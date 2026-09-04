@@ -593,4 +593,163 @@ class TrebuchetModulesTest {
         assertEquals(4, b.parts.size)
         checkStands("abri", Structure(listOf(b), "abri"))
     }
+    // ── Le catalogue moderne au banc ──────────────────────────────────────────
+    //
+    // Les quatre pièces d'une ville. Elles passent le même examen que les autres, plus
+    // un qui leur est propre : une ville est un site **dense**, donc ses bâtiments sont
+    // séparés d'un demi-mètre au lieu de vingt. Un module qui tasse de vingt centimètres
+    // est parfaitement acceptable au village et fait tomber une ville en dominos.
+
+    @Test
+    fun `une tour d immeuble tient debout`() {
+        checkStands(
+            "tour d'immeuble",
+            Structure(
+                TargetModules.towerBlock(
+                    Random(61), 20f, TargetRules.site(10f), TargetRules.site(26f)
+                ),
+                "tour d'immeuble"
+            )
+        )
+    }
+
+    @Test
+    fun `un gratte-ciel tient debout`() {
+        checkStands(
+            "gratte-ciel",
+            Structure(
+                TargetModules.towerBlock(
+                    Random(62), 20f, TargetRules.site(20f), TargetRules.site(60f), Material.STEEL
+                ),
+                "gratte-ciel"
+            )
+        )
+    }
+
+    @Test
+    fun `un socle commercial tient debout`() {
+        checkStands(
+            "socle commercial",
+            Structure(
+                TargetModules.podium(Random(63), 20f, TargetRules.site(12f), TargetRules.site(6f)),
+                "socle commercial"
+            )
+        )
+    }
+
+    @Test
+    fun `un parking en silo tient debout`() {
+        checkStands(
+            "parking",
+            Structure(
+                TargetModules.parkingDeck(
+                    Random(64), 20f, TargetRules.site(12f), TargetRules.site(13f)
+                ),
+                "parking"
+            )
+        )
+    }
+
+    @Test
+    fun `une cheminee tient debout`() {
+        checkStands(
+            "cheminée",
+            Structure(
+                TargetModules.chimney(Random(65), 20f, TargetRules.site(2f), TargetRules.site(25f)),
+                "cheminée"
+            )
+        )
+    }
+
+    /**
+     * Ce qu'une tour d'immeuble promet, et qu'aucun autre module ne promet : **elle ne
+     * bascule pas, elle descend sur place**.
+     *
+     * On tire au pied, dans les poteaux du rez-de-chaussée, et on mesure deux choses
+     * ensemble. La crête doit baisser : la tour encaisse. Et l'axe de ses pierres ne
+     * doit pas se déplacer : elle ne verse pas sur le côté comme le ferait un donjon.
+     * Prise seule, aucune des deux mesures ne dirait « effondrement en accordéon ».
+     *
+     * **Le banc est plus dur que le jeu, et c'est assumé.** Ici le boulet rebondit sur
+     * ce qu'il casse ; dans le jeu, la traversée d'arcade ([TargetStyle.pierce]) lui rend
+     * son élan et il enfile plusieurs étages d'un seul tir. On ne vérifie donc pas ici
+     * qu'une tour tombe en un coup — elle ne le doit pas — mais qu'elle tombe **droit**.
+     */
+    @Test
+    fun `une tour d immeuble descend sur place au lieu de verser`() {
+        TargetRules.style = TargetStyle.ARCADE
+        val s = Structure(
+            TargetModules.towerBlock(Random(66), 20f, TargetRules.site(10f), TargetRules.site(30f)),
+            "tour"
+        )
+        val (w, f) = stand(s)
+        val creteAvant = f.ruinHeight()
+        val axeAvant = f.pieces.map { it.body.x }.average().toFloat()
+
+        // Six boulets dans le rez-de-chaussée et le premier étage, là où on abat une
+        // tour pour de vrai. Le boulet précédent est retiré avant le suivant, sinon les
+        // tirs finissent par se frapper entre eux.
+        for (k in 0 until 6) {
+            val b = w.fireBall(2f, TargetRules.site(1.2f) + k * TargetRules.site(1.3f), 150f)
+            run(w, f, 4f)
+            w.remove(b)
+        }
+        run(w, f, 6f)
+
+        val creteApres = f.ruinHeight()
+        val axeApres = f.pieces.map { it.body.x }.average().toFloat()
+        println(
+            "TOUR crête ${"%.1f".format(creteAvant)} -> ${"%.1f".format(creteApres)} m, " +
+                "axe ${"%.1f".format(axeAvant)} -> ${"%.1f".format(axeApres)} m, " +
+                "cassé ${"%.0f".format(f.brokenRatio * 100)}%"
+        )
+        assertTrue("la tour n'a rien senti", f.brokenRatio > 0.2f)
+        assertTrue(
+            "la tour a versé au lieu de descendre : l'axe a bougé de " +
+                "${"%.1f".format(kotlin.math.abs(axeApres - axeAvant))} m",
+            kotlin.math.abs(axeApres - axeAvant) < TargetRules.site(6f)
+        )
+        assertTrue(
+            "la tour est restée intacte : ${"%.1f".format(creteAvant)} -> " +
+                "${"%.1f".format(creteApres)}",
+            creteApres < creteAvant
+        )
+    }
+
+    /**
+     * La devanture existe, elle est en verre, et elle est au rez-de-chaussée.
+     *
+     * C'est la seule pièce de verre d'une tour — le reste de la façade est **peint**,
+     * voir [TargetModules.towerBlock] — et elle est là parce que c'est la partie que le
+     * joueur atteint en premier. Le test est géométrique et non balistique : depuis la
+     * gauche, un boulet rasant rencontre le poteau d'angle avant la baie, ce qui est
+     * exact et ne se discute pas ; ce qu'on veut garantir ici, c'est qu'aucun
+     * remaniement du module ne la fasse disparaître ni monter au douzième étage.
+     */
+    @Test
+    fun `une tour d immeuble a sa devanture de verre au rez-de-chaussee`() {
+        val blocks = TargetModules.towerBlock(
+            Random(67), 20f, TargetRules.site(10f), TargetRules.site(20f)
+        )
+        val verre = blocks.filter { it.material == Material.GLASS }
+        assertTrue("la tour n'a pas de devanture", verre.isNotEmpty())
+        val plafondRez = blocks.filter { it.material == Material.CONCRETE }.minOf { it.top() }
+        println(
+            "DEVANTURE ${verre.size} panneau(x), du sol à " +
+                "${"%.1f".format(verre.maxOf { it.top() })} m, plafond du rez à " +
+                "${"%.1f".format(plafondRez)} m"
+        )
+        assertTrue("la devanture ne descend pas au sol", verre.all { it.bottom() < 0.1f })
+        assertTrue(
+            "la devanture dépasse le rez-de-chaussée",
+            verre.all { it.top() <= plafondRez + 0.01f }
+        )
+        // Et elle est bien plus fragile que le béton qui l'entoure : c'est tout son
+        // intérêt de jeu.
+        val betonLePlusFaible = blocks.filter { it.material == Material.CONCRETE }.minOf { it.hp }
+        assertTrue(
+            "le verre n'est pas plus fragile que le béton",
+            verre.maxOf { it.hp } < betonLePlusFaible * 0.2f
+        )
+    }
 }

@@ -49,7 +49,16 @@ enum class Surface {
     THATCH, SHINGLES, TILES, SLATE,
     PLANKS, TIMBER_FRAME,
     BRICK, FIELDSTONE, CUT_STONE,
-    CARDBOARD
+    CARDBOARD,
+
+    /** Le béton banché : de grands panneaux lisses et leurs joints creux. */
+    CONCRETE,
+
+    /** Le mur-rideau : une trame de vitrages sur ses meneaux. */
+    GLASS_WALL,
+
+    /** Le bardage : de la tôle nervurée, celle des hangars et des parkings. */
+    CLADDING
 }
 
 /**
@@ -60,7 +69,13 @@ enum class Surface {
  * géométrie et doit donc aussi être leur collision.
  */
 enum class Decor {
-    NONE, WINDOW_SHUTTERS, WINDOW_ARCHED, DOOR, ARROW_SLIT, BELL
+    NONE, WINDOW_SHUTTERS, WINDOW_ARCHED, DOOR, ARROW_SLIT, BELL,
+
+    /** Le bandeau de fenêtres d'un étage moderne : une seule ligne, toute la façade. */
+    WINDOW_BAND,
+
+    /** La vitrine d'un rez-de-chaussée commercial, avec son auvent. */
+    SHOPFRONT
 }
 
 /** Contour graphique d'un bloc lorsque ses pièces physiques ne suffisent pas à le lire. */

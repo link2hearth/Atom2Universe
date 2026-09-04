@@ -170,7 +170,44 @@ enum class Material(
      * étage. Plutôt que de toucher au réglage du bois — testé et calé ailleurs — les
      * cartes ont leur propre tenue, sensiblement supérieure.
      */
-    CARDBOARD(600f, 0.80f, 0f, 15f, Rupture.ECLATS, masonry = false)
+    CARDBOARD(600f, 0.80f, 0f, 15f, Rupture.ECLATS, masonry = false),
+
+    /**
+     * Le béton armé : la pierre du siècle, et la matière des villes.
+     *
+     * Aussi lourd que la pierre de taille et **plus cassant** qu'elle, ce qui est
+     * délibéré. Une tour d'habitation n'est pas un donjon : elle est faite de dalles
+     * minces posées sur des poteaux minces, et ce qu'on veut voir quand un étage cède
+     * est l'étage du dessus qui tombe sur le suivant, puis le suivant. Une vitesse
+     * critique de neuf mètres par seconde — sous celle de la pierre — donne cet
+     * effondrement en accordéon plutôt qu'un bloc qui bascule d'une pièce.
+     */
+    CONCRETE(2200f, 0.40f, 0f, 9f, Rupture.ECLATS, masonry = true),
+
+    /**
+     * Le verre d'un mur-rideau.
+     *
+     * **La densité est celle d'un panneau, pas celle du verre.** Le jeu prête un mètre
+     * d'épaisseur à toute matière ; un vitrage de quelques millimètres étalé sur ce
+     * mètre-là ne pèse presque rien, et c'est bien ce qu'on veut — une façade vitrée
+     * n'est pas une muraille. C'est exactement la convention du chaume ([THATCH]), qui
+     * n'a jamais pesé les cent vingt kilos d'un mètre cube de paille tassée non plus.
+     *
+     * Elle part en [Rupture.POUSSIERE] : une baie qui vole en éclats ne laisse pas de
+     * gravats, elle laisse un trou.
+     */
+    GLASS(90f, 0.05f, 0f, 2.5f, Rupture.ECLATS, masonry = false),
+
+    /**
+     * L'acier d'une ossature : peu de matière au mètre carré, beaucoup de tenue.
+     *
+     * Même convention de densité que le verre — un profilé dans un mètre de vide — mais
+     * l'inverse pour la tenue : c'est la matière la plus tenace du jeu après le fer, et
+     * la seule qui puisse porter une tour de cent mètres sans qu'elle s'affaisse toute
+     * seule. Contrairement au [IRON], elle **casse** : un noyau d'acier est un objectif
+     * difficile, jamais un objectif impossible.
+     */
+    STEEL(900f, 0.30f, 0f, 26f, Rupture.ECLATS, masonry = true)
 }
 
 /**

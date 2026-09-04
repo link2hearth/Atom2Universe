@@ -1630,6 +1630,361 @@ object TargetModules {
         return out
     }
 
+    // ── Le vocabulaire moderne ────────────────────────────────────────────────
+    //
+    // Une ville n'est pas un village en plus haut. Un village est fait de **pleins** —
+    // des murs, des poteaux, de la matière partout — et c'est pour ça qu'il coûte cher
+    // au moteur dès qu'on l'agrandit. Une ville est faite de **vides** : des dalles
+    // minces posées sur des poteaux minces, et de l'air entre les deux. Un étage de
+    // tour ne pèse donc presque rien et ne coûte qu'un corps, ce qui permet d'en
+    // aligner quinze les unes contre les autres sans sortir du budget — c'est très
+    // exactement ce qui rend une ville *dense* possible là où quinze donjons ne le
+    // seraient pas.
+    //
+    // La règle du décor peint vaut ici plus qu'ailleurs : un mur-rideau n'est pas un
+    // assemblage de vitres, c'est une allège de béton et un **dessin** par-dessus
+    // ([Decor.WINDOW_BAND]). Le verre n'existe dans le monde physique qu'aux endroits
+    // où le joueur peut l'atteindre, c'est-à-dire au rez-de-chaussée.
+
+    /**
+     * Hauteur d'étage d'un immeuble moderne, en mètres de site.
+     *
+     * Deux mètres soixante-dix sous plafond plus le plancher : c'est la mesure qui
+     * donne son échelle à une silhouette, et c'est à elle qu'on compte les étages
+     * d'une tour en la regardant.
+     */
+    private val storeyPitch: Float get() = TargetRules.site(3.1f)
+
+    /**
+     * **La tour** : un empilement d'étages, chaque étage étant deux ou trois poteaux,
+     * une allège et sa dalle.
+     *
+     * C'est le module le plus important du catalogue moderne, et le plus économe :
+     * **un corps par étage**, parfois un pour deux ou trois étages quand le budget
+     * serre. Un étage est un corps composé, donc parfaitement rigide tant qu'il tient —
+     * et quand il rompt, il rompt en ses propres pièces : les poteaux, l'allège, la
+     * dalle.
+     *
+     * Ce qu'elle promet à l'abattre lui est propre. Une tour de pierre bascule d'un
+     * bloc du côté qu'on a frappé ; **une tour de béton s'assoit sur elle-même**. On
+     * emporte les poteaux d'un étage, la dalle du dessus perd son appui, elle tombe sur
+     * l'étage suivant, dont les poteaux cèdent à leur tour sous le choc. C'est
+     * l'effondrement en accordéon, et il n'a demandé aucune règle : il sort tout seul
+     * de la géométrie, de la fragilité du béton ([Material.CONCRETE]) et de l'énergie
+     * de choc que le moteur comptabilise déjà.
+     *
+     * Le rez-de-chaussée est plus haut que les autres et **vitré pour de bon** : c'est
+     * la seule partie de la façade qui existe dans le monde physique, parce que c'est
+     * celle que le joueur peut atteindre, et faire voler une vitrine en éclats au
+     * premier tir vaut tous les discours.
+     */
+    fun towerBlock(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.CONCRETE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(1.2f) || height <= TargetRules.site(3f)) return out
+
+        val slabH = TargetRules.detail(0.32f)
+        val pierW = TargetRules.detail(0.42f)
+        val crownH = TargetRules.detail(0.85f)
+        val groundH = storeyPitch * 1.35f
+        val piers = if (width > TargetRules.detail(7f)) 3 else 2
+
+        // Le rez-de-chaussée : des poteaux, une dalle de plancher haut, et la vitrine
+        // en corps séparé — la seule pièce de verre de toute la tour.
+        out += storey(
+            material, left, 0f, width, groundH, slabH, pierW, piers,
+            spandrel = 0f, surface = Surface.CONCRETE, decor = Decor.SHOPFRONT,
+            variant = rng.nextInt(4)
+        )
+        // **Une baie par travée, jamais une seule sur toute la largeur.** Une tour large
+        // a trois poteaux et non deux : une vitrine unique traversait celui du milieu de
+        // part en part. Le solveur chassait l'interpénétration en soulevant toute la
+        // tour d'un demi-mètre au chargement, ce qui suffisait à lui faire toucher sa
+        // voisine — et une ville entière partait en dominos avant le premier tir.
+        val vitrineH = groundH - slabH - 2f * TargetRules.JOINT
+        for (i in 0 until piers - 1) {
+            val axeG = left + pierW / 2f + i * (width - pierW) / (piers - 1)
+            val axeD = left + pierW / 2f + (i + 1) * (width - pierW) / (piers - 1)
+            val vitrineG = axeG + pierW / 2f + TargetRules.JOINT
+            val vitrineW = axeD - pierW / 2f - TargetRules.JOINT - vitrineG
+            if (vitrineW > TargetRules.site(0.5f) && vitrineH > TargetRules.site(0.5f)) {
+                out += Block.laid(
+                    Material.GLASS,
+                    vitrineG, TargetRules.JOINT, vitrineW, vitrineH,
+                    surface = Surface.GLASS_WALL, visualVariant = rng.nextInt(4)
+                )
+            }
+        }
+
+        // Les étages courants. On en met plusieurs par corps quand le budget serre :
+        // regrouper est gratuit à l'œil — les allèges dessinées gardent leur taille —
+        // et c'est la seule parade qui tienne à la fois le budget de corps du module et
+        // la profondeur d'empilement du solveur.
+        val restant = (height - groundH - crownH).coerceAtLeast(storeyPitch)
+        val etages = (restant / storeyPitch).toInt().coerceAtLeast(1)
+        // **Cinq corps empilés au maximum, et ce plafond n'a rien à voir avec le
+        // budget.** Chaque contact d'une pile laisse le solveur s'enfoncer d'un cheveu ;
+        // neuf étages superposés cumulaient vingt à cinquante centimètres de tassement,
+        // c'est-à-dire très exactement la largeur de la rue qui sépare deux immeubles
+        // d'une ville. Les tours se touchaient au chargement et la ville partait en
+        // dominos avant le premier tir. À cinq, le tassement retombe au centimètre —
+        // et cinq morceaux suffisent largement à voir une tour s'asseoir sur elle-même.
+        val corpsMax = (bodyBudget - 3).coerceIn(2, 5)
+        val paquet = ceil(etages / corpsMax.toFloat()).toInt().coerceAtLeast(1)
+        val etageH = restant / etages
+        var y = groundH
+        var pose = 0
+        while (pose < etages) {
+            val n = minOf(paquet, etages - pose)
+            out += stackedStoreys(
+                material, left, y, width, etageH, n, slabH, pierW, piers,
+                surface = Surface.CONCRETE, decor = Decor.WINDOW_BAND,
+                variant = rng.nextInt(4)
+            )
+            y += n * etageH
+            pose += n
+        }
+
+        // La couronne : l'édicule technique et son mât. C'est elle qui donne à chaque
+        // tour une silhouette qui lui est propre — ce qu'aucune façade ne fait à trois
+        // cents mètres de distance.
+        val ediculeW = width * (0.35f + rng.nextFloat() * 0.3f)
+        val mat = rng.nextInt(3) == 0
+        out += Block.compound(
+            material, left + width / 2f, y + crownH / 2f,
+            surface = Surface.CONCRETE, visualVariant = rng.nextInt(4)
+        ) {
+            box(width / 2f, slabH / 2f, 0f, -crownH / 2f + slabH / 2f)
+            box(ediculeW / 2f, (crownH - slabH) / 2f, 0f, slabH / 2f)
+            if (mat) {
+                box(
+                    TargetRules.MIN_HALF_THICKNESS * 1.6f, crownH * 0.8f,
+                    ediculeW * 0.25f, crownH * 1.05f
+                )
+            }
+        }
+        return out
+    }
+
+    /**
+     * Un étage : les poteaux, l'allège, la dalle. Un seul corps.
+     *
+     * [spandrel] est la hauteur de l'allège — le muret plein sous les fenêtres. Elle
+     * n'est pas là pour faire joli : sans elle un étage n'est qu'un portique, le boulet
+     * passe entre les poteaux sans rien toucher, et le joueur a l'impression d'avoir
+     * traversé un décor. Avec elle, chaque étage offre une cible pleine à hauteur de
+     * tir — et elle ne coûte presque rien, puisqu'elle ne fait qu'un tiers de l'étage.
+     */
+    private fun storey(
+        material: Material,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        height: Float,
+        slabH: Float,
+        pierW: Float,
+        piers: Int,
+        spandrel: Float,
+        surface: Surface,
+        decor: Decor,
+        variant: Int
+    ): Block = Block.compound(
+        material, left + width / 2f, bottom + height / 2f,
+        surface = surface, decor = decor, visualVariant = variant
+    ) {
+        storeyParts(this, width, -height / 2f, height, slabH, pierW, piers, spandrel)
+    }
+
+    /** Plusieurs étages solidaires : le même dessin, répété dans un seul corps. */
+    private fun stackedStoreys(
+        material: Material,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        storeyH: Float,
+        count: Int,
+        slabH: Float,
+        pierW: Float,
+        piers: Int,
+        surface: Surface,
+        decor: Decor,
+        variant: Int
+    ): Block {
+        val total = storeyH * count
+        return Block.compound(
+            material, left + width / 2f, bottom + total / 2f,
+            surface = surface, decor = decor, visualVariant = variant
+        ) {
+            for (k in 0 until count) {
+                storeyParts(
+                    this, width, -total / 2f + k * storeyH, storeyH, slabH, pierW, piers,
+                    spandrel = (storeyH - slabH) * 0.34f
+                )
+            }
+        }
+    }
+
+    /** Les pièces d'un étage, dessinées à partir de [base] dans le repère du corps. */
+    private fun storeyParts(
+        b: PieceBuilder,
+        width: Float,
+        base: Float,
+        height: Float,
+        slabH: Float,
+        pierW: Float,
+        piers: Int,
+        spandrel: Float
+    ) {
+        val clear = (height - slabH).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS * 2f)
+        val n = piers.coerceAtLeast(2)
+        for (i in 0 until n) {
+            val x = -width / 2f + pierW / 2f + i * (width - pierW) / (n - 1)
+            b.box(pierW / 2f, clear / 2f, x, base + clear / 2f)
+        }
+        if (spandrel > TargetRules.MIN_HALF_THICKNESS * 2f) {
+            val inner = width - 2f * pierW
+            if (inner > 0f) b.box(inner / 2f, spandrel / 2f, 0f, base + spandrel / 2f)
+        }
+        b.box(width / 2f, slabH / 2f, 0f, base + clear + slabH / 2f)
+    }
+
+    /**
+     * **Le socle commercial** : deux ou trois niveaux pleins, larges, sur leur vitrine.
+     *
+     * Il existe pour la même raison qu'une grange au milieu d'un village : une file de
+     * tours toutes semblables se lit comme un peigne. Un bloc bas et large qui court
+     * entre deux tours donne à la ville son profil, et il est **plein** — donc il
+     * arrête le boulet au lieu de le laisser filer entre des poteaux.
+     */
+    fun podium(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.CONCRETE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(1.5f) || height <= TargetRules.site(1.5f)) return out
+        val vitrineH = (height * 0.4f).coerceAtMost(storeyPitch)
+        val surface = if (rng.nextBoolean()) Surface.CONCRETE else Surface.BRICK
+
+        // Le rez-de-chaussée vitré, en panneaux : chacun vole en éclats pour lui-même,
+        // et une devanture qui s'ouvre travée par travée se lit de loin.
+        val travees = (width / TargetRules.site(2.4f)).roundToInt().coerceIn(2, 5)
+        val traveeW = width / travees
+        for (i in 0 until travees) {
+            out += Block.laid(
+                Material.GLASS,
+                left + i * traveeW + TargetRules.JOINT, 0f,
+                traveeW - 2f * TargetRules.JOINT, vitrineH,
+                surface = Surface.GLASS_WALL,
+                decor = Decor.SHOPFRONT,
+                visualVariant = rng.nextInt(4)
+            )
+        }
+        // Les niveaux du dessus, pleins. `Masonry.wall` sait déjà les découper en
+        // panneaux appareillés sans jamais dépasser la profondeur d'empilement.
+        val hautH = height - vitrineH
+        if (hautH > TargetRules.site(0.8f)) {
+            val murs = Masonry.wall(
+                material, left, vitrineH, width, hautH,
+                stoneWidth = TargetRules.site(2.2f), stoneHeight = storeyPitch,
+                bodyBudget = (bodyBudget - travees).coerceAtLeast(3),
+                surface = surface
+            )
+            out += murs.map {
+                it.dressed(decor = Decor.WINDOW_BAND, visualVariant = rng.nextInt(4))
+            }
+        }
+        return out
+    }
+
+    /**
+     * **Le parking en silo** : rien que des dalles sur des poteaux, à tous les niveaux.
+     *
+     * C'est le bâtiment le plus fragile de la ville, et le plus spectaculaire à
+     * abattre : pas d'allège pleine, pas de façade, rien que le squelette et son
+     * garde-corps. Un poteau du bas emporté et tout le silo s'assoit — c'est le grenier
+     * sur pilotis ([granary]) porté à cinq niveaux.
+     */
+    fun parkingDeck(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.CONCRETE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.site(2f) || height <= TargetRules.site(2f)) return out
+        val slabH = TargetRules.detail(0.34f)
+        val pierW = TargetRules.detail(0.46f)
+        val niveauH = storeyPitch * 0.85f
+        val niveaux = (height / niveauH).toInt().coerceIn(2, bodyBudget.coerceAtLeast(2))
+        val h = height / niveaux
+        val piers = (width / TargetRules.site(3.2f)).roundToInt().coerceIn(3, 5)
+        for (k in 0 until niveaux) {
+            out += storey(
+                material, left, k * h, width, h, slabH, pierW, piers,
+                // Le garde-corps, et rien d'autre : un parking n'a pas de façade.
+                spandrel = TargetRules.detail(0.55f),
+                surface = Surface.CONCRETE, decor = Decor.NONE,
+                variant = rng.nextInt(4)
+            )
+        }
+        return out
+    }
+
+    /**
+     * **La cheminée d'usine** : un fût qui s'affine, une couronne, et c'est tout.
+     *
+     * Elle joue en ville le rôle que le moulin joue au village : un repère vertical
+     * isolé, qu'on abat pour le plaisir de le voir tomber en travers de ce qui est à
+     * côté. Elle s'affine vraiment — chaque tronçon un peu plus étroit que le
+     * précédent — parce qu'une cheminée droite est un poteau, et qu'un poteau n'a pas
+     * d'échelle.
+     */
+    fun chimney(
+        rng: Random,
+        left: Float,
+        width: Float,
+        height: Float,
+        material: Material = Material.CONCRETE,
+        bodyBudget: Int = DEFAULT_MODULE_BUDGET
+    ): List<Block> {
+        val out = ArrayList<Block>()
+        if (width <= TargetRules.detail(0.8f) || height <= TargetRules.site(3f)) return out
+        val couronneH = TargetRules.detail(0.5f)
+        // La couronne prend un corps : le fût se contente du reste. Sans ce plafond la
+        // cheminée était le seul module du catalogue à ignorer son budget, et c'est
+        // elle qui faisait déborder les villes.
+        val troncons = ((height - couronneH) / TargetRules.site(4f)).roundToInt()
+            .coerceIn(3, (bodyBudget - 1).coerceAtLeast(3))
+        val h = (height - couronneH) / troncons
+        val surface = if (rng.nextBoolean()) Surface.BRICK else Surface.CONCRETE
+        val cx = left + width / 2f
+        for (k in 0 until troncons) {
+            val w = width * (1f - 0.055f * k)
+            out += Block.laid(
+                material, cx - w / 2f, k * h, w, h,
+                surface = surface, visualVariant = rng.nextInt(4)
+            )
+        }
+        val wHaut = width * (1f - 0.055f * (troncons - 1))
+        out += Block.laid(
+            material, cx - wHaut * 0.62f, troncons * h, wHaut * 1.24f, couronneH,
+            surface = surface, visualVariant = rng.nextInt(4)
+        )
+        return out
+    }
+
     /**
      * Une file de piles portant une file d'arcs, chaque arc allant **d'un axe de pile
      * au suivant**.

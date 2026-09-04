@@ -33,6 +33,9 @@ class TrebuchetApercuTest {
         Material.SANDSTONE -> "#D3B076"
         Material.IRON -> "#54606B"
         Material.CARDBOARD -> "#D9B26A"
+        Material.CONCRETE -> "#B9BCB8"
+        Material.GLASS -> "#9FD4E4"
+        Material.STEEL -> "#7E8896"
     }
 
     /** Palette des surfaces : l'aperçu garde ainsi la matière des blocs composés. */
@@ -49,6 +52,9 @@ class TrebuchetApercuTest {
             Surface.FIELDSTONE -> "#92999C"
             Surface.CUT_STONE -> "#A4A9AA"
             Surface.CARDBOARD -> "#D9B26A"
+            Surface.CONCRETE -> "#B9BCB8"
+            Surface.GLASS_WALL -> "#6FA8BD"
+            Surface.CLADDING -> "#8E97A0"
             Surface.AUTO -> couleur(b.material)
         }
     }
@@ -306,6 +312,48 @@ class TrebuchetApercuTest {
                 )
             }
 
+            Decor.WINDOW_BAND -> {
+                val etage = TargetRules.site(3.1f)
+                val niveaux = ((2f * hh) / etage).toInt().coerceIn(1, 6)
+                val pas = 2f * hh / niveaux
+                val bandeH = minOf(pas * 0.36f, TargetRules.detail(0.75f))
+                val bandeW = hw * 0.86f
+                for (k in 0 until niveaux) {
+                    val cy = -hh + pas * (k + 0.62f)
+                    poly(
+                        listOf(
+                            -bandeW to cy - bandeH, bandeW to cy - bandeH,
+                            bandeW to cy + bandeH, -bandeW to cy + bandeH
+                        ),
+                        "#3E5F6E", "#2A3E48"
+                    )
+                    val meneaux = (bandeW / TargetRules.detail(0.6f)).toInt().coerceIn(2, 7)
+                    for (m in 1 until meneaux) {
+                        val x = -bandeW + 2f * bandeW * m / meneaux
+                        line(x, cy - bandeH, x, cy + bandeH, "#B9BCB8", 1f)
+                    }
+                }
+            }
+
+            Decor.SHOPFRONT -> {
+                val baieW = hw * 0.9f
+                val baieH = hh * 0.72f
+                poly(
+                    listOf(
+                        -baieW to -hh * 0.92f, baieW to -hh * 0.92f,
+                        baieW to baieH * 0.55f, -baieW to baieH * 0.55f
+                    ),
+                    "#31505C", "#1E323A"
+                )
+                poly(
+                    listOf(
+                        -baieW to baieH * 0.58f, baieW to baieH * 0.58f,
+                        baieW * 0.9f to baieH * 0.86f, -baieW * 0.9f to baieH * 0.86f
+                    ),
+                    "#B4462F", "#7A2C1C"
+                )
+            }
+
             Decor.NONE -> Unit
         }
     }
@@ -408,6 +456,53 @@ class TrebuchetApercuTest {
             )
         }
         println("APERÇU nouveaux bâtiments écrit dans ${dir.absolutePath}")
+    }
+
+    /**
+     * Les villes : les deux nouvelles sortes de site, et le catalogue moderne pièce
+     * par pièce.
+     *
+     * C'est ici qu'on juge la **densité**, qui ne se mesure pas — un chiffre de mètres
+     * par bâtiment ne dit pas si une silhouette se lit comme une ville ou comme une
+     * rangée de poteaux.
+     */
+    @Test
+    fun apercuVilles() {
+        TargetRules.style = TargetStyle.ARCADE
+        val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
+        dir.mkdirs()
+        for (seed in 1L..60L) {
+            val kind = TargetGenerator.kindFor(seed, TargetStyle.ARCADE)
+            if (kind != SiteKind.VILLE && kind != SiteKind.METROPOLE) continue
+            svg(TargetGenerator.generate(seed), File(dir, "ville-$seed.svg"))
+        }
+        val modules = listOf(
+            "batiment-tour.svg" to TargetModules.towerBlock(
+                Random(51), 0f, TargetRules.site(10f), TargetRules.site(26f)
+            ),
+            "batiment-gratte-ciel.svg" to TargetModules.towerBlock(
+                Random(52), 0f, TargetRules.site(18f), TargetRules.site(55f), Material.STEEL
+            ),
+            "batiment-socle.svg" to TargetModules.podium(
+                Random(53), 0f, TargetRules.site(12f), TargetRules.site(6f)
+            ),
+            "batiment-parking.svg" to TargetModules.parkingDeck(
+                Random(54), 0f, TargetRules.site(12f), TargetRules.site(13f)
+            ),
+            "batiment-cheminee.svg" to TargetModules.chimney(
+                Random(55), 0f, TargetRules.site(2f), TargetRules.site(25f)
+            )
+        )
+        for ((name, blocks) in modules) {
+            svg(
+                TargetLevel(
+                    0L, SiteKind.VILLE, 0f, Wind.CALM,
+                    Structure(blocks, name), Terrain.FLAT, TerrainShape.PLAINE
+                ),
+                File(dir, name)
+            )
+        }
+        println("APERÇU villes écrit dans ${dir.absolutePath}")
     }
 
     /** Dessine une bande de ciels : une colonne par heure, plus une éclipse. */

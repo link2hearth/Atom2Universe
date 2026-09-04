@@ -36,7 +36,13 @@ enum class SiteKind {
     CHATEAU_CARTES,
 
     /** Une haute tour de garde, un village sous sa protection, puis un petit château. */
-    SEIGNEURIE
+    SEIGNEURIE,
+
+    /** Un centre-ville de béton : une file d'immeubles jointifs, hauts et creux. */
+    VILLE,
+
+    /** La même chose en plus grand, fermée par un gratte-ciel à ossature d'acier. */
+    METROPOLE
 }
 
 /**
@@ -179,7 +185,12 @@ object TargetGenerator {
             // niveau pour toujours, et glisser un nouveau genre au milieu aurait changé
             // ce que chaque graine existante redonne.
             SiteKind.CHATEAU_CARTES,
-            SiteKind.SEIGNEURIE
+            SiteKind.SEIGNEURIE,
+            // Les villes ferment la progression : elles sont l'échelon au-dessus du
+            // château, et elles arrivent — comme tout ce qu'on ajoute ici — **en bout
+            // de liste**, pour qu'aucune graine déjà jouée ne change de niveau.
+            SiteKind.VILLE,
+            SiteKind.METROPOLE
         )
         // Le château de cartes est une fantaisie d'arcade. En réaliste, la même place
         // dans la progression donne la nouvelle seigneurie : une composition crédible,
@@ -255,6 +266,18 @@ object TargetGenerator {
                 TerrainShape.CRETE, TerrainShape.TERRASSES
             )
 
+            // Une ville se pose à plat. Elle est déjà l'objet le plus haut du jeu, et
+            // un relief qui l'étagerait de dix mètres de plus la ferait sortir de
+            // l'écran par le haut avant qu'on ait vu sa silhouette.
+            SiteKind.VILLE -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.PLAINE,
+                TerrainShape.COLLINE, TerrainShape.MESA
+            )
+
+            SiteKind.METROPOLE -> arrayOf(
+                TerrainShape.PLAINE, TerrainShape.PLAINE, TerrainShape.MESA
+            )
+
             // Un château de cartes n'a rien d'un site fortifié : on le pose bien en
             // évidence, jamais caché par un relief qui masquerait sa silhouette absurde.
             SiteKind.CHATEAU_CARTES -> arrayOf(
@@ -282,7 +305,14 @@ object TargetGenerator {
     ): Pair<Structure, Terrain> {
         val groupes = plan(rng, kind)
         val total = groupes.sumOf { it.size }.coerceAtLeast(1)
-        val budget = (TargetRules.BODY_BUDGET / total).coerceAtLeast(10)
+        // Le plancher est là pour qu'un module ne soit jamais affamé au point de ne
+        // plus rien pouvoir dessiner. Il vaut six et non dix : à dix, un plan de quinze
+        // pièces — une ville — se voyait accorder cent cinquante corps pour un budget
+        // de cent trente, et le site sortait hors budget sans que personne ne l'ait
+        // demandé. Six est le minimum sous lequel une tour n'a plus assez de corps
+        // pour ses étages, et il ne change rien aux plans courts : dès que le site
+        // tient en treize pièces, la division rend déjà plus que six.
+        val budget = (TargetRules.BODY_BUDGET / total).coerceAtLeast(6)
 
         // L'emprise **estimée** d'un groupe : la somme des largeurs du plan, plus les
         // écarts, plus une marge. Un module rend souvent un peu plus large que ce qu'on
@@ -354,12 +384,17 @@ object TargetGenerator {
         ModuleKind.GATEHOUSE -> TargetModules.gatehouse(rng, x, w, h, slot.material, budget)
         ModuleKind.CHAPEL -> TargetModules.chapel(rng, x, w, h, slot.material, budget)
         ModuleKind.TOWER_HOUSE -> TargetModules.towerHouse(rng, x, w, h, slot.material, budget)
+        ModuleKind.TOWER_BLOCK -> TargetModules.towerBlock(rng, x, w, h, slot.material, budget)
+        ModuleKind.PODIUM -> TargetModules.podium(rng, x, w, h, slot.material, budget)
+        ModuleKind.PARKING -> TargetModules.parkingDeck(rng, x, w, h, slot.material, budget)
+        ModuleKind.CHIMNEY -> TargetModules.chimney(rng, x, w, h, slot.material, budget)
     }
 
     private enum class ModuleKind {
         TOWER, WALL, HOUSE, PROPS,
         WINDMILL, PYRAMID, ARENA, TEMPLE, AQUEDUCT, GRANARY, INSULA, BARN, PALISADE,
-        CARD_CASTLE, WELL, SHELTER, STAIRCASE, GATEHOUSE, CHAPEL, TOWER_HOUSE
+        CARD_CASTLE, WELL, SHELTER, STAIRCASE, GATEHOUSE, CHAPEL, TOWER_HOUSE,
+        TOWER_BLOCK, PODIUM, PARKING, CHIMNEY
     }
 
     private class Slot(
@@ -659,6 +694,80 @@ object TargetGenerator {
                 )
             }
 
+            // ── Les villes ────────────────────────────────────────────────────
+            //
+            // **Un seul groupe, donc un seul plateau, et c'est tout le sujet.** Le
+            // relief réserve à chaque groupe son palier, avec une marge plate de trois
+            // mètres de chaque côté et un entre-deux d'au moins quatre : deux groupes
+            // voisins sont donc séparés d'une bonne vingtaine de mètres de terrain nu,
+            // ce qui donne le rythme d'un village — une ferme, un champ, une ferme.
+            // C'est exactement ce qu'une ville ne doit pas faire. En posant toute la
+            // ville dans un seul groupe, les bâtiments ne sont plus séparés que par le
+            // `gap` du générateur, un demi-mètre de site : ils se touchent presque, et
+            // la silhouette devient continue.
+
+            SiteKind.VILLE -> {
+                val rue = ArrayList<Slot>()
+                // On ouvre sur du bas et du plein : le boulet arrive par la gauche, et
+                // une tour en première ligne cacherait tout le reste.
+                rue += Slot(ModuleKind.PODIUM, between(9f, 13f), between(4.5f, 7f), Material.CONCRETE)
+                val immeubles = 8 + rng.nextInt(3)
+                for (i in 0 until immeubles) {
+                    // La hauteur monte doucement vers le fond : une skyline se lit à sa
+                    // pente, pas à son bâtiment le plus haut.
+                    val montee = i / (immeubles - 1f)
+                    val h = between(11f, 17f) + montee * between(4f, 12f)
+                    // **La largeur se déduit de la hauteur, et pas l'inverse.** Une
+                    // tour de neuf mètres de large sur soixante de haut n'est pas une
+                    // tour, c'est une cheminée : elle verse au premier tassement, et
+                    // c'est exactement ce que le banc a mesuré — quarante-six mètres
+                    // de dérive avant le premier tir. Un immeuble réel tient entre le
+                    // tiers et la moitié de sa hauteur en largeur, ce qui lui donne
+                    // trois points d'appui au lieu de deux et une base assez large
+                    // pour ne pas basculer toute seule.
+                    val large = (h * between(0.34f, 0.5f)).coerceIn(5f, 14f)
+                    rue += when {
+                        i == 2 -> Slot(ModuleKind.PARKING, between(9f, 13f), between(9f, 13f), Material.CONCRETE)
+                        i == immeubles - 2 -> Slot(
+                            ModuleKind.PODIUM, between(8f, 12f), between(5f, 8f), Material.CONCRETE
+                        )
+                        else -> Slot(ModuleKind.TOWER_BLOCK, large, h, Material.CONCRETE)
+                    }
+                }
+                rue += Slot(ModuleKind.CHIMNEY, between(1.6f, 2.4f), between(20f, 30f), Material.CONCRETE)
+                listOf(rue)
+            }
+
+            SiteKind.METROPOLE -> {
+                val rue = ArrayList<Slot>()
+                rue += Slot(ModuleKind.PODIUM, between(10f, 14f), between(5f, 8f), Material.CONCRETE)
+                rue += Slot(ModuleKind.PARKING, between(10f, 14f), between(11f, 15f), Material.CONCRETE)
+                val immeubles = 9 + rng.nextInt(3)
+                for (i in 0 until immeubles) {
+                    val montee = i / (immeubles - 1f)
+                    val h = between(14f, 21f) + montee * between(6f, 16f)
+                    val large = (h * between(0.34f, 0.5f)).coerceIn(6f, 16f)
+                    rue += Slot(ModuleKind.TOWER_BLOCK, large, h, Material.CONCRETE)
+                    // Un socle de temps en temps : deux tours qui se touchent forment un
+                    // seul bloc à l'œil, un socle entre les deux les sépare.
+                    if (rng.nextFloat() < 0.35f) {
+                        rue += Slot(
+                            ModuleKind.PODIUM, between(6f, 10f), between(4f, 7f), Material.CONCRETE
+                        )
+                    }
+                }
+                // Le gratte-ciel, tout au fond, à ossature d'acier : la seule pièce du
+                // jeu qu'on n'abat pas d'un tir, et le point de mire du niveau.
+                val hauteurGratteCiel = between(45f, 68f)
+                rue += Slot(
+                    ModuleKind.TOWER_BLOCK,
+                    (hauteurGratteCiel * between(0.3f, 0.4f)).coerceIn(14f, 22f),
+                    hauteurGratteCiel,
+                    Material.STEEL
+                )
+                listOf(rue)
+            }
+
             SiteKind.NECROPOLE -> {
                 val n = 2 + rng.nextInt(2)
                 val groupes = ArrayList<List<Slot>>(n + 1)
@@ -692,6 +801,8 @@ object TargetGenerator {
                 SiteKind.NECROPOLE -> "Nécropole"
                 SiteKind.CHATEAU_CARTES -> "Château de cartes"
                 SiteKind.SEIGNEURIE -> "Seigneurie protégée"
+                SiteKind.VILLE -> "Centre-ville"
+                SiteKind.METROPOLE -> "Métropole"
             }
         )
         // Le relief ne se dit que quand il change quelque chose au tir : annoncer « en

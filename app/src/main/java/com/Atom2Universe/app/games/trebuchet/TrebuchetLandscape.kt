@@ -101,7 +101,10 @@ class LandScene(context: Context) {
         "#9AA3AB".toColorInt(), // pierre
         "#D3B076".toColorInt(), // grès
         "#54606B".toColorInt(), // fer
-        "#D9B26A".toColorInt()  // carton
+        "#D9B26A".toColorInt(), // carton
+        "#B9BCB8".toColorInt(), // béton
+        "#9FD4E4".toColorInt(), // verre
+        "#7E8896".toColorInt()  // acier
     ).map { c -> Paint(Paint.ANTI_ALIAS_FLAG).apply { color = c } }
 
     private val targetEdges = intArrayOf(
@@ -113,7 +116,10 @@ class LandScene(context: Context) {
         "#6E767D".toColorInt(),
         "#A8874F".toColorInt(),
         "#39424A".toColorInt(),
-        "#A77C3F".toColorInt()
+        "#A77C3F".toColorInt(),
+        "#7C817E".toColorInt(),
+        "#5E93A6".toColorInt(),
+        "#4A525C".toColorInt()
     ).map { c ->
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = c
@@ -533,8 +539,14 @@ class LandScene(context: Context) {
                 Surface.FIELDSTONE -> intArrayOf(0xFF92999C.toInt(), 0xFF596064.toInt(), 0xFFC0C3BE.toInt())
                 Surface.CUT_STONE -> intArrayOf(0xFFA4A9AA.toInt(), 0xFF666D70.toInt(), 0xFFCED0CB.toInt())
                 Surface.CARDBOARD -> intArrayOf(0xFFD9B26A.toInt(), 0xFF9B7139.toInt(), 0xFFF0D18C.toInt())
+                Surface.CONCRETE -> intArrayOf(0xFFB9BCB8.toInt(), 0xFF7C817E.toInt(), 0xFFDCDED9.toInt())
+                Surface.GLASS_WALL -> intArrayOf(0xFF6FA8BD.toInt(), 0xFF3C5F70.toInt(), 0xFFCDEAF5.toInt())
+                Surface.CLADDING -> intArrayOf(0xFF8E97A0.toInt(), 0xFF515A63.toInt(), 0xFFC3CBD2.toInt())
                 Surface.AUTO -> when (piece.material) {
                     Material.ICE -> intArrayOf(0xFFA8D8E8.toInt(), 0xFF6EAABD.toInt(), 0xFFD9F4FA.toInt())
+                    Material.CONCRETE -> intArrayOf(0xFFB9BCB8.toInt(), 0xFF7C817E.toInt(), 0xFFDCDED9.toInt())
+                    Material.GLASS -> intArrayOf(0xFF6FA8BD.toInt(), 0xFF3C5F70.toInt(), 0xFFCDEAF5.toInt())
+                    Material.STEEL -> intArrayOf(0xFF7E8896.toInt(), 0xFF4A525C.toInt(), 0xFFB4BCC6.toInt())
                     Material.COB -> intArrayOf(0xFFB8916A.toInt(), 0xFF806044.toInt(), 0xFFD4B38C.toInt())
                     Material.EARTH -> intArrayOf(0xFF7A6247.toInt(), 0xFF4E3C2C.toInt(), 0xFFA48A69.toInt())
                     Material.IRON -> intArrayOf(0xFF54606B.toInt(), 0xFF303942.toInt(), 0xFF87939D.toInt())
@@ -624,6 +636,57 @@ class LandScene(context: Context) {
                 Surface.CARDBOARD -> {
                     canvas.drawRect(-hw + 2f * dp, -hh + 2f * dp, hw - 2f * dp, hh - 2f * dp, pSurfaceDark)
                     canvas.drawLine(-hw, 0f, hw, 0f, pSurfaceLight)
+                }
+                Surface.CONCRETE -> {
+                    // Du béton banché : de grands panneaux lisses, leurs joints creux, et
+                    // les trous de banche qui donnent l'échelle. Rien de plus — c'est une
+                    // matière qui se reconnaît à ce qu'elle n'a presque pas de dessin.
+                    val panneau = maxOf(14f * dp, hw / 1.6f)
+                    var x = -hw + panneau
+                    while (x < hw) {
+                        canvas.drawLine(x, -hh, x, hh, pSurfaceDark)
+                        x += panneau
+                    }
+                    if (hh > 10f * dp) {
+                        val y = -hh + 2f * hh * 0.5f
+                        canvas.drawLine(-hw, y, hw, y, pSurfaceDark)
+                        var tx = -hw + panneau / 2f
+                        while (tx < hw) {
+                            canvas.drawCircle(tx, y - 3f * dp, 1.1f * dp, pSurfaceDark)
+                            tx += panneau
+                        }
+                    }
+                    canvas.drawLine(-hw, -hh + dp, hw, -hh + dp, pSurfaceLight)
+                }
+                Surface.GLASS_WALL -> {
+                    // Le mur-rideau : une trame de meneaux, et deux reflets en biais qui
+                    // barrent la baie. Ce sont les reflets qui font lire « vitre » ; sans
+                    // eux, une trame sur du bleu n'est qu'un carrelage.
+                    val cell = maxOf(6f * dp, minOf(hw, hh) / 2.2f)
+                    var x = -hw + cell
+                    while (x < hw) {
+                        canvas.drawLine(x, -hh, x, hh, pSurfaceDark)
+                        x += cell
+                    }
+                    var y = -hh + cell
+                    while (y < hh) {
+                        canvas.drawLine(-hw, y, hw, y, pSurfaceDark)
+                        y += cell
+                    }
+                    pSurfaceLight.strokeWidth = maxOf(1.6f * dp, minOf(hw, hh) * 0.09f)
+                    val biais = minOf(hw, hh) * 1.1f
+                    canvas.drawLine(-hw * 0.55f, hh, -hw * 0.55f + biais, hh - biais, pSurfaceLight)
+                    canvas.drawLine(hw * 0.1f, hh, hw * 0.1f + biais * 0.6f, hh - biais * 0.6f, pSurfaceLight)
+                }
+                Surface.CLADDING -> {
+                    // La tôle nervurée : des nervures serrées, et rien d'autre.
+                    val nervure = maxOf(4f * dp, minOf(hw, hh) / 5f)
+                    var x = -hw + nervure
+                    while (x < hw) {
+                        canvas.drawLine(x, -hh, x, hh, pSurfaceDark)
+                        canvas.drawLine(x + dp, -hh, x + dp, hh, pSurfaceLight)
+                        x += nervure
+                    }
                 }
                 Surface.AUTO -> {
                     when (piece.material) {
@@ -856,6 +919,81 @@ class LandScene(context: Context) {
                 )
                 line(-bellW, bellBottom, bellW, bellBottom, "#6E451B".toColorInt(), 2f)
                 line(0f, bellBottom, 0f, -openingH * 0.62f, "#6E451B".toColorInt(), 1.4f)
+            }
+
+            Decor.WINDOW_BAND -> {
+                // Le bandeau de fenêtres d'un étage moderne : une bande vitrée d'un bout
+                // à l'autre de la façade, refendue par ses meneaux.
+                //
+                // On en dessine **autant qu'il y a d'étages dans le corps**, et non un
+                // seul étiré : quand le budget serre, un corps porte deux ou trois
+                // étages, et une baie unique de six mètres de haut trahirait le
+                // regroupement — c'est justement ce que le regroupement doit cacher.
+                val etage = TargetRules.site(3.1f)
+                val niveaux = ((2f * hh) / etage).toInt().coerceIn(1, 6)
+                val pas = 2f * hh / niveaux
+                val bandeH = minOf(pas * 0.36f, TargetRules.detail(0.75f))
+                val bandeW = hw * 0.86f
+                for (k in 0 until niveaux) {
+                    val cy = -hh + pas * (k + 0.62f)
+                    poly(
+                        listOf(
+                            -bandeW to cy - bandeH,
+                            bandeW to cy - bandeH,
+                            bandeW to cy + bandeH,
+                            -bandeW to cy + bandeH
+                        ),
+                        "#3E5F6E".toColorInt()
+                    )
+                    val meneaux = (bandeW / TargetRules.detail(0.6f)).toInt().coerceIn(2, 7)
+                    for (m in 1 until meneaux) {
+                        val x = -bandeW + 2f * bandeW * m / meneaux
+                        line(x, cy - bandeH, x, cy + bandeH, "#B9BCB8".toColorInt(), 1.1f)
+                    }
+                    // Un reflet en biais dans une travée sur deux : c'est ce qui fait
+                    // qu'une tour de béton se lit comme du verre et pas comme un trou.
+                    if ((k + piece.visualVariant) % 2 == 0) {
+                        line(
+                            -bandeW * 0.55f, cy - bandeH, -bandeW * 0.1f, cy + bandeH,
+                            "#9FD4E4".toColorInt(), 1.6f
+                        )
+                    }
+                }
+            }
+
+            Decor.SHOPFRONT -> {
+                // La vitrine : une baie qui descend au sol, son auvent, et l'enseigne.
+                val baieW = hw * 0.9f
+                val baieH = hh * 0.72f
+                poly(
+                    listOf(
+                        -baieW to -hh * 0.92f,
+                        baieW to -hh * 0.92f,
+                        baieW to baieH * 0.55f,
+                        -baieW to baieH * 0.55f
+                    ),
+                    "#31505C".toColorInt()
+                )
+                val travees = (baieW / TargetRules.detail(0.8f)).toInt().coerceIn(2, 5)
+                for (m in 1 until travees) {
+                    val x = -baieW + 2f * baieW * m / travees
+                    line(x, -hh * 0.92f, x, baieH * 0.55f, "#C6CBC8".toColorInt(), 1.2f)
+                }
+                line(
+                    -baieW * 0.7f, -hh * 0.5f, -baieW * 0.15f, baieH * 0.45f,
+                    "#BFE6F2".toColorInt(), 2f
+                )
+                // L'auvent, incliné, et l'enseigne au-dessus.
+                poly(
+                    listOf(
+                        -baieW to baieH * 0.58f,
+                        baieW to baieH * 0.58f,
+                        baieW * 0.9f to baieH * 0.86f,
+                        -baieW * 0.9f to baieH * 0.86f
+                    ),
+                    if (piece.visualVariant % 2 == 0) "#B4462F".toColorInt() else "#2F6B57".toColorInt()
+                )
+                line(-baieW * 0.75f, hh * 0.78f, baieW * 0.75f, hh * 0.78f, "#E8D9A8".toColorInt(), 2.4f)
             }
 
             Decor.NONE -> Unit

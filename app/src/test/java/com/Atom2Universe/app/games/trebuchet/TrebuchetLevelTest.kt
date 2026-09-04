@@ -95,6 +95,75 @@ class TrebuchetLevelTest {
         }
     }
 
+    /**
+     * Les villes : ce qu'on leur demande est une **densité**, et une densité se mesure.
+     *
+     * Un village pose un bâtiment par plateau, et le relief réserve à chaque plateau une
+     * marge plate de chaque côté plus un entre-deux : deux bâtiments voisins sont donc
+     * séparés d'une vingtaine de mètres de terrain nu. Une ville tient tout entière dans
+     * **un seul groupe**, donc sur un seul plateau, et ses immeubles ne sont plus
+     * séparés que par le `gap` du générateur. Ce test mesure exactement ça : le plus
+     * grand vide entre deux bâtiments voisins.
+     */
+    @Test
+    fun `une ville est dense, haute et dans le budget`() {
+        val precedent = TargetRules.style
+        try {
+            TargetRules.style = TargetStyle.ARCADE
+            var vues = 0
+            for (seed in 1L..60L) {
+                val kind = TargetGenerator.kindFor(seed, TargetStyle.ARCADE)
+                if (kind != SiteKind.VILLE && kind != SiteKind.METROPOLE) continue
+                vues++
+                val lvl = TargetGenerator.generate(seed)
+                val s = lvl.structure
+
+                // Le plus grand vide de la façade : on balaie l'emprise et on mesure la
+                // plus longue tranche que ne traverse aucun bloc.
+                val pas = 2f
+                var vide = 0f
+                var pire = 0f
+                var x = s.left
+                while (x < s.right) {
+                    val occupe = s.blocks.any { kotlin.math.abs(it.x - x) <= it.halfSpan() }
+                    vide = if (occupe) 0f else vide + pas
+                    if (vide > pire) pire = vide
+                    x += pas
+                }
+                println(
+                    "VILLE graine $seed ${TargetGenerator.label(lvl)} : ${s.blocks.size} corps, " +
+                        "${"%.0f".format(s.baseHeight)} m de haut sur ${"%.0f".format(s.width)} m, " +
+                        "plus grand vide ${"%.0f".format(pire)} m, pile ${s.deepestStack()}"
+                )
+                assertTrue("graine $seed : ${s.blocks.size} corps", s.blocks.size <= TargetRules.BODY_BUDGET)
+                assertTrue(
+                    "graine $seed : pile de ${s.deepestStack()}",
+                    s.deepestStack() <= TargetRules.MAX_STACKED_BODIES
+                )
+                assertTrue("graine $seed : ville trop basse (${s.baseHeight} m)", s.baseHeight > 40f)
+                assertTrue("graine $seed : ville trop courte (${s.width} m)", s.width > 120f)
+                assertTrue(
+                    "graine $seed : la ville a un trou de ${"%.0f".format(pire)} m — " +
+                        "ce n'est plus une rue, c'est un terrain vague",
+                    pire < 12f
+                )
+            }
+            assertTrue("aucune ville dans les soixante premières graines", vues >= 4)
+        } finally {
+            TargetRules.style = precedent
+        }
+    }
+
+    @Test
+    fun `les villes existent dans les deux temperaments`() {
+        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.ARCADE) }.toSet()
+        val realiste = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.REALISTE) }.toSet()
+        for (kind in listOf(SiteKind.VILLE, SiteKind.METROPOLE)) {
+            assertTrue("$kind manque en arcade", kind in arcade)
+            assertTrue("$kind manque en réaliste", kind in realiste)
+        }
+    }
+
     @Test
     fun `un niveau charge tient debout a cote de la machine`() {
         val g = TrebuchetGame()
