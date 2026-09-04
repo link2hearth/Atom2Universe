@@ -168,14 +168,18 @@ class TrebuchetLevelTest {
         val precedent = TargetRules.style
         try {
             TargetRules.style = TargetStyle.JEU
-            val hameau = TargetGenerator.generate(1L).structure
-            val chateau = TargetGenerator.generate(15L).structure
-            val metropole = TargetGenerator.generate(19L).structure
-            for ((nom, s) in listOf("hameau" to hameau, "château" to chateau, "métropole" to metropole)) {
+            val niveauHameau = TargetGenerator.generate(1L)
+            val niveauChateau = TargetGenerator.generate(15L)
+            val niveauMetropole = TargetGenerator.generate(19L)
+            val hameau = niveauHameau.structure
+            val chateau = niveauChateau.structure
+            val metropole = niveauMetropole.structure
+            for (lvl in listOf(niveauHameau, niveauChateau, niveauMetropole)) {
                 println(
-                    "OBJECTIF $nom : difficulté ${"%.2f".format(TargetGenerator.difficulty(s))}, " +
-                        "${TargetGenerator.par(s)} tirs touchés, " +
-                        "${NeutrinoRewards.trebuchet(TargetGenerator.difficulty(s))} neutrinos"
+                    "OBJECTIF ${lvl.kind} à ${"%.0f".format(lvl.distance)} m : " +
+                        "difficulté ${"%.2f".format(TargetGenerator.difficulty(lvl.structure))}, " +
+                        "${TargetGenerator.par(lvl)} tirs touchés, " +
+                        "${NeutrinoRewards.trebuchet(TargetGenerator.difficulty(lvl.structure))} neutrinos"
                 )
             }
             assertTrue(
@@ -189,17 +193,46 @@ class TrebuchetLevelTest {
             // L'objectif et la récompense montent ensemble, jamais l'un sans l'autre.
             assertTrue(
                 "l'objectif du hameau n'est pas plus court que celui de la métropole",
-                TargetGenerator.par(hameau) < TargetGenerator.par(metropole)
+                TargetGenerator.par(niveauHameau) < TargetGenerator.par(niveauMetropole)
             )
             assertTrue(
                 "le hameau ne paie pas moins que la métropole",
                 NeutrinoRewards.trebuchet(TargetGenerator.difficulty(hameau)) <
                     NeutrinoRewards.trebuchet(TargetGenerator.difficulty(metropole))
             )
-            // Et l'objectif reste atteignable : le banc rase un hameau en quatre tirs
-            // touchés et une métropole en dix.
-            assertTrue("objectif de hameau hors barème", TargetGenerator.par(hameau) in 3..7)
-            assertTrue("objectif de métropole hors barème", TargetGenerator.par(metropole) in 9..15)
+            // L'objectif vaut trois fois le plancher du banc, parce que le banc ne rate
+            // jamais et qu'un joueur si — voir [TargetGenerator.par]. Le banc rase un
+            // hameau en quatre tirs et une métropole en dix ; en jeu, comptez-en une
+            // quarantaine pour la métropole.
+            assertTrue(
+                "objectif de hameau hors barème : ${TargetGenerator.par(niveauHameau)}",
+                TargetGenerator.par(niveauHameau) in 10..22
+            )
+            assertTrue(
+                "objectif de métropole hors barème : ${TargetGenerator.par(niveauMetropole)}",
+                TargetGenerator.par(niveauMetropole) in 30..55
+            )
+
+            // **Et le même site plus loin coûte plus cher.** C'est la variable qui
+            // manquait à l'objectif : le boulet paie son voyage, il ne lui reste que
+            // 9 % de son énergie après quatre cents mètres.
+            val proche = TargetLevel(
+                0L, niveauMetropole.kind, TargetGenerator.MIN_DISTANCE, Wind.CALM,
+                metropole, niveauMetropole.terrain, niveauMetropole.shape
+            )
+            val loin = TargetLevel(
+                0L, niveauMetropole.kind, TargetGenerator.MAX_DISTANCE, Wind.CALM,
+                metropole, niveauMetropole.terrain, niveauMetropole.shape
+            )
+            println(
+                "PORTÉE la même métropole : ${TargetGenerator.par(proche)} tirs à " +
+                    "${TargetGenerator.MIN_DISTANCE.toInt()} m, ${TargetGenerator.par(loin)} à " +
+                    "${TargetGenerator.MAX_DISTANCE.toInt()} m"
+            )
+            assertTrue(
+                "la distance ne change rien à l'objectif",
+                TargetGenerator.par(loin) > TargetGenerator.par(proche) + 5
+            )
         } finally {
             TargetRules.style = precedent
         }
@@ -313,6 +346,20 @@ class TrebuchetLevelTest {
      * jeu trivial ou impossible. On modélise un joueur qui vise correctement — à chaque
      * tir, le boulet part sur la pièce debout la plus à gauche, au tiers de sa hauteur —
      * et on compte les coups.
+     *
+     * **Ce banc mesure un plancher, pas une partie.** Il faut le dire fort, parce que
+     * ses chiffres ont l'air d'une durée de niveau et n'en sont pas : le boulet est posé
+     * à six mètres de sa cible, à l'horizontale, au tiers de sa hauteur, et il ne rate
+     * **jamais**. Aucun joueur ne tire comme ça. Un vrai tir arrive en cloche, touche
+     * parfois des gravats, parfois le sol, parfois le toit d'une tour — et le toit est
+     * le pire endroit, on y emporte la couronne pendant que les poteaux tiennent.
+     * Rapporté au jeu réel, compter deux à quatre fois ces chiffres est plus proche.
+     *
+     * L'énergie, elle, compte moins qu'on ne croit. Mesuré sur ce même banc en faisant
+     * varier la vitesse d'impact : à 23 kJ — l'énergie que délivre la machine de départ,
+     * boulet de douze kilos largué à 62 m/s — la métropole tombe en dix-neuf tirs ; à
+     * 135 kJ, en treize. Six fois plus d'énergie ne divise pas le nombre de tirs par
+     * deux. Ce qui décide, c'est **où** le boulet arrive.
      *
      * Le barème mesuré à l'écriture de ce test : hameau 4 coups, moulin 6, village 10,
      * château 10, centre-ville 15, métropole 10.

@@ -855,7 +855,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                 R.string.trebuchet_level_cleared,
                 TargetGenerator.label(lvl),
                 game.hitCount,
-                TargetGenerator.par(lvl.structure)
+                TargetGenerator.par(lvl)
             ) + mention
             lvl != null -> getString(
                 R.string.trebuchet_level,
@@ -863,7 +863,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                 (game.targets.score * 100f).toInt(),
                 (game.targets.winRatio * 100f).toInt(),
                 game.hitCount,
-                TargetGenerator.par(lvl.structure)
+                TargetGenerator.par(lvl)
             ) + mention
             best > 0f -> getString(R.string.trebuchet_best, fmt(best))
             else -> ""

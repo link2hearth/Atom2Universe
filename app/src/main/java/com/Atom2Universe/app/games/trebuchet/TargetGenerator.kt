@@ -814,16 +814,40 @@ object TargetGenerator {
      * L'objectif du niveau : en combien de **tirs qui portent** il devrait tomber.
      *
      * Les tirs d'ajustement sont gratuits — voir [TrebuchetGame.hitCount] — donc ce
-     * chiffre-ci note la visée et non le tâtonnement. Il est calé sur le barème mesuré
-     * par le banc (`TrebuchetLevelTest`) avec la machine de départ : hameau 4 coups,
-     * moulin 6, village et château 10, métropole 10, centre-ville 15. Un joueur qui
-     * règle bien sa machine doit pouvoir faire mieux, sinon ce n'est pas un objectif,
-     * c'est un plafond.
+     * chiffre-ci note la visée et non le tâtonnement.
+     *
+     * Il tient de **deux** choses, et la seconde a longtemps manqué.
+     *
+     * Ce que le site oppose ([difficulty]) : de quoi il est fait, combien il en faut.
+     *
+     * Et **la distance**, qui compte tout autant. Le boulet paie son voyage : mesuré au
+     * banc sur un tir tendu à 150 m/s, il lui reste 97 % de son énergie après six mètres,
+     * 64 % après cent, 40 % après deux cents, et **9 % après quatre cents**. Un même site
+     * posé à quatre cents mètres demande donc une force d'impact que le joueur n'obtient
+     * qu'en réglant une machine bien plus grosse — et, en attendant, beaucoup plus de
+     * tirs. Un objectif aveugle à la distance annonçait le même chiffre pour un hameau à
+     * cent mètres et pour le même hameau à cinq cents.
+     *
+     * **Ce chiffre ne vient pas du banc de `TrebuchetLevelTest`, et il ne faut pas le
+     * recalibrer dessus.** Ce banc pose son boulet à six mètres de sa cible, à
+     * l'horizontale, et ne rate jamais : il mesure un plancher, pas une partie. Il rase
+     * une métropole en dix tirs quand il en faut une quarantaine en jouant. L'écart n'est
+     * pas l'énergie — de 23 kJ à 135 kJ, le banc ne passe que de dix-neuf tirs à treize —
+     * c'est le voyage, l'incidence du tir, et les coups qui tombent à côté.
      */
-    fun par(s: Structure): Int = (PAR_BASE + PAR_SPAN * difficulty(s)).roundToInt()
+    fun par(level: TargetLevel): Int {
+        val portee = ((level.distance - MIN_DISTANCE) / (MAX_DISTANCE - MIN_DISTANCE))
+            .coerceIn(0f, 1f)
+        val facteur = PAR_NEAR + (PAR_FAR - PAR_NEAR) * portee
+        return ((PAR_BASE + PAR_SPAN * difficulty(level.structure)) * facteur).roundToInt()
+    }
 
-    private const val PAR_BASE = 4f
-    private const val PAR_SPAN = 9f
+    private const val PAR_BASE = 12f
+    private const val PAR_SPAN = 27f
+
+    /** Le facteur de distance : à portée minimale, puis à portée maximale. */
+    private const val PAR_NEAR = 0.85f
+    private const val PAR_FAR = 1.35f
 
     /** Un nom lisible, pour l'écran de fin de niveau. */
     fun label(level: TargetLevel): String = buildString {
