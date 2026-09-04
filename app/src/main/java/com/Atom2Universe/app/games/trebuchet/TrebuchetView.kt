@@ -584,6 +584,36 @@ class TrebuchetView @JvmOverloads constructor(
 
     private val tmpPath = Path()
 
+    /**
+     * Les segments d'une polyligne, prêts pour un seul `drawLines`.
+     *
+     * Une trajectoire assemblée en `Path` est un tracé long, fin et large comme
+     * l'écran : Skia refuse de le confier à la carte graphique et le rastérise au
+     * processeur. Mesuré sur la tablette le 4 septembre 2026, les fantômes coûtaient
+     * **+60 % de processeur** à l'application, dont 1 140 ms sur 12 s dans
+     * `SoftwarePathRenderer` — et pendant que la caméra bouge, [drawTraces] repeint
+     * ces polylignes à chaque image au lieu de recoller son calque.
+     *
+     * En segments indépendants, il n'y a plus de masque. Le pinceau des fantômes comme
+     * celui de la traînée s'arrêtent net au bout du trait (`Cap.BUTT` par défaut), donc
+     * deux segments voisins ne se recouvrent pas : leur translucidité ne s'additionne
+     * nulle part. Ce qu'on perd, c'est la jointure en onglet des virages — une encoche
+     * à l'extérieur du coude. Le couloir de simplification garde les points à
+     * [SIMPLIFY_PX] près, donc les segments consécutifs sont quasi alignés et l'encoche
+     * reste sous le pixel.
+     */
+    private var linePts = FloatArray(1024)
+    private var lineCount = 0
+
+    private fun addSegment(x0: Float, y0: Float, x1: Float, y1: Float) {
+        if (lineCount + 4 > linePts.size) linePts = linePts.copyOf(linePts.size * 2)
+        linePts[lineCount] = x0
+        linePts[lineCount + 1] = y0
+        linePts[lineCount + 2] = x1
+        linePts[lineCount + 3] = y1
+        lineCount += 4
+    }
+
     private val corners = FloatArray(8)
     private val partPose = FloatArray(3)
     private val tip = FloatArray(2)
@@ -1822,12 +1852,9 @@ class TrebuchetView @JvmOverloads constructor(
         if (count < 4) return
         val w = width.toFloat()
         val h = height.toFloat()
-        tmpPath.reset()
+        lineCount = 0
         var px = sx(pts[0])
         var py = sy(pts[1])
-        var lastX = Float.NaN
-        var lastY = Float.NaN
-        var drew = false
         var hx = Float.NaN
         var hy = Float.NaN
         var dirX = 0f
@@ -1837,13 +1864,7 @@ class TrebuchetView @JvmOverloads constructor(
         fun poser(cx: Float, cy: Float) {
             val outside = (px < 0f && cx < 0f) || (px > w && cx > w) ||
                 (py < 0f && cy < 0f) || (py > h && cy > h)
-            if (!outside) {
-                if (px != lastX || py != lastY) tmpPath.moveTo(px, py)
-                tmpPath.lineTo(cx, cy)
-                lastX = cx
-                lastY = cy
-                drew = true
-            }
+            if (!outside) addSegment(px, py, cx, cy)
             px = cx
             py = cy
         }
@@ -1884,7 +1905,7 @@ class TrebuchetView @JvmOverloads constructor(
             hy = cy
         }
         if (!hx.isNaN()) poser(hx, hy)
-        if (drew) canvas.drawPath(tmpPath, paint)
+        if (lineCount > 0) canvas.drawLines(linePts, 0, lineCount, paint)
     }
 
     /**

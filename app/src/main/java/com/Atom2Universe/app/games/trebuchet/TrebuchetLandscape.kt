@@ -9,6 +9,7 @@ import android.graphics.Path
 import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.graphics.Typeface
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.Shape
@@ -128,6 +129,30 @@ class LandScene(context: Context) {
         }
     }
 
+    /**
+     * Les gravats se peignent à part, et non plus par le système de fêlures.
+     *
+     * Un bloc rompu est remplacé par des éclats **neufs** : leur usure repart de zéro,
+     * donc leur niveau de fêlure aussi. À l'écran, une pierre bien craquelée qu'on
+     * achevait voyait ses fissures disparaître d'un coup — le boulet avait l'air de
+     * réparer. Les fêlures gardent donc leur seul sens, « pierre entamée mais debout »,
+     * et ce qui est tombé se reconnaît autrement : la matière éteinte, tirée vers la
+     * poussière, et deux coins entamés.
+     */
+    private fun rubbleColor(c: Int): Int = ColorUtils.blendARGB(c, "#4A4640".toColorInt(), 0.45f)
+
+    private fun rubbleTint(colors: IntArray) {
+        for (i in colors.indices) colors[i] = rubbleColor(colors[i])
+    }
+
+    private val targetRubbleFills = targetFills.map { src ->
+        Paint(src).apply { color = rubbleColor(src.color) }
+    }
+
+    private val targetRubbleEdges = targetEdges.map { src ->
+        Paint(src).apply { color = rubbleColor(src.color) }
+    }
+
     /** Les fêlures : des traits sombres, d'autant plus nombreux que la pierre a pris. */
     private val pCrack = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.argb(150, 20, 16, 12)
@@ -188,10 +213,37 @@ class LandScene(context: Context) {
     /** Le profil du sol, refait à chaque image : il ne dépend que du cadrage. */
     private val groundPath = Path()
 
-    /** Un chemin par matériau, rempli à neuf à chaque image. */
-    private val targetPaths = Array(targetFills.size) { Path() }
+    /**
+     * La crête du sol seule, sans la fermeture vers le bas de l'écran.
+     *
+     * Elle existe pour que le trait d'herbe n'ait jamais à être tracé deux fois : un
+     * chemin qui traverse tout l'écran est rastérisé par le processeur, pas par la
+     * carte graphique, et chaque tracé en trop se paie en millisecondes.
+     */
+    private val grassPath = Path()
+
+    /** Le chemin d'**une** pierre, réutilisé d'une pierre à l'autre. */
+    private val piecePath = Path()
+
+    /** Quels matériaux sont visibles à l'image : les autres, on saute leur passe. */
     private val targetUsed = BooleanArray(targetFills.size)
-    private val crackPath = Path()
+    /**
+     * Les fêlures, en segments plutôt qu'en chemin.
+     *
+     * Elles étaient toutes réunies dans un seul `Path` pour ne faire qu'un tracé.
+     * Mesuré sur la tablette le 4 septembre 2026, c'était **la seule** source de
+     * rastérisation logicielle du jeu : site neuf, `hwuiTask` à zéro ; les mêmes
+     * bâtiments une fois fêlés, 809 ms de processeur sur 12 s, tous dans
+     * `GrSWMaskHelper` — un chemin multi-contour large comme le site entier, que Skia
+     * refuse de confier à la carte graphique.
+     *
+     * `drawLines` fait le même dessin en un appel, sans masque : chaque fêlure est un
+     * segment droit isolé, jamais raccordé à une autre. La seule différence tient aux
+     * croisements, au troisième niveau de fêlure, où le trait se superpose maintenant
+     * à lui-même et fonce d'un cran sur quelques pixels.
+     */
+    private var crackPts = FloatArray(512)
+    private var crackCount = 0
 
     /**
      * Les peintures du **décor**, celles que la nuit assombrit.
@@ -208,6 +260,7 @@ class LandScene(context: Context) {
         ArrayList<Paint>().apply {
             add(pGround); add(pGrass); add(pCrack)
             addAll(targetFills); addAll(targetEdges)
+            addAll(targetRubbleFills); addAll(targetRubbleEdges)
             add(pDecorFill); add(pDecorLine)
             add(pSurfaceFill); add(pSurfaceDark); add(pSurfaceLight)
             // La végétation s'éteint avec le jour comme le reste du sol. Les oiseaux
@@ -294,22 +347,24 @@ class LandScene(context: Context) {
                 canvas.drawLine(0f, groundY, w, groundY, pGrass)
             }
         } else {
-            groundPath.reset()
-            groundPath.moveTo(0f, sy(terrain.heightAt(leftWorld)))
+            // La crête d'abord, ouverte : c'est elle que l'herbe suivra.
+            grassPath.reset()
+            grassPath.moveTo(0f, sy(terrain.heightAt(leftWorld)))
             for (n in terrain.nodes) {
                 if (n.x <= leftWorld || n.x >= rightWorld) continue
-                groundPath.lineTo(sx(n.x), sy(n.y))
+                grassPath.lineTo(sx(n.x), sy(n.y))
             }
-            groundPath.lineTo(w, sy(terrain.heightAt(rightWorld)))
-            // L'herbe d'abord, sur la ligne seule ; puis on referme le chemin vers le
-            // bas de l'écran pour le remplissage. Dans l'autre ordre, le trait d'herbe
-            // ferait le tour du remplissage et soulignerait les bords de l'écran.
-            canvas.drawPath(groundPath, pGrass)
+            grassPath.lineTo(w, sy(terrain.heightAt(rightWorld)))
+            // Le remplissage reprend la même crête, refermée vers le bas de l'écran.
+            // On remplit d'abord, on trace l'herbe ensuite : le trait reste entier
+            // par-dessus la terre, et comme il suit le chemin *ouvert*, il ne fait
+            // pas le tour du remplissage et ne souligne pas les bords de l'écran.
+            groundPath.set(grassPath)
             groundPath.lineTo(w, h)
             groundPath.lineTo(0f, h)
             groundPath.close()
             canvas.drawPath(groundPath, pGround)
-            canvas.drawPath(groundPath, pGrass)
+            canvas.drawPath(grassPath, pGrass)
         }
 
         // Graduations à partir du pied de la machine. Le pas s'élargit quand on
@@ -435,40 +490,34 @@ class LandScene(context: Context) {
         val leftWorld = camX - viewWidth / 2f - 5f
         val rightWorld = camX + viewWidth / 2f + 5f
 
-        // Toutes les pierres d'un même matériau dans un seul chemin.
+        // Un morceau de pierre, un tracé — et non plus toutes les pierres d'un
+        // matériau dans un seul chemin.
         //
-        // Un site fait jusqu'à cent trente corps, souvent en plusieurs morceaux : les
-        // dessiner un par un, c'était trois cents appels de tracé par image, chacun
-        // avec sa mise en place d'anticrénelage, pour une surface totale qui tient
-        // dans un coin de l'écran. Regroupés par matériau, il en reste deux par
-        // matériau présent — le remplissage et le contour — et le dessin ne dépend
-        // plus du nombre de pierres mais de ce qu'elles couvrent.
-        for (path in targetPaths) path.reset()
+        // Le regroupement d'avant ne faisait bien que deux tracés par matériau, mais
+        // chacun couvrait tout le site : un chemin concave de cette taille, Skia ne
+        // sait pas le confier à la carte graphique, il le rastérise au processeur et
+        // téléverse le masque obtenu. Mesuré sur la tablette le 4 septembre 2026 :
+        // `SoftwarePathRenderer` prenait 29 % du processeur de l'application ;
+        // regrouper par pierre au lieu de par matériau l'a ramené à 21 %, mais en
+        // doublant le temps passé en `memset` — beaucoup de petits masques au lieu
+        // d'un gros, car une pierre est un corps composé, donc multi-contour.
+        // Descendre au morceau donne enfin la seule forme sans masque du tout :
+        // le quadrilatère convexe, et le cercle.
+        //
+        // L'ordre entre matériaux est conservé : c'est le seul qui se voie, quand
+        // deux pierres de matières différentes se chevauchent après un impact.
         java.util.Arrays.fill(targetUsed, false)
-        crackPath.reset()
-        var cracked = false
+        crackCount = 0
 
         for (p in field.pieces) {
             val b = p.body
             if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
-            val i = p.material.ordinal
-            val path = targetPaths[i]
-            if (p.block.silhouette == Silhouette.GABLE_ROOF) {
-                appendGable(path, p)
-            } else {
-                for (k in b.parts.indices) appendPart(path, b, k)
-            }
-            targetUsed[i] = true
-            if (p.crackLevel > 0) {
-                appendCracks(crackPath, b, p.crackLevel)
-                cracked = true
-            }
+            targetUsed[p.material.ordinal] = true
+            if (p.debris) appendChips(b, p.visualVariant)
+            else if (p.crackLevel > 0) appendCracks(b, p.crackLevel)
         }
 
-        for (i in targetPaths.indices) {
-            if (!targetUsed[i]) continue
-            canvas.drawPath(targetPaths[i], targetFills[i])
-        }
+        drawPieces(canvas, leftWorld, rightWorld, targetFills, targetRubbleFills, spoke = false)
         // Les matières sont peintes dans le repère de chaque pierre : les tuiles et
         // les planches suivent donc un toit qui tombe au lieu de glisser à sa surface.
         for (p in field.pieces) {
@@ -476,10 +525,7 @@ class LandScene(context: Context) {
             if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
             drawSurface(canvas, p)
         }
-        for (i in targetPaths.indices) {
-            if (!targetUsed[i]) continue
-            canvas.drawPath(targetPaths[i], targetEdges[i])
-        }
+        drawPieces(canvas, leftWorld, rightWorld, targetEdges, targetRubbleEdges, spoke = true)
         // Le décor peint par-dessus, après le remplissage et avant les fêlures : une
         // fenêtre doit se voir sur son mur, et une pierre fêlée doit garder sa fêlure
         // visible même là où elle recouvre un décor.
@@ -489,8 +535,45 @@ class LandScene(context: Context) {
             if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
             appendDecor(canvas, p)
         }
-        if (cracked) canvas.drawPath(crackPath, pCrack)
+        if (crackCount > 0) canvas.drawLines(crackPts, 0, crackCount, pCrack)
 
+    }
+
+    /**
+     * Chaque morceau de pierre visible, dessiné à part, matériau par matériau.
+     *
+     * Rien n'est mis en commun dans un chemin : ni les pierres d'un même matériau,
+     * ni même les morceaux d'une même pierre. Le rendu est pourtant identique au
+     * pixel près — les couleurs sont opaques, donc l'union de deux remplissages qui
+     * se recouvrent donne la même chose qu'un remplissage unique ; et un chemin
+     * groupé traçait déjà le contour de chacun de ses morceaux.
+     *
+     * [spoke] n'a de sens qu'à la passe des contours : voir [drawPart].
+     */
+    private fun drawPieces(
+        canvas: Canvas,
+        leftWorld: Float,
+        rightWorld: Float,
+        paints: List<Paint>,
+        rubble: List<Paint>,
+        spoke: Boolean,
+    ) {
+        for (m in targetUsed.indices) {
+            if (!targetUsed[m]) continue
+            for (p in targets.pieces) {
+                if (p.material.ordinal != m) continue
+                val b = p.body
+                if (b.x + b.boundingRadius < leftWorld || b.x - b.boundingRadius > rightWorld) continue
+                val paint = if (p.debris) rubble[m] else paints[m]
+                if (p.block.silhouette == Silhouette.GABLE_ROOF) {
+                    piecePath.reset()
+                    appendGable(piecePath, p)
+                    canvas.drawPath(piecePath, paint)
+                } else {
+                    for (k in b.parts.indices) drawPart(canvas, b, k, paint, spoke)
+                }
+            }
+        }
     }
 
     /** Peint les joints, fibres et rangées qui font lire la matière au premier coup d'œil. */
@@ -553,6 +636,7 @@ class LandScene(context: Context) {
                     else -> intArrayOf(targetFills[piece.material.ordinal].color, targetEdges[piece.material.ordinal].color, Color.WHITE)
                 }
             }
+            if (piece.debris) rubbleTint(colors)
             pSurfaceFill.color = colors[0]
             canvas.drawPath(decorPath, pSurfaceFill)
             pSurfaceDark.color = colors[1]
@@ -741,6 +825,7 @@ class LandScene(context: Context) {
         decorPath.lineTo(maxX, bottom)
         decorPath.close()
         canvas.clipPath(decorPath)
+        if (piece.debris) rubbleTint(colors)
         pSurfaceFill.color = colors[0]
         canvas.drawPath(decorPath, pSurfaceFill)
         pSurfaceDark.color = colors[1]
@@ -1000,15 +1085,7 @@ class LandScene(context: Context) {
         }
     }
 
-    /**
-     * Les fêlures d'une pierre entamée : un trait au premier palier, une croix au
-     * deuxième, une étoile au troisième.
-     *
-     * C'est le seul retour que le joueur ait sur un coup qui a porté sans casser, et
-     * sans lui un tir qui enlève la moitié de la vie d'une assise ressemble exactement
-     * à un tir qui n'a rien fait.
-     */
-    private fun appendCracks(path: Path, b: PhysBody, level: Int) {
+    private fun appendCracks(b: PhysBody, level: Int) {
         for (i in b.parts.indices) {
             val part = b.parts[i]
             if (part.shape == Shape.CIRCLE) continue
@@ -1019,52 +1096,97 @@ class LandScene(context: Context) {
             val hh = part.halfH * camScale * 0.8f
             if (hw < 2f * dp || hh < 2f * dp) continue
             // La rotation se fait à la main plutôt qu'avec la toile : c'est le prix à
-            // payer pour que toutes les fêlures tiennent dans un seul chemin, et donc
-            // dans un seul tracé.
+            // payer pour que toutes les fêlures tiennent dans un seul tracé.
             val a = -partPose[2]
             val ca = cos(a)
             val sa = sin(a)
-            crackLine(path, cx, cy, ca, sa, -hw, -hh * 0.4f, hw * 0.2f, hh)
-            if (level >= 2) crackLine(path, cx, cy, ca, sa, hw, -hh, -hw * 0.3f, hh * 0.5f)
+            crackLine(cx, cy, ca, sa, -hw, -hh * 0.4f, hw * 0.2f, hh)
+            if (level >= 2) crackLine(cx, cy, ca, sa, hw, -hh, -hw * 0.3f, hh * 0.5f)
             if (level >= 3) {
-                crackLine(path, cx, cy, ca, sa, -hw, hh * 0.6f, hw, hh * 0.2f)
-                crackLine(path, cx, cy, ca, sa, -hw * 0.2f, -hh, hw * 0.4f, hh * 0.3f)
+                crackLine(cx, cy, ca, sa, -hw, hh * 0.6f, hw, hh * 0.2f)
+                crackLine(cx, cy, ca, sa, -hw * 0.2f, -hh, hw * 0.4f, hh * 0.3f)
+            }
+        }
+    }
+
+    /**
+     * Les deux coins entamés d'un gravat.
+     *
+     * Ils remplacent les fêlures sur ce qui est déjà tombé, et se choisissent une fois
+     * pour toutes à partir de [TargetPiece.visualVariant] : un éclat qui roule ne doit
+     * pas voir ses entailles changer de place à chaque image. Ils passent par le même
+     * tampon de segments que les fêlures, donc par le même unique `drawLines`.
+     */
+    private fun appendChips(b: PhysBody, variant: Int) {
+        for (i in b.parts.indices) {
+            val part = b.parts[i]
+            if (part.shape == Shape.CIRCLE) continue
+            b.partWorld(i, partPose)
+            val cx = sx(partPose[0])
+            val cy = sy(partPose[1])
+            val hw = part.halfW * camScale
+            val hh = part.halfH * camScale
+            if (hw < 2.5f * dp || hh < 2.5f * dp) continue
+            val a = -partPose[2]
+            val ca = cos(a)
+            val sa = sin(a)
+            for (k in 0..1) {
+                val corner = (variant + i * 3 + k * 2) % 4
+                val ex = if (corner == 0 || corner == 3) -1f else 1f
+                val ey = if (corner < 2) -1f else 1f
+                val cw = hw * (0.20f + 0.09f * ((variant + corner) % 3))
+                val ch = hh * (0.20f + 0.09f * ((variant + i + corner) % 3))
+                crackLine(cx, cy, ca, sa, ex * hw, ey * (hh - ch), ex * (hw - cw), ey * hh)
             }
         }
     }
 
     /** Un trait de fêlure, exprimé dans le repère de la pierre puis tourné. */
     private fun crackLine(
-        path: Path, cx: Float, cy: Float, ca: Float, sa: Float,
+        cx: Float, cy: Float, ca: Float, sa: Float,
         x0: Float, y0: Float, x1: Float, y1: Float
     ) {
-        path.moveTo(cx + x0 * ca - y0 * sa, cy + x0 * sa + y0 * ca)
-        path.lineTo(cx + x1 * ca - y1 * sa, cy + x1 * sa + y1 * ca)
+        if (crackCount + 4 > crackPts.size) {
+            crackPts = crackPts.copyOf(crackPts.size * 2)
+        }
+        crackPts[crackCount] = cx + x0 * ca - y0 * sa
+        crackPts[crackCount + 1] = cy + x0 * sa + y0 * ca
+        crackPts[crackCount + 2] = cx + x1 * ca - y1 * sa
+        crackPts[crackCount + 3] = cy + x1 * sa + y1 * ca
+        crackCount += 4
     }
 
     /**
-     * Verse une forme dans un chemin, sans la dessiner.
+     * Un morceau de pierre, dessiné pour lui-même.
      *
-     * C'est ce qui permet de regrouper des dizaines de pierres en un tracé unique.
-     * Un segment n'a pas d'aire : le rayon d'un galet, ajouté au même chemin, ne
-     * change rien au remplissage et se voit au contour, exactement comme avant.
+     * C'est la seule forme que Skia sait envoyer telle quelle à la carte graphique :
+     * un quadrilatère **convexe**, ou un cercle. Dès qu'on en met deux dans le même
+     * chemin, le chemin devient multi-contour, Skia le rastérise au processeur et
+     * fabrique un masque — c'est ce qui coûtait 29 % du processeur de l'application
+     * le 4 septembre 2026, et encore 21 % quand on ne groupait plus que par pierre.
+     *
+     * [spoke] : le rayon qui montre la rotation d'un galet. Il ne se voit qu'au trait,
+     * et il n'a jamais rien rempli — sa surface est nulle.
      */
-    private fun appendPart(path: Path, b: PhysBody, part: Int) {
+    private fun drawPart(canvas: Canvas, b: PhysBody, part: Int, paint: Paint, spoke: Boolean) {
         val p = b.parts[part]
         if (p.shape == Shape.CIRCLE) {
             b.partWorld(part, partPose)
             val cx = sx(partPose[0])
             val cy = sy(partPose[1])
             val r = p.radius * camScale
-            path.addCircle(cx, cy, r, Path.Direction.CW)
-            path.moveTo(cx, cy)
-            path.lineTo(cx + r * cos(partPose[2]), cy - r * sin(partPose[2]))
+            canvas.drawCircle(cx, cy, r, paint)
+            if (spoke) {
+                canvas.drawLine(cx, cy, cx + r * cos(partPose[2]), cy - r * sin(partPose[2]), paint)
+            }
             return
         }
         b.partCorners(part, corners)
-        path.moveTo(sx(corners[0]), sy(corners[1]))
-        for (i in 1 until 4) path.lineTo(sx(corners[i * 2]), sy(corners[i * 2 + 1]))
-        path.close()
+        piecePath.reset()
+        piecePath.moveTo(sx(corners[0]), sy(corners[1]))
+        for (i in 1 until 4) piecePath.lineTo(sx(corners[i * 2]), sy(corners[i * 2 + 1]))
+        piecePath.close()
+        canvas.drawPath(piecePath, paint)
     }
 
     /**
