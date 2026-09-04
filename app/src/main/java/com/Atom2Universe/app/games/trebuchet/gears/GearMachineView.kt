@@ -15,8 +15,10 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.edit
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.ShotCamera
+import com.Atom2Universe.app.games.trebuchet.TREBUCHET_PREFS
 import com.Atom2Universe.app.games.trebuchet.ShotSite
 import com.Atom2Universe.app.games.trebuchet.TimeScrub
 import com.Atom2Universe.app.games.trebuchet.LandScene
@@ -356,6 +358,26 @@ class GearMachineView @JvmOverloads constructor(
      */
     private var panelMeasured = false
     private var panelWidth = 0f
+
+    /**
+     * Où le tableau de bord se dessine vraiment, en pixels d'écran.
+     *
+     * Relevé à chaque image plutôt que recalculé au toucher : sa largeur se mesure sur
+     * le texte affiché et sa hauteur dépend du lanceur, donc la seule géométrie sûre est
+     * celle qu'on vient de peindre. Vide tant qu'il n'y a pas de lanceur — il n'y a
+     * alors pas de panneau, et rien à replier.
+     */
+    private val panelBounds = RectF()
+
+    /**
+     * Le panneau replié : il ne reste qu'une bande, en haut à droite.
+     *
+     * Onze lignes de chiffres valent quand on règle une machine, et gênent quand on
+     * regarde voler un boulet. Le double appui bascule entre les deux, sur le panneau
+     * comme sur la bande, et le choix survit à la partie : quelqu'un qui a rangé son
+     * tableau de bord ne veut pas le retrouver ouvert au lancement suivant.
+     */
+    private var panelCollapsed = prefsPanel().getBoolean(KEY_PANEL_COLLAPSED, false)
 
     /**
      * De combien le tableau de bord est agrandi, et depuis quelle taille il repart.
@@ -1322,8 +1344,13 @@ class GearMachineView @JvmOverloads constructor(
      * c'est la hauteur qui manque quand l'écran est couché.
      */
     private fun drawLauncherPanel(canvas: Canvas) {
+        panelBounds.setEmpty()
         val wheel = game.config.launcher() ?: return
         val state = game.gears.firstOrNull { it.wheel.id == wheel.id } ?: return
+        if (panelCollapsed) {
+            drawPanelHandle(canvas)
+            return
+        }
         val drive = game.driveReadout()
         val flywheel = wheel.kind != GearWheelKind.PUMP
 
@@ -1431,6 +1458,7 @@ class GearMachineView @JvmOverloads constructor(
         val left = width - panelWidth - 10f * dp
         val top = 10f * dp
         screenRect.set(left, top, left + panelWidth, top + h)
+        panelBounds.set(screenRect)
         canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
 
         pPanelLabel.textAlign = Paint.Align.LEFT
@@ -1472,6 +1500,51 @@ class GearMachineView @JvmOverloads constructor(
 
     /** Où en est chaque colonne dans sa descente. */
     private val panelCursor = FloatArray(2)
+
+    /**
+     * La bande que le panneau replié laisse derrière lui.
+     *
+     * Elle se tient exactement là où le panneau commençait : c'est le même coin, donc le
+     * même geste pour le rouvrir. Le chevron n'est pas décoratif — une bande nue passerait
+     * pour un reste d'affichage, alors qu'il annonce un panneau qui va redescendre. Les
+     * mêmes glyphes que le sélecteur de couches, qui sont déjà connus de la police.
+     */
+    private fun drawPanelHandle(canvas: Canvas) {
+        val w = PANEL_HANDLE_W_DP * dp * panelScale
+        val h = PANEL_HANDLE_H_DP * dp * panelScale
+        val left = width - w - 10f * dp
+        val top = 10f * dp
+        screenRect.set(left, top, left + w, top + h)
+        panelBounds.set(screenRect)
+        canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
+        pPanelHead.textAlign = Paint.Align.CENTER
+        canvas.drawText(
+            "▼",
+            left + w / 2f,
+            top + h / 2f - (pPanelHead.ascent() + pPanelHead.descent()) / 2f,
+            pPanelHead
+        )
+        pPanelHead.textAlign = Paint.Align.LEFT
+    }
+
+    /** Replie ou rouvre le tableau de bord, et s'en souvient. */
+    private fun togglePanel() {
+        panelCollapsed = !panelCollapsed
+        // La largeur se remesure a la reouverture : le texte a pu changer entre-temps.
+        panelMeasured = false
+        prefsPanel().edit { putBoolean(KEY_PANEL_COLLAPSED, panelCollapsed) }
+        invalidate()
+    }
+
+    /**
+     * Le magasin de reglages du trebuchet — le meme que celui de l'activite.
+     *
+     * Son nom vient de [TREBUCHET_PREFS], pose au niveau du paquet, plutot que d'un
+     * litteral recopie : les deux ne peuvent plus se mettre a designer deux fichiers
+     * differents sans que le compilateur le voie.
+     */
+    private fun prefsPanel() =
+        context.getSharedPreferences(TREBUCHET_PREFS, Context.MODE_PRIVATE)
 
     /** Range une ligne du panneau dans les tableaux préalloués. */
     private fun panelRow(label: String, value: String, col: Int, head: Boolean = false) {
@@ -2396,6 +2469,18 @@ class GearMachineView @JvmOverloads constructor(
                 val now = SystemClock.uptimeMillis()
                 val doubleTap = now - lastTapAt < DOUBLE_TAP_MS
                 lastTapAt = now
+                // Le tableau de bord est **opaque au toucher**, comme le selecteur de
+                // couches et le bouton d'outil juste au-dessus. Onze lignes de chiffres
+                // couvrent une bonne part de l'ecran, et attraper une roue au travers
+                // etait une facon sure de deplacer la mauvaise piece. Il passe donc
+                // avant le double appui de cadrage, sinon replier le panneau recadrait
+                // la scene du meme geste.
+                if (panelBounds.contains(event.x, event.y)) {
+                    if (doubleTap) togglePanel()
+                    gestureLocked = true
+                    touchMode = TouchMode.NONE
+                    return true
+                }
                 if (doubleTap && placementTeeth == null) {
                     selectedId = null
                     cameraView = if (cameraView == CameraView.FULL) CameraView.BUILD else CameraView.FULL
@@ -2724,6 +2809,11 @@ class GearMachineView @JvmOverloads constructor(
         private const val PANEL_PAD_Y_DP = 7f
         private const val PANEL_GAP_DP = 12f
         private const val PANEL_MIN_COL_DP = 130f
+
+        /** La bande laissee par un panneau replie, et ou l'on se souvient du repli. */
+        private const val PANEL_HANDLE_W_DP = 64f
+        private const val PANEL_HANDLE_H_DP = 22f
+        private const val KEY_PANEL_COLLAPSED = "gear_panel_collapsed"
         private const val PANEL_MAX_W_DP = 300f
         private const val PANEL_MAX_W2_DP = 470f
         private const val PANEL_COL_GAP_DP = 18f

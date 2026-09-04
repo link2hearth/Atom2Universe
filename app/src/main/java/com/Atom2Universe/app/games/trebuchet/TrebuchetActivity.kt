@@ -37,6 +37,17 @@ import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
 /**
+ * Le fichier de réglages du trébuchet, partagé par l'activité et ses vues.
+ *
+ * Il vit au niveau du paquet parce qu'il n'appartient à personne en particulier :
+ * l'activité y range les records et les graines, et [GearMachineView] s'y souvient
+ * que son tableau de bord était replié. Le compagnon de l'activité reste privé —
+ * l'ouvrir pour cette seule ligne aurait exposé vingt clés au reste du module — et
+ * une constante recopiée aurait fini par désigner deux fichiers différents.
+ */
+internal const val TREBUCHET_PREFS = "trebuchet_game"
+
+/**
  * Le trébuchet : on construit une machine de jet, on décroche la détente, et la
  * portée est la conséquence de la géométrie choisie. On ne vise jamais — on règle
  * la fronde et le crochet, et la physique fait le reste.
@@ -44,7 +55,7 @@ import kotlin.math.abs
 class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineView.Listener {
 
     private companion object {
-        const val PREFS_NAME = "trebuchet_game"
+        const val PREFS_NAME = TREBUCHET_PREFS
         const val KEY_BEST = "best_distance"
         const val KEY_SEED = "level_seed"
 
