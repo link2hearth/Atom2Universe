@@ -74,6 +74,47 @@ class GearPumpTest {
         repeat(times) { run(game, GearMachineRules.MAX_CHARGE) }
     }
 
+    /**
+     * **Le calage se voit venir : la resistance rejoint le couple disponible.**
+     *
+     * C'est ce que le tableau de bord montre a la place d'un plafond de pression, et
+     * voici pourquoi il ne peut pas en montrer un. Un train lance ne s'arrete pas a
+     * l'equilibre des couples : il continue de pomper en ralentissant, sur son elan. La
+     * pression se stabilise donc **au-dessus** de cet equilibre — mesure ici — et
+     * annoncer l'equilibre comme un plafond promettrait moins que ce que la machine
+     * fait. Un volant, lui, plafonne en vitesse, et un moteur ne pousse jamais au-dela
+     * de sa vitesse libre : ce plafond-la est dur, et `GearDriveReadoutTest` le fige.
+     */
+    @Test
+    fun `la resistance du reservoir rejoint puis depasse le couple disponible`() {
+        val game = windmillCannon()
+        val dispo = game.crankTorque()
+        assertTrue("le train doit fournir du couple : $dispo N.m", dispo > 100f)
+        assertEquals("reservoir vide, rien ne resiste", 0f, game.launcherResistance(), 1e-3f)
+
+        run(game, 60f)
+        val debut = game.launcherResistance()
+        assertTrue("la resistance doit monter : $debut N.m", debut > 0f)
+        assertTrue("et rester sous le couple disponible au debut", debut < dispo)
+
+        runLong(game, 2)
+        val calage = game.launcherResistance()
+        assertTrue(
+            "au calage elle doit avoir rejoint le couple disponible : $calage contre $dispo",
+            calage > dispo
+        )
+        // L'elan du train paie la difference, mais il ne la paie pas indefiniment.
+        assertTrue("sans pour autant s'envoler : $calage contre $dispo", calage < dispo * 1.5f)
+    }
+
+    /** Un canon n'annonce pas de portee au plafond : il n'a pas de plafond chiffrable. */
+    @Test
+    fun `un canon n'annonce pas de portee au plafond`() {
+        val game = windmillCannon()
+        assertEquals(0f, game.ceilingRimSpeed(), 0f)
+        assertEquals(0f, game.ceilingRange(), 0f)
+    }
+
     @Test
     fun `la pression ne diverge jamais, elle plafonne`() {
         val game = windmillCannon()

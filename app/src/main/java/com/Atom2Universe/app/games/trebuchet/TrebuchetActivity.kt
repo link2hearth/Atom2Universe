@@ -1044,14 +1044,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         wheels.visibility = View.GONE
         timeButton.visibility = View.VISIBLE
         gearEditor.showForSelection()
-        specsText.text = getString(
-            R.string.trebuchet_gear_specs,
-            gearView.game.gears.size,
-            gearView.game.meshes.size + gearView.game.transmissions.size,
-            gearView.currentLayer,
-            gearView.game.rotationalEnergy() / 1000f,
-            gearView.game.slippingCount()
-        )
+        // **La gauche de la barre est vide en atelier, et c'est voulu.** Elle répétait
+        // cinq nombres qui vivent tous ailleurs, en plus petit : les roues, les prises et
+        // le patinage sont dans la section « Engrenages » du tableau de bord, l'énergie
+        // dans sa section « Lanceur », et l'étage courant est écrit en gros dans le
+        // sélecteur de couches. Les lire deux fois ne les rendait pas plus lisibles — ça
+        // ne faisait que voler la place de l'état du site, qui est la seule ligne qu'on
+        // regarde vraiment entre deux tirs.
+        specsText.text = ""
         // L'etat du site prend la place du titre : tant qu'il y a quelque chose a
         // abattre, c'est la seule chose qu'on veut lire.
         val site = gearView.game.targets

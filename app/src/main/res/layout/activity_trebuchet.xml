@@ -6,14 +6,17 @@
     android:orientation="vertical"
     android:background="#0A1024">
 
-    <!-- Barre supérieure : retour et record -->
+    <!-- Barre supérieure : retour et état du site -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="4dp"
         android:paddingEnd="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:background="#101932">
 
         <ImageButton
@@ -32,16 +35,21 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="6dp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="#8FA6C8"
-            android:textSize="11sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/trebuchet_best"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:gravity="end"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textColor="#FFD166"
-            android:textSize="12sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <ImageButton

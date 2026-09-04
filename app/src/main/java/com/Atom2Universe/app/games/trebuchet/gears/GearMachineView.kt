@@ -156,15 +156,26 @@ class GearMachineView @JvmOverloads constructor(
     private val pLayerButton = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.argb(85, 143, 166, 200) }
     private val pPanelLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(143, 166, 200)
-        textSize = 11f * dp
+        textSize = PANEL_LABEL_DP * dp * PANEL_MAX_SCALE
         typeface = android.graphics.Typeface.DEFAULT_BOLD
     }
     private val pPanelValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 209, 102)
-        textSize = 13f * dp
+        color = PANEL_VALUE_COLOR
+        textSize = PANEL_VALUE_DP * dp * PANEL_MAX_SCALE
         typeface = android.graphics.Typeface.create(
             android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.BOLD
         )
+    }
+    /** L'en-tete d'une section : plus petit et d'une autre couleur que ses lignes. */
+    private val pPanelHead = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = PANEL_HEAD_COLOR
+        textSize = PANEL_HEAD_DP * dp * PANEL_MAX_SCALE
+        typeface = android.graphics.Typeface.DEFAULT_BOLD
+    }
+    /** Le filet qui separe deux sections. */
+    private val pPanelRule = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(70, 143, 166, 200)
+        strokeWidth = 1f * dp
     }
     private val pLayerText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
@@ -178,15 +189,15 @@ class GearMachineView @JvmOverloads constructor(
      * Les libellés du tableau de bord, **lus une fois**.
      *
      * `getString` n'est pas une lecture de champ : il traverse la table des ressources
-     * pour retrouver la chaîne, puis la met en forme. Ces six appels-là étaient dans
-     * `onDraw`, donc rejoués cent vingt fois par seconde pour afficher les trois mêmes
-     * mots. Mesuré à la tablette, ils pesaient sept pour cent du fil principal.
+     * pour retrouver la chaîne, puis la met en forme. Ces appels-là étaient dans
+     * `onDraw`, donc rejoués cent vingt fois par seconde pour afficher les mêmes mots.
+     * Mesuré à la tablette, ils pesaient sept pour cent du fil principal.
      *
-     * Les libellés fixes deviennent des champs. Les trois valeurs changent, elles, mais
+     * Les libellés fixes deviennent donc des champs. Les valeurs changent, elles, mais
      * pas à chaque image : le régime est un entier, l'énergie s'arrondit au dixième et
-     * la portée au mètre. On garde donc la dernière chaîne fabriquée et le nombre qui
-     * l'a produite, et on ne refait le travail que quand ce nombre a bougé. La mise en
-     * forme passe par la locale des ressources, exactement comme le faisait
+     * la portée au mètre. [Readout] garde la dernière chaîne fabriquée et le nombre
+     * arrondi qui l'a produite, et ne refait le travail que quand ce nombre a bougé.
+     * La mise en forme passe par la locale des ressources, exactement comme le faisait
      * `getString(id, args)`.
      */
     private val fmtLocale = resources.configuration.locales[0]
@@ -194,21 +205,170 @@ class GearMachineView @JvmOverloads constructor(
     private val labelPressure = resources.getString(R.string.trebuchet_gear_panel_pressure)
     private val labelEnergy = resources.getString(R.string.trebuchet_gear_panel_energy)
     private val labelRange = resources.getString(R.string.trebuchet_gear_panel_range)
+    private val labelHeadMotor = resources.getString(R.string.trebuchet_gear_panel_head_motor)
+    private val labelHeadTrain = resources.getString(R.string.trebuchet_gear_panel_head_train)
+    private val labelHeadLauncher = resources.getString(R.string.trebuchet_gear_panel_head_launcher)
+    private val labelPower = resources.getString(R.string.trebuchet_gear_panel_power)
+    private val labelTorque = resources.getString(R.string.trebuchet_gear_panel_torque)
+    private val labelFree = resources.getString(R.string.trebuchet_gear_panel_free)
+    private val labelRatio = resources.getString(R.string.trebuchet_gear_panel_ratio)
+    private val labelCeiling = resources.getString(R.string.trebuchet_gear_panel_ceiling)
+    private val labelRim = resources.getString(R.string.trebuchet_gear_panel_rim)
+    private val labelBest = resources.getString(R.string.trebuchet_gear_panel_best)
+    private val labelLinks = resources.getString(R.string.trebuchet_gear_panel_links)
+    private val labelSlip = resources.getString(R.string.trebuchet_gear_panel_slip)
+    private val labelTank = resources.getString(R.string.trebuchet_gear_panel_tank)
+    private val labelCrank = resources.getString(R.string.trebuchet_gear_panel_crank)
+    private val labelLoad = resources.getString(R.string.trebuchet_gear_panel_load)
+    private val labelDash = resources.getString(R.string.trebuchet_gear_panel_dash)
     private val fmtRpm = resources.getString(R.string.trebuchet_gear_panel_rpm)
     private val fmtBar = resources.getString(R.string.trebuchet_gear_panel_bar)
     private val fmtKj = resources.getString(R.string.trebuchet_gear_panel_kj)
     private val fmtMetres = resources.getString(R.string.trebuchet_gear_panel_m)
+    private val fmtKw = resources.getString(R.string.trebuchet_gear_panel_kw)
+    private val fmtNm = resources.getString(R.string.trebuchet_gear_panel_nm)
+    private val fmtRatio = resources.getString(R.string.trebuchet_gear_panel_ratio_value)
+    private val fmtMs = resources.getString(R.string.trebuchet_gear_panel_ms)
+    private val fmtSpan = resources.getString(R.string.trebuchet_gear_panel_span)
+    private val fmtWheels = resources.getString(R.string.trebuchet_gear_panel_wheels)
+    private val fmtWheelsPart = resources.getString(R.string.trebuchet_gear_panel_wheels_part)
+    private val fmtCount = resources.getString(R.string.trebuchet_gear_panel_count)
+    private val fmtLitres = resources.getString(R.string.trebuchet_gear_panel_litres)
     private val fmtCharging = resources.getString(R.string.trebuchet_gear_charging)
     private val labelToolPart = resources.getString(R.string.trebuchet_gear_tool_part)
     private val labelToolFrame = resources.getString(R.string.trebuchet_gear_tool_frame)
-    private var shownRpm = Int.MIN_VALUE
-    private var textRpm = ""
-    private var shownPressure = Float.NaN
-    private var textPressure = ""
-    private var shownEnergy = Float.NaN
-    private var textEnergy = ""
-    private var shownRange = Float.NaN
-    private var textRange = ""
+    private val nameNoMotor = resources.getString(R.string.trebuchet_gear_motor_none)
+    private val nameCarousel = resources.getString(R.string.trebuchet_gear_motor_carousel)
+    private val nameWindmill = resources.getString(R.string.trebuchet_gear_motor_windmill)
+    private val nameWaterwheel = resources.getString(R.string.trebuchet_gear_motor_waterwheel)
+    private val nameFlywheel = resources.getString(R.string.trebuchet_gear_launcher_flywheel)
+    private val nameCannon = resources.getString(R.string.trebuchet_gear_launcher_cannon)
+
+    /**
+     * Le nom d'un moteur, pris dans les chaînes déjà lues.
+     *
+     * Un `when` plutôt qu'un tableau indexé sur l'ordinal : ajouter un moteur au milieu
+     * de l'énumération décalerait silencieusement tous les noms, alors qu'ici le
+     * compilateur réclame le cas manquant.
+     */
+    private fun motorName(kind: GearMotorKind): String = when (kind) {
+        GearMotorKind.NONE -> nameNoMotor
+        GearMotorKind.CAROUSEL -> nameCarousel
+        GearMotorKind.WINDMILL -> nameWindmill
+        GearMotorKind.WATERWHEEL -> nameWaterwheel
+    }
+
+    /**
+     * Une valeur du tableau de bord : le nombre, son format, et la chaîne déjà faite.
+     *
+     * [step] est le pas au-delà duquel on considère que la valeur a bougé — un mètre
+     * pour une portée, un dixième de kilojoule pour une énergie. Sans lui, une portée
+     * qui frémit au millième reformaterait sa chaîne à chaque image sans qu'un seul
+     * caractère change à l'écran.
+     */
+    private inner class Readout(private val format: String, private val step: Float) {
+        var text = labelDash
+            private set
+        private var shown = Float.NaN
+        private var blank = true
+
+        fun set(value: Float) {
+            if (!value.isFinite()) {
+                if (!blank) {
+                    blank = true
+                    shown = Float.NaN
+                    text = labelDash
+                    panelMeasured = false
+                }
+                return
+            }
+            val quantised = Math.round(value / step) * step
+            if (blank || quantised != shown) {
+                blank = false
+                shown = quantised
+                text = String.format(fmtLocale, format, quantised)
+                panelMeasured = false
+            }
+        }
+    }
+
+    private val readPower = Readout(fmtKw, 0.01f)
+    private val readTorque = Readout(fmtNm, 1f)
+    private val readFree = Readout(fmtRpm, 1f)
+    private val readRatio = Readout(fmtRatio, 0.01f)
+    private val readCeiling = Readout(fmtRpm, 1f)
+    private val readRpm = Readout(fmtRpm, 1f)
+    private val readPressure = Readout(fmtBar, 0.1f)
+    private val readRim = Readout(fmtMs, 0.1f)
+    private val readEnergy = Readout(fmtKj, 0.1f)
+    private val readRange = Readout(fmtMetres, 1f)
+    private val readBest = Readout(fmtMetres, 1f)
+    private val readLinks = Readout(fmtCount, 1f)
+    private val readSlip = Readout(fmtCount, 1f)
+    private val readTank = Readout(fmtLitres, 1f)
+    private val readCrank = Readout(fmtNm, 1f)
+    private val readLoad = Readout(fmtNm, 1f)
+
+    /** Les en-têtes de section, qui portent eux aussi une valeur — le genre et la taille. */
+    private var shownMotorKind: GearMotorKind? = null
+    private var shownMotorSpan = Float.NaN
+    private var textMotorHead = ""
+    private var shownWheels = Int.MIN_VALUE
+    private var shownWheelTotal = Int.MIN_VALUE
+    private var textWheelsHead = ""
+
+    /**
+     * Les lignes du panneau, remplies à chaque image dans des tableaux **déjà alloués**.
+     *
+     * Poser des `String` déjà construites dans un tableau qui existe ne coûte rien ; en
+     * fabriquer une liste par image, si. C'est la même règle que pour les chaînes
+     * elles-mêmes, appliquée à leur rangement.
+     */
+    private val panelLabel = arrayOfNulls<String>(24)
+    private val panelValue = arrayOfNulls<String>(24)
+    private val panelHead = BooleanArray(24)
+
+    /** Dans quelle colonne va cette ligne, et si elle ouvre sa colonne. */
+    private val panelCol = IntArray(24)
+    private val panelOpens = BooleanArray(24)
+    private val panelColRows = IntArray(2)
+    private val panelColWidth = FloatArray(2)
+    private var panelRows = 0
+
+    /**
+     * Deux colonnes côte à côte plutôt qu'une pile, quand l'écran est plus large que haut.
+     *
+     * En paysage la hauteur est la ressource rare : la pile complète mangeait la moitié
+     * de la scène, alors que la largeur, elle, ne manquait pas. Le découpage suit les
+     * sections telles qu'elles se lisent — **ce que la machine fournit** à gauche (le
+     * moteur et le train qui le transforme), **ce qu'elle en fait** à droite (le
+     * lanceur) — et non un partage à mi-hauteur qui couperait une section en deux.
+     */
+    private var panelTwoCols = false
+
+    /**
+     * La largeur du panneau se **mesure**, elle ne se devine pas.
+     *
+     * Les libellés changent de longueur avec la langue et les valeurs avec l'ordre de
+     * grandeur — « 0.16 kW » et « 65.79 kW » ne tiennent pas dans la même place. Une
+     * largeur fixe coupait donc soit le texte, soit le décor. On remesure seulement
+     * quand une chaîne a changé, ce que [Readout] signale de lui-même.
+     */
+    private var panelMeasured = false
+    private var panelWidth = 0f
+
+    /**
+     * De combien le tableau de bord est agrandi, et depuis quelle taille il repart.
+     *
+     * Il vise une fois et demie sa taille d'origine — il porte trois fois plus de
+     * chiffres qu'avant et doit rester lisible d'un coup d'œil pendant qu'on règle une
+     * roue. [panelBaseScale] est ce que la hauteur de l'écran autorise ; [panelScale]
+     * peut redescendre en dessous si le texte mesuré déborde en largeur, mais il repart
+     * **toujours** de la base à chaque mesure, sinon un chiffre passé de « 1131 » à
+     * « 15640 » rétrécirait le panneau pour de bon.
+     */
+    private var panelBaseScale = PANEL_MAX_SCALE
+    private var panelScale = PANEL_MAX_SCALE
     private var shownCharge = Int.MIN_VALUE
     private var textCharge = ""
     /**
@@ -656,6 +816,7 @@ class GearMachineView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         cam.resize(w, h, dp)
+        scalePanel(w, h)
         fitCamera()
     }
 
@@ -1135,78 +1296,280 @@ class GearMachineView @JvmOverloads constructor(
         timeScrub.draw(canvas, pHint, skyClock, width.toFloat(), height.toFloat(), dp)
 
     /**
+     * Ce que vaut la machine, en haut à droite — **et pourquoi elle vaut ça**.
+     *
+     * Trois sections, parce que la portée d'un tir se fabrique en trois étages et qu'en
+     * voir un seul rendait les deux autres incompréhensibles :
+     *
+     * - **Moteur** — sa puissance, son couple, et sa vitesse libre. Ces trois-là ne
+     *   montent pas ensemble : l'envergure d'un moulin multiplie sa puissance par son
+     *   carré et **divise** sa vitesse ([GearMotorRules.freeOmega]), donc un gros moulin
+     *   pousse fort et tourne lentement. Sans cette ligne affichée, agrandir ses ailes
+     *   ressemblait à une panne.
+     * - **Engrenages** — la multiplication du train, c'est-à-dire ce que le couple gagné
+     *   plus haut rend en tours. C'est la seule pièce qui rattrape le troc, et le
+     *   nombre à faire monter quand on agrandit son moteur.
+     * - **Lanceur** — le régime atteint, son plafond, la vitesse de jante qui décide
+     *   vraiment du tir ([GearMachineGame.rimSpeed]), l'énergie sous la main, et les
+     *   deux portées : celle de maintenant et celle du plafond.
+     *
+     * La paire « maintenant / plafond » est ce qui rend le panneau utile avant même de
+     * charger : elle dit d'un coup d'œil si la machine est encore en train de monter en
+     * régime, ou si elle donne déjà tout ce qu'elle sait donner.
+     *
+     * En paysage, les deux premières sections passent à gauche et le lanceur à droite
+     * ([panelTwoCols]) : la pile entière prenait presque la moitié de la hauteur, et
+     * c'est la hauteur qui manque quand l'écran est couché.
+     */
+    private fun drawLauncherPanel(canvas: Canvas) {
+        val wheel = game.config.launcher() ?: return
+        val state = game.gears.firstOrNull { it.wheel.id == wheel.id } ?: return
+        val drive = game.driveReadout()
+        val flywheel = wheel.kind != GearWheelKind.PUMP
+
+        if (drive.motorKind != shownMotorKind || drive.motorSpan != shownMotorSpan) {
+            shownMotorKind = drive.motorKind
+            shownMotorSpan = drive.motorSpan
+            textMotorHead = if (drive.driven) {
+                String.format(fmtLocale, fmtSpan, motorName(drive.motorKind), drive.motorSpan)
+            } else {
+                nameNoMotor
+            }
+            panelMeasured = false
+        }
+        if (drive.trainSize != shownWheels || drive.wheelTotal != shownWheelTotal) {
+            shownWheels = drive.trainSize
+            shownWheelTotal = drive.wheelTotal
+            // Tant que tout est relié, un seul nombre suffit ; dès qu'une roue reste sur
+            // le carreau, il faut les deux pour qu'on le voie.
+            textWheelsHead = if (drive.trainSize == drive.wheelTotal) {
+                String.format(fmtLocale, fmtWheels, drive.trainSize)
+            } else {
+                String.format(fmtLocale, fmtWheelsPart, drive.trainSize, drive.wheelTotal)
+            }
+            panelMeasured = false
+        }
+
+        // Un train sans moteur n'a ni couple ni plafond : ces cases restent vides plutôt
+        // que d'afficher des zéros, qui se liraient comme une machine en panne.
+        val driven = drive.driven
+        readPower.set(if (driven) drive.motorPower / 1000f else Float.NaN)
+        readTorque.set(if (driven) drive.motorTorque else Float.NaN)
+        readFree.set(if (driven) drive.motorFreeOmega * RPM else Float.NaN)
+        readRatio.set(if (driven) drive.ratio else Float.NaN)
+        readCeiling.set(if (driven) drive.launcherFreeOmega * RPM else Float.NaN)
+        readLinks.set(drive.linkCount.toFloat())
+        readSlip.set(game.slippingCount().toFloat())
+        readEnergy.set(game.launcherAvailableEnergy() / 1000f)
+        readRange.set(game.estimatedRange())
+        if (flywheel) {
+            readRpm.set(abs(state.body.omega) * RPM)
+            readRim.set(game.rimSpeed())
+            readBest.set(if (driven) game.ceilingRange() else Float.NaN)
+        } else {
+            readPressure.set(game.launcherPressure() / 100_000f)
+            readCrank.set(if (driven) game.crankTorque() else Float.NaN)
+            readLoad.set(game.launcherResistance())
+            readTank.set(wheel.reservoirVolume * 1000f)
+        }
+
+        // La colonne de droite n'existe qu'en paysage ; en portrait tout retombe dans
+        // la pile, et le reste du code n'a pas à savoir lequel des deux on dessine.
+        val second = if (panelTwoCols) 1 else 0
+        panelRows = 0
+        panelColRows[0] = 0
+        panelColRows[1] = 0
+        panelRow(labelHeadMotor, textMotorHead, 0, head = true)
+        panelRow(labelPower, readPower.text, 0)
+        panelRow(labelTorque, readTorque.text, 0)
+        panelRow(labelFree, readFree.text, 0)
+        panelRow(labelHeadTrain, textWheelsHead, 0, head = true)
+        panelRow(labelRatio, readRatio.text, 0)
+        panelRow(labelLinks, readLinks.text, 0)
+        panelRow(labelSlip, readSlip.text, 0)
+        panelRow(labelHeadLauncher, if (flywheel) nameFlywheel else nameCannon, second, head = true)
+        // Les deux lanceurs se lisent de la même façon — où on en est, et contre quelle
+        // limite — mais pas sur la même grandeur. Un volant plafonne en **vitesse**, et
+        // c'est un plafond dur qu'on peut chiffrer à l'avance. Un canon plafonne en
+        // **couple**, et un train lancé le dépasse sur son élan : on montre donc les deux
+        // couples qui vont se rejoindre plutôt qu'une pression maximale qui mentirait.
+        // Voir [GearMachineGame.launcherResistance]. Le canon montre en plus son
+        // réservoir, son second levier de puissance à côté de la denture de sa manivelle.
+        if (flywheel) {
+            panelRow(labelSpeed, readRpm.text, second)
+            panelRow(labelCeiling, readCeiling.text, second)
+            panelRow(labelRim, readRim.text, second)
+        } else {
+            panelRow(labelPressure, readPressure.text, second)
+            panelRow(labelLoad, readLoad.text, second)
+            panelRow(labelCrank, readCrank.text, second)
+            panelRow(labelTank, readTank.text, second)
+        }
+        panelRow(labelEnergy, readEnergy.text, second)
+        panelRow(labelRange, readRange.text, second)
+        if (flywheel) panelRow(labelBest, readBest.text, second)
+
+        if (!panelMeasured) fitPanel()
+
+        val padX = PANEL_PAD_X_DP * dp * panelScale
+        val padY = PANEL_PAD_Y_DP * dp * panelScale
+        val colGap = PANEL_COL_GAP_DP * dp * panelScale
+        val rowH = PANEL_ROW_H_DP * dp * panelScale
+        val headH = PANEL_HEAD_H_DP * dp * panelScale
+
+        // La colonne la plus longue décide de la hauteur ; l'autre laisse du blanc.
+        var tallest = 0f
+        for (col in 0..second) {
+            var stack = 0f
+            for (i in 0 until panelRows) {
+                if (panelCol[i] != col) continue
+                stack += if (panelHead[i] && !panelOpens[i]) headH else rowH
+            }
+            if (stack > tallest) tallest = stack
+        }
+        val h = tallest + padY * 2f
+        val left = width - panelWidth - 10f * dp
+        val top = 10f * dp
+        screenRect.set(left, top, left + panelWidth, top + h)
+        canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
+
+        pPanelLabel.textAlign = Paint.Align.LEFT
+        pPanelValue.textAlign = Paint.Align.RIGHT
+        // Un curseur vertical par colonne : elles descendent chacune de leur côté.
+        panelCursor[0] = top + padY
+        panelCursor[1] = top + padY
+        for (i in 0 until panelRows) {
+            val label = panelLabel[i] ?: continue
+            val value = panelValue[i] ?: continue
+            val col = panelCol[i]
+            val colLeft = left + padX + if (col == 1) panelColWidth[0] + colGap else 0f
+            val colRight = colLeft + panelColWidth[col]
+            val band = if (panelHead[i] && !panelOpens[i]) headH else rowH
+            val y = panelCursor[col]
+            if (panelHead[i]) {
+                // Le trait de section : il sépare sans ajouter une ligne de plus. Une
+                // section qui ouvre sa colonne n'a rien au-dessus d'elle à séparer.
+                if (!panelOpens[i]) canvas.drawLine(
+                    colLeft, y + band * 0.16f, colRight, y + band * 0.16f, pPanelRule
+                )
+                val baseline = y + band * 0.78f
+                pPanelHead.textAlign = Paint.Align.LEFT
+                canvas.drawText(label, colLeft, baseline, pPanelHead)
+                // Ce que l'en-tête annonce — « Moulin 5 m », « 6 roues » — reste une
+                // valeur : il prend la couleur des valeurs, pas celle des libellés.
+                pPanelHead.textAlign = Paint.Align.RIGHT
+                pPanelHead.color = PANEL_VALUE_COLOR
+                canvas.drawText(value, colRight, baseline, pPanelHead)
+                pPanelHead.color = PANEL_HEAD_COLOR
+            } else {
+                val baseline = y + band * 0.5f - (pPanelValue.ascent() + pPanelValue.descent()) / 2f
+                canvas.drawText(label, colLeft, baseline, pPanelLabel)
+                canvas.drawText(value, colRight, baseline, pPanelValue)
+            }
+            panelCursor[col] = y + band
+        }
+    }
+
+    /** Où en est chaque colonne dans sa descente. */
+    private val panelCursor = FloatArray(2)
+
+    /** Range une ligne du panneau dans les tableaux préalloués. */
+    private fun panelRow(label: String, value: String, col: Int, head: Boolean = false) {
+        if (panelRows >= panelLabel.size) return
+        panelLabel[panelRows] = label
+        panelValue[panelRows] = value
+        panelHead[panelRows] = head
+        panelCol[panelRows] = col
+        // Une section qui ouvre sa colonne n'a pas de blanc à ménager au-dessus d'elle.
+        panelOpens[panelRows] = panelColRows[col] == 0
+        panelColRows[col]++
+        panelRows++
+    }
+
+    /**
+     * Mesure les colonnes, et **rétrécit la police si le texte déborde en largeur**.
+     *
+     * La hauteur d'écran fixe déjà un agrandissement ([scalePanel]), mais deux colonnes
+     * de texte peuvent dépasser en largeur ce que la hauteur autorisait — sur un écran
+     * carré, ou dans une langue aux libellés longs. Plutôt que de rogner les colonnes,
+     * ce qui ferait chevaucher un libellé et sa valeur, on redescend la police jusqu'à
+     * ce que le contenu tienne : la mesure est proportionnelle à la taille du texte,
+     * donc une seule correction suffit, et on repart toujours de [panelBaseScale].
+     */
+    private fun fitPanel() {
+        val cap = min(
+            (if (panelTwoCols) PANEL_MAX_W2_DP else PANEL_MAX_W_DP) * dp,
+            width * PANEL_WIDTH_SHARE
+        )
+        applyPanelScale(panelBaseScale)
+        measurePanel()
+        if (panelWidth > cap && panelScale > 1f) {
+            applyPanelScale((panelScale * cap / panelWidth).coerceAtLeast(1f))
+            measurePanel()
+        }
+        panelMeasured = true
+    }
+
+    /** La largeur de chaque colonne, et celle du panneau qui les porte. */
+    private fun measurePanel() {
+        val padX = PANEL_PAD_X_DP * dp * panelScale
+        val gap = PANEL_GAP_DP * dp * panelScale
+        val colGap = PANEL_COL_GAP_DP * dp * panelScale
+        panelColWidth[0] = 0f
+        panelColWidth[1] = 0f
+        for (i in 0 until panelRows) {
+            val label = panelLabel[i] ?: continue
+            val value = panelValue[i] ?: continue
+            val paint = if (panelHead[i]) pPanelHead else pPanelLabel
+            val valuePaint = if (panelHead[i]) pPanelHead else pPanelValue
+            val line = paint.measureText(label) + gap + valuePaint.measureText(value)
+            val col = panelCol[i]
+            if (line > panelColWidth[col]) panelColWidth[col] = line
+        }
+        val minCol = PANEL_MIN_COL_DP * dp * panelScale
+        panelColWidth[0] = panelColWidth[0].coerceAtLeast(minCol)
+        if (panelTwoCols) panelColWidth[1] = panelColWidth[1].coerceAtLeast(minCol)
+        panelWidth = padX * 2f + panelColWidth[0] +
+            if (panelTwoCols) colGap + panelColWidth[1] else 0f
+    }
+
+    /** Reporte une taille de panneau sur les trois peintures qui l'écrivent. */
+    private fun applyPanelScale(scale: Float) {
+        panelScale = scale
+        pPanelLabel.textSize = PANEL_LABEL_DP * dp * scale
+        pPanelValue.textSize = PANEL_VALUE_DP * dp * scale
+        pPanelHead.textSize = PANEL_HEAD_DP * dp * scale
+    }
+
+    /**
+     * Cale le tableau de bord sur la forme de l'écran : sa disposition et sa taille.
+     *
+     * Écran couché, deux colonnes ; écran debout, une pile. Le choix se fait ici et pas
+     * dans `onDraw` — la forme d'une vue ne change qu'à une rotation, pas soixante fois
+     * par seconde. L'agrandissement suit : il vise une fois et demie, mais un panneau
+     * qui déborde par le bas ne se lit plus du tout, donc sur un écran court il
+     * redescend vers sa taille normale. La colonne la plus longue sert de référence —
+     * six lignes et un en-tête pour le lanceur en deux colonnes, la pile entière sinon.
+     */
+    private fun scalePanel(w: Int, h: Int) {
+        panelTwoCols = w > h
+        val tallest = if (panelTwoCols) {
+            PANEL_ROW_H_DP * 7f + PANEL_HEAD_H_DP
+        } else {
+            PANEL_ROW_H_DP * 13f + PANEL_HEAD_H_DP * 2f
+        }
+        val needed = tallest + PANEL_PAD_Y_DP * 2f + 20f
+        panelBaseScale = (h * PANEL_HEIGHT_SHARE / (needed * dp)).coerceIn(1f, PANEL_MAX_SCALE)
+        applyPanelScale(panelBaseScale)
+        panelMeasured = false
+    }
+
+    /**
      * La jauge de charge : combien de temps machine il reste a jouer.
      *
      * Elle dit surtout que **rien n'est fige** : sans elle, une charge de dix minutes
      * ressemblerait a un ecran bloque pendant que les roues s'emballent.
      */
-    /**
-     * Ce que le lanceur vaut a l'instant, en haut a droite.
-     *
-     * Trois nombres, et pas un de plus : la premiere ligne dit ou en est le lanceur --
-     * le regime d'un volant, la pression d'un canon, deux choses qui ne se lisent pas
-     * pareil -- puis l'energie qu'il a sous la main et la portee que ca donnerait.
-     * Sans eux, on chargeait a l'aveugle et on decouvrait le resultat une fois le
-     * boulet pose -- alors que tout se decide **avant** le tir, en regardant monter
-     * ces trois-la.
-     */
-    private fun drawLauncherPanel(canvas: Canvas) {
-        val wheel = game.config.launcher() ?: return
-        val state = game.gears.firstOrNull { it.wheel.id == wheel.id } ?: return
-        val energy = game.launcherAvailableEnergy() / 1000f
-        val range = game.estimatedRange()
-
-        val w = 148f * dp
-        val rowH = 21f * dp
-        val h = 14f * dp + rowH * 3f
-        val left = width - w - 10f * dp
-        val top = 10f * dp
-        screenRect.set(left, top, left + w, top + h)
-        canvas.drawRoundRect(screenRect, 9f * dp, 9f * dp, pLayerPanel)
-
-        pPanelLabel.textAlign = Paint.Align.LEFT
-        pPanelValue.textAlign = Paint.Align.RIGHT
-        // Un volant se lit en regime : c'est ce qui monte vers son plafond. Un canon,
-        // a l'inverse, cale a mesure que sa pression grimpe -- lui montrer le meme
-        // chiffre en aurait fait un faux signe de panne. La pression dit directement
-        // ce que l'aiguille du reservoir montre deja sur la machine.
-        if (wheel.kind == GearWheelKind.PUMP) {
-            val bar = game.launcherPressure() / 100_000f
-            if (bar != shownPressure) {
-                shownPressure = bar
-                textPressure = String.format(fmtLocale, fmtBar, bar)
-            }
-            labelRow(canvas, 0, left, w, top, rowH, labelPressure, textPressure)
-        } else {
-            val rpm = (state.body.omega * 60f / (2f * PI.toFloat())).roundToInt()
-            if (rpm != shownRpm) {
-                shownRpm = rpm
-                textRpm = String.format(fmtLocale, fmtRpm, rpm)
-            }
-            labelRow(canvas, 0, left, w, top, rowH, labelSpeed, textRpm)
-        }
-        if (energy != shownEnergy) {
-            shownEnergy = energy
-            textEnergy = String.format(fmtLocale, fmtKj, energy)
-        }
-        if (range != shownRange) {
-            shownRange = range
-            textRange = String.format(fmtLocale, fmtMetres, range)
-        }
-        labelRow(canvas, 1, left, w, top, rowH, labelEnergy, textEnergy)
-        labelRow(canvas, 2, left, w, top, rowH, labelRange, textRange)
-    }
-
-    /** Une ligne du tableau de bord : le libellé à gauche, la valeur à droite. */
-    private fun labelRow(
-        canvas: Canvas, index: Int, left: Float, w: Float, top: Float, rowH: Float,
-        label: String, value: String
-    ) {
-        val baseline = top + 7f * dp + rowH * (index + 0.5f) + (pPanelValue.textSize * 0.36f)
-        canvas.drawText(label, left + 10f * dp, baseline, pPanelLabel)
-        canvas.drawText(value, left + w - 10f * dp, baseline, pPanelValue)
-    }
-
     private fun drawChargeGauge(canvas: Canvas) {
         if (!game.charging) return
         val w = 200f * dp
@@ -2341,6 +2704,49 @@ class GearMachineView @JvmOverloads constructor(
         // se poser dessus.
         private const val PANEL_LEFT_DP = 10f
         private const val PANEL_TOP_DP = 10f
+
+        /**
+         * Le tableau de bord du lanceur : tailles de base, avant agrandissement.
+         *
+         * Elles sont toutes multipliees par [PANEL_MAX_SCALE] — ou moins sur un ecran
+         * court, voir `scalePanel`. Aucune n'est *la* largeur du panneau : celle-la se
+         * mesure sur le texte reellement affiche, qui change avec la langue et l'ordre
+         * de grandeur, et les bornes ci-dessous ne font que l'empecher de manger
+         * l'ecran — une pile en portrait, deux colonnes en paysage.
+         */
+        private const val PANEL_MAX_SCALE = 1.5f
+        private const val PANEL_LABEL_DP = 11f
+        private const val PANEL_VALUE_DP = 13f
+        private const val PANEL_HEAD_DP = 10f
+        private const val PANEL_ROW_H_DP = 20f
+        private const val PANEL_HEAD_H_DP = 23f
+        private const val PANEL_PAD_X_DP = 11f
+        private const val PANEL_PAD_Y_DP = 7f
+        private const val PANEL_GAP_DP = 12f
+        private const val PANEL_MIN_COL_DP = 130f
+        private const val PANEL_MAX_W_DP = 300f
+        private const val PANEL_MAX_W2_DP = 470f
+        private const val PANEL_COL_GAP_DP = 18f
+
+        /**
+         * La part de la largeur d'ecran que le panneau s'autorise.
+         *
+         * Deux colonnes tiennent large : sans cette borne, elles couvraient la moitie
+         * d'un ecran couche, et le volant se dessinait derriere. Quand le texte ne tient
+         * pas dedans, c'est la police qui redescend, jamais les colonnes qu'on rogne —
+         * un libelle qui chevauche sa valeur ne se lit plus du tout.
+         */
+        private const val PANEL_WIDTH_SHARE = 0.46f
+
+        /** La part de la hauteur d'ecran que le panneau s'autorise, agrandissement compris. */
+        private const val PANEL_HEIGHT_SHARE = 0.72f
+
+        /** Le vert des sections, et l'ambre des chiffres. */
+        private val PANEL_HEAD_COLOR = Color.rgb(119, 239, 196)
+        private val PANEL_VALUE_COLOR = Color.rgb(255, 209, 102)
+
+        /** Des radians par seconde vers des tours par minute. */
+        private const val RPM = 60f / (2f * PI.toFloat())
         private const val PANEL_WIDTH_DP = 152f
         private const val PANEL_ROW_DP = 44f
         private const val TOOL_TOP_DP = 60f

@@ -481,6 +481,8 @@ class GearMachineGame(
         }
         connectTransmissions()
         connectMeshes()
+        // Les dentures viennent de changer : le tableau de bord du train est a refaire.
+        driveDirty = true
         savedProjectile?.let { shot ->
             if (shot.body.x.isFinite() && shot.body.y.isFinite()) {
                 if (savedFlying) own(shot.body)
@@ -833,6 +835,271 @@ class GearMachineGame(
             total += GearMotorRules.power(gear.wheel.motor ?: continue)
         }
         return total
+    }
+
+    /**
+     * Ce que la machine promet **avant** de la charger : le moteur, le train, le plafond.
+     *
+     * Ces chiffres-là existent parce qu'on ne pouvait pas comprendre pourquoi agrandir
+     * son moulin affaiblissait son tir. La raison est entièrement lisible ici : le tir se
+     * décide sur la **vitesse de jante** ([rimSpeed]), le régime du lanceur est plafonné
+     * par `freeOmega du moteur × multiplication du train`, et la vitesse libre d'une aile
+     * de moulin baisse quand son envergure monte ([GearMotorRules.freeOmega]). Un gros
+     * moulin donne donc plus de couple et **moins** de tours ; il ne rattrape le petit
+     * que si on met la multiplication en face. Sans ces lignes affichées, ce troc était
+     * invisible et passait pour une panne.
+     */
+    class DriveReadout {
+        /** Le moteur qui mène le lanceur — celui qui lui donne le plafond le plus haut. */
+        var motorKind = GearMotorKind.NONE
+            internal set
+
+        /** Son gabarit, en mètres de rayon — l'envergure des ailes d'un moulin. */
+        var motorSpan = 0f
+            internal set
+
+        /** Sa vitesse libre à son propre arbre, en rad/s. */
+        var motorFreeOmega = 0f
+            internal set
+
+        /** Son couple maximal, en N·m. */
+        var motorTorque = 0f
+            internal set
+
+        /** La puissance de **tous** les moteurs reliés au lanceur, en watts. */
+        var motorPower = 0f
+            internal set
+
+        /** Combien de moteurs mènent réellement le lanceur. */
+        var motorCount = 0
+            internal set
+
+        /** La multiplication du train, `ω lanceur / ω moteur`. Au-dessus de 1 : ça accélère. */
+        var ratio = 0f
+            internal set
+
+        /** Le régime que le lanceur ne dépassera pas, en rad/s. */
+        var launcherFreeOmega = 0f
+            internal set
+
+        /** Combien de roues le lanceur entraîne avec lui, et combien la machine en porte. */
+        var trainSize = 0
+            internal set
+        var wheelTotal = 0
+            internal set
+
+        /** Combien de prises — engrènements et transmissions — tiennent ce train. */
+        var linkCount = 0
+            internal set
+
+        val driven: Boolean get() = motorKind != GearMotorKind.NONE && launcherFreeOmega > 0f
+
+        internal fun clear() {
+            motorKind = GearMotorKind.NONE
+            motorSpan = 0f
+            motorFreeOmega = 0f
+            motorTorque = 0f
+            motorPower = 0f
+            motorCount = 0
+            ratio = 0f
+            launcherFreeOmega = 0f
+            trainSize = 0
+            wheelTotal = 0
+            linkCount = 0
+        }
+    }
+
+    private val drive = DriveReadout()
+
+    /**
+     * Le rapport de chaque roue au lanceur : `ω roue / ω lanceur`, en valeur absolue.
+     *
+     * Le sens ne nous intéresse pas ici — un tableau de bord n'a pas à dire dans quel sens
+     * tourne un renvoi intermédiaire — donc on ne garde que des magnitudes, et une roue
+     * atteinte par deux chemins garde le premier trouvé : dans un train réel les deux
+     * chemins donnent le même rapport, sinon la machine se bloquerait.
+     */
+    private val driveRatios = HashMap<Int, Float>()
+    private var driveDirty = true
+
+    /**
+     * Le tableau de bord du train, recalculé **seulement quand la machine change**.
+     *
+     * Rien là-dedans ne dépend de l'état du mouvement : ce sont des dentures et des
+     * réglages de moteur, qui ne bougent qu'à un remontage. Le recalculer à chaque image
+     * reviendrait à parcourir tout le train soixante fois par seconde pour réécrire les
+     * mêmes nombres — exactement le travail que le panneau a déjà appris à ne pas refaire
+     * pour ses chaînes de caractères.
+     */
+    fun driveReadout(): DriveReadout {
+        if (driveDirty) {
+            computeDrive()
+            driveDirty = false
+        }
+        return drive
+    }
+
+    private fun computeDrive() {
+        drive.clear()
+        driveRatios.clear()
+        val launcherId = config.launcherWheelId ?: return
+        if (gears.none { it.wheel.id == launcherId }) return
+        driveRatios[launcherId] = 1f
+        // Le même point fixe que [connectedTo] : on repasse sur les liaisons tant qu'une
+        // roue de plus se rattache. Un train fait quelques dizaines de pièces, et ce
+        // parcours ne tourne qu'au remontage.
+        var changed = true
+        while (changed) {
+            changed = false
+            for (mesh in meshes) {
+                val a = config.wheels.firstOrNull { it.id == mesh.firstId } ?: continue
+                val b = config.wheels.firstOrNull { it.id == mesh.secondId } ?: continue
+                // Denture extérieure : la roue menée tourne dans le rapport des dentures.
+                if (spread(a.id, b.id, a.teeth.toFloat() / b.teeth.toFloat())) changed = true
+                if (spread(b.id, a.id, b.teeth.toFloat() / a.teeth.toFloat())) changed = true
+            }
+            for (transmission in transmissions) {
+                val link = transmission.config
+                val a = config.wheels.firstOrNull { it.id == link.firstId } ?: continue
+                val b = config.wheels.firstOrNull { it.id == link.secondId } ?: continue
+                // Un arbre coaxial ne change pas le régime ; une courroie comme une chaîne
+                // le change dans le rapport des rayons, donc des dentures.
+                val k = if (link.kind == GearLinkKind.SHAFT_CLUTCH) 1f
+                else a.teeth.toFloat() / b.teeth.toFloat()
+                if (spread(a.id, b.id, k)) changed = true
+                if (spread(b.id, a.id, 1f / k)) changed = true
+            }
+        }
+        drive.trainSize = driveRatios.size
+        drive.wheelTotal = gears.size
+        // Une prise ne compte que si ses **deux** bouts sont dans le train : une courroie
+        // qui pend d'une roue oubliée dans un coin ne transmet rien au lanceur.
+        for (mesh in meshes) {
+            if (mesh.firstId in driveRatios && mesh.secondId in driveRatios) drive.linkCount++
+        }
+        for (transmission in transmissions) {
+            val link = transmission.config
+            if (link.firstId in driveRatios && link.secondId in driveRatios) drive.linkCount++
+        }
+        for (gear in gears) {
+            val motor = gear.wheel.motor ?: continue
+            if (motor.kind == GearMotorKind.NONE) continue
+            // `m` vaut `ω moteur / ω lanceur` : le moteur tourne `m` fois plus vite que le
+            // lanceur, donc le train multiplie par `1/m`.
+            val m = driveRatios[gear.wheel.id] ?: continue
+            if (m <= 1e-6f || !m.isFinite()) continue
+            drive.motorCount++
+            drive.motorPower += GearMotorRules.power(motor)
+            val ceiling = GearMotorRules.freeOmega(motor) / m
+            // **Un moteur pousse, il ne retient pas** ([RotaryDriveJoint]) : quand deux
+            // moteurs mènent le même lanceur, c'est le plus rapide des deux qui fixe le
+            // plafond, pas le plus lent ni la moyenne.
+            if (ceiling > drive.launcherFreeOmega) {
+                drive.launcherFreeOmega = ceiling
+                drive.motorKind = motor.kind
+                drive.motorSpan = motor.span
+                drive.motorFreeOmega = GearMotorRules.freeOmega(motor)
+                drive.motorTorque = GearMotorRules.maxTorque(motor)
+                drive.ratio = 1f / m
+            }
+        }
+    }
+
+    /** Propage le rapport de [fromId] vers [toId], si [toId] n'est pas déjà placé. */
+    private fun spread(fromId: Int, toId: Int, factor: Float): Boolean {
+        if (toId in driveRatios) return false
+        val here = driveRatios[fromId] ?: return false
+        val next = here * factor
+        if (!next.isFinite() || next <= 0f) return false
+        driveRatios[toId] = next
+        return true
+    }
+
+    /**
+     * La vitesse de jante que le lanceur atteindra au mieux, en m/s.
+     *
+     * C'est le plafond de régime multiplié par le rayon de gorge — et donc la vraie mesure
+     * de ce que vaut une machine, puisque [launchProjectile] ne lit rien d'autre que cette
+     * vitesse-là. Sans objet pour un canon, qui ne lance pas par sa jante.
+     */
+    fun ceilingRimSpeed(): Float {
+        val wheel = config.launcher() ?: return 0f
+        if (wheel.kind != GearWheelKind.FLYWHEEL) return 0f
+        val readout = driveReadout()
+        if (!readout.driven) return 0f
+        return (readout.launcherFreeOmega * wheel.launchRadius).coerceAtMost(MAX_PROJECTILE_SPEED)
+    }
+
+
+    /**
+     * Ce que le train peut vraiment fournir sur la manivelle d'un canon, en N·m.
+     *
+     * Le couple du moteur **ramené sur la manivelle** — un train qui multiplie la vitesse
+     * par trois divise le couple par trois — moins ce que son palier prend au passage.
+     * C'est la grandeur à laquelle se compare [launcherResistance] : quand la seconde
+     * rattrape la première, la manivelle cale et la pression cesse de monter.
+     */
+    fun crankTorque(): Float {
+        val wheel = config.launcher() ?: return 0f
+        if (wheel.kind != GearWheelKind.PUMP) return 0f
+        val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+        val readout = driveReadout()
+        if (!readout.driven || readout.ratio <= 1e-6f) return 0f
+        return (readout.motorTorque / readout.ratio - gear.bearingTorque).coerceAtLeast(0f)
+    }
+
+    /**
+     * Ce que le réservoir résiste **en ce moment** sur la manivelle, en N·m.
+     *
+     * Le pendant de [rimSpeed] pour un canon : la grandeur qui monte pendant la charge et
+     * qu'on regarde s'approcher de sa limite. Elle croît comme le **logarithme** de la
+     * pression ([pumpLoadTorque]), ce qui est pour beaucoup dans la sensation qu'un canon
+     * cale « d'un coup » — la pression, elle, monte exponentiellement à mesure que le
+     * couple approche du plafond.
+     *
+     * **Pourquoi le canon n'a pas de « plafond » chiffré, contrairement au volant.** Le
+     * plafond d'un volant est un plafond de *vitesse*, et un moteur qui ne pousse jamais
+     * au-delà de sa vitesse libre en fait une limite dure ([RotaryDriveJoint]). Le canon,
+     * lui, plafonne sur un *couple* — et un train lancé ne s'arrête pas à l'équilibre des
+     * couples : il continue de pomper en ralentissant, sur son élan. Mesuré sur la
+     * machine d'essai de `GearPumpTest`, la pression se stabilise là où il faudrait
+     * 1875 N·m alors que le moulin n'en donne que 1650 : l'inertie a payé la différence.
+     * Annoncer l'équilibre comme un plafond promettrait donc moins que ce que la machine
+     * fait vraiment. On montre les deux couples, et le joueur voit le calage venir.
+     */
+    fun launcherResistance(): Float {
+        val wheel = config.launcher() ?: return 0f
+        if (wheel.kind != GearWheelKind.PUMP) return 0f
+        val gear = gears.firstOrNull { it.wheel.id == wheel.id } ?: return 0f
+        return pumpLoadTorque(gear)
+    }
+
+    private var ceilingRangeSpeed = Float.NaN
+    private var ceilingRangeAngle = Float.NaN
+    private var ceilingRangeMass = Float.NaN
+    private var ceilingRangeValue = 0f
+
+    /**
+     * La portée que la machine atteindrait **à son plafond de régime**, en mètres.
+     *
+     * Le chiffre qui répond à « est-ce que cette machine vaut mieux que la précédente ? »
+     * sans avoir à charger dix minutes pour le découvrir. Il est mis en cache : la
+     * simulation de vol de [estimatedRange] coûte neuf cents pas, et ces trois entrées-là
+     * ne bougent qu'à un réglage.
+     */
+    fun ceilingRange(): Float {
+        val wheel = config.launcher() ?: return 0f
+        val speed = ceilingRimSpeed()
+        if (speed <= 0.01f) return 0f
+        if (speed != ceilingRangeSpeed || wheel.launchAngle != ceilingRangeAngle ||
+            config.projectileMass != ceilingRangeMass
+        ) {
+            ceilingRangeSpeed = speed
+            ceilingRangeAngle = wheel.launchAngle
+            ceilingRangeMass = config.projectileMass
+            ceilingRangeValue = estimatedRange(speed)
+        }
+        return ceilingRangeValue
     }
 
     /**
@@ -1421,6 +1688,8 @@ class GearMachineGame(
         val wheel = config.wheels.firstOrNull { it.id == id } ?: return false
         if (wheel.kind !in GearMachineRules.LAUNCHER_KINDS) return false
         config.launcherWheelId = id
+        // Tout le train se lit depuis le lanceur : en changer refait tous les rapports.
+        driveDirty = true
         return true
     }
 
@@ -1861,10 +2130,18 @@ class GearMachineGame(
      * pas, memes formules de trainee et d'amortissement que [PhysWorld.stepFrame],
      * juste sans corps ni collision a fabriquer pour un chiffre d'avant-tir.
      */
-    fun estimatedRange(): Float {
+    fun estimatedRange(): Float = estimatedRange(launchSpeedNow())
+
+    /**
+     * La meme chute, jouee pour une vitesse de depart au choix.
+     *
+     * Le panneau en demande deux : celle du tir possible maintenant, et celle du tir au
+     * plafond de regime ([ceilingRange]). C'est la meme trajectoire, donc le meme code —
+     * il n'y a que la vitesse initiale qui change.
+     */
+    fun estimatedRange(v: Float): Float {
         val wheel = config.launcher() ?: return 0f
-        val v = launchSpeedNow()
-        if (v <= 0.01f) return 0f
+        if (!v.isFinite() || v <= 0.01f) return 0f
         val aim = Math.toRadians(wheel.launchAngle.toDouble()).toFloat()
         var vx = v * cos(aim)
         var vy = v * sin(aim)
@@ -2049,6 +2326,7 @@ class GearMachineGame(
         const val STALL_TIME = 0.6f
 
         private const val MAX_PROJECTILE_SPEED = 1_500f
+
 
         /** Un point de traînée toutes les vingt millisecondes, comme au trébuchet. */
 

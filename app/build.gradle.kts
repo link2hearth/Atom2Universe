@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.PathSensitivity
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -121,6 +123,22 @@ android {
             enableSplit = false
         }
     }
+}
+
+/**
+ * Les fichiers de chaines comptent comme entrees des tests unitaires.
+ *
+ * `GearPanelFormatTest` lit `strings_trebuchet.xml` **sur le disque** pour essayer chaque
+ * format avec l'argument qu'il recevra a l'ecran : c'est le seul moyen d'attraper un
+ * `%d` nourri par un `Float`, que rien dans le Kotlin ne peut voir. Mais Gradle ne
+ * devine pas cette lecture — pour lui, une tache de test ne depend que des classes — et
+ * il declarait donc la tache a jour quand seul le XML avait bouge. Le garde-fou restait
+ * vert sur une chaine deja cassee, ce qui est pire que pas de garde-fou du tout.
+ */
+tasks.withType<Test>().configureEach {
+    inputs.files(
+        fileTree("src/main/res") { include("values*/strings*.xml") }
+    ).withPropertyName("stringResources").withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 dependencies {
