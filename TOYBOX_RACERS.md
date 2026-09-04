@@ -232,7 +232,7 @@ games/toyboxracers/
 - [x] Gérer pause/reprise, orientation paysage et bouton Retour.
 - [x] Vérifier hors Android la simulation fixe, le bouclage des tours et le déclenchement du saut.
 - [x] Ajouter des tests unitaires permanents pour la verticalité, le vide, le saut, la réception et les tours.
-- [ ] Compiler l'application complète avec `compileDebugKotlin` dans l'environnement utilisateur.
+- [x] Compiler l'application complète avec `compileDebugKotlin` dans l'environnement utilisateur.
 - [x] Essayer sur téléphone et valider la base de gameplay, la direction, la pente, le saut et la caméra.
 
 **Critère de sortie :** conduire seul pendant cinq minutes reste fluide, compréhensible et amusant.
@@ -343,6 +343,7 @@ games/toyboxracers/
 | 2026-09-04 | Aucun gros décor sans collision | Un meuble ne doit jamais sembler solide si la voiture peut le traverser. |
 | 2026-09-05 | Exploration libre comme mode principal | Le circuit est un jouet dans la pièce, pas une frontière obligatoire. |
 | 2026-09-05 | Replacement strictement manuel | Le jeu ne reprend jamais le contrôle de la position du joueur. |
+| 2026-09-05 | Deux projections, jamais mélangées | `project` répond « où en est le tour », `projectForCollision` répond « quelle dalle je touche ». Au croisement elles désignent volontairement des branches différentes : croiser leurs résultats dans un même calcul d'altitude téléporte la voiture. |
 
 ---
 
@@ -405,6 +406,43 @@ games/toyboxracers/
 - En l'air, direction, moteur, frein et adhérence ne modifient plus la vitesse : les commandes reprennent effet seulement au contact du sol ou de la piste.
 - Prendre la réception à contresens maintient la voiture au sol et ne peut plus appeler le code du saut.
 - Trois simulations ciblées réussies : décollage au bord du tremplin, trente pas à contresens sans saut et choc vertical arrêté exactement sous la dalle.
+
+### 2026-09-05 — Première exécution réelle des tests
+
+Le journal du 5 septembre note que la compilation Gradle complète n'avait pas pu
+aboutir dans le bac à sable. Conséquence : `PrototypeTrackTest` avait été écrit mais
+**jamais exécuté**. Lancé pour la première fois dans l'environnement utilisateur, il
+sortait deux échecs — l'un révélait un vrai bug, l'autre venait du test lui-même.
+
+- **Téléportation sur le pont, corrigée.** `update` réécrivait l'altitude après coup
+  avec `roadY`, qui vient de `project` (la projection de **progression**), juste après
+  que `resolveGroundRoadCollision` ait posé la voiture sur la dalle que lui avait
+  trouvée `projectForCollision` (la projection **physique**). Au croisement du huit ces
+  deux projections désignent volontairement des branches différentes — c'est ce qui
+  permet de cogner le dessous du pont — donc une voiture arrêtée sous le tablier, dont
+  la progression était restée sur la branche haute, se retrouvait projetée quatorze
+  mètres plus haut. La réaffectation traînante était par ailleurs redondante dans
+  l'autre cas de figure : elle a été retirée.
+- **Test du hors-piste, recalibré.** Il lisait la vitesse au bout de dix secondes.
+  Mesuré : la voiture atteint bien ses 20 unités/s à la troisième seconde, traverse la
+  chambre à la cinquième et finit plaquée contre le mur du fond à 0,12 unité/s. Il
+  testait donc le mur, pas le hors-piste. Il mesure désormais la vitesse **pendant**
+  que la voiture est hors piste.
+- Suite complète de l'application : 444 tests, tous verts.
+
+**Reste à regarder, sans urgence.** Deux points repérés en passant, laissés en l'état
+parce qu'ils relèvent de la conception du prototype :
+
+- `resolveAirborneRoadCollision` adopte la distance de la dalle qu'il a trouvée
+  (`distance = collision.sample.distance`) ; `resolveGroundRoadCollision` ne le fait
+  pas. Sous le pont, la voiture est donc posée sur la dalle basse alors que sa
+  progression pointe toujours la branche haute, et l'état « sur la route » oscille
+  d'une image à l'autre. L'altitude, elle, reste stable — mais le comptage des tours
+  pourrait s'y perdre quand P3 arrivera.
+- `Sample.fraction` (indice ÷ nombre d'échantillons) et le `fraction` que renvoie
+  `sampleAt` (distance ÷ longueur) ne veulent pas dire la même chose sur une piste à
+  vitesse non uniforme — et le huit l'est, puisque la montée n'existe que dans sa
+  première moitié. Rien ne casse aujourd'hui ; `isJumpGap` compare bien des distances.
 
 ---
 
