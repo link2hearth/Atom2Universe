@@ -488,9 +488,13 @@ class TrebuchetGame(
         iterations = 16
         // Une cible est faite de dizaines de pierres qui ne bougent pas. Ce n'est pas ce
         // drapeau qui les rend gratuites — [TargetField.trySleep] les **retire** du
-        // monde — mais il endort aussi les gravats et la machine après le tir. Mesuré :
-        // 0,032 ms par image sur un site de vingt-cinq pierres, soit 0,4 % d'une image à
-        // 120 par seconde. C'est un confort, pas une nécessité.
+        // monde — mais il endort aussi les gravats et la machine après le tir.
+        //
+        // Mesuré sur un site de vingt-cinq pierres : 0,032 ms par pas de physique, soit
+        // **3,8 ms de processeur par seconde de jeu**, 0,4 % d'un cœur. C'est un confort,
+        // pas une nécessité. Le chiffre est donné par seconde et non par image : la
+        // physique avance par pas fixes de 1/120 s dans un accumulateur, donc elle fait le
+        // même travail que l'affichage tourne à soixante ou à cent vingt.
         sleepEnabled = true
     },
     val site: ShotSite = ShotSite(world)
@@ -766,7 +770,7 @@ class TrebuchetGame(
      * Les accesseurs ci-dessous ne sont là que pour la vue, qui lit `game.trail`,
      * `game.trailCount`, `game.ghosts` et `game.ghostStamp` depuis toujours.
      */
-    val shotTrail = ShotTrail()
+    val shotTrail: ShotTrail get() = site.trail
 
     /**
      * Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount].
@@ -990,10 +994,11 @@ class TrebuchetGame(
         // n'approche.
         targets.trySleep()
 
-        // Le monde vient d'être vidé, mais le vent n'est pas une pièce de la machine :
-        // il souffle sur le site, et il souffle encore quand on remonte le bras.
-        world.windX = wind.vx
-        world.windY = wind.vy
+        // **Le vent ne se repose plus ici.** Il fallait le refaire tant que `build`
+        // commençait par vider le monde ; depuis qu'il ne retire que les corps de la
+        // machine, le vent du monde n'est plus effacé. Le laisser aurait fait un
+        // **deuxième** endroit où le vent du monde se décide — exactement le motif qui a
+        // fait diverger les deux jeux. Un seul : [ShotSite.applyWind].
 
         // Le relief, en corps immobiles. Une dalle par palier, une boîte tournée par
         // talus, rien du tout pour une falaise — et sur un terrain plat, un seul corps,
@@ -1083,6 +1088,14 @@ class TrebuchetGame(
             friction = 0.2f
             restitution = 0.1f
             dragFactor = config.shotDrag
+            // **Pas d'amortissement : la traînée suffit, et c'est la seule qui soit
+            // une loi.** `dragFactor` est la vraie poussée de l'air, ½ρCdAv², qui
+            // fait retomber un tir plus raide qu'il n'est monté. `linearDamping`, lui,
+            // est une décroissance exponentielle appliquée à tout — un filet de
+            // sécurité numérique, pas de la physique. Un projectile subissait les
+            // deux : mesuré, la seconde lui coûtait **vingt-sept pour cent de portée**
+            // en vol pur. Voir [PhysBody.linearDamping].
+            linearDamping = 0f
             category = CAT_BALL
             // Le boulet ne connaît que le sol : la fronde le relie au bras, il n'a
             // aucune raison de venir cogner la machine.
@@ -1104,6 +1117,16 @@ class TrebuchetGame(
         slingStartAngle = measureSlingAngle()
         slingAngle = slingStartAngle
         prevRawSlingAngle = slingStartAngle
+
+        // **La machine bandée s'endort.**
+        //
+        // Depuis que le monde continue de tourner entre les tirs ([idleStep]), une machine
+        // armée y serait intégrée comme le reste : la poutre est bloquée par sa détente,
+        // mais le contrepoids pend librement à sa chape et se mettrait à osciller tout
+        // seul pendant qu'on regarde le village s'écrouler. Endormie, elle est exactement
+        // là où on l'a posée, et [release] la réveille — il le faisait déjà, pour une
+        // machine restée immobile assez longtemps pour que le moteur l'endorme.
+        for (b in world.bodies) if (b.owner === this) b.sleep()
     }
 
     /**
@@ -1344,7 +1367,10 @@ class TrebuchetGame(
     }
 
     fun step(dt: Float) {
-        if (phase != Phase.FLIGHT) return
+        if (phase != Phase.FLIGHT) {
+            idleStep(dt)
+            return
+        }
 
         // L'élan d'avant le choc, gardé pour la traversée : une fois le pas simulé, il
         // est perdu, et c'est justement lui qu'on veut rendre au projectile qui casse.
@@ -1555,6 +1581,8 @@ class TrebuchetGame(
                 friction = 0.2f
                 restitution = 0.1f
                 dragFactor = kind.dragFor(r)
+                // Les éclats volent sous la même loi que le boulet dont ils sortent.
+                linearDamping = 0f
                 category = TrebuchetCategory.BALL
                 collidesWith = TrebuchetCategory.projectileMask()
             }
@@ -1601,6 +1629,43 @@ class TrebuchetGame(
                 return
             }
         }
+    }
+
+    /**
+     * Le monde continue de tourner **entre les tirs**.
+     *
+     * Il s'arrêtait net : `step` rendait la main dès qu'on n'était plus en vol, et une
+     * tour prise en pleine chute se figeait en l'air jusqu'au tir suivant. C'était le seul
+     * endroit du jeu où la gravité s'arrêtait, et ça se voyait — l'atelier, lui, n'a jamais
+     * eu cette porte et son village finit de tomber.
+     *
+     * **Et ça ne coûte rien.** Mesuré sur un site de vingt-cinq pierres, **par seconde de
+     * jeu** — la bonne unité, puisque la physique avance par pas fixes de 1/120 s dans un
+     * accumulateur et fait donc le même travail que l'affichage tourne à soixante ou à
+     * cent vingt :
+     *
+     * ```
+     * vol + effondrement, boulet rapide   1,4 ms de processeur par seconde
+     * monde qui tourne après le tir       2,3 ms par seconde   (0,23 % d'un cœur)
+     * ```
+     *
+     * Ce qui coûte cher dans ce jeu n'a jamais été le château, c'est le **sous-pas** qu'un
+     * boulet rapide impose — sept millisecondes pour une seule image mesurées autrefois en
+     * vol, parce que chaque pierre est résolue à chacun des trente-deux sous-pas. Boulet
+     * posé, plus de sous-pas, et le château redevient gratuit.
+     *
+     * La machine, elle, ne bouge pas : elle est endormie à l'armement ([build]) et
+     * [release] la réveille. Sans ça, un contrepoids bandé dériverait doucement pendant
+     * qu'on regarde le village s'écrouler.
+     */
+    private fun idleStep(dt: Float) {
+        world.stepFrame(dt)
+        // Le site s'arme, encaisse et se rendort tout seul : sans cet appel, un château de
+        // quatre-vingts pierres resterait éveillé pour rien.
+        targets.update(dt)
+        // Un site rasé mérite son bouquet même si le tir s'est terminé avant que la
+        // dernière pierre ne tombe.
+        celebrate()
     }
 
     /**

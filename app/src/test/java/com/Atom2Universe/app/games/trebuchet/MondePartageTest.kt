@@ -22,9 +22,9 @@ import kotlin.math.abs
  *  - **deux airs** : l'atelier a besoin de 0,015 / 0,0005 là où le trébuchet respire
  *    0,05 / 0,3, et l'amortissement n'existait que sur le monde. Il vit maintenant aussi
  *    sur les corps, chaque machine posant le sien sur les siens.
- *  - le sommeil du moteur : mesuré à 0,032 ms par image, soit 0,4 % d'une image à 120 par
- *    seconde. Ce n'était pas un obstacle, contrairement à ce que son commentaire laissait
- *    croire.
+ *  - le sommeil du moteur : mesuré à 0,032 ms par pas de physique, soit 3,8 ms de
+ *    processeur par seconde de jeu — 0,4 % d'un cœur. Ce n'était pas un obstacle,
+ *    contrairement à ce que son commentaire laissait croire.
  */
 class MondePartageTest {
 
@@ -46,6 +46,34 @@ class MondePartageTest {
         assertSame("deux champs de cibles", treb.targets, gear.targets)
         assertSame("deux jeux d'effets", treb.effects, gear.effects)
         assertEquals("deux reliefs", treb.terrain.lowest, gear.terrain.lowest, 1e-6f)
+    }
+
+    /**
+     * **Les fantômes sont ceux du village, pas ceux de la machine.**
+     *
+     * Chaque jeu avait sa pile : on tirait trois fois au trébuchet, on basculait, et
+     * l'atelier montrait un ciel vide — rien n'était effacé, mais on ne pouvait pas
+     * comparer un tir de contrepoids à un tir d'air comprimé sur le même village, ce qui
+     * est pourtant la seule chose intéressante à faire quand les deux tirent dessus.
+     */
+    @Test
+    fun `les fantomes suivent le village et pas la machine`() {
+        val (treb, gear) = deuxMachines(7L)
+        treb.simulateShot()
+        assertTrue("le trébuchet n'a pas archivé son tir", treb.ghosts.isNotEmpty())
+        val apresTreb = treb.ghosts.size
+
+        treb.detach()
+        gear.attach()
+        assertEquals(
+            "l'atelier ne voit pas les tirs faits sur le même village",
+            apresTreb, gear.ghosts.size
+        )
+
+        // Et le réglage est celui de la partie : une seule pile, une seule limite.
+        gear.ghostLimit = 3
+        assertEquals("les deux machines ne partagent pas la limite", 3, treb.ghostLimit)
+        println("FANTÔMES $apresTreb tir(s) du trébuchet visibles depuis l'atelier")
     }
 
     /**

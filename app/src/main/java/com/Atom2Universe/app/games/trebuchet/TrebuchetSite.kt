@@ -89,6 +89,20 @@ class ShotSite(val world: PhysWorld) {
      */
     fun restamp() = stampPieces(targets)
 
+    /**
+     * La trace du tir en cours et la pile des tirs passés — **pour les deux machines**.
+     *
+     * Elle était par jeu, ce qui donnait deux mémoires séparées : on tirait trois fois au
+     * trébuchet, on basculait, et l'atelier montrait un ciel vide. Rien n'était effacé —
+     * les fantômes du trébuchet attendaient le retour — mais on ne pouvait pas comparer un
+     * tir de contrepoids à un tir d'air comprimé sur le même village, ce qui est pourtant
+     * la seule chose intéressante à faire quand les deux tirent sur le même.
+     *
+     * Elle appartient donc à la partie, comme le site : ce sont les tirs qu'on a faits
+     * **sur ce village-là**, quelle que soit la machine qui les a lancés.
+     */
+    val trail = ShotTrail()
+
     /** Le niveau en cours, ou nul en bac à sable (record de portée, sans cible). */
     var level: TargetLevel? = null
         private set

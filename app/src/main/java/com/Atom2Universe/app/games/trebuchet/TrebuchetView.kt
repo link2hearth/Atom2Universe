@@ -162,6 +162,44 @@ class TrebuchetView @JvmOverloads constructor(
         get() = game.phase != TrebuchetGame.Phase.FLIGHT
 
     private companion object {
+        /**
+         * Le pas de la physique : **cent vingt par seconde, même si on affiche à
+         * soixante**.
+         *
+         * La question vient toute seule — pourquoi calculer le monde deux fois par image
+         * dessinée ? Mesuré le 04/09/2026, et la réponse est qu'on ne gagne rien et qu'on
+         * perd tout.
+         *
+         * Ce qu'on gagnerait, d'abord, c'est-à-dire presque rien :
+         *
+         * ```
+         *                       120 Hz      60 Hz
+         * avec un boulet rapide  2,44 ms/s   2,04 ms/s   (-0,4 ms par seconde de jeu)
+         * site seul              0,47 ms/s   0,44 ms/s
+         * ```
+         *
+         * Quatre dixièmes de milliseconde par seconde, soit **quatre centièmes de pour
+         * cent d'un cœur**. C'est le sous-pas adaptatif ([PhysWorld.stepFrame]) qui
+         * reprend aussitôt ce qu'on croyait économiser : un pas deux fois plus gros
+         * contenant un boulet rapide se fait découper en deux fois plus de tranches, et le
+         * travail par seconde ne bouge pas.
+         *
+         * Ce qu'on perdrait, ensuite. La **même** machine, le même tir :
+         *
+         * ```
+         * 240 Hz : 142,9 m      60 Hz : 156,2 m
+         * 120 Hz : 146,3 m      30 Hz : 304,0 m
+         * ```
+         *
+         * Passer à soixante allongerait toutes les portées de sept pour cent — et le jeu
+         * est calé à cent vingt : les distances des sites, le barème, les records. La
+         * valeur juste est vers 142 m, donc soixante est aussi deux fois plus faux que
+         * cent vingt. Et les constructions fluent davantage : une pierre dérive de 0,110 m
+         * en cinq secondes à soixante contre 0,041 m à cent vingt, presque le triple.
+         *
+         * Le pas de la physique n'est pas une cadence d'affichage. Celle-ci est bridée à
+         * soixante par [FRAME_NANOS] parce que **dessiner** coûte cher ; simuler, non.
+         */
         const val FIXED_DT = 1f / 120f
 
         /**

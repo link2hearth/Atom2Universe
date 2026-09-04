@@ -265,7 +265,7 @@ class GearMachineGame(
      * une propriété de la machine. Les accesseurs qui suivent sont pour la vue, qui lit
      * `game.trail`, `game.trailCount`, `game.ghosts` et `game.ghostStamp`.
      */
-    val shotTrail = ShotTrail(initialCapacity = 1_024)
+    val shotTrail: ShotTrail get() = site.trail
 
     /** Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount]. */
     val trail: FloatArray get() = shotTrail.points
@@ -1765,6 +1765,15 @@ class GearMachineGame(
             restitution = 0.18f
             friction = 0.55f
             dragFactor = 0.5f * 1.225f * 0.47f * Math.PI.toFloat() * radius * radius
+            // **Pas d'amortissement : la traînée suffit, et c'est la seule qui soit
+            // une loi.** `dragFactor` est la vraie poussée de l'air, ½ρCdAv², qui
+            // fait retomber un tir plus raide qu'il n'est monté. `linearDamping`, lui,
+            // est une décroissance exponentielle appliquée à tout — un filet de
+            // sécurité numérique, pas de la physique. Un projectile subissait les
+            // deux : mesuré, la seconde lui coûtait **vingt-sept pour cent de portée**
+            // en vol pur. Voir [PhysBody.linearDamping].
+            //
+            // Posé **après** `own`, qui met l'air de l'atelier sur tout ce qu'il range.
             category = GearMachineRules.CATEGORY_SHOT
             // Le sol, les pierres et les gravats — tout ce qui n'est pas le mecanisme.
             collidesWith = TrebuchetCategory.BALL_FREE_MASK
@@ -1775,6 +1784,9 @@ class GearMachineGame(
             collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
         }
         own(shot)
+        // `own` pose l'air de l'atelier sur tout ce qu'il range : le boulet, lui, ne
+        // vole que sous sa traînée. Voir le commentaire à sa fabrication.
+        shot.linearDamping = 0f
         // À partir d'ici, le site saura ce que ce corps-là casse lui-même — c'est ce qui
         // permet de ne lui faire payer que ça. Les compteurs du tir précédent s'oublient
         // au même endroit, sinon un boulet hériterait des ruines d'un autre.
@@ -1989,9 +2001,29 @@ class GearMachineGame(
          *
          * Une faible traînée sur les roues — et **seulement** ça : les pertes qui comptent
          * doivent venir des paliers, parce que ce sont les seules que le joueur peut
-         * travailler en changeant de matière. L'angulaire valait 0,002, ce qui était sans
-         * conséquence tant qu'un doigt pouvait injecter quatre-vingts mégajoules d'un
-         * geste ; avec des moteurs réels elle devenait la perte dominante.
+         * travailler en changeant la matière de son axe. Contre l'air, il ne peut rien.
+         *
+         * Ce que valent ces chiffres, mesuré le 04/09/2026. La machine par défaut, trois
+         * minutes sous son moteur, et la vitesse où elle plafonne quand les pertes égalent
+         * la puissance :
+         *
+         * ```
+         * air = 0       14,00 rad/s   132 928 J
+         * air = 0,0005  14,00 rad/s   132 927 J   <- ici
+         * air = 0,01    14,00 rad/s   132 906 J
+         * air = 0,05     4,08 rad/s    11 271 J
+         * air = 0,3      0,68 rad/s       312 J   <- la valeur du trébuchet
+         * ```
+         *
+         * Quatre cent vingt-six fois moins d'énergie stockée à 0,3 : l'air y déciderait de
+         * tout et la machine serait morte. En dessous de 0,01 il ne décide plus de rien, et
+         * c'est exactement ce qu'on veut.
+         *
+         * **Et l'air n'est pas ce qui arrête une roue.** Sans moteur, une roue lancée à dix
+         * radians par seconde perd 58 % de son énergie en une minute **même avec un air
+         * strictement nul** — ce sont les paliers, `bearingTorque`, le frottement sec de
+         * l'axe. L'air n'ajoute que trois points (39,2 % restants au lieu de 42,3 %). Il
+         * est là pour que rien ne tourne éternellement, pas pour freiner.
          */
         const val AIR_LINEAIRE = 0.015f
         const val AIR_ANGULAIRE = 0.0005f
