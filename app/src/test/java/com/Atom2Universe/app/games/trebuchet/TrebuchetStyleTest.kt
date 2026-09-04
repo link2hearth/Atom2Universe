@@ -10,10 +10,13 @@ import kotlin.math.hypot
 import kotlin.random.Random
 
 /**
- * Compare les deux tempéraments de front : réaliste contre arcade.
+ * Compare le tempérament du jeu à son étalon : [TargetStyle.JEU] contre
+ * [TargetStyle.REALISTE].
  *
- * Ce n'est pas un test de plus, c'est **la** justification du mode arcade. On y vérifie
- * la promesse : un coup **ordinaire** emporte une pierre entière au lieu de la fêler,
+ * Le réaliste n'est plus un mode qu'on joue — il était injouable sans le dire — mais il
+ * reste la référence contre laquelle la table des matériaux a été calée, et c'est
+ * précisément ce qui rend ce banc utile : il mesure de **combien** le jeu s'écarte de
+ * la matière, ce qu'aucun chiffre absolu ne dirait. On y vérifie la promesse : un coup **ordinaire** emporte une pierre entière au lieu de la fêler,
  * les pierres sont grosses et assez légères pour être renversées, et une construction
  * coûte beaucoup moins de corps au moteur.
  *
@@ -27,7 +30,7 @@ class TrebuchetStyleTest {
 
     @After
     fun rendLeMode() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     /**
@@ -79,7 +82,7 @@ class TrebuchetStyleTest {
     @Test
     fun `l arcade emporte des morceaux la ou le realiste egratigne`() {
         val (corpsR, casseR, chuteR) = shootWall(TargetStyle.REALISTE)
-        val (corpsA, casseA, chuteA) = shootWall(TargetStyle.ARCADE)
+        val (corpsA, casseA, chuteA) = shootWall(TargetStyle.JEU)
 
         println(
             "STYLE réaliste : $corpsR corps, un coup détruit ${"%.1f".format(casseR * 100)}%, " +
@@ -102,7 +105,7 @@ class TrebuchetStyleTest {
 
     @Test
     fun `une pierre d arcade se casse d un coup et se laisse pousser`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         // On ne recopie pas les dimensions à la main : on demande une vraie courtine et
         // on prend sa première pierre. Un chiffre recopié se périme au premier réglage,
         // et le test jurerait alors sur une pierre qui n'existe plus.
@@ -142,7 +145,7 @@ class TrebuchetStyleTest {
     fun `un site d arcade coute bien moins de corps`() {
         TargetRules.style = TargetStyle.REALISTE
         val realiste = TargetGenerator.generate(8L).structure
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val arcade = TargetGenerator.generate(8L).structure
 
         println(
@@ -175,7 +178,7 @@ class TrebuchetStyleTest {
     fun `un site d arcade est deux fois plus grand`() {
         TargetRules.style = TargetStyle.REALISTE
         val r = TargetGenerator.generate(1L).structure
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val a = TargetGenerator.generate(1L).structure
 
         println(
@@ -210,7 +213,7 @@ class TrebuchetStyleTest {
         }
 
         val r = maison(TargetStyle.REALISTE)
-        val a = maison(TargetStyle.ARCADE)
+        val a = maison(TargetStyle.JEU)
         fun grosseur(m: List<Block>) =
             m.flatMap { b -> b.parts.map { 4f * it.halfW * it.halfH } }.average().toFloat()
 
@@ -240,7 +243,7 @@ class TrebuchetStyleTest {
      */
     @Test
     fun `aucun site d arcade ne s abime tout seul`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         for (seed in 1L..8L) {
             val lvl = TargetGenerator.generate(seed)
             // On rapproche le site de l'origine : un monde qui commence à cinq cents
@@ -287,7 +290,7 @@ class TrebuchetStyleTest {
      */
     @Test
     fun `en arcade un tas se broie jusqu au grain`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val s = TargetField.settle(
             Structure(
                 TargetModules.curtainWall(
@@ -360,7 +363,7 @@ class TrebuchetStyleTest {
         }
 
         val reel = poussee(TargetStyle.REALISTE)
-        val arcade = poussee(TargetStyle.ARCADE)
+        val arcade = poussee(TargetStyle.JEU)
         println(
             "SOUFFLE une assise part à ${"%.2f".format(reel)} m/s en réaliste, " +
                 "${"%.2f".format(arcade)} m/s en arcade"

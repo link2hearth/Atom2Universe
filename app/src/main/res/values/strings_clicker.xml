@@ -274,5 +274,6 @@
     <string name="neutrino_info_note_time">by play time</string>
     <string name="neutrino_info_note_distance">by distance</string>
     <string name="neutrino_info_note_wave">per wave cleared</string>
+    <string name="neutrino_info_note_site">by site razed</string>
     <string name="neutrino_info_note_betting">by your bet</string>
 </resources>

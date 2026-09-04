@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -60,7 +61,7 @@ class TrebuchetLevelTest {
 
     @Test
     fun `le chateau de cartes est reserve au mode arcade`() {
-        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.ARCADE) }.toSet()
+        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.JEU) }.toSet()
         val realiste = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.REALISTE) }.toSet()
         assertTrue("le château de cartes a disparu du mode arcade", SiteKind.CHATEAU_CARTES in arcade)
         assertTrue("le château de cartes apparaît encore en réaliste", SiteKind.CHATEAU_CARTES !in realiste)
@@ -72,7 +73,7 @@ class TrebuchetLevelTest {
     fun `une seigneurie raconte tour village puis petit chateau`() {
         val precedent = TargetRules.style
         try {
-            TargetRules.style = TargetStyle.ARCADE
+            TargetRules.style = TargetStyle.JEU
             // La nouvelle famille est ajoutée après les seize graines historiques :
             // la graine 17 la désigne sans changer les niveaux 1 à 16.
             val lvl = TargetGenerator.generate(17L)
@@ -109,10 +110,10 @@ class TrebuchetLevelTest {
     fun `une ville est dense, haute et dans le budget`() {
         val precedent = TargetRules.style
         try {
-            TargetRules.style = TargetStyle.ARCADE
+            TargetRules.style = TargetStyle.JEU
             var vues = 0
             for (seed in 1L..60L) {
-                val kind = TargetGenerator.kindFor(seed, TargetStyle.ARCADE)
+                val kind = TargetGenerator.kindFor(seed, TargetStyle.JEU)
                 if (kind != SiteKind.VILLE && kind != SiteKind.METROPOLE) continue
                 vues++
                 val lvl = TargetGenerator.generate(seed)
@@ -154,9 +155,59 @@ class TrebuchetLevelTest {
         }
     }
 
+    /**
+     * L'objectif de tirs et la récompense disent la même chose du même site.
+     *
+     * Les deux sortent de [TargetGenerator.difficulty], et c'est tout le sujet : un site
+     * qui demande plus de coups doit payer davantage. S'ils calculaient chacun leur
+     * difficulté, ils finiraient par se contredire, et le joueur trouverait un site qui
+     * paie comme un facile en se jouant comme un difficile.
+     */
+    @Test
+    fun `un site plus dur demande plus de tirs et paie davantage`() {
+        val precedent = TargetRules.style
+        try {
+            TargetRules.style = TargetStyle.JEU
+            val hameau = TargetGenerator.generate(1L).structure
+            val chateau = TargetGenerator.generate(15L).structure
+            val metropole = TargetGenerator.generate(19L).structure
+            for ((nom, s) in listOf("hameau" to hameau, "château" to chateau, "métropole" to metropole)) {
+                println(
+                    "OBJECTIF $nom : difficulté ${"%.2f".format(TargetGenerator.difficulty(s))}, " +
+                        "${TargetGenerator.par(s)} tirs touchés, " +
+                        "${NeutrinoRewards.trebuchet(TargetGenerator.difficulty(s))} neutrinos"
+                )
+            }
+            assertTrue(
+                "le hameau n'est pas le plus facile",
+                TargetGenerator.difficulty(hameau) < TargetGenerator.difficulty(chateau)
+            )
+            assertTrue(
+                "la métropole n'est pas la plus dure",
+                TargetGenerator.difficulty(chateau) < TargetGenerator.difficulty(metropole)
+            )
+            // L'objectif et la récompense montent ensemble, jamais l'un sans l'autre.
+            assertTrue(
+                "l'objectif du hameau n'est pas plus court que celui de la métropole",
+                TargetGenerator.par(hameau) < TargetGenerator.par(metropole)
+            )
+            assertTrue(
+                "le hameau ne paie pas moins que la métropole",
+                NeutrinoRewards.trebuchet(TargetGenerator.difficulty(hameau)) <
+                    NeutrinoRewards.trebuchet(TargetGenerator.difficulty(metropole))
+            )
+            // Et l'objectif reste atteignable : le banc rase un hameau en quatre tirs
+            // touchés et une métropole en dix.
+            assertTrue("objectif de hameau hors barème", TargetGenerator.par(hameau) in 3..7)
+            assertTrue("objectif de métropole hors barème", TargetGenerator.par(metropole) in 9..15)
+        } finally {
+            TargetRules.style = precedent
+        }
+    }
+
     @Test
     fun `les villes existent dans les deux temperaments`() {
-        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.ARCADE) }.toSet()
+        val arcade = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.JEU) }.toSet()
         val realiste = (1L..40L).map { TargetGenerator.kindFor(it, TargetStyle.REALISTE) }.toSet()
         for (kind in listOf(SiteKind.VILLE, SiteKind.METROPOLE)) {
             assertTrue("$kind manque en arcade", kind in arcade)
@@ -253,5 +304,101 @@ class TrebuchetLevelTest {
             "le boulet n'a rien fait à la cible",
             cible.brokenRatio > 0f || cible.pieces.any { it.crackLevel > 0 }
         )
+    }
+    /**
+     * **Le barème du jeu : combien de boulets bien placés pour raser un site.**
+     *
+     * C'est le seul test qui mesure l'équilibre plutôt qu'une propriété, et il vaut
+     * tous les autres réunis pour ça : rien d'autre ne dirait qu'un réglage a rendu le
+     * jeu trivial ou impossible. On modélise un joueur qui vise correctement — à chaque
+     * tir, le boulet part sur la pièce debout la plus à gauche, au tiers de sa hauteur —
+     * et on compte les coups.
+     *
+     * Le barème mesuré à l'écriture de ce test : hameau 4 coups, moulin 6, village 10,
+     * château 10, centre-ville 15, métropole 10.
+     *
+     * Et surtout, **aucun site ne tombe au premier boulet**. C'était le cas quand la
+     * traversée était gratuite : le boulet ne payait que les points de vie de ce qu'il
+     * cassait, le bois n'en a presque pas, et un seul tir enfilait les vingt-six corps
+     * d'un hameau comme une boule de bowling.
+     *
+     * Deux fausses pistes valent d'être écrites, parce qu'elles reviendraient sinon.
+     * **Le curseur de solidité n'était pas la parade** : en quadruplant les points de
+     * vie, le hameau tombait toujours en un coup pendant que la métropole devenait
+     * inrasable. Et **une traversée tout ou rien** — plein si elle est méritée, zéro
+     * sinon — remettait bien le jeu à niveau mais aplatissait le barème à 7-14 coups
+     * partout : le nombre de tirs ne dépendait plus de ce que le site oppose, mais du
+     * nombre de couches à fêler, lequel est le même partout. D'où
+     * [TargetRules.PIERCE_UNEARNED], qui rend la pente.
+     */
+    @Test
+    fun `un site ne tombe jamais au premier boulet, et tombe en une douzaine`() {
+        // Deux classes, et des bornes larges : ce test garde une **forme de courbe**,
+        // pas un chiffre. Un site qui tombe en deux coups ou qui résiste à vingt est un
+        // défaut ; qu'un château demande neuf tirs plutôt que onze ne regarde personne.
+        val petits = 3..9
+        val gros = 6..18
+        val bornes = mapOf(
+            1L to petits,      // hameau
+            6L to petits,      // moulin
+            4L to gros,        // village
+            15L to gros,       // château
+            18L to gros,       // centre-ville
+            19L to gros        // métropole
+        )
+        // On mesure **tout** avant de juger : un barème dont la première ligne échoue
+        // n'apprendrait rien sur les cinq autres, et c'est justement la forme de la
+        // courbe entière qu'on veut voir dans le rapport d'échec.
+        val fautes = ArrayList<String>()
+        for ((seed, attendu) in bornes) {
+            val g = TrebuchetGame()
+            g.loadLevel(seed)
+            val f = g.targets
+            val nom = TargetGenerator.label(g.level!!)
+            var coups = 0
+            val courbe = StringBuilder()
+            while (coups < 20 && f.pieces.isNotEmpty() && !f.cleared) {
+                if (!tirVise(g)) break
+                coups++
+                courbe.append(" ${(f.progress * 100).toInt()}%")
+            }
+            println("BARÈME graine $seed $nom : ${if (f.cleared) "$coups coups" else "> 20 coups"} —$courbe")
+            if (!f.cleared) fautes += "graine $seed ($nom) n'a pas été rasé en vingt coups"
+            else if (coups !in attendu) fautes += "graine $seed ($nom) : $coups coups, attendu $attendu"
+        }
+        assertTrue(fautes.joinToString(" ; "), fautes.isEmpty())
+    }
+
+    /**
+     * Un tir de joueur qui vise : le boulet part sur la pièce debout la plus à gauche,
+     * au tiers de sa hauteur, à cent cinquante mètres par seconde.
+     *
+     * On le pose en vol plutôt que de régler une machine : ce banc mesure la solidité
+     * des constructions, pas la balistique, et une machine mal réglée mesurerait la
+     * machine.
+     */
+    private fun tirVise(g: TrebuchetGame): Boolean {
+        val f = g.targets
+        val cible = f.pieces.filter { !it.debris }.minByOrNull { it.body.x } ?: return false
+        g.release()
+        var garde = 0
+        while (!g.ballFree && garde < 600) {
+            g.step(1f / 60f)
+            garde++
+        }
+        if (!g.ballFree) return false
+        val sol = f.terrain.heightAt(cible.body.x)
+        g.ball.x = cible.body.x - 6f
+        g.ball.y = sol + (cible.body.topY() - sol) * 0.33f + 0.5f
+        g.ball.vx = 150f
+        g.ball.vy = 0f
+        g.world.forgetContacts(g.ball)
+        var t = 0f
+        while (g.phase == TrebuchetGame.Phase.FLIGHT && t < 40f) {
+            g.step(1f / 60f)
+            t += 1f / 60f
+        }
+        g.rebuild()
+        return true
     }
 }

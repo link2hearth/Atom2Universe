@@ -271,5 +271,6 @@
     <string name="neutrino_info_note_time">залежно від часу гри</string>
     <string name="neutrino_info_note_distance">залежно від відстані</string>
     <string name="neutrino_info_note_wave">за пройдену хвилю</string>
+    <string name="neutrino_info_note_site">за зруйнований об’єкт</string>
     <string name="neutrino_info_note_betting">залежно від ставки</string>
 </resources>

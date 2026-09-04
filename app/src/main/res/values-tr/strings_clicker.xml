@@ -269,5 +269,6 @@
     <string name="neutrino_info_note_time">oyun süresine göre</string>
     <string name="neutrino_info_note_distance">mesafeye göre</string>
     <string name="neutrino_info_note_wave">tamamlanan dalga başına</string>
+    <string name="neutrino_info_note_site">yıkılan alan başına</string>
     <string name="neutrino_info_note_betting">bahsinize göre</string>
 </resources>

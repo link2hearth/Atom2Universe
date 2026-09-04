@@ -169,7 +169,7 @@ class TrebuchetEffectsTest {
      */
     @Test
     fun `raser un site tire le feu d artifice`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.loadLevel(1L)
         assertTrue("le spectacle part avant la victoire", !g.effects.busy)

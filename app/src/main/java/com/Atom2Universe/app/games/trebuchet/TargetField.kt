@@ -104,6 +104,17 @@ class TargetPiece internal constructor(
     /** Temps passé immobile, pour le ramassage des petits débris. */
     internal var restTimer = 0f
 
+    /**
+     * L'usure que cette pierre avait **au départ du tir en cours**.
+     *
+     * C'est ce qui permet de tenir la promesse « le premier coup fragilise, le second
+     * passe à travers » : le projectile ne gagne son passage que s'il achève une pierre
+     * qu'un tir **précédent** avait déjà fêlée. La mesurer à l'instant du choc ne
+     * marcherait pas — une pierre qu'on vient de casser est usée à cent pour cent par
+     * définition, et tout serait toujours traversable.
+     */
+    internal var wearAtShotStart = 0f
+
     /** 0 = intacte, 1 = sur le point de rompre. */
     val wear: Float get() = if (maxHp <= 0f) 0f else (1f - hp / maxHp).coerceIn(0f, 1f)
 
@@ -231,17 +242,66 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
     private val piercers = ArrayList<PhysBody>(8)
     private val pierceCosts = ArrayList<Float>(8)
 
+    /** Vrai quand ce projectile a gagné son passage dans l'image écoulée. */
+    private val pierceEarned = ArrayList<Boolean>(8)
+
+    /**
+     * Le coup critique du tir en cours : un seul essai, tenté à la **première** pierre
+     * intacte qu'un projectile emporte.
+     *
+     * On tire le dé au moment où ça compte plutôt qu'au départ du tir : un tir qui ne
+     * touche rien ne doit pas gaspiller sa chance.
+     */
+    private var criticalTried = false
+
     /** Déclare un projectile : on saura désormais ce qu'il casse lui-même. */
     fun trackPiercer(body: PhysBody) {
         if (piercers.contains(body)) return
         piercers.add(body)
         pierceCosts.add(0f)
+        pierceEarned.add(false)
     }
 
     /** Oublie tous les projectiles suivis. À faire entre deux tirs. */
     fun forgetPiercers() {
         piercers.clear()
         pierceCosts.clear()
+        pierceEarned.clear()
+    }
+
+    /**
+     * Ouvre un tir : on relève l'état de chaque pierre, et on rend son dé au critique.
+     *
+     * À appeler au largage. Sans ce relevé, « déjà fêlée » se lirait sur l'usure de
+     * l'instant, qui vaut cent pour cent pour toute pierre qu'on vient de briser.
+     */
+    fun beginShot() {
+        for (p in live) p.wearAtShotStart = p.wear
+        criticalTried = false
+        // Et le drapeau « ce tir a touché », qui sert à noter le joueur sur ses tirs
+        // qui portent plutôt que sur ses tirs d'ajustement.
+        tookDamage = false
+    }
+
+    /**
+     * Vrai si ce projectile a **gagné son passage** dans l'image écoulée.
+     *
+     * Le passage ne se donne plus, il se mérite, et de deux façons seulement :
+     *
+     *  - il achève une pierre qu'un tir précédent avait **déjà fêlée** — c'est la règle
+     *    lisible, « le premier coup fragilise, le second passe », et le joueur la voit
+     *    sur la craquelure de la pierre avant de tirer ;
+     *  - ou il décroche son **coup critique** ([TargetRules.PIERCE_CRIT_CHANCE]), une
+     *    seule fois par tir, et seulement sur la première couche.
+     *
+     * Partout ailleurs, un boulet qui casse s'arrête dans ce qu'il vient de casser. La
+     * traversée gratuite et permanente était le défaut central du jeu : un seul boulet
+     * rasait un hameau de vingt-six corps parce que le bois ne coûte presque rien à
+     * briser, et le boulet repartait chaque fois avec toute sa vitesse.
+     */
+    fun piercedThrough(body: PhysBody): Boolean {
+        val i = piercers.indexOf(body)
+        return i >= 0 && pierceEarned[i]
     }
 
     /**
@@ -280,7 +340,17 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
                 best = i
             }
         }
-        if (best >= 0) pierceCosts[best] = pierceCosts[best] + cost
+        if (best < 0) return
+        pierceCosts[best] = pierceCosts[best] + cost
+        when {
+            // Elle était déjà fêlée avant ce tir : le boulet passe au travers.
+            p.wearAtShotStart >= TargetRules.PIERCE_SOFT_WEAR -> pierceEarned[best] = true
+            // Sinon, sa seule chance du tir : le coup critique, et une couche.
+            !criticalTried -> {
+                criticalTried = true
+                if (rng.nextFloat() < TargetRules.PIERCE_CRIT_CHANCE) pierceEarned[best] = true
+            }
+        }
     }
 
     /**
@@ -557,7 +627,10 @@ class TargetField(private val world: PhysWorld, seed: Long = 1L) {
         updateDormancy()
         if (dormant) return
 
-        for (i in pierceCosts.indices) pierceCosts[i] = 0f
+        for (i in pierceCosts.indices) {
+            pierceCosts[i] = 0f
+            pierceEarned[i] = false
+        }
 
         var someBroke = false
         for (p in live) {

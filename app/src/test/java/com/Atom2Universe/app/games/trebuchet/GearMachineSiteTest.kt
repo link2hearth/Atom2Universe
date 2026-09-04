@@ -166,4 +166,61 @@ class GearMachineSiteTest {
         assertTrue("la machine a disparu avec le site", game.gears.isNotEmpty())
         assertEquals(0f, abs(game.terrain.heightAt(0f)), 1e-4f)
     }
+
+    /**
+     * **Un site posé au fond d'un vallon reste au fond du vallon.**
+     *
+     * L'atelier pose une dalle de quarante kilomètres sous tout le monde : elle porte la
+     * machine et ferme le monde de part et d'autre du relief, lequel ne couvre que la
+     * longueur du site. Cette dalle a longtemps eu sa face supérieure calée **à
+     * l'altitude zéro** — et un site de vallon descend jusqu'à huit mètres sous le
+     * niveau de la machine. C'était donc la dalle qui portait le village, pas le relief,
+     * pendant que le décor se dessinait sur le vrai profil : bâtiments et gravats
+     * flottaient huit mètres au-dessus du sol qu'on leur voyait.
+     *
+     * Le pire était que ça ne se voyait qu'au **premier impact** : la cible se charge
+     * endormie, donc rien ne bougeait tant que rien ne la touchait. Le boulet arrivait,
+     * tout se réveillait d'un coup, et le site remontait en bloc.
+     *
+     * On mesure donc la seule chose qui compte : après avoir fait tourner le monde, une
+     * pierre est-elle toujours là où le générateur l'avait posée.
+     */
+    @Test
+    fun `un site en contrebas ne remonte pas a l altitude zero`() {
+        val precedent = TargetRules.style
+        try {
+            TargetRules.style = TargetStyle.JEU
+            var vallonsVus = 0
+            for (seed in 1L..40L) {
+                val game = GearMachineGame()
+                game.loadSite(seed)
+                val site = game.targets
+                if (site.pieces.isEmpty()) continue
+                // Seuls les reliefs qui descendent sous la machine sont concernés.
+                if (game.terrain.lowest > -0.5f) continue
+                vallonsVus++
+
+                val avant = site.pieces.map { it.body to it.body.y }
+                site.wake()
+                repeat(600) {
+                    game.world.stepFrame(1f / 60f)
+                    site.update(1f / 60f)
+                }
+                var pire = 0f
+                for ((corps, y0) in avant) pire = maxOf(pire, corps.y - y0)
+                println(
+                    "VALLON graine $seed : sol à ${"%.1f".format(game.terrain.lowest)} m, " +
+                        "la pierre la plus soulevée a monté de ${"%.2f".format(pire)} m"
+                )
+                assertTrue(
+                    "graine $seed : le site a remonté de ${"%.2f".format(pire)} m — " +
+                        "la dalle passe au-dessus du relief",
+                    pire < 0.5f
+                )
+            }
+            assertTrue("aucun site en contrebas dans les quarante premières graines", vallonsVus > 0)
+        } finally {
+            TargetRules.style = precedent
+        }
+    }
 }

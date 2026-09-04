@@ -249,13 +249,18 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         val b = projectile?.body ?: return
         val cost = targets.pierceCost(b)
         if (cost <= 0f) return
+        // Plein s'il a gagné son passage — pierre déjà fêlée, ou coup critique, voir
+        // [com.Atom2Universe.app.games.trebuchet.TargetField.piercedThrough] — et un
+        // reliquat sinon.
+        val part = refund *
+            if (targets.piercedThrough(b)) 1f else TargetRules.PIERCE_UNEARNED
         val v0 = hypot(momentumVx, momentumVy)
         if (v0 < 1f) return
         val left = (momentumEnergy - cost).coerceAtLeast(0f)
         val voulu = sqrt(2f * left / b.mass)
         val maintenant = hypot(b.vx, b.vy)
         if (voulu <= maintenant) return
-        val v = maintenant + (voulu - maintenant) * refund
+        val v = maintenant + (voulu - maintenant) * part
         b.wake()
         b.vx = momentumVx / v0 * v
         b.vy = momentumVy / v0 * v
@@ -556,16 +561,34 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     /**
-     * Pose la dalle de sol. Sa face supérieure est exactement à zéro, comme la ligne
-     * d'herbe que dessine la vue, et elle traverse toutes les couches : un boulet tiré
-     * depuis l'étage +3 retombe sur la même terre que les autres.
+     * Pose la dalle de sol, **sous** le relief et jamais au travers.
+     *
+     * Elle traverse toutes les couches — un boulet tiré depuis l'étage +3 retombe sur la
+     * même terre que les autres — et elle ferme le monde de part et d'autre du relief.
+     *
+     * **Sa face supérieure suit le point le plus bas du relief, elle n'est pas à zéro.**
+     * Elle l'a été, et c'était le défaut le plus déroutant du jeu : une dalle de quarante
+     * kilomètres calée à l'altitude zéro passe **au-dessus** d'un site posé au fond d'un
+     * vallon, lequel descend jusqu'à huit mètres sous le niveau de la machine. C'était
+     * donc la dalle qui portait le village, pas le relief. Le décor, lui, se dessine sur
+     * le vrai profil : le joueur voyait ses bâtiments et leurs gravats **suspendus à huit
+     * mètres au-dessus du sol**.
+     *
+     * Et le décalage ne se voyait qu'au premier impact : la cible se charge endormie
+     * ([TargetField.trySleep]), donc rien ne bougeait tant que rien ne la touchait. Le
+     * boulet arrivait, tout se réveillait, et le site remontait d'un bloc — « l'immeuble
+     * a grandi pendant le tir ».
+     *
+     * Sur un relief plat ou entièrement au-dessus de zéro, le minimum vaut zéro et la
+     * dalle ne bouge pas d'un millimètre : c'est la même dalle qu'avant.
      */
     private fun addGround() {
+        val sommet = minOf(0f, terrain.lowest)
         ground = PhysBody(
             GearMachineRules.GROUND_HALF_WIDTH, GearMachineRules.GROUND_DEPTH / 2f, 0f
         ).apply {
             x = 0f
-            y = -GearMachineRules.GROUND_DEPTH / 2f
+            y = sommet - GearMachineRules.GROUND_DEPTH / 2f
             lockPosition = true
             lockRotation = true
             friction = 0.62f
@@ -1861,6 +1884,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         targets.forgetPiercers()
         targets.resetHitFlag()
         targets.trackPiercer(shot)
+        // Le tir s'ouvre : le site relève l'état de chaque pierre, qui décidera de ce
+        // que ce boulet-là a le droit de traverser. Même règle qu'au trébuchet.
+        targets.beginShot()
         projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy, targetX())
         phase = Phase.FLIGHT
         trailClear()

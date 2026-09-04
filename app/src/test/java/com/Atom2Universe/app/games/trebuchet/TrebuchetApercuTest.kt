@@ -360,7 +360,7 @@ class TrebuchetApercuTest {
 
     @Test
     fun apercu() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
         for (seed in 1L..20L) {
@@ -372,7 +372,7 @@ class TrebuchetApercuTest {
     /** Les six pièces du catalogue de détails, posées côte à côte pour les voir sans niveau. */
     @Test
     fun apercuDetails() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
         val blocks = ArrayList<Block>()
@@ -417,7 +417,7 @@ class TrebuchetApercuTest {
 
     @Test
     fun apercuDetailsZoom() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
         closeup(Masonry.windowedWall(Material.STONE, 0f, 0f, 5f, 4f), File(dir, "detail-fenetre.svg"))
@@ -431,7 +431,7 @@ class TrebuchetApercuTest {
 
     @Test
     fun apercuNouveauxBatiments() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
         val modules = listOf(
@@ -468,11 +468,11 @@ class TrebuchetApercuTest {
      */
     @Test
     fun apercuVilles() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val dir = File(System.getProperty("apercu.dir") ?: "build/apercu")
         dir.mkdirs()
         for (seed in 1L..60L) {
-            val kind = TargetGenerator.kindFor(seed, TargetStyle.ARCADE)
+            val kind = TargetGenerator.kindFor(seed, TargetStyle.JEU)
             if (kind != SiteKind.VILLE && kind != SiteKind.METROPOLE) continue
             svg(TargetGenerator.generate(seed), File(dir, "ville-$seed.svg"))
         }

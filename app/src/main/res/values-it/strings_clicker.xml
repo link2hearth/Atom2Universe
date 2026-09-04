@@ -269,5 +269,6 @@
     <string name="neutrino_info_note_time">in base al tempo di gioco</string>
     <string name="neutrino_info_note_distance">in base alla distanza</string>
     <string name="neutrino_info_note_wave">per ondata completata</string>
+    <string name="neutrino_info_note_site">per sito raso al suolo</string>
     <string name="neutrino_info_note_betting">in base alla puntata</string>
 </resources>

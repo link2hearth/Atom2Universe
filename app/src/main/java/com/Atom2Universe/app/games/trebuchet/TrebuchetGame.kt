@@ -877,6 +877,19 @@ class TrebuchetGame {
 
     var shotCount = 0
         private set
+
+    /**
+     * Les tirs qui ont **touché**, c'est-à-dire fait perdre de la vie à au moins une
+     * pierre. C'est le seul compteur dont on puisse faire une note.
+     *
+     * Compter les tirs *lancés* punirait le réglage, c'est-à-dire le jeu lui-même : au
+     * trébuchet on ajuste sa machine sur plusieurs coups avant d'être sûr de toucher où
+     * l'on vise, et ces coups-là doivent rester **gratuits**. Compter les tirs qui
+     * portent, en revanche, mesure exactement ce qu'on veut mesurer : est-ce que le
+     * joueur a visé juste une fois qu'il savait viser.
+     */
+    var hitCount = 0
+        private set
     var bestDistance = 0f
         private set
 
@@ -1142,6 +1155,7 @@ class TrebuchetGame {
         build()
         targets.load(lvl.structure, lvl.terrain)
         shotCount = 0
+        hitCount = 0
         celebrated = false
         effects.clear()
         applyWind(lvl.wind)
@@ -1274,6 +1288,9 @@ class TrebuchetGame {
         // La machine vient peut-être de passer plusieurs secondes à l'arrêt : on la
         // réveille avant de la lâcher, sinon la détente ne déclencherait rien.
         world.wakeAll()
+        // Le tir s'ouvre ici : le champ relève l'état de chaque pierre, qui décidera de
+        // ce que le boulet a le droit de traverser.
+        targets.beginShot()
         trailClear()
         elapsed = 0f
         trailTimer = 0f
@@ -1459,11 +1476,19 @@ class TrebuchetGame {
         if (!ballFree || ballGone) return
         val refund = TargetRules.style.pierce
         if (refund <= 0f) return
+        // Le passage se **gagne** : pierre déjà fêlée, ou coup critique. Voir
+        // [TargetField.piercedThrough] — c'est le champ qui tient la règle, parce que
+        // c'est lui qui sait ce que le boulet vient d'achever et dans quel état c'était.
+        
         val n = 1 + shards.size
         for (i in 0 until n) {
             val b = if (i == 0) ball else shards[i - 1]
             val cost = targets.pierceCost(b)
             if (cost <= 0f) continue
+            // Plein s'il a gagné son passage, un reliquat sinon : voir
+            // [TargetRules.PIERCE_UNEARNED] pour ce que ce reliquat sauve.
+            val part = refund *
+                if (targets.piercedThrough(b)) 1f else TargetRules.PIERCE_UNEARNED
             val vx0 = momentum[3 * i]
             val vy0 = momentum[3 * i + 1]
             val v0 = hypot(vx0, vy0)
@@ -1472,7 +1497,7 @@ class TrebuchetGame {
             val wanted = sqrt(2f * left / b.mass)
             val now = hypot(b.vx, b.vy)
             if (wanted <= now) continue
-            val v = now + (wanted - now) * refund
+            val v = now + (wanted - now) * part
             b.wake()
             b.vx = vx0 / v0 * v
             b.vy = vy0 / v0 * v
@@ -1723,6 +1748,9 @@ class TrebuchetGame {
             if (shotDistance > bestDistance) bestDistance = shotDistance
         }
         shotCount++
+        // « Touché » se lit sur la cible elle-même : le drapeau se lève dès qu'un choc a
+        // entamé une pierre, et il est remis à zéro à l'ouverture du tir.
+        if (targets.tookDamage) hitCount++
         // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
         ghostList.add(0, trailBuf.copyOf(trailCount))
         while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)

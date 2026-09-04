@@ -271,5 +271,6 @@
     <string name="neutrino_info_note_time">по времени игры</string>
     <string name="neutrino_info_note_distance">по дистанции</string>
     <string name="neutrino_info_note_wave">за пройденную волну</string>
+    <string name="neutrino_info_note_site">за разрушенный объект</string>
     <string name="neutrino_info_note_betting">по вашей ставке</string>
 </resources>

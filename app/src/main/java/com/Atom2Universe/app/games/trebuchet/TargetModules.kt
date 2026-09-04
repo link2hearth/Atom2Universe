@@ -3,9 +3,11 @@ package com.Atom2Universe.app.games.trebuchet
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.ceil
+import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.random.Random
 
 /**
@@ -290,13 +292,22 @@ object Masonry {
         val halfW = width / 2f
         val slope = hypot(halfW, rise)
         val angle = atan2(rise, halfW)
+        // Les deux versants s'arrêtent **avant** le faîtage plutôt que de s'y croiser.
+        // Croisés, ils se chevauchaient d'un quart de mètre au sommet — invisible tant
+        // que le toit tient, puisqu'un corps composé est parfaitement rigide, mais le
+        // jour où il casse en ses deux versants ceux-ci sont deux corps libres imbriqués
+        // et se repoussent. Un petit jour au faîtage ne se voit pas : la silhouette
+        // dessinée est un pignon plein ([Silhouette.GABLE_ROOF]).
+        val c = cos(angle)
+        val s = sin(angle)
+        val jour = thickness / 2f
         return Block.compound(
             material, left + halfW, bottom + rise / 2f,
             surface = surface, silhouette = Silhouette.GABLE_ROOF,
             visualVariant = visualVariant
         ) {
-            box(slope / 2f, thickness / 2f, -halfW / 2f, 0f, angle)
-            box(slope / 2f, thickness / 2f, halfW / 2f, 0f, -angle)
+            box(slope / 2f - jour, thickness / 2f, -halfW / 2f - jour * c, -jour * s, angle)
+            box(slope / 2f - jour, thickness / 2f, halfW / 2f + jour * c, -jour * s, -angle)
         }
     }
 
@@ -1117,11 +1128,22 @@ object TargetModules {
         // pas — elles feraient un moulin difforme, ce qui est pire.
         val moyeu = chapeauH / 2f + demiAile * 0.75f
         val cx = left + width / 2f
+        // **Quatre demi-ailes qui partent du moyeu, et non deux barres croisées.** Deux
+        // barres qui se croisent se chevauchent sur toute leur épaisseur ; tant que la
+        // croix tient, ça ne se voit pas — un corps composé est parfaitement rigide —
+        // mais elle casse **en ses pièces**, et deux barres imbriquées d'un mètre se
+        // repoussent violemment en devenant des corps libres. Découpée au moyeu, la
+        // croix se lit exactement pareil et part en quatre ailes.
+        val moyeuR = epaisseur
+        val aileL = (demiAile - moyeuR).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS * 2f)
         out += Block.compound(Material.WOOD, cx, futH + galerieH + chapeauH / 2f) {
             box(chapeauW / 2f, chapeauH / 2f, 0f, 0f)
             box(epaisseur / 2f, (moyeu - chapeauH / 2f) / 2f, 0f, (moyeu + chapeauH / 2f) / 2f)
-            box(demiAile, epaisseur / 2f, 0f, moyeu, QUART)
-            box(demiAile, epaisseur / 2f, 0f, moyeu, -QUART)
+            for (k in 0 until 4) {
+                val a = QUART + k * (PI / 2.0).toFloat()
+                val r = moyeuR + aileL / 2f
+                box(aileL / 2f, epaisseur / 2f, r * cos(a), moyeu + r * sin(a), a)
+            }
         }
         return out
     }
@@ -1763,9 +1785,12 @@ object TargetModules {
             box(width / 2f, slabH / 2f, 0f, -crownH / 2f + slabH / 2f)
             box(ediculeW / 2f, (crownH - slabH) / 2f, 0f, slabH / 2f)
             if (mat) {
+                // Il part du **toit** de l'édicule et non de son ventre : planté dedans,
+                // il en ressortait comme un boulon au moment où la couronne se brise.
+                val mature = crownH * 0.9f
                 box(
-                    TargetRules.MIN_HALF_THICKNESS * 1.6f, crownH * 0.8f,
-                    ediculeW * 0.25f, crownH * 1.05f
+                    TargetRules.MIN_HALF_THICKNESS * 1.6f, mature / 2f,
+                    ediculeW * 0.25f, crownH / 2f + mature / 2f
                 )
             }
         }
@@ -1843,13 +1868,28 @@ object TargetModules {
     ) {
         val clear = (height - slabH).coerceAtLeast(TargetRules.MIN_HALF_THICKNESS * 2f)
         val n = piers.coerceAtLeast(2)
-        for (i in 0 until n) {
-            val x = -width / 2f + pierW / 2f + i * (width - pierW) / (n - 1)
-            b.box(pierW / 2f, clear / 2f, x, base + clear / 2f)
-        }
+        fun axe(i: Int) = -width / 2f + pierW / 2f + i * (width - pierW) / (n - 1)
+        for (i in 0 until n) b.box(pierW / 2f, clear / 2f, axe(i), base + clear / 2f)
+
+        // **Une allège par travée, jamais une seule sur toute la largeur.** Un étage
+        // large a trois poteaux et non deux : une allège d'un seul tenant enfouissait
+        // celui du milieu sur un mètre et demi.
+        //
+        // Deux pièces d'un même corps ont le droit de se chevaucher tant qu'il tient —
+        // elles sont parfaitement solidaires — mais **le bloc composé est aussi son plan
+        // de fracture** : à la rupture, chaque pièce devient un corps libre à la pose
+        // qu'elle avait, et deux corps imbriqués d'un mètre et demi se repoussent
+        // violemment. C'est ce qu'on voyait en pilonnant une tour par le toit : au
+        // moment de l'impact, l'immeuble « grandissait » d'un coup.
         if (spandrel > TargetRules.MIN_HALF_THICKNESS * 2f) {
-            val inner = width - 2f * pierW
-            if (inner > 0f) b.box(inner / 2f, spandrel / 2f, 0f, base + spandrel / 2f)
+            for (i in 0 until n - 1) {
+                val gauche = axe(i) + pierW / 2f
+                val droite = axe(i + 1) - pierW / 2f
+                val w = droite - gauche
+                if (w > TargetRules.MIN_HALF_THICKNESS * 2f) {
+                    b.box(w / 2f, spandrel / 2f, (gauche + droite) / 2f, base + spandrel / 2f)
+                }
+            }
         }
         b.box(width / 2f, slabH / 2f, 0f, base + clear + slabH / 2f)
     }

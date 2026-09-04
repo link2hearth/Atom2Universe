@@ -199,7 +199,7 @@ enum class Projectile(
      * boulets pour le prix d'un.
      */
     fun shardMass(): Float =
-        if (TargetRules.style == TargetStyle.ARCADE) mass else mass / shards
+        if (TargetRules.style == TargetStyle.JEU) mass else mass / shards
 
     companion object {
 

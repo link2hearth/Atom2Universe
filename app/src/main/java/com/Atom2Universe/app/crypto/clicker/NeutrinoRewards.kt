@@ -86,6 +86,31 @@ object NeutrinoRewards {
     fun link(difficultyOrdinal: Int, pairsOrdinal: Int) =
         linkBase(difficultyOrdinal) * linkMultiplier(pairsOrdinal)
 
+    // ── Trébuchet : de 10 à 50 selon le site rasé ──────────────────────────────
+    //
+    // La récompense ne dépend **pas du nombre de tirs**, et c'est délibéré : au
+    // trébuchet on règle sa machine sur plusieurs coups avant d'être sûr de toucher où
+    // l'on vise. Compter les tirs punirait le réglage, c'est-à-dire le jeu lui-même.
+    //
+    // Elle dépend de ce que le site oppose : **de quoi il est fait** et **combien il en
+    // faut**. Un hameau de bois de vingt-six corps vaut le minimum ; une métropole de
+    // béton et d'acier de cent corps vaut le maximum. Les deux mesures existent déjà
+    // sur la construction — `Structure.masonryShare` et le nombre de blocs — et rien
+    // n'a eu besoin d'être inventé pour ça.
+    const val TREBUCHET_MIN = 10
+    const val TREBUCHET_MAX = 50
+
+    /**
+     * [difficulty] va de 0 (un hameau de bois) à 1 (une métropole de béton), et vient de
+     * `TargetGenerator.difficulty` — **elle ne se recalcule pas ici**. Le même chiffre
+     * décide de l'objectif de tirs du niveau ; deux calculs séparés finiraient par se
+     * contredire, et un site paierait comme un facile en se jouant comme un difficile.
+     */
+    fun trebuchet(difficulty: Float): Int =
+        (TREBUCHET_MIN + (TREBUCHET_MAX - TREBUCHET_MIN) * difficulty.coerceIn(0f, 1f))
+            .toInt()
+            .coerceIn(TREBUCHET_MIN, TREBUCHET_MAX)
+
     // ── Nucléa : 2 neutrinos par vague terminée ────────────────────────────────
     const val NUCLEA_PER_WAVE = 2
     fun nuclea(wavesCleared: Int) = wavesCleared * NUCLEA_PER_WAVE
@@ -144,6 +169,11 @@ object NeutrinoRewards {
             ),
             Entry(R.string.escape_title, list(ESCAPE_VALUES.toList()), R.string.neutrino_info_note_perfect),
             // Arcade
+            Entry(
+                R.string.trebuchet_title,
+                "$TREBUCHET_MIN – $TREBUCHET_MAX",
+                R.string.neutrino_info_note_site
+            ),
             Entry(R.string.nuclea_title, "$NUCLEA_PER_WAVE", R.string.neutrino_info_note_wave),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),

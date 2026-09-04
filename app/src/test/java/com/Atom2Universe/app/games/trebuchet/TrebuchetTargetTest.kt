@@ -31,7 +31,7 @@ class TrebuchetTargetTest {
 
     @After
     fun rendLeMode() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     private fun world(): PhysWorld = PhysWorld().apply {
@@ -537,7 +537,7 @@ class TrebuchetTargetTest {
         // en réaliste, où l'objectif tombe à trente pour cent sur de la maçonnerie. Ce
         // n'est pas une inconséquence, c'est la définition — « impossible » veut dire
         // « impossible pour l'objectif demandé », et l'objectif dépend du mode.
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val increvable = Structure(
             listOf(
                 Block.laid(Material.STONE, 0f, 0f, 1f, 3f, Role.FOUNDATION),

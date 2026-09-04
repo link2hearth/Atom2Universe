@@ -23,12 +23,12 @@ class TrebuchetTerrainTest {
 
     @Before
     fun modeArcade() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     @After
     fun rendLeMode() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     // ── La géométrie ──────────────────────────────────────────────────────────

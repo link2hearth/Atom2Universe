@@ -27,7 +27,7 @@ class TrebuchetProjectileTest {
 
     @After
     fun rendLeMode() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     private fun world(): PhysWorld = PhysWorld().apply {
@@ -72,9 +72,18 @@ class TrebuchetProjectileTest {
         }
         w.add(b)
         f.trackPiercer(b)
+        f.beginShot()
 
         // Le champ de cibles ne rend pas l'élan tout seul : c'est le jeu qui le fait,
         // et on refait ici, à la main, exactement ce que fait [TrebuchetGame.step].
+        //
+        // **Le facteur [TargetStyle.pierce] compris.** Cette boucle l'a longtemps ignoré
+        // — elle ne s'en servait que comme d'un interrupteur, et rendait toujours la
+        // traversée *complète*. Tant que le curseur valait un, la différence ne se
+        // voyait pas ; le jour où il est passé à 0,6 pour cesser qu'un seul boulet rase
+        // un hameau entier, le banc a continué de mesurer l'ancien jeu et n'aurait rien
+        // dit d'une régression.
+        val rendu = TargetRules.style.pierce
         var vitesseFinale = 0f
         repeat(240) {
             val vx0 = b.vx
@@ -83,13 +92,19 @@ class TrebuchetProjectileTest {
             w.stepFrame(1f / 60f)
             f.update(1f / 60f)
             val cost = f.pierceCost(b)
-            if (cost > 0f && TargetRules.style.pierce > 0f) {
+            if (cost > 0f && rendu > 0f) {
+                // Plein si le passage a été gagné — pierre déjà fêlée ou coup critique —
+                // et un reliquat sinon, exactement comme [TrebuchetGame.pierceThrough].
+                val part = rendu *
+                    if (f.piercedThrough(b)) 1f else TargetRules.PIERCE_UNEARNED
                 val v0 = hypot(vx0, vy0)
                 val reste = (e0 - cost).coerceAtLeast(0f)
                 val voulu = kotlin.math.sqrt(2f * reste / b.mass)
-                if (voulu > hypot(b.vx, b.vy) && v0 > 1f) {
-                    b.vx = vx0 / v0 * voulu
-                    b.vy = vy0 / v0 * voulu
+                val maintenant = hypot(b.vx, b.vy)
+                if (voulu > maintenant && v0 > 1f) {
+                    val v = maintenant + (voulu - maintenant) * part
+                    b.vx = vx0 / v0 * v
+                    b.vy = vy0 / v0 * v
                     w.forgetContacts(b)
                 }
             }
@@ -98,10 +113,25 @@ class TrebuchetProjectileTest {
         return Triple(f.brokenRatio, b.x, vitesseFinale)
     }
 
+    /**
+     * La promesse de jeu : **le boulet ne repart jamais en arrière**.
+     *
+     * Elle disait « il traverse » du temps où la traversée était gratuite : le boulet
+     * ressortait alors sept mètres derrière la courtine, et le même mécanisme lui
+     * faisait raser un hameau entier d'un seul tir. Le passage se **gagne** maintenant
+     * — pierre déjà fêlée ou coup critique — et sur une courtine de pierre encore
+     * intacte, le premier boulet s'arrête contre elle.
+     *
+     * C'est la bonne promesse, et c'est la meilleure des deux : ce qu'on ne veut pas
+     * voir n'est pas un boulet qui s'arrête, c'est un boulet qui **revient sur le
+     * joueur** après avoir cassé ce qu'il touchait. Le tir part de vingt mètres, le mur
+     * commence à quarante : en réaliste le boulet finit **derrière** son point de
+     * départ, en jeu il finit contre la maçonnerie.
+     */
     @Test
-    fun `en arcade le boulet traverse au lieu de rebondir`() {
+    fun `le boulet ne repart jamais en arriere`() {
         val (casseR, xR, vxR) = tirDansUnMur(TargetStyle.REALISTE)
-        val (casseA, xA, vxA) = tirDansUnMur(TargetStyle.ARCADE)
+        val (casseA, xA, vxA) = tirDansUnMur(TargetStyle.JEU)
         println(
             "TRAVERSÉE réaliste : ${"%.1f".format(casseR * 100)}% détruit, " +
                 "le boulet finit en x=${"%.0f".format(xR)} à ${"%.0f".format(vxR)} m/s"
@@ -114,9 +144,18 @@ class TrebuchetProjectileTest {
             "l'arcade ne casse pas plus que le réaliste : $casseA contre $casseR",
             casseA > casseR
         )
-        // Le mur est à quarante mètres : un boulet qui traverse en ressort par l'autre
-        // côté, un boulet qui rebondit revient en arrière.
-        assertTrue("le boulet d'arcade n'a pas traversé le mur : x=$xA", xA > 45f)
+        assertTrue(
+            "le boulet réaliste n'est pas revenu en arrière : x=$xR (le tir part de 20)",
+            xR < 20f
+        )
+        assertTrue(
+            "le boulet de jeu est revenu en arrière : x=$xA (le tir part de 20)",
+            xA > 20f
+        )
+        assertTrue(
+            "le boulet de jeu n'a pas atteint le mur : x=$xA (le mur commence à 40)",
+            xA > 35f
+        )
     }
 
     /**
@@ -133,7 +172,7 @@ class TrebuchetProjectileTest {
      */
     @Test
     fun `la traversee ne cree jamais d energie`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         // Le boulet léger et le boulet lourd : le second remplace le « bloc lourd » qui
         // était une entrée du catalogue avant que le poids ne se règle.
         for (kg in listOf(Projectile.DEFAULT_BALL_MASS, 34f)) {
@@ -181,7 +220,7 @@ class TrebuchetProjectileTest {
 
     @Test
     fun `le paquet se separe pendant la descente et pas avant`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.config.projectile = Projectile.FRAGMENTATION
         g.loadLevel(4L)
@@ -223,7 +262,7 @@ class TrebuchetProjectileTest {
     fun `chaque projectile a sa maniere de casser`() {
         val degats = HashMap<Projectile, Float>()
         for (kind in Projectile.entries) {
-            TargetRules.style = TargetStyle.ARCADE
+            TargetRules.style = TargetStyle.JEU
             val g = TrebuchetGame()
             g.config.projectile = kind
             g.loadLevel(1L)
@@ -253,7 +292,7 @@ class TrebuchetProjectileTest {
 
     @Test
     fun `la bombe souffle a l impact`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.config.projectile = Projectile.BOMBE
         g.loadLevel(1L)
@@ -294,7 +333,7 @@ class TrebuchetProjectileTest {
      */
     @Test
     fun `la bombe cesse d exister une fois qu elle a explose`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.config.projectile = Projectile.BOMBE
         g.loadLevel(1L)
@@ -355,7 +394,7 @@ class TrebuchetProjectileTest {
      */
     @Test
     fun `une bombe entame un chateau dans les deux modes`() {
-        for (style in listOf(TargetStyle.REALISTE, TargetStyle.ARCADE)) {
+        for (style in listOf(TargetStyle.REALISTE, TargetStyle.JEU)) {
             TargetRules.style = style
             val g = TrebuchetGame()
             g.config.projectile = Projectile.BOMBE
@@ -415,7 +454,7 @@ class TrebuchetProjectileTest {
      */
     @Test
     fun `le poids du boulet se regle et emmene le rayon avec lui`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val boulet = Projectile.BOULET
 
         // Le rayon suit la masse en racine cubique, et la loi est calée sur le catalogue
@@ -495,7 +534,7 @@ class TrebuchetProjectileTest {
      */
     @Test
     fun `une grosse charge frappe plus fort et vole moins loin`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
 
         fun portee(sticks: Int): Float {
             val g = TrebuchetGame()

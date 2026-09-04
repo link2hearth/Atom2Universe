@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="trebuchet_neutrinos">⚛ +%1$d neutrinos</string>
     <string name="trebuchet_title">Trebuchet</string>
     <string name="trebuchet_description">Build a throwing machine — you never aim, you compute</string>
     <string name="trebuchet_back">Back</string>
@@ -50,8 +51,9 @@
     <string name="trebuchet_sel_sling_shot">Sling &#8212; %1$s m &#183; %2$s</string>
 
     <!-- Target site. Other locales fall back here until they are translated. -->
-    <string name="trebuchet_level">%1$s · %2$d %% of %3$d %% · %4$d shot(s)</string>
-    <string name="trebuchet_level_cleared">%1$s — RAZED in %2$d shot(s)!</string>
+    <string name="trebuchet_level">%1$s · %2$d %% of %3$d %% · %4$d/%5$d hits</string>
+    <string name="trebuchet_level_cleared">%1$s — RAZED in %2$d hits (par %3$d)!</string>
+    <string name="trebuchet_level_best"> · best %1$d</string>
     <string name="trebuchet_btn_next">Next site</string>
     <string name="trebuchet_btn_machines">Machines ▾</string>
 
@@ -172,8 +174,6 @@
     <string name="trebuchet_gear_shaft_pending_tip">Shaft coupling ready. Choose another layer and tap its wheel: it will be centred here and engaged progressively.</string>
     <string name="trebuchet_gear_layout_conflict">Size change cancelled: the red wheels would collide, or the gear loop cannot keep every mesh aligned.</string>
     <string name="trebuchet_settings">Settings</string>
-    <string name="trebuchet_style_arcade">Arcade sites</string>
-    <string name="trebuchet_style_realistic">Realistic sites</string>
     <string name="trebuchet_clean_ghosts">Clear past shots (%1$d)</string>
     <string name="trebuchet_clean_done">Past shots cleared</string>
     <string name="trebuchet_ghost_limit">Past shots kept: %1$d</string>

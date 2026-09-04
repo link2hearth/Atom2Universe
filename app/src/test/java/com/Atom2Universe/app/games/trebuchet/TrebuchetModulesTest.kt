@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet
 
 import com.Atom2Universe.app.games.physics.PhysBody
+import com.Atom2Universe.app.games.physics.Shape
 import com.Atom2Universe.app.games.physics.PhysWorld
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -8,6 +9,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.random.Random
+import kotlin.math.sin
+import kotlin.math.hypot
+import kotlin.math.cos
 
 /**
  * Vérifie le vocabulaire d'architecture : chaque module doit tenir debout tout seul,
@@ -17,6 +21,16 @@ import kotlin.random.Random
  * s'écroule avant le premier tir ne se voit pas dans le code, elle se mesure.
  */
 class TrebuchetModulesTest {
+
+    /**
+     * Enfoncement toléré entre deux pièces d'un même bloc, en mètres.
+     *
+     * Assez large pour laisser passer les quatre modules d'ornement qui se chevauchent
+     * par nature — puits, abri, rambarde, cartes du château — dont les pièces sont trop
+     * légères pour pousser quoi que ce soit ; assez serré pour attraper l'ordre de
+     * grandeur au-dessus, celui qui déplace un bâtiment entier.
+     */
+    private val MAX_CHEVAUCHEMENT = 0.55f
 
     /**
      * Ces chiffres-ci sont ceux du mode **réaliste** : c'est contre lui que la table
@@ -30,7 +44,7 @@ class TrebuchetModulesTest {
 
     @After
     fun rendLeMode() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
     }
 
     private fun world(): PhysWorld = PhysWorld().apply {
@@ -477,7 +491,7 @@ class TrebuchetModulesTest {
         // déplace pas quatre tonnes de charpente — c'est exact, et ça ne dit rien du
         // module. Ce qu'on veut vérifier ici est une promesse de jeu, elle se vérifie
         // donc dans le mode où le jeu se joue.
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val s = Structure(TargetModules.windmill(Random(11), 20f, 4.5f, 14f), "moulin")
         val (w, f) = stand(s)
         val avant = f.ruinHeight()
@@ -505,7 +519,7 @@ class TrebuchetModulesTest {
         // abattue en rend trois ou quatre. Ce test vérifie qu'on ne paie le détail
         // qu'au moment où le joueur l'a mérité — en arcade, pour la même raison que le
         // moulin ci-dessus.
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val s = Structure(TargetModules.temple(Random(14), 20f, 11f, 9f), "temple")
         val (w, f) = stand(s)
         val corpsDebout = f.pieces.size
@@ -677,7 +691,7 @@ class TrebuchetModulesTest {
      */
     @Test
     fun `une tour d immeuble descend sur place au lieu de verser`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val s = Structure(
             TargetModules.towerBlock(Random(66), 20f, TargetRules.site(10f), TargetRules.site(30f)),
             "tour"
@@ -751,5 +765,147 @@ class TrebuchetModulesTest {
             "le verre n'est pas plus fragile que le béton",
             verre.maxOf { it.hp } < betonLePlusFaible * 0.2f
         )
+    }
+    // ── Le plan de fracture ───────────────────────────────────────────────────
+
+    /**
+     * **Les pièces d'un bloc ne doivent pas s'enfoncer les unes dans les autres.**
+     *
+     * C'est le défaut le plus sournois du catalogue, parce qu'il est **invisible tant
+     * que le bâtiment tient**. Deux pièces d'un même corps composé sont parfaitement
+     * solidaires : elles peuvent se chevaucher d'un mètre sans que rien ne bouge, et
+     * l'aperçu comme le jeu les dessinent l'une sur l'autre sans qu'on y voie rien.
+     *
+     * Mais le bloc composé est aussi son **plan de fracture** : à la rupture, chaque
+     * pièce devient un corps libre à la pose qu'elle avait — et deux corps imbriqués
+     * d'un mètre et demi se repoussent aussitôt de toutes leurs forces. Vu du joueur,
+     * l'immeuble qu'il pilonne « grandit » d'un coup au moment de l'impact. C'est
+     * exactement ce qui arrivait aux tours de ville, dont l'allège traversait le poteau
+     * du milieu sur un mètre et demi, et aux toits, dont les deux versants se croisaient
+     * au faîtage.
+     *
+     * Le seuil est large et le reste : quatre modules d'ornement se chevauchent un peu
+     * par nature — le puits, l'abri, la rambarde et les cartes du château — et ce sont
+     * des pièces légères dont la séparation ne pousse personne. Ce qu'on interdit, c'est
+     * l'ordre de grandeur au-dessus, celui qui déplace un bâtiment.
+     */
+    @Test
+    fun `aucune piece d un bloc ne s enfonce dans une autre`() {
+        TargetRules.style = TargetStyle.JEU
+        fun s(v: Float) = TargetRules.site(v)
+        val rng = Random(9)
+        val cas = listOf(
+            "tour d'immeuble étroite" to TargetModules.towerBlock(rng, 0f, s(6f), s(20f)),
+            "tour d'immeuble large" to TargetModules.towerBlock(rng, 0f, s(12f), s(30f)),
+            "gratte-ciel" to TargetModules.towerBlock(rng, 0f, s(20f), s(60f), Material.STEEL),
+            "parking" to TargetModules.parkingDeck(rng, 0f, s(12f), s(13f)),
+            "socle" to TargetModules.podium(rng, 0f, s(12f), s(6f)),
+            "maison" to TargetModules.house(rng, 0f, s(6f), s(9f)),
+            "maison-tour" to TargetModules.towerHouse(rng, 0f, s(5f), s(13f)),
+            "tour de pierre" to TargetModules.tower(rng, 0f, s(5f), s(16f)),
+            "courtine" to TargetModules.curtainWall(rng, 0f, s(10f), s(8f)),
+            "porte fortifiée" to TargetModules.gatehouse(rng, 0f, s(7f), s(9f)),
+            "chapelle" to TargetModules.chapel(rng, 0f, s(6f), s(12f)),
+            "grange" to TargetModules.barn(rng, 0f, s(10f), s(6f)),
+            "grenier" to TargetModules.granary(rng, 0f, s(6f), s(10f)),
+            "moulin" to TargetModules.windmill(rng, 0f, s(5f), s(14f)),
+            "temple" to TargetModules.temple(rng, 0f, s(11f), s(9f)),
+            "aqueduc" to TargetModules.aqueduct(rng, 0f, s(12f), s(11f)),
+            "toit" to listOf(Masonry.roof(Material.THATCH, 0f, 0f, s(5f), s(1.6f))),
+            "escalier" to listOf(Masonry.staircase(Material.STONE, 0f, 0f, s(4f), s(3f)))
+        )
+        val fautes = ArrayList<String>()
+        for ((nom, blocks) in cas) {
+            var pire = 0f
+            var quoi = ""
+            for (b in blocks) {
+                val o = pireChevauchement(b)
+                if (o.first > pire) {
+                    pire = o.first
+                    quoi = o.second
+                }
+            }
+            println("FRACTURE $nom : pire chevauchement interne ${"%.2f".format(pire)} m $quoi")
+            if (pire > MAX_CHEVAUCHEMENT) {
+                fautes += "$nom : ${"%.2f".format(pire)} m ($quoi)"
+            }
+        }
+        assertTrue(
+            "des pièces s'enfoncent l'une dans l'autre et s'expulseront à la rupture — " +
+                fautes.joinToString(" ; "),
+            fautes.isEmpty()
+        )
+    }
+
+    /** Le plus gros enfoncement entre deux pièces d'un même bloc, en mètres. */
+    private fun pireChevauchement(b: Block): Pair<Float, String> {
+        if (b.parts.size < 2) return 0f to ""
+        val polys = b.parts.map { coinsDe(it, b.angle) }
+        var pire = 0f
+        var quoi = ""
+        for (i in b.parts.indices) {
+            if (b.parts[i].shape == Shape.CIRCLE) continue
+            for (j in i + 1 until b.parts.size) {
+                if (b.parts[j].shape == Shape.CIRCLE) continue
+                val o = enfoncement(polys[i], polys[j])
+                if (o > pire) {
+                    pire = o
+                    quoi = "pièces $i×$j de ${b.material}"
+                }
+            }
+        }
+        return pire to quoi
+    }
+
+    private fun coinsDe(p: Piece, angle: Float): FloatArray {
+        val c = cos(angle)
+        val s = sin(angle)
+        val cx = p.localX * c - p.localY * s
+        val cy = p.localX * s + p.localY * c
+        val a = angle + p.localAngle
+        val ca = cos(a)
+        val sa = sin(a)
+        val out = FloatArray(8)
+        var k = 0
+        for ((dx, dy) in listOf(
+            -p.halfW to -p.halfH, p.halfW to -p.halfH, p.halfW to p.halfH, -p.halfW to p.halfH
+        )) {
+            out[k++] = cx + dx * ca - dy * sa
+            out[k++] = cy + dx * sa + dy * ca
+        }
+        return out
+    }
+
+    /** Profondeur de recouvrement de deux rectangles orientés (SAT), zéro s'ils sont séparés. */
+    private fun enfoncement(a: FloatArray, b: FloatArray): Float {
+        var best = Float.MAX_VALUE
+        for (poly in listOf(a, b)) {
+            for (e in 0 until 2) {
+                val dx = poly[(e + 1) * 2] - poly[e * 2]
+                val dy = poly[(e + 1) * 2 + 1] - poly[e * 2 + 1]
+                val len = hypot(dx, dy)
+                if (len < 1e-6f) continue
+                val nx = -dy / len
+                val ny = dx / len
+                var aMin = Float.MAX_VALUE
+                var aMax = -Float.MAX_VALUE
+                var bMin = Float.MAX_VALUE
+                var bMax = -Float.MAX_VALUE
+                for (i in 0 until 4) {
+                    val d = a[i * 2] * nx + a[i * 2 + 1] * ny
+                    if (d < aMin) aMin = d
+                    if (d > aMax) aMax = d
+                }
+                for (i in 0 until 4) {
+                    val d = b[i * 2] * nx + b[i * 2 + 1] * ny
+                    if (d < bMin) bMin = d
+                    if (d > bMax) bMax = d
+                }
+                val o = minOf(aMax, bMax) - maxOf(aMin, bMin)
+                if (o <= 0f) return 0f
+                if (o < best) best = o
+            }
+        }
+        return best
     }
 }

@@ -44,7 +44,7 @@ class GearStyleTest {
      */
     @Test
     fun `le site de l atelier change de taille avec le temperament`() {
-        val arcade = siteSous(TargetStyle.ARCADE).targets
+        val arcade = siteSous(TargetStyle.JEU).targets
         val realiste = siteSous(TargetStyle.REALISTE).targets
 
         fun carrure(f: TargetField) = "${"%.1f".format(f.right - f.left)} m de front, " +
@@ -96,7 +96,7 @@ class GearStyleTest {
         //
         // Entre les deux, la différence est celle du tempérament et de rien d'autre.
         for (e in floatArrayOf(60_000f, 150_000f)) {
-            val arcade = souffler(TargetStyle.ARCADE, e)
+            val arcade = souffler(TargetStyle.JEU, e)
             val realiste = souffler(TargetStyle.REALISTE, e)
             println(
                 "STYLE ${"%.0f".format(e / 1000f)} kJ : arcade " +
@@ -122,7 +122,7 @@ class GearStyleTest {
         val game = siteSous(TargetStyle.REALISTE)
         val frontRealiste = game.targets.right - game.targets.left
 
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         assertTrue(
             "le site a changé tout seul : la taille n'est pas fixée à la naissance",
             game.targets.right - game.targets.left == frontRealiste
@@ -193,7 +193,7 @@ class GearStyleTest {
         fun vitesseAuChoc(auChoc: TargetStyle): Float {
             // Le site, toujours bâti en arcade : c'est la traversée qu'on mesure, pas la
             // solidité des murs.
-            val game = siteSous(TargetStyle.ARCADE)
+            val game = siteSous(TargetStyle.JEU)
             val site = game.targets
             var garde = 0
             while (!site.armed && garde++ < 2_000) game.step(1f / 120f)
@@ -209,7 +209,7 @@ class GearStyleTest {
             return Float.NaN
         }
 
-        val arcade = vitesseAuChoc(TargetStyle.ARCADE)
+        val arcade = vitesseAuChoc(TargetStyle.JEU)
         val realiste = vitesseAuChoc(TargetStyle.REALISTE)
         println(
             "TRAVERSÉE à l'image du bris : arcade ${"%.1f".format(arcade)} m/s, " +
@@ -237,7 +237,7 @@ class GearStyleTest {
      */
     @Test
     fun `la traversee ne rend jamais plus que l elan d avant le choc`() {
-        val game = siteSous(TargetStyle.ARCADE)
+        val game = siteSous(TargetStyle.JEU)
         val site = game.targets
         var garde = 0
         while (!site.armed && garde++ < 2_000) game.step(1f / 120f)
@@ -280,7 +280,7 @@ class GearStyleTest {
      */
     @Test
     fun `toucher un mur en l air ne compte pas comme un atterrissage`() {
-        val game = siteSous(TargetStyle.ARCADE)
+        val game = siteSous(TargetStyle.JEU)
         val site = game.targets
         var garde = 0
         while (!site.armed && garde++ < 2_000) game.step(1f / 120f)

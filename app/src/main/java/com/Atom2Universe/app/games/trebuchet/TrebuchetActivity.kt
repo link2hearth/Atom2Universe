@@ -14,6 +14,8 @@ import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.trebuchet.gears.GearMachineConfig
 import com.Atom2Universe.app.games.trebuchet.gears.GearMachineGame
 import com.Atom2Universe.app.games.trebuchet.gears.GearEditorBubble
@@ -43,8 +45,17 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         const val PREFS_NAME = "trebuchet_game"
         const val KEY_BEST = "best_distance"
         const val KEY_SEED = "level_seed"
+
+        /**
+         * Préfixe du record d'un site : le meilleur nombre de **tirs touchés** avec
+         * lequel cette graine a été rasée.
+         *
+         * Une entrée par graine jouée, et c'est assumé : un joueur en voit quelques
+         * dizaines, et retrouver « je l'avais eu en cinq » quand on retombe sur un site
+         * connu vaut largement ces quelques lignes de préférences.
+         */
+        const val KEY_HITS_PREFIX = "best_hits"
         const val KEY_GEAR_SEED = "gear_site_seed"
-        const val KEY_STYLE = "target_style"
         const val KEY_MACHINES = "machines"
         const val KEY_GEAR_MACHINES = "gear_machines"
 
@@ -111,8 +122,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         )
 
         // Les entrées du menu des réglages.
-        const val ID_ARCADE = 0
-        const val ID_REALISTE = 1
         const val ID_CLEAN = 2
         const val ID_GHOSTS = 3
         const val ID_SOUND = 4
@@ -156,6 +165,16 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     /** Vrai tant qu'un site se fabrique en fond. */
     private var loading = false
 
+    /**
+     * Vrai quand le site actuellement posé a déjà payé sa récompense.
+     *
+     * Il ne s'écrit pas dans les préférences, et c'est tout son sens : ce qu'on empêche
+     * n'est pas de rejouer un site — recommencer d'un site intact est le même travail et
+     * mérite le même salaire — mais de continuer à tirer sur des ruines déjà rasées pour
+     * encaisser deux fois.
+     */
+    private var sitePaye = false
+
     /** Le numéro de la dernière fabrication demandée : voir [loadLevel]. */
     private var loadToken = 0
 
@@ -182,12 +201,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         best = prefs.getFloat(KEY_BEST, 0f)
         levelSeed = prefs.getLong(KEY_SEED, 1L)
         gearSiteSeed = prefs.getLong(KEY_GEAR_SEED, GearMachineGame.DEFAULT_SITE_SEED)
-        // Le tempérament tel qu'il était quand la vue de l'atelier a bâti son premier
-        // site, c'est-à-dire pendant `setContentView`, juste avant cette ligne.
-        val styleAuDemarrage = TargetRules.style
-        TargetRules.style = runCatching {
-            TargetStyle.valueOf(prefs.getString(KEY_STYLE, null) ?: TargetStyle.ARCADE.name)
-        }.getOrDefault(TargetStyle.ARCADE)
+        // **Un seul tempérament, et il n'est plus un choix.** Le jeu a longtemps offert
+        // « constructions arcade » et « constructions réalistes ». Le second était
+        // injouable sans qu'on le dise : mesuré au banc, un boulet de douze kilos à cent
+        // dix mètres par seconde fait exactement zéro pour cent de dégâts à une courtine
+        // de pierre. Il fallait une machine à cinquante tonnes de contrepoids pour que
+        // quoi que ce soit se passe, et rien ne l'annonçait. [TargetStyle.REALISTE]
+        // reste dans le code comme étalon de calage ; le joueur ne le rencontre plus.
+        TargetRules.style = TargetStyle.JEU
 
         gameView = findViewById(R.id.trebuchet_view)
         gearView = findViewById(R.id.trebuchet_gear_view)
@@ -250,12 +271,10 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // constantes par défaut, et un joueur en réaliste retrouvait un atelier en
         // arcade — ou l'inverse — sans que rien ne le dise.
         //
-        // Sauf si le tempérament n'a pas bougé **et** que c'est déjà la bonne graine :
-        // bâtir un site coûte quelques millisecondes, et en construire deux à chaque
-        // ouverture faisait apparaître l'un puis l'autre.
-        if (gearSiteSeed != GearMachineGame.DEFAULT_SITE_SEED ||
-            TargetRules.style != styleAuDemarrage
-        ) {
+        // Sauf si c'est déjà la bonne graine : bâtir un site coûte quelques
+        // millisecondes, et en construire deux à chaque ouverture faisait apparaître
+        // l'un puis l'autre.
+        if (gearSiteSeed != GearMachineGame.DEFAULT_SITE_SEED) {
             gearView.loadSite(gearSiteSeed)
         }
     }
@@ -310,6 +329,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      */
     private fun loadLevel(seed: Long) {
         levelSeed = seed
+        sitePaye = false
         prefs.edit { putLong(KEY_SEED, seed) }
         gameView.clearSelection()
         // Le jeton écarte les sites périmés : un joueur qui enchaîne les appuis longs
@@ -358,15 +378,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun showSettingsMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
         val menu = popup.menu
-        menu.add(1, ID_ARCADE, 0, getString(R.string.trebuchet_style_arcade))
-        menu.add(1, ID_REALISTE, 1, getString(R.string.trebuchet_style_realistic))
-        // Une case cochée dit lequel des deux est en cours ; deux entrées valent mieux
-        // qu'un interrupteur qui n'annonce pas ce qu'il va faire.
-        menu.setGroupCheckable(1, true, true)
-        menu.findItem(
-            if (TargetRules.style == TargetStyle.ARCADE) ID_ARCADE else ID_REALISTE
-        ).isChecked = true
-
         // La profondeur de mémoire, dans son propre tiroir : c'est un réglage qu'on
         // pose une fois et qu'on ne rouvre plus.
         val sous = menu.addSubMenu(
@@ -392,8 +403,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                ID_ARCADE -> setStyle(TargetStyle.ARCADE)
-                ID_REALISTE -> setStyle(TargetStyle.REALISTE)
                 ID_CLEAN -> {
                     if (machineMode == MachineMode.GEARS) {
                         gearView.clearGhosts()
@@ -427,35 +436,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         gearView.soundEnabled = on
         prefs.edit { putBoolean(KEY_SOUND, on) }
     }
-
-    /**
-     * Change le tempérament et refait le site avec.
-     *
-     * Le site se refait, et il n'y a pas moyen de faire autrement : la masse et la
-     * solidité d'une pierre sont fixées à sa naissance. On ne les change pas sous les
-     * pieds du joueur.
-     */
-    private fun setStyle(style: TargetStyle) {
-        if (style == TargetRules.style) return
-        // Le tempérament se pose **avant** la fabrication, qui le lit pour dimensionner
-        // ses pierres. Le site d'avant tourne donc quelques dizaines de millisecondes
-        // avec les constantes du nouveau — sans conséquence, puisqu'il est sur le point
-        // d'être remplacé et que personne ne tire pendant qu'il choisit dans un menu.
-        TargetRules.style = style
-        prefs.edit { putString(KEY_STYLE, style.name) }
-        loadLevel(levelSeed)
-        // **Les deux terrains, pas seulement celui du trébuchet.** L'atelier a des
-        // bâtiments depuis peu, et il gardait ceux d'avant : on passait en arcade et les
-        // murs restaient aussi durs qu'en réaliste, ce qui ne ressemblait à rien.
-        //
-        // On le refait sur sa propre graine, donc c'est le **même** site avec d'autres
-        // pierres — exactement ce que fait le champ de tir de son côté.
-        gearView.loadSite(gearSiteSeed)
-    }
-
-    /** Le nom du tempérament, tel qu'il s'affiche. */
-    private fun styleLabel(): String =
-        if (TargetRules.style == TargetStyle.ARCADE) "ARCADE" else "RÉALISTE"
 
     // ── L'atelier ─────────────────────────────────────────────────────────────
 
@@ -785,8 +765,42 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             best = game.shotDistance
             prefs.edit { putFloat(KEY_BEST, best) }
         }
+        payerLeSite(game)
         updateUi()
     }
+
+    /**
+     * Verse les neutrinos d'un site rasé, et retient le record.
+     *
+     * **Une fois par site posé, et non une fois par graine.** Ce qui se paie est le
+     * travail : partir d'un site intact et le mettre à terre. Y revenir plus tard et
+     * recommencer le paie donc de nouveau — c'est le même travail — alors que continuer
+     * de tirer sur des ruines déjà rasées ne paie rien. Le verrou est [sitePaye], remis
+     * à zéro quand un site se charge.
+     *
+     * Le montant ne dépend pas du nombre de tirs : il dépend de ce que le site oppose,
+     * et le calcul vit dans [NeutrinoRewards.trebuchet] avec tous les autres barèmes du
+     * hub. Le **record**, lui, se compte en tirs qui portent — voir
+     * [TrebuchetGame.hitCount].
+     */
+    private fun payerLeSite(game: TrebuchetGame) {
+        val lvl = game.level ?: return
+        if (!game.targets.cleared || sitePaye) return
+        sitePaye = true
+
+        val cle = KEY_HITS_PREFIX + lvl.seed
+        val ancien = prefs.getInt(cle, 0)
+        if (ancien == 0 || game.hitCount < ancien) {
+            prefs.edit { putInt(cle, game.hitCount) }
+        }
+
+        val gain = NeutrinoRewards.trebuchet(TargetGenerator.difficulty(lvl.structure))
+        NeutrinoRepository(this).addBalance(gain)
+        toast(getString(R.string.trebuchet_neutrinos, gain))
+    }
+
+    /** Le record de cette graine, ou zéro si elle n'a jamais été rasée. */
+    private fun recordDuSite(seed: Long): Int = prefs.getInt(KEY_HITS_PREFIX + seed, 0)
 
     override fun onMachineChanged() {
         if (machineMode == MachineMode.TREBUCHET) updateUi()
@@ -832,18 +846,25 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // La ligne du haut dit où on en est du site ; en bac à sable, elle garde le
         // record de portée.
         val lvl = game.level
+        // On note le joueur sur ses **tirs qui portent**, jamais sur ses tirs lancés :
+        // les coups d'ajustement, qui sont la moitié du jeu, restent gratuits.
+        val record = if (lvl != null) recordDuSite(lvl.seed) else 0
+        val mention = if (record > 0) getString(R.string.trebuchet_level_best, record) else ""
         bestText.text = when {
             lvl != null && game.targets.cleared -> getString(
                 R.string.trebuchet_level_cleared,
-                TargetGenerator.label(lvl), game.shotCount
-            ) + " · " + styleLabel()
+                TargetGenerator.label(lvl),
+                game.hitCount,
+                TargetGenerator.par(lvl.structure)
+            ) + mention
             lvl != null -> getString(
                 R.string.trebuchet_level,
                 TargetGenerator.label(lvl),
                 (game.targets.score * 100f).toInt(),
                 (game.targets.winRatio * 100f).toInt(),
-                game.shotCount
-            ) + " · " + styleLabel()
+                game.hitCount,
+                TargetGenerator.par(lvl.structure)
+            ) + mention
             best > 0f -> getString(R.string.trebuchet_best, fmt(best))
             else -> ""
         }

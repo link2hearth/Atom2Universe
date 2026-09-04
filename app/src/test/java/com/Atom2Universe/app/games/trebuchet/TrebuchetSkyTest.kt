@@ -380,7 +380,7 @@ class TrebuchetSkyTest {
      */
     @Test
     fun `un site rase n a plus de lumieres`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.loadLevel(4L)
         val f = g.targets
@@ -413,7 +413,7 @@ class TrebuchetSkyTest {
      */
     @Test
     fun `les lumieres se posent au-dessus de leur propre sol`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         for (seed in longArrayOf(8L, 14L, 4L, 2L)) {
             val g = TrebuchetGame()
             g.loadLevel(seed)

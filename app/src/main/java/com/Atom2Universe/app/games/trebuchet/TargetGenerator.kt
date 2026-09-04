@@ -195,7 +195,7 @@ object TargetGenerator {
         // Le château de cartes est une fantaisie d'arcade. En réaliste, la même place
         // dans la progression donne la nouvelle seigneurie : une composition crédible,
         // plus longue et plus haute, mais bâtie avec les modules ordinaires.
-        val ladder = if (style == TargetStyle.ARCADE) arcadeLadder else
+        val ladder = if (style == TargetStyle.JEU) arcadeLadder else
             arcadeLadder.filterNot { it == SiteKind.CHATEAU_CARTES }.toTypedArray()
         val i = ((seed - 1L) % ladder.size).toInt()
         return ladder[if (i < 0) i + ladder.size else i]
@@ -432,7 +432,7 @@ object TargetGenerator {
         // condition sur [TargetRules.style] n'a le droit de contenir un `rng`.
         val torchis = rng.nextFloat() < 0.25f
         val stone =
-            if (torchis && TargetRules.style == TargetStyle.ARCADE) Material.COB
+            if (torchis && TargetRules.style == TargetStyle.JEU) Material.COB
             else Material.STONE
 
         // La hauteur d'une tour : la plupart du temps sa gamme habituelle, et de temps
@@ -448,7 +448,7 @@ object TargetGenerator {
             // Même règle que pour [stone] : on tire toujours, on choisit ensuite. Deux
             // nombres consommés dans les deux tempéraments, donc le même plan.
             val geante = rng.nextFloat() >= 1f - chanceGeante
-            return if (geante && TargetRules.style == TargetStyle.ARCADE) {
+            return if (geante && TargetRules.style == TargetStyle.JEU) {
                 between(geanteMin, geanteMax)
             } else {
                 between(modMin, modMax)
@@ -569,7 +569,7 @@ object TargetGenerator {
                 // 1. la tour de garde prend le premier impact ;
                 // 2. plusieurs foyers occupent le terrain qu'elle protège ;
                 // 3. un petit château ferme l'horizon à droite.
-                val tourAvant = if (TargetRules.style == TargetStyle.ARCADE) {
+                val tourAvant = if (TargetRules.style == TargetStyle.JEU) {
                     between(34f, 58f)
                 } else {
                     between(20f, 29f)
@@ -785,6 +785,45 @@ object TargetGenerator {
             }
         }
     }
+
+    /**
+     * Ce que le site oppose, de 0 (un hameau de bois) à 1 (une métropole de béton).
+     *
+     * **Source unique de la difficulté d'un site.** Deux choses s'en servent et doivent
+     * dire la même chose : l'objectif de tirs ([par]) et la récompense en neutrinos
+     * ([com.Atom2Universe.app.crypto.clicker.NeutrinoRewards.trebuchet]). Un site plus
+     * dur doit à la fois demander plus de coups et payer davantage ; si les deux
+     * calculaient leur difficulté chacun de leur côté, ils finiraient par se contredire.
+     *
+     * Deux mesures, à poids égal : **de quoi c'est fait** et **combien il en faut**. Un
+     * gros site de bois et un petit site de pierre se valent — l'un demande de la
+     * couverture, l'autre de la force.
+     */
+    fun difficulty(s: Structure): Float {
+        val matiere = s.masonryShare.coerceIn(0f, 1f)
+        val taille = ((s.blocks.size - SMALL_SITE).toFloat() /
+            (LARGE_SITE - SMALL_SITE)).coerceIn(0f, 1f)
+        return (0.5f * matiere + 0.5f * taille).coerceIn(0f, 1f)
+    }
+
+    /** En dessous, un site ne compte pas comme grand ; au-dessus, il plafonne. */
+    private const val SMALL_SITE = 20
+    private const val LARGE_SITE = 110
+
+    /**
+     * L'objectif du niveau : en combien de **tirs qui portent** il devrait tomber.
+     *
+     * Les tirs d'ajustement sont gratuits — voir [TrebuchetGame.hitCount] — donc ce
+     * chiffre-ci note la visée et non le tâtonnement. Il est calé sur le barème mesuré
+     * par le banc (`TrebuchetLevelTest`) avec la machine de départ : hameau 4 coups,
+     * moulin 6, village et château 10, métropole 10, centre-ville 15. Un joueur qui
+     * règle bien sa machine doit pouvoir faire mieux, sinon ce n'est pas un objectif,
+     * c'est un plafond.
+     */
+    fun par(s: Structure): Int = (PAR_BASE + PAR_SPAN * difficulty(s)).roundToInt()
+
+    private const val PAR_BASE = 4f
+    private const val PAR_SPAN = 9f
 
     /** Un nom lisible, pour l'écran de fin de niveau. */
     fun label(level: TargetLevel): String = buildString {

@@ -62,7 +62,7 @@ class TrebuchetWindTest {
     @Test
     fun `le vent porte le boulet et laisse le chateau tranquille`() {
         fun portee(w: Wind): Float {
-            TargetRules.style = TargetStyle.ARCADE
+            TargetRules.style = TargetStyle.JEU
             val g = TrebuchetGame()
             g.world.windX = w.vx
             g.world.windY = w.vy
@@ -100,7 +100,7 @@ class TrebuchetWindTest {
 
     @Test
     fun `un chateau ne s envole pas`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.loadLevel(15L)
         // On force le pire vent possible, bien au-delà de ce que le jeu tire — et on ne
@@ -128,7 +128,7 @@ class TrebuchetWindTest {
         // villages font trois cents mètres de front, le même tir poussé par un vent
         // arrière retombe **dedans** et casse 1,5 % du site. La mesure ne disait donc
         // plus rien du vent, elle mesurait un impact.
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.loadLevel(4L)
         val pire = derive(g, Wind.MAX_SPEED, 10f, tirer = false)
@@ -159,7 +159,7 @@ class TrebuchetWindTest {
 
     @Test
     fun `le niveau porte son vent`() {
-        TargetRules.style = TargetStyle.ARCADE
+        TargetRules.style = TargetStyle.JEU
         val g = TrebuchetGame()
         g.loadLevel(6L)
         val attendu = Wind.forSeed(6L)

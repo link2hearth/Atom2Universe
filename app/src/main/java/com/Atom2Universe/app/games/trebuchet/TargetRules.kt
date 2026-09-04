@@ -213,11 +213,18 @@ enum class Material(
 /**
  * Le tempérament des constructions : fidèle à la matière, ou taillé pour le jeu.
  *
- * Le mode réaliste est celui de la table des matériaux : de la vraie pierre, de la
- * vraie densité, et un boulet de douze kilos qui ne peut pas grand-chose contre un
+ * **Il n'y en a plus qu'un que le joueur rencontre.** Le jeu a longtemps offert le
+ * choix ; le réaliste était injouable sans le dire — mesuré au banc, un boulet de douze
+ * kilos à cent dix mètres par seconde fait exactement zéro pour cent de dégâts à une
+ * courtine de pierre — et [REALISTE] est resté ici comme **étalon** : c'est contre lui
+ * que la table des matériaux a été calée, c'est dedans que tourne le banc des modules,
+ * et tout écart de [JEU] se lit comme un facteur par rapport à lui.
+ *
+ * Le tempérament réaliste est celui de la table des matériaux : de la vraie pierre, de
+ * la vraie densité, et un boulet de douze kilos qui ne peut pas grand-chose contre un
  * rempart — ce qui est exact, et lent.
  *
- * **Le mode arcade n'est pas « la même chose en plus faible ».** Doubler la taille des
+ * **Le tempérament du jeu n'est pas « la même chose en plus faible ».** Doubler la taille des
  * pierres en 2D quadruple leur masse, donc leurs points de vie : des pierres deux fois
  * plus grosses et deux fois moins tenaces seraient **deux fois plus dures** à abattre.
  * Il faut donc bouger les curseurs ensemble :
@@ -283,12 +290,43 @@ enum class TargetStyle(
      * long de sa trajectoire d'avant le choc, amputée de l'énergie exacte des points de
      * vie qu'il vient d'emporter. Il ne gagne jamais d'énergie — il ne perd que la
      * bonne — et il ne récupère rien s'il n'a rien cassé. Un boulet qui cogne sans
-     * casser rebondit dans les deux modes.
+     * casser rebondit quel que soit le réglage.
+     *
+     * **Le jeu tourne à 0,6, et ce chiffre est le cœur de son équilibre.** À un, un
+     * seul boulet rasait un hameau entier : le bois n'a presque pas de points de vie,
+     * donc le boulet ne payait presque rien et enfilait les vingt-six corps du site
+     * comme une boule de bowling. Mesuré, en visant correctement : hameau **1 coup**,
+     * moulin 1, village 2, château 5.
+     *
+     * On a d'abord cru que c'était un problème de solidité. Ce n'en était pas un : en
+     * quadruplant les points de vie ([toughnessScale] porté de 0,26 à 0,52), le hameau
+     * tombait **toujours** en un coup pendant que la métropole devenait inrasable,
+     * bloquée à 12 % après quatorze tirs. Le curseur de tenue n'échange les deux
+     * problèmes, il n'en résout aucun.
+     *
+     * À 0,6, le boulet traverse encore mais s'essouffle : hameau **4 coups**, moulin 4,
+     * village 10, château 9, centre-ville 9, métropole 12 — et l'avancement monte à
+     * chaque tir au lieu de sauter d'un coup à cent pour cent.
      */
     val pierce: Float
 ) {
+    /**
+     * La référence : la vraie table des matériaux, à l'échelle réelle, sans traversée.
+     *
+     * **Ce n'est plus un mode de jeu, c'est un étalon.** Le joueur ne peut plus le
+     * choisir, et pour une bonne raison : mesuré au banc, un boulet de douze kilos à
+     * cent dix mètres par seconde fait exactement **0 %** de dégâts à une courtine de
+     * pierre. C'est physiquement juste et parfaitement injouable tant qu'on n'a pas
+     * réglé une machine à cinquante tonnes de contrepoids — ce que rien n'annonçait.
+     *
+     * Il reste ici parce que c'est contre lui que la table des matériaux a été calée,
+     * que le banc des modules tourne dedans, et que tout écart de [JEU] se lit comme
+     * un facteur par rapport à lui.
+     */
     REALISTE(1f, 1f, 1f, 1f, 1f, 0f),
-    ARCADE(2f, 2.6f, 1.6f, 0.07f, 0.26f, 1f)
+
+    /** Le tempérament du jeu, et le seul que le joueur rencontre. */
+    JEU(2f, 2.6f, 1.6f, 0.07f, 0.26f, 1f)
 }
 
 /**
@@ -305,7 +343,7 @@ object TargetRules {
      * reconstruire le niveau : la masse et les points de vie d'une pierre sont calculés
      * une fois pour toutes à sa création.
      */
-    var style: TargetStyle = TargetStyle.ARCADE
+    var style: TargetStyle = TargetStyle.JEU
 
     /**
      * Une longueur de pierre d'appareil, à l'échelle du tempérament en cours.
@@ -470,7 +508,7 @@ object TargetRules {
      * et celui de l'autre plutôt que de basculer d'un seuil arbitraire.
      */
     fun winRatio(masonryShare: Float): Float {
-        if (style == TargetStyle.ARCADE) return WIN_RATIO
+        if (style == TargetStyle.JEU) return WIN_RATIO
         val t = masonryShare.coerceIn(0f, 1f)
         return WIN_RATIO_WOOD + (WIN_RATIO_STONE - WIN_RATIO_WOOD) * t
     }
@@ -701,6 +739,43 @@ object TargetRules {
      * qu'il vient d'emporter est déjà loin derrière lui quand on regarde.
      */
     const val PIERCE_REACH = 1.5f
+
+    /**
+     * Chance qu'un projectile **gagne son passage du premier coup**, sur une pierre
+     * encore intacte, une seule fois par tir.
+     *
+     * C'est le coup critique, et il ne perce qu'**une couche** : la pierre qu'il vient
+     * d'emporter, et rien derrière. Un boulet qui traverserait tout un bâtiment sur un
+     * coup de chance serait exactement le défaut qu'on vient de retirer au jeu.
+     */
+    const val PIERCE_CRIT_CHANCE = 0.25f
+
+    /**
+     * Ce qu'un projectile récupère quand il casse **sans avoir gagné son passage**.
+     *
+     * Il faut bien qu'il lui reste quelque chose, et la raison est un barème mesuré.
+     * Avec un passage tout ou rien — plein s'il est mérité, zéro sinon — le jeu se
+     * remet à niveau mais **il s'aplatit** : hameau 7 coups, moulin 10, village 12,
+     * château 12, centre-ville 12, métropole 14. La différence entre le premier niveau
+     * et le dernier avait disparu, parce que le nombre de tirs ne dépendait plus de ce
+     * que le site oppose mais du nombre de couches à fêler, lequel est à peu près le
+     * même partout.
+     *
+     * Ce reliquat-ci rend la pente : le boulet garde assez d'élan pour enfiler
+     * deux ou trois maisons de bois, jamais assez pour traverser une muraille.
+     */
+    const val PIERCE_UNEARNED = 0.35f
+
+    /**
+     * L'usure à partir de laquelle une pierre compte comme **déjà fêlée**, donc
+     * traversable.
+     *
+     * C'est le premier palier de craquelure, celui que le joueur voit apparaître à
+     * l'écran : la règle qu'on lui promet — « le premier coup fragilise, le second
+     * passe » — se lit donc sur la pierre elle-même, sans qu'aucun chiffre caché ne
+     * décide à sa place.
+     */
+    val PIERCE_SOFT_WEAR: Float get() = CRACK_THRESHOLDS[0]
 
     /** Temps qu'un petit débris passe immobile avant d'être ramassé, en secondes. */
     const val DEBRIS_LIFETIME = 3f

@@ -269,5 +269,6 @@
     <string name="neutrino_info_note_time">naar speeltijd</string>
     <string name="neutrino_info_note_distance">naar afstand</string>
     <string name="neutrino_info_note_wave">per voltooide golf</string>
+    <string name="neutrino_info_note_site">per verwoeste locatie</string>
     <string name="neutrino_info_note_betting">naar je inzet</string>
 </resources>

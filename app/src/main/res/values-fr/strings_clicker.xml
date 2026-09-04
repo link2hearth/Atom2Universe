@@ -271,5 +271,6 @@
     <string name="neutrino_info_note_time">selon le temps de jeu</string>
     <string name="neutrino_info_note_distance">selon la distance</string>
     <string name="neutrino_info_note_wave">par vague terminée</string>
+    <string name="neutrino_info_note_site">selon le site rasé</string>
     <string name="neutrino_info_note_betting">selon la mise</string>
 </resources>
