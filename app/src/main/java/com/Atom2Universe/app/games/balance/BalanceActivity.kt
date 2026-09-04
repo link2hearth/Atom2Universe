@@ -85,7 +85,9 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
         val labels = listOf(
             getString(R.string.balance_difficulty_easy),
             getString(R.string.balance_difficulty_medium),
-            getString(R.string.balance_difficulty_hard)
+            getString(R.string.balance_difficulty_hard),
+            getString(R.string.balance_difficulty_expert),
+            getString(R.string.balance_difficulty_extreme)
         )
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

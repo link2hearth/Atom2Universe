@@ -18,7 +18,7 @@ object BalanceRules {
     const val WORLD_WIDTH = 5f
 
     /** Demi-longueur de la planche. */
-    const val PLANK_HALF_LENGTH = 1.7f
+    const val PLANK_HALF_LENGTH = 1.85f
     const val PLANK_HALF_THICKNESS = 0.05f
     const val PLANK_MASS = 9f
 
@@ -30,6 +30,9 @@ object BalanceRules {
      * mordre sur le pivot, même d'un coin.
      */
     const val DEAD_HALF = 0.12f
+
+    /** Fraction minimale d'une pièce qui doit rester au-dessus de la planche. */
+    const val MIN_SUPPORT_FRACTION = 0.25f
 
     /**
      * Pas de la règle gravée sur la planche. Purement visuel : rien ne s'y
@@ -43,22 +46,9 @@ object BalanceRules {
     /** Un poids lâché plus bas que ça est considéré comme tombé. */
     const val FALL_LIMIT = PIVOT_HEIGHT - 0.15f
 
-    /**
-     * Côté d'une brique, en mètres : plus la masse est grande, plus la brique
-     * est grosse (surface ~ masse, comme si toutes avaient la même densité).
-     *
-     * Le facteur [weightCount] resserre l'échelle quand il y a beaucoup de
-     * poids : à sept briques, tout doit encore tenir sur la planche. Les
-     * proportions entre briques d'un même niveau, elles, ne changent pas.
-     */
-    fun sizeForMass(mass: Int, weightCount: Int): Float {
-        val fit = when {
-            weightCount <= 3 -> 1f
-            weightCount <= 5 -> 0.88f
-            else -> 0.76f
-        }
-        return (0.17f + 0.055f * sqrt(mass.toFloat())) * fit
-    }
+    /** Aire en m² : c'est volontairement la seule échelle de taille du jeu. */
+    const val AREA_PER_KG = 0.0032f
+    fun areaForMass(mass: Int): Float = mass * AREA_PER_KG
 
     /** Longueur utilisable de chaque côté du pivot. */
     const val USABLE_PER_SIDE = PLANK_HALF_LENGTH - DEAD_HALF
@@ -81,10 +71,10 @@ object BalanceRules {
 class BalanceWeight(
     val index: Int,
     val mass: Int,
-    halfW: Float,
-    halfH: Float
+    val shape: Shape,
+    val body: PhysBody
 ) {
-    val body = PhysBody(halfW, halfH, mass.toFloat())
+    enum class Shape { RECTANGLE, TRIANGLE, TETROMINO_L, TETROMINO_T, TETROMINO_Z }
 
     /** Vrai quand le poids a été déposé sur la planche. */
     var placed = false
@@ -102,17 +92,56 @@ class BalanceWeight(
 
     var dragging = false
 
+    /** Orientation choisie dans le carrousel et conservée au moment de la pose. */
+    var restAngle = 0f
+
     init {
         body.tag = this
         body.inWorld = false
         body.friction = 0.62f
     }
 
-    /** Distance minimale au pivot : la brique ne doit pas mordre sur la zone interdite. */
-    val minDistance: Float get() = BalanceRules.DEAD_HALF + body.halfW
+    /** Dimensions de l'encombrement de la pièce à plat. */
+    val halfWidth: Float get() = body.aabbHalfWidth()
+    val halfHeight: Float get() = body.parts.maxOf { part ->
+        kotlin.math.abs(part.localY) + if (part.shape == com.Atom2Universe.app.games.physics.Shape.CIRCLE) part.radius else part.halfH
+    }
+    val baseOffset: Float get() = body.parts.minOf { part ->
+        part.localY - if (part.shape == com.Atom2Universe.app.games.physics.Shape.CIRCLE) part.radius else part.halfH
+    }
 
-    /** Distance maximale : la brique doit reposer entièrement sur la planche. */
-    val maxDistance: Float get() = BalanceRules.PLANK_HALF_LENGTH - body.halfW
+    /** Partie la plus basse de la forme dans son orientation actuelle. */
+    val bottomOffset: Float
+        get() {
+            val c = kotlin.math.cos(body.angle)
+            val s = kotlin.math.sin(body.angle)
+            return body.parts.minOf { part ->
+                val center = part.localX * s + part.localY * c
+                if (part.shape == com.Atom2Universe.app.games.physics.Shape.TRIANGLE) {
+                    val a = body.angle + part.localAngle
+                    val sa = kotlin.math.sin(a)
+                    val ca = kotlin.math.cos(a)
+                    minOf(
+                        center - part.halfW * sa - part.halfH * ca,
+                        center + part.halfW * sa - part.halfH * ca,
+                        center + part.halfH * ca
+                    )
+                } else {
+                    val extent = part.halfW * kotlin.math.abs(s) + part.halfH * kotlin.math.abs(c)
+                    center - extent
+                }
+            }
+        }
+
+    /** Distance minimale au pivot : la brique ne doit pas mordre sur la zone interdite. */
+    val minDistance: Float get() = BalanceRules.DEAD_HALF + halfWidth
+
+    /**
+     * Distance maximale : une pièce peut dépasser du bord, mais au moins un
+     * quart de sa largeur reste porté par la planche. Le test physique décide
+     * ensuite si l'empilement tient réellement.
+     */
+    val maxDistance: Float get() = BalanceRules.PLANK_HALF_LENGTH + halfWidth * (1f - 2f * BalanceRules.MIN_SUPPORT_FRACTION)
 
     /** Couple exercé sur la planche (kg·m) : positif = penche à droite. */
     val torque: Float get() = if (placed) mass * body.x else 0f
@@ -130,16 +159,21 @@ class BalanceGame {
 
     /**
      * Difficulté : nombre de poids, tolérance d'inclinaison acceptée à l'arrivée
-     * et masse maximale des briques.
+     * et plage de masses. Les deux derniers modes sont volontairement des
+     * puzzles de construction : beaucoup de pièces, des masses très écartées
+     * et des formes qui obligent aussi à penser à la stabilité des piles.
      */
     enum class Difficulty(
         val weightCount: Int,
         val toleranceDeg: Float,
+        val minMass: Int,
         val maxMass: Int
     ) {
-        EASY(3, 8f, 12),
-        MEDIUM(5, 5f, 18),
-        HARD(7, 3.5f, 25)
+        EASY(3, 8f, 1, 12),
+        MEDIUM(5, 4.5f, 3, 24),
+        HARD(8, 3f, 6, 42),
+        EXPERT(11, 2f, 10, 65),
+        EXTREME(14, 1.35f, 15, 50)
     }
 
     enum class Phase { PLACING, TESTING, WON, LOST }
@@ -181,6 +215,9 @@ class BalanceGame {
     /** Bas du plateau de rangement : en dessous, on est en zone de pose. */
     var trayBottom = 6f
         private set
+
+    /** Décalage du carrousel de pièces ; il reboucle à chaque tour complet. */
+    private var trayScroll = 0f
 
     /** Raideur du rappel retenue pour le test en cours (kg·m). */
     var stiffness = 10f
@@ -257,7 +294,10 @@ class BalanceGame {
 
     /** Appelé par la vue quand elle connaît sa taille : fixe la hauteur du monde. */
     fun setViewport(worldHeight: Float) {
-        this.worldHeight = worldHeight.coerceAtLeast(4f)
+        // En paysage la scène est basse : imposer quatre unités repoussait le
+        // carrousel hors de la surface réelle. On garde seulement le strict
+        // minimum pour le pivot ; le carrousel reste donc toujours visible.
+        this.worldHeight = worldHeight.coerceAtLeast(1.25f)
         layoutTray()
     }
 
@@ -279,24 +319,65 @@ class BalanceGame {
         weights.clear()
 
         for ((i, m) in generateMasses(diff).withIndex()) {
-            // Surface proportionnelle à la masse : une brique lourde se voit.
-            // L'allure varie un peu (un peu large, un peu haute) sans trahir
-            // la lecture de la masse.
-            val side = BalanceRules.sizeForMass(m, diff.weightCount)
-            val aspect = 0.86f + rng.nextFloat() * 0.32f
-            val width = side * sqrt(aspect)
-            val height = side / sqrt(aspect)
-            val w = BalanceWeight(i, m, width / 2f, height / 2f)
+            val w = createWeight(i, m, diff)
             weights.add(w)
             world.add(w.body)
         }
         layoutTray()
     }
 
+    /**
+     * Chaque géométrie reçoit exactement [BalanceRules.areaForMass] : un 99 kg
+     * a donc 99 fois l'aire d'un 1 kg de même forme. Les tétriminos sont de
+     * vrais corps composés et le triangle est un vrai polygone à trois faces.
+     */
+    private fun createWeight(index: Int, mass: Int, diff: Difficulty): BalanceWeight {
+        val shape = when (diff) {
+            Difficulty.EASY -> BalanceWeight.Shape.RECTANGLE
+            Difficulty.MEDIUM -> if (index % 4 == 0) BalanceWeight.Shape.TRIANGLE else BalanceWeight.Shape.RECTANGLE
+            Difficulty.HARD -> BalanceWeight.Shape.entries[index % 3]
+            Difficulty.EXPERT, Difficulty.EXTREME -> BalanceWeight.Shape.entries[rng.nextInt(BalanceWeight.Shape.entries.size)]
+        }
+        val area = BalanceRules.areaForMass(mass)
+        val body = when (shape) {
+            BalanceWeight.Shape.RECTANGLE -> {
+                val aspect = 0.55f + rng.nextFloat() * 1.15f
+                PhysBody(sqrt(area * aspect) / 2f, sqrt(area / aspect) / 2f, mass.toFloat())
+            }
+            BalanceWeight.Shape.TRIANGLE -> PhysBody.compound(mass.toFloat()) {
+                val half = sqrt(area / 2f)
+                triangle(half, half)
+            }
+            BalanceWeight.Shape.TETROMINO_L -> PhysBody.compound(mass.toFloat()) {
+                val u = sqrt(area / 4f)
+                box(u / 2f, u / 2f, -u / 2f, -u / 2f)
+                box(u / 2f, u / 2f, -u / 2f, u / 2f)
+                box(u / 2f, u / 2f, -u / 2f, u * 1.5f)
+                box(u / 2f, u / 2f, u / 2f, -u / 2f)
+            }
+            BalanceWeight.Shape.TETROMINO_T -> PhysBody.compound(mass.toFloat()) {
+                val u = sqrt(area / 4f)
+                box(u / 2f, u / 2f, -u, u / 2f)
+                box(u / 2f, u / 2f, 0f, u / 2f)
+                box(u / 2f, u / 2f, u, u / 2f)
+                box(u / 2f, u / 2f, 0f, -u / 2f)
+            }
+            BalanceWeight.Shape.TETROMINO_Z -> PhysBody.compound(mass.toFloat()) {
+                val u = sqrt(area / 4f)
+                box(u / 2f, u / 2f, -u / 2f, u / 2f)
+                box(u / 2f, u / 2f, u / 2f, u / 2f)
+                box(u / 2f, u / 2f, u / 2f, -u / 2f)
+                box(u / 2f, u / 2f, u * 1.5f, -u / 2f)
+            }
+        }
+        return BalanceWeight(index, mass, shape, body)
+    }
+
     /** Repart du même niveau : tous les poids retournent dans le plateau. */
     fun resetPlacement() {
         resetRun()
         for (w in weights) sendToTray(w)
+        layoutTray()
     }
 
     /**
@@ -315,7 +396,10 @@ class BalanceGame {
         for (w in weights) if (w !in kept) sendToTray(w)
         // On repart d'une planche vide, puis on repose dans l'ordre d'origine :
         // sinon une brique encore de travers servirait d'appui à sa voisine.
-        for (w in kept) w.placed = false
+        for (w in kept) {
+            w.placed = false
+            w.body.angle = w.restAngle
+        }
         placementOrder.clear()
         for (w in kept) {
             val side = if (w.plankX < 0f) -1f else 1f
@@ -349,7 +433,7 @@ class BalanceGame {
             var guard = 0
             while (i < n && guard < 400) {
                 guard++
-                val m = rng.nextInt(1, diff.maxMass + 1)
+                val m = rng.nextInt(diff.minMass, diff.maxMass + 1)
                 if (masses.take(i).contains(m)) continue
                 masses[i] = m
                 i++
@@ -373,21 +457,15 @@ class BalanceGame {
         val n = masses.size
         val lo = FloatArray(n)
         val hi = FloatArray(n)
-        // Marge de largeur : la plus large des aspects possibles, plus un espace
-        // entre briques. Il doit rester de la place pour les faire coulisser.
-        var totalWidth = 0f
         for (i in 0 until n) {
-            val side = BalanceRules.sizeForMass(masses[i], n)
-            val halfW = side / 2f
-            totalWidth += side * 1.09f + 0.02f
+            val halfW = sqrt(BalanceRules.areaForMass(masses[i]))
             lo[i] = masses[i] * (BalanceRules.DEAD_HALF + halfW)
             hi[i] = masses[i] * (BalanceRules.PLANK_HALF_LENGTH - halfW)
         }
-        // Les briques doivent tenir côte à côte sur les deux moitiés de planche,
-        // avec assez de jeu pour ajuster : sans ça il faudrait les empiler.
-        if (totalWidth > 2f * BalanceRules.USABLE_PER_SIDE - 0.55f) return false
 
-        val margin = 0.4f
+        // Les niveaux avancés sont faits pour empiler : on ne les refuse donc
+        // plus parce qu'une solution exigerait plusieurs étages.
+        val margin = 0.25f
         for (mask in 1 until (1 shl n) - 1) {
             var leftLo = 0f; var leftHi = 0f
             var rightLo = 0f; var rightHi = 0f
@@ -403,51 +481,66 @@ class BalanceGame {
 
     // ── Plateau de rangement ──────────────────────────────────────────────────
 
-    /** Range les poids non posés en une ou plusieurs rangées en haut de l'écran. */
+    /**
+     * Range les pièces dans un seul carrousel horizontal. Contrairement aux
+     * anciennes rangées, le nombre de pièces ne change jamais la hauteur de
+     * jeu : un glissement latéral fait défiler la bande et reboucle à l'infini.
+     */
     private fun layoutTray() {
-        if (weights.isEmpty()) return
-        val margin = 0.14f
-        val usable = BalanceRules.WORLD_WIDTH - 2f * margin
+        val trayWeights = weights.filter { !it.placed && !it.dragging }
+        if (trayWeights.isEmpty()) return
         val gap = 0.08f
 
-        val rows = ArrayList<MutableList<BalanceWeight>>()
-        var current = ArrayList<BalanceWeight>()
-        var width = 0f
-        for (w in weights) {
-            val bw = w.body.halfW * 2f
-            if (current.isNotEmpty() && width + gap + bw > usable) {
-                rows.add(current)
-                current = ArrayList()
-                width = 0f
-            }
-            if (current.isNotEmpty()) width += gap
-            width += bw
-            current.add(w)
+        val total = trayWeights.sumOf { (it.halfWidth * 2f + gap).toDouble() }.toFloat()
+        if (total > 0f) trayScroll = ((trayScroll % total) + total) % total
+        val maxHeight = trayWeights.maxOf { it.halfHeight * 2f }
+        val top = worldHeight - 0.14f
+        var cursor = -total / 2f
+        for (w in trayWeights) {
+            val width = w.halfWidth * 2f
+            cursor += width / 2f
+            // Le même cycle est répété de part et d'autre de l'écran.
+            w.trayX = (((cursor + trayScroll + total / 2f) % total) + total) % total - total / 2f
+            w.trayY = top - maxHeight / 2f
+            cursor += width / 2f + gap
         }
-        if (current.isNotEmpty()) rows.add(current)
+        trayBottom = top - maxHeight - 0.16f
 
-        var top = worldHeight - 0.14f
-        for (row in rows) {
-            val rowHeight = row.maxOf { it.body.halfH * 2f }
-            val rowWidth = row.sumOf { (it.body.halfW * 2f).toDouble() }.toFloat() + gap * (row.size - 1)
-            var x = -rowWidth / 2f
-            for (w in row) {
-                x += w.body.halfW
-                w.trayX = x
-                w.trayY = top - rowHeight / 2f
-                x += w.body.halfW + gap
-            }
-            top -= rowHeight + 0.10f
+        for (w in trayWeights) parkInTray(w)
+    }
+
+    /** Fait défiler le carrousel, sans modifier les pièces déjà posées. */
+    fun scrollTray(delta: Float) {
+        if (phase != Phase.PLACING || dragged != null || weights.isEmpty()) return
+        trayScroll += delta
+        layoutTray()
+    }
+
+    /** Abandonne une traction devenue un geste de défilement. */
+    fun cancelDragForScroll() {
+        val w = dragged ?: return
+        dragged = null
+        w.dragging = false
+        sendToTray(w)
+    }
+
+    /** Tourne une pièce dans le carrousel. Les triangles ont trois orientations. */
+    fun rotateInTray(w: BalanceWeight) {
+        if (phase != Phase.PLACING || w.placed || w.dragging) return
+        val step = if (w.shape == BalanceWeight.Shape.TRIANGLE) {
+            (2f * Math.PI / 3f).toFloat()
+        } else {
+            (Math.PI / 2.0).toFloat()
         }
-        trayBottom = top - 0.04f
-
-        for (w in weights) if (!w.placed && !w.dragging) parkInTray(w)
+        w.restAngle = (w.restAngle + step) % (2f * Math.PI.toFloat())
+        w.body.angle = w.restAngle
+        layoutTray()
     }
 
     private fun parkInTray(w: BalanceWeight) {
         w.body.x = w.trayX
         w.body.y = w.trayY
-        w.body.angle = 0f
+        w.body.angle = w.restAngle
         w.body.vx = 0f; w.body.vy = 0f; w.body.omega = 0f
         w.body.inWorld = false
     }
@@ -466,20 +559,21 @@ class BalanceGame {
     fun weightAt(wx: Float, wy: Float): BalanceWeight? {
         var best: BalanceWeight? = null
         for (w in weights) {
-            if (!contains(w.body, wx, wy)) continue
+            if (!contains(w, wx, wy)) continue
             if (best == null || w.body.y > best.body.y) best = w
         }
         return best
     }
 
-    private fun contains(b: PhysBody, wx: Float, wy: Float): Boolean {
+    private fun contains(w: BalanceWeight, wx: Float, wy: Float): Boolean {
+        val b = w.body
         val dx = wx - b.x
         val dy = wy - b.y
         val c = kotlin.math.cos(-b.angle)
         val s = kotlin.math.sin(-b.angle)
         val lx = dx * c - dy * s
         val ly = dx * s + dy * c
-        return abs(lx) <= b.halfW + 0.03f && abs(ly) <= b.halfH + 0.03f
+        return abs(lx) <= w.halfWidth + 0.03f && abs(ly) <= w.halfHeight + 0.03f
     }
 
     fun beginDrag(w: BalanceWeight, wx: Float, wy: Float) {
@@ -488,7 +582,6 @@ class BalanceGame {
         w.dragging = true
         w.placed = false
         w.body.inWorld = false     // fantôme : ne bouscule pas les autres briques
-        w.body.angle = 0f
         w.body.vx = 0f; w.body.vy = 0f; w.body.omega = 0f
         world.forgetContacts(w.body)
         grabDx = w.body.x - wx
@@ -500,7 +593,7 @@ class BalanceGame {
     fun dragTo(wx: Float, wy: Float) {
         val w = dragged ?: return
         val half = BalanceRules.WORLD_WIDTH / 2f
-        w.body.x = (wx + grabDx).coerceIn(-half + w.body.halfW, half - w.body.halfW)
+        w.body.x = (wx + grabDx).coerceIn(-half + w.halfWidth, half - w.halfWidth)
         w.body.y = (wy + grabDy).coerceIn(0.2f, worldHeight - 0.05f)
         updatePreview()
     }
@@ -540,12 +633,14 @@ class BalanceGame {
 
         if (w.body.y >= trayBottom) {          // relâché dans le plateau
             sendToTray(w)
+            layoutTray()
             return false
         }
         val x = landingX(w)
         if (x == null) {
             notice = Notice.DEAD_ZONE          // interdit de poser sur le pivot
             sendToTray(w)
+            layoutTray()
             return false
         }
         place(w, x)
@@ -559,12 +654,20 @@ class BalanceGame {
         placementOrder.remove(w)
         placementOrder.add(w)
         w.body.x = x
-        w.body.angle = 0f
+        w.body.angle = w.restAngle
         w.body.vx = 0f; w.body.vy = 0f; w.body.omega = 0f
-        w.body.y = restingY(w, x) + w.body.halfH
+        w.body.y = restingY(w, x) - w.bottomOffset
+        // Le solveur générique des polygones produit un unique contact pour
+        // une base triangulaire. On conserve donc l'orientation décidée par le
+        // joueur : le triangle peut tomber ou glisser, mais ne pivote pas tout
+        // seul sur ce point de contact artificiel.
+        w.body.lockRotation = w.shape == BalanceWeight.Shape.TRIANGLE
+        w.body.refreshMass()
         w.body.inWorld = true
         world.forgetContacts(w.body)
         notice = Notice.NONE
+        // Une pièce sort du carrousel : les restantes se rapprochent aussitôt.
+        layoutTray()
     }
 
     /** Hauteur de la surface sur laquelle la brique va se poser (planche ou pile). */
@@ -573,7 +676,7 @@ class BalanceGame {
         for (other in weights) {
             if (other === w || !other.placed) continue
             val ohw = other.body.aabbHalfWidth()
-            if (abs(other.body.x - x) < ohw + w.body.halfW - 0.01f) {
+            if (abs(other.body.x - x) < ohw + w.halfWidth - 0.01f) {
                 top = maxOf(top, other.body.topY() + 0.004f)
             }
         }
@@ -616,9 +719,16 @@ class BalanceGame {
             Phase.PLACING -> {
                 world.step(dt)
                 // Une brique qui a glissé de la planche repart dans le plateau.
+                var returnedToTray = false
                 for (w in weights) {
-                    if (w.placed && w.body.y < BalanceRules.FALL_LIMIT) sendToTray(w)
+                    if (w.placed && w.body.y < BalanceRules.FALL_LIMIT) {
+                        sendToTray(w)
+                        returnedToTray = true
+                    }
                 }
+                // La pièce réintègre tout de suite le cycle : sans ce recalcul,
+                // son ancienne place vide ne se réapparaissait qu'après un swipe.
+                if (returnedToTray) layoutTray()
             }
             Phase.TESTING -> {
                 applyLeverTorque()

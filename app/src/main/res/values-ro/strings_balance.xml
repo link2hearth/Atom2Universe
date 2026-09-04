@@ -5,7 +5,9 @@
     <string name="balance_back">Înapoi</string>
     <string name="balance_difficulty_easy">Ușor · 3 greutăți</string>
     <string name="balance_difficulty_medium">Mediu · 5 greutăți</string>
-    <string name="balance_difficulty_hard">Greu · 7 greutăți</string>
+    <string name="balance_difficulty_hard">Greu · 8 blocuri</string>
+    <string name="balance_difficulty_expert">Expert · 11 blocuri</string>
+    <string name="balance_difficulty_extreme">Extrem · 14 blocuri</string>
     <string name="balance_level">Nivelul %1$d</string>
     <string name="balance_level_best">Nivelul %1$d · record %2$d</string>
     <string name="balance_btn_test">Eliberează pârghia</string>

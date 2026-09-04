@@ -5,7 +5,9 @@
     <string name="balance_back">Πίσω</string>
     <string name="balance_difficulty_easy">Εύκολο · 3 βάρη</string>
     <string name="balance_difficulty_medium">Μέτριο · 5 βάρη</string>
-    <string name="balance_difficulty_hard">Δύσκολο · 7 βάρη</string>
+    <string name="balance_difficulty_hard">Δύσκολο · 8 μπλοκ</string>
+    <string name="balance_difficulty_expert">Ειδικός · 11 μπλοκ</string>
+    <string name="balance_difficulty_extreme">Ακραίο · 14 μπλοκ</string>
     <string name="balance_level">Επίπεδο %1$d</string>
     <string name="balance_level_best">Επίπεδο %1$d · ρεκόρ %2$d</string>
     <string name="balance_btn_test">Απελευθέρωση μοχλού</string>

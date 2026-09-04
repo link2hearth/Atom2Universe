@@ -5,7 +5,9 @@
     <string name="balance_back">Назад</string>
     <string name="balance_difficulty_easy">Легко · 3 груза</string>
     <string name="balance_difficulty_medium">Средне · 5 грузов</string>
-    <string name="balance_difficulty_hard">Сложно · 7 грузов</string>
+    <string name="balance_difficulty_hard">Сложно · 8 блоков</string>
+    <string name="balance_difficulty_expert">Эксперт · 11 блоков</string>
+    <string name="balance_difficulty_extreme">Экстрим · 14 блоков</string>
     <string name="balance_level">Уровень %1$d</string>
     <string name="balance_level_best">Уровень %1$d · рекорд %2$d</string>
     <string name="balance_btn_test">Отпустить рычаг</string>

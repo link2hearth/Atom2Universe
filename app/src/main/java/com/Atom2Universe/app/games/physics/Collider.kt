@@ -82,6 +82,22 @@ internal class ShapeRef {
         out[4] = x + halfW * c - halfH * s; out[5] = y + halfW * s + halfH * c
         out[6] = x - halfW * c - halfH * s; out[7] = y - halfW * s + halfH * c
     }
+
+    /** Écrit les sommets du polygone convexe et retourne leur nombre (3 ou 4). */
+    fun polygon(out: FloatArray): Int {
+        val c = cos(angle)
+        val s = sin(angle)
+        if (shape == Shape.TRIANGLE) {
+            // Le triangle local pointe vers le haut. Le centre de masse éventuel
+            // est déjà pris en compte dans localX/localY par PhysBody.compound.
+            out[0] = x - halfW * c + halfH * s; out[1] = y - halfW * s - halfH * c
+            out[2] = x + halfW * c + halfH * s; out[3] = y + halfW * s - halfH * c
+            out[4] = x - halfH * s; out[5] = y + halfH * c
+            return 3
+        }
+        corners(out)
+        return 4
+    }
 }
 
 /**
@@ -126,8 +142,54 @@ internal object Collider {
             refA.shape == Shape.CIRCLE && refB.shape == Shape.CIRCLE -> circleCircle(refA, refB, out)
             refA.shape == Shape.CIRCLE -> circleBox(refA, refB, out, circleIsA = true)
             refB.shape == Shape.CIRCLE -> circleBox(refB, refA, out, circleIsA = false)
-            else -> boxBox(refA, refB, out)
+            refA.shape == Shape.BOX && refB.shape == Shape.BOX -> boxBox(refA, refB, out)
+            else -> polygonPolygon(refA, refB, out)
         }
+    }
+
+    /** SAT générique pour les rares contacts contenant un triangle. */
+    private fun polygonPolygon(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
+        val na = a.polygon(vertsA)
+        val nb = b.polygon(vertsB)
+        var bestOverlap = Float.MAX_VALUE
+        var bestX = 0f
+        var bestY = 0f
+        fun testAxes(v: FloatArray, n: Int): Boolean {
+            for (i in 0 until n) {
+                val j = (i + 1) % n
+                val ex = v[j * 2] - v[i * 2]
+                val ey = v[j * 2 + 1] - v[i * 2 + 1]
+                val len = sqrt(ex * ex + ey * ey)
+                if (len < 1e-6f) continue
+                val ax = -ey / len
+                val ay = ex / len
+                var amin = Float.MAX_VALUE; var amax = -Float.MAX_VALUE
+                var bmin = Float.MAX_VALUE; var bmax = -Float.MAX_VALUE
+                for (k in 0 until na) { val q = vertsA[k * 2] * ax + vertsA[k * 2 + 1] * ay; amin = minOf(amin, q); amax = maxOf(amax, q) }
+                for (k in 0 until nb) { val q = vertsB[k * 2] * ax + vertsB[k * 2 + 1] * ay; bmin = minOf(bmin, q); bmax = maxOf(bmax, q) }
+                val overlap = minOf(amax, bmax) - maxOf(amin, bmin)
+                if (overlap < 0f) return false
+                if (overlap < bestOverlap) { bestOverlap = overlap; bestX = ax; bestY = ay }
+            }
+            return true
+        }
+        if (!testAxes(vertsA, na) || !testAxes(vertsB, nb)) return 0
+        if ((b.x - a.x) * bestX + (b.y - a.y) * bestY < 0f) { bestX = -bestX; bestY = -bestY }
+        normalX = bestX; normalY = bestY
+        // Milieu des faces de support : une base triangulaire repose donc bien
+        // sur toute sa longueur, plutôt que sur un coin de rectangle caché.
+        fun support(v: FloatArray, n: Int, dx: Float, dy: Float, outPoint: FloatArray) {
+            var best = -Float.MAX_VALUE; var sx = 0f; var sy = 0f; var count = 0
+            for (i in 0 until n) { val x = v[i * 2]; val y = v[i * 2 + 1]; val d = x * dx + y * dy
+                if (d > best + 1e-4f) { best = d; sx = x; sy = y; count = 1 } else if (abs(d - best) <= 1e-4f) { sx += x; sy += y; count++ } }
+            outPoint[0] = sx / count; outPoint[1] = sy / count
+        }
+        support(vertsA, na, bestX, bestY, segIn)
+        support(vertsB, nb, -bestX, -bestY, segMid)
+        val c = out[0]
+        c.px = (segIn[0] + segMid[0]) * 0.5f; c.py = (segIn[1] + segMid[1]) * 0.5f
+        c.separation = -bestOverlap; c.normalImpulse = 0f; c.tangentImpulse = 0f; c.feature = ROUND_FEATURE
+        return 1
     }
 
     // --------------------------- Disque contre disque ---------------------------

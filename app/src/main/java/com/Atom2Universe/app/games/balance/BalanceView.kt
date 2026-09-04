@@ -81,12 +81,20 @@ class BalanceView @JvmOverloads constructor(
     private var lastNanos = 0L
     private var accumulator = 0f
     private var lastPhase = BalanceGame.Phase.PLACING
+    private var trayGesture = false
+    private var trayScrolling = false
+    private var lastTouchWorldX = 0f
+    private var downX = 0f
+    private var downY = 0f
+    private var tappedTrayWeight: BalanceWeight? = null
 
     private val dp = resources.displayMetrics.density
 
     /** Pixels par mètre. */
     private var scale = 100f
     private var cx = 0f
+    /** Décalage vertical du monde : en paysage, le pied continue sous l'écran. */
+    private var worldYOffset = 0f
 
     private companion object {
         const val FIXED_DT = 1f / 120f
@@ -228,8 +236,12 @@ class BalanceView @JvmOverloads constructor(
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
         scale = w / BalanceRules.WORLD_WIDTH
         cx = w / 2f
+        // En paysage, on garde la planche basse et on laisse le socle sortir
+        // par le bas. Le carrousel reste en haut car la hauteur transmise au
+        // jeu inclut exactement ce décalage.
+        worldYOffset = if (w > h) 0.62f else 0f
         synchronized(game) {
-            game.setViewport(h / scale)
+            game.setViewport(h / scale + worldYOffset)
             if (game.weights.isEmpty()) game.newLevel()
         }
     }
@@ -295,23 +307,61 @@ class BalanceView @JvmOverloads constructor(
     // ── Conversion monde → écran ──────────────────────────────────────────────
 
     private fun sx(x: Float) = cx + x * scale
-    private fun sy(y: Float) = height - y * scale
+    private fun sy(y: Float) = height - (y - worldYOffset) * scale
 
     // ── Saisie ────────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val wx = (event.x - cx) / scale
-        val wy = (height - event.y) / scale
+        val wy = (height - event.y) / scale + worldYOffset
 
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> synchronized(game) {
                 if (game.phase != BalanceGame.Phase.PLACING) return true
-                val w = game.weightAt(wx, wy) ?: return true
+                trayGesture = wy >= game.trayBottom
+                trayScrolling = false
+                lastTouchWorldX = wx
+                downX = event.x
+                downY = event.y
+                val w = game.weightAt(wx, wy)
+                tappedTrayWeight = if (trayGesture) w else null
+                if (w == null) return true
                 game.beginDrag(w, wx, wy)
             }
-            MotionEvent.ACTION_MOVE -> synchronized(game) { game.dragTo(wx, wy) }
+            MotionEvent.ACTION_MOVE -> synchronized(game) {
+                // Un mouvement horizontal dans le bac est un défilement, même
+                // s'il commence sur une pièce. Cela évite de devoir viser un
+                // minuscule espace vide entre deux formes.
+                if (trayGesture) {
+                    val dx = event.x - downX
+                    val dy = event.y - downY
+                    if (trayScrolling || (kotlin.math.abs(dx) > 12f * dp && kotlin.math.abs(dx) > kotlin.math.abs(dy))) {
+                        if (!trayScrolling) game.cancelDragForScroll()
+                        trayScrolling = true
+                        game.scrollTray(wx - lastTouchWorldX)
+                        lastTouchWorldX = wx
+                    } else if (kotlin.math.abs(dy) > 12f * dp) {
+                        // Le doigt quitte le bac : c'est une prise de pièce,
+                        // pas un défilement.
+                        trayGesture = false
+                        game.dragTo(wx, wy)
+                    }
+                } else {
+                    game.dragTo(wx, wy)
+                }
+            }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                synchronized(game) { game.endDrag() }
+                synchronized(game) {
+                    if (!trayScrolling) {
+                        game.endDrag()
+                        // Un tap, sans mouvement significatif, change seulement
+                        // l'orientation de la pièce dans son carrousel.
+                        if (trayGesture && event.actionMasked == MotionEvent.ACTION_UP) {
+                            tappedTrayWeight?.let { game.rotateInTray(it) }
+                        }
+                    }
+                    tappedTrayWeight = null
+                }
                 listener?.onPlacementChanged()
             }
         }
@@ -339,6 +389,7 @@ class BalanceView @JvmOverloads constructor(
         drawPivot(canvas)
         drawPlank(canvas)
         drawWeights(canvas)
+        drawMassLabels(canvas)
         drawDropGhost(canvas)
     }
 
@@ -359,7 +410,7 @@ class BalanceView @JvmOverloads constructor(
     private fun drawPivot(canvas: Canvas) {
         val apexY = sy(BalanceRules.PIVOT_HEIGHT)
         val baseY = sy(0f)
-        val halfBase = 0.42f * scale
+        val halfBase = 0.46f * scale
         tmpPath.reset()
         tmpPath.moveTo(cx, apexY)
         tmpPath.lineTo(cx - halfBase, baseY)
@@ -428,53 +479,90 @@ class BalanceView @JvmOverloads constructor(
             pBoxEdge.color = darken(pBox.color)
             pBoxEdge.alpha = pBox.alpha
 
-            val hw = b.halfW * scale
-            val hh = b.halfH * scale
+            val hw = w.halfWidth * scale
+            val hh = w.halfHeight * scale
             canvas.save()
             canvas.translate(sx(b.x), sy(b.y))
             canvas.rotate(-Math.toDegrees(b.angle.toDouble()).toFloat())
 
             val r = 5f * dp
-            tmpRect.set(-hw, -hh, hw, hh)
-            canvas.drawRoundRect(tmpRect, r, r, pBox)
-            canvas.drawRoundRect(tmpRect, r, r, pBoxEdge)
-            // Reflet sur la tranche haute
-            tmpRect.set(-hw + 3f * dp, -hh + 3f * dp, hw - 3f * dp, -hh + hh * 0.45f)
-            canvas.drawRoundRect(tmpRect, r * 0.6f, r * 0.6f, pBoxShine)
-
-            // Gros chiffre : c'est l'information principale de la brique. On part
-            // de la hauteur disponible, puis on rétrécit si le nombre déborde
-            // en largeur (deux chiffres tiennent moins bien qu'un).
-            val label = w.mass.toString()
-            val showUnit = hh > 16f * dp
-            pBoxLabel.color = darken(pBox.color)
-            var ts = hh * (if (showUnit) 1.05f else 1.3f)
-            pBoxLabel.textSize = ts
-            val maxWidth = hw * 1.62f
-            val measured = pBoxLabel.measureText(label)
-            if (measured > maxWidth) {
-                ts *= maxWidth / measured
-                pBoxLabel.textSize = ts
-            }
-            val baseline = if (showUnit) ts * 0.22f else ts * 0.36f
-            canvas.drawText(label, 0f, baseline, pBoxLabel)
-            if (showUnit) {
-                pBoxUnit.textSize = ts * 0.32f
-                pBoxUnit.color = pBoxLabel.color
-                pBoxUnit.alpha = 200
-                canvas.drawText("kg", 0f, baseline + ts * 0.4f, pBoxUnit)
+            if (w.shape == BalanceWeight.Shape.TRIANGLE) {
+                val part = b.parts.single()
+                tmpPath.reset()
+                tmpPath.moveTo((part.localX - part.halfW) * scale, -(part.localY - part.halfH) * scale)
+                tmpPath.lineTo((part.localX + part.halfW) * scale, -(part.localY - part.halfH) * scale)
+                tmpPath.lineTo(part.localX * scale, -(part.localY + part.halfH) * scale)
+                tmpPath.close()
+                canvas.drawPath(tmpPath, pBox)
+                canvas.drawPath(tmpPath, pBoxEdge)
+            } else {
+                // Chaque carré d'un tétrimino est une vraie partie du même corps
+                // physique : le dessin suit donc exactement sa géométrie.
+                for (part in b.parts) {
+                    val phw = part.halfW * scale
+                    val phh = part.halfH * scale
+                    canvas.save()
+                    canvas.translate(part.localX * scale, -part.localY * scale)
+                    canvas.rotate(-Math.toDegrees(part.localAngle.toDouble()).toFloat())
+                    tmpRect.set(-phw, -phh, phw, phh)
+                    canvas.drawRoundRect(tmpRect, r, r, pBox)
+                    canvas.drawRoundRect(tmpRect, r, r, pBoxEdge)
+                    tmpRect.set(-phw + 2f * dp, -phh + 2f * dp, phw - 2f * dp, -phh + phh * 0.5f)
+                    canvas.drawRoundRect(tmpRect, r * 0.5f, r * 0.5f, pBoxShine)
+                    canvas.restore()
+                }
             }
 
             canvas.restore()
         }
     }
 
+    /**
+     * La masse ne masque plus les formes : elle est sous la pièce dans le
+     * carrousel, puis migre dans la colonne du côté où elle a été posée.
+     */
+    private fun drawMassLabels(canvas: Canvas) {
+        // Une ligne unique réserve la lecture des masses au carrousel, sans
+        // dépendre de la hauteur ou de l'orientation de chaque pièce.
+        pBoxLabel.textSize = 26f * dp
+        pBoxLabel.color = Color.WHITE
+        pBoxLabel.alpha = 235
+        val trayLabelY = sy(game.trayBottom) + 34f * dp
+        for (weight in game.weights) {
+            if (weight.placed || weight.dragging) continue
+            canvas.drawText(weight.mass.toString(), sx(weight.body.x), trayLabelY, pBoxLabel)
+        }
+
+        val left = game.weights.filter { it.placed && it.body.x < 0f }.sortedBy { it.index }
+        val right = game.weights.filter { it.placed && it.body.x >= 0f }.sortedBy { it.index }
+        pBoxLabel.textSize = 28f * dp
+        fun column(items: List<BalanceWeight>, x: Float, align: Paint.Align) {
+            pBoxLabel.textAlign = align
+            val step = 34f * dp
+            val middle = (sy(game.trayBottom) + sy(BalanceRules.PLANK_TOP)) * 0.5f
+            val start = middle - (items.size - 1) * step * 0.5f
+            items.forEachIndexed { i, weight ->
+                canvas.drawText(weight.mass.toString(), x, start + i * step, pBoxLabel)
+            }
+            // Le résultat gagnant confirme visuellement l'addition des deux
+            // côtés, sans réintroduire de texte dans les formes elles-mêmes.
+            if (game.phase == BalanceGame.Phase.WON && items.isNotEmpty()) {
+                pBoxLabel.textSize = 22f * dp
+                canvas.drawText("Σ ${items.sumOf { it.mass }}", x, start + items.size * step + 5f * dp, pBoxLabel)
+                pBoxLabel.textSize = 28f * dp
+            }
+        }
+        column(left, width * 0.14f, Paint.Align.CENTER)
+        column(right, width * 0.86f, Paint.Align.CENTER)
+        pBoxLabel.textAlign = Paint.Align.CENTER
+    }
+
     /** Silhouette de l'emplacement visé pendant le glisser. */
     private fun drawDropGhost(canvas: Canvas) {
         val w = game.weights.firstOrNull { it.dragging } ?: return
         if (w.body.y >= game.trayBottom) return
-        val hw = w.body.halfW * scale
-        val hh = w.body.halfH * scale
+        val hw = w.halfWidth * scale
+        val hh = w.halfHeight * scale
 
         if (!game.dragValid) {
             // Rappel visuel de la règle : la zone du pivot est refusée.
@@ -485,9 +573,32 @@ class BalanceView @JvmOverloads constructor(
             return
         }
         val x = sx(game.dragPreviewX)
-        val top = sy(game.dragPreviewTop)
-        tmpRect.set(x - hw, top - 2f * hh, x + hw, top)
-        canvas.drawRoundRect(tmpRect, 4f * dp, 4f * dp, pGhost)
+        // dragPreviewTop est la surface d'appui ; le centre du corps dépend de
+        // sa forme (un triangle n'est pas symétrique verticalement).
+        val y = sy(game.dragPreviewTop - w.bottomOffset)
+        canvas.save()
+        canvas.translate(x, y)
+        canvas.rotate(-Math.toDegrees(w.body.angle.toDouble()).toFloat())
+        if (w.shape == BalanceWeight.Shape.TRIANGLE) {
+            val part = w.body.parts.single()
+            tmpPath.reset()
+            tmpPath.moveTo((part.localX - part.halfW) * scale, -(part.localY - part.halfH) * scale)
+            tmpPath.lineTo((part.localX + part.halfW) * scale, -(part.localY - part.halfH) * scale)
+            tmpPath.lineTo(part.localX * scale, -(part.localY + part.halfH) * scale)
+            tmpPath.close()
+            canvas.drawPath(tmpPath, pGhost)
+        } else {
+            for (part in w.body.parts) {
+                val phw = part.halfW * scale
+                val phh = part.halfH * scale
+                canvas.save()
+                canvas.translate(part.localX * scale, -part.localY * scale)
+                tmpRect.set(-phw, -phh, phw, phh)
+                canvas.drawRoundRect(tmpRect, 4f * dp, 4f * dp, pGhost)
+                canvas.restore()
+            }
+        }
+        canvas.restore()
     }
 
     /**

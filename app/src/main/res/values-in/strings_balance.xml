@@ -5,7 +5,9 @@
     <string name="balance_back">Kembali</string>
     <string name="balance_difficulty_easy">Mudah · 3 beban</string>
     <string name="balance_difficulty_medium">Sedang · 5 beban</string>
-    <string name="balance_difficulty_hard">Sulit · 7 beban</string>
+    <string name="balance_difficulty_hard">Sulit · 8 blok</string>
+    <string name="balance_difficulty_expert">Pakar · 11 blok</string>
+    <string name="balance_difficulty_extreme">Ekstrem · 14 blok</string>
     <string name="balance_level">Level %1$d</string>
     <string name="balance_level_best">Level %1$d · rekor %2$d</string>
     <string name="balance_btn_test">Lepaskan tuas</string>

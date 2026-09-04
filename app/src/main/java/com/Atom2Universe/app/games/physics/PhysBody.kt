@@ -13,7 +13,7 @@ import kotlin.math.sqrt
  * La boîte suffisait au jeu d'équilibre ; le disque a été ajouté pour les
  * projectiles, parce qu'un boulet carré tombe comme une pierre au lieu de rouler.
  */
-enum class Shape { BOX, CIRCLE }
+enum class Shape { BOX, CIRCLE, TRIANGLE }
 
 /**
  * Une des formes qui composent un corps, avec sa position dans le repère de
@@ -32,6 +32,14 @@ class BodyPart internal constructor(
     val localY: Float,
     val localAngle: Float
 ) {
+    /** Centre de masse de la forme dans son propre repère géométrique. */
+    internal val centroidX: Float = 0f
+    internal val centroidY: Float = when (shape) {
+        // Sommets du triangle : (-w,-h), (w,-h), (0,h).
+        // Son centre de gravité est un tiers de hauteur sous son centre de boîte.
+        Shape.TRIANGLE -> -halfH / 3f
+        else -> 0f
+    }
     // Ces quatre grandeurs ne dépendent que de la forme, qui ne change jamais après
     // sa construction : elles se calculent une fois pour toutes. Ce n'étaient au
     // départ que des accesseurs calculés, ce qui était juste et invisible — jusqu'à
@@ -39,17 +47,18 @@ class BodyPart internal constructor(
     // la recherche des paires en contact réclame le rayon englobant de chaque corps
     // à chaque fois : un million et demi de racines carrées par image.
     /** Sert à répartir la masse du corps entre ses formes. */
-    internal val area: Float = if (shape == Shape.CIRCLE) {
-        (Math.PI * radius * radius).toFloat()
-    } else {
-        4f * halfW * halfH
+    internal val area: Float = when (shape) {
+        Shape.CIRCLE -> (Math.PI * radius * radius).toFloat()
+        Shape.TRIANGLE -> 2f * halfW * halfH
+        Shape.BOX -> 4f * halfW * halfH
     }
 
     /** Inertie autour de son propre centre, pour une masse de 1 kg. */
-    internal val unitInertia: Float = if (shape == Shape.CIRCLE) {
-        radius * radius / 2f
-    } else {
-        (4f * halfW * halfW + 4f * halfH * halfH) / 12f
+    internal val unitInertia: Float = when (shape) {
+        Shape.CIRCLE -> radius * radius / 2f
+        // Moment autour du centre de gravité d'un triangle isocèle plein.
+        Shape.TRIANGLE -> halfW * halfW / 6f + 2f * halfH * halfH / 9f
+        Shape.BOX -> (4f * halfW * halfW + 4f * halfH * halfH) / 12f
     }
 
     internal val boundingRadius: Float =
@@ -71,6 +80,11 @@ class PartsBuilder internal constructor() {
     /** Ajoute un disque, centré en ([x], [y]) dans le repère du corps. */
     fun circle(radius: Float, x: Float = 0f, y: Float = 0f) {
         parts += BodyPart(Shape.CIRCLE, radius, radius, radius, x, y, 0f)
+    }
+
+    /** Triangle isocèle, pointe vers le haut, de sommets (-w,-h), (w,-h), (0,h). */
+    fun triangle(halfW: Float, halfH: Float, x: Float = 0f, y: Float = 0f, angle: Float = 0f) {
+        parts += BodyPart(Shape.TRIANGLE, halfW, halfH, 0f, x, y, angle)
     }
 }
 
@@ -131,8 +145,8 @@ class PhysBody private constructor(
             var cy = 0f
             for (p in b.parts) {
                 totalArea += p.area
-                cx += p.area * p.localX
-                cy += p.area * p.localY
+                cx += p.area * (p.localX + p.centroidX)
+                cy += p.area * (p.localY + p.centroidY)
             }
             if (totalArea > 0f) {
                 cx /= totalArea
@@ -424,7 +438,9 @@ class PhysBody private constructor(
         var i = 0f
         for (p in parts) {
             val m = mass * p.area / totalArea
-            i += m * (p.unitInertia + p.localX * p.localX + p.localY * p.localY)
+            val massX = p.localX + p.centroidX
+            val massY = p.localY + p.centroidY
+            i += m * (p.unitInertia + massX * massX + massY * massY)
         }
         return i * inertiaScale
     }

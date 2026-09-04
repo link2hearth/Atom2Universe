@@ -3,9 +3,11 @@
     <string name="balance_title">Équilibre</string>
     <string name="balance_description">Répartissez les poids sur le levier jusqu\'à l\'équilibre</string>
     <string name="balance_back">Retour</string>
-    <string name="balance_difficulty_easy">Facile · 3 poids</string>
-    <string name="balance_difficulty_medium">Moyen · 5 poids</string>
-    <string name="balance_difficulty_hard">Difficile · 7 poids</string>
+    <string name="balance_difficulty_easy">Facile · 3 blocs</string>
+    <string name="balance_difficulty_medium">Moyen · 5 blocs</string>
+    <string name="balance_difficulty_hard">Difficile · 8 blocs</string>
+    <string name="balance_difficulty_expert">Expert · 11 blocs</string>
+    <string name="balance_difficulty_extreme">Extrême · 14 blocs</string>
     <string name="balance_level">Niveau %1$d</string>
     <string name="balance_level_best">Niveau %1$d · record %2$d</string>
     <string name="balance_btn_test">Relâcher le levier</string>

@@ -5,7 +5,9 @@
     <string name="balance_back">Wstecz</string>
     <string name="balance_difficulty_easy">Łatwy · 3 ciężarki</string>
     <string name="balance_difficulty_medium">Średni · 5 ciężarków</string>
-    <string name="balance_difficulty_hard">Trudny · 7 ciężarków</string>
+    <string name="balance_difficulty_hard">Trudny · 8 bloków</string>
+    <string name="balance_difficulty_expert">Ekspert · 11 bloków</string>
+    <string name="balance_difficulty_extreme">Ekstremalny · 14 bloków</string>
     <string name="balance_level">Poziom %1$d</string>
     <string name="balance_level_best">Poziom %1$d · rekord %2$d</string>
     <string name="balance_btn_test">Zwolnij dźwignię</string>

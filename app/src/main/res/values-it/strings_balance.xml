@@ -5,7 +5,9 @@
     <string name="balance_back">Indietro</string>
     <string name="balance_difficulty_easy">Facile · 3 pesi</string>
     <string name="balance_difficulty_medium">Medio · 5 pesi</string>
-    <string name="balance_difficulty_hard">Difficile · 7 pesi</string>
+    <string name="balance_difficulty_hard">Difficile · 8 blocchi</string>
+    <string name="balance_difficulty_expert">Esperto · 11 blocchi</string>
+    <string name="balance_difficulty_extreme">Estremo · 14 blocchi</string>
     <string name="balance_level">Livello %1$d</string>
     <string name="balance_level_best">Livello %1$d · record %2$d</string>
     <string name="balance_btn_test">Rilascia la leva</string>

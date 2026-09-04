@@ -61,10 +61,10 @@ object NeutrinoRewards {
     private val SOKOBAN_VALUES = intArrayOf(1, 2, 4, 5)
     fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
 
-    // ── Équilibre : EASY/MEDIUM/HARD, par niveau réussi ───────────────────────
+    // ── Équilibre : EASY à EXTREME, par niveau réussi ─────────────────────────
     // Chaque test qui n'aboutit pas (raté ou interrompu) retire un neutrino,
     // sans jamais descendre sous 1 : réfléchir avant de relâcher le levier paie.
-    private val BALANCE_VALUES = intArrayOf(3, 6, 12)
+    private val BALANCE_VALUES = intArrayOf(3, 6, 12, 20, 32)
     const val BALANCE_RETRY_PENALTY = 1
     fun balance(difficultyOrdinal: Int, failedAttempts: Int = 0) =
         (BALANCE_VALUES[difficultyOrdinal] - failedAttempts * BALANCE_RETRY_PENALTY)

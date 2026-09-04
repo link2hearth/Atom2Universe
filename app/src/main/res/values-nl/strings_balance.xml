@@ -5,7 +5,9 @@
     <string name="balance_back">Terug</string>
     <string name="balance_difficulty_easy">Makkelijk · 3 gewichten</string>
     <string name="balance_difficulty_medium">Gemiddeld · 5 gewichten</string>
-    <string name="balance_difficulty_hard">Moeilijk · 7 gewichten</string>
+    <string name="balance_difficulty_hard">Moeilijk · 8 blokken</string>
+    <string name="balance_difficulty_expert">Expert · 11 blokken</string>
+    <string name="balance_difficulty_extreme">Extreem · 14 blokken</string>
     <string name="balance_level">Level %1$d</string>
     <string name="balance_level_best">Level %1$d · record %2$d</string>
     <string name="balance_btn_test">Hefboom loslaten</string>

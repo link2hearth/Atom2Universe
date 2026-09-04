@@ -195,17 +195,16 @@ class BalanceGameTest {
     }
 
     @Test
-    fun `une brique posee trop pres du bord reste entierement sur la planche`() {
+    fun `une brique peut depasser du bord en restant suffisamment soutenue`() {
         val game = newGame(BalanceGame.Difficulty.EASY)
         val w = game.weights.first()
         game.put(w, BalanceRules.PLANK_HALF_LENGTH + 0.3f)
         game.simulate(1f)
 
         assertTrue("le poids n'est pas posé", w.placed)
-        assertTrue(
-            "la brique déborde de la planche : x=${w.body.x}",
-            w.body.x + w.body.halfW <= BalanceRules.PLANK_HALF_LENGTH + 0.001f
-        )
+        val overlap = BalanceRules.PLANK_HALF_LENGTH - (w.body.x - w.body.halfW)
+        val minOverlap = 2f * w.body.halfW * BalanceRules.MIN_SUPPORT_FRACTION
+        assertTrue("la brique n'est pas assez soutenue : $overlap < $minOverlap", overlap + 0.001f >= minOverlap)
     }
 
     @Test

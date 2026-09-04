@@ -3,9 +3,11 @@
     <string name="balance_title">Balance</string>
     <string name="balance_description">Spread the weights along the lever until it stays level</string>
     <string name="balance_back">Back</string>
-    <string name="balance_difficulty_easy">Easy · 3 weights</string>
-    <string name="balance_difficulty_medium">Medium · 5 weights</string>
-    <string name="balance_difficulty_hard">Hard · 7 weights</string>
+    <string name="balance_difficulty_easy">Easy · 3 blocks</string>
+    <string name="balance_difficulty_medium">Medium · 5 blocks</string>
+    <string name="balance_difficulty_hard">Hard · 8 blocks</string>
+    <string name="balance_difficulty_expert">Expert · 11 blocks</string>
+    <string name="balance_difficulty_extreme">Extreme · 14 blocks</string>
     <string name="balance_level">Level %1$d</string>
     <string name="balance_level_best">Level %1$d · best %2$d</string>
     <string name="balance_btn_test">Release the lever</string>

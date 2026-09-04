@@ -5,7 +5,9 @@
     <string name="balance_back">Zurück</string>
     <string name="balance_difficulty_easy">Leicht · 3 Gewichte</string>
     <string name="balance_difficulty_medium">Mittel · 5 Gewichte</string>
-    <string name="balance_difficulty_hard">Schwer · 7 Gewichte</string>
+    <string name="balance_difficulty_hard">Schwer · 8 Blöcke</string>
+    <string name="balance_difficulty_expert">Experte · 11 Blöcke</string>
+    <string name="balance_difficulty_extreme">Extrem · 14 Blöcke</string>
     <string name="balance_level">Level %1$d</string>
     <string name="balance_level_best">Level %1$d · Bestwert %2$d</string>
     <string name="balance_btn_test">Hebel loslassen</string>

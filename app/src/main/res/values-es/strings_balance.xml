@@ -5,7 +5,9 @@
     <string name="balance_back">Atrás</string>
     <string name="balance_difficulty_easy">Fácil · 3 pesos</string>
     <string name="balance_difficulty_medium">Medio · 5 pesos</string>
-    <string name="balance_difficulty_hard">Difícil · 7 pesos</string>
+    <string name="balance_difficulty_hard">Difícil · 8 bloques</string>
+    <string name="balance_difficulty_expert">Experto · 11 bloques</string>
+    <string name="balance_difficulty_extreme">Extremo · 14 bloques</string>
     <string name="balance_level">Nivel %1$d</string>
     <string name="balance_level_best">Nivel %1$d · récord %2$d</string>
     <string name="balance_btn_test">Soltar la palanca</string>
