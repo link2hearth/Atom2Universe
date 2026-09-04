@@ -12,14 +12,19 @@ import com.Atom2Universe.app.games.physics.PhysWorld
 import com.Atom2Universe.app.games.physics.PhysicsConstants
 import com.Atom2Universe.app.games.physics.RevoluteJoint
 import com.Atom2Universe.app.games.physics.RotaryDriveJoint
+import com.Atom2Universe.app.games.trebuchet.ShotPierce
+import com.Atom2Universe.app.games.trebuchet.ShotSite
+import com.Atom2Universe.app.games.trebuchet.ShotTrail
 import com.Atom2Universe.app.games.trebuchet.TargetField
 import com.Atom2Universe.app.games.trebuchet.TargetGenerator
 import com.Atom2Universe.app.games.trebuchet.TargetLevel
 import com.Atom2Universe.app.games.trebuchet.Terrain
 import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
+import com.Atom2Universe.app.games.trebuchet.TrebuchetGround
 import com.Atom2Universe.app.games.trebuchet.TargetRules
 import com.Atom2Universe.app.games.trebuchet.TrebuchetEffects
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
+import com.Atom2Universe.app.games.trebuchet.Wind
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -144,45 +149,51 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     var lastShotHitTarget = false
         private set
 
-    /** Le sol de l'atelier : une seule dalle plate, refaite à chaque reconstruction. */
+    /** Le corps de sol le plus à gauche : le premier de [groundBodies]. */
     lateinit var ground: PhysBody
+
+    /** Tous les corps du sol, le plus à gauche en premier, refaits à chaque montage. */
+    var groundBodies: List<PhysBody> = emptyList()
         private set
 
     /**
-     * Le relief et le site, **les memes qu'au champ de tir**.
+     * La partie : le relief, le site, le vent, les compteurs, le bouquet final.
      *
-     * L'atelier n'est plus une dalle nue : on y tire sur des collines et des batiments
-     * qui s'effondrent, parce qu'il n'y avait aucune raison qu'une machine a engrenages
-     * mesure ses coups sur un terrain moins vrai qu'un trebuchet. Le tout sort d'une
-     * graine, exactement comme un niveau du trebuchet.
+     * C'est [ShotSite], la **même** pièce que le trébuchet — tout ce qu'une partie
+     * possède sauf la machine. L'atelier avait la sienne, et elle **jetait le vent** que
+     * sa propre graine venait de tirer : la mesure est dans [ShotSite].
      *
-     * Le relief est **plat sous la machine** : c'est [TargetGenerator] qui le garantit,
-     * il batit le terrain autour des batiments et laisse la ligne de tir de niveau. Une
+     * Le relief est plat sous la machine : c'est [TargetGenerator] qui le garantit, il
+     * bâtit le terrain autour des bâtiments et laisse la ligne de tir de niveau. Une
      * colline sous l'atelier enterrerait les roues.
      */
-    var terrain: Terrain = Terrain.FLAT
-        private set
+    val site = ShotSite(
+        world,
+        remount = { rebuild() },
+        // Les pierres du site doivent vivre sur **toutes** les couches de l'atelier.
+        // [TargetField] ne connaît pas les étages : il laisse ses corps sur la couche
+        // zéro, et un boulet parti d'un lanceur monté au troisième les traverserait sans
+        // les voir. On leur donne la même envergure qu'au sol, qui traverse déjà tout.
+        stampPieces = { champ ->
+            for (p in champ.pieces) {
+                p.body.collisionLayer = GearMachineRules.MIN_LAYER
+                p.body.collisionLayerDepth =
+                    GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
+            }
+        }
+    )
 
-    var level: TargetLevel? = null
-        private set
+    val terrain: Terrain get() = site.terrain
 
-    val targets = TargetField(world).apply {
-        // La poussiere d'une pierre qui cede : c'est le seul retour visible d'un coup
-        // qui a porte sans casser, et il ne coute rien puisque les effets tournent deja.
-        onDust = { x, y, r -> effects.dust(x, y, r) }
-    }
+    val level: TargetLevel? get() = site.level
 
-    /**
-     * Fumee, gravats, poussiere et feu d'artifice.
-     *
-     * Les memes que le trebuchet, pour la meme raison que le decor : une explosion ne
-     * ressemble pas plus a un train d'engrenages qu'a un contrepoids. La vue les peint
-     * avec [com.Atom2Universe.app.games.trebuchet.SparkScene].
-     */
-    val effects = TrebuchetEffects()
+    val targets: TargetField get() = site.targets
 
-    /** Le feu d'artifice ne part qu'une fois par site. */
-    private var celebrated = false
+    /** Le vent du site, celui de sa graine. Le monde et les effets s'en servent déjà. */
+    val wind: Wind get() = site.wind
+
+    /** Fumée, gravats, poussière et feu d'artifice. Les mêmes que le trébuchet. */
+    val effects: TrebuchetEffects get() = site.effects
 
     /**
      * Hauteur de ciel visible a l'ecran, en metres. La vue la pose a chaque image.
@@ -197,101 +208,33 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      *
      * C'est la seule chose que la simulation sait de l'affichage.
      */
-    var skyTop = 150f
-        set(value) {
-            field = value
-            effects.skyTop = value
-        }
+    var skyTop: Float
+        get() = site.skyTop
+        set(value) { site.skyTop = value }
 
-    // ── La traversée ─────────────────────────────────────────────────────────
-    //
-    // L'élan du boulet avant le choc de l'image en cours. Une fois le pas simulé il est
-    // perdu, et c'est justement lui qu'on veut rendre à un projectile qui vient de
-    // casser quelque chose.
-    private var momentumVx = 0f
-    private var momentumVy = 0f
-    private var momentumEnergy = 0f
+    /**
+     * La traversée : un projectile ne paie que ce qu'il a détruit.
+     *
+     * C'est [ShotPierce], la **même** pièce que le trébuchet — c'est la moitié manquante
+     * du mode arcade, et elle n'a rien à voir avec la façon dont le boulet a été lancé.
+     * Le calcul et ses trois garde-fous sont décrits là-bas ; ici il ne reste qu'à dire
+     * **qui** a le droit de traverser cette image.
+     */
+    private val pierce = ShotPierce()
 
-    private fun rememberMomentum() {
-        val b = projectile?.body ?: return
-        momentumVx = b.vx
-        momentumVy = b.vy
-        momentumEnergy = 0.5f * b.mass * (b.vx * b.vx + b.vy * b.vy)
+    /** Le boulet en vol, et lui seul : l'atelier n'a pas d'éclats. */
+    private fun aimPierce() {
+        pierce.bodies.clear()
+        if (phase == Phase.FLIGHT) projectile?.let { pierce.bodies.add(it.body) }
+        pierce.remember()
     }
 
     /**
-     * **Un projectile ne paie que ce qu'il a détruit.**
-     *
-     * C'est la moitié manquante du mode arcade dans l'atelier. Sans elle, la physique
-     * décide seule et elle est impitoyable : un boulet de vingt kilos qui percute une
-     * pierre de trois tonnes repart en arrière, **même si la pierre se brise**. C'est
-     * exact — l'impulsion de contact se calcule avant que la pierre ne meure, et elle ne
-     * sait pas que sa cible n'existera plus dans un dixième de seconde. C'est aussi tout
-     * ce qu'on ne veut pas voir en arcade, où un boulet doit entrer dans la construction
-     * et ressortir de l'autre côté.
-     *
-     * On le remet donc dans l'axe qu'il avait avant le choc, avec l'énergie qu'il avait
-     * **moins celle des points de vie qu'il vient d'emporter**. Trois garde-fous font
-     * que ce n'est pas de la triche :
-     *
-     *  - il ne récupère rien s'il n'a **rien cassé** : cogner sans casser rebondit, dans
-     *    les deux modes ;
-     *  - il ne dépasse jamais l'énergie qu'il avait au début de l'image, donc le moteur
-     *    ne crée pas d'énergie — la règle d'or de cette physique ;
-     *  - on ne le relance que si la physique l'a laissé **plus lent** que ça.
-     *
-     * Et le curseur [com.Atom2Universe.app.games.trebuchet.TargetStyle.pierce] vaut zéro
-     * en réaliste, où le rebond honnête est précisément ce qu'on est venu voir.
+     * Tire le feu d'artifice de la victoire. Le bouquet part du bord droit de la machine
+     * jusqu'au bout des décombres : voir [ShotSite.celebrate].
      */
-    private fun pierceThrough() {
-        val refund = TargetRules.style.pierce
-        if (refund <= 0f) return
-        val b = projectile?.body ?: return
-        val cost = targets.pierceCost(b)
-        if (cost <= 0f) return
-        // Plein s'il a gagné son passage — pierre déjà fêlée, ou coup critique, voir
-        // [com.Atom2Universe.app.games.trebuchet.TargetField.piercedThrough] — et un
-        // reliquat sinon.
-        val part = refund *
-            if (targets.piercedThrough(b)) 1f else TargetRules.PIERCE_UNEARNED
-        val v0 = hypot(momentumVx, momentumVy)
-        if (v0 < 1f) return
-        val left = (momentumEnergy - cost).coerceAtLeast(0f)
-        val voulu = sqrt(2f * left / b.mass)
-        val maintenant = hypot(b.vx, b.vy)
-        if (voulu <= maintenant) return
-        val v = maintenant + (voulu - maintenant) * part
-        b.wake()
-        b.vx = momentumVx / v0 * v
-        b.vy = momentumVy / v0 * v
-        // Les contacts gardent leurs impulsions d'une image à l'autre : sans les
-        // oublier, le solveur retiendrait le boulet contre une pierre qui n'est déjà
-        // plus là.
-        world.forgetContacts(b)
-    }
+    private fun celebrate() = site.celebrate(bounds()[1])
 
-    /**
-     * Tire le feu d'artifice de la victoire, une fois par site.
-     *
-     * Il part **de la machine jusqu'au bout des decombres**, et non plus seulement
-     * jusqu'au pied de la construction — meme regle qu'au trebuchet, et pour la meme
-     * raison : la camera prend tout le champ a la fin d'un tir, et un bouquet qui
-     * s'arrete avant les ruines laisse noire la moitie de l'image ou le joueur regarde
-     * ce qu'il vient d'abattre.
-     *
-     * Le bout des decombres se lit sur les pierres et non sur l'empreinte d'origine :
-     * une construction qui s'effondre projette ses blocs plus loin qu'elle ne
-     * s'etendait.
-     */
-    private fun celebrate() {
-        if (celebrated || level == null || !targets.cleared) return
-        celebrated = true
-        val debut = bounds()[1] + 30f
-        var bout = targets.right
-        for (p in targets.pieces) if (p.body.x > bout) bout = p.body.x
-        val fin = (bout + 25f).coerceAtLeast(debut + 40f)
-        effects.celebrate(debut, fin)
-    }
 
     /**
      * Charge le site de la graine donnee, ou le retire si [seed] est nul.
@@ -301,56 +244,21 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * l'ancien.
      */
     fun loadSite(seed: Long?) {
-        if (seed == null) {
-            level = null
-            terrain = Terrain.FLAT
-            targets.clear()
-            rebuild()
-            return
-        }
-        // Le site se pose **exactement comme au trebuchet** : la ou le generateur l'a
-        // mis, avec son relief. C'est deja lui qui garantit un tablier plat a l'altitude
-        // zero sous la ligne de tir, sinon la machine s'enterrerait.
+        // Le site se pose **exactement comme au trébuchet**, par la même procédure : là
+        // où le générateur l'a mis, avec son relief et **avec son vent**. L'ordre des
+        // étapes et ses pièges sont décrits dans [ShotSite.load] — notamment le
+        // `reattach` qu'il ne faut surtout pas ajouter après un `targets.load`, sous
+        // peine de mettre chaque pierre deux fois dans le monde.
         //
-        // On a essaye de le rapprocher, sur l'idee qu'un atelier tire moins loin qu'un
-        // trebuchet. C'est faux : la machine par defaut envoie deja son boulet a pres de
-        // trois cents metres. Rapprocher le village a la distance du mannequin — soixante
-        // metres — mettait un chateau en travers de chaque tir des la premiere image.
-        // La distance de visee resservira pour placer un site **choisi**, pas celui-ci.
-        val lvl = TargetGenerator.generate(seed)
-        level = lvl
-        terrain = lvl.terrain
-        // Les gravats retombent sur le relief, pas sur l'altitude zero.
-        effects.groundAt = { x -> lvl.terrain.heightAt(x) }
-        effects.clear()
-        celebrated = false
-        rebuild()
-        targets.load(lvl.structure, lvl.terrain)
-        stampSite()
-        // **Pas de `reattach()` ici.** [TargetField.load] pose deja chaque pierre dans le
-        // monde en la fabriquant ; `reattach` ne sert qu'a les y remettre apres un
-        // `world.clear()`, ce que fait [rebuild]. Les deux enchaines mettaient **chaque
-        // pierre deux fois** dans la liste des corps — et rien ne s'en plaignait : le
-        // balayage large appariait alors un corps avec lui-meme, le solveur inventait des
-        // contacts entre ses propres morceaux, et une construction touchee se figeait ou
-        // partait de travers une fois sur deux.
+        // On a essayé de rapprocher le site, sur l'idée qu'un atelier tire moins loin
+        // qu'un trébuchet. C'est faux : la machine par défaut envoie déjà son boulet à
+        // près de trois cents mètres. Rapprocher le village à la distance du mannequin —
+        // soixante mètres — mettait un château en travers de chaque tir dès la première
+        // image. La distance de visée resservira pour placer un site **choisi**.
+        site.load(seed?.let { TargetGenerator.generate(it) })
     }
 
 
-    /**
-     * Met les pierres du site sur **toutes** les couches de l'atelier.
-     *
-     * [TargetField] ne connait pas les etages : il laisse ses corps sur la couche zero.
-     * Un boulet parti d'un lanceur monte au troisieme etage les traverserait donc sans
-     * les voir. On leur donne la meme envergure qu'au sol, qui traverse deja tout.
-     */
-    private fun stampSite() {
-        for (p in targets.pieces) {
-            p.body.collisionLayer = GearMachineRules.MIN_LAYER
-            p.body.collisionLayerDepth =
-                GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
-        }
-    }
 
     /**
      * Les trois temps d'un tir, comme au trébuchet.
@@ -364,19 +272,25 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
 
     var phase = Phase.BUILD
         private set
-    var shotCount = 0
-        private set
+    var shotCount: Int
+        get() = site.shotCount
+        private set(value) { site.shotCount = value }
+
+    /**
+     * La trace du tir en cours et la pile des tirs passés.
+     *
+     * C'est [ShotTrail], la **même** pièce que le trébuchet : une trajectoire n'est pas
+     * une propriété de la machine. Les accesseurs qui suivent sont pour la vue, qui lit
+     * `game.trail`, `game.trailCount`, `game.ghosts` et `game.ghostStamp`.
+     */
+    val shotTrail = ShotTrail(initialCapacity = 1_024)
 
     /** Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount]. */
-    private var trailBuf = FloatArray(1_024)
-    val trail: FloatArray get() = trailBuf
-    var trailCount = 0
-        private set
-
-    private val ghostList = ArrayList<FloatArray>()
+    val trail: FloatArray get() = shotTrail.points
+    val trailCount: Int get() = shotTrail.count
 
     /** Les tirs précédents, le plus récent en tête. */
-    val ghosts: List<FloatArray> get() = ghostList
+    val ghosts: List<FloatArray> get() = shotTrail.ghosts
 
     /**
      * Change à chaque fois que la liste des fantômes change, et jamais autrement.
@@ -386,18 +300,13 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * voudrait dire relire dix fois trois mille nombres à chaque image, soit exactement
      * le travail qu'on essaie d'éviter. Un compteur suffit.
      */
-    var ghostStamp = 0
-        private set
+    val ghostStamp: Int get() = shotTrail.stamp
 
     /** Combien de fantômes on garde. Le réglage est celui du trébuchet. */
-    var ghostLimit: Int = TrebuchetRules.GHOST_HISTORY
-        set(value) {
-            field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
-            while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
-            ghostStamp++
-        }
+    var ghostLimit: Int
+        get() = shotTrail.limit
+        set(value) { shotTrail.limit = value }
 
-    private var trailTimer = 0f
     private var restCalm = 0f
     private var sinceLanding = 0f
 
@@ -553,7 +462,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // engrenage entre deux tirs ne doit pas voir le village se reconstruire derriere
         // lui.
         targets.reattach()
-        stampSite()
+        site.restamp()
         // Le boulet qui vient de la toucher n'a pas survecu au vidage : c'est le moment
         // de rendormir la cible si elle est prete, plutot que d'attendre la prochaine
         // image de vol pour s'en apercevoir.
@@ -561,52 +470,28 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     /**
-     * Pose la dalle de sol, **sous** le relief et jamais au travers.
+     * Pose le sol : le relief, prolongé à plat jusqu'aux bords du monde.
      *
-     * Elle traverse toutes les couches — un boulet tiré depuis l'étage +3 retombe sur la
-     * même terre que les autres — et elle ferme le monde de part et d'autre du relief.
+     * C'est [TrebuchetGround.lay] qui fait le travail, et c'est la **même** pièce que le
+     * trébuchet — le sol appartient au site, pas à la machine. On ne lui donne que ce
+     * qui est vraiment propre à l'atelier : la largeur de son monde, vingt fois celle du
+     * trébuchet, et le tampon de couches ci-dessous.
      *
-     * **Sa face supérieure suit le point le plus bas du relief, elle n'est pas à zéro.**
-     * Elle l'a été, et c'était le défaut le plus déroutant du jeu : une dalle de quarante
-     * kilomètres calée à l'altitude zéro passe **au-dessus** d'un site posé au fond d'un
-     * vallon, lequel descend jusqu'à huit mètres sous le niveau de la machine. C'était
-     * donc la dalle qui portait le village, pas le relief. Le décor, lui, se dessine sur
-     * le vrai profil : le joueur voyait ses bâtiments et leurs gravats **suspendus à huit
-     * mètres au-dessus du sol**.
-     *
-     * Et le décalage ne se voyait qu'au premier impact : la cible se charge endormie
-     * ([TargetField.trySleep]), donc rien ne bougeait tant que rien ne la touchait. Le
-     * boulet arrivait, tout se réveillait, et le site remontait d'un bloc — « l'immeuble
-     * a grandi pendant le tir ».
-     *
-     * Sur un relief plat ou entièrement au-dessus de zéro, le minimum vaut zéro et la
-     * dalle ne bouge pas d'un millimètre : c'est la même dalle qu'avant.
+     * **Il n'y a plus de dalle.** L'atelier en posait une, plate, de quarante kilomètres,
+     * qui portait la machine et fermait le monde de part et d'autre du relief. Elle a
+     * coûté deux bugs, dont le second était invisible : une dalle plate ne peut pas être
+     * d'accord avec un relief qui ne l'est pas, et au-delà du relief le boulet touchait
+     * jusqu'à **vingt-huit mètres** plus bas que ce que `terrain.heightAt` annonçait à
+     * [trackShot] pour décider qu'il avait atterri. Le détail de la mesure et de la
+     * fausse piste est dans [TrebuchetGround].
      */
     private fun addGround() {
-        val sommet = minOf(0f, terrain.lowest)
-        ground = PhysBody(
-            GearMachineRules.GROUND_HALF_WIDTH, GearMachineRules.GROUND_DEPTH / 2f, 0f
-        ).apply {
-            x = 0f
-            y = sommet - GearMachineRules.GROUND_DEPTH / 2f
-            lockPosition = true
-            lockRotation = true
-            friction = 0.62f
-            restitution = 0f
-            refreshMass()
-        }
-        stampGround(ground)
-        world.add(ground)
-
-        // Le relief par-dessus la dalle, une fois qu'il y en a un. La dalle reste : elle
-        // porte la machine et ferme le monde de part et d'autre du terrain, qui ne
-        // s'etend que sur la longueur du site.
-        if (!terrain.flat) {
-            for (b in terrain.bodies()) {
-                stampGround(b)
-                world.add(b)
-            }
-        }
+        groundBodies = TrebuchetGround.lay(
+            world, terrain,
+            -GearMachineRules.GROUND_HALF_WIDTH, GearMachineRules.GROUND_HALF_WIDTH,
+            friction = 0.55f
+        ) { stampGround(it) }
+        ground = groundBodies.first()
     }
 
     /** Ce qu'un morceau de sol rencontre : le boulet, les pierres, et leurs gravats. */
@@ -683,7 +568,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         updateProgressiveClutches(h)
         applyBrake()
         // L'élan d'avant le choc, gardé pour la traversée.
-        if (phase == Phase.FLIGHT) rememberMomentum()
+        aimPierce()
         world.stepFrame(h)
         // **Après**, jamais avant : c'est la vitesse que le solveur vient d'accorder à
         // la manivelle une fois le couple résistant du réservoir pris en compte, pas
@@ -699,7 +584,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // dégâts, et la traversée a besoin de savoir ce que le boulet vient de casser.
         targets.update(h)
         if (phase == Phase.FLIGHT) {
-            pierceThrough()
+            pierce.apply(world, targets)
             projectile?.let { trackShot(it, h) }
         }
     }
@@ -921,14 +806,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         return total
     }
 
-    private fun trailClear() { trailCount = 0 }
-
-    private fun trailAdd(x: Float, y: Float) {
-        if (trailCount + 2 > trailBuf.size) trailBuf = trailBuf.copyOf(trailBuf.size * 2)
-        trailBuf[trailCount++] = x
-        trailBuf[trailCount++] = y
-    }
-
     /**
      * Termine le tir sur demande, sans attendre que le boulet se calme.
      *
@@ -952,13 +829,12 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     private fun finishShot() {
         phase = Phase.RESULT
         shotCount++
+        // Un dernier point là où le boulet est vraiment, puis la trace devient le
+        // fantôme le plus récent — voir [ShotTrail.archive].
         projectile?.let { shot ->
-            trailAdd(shot.body.x, shot.body.y)
+            shotTrail.archive(shot.body.x, shot.body.y)
             world.remove(shot.body)
-        }
-        ghostList.add(0, trailBuf.copyOf(trailCount))
-        while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
-        ghostStamp++
+        } ?: shotTrail.archive()
     }
 
     /** Rebande l'atelier : le boulet posé disparaît, son fantôme reste. */
@@ -969,12 +845,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         phase = Phase.BUILD
     }
 
-    /** Efface la mémoire des tirs. */
-    fun clearGhosts() {
-        ghostList.clear()
-        trailClear()
-        ghostStamp++
-    }
+    /** Efface la mémoire des tirs — la trace vivante comprise. */
+    fun clearGhosts() = shotTrail.clearGhosts()
 
     /**
      * Relève le vol : le passage sur la cible, puis le premier contact au sol.
@@ -991,11 +863,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             finishShot()
             return
         }
-        trailTimer += dt
-        if (trailTimer > TRAIL_INTERVAL && trailCount < MAX_TRAIL_FLOATS) {
-            trailTimer = 0f
-            trailAdd(body.x, body.y)
-        }
+        shotTrail.sample(dt, body.x, body.y)
         shot.peakY = maxOf(shot.peakY, body.y)
         if (!shot.hitTarget && crossesTarget(shot)) {
             shot.hitTarget = true
@@ -1889,9 +1757,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         targets.beginShot()
         projectile = ProjectileState(shot, shot.x, shot.y, projectileEnergy, targetX())
         phase = Phase.FLIGHT
-        trailClear()
-        trailAdd(shot.x, shot.y)
-        trailTimer = 0f
+        // La trace s'ouvre **à la bouche du canon** : contrairement au trébuchet, le
+        // boulet est libre dès la première image, il n'y a pas de balancement à montrer.
+        shotTrail.begin(shot.x, shot.y)
         restCalm = 0f
         sinceLanding = 0f
         lastShotDistance = 0f
@@ -2110,8 +1978,6 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         private const val MAX_PROJECTILE_SPEED = 1_500f
 
         /** Un point de traînée toutes les vingt millisecondes, comme au trébuchet. */
-        private const val TRAIL_INTERVAL = 0.02f
-        private const val MAX_TRAIL_FLOATS = 6_000
 
         /** En dessous, le boulet est considéré comme posé pour de bon. */
         private const val REST_SPEED = 0.30f

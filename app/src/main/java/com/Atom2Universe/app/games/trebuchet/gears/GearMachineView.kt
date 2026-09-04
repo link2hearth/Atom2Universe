@@ -16,6 +16,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.trebuchet.ShotCamera
+import com.Atom2Universe.app.games.trebuchet.TimeScrub
 import com.Atom2Universe.app.games.trebuchet.LandScene
 import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
 import com.Atom2Universe.app.games.trebuchet.SparkScene
@@ -231,9 +233,16 @@ class GearMachineView @JvmOverloads constructor(
     private val skyClock get() = backdrop.clock
     private val ambientClock get() = backdrop.ambientClock
 
-    private var camX = 0f
-    private var camY = 3f
-    private var camScale = 60f
+    /**
+     * Le cadrage : position, échelle, plancher du sol, butées, projection.
+     *
+     * C'est [ShotCamera], la **même** pièce que le trébuchet. L'atelier avait la sienne,
+     * et il lui manquait le **plancher** : sa ligne de sol était clouée à la même hauteur
+     * d'écran quel que soit le relief, donc un village bâti au fond d'un vallon avait ses
+     * pieds jusqu'à 470 px sous le bord bas d'un écran qui en fait 1200. La mesure est
+     * dans [ShotCamera].
+     */
+    private val cam = ShotCamera(GROUND_INSET_DP)
     private var running = false
     private var lastFrameNanos = 0L
 
@@ -252,10 +261,6 @@ class GearMachineView @JvmOverloads constructor(
     private var ghostCamY = Float.NaN
     private var ghostCamScale = Float.NaN
     private var ghostStamp = -1
-    private var prevCamX = Float.NaN
-    private var prevCamY = Float.NaN
-    private var prevCamScale = Float.NaN
-    private var cameraMoving = true
     private var accumulator = 0f
     private var touchMode = TouchMode.NONE
     private var touchGearId: Int? = null
@@ -295,12 +300,11 @@ class GearMachineView @JvmOverloads constructor(
     private var panLastX = 0f
     private var panLastY = 0f
     private var sceneDragging = false
-    private var timePressAt = 0L
-    private var timePressX = 0f
-    private var timeFingerX = 0f
-    private var timeCandidate = false
-    private var timeMode = false
-    private var timeRate = 0f
+    /**
+     * L'appui long qui attrape l'heure : [TimeScrub], la **même** pièce que le trébuchet.
+     * La vue ne garde que ce qui la regarde — ici, que le doigt soit au-dessus du relief.
+     */
+    private val timeScrub = TimeScrub()
 
     fun toggleStructureTool(): Boolean {
         structureTool = !structureTool
@@ -627,8 +631,18 @@ class GearMachineView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        cam.resize(w, h, dp)
         fitCamera()
     }
+
+    /**
+     * Jusqu'où le sol descend entre deux abscisses.
+     *
+     * Passé à la caméra plutôt que lu par elle : [ShotCamera] ne connaît pas le terrain,
+     * et c'est ce qui la garde testable hors d'Android.
+     */
+    private val terrainFloor: (Float, Float) -> Float =
+        { a, b -> game.terrain.lowestBetween(a, b) }
 
     /**
      * Recadre sur la machine.
@@ -643,16 +657,11 @@ class GearMachineView @JvmOverloads constructor(
     private fun fitCamera() {
         if (width <= 0 || height <= 0) return
         val target = buildTarget()
-        camX = target[0]
-        camScale = target[1]
-        camY = groundCamY(camScale)
+        cam.snap(1f, target[0], target[1], terrainFloor)
         clampCamera()
         cameraView = CameraView.BUILD
         manualCam = false
     }
-
-    /** Le sol pose en bas de l'image, quelle que soit l'echelle. */
-    private fun groundCamY(scale: Float) = (height / 2f - GROUND_INSET_DP * dp) / scale
 
     /**
      * Le cadrage de reglage : sol en bas, machine a gauche, et une grande reserve de
@@ -661,8 +670,13 @@ class GearMachineView @JvmOverloads constructor(
     private fun buildTarget(): FloatArray {
         val bounds = game.bounds()
         val spanX = (bounds[1] - bounds[0] + 8f).coerceAtLeast(30f)
-        val spanY = (bounds[3].coerceAtLeast(0f) + 4f).coerceAtLeast(14f)
-        val scale = min(width / spanX, (height - 34f * dp) / spanY).coerceAtLeast(0.01f)
+        // Les hauteurs se comptent **depuis le plancher du cadrage**, pas depuis zéro :
+        // au-dessus d'un vallon, le sol posé en bas de l'image est huit mètres plus bas,
+        // et une fenêtre réglée sur la seule altitude laisserait sortir par le haut ce
+        // qu'elle prétend cadrer. Voir [ShotCamera].
+        val spanY = ((bounds[3] - cam.floor).coerceAtLeast(0f) + 4f).coerceAtLeast(14f)
+        val scale = min(width / spanX, (height - GROUND_INSET_DP * dp) / spanY)
+            .coerceAtLeast(0.01f)
         val center = (bounds[0] + bounds[1]) / 2f
         return floatArrayOf(center + spanX * 0.16f, scale)
     }
@@ -682,7 +696,9 @@ class GearMachineView @JvmOverloads constructor(
     private fun flightTarget(shot: GearMachineGame.ProjectileState): FloatArray {
         val bounds = game.bounds()
         val spanX = (bounds[1] - bounds[0] + 8f).coerceAtLeast(FLIGHT_MIN_WIDTH)
-        val spanY = maxOf(bounds[3] + 4f, shot.body.y + FLIGHT_TOP_MARGIN).coerceAtLeast(14f)
+        val spanY = maxOf(
+            bounds[3] - cam.floor + 4f, shot.body.y - cam.floor + FLIGHT_TOP_MARGIN
+        ).coerceAtLeast(14f)
         val scale = min(
             width / spanX,
             (height - GROUND_INSET_DP * dp) / spanY
@@ -709,7 +725,7 @@ class GearMachineView @JvmOverloads constructor(
             val left = site.left - RESULT_HIT_MARGIN
             val right = site.right + RESULT_HIT_MARGIN
             val spanX = (right - left).coerceAtLeast(RESULT_HIT_MIN_WIDTH)
-            val spanY = (site.baseHeight + RESULT_HIT_MARGIN)
+            val spanY = (site.baseHeight - cam.floor + RESULT_HIT_MARGIN)
                 .coerceAtLeast(RESULT_HIT_MIN_HEIGHT)
             val echelle = min(
                 width / spanX, (height - GROUND_INSET_DP * dp) / spanY
@@ -720,7 +736,7 @@ class GearMachineView @JvmOverloads constructor(
         val left = bounds[0] - 6f
         val right = maxOf(shot.body.x, shot.targetX) + RESULT_MARGIN
         val spanX = (right - left).coerceAtLeast(30f)
-        val spanY = (maxOf(bounds[3], shot.peakY) + 6f).coerceAtLeast(14f)
+        val spanY = (maxOf(bounds[3], shot.peakY) - cam.floor + 6f).coerceAtLeast(14f)
         val scale = min(
             width / spanX, (height - GROUND_INSET_DP * dp) / spanY
         ).coerceAtLeast(0.01f)
@@ -747,9 +763,9 @@ class GearMachineView @JvmOverloads constructor(
         val right = maxOf(bounds[1], loin)
         val spanX = (right - left + 12f).coerceAtLeast(70f)
         val haut = maxOf(bounds[3], game.terrain.highest + 12f)
-        val spanY = (haut.coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
+        val spanY = ((haut - cam.floor).coerceAtLeast(2.2f) + 4f).coerceAtLeast(14f)
         val scale = min(
-            width / spanX, (height - 34f * dp) / spanY
+            width / spanX, (height - GROUND_INSET_DP * dp) / spanY
         ).coerceAtLeast(0.01f)
         return floatArrayOf((left + right) / 2f, scale)
     }
@@ -789,9 +805,7 @@ class GearMachineView @JvmOverloads constructor(
             }
             else -> { follow = 4.5f; buildTarget() }
         }
-        camX += (target[0] - camX) * (dt * follow).coerceIn(0f, 1f)
-        camScale += (target[1] - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
-        camY = groundCamY(camScale)
+        cam.follow(dt, target[0], target[1], follow, terrainFloor)
         clampCamera()
     }
 
@@ -800,8 +814,10 @@ class GearMachineView @JvmOverloads constructor(
         val frameStart = SystemClock.uptimeMillis()
         // La caméra a-t-elle bougé depuis l'image précédente ? Le calque des fantômes en
         // dépend, et il faut le savoir **avant** de le dessiner.
-        cameraMoving = camX != prevCamX || camY != prevCamY || camScale != prevCamScale
-        prevCamX = camX; prevCamY = camY; prevCamScale = camScale
+        // Au demi-pixel près, pas à l'égalité stricte : voir [ShotCamera.beginFrame].
+        // L'atelier comparait strictement, donc son calque de fantômes se refaisait cent
+        // six images de plus que nécessaire après chaque changement de cadrage.
+        cam.beginFrame()
         // Ce que l'écran montre du ciel : le feu d'artifice s'y règle. Le cadrage pose
         // l'altitude zéro en bas de l'image, à l'encoche près, donc la hauteur de ciel
         // visible se lit d'un trait au bord supérieur. Elle se relit **à chaque image**
@@ -813,8 +829,8 @@ class GearMachineView @JvmOverloads constructor(
         drawWorkshopSky(canvas)
 
         canvas.save()
-        canvas.translate(width / 2f - camX * camScale, height / 2f + camY * camScale)
-        canvas.scale(camScale, -camScale)
+        canvas.translate(width / 2f - cam.x * cam.scale, height / 2f + cam.y * cam.scale)
+        canvas.scale(cam.scale, -cam.scale)
         drawAutomaticFrame(canvas)
         drawTransmissions(canvas)
         for (mesh in game.meshes) {
@@ -863,7 +879,7 @@ class GearMachineView @JvmOverloads constructor(
         // n'aurait aucun sens.
         sparks.draw(
             canvas, game.effects, false,
-            width.toFloat(), height.toFloat(), camX, camY, camScale
+            width.toFloat(), height.toFloat(), cam.x, cam.y, cam.scale
         )
         drawLauncherPanel(canvas)
         drawTimeControl(canvas)
@@ -938,7 +954,7 @@ class GearMachineView @JvmOverloads constructor(
             // Le decor avance d'un coup du temps reellement simule : nuages et horloge
             // sont lineaires en dt, donc sommer les sous-pas donne le meme resultat que
             // les parcourir, pour un seul recalcul du ciel par image.
-            backdrop.advance(consumed, if (timeMode) 0f else consumed, workshopBreeze())
+            backdrop.advance(consumed, if (timeScrub.active) 0f else consumed, workshopBreeze())
         }
         land.updateDecor(
             elapsed, game.level, game.terrain, game.targets, game.projectile?.body?.x ?: 0f
@@ -979,19 +995,29 @@ class GearMachineView @JvmOverloads constructor(
      */
     private fun drawWorkshopSky(canvas: Canvas) {
         val w = width.toFloat(); val h = height.toFloat()
-        backdrop.draw(canvas, w, h, camX, camY, camScale)
+        backdrop.draw(canvas, w, h, cam.x, cam.y, cam.scale)
         // Le feu d'artifice monte au fond du ciel, et le sol lui coupe les jambes quand
         // ses etoiles retombent : c'est ce qu'on voit dehors.
-        sparks.draw(canvas, game.effects, true, w, h, camX, camY, camScale)
+        sparks.draw(canvas, game.effects, true, w, h, cam.x, cam.y, cam.scale)
         land.firingLine = game.bounds()[0]
         land.draw(
-            canvas, w, h, camX, camY, camScale,
+            canvas, w, h, cam.x, cam.y, cam.scale,
             game.terrain, game.targets, sky.light, 0f, backdrop.ambientClock
         )
     }
 
     /** La brise de l'atelier : de quoi faire deriver les nuages, rien de plus. */
-    private fun workshopBreeze() = sin(ambientClock * 0.08f) * 2.2f
+    /**
+     * Le vent qui couche les arbres et la fumée : **celui du site**, pas une invention.
+     *
+     * C'était une sinusoïde fabriquée ici même. Elle a eu sa raison d'être — l'atelier
+     * tirait sur une dalle nue, sans site ni graine — mais il en a un depuis, et
+     * [TargetGenerator] tire un vent pour chaque niveau, jusqu'à huit mètres et demi par
+     * seconde. Il était simplement jeté : la vue faisait bouger les arbres sur un rythme
+     * inventé pendant que le vrai vent du site dormait dans un objet que personne ne
+     * lisait, et que la traînée du boulet comme la fumée l'ignoraient. Voir [ShotSite].
+     */
+    private fun workshopBreeze() = game.wind.vx
 
     /** L'objectif de tir donne un second point de repère au double-appui large. */
     private fun objectiveX(): Float = if (game.projectile != null) {
@@ -1071,50 +1097,18 @@ class GearMachineView @JvmOverloads constructor(
     }
 
     private fun clampCamera() {
-        if (width <= 0 || camScale <= 0f) return
-        val left = leftCameraLimit()
-        val right = rightCameraLimit()
-        val halfWidth = width / camScale / 2f
-        camX = if (right - left <= halfWidth * 2f) {
-            (left + right) * 0.5f
-        } else {
-            camX.coerceIn(left + halfWidth, right - halfWidth)
-        }
-        camY = groundCamY(camScale)
+        val minScale = (width / (rightCameraLimit() - leftCameraLimit())).coerceAtLeast(0.01f)
+        cam.clamp(leftCameraLimit(), rightCameraLimit(), minScale, 190f * dp)
     }
 
-    private fun updateTimeControl(dt: Float) {
-        if (!timeMode) {
-            if (timeCandidate && SystemClock.uptimeMillis() - timePressAt >= TIME_HOLD_MS) {
-                timeMode = true
-                timePressX = timeFingerX
-            }
-            return
-        }
-        timeRate = SkyClock.scrubRate(timeFingerX - timePressX, width * TIME_THROW)
-        skyClock.scrub(timeRate * dt)
-    }
+    private fun updateTimeControl(dt: Float) =
+        timeScrub.update(dt, width.toFloat(), skyClock)
 
-    private fun stopTimeControl() {
-        timeMode = false
-        timeCandidate = false
-        timeRate = 0f
-    }
+    private fun stopTimeControl() = timeScrub.stop()
 
     /** Retour détaillé pendant l'appui long, identique à celui du trébuchet. */
-    private fun drawTimeControl(canvas: Canvas) {
-        if (!timeMode) return
-        val minutes = ((skyClock.instant % 86_400_000L) + 86_400_000L) % 86_400_000L / 60_000L
-        val hour = minutes / 60
-        val minute = minutes % 60
-        val direction = when {
-            timeRate > 0.02f -> "▶"
-            timeRate < -0.02f -> "◀"
-            else -> "■"
-        }
-        pHint.textSize = 20f * dp
-        canvas.drawText("%02d:%02d  %s %.1f h/s".format(hour, minute, direction, abs(timeRate)), width / 2f, height * 0.18f, pHint)
-    }
+    private fun drawTimeControl(canvas: Canvas) =
+        timeScrub.draw(canvas, pHint, skyClock, width.toFloat(), height.toFloat(), dp)
 
     /**
      * La jauge de charge : combien de temps machine il reste a jouer.
@@ -1692,13 +1686,13 @@ class GearMachineView @JvmOverloads constructor(
         val layer = ghostLayer
         if (layer != null && ghostReady &&
             layer.width == width && layer.height == height &&
-            ghostCamX == camX && ghostCamY == camY && ghostCamScale == camScale &&
+            ghostCamX == cam.x && ghostCamY == cam.y && ghostCamScale == cam.scale &&
             ghostStamp == stamp
         ) {
             canvas.drawBitmap(layer, 0f, 0f, null)
             return
         }
-        if (cameraMoving) {
+        if (cam.moving) {
             ghostReady = false
             paintGhosts(canvas)
             return
@@ -1710,9 +1704,9 @@ class GearMachineView @JvmOverloads constructor(
         }
         fresh.eraseColor(Color.TRANSPARENT)
         paintGhosts(ghostLayerCanvas ?: return)
-        ghostCamX = camX
-        ghostCamY = camY
-        ghostCamScale = camScale
+        ghostCamX = cam.x
+        ghostCamY = cam.y
+        ghostCamScale = cam.scale
         ghostStamp = stamp
         ghostReady = true
         canvas.drawBitmap(fresh, 0f, 0f, null)
@@ -1936,7 +1930,7 @@ class GearMachineView @JvmOverloads constructor(
         val dx = event.getX(1) - event.getX(0)
         val dy = event.getY(1) - event.getY(0)
         pinchStartDistance = hypot(dx, dy).coerceAtLeast(1f)
-        pinchStartScale = camScale
+        pinchStartScale = cam.scale
         pinchLastFocusX = (event.getX(0) + event.getX(1)) * 0.5f
         pinching = true
         // Deux doigts ne deselectionnent pas : sans ca, un pincement qui ne bouge
@@ -1960,12 +1954,13 @@ class GearMachineView @JvmOverloads constructor(
         val worldX = wx(pinchLastFocusX)
         val minScale = (width / (rightCameraLimit() - leftCameraLimit())).coerceAtLeast(0.01f)
         val maxScale = 190f * dp
-        camScale = (pinchStartScale * distance / pinchStartDistance).coerceIn(minScale, maxScale)
-        camX = worldX - (focusX - width / 2f) / camScale
+        cam.scale = (pinchStartScale * distance / pinchStartDistance).coerceIn(minScale, maxScale)
+        cam.x = worldX - (focusX - width / 2f) / cam.scale
         pinchLastFocusX = focusX
-        // Le sol ne suit jamais le doigt : il reste posé en bas de l'écran,
-        // comme dans TrebuchetView, quelle que soit l'échelle choisie.
-        camY = groundCamY(camScale)
+        // Le sol ne suit jamais le doigt : il reste posé en bas de l'écran, quelle que
+        // soit l'échelle choisie. Un cadrage posé au doigt **est** un cadrage posé.
+        cam.ready = true
+        cam.y = cam.groundY()
         clampCamera()
     }
 
@@ -1976,7 +1971,7 @@ class GearMachineView @JvmOverloads constructor(
             sceneDragging = true
             manualCam = true
         }
-        camX -= dx / camScale
+        cam.x -= dx / cam.scale
         clampCamera()
         panLastX = event.x
         panLastY = event.y
@@ -2041,10 +2036,9 @@ class GearMachineView @JvmOverloads constructor(
                         // Le ciel commence **au-dessus du sol qu'on voit**, pas au-dessus
                         // de l'altitude zero : depuis qu'il y a du relief, un doigt pose
                         // sur le flanc d'une colline etait compte comme pose dans le ciel.
-                        timeCandidate = y > game.terrain.heightAt(x)
-                        timePressAt = now
-                        timePressX = event.x
-                        timeFingerX = event.x
+                        timeScrub.press(
+                            event.x, eligible = y > game.terrain.heightAt(x), now = now
+                        )
                     }
                     touchMode = TouchMode.NONE
                     listener?.onGearSelectionChanged()
@@ -2139,13 +2133,9 @@ class GearMachineView @JvmOverloads constructor(
                     )
                     lastGestureRawX = event.rawX
                     lastGestureRawY = event.rawY
-                    timeFingerX = event.x
-                    if (timeMode) {
+                    if (timeScrub.move(event.x, DRAG_SLOP_DP * dp)) {
                         invalidate()
                         return true
-                    }
-                    if (timeCandidate && abs(event.x - timePressX) > DRAG_SLOP_DP * dp) {
-                        timeCandidate = false
                     }
                     if (!gestureLocked) panScene(event)
                     invalidate()
@@ -2289,11 +2279,7 @@ class GearMachineView @JvmOverloads constructor(
          */
         private const val DRAG_SLOP_DP = 9f
 
-        /** Duree de l'appui qui donne la main sur l'heure, en millisecondes. */
-        private const val TIME_HOLD_MS = 420L
 
-        /** Part de la largeur d'ecran a parcourir pour balayer le temps a pleine vitesse. */
-        private const val TIME_THROW = 0.33f
 
         /** Les rayons d'un volant : assez pour qu'on lise la rotation, pas plus. */
         private const val FLYWHEEL_SPOKES = 6
@@ -2341,8 +2327,9 @@ class GearMachineView @JvmOverloads constructor(
         const val HUD_BOTTOM_DP = TOOL_TOP_DP + TOOL_HEIGHT_DP
     }
 
-    private fun sx(x: Float) = width / 2f + (x - camX) * camScale
-    private fun sy(y: Float) = height / 2f - (y - camY) * camScale
-    private fun wx(x: Float) = camX + (x - width / 2f) / camScale
-    private fun wy(y: Float) = camY - (y - height / 2f) / camScale
+    // La projection appartient au cadrage : voir [ShotCamera].
+    private fun sx(x: Float) = cam.sx(x)
+    private fun sy(y: Float) = cam.sy(y)
+    private fun wx(x: Float) = cam.worldX(x)
+    private fun wy(y: Float) = cam.worldY(y)
 }

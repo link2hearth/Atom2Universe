@@ -581,22 +581,22 @@ class TrebuchetGame {
      * par le boulet.
      */
     /**
-     * Les étincelles, les explosions et les feux d'artifice.
+     * La partie : le site, le relief, le vent, les compteurs, le bouquet final.
      *
-     * Ils vivent dans la machine et non dans la vue, pour la même raison que la cible :
-     * ce sont des choses qui bougent dans des mètres, elles se simulent, et ce qui se
-     * simule se vérifie au banc. La vue n'en fait que des pixels.
+     * C'est [ShotSite], la **même** pièce que l'atelier d'engrenages — tout ce qu'une
+     * partie possède sauf la machine. Les accesseurs qui suivent sont pour la vue et
+     * l'activité, qui lisent `game.effects`, `game.targets`, `game.terrain`… depuis
+     * toujours.
      */
-    val effects = TrebuchetEffects()
+    val site = ShotSite(world, remount = { build() })
+
+    val effects: TrebuchetEffects get() = site.effects
 
     /**
      * Prévient qu'une bombe vient d'exploser, pour qui voudrait en faire un bruit —
      * la simulation reste du Kotlin pur, sans dépendance à l'audio Android.
      */
     var onExplosion: ((Float, Float, Float) -> Unit)? = null
-
-    /** Vrai quand le site en cours a déjà eu droit à son feu d'artifice. */
-    private var celebrated = false
 
     /**
      * Hauteur de ciel visible à l'écran, en mètres. La vue la pose à chaque image.
@@ -606,17 +606,11 @@ class TrebuchetGame {
      * mètres de ciel, le même écran debout en montre huit cents — des fusées réglées
      * pour l'un se tassent dans le bas de l'autre.
      */
-    var skyTop = 150f
-        set(value) {
-            field = value
-            effects.skyTop = value
-        }
+    var skyTop: Float
+        get() = site.skyTop
+        set(value) { site.skyTop = value }
 
-    val targets = TargetField(world).apply {
-        // La poussière du dernier palier de destruction. Le champ de cibles ne connaît
-        // pas les effets — c'est le jeu qui les lui prête, une fois, ici.
-        onDust = { x, y, r -> effects.dust(x, y, r) }
-    }
+    val targets: TargetField get() = site.targets
 
     /**
      * Le vent du moment. Il vient du niveau, donc de sa graine.
@@ -625,12 +619,10 @@ class TrebuchetGame {
      * effets pour emporter la fumée et les feux. Rien d'autre n'a besoin de le
      * connaître.
      */
-    var wind: Wind = Wind.CALM
-        private set
+    val wind: Wind get() = site.wind
 
     /** Le niveau en cours, ou nul en bac à sable (record de portée, sans cible). */
-    var level: TargetLevel? = null
-        private set
+    val level: TargetLevel? get() = site.level
 
     var phase = Phase.BUILD
         private set
@@ -644,8 +636,7 @@ class TrebuchetGame {
      * quand il veut savoir si le boulet a touché. Un seul profil, trois lecteurs, et
      * aucun risque qu'ils racontent trois histoires différentes.
      */
-    var terrain: Terrain = Terrain.FLAT
-        private set
+    val terrain: Terrain get() = site.terrain
 
     /** Les corps immobiles qui portent le monde. Refaits à chaque remontage. */
     private val groundBodies = ArrayList<PhysBody>(12)
@@ -756,7 +747,17 @@ class TrebuchetGame {
     var launchAngleDeg = 0f
         private set
 
-    private var trailBuf = FloatArray(2048)
+    /**
+     * La trace du tir en cours et la pile des tirs passés.
+     *
+     * C'est [ShotTrail], la **même** pièce que l'atelier d'engrenages : une trajectoire
+     * n'appartient pas à la machine qui l'a lancée. Les deux jeux en avaient chacun leur
+     * copie, et elles avaient déjà divergé — voir la mesure dans [ShotTrail].
+     *
+     * Les accesseurs ci-dessous ne sont là que pour la vue, qui lit `game.trail`,
+     * `game.trailCount`, `game.ghosts` et `game.ghostStamp` depuis toujours.
+     */
+    val shotTrail = ShotTrail()
 
     /**
      * Trajectoire du tir en cours, en couples (x, y), à lire jusqu'à [trailCount].
@@ -766,23 +767,10 @@ class TrebuchetGame {
      * à chaque image par la vue. C'est du travail pour le ramasse-miettes pendant le
      * vol, c'est-à-dire au pire moment.
      */
-    val trail: FloatArray get() = trailBuf
+    val trail: FloatArray get() = shotTrail.points
 
     /** Nombre de flottants utiles dans [trail] (deux par point). */
-    var trailCount = 0
-        private set
-
-    private fun trailClear() {
-        trailCount = 0
-    }
-
-    private fun trailAdd(x: Float, y: Float) {
-        if (trailCount + 2 > trailBuf.size) trailBuf = trailBuf.copyOf(trailBuf.size * 2)
-        trailBuf[trailCount++] = x
-        trailBuf[trailCount++] = y
-    }
-
-    private val ghostList = ArrayList<FloatArray>(TrebuchetRules.GHOST_HISTORY)
+    val trailCount: Int get() = shotTrail.count
 
     /**
      * Change à chaque fois que la pile des fantômes change, et jamais autrement.
@@ -792,22 +780,12 @@ class TrebuchetGame {
      * eux-mêmes voudrait dire relire dix fois trois mille nombres à chaque image, soit
      * exactement le travail qu'on cherche à éviter. Un compteur suffit.
      */
-    var ghostStamp = 0
-        private set
+    val ghostStamp: Int get() = shotTrail.stamp
 
-    /**
-     * Combien de tirs on garde. Le joueur le règle dans le menu des réglages.
-     *
-     * Baisser la limite taille la pile sur-le-champ : un réglage qui n'agirait qu'aux
-     * tirs suivants laisserait à l'écran des traces que le menu prétend avoir
-     * oubliées.
-     */
-    var ghostLimit: Int = TrebuchetRules.GHOST_HISTORY
-        set(value) {
-            field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
-            while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
-            ghostStamp++
-        }
+    /** Combien de tirs on garde. Le joueur le règle dans le menu des réglages. */
+    var ghostLimit: Int
+        get() = shotTrail.limit
+        set(value) { shotTrail.limit = value }
 
     /**
      * Les trajectoires des tirs précédents, **du plus récent au plus ancien**.
@@ -821,10 +799,10 @@ class TrebuchetGame {
      * qu'un millier de flottants chacune, la vue les découpe déjà à ce qui tient à
      * l'écran, et rien n'oblige à les redessiner quand la caméra ne bouge pas.
      */
-    val ghosts: List<FloatArray> get() = ghostList
+    val ghosts: List<FloatArray> get() = shotTrail.ghosts
 
     /** La trajectoire du dernier tir, ou nulle si personne n'a encore tiré. */
-    val ghost: FloatArray? get() = ghostList.firstOrNull()
+    val ghost: FloatArray? get() = shotTrail.ghosts.firstOrNull()
 
     // Mesures du tir
     var shotDistance = 0f
@@ -875,8 +853,9 @@ class TrebuchetGame {
     var efficiency = 0f
         private set
 
-    var shotCount = 0
-        private set
+    var shotCount: Int
+        get() = site.shotCount
+        private set(value) { site.shotCount = value }
 
     /**
      * Les tirs qui ont **touché**, c'est-à-dire fait perdre de la vie à au moins une
@@ -888,13 +867,13 @@ class TrebuchetGame {
      * portent, en revanche, mesure exactement ce qu'on veut mesurer : est-ce que le
      * joueur a visé juste une fois qu'il savait viser.
      */
-    var hitCount = 0
-        private set
+    var hitCount: Int
+        get() = site.hitCount
+        private set(value) { site.hitCount = value }
     var bestDistance = 0f
         private set
 
     private var elapsed = 0f
-    private var trailTimer = 0f
     private var cwStartY = 0f
     private val probe = FloatArray(2)
 
@@ -939,9 +918,8 @@ class TrebuchetGame {
     fun build() {
         config.clamp()
         world.clear()
-        trailClear()
+        shotTrail.begin()
         elapsed = 0f
-        trailTimer = 0f
         ballFree = false
         efficiency = 0f
         shotStopped = false
@@ -974,9 +952,17 @@ class TrebuchetGame {
         // Le relief, en corps immobiles. Une dalle par palier, une boîte tournée par
         // talus, rien du tout pour une falaise — et sur un terrain plat, un seul corps,
         // exactement comme avant que le relief n'existe.
+        //
+        // C'est [TrebuchetGround] qui le pose, et c'est la **même** pièce qui sert à
+        // l'atelier d'engrenages : le sol appartient au site, pas à la machine. Le
+        // relief d'un niveau couvre déjà GROUND_LEFT..GROUND_RIGHT, donc le prolongement
+        // ne change rien ici — c'est exactement le sol d'avant. C'est du côté de
+        // l'atelier, dont le monde est vingt fois plus large, qu'il rembourse.
         groundBodies.clear()
-        groundBodies += terrain.bodies(friction = 0.55f)
-        for (b in groundBodies) world.add(b)
+        groundBodies += TrebuchetGround.lay(
+            world, terrain, TrebuchetRules.GROUND_LEFT, TrebuchetRules.GROUND_RIGHT,
+            friction = 0.55f
+        )
         ground = groundBodies.first()
 
         // Le pied : un corps immobile qui sert d'axe. Le bâti dessiné en dessous est
@@ -1146,48 +1132,17 @@ class TrebuchetGame {
      * fond. La pose, elle, remplace le monde sous les pieds du joueur : elle est
      * immédiate, et elle doit se faire d'un bloc pendant que la simulation est à l'arrêt.
      */
-    fun applyLevel(lvl: TargetLevel) {
-        level = lvl
-        // Le relief se pose **avant** le remontage : c'est lui qui décide des corps
-        // immobiles du monde, et [build] les fabrique.
-        terrain = lvl.terrain
-        effects.groundAt = { x -> lvl.terrain.heightAt(x) }
-        build()
-        targets.load(lvl.structure, lvl.terrain)
-        shotCount = 0
-        hitCount = 0
-        celebrated = false
-        effects.clear()
-        applyWind(lvl.wind)
-    }
-
-    /** Repart en bac à sable : plus de cible, on ne mesure que la portée. */
-    fun clearLevel() {
-        level = null
-        targets.clear()
-        // Le bac à sable sert à mesurer une machine : on lui rend son terrain plat.
-        terrain = Terrain.FLAT
-        effects.groundAt = { 0f }
-        build()
-        // Pas de site, pas de vent : le bac à sable sert à mesurer une machine, et une
-        // mesure ne se fait pas dans le courant d'air.
-        applyWind(Wind.CALM)
-    }
+    fun applyLevel(lvl: TargetLevel) = site.load(lvl)
 
     /**
-     * Pose le vent, une fois, aux deux endroits qui s'en servent.
-     *
-     * Le monde ne connaît qu'une vitesse d'air, dont il se sert dans la traînée ; les
-     * effets s'en servent pour emporter la fumée et coucher les feux d'artifice. Passer
-     * par ici garantit que les deux racontent la même histoire — un vent qui souffle
-     * sur le boulet mais pas sur la fumée serait pire que pas de vent du tout.
+     * Repart en bac à sable : plus de cible, terrain plat, et pas de vent — on ne mesure
+     * que la portée, et une mesure ne se fait pas dans le courant d'air.
      */
-    fun applyWind(w: Wind) {
-        wind = w
-        world.windX = w.vx
-        world.windY = w.vy
-        effects.setWind(w.vx, w.vy)
-    }
+    fun clearLevel() = site.load(null)
+
+    /** Pose le vent sur le monde et sur les effets. Voir [ShotSite.applyWind]. */
+    fun applyWind(w: Wind) = site.applyWind(w)
+
 
     /**
      * Rejoue la pose avec les réglages actuels, en gardant l'historique des tirs.
@@ -1239,11 +1194,8 @@ class TrebuchetGame {
         build()
     }
 
-    /** Efface la mémoire des tirs. Le seul chemin qui les enlève. */
-    fun clearGhosts() {
-        ghostList.clear()
-        ghostStamp++
-    }
+    /** Efface la mémoire des tirs — la trace vivante comprise. Voir [ShotTrail.clearGhosts]. */
+    fun clearGhosts() = shotTrail.clearGhosts()
 
     /** Règle la longueur de la fronde, en mètres. */
     fun setSlingLength(metres: Float) = editSetting {
@@ -1291,9 +1243,10 @@ class TrebuchetGame {
         // Le tir s'ouvre ici : le champ relève l'état de chaque pierre, qui décidera de
         // ce que le boulet a le droit de traverser.
         targets.beginShot()
-        trailClear()
+        // La trace s'ouvre **vide** : celle du trébuchet commence par le balancement
+        // du bras, il n'y a donc pas de point de départ à poser comme au canon.
+        shotTrail.begin()
         elapsed = 0f
-        trailTimer = 0f
         ballFree = false
         shotDistance = 0f
         peakHeight = ball.y
@@ -1349,7 +1302,7 @@ class TrebuchetGame {
 
         // L'élan d'avant le choc, gardé pour la traversée : une fois le pas simulé, il
         // est perdu, et c'est justement lui qu'on veut rendre au projectile qui casse.
-        rememberMomentum()
+        aimPierce()
 
         stepUntilRelease(dt)
         // Le choc du projectile se lit **avant** la cible : c'est elle qui remet les
@@ -1358,7 +1311,9 @@ class TrebuchetGame {
         targets.update(dt)
         elapsed += dt
 
-        pierceThrough(dt)
+        // Le site vient d'encaisser (`targets.update` ci-dessus) : la traversée sait
+        // donc ce que le boulet a cassé, et peut lui rendre le reste de son élan.
+        pierce.apply(world, targets)
         if (!blown) explodeOnImpact(hit)
         if (!split) splitInFlight()
 
@@ -1367,14 +1322,10 @@ class TrebuchetGame {
         if (ball.y > peakHeight) peakHeight = ball.y
         if (!ballFree) launchSpeed = speed
 
-        trailTimer += dt
         // Une bombe partie en fumée n'écrit plus : sans ça, la trace empilerait des
         // centaines de points au même endroit pendant que la construction s'écroule, et
         // le fantôme du tir garderait ce pâté-là.
-        if (trailTimer > 0.02f && trailCount < 6000 && !ballGone) {
-            trailTimer = 0f
-            trailAdd(ball.x, ball.y)
-        }
+        shotTrail.sample(dt, ball.x, ball.y, record = !ballGone)
 
         // Le tir se mesure au **point d'impact**, comme une portée d'artillerie : ce
         // qui compte est là où le boulet frappe, pas où il finit de rouler. Un boulet
@@ -1427,85 +1378,30 @@ class TrebuchetGame {
     // ── Ce que le projectile fait de sa vie ──────────────────────────────────
 
     /**
-     * Élan de chaque projectile au début de l'image : vitesse en x, en y, et énergie.
-     *
-     * Un tableau plutôt que des objets : il y a jusqu'à cinq éclats, relus soixante
-     * fois par seconde pendant tout un vol, et une allocation par image serait du
-     * travail donné au ramasse-miettes exactement pendant l'impact.
-     */
-    private var momentum = FloatArray(3 * 8)
-
-    private fun rememberMomentum() {
-        if (!ballFree) return
-        val n = 1 + shards.size
-        if (momentum.size < 3 * n) momentum = FloatArray(3 * n)
-        for (i in 0 until n) {
-            val b = if (i == 0) ball else shards[i - 1]
-            momentum[3 * i] = b.vx
-            momentum[3 * i + 1] = b.vy
-            momentum[3 * i + 2] = 0.5f * b.mass * (b.vx * b.vx + b.vy * b.vy)
-        }
-    }
-
-    /**
      * La traversée : un projectile ne paie que ce qu'il a détruit.
      *
-     * La physique, laissée seule, fait rebondir un boulet de douze kilos sur une pierre
-     * de trois tonnes **même quand la pierre se brise** — le choc est résolu avant que
-     * la pierre ne meure, et l'impulsion, elle, ne sait pas que sa cible n'existera
-     * plus dans un dixième de seconde. C'est exact, et c'est tout ce qu'on ne veut pas
-     * voir en arcade : ça cogne, ça casse, et ça repart en arrière.
-     *
-     * On remet donc le projectile dans l'axe qu'il avait avant le choc, avec l'énergie
-     * qu'il avait **moins celle des points de vie qu'il vient d'emporter**. Trois
-     * garde-fous font que ce n'est pas de la triche gratuite :
-     *
-     *  - il ne récupère rien s'il n'a **rien cassé** : cogner sans casser rebondit,
-     *    dans les deux modes ;
-     *  - il ne dépasse jamais l'énergie qu'il avait au début de l'image, donc le moteur
-     *    ne crée pas d'énergie — la règle d'or de cette physique ;
-     *  - on ne le relance que si la physique l'a laissé **plus lent** que ça, sinon on
-     *    ne touche à rien.
-     *
-     * Et le curseur [TargetStyle.pierce] vaut zéro en réaliste, où le rebond honnête
-     * est précisément ce qu'on est venu voir.
+     * C'est [ShotPierce], la **même** pièce que l'atelier d'engrenages. Le calcul y est
+     * décrit en entier ; ici il ne reste qu'à dire **qui** a le droit de traverser cette
+     * image-ci, ce qui est la seule chose que la machine sache et pas la pièce partagée.
      */
-    private fun pierceThrough(dt: Float) {
-        // Rien à relancer quand le projectile n'est plus là : la bombe n'a pas d'éclats,
-        // et [ball] désigne alors un corps retiré du monde.
-        if (!ballFree || ballGone) return
-        val refund = TargetRules.style.pierce
-        if (refund <= 0f) return
-        // Le passage se **gagne** : pierre déjà fêlée, ou coup critique. Voir
-        // [TargetField.piercedThrough] — c'est le champ qui tient la règle, parce que
-        // c'est lui qui sait ce que le boulet vient d'achever et dans quel état c'était.
-        
-        val n = 1 + shards.size
-        for (i in 0 until n) {
-            val b = if (i == 0) ball else shards[i - 1]
-            val cost = targets.pierceCost(b)
-            if (cost <= 0f) continue
-            // Plein s'il a gagné son passage, un reliquat sinon : voir
-            // [TargetRules.PIERCE_UNEARNED] pour ce que ce reliquat sauve.
-            val part = refund *
-                if (targets.piercedThrough(b)) 1f else TargetRules.PIERCE_UNEARNED
-            val vx0 = momentum[3 * i]
-            val vy0 = momentum[3 * i + 1]
-            val v0 = hypot(vx0, vy0)
-            if (v0 < 1f) continue
-            val left = (momentum[3 * i + 2] - cost).coerceAtLeast(0f)
-            val wanted = sqrt(2f * left / b.mass)
-            val now = hypot(b.vx, b.vy)
-            if (wanted <= now) continue
-            val v = now + (wanted - now) * part
-            b.wake()
-            b.vx = vx0 / v0 * v
-            b.vy = vy0 / v0 * v
-            // Les contacts gardent leurs impulsions d'une image à l'autre : sans les
-            // oublier, le solveur retiendrait le projectile contre une pierre qui n'est
-            // déjà plus là.
-            world.forgetContacts(b)
+    private val pierce = ShotPierce()
+
+    /**
+     * Qui peut traverser cette image : le boulet s'il est libre, et ses éclats s'il
+     * s'est fendu en vol.
+     *
+     * La liste se remplit **avant** le pas, et c'est elle que la traversée relit après :
+     * un projectile qui n'y était pas au moment où on a relevé son élan n'a pas d'élan à
+     * qui rendre quoi que ce soit. Une bombe partie en fumée n'y est plus non plus —
+     * [ball] désigne alors un corps retiré du monde.
+     */
+    private fun aimPierce() {
+        pierce.bodies.clear()
+        if (ballFree && !ballGone) {
+            pierce.bodies.add(ball)
+            pierce.bodies.addAll(shards)
         }
+        pierce.remember()
     }
 
     /**
@@ -1751,42 +1647,19 @@ class TrebuchetGame {
         // « Touché » se lit sur la cible elle-même : le drapeau se lève dès qu'un choc a
         // entamé une pierre, et il est remis à zéro à l'ouverture du tir.
         if (targets.tookDamage) hitCount++
-        // Le plus récent en tête, et on oublie le plus vieux quand la pile déborde.
-        ghostList.add(0, trailBuf.copyOf(trailCount))
-        while (ghostList.size > ghostLimit) ghostList.removeAt(ghostList.size - 1)
-        ghostStamp++
+        // Un dernier point **là où le boulet est vraiment**, puis la trace devient le
+        // fantôme le plus récent. Sans ce point, un tir coupé en plein vol laissait un
+        // trait qui s'arrête en l'air : mesuré à 0,25 m à trente mètres par seconde,
+        // et ça monte avec la vitesse. L'atelier le posait, pas le trébuchet.
+        shotTrail.archive(ball.x, ball.y)
     }
 
     /**
-     * Tire le feu d'artifice de la victoire, une fois par site.
-     *
-     * Il part **de la machine jusqu'au bout des décombres**, et non plus seulement
-     * jusqu'au pied de la construction. La caméra prend tout le champ à la fin d'un
-     * tir : un bouquet qui s'arrête avant les ruines laisse noire la moitié droite de
-     * l'image, celle-là même où le joueur regarde ce qu'il vient d'abattre. On fête un
-     * site rasé, donc on éclaire le site entier.
-     *
-     * Le bout des décombres se lit sur les pierres et non sur l'empreinte d'origine :
-     * une construction qui s'effondre projette ses blocs plus loin qu'elle ne
-     * s'étendait, et c'est jusque-là que le terrain compte.
+     * Tire le feu d'artifice de la victoire. Le bouquet part du bord droit de la machine
+     * jusqu'au bout des décombres : voir [ShotSite.celebrate].
      */
-    private fun celebrate() {
-        if (celebrated || level == null || !targets.cleared) return
-        celebrated = true
-        val debut = TrebuchetRules.FIRING_LINE + 30f
-        val fin = (rubbleRight() + 25f).coerceAtLeast(debut + 40f)
-        effects.celebrate(debut, fin)
-    }
+    private fun celebrate() = site.celebrate(TrebuchetRules.FIRING_LINE)
 
-    /**
-     * L'abscisse de la pierre la plus à droite, débris compris, ou le bord de
-     * l'empreinte s'il n'en reste aucune.
-     */
-    private fun rubbleRight(): Float {
-        var bout = targets.right
-        for (p in targets.pieces) if (p.body.x > bout) bout = p.body.x
-        return bout
-    }
 
     // ── Simulation sans affichage ────────────────────────────────────────────
 
@@ -1843,6 +1716,6 @@ class TrebuchetGame {
     fun startTrace(): FloatArray {
         val from = launchTrailIndex
         if (from < 0 || trailCount - from < 6) return FloatArray(0)
-        return trailBuf.copyOfRange(from, trailCount)
+        return shotTrail.points.copyOfRange(from, trailCount)
     }
 }

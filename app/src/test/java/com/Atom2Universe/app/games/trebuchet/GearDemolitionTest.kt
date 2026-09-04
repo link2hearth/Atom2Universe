@@ -209,12 +209,36 @@ class GearDemolitionTest {
                 "${site.pieceBroken} cassées, ${"%.0f".format(site.progress * 100f)} % de l'objectif"
         )
         assertTrue("le tir n'a jamais pris fin : le joueur reste bloqué en vol", finAt >= 0)
+        assertTrue("le village n'a jamais bougé : le boulet ne l'a pas touché", dernierMouvement > 0)
 
-        // Et le village continue de s'écrouler **après** la fin du tir : le monde de
-        // l'atelier ne s'arrête pas avec le boulet, contrairement à celui du trébuchet.
+        // **Et le monde continue de tourner après la fin du tir.**
+        //
+        // Ça se lisait avant sur « le village bouge encore après `finAt` », ce qui était
+        // un raccourci commode et non la propriété voulue : le jour où le tir dure plus
+        // longtemps que l'effondrement, le raccourci se plaint alors que rien ne va mal.
+        // C'est arrivé le 04/09/2026, quand l'atelier a enfin reçu le vent de sa graine :
+        // le vent amortit les gravats — le village se calme à 4,3 s au lieu de 7,7 —
+        // pendant que le boulet, poussé dans les ruines, met plus longtemps à se déclarer
+        // arrêté. Deux comportements justes, un raccourci faux.
+        //
+        // On mesure donc la chose elle-même : on lâche un caillou au-dessus du site une
+        // fois le tir fini, et il doit tomber. Un monde figé le laisserait en l'air.
+        val temoin = PhysBody.circle(0.2f, 5f).apply {
+            x = site.left + 5f
+            y = game.terrain.heightAt(site.left + 5f) + 25f
+            category = TrebuchetCategory.DEBRIS
+            collidesWith = TrebuchetCategory.GROUND
+            collisionLayer = -32
+            collisionLayerDepth = 65
+        }
+        val depart = temoin.y
+        game.world.add(temoin)
+        repeat(120) { game.step(fixed) }
+        println("TÉMOIN lâché de ${"%.1f".format(depart)} m, tombé à ${"%.1f".format(temoin.y)} m")
         assertTrue(
-            "l'effondrement s'est arrêté avec le tir",
-            dernierMouvement > finAt
+            "le monde de l'atelier s'est figé avec le tir : le témoin n'est pas tombé " +
+                "(${"%.2f".format(depart - temoin.y)} m en une seconde)",
+            depart - temoin.y > 3f
         )
     }
 

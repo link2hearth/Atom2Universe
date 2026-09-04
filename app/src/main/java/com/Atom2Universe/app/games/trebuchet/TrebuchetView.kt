@@ -100,10 +100,14 @@ class TrebuchetView @JvmOverloads constructor(
 
     // ── Caméra ───────────────────────────────────────────────────────────────
 
-    private var camX = 0f
-    private var camY = 2f
-    private var camScale = 60f
-    private var camReady = false
+    /**
+     * Le cadrage : position, échelle, plancher du sol, butées, projection.
+     *
+     * C'est [ShotCamera], la **même** pièce que l'atelier d'engrenages. Une caméra ne
+     * regarde pas une machine, elle regarde un site — voir là-bas la mesure de ce que
+     * coûtait de l'avoir écrite deux fois.
+     */
+    private val cam = ShotCamera(GROUND_INSET_DP)
 
     /**
      * Le calque des traces — fantômes et cône de départ — et de quoi savoir s'il vaut
@@ -122,19 +126,10 @@ class TrebuchetView @JvmOverloads constructor(
     private var traceGhostStamp = -1
     private var tracePreviewStamp = -1
     private var tracePhase = TrebuchetGame.Phase.BUILD
-    private var prevCamX = Float.NaN
-    private var prevCamY = Float.NaN
-    private var prevCamScale = Float.NaN
-    private var cameraMoving = true
 
     /** Change quand [previewPath] est remplacée : le cône dessiné doit alors se refaire. */
     private var previewStamp = 0
 
-    /**
-     * Jusqu'où le sol descend dans la portion regardée, en mètres, et jamais au-dessus
-     * de zéro. C'est ce que le cadrage pose au bas de l'image. Voir [groundCamY].
-     */
-    private var camFloor = 0f
 
     /**
      * Le joueur tient le cadrage. Tant qu'il le tient, la caméra ne bouge plus
@@ -251,16 +246,7 @@ class TrebuchetView @JvmOverloads constructor(
          */
         const val GROUND_INSET_DP = 34f
 
-        /** Durée de l'appui qui donne la main sur l'heure, en millisecondes. */
-        const val TIME_HOLD_MS = 420L
 
-        /**
-         * Part de la largeur de l'écran qu'il faut parcourir pour aller à pleine vitesse.
-         *
-         * Un tiers, et pas la moitié : le doigt part rarement du centre, et il faut que
-         * la pleine vitesse reste atteignable quand on a appuyé un peu de côté.
-         */
-        const val TIME_THROW = 0.33f
 
 
         /** Deux appuis rapprochés rendent le cadrage à la caméra. */
@@ -403,12 +389,11 @@ class TrebuchetView @JvmOverloads constructor(
      * d'autre à faire — c'est de la place libre, et c'est ce qui rend ce geste-là
      * possible sans rien casser.
      */
-    private var timePressAt = 0L
-    private var timePressX = 0f
-    private var timeFingerX = 0f
-    private var timeCandidate = false
-    private var timeMode = false
-    private var timeRate = 0f
+    /**
+     * L'appui long qui attrape l'heure : [TimeScrub], la **même** pièce que l'atelier
+     * d'engrenages. La vue ne garde que ce qui la regarde — où le ciel commence.
+     */
+    private val timeScrub = TimeScrub()
     private val pFrame = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#6D4C41".toColorInt() }
     private val pBeam = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = "#A1887F".toColorInt() }
     private val pEdge = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -611,7 +596,8 @@ class TrebuchetView @JvmOverloads constructor(
     override fun surfaceCreated(holder: SurfaceHolder) = resume()
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, w: Int, h: Int) {
-        camReady = false
+        cam.resize(w, h, dp)
+        cam.ready = false
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = pause()
@@ -674,7 +660,7 @@ class TrebuchetView @JvmOverloads constructor(
                 // Le ciel se mesure **au-dessus du sol qu'on voit**, pas au-dessus de
                 // l'altitude zéro : dans un vallon, les fusées calculées sur une hauteur
                 // absolue éclateraient dix mètres trop bas.
-                if (height > 0) game.skyTop = worldY(0f) - camFloor
+                if (height > 0) game.skyTop = worldY(0f) - cam.floor
                 // L'heure du jeu avance avec l'image réelle, comme les étincelles : le
                 // ciel ne décide de rien, personne ne le rejoue, et le figer entre deux
                 // pas de physique se verrait à la seconde près sur un crépuscule.
@@ -684,7 +670,7 @@ class TrebuchetView @JvmOverloads constructor(
                 // La dérive suit **vx** et non la vitesse : c'est le signe qui manquait
                 // aux stries, lesquelles pointaient à gauche par vent debout tout en
                 // filant à droite.
-                backdrop.advance(frameDt, if (timeMode) 0f else frameDt, game.wind.vx)
+                backdrop.advance(frameDt, if (timeScrub.active) 0f else frameDt, game.wind.vx)
                 land.updateDecor(
                     frameDt, game.level, game.terrain, game.targets, game.ball.x
                 ) { sfx.villagerCry() }
@@ -817,7 +803,6 @@ class TrebuchetView @JvmOverloads constructor(
 
         val targetScale: Float
         val tx: Float
-        val ty: Float
         val follow: Float
 
         if (game.phase == TrebuchetGame.Phase.FLIGHT) {
@@ -838,13 +823,13 @@ class TrebuchetView @JvmOverloads constructor(
             // l'image est dix mètres plus bas, et une fenêtre réglée sur la seule
             // altitude du boulet le laisserait sortir par le haut.
             val flightHeight =
-                max(machineHeight, game.ball.y - camFloor + FLIGHT_TOP_MARGIN)
+                max(machineHeight, game.ball.y - cam.floor + FLIGHT_TOP_MARGIN)
             // Les derniers mètres de la chute resserrent un peu le cadre : c'est là que
             // l'impact se joue, et un tir qui redescend d'un arc bas franchit cette
             // fraction-là bien avant de toucher le sol, donc sans à-coup à l'arrivée.
             val descentFrac = if (game.ball.vy < 0f) {
                 val fallen = (game.peakHeight - game.ball.y).coerceAtLeast(0f)
-                val span = (game.peakHeight - camFloor).coerceAtLeast(1f)
+                val span = (game.peakHeight - cam.floor).coerceAtLeast(1f)
                 (fallen / span).coerceIn(0f, 1f)
             } else 0f
             val endBoost = ((descentFrac - FLIGHT_END_ZOOM_START) / (1f - FLIGHT_END_ZOOM_START))
@@ -860,7 +845,6 @@ class TrebuchetView @JvmOverloads constructor(
             // On vise devant le boulet, d'autant plus loin qu'il va vite : le
             // cadrage anticipe au lieu de courir après.
             tx = game.ball.x + game.ball.vx * 0.4f
-            ty = groundCamY(targetScale)
             follow = 8f
         } else {
             val targetWidth: Float
@@ -873,7 +857,7 @@ class TrebuchetView @JvmOverloads constructor(
                     val t = game.targets
                     targetWidth = (t.right - t.left + RESULT_HIT_MARGIN)
                         .coerceAtLeast(RESULT_HIT_MIN_WIDTH)
-                    targetHeight = (t.baseHeight - camFloor + RESULT_HIT_MARGIN)
+                    targetHeight = (t.baseHeight - cam.floor + RESULT_HIT_MARGIN)
                         .coerceAtLeast(RESULT_HIT_MIN_HEIGHT)
                     tx = (t.left + t.right) / 2f
                 } else {
@@ -889,7 +873,7 @@ class TrebuchetView @JvmOverloads constructor(
                         ?.let { game.targets.right }
                     val rightMost = (cible ?: impactX) + RESULT_VIEW_MARGIN
                     targetWidth = max(machineWidth, rightMost - leftMost).coerceAtMost(MAX_VIEW_WIDTH)
-                    targetHeight = max(machineHeight, game.peakHeight - camFloor + 12f)
+                    targetHeight = max(machineHeight, game.peakHeight - cam.floor + 12f)
                     tx = (leftMost + rightMost) / 2f
                 }
                 follow = 3f
@@ -905,39 +889,25 @@ class TrebuchetView @JvmOverloads constructor(
                 width / targetWidth,
                 (height - GROUND_INSET_DP * dp) / targetHeight
             ).coerceIn(minScale(), maxScale())
-            ty = groundCamY(targetScale)
         }
 
-        if (!camReady) {
-            camX = tx; camScale = targetScale
-            // Le plancher se prend une fois la vue posée, sinon il se lisserait depuis
-            // un cadrage qui n'a jamais existé et le premier dixième de seconde du
-            // niveau se jouerait avec l'horizon en train de glisser.
-            updateFloor(dt)
-            camY = groundCamY(camScale)
-            camReady = true
-            return
-        }
-        // Suivi souple : la caméra rattrape sa cible sans à-coups.
-        val k = (dt * follow).coerceIn(0f, 1f)
-        camX += (tx - camX) * k
-        camY += (ty - camY) * k
-        camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
-        // Le plancher se relit **après** que le cadrage a bougé : c'est ce qu'on voit
-        // maintenant qui décide jusqu'où le sol descend, pas ce qu'on voyait à l'image
-        // précédente.
-        updateFloor(dt)
-
-        if (cameraFree) {
-            clampCamera()
-        } else {
-            // Le sol se recale sur l'échelle **réelle** et non sur celle qu'on visait :
-            // le zoom et le déplacement se rattrapent à des vitesses différentes, et
-            // l'écart, si petit soit-il, ferait respirer l'horizon à chaque image. Il
-            // n'y a rien de pire à regarder qu'un sol qui flotte.
-            camY = groundCamY(camScale)
-        }
+        // Le suivi souple, le plancher et le recalage du sol sont dans [ShotCamera] :
+        // l'ordonnée y est **toujours** celle qui pose le sol en bas, jamais une valeur
+        // rattrapée. Le trébuchet interpolait `camY` vers `ty` juste avant de l'écraser
+        // par `groundCamY` — deux lignes mortes qui donnaient l'impression que la
+        // hauteur se réglait, alors qu'elle ne s'est jamais réglée.
+        cam.follow(dt, tx, targetScale, follow, terrainFloor)
+        if (cameraFree) clampCamera()
     }
+
+    /**
+     * Jusqu'où le sol descend entre deux abscisses.
+     *
+     * Passé à la caméra plutôt que lu par elle : [ShotCamera] ne connaît pas le terrain,
+     * et c'est très bien — c'est la seule chose qui la garde testable hors d'Android.
+     */
+    private val terrainFloor: (Float, Float) -> Float =
+        { a, b -> game.terrain.lowestBetween(a, b) }
 
     /**
      * Largeur du cadrage de la machine, en mètres : un bras de 18 m ne tient pas dans
@@ -980,17 +950,7 @@ class TrebuchetView @JvmOverloads constructor(
                 (height - GROUND_INSET_DP * dp) / machineViewHeight()
             ).coerceIn(minScale(), maxScale())
         }
-        if (!camReady) {
-            camX = tx
-            camScale = targetScale
-            updateFloor(dt)
-            camY = groundCamY(camScale)
-            camReady = true
-            return
-        }
-        camX += (tx - camX) * (dt * 4.5f).coerceIn(0f, 1f)
-        camScale += (targetScale - camScale) * (dt * 2.5f).coerceIn(0f, 1f)
-        updateFloor(dt)
+        cam.follow(dt, tx, targetScale, 4.5f, terrainFloor)
         // Les butées et le calage du sol valent ici comme ailleurs — y compris en vol,
         // où le cadrage automatique s'en passe parce qu'il suit un boulet qui, lui, a le
         // droit de sortir du terrain.
@@ -1019,52 +979,9 @@ class TrebuchetView @JvmOverloads constructor(
      * vue de tir se lit comme une gravure — l'horizon toujours à la même place, et
      * seule la distance qui défile.
      */
-    private fun clampCamera() {
-        camScale = camScale.coerceIn(minScale(), maxScale())
-        val halfW = width / 2f / camScale
+    private fun clampCamera() =
+        cam.clamp(panLeft(), panRight(), minScale(), maxScale())
 
-        val left = panLeft()
-        val right = panRight()
-        camX = if (right - left <= halfW * 2f) {
-            // Dézoom complet : le terrain est plus étroit que la vue, on le centre.
-            (left + right) / 2f
-        } else {
-            camX.coerceIn(left + halfW, right - halfW)
-        }
-        camY = groundCamY(camScale)
-    }
-
-    /**
-     * L'ordonnée de caméra qui pose le sol au bas de l'image, la bande de terre des
-     * bornes de distance gardée dessous.
-     *
-     * **Le « sol », c'est le point le plus bas qu'on voie, et pas l'altitude zéro.** La
-     * première version calait le zéro sur le bas de l'écran, ce qui revenait à décréter
-     * que rien n'est jamais sous les pieds de la machine. C'était vrai tant que le
-     * terrain était une droite ; depuis qu'un site peut se bâtir au fond d'un vallon,
-     * huit mètres plus bas, ce site-là tombait purement et simplement **sous le bord
-     * inférieur de l'écran** — le joueur voyait un pré vide et tirait sur une cible
-     * qu'il ne pouvait pas regarder.
-     *
-     * Le plancher se prend donc sur **la portion visible**, et jamais au-dessus de zéro :
-     * une butte n'abaisse pas le cadrage, elle monte dans l'image comme il se doit, et un
-     * terrain plat se cadre exactement comme avant. On ne paie le décalage que lorsqu'un
-     * creux est réellement à l'écran.
-     */
-    private fun groundCamY(scale: Float) = camFloor + (height / 2f - GROUND_INSET_DP * dp) / scale
-
-    /**
-     * Le plancher du cadrage : jusqu'où le sol descend dans ce qu'on regarde.
-     *
-     * Il est **lissé**, et pour la même raison que tout le reste du cadrage : il change
-     * quand un creux entre dans la vue, et un plancher qui sauterait ferait sauter
-     * l'horizon avec lui. Lissé, on descend dans le vallon comme on y marcherait.
-     */
-    private fun updateFloor(dt: Float) {
-        val halfW = width / 2f / camScale
-        val vise = min(0f, game.terrain.lowestBetween(camX - halfW, camX + halfW))
-        camFloor = if (!camReady) vise else camFloor + (vise - camFloor) * (dt * 4f).coerceIn(0f, 1f)
-    }
 
     /** Butée arrière : la pointe du bras bandé plonge de tout le bras long. */
     private fun panLeft(): Float = game.pivotX - game.config.longArm - PAN_BACK_MARGIN
@@ -1084,11 +1001,12 @@ class TrebuchetView @JvmOverloads constructor(
     /** Zoom maximal : de quoi examiner le crochet de largage à la loupe. */
     private fun maxScale(): Float = width / MIN_VIEW_WIDTH
 
-    private fun sx(x: Float) = (x - camX) * camScale + width / 2f
-    private fun sy(y: Float) = height / 2f - (y - camY) * camScale
-
-    private fun worldX(px: Float) = (px - width / 2f) / camScale + camX
-    private fun worldY(py: Float) = camY - (py - height / 2f) / camScale
+    // La projection appartient au cadrage : voir [ShotCamera]. Ces quatre-là ne restent
+    // que parce que la vue les appelle une centaine de fois.
+    private fun sx(x: Float) = cam.sx(x)
+    private fun sy(y: Float) = cam.sy(y)
+    private fun worldX(px: Float) = cam.worldX(px)
+    private fun worldY(py: Float) = cam.worldY(py)
 
     // ── Saisie ───────────────────────────────────────────────────────────────
 
@@ -1125,11 +1043,12 @@ class TrebuchetView @JvmOverloads constructor(
                 // d'autre ne se dispute cette zone-là. On ne décide pas tout de suite —
                 // c'est la durée qui tranchera, dans [updateTimeControl].
                 val wx = worldX(event.x)
-                timeCandidate = grip == Grip.NONE && !gestureLocked &&
-                    worldY(event.y) > game.terrain.heightAt(wx)
-                timePressAt = now
-                timePressX = event.x
-                timeFingerX = event.x
+                timeScrub.press(
+                    event.x,
+                    eligible = grip == Grip.NONE && !gestureLocked &&
+                        worldY(event.y) > game.terrain.heightAt(wx),
+                    now = now
+                )
                 readPointers(event, -1)
             }
             // Un deuxième doigt, c'est toujours la caméra : on lâche le réglage en cours.
@@ -1146,17 +1065,14 @@ class TrebuchetView @JvmOverloads constructor(
                 readPointers(event, -1)
             }
             MotionEvent.ACTION_MOVE -> synchronized(game) {
-                timeFingerX = event.x
-                if (timeMode) {
-                    // En contrôle de l'heure, le doigt ne fait plus que ça : la vue ne
-                    // suit pas, sinon on balaierait le temps et le terrain à la fois.
+                // En contrôle de l'heure, le doigt ne fait plus que ça : la vue ne suit
+                // pas, sinon on balaierait le temps et le terrain à la fois.
+                if (timeScrub.move(event.x, DRAG_SLOP_DP * dp)) {
+                    // rien d'autre
                 } else if (grip != Grip.NONE) {
                     applyGrip(worldX(event.x), worldY(event.y))
                     notify = true
                 } else {
-                    // Un doigt qui part avant la fin de l'appui long voulait déplacer la
-                    // vue : ce n'est plus un candidat.
-                    if (abs(event.x - timePressX) > DRAG_SLOP_DP * dp) timeCandidate = false
                     dragCamera(event)
                 }
             }
@@ -1430,7 +1346,7 @@ class TrebuchetView @JvmOverloads constructor(
 
     /** La tolérance de saisie, en mètres, à l'échelle où l'on regarde. */
     private fun pickReach(): Float =
-        (PICK_REACH_DP * dp / camScale).coerceAtMost(PICK_REACH_MAX)
+        (PICK_REACH_DP * dp / cam.scale).coerceAtMost(PICK_REACH_MAX)
 
     /** Projection du doigt sur l'axe de la poutre, comptée depuis un point donné. */
     private fun alongBeam(ox: Float, oy: Float, wx: Float, wy: Float): Float {
@@ -1495,11 +1411,13 @@ class TrebuchetView @JvmOverloads constructor(
         // qui restera sous les doigts. La hauteur, elle, appartient au sol.
         val wx = worldX(prevX)
         if (pinching) {
-            camScale = (camScale * (focusSpread / prevSpread)).coerceIn(minScale(), maxScale())
+            cam.scale = (cam.scale * (focusSpread / prevSpread)).coerceIn(minScale(), maxScale())
         }
-        camX = wx - (focusX - width / 2f) / camScale
+        cam.x = wx - (focusX - width / 2f) / cam.scale
         manualCam = true
-        camReady = true
+        // Un cadrage posé au doigt **est** un cadrage posé : la prochaine image le
+        // rattrape au lieu d'y sauter.
+        cam.ready = true
         clampCamera()
     }
 
@@ -1614,23 +1532,20 @@ class TrebuchetView @JvmOverloads constructor(
         // rattrape sa cible de façon asymptotique : la comparaison se fait donc au
         // demi-pixel près et non à l'égalité stricte, sans quoi la caméra ne serait
         // jamais déclarée immobile.
-        cameraMoving = !memeCadrage(prevCamX, prevCamY, prevCamScale)
-        prevCamX = camX
-        prevCamY = camY
-        prevCamScale = camScale
+        cam.beginFrame()
 
         drawSky(canvas, w, h)
 
         // Les feux d'artifice passent **derrière** le terrain : ils montent au fond du
         // ciel, et le sol leur coupe les jambes quand leurs étoiles retombent, ce qui
         // est exactement ce qu'on voit dehors.
-        sparks.draw(canvas, game.effects, true, w, h, camX, camY, camScale)
+        sparks.draw(canvas, game.effects, true, w, h, cam.x, cam.y, cam.scale)
 
         // Le paysage — sol, verdure, constructions, habitants, feux — et la nuit qui
         // se pose dessus. Tout est peint par [land], donc l'atelier d'engrenages en a
         // exactement le même : voir [LandScene].
         land.draw(
-            canvas, w, h, camX, camY, camScale,
+            canvas, w, h, cam.x, cam.y, cam.scale,
             game.terrain, game.targets, sky.light, game.wind.vx, ambientClock
         )
         drawTraces(canvas)
@@ -1648,7 +1563,7 @@ class TrebuchetView @JvmOverloads constructor(
         drawTrail(canvas)
         // Les explosions, elles, sont devant tout : une bombe qui souffle derrière le
         // château qu'elle détruit n'aurait aucun sens.
-        sparks.draw(canvas, game.effects, false, w, h, camX, camY, camScale)
+        sparks.draw(canvas, game.effects, false, w, h, cam.x, cam.y, cam.scale)
         drawGrabSpots(canvas)
         drawSelection(canvas)
         drawRecenterHint(canvas)
@@ -1664,7 +1579,7 @@ class TrebuchetView @JvmOverloads constructor(
      * monde, et il leur faut la caméra pour savoir où atterrir.
      */
     private fun drawSky(canvas: Canvas, w: Float, h: Float) {
-        backdrop.draw(canvas, w, h, camX, camY, camScale)
+        backdrop.draw(canvas, w, h, cam.x, cam.y, cam.scale)
     }
 
     /**
@@ -1681,47 +1596,13 @@ class TrebuchetView @JvmOverloads constructor(
      * l'arrête, et c'est le meilleur moyen de regarder un crépuscule aussi longtemps
      * qu'on veut.
      */
-    private fun updateTimeControl(dt: Float) {
-        if (!timeMode) {
-            if (timeCandidate && SystemClock.uptimeMillis() - timePressAt >= TIME_HOLD_MS) {
-                timeMode = true
-                timePressX = timeFingerX
-            }
-            return
-        }
-        timeRate = SkyClock.scrubRate(timeFingerX - timePressX, width * TIME_THROW)
-        skyClock.scrub(timeRate * dt)
-    }
+    private fun updateTimeControl(dt: Float) =
+        timeScrub.update(dt, width.toFloat(), skyClock)
 
-    private fun stopTimeControl() {
-        timeMode = false
-        timeCandidate = false
-        timeRate = 0f
-    }
+    private fun stopTimeControl() = timeScrub.stop()
 
-    /**
-     * Ce que le joueur lit pendant qu'il tient l'heure : l'heure qu'il est, et à quelle
-     * vitesse elle file.
-     *
-     * Sans ça le geste serait un secret : rien à l'écran ne dirait qu'on a quitté le
-     * cadrage pour le temps, et un ciel qui se met à défiler passerait pour un bug.
-     */
-    private fun drawTimeControl(canvas: Canvas, w: Float) {
-        if (!timeMode) return
-        val minutes = ((skyClock.instant % 86_400_000L) + 86_400_000L) % 86_400_000L / 60_000L
-        val heure = minutes / 60
-        val minute = minutes % 60
-        val sens = when {
-            timeRate > 0.02f -> "▶"
-            timeRate < -0.02f -> "◀"
-            else -> "■"
-        }
-        pHint.textSize = 20f * dp
-        canvas.drawText(
-            "%02d:%02d  %s %.1f h/s".format(heure, minute, sens, abs(timeRate)),
-            w / 2f, height * 0.18f, pHint
-        )
-    }
+    private fun drawTimeControl(canvas: Canvas, w: Float) =
+        timeScrub.draw(canvas, pHint, skyClock, w, height.toFloat(), dp)
 
     /**
      * Le bâti : un A sous le pivot, purement décoratif mais il donne l'échelle.
@@ -1736,8 +1617,8 @@ class TrebuchetView @JvmOverloads constructor(
         val px = sx(game.pivotX)
         val py = sy(game.pivotY)
         val groundY = sy(0f)
-        val spread = 0.30f * game.pivotY * camScale
-        val legW = max(2f * dp, 0.06f * camScale)
+        val spread = 0.30f * game.pivotY * cam.scale
+        val legW = max(2f * dp, 0.06f * cam.scale)
 
         tmpPath.reset()
         tmpPath.moveTo(px - legW, py)
@@ -1755,7 +1636,7 @@ class TrebuchetView @JvmOverloads constructor(
         tmpPath.close()
         canvas.drawPath(tmpPath, pFrame)
 
-        canvas.drawCircle(px, py, max(3f * dp, 0.10f * camScale), pPivot)
+        canvas.drawCircle(px, py, max(3f * dp, 0.10f * cam.scale), pPivot)
     }
 
     /** L'élingue qui suspend le contrepoids sous le bras court. */
@@ -1798,7 +1679,7 @@ class TrebuchetView @JvmOverloads constructor(
             b.partWorld(part, partPose)
             val cx = sx(partPose[0])
             val cy = sy(partPose[1])
-            val r = p.radius * camScale
+            val r = p.radius * cam.scale
             canvas.drawCircle(cx, cy, r, fill)
             canvas.drawCircle(cx, cy, r, edge)
             // Un rayon tracé, pour qu'on voie le boulet rouler.
@@ -2017,12 +1898,12 @@ class TrebuchetView @JvmOverloads constructor(
             traceGhostStamp == game.ghostStamp &&
             tracePreviewStamp == previewStamp &&
             tracePhase == game.phase &&
-            memeCadrage(traceCamX, traceCamY, traceCamScale)
+            cam.sameFraming(traceCamX, traceCamY, traceCamScale)
         ) {
             canvas.drawBitmap(layer, 0f, 0f, null)
             return
         }
-        if (cameraMoving) {
+        if (cam.moving) {
             traceReady = false
             peindreTraces(canvas)
             return
@@ -2035,9 +1916,9 @@ class TrebuchetView @JvmOverloads constructor(
         }
         frais.eraseColor(Color.TRANSPARENT)
         peindreTraces(dessus)
-        traceCamX = camX
-        traceCamY = camY
-        traceCamScale = camScale
+        traceCamX = cam.x
+        traceCamY = cam.y
+        traceCamScale = cam.scale
         traceGhostStamp = game.ghostStamp
         tracePreviewStamp = previewStamp
         tracePhase = game.phase
@@ -2056,14 +1937,6 @@ class TrebuchetView @JvmOverloads constructor(
      * L'écart d'échelle se mesure sur la demi-diagonale parce que c'est là qu'il
      * déplace le plus : un zoom fait glisser les coins bien plus que le centre.
      */
-    private fun memeCadrage(x: Float, y: Float, s: Float): Boolean {
-        if (s <= 0f || camScale <= 0f) return false
-        val demiDiagonale = hypot(width * 0.5f, height * 0.5f)
-        if (abs(s - camScale) / camScale * demiDiagonale > TRACE_SLOP_PX) return false
-        if (abs(x - camX) * camScale > TRACE_SLOP_PX) return false
-        if (abs(y - camY) * camScale > TRACE_SLOP_PX) return false
-        return true
-    }
 
     /**
      * Le calque à la taille de la vue, ou `null` s'il n'y a pas la place.
@@ -2263,7 +2136,7 @@ class TrebuchetView @JvmOverloads constructor(
             if (part.shape == Shape.CIRCLE) {
                 b.partWorld(i, partPose)
                 canvas.drawCircle(
-                    sx(partPose[0]), sy(partPose[1]), part.radius * camScale + 2f * dp, pSelect
+                    sx(partPose[0]), sy(partPose[1]), part.radius * cam.scale + 2f * dp, pSelect
                 )
                 continue
             }

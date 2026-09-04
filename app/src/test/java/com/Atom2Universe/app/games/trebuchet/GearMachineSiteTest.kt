@@ -168,6 +168,73 @@ class GearMachineSiteTest {
     }
 
     /**
+     * **Le sol physique est celui que le jeu annonce, jusqu'au bout du monde.**
+     *
+     * L'atelier posait, en plus du relief, une dalle plate de quarante kilomètres qui
+     * fermait le monde de part et d'autre du site — le relief, lui, ne va que de
+     * `GROUND_LEFT` à `GROUND_RIGHT`. Une dalle plate ne peut pas être d'accord avec un
+     * relief qui ne l'est pas : au-delà du site, le boulet touchait la dalle pendant que
+     * le jeu, lui, lisait `terrain.heightAt`.
+     *
+     * Ce n'est pas cosmétique. [GearMachineGame] décide qu'un tir a atterri en comparant
+     * la hauteur du boulet à `terrain.heightAt(x)` : un tir qui dépassait le relief était
+     * déclaré posé **avant de toucher**, et sa portée annoncée d'autant plus courte.
+     *
+     * Mesuré en lâchant une bille à six postes fixes, sur les quarante premières graines,
+     * et en comparant où elle se pose à ce que `heightAt` annonce :
+     *
+     * ```
+     * avant : 28,78 m d'écart (graine 27 en x=1200 : annoncé 27,23 m, posée à -1,55 m)
+     * après :  0,01 m         (l'enfoncement au repos d'un contact, rien d'autre)
+     * ```
+     *
+     * La correction est [TrebuchetGround] : plus de dalle, on prolonge le **profil** à
+     * plat jusqu'aux bords du monde. Le sol physique *est* `heightAt`, par construction.
+     */
+    @Test
+    fun `le sol suit le relief jusqu au bout du monde`() {
+        val precedent = TargetRules.style
+        try {
+            TargetRules.style = TargetStyle.JEU
+            val postes = floatArrayOf(-15_000f, -5_000f, -400f, 1_200f, 5_000f, 15_000f)
+            var pire = 0f
+            var pireOu = ""
+            for (seed in longArrayOf(2L, 8L, 11L, 27L, 28L)) {
+                val game = GearMachineGame()
+                game.loadSite(seed)
+                for (x in postes) {
+                    val annonce = game.terrain.heightAt(x)
+                    val bille = PhysBody.circle(0.25f, 20f).apply {
+                        this.x = x
+                        y = annonce + 6f
+                        category = TrebuchetCategory.BALL
+                        collidesWith = TrebuchetCategory.BALL_FREE_MASK
+                        collisionLayer = -32
+                        collisionLayerDepth = 65
+                    }
+                    game.world.add(bille)
+                    repeat(400) { game.world.stepFrame(1f / 120f) }
+                    game.world.remove(bille)
+                    val reel = bille.y - 0.25f
+                    val ecart = abs(annonce - reel)
+                    if (ecart > pire) {
+                        pire = ecart
+                        pireOu = "graine $seed en x=${x.toInt()} : annoncé " +
+                            "${"%.2f".format(annonce)} m, posée à ${"%.2f".format(reel)} m"
+                    }
+                }
+            }
+            println("SOL écart max entre le réel et l'annoncé : ${"%.2f".format(pire)} m — $pireOu")
+            assertTrue(
+                "le sol n'est pas là où le jeu le croit : ${"%.2f".format(pire)} m d'écart — $pireOu",
+                pire < 0.1f
+            )
+        } finally {
+            TargetRules.style = precedent
+        }
+    }
+
+    /**
      * **Un site posé au fond d'un vallon reste au fond du vallon.**
      *
      * L'atelier pose une dalle de quarante kilomètres sous tout le monde : elle porte la

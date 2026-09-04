@@ -31,8 +31,35 @@ object BalanceRules {
      */
     const val DEAD_HALF = 0.12f
 
-    /** Fraction minimale d'une pièce qui doit rester au-dessus de la planche. */
-    const val MIN_SUPPORT_FRACTION = 0.25f
+    /**
+     * Fraction minimale d'une pièce qui doit rester au-dessus de la planche.
+     *
+     * **La moitié, et c'est de la géométrie, pas un réglage.** Une brique portée sur une
+     * fraction `f` de sa largeur a son centre de gravité au-delà du bord dès que `f` est
+     * sous la moitié : elle bascule, toujours, sans exception. À un quart — la valeur
+     * d'avant — le jeu acceptait donc une pose qui échouait à tous les coups. Mesuré sur
+     * les cinq difficultés : la brique posée à la distance maximale autorisée revenait au
+     * plateau au bout d'une seconde dans quatre cas sur cinq, le cinquième n'y échappant
+     * que parce qu'un triangle a sa rotation bloquée.
+     *
+     * **Un peu plus que la moitié, et le « un peu » est mesuré.** À exactement la moitié,
+     * le centre de gravité tombe *sur* le bord : équilibre neutre, et le moindre bruit
+     * numérique tranche. Balayage sur cinq difficultés, soixante niveaux, trois briques
+     * chacun, posées à la distance maximale de chaque seuil :
+     *
+     * ```
+     * f = 0,50 : 133 briques tombées sur 180
+     * f = 0,52 :   0 tombée sur 180
+     * f = 0,55 :   0 tombée sur 180
+     * f = 0,60 :   0 tombée sur 180
+     * ```
+     *
+     * La falaise est exactement à un demi. 0,52 suffit déjà ; on prend 0,55 pour avoir une
+     * marge qui ne dépende pas du bruit — elle laisse le centre à un dixième de
+     * demi-largeur à l'intérieur du bord. Le débordement reste bien réel : presque la
+     * moitié de la brique est dans le vide, et ça se voit.
+     */
+    const val MIN_SUPPORT_FRACTION = 0.55f
 
     /**
      * Pas de la règle gravée sur la planche. Purement visuel : rien ne s'y
@@ -137,9 +164,12 @@ class BalanceWeight(
     val minDistance: Float get() = BalanceRules.DEAD_HALF + halfWidth
 
     /**
-     * Distance maximale : une pièce peut dépasser du bord, mais au moins un
-     * quart de sa largeur reste porté par la planche. Le test physique décide
-     * ensuite si l'empilement tient réellement.
+     * Distance maximale : une pièce peut dépasser du bord, mais un peu plus de la moitié
+     * de sa largeur reste portée par la planche — autrement dit son centre de gravité
+     * reste **franchement** au-dessus de la planche. Voir
+     * [BalanceRules.MIN_SUPPORT_FRACTION] : à la moitié pile c'est un équilibre neutre,
+     * et en dessous la pose bascule à tous les coups. Le test physique décide ensuite si
+     * l'empilement tient réellement.
      */
     val maxDistance: Float get() = BalanceRules.PLANK_HALF_LENGTH + halfWidth * (1f - 2f * BalanceRules.MIN_SUPPORT_FRACTION)
 
@@ -657,11 +687,16 @@ class BalanceGame {
         w.body.angle = w.restAngle
         w.body.vx = 0f; w.body.vy = 0f; w.body.omega = 0f
         w.body.y = restingY(w, x) - w.bottomOffset
-        // Le solveur générique des polygones produit un unique contact pour
-        // une base triangulaire. On conserve donc l'orientation décidée par le
-        // joueur : le triangle peut tomber ou glisser, mais ne pivote pas tout
-        // seul sur ce point de contact artificiel.
-        w.body.lockRotation = w.shape == BalanceWeight.Shape.TRIANGLE
+        // **Plus aucune rotation bloquée.** Le triangle en avait une, parce que le
+        // solveur générique des polygones ne rendait qu'un seul point de contact pour
+        // une base triangulaire, et qu'un triangle posé sur une pointe unique pivotait
+        // sur place. Le remède était pire : un solide à rotation bloquée posé sur une
+        // planche qui s'incline reste horizontal, ne la touche plus que par un coin, et
+        // lui transmet son poids **à ce coin**. Mesuré sur douze niveaux MEDIUM disposés
+        // au couple exactement nul : la planche partait à 6 à 9 degrés, les rectangles
+        // suivant son angle au dixième près pendant que les triangles restaient à 0,00°.
+        // `Collider.polygonPolygon` rend maintenant deux contacts, comme pour les
+        // boîtes : le triangle est un solide comme les autres.
         w.body.refreshMass()
         w.body.inWorld = true
         world.forgetContacts(w.body)

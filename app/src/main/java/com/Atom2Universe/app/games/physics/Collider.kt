@@ -132,6 +132,16 @@ internal object Collider {
     private const val ROUND_FEATURE = -1
 
     /**
+     * Marque les identifiants venant de [polygonPolygon], pour qu'ils ne se confondent
+     * jamais avec ceux de [boxBox].
+     *
+     * Le démarrage à chaud retrouve l'impulsion d'un contact par son identifiant : deux
+     * contacts différents qui porteraient le même numéro se prêteraient leur poussée, et
+     * une pile se mettrait à trembler sans raison visible.
+     */
+    private const val TRI_FEATURE = 1 shl 20
+
+    /**
      * Calcule les points de contact entre la forme [pa] de [a] et la forme [pb] de
      * [b], et les écrit dans [out]. Retourne le nombre de points (0 sans collision).
      */
@@ -147,49 +157,142 @@ internal object Collider {
         }
     }
 
-    /** SAT générique pour les rares contacts contenant un triangle. */
+    /**
+     * Contact entre deux polygones convexes dont au moins un est un triangle.
+     *
+     * **Il rend jusqu'à deux points de contact, comme [boxBox], et c'est tout le sujet.**
+     * Il n'en rendait qu'un, au milieu de la face d'appui, ce qui semblait raisonnable —
+     * « une base triangulaire repose sur toute sa longueur ». Mais un point unique ne
+     * transmet **aucun couple** : un triangle posé à plat ne peut alors ni tenir droit ni
+     * suivre le plan qui le porte, il pivote sur ce point comme sur une pointe.
+     *
+     * Le jeu d'équilibre l'a payé de deux façons. On a d'abord bloqué la rotation des
+     * triangles pour les empêcher de tourner sur place ; et un solide à rotation bloquée
+     * posé sur une planche qui s'incline **reste horizontal**, donc ne la touche plus que
+     * par un coin, et lui transmet son poids à ce coin au lieu du dessous de son centre de
+     * gravité. Mesuré le 04/09/2026 sur douze niveaux MEDIUM disposés au couple
+     * exactement nul : la planche partait à **6 à 9 degrés**, les rectangles suivant son
+     * angle au dixième près pendant que les triangles restaient à 0,00°. Aucun compteur
+     * ne pouvait le voir : les briques ne bougeaient pas d'un millimètre.
+     *
+     * Deux contacts, et le triangle redevient un solide ordinaire.
+     *
+     * L'algorithme est celui de [boxBox] — face de référence, face incidente, découpage —
+     * généralisé à un nombre quelconque de sommets. Il reste sur le chemin lent : les
+     * boîtes contre boîtes, qui sont l'immense majorité des contacts, gardent leur version
+     * spécialisée.
+     */
     private fun polygonPolygon(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
         val na = a.polygon(vertsA)
         val nb = b.polygon(vertsB)
-        var bestOverlap = Float.MAX_VALUE
-        var bestX = 0f
-        var bestY = 0f
-        fun testAxes(v: FloatArray, n: Int): Boolean {
-            for (i in 0 until n) {
-                val j = (i + 1) % n
-                val ex = v[j * 2] - v[i * 2]
-                val ey = v[j * 2 + 1] - v[i * 2 + 1]
-                val len = sqrt(ex * ex + ey * ey)
-                if (len < 1e-6f) continue
-                val ax = -ey / len
-                val ay = ex / len
-                var amin = Float.MAX_VALUE; var amax = -Float.MAX_VALUE
-                var bmin = Float.MAX_VALUE; var bmax = -Float.MAX_VALUE
-                for (k in 0 until na) { val q = vertsA[k * 2] * ax + vertsA[k * 2 + 1] * ay; amin = minOf(amin, q); amax = maxOf(amax, q) }
-                for (k in 0 until nb) { val q = vertsB[k * 2] * ax + vertsB[k * 2 + 1] * ay; bmin = minOf(bmin, q); bmax = maxOf(bmax, q) }
-                val overlap = minOf(amax, bmax) - maxOf(amin, bmin)
-                if (overlap < 0f) return false
-                if (overlap < bestOverlap) { bestOverlap = overlap; bestX = ax; bestY = ay }
+
+        maxSeparationN(vertsA, na, vertsB, nb)
+        val sepA = sepValue
+        val faceA = sepIndex
+        if (sepA > 0f) return 0
+
+        maxSeparationN(vertsB, nb, vertsA, na)
+        val sepB = sepValue
+        val faceB = sepIndex
+        if (sepB > 0f) return 0
+
+        // Face de référence : celle qui sépare le mieux, avec le même petit biais que
+        // [boxBox] pour ne pas basculer d'une face à l'autre à chaque image.
+        val flip = sepB > sepA + 0.002f
+        val refVerts = if (flip) vertsB else vertsA
+        val incVerts = if (flip) vertsA else vertsB
+        val nRef = if (flip) nb else na
+        val nInc = if (flip) na else nb
+        val refIdx = if (flip) faceB else faceA
+
+        val rj = (refIdx + 1) % nRef
+        val r0x = refVerts[refIdx * 2]
+        val r0y = refVerts[refIdx * 2 + 1]
+        val r1x = refVerts[rj * 2]
+        val r1y = refVerts[rj * 2 + 1]
+        var tx = r1x - r0x
+        var ty = r1y - r0y
+        val tl = sqrt(tx * tx + ty * ty)
+        if (tl < 1e-6f) return 0
+        tx /= tl; ty /= tl
+        val nx = ty        // normale sortante de la face de référence
+        val ny = -tx
+
+        // Face incidente : celle dont la normale est la plus opposée à la référence.
+        var incIdx = 0
+        var minDot = Float.MAX_VALUE
+        for (i in 0 until nInc) {
+            val j = (i + 1) % nInc
+            val ex = incVerts[j * 2] - incVerts[i * 2]
+            val ey = incVerts[j * 2 + 1] - incVerts[i * 2 + 1]
+            val el = sqrt(ex * ex + ey * ey)
+            if (el < 1e-6f) continue
+            val d = (ey / el) * nx + (-ex / el) * ny
+            if (d < minDot) { minDot = d; incIdx = i }
+        }
+        val ij = (incIdx + 1) % nInc
+        segIn[0] = incVerts[incIdx * 2]; segIn[1] = incVerts[incIdx * 2 + 1]
+        segIn[2] = incVerts[ij * 2]; segIn[3] = incVerts[ij * 2 + 1]
+        featIn[0] = incIdx; featIn[1] = ij
+
+        // Découpage contre les deux bords latéraux de la face de référence.
+        val side0 = tx * r0x + ty * r0y
+        val side1 = tx * r1x + ty * r1y
+        if (clip(-tx, -ty, -side0, segIn, featIn, segMid, featMid, 8) < 2) return 0
+        if (clip(tx, ty, side1, segMid, featMid, segOut, featOut, 9) < 2) return 0
+
+        normalX = if (flip) -nx else nx
+        normalY = if (flip) -ny else ny
+
+        var count = 0
+        for (i in 0 until 2) {
+            val px = segOut[i * 2]
+            val py = segOut[i * 2 + 1]
+            val sep = (px - r0x) * nx + (py - r0y) * ny
+            if (sep <= 0f) {
+                val c = out[count]
+                c.px = px
+                c.py = py
+                c.separation = sep
+                c.normalImpulse = 0f
+                c.tangentImpulse = 0f
+                // Les identifiants de contact servent au démarrage à chaud : ils doivent
+                // rester stables d'une image à l'autre, et distincts de ceux de [boxBox].
+                c.feature = TRI_FEATURE or (if (flip) 1 shl 16 else 0) or
+                    (refIdx shl 8) or featOut[i]
+                count++
             }
-            return true
         }
-        if (!testAxes(vertsA, na) || !testAxes(vertsB, nb)) return 0
-        if ((b.x - a.x) * bestX + (b.y - a.y) * bestY < 0f) { bestX = -bestX; bestY = -bestY }
-        normalX = bestX; normalY = bestY
-        // Milieu des faces de support : une base triangulaire repose donc bien
-        // sur toute sa longueur, plutôt que sur un coin de rectangle caché.
-        fun support(v: FloatArray, n: Int, dx: Float, dy: Float, outPoint: FloatArray) {
-            var best = -Float.MAX_VALUE; var sx = 0f; var sy = 0f; var count = 0
-            for (i in 0 until n) { val x = v[i * 2]; val y = v[i * 2 + 1]; val d = x * dx + y * dy
-                if (d > best + 1e-4f) { best = d; sx = x; sy = y; count = 1 } else if (abs(d - best) <= 1e-4f) { sx += x; sy += y; count++ } }
-            outPoint[0] = sx / count; outPoint[1] = sy / count
+        return count
+    }
+
+    /**
+     * Comme `maxSeparation`, mais pour un nombre quelconque de sommets.
+     *
+     * La version d'origine parcourait quatre sommets en dur (`and 3`) : appliquée à un
+     * triangle elle aurait lu un quatrième sommet qui n'existe pas.
+     */
+    private fun maxSeparationN(vr: FloatArray, nr: Int, vi: FloatArray, ni: Int) {
+        var best = -Float.MAX_VALUE
+        var bestI = 0
+        for (i in 0 until nr) {
+            val ax = vr[i * 2]
+            val ay = vr[i * 2 + 1]
+            val j = (i + 1) % nr
+            var nx = vr[j * 2 + 1] - ay
+            var ny = -(vr[j * 2] - ax)
+            val len = sqrt(nx * nx + ny * ny)
+            if (len < 1e-6f) continue
+            nx /= len; ny /= len
+            var minS = Float.MAX_VALUE
+            for (k in 0 until ni) {
+                val s = (vi[k * 2] - ax) * nx + (vi[k * 2 + 1] - ay) * ny
+                if (s < minS) minS = s
+            }
+            if (minS > best) { best = minS; bestI = i }
         }
-        support(vertsA, na, bestX, bestY, segIn)
-        support(vertsB, nb, -bestX, -bestY, segMid)
-        val c = out[0]
-        c.px = (segIn[0] + segMid[0]) * 0.5f; c.py = (segIn[1] + segMid[1]) * 0.5f
-        c.separation = -bestOverlap; c.normalImpulse = 0f; c.tangentImpulse = 0f; c.feature = ROUND_FEATURE
-        return 1
+        sepValue = best
+        sepIndex = bestI
     }
 
     // --------------------------- Disque contre disque ---------------------------

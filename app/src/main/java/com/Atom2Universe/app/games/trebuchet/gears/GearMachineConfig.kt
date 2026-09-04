@@ -492,13 +492,15 @@ object GearMachineRules {
     const val CATEGORY_SHOT = TrebuchetCategory.BALL
 
     /**
-     * La dalle de sol : assez large pour porter le plus long des tirs, et **épaisse**,
-     * parce que le moteur taille ses sous-pas sur l'épaisseur de ce qu'un corps rapide
-     * peut atteindre. Une dalle mince hacherait chaque image en trente-deux sous-pas
-     * dès qu'un boulet file au ras du sol.
+     * Les bords du monde de l'atelier : assez loin pour porter le plus long des tirs.
+     *
+     * C'est jusque-là que le relief est prolongé à plat par `TrebuchetGround.lay`. Son
+     * épaisseur, elle, n'est plus réglée ici : `Terrain.DEPTH` la fixe pour tout le
+     * monde, et elle est **grosse** parce que le moteur taille ses sous-pas sur
+     * l'épaisseur de ce qu'un corps rapide peut atteindre — un sol mince hacherait
+     * chaque image en trente-deux sous-pas dès qu'un boulet file au ras du sol.
      */
     const val GROUND_HALF_WIDTH = 20_000f
-    const val GROUND_DEPTH = 30f
 
     /** Le mannequin planté devant le lanceur : le seul but de l'atelier, pour l'instant. */
     const val TARGET_DISTANCE = 60f
