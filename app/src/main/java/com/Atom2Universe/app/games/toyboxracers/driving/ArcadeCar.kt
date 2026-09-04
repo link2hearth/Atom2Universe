@@ -182,14 +182,17 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
             if (groundedOnRoad && hasRoadSurface) {
                 airborneY = roadY
             } else {
+                // `resolveGroundRoadCollision` cherche la dalle **physiquement** la plus
+                // proche et pose lui-même l'altitude sur celle qu'il a trouvée. Il ne
+                // faut donc rien réécrire derrière lui : `roadY` vient de l'autre
+                // projection, celle de la progression, et les deux ne désignent pas la
+                // même dalle au croisement. Une réaffectation traînait ici et faisait
+                // exactement ça — la voiture arrêtée sous le pont, dont la progression
+                // était restée sur la branche haute, se retrouvait téléportée sur le
+                // tablier quatorze mètres plus haut.
                 groundedOnRoad = false
                 airborneY = floorY
                 resolveGroundRoadCollision(previousWorldX, previousWorldZ)
-            }
-            airborneY = if (groundedOnRoad) {
-                roadY
-            } else {
-                track.groundHeightAt(worldX, worldZ) + PrototypeTrack.CAR_CLEARANCE
             }
         }
         speed = hypot(velocityX, velocityZ)

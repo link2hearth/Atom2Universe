@@ -59,6 +59,16 @@ class PrototypeTrackTest {
         assertEquals(initialPosition.z, car.worldPosition.z, 0.0001f)
     }
 
+    /**
+     * Le hors-piste ne doit pas brider la voiture.
+     *
+     * **On mesure la vitesse pendant qu'elle est hors piste, pas au bout des dix
+     * secondes.** Sans volant, la voiture roule tout droit : à vingt mètres par seconde
+     * elle traverse la chambre en cinq secondes et finit plaquée contre un mur, où sa
+     * vitesse tombe évidemment à rien. Lire le compteur à l'arrivée revenait donc à
+     * tester le mur, pas le hors-piste — et le test échouait sur une voiture qui avait
+     * pourtant atteint sa vitesse maximale dès la troisième seconde.
+     */
     @Test
     fun acceleratorMovesCarButDoesNotSteerIt() {
         val track = PrototypeTrack()
@@ -66,15 +76,24 @@ class PrototypeTrackTest {
         val initialPosition = car.worldPosition
         val initialYaw = car.yawRadians
 
+        var sawOffRoad = false
+        var fastestOffRoad = 0f
         repeat(60 * 10) {
             car.update(
                 1f / 60f,
                 ArcadeCar.Input(steering = 0f, accelerating = true, braking = false)
             )
+            if (car.offRoad) {
+                sawOffRoad = true
+                fastestOffRoad = kotlin.math.max(fastestOffRoad, car.speed)
+            }
         }
 
-        assertTrue("La voiture doit pouvoir rouler librement hors piste", car.offRoad)
-        assertTrue("Le hors-piste ne doit pas imposer une vitesse très basse", car.speed > 18f)
+        assertTrue("La voiture doit pouvoir rouler librement hors piste", sawOffRoad)
+        assertTrue(
+            "Le hors-piste ne doit pas imposer une vitesse très basse : $fastestOffRoad m/s",
+            fastestOffRoad > 18f
+        )
         assertEquals(initialYaw, car.yawRadians, 0.0001f)
         assertTrue(
             car.worldPosition.x != initialPosition.x || car.worldPosition.z != initialPosition.z
