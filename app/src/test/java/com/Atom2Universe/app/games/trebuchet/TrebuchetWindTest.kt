@@ -122,10 +122,16 @@ class TrebuchetWindTest {
         // charpente d'arcade — quatorze fois plus légère que le bois réel — s'envole
         // pour de bon dedans. Ce qui doit tenir, c'est le vent **du jeu**, et c'est ce
         // village-ci qui le vérifie : palissades, granges et toits de chaume compris.
+        //
+        // **Et on ne tire pas**, pour la même raison que le château ci-dessus. Ce test
+        // tirait à l'origine, et le boulet n'atteignait pas la cible ; depuis que les
+        // villages font trois cents mètres de front, le même tir poussé par un vent
+        // arrière retombe **dedans** et casse 1,5 % du site. La mesure ne disait donc
+        // plus rien du vent, elle mesurait un impact.
         TargetRules.style = TargetStyle.ARCADE
         val g = TrebuchetGame()
         g.loadLevel(4L)
-        val pire = derive(g, Wind.MAX_SPEED, 10f)
+        val pire = derive(g, Wind.MAX_SPEED, 10f, tirer = false)
         println("VENT village à ${Wind.MAX_SPEED} m/s : dérive maximale ${"%.2f".format(pire)} m")
         assertTrue("le village a pris le vent : $pire m", pire < 1f)
         assertEquals("le village s'est abîmé tout seul", 0f, g.targets.brokenRatio, 1e-4f)

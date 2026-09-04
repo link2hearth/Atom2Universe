@@ -388,9 +388,17 @@ object TargetGenerator {
         // Les fortifications de torchis géantes appartiennent au langage arcade. En
         // réaliste, les plans militaires restent en pierre ; le torchis demeure sur
         // les maisons, où il est architecturalement plausible.
-        val stone = if (
-            TargetRules.style == TargetStyle.ARCADE && rng.nextFloat() < 0.25f
-        ) Material.COB else Material.STONE
+        //
+        // **Le tirage se fait d'abord, le tempérament décide ensuite.** Écrit en une
+        // seule condition — `style == ARCADE && rng.nextFloat() < 0.25f` — Kotlin
+        // court-circuite le `&&` et ne tire *pas* le nombre en réaliste : tout le flux
+        // aléatoire se décale d'un cran, et la même graine ne donne plus le même site
+        // dans les deux modes. C'est un piège général : dans cette fonction, aucune
+        // condition sur [TargetRules.style] n'a le droit de contenir un `rng`.
+        val torchis = rng.nextFloat() < 0.25f
+        val stone =
+            if (torchis && TargetRules.style == TargetStyle.ARCADE) Material.COB
+            else Material.STONE
 
         // La hauteur d'une tour : la plupart du temps sa gamme habituelle, et de temps
         // en temps un colosse. Ça ne coûte plus rien au moteur depuis que
@@ -401,12 +409,15 @@ object TargetGenerator {
             modMin: Float, modMax: Float,
             geanteMin: Float, geanteMax: Float,
             chanceGeante: Float = 0.15f
-        ): Float = if (TargetRules.style == TargetStyle.REALISTE) {
-            between(modMin, modMax)
-        } else if (rng.nextFloat() < 1f - chanceGeante) {
-            between(modMin, modMax)
-        } else {
-            between(geanteMin, geanteMax)
+        ): Float {
+            // Même règle que pour [stone] : on tire toujours, on choisit ensuite. Deux
+            // nombres consommés dans les deux tempéraments, donc le même plan.
+            val geante = rng.nextFloat() >= 1f - chanceGeante
+            return if (geante && TargetRules.style == TargetStyle.ARCADE) {
+                between(geanteMin, geanteMax)
+            } else {
+                between(modMin, modMax)
+            }
         }
 
         return when (kind) {

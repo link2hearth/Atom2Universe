@@ -195,8 +195,13 @@ class TrebuchetEffectsTest {
         assertTrue("le site n'a pas été rasé, le test ne prouve rien", g.targets.cleared)
         assertTrue("aucun feu d'artifice à la victoire", g.effects.busy)
 
+        // Trente secondes, et pas vingt : le bouquet lâche vingt-deux fusées étalées sur
+        // une douzaine de secondes, et la dernière gerbe met encore le temps de sa chute
+        // à s'éteindre. Mesuré à 22,9 s pour la graine 1 — une fenêtre de vingt secondes
+        // ne laissait aucune marge, et le moindre décalage du tirage la faisait échouer
+        // sans que le spectacle ait le moindre défaut.
         var pic = 0
-        repeat(1200) {
+        repeat(1800) {
             g.stepEffects(1f / 60f)
             pic = maxOf(pic, g.effects.aliveCount)
         }

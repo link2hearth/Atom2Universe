@@ -478,8 +478,58 @@ object TargetModules {
     }
 
     /**
-     * Un panneau plein mais friable, cassé en lattes horizontales pour que ses débris
-     * restent minces. Le décor est dessiné sur l'ensemble du panneau.
+     * Hauteur maximale d'un hourdis de façade, en **mètres nus** — le tempérament ne la
+     * touche pas, et c'est tout l'intérêt.
+     *
+     * Les points de vie d'un bloc valent `½·masse·v²` ([Block.hp]), donc ils grandissent
+     * avec sa surface. Un panneau de torchis qui monte d'un seul tenant du plancher au
+     * linteau coûte, en réaliste, une centaine de kilojoules à briser — quand un boulet
+     * de douze kilos à 110 m/s n'en porte que soixante-treize. Fermer **toutes** les
+     * travées revenait donc à poser un bouclier devant les poteaux : la maison encaissait
+     * cinq boulets dans la façade sans descendre d'un centimètre, ce qui lui retirait la
+     * seule chose qu'elle savait faire.
+     *
+     * C'est la même leçon que l'ancien hourdis, plafonné pour une raison voisine — un
+     * gravat aussi haut que large — et il ne fallait pas la perdre en habillant les
+     * façades.
+     */
+    private const val PANEL_MAX_HEIGHT = 1.3f
+
+    /**
+     * Le hourdis d'une travée : un panneau plein **en bas**, le pan de bois nu au-dessus.
+     *
+     * Voir [PANEL_MAX_HEIGHT] pour la hauteur. La travée n'est pas close jusqu'au
+     * linteau, et ce n'est pas un renoncement : c'est à quoi ressemble un colombage,
+     * et c'est surtout ce qui laisse au boulet une chance d'atteindre le poteau.
+     */
+    private fun facadeBay(
+        rng: Random,
+        left: Float,
+        bottom: Float,
+        width: Float,
+        height: Float,
+        decor: Decor,
+        surface: Surface
+    ): List<Block> {
+        if (width <= 0f || height <= 0f) return emptyList()
+        val h = minOf(height * 0.6f, PANEL_MAX_HEIGHT)
+        if (h <= TargetRules.MIN_HALF_THICKNESS * 6f) return emptyList()
+        return listOf(facadePanel(rng, left, bottom, width, h, decor, surface))
+    }
+
+    /**
+     * Un hourdis : **un seul corps plein**, sa matière peinte par-dessus.
+     *
+     * Il a d'abord été découpé en lattes horizontales, pour que ses débris restent
+     * minces. C'était deux erreurs en une. Le torchis rompt en [Rupture.POUSSIERE] : il
+     * ne laisse aucun débris, donc le plan de fracture ne servait jamais. Et le moteur
+     * règle ses sous-pas sur la pièce la plus mince qu'un corps rapide peut atteindre
+     * ([PhysWorld.subStepsFor]) : six lattes de vingt centimètres faisaient découper
+     * chaque image du vol en onze sous-pas au lieu de trois, pour un détail qu'aucun
+     * joueur n'a jamais vu.
+     *
+     * Les planches et le colombage sont donc **peints** — c'est exactement ce à quoi
+     * [Surface] sert, voir `LandScene.drawSurface` — et le corps reste une boîte.
      */
     private fun facadePanel(
         rng: Random,
@@ -489,21 +539,10 @@ object TargetModules {
         height: Float,
         decor: Decor,
         surface: Surface
-    ): Block {
-        val rows = (height / TargetRules.detail(0.48f)).roundToInt().coerceIn(3, 6)
-        val rowH = height / rows
-        return Block.compound(
-            Material.COB, left + width / 2f, bottom + height / 2f,
-            decor = decor, surface = surface, visualVariant = rng.nextInt(4)
-        ) {
-            repeat(rows) { row ->
-                box(
-                    width / 2f, (rowH - TargetRules.JOINT) / 2f,
-                    0f, -height / 2f + rowH * (row + 0.5f)
-                )
-            }
-        }
-    }
+    ): Block = Block.laid(
+        Material.COB, left, bottom, width, height,
+        decor = decor, surface = surface, visualVariant = rng.nextInt(4)
+    )
 
     /**
      * Ce qu'un module s'autorise en corps, faute d'instruction contraire.
@@ -541,10 +580,14 @@ object TargetModules {
         val surface = masonrySurface(rng, material)
         // Les merlons se paient sur le budget : il en faut un par pas de merlon.
         val merlonCount = (width / TargetRules.stone(1.4f)).toInt() + 1
+        // **Pas de `stackBudget` serré ici.** Le regrouper à trois pour tenir le
+        // budget de corps triplait la masse de chaque assise, donc ses points de vie
+        // ([Block.hp] est proportionnel à la masse) : un boulet d'arcade qui entrait
+        // dans la courtine et en ressortait de l'autre côté s'est mis à rebondir en
+        // arrière. Le regroupement est gratuit à l'œil mais jamais à l'impact.
         val wall = Masonry.wall(
             material, left, 0f, width, walkway,
             stoneWidth = 1.2f, stoneHeight = stoneH,
-            stackBudget = 3,
             bodyBudget = (bodyBudget - merlonCount).coerceAtLeast(4),
             surface = surface
         )
@@ -710,19 +753,29 @@ object TargetModules {
             out += Masonry.post(material, left + postW / 2f, y, postW, postH)
             out += Masonry.post(material, left + width - postW / 2f, y, postW, postH)
             if (middlePost) out += Masonry.post(material, left + width / 2f, y, postW, postH)
-            // Chaque travée est désormais réellement fermée. Les panneaux restent
-            // légers : ils se fracturent en petites lattes, tandis que les poteaux
-            // continuent à porter la maison et à commander son effondrement.
+            // **Un hourdis par étage, jamais tous les deux.** Fermer toutes les travées
+            // paraissait mieux et retirait à la maison la seule chose qu'elle sache
+            // faire. Un hourdis de torchis pèse trois tonnes et demie contre quatre
+            // cents kilos pour un poteau : deux travées closes, et le boulet ne touche
+            // plus jamais l'ossature — pire, une fois les poteaux tombés, les deux
+            // hourdis se retrouvent en **piles** l'un sur l'autre et tiennent l'étage à
+            // eux seuls. Mesuré en réaliste : cinq boulets dans la façade, deux poteaux
+            // du bas emportés, et la crête n'avait pas bougé d'un centimètre.
+            //
+            // Une travée sur deux laissée ouverte suffit : la façade se lit, et le
+            // boulet garde un chemin vers le bois.
             val bays = if (middlePost) 2 else 1
             val bayW = (width - (bays + 1) * postW) / bays
+            val closed = rng.nextInt(bays)
             for (bay in 0 until bays) {
                 val bayLeft = left + postW + bay * (bayW + postW)
                 val facade = when {
-                    s == 0 && bay == 0 -> Decor.DOOR
+                    s == 0 -> Decor.DOOR
                     rng.nextBoolean() -> Decor.WINDOW_SHUTTERS
                     else -> Decor.WINDOW_ARCHED
                 }
-                out += facadePanel(
+                if (bay != closed) continue
+                out += facadeBay(
                     rng,
                     bayLeft + TargetRules.JOINT,
                     y + TargetRules.JOINT,
@@ -1503,7 +1556,12 @@ object TargetModules {
         if (width <= 1f || height <= 1f) return out
         val poteauW = TargetRules.detail(0.4f)
         val beamH = TargetRules.detail(0.35f)
-        val rise = (width * 0.46f).coerceIn(TargetRules.detail(1.2f), height * 0.62f)
+        // Le plafond passe avant le plancher : sur une grange basse, `detail(1.2f)`
+        // dépasse `height * 0.62f` et `coerceIn` lève alors une exception. La pente
+        // voulue est un minimum **souhaité**, pas une contrainte : elle cède devant la
+        // hauteur disponible.
+        val riseMax = height * 0.62f
+        val rise = (width * 0.46f).coerceIn(minOf(TargetRules.detail(1.2f), riseMax), riseMax)
         val murH = (height - rise - beamH).coerceAtLeast(TargetRules.site(1.2f))
         val poteaux = (width / TargetRules.detail(3f)).roundToInt().coerceIn(3, 5)
         for (i in 0 until poteaux) {
@@ -1517,7 +1575,7 @@ object TargetModules {
         val pignonW = pas - poteauW - TargetRules.JOINT
         if (pignonW > TargetRules.site(0.5f)) {
             for (bay in 0 until travees) {
-                out += facadePanel(
+                out += facadeBay(
                     rng,
                     left + poteauW + bay * pas + TargetRules.JOINT,
                     TargetRules.JOINT,
