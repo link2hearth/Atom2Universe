@@ -279,4 +279,6 @@
     <string name="cave_upgrade_weapon_name">Nuova arma</string>
     <string name="cave_upgrade_weapon_desc">Sblocca un nuovo tipo di proiettile</string>
     <string name="cave_player_level">Liv %1$d</string>
+    <string name="toybox_racers_title">Toybox Racers</string>
+    <string name="toybox_racers_description">Gareggia con piccole auto giocattolo in una casa gigante piena di curve</string>
 </resources>

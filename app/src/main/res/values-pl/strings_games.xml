@@ -279,4 +279,6 @@
     <string name="cave_upgrade_weapon_name">Nowa broń</string>
     <string name="cave_upgrade_weapon_desc">Odblokuj nowy typ pocisku</string>
     <string name="cave_player_level">Poz. %1$d</string>
+    <string name="toybox_racers_title">Toybox Racers</string>
+    <string name="toybox_racers_description">Ścigaj się małymi samochodzikami po ogromnym domu pełnym zakrętów</string>
 </resources>

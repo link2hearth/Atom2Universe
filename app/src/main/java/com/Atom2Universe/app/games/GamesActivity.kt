@@ -18,6 +18,7 @@ import com.Atom2Universe.app.games.link.LinkActivity
 import com.Atom2Universe.app.games.starswar.StarsWarActivity
 import com.Atom2Universe.app.games.wavesurf.WaveSurfActivity
 import com.Atom2Universe.app.games.motocross.MotocrossActivity
+import com.Atom2Universe.app.games.toyboxracers.ToyboxRacersActivity
 import com.Atom2Universe.app.games.hexrunner.HexRunnerActivity
 import com.Atom2Universe.app.games.cosmorun.CosmoRunActivity
 import com.Atom2Universe.app.games.caves.CaveWorldMenuActivity
@@ -219,6 +220,14 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_motocross,
             activityClass = MotocrossActivity::class.java
+        ),
+        HubTile(
+            id = "toybox_racers",
+            titleRes = R.string.toybox_racers_title,
+            descriptionRes = R.string.toybox_racers_description,
+            iconRes = R.drawable.ic_toybox_racers,
+            defaultColorRes = R.color.game_tile_toybox_racers,
+            activityClass = ToyboxRacersActivity::class.java
         ),
         HubTile(
             id = "orbite",

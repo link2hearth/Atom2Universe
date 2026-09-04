@@ -279,4 +279,6 @@
     <string name="cave_upgrade_weapon_name">Yeni Silah</string>
     <string name="cave_upgrade_weapon_desc">Yeni bir mermi türünün kilidini açar</string>
     <string name="cave_player_level">Svy %1$d</string>
+    <string name="toybox_racers_title">Toybox Racers</string>
+    <string name="toybox_racers_description">Minik oyuncak arabalarla virajlı, dev bir evde yarış</string>
 </resources>

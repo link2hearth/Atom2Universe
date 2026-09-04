@@ -286,4 +286,6 @@
     <string name="cave_upgrade_weapon_name">Nouvelle Arme</string>
     <string name="cave_upgrade_weapon_desc">Débloque un nouveau type de projectile</string>
     <string name="cave_player_level">Niv %1$d</string>
+    <string name="toybox_racers_title">Toybox Racers</string>
+    <string name="toybox_racers_description">Fais la course avec de petites voitures dans une maison géante pleine de virages</string>
 </resources>

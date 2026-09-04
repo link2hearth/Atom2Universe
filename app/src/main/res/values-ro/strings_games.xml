@@ -278,4 +278,6 @@
     <string name="cave_upgrade_weapon_name">Armă nouă</string>
     <string name="cave_upgrade_weapon_desc">Deblochează un nou tip de proiectil</string>
     <string name="cave_player_level">Niv %1$d</string>
+    <string name="toybox_racers_title">Toybox Racers</string>
+    <string name="toybox_racers_description">Concurează cu mașinuțe printr-o casă uriașă plină de viraje</string>
 </resources>
