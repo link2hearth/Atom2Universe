@@ -34,7 +34,18 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 /** Atelier physique autonome de la première machine à engrenages. */
-class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
+class GearMachineGame(
+    initial: GearMachineConfig = GearMachineConfig(),
+    /**
+     * Le monde et le site, **fournis de l'extérieur** quand on veut les partager.
+     *
+     * Par défaut la machine se fabrique les siens, ce qui est le cas d'un test. L'activité
+     * passe ceux du trébuchet : c'est ce qui fait que changer de machine ne change plus de
+     * village, ni l'état dans lequel on l'a laissé.
+     */
+    mondeInitial: PhysWorld? = null,
+    siteInitial: ShotSite? = null
+) {
     data class GearState(
         val wheel: GearWheelConfig,
         val body: PhysBody,
@@ -103,24 +114,9 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         var stalled: Float = 0f
     )
 
-    val world = PhysWorld().apply {
+    val world: PhysWorld = mondeInitial ?: PhysWorld().apply {
         // Une magnitude, dirigée vers le bas : le monde intègre `vy -= gravity·dt`.
-        // Elle valait ici -9,8 depuis l'origine, donc le boulet **montait** — invisible
-        // tant qu'il n'y avait pas de sol pour le rattraper.
         gravity = PhysicsConstants.STANDARD_GRAVITY
-        linearDamping = 0.015f
-        // Une faible traînée de l'air sur les roues — et **seulement** ça : les pertes
-        // qui comptent doivent venir des paliers, parce que ce sont les seules que le
-        // joueur peut travailler en changeant de matière.
-        //
-        // Elle valait 0,002, ce qui était sans conséquence tant qu'un doigt pouvait
-        // injecter quatre-vingts mégajoules d'un geste. Avec des moteurs réels elle
-        // devenait la perte dominante : sur un train de manège monté au soixante-
-        // quatrième, elle mangeait trois kilowatts quand les paliers en prenaient un
-        // demi, et le volant plafonnait à trente-cinq fois l'allure de la bête au lieu
-        // des soixante-quatre que le train promettait. À 0,0005 ce sont les paliers qui
-        // décident, et le plafond redevient celui qu'annonce le rapport de la cascade.
-        angularDamping = 0.0005f
         sleepEnabled = false
         iterations = 18
     }
@@ -167,21 +163,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
      * bâtit le terrain autour des bâtiments et laisse la ligne de tir de niveau. Une
      * colline sous l'atelier enterrerait les roues.
      */
-    val site = ShotSite(
-        world,
-        remount = { rebuild() },
-        // Les pierres du site doivent vivre sur **toutes** les couches de l'atelier.
-        // [TargetField] ne connaît pas les étages : il laisse ses corps sur la couche
-        // zéro, et un boulet parti d'un lanceur monté au troisième les traverserait sans
-        // les voir. On leur donne la même envergure qu'au sol, qui traverse déjà tout.
-        stampPieces = { champ ->
-            for (p in champ.pieces) {
-                p.body.collisionLayer = GearMachineRules.MIN_LAYER
-                p.body.collisionLayerDepth =
-                    GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
-            }
-        }
-    )
+    val site: ShotSite = siteInitial ?: ShotSite(world)
 
     val terrain: Terrain get() = site.terrain
 
@@ -327,7 +309,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     )
 
     init {
-        rebuild(preserveMotion = false)
+        attach(preserveMotion = false)
         // Le site **apres** la machine : il a besoin d'un monde deja monte, et
         // [loadSite] le remonte de toute facon pour poser le relief.
         loadSite(DEFAULT_SITE_SEED)
@@ -339,6 +321,58 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // moteurs se reouvre ainsi avec son moulin et son pas de tir.
         config = value.deepCopy().also { it.ensureCorePieces() }
         rebuild(preserveMotion = false)
+    }
+
+    /**
+     * Branche la machine sur le site : à partir de là, c'est elle qui se remonte quand le
+     * site change, et c'est elle qui est dans le monde.
+     */
+    fun attach(preserveMotion: Boolean = true) {
+        site.remount = { rebuild() }
+        site.stampPieces = { champ ->
+            // Les pierres du site doivent vivre sur **toutes** les couches de l'atelier.
+            // [TargetField] ne connaît pas les étages : il laisse ses corps sur la couche
+            // zéro, et un boulet parti d'un lanceur monté au troisième les traverserait
+            // sans les voir. On leur donne la même envergure qu'au sol, qui traverse tout.
+            for (p in champ.pieces) {
+                p.body.collisionLayer = GearMachineRules.MIN_LAYER
+                p.body.collisionLayerDepth =
+                    GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
+            }
+        }
+        rebuild(preserveMotion)
+        site.restamp()
+    }
+
+    /**
+     * Retire la machine du monde en y laissant le site intact.
+     *
+     * Le village, ses gravats et leurs dégâts restent exactement là où ils sont pendant
+     * que l'autre machine prend la place.
+     */
+    fun detach() {
+        projectile?.let { world.remove(it.body) }
+        world.removeOwned(this)
+    }
+
+    /**
+     * Met un corps dans le monde **au nom de cette machine**, pour pouvoir le lui retirer
+     * plus tard sans toucher au reste. Voir [PhysBody.owner].
+     */
+    private fun own(b: PhysBody) {
+        b.owner = this
+        // **L'air de l'atelier, posé sur ses corps et non sur le monde.**
+        //
+        // Ces deux régimes étaient des réglages du monde, ce qui obligeait l'atelier à
+        // avoir le sien : le trébuchet respire 0,05 / 0,3, l'atelier 0,015 / 0,0005. Le
+        // second est mesuré — à 0,3, un train de manège monté au soixante-quatrième
+        // plafonnait à trente-cinq fois l'allure de la bête au lieu des soixante-quatre
+        // que le rapport de cascade promettait, parce que l'air décidait à la place des
+        // paliers. Posés sur les corps, les deux machines peuvent enfin partager un
+        // monde. Voir [PhysBody.linearDamping].
+        b.linearDamping = AIR_LINEAIRE
+        b.angularDamping = AIR_ANGULAIRE
+        world.add(b)
     }
 
     fun rebuild(
@@ -357,7 +391,11 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // que s'il est encore en vol.
         val savedProjectile = if (preserveMotion) projectile else null
         val savedFlying = savedProjectile != null && phase == Phase.FLIGHT
-        world.clear()
+        // **On ne vide plus le monde, on retire ce qui est à nous.** Vider marchait
+        // tant qu'un monde ne portait qu'une machine et son site — au prix de remettre
+        // le site dedans juste après, ce qui a déjà coûté un bug de pierres comptées
+        // deux fois. Le site ne bouge plus : ni retiré, ni remis.
+        world.removeOwned(this)
         gears.clear()
         meshes.clear()
         transmissions.clear()
@@ -406,8 +444,8 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
                 collisionLayer = wheel.layer
                 refreshMass()
             }
-            world.add(support)
-            world.add(body)
+            own(support)
+            own(body)
             savedMotion[wheel.id]?.let { motion ->
                 if (wheel.id !in useConfiguredAngleFor) wheel.angle = motion.angle
                 if (motion.energy > 0f && body.inertia > 1e-12f) {
@@ -445,23 +483,14 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         connectMeshes()
         savedProjectile?.let { shot ->
             if (shot.body.x.isFinite() && shot.body.y.isFinite()) {
-                if (savedFlying) world.add(shot.body)
+                if (savedFlying) own(shot.body)
                 projectile = shot
             }
         }
 
-        // **Le site rentre dans le monde ici, et nulle part ailleurs.**
-        //
-        // [TargetField.load] fabrique les pierres mais ne les pose pas : c'est
-        // [TargetField.reattach] qui le fait, et il faut le rappeler apres **chaque**
-        // `world.clear()`. C'est exactement ce qui manquait — les boulets traversaient
-        // le village sans le voir, filtres de collision parfaits et pierres absentes du
-        // monde. Le trebuchet fait la meme chose au meme endroit, dans son `build()`.
-        //
-        // La cible garde ses corps d'un remontage a l'autre : le joueur qui deplace un
-        // engrenage entre deux tirs ne doit pas voir le village se reconstruire derriere
-        // lui.
-        targets.reattach()
+        // **Plus de `reattach`.** Le site n'a jamais quitté le monde : le remontage ne
+        // retire que les corps de la machine. On lui rend seulement ses couches, que
+        // [TargetField] ne connaît pas.
         site.restamp()
         // Le boulet qui vient de la toucher n'a pas survecu au vidage : c'est le moment
         // de rendormir la cible si elle est prete, plutot que d'attendre la prochaine
@@ -490,7 +519,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             world, terrain,
             -GearMachineRules.GROUND_HALF_WIDTH, GearMachineRules.GROUND_HALF_WIDTH,
             friction = 0.55f
-        ) { stampGround(it) }
+        ) { it.owner = this; stampGround(it) }
         ground = groundBodies.first()
     }
 
@@ -1745,7 +1774,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
             collisionLayer = GearMachineRules.MIN_LAYER
             collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
         }
-        world.add(shot)
+        own(shot)
         // À partir d'ici, le site saura ce que ce corps-là casse lui-même — c'est ce qui
         // permet de ne lui faire payer que ça. Les compteurs du tir précédent s'oublient
         // au même endroit, sinon un boulet hériterait des ruines d'un autre.
@@ -1846,7 +1875,7 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
         // ici, seulement sa longueur -- et ca borne le cout d'un chiffre recalcule a
         // chaque image du panneau.
         val dt = 1f / 30f
-        val linearKeep = (1f - world.linearDamping * dt).coerceIn(0f, 1f)
+        val linearKeep = (1f - AIR_LINEAIRE * dt).coerceIn(0f, 1f)
         var steps = 0
         while (y > 0f && steps < 900) {
             vy -= g * dt
@@ -1955,6 +1984,18 @@ class GearMachineGame(initial: GearMachineConfig = GearMachineConfig()) {
     }
 
     companion object {
+        /**
+         * L'air que respirent les corps de l'atelier, par seconde.
+         *
+         * Une faible traînée sur les roues — et **seulement** ça : les pertes qui comptent
+         * doivent venir des paliers, parce que ce sont les seules que le joueur peut
+         * travailler en changeant de matière. L'angulaire valait 0,002, ce qui était sans
+         * conséquence tant qu'un doigt pouvait injecter quatre-vingts mégajoules d'un
+         * geste ; avec des moteurs réels elle devenait la perte dominante.
+         */
+        const val AIR_LINEAIRE = 0.015f
+        const val AIR_ANGULAIRE = 0.0005f
+
         /**
          * La graine du site que l'atelier montre par defaut.
          *

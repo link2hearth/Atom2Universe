@@ -108,6 +108,16 @@ class PhysBody private constructor(
         this(listOf(BodyPart(Shape.BOX, halfW, halfH, 0f, 0f, 0f, 0f)), mass)
 
     companion object {
+
+        /**
+         * Valeur d'amortissement qui veut dire « celui du monde ».
+         *
+         * Un nombre négatif plutôt qu'un `Float?` : la boucle d'intégration passe sur
+         * tous les corps à chacun des trente-deux sous-pas d'un boulet rapide, et une
+         * valeur nulle emballée y coûterait un déréférencement par corps et par sous-pas.
+         */
+        const val INHERIT = -1f
+
         /**
          * Le compteur d'identifiants, **partagé par tous les mondes de l'application**.
          *
@@ -399,6 +409,46 @@ class PhysBody private constructor(
      * raide qu'elle n'est montée.
      */
     var dragFactor = 0f
+
+    /**
+     * Amortissement propre au corps, **par seconde**, ou [INHERIT] pour prendre celui du
+     * monde ([PhysWorld.linearDamping] et [PhysWorld.angularDamping]).
+     *
+     * L'amortissement décrit l'air, et deux corps du même monde respirent le même air —
+     * c'est pour ça que le réglage vit d'abord sur le monde. Mais deux **machines** dans
+     * le même monde peuvent avoir besoin de deux régimes très différents, et ce sont
+     * alors deux choses distinctes qu'on écrivait au même endroit :
+     *
+     * ```
+     * trébuchet   linéaire 0,05   angulaire 0,3      la poutre et les gravats s'arrêtent
+     * atelier     linéaire 0,015  angulaire 0,0005   les paliers décident, pas l'air
+     * ```
+     *
+     * L'atelier a mesuré son 0,0005 : à 0,3, un train de manège monté au soixante-
+     * quatrième plafonnait à trente-cinq fois l'allure de la bête au lieu des
+     * soixante-quatre que le rapport de cascade promettait. Ces deux régimes ne pouvaient
+     * pas cohabiter tant que le réglage n'existait que sur le monde — ce qui obligeait
+     * chaque jeu à avoir le sien.
+     *
+     * Le laisser à [INHERIT] ne coûte rien et ne change rien : c'est exactement le
+     * comportement d'avant.
+     */
+    var linearDamping = INHERIT
+    var angularDamping = INHERIT
+
+    /**
+     * Qui a mis ce corps dans le monde, pour pouvoir l'en retirer sans toucher au reste.
+     *
+     * Un monde peut porter plusieurs choses indépendantes — un site à abattre, et la
+     * machine qui tire dessus. Remonter la machine ne doit pas effacer le site, et les
+     * deux jeux le faisaient pourtant en vidant le monde entier puis en remettant le site
+     * dedans. [PhysWorld.removeOwned] fait le geste juste : retirer ce qui appartient à
+     * quelqu'un, et lui seul.
+     *
+     * Distinct de [tag], qui dit *ce que le corps est* pour le jeu ; celui-ci dit *qui le
+     * range*.
+     */
+    var owner: Any? = null
 
     // ── Raccourcis pour les corps à une seule forme ───────────────────────────
 

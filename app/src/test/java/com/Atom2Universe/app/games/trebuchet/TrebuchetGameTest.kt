@@ -444,7 +444,7 @@ class TrebuchetGameTest {
         g.ghostLimit = 3
         assertTrue("la limite n'a pas taillé la pile : ${g.ghosts.size}", g.ghosts.size == 3)
         // Et la remonter ne ressuscite personne : ce qui est oublié est oublié.
-        g.ghostLimit = TrebuchetRules.GHOST_CHOICES.last()
+        g.ghostLimit = TrebuchetRules.GHOST_MAX
         assertTrue("des fantômes sont revenus d'entre les morts", g.ghosts.size == 3)
 
         // Un seul chemin les enlève, et c'est un bouton que le joueur presse exprès.

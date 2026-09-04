@@ -38,21 +38,25 @@ import com.Atom2Universe.app.games.physics.PhysWorld
  * Se tromper d'ordre ne lève rien — ça donne un site qui flotte, ou des pierres comptées
  * deux fois.
  */
-class ShotSite(
-    private val world: PhysWorld,
+class ShotSite(val world: PhysWorld) {
+
     /**
-     * Remonte la machine et refait le sol. C'est [TrebuchetGame.build] d'un côté,
-     * `GearMachineGame.rebuild` de l'autre : la seule chose de cette classe qui dépende
-     * de la machine, et c'est pour ça qu'elle arrive par la porte.
+     * Remonte la machine et refait le sol. C'est `TrebuchetGame.build` d'un côté,
+     * `GearMachineGame.rebuild` de l'autre.
+     *
+     * C'est une **variable** et non un paramètre de construction, parce qu'un site peut
+     * servir successivement à plusieurs machines : celle qui se branche pose son crochet,
+     * celle qui s'en va le laisse à la suivante. C'est ce qui permet de garder le village
+     * et ses gravats en changeant de machine.
      */
-    private val remount: () -> Unit,
+    var remount: () -> Unit = {}
+
     /**
      * De quoi tamponner les pierres une fois posées. L'atelier s'en sert pour les mettre
      * sur toutes ses couches de collision — un boulet parti du troisième étage doit
-     * pouvoir les toucher. Le trébuchet, qui n'a pas d'étages, ne passe rien.
+     * pouvoir les toucher. Le trébuchet, qui n'a pas d'étages, ne pose rien.
      */
-    private val stampPieces: (TargetField) -> Unit = {}
-) {
+    var stampPieces: (TargetField) -> Unit = {}
 
     /**
      * Fumée, gravats, poussière et feu d'artifice.

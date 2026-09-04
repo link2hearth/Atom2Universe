@@ -66,14 +66,20 @@ class ShotTrail(initialCapacity: Int = 2_048) {
         private set
 
     /**
-     * Combien de tirs on garde. Le joueur le règle dans le menu.
+     * Combien de tirs on garde, de zéro à [TrebuchetRules.GHOST_MAX].
      *
      * Baisser la limite taille la pile sur-le-champ : un réglage qui n'agirait qu'aux
      * tirs suivants laisserait à l'écran des traces que le menu prétend avoir oubliées.
+     *
+     * **Zéro ne veut pas dire « aucune trajectoire à l'écran ».** La trace du tir en cours
+     * est dessinée à part, et elle ne s'efface qu'à l'ouverture du tir suivant ([begin]) :
+     * à zéro, on voit donc encore le trait de ce qu'on vient de lancer, et il s'en va
+     * quand on rebande la machine. C'est le réglage de qui veut lire son coup sans traîner
+     * la mémoire des précédents.
      */
     var limit: Int = TrebuchetRules.GHOST_HISTORY
         set(value) {
-            field = value.coerceIn(1, TrebuchetRules.GHOST_CHOICES.last())
+            field = value.coerceIn(0, TrebuchetRules.GHOST_MAX)
             while (ghostList.size > field) ghostList.removeAt(ghostList.size - 1)
             stamp++
         }

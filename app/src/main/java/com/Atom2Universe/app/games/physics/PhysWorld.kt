@@ -168,6 +168,10 @@ class PhysWorld {
      * par seconde et retombait à la moitié de sa portée — un frottement fantôme, dont
      * l'intensité dépendait de la vitesse de la simulation elle-même.
      */
+    /**
+     * L'air du monde, par seconde. Un corps peut s'en écarter : voir
+     * [PhysBody.linearDamping].
+     */
     var linearDamping = 0.05f
     var angularDamping = 0.3f
 
@@ -252,6 +256,41 @@ class PhysWorld {
         bodies.clear()
         joints.clear()
         arbiters.clear()
+        active.clear()
+        activeJoints.clear()
+    }
+
+    /**
+     * Retire du monde tout ce qui appartient à [owner], et rien d'autre.
+     *
+     * C'est le geste qu'on écrivait « vider le monde puis y remettre ce qu'on veut
+     * garder ». Ça marchait tant qu'un monde ne portait qu'une machine et son site ; ça
+     * ne marche plus dès que deux machines s'y succèdent, puisque remonter l'une
+     * effacerait l'autre.
+     *
+     * Les liaisons partent avec leurs corps : une liaison dont un bout a quitté le monde
+     * ne peut plus rien tirer, et la laisser reviendrait à garder une chape accrochée à
+     * un bras qui n'existe plus.
+     */
+    fun removeOwned(owner: Any) {
+        var i = joints.size - 1
+        while (i >= 0) {
+            val j = joints[i]
+            if (j.a.owner === owner || j.b.owner === owner) joints.removeAt(i)
+            i--
+        }
+        i = bodies.size - 1
+        while (i >= 0) {
+            if (bodies[i].owner === owner) bodies.removeAt(i)
+            i--
+        }
+        // Les contacts mémorisés d'un corps parti n'ont plus de sens, et les listes de
+        // travail se refont à chaque image de toute façon.
+        doomed.clear()
+        for ((k, arb) in arbiters) {
+            if (arb.a.owner === owner || arb.b.owner === owner) doomed.add(k)
+        }
+        for (k in doomed) arbiters.remove(k)
         active.clear()
         activeJoints.clear()
     }
@@ -549,12 +588,18 @@ class PhysWorld {
             if (bd.invMass > 0f) {
                 bd.x += (bd.vx + bd.pvx) * dt
                 bd.y += (bd.vy + bd.pvy) * dt
-                bd.vx *= linearKeep
-                bd.vy *= linearKeep
+                // Un corps peut avoir son propre régime : voir [PhysBody.linearDamping].
+                // Sans réglage propre — le cas de presque tous — c'est celui du monde,
+                // déjà converti en facteur pour ce pas-ci.
+                val keep = if (bd.linearDamping < 0f) linearKeep
+                else (1f - bd.linearDamping * dt).coerceIn(0f, 1f)
+                bd.vx *= keep
+                bd.vy *= keep
             }
             if (bd.invI > 0f) {
                 bd.angle += (bd.omega + bd.pomega) * dt
-                bd.omega *= angularKeep
+                bd.omega *= if (bd.angularDamping < 0f) angularKeep
+                else (1f - bd.angularDamping * dt).coerceIn(0f, 1f)
             }
             bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
         }

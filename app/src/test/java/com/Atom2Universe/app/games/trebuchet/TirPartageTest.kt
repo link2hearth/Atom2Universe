@@ -227,13 +227,24 @@ class TirPartageTest {
         assertEquals("le plus récent a été jeté", 4f, trail.ghosts.first()[0], 1e-4f)
         assertTrue("la vue n'a pas été prévenue", trail.stamp > avant)
 
+        // **Zéro est un réglage, pas une erreur.** Le curseur du menu descend jusque-là :
+        // la pile se vide, mais la trace du tir en cours reste dessinée jusqu'au tir
+        // suivant. C'est le réglage de qui veut lire son coup sans traîner les autres.
         trail.limit = 0
-        assertEquals("une limite nulle laisserait un menu sans effet", 1, trail.limit)
+        assertEquals("zéro n'est pas accepté comme limite", 0, trail.limit)
+        assertEquals("la pile n'a pas été vidée", 0, trail.ghosts.size)
+        trail.begin(9f, 0f)
+        trail.archive()
+        assertEquals("un fantôme a été gardé à limite zéro", 0, trail.ghosts.size)
+        assertTrue("la trace du tir en cours a disparu à limite zéro", trail.count > 0)
+
         trail.limit = 9_999
         assertEquals(
-            "la limite dépasse les choix du menu",
-            TrebuchetRules.GHOST_CHOICES.last(), trail.limit
+            "la limite dépasse le maximum du curseur",
+            TrebuchetRules.GHOST_MAX, trail.limit
         )
+        trail.limit = -5
+        assertEquals("une limite négative n'est pas ramenée à zéro", 0, trail.limit)
     }
 
     /**

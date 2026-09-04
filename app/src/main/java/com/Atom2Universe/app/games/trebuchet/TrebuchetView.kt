@@ -80,6 +80,10 @@ class TrebuchetView @JvmOverloads constructor(
         NONE, BEAM_LENGTH, LEVER, POST_HEIGHT, CW_MASS, CW_HANG, PIN_ANGLE, SLING_LENGTH
     }
 
+    /**
+     * Le trébuchet. C'est **lui** qui possède le monde et le site partagés : les deux
+     * machines vivent dedans à tour de rôle, et le village y reste entre les deux.
+     */
     val game = TrebuchetGame()
     var listener: Listener? = null
 

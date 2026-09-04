@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -122,10 +124,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         )
 
         // Les entrées du menu des réglages.
-        const val ID_CLEAN = 2
         const val ID_GHOSTS = 3
         const val ID_SOUND = 4
-        const val ID_FIRST_GHOST_CHOICE = 20
     }
 
     private lateinit var gameView: TrebuchetView
@@ -212,6 +212,17 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         gameView = findViewById(R.id.trebuchet_view)
         gearView = findViewById(R.id.trebuchet_gear_view)
+        // **Un seul monde, un seul site, deux machines qui s'y succèdent.**
+        //
+        // Les deux jeux avaient chacun le sien, et basculer de machine changeait donc de
+        // village — en remettant à neuf celui qu'on venait d'entamer. L'atelier adopte
+        // maintenant le monde et le site du trébuchet ; seule la machine active est dans
+        // le monde, le village y reste avec ses gravats et ses dégâts.
+        //
+        // **Ici et pas plus bas** : l'adoption remplace le jeu de l'atelier, donc tout
+        // réglage posé avant serait posé sur un jeu qu'on jette.
+        gearView.adopterMonde(gameView.game.world, gameView.game.site)
+        gearView.game.detach()
         statusText = findViewById(R.id.trebuchet_status)
         specsText = findViewById(R.id.trebuchet_specs)
         bestText = findViewById(R.id.trebuchet_best)
@@ -263,20 +274,19 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         findViewById<ImageButton>(R.id.trebuchet_btn_settings)
             .setOnClickListener { showSettingsMenu(it) }
 
-        restoreWorkshop()
-        loadLevel(levelSeed)
-        // **Le site de l'atelier se refait ici**, et pas seulement à la construction de
-        // la vue. Celle-ci est montée par `setContentView`, donc **avant** que le
-        // tempérament ne soit relu des préférences : son site naissait avec les
-        // constantes par défaut, et un joueur en réaliste retrouvait un atelier en
-        // arcade — ou l'inverse — sans que rien ne le dise.
+        // **Un seul monde, un seul site, deux machines qui s'y succèdent.**
         //
-        // Sauf si c'est déjà la bonne graine : bâtir un site coûte quelques
-        // millisecondes, et en construire deux à chaque ouverture faisait apparaître
-        // l'un puis l'autre.
-        if (gearSiteSeed != GearMachineGame.DEFAULT_SITE_SEED) {
-            gearView.loadSite(gearSiteSeed)
-        }
+        // Les deux jeux avaient chacun le sien, et basculer de machine changeait donc de
+        // village — et remettait à neuf celui qu'on venait d'entamer. L'atelier adopte
+        // maintenant le monde et le site du trébuchet ; seule la machine active est dans
+        // le monde, le village y reste avec ses gravats et ses dégâts.
+        restoreWorkshop()
+        // **Un seul chargement.** L'atelier refaisait le sien juste après, avec sa propre
+        // graine : deux sites se construisaient à chaque ouverture, on voyait l'un puis
+        // l'autre, et le second effaçait le premier. Il n'y a plus qu'un village, donc
+        // qu'une graine — celle de l'atelier si c'est là qu'on avait laissé le joueur.
+        loadLevel(if (prefs.getString(KEY_MODE, null) == MachineMode.GEARS.name) gearSiteSeed
+        else levelSeed)
     }
 
     /** Rouvre l'atelier là où on l'avait laissé : le même mode, la même machine. */
@@ -328,9 +338,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      * le fil de l'interface, et elle est immédiate.
      */
     private fun loadLevel(seed: Long) {
-        levelSeed = seed
+        retenirGraine(seed)
         sitePaye = false
-        prefs.edit { putLong(KEY_SEED, seed) }
         gameView.clearSelection()
         // Le jeton écarte les sites périmés : un joueur qui enchaîne les appuis longs
         // lance plusieurs fabrications, et seule la dernière demandée doit se poser.
@@ -350,6 +359,16 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun nextLevel() = loadLevel(levelSeed + 1L)
 
     /**
+     * Le village est le même pour les deux machines : les deux graines suivent la même
+     * valeur, chacune gardant son rôle dans les préférences.
+     */
+    private fun retenirGraine(seed: Long) {
+        levelSeed = seed
+        gearSiteSeed = seed
+        prefs.edit { putLong(KEY_SEED, seed); putLong(KEY_GEAR_SEED, seed) }
+    }
+
+    /**
      * Dresse un site tire au hasard dans l'atelier.
      *
      * Au hasard et non a la suite : l'atelier n'a pas de progression, on y vient
@@ -358,9 +377,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      */
     private fun nextGearSite() {
         val seed = kotlin.random.Random.nextLong(1L, 1_000_000L)
-        gearSiteSeed = seed
-        prefs.edit { putLong(KEY_GEAR_SEED, seed) }
-        gearView.loadSite(seed)
+        // Un seul site pour les deux machines : la graine de l'atelier **est** celle du
+        // niveau. Le geste reste différent — le trébuchet enchaîne dans l'ordre parce
+        // qu'il a une progression, l'atelier tire au hasard parce qu'il n'en a pas — mais
+        // les deux posent le même village.
+        retenirGraine(seed)
+        // Sous le même verrou que partout : poser un site remonte la machine active, donc
+        // change la liste des corps du monde que les deux machines se partagent.
+        synchronized(gameView.game) { gearView.loadSite(seed) }
         gearEditor.closeTime()
         updateUi()
         toast(getString(R.string.trebuchet_gear_site_new, seed))
@@ -378,23 +402,14 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun showSettingsMenu(anchor: View) {
         val popup = PopupMenu(this, anchor)
         val menu = popup.menu
-        // La profondeur de mémoire, dans son propre tiroir : c'est un réglage qu'on
-        // pose une fois et qu'on ne rouvre plus.
-        val sous = menu.addSubMenu(
-            0, ID_GHOSTS, 2,
-            getString(R.string.trebuchet_ghost_limit, gameView.game.ghostLimit)
-        )
-        for ((i, n) in TrebuchetRules.GHOST_CHOICES.withIndex()) {
-            sous.add(2, ID_FIRST_GHOST_CHOICE + i, i, n.toString())
-        }
-        sous.setGroupCheckable(2, true, true)
-        val choisi = TrebuchetRules.GHOST_CHOICES.indexOf(gameView.game.ghostLimit)
-        if (choisi >= 0) sous.findItem(ID_FIRST_GHOST_CHOICE + choisi).isChecked = true
-
-        val fantomes = if (machineMode == MachineMode.GEARS) gearView.game.ghosts.size
-            else gameView.game.ghosts.size
-        menu.add(0, ID_CLEAN, 3, getString(R.string.trebuchet_clean_ghosts, fantomes))
-            .isEnabled = fantomes > 0
+        // **Une seule entrée pour les fantômes**, qui ouvre leur boîte.
+        //
+        // Il y avait un tiroir de cinq paliers figés (10, 20, 30, 40, 50) et, à côté, un
+        // effacement. Deux choses de la même famille rangées à deux endroits, et un
+        // réglage qui ne savait pas dire « juste les trois derniers » — pourtant le plus
+        // utile quand on cherche un écart de dix mètres. Un menu déroulant ne peut pas
+        // porter de curseur : ce sera une boîte.
+        menu.add(0, ID_GHOSTS, 2, getString(R.string.trebuchet_ghosts_menu))
 
         menu.add(0, ID_SOUND, 4, getString(R.string.trebuchet_sound)).apply {
             isCheckable = true
@@ -403,31 +418,109 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                ID_CLEAN -> {
-                    if (machineMode == MachineMode.GEARS) {
-                        gearView.clearGhosts()
-                    } else {
-                        synchronized(gameView.game) { gameView.game.clearGhosts() }
-                    }
-                    toast(getString(R.string.trebuchet_clean_done))
-                }
+                ID_GHOSTS -> showGhostDialog()
                 ID_SOUND -> setSoundEnabled(!gameView.soundEnabled)
-                else -> {
-                    val i = item.itemId - ID_FIRST_GHOST_CHOICE
-                    TrebuchetRules.GHOST_CHOICES.getOrNull(i)?.let { setGhostLimit(it) }
-                }
             }
             true
         }
         popup.show()
     }
 
-    /** Combien de tirs le joueur veut garder à l'écran. */
+    /**
+     * La boîte des fantômes : combien on en garde, et de quoi effacer ceux de l'écran.
+     *
+     * **Le curseur va de zéro à cinquante, un par un.** Les cinq paliers d'avant
+     * interdisaient les petits nombres, alors que « les trois derniers » est le réglage de
+     * qui cherche un écart de dix mètres : au-delà d'une poignée, les traits se
+     * superposent et ne disent plus rien.
+     *
+     * **Zéro n'éteint pas tout** : la trace du tir en cours est dessinée à part et ne
+     * s'efface qu'en rebandant la machine. À zéro on voit donc encore ce qu'on vient de
+     * lancer, et rien d'autre — voir [ShotTrail.limit].
+     *
+     * L'effacement est **dans la même boîte, en dessous**, et non plus à côté dans le
+     * menu : c'est le même sujet, et surtout il ne touche pas au réglage. Vider l'écran
+     * pour y voir clair ne doit pas obliger à retrouver son nombre ensuite.
+     */
+    private fun showGhostDialog() {
+        val marge = (16 * resources.displayMetrics.density).toInt()
+        val titre = TextView(this)
+        val curseur = SeekBar(this).apply {
+            max = TrebuchetRules.GHOST_MAX
+            progress = gameView.game.ghostLimit.coerceIn(0, TrebuchetRules.GHOST_MAX)
+        }
+        fun rafraichir(n: Int) {
+            titre.text = if (n == 0) getString(R.string.trebuchet_ghost_none)
+            else getString(R.string.trebuchet_ghost_limit, n)
+        }
+        rafraichir(curseur.progress)
+        curseur.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar, n: Int, fromUser: Boolean) {
+                rafraichir(n)
+                // À la volée : le joueur voit l'effet sur ses traces pendant qu'il glisse,
+                // ce qui est la seule façon de choisir ce nombre-là.
+                if (fromUser) setGhostLimit(n)
+            }
+            override fun onStartTrackingTouch(sb: SeekBar) = Unit
+            override fun onStopTrackingTouch(sb: SeekBar) = Unit
+        })
+        val corps = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(marge, marge, marge, 0)
+            addView(titre)
+            addView(curseur)
+        }
+        val boite = AlertDialog.Builder(this)
+            .setTitle(R.string.trebuchet_ghosts_menu)
+            .setView(corps)
+            .setNeutralButton(getString(R.string.trebuchet_clean_ghosts, fantomesAffiches()), null)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+        // **Le bouton d'effacement ne referme pas la boîte.** Un bouton d'`AlertDialog` la
+        // ferme toujours ; celui-ci est une commande *dans* le réglage, pas une façon d'en
+        // sortir — on vide pour y voir clair, et on continue de régler. Son libellé se
+        // remet à jour, sans quoi il annoncerait encore les fantômes qu'il vient d'effacer.
+        boite.getButton(AlertDialog.BUTTON_NEUTRAL).apply {
+            setOnClickListener {
+                cleanGhosts()
+                text = getString(R.string.trebuchet_clean_ghosts, fantomesAffiches())
+                isEnabled = false
+            }
+            isEnabled = fantomesAffiches() > 0
+        }
+    }
+
+    /** Combien de tirs passés sont à l'écran, dans le mode en cours. */
+    private fun fantomesAffiches(): Int =
+        if (machineMode == MachineMode.GEARS) gearView.game.ghosts.size
+        else gameView.game.ghosts.size
+
+    /**
+     * Efface les tirs qui sont à l'écran, **sans toucher au réglage**.
+     *
+     * C'est un ménage, pas un changement d'avis : on vide pour y voir clair et on continue
+     * d'en garder autant qu'avant.
+     */
+    private fun cleanGhosts() {
+        synchronized(gameView.game) {
+            if (machineMode == MachineMode.GEARS) gearView.clearGhosts()
+            else gameView.game.clearGhosts()
+        }
+        toast(getString(R.string.trebuchet_clean_done))
+    }
+
+    /**
+     * Combien de tirs le joueur veut garder à l'écran.
+     *
+     * **Sans message.** Il y en avait un, du temps où le réglage se prenait dans un menu à
+     * cinq paliers ; au curseur il partirait cinquante fois pendant qu'on glisse. Le
+     * chiffre est écrit au-dessus du curseur et les traces bougent à l'écran : le retour
+     * est déjà là, et il est meilleur.
+     */
     private fun setGhostLimit(n: Int) {
         synchronized(gameView.game) { gameView.game.ghostLimit = n }
         gearView.game.ghostLimit = n
         prefs.edit { putInt(KEY_GHOSTS, n) }
-        toast(getString(R.string.trebuchet_ghost_limit, n))
     }
 
     /** Coupe ou rétablit les bruitages, et s'en souvient pour la prochaine partie. */
@@ -618,14 +711,31 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private fun switchMachineMode(mode: MachineMode) {
         if (machineMode == mode) return
         machineMode = mode
+        // La machine qui s'en va quitte le monde, celle qui arrive s'y branche. Le site
+        // ne bouge pas : c'est lui qu'on veut retrouver tel qu'on l'a laissé.
+        //
+        // **Sous le verrou du trébuchet**, qui est celui de son fil de rendu : il tourne
+        // sur sa propre boucle et `pause()` ne fait que lui demander de s'arrêter, sans
+        // l'attendre. Depuis que les deux machines partagent un monde, changer la liste
+        // de ses corps pendant qu'il est en train d'en simuler un pas ne serait plus
+        // seulement du travail perdu. L'atelier, lui, dessine sur le fil de l'interface :
+        // il est déjà là où on est.
         if (mode == MachineMode.TREBUCHET) {
             gearView.pause()
+            synchronized(gameView.game) {
+                gearView.game.detach()
+                gameView.game.attach()
+            }
             gearView.visibility = View.GONE
             gameView.visibility = View.VISIBLE
             gameView.resume()
         } else {
             gameView.pause()
             gameView.clearSelection()
+            synchronized(gameView.game) {
+                gameView.game.detach()
+                gearView.game.attach()
+            }
             gameView.visibility = View.GONE
             gearView.visibility = View.VISIBLE
             gearView.resume()

@@ -17,6 +17,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.trebuchet.ShotCamera
+import com.Atom2Universe.app.games.trebuchet.ShotSite
 import com.Atom2Universe.app.games.trebuchet.TimeScrub
 import com.Atom2Universe.app.games.trebuchet.LandScene
 import com.Atom2Universe.app.games.trebuchet.SkyBackdrop
@@ -55,7 +56,30 @@ class GearMachineView @JvmOverloads constructor(
     private enum class CameraView { BUILD, FULL }
     data class PendingLink(val firstId: Int, val kind: GearLinkKind, val inputDirection: Int)
 
-    val game = GearMachineGame()
+    /**
+     * La machine de l'atelier.
+     *
+     * **Elle n'est pas `val`** : l'activité la remplace au démarrage par une machine
+     * branchée sur le monde et le site du trébuchet, pour que changer de machine ne change
+     * plus de village — voir [adopterMonde]. Une vue montée seule (aperçu, outil) garde
+     * celle-ci, qui a son monde à elle.
+     */
+    var game = GearMachineGame()
+        private set
+
+    /**
+     * Rebranche l'atelier sur un monde et un site déjà en place.
+     *
+     * La configuration de la machine suit : c'est la seule chose qu'on ne veut surtout pas
+     * perdre en faisant ça, puisque c'est ce que le joueur a construit.
+     */
+    fun adopterMonde(monde: com.Atom2Universe.app.games.physics.PhysWorld, site: ShotSite) {
+        if (game.world === monde) return
+        val garde = game.config.deepCopy()
+        game.detach()
+        game = GearMachineGame(garde, monde, site)
+        invalidate()
+    }
     var listener: Listener? = null
     var selectedId: Int? = null
         private set

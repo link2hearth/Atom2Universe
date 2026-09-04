@@ -219,18 +219,18 @@ object TrebuchetRules {
      * compte. Mais c'est un jugement, pas une mesure — le coût, lui, n'entre pas en
      * ligne de compte, une trajectoire pesant deux mille flottants et la vue ne
      * dessinant que ce qui tient à l'écran. Le joueur peut donc en décider autrement,
-     * voir [GHOST_CHOICES].
+     * voir [GHOST_MAX].
      */
     const val GHOST_HISTORY = 10
 
     /**
-     * Ce que le joueur peut choisir comme profondeur de mémoire.
+     * Le plus grand nombre de tirs qu'on puisse garder à l'écran.
      *
-     * Cinquante est le maximum offert, et il n'a rien d'une limite technique : c'est le
-     * point où la nappe cesse d'être une information pour devenir un décor. Qui veut
-     * s'en servir comme décor a le droit.
+     * Le joueur le règle au curseur, de zéro à cinquante, un par un — il y avait cinq
+     * paliers figés (10, 20, 30, 40, 50), ce qui interdisait « juste les trois derniers »,
+     * qui est pourtant le réglage le plus utile quand on cherche un écart de dix mètres.
      */
-    val GHOST_CHOICES = intArrayOf(10, 20, 30, 40, 50)
+    const val GHOST_MAX = 50
 
     /** Garde au sol de la pointe du bras quand la machine est bandée. */
     const val TIP_CLEARANCE = 0.35f
@@ -473,7 +473,28 @@ class MachineConfig {
  * incomparablement plus solide que la précédente, où un boulet coincé entre trois
  * planches finissait éjecté à des centaines de mètres par seconde.
  */
-class TrebuchetGame {
+class TrebuchetGame(
+    /**
+     * Le monde et le site, **fournis de l'extérieur** quand on veut les partager.
+     *
+     * Les valeurs par défaut donnent à la machine son monde à elle : c'est ce dont un
+     * test a besoin, et c'est ce qu'était le jeu jusqu'ici. L'activité, elle, passe le
+     * monde et le site communs aux deux machines — c'est ce qui fait que changer de
+     * machine ne change plus de village.
+     */
+    val world: PhysWorld = PhysWorld().apply {
+        // Trois liaisons et un contact au sol : le monde est bien plus simple qu'avant,
+        // et n'a plus besoin de vingt-deux passes pour tenir.
+        iterations = 16
+        // Une cible est faite de dizaines de pierres qui ne bougent pas. Ce n'est pas ce
+        // drapeau qui les rend gratuites — [TargetField.trySleep] les **retire** du
+        // monde — mais il endort aussi les gravats et la machine après le tir. Mesuré :
+        // 0,032 ms par image sur un site de vingt-cinq pierres, soit 0,4 % d'une image à
+        // 120 par seconde. C'est un confort, pas une nécessité.
+        sleepEnabled = true
+    },
+    val site: ShotSite = ShotSite(world)
+) {
 
     enum class Phase { BUILD, FLIGHT, RESULT }
 
@@ -561,16 +582,6 @@ class TrebuchetGame {
         const val BLAST_TRIGGER = 50f
     }
 
-    val world = PhysWorld().apply {
-        // Trois liaisons et un contact au sol : le monde est bien plus simple
-        // qu'avant, et n'a plus besoin de vingt-deux passes pour tenir.
-        iterations = 16
-        // Une cible est faite de dizaines de pierres qui ne bougent pas. Sans la mise
-        // en sommeil, elles sont résolues à chacun des trente-deux sous-pas qu'impose
-        // un boulet rapide, et l'image devient injouable dès que le boulet approche —
-        // c'est-à-dire au seul moment où le joueur regarde.
-        sleepEnabled = true
-    }
     val config = MachineConfig()
 
     /**
@@ -588,8 +599,6 @@ class TrebuchetGame {
      * l'activité, qui lisent `game.effects`, `game.targets`, `game.terrain`… depuis
      * toujours.
      */
-    val site = ShotSite(world, remount = { build() })
-
     val effects: TrebuchetEffects get() = site.effects
 
     /**
@@ -878,7 +887,32 @@ class TrebuchetGame {
     private val probe = FloatArray(2)
 
     init {
+        attach()
+    }
+
+    /**
+     * Branche la machine sur le site : à partir de là, c'est elle qui se remonte quand le
+     * site change, et c'est elle qui est dans le monde.
+     *
+     * Le trébuchet ne tamponne rien : il n'a pas d'étages de collision. Il **efface**
+     * quand même le tampon de l'atelier, sans quoi une machine chassant l'autre laisserait
+     * le sien en place.
+     */
+    fun attach() {
+        site.remount = { build() }
+        site.stampPieces = {}
         build()
+    }
+
+    /**
+     * Retire la machine du monde en y laissant le site intact.
+     *
+     * C'est l'autre moitié du geste : le village, ses gravats et leurs dégâts restent
+     * exactement là où ils sont pendant que l'autre machine prend la place.
+     */
+    fun detach() {
+        world.removeOwned(this)
+        groundBodies.clear()
     }
 
     // ── Géométrie de la machine ───────────────────────────────────────────────
@@ -914,10 +948,23 @@ class TrebuchetGame {
         beam.localToWorld(config.beamLength / 2f + len * cos(a), len * sin(a), out)
     }
 
+    /**
+     * Met un corps dans le monde **au nom de cette machine**, pour pouvoir le lui retirer
+     * plus tard sans toucher au reste. Voir [PhysBody.owner].
+     */
+    private fun own(b: PhysBody) {
+        b.owner = this
+        world.add(b)
+    }
+
     /** (Re)monte entièrement la machine d'après [config], et la rebande. */
     fun build() {
         config.clamp()
-        world.clear()
+        // **On ne vide plus le monde, on retire ce qui est à nous.** Vider marchait tant
+        // qu'un monde ne portait qu'une machine et son site — au prix de remettre le site
+        // dedans juste après, ce qui a déjà coûté un bug de pierres comptées deux fois.
+        // Le site, lui, ne bouge plus : ni retiré, ni remis.
+        world.removeOwned(this)
         shotTrail.begin()
         elapsed = 0f
         ballFree = false
@@ -933,10 +980,9 @@ class TrebuchetGame {
         targets.forgetPiercers()
         targets.resetHitFlag()
 
-        // Le monde vient d'être vidé pour remonter la machine. La cible, elle, garde
-        // ses corps : le joueur qui allonge sa poutre entre deux tirs ne doit pas voir
-        // le château se reconstruire derrière lui.
-        targets.reattach()
+        // **Plus de `reattach`.** Le site n'a jamais quitté le monde : le remontage ne
+        // retire que les corps de la machine. Le remettre reviendrait à l'ajouter une
+        // seconde fois — le piège que [PhysWorld.add] garde en mémoire.
         // Le boulet qui vient de la toucher, lui, n'a pas survécu à ce vidage : c'est
         // le moment de rendormir la cible si elle est prête, plutôt que d'attendre la
         // prochaine image de vol pour s'en apercevoir — cette image-là est celle du
@@ -962,7 +1008,7 @@ class TrebuchetGame {
         groundBodies += TrebuchetGround.lay(
             world, terrain, TrebuchetRules.GROUND_LEFT, TrebuchetRules.GROUND_RIGHT,
             friction = 0.55f
-        )
+        ) { it.owner = this }
         ground = groundBodies.first()
 
         // Le pied : un corps immobile qui sert d'axe. Le bâti dessiné en dessous est
@@ -976,7 +1022,7 @@ class TrebuchetGame {
             collidesWith = 0
             refreshMass()
         }
-        world.add(post)
+        own(post)
 
         // Le bras : une simple planche. Plus aucune cuiller ni butée — tout ce que
         // cette géométrie tentait de faire, la fronde le fait mieux.
@@ -999,7 +1045,7 @@ class TrebuchetGame {
             lockRotation = true
         }
         placeBeam()
-        world.add(beam)
+        own(beam)
 
         pivot = RevoluteJoint.pin(beam, post, pivotX, pivotY)
         world.addJoint(pivot)
@@ -1018,7 +1064,7 @@ class TrebuchetGame {
             collidesWith = CAT_GROUND
         }
         placeCounterweight()
-        world.add(counterweight)
+        own(counterweight)
 
         // La chape est ancrée **au-dessus** du contrepoids, à la longueur voulue :
         // une liaison pivot accepte n'importe quel point du repère du corps, même
@@ -1042,7 +1088,7 @@ class TrebuchetGame {
             // aucune raison de venir cogner la machine.
             collidesWith = CAT_GROUND
         }
-        world.add(ball)
+        own(ball)
         placeBall()
 
         tipWorld(probe)
@@ -1512,7 +1558,7 @@ class TrebuchetGame {
                 category = TrebuchetCategory.BALL
                 collidesWith = TrebuchetCategory.projectileMask()
             }
-            world.add(b)
+            own(b)
             targets.trackPiercer(b)
             if (k == 0) ball = b else shards.add(b)
         }
