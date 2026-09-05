@@ -280,4 +280,20 @@
     <string name="cave_player_level">Niv %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Concurează cu mașinuțe printr-o casă uriașă plină de viraje</string>
+    <string name="toybox_pause">Pauză</string>
+    <string name="toybox_resume">Continuă</string>
+    <string name="toybox_restart">Reîncepe</string>
+    <string name="toybox_start_race">Cursă</string>
+    <string name="toybox_free">Mod liber</string>
+    <string name="toybox_quit">Ieșire</string>
+    <string name="toybox_free_hud">%1$d km/h · Liber · %2$s</string>
+    <string name="toybox_return_track">Revino pe pistă pentru a trece prin punctele de control</string>
+    <string name="toybox_explore_hint">Explorează liber — nu trebuie să revii pe pistă</string>
+    <string name="toybox_room_bedroom">Dormitor</string>
+    <string name="toybox_room_kitchen">Bucătărie</string>
+    <string name="toybox_circuit_eight">Circuit în opt</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Schimbă camera</string>
+    <string name="toybox_change_circuit">Schimbă circuitul</string>
+    <string name="toybox_slalom_hint">Pe sub masă, apoi în jurul ghiveciului — continuă să accelerezi</string>
 </resources>

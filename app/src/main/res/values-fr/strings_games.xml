@@ -288,4 +288,20 @@
     <string name="cave_player_level">Niv %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Fais la course avec de petites voitures dans une maison géante pleine de virages</string>
+    <string name="toybox_pause">Pause</string>
+    <string name="toybox_resume">Reprendre</string>
+    <string name="toybox_restart">Recommencer</string>
+    <string name="toybox_start_race">Course</string>
+    <string name="toybox_free">Libre</string>
+    <string name="toybox_quit">Quitter</string>
+    <string name="toybox_free_hud">%1$d km/h · Libre · %2$s</string>
+    <string name="toybox_return_track">Rejoins la piste pour valider les checkpoints</string>
+    <string name="toybox_explore_hint">Explore librement — aucun retour à la piste imposé</string>
+    <string name="toybox_room_bedroom">Chambre</string>
+    <string name="toybox_room_kitchen">Cuisine</string>
+    <string name="toybox_circuit_eight">Huit</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Changer de pièce</string>
+    <string name="toybox_change_circuit">Changer de circuit</string>
+    <string name="toybox_slalom_hint">Sous la table, puis autour du pot — maintiens GAZ</string>
 </resources>

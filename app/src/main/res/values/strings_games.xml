@@ -288,4 +288,20 @@
     <string name="cave_player_level">Lvl %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Race tiny toy cars through a giant, winding house</string>
+    <string name="toybox_pause">Pause</string>
+    <string name="toybox_resume">Resume</string>
+    <string name="toybox_restart">Restart</string>
+    <string name="toybox_start_race">Start race</string>
+    <string name="toybox_free">Free roam</string>
+    <string name="toybox_quit">Quit</string>
+    <string name="toybox_free_hud">%1$d km/h · Free · %2$s</string>
+    <string name="toybox_return_track">Return to the track to pass checkpoints</string>
+    <string name="toybox_explore_hint">Explore freely — no need to return to the track</string>
+    <string name="toybox_room_bedroom">Bedroom</string>
+    <string name="toybox_room_kitchen">Kitchen</string>
+    <string name="toybox_circuit_eight">Figure eight</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Change room</string>
+    <string name="toybox_change_circuit">Change circuit</string>
+    <string name="toybox_slalom_hint">Under the table, then around the flowerpot — keep accelerating</string>
 </resources>

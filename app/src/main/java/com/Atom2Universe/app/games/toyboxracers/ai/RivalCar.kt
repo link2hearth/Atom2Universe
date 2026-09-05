@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.toyboxracers.ai
 
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
+import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import kotlin.math.PI
@@ -20,6 +21,8 @@ internal class RivalCar(
         private set
     var speed = 0f
         private set
+    var finishSeconds = Float.POSITIVE_INFINITY
+        private set
     var worldPosition = Vec3(0f, 0f, 0f)
         private set
     var yawRadians = 0f
@@ -35,6 +38,7 @@ internal class RivalCar(
         raceProgress = -2.3f - index * 2.15f
         speed = 0f
         elapsed = 0f
+        finishSeconds = Float.POSITIVE_INFINITY
         personalityPace = 0.94f + index * 0.024f
         lineOffset = (index - 2) * 0.42f
         mistakePhase = index * 1.37f + difficulty.ordinal * 0.53f
@@ -58,6 +62,10 @@ internal class RivalCar(
         val acceleration = if (speed < targetSpeed) config.acceleration else -config.braking
         speed = (speed + acceleration * dt).coerceIn(0f, config.maxSpeed)
         val travelled = speed * dt
+        val finishDistance = RaceSession.TOTAL_LAPS * track.length
+        if (raceProgress < finishDistance && raceProgress + travelled >= finishDistance) {
+            finishSeconds = elapsed - dt + dt * (finishDistance - raceProgress) / travelled
+        }
         raceProgress += travelled
         distance = track.wrapDistance(distance + travelled)
         updateTransform()
@@ -108,6 +116,6 @@ internal class RivalCar(
     )
 
     companion object {
-        private const val START_FRACTION = 0.015f
+        private const val START_FRACTION = RaceSession.START_FRACTION
     }
 }

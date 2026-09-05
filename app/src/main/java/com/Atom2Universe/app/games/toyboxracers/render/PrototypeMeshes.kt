@@ -5,6 +5,8 @@ import android.opengl.Matrix
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.ToyKind
+import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
+import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.PI
@@ -140,6 +142,13 @@ internal class ColoredMesh private constructor(
 
 internal class MeshBuilder {
     private val values = ArrayList<Float>()
+    private var placement: DecorPlacement? = null
+
+    fun placed(value: DecorPlacement, build: () -> Unit) {
+        check(placement == null) { "Nested decor transforms are not supported" }
+        placement = value
+        try { build() } finally { placement = null }
+    }
 
     fun triangle(a: Vec3, b: Vec3, c: Vec3, color: FloatArray) {
         val normal = cross(b - a, c - a).normalized()
@@ -187,7 +196,7 @@ internal class MeshBuilder {
             val z0 = centerZ + sin(angle0) * radius
             val y1 = centerY + cos(angle1) * radius
             val z1 = centerZ + sin(angle1) * radius
-            quad(Vec3(x0, y0, z0), Vec3(x1, y0, z0), Vec3(x1, y1, z1), Vec3(x0, y1, z1), color)
+            quad(Vec3(x0, y0, z0), Vec3(x0, y1, z1), Vec3(x1, y1, z1), Vec3(x1, y0, z0), color)
             triangle(Vec3(x0, centerY, centerZ), Vec3(x0, y1, z1), Vec3(x0, y0, z0), color)
             triangle(Vec3(x1, centerY, centerZ), Vec3(x1, y0, z0), Vec3(x1, y1, z1), color)
         }
@@ -275,8 +284,18 @@ internal class MeshBuilder {
     fun build(): ColoredMesh = ColoredMesh.from(values.toFloatArray())
 
     private fun vertex(position: Vec3, normal: Vec3, color: FloatArray) {
-        values += position.x; values += position.y; values += position.z
-        values += normal.x; values += normal.y; values += normal.z
+        val p = placement
+        if (p == null) {
+            values += position.x; values += position.y; values += position.z
+            values += normal.x; values += normal.y; values += normal.z
+        } else {
+            values += p.x + p.rotatedX(position.x, position.z) * p.scale
+            values += p.y + position.y * p.scale
+            values += p.z + p.rotatedZ(position.x, position.z) * p.scale
+            values += p.rotatedX(normal.x, normal.z)
+            values += normal.y
+            values += p.rotatedZ(normal.x, normal.z)
+        }
         values += color[0]; values += color[1]; values += color[2]; values += color.getOrElse(3) { 1f }
     }
 
@@ -366,14 +385,65 @@ internal object PrototypeMeshFactory {
     fun environment(track: PrototypeTrack): ColoredMesh {
         val builder = MeshBuilder()
         addTerrain(builder)
-        addPatchworkRug(builder, track)
+        if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track) else addKitchenFloor(builder)
         addRoomWalls(builder)
+        addFurniture(builder, track)
         addToyModels(builder, track)
+        track.decorations.forEach { DecorMeshFactory.add(builder, it) }
         return builder.build()
     }
 
     private fun addTerrain(builder: MeshBuilder) {
         builder.box(0f, -0.40f, 0f, 236f, 0.8f, 150f, FLOOR)
+        // Joints de parquet en géométrie, sans texture ni chargement externe.
+        val seam = color(0.73f, 0.60f, 0.47f)
+        for (row in -7..7) {
+            builder.box(0f, 0.003f, row * 10f, 236f, 0.005f, 0.065f, seam)
+            for (column in -3..3) {
+                val x = column * 32f + if (row % 2 == 0) 0f else 16f
+                builder.box(x, 0.003f, row * 10f + 5f, 0.065f, 0.005f, 10f, seam)
+            }
+        }
+    }
+
+    private fun addKitchenFloor(builder: MeshBuilder) {
+        for (column in 0 until 20) for (row in 0 until 12) {
+            builder.box(-118f + (column + 0.5f) * 11.8f, 0.006f, -75f + (row + 0.5f) * 12.5f,
+                11.65f, 0.008f, 12.35f,
+                if ((column + row) % 2 == 0) color(0.92f, 0.95f, 0.86f) else color(0.74f, 0.87f, 0.81f))
+        }
+    }
+
+    private fun addFurniture(builder: MeshBuilder, track: PrototypeTrack) {
+        for (part in track.roomBoxes) {
+            val c = part.color
+            builder.box(part.x, part.y, part.z, part.width, part.height, part.depth,
+                color(((c shr 16) and 255) / 255f, ((c shr 8) and 255) / 255f, (c and 255) / 255f))
+        }
+        if (track.scene.room != RoomKind.BEDROOM) return
+        // Ciel illustré derrière les croisillons : nuages en relief très aplati.
+        for (x in floatArrayOf(-21f, 25f)) {
+            builder.lowPolyEllipsoid(x + 6f, 24.8f, -74.35f, 1.6f, 1.6f, 0.12f, 6, 12, CREAM)
+            for (i in 0..2) {
+                builder.lowPolyEllipsoid(x - 7f + i * 2f, 23.4f + (i % 2) * 0.6f, -74.35f,
+                    1.8f, 0.9f, 0.12f, 5, 10, color(0.97f, 0.98f, 1f))
+            }
+        }
+        // Lampe champignon et pot à crayons sur le bureau.
+        builder.cylinderY(-7.5f, 11.3f, -68f, 0.5f, 2f, 14, LAVENDER)
+        builder.cylinderY(-7.5f, 13.6f, -68f, 4.2f, 0.3f, 10, CREAM)
+        builder.lowPolyEllipsoid(-7.5f, 16f, -68f, 2.8f, 1.5f, 2.8f, 6, 14, PINK)
+        builder.cylinderY(-7.5f, 15.5f, -68f, 0.18f, 2.45f, 14, CREAM)
+        builder.cylinderY(-24f, 12.1f, -69f, 2.1f, 1.2f, 10, MINT)
+        for (i in 0..4) {
+            val a = i * 2f * PI.toFloat() / 5f
+            val x = -24f + cos(a) * 0.7f
+            val z = -69f + sin(a) * 0.7f
+            val h = 2.4f + (i % 3) * 0.4f
+            val c = arrayOf(PINK, SKY, CREAM, LAVENDER, MINT)[i]
+            builder.cylinderY(x, 12.5f + h * 0.5f, z, h, 0.13f, 6, c)
+            builder.coneY(x, 12.5f + h, z, 0.5f, 0.13f, 6, FLOOR)
+        }
     }
 
     private fun addPatchworkRug(builder: MeshBuilder, track: PrototypeTrack) {
@@ -435,14 +505,33 @@ internal object PrototypeMeshFactory {
     }
 
     private fun addTeddy(builder: MeshBuilder, x: Float, ground: Float, z: Float) {
-        builder.lowPolyEllipsoid(x, ground + 4.1f, z, 2.8f, 3.5f, 2.3f, 5, 9, TEDDY)
-        builder.lowPolyEllipsoid(x, ground + 7.7f, z + 0.2f, 2.45f, 2.35f, 2.15f, 5, 9, TEDDY)
-        builder.lowPolyEllipsoid(x - 2.0f, ground + 9.0f, z + 0.1f, 0.9f, 1.0f, 0.75f, 4, 8, TEDDY)
-        builder.lowPolyEllipsoid(x + 2.0f, ground + 9.0f, z + 0.1f, 0.9f, 1.0f, 0.75f, 4, 8, TEDDY)
-        builder.lowPolyEllipsoid(x, ground + 7.2f, z + 1.9f, 1.05f, 0.8f, 0.55f, 4, 8, TEDDY_LIGHT)
-        builder.lowPolyEllipsoid(x - 0.78f, ground + 8.15f, z + 1.88f, 0.20f, 0.25f, 0.12f, 3, 6, DARK)
-        builder.lowPolyEllipsoid(x + 0.78f, ground + 8.15f, z + 1.88f, 0.20f, 0.25f, 0.12f, 3, 6, DARK)
-        builder.lowPolyEllipsoid(x, ground + 7.35f, z + 2.42f, 0.30f, 0.24f, 0.16f, 3, 6, DARK)
+        fun oval(dx: Float, y: Float, dz: Float, rx: Float, ry: Float, rz: Float, c: FloatArray) =
+            builder.lowPolyEllipsoid(x + dx, ground + y, z + dz, rx, ry, rz, 7, 12, c)
+        // Bassin posé au sol, ventre rond et pattes avancées : silhouette assise.
+        oval(0f, 2.6f, -0.3f, 2.8f, 2.6f, 2.2f, TEDDY)
+        oval(0f, 4f, 0f, 2.45f, 2.7f, 2.1f, TEDDY)
+        oval(0f, 3.6f, 1.8f, 1.65f, 1.85f, 0.5f, TEDDY_LIGHT)
+        for (side in intArrayOf(-1, 1)) {
+            oval(side * 2.1f, 1.3f, 2f, 1.55f, 1.3f, 2.05f, TEDDY)
+            oval(side * 2.1f, 1.35f, 3.95f, 1.08f, 0.9f, 0.32f, TEDDY_LIGHT)
+            oval(side * 2.7f, 3.9f, 0.8f, 1.05f, 1.9f, 1.05f, TEDDY)
+            oval(side * 2.65f, 2.65f, 1.4f, 0.7f, 0.65f, 0.6f, TEDDY_LIGHT)
+            oval(side * 1.9f, 8.75f, 0.1f, 0.95f, 1f, 0.65f, TEDDY)
+            oval(side * 1.9f, 8.8f, 0.64f, 0.6f, 0.65f, 0.16f, TEDDY_LIGHT)
+        }
+        oval(0f, 7.3f, 0.35f, 2.45f, 2.25f, 2.1f, TEDDY)
+        oval(0f, 6.8f, 2.15f, 1.25f, 0.85f, 0.65f, TEDDY_LIGHT)
+        for (side in intArrayOf(-1, 1)) {
+            oval(side * 0.86f, 7.7f, 2.25f, 0.22f, 0.28f, 0.15f, DARK)
+            oval(side * 0.86f - 0.05f, 7.8f, 2.37f, 0.065f, 0.075f, 0.045f, CREAM)
+        }
+        oval(0f, 7.02f, 2.77f, 0.36f, 0.25f, 0.16f, DARK)
+        builder.box(x, ground + 6.66f, z + 2.79f, 0.075f, 0.35f, 0.06f, DARK)
+        // Nœud lavande et petites coutures du ventre.
+        oval(-0.65f, 5.65f, 2.1f, 0.7f, 0.42f, 0.3f, LAVENDER)
+        oval(0.65f, 5.65f, 2.1f, 0.7f, 0.42f, 0.3f, LAVENDER)
+        oval(0f, 5.65f, 2.3f, 0.3f, 0.32f, 0.25f, PINK)
+        for (i in 0..3) builder.box(x, ground + 2.8f + i * 0.4f, z + 2.31f, 0.16f, 0.055f, 0.055f, TEDDY)
     }
 
     private fun addTrain(builder: MeshBuilder, x: Float, ground: Float, z: Float) {

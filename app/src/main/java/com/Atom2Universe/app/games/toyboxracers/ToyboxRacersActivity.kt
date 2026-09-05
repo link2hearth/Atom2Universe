@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.toyboxracers
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -17,6 +18,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
+import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
+import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
+import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
 import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
@@ -24,8 +30,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import java.util.Locale
 
 /**
- * Activité interne du prototype P2. Elle est déclarée dans le manifeste mais ne
- * sera ajoutée au hub public qu'une fois la boucle de course suffisamment stable.
+ * Exploration libre et courses facultatives, accessibles depuis le hub des jeux.
  */
 class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var glView: ToyboxRacersGLView
@@ -36,6 +41,15 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var resultPanel: LinearLayout
     private lateinit var resultText: TextView
     private lateinit var difficultyButton: Button
+    private lateinit var modeButton: Button
+    private lateinit var roomButton: Button
+    private lateinit var circuitButton: Button
+    private var currentScene = SceneChoice()
+    private lateinit var minimap: ToyboxMinimapView
+    private var currentMode = PlayMode.EXPLORATION
+    private var paused = false
+    private var pauseDialog: AlertDialog? = null
+    private val releaseControls = mutableListOf<() -> Unit>()
     private var currentDifficulty = RaceDifficulty.ARCADE
     private var lastTurboLevel = 0
     private var lastTurboReleaseSerial = 0
@@ -50,7 +64,11 @@ class ToyboxRacersActivity : ThemedActivity() {
         currentDifficulty = RaceDifficulty.entries.getOrElse(
             prefs.getInt(KEY_DIFFICULTY, RaceDifficulty.ARCADE.ordinal)
         ) { RaceDifficulty.ARCADE }
-        renderer = ToyboxRacersRenderer(currentDifficulty) { state ->
+        currentScene = SceneChoice(
+            RoomKind.entries.find { it.name == prefs.getString("room", null) } ?: RoomKind.BEDROOM,
+            CircuitKind.entries.find { it.name == prefs.getString("circuit", null) } ?: CircuitKind.FIGURE_EIGHT
+        )
+        renderer = ToyboxRacersRenderer(currentDifficulty, currentScene) { state ->
             runOnUiThread { updateHud(state) }
         }
         glView = ToyboxRacersGLView(this, renderer)
@@ -63,11 +81,17 @@ class ToyboxRacersActivity : ThemedActivity() {
         root.addView(glView, FrameLayout.LayoutParams(-1, -1))
         addHud(root)
         addControls(root)
+        minimap = ToyboxMinimapView(this)
+        val compact = resources.displayMetrics.widthPixels / resources.displayMetrics.density < 640f
+        root.addView(minimap, FrameLayout.LayoutParams(dp(if (compact) 112 else 152), dp(if (compact) 80 else 106)).apply {
+            gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            bottomMargin = dp(20)
+        })
         addRaceOverlay(root)
         setContentView(root)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = finish()
+            override fun handleOnBackPressed() = showPause()
         })
     }
 
@@ -75,14 +99,70 @@ class ToyboxRacersActivity : ThemedActivity() {
         super.onResume()
         glView.onResume()
         enableImmersiveMode()
+        if (paused) showPause()
     }
 
     override fun onPause() {
-        renderer.setSteering(0f)
-        renderer.setAccelerating(false)
-        renderer.setBraking(false)
+        pauseGame()
         glView.onPause()
         super.onPause()
+    }
+
+    override fun onDestroy() {
+        pauseDialog?.dismiss()
+        pauseDialog = null
+        super.onDestroy()
+    }
+
+    private fun pauseGame() {
+        paused = true
+        releaseControls.forEach { it() }
+        renderer.setPaused(true)
+    }
+
+    private fun resumeGame() {
+        paused = false
+        renderer.setPaused(false)
+        pauseDialog?.dismiss()
+        pauseDialog = null
+        enableImmersiveMode()
+    }
+
+    private fun showPause() {
+        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
+        pauseGame()
+        pauseDialog = AlertDialog.Builder(this)
+            .setTitle(R.string.toybox_pause)
+            .setItems(arrayOf(
+                getString(R.string.toybox_resume),
+                getString(R.string.toybox_restart),
+                getString(if (currentMode == PlayMode.EXPLORATION) R.string.toybox_start_race else R.string.toybox_free),
+                getString(R.string.toybox_quit)
+            )) { _, which ->
+                when (which) {
+                    0 -> resumeGame()
+                    1 -> {
+                        resultPanel.visibility = View.GONE
+                        renderer.requestReset()
+                        resumeGame()
+                    }
+                    2 -> {
+                        switchMode()
+                        resumeGame()
+                    }
+                    3 -> finish()
+                }
+            }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun switchMode() {
+        releaseControls.forEach { it() }
+        currentMode = if (currentMode == PlayMode.EXPLORATION) PlayMode.RACE else PlayMode.EXPLORATION
+        resultPanel.visibility = View.GONE
+        modeButton.setText(if (currentMode == PlayMode.EXPLORATION) R.string.toybox_start_race else R.string.toybox_free)
+        renderer.setMode(currentMode)
     }
 
     private fun addHud(root: FrameLayout) {
@@ -93,34 +173,35 @@ class ToyboxRacersActivity : ThemedActivity() {
             background = roundedBackground(0xB83B4055.toInt(), 18f)
         }
         val title = TextView(this).apply {
-            text = "TOYBOX RACERS · PROTOTYPE P3"
+            text = getString(R.string.toybox_racers_title)
             setTextColor(Color.WHITE)
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
         }
         hud = TextView(this).apply {
-            text = "0 km/h   ·   1/6   ·   Tour 1/3   ·   00:00.0"
+            text = getString(R.string.toybox_free_hud, 0, "00:00.0")
             setTextColor(0xFFFFE7A8.toInt())
-            textSize = 18f
+            textSize = 16f
             typeface = Typeface.MONOSPACE
         }
         status = TextView(this).apply {
-            text = "Montée, plateau et saut inclus"
+            text = getString(R.string.toybox_explore_hint)
             setTextColor(Color.WHITE)
             textSize = 12f
         }
         topPanel.addView(title)
         topPanel.addView(hud)
         topPanel.addView(status)
-        root.addView(topPanel, FrameLayout.LayoutParams(-2, -2).apply {
+        root.addView(topPanel, FrameLayout.LayoutParams(resources.displayMetrics.widthPixels - dp(204), -2).apply {
             gravity = Gravity.TOP or Gravity.START
             leftMargin = (16 * density).toInt()
             topMargin = (12 * density).toInt()
         })
 
-        val back = makeButton("×", 52, 0xB83B4055.toInt()).apply {
+        val back = makeButton("Ⅱ", 52, 0xB83B4055.toInt()).apply {
             textSize = 28f
-            setOnClickListener { finish() }
+            contentDescription = getString(R.string.toybox_pause)
+            setOnClickListener { showPause() }
         }
         root.addView(back, FrameLayout.LayoutParams(dp(52), dp(52)).apply {
             gravity = Gravity.TOP or Gravity.END
@@ -130,7 +211,11 @@ class ToyboxRacersActivity : ThemedActivity() {
 
         val reset = makeButton("DÉPART", 92, 0xAA735D91.toInt()).apply {
             textSize = 11f
-            setOnClickListener { renderer.requestReset() }
+            setOnClickListener {
+                releaseControls.forEach { it() }
+                resultPanel.visibility = View.GONE
+                renderer.requestReset()
+            }
         }
         root.addView(reset, FrameLayout.LayoutParams(dp(92), dp(44)).apply {
             gravity = Gravity.TOP or Gravity.END
@@ -155,6 +240,53 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(18)
             topMargin = dp(72)
         })
+        modeButton = makeButton(getString(R.string.toybox_start_race), 112, 0xAA735D91.toInt()).apply {
+            textSize = 11f
+            setOnClickListener { switchMode() }
+        }
+        root.addView(modeButton, FrameLayout.LayoutParams(dp(112), dp(42)).apply {
+            gravity = Gravity.TOP or Gravity.END
+            rightMargin = dp(18)
+            topMargin = dp(122)
+        })
+        roomButton = makeButton(roomLabel(), 120, 0xAA4B617A.toInt()).apply {
+            textSize = 12f
+            contentDescription = getString(R.string.toybox_change_room)
+            setOnClickListener {
+                changeScene(currentScene.copy(room = if (currentScene.room == RoomKind.BEDROOM) RoomKind.KITCHEN else RoomKind.BEDROOM))
+            }
+        }
+        circuitButton = makeButton(circuitLabel(), 120, 0xAA735D91.toInt()).apply {
+            textSize = 12f
+            contentDescription = getString(R.string.toybox_change_circuit)
+            setOnClickListener {
+                changeScene(currentScene.copy(circuit = if (currentScene.circuit == CircuitKind.FIGURE_EIGHT) CircuitKind.SLALOM else CircuitKind.FIGURE_EIGHT))
+            }
+        }
+        for ((index, button) in listOf(roomButton, circuitButton).withIndex()) {
+            root.addView(button, FrameLayout.LayoutParams(dp(120), dp(42)).apply {
+                gravity = Gravity.TOP or Gravity.START
+                leftMargin = dp(16 + index * 128)
+                topMargin = dp(128)
+            })
+        }
+    }
+
+    private fun roomLabel() = getString(if (currentScene.room == RoomKind.BEDROOM) R.string.toybox_room_bedroom else R.string.toybox_room_kitchen)
+    private fun circuitLabel() = getString(if (currentScene.circuit == CircuitKind.FIGURE_EIGHT) R.string.toybox_circuit_eight else R.string.toybox_circuit_slalom)
+
+    private fun changeScene(scene: SceneChoice) {
+        releaseControls.forEach { it() }
+        currentScene = scene
+        roomButton.text = roomLabel()
+        circuitButton.text = circuitLabel()
+        resultPanel.visibility = View.GONE
+        lastFinishSerial = 0
+        lastTurboLevel = 0
+        lastTurboReleaseSerial = 0
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+            .putString("room", scene.room.name).putString("circuit", scene.circuit.name).apply()
+        renderer.setScene(scene)
     }
 
     private fun addRaceOverlay(root: FrameLayout) {
@@ -247,7 +379,14 @@ class ToyboxRacersActivity : ThemedActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun bindHoldButton(view: View, changed: (Boolean) -> Unit) {
         var activePointerId = MotionEvent.INVALID_POINTER_ID
+        releaseControls += {
+            activePointerId = MotionEvent.INVALID_POINTER_ID
+            view.isPressed = false
+            view.alpha = 0.82f
+            changed(false)
+        }
         view.setOnTouchListener { touchedView, event ->
+            if (paused) return@setOnTouchListener true
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     activePointerId = event.getPointerId(event.actionIndex)
@@ -286,13 +425,15 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun updateHud(state: ToyboxRacersRenderer.HudState) {
+        if (isFinishing || isDestroyed || state.mode != currentMode || state.scene != currentScene) return
+        minimap.update(state)
         if (state.turboLevel > lastTurboLevel) vibrate(18L, 35 + state.turboLevel * 20)
         if (state.turboReleaseSerial != lastTurboReleaseSerial) vibrate(42L, 105)
         lastTurboLevel = state.turboLevel
         lastTurboReleaseSerial = state.turboReleaseSerial
         val minutes = state.elapsedSeconds.toInt() / 60
         val seconds = state.elapsedSeconds % 60f
-        hud.text = String.format(
+        hud.text = if (state.mode == PlayMode.EXPLORATION) getString(R.string.toybox_free_hud, state.speedKmh, formatTime(state.elapsedSeconds)) else String.format(
             Locale.ROOT,
             "%3d km/h   ·   %d/6   ·   Tour %d/%d   ·   %02d:%04.1f",
             state.speedKmh,
@@ -302,38 +443,44 @@ class ToyboxRacersActivity : ThemedActivity() {
             minutes,
             seconds
         )
-        countdown.visibility = if (state.racePhase == RacePhase.COUNTDOWN) View.VISIBLE else View.GONE
-        if (state.racePhase == RacePhase.COUNTDOWN) {
+        val racing = state.mode == PlayMode.RACE
+        difficultyButton.isEnabled = !racing || state.racePhase == RacePhase.FINISHED
+        difficultyButton.alpha = if (difficultyButton.isEnabled) 0.82f else 0.4f
+        countdown.visibility = if (racing && state.racePhase == RacePhase.COUNTDOWN) View.VISIBLE else View.GONE
+        if (racing && state.racePhase == RacePhase.COUNTDOWN) {
             countdown.text = kotlin.math.ceil(state.countdownSeconds.coerceAtMost(3f))
                 .toInt().coerceAtLeast(1).toString()
         }
-        if (state.finishSerial != lastFinishSerial && state.racePhase == RacePhase.FINISHED) {
+        if (racing && state.finishSerial != lastFinishSerial && state.racePhase == RacePhase.FINISHED) {
             lastFinishSerial = state.finishSerial
             showResult(state)
         }
         status.text = when {
-            state.racePhase == RacePhase.COUNTDOWN -> "Prépare-toi — le départ est verrouillé"
-            state.racePhase == RacePhase.FINISHED -> "Course terminée"
-            state.wrongWay -> "MAUVAIS SENS — fais demi-tour"
+            racing && state.racePhase == RacePhase.COUNTDOWN -> "Prépare-toi — le départ est verrouillé"
+            racing && state.racePhase == RacePhase.FINISHED -> "Course terminée"
+            racing && state.wrongWay -> "MAUVAIS SENS — fais demi-tour"
             state.airborne -> "SAUT !  Prépare la réception"
             state.reversing -> "MARCHE ARRIÈRE — relâche FREIN pour repartir"
             state.turboBoosting -> "RUBAN TURBO !  Relance pastel"
             state.drifting -> "Ruban ${"●".repeat(state.turboLevel.coerceAtLeast(1))}${"○".repeat((3 - state.turboLevel).coerceAtLeast(0))}  ${(state.turboCharge * 100).toInt()} %"
-            state.offRoad -> "Exploration libre — aucune obligation de revenir"
+            state.offRoad -> getString(if (racing) R.string.toybox_return_track else R.string.toybox_explore_hint)
+            state.scene.circuit == CircuitKind.SLALOM -> getString(R.string.toybox_slalom_hint)
             else -> "Maintiens GAZ — tourne, puis redresse pour le Ruban Turbo"
         }
     }
 
     private fun showResult(state: ToyboxRacersRenderer.HudState) {
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val key = KEY_BEST_PREFIX + state.difficulty.name
-        val previousBest = prefs.getFloat(key, 0f)
+        val key = KEY_BEST_PREFIX + state.scene.room.name + "_" + state.scene.circuit.name + "_" + state.difficulty.name
+        val legacyBest = if (state.scene == SceneChoice()) prefs.getFloat(KEY_BEST_PREFIX + state.difficulty.name, 0f) else 0f
+        val previousBest = prefs.getFloat(key, legacyBest)
         val newBest = previousBest <= 0f || state.elapsedSeconds < previousBest
         val best = if (newBest) state.elapsedSeconds else previousBest
         if (newBest) prefs.edit().putFloat(key, state.elapsedSeconds).apply()
         resultText.text = buildString {
             append(positionLabel(state.finishPosition)).append(" place\n")
             append(formatTime(state.elapsedSeconds)).append(" · ").append(state.difficulty.label)
+            append("\n").append(roomLabel()).append(" · ").append(circuitLabel())
             append("\nMeilleur : ").append(formatTime(best))
             if (newBest) append("  ★ NOUVEAU RECORD")
         }

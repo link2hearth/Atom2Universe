@@ -279,4 +279,20 @@
     <string name="cave_player_level">Επ %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Αγωνίσου με μικρά αυτοκινητάκια σε ένα τεράστιο σπίτι γεμάτο στροφές</string>
+    <string name="toybox_pause">Παύση</string>
+    <string name="toybox_resume">Συνέχεια</string>
+    <string name="toybox_restart">Επανεκκίνηση</string>
+    <string name="toybox_start_race">Αγώνας</string>
+    <string name="toybox_free">Ελεύθερα</string>
+    <string name="toybox_quit">Έξοδος</string>
+    <string name="toybox_free_hud">%1$d χλμ/ώ · Ελεύθερα · %2$s</string>
+    <string name="toybox_return_track">Επέστρεψε στην πίστα για να περάσεις τα σημεία ελέγχου</string>
+    <string name="toybox_explore_hint">Εξερεύνησε ελεύθερα — δεν χρειάζεται να επιστρέψεις στην πίστα</string>
+    <string name="toybox_room_bedroom">Υπνοδωμάτιο</string>
+    <string name="toybox_room_kitchen">Κουζίνα</string>
+    <string name="toybox_circuit_eight">Οχτάρι</string>
+    <string name="toybox_circuit_slalom">Σλάλομ</string>
+    <string name="toybox_change_room">Αλλαγή δωματίου</string>
+    <string name="toybox_change_circuit">Αλλαγή πίστας</string>
+    <string name="toybox_slalom_hint">Κάτω από το τραπέζι, μετά γύρω από τη γλάστρα — κράτα πατημένο το γκάζι</string>
 </resources>

@@ -281,4 +281,20 @@
     <string name="cave_player_level">Nv %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Corre com pequenos carros de brinquedo numa casa gigante cheia de curvas</string>
+    <string name="toybox_pause">Pausa</string>
+    <string name="toybox_resume">Continuar</string>
+    <string name="toybox_restart">Recomeçar</string>
+    <string name="toybox_start_race">Corrida</string>
+    <string name="toybox_free">Explorar</string>
+    <string name="toybox_quit">Sair</string>
+    <string name="toybox_free_hud">%1$d km/h · Livre · %2$s</string>
+    <string name="toybox_return_track">Volta à pista para passar pelos pontos de controlo</string>
+    <string name="toybox_explore_hint">Explora livremente — não é preciso voltar à pista</string>
+    <string name="toybox_room_bedroom">Quarto</string>
+    <string name="toybox_room_kitchen">Cozinha</string>
+    <string name="toybox_circuit_eight">Circuito em oito</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Mudar de divisão</string>
+    <string name="toybox_change_circuit">Mudar de circuito</string>
+    <string name="toybox_slalom_hint">Passa por baixo da mesa e contorna o vaso — continua a acelerar</string>
 </resources>

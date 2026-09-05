@@ -281,4 +281,20 @@
     <string name="cave_player_level">Svy %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Minik oyuncak arabalarla virajlı, dev bir evde yarış</string>
+    <string name="toybox_pause">Duraklat</string>
+    <string name="toybox_resume">Devam et</string>
+    <string name="toybox_restart">Yeniden başla</string>
+    <string name="toybox_start_race">Yarış</string>
+    <string name="toybox_free">Serbest sürüş</string>
+    <string name="toybox_quit">Çık</string>
+    <string name="toybox_free_hud">%1$d km/sa · Serbest · %2$s</string>
+    <string name="toybox_return_track">Kontrol noktalarını geçmek için piste dön</string>
+    <string name="toybox_explore_hint">Özgürce keşfet — piste dönmek zorunda değilsin</string>
+    <string name="toybox_room_bedroom">Yatak odası</string>
+    <string name="toybox_room_kitchen">Mutfak</string>
+    <string name="toybox_circuit_eight">Sekiz pisti</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Odayı değiştir</string>
+    <string name="toybox_change_circuit">Pisti değiştir</string>
+    <string name="toybox_slalom_hint">Masanın altından geç, saksının etrafından dön — gaza basılı tut</string>
 </resources>

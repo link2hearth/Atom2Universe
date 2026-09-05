@@ -281,4 +281,20 @@
     <string name="cave_player_level">Stufe %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Rase mit kleinen Spielzeugautos durch ein riesiges, kurvenreiches Haus</string>
+    <string name="toybox_pause">Pause</string>
+    <string name="toybox_resume">Fortsetzen</string>
+    <string name="toybox_restart">Neustart</string>
+    <string name="toybox_start_race">Rennen</string>
+    <string name="toybox_free">Freie Fahrt</string>
+    <string name="toybox_quit">Verlassen</string>
+    <string name="toybox_free_hud">%1$d km/h · Frei · %2$s</string>
+    <string name="toybox_return_track">Kehre zur Strecke zurück, um Kontrollpunkte zu passieren</string>
+    <string name="toybox_explore_hint">Erkunde frei — du musst nicht zur Strecke zurückkehren</string>
+    <string name="toybox_room_bedroom">Schlafzimmer</string>
+    <string name="toybox_room_kitchen">Küche</string>
+    <string name="toybox_circuit_eight">Achterkurs</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Raum wechseln</string>
+    <string name="toybox_change_circuit">Strecke wechseln</string>
+    <string name="toybox_slalom_hint">Unter dem Tisch hindurch, dann um den Blumentopf — gib weiter Gas</string>
 </resources>

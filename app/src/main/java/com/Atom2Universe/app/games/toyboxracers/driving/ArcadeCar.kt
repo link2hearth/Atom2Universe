@@ -66,6 +66,8 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
     private var driftEffectiveSeconds = 0f
     private var turboBoostPeakMultiplier = 1f
     private var reverseHoldSeconds = 0f
+    private var steeringSmoothed = 0f
+    private var driftBlend = 0f
 
     init {
         placeAtStart()
@@ -93,6 +95,8 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         turboBoostPeakMultiplier = 1f
         reversing = false
         reverseHoldSeconds = 0f
+        steeringSmoothed = 0f
+        driftBlend = 0f
         verticalVelocity = 0f
         velocityX = 0f
         velocityZ = 0f
@@ -108,16 +112,47 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         lateralOffset = beforeProjection.lateralOffset
         offRoad = abs(lateralOffset) > beforeProjection.sample.roadWidth * 0.5f
 
-        val steering = input.steering.coerceIn(-1f, 1f)
+        // Les boutons ne donnent que -1, 0 ou +1 : sans lissage, la voiture
+        // passe de tout droit à braquage complet en une image et le train
+        // arrière décroche avant même que le joueur ait vu le virage.
+        val steeringTarget = input.steering.coerceIn(-1f, 1f)
+        val steeringRate = if (abs(steeringTarget) < abs(steeringSmoothed) ||
+            steeringTarget * steeringSmoothed < 0f
+        ) STEERING_RETURN_RATE else STEERING_RATE
+        steeringSmoothed = approach(steeringSmoothed, steeringTarget, steeringRate * dt)
+        val steering = steeringSmoothed
         speed = hypot(velocityX, velocityZ)
         val currentForwardX = sin(yawRadians)
         val currentForwardZ = cos(yawRadians)
         val currentForwardSpeed = velocityX * currentForwardX + velocityZ * currentForwardZ
+        val currentLateralSpeed = velocityX * currentForwardZ - velocityZ * currentForwardX
         updateReverseState(dt, input)
+        // Le passage en glisse s'installe en un tiers de seconde au lieu de
+        // basculer d'une image à l'autre : l'arrière sort progressivement.
+        driftBlend = approach(driftBlend, if (drifting) 1f else 0f, DRIFT_BLEND_RATE * dt)
         if (!airborne && speed > 0.35f && abs(steering) > 0.01f) {
-            val steeringStrength = 0.45f + 1.30f * (speed / MAX_SPEED).coerceIn(0f, 1f)
+            // Une trajectoire courbe demande une accélération latérale v × ω.
+            // Faire pivoter le nez plus vite que ce que les pneus peuvent tenir
+            // ne fait pas tourner la voiture : ça la met en travers. On plafonne
+            // donc la rotation à ω = adhérence / vitesse, ce qui laisse un
+            // braquage vif en épingle et le calme naturellement à pleine allure.
+            val speedRatio = (speed / MAX_SPEED).coerceIn(0f, 1f)
+            val desiredRate = STEER_RATE_SLOW + (STEER_RATE_FAST - STEER_RATE_SLOW) * speedRatio
+            val corneringGrip = CORNERING_GRIP + (DRIFT_CORNERING_GRIP - CORNERING_GRIP) * driftBlend
+            val tractionRate = corneringGrip / max(speed, STEER_LIMIT_MIN_SPEED)
             val reverseSteering = if (currentForwardSpeed < -0.2f) -1f else 1f
-            yawRadians += steering * reverseSteering * steeringStrength * dt
+            yawRadians += steering * reverseSteering * minOf(desiredRate, tractionRate) * dt
+        }
+        // Rappel d'alignement : le nez revient de lui-même dans l'axe de la
+        // trajectoire. Sans lui, seule l'adhérence latérale corrige un travers,
+        // et le tête-à-queue s'entretient tout seul une fois lancé. Au-delà de
+        // l'angle de rattrapage, le rappel se durcit : c'est le filet qui évite
+        // la toupie, borné pour ne jamais faire pivoter la voiture d'un coup.
+        if (!airborne && speed > ALIGN_MIN_SPEED && currentForwardSpeed > 0.5f) {
+            val slip = atan2(currentLateralSpeed, currentForwardSpeed)
+            var alignRate = ALIGN_RATE + (ALIGN_RATE_DRIFT - ALIGN_RATE) * driftBlend
+            if (abs(slip) > SPIN_CATCH_ANGLE) alignRate += SPIN_CATCH_RATE
+            yawRadians += (slip * alignRate).coerceIn(-MAX_ALIGN_RATE, MAX_ALIGN_RATE) * dt
         }
 
         val forwardX = sin(yawRadians)
@@ -202,11 +237,27 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
             driftGraceSeconds = 0f
             driftCandidateSeconds = 0f
         }
-        val grip = when {
+        // L'adhérence a une part fixe et une part proportionnelle au travers :
+        // plus la voiture glisse, plus vite elle se recolle. Un taux fixe seul
+        // mettait plusieurs secondes à effacer une grosse glissade, d'où la
+        // sensation de patinage qui ne s'arrête jamais.
+        val gripBase = when {
             airborne -> 0f
             driftRequested -> DRIFT_GRIP
             else -> NORMAL_GRIP
         }
+        val gripGain = when {
+            airborne -> 0f
+            driftRequested -> DRIFT_GRIP_GAIN
+            else -> NORMAL_GRIP_GAIN
+        }
+        // Lever le pied ou freiner rend de l'adhérence : c'est le geste naturel
+        // pour rattraper un travers, il doit récompenser le joueur.
+        val liftBonus = if (!airborne && (!input.accelerating || input.braking)) LIFT_GRIP_BONUS else 1f
+        // Le plafond ne change rien en virage tenu — l'équilibre s'y établit
+        // bien en dessous — mais il empêche un gros travers d'être effacé en
+        // deux images, ce qui se verrait comme un claquement du châssis.
+        val grip = ((gripBase + gripGain * abs(lateralSpeed)) * liftBonus).coerceAtMost(MAX_GRIP)
         val speedBeforeGrip = hypot(forwardSpeed, lateralSpeed)
         lateralSpeed = approach(lateralSpeed, 0f, grip * dt)
         velocityX = forwardX * forwardSpeed + rightX * lateralSpeed
@@ -260,6 +311,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         worldZ += velocityZ * dt
         resolveRoomWalls()
         resolveToyObstacles()
+        resolveFurnitureSides()
 
         val projection = track.project(worldX, airborneY, worldZ, distance)
         distance = projection.sample.distance
@@ -270,7 +322,9 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         val road = projection.sample
         val onRoad = abs(lateralOffset) <= road.roadWidth * 0.55f
         val hasRoadSurface = onRoad && !track.isJumpGap(distance)
-        val floorY = track.groundHeightAt(worldX, worldZ) + PrototypeTrack.CAR_CLEARANCE
+        val floorY = maxOf(track.groundHeightAt(worldX, worldZ),
+            track.furnitureHeightAt(worldX, worldZ, worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f)) +
+            PrototypeTrack.CAR_CLEARANCE
         val roadY = road.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
 
         // Aucun lancement scripté : les roues perdent simplement leur support
@@ -292,10 +346,18 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         }
 
         var landedOnRoadThisStep = false
+        // Un meuble ne téléporte jamais la voiture sur son plateau. Il ne porte
+        // que des roues déjà au-dessus ; quitter son bord déclenche une chute.
+        if (!airborne && !groundedOnRoad && worldPosition.y > floorY + 0.05f) {
+            airborne = true
+            airborneY = worldPosition.y
+            verticalVelocity = 0f
+        }
         if (airborne) {
             val previousAirborneY = airborneY
             airborneY += verticalVelocity * dt
             verticalVelocity -= 9.81f * dt
+            resolveFurnitureCeilings(previousAirborneY)
             landedOnRoadThisStep = resolveAirborneRoadCollision(
                 previousWorldX,
                 previousWorldZ,
@@ -304,10 +366,10 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
             if (
                 airborne &&
                 verticalVelocity <= 0f &&
-                airborneY <= track.groundHeightAt(worldX, worldZ) + PrototypeTrack.CAR_CLEARANCE
+                airborneY <= floorY
             ) {
                 airborne = false
-                airborneY = track.groundHeightAt(worldX, worldZ) + PrototypeTrack.CAR_CLEARANCE
+                airborneY = floorY
                 verticalVelocity = 0f
                 groundedOnRoad = false
                 velocityX *= 0.80f
@@ -329,7 +391,9 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
                 // tablier quatorze mètres plus haut.
                 groundedOnRoad = false
                 airborneY = floorY
-                resolveGroundRoadCollision(previousWorldX, previousWorldZ)
+                if (floorY <= track.groundHeightAt(worldX, worldZ) + PrototypeTrack.CAR_CLEARANCE + 0.02f) {
+                    resolveGroundRoadCollision(previousWorldX, previousWorldZ)
+                }
             }
         }
         speed = hypot(velocityX, velocityZ)
@@ -591,6 +655,53 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         }
     }
 
+    private fun resolveFurnitureSides() {
+        val bottom = airborneY - PrototypeTrack.CAR_CLEARANCE
+        val top = airborneY + CAR_TOP_FROM_ORIGIN
+        for (box in track.furnitureSolids) {
+            if (bottom >= box.top - 0.02f || top <= box.bottom) continue
+            val left = box.left - CAR_COLLISION_RADIUS
+            val right = box.right + CAR_COLLISION_RADIUS
+            val back = box.back - CAR_COLLISION_RADIUS
+            val front = box.front + CAR_COLLISION_RADIUS
+            if (worldX <= left || worldX >= right || worldZ <= back || worldZ >= front) continue
+            // Éjection par la face la plus proche, sans bloquer l'espace entre les pieds.
+            val dx = minOf(worldX - left, right - worldX)
+            val dz = minOf(worldZ - back, front - worldZ)
+            var nx = 0f
+            var nz = 0f
+            if (dx < dz) {
+                nx = if (worldX < box.x) -1f else 1f
+                worldX = if (nx < 0f) left else right
+            } else {
+                nz = if (worldZ < box.z) -1f else 1f
+                worldZ = if (nz < 0f) back else front
+            }
+            val normalSpeed = velocityX * nx + velocityZ * nz
+            if (normalSpeed < 0f) {
+                val impactSpeed = hypot(velocityX, velocityZ)
+                velocityX -= (1f + TOY_RESTITUTION) * normalSpeed * nx
+                velocityZ -= (1f + TOY_RESTITUTION) * normalSpeed * nz
+                preserveCollisionRhythm(impactSpeed)
+            }
+        }
+    }
+
+    private fun resolveFurnitureCeilings(previousY: Float) {
+        if (airborneY <= previousY) return
+        var ceiling = Float.POSITIVE_INFINITY
+        for (box in track.furnitureSolids) {
+            if (worldX < box.left - CAR_COLLISION_RADIUS || worldX > box.right + CAR_COLLISION_RADIUS ||
+                worldZ < box.back - CAR_COLLISION_RADIUS || worldZ > box.front + CAR_COLLISION_RADIUS) continue
+            if (previousY + CAR_TOP_FROM_ORIGIN <= box.bottom && airborneY + CAR_TOP_FROM_ORIGIN >= box.bottom)
+                ceiling = minOf(ceiling, box.bottom)
+        }
+        if (ceiling.isFinite()) {
+            airborneY = ceiling - CAR_TOP_FROM_ORIGIN
+            verticalVelocity = -abs(verticalVelocity) * TOY_RESTITUTION
+        }
+    }
+
     private fun approach(current: Float, target: Float, amount: Float): Float = when {
         current < target -> (current + amount).coerceAtMost(target)
         current > target -> (current - amount).coerceAtLeast(target)
@@ -620,8 +731,26 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         private const val BRAKE_DECELERATION = 13f
         private const val ROLLING_DECELERATION = 2.4f
         private const val OFF_ROAD_DECELERATION = 0.65f
+        private const val STEERING_RATE = 5.5f
+        private const val STEERING_RETURN_RATE = 9.0f
+        private const val STEER_RATE_SLOW = 2.40f
+        private const val STEER_RATE_FAST = 1.70f
+        private const val STEER_LIMIT_MIN_SPEED = 4f
+        private const val CORNERING_GRIP = 22f
+        private const val DRIFT_CORNERING_GRIP = 34f
+        private const val ALIGN_MIN_SPEED = 1.5f
+        private const val ALIGN_RATE = 2.0f
+        private const val ALIGN_RATE_DRIFT = 0.45f
+        private const val SPIN_CATCH_ANGLE = 0.85f
+        private const val SPIN_CATCH_RATE = 4.0f
+        private const val MAX_ALIGN_RATE = 2.5f
         private const val NORMAL_GRIP = 16f
-        private const val DRIFT_GRIP = 9.0f
+        private const val NORMAL_GRIP_GAIN = 6.5f
+        private const val DRIFT_GRIP = 8.0f
+        private const val DRIFT_GRIP_GAIN = 3.0f
+        private const val LIFT_GRIP_BONUS = 1.45f
+        private const val MAX_GRIP = 42f
+        private const val DRIFT_BLEND_RATE = 3.0f
         private const val DRIFT_SPEED_MIN = 7f
         private const val DRIFT_STEERING_MIN = 0.28f
         private const val DRIFT_FORWARD_RATIO_MIN = 0.18f

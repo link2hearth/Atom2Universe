@@ -68,6 +68,12 @@ class PrototypeTrackTest {
      * vitesse tombe évidemment à rien. Lire le compteur à l'arrivée revenait donc à
      * tester le mur, pas le hors-piste — et le test échouait sur une voiture qui avait
      * pourtant atteint sa vitesse maximale dès la troisième seconde.
+     *
+     * **Le cap ne se vérifie que tant que rien n'a été percuté.** Depuis le rappel
+     * d'alignement, une voiture déviée par un mur remet son nez dans l'axe de sa
+     * nouvelle trajectoire : elle finit le long du mur au lieu de le longer en crabe.
+     * Ce n'est pas l'accélérateur qui « braque », c'est le choc — on arrête donc de
+     * surveiller le cap au premier impact, repéré à la vitesse qui chute d'un coup.
      */
     @Test
     fun acceleratorMovesCarButDoesNotSteerIt() {
@@ -78,11 +84,25 @@ class PrototypeTrackTest {
 
         var sawOffRoad = false
         var fastestOffRoad = 0f
+        var impacted = false
+        var previousSpeed = 0f
+        var checkedSteps = 0
         repeat(60 * 10) {
             car.update(
                 1f / 60f,
                 ArcadeCar.Input(steering = 0f, accelerating = true, braking = false)
             )
+            if (previousSpeed - car.speed > 0.5f) impacted = true
+            if (!impacted) {
+                checkedSteps++
+                assertEquals(
+                    "Plein gaz sans volant et sans choc ne doit jamais faire tourner la voiture",
+                    initialYaw,
+                    car.yawRadians,
+                    0.0001f
+                )
+            }
+            previousSpeed = car.speed
             if (car.offRoad) {
                 sawOffRoad = true
                 fastestOffRoad = kotlin.math.max(fastestOffRoad, car.speed)
@@ -94,7 +114,10 @@ class PrototypeTrackTest {
             "Le hors-piste ne doit pas imposer une vitesse très basse : $fastestOffRoad m/s",
             fastestOffRoad > 18f
         )
-        assertEquals(initialYaw, car.yawRadians, 0.0001f)
+        assertTrue(
+            "Le cap doit avoir été vérifié sur une vraie ligne droite : $checkedSteps pas",
+            checkedSteps > 60
+        )
         assertTrue(
             car.worldPosition.x != initialPosition.x || car.worldPosition.z != initialPosition.z
         )

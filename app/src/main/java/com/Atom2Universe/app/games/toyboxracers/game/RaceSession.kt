@@ -11,6 +11,7 @@ internal enum class RaceDifficulty(val label: String) {
 }
 
 internal enum class RacePhase { COUNTDOWN, RACING, FINISHED }
+internal enum class PlayMode { EXPLORATION, RACE }
 
 /** État déterministe d'une course, indépendant du rendu et de la fréquence d'image. */
 internal class RaceSession(private val track: PrototypeTrack) {
@@ -82,11 +83,21 @@ internal class RaceSession(private val track: PrototypeTrack) {
             playerProgress = (playerProgress + delta).coerceAtLeast(-12f)
             reverseSeconds = if (delta < -0.01f) reverseSeconds + dt else (reverseSeconds - dt * 2f).coerceAtLeast(0f)
             wrongWay = reverseSeconds >= WRONG_WAY_DELAY
-            if (delta > 0f && playerOnRoad) advanceCheckpoints(lastPlayerDistance, playerDistance)
+            if (delta > 0f && playerOnRoad) {
+                advanceCheckpoints(lastPlayerDistance, playerDistance)
+                if (phase == RacePhase.FINISHED) {
+                    val toFinish = track.wrapDistance(track.length * START_FRACTION - lastPlayerDistance)
+                    raceSeconds -= dt * (1f - (toFinish / delta).coerceIn(0f, 1f))
+                }
+            }
         }
         lastPlayerDistance = playerDistance
         updatePosition(dt, rivals)
-        if (phase == RacePhase.FINISHED && finishPosition == 0) finishPosition = playerPosition
+        if (phase == RacePhase.FINISHED && finishPosition == 0) {
+            // L'hystérésis rend le HUD lisible mais ne doit pas décider du résultat.
+            finishPosition = 1 + rivals.count { it.finishSeconds <= raceSeconds }
+            playerPosition = finishPosition
+        }
     }
 
     private fun advanceCheckpoints(previous: Float, current: Float) {

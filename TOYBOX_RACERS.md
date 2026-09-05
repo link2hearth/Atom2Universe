@@ -4,7 +4,10 @@
 
 ## État du projet
 
-**Phase actuelle :** première course P3 implémentée — validation et équilibrage sur téléphone requis.
+**Phase actuelle :** P3 jouable et P4 enrichie : chambre meublée, ours assis retravaillé et catalogue de 49 décors pour les futures pièces et l'extérieur — validation et équilibrage sur téléphone requis.
+
+Le catalogue, les identifiants et les conventions de placement sont décrits dans
+[TOYBOX_DECORS.md](TOYBOX_DECORS.md).
 
 | État | Signification |
 |---|---|
@@ -15,7 +18,11 @@
 
 ### Prochaine étape recommandée
 
-Tester sur téléphone une course complète en difficulté **Arcade** : vérifier le départ verrouillé, la lisibilité des cinq adversaires, le classement, les trois tours, l'arrivée et l'enregistrement du record. Essayer ensuite Détente et Champion, puis vérifier qu'une sortie de piste ou un passage à contresens ne valide pas abusivement un tour.
+Le jeu démarre en **Libre**, sans adversaires ni compte à rebours. Tester la conduite et la mini-carte (triangle blanc : joueur et cap ; carré crème : départ). Choisir une difficulté puis toucher **Course** pour lancer les trois tours ; **Libre** permet de quitter le défi.
+
+Sur téléphone, vérifier la pause avec **Ⅱ** ou Retour, puis passer dans une autre application en maintenant GAZ : au retour, le jeu doit attendre **Reprendre**, sans accélérateur bloqué ni temps écoulé pendant la pause. Vérifier aussi la pause pendant le compte à rebours et le turbo.
+
+Tester ensuite une course complète en difficulté **Arcade** : départ verrouillé, cinq adversaires et points colorés sur la carte, classement, trois tours, arrivée, record et nouvelle course. Essayer Détente et Champion, puis vérifier qu'une sortie de piste ou un passage à contresens ne valide pas abusivement un tour. Contrôler la lisibilité du HUD et des commandes sur un petit écran paysage.
 
 ---
 
@@ -245,6 +252,8 @@ games/toyboxracers/
 - [~] Déclencher une impulsion lisible au redressement : durée continue jusqu'à cinq secondes, attaque proportionnelle au ruban et retour courbe à la vitesse normale ; puissance à régler.
 - [~] Ajouter vibrations légères, poussière pastel et mouvements de caméra : retours aux paliers et à la relance implémentés ; confort à valider.
 - [~] Régler les collisions pour conserver le rythme de course : murs et jouets conservent au moins 58 % de l'élan ; comportement à tester en jeu.
+- [~] Stabiliser la conduite pour les virages serrés : braquage lissé (les boutons ne donnent que -1/0/+1), rotation plafonnée par l'adhérence, rappel d'alignement contre le tête-à-queue et regain d'adhérence pied levé ou au frein ; réglages à valider sur téléphone.
+- [~] Supprimer la vibration de l'image sur écran 120 Hz : position et cap de la voiture et des rivaux interpolés entre deux pas, amortissements caméra et assiette exprimés par seconde ; à confirmer sur tablette.
 - [~] Tester plusieurs tailles de commandes tactiles : trois profils adaptatifs ajoutés pour écrans compacts, moyens et larges ; essais physiques à faire.
 
 **Critère de sortie :** le joueur cherche spontanément les courbes pour préparer ses relances.
@@ -265,13 +274,13 @@ games/toyboxracers/
 
 - [ ] Créer une voiture jouet finale et plusieurs variantes originales.
 - [ ] Définir la palette officielle et les matériaux.
-- [~] Construire le décor **La Chambre Arc-en-ciel** : sol plat, tapis, murs et premiers jouets procéduraux ajoutés.
+- [~] Construire le décor **La Chambre Arc-en-ciel** : sol, tapis, parquet, murs, jouets, ours assis, porte, deux fenêtres, rideaux, bureau, bibliothèque, étagères et lit ajoutés ; validation téléphone restante.
 - [x] Ajouter des limites de pièce visibles et solides pour contenir l'exploration libre.
 - [x] Créer une première collection de jouets low-poly originaux : cubes, ours, train et toupie.
 - [ ] Ajouter éclairage, blob shadows et arrière-plan de pièce.
 - [ ] Créer HUD, icône et écran de sélection originaux.
 - [ ] Remplacer chaque élément temporaire du prototype.
-- [ ] Tenir à jour l'inventaire de provenance des assets.
+- [~] Tenir à jour l'inventaire de provenance des assets : mobilier et catalogue documentés dans `TOYBOX_DECORS.md`.
 
 **Critère de sortie :** aucune ressource temporaire ou externe ne subsiste et une capture d'écran est immédiatement identifiable comme Toybox Racers.
 
@@ -343,6 +352,9 @@ games/toyboxracers/
 | 2026-09-04 | Aucun gros décor sans collision | Un meuble ne doit jamais sembler solide si la voiture peut le traverser. |
 | 2026-09-05 | Exploration libre comme mode principal | Le circuit est un jouet dans la pièce, pas une frontière obligatoire. |
 | 2026-09-05 | Replacement strictement manuel | Le jeu ne reprend jamais le contrôle de la position du joueur. |
+| 2026-09-05 | Le braquage est plafonné par l'adhérence | Tourner une voiture plus vite que ce que ses pneus tiennent ne la fait pas tourner : ça la met en travers. La rotation du nez est donc bornée à `adhérence / vitesse`, ce qui donne un braquage vif en épingle et calme la voiture à pleine allure — au lieu de l'inverse. |
+| 2026-09-05 | Lever le pied rend de l'adhérence | C'est le réflexe naturel du joueur quand la voiture part : il doit être récompensé, jamais puni. |
+| 2026-09-05 | Rendu interpolé entre deux pas de simulation | L'écran de la tablette affiche 120 images par seconde, la simulation en calcule 60 : une image sur deux ne montrait aucun mouvement et l'autre un saut double. Le cap de la caméra n'étant pas amorti, ce battement à 60 Hz se voyait comme une vibration de l'image. La simulation garde son pas fixe déterministe ; seul l'affichage interpole. |
 | 2026-09-05 | Deux projections, jamais mélangées | `project` répond « où en est le tour », `projectForCollision` répond « quelle dalle je touche ». Au croisement elles désignent volontairement des branches différentes : croiser leurs résultats dans un même calcul d'altitude téléporte la voiture. |
 
 ---
@@ -559,6 +571,82 @@ parce qu'ils relèvent de la conception du prototype :
   rubans courts ne peuvent donc plus s'enchaîner par-dessus leur propre relance.
 - Les couleurs menthe, lavande et or restent des repères visuels, mais la physique
   utilise maintenant une valeur continue plutôt que trois récompenses discrètes.
+
+---
+
+### 2026-09-05 — Choix du mode, pause et repérage
+
+- L'exploration libre redevient le mode initial, conformément à la direction bac à sable :
+  conduite et Ruban Turbo actifs, sans adversaires, arrivée ni enregistrement de record.
+- Le bouton **Course** lance le défi avec la difficulté choisie ; **Libre** quitte le défi.
+  La difficulté est verrouillée pendant la course pour éviter une remise à zéro accidentelle.
+- Pause ajoutée avec reprise, recommencement, changement de mode et sortie. Le bouton
+  Retour ouvre ce menu. Le passage en arrière-plan suspend aussi la partie et demande
+  une reprise explicite au retour ; les doigts propriétaires des commandes sont libérés.
+- La simulation et le chronomètre ignorent le temps passé en pause. Une recréation du
+  contexte OpenGL recharge les meshes sans réinitialiser la course. Cela ne constitue
+  pas une sauvegarde de partie après destruction de l'activité ou du processus Android.
+- Mini-carte procédurale de la pièce : tracé, interruption du tremplin, départ, cap du
+  joueur et cinq points aux couleurs des adversaires. Aucun asset externe ajouté.
+  Le tracé est construit au changement de taille ; les positions suivent le HUD à 10 Hz.
+- HUD resserré pour réserver une zone distincte aux boutons à droite.
+- Le résultat final ne dépend plus du délai de stabilisation du classement affiché.
+  Les instants de franchissement sont interpolés dans le pas fixe pour départager
+  deux arrivées pendant le même pas ; le chronomètre final utilise également cet instant.
+- Neuf nouvelles chaînes d'interface ajoutées dans les 14 langues ; les anciens textes
+  provisoires français restent à reprendre lors de la traduction complète P6.
+- Vérification finale `compileDebugKotlin` réussie (34 secondes), XML des 14 langues
+  vérifiés et `git diff --check` sans erreur. Aucun APK construit ou installé.
+  Validation visuelle et comportementale sur téléphone
+  encore nécessaire, suivant la liste en tête de document.
+
+---
+
+### 2026-09-05 — Chambre meublée et catalogue pour les futures pistes
+
+- Ours remodelé en position assise avec pattes avancées, coussinets, bras, ventre
+  clair, oreilles bicolores, yeux brillants et nœud lavande.
+- Chambre enrichie : porte fermée à panneaux, deux fenêtres avec ciel illustré et
+  rideaux, bureau avec tiroirs et tabouret, lampe champignon, crayons, cahier, livres,
+  bibliothèque, étagères, bacs, lit bas et parquet. Murs rehaussés à 32 unités.
+- Volumes du mobilier définis dans `RoomDecor` et partagés entre rendu et collisions.
+  Les pieds restent séparés ; les plateaux supportent une arrivée depuis le haut,
+  les dessous bloquent une montée et une sortie de plateau déclenche une chute.
+- Train déplacé pour dégager le bureau. Écart horizontal minimal calculé entre
+  mobilier et bord du circuit : environ 2,33 unités, avant rayon de la voiture.
+- Correction du sens des triangles latéraux des cylindres orientés X : les roues
+  des voitures, du train et de la servante présentent désormais leurs faces extérieures.
+- Bibliothèque de 25 modèles originaux : 8 cuisine, 9 salon/salle à manger et
+  8 garage. Ils ne sont pas ajoutés automatiquement à la chambre existante.
+- Placement réutilisable par position, quart de tour et échelle uniforme ; normales
+  tournées avec le mesh et collisions transformées depuis la même définition.
+- Modèles regroupés dans le mesh statique du décor ; catalogue chargé à la demande.
+- `TOYBOX_DECORS.md` ajouté : inventaire, provenance, conventions et exemple de composition.
+- Vérification finale `compileDebugKotlin` réussie (34 secondes). Maillages exportés
+  depuis les classes compilées pour une planche d'aperçu, contrôlée visuellement hors
+  Android : 10 432 triangles pour le décor de chambre, de 84 à 1 404 par modèle du
+  catalogue. Aucun APK généré ou installé ; fluidité et collisions à essayer sur téléphone.
+
+---
+
+### 2026-09-05 — Bureau, salle de bains et extérieur
+
+- 24 modèles ajoutés dans `DecorExpansion` : tour PC, écran/clavier/souris, vélo
+  d'appartement, commode, micro-ondes, neuf accessoires/meubles de salle de bains
+  et dix éléments d'extérieur, dont maison, porche et voiture familiale miniature.
+- Catalogue porté à 49 identifiants uniques. `DecorCatalog.forRoom` permet de
+  sélectionner tous les éléments d'une pièce, quelle que soit leur collection.
+- Toit à deux pentes ajouté aux primitives de rendu pour maison, porche et petits
+  accessoires. Collision encore rectangulaire, non destinée à rouler sur ces toits.
+- Douche ouverte et baignoire construite avec fond et parois distinctes ; pas de
+  boîte globale bouchant leur intérieur. Modèles et collisions restent statiques.
+- Miroir encadré créé avec surface claire stylisée. Les vrais reflets OpenGL ES
+  demandent une passe de rendu supplémentaire et restent un chantier ultérieur.
+- Maison extérieure terminée sur ses quatre côtés ; le circuit extérieur et les
+  intérieurs de cette maison ne sont pas encore implémentés.
+- Compilation `compileDebugKotlin` et inspection d'une planche issue des maillages
+  compilés réalisées ; aucun APK généré ou installé. Catalogue documenté dans
+  `TOYBOX_DECORS.md`. Essais sur téléphone à effectuer lors du placement des décors.
 
 ---
 

@@ -281,4 +281,20 @@
     <string name="cave_player_level">Poz. %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Ścigaj się małymi samochodzikami po ogromnym domu pełnym zakrętów</string>
+    <string name="toybox_pause">Pauza</string>
+    <string name="toybox_resume">Wznów</string>
+    <string name="toybox_restart">Od początku</string>
+    <string name="toybox_start_race">Wyścig</string>
+    <string name="toybox_free">Jazda wolna</string>
+    <string name="toybox_quit">Wyjdź</string>
+    <string name="toybox_free_hud">%1$d km/h · Swobodnie · %2$s</string>
+    <string name="toybox_return_track">Wróć na tor, aby zaliczyć punkty kontrolne</string>
+    <string name="toybox_explore_hint">Zwiedzaj swobodnie — nie musisz wracać na tor</string>
+    <string name="toybox_room_bedroom">Sypialnia</string>
+    <string name="toybox_room_kitchen">Kuchnia</string>
+    <string name="toybox_circuit_eight">Ósemka</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Zmień pokój</string>
+    <string name="toybox_change_circuit">Zmień tor</string>
+    <string name="toybox_slalom_hint">Pod stołem, potem wokół doniczki — trzymaj gaz</string>
 </resources>

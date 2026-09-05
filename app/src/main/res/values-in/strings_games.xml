@@ -281,4 +281,20 @@
     <string name="cave_player_level">Lvl %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Balapkan mobil mainan mungil di rumah raksasa yang penuh tikungan</string>
+    <string name="toybox_pause">Jeda</string>
+    <string name="toybox_resume">Lanjutkan</string>
+    <string name="toybox_restart">Mulai ulang</string>
+    <string name="toybox_start_race">Balapan</string>
+    <string name="toybox_free">Jelajah bebas</string>
+    <string name="toybox_quit">Keluar</string>
+    <string name="toybox_free_hud">%1$d km/j · Bebas · %2$s</string>
+    <string name="toybox_return_track">Kembali ke lintasan untuk melewati checkpoint</string>
+    <string name="toybox_explore_hint">Jelajahi dengan bebas — tidak perlu kembali ke lintasan</string>
+    <string name="toybox_room_bedroom">Kamar tidur</string>
+    <string name="toybox_room_kitchen">Dapur</string>
+    <string name="toybox_circuit_eight">Lintasan delapan</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Ganti ruangan</string>
+    <string name="toybox_change_circuit">Ganti lintasan</string>
+    <string name="toybox_slalom_hint">Lewati bawah meja, lalu kelilingi pot — terus tekan gas</string>
 </resources>

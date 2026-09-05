@@ -4,6 +4,7 @@ import kotlin.math.atan2
 import kotlin.math.PI
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 
 internal enum class ToyKind { BLOCKS, TEDDY, TRAIN, SPINNING_TOP }
 
@@ -23,7 +24,23 @@ internal data class ToyObstacle(
  * vide, puis réception au sol. Cette séparation permet de remplacer plus tard
  * les volumes de test par le lit et le bureau sans réécrire la conduite.
  */
-internal class PrototypeTrack(sampleCount: Int = 480) {
+internal class PrototypeTrack(
+    sampleCount: Int = 480,
+    decorations: List<DecorPlacement> = emptyList(),
+    val scene: SceneChoice = SceneChoice()
+) {
+    val decorations = RaceLayouts.decorations(scene) + decorations
+    val roomBoxes = RaceLayouts.boxes(scene)
+    val furnitureSolids: List<RoomBox> = RaceLayouts.solids(scene) + this.decorations.flatMap { it.solids }
+
+    fun furnitureHeightAt(x: Float, z: Float, maximumY: Float): Float {
+        var height = 0f
+        for (box in furnitureSolids) {
+            if (x in box.left..box.right && z in box.back..box.front && box.top <= maximumY)
+                height = maxOf(height, box.top)
+        }
+        return height
+    }
 
     data class Vec3(val x: Float, val y: Float, val z: Float) {
         operator fun plus(other: Vec3) = Vec3(x + other.x, y + other.y, z + other.z)
@@ -58,12 +75,7 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
     val jumpStartDistance: Float
     val jumpEndDistance: Float
 
-    val toyObstacles = listOf(
-        ToyObstacle(ToyKind.BLOCKS, -65f, 0f, 6.5f, 7f),
-        ToyObstacle(ToyKind.TEDDY, 65f, 0f, 5.5f, 10f),
-        ToyObstacle(ToyKind.TRAIN, 0f, -62f, 8f, 7f),
-        ToyObstacle(ToyKind.SPINNING_TOP, 0f, 62f, 5f, 8f)
-    )
+    val toyObstacles = RaceLayouts.toys(scene)
 
     init {
         val raw = ArrayList<Vec3>(sampleCount)
@@ -208,6 +220,7 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
     }
 
     fun isJumpGap(distance: Float): Boolean {
+        if (scene.circuit == CircuitKind.SLALOM) return false
         val wrapped = wrapDistance(distance)
         return wrapped in jumpStartDistance..jumpEndDistance
     }
@@ -221,6 +234,7 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
     fun headingRadians(sample: Sample): Float = atan2(sample.tangent.x, sample.tangent.z)
 
     private fun point(fraction: Float): Vec3 {
+        if (scene.circuit == CircuitKind.SLALOM) return slalomPoint(fraction)
         val angle = fraction * 2f * PI.toFloat()
         // Lemniscate de Gerono : les deux passages au centre ont des directions
         // différentes et une courbure nulle, idéale pour placer le grand saut.
@@ -246,6 +260,7 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
     }
 
     private fun roadWidth(fraction: Float): Float {
+        if (scene.circuit == CircuitKind.SLALOM) return 7f
         // Le plateau et la réception pardonnent davantage les erreurs.
         val nearJump = fraction in 0.42f..0.60f
         return if (nearJump) 10.5f else 8.5f
@@ -258,7 +273,28 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
 
     private fun lerp(a: Vec3, b: Vec3, t: Float) = a + (b - a) * t
 
+    /** Spline fermée à tangente continue ; toutes les coordonnées Y restent à zéro. */
+    private fun slalomPoint(fraction: Float): Vec3 {
+        val scaled = fraction * SLALOM_POINTS.size
+        val index = scaled.toInt() % SLALOM_POINTS.size
+        val t = scaled - scaled.toInt()
+        fun p(offset: Int) = SLALOM_POINTS[(index + offset + SLALOM_POINTS.size) % SLALOM_POINTS.size]
+        val a = p(-1); val b = p(0); val c = p(1); val d = p(2)
+        fun component(axis: Int): Float = 0.5f * ((2f * b[axis]) + (-a[axis] + c[axis]) * t +
+            (2f * a[axis] - 5f * b[axis] + 4f * c[axis] - d[axis]) * t * t +
+            (-a[axis] + 3f * b[axis] - 3f * c[axis] + d[axis]) * t * t * t)
+        return Vec3(component(0), 0f, component(1))
+    }
+
     companion object {
+        private val SLALOM_POINTS = arrayOf(
+            floatArrayOf(-78f, -44f), floatArrayOf(-28f, -44f), floatArrayOf(28f, -44f),
+            floatArrayOf(64f, -44f), floatArrayOf(84f, -28f), floatArrayOf(64f, -12f),
+            floatArrayOf(4f, -12f), floatArrayOf(-18f, 6f), floatArrayOf(4f, 24f),
+            floatArrayOf(64f, 24f), floatArrayOf(84f, 42f), floatArrayOf(64f, 56f),
+            floatArrayOf(-62f, 56f), floatArrayOf(-86f, 32f), floatArrayOf(-64f, 6f),
+            floatArrayOf(-48f, -14f), floatArrayOf(-72f, -26f), floatArrayOf(-88f, -28f)
+        )
         const val JUMP_START_FRACTION = 0.48f
         const val JUMP_END_FRACTION = 0.52f
         const val HIGH_LEVEL = 14.0f
@@ -271,6 +307,6 @@ internal class PrototypeTrack(sampleCount: Int = 480) {
         private const val TRACK_HALF_DEPTH = 62f
         const val ROOM_HALF_WIDTH = 118f
         const val ROOM_HALF_DEPTH = 75f
-        const val ROOM_WALL_HEIGHT = 18f
+        const val ROOM_WALL_HEIGHT = 32f
     }
 }

@@ -281,4 +281,20 @@
     <string name="cave_player_level">Рів %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Ганяй на маленьких іграшкових машинках величезним будинком із безліччю поворотів</string>
+    <string name="toybox_pause">Пауза</string>
+    <string name="toybox_resume">Продовжити</string>
+    <string name="toybox_restart">Спочатку</string>
+    <string name="toybox_start_race">Перегони</string>
+    <string name="toybox_free">Вільно</string>
+    <string name="toybox_quit">Вийти</string>
+    <string name="toybox_free_hud">%1$d км/год · Вільно · %2$s</string>
+    <string name="toybox_return_track">Повернися на трасу, щоб пройти контрольні точки</string>
+    <string name="toybox_explore_hint">Досліджуй вільно — повертатися на трасу не обов’язково</string>
+    <string name="toybox_room_bedroom">Спальня</string>
+    <string name="toybox_room_kitchen">Кухня</string>
+    <string name="toybox_circuit_eight">Вісімка</string>
+    <string name="toybox_circuit_slalom">Слалом</string>
+    <string name="toybox_change_room">Змінити кімнату</string>
+    <string name="toybox_change_circuit">Змінити трасу</string>
+    <string name="toybox_slalom_hint">Під столом, потім навколо горщика — утримуй газ</string>
 </resources>

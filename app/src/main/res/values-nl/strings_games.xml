@@ -281,4 +281,20 @@
     <string name="cave_player_level">Lvl %1$d</string>
     <string name="toybox_racers_title">Toybox Racers</string>
     <string name="toybox_racers_description">Race met kleine speelgoedauto’s door een reusachtig huis vol bochten</string>
+    <string name="toybox_pause">Pauze</string>
+    <string name="toybox_resume">Hervatten</string>
+    <string name="toybox_restart">Herstarten</string>
+    <string name="toybox_start_race">Race</string>
+    <string name="toybox_free">Vrij rijden</string>
+    <string name="toybox_quit">Afsluiten</string>
+    <string name="toybox_free_hud">%1$d km/h · Vrij · %2$s</string>
+    <string name="toybox_return_track">Keer terug naar de baan om controlepunten te passeren</string>
+    <string name="toybox_explore_hint">Verken vrij — je hoeft niet terug naar de baan</string>
+    <string name="toybox_room_bedroom">Slaapkamer</string>
+    <string name="toybox_room_kitchen">Keuken</string>
+    <string name="toybox_circuit_eight">Achtbaan</string>
+    <string name="toybox_circuit_slalom">Slalom</string>
+    <string name="toybox_change_room">Kamer wijzigen</string>
+    <string name="toybox_change_circuit">Circuit wijzigen</string>
+    <string name="toybox_slalom_hint">Onder de tafel door en om de bloempot — blijf gas geven</string>
 </resources>
