@@ -13,6 +13,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
+import android.text.InputType
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -23,6 +25,7 @@ import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
+import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
 import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
@@ -45,6 +48,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var roomButton: Button
     private lateinit var circuitButton: Button
     private var currentScene = SceneChoice()
+    private lateinit var housePlan: HousePlan
     private lateinit var minimap: ToyboxMinimapView
     private var currentMode = PlayMode.EXPLORATION
     private var paused = false
@@ -64,10 +68,18 @@ class ToyboxRacersActivity : ThemedActivity() {
         currentDifficulty = RaceDifficulty.entries.getOrElse(
             prefs.getInt(KEY_DIFFICULTY, RaceDifficulty.ARCADE.ordinal)
         ) { RaceDifficulty.ARCADE }
-        currentScene = SceneChoice(
-            RoomKind.entries.find { it.name == prefs.getString("room", null) } ?: RoomKind.BEDROOM,
-            CircuitKind.entries.find { it.name == prefs.getString("circuit", null) } ?: CircuitKind.FIGURE_EIGHT
-        )
+        val seed = prefs.getLong(KEY_HOUSE_SEED, 2026L)
+        housePlan = HousePlan.generate(seed)
+        val savedRoom = RoomKind.entries.find { it.name == prefs.getString("room", null) } ?: RoomKind.BEDROOM
+        currentScene = sceneForRoom(savedRoom)
+        // Migration de la sélection avant l'arrivée du plan de maison.
+        if (!prefs.contains(KEY_HOUSE_SEED)) {
+            CircuitKind.entries.find { it.name == prefs.getString("circuit", null) }?.let {
+                currentScene = SceneChoice(savedRoom, it)
+            }
+            prefs.edit().putLong(KEY_HOUSE_SEED, seed)
+                .putString(KEY_ROOM_CIRCUIT + savedRoom.name, currentScene.circuit.name).apply()
+        }
         renderer = ToyboxRacersRenderer(currentDifficulty, currentScene) { state ->
             runOnUiThread { updateHud(state) }
         }
@@ -131,7 +143,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun showPause() {
         if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
         pauseGame()
-        pauseDialog = AlertDialog.Builder(this)
+        pauseDialog = dialogBuilder()
             .setTitle(R.string.toybox_pause)
             .setItems(arrayOf(
                 getString(R.string.toybox_resume),
@@ -253,14 +265,14 @@ class ToyboxRacersActivity : ThemedActivity() {
             textSize = 12f
             contentDescription = getString(R.string.toybox_change_room)
             setOnClickListener {
-                changeScene(currentScene.copy(room = if (currentScene.room == RoomKind.BEDROOM) RoomKind.KITCHEN else RoomKind.BEDROOM))
+                showRoomPicker()
             }
         }
         circuitButton = makeButton(circuitLabel(), 120, 0xAA735D91.toInt()).apply {
             textSize = 12f
             contentDescription = getString(R.string.toybox_change_circuit)
             setOnClickListener {
-                changeScene(currentScene.copy(circuit = if (currentScene.circuit == CircuitKind.FIGURE_EIGHT) CircuitKind.SLALOM else CircuitKind.FIGURE_EIGHT))
+                showCircuitPicker()
             }
         }
         for ((index, button) in listOf(roomButton, circuitButton).withIndex()) {
@@ -272,8 +284,107 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
     }
 
-    private fun roomLabel() = getString(if (currentScene.room == RoomKind.BEDROOM) R.string.toybox_room_bedroom else R.string.toybox_room_kitchen)
-    private fun circuitLabel() = getString(if (currentScene.circuit == CircuitKind.FIGURE_EIGHT) R.string.toybox_circuit_eight else R.string.toybox_circuit_slalom)
+    private fun roomLabel(kind: RoomKind = currentScene.room) = getString(when (kind) {
+        RoomKind.BEDROOM -> R.string.toybox_room_bedroom
+        RoomKind.KITCHEN -> R.string.toybox_room_kitchen
+        RoomKind.LIVING_ROOM -> R.string.toybox_room_living
+        RoomKind.DINING_ROOM -> R.string.toybox_room_dining
+        RoomKind.OFFICE -> R.string.toybox_room_office
+        RoomKind.BATHROOM -> R.string.toybox_room_bathroom
+        RoomKind.LAUNDRY -> R.string.toybox_room_laundry
+        RoomKind.GARAGE -> R.string.toybox_room_garage
+    })
+
+    private fun sceneForRoom(kind: RoomKind): SceneChoice {
+        val saved = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getString(KEY_ROOM_CIRCUIT + kind.name, null)
+        val circuit = CircuitKind.entries.find { it.name == saved } ?: housePlan.room(kind).circuit
+        return SceneChoice(kind, circuit)
+    }
+
+    private fun showRoomPicker() {
+        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
+        pauseGame()
+        val rooms = housePlan.rooms.map { it.kind }
+        pauseDialog = dialogBuilder()
+            .setTitle(getString(R.string.toybox_change_room) + " · " + housePlan.seed)
+            .setSingleChoiceItems(rooms.map { roomLabel(it) + " · " + circuitLabel(sceneForRoom(it).circuit) }
+                .toTypedArray(), rooms.indexOf(currentScene.room)) { _, which ->
+                if (rooms[which] != currentScene.room) changeScene(sceneForRoom(rooms[which]))
+                resumeGame()
+            }
+            .setNeutralButton(R.string.toybox_house_seed) { _, _ ->
+                // Le dialogue de sélection est fermé avant d'ouvrir la saisie.
+                pauseDialog = null
+                roomButton.post { if (!isFinishing && !isDestroyed) showSeedPicker() }
+            }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun showSeedPicker() {
+        pauseGame()
+        val builder = dialogBuilder()
+        val input = EditText(builder.context).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+            setText(housePlan.seed.toString())
+            selectAll()
+            contentDescription = getString(R.string.toybox_house_seed)
+        }
+        val dialog = builder
+            .setTitle(R.string.toybox_house_seed)
+            .setMessage(R.string.toybox_house_seed_help)
+            .setView(input)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel) { _, _ -> resumeGame() }
+            .setOnCancelListener { resumeGame() }
+            .create()
+        pauseDialog = dialog
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val seed = input.text.toString().trim().toLongOrNull()
+                if (seed == null) {
+                    input.error = getString(R.string.toybox_house_seed_invalid)
+                    return@setOnClickListener
+                }
+                housePlan = HousePlan.generate(seed)
+                val editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putLong(KEY_HOUSE_SEED, seed)
+                RoomKind.entries.forEach { editor.remove(KEY_ROOM_CIRCUIT + it.name) }
+                editor.apply()
+                changeScene(housePlan.room(currentScene.room).scene)
+                resumeGame()
+            }
+        }
+        dialog.show()
+    }
+    private fun circuitLabel(kind: CircuitKind = currentScene.circuit) = getString(when (kind) {
+        CircuitKind.FIGURE_EIGHT -> R.string.toybox_circuit_eight
+        CircuitKind.SLALOM -> R.string.toybox_circuit_slalom
+        CircuitKind.ROLLING_HILLS -> R.string.toybox_circuit_hills
+        CircuitKind.DOUBLE_BUMPS -> R.string.toybox_circuit_doubles
+        CircuitKind.HIGH_GARDEN -> R.string.toybox_circuit_viaduct
+        CircuitKind.SWITCHBACKS -> R.string.toybox_circuit_switchbacks
+        CircuitKind.JUMP_PARADE -> R.string.toybox_circuit_jumps
+        CircuitKind.RIBBON_RALLY -> R.string.toybox_circuit_rally
+        CircuitKind.FURNITURE_TRAIL -> R.string.toybox_circuit_furniture
+        CircuitKind.WORKSHOP_EXPEDITION -> R.string.toybox_circuit_expedition
+    })
+
+    private fun showCircuitPicker() {
+        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
+        pauseGame()
+        pauseDialog = dialogBuilder()
+            .setTitle(getString(R.string.toybox_change_circuit) + " · " + roomLabel())
+            .setSingleChoiceItems(CircuitKind.entries.map { circuitLabel(it) }.toTypedArray(),
+                currentScene.circuit.ordinal) { _, which ->
+                val choice = CircuitKind.entries[which]
+                if (choice != currentScene.circuit) changeScene(currentScene.copy(circuit = choice))
+                resumeGame()
+            }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun dialogBuilder() = AlertDialog.Builder(this, R.style.Theme_Toybox_Dialog)
 
     private fun changeScene(scene: SceneChoice) {
         releaseControls.forEach { it() }
@@ -285,7 +396,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         lastTurboLevel = 0
         lastTurboReleaseSerial = 0
         getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
-            .putString("room", scene.room.name).putString("circuit", scene.circuit.name).apply()
+            .putString("room", scene.room.name).putString("circuit", scene.circuit.name)
+            .putString(KEY_ROOM_CIRCUIT + scene.room.name, scene.circuit.name).apply()
         renderer.setScene(scene)
     }
 
@@ -551,5 +663,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         private const val PREFS_NAME = "toybox_racers_save"
         private const val KEY_DIFFICULTY = "difficulty"
         private const val KEY_BEST_PREFIX = "best_time_"
+        private const val KEY_HOUSE_SEED = "house_seed_v1"
+        private const val KEY_ROOM_CIRCUIT = "house_circuit_v1_"
     }
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Aujourd\'hui</string>
     <string name="stats_tab_week">Semaine</string>
@@ -304,4 +304,21 @@
     <string name="toybox_change_room">Changer de pièce</string>
     <string name="toybox_change_circuit">Changer de circuit</string>
     <string name="toybox_slalom_hint">Sous la table, puis autour du pot — maintiens GAZ</string>
+    <string name="toybox_circuit_hills">Collines</string>
+    <string name="toybox_circuit_doubles">Doubles bosses</string>
+    <string name="toybox_circuit_viaduct">Viaduc aérien</string>
+    <string name="toybox_circuit_switchbacks">Épingles</string>
+    <string name="toybox_circuit_jumps">Parade de sauts</string>
+    <string name="toybox_circuit_rally">Rallye ruban</string>
+    <string name="toybox_room_living">Salon</string>
+    <string name="toybox_room_dining">Salle à manger</string>
+    <string name="toybox_room_office">Bureau</string>
+    <string name="toybox_room_bathroom">Salle de bains</string>
+    <string name="toybox_room_laundry">Buanderie</string>
+    <string name="toybox_room_garage">Garage</string>
+    <string name="toybox_house_seed">Seed de la maison</string>
+    <string name="toybox_house_seed_help">Même seed, même disposition et mêmes circuits. Valider rétablit les circuits attribués. Les pièces restent séparées.</string>
+    <string name="toybox_house_seed_invalid">Saisis un entier entre -9223372036854775808 et 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Tour des meubles</string>
+    <string name="toybox_circuit_expedition">Grande expédition</string>
 </resources>

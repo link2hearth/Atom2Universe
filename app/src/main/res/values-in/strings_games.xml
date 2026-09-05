@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Hari ini</string>
     <string name="stats_tab_week">Minggu</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Ganti ruangan</string>
     <string name="toybox_change_circuit">Ganti lintasan</string>
     <string name="toybox_slalom_hint">Lewati bawah meja, lalu kelilingi pot — terus tekan gas</string>
+    <string name="toybox_circuit_hills">Perbukitan</string>
+    <string name="toybox_circuit_doubles">Gundukan ganda</string>
+    <string name="toybox_circuit_viaduct">Jembatan layang</string>
+    <string name="toybox_circuit_switchbacks">Tikungan tajam</string>
+    <string name="toybox_circuit_jumps">Parade lompatan</string>
+    <string name="toybox_circuit_rally">Reli pita</string>
+    <string name="toybox_room_living">Ruang keluarga</string>
+    <string name="toybox_room_dining">Ruang makan</string>
+    <string name="toybox_room_office">Ruang kerja</string>
+    <string name="toybox_room_bathroom">Kamar mandi</string>
+    <string name="toybox_room_laundry">Ruang cuci</string>
+    <string name="toybox_room_garage">Garasi</string>
+    <string name="toybox_house_seed">Seed rumah</string>
+    <string name="toybox_house_seed_help">Seed sama menghasilkan tata ruang dan sirkuit yang sama. Konfirmasi memulihkan sirkuit bawaan. Ruangan masih terpisah.</string>
+    <string name="toybox_house_seed_invalid">Masukkan bilangan bulat dari -9223372036854775808 hingga 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Jalur perabot</string>
+    <string name="toybox_circuit_expedition">Ekspedisi besar</string>
 </resources>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Today</string>
     <string name="stats_tab_week">Week</string>
@@ -304,4 +304,21 @@
     <string name="toybox_change_room">Change room</string>
     <string name="toybox_change_circuit">Change circuit</string>
     <string name="toybox_slalom_hint">Under the table, then around the flowerpot — keep accelerating</string>
+    <string name="toybox_circuit_hills">Rolling hills</string>
+    <string name="toybox_circuit_doubles">Double bumps</string>
+    <string name="toybox_circuit_viaduct">Sky viaduct</string>
+    <string name="toybox_circuit_switchbacks">Switchbacks</string>
+    <string name="toybox_circuit_jumps">Jump parade</string>
+    <string name="toybox_circuit_rally">Ribbon rally</string>
+    <string name="toybox_room_living">Living room</string>
+    <string name="toybox_room_dining">Dining room</string>
+    <string name="toybox_room_office">Study</string>
+    <string name="toybox_room_bathroom">Bathroom</string>
+    <string name="toybox_room_laundry">Laundry room</string>
+    <string name="toybox_room_garage">Garage</string>
+    <string name="toybox_house_seed">House seed</string>
+    <string name="toybox_house_seed_help">Same seed, same room layout and circuits. Confirming restores assigned circuits. Rooms are still separate.</string>
+    <string name="toybox_house_seed_invalid">Enter an integer from -9223372036854775808 to 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Furniture trail</string>
+    <string name="toybox_circuit_expedition">Grand expedition</string>
 </resources>

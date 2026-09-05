@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Dzisiaj</string>
     <string name="stats_tab_week">Tydzień</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Zmień pokój</string>
     <string name="toybox_change_circuit">Zmień tor</string>
     <string name="toybox_slalom_hint">Pod stołem, potem wokół doniczki — trzymaj gaz</string>
+    <string name="toybox_circuit_hills">Wzgórza</string>
+    <string name="toybox_circuit_doubles">Podwójne garby</string>
+    <string name="toybox_circuit_viaduct">Podniebny wiadukt</string>
+    <string name="toybox_circuit_switchbacks">Serpentyny</string>
+    <string name="toybox_circuit_jumps">Parada skoków</string>
+    <string name="toybox_circuit_rally">Rajd wstęgi</string>
+    <string name="toybox_room_living">Salon</string>
+    <string name="toybox_room_dining">Jadalnia</string>
+    <string name="toybox_room_office">Gabinet</string>
+    <string name="toybox_room_bathroom">Łazienka</string>
+    <string name="toybox_room_laundry">Pralnia</string>
+    <string name="toybox_room_garage">Garaż</string>
+    <string name="toybox_house_seed">Ziarno domu</string>
+    <string name="toybox_house_seed_help">To samo ziarno daje ten sam układ i trasy. Zatwierdzenie przywraca przypisane trasy. Pokoje są nadal oddzielne.</string>
+    <string name="toybox_house_seed_invalid">Wpisz liczbę całkowitą od -9223372036854775808 do 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Szlak mebli</string>
+    <string name="toybox_circuit_expedition">Wielka wyprawa</string>
 </resources>

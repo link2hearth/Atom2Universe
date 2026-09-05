@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Hoje</string>
     <string name="stats_tab_week">Semana</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Mudar de divisão</string>
     <string name="toybox_change_circuit">Mudar de circuito</string>
     <string name="toybox_slalom_hint">Passa por baixo da mesa e contorna o vaso — continua a acelerar</string>
+    <string name="toybox_circuit_hills">Colinas</string>
+    <string name="toybox_circuit_doubles">Lombas duplas</string>
+    <string name="toybox_circuit_viaduct">Viaduto aéreo</string>
+    <string name="toybox_circuit_switchbacks">Curvas fechadas</string>
+    <string name="toybox_circuit_jumps">Desfile de saltos</string>
+    <string name="toybox_circuit_rally">Rali de fita</string>
+    <string name="toybox_room_living">Sala de estar</string>
+    <string name="toybox_room_dining">Sala de jantar</string>
+    <string name="toybox_room_office">Escritório</string>
+    <string name="toybox_room_bathroom">Casa de banho</string>
+    <string name="toybox_room_laundry">Lavandaria</string>
+    <string name="toybox_room_garage">Garagem</string>
+    <string name="toybox_house_seed">Semente da casa</string>
+    <string name="toybox_house_seed_help">A mesma semente gera a mesma disposição e circuitos. Confirmar repõe os circuitos atribuídos. As divisões continuam separadas.</string>
+    <string name="toybox_house_seed_invalid">Introduz um inteiro entre -9223372036854775808 e 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Percurso dos móveis</string>
+    <string name="toybox_circuit_expedition">Grande expedição</string>
 </resources>

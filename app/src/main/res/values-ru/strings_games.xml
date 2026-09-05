@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Сегодня</string>
     <string name="stats_tab_week">Неделя</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Сменить комнату</string>
     <string name="toybox_change_circuit">Сменить трассу</string>
     <string name="toybox_slalom_hint">Под столом, затем вокруг горшка — удерживай газ</string>
+    <string name="toybox_circuit_hills">Холмы</string>
+    <string name="toybox_circuit_doubles">Двойные кочки</string>
+    <string name="toybox_circuit_viaduct">Воздушный виадук</string>
+    <string name="toybox_circuit_switchbacks">Серпантины</string>
+    <string name="toybox_circuit_jumps">Парад прыжков</string>
+    <string name="toybox_circuit_rally">Ленточное ралли</string>
+    <string name="toybox_room_living">Гостиная</string>
+    <string name="toybox_room_dining">Столовая</string>
+    <string name="toybox_room_office">Кабинет</string>
+    <string name="toybox_room_bathroom">Ванная</string>
+    <string name="toybox_room_laundry">Прачечная</string>
+    <string name="toybox_room_garage">Гараж</string>
+    <string name="toybox_house_seed">Сид дома</string>
+    <string name="toybox_house_seed_help">Одинаковый сид даёт одинаковую планировку и трассы. Подтверждение восстанавливает назначенные трассы. Комнаты пока раздельные.</string>
+    <string name="toybox_house_seed_invalid">Введите целое число от -9223372036854775808 до 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Мебельный маршрут</string>
+    <string name="toybox_circuit_expedition">Большая экспедиция</string>
 </resources>

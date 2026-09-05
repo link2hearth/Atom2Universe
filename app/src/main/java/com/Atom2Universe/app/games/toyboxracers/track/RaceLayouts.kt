@@ -3,8 +3,15 @@ package com.Atom2Universe.app.games.toyboxracers.track
 import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 
-internal enum class RoomKind { BEDROOM, KITCHEN }
-internal enum class CircuitKind { FIGURE_EIGHT, SLALOM }
+internal enum class RoomKind { BEDROOM, KITCHEN, LIVING_ROOM, DINING_ROOM, OFFICE, BATHROOM, LAUNDRY, GARAGE }
+internal enum class CircuitKind {
+    FIGURE_EIGHT, SLALOM, ROLLING_HILLS, DOUBLE_BUMPS, HIGH_GARDEN, SWITCHBACKS, JUMP_PARADE, RIBBON_RALLY,
+    FURNITURE_TRAIL, WORKSHOP_EXPEDITION;
+
+    val usesSculptedLayout get() = ordinal in ROLLING_HILLS.ordinal..RIBBON_RALLY.ordinal
+    val usesFurnitureLayout get() = this == FURNITURE_TRAIL || this == WORKSHOP_EXPEDITION
+    val usesPeripheralDecor get() = usesSculptedLayout || usesFurnitureLayout
+}
 internal data class SceneChoice(val room: RoomKind = RoomKind.BEDROOM, val circuit: CircuitKind = CircuitKind.FIGURE_EIGHT)
 
 /** Implantations dessinées avec la piste : les meubles peuvent l'enjamber, jamais la boucher. */
@@ -16,15 +23,19 @@ internal object RaceLayouts {
     }
 
     fun boxes(scene: SceneChoice): List<RoomBox> = if (scene.room == RoomKind.BEDROOM)
-        RoomDecor.boxes.map { bedroomBox(it, scene.circuit) } else RoomDecor.boxes.filter(::opening)
+        RoomDecor.boxes.map { bedroomBox(it, scene.circuit) }
+        else RoomDecor.boxes.filter(::opening) + RoomThemes.boxes(scene.room)
 
     fun solids(scene: SceneChoice): List<RoomBox> = if (scene.room == RoomKind.BEDROOM)
-        RoomDecor.solids.map { bedroomBox(it, scene.circuit) } else RoomDecor.solids.filter(::opening)
+        RoomDecor.solids.map { bedroomBox(it, scene.circuit) }
+        else RoomDecor.solids.filter(::opening) + RoomThemes.boxes(scene.room)
 
     private fun opening(box: RoomBox) =
         (box.z < -70f && box.y >= 13f && box.x in -40f..42f) || (box.z > 73f && box.x < -60f)
 
     fun decorations(scene: SceneChoice): List<DecorPlacement> = buildList {
+        addAll(RoomThemes.decorations(scene.room))
+        if (scene.circuit.usesFurnitureLayout) addAll(OrganicCircuits.decorations(scene))
         fun place(id: String, x: Float, z: Float, scale: Float = 1f, y: Float = 0f, turn: Int = 0) {
             add(DecorPlacement(DecorCatalog[id], x, y, z, turn, scale))
         }
@@ -37,8 +48,9 @@ internal object RaceLayouts {
             place("kitchen.microwave", -32f, -67f, 1.1f, 13.44f)
             place("kitchen.toaster", 14f, -67f, 1.2f, 13.44f)
             place("kitchen.kettle", 20f, -67f, 1.1f, 13.44f)
-            place("kitchen.island", if (scene.circuit == CircuitKind.SLALOM) 35f else -65f, 0f, 1.15f)
-            place("kitchen.fruit_bowl", if (scene.circuit == CircuitKind.SLALOM) 35f else -65f, 0f, 1.15f, 11.68f)
+            val islandX = if (scene.circuit.usesPeripheralDecor) -105f else if (scene.circuit == CircuitKind.SLALOM) 35f else -65f
+            place("kitchen.island", islandX, 0f, 1.15f)
+            place("kitchen.fruit_bowl", islandX, 0f, 1.15f, 11.68f)
             place("office.dresser", 28f, 70f, 1f, turn = 2)
             if (scene.circuit == CircuitKind.FIGURE_EIGHT) {
                 place("living.dining_table", 55f, 0f, 1.7f)
@@ -46,7 +58,7 @@ internal object RaceLayouts {
                 place("living.plant", 0f, 66f, 1.7f)
             }
         }
-        if (scene.circuit == CircuitKind.SLALOM) {
+        if (scene.circuit == CircuitKind.SLALOM && scene.room in listOf(RoomKind.BEDROOM, RoomKind.KITCHEN)) {
             // Ligne droite sous le plateau ; les deux rangées de pieds encadrent le ruban.
             place("living.dining_table", -15f, -44f, 1.65f)
             // Centre de l'épingle est : demi-tour autour du pot, pas au travers.
@@ -56,6 +68,12 @@ internal object RaceLayouts {
 
     fun toys(scene: SceneChoice): List<ToyObstacle> {
         if (scene.room != RoomKind.BEDROOM) return emptyList()
+        if (scene.circuit.usesPeripheralDecor) return listOf(
+            ToyObstacle(ToyKind.BLOCKS, -105f, 25f, 6.5f, 7f),
+            ToyObstacle(ToyKind.TEDDY, 105f, if (scene.circuit.usesFurnitureLayout) -54f else 0f, 5.5f, 10f),
+            ToyObstacle(ToyKind.TRAIN, 25f, -62f, 8f, 7f),
+            ToyObstacle(ToyKind.SPINNING_TOP, 0f, 62f, 5f, 8f)
+        )
         val slalom = scene.circuit == CircuitKind.SLALOM
         return listOf(
             ToyObstacle(ToyKind.BLOCKS, if (slalom) -45f else -65f, if (slalom) 32f else 0f, 6.5f, 7f),

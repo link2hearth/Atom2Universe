@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Heute</string>
     <string name="stats_tab_week">Woche</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Raum wechseln</string>
     <string name="toybox_change_circuit">Strecke wechseln</string>
     <string name="toybox_slalom_hint">Unter dem Tisch hindurch, dann um den Blumentopf — gib weiter Gas</string>
+    <string name="toybox_circuit_hills">Hügelland</string>
+    <string name="toybox_circuit_doubles">Doppelwellen</string>
+    <string name="toybox_circuit_viaduct">Höhenviadukt</string>
+    <string name="toybox_circuit_switchbacks">Haarnadelkurven</string>
+    <string name="toybox_circuit_jumps">Sprungparade</string>
+    <string name="toybox_circuit_rally">Bandrallye</string>
+    <string name="toybox_room_living">Wohnzimmer</string>
+    <string name="toybox_room_dining">Esszimmer</string>
+    <string name="toybox_room_office">Arbeitszimmer</string>
+    <string name="toybox_room_bathroom">Badezimmer</string>
+    <string name="toybox_room_laundry">Waschküche</string>
+    <string name="toybox_room_garage">Garage</string>
+    <string name="toybox_house_seed">Haus-Seed</string>
+    <string name="toybox_house_seed_help">Gleicher Seed, gleiche Raumverteilung und Strecken. Bestätigen stellt die zugewiesenen Strecken wieder her. Die Räume sind noch getrennt.</string>
+    <string name="toybox_house_seed_invalid">Gib eine ganze Zahl zwischen -9223372036854775808 und 9223372036854775807 ein.</string>
+    <string name="toybox_circuit_furniture">Möbelrunde</string>
+    <string name="toybox_circuit_expedition">Große Expedition</string>
 </resources>

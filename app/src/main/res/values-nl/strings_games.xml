@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Vandaag</string>
     <string name="stats_tab_week">Week</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Kamer wijzigen</string>
     <string name="toybox_change_circuit">Circuit wijzigen</string>
     <string name="toybox_slalom_hint">Onder de tafel door en om de bloempot — blijf gas geven</string>
+    <string name="toybox_circuit_hills">Heuvels</string>
+    <string name="toybox_circuit_doubles">Dubbele hobbels</string>
+    <string name="toybox_circuit_viaduct">Hoog viaduct</string>
+    <string name="toybox_circuit_switchbacks">Haarspeldbochten</string>
+    <string name="toybox_circuit_jumps">Sprongparade</string>
+    <string name="toybox_circuit_rally">Lintrally</string>
+    <string name="toybox_room_living">Woonkamer</string>
+    <string name="toybox_room_dining">Eetkamer</string>
+    <string name="toybox_room_office">Werkkamer</string>
+    <string name="toybox_room_bathroom">Badkamer</string>
+    <string name="toybox_room_laundry">Wasruimte</string>
+    <string name="toybox_room_garage">Garage</string>
+    <string name="toybox_house_seed">Huis-seed</string>
+    <string name="toybox_house_seed_help">Dezelfde seed geeft dezelfde indeling en circuits. Bevestigen herstelt de toegewezen circuits. De kamers zijn nog gescheiden.</string>
+    <string name="toybox_house_seed_invalid">Voer een geheel getal in van -9223372036854775808 tot 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Meubelroute</string>
+    <string name="toybox_circuit_expedition">Grote expeditie</string>
 </resources>

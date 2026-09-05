@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Bugün</string>
     <string name="stats_tab_week">Hafta</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Odayı değiştir</string>
     <string name="toybox_change_circuit">Pisti değiştir</string>
     <string name="toybox_slalom_hint">Masanın altından geç, saksının etrafından dön — gaza basılı tut</string>
+    <string name="toybox_circuit_hills">Tepeler</string>
+    <string name="toybox_circuit_doubles">Çift tümsekler</string>
+    <string name="toybox_circuit_viaduct">Gökyüzü viyadüğü</string>
+    <string name="toybox_circuit_switchbacks">Keskin virajlar</string>
+    <string name="toybox_circuit_jumps">Atlayış geçidi</string>
+    <string name="toybox_circuit_rally">Şerit ralli</string>
+    <string name="toybox_room_living">Oturma odası</string>
+    <string name="toybox_room_dining">Yemek odası</string>
+    <string name="toybox_room_office">Çalışma odası</string>
+    <string name="toybox_room_bathroom">Banyo</string>
+    <string name="toybox_room_laundry">Çamaşır odası</string>
+    <string name="toybox_room_garage">Garaj</string>
+    <string name="toybox_house_seed">Ev tohumu</string>
+    <string name="toybox_house_seed_help">Aynı tohum aynı yerleşimi ve pistleri üretir. Onaylamak atanmış pistleri geri yükler. Odalar hâlâ ayrıdır.</string>
+    <string name="toybox_house_seed_invalid">-9223372036854775808 ile 9223372036854775807 arasında bir tam sayı girin.</string>
+    <string name="toybox_circuit_furniture">Mobilya parkuru</string>
+    <string name="toybox_circuit_expedition">Büyük keşif</string>
 </resources>

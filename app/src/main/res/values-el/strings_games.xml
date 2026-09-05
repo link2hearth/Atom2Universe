@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Σήμερα</string>
     <string name="stats_tab_week">Εβδομάδα</string>
@@ -295,4 +295,21 @@
     <string name="toybox_change_room">Αλλαγή δωματίου</string>
     <string name="toybox_change_circuit">Αλλαγή πίστας</string>
     <string name="toybox_slalom_hint">Κάτω από το τραπέζι, μετά γύρω από τη γλάστρα — κράτα πατημένο το γκάζι</string>
+    <string name="toybox_circuit_hills">Λόφοι</string>
+    <string name="toybox_circuit_doubles">Διπλά σαμαράκια</string>
+    <string name="toybox_circuit_viaduct">Εναέρια γέφυρα</string>
+    <string name="toybox_circuit_switchbacks">Φουρκέτες</string>
+    <string name="toybox_circuit_jumps">Παρέλαση αλμάτων</string>
+    <string name="toybox_circuit_rally">Ράλι κορδέλα</string>
+    <string name="toybox_room_living">Σαλόνι</string>
+    <string name="toybox_room_dining">Τραπεζαρία</string>
+    <string name="toybox_room_office">Γραφείο</string>
+    <string name="toybox_room_bathroom">Μπάνιο</string>
+    <string name="toybox_room_laundry">Πλυσταριό</string>
+    <string name="toybox_room_garage">Γκαράζ</string>
+    <string name="toybox_house_seed">Seed σπιτιού</string>
+    <string name="toybox_house_seed_help">Ίδιο seed, ίδια διάταξη και πίστες. Η επιβεβαίωση επαναφέρει τις πίστες. Τα δωμάτια παραμένουν χωριστά.</string>
+    <string name="toybox_house_seed_invalid">Δώσε ακέραιο από -9223372036854775808 έως 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Διαδρομή επίπλων</string>
+    <string name="toybox_circuit_expedition">Μεγάλη αποστολή</string>
 </resources>

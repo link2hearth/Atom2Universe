@@ -6,6 +6,9 @@ import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.ToyKind
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
+import com.Atom2Universe.app.games.toyboxracers.track.RoomThemes
+import com.Atom2Universe.app.games.toyboxracers.track.RoomTheme
+import com.Atom2Universe.app.games.toyboxracers.track.FloorKind
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -338,7 +341,24 @@ internal object PrototypeMeshFactory {
             val a = samples[index]
             val b = samples[nextIndex]
             val middleDistance = segmentMiddleDistance(index)
-            if (track.isJumpGap(middleDistance)) return@forEach
+            val middle = track.sampleAt(middleDistance)
+            if (!track.hasDeck(middle)) {
+                // Sur parquet et mobilier : des chevrons espacés guident la
+                // course, sans masquer les vraies surfaces sous un ruban.
+                if (track.scene.circuit.usesFurnitureLayout && index % 12 == 0) {
+                    val p = middle.position + Vec3(0f, PrototypeTrack.ROAD_SURFACE_LIFT + .025f, 0f)
+                    val forward = Vec3(middle.tangent.x, 0f, middle.tangent.z).normalized()
+                    val right = middle.right
+                    for (side in intArrayOf(-1, 1)) {
+                        val outer = p - forward * .7f + right * (side * 1.25f)
+                        val tip = p + forward * .6f
+                        builder.quad(outer, tip, tip - forward * .3f, outer - forward * .3f, DARK)
+                        // Les deux sens d'enroulement garantissent la visibilité des deux branches.
+                        builder.quad(outer - forward * .3f, tip - forward * .3f, tip, outer, DARK)
+                    }
+                }
+                return@forEach
+            }
 
             val aHalf = a.roadWidth * 0.5f
             val bHalf = b.roadWidth * 0.5f
@@ -347,7 +367,9 @@ internal object PrototypeMeshFactory {
             val aRight = a.position + a.right * aHalf + lift
             val bLeft = b.position - b.right * bHalf + lift
             val bRight = b.position + b.right * bHalf + lift
-            val roadColor = if ((index / 12) % 2 == 0) ROAD else ROAD_LIGHT
+            val roadColor = if (track.scene.circuit.usesFurnitureLayout)
+                rgb(if ((index / 12) % 2 == 0) 0xDAB68B else 0xCBA47C)
+                else if ((index / 12) % 2 == 0) ROAD else ROAD_LIGHT
             builder.quad(aLeft, bLeft, bRight, aRight, roadColor)
 
             val curbWidth = PrototypeTrack.CURB_WIDTH
@@ -372,10 +394,10 @@ internal object PrototypeMeshFactory {
             builder.quad(aRightOutside, bRightOutside, bRightBottom, aRightBottom, ROAD_SIDE)
 
             val previousIndex = (index - 1 + samples.size) % samples.size
-            if (track.isJumpGap(segmentMiddleDistance(previousIndex))) {
+            if (!track.hasDeck(track.sampleAt(segmentMiddleDistance(previousIndex)))) {
                 builder.quad(aLeftOutside, aRightOutside, aRightBottom, aLeftBottom, ROAD_SIDE)
             }
-            if (track.isJumpGap(segmentMiddleDistance(nextIndex))) {
+            if (!track.hasDeck(track.sampleAt(segmentMiddleDistance(nextIndex)))) {
                 builder.quad(bRightOutside, bLeftOutside, bLeftBottom, bRightBottom, ROAD_SIDE)
             }
         }
@@ -384,17 +406,31 @@ internal object PrototypeMeshFactory {
 
     fun environment(track: PrototypeTrack): ColoredMesh {
         val builder = MeshBuilder()
-        addTerrain(builder)
-        if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track) else addKitchenFloor(builder)
-        addRoomWalls(builder)
+        val theme = RoomThemes.theme(track.scene.room)
+        addTerrain(builder, theme)
+        if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track)
+        if (theme.floor == FloorKind.TILES) addTiledFloor(builder, theme)
+        if (track.scene.room == RoomKind.LIVING_ROOM || track.scene.room == RoomKind.OFFICE) {
+            builder.box(0f, 0.012f, 0f, 90f, 0.02f, 52f, rgb(theme.accent))
+            builder.box(0f, 0.023f, 0f, 84f, 0.002f, 46f, rgb(theme.wall))
+        }
+        if (track.scene.room == RoomKind.GARAGE) {
+            for (x in floatArrayOf(-40f, 40f)) builder.box(x, .012f, 0f, .5f, .02f, 90f, CREAM)
+            for (z in floatArrayOf(-45f, 45f)) builder.box(0f, .012f, z, 80f, .02f, .5f, CREAM)
+        }
+        addRoomWalls(builder, theme)
         addFurniture(builder, track)
         addToyModels(builder, track)
         track.decorations.forEach { DecorMeshFactory.add(builder, it) }
         return builder.build()
     }
 
-    private fun addTerrain(builder: MeshBuilder) {
-        builder.box(0f, -0.40f, 0f, 236f, 0.8f, 150f, FLOOR)
+    private fun rgb(value: Int) = color(((value shr 16) and 255) / 255f,
+        ((value shr 8) and 255) / 255f, (value and 255) / 255f)
+
+    private fun addTerrain(builder: MeshBuilder, theme: RoomTheme) {
+        builder.box(0f, -0.40f, 0f, 236f, 0.8f, 150f, rgb(theme.floorColor))
+        if (theme.floor != FloorKind.PARQUET) return
         // Joints de parquet en géométrie, sans texture ni chargement externe.
         val seam = color(0.73f, 0.60f, 0.47f)
         for (row in -7..7) {
@@ -406,11 +442,11 @@ internal object PrototypeMeshFactory {
         }
     }
 
-    private fun addKitchenFloor(builder: MeshBuilder) {
+    private fun addTiledFloor(builder: MeshBuilder, theme: RoomTheme) {
         for (column in 0 until 20) for (row in 0 until 12) {
             builder.box(-118f + (column + 0.5f) * 11.8f, 0.006f, -75f + (row + 0.5f) * 12.5f,
                 11.65f, 0.008f, 12.35f,
-                if ((column + row) % 2 == 0) color(0.92f, 0.95f, 0.86f) else color(0.74f, 0.87f, 0.81f))
+                rgb(if ((column + row) % 2 == 0) theme.floorColor else theme.accent))
         }
     }
 
@@ -468,17 +504,17 @@ internal object PrototypeMeshFactory {
         }
     }
 
-    private fun addRoomWalls(builder: MeshBuilder) {
+    private fun addRoomWalls(builder: MeshBuilder, theme: RoomTheme) {
         val halfWidth = PrototypeTrack.ROOM_HALF_WIDTH
         val halfDepth = PrototypeTrack.ROOM_HALF_DEPTH
         val height = PrototypeTrack.ROOM_WALL_HEIGHT
         val thickness = 1.5f
         // Les volumes commencent exactement au bord jouable : le visuel et la
         // collision correspondent, sans mur invisible placé avant la plinthe.
-        builder.box(0f, height * 0.5f, -halfDepth - thickness * 0.5f, halfWidth * 2f + thickness * 2f, height, thickness, WALL_PINK)
-        builder.box(0f, height * 0.5f, halfDepth + thickness * 0.5f, halfWidth * 2f + thickness * 2f, height, thickness, WALL_CREAM)
-        builder.box(-halfWidth - thickness * 0.5f, height * 0.5f, 0f, thickness, height, halfDepth * 2f, WALL_CREAM)
-        builder.box(halfWidth + thickness * 0.5f, height * 0.5f, 0f, thickness, height, halfDepth * 2f, WALL_PINK)
+        builder.box(0f, height * 0.5f, -halfDepth - thickness * 0.5f, halfWidth * 2f + thickness * 2f, height, thickness, rgb(theme.accent))
+        builder.box(0f, height * 0.5f, halfDepth + thickness * 0.5f, halfWidth * 2f + thickness * 2f, height, thickness, rgb(theme.wall))
+        builder.box(-halfWidth - thickness * 0.5f, height * 0.5f, 0f, thickness, height, halfDepth * 2f, rgb(theme.wall))
+        builder.box(halfWidth + thickness * 0.5f, height * 0.5f, 0f, thickness, height, halfDepth * 2f, rgb(theme.accent))
         builder.box(0f, 0.65f, -halfDepth + 0.22f, halfWidth * 2f, 1.3f, 0.44f, CREAM)
         builder.box(0f, 0.65f, halfDepth - 0.22f, halfWidth * 2f, 1.3f, 0.44f, CREAM)
         builder.box(-halfWidth + 0.22f, 0.65f, 0f, 0.44f, 1.3f, halfDepth * 2f, CREAM)

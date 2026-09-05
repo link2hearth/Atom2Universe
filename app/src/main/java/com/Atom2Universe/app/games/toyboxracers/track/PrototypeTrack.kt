@@ -137,12 +137,17 @@ internal class PrototypeTrack(
             tangent = lerp(first.tangent, second.tangent, alpha).normalized(),
             right = lerp(first.right, second.right, alpha).normalized(),
             distance = wrapped,
-            fraction = wrapped / length,
+            fraction = first.fraction + ((if (secondIndex == 0) 1f else second.fraction) - first.fraction) * alpha,
             roadWidth = first.roadWidth + (second.roadWidth - first.roadWidth) * alpha
         )
     }
 
     fun allSamples(): List<Sample> = samples
+
+    fun surface(sample: Sample): CourseSurface = if (scene.circuit.usesFurnitureLayout)
+        OrganicCircuits.surface(scene.circuit, sample.fraction) else CourseSurface.DECK
+
+    fun hasDeck(sample: Sample) = surface(sample) == CourseSurface.DECK && !isJumpGap(sample.distance)
 
     /**
      * Projette une position libre sur l'axe de la piste. La voiture ne suit pas
@@ -171,9 +176,11 @@ internal class PrototypeTrack(
         // Corrige la quantification du tableau en avançant légèrement sur la
         // tangente, puis recalcule le décalage latéral sur l'échantillon affiné.
         val dx = worldX - nearest.position.x
-        val dy = worldY - (nearest.position.y + ROAD_SURFACE_LIFT + CAR_CLEARANCE)
         val dz = worldZ - nearest.position.z
-        val along = dx * nearest.tangent.x + dy * nearest.tangent.y + dz * nearest.tangent.z
+        // L'altitude choisit la branche au croisement, mais ne doit pas décaler
+        // la surface sous les roues vers l'arrière lorsqu'on monte une bosse.
+        val horizontalSquared = nearest.tangent.x * nearest.tangent.x + nearest.tangent.z * nearest.tangent.z
+        val along = (dx * nearest.tangent.x + dz * nearest.tangent.z) / horizontalSquared.coerceAtLeast(0.0001f)
         val refined = sampleAt(nearest.distance + along)
         val refinedDx = worldX - refined.position.x
         val refinedDz = worldZ - refined.position.z
@@ -191,7 +198,7 @@ internal class PrototypeTrack(
         var nearest: Sample? = null
         var nearestScore = Float.MAX_VALUE
         for (sample in samples) {
-            if (isJumpGap(sample.distance)) continue
+            if (!hasDeck(sample)) continue
             val dx = worldX - sample.position.x
             val dz = worldZ - sample.position.z
             val slabCenterY = sample.position.y + ROAD_SURFACE_LIFT - ROAD_THICKNESS * 0.5f
@@ -209,7 +216,7 @@ internal class PrototypeTrack(
         val along = (dx * first.tangent.x + dz * first.tangent.z) /
             horizontalTangentSquared.coerceAtLeast(0.0001f)
         val refined = sampleAt(first.distance + along)
-        if (isJumpGap(refined.distance)) return null
+        if (!hasDeck(refined)) return null
         val refinedDx = worldX - refined.position.x
         val refinedDz = worldZ - refined.position.z
         return Projection(
@@ -220,7 +227,7 @@ internal class PrototypeTrack(
     }
 
     fun isJumpGap(distance: Float): Boolean {
-        if (scene.circuit == CircuitKind.SLALOM) return false
+        if (scene.circuit != CircuitKind.FIGURE_EIGHT) return false
         val wrapped = wrapDistance(distance)
         return wrapped in jumpStartDistance..jumpEndDistance
     }
@@ -234,6 +241,8 @@ internal class PrototypeTrack(
     fun headingRadians(sample: Sample): Float = atan2(sample.tangent.x, sample.tangent.z)
 
     private fun point(fraction: Float): Vec3 {
+        if (scene.circuit.usesFurnitureLayout) return OrganicCircuits.point(scene.circuit, fraction)
+        if (scene.circuit.usesSculptedLayout) return SculptedCircuits.point(scene.circuit, fraction)
         if (scene.circuit == CircuitKind.SLALOM) return slalomPoint(fraction)
         val angle = fraction * 2f * PI.toFloat()
         // Lemniscate de Gerono : les deux passages au centre ont des directions
@@ -260,6 +269,12 @@ internal class PrototypeTrack(
     }
 
     private fun roadWidth(fraction: Float): Float {
+        if (scene.circuit.usesFurnitureLayout) return when (OrganicCircuits.surface(scene.circuit, fraction)) {
+            CourseSurface.DECK -> 9f
+            CourseSurface.FLOOR -> 18f
+            CourseSurface.FURNITURE -> 16f
+        }
+        if (scene.circuit.usesSculptedLayout) return SculptedCircuits.width(scene.circuit)
         if (scene.circuit == CircuitKind.SLALOM) return 7f
         // Le plateau et la réception pardonnent davantage les erreurs.
         val nearJump = fraction in 0.42f..0.60f

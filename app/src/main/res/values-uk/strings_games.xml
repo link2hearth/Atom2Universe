@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Сьогодні</string>
     <string name="stats_tab_week">Тиждень</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Змінити кімнату</string>
     <string name="toybox_change_circuit">Змінити трасу</string>
     <string name="toybox_slalom_hint">Під столом, потім навколо горщика — утримуй газ</string>
+    <string name="toybox_circuit_hills">Пагорби</string>
+    <string name="toybox_circuit_doubles">Подвійні горби</string>
+    <string name="toybox_circuit_viaduct">Повітряний віадук</string>
+    <string name="toybox_circuit_switchbacks">Серпантини</string>
+    <string name="toybox_circuit_jumps">Парад стрибків</string>
+    <string name="toybox_circuit_rally">Ралі стрічка</string>
+    <string name="toybox_room_living">Вітальня</string>
+    <string name="toybox_room_dining">Їдальня</string>
+    <string name="toybox_room_office">Кабінет</string>
+    <string name="toybox_room_bathroom">Ванна</string>
+    <string name="toybox_room_laundry">Пральня</string>
+    <string name="toybox_room_garage">Гараж</string>
+    <string name="toybox_house_seed">Сід будинку</string>
+    <string name="toybox_house_seed_help">Однаковий сід дає однакове планування та траси. Підтвердження відновлює призначені траси. Кімнати поки окремі.</string>
+    <string name="toybox_house_seed_invalid">Введіть ціле число від -9223372036854775808 до 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Меблевий маршрут</string>
+    <string name="toybox_circuit_expedition">Велика експедиція</string>
 </resources>

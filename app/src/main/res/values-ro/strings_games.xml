@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Azi</string>
     <string name="stats_tab_week">Săptămână</string>
@@ -296,4 +296,21 @@
     <string name="toybox_change_room">Schimbă camera</string>
     <string name="toybox_change_circuit">Schimbă circuitul</string>
     <string name="toybox_slalom_hint">Pe sub masă, apoi în jurul ghiveciului — continuă să accelerezi</string>
+    <string name="toybox_circuit_hills">Coline</string>
+    <string name="toybox_circuit_doubles">Denivelări duble</string>
+    <string name="toybox_circuit_viaduct">Viaduct aerian</string>
+    <string name="toybox_circuit_switchbacks">Serpentine</string>
+    <string name="toybox_circuit_jumps">Parada săriturilor</string>
+    <string name="toybox_circuit_rally">Raliul panglicii</string>
+    <string name="toybox_room_living">Sufragerie</string>
+    <string name="toybox_room_dining">Sală de mese</string>
+    <string name="toybox_room_office">Birou</string>
+    <string name="toybox_room_bathroom">Baie</string>
+    <string name="toybox_room_laundry">Spălătorie</string>
+    <string name="toybox_room_garage">Garaj</string>
+    <string name="toybox_house_seed">Seed pentru casă</string>
+    <string name="toybox_house_seed_help">Același seed, aceeași dispunere și circuite. Confirmarea restabilește circuitele atribuite. Camerele rămân separate.</string>
+    <string name="toybox_house_seed_invalid">Introdu un întreg între -9223372036854775808 și 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Traseul mobilei</string>
+    <string name="toybox_circuit_expedition">Marea expediție</string>
 </resources>

@@ -2,6 +2,10 @@ package com.Atom2Universe.app.games.toyboxracers
 
 import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
+import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
+import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
+import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
+import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -234,6 +238,58 @@ class PrototypeTrackTest {
         car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = false, braking = false))
 
         assertTrue("Passer sous le pont ne doit jamais téléporter la voiture dessus", car.worldPosition.y < 1f)
+    }
+
+    @Test
+    fun ascendingLandingOnARampDoesNotBecomeAHeadOnCollision() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.GARAGE, CircuitKind.WORKSHOP_EXPEDITION))
+        val road = track.allSamples().first { track.hasDeck(it) && it.tangent.y > 0.3f }
+        val car = ArcadeCar(track)
+        val horizontal = kotlin.math.hypot(road.tangent.x, road.tangent.z)
+        val y = road.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE + .02f
+        car.setPrivateField("worldX", road.position.x)
+        car.setPrivateField("worldZ", road.position.z)
+        car.setPrivateField("airborneY", y)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(road.position.x, y, road.position.z))
+        car.setPrivateField("distance", road.distance)
+        car.setPrivateField("previousDistance", road.distance)
+        car.setPrivateField("yawRadians", track.headingRadians(road))
+        car.setPrivateField("velocityX", road.tangent.x / horizontal * 16f)
+        car.setPrivateField("velocityZ", road.tangent.z / horizontal * 16f)
+        car.setPrivateField("verticalVelocity", 1f)
+        car.setPrivateField("airborne", true)
+        car.setPrivateField("groundedOnRoad", false)
+
+        car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = false, braking = false))
+
+        assertFalse("La pente doit recevoir la voiture qui monte encore", car.airborne)
+        assertTrue("Une réception douce ne doit ni bloquer ni inverser la vitesse", car.speed > 15.5f)
+        assertTrue(car.groundedOnRoad)
+    }
+
+    @Test
+    fun climbingProjectionUsesHorizontalPositionRatherThanOldCarHeight() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.GARAGE, CircuitKind.WORKSHOP_EXPEDITION))
+        val road = track.allSamples().first { track.hasDeck(it) && it.tangent.y > .35f }
+        val projected = track.project(road.position.x,
+            road.position.y + PrototypeTrack.CAR_CLEARANCE - 1.5f, road.position.z, road.distance)
+        assertEquals("L'ancienne hauteur ne doit pas reculer les roues sur la pente",
+            road.distance, projected.sample.distance, .2f)
+    }
+
+    @Test
+    fun organicCoursesUseRealFloorAndFurnitureInsteadOfHiddenDecks() {
+        for (kind in listOf(CircuitKind.FURNITURE_TRAIL, CircuitKind.WORKSHOP_EXPEDITION)) {
+            val track = PrototypeTrack(scene = SceneChoice(RoomKind.GARAGE, kind))
+            val samples = track.allSamples()
+            assertTrue(track.length > 700f)
+            assertTrue(samples.count { track.surface(it) == CourseSurface.FLOOR } > samples.size / 2)
+            val tabletop = samples.first { track.surface(it) == CourseSurface.FURNITURE && abs(it.position.x) < 10f }
+            assertFalse(track.hasDeck(tabletop))
+            assertEquals(12f, track.furnitureHeightAt(tabletop.position.x, tabletop.position.z, 12.01f), .001f)
+            assertEquals("Le passage sous le meuble doit rester libre", 0f,
+                track.furnitureHeightAt(0f, tabletop.position.z, 1f), .001f)
+        }
     }
 
     private fun angleDifference(target: Float, current: Float): Float {

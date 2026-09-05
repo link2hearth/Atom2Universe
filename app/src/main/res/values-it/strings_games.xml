@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="stats_tab_day">Oggi</string>
     <string name="stats_tab_week">Settimana</string>
@@ -297,4 +297,21 @@
     <string name="toybox_change_room">Cambia stanza</string>
     <string name="toybox_change_circuit">Cambia circuito</string>
     <string name="toybox_slalom_hint">Sotto il tavolo e intorno al vaso — continua ad accelerare</string>
+    <string name="toybox_circuit_hills">Colline</string>
+    <string name="toybox_circuit_doubles">Dossi doppi</string>
+    <string name="toybox_circuit_viaduct">Viadotto aereo</string>
+    <string name="toybox_circuit_switchbacks">Tornanti</string>
+    <string name="toybox_circuit_jumps">Parata di salti</string>
+    <string name="toybox_circuit_rally">Rally a nastro</string>
+    <string name="toybox_room_living">Soggiorno</string>
+    <string name="toybox_room_dining">Sala da pranzo</string>
+    <string name="toybox_room_office">Studio</string>
+    <string name="toybox_room_bathroom">Bagno</string>
+    <string name="toybox_room_laundry">Lavanderia</string>
+    <string name="toybox_room_garage">Garage</string>
+    <string name="toybox_house_seed">Seme della casa</string>
+    <string name="toybox_house_seed_help">Stesso seme, stessa disposizione e circuiti. Confermare ripristina i circuiti assegnati. Le stanze restano separate.</string>
+    <string name="toybox_house_seed_invalid">Inserisci un intero tra -9223372036854775808 e 9223372036854775807.</string>
+    <string name="toybox_circuit_furniture">Giro dei mobili</string>
+    <string name="toybox_circuit_expedition">Grande spedizione</string>
 </resources>
