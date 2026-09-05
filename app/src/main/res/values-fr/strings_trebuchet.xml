@@ -88,6 +88,8 @@
     <string name="trebuchet_gear_material_aluminum">Aluminium</string>
     <string name="trebuchet_gear_material_steel">Acier</string>
     <string name="trebuchet_gear_material_titanium">Titane</string>
+    <string name="trebuchet_gear_material_menu">Type de matériaux…</string>
+    <string name="trebuchet_gear_material_applied">Toute la machine est maintenant en %1$s</string>
     <string name="trebuchet_gear_belt_open">Courroie ouverte — même sens</string>
     <string name="trebuchet_gear_belt_crossed">Courroie croisée — sens opposé</string>
     <string name="trebuchet_gear_chain_ccw">Chaîne + roue libre — pédalage antihoraire</string>
@@ -185,7 +187,8 @@
     <string name="trebuchet_gear_edit_ball">Boulet</string>
     <string name="trebuchet_gear_edit_launch">Largage</string>
     <string name="trebuchet_gear_edit_tank">Réservoir</string>
-    <string name="trebuchet_gear_edit_material">Matière</string>
+    <string name="trebuchet_gear_clutch_engage">EMBRAYER</string>
+    <string name="trebuchet_gear_clutch_disengage">DÉBRAYER</string>
     <string name="trebuchet_gear_size_header">Ø %1$d cm · circonférence %2$d cm</string>
     <string name="trebuchet_gear_tool_part">OUTIL · PIÈCE</string>
     <string name="trebuchet_gear_tool_frame">BÂTI · DÉPLACER</string>

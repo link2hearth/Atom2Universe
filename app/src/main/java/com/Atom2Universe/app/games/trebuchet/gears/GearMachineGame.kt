@@ -67,7 +67,15 @@ class GearMachineGame(
         var reservoirStdVolume: Float = 0f
     )
 
-    data class Mesh(val firstId: Int, val secondId: Int, val joint: GearJoint)
+    data class Mesh(
+        val firstId: Int,
+        val secondId: Int,
+        val joint: GearJoint,
+        /** Le plein régime de la denture, celui que rend [updateMotorMeshClutch] une fois synchronisée. */
+        val baseMaxTorque: Float,
+        /** Prise progressive côté moteur, de 0 à 1 — voir [updateMotorMeshClutch]. */
+        var clutchGrip: Float = 0f
+    )
     data class Transmission(
         val config: GearLinkConfig,
         val joint: Joint,
@@ -481,6 +489,10 @@ class GearMachineGame(
         }
         connectTransmissions()
         connectMeshes()
+        // Les liaisons viennent d'etre recreees fraiches (donc embrayees) : le levier
+        // du lanceur doit reprendre effet dessus tout de suite, pas seulement au
+        // prochain pas de simulation.
+        applyLauncherClutch()
         // Les dentures viennent de changer : le tableau de bord du train est a refaire.
         driveDirty = true
         savedProjectile?.let { shot ->
@@ -590,13 +602,14 @@ class GearMachineGame(
             val toothForce = weaker * GearMachineRules.MODULE * 0.10f * 0.060f
             joint.maxTorqueOnB = toothForce * b.wheel.pitchRadius
             world.addJoint(joint)
-            meshes += Mesh(a.wheel.id, b.wheel.id, joint)
+            meshes += Mesh(a.wheel.id, b.wheel.id, joint, baseMaxTorque = joint.maxTorqueOnB)
         }
     }
 
     fun step(dt: Float) {
         val h = dt.coerceIn(0f, 1f / 30f)
         updateProgressiveClutches(h)
+        updateMotorMeshClutch(h)
         applyBrake()
         // L'élan d'avant le choc, gardé pour la traversée.
         aimPierce()
@@ -1243,6 +1256,20 @@ class GearMachineGame(
         )
 
     /**
+     * La prise visée d'un embrayage centrifuge, pour un écart de vitesse donné : forte
+     * près de la synchronisation, faible à grand glissement. Commune aux deux
+     * embrayages automatiques du jeu — voir [updateProgressiveClutches] et
+     * [updateMotorMeshClutch].
+     */
+    private fun clutchTargetGrip(slipSpeed: Float): Float = 0.16f + 0.84f / (1f + abs(slipSpeed) / 7f)
+
+    /** Rapproche une prise de sa cible, vite en serrant et lentement en relâchant. */
+    private fun approachGrip(current: Float, target: Float, dt: Float): Float {
+        val response = (dt * if (target > current) 2.4f else 7f).coerceIn(0f, 1f)
+        return current + (target - current) * response
+    }
+
+    /**
      * Embrayage centrifuge simplifié : à grand écart de vitesse il patine et protège
      * la roue lourde ; en se rapprochant de la synchronisation il serre davantage.
      */
@@ -1253,9 +1280,7 @@ class GearMachineGame(
             val a = gears.firstOrNull { it.wheel.id == transmission.config.firstId } ?: continue
             val b = gears.firstOrNull { it.wheel.id == transmission.config.secondId } ?: continue
             val slipSpeed = abs(a.body.omega - b.body.omega)
-            val targetGrip = 0.16f + 0.84f / (1f + slipSpeed / 7f)
-            val response = (dt * if (targetGrip > transmission.clutchGrip) 2.4f else 7f).coerceIn(0f, 1f)
-            transmission.clutchGrip += (targetGrip - transmission.clutchGrip) * response
+            transmission.clutchGrip = approachGrip(transmission.clutchGrip, clutchTargetGrip(slipSpeed), dt)
             val smallerRadius = minOf(a.wheel.pitchRadius, b.wheel.pitchRadius).coerceAtLeast(0.25f)
             // La capacité pleine doit dépasser le frottement du palier d'une grande
             // roue d'acier ; c'est la prise faible à grand glissement qui adoucit le
@@ -1264,12 +1289,89 @@ class GearMachineGame(
         }
     }
 
+    /**
+     * La même prise progressive que [updateProgressiveClutches], mais posée d'elle-même
+     * sur la denture qui touche le moteur — jamais posée par le joueur.
+     *
+     * **Un moteur réel ne cale pas.** Les ailes d'un moulin tournent à peu près à vitesse
+     * constante, imposée par le vent ; c'est le mécanisme qui prend la charge, pas
+     * l'inverse. Ici pourtant, le moteur entraîne directement la roue dentée qui
+     * l'engrène : brancher un volant lourd dessus demande au premier pas de simulation
+     * de le faire sauter d'un coup à la vitesse du train, ce qui renvoie sur le moteur
+     * un couple de réaction qui n'a **aucune raison** de rester dans ce qu'il sait
+     * fournir, et le cale avec le reste.
+     *
+     * La première version plafonnait à une fraction fixe de la résistance du matériau
+     * (la limite normale d'une denture, [connectMeshes]) — insuffisant : sur une
+     * denture d'acier ou de titane cette fraction dépasse encore largement le couple
+     * d'un petit moulin, qui se fait donc caler pareil. Le plafond suit maintenant
+     * **le couple du moteur lui-même** tant que les deux roues ne sont pas
+     * synchronisées, et seulement la résistance du matériau une fois qu'elles le
+     * sont — la denture ne retrouve sa vraie limite qu'après avoir rattrapé la roue
+     * qu'elle entraîne, jamais avant.
+     *
+     * Ce plafond reste **sous** le couple du moteur, jamais au-dessus : la réaction
+     * qui revient sur son propre corps ne peut alors jamais dépasser ce qu'il fournit
+     * lui-même, donc jamais le faire décélérer — au pire il stagne, tout son couple
+     * passant dans la mise en branle du train, et c'est très bien : c'est exactement
+     * l'énergie que la denture est censée transmettre.
+     */
+    private fun updateMotorMeshClutch(dt: Float) {
+        for (mesh in meshes) {
+            val a = gears.firstOrNull { it.wheel.id == mesh.firstId } ?: continue
+            val b = gears.firstOrNull { it.wheel.id == mesh.secondId } ?: continue
+            val motor = a.wheel.motor?.takeIf { it.kind != GearMotorKind.NONE }
+                ?: b.wheel.motor?.takeIf { it.kind != GearMotorKind.NONE }
+                ?: continue
+            val joint = mesh.joint
+            val slipSpeed = abs(b.body.omega + joint.ratio * a.body.omega)
+            mesh.clutchGrip = approachGrip(mesh.clutchGrip, clutchTargetGrip(slipSpeed), dt)
+            // Sous le couple du moteur, jamais dessus — voir la doc de la fonction.
+            val motorCeiling = GearMotorRules.maxTorque(motor) * MOTOR_MESH_HEADROOM
+            val floor = minOf(mesh.baseMaxTorque, motorCeiling)
+            joint.maxTorqueOnB = floor + (mesh.baseMaxTorque - floor) * mesh.clutchGrip.coerceIn(0f, 1f)
+        }
+    }
+
+    /**
+     * Le levier du lanceur : coupe ou rétablit tout ce qui le relie au reste de la
+     * machine, quelle que soit la façon dont il y est relié.
+     *
+     * **Un interrupteur sur les liaisons, pas sur une valeur de couple.** [Joint.enabled]
+     * existe déjà pour ça — c'est ce que le solveur regarde en tout premier, et une
+     * liaison désactivée ne fait plus rien du tout, denture comme courroie, chaîne ou
+     * arbre coaxial. Le levier n'a donc pas besoin de savoir comment le lanceur est
+     * bâti aujourd'hui : il éteint tout ce qui le touche, et rien d'autre.
+     */
+    private fun applyLauncherClutch() {
+        val id = config.launcherWheelId ?: return
+        val engaged = config.launcherEngaged
+        for (mesh in meshes) {
+            if (mesh.firstId == id || mesh.secondId == id) mesh.joint.enabled = engaged
+        }
+        for (transmission in transmissions) {
+            if (transmission.config.firstId == id || transmission.config.secondId == id) {
+                transmission.joint.enabled = engaged
+            }
+        }
+    }
+
+    /** Embraye ou débraye le lanceur — voir [applyLauncherClutch]. */
+    fun setLauncherEngaged(engaged: Boolean): Boolean {
+        config.launcherEngaged = engaged
+        applyLauncherClutch()
+        return engaged
+    }
+
     fun addGear(teeth: Int, x: Float, y: Float, layer: Int): Int? {
         if (config.wheels.size >= GearMachineRules.MAX_GEARS) return null
         val wheel = GearWheelConfig(
             config.nextId++, x, y,
             teeth.coerceIn(GearMachineRules.MIN_TEETH, GearMachineRules.MAX_TEETH),
-            layer.coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER)
+            layer.coerceIn(GearMachineRules.MIN_LAYER, GearMachineRules.MAX_LAYER),
+            // Une piece qui vient d'arriver est du meme materiau que le reste de la
+            // machine : c'est un choix de machine entiere, pas un tirage par piece.
+            material = config.material
         )
         snap(wheel, ignoreId = -1, GearMachineRules.MAGNET_ENGAGE_MODULES)
         config.wheels += wheel
@@ -1674,13 +1776,19 @@ class GearMachineGame(
         return wheel.layer
     }
 
-    fun changeMaterial(id: Int, delta: Int): GearWheelMaterial? {
-        val wheel = config.wheels.firstOrNull { it.id == id } ?: return null
-        val materials = GearWheelMaterial.entries
-        val index = Math.floorMod(wheel.material.ordinal + delta, materials.size)
-        wheel.material = materials[index]
+    /**
+     * Change le matériau de **toute la machine**, d'un coup.
+     *
+     * Une roue en bois et sa voisine en titane n'a pas de sens : le matériau se
+     * choisit donc une fois pour tout ce qui est construit, présent ou à venir — voir
+     * [addGear]. Le choix se fait dans le sous-menu « Pièces », pas sur une roue prise
+     * au doigt : ce n'est plus un réglage de pièce.
+     */
+    fun setGlobalMaterial(material: GearWheelMaterial): GearWheelMaterial {
+        config.material = material
+        for (wheel in config.wheels) wheel.material = material
         rebuild()
-        return wheel.material
+        return material
     }
 
     /** Choisit le lanceur qui tire. Seuls un volant ou un canon portent une visée. */
@@ -2338,5 +2446,16 @@ class GearMachineGame(
 
         /** Au-delà, on arrête d'attendre : le boulet roule, on a tout vu. */
         private const val MAX_ROLL = 4f
+
+        /**
+         * La part du couple du moteur que sa propre denture peut lui renvoyer en
+         * réaction, tant que les deux roues ne sont pas synchronisées — voir
+         * [updateMotorMeshClutch]. **Toujours strictement sous 1** : au-delà, la
+         * réaction dépasserait ce que le moteur sait fournir et le décélérerait — c'est
+         * exactement le calage qu'on cherche à éviter. En dessous d'1, il lui reste
+         * toujours de quoi tenir sa vitesse pendant que la denture met le train en
+         * branle avec le reste.
+         */
+        private const val MOTOR_MESH_HEADROOM = 0.9f
     }
 }

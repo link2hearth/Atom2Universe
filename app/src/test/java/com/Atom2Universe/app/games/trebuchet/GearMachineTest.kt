@@ -197,7 +197,7 @@ class GearMachineTest {
         assertEquals(initialEnergy, game.rotationalEnergy(setOf(1)), initialEnergy * 1e-5f)
         assertTrue(game.gears.first { it.wheel.id == 1 }.body.omega > 0f)
 
-        game.changeMaterial(1, 1)
+        game.setGlobalMaterial(GearWheelMaterial.ALUMINUM)
         assertEquals(initialEnergy, game.rotationalEnergy(setOf(1)), initialEnergy * 1e-5f)
     }
 

@@ -204,9 +204,7 @@ enum class GearWheelMaterial(val physics: MachineMaterial, val axleFriction: Flo
     WOOD(MachineMaterials.WOOD, 0.020f),
     ALUMINUM(MachineMaterials.ALUMINUM, 0.012f),
     STEEL(MachineMaterials.STEEL, 0.016f),
-    TITANIUM(MachineMaterials.TITANIUM, 0.010f);
-
-    fun next(): GearWheelMaterial = entries[(ordinal + 1) % entries.size]
+    TITANIUM(MachineMaterials.TITANIUM, 0.010f)
 }
 
 data class GearWheelConfig(
@@ -551,13 +549,33 @@ class GearMachineConfig(
      * pas un moteur — mais elle se règle depuis la bulle d'un moteur, là où on la
      * regarde. C'est exactement le partage déjà retenu pour la masse du boulet.
      */
-    var chargeSeconds: Float = GearMachineRules.DEFAULT_CHARGE
+    var chargeSeconds: Float = GearMachineRules.DEFAULT_CHARGE,
+    /**
+     * Le matériau de la machine, **un seul pour tout ce qu'on bâtit**.
+     *
+     * Une roue en bois et sa voisine en titane n'a aucun sens : c'était pourtant ce
+     * que la bulle de chaque pièce proposait, roue par roue. Le choix se fait
+     * maintenant une fois, ici, et [GearMachineGame.setGlobalMaterial] l'applique
+     * d'un coup à toute la machine — présente et à venir, voir [GearMachineGame.addGear].
+     */
+    var material: GearWheelMaterial = GearWheelMaterial.WOOD,
+    /**
+     * Le levier du lanceur : relié au reste de la machine, ou débrayé.
+     *
+     * **Un interrupteur, pas un curseur.** Un embrayage à pourcentage a été essayé et
+     * ne rendait pas service : ce qu'on veut au pied du lanceur, c'est pouvoir le
+     * couper du train d'un geste — pour le freiner seul, ou simplement l'arrêter d'en
+     * recevoir — sans démonter la machine ni déplacer une roue. La prise en douceur,
+     * elle, reste automatique : voir [GearMachineGame.updateMotorMeshClutch].
+     */
+    var launcherEngaged: Boolean = true
 ) {
     var nextId: Int = (wheels.maxOfOrNull { it.id } ?: 0) + 1
 
     fun deepCopy(): GearMachineConfig = GearMachineConfig(
         wheels.map { it.copyWheel() }.toMutableList(), launcherWheelId,
-        projectileMass, links.map { it.copyLink() }.toMutableList(), chargeSeconds
+        projectileMass, links.map { it.copyLink() }.toMutableList(), chargeSeconds, material,
+        launcherEngaged
     ).also {
         it.nextId = nextId
     }
@@ -688,7 +706,7 @@ class GearMachineConfig(
         ) {
             val launcher = GearWheelConfig(
                 nextId++, GearMachineRules.LAUNCHER_X, 0f,
-                GearMachineRules.FLYWHEEL_TEETH, kind = GearWheelKind.FLYWHEEL
+                GearMachineRules.FLYWHEEL_TEETH, kind = GearWheelKind.FLYWHEEL, material = material
             )
             launcher.y = GearMachineRules.launcherY(launcher)
             wheels += launcher
@@ -702,6 +720,7 @@ class GearMachineConfig(
                 leftmost?.y ?: 6f,
                 GearMachineRules.MOTOR_TEETH,
                 layer = leftmost?.layer ?: 0,
+                material = material,
                 motor = GearMotorConfig(
                     GearMotorKind.WINDMILL,
                     span = GearMotorRules.defaultSpan(GearMotorKind.WINDMILL)
@@ -760,7 +779,8 @@ class GearMachinePreset(name: String, config: GearMachineConfig) {
 /** Format tolérant et versionné des machines à engrenages. */
 object GearMachineLibrary {
     const val MAX_PRESETS = 30
-    private const val VERSION = "G7"
+    private const val VERSION = "G8"
+    private const val VERSION_G7 = "G7"
     private const val VERSION_G6 = "G6"
     private const val VERSION_G5 = "G5"
     private const val VERSION_G4 = "G4"
@@ -772,11 +792,15 @@ object GearMachineLibrary {
         for (preset in list.take(MAX_PRESETS)) {
             append(VERSION).append('\t').append(preset.name)
             // L'angle garde sa place dans l'entete pour que les versions anterieures
-            // relisent quelque chose de sense : c'est celui du volant qui tire.
+            // relisent quelque chose de sense : c'est celui du volant qui tire. Le
+            // materiau y rejoint depuis G8 : il est desormais unique pour toute la
+            // machine, et non plus repete roue par roue. Le levier du lanceur suit.
             append('\t').append("L,").append(preset.config.launcherWheelId ?: -1).append(',')
                 .append(preset.config.launcher()?.launchAngle ?: 35f).append(',')
                 .append(preset.config.projectileMass).append(',')
-                .append(preset.config.chargeSeconds)
+                .append(preset.config.chargeSeconds).append(',')
+                .append(preset.config.material.name).append(',')
+                .append(if (preset.config.launcherEngaged) 1 else 0)
             for (link in preset.config.links) {
                 append('\t').append("T,").append(link.kind.name).append(',')
                     .append(link.firstId).append(',').append(link.secondId).append(',')
@@ -805,7 +829,7 @@ object GearMachineLibrary {
             val fields = line.split('\t')
             val version = fields.getOrNull(0) ?: continue
             if (fields.size < 2 || version !in setOf(
-                    VERSION, VERSION_G6, VERSION_G5, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1
+                    VERSION, VERSION_G7, VERSION_G6, VERSION_G5, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1
                 )
             ) continue
             val name = MachinePreset.clean(fields[1])
@@ -815,15 +839,24 @@ object GearMachineLibrary {
             var launcherAngle = 35f
             var projectileMass = GearMachineRules.DEFAULT_PROJECTILE_MASS
             var chargeSeconds = GearMachineRules.DEFAULT_CHARGE
+            // Avant G8 il n'y avait pas de matiere commune : elle se devine, une fois
+            // les roues relues, de celle de la premiere d'entre elles. Le levier du
+            // lanceur n'existait pas non plus : une machine relue est embrayee, comme
+            // elle l'a toujours ete.
+            var globalMaterial: GearWheelMaterial? = null
+            var launcherEngaged = true
             val links = ArrayList<GearLinkConfig>()
             for (field in fields.drop(2)) {
                 val value = field.split(',')
-                if (value.size in 4..5 && value[0] == "L") {
+                if (value.size in 4..7 && value[0] == "L") {
                     launcherId = value[1].toIntOrNull()?.takeIf { it >= 0 }
                     launcherAngle = value[2].toFloatOrNull() ?: launcherAngle
                     projectileMass = value[3].toFloatOrNull() ?: projectileMass
                     // Avant G6 personne ne chargeait : la durée par défaut fait l'affaire.
                     chargeSeconds = value.getOrNull(4)?.toFloatOrNull() ?: chargeSeconds
+                    globalMaterial = value.getOrNull(5)
+                        ?.let { runCatching { GearWheelMaterial.valueOf(it) }.getOrNull() }
+                    launcherEngaged = value.getOrNull(6)?.toIntOrNull() != 0
                     continue
                 }
                 if (value.size == 5 && value[0] == "T") {
@@ -868,8 +901,11 @@ object GearMachineLibrary {
                     id, x, y, teeth, layer, kind, material, angle, launch, motor, reservoirVolume
                 )
             }
-            val config =
-                GearMachineConfig(wheels, launcherId, projectileMass, links, chargeSeconds)
+            val config = GearMachineConfig(
+                wheels, launcherId, projectileMass, links, chargeSeconds,
+                globalMaterial ?: wheels.firstOrNull()?.material ?: GearWheelMaterial.WOOD,
+                launcherEngaged
+            )
             config.clamp()
             if (config.wheels.isNotEmpty()) out += GearMachinePreset(name, config)
         }

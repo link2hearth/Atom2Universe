@@ -104,6 +104,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
         const val ID_GROUP_GEAR_SIZES = 90
         const val ID_GROUP_TRANSMISSION = 91
+        const val ID_GROUP_MATERIAL = 92
         const val ID_BELT_OPEN = 119
         const val ID_BELT_CROSSED = 120
         const val ID_CHAIN_CCW = 121
@@ -112,6 +113,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         const val ID_LINK_CANCEL = 124
         const val ID_FIRST_GEAR_SIZE = 130
         const val ID_GEAR_RESET = 126
+        const val ID_FIRST_MATERIAL = 140
 
         /** Un libellé par taille de roue, dans l'ordre de [GearMachineRules.SIZES]. */
         val GEAR_SIZE_LABELS = intArrayOf(
@@ -314,6 +316,32 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         if (machineMode == MachineMode.TREBUCHET) gameView.resume() else gearView.resume()
     }
 
+    /**
+     * Un `PopupMenu` ouvre sa propre fenêtre, et celle-ci fait réapparaître les barres
+     * système : Android les redonne à toute fenêtre qui prend le focus sans avoir
+     * elle-même demandé à les cacher. Filet de sécurité général — un retour au premier
+     * plan depuis une autre appli, par exemple — mais **pas suffisant à lui seul** pour
+     * un `PopupMenu` : voir [showKeepingBarsHidden], qui fait le travail précis.
+     */
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) enableImmersiveMode()
+    }
+
+    /**
+     * Montre le menu, et referme la porte que ça ouvre.
+     *
+     * `onWindowFocusChanged` ne suffisait pas : il se déclenche bien à la fermeture du
+     * menu, mais **avant** que le système ait fini de remonter les barres qu'il vient
+     * de révéler — les recacher à cet instant-là revient à les recacher trop tôt, et
+     * il les remonte quand même juste après. On attend donc que la file de dessin de
+     * la fenêtre soit vidée, ce qui place notre appel **après** cette remontée.
+     */
+    private fun PopupMenu.showKeepingBarsHidden() {
+        setOnDismissListener { window.decorView.post { enableImmersiveMode() } }
+        show()
+    }
+
     override fun onPause() {
         super.onPause()
         gameView.pause()
@@ -434,7 +462,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             }
             true
         }
-        popup.show()
+        popup.showKeepingBarsHidden()
     }
 
     /**
@@ -609,7 +637,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             }
             true
         }
-        popup.show()
+        popup.showKeepingBarsHidden()
     }
 
     /**
@@ -641,7 +669,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             }
             true
         }
-        popup.show()
+        popup.showKeepingBarsHidden()
     }
 
     /**
@@ -678,11 +706,31 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
                 link.add(0, ID_LINK_CANCEL, 5, getString(R.string.trebuchet_gear_link_cancel))
             }
         }
+        // Le materiau vaut pour toute la machine : ce n'est plus le reglage d'une
+        // piece, donc il vit dans ce menu-la et non plus dans la bulle d'une roue.
+        val materials = popup.menu.addSubMenu(
+            0, ID_GROUP_MATERIAL, 5, getString(R.string.trebuchet_gear_material_menu)
+        )
+        val currentMaterial = gearView.game.config.material
+        for ((i, material) in GearWheelMaterial.entries.withIndex()) {
+            materials.add(ID_GROUP_MATERIAL, ID_FIRST_MATERIAL + i, i, gearMaterialLabel(material))
+                .isChecked = material == currentMaterial
+        }
+        // Coche exclusive : le materiau courant se voit d'un coup d'oeil, comme un
+        // choix parmi d'autres et non une simple liste de commandes.
+        materials.setGroupCheckable(ID_GROUP_MATERIAL, true, true)
         popup.menu.add(0, ID_GEAR_RESET, 4, getString(R.string.trebuchet_gear_reset))
         popup.setOnMenuItemClickListener { item ->
             val id = item.itemId
             if (id in ID_FIRST_GEAR_SIZE until ID_FIRST_GEAR_SIZE + GearMachineRules.SIZES.size) {
                 gearView.armPlacement(GearMachineRules.SIZES[id - ID_FIRST_GEAR_SIZE])
+                updateUi()
+                return@setOnMenuItemClickListener true
+            }
+            if (id in ID_FIRST_MATERIAL until ID_FIRST_MATERIAL + GearWheelMaterial.entries.size) {
+                val material = GearWheelMaterial.entries[id - ID_FIRST_MATERIAL]
+                gearView.setGlobalMaterial(material)
+                toast(getString(R.string.trebuchet_gear_material_applied, gearMaterialLabel(material)))
                 updateUi()
                 return@setOnMenuItemClickListener true
             }
@@ -701,7 +749,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             updateUi()
             true
         }
-        popup.show()
+        popup.showKeepingBarsHidden()
     }
 
     /** Pose une machine sur le terrain et le dit, parce que ça ne se voit pas toujours. */
@@ -814,7 +862,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             }
             true
         }
-        popup.show()
+        popup.showKeepingBarsHidden()
     }
 
     private fun toast(text: String) {

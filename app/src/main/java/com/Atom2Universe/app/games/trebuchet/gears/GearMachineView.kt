@@ -137,13 +137,14 @@ class GearMachineView @JvmOverloads constructor(
     }
     private val trailPath = Path()
     private val spinRect = RectF()
+    /** Les quatre points des deux brins d'une courroie ou d'une chaîne — voir [beltTangentPoints]. */
+    private val transmissionPts = FloatArray(8)
     private val pTrack = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
     }
     private val pSpin = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(255, 209, 102); style = Paint.Style.STROKE; strokeWidth = 0.07f
     }
-    private val pText = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 11f * dp; textAlign = Paint.Align.CENTER }
     private val pUpperLayer = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = 0.045f
@@ -653,13 +654,21 @@ class GearMachineView @JvmOverloads constructor(
         return layer
     }
 
-    fun changeSelectedMaterial(delta: Int): GearWheelMaterial? {
-        val id = selectedId ?: return null
-        val material = game.changeMaterial(id, delta) ?: return null
+    /** Change le matériau de toute la machine d'un coup — voir [GearMachineGame.setGlobalMaterial]. */
+    fun setGlobalMaterial(material: GearWheelMaterial): GearWheelMaterial {
+        val applied = game.setGlobalMaterial(material)
         layoutConflictIds = emptySet()
         listener?.onGearMachineChanged()
         invalidate()
-        return material
+        return applied
+    }
+
+    /** Embraye ou débraye le lanceur — voir [GearMachineGame.setLauncherEngaged]. */
+    fun toggleLauncherClutch(): Boolean {
+        val engaged = game.setLauncherEngaged(!game.config.launcherEngaged)
+        listener?.onGearMachineChanged()
+        invalidate()
+        return engaged
     }
 
     fun setProjectileMass(mass: Float): Float {
@@ -1044,7 +1053,10 @@ class GearMachineView @JvmOverloads constructor(
             val a = game.gears.firstOrNull { it.wheel.id == mesh.firstId } ?: continue
             val b = game.gears.firstOrNull { it.wheel.id == mesh.secondId } ?: continue
             pMesh.color = layerColor(a.wheel.layer, pastel = a.wheel.layer < currentLayer)
-            pMesh.alpha = layerAlpha(a.wheel.layer, 170, 80)
+            val alpha = layerAlpha(a.wheel.layer, 170, 80)
+            // Meme regle que les transmissions : une denture coupee par le levier du
+            // lanceur s'affiche estompee.
+            pMesh.alpha = if (mesh.joint.enabled) alpha else (alpha * 0.3f).toInt()
             canvas.drawLine(a.body.x, a.body.y, b.body.x, b.body.y, pMesh)
         }
         drawMotors(canvas)
@@ -1066,20 +1078,6 @@ class GearMachineView @JvmOverloads constructor(
         drawGhosts(canvas)
         drawTrail(canvas)
 
-        for (gear in game.gears) {
-            val x = sx(gear.body.x)
-            val y = sy(gear.body.y)
-            pText.color = if (gear.wheel.id == selectedId) Color.rgb(255, 209, 102)
-                else layerColor(gear.wheel.layer, pastel = gear.wheel.layer < currentLayer)
-            pText.alpha = layerAlpha(gear.wheel.layer, 210, 75)
-            val kind = when (gear.wheel.kind) {
-                GearWheelKind.FLYWHEEL -> "V"
-                GearWheelKind.PUMP -> "C"
-                else -> "${gear.wheel.teeth}T"
-            }
-            canvas.drawText("L${gear.wheel.layer} · $kind", x, y + 4f * dp, pText)
-        }
-        pText.alpha = 255
         drawLayerSelector(canvas)
         drawStructureTool(canvas)
         // Les explosions sont devant tout : une gerbe derriere le mur qu'elle demolit
@@ -1690,6 +1688,59 @@ class GearMachineView @JvmOverloads constructor(
         canvas.drawCircle(x, y, (0.10f + gear.wheel.outerRadius * 0.025f).coerceAtMost(0.20f), pFrame)
     }
 
+    /**
+     * Les points où une courroie ou une chaîne touche chaque roue, tangente à sa
+     * jante — et non plantés au moyeu quelle que soit sa taille, comme c'était le cas.
+     *
+     * Une courroie **ouverte** longe l'extérieur des deux poulies sans jamais passer
+     * entre elles : ses deux brins sont les tangentes **externes**, celles qui
+     * touchent les deux jantes du même côté. Une courroie **croisée** passe entre les
+     * deux, en X : ce sont les tangentes **internes**, de chaque côté opposé. La
+     * chaîne suit la même géométrie qu'une courroie ouverte.
+     *
+     * Les deux cas se résolvent par la même construction : dans le repère porté par
+     * l'axe des deux moyeux, le point de contact sur chaque jante est à la même
+     * direction `v` (à l'échelle du rayon propre de chaque roue) — seule la
+     * composante le long de l'axe change de signe entre externe et interne. Ecrire
+     * que la corde reliant les deux contacts est bien perpendiculaire à `v` donne
+     * cette composante directement, sans repasser par un angle.
+     *
+     * Remplit [transmissionPts] : brin 1 en `0..3`, brin 2 en `4..7`. Ne fait aucune
+     * allocation — appelée à chaque image, pour chaque transmission.
+     */
+    private fun beltTangentPoints(
+        ax: Float, ay: Float, ar: Float,
+        bx: Float, by: Float, br: Float,
+        crossed: Boolean
+    ) {
+        val dx = bx - ax
+        val dy = by - ay
+        val d = hypot(dx, dy).coerceAtLeast(1e-4f)
+        val ux = dx / d
+        val uy = dy / d
+        val nx = -uy
+        val ny = ux
+        // Externe : composante le long de l'axe proportionnelle à l'écart des rayons.
+        // Interne (croisée) : à leur somme, et le contact sur B passe de l'autre côté.
+        val along = ((if (crossed) ar + br else ar - br) / d).coerceIn(-0.999f, 0.999f)
+        val across = kotlin.math.sqrt((1f - along * along).coerceAtLeast(0f))
+        val bSign = if (crossed) -1f else 1f
+        // Brin 1.
+        var vx = along * ux + across * nx
+        var vy = along * uy + across * ny
+        transmissionPts[0] = ax + ar * vx
+        transmissionPts[1] = ay + ar * vy
+        transmissionPts[2] = bx + bSign * br * vx
+        transmissionPts[3] = by + bSign * br * vy
+        // Brin 2, de l'autre côté de l'axe.
+        vx = along * ux - across * nx
+        vy = along * uy - across * ny
+        transmissionPts[4] = ax + ar * vx
+        transmissionPts[5] = ay + ar * vy
+        transmissionPts[6] = bx + bSign * br * vx
+        transmissionPts[7] = by + bSign * br * vy
+    }
+
     private fun drawTransmissions(canvas: Canvas) {
         for (transmission in game.transmissions) {
             val a = game.gears.firstOrNull { it.wheel.id == transmission.config.firstId } ?: continue
@@ -1697,28 +1748,38 @@ class GearMachineView @JvmOverloads constructor(
             val dx = b.body.x - a.body.x
             val dy = b.body.y - a.body.y
             val length = hypot(dx, dy).coerceAtLeast(1e-4f)
-            val ox = -dy / length * 0.10f
-            val oy = dx / length * 0.10f
             val layerAlpha = layerAlpha(a.wheel.layer, 150, 60)
             pBelt.alpha = layerAlpha
             pChain.alpha = layerAlpha
+            // Une liaison coupee par le levier du lanceur s'affiche estompee : le
+            // joueur voit d'un coup d'oeil qu'elle est debrayee, quel que soit son
+            // genre — voir [GearMachineGame.applyLauncherClutch].
+            if (!transmission.joint.enabled) {
+                pBelt.alpha = (layerAlpha * 0.3f).toInt()
+                pChain.alpha = (layerAlpha * 0.3f).toInt()
+            }
             when (transmission.config.kind) {
                 GearLinkKind.BELT_OPEN -> {
-                    canvas.drawLine(a.body.x + ox, a.body.y + oy, b.body.x + ox, b.body.y + oy, pBelt)
-                    canvas.drawLine(a.body.x - ox, a.body.y - oy, b.body.x - ox, b.body.y - oy, pBelt)
+                    beltTangentPoints(a.body.x, a.body.y, a.wheel.pitchRadius, b.body.x, b.body.y, b.wheel.pitchRadius, crossed = false)
+                    canvas.drawLine(transmissionPts[0], transmissionPts[1], transmissionPts[2], transmissionPts[3], pBelt)
+                    canvas.drawLine(transmissionPts[4], transmissionPts[5], transmissionPts[6], transmissionPts[7], pBelt)
                 }
                 GearLinkKind.BELT_CROSSED -> {
-                    canvas.drawLine(a.body.x + ox, a.body.y + oy, b.body.x - ox, b.body.y - oy, pBelt)
-                    canvas.drawLine(a.body.x - ox, a.body.y - oy, b.body.x + ox, b.body.y + oy, pBelt)
+                    beltTangentPoints(a.body.x, a.body.y, a.wheel.pitchRadius, b.body.x, b.body.y, b.wheel.pitchRadius, crossed = true)
+                    canvas.drawLine(transmissionPts[0], transmissionPts[1], transmissionPts[2], transmissionPts[3], pBelt)
+                    canvas.drawLine(transmissionPts[4], transmissionPts[5], transmissionPts[6], transmissionPts[7], pBelt)
                 }
                 GearLinkKind.CHAIN_FREEWHEEL -> {
                     if (!(transmission.joint as com.Atom2Universe.app.games.physics.OneWayRotaryJoint).engaged) {
                         pChain.alpha = (layerAlpha * 0.55f).toInt()
                     }
-                    canvas.drawLine(a.body.x + ox, a.body.y + oy, b.body.x + ox, b.body.y + oy, pChain)
-                    canvas.drawLine(a.body.x - ox, a.body.y - oy, b.body.x - ox, b.body.y - oy, pChain)
+                    beltTangentPoints(a.body.x, a.body.y, a.wheel.pitchRadius, b.body.x, b.body.y, b.wheel.pitchRadius, crossed = false)
+                    canvas.drawLine(transmissionPts[0], transmissionPts[1], transmissionPts[2], transmissionPts[3], pChain)
+                    canvas.drawLine(transmissionPts[4], transmissionPts[5], transmissionPts[6], transmissionPts[7], pChain)
                     val mx = (a.body.x + b.body.x) * 0.5f
                     val my = (a.body.y + b.body.y) * 0.5f
+                    val ox = -dy / length * 0.10f
+                    val oy = dx / length * 0.10f
                     val direction = transmission.config.inputDirection.toFloat()
                     gearPath.reset()
                     gearPath.moveTo(mx + dx / length * 0.24f * direction, my + dy / length * 0.24f * direction)
@@ -1732,12 +1793,11 @@ class GearMachineView @JvmOverloads constructor(
                 GearLinkKind.SHAFT_CLUTCH -> {
                     val radius = (minOf(a.wheel.pitchRadius, b.wheel.pitchRadius) * 0.32f)
                         .coerceAtLeast(0.13f)
-                    pChain.alpha = layerAlpha
                     pChain.strokeWidth = 0.065f
                     canvas.drawCircle(a.body.x, a.body.y, radius, pChain)
                     canvas.drawCircle(a.body.x, a.body.y, radius * 0.58f, pChain)
                     pGear.color = Color.rgb(255, 209, 102)
-                    pGear.alpha = layerAlpha
+                    pGear.alpha = pChain.alpha
                     canvas.drawCircle(a.body.x, a.body.y, 0.065f, pGear)
                 }
             }

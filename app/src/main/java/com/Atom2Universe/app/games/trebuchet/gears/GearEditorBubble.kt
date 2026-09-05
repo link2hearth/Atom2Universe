@@ -56,7 +56,6 @@ class GearEditorBubble @JvmOverloads constructor(
     ) {
         TEETH(R.string.trebuchet_gear_edit_teeth, R.string.trebuchet_gear_unit_teeth, 3, 1),
         LAYER(R.string.trebuchet_gear_edit_layer, R.string.trebuchet_gear_unit_layer, 2, 1, signed = true),
-        MATERIAL(R.string.trebuchet_gear_edit_material, R.string.trebuchet_gear_unit_none, 0, 1, choice = true),
 
         /**
          * Le gabarit de la machine motrice, en mètres de rayon.
@@ -119,7 +118,7 @@ class GearEditorBubble @JvmOverloads constructor(
     private var lastWheelId: Int? = null
 
     /** Les boutons du bas. Ils dependent entierement de la piece tenue. */
-    private enum class Action { MOTOR, LAUNCHER_KIND, CHARGE, COUPLE, DUPLICATE, DELETE }
+    private enum class Action { MOTOR, LAUNCHER_KIND, CHARGE, COUPLE, CLUTCH, DUPLICATE, DELETE }
 
     private val dp = resources.displayMetrics.density
 
@@ -287,7 +286,6 @@ class GearEditorBubble @JvmOverloads constructor(
         val out = ArrayList<Dial>(7)
         out += Dial.TEETH
         out += Dial.LAYER
-        out += Dial.MATERIAL
         if (wheel.kind in GearMachineRules.LAUNCHER_KINDS) {
             out += Dial.LAUNCH
             // Le réservoir n'existe que pour un canon : un volant n'a rien à mettre
@@ -319,7 +317,7 @@ class GearEditorBubble @JvmOverloads constructor(
     private fun actionsFor(wheel: GearWheelConfig?): List<Action> {
         if (wheel == null) return emptyList()
         val view = gearView ?: return emptyList()
-        if (view.game.config.isPinned(wheel.id)) return listOf(Action.LAUNCHER_KIND)
+        if (view.game.config.isPinned(wheel.id)) return listOf(Action.LAUNCHER_KIND, Action.CLUTCH)
         val out = ArrayList<Action>(3)
         if (wheel.motor != null) {
             out += Action.MOTOR
@@ -678,6 +676,12 @@ class GearEditorBubble @JvmOverloads constructor(
             else R.string.trebuchet_gear_charge
         )
         Action.COUPLE -> context.getString(R.string.trebuchet_gear_couple)
+        // Le bouton dit ce qu'il fera au prochain appui, exactement comme CHARGE :
+        // « Débrayer » tant que c'est relié, « Embrayer » une fois coupé.
+        Action.CLUTCH -> context.getString(
+            if (gearView?.game?.config?.launcherEngaged != false) R.string.trebuchet_gear_clutch_disengage
+            else R.string.trebuchet_gear_clutch_engage
+        )
         Action.DUPLICATE -> context.getString(R.string.trebuchet_gear_duplicate)
         Action.DELETE -> context.getString(R.string.trebuchet_gear_delete_short)
     }
@@ -778,6 +782,7 @@ class GearEditorBubble @JvmOverloads constructor(
             Action.LAUNCHER_KIND -> view.cycleSelectedLauncherKind()
             Action.CHARGE -> view.toggleCharge()
             Action.COUPLE -> view.armLink(GearLinkKind.SHAFT_CLUTCH)
+            Action.CLUTCH -> view.toggleLauncherClutch()
             Action.DUPLICATE -> view.duplicateSelected()
             Action.DELETE -> view.deleteSelected()
         }
@@ -963,7 +968,7 @@ class GearEditorBubble @JvmOverloads constructor(
             // Le modele garde le reservoir en m3 ; la roulette le montre en litres,
             // plus lisible sur une piece qui va de dix a deux mille.
             Dial.TANK -> (wheel.reservoirVolume * 1_000f).roundToInt()
-            Dial.MATERIAL, Dial.SPEED -> 0
+            Dial.SPEED -> 0
         }
     }
 
@@ -978,7 +983,7 @@ class GearEditorBubble @JvmOverloads constructor(
             Dial.LAUNCH -> view.setSelectedLaunchAngle(value.toFloat())
             Dial.BALL -> view.setProjectileMass(value.toFloat())
             Dial.TANK -> view.setSelectedReservoirVolume(value / 1_000f)
-            Dial.MATERIAL, Dial.SPEED -> Unit
+            Dial.SPEED -> Unit
         }
     }
 
@@ -996,35 +1001,11 @@ class GearEditorBubble @JvmOverloads constructor(
         return out
     }
 
-    private fun wordsOf(d: Dial): List<String> = when (d) {
-        Dial.MATERIAL -> GearWheelMaterial.entries.map { materialName(it) }
-        else -> emptyList()
-    }
+    private fun wordsOf(d: Dial): List<String> = emptyList()
 
-    private fun choiceIndex(d: Dial): Int {
-        val wheel = gearView?.selectedWheel() ?: return 0
-        return when (d) {
-            Dial.MATERIAL -> wheel.material.ordinal
-            else -> 0
-        }
-    }
+    private fun choiceIndex(d: Dial): Int = 0
 
-    private fun cycleChoice(d: Dial, delta: Int) {
-        val view = gearView ?: return
-        when (d) {
-            Dial.MATERIAL -> view.changeSelectedMaterial(delta)
-            else -> Unit
-        }
-    }
-
-    private fun materialName(material: GearWheelMaterial): String = context.getString(
-        when (material) {
-            GearWheelMaterial.WOOD -> R.string.trebuchet_gear_material_wood
-            GearWheelMaterial.ALUMINUM -> R.string.trebuchet_gear_material_aluminum
-            GearWheelMaterial.STEEL -> R.string.trebuchet_gear_material_steel
-            GearWheelMaterial.TITANIUM -> R.string.trebuchet_gear_material_titanium
-        }
-    )
+    private fun cycleChoice(d: Dial, delta: Int) = Unit
 
     private fun speedText(): String =
         ((gearView?.selectedOmega() ?: 0f) * RAD_PER_S_TO_RPM).roundToInt().toString()

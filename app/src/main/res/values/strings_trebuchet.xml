@@ -90,6 +90,8 @@
     <string name="trebuchet_gear_material_aluminum">Aluminum</string>
     <string name="trebuchet_gear_material_steel">Steel</string>
     <string name="trebuchet_gear_material_titanium">Titanium</string>
+    <string name="trebuchet_gear_material_menu">Wheel material…</string>
+    <string name="trebuchet_gear_material_applied">Whole machine now built in %1$s</string>
     <string name="trebuchet_gear_belt_open">Open belt — same direction</string>
     <string name="trebuchet_gear_belt_crossed">Crossed belt — opposite direction</string>
     <string name="trebuchet_gear_chain_ccw">Chain + freewheel — counterclockwise drive</string>
@@ -187,7 +189,8 @@
     <string name="trebuchet_gear_edit_ball">Ball</string>
     <string name="trebuchet_gear_edit_launch">Launch</string>
     <string name="trebuchet_gear_edit_tank">Tank</string>
-    <string name="trebuchet_gear_edit_material">Material</string>
+    <string name="trebuchet_gear_clutch_engage">ENGAGE</string>
+    <string name="trebuchet_gear_clutch_disengage">DISENGAGE</string>
     <string name="trebuchet_gear_size_header">Ø %1$d cm · circumference %2$d cm</string>
     <string name="trebuchet_gear_tool_part">TOOL · PART</string>
     <string name="trebuchet_gear_tool_frame">FRAME · MOVE</string>
