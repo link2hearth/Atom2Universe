@@ -18,6 +18,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.physics.PhysBody
@@ -294,6 +295,12 @@ class TrebuchetView @JvmOverloads constructor(
         /** Deux appuis rapprochés rendent le cadrage à la caméra. */
         const val DOUBLE_TAP_MS = 300L
 
+        /** Le tableau de bord replié ou non, retenu d'une partie à l'autre. */
+        const val KEY_SPECS_COLLAPSED = "trebuchet_specs_collapsed"
+
+        /** Le côté de la bande que le tableau de bord replié laisse à sa place. */
+        const val SPECS_HANDLE_DP = 36f
+
         /** Sous ce déplacement, un doigt posé est un appui, pas un glissement. */
         const val DRAG_SLOP_DP = 9f
 
@@ -546,6 +553,62 @@ class TrebuchetView @JvmOverloads constructor(
         color = "#CFE3FF".toColorInt()
         typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
     }
+
+    /**
+     * Le tableau de bord du trébuchet, en haut à droite : portée du tir précédent,
+     * énergie stockée, poids du projectile.
+     *
+     * **Même bulle que l'atelier, pas un encart maison.** Même coin, même fond, mêmes
+     * couleurs de libellé et de valeur, et le même geste pour la replier — un
+     * double-appui, qui laisse une petite bande à sa place plutôt que de la faire
+     * disparaître. Une première version avait recopié la phrase de la barre Android
+     * dans un encart à gauche : ni le format, ni l'emplacement, ni le repli n'y
+     * étaient, et ce n'était donc pas la même bulle, juste un texte déplacé.
+     */
+    private val pSpecsPanel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(225, 16, 25, 50)
+    }
+    private val pSpecsLabel = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.LEFT
+        color = Color.rgb(143, 166, 200)
+        textSize = 15f * dp
+    }
+    private val pSpecsValue = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.RIGHT
+        color = Color.rgb(255, 209, 102)
+        textSize = 17f * dp
+        typeface = Typeface.create(Typeface.MONOSPACE, Typeface.BOLD)
+    }
+    private val pSpecsHandle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        color = Color.rgb(143, 166, 200)
+        textSize = 18f * dp
+        typeface = Typeface.DEFAULT_BOLD
+    }
+
+    /** La zone du tableau de bord à l'écran — replié ou non — pour lui réserver le toucher. */
+    private val specsBox = RectF()
+    private val fmtLocale = resources.configuration.locales[0]
+
+    /** Replié à une petite bande, ou déployé. Retenu d'une partie à l'autre. */
+    private var specsCollapsed = prefs().getBoolean(KEY_SPECS_COLLAPSED, false)
+
+    /** Les nombres au dernier calcul, pour ne refaire le texte que s'ils ont bougé. */
+    private var specsShotDistance = Float.NaN
+    private var specsEnergy = Int.MIN_VALUE
+    private var specsWeight = Float.NaN
+    private var specsRangeText = ""
+    private var specsEnergyText = ""
+    private var specsWeightText = ""
+
+    /** Les libellés, lus une fois — voir la même raison dans [GearMachineView]. */
+    private val labelSpecsRange = resources.getString(R.string.trebuchet_specs_previous)
+    private val labelSpecsStored = resources.getString(R.string.trebuchet_specs_stored)
+    private val labelSpecsWeight = resources.getString(R.string.trebuchet_dial_weight)
+
+    /** Les trois lignes du panneau, dans des tableaux déjà alloués. */
+    private val specsRowLabel = arrayOf("", "", "")
+    private val specsRowValue = arrayOf("", "", "")
 
 
     private val pHandle = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -1089,6 +1152,13 @@ class TrebuchetView @JvmOverloads constructor(
                 val now = SystemClock.uptimeMillis()
                 val doubleTap = now - lastTapAt < DOUBLE_TAP_MS
                 lastTapAt = now
+                // Le tableau de bord est opaque au toucher, comme à l'atelier : un appui
+                // dessus ne doit jamais attraper la pièce qui se trouve dessous à
+                // l'écran, et il passe donc avant tout le reste du geste.
+                if (specsBox.contains(event.x, event.y)) {
+                    if (doubleTap) toggleSpecsPanel()
+                    return true
+                }
                 grip = Grip.NONE
                 tappedVoid = false
                 dragTravel = 0f
@@ -1640,6 +1710,9 @@ class TrebuchetView @JvmOverloads constructor(
         drawSelection(canvas)
         drawRecenterHint(canvas)
         drawTimeControl(canvas, w)
+        // Le tableau de bord d'abord : la jauge de vent se pose sous lui, qu'il soit
+        // replié ou déployé — voir [specsBox].
+        drawSpecsPanel(canvas, w)
         drawWindGauge(canvas, w)
     }
 
@@ -1777,6 +1850,91 @@ class TrebuchetView @JvmOverloads constructor(
 
 
     /**
+     * Le tableau de bord : la portée du tir précédent, le cran, l'énergie stockée, la
+     * fronde. En haut à droite, replié à une bande d'un double-appui — voir
+     * [GearMachineView.drawLauncherPanel] pour le même principe côté atelier.
+     *
+     * On ne refait un texte que si son nombre a bougé : `getString`/`String.format`
+     * traversent la table des ressources, et ce n'est pas un travail à refaire sans
+     * raison à chaque image.
+     */
+    private fun drawSpecsPanel(canvas: Canvas, w: Float) {
+        val pad = 10f * dp
+        if (specsCollapsed) {
+            val side = SPECS_HANDLE_DP * dp
+            val left = w - side - pad
+            specsBox.set(left, pad, left + side, pad + side)
+            canvas.drawRoundRect(specsBox, 8f * dp, 8f * dp, pSpecsPanel)
+            canvas.drawText(
+                "▼", left + side / 2f,
+                pad + side / 2f - (pSpecsHandle.ascent() + pSpecsHandle.descent()) / 2f, pSpecsHandle
+            )
+            return
+        }
+        val cfg = game.config
+        if (game.shotDistance != specsShotDistance) {
+            specsShotDistance = game.shotDistance
+            specsRangeText = if (specsShotDistance > 0f) {
+                String.format(fmtLocale, "%.0f m", specsShotDistance)
+            } else {
+                resources.getString(R.string.trebuchet_gear_panel_dash)
+            }
+        }
+        val energy = (cfg.storedEnergy / 1000f).toInt()
+        if (energy != specsEnergy) {
+            specsEnergy = energy
+            specsEnergyText = "$energy kJ"
+        }
+        if (cfg.shotMass != specsWeight) {
+            specsWeight = cfg.shotMass
+            specsWeightText = String.format(fmtLocale, "%.0f kg", cfg.shotMass)
+        }
+
+        specsRowLabel[0] = labelSpecsRange; specsRowValue[0] = specsRangeText
+        specsRowLabel[1] = labelSpecsStored; specsRowValue[1] = specsEnergyText
+        specsRowLabel[2] = labelSpecsWeight; specsRowValue[2] = specsWeightText
+
+        var labelWidth = 0f
+        var valueWidth = 0f
+        for (i in specsRowLabel.indices) {
+            labelWidth = max(labelWidth, pSpecsLabel.measureText(specsRowLabel[i]))
+            valueWidth = max(valueWidth, pSpecsValue.measureText(specsRowValue[i]))
+        }
+        val padX = 12f * dp
+        val colGap = 14f * dp
+        val rowH = 27f * dp
+        val boxW = padX * 2f + labelWidth + colGap + valueWidth
+        val boxH = padX * 0.7f * 2f + rowH * specsRowLabel.size
+        val left = w - boxW - pad
+        specsBox.set(left, pad, left + boxW, pad + boxH)
+        canvas.drawRoundRect(specsBox, 8f * dp, 8f * dp, pSpecsPanel)
+
+        val labelX = left + padX
+        val valueX = left + boxW - padX
+        var y = pad + padX * 0.7f
+        for (i in specsRowLabel.indices) {
+            val baseline = y + rowH * 0.5f - (pSpecsValue.ascent() + pSpecsValue.descent()) / 2f
+            canvas.drawText(specsRowLabel[i], labelX, baseline, pSpecsLabel)
+            canvas.drawText(specsRowValue[i], valueX, baseline, pSpecsValue)
+            y += rowH
+        }
+    }
+
+    /**
+     * Replie ou déploie le tableau de bord, et s'en souvient.
+     *
+     * Pas d'`invalidate()` : cette vue est une [SurfaceView], sa boucle de rendu
+     * tourne déjà en continu et redessinera avec le nouvel état à l'image suivante.
+     */
+    private fun toggleSpecsPanel() {
+        specsCollapsed = !specsCollapsed
+        prefs().edit { putBoolean(KEY_SPECS_COLLAPSED, specsCollapsed) }
+    }
+
+    /** Le magasin de réglages du trébuchet — voir [TREBUCHET_PREFS]. */
+    private fun prefs() = context.getSharedPreferences(TREBUCHET_PREFS, Context.MODE_PRIVATE)
+
+    /**
      * L'indicateur de vent : une flèche et un chiffre, en haut à droite.
      *
      * Il est dessiné et non posé en vue Android, pour une raison simple : la flèche doit
@@ -1791,10 +1949,12 @@ class TrebuchetView @JvmOverloads constructor(
         val wind = game.wind
         if (wind.calm) return
         val force = (wind.speed / Wind.MAX_SPEED).coerceIn(0f, 1f)
-        val pad = 10f * dp
+        // Le tableau de bord se dessine juste avant : sa boîte est donc déjà à jour,
+        // repliée ou non, et la jauge n'a qu'à se poser sous elle.
+        val pad = specsBox.bottom + 8f * dp
         val boxW = 92f * dp
         val boxH = 40f * dp
-        val left = w - boxW - pad
+        val left = w - boxW - 10f * dp
         windBox.set(left, pad, left + boxW, pad + boxH)
         canvas.drawRoundRect(windBox, 8f * dp, 8f * dp, pGaugeBed)
 

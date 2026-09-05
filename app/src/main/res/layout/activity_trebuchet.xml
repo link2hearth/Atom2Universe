@@ -30,20 +30,10 @@
             android:contentDescription="@string/trebuchet_back" />
 
         <TextView
-            android:id="@+id/trebuchet_specs"
+            android:id="@+id/trebuchet_best"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="6dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="#8FA6C8"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/trebuchet_best"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:gravity="end"
             android:maxLines="2"

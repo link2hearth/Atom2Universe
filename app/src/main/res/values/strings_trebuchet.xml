@@ -18,7 +18,8 @@
     <string name="trebuchet_status_stopped">Shot ended in mid-air — the trail is kept, and so is the damage. Touch a part to re-cock.</string>
     <string name="trebuchet_status_result">%1$s m — released at %2$s m/s, %3$d° above the ground, peaked at %4$s m · efficiency %5$d %%</string>
     <string name="trebuchet_status_backwards">It went backwards! The hook holds the sling too long — stand it up, or shorten the sling</string>
-    <string name="trebuchet_specs">Cocked at %1$d° · stored %2$d kJ · sling %3$s m</string>
+    <string name="trebuchet_specs_previous">Previous</string>
+    <string name="trebuchet_specs_stored">Stored</string>
     <string name="trebuchet_sel_beam">Beam — %1$s m · lever %2$s:1</string>
     <string name="trebuchet_sel_post">Post — %1$s m</string>
     <string name="trebuchet_sel_weight">Counterweight — %1$d kg · strap %2$s m</string>

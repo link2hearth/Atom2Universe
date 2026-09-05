@@ -144,7 +144,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
     private lateinit var gameView: TrebuchetView
     private lateinit var gearView: GearMachineView
     private lateinit var statusText: TextView
-    private lateinit var specsText: TextView
     private lateinit var bestText: TextView
     private lateinit var fireButton: TextView
     private lateinit var wheels: TrebuchetWheelBubble
@@ -237,7 +236,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         gearView.adopterMonde(gameView.game.world, gameView.game.site)
         gearView.game.detach()
         statusText = findViewById(R.id.trebuchet_status)
-        specsText = findViewById(R.id.trebuchet_specs)
         bestText = findViewById(R.id.trebuchet_best)
         fireButton = findViewById(R.id.trebuchet_btn_fire)
         infoTitle = findViewById(R.id.trebuchet_info_title)
@@ -1006,12 +1004,8 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         updateInfoBand(cfg)
         wheels.showFor(gameView.selected)
 
-        specsText.text = getString(
-            R.string.trebuchet_specs,
-            cfg.cockAngleDeg.toInt(),
-            (cfg.storedEnergy / 1000f).toInt(),
-            fmt2(cfg.slingLength)
-        )
+        // Le cran, l'énergie stockée et la fronde sont dessinés sur la scène par
+        // [TrebuchetView.drawSpecsPanel] — plus la barre Android du haut à tenir à jour.
         // La ligne du haut dit où on en est du site ; en bac à sable, elle garde le
         // record de portée.
         val lvl = game.level
@@ -1103,14 +1097,6 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         wheels.visibility = View.GONE
         timeButton.visibility = View.VISIBLE
         gearEditor.showForSelection()
-        // **La gauche de la barre est vide en atelier, et c'est voulu.** Elle répétait
-        // cinq nombres qui vivent tous ailleurs, en plus petit : les roues, les prises et
-        // le patinage sont dans la section « Engrenages » du tableau de bord, l'énergie
-        // dans sa section « Lanceur », et l'étage courant est écrit en gros dans le
-        // sélecteur de couches. Les lire deux fois ne les rendait pas plus lisibles — ça
-        // ne faisait que voler la place de l'état du site, qui est la seule ligne qu'on
-        // regarde vraiment entre deux tirs.
-        specsText.text = ""
         // L'etat du site prend la place du titre : tant qu'il y a quelque chose a
         // abattre, c'est la seule chose qu'on veut lire.
         val site = gearView.game.targets

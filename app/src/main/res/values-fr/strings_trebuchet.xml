@@ -18,7 +18,8 @@
     <string name="trebuchet_status_stopped">Tir arrêté en plein vol — la traînée est gardée, les dégâts aussi. Touche une pièce pour rebander.</string>
     <string name="trebuchet_status_result">%1$s m — largué à %2$s m/s sous %3$d°, culminé à %4$s m · rendement %5$d %%</string>
     <string name="trebuchet_status_backwards">Parti en arrière ! Le crochet retient la fronde trop longtemps : redresse-le, ou raccourcis la fronde</string>
-    <string name="trebuchet_specs">Armé à %1$d° · %2$d kJ en réserve · fronde %3$s m</string>
+    <string name="trebuchet_specs_previous">Précédent</string>
+    <string name="trebuchet_specs_stored">Stocké</string>
     <string name="trebuchet_sel_beam">Poutre — %1$s m · levier %2$s:1</string>
     <string name="trebuchet_sel_post">Pied — %1$s m</string>
     <string name="trebuchet_sel_weight">Contrepoids — %1$d kg · chape %2$s m</string>
