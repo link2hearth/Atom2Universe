@@ -27,6 +27,7 @@ import com.Atom2Universe.app.games.trebuchet.SparkScene
 import com.Atom2Universe.app.games.trebuchet.TrebuchetSfx
 import com.Atom2Universe.app.games.trebuchet.SkyClock
 import com.Atom2Universe.app.games.trebuchet.SkyState
+import com.Atom2Universe.app.games.trebuchet.Projectile
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -527,6 +528,7 @@ class GearMachineView @JvmOverloads constructor(
         // Les fusees et leurs bouquets sonnent d'eux-memes : les effets previennent.
         game.effects.onRocketLaunch = { _, _ -> sfx.fireworkLaunch() }
         game.effects.onBurst = { _, _ -> sfx.fireworkBurst() }
+        game.onExplosion = { _, _, _ -> sfx.explosion() }
         running = true
         lastFrameNanos = 0L
         postInvalidateOnAnimation()
@@ -673,6 +675,26 @@ class GearMachineView @JvmOverloads constructor(
 
     fun setProjectileMass(mass: Float): Float {
         val applied = game.setProjectileMass(mass)
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+        return applied
+    }
+
+    /** Fait défiler le projectile chargé — même catalogue qu'au trébuchet. */
+    fun cycleProjectileKind(delta: Int): Projectile {
+        val kinds = Projectile.entries
+        val next = kinds[Math.floorMod(kinds.indexOf(game.config.projectileKind) + delta, kinds.size)]
+        val applied = game.setProjectileKind(next)
+        listener?.onGearMachineChanged()
+        listener?.onGearSelectionChanged()
+        invalidate()
+        return applied
+    }
+
+    /** Combien de bâtons de poudre dans la bombe. */
+    fun setBombSticks(sticks: Int): Int {
+        val applied = game.setBombSticks(sticks)
         listener?.onGearMachineChanged()
         listener?.onGearSelectionChanged()
         invalidate()
@@ -1068,10 +1090,15 @@ class GearMachineView @JvmOverloads constructor(
         drawPendingLink(canvas)
         drawMagnetFeedback(canvas)
         game.projectile?.let { shot ->
-            drawShotMark(canvas, shot)
-            pGear.color = Color.rgb(245, 240, 222)
-            pGear.alpha = 255
-            canvas.drawCircle(shot.body.x, shot.body.y, shot.body.radius, pGear)
+            // Une bombe qui a soufflé n'a plus rien à montrer d'elle-même : le corps a
+            // disparu avec le souffle qui l'a rendu.
+            if (!shot.blown) {
+                pGear.color = Color.rgb(245, 240, 222)
+                pGear.alpha = 255
+                canvas.drawCircle(shot.body.x, shot.body.y, shot.body.radius, pGear)
+                // Les éclats d'une fragmentation qui s'est séparée en vol.
+                for (shard in shot.shards) canvas.drawCircle(shard.x, shard.y, shard.radius, pGear)
+            }
         }
         canvas.restore()
 
@@ -1257,16 +1284,6 @@ class GearMachineView @JvmOverloads constructor(
         canvas.drawLine(x - 0.27f, 1.99f, x + 0.27f, 1.45f, pFrame)
         pFrame.color = Color.rgb(66, 83, 112)
         pFrame.alpha = 255
-    }
-
-    /** La marque du boulet posé : une portée qu'on lit sans quitter le terrain des yeux. */
-    private fun drawShotMark(canvas: Canvas, shot: GearMachineGame.ProjectileState) {
-        if (!shot.landed) return
-        pMesh.color = Color.rgb(255, 209, 102)
-        pMesh.alpha = 190
-        canvas.drawLine(shot.body.x, 0f, shot.body.x, 1.1f, pMesh)
-        canvas.drawLine(shot.body.x - 0.35f, 0.02f, shot.body.x + 0.35f, 0.02f, pMesh)
-        pMesh.alpha = 255
     }
 
     /**
@@ -1880,7 +1897,7 @@ class GearMachineView @JvmOverloads constructor(
 
         // Le boulet en attente, exactement celui qui partira.
         if (game.phase == GearMachineGame.Phase.BUILD) {
-            val radius = GearMachineRules.projectileRadius(game.config.projectileMass)
+            val radius = game.config.projectileKind.radiusFor(game.config.shotMass)
             pGear.color = Color.rgb(245, 240, 222)
             pGear.alpha = alpha
             canvas.drawCircle(px, py, radius, pGear)

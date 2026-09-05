@@ -24,6 +24,7 @@ import com.Atom2Universe.app.games.trebuchet.TrebuchetGround
 import com.Atom2Universe.app.games.trebuchet.TargetRules
 import com.Atom2Universe.app.games.trebuchet.TrebuchetEffects
 import com.Atom2Universe.app.games.trebuchet.TrebuchetRules
+import com.Atom2Universe.app.games.trebuchet.Projectile
 import com.Atom2Universe.app.games.trebuchet.Wind
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -104,7 +105,15 @@ class GearMachineGame(
      * que le joueur voulait voir. Il n'est retiré qu'au tir suivant.
      */
     data class ProjectileState(
-        val body: PhysBody,
+        /**
+         * Le morceau qui porte la trace, la mesure et la caméra.
+         *
+         * **Var**, pas val : quand la fragmentation défait le paquet, [splitInFlight]
+         * le remplace par le premier éclat — exactement comme `TrebuchetGame.ball`
+         * reprend la place du paquet qui vient de s'ouvrir. Le reste du jeu continue
+         * de ne connaître qu'un projectile.
+         */
+        var body: PhysBody,
         val startX: Float,
         val startY: Float,
         val launchEnergy: Float,
@@ -119,7 +128,16 @@ class GearMachineGame(
         var previousX: Float = startX,
         var previousY: Float = startY,
         /** Depuis combien de temps le boulet ne bouge plus. Voir le quatrième relevé. */
-        var stalled: Float = 0f
+        var stalled: Float = 0f,
+        /**
+         * Les **autres** morceaux d'une fragmentation qui s'est séparée en vol — voir
+         * [body]. Vide pour un boulet ou une bombe, qui restent un seul corps.
+         */
+        val shards: MutableList<PhysBody> = mutableListOf(),
+        /** Vrai quand le paquet s'est déjà défait : on ne se sépare qu'une fois. */
+        var split: Boolean = false,
+        /** Vrai quand la bombe a déjà soufflé : on n'explose qu'une fois. */
+        var blown: Boolean = false
     )
 
     val world: PhysWorld = mondeInitial ?: PhysWorld().apply {
@@ -140,6 +158,9 @@ class GearMachineGame(
         private set
     var lastLaunchEnergy = 0f
         private set
+
+    /** Le souffle d'une bombe qui vient d'exploser — la vue s'en sert pour le bruitage. */
+    var onExplosion: ((Float, Float, Float) -> Unit)? = null
 
 
     /**
@@ -620,6 +641,10 @@ class GearMachineGame(
         updatePumpReservoir(h)
         effects.update(h)
         celebrate()
+        // Le choc se lit **avant** que la cible ne remette ses compteurs a zero une
+        // fois les degats appliques -- meme ordre qu'au trebuchet, voir
+        // [TrebuchetGame.step] et [explodeOnImpact].
+        val hit = projectile?.body?.let { it.impactAccum > BLAST_TRIGGER } ?: false
         // Le site s'arme, encaisse et se rendort tout seul — c'est [TargetField.update]
         // qui le fait, et sans cet appel un chateau de quatre-vingts pierres serait
         // resolu a chaque sous-pas d'un boulet a trois cents metres de la.
@@ -629,7 +654,11 @@ class GearMachineGame(
         targets.update(h)
         if (phase == Phase.FLIGHT) {
             pierce.apply(world, targets)
-            projectile?.let { trackShot(it, h) }
+            projectile?.let { shot ->
+                if (!shot.blown) explodeOnImpact(shot, hit)
+                if (!shot.blown && !shot.split) splitInFlight(shot)
+                trackShot(shot, h)
+            }
         }
     }
 
@@ -1090,6 +1119,7 @@ class GearMachineGame(
     private var ceilingRangeSpeed = Float.NaN
     private var ceilingRangeAngle = Float.NaN
     private var ceilingRangeMass = Float.NaN
+    private var ceilingRangeKind: Projectile? = null
     private var ceilingRangeValue = 0f
 
     /**
@@ -1099,17 +1129,21 @@ class GearMachineGame(
      * sans avoir à charger dix minutes pour le découvrir. Il est mis en cache : la
      * simulation de vol de [estimatedRange] coûte neuf cents pas, et ces trois entrées-là
      * ne bougent qu'à un réglage.
+     *
+     * Le genre de projectile s'ajoute à la masse : deux projectiles de même poids
+     * n'ont pas le même rayon ni la même traînée, voir [Projectile.radiusFor].
      */
     fun ceilingRange(): Float {
         val wheel = config.launcher() ?: return 0f
         val speed = ceilingRimSpeed()
         if (speed <= 0.01f) return 0f
         if (speed != ceilingRangeSpeed || wheel.launchAngle != ceilingRangeAngle ||
-            config.projectileMass != ceilingRangeMass
+            config.shotMass != ceilingRangeMass || config.projectileKind != ceilingRangeKind
         ) {
             ceilingRangeSpeed = speed
             ceilingRangeAngle = wheel.launchAngle
-            ceilingRangeMass = config.projectileMass
+            ceilingRangeMass = config.shotMass
+            ceilingRangeKind = config.projectileKind
             ceilingRangeValue = estimatedRange(speed)
         }
         return ceilingRangeValue
@@ -1142,20 +1176,116 @@ class GearMachineGame(
         // fantôme le plus récent — voir [ShotTrail.archive].
         projectile?.let { shot ->
             shotTrail.archive(shot.body.x, shot.body.y)
-            world.remove(shot.body)
+            stopProjectile(shot)
         } ?: shotTrail.archive()
+    }
+
+    /**
+     * Sort tous les corps d'un tir du monde et les immobilise — le boulet, et ses
+     * éclats s'il s'est fragmenté. Un tir terminé ne doit plus bouger, qu'il se soit
+     * posé de lui-même ou qu'on l'ait arrêté en plein vol.
+     */
+    private fun stopProjectile(shot: ProjectileState) {
+        stopBody(shot.body)
+        for (shard in shot.shards) stopBody(shard)
+    }
+
+    private fun stopBody(body: PhysBody) {
+        if (!body.inWorld) return
+        body.vx = 0f
+        body.vy = 0f
+        body.omega = 0f
+        world.remove(body)
+        body.inWorld = false
     }
 
     /** Rebande l'atelier : le boulet posé disparaît, son fantôme reste. */
     fun newShot() {
         if (phase == Phase.BUILD) return
-        projectile?.let { world.remove(it.body) }
+        projectile?.let { stopProjectile(it) }
         projectile = null
         phase = Phase.BUILD
     }
 
     /** Efface la mémoire des tirs — la trace vivante comprise. */
     fun clearGhosts() = shotTrail.clearGhosts()
+
+    /**
+     * La bombe : elle rend tout d'un coup, là où elle touche.
+     *
+     * Portage exact de `TrebuchetGame.explodeOnImpact` — même déclencheur, même
+     * souffle, même disparition. [hit] vient d'un vrai choc (un mur, une pierre) ;
+     * l'autre condition rattrape la bombe qui se pose en douceur sur le sol, qui doit
+     * exploser aussi.
+     */
+    private fun explodeOnImpact(shot: ProjectileState, hit: Boolean) {
+        val kind = config.projectileKind
+        if (!kind.explosive) return
+        val body = shot.body
+        if (!hit && body.y > terrain.heightAt(body.x) + body.radius + 0.03f) return
+        shot.blown = true
+        val r = kind.blastRadiusFor(config.bombSticks)
+        targets.blast(body.x, body.y, kind.blastEnergyFor(config.bombSticks), r)
+        effects.explosion(body.x, body.y, r)
+        onExplosion?.invoke(body.x, body.y, r)
+        stopBody(body)
+    }
+
+    /**
+     * Le paquet se défait, une fois passé le sommet de la cloche.
+     *
+     * Portage exact de `TrebuchetGame.splitInFlight` : même repère (la hauteur, pas
+     * le temps), même éventail perpendiculaire à la trajectoire. Le premier éclat
+     * reprend la place de [ProjectileState.body] — voir sa doc — et les autres
+     * rejoignent [ProjectileState.shards].
+     */
+    private fun splitInFlight(shot: ProjectileState) {
+        val kind = config.projectileKind
+        if (kind.shards <= 1) return
+        val body = shot.body
+        if (body.vy > 0f) return
+        val floor = body.y - body.radius
+        if (floor > shot.peakY * (1f - kind.splitFraction)) return
+
+        shot.split = true
+        val v = hypot(body.vx, body.vy)
+        if (v < 1f) return
+        val px = -body.vy / v
+        val py = body.vx / v
+        val m = kind.shardMass()
+        val r = body.radius / sqrt(kind.shards.toFloat())
+
+        val x0 = body.x
+        val y0 = body.y
+        val vx0 = body.vx
+        val vy0 = body.vy
+        stopBody(body)
+        targets.forgetPiercers()
+        shot.shards.clear()
+
+        for (k in 0 until kind.shards) {
+            val rank = k - (kind.shards - 1) / 2f
+            val spread = SHARD_SPREAD * rank
+            val b = PhysBody.circle(r, m).apply {
+                x = x0 + px * rank * 3f * r
+                y = y0 + py * rank * 3f * r
+                vx = vx0 + px * spread
+                vy = vy0 + py * spread
+                friction = 0.2f
+                restitution = 0.1f
+                dragFactor = kind.dragFor(r)
+                linearDamping = 0f
+                category = GearMachineRules.CATEGORY_SHOT
+                collidesWith = TrebuchetCategory.BALL_FREE_MASK
+                collisionLayer = GearMachineRules.MIN_LAYER
+                collisionLayerDepth = GearMachineRules.MAX_LAYER - GearMachineRules.MIN_LAYER + 1
+            }
+            own(b)
+            b.linearDamping = 0f
+            targets.trackPiercer(b)
+            if (k == 0) shot.body = b else shot.shards.add(b)
+        }
+    }
 
     /**
      * Relève le vol : le passage sur la cible, puis le premier contact au sol.
@@ -1178,7 +1308,17 @@ class GearMachineGame(
             shot.hitTarget = true
             if (shot.landed) lastShotHitTarget = true
         }
-        if (!shot.landed) {
+        if (!shot.landed && shot.blown) {
+            // Une bombe qui a soufflé a fini son voyage, où qu'elle l'ait fini : elle a
+            // pu exploser contre un mur à dix mètres du sol, et attendre qu'elle
+            // « touche terre » serait attendre un corps qui n'existe plus — voir
+            // [explodeOnImpact]. Son atterrissage est donc celui du souffle.
+            shot.landed = true
+            shot.distance = body.x - shot.startX
+            lastShotDistance = shot.distance
+            lastShotHeight = shot.peakY - shot.startY
+            lastShotHitTarget = shot.hitTarget
+        } else if (!shot.landed) {
             // Trois façons de constater le toucher, parce qu'une seule ne suffit pas :
             // le boulet est au sol maintenant, il l'était à l'image précédente, ou le
             // moteur lui a compté un choc. Un boulet rapide frappe et **repart** en
@@ -1845,6 +1985,21 @@ class GearMachineGame(
     }
 
     /**
+     * Ce qu'on met dans la gorge ou le tube — voir [GearMachineConfig.projectileKind].
+     * Sans effet sur un tir déjà en vol : changer d'avis en l'air ne rembobine rien.
+     */
+    fun setProjectileKind(kind: Projectile): Projectile {
+        config.projectileKind = kind
+        return kind
+    }
+
+    /** Combien de bâtons de poudre dans la bombe — voir [GearMachineConfig.bombSticks]. */
+    fun setBombSticks(sticks: Int): Int {
+        config.bombSticks = sticks.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
+        return config.bombSticks
+    }
+
+    /**
      * Change le moteur d'une roue, d'un cran dans la liste.
      *
      * L'ordre des crans est celui de l'énumération, « aucun » compris : on démonte
@@ -2063,7 +2218,8 @@ class GearMachineGame(
         cancelCharge()
         val launcherId = config.launcherWheelId ?: return false
         val launcher = gears.firstOrNull { it.wheel.id == launcherId } ?: return false
-        val mass = config.projectileMass
+        val kind = config.projectileKind
+        val mass = config.shotMass
         val efficiency = GearMachineRules.LAUNCH_EFFICIENCY
 
         val projectileEnergy: Float
@@ -2130,8 +2286,11 @@ class GearMachineGame(
         }
 
         val speed = sqrt(2f * projectileEnergy / mass).coerceAtMost(MAX_PROJECTILE_SPEED)
-        if (phase == Phase.FLIGHT) projectile?.let { world.remove(it.body) }
-        val radius = (0.075f * kotlin.math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
+        if (phase == Phase.FLIGHT) projectile?.let { stopProjectile(it) }
+        // Le rayon et la trainee sortent du catalogue [Projectile], pas d'une formule
+        // a part : c'est ce qui harmonise les deux jeux, et ce qui donne a la
+        // fragmentation et a la bombe leur bon diametre.
+        val radius = kind.radiusFor(mass)
         val shot = PhysBody.circle(radius, mass).apply {
             x = muzzleX
             // Un volant pose tres bas ferait naitre le boulet dans la terre, et le
@@ -2141,7 +2300,7 @@ class GearMachineGame(
             vy = ny * speed
             restitution = 0.18f
             friction = 0.55f
-            dragFactor = 0.5f * 1.225f * 0.47f * Math.PI.toFloat() * radius * radius
+            dragFactor = kind.dragFor(radius)
             // **Pas d'amortissement : la traînée suffit, et c'est la seule qui soit
             // une loi.** `dragFactor` est la vraie poussée de l'air, ½ρCdAv², qui
             // fait retomber un tir plus raide qu'il n'est monté. `linearDamping`, lui,
@@ -2198,7 +2357,7 @@ class GearMachineGame(
      */
     fun launchSpeedNow(): Float {
         val wheel = config.launcher() ?: return 0f
-        val mass = config.projectileMass
+        val mass = config.shotMass
         val available = launcherAvailableEnergy()
         if (available <= 0f) return 0f
         val payable = sqrt(2f * available * GearMachineRules.LAUNCH_EFFICIENCY / mass)
@@ -2264,9 +2423,9 @@ class GearMachineGame(
             (state.body.y + sin(armAngle) * wheel.launchRadius).coerceAtLeast(0f)
         }
 
-        val mass = config.projectileMass
-        val radius = (0.075f * kotlin.math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
-        val dragFactor = 0.5f * PhysicsConstants.AIR_DENSITY * 0.47f * Math.PI.toFloat() * radius * radius
+        val mass = config.shotMass
+        val radius = config.projectileKind.radiusFor(mass)
+        val dragFactor = config.projectileKind.dragFor(radius)
         val g = PhysicsConstants.STANDARD_GRAVITY
         // Un pas grossier suffit a une estimation -- ce n'est pas le tir qui se joue
         // ici, seulement sa longueur -- et ca borne le cout d'un chiffre recalcule a
@@ -2457,5 +2616,16 @@ class GearMachineGame(
          * branle avec le reste.
          */
         private const val MOTOR_MESH_HEADROOM = 0.9f
+
+        /**
+         * Au-delà de ce couple accumulé sur le boulet, un choc compte comme un vrai
+         * impact — celui qui fait exploser une bombe même si elle n'a pas encore
+         * atteint le sol. Même seuil qu'au trébuchet, voir `TrebuchetGame.BLAST_TRIGGER`
+         * (privée là-bas, dupliquée ici plutôt que rendue publique pour un seul appel).
+         */
+        private const val BLAST_TRIGGER = 50f
+
+        /** Écart de vitesse entre deux éclats voisins d'une fragmentation, en m/s. */
+        private const val SHARD_SPREAD = 2f
     }
 }

@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.trebuchet.gears
 import com.Atom2Universe.app.games.trebuchet.TrebuchetCategory
 
 import com.Atom2Universe.app.games.trebuchet.MachinePreset
+import com.Atom2Universe.app.games.trebuchet.Projectile
 import com.Atom2Universe.app.games.physics.MachineMaterial
 import com.Atom2Universe.app.games.physics.MachineMaterials
 import com.Atom2Universe.app.games.physics.PhysicsConstants
@@ -456,16 +457,6 @@ object GearMachineRules {
     val SIZES = intArrayOf(12, 24, 48, 96)
 
     /**
-     * Le rayon d'un boulet de cette masse, en metres.
-     *
-     * Il sert au tir **et** au dessin du boulet en attente dans sa gorge : les deux
-     * doivent donner exactement la meme bille, sinon celle qu'on voit charger n'est
-     * pas celle qui part.
-     */
-    fun projectileRadius(mass: Float): Float =
-        (0.075f * Math.cbrt(mass.toDouble())).toFloat().coerceIn(0.06f, 0.55f)
-
-    /**
      * Qui touche quoi. Les roues ne se heurtent jamais — leurs dents sont logiques,
      * et deux roues d'un même train se recouvrent par construction. Le boulet, lui,
      * ne connaît que le sol : le laisser cogner la machine qui vient de le lancer
@@ -568,14 +559,34 @@ class GearMachineConfig(
      * recevoir — sans démonter la machine ni déplacer une roue. La prise en douceur,
      * elle, reste automatique : voir [GearMachineGame.updateMotorMeshClutch].
      */
-    var launcherEngaged: Boolean = true
+    var launcherEngaged: Boolean = true,
+    /**
+     * Ce qu'on met dans la gorge ou le tube — **le même catalogue qu'au trébuchet**,
+     * [Projectile]. Un seul réglage pour toute la machine, valable pour le volant
+     * comme pour le canon : c'est le lanceur en place qui décide de la trajectoire,
+     * pas du chargement.
+     */
+    var projectileKind: Projectile = Projectile.BOULET,
+    /** Combien de bâtons de poudre dans la bombe — sans effet sur les deux autres. */
+    var bombSticks: Int = Projectile.DEFAULT_STICKS
 ) {
     var nextId: Int = (wheels.maxOfOrNull { it.id } ?: 0) + 1
+
+    /**
+     * La masse réellement lancée — copie exacte de `TrebuchetGame.shotMass` : le
+     * boulet se pèse, la bombe se charge, la fragmentation ne se règle pas.
+     */
+    val shotMass: Float
+        get() = when {
+            projectileKind.explosive -> projectileKind.massFor(bombSticks)
+            projectileKind.weighable -> projectileMass
+            else -> projectileKind.mass
+        }
 
     fun deepCopy(): GearMachineConfig = GearMachineConfig(
         wheels.map { it.copyWheel() }.toMutableList(), launcherWheelId,
         projectileMass, links.map { it.copyLink() }.toMutableList(), chargeSeconds, material,
-        launcherEngaged
+        launcherEngaged, projectileKind, bombSticks
     ).also {
         it.nextId = nextId
     }
@@ -646,6 +657,7 @@ class GearMachineConfig(
         chargeSeconds = chargeSeconds.takeIf { it.isFinite() }
             ?.coerceIn(GearMachineRules.MIN_CHARGE, GearMachineRules.MAX_CHARGE)
             ?: GearMachineRules.DEFAULT_CHARGE
+        bombSticks = bombSticks.coerceIn(Projectile.MIN_STICKS, Projectile.MAX_STICKS)
         nextId = maxOf(nextId, (wheels.maxOfOrNull { it.id } ?: 0) + 1)
     }
 
@@ -779,7 +791,8 @@ class GearMachinePreset(name: String, config: GearMachineConfig) {
 /** Format tolérant et versionné des machines à engrenages. */
 object GearMachineLibrary {
     const val MAX_PRESETS = 30
-    private const val VERSION = "G8"
+    private const val VERSION = "G9"
+    private const val VERSION_G8 = "G8"
     private const val VERSION_G7 = "G7"
     private const val VERSION_G6 = "G6"
     private const val VERSION_G5 = "G5"
@@ -795,12 +808,16 @@ object GearMachineLibrary {
             // relisent quelque chose de sense : c'est celui du volant qui tire. Le
             // materiau y rejoint depuis G8 : il est desormais unique pour toute la
             // machine, et non plus repete roue par roue. Le levier du lanceur suit.
+            // Depuis G9, le catalogue de projectiles du trebuchet y rejoint aussi :
+            // boulet pese, fragmentation fixe, ou bombe chargee en batons.
             append('\t').append("L,").append(preset.config.launcherWheelId ?: -1).append(',')
                 .append(preset.config.launcher()?.launchAngle ?: 35f).append(',')
                 .append(preset.config.projectileMass).append(',')
                 .append(preset.config.chargeSeconds).append(',')
                 .append(preset.config.material.name).append(',')
-                .append(if (preset.config.launcherEngaged) 1 else 0)
+                .append(if (preset.config.launcherEngaged) 1 else 0).append(',')
+                .append(preset.config.projectileKind.name).append(',')
+                .append(preset.config.bombSticks)
             for (link in preset.config.links) {
                 append('\t').append("T,").append(link.kind.name).append(',')
                     .append(link.firstId).append(',').append(link.secondId).append(',')
@@ -829,7 +846,8 @@ object GearMachineLibrary {
             val fields = line.split('\t')
             val version = fields.getOrNull(0) ?: continue
             if (fields.size < 2 || version !in setOf(
-                    VERSION, VERSION_G7, VERSION_G6, VERSION_G5, VERSION_G4, VERSION_G3, VERSION_G2, VERSION_G1
+                    VERSION, VERSION_G8, VERSION_G7, VERSION_G6, VERSION_G5, VERSION_G4, VERSION_G3,
+                    VERSION_G2, VERSION_G1
                 )
             ) continue
             val name = MachinePreset.clean(fields[1])
@@ -842,13 +860,16 @@ object GearMachineLibrary {
             // Avant G8 il n'y avait pas de matiere commune : elle se devine, une fois
             // les roues relues, de celle de la premiere d'entre elles. Le levier du
             // lanceur n'existait pas non plus : une machine relue est embrayee, comme
-            // elle l'a toujours ete.
+            // elle l'a toujours ete. Avant G9, il n'y avait qu'un boulet : une machine
+            // relue tire donc un boulet du meme poids qu'avant.
             var globalMaterial: GearWheelMaterial? = null
             var launcherEngaged = true
+            var projectileKind = Projectile.BOULET
+            var bombSticks = Projectile.DEFAULT_STICKS
             val links = ArrayList<GearLinkConfig>()
             for (field in fields.drop(2)) {
                 val value = field.split(',')
-                if (value.size in 4..7 && value[0] == "L") {
+                if (value.size in 4..9 && value[0] == "L") {
                     launcherId = value[1].toIntOrNull()?.takeIf { it >= 0 }
                     launcherAngle = value[2].toFloatOrNull() ?: launcherAngle
                     projectileMass = value[3].toFloatOrNull() ?: projectileMass
@@ -857,6 +878,9 @@ object GearMachineLibrary {
                     globalMaterial = value.getOrNull(5)
                         ?.let { runCatching { GearWheelMaterial.valueOf(it) }.getOrNull() }
                     launcherEngaged = value.getOrNull(6)?.toIntOrNull() != 0
+                    projectileKind = value.getOrNull(7)
+                        ?.let { runCatching { Projectile.valueOf(it) }.getOrNull() } ?: projectileKind
+                    bombSticks = value.getOrNull(8)?.toIntOrNull() ?: bombSticks
                     continue
                 }
                 if (value.size == 5 && value[0] == "T") {
@@ -904,7 +928,7 @@ object GearMachineLibrary {
             val config = GearMachineConfig(
                 wheels, launcherId, projectileMass, links, chargeSeconds,
                 globalMaterial ?: wheels.firstOrNull()?.material ?: GearWheelMaterial.WOOD,
-                launcherEngaged
+                launcherEngaged, projectileKind, bombSticks
             )
             config.clamp()
             if (config.wheels.isNotEmpty()) out += GearMachinePreset(name, config)

@@ -528,7 +528,7 @@ class GearMachineTest {
             assertTrue("la gorge mord sur le moyeu ($teeth)", inner > 0f)
             // Le boulet ordinaire doit tenir entre les deux lèvres, sinon celui qu'on
             // dessine en attente déborderait de la piste qui le retient.
-            val ball = GearMachineRules.projectileRadius(GearMachineRules.DEFAULT_PROJECTILE_MASS)
+            val ball = Projectile.BOULET.radiusFor(GearMachineRules.DEFAULT_PROJECTILE_MASS)
             assertTrue("le boulet ne tient pas dans la gorge ($teeth)", wheel.grooveWidth >= ball * 2f)
         }
     }
@@ -541,7 +541,7 @@ class GearMachineTest {
         assertTrue(game.launchProjectile())
 
         assertEquals(
-            GearMachineRules.projectileRadius(40f),
+            Projectile.BOULET.radiusFor(40f),
             game.projectile!!.body.radius,
             1e-6f
         )

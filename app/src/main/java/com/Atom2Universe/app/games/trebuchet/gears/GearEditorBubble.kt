@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.trebuchet.Projectile
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -79,8 +80,24 @@ class GearEditorBubble @JvmOverloads constructor(
         DURATION(R.string.trebuchet_gear_edit_duration, R.string.trebuchet_gear_unit_s, 4, 30),
         LAUNCH(R.string.trebuchet_gear_edit_launch, R.string.trebuchet_gear_unit_deg, 2, 1),
 
-        /** Le boulet, en kilos. Quatre colonnes : le bloc de siège pèse une tonne. */
+        /**
+         * Ce qu'on charge — le même catalogue qu'au trébuchet, [Projectile] : boulet,
+         * fragmentation ou bombe. Une seule roulette de mots, comme au trébuchet.
+         */
+        SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 1, choice = true),
+
+        /**
+         * Le boulet, en kilos. Quatre colonnes : le bloc de siège pèse une tonne.
+         * Sans objet pour la fragmentation ou la bombe, qui ne se pèsent pas — voir
+         * [dialsFor].
+         */
         BALL(R.string.trebuchet_gear_edit_ball, R.string.trebuchet_gear_unit_kg, 4, 10),
+
+        /**
+         * Combien de bâtons de poudre dans la bombe. Sans objet pour les deux autres
+         * projectiles, qui n'ont pas de charge — voir [dialsFor].
+         */
+        STICKS(R.string.trebuchet_dial_charge, R.string.trebuchet_unit_sticks, 3, 5),
 
         /**
          * Le réservoir d'un canon, en litres. Le deuxième levier de puissance, à côté
@@ -291,7 +308,12 @@ class GearEditorBubble @JvmOverloads constructor(
             // Le réservoir n'existe que pour un canon : un volant n'a rien à mettre
             // sous pression.
             if (wheel.kind == GearWheelKind.PUMP) out += Dial.TANK
-            out += Dial.BALL
+            // Le catalogue est le même pour les deux lanceurs : ce qu'on charge ne
+            // dépend pas de la façon dont on l'envoie.
+            out += Dial.SHOT
+            val kind = gearView?.game?.config?.projectileKind
+            if (kind?.weighable == true) out += Dial.BALL
+            if (kind?.explosive == true) out += Dial.STICKS
         } else if (wheel.motor != null) {
             // Le genre du moteur ne se regle plus ici : il se choisit en posant la
             // piece, comme on choisit un engrenage plutot qu'un volant. Une ligne qui
@@ -965,10 +987,11 @@ class GearEditorBubble @JvmOverloads constructor(
             Dial.DURATION -> view.game.config.chargeSeconds.roundToInt()
             Dial.LAUNCH -> wheel.launchAngle.roundToInt()
             Dial.BALL -> view.game.config.projectileMass.roundToInt()
+            Dial.STICKS -> view.game.config.bombSticks
             // Le modele garde le reservoir en m3 ; la roulette le montre en litres,
             // plus lisible sur une piece qui va de dix a deux mille.
             Dial.TANK -> (wheel.reservoirVolume * 1_000f).roundToInt()
-            Dial.SPEED -> 0
+            Dial.SHOT, Dial.SPEED -> 0
         }
     }
 
@@ -982,8 +1005,9 @@ class GearEditorBubble @JvmOverloads constructor(
             Dial.DURATION -> view.setChargeSeconds(value.toFloat())
             Dial.LAUNCH -> view.setSelectedLaunchAngle(value.toFloat())
             Dial.BALL -> view.setProjectileMass(value.toFloat())
+            Dial.STICKS -> view.setBombSticks(value)
             Dial.TANK -> view.setSelectedReservoirVolume(value / 1_000f)
-            Dial.SPEED -> Unit
+            Dial.SHOT, Dial.SPEED -> Unit
         }
     }
 
@@ -1001,11 +1025,31 @@ class GearEditorBubble @JvmOverloads constructor(
         return out
     }
 
-    private fun wordsOf(d: Dial): List<String> = emptyList()
+    private fun wordsOf(d: Dial): List<String> = when (d) {
+        Dial.SHOT -> Projectile.entries.map { shotName(it) }
+        else -> emptyList()
+    }
 
-    private fun choiceIndex(d: Dial): Int = 0
+    private fun choiceIndex(d: Dial): Int = when (d) {
+        Dial.SHOT -> gearView?.game?.config?.projectileKind?.ordinal ?: 0
+        else -> 0
+    }
 
-    private fun cycleChoice(d: Dial, delta: Int) = Unit
+    private fun cycleChoice(d: Dial, delta: Int) {
+        when (d) {
+            Dial.SHOT -> gearView?.cycleProjectileKind(delta)
+            else -> Unit
+        }
+    }
+
+    /** Le nom d'un projectile — les mêmes chaînes qu'au trébuchet, même catalogue. */
+    private fun shotName(kind: Projectile): String = context.getString(
+        when (kind) {
+            Projectile.BOULET -> R.string.trebuchet_shot_ball
+            Projectile.FRAGMENTATION -> R.string.trebuchet_shot_cluster
+            Projectile.BOMBE -> R.string.trebuchet_shot_bomb
+        }
+    )
 
     private fun speedText(): String =
         ((gearView?.selectedOmega() ?: 0f) * RAD_PER_S_TO_RPM).roundToInt().toString()

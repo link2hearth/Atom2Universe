@@ -1763,6 +1763,23 @@ class TrebuchetGame(
         // trait qui s'arrête en l'air : mesuré à 0,25 m à trente mètres par seconde,
         // et ça monte avec la vitesse. L'atelier le posait, pas le trébuchet.
         shotTrail.archive(ball.x, ball.y)
+        // Le corps quitte le monde : un tir termine ne doit plus bouger, qu'il se soit
+        // pose de lui-meme ou qu'on l'ait arrete en plein vol. Sans ca, un tir coupe
+        // continuait sa course sous nos yeux -- sans trainee, puisqu'elle vient d'etre
+        // archivee -- ce qui est pire que ce qu'on voulait corriger. L'atelier retire
+        // deja son boulet ainsi ; voir [GearMachineGame.finishShot].
+        stopBody(ball)
+        for (shard in shards) stopBody(shard)
+    }
+
+    /** Sort un corps du monde et l'immobilise : plus rien ne doit plus le faire bouger. */
+    private fun stopBody(body: PhysBody) {
+        if (!body.inWorld) return
+        body.vx = 0f
+        body.vy = 0f
+        body.omega = 0f
+        world.remove(body)
+        body.inWorld = false
     }
 
     /**

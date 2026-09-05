@@ -244,7 +244,7 @@ class GearCannonArt(private val dp: Float) {
         val nx = cos(aim)
         val ny = sin(aim)
         val length = GearMachineRules.CANNON_BARREL_LENGTH
-        val ballRadius = GearMachineRules.projectileRadius(game.config.projectileMass)
+        val ballRadius = game.config.projectileKind.radiusFor(game.config.shotMass)
         // Un « beau gros canon » ne doit jamais paraître fin, même pour le plus petit
         // caillou -- seul l'écart au calibre max se voit vraiment.
         val bore = 0.30f + ballRadius * 0.9f
