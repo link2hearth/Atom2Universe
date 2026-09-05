@@ -595,11 +595,13 @@ internal object PrototypeMeshFactory {
         builder.box(0f, 0.51f, 0.19f, 0.53f, 0.15f, 0.06f, WINDOW)
         builder.box(-0.42f, 0.31f, 0.40f, 0.06f, 0.12f, 0.22f, CREAM)
         builder.box(0.42f, 0.31f, 0.40f, 0.06f, 0.12f, 0.22f, CREAM)
-        val axleLength = 1.02f
-        val frontZ = 0.38f
-        val rearZ = -0.38f
-        builder.cylinderX(0f, 0.18f, frontZ, axleLength, 0.21f, 10, DARK)
-        builder.cylinderX(0f, 0.18f, rearZ, axleLength, 0.21f, 10, DARK)
+        for (z in floatArrayOf(0.46f, -0.46f)) {
+            builder.box(0f, 0.19f, z, 0.86f, 0.07f, 0.08f, DARK)
+            for (x in floatArrayOf(-0.49f, 0.49f)) {
+                builder.cylinderX(x, 0.18f, z, 0.16f, 0.21f, 10, DARK)
+                builder.cylinderX(x, 0.18f, z, 0.17f, 0.11f, 10, CREAM)
+            }
+        }
         return builder.build()
     }
 

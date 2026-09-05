@@ -13,7 +13,10 @@ import kotlin.math.exp
 import kotlin.math.pow
 
 /** Modèle de conduite volontairement arcade, déterministe et à pas fixe. */
-internal class ArcadeCar(private val track: PrototypeTrack) {
+internal class ArcadeCar(
+    private val track: PrototypeTrack,
+    private val spec: VehicleSpec = VehicleSpec.ToyCar
+) {
 
     data class Input(val steering: Float, val accelerating: Boolean, val braking: Boolean)
 
@@ -26,6 +29,10 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
     var headingOffset = 0f
         private set
     var yawRadians = 0f
+        private set
+    var pitchRadians = 0f
+        private set
+    var rollRadians = 0f
         private set
     var worldPosition = Vec3(0f, PrototypeTrack.CAR_CLEARANCE, 0f)
         private set
@@ -60,6 +67,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
     private var velocityZ = 0f
     var groundedOnRoad = true
         private set
+    private var groundedWheelCount = 4
     private var previousDistance = distance
     private var driftCandidateSeconds = 0f
     private var driftDurationSeconds = 0f
@@ -80,6 +88,8 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         speed = 0f
         headingOffset = 0f
         yawRadians = 0f
+        pitchRadians = 0f
+        rollRadians = 0f
         airborne = false
         offRoad = false
         lap = 1
@@ -102,6 +112,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         velocityX = 0f
         velocityZ = 0f
         groundedOnRoad = true
+        groundedWheelCount = 4
         placeAtStart()
     }
 
@@ -131,6 +142,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         // Le passage en glisse s'installe en un tiers de seconde au lieu de
         // basculer d'une image à l'autre : l'arrière sort progressivement.
         driftBlend = approach(driftBlend, if (drifting) 1f else 0f, DRIFT_BLEND_RATE * dt)
+        val wheelGrip = wheelGripScale()
         if (!airborne && speed > 0.35f && abs(steering) > 0.01f) {
             // Une trajectoire courbe demande une accélération latérale v × ω.
             // Faire pivoter le nez plus vite que ce que les pneus peuvent tenir
@@ -139,7 +151,8 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
             // braquage vif en épingle et le calme naturellement à pleine allure.
             val speedRatio = (speed / MAX_SPEED).coerceIn(0f, 1f)
             val desiredRate = STEER_RATE_SLOW + (STEER_RATE_FAST - STEER_RATE_SLOW) * speedRatio
-            val corneringGrip = CORNERING_GRIP + (DRIFT_CORNERING_GRIP - CORNERING_GRIP) * driftBlend
+            val corneringGrip = (CORNERING_GRIP +
+                (DRIFT_CORNERING_GRIP - CORNERING_GRIP) * driftBlend) * spec.lateralGrip * wheelGrip
             val tractionRate = corneringGrip / max(speed, STEER_LIMIT_MIN_SPEED)
             val reverseSteering = if (currentForwardSpeed < -0.2f) -1f else 1f
             yawRadians += steering * reverseSteering * minOf(desiredRate, tractionRate) * dt
@@ -159,11 +172,11 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         val forwardX = sin(yawRadians)
         val forwardZ = cos(yawRadians)
         if (!airborne && input.accelerating) {
-            velocityX += forwardX * ENGINE_ACCELERATION * dt
-            velocityZ += forwardZ * ENGINE_ACCELERATION * dt
+            velocityX += forwardX * ENGINE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
+            velocityZ += forwardZ * ENGINE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
         } else if (!airborne && reversing) {
-            velocityX -= forwardX * REVERSE_ACCELERATION * dt
-            velocityZ -= forwardZ * REVERSE_ACCELERATION * dt
+            velocityX -= forwardX * REVERSE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
+            velocityZ -= forwardZ * REVERSE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
         }
 
         var forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
@@ -258,7 +271,8 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         // Le plafond ne change rien en virage tenu — l'équilibre s'y établit
         // bien en dessous — mais il empêche un gros travers d'être effacé en
         // deux images, ce qui se verrait comme un claquement du châssis.
-        val grip = ((gripBase + gripGain * abs(lateralSpeed)) * liftBonus).coerceAtMost(MAX_GRIP)
+        val grip = ((gripBase + gripGain * abs(lateralSpeed)) *
+            liftBonus * spec.lateralGrip * wheelGrip).coerceAtMost(MAX_GRIP)
         val speedBeforeGrip = hypot(forwardSpeed, lateralSpeed)
         lateralSpeed = approach(lateralSpeed, 0f, grip * dt)
         velocityX = forwardX * forwardSpeed + rightX * lateralSpeed
@@ -319,57 +333,22 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         offRoad = abs(lateralOffset) > projection.sample.roadWidth * 0.5f
         if (distance < previousDistance && previousDistance > track.length * 0.85f && distance < track.length * 0.15f) lap++
 
-        val road = projection.sample
-        val onRoad = abs(lateralOffset) <= road.roadWidth * 0.55f
-        val deck = track.surface(road) == CourseSurface.DECK
-        val realSurfaceY = maxOf(track.groundHeightAt(worldX, worldZ),
-            track.furnitureHeightAt(worldX, worldZ, worldPosition.y - PrototypeTrack.CAR_CLEARANCE + MAX_ROAD_STEP))
-        val hasRoadSurface = onRoad && !track.isJumpGap(distance) &&
-            (deck || abs(realSurfaceY - (road.position.y + PrototypeTrack.ROAD_SURFACE_LIFT)) < 0.15f)
+        val wheelContacts = sampleWheelContacts()
+        val groundedContacts = wheelContacts.filter { it.grounded }
+        groundedWheelCount = groundedContacts.size
+        groundedOnRoad = groundedContacts.any { it.road }
         val floorY = maxOf(track.groundHeightAt(worldX, worldZ),
             track.furnitureHeightAt(worldX, worldZ, worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f)) +
-            PrototypeTrack.CAR_CLEARANCE
-        val roadY = (if (deck) road.position.y + PrototypeTrack.ROAD_SURFACE_LIFT else realSurfaceY) +
-            PrototypeTrack.CAR_CLEARANCE
+            spec.rideHeight
+        updateSuspensionPose(dt, wheelContacts, beforeProjection.sample)
 
-        // Aucun lancement scripté : les roues perdent simplement leur support
-        // au bord réel de la dalle. La vitesse verticale provient uniquement de
-        // la pente et du mouvement actuel, puis la gravité prend le relais.
-        if (!airborne && groundedOnRoad) {
-            // Une crête ne peut pas tirer les roues vers le bas plus vite que la gravité.
-            // À faible allure on épouse la bosse ; avec de l'élan on décolle.
-            val incomingRise = slopeVelocity(beforeProjection.sample)
-            val outgoingRise = slopeVelocity(road)
-            val leavesCrest = hasRoadSurface && incomingRise > 0.5f &&
-                incomingRise - outgoingRise > 9.81f * dt &&
-                worldPosition.y + incomingRise * dt - 0.5f * 9.81f * dt * dt > roadY
-            val previousRoadY = beforeProjection.sample.position.y +
-                PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
-            // La continuité se mesure par rapport à la pente parcourue, pas à
-            // une marche verticale fixe qui bloquait les montées rapides.
-            val expectedY = worldPosition.y + incomingRise * dt
-            val remainsSupported = hasRoadSurface && abs(worldPosition.y - previousRoadY) < MAX_ROAD_STEP &&
-                abs(expectedY - roadY) < MAX_ROAD_STEP
-            if (!remainsSupported || leavesCrest) {
-                groundedOnRoad = false
-                if (worldPosition.y > floorY + 0.5f) {
-                    airborne = true
-                    airborneY = worldPosition.y
-                    verticalVelocity = slopeVelocity(beforeProjection.sample)
-                } else {
-                    airborneY = floorY
-                    verticalVelocity = 0f
-                }
-            }
-        }
-
-        var landedOnRoadThisStep = false
+        var landedOnRoadThisStep = groundedWheelCount > 0
         // Un meuble ne téléporte jamais la voiture sur son plateau. Il ne porte
         // que des roues déjà au-dessus ; quitter son bord déclenche une chute.
-        if (!airborne && !groundedOnRoad && worldPosition.y > floorY + 0.05f) {
+        if (!airborne && groundedWheelCount == 0 && worldPosition.y > floorY + 0.05f) {
             airborne = true
             airborneY = worldPosition.y
-            verticalVelocity = 0f
+            verticalVelocity = slopeVelocity(beforeProjection.sample)
         }
         if (airborne) {
             val previousAirborneY = airborneY
@@ -400,9 +379,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         }
 
         if (!airborne && !landedOnRoadThisStep) {
-            if (groundedOnRoad && hasRoadSurface) {
-                airborneY = roadY
-            } else {
+            if (!groundedOnRoad) {
                 // `resolveGroundRoadCollision` cherche la dalle **physiquement** la plus
                 // proche et pose lui-même l'altitude sur celle qu'il a trouvée. Il ne
                 // faut donc rien réécrire derrière lui : `roadY` vient de l'autre
@@ -430,7 +407,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         worldX = start.position.x
         worldZ = start.position.z
         yawRadians = track.headingRadians(start)
-        airborneY = start.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
+        airborneY = start.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + spec.rideHeight
         worldPosition = Vec3(worldX, airborneY, worldZ)
         previousDistance = distance
     }
@@ -441,6 +418,116 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         val tangentZ = sample.tangent.z / horizontalLength
         val alongTrack = velocityX * tangentX + velocityZ * tangentZ
         return alongTrack * sample.tangent.y / horizontalLength
+    }
+
+    private fun wheelGripScale(): Float {
+        if (airborne) return 0f
+        return (0.35f + groundedWheelCount * 0.1625f).coerceIn(0f, 1f)
+    }
+
+    private data class WheelContact(
+        val localX: Float,
+        val localZ: Float,
+        val surfaceY: Float,
+        val grounded: Boolean,
+        val road: Boolean
+    )
+
+    private fun sampleWheelContacts(): List<WheelContact> {
+        val forwardX = sin(yawRadians)
+        val forwardZ = cos(yawRadians)
+        val rightX = forwardZ
+        val rightZ = -forwardX
+        val halfTrack = spec.trackWidth * 0.5f
+        val halfBase = spec.wheelBase * 0.5f
+        return listOf(
+            wheelContact(-halfTrack, halfBase, forwardX, forwardZ, rightX, rightZ),
+            wheelContact(halfTrack, halfBase, forwardX, forwardZ, rightX, rightZ),
+            wheelContact(-halfTrack, -halfBase, forwardX, forwardZ, rightX, rightZ),
+            wheelContact(halfTrack, -halfBase, forwardX, forwardZ, rightX, rightZ)
+        )
+    }
+
+    private fun wheelContact(
+        localX: Float,
+        localZ: Float,
+        forwardX: Float,
+        forwardZ: Float,
+        rightX: Float,
+        rightZ: Float
+    ): WheelContact {
+        val wheelX = worldX + rightX * localX + forwardX * localZ
+        val wheelZ = worldZ + rightZ * localX + forwardZ * localZ
+        val support = supportAt(wheelX, wheelZ, localZ)
+        val suspensionExtension = airborneY - support.surfaceY - spec.rideHeight
+        val grounded = suspensionExtension <= spec.suspensionTravel
+        return WheelContact(localX, localZ, support.surfaceY, grounded, support.road)
+    }
+
+    private data class Support(val surfaceY: Float, val road: Boolean)
+
+    private fun supportAt(wheelX: Float, wheelZ: Float, localZ: Float): Support {
+        val projection = track.project(wheelX, airborneY, wheelZ, distance + localZ)
+        val sample = projection.sample
+        val deck = track.surface(sample) == CourseSurface.DECK
+        val roadSurfaceY = sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT
+        val onDeck = deck && !track.isJumpGap(sample.distance) &&
+            abs(projection.lateralOffset) <= sample.roadWidth * 0.5f + PrototypeTrack.CURB_WIDTH + spec.wheelRadius
+        val furnitureY = track.furnitureHeightAt(
+            wheelX,
+            wheelZ,
+            airborneY - spec.rideHeight + spec.suspensionTravel + spec.wheelRadius
+        )
+        val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY)
+        return if (onDeck && roadSurfaceY >= realSurfaceY - 0.20f) {
+            Support(roadSurfaceY, true)
+        } else {
+            Support(realSurfaceY, false)
+        }
+    }
+
+    private fun updateSuspensionPose(
+        dt: Float,
+        contacts: List<WheelContact>,
+        previousRoad: PrototypeTrack.Sample
+    ) {
+        val grounded = contacts.filter { it.grounded }
+        if (grounded.isEmpty()) return
+
+        val targetY = grounded.sumOf { (it.surfaceY + spec.rideHeight).toDouble() }.toFloat() / grounded.size
+        val springError = targetY - airborneY
+        verticalVelocity += (springError * spec.suspensionStiffness -
+            verticalVelocity * spec.suspensionDamping) / spec.mass * dt
+        val maxLift = (slopeVelocity(previousRoad).coerceAtLeast(0f) + 2.2f) * dt
+        val nextY = (airborneY + verticalVelocity * dt).coerceAtMost(targetY + spec.suspensionTravel)
+        airborneY = if (nextY < targetY - spec.suspensionTravel) {
+            targetY - spec.suspensionTravel
+        } else {
+            minOf(nextY, airborneY + maxLift)
+        }
+        if (abs(airborneY - targetY) < 0.015f && abs(verticalVelocity) < 0.08f) {
+            airborneY = targetY
+            verticalVelocity = 0f
+        }
+        airborne = false
+
+        val front = contacts.filter { it.localZ > 0f && it.grounded }
+        val rear = contacts.filter { it.localZ < 0f && it.grounded }
+        val left = contacts.filter { it.localX < 0f && it.grounded }
+        val right = contacts.filter { it.localX > 0f && it.grounded }
+        val targetPitch = if (front.isNotEmpty() && rear.isNotEmpty()) {
+            val frontY = front.sumOf { it.surfaceY.toDouble() }.toFloat() / front.size
+            val rearY = rear.sumOf { it.surfaceY.toDouble() }.toFloat() / rear.size
+            kotlin.math.atan2(frontY - rearY, spec.wheelBase)
+        } else 0f
+        val targetRoll = if (left.isNotEmpty() && right.isNotEmpty()) {
+            val leftY = left.sumOf { it.surfaceY.toDouble() }.toFloat() / left.size
+            val rightY = right.sumOf { it.surfaceY.toDouble() }.toFloat() / right.size
+            kotlin.math.atan2(leftY - rightY, spec.trackWidth)
+        } else 0f
+        pitchRadians += (targetPitch.coerceIn(-MAX_BODY_PITCH, MAX_BODY_PITCH) - pitchRadians) *
+            SUSPENSION_POSE_BLEND
+        rollRadians += (targetRoll.coerceIn(-0.42f, 0.42f) - rollRadians) * SUSPENSION_POSE_BLEND
     }
 
     /** Collision complète contre le dessus, le dessous et les flancs de la dalle. */
@@ -813,5 +900,7 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         private const val CAR_TOP_FROM_ORIGIN = 0.68f
         private const val MAX_ROAD_STEP = 0.75f
         private const val MAX_GROUND_STEP = 0.16f
+        private const val MAX_BODY_PITCH = 0.76f
+        private const val SUSPENSION_POSE_BLEND = 0.18f
     }
 }

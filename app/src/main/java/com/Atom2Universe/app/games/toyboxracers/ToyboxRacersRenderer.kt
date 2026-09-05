@@ -19,9 +19,7 @@ import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.PI
-import kotlin.math.atan2
 import kotlin.math.exp
-import kotlin.math.sqrt
 
 internal class ToyboxRacersRenderer(
     initialDifficulty: RaceDifficulty,
@@ -100,6 +98,7 @@ internal class ToyboxRacersRenderer(
     private var cameraKick = 0f
     private var cameraKickVisual = 0f
     private var visualDriftLean = 0f
+    private var visualRoll = 0f
     // État de rendu interpolé entre deux pas de simulation. L'écran affiche
     // 120 images par seconde alors que la simulation en calcule 60 : sans ces
     // deux photos, une image sur deux montrerait exactement la même chose que
@@ -377,45 +376,41 @@ internal class ToyboxRacersRenderer(
         GLES30.glDepthMask(true)
         GLES30.glDisable(GLES30.GL_BLEND)
 
-        val road = track.sampleAt(car.distance)
-        val groundY = maxOf(track.groundHeightAt(renderCarPosition.x, renderCarPosition.z),
-            track.furnitureHeightAt(renderCarPosition.x, renderCarPosition.z,
-                renderCarPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f))
-        val shadowY = if (!car.groundedOnRoad || car.offRoad || track.isJumpGap(car.distance)) {
-            groundY + 0.025f
-        } else {
-            road.position.y + 0.075f
+        val shouldDrawShadow = car.airborne || !car.groundedOnRoad || car.offRoad || track.isJumpGap(car.distance)
+        if (shouldDrawShadow) {
+            val groundY = maxOf(track.groundHeightAt(renderCarPosition.x, renderCarPosition.z),
+                track.furnitureHeightAt(renderCarPosition.x, renderCarPosition.z,
+                    renderCarPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f))
+            Matrix.setIdentityM(shadowModel, 0)
+            Matrix.translateM(
+                shadowModel, 0,
+                renderCarPosition.x,
+                groundY + 0.025f,
+                renderCarPosition.z
+            )
+            GLES30.glEnable(GLES30.GL_BLEND)
+            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+            GLES30.glDepthMask(false)
+            shadowMesh.draw(shader, viewProjection, shadowModel)
+            GLES30.glDepthMask(true)
+            GLES30.glDisable(GLES30.GL_BLEND)
         }
-        Matrix.setIdentityM(shadowModel, 0)
-        Matrix.translateM(
-            shadowModel, 0,
-            renderCarPosition.x,
-            shadowY,
-            renderCarPosition.z
-        )
-        GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-        GLES30.glDepthMask(false)
-        shadowMesh.draw(shader, viewProjection, shadowModel)
-        GLES30.glDepthMask(true)
-        GLES30.glDisable(GLES30.GL_BLEND)
 
         val heading = renderCarYaw
-        val horizontal = sqrt(road.tangent.x * road.tangent.x + road.tangent.z * road.tangent.z)
-        val targetPitch = when {
-            car.airborne -> 0f
-            !car.groundedOnRoad || car.offRoad -> 0f
-            else -> atan2(road.tangent.y, horizontal).coerceIn(-0.35f, 0.35f)
-        }
+        val targetPitch = if (car.airborne) 0f else car.pitchRadians.coerceIn(-MAX_VISUAL_PITCH, MAX_VISUAL_PITCH)
+        val targetRoll = if (car.airborne) 0f else car.rollRadians.coerceIn(-0.34f, 0.34f)
         // Évite la cassure visuelle d'une image au moment où les roues quittent
         // le tremplin ou touchent la réception, perçue comme un petit lag.
         // Le taux est par seconde : écrit par image, il amortissait deux fois
         // plus vite sur un écran 120 Hz que sur un 60 Hz.
         visualPitch += (targetPitch - visualPitch) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
+        visualRoll += (targetRoll - visualRoll) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
         Matrix.setIdentityM(carModel, 0)
         Matrix.translateM(carModel, 0, renderCarPosition.x, renderCarPosition.y, renderCarPosition.z)
         Matrix.rotateM(carModel, 0, heading * 180f / PI.toFloat(), 0f, 1f, 0f)
         Matrix.rotateM(carModel, 0, -visualPitch * 180f / PI.toFloat(), 1f, 0f, 0f)
+        Matrix.rotateM(carModel, 0, visualRoll * 180f / PI.toFloat(), 0f, 0f, 1f)
+        Matrix.translateM(carModel, 0, 0f, CAR_VISUAL_SUSPENSION_OFFSET, 0f)
         carMesh.draw(shader, viewProjection, carModel)
         renderRivals()
     }
@@ -444,6 +439,7 @@ internal class ToyboxRacersRenderer(
         cameraKick = 0f
         cameraKickVisual = 0f
         visualDriftLean = 0f
+        visualRoll = 0f
         captureSimulationState()
         interpolateSimulationState()
         turboEffects.reset(car.turboReleaseSerial)
@@ -461,5 +457,7 @@ internal class ToyboxRacersRenderer(
         private const val FIXED_STEP = 1f / 60f
         /** Équivaut à l'ancien 0,14 par image, mais mesuré à 60 images par seconde. */
         private const val PITCH_SMOOTHING_RATE = 9.05f
+        private const val MAX_VISUAL_PITCH = 0.76f
+        private const val CAR_VISUAL_SUSPENSION_OFFSET = -0.21f
     }
 }
