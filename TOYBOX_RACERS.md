@@ -4,7 +4,7 @@
 
 ## État du projet
 
-**Phase actuelle :** P1 jouable validée — première passe de la direction artistique P4 en cours.
+**Phase actuelle :** première course P3 implémentée — validation et équilibrage sur téléphone requis.
 
 | État | Signification |
 |---|---|
@@ -15,7 +15,7 @@
 
 ### Prochaine étape recommandée
 
-Tester sur téléphone la première chambre procédurale : tapis patchwork pastel, quatre jouets low-poly solides distribués hors de la piste et murs de pièce. Vérifier surtout que les murs sont visibles assez tôt et que la densité du décor ne gêne pas la conduite.
+Tester sur téléphone une course complète en difficulté **Arcade** : vérifier le départ verrouillé, la lisibilité des cinq adversaires, le classement, les trois tours, l'arrivée et l'enregistrement du record. Essayer ensuite Détente et Champion, puis vérifier qu'une sortie de piste ou un passage à contresens ne valide pas abusivement un tour.
 
 ---
 
@@ -102,7 +102,7 @@ Le premier prototype utilisera seulement le sol, quelques cubes et des barrière
 - Hors-piste libre avec seulement une très légère différence de friction, sans plafond de vitesse ni retour forcé.
 - Collisions souples : perte d'élan et léger rebond, jamais d'arrêt brutal prolongé.
 - Caméra arrière élastique qui anticipe légèrement les courbes.
-- Pas de marche arrière complexe : replacement automatique si la voiture reste bloquée.
+- Marche arrière simple sur le bouton FREIN lorsque la voiture est presque arrêtée ; vitesse limitée et aucune boîte de vitesses complexe.
 
 ### Exploration et format d'une course
 
@@ -239,25 +239,25 @@ games/toyboxracers/
 
 ### P2 — Ruban Turbo et sensation de conduite
 
-- [ ] Détecter un dérapage intentionnel plutôt qu'un simple tête-à-queue.
-- [ ] Faire croître la charge selon angle, vitesse et durée.
-- [ ] Dessiner le ruban pastel et ses trois niveaux visuels.
-- [ ] Déclencher une impulsion lisible au redressement.
-- [ ] Ajouter vibrations légères, poussière pastel et mouvements de caméra.
-- [ ] Régler les collisions pour conserver le rythme de course.
-- [ ] Tester plusieurs tailles de commandes tactiles.
+- [~] Détecter un dérapage intentionnel plutôt qu'un simple tête-à-queue : déclenchement automatique en virage selon direction, vitesse, mouvement avant, angle de glisse et confirmation temporelle ; ressenti téléphone à valider.
+- [~] Faire croître la charge selon angle, vitesse et durée : réserve continue en secondes efficaces, courbe peu rentable au début puis plafonnée progressivement ; cadence à régler sur téléphone.
+- [~] Dessiner le ruban pastel et ses trois niveaux visuels : menthe, lavande et jaune avec largeur/opacité croissantes ; lisibilité et performances à valider sur téléphone.
+- [~] Déclencher une impulsion lisible au redressement : durée continue jusqu'à cinq secondes, attaque proportionnelle au ruban et retour courbe à la vitesse normale ; puissance à régler.
+- [~] Ajouter vibrations légères, poussière pastel et mouvements de caméra : retours aux paliers et à la relance implémentés ; confort à valider.
+- [~] Régler les collisions pour conserver le rythme de course : murs et jouets conservent au moins 58 % de l'élan ; comportement à tester en jeu.
+- [~] Tester plusieurs tailles de commandes tactiles : trois profils adaptatifs ajoutés pour écrans compacts, moyens et larges ; essais physiques à faire.
 
 **Critère de sortie :** le joueur cherche spontanément les courbes pour préparer ses relances.
 
 ### P3 — Première course complète
 
-- [ ] Ajouter checkpoints, sens de circulation, tours et arrivée.
-- [ ] Créer une ligne de course pour l'IA.
-- [ ] Ajouter cinq adversaires avec erreurs et personnalités simples.
-- [ ] Calculer le classement sans saut incohérent de position.
-- [ ] Ajouter compte à rebours, faux départ impossible et écran de résultat.
-- [ ] Créer trois difficultés équitables.
-- [ ] Sauvegarder les meilleurs temps.
+- [~] Ajouter checkpoints, sens de circulation, tours et arrivée : quatre validations ordonnées par tour, détection du mauvais sens et arrivée au troisième tour implémentées ; essai réel requis.
+- [~] Créer une ligne de course pour l'IA : trajectoire centrale anticipée avec décalages latéraux et saut procédural implémentée ; trajectoire à observer.
+- [~] Ajouter cinq adversaires avec erreurs et personnalités simples : rythmes, lignes et ralentissements périodiques distincts implémentés ; équilibrage requis.
+- [~] Calculer le classement sans saut incohérent de position : progression continue, rejet des grands sauts de projection, marge spatiale et confirmation temporelle implémentés.
+- [~] Ajouter compte à rebours, faux départ impossible et écran de résultat : simulation joueur verrouillée avant le départ, panneau place/temps/rejouer implémenté.
+- [~] Créer trois difficultés équitables : Détente, Arcade et Champion règlent anticipation, allure, prudence et fréquence des erreurs sans boost caché.
+- [~] Sauvegarder les meilleurs temps : meilleur chrono séparé par difficulté dans les préférences locales.
 
 **Critère de sortie :** une course de trois tours peut être gagnée, perdue, recommencée et enregistrée correctement.
 
@@ -443,6 +443,122 @@ parce qu'ils relèvent de la conception du prototype :
   `sampleAt` (distance ÷ longueur) ne veulent pas dire la même chose sur une piste à
   vitesse non uniforme — et le huit l'est, puisque la montée n'existe que dans sa
   première moitié. Rien ne casse aujourd'hui ; `isJumpGap` compare bien des distances.
+
+### 2026-09-05 — Première passe du Ruban Turbo (P2)
+
+- Dérapage intentionnel séparé d'un tête-à-queue : frein et direction maintenus,
+  vitesse minimale, mouvement encore majoritairement vers l'avant, fenêtre d'angle
+  de glisse et confirmation pendant plusieurs pas de simulation.
+- Charge calculée à chaque pas fixe selon l'angle, la vitesse et le temps passé dans
+  la dérive. Trois niveaux déclenchent une relance de force et de durée croissantes.
+- Ruban procédural ajouté sans asset : menthe au premier niveau, lavande au deuxième,
+  jaune crème au troisième. Le maillage dynamique, les traces et les particules ont
+  une capacité fixe et réutilisent leurs buffers.
+- Poussière pastel ajoutée pendant la dérive et en petite gerbe lors de la relance.
+- Caméra décalée légèrement selon la glisse, puis recul bref lors de l'impulsion.
+- Vibrations légères ajoutées lors du franchissement des niveaux et à la relance.
+- Vitesse supérieure autorisée pendant le turbo, suivie d'un retour progressif à la
+  vitesse normale plutôt que d'une coupure brutale.
+- Collisions contre murs et jouets recalibrées pour conserver au moins 58 % de l'élan.
+- Trois profils de tailles de commandes tactiles sélectionnés selon la largeur utile.
+- Vérification `compileDebugKotlin` réussie avec le JDK embarqué d'Android Studio.
+- Tous les points P2 restent en cours jusqu'au réglage et à la validation sur téléphone.
+
+### 2026-09-05 — Ruban Turbo simplifié après retour téléphone
+
+- La combinaison GAZ + direction + FREIN est supprimée : elle compliquait une action
+  qui doit rester naturelle et obligeait à interrompre inutilement l'accélération.
+- Le joueur peut désormais garder GAZ. Un virage suffisamment marqué réduit
+  automatiquement et légèrement l'adhérence, fait apparaître le ruban, puis le
+  redressement déclenche la relance.
+- L'adhérence de dérive a été remontée pour produire une glisse plus légère et mieux
+  contrôlée que l'ancien dérapage au frein.
+- Le bouton FREIN ne commande plus le dérapage ; son second rôle contextuel de marche arrière est documenté ci-dessous.
+
+### 2026-09-05 — Temporisation et continuité du Ruban Turbo
+
+- Un petit coup de volant ne suffit plus : le virage et la glisse doivent rester
+  valides pendant 0,38 seconde avant l'apparition du ruban.
+- Une fois le ruban actif, une correction de trajectoire pouvant durer jusqu'à
+  0,52 seconde ne coupe plus la dérive. Reprendre la direction pendant cette fenêtre
+  continue le même ruban et conserve toute la charge.
+- Freiner, décoller ou partir en tête-à-queue annule toujours la charge afin de ne pas
+  récompenser une perte de contrôle.
+- Le premier niveau est garanti après une dérive réellement confirmée. Les relances
+  durent désormais de 0,70 à 1,20 seconde et leur accélération a été renforcée.
+- Le déplacement de caméra à l'activation et à la relance est maintenant interpolé ;
+  sa cible ne saute plus brutalement vers l'avant, ce qui pouvait ressembler à un lag.
+
+### 2026-09-05 — Frein contextuel et marche arrière
+
+- Tant que la voiture avance, le bouton FREIN conserve son rôle normal.
+- Une fois presque immobile, maintenir FREIN pendant une très courte pause engage la
+  marche arrière. Relâcher le bouton la désengage immédiatement.
+- La marche arrière est limitée à 7 unités/s et possède une accélération plus douce
+  que la marche avant.
+- La direction est inversée pendant le recul afin que les commandes restent naturelles.
+
+### 2026-09-05 — Correction du crash du retour haptique
+
+- Le premier essai des vibrations a révélé une `SecurityException` : la permission
+  normale `android.permission.VIBRATE` manquait dans le manifeste.
+- La permission est maintenant déclarée et l'appel au vibreur est protégé : si un
+  appareil ou un profil refuse malgré tout le service, seul l'effet haptique est
+  ignoré et la partie continue.
+
+### 2026-09-05 — Déclenchement du ruban fiabilisé
+
+- Le compteur d'entrée dépend désormais d'un virage maintenu à vitesse suffisante.
+  Il ne repart plus à zéro simplement parce que l'angle de glisse traverse trop vite
+  une fenêtre étroite entre deux pas de simulation.
+- L'angle de glisse reste utilisé pour calculer la qualité de la charge et annuler la
+  dérive à l'approche d'une vraie perte de contrôle.
+- La tolérance sur la composante avant et sur l'angle a été élargie afin que le ruban
+  apparaisse avant un tête-à-queue plutôt que de refuser silencieusement l'activation.
+- L'adhérence automatique en virage est renforcée pour conserver une glisse visible
+  mais réduire la tendance de la mécanique à provoquer elle-même un tête-à-queue.
+
+### 2026-09-05 — Première course complète (P3)
+
+- Nouveau contrôleur de course à pas fixe : compte à rebours de 3,25 secondes,
+  chronomètre, quatre checkpoints ordonnés, mauvais sens, trois tours et arrivée.
+- Les commandes peuvent être maintenues pendant le compte à rebours mais la voiture
+  reste physiquement immobile : aucun faux départ n'est possible.
+- Les changements de branche incohérents au croisement sont filtrés dans la mesure de
+  progression. Le classement utilise également une marge de 1,5 unité et une
+  confirmation de 0,28 seconde pour éviter de clignoter lors d'un dépassement.
+- Cinq adversaires colorés suivent une ligne de course anticipée. Ils possèdent des
+  décalages latéraux, des rythmes et des erreurs périodiques distincts.
+- Les adversaires franchissent le vide central avec une trajectoire verticale
+  procédurale au lieu de flotter sur la portion absente du ruban de piste.
+- Trois difficultés sans triche de boost : **Détente**, **Arcade** et **Champion**.
+  Elles modifient vitesse cible, anticipation, prudence en courbe et erreurs.
+- HUD de course ajouté : vitesse, position sur six, tour sur trois, chronomètre,
+  compte à rebours central et alerte de mauvais sens.
+- Écran de résultat ajouté avec place, temps, difficulté, meilleur chrono local et
+  bouton pour rejouer. Les records et la difficulté choisie sont persistés.
+- Les sept tâches P3 restent en cours jusqu'à une course complète validée sur téléphone.
+- Vérification `compileDebugKotlin` réussie.
+
+### 2026-09-05 — Récompense continue du Ruban Turbo
+
+- Le ruban reste invisible pendant les 0,25 premières secondes du virage. Ce temps
+  confirme l'intention mais ne donne plus automatiquement un niveau de turbo.
+- Une fois visible, la réserve cumule des secondes efficaces. Chaque seconde compte
+  davantage lorsque l'angle et la vitesse témoignent d'une glisse bien contrôlée,
+  tandis qu'un petit virage reste légèrement positif.
+- La correction latérale propre au ruban conserve désormais la norme de la vitesse :
+  activer la mécanique ne prélève aucune énergie cachée au joueur.
+- Les trois boosts fixes sont supprimés. La durée suit une courbe convexe au départ,
+  puis à rendement décroissant, avec un plafond strict de cinq secondes.
+- La puissance d'attaque dépend elle aussi de la réserve, entre environ x1,12 et
+  x1,80 de vitesse maximale. La poussée soutenue conserve 38 % de cet excédent, puis
+  rejoint doucement x1 pendant le dernier quart du boost. Même un petit boost décroît
+  donc toujours depuis sa propre puissance initiale.
+- Une nouvelle charge est impossible tant qu'un boost reste actif. Les cycles de
+  rubans courts ne peuvent donc plus s'enchaîner par-dessus leur propre relance.
+- Les couleurs menthe, lavande et or restent des repères visuels, mais la physique
+  utilise maintenant une valeur continue plutôt que trois récompenses discrètes.
 
 ---
 

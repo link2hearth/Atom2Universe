@@ -463,9 +463,9 @@ internal object PrototypeMeshFactory {
         builder.lowPolyEllipsoid(x, ground + 7.9f, z, 1.1f, 0.65f, 1.1f, 4, 10, MINT)
     }
 
-    fun car(): ColoredMesh {
+    fun car(bodyColor: FloatArray = PINK): ColoredMesh {
         val builder = MeshBuilder()
-        builder.box(0f, 0.25f, 0f, 0.82f, 0.30f, 1.28f, PINK)
+        builder.box(0f, 0.25f, 0f, 0.82f, 0.30f, 1.28f, bodyColor)
         builder.box(0f, 0.48f, -0.05f, 0.62f, 0.30f, 0.60f, CREAM)
         builder.box(0f, 0.51f, 0.19f, 0.53f, 0.15f, 0.06f, WINDOW)
         builder.box(-0.42f, 0.31f, 0.40f, 0.06f, 0.12f, 0.22f, CREAM)

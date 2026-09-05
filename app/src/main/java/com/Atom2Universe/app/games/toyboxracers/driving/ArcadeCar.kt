@@ -8,6 +8,8 @@ import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.pow
 
 /** Modèle de conduite volontairement arcade, déterministe et à pas fixe. */
 internal class ArcadeCar(private val track: PrototypeTrack) {
@@ -34,6 +36,20 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         private set
     var elapsedSeconds = 0f
         private set
+    var drifting = false
+        private set
+    var turboCharge = 0f
+        private set
+    var turboLevel = 0
+        private set
+    var turboBoostSeconds = 0f
+        private set
+    var turboBoostTotalSeconds = 0f
+        private set
+    var turboReleaseSerial = 0
+        private set
+    var reversing = false
+        private set
 
     private var verticalVelocity = 0f
     private var airborneY = 0f
@@ -44,6 +60,12 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
     var groundedOnRoad = true
         private set
     private var previousDistance = distance
+    private var driftCandidateSeconds = 0f
+    private var driftDurationSeconds = 0f
+    private var driftGraceSeconds = 0f
+    private var driftEffectiveSeconds = 0f
+    private var turboBoostPeakMultiplier = 1f
+    private var reverseHoldSeconds = 0f
 
     init {
         placeAtStart()
@@ -59,6 +81,18 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         offRoad = false
         lap = 1
         elapsedSeconds = 0f
+        drifting = false
+        turboCharge = 0f
+        turboLevel = 0
+        turboBoostSeconds = 0f
+        turboBoostTotalSeconds = 0f
+        driftCandidateSeconds = 0f
+        driftDurationSeconds = 0f
+        driftGraceSeconds = 0f
+        driftEffectiveSeconds = 0f
+        turboBoostPeakMultiplier = 1f
+        reversing = false
+        reverseHoldSeconds = 0f
         verticalVelocity = 0f
         velocityX = 0f
         velocityZ = 0f
@@ -76,9 +110,14 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
 
         val steering = input.steering.coerceIn(-1f, 1f)
         speed = hypot(velocityX, velocityZ)
+        val currentForwardX = sin(yawRadians)
+        val currentForwardZ = cos(yawRadians)
+        val currentForwardSpeed = velocityX * currentForwardX + velocityZ * currentForwardZ
+        updateReverseState(dt, input)
         if (!airborne && speed > 0.35f && abs(steering) > 0.01f) {
             val steeringStrength = 0.45f + 1.30f * (speed / MAX_SPEED).coerceIn(0f, 1f)
-            yawRadians += steering * steeringStrength * dt
+            val reverseSteering = if (currentForwardSpeed < -0.2f) -1f else 1f
+            yawRadians += steering * reverseSteering * steeringStrength * dt
         }
 
         val forwardX = sin(yawRadians)
@@ -86,36 +125,134 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         if (!airborne && input.accelerating) {
             velocityX += forwardX * ENGINE_ACCELERATION * dt
             velocityZ += forwardZ * ENGINE_ACCELERATION * dt
+        } else if (!airborne && reversing) {
+            velocityX -= forwardX * REVERSE_ACCELERATION * dt
+            velocityZ -= forwardZ * REVERSE_ACCELERATION * dt
         }
 
-        val forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
+        var forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
         val rightX = forwardZ
         val rightZ = -forwardX
         var lateralSpeed = velocityX * rightX + velocityZ * rightZ
-        val drifting = input.braking && abs(steering) > 0.1f && speed > 5f
+        val slipAngle = abs(atan2(lateralSpeed, max(0.1f, abs(forwardSpeed))))
+        val wasDrifting = drifting
+        // Le Ruban Turbo est automatique : le joueur garde GAZ et conduit
+        // normalement. Un virage assez marqué assouplit légèrement l'adhérence,
+        // puis le redressement libère la charge sans combinaison de boutons.
+        val driftBaseValid = !airborne && !input.braking && turboBoostSeconds <= 0f &&
+            speed >= DRIFT_SPEED_MIN && forwardSpeed > speed * DRIFT_FORWARD_RATIO_MIN
+        val driftRequested = driftBaseValid && abs(steering) >= DRIFT_STEERING_MIN
+        val chargeableDrift = driftRequested && slipAngle in DRIFT_ANGLE_MIN..DRIFT_ANGLE_MAX
+        if (!wasDrifting) {
+            // La confirmation repose sur un vrai virage maintenu, pas sur une fenêtre
+            // d'angle que la voiture peut traverser entre deux images. L'angle sert
+            // ensuite à doser la charge et à refuser une perte de contrôle.
+            driftCandidateSeconds = if (driftRequested) driftCandidateSeconds + dt else 0f
+            drifting = driftCandidateSeconds >= DRIFT_CONFIRM_SECONDS
+            if (drifting) {
+                // Le seuil rend la détection visible, mais la réserve commence à
+                // zéro : aucun petit boost fixe ne peut être spammé.
+                driftEffectiveSeconds = 0f
+                turboCharge = 0f
+                turboLevel = 1
+                driftGraceSeconds = 0f
+            }
+        } else {
+            val canKeepDrifting = driftBaseValid && slipAngle <= DRIFT_CANCEL_ANGLE
+            if (driftRequested && canKeepDrifting) {
+                // Reprendre le virage pendant la fenêtre de grâce prolonge le même ruban.
+                driftGraceSeconds = 0f
+                drifting = true
+            } else if (canKeepDrifting && driftGraceSeconds < DRIFT_EXIT_GRACE_SECONDS) {
+                // Le joueur peut relâcher brièvement la direction pour éviter le décor
+                // sans perdre immédiatement son ruban ni sa charge.
+                driftGraceSeconds += dt
+                drifting = true
+            } else {
+                drifting = false
+            }
+        }
+        if (drifting) {
+            driftDurationSeconds += dt
+            if (driftRequested) {
+                val angleQuality = ((slipAngle - DRIFT_ANGLE_MIN) /
+                    (DRIFT_IDEAL_ANGLE - DRIFT_ANGLE_MIN)).coerceIn(0f, 1f)
+                val speedQuality = ((speed - DRIFT_SPEED_MIN) /
+                    (MAX_SPEED - DRIFT_SPEED_MIN)).coerceIn(0f, 1f)
+                val controlQuality = if (chargeableDrift) {
+                    0.55f + angleQuality * 0.30f + speedQuality * 0.15f
+                } else {
+                    // Un petit virage reste légèrement positif et ne s'auto-punit
+                    // jamais, mais une belle glisse charge sensiblement plus vite.
+                    0.42f + speedQuality * 0.10f
+                }
+                driftEffectiveSeconds += dt * controlQuality
+                turboCharge = (driftEffectiveSeconds / FULL_CHARGE_SECONDS).coerceIn(0f, 1f)
+                turboLevel = chargeLevel(turboCharge)
+            }
+        } else if (wasDrifting) {
+            if (driftBaseValid && abs(steering) < DRIFT_STEERING_MIN) {
+                releaseTurbo(forwardX, forwardZ)
+            } else {
+                // Freiner, décoller ou partir en tête-à-queue annule la charge :
+                // seul un vrai redressement en fin de courbe mérite la relance.
+                clearTurboCharge()
+            }
+            driftDurationSeconds = 0f
+            driftGraceSeconds = 0f
+            driftCandidateSeconds = 0f
+        }
         val grip = when {
             airborne -> 0f
-            drifting -> DRIFT_GRIP
+            driftRequested -> DRIFT_GRIP
             else -> NORMAL_GRIP
         }
+        val speedBeforeGrip = hypot(forwardSpeed, lateralSpeed)
         lateralSpeed = approach(lateralSpeed, 0f, grip * dt)
         velocityX = forwardX * forwardSpeed + rightX * lateralSpeed
         velocityZ = forwardZ * forwardSpeed + rightZ * lateralSpeed
+        if (driftRequested) {
+            // Le ruban ne prélève aucune énergie cachée. Frein, collisions et
+            // erreurs restent les seules causes de perte d'élan.
+            val speedAfterGrip = hypot(velocityX, velocityZ)
+            if (speedAfterGrip > 0.0001f) {
+                val conservation = speedBeforeGrip / speedAfterGrip
+                velocityX *= conservation
+                velocityZ *= conservation
+            }
+        }
         headingOffset = atan2(lateralSpeed, max(0.1f, abs(forwardSpeed)))
 
         val deceleration = if (airborne) {
             0f
         } else {
             when {
-                input.braking -> BRAKE_DECELERATION
+                input.braking && !reversing -> BRAKE_DECELERATION
                 !input.accelerating -> ROLLING_DECELERATION
                 else -> 0f
             } + if (offRoad) OFF_ROAD_DECELERATION else 0f
         }
         applyDeceleration(deceleration * dt)
+        limitReverseSpeed(forwardX, forwardZ)
         // Le hors-piste appartient au terrain de jeu : aucune vitesse plafond
         // artificielle ne force le joueur à retourner sur le ruban de route.
-        limitSpeed(MAX_SPEED)
+        if (turboBoostSeconds > 0f) {
+            val progress = if (turboBoostTotalSeconds > 0f) {
+                1f - turboBoostSeconds / turboBoostTotalSeconds
+            } else 1f
+            val multiplier = boostMultiplier(progress.coerceIn(0f, 1f))
+            forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
+            if (forwardSpeed > 0f) {
+                val strength = ((multiplier - 1f) /
+                    (turboBoostPeakMultiplier - 1f).coerceAtLeast(0.01f)).coerceIn(0f, 1f)
+                velocityX += forwardX * TURBO_ACCELERATION * strength * dt
+                velocityZ += forwardZ * TURBO_ACCELERATION * strength * dt
+            }
+            limitSpeed(MAX_SPEED * multiplier)
+            turboBoostSeconds = (turboBoostSeconds - dt).coerceAtLeast(0f)
+        } else {
+            limitSpeed(MAX_SPEED)
+        }
 
         val previousWorldX = worldX
         val previousWorldZ = worldZ
@@ -298,6 +435,96 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
         velocityZ *= -ROAD_RESTITUTION
     }
 
+    private fun releaseTurbo(forwardX: Float, forwardZ: Float) {
+        val earnedSeconds = driftEffectiveSeconds
+        val duration = boostDuration(earnedSeconds)
+        if (duration < MIN_BOOST_DURATION) {
+            clearTurboCharge()
+            return
+        }
+        turboBoostPeakMultiplier = boostPeakMultiplier(earnedSeconds)
+        val impulse = (turboBoostPeakMultiplier - 1f) * TURBO_RELEASE_IMPULSE
+        velocityX += forwardX * impulse
+        velocityZ += forwardZ * impulse
+        turboBoostTotalSeconds = duration
+        turboBoostSeconds = duration
+        turboReleaseSerial++
+        clearTurboCharge()
+    }
+
+    private fun clearTurboCharge() {
+        turboCharge = 0f
+        turboLevel = 0
+        driftEffectiveSeconds = 0f
+    }
+
+    private fun updateReverseState(dt: Float, input: Input) {
+        if (
+            airborne || !input.braking || input.accelerating ||
+            (!reversing && speed > REVERSE_ENGAGE_SPEED)
+        ) {
+            reversing = false
+            reverseHoldSeconds = 0f
+            return
+        }
+        if (!reversing) {
+            reverseHoldSeconds += dt
+            reversing = reverseHoldSeconds >= REVERSE_ENGAGE_DELAY
+        }
+    }
+
+    private fun limitReverseSpeed(forwardX: Float, forwardZ: Float) {
+        val forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
+        if (forwardSpeed >= -MAX_REVERSE_SPEED) return
+        val excess = forwardSpeed + MAX_REVERSE_SPEED
+        velocityX -= forwardX * excess
+        velocityZ -= forwardZ * excess
+    }
+
+    private fun chargeLevel(charge: Float): Int = when {
+        charge >= TURBO_LEVEL_THREE -> 3
+        charge >= TURBO_LEVEL_TWO -> 2
+        else -> 1
+    }
+
+    /** Convexe au départ, puis rendement décroissant près du plafond de cinq secondes. */
+    private fun boostDuration(effectiveSeconds: Float): Float {
+        if (effectiveSeconds <= 0f) return 0f
+        val curved = MAX_BOOST_DURATION *
+            (1f - exp(-((effectiveSeconds / BOOST_DURATION_SCALE).pow(BOOST_DURATION_POWER))))
+        return (curved + effectiveSeconds * BOOST_DURATION_LINEAR_GAIN)
+            .coerceAtMost(MAX_BOOST_DURATION)
+    }
+
+    private fun boostPeakMultiplier(effectiveSeconds: Float): Float =
+        (MIN_BOOST_PEAK + BOOST_PEAK_RANGE *
+            (1f - exp(-(effectiveSeconds / BOOST_PEAK_SCALE))))
+            .coerceAtMost(MAX_BOOST_PEAK)
+
+    /** Attaque marquée, poussée prolongée, puis retour doux à x1 sur le dernier quart. */
+    private fun boostMultiplier(progress: Float): Float {
+        val sustainMultiplier = 1f + (turboBoostPeakMultiplier - 1f) * BOOST_SUSTAIN_RATIO
+        return if (progress < BOOST_TAIL_START) {
+            val t = progress / BOOST_TAIL_START
+            val eased = t * t * (3f - 2f * t)
+            turboBoostPeakMultiplier +
+                (sustainMultiplier - turboBoostPeakMultiplier) * eased
+        } else {
+            val t = (progress - BOOST_TAIL_START) / (1f - BOOST_TAIL_START)
+            val eased = t * t * (3f - 2f * t)
+            sustainMultiplier + (1f - sustainMultiplier) * eased
+        }
+    }
+
+    private fun preserveCollisionRhythm(beforeSpeed: Float) {
+        val current = hypot(velocityX, velocityZ)
+        val minimum = beforeSpeed * COLLISION_SPEED_RETENTION
+        if (current >= minimum || current <= 0.0001f) return
+        val scale = minimum / current
+        velocityX *= scale
+        velocityZ *= scale
+    }
+
     private fun applyDeceleration(amount: Float) {
         val current = hypot(velocityX, velocityZ)
         if (current <= 0.0001f) return
@@ -316,22 +543,29 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
     }
 
     private fun resolveRoomWalls() {
+        val impactSpeed = hypot(velocityX, velocityZ)
+        var collided = false
         val xLimit = PrototypeTrack.ROOM_HALF_WIDTH - CAR_COLLISION_RADIUS
         val zLimit = PrototypeTrack.ROOM_HALF_DEPTH - CAR_COLLISION_RADIUS
         if (worldX < -xLimit) {
             worldX = -xLimit
             velocityX = abs(velocityX) * WALL_RESTITUTION
+            collided = true
         } else if (worldX > xLimit) {
             worldX = xLimit
             velocityX = -abs(velocityX) * WALL_RESTITUTION
+            collided = true
         }
         if (worldZ < -zLimit) {
             worldZ = -zLimit
             velocityZ = abs(velocityZ) * WALL_RESTITUTION
+            collided = true
         } else if (worldZ > zLimit) {
             worldZ = zLimit
             velocityZ = -abs(velocityZ) * WALL_RESTITUTION
+            collided = true
         }
+        if (collided) preserveCollisionRhythm(impactSpeed)
     }
 
     private fun resolveToyObstacles() {
@@ -349,8 +583,10 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
             worldZ = obstacle.z + normalZ * minimumDistance
             val normalSpeed = velocityX * normalX + velocityZ * normalZ
             if (normalSpeed < 0f) {
+                val impactSpeed = hypot(velocityX, velocityZ)
                 velocityX -= (1f + TOY_RESTITUTION) * normalSpeed * normalX
                 velocityZ -= (1f + TOY_RESTITUTION) * normalSpeed * normalZ
+                preserveCollisionRhythm(impactSpeed)
             }
         }
     }
@@ -363,12 +599,42 @@ internal class ArcadeCar(private val track: PrototypeTrack) {
 
     companion object {
         private const val MAX_SPEED = 20f
+        private const val TURBO_ACCELERATION = 11.0f
+        private const val TURBO_RELEASE_IMPULSE = 4.0f
+        private const val MIN_BOOST_DURATION = 0.06f
+        private const val MAX_BOOST_DURATION = 5.0f
+        private const val BOOST_DURATION_SCALE = 7.0f
+        private const val BOOST_DURATION_POWER = 1.6f
+        private const val BOOST_DURATION_LINEAR_GAIN = 0.08f
+        private const val MIN_BOOST_PEAK = 1.12f
+        private const val MAX_BOOST_PEAK = 1.80f
+        private const val BOOST_PEAK_RANGE = 0.68f
+        private const val BOOST_PEAK_SCALE = 4.0f
+        private const val BOOST_SUSTAIN_RATIO = 0.38f
+        private const val BOOST_TAIL_START = 0.75f
         private const val ENGINE_ACCELERATION = 8.5f
+        private const val REVERSE_ACCELERATION = 6.0f
+        private const val MAX_REVERSE_SPEED = 7.0f
+        private const val REVERSE_ENGAGE_SPEED = 0.55f
+        private const val REVERSE_ENGAGE_DELAY = 0.12f
         private const val BRAKE_DECELERATION = 13f
         private const val ROLLING_DECELERATION = 2.4f
         private const val OFF_ROAD_DECELERATION = 0.65f
         private const val NORMAL_GRIP = 16f
-        private const val DRIFT_GRIP = 3.8f
+        private const val DRIFT_GRIP = 9.0f
+        private const val DRIFT_SPEED_MIN = 7f
+        private const val DRIFT_STEERING_MIN = 0.28f
+        private const val DRIFT_FORWARD_RATIO_MIN = 0.18f
+        private const val DRIFT_ANGLE_MIN = 0.035f
+        private const val DRIFT_IDEAL_ANGLE = 0.42f
+        private const val DRIFT_ANGLE_MAX = 0.95f
+        private const val DRIFT_CANCEL_ANGLE = 1.25f
+        private const val DRIFT_CONFIRM_SECONDS = 0.25f
+        private const val DRIFT_EXIT_GRACE_SECONDS = 0.52f
+        private const val FULL_CHARGE_SECONDS = 10f
+        private const val TURBO_LEVEL_TWO = 0.25f
+        private const val TURBO_LEVEL_THREE = 0.60f
+        private const val COLLISION_SPEED_RETENTION = 0.58f
         private const val CAR_COLLISION_RADIUS = 0.58f
         private const val WALL_RESTITUTION = 0.28f
         private const val TOY_RESTITUTION = 0.22f
