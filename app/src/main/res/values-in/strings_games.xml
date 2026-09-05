@@ -314,6 +314,5 @@
     <string name="toybox_house_seed_invalid">Masukkan bilangan bulat dari -9223372036854775808 hingga 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Jalur perabot</string>
     <string name="toybox_circuit_expedition">Ekspedisi besar</string>
-    <string name="toybox_circuit_crossroads">Persimpangan besar</string>
     <string name="toybox_house_mode">Rumah</string>
 </resources>

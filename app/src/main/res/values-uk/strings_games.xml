@@ -314,6 +314,5 @@
     <string name="toybox_house_seed_invalid">Введіть ціле число від -9223372036854775808 до 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Меблевий маршрут</string>
     <string name="toybox_circuit_expedition">Велика експедиція</string>
-    <string name="toybox_circuit_crossroads">Велике перехрестя</string>
     <string name="toybox_house_mode">Будинок</string>
 </resources>

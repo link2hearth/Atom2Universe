@@ -371,7 +371,6 @@ class ToyboxRacersActivity : ThemedActivity() {
         CircuitKind.RIBBON_RALLY -> R.string.toybox_circuit_rally
         CircuitKind.FURNITURE_TRAIL -> R.string.toybox_circuit_furniture
         CircuitKind.WORKSHOP_EXPEDITION -> R.string.toybox_circuit_expedition
-        CircuitKind.CROSSROADS_SHOWCASE -> R.string.toybox_circuit_crossroads
         CircuitKind.HOUSE_GROUND_FLOOR -> R.string.toybox_house_mode
     })
 

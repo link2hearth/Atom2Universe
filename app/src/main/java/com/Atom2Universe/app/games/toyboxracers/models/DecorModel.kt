@@ -2,7 +2,7 @@ package com.Atom2Universe.app.games.toyboxracers.models
 
 import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
 
-internal enum class DecorRoom { KITCHEN, LIVING_ROOM, GARAGE, OFFICE, BATHROOM, OUTDOOR, STRUCTURE, BEDROOM }
+internal enum class DecorRoom { KITCHEN, LIVING_ROOM, GARAGE, OFFICE, BATHROOM, OUTDOOR, BEDROOM }
 internal enum class DecorShape { BOX, OVAL, CYLINDER_Y, CYLINDER_X, CONE_Y, GABLE_ROOF }
 
 /** Dimensions complètes, origine au centre de la base, façade tournée vers +Z. */

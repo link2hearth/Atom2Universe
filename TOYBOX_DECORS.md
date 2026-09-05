@@ -146,7 +146,6 @@ composition destinée au jeu doit être placée selon le tracé de sa future pi�
 | Cuisine, salon, garage | `models/DecorCatalog.kt` | 25 assemblages originaux, réalisés par Codex pour ce projet | 2026-09-05 |
 | Bureau, salle de bains, extérieur et micro-ondes | `models/DecorExpansion.kt` | 24 assemblages originaux, réalisés par Codex pour ce projet | 2026-09-05 |
 | Primitives, placement et palette | `models/DecorModel.kt`, `render/DecorMeshFactory.kt` | Génération Kotlin sans ressource externe | 2026-09-05 |
-| Tunnel et garde-corps de pont | `models/DecorStructures.kt` (`DecorRoom.STRUCTURE`) | Boîtes, une pièce solide par mur/toit/pilier, pour « Grand carrefour » | 2026-09-05 |
 | Étagère-escabeau et armoire du mode Maison | `models/DecorHouseFurniture.kt` | Plateaux calés sur la hauteur réelle du mobilier voisin (commode existante) | 2026-09-05 |
 
 ## Validation à poursuivre sur téléphone
@@ -159,10 +158,10 @@ de chambre contient 10 432 triangles ; chaque modèle du catalogue compte entre
 chambre conserve au moins 2,33 unités de marge
 horizontale par rapport au bord de la piste (avant rayon de collision de la voiture).
 
-Le tunnel, les garde-corps, l'étagère-escabeau et l'armoire n'ont été validés que
-par calcul (tests JVM `PrototypeTrackTest`) et par lecture du maillage généré,
-jamais visuellement sur device — leurs marges (tunnel notamment) restent à confirmer
-au premier essai, comme la marge de 2,33 unités ci-dessus l'a été en son temps.
+L'étagère-escabeau et l'armoire n'ont été validées que par calcul (tests JVM
+`PrototypeTrackTest`) et par lecture du maillage généré, jamais visuellement sur
+device — leurs marges restent à confirmer au premier essai, comme la marge de
+2,33 unités ci-dessus l'a été en son temps.
 
 Contrôler la silhouette de l'ours, la lisibilité des fenêtres depuis la voiture,
 le passage entre les pieds du bureau, les collisions au bord du lit, les

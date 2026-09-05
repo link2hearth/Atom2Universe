@@ -314,6 +314,5 @@
     <string name="toybox_house_seed_invalid">Voer een geheel getal in van -9223372036854775808 tot 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Meubelroute</string>
     <string name="toybox_circuit_expedition">Grote expeditie</string>
-    <string name="toybox_circuit_crossroads">Groot kruispunt</string>
     <string name="toybox_house_mode">Huis</string>
 </resources>

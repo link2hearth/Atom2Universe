@@ -12,10 +12,6 @@ internal object CircuitCrossings {
     private val table: Map<CircuitKind, List<GradeCrossing>> = mapOf(
         CircuitKind.FIGURE_EIGHT to listOf(
             GradeCrossing(PrototypeTrack.JUMP_START_FRACTION, PrototypeTrack.JUMP_END_FRACTION)
-        ),
-        CircuitKind.CROSSROADS_SHOWCASE to listOf(
-            GradeCrossing(CrossroadsCircuit.GAP0_START, CrossroadsCircuit.GAP0_END),
-            GradeCrossing(CrossroadsCircuit.GAP2_START, CrossroadsCircuit.GAP2_END)
         )
     )
 

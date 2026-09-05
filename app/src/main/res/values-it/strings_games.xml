@@ -314,6 +314,5 @@
     <string name="toybox_house_seed_invalid">Inserisci un intero tra -9223372036854775808 e 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Giro dei mobili</string>
     <string name="toybox_circuit_expedition">Grande spedizione</string>
-    <string name="toybox_circuit_crossroads">Grande incrocio</string>
     <string name="toybox_house_mode">Casa</string>
 </resources>

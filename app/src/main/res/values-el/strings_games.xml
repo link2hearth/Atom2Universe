@@ -312,6 +312,5 @@
     <string name="toybox_house_seed_invalid">Δώσε ακέραιο από -9223372036854775808 έως 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Διαδρομή επίπλων</string>
     <string name="toybox_circuit_expedition">Μεγάλη αποστολή</string>
-    <string name="toybox_circuit_crossroads">Μεγάλο σταυροδρόμι</string>
     <string name="toybox_house_mode">Σπίτι</string>
 </resources>

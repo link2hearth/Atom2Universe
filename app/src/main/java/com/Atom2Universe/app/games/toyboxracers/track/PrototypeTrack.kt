@@ -262,7 +262,6 @@ internal class PrototypeTrack(
     private fun point(fraction: Float): Vec3 {
         if (scene.circuit.usesFurnitureLayout) return OrganicCircuits.point(scene.circuit, fraction)
         if (scene.circuit.usesSculptedLayout) return SculptedCircuits.point(scene.circuit, fraction)
-        if (scene.circuit.usesCrossroadsLayout) return CrossroadsCircuit.point(fraction)
         if (scene.circuit == CircuitKind.SLALOM) return slalomPoint(fraction)
         val angle = fraction * 2f * PI.toFloat()
         // Lemniscate de Gerono : les deux passages au centre ont des directions
@@ -295,7 +294,6 @@ internal class PrototypeTrack(
             CourseSurface.FURNITURE -> 16f
         }
         if (scene.circuit.usesSculptedLayout) return SculptedCircuits.width(scene.circuit)
-        if (scene.circuit.usesCrossroadsLayout) return CrossroadsCircuit.width(fraction)
         if (scene.circuit == CircuitKind.SLALOM) return 7f
         // Le plateau et la réception pardonnent davantage les erreurs.
         val nearJump = fraction in 0.42f..0.60f

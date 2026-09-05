@@ -4,7 +4,6 @@ import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitCrossings
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
-import com.Atom2Universe.app.games.toyboxracers.track.CrossroadsCircuit
 import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
 import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
 import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
@@ -63,7 +62,7 @@ class PrototypeTrackTest {
     @Test
     fun circuitsWithoutACrossingNeverReportAJumpGap() {
         for (kind in CircuitKind.entries) {
-            if (kind == CircuitKind.FIGURE_EIGHT || kind == CircuitKind.CROSSROADS_SHOWCASE) continue
+            if (kind == CircuitKind.FIGURE_EIGHT) continue
             val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, kind))
             assertTrue("$kind ne doit avoir aucun croisement pour cette itération",
                 CircuitCrossings.crossingsFor(kind).isEmpty())
@@ -334,53 +333,6 @@ class PrototypeTrackTest {
     }
 
     @Test
-    fun crossroadsShowcaseHasTwoDistinctJumpsAndOneFixedBridge() {
-        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.CROSSROADS_SHOWCASE))
-        val crossings = CircuitCrossings.crossingsFor(CircuitKind.CROSSROADS_SHOWCASE)
-        assertEquals("Le circuit doit exposer exactement deux sauts", 2, crossings.size)
-
-        for (crossing in crossings) {
-            val midFraction = (crossing.gapStartFraction + crossing.gapEndFraction) / 2f
-            val midDistance = track.allSamples().first { it.fraction >= midFraction }.distance
-            assertTrue("Chaque saut doit être un vrai vide", track.isJumpGap(midDistance))
-        }
-
-        // Le pont (troisième croisement, sans vide) doit rester une dalle continue,
-        // clairement plus haute que la piste basse qu'il surplombe au même endroit XZ.
-        val bridgeSample = track.allSamples().first { it.fraction >= CrossroadsCircuit.BRIDGE_PEAK_END }
-        assertTrue("Le pont doit avoir une dalle, jamais un vide", track.hasDeck(bridgeSample))
-        val lowCrossingSample = track.allSamples().first()
-        assertTrue(
-            "Le pont doit dominer nettement la piste basse qu'il surplombe",
-            bridgeSample.position.y - lowCrossingSample.position.y > 4f
-        )
-
-        // Les deux sauts doivent culminer à des hauteurs distinctes.
-        val jump0Peak = track.allSamples().first { it.fraction >= crossings[0].gapStartFraction }.position.y
-        val jump2Peak = track.allSamples().first { it.fraction >= crossings[1].gapStartFraction }.position.y
-        assertTrue(
-            "Les deux sauts doivent culminer à des hauteurs distinctes",
-            abs(jump0Peak - jump2Peak) > 0.5f
-        )
-    }
-
-    @Test
-    fun crossroadsTunnelAddsSolidWallsButLeavesTheMiddleOpen() {
-        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.CROSSROADS_SHOWCASE))
-        val tunnelCenter = CrossroadsCircuit.point(CrossroadsCircuit.TUNNEL_FRACTION)
-        val hasWallOnEachSide = track.furnitureSolids.any {
-            abs(it.x - tunnelCenter.x) < 1f && abs(abs(it.z - tunnelCenter.z) - 8.3f) < 1f
-        }
-        assertTrue("Le tunnel doit ajouter des murs de collision de chaque côté", hasWallOnEachSide)
-        assertEquals(
-            "Le centre du tunnel doit rester libre pour la voiture",
-            0f,
-            track.furnitureHeightAt(tunnelCenter.x, tunnelCenter.z, 1f),
-            0.001f
-        )
-    }
-
-    @Test
     fun houseHasFourDistinctRoomsAroundACentralCorridor() {
         val rooms = HouseGeometry.rooms
         assertEquals(4, rooms.map { it.kind }.distinct().size)
@@ -441,6 +393,80 @@ class PrototypeTrackTest {
         assertTrue(
             "L'armoire doit atterrir plus bas que le sommet de l'étagère : un vrai saut",
             wardrobeHeight in 15f..shelfPeakHeight
+        )
+    }
+
+    @Test
+    fun drivingUpTheWorkshopRampNeverLosesSupportOrGetsStuckAtTheTop() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.GARAGE, CircuitKind.WORKSHOP_EXPEDITION))
+        val car = ArcadeCar(track)
+        val samples = track.allSamples()
+        val rampStart = samples.first { it.fraction >= 0.395f }
+        val horizontal = kotlin.math.hypot(rampStart.tangent.x, rampStart.tangent.z)
+        car.setPrivateField("worldX", rampStart.position.x)
+        car.setPrivateField("worldZ", rampStart.position.z)
+        val startY = rampStart.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
+        car.setPrivateField("airborneY", startY)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(rampStart.position.x, startY, rampStart.position.z))
+        car.setPrivateField("distance", rampStart.distance)
+        car.setPrivateField("previousDistance", rampStart.distance)
+        car.setPrivateField("yawRadians", track.headingRadians(rampStart))
+        car.setPrivateField("velocityX", rampStart.tangent.x / horizontal * 14f)
+        car.setPrivateField("velocityZ", rampStart.tangent.z / horizontal * 14f)
+        car.setPrivateField("groundedOnRoad", true)
+
+        var previousY = startY
+        var sawUnexplainedDrop = false
+        var sawAirborneDuringClimb = false
+        var maxYReached = startY
+        repeat(400) {
+            car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = true, braking = false))
+            val y = car.worldPosition.y
+            // Une vraie pente ne fait jamais chuter la voiture de plus d'un cran de
+            // suspension en une image : au-delà, ce n'est plus une pente, c'est une chute.
+            if (y < previousY - 0.3f) sawUnexplainedDrop = true
+            if (car.airborne && y < 11.5f) sawAirborneDuringClimb = true
+            maxYReached = maxOf(maxYReached, y)
+            previousY = y
+        }
+
+        assertFalse("La voiture ne doit jamais chuter brutalement en montant une pente continue", sawUnexplainedDrop)
+        assertFalse("La montée ne doit jamais être traitée comme un saut", sawAirborneDuringClimb)
+        assertTrue("La voiture doit effectivement atteindre le plateau (~12)", maxYReached > 10f)
+    }
+
+    @Test
+    fun drivingUnderTheHighBranchNeverGetsHoistedOntoItByAStaleDistance() {
+        val track = PrototypeTrack()
+        val car = ArcadeCar(track)
+        val samples = track.allSamples()
+        // La voiture est physiquement au sol, sous l'endroit où la branche haute
+        // passe au-dessus (même x,z que le croisement), mais sa progression
+        // mémorisée pointe par erreur vers cette branche haute : c'est exactement
+        // le scénario qui a déjà causé une téléportation par le passé. supportAt()
+        // (appui de chaque roue) doit ignorer cette continuité de progression et
+        // ne comparer que la position physique réelle, comme projectForCollision().
+        val lowPoint = samples.first()
+        val highSample = samples.first { it.fraction >= 0.5f }
+        car.setPrivateField("worldX", lowPoint.position.x)
+        car.setPrivateField("worldZ", lowPoint.position.z)
+        val floorY = lowPoint.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
+        car.setPrivateField("airborneY", floorY)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(lowPoint.position.x, floorY, lowPoint.position.z))
+        car.setPrivateField("distance", highSample.distance)
+        car.setPrivateField("previousDistance", highSample.distance)
+        car.setPrivateField("yawRadians", track.headingRadians(lowPoint))
+        car.setPrivateField("groundedOnRoad", true)
+
+        var maxY = floorY
+        repeat(30) {
+            car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = false, braking = false))
+            maxY = maxOf(maxY, car.worldPosition.y)
+        }
+
+        assertTrue(
+            "La voiture ne doit jamais être hissée sur la branche haute alors qu'elle est en dessous : max observé $maxY",
+            maxY < 3f
         )
     }
 

@@ -460,7 +460,7 @@ internal class ArcadeCar(
     ): WheelContact {
         val wheelX = worldX + rightX * localX + forwardX * localZ
         val wheelZ = worldZ + rightZ * localX + forwardZ * localZ
-        val support = supportAt(wheelX, wheelZ, localZ)
+        val support = supportAt(wheelX, wheelZ)
         val suspensionExtension = airborneY - support.surfaceY - spec.rideHeight
         val grounded = suspensionExtension <= spec.suspensionTravel
         return WheelContact(localX, localZ, support.surfaceY, grounded, support.road)
@@ -468,13 +468,18 @@ internal class ArcadeCar(
 
     private data class Support(val surfaceY: Float, val road: Boolean)
 
-    private fun supportAt(wheelX: Float, wheelZ: Float, localZ: Float): Support {
-        val projection = track.project(wheelX, airborneY, wheelZ, distance + localZ)
-        val sample = projection.sample
-        val deck = track.surface(sample) == CourseSurface.DECK
-        val roadSurfaceY = sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT
-        val onDeck = deck && !track.isJumpGap(sample.distance) &&
-            abs(projection.lateralOffset) <= sample.roadWidth * 0.5f + PrototypeTrack.CURB_WIDTH + spec.wheelRadius
+    /** Appui d'une roue : cherche la dalle physiquement la plus proche, jamais celle
+     * que la progression du tour laisserait deviner. `project()` pondère fortement
+     * la continuité de progression (utile pour le hors-piste/la surface globale),
+     * au point qu'un écart de progression peut l'emporter sur dix unités de
+     * différence de hauteur — exactement le mécanisme qui téléportait la voiture sur
+     * une branche haute non pertinente en passant dessous. `projectForCollision()`
+     * existe déjà pour ignorer cette continuité et ne comparer que la position réelle. */
+    private fun supportAt(wheelX: Float, wheelZ: Float): Support {
+        val collision = track.projectForCollision(wheelX, airborneY, wheelZ)
+        val onDeck = collision != null &&
+            abs(collision.lateralOffset) <= collision.sample.roadWidth * 0.5f + PrototypeTrack.CURB_WIDTH + spec.wheelRadius
+        val roadSurfaceY = (collision?.sample?.position?.y ?: 0f) + PrototypeTrack.ROAD_SURFACE_LIFT
         val furnitureY = track.furnitureHeightAt(
             wheelX,
             wheelZ,
@@ -790,7 +795,12 @@ internal class ArcadeCar(
         val bottom = airborneY - PrototypeTrack.CAR_CLEARANCE
         val top = airborneY + CAR_TOP_FROM_ORIGIN
         for (box in track.furnitureSolids) {
-            if (bottom >= box.top - 0.02f || top <= box.bottom) continue
+            // La suspension à ressort met quelques images à rattraper une nouvelle
+            // hauteur d'appui (rampe -> dessus d'un meuble) : juste après la
+            // transition, le dessous mesuré reste encore un peu sous le plateau
+            // réel. Une marge de 0,02 confondait ce retard normal avec un flanc,
+            // ce qui éjectait la voiture pile à l'arrivée sur la table.
+            if (bottom >= box.top - FURNITURE_TOP_SETTLING_MARGIN || top <= box.bottom) continue
             val left = box.left - CAR_COLLISION_RADIUS
             val right = box.right + CAR_COLLISION_RADIUS
             val back = box.back - CAR_COLLISION_RADIUS
@@ -904,5 +914,6 @@ internal class ArcadeCar(
         private const val MAX_GROUND_STEP = 0.16f
         private const val MAX_BODY_PITCH = 0.76f
         private const val SUSPENSION_POSE_BLEND = 0.18f
+        private const val FURNITURE_TOP_SETTLING_MARGIN = 0.3f
     }
 }
