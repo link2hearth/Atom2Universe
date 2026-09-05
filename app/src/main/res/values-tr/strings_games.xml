@@ -314,4 +314,6 @@
     <string name="toybox_house_seed_invalid">-9223372036854775808 ile 9223372036854775807 arasında bir tam sayı girin.</string>
     <string name="toybox_circuit_furniture">Mobilya parkuru</string>
     <string name="toybox_circuit_expedition">Büyük keşif</string>
+    <string name="toybox_circuit_crossroads">Büyük kavşak</string>
+    <string name="toybox_house_mode">Ev</string>
 </resources>

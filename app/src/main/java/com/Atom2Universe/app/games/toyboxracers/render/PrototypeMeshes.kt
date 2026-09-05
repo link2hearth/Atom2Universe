@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.RoomThemes
 import com.Atom2Universe.app.games.toyboxracers.track.RoomTheme
 import com.Atom2Universe.app.games.toyboxracers.track.FloorKind
+import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -406,23 +407,42 @@ internal object PrototypeMeshFactory {
 
     fun environment(track: PrototypeTrack): ColoredMesh {
         val builder = MeshBuilder()
-        val theme = RoomThemes.theme(track.scene.room)
-        addTerrain(builder, theme)
-        if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track)
-        if (theme.floor == FloorKind.TILES) addTiledFloor(builder, theme)
-        if (track.scene.room == RoomKind.LIVING_ROOM || track.scene.room == RoomKind.OFFICE) {
-            builder.box(0f, 0.012f, 0f, 90f, 0.02f, 52f, rgb(theme.accent))
-            builder.box(0f, 0.023f, 0f, 84f, 0.002f, 46f, rgb(theme.wall))
+        if (track.scene.circuit.usesHouseLayout) {
+            addHouseFloors(builder)
+        } else {
+            val theme = RoomThemes.theme(track.scene.room)
+            addTerrain(builder, theme)
+            if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track)
+            if (theme.floor == FloorKind.TILES) addTiledFloor(builder, theme)
+            if (track.scene.room == RoomKind.LIVING_ROOM || track.scene.room == RoomKind.OFFICE) {
+                builder.box(0f, 0.012f, 0f, 90f, 0.02f, 52f, rgb(theme.accent))
+                builder.box(0f, 0.023f, 0f, 84f, 0.002f, 46f, rgb(theme.wall))
+            }
+            if (track.scene.room == RoomKind.GARAGE) {
+                for (x in floatArrayOf(-40f, 40f)) builder.box(x, .012f, 0f, .5f, .02f, 90f, CREAM)
+                for (z in floatArrayOf(-45f, 45f)) builder.box(0f, .012f, z, 80f, .02f, .5f, CREAM)
+            }
+            addRoomWalls(builder, theme)
         }
-        if (track.scene.room == RoomKind.GARAGE) {
-            for (x in floatArrayOf(-40f, 40f)) builder.box(x, .012f, 0f, .5f, .02f, 90f, CREAM)
-            for (z in floatArrayOf(-45f, 45f)) builder.box(0f, .012f, z, 80f, .02f, .5f, CREAM)
-        }
-        addRoomWalls(builder, theme)
         addFurniture(builder, track)
         addToyModels(builder, track)
         track.decorations.forEach { DecorMeshFactory.add(builder, it) }
         return builder.build()
+    }
+
+    /** Sol de chaque pièce + sol du couloir. Les murs (troués aux portes) et le
+     * mobilier arrivent par la liste générique track.roomBoxes -> addFurniture(),
+     * pour ne jamais dessiner un mur que la collision ignore ou inversement. */
+    private fun addHouseFloors(builder: MeshBuilder) {
+        val halfWidth = PrototypeTrack.ROOM_HALF_WIDTH
+        val halfDepth = PrototypeTrack.ROOM_HALF_DEPTH
+        for (room in HouseGeometry.rooms) {
+            val theme = RoomThemes.theme(room.kind)
+            builder.box(room.centerX, -0.40f, room.centerZ, halfWidth * 2f, 0.8f, halfDepth * 2f, rgb(theme.floorColor))
+        }
+        val (corridorMinX, corridorMaxX) = HouseGeometry.corridorBounds()
+        builder.box((corridorMinX + corridorMaxX) * 0.5f, -0.40f, 0f,
+            corridorMaxX - corridorMinX, 0.8f, HouseGeometry.CORRIDOR_HALF_DEPTH * 2f, rgb(0xE8DFC8))
     }
 
     private fun rgb(value: Int) = color(((value shr 16) and 255) / 255f,
@@ -456,7 +476,7 @@ internal object PrototypeMeshFactory {
             builder.box(part.x, part.y, part.z, part.width, part.height, part.depth,
                 color(((c shr 16) and 255) / 255f, ((c shr 8) and 255) / 255f, (c and 255) / 255f))
         }
-        if (track.scene.room != RoomKind.BEDROOM) return
+        if (track.scene.room != RoomKind.BEDROOM || track.scene.circuit.usesHouseLayout) return
         // Ciel illustré derrière les croisillons : nuages en relief très aplati.
         for (x in floatArrayOf(-21f, 25f)) {
             builder.lowPolyEllipsoid(x + 6f, 24.8f, -74.35f, 1.6f, 1.6f, 0.12f, 6, 12, CREAM)

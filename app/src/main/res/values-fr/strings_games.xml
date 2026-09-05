@@ -321,4 +321,6 @@
     <string name="toybox_house_seed_invalid">Saisis un entier entre -9223372036854775808 et 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Tour des meubles</string>
     <string name="toybox_circuit_expedition">Grande expédition</string>
+    <string name="toybox_circuit_crossroads">Grand carrefour</string>
+    <string name="toybox_house_mode">Maison</string>
 </resources>

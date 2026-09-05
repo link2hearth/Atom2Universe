@@ -17,6 +17,12 @@ internal object OrganicCircuits {
     private fun floor(x: Int, z: Int) = Node(x.toFloat(), 0f, z.toFloat(), CourseSurface.FLOOR)
     private fun ramp(x: Int, y: Int, z: Int) = Node(x.toFloat(), y.toFloat(), z.toFloat(), CourseSurface.DECK)
     private fun top(x: Int, z: Int) = Node(x.toFloat(), 12f, z.toFloat(), CourseSurface.FURNITURE)
+    // Variantes en virgule flottante : le parcours signature de la maison colle
+    // aux vraies hauteurs de mobilier (bureau, commode, étagère...), jamais 12
+    // par défaut.
+    private fun floor(x: Float, z: Float) = Node(x, 0f, z, CourseSurface.FLOOR)
+    private fun ramp(x: Float, y: Float, z: Float) = Node(x, y, z, CourseSurface.DECK)
+    private fun top(x: Float, y: Float, z: Float) = Node(x, y, z, CourseSurface.FURNITURE)
 
     private val trails = mapOf(
         CircuitKind.FURNITURE_TRAIL to listOf(
@@ -33,6 +39,23 @@ internal object OrganicCircuits {
             floor(78,-6), floor(60,-22), floor(22,-22), floor(0,-4), floor(0,16), floor(0,32),
             floor(-30,30), floor(-58,26), floor(-74,4), floor(-62,-16), floor(-26,-22),
             floor(-44,-34), floor(-80,-30)
+        ),
+        // Parcours signature du mode Maison : chambre (lit, tapis, jouets) →
+        // couloir → bureau (chaise, bureau, commode, étagère-escabeau, armoire)
+        // → couloir → retour au lit. Coordonnées en repère MONDE (après les
+        // poses de HouseGeometry), pas locales à une seule pièce.
+        CircuitKind.HOUSE_GROUND_FLOOR to listOf(
+            top(-23f, 5.4f, -25f), ramp(-23f, 0f, -42f),
+            floor(-40f, -67f), floor(-55f, -37f), floor(-73f, -19f), floor(-73f, -12.5f),
+            floor(-73f, -6f), floor(-20f, 0f), floor(40f, 4f), floor(73f, 10f), floor(73f, 12.5f),
+            floor(73f, 37f), floor(40f, 77f), floor(12f, 117f),
+            top(12f, 5.95f, 142f), top(12f, 11.1f, 148f), ramp(12f, 0f, 127f),
+            floor(-10f, 127f), floor(-24f, 145f),
+            top(-24f, 14.06f, 154f), top(-39f, 14f, 154f), top(-45f, 18f, 154f),
+            top(-51f, 22f, 154f), top(-58f, 26.3f, 154f), top(-75f, 19f, 154f),
+            floor(-90f, 127f), floor(-40f, 90f), floor(20f, 50f), floor(73f, 20f), floor(73f, 12.5f),
+            floor(73f, 6f), floor(0f, 0f), floor(-73f, -6f), floor(-73f, -12.5f), floor(-73f, -19f),
+            floor(-40f, -47f), floor(-23f, -32f)
         )
     )
 

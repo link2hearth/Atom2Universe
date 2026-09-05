@@ -313,4 +313,6 @@
     <string name="toybox_house_seed_invalid">Introdu un întreg între -9223372036854775808 și 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Traseul mobilei</string>
     <string name="toybox_circuit_expedition">Marea expediție</string>
+    <string name="toybox_circuit_crossroads">Marea răscruce</string>
+    <string name="toybox_house_mode">Casă</string>
 </resources>

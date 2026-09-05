@@ -314,4 +314,6 @@
     <string name="toybox_house_seed_invalid">Wpisz liczbę całkowitą od -9223372036854775808 do 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Szlak mebli</string>
     <string name="toybox_circuit_expedition">Wielka wyprawa</string>
+    <string name="toybox_circuit_crossroads">Wielkie skrzyżowanie</string>
+    <string name="toybox_house_mode">Dom</string>
 </resources>

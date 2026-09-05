@@ -321,4 +321,6 @@
     <string name="toybox_house_seed_invalid">Enter an integer from -9223372036854775808 to 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Furniture trail</string>
     <string name="toybox_circuit_expedition">Grand expedition</string>
+    <string name="toybox_circuit_crossroads">Grand Crossroads</string>
+    <string name="toybox_house_mode">House</string>
 </resources>

@@ -76,11 +76,12 @@ internal class RivalCar(
         val weave = sin(elapsed * 0.55f + mistakePhase) * 0.32f
         val offset = lineOffset + weave
         var y = sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
-        if (track.isJumpGap(distance)) {
-            val start = track.sampleAt(track.jumpStartDistance)
-            val end = track.sampleAt(track.jumpEndDistance)
-            val t = ((distance - track.jumpStartDistance) /
-                (track.jumpEndDistance - track.jumpStartDistance)).coerceIn(0f, 1f)
+        val crossing = track.crossingAt(distance)
+        if (crossing != null) {
+            val start = track.sampleAt(crossing.startDistance)
+            val end = track.sampleAt(crossing.endDistance)
+            val t = ((distance - crossing.startDistance) /
+                (crossing.endDistance - crossing.startDistance)).coerceIn(0f, 1f)
             y = start.position.y + (end.position.y - start.position.y) * t +
                 sin(t * PI.toFloat()) * 2.2f + PrototypeTrack.CAR_CLEARANCE
         }

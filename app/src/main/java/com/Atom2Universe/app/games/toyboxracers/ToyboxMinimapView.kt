@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
+import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import kotlin.math.cos
 import kotlin.math.sin
@@ -45,10 +46,20 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
 
     private fun rebuildRoute(w: Int, h: Int) {
         // La pièce entière reste visible, y compris lorsque le joueur explore.
-        scale = minOf(
-            (w - 16f * density).coerceAtLeast(1f) / (2f * PrototypeTrack.ROOM_HALF_WIDTH),
-            (h - 16f * density).coerceAtLeast(1f) / (2f * PrototypeTrack.ROOM_HALF_DEPTH)
-        )
+        // En mode Maison, la carte couvre les quatre pièces et le couloir.
+        scale = if (track.scene.circuit.usesHouseLayout) {
+            val (minX, maxX) = HouseGeometry.corridorBounds()
+            val maxDepth = HouseGeometry.rooms.maxOf { kotlin.math.abs(it.centerZ) + PrototypeTrack.ROOM_HALF_DEPTH }
+            minOf(
+                (w - 16f * density).coerceAtLeast(1f) / (maxX - minX),
+                (h - 16f * density).coerceAtLeast(1f) / (2f * maxDepth)
+            )
+        } else {
+            minOf(
+                (w - 16f * density).coerceAtLeast(1f) / (2f * PrototypeTrack.ROOM_HALF_WIDTH),
+                (h - 16f * density).coerceAtLeast(1f) / (2f * PrototypeTrack.ROOM_HALF_DEPTH)
+            )
+        }
         route.reset()
         var connected = false
         repeat(481) { index ->

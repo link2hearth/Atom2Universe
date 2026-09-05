@@ -275,10 +275,14 @@ class ToyboxRacersActivity : ThemedActivity() {
                 showCircuitPicker()
             }
         }
-        for ((index, button) in listOf(roomButton, circuitButton).withIndex()) {
-            root.addView(button, FrameLayout.LayoutParams(dp(120), dp(42)).apply {
+        val houseButton = makeButton(getString(R.string.toybox_house_mode), 96, 0xAA4B8F6E.toInt()).apply {
+            textSize = 12f
+            setOnClickListener { enterHouseMode() }
+        }
+        for ((index, button) in listOf(roomButton, circuitButton, houseButton).withIndex()) {
+            root.addView(button, FrameLayout.LayoutParams(dp(if (index == 2) 96 else 120), dp(42)).apply {
                 gravity = Gravity.TOP or Gravity.START
-                leftMargin = dp(16 + index * 128)
+                leftMargin = dp(16 + if (index < 2) index * 128 else 256)
                 topMargin = dp(128)
             })
         }
@@ -367,21 +371,40 @@ class ToyboxRacersActivity : ThemedActivity() {
         CircuitKind.RIBBON_RALLY -> R.string.toybox_circuit_rally
         CircuitKind.FURNITURE_TRAIL -> R.string.toybox_circuit_furniture
         CircuitKind.WORKSHOP_EXPEDITION -> R.string.toybox_circuit_expedition
+        CircuitKind.CROSSROADS_SHOWCASE -> R.string.toybox_circuit_crossroads
+        CircuitKind.HOUSE_GROUND_FLOOR -> R.string.toybox_house_mode
     })
 
     private fun showCircuitPicker() {
         if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
         pauseGame()
+        val pickable = CircuitKind.entries.filterNot { it.usesHouseLayout }
         pauseDialog = dialogBuilder()
             .setTitle(getString(R.string.toybox_change_circuit) + " · " + roomLabel())
-            .setSingleChoiceItems(CircuitKind.entries.map { circuitLabel(it) }.toTypedArray(),
-                currentScene.circuit.ordinal) { _, which ->
-                val choice = CircuitKind.entries[which]
+            .setSingleChoiceItems(pickable.map { circuitLabel(it) }.toTypedArray(),
+                pickable.indexOf(currentScene.circuit)) { _, which ->
+                val choice = pickable[which]
                 if (choice != currentScene.circuit) changeScene(currentScene.copy(circuit = choice))
                 resumeGame()
             }
             .setOnCancelListener { resumeGame() }
             .show()
+    }
+
+    /** Scène dédiée : contrairement aux 8 pièces indépendantes, la maison
+     * couvre plusieurs pièces à la fois et n'a pas de RoomKind qui la représente
+     * seule, donc elle contourne le sélecteur pièce/circuit habituel. */
+    private fun enterHouseMode() {
+        if (currentScene.circuit == CircuitKind.HOUSE_GROUND_FLOOR) return
+        releaseControls.forEach { it() }
+        currentScene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR)
+        roomButton.text = roomLabel()
+        circuitButton.text = circuitLabel()
+        resultPanel.visibility = View.GONE
+        lastFinishSerial = 0
+        lastTurboLevel = 0
+        lastTurboReleaseSerial = 0
+        renderer.setScene(currentScene)
     }
 
     private fun dialogBuilder() = AlertDialog.Builder(this, R.style.Theme_Toybox_Dialog)

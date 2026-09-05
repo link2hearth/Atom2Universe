@@ -71,7 +71,13 @@ internal class PrototypeTrack(
     private val samples: List<Sample>
     val length: Float
 
-    /** Début et fin de la portion sans route, exprimés en distance de piste. */
+    /** Une zone de croisement, exprimée en distance de piste plutôt qu'en fraction. */
+    data class CrossingRange(val startDistance: Float, val endDistance: Float)
+
+    private val crossingRanges: List<CrossingRange>
+
+    /** Début et fin de la portion sans route, exprimés en distance de piste.
+     * Conservés pour compat (RivalCar, tests) : reflètent le premier croisement du circuit. */
     val jumpStartDistance: Float
     val jumpEndDistance: Float
 
@@ -111,8 +117,14 @@ internal class PrototypeTrack(
             )
         }
 
-        jumpStartDistance = samples.first { it.fraction >= JUMP_START_FRACTION }.distance
-        jumpEndDistance = samples.first { it.fraction >= JUMP_END_FRACTION }.distance
+        crossingRanges = CircuitCrossings.crossingsFor(scene.circuit).map { crossing ->
+            CrossingRange(
+                samples.first { it.fraction >= crossing.gapStartFraction }.distance,
+                samples.first { it.fraction >= crossing.gapEndFraction }.distance
+            )
+        }
+        jumpStartDistance = crossingRanges.firstOrNull()?.startDistance ?: 0f
+        jumpEndDistance = crossingRanges.firstOrNull()?.endDistance ?: 0f
     }
 
     fun sampleAt(distance: Float): Sample {
@@ -227,9 +239,16 @@ internal class PrototypeTrack(
     }
 
     fun isJumpGap(distance: Float): Boolean {
-        if (scene.circuit != CircuitKind.FIGURE_EIGHT) return false
+        if (crossingRanges.isEmpty()) return false
         val wrapped = wrapDistance(distance)
-        return wrapped in jumpStartDistance..jumpEndDistance
+        return crossingRanges.any { wrapped in it.startDistance..it.endDistance }
+    }
+
+    /** Zone de croisement contenant cette distance, ou null. Généralise l'ancien
+     * couple jumpStartDistance/jumpEndDistance pour un circuit à plusieurs croisements. */
+    fun crossingAt(distance: Float): CrossingRange? {
+        val wrapped = wrapDistance(distance)
+        return crossingRanges.firstOrNull { wrapped in it.startDistance..it.endDistance }
     }
 
     fun wrapDistance(distance: Float): Float {
@@ -243,6 +262,7 @@ internal class PrototypeTrack(
     private fun point(fraction: Float): Vec3 {
         if (scene.circuit.usesFurnitureLayout) return OrganicCircuits.point(scene.circuit, fraction)
         if (scene.circuit.usesSculptedLayout) return SculptedCircuits.point(scene.circuit, fraction)
+        if (scene.circuit.usesCrossroadsLayout) return CrossroadsCircuit.point(fraction)
         if (scene.circuit == CircuitKind.SLALOM) return slalomPoint(fraction)
         val angle = fraction * 2f * PI.toFloat()
         // Lemniscate de Gerono : les deux passages au centre ont des directions
@@ -275,6 +295,7 @@ internal class PrototypeTrack(
             CourseSurface.FURNITURE -> 16f
         }
         if (scene.circuit.usesSculptedLayout) return SculptedCircuits.width(scene.circuit)
+        if (scene.circuit.usesCrossroadsLayout) return CrossroadsCircuit.width(fraction)
         if (scene.circuit == CircuitKind.SLALOM) return 7f
         // Le plateau et la réception pardonnent davantage les erreurs.
         val nearJump = fraction in 0.42f..0.60f

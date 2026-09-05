@@ -314,4 +314,6 @@
     <string name="toybox_house_seed_invalid">Gib eine ganze Zahl zwischen -9223372036854775808 und 9223372036854775807 ein.</string>
     <string name="toybox_circuit_furniture">Möbelrunde</string>
     <string name="toybox_circuit_expedition">Große Expedition</string>
+    <string name="toybox_circuit_crossroads">Große Kreuzung</string>
+    <string name="toybox_house_mode">Haus</string>
 </resources>

@@ -6,11 +6,15 @@ import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 internal enum class RoomKind { BEDROOM, KITCHEN, LIVING_ROOM, DINING_ROOM, OFFICE, BATHROOM, LAUNDRY, GARAGE }
 internal enum class CircuitKind {
     FIGURE_EIGHT, SLALOM, ROLLING_HILLS, DOUBLE_BUMPS, HIGH_GARDEN, SWITCHBACKS, JUMP_PARADE, RIBBON_RALLY,
-    FURNITURE_TRAIL, WORKSHOP_EXPEDITION;
+    FURNITURE_TRAIL, WORKSHOP_EXPEDITION, CROSSROADS_SHOWCASE, HOUSE_GROUND_FLOOR;
 
     val usesSculptedLayout get() = ordinal in ROLLING_HILLS.ordinal..RIBBON_RALLY.ordinal
-    val usesFurnitureLayout get() = this == FURNITURE_TRAIL || this == WORKSHOP_EXPEDITION
-    val usesPeripheralDecor get() = usesSculptedLayout || usesFurnitureLayout
+    val usesFurnitureLayout get() = this == FURNITURE_TRAIL || this == WORKSHOP_EXPEDITION || this == HOUSE_GROUND_FLOOR
+    val usesCrossroadsLayout get() = this == CROSSROADS_SHOWCASE
+    /** Seul ce circuit couvre plusieurs pièces à la fois : mur unique désactivé,
+     * rendu par pièce, mobilier et jouets propres à la maison. */
+    val usesHouseLayout get() = this == HOUSE_GROUND_FLOOR
+    val usesPeripheralDecor get() = usesSculptedLayout || usesFurnitureLayout || usesCrossroadsLayout
 }
 internal data class SceneChoice(val room: RoomKind = RoomKind.BEDROOM, val circuit: CircuitKind = CircuitKind.FIGURE_EIGHT)
 
@@ -22,20 +26,36 @@ internal object RaceLayouts {
             box.copy(x = box.x - 78f, z = box.z - 62f) else box
     }
 
-    fun boxes(scene: SceneChoice): List<RoomBox> = if (scene.room == RoomKind.BEDROOM)
-        RoomDecor.boxes.map { bedroomBox(it, scene.circuit) }
-        else RoomDecor.boxes.filter(::opening) + RoomThemes.boxes(scene.room)
+    fun boxes(scene: SceneChoice): List<RoomBox> = when {
+        scene.circuit.usesHouseLayout -> HouseGeometry.wallBoxes() + HouseGeometry.furnitureBoxes()
+        scene.room == RoomKind.BEDROOM -> RoomDecor.boxes.map { bedroomBox(it, scene.circuit) }
+        else -> RoomDecor.boxes.filter(::opening) + RoomThemes.boxes(scene.room)
+    }
 
-    fun solids(scene: SceneChoice): List<RoomBox> = if (scene.room == RoomKind.BEDROOM)
-        RoomDecor.solids.map { bedroomBox(it, scene.circuit) }
-        else RoomDecor.solids.filter(::opening) + RoomThemes.boxes(scene.room)
+    fun solids(scene: SceneChoice): List<RoomBox> = when {
+        scene.circuit.usesHouseLayout -> HouseGeometry.wallBoxes() + HouseGeometry.furnitureBoxes()
+        scene.room == RoomKind.BEDROOM -> RoomDecor.solids.map { bedroomBox(it, scene.circuit) }
+        else -> RoomDecor.solids.filter(::opening) + RoomThemes.boxes(scene.room)
+    }
 
     private fun opening(box: RoomBox) =
         (box.z < -70f && box.y >= 13f && box.x in -40f..42f) || (box.z > 73f && box.x < -60f)
 
     fun decorations(scene: SceneChoice): List<DecorPlacement> = buildList {
+        if (scene.circuit.usesHouseLayout) {
+            addAll(HouseGeometry.furnitureDecorations())
+            return@buildList
+        }
         addAll(RoomThemes.decorations(scene.room))
         if (scene.circuit.usesFurnitureLayout) addAll(OrganicCircuits.decorations(scene))
+        if (scene.circuit.usesCrossroadsLayout) {
+            val tunnel = CrossroadsCircuit.point(CrossroadsCircuit.TUNNEL_FRACTION)
+            add(DecorPlacement(DecorCatalog["structure.tunnel_arch"], tunnel.x, tunnel.y, tunnel.z))
+            val bridge = CrossroadsCircuit.point(CrossroadsCircuit.BRIDGE_PEAK_END)
+            val railOffset = CrossroadsCircuit.width(CrossroadsCircuit.BRIDGE_PEAK_END) * 0.5f + 0.6f
+            add(DecorPlacement(DecorCatalog["structure.bridge_rail"], bridge.x - railOffset, bridge.y, bridge.z))
+            add(DecorPlacement(DecorCatalog["structure.bridge_rail"], bridge.x + railOffset, bridge.y, bridge.z))
+        }
         fun place(id: String, x: Float, z: Float, scale: Float = 1f, y: Float = 0f, turn: Int = 0) {
             add(DecorPlacement(DecorCatalog[id], x, y, z, turn, scale))
         }
@@ -67,6 +87,7 @@ internal object RaceLayouts {
     }
 
     fun toys(scene: SceneChoice): List<ToyObstacle> {
+        if (scene.circuit.usesHouseLayout) return HouseGeometry.toys()
         if (scene.room != RoomKind.BEDROOM) return emptyList()
         if (scene.circuit.usesPeripheralDecor) return listOf(
             ToyObstacle(ToyKind.BLOCKS, -105f, 25f, 6.5f, 7f),

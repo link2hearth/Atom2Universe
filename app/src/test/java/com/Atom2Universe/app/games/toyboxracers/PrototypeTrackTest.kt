@@ -2,8 +2,12 @@ package com.Atom2Universe.app.games.toyboxracers
 
 import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
+import com.Atom2Universe.app.games.toyboxracers.track.CircuitCrossings
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
+import com.Atom2Universe.app.games.toyboxracers.track.CrossroadsCircuit
 import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
+import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
+import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import org.junit.Assert.assertFalse
@@ -40,6 +44,43 @@ class PrototypeTrackTest {
         assertTrue(
             "La seconde branche doit franchir le centre en hauteur",
             upperCrossing.y - lowerCrossing.y > 10f
+        )
+    }
+
+    @Test
+    fun figureEightCrossingMatchesTheOriginalJumpConstants() {
+        val crossings = CircuitCrossings.crossingsFor(CircuitKind.FIGURE_EIGHT)
+        assertEquals(1, crossings.size)
+        assertEquals(PrototypeTrack.JUMP_START_FRACTION, crossings.single().gapStartFraction, 0f)
+        assertEquals(PrototypeTrack.JUMP_END_FRACTION, crossings.single().gapEndFraction, 0f)
+
+        val track = PrototypeTrack()
+        assertEquals(track.jumpStartDistance, track.crossingAt(track.jumpStartDistance + 0.05f)!!.startDistance, 0.001f)
+        assertEquals(track.jumpEndDistance, track.crossingAt(track.jumpStartDistance + 0.05f)!!.endDistance, 0.001f)
+        assertEquals(null, track.crossingAt(track.jumpStartDistance - 5f))
+    }
+
+    @Test
+    fun circuitsWithoutACrossingNeverReportAJumpGap() {
+        for (kind in CircuitKind.entries) {
+            if (kind == CircuitKind.FIGURE_EIGHT || kind == CircuitKind.CROSSROADS_SHOWCASE) continue
+            val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, kind))
+            assertTrue("$kind ne doit avoir aucun croisement pour cette itération",
+                CircuitCrossings.crossingsFor(kind).isEmpty())
+            assertFalse("$kind ne doit jamais signaler de vide", track.isJumpGap(track.length * 0.5f))
+        }
+    }
+
+    @Test
+    fun housePlanRoomToCircuitAssignmentIsStableForAFixedSeed() {
+        val plan = HousePlan.generate(42L)
+        assertEquals(
+            listOf(
+                CircuitKind.DOUBLE_BUMPS, CircuitKind.HIGH_GARDEN, CircuitKind.FIGURE_EIGHT,
+                CircuitKind.SLALOM, CircuitKind.ROLLING_HILLS, CircuitKind.RIBBON_RALLY,
+                CircuitKind.JUMP_PARADE, CircuitKind.SWITCHBACKS
+            ),
+            plan.rooms.map { it.circuit }
         )
     }
 
@@ -290,6 +331,117 @@ class PrototypeTrackTest {
             assertEquals("Le passage sous le meuble doit rester libre", 0f,
                 track.furnitureHeightAt(0f, tabletop.position.z, 1f), .001f)
         }
+    }
+
+    @Test
+    fun crossroadsShowcaseHasTwoDistinctJumpsAndOneFixedBridge() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.CROSSROADS_SHOWCASE))
+        val crossings = CircuitCrossings.crossingsFor(CircuitKind.CROSSROADS_SHOWCASE)
+        assertEquals("Le circuit doit exposer exactement deux sauts", 2, crossings.size)
+
+        for (crossing in crossings) {
+            val midFraction = (crossing.gapStartFraction + crossing.gapEndFraction) / 2f
+            val midDistance = track.allSamples().first { it.fraction >= midFraction }.distance
+            assertTrue("Chaque saut doit être un vrai vide", track.isJumpGap(midDistance))
+        }
+
+        // Le pont (troisième croisement, sans vide) doit rester une dalle continue,
+        // clairement plus haute que la piste basse qu'il surplombe au même endroit XZ.
+        val bridgeSample = track.allSamples().first { it.fraction >= CrossroadsCircuit.BRIDGE_PEAK_END }
+        assertTrue("Le pont doit avoir une dalle, jamais un vide", track.hasDeck(bridgeSample))
+        val lowCrossingSample = track.allSamples().first()
+        assertTrue(
+            "Le pont doit dominer nettement la piste basse qu'il surplombe",
+            bridgeSample.position.y - lowCrossingSample.position.y > 4f
+        )
+
+        // Les deux sauts doivent culminer à des hauteurs distinctes.
+        val jump0Peak = track.allSamples().first { it.fraction >= crossings[0].gapStartFraction }.position.y
+        val jump2Peak = track.allSamples().first { it.fraction >= crossings[1].gapStartFraction }.position.y
+        assertTrue(
+            "Les deux sauts doivent culminer à des hauteurs distinctes",
+            abs(jump0Peak - jump2Peak) > 0.5f
+        )
+    }
+
+    @Test
+    fun crossroadsTunnelAddsSolidWallsButLeavesTheMiddleOpen() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.CROSSROADS_SHOWCASE))
+        val tunnelCenter = CrossroadsCircuit.point(CrossroadsCircuit.TUNNEL_FRACTION)
+        val hasWallOnEachSide = track.furnitureSolids.any {
+            abs(it.x - tunnelCenter.x) < 1f && abs(abs(it.z - tunnelCenter.z) - 8.3f) < 1f
+        }
+        assertTrue("Le tunnel doit ajouter des murs de collision de chaque côté", hasWallOnEachSide)
+        assertEquals(
+            "Le centre du tunnel doit rester libre pour la voiture",
+            0f,
+            track.furnitureHeightAt(tunnelCenter.x, tunnelCenter.z, 1f),
+            0.001f
+        )
+    }
+
+    @Test
+    fun houseHasFourDistinctRoomsAroundACentralCorridor() {
+        val rooms = HouseGeometry.rooms
+        assertEquals(4, rooms.map { it.kind }.distinct().size)
+        val (minX, maxX) = HouseGeometry.corridorBounds()
+        assertTrue("Le couloir doit couvrir toutes les colonnes de pièces", maxX > minX)
+        for (room in rooms) {
+            assertTrue(
+                "Chaque pièce doit border le couloir",
+                abs(abs(room.centerZ) - (PrototypeTrack.ROOM_HALF_DEPTH + 12f)) < 0.01f
+            )
+        }
+    }
+
+    @Test
+    fun houseCorridorDoorsAreRealGapsNotDecorativeWalls() {
+        val walls = HouseGeometry.wallBoxes()
+        for (room in HouseGeometry.rooms) {
+            // La porte locale (x=-73, sur le mur qui fait face au couloir) ne doit
+            // être couverte par aucun mur : sinon la pièce serait murée dessus.
+            val doorWorldX = room.centerX + if (room.quarterTurns == 2) 73f else -73f
+            val doorWorldZ = room.centerZ + if (room.quarterTurns == 2) -75.75f else 75.75f
+            val blocked = walls.any {
+                doorWorldX in it.left..it.right && doorWorldZ in it.back..it.front
+            }
+            assertFalse("La porte de ${room.kind} doit rester un vrai passage", blocked)
+        }
+    }
+
+    @Test
+    fun houseCarCanCrossFromOneRoomIntoTheCorridor() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        val car = ArcadeCar(track)
+        // Bien au-delà de ROOM_HALF_DEPTH : la maison n'a pas de rectangle
+        // englobant unique, seule une vraie porte laisse passer la voiture.
+        car.setPrivateField("worldX", -73f)
+        car.setPrivateField("worldZ", -20f)
+        car.setPrivateField("airborneY", PrototypeTrack.CAR_CLEARANCE)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(-73f, PrototypeTrack.CAR_CLEARANCE, -20f))
+        car.setPrivateField("velocityZ", 15f)
+        repeat(60 * 3) {
+            car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = false, braking = false))
+        }
+        assertTrue(
+            "La voiture doit pouvoir franchir la porte vers le couloir",
+            car.worldPosition.z > -12.5f
+        )
+    }
+
+    @Test
+    fun houseFurnitureClimbsFromChairToWardrobeAtIncreasingThenDippingHeights() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        assertTrue(track.length > 700f)
+        val dresserHeight = track.furnitureHeightAt(-24f, 154f, 15f)
+        val shelfPeakHeight = track.furnitureHeightAt(-58f, 154f, 27f)
+        val wardrobeHeight = track.furnitureHeightAt(-75f, 154f, 20f)
+        assertTrue("La commode doit être un vrai plateau", dresserHeight > 10f)
+        assertTrue("L'étagère doit culminer plus haut que la commode", shelfPeakHeight > dresserHeight)
+        assertTrue(
+            "L'armoire doit atterrir plus bas que le sommet de l'étagère : un vrai saut",
+            wardrobeHeight in 15f..shelfPeakHeight
+        )
     }
 
     private fun angleDifference(target: Float, current: Float): Float {

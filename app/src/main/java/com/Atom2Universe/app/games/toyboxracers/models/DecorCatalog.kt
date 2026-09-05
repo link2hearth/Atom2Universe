@@ -267,9 +267,10 @@ internal object DecorCatalog {
         )
     }
 
-    val all: List<DecorModel> by lazy { (kitchen + livingRoom + garage + DecorExpansion.all).also { list ->
-        check(list.map { it.id }.distinct().size == list.size)
-    } }
+    val all: List<DecorModel> by lazy {
+        (kitchen + livingRoom + garage + DecorExpansion.all + DecorStructures.all + DecorHouseFurniture.all)
+            .also { list -> check(list.map { it.id }.distinct().size == list.size) }
+    }
     private val byId by lazy { all.associateBy { it.id } }
     fun forRoom(room: DecorRoom): List<DecorModel> = all.filter { it.room == room }
     operator fun get(id: String): DecorModel = requireNotNull(byId[id]) { "Unknown decor: $id" }

@@ -314,4 +314,6 @@
     <string name="toybox_house_seed_invalid">Introduce un entero entre -9223372036854775808 y 9223372036854775807.</string>
     <string name="toybox_circuit_furniture">Ruta de los muebles</string>
     <string name="toybox_circuit_expedition">Gran expedición</string>
+    <string name="toybox_circuit_crossroads">Gran cruce</string>
+    <string name="toybox_house_mode">Casa</string>
 </resources>

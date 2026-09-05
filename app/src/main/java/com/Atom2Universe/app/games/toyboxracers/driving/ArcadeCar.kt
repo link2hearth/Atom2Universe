@@ -324,7 +324,9 @@ internal class ArcadeCar(
         val previousWorldZ = worldZ
         worldX += velocityX * dt
         worldZ += velocityZ * dt
-        resolveRoomWalls()
+        // La maison n'a pas de rectangle englobant unique : ses murs (troués aux
+        // portes) sont des furnitureSolids ordinaires, résolus par resolveFurnitureSides().
+        if (!track.scene.circuit.usesHouseLayout) resolveRoomWalls()
         resolveToyObstacles()
 
         val projection = track.project(worldX, airborneY, worldZ, distance)
