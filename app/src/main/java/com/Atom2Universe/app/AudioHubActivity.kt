@@ -565,13 +565,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         }
         tilesAdapter.setGridMode(isGridMode)
 
-        // Recalculate heights after layout change
-        tilesRecyclerView.post {
-            val height = tilesRecyclerView.height
-            if (height > 0) {
-                tilesAdapter.setRecyclerViewHeight(height)
-            }
-        }
+        awaitCorrectTileHeightBeforeDraw()
     }
 
     private fun setupModuleTiles() {
@@ -605,15 +599,31 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         // Load tiles with customization
         loadTiles()
 
-        // Notify adapter of RecyclerView height after layout (once)
-        tilesRecyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
+        awaitCorrectTileHeightBeforeDraw()
+    }
+
+    /**
+     * La hauteur des tuiles dépend de la hauteur mesurée du RecyclerView, connue seulement
+     * après un premier passage de layout. Corriger la hauteur après coup (post{} ou
+     * OnGlobalLayoutListener) planifie un nouveau layout pour la frame suivante : la frame
+     * actuelle s'affiche donc une fraction de seconde avec la hauteur par défaut (tuiles
+     * étirées) avant la correction. OnPreDrawListener s'exécute juste avant l'affichage et
+     * peut annuler la frame en cours (retour false) tant que la hauteur n'est pas stable,
+     * ce qui évite complètement ce flash.
+     */
+    private fun awaitCorrectTileHeightBeforeDraw() {
+        var appliedHeight = -1
+        tilesRecyclerView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
                 val height = tilesRecyclerView.height
-                if (height > 0) {
+                if (height <= 0) return false
+                if (height != appliedHeight) {
+                    appliedHeight = height
                     tilesAdapter.setRecyclerViewHeight(height)
-                    // Remove listener after first successful call to avoid repeated invocations
-                    tilesRecyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    return false
                 }
+                tilesRecyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+                return true
             }
         })
     }

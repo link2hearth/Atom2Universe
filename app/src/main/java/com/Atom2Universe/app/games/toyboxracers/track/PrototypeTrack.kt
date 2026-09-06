@@ -31,10 +31,11 @@ internal class PrototypeTrack(
 ) {
     val decorations = RaceLayouts.decorations(scene) + decorations
     val roomBoxes = RaceLayouts.boxes(scene)
-    val furnitureSolids: List<RoomBox> = RaceLayouts.solids(scene) + this.decorations.flatMap { it.solids }
+    val furnitureSolids: List<RoomBox> = RaceLayouts.solids(scene) + this.decorations.flatMap { it.solids } +
+        if (scene.circuit.usesHouseLayout) HouseGeometry.floorBoxes() else emptyList()
 
     fun furnitureHeightAt(x: Float, z: Float, maximumY: Float): Float {
-        var height = 0f
+        var height = groundHeightAt(x, z)
         for (box in furnitureSolids) {
             if (x in box.left..box.right && z in box.back..box.front && box.top <= maximumY)
                 height = maxOf(height, box.top)
@@ -84,15 +85,16 @@ internal class PrototypeTrack(
     val toyObstacles = RaceLayouts.toys(scene)
 
     init {
-        val raw = ArrayList<Vec3>(sampleCount)
-        repeat(sampleCount) { index ->
-            raw += point(index.toFloat() / sampleCount)
+        val count = if (scene.circuit.usesHouseLayout) maxOf(sampleCount, 960) else sampleCount
+        val raw = ArrayList<Vec3>(count)
+        repeat(count) { index ->
+            raw += point(index.toFloat() / count)
         }
 
-        val cumulative = FloatArray(sampleCount + 1)
-        for (i in 1..sampleCount) {
+        val cumulative = FloatArray(count + 1)
+        for (i in 1..count) {
             val a = raw[i - 1]
-            val b = raw[i % sampleCount]
+            val b = raw[i % count]
             val dx = b.x - a.x
             val dy = b.y - a.y
             val dz = b.z - a.z
@@ -100,9 +102,9 @@ internal class PrototypeTrack(
         }
         length = cumulative.last()
 
-        samples = List(sampleCount) { index ->
-            val previous = raw[(index - 1 + sampleCount) % sampleCount]
-            val next = raw[(index + 1) % sampleCount]
+        samples = List(count) { index ->
+            val previous = raw[(index - 1 + count) % count]
+            val next = raw[(index + 1) % count]
             val tangent = (next - previous).normalized()
             val horizontalLength = sqrt(tangent.x * tangent.x + tangent.z * tangent.z)
                 .coerceAtLeast(0.0001f)
@@ -112,8 +114,8 @@ internal class PrototypeTrack(
                 tangent = tangent,
                 right = right,
                 distance = cumulative[index],
-                fraction = index.toFloat() / sampleCount,
-                roadWidth = roadWidth(index.toFloat() / sampleCount)
+                fraction = index.toFloat() / count,
+                roadWidth = roadWidth(index.toFloat() / count)
             )
         }
 
@@ -156,7 +158,8 @@ internal class PrototypeTrack(
 
     fun allSamples(): List<Sample> = samples
 
-    fun surface(sample: Sample): CourseSurface = if (scene.circuit.usesFurnitureLayout)
+    fun surface(sample: Sample): CourseSurface = if (scene.circuit.usesHouseLayout) CourseSurface.DECK
+        else if (scene.circuit.usesFurnitureLayout)
         OrganicCircuits.surface(scene.circuit, sample.fraction) else CourseSurface.DECK
 
     fun hasDeck(sample: Sample) = surface(sample) == CourseSurface.DECK && !isJumpGap(sample.distance)
@@ -178,7 +181,7 @@ internal class PrototypeTrack(
             // L'altitude distingue les deux routes au croisement. La pénalité de
             // progression empêche un changement de branche pendant le saut.
             val score = dx * dx + dz * dz + dy * dy * 1.5f +
-                progressDifference * progressDifference * 0.018f
+                progressDifference.coerceAtMost(25f).let { it * it } * 0.018f
             if (score < nearestScore) {
                 nearest = sample
                 nearestScore = score
@@ -201,43 +204,53 @@ internal class PrototypeTrack(
         return Projection(refined, lateral, horizontal)
     }
 
-    /**
-     * Cherche la dalle physiquement la plus proche sans favoriser la progression.
-     * Cette seconde projection permet notamment de heurter le dessous de la
-     * branche haute même lorsque la progression reste associée à la branche basse.
-     */
-    fun projectForCollision(worldX: Float, worldY: Float, worldZ: Float): Projection? {
-        var nearest: Sample? = null
-        var nearestScore = Float.MAX_VALUE
-        for (sample in samples) {
-            if (!hasDeck(sample)) continue
-            val dx = worldX - sample.position.x
-            val dz = worldZ - sample.position.z
-            val slabCenterY = sample.position.y + ROAD_SURFACE_LIFT - ROAD_THICKNESS * 0.5f
-            val dy = worldY - slabCenterY
-            val score = dx * dx + dz * dz + dy * dy * 1.5f
-            if (score < nearestScore) {
-                nearest = sample
-                nearestScore = score
-            }
+    private data class DeckSegment(val a: Sample, val b: Sample, val end: Float)
+
+    private val deckSegments by lazy {
+        samples.indices.mapNotNull { i ->
+            val a = samples[i]
+            val b = samples[(i + 1) % samples.size]
+            val end = if (i == samples.lastIndex) length else b.distance
+            if (hasDeck(sampleAt((a.distance + end) * .5f))) DeckSegment(a, b, end) else null
         }
-        val first = nearest ?: return null
-        val dx = worldX - first.position.x
-        val dz = worldZ - first.position.z
-        val horizontalTangentSquared = first.tangent.x * first.tangent.x + first.tangent.z * first.tangent.z
-        val along = (dx * first.tangent.x + dz * first.tangent.z) /
-            horizontalTangentSquared.coerceAtLeast(0.0001f)
-        val refined = sampleAt(first.distance + along)
-        if (!hasDeck(refined)) return null
-        val refinedDx = worldX - refined.position.x
-        val refinedDz = worldZ - refined.position.z
-        return Projection(
-            sample = refined,
-            lateralOffset = refinedDx * refined.right.x + refinedDz * refined.right.z,
-            horizontalDistance = sqrt(refinedDx * refinedDx + refinedDz * refinedDz)
-        )
     }
 
+    /** Toutes les couches sous cette empreinte, sans biais de progression.
+     * Les deux triangles sont ceux du maillage rendu : ni prolongement infini
+     * d'une tangente, ni trous entre segments dans l'extérieur d'un virage.
+     */
+    fun decksAt(x: Float, z: Float, margin: Float = 0f): List<Projection> = buildList {
+        for ((a, b, end) in deckSegments) {
+            val extent = maxOf(a.roadWidth, b.roadWidth) * .5f + CURB_WIDTH + margin
+            if (x < minOf(a.position.x, b.position.x) - extent ||
+                x > maxOf(a.position.x, b.position.x) + extent ||
+                z < minOf(a.position.z, b.position.z) - extent ||
+                z > maxOf(a.position.z, b.position.z) + extent) continue
+            val aw = a.roadWidth * .5f + CURB_WIDTH + margin
+            val bw = b.roadWidth * .5f + CURB_WIDTH + margin
+            val al = a.position - a.right * aw
+            val ar = a.position + a.right * aw
+            val bl = b.position - b.right * bw
+            val br = b.position + b.right * bw
+            val t = triangleProgress(x, z, al, bl, br, 0f, 1f, 1f)
+                ?: triangleProgress(x, z, al, br, ar, 0f, 1f, 0f) ?: continue
+            val sample = sampleAt(a.distance + (end - a.distance) * t)
+            val lateral = (x - sample.position.x) * sample.right.x +
+                (z - sample.position.z) * sample.right.z
+            add(Projection(sample, lateral, kotlin.math.abs(lateral)))
+        }
+    }
+
+    private fun triangleProgress(x: Float, z: Float, a: Vec3, b: Vec3, c: Vec3,
+                                 ta: Float, tb: Float, tc: Float): Float? {
+        val denominator = (b.z-c.z)*(a.x-c.x) + (c.x-b.x)*(a.z-c.z)
+        if (kotlin.math.abs(denominator) < .000001f) return null
+        val u = ((b.z-c.z)*(x-c.x) + (c.x-b.x)*(z-c.z)) / denominator
+        val v = ((c.z-a.z)*(x-c.x) + (a.x-c.x)*(z-c.z)) / denominator
+        val w = 1f-u-v
+        if (u < -.00001f || v < -.00001f || w < -.00001f) return null
+        return (u*ta + v*tb + w*tc).coerceIn(0f, 1f)
+    }
     fun isJumpGap(distance: Float): Boolean {
         if (crossingRanges.isEmpty()) return false
         val wrapped = wrapDistance(distance)
@@ -260,6 +273,7 @@ internal class PrototypeTrack(
     fun headingRadians(sample: Sample): Float = atan2(sample.tangent.x, sample.tangent.z)
 
     private fun point(fraction: Float): Vec3 {
+        if (scene.circuit.usesHouseLayout) return HouseGeometry.point(fraction)
         if (scene.circuit.usesFurnitureLayout) return OrganicCircuits.point(scene.circuit, fraction)
         if (scene.circuit.usesSculptedLayout) return SculptedCircuits.point(scene.circuit, fraction)
         if (scene.circuit == CircuitKind.SLALOM) return slalomPoint(fraction)
@@ -271,8 +285,11 @@ internal class PrototypeTrack(
         return Vec3(x, groundHeightAt(x, z) + altitude(fraction), z)
     }
 
-    /** Hauteur du plancher, conservée comme fonction pour les futurs sols spéciaux. */
-    fun groundHeightAt(@Suppress("UNUSED_PARAMETER") x: Float, @Suppress("UNUSED_PARAMETER") z: Float) = 0f
+    /** Le seul terrain de fond est le niveau bas ; les étages sont des volumes. */
+    fun groundHeightAt(x: Float, z: Float): Float =
+        if (scene.circuit.usesHouseLayout &&
+            (kotlin.math.abs(x) > HouseGeometry.HALF_WIDTH || kotlin.math.abs(z) > HouseGeometry.HALF_DEPTH))
+            Float.NEGATIVE_INFINITY else 0f
 
     private fun altitude(fraction: Float): Float = when {
         fraction < 0.20f -> 0f
@@ -288,6 +305,12 @@ internal class PrototypeTrack(
     }
 
     private fun roadWidth(fraction: Float): Float {
+        if (scene.circuit.usesHouseLayout) return when {
+            fraction in 0.10f..0.21f || fraction in 0.34f..0.45f ||
+                fraction in 0.68f..0.79f || fraction >= 0.88f -> 17.5f
+            fraction in 0.22f..0.31f || fraction in 0.55f..0.64f -> 14.5f
+            else -> 13f
+        }
         if (scene.circuit.usesFurnitureLayout) return when (OrganicCircuits.surface(scene.circuit, fraction)) {
             CourseSurface.DECK -> 9f
             CourseSurface.FLOOR -> 18f
@@ -329,8 +352,10 @@ internal class PrototypeTrack(
             floatArrayOf(-62f, 56f), floatArrayOf(-86f, 32f), floatArrayOf(-64f, 6f),
             floatArrayOf(-48f, -14f), floatArrayOf(-72f, -26f), floatArrayOf(-88f, -28f)
         )
-        const val JUMP_START_FRACTION = 0.48f
-        const val JUMP_END_FRACTION = 0.52f
+        // Avec la chute plus franche, le vide fait environ 20 unités : il reste
+        // franchissable à vitesse de course sans imposer deux secondes de vol.
+        const val JUMP_START_FRACTION = 0.49f
+        const val JUMP_END_FRACTION = 0.51f
         const val HIGH_LEVEL = 14.0f
         const val RAMP_RISE = 2.2f
         const val CAR_CLEARANCE = 0.24f

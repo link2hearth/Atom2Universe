@@ -147,10 +147,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
         }
         tilesAdapter.setGridMode(isGridMode)
 
-        recyclerView.post {
-            val height = recyclerView.height
-            if (height > 0) tilesAdapter.setRecyclerViewHeight(height)
-        }
+        awaitCorrectTileHeightBeforeDraw()
     }
 
     private fun updateEditModeUI() {
@@ -184,13 +181,31 @@ abstract class BaseHubActivity : AppCompatActivity() {
 
         loadTiles()
 
-        recyclerView.viewTreeObserver.addOnGlobalLayoutListener(object : android.view.ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
+        awaitCorrectTileHeightBeforeDraw()
+    }
+
+    /**
+     * La hauteur des tuiles dépend de la hauteur mesurée du RecyclerView, connue seulement
+     * après un premier passage de layout. Corriger la hauteur après coup (post{} ou
+     * OnGlobalLayoutListener) planifie un nouveau layout pour la frame suivante : la frame
+     * actuelle s'affiche donc une fraction de seconde avec la hauteur par défaut (tuiles
+     * étirées) avant la correction. OnPreDrawListener s'exécute juste avant l'affichage et
+     * peut annuler la frame en cours (retour false) tant que la hauteur n'est pas stable,
+     * ce qui évite complètement ce flash.
+     */
+    private fun awaitCorrectTileHeightBeforeDraw() {
+        var appliedHeight = -1
+        recyclerView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
                 val height = recyclerView.height
-                if (height > 0) {
+                if (height <= 0) return false
+                if (height != appliedHeight) {
+                    appliedHeight = height
                     tilesAdapter.setRecyclerViewHeight(height)
-                    recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    return false
                 }
+                recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+                return true
             }
         })
     }

@@ -47,7 +47,7 @@ class PrototypeTrackTest {
     }
 
     @Test
-    fun figureEightCrossingMatchesTheOriginalJumpConstants() {
+    fun figureEightCrossingMatchesTheJumpConstants() {
         val crossings = CircuitCrossings.crossingsFor(CircuitKind.FIGURE_EIGHT)
         assertEquals(1, crossings.size)
         assertEquals(PrototypeTrack.JUMP_START_FRACTION, crossings.single().gapStartFraction, 0f)
@@ -333,69 +333,110 @@ class PrototypeTrackTest {
     }
 
     @Test
-    fun houseHasFourDistinctRoomsAroundACentralCorridor() {
-        val rooms = HouseGeometry.rooms
-        assertEquals(4, rooms.map { it.kind }.distinct().size)
-        val (minX, maxX) = HouseGeometry.corridorBounds()
-        assertTrue("Le couloir doit couvrir toutes les colonnes de pièces", maxX > minX)
-        for (room in rooms) {
-            assertTrue(
-                "Chaque pièce doit border le couloir",
-                abs(abs(room.centerZ) - (PrototypeTrack.ROOM_HALF_DEPTH + 12f)) < 0.01f
-            )
-        }
+    fun houseHasThreePhysicalLevelsAndAnOpenAtrium() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        assertEquals(0f, track.furnitureHeightAt(80f, 0f, 1f), .001f)
+        assertEquals(26f, track.furnitureHeightAt(80f, 0f, 27f), .001f)
+        assertEquals(52f, track.furnitureHeightAt(80f, 0f, 53f), .001f)
+        assertEquals("Le vide de l'atrium ne doit pas être un plancher invisible",
+            0f, track.furnitureHeightAt(0f, 15f, 60f), .001f)
+        assertTrue(track.allSamples().all { track.hasDeck(it) })
+        assertTrue(track.allSamples().any { it.position.y > 51f })
+        assertTrue(track.allSamples().any { it.tangent.y > .1f })
+        assertTrue(track.allSamples().any { it.tangent.y < -.1f })
     }
 
     @Test
-    fun houseCorridorDoorsAreRealGapsNotDecorativeWalls() {
-        val walls = HouseGeometry.wallBoxes()
-        for (room in HouseGeometry.rooms) {
-            // La porte locale (x=-73, sur le mur qui fait face au couloir) ne doit
-            // être couverte par aucun mur : sinon la pièce serait murée dessus.
-            val doorWorldX = room.centerX + if (room.quarterTurns == 2) 73f else -73f
-            val doorWorldZ = room.centerZ + if (room.quarterTurns == 2) -75.75f else 75.75f
-            val blocked = walls.any {
-                doorWorldX in it.left..it.right && doorWorldZ in it.back..it.front
+    fun houseRouteDoesNotCrossWallsOrFurniture() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        for (sample in track.allSamples()) {
+            val p = sample.position
+            val bottom = p.y + PrototypeTrack.ROAD_SURFACE_LIFT
+            val blocked = track.furnitureSolids.any {
+                it.top > bottom + .1f && it.bottom < bottom + .92f &&
+                    p.x > it.left - .6f && p.x < it.right + .6f &&
+                    p.z > it.back - .6f && p.z < it.front + .6f
             }
-            assertFalse("La porte de ${room.kind} doit rester un vrai passage", blocked)
+            assertFalse("La trajectoire doit rester praticable à $p", blocked)
+            assertTrue("La surface visible doit exister pour la collision à $p",
+                track.decksAt(p.x, p.z).any { abs(it.sample.position.y - p.y) < .02f })
         }
     }
 
     @Test
-    fun houseCarCanCrossFromOneRoomIntoTheCorridor() {
+    fun continuousHouseDescentsKeepWheelContactAtFullSpeed() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        val descents = track.allSamples().filter { it.tangent.y < -.1f }
+        assertTrue(descents.isNotEmpty())
+        for (sample in descents) {
+            val car = ArcadeCar(track)
+            val p = sample.position
+            val y = p.y + PrototypeTrack.ROAD_SURFACE_LIFT + PrototypeTrack.CAR_CLEARANCE
+            val horizontal = kotlin.math.hypot(sample.tangent.x, sample.tangent.z)
+            car.setPrivateField("worldX", p.x)
+            car.setPrivateField("worldZ", p.z)
+            car.setPrivateField("airborneY", y)
+            car.setPrivateField("worldPosition", PrototypeTrack.Vec3(p.x, y, p.z))
+            car.setPrivateField("yawRadians", track.headingRadians(sample))
+            car.setPrivateField("velocityX", sample.tangent.x / horizontal * 20f)
+            car.setPrivateField("velocityZ", sample.tangent.z / horizontal * 20f)
+            car.setPrivateField("distance", sample.distance)
+            repeat(10) {
+                car.update(1f / 60f, ArcadeCar.Input(0f, true, false))
+                assertFalse("Une descente continue doit garder les roues au sol à $p", car.airborne)
+            }
+        }
+    }
+
+    @Test
+    fun carBelowAnActualBridgeNeverSnapsToItsDeck() {
+        val track = PrototypeTrack()
+        val bridge = track.allSamples().first { it.fraction >= .4f }
+        val car = ArcadeCar(track)
+        car.setPrivateField("worldX", bridge.position.x)
+        car.setPrivateField("worldZ", bridge.position.z)
+        car.setPrivateField("airborneY", PrototypeTrack.CAR_CLEARANCE)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(bridge.position.x,
+            PrototypeTrack.CAR_CLEARANCE, bridge.position.z))
+        car.setPrivateField("distance", bridge.distance)
+        repeat(120) {
+            car.update(1f / 60f, ArcadeCar.Input(0f, false, false))
+            assertTrue("Un pont au-dessus des roues n'est pas un appui", car.worldPosition.y < 1f)
+        }
+    }
+
+    @Test
+    fun fallingBetweenHouseLevelsLandsOnTheFloorBelow() {
         val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
         val car = ArcadeCar(track)
-        // Bien au-delà de ROOM_HALF_DEPTH : la maison n'a pas de rectangle
-        // englobant unique, seule une vraie porte laisse passer la voiture.
-        car.setPrivateField("worldX", -73f)
-        car.setPrivateField("worldZ", -20f)
-        car.setPrivateField("airborneY", PrototypeTrack.CAR_CLEARANCE)
-        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(-73f, PrototypeTrack.CAR_CLEARANCE, -20f))
-        car.setPrivateField("velocityZ", 15f)
-        repeat(60 * 3) {
-            car.update(1f / 60f, ArcadeCar.Input(0f, accelerating = false, braking = false))
+        car.setPrivateField("worldX", 80f)
+        car.setPrivateField("worldZ", 0f)
+        car.setPrivateField("airborneY", 40f)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(80f, 40f, 0f))
+        car.setPrivateField("airborne", true)
+        repeat(120) {
+            car.update(1f / 60f, ArcadeCar.Input(0f, false, false))
+            assertTrue("Le plafond de l'étage ne doit pas attirer la voiture", car.worldPosition.y <= 40f)
         }
-        assertTrue(
-            "La voiture doit pouvoir franchir la porte vers le couloir",
-            car.worldPosition.z > -12.5f
-        )
+        assertFalse(car.airborne)
+        assertEquals(26f + PrototypeTrack.CAR_CLEARANCE, car.worldPosition.y, .02f)
     }
 
     @Test
-    fun houseFurnitureClimbsFromChairToWardrobeAtIncreasingThenDippingHeights() {
-        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
-        assertTrue(track.length > 700f)
-        val dresserHeight = track.furnitureHeightAt(-24f, 154f, 15f)
-        val shelfPeakHeight = track.furnitureHeightAt(-58f, 154f, 27f)
-        val wardrobeHeight = track.furnitureHeightAt(-75f, 154f, 20f)
-        assertTrue("La commode doit être un vrai plateau", dresserHeight > 10f)
-        assertTrue("L'étagère doit culminer plus haut que la commode", shelfPeakHeight > dresserHeight)
-        assertTrue(
-            "L'armoire doit atterrir plus bas que le sommet de l'étagère : un vrai saut",
-            wardrobeHeight in 15f..shelfPeakHeight
-        )
+    fun airborneSteeringChangesDirectionWithoutCreatingSpeed() {
+        val car = ArcadeCar(PrototypeTrack())
+        car.setPrivateField("worldX", 0f)
+        car.setPrivateField("worldZ", 20f)
+        car.setPrivateField("airborneY", 25f)
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(0f, 25f, 20f))
+        car.setPrivateField("airborne", true)
+        car.setPrivateField("velocityZ", 10f)
+        car.setPrivateField("yawRadians", 0f)
+        repeat(10) { car.update(1f / 60f, ArcadeCar.Input(1f, false, false)) }
+        assertTrue(car.yawRadians > 0f)
+        assertEquals(10f, car.speed, .001f)
+        assertTrue("La chute doit être franche", car.worldPosition.y < 24.7f)
     }
-
     @Test
     fun drivingUpTheWorkshopRampNeverLosesSupportOrGetsStuckAtTheTop() {
         val track = PrototypeTrack(scene = SceneChoice(RoomKind.GARAGE, CircuitKind.WORKSHOP_EXPEDITION))
@@ -445,7 +486,7 @@ class PrototypeTrackTest {
         // mémorisée pointe par erreur vers cette branche haute : c'est exactement
         // le scénario qui a déjà causé une téléportation par le passé. supportAt()
         // (appui de chaque roue) doit ignorer cette continuité de progression et
-        // ne comparer que la position physique réelle, comme projectForCollision().
+        // ne comparer que les surfaces physiquement accessibles sous les roues.
         val lowPoint = samples.first()
         val highSample = samples.first { it.fraction >= 0.5f }
         car.setPrivateField("worldX", lowPoint.position.x)

@@ -2,6 +2,9 @@ package com.Atom2Universe.app.games.toyboxracers.render
 
 import android.opengl.GLES30
 import android.opengl.Matrix
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.ToyKind
@@ -315,6 +318,10 @@ internal object PrototypeMeshFactory {
     private val ROAD_LIGHT = color(0.48f, 0.53f, 0.62f)
     private val ROAD_SIDE = color(0.33f, 0.38f, 0.47f)
     private val ROAD_UNDERSIDE = color(0.25f, 0.29f, 0.37f)
+    private val HOUSE_DUCT = color(0.53f, 0.64f, 0.69f)
+    private val HOUSE_DUCT_LIGHT = color(0.66f, 0.76f, 0.80f)
+    private val HOUSE_PLANK = color(0.72f, 0.49f, 0.29f)
+    private val HOUSE_PLANK_LIGHT = color(0.84f, 0.63f, 0.39f)
     private val CREAM = color(1.00f, 0.89f, 0.63f)
     private val PINK = color(0.98f, 0.48f, 0.58f)
     private val MINT = color(0.43f, 0.85f, 0.70f)
@@ -327,6 +334,13 @@ internal object PrototypeMeshFactory {
     private val WALL_CREAM = color(1.00f, 0.93f, 0.78f)
     private val TEDDY = color(0.72f, 0.50f, 0.34f)
     private val TEDDY_LIGHT = color(0.93f, 0.73f, 0.51f)
+
+    fun world(world: ToyboxWorld, preview: ToyboxVolume? = null): ColoredMesh {
+        val builder = MeshBuilder()
+        world.volumes.forEach { addWorldVolume(builder, it, alpha = 1f) }
+        if (preview != null) addWorldVolume(builder, preview, alpha = 0.54f)
+        return builder.build()
+    }
 
     fun track(track: PrototypeTrack): ColoredMesh {
         val builder = MeshBuilder()
@@ -368,13 +382,19 @@ internal object PrototypeMeshFactory {
             val aRight = a.position + a.right * aHalf + lift
             val bLeft = b.position - b.right * bHalf + lift
             val bRight = b.position + b.right * bHalf + lift
-            val roadColor = if (track.scene.circuit.usesFurnitureLayout)
+            val roadColor = if (track.scene.circuit.usesHouseLayout) {
+                houseCourseColor(middle.fraction, index)
+            } else if (track.scene.circuit.usesFurnitureLayout)
                 rgb(if ((index / 12) % 2 == 0) 0xDAB68B else 0xCBA47C)
                 else if ((index / 12) % 2 == 0) ROAD else ROAD_LIGHT
             builder.quad(aLeft, bLeft, bRight, aRight, roadColor)
 
-            val curbWidth = PrototypeTrack.CURB_WIDTH
-            val curbColor = if ((index / 8) % 2 == 0) CREAM else PINK
+            val curbWidth = if (track.scene.circuit.usesHouseLayout) PrototypeTrack.CURB_WIDTH * 2.6f
+                else PrototypeTrack.CURB_WIDTH
+            val curbColor = if (track.scene.circuit.usesHouseLayout) {
+                if (middle.fraction in 0.10f..0.21f || middle.fraction in 0.68f..0.79f)
+                    HOUSE_DUCT_LIGHT else CREAM
+            } else if ((index / 8) % 2 == 0) CREAM else PINK
             val aLeftOutside = a.position - a.right * (aHalf + curbWidth) + lift
             val bLeftOutside = b.position - b.right * (bHalf + curbWidth) + lift
             builder.quad(aLeftOutside, bLeftOutside, bLeft, aLeft, curbColor)
@@ -390,9 +410,13 @@ internal object PrototypeMeshFactory {
             val aRightBottom = aRightOutside + down
             val bLeftBottom = bLeftOutside + down
             val bRightBottom = bRightOutside + down
-            builder.quad(aRightBottom, bRightBottom, bLeftBottom, aLeftBottom, ROAD_UNDERSIDE)
-            builder.quad(aLeftOutside, aLeftBottom, bLeftBottom, bLeftOutside, ROAD_SIDE)
-            builder.quad(aRightOutside, bRightOutside, bRightBottom, aRightBottom, ROAD_SIDE)
+            val underside = if (track.scene.circuit.usesHouseLayout) DARK else ROAD_UNDERSIDE
+            val sideColor = if (track.scene.circuit.usesHouseLayout &&
+                (middle.fraction in 0.10f..0.21f || middle.fraction in 0.68f..0.79f)) HOUSE_DUCT
+                else ROAD_SIDE
+            builder.quad(aRightBottom, bRightBottom, bLeftBottom, aLeftBottom, underside)
+            builder.quad(aLeftOutside, aLeftBottom, bLeftBottom, bLeftOutside, sideColor)
+            builder.quad(aRightOutside, bRightOutside, bRightBottom, aRightBottom, sideColor)
 
             val previousIndex = (index - 1 + samples.size) % samples.size
             if (!track.hasDeck(track.sampleAt(segmentMiddleDistance(previousIndex)))) {
@@ -403,6 +427,15 @@ internal object PrototypeMeshFactory {
             }
         }
         return builder.build()
+    }
+
+    private fun houseCourseColor(fraction: Float, index: Int): FloatArray = when {
+        fraction in 0.10f..0.21f || fraction in 0.34f..0.45f ||
+            fraction in 0.68f..0.79f || fraction >= 0.88f ->
+            if ((index / 10) % 2 == 0) HOUSE_DUCT else HOUSE_DUCT_LIGHT
+        fraction in 0.22f..0.31f || fraction in 0.55f..0.64f ->
+            if ((index / 8) % 2 == 0) HOUSE_PLANK else HOUSE_PLANK_LIGHT
+        else -> if ((index / 14) % 2 == 0) FLOOR else CREAM
     }
 
     fun environment(track: PrototypeTrack): ColoredMesh {
@@ -430,23 +463,89 @@ internal object PrototypeMeshFactory {
         return builder.build()
     }
 
-    /** Sol de chaque pièce + sol du couloir. Les murs (troués aux portes) et le
-     * mobilier arrivent par la liste générique track.roomBoxes -> addFurniture(),
-     * pour ne jamais dessiner un mur que la collision ignore ou inversement. */
+    /** Les mêmes planchers finis alimentent le rendu et les contacts. */
     private fun addHouseFloors(builder: MeshBuilder) {
-        val halfWidth = PrototypeTrack.ROOM_HALF_WIDTH
-        val halfDepth = PrototypeTrack.ROOM_HALF_DEPTH
-        for (room in HouseGeometry.rooms) {
-            val theme = RoomThemes.theme(room.kind)
-            builder.box(room.centerX, -0.40f, room.centerZ, halfWidth * 2f, 0.8f, halfDepth * 2f, rgb(theme.floorColor))
+        for (box in HouseGeometry.floorBoxes()) {
+            builder.box(box.x, box.y, box.z, box.width, box.height, box.depth, rgb(box.color))
         }
-        val (corridorMinX, corridorMaxX) = HouseGeometry.corridorBounds()
-        builder.box((corridorMinX + corridorMaxX) * 0.5f, -0.40f, 0f,
-            corridorMaxX - corridorMinX, 0.8f, HouseGeometry.CORRIDOR_HALF_DEPTH * 2f, rgb(0xE8DFC8))
+    }
+
+    private fun addWorldVolume(builder: MeshBuilder, volume: ToyboxVolume, alpha: Float) {
+        val color = rgba(volume.color, alpha)
+        when (volume.kind) {
+            ToyboxVolumeKind.RAMP -> addWorldRamp(builder, volume, color)
+            ToyboxVolumeKind.STAIR -> addWorldStairs(builder, volume, color)
+            ToyboxVolumeKind.WINDOW -> {
+                builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
+                builder.box(volume.x, volume.y, volume.z, volume.width * 0.92f, volume.height * 0.08f, volume.depth + 0.08f, CREAM)
+                builder.box(volume.x, volume.y, volume.z, volume.width * 0.08f, volume.height * 0.92f, volume.depth + 0.08f, CREAM)
+            }
+            ToyboxVolumeKind.DOOR -> {
+                builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
+                builder.cylinderY(volume.x + volume.width * 0.34f, volume.y, volume.z + volume.depth * 0.52f, 0.42f, 0.18f, 8, CREAM)
+            }
+            ToyboxVolumeKind.RAIL -> {
+                builder.box(volume.x, volume.y + volume.height * 0.38f, volume.z, volume.width, volume.height * 0.18f, volume.depth, color)
+                builder.box(volume.x, volume.y - volume.height * 0.38f, volume.z, volume.width, volume.height * 0.14f, volume.depth, color)
+                val posts = maxOf(2, (volume.width / 6f).toInt() + 1)
+                repeat(posts) { index ->
+                    val t = if (posts == 1) 0.5f else index.toFloat() / (posts - 1)
+                    val x = volume.left + volume.width * t
+                    builder.box(x, volume.y, volume.z, 0.45f, volume.height, volume.depth, color)
+                }
+            }
+            else -> builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
+        }
+    }
+
+    private fun addWorldRamp(builder: MeshBuilder, volume: ToyboxVolume, color: FloatArray) {
+        val left = volume.left
+        val right = volume.right
+        val back = volume.back
+        val front = volume.front
+        val bottom = volume.y - volume.height * 0.5f
+        val top = volume.y + volume.height * 0.5f
+        val lbb = Vec3(left, bottom, back)
+        val rbb = Vec3(right, bottom, back)
+        val lbf = Vec3(left, bottom, front)
+        val rbf = Vec3(right, bottom, front)
+        val ltf = Vec3(left, top, front)
+        val rtf = Vec3(right, top, front)
+        builder.quad(lbf, rbf, rtf, ltf, color)
+        builder.triangle(lbb, lbf, ltf, color)
+        builder.triangle(rbb, rtf, rbf, color)
+        builder.quad(lbb, rbb, rbf, lbf, color)
+        builder.quad(lbb, ltf, rtf, rbb, color)
+    }
+
+    private fun addWorldStairs(builder: MeshBuilder, volume: ToyboxVolume, color: FloatArray) {
+        val steps = maxOf(2, (volume.depth / 3f).toInt())
+        val stepDepth = volume.depth / steps
+        val bottom = volume.y - volume.height * 0.5f
+        repeat(steps) { index ->
+            val h = volume.height * (index + 1) / steps
+            val z = volume.back + stepDepth * (index + 0.5f)
+            builder.box(
+                volume.x,
+                bottom + h * 0.5f,
+                z,
+                volume.width,
+                h,
+                stepDepth,
+                color
+            )
+        }
     }
 
     private fun rgb(value: Int) = color(((value shr 16) and 255) / 255f,
         ((value shr 8) and 255) / 255f, (value and 255) / 255f)
+
+    private fun rgba(value: Int, alpha: Float) = floatArrayOf(
+        ((value shr 16) and 255) / 255f,
+        ((value shr 8) and 255) / 255f,
+        (value and 255) / 255f,
+        alpha
+    )
 
     private fun addTerrain(builder: MeshBuilder, theme: RoomTheme) {
         builder.box(0f, -0.40f, 0f, 236f, 0.8f, 150f, rgb(theme.floorColor))

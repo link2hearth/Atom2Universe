@@ -17,10 +17,14 @@ import android.widget.EditText
 import android.text.InputType
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.SimpleColorPickerDialog
+import com.Atom2Universe.app.games.toyboxracers.editor.EditorTouchLayer
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
@@ -29,6 +33,9 @@ import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
 import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorldStore
 import com.Atom2Universe.app.util.enableImmersiveMode
 import java.util.Locale
 
@@ -47,10 +54,46 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var modeButton: Button
     private lateinit var roomButton: Button
     private lateinit var circuitButton: Button
+    private lateinit var editorButton: Button
+    private lateinit var pauseButton: Button
+    private lateinit var editorPanel: LinearLayout
+    private lateinit var editorToolsPanel: LinearLayout
+    private lateinit var editorPositionPanel: LinearLayout
+    private lateinit var editorCameraPanel: LinearLayout
+    private lateinit var editorInfo: TextView
+    private lateinit var editorKindButton: Button
+    private lateinit var editorGridButton: Button
+    private lateinit var editorSolidButton: Button
+    private lateinit var editorColorButton: Button
+    private lateinit var editorPlaceButton: Button
+    private lateinit var editorWidthPicker: NumberPicker
+    private lateinit var editorHeightPicker: NumberPicker
+    private lateinit var editorDepthPicker: NumberPicker
+    private lateinit var editorTouchLayer: EditorTouchLayer
+    private val raceHudViews = mutableListOf<View>()
+    private val raceControlViews = mutableListOf<View>()
     private var currentScene = SceneChoice()
     private lateinit var housePlan: HousePlan
     private lateinit var minimap: ToyboxMinimapView
+    private lateinit var worldStore: ToyboxWorldStore
+    private var editorWorld = ToyboxWorld()
     private var currentMode = PlayMode.EXPLORATION
+    private var editorActive = false
+    private var editorKind = ToyboxVolumeKind.FLOOR
+    private var editorWidth = 20f
+    private var editorHeight = 0.6f
+    private var editorDepth = 20f
+    private var editorFloorY = 0f
+    private var editorSolid = true
+    private var editorColor = editorKind.color
+    private var selectedVolumeId: Long? = null
+    private var editorDraftActive = false
+    private var editorGridIndex = 0
+    private var editorForward = 0f
+    private var editorStrafe = 0f
+    private var editorPitch = 0f
+    private var editorYaw = 0f
+    private var syncingEditorPickers = false
     private var paused = false
     private var pauseDialog: AlertDialog? = null
     private val releaseControls = mutableListOf<() -> Unit>()
@@ -65,6 +108,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        worldStore = ToyboxWorldStore(this)
+        editorWorld = worldStore.load()
         currentDifficulty = RaceDifficulty.entries.getOrElse(
             prefs.getInt(KEY_DIFFICULTY, RaceDifficulty.ARCADE.ordinal)
         ) { RaceDifficulty.ARCADE }
@@ -83,6 +128,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         renderer = ToyboxRacersRenderer(currentDifficulty, currentScene) { state ->
             runOnUiThread { updateHud(state) }
         }
+        renderer.setEditorWorld(editorWorld)
+        pushEditorPreview()
         glView = ToyboxRacersGLView(this, renderer)
 
         val root = FrameLayout(this).apply {
@@ -93,6 +140,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         root.addView(glView, FrameLayout.LayoutParams(-1, -1))
         addHud(root)
         addControls(root)
+        addEditorOverlay(root)
         minimap = ToyboxMinimapView(this)
         val compact = resources.displayMetrics.widthPixels / resources.displayMetrics.density < 640f
         root.addView(minimap, FrameLayout.LayoutParams(dp(if (compact) 112 else 152), dp(if (compact) 80 else 106)).apply {
@@ -103,7 +151,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         setContentView(root)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() = showPause()
+            override fun handleOnBackPressed() {
+                if (editorActive) toggleEditorMode() else showPause()
+            }
         })
     }
 
@@ -111,7 +161,13 @@ class ToyboxRacersActivity : ThemedActivity() {
         super.onResume()
         glView.onResume()
         enableImmersiveMode()
-        if (paused) showPause()
+        if (editorActive) {
+            paused = false
+            renderer.setPaused(false)
+            renderer.setEditorActive(true)
+            pushEditorPreview()
+        }
+        if (paused && !editorActive) showPause()
     }
 
     override fun onPause() {
@@ -209,13 +265,14 @@ class ToyboxRacersActivity : ThemedActivity() {
             leftMargin = (16 * density).toInt()
             topMargin = (12 * density).toInt()
         })
+        raceHudViews += topPanel
 
-        val back = makeButton("Ⅱ", 52, 0xB83B4055.toInt()).apply {
+        pauseButton = makeButton("Ⅱ", 52, 0xB83B4055.toInt()).apply {
             textSize = 28f
             contentDescription = getString(R.string.toybox_pause)
-            setOnClickListener { showPause() }
+            setOnClickListener { if (editorActive) toggleEditorMode() else showPause() }
         }
-        root.addView(back, FrameLayout.LayoutParams(dp(52), dp(52)).apply {
+        root.addView(pauseButton, FrameLayout.LayoutParams(dp(52), dp(52)).apply {
             gravity = Gravity.TOP or Gravity.END
             rightMargin = dp(14)
             topMargin = dp(12)
@@ -234,6 +291,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(76)
             topMargin = dp(16)
         })
+        raceHudViews += reset
 
         difficultyButton = makeButton(currentDifficulty.label, 92, 0xAA4B617A.toInt()).apply {
             textSize = 11f
@@ -252,6 +310,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(18)
             topMargin = dp(72)
         })
+        raceHudViews += difficultyButton
         modeButton = makeButton(getString(R.string.toybox_start_race), 112, 0xAA735D91.toInt()).apply {
             textSize = 11f
             setOnClickListener { switchMode() }
@@ -261,6 +320,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(18)
             topMargin = dp(122)
         })
+        raceHudViews += modeButton
         roomButton = makeButton(roomLabel(), 120, 0xAA4B617A.toInt()).apply {
             textSize = 12f
             contentDescription = getString(R.string.toybox_change_room)
@@ -279,12 +339,17 @@ class ToyboxRacersActivity : ThemedActivity() {
             textSize = 12f
             setOnClickListener { enterHouseMode() }
         }
-        for ((index, button) in listOf(roomButton, circuitButton, houseButton).withIndex()) {
-            root.addView(button, FrameLayout.LayoutParams(dp(if (index == 2) 96 else 120), dp(42)).apply {
+        editorButton = makeButton("BUILD 3D", 96, 0xAA735D91.toInt()).apply {
+            textSize = 12f
+            setOnClickListener { toggleEditorMode() }
+        }
+        for ((index, button) in listOf(roomButton, circuitButton, houseButton, editorButton).withIndex()) {
+            root.addView(button, FrameLayout.LayoutParams(dp(if (index >= 2) 96 else 120), dp(42)).apply {
                 gravity = Gravity.TOP or Gravity.START
-                leftMargin = dp(16 + if (index < 2) index * 128 else 256)
+                leftMargin = dp(16 + if (index < 2) index * 128 else 256 + (index - 2) * 104)
                 topMargin = dp(128)
             })
+            raceHudViews += button
         }
     }
 
@@ -481,6 +546,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             leftMargin = dp(20)
             bottomMargin = dp(20)
         })
+        raceControlViews += steering
 
         val brake = makeButton("FREIN\nRECUL", controls.brake, 0xB8735D91.toInt()).apply {
             textSize = 12f
@@ -490,6 +556,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(controls.accelerator + 34)
             bottomMargin = dp(26)
         })
+        raceControlViews += brake
 
         val accelerator = makeButton("GAZ", controls.accelerator, 0xB8E26F82.toInt()).apply {
             textSize = 13f
@@ -499,6 +566,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             rightMargin = dp(22)
             bottomMargin = dp(16)
         })
+        raceControlViews += accelerator
 
         bindHoldButton(left) { pressed ->
             renderer.setSteering(if (pressed) 1f else if (right.isPressed) -1f else 0f)
@@ -511,6 +579,550 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    private fun addEditorOverlay(root: FrameLayout) {
+        editorTouchLayer = EditorTouchLayer(this).apply {
+            visibility = View.GONE
+            onMoveAxesChanged = { strafe, forward ->
+                editorStrafe = -strafe
+                editorForward = forward
+                pushEditorInput()
+            }
+            onLookAxesChanged = { yaw, pitch ->
+                editorYaw = -yaw
+                editorPitch = pitch
+                pushEditorInput()
+            }
+            onObjectLongPress = { x, y ->
+                renderer.pickVolume(x, y, editorWorld.volumes)?.let { selectEditorVolume(it) }
+            }
+        }
+        root.addView(editorTouchLayer, FrameLayout.LayoutParams(-1, -1))
+
+        fun makeBubble() = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(12), dp(10), dp(12), dp(12))
+            background = roundedBackground(0xD83B4055.toInt(), 18f)
+            visibility = View.GONE
+        }
+
+        fun row(parent: LinearLayout, vararg views: View, heightDp: Int = 42, bottomDp: Int = 6) {
+            val line = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+            }
+            views.forEachIndexed { index, view ->
+                line.addView(view, LinearLayout.LayoutParams(0, dp(heightDp), 1f).apply {
+                    if (index < views.lastIndex) rightMargin = dp(6)
+                })
+            }
+            parent.addView(line, LinearLayout.LayoutParams(-1, dp(heightDp)).apply { bottomMargin = dp(bottomDp) })
+        }
+
+        fun label(text: String, size: Float = 12f, bold: Boolean = false) = TextView(this).apply {
+            this.text = text
+            setTextColor(Color.WHITE)
+            textSize = size
+            alpha = 0.9f
+            if (bold) typeface = Typeface.DEFAULT_BOLD
+        }
+
+        fun grab(text: String, target: View) = label("≡  $text", 15f, bold = true).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(4), 0, dp(4), dp(4))
+            setOnTouchListener(panelDragTouchListener(target))
+        }
+
+        fun action(label: String, color: Int = 0xAA4B617A.toInt(), action: () -> Unit) =
+            makeEditorButton(label, color).apply { setOnClickListener { action() } }
+
+        editorToolsPanel = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+            background = roundedBackground(0xD83B4055.toInt(), 18f)
+            visibility = View.GONE
+        }
+        val toolsContent = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        editorKindButton = makeEditorButton("+", 0xAA4B8F6E.toInt()).apply {
+            textSize = 24f
+            setOnClickListener { showAddItemFamilies() }
+        }
+        editorGridButton = makeEditorButton("", 0xAA735D91.toInt()).apply {
+            setOnClickListener {
+                editorGridIndex = (editorGridIndex + 1) % EDITOR_GRIDS.size
+                pushEditorPreview()
+            }
+        }
+        listOf(editorKindButton, editorGridButton).forEachIndexed { index, view ->
+            toolsContent.addView(view, LinearLayout.LayoutParams(0, dp(42), 1f).apply {
+                if (index == 0) rightMargin = dp(6)
+            })
+        }
+        editorToolsPanel.orientation = LinearLayout.VERTICAL
+        editorToolsPanel.addView(grab("Outils", editorToolsPanel), LinearLayout.LayoutParams(-1, dp(28)))
+        editorToolsPanel.addView(toolsContent, LinearLayout.LayoutParams(-1, dp(42)))
+        root.addView(editorToolsPanel, FrameLayout.LayoutParams(dp(190), -2).apply {
+            gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+            topMargin = dp(14)
+        })
+
+        editorCameraPanel = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(8), dp(8), dp(8), dp(8))
+            background = roundedBackground(0xD83B4055.toInt(), 18f)
+            visibility = View.GONE
+        }
+        val cameraUp = action("Cam +") { renderer.moveEditorCameraHeight(gridSize()) }
+        val cameraDown = action("Cam -") { renderer.moveEditorCameraHeight(-gridSize()) }
+        editorCameraPanel.addView(cameraUp, LinearLayout.LayoutParams(dp(78), dp(42)).apply { bottomMargin = dp(6) })
+        editorCameraPanel.addView(cameraDown, LinearLayout.LayoutParams(dp(78), dp(42)))
+        root.addView(editorCameraPanel, FrameLayout.LayoutParams(-2, -2).apply {
+            gravity = Gravity.BOTTOM or Gravity.END
+            rightMargin = dp(16)
+            bottomMargin = dp(24)
+        })
+
+        editorPanel = makeBubble()
+        editorPanel.addView(grab("Bloc", editorPanel), LinearLayout.LayoutParams(-1, dp(28)).apply {
+            bottomMargin = dp(6)
+        })
+        editorInfo = label("", 12f).apply {
+            typeface = Typeface.MONOSPACE
+            setPadding(0, 0, 0, dp(4))
+        }
+        editorPanel.addView(editorInfo, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+
+        editorSolidButton = makeEditorButton("", 0xAA735D91.toInt()).apply {
+            setOnClickListener {
+                editorSolid = !editorSolid
+                updateSelectedVolume { it.copy(solid = editorSolid) }
+                pushEditorPreview()
+            }
+        }
+        editorColorButton = makeEditorButton("", 0xAA4B617A.toInt()).apply {
+            setOnClickListener { showEditorColorPicker() }
+        }
+        row(editorPanel, editorSolidButton, editorColorButton)
+        val dimensions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+        editorPanel.addView(dimensions, LinearLayout.LayoutParams(-1, dp(116)).apply { bottomMargin = dp(8) })
+        fun dimensionPicker(title: String, initial: Float, changed: (Float) -> Unit): NumberPicker {
+            val picker = NumberPicker(this).apply {
+                minValue = EDITOR_DIMENSION_MIN_TICKS
+                maxValue = dimensionMaxTick()
+                wrapSelectorWheel = false
+                descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+                setFormatter { formatEditorNumber(it * gridSize()) }
+                value = dimensionToTick(initial)
+                setOnValueChangedListener { _, _, newValue ->
+                    if (!syncingEditorPickers) changed(newValue * gridSize())
+                }
+            }
+            val box = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                addView(label(title, 11f, bold = true), LinearLayout.LayoutParams(-1, -2))
+                addView(picker, LinearLayout.LayoutParams(-1, dp(88)))
+            }
+            dimensions.addView(box, LinearLayout.LayoutParams(0, -1, 1f))
+            return picker
+        }
+        editorWidthPicker = dimensionPicker("Largeur", editorWidth) { setEditorDimension(width = it) }
+        editorHeightPicker = dimensionPicker("Hauteur", editorHeight) { setEditorDimension(height = it) }
+        editorDepthPicker = dimensionPicker("Profondeur", editorDepth) { setEditorDimension(depth = it) }
+        editorPlaceButton = makeEditorButton("Poser", 0xAA4B8F6E.toInt()).apply {
+            setOnClickListener { placeEditorVolume() }
+        }
+        row(
+            editorPanel,
+            editorPlaceButton,
+            action("Effacer", 0xAA9A4B4B.toInt()) { deleteEditorVolume() }
+        )
+
+        root.addView(editorPanel, FrameLayout.LayoutParams(dp(286), -2).apply {
+            gravity = Gravity.TOP or Gravity.END
+            rightMargin = dp(14)
+            topMargin = dp(70)
+        })
+
+        editorPositionPanel = makeBubble()
+        editorPositionPanel.addView(grab("Position", editorPositionPanel), LinearLayout.LayoutParams(-1, dp(28)).apply {
+            bottomMargin = dp(8)
+        })
+        val moveUp = action("↑") { moveEditorObject(0f, 1f) }
+        val moveLeft = action("←") { moveEditorObject(1f, 0f) }
+        val moveRight = action("→") { moveEditorObject(-1f, 0f) }
+        val moveDown = action("↓") { moveEditorObject(0f, -1f) }
+        val moveHigher = action("Y +") { moveEditorFloor(gridSize()) }
+        val moveLower = action("Y -") { moveEditorFloor(-gridSize()) }
+        val rotateLeft = action("↺ 90") { rotateEditorObject() }
+        val rotateRight = action("↻ 90") { rotateEditorObject() }
+        row(
+            editorPositionPanel,
+            label(""),
+            moveUp,
+            label(""),
+            bottomDp = 2
+        )
+        row(
+            editorPositionPanel,
+            moveLeft,
+            label(""),
+            moveRight,
+            bottomDp = 2
+        )
+        row(
+            editorPositionPanel,
+            label(""),
+            moveDown,
+            label(""),
+            bottomDp = 0
+        )
+        row(editorPositionPanel, moveHigher, moveLower)
+        row(editorPositionPanel, rotateLeft, rotateRight, bottomDp = 0)
+        root.addView(editorPositionPanel, FrameLayout.LayoutParams(dp(206), -2).apply {
+            gravity = Gravity.BOTTOM or Gravity.START
+            leftMargin = dp(18)
+            bottomMargin = dp(22)
+        })
+        pauseButton.bringToFront()
+        pushEditorPreview()
+    }
+
+    private fun toggleEditorMode() {
+        editorActive = !editorActive
+        releaseControls.forEach { it() }
+        resultPanel.visibility = View.GONE
+        raceHudViews.forEach { it.visibility = if (editorActive) View.GONE else View.VISIBLE }
+        raceControlViews.forEach { it.visibility = if (editorActive) View.GONE else View.VISIBLE }
+        editorPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorToolsPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorPositionPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorTouchLayer.visibility = if (editorActive) View.VISIBLE else View.GONE
+        minimap.visibility = if (editorActive) View.GONE else View.VISIBLE
+        renderer.setEditorActive(editorActive)
+        pushEditorInput()
+        pushEditorPreview()
+        pauseButton.bringToFront()
+        if (editorActive) {
+            status.text = "Mode construction : déplace la caméra, règle le bloc, puis POSER"
+        }
+    }
+
+    private fun applyEditorItemPreset(item: EditorItemPreset) {
+        selectedVolumeId = null
+        editorDraftActive = true
+        editorKind = item.kind
+        editorWidth = item.width
+        editorHeight = item.height
+        editorDepth = item.depth
+        editorFloorY = maxOf(editorFloorY, item.minimumFloorY)
+        editorSolid = item.kind.solidByDefault
+        editorColor = item.kind.color
+        renderer.resetEditorPreviewAnchor()
+        pushEditorPreview()
+    }
+
+    private fun resizeEditor(widthDelta: Float, heightDelta: Float, depthDelta: Float) {
+        if (selectedVolumeId == null && !editorDraftActive) return
+        editorWidth = (editorWidth + widthDelta).coerceAtLeast(gridSize())
+        editorHeight = (editorHeight + heightDelta).coerceAtLeast(gridSize())
+        editorDepth = (editorDepth + depthDelta).coerceAtLeast(gridSize())
+        updateSelectedVolume { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
+        pushEditorPreview()
+    }
+
+    private fun setEditorDimension(width: Float? = null, height: Float? = null, depth: Float? = null) {
+        if (selectedVolumeId == null && !editorDraftActive) return
+        editorWidth = (width ?: editorWidth).coerceAtLeast(gridSize())
+        editorHeight = (height ?: editorHeight).coerceAtLeast(gridSize())
+        editorDepth = (depth ?: editorDepth).coerceAtLeast(gridSize())
+        updateSelectedVolume { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
+        pushEditorPreview()
+    }
+
+    private fun showAddItemFamilies() {
+        val families = EDITOR_ITEM_FAMILIES
+        dialogBuilder()
+            .setTitle("Ajouter un objet")
+            .setItems(families.map { it.name }.toTypedArray()) { _, which ->
+                showAddItems(families[which])
+            }
+            .show()
+    }
+
+    private fun showAddItems(family: EditorItemFamily) {
+        dialogBuilder()
+            .setTitle(family.name)
+            .setItems(family.items.map { it.name }.toTypedArray()) { _, which ->
+                applyEditorItemPreset(family.items[which])
+            }
+            .setNegativeButton("Retour") { _, _ -> showAddItemFamilies() }
+            .show()
+    }
+
+    private fun moveEditorFloor(delta: Float) {
+        if (selectedVolumeId == null && !editorDraftActive) return
+        editorFloorY += delta
+        updateSelectedVolume { volume ->
+            val centerY = if (volume.kind == ToyboxVolumeKind.FLOOR) editorFloorY - volume.height * 0.5f
+                else editorFloorY + volume.height * 0.5f
+            volume.copy(y = centerY)
+        }
+        pushEditorPreview()
+    }
+
+    private fun placeEditorVolume() {
+        if (selectedVolumeId != null) {
+            clearEditorSelection()
+            return
+        }
+        if (!editorDraftActive) return
+        val volume = renderer.makePreviewVolume(System.nanoTime())
+        editorWorld = editorWorld.copy(volumes = editorWorld.volumes + volume)
+        editorDraftActive = false
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+        pushEditorPreview()
+    }
+
+    private fun deleteEditorVolume() {
+        val selected = selectedVolumeId
+        if (selected == null) return
+        editorWorld = editorWorld.copy(volumes = editorWorld.volumes.filterNot { it.id == selected })
+        selectedVolumeId = null
+        editorDraftActive = false
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+        pushEditorPreview()
+    }
+
+    private fun pushEditorInput() {
+        renderer.setEditorInput(editorStrafe, editorForward, editorYaw, editorPitch)
+    }
+
+    private fun pushEditorPreview() {
+        if (!::editorKindButton.isInitialized) return
+        val selected = selectedVolume()
+        val hasDraft = selected == null && editorDraftActive
+        val canEditBlock = selected != null || hasDraft
+        editorPanel.visibility = if (editorActive && canEditBlock) View.VISIBLE else View.GONE
+        editorPositionPanel.visibility = if (editorActive && canEditBlock) View.VISIBLE else View.GONE
+        editorToolsPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
+        editorKindButton.text = "+"
+        editorGridButton.text = "Grille ${gridLabel()}"
+        editorSolidButton.text = if (editorSolid) "Solide" else "Décor"
+        editorPlaceButton.text = when {
+            selected != null -> "Valider"
+            hasDraft -> "Poser"
+            else -> "Rien"
+        }
+        listOf(editorSolidButton, editorColorButton, editorPlaceButton).forEach {
+            it.isEnabled = canEditBlock || it === editorPlaceButton
+            it.alpha = if (canEditBlock) 0.82f else 0.38f
+        }
+        if (::editorWidthPicker.isInitialized) {
+            syncingEditorPickers = true
+            val maxTick = dimensionMaxTick()
+            listOf(editorWidthPicker, editorHeightPicker, editorDepthPicker).forEach { picker ->
+                picker.maxValue = maxTick
+            }
+            editorWidthPicker.value = dimensionToTick(editorWidth)
+            editorHeightPicker.value = dimensionToTick(editorHeight)
+            editorDepthPicker.value = dimensionToTick(editorDepth)
+            listOf(editorWidthPicker, editorHeightPicker, editorDepthPicker).forEach { picker ->
+                picker.setFormatter { formatEditorNumber(it * gridSize()) }
+                picker.invalidate()
+            }
+            syncingEditorPickers = false
+        }
+        editorColorButton.text = ""
+        editorColorButton.background = roundedBackground(editorColor, 16f)
+        editorInfo.text = buildString {
+            append(when {
+                selected != null -> "Bloc selectionne #${selected.id.toString().takeLast(4)}"
+                hasDraft -> "Nouveau bloc"
+                else -> "Aucun bloc selectionne"
+            })
+            append("\n")
+            append("Type: ").append(editorKind.label).append("  ").append(gridLabel())
+            append("  L ").append(formatEditorNumber(editorWidth))
+            append("  P ").append(formatEditorNumber(editorDepth))
+            append("  H ").append(formatEditorNumber(editorHeight))
+            append("  Y ").append(formatEditorNumber(editorFloorY))
+            append("\n")
+            append(if (editorSolid) "solide" else "decor seulement")
+            append("  ").append(editorWorld.volumes.size).append(" objets")
+            if (selected == null) append(if (hasDraft) "  |  Poser pour creer" else "  |  + pour ajouter")
+        }
+        renderer.setEditorSelection(selected)
+        renderer.setEditorPreviewVisible(selected != null || hasDraft)
+        renderer.setEditorPreview(editorKind, editorWidth, editorHeight, editorDepth, gridSize(), editorFloorY, editorSolid, editorColor)
+    }
+
+    private fun selectEditorVolume(id: Long) {
+        val volume = editorWorld.volumes.firstOrNull { it.id == id } ?: return
+        selectedVolumeId = id
+        editorDraftActive = false
+        editorKind = volume.kind
+        editorWidth = volume.width
+        editorHeight = volume.height
+        editorDepth = volume.depth
+        editorSolid = volume.solid
+        editorColor = volume.color
+        editorFloorY = if (volume.kind == ToyboxVolumeKind.FLOOR) volume.y + volume.height * 0.5f
+            else volume.y - volume.height * 0.5f
+        pushEditorPreview()
+    }
+
+    private fun moveEditorObject(strafe: Float, forward: Float) {
+        if (!editorActive) return
+        if (selectedVolumeId == null && !editorDraftActive) return
+        val delta = renderer.editorNudgeDelta(strafe, forward, gridSize())
+        val selected = selectedVolumeId
+        if (selected == null) {
+            renderer.moveEditorPreview(delta.x, delta.z)
+        } else {
+            updateSelectedVolume { volume ->
+                volume.copy(
+                    x = snapEditor(volume.x + delta.x),
+                    z = snapEditor(volume.z + delta.z)
+                )
+            }
+        }
+        pushEditorPreview()
+    }
+
+    private fun rotateEditorObject() {
+        if (selectedVolumeId == null && !editorDraftActive) return
+        val old = editorWidth
+        editorWidth = editorDepth
+        editorDepth = old
+        updateSelectedVolume { it.copy(width = editorWidth, depth = editorDepth) }
+        pushEditorPreview()
+    }
+
+    private fun snapEditor(value: Float): Float {
+        val grid = gridSize()
+        return kotlin.math.round(value / grid) * grid
+    }
+
+    private fun clearEditorSelection() {
+        selectedVolumeId = null
+        editorDraftActive = false
+        pushEditorPreview()
+    }
+
+    private fun selectedVolume() = selectedVolumeId?.let { id -> editorWorld.volumes.firstOrNull { it.id == id } }
+
+    private fun updateSelectedVolume(change: (ToyboxVolume) -> ToyboxVolume) {
+        val selected = selectedVolumeId ?: return
+        var changed = false
+        editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
+            if (volume.id == selected) {
+                changed = true
+                change(volume)
+            } else volume
+        })
+        if (changed) {
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+        }
+    }
+
+    private fun showEditorColorPicker() {
+        SimpleColorPickerDialog(
+            this,
+            currentColorHex = String.format(Locale.ROOT, "#%06X", editorColor and 0xFFFFFF),
+            showTextMode = false
+        ) { colorHex, _ ->
+            editorColor = Color.parseColor(colorHex)
+            updateSelectedVolume { it.copy(color = editorColor) }
+            pushEditorPreview()
+        }.show()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun bindEditorHold(view: View, changed: (Boolean) -> Unit) {
+        view.setOnTouchListener { touchedView, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+                    touchedView.isPressed = true
+                    touchedView.alpha = 1f
+                    changed(true)
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_POINTER_UP -> {
+                    touchedView.isPressed = false
+                    touchedView.alpha = 0.82f
+                    changed(false)
+                }
+            }
+            true
+        }
+    }
+
+    private fun makeEditorButton(label: String, color: Int = 0xAA4B617A.toInt()): Button =
+        makeButton(label, 72, color).apply { textSize = 12f }
+
+    private fun gridSize() = EDITOR_GRIDS[editorGridIndex].first
+
+    private fun gridLabel() = EDITOR_GRIDS[editorGridIndex].second
+
+    private fun dimensionStep() = maxOf(gridSize(), 0.25f)
+
+    private fun formatEditorNumber(value: Float): String =
+        if (kotlin.math.abs(value - value.toInt()) < 0.001f) value.toInt().toString()
+        else String.format(Locale.ROOT, "%.2f", value)
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun panelDragTouchListener(target: View): View.OnTouchListener {
+        var lastRawX = 0f
+        var lastRawY = 0f
+        return View.OnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    lastRawX = event.rawX
+                    lastRawY = event.rawY
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val parent = target.parent as? View ?: return@OnTouchListener true
+                    val dx = event.rawX - lastRawX
+                    val dy = event.rawY - lastRawY
+                    lastRawX = event.rawX
+                    lastRawY = event.rawY
+                    val minX = -target.left.toFloat()
+                    val maxX = (parent.width - target.right).toFloat()
+                    val minY = -target.top.toFloat()
+                    val maxY = (parent.height - target.bottom).toFloat()
+                    target.translationX = (target.translationX + dx).coerceIn(minX, maxX)
+                    target.translationY = (target.translationY + dy).coerceIn(minY, maxY)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> true
+                else -> true
+            }
+        }
+    }
+
+    private fun dimensionToTick(value: Float): Int =
+        kotlin.math.round(value / gridSize())
+            .toInt()
+            .coerceIn(EDITOR_DIMENSION_MIN_TICKS, dimensionMaxTick())
+
+    private fun dimensionMaxTick(): Int =
+        kotlin.math.round(EDITOR_DIMENSION_MAX_SIZE / gridSize())
+            .toInt()
+            .coerceAtLeast(EDITOR_DIMENSION_MIN_TICKS)
+
+    @SuppressLint("ClickableViewAccessibility")
     private fun bindHoldButton(view: View, changed: (Boolean) -> Unit) {
         var activePointerId = MotionEvent.INVALID_POINTER_ID
         releaseControls += {
@@ -520,7 +1132,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             changed(false)
         }
         view.setOnTouchListener { touchedView, event ->
-            if (paused) return@setOnTouchListener true
+            if (paused || editorActive) return@setOnTouchListener true
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
                     activePointerId = event.getPointerId(event.actionIndex)
@@ -559,7 +1171,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun updateHud(state: ToyboxRacersRenderer.HudState) {
-        if (isFinishing || isDestroyed || state.mode != currentMode || state.scene != currentScene) return
+        if (isFinishing || isDestroyed || editorActive || state.mode != currentMode || state.scene != currentScene) return
         minimap.update(state)
         if (state.turboLevel > lastTurboLevel) vibrate(18L, 35 + state.turboLevel * 20)
         if (state.turboReleaseSerial != lastTurboReleaseSerial) vibrate(42L, 105)
@@ -681,11 +1293,65 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
     }
 
+    private data class EditorItemFamily(
+        val name: String,
+        val items: List<EditorItemPreset>
+    )
+
+    private data class EditorItemPreset(
+        val name: String,
+        val kind: ToyboxVolumeKind,
+        val width: Float,
+        val height: Float,
+        val depth: Float,
+        val minimumFloorY: Float = 0f
+    )
+
     companion object {
         private const val PREFS_NAME = "toybox_racers_save"
         private const val KEY_DIFFICULTY = "difficulty"
         private const val KEY_BEST_PREFIX = "best_time_"
         private const val KEY_HOUSE_SEED = "house_seed_v1"
         private const val KEY_ROOM_CIRCUIT = "house_circuit_v1_"
+        private val EDITOR_GRIDS = arrayOf(
+            1f to "10cm",
+            0.1f to "1cm",
+            0.01f to "0.1cm"
+        )
+        private const val EDITOR_DIMENSION_MIN_TICKS = 1
+        private const val EDITOR_DIMENSION_MAX_SIZE = 100f
+        private val EDITOR_ITEM_FAMILIES = listOf(
+            EditorItemFamily(
+                "Construction",
+                listOf(
+                    EditorItemPreset("Sol", ToyboxVolumeKind.FLOOR, 24f, 0.6f, 24f),
+                    EditorItemPreset("Mur", ToyboxVolumeKind.WALL, 18f, 8f, 1f),
+                    EditorItemPreset("Plafond", ToyboxVolumeKind.FLOOR, 24f, 0.5f, 24f, minimumFloorY = 8f),
+                    EditorItemPreset("Rambarde", ToyboxVolumeKind.RAIL, 14f, 3.2f, 0.8f)
+                )
+            ),
+            EditorItemFamily(
+                "Ouvertures",
+                listOf(
+                    EditorItemPreset("Porte", ToyboxVolumeKind.DOOR, 5f, 7f, 0.8f),
+                    EditorItemPreset("Fenetre", ToyboxVolumeKind.WINDOW, 6f, 4f, 0.5f, minimumFloorY = 3f)
+                )
+            ),
+            EditorItemFamily(
+                "Circulation",
+                listOf(
+                    EditorItemPreset("Planche / rampe", ToyboxVolumeKind.RAMP, 8f, 4f, 18f),
+                    EditorItemPreset("Escalier", ToyboxVolumeKind.STAIR, 8f, 4f, 14f),
+                    EditorItemPreset("Conduit large", ToyboxVolumeKind.DUCT, 12f, 5f, 22f)
+                )
+            ),
+            EditorItemFamily(
+                "Meubles et decor",
+                listOf(
+                    EditorItemPreset("Meuble bloc", ToyboxVolumeKind.FURNITURE, 12f, 5f, 8f),
+                    EditorItemPreset("Petit decor", ToyboxVolumeKind.DECOR, 3f, 3f, 3f)
+                )
+            )
+        )
     }
 }

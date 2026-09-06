@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
 import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import kotlin.math.cos
+import kotlin.math.abs
 import kotlin.math.sin
 
 /** Carte fixe : le triangle blanc montre le joueur et son cap, les points les IA. */
@@ -16,6 +17,7 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
     private var track = PrototypeTrack()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val route = Path()
+    private val levelRoutes = Array(3) { Path() }
     private val arrow = Path()
     private val density = resources.displayMetrics.density
     private var scale = 1f
@@ -48,11 +50,9 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
         // La pièce entière reste visible, y compris lorsque le joueur explore.
         // En mode Maison, la carte couvre les quatre pièces et le couloir.
         scale = if (track.scene.circuit.usesHouseLayout) {
-            val (minX, maxX) = HouseGeometry.corridorBounds()
-            val maxDepth = HouseGeometry.rooms.maxOf { kotlin.math.abs(it.centerZ) + PrototypeTrack.ROOM_HALF_DEPTH }
             minOf(
-                (w - 16f * density).coerceAtLeast(1f) / (maxX - minX),
-                (h - 16f * density).coerceAtLeast(1f) / (2f * maxDepth)
+                (w - 16f * density).coerceAtLeast(1f) / (2f * HouseGeometry.HALF_WIDTH),
+                (h - 16f * density).coerceAtLeast(1f) / (2f * HouseGeometry.HALF_DEPTH)
             )
         } else {
             minOf(
@@ -61,10 +61,22 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
             )
         }
         route.reset()
+        levelRoutes.forEach { it.reset() }
         var connected = false
+        var previousLevel = -1
         repeat(481) { index ->
             val distance = track.length * index / 480f
             val sample = track.sampleAt(distance)
+            if (track.scene.circuit.usesHouseLayout) {
+                val level = ((sample.position.y + HouseGeometry.LEVEL_HEIGHT * .5f) /
+                    HouseGeometry.LEVEL_HEIGHT).toInt().coerceIn(0, 2)
+                if (level != previousLevel) {
+                    levelRoutes[level].moveTo(mapX(sample.position.x), mapZ(sample.position.z))
+                } else {
+                    levelRoutes[level].lineTo(mapX(sample.position.x), mapZ(sample.position.z))
+                }
+                previousLevel = level
+            }
             if (track.isJumpGap(distance)) {
                 connected = false
             } else {
@@ -85,6 +97,13 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
         paint.strokeJoin = Paint.Join.ROUND
         paint.color = 0xBBD7DCF0.toInt()
         canvas.drawPath(route, paint)
+        if (track.scene.circuit.usesHouseLayout) {
+            val level = (((state?.playerY ?: 0f) + HouseGeometry.LEVEL_HEIGHT * .5f) /
+                HouseGeometry.LEVEL_HEIGHT).toInt().coerceIn(0, 2)
+            paint.color = 0xFFFFE7A8.toInt()
+            paint.strokeWidth = 3.5f * density
+            canvas.drawPath(levelRoutes[level], paint)
+        }
         paint.style = Paint.Style.FILL
         val start = track.sampleAt(track.length * RaceSession.START_FRACTION).position
         paint.color = 0xFFFFE7A8.toInt()
@@ -93,6 +112,8 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
         val snapshot = state ?: return
         snapshot.rivalPositions.forEachIndexed { index, position ->
             paint.color = colors[index % colors.size]
+            if (track.scene.circuit.usesHouseLayout && abs(position.y - snapshot.playerY) > 13f)
+                paint.alpha = 65
             canvas.drawCircle(mapX(position.x), mapZ(position.z), 2.8f * density, paint)
         }
         val x = mapX(snapshot.playerX)

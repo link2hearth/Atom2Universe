@@ -5,6 +5,9 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
 import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
@@ -19,7 +22,9 @@ import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.exp
+import kotlin.math.sin
 
 internal class ToyboxRacersRenderer(
     initialDifficulty: RaceDifficulty,
@@ -48,6 +53,7 @@ internal class ToyboxRacersRenderer(
         val finishSerial: Int,
         val mode: PlayMode,
         val playerX: Float,
+        val playerY: Float,
         val playerZ: Float,
         val playerYaw: Float,
         val rivalPositions: List<Vec3>,
@@ -73,6 +79,23 @@ internal class ToyboxRacersRenderer(
     @Volatile private var paused = false
     @Volatile private var discardFrameTime = false
     @Volatile private var requestedScene = initialScene
+    @Volatile private var editorActive = false
+    @Volatile private var editorForwardInput = 0f
+    @Volatile private var editorStrafeInput = 0f
+    @Volatile private var editorYawInput = 0f
+    @Volatile private var editorPitchInput = 0f
+    @Volatile private var requestedWorld = ToyboxWorld()
+    @Volatile private var worldDirty = true
+    @Volatile private var previewKind = ToyboxVolumeKind.FLOOR
+    @Volatile private var previewWidth = 20f
+    @Volatile private var previewHeight = 0.6f
+    @Volatile private var previewDepth = 20f
+    @Volatile private var previewGrid = 1f
+    @Volatile private var previewFloorY = 0f
+    @Volatile private var previewSolid = true
+    @Volatile private var previewColor = ToyboxVolumeKind.FLOOR.color
+    @Volatile private var selectedPreview: ToyboxVolume? = null
+    @Volatile private var previewVisible = false
 
     private lateinit var shader: ToyboxShader
     private lateinit var trackMesh: ColoredMesh
@@ -80,6 +103,10 @@ internal class ToyboxRacersRenderer(
     private lateinit var carMesh: ColoredMesh
     private lateinit var shadowMesh: ColoredMesh
     private lateinit var rivalMeshes: List<ColoredMesh>
+    private var worldMesh: ColoredMesh? = null
+    private var previewMesh: ColoredMesh? = null
+    private var currentWorld = ToyboxWorld()
+    private var lastPreviewVolume: ToyboxVolume? = null
 
     private val projection = FloatArray(16)
     private val view = FloatArray(16)
@@ -88,6 +115,7 @@ internal class ToyboxRacersRenderer(
     private val carModel = FloatArray(16)
     private val shadowModel = FloatArray(16)
     private val rivalModels = Array(5) { FloatArray(16) }
+    private val inverseViewProjection = FloatArray(16)
 
     private var lastFrameNanos = 0L
     private var accumulator = 0f
@@ -99,6 +127,14 @@ internal class ToyboxRacersRenderer(
     private var cameraKickVisual = 0f
     private var visualDriftLean = 0f
     private var visualRoll = 0f
+    private var editorCameraPosition = Vec3(0f, 16f, -38f)
+    private var editorCameraYaw = 0f
+    private var editorCameraPitch = -0.22f
+    private var previewAnchorReady = false
+    private var previewAnchorX = 0f
+    private var previewAnchorZ = 0f
+    private var surfaceWidth = 1
+    private var surfaceHeight = 1
     // État de rendu interpolé entre deux pas de simulation. L'écran affiche
     // 120 images par seconde alors que la simulation en calcule 60 : sans ces
     // deux photos, une image sur deux montrerait exactement la même chose que
@@ -154,6 +190,139 @@ internal class ToyboxRacersRenderer(
         resetRequested = true
     }
 
+    fun setEditorActive(value: Boolean) {
+        editorActive = value
+        discardFrameTime = true
+        if (value) {
+            steeringInput = 0f
+            acceleratorInput = false
+            brakeInput = false
+            editorCameraPosition = Vec3(renderCarPosition.x, maxOf(7f, renderCarPosition.y + 8f), renderCarPosition.z - 28f)
+            editorCameraYaw = renderCarYaw
+            editorCameraPitch = -0.22f
+            resetEditorPreviewAnchor()
+            cameraReady = false
+        } else {
+            editorForwardInput = 0f
+            editorStrafeInput = 0f
+            editorYawInput = 0f
+            editorPitchInput = 0f
+            cameraReady = false
+        }
+    }
+
+    fun setEditorInput(strafe: Float, forward: Float, yaw: Float, pitch: Float) {
+        editorStrafeInput = strafe.coerceIn(-1f, 1f)
+        editorForwardInput = forward.coerceIn(-1f, 1f)
+        editorYawInput = yaw.coerceIn(-1f, 1f)
+        editorPitchInput = pitch.coerceIn(-1f, 1f)
+    }
+
+    fun setEditorWorld(world: ToyboxWorld) {
+        requestedWorld = world
+        worldDirty = true
+    }
+
+    fun setEditorSelection(volume: ToyboxVolume?) {
+        selectedPreview = volume
+        lastPreviewVolume = null
+    }
+
+    fun setEditorPreviewVisible(value: Boolean) {
+        previewVisible = value
+        lastPreviewVolume = null
+    }
+
+    fun resetEditorPreviewAnchor() {
+        val forward = horizontalEditorForward()
+        previewAnchorX = snap(editorCameraPosition.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
+        previewAnchorZ = snap(editorCameraPosition.z + forward.z * 18f, previewGrid.coerceAtLeast(0.01f))
+        previewAnchorReady = true
+        lastPreviewVolume = null
+    }
+
+    fun setEditorPreview(
+        kind: ToyboxVolumeKind,
+        width: Float,
+        height: Float,
+        depth: Float,
+        grid: Float,
+        floorY: Float,
+        solid: Boolean,
+        color: Int
+    ) {
+        previewKind = kind
+        previewWidth = width.coerceAtLeast(0.05f)
+        previewHeight = height.coerceAtLeast(0.05f)
+        previewDepth = depth.coerceAtLeast(0.05f)
+        previewGrid = grid.coerceAtLeast(0.01f)
+        previewFloorY = floorY
+        previewSolid = solid
+        previewColor = color
+        lastPreviewVolume = null
+    }
+
+    fun moveEditorPreview(dx: Float, dz: Float) {
+        ensurePreviewAnchor()
+        val grid = previewGrid.coerceAtLeast(0.01f)
+        previewAnchorX = snap(previewAnchorX + dx, grid)
+        previewAnchorZ = snap(previewAnchorZ + dz, grid)
+        lastPreviewVolume = null
+    }
+
+    fun editorNudgeDelta(strafe: Float, forward: Float, grid: Float): Vec3 {
+        val horizontalForward = horizontalEditorForward()
+        val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
+        return right * (strafe * grid) + horizontalForward * (forward * grid)
+    }
+
+    fun moveEditorCameraHeight(delta: Float) {
+        editorCameraPosition = Vec3(
+            editorCameraPosition.x,
+            (editorCameraPosition.y + delta).coerceIn(2.2f, 65f),
+            editorCameraPosition.z
+        )
+    }
+
+    fun makePreviewVolume(id: Long): ToyboxVolume {
+        val grid = previewGrid.coerceAtLeast(0.01f)
+        ensurePreviewAnchor()
+        val rawX = previewAnchorX
+        val rawZ = previewAnchorZ
+        val width = snap(previewWidth, grid).coerceAtLeast(grid)
+        val height = snap(previewHeight, grid).coerceAtLeast(grid)
+        val depth = snap(previewDepth, grid).coerceAtLeast(grid)
+        val floorY = snap(previewFloorY, grid)
+        val centerY = if (previewKind == ToyboxVolumeKind.FLOOR) floorY - height * 0.5f else floorY + height * 0.5f
+        return ToyboxVolume(
+            id = id,
+            kind = previewKind,
+            x = snap(rawX, grid),
+            y = centerY,
+            z = snap(rawZ, grid),
+            width = width,
+            height = height,
+            depth = depth,
+            solid = previewSolid,
+            color = previewColor
+        )
+    }
+
+    private fun ensurePreviewAnchor() {
+        if (!previewAnchorReady) resetEditorPreviewAnchor()
+    }
+
+    fun pickVolume(screenX: Float, screenY: Float, volumes: List<ToyboxVolume>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return volumes
+            .mapNotNull { volume -> rayBoxDistance(near, direction, volume)?.let { distance -> volume.id to distance } }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.72f, 0.86f, 0.94f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
@@ -172,6 +341,9 @@ internal class ToyboxRacersRenderer(
         )
         rivalMeshes = rivalColors.map { color -> PrototypeMeshFactory.car(color).also { it.upload() } }
         shadowMesh = PrototypeMeshFactory.shadow().also { it.upload() }
+        currentWorld = requestedWorld
+        worldMesh?.destroy()
+        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
         turboEffects.upload()
         turboEffects.reset(car.turboReleaseSerial)
         Matrix.setIdentityM(identity, 0)
@@ -186,6 +358,8 @@ internal class ToyboxRacersRenderer(
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        surfaceWidth = width.coerceAtLeast(1)
+        surfaceHeight = height.coerceAtLeast(1)
         GLES30.glViewport(0, 0, width, height)
         val aspect = width.toFloat() / height.coerceAtLeast(1)
         Matrix.perspectiveM(projection, 0, 58f, aspect, 0.1f, 420f)
@@ -217,6 +391,14 @@ internal class ToyboxRacersRenderer(
             mode = requestedMode
             resetRace()
             resetRequested = false
+        }
+
+        rebuildWorldMeshesIfNeeded()
+
+        if (editorActive) {
+            updateEditorCamera(frameSeconds)
+            renderScene(frameSeconds)
+            return
         }
 
         accumulator = if (skipTime) 0f else (accumulator + frameSeconds).coerceAtMost(0.20f)
@@ -274,6 +456,7 @@ internal class ToyboxRacersRenderer(
                     finishSerial = raceSession.finishSerial,
                     mode = mode,
                     playerX = car.worldPosition.x,
+                    playerY = car.worldPosition.y,
                     playerZ = car.worldPosition.z,
                     playerYaw = car.yawRadians,
                     rivalPositions = if (mode == PlayMode.RACE) rivals.map { it.worldPosition } else emptyList(),
@@ -361,9 +544,58 @@ internal class ToyboxRacersRenderer(
         Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
     }
 
+    private fun updateEditorCamera(frameSeconds: Float) {
+        val seconds = frameSeconds.coerceAtMost(0.05f)
+        editorCameraYaw += editorYawInput * seconds * 2.4f
+        editorCameraPitch = (editorCameraPitch + editorPitchInput * seconds * 1.45f).coerceIn(-1.05f, 0.55f)
+        val horizontalForward = horizontalEditorForward()
+        val forward = editorForward()
+        val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
+        val speed = 35f
+        editorCameraPosition = editorCameraPosition +
+            horizontalForward * (editorForwardInput * speed * seconds) +
+            right * (editorStrafeInput * speed * seconds) +
+            Vec3(0f, 0f, 0f)
+        editorCameraPosition = Vec3(
+            editorCameraPosition.x.coerceIn(-180f, 180f),
+            editorCameraPosition.y.coerceIn(2.2f, 65f),
+            editorCameraPosition.z.coerceIn(-150f, 150f)
+        )
+        val target = editorCameraPosition + forward * 18f
+        Matrix.setLookAtM(
+            view, 0,
+            editorCameraPosition.x, editorCameraPosition.y, editorCameraPosition.z,
+            target.x, target.y, target.z,
+            0f, 1f, 0f
+        )
+        Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
+        val preview = when {
+            selectedPreview != null -> selectedPreview
+            previewVisible -> makePreviewVolume(PREVIEW_ID)
+            else -> null
+        }
+        if (preview != lastPreviewVolume) {
+            previewMesh?.destroy()
+            previewMesh = preview?.let { PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList()), it).also { mesh -> mesh.upload() } }
+            lastPreviewVolume = preview
+        }
+    }
+
     private fun renderScene(frameSeconds: Float) {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         GLES30.glUseProgram(shader.program)
+        if (editorActive) {
+            worldMesh?.draw(shader, viewProjection, identity)
+            GLES30.glEnable(GLES30.GL_BLEND)
+            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+            GLES30.glDepthMask(false)
+            GLES30.glDisable(GLES30.GL_CULL_FACE)
+            previewMesh?.draw(shader, viewProjection, identity)
+            GLES30.glEnable(GLES30.GL_CULL_FACE)
+            GLES30.glDepthMask(true)
+            GLES30.glDisable(GLES30.GL_BLEND)
+            return
+        }
         environmentMesh.draw(shader, viewProjection, identity)
         trackMesh.draw(shader, viewProjection, identity)
 
@@ -453,11 +685,78 @@ internal class ToyboxRacersRenderer(
      */
     private fun smoothing(rate: Float, seconds: Float) = 1f - exp(-rate * seconds)
 
+    private fun rebuildWorldMeshesIfNeeded() {
+        if (!worldDirty) return
+        currentWorld = requestedWorld
+        worldMesh?.destroy()
+        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
+        previewMesh?.destroy()
+        previewMesh = null
+        lastPreviewVolume = null
+        worldDirty = false
+    }
+
+    private fun horizontalEditorForward() = Vec3(sin(editorCameraYaw), 0f, cos(editorCameraYaw)).normalized()
+
+    private fun editorForward(): Vec3 {
+        val flat = cos(editorCameraPitch)
+        return Vec3(
+            sin(editorCameraYaw) * flat,
+            sin(editorCameraPitch),
+            cos(editorCameraYaw) * flat
+        ).normalized()
+    }
+
+    private fun snap(value: Float, grid: Float): Float =
+        kotlin.math.round(value / grid) * grid
+
+    private fun unproject(screenX: Float, screenY: Float, ndcZ: Float): Vec3? {
+        val ndcX = screenX / surfaceWidth.toFloat() * 2f - 1f
+        val ndcY = 1f - screenY / surfaceHeight.toFloat() * 2f
+        val input = floatArrayOf(ndcX, ndcY, ndcZ, 1f)
+        val output = FloatArray(4)
+        Matrix.multiplyMV(output, 0, inverseViewProjection, 0, input, 0)
+        val w = output[3]
+        if (kotlin.math.abs(w) < 0.0001f) return null
+        return Vec3(output[0] / w, output[1] / w, output[2] / w)
+    }
+
+    private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: ToyboxVolume): Float? {
+        val minX = box.left
+        val maxX = box.right
+        val minY = box.y - box.height * 0.5f
+        val maxY = box.y + box.height * 0.5f
+        val minZ = box.back
+        val maxZ = box.front
+        var tMin = 0f
+        var tMax = 500f
+
+        fun slab(originValue: Float, directionValue: Float, minValue: Float, maxValue: Float): Boolean {
+            if (kotlin.math.abs(directionValue) < 0.0001f) return originValue in minValue..maxValue
+            var t1 = (minValue - originValue) / directionValue
+            var t2 = (maxValue - originValue) / directionValue
+            if (t1 > t2) {
+                val tmp = t1
+                t1 = t2
+                t2 = tmp
+            }
+            tMin = maxOf(tMin, t1)
+            tMax = minOf(tMax, t2)
+            return tMin <= tMax
+        }
+
+        if (!slab(origin.x, direction.x, minX, maxX)) return null
+        if (!slab(origin.y, direction.y, minY, maxY)) return null
+        if (!slab(origin.z, direction.z, minZ, maxZ)) return null
+        return tMin
+    }
+
     companion object {
         private const val FIXED_STEP = 1f / 60f
         /** Équivaut à l'ancien 0,14 par image, mais mesuré à 60 images par seconde. */
         private const val PITCH_SMOOTHING_RATE = 9.05f
         private const val MAX_VISUAL_PITCH = 0.76f
         private const val CAR_VISUAL_SUSPENSION_OFFSET = -0.21f
+        private const val PREVIEW_ID = -1L
     }
 }

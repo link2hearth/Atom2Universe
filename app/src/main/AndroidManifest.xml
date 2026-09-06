@@ -423,6 +423,12 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".games.toyboxracers.editor.ToyboxWorldEditorActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.match3.Match3Activity"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
