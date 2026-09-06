@@ -179,13 +179,11 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             .create()
         activeDialog = dialog
 
-        list.addView(sectionHeader(str(R.string.toybox_menu_worlds_section)))
-        ToyboxWorld.builtInWorlds().forEach { world ->
-            list.addView(loadRow(world.name, str(R.string.toybox_menu_blocks_count, world.volumes.size)) {
-                dialog.dismiss()
-                host.loadCustomWorld(world, null)
-            })
-        }
+        list.addView(sectionHeader("Nouveau"))
+        list.addView(loadRow("Nouveau circuit libre", "Piste editable propre") {
+            dialog.dismiss()
+            host.loadCustomWorld(ToyboxWorld(), null)
+        })
         list.addView(loadRow(str(R.string.toybox_house_mode), str(R.string.toybox_menu_classic_circuits)) {
             dialog.dismiss()
             host.loadLegacyScene(SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
@@ -208,14 +206,20 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
         } else {
             val stamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
             creations.forEach { file ->
-                list.addView(loadRow(file.nameWithoutExtension, stamp.format(file.lastModified())) {
+                val world = host.worldStore.loadCreation(file)
+                val label = world?.name ?: file.nameWithoutExtension
+                val details = "${stamp.format(file.lastModified())}  |  ${world?.trackSections?.size ?: 0} sections"
+                list.addView(loadRow(label, details, onLongClick = {
+                    showCreationActions(file)
+                    true
+                }) {
                     dialog.dismiss()
-                    val world = host.worldStore.loadCreation(file)
-                    if (world == null) {
+                    val loaded = host.worldStore.loadCreation(file)
+                    if (loaded == null) {
                         Toast.makeText(activity, str(R.string.toybox_menu_no_creations), Toast.LENGTH_SHORT).show()
                         host.resumeGame()
                     } else {
-                        host.loadCustomWorld(world, file)
+                        host.loadCustomWorld(loaded, file)
                     }
                 })
             }
@@ -231,7 +235,7 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
         setPadding(dp(4), dp(10), dp(4), dp(6))
     }
 
-    private fun loadRow(label: String, sub: String?, onClick: () -> Unit): View {
+    private fun loadRow(label: String, sub: String?, onLongClick: (() -> Boolean)? = null, onClick: () -> Unit): View {
         val row = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(9), dp(12), dp(9))
@@ -239,6 +243,7 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             isClickable = true
             isFocusable = true
             setOnClickListener { onClick() }
+            if (onLongClick != null) setOnLongClickListener { onLongClick() }
         }
         row.addView(TextView(activity).apply {
             text = label
@@ -257,6 +262,69 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             addView(row, LinearLayout.LayoutParams(-1, -2))
             layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) }
         }
+    }
+
+    private fun showCreationActions(file: File) {
+        val world = host.worldStore.loadCreation(file)
+        val title = world?.name ?: file.nameWithoutExtension
+        host.dialogBuilder()
+            .setTitle(title)
+            .setItems(arrayOf("Dupliquer", "Renommer", "Supprimer")) { _, which ->
+                when (which) {
+                    0 -> {
+                        host.worldStore.duplicateCreation(file)
+                        Toast.makeText(activity, "Creation dupliquee", Toast.LENGTH_SHORT).show()
+                        showLoad()
+                    }
+                    1 -> showRenameCreation(file, title)
+                    2 -> confirmDeleteCreation(file, title)
+                }
+            }
+            .setNegativeButton(str(R.string.toybox_menu_back)) { _, _ -> showLoad() }
+            .setOnCancelListener { showLoad() }
+            .create()
+            .trackAndShow()
+    }
+
+    private fun showRenameCreation(file: File, currentName: String) {
+        val builder = host.dialogBuilder()
+        val input = EditText(builder.context).apply {
+            setText(currentName)
+            selectAll()
+        }
+        val dialog = builder
+            .setTitle("Renommer")
+            .setView(input)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel) { _, _ -> showLoad() }
+            .setOnCancelListener { showLoad() }
+            .create()
+        activeDialog = dialog
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val name = input.text.toString().trim().ifBlank { currentName }
+                host.worldStore.renameCreation(file, name)
+                Toast.makeText(activity, "Creation renommee", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+                showLoad()
+            }
+        }
+        dialog.show()
+    }
+
+    private fun confirmDeleteCreation(file: File, name: String) {
+        host.dialogBuilder()
+            .setTitle("Supprimer")
+            .setMessage("Supprimer \"$name\" ?")
+            .setPositiveButton("Supprimer") { _, _ ->
+                host.worldStore.deleteCreation(file)
+                Toast.makeText(activity, "Creation supprimee", Toast.LENGTH_SHORT).show()
+                showLoad()
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> showLoad() }
+            .setOnCancelListener { showLoad() }
+            .create()
+            .trackAndShow()
     }
 
     private fun showLegacyRoomPicker() {

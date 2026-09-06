@@ -1,12 +1,15 @@
 package com.Atom2Universe.app.games.toyboxracers.driving
 
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.sin
@@ -79,7 +82,9 @@ internal class ArcadeCar(
     private var reverseHoldSeconds = 0f
     private var steeringSmoothed = 0f
     private var driftBlend = 0f
-    private var editorWorld = ToyboxWorld(volumes = emptyList())
+    private var editorWorld = ToyboxWorld(volumes = emptyList(), trackSections = emptyList())
+    private var editorTrackColliders = emptyList<EditorTrackCollider>()
+    private var editorTrackIndex = EditorTrackIndex(emptyList())
     /** Vrai quand un monde d'éditeur (pas un circuit classique) est conduit :
      * la piste procédurale (route, murs de pièce, meubles, jouets) est alors
      * totalement ignorée, seul `editorWorld` fait office de sol/obstacles. */
@@ -91,6 +96,8 @@ internal class ArcadeCar(
 
     fun setEditorWorld(world: ToyboxWorld) {
         editorWorld = world
+        editorTrackColliders = world.trackSections.map(::EditorTrackCollider)
+        editorTrackIndex = EditorTrackIndex(editorTrackColliders)
     }
 
     fun reset() {
@@ -362,12 +369,14 @@ internal class ArcadeCar(
         groundedOnRoad = groundedContacts.any { it.road }
         val maximumBodySurfaceY = worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f
         val floorY = (if (sandboxMode) {
-            editorWorldSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY).coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y)
+            maxOf(
+                editorTrackSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY),
+                editorWorldSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY)
+            ).coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y)
         } else {
             maxOf(
                 track.groundHeightAt(worldX, worldZ),
-                track.furnitureHeightAt(worldX, worldZ, maximumBodySurfaceY),
-                editorWorldSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY)
+                track.furnitureHeightAt(worldX, worldZ, maximumBodySurfaceY)
             )
         }) + spec.rideHeight
         updateSuspensionPose(dt, wheelContacts)
@@ -419,8 +428,8 @@ internal class ArcadeCar(
         // Résoudre les flancs avec la hauteur de cette image : l'ancienne
         // hauteur confondait l'arrivée sur un plateau avec un choc de face.
         if (!airborne) resolveGroundRoadCollision(previousWorldX, previousWorldZ)
-        resolveFurnitureSides()
-        resolveEditorWorldSides()
+        if (!sandboxMode) resolveFurnitureSides()
+        if (sandboxMode) resolveEditorWorldSides()
         if (track.scene.circuit.usesHouseLayout && airborneY < -12f) {
             // Une sortie de la maquette n'abandonne pas le joueur sur un sol invisible.
             velocityX = 0f
@@ -438,6 +447,15 @@ internal class ArcadeCar(
     }
 
     private fun placeAtStart() {
+        editorTrackIndex.firstOrNull()?.takeIf { sandboxMode }?.let { section ->
+            worldX = section.startX
+            worldZ = section.startZ
+            yawRadians = section.yawRadians
+            airborneY = section.startY + PrototypeTrack.ROAD_SURFACE_LIFT + spec.rideHeight
+            worldPosition = Vec3(worldX, airborneY, worldZ)
+            previousDistance = distance
+            return
+        }
         val start = track.sampleAt(distance)
         worldX = start.position.x
         worldZ = start.position.z
@@ -504,9 +522,11 @@ internal class ArcadeCar(
     /** L'appui est la plus haute surface accessible sous la roue, sans biais de tour. */
     private fun supportAt(wheelX: Float, wheelZ: Float): Support {
         val maximumY = airborneY - spec.rideHeight + if (airborne) .02f else MAX_SUPPORT_RISE
-        val editorY = editorWorldSurfaceHeightAt(wheelX, wheelZ, maximumY)
         if (sandboxMode) {
-            return Support(editorY.coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y), false)
+            val editorRoadY = editorTrackSurfaceHeightAt(wheelX, wheelZ, maximumY)
+            val editorY = editorWorldSurfaceHeightAt(wheelX, wheelZ, maximumY)
+            val surface = maxOf(editorRoadY, editorY).coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y)
+            return Support(surface, editorRoadY >= surface - 0.20f)
         }
         val collision = track.decksAt(wheelX, wheelZ, spec.wheelRadius)
             .filter { it.sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT <= maximumY }
@@ -518,7 +538,7 @@ internal class ArcadeCar(
             wheelZ,
             maximumY
         )
-        val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY, editorY)
+        val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY)
         return if (onDeck && roadSurfaceY >= realSurfaceY - 0.20f) {
             Support(roadSurfaceY, true)
         } else {
@@ -873,7 +893,118 @@ internal class ArcadeCar(
         return height
     }
 
+    private fun editorTrackSurfaceHeightAt(x: Float, z: Float, maximumY: Float): Float {
+        var height = Float.NEGATIVE_INFINITY
+        for (section in editorTrackIndex.candidates(x, z, spec.wheelRadius)) {
+            val surfaceY = section.surfaceYAt(x, z) ?: continue
+            if (surfaceY <= maximumY + EDITOR_WORLD_SURFACE_TOLERANCE) height = maxOf(height, surfaceY)
+        }
+        return height
+    }
+
+    private class EditorTrackIndex(private val sections: List<EditorTrackCollider>) {
+        private val buckets = HashMap<Long, MutableList<EditorTrackCollider>>()
+
+        init {
+            sections.forEach { section ->
+                val minCellX = cell(section.minX)
+                val maxCellX = cell(section.maxX)
+                val minCellZ = cell(section.minZ)
+                val maxCellZ = cell(section.maxZ)
+                for (cx in minCellX..maxCellX) {
+                    for (cz in minCellZ..maxCellZ) {
+                        buckets.getOrPut(key(cx, cz)) { ArrayList() }.add(section)
+                    }
+                }
+            }
+        }
+
+        fun firstOrNull(): EditorTrackCollider? = sections.firstOrNull()
+
+        fun candidates(x: Float, z: Float, margin: Float): List<EditorTrackCollider> {
+            if (sections.size < 80) return sections
+            val seen = HashSet<EditorTrackCollider>()
+            val result = ArrayList<EditorTrackCollider>()
+            val minCellX = cell(x - margin)
+            val maxCellX = cell(x + margin)
+            val minCellZ = cell(z - margin)
+            val maxCellZ = cell(z + margin)
+            for (cx in minCellX..maxCellX) {
+                for (cz in minCellZ..maxCellZ) {
+                    buckets[key(cx, cz)]?.forEach { section ->
+                        if (seen.add(section) &&
+                            x >= section.minX - margin && x <= section.maxX + margin &&
+                            z >= section.minZ - margin && z <= section.maxZ + margin) {
+                            result += section
+                        }
+                    }
+                }
+            }
+            return result
+        }
+
+        private fun cell(value: Float): Int = floor(value / CELL_SIZE).toInt()
+
+        private fun key(x: Int, z: Int): Long = (x.toLong() shl 32) xor (z.toLong() and 0xFFFFFFFFL)
+
+        companion object {
+            private const val CELL_SIZE = 18f
+        }
+    }
+
+    private class EditorTrackCollider(section: ToyboxTrackSection) {
+        val startY = section.y
+        val endY = section.endY
+        val yawRadians = section.yawRadians
+        private val x = section.x
+        private val z = section.z
+        private val forwardX = section.forwardX
+        private val forwardZ = section.forwardZ
+        private val rightX = section.rightX
+        private val rightZ = section.rightZ
+        private val halfLength = section.halfLength
+        private val halfWidth = section.halfWidth
+        private val length = section.length.coerceAtLeast(0.0001f)
+        private val bankSin = sin(section.bankRadians)
+        val startX = section.startX
+        val startZ = section.startZ
+        val minX: Float
+        val maxX: Float
+        val minZ: Float
+        val maxZ: Float
+
+        init {
+            val corners = listOf(
+                cornerX(-1f, -1f) to cornerZ(-1f, -1f),
+                cornerX(-1f, 1f) to cornerZ(-1f, 1f),
+                cornerX(1f, -1f) to cornerZ(1f, -1f),
+                cornerX(1f, 1f) to cornerZ(1f, 1f)
+            )
+            minX = corners.minOf { it.first }
+            maxX = corners.maxOf { it.first }
+            minZ = corners.minOf { it.second }
+            maxZ = corners.maxOf { it.second }
+        }
+
+        fun surfaceYAt(worldX: Float, worldZ: Float): Float? {
+            val dx = worldX - x
+            val dz = worldZ - z
+            val along = dx * forwardX + dz * forwardZ
+            val side = dx * rightX + dz * rightZ
+            if (along !in -halfLength..halfLength || side !in -halfWidth..halfWidth) return null
+            val t = (along + halfLength) / length
+            return startY + (endY - startY) * t + side * bankSin
+        }
+
+        private fun cornerX(alongSign: Float, sideSign: Float): Float =
+            x + forwardX * (alongSign * halfLength) + rightX * (sideSign * halfWidth)
+
+        private fun cornerZ(alongSign: Float, sideSign: Float): Float =
+            z + forwardZ * (alongSign * halfLength) + rightZ * (sideSign * halfWidth)
+    }
+
     private fun ToyboxVolume.topSurfaceYAt(x: Float, z: Float): Float? {
+        if (kind == ToyboxVolumeKind.RAMP) return rampSurfaceYAt(x, z)
         val top = height * 0.5f
         val a = worldPoint(-width * 0.5f, top, -depth * 0.5f)
         val b = worldPoint(width * 0.5f, top, -depth * 0.5f)
@@ -881,6 +1012,21 @@ internal class ArcadeCar(
         val d = worldPoint(-width * 0.5f, top, depth * 0.5f)
         return triangleSurfaceY(x, z, a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z)
             ?: triangleSurfaceY(x, z, a.x, a.y, a.z, c.x, c.y, c.z, d.x, d.y, d.z)
+    }
+
+    private fun ToyboxVolume.rampSurfaceYAt(x: Float, z: Float): Float? {
+        val left = -width * 0.5f
+        val right = width * 0.5f
+        val back = -depth * 0.5f
+        val front = depth * 0.5f
+        val bottom = -height * 0.5f
+        val top = height * 0.5f
+        val lbb = worldPoint(left, bottom, back)
+        val rbb = worldPoint(right, bottom, back)
+        val ltf = worldPoint(left, top, front)
+        val rtf = worldPoint(right, top, front)
+        return triangleSurfaceY(x, z, lbb.x, lbb.y, lbb.z, ltf.x, ltf.y, ltf.z, rtf.x, rtf.y, rtf.z)
+            ?: triangleSurfaceY(x, z, lbb.x, lbb.y, lbb.z, rtf.x, rtf.y, rtf.z, rbb.x, rbb.y, rbb.z)
     }
 
     private fun triangleSurfaceY(
@@ -939,7 +1085,8 @@ internal class ArcadeCar(
     }
 
     private fun ToyboxVolume.blocksSides(): Boolean =
-        foldedDegrees(pitchDegrees) < 1.5f && foldedDegrees(rollDegrees) < 1.5f && height > 1.2f
+        kind != ToyboxVolumeKind.RAMP &&
+            foldedDegrees(pitchDegrees) < 1.5f && foldedDegrees(rollDegrees) < 1.5f && height > 1.2f
 
     private fun foldedDegrees(degrees: Float): Float {
         val normalized = abs(degrees % 360f)

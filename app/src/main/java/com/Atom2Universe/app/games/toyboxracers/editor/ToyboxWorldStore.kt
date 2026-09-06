@@ -55,6 +55,7 @@ internal class ToyboxWorldStore(private val context: Context) {
 
     fun listCreations(): List<File> {
         creationsDir.mkdirs()
+        cleanupInvalidCreations()
         return creationsDir
             .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
             ?.sortedByDescending { it.lastModified() }
@@ -79,6 +80,28 @@ internal class ToyboxWorldStore(private val context: Context) {
         canonicalFile.writeText(world.toJson().toString(2))
         save(world)
         return true
+    }
+
+    fun duplicateCreation(file: File): File? {
+        val world = loadCreation(file) ?: return null
+        return saveCreation(world, "${world.name}_copie")
+    }
+
+    fun renameCreation(file: File, name: String): File? {
+        val world = loadCreation(file) ?: return null
+        val renamed = world.copy(name = name)
+        val newFile = saveCreation(renamed, name)
+        deleteCreation(file)
+        return newFile
+    }
+
+    fun deleteCreation(file: File): Boolean {
+        val canonicalDir = creationsDir.canonicalFile
+        val canonicalFile = file.canonicalFile
+        if (!canonicalFile.path.startsWith(canonicalDir.path)) return false
+        val undoFile = File(canonicalFile.parentFile, "${canonicalFile.nameWithoutExtension}.undo.json")
+        if (undoFile.exists()) undoFile.delete()
+        return canonicalFile.delete()
     }
 
     fun creationFileNamed(name: String): File? {
@@ -112,6 +135,19 @@ internal class ToyboxWorldStore(private val context: Context) {
     }
 
     fun absoluteSavePath(): String = worldFile.absolutePath
+
+    private fun cleanupInvalidCreations() {
+        creationsDir
+            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
+            ?.forEach { file ->
+                val valid = runCatching {
+                    val json = JSONObject(file.readText())
+                    json.optInt("version", -1) == ToyboxWorld.VERSION &&
+                        json.optJSONArray("trackSections") != null
+                }.getOrDefault(false)
+                if (!valid) deleteCreation(file)
+            }
+    }
 
     companion object {
         const val FILE_NAME = "toybox_tablet_house.json"

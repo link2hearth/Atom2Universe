@@ -7,6 +7,7 @@ import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
 import com.Atom2Universe.app.games.toyboxracers.editor.ActiveWorldKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
@@ -107,6 +108,7 @@ internal class ToyboxRacersRenderer(
     @Volatile private var previewRotationAxis = ToyboxRotationAxis.YAW
     @Volatile private var selectedPreview: ToyboxVolume? = null
     @Volatile private var previewVisible = false
+    @Volatile private var trackPreview: ToyboxTrackSection? = null
     @Volatile private var decorPreview: ToyboxDecor? = null
 
     private lateinit var shader: ToyboxShader
@@ -117,11 +119,14 @@ internal class ToyboxRacersRenderer(
     private lateinit var rivalMeshes: List<ColoredMesh>
     private var worldMesh: ColoredMesh? = null
     private var previewMesh: ColoredMesh? = null
+    private var trackPreviewMesh: ColoredMesh? = null
     private var decorPreviewMesh: ColoredMesh? = null
     private var currentWorld = ToyboxWorld()
     private var lastPreviewVolume: ToyboxVolume? = null
+    private var lastPreviewTrack: ToyboxTrackSection? = null
     private var lastPreviewDecor: ToyboxDecor? = null
     @Volatile private var previewMeshDirty = true
+    @Volatile private var trackPreviewMeshDirty = true
     @Volatile private var decorPreviewMeshDirty = true
 
     private val projection = FloatArray(16)
@@ -261,6 +266,11 @@ internal class ToyboxRacersRenderer(
         decorPreviewMeshDirty = true
     }
 
+    fun setEditorTrackPreview(section: ToyboxTrackSection?) {
+        trackPreview = section
+        trackPreviewMeshDirty = true
+    }
+
     fun resetEditorPreviewAnchor() {
         val forward = horizontalEditorForward()
         previewAnchorX = snap(editorCameraPosition.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
@@ -382,6 +392,17 @@ internal class ToyboxRacersRenderer(
             ?.first
     }
 
+    fun pickTrackSection(screenX: Float, screenY: Float, sections: List<ToyboxTrackSection>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return sections
+            .mapNotNull { section -> rayTrackSectionDistance(near, direction, section)?.let { distance -> section.id to distance } }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.72f, 0.86f, 0.94f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
@@ -402,6 +423,7 @@ internal class ToyboxRacersRenderer(
         shadowMesh = PrototypeMeshFactory.shadow().also { it.upload() }
         currentWorld = requestedWorld
         car.setEditorWorld(currentWorld)
+        car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
         worldMesh?.destroy()
         worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
         turboEffects.upload()
@@ -646,16 +668,31 @@ internal class ToyboxRacersRenderer(
         if (previewMeshDirty || preview != lastPreviewVolume) {
             previewMesh?.destroy()
             previewMesh = preview?.let {
-                PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList()), it, previewRotationAxis).also { mesh -> mesh.upload() }
+                PrototypeMeshFactory.world(
+                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList()),
+                    it,
+                    previewRotationAxis
+                ).also { mesh -> mesh.upload() }
             }
             lastPreviewVolume = preview
             previewMeshDirty = false
+        }
+        val trackSection = trackPreview
+        if (trackPreviewMeshDirty || trackSection != lastPreviewTrack) {
+            trackPreviewMesh?.destroy()
+            trackPreviewMesh = trackSection?.let {
+                PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList(), trackSections = listOf(it))).also { mesh -> mesh.upload() }
+            }
+            lastPreviewTrack = trackSection
+            trackPreviewMeshDirty = false
         }
         val decor = decorPreview
         if (decorPreviewMeshDirty || decor != lastPreviewDecor) {
             decorPreviewMesh?.destroy()
             decorPreviewMesh = decor?.let {
-                PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList(), decorations = listOf(it))).also { mesh -> mesh.upload() }
+                PrototypeMeshFactory.world(
+                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList(), decorations = listOf(it))
+                ).also { mesh -> mesh.upload() }
             }
             lastPreviewDecor = decor
             decorPreviewMeshDirty = false
@@ -672,6 +709,7 @@ internal class ToyboxRacersRenderer(
             GLES30.glDepthMask(false)
             GLES30.glDisable(GLES30.GL_CULL_FACE)
             previewMesh?.draw(shader, viewProjection, identity)
+            trackPreviewMesh?.draw(shader, viewProjection, identity)
             decorPreviewMesh?.draw(shader, viewProjection, identity)
             GLES30.glEnable(GLES30.GL_CULL_FACE)
             GLES30.glDepthMask(true)
@@ -791,6 +829,10 @@ internal class ToyboxRacersRenderer(
         previewMesh = null
         lastPreviewVolume = null
         previewMeshDirty = true
+        trackPreviewMesh?.destroy()
+        trackPreviewMesh = null
+        lastPreviewTrack = null
+        trackPreviewMeshDirty = true
         decorPreviewMesh?.destroy()
         decorPreviewMesh = null
         lastPreviewDecor = null
@@ -887,6 +929,25 @@ internal class ToyboxRacersRenderer(
             box.z - halfDepth,
             box.z + halfDepth
         )
+    }
+
+    private fun rayTrackSectionDistance(origin: Vec3, direction: Vec3, section: ToyboxTrackSection): Float? {
+        if (kotlin.math.abs(direction.y) < 0.0001f) return null
+        var low = 0f
+        var high = 500f
+        repeat(18) {
+            val mid = (low + high) * 0.5f
+            val x = origin.x + direction.x * mid
+            val y = origin.y + direction.y * mid
+            val z = origin.z + direction.z * mid
+            val surfaceY = section.surfaceYAt(x, z)
+            if (surfaceY == null || y > surfaceY + 0.08f) low = mid else high = mid
+        }
+        val x = origin.x + direction.x * high
+        val y = origin.y + direction.y * high
+        val z = origin.z + direction.z * high
+        val surfaceY = section.surfaceYAt(x, z) ?: return null
+        return if (kotlin.math.abs(y - surfaceY) <= 0.25f) high else null
     }
 
     private fun rayBoxDistance(

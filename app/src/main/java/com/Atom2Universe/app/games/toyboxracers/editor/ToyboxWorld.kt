@@ -7,6 +7,7 @@ import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.cos
+import kotlin.math.hypot
 import kotlin.math.sin
 
 internal enum class ToyboxVolumeKind(val label: String, val color: Int, val solidByDefault: Boolean) {
@@ -133,7 +134,7 @@ internal data class ToyboxVolume(
         .put("width", width.toDouble())
         .put("height", height.toDouble())
         .put("depth", depth.toDouble())
-        .put("solid", solid)
+        .put("solid", if (kind == ToyboxVolumeKind.FLOOR) true else solid)
         .put("color", color)
         .put("quarterTurns", quarterTurns)
         .put("yawDegrees", yawDegrees.toDouble())
@@ -154,7 +155,7 @@ internal data class ToyboxVolume(
                 width = json.optDouble("width", 12.0).toFloat().coerceAtLeast(1f),
                 height = json.optDouble("height", 4.0).toFloat().coerceAtLeast(0.25f),
                 depth = json.optDouble("depth", 12.0).toFloat().coerceAtLeast(1f),
-                solid = json.optBoolean("solid", true),
+                solid = if (kind == ToyboxVolumeKind.FLOOR) true else json.optBoolean("solid", true),
                 color = json.optInt("color", kind.color),
                 quarterTurns = quarterTurns,
                 yawDegrees = json.optDouble("yawDegrees", quarterTurns * 90.0).toFloat(),
@@ -166,6 +167,146 @@ internal data class ToyboxVolume(
 }
 
 internal data class VolumePoint(val x: Float, val y: Float, val z: Float)
+
+internal data class ToyboxTrackSection(
+    val id: Long,
+    val x: Float,
+    val y: Float,
+    val z: Float,
+    val yawDegrees: Float,
+    val length: Float,
+    val width: Float,
+    val endY: Float = y,
+    val bankDegrees: Float = 0f,
+    val color: Int = 0xFF6F7B91.toInt()
+) {
+    val yawRadians get() = yawDegrees * kotlin.math.PI.toFloat() / 180f
+    val bankRadians get() = bankDegrees * kotlin.math.PI.toFloat() / 180f
+    val yawSin get() = sin(yawRadians)
+    val yawCos get() = cos(yawRadians)
+    val forwardX get() = yawSin
+    val forwardZ get() = yawCos
+    val rightX get() = yawCos
+    val rightZ get() = -yawSin
+    val halfLength get() = length * 0.5f
+    val halfWidth get() = width * 0.5f
+    val startX get() = x - forwardX * halfLength
+    val startZ get() = z - forwardZ * halfLength
+    val finishX get() = x + forwardX * halfLength
+    val finishZ get() = z + forwardZ * halfLength
+    val minX get() = minOf(corner(-1f, -1f).x, corner(-1f, 1f).x, corner(1f, -1f).x, corner(1f, 1f).x)
+    val maxX get() = maxOf(corner(-1f, -1f).x, corner(-1f, 1f).x, corner(1f, -1f).x, corner(1f, 1f).x)
+    val minZ get() = minOf(corner(-1f, -1f).z, corner(-1f, 1f).z, corner(1f, -1f).z, corner(1f, 1f).z)
+    val maxZ get() = maxOf(corner(-1f, -1f).z, corner(-1f, 1f).z, corner(1f, -1f).z, corner(1f, 1f).z)
+
+    fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
+    fun rotateYaw(deltaDegrees: Float) = copy(yawDegrees = ((yawDegrees + deltaDegrees) % 360f + 360f) % 360f)
+    fun withStartY(value: Float) = copy(y = value)
+    fun withEndY(value: Float) = copy(endY = value)
+    fun resize(width: Float = this.width, length: Float = this.length) =
+        copy(width = width.coerceAtLeast(2f), length = length.coerceAtLeast(2f))
+
+    fun localAlong(worldX: Float, worldZ: Float): Float {
+        val dx = worldX - x
+        val dz = worldZ - z
+        return dx * forwardX + dz * forwardZ
+    }
+
+    fun localSide(worldX: Float, worldZ: Float): Float {
+        val dx = worldX - x
+        val dz = worldZ - z
+        return dx * rightX + dz * rightZ
+    }
+
+    fun containsXZ(worldX: Float, worldZ: Float, margin: Float = 0f): Boolean =
+        localAlong(worldX, worldZ) in (-halfLength - margin)..(halfLength + margin) &&
+            localSide(worldX, worldZ) in (-halfWidth - margin)..(halfWidth + margin)
+
+    fun surfaceYAt(worldX: Float, worldZ: Float): Float? {
+        val along = localAlong(worldX, worldZ)
+        val side = localSide(worldX, worldZ)
+        if (along !in -halfLength..halfLength || side !in -halfWidth..halfWidth) return null
+        val t = (along + halfLength) / length.coerceAtLeast(0.0001f)
+        val centreY = y + (endY - y) * t
+        return centreY + side * sin(bankRadians)
+    }
+
+    fun corner(alongSign: Float, sideSign: Float): VolumePoint {
+        val along = alongSign * halfLength
+        val side = sideSign * halfWidth
+        val t = (along + halfLength) / length.coerceAtLeast(0.0001f)
+        val centreY = y + (endY - y) * t
+        return VolumePoint(
+            x = x + forwardX * along + rightX * side,
+            y = centreY + side * sin(bankRadians),
+            z = z + forwardZ * along + rightZ * side
+        )
+    }
+
+    fun snappedTo(sections: List<ToyboxTrackSection>, snapDistance: Float): ToyboxTrackSection {
+        var best: Pair<Float, ToyboxTrackSection>? = null
+        for (other in sections) {
+            if (other.id == id) continue
+            for (ownEnd in listOf(
+                floatArrayOf(startX, y, startZ, 0f),
+                floatArrayOf(finishX, endY, finishZ, 1f)
+            )) {
+                val sx = ownEnd[0]
+                val sy = ownEnd[1]
+                val sz = ownEnd[2]
+                val end = ownEnd[3]
+                for (otherEnd in listOf(
+                    floatArrayOf(other.startX, other.y, other.startZ),
+                    floatArrayOf(other.finishX, other.endY, other.finishZ)
+                )) {
+                    val ox = otherEnd[0]
+                    val oy = otherEnd[1]
+                    val oz = otherEnd[2]
+                    val d = hypot(sx - ox, sz - oz) + kotlin.math.abs(sy - oy) * 0.35f
+                    if (d <= snapDistance && (best == null || d < best!!.first)) {
+                        val dx = ox - sx
+                        val dz = oz - sz
+                        val moved = copy(
+                            x = x + dx,
+                            z = z + dz,
+                            y = if (end < 0.5f) oy else y,
+                            endY = if (end >= 0.5f) oy else endY
+                        )
+                        best = d to moved
+                    }
+                }
+            }
+        }
+        return best?.second ?: this
+    }
+
+    fun toJson() = JSONObject()
+        .put("id", id)
+        .put("x", x.toDouble())
+        .put("y", y.toDouble())
+        .put("z", z.toDouble())
+        .put("yawDegrees", yawDegrees.toDouble())
+        .put("length", length.toDouble())
+        .put("width", width.toDouble())
+        .put("endY", endY.toDouble())
+        .put("bankDegrees", bankDegrees.toDouble())
+        .put("color", color)
+
+    companion object {
+        fun fromJson(json: JSONObject) = ToyboxTrackSection(
+            id = json.optLong("id", System.nanoTime()),
+            x = json.optDouble("x", 0.0).toFloat(),
+            y = json.optDouble("y", 0.0).toFloat(),
+            z = json.optDouble("z", 0.0).toFloat(),
+            yawDegrees = json.optDouble("yawDegrees", 0.0).toFloat(),
+            length = json.optDouble("length", 24.0).toFloat().coerceAtLeast(2f),
+            width = json.optDouble("width", 8.0).toFloat().coerceAtLeast(2f),
+            endY = json.optDouble("endY", json.optDouble("y", 0.0)).toFloat(),
+            bankDegrees = json.optDouble("bankDegrees", 0.0).toFloat(),
+            color = json.optInt("color", 0xFF6F7B91.toInt())
+        )
+    }
+}
 
 internal enum class ToyboxRotationAxis(val label: String) {
     YAW("Plan"),
@@ -258,8 +399,9 @@ internal data class ToyboxCheckpoint(
 
 internal data class ToyboxWorld(
     val version: Int = VERSION,
-    val name: String = "Maison tablette",
+    val name: String = "Circuit libre",
     val volumes: List<ToyboxVolume> = starterVolumes(),
+    val trackSections: List<ToyboxTrackSection> = starterTrackSections(),
     val checkpoints: List<ToyboxCheckpoint> = emptyList(),
     val decorations: List<ToyboxDecor> = emptyList()
 ) {
@@ -267,44 +409,48 @@ internal data class ToyboxWorld(
         .put("version", version)
         .put("name", name)
         .put("volumes", JSONArray().apply { volumes.forEach { put(it.toJson()) } })
+        .put("trackSections", JSONArray().apply { trackSections.forEach { put(it.toJson()) } })
         .put("checkpoints", JSONArray().apply { checkpoints.forEach { put(it.toJson()) } })
         .put("decorations", JSONArray().apply { decorations.forEach { put(it.toJson()) } })
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
 
         fun fromJson(json: JSONObject): ToyboxWorld {
+            if (json.optInt("version", -1) != VERSION) return ToyboxWorld()
             val volumesJson = json.optJSONArray("volumes") ?: JSONArray()
+            val trackJson = json.optJSONArray("trackSections") ?: JSONArray()
             val checkpointJson = json.optJSONArray("checkpoints") ?: JSONArray()
             val decorationsJson = json.optJSONArray("decorations") ?: JSONArray()
             return ToyboxWorld(
                 version = json.optInt("version", VERSION),
-                name = json.optString("name", "Maison tablette"),
+                name = json.optString("name", "Circuit libre"),
                 volumes = List(volumesJson.length()) { ToyboxVolume.fromJson(volumesJson.getJSONObject(it)) },
+                trackSections = List(trackJson.length()) { ToyboxTrackSection.fromJson(trackJson.getJSONObject(it)) },
                 checkpoints = List(checkpointJson.length()) { ToyboxCheckpoint.fromJson(checkpointJson.getJSONObject(it)) },
                 decorations = List(decorationsJson.length()) { ToyboxDecor.fromJson(decorationsJson.getJSONObject(it)) }
             )
         }
 
         fun starterVolumes(): List<ToyboxVolume> = listOf(
-            ToyboxVolume(1, ToyboxVolumeKind.FLOOR, 0f, -0.4f, 0f, 180f, 0.8f, 120f),
-            ToyboxVolume(2, ToyboxVolumeKind.WALL, 0f, 5f, -61f, 180f, 10f, 2f),
-            ToyboxVolume(3, ToyboxVolumeKind.WALL, 0f, 5f, 61f, 180f, 10f, 2f),
-            ToyboxVolume(4, ToyboxVolumeKind.WALL, -91f, 5f, 0f, 2f, 10f, 120f),
-            ToyboxVolume(5, ToyboxVolumeKind.WALL, 91f, 5f, 0f, 2f, 10f, 120f),
-            ToyboxVolume(6, ToyboxVolumeKind.DOOR, 0f, 5f, 61.5f, 18f, 10f, 1f, solid = false),
-            ToyboxVolume(7, ToyboxVolumeKind.RAMP, -35f, 2.4f, 20f, 42f, 1f, 14f),
-            ToyboxVolume(8, ToyboxVolumeKind.DUCT, 35f, 4f, -20f, 48f, 8f, 16f),
-            ToyboxVolume(9, ToyboxVolumeKind.RAIL, 0f, 3f, 0f, 48f, 5f, 1.2f)
+            ToyboxVolume(1, ToyboxVolumeKind.FLOOR, 0f, -0.4f, 0f, 180f, 0.8f, 120f)
+        )
+
+        fun starterTrackSections(): List<ToyboxTrackSection> = listOf(
+            ToyboxTrackSection(101, 0f, 0.05f, -32f, 90f, 58f, 9f),
+            ToyboxTrackSection(102, 32f, 0.05f, 0f, 0f, 58f, 9f, endY = 6f),
+            ToyboxTrackSection(103, 0f, 6f, 32f, 270f, 58f, 9f),
+            ToyboxTrackSection(104, -32f, 6f, 0f, 180f, 58f, 9f, endY = 0.05f)
         )
 
         fun builtInWorlds(): List<ToyboxWorld> = listOf(
             ToyboxWorld(
                 name = "Maison complete 3 etages",
                 volumes = completeHouseVolumes(),
+                trackSections = emptyList(),
                 decorations = completeHouseDecorations()
             ),
-            ToyboxWorld(name = "Maison tablette", volumes = starterVolumes())
+            ToyboxWorld(name = "Maison tablette", volumes = starterVolumes(), trackSections = starterTrackSections())
         )
 
         private fun completeHouseVolumes(): List<ToyboxVolume> {
@@ -335,6 +481,7 @@ internal data class ToyboxWorld(
             val color = box.color and 0x00FFFFFF
             val thin = box.width <= 1.2f || box.depth <= 1.2f
             return when {
+                box.height <= 1.2f -> ToyboxVolumeKind.FLOOR
                 color == 0x9FD2E3 -> ToyboxVolumeKind.WINDOW
                 color == 0xA8D1B7 && thin && box.height >= 12f -> ToyboxVolumeKind.DOOR
                 color == 0x8DA7B3 || color == 0xE6EEF2 -> ToyboxVolumeKind.DUCT
