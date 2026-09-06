@@ -2,7 +2,10 @@ package com.Atom2Universe.app.games.toyboxracers
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -18,12 +21,15 @@ import android.text.InputType
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.NumberPicker
+import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.SimpleColorPickerDialog
 import com.Atom2Universe.app.games.toyboxracers.editor.EditorTouchLayer
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
@@ -36,6 +42,10 @@ import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorldStore
+import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
+import com.Atom2Universe.app.games.toyboxracers.models.DecorModel
+import com.Atom2Universe.app.games.toyboxracers.models.DecorRoom
+import com.Atom2Universe.app.games.toyboxracers.models.DecorShape
 import com.Atom2Universe.app.util.enableImmersiveMode
 import java.util.Locale
 
@@ -63,6 +73,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var editorInfo: TextView
     private lateinit var editorKindButton: Button
     private lateinit var editorGridButton: Button
+    private lateinit var editorGroupButton: Button
     private lateinit var editorSolidButton: Button
     private lateinit var editorColorButton: Button
     private lateinit var editorPlaceButton: Button
@@ -83,10 +94,17 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var editorWidth = 20f
     private var editorHeight = 0.6f
     private var editorDepth = 20f
+    private var editorQuarterTurns = 0
     private var editorFloorY = 0f
     private var editorSolid = true
     private var editorColor = editorKind.color
     private var selectedVolumeId: Long? = null
+    private var selectedDecorId: Long? = null
+    private var selectedGroupIds: Set<Long> = emptySet()
+    private var editorDraftDecorModelId: String? = null
+    private var editorDecorQuarterTurns = 0
+    private var editorDecorScale = 1f
+    private var editorGroupMode = EditorGroupMode.OFF
     private var editorDraftActive = false
     private var editorGridIndex = 0
     private var editorForward = 0f
@@ -199,6 +217,10 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun showPause() {
         if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
         pauseGame()
+        if (editorActive) {
+            showEditorPause()
+            return
+        }
         pauseDialog = dialogBuilder()
             .setTitle(R.string.toybox_pause)
             .setItems(arrayOf(
@@ -223,6 +245,110 @@ class ToyboxRacersActivity : ThemedActivity() {
             }
             .setOnCancelListener { resumeGame() }
             .show()
+    }
+
+    private fun showEditorPause() {
+        pauseDialog = dialogBuilder()
+            .setTitle("Pause creation")
+            .setItems(arrayOf(
+                "Reprendre",
+                "Save actual",
+                "Load",
+                "Load creations",
+                "Load niveau du jeu",
+                "Quitter le mode edition",
+                getString(R.string.toybox_quit)
+            )) { _, which ->
+                when (which) {
+                    0 -> resumeGame()
+                    1 -> saveCurrentCreation()
+                    2 -> showEditorLoadMenu()
+                    3 -> showCreationLoader()
+                    4 -> showBuiltInLevelLoader()
+                    5 -> {
+                        resumeGame()
+                        toggleEditorMode()
+                    }
+                    6 -> finish()
+                }
+            }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun showEditorLoadMenu() {
+        pauseDialog = null
+        pauseDialog = dialogBuilder()
+            .setTitle("Load")
+            .setItems(arrayOf("Load creations", "Load niveau du jeu")) { _, which ->
+                when (which) {
+                    0 -> showCreationLoader()
+                    1 -> showBuiltInLevelLoader()
+                }
+            }
+            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun saveCurrentCreation() {
+        val file = worldStore.saveCreation(editorWorld)
+        Toast.makeText(this, "Creation sauvee: ${file.name}", Toast.LENGTH_SHORT).show()
+        resumeGame()
+    }
+
+    private fun showCreationLoader() {
+        val creations = worldStore.listCreations()
+        if (creations.isEmpty()) {
+            Toast.makeText(this, "Aucune creation sauvegardee", Toast.LENGTH_SHORT).show()
+            resumeGame()
+            return
+        }
+        pauseDialog = null
+        pauseDialog = dialogBuilder()
+            .setTitle("Load creations")
+            .setItems(creations.map { it.nameWithoutExtension }.toTypedArray()) { _, which ->
+                val world = worldStore.loadCreation(creations[which])
+                if (world == null) {
+                    Toast.makeText(this, "Creation illisible", Toast.LENGTH_SHORT).show()
+                    resumeGame()
+                } else {
+                    loadEditorWorld(world, saveAsActual = true)
+                    Toast.makeText(this, "Creation chargee", Toast.LENGTH_SHORT).show()
+                    resumeGame()
+                }
+            }
+            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun showBuiltInLevelLoader() {
+        val levels = ToyboxWorld.builtInWorlds()
+        pauseDialog = null
+        pauseDialog = dialogBuilder()
+            .setTitle("Load niveau du jeu")
+            .setItems(levels.map { it.name }.toTypedArray()) { _, which ->
+                loadEditorWorld(levels[which], saveAsActual = true)
+                Toast.makeText(this, "${levels[which].name} charge", Toast.LENGTH_SHORT).show()
+                resumeGame()
+            }
+            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
+            .setOnCancelListener { resumeGame() }
+            .show()
+    }
+
+    private fun loadEditorWorld(world: ToyboxWorld, saveAsActual: Boolean) {
+        editorWorld = world
+        selectedVolumeId = null
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
+        editorDraftActive = false
+        editorDraftDecorModelId = null
+        editorQuarterTurns = 0
+        if (saveAsActual) worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+        pushEditorPreview()
     }
 
     private fun switchMode() {
@@ -270,7 +396,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         pauseButton = makeButton("Ⅱ", 52, 0xB83B4055.toInt()).apply {
             textSize = 28f
             contentDescription = getString(R.string.toybox_pause)
-            setOnClickListener { if (editorActive) toggleEditorMode() else showPause() }
+            setOnClickListener { showPause() }
         }
         root.addView(pauseButton, FrameLayout.LayoutParams(dp(52), dp(52)).apply {
             gravity = Gravity.TOP or Gravity.END
@@ -593,7 +719,16 @@ class ToyboxRacersActivity : ThemedActivity() {
                 pushEditorInput()
             }
             onObjectLongPress = { x, y ->
-                renderer.pickVolume(x, y, editorWorld.volumes)?.let { selectEditorVolume(it) }
+                renderer.pickDecor(x, y, editorWorld.decorations)?.let {
+                    selectEditorDecor(it)
+                    return@let
+                } ?: renderer.pickVolume(x, y, editorWorld.volumes)?.let {
+                    when (editorGroupMode) {
+                        EditorGroupMode.OFF -> selectEditorVolume(it)
+                        EditorGroupMode.SAME_KIND -> selectConnectedGroup(it, sameKindOnly = true)
+                        EditorGroupMode.CONNECTED -> selectConnectedGroup(it, sameKindOnly = false)
+                    }
+                }
             }
         }
         root.addView(editorTouchLayer, FrameLayout.LayoutParams(-1, -1))
@@ -656,15 +791,22 @@ class ToyboxRacersActivity : ThemedActivity() {
                 pushEditorPreview()
             }
         }
-        listOf(editorKindButton, editorGridButton).forEachIndexed { index, view ->
+        editorGroupButton = makeEditorButton("Groupe", 0xAA4B617A.toInt()).apply {
+            setOnClickListener {
+                editorGroupMode = editorGroupMode.next()
+                if (editorGroupMode == EditorGroupMode.OFF) selectedGroupIds = emptySet()
+                pushEditorPreview()
+            }
+        }
+        listOf(editorKindButton, editorGridButton, editorGroupButton).forEachIndexed { index, view ->
             toolsContent.addView(view, LinearLayout.LayoutParams(0, dp(42), 1f).apply {
-                if (index == 0) rightMargin = dp(6)
+                if (index < 2) rightMargin = dp(6)
             })
         }
         editorToolsPanel.orientation = LinearLayout.VERTICAL
         editorToolsPanel.addView(grab("Outils", editorToolsPanel), LinearLayout.LayoutParams(-1, dp(28)))
         editorToolsPanel.addView(toolsContent, LinearLayout.LayoutParams(-1, dp(42)))
-        root.addView(editorToolsPanel, FrameLayout.LayoutParams(dp(190), -2).apply {
+        root.addView(editorToolsPanel, FrameLayout.LayoutParams(dp(286), -2).apply {
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
             topMargin = dp(14)
         })
@@ -677,6 +819,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         val cameraUp = action("Cam +") { renderer.moveEditorCameraHeight(gridSize()) }
         val cameraDown = action("Cam -") { renderer.moveEditorCameraHeight(-gridSize()) }
+        bindRepeatingEditorAction(cameraUp) { renderer.moveEditorCameraHeight(gridSize()) }
+        bindRepeatingEditorAction(cameraDown) { renderer.moveEditorCameraHeight(-gridSize()) }
         editorCameraPanel.addView(cameraUp, LinearLayout.LayoutParams(dp(78), dp(42)).apply { bottomMargin = dp(6) })
         editorCameraPanel.addView(cameraDown, LinearLayout.LayoutParams(dp(78), dp(42)))
         root.addView(editorCameraPanel, FrameLayout.LayoutParams(-2, -2).apply {
@@ -760,8 +904,14 @@ class ToyboxRacersActivity : ThemedActivity() {
         val moveDown = action("↓") { moveEditorObject(0f, -1f) }
         val moveHigher = action("Y +") { moveEditorFloor(gridSize()) }
         val moveLower = action("Y -") { moveEditorFloor(-gridSize()) }
-        val rotateLeft = action("↺ 90") { rotateEditorObject() }
-        val rotateRight = action("↻ 90") { rotateEditorObject() }
+        val rotateLeft = action("↺ 90") { rotateEditorObject(-1) }
+        val rotateRight = action("↻ 90") { rotateEditorObject(1) }
+        bindRepeatingEditorAction(moveUp) { moveEditorObject(0f, 1f) }
+        bindRepeatingEditorAction(moveLeft) { moveEditorObject(1f, 0f) }
+        bindRepeatingEditorAction(moveRight) { moveEditorObject(-1f, 0f) }
+        bindRepeatingEditorAction(moveDown) { moveEditorObject(0f, -1f) }
+        bindRepeatingEditorAction(moveHigher) { moveEditorFloor(gridSize()) }
+        bindRepeatingEditorAction(moveLower) { moveEditorFloor(-gridSize()) }
         row(
             editorPositionPanel,
             label(""),
@@ -817,14 +967,32 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun applyEditorItemPreset(item: EditorItemPreset) {
         selectedVolumeId = null
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
         editorDraftActive = true
+        editorDraftDecorModelId = null
         editorKind = item.kind
         editorWidth = item.width
         editorHeight = item.height
         editorDepth = item.depth
+        editorQuarterTurns = 0
         editorFloorY = maxOf(editorFloorY, item.minimumFloorY)
         editorSolid = item.kind.solidByDefault
         editorColor = item.kind.color
+        renderer.resetEditorPreviewAnchor()
+        pushEditorPreview()
+    }
+
+    private fun applyEditorDecorModel(model: DecorModel) {
+        selectedVolumeId = null
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
+        editorDraftActive = false
+        editorDraftDecorModelId = model.id
+        editorQuarterTurns = 0
+        editorDecorQuarterTurns = 0
+        editorDecorScale = 1f
+        editorFloorY = maxOf(editorFloorY, 0f)
         renderer.resetEditorPreviewAnchor()
         pushEditorPreview()
     }
@@ -849,10 +1017,11 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun showAddItemFamilies() {
         val families = EDITOR_ITEM_FAMILIES
+        val labels = families.map { it.name } + "Modeles 3D"
         dialogBuilder()
             .setTitle("Ajouter un objet")
-            .setItems(families.map { it.name }.toTypedArray()) { _, which ->
-                showAddItems(families[which])
+            .setItems(labels.toTypedArray()) { _, which ->
+                if (which < families.size) showAddItems(families[which]) else showDecorModelFamilies()
             }
             .show()
     }
@@ -867,7 +1036,79 @@ class ToyboxRacersActivity : ThemedActivity() {
             .show()
     }
 
+    private fun showDecorModelFamilies() {
+        val families = decorModelFamilies()
+        dialogBuilder()
+            .setTitle("Modeles 3D")
+            .setItems(families.map { "${it.name} (${it.items.size})" }.toTypedArray()) { _, which ->
+                showDecorModelList(families[which])
+            }
+            .setNegativeButton("Retour") { _, _ -> showAddItemFamilies() }
+            .show()
+    }
+
+    private fun showDecorModelList(family: DecorModelFamily) {
+        val scroll = ScrollView(this)
+        val list = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(10), dp(8), dp(10), dp(8))
+        }
+        scroll.addView(list)
+        val dialog = dialogBuilder()
+            .setTitle(family.name)
+            .setView(scroll)
+            .setNegativeButton("Retour") { _, _ -> showDecorModelFamilies() }
+            .create()
+        family.items.forEach { model ->
+            list.addView(decorModelRow(model, dialog), LinearLayout.LayoutParams(-1, dp(74)).apply {
+                bottomMargin = dp(7)
+            })
+        }
+        dialog.show()
+    }
+
+    private fun decorModelRow(model: DecorModel, dialog: AlertDialog): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(8), dp(6), dp(10), dp(6))
+            background = roundedBackground(0xAA4B617A.toInt(), 14f)
+            isClickable = true
+            isFocusable = true
+            setOnClickListener {
+                dialog.dismiss()
+                applyEditorDecorModel(model)
+            }
+        }
+        row.addView(DecorModelThumbnailView(this, model), LinearLayout.LayoutParams(dp(62), dp(62)).apply {
+            rightMargin = dp(10)
+        })
+        val textBox = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        textBox.addView(TextView(this).apply {
+            text = decorName(model.id)
+            setTextColor(Color.WHITE)
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+        })
+        textBox.addView(TextView(this).apply {
+            text = "${decorRoomLabel(model.room)}  |  ${model.parts.size} pieces"
+            setTextColor(0xFFFFE7A8.toInt())
+            textSize = 11f
+        })
+        row.addView(textBox, LinearLayout.LayoutParams(0, -1, 1f))
+        return row
+    }
+
     private fun moveEditorFloor(delta: Float) {
+        if (selectedDecorId != null || editorDraftDecorModelId != null) {
+            editorFloorY += delta
+            updateSelectedDecor { it.copy(y = editorFloorY) }
+            pushEditorPreview()
+            return
+        }
         if (selectedVolumeId == null && !editorDraftActive) return
         editorFloorY += delta
         updateSelectedVolume { volume ->
@@ -883,6 +1124,32 @@ class ToyboxRacersActivity : ThemedActivity() {
             clearEditorSelection()
             return
         }
+        if (selectedDecorId != null) {
+            clearEditorSelection()
+            return
+        }
+        if (selectedGroupIds.isNotEmpty()) {
+            clearEditorSelection()
+            return
+        }
+        editorDraftDecorModelId?.let { modelId ->
+            val anchor = renderer.makePreviewVolume(System.nanoTime())
+            val decor = ToyboxDecor(
+                id = System.nanoTime(),
+                modelId = modelId,
+                x = anchor.x,
+                y = editorFloorY,
+                z = anchor.z,
+                quarterTurns = editorDecorQuarterTurns,
+                scale = editorDecorScale
+            )
+            editorWorld = editorWorld.copy(decorations = editorWorld.decorations + decor)
+            editorDraftDecorModelId = null
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+            return
+        }
         if (!editorDraftActive) return
         val volume = renderer.makePreviewVolume(System.nanoTime())
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes + volume)
@@ -893,11 +1160,35 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun deleteEditorVolume() {
+        if (selectedGroupIds.isNotEmpty()) {
+            editorWorld = editorWorld.copy(volumes = editorWorld.volumes.filterNot { it.id in selectedGroupIds })
+            selectedGroupIds = emptySet()
+            selectedVolumeId = null
+            selectedDecorId = null
+            editorDraftActive = false
+            editorDraftDecorModelId = null
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+            return
+        }
+        val selectedDecor = selectedDecorId
+        if (selectedDecor != null) {
+            editorWorld = editorWorld.copy(decorations = editorWorld.decorations.filterNot { it.id == selectedDecor })
+            selectedDecorId = null
+            editorDraftDecorModelId = null
+            editorDraftActive = false
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+            return
+        }
         val selected = selectedVolumeId
         if (selected == null) return
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes.filterNot { it.id == selected })
         selectedVolumeId = null
         editorDraftActive = false
+        editorDraftDecorModelId = null
         worldStore.save(editorWorld)
         renderer.setEditorWorld(editorWorld)
         pushEditorPreview()
@@ -910,23 +1201,38 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun pushEditorPreview() {
         if (!::editorKindButton.isInitialized) return
         val selected = selectedVolume()
-        val hasDraft = selected == null && editorDraftActive
+        val selectedDecor = selectedDecor()
+        val draftDecorModel = editorDraftDecorModelId?.let { runCatching { DecorCatalog[it] }.getOrNull() }
+        val hasDraft = selected == null && selectedDecor == null && editorDraftActive
+        val hasDecorDraft = selected == null && selectedDecor == null && draftDecorModel != null
+        val hasGroup = selectedGroupIds.isNotEmpty()
         val canEditBlock = selected != null || hasDraft
-        editorPanel.visibility = if (editorActive && canEditBlock) View.VISIBLE else View.GONE
-        editorPositionPanel.visibility = if (editorActive && canEditBlock) View.VISIBLE else View.GONE
+        val canEditDecor = selectedDecor != null || hasDecorDraft
+        editorPanel.visibility = if (editorActive && (canEditBlock || canEditDecor) && !hasGroup) View.VISIBLE else View.GONE
+        editorPositionPanel.visibility = if (editorActive && (canEditBlock || canEditDecor || hasGroup)) View.VISIBLE else View.GONE
         editorToolsPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorKindButton.text = "+"
         editorGridButton.text = "Grille ${gridLabel()}"
+        editorGroupButton.text = when {
+            hasGroup -> "Groupe ${selectedGroupIds.size}"
+            editorGroupMode == EditorGroupMode.SAME_KIND -> "Groupe type"
+            editorGroupMode == EditorGroupMode.CONNECTED -> "Prefab"
+            else -> "Groupe"
+        }
+        editorGroupButton.alpha = if (editorGroupMode == EditorGroupMode.OFF) 0.82f else 1f
         editorSolidButton.text = if (editorSolid) "Solide" else "Décor"
         editorPlaceButton.text = when {
             selected != null -> "Valider"
+            selectedDecor != null -> "Valider"
+            hasGroup -> "Valider"
+            hasDecorDraft -> "Poser"
             hasDraft -> "Poser"
             else -> "Rien"
         }
         listOf(editorSolidButton, editorColorButton, editorPlaceButton).forEach {
             it.isEnabled = canEditBlock || it === editorPlaceButton
-            it.alpha = if (canEditBlock) 0.82f else 0.38f
+            it.alpha = if (it.isEnabled && (canEditBlock || it === editorPlaceButton)) 0.82f else 0.38f
         }
         if (::editorWidthPicker.isInitialized) {
             syncingEditorPickers = true
@@ -948,33 +1254,92 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorInfo.text = buildString {
             append(when {
                 selected != null -> "Bloc selectionne #${selected.id.toString().takeLast(4)}"
+                selectedDecor != null -> "Modele 3D: ${decorName(selectedDecor.modelId)}"
+                hasGroup -> "Groupe selectionne (${selectedGroupIds.size} blocs)"
+                hasDecorDraft -> "Nouveau modele 3D: ${draftDecorModel?.let { decorName(it.id) } ?: "inconnu"}"
                 hasDraft -> "Nouveau bloc"
                 else -> "Aucun bloc selectionne"
             })
             append("\n")
-            append("Type: ").append(editorKind.label).append("  ").append(gridLabel())
-            append("  L ").append(formatEditorNumber(editorWidth))
-            append("  P ").append(formatEditorNumber(editorDepth))
-            append("  H ").append(formatEditorNumber(editorHeight))
+            if (canEditDecor) {
+                val turns = selectedDecor?.quarterTurns ?: editorDecorQuarterTurns
+                val scale = selectedDecor?.scale ?: editorDecorScale
+                append("Type: modele 3D  ").append(gridLabel())
+                append("  Tour ").append(((turns % 4) + 4) % 4 * 90).append(" deg")
+                append("  Echelle ").append(formatEditorNumber(scale))
+            } else {
+                append("Type: ").append(editorKind.label).append("  ").append(gridLabel())
+                append("  L ").append(formatEditorNumber(editorWidth))
+                append("  P ").append(formatEditorNumber(editorDepth))
+                append("  H ").append(formatEditorNumber(editorHeight))
+                append("  Tour ").append(((editorQuarterTurns % 4) + 4) % 4 * 90).append(" deg")
+            }
             append("  Y ").append(formatEditorNumber(editorFloorY))
             append("\n")
-            append(if (editorSolid) "solide" else "decor seulement")
-            append("  ").append(editorWorld.volumes.size).append(" objets")
-            if (selected == null) append(if (hasDraft) "  |  Poser pour creer" else "  |  + pour ajouter")
+            append(if (canEditDecor) "modele procedural 3D" else if (editorSolid) "solide" else "decor seulement")
+            append("  ").append(editorWorld.volumes.size + editorWorld.decorations.size).append(" objets")
+            if (selected == null && selectedDecor == null) {
+                append(if (hasDraft || hasDecorDraft) "  |  Poser pour creer" else "  |  + pour ajouter")
+            }
         }
         renderer.setEditorSelection(selected)
-        renderer.setEditorPreviewVisible(selected != null || hasDraft)
-        renderer.setEditorPreview(editorKind, editorWidth, editorHeight, editorDepth, gridSize(), editorFloorY, editorSolid, editorColor)
+        renderer.setEditorPreviewVisible(!hasGroup && !canEditDecor && (selected != null || hasDraft))
+        renderer.setEditorPreview(editorKind, editorWidth, editorHeight, editorDepth, gridSize(), editorFloorY, editorSolid, editorColor, editorQuarterTurns)
+        renderer.setEditorDecorPreview(if (hasDecorDraft) {
+            val anchor = renderer.makePreviewVolume(-2L)
+            ToyboxDecor(
+                id = -2L,
+                modelId = draftDecorModel!!.id,
+                x = anchor.x,
+                y = editorFloorY,
+                z = anchor.z,
+                quarterTurns = editorDecorQuarterTurns,
+                scale = editorDecorScale
+            )
+        } else null)
+    }
+
+    private fun selectConnectedGroup(startId: Long, sameKindOnly: Boolean) {
+        val start = editorWorld.volumes.firstOrNull { it.id == startId } ?: return
+        val selected = LinkedHashSet<Long>()
+        val queue = ArrayDeque<ToyboxVolume>()
+        selected += start.id
+        queue += start
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            editorWorld.volumes.forEach { candidate ->
+                if (candidate.id in selected) return@forEach
+                if ((!sameKindOnly || candidate.kind == start.kind) && current.touches(candidate)) {
+                    selected += candidate.id
+                    queue += candidate
+                }
+            }
+        }
+        selectedVolumeId = null
+        selectedDecorId = null
+        editorDraftActive = false
+        editorDraftDecorModelId = null
+        selectedGroupIds = selected
+        editorKind = start.kind
+        editorSolid = start.solid
+        editorColor = start.color
+        editorFloorY = if (start.kind == ToyboxVolumeKind.FLOOR) start.y + start.height * 0.5f
+            else start.y - start.height * 0.5f
+        pushEditorPreview()
     }
 
     private fun selectEditorVolume(id: Long) {
         val volume = editorWorld.volumes.firstOrNull { it.id == id } ?: return
         selectedVolumeId = id
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
         editorDraftActive = false
+        editorDraftDecorModelId = null
         editorKind = volume.kind
         editorWidth = volume.width
         editorHeight = volume.height
         editorDepth = volume.depth
+        editorQuarterTurns = volume.quarterTurns
         editorSolid = volume.solid
         editorColor = volume.color
         editorFloorY = if (volume.kind == ToyboxVolumeKind.FLOOR) volume.y + volume.height * 0.5f
@@ -982,12 +1347,82 @@ class ToyboxRacersActivity : ThemedActivity() {
         pushEditorPreview()
     }
 
+    private fun selectEditorDecor(id: Long) {
+        val decor = editorWorld.decorations.firstOrNull { it.id == id } ?: return
+        selectedVolumeId = null
+        selectedDecorId = id
+        selectedGroupIds = emptySet()
+        editorDraftActive = false
+        editorDraftDecorModelId = null
+        editorFloorY = decor.y
+        editorDecorQuarterTurns = decor.quarterTurns
+        editorDecorScale = decor.scale
+        pushEditorPreview()
+    }
+
+    private fun ToyboxVolume.touches(other: ToyboxVolume): Boolean {
+        val epsilon = 0.06f
+        val xTouch = kotlin.math.abs(right - other.left) <= epsilon || kotlin.math.abs(left - other.right) <= epsilon
+        val zTouch = kotlin.math.abs(front - other.back) <= epsilon || kotlin.math.abs(back - other.front) <= epsilon
+        val xOverlap = right >= other.left - epsilon && left <= other.right + epsilon
+        val zOverlap = front >= other.back - epsilon && back <= other.front + epsilon
+        val yOverlap = top() >= other.bottom() - epsilon && bottom() <= other.top() + epsilon
+        return yOverlap && ((xTouch && zOverlap) || (zTouch && xOverlap))
+    }
+
+    private fun ToyboxVolume.bottom() = y - height * 0.5f
+
+    private fun ToyboxVolume.top() = y + height * 0.5f
+
+    private fun moveSelectedGroup(dx: Float, dz: Float) {
+        val group = selectedGroupIds
+        if (group.isEmpty()) return
+        editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
+            if (volume.id in group) volume.copy(
+                x = snapEditor(volume.x + dx),
+                z = snapEditor(volume.z + dz)
+            ) else volume
+        })
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+    }
+
+    private fun rotateSelectedGroup(deltaTurns: Int) {
+        val group = selectedGroupIds
+        if (group.isEmpty()) return
+        val volumes = editorWorld.volumes.filter { it.id in group }
+        if (volumes.isEmpty()) return
+        val centerX = volumes.map { it.x }.average().toFloat()
+        val centerZ = volumes.map { it.z }.average().toFloat()
+        editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
+            if (volume.id !in group) volume else {
+                val dx = volume.x - centerX
+                val dz = volume.z - centerZ
+                volume.rotateQuarter(deltaTurns).copy(
+                    x = snapEditor(centerX + dz * deltaTurns),
+                    z = snapEditor(centerZ - dx * deltaTurns)
+                )
+            }
+        })
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+    }
+
     private fun moveEditorObject(strafe: Float, forward: Float) {
         if (!editorActive) return
-        if (selectedVolumeId == null && !editorDraftActive) return
+        if (selectedVolumeId == null && selectedDecorId == null && selectedGroupIds.isEmpty() && !editorDraftActive && editorDraftDecorModelId == null) return
         val delta = renderer.editorNudgeDelta(strafe, forward, gridSize())
         val selected = selectedVolumeId
-        if (selected == null) {
+        if (selectedGroupIds.isNotEmpty()) {
+            moveSelectedGroup(delta.x, delta.z)
+        } else if (selectedDecorId != null) {
+            updateSelectedDecor { decor ->
+                decor.copy(
+                    x = snapEditor(decor.x + delta.x),
+                    z = snapEditor(decor.z + delta.z)
+                )
+            }
+        } else if (selected == null) {
             renderer.moveEditorPreview(delta.x, delta.z)
         } else {
             updateSelectedVolume { volume ->
@@ -1000,12 +1435,33 @@ class ToyboxRacersActivity : ThemedActivity() {
         pushEditorPreview()
     }
 
-    private fun rotateEditorObject() {
+    private fun rotateEditorObject(deltaTurns: Int) {
+        if (selectedGroupIds.isNotEmpty()) {
+            rotateSelectedGroup(deltaTurns)
+            pushEditorPreview()
+            return
+        }
+        if (selectedDecorId != null) {
+            updateSelectedDecor { decor ->
+                decor.rotateQuarter(deltaTurns).also { editorDecorQuarterTurns = it.quarterTurns }
+            }
+            pushEditorPreview()
+            return
+        }
+        if (editorDraftDecorModelId != null) {
+            editorDecorQuarterTurns = ((editorDecorQuarterTurns + deltaTurns) % 4 + 4) % 4
+            pushEditorPreview()
+            return
+        }
         if (selectedVolumeId == null && !editorDraftActive) return
-        val old = editorWidth
-        editorWidth = editorDepth
-        editorDepth = old
-        updateSelectedVolume { it.copy(width = editorWidth, depth = editorDepth) }
+        if (selectedVolumeId == null) editorQuarterTurns = ((editorQuarterTurns + deltaTurns) % 4 + 4) % 4
+        updateSelectedVolume { volume ->
+            volume.rotateQuarter(deltaTurns).also {
+                editorWidth = it.width
+                editorDepth = it.depth
+                editorQuarterTurns = it.quarterTurns
+            }
+        }
         pushEditorPreview()
     }
 
@@ -1016,11 +1472,17 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun clearEditorSelection() {
         selectedVolumeId = null
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
         editorDraftActive = false
+        editorDraftDecorModelId = null
+        editorQuarterTurns = 0
         pushEditorPreview()
     }
 
     private fun selectedVolume() = selectedVolumeId?.let { id -> editorWorld.volumes.firstOrNull { it.id == id } }
+
+    private fun selectedDecor() = selectedDecorId?.let { id -> editorWorld.decorations.firstOrNull { it.id == id } }
 
     private fun updateSelectedVolume(change: (ToyboxVolume) -> ToyboxVolume) {
         val selected = selectedVolumeId ?: return
@@ -1030,6 +1492,21 @@ class ToyboxRacersActivity : ThemedActivity() {
                 changed = true
                 change(volume)
             } else volume
+        })
+        if (changed) {
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+        }
+    }
+
+    private fun updateSelectedDecor(change: (ToyboxDecor) -> ToyboxDecor) {
+        val selected = selectedDecorId ?: return
+        var changed = false
+        editorWorld = editorWorld.copy(decorations = editorWorld.decorations.map { decor ->
+            if (decor.id == selected) {
+                changed = true
+                change(decor)
+            } else decor
         })
         if (changed) {
             worldStore.save(editorWorld)
@@ -1068,6 +1545,42 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun bindRepeatingEditorAction(view: View, action: () -> Unit) {
+        var activePointerId = MotionEvent.INVALID_POINTER_ID
+        val repeater = object : Runnable {
+            override fun run() {
+                if (activePointerId == MotionEvent.INVALID_POINTER_ID || !editorActive) return
+                action()
+                view.postDelayed(this, EDITOR_REPEAT_INTERVAL_MS)
+            }
+        }
+        fun release(touchedView: View) {
+            activePointerId = MotionEvent.INVALID_POINTER_ID
+            touchedView.removeCallbacks(repeater)
+            touchedView.isPressed = false
+            touchedView.alpha = 0.82f
+        }
+        view.setOnTouchListener { touchedView, event ->
+            if (!editorActive) return@setOnTouchListener true
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    activePointerId = event.getPointerId(event.actionIndex)
+                    touchedView.isPressed = true
+                    touchedView.alpha = 1f
+                    action()
+                    touchedView.removeCallbacks(repeater)
+                    touchedView.postDelayed(repeater, EDITOR_REPEAT_INITIAL_DELAY_MS)
+                }
+                MotionEvent.ACTION_POINTER_UP -> {
+                    if (event.getPointerId(event.actionIndex) == activePointerId) release(touchedView)
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> release(touchedView)
+            }
+            true
+        }
+    }
+
     private fun makeEditorButton(label: String, color: Int = 0xAA4B617A.toInt()): Button =
         makeButton(label, 72, color).apply { textSize = 12f }
 
@@ -1080,6 +1593,26 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun formatEditorNumber(value: Float): String =
         if (kotlin.math.abs(value - value.toInt()) < 0.001f) value.toInt().toString()
         else String.format(Locale.ROOT, "%.2f", value)
+
+    private fun decorModelFamilies(): List<DecorModelFamily> =
+        DECOR_ROOM_ORDER.mapNotNull { room ->
+            DecorCatalog.forRoom(room).takeIf { it.isNotEmpty() }?.let { DecorModelFamily(decorRoomLabel(room), it) }
+        }
+
+    private fun decorRoomLabel(room: DecorRoom): String = when (room) {
+        DecorRoom.KITCHEN -> "Cuisine"
+        DecorRoom.LIVING_ROOM -> "Salon"
+        DecorRoom.GARAGE -> "Garage"
+        DecorRoom.OFFICE -> "Bureau"
+        DecorRoom.BATHROOM -> "Salle de bain"
+        DecorRoom.OUTDOOR -> "Exterieur"
+        DecorRoom.BEDROOM -> "Chambre"
+    }
+
+    private fun decorName(modelId: String): String =
+        modelId.substringAfter('.')
+            .replace('_', ' ')
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun panelDragTouchListener(target: View): View.OnTouchListener {
@@ -1298,6 +1831,11 @@ class ToyboxRacersActivity : ThemedActivity() {
         val items: List<EditorItemPreset>
     )
 
+    private data class DecorModelFamily(
+        val name: String,
+        val items: List<DecorModel>
+    )
+
     private data class EditorItemPreset(
         val name: String,
         val kind: ToyboxVolumeKind,
@@ -1306,6 +1844,18 @@ class ToyboxRacersActivity : ThemedActivity() {
         val depth: Float,
         val minimumFloorY: Float = 0f
     )
+
+    private enum class EditorGroupMode {
+        OFF,
+        SAME_KIND,
+        CONNECTED;
+
+        fun next() = when (this) {
+            OFF -> SAME_KIND
+            SAME_KIND -> CONNECTED
+            CONNECTED -> OFF
+        }
+    }
 
     companion object {
         private const val PREFS_NAME = "toybox_racers_save"
@@ -1320,6 +1870,17 @@ class ToyboxRacersActivity : ThemedActivity() {
         )
         private const val EDITOR_DIMENSION_MIN_TICKS = 1
         private const val EDITOR_DIMENSION_MAX_SIZE = 100f
+        private const val EDITOR_REPEAT_INITIAL_DELAY_MS = 260L
+        private const val EDITOR_REPEAT_INTERVAL_MS = 82L
+        private val DECOR_ROOM_ORDER = listOf(
+            DecorRoom.GARAGE,
+            DecorRoom.KITCHEN,
+            DecorRoom.LIVING_ROOM,
+            DecorRoom.BEDROOM,
+            DecorRoom.OFFICE,
+            DecorRoom.BATHROOM,
+            DecorRoom.OUTDOOR
+        )
         private val EDITOR_ITEM_FAMILIES = listOf(
             EditorItemFamily(
                 "Construction",
@@ -1344,14 +1905,65 @@ class ToyboxRacersActivity : ThemedActivity() {
                     EditorItemPreset("Escalier", ToyboxVolumeKind.STAIR, 8f, 4f, 14f),
                     EditorItemPreset("Conduit large", ToyboxVolumeKind.DUCT, 12f, 5f, 22f)
                 )
-            ),
-            EditorItemFamily(
-                "Meubles et decor",
-                listOf(
-                    EditorItemPreset("Meuble bloc", ToyboxVolumeKind.FURNITURE, 12f, 5f, 8f),
-                    EditorItemPreset("Petit decor", ToyboxVolumeKind.DECOR, 3f, 3f, 3f)
-                )
             )
         )
+    }
+}
+
+private class DecorModelThumbnailView(
+    context: android.content.Context,
+    private val model: DecorModel
+) : View(context) {
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val rect = RectF()
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        val radius = 10f * resources.displayMetrics.density
+        paint.style = Paint.Style.FILL
+        paint.color = 0x6630364A
+        rect.set(0f, 0f, width.toFloat(), height.toFloat())
+        canvas.drawRoundRect(rect, radius, radius, paint)
+
+        val bounds = model.bounds
+        val spanX = maxOf(1f, bounds.width)
+        val spanZ = maxOf(1f, bounds.depth)
+        val spanY = maxOf(1f, bounds.height)
+        val visualWidth = (spanX + spanZ) * 0.72f
+        val visualHeight = (spanX + spanZ) * 0.34f + spanY * 0.72f
+        val scale = minOf(width * 0.72f / visualWidth, height * 0.72f / visualHeight).coerceAtLeast(0.1f)
+        val centerX = width * 0.5f
+        val centerY = height * 0.66f + spanY * scale * 0.22f
+
+        model.parts
+            .sortedWith(compareBy({ it.x + it.z }, { it.y }))
+            .forEach { part ->
+                val sx = centerX + (part.x - part.z) * 0.72f * scale
+                val sy = centerY + (part.x + part.z) * 0.34f * scale - part.y * 0.72f * scale
+                val w = maxOf(3f, (part.width + part.depth) * 0.34f * scale)
+                val h = maxOf(3f, part.height * 0.72f * scale)
+                paint.color = 0xFF000000.toInt() or (part.color and 0x00FFFFFF)
+                paint.alpha = if (part.solid) 255 else 170
+                when (part.shape) {
+                    DecorShape.OVAL, DecorShape.CYLINDER_Y, DecorShape.CYLINDER_X -> {
+                        rect.set(sx - w * 0.5f, sy - h * 0.5f, sx + w * 0.5f, sy + h * 0.5f)
+                        canvas.drawOval(rect, paint)
+                    }
+                    DecorShape.CONE_Y, DecorShape.GABLE_ROOF -> {
+                        val path = android.graphics.Path().apply {
+                            moveTo(sx, sy - h * 0.65f)
+                            lineTo(sx + w * 0.55f, sy + h * 0.45f)
+                            lineTo(sx - w * 0.55f, sy + h * 0.45f)
+                            close()
+                        }
+                        canvas.drawPath(path, paint)
+                    }
+                    else -> {
+                        rect.set(sx - w * 0.5f, sy - h * 0.5f, sx + w * 0.5f, sy + h * 0.5f)
+                        canvas.drawRoundRect(rect, 3f, 3f, paint)
+                    }
+                }
+                paint.alpha = 255
+            }
     }
 }

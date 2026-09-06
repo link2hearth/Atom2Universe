@@ -338,6 +338,7 @@ internal object PrototypeMeshFactory {
     fun world(world: ToyboxWorld, preview: ToyboxVolume? = null): ColoredMesh {
         val builder = MeshBuilder()
         world.volumes.forEach { addWorldVolume(builder, it, alpha = 1f) }
+        world.decorations.mapNotNull { it.placement() }.forEach { DecorMeshFactory.add(builder, it) }
         if (preview != null) addWorldVolume(builder, preview, alpha = 0.54f)
         return builder.build()
     }
@@ -472,29 +473,31 @@ internal object PrototypeMeshFactory {
 
     private fun addWorldVolume(builder: MeshBuilder, volume: ToyboxVolume, alpha: Float) {
         val color = rgba(volume.color, alpha)
+        val worldWidth = volume.worldWidth
+        val worldDepth = volume.worldDepth
         when (volume.kind) {
             ToyboxVolumeKind.RAMP -> addWorldRamp(builder, volume, color)
             ToyboxVolumeKind.STAIR -> addWorldStairs(builder, volume, color)
             ToyboxVolumeKind.WINDOW -> {
-                builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
-                builder.box(volume.x, volume.y, volume.z, volume.width * 0.92f, volume.height * 0.08f, volume.depth + 0.08f, CREAM)
-                builder.box(volume.x, volume.y, volume.z, volume.width * 0.08f, volume.height * 0.92f, volume.depth + 0.08f, CREAM)
+                builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
+                builder.box(volume.x, volume.y, volume.z, worldWidth * 0.92f, volume.height * 0.08f, worldDepth + 0.08f, CREAM)
+                builder.box(volume.x, volume.y, volume.z, worldWidth * 0.08f, volume.height * 0.92f, worldDepth + 0.08f, CREAM)
             }
             ToyboxVolumeKind.DOOR -> {
-                builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
-                builder.cylinderY(volume.x + volume.width * 0.34f, volume.y, volume.z + volume.depth * 0.52f, 0.42f, 0.18f, 8, CREAM)
+                builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
+                builder.cylinderY(volume.x + worldWidth * 0.34f, volume.y, volume.z + worldDepth * 0.52f, 0.42f, 0.18f, 8, CREAM)
             }
             ToyboxVolumeKind.RAIL -> {
-                builder.box(volume.x, volume.y + volume.height * 0.38f, volume.z, volume.width, volume.height * 0.18f, volume.depth, color)
-                builder.box(volume.x, volume.y - volume.height * 0.38f, volume.z, volume.width, volume.height * 0.14f, volume.depth, color)
-                val posts = maxOf(2, (volume.width / 6f).toInt() + 1)
+                builder.box(volume.x, volume.y + volume.height * 0.38f, volume.z, worldWidth, volume.height * 0.18f, worldDepth, color)
+                builder.box(volume.x, volume.y - volume.height * 0.38f, volume.z, worldWidth, volume.height * 0.14f, worldDepth, color)
+                val posts = maxOf(2, (worldWidth / 6f).toInt() + 1)
                 repeat(posts) { index ->
                     val t = if (posts == 1) 0.5f else index.toFloat() / (posts - 1)
-                    val x = volume.left + volume.width * t
-                    builder.box(x, volume.y, volume.z, 0.45f, volume.height, volume.depth, color)
+                    val x = volume.left + worldWidth * t
+                    builder.box(x, volume.y, volume.z, 0.45f, volume.height, worldDepth, color)
                 }
             }
-            else -> builder.box(volume.x, volume.y, volume.z, volume.width, volume.height, volume.depth, color)
+            else -> builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
         }
     }
 
@@ -519,8 +522,8 @@ internal object PrototypeMeshFactory {
     }
 
     private fun addWorldStairs(builder: MeshBuilder, volume: ToyboxVolume, color: FloatArray) {
-        val steps = maxOf(2, (volume.depth / 3f).toInt())
-        val stepDepth = volume.depth / steps
+        val steps = maxOf(2, (volume.worldDepth / 3f).toInt())
+        val stepDepth = volume.worldDepth / steps
         val bottom = volume.y - volume.height * 0.5f
         repeat(steps) { index ->
             val h = volume.height * (index + 1) / steps
@@ -529,7 +532,7 @@ internal object PrototypeMeshFactory {
                 volume.x,
                 bottom + h * 0.5f,
                 z,
-                volume.width,
+                volume.worldWidth,
                 h,
                 stepDepth,
                 color

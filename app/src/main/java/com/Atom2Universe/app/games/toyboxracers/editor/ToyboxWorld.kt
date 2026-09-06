@@ -1,5 +1,9 @@
 package com.Atom2Universe.app.games.toyboxracers.editor
 
+import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
+import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
+import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
+import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -26,12 +30,16 @@ internal data class ToyboxVolume(
     val height: Float,
     val depth: Float,
     val solid: Boolean = kind.solidByDefault,
-    val color: Int = kind.color
+    val color: Int = kind.color,
+    val quarterTurns: Int = 0
 ) {
-    val left get() = x - width * 0.5f
-    val right get() = x + width * 0.5f
-    val back get() = z - depth * 0.5f
-    val front get() = z + depth * 0.5f
+    val rotation get() = ((quarterTurns % 4) + 4) % 4
+    val worldWidth get() = if (rotation % 2 == 0) width else depth
+    val worldDepth get() = if (rotation % 2 == 0) depth else width
+    val left get() = x - worldWidth * 0.5f
+    val right get() = x + worldWidth * 0.5f
+    val back get() = z - worldDepth * 0.5f
+    val front get() = z + worldDepth * 0.5f
 
     fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
     fun resize(dw: Float, dd: Float) = copy(
@@ -41,6 +49,7 @@ internal data class ToyboxVolume(
     fun lift(dy: Float) = copy(y = (y + dy).coerceAtLeast(0f))
     fun taller(dh: Float) = copy(height = (height + dh).coerceAtLeast(0.25f))
     fun toggleSolid() = copy(solid = !solid)
+    fun rotateQuarter(delta: Int = 1) = copy(quarterTurns = ((quarterTurns + delta) % 4 + 4) % 4)
 
     fun toJson() = JSONObject()
         .put("id", id)
@@ -53,6 +62,7 @@ internal data class ToyboxVolume(
         .put("depth", depth.toDouble())
         .put("solid", solid)
         .put("color", color)
+        .put("quarterTurns", quarterTurns)
 
     companion object {
         fun fromJson(json: JSONObject): ToyboxVolume {
@@ -68,9 +78,50 @@ internal data class ToyboxVolume(
                 height = json.optDouble("height", 4.0).toFloat().coerceAtLeast(0.25f),
                 depth = json.optDouble("depth", 12.0).toFloat().coerceAtLeast(1f),
                 solid = json.optBoolean("solid", true),
-                color = json.optInt("color", kind.color)
+                color = json.optInt("color", kind.color),
+                quarterTurns = json.optInt("quarterTurns", 0)
             )
         }
+    }
+}
+
+internal data class ToyboxDecor(
+    val id: Long,
+    val modelId: String,
+    val x: Float,
+    val y: Float,
+    val z: Float,
+    val quarterTurns: Int = 0,
+    val scale: Float = 1f
+) {
+    fun placement(): DecorPlacement? = runCatching {
+        DecorPlacement(DecorCatalog[modelId], x, y, z, quarterTurns, scale)
+    }.getOrNull()
+
+    fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
+    fun lift(dy: Float) = copy(y = (y + dy).coerceAtLeast(0f))
+    fun resize(ds: Float) = copy(scale = (scale + ds).coerceAtLeast(0.05f))
+    fun rotateQuarter(delta: Int = 1) = copy(quarterTurns = ((quarterTurns + delta) % 4 + 4) % 4)
+
+    fun toJson() = JSONObject()
+        .put("id", id)
+        .put("modelId", modelId)
+        .put("x", x.toDouble())
+        .put("y", y.toDouble())
+        .put("z", z.toDouble())
+        .put("quarterTurns", quarterTurns)
+        .put("scale", scale.toDouble())
+
+    companion object {
+        fun fromJson(json: JSONObject) = ToyboxDecor(
+            id = json.optLong("id", System.nanoTime()),
+            modelId = json.optString("modelId"),
+            x = json.optDouble("x", 0.0).toFloat(),
+            y = json.optDouble("y", 0.0).toFloat(),
+            z = json.optDouble("z", 0.0).toFloat(),
+            quarterTurns = json.optInt("quarterTurns", 0),
+            scale = json.optDouble("scale", 1.0).toFloat().coerceAtLeast(0.05f)
+        )
     }
 }
 
@@ -103,13 +154,15 @@ internal data class ToyboxWorld(
     val version: Int = VERSION,
     val name: String = "Maison tablette",
     val volumes: List<ToyboxVolume> = starterVolumes(),
-    val checkpoints: List<ToyboxCheckpoint> = emptyList()
+    val checkpoints: List<ToyboxCheckpoint> = emptyList(),
+    val decorations: List<ToyboxDecor> = emptyList()
 ) {
     fun toJson(): JSONObject = JSONObject()
         .put("version", version)
         .put("name", name)
         .put("volumes", JSONArray().apply { volumes.forEach { put(it.toJson()) } })
         .put("checkpoints", JSONArray().apply { checkpoints.forEach { put(it.toJson()) } })
+        .put("decorations", JSONArray().apply { decorations.forEach { put(it.toJson()) } })
 
     companion object {
         const val VERSION = 1
@@ -117,11 +170,13 @@ internal data class ToyboxWorld(
         fun fromJson(json: JSONObject): ToyboxWorld {
             val volumesJson = json.optJSONArray("volumes") ?: JSONArray()
             val checkpointJson = json.optJSONArray("checkpoints") ?: JSONArray()
+            val decorationsJson = json.optJSONArray("decorations") ?: JSONArray()
             return ToyboxWorld(
                 version = json.optInt("version", VERSION),
                 name = json.optString("name", "Maison tablette"),
                 volumes = List(volumesJson.length()) { ToyboxVolume.fromJson(volumesJson.getJSONObject(it)) },
-                checkpoints = List(checkpointJson.length()) { ToyboxCheckpoint.fromJson(checkpointJson.getJSONObject(it)) }
+                checkpoints = List(checkpointJson.length()) { ToyboxCheckpoint.fromJson(checkpointJson.getJSONObject(it)) },
+                decorations = List(decorationsJson.length()) { ToyboxDecor.fromJson(decorationsJson.getJSONObject(it)) }
             )
         }
 
@@ -136,5 +191,69 @@ internal data class ToyboxWorld(
             ToyboxVolume(8, ToyboxVolumeKind.DUCT, 35f, 4f, -20f, 48f, 8f, 16f),
             ToyboxVolume(9, ToyboxVolumeKind.RAIL, 0f, 3f, 0f, 48f, 5f, 1.2f)
         )
+
+        fun builtInWorlds(): List<ToyboxWorld> = listOf(
+            ToyboxWorld(
+                name = "Maison complete 3 etages",
+                volumes = completeHouseVolumes(),
+                decorations = completeHouseDecorations()
+            ),
+            ToyboxWorld(name = "Maison tablette", volumes = starterVolumes())
+        )
+
+        private fun completeHouseVolumes(): List<ToyboxVolume> {
+            var nextId = 10_000L
+            fun RoomBox.toVolume(kind: ToyboxVolumeKind) = ToyboxVolume(
+                id = nextId++,
+                kind = kind,
+                x = x,
+                y = y,
+                z = z,
+                width = width,
+                height = height,
+                depth = depth,
+                solid = kind.solidByDefault,
+                color = 0xFF000000.toInt() or (color and 0x00FFFFFF)
+            )
+            val floors = HouseGeometry.floorBoxes().map { it.toVolume(ToyboxVolumeKind.FLOOR) }
+            val walls = HouseGeometry.wallBoxes().map { box ->
+                box.toVolume(if (box.height <= 5f) ToyboxVolumeKind.RAIL else ToyboxVolumeKind.WALL)
+            }
+            val furniture = HouseGeometry.furnitureBoxes().map { box ->
+                box.toVolume(classifyHouseBox(box))
+            }
+            return floors + walls + furniture
+        }
+
+        private fun classifyHouseBox(box: RoomBox): ToyboxVolumeKind {
+            val color = box.color and 0x00FFFFFF
+            val thin = box.width <= 1.2f || box.depth <= 1.2f
+            return when {
+                color == 0x9FD2E3 -> ToyboxVolumeKind.WINDOW
+                color == 0xA8D1B7 && thin && box.height >= 12f -> ToyboxVolumeKind.DOOR
+                color == 0x8DA7B3 || color == 0xE6EEF2 -> ToyboxVolumeKind.DUCT
+                color == 0xC08A55 || color == 0xD6A46E || color == 0xA7B9C6 -> ToyboxVolumeKind.RAMP
+                color == 0xF3E9D7 && box.height <= 1.2f && box.depth <= 4f -> ToyboxVolumeKind.STAIR
+                color == 0xF7E7C8 || color == 0xC79A5A || color == 0xB57F4A -> ToyboxVolumeKind.RAIL
+                !box.isSolidDecor() -> ToyboxVolumeKind.DECOR
+                else -> ToyboxVolumeKind.FURNITURE
+            }
+        }
+
+        private fun RoomBox.isSolidDecor(): Boolean =
+            width >= 1f && height >= 0.5f && depth >= 1f
+
+        private fun completeHouseDecorations(): List<ToyboxDecor> =
+            HouseGeometry.furnitureDecorations().mapIndexed { index, placement ->
+                ToyboxDecor(
+                    id = 20_000L + index,
+                    modelId = placement.model.id,
+                    x = placement.x,
+                    y = placement.y,
+                    z = placement.z,
+                    quarterTurns = placement.quarterTurns,
+                    scale = placement.scale
+                )
+            }
     }
 }

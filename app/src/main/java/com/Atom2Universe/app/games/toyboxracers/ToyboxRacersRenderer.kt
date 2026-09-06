@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
 import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
@@ -18,6 +19,7 @@ import com.Atom2Universe.app.games.toyboxracers.render.ToyboxShader
 import com.Atom2Universe.app.games.toyboxracers.render.TurboEffects
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
+import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -94,8 +96,10 @@ internal class ToyboxRacersRenderer(
     @Volatile private var previewFloorY = 0f
     @Volatile private var previewSolid = true
     @Volatile private var previewColor = ToyboxVolumeKind.FLOOR.color
+    @Volatile private var previewQuarterTurns = 0
     @Volatile private var selectedPreview: ToyboxVolume? = null
     @Volatile private var previewVisible = false
+    @Volatile private var decorPreview: ToyboxDecor? = null
 
     private lateinit var shader: ToyboxShader
     private lateinit var trackMesh: ColoredMesh
@@ -105,8 +109,10 @@ internal class ToyboxRacersRenderer(
     private lateinit var rivalMeshes: List<ColoredMesh>
     private var worldMesh: ColoredMesh? = null
     private var previewMesh: ColoredMesh? = null
+    private var decorPreviewMesh: ColoredMesh? = null
     private var currentWorld = ToyboxWorld()
     private var lastPreviewVolume: ToyboxVolume? = null
+    private var lastPreviewDecor: ToyboxDecor? = null
 
     private val projection = FloatArray(16)
     private val view = FloatArray(16)
@@ -233,6 +239,11 @@ internal class ToyboxRacersRenderer(
         lastPreviewVolume = null
     }
 
+    fun setEditorDecorPreview(decor: ToyboxDecor?) {
+        decorPreview = decor
+        lastPreviewDecor = null
+    }
+
     fun resetEditorPreviewAnchor() {
         val forward = horizontalEditorForward()
         previewAnchorX = snap(editorCameraPosition.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
@@ -249,7 +260,8 @@ internal class ToyboxRacersRenderer(
         grid: Float,
         floorY: Float,
         solid: Boolean,
-        color: Int
+        color: Int,
+        quarterTurns: Int = 0
     ) {
         previewKind = kind
         previewWidth = width.coerceAtLeast(0.05f)
@@ -259,6 +271,7 @@ internal class ToyboxRacersRenderer(
         previewFloorY = floorY
         previewSolid = solid
         previewColor = color
+        previewQuarterTurns = quarterTurns
         lastPreviewVolume = null
     }
 
@@ -304,7 +317,8 @@ internal class ToyboxRacersRenderer(
             height = height,
             depth = depth,
             solid = previewSolid,
-            color = previewColor
+            color = previewColor,
+            quarterTurns = previewQuarterTurns
         )
     }
 
@@ -319,6 +333,23 @@ internal class ToyboxRacersRenderer(
         val direction = (far - near).normalized()
         return volumes
             .mapNotNull { volume -> rayBoxDistance(near, direction, volume)?.let { distance -> volume.id to distance } }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
+    fun pickDecor(screenX: Float, screenY: Float, decorations: List<ToyboxDecor>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return decorations
+            .mapNotNull { decor ->
+                val distance = decor.placement()
+                    ?.solids
+                    ?.mapNotNull { box -> rayBoxDistance(near, direction, box) }
+                    ?.minOrNull()
+                distance?.let { decor.id to it }
+            }
             .minByOrNull { it.second }
             ?.first
     }
@@ -579,6 +610,14 @@ internal class ToyboxRacersRenderer(
             previewMesh = preview?.let { PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList()), it).also { mesh -> mesh.upload() } }
             lastPreviewVolume = preview
         }
+        val decor = decorPreview
+        if (decor != lastPreviewDecor) {
+            decorPreviewMesh?.destroy()
+            decorPreviewMesh = decor?.let {
+                PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList(), decorations = listOf(it))).also { mesh -> mesh.upload() }
+            }
+            lastPreviewDecor = decor
+        }
     }
 
     private fun renderScene(frameSeconds: Float) {
@@ -591,6 +630,7 @@ internal class ToyboxRacersRenderer(
             GLES30.glDepthMask(false)
             GLES30.glDisable(GLES30.GL_CULL_FACE)
             previewMesh?.draw(shader, viewProjection, identity)
+            decorPreviewMesh?.draw(shader, viewProjection, identity)
             GLES30.glEnable(GLES30.GL_CULL_FACE)
             GLES30.glDepthMask(true)
             GLES30.glDisable(GLES30.GL_BLEND)
@@ -693,6 +733,9 @@ internal class ToyboxRacersRenderer(
         previewMesh?.destroy()
         previewMesh = null
         lastPreviewVolume = null
+        decorPreviewMesh?.destroy()
+        decorPreviewMesh = null
+        lastPreviewDecor = null
         worldDirty = false
     }
 
@@ -722,12 +765,44 @@ internal class ToyboxRacersRenderer(
     }
 
     private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: ToyboxVolume): Float? {
-        val minX = box.left
-        val maxX = box.right
-        val minY = box.y - box.height * 0.5f
-        val maxY = box.y + box.height * 0.5f
-        val minZ = box.back
-        val maxZ = box.front
+        return rayBoxDistance(
+            origin,
+            direction,
+            box.left,
+            box.right,
+            box.y - box.height * 0.5f,
+            box.y + box.height * 0.5f,
+            box.back,
+            box.front
+        )
+    }
+
+    private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: RoomBox): Float? {
+        val halfWidth = box.width * 0.5f
+        val halfHeight = box.height * 0.5f
+        val halfDepth = box.depth * 0.5f
+        return rayBoxDistance(
+            origin,
+            direction,
+            box.x - halfWidth,
+            box.x + halfWidth,
+            box.y - halfHeight,
+            box.y + halfHeight,
+            box.z - halfDepth,
+            box.z + halfDepth
+        )
+    }
+
+    private fun rayBoxDistance(
+        origin: Vec3,
+        direction: Vec3,
+        minX: Float,
+        maxX: Float,
+        minY: Float,
+        maxY: Float,
+        minZ: Float,
+        maxZ: Float
+    ): Float? {
         var tMin = 0f
         var tMax = 500f
 
