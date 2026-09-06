@@ -6,6 +6,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import org.json.JSONArray
 import org.json.JSONObject
 
 internal class ToyboxWorldStore(private val context: Context) {
@@ -24,6 +25,18 @@ internal class ToyboxWorldStore(private val context: Context) {
         worldDir.mkdirs()
         worldFile.writeText(world.toJson().toString(2))
         return worldFile
+    }
+
+    fun loadUndoHistory(file: File?): JSONArray? {
+        val undoFile = undoFileFor(file)
+        if (!undoFile.exists()) return null
+        return runCatching { JSONArray(undoFile.readText()) }.getOrNull()
+    }
+
+    fun saveUndoHistory(file: File?, history: JSONArray) {
+        val undoFile = undoFileFor(file)
+        undoFile.parentFile?.mkdirs()
+        undoFile.writeText(history.toString(2))
     }
 
     fun saveCreation(world: ToyboxWorld, name: String = world.name): File {
@@ -55,6 +68,35 @@ internal class ToyboxWorldStore(private val context: Context) {
         return runCatching {
             ToyboxWorld.fromJson(JSONObject(canonicalFile.readText()))
         }.getOrNull()
+    }
+
+    /** Écrase une création déjà nommée (bouton "Sauvegarder" sur une copie
+     * qui a déjà un fichier propre) — jamais utilisé pour un monde intégré. */
+    fun overwriteCreation(world: ToyboxWorld, file: File): Boolean {
+        val canonicalDir = creationsDir.canonicalFile
+        val canonicalFile = file.canonicalFile
+        if (!canonicalFile.path.startsWith(canonicalDir.path) || !canonicalFile.exists()) return false
+        canonicalFile.writeText(world.toJson().toString(2))
+        save(world)
+        return true
+    }
+
+    fun creationFileNamed(name: String): File? {
+        creationsDir.mkdirs()
+        return creationsDir
+            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
+            ?.firstOrNull { it.name == name }
+    }
+
+    private fun undoFileFor(file: File?): File {
+        if (file == null) return File(worldDir, "${FILE_NAME.removeSuffix(".json")}.undo.json")
+        val canonicalDir = creationsDir.canonicalFile
+        val canonicalFile = file.canonicalFile
+        return if (canonicalFile.path.startsWith(canonicalDir.path)) {
+            File(canonicalFile.parentFile, "${canonicalFile.nameWithoutExtension}.undo.json")
+        } else {
+            File(worldDir, "${FILE_NAME.removeSuffix(".json")}.undo.json")
+        }
     }
 
     fun exportCopy(world: ToyboxWorld): android.net.Uri {

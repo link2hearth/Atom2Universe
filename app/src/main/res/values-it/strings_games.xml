@@ -315,4 +315,18 @@
     <string name="toybox_circuit_furniture">Giro dei mobili</string>
     <string name="toybox_circuit_expedition">Grande spedizione</string>
     <string name="toybox_house_mode">Casa</string>
+    <string name="toybox_menu_edit_mode">Modifica</string>
+    <string name="toybox_menu_test_mode">Prova</string>
+    <string name="toybox_menu_load">Carica…</string>
+    <string name="toybox_menu_save">Salva</string>
+    <string name="toybox_menu_save_as_new">Salva come copia</string>
+    <string name="toybox_menu_back">Indietro</string>
+    <string name="toybox_menu_worlds_section">Mondi</string>
+    <string name="toybox_menu_my_creations_section">Le mie creazioni</string>
+    <string name="toybox_menu_classic_circuits">Circuiti classici</string>
+    <string name="toybox_menu_no_creations">Nessuna creazione salvata</string>
+    <string name="toybox_menu_creation_saved">Creazione salvata: %1$s</string>
+    <string name="toybox_menu_name_prompt">Nome del salvataggio</string>
+    <string name="toybox_menu_default_name">La mia creazione</string>
+    <string name="toybox_menu_blocks_count">%1$d blocchi</string>
 </resources>

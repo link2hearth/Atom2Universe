@@ -16,8 +16,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.EditText
-import android.text.InputType
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.NumberPicker
@@ -28,6 +26,7 @@ import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.SimpleColorPickerDialog
+import com.Atom2Universe.app.games.toyboxracers.editor.ActiveWorldKind
 import com.Atom2Universe.app.games.toyboxracers.editor.EditorTouchLayer
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
@@ -36,23 +35,118 @@ import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
 import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
+import com.Atom2Universe.app.games.toyboxracers.track.RaceLayouts
+import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
 import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
 import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
 import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorldStore
+import com.Atom2Universe.app.games.toyboxracers.menu.ToyboxWorldMenu
+import com.Atom2Universe.app.games.toyboxracers.menu.ToyboxWorldMenuHost
 import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
 import com.Atom2Universe.app.games.toyboxracers.models.DecorModel
 import com.Atom2Universe.app.games.toyboxracers.models.DecorRoom
 import com.Atom2Universe.app.games.toyboxracers.models.DecorShape
 import com.Atom2Universe.app.util.enableImmersiveMode
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * Exploration libre et courses facultatives, accessibles depuis le hub des jeux.
  */
 class ToyboxRacersActivity : ThemedActivity() {
+    private data class EditorUndoState(
+        val world: ToyboxWorld,
+        val selectedVolumeId: Long?,
+        val selectedDecorId: Long?,
+        val selectedGroupIds: Set<Long>,
+        val draftActive: Boolean,
+        val draftDecorModelId: String?,
+        val kind: ToyboxVolumeKind,
+        val width: Float,
+        val height: Float,
+        val depth: Float,
+        val quarterTurns: Int,
+        val yawDegrees: Float,
+        val pitchDegrees: Float,
+        val rollDegrees: Float,
+        val floorY: Float,
+        val solid: Boolean,
+        val color: Int,
+        val decorQuarterTurns: Int,
+        val decorYawDegrees: Float,
+        val decorScale: Float,
+        val groupMode: EditorGroupMode,
+        val rotationAxis: ToyboxRotationAxis,
+        val rotationStepIndex: Int,
+        val gridIndex: Int
+    ) {
+        fun toJson() = JSONObject()
+            .put("world", world.toJson())
+            .put("selectedVolumeId", selectedVolumeId)
+            .put("selectedDecorId", selectedDecorId)
+            .put("selectedGroupIds", JSONArray().apply { selectedGroupIds.forEach { put(it) } })
+            .put("draftActive", draftActive)
+            .put("draftDecorModelId", draftDecorModelId)
+            .put("kind", kind.name)
+            .put("width", width.toDouble())
+            .put("height", height.toDouble())
+            .put("depth", depth.toDouble())
+            .put("quarterTurns", quarterTurns)
+            .put("yawDegrees", yawDegrees.toDouble())
+            .put("pitchDegrees", pitchDegrees.toDouble())
+            .put("rollDegrees", rollDegrees.toDouble())
+            .put("floorY", floorY.toDouble())
+            .put("solid", solid)
+            .put("color", color)
+            .put("decorQuarterTurns", decorQuarterTurns)
+            .put("decorYawDegrees", decorYawDegrees.toDouble())
+            .put("decorScale", decorScale.toDouble())
+            .put("groupMode", groupMode.name)
+            .put("rotationAxis", rotationAxis.name)
+            .put("rotationStepIndex", rotationStepIndex)
+            .put("gridIndex", gridIndex)
+
+        companion object {
+            fun fromJson(json: JSONObject): EditorUndoState {
+                val selectedGroupJson = json.optJSONArray("selectedGroupIds") ?: JSONArray()
+                return EditorUndoState(
+                    world = ToyboxWorld.fromJson(json.getJSONObject("world")),
+                    selectedVolumeId = if (json.isNull("selectedVolumeId")) null else json.optLong("selectedVolumeId"),
+                    selectedDecorId = if (json.isNull("selectedDecorId")) null else json.optLong("selectedDecorId"),
+                    selectedGroupIds = List(selectedGroupJson.length()) { selectedGroupJson.optLong(it) }.toSet(),
+                    draftActive = json.optBoolean("draftActive", false),
+                    draftDecorModelId = json.optString("draftDecorModelId").takeIf { !json.isNull("draftDecorModelId") && it.isNotBlank() },
+                    kind = ToyboxVolumeKind.entries.find { it.name == json.optString("kind") } ?: ToyboxVolumeKind.FLOOR,
+                    width = json.optDouble("width", 20.0).toFloat(),
+                    height = json.optDouble("height", 0.6).toFloat(),
+                    depth = json.optDouble("depth", 20.0).toFloat(),
+                    quarterTurns = json.optInt("quarterTurns", 0),
+                    yawDegrees = json.optDouble("yawDegrees", 0.0).toFloat(),
+                    pitchDegrees = json.optDouble("pitchDegrees", 0.0).toFloat(),
+                    rollDegrees = json.optDouble("rollDegrees", 0.0).toFloat(),
+                    floorY = json.optDouble("floorY", 0.0).toFloat(),
+                    solid = json.optBoolean("solid", true),
+                    color = json.optInt("color", ToyboxVolumeKind.FLOOR.color),
+                    decorQuarterTurns = json.optInt("decorQuarterTurns", 0),
+                    decorYawDegrees = json.optDouble("decorYawDegrees", 0.0).toFloat(),
+                    decorScale = json.optDouble("decorScale", 1.0).toFloat(),
+                    groupMode = EditorGroupMode.entries.find { it.name == json.optString("groupMode") } ?: EditorGroupMode.OFF,
+                    rotationAxis = ToyboxRotationAxis.entries.find { it.name == json.optString("rotationAxis") } ?: ToyboxRotationAxis.YAW,
+                    rotationStepIndex = json.optInt("rotationStepIndex", 1),
+                    gridIndex = json.optInt("gridIndex", 0)
+                )
+            }
+        }
+    }
+
     private lateinit var glView: ToyboxRacersGLView
     private lateinit var renderer: ToyboxRacersRenderer
     private lateinit var hud: TextView
@@ -62,9 +156,6 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var resultText: TextView
     private lateinit var difficultyButton: Button
     private lateinit var modeButton: Button
-    private lateinit var roomButton: Button
-    private lateinit var circuitButton: Button
-    private lateinit var editorButton: Button
     private lateinit var pauseButton: Button
     private lateinit var editorPanel: LinearLayout
     private lateinit var editorToolsPanel: LinearLayout
@@ -77,6 +168,12 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var editorSolidButton: Button
     private lateinit var editorColorButton: Button
     private lateinit var editorPlaceButton: Button
+    private lateinit var editorDuplicateButton: Button
+    private lateinit var editorRotateLeftButton: Button
+    private lateinit var editorRotateRightButton: Button
+    private lateinit var editorRotationStepButton: Button
+    private lateinit var editorRotationAxisButton: Button
+    private lateinit var editorUndoButton: Button
     private lateinit var editorWidthPicker: NumberPicker
     private lateinit var editorHeightPicker: NumberPicker
     private lateinit var editorDepthPicker: NumberPicker
@@ -87,7 +184,10 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var housePlan: HousePlan
     private lateinit var minimap: ToyboxMinimapView
     private lateinit var worldStore: ToyboxWorldStore
+    private lateinit var worldMenu: ToyboxWorldMenu
     private var editorWorld = ToyboxWorld()
+    private var currentCreationFile: File? = null
+    private var currentWorldKind = ActiveWorldKind.CUSTOM
     private var currentMode = PlayMode.EXPLORATION
     private var editorActive = false
     private var editorKind = ToyboxVolumeKind.FLOOR
@@ -95,6 +195,9 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var editorHeight = 0.6f
     private var editorDepth = 20f
     private var editorQuarterTurns = 0
+    private var editorYawDegrees = 0f
+    private var editorPitchDegrees = 0f
+    private var editorRollDegrees = 0f
     private var editorFloorY = 0f
     private var editorSolid = true
     private var editorColor = editorKind.color
@@ -103,8 +206,11 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var selectedGroupIds: Set<Long> = emptySet()
     private var editorDraftDecorModelId: String? = null
     private var editorDecorQuarterTurns = 0
+    private var editorDecorYawDegrees = 0f
     private var editorDecorScale = 1f
     private var editorGroupMode = EditorGroupMode.OFF
+    private var editorRotationAxis = ToyboxRotationAxis.YAW
+    private var editorRotationStepIndex = 1
     private var editorDraftActive = false
     private var editorGridIndex = 0
     private var editorForward = 0f
@@ -113,12 +219,13 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var editorYaw = 0f
     private var syncingEditorPickers = false
     private var paused = false
-    private var pauseDialog: AlertDialog? = null
     private val releaseControls = mutableListOf<() -> Unit>()
+    private val editorUndoStack = ArrayDeque<EditorUndoState>()
     private var currentDifficulty = RaceDifficulty.ARCADE
     private var lastTurboLevel = 0
     private var lastTurboReleaseSerial = 0
     private var lastFinishSerial = 0
+    private var suppressEditorUndo = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +234,9 @@ class ToyboxRacersActivity : ThemedActivity() {
 
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         worldStore = ToyboxWorldStore(this)
+        worldMenu = ToyboxWorldMenu(this, worldMenuHost)
         editorWorld = worldStore.load()
+        currentCreationFile = prefs.getString(KEY_CURRENT_CREATION_FILE, null)?.let { worldStore.creationFileNamed(it) }
         currentDifficulty = RaceDifficulty.entries.getOrElse(
             prefs.getInt(KEY_DIFFICULTY, RaceDifficulty.ARCADE.ordinal)
         ) { RaceDifficulty.ARCADE }
@@ -147,6 +256,8 @@ class ToyboxRacersActivity : ThemedActivity() {
             runOnUiThread { updateHud(state) }
         }
         renderer.setEditorWorld(editorWorld)
+        renderer.setActiveWorldKind(currentWorldKind)
+        loadEditorUndoHistory()
         pushEditorPreview()
         glView = ToyboxRacersGLView(this, renderer)
 
@@ -166,11 +277,12 @@ class ToyboxRacersActivity : ThemedActivity() {
             bottomMargin = dp(20)
         })
         addRaceOverlay(root)
+        updateRaceControlsVisibility()
         setContentView(root)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (editorActive) toggleEditorMode() else showPause()
+                showPause()
             }
         })
     }
@@ -195,8 +307,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     override fun onDestroy() {
-        pauseDialog?.dismiss()
-        pauseDialog = null
+        worldMenu.dismiss()
         super.onDestroy()
     }
 
@@ -209,146 +320,192 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun resumeGame() {
         paused = false
         renderer.setPaused(false)
-        pauseDialog?.dismiss()
-        pauseDialog = null
+        worldMenu.dismiss()
         enableImmersiveMode()
     }
 
     private fun showPause() {
-        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
+        if (isFinishing || isDestroyed || worldMenu.isShowing()) return
         pauseGame()
-        if (editorActive) {
-            showEditorPause()
-            return
-        }
-        pauseDialog = dialogBuilder()
-            .setTitle(R.string.toybox_pause)
-            .setItems(arrayOf(
-                getString(R.string.toybox_resume),
-                getString(R.string.toybox_restart),
-                getString(if (currentMode == PlayMode.EXPLORATION) R.string.toybox_start_race else R.string.toybox_free),
-                getString(R.string.toybox_quit)
-            )) { _, which ->
-                when (which) {
-                    0 -> resumeGame()
-                    1 -> {
-                        resultPanel.visibility = View.GONE
-                        renderer.requestReset()
-                        resumeGame()
-                    }
-                    2 -> {
-                        switchMode()
-                        resumeGame()
-                    }
-                    3 -> finish()
-                }
-            }
-            .setOnCancelListener { resumeGame() }
-            .show()
+        worldMenu.showPause()
     }
 
-    private fun showEditorPause() {
-        pauseDialog = dialogBuilder()
-            .setTitle("Pause creation")
-            .setItems(arrayOf(
-                "Reprendre",
-                "Save actual",
-                "Load",
-                "Load creations",
-                "Load niveau du jeu",
-                "Quitter le mode edition",
-                getString(R.string.toybox_quit)
-            )) { _, which ->
-                when (which) {
-                    0 -> resumeGame()
-                    1 -> saveCurrentCreation()
-                    2 -> showEditorLoadMenu()
-                    3 -> showCreationLoader()
-                    4 -> showBuiltInLevelLoader()
-                    5 -> {
-                        resumeGame()
-                        toggleEditorMode()
-                    }
-                    6 -> finish()
-                }
-            }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    private fun showEditorLoadMenu() {
-        pauseDialog = null
-        pauseDialog = dialogBuilder()
-            .setTitle("Load")
-            .setItems(arrayOf("Load creations", "Load niveau du jeu")) { _, which ->
-                when (which) {
-                    0 -> showCreationLoader()
-                    1 -> showBuiltInLevelLoader()
-                }
-            }
-            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    private fun saveCurrentCreation() {
-        val file = worldStore.saveCreation(editorWorld)
-        Toast.makeText(this, "Creation sauvee: ${file.name}", Toast.LENGTH_SHORT).show()
-        resumeGame()
-    }
-
-    private fun showCreationLoader() {
-        val creations = worldStore.listCreations()
-        if (creations.isEmpty()) {
-            Toast.makeText(this, "Aucune creation sauvegardee", Toast.LENGTH_SHORT).show()
-            resumeGame()
-            return
-        }
-        pauseDialog = null
-        pauseDialog = dialogBuilder()
-            .setTitle("Load creations")
-            .setItems(creations.map { it.nameWithoutExtension }.toTypedArray()) { _, which ->
-                val world = worldStore.loadCreation(creations[which])
-                if (world == null) {
-                    Toast.makeText(this, "Creation illisible", Toast.LENGTH_SHORT).show()
-                    resumeGame()
-                } else {
-                    loadEditorWorld(world, saveAsActual = true)
-                    Toast.makeText(this, "Creation chargee", Toast.LENGTH_SHORT).show()
-                    resumeGame()
-                }
-            }
-            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    private fun showBuiltInLevelLoader() {
-        val levels = ToyboxWorld.builtInWorlds()
-        pauseDialog = null
-        pauseDialog = dialogBuilder()
-            .setTitle("Load niveau du jeu")
-            .setItems(levels.map { it.name }.toTypedArray()) { _, which ->
-                loadEditorWorld(levels[which], saveAsActual = true)
-                Toast.makeText(this, "${levels[which].name} charge", Toast.LENGTH_SHORT).show()
-                resumeGame()
-            }
-            .setNegativeButton("Retour") { _, _ -> showEditorPause() }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    private fun loadEditorWorld(world: ToyboxWorld, saveAsActual: Boolean) {
+    /** Bascule d'un monde à l'autre : toujours une copie en mémoire, jamais
+     * une écriture du fichier source (créations comme mondes intégrés). */
+    private fun loadCustomWorld(world: ToyboxWorld, sourceFile: File?) {
         editorWorld = world
+        editorUndoStack.clear()
+        currentCreationFile = sourceFile
+        loadEditorUndoHistory()
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+            .putString(KEY_CURRENT_CREATION_FILE, sourceFile?.name)
+            .apply()
         selectedVolumeId = null
         selectedDecorId = null
         selectedGroupIds = emptySet()
         editorDraftActive = false
         editorDraftDecorModelId = null
         editorQuarterTurns = 0
-        if (saveAsActual) worldStore.save(editorWorld)
+        editorYawDegrees = 0f
+        editorPitchDegrees = 0f
+        editorRollDegrees = 0f
+        worldStore.save(editorWorld)
         renderer.setEditorWorld(editorWorld)
+        currentWorldKind = ActiveWorldKind.CUSTOM
+        renderer.setActiveWorldKind(currentWorldKind)
+        currentMode = PlayMode.EXPLORATION
+        renderer.setMode(currentMode)
+        renderer.requestReset()
         pushEditorPreview()
+        updateRaceControlsVisibility()
+        resumeGame()
+    }
+
+    private fun loadLegacyScene(scene: SceneChoice) {
+        currentWorldKind = ActiveWorldKind.LEGACY
+        renderer.setActiveWorldKind(currentWorldKind)
+        if (editorActive) toggleEditorMode()
+        changeScene(scene)
+        updateRaceControlsVisibility()
+        resumeGame()
+    }
+
+    private fun saveCurrentCreation() {
+        val file = currentCreationFile
+        if (file != null && worldStore.overwriteCreation(editorWorld, file)) {
+            Toast.makeText(this, getString(R.string.toybox_menu_creation_saved, file.nameWithoutExtension), Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveCurrentCreationAsNew(name: String) {
+        editorWorld = editorWorld.copy(name = name)
+        val file = worldStore.saveCreation(editorWorld, name)
+        currentCreationFile = file
+        saveEditorUndoHistory()
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+            .putString(KEY_CURRENT_CREATION_FILE, file.name)
+            .apply()
+    }
+
+    /** Traduit l'état de l'activité vers ce dont [ToyboxWorldMenu] a besoin,
+     * sans lui exposer les champs privés directement. */
+    private val worldMenuHost = object : ToyboxWorldMenuHost {
+        override val worldStore get() = this@ToyboxRacersActivity.worldStore
+        override fun dialogBuilder() = this@ToyboxRacersActivity.dialogBuilder()
+        override fun activeWorldKind() = currentWorldKind
+        override fun isEditorActive() = editorActive
+        override fun currentScene() = this@ToyboxRacersActivity.currentScene
+        override fun housePlan() = this@ToyboxRacersActivity.housePlan
+        override fun currentCreationFile() = currentCreationFile
+        override fun currentEditorWorldName() = editorWorld.name
+        override fun roomLabel(kind: RoomKind) = this@ToyboxRacersActivity.roomLabel(kind)
+        override fun circuitLabel(kind: CircuitKind) = this@ToyboxRacersActivity.circuitLabel(kind)
+        override fun sceneForRoom(kind: RoomKind) = this@ToyboxRacersActivity.sceneForRoom(kind)
+        override fun resumeGame() = this@ToyboxRacersActivity.resumeGame()
+        override fun restartRace() {
+            resultPanel.visibility = View.GONE
+            renderer.requestReset()
+            resumeGame()
+        }
+        override fun quitGame() = finish()
+        override fun setEditing(editing: Boolean) {
+            if (editing != editorActive) toggleEditorMode()
+            resumeGame()
+        }
+        override fun loadCustomWorld(world: ToyboxWorld, sourceFile: File?) =
+            this@ToyboxRacersActivity.loadCustomWorld(world, sourceFile)
+        override fun loadLegacyScene(scene: SceneChoice) = this@ToyboxRacersActivity.loadLegacyScene(scene)
+        override fun editLegacySceneAsNewCreation() = this@ToyboxRacersActivity.editLegacySceneAsNewCreation()
+        override fun setHousePlan(plan: HousePlan) {
+            housePlan = plan
+            val editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putLong(KEY_HOUSE_SEED, plan.seed)
+            RoomKind.entries.forEach { editor.remove(KEY_ROOM_CIRCUIT + it.name) }
+            editor.apply()
+            loadLegacyScene(housePlan.room(currentScene.room).scene)
+        }
+        override fun saveCurrentCreation() = this@ToyboxRacersActivity.saveCurrentCreation()
+        override fun saveCurrentCreationAsNew(name: String) = this@ToyboxRacersActivity.saveCurrentCreationAsNew(name)
+    }
+
+    private fun editLegacySceneAsNewCreation() {
+        val name = legacyCopyName(currentScene)
+        editorWorld = legacySceneToWorld(currentScene, name)
+        editorUndoStack.clear()
+        currentCreationFile = worldStore.saveCreation(editorWorld, name)
+        saveEditorUndoHistory()
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
+            .putString(KEY_CURRENT_CREATION_FILE, currentCreationFile?.name)
+            .apply()
+        selectedVolumeId = null
+        selectedDecorId = null
+        selectedGroupIds = emptySet()
+        editorDraftActive = false
+        editorDraftDecorModelId = null
+        editorQuarterTurns = 0
+        editorYawDegrees = 0f
+        editorPitchDegrees = 0f
+        editorRollDegrees = 0f
+        currentWorldKind = ActiveWorldKind.CUSTOM
+        renderer.setActiveWorldKind(currentWorldKind)
+        currentMode = PlayMode.EXPLORATION
+        renderer.setMode(currentMode)
+        renderer.setEditorWorld(editorWorld)
+        renderer.requestReset()
+        if (!editorActive) toggleEditorMode()
+        pushEditorPreview()
+        updateRaceControlsVisibility()
+        resumeGame()
+        Toast.makeText(this, "Copie creee : $name", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun legacyCopyName(scene: SceneChoice): String {
+        val stamp = SimpleDateFormat("yyyy-MM-dd HH-mm", Locale.getDefault()).format(Date())
+        return "${circuitLabel(scene.circuit)} - $stamp"
+    }
+
+    private fun legacySceneToWorld(scene: SceneChoice, name: String): ToyboxWorld {
+        var nextId = 100_000L
+        fun RoomBox.toVolume(kind: ToyboxVolumeKind) = ToyboxVolume(
+            id = nextId++,
+            kind = kind,
+            x = x,
+            y = y,
+            z = z,
+            width = width,
+            height = height,
+            depth = depth,
+            solid = kind.solidByDefault,
+            color = 0xFF000000.toInt() or (color and 0x00FFFFFF)
+        )
+        val floor = ToyboxVolume(nextId++, ToyboxVolumeKind.FLOOR, 0f, -0.4f, 0f, 220f, 0.8f, 150f)
+        val volumes = listOf(floor) + RaceLayouts.solids(scene).map { box ->
+            val kind = when {
+                box.height <= 1.2f -> ToyboxVolumeKind.FLOOR
+                box.width <= 1.2f || box.depth <= 1.2f -> ToyboxVolumeKind.WALL
+                else -> ToyboxVolumeKind.FURNITURE
+            }
+            box.toVolume(kind)
+        }
+        val decorations = RaceLayouts.decorations(scene).mapIndexed { index, placement ->
+            ToyboxDecor(
+                id = 200_000L + index,
+                modelId = placement.model.id,
+                x = placement.x,
+                y = placement.y,
+                z = placement.z,
+                quarterTurns = placement.quarterTurns,
+                scale = placement.scale,
+                yawDegrees = placement.yawDegrees
+            )
+        }
+        return ToyboxWorld(name = name, volumes = volumes, decorations = decorations)
+    }
+
+    private fun updateRaceControlsVisibility() {
+        val legacy = currentWorldKind == ActiveWorldKind.LEGACY
+        difficultyButton.visibility = if (legacy) View.VISIBLE else View.GONE
+        modeButton.visibility = if (legacy) View.VISIBLE else View.GONE
+        minimap.visibility = if (legacy && !editorActive) View.VISIBLE else View.GONE
     }
 
     private fun switchMode() {
@@ -447,36 +604,6 @@ class ToyboxRacersActivity : ThemedActivity() {
             topMargin = dp(122)
         })
         raceHudViews += modeButton
-        roomButton = makeButton(roomLabel(), 120, 0xAA4B617A.toInt()).apply {
-            textSize = 12f
-            contentDescription = getString(R.string.toybox_change_room)
-            setOnClickListener {
-                showRoomPicker()
-            }
-        }
-        circuitButton = makeButton(circuitLabel(), 120, 0xAA735D91.toInt()).apply {
-            textSize = 12f
-            contentDescription = getString(R.string.toybox_change_circuit)
-            setOnClickListener {
-                showCircuitPicker()
-            }
-        }
-        val houseButton = makeButton(getString(R.string.toybox_house_mode), 96, 0xAA4B8F6E.toInt()).apply {
-            textSize = 12f
-            setOnClickListener { enterHouseMode() }
-        }
-        editorButton = makeButton("BUILD 3D", 96, 0xAA735D91.toInt()).apply {
-            textSize = 12f
-            setOnClickListener { toggleEditorMode() }
-        }
-        for ((index, button) in listOf(roomButton, circuitButton, houseButton, editorButton).withIndex()) {
-            root.addView(button, FrameLayout.LayoutParams(dp(if (index >= 2) 96 else 120), dp(42)).apply {
-                gravity = Gravity.TOP or Gravity.START
-                leftMargin = dp(16 + if (index < 2) index * 128 else 256 + (index - 2) * 104)
-                topMargin = dp(128)
-            })
-            raceHudViews += button
-        }
     }
 
     private fun roomLabel(kind: RoomKind = currentScene.room) = getString(when (kind) {
@@ -496,61 +623,6 @@ class ToyboxRacersActivity : ThemedActivity() {
         return SceneChoice(kind, circuit)
     }
 
-    private fun showRoomPicker() {
-        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
-        pauseGame()
-        val rooms = housePlan.rooms.map { it.kind }
-        pauseDialog = dialogBuilder()
-            .setTitle(getString(R.string.toybox_change_room) + " · " + housePlan.seed)
-            .setSingleChoiceItems(rooms.map { roomLabel(it) + " · " + circuitLabel(sceneForRoom(it).circuit) }
-                .toTypedArray(), rooms.indexOf(currentScene.room)) { _, which ->
-                if (rooms[which] != currentScene.room) changeScene(sceneForRoom(rooms[which]))
-                resumeGame()
-            }
-            .setNeutralButton(R.string.toybox_house_seed) { _, _ ->
-                // Le dialogue de sélection est fermé avant d'ouvrir la saisie.
-                pauseDialog = null
-                roomButton.post { if (!isFinishing && !isDestroyed) showSeedPicker() }
-            }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    private fun showSeedPicker() {
-        pauseGame()
-        val builder = dialogBuilder()
-        val input = EditText(builder.context).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
-            setText(housePlan.seed.toString())
-            selectAll()
-            contentDescription = getString(R.string.toybox_house_seed)
-        }
-        val dialog = builder
-            .setTitle(R.string.toybox_house_seed)
-            .setMessage(R.string.toybox_house_seed_help)
-            .setView(input)
-            .setPositiveButton(android.R.string.ok, null)
-            .setNegativeButton(android.R.string.cancel) { _, _ -> resumeGame() }
-            .setOnCancelListener { resumeGame() }
-            .create()
-        pauseDialog = dialog
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val seed = input.text.toString().trim().toLongOrNull()
-                if (seed == null) {
-                    input.error = getString(R.string.toybox_house_seed_invalid)
-                    return@setOnClickListener
-                }
-                housePlan = HousePlan.generate(seed)
-                val editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit().putLong(KEY_HOUSE_SEED, seed)
-                RoomKind.entries.forEach { editor.remove(KEY_ROOM_CIRCUIT + it.name) }
-                editor.apply()
-                changeScene(housePlan.room(currentScene.room).scene)
-                resumeGame()
-            }
-        }
-        dialog.show()
-    }
     private fun circuitLabel(kind: CircuitKind = currentScene.circuit) = getString(when (kind) {
         CircuitKind.FIGURE_EIGHT -> R.string.toybox_circuit_eight
         CircuitKind.SLALOM -> R.string.toybox_circuit_slalom
@@ -565,45 +637,11 @@ class ToyboxRacersActivity : ThemedActivity() {
         CircuitKind.HOUSE_GROUND_FLOOR -> R.string.toybox_house_mode
     })
 
-    private fun showCircuitPicker() {
-        if (isFinishing || isDestroyed || pauseDialog?.isShowing == true) return
-        pauseGame()
-        val pickable = CircuitKind.entries.filterNot { it.usesHouseLayout }
-        pauseDialog = dialogBuilder()
-            .setTitle(getString(R.string.toybox_change_circuit) + " · " + roomLabel())
-            .setSingleChoiceItems(pickable.map { circuitLabel(it) }.toTypedArray(),
-                pickable.indexOf(currentScene.circuit)) { _, which ->
-                val choice = pickable[which]
-                if (choice != currentScene.circuit) changeScene(currentScene.copy(circuit = choice))
-                resumeGame()
-            }
-            .setOnCancelListener { resumeGame() }
-            .show()
-    }
-
-    /** Scène dédiée : contrairement aux 8 pièces indépendantes, la maison
-     * couvre plusieurs pièces à la fois et n'a pas de RoomKind qui la représente
-     * seule, donc elle contourne le sélecteur pièce/circuit habituel. */
-    private fun enterHouseMode() {
-        if (currentScene.circuit == CircuitKind.HOUSE_GROUND_FLOOR) return
-        releaseControls.forEach { it() }
-        currentScene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR)
-        roomButton.text = roomLabel()
-        circuitButton.text = circuitLabel()
-        resultPanel.visibility = View.GONE
-        lastFinishSerial = 0
-        lastTurboLevel = 0
-        lastTurboReleaseSerial = 0
-        renderer.setScene(currentScene)
-    }
-
     private fun dialogBuilder() = AlertDialog.Builder(this, R.style.Theme_Toybox_Dialog)
 
     private fun changeScene(scene: SceneChoice) {
         releaseControls.forEach { it() }
         currentScene = scene
-        roomButton.text = roomLabel()
-        circuitButton.text = circuitLabel()
         resultPanel.visibility = View.GONE
         lastFinishSerial = 0
         lastTurboLevel = 0
@@ -798,9 +836,13 @@ class ToyboxRacersActivity : ThemedActivity() {
                 pushEditorPreview()
             }
         }
-        listOf(editorKindButton, editorGridButton, editorGroupButton).forEachIndexed { index, view ->
+        editorUndoButton = makeEditorButton("Annuler", 0xAA4B617A.toInt()).apply {
+            setOnClickListener { undoEditorAction() }
+        }
+        val toolButtons = listOf(editorKindButton, editorGridButton, editorGroupButton, editorUndoButton)
+        toolButtons.forEachIndexed { index, view ->
             toolsContent.addView(view, LinearLayout.LayoutParams(0, dp(42), 1f).apply {
-                if (index < 2) rightMargin = dp(6)
+                if (index < toolButtons.lastIndex) rightMargin = dp(6)
             })
         }
         editorToolsPanel.orientation = LinearLayout.VERTICAL
@@ -841,8 +883,9 @@ class ToyboxRacersActivity : ThemedActivity() {
 
         editorSolidButton = makeEditorButton("", 0xAA735D91.toInt()).apply {
             setOnClickListener {
+                val undoState = captureEditorUndoState()
                 editorSolid = !editorSolid
-                updateSelectedVolume { it.copy(solid = editorSolid) }
+                updateSelectedVolume(undoState) { it.copy(solid = editorSolid) }
                 pushEditorPreview()
             }
         }
@@ -882,9 +925,13 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorPlaceButton = makeEditorButton("Poser", 0xAA4B8F6E.toInt()).apply {
             setOnClickListener { placeEditorVolume() }
         }
+        editorDuplicateButton = makeEditorButton("Dupliquer", 0xAA4B617A.toInt()).apply {
+            setOnClickListener { duplicateEditorSelection() }
+        }
         row(
             editorPanel,
             editorPlaceButton,
+            editorDuplicateButton,
             action("Effacer", 0xAA9A4B4B.toInt()) { deleteEditorVolume() }
         )
 
@@ -904,8 +951,16 @@ class ToyboxRacersActivity : ThemedActivity() {
         val moveDown = action("↓") { moveEditorObject(0f, -1f) }
         val moveHigher = action("Y +") { moveEditorFloor(gridSize()) }
         val moveLower = action("Y -") { moveEditorFloor(-gridSize()) }
-        val rotateLeft = action("↺ 90") { rotateEditorObject(-1) }
-        val rotateRight = action("↻ 90") { rotateEditorObject(1) }
+        editorRotateLeftButton = action("") { rotateEditorObject(-rotationStep()) }
+        editorRotateRightButton = action("") { rotateEditorObject(rotationStep()) }
+        editorRotationAxisButton = action("") {
+            editorRotationAxis = editorRotationAxis.next()
+            pushEditorPreview()
+        }
+        editorRotationStepButton = action("") {
+            editorRotationStepIndex = (editorRotationStepIndex + 1) % EDITOR_ROTATION_STEPS.size
+            pushEditorPreview()
+        }
         bindRepeatingEditorAction(moveUp) { moveEditorObject(0f, 1f) }
         bindRepeatingEditorAction(moveLeft) { moveEditorObject(1f, 0f) }
         bindRepeatingEditorAction(moveRight) { moveEditorObject(-1f, 0f) }
@@ -934,7 +989,8 @@ class ToyboxRacersActivity : ThemedActivity() {
             bottomDp = 0
         )
         row(editorPositionPanel, moveHigher, moveLower)
-        row(editorPositionPanel, rotateLeft, rotateRight, bottomDp = 0)
+        row(editorPositionPanel, editorRotateLeftButton, editorRotationAxisButton, editorRotateRightButton)
+        row(editorPositionPanel, editorRotationStepButton, bottomDp = 0)
         root.addView(editorPositionPanel, FrameLayout.LayoutParams(dp(206), -2).apply {
             gravity = Gravity.BOTTOM or Gravity.START
             leftMargin = dp(18)
@@ -955,8 +1011,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorPositionPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorTouchLayer.visibility = if (editorActive) View.VISIBLE else View.GONE
-        minimap.visibility = if (editorActive) View.GONE else View.VISIBLE
         renderer.setEditorActive(editorActive)
+        updateRaceControlsVisibility()
         pushEditorInput()
         pushEditorPreview()
         pauseButton.bringToFront()
@@ -976,6 +1032,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorHeight = item.height
         editorDepth = item.depth
         editorQuarterTurns = 0
+        editorYawDegrees = 0f
+        editorPitchDegrees = item.pitchDegrees
+        editorRollDegrees = item.rollDegrees
         editorFloorY = maxOf(editorFloorY, item.minimumFloorY)
         editorSolid = item.kind.solidByDefault
         editorColor = item.kind.color
@@ -990,7 +1049,11 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorDraftActive = false
         editorDraftDecorModelId = model.id
         editorQuarterTurns = 0
+        editorYawDegrees = 0f
+        editorPitchDegrees = 0f
+        editorRollDegrees = 0f
         editorDecorQuarterTurns = 0
+        editorDecorYawDegrees = 0f
         editorDecorScale = 1f
         editorFloorY = maxOf(editorFloorY, 0f)
         renderer.resetEditorPreviewAnchor()
@@ -999,19 +1062,21 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun resizeEditor(widthDelta: Float, heightDelta: Float, depthDelta: Float) {
         if (selectedVolumeId == null && !editorDraftActive) return
+        val undoState = captureEditorUndoState()
         editorWidth = (editorWidth + widthDelta).coerceAtLeast(gridSize())
         editorHeight = (editorHeight + heightDelta).coerceAtLeast(gridSize())
         editorDepth = (editorDepth + depthDelta).coerceAtLeast(gridSize())
-        updateSelectedVolume { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
+        updateSelectedVolume(undoState) { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
         pushEditorPreview()
     }
 
     private fun setEditorDimension(width: Float? = null, height: Float? = null, depth: Float? = null) {
         if (selectedVolumeId == null && !editorDraftActive) return
+        val undoState = captureEditorUndoState()
         editorWidth = (width ?: editorWidth).coerceAtLeast(gridSize())
         editorHeight = (height ?: editorHeight).coerceAtLeast(gridSize())
         editorDepth = (depth ?: editorDepth).coerceAtLeast(gridSize())
-        updateSelectedVolume { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
+        updateSelectedVolume(undoState) { it.copy(width = editorWidth, height = editorHeight, depth = editorDepth) }
         pushEditorPreview()
     }
 
@@ -1104,14 +1169,16 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun moveEditorFloor(delta: Float) {
         if (selectedDecorId != null || editorDraftDecorModelId != null) {
+            val undoState = captureEditorUndoState()
             editorFloorY += delta
-            updateSelectedDecor { it.copy(y = editorFloorY) }
+            updateSelectedDecor(undoState) { it.copy(y = editorFloorY) }
             pushEditorPreview()
             return
         }
         if (selectedVolumeId == null && !editorDraftActive) return
+        val undoState = captureEditorUndoState()
         editorFloorY += delta
-        updateSelectedVolume { volume ->
+        updateSelectedVolume(undoState) { volume ->
             val centerY = if (volume.kind == ToyboxVolumeKind.FLOOR) editorFloorY - volume.height * 0.5f
                 else editorFloorY + volume.height * 0.5f
             volume.copy(y = centerY)
@@ -1133,6 +1200,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             return
         }
         editorDraftDecorModelId?.let { modelId ->
+            rememberEditorUndo()
             val anchor = renderer.makePreviewVolume(System.nanoTime())
             val decor = ToyboxDecor(
                 id = System.nanoTime(),
@@ -1141,7 +1209,8 @@ class ToyboxRacersActivity : ThemedActivity() {
                 y = editorFloorY,
                 z = anchor.z,
                 quarterTurns = editorDecorQuarterTurns,
-                scale = editorDecorScale
+                scale = editorDecorScale,
+                yawDegrees = editorDecorYawDegrees
             )
             editorWorld = editorWorld.copy(decorations = editorWorld.decorations + decor)
             editorDraftDecorModelId = null
@@ -1151,6 +1220,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             return
         }
         if (!editorDraftActive) return
+        rememberEditorUndo()
         val volume = renderer.makePreviewVolume(System.nanoTime())
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes + volume)
         editorDraftActive = false
@@ -1161,6 +1231,7 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun deleteEditorVolume() {
         if (selectedGroupIds.isNotEmpty()) {
+            rememberEditorUndo()
             editorWorld = editorWorld.copy(volumes = editorWorld.volumes.filterNot { it.id in selectedGroupIds })
             selectedGroupIds = emptySet()
             selectedVolumeId = null
@@ -1174,6 +1245,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         val selectedDecor = selectedDecorId
         if (selectedDecor != null) {
+            rememberEditorUndo()
             editorWorld = editorWorld.copy(decorations = editorWorld.decorations.filterNot { it.id == selectedDecor })
             selectedDecorId = null
             editorDraftDecorModelId = null
@@ -1185,6 +1257,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         val selected = selectedVolumeId
         if (selected == null) return
+        rememberEditorUndo()
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes.filterNot { it.id == selected })
         selectedVolumeId = null
         editorDraftActive = false
@@ -1192,6 +1265,165 @@ class ToyboxRacersActivity : ThemedActivity() {
         worldStore.save(editorWorld)
         renderer.setEditorWorld(editorWorld)
         pushEditorPreview()
+    }
+
+    private fun duplicateEditorSelection() {
+        val offset = gridSize()
+        if (selectedGroupIds.isNotEmpty()) {
+            val duplicated = editorWorld.volumes
+                .filter { it.id in selectedGroupIds }
+                .mapIndexed { index, volume ->
+                    volume.copy(
+                        id = System.nanoTime() + index,
+                        x = snapEditor(volume.x + offset),
+                        z = snapEditor(volume.z + offset)
+                    )
+            }
+            if (duplicated.isEmpty()) return
+            rememberEditorUndo()
+            editorWorld = editorWorld.copy(volumes = editorWorld.volumes + duplicated)
+            selectedGroupIds = duplicated.map { it.id }.toSet()
+            selectedVolumeId = null
+            selectedDecorId = null
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+            return
+        }
+
+        selectedVolume()?.let { volume ->
+            val copy = volume.copy(
+                id = System.nanoTime(),
+                x = snapEditor(volume.x + offset),
+                z = snapEditor(volume.z + offset)
+            )
+            rememberEditorUndo()
+            editorWorld = editorWorld.copy(volumes = editorWorld.volumes + copy)
+            selectEditorVolume(copy.id)
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+            return
+        }
+
+        selectedDecor()?.let { decor ->
+            val copy = decor.copy(
+                id = System.nanoTime(),
+                x = snapEditor(decor.x + offset),
+                z = snapEditor(decor.z + offset)
+            )
+            rememberEditorUndo()
+            editorWorld = editorWorld.copy(decorations = editorWorld.decorations + copy)
+            selectEditorDecor(copy.id)
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            pushEditorPreview()
+        }
+    }
+
+    private fun rememberEditorUndo(state: EditorUndoState = captureEditorUndoState()) {
+        if (suppressEditorUndo || editorUndoStack.lastOrNull() == state) return
+        if (editorUndoStack.size >= EDITOR_UNDO_LIMIT) editorUndoStack.removeFirst()
+        editorUndoStack.addLast(state)
+        saveEditorUndoHistory()
+        updateEditorUndoButton()
+    }
+
+    private fun captureEditorUndoState() = EditorUndoState(
+        world = editorWorld,
+        selectedVolumeId = selectedVolumeId,
+        selectedDecorId = selectedDecorId,
+        selectedGroupIds = selectedGroupIds.toSet(),
+        draftActive = editorDraftActive,
+        draftDecorModelId = editorDraftDecorModelId,
+        kind = editorKind,
+        width = editorWidth,
+        height = editorHeight,
+        depth = editorDepth,
+        quarterTurns = editorQuarterTurns,
+        yawDegrees = editorYawDegrees,
+        pitchDegrees = editorPitchDegrees,
+        rollDegrees = editorRollDegrees,
+        floorY = editorFloorY,
+        solid = editorSolid,
+        color = editorColor,
+        decorQuarterTurns = editorDecorQuarterTurns,
+        decorYawDegrees = editorDecorYawDegrees,
+        decorScale = editorDecorScale,
+        groupMode = editorGroupMode,
+        rotationAxis = editorRotationAxis,
+        rotationStepIndex = editorRotationStepIndex,
+        gridIndex = editorGridIndex
+    )
+
+    private fun undoEditorAction() {
+        val state = editorUndoStack.removeLastOrNull() ?: return
+        suppressEditorUndo = true
+        try {
+            restoreEditorUndoState(state)
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            saveEditorUndoHistory()
+            updateEditorUndoButton()
+            pushEditorPreview()
+            Toast.makeText(this, "Action annulee", Toast.LENGTH_SHORT).show()
+        } finally {
+            suppressEditorUndo = false
+        }
+    }
+
+    private fun restoreEditorUndoState(state: EditorUndoState) {
+        editorWorld = state.world
+        selectedVolumeId = state.selectedVolumeId
+        selectedDecorId = state.selectedDecorId
+        selectedGroupIds = state.selectedGroupIds
+        editorDraftActive = state.draftActive
+        editorDraftDecorModelId = state.draftDecorModelId
+        editorKind = state.kind
+        editorWidth = state.width
+        editorHeight = state.height
+        editorDepth = state.depth
+        editorQuarterTurns = state.quarterTurns
+        editorYawDegrees = state.yawDegrees
+        editorPitchDegrees = state.pitchDegrees
+        editorRollDegrees = state.rollDegrees
+        editorFloorY = state.floorY
+        editorSolid = state.solid
+        editorColor = state.color
+        editorDecorQuarterTurns = state.decorQuarterTurns
+        editorDecorYawDegrees = state.decorYawDegrees
+        editorDecorScale = state.decorScale
+        editorGroupMode = state.groupMode
+        editorRotationAxis = state.rotationAxis
+        editorRotationStepIndex = state.rotationStepIndex.coerceIn(0, EDITOR_ROTATION_STEPS.lastIndex)
+        editorGridIndex = state.gridIndex.coerceIn(0, EDITOR_GRIDS.lastIndex)
+    }
+
+    private fun updateEditorUndoButton() {
+        if (!::editorUndoButton.isInitialized) return
+        val canUndo = editorUndoStack.isNotEmpty()
+        editorUndoButton.isEnabled = canUndo
+        editorUndoButton.alpha = if (canUndo) 0.82f else 0.38f
+    }
+
+    private fun saveEditorUndoHistory() {
+        val json = JSONArray().apply { editorUndoStack.forEach { put(it.toJson()) } }
+        worldStore.saveUndoHistory(currentCreationFile, json)
+    }
+
+    private fun loadEditorUndoHistory() {
+        editorUndoStack.clear()
+        val json = worldStore.loadUndoHistory(currentCreationFile) ?: run {
+            updateEditorUndoButton()
+            return
+        }
+        val start = (json.length() - EDITOR_UNDO_LIMIT).coerceAtLeast(0)
+        for (index in start until json.length()) {
+            runCatching { EditorUndoState.fromJson(json.getJSONObject(index)) }
+                .getOrNull()
+                ?.let { editorUndoStack.addLast(it) }
+        }
+        updateEditorUndoButton()
     }
 
     private fun pushEditorInput() {
@@ -1214,11 +1446,22 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorKindButton.text = "+"
         editorGridButton.text = "Grille ${gridLabel()}"
+        updateEditorUndoButton()
         editorGroupButton.text = when {
             hasGroup -> "Groupe ${selectedGroupIds.size}"
             editorGroupMode == EditorGroupMode.SAME_KIND -> "Groupe type"
             editorGroupMode == EditorGroupMode.CONNECTED -> "Prefab"
             else -> "Groupe"
+        }
+        if (::editorRotationAxisButton.isInitialized) {
+            editorRotationAxisButton.text = editorRotationAxis.label
+            editorRotationAxisButton.isEnabled = !canEditDecor
+            editorRotationAxisButton.alpha = if (canEditDecor) 0.38f else 0.82f
+        }
+        if (::editorRotationStepButton.isInitialized) {
+            editorRotationStepButton.text = "Rotation ${formatEditorNumber(rotationStep())} deg"
+            editorRotateLeftButton.text = "↺ ${formatEditorNumber(rotationStep())}"
+            editorRotateRightButton.text = "↻ ${formatEditorNumber(rotationStep())}"
         }
         editorGroupButton.alpha = if (editorGroupMode == EditorGroupMode.OFF) 0.82f else 1f
         editorSolidButton.text = if (editorSolid) "Solide" else "Décor"
@@ -1230,9 +1473,14 @@ class ToyboxRacersActivity : ThemedActivity() {
             hasDraft -> "Poser"
             else -> "Rien"
         }
+        val canDuplicate = selected != null || selectedDecor != null || hasGroup
         listOf(editorSolidButton, editorColorButton, editorPlaceButton).forEach {
             it.isEnabled = canEditBlock || it === editorPlaceButton
             it.alpha = if (it.isEnabled && (canEditBlock || it === editorPlaceButton)) 0.82f else 0.38f
+        }
+        if (::editorDuplicateButton.isInitialized) {
+            editorDuplicateButton.isEnabled = canDuplicate
+            editorDuplicateButton.alpha = if (canDuplicate) 0.82f else 0.38f
         }
         if (::editorWidthPicker.isInitialized) {
             syncingEditorPickers = true
@@ -1262,17 +1510,19 @@ class ToyboxRacersActivity : ThemedActivity() {
             })
             append("\n")
             if (canEditDecor) {
-                val turns = selectedDecor?.quarterTurns ?: editorDecorQuarterTurns
+                val yaw = selectedDecor?.yawDegrees ?: editorDecorYawDegrees
                 val scale = selectedDecor?.scale ?: editorDecorScale
                 append("Type: modele 3D  ").append(gridLabel())
-                append("  Tour ").append(((turns % 4) + 4) % 4 * 90).append(" deg")
+                append("  Angle ").append(formatEditorNumber(yaw)).append(" deg")
                 append("  Echelle ").append(formatEditorNumber(scale))
             } else {
                 append("Type: ").append(editorKind.label).append("  ").append(gridLabel())
                 append("  L ").append(formatEditorNumber(editorWidth))
                 append("  P ").append(formatEditorNumber(editorDepth))
                 append("  H ").append(formatEditorNumber(editorHeight))
-                append("  Tour ").append(((editorQuarterTurns % 4) + 4) % 4 * 90).append(" deg")
+                append("  Angle ").append(formatEditorNumber(editorYawDegrees)).append(" deg")
+                append("  Incl ").append(formatEditorNumber(editorPitchDegrees)).append("/")
+                    .append(formatEditorNumber(editorRollDegrees)).append(" deg")
             }
             append("  Y ").append(formatEditorNumber(editorFloorY))
             append("\n")
@@ -1284,7 +1534,21 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         renderer.setEditorSelection(selected)
         renderer.setEditorPreviewVisible(!hasGroup && !canEditDecor && (selected != null || hasDraft))
-        renderer.setEditorPreview(editorKind, editorWidth, editorHeight, editorDepth, gridSize(), editorFloorY, editorSolid, editorColor, editorQuarterTurns)
+        renderer.setEditorPreview(
+            editorKind,
+            editorWidth,
+            editorHeight,
+            editorDepth,
+            gridSize(),
+            editorFloorY,
+            editorSolid,
+            editorColor,
+            editorQuarterTurns,
+            editorYawDegrees,
+            editorPitchDegrees,
+            editorRollDegrees,
+            editorRotationAxis
+        )
         renderer.setEditorDecorPreview(if (hasDecorDraft) {
             val anchor = renderer.makePreviewVolume(-2L)
             ToyboxDecor(
@@ -1294,7 +1558,8 @@ class ToyboxRacersActivity : ThemedActivity() {
                 y = editorFloorY,
                 z = anchor.z,
                 quarterTurns = editorDecorQuarterTurns,
-                scale = editorDecorScale
+                scale = editorDecorScale,
+                yawDegrees = editorDecorYawDegrees
             )
         } else null)
     }
@@ -1340,6 +1605,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorHeight = volume.height
         editorDepth = volume.depth
         editorQuarterTurns = volume.quarterTurns
+        editorYawDegrees = volume.yawDegrees
+        editorPitchDegrees = volume.pitchDegrees
+        editorRollDegrees = volume.rollDegrees
         editorSolid = volume.solid
         editorColor = volume.color
         editorFloorY = if (volume.kind == ToyboxVolumeKind.FLOOR) volume.y + volume.height * 0.5f
@@ -1356,6 +1624,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorDraftDecorModelId = null
         editorFloorY = decor.y
         editorDecorQuarterTurns = decor.quarterTurns
+        editorDecorYawDegrees = decor.yawDegrees
         editorDecorScale = decor.scale
         pushEditorPreview()
     }
@@ -1377,6 +1646,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun moveSelectedGroup(dx: Float, dz: Float) {
         val group = selectedGroupIds
         if (group.isEmpty()) return
+        rememberEditorUndo()
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
             if (volume.id in group) volume.copy(
                 x = snapEditor(volume.x + dx),
@@ -1387,20 +1657,32 @@ class ToyboxRacersActivity : ThemedActivity() {
         renderer.setEditorWorld(editorWorld)
     }
 
-    private fun rotateSelectedGroup(deltaTurns: Int) {
+    private fun rotateSelectedGroup(deltaDegrees: Float) {
         val group = selectedGroupIds
         if (group.isEmpty()) return
         val volumes = editorWorld.volumes.filter { it.id in group }
         if (volumes.isEmpty()) return
+        rememberEditorUndo()
+        if (editorRotationAxis != ToyboxRotationAxis.YAW) {
+            editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
+                if (volume.id !in group) volume else rotateVolumeOnSelectedAxis(volume, deltaDegrees)
+            })
+            worldStore.save(editorWorld)
+            renderer.setEditorWorld(editorWorld)
+            return
+        }
         val centerX = volumes.map { it.x }.average().toFloat()
         val centerZ = volumes.map { it.z }.average().toFloat()
+        val radians = deltaDegrees * kotlin.math.PI.toFloat() / 180f
+        val c = kotlin.math.cos(radians)
+        val s = kotlin.math.sin(radians)
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
             if (volume.id !in group) volume else {
                 val dx = volume.x - centerX
                 val dz = volume.z - centerZ
-                volume.rotateQuarter(deltaTurns).copy(
-                    x = snapEditor(centerX + dz * deltaTurns),
-                    z = snapEditor(centerZ - dx * deltaTurns)
+                volume.rotateYaw(deltaDegrees).copy(
+                    x = snapEditor(centerX + dx * c + dz * s),
+                    z = snapEditor(centerZ - dx * s + dz * c)
                 )
             }
         })
@@ -1435,40 +1717,66 @@ class ToyboxRacersActivity : ThemedActivity() {
         pushEditorPreview()
     }
 
-    private fun rotateEditorObject(deltaTurns: Int) {
+    private fun rotateEditorObject(deltaDegrees: Float) {
         if (selectedGroupIds.isNotEmpty()) {
-            rotateSelectedGroup(deltaTurns)
+            rotateSelectedGroup(deltaDegrees)
             pushEditorPreview()
             return
         }
         if (selectedDecorId != null) {
             updateSelectedDecor { decor ->
-                decor.rotateQuarter(deltaTurns).also { editorDecorQuarterTurns = it.quarterTurns }
+                decor.rotateYaw(deltaDegrees).also {
+                    editorDecorQuarterTurns = it.quarterTurns
+                    editorDecorYawDegrees = it.yawDegrees
+                }
             }
             pushEditorPreview()
             return
         }
         if (editorDraftDecorModelId != null) {
-            editorDecorQuarterTurns = ((editorDecorQuarterTurns + deltaTurns) % 4 + 4) % 4
+            val normalized = ((editorDecorYawDegrees + deltaDegrees) % 360f + 360f) % 360f
+            editorDecorYawDegrees = normalized
+            editorDecorQuarterTurns = ((normalized / 90f).toInt() % 4 + 4) % 4
             pushEditorPreview()
             return
         }
         if (selectedVolumeId == null && !editorDraftActive) return
-        if (selectedVolumeId == null) editorQuarterTurns = ((editorQuarterTurns + deltaTurns) % 4 + 4) % 4
+        if (selectedVolumeId == null) {
+            when (editorRotationAxis) {
+                ToyboxRotationAxis.YAW -> {
+                    editorYawDegrees = ((editorYawDegrees + deltaDegrees) % 360f + 360f) % 360f
+                    editorQuarterTurns = ((editorYawDegrees / 90f).toInt() % 4 + 4) % 4
+                }
+                ToyboxRotationAxis.PITCH -> editorPitchDegrees += deltaDegrees
+                ToyboxRotationAxis.ROLL -> editorRollDegrees += deltaDegrees
+            }
+        }
         updateSelectedVolume { volume ->
-            volume.rotateQuarter(deltaTurns).also {
+            rotateVolumeOnSelectedAxis(volume, deltaDegrees).also {
                 editorWidth = it.width
                 editorDepth = it.depth
                 editorQuarterTurns = it.quarterTurns
+                editorYawDegrees = it.yawDegrees
+                editorPitchDegrees = it.pitchDegrees
+                editorRollDegrees = it.rollDegrees
             }
         }
         pushEditorPreview()
     }
 
+    private fun rotateVolumeOnSelectedAxis(volume: ToyboxVolume, deltaDegrees: Float): ToyboxVolume =
+        when (editorRotationAxis) {
+            ToyboxRotationAxis.YAW -> volume.rotateYaw(deltaDegrees)
+            ToyboxRotationAxis.PITCH -> volume.rotatePitch(deltaDegrees)
+            ToyboxRotationAxis.ROLL -> volume.rotateRoll(deltaDegrees)
+        }
+
     private fun snapEditor(value: Float): Float {
         val grid = gridSize()
         return kotlin.math.round(value / grid) * grid
     }
+
+    private fun rotationStep(): Float = EDITOR_ROTATION_STEPS[editorRotationStepIndex]
 
     private fun clearEditorSelection() {
         selectedVolumeId = null
@@ -1477,6 +1785,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorDraftActive = false
         editorDraftDecorModelId = null
         editorQuarterTurns = 0
+        editorYawDegrees = 0f
+        editorPitchDegrees = 0f
+        editorRollDegrees = 0f
         pushEditorPreview()
     }
 
@@ -1484,7 +1795,10 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun selectedDecor() = selectedDecorId?.let { id -> editorWorld.decorations.firstOrNull { it.id == id } }
 
-    private fun updateSelectedVolume(change: (ToyboxVolume) -> ToyboxVolume) {
+    private fun updateSelectedVolume(
+        undoState: EditorUndoState = captureEditorUndoState(),
+        change: (ToyboxVolume) -> ToyboxVolume
+    ) {
         val selected = selectedVolumeId ?: return
         var changed = false
         editorWorld = editorWorld.copy(volumes = editorWorld.volumes.map { volume ->
@@ -1494,12 +1808,16 @@ class ToyboxRacersActivity : ThemedActivity() {
             } else volume
         })
         if (changed) {
+            rememberEditorUndo(undoState)
             worldStore.save(editorWorld)
             renderer.setEditorWorld(editorWorld)
         }
     }
 
-    private fun updateSelectedDecor(change: (ToyboxDecor) -> ToyboxDecor) {
+    private fun updateSelectedDecor(
+        undoState: EditorUndoState = captureEditorUndoState(),
+        change: (ToyboxDecor) -> ToyboxDecor
+    ) {
         val selected = selectedDecorId ?: return
         var changed = false
         editorWorld = editorWorld.copy(decorations = editorWorld.decorations.map { decor ->
@@ -1509,6 +1827,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             } else decor
         })
         if (changed) {
+            rememberEditorUndo(undoState)
             worldStore.save(editorWorld)
             renderer.setEditorWorld(editorWorld)
         }
@@ -1520,8 +1839,9 @@ class ToyboxRacersActivity : ThemedActivity() {
             currentColorHex = String.format(Locale.ROOT, "#%06X", editorColor and 0xFFFFFF),
             showTextMode = false
         ) { colorHex, _ ->
+            val undoState = captureEditorUndoState()
             editorColor = Color.parseColor(colorHex)
-            updateSelectedVolume { it.copy(color = editorColor) }
+            updateSelectedVolume(undoState) { it.copy(color = editorColor) }
             pushEditorPreview()
         }.show()
     }
@@ -1842,7 +2162,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         val width: Float,
         val height: Float,
         val depth: Float,
-        val minimumFloorY: Float = 0f
+        val minimumFloorY: Float = 0f,
+        val pitchDegrees: Float = 0f,
+        val rollDegrees: Float = 0f
     )
 
     private enum class EditorGroupMode {
@@ -1863,6 +2185,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         private const val KEY_BEST_PREFIX = "best_time_"
         private const val KEY_HOUSE_SEED = "house_seed_v1"
         private const val KEY_ROOM_CIRCUIT = "house_circuit_v1_"
+        private const val KEY_CURRENT_CREATION_FILE = "current_creation_file"
         private val EDITOR_GRIDS = arrayOf(
             1f to "10cm",
             0.1f to "1cm",
@@ -1870,8 +2193,10 @@ class ToyboxRacersActivity : ThemedActivity() {
         )
         private const val EDITOR_DIMENSION_MIN_TICKS = 1
         private const val EDITOR_DIMENSION_MAX_SIZE = 100f
+        private const val EDITOR_UNDO_LIMIT = 20
         private const val EDITOR_REPEAT_INITIAL_DELAY_MS = 260L
         private const val EDITOR_REPEAT_INTERVAL_MS = 82L
+        private val EDITOR_ROTATION_STEPS = floatArrayOf(1f, 15f, 90f)
         private val DECOR_ROOM_ORDER = listOf(
             DecorRoom.GARAGE,
             DecorRoom.KITCHEN,
@@ -1888,6 +2213,7 @@ class ToyboxRacersActivity : ThemedActivity() {
                     EditorItemPreset("Sol", ToyboxVolumeKind.FLOOR, 24f, 0.6f, 24f),
                     EditorItemPreset("Mur", ToyboxVolumeKind.WALL, 18f, 8f, 1f),
                     EditorItemPreset("Plafond", ToyboxVolumeKind.FLOOR, 24f, 0.5f, 24f, minimumFloorY = 8f),
+                    EditorItemPreset("Pan de toit", ToyboxVolumeKind.WALL, 28f, 0.55f, 12f, minimumFloorY = 6f, pitchDegrees = -35f),
                     EditorItemPreset("Rambarde", ToyboxVolumeKind.RAIL, 14f, 3.2f, 0.8f)
                 )
             ),

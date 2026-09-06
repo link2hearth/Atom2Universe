@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.toyboxracers.driving
 
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
@@ -77,9 +79,18 @@ internal class ArcadeCar(
     private var reverseHoldSeconds = 0f
     private var steeringSmoothed = 0f
     private var driftBlend = 0f
+    private var editorWorld = ToyboxWorld(volumes = emptyList())
+    /** Vrai quand un monde d'éditeur (pas un circuit classique) est conduit :
+     * la piste procédurale (route, murs de pièce, meubles, jouets) est alors
+     * totalement ignorée, seul `editorWorld` fait office de sol/obstacles. */
+    var sandboxMode = false
 
     init {
         placeAtStart()
+    }
+
+    fun setEditorWorld(world: ToyboxWorld) {
+        editorWorld = world
     }
 
     fun reset() {
@@ -334,8 +345,10 @@ internal class ArcadeCar(
         worldZ += velocityZ * dt
         // La maison n'a pas de rectangle englobant unique : ses murs (troués aux
         // portes) sont des furnitureSolids ordinaires, résolus par resolveFurnitureSides().
-        if (!track.scene.circuit.usesHouseLayout) resolveRoomWalls()
-        resolveToyObstacles()
+        if (!sandboxMode) {
+            if (!track.scene.circuit.usesHouseLayout) resolveRoomWalls()
+            resolveToyObstacles()
+        }
 
         val projection = track.project(worldX, airborneY, worldZ, distance)
         distance = projection.sample.distance
@@ -347,9 +360,16 @@ internal class ArcadeCar(
         val groundedContacts = wheelContacts.filter { it.grounded }
         groundedWheelCount = groundedContacts.size
         groundedOnRoad = groundedContacts.any { it.road }
-        val floorY = maxOf(track.groundHeightAt(worldX, worldZ),
-            track.furnitureHeightAt(worldX, worldZ, worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f)) +
-            spec.rideHeight
+        val maximumBodySurfaceY = worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f
+        val floorY = (if (sandboxMode) {
+            editorWorldSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY).coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y)
+        } else {
+            maxOf(
+                track.groundHeightAt(worldX, worldZ),
+                track.furnitureHeightAt(worldX, worldZ, maximumBodySurfaceY),
+                editorWorldSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY)
+            )
+        }) + spec.rideHeight
         updateSuspensionPose(dt, wheelContacts)
 
         var landedOnRoadThisStep = groundedWheelCount > 0
@@ -400,6 +420,7 @@ internal class ArcadeCar(
         // hauteur confondait l'arrivée sur un plateau avec un choc de face.
         if (!airborne) resolveGroundRoadCollision(previousWorldX, previousWorldZ)
         resolveFurnitureSides()
+        resolveEditorWorldSides()
         if (track.scene.circuit.usesHouseLayout && airborneY < -12f) {
             // Une sortie de la maquette n'abandonne pas le joueur sur un sol invisible.
             velocityX = 0f
@@ -483,6 +504,10 @@ internal class ArcadeCar(
     /** L'appui est la plus haute surface accessible sous la roue, sans biais de tour. */
     private fun supportAt(wheelX: Float, wheelZ: Float): Support {
         val maximumY = airborneY - spec.rideHeight + if (airborne) .02f else MAX_SUPPORT_RISE
+        val editorY = editorWorldSurfaceHeightAt(wheelX, wheelZ, maximumY)
+        if (sandboxMode) {
+            return Support(editorY.coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y), false)
+        }
         val collision = track.decksAt(wheelX, wheelZ, spec.wheelRadius)
             .filter { it.sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT <= maximumY }
             .maxByOrNull { it.sample.position.y }
@@ -493,7 +518,7 @@ internal class ArcadeCar(
             wheelZ,
             maximumY
         )
-        val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY)
+        val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY, editorY)
         return if (onDeck && roadSurfaceY >= realSurfaceY - 0.20f) {
             Support(roadSurfaceY, true)
         } else {
@@ -822,7 +847,7 @@ internal class ArcadeCar(
     }
 
     private fun resolveFurnitureCeilings(previousY: Float) {
-        if (airborneY <= previousY) return
+        if (sandboxMode || airborneY <= previousY) return
         var ceiling = Float.POSITIVE_INFINITY
         for (box in track.furnitureSolids) {
             if (worldX < box.left - CAR_COLLISION_RADIUS || worldX > box.right + CAR_COLLISION_RADIUS ||
@@ -834,6 +859,91 @@ internal class ArcadeCar(
             airborneY = ceiling - CAR_TOP_FROM_ORIGIN
             verticalVelocity = -abs(verticalVelocity) * TOY_RESTITUTION
         }
+    }
+
+    private fun editorWorldSurfaceHeightAt(x: Float, z: Float, maximumY: Float): Float {
+        var height = Float.NEGATIVE_INFINITY
+        for (volume in editorWorld.volumes) {
+            if (!volume.solid) continue
+            if (x < volume.left - spec.wheelRadius || x > volume.right + spec.wheelRadius ||
+                z < volume.back - spec.wheelRadius || z > volume.front + spec.wheelRadius) continue
+            val surfaceY = volume.topSurfaceYAt(x, z) ?: continue
+            if (surfaceY <= maximumY + EDITOR_WORLD_SURFACE_TOLERANCE) height = maxOf(height, surfaceY)
+        }
+        return height
+    }
+
+    private fun ToyboxVolume.topSurfaceYAt(x: Float, z: Float): Float? {
+        val top = height * 0.5f
+        val a = worldPoint(-width * 0.5f, top, -depth * 0.5f)
+        val b = worldPoint(width * 0.5f, top, -depth * 0.5f)
+        val c = worldPoint(width * 0.5f, top, depth * 0.5f)
+        val d = worldPoint(-width * 0.5f, top, depth * 0.5f)
+        return triangleSurfaceY(x, z, a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z)
+            ?: triangleSurfaceY(x, z, a.x, a.y, a.z, c.x, c.y, c.z, d.x, d.y, d.z)
+    }
+
+    private fun triangleSurfaceY(
+        x: Float,
+        z: Float,
+        ax: Float,
+        ay: Float,
+        az: Float,
+        bx: Float,
+        by: Float,
+        bz: Float,
+        cx: Float,
+        cy: Float,
+        cz: Float
+    ): Float? {
+        val denominator = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz)
+        if (abs(denominator) < 0.000001f) return null
+        val u = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / denominator
+        val v = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / denominator
+        val w = 1f - u - v
+        if (u < -EDITOR_WORLD_EDGE_TOLERANCE || v < -EDITOR_WORLD_EDGE_TOLERANCE || w < -EDITOR_WORLD_EDGE_TOLERANCE) return null
+        return ay * u + by * v + cy * w
+    }
+
+    private fun resolveEditorWorldSides() {
+        val bottom = airborneY - PrototypeTrack.CAR_CLEARANCE
+        val top = airborneY + CAR_TOP_FROM_ORIGIN
+        for (volume in editorWorld.volumes) {
+            if (!volume.solid || !volume.blocksSides()) continue
+            if (bottom >= volume.y + volume.height * 0.5f - FURNITURE_TOP_SETTLING_MARGIN ||
+                top <= volume.y - volume.height * 0.5f) continue
+            val left = volume.left - CAR_COLLISION_RADIUS
+            val right = volume.right + CAR_COLLISION_RADIUS
+            val back = volume.back - CAR_COLLISION_RADIUS
+            val front = volume.front + CAR_COLLISION_RADIUS
+            if (worldX <= left || worldX >= right || worldZ <= back || worldZ >= front) continue
+            val dx = minOf(worldX - left, right - worldX)
+            val dz = minOf(worldZ - back, front - worldZ)
+            var nx = 0f
+            var nz = 0f
+            if (dx < dz) {
+                nx = if (worldX < volume.x) -1f else 1f
+                worldX = if (nx < 0f) left else right
+            } else {
+                nz = if (worldZ < volume.z) -1f else 1f
+                worldZ = if (nz < 0f) back else front
+            }
+            val normalSpeed = velocityX * nx + velocityZ * nz
+            if (normalSpeed < 0f) {
+                val impactSpeed = hypot(velocityX, velocityZ)
+                velocityX -= (1f + TOY_RESTITUTION) * normalSpeed * nx
+                velocityZ -= (1f + TOY_RESTITUTION) * normalSpeed * nz
+                preserveCollisionRhythm(impactSpeed)
+            }
+        }
+    }
+
+    private fun ToyboxVolume.blocksSides(): Boolean =
+        foldedDegrees(pitchDegrees) < 1.5f && foldedDegrees(rollDegrees) < 1.5f && height > 1.2f
+
+    private fun foldedDegrees(degrees: Float): Float {
+        val normalized = abs(degrees % 360f)
+        return minOf(normalized, 360f - normalized)
     }
 
     private fun approach(current: Float, target: Float, amount: Float): Float = when {
@@ -909,5 +1019,10 @@ internal class ArcadeCar(
         private const val MAX_BODY_PITCH = 0.76f
         private const val SUSPENSION_POSE_BLEND = 0.18f
         private const val FURNITURE_TOP_SETTLING_MARGIN = 0.3f
+        private const val EDITOR_WORLD_EDGE_TOLERANCE = 0.035f
+        private const val EDITOR_WORLD_SURFACE_TOLERANCE = 0.08f
+        /** Plancher de repli en mode bac à sable : évite une chute infinie
+         * quand la roue n'est au-dessus d'aucun bloc du monde édité. */
+        private const val SANDBOX_FALLBACK_GROUND_Y = 0f
     }
 }

@@ -4,9 +4,29 @@ Le gameplay reste une conduite arcade libre : accélérateur, frein/marche arri�
 virages, glisse et Ruban Turbo. Les véhicules et le catalogue de modèles 3D sont
 conservés, ainsi que les couleurs pastel et les circuits des huit pièces.
 
+## Un seul monde actif à la fois
+
+`ActiveWorldKind` distingue les deux systèmes de piste, jamais actifs en même
+temps (rendu et collisions) :
+- **LEGACY** : les circuits procéduraux historiques (8 pièces × 10 circuits,
+  maison à seed) — jouables en course complète avec adversaires, mais non
+  éditables.
+- **CUSTOM** : un `ToyboxWorld` bâti dans l'éditeur de blocs — exploration
+  libre uniquement (`ArcadeCar.sandboxMode`), sans tour ni adversaires.
+
+Le menu pause unique (`menu/ToyboxWorldMenu.kt`) fusionne l'ancien menu de
+course et l'ancien menu d'édition : bascule Éditer/Tester (mondes CUSTOM
+uniquement), Charger (mondes intégrés, circuits classiques, créations du
+joueur) et Sauvegarder/Sauvegarder une copie. Charger une création ou un
+monde intégré en fait toujours une copie en mémoire — le fichier source
+n'est jamais écrasé tant qu'on n'a pas explicitement choisi Sauvegarder.
+
 ## Maison
 
-Le bouton Maison ouvre une scène continue, sans changement de carte :
+La maison à trois niveaux est jouable des deux côtés : comme circuit
+classique ("Maison (circuit)" dans Charger, sans édition possible) et comme
+monde d'éditeur complet ("Maison complète 3 étages", éditable). Elle ouvre
+une scène continue, sans changement de carte :
 - garage à Y = 0 ;
 - séjour avec cuisine à Y = 26 ;
 - mezzanine à Y = 52, avec un pont sur l'atrium ;

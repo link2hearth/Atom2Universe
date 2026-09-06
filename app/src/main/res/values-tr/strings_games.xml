@@ -315,4 +315,18 @@
     <string name="toybox_circuit_furniture">Mobilya parkuru</string>
     <string name="toybox_circuit_expedition">Büyük keşif</string>
     <string name="toybox_house_mode">Ev</string>
+    <string name="toybox_menu_edit_mode">Düzenle</string>
+    <string name="toybox_menu_test_mode">Test et</string>
+    <string name="toybox_menu_load">Yükle…</string>
+    <string name="toybox_menu_save">Kaydet</string>
+    <string name="toybox_menu_save_as_new">Kopya olarak kaydet</string>
+    <string name="toybox_menu_back">Geri</string>
+    <string name="toybox_menu_worlds_section">Dünyalar</string>
+    <string name="toybox_menu_my_creations_section">Yaratımlarım</string>
+    <string name="toybox_menu_classic_circuits">Klasik pistler</string>
+    <string name="toybox_menu_no_creations">Kayıtlı yaratım yok</string>
+    <string name="toybox_menu_creation_saved">Yaratım kaydedildi: %1$s</string>
+    <string name="toybox_menu_name_prompt">Kayıt adı</string>
+    <string name="toybox_menu_default_name">Yaratımım</string>
+    <string name="toybox_menu_blocks_count">%1$d blok</string>
 </resources>

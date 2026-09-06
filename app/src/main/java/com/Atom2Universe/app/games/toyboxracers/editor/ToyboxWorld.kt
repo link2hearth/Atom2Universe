@@ -6,6 +6,8 @@ import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.math.cos
+import kotlin.math.sin
 
 internal enum class ToyboxVolumeKind(val label: String, val color: Int, val solidByDefault: Boolean) {
     FLOOR("Sol", 0xFFD7E6E4.toInt(), true),
@@ -31,15 +33,35 @@ internal data class ToyboxVolume(
     val depth: Float,
     val solid: Boolean = kind.solidByDefault,
     val color: Int = kind.color,
-    val quarterTurns: Int = 0
+    val quarterTurns: Int = 0,
+    val yawDegrees: Float = quarterTurns * 90f,
+    val pitchDegrees: Float = 0f,
+    val rollDegrees: Float = 0f
 ) {
-    val rotation get() = ((quarterTurns % 4) + 4) % 4
-    val worldWidth get() = if (rotation % 2 == 0) width else depth
-    val worldDepth get() = if (rotation % 2 == 0) depth else width
-    val left get() = x - worldWidth * 0.5f
-    val right get() = x + worldWidth * 0.5f
-    val back get() = z - worldDepth * 0.5f
-    val front get() = z + worldDepth * 0.5f
+    val normalizedYaw get() = ((yawDegrees % 360f) + 360f) % 360f
+    val rotation get() = (((normalizedYaw / 90f).toInt() % 4) + 4) % 4
+    val yawRadians get() = normalizedYaw * kotlin.math.PI.toFloat() / 180f
+    val pitchRadians get() = pitchDegrees * kotlin.math.PI.toFloat() / 180f
+    val rollRadians get() = rollDegrees * kotlin.math.PI.toFloat() / 180f
+    val yawCos get() = cos(yawRadians)
+    val yawSin get() = sin(yawRadians)
+    val pitchCos get() = cos(pitchRadians)
+    val pitchSin get() = sin(pitchRadians)
+    val rollCos get() = cos(rollRadians)
+    val rollSin get() = sin(rollRadians)
+    private val corners get() = buildList {
+        for (lx in floatArrayOf(-width * 0.5f, width * 0.5f)) {
+            for (ly in floatArrayOf(-height * 0.5f, height * 0.5f)) {
+                for (lz in floatArrayOf(-depth * 0.5f, depth * 0.5f)) add(worldPoint(lx, ly, lz))
+            }
+        }
+    }
+    val worldWidth get() = right - left
+    val worldDepth get() = front - back
+    val left get() = corners.minOf { it.x }
+    val right get() = corners.maxOf { it.x }
+    val back get() = corners.minOf { it.z }
+    val front get() = corners.maxOf { it.z }
 
     fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
     fun resize(dw: Float, dd: Float) = copy(
@@ -49,7 +71,58 @@ internal data class ToyboxVolume(
     fun lift(dy: Float) = copy(y = (y + dy).coerceAtLeast(0f))
     fun taller(dh: Float) = copy(height = (height + dh).coerceAtLeast(0.25f))
     fun toggleSolid() = copy(solid = !solid)
-    fun rotateQuarter(delta: Int = 1) = copy(quarterTurns = ((quarterTurns + delta) % 4 + 4) % 4)
+    fun rotateQuarter(delta: Int = 1) = rotateYaw(delta * 90f)
+    fun rotateYaw(deltaDegrees: Float) = withYaw(yawDegrees + deltaDegrees)
+    fun rotatePitch(deltaDegrees: Float) = copy(pitchDegrees = pitchDegrees + deltaDegrees)
+    fun rotateRoll(deltaDegrees: Float) = copy(rollDegrees = rollDegrees + deltaDegrees)
+    fun withYaw(degrees: Float): ToyboxVolume {
+        val normalized = ((degrees % 360f) + 360f) % 360f
+        val snappedQuarter = ((normalized / 90f).toInt() % 4 + 4) % 4
+        return copy(yawDegrees = normalized, quarterTurns = snappedQuarter)
+    }
+
+    fun localX(worldX: Float, worldZ: Float): Float {
+        val dx = worldX - x
+        val dz = worldZ - z
+        return dx * yawCos - dz * yawSin
+    }
+
+    fun localZ(worldX: Float, worldZ: Float): Float {
+        val dx = worldX - x
+        val dz = worldZ - z
+        return dx * yawSin + dz * yawCos
+    }
+
+    fun worldX(localX: Float, localZ: Float): Float = x + localX * yawCos + localZ * yawSin
+    fun worldZ(localX: Float, localZ: Float): Float = z - localX * yawSin + localZ * yawCos
+
+    fun worldPoint(localX: Float, localY: Float, localZ: Float): VolumePoint {
+        val pitchedY = localY + localZ * pitchSin
+        val pitchedZ = localZ * pitchCos - localY * pitchSin
+        val rolledX = localX * rollCos - pitchedY * rollSin
+        val rolledY = localX * rollSin + pitchedY * rollCos
+        return VolumePoint(
+            x = x + rolledX * yawCos + pitchedZ * yawSin,
+            y = y + rolledY,
+            z = z - rolledX * yawSin + pitchedZ * yawCos
+        )
+    }
+
+    fun localPoint(worldX: Float, worldY: Float, worldZ: Float): VolumePoint {
+        val dx = worldX - x
+        val dy = worldY - y
+        val dz = worldZ - z
+        val yawedX = dx * yawCos - dz * yawSin
+        val yawedZ = dx * yawSin + dz * yawCos
+        val unrolledX = yawedX * rollCos + dy * rollSin
+        val unrolledY = -yawedX * rollSin + dy * rollCos
+        val unpitchedY = unrolledY * pitchCos - yawedZ * pitchSin
+        val unpitchedZ = unrolledY * pitchSin + yawedZ * pitchCos
+        return VolumePoint(unrolledX, unpitchedY, unpitchedZ)
+    }
+
+    fun containsXZ(worldX: Float, worldZ: Float): Boolean =
+        worldX in left..right && worldZ in back..front
 
     fun toJson() = JSONObject()
         .put("id", id)
@@ -63,11 +136,15 @@ internal data class ToyboxVolume(
         .put("solid", solid)
         .put("color", color)
         .put("quarterTurns", quarterTurns)
+        .put("yawDegrees", yawDegrees.toDouble())
+        .put("pitchDegrees", pitchDegrees.toDouble())
+        .put("rollDegrees", rollDegrees.toDouble())
 
     companion object {
         fun fromJson(json: JSONObject): ToyboxVolume {
             val kind = ToyboxVolumeKind.entries.find { it.name == json.optString("kind") }
                 ?: ToyboxVolumeKind.FURNITURE
+            val quarterTurns = json.optInt("quarterTurns", 0)
             return ToyboxVolume(
                 id = json.optLong("id", System.nanoTime()),
                 kind = kind,
@@ -79,9 +156,26 @@ internal data class ToyboxVolume(
                 depth = json.optDouble("depth", 12.0).toFloat().coerceAtLeast(1f),
                 solid = json.optBoolean("solid", true),
                 color = json.optInt("color", kind.color),
-                quarterTurns = json.optInt("quarterTurns", 0)
+                quarterTurns = quarterTurns,
+                yawDegrees = json.optDouble("yawDegrees", quarterTurns * 90.0).toFloat(),
+                pitchDegrees = json.optDouble("pitchDegrees", 0.0).toFloat(),
+                rollDegrees = json.optDouble("rollDegrees", 0.0).toFloat()
             )
         }
+    }
+}
+
+internal data class VolumePoint(val x: Float, val y: Float, val z: Float)
+
+internal enum class ToyboxRotationAxis(val label: String) {
+    YAW("Plan"),
+    PITCH("Incl. av/ar"),
+    ROLL("Incl. g/d");
+
+    fun next() = when (this) {
+        YAW -> PITCH
+        PITCH -> ROLL
+        ROLL -> YAW
     }
 }
 
@@ -92,16 +186,23 @@ internal data class ToyboxDecor(
     val y: Float,
     val z: Float,
     val quarterTurns: Int = 0,
-    val scale: Float = 1f
+    val scale: Float = 1f,
+    val yawDegrees: Float = quarterTurns * 90f
 ) {
     fun placement(): DecorPlacement? = runCatching {
-        DecorPlacement(DecorCatalog[modelId], x, y, z, quarterTurns, scale)
+        DecorPlacement(DecorCatalog[modelId], x, y, z, quarterTurns, scale, yawDegrees)
     }.getOrNull()
 
     fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
     fun lift(dy: Float) = copy(y = (y + dy).coerceAtLeast(0f))
     fun resize(ds: Float) = copy(scale = (scale + ds).coerceAtLeast(0.05f))
-    fun rotateQuarter(delta: Int = 1) = copy(quarterTurns = ((quarterTurns + delta) % 4 + 4) % 4)
+    fun rotateQuarter(delta: Int = 1) = rotateYaw(delta * 90f)
+    fun rotateYaw(deltaDegrees: Float) = withYaw(yawDegrees + deltaDegrees)
+    fun withYaw(degrees: Float): ToyboxDecor {
+        val normalized = ((degrees % 360f) + 360f) % 360f
+        val snappedQuarter = ((normalized / 90f).toInt() % 4 + 4) % 4
+        return copy(yawDegrees = normalized, quarterTurns = snappedQuarter)
+    }
 
     fun toJson() = JSONObject()
         .put("id", id)
@@ -111,17 +212,22 @@ internal data class ToyboxDecor(
         .put("z", z.toDouble())
         .put("quarterTurns", quarterTurns)
         .put("scale", scale.toDouble())
+        .put("yawDegrees", yawDegrees.toDouble())
 
     companion object {
-        fun fromJson(json: JSONObject) = ToyboxDecor(
-            id = json.optLong("id", System.nanoTime()),
-            modelId = json.optString("modelId"),
-            x = json.optDouble("x", 0.0).toFloat(),
-            y = json.optDouble("y", 0.0).toFloat(),
-            z = json.optDouble("z", 0.0).toFloat(),
-            quarterTurns = json.optInt("quarterTurns", 0),
-            scale = json.optDouble("scale", 1.0).toFloat().coerceAtLeast(0.05f)
-        )
+        fun fromJson(json: JSONObject): ToyboxDecor {
+            val quarterTurns = json.optInt("quarterTurns", 0)
+            return ToyboxDecor(
+                id = json.optLong("id", System.nanoTime()),
+                modelId = json.optString("modelId"),
+                x = json.optDouble("x", 0.0).toFloat(),
+                y = json.optDouble("y", 0.0).toFloat(),
+                z = json.optDouble("z", 0.0).toFloat(),
+                quarterTurns = quarterTurns,
+                scale = json.optDouble("scale", 1.0).toFloat().coerceAtLeast(0.05f),
+                yawDegrees = json.optDouble("yawDegrees", quarterTurns * 90.0).toFloat()
+            )
+        }
     }
 }
 
@@ -252,7 +358,8 @@ internal data class ToyboxWorld(
                     y = placement.y,
                     z = placement.z,
                     quarterTurns = placement.quarterTurns,
-                    scale = placement.scale
+                    scale = placement.scale,
+                    yawDegrees = placement.yawDegrees
                 )
             }
     }

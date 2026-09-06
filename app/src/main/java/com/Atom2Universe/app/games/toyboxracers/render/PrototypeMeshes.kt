@@ -4,6 +4,7 @@ import android.opengl.GLES30
 import android.opengl.Matrix
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
@@ -335,11 +336,18 @@ internal object PrototypeMeshFactory {
     private val TEDDY = color(0.72f, 0.50f, 0.34f)
     private val TEDDY_LIGHT = color(0.93f, 0.73f, 0.51f)
 
-    fun world(world: ToyboxWorld, preview: ToyboxVolume? = null): ColoredMesh {
+    fun world(
+        world: ToyboxWorld,
+        preview: ToyboxVolume? = null,
+        rotationAxis: ToyboxRotationAxis = ToyboxRotationAxis.YAW
+    ): ColoredMesh {
         val builder = MeshBuilder()
         world.volumes.forEach { addWorldVolume(builder, it, alpha = 1f) }
         world.decorations.mapNotNull { it.placement() }.forEach { DecorMeshFactory.add(builder, it) }
-        if (preview != null) addWorldVolume(builder, preview, alpha = 0.54f)
+        if (preview != null) {
+            addWorldVolume(builder, preview, alpha = 0.54f)
+            addRotationGizmo(builder, preview, rotationAxis)
+        }
         return builder.build()
     }
 
@@ -473,47 +481,144 @@ internal object PrototypeMeshFactory {
 
     private fun addWorldVolume(builder: MeshBuilder, volume: ToyboxVolume, alpha: Float) {
         val color = rgba(volume.color, alpha)
-        val worldWidth = volume.worldWidth
-        val worldDepth = volume.worldDepth
         when (volume.kind) {
             ToyboxVolumeKind.RAMP -> addWorldRamp(builder, volume, color)
             ToyboxVolumeKind.STAIR -> addWorldStairs(builder, volume, color)
             ToyboxVolumeKind.WINDOW -> {
-                builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
-                builder.box(volume.x, volume.y, volume.z, worldWidth * 0.92f, volume.height * 0.08f, worldDepth + 0.08f, CREAM)
-                builder.box(volume.x, volume.y, volume.z, worldWidth * 0.08f, volume.height * 0.92f, worldDepth + 0.08f, CREAM)
+                addOrientedBox(builder, volume, 0f, 0f, 0f, volume.width, volume.height, volume.depth, color)
+                addOrientedBox(builder, volume, 0f, 0f, 0f, volume.width * 0.92f, volume.height * 0.08f, volume.depth + 0.08f, CREAM)
+                addOrientedBox(builder, volume, 0f, 0f, 0f, volume.width * 0.08f, volume.height * 0.92f, volume.depth + 0.08f, CREAM)
             }
             ToyboxVolumeKind.DOOR -> {
-                builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
-                builder.cylinderY(volume.x + worldWidth * 0.34f, volume.y, volume.z + worldDepth * 0.52f, 0.42f, 0.18f, 8, CREAM)
+                addOrientedBox(builder, volume, 0f, 0f, 0f, volume.width, volume.height, volume.depth, color)
+                builder.cylinderY(
+                    volume.worldX(volume.width * 0.34f, volume.depth * 0.52f),
+                    volume.y,
+                    volume.worldZ(volume.width * 0.34f, volume.depth * 0.52f),
+                    0.42f,
+                    0.18f,
+                    8,
+                    CREAM
+                )
             }
             ToyboxVolumeKind.RAIL -> {
-                builder.box(volume.x, volume.y + volume.height * 0.38f, volume.z, worldWidth, volume.height * 0.18f, worldDepth, color)
-                builder.box(volume.x, volume.y - volume.height * 0.38f, volume.z, worldWidth, volume.height * 0.14f, worldDepth, color)
-                val posts = maxOf(2, (worldWidth / 6f).toInt() + 1)
+                addOrientedBox(builder, volume, 0f, volume.height * 0.38f, 0f, volume.width, volume.height * 0.18f, volume.depth, color)
+                addOrientedBox(builder, volume, 0f, -volume.height * 0.38f, 0f, volume.width, volume.height * 0.14f, volume.depth, color)
+                val posts = maxOf(2, (volume.width / 6f).toInt() + 1)
                 repeat(posts) { index ->
                     val t = if (posts == 1) 0.5f else index.toFloat() / (posts - 1)
-                    val x = volume.left + worldWidth * t
-                    builder.box(x, volume.y, volume.z, 0.45f, volume.height, worldDepth, color)
+                    val localX = -volume.width * 0.5f + volume.width * t
+                    addOrientedBox(builder, volume, localX, 0f, 0f, 0.45f, volume.height, volume.depth, color)
                 }
             }
-            else -> builder.box(volume.x, volume.y, volume.z, worldWidth, volume.height, worldDepth, color)
+            else -> addOrientedBox(builder, volume, 0f, 0f, 0f, volume.width, volume.height, volume.depth, color)
         }
     }
 
+    private fun addRotationGizmo(builder: MeshBuilder, volume: ToyboxVolume, axis: ToyboxRotationAxis) {
+        val radius = maxOf(volume.width, volume.height, volume.depth).coerceAtLeast(3.2f) * 0.52f
+        val thickness = maxOf(0.035f, radius * 0.015f)
+        addRotationRing(builder, volume, ToyboxRotationAxis.YAW, axis, radius, thickness)
+        addRotationRing(builder, volume, ToyboxRotationAxis.PITCH, axis, radius, thickness)
+        addRotationRing(builder, volume, ToyboxRotationAxis.ROLL, axis, radius, thickness)
+    }
+
+    private fun addRotationRing(
+        builder: MeshBuilder,
+        volume: ToyboxVolume,
+        ringAxis: ToyboxRotationAxis,
+        activeAxis: ToyboxRotationAxis,
+        radius: Float,
+        thickness: Float
+    ) {
+        val color = when (ringAxis) {
+            ToyboxRotationAxis.YAW -> ringColor(0.20f, 1f, 0.35f, ringAxis == activeAxis)
+            ToyboxRotationAxis.PITCH -> ringColor(1f, 0.24f, 0.15f, ringAxis == activeAxis)
+            ToyboxRotationAxis.ROLL -> ringColor(0.20f, 0.52f, 1f, ringAxis == activeAxis)
+        }
+        val segments = 72
+        for (index in 0 until segments) {
+            val start = (index.toFloat() / segments) * (PI.toFloat() * 2f)
+            val end = ((index + 1f) / segments) * (PI.toFloat() * 2f)
+            val innerStart = ringPoint(volume, ringAxis, start, radius - thickness)
+            val innerEnd = ringPoint(volume, ringAxis, end, radius - thickness)
+            val outerEnd = ringPoint(volume, ringAxis, end, radius + thickness)
+            val outerStart = ringPoint(volume, ringAxis, start, radius + thickness)
+            builder.quad(innerStart, innerEnd, outerEnd, outerStart, color)
+        }
+    }
+
+    private fun ringPoint(volume: ToyboxVolume, axis: ToyboxRotationAxis, angle: Float, radius: Float): Vec3 {
+        val c = cos(angle) * radius
+        val s = sin(angle) * radius
+        val point = when (axis) {
+            ToyboxRotationAxis.YAW -> volume.worldPoint(c, 0f, s)
+            ToyboxRotationAxis.PITCH -> volume.worldPoint(0f, c, s)
+            ToyboxRotationAxis.ROLL -> volume.worldPoint(c, s, 0f)
+        }
+        return Vec3(point.x, point.y, point.z)
+    }
+
+    private fun ringColor(r: Float, g: Float, b: Float, active: Boolean): FloatArray {
+        val strength = if (active) 1f else 0.72f
+        val alpha = if (active) 0.96f else 0.34f
+        return floatArrayOf(r * strength, g * strength, b * strength, alpha)
+    }
+
+    private fun addOrientedBox(
+        builder: MeshBuilder,
+        volume: ToyboxVolume,
+        localCenterX: Float,
+        localCenterY: Float,
+        localCenterZ: Float,
+        sizeX: Float,
+        sizeY: Float,
+        sizeZ: Float,
+        color: FloatArray
+    ) {
+        val left = localCenterX - sizeX * 0.5f
+        val right = localCenterX + sizeX * 0.5f
+        val bottom = volume.y + localCenterY - sizeY * 0.5f
+        val top = volume.y + localCenterY + sizeY * 0.5f
+        val back = localCenterZ - sizeZ * 0.5f
+        val front = localCenterZ + sizeZ * 0.5f
+        fun p(localX: Float, y: Float, localZ: Float): Vec3 {
+            val point = volume.worldPoint(localX, y - volume.y, localZ)
+            return Vec3(point.x, point.y, point.z)
+        }
+        val lbb = p(left, bottom, back)
+        val rbb = p(right, bottom, back)
+        val ltb = p(left, top, back)
+        val rtb = p(right, top, back)
+        val lbf = p(left, bottom, front)
+        val rbf = p(right, bottom, front)
+        val ltf = p(left, top, front)
+        val rtf = p(right, top, front)
+        builder.quad(lbf, rbf, rtf, ltf, color)
+        builder.quad(rbb, lbb, ltb, rtb, color)
+        builder.quad(rbf, rbb, rtb, rtf, color)
+        builder.quad(lbb, lbf, ltf, ltb, color)
+        builder.quad(ltf, rtf, rtb, ltb, color)
+        builder.quad(lbb, rbb, rbf, lbf, color)
+    }
+
     private fun addWorldRamp(builder: MeshBuilder, volume: ToyboxVolume, color: FloatArray) {
-        val left = volume.left
-        val right = volume.right
-        val back = volume.back
-        val front = volume.front
+        val left = -volume.width * 0.5f
+        val right = volume.width * 0.5f
+        val back = -volume.depth * 0.5f
+        val front = volume.depth * 0.5f
         val bottom = volume.y - volume.height * 0.5f
         val top = volume.y + volume.height * 0.5f
-        val lbb = Vec3(left, bottom, back)
-        val rbb = Vec3(right, bottom, back)
-        val lbf = Vec3(left, bottom, front)
-        val rbf = Vec3(right, bottom, front)
-        val ltf = Vec3(left, top, front)
-        val rtf = Vec3(right, top, front)
+        fun p(localX: Float, y: Float, localZ: Float): Vec3 {
+            val point = volume.worldPoint(localX, y - volume.y, localZ)
+            return Vec3(point.x, point.y, point.z)
+        }
+        val lbb = p(left, bottom, back)
+        val rbb = p(right, bottom, back)
+        val lbf = p(left, bottom, front)
+        val rbf = p(right, bottom, front)
+        val ltf = p(left, top, front)
+        val rtf = p(right, top, front)
         builder.quad(lbf, rbf, rtf, ltf, color)
         builder.triangle(lbb, lbf, ltf, color)
         builder.triangle(rbb, rtf, rbf, color)
@@ -522,17 +627,19 @@ internal object PrototypeMeshFactory {
     }
 
     private fun addWorldStairs(builder: MeshBuilder, volume: ToyboxVolume, color: FloatArray) {
-        val steps = maxOf(2, (volume.worldDepth / 3f).toInt())
-        val stepDepth = volume.worldDepth / steps
+        val steps = maxOf(2, (volume.depth / 3f).toInt())
+        val stepDepth = volume.depth / steps
         val bottom = volume.y - volume.height * 0.5f
         repeat(steps) { index ->
             val h = volume.height * (index + 1) / steps
-            val z = volume.back + stepDepth * (index + 0.5f)
-            builder.box(
-                volume.x,
-                bottom + h * 0.5f,
-                z,
-                volume.worldWidth,
+            val localZ = -volume.depth * 0.5f + stepDepth * (index + 0.5f)
+            addOrientedBox(
+                builder,
+                volume,
+                0f,
+                bottom + h * 0.5f - volume.y,
+                localZ,
+                volume.width,
                 h,
                 stepDepth,
                 color

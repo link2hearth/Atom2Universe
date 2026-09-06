@@ -314,4 +314,18 @@
     <string name="toybox_circuit_furniture">Traseul mobilei</string>
     <string name="toybox_circuit_expedition">Marea expediție</string>
     <string name="toybox_house_mode">Casă</string>
+    <string name="toybox_menu_edit_mode">Editare</string>
+    <string name="toybox_menu_test_mode">Testare</string>
+    <string name="toybox_menu_load">Încarcă…</string>
+    <string name="toybox_menu_save">Salvează</string>
+    <string name="toybox_menu_save_as_new">Salvează ca o copie</string>
+    <string name="toybox_menu_back">Înapoi</string>
+    <string name="toybox_menu_worlds_section">Lumi</string>
+    <string name="toybox_menu_my_creations_section">Creațiile mele</string>
+    <string name="toybox_menu_classic_circuits">Circuite clasice</string>
+    <string name="toybox_menu_no_creations">Nicio creație salvată</string>
+    <string name="toybox_menu_creation_saved">Creație salvată: %1$s</string>
+    <string name="toybox_menu_name_prompt">Numele salvării</string>
+    <string name="toybox_menu_default_name">Creația mea</string>
+    <string name="toybox_menu_blocks_count">%1$d blocuri</string>
 </resources>

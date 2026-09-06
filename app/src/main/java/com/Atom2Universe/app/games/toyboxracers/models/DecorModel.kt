@@ -1,6 +1,9 @@
 package com.Atom2Universe.app.games.toyboxracers.models
 
 import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 internal enum class DecorRoom { KITCHEN, LIVING_ROOM, GARAGE, OFFICE, BATHROOM, OUTDOOR, BEDROOM }
 internal enum class DecorShape { BOX, OVAL, CYLINDER_Y, CYLINDER_X, CONE_Y, GABLE_ROOF }
@@ -26,27 +29,30 @@ internal data class DecorModel(val id: String, val room: DecorRoom, val parts: L
     }
 }
 
-/** Les quarts de tour gardent les collisions rectangulaires exactement alignées au rendu. */
 internal data class DecorPlacement(
     val model: DecorModel, val x: Float, val y: Float, val z: Float,
-    val quarterTurns: Int = 0, val scale: Float = 1f
+    val quarterTurns: Int = 0, val scale: Float = 1f, val yawDegrees: Float = quarterTurns * 90f
 ) {
     init {
         require(x.isFinite() && y.isFinite() && z.isFinite())
         require(scale.isFinite() && scale > 0f)
     }
-    val rotation = ((quarterTurns % 4) + 4) % 4
-    fun rotatedX(px: Float, pz: Float): Float = when (rotation) { 0 -> px; 1 -> pz; 2 -> -px; else -> -pz }
-    fun rotatedZ(px: Float, pz: Float): Float = when (rotation) { 0 -> pz; 1 -> -px; 2 -> -pz; else -> px }
+    val normalizedYaw = ((yawDegrees % 360f) + 360f) % 360f
+    val rotation = (((normalizedYaw / 90f).toInt() % 4) + 4) % 4
+    private val yawRadians = normalizedYaw * kotlin.math.PI.toFloat() / 180f
+    private val yawCos = cos(yawRadians)
+    private val yawSin = sin(yawRadians)
+    fun rotatedX(px: Float, pz: Float): Float = px * yawCos + pz * yawSin
+    fun rotatedZ(px: Float, pz: Float): Float = -px * yawSin + pz * yawCos
 
     /** Un volume par pièce solide ; jamais une boîte globale bouchant dessous et passages. */
     val solids: List<RoomBox> by lazy {
         model.parts.filter { it.solid }.map { part ->
             RoomBox(x + rotatedX(part.x, part.z) * scale, y + part.y * scale,
                 z + rotatedZ(part.x, part.z) * scale,
-                (if (rotation % 2 == 0) part.width else part.depth) * scale,
+                (abs(yawCos) * part.width + abs(yawSin) * part.depth) * scale,
                 part.height * scale,
-                (if (rotation % 2 == 0) part.depth else part.width) * scale, part.color)
+                (abs(yawSin) * part.width + abs(yawCos) * part.depth) * scale, part.color)
         }
     }
 }

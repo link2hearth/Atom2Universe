@@ -315,4 +315,18 @@
     <string name="toybox_circuit_furniture">Möbelrunde</string>
     <string name="toybox_circuit_expedition">Große Expedition</string>
     <string name="toybox_house_mode">Haus</string>
+    <string name="toybox_menu_edit_mode">Bearbeiten</string>
+    <string name="toybox_menu_test_mode">Testen</string>
+    <string name="toybox_menu_load">Laden…</string>
+    <string name="toybox_menu_save">Speichern</string>
+    <string name="toybox_menu_save_as_new">Als Kopie speichern</string>
+    <string name="toybox_menu_back">Zurück</string>
+    <string name="toybox_menu_worlds_section">Welten</string>
+    <string name="toybox_menu_my_creations_section">Meine Kreationen</string>
+    <string name="toybox_menu_classic_circuits">Klassische Strecken</string>
+    <string name="toybox_menu_no_creations">Keine gespeicherten Kreationen</string>
+    <string name="toybox_menu_creation_saved">Kreation gespeichert: %1$s</string>
+    <string name="toybox_menu_name_prompt">Name der Speicherung</string>
+    <string name="toybox_menu_default_name">Meine Kreation</string>
+    <string name="toybox_menu_blocks_count">%1$d Blöcke</string>
 </resources>

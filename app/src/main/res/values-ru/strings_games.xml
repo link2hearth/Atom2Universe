@@ -315,4 +315,18 @@
     <string name="toybox_circuit_furniture">Мебельный маршрут</string>
     <string name="toybox_circuit_expedition">Большая экспедиция</string>
     <string name="toybox_house_mode">Дом</string>
+    <string name="toybox_menu_edit_mode">Редактировать</string>
+    <string name="toybox_menu_test_mode">Тест</string>
+    <string name="toybox_menu_load">Загрузить…</string>
+    <string name="toybox_menu_save">Сохранить</string>
+    <string name="toybox_menu_save_as_new">Сохранить как копию</string>
+    <string name="toybox_menu_back">Назад</string>
+    <string name="toybox_menu_worlds_section">Миры</string>
+    <string name="toybox_menu_my_creations_section">Мои творения</string>
+    <string name="toybox_menu_classic_circuits">Классические трассы</string>
+    <string name="toybox_menu_no_creations">Нет сохранённых творений</string>
+    <string name="toybox_menu_creation_saved">Творение сохранено: %1$s</string>
+    <string name="toybox_menu_name_prompt">Имя сохранения</string>
+    <string name="toybox_menu_default_name">Моё творение</string>
+    <string name="toybox_menu_blocks_count">%1$d блоков</string>
 </resources>

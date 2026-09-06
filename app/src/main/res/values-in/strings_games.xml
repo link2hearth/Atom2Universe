@@ -315,4 +315,18 @@
     <string name="toybox_circuit_furniture">Jalur perabot</string>
     <string name="toybox_circuit_expedition">Ekspedisi besar</string>
     <string name="toybox_house_mode">Rumah</string>
+    <string name="toybox_menu_edit_mode">Edit</string>
+    <string name="toybox_menu_test_mode">Uji coba</string>
+    <string name="toybox_menu_load">Muat…</string>
+    <string name="toybox_menu_save">Simpan</string>
+    <string name="toybox_menu_save_as_new">Simpan sebagai salinan</string>
+    <string name="toybox_menu_back">Kembali</string>
+    <string name="toybox_menu_worlds_section">Dunia</string>
+    <string name="toybox_menu_my_creations_section">Kreasi saya</string>
+    <string name="toybox_menu_classic_circuits">Sirkuit klasik</string>
+    <string name="toybox_menu_no_creations">Belum ada kreasi tersimpan</string>
+    <string name="toybox_menu_creation_saved">Kreasi disimpan: %1$s</string>
+    <string name="toybox_menu_name_prompt">Nama simpanan</string>
+    <string name="toybox_menu_default_name">Kreasi saya</string>
+    <string name="toybox_menu_blocks_count">%1$d blok</string>
 </resources>
