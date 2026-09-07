@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Nama simpanan</string>
     <string name="toybox_menu_default_name">Kreasi saya</string>
     <string name="toybox_menu_blocks_count">%1$d blok</string>
+    <string name="toybox_track_extend">Perpanjang</string>
+    <string name="toybox_track_point">Titik ujung</string>
+    <string name="toybox_track_split">Titik +</string>
+    <string name="toybox_track_hint">Geser titik; Y + / Y − mengatur ketinggiannya.</string>
 </resources>

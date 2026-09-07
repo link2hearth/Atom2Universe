@@ -80,3 +80,53 @@ La politique du dépôt autorise ici seulement `compileDebugKotlin` : aucun
 APK, aucune installation et aucune exécution de tests Gradle. Les tests
 ajoutés restent donc à exécuter localement. Le ressenti des bosses, la
 lisibilité des étages et les parcours complets restent à valider sur appareil.
+
+## Édition tactile des pistes
+
+- Toucher une piste la sélectionne ; les deux poignées correspondent au début
+  et à la fin. Glisser une poignée déplace cette extrémité sur son plan horizontal.
+- La poignée jaune est active. « Extrémité » alterne entre début et fin ;
+  « Y + / Y − » règle uniquement son altitude. Les extrémités déjà raccordées
+  suivent la modification. Un glissement complet compte comme une seule annulation.
+- Toucher une zone du morceau puis « Point + » le divise près de cette zone
+  et sélectionne le point ajouté. « Prolonger » ajoute une section de 20 unités
+  à la fin du morceau sélectionné, à la même altitude.
+- Les dimensions inférieures à deux unités, les largeurs aux deux extrémités
+  et les orientations des bords du circuit importé sont conservées en JSON.
+  Le rendu et les contacts utilisent les mêmes triangles, indépendamment du
+  nombre de morceaux. Modifier une couleur ou une altitude ne déclenche plus
+  un déplacement par accrochage automatique.
+
+Vérification manuelle sur appareil : copier un circuit sinueux, passer plusieurs
+fois Éditer → Tester, sauvegarder puis recharger ; vérifier les virages et les
+petits segments. Sur une nouvelle création, prolonger une piste, déplacer le
+raccord commun, modifier son altitude, ajouter un point, puis annuler. Vérifier
+également un glissement interrompu et la conservation des annulations après
+ouverture de la liste des créations. La conversion reste une création en mode
+exploration, sans les adversaires ni les objectifs de la course procédurale.
+## Collisions des créations
+
+La copie d’un circuit reprend les murs et meubles solides de `RaceLayouts.solids`.
+Les parties solides des modèles 3D deviennent des volumes de collision distincts,
+ce qui laisse libres les passages sous les tables et entre leurs pieds. Le test
+latéral respecte leur rotation horizontale ; les formes arrondies restent
+approximées par les boîtes de leurs parties, comme pour les circuits classiques.
+
+`EditorVolumeIndex` regroupe les obstacles par cellules de 18 unités et met leurs
+limites et triangles en cache. Les grands volumes disposent d’une liste séparée
+pour éviter une grille gigantesque. Les triangles des pistes sont aussi préparés
+au changement du circuit. La voiture ne reconstruit que les catégories modifiées,
+sur le fil de simulation ; les déplacements intermédiaires en édition attendent
+le retour au test. Rendu et simulation consomment le même instantané du monde.
+
+Les anciens fichiers conservent leurs attributs `solid` : un bloc volontairement
+non solide ne doit pas devenir un obstacle automatiquement. Pour une ancienne
+copie créée avec les collisions de mobilier désactivées, activer « Solide » sur
+les blocs concernés ou refaire une copie du circuit original. Les parties
+solides des modèles 3D sont prises en compte aussi dans les anciennes créations.
+
+À vérifier sur appareil : heurter un mur et un meuble après Éditer → Tester puis
+sauvegarde/rechargement, rouler sur un plateau et sous une table, tourner un meuble,
+et comparer la fluidité d’une maison chargée avec de nombreux objets. Les flancs
+des rampes et des volumes inclinés restent exclus du test latéral existant afin
+de ne pas empêcher la montée ; leur surface supérieure reste porteuse.

@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Nombre de la copia</string>
     <string name="toybox_menu_default_name">Mi creación</string>
     <string name="toybox_menu_blocks_count">%1$d bloques</string>
+    <string name="toybox_track_extend">Prolongar</string>
+    <string name="toybox_track_point">Extremo</string>
+    <string name="toybox_track_split">Punto +</string>
+    <string name="toybox_track_hint">Arrastra un extremo; Y + / Y − ajusta su altura.</string>
 </resources>

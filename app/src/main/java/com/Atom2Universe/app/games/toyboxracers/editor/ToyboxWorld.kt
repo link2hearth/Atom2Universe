@@ -178,7 +178,10 @@ internal data class ToyboxTrackSection(
     val width: Float,
     val endY: Float = y,
     val bankDegrees: Float = 0f,
-    val color: Int = 0xFF6F7B91.toInt()
+    val color: Int = 0xFF6F7B91.toInt(),
+    val startYawOffset: Float = 0f,
+    val endYawOffset: Float = 0f,
+    val endWidth: Float = width
 ) {
     val yawRadians get() = yawDegrees * kotlin.math.PI.toFloat() / 180f
     val bankRadians get() = bankDegrees * kotlin.math.PI.toFloat() / 180f
@@ -203,8 +206,23 @@ internal data class ToyboxTrackSection(
     fun rotateYaw(deltaDegrees: Float) = copy(yawDegrees = ((yawDegrees + deltaDegrees) % 360f + 360f) % 360f)
     fun withStartY(value: Float) = copy(y = value)
     fun withEndY(value: Float) = copy(endY = value)
+    fun withEndpoint(finish: Boolean, px: Float, py: Float, pz: Float): ToyboxTrackSection {
+        val ax = if (finish) startX else px
+        val az = if (finish) startZ else pz
+        val bx = if (finish) px else finishX
+        val bz = if (finish) pz else finishZ
+        val distance = hypot(bx - ax, bz - az)
+        if (distance < 0.05f) return this
+        val angle = kotlin.math.atan2(bx - ax, bz - az) * 180f / kotlin.math.PI.toFloat()
+        return copy(x = (ax + bx) * 0.5f, z = (az + bz) * 0.5f,
+            y = if (finish) y else py, endY = if (finish) py else endY,
+            length = distance, yawDegrees = angle,
+            startYawOffset = startYawOffset + yawDegrees - angle,
+            endYawOffset = endYawOffset + yawDegrees - angle)
+    }
     fun resize(width: Float = this.width, length: Float = this.length) =
-        copy(width = width.coerceAtLeast(2f), length = length.coerceAtLeast(2f))
+        copy(width = width.coerceAtLeast(0.05f), endWidth = endWidth * width / this.width,
+            length = length.coerceAtLeast(0.05f))
 
     fun localAlong(worldX: Float, worldZ: Float): Float {
         val dx = worldX - x
@@ -223,23 +241,31 @@ internal data class ToyboxTrackSection(
             localSide(worldX, worldZ) in (-halfWidth - margin)..(halfWidth + margin)
 
     fun surfaceYAt(worldX: Float, worldZ: Float): Float? {
-        val along = localAlong(worldX, worldZ)
-        val side = localSide(worldX, worldZ)
-        if (along !in -halfLength..halfLength || side !in -halfWidth..halfWidth) return null
-        val t = (along + halfLength) / length.coerceAtLeast(0.0001f)
-        val centreY = y + (endY - y) * t
-        return centreY + side * sin(bankRadians)
+        val a = corner(-1f, -1f)
+        val b = corner(1f, -1f)
+        val c = corner(1f, 1f)
+        val d = corner(-1f, 1f)
+        fun triangle(p: VolumePoint, q: VolumePoint, r: VolumePoint): Float? {
+            val denominator = (q.z - r.z) * (p.x - r.x) + (r.x - q.x) * (p.z - r.z)
+            if (kotlin.math.abs(denominator) < 0.000001f) return null
+            val u = ((q.z - r.z) * (worldX - r.x) + (r.x - q.x) * (worldZ - r.z)) / denominator
+            val v = ((r.z - p.z) * (worldX - r.x) + (p.x - r.x) * (worldZ - r.z)) / denominator
+            if (u < -0.0001f || v < -0.0001f || u + v > 1.0001f) return null
+            return u * p.y + v * q.y + (1f - u - v) * r.y
+        }
+        return triangle(a, b, c) ?: triangle(a, c, d)
     }
 
     fun corner(alongSign: Float, sideSign: Float): VolumePoint {
         val along = alongSign * halfLength
-        val side = sideSign * halfWidth
+        val side = sideSign * (if (alongSign < 0f) width else endWidth) * 0.5f
+        val angle = (yawDegrees + if (alongSign < 0f) startYawOffset else endYawOffset) * kotlin.math.PI.toFloat() / 180f
         val t = (along + halfLength) / length.coerceAtLeast(0.0001f)
         val centreY = y + (endY - y) * t
         return VolumePoint(
-            x = x + forwardX * along + rightX * side,
+            x = x + forwardX * along + cos(angle) * side,
             y = centreY + side * sin(bankRadians),
-            z = z + forwardZ * along + rightZ * side
+            z = z + forwardZ * along - sin(angle) * side
         )
     }
 
@@ -290,6 +316,9 @@ internal data class ToyboxTrackSection(
         .put("width", width.toDouble())
         .put("endY", endY.toDouble())
         .put("bankDegrees", bankDegrees.toDouble())
+        .put("startYawOffset", startYawOffset.toDouble())
+        .put("endYawOffset", endYawOffset.toDouble())
+        .put("endWidth", endWidth.toDouble())
         .put("color", color)
 
     companion object {
@@ -299,8 +328,11 @@ internal data class ToyboxTrackSection(
             y = json.optDouble("y", 0.0).toFloat(),
             z = json.optDouble("z", 0.0).toFloat(),
             yawDegrees = json.optDouble("yawDegrees", 0.0).toFloat(),
-            length = json.optDouble("length", 24.0).toFloat().coerceAtLeast(2f),
-            width = json.optDouble("width", 8.0).toFloat().coerceAtLeast(2f),
+            length = json.optDouble("length", 24.0).toFloat().coerceAtLeast(0.05f),
+            width = json.optDouble("width", 8.0).toFloat().coerceAtLeast(0.05f),
+            startYawOffset = json.optDouble("startYawOffset", 0.0).toFloat(),
+            endYawOffset = json.optDouble("endYawOffset", 0.0).toFloat(),
+            endWidth = json.optDouble("endWidth", json.optDouble("width", 8.0)).toFloat().coerceAtLeast(0.05f),
             endY = json.optDouble("endY", json.optDouble("y", 0.0)).toFloat(),
             bankDegrees = json.optDouble("bankDegrees", 0.0).toFloat(),
             color = json.optInt("color", 0xFF6F7B91.toInt())

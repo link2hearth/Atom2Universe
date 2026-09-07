@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Nome do salvamento</string>
     <string name="toybox_menu_default_name">Minha criação</string>
     <string name="toybox_menu_blocks_count">%1$d blocos</string>
+    <string name="toybox_track_extend">Prolongar</string>
+    <string name="toybox_track_point">Extremidade</string>
+    <string name="toybox_track_split">Ponto +</string>
+    <string name="toybox_track_hint">Arrasta uma ponta; Y + / Y − ajusta a sua altura.</string>
 </resources>

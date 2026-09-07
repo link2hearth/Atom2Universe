@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Nome del salvataggio</string>
     <string name="toybox_menu_default_name">La mia creazione</string>
     <string name="toybox_menu_blocks_count">%1$d blocchi</string>
+    <string name="toybox_track_extend">Prolunga</string>
+    <string name="toybox_track_point">Estremità</string>
+    <string name="toybox_track_split">Punto +</string>
+    <string name="toybox_track_hint">Trascina un punto; Y + / Y − regola la sua altezza.</string>
 </resources>

@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Name der Speicherung</string>
     <string name="toybox_menu_default_name">Meine Kreation</string>
     <string name="toybox_menu_blocks_count">%1$d Blöcke</string>
+    <string name="toybox_track_extend">Verlängern</string>
+    <string name="toybox_track_point">Endpunkt</string>
+    <string name="toybox_track_split">Punkt +</string>
+    <string name="toybox_track_hint">Ziehe einen Griff; Y + / Y − ändert seine Höhe.</string>
 </resources>

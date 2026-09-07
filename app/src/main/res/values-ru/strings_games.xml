@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Имя сохранения</string>
     <string name="toybox_menu_default_name">Моё творение</string>
     <string name="toybox_menu_blocks_count">%1$d блоков</string>
+    <string name="toybox_track_extend">Продлить</string>
+    <string name="toybox_track_point">Конец</string>
+    <string name="toybox_track_split">Точка +</string>
+    <string name="toybox_track_hint">Перетащи точку; Y + / Y − меняет её высоту.</string>
 </resources>

@@ -316,8 +316,6 @@ internal class MeshBuilder {
 }
 
 internal object PrototypeMeshFactory {
-    private const val CONTINUOUS_TRACK_RENDER_THRESHOLD = 80
-    private const val TRACK_JOIN_SMOOTH_DISTANCE = 3.0f
     private val ROAD = color(0.43f, 0.48f, 0.57f)
     private val ROAD_LIGHT = color(0.48f, 0.53f, 0.62f)
     private val ROAD_SIDE = color(0.33f, 0.38f, 0.47f)
@@ -346,11 +344,7 @@ internal object PrototypeMeshFactory {
     ): ColoredMesh {
         val builder = MeshBuilder()
         world.volumes.forEach { addWorldVolume(builder, it, alpha = 1f) }
-        if (world.trackSections.size > CONTINUOUS_TRACK_RENDER_THRESHOLD) {
-            addWorldTrackRibbon(builder, world.trackSections, alpha = 1f)
-        } else {
-            world.trackSections.forEach { addWorldTrackSection(builder, it, alpha = 1f) }
-        }
+        world.trackSections.forEach { addWorldTrackSection(builder, it, alpha = 1f) }
         world.decorations.mapNotNull { it.placement() }.forEach { DecorMeshFactory.add(builder, it) }
         if (preview != null) {
             addWorldVolume(builder, preview, alpha = 0.54f)
@@ -499,13 +493,12 @@ internal object PrototypeMeshFactory {
         val rightBack = section.corner(-1f, 1f).toVec3() + lift
         val leftFront = section.corner(1f, -1f).toVec3() + lift
         val rightFront = section.corner(1f, 1f).toVec3() + lift
-        val rightVector = Vec3(section.rightX, 0f, section.rightZ)
         builder.quad(leftBack, leftFront, rightFront, rightBack, road)
 
         val curbWidth = PrototypeTrack.CURB_WIDTH * 1.6f
         fun edge(sideSign: Float, innerBack: Vec3, innerFront: Vec3, color: FloatArray) {
-            val outerBack = innerBack + rightVector * (sideSign * curbWidth)
-            val outerFront = innerFront + rightVector * (sideSign * curbWidth)
+            val outerBack = innerBack + (rightBack - leftBack).normalized() * (sideSign * curbWidth)
+            val outerFront = innerFront + (rightFront - leftFront).normalized() * (sideSign * curbWidth)
             if (sideSign < 0f) builder.quad(outerBack, outerFront, innerFront, innerBack, color)
             else builder.quad(innerBack, innerFront, outerFront, outerBack, color)
             val down = Vec3(0f, -thickness, 0f)
@@ -519,64 +512,6 @@ internal object PrototypeMeshFactory {
         builder.quad(leftBack, rightBack, rightBack + down, leftBack + down, side)
         builder.quad(rightFront, leftFront, leftFront + down, rightFront + down, side)
     }
-
-    private fun addWorldTrackRibbon(builder: MeshBuilder, sections: List<ToyboxTrackSection>, alpha: Float) {
-        val side = rgba(0xFF394456.toInt(), alpha)
-        val underside = rgba(0xFF252C38.toInt(), alpha)
-        val curbA = rgba(0xFFFFE7A8.toInt(), alpha)
-        val curbB = rgba(0xFFFF7B8A.toInt(), alpha)
-        val thickness = PrototypeTrack.ROAD_THICKNESS
-        val curbWidth = PrototypeTrack.CURB_WIDTH * 1.6f
-        val lift = Vec3(0f, PrototypeTrack.ROAD_SURFACE_LIFT, 0f)
-        val down = Vec3(0f, -thickness, 0f)
-        val closed = sections.size > 2 && sections.last().finishDistanceTo(sections.first()) < TRACK_JOIN_SMOOTH_DISTANCE
-
-        fun smoothRight(index: Int, atFinish: Boolean): Vec3 {
-            val current = sections[index]
-            val neighborIndex = if (atFinish) index + 1 else index - 1
-            val hasNeighbor = when {
-                atFinish && neighborIndex < sections.size -> current.finishDistanceTo(sections[neighborIndex]) < TRACK_JOIN_SMOOTH_DISTANCE
-                !atFinish && neighborIndex >= 0 -> sections[neighborIndex].finishDistanceTo(current) < TRACK_JOIN_SMOOTH_DISTANCE
-                atFinish && closed -> current.finishDistanceTo(sections.first()) < TRACK_JOIN_SMOOTH_DISTANCE
-                !atFinish && closed -> sections.last().finishDistanceTo(current) < TRACK_JOIN_SMOOTH_DISTANCE
-                else -> false
-            }
-            if (!hasNeighbor) return Vec3(current.rightX, 0f, current.rightZ)
-            val neighbor = when {
-                atFinish && neighborIndex < sections.size -> sections[neighborIndex]
-                !atFinish && neighborIndex >= 0 -> sections[neighborIndex]
-                atFinish -> sections.first()
-                else -> sections.last()
-            }
-            return Vec3(current.rightX + neighbor.rightX, 0f, current.rightZ + neighbor.rightZ).normalized()
-        }
-
-        sections.forEachIndexed { index, section ->
-            val road = rgba(section.color, alpha)
-            val start = Vec3(section.startX, section.y, section.startZ) + lift
-            val finish = Vec3(section.finishX, section.endY, section.finishZ) + lift
-            val startRight = smoothRight(index, atFinish = false)
-            val finishRight = smoothRight(index, atFinish = true)
-            val leftBack = start - startRight * section.halfWidth
-            val rightBack = start + startRight * section.halfWidth
-            val leftFront = finish - finishRight * section.halfWidth
-            val rightFront = finish + finishRight * section.halfWidth
-            val leftBackOuter = leftBack - startRight * curbWidth
-            val leftFrontOuter = leftFront - finishRight * curbWidth
-            val rightBackOuter = rightBack + startRight * curbWidth
-            val rightFrontOuter = rightFront + finishRight * curbWidth
-
-            builder.quad(leftBack, leftFront, rightFront, rightBack, road)
-            builder.quad(leftBackOuter, leftFrontOuter, leftFront, leftBack, curbA)
-            builder.quad(rightBack, rightFront, rightFrontOuter, rightBackOuter, curbB)
-            builder.quad(rightFrontOuter + down, leftFrontOuter + down, leftBackOuter + down, rightBackOuter + down, underside)
-            builder.quad(leftBackOuter, leftBackOuter + down, leftFrontOuter + down, leftFrontOuter, side)
-            builder.quad(rightFrontOuter, rightBackOuter, rightBackOuter + down, rightFrontOuter + down, side)
-        }
-    }
-
-    private fun ToyboxTrackSection.finishDistanceTo(next: ToyboxTrackSection): Float =
-        kotlin.math.hypot(finishX - next.startX, finishZ - next.startZ) + kotlin.math.abs(endY - next.y) * 0.35f
 
     private fun com.Atom2Universe.app.games.toyboxracers.editor.VolumePoint.toVec3() = Vec3(x, y, z)
 

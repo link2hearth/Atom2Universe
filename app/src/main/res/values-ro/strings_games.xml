@@ -328,4 +328,8 @@
     <string name="toybox_menu_name_prompt">Numele salvării</string>
     <string name="toybox_menu_default_name">Creația mea</string>
     <string name="toybox_menu_blocks_count">%1$d blocuri</string>
+    <string name="toybox_track_extend">Prelungește</string>
+    <string name="toybox_track_point">Capăt</string>
+    <string name="toybox_track_split">Punct +</string>
+    <string name="toybox_track_hint">Trage un capăt; Y + / Y − reglează înălțimea.</string>
 </resources>

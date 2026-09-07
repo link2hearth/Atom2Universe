@@ -13,6 +13,14 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     var onLookAxesChanged: ((yaw: Float, pitch: Float) -> Unit)? = null
     var onObjectDrag: ((dx: Float, dy: Float) -> Unit)? = null
     var onObjectLongPress: ((x: Float, y: Float) -> Unit)? = null
+    var onTap: ((Float, Float) -> Unit)? = null
+    var onHandleDown: ((Float, Float) -> Boolean)? = null
+    var onHandleMove: ((Float, Float) -> Unit)? = null
+    var onHandleEnd: ((Boolean) -> Unit)? = null
+    var handles: (() -> List<Pair<Float, Float>>)? = null
+    var selectedHandle = -1
+    private var handleDragging = false
+    private var moved = false
 
     private val basePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0x663B4055 }
     private val ringPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -54,6 +62,12 @@ internal class EditorTouchLayer(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        handles?.invoke()?.forEachIndexed { index, point ->
+            knobPaint.color = if (index == selectedHandle) 0xFFFFC857.toInt() else Color.WHITE
+            canvas.drawCircle(point.first, point.second, resources.displayMetrics.density * 12f, basePaint)
+            canvas.drawCircle(point.first, point.second, resources.displayMetrics.density * 8f, knobPaint)
+        }
+        if (visibility == VISIBLE) postInvalidateOnAnimation()
         if (movePointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, moveBaseX, moveBaseY, moveX, moveY, "MOVE")
         if (lookPointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, lookBaseX, lookBaseY, lookX, lookY, "VIEW")
     }
@@ -62,7 +76,15 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> startPointer(event.actionIndex, event)
             MotionEvent.ACTION_MOVE -> updatePointers(event)
-            MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> stopPointer(event.getPointerId(event.actionIndex))
+            MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> {
+                val i = event.actionIndex
+                if (event.getPointerId(i) == dragPointer) {
+                    if (handleDragging) onHandleEnd?.invoke(false)
+                    else if (!moved && !longPressTriggered) onTap?.invoke(event.getX(i), event.getY(i))
+                    handleDragging = false
+                }
+                stopPointer(event.getPointerId(i))
+            }
             MotionEvent.ACTION_CANCEL -> resetAll()
         }
         return true
@@ -73,6 +95,11 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         val x = event.getX(index)
         val y = event.getY(index)
         val joystickZoneTop = height * 0.62f
+        if (dragPointer == MotionEvent.INVALID_POINTER_ID && onHandleDown?.invoke(x, y) == true) {
+            dragPointer = pointerId
+            handleDragging = true
+            return
+        }
         when {
             x < width * 0.34f && y > joystickZoneTop && movePointer == MotionEvent.INVALID_POINTER_ID -> {
                 movePointer = pointerId
@@ -93,6 +120,7 @@ internal class EditorTouchLayer(context: Context) : View(context) {
                 longPressX = x
                 longPressY = y
                 longPressTriggered = false
+                moved = false
                 postDelayed(longPressRunnable, LONG_PRESS_MS)
             }
         }
@@ -133,6 +161,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun resetAll() {
+        if (handleDragging) onHandleEnd?.invoke(true)
+        handleDragging = false
         movePointer = MotionEvent.INVALID_POINTER_ID
         lookPointer = MotionEvent.INVALID_POINTER_ID
         dragPointer = MotionEvent.INVALID_POINTER_ID
@@ -161,9 +191,16 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun updateDrag(x: Float, y: Float) {
+        if (handleDragging) {
+            onHandleMove?.invoke(x, y)
+            return
+        }
         val dx = x - dragLastX
         val dy = y - dragLastY
-        if (hypot(x - longPressX, y - longPressY) > touchSlop) removeCallbacks(longPressRunnable)
+        if (hypot(x - longPressX, y - longPressY) > touchSlop) {
+            moved = true
+            removeCallbacks(longPressRunnable)
+        }
         dragLastX = x
         dragLastY = y
         if (!longPressTriggered) onObjectDrag?.invoke(dx, dy)
@@ -187,6 +224,11 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun joystickRadius() = minOf(width, height) * 0.095f
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (visibility != VISIBLE) resetAll()
+    }
 
     private val touchSlop get() = resources.displayMetrics.density * 12f
 

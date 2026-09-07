@@ -199,6 +199,11 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var currentWorldKind = ActiveWorldKind.CUSTOM
     private var currentMode = PlayMode.EXPLORATION
     private var editorActive = false
+    private var trackEndpoint = -1
+    private var trackDragUndo: EditorUndoState? = null
+    private var trackDragOrigin: Pair<Float, Float>? = null
+    private var trackDragSection: ToyboxTrackSection? = null
+    private var trackTapFraction = 0.5f
     private var editorKind = ToyboxVolumeKind.FLOOR
     private var editorWidth = 20f
     private var editorHeight = 0.6f
@@ -498,13 +503,14 @@ class ToyboxRacersActivity : ThemedActivity() {
         } else {
             emptyList()
         }
+        val solidBoxes = RaceLayouts.solids(scene).toHashSet()
         val visualVolumes = RaceLayouts.boxes(scene).map { box ->
             val kind = when {
                 box.height <= 1.2f -> ToyboxVolumeKind.FLOOR
                 box.width <= 1.2f || box.depth <= 1.2f -> ToyboxVolumeKind.WALL
                 else -> ToyboxVolumeKind.FURNITURE
             }
-            box.toVisualVolume(kind, solid = kind == ToyboxVolumeKind.FLOOR)
+            box.toVisualVolume(kind, solid = box in solidBoxes || kind == ToyboxVolumeKind.FLOOR)
         }
         val decorations = RaceLayouts.decorations(scene).mapIndexed { index, placement ->
             ToyboxDecor(
@@ -548,12 +554,15 @@ class ToyboxRacersActivity : ThemedActivity() {
                 sections += ToyboxTrackSection(
                     id = id++,
                     x = (a.position.x + b.position.x) * 0.5f,
-                    y = a.position.y + PrototypeTrack.ROAD_SURFACE_LIFT,
+                    y = a.position.y,
                     z = (a.position.z + b.position.z) * 0.5f,
                     yawDegrees = ((yaw % 360f) + 360f) % 360f,
-                    length = length + 0.18f,
-                    width = ((a.roadWidth + b.roadWidth) * 0.5f + PrototypeTrack.CURB_WIDTH * 2f).coerceAtLeast(4f),
-                    endY = b.position.y + PrototypeTrack.ROAD_SURFACE_LIFT,
+                    length = length,
+                    width = a.roadWidth,
+                    endWidth = b.roadWidth,
+                    startYawOffset = kotlin.math.atan2(-a.right.z, a.right.x) * 180f / kotlin.math.PI.toFloat() - yaw,
+                    endYawOffset = kotlin.math.atan2(-b.right.z, b.right.x) * 180f / kotlin.math.PI.toFloat() - yaw,
+                    endY = b.position.y,
                     color = 0xFF6F7B91.toInt()
                 )
             }
@@ -807,6 +816,42 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun addEditorOverlay(root: FrameLayout) {
         editorTouchLayer = EditorTouchLayer(this).apply {
             visibility = View.GONE
+            handles = { trackHandles() }
+            onTap = { x, y ->
+                renderer.pickTrackSection(x, y, editorWorld.trackSections)?.let { id ->
+                    selectEditorTrack(id)
+                    selectedTrack()?.let { section ->
+                        renderer.editorPointOnPlane(x, y, (section.y + section.endY) * 0.5f)?.let {
+                            trackTapFraction = ((section.localAlong(it.x, it.z) + section.halfLength) / section.length).coerceIn(0.1f, 0.9f)
+                        }
+                    }
+                    val points = trackHandles()
+                    trackEndpoint = points.indices.minByOrNull { i ->
+                        kotlin.math.hypot(points[i].first - x, points[i].second - y)
+                    } ?: -1
+                    selectedHandle = trackEndpoint
+                    pushEditorPreview()
+                }
+            }
+            onHandleDown = { x, y ->
+                val points = trackHandles()
+                val index = points.indices.minByOrNull { i -> kotlin.math.hypot(points[i].first - x, points[i].second - y) }
+                val hit = index != null && kotlin.math.hypot(points[index].first - x, points[index].second - y) < dp(28)
+                if (hit) {
+                    trackEndpoint = index!!
+                    selectedHandle = index
+                    trackDragOrigin = null
+                    trackDragUndo = captureEditorUndoState()
+                    trackDragSection = selectedTrack()
+                    val section = trackDragSection!!
+                    renderer.editorPointOnPlane(x, y, if (index == 0) section.y else section.endY)?.let {
+                        trackDragOrigin = it.x to it.z
+                    }
+                }
+                hit
+            }
+            onHandleMove = { x, y -> dragTrackEndpoint(x, y) }
+            onHandleEnd = { cancelled -> finishTrackDrag(cancelled) }
             onMoveAxesChanged = { strafe, forward ->
                 editorStrafe = -strafe
                 editorForward = forward
@@ -960,6 +1005,16 @@ class ToyboxRacersActivity : ThemedActivity() {
             setOnClickListener { showEditorColorPicker() }
         }
         row(editorPanel, editorSolidButton, editorColorButton)
+        row(editorPanel,
+            action(getString(R.string.toybox_track_extend)) { extendSelectedTrack() },
+            action(getString(R.string.toybox_track_point)) {
+                if (selectedTrack() != null) {
+                    trackEndpoint = (trackEndpoint + 1) % 2
+                    editorTouchLayer.selectedHandle = trackEndpoint
+                    pushEditorPreview()
+                }
+            },
+            action(getString(R.string.toybox_track_split)) { splitSelectedTrack() })
         val dimensions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
@@ -1165,9 +1220,9 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun setEditorDimension(width: Float? = null, height: Float? = null, depth: Float? = null) {
         if (selectedTrackId != null || editorDraftTrackActive) {
             val undoState = captureEditorUndoState()
-            editorWidth = (width ?: editorWidth).coerceAtLeast(2f)
+            editorWidth = (width ?: editorWidth).coerceAtLeast(0.05f)
             editorHeight = height ?: editorHeight
-            editorDepth = (depth ?: editorDepth).coerceAtLeast(2f)
+            editorDepth = (depth ?: editorDepth).coerceAtLeast(0.05f)
             updateSelectedTrack(undoState) {
                 it.resize(width = editorWidth, length = editorDepth).withEndY(editorFloorY + editorHeight)
             }
@@ -1275,6 +1330,19 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun moveEditorFloor(delta: Float) {
+        selectedTrack()?.let { section ->
+            if (trackEndpoint >= 0) {
+                val state = captureEditorUndoState()
+                moveTrackEndpoint(section, trackEndpoint == 1,
+                    if (trackEndpoint == 0) section.startX else section.finishX,
+                    (if (trackEndpoint == 0) section.y else section.endY) + delta,
+                    if (trackEndpoint == 0) section.startZ else section.finishZ)
+                rememberEditorUndo(state)
+                worldStore.save(editorWorld)
+                syncTrackFields()
+                return
+            }
+        }
         if (selectedTrackId != null || editorDraftTrackActive) {
             val undoState = captureEditorUndoState()
             editorFloorY += delta
@@ -1698,6 +1766,11 @@ class ToyboxRacersActivity : ThemedActivity() {
             })
             append("\n")
             if (canEditTrack) {
+                append(getString(R.string.toybox_track_hint)).append("\n")
+                if (selectedTrack != null && trackEndpoint >= 0) {
+                    append(getString(R.string.toybox_track_point)).append(" ").append(trackEndpoint + 1)
+                    append(" · Y ").append(formatEditorNumber(if (trackEndpoint == 0) selectedTrack.y else selectedTrack.endY)).append("\n")
+                }
                 append("Type: piste  ").append(gridLabel())
                 append("  Largeur ").append(formatEditorNumber(editorWidth))
                 append("  Longueur ").append(formatEditorNumber(editorDepth))
@@ -1835,6 +1908,9 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun selectEditorTrack(id: Long) {
+        trackTapFraction = 0.5f
+        trackEndpoint = -1
+        editorTouchLayer.selectedHandle = -1
         val section = editorWorld.trackSections.firstOrNull { it.id == id } ?: return
         selectedVolumeId = null
         selectedTrackId = id
@@ -2073,6 +2149,115 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun selectedTrack() = selectedTrackId?.let { id -> editorWorld.trackSections.firstOrNull { it.id == id } }
 
+    private fun trackHandles(): List<Pair<Float, Float>> {
+        val section = selectedTrack() ?: return emptyList()
+        val start = renderer.projectEditorPoint(section.startX, section.y, section.startZ) ?: return emptyList()
+        val end = renderer.projectEditorPoint(section.finishX, section.endY, section.finishZ) ?: return emptyList()
+        return listOf(start, end)
+    }
+
+    private fun syncTrackFields() {
+        selectedTrack()?.let {
+            editorFloorY = it.y
+            editorHeight = it.endY - it.y
+            editorDepth = it.length
+            editorYawDegrees = it.yawDegrees
+        }
+        renderer.setEditorWorld(editorWorld)
+        pushEditorPreview()
+    }
+
+    /** Move shared endpoints together, using the original gesture snapshot to avoid drift. */
+    private fun moveTrackEndpoint(section: ToyboxTrackSection, finish: Boolean, x: Float, y: Float, z: Float) {
+        val ox = if (finish) section.finishX else section.startX
+        val oy = if (finish) section.endY else section.y
+        val oz = if (finish) section.finishZ else section.startZ
+        fun connected(px: Float, py: Float, pz: Float) =
+            kotlin.math.hypot(px - ox, pz - oz) < 0.025f && kotlin.math.abs(py - oy) < 0.025f
+        editorWorld = editorWorld.copy(trackSections = editorWorld.trackSections.map { other ->
+            when {
+                other.id == section.id -> other.withEndpoint(finish, x, y, z)
+                connected(other.startX, other.y, other.startZ) -> other.withEndpoint(false, x, y, z)
+                connected(other.finishX, other.endY, other.finishZ) -> other.withEndpoint(true, x, y, z)
+                else -> other
+            }
+        })
+    }
+
+    private fun dragTrackEndpoint(x: Float, y: Float) {
+        val section = trackDragSection ?: return
+        val origin = trackDragOrigin ?: return
+        val state = trackDragUndo ?: return
+        val finish = trackEndpoint == 1
+        val altitude = if (finish) section.endY else section.y
+        val point = renderer.editorPointOnPlane(x, y, altitude) ?: return
+        editorWorld = state.world
+        moveTrackEndpoint(section, finish,
+            snapEditor((if (finish) section.finishX else section.startX) + point.x - origin.first),
+            altitude,
+            snapEditor((if (finish) section.finishZ else section.startZ) + point.z - origin.second))
+        syncTrackFields()
+    }
+
+    private fun finishTrackDrag(cancelled: Boolean) {
+        val state = trackDragUndo ?: return
+        if (cancelled) editorWorld = state.world
+        else if (editorWorld != state.world) {
+            rememberEditorUndo(state)
+            worldStore.save(editorWorld)
+        }
+        trackDragUndo = null
+        trackDragOrigin = null
+        trackDragSection = null
+        syncTrackFields()
+    }
+
+    private fun extendSelectedTrack() {
+        val source = selectedTrack() ?: return
+        rememberEditorUndo()
+        val length = 20f
+        val section = ToyboxTrackSection(System.nanoTime(),
+            source.finishX + source.forwardX * length * 0.5f, source.endY,
+            source.finishZ + source.forwardZ * length * 0.5f,
+            source.yawDegrees, length, source.endWidth, color = source.color)
+        editorWorld = editorWorld.copy(trackSections = editorWorld.trackSections + section)
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+        selectEditorTrack(section.id)
+        trackEndpoint = 1
+        editorTouchLayer.selectedHandle = 1
+        pushEditorPreview()
+    }
+
+    private fun splitSelectedTrack() {
+        val section = selectedTrack() ?: return
+        if (section.length < 0.5f) return
+        val t = trackTapFraction
+        val x = section.startX + (section.finishX - section.startX) * t
+        val y = section.y + (section.endY - section.y) * t
+        val z = section.startZ + (section.finishZ - section.startZ) * t
+        val backLeft = section.corner(-1f, -1f)
+        val backRight = section.corner(-1f, 1f)
+        val frontLeft = section.corner(1f, -1f)
+        val frontRight = section.corner(1f, 1f)
+        val rx = (backRight.x - backLeft.x) * (1f - t) + (frontRight.x - frontLeft.x) * t
+        val rz = (backRight.z - backLeft.z) * (1f - t) + (frontRight.z - frontLeft.z) * t
+        val width = kotlin.math.hypot(rx, rz)
+        val offset = kotlin.math.atan2(-rz, rx) * 180f / kotlin.math.PI.toFloat() - section.yawDegrees
+        val first = section.withEndpoint(true, x, y, z).copy(endWidth = width, endYawOffset = offset)
+        val second = section.withEndpoint(false, x, y, z).copy(id = System.nanoTime(), width = width, startYawOffset = offset)
+        rememberEditorUndo()
+        editorWorld = editorWorld.copy(trackSections = editorWorld.trackSections.flatMap {
+            if (it.id == section.id) listOf(first, second) else listOf(it)
+        })
+        worldStore.save(editorWorld)
+        renderer.setEditorWorld(editorWorld)
+        selectEditorTrack(first.id)
+        trackEndpoint = 1
+        editorTouchLayer.selectedHandle = 1
+        pushEditorPreview()
+    }
+
     private fun selectedDecor() = selectedDecorId?.let { id -> editorWorld.decorations.firstOrNull { it.id == id } }
 
     private fun updateSelectedVolume(
@@ -2124,7 +2309,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorWorld = editorWorld.copy(trackSections = editorWorld.trackSections.map { section ->
             if (section.id == selected) {
                 changed = true
-                change(section).snappedTo(editorWorld.trackSections, TRACK_SNAP_DISTANCE)
+                change(section)
             } else section
         })
         if (changed) {

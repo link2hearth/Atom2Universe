@@ -336,4 +336,8 @@
     <string name="toybox_menu_name_prompt">Save name</string>
     <string name="toybox_menu_default_name">My creation</string>
     <string name="toybox_menu_blocks_count">%1$d blocks</string>
+    <string name="toybox_track_extend">Extend</string>
+    <string name="toybox_track_point">Endpoint</string>
+    <string name="toybox_track_split">Add point</string>
+    <string name="toybox_track_hint">Drag a handle; Y + / Y − adjusts its height.</string>
 </resources>

@@ -247,8 +247,6 @@ internal class ToyboxRacersRenderer(
 
     fun setEditorWorld(world: ToyboxWorld) {
         requestedWorld = world
-        car.setEditorWorld(world)
-        worldDirty = true
     }
 
     fun setEditorSelection(volume: ToyboxVolume?) {
@@ -403,6 +401,25 @@ internal class ToyboxRacersRenderer(
             ?.first
     }
 
+    fun projectEditorPoint(x: Float, y: Float, z: Float): Pair<Float, Float>? {
+        val output = FloatArray(4)
+        Matrix.multiplyMV(output, 0, viewProjection, 0, floatArrayOf(x, y, z, 1f), 0)
+        if (output[3] <= 0f) return null
+        return (output[0] / output[3] + 1f) * surfaceWidth * 0.5f to
+            (1f - output[1] / output[3]) * surfaceHeight * 0.5f
+    }
+
+    fun editorPointOnPlane(screenX: Float, screenY: Float, height: Float): Vec3? {
+        if (!Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = far - near
+        if (kotlin.math.abs(direction.y) < 0.0001f) return null
+        val t = (height - near.y) / direction.y
+        if (t !in 0f..1f) return null
+        return near + direction * t
+    }
+
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES30.glClearColor(0.72f, 0.86f, 0.94f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
@@ -455,13 +472,17 @@ internal class ToyboxRacersRenderer(
         val frameSeconds = if (skipTime) 0f else
             ((now - lastFrameNanos) / 1_000_000_000f).coerceIn(0f, 0.10f)
         lastFrameNanos = now
+        // Physics state belongs exclusively to the GL/simulation thread.
+        val frameWorld = requestedWorld
+        if (!editorActive || resetRequested) car.setEditorWorld(frameWorld)
+        car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
 
         if (resetRequested) {
             val scene = requestedScene
             if (scene != track.scene) {
                 track = PrototypeTrack(scene = scene)
                 car = ArcadeCar(track)
-                car.setEditorWorld(requestedWorld)
+                car.setEditorWorld(frameWorld)
                 raceSession = RaceSession(track)
                 rivals = List(5) { RivalCar(track, it) }
                 trackMesh.destroy()
@@ -472,6 +493,7 @@ internal class ToyboxRacersRenderer(
             }
             difficulty = requestedDifficulty
             mode = requestedMode
+            car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
             resetRace()
             resetRequested = false
         }
@@ -484,7 +506,7 @@ internal class ToyboxRacersRenderer(
         // n'a de sens que sur un circuit classique.
         if (activeWorldKind == ActiveWorldKind.CUSTOM) mode = PlayMode.EXPLORATION
 
-        rebuildWorldMeshesIfNeeded()
+        rebuildWorldMeshesIfNeeded(frameWorld)
 
         if (editorActive) {
             updateEditorCamera(frameSeconds)
@@ -820,9 +842,10 @@ internal class ToyboxRacersRenderer(
      */
     private fun smoothing(rate: Float, seconds: Float) = 1f - exp(-rate * seconds)
 
-    private fun rebuildWorldMeshesIfNeeded() {
-        if (!worldDirty) return
-        currentWorld = requestedWorld
+    private fun rebuildWorldMeshesIfNeeded(world: ToyboxWorld) {
+        if (!worldDirty && currentWorld === world) return
+        discardFrameTime = true
+        currentWorld = world
         worldMesh?.destroy()
         worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
         previewMesh?.destroy()
@@ -932,24 +955,31 @@ internal class ToyboxRacersRenderer(
     }
 
     private fun rayTrackSectionDistance(origin: Vec3, direction: Vec3, section: ToyboxTrackSection): Float? {
-        if (kotlin.math.abs(direction.y) < 0.0001f) return null
-        var low = 0f
-        var high = 500f
-        repeat(18) {
-            val mid = (low + high) * 0.5f
-            val x = origin.x + direction.x * mid
-            val y = origin.y + direction.y * mid
-            val z = origin.z + direction.z * mid
-            val surfaceY = section.surfaceYAt(x, z)
-            if (surfaceY == null || y > surfaceY + 0.08f) low = mid else high = mid
+        fun cross(a: Vec3, b: Vec3) = Vec3(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x)
+        fun dot(a: Vec3, b: Vec3) = a.x*b.x + a.y*b.y + a.z*b.z
+        fun triangle(a: Vec3, b: Vec3, c: Vec3): Float? {
+            val edge1 = b - a
+            val edge2 = c - a
+            val h = cross(direction, edge2)
+            val determinant = dot(edge1, h)
+            if (kotlin.math.abs(determinant) < 0.000001f) return null
+            val s = origin - a
+            val u = dot(s, h) / determinant
+            if (u !in 0f..1f) return null
+            val q = cross(s, edge1)
+            val v = dot(direction, q) / determinant
+            if (v < 0f || u + v > 1f) return null
+            return (dot(edge2, q) / determinant).takeIf { it >= 0f }
         }
-        val x = origin.x + direction.x * high
-        val y = origin.y + direction.y * high
-        val z = origin.z + direction.z * high
-        val surfaceY = section.surfaceYAt(x, z) ?: return null
-        return if (kotlin.math.abs(y - surfaceY) <= 0.25f) high else null
+        fun point(along: Float, side: Float) = section.corner(along, side).let {
+            Vec3(it.x, it.y + PrototypeTrack.ROAD_SURFACE_LIFT, it.z)
+        }
+        val a = point(-1f, -1f)
+        val b = point(1f, -1f)
+        val c = point(1f, 1f)
+        val d = point(-1f, 1f)
+        return listOfNotNull(triangle(a, b, c), triangle(a, c, d)).minOrNull()
     }
-
     private fun rayBoxDistance(
         origin: Vec3,
         direction: Vec3,

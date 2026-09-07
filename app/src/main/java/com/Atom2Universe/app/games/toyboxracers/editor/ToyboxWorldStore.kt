@@ -57,7 +57,7 @@ internal class ToyboxWorldStore(private val context: Context) {
         creationsDir.mkdirs()
         cleanupInvalidCreations()
         return creationsDir
-            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
+            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) && !file.name.endsWith(".undo.json") }
             ?.sortedByDescending { it.lastModified() }
             ?: emptyList()
     }
@@ -107,7 +107,7 @@ internal class ToyboxWorldStore(private val context: Context) {
     fun creationFileNamed(name: String): File? {
         creationsDir.mkdirs()
         return creationsDir
-            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
+            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) && !file.name.endsWith(".undo.json") }
             ?.firstOrNull { it.name == name }
     }
 
@@ -138,7 +138,7 @@ internal class ToyboxWorldStore(private val context: Context) {
 
     private fun cleanupInvalidCreations() {
         creationsDir
-            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
+            .listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) && !file.name.endsWith(".undo.json") }
             ?.forEach { file ->
                 val valid = runCatching {
                     val json = JSONObject(file.readText())

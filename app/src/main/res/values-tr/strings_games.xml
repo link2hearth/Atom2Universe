@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Kayıt adı</string>
     <string name="toybox_menu_default_name">Yaratımım</string>
     <string name="toybox_menu_blocks_count">%1$d blok</string>
+    <string name="toybox_track_extend">Uzat</string>
+    <string name="toybox_track_point">Uç nokta</string>
+    <string name="toybox_track_split">Nokta +</string>
+    <string name="toybox_track_hint">Bir ucu sürükle; Y + / Y − yüksekliği ayarlar.</string>
 </resources>

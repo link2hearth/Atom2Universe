@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Naam van de opslag</string>
     <string name="toybox_menu_default_name">Mijn creatie</string>
     <string name="toybox_menu_blocks_count">%1$d blokken</string>
+    <string name="toybox_track_extend">Verlengen</string>
+    <string name="toybox_track_point">Eindpunt</string>
+    <string name="toybox_track_split">Punt +</string>
+    <string name="toybox_track_hint">Sleep een punt; Y + / Y − past de hoogte aan.</string>
 </resources>

@@ -327,4 +327,8 @@
     <string name="toybox_menu_name_prompt">Όνομα αποθήκευσης</string>
     <string name="toybox_menu_default_name">Η δημιουργία μου</string>
     <string name="toybox_menu_blocks_count">%1$d μπλοκ</string>
+    <string name="toybox_track_extend">Επέκταση</string>
+    <string name="toybox_track_point">Άκρο</string>
+    <string name="toybox_track_split">Σημείο +</string>
+    <string name="toybox_track_hint">Σύρε ένα άκρο· Y + / Y − ρυθμίζει το ύψος του.</string>
 </resources>

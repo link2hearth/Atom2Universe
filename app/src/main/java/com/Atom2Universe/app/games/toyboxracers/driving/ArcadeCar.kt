@@ -85,6 +85,7 @@ internal class ArcadeCar(
     private var editorWorld = ToyboxWorld(volumes = emptyList(), trackSections = emptyList())
     private var editorTrackColliders = emptyList<EditorTrackCollider>()
     private var editorTrackIndex = EditorTrackIndex(emptyList())
+    private var editorVolumeIndex = EditorVolumeIndex(emptyList())
     /** Vrai quand un monde d'éditeur (pas un circuit classique) est conduit :
      * la piste procédurale (route, murs de pièce, meubles, jouets) est alors
      * totalement ignorée, seul `editorWorld` fait office de sol/obstacles. */
@@ -95,9 +96,26 @@ internal class ArcadeCar(
     }
 
     fun setEditorWorld(world: ToyboxWorld) {
+        if (editorWorld === world) return
+        if (editorWorld.trackSections !== world.trackSections) {
+            editorTrackColliders = world.trackSections.map(::EditorTrackCollider)
+            editorTrackIndex = EditorTrackIndex(editorTrackColliders)
+        }
+        if (editorWorld.volumes !== world.volumes || editorWorld.decorations !== world.decorations) {
+            val decorVolumes = world.decorations.flatMap { decor ->
+                val placement = decor.placement() ?: return@flatMap emptyList()
+                placement.model.parts.filter { it.solid }.map { part ->
+                    ToyboxVolume(decor.id, ToyboxVolumeKind.FURNITURE,
+                        placement.x + placement.rotatedX(part.x, part.z) * placement.scale,
+                        placement.y + part.y * placement.scale,
+                        placement.z + placement.rotatedZ(part.x, part.z) * placement.scale,
+                        part.width * placement.scale, part.height * placement.scale, part.depth * placement.scale,
+                        yawDegrees = placement.yawDegrees)
+                }
+            }
+            editorVolumeIndex = EditorVolumeIndex(world.volumes + decorVolumes)
+        }
         editorWorld = world
-        editorTrackColliders = world.trackSections.map(::EditorTrackCollider)
-        editorTrackIndex = EditorTrackIndex(editorTrackColliders)
     }
 
     fun reset() {
@@ -867,7 +885,20 @@ internal class ArcadeCar(
     }
 
     private fun resolveFurnitureCeilings(previousY: Float) {
-        if (sandboxMode || airborneY <= previousY) return
+        if (airborneY <= previousY) return
+        if (sandboxMode) {
+            var ceiling = Float.POSITIVE_INFINITY
+            editorVolumeIndex.visit(worldX, worldZ, 0f) { collider ->
+                val underside = collider.ceilingAt(worldX, worldZ) ?: return@visit
+                if (previousY + CAR_TOP_FROM_ORIGIN <= underside && airborneY + CAR_TOP_FROM_ORIGIN >= underside)
+                    ceiling = minOf(ceiling, underside)
+            }
+            if (ceiling.isFinite()) {
+                airborneY = ceiling - CAR_TOP_FROM_ORIGIN
+                verticalVelocity = -abs(verticalVelocity) * TOY_RESTITUTION
+            }
+            return
+        }
         var ceiling = Float.POSITIVE_INFINITY
         for (box in track.furnitureSolids) {
             if (worldX < box.left - CAR_COLLISION_RADIUS || worldX > box.right + CAR_COLLISION_RADIUS ||
@@ -883,11 +914,8 @@ internal class ArcadeCar(
 
     private fun editorWorldSurfaceHeightAt(x: Float, z: Float, maximumY: Float): Float {
         var height = Float.NEGATIVE_INFINITY
-        for (volume in editorWorld.volumes) {
-            if (!volume.solid) continue
-            if (x < volume.left - spec.wheelRadius || x > volume.right + spec.wheelRadius ||
-                z < volume.back - spec.wheelRadius || z > volume.front + spec.wheelRadius) continue
-            val surfaceY = volume.topSurfaceYAt(x, z) ?: continue
+        editorVolumeIndex.visit(x, z, 0f) { collider ->
+            val surfaceY = collider.heightAt(x, z) ?: return@visit
             if (surfaceY <= maximumY + EDITOR_WORLD_SURFACE_TOLERANCE) height = maxOf(height, surfaceY)
         }
         return height
@@ -952,128 +980,57 @@ internal class ArcadeCar(
         }
     }
 
-    private class EditorTrackCollider(section: ToyboxTrackSection) {
+    private class EditorTrackCollider(private val section: ToyboxTrackSection) {
+        private val a = section.corner(-1f, -1f)
+        private val b = section.corner(1f, -1f)
+        private val c = section.corner(1f, 1f)
+        private val d = section.corner(-1f, 1f)
+        private val surfaceA = EditorSurfaceTriangle(a, b, c)
+        private val surfaceB = EditorSurfaceTriangle(a, c, d)
         val startY = section.y
         val endY = section.endY
         val yawRadians = section.yawRadians
-        private val x = section.x
-        private val z = section.z
-        private val forwardX = section.forwardX
-        private val forwardZ = section.forwardZ
-        private val rightX = section.rightX
-        private val rightZ = section.rightZ
-        private val halfLength = section.halfLength
-        private val halfWidth = section.halfWidth
-        private val length = section.length.coerceAtLeast(0.0001f)
-        private val bankSin = sin(section.bankRadians)
         val startX = section.startX
         val startZ = section.startZ
-        val minX: Float
-        val maxX: Float
-        val minZ: Float
-        val maxZ: Float
-
-        init {
-            val corners = listOf(
-                cornerX(-1f, -1f) to cornerZ(-1f, -1f),
-                cornerX(-1f, 1f) to cornerZ(-1f, 1f),
-                cornerX(1f, -1f) to cornerZ(1f, -1f),
-                cornerX(1f, 1f) to cornerZ(1f, 1f)
-            )
-            minX = corners.minOf { it.first }
-            maxX = corners.maxOf { it.first }
-            minZ = corners.minOf { it.second }
-            maxZ = corners.maxOf { it.second }
-        }
-
-        fun surfaceYAt(worldX: Float, worldZ: Float): Float? {
-            val dx = worldX - x
-            val dz = worldZ - z
-            val along = dx * forwardX + dz * forwardZ
-            val side = dx * rightX + dz * rightZ
-            if (along !in -halfLength..halfLength || side !in -halfWidth..halfWidth) return null
-            val t = (along + halfLength) / length
-            return startY + (endY - startY) * t + side * bankSin
-        }
-
-        private fun cornerX(alongSign: Float, sideSign: Float): Float =
-            x + forwardX * (alongSign * halfLength) + rightX * (sideSign * halfWidth)
-
-        private fun cornerZ(alongSign: Float, sideSign: Float): Float =
-            z + forwardZ * (alongSign * halfLength) + rightZ * (sideSign * halfWidth)
+        val minX = minOf(a.x, b.x, c.x, d.x)
+        val maxX = maxOf(a.x, b.x, c.x, d.x)
+        val minZ = minOf(a.z, b.z, c.z, d.z)
+        val maxZ = maxOf(a.z, b.z, c.z, d.z)
+        fun surfaceYAt(worldX: Float, worldZ: Float) =
+            (surfaceA.heightAt(worldX, worldZ) ?: surfaceB.heightAt(worldX, worldZ))?.plus(PrototypeTrack.ROAD_SURFACE_LIFT)
     }
-
-    private fun ToyboxVolume.topSurfaceYAt(x: Float, z: Float): Float? {
-        if (kind == ToyboxVolumeKind.RAMP) return rampSurfaceYAt(x, z)
-        val top = height * 0.5f
-        val a = worldPoint(-width * 0.5f, top, -depth * 0.5f)
-        val b = worldPoint(width * 0.5f, top, -depth * 0.5f)
-        val c = worldPoint(width * 0.5f, top, depth * 0.5f)
-        val d = worldPoint(-width * 0.5f, top, depth * 0.5f)
-        return triangleSurfaceY(x, z, a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z)
-            ?: triangleSurfaceY(x, z, a.x, a.y, a.z, c.x, c.y, c.z, d.x, d.y, d.z)
-    }
-
-    private fun ToyboxVolume.rampSurfaceYAt(x: Float, z: Float): Float? {
-        val left = -width * 0.5f
-        val right = width * 0.5f
-        val back = -depth * 0.5f
-        val front = depth * 0.5f
-        val bottom = -height * 0.5f
-        val top = height * 0.5f
-        val lbb = worldPoint(left, bottom, back)
-        val rbb = worldPoint(right, bottom, back)
-        val ltf = worldPoint(left, top, front)
-        val rtf = worldPoint(right, top, front)
-        return triangleSurfaceY(x, z, lbb.x, lbb.y, lbb.z, ltf.x, ltf.y, ltf.z, rtf.x, rtf.y, rtf.z)
-            ?: triangleSurfaceY(x, z, lbb.x, lbb.y, lbb.z, rtf.x, rtf.y, rtf.z, rbb.x, rbb.y, rbb.z)
-    }
-
-    private fun triangleSurfaceY(
-        x: Float,
-        z: Float,
-        ax: Float,
-        ay: Float,
-        az: Float,
-        bx: Float,
-        by: Float,
-        bz: Float,
-        cx: Float,
-        cy: Float,
-        cz: Float
-    ): Float? {
-        val denominator = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz)
-        if (abs(denominator) < 0.000001f) return null
-        val u = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / denominator
-        val v = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / denominator
-        val w = 1f - u - v
-        if (u < -EDITOR_WORLD_EDGE_TOLERANCE || v < -EDITOR_WORLD_EDGE_TOLERANCE || w < -EDITOR_WORLD_EDGE_TOLERANCE) return null
-        return ay * u + by * v + cy * w
-    }
-
     private fun resolveEditorWorldSides() {
         val bottom = airborneY - PrototypeTrack.CAR_CLEARANCE
         val top = airborneY + CAR_TOP_FROM_ORIGIN
-        for (volume in editorWorld.volumes) {
-            if (!volume.solid || !volume.blocksSides()) continue
-            if (bottom >= volume.y + volume.height * 0.5f - FURNITURE_TOP_SETTLING_MARGIN ||
-                top <= volume.y - volume.height * 0.5f) continue
-            val left = volume.left - CAR_COLLISION_RADIUS
-            val right = volume.right + CAR_COLLISION_RADIUS
-            val back = volume.back - CAR_COLLISION_RADIUS
-            val front = volume.front + CAR_COLLISION_RADIUS
-            if (worldX <= left || worldX >= right || worldZ <= back || worldZ >= front) continue
-            val dx = minOf(worldX - left, right - worldX)
-            val dz = minOf(worldZ - back, front - worldZ)
-            var nx = 0f
-            var nz = 0f
+        editorVolumeIndex.visit(worldX, worldZ, CAR_COLLISION_RADIUS) { collider ->
+            val volume = collider.volume
+            if (!volume.blocksSides()) return@visit
+            if (bottom >= collider.top - FURNITURE_TOP_SETTLING_MARGIN || top <= collider.bottom) return@visit
+            val c = collider.yawCos
+            val s = collider.yawSin
+            val localX = (worldX - volume.x) * c - (worldZ - volume.z) * s
+            val localZ = (worldX - volume.x) * s + (worldZ - volume.z) * c
+            val halfWidth = volume.width * 0.5f + CAR_COLLISION_RADIUS
+            val halfDepth = volume.depth * 0.5f + CAR_COLLISION_RADIUS
+            if (abs(localX) >= halfWidth || abs(localZ) >= halfDepth) return@visit
+            val dx = halfWidth - abs(localX)
+            val dz = halfDepth - abs(localZ)
+            val nx: Float
+            val nz: Float
+            val penetration: Float
             if (dx < dz) {
-                nx = if (worldX < volume.x) -1f else 1f
-                worldX = if (nx < 0f) left else right
+                val sign = if (localX < 0f) -1f else 1f
+                nx = sign * c
+                nz = -sign * s
+                penetration = dx
             } else {
-                nz = if (worldZ < volume.z) -1f else 1f
-                worldZ = if (nz < 0f) back else front
+                val sign = if (localZ < 0f) -1f else 1f
+                nx = sign * s
+                nz = sign * c
+                penetration = dz
             }
+            worldX += nx * penetration
+            worldZ += nz * penetration
             val normalSpeed = velocityX * nx + velocityZ * nz
             if (normalSpeed < 0f) {
                 val impactSpeed = hypot(velocityX, velocityZ)

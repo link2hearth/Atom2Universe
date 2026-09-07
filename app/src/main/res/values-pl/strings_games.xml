@@ -329,4 +329,8 @@
     <string name="toybox_menu_name_prompt">Nazwa zapisu</string>
     <string name="toybox_menu_default_name">Moja kreacja</string>
     <string name="toybox_menu_blocks_count">%1$d bloków</string>
+    <string name="toybox_track_extend">Przedłuż</string>
+    <string name="toybox_track_point">Koniec</string>
+    <string name="toybox_track_split">Punkt +</string>
+    <string name="toybox_track_hint">Przeciągnij uchwyt; Y + / Y − zmienia wysokość.</string>
 </resources>
