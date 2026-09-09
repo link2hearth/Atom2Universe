@@ -459,6 +459,25 @@ class CaveActivity : ThemedActivity() {
         dialogRoot.addView(btnRow)
         val dialog = AlertDialog.Builder(this).setView(dialogRoot).create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogRoot.addView(Button(this).apply {
+            setText(R.string.cave_cheat_weapon_kit)
+            setTextColor(0xFF9FD5FF.toInt())
+            setOnClickListener {
+                isEnabled = false
+                glView.queueEvent {
+                    renderer.giveWeaponTestKit()
+                    uiHandler.post {
+                        // Les anciennes banques UI ne doivent pas réécrire les slots du kit.
+                        invManager.initInvSlots()
+                        renderer.hotbarModeCallback?.invoke(renderer.hotbarMode)
+                        renderer.inventoryCallback?.invoke(renderer.inventory.toMap())
+                        android.widget.Toast.makeText(this@CaveActivity,
+                            R.string.cave_cheat_weapon_kit_done,android.widget.Toast.LENGTH_LONG).show()
+                    }
+                }
+                dialog.dismiss()
+            }
+        },dialogRoot.indexOfChild(btnRow))
         btnRow.addView(Button(this).apply {
             text = getString(R.string.cave_quit_cancel); setTextColor(0xAAFFFFFF.toInt())
             setBackgroundColor(Color.TRANSPARENT); setOnClickListener { dialog.dismiss() }

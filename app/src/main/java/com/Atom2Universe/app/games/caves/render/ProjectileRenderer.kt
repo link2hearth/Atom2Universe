@@ -124,10 +124,16 @@ internal class ProjectileRenderer {
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textures[texIdx.coerceIn(0, 7)])
             var si = 0
             for (p in group) {
+                if (si + 6 * 5 > vBuf.size) break
                 val px = (p.x - camX).toFloat()
                 val py = (p.y - camY).toFloat()
                 val pz = (p.z - camZ).toFloat()
-                val hw = 0.20f
+                // Un caillou a la même échelle que celui dans la main, pas un halo de 40 cm.
+                val hw = if (p.isRock) 0.055f else 0.20f
+                // Le départ physique reste près du viseur pour conserver collisions/précision.
+                // Son sprite n'apparaît qu'une fois sorti de l'espace occupé par le visage.
+                if (p.isRock && px*px + py*py + pz*pz < 0.35f*0.35f) continue
+                if (!ProjectileVisibility.inFrontOfNearPlane(px, py, pz, rX, rZ, hw, vpMatrix)) continue
                 fun sv(rx: Float, ry: Float, u: Float, v: Float) {
                     vBuf[si++] = px + rX * rx; vBuf[si++] = py + ry; vBuf[si++] = pz + rZ * rx
                     vBuf[si++] = u;             vBuf[si++] = v
@@ -186,6 +192,7 @@ internal class ProjectileRenderer {
             val py = (p.y - camY).toFloat()
             val pz = (p.z - camZ).toFloat()
             val hw = 0.10f
+            if (!ProjectileVisibility.inFrontOfNearPlane(px, py, pz, rX, rZ, hw, vpMatrix)) continue
             fun sv(rx: Float, ry: Float, u: Float, v: Float) {
                 vBuf[si++] = px + rX * rx; vBuf[si++] = py + ry; vBuf[si++] = pz + rZ * rx
                 vBuf[si++] = u;             vBuf[si++] = v

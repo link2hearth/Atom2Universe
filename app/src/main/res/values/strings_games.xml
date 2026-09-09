@@ -462,4 +462,6 @@
     <string name="toybox_prop_rug_chevrons">Chevron rug</string>
     <string name="toybox_prop_rug_diamonds">Diamond rug</string>
     <string name="toybox_prop_rug_medallion">Medallion rug</string>
+    <string name="cave_cheat_weapon_kit">Cheat: weapons + ammo kit</string>
+    <string name="cave_cheat_weapon_kit_done">Four weapons equipped. Each ammo supply has at least 250 rounds.</string>
 </resources>

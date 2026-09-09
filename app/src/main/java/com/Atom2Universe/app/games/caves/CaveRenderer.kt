@@ -23,6 +23,7 @@ import com.Atom2Universe.app.games.caves.entity.WeaponColor
 import com.Atom2Universe.app.games.caves.entity.WeaponDef
 import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
+import com.Atom2Universe.app.games.caves.render.HeldEquipmentMesh
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
 import com.Atom2Universe.app.games.caves.render.MobModels
@@ -106,7 +107,7 @@ internal class CaveRenderer(
     private var wUChunkOffset = 0; private var wUAmbient = 0; private var wUCaveFloor = 0
     private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
     private var wUUnderwater = 0
-    private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0
+    private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0; private var lUAlpha = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
     private var wWAPos = 0; private var wWAUv = 0; private var wWASky = 0; private var wWUMvp = 0
     private var wWUChunkOffset = 0; private var wWUAmbient = 0; private var wWUCaveFloor = 0
@@ -451,9 +452,10 @@ internal class CaveRenderer(
         #version 300 es
         precision mediump float;
         in vec3 v_color;
+        uniform float u_alpha;
         out vec4 fragColor;
         void main() {
-            fragColor = vec4(v_color, 1.0);
+            fragColor = vec4(v_color, u_alpha);
         }
     """.trimIndent()
 
@@ -556,6 +558,8 @@ internal class CaveRenderer(
             lAPos   = it.attrib("a_pos")
             lAColor = it.attrib("a_color")
             lUMvp   = it.uniform("u_mvp")
+            lUAlpha = it.uniform("u_alpha")
+            GLES30.glUniform1f(lUAlpha, 1f)
         }
         starShader = ShaderProgram(VERT_STAR, FRAG_STAR).also {
             it.use()
@@ -1195,6 +1199,7 @@ internal class CaveRenderer(
         projRenderer.renderParticles(impactParticles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
 
         // ── Boîte joueur (TPS) ────────────────────────────────────────────────
+        updateEquipmentAnimation(if (gamePaused) 0f else dt)
         drawPlayerBox(dt)
 
         // ── Rendu laser + highlight ───────────────────────────────────────────
@@ -1299,6 +1304,28 @@ private fun updateProjectiles(dt: Float) {
 
     // Munitions possibles pour chaque famille d'arme à distance, dans l'ordre de préférence
     // de consommation (le lance-pierre accepte les deux variantes de caillou ramassées au sol).
+    /** Kit de test, appelé sur le thread GL. Réutilise les armes déjà possédées. */
+    fun giveWeaponTestKit() {
+        val registry = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
+        val types = listOf("sling", "bow", "crossbow", "gun")
+        for ((slot, type) in types.withIndex()) {
+            val existing = inventory.keys.firstOrNull { id ->
+                (inventory[id] ?: 0) > 0 && registry.get(id)?.defId == type
+            }
+            val id = existing ?: ItemRegistry.rollInstance(type,Random.Default)?.let { registry.allocate(it) } ?: continue
+            inventory[id] = 1
+            // Les objets déplacés de la barre restent dans l'inventaire.
+            for (i in combatHotbar.indices) if (combatHotbar[i] == id) combatHotbar[i] = null
+            combatHotbar[slot] = id
+            for (ammo in ammoCandidatesFor(type)) inventory[ammo] = maxOf(inventory[ammo] ?: 0,250)
+        }
+        hotbarMode = HotbarMode.COMBAT
+        selectedSlot = 0
+        weaponChargeTime = 0f; rockChargeTime = 0f
+        equipmentRelease = -1f; releasedEquipment = null
+        // L’activité reconstruit les banques UI avant de publier les changements.
+    }
+
     private fun ammoCandidatesFor(weaponType: String?): List<Short> = when (weaponType) {
         "sling"    -> ROCK_IDS.toList()
         "bow"      -> listOf(ARROW_ID)
@@ -1359,6 +1386,8 @@ private fun updateProjectiles(dt: Float) {
         weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.15f)
         swingCallback?.invoke()
         startSwing()
+        equipmentRelease = 0f
+        releasedEquipment = def.weaponType
         return true
     }
 
@@ -1415,6 +1444,8 @@ private fun updateProjectiles(dt: Float) {
                 speed, damage, rockWeapon, isRock = true
             ))
             startSwing()
+            equipmentRelease = 0f
+            releasedEquipment = "rock"
             val count = (inventory[rockId] ?: 0) - 1
             if (count <= 0) inventory.remove(rockId) else inventory[rockId] = count
             inventoryCallback?.invoke(inventory.toMap())
@@ -2109,155 +2140,51 @@ private fun updateProjectiles(dt: Float) {
 
     private fun drawPlayerBox(dt: Float) {
         if (!camera.thirdPerson) return
-
-        // Position joueur (floating origin)
-        val px = (camera.playerX - camera.x).toFloat()
-        val py = (camera.playerY - camera.y).toFloat()
-        val pz = (camera.playerZ - camera.z).toFloat()
-
-        // Repère local orienté dans la direction de marche du joueur
-        val fwdX = camera.fwdX; val fwdZ = camera.fwdZ
-        val rgtX = -fwdZ;       val rgtZ =  fwdX
-
-        fun wx(r: Float, f: Float) = px + r * rgtX + f * fwdX
-        fun wz(r: Float, f: Float) = pz + r * rgtZ + f * fwdZ
-
-        // Avance la phase de marche uniquement quand le joueur se déplace
-        val pdx = camera.playerX - walkLastX; val pdz = camera.playerZ - walkLastZ
-        if (pdx * pdx + pdz * pdz > 1e-6) walkPhase = (walkPhase + dt * 7.5f) % (2f * Math.PI.toFloat())
+        val moving = hypot(camera.playerX-walkLastX, camera.playerZ-walkLastZ) > .001
+        if (moving && !gamePaused) walkPhase += dt*7.5f
         walkLastX = camera.playerX; walkLastZ = camera.playerZ
-
-        val sinW = kotlin.math.sin(walkPhase)
-        val legSwing = 0.38f * sinW   // jambes : ~22° d'amplitude
-        val armSwing = 0.28f * sinW   // bras   : ~16° d'amplitude
-        // Coup de lancer/attaque du bras droit — même minuteur que le viewmodel FPS
-        // ([drawViewmodel]/[startSwing]), pour un retour visuel cohérent en vue TPS aussi.
-        val attackSwing = if (swingActive) 1.6f * kotlin.math.sin((swingTimer / SWING_DUR) * Math.PI.toFloat()) else 0f
-
-        val yFeet     = py - 1.62f
-        val yWaist    = yFeet + 0.72f
-        val yShoulder = yFeet + 1.35f
-        val yTop      = yFeet + 1.80f
-
-        // 6 parties × 6 faces × 6 sommets × 6 floats
-        val verts = FloatArray(6 * 6 * 6 * 6)
-        var vi = 0
-        fun v(vx: Float, vy: Float, vz: Float, cr: Float, cg: Float, cb: Float) {
-            verts[vi++] = vx; verts[vi++] = vy; verts[vi++] = vz
-            verts[vi++] = cr; verts[vi++] = cg; verts[vi++] = cb
+        val step = if (moving) sin(walkPhase)*.24f else 0f
+        val m = equipmentMesh
+        m.clear()
+        // Explorateur : veste, ceinture, bottes, sac et visage.
+        m.box(0f,-.59f,0f,.22f,.29f,.13f,0x435B78)
+        m.box(0f,-.86f,0f,.225f,.035f,.14f,0x49382B)
+        m.box(0f,-.85f,-.15f,.035f,.028f,.012f,0xC6AA67)
+        m.box(0f,-.18f,0f,.18f,.20f,.17f,0xD5A17C)
+        m.box(0f,.015f,0f,.19f,.045f,.18f,0x49392C)
+        m.box(0f,-.14f,.15f,.185f,.15f,.035f,0x49392C)
+        for (side in listOf(-1f,1f)) {
+            m.box(side*.073f,-.15f,-.174f,.035f,.028f,.008f,0xEEE9DE)
+            m.box(side*.073f,-.15f,-.184f,.015f,.019f,.006f,0x263B43)
+            m.box(side*.15f,-.58f,-.145f,.026f,.25f,.017f,0x896C44)
+            m.rod(side*.115f,-.9f,0f,side*.115f,-1.25f,side*step,.103f,0x293C53,.086f)
+            m.rod(side*.115f,-1.25f,side*step,side*.115f,-1.53f,side*step*.8f,.085f,0x293C53,.072f)
+            m.box(side*.115f,-1.565f,side*step*.8f-.035f,.09f,.055f,.145f,0x332F2C)
         }
-
-        // ── Boîte statique ───────────────────────────────────────────────────
-        fun box(rMin: Float, rMax: Float, yMin: Float, yMax: Float, fMin: Float, fMax: Float,
-                cr: Float, cg: Float, cb: Float) {
-            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr,cg,cb)
-            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr,cg,cb)
-            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr,cg,cb)
-            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr,cg,cb)
-            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr,cg,cb)
-            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr,cg,cb)
-            val b = 0.50f
-            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*b,cg*b,cb*b)
-            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*b,cg*b,cb*b)
-            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*b,cg*b,cb*b)
-            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*b,cg*b,cb*b)
-            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*b,cg*b,cb*b)
-            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*b,cg*b,cb*b)
-            val rs = 0.78f
-            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
-            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
-            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*rs,cg*rs,cb*rs)
-            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
-            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*rs,cg*rs,cb*rs)
-            val fs = 0.88f
-            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
-            v(wx(rMin,fMax),yMax,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
-            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
-            v(wx(rMin,fMax),yMin,wz(rMin,fMax), cr*fs,cg*fs,cb*fs)
-            v(wx(rMax,fMax),yMax,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
-            v(wx(rMax,fMax),yMin,wz(rMax,fMax), cr*fs,cg*fs,cb*fs)
-            val bk = 0.62f
-            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
-            v(wx(rMax,fMin),yMax,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
-            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
-            v(wx(rMax,fMin),yMin,wz(rMax,fMin), cr*bk,cg*bk,cb*bk)
-            v(wx(rMin,fMin),yMax,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
-            v(wx(rMin,fMin),yMin,wz(rMin,fMin), cr*bk,cg*bk,cb*bk)
+        m.box(0f,-.57f,.205f,.18f,.235f,.075f,0x786042)
+        m.box(0f,-.66f,.29f,.12f,.09f,.024f,0x9C8055)
+        val type = selectedEquipmentType()
+        val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
+        val active = type != null || throwing || (hotbarMode == HotbarMode.COMBAT && hotbar[selectedSlot] in ROCK_IDS)
+        if (!active) for (side in listOf(-1f,1f)) {
+            m.rod(side*.27f,-.38f,0f,side*.31f,-.67f,-side*step,.080f,0x435B78,.061f)
+            m.rod(side*.31f,-.67f,-side*step,side*.32f,-.94f,-side*step,.059f,0xD5A17C,.045f)
+            m.hand(side*.32f,-.97f,-side*step)
         }
-
-        // ── Membre avec balancement (rotation autour du pivot supérieur) ──────
-        // swing > 0 → membre part vers l'avant, swing < 0 → vers l'arrière
-        fun swingLimb(rMin: Float, rMax: Float, yPivot: Float, yBot: Float,
-                      fMin: Float, fMax: Float, swing: Float,
-                      cr: Float, cg: Float, cb: Float) {
-            val c = kotlin.math.cos(swing); val s = kotlin.math.sin(swing)
-            // Rotation dans le plan (Y, fwd) autour de yPivot
-            fun yW(y: Float, f: Float) = yPivot + (y - yPivot) * c + f * s
-            fun fW(y: Float, f: Float) = -(y - yPivot) * s + f * c
-            fun vt(r: Float, y: Float, f: Float, sh: Float) {
-                val fw = fW(y, f); val yw = yW(y, f)
-                v(wx(r, fw), yw, wz(r, fw), cr * sh, cg * sh, cb * sh)
-            }
-            // Top
-            vt(rMin,yPivot,fMin,1.00f); vt(rMax,yPivot,fMin,1.00f); vt(rMax,yPivot,fMax,1.00f)
-            vt(rMin,yPivot,fMin,1.00f); vt(rMax,yPivot,fMax,1.00f); vt(rMin,yPivot,fMax,1.00f)
-            // Bottom
-            vt(rMin,yBot,fMax,0.50f); vt(rMax,yBot,fMax,0.50f); vt(rMax,yBot,fMin,0.50f)
-            vt(rMin,yBot,fMax,0.50f); vt(rMax,yBot,fMin,0.50f); vt(rMin,yBot,fMin,0.50f)
-            // Right +r
-            vt(rMax,yBot,fMax,0.78f); vt(rMax,yPivot,fMax,0.78f); vt(rMax,yPivot,fMin,0.78f)
-            vt(rMax,yBot,fMax,0.78f); vt(rMax,yPivot,fMin,0.78f); vt(rMax,yBot,fMin,0.78f)
-            // Left -r
-            vt(rMin,yBot,fMin,0.78f); vt(rMin,yPivot,fMin,0.78f); vt(rMin,yPivot,fMax,0.78f)
-            vt(rMin,yBot,fMin,0.78f); vt(rMin,yPivot,fMax,0.78f); vt(rMin,yBot,fMax,0.78f)
-            // Front +fwd
-            vt(rMin,yBot,fMax,0.88f); vt(rMin,yPivot,fMax,0.88f); vt(rMax,yPivot,fMax,0.88f)
-            vt(rMin,yBot,fMax,0.88f); vt(rMax,yPivot,fMax,0.88f); vt(rMax,yBot,fMax,0.88f)
-            // Back -fwd
-            vt(rMax,yBot,fMin,0.62f); vt(rMax,yPivot,fMin,0.62f); vt(rMin,yPivot,fMin,0.62f)
-            vt(rMax,yBot,fMin,0.62f); vt(rMin,yPivot,fMin,0.62f); vt(rMin,yBot,fMin,0.62f)
+        android.opengl.Matrix.setIdentityM(equipmentModel,0)
+        // Droite caméra, haut, arrière : les armes pointent vers -Z local.
+        equipmentModel[0] = -camera.fwdZ; equipmentModel[2] = camera.fwdX
+        equipmentModel[8] = -camera.fwdX; equipmentModel[10] = -camera.fwdZ
+        equipmentModel[12] = (camera.playerX-camera.x).toFloat()
+        equipmentModel[13] = (camera.playerY-camera.y).toFloat()
+        equipmentModel[14] = (camera.playerZ-camera.z).toFloat()
+        drawEquipmentMesh(equipmentModel,camera.vpMatrix)
+        if (active) {
+            android.opengl.Matrix.translateM(equipmentModel,0,0f,-.38f,0f)
+            android.opengl.Matrix.rotateM(equipmentModel,0,-camera.pitch,1f,0f,0f)
+            android.opengl.Matrix.translateM(equipmentModel,0,.27f,.03f,-.43f)
+            drawEquipment(type,throwing || type == null,false)
         }
-
-        // Tête (statique)
-        box(-0.225f,  0.225f, yShoulder, yTop,            -0.225f, 0.225f, 0.85f, 0.72f, 0.60f)
-        // Torse (statique)
-        box(-0.22f,   0.22f,  yWaist,   yShoulder,        -0.15f,  0.15f,  0.38f, 0.42f, 0.68f)
-        // Bras gauche — swing opposé à la jambe gauche (naturel)
-        swingLimb(-0.37f, -0.25f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f, -armSwing, 0.38f, 0.42f, 0.68f)
-        // Bras droit — swing opposé à la jambe droite + coup de lancer/attaque éventuel
-        swingLimb( 0.25f,  0.37f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f,  armSwing + attackSwing, 0.38f, 0.42f, 0.68f)
-        // Jambe gauche
-        swingLimb(-0.22f, -0.02f, yWaist, yFeet, -0.15f, 0.15f,  legSwing, 0.22f, 0.26f, 0.48f)
-        // Jambe droite — toujours opposé à la jambe gauche
-        swingLimb( 0.02f,  0.22f, yWaist, yFeet, -0.15f, 0.15f, -legSwing, 0.22f, 0.26f, 0.48f)
-
-        val floatCount = vi
-        val buf = ByteBuffer.allocateDirect(floatCount * 4)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(verts, 0, floatCount); buf.position(0)
-
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, playerBoxVbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, floatCount * 4, buf, GLES30.GL_DYNAMIC_DRAW)
-
-        laserShader?.use()
-        GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
-
-        val stride = 6 * 4
-        GLES30.glEnableVertexAttribArray(lAPos)
-        GLES30.glVertexAttribPointer(lAPos,   3, GLES30.GL_FLOAT, false, stride, 0)
-        GLES30.glEnableVertexAttribArray(lAColor)
-        GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, floatCount / 6)
-        GLES30.glDisableVertexAttribArray(lAPos)
-        GLES30.glDisableVertexAttribArray(lAColor)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────────
@@ -2268,17 +2195,6 @@ private fun updateProjectiles(dt: Float) {
     private fun drawViewmodel(dt: Float) {
         if (camera.thirdPerson) return
 
-        // ── Animation ─────────────────────────────────────────────────────────
-        // Minage en cours → swing en boucle ; sinon swing one-shot (attaque/pose).
-        val mining = mineTarget != null && !gamePaused
-        if (mining) {
-            swingActive = true
-            swingTimer += dt
-            if (swingTimer > SWING_DUR) swingTimer = 0f
-        } else if (swingActive) {
-            swingTimer += dt
-            if (swingTimer >= SWING_DUR) { swingActive = false; swingTimer = 0f }
-        }
         val swing = if (swingActive) sin((swingTimer / SWING_DUR) * PI.toFloat()) else 0f
 
         // ── Matrice du bras (repère vue) ──────────────────────────────────────
@@ -2296,16 +2212,24 @@ private fun updateProjectiles(dt: Float) {
 
         val held = hotbar[selectedSlot]
         val isWeapon = held != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(held)
-        val heldWeaponType = if (isWeapon) {
-            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(held!!)
-                ?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }?.weaponType
-        } else null
 
+
+        val type = selectedEquipmentType()
+        val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
+        if (type != null || throwing || (hotbarMode == HotbarMode.COMBAT && (held == null || held in ROCK_IDS))) {
+            android.opengl.Matrix.setIdentityM(equipmentModel,0)
+            val charge = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f,1f)
+            val recoil = if (equipmentRelease >= 0f) exp(-equipmentRelease*15f)*.065f else 0f
+            android.opengl.Matrix.translateM(equipmentModel,0,.34f-charge*.015f,
+                if(type == "bow") -.16f else -.28f, (if(type == "bow") -.85f else -.72f)+recoil)
+            android.opengl.Matrix.rotateM(equipmentModel,0,recoil*95f,1f,0f,0f)
+            drawEquipment(type,throwing || type == null,true)
+            return
+        }
         drawArm(isWeapon)
 
         if (held != null) {
             when {
-                heldWeaponType in VOXEL_WEAPON_MODELS -> drawHeldVoxelWeapon(heldWeaponType!!)
                 isWeapon                     -> drawHeldWeapon(held)
                 BlockRegistry.isDecoration(held) -> drawHeldFlat(held)
                 else                         -> drawHeldBlock(held)
@@ -2496,92 +2420,92 @@ private fun updateProjectiles(dt: Float) {
         GLES30.glDisable(GLES30.GL_BLEND)
     }
 
-    /** Boîte d'un modèle voxel d'arme tenue, en unités locales (même échelle que [drawArm]). */
-    private data class VmBoxDef(
-        val x0: Float, val x1: Float, val y0: Float, val y1: Float, val z0: Float, val z1: Float,
-        val color: Triple<Float, Float, Float>
-    ) {
-        val r get() = color.first
-        val g get() = color.second
-        val b get() = color.third
+    private val equipmentMesh = HeldEquipmentMesh()
+    private val equipmentModel = FloatArray(16)
+    private var equipmentRelease = -1f
+    private var releasedEquipment: String? = null
+
+    private fun selectedEquipmentType(): String? {
+        val id = hotbar[selectedSlot] ?: return null
+        val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return null
+        return ItemRegistry.get(instance.defId)?.weaponType
     }
 
-    // Armes à distance sans sprite dédié : rendues en petites boîtes voxel façon EnemyRenderer
-    // plutôt qu'un plan texturé. Repère local : origine = poignée dans le poing, x=droite,
-    // y=haut, z=avant (vers la cible) — chaque modèle s'étend bien vers +Z pour se lire
-    // comme pointant vers la cible, pas seulement empilé verticalement.
-    private val WOOD = Triple(0.42f, 0.28f, 0.14f)
-    private val LEATHER = Triple(0.12f, 0.08f, 0.05f)
-    private val STEEL = Triple(0.55f, 0.55f, 0.58f)
-    private val GUNMETAL = Triple(0.20f, 0.20f, 0.22f)
-    private val GRIP_DARK = Triple(0.30f, 0.20f, 0.10f)
-
-    private val VOXEL_WEAPON_MODELS: Map<String, List<VmBoxDef>> = mapOf(
-        "sling" to listOf(
-            VmBoxDef(-0.018f, 0.018f, -0.10f,  0.04f, -0.018f, 0.018f, WOOD),   // manche, sous la poigne
-            VmBoxDef(-0.022f, 0.022f,  0.04f,  0.10f,  0.00f,   0.02f, WOOD),   // col vers la fourche
-            VmBoxDef(-0.10f,  0.10f,   0.095f, 0.125f, 0.02f,   0.06f, WOOD),   // base de fourche (barre)
-            VmBoxDef(-0.105f,-0.055f,  0.10f,  0.28f,  0.03f,   0.10f, WOOD),   // fourche gauche, vers l'avant
-            VmBoxDef( 0.055f, 0.105f,  0.10f,  0.28f,  0.03f,   0.10f, WOOD)    // fourche droite
-        ),
-        "crossbow" to listOf(
-            VmBoxDef(-0.018f, 0.018f, -0.10f, -0.015f, -0.03f, 0.02f,  GRIP_DARK),  // poignée/détente, sous
-            VmBoxDef(-0.024f, 0.024f, -0.015f, 0.02f,  -0.06f, 0.22f,  WOOD),       // fût, vers l'avant
-            VmBoxDef(-0.03f,  0.03f,  -0.01f,  0.03f,   0.16f, 0.20f,  WOOD),       // renfort avant
-            VmBoxDef(-0.17f,  0.17f,   0.00f,  0.026f,  0.18f, 0.21f,  STEEL)       // arc horizontal, à l'avant
-        ),
-        "gun" to listOf(
-            VmBoxDef(-0.018f, 0.018f, -0.13f, -0.02f, -0.07f, -0.02f, GRIP_DARK),   // crosse, en bas-arrière
-            VmBoxDef(-0.022f, 0.022f, -0.02f,  0.035f,-0.06f,  0.10f, GUNMETAL),    // carcasse
-            VmBoxDef(-0.014f, 0.014f,  0.005f, 0.03f,  0.10f,  0.25f, GUNMETAL)     // canon, vers l'avant
-        )
-    )
-
-    /** Arme sans sprite dédié : petit assemblage de boîtes voxel dans la main (fût-shader),
-     *  avec tension visible en visant et léger recul au tir. */
-    private fun drawHeldVoxelWeapon(weaponType: String) {
-        val boxes = VOXEL_WEAPON_MODELS[weaponType] ?: return
-
-        // Tension en maintenant le bouton (on bande l'arme) : léger recul + bascule vers soi.
-        val chargeT = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f, 1f)
-        // Recul au tir : à-coup vers l'arrière/le haut, même minuteur que le bras (startSwing).
-        val recoil = if (swingActive) 0.05f * kotlin.math.sin((swingTimer / SWING_DUR) * Math.PI.toFloat()) else 0f
-
-        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
-        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.50f, 0.04f - chargeT * 0.025f - recoil)
-        android.opengl.Matrix.rotateM(vmTmp, 0, -10f - chargeT * 3f - recoil * 60f, 1f, 0f, 0f)
-        android.opengl.Matrix.rotateM(vmTmp, 0, -14f, 0f, 1f, 0f)
-        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, vmTmp, 0)
-
-        val extraBoxes = if (weaponType == "sling") 1 else 0
-        val arr = FloatArray((boxes.size + extraBoxes) * 36 * 6)
-        var o = 0
-        for (bx in boxes) o = vmBox(arr, o, bx.x0, bx.x1, bx.y0, bx.y1, bx.z0, bx.z1, bx.r, bx.g, bx.b)
-
-        if (weaponType == "sling") {
-            // Poche du tir : tirée vers l'arrière/le bas quand on bande le lance-pierre,
-            // pour qu'on voie concrètement la tension monter avant le relâchement.
-            val pull = chargeT * 0.14f
-            val py0 = 0.13f - pull * 0.55f; val py1 = py0 + 0.03f
-            val pz0 = 0.05f - pull;         val pz1 = pz0 + 0.03f
-            o = vmBox(arr, o, -0.02f, 0.02f, py0, py1, pz0, pz1, LEATHER.first, LEATHER.second, LEATHER.third)
+    private fun updateEquipmentAnimation(dt: Float) {
+        // ── Animation ─────────────────────────────────────────────────────────
+        // Minage en cours → swing en boucle ; sinon swing one-shot (attaque/pose).
+        val mining = mineTarget != null && !gamePaused
+        if (mining) {
+            swingActive = true
+            swingTimer += dt
+            if (swingTimer > SWING_DUR) swingTimer = 0f
+        } else if (swingActive) {
+            swingTimer += dt
+            if (swingTimer >= SWING_DUR) { swingActive = false; swingTimer = 0f }
         }
+        if (equipmentRelease >= 0f) {
+            equipmentRelease += dt
+            if (equipmentRelease > .55f) { equipmentRelease = -1f; releasedEquipment = null }
+        }
+    }
 
-        val buf = ByteBuffer.allocateDirect(o * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(arr, 0, o); buf.position(0)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, o * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+    private fun drawEquipment(type: String?, rock: Boolean, fps: Boolean) {
+        val m = equipmentMesh
+        m.clear()
+        val release = if (releasedEquipment == (if(rock) "rock" else type)) equipmentRelease else -1f
+        val charge = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f,1f)
+        val rockCharge = (rockChargeTime / ROCK_CHARGE_MAX).coerceIn(0f,1f)
+        val ammo = ammoBlockIdFor(type)
+        val loaded = if (rock) ROCK_IDS.any { (inventory[it] ?: 0) > 0 }
+            else ammo != null && (inventory[ammo] ?: 0) > 0 && release < 0f
+        val instance = hotbar[selectedSlot]?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
+        val accent = when(instance?.rarity) {
+            com.Atom2Universe.app.games.caves.node.ItemRarity.MAGIC -> 0x60B6E3
+            com.Atom2Universe.app.games.caves.node.ItemRarity.RARE -> 0xE5C36A
+            com.Atom2Universe.app.games.caves.node.ItemRarity.EPIC -> 0xB889E8
+            com.Atom2Universe.app.games.caves.node.ItemRarity.LEGENDARY -> 0xF5A04A
+            else -> 0xBFA779
+        }
+        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent)
+        drawEquipmentMesh(equipmentModel,if(fps) vmProj else camera.vpMatrix)
+        if (fps && type == "sling" && !rock) {
+            m.slingDrawHand(charge,release)
+            drawEquipmentMesh(equipmentModel,vmProj,0.32f)
+        }
+    }
+
+    private fun drawEquipmentMesh(model: FloatArray, projection: FloatArray, alpha: Float = 1f) {
+        val m = equipmentMesh
+        m.buffer.clear(); m.buffer.put(m.vertices,0,m.count); m.buffer.flip()
+        android.opengl.Matrix.multiplyMM(vmMvp,0,projection,0,model,0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,vmVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER,m.count*4,m.buffer,GLES30.GL_DYNAMIC_DRAW)
         laserShader?.use()
-        GLES30.glUniformMatrix4fv(lUMvp, 1, false, vmMvp, 0)
-        val stride = 6 * 4
+        GLES30.glUniformMatrix4fv(lUMvp,1,false,vmMvp,0)
+        GLES30.glUniform1f(lUAlpha,alpha)
         GLES30.glEnableVertexAttribArray(lAPos)
-        GLES30.glVertexAttribPointer(lAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glVertexAttribPointer(lAPos,3,GLES30.GL_FLOAT,false,24,0)
         GLES30.glEnableVertexAttribArray(lAColor)
-        GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, o / 6)
-        GLES30.glDisableVertexAttribArray(lAPos)
-        GLES30.glDisableVertexAttribArray(lAColor)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        GLES30.glVertexAttribPointer(lAColor,3,GLES30.GL_FLOAT,false,24,12)
+        if (alpha < 1f) {
+            // Pré-passe profondeur : seule la face visible de la main contribue à l'alpha.
+            GLES30.glColorMask(false,false,false,false)
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES,0,m.count/6)
+            GLES30.glColorMask(true,true,true,true)
+            GLES30.glDepthFunc(GLES30.GL_EQUAL)
+            GLES30.glDepthMask(false)
+            GLES30.glEnable(GLES30.GL_BLEND)
+            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA,GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        }
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES,0,m.count/6)
+        if (alpha < 1f) {
+            GLES30.glDisable(GLES30.GL_BLEND)
+            GLES30.glDepthMask(true)
+            GLES30.glDepthFunc(GLES30.GL_LESS)
+        }
+        GLES30.glUniform1f(lUAlpha,1f)
+        GLES30.glDisableVertexAttribArray(lAPos); GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,0)
     }
 
     /** Texture GL d'un sprite d'item (cache par nom ; 0 si introuvable). */

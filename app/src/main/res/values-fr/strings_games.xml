@@ -462,4 +462,6 @@
     <string name="toybox_prop_rug_chevrons">Tapis à chevrons</string>
     <string name="toybox_prop_rug_diamonds">Tapis à losanges</string>
     <string name="toybox_prop_rug_medallion">Tapis médaillon</string>
+    <string name="cave_cheat_weapon_kit">Triche : kit armes + munitions</string>
+    <string name="cave_cheat_weapon_kit_done">Quatre armes équipées. Chaque réserve de munitions contient au moins 250 unités.</string>
 </resources>
