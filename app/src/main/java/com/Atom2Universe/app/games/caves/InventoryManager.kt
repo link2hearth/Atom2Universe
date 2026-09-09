@@ -379,7 +379,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoSpriteView?.background = activity.blockDrawable(type, 6f)
                 val rarityColor = weaponRarityColor(instance?.rarity ?: ItemRarity.COMMON)
                 val rarityLabel = instance?.rarity?.name?.lowercase()?.replaceFirstChar { it.uppercase() } ?: "?"
-                val baseName    = def?.id?.replace('_', ' ')?.split(" ")?.joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } } ?: "Unknown"
+                val baseName = def?.id?.let { activity.weaponName(it) } ?: "?"
                 infoNameTv?.setTextColor(rarityColor)
                 infoNameTv?.text  = "[$rarityLabel]\n$baseName"
                 infoCountTv?.text = ""
@@ -395,6 +395,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     append("⚔ $dmg dmg")
                     if (speed.isNotEmpty()) append("  •  $speed")
                     if (extra.isNotEmpty()) { append("\n"); append(extra) }
+                    val description=activity.resources.getIdentifier("cave_weapon_style_${def?.id}","string",activity.packageName)
+                    if(description!=0) { append("\n");append(activity.getString(description)) }
                 }
                 infoIngredientsTv?.visibility = View.VISIBLE
             } else {

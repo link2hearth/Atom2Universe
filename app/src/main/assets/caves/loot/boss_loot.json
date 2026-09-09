@@ -1,8 +1,57 @@
 {
   "id": "boss_loot",
-  "rolls": [1, 2],
+  "rolls": [
+    1,
+    2
+  ],
   "entries": [
-    { "item": "ward_stone", "weight": 3, "count": [1, 1] },
-    { "item": "gun",        "weight": 4, "count": [1, 1] }
+    {
+      "item": "ward_stone",
+      "weight": 3,
+      "count": [
+        1,
+        1
+      ]
+    },
+    {
+      "item": "gun",
+      "weight": 4,
+      "count": [
+        1,
+        1
+      ]
+    },
+    {
+      "item": "shotgun",
+      "weight": 3,
+      "count": [
+        1,
+        1
+      ]
+    },
+    {
+      "item": "smg",
+      "weight": 3,
+      "count": [
+        1,
+        1
+      ]
+    },
+    {
+      "item": "dual_pistols",
+      "weight": 3,
+      "count": [
+        1,
+        1
+      ]
+    },
+    {
+      "item": "lever_rifle",
+      "weight": 3,
+      "count": [
+        1,
+        1
+      ]
+    }
   ]
 }

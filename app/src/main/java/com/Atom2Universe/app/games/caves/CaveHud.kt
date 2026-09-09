@@ -329,6 +329,9 @@ internal class CaveHud(private val activity: CaveActivity) {
         v.animate().alpha(0f).setDuration(420).start()
     }
 
+    private var magazineText: android.widget.TextView? = null
+    fun updateWeaponStatus(text: String) { magazineText?.text=text }
+
     fun buildWeaponInHand(root: FrameLayout) {
         // Nom de l'arme affiché dans la barre hotbar (collé à droite)
         val tooltip = LinearLayout(activity).apply {
@@ -352,6 +355,8 @@ internal class CaveHud(private val activity: CaveActivity) {
             gravity = Gravity.END
         }
         tooltip.addView(nameTv); tooltip.addView(statsTv)
+        magazineText=android.widget.TextView(activity).apply { textSize=10f;setTextColor(0xFFE5C987.toInt());gravity=Gravity.END }
+        tooltip.addView(magazineText)
         root.addView(tooltip)
         weaponTooltipView = tooltip
         weaponTooltipName = nameTv
@@ -365,7 +370,7 @@ internal class CaveHud(private val activity: CaveActivity) {
 
         // Tooltip
         val rarityLabel = weapon.rarity.name.lowercase().replaceFirstChar { it.uppercase() }
-        val baseName = def.id.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+        val baseName = activity.weaponName(def.id)
         weaponTooltipName?.setTextColor(rarityColor)
         weaponTooltipName?.text = "[$rarityLabel] $baseName"
         val dmg = weapon.rolledDamage ?: 0

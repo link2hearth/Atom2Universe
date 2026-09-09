@@ -1,0 +1,21 @@
+{
+  "id": "shotgun",
+  "type": "weapon",
+  "weapon_type": "shotgun",
+  "tier": 4,
+  "attack_speed_ms": 900,
+  "rarity_weights": {
+    "common": 5,
+    "magic": 15,
+    "rare": 30,
+    "epic": 30,
+    "legendary": 20
+  },
+  "damage_base": [
+    48,
+    66
+  ],
+  "stats": {},
+  "flags": [],
+  "sprite": "shotgun"
+}

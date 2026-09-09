@@ -123,6 +123,11 @@ class CaveActivity : ThemedActivity() {
         }
     }
 
+    internal fun weaponName(id: String): String {
+        val res=resources.getIdentifier("cave_weapon_$id","string",packageName)
+        return if(res!=0) getString(res) else id.replace('_',' ')
+    }
+
     internal fun blockName(type: Short): String {
         val name = BlockRegistry.get(type)?.name ?: return "?"
         val resId = resources.getIdentifier("cave_block_$name", "string", packageName).takeIf { it != 0 }
@@ -172,6 +177,7 @@ class CaveActivity : ThemedActivity() {
                 playerShieldCurrent = save.playerShieldCurrent,
                 playerWeapons       = save.playerWeapons,
                 wardStonePositions  = save.wardStonePositions,
+                recoverableAmmo = save.recoverableAmmo,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -191,6 +197,7 @@ class CaveActivity : ThemedActivity() {
                 playerShieldCurrent = save.playerShieldCurrent,
                 playerWeapons       = save.playerWeapons,
                 wardStonePositions  = save.wardStonePositions,
+                recoverableAmmo = save.recoverableAmmo,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -307,6 +314,7 @@ class CaveActivity : ThemedActivity() {
 
         hud.buildHealthBar(root)
         hud.buildWeaponInHand(root)
+        renderer.weaponStatusCallback = { text -> uiHandler.post { hud.updateWeaponStatus(text) } }
         hud.buildDamageFlash(root)
 
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
@@ -405,7 +413,8 @@ class CaveActivity : ThemedActivity() {
             skillSpeedXp        = sb.speedXp,
             skillEnduranceXp    = sb.enduranceXp,
             skillAcrobaticsXp   = sb.acrobaticsXp,
-            weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot()
+            weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
+            recoverableAmmo = renderer.recoverableAmmoSnapshot
         )
     }
 

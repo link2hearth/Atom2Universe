@@ -1,0 +1,21 @@
+{
+  "id": "smg",
+  "type": "weapon",
+  "weapon_type": "smg",
+  "tier": 4,
+  "attack_speed_ms": 95,
+  "rarity_weights": {
+    "common": 5,
+    "magic": 15,
+    "rare": 30,
+    "epic": 30,
+    "legendary": 20
+  },
+  "damage_base": [
+    5,
+    8
+  ],
+  "stats": {},
+  "flags": [],
+  "sprite": "smg"
+}

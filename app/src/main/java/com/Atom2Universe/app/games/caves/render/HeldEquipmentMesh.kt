@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.caves.render
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.*
+import com.Atom2Universe.app.games.caves.entity.ProjectileKind
 
 /** Géométrie facettée partagée FPS/TPS. +Y vers le haut, -Z vers la cible.
  * Le tampon est réutilisé : aucune allocation native à chaque image. */
@@ -81,9 +82,17 @@ internal class HeldEquipmentMesh {
 
     /** Pose complète utilisée directement par les deux caméras, inspectable sans OpenGL. */
     fun pose(type: String?, rock: Boolean, fps: Boolean, charge: Float, rockCharge: Float,
-             release: Float, loaded: Boolean, accent: Int) {
+             release: Float, loaded: Boolean, accent: Int, reload: Float = 0f, shotIndex: Int = 0) {
         clear()
         val m = this
+        if(type=="dual_pistols") {
+            for(side in listOf(-1f,1f)) {
+                rod(side*.24f,if(fps) -.24f else -.03f,if(fps) .10f else .43f,side*.16f,-.06f,.02f,.06f,0x435B78,.038f)
+                hand(side*.16f,-.025f,.02f)
+            }
+            weapon(type,charge,release,loaded,accent,reload=reload,shotIndex=shotIndex)
+            return
+        }
         val follow = if (release >= 0f) sin((release/.55f).coerceIn(0f,1f)*PI.toFloat()) else 0f
         // Les épaules restent fixes pendant le lancer : seuls coude et main se déplacent.
         val hx = if(rock) rockCharge*.065f-follow*.10f else 0f
@@ -118,7 +127,7 @@ internal class HeldEquipmentMesh {
                 m.rod(leftElbowX,elbowY,elbowZ,handX,handY,handZ,.052f,0xD5A17C,.034f)
                 if (!pulling || charge <= .01f) m.hand(handX,handY,handZ)
             }
-            m.weapon(type,charge,release,loaded,accent, showSlingHand = !fps)
+            m.weapon(type,charge,release,loaded,accent, showSlingHand = !fps,reload=reload,shotIndex=shotIndex)
         }
     }
 
@@ -136,10 +145,18 @@ internal class HeldEquipmentMesh {
     }
 
     /** Grip à l'origine. Les pièces mobiles utilisent le même repère dans les deux vues. */
-    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true) {
+    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true, reload: Float = 0f, shotIndex: Int = 0) {
         val wood = 0x85502C; val leather = 0x392B28; val metal = 0xA9BBC7
         val snap = if (release >= 0f) sin(release*38f)*exp(-release*10f)*.085f else 0f
         when (type) {
+            "shotgun", "smg", "lever_rifle" -> longGun(type,release,reload,accent)
+            "dual_pistols" -> {
+                for(side in 0..1) {
+                    val start=count
+                    weapon("gun",0f,if(side==shotIndex%2) release else -1f,loaded,accent,reload=reload)
+                    for(i in start until count step 6) vertices[i]+=if(side==0) -.16f else .16f
+                }
+            }
             "sling" -> {
                 rod(0f,-.12f,0f,0f,.09f,0f,.031f,wood,.043f)
                 for (side in listOf(-1f,1f)) {
@@ -194,6 +211,8 @@ internal class HeldEquipmentMesh {
             "gun" -> {
                 val kick = if(release >= 0f) sin((release/.16f).coerceIn(0f,1f)*PI.toFloat())*.055f else 0f
                 rod(0f,-.15f,.055f,0f,.012f,.0f,.045f,leather,.038f)
+                val magDrop=sin(reload*PI.toFloat())*.20f
+                box(0f,-.105f-magDrop,.038f,.027f,.065f,.025f,0x202D36)
                 box(0f,.045f,-.08f,.047f,.040f,.16f,0x354552)
                 box(0f,.094f,-.08f+kick,.042f,.017f,.16f,metal)
                 rod(0f,.049f,-.20f,0f,.049f,-.30f,.027f,0x647883)
@@ -210,6 +229,81 @@ internal class HeldEquipmentMesh {
                     rod(0f,.049f,-.31f,0f,.049f,-.43f*flash-.31f*(1f-flash),.021f*flash,0xFFFFDC,0f)
                 }
             }
+        }
+    }
+
+    private fun muzzle(x: Float,y: Float,z: Float,release: Float) {
+        if(release !in 0f.. .075f) return
+        val f=1f-release/.075f
+        rod(x,y,z,x,y,z-.16f*f,.04f*f,0xFFD576,0f)
+        rod(x,y,z,x,y,z-.09f*f,.017f*f,0xFFF5D7,0f)
+    }
+
+    private fun longGun(type: String, release: Float, reload: Float, accent: Int) {
+        val pump=if(release>=0f) sin((release/.65f).coerceIn(0f,1f)*PI.toFloat()) else 0f
+        val drop=sin(reload*PI.toFloat())
+        val wood=if(type=="shotgun") 0x79472C else 0xA16A37
+        val steel=0x687D8D
+        val front=if(type=="smg") -.40f else -.68f
+        // Carcasse, canon octogonal, bouche noire et guidon contrasté.
+        box(0f,.065f,-.13f,.044f,.045f,.15f,0x30414E)
+        rod(0f,.083f,-.23f,0f,.083f,front,.023f,steel,.018f)
+        rod(0f,.083f,front-.001f,0f,.083f,front-.004f,.012f,0x10171D)
+        box(0f,.114f,front+.03f,.007f,.014f,.012f,accent)
+        rod(0f,-.13f,.055f,0f,.027f,0f,.034f,0x352C27)
+        box(0f,.045f,.13f,.05f,.07f,.10f,if(type=="smg") 0x25333D else wood)
+        box(0f,.025f,.235f,.055f,.08f,.016f,0x1C252B)
+        for(side in listOf(-1f,1f)) {
+            box(side*.034f,.120f,-.025f,.008f,.012f,.015f,0x202C34)
+            rod(side*.046f,.064f,-.12f,side*.047f,.064f,-.045f+if(type=="lever_rifle") pump*.035f else 0f,.009f,accent)
+        }
+        if(type=="smg") {
+            // Chargeur tombant, rail, ouïes, crosse métallique compacte.
+            box(0f,-.13f-drop*.24f,-.14f,.026f,.13f,.033f,0x25343D)
+            for(i in 0..4) box(.028f,-.035f-i*.043f-drop*.24f,-.14f,.003f,.005f,.034f,steel)
+            for(i in 0..4) box(0f,.117f,-.10f-i*.028f,.040f,.007f,.008f,0x93A2AD)
+            rod(0f,.018f,-.26f,0f,.018f,-.35f,.038f,0x1E2A32)
+        } else if(type=="shotgun") {
+            rod(0f,.025f,-.20f,0f,.025f,-.61f,.021f,steel)
+            val z=-.35f+pump*.10f
+            rod(0f,.023f,z-.07f,0f,.023f,z+.06f,.047f,wood)
+            for(i in 0..5) rod(0f,.023f,z-.065f+i*.022f,0f,.023f,z-.057f+i*.022f,.050f,0x392F28)
+            // Cartouchière sur la crosse et cartouche visible pendant la recharge.
+            for(i in 0..3) rod(.056f,-.015f,.08f+i*.032f,.056f,.07f,.08f+i*.032f,.011f,0xA04431)
+            if(reload>0f) rod(.085f,-.04f-drop*.05f,-.09f,.085f,.018f-drop*.05f,-.09f,.013f,0xD08C45)
+        } else {
+            rod(0f,.025f,-.20f,0f,.025f,-.47f,.034f,wood)
+            // Levier sous le pontet : rotation pendant le réarmement.
+            val y=-.07f-pump*.085f
+            rod(0f,-.015f,-.09f,0f,y,-.11f,.009f,accent)
+            rod(0f,y,-.11f,0f,y,.055f,.009f,accent)
+            rod(0f,y,.055f,0f,-.02f,.035f,.009f,accent)
+            box(0f,.126f,-.12f,.01f,.009f,.03f,accent)
+        }
+        muzzle(0f,.083f,front-.006f,release)
+    }
+
+    /** Projectiles en unités monde, orientés selon la vitesse réelle (chute comprise). */
+    fun projectile(kind: ProjectileKind,x: Float,y: Float,z: Float,dx: Float,dy: Float,dz: Float) {
+        val len=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.0001f)
+        val nx=dx/len;val ny=dy/len;val nz=dz/len
+        when(kind) {
+            ProjectileKind.ROCK -> stone(x,y,z,.048f)
+            ProjectileKind.ARROW,ProjectileKind.BOLT -> {
+                val length=if(kind==ProjectileKind.ARROW) .57f else .34f
+                val bx=x-nx*length;val by=y-ny*length;val bz=z-nz*length
+                rod(bx,by,bz,x-nx*.045f,y-ny*.045f,z-nz*.045f,.007f,if(kind==ProjectileKind.ARROW) 0xBC9256 else 0x829DA9)
+                rod(x-nx*.045f,y-ny*.045f,z-nz*.045f,x,y,z,.020f,0xCAD8DE,0f)
+                val sideLen=sqrt(nx*nx+nz*nz)
+                val sx=if(sideLen>.001f) -nz/sideLen else 1f
+                val sz=if(sideLen>.001f) nx/sideLen else 0f
+                for(side in listOf(-1f,1f)) rod(bx,by,bz,bx+nx*.075f+side*sx*.035f,by+ny*.075f,bz+nz*.075f+side*sz*.035f,.012f,if(kind==ProjectileKind.ARROW) 0xD6EAD2 else 0x67BFD0,.003f)
+            }
+            ProjectileKind.BULLET,ProjectileKind.PELLET -> {
+                val length=if(kind==ProjectileKind.BULLET) .20f else .075f
+                rod(x-nx*length,y-ny*length,z-nz*length,x,y,z,if(kind==ProjectileKind.BULLET) .009f else .007f,0xFFE4A0,.003f)
+            }
+            else -> Unit
         }
     }
 

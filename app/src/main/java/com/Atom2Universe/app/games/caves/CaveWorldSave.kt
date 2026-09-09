@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+internal data class StuckAmmo(val x: Double,val y: Double,val z: Double,
+    val vx: Double,val vy: Double,val vz: Double,val ammoId: Short)
+
 internal data class CaveWorldSave(
     val id: String,
     val name: String,
@@ -42,7 +45,8 @@ internal data class CaveWorldSave(
     var skillEnduranceXp:  Int = 0,
     var skillAcrobaticsXp: Int = 0,
     // IDs ≥ 10000 → instances d'armes dynamiques
-    var weaponInstances: Map<Short, ItemInstance> = emptyMap()
+    var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
+    var recoverableAmmo: List<StuckAmmo> = emptyList()
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -108,6 +112,7 @@ internal object CaveWorldSaveManager {
         existing.skillEnduranceXp    = snap.skillEnduranceXp
         existing.skillAcrobaticsXp   = snap.skillAcrobaticsXp
         existing.weaponInstances     = snap.weaponInstances
+        existing.recoverableAmmo = snap.recoverableAmmo
         persist(context, existing)
     }
 
@@ -175,6 +180,12 @@ internal object CaveWorldSaveManager {
                 wiJson.put(id.toString(), o)
             }
             put("weaponInstances", wiJson)
+            put("recoverableAmmo",JSONArray().also { arr ->
+                save.recoverableAmmo.takeLast(256).forEach { a -> arr.put(JSONObject().apply {
+                    put("x",a.x);put("y",a.y);put("z",a.z)
+                    put("vx",a.vx);put("vy",a.vy);put("vz",a.vz);put("ammo",a.ammoId.toInt())
+                }) }
+            })
         }
         saveFile(context, save.id).writeText(json.toString())
     }
@@ -250,7 +261,16 @@ internal object CaveWorldSaveManager {
             skillSpeedXp      = j.optInt("skillSpeedXp",      0),
             skillEnduranceXp  = j.optInt("skillEnduranceXp",  0),
             skillAcrobaticsXp = j.optInt("skillAcrobaticsXp", 0),
-            weaponInstances = weaponInstances
+            weaponInstances = weaponInstances,
+            recoverableAmmo = j.optJSONArray("recoverableAmmo")?.let { arr ->
+                (0 until minOf(arr.length(),256)).mapNotNull { i ->
+                    val a=arr.optJSONObject(i) ?: return@mapNotNull null
+                    val id=a.optInt("ammo")
+                    if(id!=8010 && id!=8011) return@mapNotNull null
+                    val values=listOf("x","y","z","vx","vy","vz").map { a.optDouble(it) }
+                    if(values.any { !it.isFinite() }) null else StuckAmmo(values[0],values[1],values[2],values[3],values[4],values[5],id.toShort())
+                }
+            } ?: emptyList()
         )
     }
 }

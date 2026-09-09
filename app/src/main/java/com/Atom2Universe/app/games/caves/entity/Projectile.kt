@@ -12,8 +12,13 @@ internal class Projectile(
     val stats: Map<String, Int> = emptyMap(),
     /** true si tiré par une arme équipée (arc, arbalète…) : passe par la résolution de
      *  combat complète (critique, statuts, recul) au lieu d'un simple dégât plat. */
-    val isPlayerWeapon: Boolean = false
+    val isPlayerWeapon: Boolean = false,
+    val kind: ProjectileKind = if (isRock) ProjectileKind.ROCK else ProjectileKind.LEGACY,
+    val ammoId: Short? = null,
+    val maxRange: Float = 90f
 ) {
+    var stuck = false
+    var age = 0f
     var travelDist = 0.0
     var velY: Double = dirY * speed.toDouble()
 }

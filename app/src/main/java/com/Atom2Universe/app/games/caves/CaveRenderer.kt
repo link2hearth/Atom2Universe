@@ -17,6 +17,9 @@ import com.Atom2Universe.app.games.caves.node.LootTableRegistry
 import com.Atom2Universe.app.games.caves.node.MobRegistry
 import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
+import com.Atom2Universe.app.games.caves.entity.RangedProfile
+import com.Atom2Universe.app.games.caves.entity.MagazineState
+import com.Atom2Universe.app.games.caves.entity.ProjectileKind
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
 import com.Atom2Universe.app.games.caves.entity.WeaponColor
@@ -69,6 +72,7 @@ internal class CaveRenderer(
         val playerShieldCurrent: Int = 0,
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
         val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
+        val recoverableAmmo: List<StuckAmmo> = emptyList(),
         val skillAthleticsXp:  Int = 0,
         val skillSpeedXp:      Int = 0,
         val skillEnduranceXp:  Int = 0,
@@ -268,12 +272,19 @@ internal class CaveRenderer(
     private var lastKilledMobMaxHp = 20
     val playerStats = PlayerStats()
     val projectiles = ArrayList<Projectile>(64)
+    @Volatile var recoverableAmmoSnapshot: List<StuckAmmo> = emptyList()
+        private set
     private val impactParticles = ArrayList<ImpactParticle>(128)
 
     private val ROCK_IDS = setOf(2020.toShort(), 2021.toShort())
     private var rockChargeTime = 0f
     private val ROCK_CHARGE_MAX = 1.5f
-    private val RANGED_WEAPON_TYPES = setOf("sling", "bow", "crossbow", "gun")
+    private val RANGED_WEAPON_TYPES = RangedProfile.all.keys
+    private val magazines = mutableMapOf<Short, MagazineState>()
+    private var fireWasDown = false
+    private var lastFireWeapon: Short? = null
+    private var lastWeaponStatus = ""
+    var weaponStatusCallback: ((String) -> Unit)? = null
     private var weaponChargeTime = 0f   // temps de visée/tension avant de relâcher pour tirer
     private val WEAPON_CHARGE_VISUAL_MAX = 0.6f   // durée pour atteindre la tension visuelle max
     private val ARROW_ID: Short = 8010
@@ -678,6 +689,12 @@ internal class CaveRenderer(
             playerNode.maxShield = savedState.playerShield
             playerNode.shield   = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
             savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
+            recoverableAmmoSnapshot=savedState.recoverableAmmo
+            for(a in savedState.recoverableAmmo) {
+                projectiles.add(Projectile(a.x,a.y,a.z,a.vx,a.vy,a.vz,1f,0,
+                    WeaponDef(WeaponColor.WHITE,WeaponVariant.SQUARE),kind=if(a.ammoId==ARROW_ID) ProjectileKind.ARROW else ProjectileKind.BOLT,
+                    ammoId=a.ammoId).also { it.stuck=true;it.age=1f })
+            }
             skillBook.athleticsXp  = savedState.skillAthleticsXp
             skillBook.speedXp      = savedState.skillSpeedXp
             skillBook.enduranceXp  = savedState.skillEnduranceXp
@@ -863,6 +880,7 @@ internal class CaveRenderer(
             updateRockThrow(dt)
             updateMining(dt)
             updateProjectiles(dt)
+            publishWeaponStatus()
             updateImpactParticles(dt)
         }
 
@@ -1245,55 +1263,72 @@ internal class CaveRenderer(
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
     }
 
-private fun updateProjectiles(dt: Float) {
-        val ROCK_GRAVITY = 12.0
-        val iter = projectiles.iterator()
-        while (iter.hasNext()) {
-            val p = iter.next()
-            if (p.isRock) {
-                p.velY -= ROCK_GRAVITY * dt
-                p.x += p.dirX * p.speed * dt
-                p.y += p.velY * dt
-                p.z += p.dirZ * p.speed * dt
-                p.travelDist += p.speed.toDouble() * dt
-            } else {
-                val step = (p.speed * dt).toDouble()
-                p.x += p.dirX * step; p.y += p.dirY * step; p.z += p.dirZ * step
-                p.travelDist += step
-            }
-            if (p.travelDist > PROJ_MAX_DIST) { iter.remove(); continue }
+    private fun projectileSolid(x: Double,y: Double,z: Double): Boolean {
+        val block = worldBlockAt(floor(x).toInt(),floor(y).toInt(),floor(z).toInt())
+        return block != AIR && !BlockRegistry.isDecoration(block) && !BlockRegistry.isWater(block)
+    }
 
-            if (p.isRock) {
-                val block = worldBlockAt(
-                    Math.floor(p.x).toInt(),
-                    Math.floor(p.y).toInt(),
-                    Math.floor(p.z).toInt()
-                )
-                if (block != AIR && !BlockRegistry.isDecoration(block) && !BlockRegistry.isWater(block)) {
-                    spawnImpact(p.x, p.y, p.z)
-                    iter.remove(); continue
-                }
-            }
+    private fun canRecover(p: Projectile): Boolean {
+        val dx=p.x-camera.playerX; val dy=p.y-(camera.playerY-.5); val dz=p.z-camera.playerZ
+        if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return false
+        val steps=ceil(sqrt(dx*dx+dy*dy+dz*dz)/.15).toInt().coerceAtLeast(1)
+        for (i in 1..steps) {
+            val t=i.toDouble()/steps
+            if(projectileSolid(camera.playerX+dx*t,camera.playerY-.5+dy*t,camera.playerZ+dz*t)) return false
+        }
+        return true
+    }
 
-            val hit = enemyManager.enemies.find { e ->
-                if (e.hp <= 0) return@find false
-                // Cylindre de collision aligné sur le modèle voxel visible :
-                // rayon XZ généreux, hauteur des pieds (e.y) jusqu'au sommet réel.
-                val rXZ = e.def.radius.toDouble() + 0.5
-                val dx = p.x - e.x; val dz = p.z - e.z
-                if (dx * dx + dz * dz >= rXZ * rXZ) return@find false
-                val top = MobModels.bodyHeightWorld(e.def.model, e.baseScale).toDouble()
-                p.y >= e.y - 0.25 && p.y <= e.y + top + 0.25
-            }
-            if (hit != null) {
-                if (p.isRock) spawnImpact(p.x, p.y, p.z)
-                if (p.isPlayerWeapon) {
-                    applyWeaponHit(hit, p.damage, p.stats, kotlin.random.Random.Default)
-                } else {
-                    enemyManager.damageEnemy(hit, p.damage)
+    private fun updateProjectiles(dt: Float) {
+        var recovered = false
+        val iter=projectiles.iterator()
+        while(iter.hasNext()) {
+            val p=iter.next()
+            p.age+=dt
+            if(p.stuck) {
+                if(p.age>.4f && p.ammoId != null && canRecover(p)) {
+                    inventory[p.ammoId]=(inventory[p.ammoId] ?: 0)+1
+                    recovered=true; iter.remove()
                 }
-                iter.remove()
+                continue
             }
+            // Sous-pas de 15 cm : même une balle rapide ne saute pas une paroi voxel.
+            val steps=ceil(maxOf(p.speed.toDouble(),abs(p.velY))*dt/.15).toInt().coerceIn(1,256)
+            val step=dt/steps
+                for(i in 0 until steps) {
+                val ox=p.x; val oy=p.y; val oz=p.z
+                p.velY-=p.kind.gravity*step
+                p.x+=p.dirX*p.speed*step; p.y+=p.velY*step; p.z+=p.dirZ*p.speed*step
+                p.travelDist+=sqrt((p.x-ox).pow(2)+(p.y-oy).pow(2)+(p.z-oz).pow(2))
+                if(p.kind != ProjectileKind.LEGACY && projectileSolid(p.x,p.y,p.z)) {
+                    spawnImpact(p.x,p.y,p.z)
+                    if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
+                        p.x=ox;p.y=oy;p.z=oz;p.stuck=true;recovered=true
+                    } else { iter.remove() }
+                    break
+                }
+                val hit=enemyManager.enemies.find { e ->
+                    val radius=e.def.radius.toDouble()+.5
+                    e.hp>0 && (p.x-e.x).pow(2)+(p.z-e.z).pow(2)<radius*radius &&
+                        p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)+.25
+                }
+                if(hit!=null) {
+                    if(p.kind!=ProjectileKind.LEGACY) spawnImpact(p.x,p.y,p.z)
+                    if(p.isPlayerWeapon) applyWeaponHit(hit,p.damage,p.stats,Random.Default)
+                    else enemyManager.damageEnemy(hit,p.damage)
+                    iter.remove();break
+                }
+                if(p.travelDist>p.maxRange) { iter.remove();break }
+            }
+        }
+        // Limite mémoire pour les munitions plantées dans une session très longue.
+        var excess=projectiles.count { it.stuck }-256
+        if(excess>0) projectiles.removeAll { it.stuck && excess-- > 0 }
+        if(recovered) {
+            recoverableAmmoSnapshot=projectiles.filter { it.stuck && it.ammoId!=null }.map {
+                StuckAmmo(it.x,it.y,it.z,it.dirX*it.speed,it.velY,it.dirZ*it.speed,it.ammoId!!)
+            }
+            inventoryCallback?.invoke(inventory.toMap())
         }
     }
 
@@ -1307,7 +1342,8 @@ private fun updateProjectiles(dt: Float) {
     /** Kit de test, appelé sur le thread GL. Réutilise les armes déjà possédées. */
     fun giveWeaponTestKit() {
         val registry = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
-        val types = listOf("sling", "bow", "crossbow", "gun")
+        val types = RangedProfile.all.keys.toList()
+        magazines.clear()
         for ((slot, type) in types.withIndex()) {
             val existing = inventory.keys.firstOrNull { id ->
                 (inventory[id] ?: 0) > 0 && registry.get(id)?.defId == type
@@ -1330,7 +1366,7 @@ private fun updateProjectiles(dt: Float) {
         "sling"    -> ROCK_IDS.toList()
         "bow"      -> listOf(ARROW_ID)
         "crossbow" -> listOf(BOLT_ID)
-        "gun"      -> listOf(BULLET_ID)
+        "gun", "shotgun", "smg", "dual_pistols", "lever_rifle" -> listOf(BULLET_ID)
         else       -> emptyList()
     }
 
@@ -1359,6 +1395,12 @@ private fun updateProjectiles(dt: Float) {
         val ammoCount = inventory[ammoId] ?: 0
         if (ammoCount <= 0) return false
 
+        val profile = RangedProfile.all[def.weaponType] ?: return false
+        val magazine = if(profile.magazine>0) magazines.getOrPut(heldId) { MagazineState(profile.magazine,profile.reload) } else null
+        if(magazine != null && !magazine.shoot()) {
+            magazine.reload()
+            return false
+        }
         val stats = weapon.rolledStats
         val baseDamage = weapon.rolledDamage ?: 1
         val yawRad = Math.toRadians(camera.yaw.toDouble())
@@ -1370,20 +1412,27 @@ private fun updateProjectiles(dt: Float) {
         val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
         val spawnY = camera.playerY - 0.05
         val ammoWeapon = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
-        projectiles.add(Projectile(
-            spawnX, spawnY, spawnZ,
-            camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
-            RANGED_PROJECTILE_SPEED, baseDamage, ammoWeapon,
-            isRock = true, stats = stats, isPlayerWeapon = true
-        ))
+        val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
+        repeat(profile.pellets) {
+            val spread=profile.spread*heat
+            var dx=camera.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            var dy=camera.aimY.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            var dz=camera.aimZ.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            val len=sqrt(dx*dx+dy*dy+dz*dz);dx/=len;dy/=len;dz/=len
+            projectiles.add(Projectile(spawnX,spawnY,spawnZ,dx,dy,dz,
+                profile.speed,(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
+                isRock=profile.kind==ProjectileKind.ROCK,stats=stats,isPlayerWeapon=true,
+                kind=profile.kind,ammoId=if(profile.kind==ProjectileKind.ARROW || profile.kind==ProjectileKind.BOLT) ammoId else null,
+                maxRange=profile.range))
+        }
 
         val newCount = ammoCount - 1
         if (newCount <= 0) inventory.remove(ammoId) else inventory[ammoId] = newCount
         inventoryCallback?.invoke(inventory.toMap())
 
         val speedBonus = stats["attack_speed"] ?: 0
-        val cooldownMs = def.attackSpeedMs.coerceAtLeast(200) * (1f - speedBonus / 100f)
-        weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.15f)
+        weaponAttackCooldown=(profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
+        if(magazine?.remaining==0 && newCount>0) magazine.reload()
         swingCallback?.invoke()
         startSwing()
         equipmentRelease = 0f
@@ -1395,6 +1444,14 @@ private fun updateProjectiles(dt: Float) {
     // bascule plus jamais tout seul sur une autre arme) ; repli main nue si rien d'utilisable
     // n'est sélectionné. Sélection mémorisée séparément par mode (voir [selectedSlot]).
     private fun updateRockThrow(dt: Float) {
+        val down=touch.rtChargeRaw>.3f
+        val pressed=down && !fireWasDown
+        fireWasDown=down
+        val held=hotbar[selectedSlot]
+        if(held!=lastFireWeapon) {
+            rockChargeTime=0f;weaponChargeTime=0f;lastFireWeapon=held
+        }
+        magazines[held]?.update(dt)
         if (hotbarMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
 
         // Viser un caillou au sol le ramasse plutôt que de tirer dans le vide dessus
@@ -1402,6 +1459,12 @@ private fun updateProjectiles(dt: Float) {
         if (isAimingAtRockBlock()) { weaponChargeTime = 0f; rockChargeTime = 0f; return }
 
         if (isSelectedRangedWeapon()) {
+            val profile=RangedProfile.all[selectedEquipmentType()]
+            if(profile != null && profile.magazine>0) {
+                rockChargeTime=0f;weaponChargeTime=0f
+                if(down && (profile.automatic || pressed)) tryWeaponRangedAttack()
+                return
+            }
             rockChargeTime = 0f
             // Vise en tenant le bouton (tension de l'arme), tire seulement au relâchement —
             // pas de tir instantané à l'appui, pour pouvoir viser d'abord. Si l'arme
@@ -2425,6 +2488,18 @@ private fun updateProjectiles(dt: Float) {
     private var equipmentRelease = -1f
     private var releasedEquipment: String? = null
 
+    private fun publishWeaponStatus() {
+        val type=selectedEquipmentType()
+        val profile=RangedProfile.all[type]
+        val id=hotbar[selectedSlot]
+        val reserve=ammoBlockIdFor(type)?.let { inventory[it] ?: 0 } ?: 0
+        val mag=if(id!=null && profile!=null && profile.magazine>0) magazines.getOrPut(id) { MagazineState(profile.magazine,profile.reload) } else null
+        val status=if(hotbarMode!=HotbarMode.COMBAT || mag==null) ""
+            else if(mag.reloadRemaining>0f) context.getString(com.Atom2Universe.app.R.string.cave_weapon_reloading)
+            else context.getString(com.Atom2Universe.app.R.string.cave_weapon_magazine,minOf(mag.remaining,reserve),reserve)
+        if(status!=lastWeaponStatus) { lastWeaponStatus=status;weaponStatusCallback?.invoke(status) }
+    }
+
     private fun selectedEquipmentType(): String? {
         val id = hotbar[selectedSlot] ?: return null
         val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return null
@@ -2466,7 +2541,12 @@ private fun updateProjectiles(dt: Float) {
             com.Atom2Universe.app.games.caves.node.ItemRarity.LEGENDARY -> 0xF5A04A
             else -> 0xBFA779
         }
-        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent)
+        val mag=hotbar[selectedSlot]?.let { magazines[it] }
+        val reload=mag?.progress ?: 0f
+        val dip=sin(reload*PI.toFloat())
+        android.opengl.Matrix.rotateM(equipmentModel,0,dip*28f,0f,0f,1f)
+        android.opengl.Matrix.translateM(equipmentModel,0,0f,-dip*.12f,0f)
+        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0)
         drawEquipmentMesh(equipmentModel,if(fps) vmProj else camera.vpMatrix)
         if (fps && type == "sling" && !rock) {
             m.slingDrawHand(charge,release)

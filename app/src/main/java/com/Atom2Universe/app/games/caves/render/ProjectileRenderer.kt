@@ -4,6 +4,7 @@ import android.content.res.AssetManager
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.ImpactParticle
+import com.Atom2Universe.app.games.caves.entity.ProjectileKind
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -12,6 +13,9 @@ import kotlin.math.sin
 
 internal class ProjectileRenderer {
 
+    private var physicalShader: ShaderProgram? = null
+    private val physicalMesh = HeldEquipmentMesh()
+    private var physicalPos=0; private var physicalColor=0; private var physicalMvp=0
     private var shader: ShaderProgram? = null
     private var aPos = 0; private var aUv = 0
     private var uMvp = 0; private var uTex = 0
@@ -66,6 +70,22 @@ internal class ProjectileRenderer {
     """.trimIndent()
 
     fun onSurfaceCreated(assets: AssetManager) {
+        physicalShader=ShaderProgram("""
+            #version 300 es
+            in vec3 a_pos;
+            in vec3 a_color;
+            uniform mat4 u_mvp;
+            out vec3 color;
+            void main() { color=a_color; gl_Position=u_mvp*vec4(a_pos,1.0); }
+        """.trimIndent(),"""
+            #version 300 es
+            precision mediump float;
+            in vec3 color;
+            out vec4 fragColor;
+            void main() { fragColor=vec4(color,1.0); }
+        """.trimIndent()).also {
+            it.use(); physicalPos=it.attrib("a_pos");physicalColor=it.attrib("a_color");physicalMvp=it.uniform("u_mvp")
+        }
         shader = ShaderProgram(VERT, FRAG).also {
             it.use()
             aPos = it.attrib("a_pos"); aUv  = it.attrib("a_uv")
@@ -119,7 +139,7 @@ internal class ProjectileRenderer {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glUniform1i(uTex, 0)
 
-        val byTex = projectiles.groupBy { it.weapon.texIndex }
+        val byTex = projectiles.filter { it.kind == ProjectileKind.LEGACY }.groupBy { it.weapon.texIndex }
         for ((texIdx, group) in byTex) {
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textures[texIdx.coerceIn(0, 7)])
             var si = 0
@@ -160,6 +180,37 @@ internal class ProjectileRenderer {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
         GLES30.glDepthMask(true)
         GLES30.glDisable(GLES30.GL_BLEND)
+        renderPhysical(projectiles,camX,camY,camZ,vpMatrix)
+    }
+
+    private fun renderPhysical(projectiles: List<Projectile>,camX: Double,camY: Double,camZ: Double,vp: FloatArray) {
+        physicalShader?.use() ?: return
+        GLES30.glUniformMatrix4fv(physicalMvp,1,false,vp,0)
+        val m=physicalMesh;m.clear()
+        fun flush() {
+            if(m.count==0) return
+            m.buffer.clear();m.buffer.put(m.vertices,0,m.count);m.buffer.flip()
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,vbo)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER,m.count*4,m.buffer,GLES30.GL_DYNAMIC_DRAW)
+            GLES30.glEnableVertexAttribArray(physicalPos);GLES30.glVertexAttribPointer(physicalPos,3,GLES30.GL_FLOAT,false,24,0)
+            GLES30.glEnableVertexAttribArray(physicalColor);GLES30.glVertexAttribPointer(physicalColor,3,GLES30.GL_FLOAT,false,24,12)
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES,0,m.count/6)
+            GLES30.glDisableVertexAttribArray(physicalPos);GLES30.glDisableVertexAttribArray(physicalColor)
+            m.clear()
+        }
+        for(p in projectiles) {
+            if(p.kind==ProjectileKind.LEGACY) continue
+            val x=(p.x-camX).toFloat();val y=(p.y-camY).toFloat();val z=(p.z-camZ).toFloat()
+            if(x*x+y*y+z*z<.35f*.35f) continue
+            // Tout le volume doit se trouver devant le plan proche, queue comprise.
+            val extent=if(p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT) .6f else .22f
+            val near=(vp[2]+vp[3])*x+(vp[6]+vp[7])*y+(vp[10]+vp[11])*z+vp[14]+vp[15]
+            val nx=vp[2]+vp[3];val ny=vp[6]+vp[7];val nz=vp[10]+vp[11]
+            if(near<=extent*kotlin.math.sqrt(nx*nx+ny*ny+nz*nz)) continue
+            if(m.count>70000) flush()
+            m.projectile(p.kind,x,y,z,(p.dirX*p.speed).toFloat(),p.velY.toFloat(),(p.dirZ*p.speed).toFloat())
+        }
+        flush();GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,0)
     }
 
     fun renderParticles(
@@ -221,6 +272,7 @@ internal class ProjectileRenderer {
     }
 
     fun destroy() {
+        physicalShader?.destroy()
         shader?.destroy()
         partShader?.destroy()
         if (textures.any { it != 0 }) GLES30.glDeleteTextures(8, textures, 0)

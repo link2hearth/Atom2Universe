@@ -1,0 +1,21 @@
+{
+  "id": "lever_rifle",
+  "type": "weapon",
+  "weapon_type": "lever_rifle",
+  "tier": 4,
+  "attack_speed_ms": 950,
+  "rarity_weights": {
+    "common": 5,
+    "magic": 15,
+    "rare": 30,
+    "epic": 30,
+    "legendary": 20
+  },
+  "damage_base": [
+    44,
+    62
+  ],
+  "stats": {},
+  "flags": [],
+  "sprite": "lever_rifle"
+}
