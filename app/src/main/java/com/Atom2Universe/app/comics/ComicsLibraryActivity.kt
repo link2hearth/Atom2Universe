@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +115,17 @@ class ComicsLibraryActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         loadData()
+        loadReadingTimes()
+    }
+
+    private fun loadReadingTimes() {
+        scope.launch {
+            val times = withContext(Dispatchers.IO) {
+                StatsRepository(this@ComicsLibraryActivity).getReadingTimeByTitle(StatsRepository.MODULE_COMIC)
+            }
+            adapter.readingTimeByTitle = times
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroy() {
@@ -573,6 +585,13 @@ sealed class LibItem {
     data class Standalone(val entry: ComicEntry) : LibItem()
 }
 
+private fun formatComicCardReadingDuration(durationMs: Long): String {
+    val totalMinutes = (durationMs / 1000 / 60).toInt()
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
+}
+
 // ── Adapter ───────────────────────────────────────────────────────────────────
 
 class LibraryAdapter(
@@ -580,7 +599,8 @@ class LibraryAdapter(
     private val onRootClick: (ComicsRootLibrary) -> Unit,
     private val onRootLongClick: (ComicsRootLibrary) -> Unit,
     private val onComicClick: (ComicEntry) -> Unit,
-    private val onComicLongClick: (ComicEntry) -> Unit
+    private val onComicLongClick: (ComicEntry) -> Unit,
+    var readingTimeByTitle: Map<String, Long> = emptyMap()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -606,7 +626,7 @@ class LibraryAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
             is LibItem.Root -> (holder as RootVH).bind(item.lib, item.count, onRootClick, onRootLongClick)
-            is LibItem.Standalone -> (holder as StandaloneVH).bind(item.entry, onComicClick, onComicLongClick)
+            is LibItem.Standalone -> (holder as StandaloneVH).bind(item.entry, readingTimeByTitle[item.entry.title], onComicClick, onComicLongClick)
         }
     }
 
@@ -626,10 +646,17 @@ class LibraryAdapter(
         val title: TextView = view.findViewById(R.id.comic_title)
         val progressText: TextView = view.findViewById(R.id.comic_progress_text)
         val progressBar: ProgressBar = view.findViewById(R.id.comic_progress_bar)
-        fun bind(entry: ComicEntry, onClick: (ComicEntry) -> Unit, onLong: (ComicEntry) -> Unit) {
+        val readingTime: TextView = view.findViewById(R.id.comic_reading_time)
+        fun bind(entry: ComicEntry, readingTimeMs: Long?, onClick: (ComicEntry) -> Unit, onLong: (ComicEntry) -> Unit) {
             title.text = entry.title
             progressText.text = "${entry.currentPage + 1} / ${entry.totalPages}"
             progressBar.progress = entry.progressPercent
+            if (readingTimeMs != null && readingTimeMs > 0L) {
+                readingTime.visibility = View.VISIBLE
+                readingTime.text = "🕐 " + formatComicCardReadingDuration(readingTimeMs)
+            } else {
+                readingTime.visibility = View.GONE
+            }
             cover.setImageResource(R.drawable.ic_hub_comics)
             itemView.setOnClickListener { onClick(entry) }
             itemView.setOnLongClickListener { onLong(entry); true }

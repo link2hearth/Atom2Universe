@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Чтение</string>
+    <string name="reading_stats_desc">Время, потраченное на чтение книг и комиксов</string>
+    <string name="reading_stats_empty">Пока нет сессий чтения</string>
+    <string name="reading_stats_books_title">Книги</string>
+    <string name="reading_stats_comics_title">Комиксы</string>
+    <string name="reading_stats_history_title">История</string>
+    <string name="reading_stats_top_titles">Самые читаемые</string>
+</resources>

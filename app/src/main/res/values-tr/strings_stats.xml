@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Okuma</string>
+    <string name="reading_stats_desc">Kitap ve çizgi roman okuma süresi</string>
+    <string name="reading_stats_empty">Henüz okuma oturumu yok</string>
+    <string name="reading_stats_books_title">Kitaplar</string>
+    <string name="reading_stats_comics_title">Çizgi Romanlar</string>
+    <string name="reading_stats_history_title">Geçmiş</string>
+    <string name="reading_stats_top_titles">En çok okunanlar</string>
+</resources>

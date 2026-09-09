@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Lectură</string>
+    <string name="reading_stats_desc">Timp petrecut citind cărți și benzi desenate</string>
+    <string name="reading_stats_empty">Nicio sesiune de lectură încă</string>
+    <string name="reading_stats_books_title">Cărți</string>
+    <string name="reading_stats_comics_title">Benzi desenate</string>
+    <string name="reading_stats_history_title">Istoric</string>
+    <string name="reading_stats_top_titles">Cele mai citite</string>
+</resources>

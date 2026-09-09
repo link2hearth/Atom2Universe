@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -767,12 +768,23 @@ class QuizActivity : ThemedActivity() {
         preferences.clearGameState()
     }
 
+    /** Cumul lifetime bonnes réponses / total, pour le % affiché dans les stats jeux. */
+    private fun recordQuizAnswers(correct: Int, total: Int) {
+        if (total <= 0) return
+        val prefs = getSharedPreferences("quiz_stats", MODE_PRIVATE)
+        prefs.edit {
+            putInt("lifetime_correct", prefs.getInt("lifetime_correct", 0) + correct)
+            putInt("lifetime_total", prefs.getInt("lifetime_total", 0) + total)
+        }
+    }
+
     private fun showResults() {
         showState(QuizState.RESULT)
 
         val correctCount = answeredQuestions.count { it.isCorrect }
         val totalCount = answeredQuestions.size
         val percentage = if (totalCount > 0) (correctCount * 100) / totalCount else 0
+        recordQuizAnswers(correctCount, totalCount)
 
         // Update score display
         resultScore.text = getString(R.string.quiz_score_format, correctCount, totalCount)
@@ -866,6 +878,7 @@ class QuizActivity : ThemedActivity() {
         // Calculate total score: +1 for correct, 0 for wrong original, -1 for troll
         val totalScore = correctCount - trollCount
         val maxScore = answeredQuestions.size
+        recordQuizAnswers(correctCount, maxScore)
 
         // Update score display
         challengeScore.text = getString(R.string.quiz_challenge_score_format, totalScore)

@@ -259,6 +259,12 @@
                 <TextView style="@style/StatLabel" android:text="@string/stat_pipetap_won" />
                 <TextView android:id="@+id/stat_pipetap_won_value" style="@style/StatValue" tools:text="—" />
             </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_othello_won" />
+                <TextView android:id="@+id/stat_othello_won_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
 
             <!-- ── Section : records ─────────────────────────────────────────── -->
             <TextView
@@ -361,6 +367,133 @@
                 <TextView style="@style/StatLabel" android:text="@string/stat_hexrunner_best" />
                 <TextView android:id="@+id/stat_hexrunner_best_value" style="@style/StatValue" tools:text="—" />
             </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_hotpotato_score" />
+                <TextView android:id="@+id/stat_hotpotato_score_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_motocross_distance" />
+                <TextView android:id="@+id/stat_motocross_distance_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_orbite_score" />
+                <TextView android:id="@+id/stat_orbite_score_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_cosmorun_score" />
+                <TextView android:id="@+id/stat_cosmorun_score_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_minesweeper_best" />
+                <TextView android:id="@+id/stat_minesweeper_best_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_sokoban_best" />
+                <TextView android:id="@+id/stat_sokoban_best_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_balance_best_level" />
+                <TextView android:id="@+id/stat_balance_best_level_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_nuclea_wave" />
+                <TextView android:id="@+id/stat_nuclea_wave_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_trebuchet_distance" />
+                <TextView android:id="@+id/stat_trebuchet_distance_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_trebuchet_sites" />
+                <TextView android:id="@+id/stat_trebuchet_sites_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_roguelike_floor" />
+                <TextView android:id="@+id/stat_roguelike_floor_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_escape_solved" />
+                <TextView android:id="@+id/stat_escape_solved_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_escape_perfect" />
+                <TextView android:id="@+id/stat_escape_perfect_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_starbridges_solved" />
+                <TextView android:id="@+id/stat_starbridges_solved_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <LinearLayout style="@style/StatRow">
+                <TextView style="@style/StatLabel" android:text="@string/stat_quiz_accuracy" />
+                <TextView android:id="@+id/stat_quiz_accuracy_value" style="@style/StatValue" tools:text="—" />
+            </LinearLayout>
+            <View style="@style/StatDivider" />
+
+            <!-- Memory : une ligne par difficulté (rempli dynamiquement) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_memory_title"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
+                android:letterSpacing="0.12"
+                android:paddingTop="20dp"
+                android:paddingBottom="6dp" />
+            <LinearLayout
+                android:id="@+id/memory_diff_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Circles : une ligne par difficulté (rempli dynamiquement) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/stat_circles_title"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
+                android:letterSpacing="0.12"
+                android:paddingTop="20dp"
+                android:paddingBottom="6dp" />
+            <LinearLayout
+                android:id="@+id/circles_diff_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
         </LinearLayout>
 

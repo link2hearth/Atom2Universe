@@ -20,7 +20,9 @@ data class GameStats(
     val blackjackPlayed: Int = 0,
     val blackjackWon: Int = 0,
     val pipeTapHardWon: Int = 0,
-    val hexRunnerBestMs: Long = 0L
+    val hexRunnerBestMs: Long = 0L,
+    val othelloPlayed: Int = 0,
+    val othelloWon: Int = 0
 )
 
 class GameStatsRepository(context: Context) {
@@ -44,7 +46,9 @@ class GameStatsRepository(context: Context) {
         blackjackPlayed      = prefs.getInt("blackjack_played", 0),
         blackjackWon         = prefs.getInt("blackjack_won", 0),
         pipeTapHardWon       = prefs.getInt("pipetap_hard_won", 0),
-        hexRunnerBestMs      = prefs.getLong("hexrunner_best_ms", 0L)
+        hexRunnerBestMs      = prefs.getLong("hexrunner_best_ms", 0L),
+        othelloPlayed        = prefs.getInt("othello_played", 0),
+        othelloWon           = prefs.getInt("othello_won", 0)
     )
 
     fun save(stats: GameStats) {
@@ -66,6 +70,8 @@ class GameStatsRepository(context: Context) {
             .putInt("blackjack_won",           stats.blackjackWon)
             .putInt("pipetap_hard_won",        stats.pipeTapHardWon)
             .putLong("hexrunner_best_ms",      stats.hexRunnerBestMs)
+            .putInt("othello_played",          stats.othelloPlayed)
+            .putInt("othello_won",             stats.othelloWon)
             .apply()
     }
 
@@ -110,6 +116,9 @@ class GameStatsRepository(context: Context) {
     fun recordBlackjackWon()     = increment("blackjack_won")
 
     fun recordPipeTapHardWon() = increment("pipetap_hard_won")
+
+    fun recordOthelloPlayed() = increment("othello_played")
+    fun recordOthelloWon()    = increment("othello_won")
 
     fun reset() {
         prefs.edit { clear() }

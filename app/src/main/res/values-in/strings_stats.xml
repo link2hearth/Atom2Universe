@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Membaca</string>
+    <string name="reading_stats_desc">Waktu membaca buku dan komik</string>
+    <string name="reading_stats_empty">Belum ada sesi membaca</string>
+    <string name="reading_stats_books_title">Buku</string>
+    <string name="reading_stats_comics_title">Komik</string>
+    <string name="reading_stats_history_title">Riwayat</string>
+    <string name="reading_stats_top_titles">Paling banyak dibaca</string>
+</resources>

@@ -248,6 +248,7 @@ class ClickerStatsActivity : ThemedActivity() {
             if (gameStats.colorStackHardBestMs > 0) formatMs(gameStats.colorStackHardBestMs) else "—"
         findViewById<TextView>(R.id.stat_pipetap_won_value).text =
             if (gameStats.pipeTapHardWon > 0) fmt.format(gameStats.pipeTapHardWon) else "—"
+        findViewById<TextView>(R.id.stat_othello_won_value).setWins(gameStats.othelloWon, gameStats.othelloPlayed)
 
         // Records depuis SharedPreferences individuels
         val sw = getSharedPreferences("stars_war_save", MODE_PRIVATE)
@@ -302,6 +303,80 @@ class ClickerStatsActivity : ThemedActivity() {
             if (secs >= 60) "%d:%02d".format(secs / 60, secs % 60) else "$secs s"
         } else "—"
 
+        val hp = getSharedPreferences("hot_potato_save", MODE_PRIVATE)
+        val hpScore = hp.getInt("best_score", 0)
+        findViewById<TextView>(R.id.stat_hotpotato_score_value).text = if (hpScore > 0) fmt.format(hpScore) else "—"
+
+        val mx = getSharedPreferences("motocross_save", MODE_PRIVATE)
+        val mxBest = mx.getFloat("best", 0f)
+        findViewById<TextView>(R.id.stat_motocross_distance_value).text =
+            if (mxBest > 0f) "${fmt.format(mxBest.toInt())} m" else "—"
+
+        val ob = getSharedPreferences("orbite_save", MODE_PRIVATE)
+        val obBest = ob.getInt("best", 0)
+        findViewById<TextView>(R.id.stat_orbite_score_value).text = if (obBest > 0) fmt.format(obBest) else "—"
+
+        val cr = getSharedPreferences("cosmo_run_save", MODE_PRIVATE)
+        val crBest = cr.getInt("best_score", 0)
+        findViewById<TextView>(R.id.stat_cosmorun_score_value).text = if (crBest > 0) fmt.format(crBest) else "—"
+
+        // Minesweeper / Sokoban / Balance : un seul chiffre = le meilleur, toutes difficultés confondues
+        val msPrefs = com.Atom2Universe.app.games.minesweeper.MinesweeperPrefs(this)
+        val msBest = com.Atom2Universe.app.games.minesweeper.MinesweeperDifficulty.entries
+            .map { msPrefs.getBestTime(it) }
+            .filter { it >= 0 }
+            .minOrNull()
+        findViewById<TextView>(R.id.stat_minesweeper_best_value).text =
+            if (msBest != null) "%d:%02d".format(msBest / 60, msBest % 60) else "—"
+
+        val skPrefs = getSharedPreferences("sokoban_prefs", MODE_PRIVATE)
+        val skBest = com.Atom2Universe.app.games.sokoban.SokobanDifficulty.entries
+            .map { skPrefs.getInt("best_" + it.name, 0) }
+            .filter { it > 0 }
+            .minOrNull()
+        findViewById<TextView>(R.id.stat_sokoban_best_value).text = if (skBest != null) fmt.format(skBest) else "—"
+
+        val blPrefs = getSharedPreferences("balance_game", MODE_PRIVATE)
+        val blBest = com.Atom2Universe.app.games.balance.BalanceGame.Difficulty.entries
+            .map { blPrefs.getInt("best_level_" + it.ordinal, 0) }
+            .maxOrNull()
+        findViewById<TextView>(R.id.stat_balance_best_level_value).text =
+            if (blBest != null && blBest > 0) fmt.format(blBest) else "—"
+
+        val nc = getSharedPreferences("nuclea_save", MODE_PRIVATE)
+        val ncWave = nc.getInt("best_wave", 0)
+        findViewById<TextView>(R.id.stat_nuclea_wave_value).text = if (ncWave > 0) fmt.format(ncWave) else "—"
+
+        val tb = getSharedPreferences(com.Atom2Universe.app.games.trebuchet.TREBUCHET_PREFS, MODE_PRIVATE)
+        val tbDistance = tb.getFloat("best_distance", 0f)
+        findViewById<TextView>(R.id.stat_trebuchet_distance_value).text =
+            if (tbDistance > 0f) "${fmt.format(tbDistance.toInt())} m" else "—"
+        val tbSites = tb.getInt("sites_destroyed", 0)
+        findViewById<TextView>(R.id.stat_trebuchet_sites_value).text = if (tbSites > 0) fmt.format(tbSites) else "—"
+
+        val rg = getSharedPreferences("roguelike_save", MODE_PRIVATE)
+        val rgFloor = rg.getInt("best_floor", 0)
+        findViewById<TextView>(R.id.stat_roguelike_floor_value).text = if (rgFloor > 0) fmt.format(rgFloor) else "—"
+
+        val el = getSharedPreferences("escape_labyrinth_prefs", MODE_PRIVATE)
+        val elSolved = el.getInt("solved", 0)
+        val elPerfect = el.getInt("solved_perfect", 0)
+        findViewById<TextView>(R.id.stat_escape_solved_value).text = if (elSolved > 0) fmt.format(elSolved) else "—"
+        findViewById<TextView>(R.id.stat_escape_perfect_value).text = if (elPerfect > 0) fmt.format(elPerfect) else "—"
+
+        val sb = getSharedPreferences("starbridges_save", MODE_PRIVATE)
+        val sbSolved = sb.getInt("solved", 0)
+        findViewById<TextView>(R.id.stat_starbridges_solved_value).text = if (sbSolved > 0) fmt.format(sbSolved) else "—"
+
+        val qz = getSharedPreferences("quiz_stats", MODE_PRIVATE)
+        val qzCorrect = qz.getInt("lifetime_correct", 0)
+        val qzTotal = qz.getInt("lifetime_total", 0)
+        findViewById<TextView>(R.id.stat_quiz_accuracy_value).text =
+            if (qzTotal > 0) "${qzCorrect * 100 / qzTotal}% ($qzCorrect/$qzTotal)" else "—"
+
+        bindMemoryStats()
+        bindCirclesStats()
+
         // Particules : Room DB async
         lifecycleScope.launch {
             val meta = com.Atom2Universe.app.games.particules.data.ParticulesDatabase
@@ -315,6 +390,43 @@ class ClickerStatsActivity : ThemedActivity() {
                 scoreView.text = "—"
                 levelView.text = "—"
             }
+        }
+    }
+
+    /** Une ligne par difficulté : meilleur temps + meilleur nombre de coups. */
+    private fun bindMemoryStats() {
+        val prefs = getSharedPreferences("memory_save", MODE_PRIVATE)
+        val container = findViewById<LinearLayout>(R.id.memory_diff_container)
+        container.removeAllViews()
+        for (diff in com.Atom2Universe.app.games.memory.MemoryDifficulty.entries) {
+            val time = prefs.getInt("best_time_" + diff.name, 0)
+            val moves = prefs.getInt("best_moves_" + diff.name, 0)
+            if (time == 0 && moves == 0) continue
+            val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
+            row.findViewById<TextView>(R.id.row_label).text = getString(R.string.stat_memory_diff, diff.label)
+            val parts = mutableListOf<String>()
+            if (time > 0) parts.add("%d:%02d".format(time / 60, time % 60))
+            if (moves > 0) parts.add(getString(R.string.stat_moves_format, moves))
+            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ")
+            container.addView(row)
+        }
+    }
+
+    /** Une ligne par difficulté : puzzles résolus + meilleur nombre de coups. */
+    private fun bindCirclesStats() {
+        val prefs = getSharedPreferences("circles_save", MODE_PRIVATE)
+        val container = findViewById<LinearLayout>(R.id.circles_diff_container)
+        container.removeAllViews()
+        for (diff in com.Atom2Universe.app.games.circles.CirclesDifficulty.entries) {
+            val solved = prefs.getInt("solved_" + diff.name, 0)
+            val moves = prefs.getInt("best_moves_" + diff.name, 0)
+            if (solved == 0) continue
+            val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
+            row.findViewById<TextView>(R.id.row_label).text = getString(R.string.stat_circles_diff, diff.label)
+            val parts = mutableListOf(getString(R.string.stat_solved_format, solved))
+            if (moves > 0) parts.add(getString(R.string.stat_moves_format, moves))
+            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ")
+            container.addView(row)
         }
     }
 

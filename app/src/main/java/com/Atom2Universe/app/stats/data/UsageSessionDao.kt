@@ -185,7 +185,69 @@ interface UsageSessionDao {
      */
     @Query("SELECT * FROM usage_sessions WHERE startTimestamp >= :startMs AND startTimestamp < :endMs ORDER BY startTimestamp ASC")
     suspend fun getSessionsBetween(startMs: Long, endMs: Long): List<UsageSessionEntity>
+
+    /**
+     * Récupère toutes les sessions pour une liste de modules (ex: lecture livres+BD),
+     * triées de la plus récente à la plus ancienne.
+     */
+    @Query("SELECT * FROM usage_sessions WHERE moduleType IN (:moduleTypes) ORDER BY startTimestamp DESC")
+    suspend fun getSessionsByModules(moduleTypes: List<String>): List<UsageSessionEntity>
+
+    /**
+     * Récupère le temps de lecture total par titre pour un module (book ou comic),
+     * pour l'affichage sur les tuiles des bibliothèques.
+     */
+    @Query("""
+        SELECT readingTitle, SUM(durationMs) as totalDuration
+        FROM usage_sessions
+        WHERE moduleType = :moduleType
+        AND readingTitle IS NOT NULL
+        AND readingTitle != ''
+        GROUP BY readingTitle
+    """)
+    suspend fun getReadingTimeByTitle(moduleType: String): List<TitleDurationStats>
+
+    /**
+     * Récupère les sessions d'une liste de modules dans une plage de timestamps
+     * (ex: lecture livres+BD sur une période ou un mois pour le calendrier).
+     */
+    @Query("SELECT * FROM usage_sessions WHERE moduleType IN (:moduleTypes) AND startTimestamp >= :startMs AND startTimestamp < :endMs ORDER BY startTimestamp ASC")
+    suspend fun getSessionsByModulesBetween(moduleTypes: List<String>, startMs: Long, endMs: Long): List<UsageSessionEntity>
+
+    /**
+     * Récupère le top des titres (livres/BD) les plus lus sur une période, tous modules confondus.
+     */
+    @Query("""
+        SELECT readingTitle, moduleType, SUM(durationMs) as totalDuration
+        FROM usage_sessions
+        WHERE moduleType IN (:moduleTypes)
+        AND readingTitle IS NOT NULL
+        AND readingTitle != ''
+        AND startTimestamp >= :startDate
+        AND endTimestamp <= :endDate
+        GROUP BY readingTitle, moduleType
+        ORDER BY totalDuration DESC
+        LIMIT :limit
+    """)
+    suspend fun getTopReadingTitles(moduleTypes: List<String>, startDate: Long, endDate: Long, limit: Int): List<ReadingTitleStats>
 }
+
+/**
+ * Classe de données pour le top des titres de lecture (livre/BD) sur une période.
+ */
+data class ReadingTitleStats(
+    val readingTitle: String,
+    val moduleType: String,
+    val totalDuration: Long
+)
+
+/**
+ * Classe de données pour le temps de lecture cumulé d'un titre (livre/BD).
+ */
+data class TitleDurationStats(
+    val readingTitle: String,
+    val totalDuration: Long
+)
 
 /**
  * Classe de données pour les statistiques d'artiste.

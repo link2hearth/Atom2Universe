@@ -220,6 +220,7 @@
     <color name="audio_hub_tile_books">#4E342E</color>
     <color name="audio_hub_tile_comics">#4A148C</color>
     <color name="audio_hub_tile_dictaphone">#37474F</color>
+    <color name="audio_hub_tile_stats_hub">#4527A0</color>
 
     <!-- Science hub -->
     <color name="audio_hub_tile_science">#00695C</color>

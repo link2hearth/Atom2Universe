@@ -84,6 +84,13 @@ data class UsageSessionEntity(
      */
     val radioStationName: String? = null,
 
+    // ===== Métadonnées pour LECTURE (book / comic) =====
+
+    /**
+     * Titre du livre ou de la BD lue (pour book/comic), utilisé pour les deux types
+     */
+    val readingTitle: String? = null,
+
     /**
      * Device d'origine de la session (null = créée localement, non-null = importée depuis un autre appareil via sync).
      * Permet d'éviter de réexporter des sessions importées sous un mauvais deviceId.

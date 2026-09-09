@@ -36,4 +36,6 @@
     <string name="hub_shortcut_exists_message">« %1$s » sudah menjadi pintasan. Pindahkan ke posisi pertama (Ya) atau hapus (Tidak)?</string>
     <string name="hub_shortcut_added">Pintasan ditambahkan</string>
     <string name="periodic_toggle_rarities_desc">Tampilkan/sembunyikan kelangkaan</string>
+    <string name="hub_stats_title">Statistik</string>
+    <string name="hub_stats_desc">Ringkasan mendengarkan, game, dan membaca</string>
 </resources>

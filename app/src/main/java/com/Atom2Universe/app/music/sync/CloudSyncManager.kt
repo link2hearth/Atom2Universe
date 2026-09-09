@@ -14,6 +14,7 @@ import com.Atom2Universe.app.music.AlbumFavoritesManager
 import com.Atom2Universe.app.music.ArtistCustomizationManager
 import com.Atom2Universe.app.music.MusicFavoritesManager
 import com.Atom2Universe.app.music.MusicPlaylistManager
+import com.Atom2Universe.app.readingprogress.sync.ReadingProgressSyncManager
 import com.Atom2Universe.app.stats.sync.StatsSyncManager
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.sync.algorithm.AlbumFavoritesMerger
@@ -418,6 +419,15 @@ object CloudSyncManager {
             } catch (e: Exception) {
                 Log.e(TAG, "Stats sync failed (non-critical)", e)
                 // Continue sync even if stats fail
+            }
+
+            // Phase 3.6: Sync reading progress (books/comics)
+            try {
+                val progressResult = ReadingProgressSyncManager.syncProgress()
+                Log.d(TAG, "Reading progress sync: ${progressResult.message}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Reading progress sync failed (non-critical)", e)
+                // Continue sync even if progress sync fails
             }
 
             // Phase 4: Backup (if primary device)

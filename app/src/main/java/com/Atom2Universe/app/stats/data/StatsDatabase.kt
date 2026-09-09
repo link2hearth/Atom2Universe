@@ -12,7 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         UsageSessionEntity::class,
         DailySummaryEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class StatsDatabase : RoomDatabase() {
@@ -71,6 +71,13 @@ abstract class StatsDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Colonne pour les stats de lecture (livres/BD) : titre lu
+                db.execSQL("ALTER TABLE usage_sessions ADD COLUMN readingTitle TEXT")
+            }
+        }
+
         fun getInstance(context: Context): StatsDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -78,7 +85,7 @@ abstract class StatsDatabase : RoomDatabase() {
                     StatsDatabase::class.java,
                     DATABASE_NAME
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
 
                 INSTANCE = instance

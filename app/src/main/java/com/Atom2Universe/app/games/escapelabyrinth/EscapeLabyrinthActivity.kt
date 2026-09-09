@@ -14,6 +14,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -186,6 +187,10 @@ class EscapeLabyrinthActivity : ThemedActivity() {
                 NeutrinoRepository(this).addBalance(
                     NeutrinoRewards.escape(currentDifficulty.ordinal, perfect)
                 )
+                prefs.edit {
+                    putInt("solved", prefs.getInt("solved", 0) + 1)
+                    if (perfect) putInt("solved_perfect", prefs.getInt("solved_perfect", 0) + 1)
+                }
                 tvStatus.text = if (perfect)
                     getString(R.string.escape_status_win_perfect, play.turn)
                 else

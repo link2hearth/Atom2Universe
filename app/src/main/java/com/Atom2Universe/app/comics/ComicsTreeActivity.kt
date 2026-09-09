@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +71,8 @@ class ComicsTreeActivity : ThemedActivity() {
     private lateinit var foldersEmpty: TextView
     private lateinit var contentContainer: View
     private var allEntries: List<ComicEntry> = emptyList()
+    // Temps de lecture cumulé par titre (stats), pour l'affichage sur les tuiles
+    private var readingTimeByTitle: Map<String, Long> = emptyMap()
     private var currentFolderPath: String? = null
     private var currentFilteredEntries: List<ComicEntry> = emptyList()
     private var hasFolderLevel = false
@@ -144,6 +147,17 @@ class ComicsTreeActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         loadData()
+        loadReadingTimes()
+    }
+
+    private fun loadReadingTimes() {
+        scope.launch {
+            val times = withContext(Dispatchers.IO) {
+                StatsRepository(this@ComicsTreeActivity).getReadingTimeByTitle(StatsRepository.MODULE_COMIC)
+            }
+            readingTimeByTitle = times
+            recycler.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroy() {
@@ -325,6 +339,7 @@ class ComicsTreeActivity : ThemedActivity() {
                 scope = scope,
                 entries = entries,
                 folderPath = folderPath,
+                readingTimeByTitle = readingTimeByTitle,
                 onComicClick = { entry -> openComic(entry) }
             )
         }
@@ -412,6 +427,7 @@ private class ComicBrowseAdapter(
     private val scope: CoroutineScope,
     entries: List<ComicEntry>,
     folderPath: String,
+    private val readingTimeByTitle: Map<String, Long>,
     private val onComicClick: (ComicEntry) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -438,7 +454,7 @@ private class ComicBrowseAdapter(
         when (val row = rows[position]) {
             is ComicBrowseRow.SectionHeader -> (holder as BrowseSectionVH).bind(row)
             is ComicBrowseRow.ComicItem -> {
-                (holder as ComicVH).bind(row.entry, 0, density, scope, context)
+                (holder as ComicVH).bind(row.entry, 0, density, scope, context, readingTimeByTitle[row.entry.title])
                 holder.itemView.setOnClickListener { onComicClick(row.entry) }
             }
         }
@@ -512,9 +528,10 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
     val progress: ProgressBar = view.findViewById(R.id.comic_tile_progress)
     val progressText: TextView = view.findViewById(R.id.comic_tile_progress_text)
     val date: TextView = view.findViewById(R.id.comic_tile_date)
+    val readingTime: TextView = view.findViewById(R.id.comic_tile_reading_time)
     var loadJob: Job? = null
 
-    fun bind(entry: ComicEntry, depth: Int, density: Float, scope: CoroutineScope, context: Context) {
+    fun bind(entry: ComicEntry, depth: Int, density: Float, scope: CoroutineScope, context: Context, readingTimeMs: Long?) {
         (itemView.layoutParams as? ViewGroup.MarginLayoutParams)?.let { lp ->
             lp.marginStart = ((depth * 20) * density).toInt() + (10 * density).toInt()
             itemView.layoutParams = lp
@@ -528,6 +545,7 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
         date.text = if (entry.lastOpenedAt > 0)
             DateUtils.getRelativeTimeSpanString(entry.lastOpenedAt, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
         else ""
+        bindComicReadingTime(readingTime, readingTimeMs)
 
         cover.setImageResource(R.drawable.ic_hub_comics)
         loadJob?.cancel()
@@ -538,6 +556,23 @@ private class ComicVH(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     fun cancelLoad() { loadJob?.cancel(); loadJob = null }
+}
+
+/** Affiche (ou masque) la durée de lecture cumulée sur une tuile BD. */
+private fun bindComicReadingTime(view: TextView, durationMs: Long?) {
+    if (durationMs == null || durationMs <= 0L) {
+        view.visibility = View.GONE
+        return
+    }
+    view.visibility = View.VISIBLE
+    view.text = "🕐 " + formatComicReadingDuration(durationMs)
+}
+
+private fun formatComicReadingDuration(durationMs: Long): String {
+    val totalMinutes = (durationMs / 1000 / 60).toInt()
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
 }
 
 // ── Cover thumbnail helper ────────────────────────────────────────────────────

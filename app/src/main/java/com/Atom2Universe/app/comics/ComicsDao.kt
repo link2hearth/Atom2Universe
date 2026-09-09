@@ -26,6 +26,9 @@ interface ComicsDao {
     @Query("SELECT * FROM comic_entries WHERE sourcePath = :sourcePath LIMIT 1")
     suspend fun getComicBySource(sourcePath: String): ComicEntry?
 
+    @Query("SELECT * FROM comic_entries WHERE id = :id LIMIT 1")
+    suspend fun getComicById(id: String): ComicEntry?
+
     @Query("SELECT currentPage FROM comic_entries WHERE id = :id")
     suspend fun getCurrentPage(id: String): Int?
 

@@ -68,6 +68,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
          * connu vaut largement ces quelques lignes de préférences.
          */
         const val KEY_HITS_PREFIX = "best_hits"
+        const val KEY_SITES_DESTROYED = "sites_destroyed"
         const val KEY_GEAR_SEED = "gear_site_seed"
         const val KEY_MACHINES = "machines"
         const val KEY_GEAR_MACHINES = "gear_machines"
@@ -960,6 +961,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         if (ancien == 0 || game.hitCount < ancien) {
             prefs.edit { putInt(cle, game.hitCount) }
         }
+        prefs.edit { putInt(KEY_SITES_DESTROYED, prefs.getInt(KEY_SITES_DESTROYED, 0) + 1) }
 
         val gain = NeutrinoRewards.trebuchet(TargetGenerator.difficulty(lvl.structure))
         NeutrinoRepository(this).addBalance(gain)

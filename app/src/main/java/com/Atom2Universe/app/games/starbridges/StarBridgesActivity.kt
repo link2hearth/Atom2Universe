@@ -17,6 +17,7 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
 
@@ -167,7 +168,12 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     override fun onSolved() {
         stopTimer()
         updateStats()
+        val firstTimeSolved = !game.rewardClaimed
         awardReward()
+        if (firstTimeSolved) {
+            val prefs = getSharedPreferences("starbridges_save", MODE_PRIVATE)
+            prefs.edit { putInt("solved", prefs.getInt("solved", 0) + 1) }
+        }
         saveGame()
         showWinOverlay()
     }

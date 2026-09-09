@@ -280,6 +280,20 @@ class MemoryActivity : AppCompatActivity() {
         winOverlay.visibility = View.VISIBLE
         // EASY=+1, NORMAL=+2, MEDIUM=+3, PRO=+4, HARD=+5
         NeutrinoRepository(this).addBalance(NeutrinoRewards.memory(game.difficulty.ordinal))
+        saveRecordIfBetter()
+    }
+
+    /** Meilleur temps et meilleur nombre de coups, par difficulté (0 = jamais résolu à cette difficulté). */
+    private fun saveRecordIfBetter() {
+        val diff = game.difficulty
+        val timeKey = "best_time_" + diff.name
+        val movesKey = "best_moves_" + diff.name
+        val bestTime = prefs.getInt(timeKey, 0)
+        val bestMoves = prefs.getInt(movesKey, 0)
+        prefs.edit {
+            if (bestTime == 0 || game.elapsedSeconds < bestTime) putInt(timeKey, game.elapsedSeconds.toInt())
+            if (bestMoves == 0 || game.flips < bestMoves) putInt(movesKey, game.flips)
+        }
     }
 
     // ── Bitmap loading ────────────────────────────────────────────────────────────

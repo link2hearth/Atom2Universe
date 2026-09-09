@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Lezen</string>
+    <string name="reading_stats_desc">Tijd besteed aan het lezen van boeken en strips</string>
+    <string name="reading_stats_empty">Nog geen leessessies</string>
+    <string name="reading_stats_books_title">Boeken</string>
+    <string name="reading_stats_comics_title">Strips</string>
+    <string name="reading_stats_history_title">Geschiedenis</string>
+    <string name="reading_stats_top_titles">Meest gelezen</string>
+</resources>

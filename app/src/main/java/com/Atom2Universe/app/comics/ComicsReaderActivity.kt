@@ -17,6 +17,9 @@ import android.widget.Toast
 import androidx.documentfile.provider.DocumentFile
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.readingprogress.data.ReadingProgressRepository
+import com.Atom2Universe.app.stats.StatsTracker
+import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +70,7 @@ class ComicsReaderActivity : ThemedActivity() {
     private var folderImages: List<Uri>? = null
 
     private var isLoading = false
+    private val readingProgressRepository by lazy { ReadingProgressRepository(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,14 +163,26 @@ class ComicsReaderActivity : ThemedActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        titleText.text?.toString()?.takeIf { it.isNotEmpty() }?.let {
+            StatsTracker.startReadingSession(StatsRepository.MODULE_COMIC, it)
+        }
+    }
+
     override fun onPause() {
         super.onPause()
+        StatsTracker.endReadingSession()
         // Synchrone : garantit l'écriture avant que onResume de la bibliothèque ne lise la DB
         val id = comicId ?: return
         val page = currentPage
+        val title = titleText.text?.toString()
         runBlocking(Dispatchers.IO) {
             ComicsDatabase.getInstance(applicationContext).comicsDao()
                 .updateProgress(id, page, System.currentTimeMillis())
+            if (totalPages > 0 && !title.isNullOrBlank()) {
+                readingProgressRepository.updateProgress(StatsRepository.MODULE_COMIC, title, page.toFloat() / totalPages)
+            }
         }
     }
 
@@ -182,9 +198,13 @@ class ComicsReaderActivity : ThemedActivity() {
     private fun saveProgress() {
         val id = comicId ?: return
         val page = currentPage
+        val title = titleText.text?.toString()
         saveScope.launch {
             ComicsDatabase.getInstance(applicationContext).comicsDao()
                 .updateProgress(id, page, System.currentTimeMillis())
+            if (totalPages > 0 && !title.isNullOrBlank()) {
+                readingProgressRepository.updateProgress(StatsRepository.MODULE_COMIC, title, page.toFloat() / totalPages)
+            }
         }
     }
 
@@ -294,6 +314,19 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private suspend fun initNavigation() {
+        // Reprise synchronisée : si un autre appareil a lu ce titre plus récemment, on saute à sa page
+        val id = comicId
+        val title = titleText.text?.toString()
+        if (id != null && totalPages > 0 && !title.isNullOrBlank()) {
+            val localEntry = withContext(Dispatchers.IO) {
+                ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao().getComicById(id)
+            }
+            val remote = readingProgressRepository.getProgress(StatsRepository.MODULE_COMIC, title)
+            if (remote != null && remote.lastReadTimestamp > (localEntry?.lastOpenedAt ?: 0L)) {
+                currentPage = (remote.progressPercent * totalPages).toInt().coerceIn(0, totalPages - 1)
+            }
+        }
+
         if (currentPage >= totalPages) currentPage = 0
         seekBar.max = maxOf(0, totalPages - 1)
         seekBar.progress = currentPage
@@ -301,7 +334,6 @@ class ComicsReaderActivity : ThemedActivity() {
         // Le scan de bibliothèque laisse totalPages à 0 pour les CBZ/dossiers (compte coûteux
         // à faire pendant le scan) : on le connaît seulement ici, il faut donc le réécrire en base
         // sinon la barre de progression reste bloquée à 0% pour toujours.
-        val id = comicId
         if (id != null && totalPages > 0) {
             withContext(Dispatchers.IO) {
                 ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao().updateTotalPages(id, totalPages)

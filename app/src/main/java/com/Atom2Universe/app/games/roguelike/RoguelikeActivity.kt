@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import androidx.core.content.edit
 
 class RoguelikeActivity : ThemedActivity() {
 
@@ -83,6 +84,14 @@ class RoguelikeActivity : ThemedActivity() {
 
     // ── Attache / détache un game ────────────────────────────────────────────────
 
+    /** Étage le plus profond jamais atteint, pour les stats jeux. */
+    private fun saveBestFloorIfBetter(floor: Int) {
+        val prefs = getSharedPreferences("roguelike_save", MODE_PRIVATE)
+        if (floor > prefs.getInt("best_floor", 0)) {
+            prefs.edit { putInt("best_floor", floor) }
+        }
+    }
+
     private fun attachGame(g: RoguelikeGame) {
         game          = g
         gameView.game = g
@@ -91,7 +100,7 @@ class RoguelikeActivity : ThemedActivity() {
         g.onPlayerHit    = { sfx.onPlayerHit() }
         g.onMonsterDied  = { sfx.onMonsterDied() }
         g.onDescend      = { sfx.onDescend() }
-        g.onFloorChanged = { floor -> music.onFloorChanged(floor) }
+        g.onFloorChanged = { floor -> music.onFloorChanged(floor); saveBestFloorIfBetter(floor) }
 
         gameView.onMove = { dx, dy ->
             g.tryMove(dx, dy); refresh()

@@ -44,6 +44,9 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.readingprogress.data.ReadingProgressRepository
+import com.Atom2Universe.app.stats.StatsTracker
+import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,6 +77,7 @@ class BookReaderActivity : ThemedActivity() {
         private const val KEY_FONT_NAME = "reading_font_name"
         private const val KEY_FONT_SIZE = "reading_font_size"
         const val EXTRA_BOOK_URI = "extra_book_uri"
+        const val EXTRA_BOOK_TITLE = "extra_book_title"
         private const val MENU_THEME = 2
         private const val MENU_FONT = 3
         private const val MENU_BOOKMARKS = 4
@@ -260,6 +264,9 @@ class BookReaderActivity : ThemedActivity() {
 
     // ── Bookmarks ─────────────────────────────────────────────────────────────
     private val bookmarkData = mutableMapOf<Int, String>() // itemIndex → text snippet
+    // Titre fourni par la bibliothèque (plus fiable que le nom de fichier), prioritaire quand présent
+    private var pendingBookTitle: String? = null
+    private val readingProgressRepository by lazy { ReadingProgressRepository(this) }
 
     // ── Auto-hide des barres ──────────────────────────────────────────────────
     private var barsActive = false   // true dès qu'un livre est ouvert
@@ -314,6 +321,8 @@ class BookReaderActivity : ThemedActivity() {
         toolbar.setOnTouchListener { _, _ -> showBarsTemporarily(); false }
         bottomBar.setOnTouchListener { _, _ -> showBarsTemporarily(); false }
 
+        pendingBookTitle = intent.getStringExtra(EXTRA_BOOK_TITLE)?.takeIf { it.isNotBlank() }
+
         val intentUri = intent.getStringExtra(EXTRA_BOOK_URI)?.let { Uri.parse(it) }
             ?: intent.data
             ?: prefs.getString(KEY_CURRENT_URI, null)?.let { Uri.parse(it) }
@@ -325,12 +334,17 @@ class BookReaderActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         if (barsActive) showBarsTemporarily()
+        // Reprend le suivi du temps de lecture après un retour en avant-plan (le livre est déjà ouvert)
+        toolbar.title?.toString()?.takeIf { it.isNotEmpty() }?.let {
+            StatsTracker.startReadingSession(StatsRepository.MODULE_BOOK, it)
+        }
     }
 
     override fun onStop() {
         super.onStop()
         hideHandler.removeCallbacks(hideRunnable)
         savePosition()
+        StatsTracker.endReadingSession()
     }
 
     override fun onDestroy() {
@@ -945,8 +959,13 @@ class BookReaderActivity : ThemedActivity() {
         stopReading()
         val mimeType = contentResolver.getType(uri)
         val fileName = getFileName(uri)
-        val title = fileName?.substringBeforeLast('.') ?: getString(R.string.book_reader_title)
+        // Le titre fourni par la bibliothèque (EPUB metadata, plus fiable) prime sur celui dérivé du nom de fichier,
+        // pour que le titre affiché reste identique à celui utilisé par les stats de lecture et la sync de progression.
+        val title = pendingBookTitle?.also { pendingBookTitle = null }
+            ?: fileName?.substringBeforeLast('.')
+            ?: getString(R.string.book_reader_title)
         toolbar.title = title
+        StatsTracker.startReadingSession(StatsRepository.MODULE_BOOK, title)
         currentUri = uri
         currentFileSize = getFileSize(uri)
         loadBookmarks(uri)
@@ -1287,9 +1306,11 @@ class BookReaderActivity : ThemedActivity() {
             ViewType.TXT, ViewType.EPUB -> {
                 val lm = txtRecycler.layoutManager as? LinearLayoutManager ?: return
                 val pos = lm.findFirstVisibleItemPosition()
+                val now = System.currentTimeMillis()
                 prefs.edit {
                     putInt("${k}_idx", pos)
                     putInt("${k}_off", txtRecycler.getChildAt(0)?.top ?: 0)
+                    putLong("${k}_time", now)
                 }
                 val paragraphNumber = (paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: pos) + 1
                 BookLibraryActivity.updateProgress(
@@ -1298,6 +1319,16 @@ class BookReaderActivity : ThemedActivity() {
                     paragraphNumber.coerceIn(0, paragraphs.size),
                     paragraphs.size
                 )
+                // Progression synchronisable entre appareils : ratio position/nombre total d'items,
+                // indépendant de l'écran (déterminé uniquement par le contenu du fichier).
+                val itemCount = txtRecycler.adapter?.itemCount ?: 0
+                val title = toolbar.title?.toString()
+                if (itemCount > 0 && !title.isNullOrBlank()) {
+                    val percent = pos.toFloat() / itemCount
+                    scope.launch {
+                        readingProgressRepository.updateProgress(StatsRepository.MODULE_BOOK, title, percent)
+                    }
+                }
             }
             ViewType.EMPTY -> {}
         }
@@ -1305,10 +1336,24 @@ class BookReaderActivity : ThemedActivity() {
 
     private fun restoreTxtPosition(uri: Uri) {
         val k = posKey(uri)
-        val pos = prefs.getInt("${k}_idx", 0); val off = prefs.getInt("${k}_off", 0)
-        if (pos > 0) txtRecycler.post {
-            (txtRecycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, off)
-            ttsCurrentParagraph = paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: 0
+        val localPos = prefs.getInt("${k}_idx", 0)
+        val localOff = prefs.getInt("${k}_off", 0)
+        val localTime = prefs.getLong("${k}_time", 0L)
+        val title = toolbar.title?.toString()
+        val itemCount = txtRecycler.adapter?.itemCount ?: 0
+
+        scope.launch {
+            val remote = title?.let { readingProgressRepository.getProgress(StatsRepository.MODULE_BOOK, it) }
+            val (pos, off) = if (remote != null && remote.lastReadTimestamp > localTime && itemCount > 0) {
+                // La progression synchronisée depuis un autre appareil est plus récente : on saute au bon endroit
+                (remote.progressPercent * itemCount).toInt().coerceIn(0, itemCount - 1) to 0
+            } else {
+                localPos to localOff
+            }
+            if (pos > 0) txtRecycler.post {
+                (txtRecycler.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(pos, off)
+                ttsCurrentParagraph = paragraphAdapter?.paragraphIndexAtOrAfter(pos) ?: 0
+            }
         }
     }
 

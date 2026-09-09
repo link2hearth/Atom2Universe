@@ -13,7 +13,6 @@ import com.Atom2Universe.app.games.draughts.DraughtsActivity
 import com.Atom2Universe.app.games.othello.OthelloActivity
 import com.Atom2Universe.app.games.flappycat.FlappyCatActivity
 import com.Atom2Universe.app.games.hotpotato.HotPotatoActivity
-import com.Atom2Universe.app.clickerstats.ClickerStatsActivity
 import com.Atom2Universe.app.games.link.LinkActivity
 import com.Atom2Universe.app.games.starswar.StarsWarActivity
 import com.Atom2Universe.app.games.wavesurf.WaveSurfActivity
@@ -385,15 +384,6 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_upload,
             defaultColorRes = R.color.game_tile_bigger,
             activityClass = BiggerActivity::class.java
-        ),
-        // Stats tout en bas
-        HubTile(
-            id = "clicker_stats",
-            titleRes = R.string.clicker_stats_title,
-            descriptionRes = R.string.main_hub_clicker_stats_desc,
-            iconRes = android.R.drawable.ic_menu_info_details,
-            defaultColorRes = R.color.main_hub_tile_clicker_stats,
-            activityClass = ClickerStatsActivity::class.java
         )
     )
 

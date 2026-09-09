@@ -93,6 +93,15 @@
                     android:alpha="0.6"
                     android:textSize="11sp" />
 
+                <TextView
+                    android:id="@+id/comic_tile_reading_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:alpha="0.6"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

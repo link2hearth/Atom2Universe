@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.Atom2Universe.app.stats.StatsTracker
 import com.Atom2Universe.app.crypto.sync.GamesSyncManager
+import com.Atom2Universe.app.readingprogress.sync.ReadingProgressSyncManager
 import com.Atom2Universe.app.stats.sync.StatsSyncManager
 import com.Atom2Universe.app.util.LogcatNoiseReducer
 
@@ -14,6 +15,7 @@ class A2UApplication : Application() {
         AudioFocusManager.init(this)
         StatsTracker.init(this)
         StatsSyncManager.init(this)
+        ReadingProgressSyncManager.init(this)
         GamesSyncManager.init(this)
         LogcatNoiseReducer.reducePopupMenuLogs()
     }

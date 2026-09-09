@@ -105,7 +105,8 @@ object StatsSyncManager {
                     trackAlbumArtist = session.trackAlbumArtist,
                     midiFileName = session.midiFileName,
                     practiceScore = session.practiceScore,
-                    radioStationName = session.radioStationName
+                    radioStationName = session.radioStationName,
+                    readingTitle = session.readingTitle
                 )
             }
 
@@ -225,6 +226,7 @@ object StatsSyncManager {
                 midiFileName = syncSession.midiFileName,
                 practiceScore = syncSession.practiceScore,
                 radioStationName = syncSession.radioStationName,
+                readingTitle = syncSession.readingTitle,
                 sourceDeviceId = syncSession.deviceId  // Marquer l'appareil d'origine pour ne pas réexporter sous le mauvais deviceId
             )
 

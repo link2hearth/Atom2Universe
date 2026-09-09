@@ -32,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.stats.data.StatsRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -165,6 +166,8 @@ class BookLibraryActivity : ThemedActivity() {
     private lateinit var adapter: BookAdapter
     private lateinit var emptyState: View
     private lateinit var recyclerView: RecyclerView
+    // Temps de lecture cumulé par titre (stats), pour l'affichage sur les tuiles
+    private var readingTimeByTitle: Map<String, Long> = emptyMap()
 
     // ── Bibliothèques ─────────────────────────────────────────────────────────
 
@@ -274,6 +277,7 @@ class BookLibraryActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         refreshBooks()
+        loadReadingTimes()
         if (currentTab == 1) {
             val root = currentRoot
             val authorPath = currentAuthorPath
@@ -405,9 +409,20 @@ class BookLibraryActivity : ThemedActivity() {
         recyclerView.visibility = if (empty) View.GONE else View.VISIBLE
     }
 
-    private fun launchReader(uri: Uri) {
+    private fun loadReadingTimes() {
+        shelfScope.launch {
+            val times = withContext(Dispatchers.IO) {
+                StatsRepository(this@BookLibraryActivity).getReadingTimeByTitle(StatsRepository.MODULE_BOOK)
+            }
+            readingTimeByTitle = times
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun launchReader(uri: Uri, title: String? = null) {
         startActivity(Intent(this, BookReaderActivity::class.java).apply {
             putExtra(BookReaderActivity.EXTRA_BOOK_URI, uri.toString())
+            title?.let { putExtra(BookReaderActivity.EXTRA_BOOK_TITLE, it) }
         })
     }
 
@@ -542,6 +557,7 @@ class BookLibraryActivity : ThemedActivity() {
                 scope = coverScope,
                 entries = bookEntries,
                 authorPath = authorPath,
+                readingTimeByTitle = readingTimeByTitle,
                 onBookClick = { entry -> openShelfBook(entry) }
             )
         }
@@ -569,6 +585,7 @@ class BookLibraryActivity : ThemedActivity() {
                   else Uri.parse(entry.sourcePath)
         startActivity(Intent(this, BookReaderActivity::class.java).apply {
             putExtra(BookReaderActivity.EXTRA_BOOK_URI, uri.toString())
+            putExtra(BookReaderActivity.EXTRA_BOOK_TITLE, entry.title)
         })
     }
 
@@ -876,6 +893,7 @@ class BookLibraryActivity : ThemedActivity() {
             val progress: ProgressBar = root.findViewById(R.id.book_progress)
             val progressText: TextView = root.findViewById(R.id.book_progress_text)
             val date: TextView = root.findViewById(R.id.book_date)
+            val readingTime: TextView = root.findViewById(R.id.book_reading_time)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookVH =
@@ -889,6 +907,7 @@ class BookLibraryActivity : ThemedActivity() {
             holder.progress.progress = book.progressPercent
             holder.progressText.text = if (book.progressPercent > 0) "${book.progressPercent}%" else ""
             holder.date.text = formatDate(book.lastOpenedAt)
+            bindReadingTime(holder.readingTime, readingTimeByTitle[book.title])
 
             val coverFile = book.coverPath?.let { File(it) }
             if (coverFile != null && coverFile.exists()) {
@@ -901,7 +920,7 @@ class BookLibraryActivity : ThemedActivity() {
                 } else { setPlaceholder(holder.cover) }
             } else { setPlaceholder(holder.cover) }
 
-            holder.root.setOnClickListener { launchReader(Uri.parse(book.uri)) }
+            holder.root.setOnClickListener { launchReader(Uri.parse(book.uri), book.title) }
             holder.root.setOnLongClickListener {
                 AlertDialog.Builder(this@BookLibraryActivity)
                     .setTitle(book.title)
@@ -1021,6 +1040,7 @@ private class AuthorBooksAdapter(
     private val scope: CoroutineScope,
     entries: List<BookShelfEntry>,
     authorPath: String,
+    private val readingTimeByTitle: Map<String, Long>,
     private val onBookClick: (BookShelfEntry) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -1043,7 +1063,10 @@ private class AuthorBooksAdapter(
         when (val row = rows[position]) {
             is AuthorBooksRow.SectionHeader -> (holder as SectionHeaderVH).bind(row)
             is AuthorBooksRow.BookItem -> {
-                (holder as ShelfBookVH).bind(row.entry, 0, context.resources.displayMetrics.density, scope, context)
+                (holder as ShelfBookVH).bind(
+                    row.entry, 0, context.resources.displayMetrics.density, scope, context,
+                    readingTimeByTitle[row.entry.title]
+                )
                 holder.itemView.setOnClickListener { onBookClick(row.entry) }
             }
         }
@@ -1082,9 +1105,10 @@ private class ShelfBookVH(view: View) : RecyclerView.ViewHolder(view) {
     val progress: ProgressBar = view.findViewById(R.id.book_progress)
     val progressText: TextView = view.findViewById(R.id.book_progress_text)
     val date: TextView = view.findViewById(R.id.book_date)
+    val readingTime: TextView = view.findViewById(R.id.book_reading_time)
     var loadJob: Job? = null
 
-    fun bind(entry: BookShelfEntry, depth: Int, density: Float, scope: CoroutineScope, context: Context) {
+    fun bind(entry: BookShelfEntry, depth: Int, density: Float, scope: CoroutineScope, context: Context, readingTimeMs: Long?) {
         (itemView.layoutParams as? ViewGroup.MarginLayoutParams)?.let { lp ->
             lp.marginStart = ((depth * 20) * density).toInt() + (10 * density).toInt()
             itemView.layoutParams = lp
@@ -1097,6 +1121,7 @@ private class ShelfBookVH(view: View) : RecyclerView.ViewHolder(view) {
         date.text = if (entry.lastOpenedAt > 0)
             DateUtils.getRelativeTimeSpanString(entry.lastOpenedAt, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
         else ""
+        bindReadingTime(readingTime, readingTimeMs)
 
         setPlaceholder(cover)
         loadJob?.cancel()
@@ -1120,6 +1145,23 @@ private class ShelfBookVH(view: View) : RecyclerView.ViewHolder(view) {
         iv.setImageResource(R.drawable.ic_hub_books)
         iv.setColorFilter(Color.argb(100, 255, 255, 255))
     }
+}
+
+/** Affiche (ou masque) la durée de lecture cumulée sur une tuile livre. */
+private fun bindReadingTime(view: TextView, durationMs: Long?) {
+    if (durationMs == null || durationMs <= 0L) {
+        view.visibility = View.GONE
+        return
+    }
+    view.visibility = View.VISIBLE
+    view.text = "🕐 " + formatReadingDuration(durationMs)
+}
+
+private fun formatReadingDuration(durationMs: Long): String {
+    val totalMinutes = (durationMs / 1000 / 60).toInt()
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return if (hours > 0) "${hours}h${minutes.toString().padStart(2, '0')}" else "${minutes}min"
 }
 
 private fun formatShelfSize(bytes: Long): String = when {

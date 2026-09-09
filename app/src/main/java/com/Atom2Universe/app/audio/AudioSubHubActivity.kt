@@ -10,7 +10,6 @@ import com.Atom2Universe.app.midi.ui.MidiPlayerActivity
 import com.Atom2Universe.app.music.MusicPlayerActivity
 import com.Atom2Universe.app.radio.RadioActivity
 import com.Atom2Universe.app.sf2creator.Sf2CreatorActivity
-import com.Atom2Universe.app.stats.ui.StatsActivity
 
 class AudioSubHubActivity : BaseHubActivity() {
 
@@ -62,14 +61,6 @@ class AudioSubHubActivity : BaseHubActivity() {
             iconRes = R.drawable.ic_sf2_creator,
             defaultColorRes = R.color.audio_hub_tile_sf2_creator,
             activityClass = Sf2CreatorActivity::class.java
-        ),
-        HubTile(
-            id = "stats",
-            titleRes = R.string.audio_hub_stats_title,
-            descriptionRes = R.string.audio_hub_stats_desc,
-            iconRes = R.drawable.ic_stats,
-            defaultColorRes = R.color.audio_hub_tile_stats,
-            activityClass = StatsActivity::class.java
         ),
         HubTile(
             id = "dictaphone",

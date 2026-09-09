@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -140,6 +141,11 @@ class OthelloActivity : ThemedActivity(), OthelloBoardView.OnCellClickListener {
         // 15 neutrinos en solo quand le joueur humain (blanc) gagne contre l'IA
         if (awardReward && isSoloMode && winner == OthelloGame.WHITE) {
             NeutrinoRepository(this).addBalance(NeutrinoRewards.OTHELLO_WIN)
+        }
+        if (awardReward && isSoloMode) {
+            val statsRepo = GameStatsRepository(this)
+            statsRepo.recordOthelloPlayed()
+            if (winner == OthelloGame.WHITE) statsRepo.recordOthelloWon()
         }
         val result = when (winner) {
             OthelloGame.BLACK -> getString(R.string.othello_result_black)

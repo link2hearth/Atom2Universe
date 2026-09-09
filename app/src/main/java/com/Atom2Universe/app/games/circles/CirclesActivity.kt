@@ -165,10 +165,23 @@ class CirclesActivity : ThemedActivity() {
         if (!game.rewardClaimed) {
             game.rewardClaimed = true
             awardReward()
+            saveRecord()
         }
         updateStats()
         showWinOverlay()
         saveGame()
+    }
+
+    /** Puzzles résolus et meilleur nombre de coups, par difficulté. */
+    private fun saveRecord() {
+        val diff = game.difficulty
+        val movesKey = "best_moves_" + diff.name
+        val solvedKey = "solved_" + diff.name
+        val bestMoves = prefs.getInt(movesKey, 0)
+        prefs.edit {
+            if (bestMoves == 0 || game.moves < bestMoves) putInt(movesKey, game.moves)
+            putInt(solvedKey, prefs.getInt(solvedKey, 0) + 1)
+        }
     }
 
     // ── Hint ──────────────────────────────────────────────────────────────────────

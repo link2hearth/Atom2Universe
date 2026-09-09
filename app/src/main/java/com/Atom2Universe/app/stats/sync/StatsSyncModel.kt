@@ -67,7 +67,10 @@ data class SyncUsageSession(
     val practiceScore: Float? = null,
 
     // Métadonnées pour radio
-    val radioStationName: String? = null
+    val radioStationName: String? = null,
+
+    // Métadonnées pour lecture (livres/BD)
+    val readingTitle: String? = null
 ) {
     companion object {
         fun fromJson(obj: JSONObject): SyncUsageSession {
@@ -84,7 +87,8 @@ data class SyncUsageSession(
                 trackAlbumArtist = obj.optString("trackAlbumArtist").takeIf { it.isNotEmpty() },
                 midiFileName = obj.optString("midiFileName").takeIf { it.isNotEmpty() },
                 practiceScore = if (obj.has("practiceScore")) obj.getDouble("practiceScore").toFloat() else null,
-                radioStationName = obj.optString("radioStationName").takeIf { it.isNotEmpty() }
+                radioStationName = obj.optString("radioStationName").takeIf { it.isNotEmpty() },
+                readingTitle = obj.optString("readingTitle").takeIf { it.isNotEmpty() }
             )
         }
     }
@@ -105,6 +109,7 @@ data class SyncUsageSession(
         midiFileName?.let { obj.put("midiFileName", it) }
         practiceScore?.let { obj.put("practiceScore", it) }
         radioStationName?.let { obj.put("radioStationName", it) }
+        readingTitle?.let { obj.put("readingTitle", it) }
 
         return obj
     }

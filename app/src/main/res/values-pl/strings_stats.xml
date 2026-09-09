@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Czytanie</string>
+    <string name="reading_stats_desc">Czas spędzony na czytaniu książek i komiksów</string>
+    <string name="reading_stats_empty">Brak jeszcze sesji czytania</string>
+    <string name="reading_stats_books_title">Książki</string>
+    <string name="reading_stats_comics_title">Komiksy</string>
+    <string name="reading_stats_history_title">Historia</string>
+    <string name="reading_stats_top_titles">Najczęściej czytane</string>
+</resources>

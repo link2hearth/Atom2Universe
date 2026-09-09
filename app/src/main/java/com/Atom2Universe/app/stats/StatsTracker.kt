@@ -25,6 +25,7 @@ object StatsTracker {
     private var currentMusicSession: MusicSession? = null
     private var currentMidiSession: MidiSession? = null
     private var currentRadioSession: RadioSession? = null
+    private var currentReadingSession: ReadingSession? = null
 
     /**
      * Initialise le tracker avec le contexte de l'application.
@@ -263,6 +264,54 @@ object StatsTracker {
         Log.d(TAG, "Ended radio session: duration ${durationMs / 1000}s")
     }
 
+    // ===== LECTURE (livres / BD) =====
+
+    /**
+     * Démarre une session de lecture (livre ou BD). Si une session de lecture est déjà
+     * en cours (même titre ou non), elle est terminée et sauvegardée avant de démarrer la nouvelle.
+     *
+     * @param moduleType StatsRepository.MODULE_BOOK ou MODULE_COMIC
+     */
+    fun startReadingSession(moduleType: String, title: String?) {
+        endReadingSession()
+
+        currentReadingSession = ReadingSession(
+            startTimestamp = System.currentTimeMillis(),
+            moduleType = moduleType,
+            title = title
+        )
+
+        Log.d(TAG, "Started reading session ($moduleType): $title")
+    }
+
+    /**
+     * Termine la session de lecture en cours.
+     */
+    fun endReadingSession() {
+        val session = currentReadingSession ?: return
+        currentReadingSession = null
+
+        val endTimestamp = System.currentTimeMillis()
+        val durationMs = endTimestamp - session.startTimestamp
+
+        // Ne sauvegarder que si la durée est >= 3 secondes
+        if (durationMs < MIN_SESSION_DURATION_MS) {
+            Log.d(TAG, "Reading session too short ($durationMs ms), skipping")
+            return
+        }
+
+        val usageSession = UsageSessionEntity(
+            moduleType = session.moduleType,
+            startTimestamp = session.startTimestamp,
+            endTimestamp = endTimestamp,
+            durationMs = durationMs,
+            readingTitle = session.title ?: ""
+        )
+
+        saveSession(usageSession)
+        Log.d(TAG, "Ended reading session (${session.moduleType}): duration ${durationMs / 1000}s")
+    }
+
     // ===== HELPERS =====
 
     /**
@@ -293,6 +342,7 @@ object StatsTracker {
         endMusicSession()
         endMidiSession()
         endRadioSession()
+        endReadingSession()
         Log.d(TAG, "All sessions ended")
     }
 
@@ -318,5 +368,11 @@ object StatsTracker {
     private data class RadioSession(
         val startTimestamp: Long,
         val stationName: String?
+    )
+
+    private data class ReadingSession(
+        val startTimestamp: Long,
+        val moduleType: String,
+        val title: String?
     )
 }

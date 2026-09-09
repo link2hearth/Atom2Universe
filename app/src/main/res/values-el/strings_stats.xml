@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Ανάγνωση</string>
+    <string name="reading_stats_desc">Χρόνος ανάγνωσης βιβλίων και κόμικς</string>
+    <string name="reading_stats_empty">Καμία συνεδρία ανάγνωσης ακόμα</string>
+    <string name="reading_stats_books_title">Βιβλία</string>
+    <string name="reading_stats_comics_title">Κόμικς</string>
+    <string name="reading_stats_history_title">Ιστορικό</string>
+    <string name="reading_stats_top_titles">Τα πιο διαβασμένα</string>
+</resources>

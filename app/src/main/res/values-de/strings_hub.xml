@@ -36,4 +36,6 @@
     <string name="hub_shortcut_exists_message">« %1$s » ist bereits eine Verknüpfung. An erste Position verschieben (Ja) oder entfernen (Nein)?</string>
     <string name="hub_shortcut_added">Verknüpfung hinzugefügt</string>
     <string name="periodic_toggle_rarities_desc">Seltenheiten ein-/ausblenden</string>
+    <string name="hub_stats_title">Statistiken</string>
+    <string name="hub_stats_desc">Zusammenfassung: Hören, Spiele und Lesen</string>
 </resources>

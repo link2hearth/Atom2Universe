@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reading_stats_title">Lecture</string>
+    <string name="reading_stats_desc">Temps passé à lire livres et BD</string>
+    <string name="reading_stats_empty">Aucune session de lecture pour l\'instant</string>
+    <string name="reading_stats_books_title">Livres</string>
+    <string name="reading_stats_comics_title">BD</string>
+    <string name="reading_stats_history_title">Historique</string>
+    <string name="reading_stats_top_titles">Les plus lus</string>
+</resources>

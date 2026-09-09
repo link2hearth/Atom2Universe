@@ -36,4 +36,6 @@
     <string name="hub_shortcut_exists_message">«%1$s» уже является ярлыком. Переместить на первую позицию (Да) или удалить (Нет)?</string>
     <string name="hub_shortcut_added">Ярлык добавлен</string>
     <string name="periodic_toggle_rarities_desc">Показать/скрыть редкости</string>
+    <string name="hub_stats_title">Статистика</string>
+    <string name="hub_stats_desc">Сводка прослушивания, игр и чтения</string>
 </resources>

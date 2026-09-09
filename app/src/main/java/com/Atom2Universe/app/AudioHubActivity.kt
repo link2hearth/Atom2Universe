@@ -27,6 +27,7 @@ import com.Atom2Universe.app.games.GamesActivity
 import com.Atom2Universe.app.creative.CreativeHubActivity
 import com.Atom2Universe.app.reading.ReadingHubActivity
 import com.Atom2Universe.app.science.ScienceHubActivity
+import com.Atom2Universe.app.stats.StatsHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.hub.HubTilesAdapter
 import com.Atom2Universe.app.hub.HubTileTouchCallback
@@ -68,14 +69,15 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         const val TILE_EDITOR = "editor"
         const val TILE_SF2_CREATOR = "sf2_creator"
         const val TILE_STATS = "stats"  // kept for prefs migration
+        const val TILE_STATS_HUB = "stats_hub"
         const val TILE_GAMES = "games"
         const val TILE_CLICKER = "clicker"
         const val TILE_CREATIVE = "creative"
         const val TILE_NOTES = "notes"
         const val TILE_READING = "reading"
         const val TILE_SCIENCE = "science"
-        // Default order: Audio (sub-hub), Games, Creative, Reading, Science
-        val DEFAULT_ORDER = listOf(TILE_AUDIO, TILE_GAMES, TILE_CREATIVE, TILE_READING, TILE_SCIENCE)
+        // Default order: Audio (sub-hub), Games, Creative, Reading, Science, Stats
+        val DEFAULT_ORDER = listOf(TILE_AUDIO, TILE_GAMES, TILE_CREATIVE, TILE_READING, TILE_SCIENCE, TILE_STATS_HUB)
 
         // Extra to indicate we're returning from a module (don't redirect)
         const val EXTRA_FROM_MODULE = "from_module"
@@ -163,6 +165,14 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
             iconRes = R.drawable.ic_science,
             defaultColorRes = R.color.audio_hub_tile_science,
             activityClass = ScienceHubActivity::class.java
+        ),
+        HubTile(
+            id = TILE_STATS_HUB,
+            titleRes = R.string.hub_stats_title,
+            descriptionRes = R.string.hub_stats_desc,
+            iconRes = R.drawable.ic_stats,
+            defaultColorRes = R.color.audio_hub_tile_stats_hub,
+            activityClass = StatsHubActivity::class.java
         )
     )
 
