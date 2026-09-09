@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Zıplayan Kedi</string>
+    <string name="flappy_cat_description">Direklerden ve kuşlardan kaçın!</string>
+    <string name="flappy_cat_tap_to_start">Başlamak için dokun</string>
+    <string name="flappy_cat_tap_to_retry">Tekrar denemek için dokun</string>
+    <string name="flappy_cat_game_over">Oyun Bitti</string>
+    <string name="flappy_cat_paused">Duraklatıldı</string>
+    <string name="flappy_cat_tap_to_resume">Devam etmek için dokun</string>
+    <string name="flappy_cat_score_label">Puan</string>
+    <string name="flappy_cat_best_label">EN İYİ</string>
+    <string name="flappy_cat_new_best">Yeni rekor!</string>
+</resources>

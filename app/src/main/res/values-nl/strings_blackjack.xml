@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Casino-blackjack met maximaal 4 AI-tegenstanders</string>
+    <string name="blackjack_hit">KAART</string>
+    <string name="blackjack_stand">PASSEN</string>
+    <string name="blackjack_double">VERDUBBELEN</string>
+    <string name="blackjack_split">SPLITSEN</string>
+    <string name="blackjack_deal">DELEN</string>
+    <string name="blackjack_bet_label">INZET</string>
+    <string name="blackjack_ai_players_label">AI-spelers: %1$d</string>
+    <string name="blackjack_settings_title">Tapelinstellingen</string>
+    <string name="blackjack_result_win">GEWONNEN +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">VERLOREN -%1$d</string>
+    <string name="blackjack_result_push">GELIJKSPEL</string>
+    <string name="blackjack_result_win_free">GEWONNEN</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">VERLOREN</string>
+    <string name="blackjack_bet_free">GRATIS</string>
+    <string name="blackjack_neutrino_balance">Neutronen: %1$d</string>
+    <string name="blackjack_ia_short">AI</string>
+    <string name="blackjack_start">Spelen</string>
+    <string name="blackjack_dealer_thinking">Dealer denkt…</string>
+    <string name="blackjack_new_game_confirm">Nieuw spel?</string>
+    <string name="blackjack_confirm">✓ Bevestigen</string>
+    <string name="blackjack_cancel">✕ Annuleren</string>
+</resources>

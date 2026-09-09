@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Szachy</string>
+    <string name="chess_description">Szachy z wielopoziomową AI</string>
+    <string name="chess_new_game">Nowa gra</string>
+    <string name="chess_difficulty_training">Trening</string>
+    <string name="chess_difficulty_training_desc">Słaba AI, idealna do nauki</string>
+    <string name="chess_difficulty_standard">Standardowy</string>
+    <string name="chess_difficulty_standard_desc">Średnia AI, zrównoważona gra</string>
+    <string name="chess_difficulty_expert">Ekspert</string>
+    <string name="chess_difficulty_expert_desc">Silna AI, trudne wyzwanie</string>
+    <string name="chess_difficulty_two_player">Dwóch graczy</string>
+    <string name="chess_difficulty_two_player_desc">Graj przeciwko ludzkiemu przeciwnikowi</string>
+    <string name="chess_status_your_turn">Twoja kolej</string>
+    <string name="chess_status_black_turn">Ruch czarnych</string>
+    <string name="chess_status_ai_thinking">AI myśli…</string>
+    <string name="chess_status_check">Szach!</string>
+    <string name="chess_status_checkmate">Szach-mat! %s wygrywa</string>
+    <string name="chess_status_stalemate">Pat — Remis</string>
+    <string name="chess_color_white">Białe</string>
+    <string name="chess_color_black">Czarne</string>
+    <string name="chess_resume_title">Wznowić grę?</string>
+    <string name="chess_resume_message">Znaleziono zapisaną grę. Kontynuować?</string>
+    <string name="chess_confirm_new_title">Nowa gra?</string>
+    <string name="chess_confirm_new_message">Bieżąca gra zostanie utracona. Kontynuować?</string>
+    <string name="chess_promotion_title">Promocja pionka</string>
+    <string name="chess_promotion_queen">Hetman</string>
+    <string name="chess_promotion_rook">Wieża</string>
+    <string name="chess_promotion_bishop">Goniec</string>
+    <string name="chess_promotion_knight">Skoczek</string>
+    <string name="chess_victory_title">Zwycięstwo!</string>
+    <string name="chess_widget_cancel">✕ Anuluj</string>
+    <string name="chess_captured_label">Zbite:</string>
+</resources>

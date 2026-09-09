@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Jumping Cat</string>
+    <string name="flappy_cat_description">Unikaj pylonów i ptaków!</string>
+    <string name="flappy_cat_tap_to_start">Dotknij, aby rozpocząć</string>
+    <string name="flappy_cat_tap_to_retry">Dotknij, aby spróbować ponownie</string>
+    <string name="flappy_cat_game_over">Koniec gry</string>
+    <string name="flappy_cat_paused">Pauza</string>
+    <string name="flappy_cat_tap_to_resume">Dotknij, aby wznowić</string>
+    <string name="flappy_cat_score_label">Wynik</string>
+    <string name="flappy_cat_best_label">NAJLEPSZY</string>
+    <string name="flappy_cat_new_best">Nowy rekord!</string>
+</resources>

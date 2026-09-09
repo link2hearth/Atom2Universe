@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Σκάκι</string>
+    <string name="chess_description">Παιχνίδι σκακιού με πολυεπίπεδο AI</string>
+    <string name="chess_new_game">Νέο παιχνίδι</string>
+    <string name="chess_difficulty_training">Εκπαίδευση</string>
+    <string name="chess_difficulty_training_desc">Αδύναμο AI, ιδανικό για εκμάθηση</string>
+    <string name="chess_difficulty_standard">Τυπικό</string>
+    <string name="chess_difficulty_standard_desc">Μέτριο AI, ισορροπημένο παιχνίδι</string>
+    <string name="chess_difficulty_expert">Ειδικός</string>
+    <string name="chess_difficulty_expert_desc">Ισχυρό AI, δύσκολη πρόκληση</string>
+    <string name="chess_difficulty_two_player">Δύο παίκτες</string>
+    <string name="chess_difficulty_two_player_desc">Παιχνίδι εναντίον ανθρώπου αντιπάλου</string>
+    <string name="chess_status_your_turn">Η σειρά σας</string>
+    <string name="chess_status_black_turn">Σειρά των Μαύρων</string>
+    <string name="chess_status_ai_thinking">Ο υπολογιστής σκέφτεται…</string>
+    <string name="chess_status_check">Σαχ!</string>
+    <string name="chess_status_checkmate">Ματ! %s κερδίζει</string>
+    <string name="chess_status_stalemate">Αδιέξοδο - Ισοπαλία</string>
+    <string name="chess_color_white">Λευκά</string>
+    <string name="chess_color_black">Μαύρα</string>
+    <string name="chess_resume_title">Συνέχεια παιχνιδιού;</string>
+    <string name="chess_resume_message">Βρέθηκε αποθηκευμένο παιχνίδι. Θέλετε να συνεχίσετε;</string>
+    <string name="chess_confirm_new_title">Νέο παιχνίδι;</string>
+    <string name="chess_confirm_new_message">Το τρέχον παιχνίδι θα χαθεί. Συνέχεια;</string>
+    <string name="chess_promotion_title">Προαγωγή πιονιού</string>
+    <string name="chess_promotion_queen">Βασίλισσα</string>
+    <string name="chess_promotion_rook">Πύργος</string>
+    <string name="chess_promotion_bishop">Αξιωματικός</string>
+    <string name="chess_promotion_knight">Ίππος</string>
+    <string name="chess_victory_title">Νίκη!</string>
+    <string name="chess_widget_cancel">✕ Ακύρωση</string>
+    <string name="chess_captured_label">Αιχμαλωτίστηκαν:</string>
+</resources>

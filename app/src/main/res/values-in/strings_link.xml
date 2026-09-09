@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Hubungkan sel untuk mencapai nol — atau sepuluh!</string>
+    <string name="link_moves_label">Gerakan:</string>
+    <string name="link_difficulty_easy">Kecil</string>
+    <string name="link_difficulty_medium">Sedang</string>
+    <string name="link_difficulty_hard">Besar</string>
+    <string name="link_pairs_few">Sedikit kembar</string>
+    <string name="link_pairs_normal">Kembar normal</string>
+    <string name="link_pairs_many">Banyak kembar</string>
+    <string name="link_mode_classic">Klasik</string>
+    <string name="link_mode_perfect">Sempurna</string>
+    <string name="link_btn_undo">Batalkan</string>
+    <string name="link_btn_restart">Mulai ulang</string>
+    <string name="link_btn_new_level">Baru</string>
+    <string name="link_msg_new_level">Level %1$s baru. Hubungkan %2$d sel untuk menyesuaikan nilai!</string>
+    <string name="link_msg_new_level_perfect">Mode sempurna — %1$s. Temukan %2$d gerakan tepat.</string>
+    <string name="link_msg_progress">%1$d sel normal dan %2$d sel plus tersisa untuk disesuaikan.</string>
+    <string name="link_msg_invalid_pattern">Pola tidak valid untuk panjang tautan ini.</string>
+    <string name="link_msg_undo">Gerakan terakhir dibatalkan.</string>
+    <string name="link_msg_nothing_to_undo">Tidak ada yang dibatalkan.</string>
+    <string name="link_msg_restart">Teka-teki diulang.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Terpecahkan!</string>
+    <string name="link_victory_moves">%1$d gerakan</string>
+</resources>

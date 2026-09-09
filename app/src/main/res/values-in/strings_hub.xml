@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Tampilkan/sembunyikan kelangkaan</string>
     <string name="hub_stats_title">Statistik</string>
     <string name="hub_stats_desc">Ringkasan mendengarkan, game, dan membaca</string>
+
+    <string name="back_button_desc">Kembali</string>
 </resources>

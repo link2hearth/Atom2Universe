@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Pisica sărind</string>
+    <string name="flappy_cat_description">Evitați stâlpii și păsările!</string>
+    <string name="flappy_cat_tap_to_start">Apăsați pentru a începe</string>
+    <string name="flappy_cat_tap_to_retry">Apăsați pentru a reîncerca</string>
+    <string name="flappy_cat_game_over">Joc terminat</string>
+    <string name="flappy_cat_paused">Pauză</string>
+    <string name="flappy_cat_tap_to_resume">Apăsați pentru a relua</string>
+    <string name="flappy_cat_score_label">Scor</string>
+    <string name="flappy_cat_best_label">RECORD</string>
+    <string name="flappy_cat_new_best">Nou record!</string>
+</resources>

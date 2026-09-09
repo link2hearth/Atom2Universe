@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Οδήγησε σε διαδρομές — αριστερά για φρενάρισμα/γείρε πίσω, δεξιά για επιτάχυνση/γείρε μπρος!</string>
+    <string name="motocross_restart">Επανεκκίνηση</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
+</resources>

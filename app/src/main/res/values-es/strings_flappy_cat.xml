@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Gato saltarín</string>
+    <string name="flappy_cat_description">¡Esquiva pilones y pájaros!</string>
+    <string name="flappy_cat_tap_to_start">Toca para empezar</string>
+    <string name="flappy_cat_tap_to_retry">Toca para reintentar</string>
+    <string name="flappy_cat_game_over">Game Over</string>
+    <string name="flappy_cat_paused">Pausa</string>
+    <string name="flappy_cat_tap_to_resume">Toca para reanudar</string>
+    <string name="flappy_cat_score_label">Puntos</string>
+    <string name="flappy_cat_best_label">MEJOR</string>
+    <string name="flappy_cat_new_best">¡Nuevo récord!</string>
+</resources>

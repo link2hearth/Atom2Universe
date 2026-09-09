@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Ruleta</string>
+    <string name="roulette_description">Tragaperras – alinea palos y colores para ganar neutrinos</string>
+    <string name="roulette_spin">GIRAR</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">¡Selecciona una apuesta y gira!</string>
+    <string name="roulette_status_spinning">Girando…</string>
+    <string name="roulette_status_lose">Sin suerte esta vez.</string>
+    <string name="roulette_status_no_funds">¡No hay suficientes neutrinos!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">¡Línea %1$s! ×%2$d</string>
+    <string name="roulette_win_joker_wild">¡%1$s + Comodín! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 ¡Comodines completos! ×%1$d</string>
+    <string name="roulette_win_multiple">¡Varios premios! ×%1$d total</string>
+    <string name="roulette_win_overlay_title">¡GANADO!</string>
+    <string name="roulette_win_overlay_tap">Toca para continuar</string>
+</resources>

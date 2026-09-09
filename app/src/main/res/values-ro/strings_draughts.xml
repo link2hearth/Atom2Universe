@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Dame</string>
+    <string name="draughts_description">Dame internaționale (10×10) cu IA</string>
+    <string name="draughts_new_game">Joc nou</string>
+    <string name="draughts_difficulty_training">Antrenament</string>
+    <string name="draughts_difficulty_training_desc">IA slabă, ideală pentru învățare</string>
+    <string name="draughts_difficulty_standard">Standard</string>
+    <string name="draughts_difficulty_standard_desc">IA medie, joc echilibrat</string>
+    <string name="draughts_difficulty_expert">Expert</string>
+    <string name="draughts_difficulty_expert_desc">IA puternică, provocare dificilă</string>
+    <string name="draughts_difficulty_two_player">Doi jucători</string>
+    <string name="draughts_difficulty_two_player_desc">Jucați împotriva unui adversar uman</string>
+    <string name="draughts_status_white_turn">Rândul Albului</string>
+    <string name="draughts_status_black_turn">Rândul Negrului</string>
+    <string name="draughts_status_ai_thinking">IA se gândește…</string>
+    <string name="draughts_status_game_over">%s câștigă!</string>
+    <string name="draughts_color_white">Alb</string>
+    <string name="draughts_color_black">Negru</string>
+    <string name="draughts_draw">Egalitate</string>
+    <string name="draughts_game_over_title">Joc terminat</string>
+    <string name="draughts_resume_title">Reluare joc?</string>
+    <string name="draughts_resume_message">Un joc salvat a fost găsit. Doriți să continuați?</string>
+    <string name="draughts_confirm_new_title">Joc nou?</string>
+    <string name="draughts_confirm_new_message">Jocul curent va fi pierdut. Continuați?</string>
+    <string name="draughts_victory_title">Victorie!</string>
+    <string name="draughts_victory_message">Felicitări! Ați bătut IA.\n\nRecompense:\n• %1$d bilete gacha\n• Boost x%2$d pentru %3$d minute</string>
+    <string name="draughts_mandatory_capture">Captură obligatorie! Trebuie să luați o piesă inamică.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Anulare</string>
+    <string name="draughts_widget_draw">Egalitate</string>
+    <string name="draughts_widget_white_wins">Alb\nCâștigă</string>
+    <string name="draughts_widget_black_wins">Negru\nCâștigă</string>
+    <string name="draughts_widget_victory">Victorie!</string>
+    <string name="draughts_widget_defeat">Înfrângere</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

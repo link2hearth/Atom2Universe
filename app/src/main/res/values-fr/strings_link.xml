@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Reliez des cases pour atteindre zéro — ou dix !</string>
+    <string name="link_moves_label">Coups :</string>
+    <string name="link_difficulty_easy">Petit</string>
+    <string name="link_difficulty_medium">Moyen</string>
+    <string name="link_difficulty_hard">Grand</string>
+    <string name="link_pairs_few">Peu de jumelles</string>
+    <string name="link_pairs_normal">Jumelles normales</string>
+    <string name="link_pairs_many">Beaucoup de jumelles</string>
+    <string name="link_mode_classic">Classique</string>
+    <string name="link_mode_perfect">Parfait</string>
+    <string name="link_btn_undo">Annuler</string>
+    <string name="link_btn_restart">Réinitialiser</string>
+    <string name="link_btn_new_level">Nouveau</string>
+    <string name="link_msg_new_level">Nouveau niveau %1$s. Reliez %2$d cases pour ajuster les valeurs !</string>
+    <string name="link_msg_new_level_perfect">Mode Parfait — %1$s. Trouvez les %2$d bons coups.</string>
+    <string name="link_msg_progress">%1$d cases normales et %2$d cases + restantes à ajuster.</string>
+    <string name="link_msg_invalid_pattern">Motif invalide pour cette longueur de lien.</string>
+    <string name="link_msg_undo">Dernier coup annulé.</string>
+    <string name="link_msg_nothing_to_undo">Aucun coup à annuler.</string>
+    <string name="link_msg_restart">Puzzle réinitialisé.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Résolu !</string>
+    <string name="link_victory_moves">%1$d coups</string>
+</resources>

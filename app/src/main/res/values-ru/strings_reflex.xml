@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Рефлексы</string>
+    <string name="reflex_description">Нажимайте на круги как можно быстрее!</string>
+    <string name="reflex_score_label">ОЧКИ</string>
+    <string name="reflex_best_easy_label">РЕКОРД (ЛЁГКИЙ)</string>
+    <string name="reflex_best_hard_label">РЕКОРД (СЛОЖНЫЙ)</string>
+    <string name="reflex_mode_easy">Лёгкий</string>
+    <string name="reflex_mode_hard">Сложный</string>
+    <string name="reflex_start">Играть</string>
+    <string name="reflex_status_ready">Выберите режим и нажмите Играть</string>
+    <string name="reflex_status_go">Вперёд! Нажимайте на круги!</string>
+    <string name="reflex_status_hit">Попадание! +%1$d очков — Всего: %2$d</string>
+    <string name="reflex_status_game_over">Игра окончена! Итоговый счёт: %1$d</string>
+    <string name="reflex_status_new_record">Новый рекорд! Счёт: %1$d</string>
+</resources>

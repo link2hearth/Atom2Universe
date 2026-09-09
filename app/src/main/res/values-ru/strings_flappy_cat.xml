@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Jumping Cat</string>
+    <string name="flappy_cat_description">Уклоняйтесь от пилонов и птиц!</string>
+    <string name="flappy_cat_tap_to_start">Нажмите для начала</string>
+    <string name="flappy_cat_tap_to_retry">Нажмите для повтора</string>
+    <string name="flappy_cat_game_over">Конец игры</string>
+    <string name="flappy_cat_paused">Пауза</string>
+    <string name="flappy_cat_tap_to_resume">Нажмите для продолжения</string>
+    <string name="flappy_cat_score_label">Счёт</string>
+    <string name="flappy_cat_best_label">РЕКОРД</string>
+    <string name="flappy_cat_new_best">Новый рекорд!</string>
+</resources>

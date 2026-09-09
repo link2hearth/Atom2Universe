@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Campo Minado</string>
+    <string name="minesweeper_description">Clássico quebra-cabeça de minas</string>
+    <string name="minesweeper_diff_easy">Fácil · 10 minas</string>
+    <string name="minesweeper_diff_normal">Normal · 20 minas</string>
+    <string name="minesweeper_diff_medium">Médio · 40 minas</string>
+    <string name="minesweeper_diff_hard">Difícil · 80 minas</string>
+    <string name="minesweeper_new_game">Novo jogo</string>
+    <string name="minesweeper_mines">Minas</string>
+    <string name="minesweeper_timer">Cronômetro</string>
+    <string name="minesweeper_won">Você venceu! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Você venceu! 🏆 Novo recorde!  %1$s</string>
+    <string name="minesweeper_lost">Boom! 💥  Fim de jogo</string>
+    <string name="minesweeper_score_diff">Dificuldade</string>
+    <string name="minesweeper_score_best">Melhor tempo</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Novo jogo</string>
+</resources>

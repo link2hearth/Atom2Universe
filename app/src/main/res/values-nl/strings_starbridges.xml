@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Verbind alle sterren met bruggen die elkaar niet kruisen</string>
+    <string name="starbridges_bridges">%1$d / %2$d bruggen</string>
+    <string name="starbridges_solved">Sterrenbeeld compleet!</string>
+    <string name="starbridges_solved_header">★ Compleet!</string>
+    <string name="starbridges_win_message">Klaar in %1$s — %2$d zetten, %3$d bruggen.</string>
+    <string name="starbridges_btn_again">Nieuw spel</string>
+    <string name="starbridges_btn_next">Volgende grootte</string>
+    <string name="starbridges_hint_source">Tik op een ster om een brug te beginnen.</string>
+    <string name="starbridges_hint_target">Tik op een uitgelijnde ster om de brug te plaatsen.</string>
+    <string name="starbridges_restart_desc">Puzzel herstarten</string>
+</resources>

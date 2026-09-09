@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Draai de tegels om alle buizen te verbinden</string>
+    <string name="pipetap_moves">%1$d zetten</string>
+    <string name="pipetap_solved">Opgelost!</string>
+    <string name="pipetap_win_message">Opgelost in %2$s met %1$d rotaties.</string>
+    <string name="pipetap_btn_again">Nieuw spel</string>
+    <string name="pipetap_btn_next">Volgende grootte</string>
+    <string name="pipetap_widget_cancel">Annuleren</string>
+    <string name="pipetap_widget_confirm">Starten</string>
+</resources>

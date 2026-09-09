@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Bağlantı</string>
+    <string name="link_description">Sıfıra veya ona ulaşmak için hücreleri bağlayın!</string>
+    <string name="link_moves_label">Hamle:</string>
+    <string name="link_difficulty_easy">Küçük</string>
+    <string name="link_difficulty_medium">Orta</string>
+    <string name="link_difficulty_hard">Büyük</string>
+    <string name="link_pairs_few">Az ikizler</string>
+    <string name="link_pairs_normal">Normal ikizler</string>
+    <string name="link_pairs_many">Çok ikizler</string>
+    <string name="link_mode_classic">Klasik</string>
+    <string name="link_mode_perfect">Mükemmel</string>
+    <string name="link_btn_undo">Geri al</string>
+    <string name="link_btn_restart">Yeniden başlat</string>
+    <string name="link_btn_new_level">Yeni</string>
+    <string name="link_msg_new_level" formatted="false">Yeni %1$s seviyesi. Değerleri ayarlamak için %2$d hücreyi bağlayın!</string>
+    <string name="link_msg_new_level_perfect" formatted="false">Mükemmel mod — %1$s. %2$d tam hamleyi bulun.</string>
+    <string name="link_msg_progress" formatted="false">%1$d normal ve %2$d artı hücre ayarlanmayı bekliyor.</string>
+    <string name="link_msg_invalid_pattern">Bu bağlantı uzunluğu için geçersiz desen.</string>
+    <string name="link_msg_undo">Son hamle geri alındı.</string>
+    <string name="link_msg_nothing_to_undo">Geri alınacak bir şey yok.</string>
+    <string name="link_msg_restart">Bulmaca sıfırlandı.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Çözüldü!</string>
+    <string name="link_victory_moves">%1$d hamle</string>
+</resources>

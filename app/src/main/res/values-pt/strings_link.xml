@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Liga as células para chegar a zero — ou dez!</string>
+    <string name="link_moves_label">Movimentos:</string>
+    <string name="link_difficulty_easy">Pequeno</string>
+    <string name="link_difficulty_medium">Médio</string>
+    <string name="link_difficulty_hard">Grande</string>
+    <string name="link_pairs_few">Poucos gémeos</string>
+    <string name="link_pairs_normal">Gémeos normais</string>
+    <string name="link_pairs_many">Muitos gémeos</string>
+    <string name="link_mode_classic">Clássico</string>
+    <string name="link_mode_perfect">Perfeito</string>
+    <string name="link_btn_undo">Desfazer</string>
+    <string name="link_btn_restart">Reiniciar</string>
+    <string name="link_btn_new_level">Novo</string>
+    <string name="link_msg_new_level">Novo nível %1$s. Liga %2$d células para ajustar os valores!</string>
+    <string name="link_msg_new_level_perfect">Modo perfeito — %1$s. Encontra os %2$d movimentos exatos.</string>
+    <string name="link_msg_progress">%1$d células normais e %2$d células plus por ajustar.</string>
+    <string name="link_msg_invalid_pattern">Combinação inválida para este comprimento de link.</string>
+    <string name="link_msg_undo">Último movimento desfeito.</string>
+    <string name="link_msg_nothing_to_undo">Nada para desfazer.</string>
+    <string name="link_msg_restart">Puzzle reposto.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Resolvido!</string>
+    <string name="link_victory_moves">%1$d movimentos</string>
+</resources>

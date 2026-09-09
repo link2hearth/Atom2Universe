@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Drehe Kacheln, um alle Rohre zu verbinden</string>
+    <string name="pipetap_moves">%1$d Züge</string>
+    <string name="pipetap_solved">Gelöst!</string>
+    <string name="pipetap_win_message">Gelöst in %2$s mit %1$d Drehungen.</string>
+    <string name="pipetap_btn_again">Neues Spiel</string>
+    <string name="pipetap_btn_next">Nächste Größe</string>
+    <string name="pipetap_widget_cancel">Abbrechen</string>
+    <string name="pipetap_widget_confirm">Starten</string>
+</resources>

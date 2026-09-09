@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Grile sudoku cu 3 niveluri de dificultate</string>
+    <string name="sudoku_difficulty_easy">Ușor</string>
+    <string name="sudoku_difficulty_medium">Mediu</string>
+    <string name="sudoku_difficulty_hard">Greu</string>
+    <string name="sudoku_new_game">Joc nou</string>
+    <string name="sudoku_check">Verificare</string>
+    <string name="sudoku_clear">Ștergere</string>
+    <string name="sudoku_undo">↩ Anulare</string>
+    <string name="sudoku_redo">↪ Refacere</string>
+    <string name="sudoku_status_generating">Se generează…</string>
+    <string name="sudoku_status_generated">Grilă %1$s generată (%2$d indicii)</string>
+    <string name="sudoku_status_no_error">Nicio eroare până acum</string>
+    <string name="sudoku_status_errors">%1$d eroare(i) detectate</string>
+    <string name="sudoku_status_mistakes">%1$d celulă(e) incorecte</string>
+    <string name="sudoku_status_solved">Felicitări! Puzzle rezolvat!</string>
+    <string name="sudoku_dialog_new_game_title">Joc nou</string>
+    <string name="sudoku_dialog_confirm_new_title">Joc în desfășurare</string>
+    <string name="sudoku_dialog_confirm_new_message">Doriți să abandonați jocul curent?</string>
+    <string name="sudoku_resume_game">Reluare joc</string>
+    <string name="sudoku_start_new">Pornire joc nou</string>
+    <string name="sudoku_result_success">Bravo!</string>
+    <string name="sudoku_result_failure">Eșec!</string>
+    <string name="sudoku_widget_cancel">✕ Anulare</string>
+    <string name="sudoku_validate">Validează</string>
+    <string name="sudoku_notes">Notițe</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

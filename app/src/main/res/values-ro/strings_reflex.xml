@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Reflex</string>
+    <string name="reflex_description">Apăsați cercurile cât mai rapid!</string>
+    <string name="reflex_score_label">SCOR</string>
+    <string name="reflex_best_easy_label">RECORD (UȘOR)</string>
+    <string name="reflex_best_hard_label">RECORD (GREU)</string>
+    <string name="reflex_mode_easy">Ușor</string>
+    <string name="reflex_mode_hard">Greu</string>
+    <string name="reflex_start">Joc</string>
+    <string name="reflex_status_ready">Alegeți un mod și apăsați Joc</string>
+    <string name="reflex_status_go">Go! Apăsați cercurile!</string>
+    <string name="reflex_status_hit">Lovitură! +%1$d pct - Total: %2$d</string>
+    <string name="reflex_status_game_over">Joc terminat! Scor final: %1$d</string>
+    <string name="reflex_status_new_record">Nou record! Scor: %1$d</string>
+</resources>

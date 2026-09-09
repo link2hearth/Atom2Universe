@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Blackjack kasino dengan hingga 4 lawan AI</string>
+    <string name="blackjack_hit">AMBIL</string>
+    <string name="blackjack_stand">BERHENTI</string>
+    <string name="blackjack_double">GANDA</string>
+    <string name="blackjack_split">BAGI</string>
+    <string name="blackjack_deal">BAGIKAN</string>
+    <string name="blackjack_bet_label">TARUHAN</string>
+    <string name="blackjack_ai_players_label">Pemain AI: %1$d</string>
+    <string name="blackjack_settings_title">Pengaturan meja</string>
+    <string name="blackjack_result_win">MENANG +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">KALAH -%1$d</string>
+    <string name="blackjack_result_push">SERI</string>
+    <string name="blackjack_result_win_free">MENANG</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">KALAH</string>
+    <string name="blackjack_bet_free">GRATIS</string>
+    <string name="blackjack_neutrino_balance">Neutrino: %1$d</string>
+    <string name="blackjack_ia_short">AI</string>
+    <string name="blackjack_start">Main</string>
+    <string name="blackjack_dealer_thinking">Dealer sedang berpikir…</string>
+    <string name="blackjack_new_game_confirm">Permainan baru?</string>
+    <string name="blackjack_confirm">✓ Konfirmasi</string>
+    <string name="blackjack_cancel">✕ Batal</string>
+</resources>

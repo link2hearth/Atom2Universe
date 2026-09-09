@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Rotiți plăcile pentru a conecta toate țevile</string>
+    <string name="pipetap_moves">%1$d mișcări</string>
+    <string name="pipetap_solved">Rezolvat!</string>
+    <string name="pipetap_win_message">Rezolvat în %2$s cu %1$d rotații.</string>
+    <string name="pipetap_btn_again">Joc nou</string>
+    <string name="pipetap_btn_next">Dimensiune următoare</string>
+    <string name="pipetap_widget_cancel">Anulare</string>
+    <string name="pipetap_widget_confirm">Start</string>
+</resources>

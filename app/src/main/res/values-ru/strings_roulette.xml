@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Рулетка</string>
+    <string name="roulette_description">Игровой автомат – выстройте масти и цвета для выигрыша нейтрино</string>
+    <string name="roulette_spin">КРУТИТЬ</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Выберите ставку и крутите!</string>
+    <string name="roulette_status_spinning">Вращается…</string>
+    <string name="roulette_status_lose">На этот раз не повезло.</string>
+    <string name="roulette_status_no_funds">Недостаточно нейтрино!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">Линия %1$s! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Джокер! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Все Джокеры! ×%1$d</string>
+    <string name="roulette_win_multiple">Несколько выигрышей! ×%1$d итого</string>
+    <string name="roulette_win_overlay_title">ВЫИГРЫШ!</string>
+    <string name="roulette_win_overlay_tap">Нажмите для продолжения</string>
+</resources>

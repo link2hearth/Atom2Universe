@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Lass das Elektron kreisen, weiche den Asteroiden aus und sammle die Energiequanten!</string>
+    <string name="orbite_subtitle">Ein Tippen kehrt die Umlaufrichtung des Elektrons um</string>
+    <string name="orbite_instructions">Weiche den zum Kern gezogenen Trümmern aus · streife die grünen Quanten für Combos</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Erneut</string>
+    <string name="orbite_btn_back">Zurück</string>
+    <string name="orbite_game_over">Kollabiert!</string>
+    <string name="orbite_best_label">BESTE %1$s</string>
+    <string name="orbite_final_score">Punkte %1$d</string>
+    <string name="orbite_best_score">Beste %1$d</string>
+    <string name="orbite_new_best">★ Neuer Rekord! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

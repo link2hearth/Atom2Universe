@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Scacchi</string>
+    <string name="chess_description">Gioco di scacchi con IA multilivello</string>
+    <string name="chess_new_game">Nuova partita</string>
+    <string name="chess_difficulty_training">Allenamento</string>
+    <string name="chess_difficulty_training_desc">IA debole, ideale per imparare</string>
+    <string name="chess_difficulty_standard">Standard</string>
+    <string name="chess_difficulty_standard_desc">IA media, gioco equilibrato</string>
+    <string name="chess_difficulty_expert">Esperto</string>
+    <string name="chess_difficulty_expert_desc">IA forte, sfida difficile</string>
+    <string name="chess_difficulty_two_player">Due giocatori</string>
+    <string name="chess_difficulty_two_player_desc">Gioca contro un avversario umano</string>
+    <string name="chess_status_your_turn">Tuo turno</string>
+    <string name="chess_status_black_turn">Turno del nero</string>
+    <string name="chess_status_ai_thinking">L\'IA sta pensando…</string>
+    <string name="chess_status_check">Scacco!</string>
+    <string name="chess_status_checkmate">Scacco matto! %s vince</string>
+    <string name="chess_status_stalemate">Stallo - Pari</string>
+    <string name="chess_color_white">Bianco</string>
+    <string name="chess_color_black">Nero</string>
+    <string name="chess_resume_title">Riprendere la partita?</string>
+    <string name="chess_resume_message">È stata trovata una partita salvata. Vuoi continuare?</string>
+    <string name="chess_confirm_new_title">Nuova partita?</string>
+    <string name="chess_confirm_new_message">La partita attuale andrà persa. Continuare?</string>
+    <string name="chess_promotion_title">Promozione pedone</string>
+    <string name="chess_promotion_queen">Regina</string>
+    <string name="chess_promotion_rook">Torre</string>
+    <string name="chess_promotion_bishop">Alfiere</string>
+    <string name="chess_promotion_knight">Cavallo</string>
+    <string name="chess_victory_title">Vittoria!</string>
+    <string name="chess_widget_cancel">✕ Annulla</string>
+    <string name="chess_captured_label">Catturati:</string>
+</resources>

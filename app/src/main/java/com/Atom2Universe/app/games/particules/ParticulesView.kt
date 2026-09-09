@@ -5,6 +5,7 @@ import android.graphics.*
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.Atom2Universe.app.R
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -90,17 +91,17 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     // ── Shop ─────────────────────────────────────────────────────
     private data class ShopItem(
-        val key: String, val name: String, val desc: String,
+        val key: String, @androidx.annotation.StringRes val nameRes: Int, @androidx.annotation.StringRes val descRes: Int,
         val price: Long, val maxLevel: Int, val icon: String
     )
     private val shopItems = listOf(
-        ShopItem("extraLives",  "Vie +1",           "+1 vie max au départ",     500L,  3, "♥"),
-        ShopItem("slowBall",    "Balle lente",      "-8% vitesse de balle",     400L,  3, "◎"),
-        ShopItem("widePaddle",  "Raquette large",   "+12% largeur de raquette", 300L,  3, "▬"),
-        ShopItem("startShield", "Bouclier initial", "1 bouclier au départ",     350L,  1, "◈"),
-        ShopItem("goldMagnet",  "Aimant doré",      "×1.5 pièces par brique",   600L,  1, "◆"),
-        ShopItem("multiStart",  "Multi-départ",     "2 balles au départ",       800L,  1, "⊕"),
-        ShopItem("stackTimers", "Chrono+",          "Bonus cumulés : +temps",   700L,  1, "⧗")
+        ShopItem("extraLives",  R.string.particules_shop_extra_lives_name,  R.string.particules_shop_extra_lives_desc,  500L,  3, "♥"),
+        ShopItem("slowBall",    R.string.particules_shop_slow_ball_name,    R.string.particules_shop_slow_ball_desc,    400L,  3, "◎"),
+        ShopItem("widePaddle",  R.string.particules_shop_wide_paddle_name,  R.string.particules_shop_wide_paddle_desc,  300L,  3, "▬"),
+        ShopItem("startShield", R.string.particules_shop_start_shield_name, R.string.particules_shop_start_shield_desc, 350L,  1, "◈"),
+        ShopItem("goldMagnet",  R.string.particules_shop_gold_magnet_name,  R.string.particules_shop_gold_magnet_desc,  600L,  1, "◆"),
+        ShopItem("multiStart",  R.string.particules_shop_multi_start_name,  R.string.particules_shop_multi_start_desc,  800L,  1, "⊕"),
+        ShopItem("stackTimers", R.string.particules_shop_stack_timers_name, R.string.particules_shop_stack_timers_desc, 700L,  1, "⧗")
     )
     private val shopRects = Array(7) { RectF() }
     private val shopBackRect = RectF()
@@ -1382,7 +1383,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private fun pickRelic(relic: Relic) {
         ownedRelics.add(relic.id)
         applyRelicInstant(relic.id)
-        addFloatText(W / 2, H * 0.4f, relic.name.uppercase(), 0xFFFFE066.toInt(), 1.4f)
+        addFloatText(W / 2, H * 0.4f, context.getString(relic.nameRes).uppercase(), 0xFFFFE066.toInt(), 1.4f)
         generateLevel()
         resetBallOnPaddle()
         syncPaddleWidth()
@@ -1583,12 +1584,12 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     private fun drawHud(canvas: Canvas) {
         pHud.textAlign = Paint.Align.LEFT; pHud.color = 0xFFFFFFFF.toInt()
-        canvas.drawText("Niv.$level", 18f, pHud.textSize + 6f, pHud)
+        canvas.drawText(context.getString(R.string.particules_hud_level, level), 18f, pHud.textSize + 6f, pHud)
         pHud.textAlign = Paint.Align.CENTER
         canvas.drawText(fmtScore(score), W / 2, pHud.textSize + 6f, pHud)
         pHud.textSize *= 0.7f
         pHud.color = 0xFFFFD55A.toInt()
-        canvas.drawText("◆ $gold", W / 2, pHud.textSize * 2f + 12f, pHud)
+        canvas.drawText(context.getString(R.string.particules_hud_gold, gold), W / 2, pHud.textSize * 2f + 12f, pHud)
         pHud.textSize /= 0.7f
         pHud.color = 0xFFFFFFFF.toInt()
 
@@ -1618,7 +1619,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pPuLabel.textSize = pHud.textSize * 0.48f
             pPuLabel.textAlign = Paint.Align.LEFT
             pPuLabel.color = 0xFFCCAAFF.toInt()
-            canvas.drawText("Reliques : ${ownedRelics.size}", 18f, pHud.textSize * 1.85f, pPuLabel)
+            canvas.drawText(context.getString(R.string.particules_hud_relics_count, ownedRelics.size), 18f, pHud.textSize * 1.85f, pPuLabel)
         }
         if (level % 5 == 0 && bossHpBarMax > 0f && state == State.PLAYING) {
             val barW = W * 0.6f; val barH = H * 0.012f
@@ -1636,7 +1637,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             pPuLabel.textSize = barH * 1.3f
             pPuLabel.textAlign = Paint.Align.CENTER
             pPuLabel.color = 0xFFFFFFFF.toInt()
-            canvas.drawText("BOSS", W / 2, barY - 3f, pPuLabel)
+            canvas.drawText(context.getString(R.string.particules_hud_boss), W / 2, barY - 3f, pPuLabel)
         }
     }
 
@@ -1932,7 +1933,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         pCombo.color = 0xFFFFE066.toInt()
         pCombo.alpha = (alpha * 230).toInt().coerceIn(0, 255)
         pCombo.textSize = pHud.textSize * 1.4f
-        canvas.drawText("COMBO x${combo}", W / 2, pHud.textSize * 2.4f, pCombo)
+        canvas.drawText(context.getString(R.string.particules_combo, combo), W / 2, pHud.textSize * 2.4f, pCombo)
         pCombo.alpha = 255
     }
 
@@ -1982,10 +1983,10 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
         pTitle.textSize = maxOf(H * 0.04f, 26f)
         pTitle.color = 0xFFFFE066.toInt()
-        canvas.drawText("Choisis une relique", W / 2, top - 40f, pTitle)
+        canvas.drawText(context.getString(R.string.particules_choose_relic_title), W / 2, top - 40f, pTitle)
         pSub.textSize = maxOf(H * 0.023f, 16f)
         pSub.color = 0xFFAABBCC.toInt()
-        canvas.drawText("Niveau ${level - 1} terminé • Pièces : $gold", W / 2, top - 10f, pSub)
+        canvas.drawText(context.getString(R.string.particules_level_cleared_subtitle, level - 1, gold), W / 2, top - 10f, pSub)
 
         for (i in 0 until n) {
             val r = choices[i]
@@ -2003,18 +2004,22 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
             pTitle.textSize = maxOf(cardH * 0.09f, 18f)
             pTitle.color = 0xFFFFFFFF.toInt()
-            canvas.drawText(r.name, choiceRects[i].centerX(), choiceRects[i].top + cardH * 0.24f, pTitle)
+            canvas.drawText(context.getString(r.nameRes), choiceRects[i].centerX(), choiceRects[i].top + cardH * 0.24f, pTitle)
 
             pSub.textSize = maxOf(cardH * 0.06f, 14f)
             pSub.color = rarityColor(r.rarity)
             canvas.drawText(
-                when (r.rarity) { Rarity.COMMON -> "commune"; Rarity.RARE -> "rare"; Rarity.EPIC -> "épique" },
+                context.getString(when (r.rarity) {
+                    Rarity.COMMON -> R.string.particules_rarity_common
+                    Rarity.RARE -> R.string.particules_rarity_rare
+                    Rarity.EPIC -> R.string.particules_rarity_epic
+                }),
                 choiceRects[i].centerX(), choiceRects[i].top + cardH * 0.36f, pSub
             )
 
             pSub.textSize = maxOf(cardH * 0.065f, 14f)
             pSub.color = 0xFFCCDDEE.toInt()
-            val lines = wrapText(r.desc, pSub, cardW - 20f)
+            val lines = wrapText(context.getString(r.descRes), pSub, cardW - 20f)
             var yy = choiceRects[i].top + cardH * 0.55f
             for (l in lines.take(4)) {
                 canvas.drawText(l, choiceRects[i].centerX(), yy, pSub)
@@ -2031,7 +2036,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         canvas.drawRoundRect(skipRelicRect, 8f, 8f, pCardStroke)
         pSub.textSize = maxOf(btnH * 0.55f, 15f)
         pSub.color = 0xFF998BAA.toInt()
-        canvas.drawText("✕ Passer", W / 2, btnY + btnH * 0.72f, pSub)
+        canvas.drawText(context.getString(R.string.particules_skip), W / 2, btnY + btnH * 0.72f, pSub)
     }
 
     private fun wrapText(text: String, paint: Paint, maxW: Float): List<String> {
@@ -2056,15 +2061,15 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
         pTitle.textSize = maxOf(H * 0.04f, 26f)
         pTitle.color = 0xFFDD2266.toInt()
-        canvas.drawText("⚔ Boss vaincu !", W / 2, H * 0.055f, pTitle)
+        canvas.drawText(context.getString(R.string.particules_boss_defeated), W / 2, H * 0.055f, pTitle)
 
         pTitle.color = 0xFFFFD55A.toInt()
         pTitle.textSize = maxOf(H * 0.035f, 22f)
-        canvas.drawText("◆ Boutique", W / 2, H * 0.095f, pTitle)
+        canvas.drawText(context.getString(R.string.particules_shop_title), W / 2, H * 0.095f, pTitle)
 
         pSub.textSize = maxOf(H * 0.025f, 17f)
         pSub.color = 0xFFFFFFFF.toInt()
-        canvas.drawText("Pièces disponibles : $gold", W / 2, H * 0.13f, pSub)
+        canvas.drawText(context.getString(R.string.particules_shop_gold_available, gold), W / 2, H * 0.13f, pSub)
 
         val cardW = W * 0.42f
         val cardH = H * 0.11f
@@ -2098,19 +2103,20 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
             pTitle.textSize = maxOf(cardH * 0.18f, 15f)
             pTitle.color = 0xFFFFFFFF.toInt()
-            canvas.drawText("${item.icon} ${item.name}", shopRects[i].centerX(), y + cardH * 0.28f, pTitle)
+            canvas.drawText("${item.icon} ${context.getString(item.nameRes)}", shopRects[i].centerX(), y + cardH * 0.28f, pTitle)
 
             pSub.textSize = maxOf(cardH * 0.14f, 12f)
             pSub.color = 0xFFAABBCC.toInt()
-            canvas.drawText(item.desc, shopRects[i].centerX(), y + cardH * 0.50f, pSub)
+            canvas.drawText(context.getString(item.descRes), shopRects[i].centerX(), y + cardH * 0.50f, pSub)
 
             if (maxed) {
                 pSub.color = 0xFF44DD66.toInt()
-                canvas.drawText("MAX ($cur/${item.maxLevel})", shopRects[i].centerX(), y + cardH * 0.75f, pSub)
+                canvas.drawText(context.getString(R.string.particules_shop_item_max, cur, item.maxLevel), shopRects[i].centerX(), y + cardH * 0.75f, pSub)
             } else {
-                val lvlTxt = if (item.maxLevel > 1) "Niv.$cur/${item.maxLevel} • " else ""
+                val priceText = if (item.maxLevel > 1) context.getString(R.string.particules_shop_item_price_leveled, cur, item.maxLevel, price)
+                                 else context.getString(R.string.particules_shop_item_price, price)
                 pSub.color = if (canBuy) 0xFFFFD55A.toInt() else 0xFFFF6666.toInt()
-                canvas.drawText("${lvlTxt}◆ $price", shopRects[i].centerX(), y + cardH * 0.75f, pSub)
+                canvas.drawText(priceText, shopRects[i].centerX(), y + cardH * 0.75f, pSub)
             }
         }
 
@@ -2123,7 +2129,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         canvas.drawRoundRect(shopBackRect, 8f, 8f, pCardStroke)
         pSub.textSize = maxOf(btnH * 0.55f, 16f)
         pSub.color = 0xFFFFFFFF.toInt()
-        canvas.drawText("▶ Continuer", W / 2, btnY + btnH * 0.70f, pSub)
+        canvas.drawText(context.getString(R.string.particules_continue), W / 2, btnY + btnH * 0.70f, pSub)
     }
 
     private fun drawOverlay(canvas: Canvas) {
@@ -2136,64 +2142,64 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 pTitle.color = 0xFFFFFFFF.toInt()
                 pTitle.textSize = maxOf(H * 0.042f, 28f)
                 if (level == 1) {
-                    canvas.drawText("Particules", W / 2, cy - pTitle.textSize, pTitle)
+                    canvas.drawText(context.getString(R.string.particules_title), W / 2, cy - pTitle.textSize, pTitle)
                     pSub.color = 0xFFAABBCC.toInt()
-                    canvas.drawText("Détruisez, enchaînez, survivez", W / 2, cy + 10f, pSub)
-                    canvas.drawText("Glissez pour viser • Relâchez pour lancer", W / 2, cy + pSub.textSize + 16f, pSub)
+                    canvas.drawText(context.getString(R.string.particules_tagline), W / 2, cy + 10f, pSub)
+                    canvas.drawText(context.getString(R.string.particules_instructions), W / 2, cy + pSub.textSize + 16f, pSub)
                     if (meta.highScore > 0) {
                         pSub.color = 0xFFFFD55A.toInt()
-                        canvas.drawText("Record : ${fmtScore(meta.highScore)}  •  Niv.max ${meta.highestLevel}",
+                        canvas.drawText(context.getString(R.string.particules_record, fmtScore(meta.highScore), meta.highestLevel),
                             W / 2, cy + pSub.textSize * 2 + 30f, pSub)
                     }
                 } else if (level % 5 == 0) {
                     pTitle.color = 0xFFDD2266.toInt()
-                    canvas.drawText("⚔ BOSS ⚔", W / 2, cy - pTitle.textSize, pTitle)
+                    canvas.drawText(context.getString(R.string.particules_boss_banner), W / 2, cy - pTitle.textSize, pTitle)
                     pTitle.color = 0xFFFFFFFF.toInt()
-                    canvas.drawText("Niveau $level", W / 2, cy + 10f, pTitle)
+                    canvas.drawText(context.getString(R.string.particules_level_banner, level), W / 2, cy + 10f, pTitle)
                     pSub.color = 0xFFAABBCC.toInt()
-                    canvas.drawText("Glissez pour viser • Relâchez pour lancer", W / 2, cy + pTitle.textSize + 20f, pSub)
+                    canvas.drawText(context.getString(R.string.particules_instructions), W / 2, cy + pTitle.textSize + 20f, pSub)
                 } else {
-                    canvas.drawText("Niveau $level", W / 2, cy - 10f, pTitle)
+                    canvas.drawText(context.getString(R.string.particules_level_banner, level), W / 2, cy - 10f, pTitle)
                     pSub.color = 0xFFAABBCC.toInt()
-                    canvas.drawText("Glissez pour viser • Relâchez pour lancer", W / 2, cy + pTitle.textSize + 8f, pSub)
+                    canvas.drawText(context.getString(R.string.particules_instructions), W / 2, cy + pTitle.textSize + 8f, pSub)
                 }
             }
             State.PAUSED -> {
                 pTitle.textSize = maxOf(H * 0.042f, 28f)
-                canvas.drawText("En pause", W / 2, cy - 10f, pTitle)
+                canvas.drawText(context.getString(R.string.particules_paused), W / 2, cy - 10f, pTitle)
                 pSub.color = 0xFFAABBCC.toInt()
-                canvas.drawText("Touchez pour reprendre", W / 2, cy + pTitle.textSize + 8f, pSub)
+                canvas.drawText(context.getString(R.string.particules_tap_resume), W / 2, cy + pTitle.textSize + 8f, pSub)
             }
             State.LIFE_LOST -> {
                 pTitle.textSize = maxOf(H * 0.042f, 28f)
                 pTitle.color = 0xFFFF6677.toInt()
-                canvas.drawText("Particule perdue !", W / 2, cy - 10f, pTitle)
+                canvas.drawText(context.getString(R.string.particules_life_lost), W / 2, cy - 10f, pTitle)
                 pSub.color = 0xFFAABBCC.toInt()
-                canvas.drawText("$lives vie(s) restante(s)", W / 2, cy + pTitle.textSize + 8f, pSub)
-                canvas.drawText("Glissez pour viser • Relâchez pour lancer", W / 2, cy + pTitle.textSize + pSub.textSize + 18f, pSub)
+                canvas.drawText(context.getString(R.string.particules_lives_remaining, lives), W / 2, cy + pTitle.textSize + 8f, pSub)
+                canvas.drawText(context.getString(R.string.particules_instructions), W / 2, cy + pTitle.textSize + pSub.textSize + 18f, pSub)
             }
             State.LEVEL_CLEAR -> drawRelicChoice(canvas)
             State.GAME_OVER -> {
                 pTitle.textSize = maxOf(H * 0.042f, 28f)
                 pTitle.color = 0xFFFFFFFF.toInt()
-                canvas.drawText("Partie terminée", W / 2, cy - pTitle.textSize * 1.5f, pTitle)
+                canvas.drawText(context.getString(R.string.particules_game_over), W / 2, cy - pTitle.textSize * 1.5f, pTitle)
                 pSub.color = 0xFFEEEEEE.toInt()
-                canvas.drawText("Score final : ${fmtScore(score)}", W / 2, cy - pTitle.textSize * 0.3f, pSub)
+                canvas.drawText(context.getString(R.string.particules_final_score, fmtScore(score)), W / 2, cy - pTitle.textSize * 0.3f, pSub)
                 pSub.color = 0xFFAABBCC.toInt()
-                canvas.drawText("Niv.${ level - 1} atteint", W / 2, cy + pSub.textSize * 0.7f, pSub)
+                canvas.drawText(context.getString(R.string.particules_level_reached, level - 1), W / 2, cy + pSub.textSize * 0.7f, pSub)
                 pSub.color = 0xFFFFD55A.toInt()
-                canvas.drawText("+$gold pièces • Total : ${meta.totalGold}", W / 2, cy + pSub.textSize * 2f, pSub)
+                canvas.drawText(context.getString(R.string.particules_gold_earned, gold, meta.totalGold), W / 2, cy + pSub.textSize * 2f, pSub)
                 if (bestCombo >= 3) {
                     pSub.color = 0xFFFFE066.toInt()
-                    canvas.drawText("Meilleur combo : x$bestCombo", W / 2, cy + pSub.textSize * 3.2f, pSub)
+                    canvas.drawText(context.getString(R.string.particules_best_combo, bestCombo), W / 2, cy + pSub.textSize * 3.2f, pSub)
                 }
                 if (meta.highScore > 0) {
                     pSub.color = 0xFFAABBCC.toInt()
-                    canvas.drawText("Record : ${fmtScore(meta.highScore)}",
+                    canvas.drawText(context.getString(R.string.particules_record_score, fmtScore(meta.highScore)),
                         W / 2, cy + pSub.textSize * 4.4f, pSub)
                 }
                 pSub.color = 0xFFAABBCC.toInt()
-                canvas.drawText("Touchez pour rejouer", W / 2, cy + pSub.textSize * 6f, pSub)
+                canvas.drawText(context.getString(R.string.particules_tap_replay), W / 2, cy + pSub.textSize * 6f, pSub)
             }
             State.PLAYING, State.SHOP -> {}
         }

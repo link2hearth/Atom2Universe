@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Rode as peças para ligar todos os canos</string>
+    <string name="pipetap_moves">%1$d movimentos</string>
+    <string name="pipetap_solved">Resolvido!</string>
+    <string name="pipetap_win_message">Resolvido em %2$s com %1$d rotações.</string>
+    <string name="pipetap_btn_again">Nova partida</string>
+    <string name="pipetap_btn_next">Próximo tamanho</string>
+    <string name="pipetap_widget_cancel">Cancelar</string>
+    <string name="pipetap_widget_confirm">Iniciar</string>
+</resources>

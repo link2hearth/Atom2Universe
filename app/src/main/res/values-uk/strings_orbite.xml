@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Орбіта</string>
+    <string name="orbite_description">Розкрути електрон, ухиляйся від астероїдів і збирай кванти енергії!</string>
+    <string name="orbite_subtitle">Один дотик змінює напрямок орбіти електрона</string>
+    <string name="orbite_instructions">Ухиляйся від космічного сміття, притягнутого до ядра · збирай зелені кванти для комбо</string>
+    <string name="orbite_btn_start">Старт</string>
+    <string name="orbite_btn_restart">Заново</string>
+    <string name="orbite_btn_back">Назад</string>
+    <string name="orbite_game_over">Колапс!</string>
+    <string name="orbite_best_label">РЕКОРД %1$s</string>
+    <string name="orbite_final_score">Рахунок %1$d</string>
+    <string name="orbite_best_score">Рекорд %1$d</string>
+    <string name="orbite_new_best">★ Новий рекорд! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbită</string>
+    <string name="orbite_description">Pune electronul în mișcare, evită asteroizii și adună cuantele de energie!</string>
+    <string name="orbite_subtitle">O atingere inversează orbita electronului</string>
+    <string name="orbite_instructions">Evită resturile cosmice atrase de nucleu · mătură cuantele verzi pentru a face combo-uri</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Reia</string>
+    <string name="orbite_btn_back">Înapoi</string>
+    <string name="orbite_game_over">Colaps!</string>
+    <string name="orbite_best_label">CEL MAI BUN %1$s</string>
+    <string name="orbite_final_score">Scor %1$d</string>
+    <string name="orbite_best_score">Cel mai bun %1$d</string>
+    <string name="orbite_new_best">★ Record nou! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

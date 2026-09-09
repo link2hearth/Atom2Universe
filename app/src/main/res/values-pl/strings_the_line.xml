@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Połącz punkty, wypełnij siatkę</string>
+    <string name="the_line_back">Wróć</string>
+    <string name="the_line_mode_single">Pojedynczy</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Łatwy</string>
+    <string name="the_line_diff_medium">Średni</string>
+    <string name="the_line_diff_hard">Trudny</string>
+    <string name="the_line_level">Poziom %1$d</string>
+    <string name="the_line_remaining">Pozostałe komórki: %1$d</string>
+    <string name="the_line_hint_single">Narysuj ścieżkę od S do F, która odwiedza każdą komórkę.</string>
+    <string name="the_line_hint_multi">Połącz każdą parę kolorów bez krzyżowania ścieżek.</string>
+    <string name="the_line_completed">Poziom %1$d ukończony!</string>
+    <string name="the_line_error">Nie można wygenerować siatki. Spróbuj ponownie.</string>
+    <string name="the_line_btn_reset">Nowa gra</string>
+    <string name="the_line_new_game">Nowa gra</string>
+    <string name="the_line_solved_label">✓ Rozwiązano!</string>
+    <string name="the_line_diff_simple">Prosty</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Anuluj</string>
+</resources>

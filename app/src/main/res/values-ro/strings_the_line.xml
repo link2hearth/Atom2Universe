@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">Linia</string>
+    <string name="the_line_description">Conectați punctele, umpleți grila</string>
+    <string name="the_line_back">Înapoi</string>
+    <string name="the_line_mode_single">Simplu</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Ușor</string>
+    <string name="the_line_diff_medium">Mediu</string>
+    <string name="the_line_diff_hard">Greu</string>
+    <string name="the_line_level">Nivelul %1$d</string>
+    <string name="the_line_remaining">Celule rămase: %1$d</string>
+    <string name="the_line_hint_single">Desenați un drum de la S la F care trece prin fiecare celulă.</string>
+    <string name="the_line_hint_multi">Conectați fiecare pereche de culori fără a încrucișa drumurile.</string>
+    <string name="the_line_completed">Nivelul %1$d completat!</string>
+    <string name="the_line_error">Nu s-a putut genera o grilă. Încercați din nou.</string>
+    <string name="the_line_btn_reset">Joc nou</string>
+    <string name="the_line_new_game">Joc nou</string>
+    <string name="the_line_solved_label">✓ Rezolvat!</string>
+    <string name="the_line_diff_simple">Simplu</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Anulare</string>
+</resources>

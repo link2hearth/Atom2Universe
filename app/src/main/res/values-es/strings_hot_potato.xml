@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Patata Caliente</string>
+    <string name="hot_potato_description">Haz rebotar la patata, cocínala en su punto y ¡lánzala por los lados!</string>
+    <string name="hot_potato_how_to">Tira hacia atrás como un tirachinas para lanzar · cocínala hasta la zona verde</string>
+    <string name="hot_potato_tap_to_start">Toca debajo de la patata para empezar</string>
+    <string name="hot_potato_tap_to_retry">Toca para reintentar</string>
+    <string name="hot_potato_tap_to_resume">Toca para continuar</string>
+    <string name="hot_potato_game_over">Fin del juego</string>
+    <string name="hot_potato_paused">En pausa</string>
+    <string name="hot_potato_score_label">Puntos</string>
+    <string name="hot_potato_best_label">MEJOR</string>
+    <string name="hot_potato_new_best">¡Nuevo récord!</string>
+    <string name="hot_potato_perfect">¡Perfecto!</string>
+    <string name="hot_potato_raw">¡Demasiado cruda!</string>
+    <string name="hot_potato_burnt">¡Quemada!</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memory</string>
+    <string name="memory_description">Temukan semua pasangan kartu yang cocok</string>
+    <string name="memory_flips">%1$d balik</string>
+    <string name="memory_solved">Selesai!</string>
+    <string name="memory_win_message">Selesai dalam %2$s dengan %1$d balik.</string>
+    <string name="memory_btn_again">Permainan baru</string>
+    <string name="memory_btn_back">Kembali</string>
+    <string name="memory_confirm_message">Mulai permainan %1$s baru?</string>
+</resources>

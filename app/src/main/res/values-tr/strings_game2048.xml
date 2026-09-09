@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Kuantum 2048</string>
+    <string name="game2048_description">Hedefe ulaşmak için karoları birleştirin!</string>
+    <string name="game2048_score_label">PUAN</string>
+    <string name="game2048_best_label">EN İYİ</string>
+    <string name="game2048_universes_label">EVRENLER</string>
+    <string name="game2048_size_label">Izgara:</string>
+    <string name="game2048_target_label">Hedef:</string>
+    <string name="game2048_new">Yeni</string>
+    <string name="game2048_status_play">Karoları hareket ettirmek için kaydırın</string>
+    <string name="game2048_status_win">Harika! %1$d karoya ulaşıldı! Yeni evren…</string>
+    <string name="game2048_status_over">%1$d\'de takıldı. Yeni evren…</string>
+    <string name="game2048_confirm_title">Yeni oyun?</string>
+    <string name="game2048_confirm_message">Mevcut oyun kaybolacak. Devam et?</string>
+    <string name="game2048_quantum_mode">🐱 Kuantum Modu</string>
+    <string name="game2048_joker_active">🐱 ⚡ AKTİF</string>
+    <string name="game2048_difficulty_easy">Kolay</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Zor</string>
+    <string name="game2048_difficulty_random">Rastgele</string>
+</resources>

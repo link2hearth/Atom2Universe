@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Collega le celle per raggiungere zero — o dieci!</string>
+    <string name="link_moves_label">Mosse:</string>
+    <string name="link_difficulty_easy">Piccolo</string>
+    <string name="link_difficulty_medium">Medio</string>
+    <string name="link_difficulty_hard">Grande</string>
+    <string name="link_pairs_few">Pochi gemelli</string>
+    <string name="link_pairs_normal">Gemelli normali</string>
+    <string name="link_pairs_many">Molti gemelli</string>
+    <string name="link_mode_classic">Classico</string>
+    <string name="link_mode_perfect">Perfetto</string>
+    <string name="link_btn_undo">Annulla</string>
+    <string name="link_btn_restart">Ricomincia</string>
+    <string name="link_btn_new_level">Nuovo</string>
+    <string name="link_msg_new_level">Nuovo livello %1$s. Collega %2$d celle per regolare i valori!</string>
+    <string name="link_msg_new_level_perfect">Modalità perfetta — %1$s. Trova le %2$d mosse esatte.</string>
+    <string name="link_msg_progress">%1$d celle normali e %2$d celle plus da regolare.</string>
+    <string name="link_msg_invalid_pattern">Combinazione non valida per questa lunghezza di link.</string>
+    <string name="link_msg_undo">Ultima mossa annullata.</string>
+    <string name="link_msg_nothing_to_undo">Niente da annullare.</string>
+    <string name="link_msg_restart">Puzzle azzerato.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Risolto!</string>
+    <string name="link_victory_moves">%1$d mosse</string>
+</resources>

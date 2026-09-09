@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Collega i punti, riempi la griglia</string>
+    <string name="the_line_back">Indietro</string>
+    <string name="the_line_mode_single">Singolo</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Facile</string>
+    <string name="the_line_diff_medium">Medio</string>
+    <string name="the_line_diff_hard">Difficile</string>
+    <string name="the_line_level">Livello %1$d</string>
+    <string name="the_line_remaining">Celle rimanenti: %1$d</string>
+    <string name="the_line_hint_single">Traccia un percorso da S ad F che visiti ogni cella.</string>
+    <string name="the_line_hint_multi">Collega ogni coppia di colori senza incrociare i percorsi.</string>
+    <string name="the_line_completed">Livello %1$d completato!</string>
+    <string name="the_line_error">Impossibile generare una griglia. Riprova.</string>
+    <string name="the_line_btn_reset">Nuova partita</string>
+    <string name="the_line_new_game">Nuova partita</string>
+    <string name="the_line_solved_label">✓ Risolto!</string>
+    <string name="the_line_diff_simple">Semplice</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Annulla</string>
+</resources>

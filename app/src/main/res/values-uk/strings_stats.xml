@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Комікси</string>
     <string name="reading_stats_history_title">Історія</string>
     <string name="reading_stats_top_titles">Найбільш читані</string>
+
+    <string name="stats_tab_day">Сьогодні</string>
+    <string name="stats_tab_week">Тиждень</string>
+    <string name="stats_tab_month">Місяць</string>
+    <string name="stats_tab_year">Рік</string>
+    <string name="stats_total_time">Загальний час</string>
+    <string name="stats_hours_format">%1$d год %2$d хв</string>
+    <string name="stats_minutes_format">%1$d хв</string>
+    <string name="stats_top_artists">Топ виконавців</string>
+    <string name="stats_top_albums">Топ альбомів</string>
+    <string name="stats_top_midi">Топ MIDI-файлів</string>
+    <string name="stats_average_score">Середній бал практики</string>
+    <string name="stats_no_data">Немає даних за цей період</string>
+    <string name="stats_tab_calendar">Календар</string>
+    <string name="stats_calendar_no_data">Немає активності за цей день</string>
+    <string name="stats_calendar_music_section">Музика</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Радіо</string>
+    <string name="stats_calendar_tracks_format">%1$d треків, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (рахунок: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Разом: %1$s</string>
 </resources>

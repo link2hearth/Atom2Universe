@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Reflexen</string>
+    <string name="reflex_description">Tik zo snel mogelijk op de cirkels!</string>
+    <string name="reflex_score_label">SCORE</string>
+    <string name="reflex_best_easy_label">BESTE (MAKKELIJK)</string>
+    <string name="reflex_best_hard_label">BESTE (MOEILIJK)</string>
+    <string name="reflex_mode_easy">Makkelijk</string>
+    <string name="reflex_mode_hard">Moeilijk</string>
+    <string name="reflex_start">Spelen</string>
+    <string name="reflex_status_ready">Kies een modus en druk op Spelen</string>
+    <string name="reflex_status_go">Ga! Tik op de cirkels!</string>
+    <string name="reflex_status_hit">Raak! +%1$d pts — Totaal: %2$d</string>
+    <string name="reflex_status_game_over">Spel voorbij! Eindstand: %1$d</string>
+    <string name="reflex_status_new_record">Nieuw record! Score: %1$d</string>
+</resources>

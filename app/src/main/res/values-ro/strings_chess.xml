@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Șah</string>
+    <string name="chess_description">Joc de șah cu IA multi-nivel</string>
+    <string name="chess_new_game">Joc nou</string>
+    <string name="chess_difficulty_training">Antrenament</string>
+    <string name="chess_difficulty_training_desc">IA slabă, ideală pentru învățare</string>
+    <string name="chess_difficulty_standard">Standard</string>
+    <string name="chess_difficulty_standard_desc">IA medie, joc echilibrat</string>
+    <string name="chess_difficulty_expert">Expert</string>
+    <string name="chess_difficulty_expert_desc">IA puternică, provocare dificilă</string>
+    <string name="chess_difficulty_two_player">Doi jucători</string>
+    <string name="chess_difficulty_two_player_desc">Jucați împotriva unui adversar uman</string>
+    <string name="chess_status_your_turn">Rândul dvs.</string>
+    <string name="chess_status_black_turn">Rândul Negrului</string>
+    <string name="chess_status_ai_thinking">IA se gândește…</string>
+    <string name="chess_status_check">Șah!</string>
+    <string name="chess_status_checkmate">Șah-mat! %s câștigă</string>
+    <string name="chess_status_stalemate">Pat - Egalitate</string>
+    <string name="chess_color_white">Alb</string>
+    <string name="chess_color_black">Negru</string>
+    <string name="chess_resume_title">Reluare joc?</string>
+    <string name="chess_resume_message">Un joc salvat a fost găsit. Doriți să continuați?</string>
+    <string name="chess_confirm_new_title">Joc nou?</string>
+    <string name="chess_confirm_new_message">Jocul curent va fi pierdut. Continuați?</string>
+    <string name="chess_promotion_title">Promovare pion</string>
+    <string name="chess_promotion_queen">Regină</string>
+    <string name="chess_promotion_rook">Turn</string>
+    <string name="chess_promotion_bishop">Nebun</string>
+    <string name="chess_promotion_knight">Cal</string>
+    <string name="chess_victory_title">Victorie!</string>
+    <string name="chess_widget_cancel">✕ Anulare</string>
+    <string name="chess_captured_label">Capturat:</string>
+</resources>

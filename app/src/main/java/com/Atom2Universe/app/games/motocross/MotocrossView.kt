@@ -15,6 +15,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.Atom2Universe.app.R
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -949,8 +950,8 @@ class MotocrossView @JvmOverloads constructor(
         txtPaint.typeface = Typeface.DEFAULT
         txtPaint.color = Color.argb(155, 255, 255, 255)
         txtPaint.textSize = vw * 0.038f
-        canvas.drawText("◀ Freiner / Pencher", vw * 0.25f, vh * 0.9f, txtPaint)
-        canvas.drawText("Accélérer / Pencher ▶", vw * 0.75f, vh * 0.9f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_hint_brake), vw * 0.25f, vh * 0.9f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_hint_accelerate), vw * 0.75f, vh * 0.9f, txtPaint)
     }
 
     private fun drawGameOver(canvas: Canvas) {
@@ -958,12 +959,12 @@ class MotocrossView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, vw, vh, overlayPaint)
         txtPaint.typeface = Typeface.DEFAULT_BOLD
         txtPaint.color = Color.rgb(255, 82, 44); txtPaint.textSize = vw * 0.09f
-        canvas.drawText("GAME OVER", vw / 2f, vh * 0.38f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_game_over), vw / 2f, vh * 0.38f, txtPaint)
         txtPaint.typeface = Typeface.DEFAULT; txtPaint.color = Color.WHITE; txtPaint.textSize = vw * 0.048f
-        canvas.drawText("Distance : ${maxDistM.toInt()} m", vw / 2f, vh * 0.52f, txtPaint)
-        canvas.drawText("Meilleur : ${bestDistM.toInt()} m", vw / 2f, vh * 0.62f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_distance_final, maxDistM.toInt()), vw / 2f, vh * 0.52f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_best, bestDistM.toInt()), vw / 2f, vh * 0.62f, txtPaint)
         txtPaint.color = Color.rgb(88, 208, 255); txtPaint.textSize = vw * 0.042f
-        canvas.drawText("Appuyez pour rejouer", vw / 2f, vh * 0.74f, txtPaint)
+        canvas.drawText(context.getString(R.string.motocross_tap_replay), vw / 2f, vh * 0.74f, txtPaint)
     }
 
     // ── Persistance ──────────────────────────────────────────────────────────────

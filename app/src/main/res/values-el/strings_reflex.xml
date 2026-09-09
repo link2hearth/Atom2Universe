@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Αντανακλαστικά</string>
+    <string name="reflex_description">Πατήστε τους κύκλους όσο πιο γρήγορα γίνεται!</string>
+    <string name="reflex_score_label">ΒΑΘΜΟΛΟΓΙΑ</string>
+    <string name="reflex_best_easy_label">ΚΑΛΥΤΕΡΟ (ΕΥΚΟΛΟ)</string>
+    <string name="reflex_best_hard_label">ΚΑΛΥΤΕΡΟ (ΔΥΣΚΟΛΟ)</string>
+    <string name="reflex_mode_easy">Εύκολο</string>
+    <string name="reflex_mode_hard">Δύσκολο</string>
+    <string name="reflex_start">Αναπαραγωγή</string>
+    <string name="reflex_status_ready">Επιλέξτε λειτουργία και πατήστε Αναπαραγωγή</string>
+    <string name="reflex_status_go">Πάμε! Πατήστε τους κύκλους!</string>
+    <string name="reflex_status_hit">Επιτυχία! +%1$d πόντοι - Σύνολο: %2$d</string>
+    <string name="reflex_status_game_over">Τέλος παιχνιδιού! Τελική βαθμολογία: %1$d</string>
+    <string name="reflex_status_new_record">Νέο ρεκόρ! Βαθμολογία: %1$d</string>
+</resources>

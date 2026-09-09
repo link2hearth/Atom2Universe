@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wave_surf_title">Wave Surf</string>
+    <string name="wave_surf_description">Surf nas colinas procedurais — toque para mergulhar e ganhar velocidade!</string>
+    <string name="wave_surf_restart">Reiniciar</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/h</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Vívido</string>
+    <string name="wave_surf_theme_pastel">Pastel</string>
+    <string name="wave_surf_theme_old">Vintage</string>
+    <string name="wave_surf_theme_gray">P&amp;B</string>
+</resources>

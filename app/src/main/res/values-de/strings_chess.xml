@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Schach</string>
+    <string name="chess_description">Schachspiel mit mehrstufiger KI</string>
+    <string name="chess_new_game">Neues Spiel</string>
+    <string name="chess_difficulty_training">Training</string>
+    <string name="chess_difficulty_training_desc">Schwache KI, ideal zum Lernen</string>
+    <string name="chess_difficulty_standard">Standard</string>
+    <string name="chess_difficulty_standard_desc">Mittlere KI, ausgewogenes Spiel</string>
+    <string name="chess_difficulty_expert">Experte</string>
+    <string name="chess_difficulty_expert_desc">Starke KI, schwierige Herausforderung</string>
+    <string name="chess_difficulty_two_player">Zwei Spieler</string>
+    <string name="chess_difficulty_two_player_desc">Gegen einen menschlichen Gegner spielen</string>
+    <string name="chess_status_your_turn">Dein Zug</string>
+    <string name="chess_status_black_turn">Schwarz ist am Zug</string>
+    <string name="chess_status_ai_thinking">KI denkt nach…</string>
+    <string name="chess_status_check">Schach!</string>
+    <string name="chess_status_checkmate">Schachmatt! %s gewinnt</string>
+    <string name="chess_status_stalemate">Patt - Unentschieden</string>
+    <string name="chess_color_white">Weiß</string>
+    <string name="chess_color_black">Schwarz</string>
+    <string name="chess_resume_title">Spiel fortsetzen?</string>
+    <string name="chess_resume_message">Ein gespeichertes Spiel wurde gefunden. Möchten Sie fortfahren?</string>
+    <string name="chess_confirm_new_title">Neues Spiel?</string>
+    <string name="chess_confirm_new_message">Das aktuelle Spiel geht verloren. Fortfahren?</string>
+    <string name="chess_promotion_title">Bauernumwandlung</string>
+    <string name="chess_promotion_queen">Dame</string>
+    <string name="chess_promotion_rook">Turm</string>
+    <string name="chess_promotion_bishop">Läufer</string>
+    <string name="chess_promotion_knight">Springer</string>
+    <string name="chess_victory_title">Sieg!</string>
+    <string name="chess_widget_cancel">✕ Abbrechen</string>
+    <string name="chess_captured_label">Geschlagen:</string>
+</resources>

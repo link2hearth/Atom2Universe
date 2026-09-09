@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Merge tiles to reach the goal!</string>
+    <string name="game2048_score_label">SCORE</string>
+    <string name="game2048_best_label">BEST</string>
+    <string name="game2048_universes_label">UNIVERSES</string>
+    <string name="game2048_size_label">Grid:</string>
+    <string name="game2048_target_label">Goal:</string>
+    <string name="game2048_new">New</string>
+    <string name="game2048_status_play">Swipe to move the tiles</string>
+    <string name="game2048_status_win">Great! Tile %1$d reached! New universe…</string>
+    <string name="game2048_status_over">Stuck at %1$d. New universe…</string>
+    <string name="game2048_confirm_title">New game?</string>
+    <string name="game2048_confirm_message">The current game will be lost. Continue?</string>
+    <string name="game2048_quantum_mode">🐱 Quantum Mode</string>
+    <string name="game2048_joker_active">🐱 ⚡ ACTIVE</string>
+    <string name="game2048_difficulty_easy">Easy</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Hard</string>
+    <string name="game2048_difficulty_random">Random</string>
+</resources>

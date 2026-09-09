@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Горячая картошка</string>
+    <string name="hot_potato_description">Подбрасывай картошку, прожарь её как надо и выбей её по бокам!</string>
+    <string name="hot_potato_how_to">Оттяни как рогатку для запуска · прожарь до зелёной зоны</string>
+    <string name="hot_potato_tap_to_start">Нажми под картошкой, чтобы начать</string>
+    <string name="hot_potato_tap_to_retry">Нажми, чтобы повторить</string>
+    <string name="hot_potato_tap_to_resume">Нажми, чтобы продолжить</string>
+    <string name="hot_potato_game_over">Игра окончена</string>
+    <string name="hot_potato_paused">Пауза</string>
+    <string name="hot_potato_score_label">Счёт</string>
+    <string name="hot_potato_best_label">ЛУЧШИЙ</string>
+    <string name="hot_potato_new_best">Новый рекорд!</string>
+    <string name="hot_potato_perfect">Идеально!</string>
+    <string name="hot_potato_raw">Сыровата!</string>
+    <string name="hot_potato_burnt">Подгорела!</string>
+</resources>

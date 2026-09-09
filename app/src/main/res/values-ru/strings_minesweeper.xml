@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Сапёр</string>
+    <string name="minesweeper_description">Классическая головоломка с минами</string>
+    <string name="minesweeper_diff_easy">Лёгкий · 10 мин</string>
+    <string name="minesweeper_diff_normal">Обычный · 20 мин</string>
+    <string name="minesweeper_diff_medium">Средний · 40 мин</string>
+    <string name="minesweeper_diff_hard">Сложный · 80 мин</string>
+    <string name="minesweeper_new_game">Новая игра</string>
+    <string name="minesweeper_mines">Мины</string>
+    <string name="minesweeper_timer">Таймер</string>
+    <string name="minesweeper_won">Вы выиграли! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Вы выиграли! 🏆 Новый рекорд!  %1$s</string>
+    <string name="minesweeper_lost">Бум! 💥  Игра окончена</string>
+    <string name="minesweeper_score_diff">Сложность</string>
+    <string name="minesweeper_score_best">Лучшее время</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Новая игра</string>
+</resources>

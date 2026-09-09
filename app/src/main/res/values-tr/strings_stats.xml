@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Çizgi Romanlar</string>
     <string name="reading_stats_history_title">Geçmiş</string>
     <string name="reading_stats_top_titles">En çok okunanlar</string>
+
+    <string name="stats_tab_day">Bugün</string>
+    <string name="stats_tab_week">Hafta</string>
+    <string name="stats_tab_month">Ay</string>
+    <string name="stats_tab_year">Yıl</string>
+    <string name="stats_total_time">Toplam süre</string>
+    <string name="stats_hours_format">%1$d sa %2$d dk</string>
+    <string name="stats_minutes_format">%1$d dk</string>
+    <string name="stats_top_artists">En çok dinlenen sanatçılar</string>
+    <string name="stats_top_albums">En çok dinlenen albümler</string>
+    <string name="stats_top_midi">En çok kullanılan MIDI dosyaları</string>
+    <string name="stats_average_score">Ortalama pratik puanı</string>
+    <string name="stats_no_data">Bu dönem için veri yok</string>
+    <string name="stats_tab_calendar">Takvim</string>
+    <string name="stats_calendar_no_data">Bu gün etkinlik yok</string>
+    <string name="stats_calendar_music_section">Müzik</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radyo</string>
+    <string name="stats_calendar_tracks_format">%1$d parça, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (puan: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Toplam: %1$s</string>
 </resources>

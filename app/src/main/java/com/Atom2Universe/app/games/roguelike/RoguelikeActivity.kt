@@ -44,16 +44,16 @@ class RoguelikeActivity : ThemedActivity() {
     // ── Dialog continuer / nouvelle partie ──────────────────────────────────────
 
     private fun showContinueDialog() {
-        val summary = SaveManager.saveSummary(this) ?: "partie en cours"
+        val summary = SaveManager.saveSummary(this) ?: getString(R.string.roguelike_save_in_progress_fallback)
         AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
-            .setTitle("Donjon")
-            .setMessage("Une aventure est en cours :\n$summary\n\nQue veux-tu faire ?")
+            .setTitle(R.string.roguelike_title)
+            .setMessage(getString(R.string.roguelike_resume_dialog_message, summary))
             .setCancelable(false)
-            .setPositiveButton("Continuer") { _, _ ->
+            .setPositiveButton(R.string.roguelike_resume_dialog_continue) { _, _ ->
                 val saved = SaveManager.load(this)
                 attachGame(saved ?: RoguelikeGame())
             }
-            .setNegativeButton("Nouvelle partie") { _, _ ->
+            .setNegativeButton(R.string.roguelike_resume_dialog_new_game) { _, _ ->
                 SaveManager.clear(this)
                 attachGame(RoguelikeGame())
             }

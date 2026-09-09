@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Füge Kacheln zusammen, um das Ziel zu erreichen!</string>
+    <string name="game2048_score_label">PUNKTE</string>
+    <string name="game2048_best_label">BESTES</string>
+    <string name="game2048_universes_label">UNIVERSEN</string>
+    <string name="game2048_size_label">Raster:</string>
+    <string name="game2048_target_label">Ziel:</string>
+    <string name="game2048_new">Neu</string>
+    <string name="game2048_status_play">Wischen zum Bewegen der Kacheln</string>
+    <string name="game2048_status_win">Super! Kachel %1$d erreicht! Neues Universum…</string>
+    <string name="game2048_status_over">Bei %1$d steckengeblieben. Neues Universum…</string>
+    <string name="game2048_confirm_title">Neues Spiel?</string>
+    <string name="game2048_confirm_message">Das aktuelle Spiel geht verloren. Fortfahren?</string>
+    <string name="game2048_quantum_mode">🐱 Quantenmodus</string>
+    <string name="game2048_joker_active">🐱 ⚡ AKTIV</string>
+    <string name="game2048_difficulty_easy">Einfach</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Schwer</string>
+    <string name="game2048_difficulty_random">Zufällig</string>
+</resources>

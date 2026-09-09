@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Пам\'ять</string>
+    <string name="memory_description">Знайдіть всі пари карток, що збігаються</string>
+    <string name="memory_flips">%1$d перевертань</string>
+    <string name="memory_solved">Завершено!</string>
+    <string name="memory_win_message" formatted="false">Завершено за %2$s з %1$d перевертань.</string>
+    <string name="memory_btn_again">Нова гра</string>
+    <string name="memory_btn_back">Назад</string>
+    <string name="memory_confirm_message">Почати нову гру %1$s?</string>
+</resources>

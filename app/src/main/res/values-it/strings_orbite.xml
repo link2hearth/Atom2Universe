@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbita</string>
+    <string name="orbite_description">Fai girare l’elettrone, schiva gli asteroidi e raccogli i quanti di energia!</string>
+    <string name="orbite_subtitle">Un tocco inverte l’orbita dell’elettrone</string>
+    <string name="orbite_instructions">Schiva i detriti cosmici attratti dal nucleo · sfiora i quanti verdi per creare combo</string>
+    <string name="orbite_btn_start">Inizia</string>
+    <string name="orbite_btn_restart">Riprova</string>
+    <string name="orbite_btn_back">Indietro</string>
+    <string name="orbite_game_over">Collassato!</string>
+    <string name="orbite_best_label">MIGLIORE %1$s</string>
+    <string name="orbite_final_score">Punti %1$d</string>
+    <string name="orbite_best_score">Migliore %1$d</string>
+    <string name="orbite_new_best">★ Nuovo record! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

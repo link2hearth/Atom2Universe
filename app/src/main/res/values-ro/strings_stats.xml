@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Benzi desenate</string>
     <string name="reading_stats_history_title">Istoric</string>
     <string name="reading_stats_top_titles">Cele mai citite</string>
+
+    <string name="stats_tab_day">Azi</string>
+    <string name="stats_tab_week">Săptămână</string>
+    <string name="stats_tab_month">Lună</string>
+    <string name="stats_tab_year">An</string>
+    <string name="stats_total_time">Timp total de utilizare</string>
+    <string name="stats_hours_format">%1$d h %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artiști</string>
+    <string name="stats_top_albums">Top albume</string>
+    <string name="stats_top_midi">Melodii cel mai mult practicate</string>
+    <string name="stats_average_score">Scor mediu de practică</string>
+    <string name="stats_no_data">Nicio dată pentru această perioadă</string>
+    <string name="stats_tab_calendar">Calendar</string>
+    <string name="stats_calendar_no_data">Nicio activitate în această zi</string>
+    <string name="stats_calendar_music_section">Muzică</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d piese, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (scor: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Total: %1$s</string>
 </resources>

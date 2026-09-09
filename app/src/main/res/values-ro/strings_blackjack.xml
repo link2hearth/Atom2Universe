@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Blackjack de cazino cu până la 4 adversari IA</string>
+    <string name="blackjack_hit">CARTE</string>
+    <string name="blackjack_stand">STAI</string>
+    <string name="blackjack_double">DUBLU</string>
+    <string name="blackjack_split">ÎMPĂRȚIRE</string>
+    <string name="blackjack_deal">ÎMPARTE</string>
+    <string name="blackjack_bet_label">PARIU</string>
+    <string name="blackjack_ai_players_label">Jucători IA: %1$d</string>
+    <string name="blackjack_settings_title">Setări masă</string>
+    <string name="blackjack_result_win">CÂȘTIG +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">PIERDUT -%1$d</string>
+    <string name="blackjack_result_push">EGALITATE</string>
+    <string name="blackjack_result_win_free">CÂȘTIG</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">PIERDUT</string>
+    <string name="blackjack_bet_free">GRATUIT</string>
+    <string name="blackjack_neutrino_balance">Neutrini: %1$d</string>
+    <string name="blackjack_ia_short">IA</string>
+    <string name="blackjack_start">Joc</string>
+    <string name="blackjack_dealer_thinking">Dealerul se gândește…</string>
+    <string name="blackjack_new_game_confirm">Joc nou?</string>
+    <string name="blackjack_confirm">✓ Confirmare</string>
+    <string name="blackjack_cancel">✕ Anulare</string>
+</resources>

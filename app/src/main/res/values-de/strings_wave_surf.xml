@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wave_surf_title">Wave Surf</string>
+    <string name="wave_surf_description">Surfe auf prozeduralen Hügeln — tippen zum Tauchen und Beschleunigen!</string>
+    <string name="wave_surf_restart">Neustart</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/h</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Lebendig</string>
+    <string name="wave_surf_theme_pastel">Pastell</string>
+    <string name="wave_surf_theme_old">Alt</string>
+    <string name="wave_surf_theme_gray">S&amp;W</string>
+</resources>

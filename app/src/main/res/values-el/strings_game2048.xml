@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Συγχωνεύστε πλακίδια για να φτάσετε τον στόχο!</string>
+    <string name="game2048_score_label">ΒΑΘΜΟΛΟΓΙΑ</string>
+    <string name="game2048_best_label">ΚΑΛΥΤΕΡΟ</string>
+    <string name="game2048_universes_label">ΣΥΜΠΑΝΤΑ</string>
+    <string name="game2048_size_label">Πλέγμα:</string>
+    <string name="game2048_target_label">Στόχος:</string>
+    <string name="game2048_new">Νέο</string>
+    <string name="game2048_status_play">Σύρετε για να μετακινήσετε τα πλακίδια</string>
+    <string name="game2048_status_win">Μπράβο! Το πλακίδιο %1$d επιτεύχθηκε! Νέο σύμπαν…</string>
+    <string name="game2048_status_over">Εγκλωβισμένος στο %1$d. Νέο σύμπαν…</string>
+    <string name="game2048_confirm_title">Νέο παιχνίδι;</string>
+    <string name="game2048_confirm_message">Το τρέχον παιχνίδι θα χαθεί. Συνέχεια;</string>
+    <string name="game2048_quantum_mode">🐱 Λειτουργία Quantum</string>
+    <string name="game2048_joker_active">🐱 ⚡ ΕΝΕΡΓΟ</string>
+    <string name="game2048_difficulty_easy">Εύκολο</string>
+    <string name="game2048_difficulty_normal">Κανονικό</string>
+    <string name="game2048_difficulty_hard">Δύσκολο</string>
+    <string name="game2048_difficulty_random">Τυχαίο</string>
+</resources>

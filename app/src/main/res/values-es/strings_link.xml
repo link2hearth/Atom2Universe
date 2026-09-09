@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Conecta celdas para llegar a cero — ¡o a diez!</string>
+    <string name="link_moves_label">Movimientos:</string>
+    <string name="link_difficulty_easy">Pequeño</string>
+    <string name="link_difficulty_medium">Medio</string>
+    <string name="link_difficulty_hard">Grande</string>
+    <string name="link_pairs_few">Pocos gemelos</string>
+    <string name="link_pairs_normal">Gemelos normales</string>
+    <string name="link_pairs_many">Muchos gemelos</string>
+    <string name="link_mode_classic">Clásico</string>
+    <string name="link_mode_perfect">Perfecto</string>
+    <string name="link_btn_undo">Deshacer</string>
+    <string name="link_btn_restart">Reiniciar</string>
+    <string name="link_btn_new_level">Nuevo</string>
+    <string name="link_msg_new_level">Nuevo nivel %1$s. ¡Conecta %2$d celdas para ajustar los valores!</string>
+    <string name="link_msg_new_level_perfect">Modo perfecto — %1$s. Encuentra los %2$d movimientos exactos.</string>
+    <string name="link_msg_progress">%1$d celdas normales y %2$d celdas plus por ajustar.</string>
+    <string name="link_msg_invalid_pattern">Patrón inválido para esta longitud de enlace.</string>
+    <string name="link_msg_undo">Último movimiento deshecho.</string>
+    <string name="link_msg_nothing_to_undo">Nada que deshacer.</string>
+    <string name="link_msg_restart">Puzzle reiniciado.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">¡Resuelto!</string>
+    <string name="link_victory_moves">%1$d movimientos</string>
+</resources>

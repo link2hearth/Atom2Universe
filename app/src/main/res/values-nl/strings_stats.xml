@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Strips</string>
     <string name="reading_stats_history_title">Geschiedenis</string>
     <string name="reading_stats_top_titles">Meest gelezen</string>
+
+    <string name="stats_tab_day">Vandaag</string>
+    <string name="stats_tab_week">Week</string>
+    <string name="stats_tab_month">Maand</string>
+    <string name="stats_tab_year">Jaar</string>
+    <string name="stats_total_time">Totale gebruikstijd</string>
+    <string name="stats_hours_format">%1$d u %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artiesten</string>
+    <string name="stats_top_albums">Top albums</string>
+    <string name="stats_top_midi">Meest geoefende nummers</string>
+    <string name="stats_average_score">Gemiddelde oefenscore</string>
+    <string name="stats_no_data">Geen gegevens voor deze periode</string>
+    <string name="stats_tab_calendar">Kalender</string>
+    <string name="stats_calendar_no_data">Geen activiteit op deze dag</string>
+    <string name="stats_calendar_music_section">Muziek</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d nummers, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (score: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Totaal: %1$s</string>
 </resources>

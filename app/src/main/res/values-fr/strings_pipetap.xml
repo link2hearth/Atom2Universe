@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Faites pivoter les tuiles pour relier tous les tuyaux</string>
+    <string name="pipetap_moves">%1$d coups</string>
+    <string name="pipetap_solved">Résolu !</string>
+    <string name="pipetap_win_message">Résolu en %2$s avec %1$d rotations.</string>
+    <string name="pipetap_btn_again">Nouvelle partie</string>
+    <string name="pipetap_btn_next">Taille suivante</string>
+    <string name="pipetap_widget_cancel">Annuler</string>
+    <string name="pipetap_widget_confirm">Démarrer</string>
+</resources>

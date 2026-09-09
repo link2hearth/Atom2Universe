@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Pasjans</string>
+    <string name="solitaire_description">Klasyczna gra karciana Klondike</string>
+    <string name="solitaire_new_game">Nowa gra</string>
+    <string name="solitaire_moves">Ruchy: %1$d</string>
+    <string name="solitaire_status_new_game">Nowa gra rozpoczęta</string>
+    <string name="solitaire_status_restored">Gra przywrócona</string>
+    <string name="solitaire_status_won">Gratulacje! Wygrałeś!</string>
+    <string name="solitaire_dialog_resume_title">Gra w toku</string>
+    <string name="solitaire_dialog_resume_message">Trwa gra. Wznowić?</string>
+    <string name="solitaire_dialog_new_title">Nowa gra</string>
+    <string name="solitaire_dialog_new_message">Czy chcesz porzucić bieżącą grę?</string>
+    <string name="solitaire_auto_finish">Automatyczne zakończenie</string>
+    <string name="solitaire_status_won_short">Świetnie!\nZwycięstwo!</string>
+    <string name="solitaire_new_game_confirm">Nowa gra?</string>
+    <string name="solitaire_confirm">✓ Potwierdź</string>
+    <string name="solitaire_cancel">✕ Anuluj</string>
+</resources>

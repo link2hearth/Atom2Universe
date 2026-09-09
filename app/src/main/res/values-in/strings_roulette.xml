@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Mesin slot – sejajarkan simbol dan warna untuk memenangkan neutrino</string>
+    <string name="roulette_spin">PUTAR</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Pilih taruhan dan putar!</string>
+    <string name="roulette_status_spinning">Berputar…</string>
+    <string name="roulette_status_lose">Tidak menang kali ini.</string>
+    <string name="roulette_status_no_funds">Neutrino tidak cukup!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">Baris %1$s! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Joker Penuh! ×%1$d</string>
+    <string name="roulette_win_multiple">Beberapa kemenangan! ×%1$d total</string>
+    <string name="roulette_win_overlay_title">MENANG!</string>
+    <string name="roulette_win_overlay_tap">Ketuk untuk lanjutkan</string>
+</resources>

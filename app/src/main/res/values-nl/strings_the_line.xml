@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Verbind de punten, vul het raster</string>
+    <string name="the_line_back">Terug</string>
+    <string name="the_line_mode_single">Enkel</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Makkelijk</string>
+    <string name="the_line_diff_medium">Gemiddeld</string>
+    <string name="the_line_diff_hard">Moeilijk</string>
+    <string name="the_line_level">Niveau %1$d</string>
+    <string name="the_line_remaining">Resterende cellen: %1$d</string>
+    <string name="the_line_hint_single">Teken een pad van S naar F dat elke cel bezoekt.</string>
+    <string name="the_line_hint_multi">Verbind elk kleurenpaar zonder paden te kruisen.</string>
+    <string name="the_line_completed">Niveau %1$d voltooid!</string>
+    <string name="the_line_error">Kon geen raster genereren. Probeer opnieuw.</string>
+    <string name="the_line_btn_reset">Nieuw spel</string>
+    <string name="the_line_new_game">Nieuw spel</string>
+    <string name="the_line_solved_label">✓ Opgelost!</string>
+    <string name="the_line_diff_simple">Eenvoudig</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Annuleren</string>
+</resources>

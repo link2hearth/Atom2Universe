@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Ταξινομήστε τα μάρκες ανά χρώμα</string>
+    <string name="color_stack_back">Πίσω</string>
+    <string name="color_stack_difficulty_label">Δυσκολία:</string>
+    <string name="color_stack_difficulty_easy">Εύκολο</string>
+    <string name="color_stack_difficulty_medium">Μέτριο</string>
+    <string name="color_stack_difficulty_hard">Δύσκολο</string>
+    <string name="color_stack_moves">Κινήσεις: %1$d</string>
+    <string name="color_stack_moves_zero">Κινήσεις: 0</string>
+    <string name="color_stack_btn_new">Νέο</string>
+    <string name="color_stack_btn_restart">Επανεκκίνηση</string>
+    <string name="color_stack_btn_undo">Αναίρεση</string>
+    <string name="color_stack_status_new">Νέο παιχνίδι</string>
+    <string name="color_stack_status_restarted">Παιχνίδι επανεκκινήθηκε</string>
+    <string name="color_stack_status_won">🎉 Συγχαρητήρια!</string>
+    <string name="color_stack_new_game">Νέο παιχνίδι</string>
+    <string name="color_stack_widget_cancel">✕ Ακύρωση</string>
+</resources>

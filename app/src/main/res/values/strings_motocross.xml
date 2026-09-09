@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Ride procedural tracks — left to brake/lean back, right to accelerate/lean forward!</string>
+    <string name="motocross_restart">Restart</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="motocross_hint_brake">◀ Brake / Lean back</string>
+    <string name="motocross_hint_accelerate">Accelerate / Lean forward ▶</string>
+    <string name="motocross_game_over">GAME OVER</string>
+    <string name="motocross_distance_final">Distance: %1$d m</string>
+    <string name="motocross_best">Best: %1$d m</string>
+    <string name="motocross_tap_replay">Tap to play again</string>
+</resources>

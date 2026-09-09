@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Судоку</string>
+    <string name="sudoku_description">Головоломки судоку с 3 уровнями сложности</string>
+    <string name="sudoku_difficulty_easy">Лёгкий</string>
+    <string name="sudoku_difficulty_medium">Средний</string>
+    <string name="sudoku_difficulty_hard">Сложный</string>
+    <string name="sudoku_new_game">Новая игра</string>
+    <string name="sudoku_check">Проверить</string>
+    <string name="sudoku_clear">Очистить</string>
+    <string name="sudoku_undo">↩ Отменить</string>
+    <string name="sudoku_redo">↪ Повторить</string>
+    <string name="sudoku_status_generating">Генерация…</string>
+    <string name="sudoku_status_generated">Сетка %1$s сгенерирована (%2$d подсказок)</string>
+    <string name="sudoku_status_no_error">Пока без ошибок</string>
+    <string name="sudoku_status_errors">Обнаружено %1$d ошибок(и)</string>
+    <string name="sudoku_status_mistakes">%1$d неверных клеток</string>
+    <string name="sudoku_status_solved">Поздравляем! Головоломка решена!</string>
+    <string name="sudoku_dialog_new_game_title">Новая игра</string>
+    <string name="sudoku_dialog_confirm_new_title">Игра в процессе</string>
+    <string name="sudoku_dialog_confirm_new_message">Хотите покинуть текущую игру?</string>
+    <string name="sudoku_resume_game">Возобновить игру</string>
+    <string name="sudoku_start_new">Начать новую игру</string>
+    <string name="sudoku_result_success">Отлично!</string>
+    <string name="sudoku_result_failure">Неудача!</string>
+    <string name="sudoku_widget_cancel">✕ Отмена</string>
+    <string name="sudoku_validate">Проверить</string>
+    <string name="sudoku_notes">Заметки</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

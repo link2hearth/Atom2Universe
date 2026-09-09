@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Συνδέστε κελιά για να φτάσετε στο μηδέν — ή στο δέκα!</string>
+    <string name="link_moves_label">Κινήσεις:</string>
+    <string name="link_difficulty_easy">Μικρό</string>
+    <string name="link_difficulty_medium">Μέτριο</string>
+    <string name="link_difficulty_hard">Μεγάλο</string>
+    <string name="link_pairs_few">Λίγα ζεύγη</string>
+    <string name="link_pairs_normal">Κανονικά ζεύγη</string>
+    <string name="link_pairs_many">Πολλά ζεύγη</string>
+    <string name="link_mode_classic">Κλασικό</string>
+    <string name="link_mode_perfect">Τέλειο</string>
+    <string name="link_btn_undo">Αναίρεση</string>
+    <string name="link_btn_restart">Επανεκκίνηση</string>
+    <string name="link_btn_new_level">Νέο</string>
+    <string name="link_msg_new_level">Νέο επίπεδο %1$s. Συνδέστε %2$d κελιά για ρύθμιση τιμών!</string>
+    <string name="link_msg_new_level_perfect">Λειτουργία τέλειου — %1$s. Βρείτε τις %2$d ακριβείς κινήσεις.</string>
+    <string name="link_msg_progress">%1$d κανονικά και %2$d συν κελιά απομένουν προς ρύθμιση.</string>
+    <string name="link_msg_invalid_pattern">Μη έγκυρο μοτίβο για αυτό το μήκος σύνδεσης.</string>
+    <string name="link_msg_undo">Τελευταία κίνηση αναιρέθηκε.</string>
+    <string name="link_msg_nothing_to_undo">Τίποτα να αναιρεθεί.</string>
+    <string name="link_msg_restart">Παζλ επαναφέρθηκε.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Λύθηκε!</string>
+    <string name="link_victory_moves">%1$d κινήσεις</string>
+</resources>

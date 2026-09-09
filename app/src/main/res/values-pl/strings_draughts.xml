@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Warcaby</string>
+    <string name="draughts_description">Warcaby międzynarodowe (10×10) z AI</string>
+    <string name="draughts_new_game">Nowa gra</string>
+    <string name="draughts_difficulty_training">Trening</string>
+    <string name="draughts_difficulty_training_desc">Słaba AI, idealna do nauki</string>
+    <string name="draughts_difficulty_standard">Standardowy</string>
+    <string name="draughts_difficulty_standard_desc">Średnia AI, zrównoważona gra</string>
+    <string name="draughts_difficulty_expert">Ekspert</string>
+    <string name="draughts_difficulty_expert_desc">Silna AI, trudne wyzwanie</string>
+    <string name="draughts_difficulty_two_player">Dwóch graczy</string>
+    <string name="draughts_difficulty_two_player_desc">Graj przeciwko ludzkiemu przeciwnikowi</string>
+    <string name="draughts_status_white_turn">Ruch białych</string>
+    <string name="draughts_status_black_turn">Ruch czarnych</string>
+    <string name="draughts_status_ai_thinking">AI myśli…</string>
+    <string name="draughts_status_game_over">%s wygrywa!</string>
+    <string name="draughts_color_white">Białe</string>
+    <string name="draughts_color_black">Czarne</string>
+    <string name="draughts_draw">Remis</string>
+    <string name="draughts_game_over_title">Koniec gry</string>
+    <string name="draughts_resume_title">Wznowić grę?</string>
+    <string name="draughts_resume_message">Znaleziono zapisaną grę. Kontynuować?</string>
+    <string name="draughts_confirm_new_title">Nowa gra?</string>
+    <string name="draughts_confirm_new_message">Bieżąca gra zostanie utracona. Kontynuować?</string>
+    <string name="draughts_victory_title">Zwycięstwo!</string>
+    <string name="draughts_victory_message">Gratulacje! Pokonałeś AI.\n\nNagrody:\n• %1$d żetonów gacha\n• Boost x%2$d przez %3$d minut</string>
+    <string name="draughts_mandatory_capture">Obowiązkowe bicie! Musisz zbić wrogą pionek.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Anuluj</string>
+    <string name="draughts_widget_draw">Remis</string>
+    <string name="draughts_widget_white_wins">Białe\nwygrywają</string>
+    <string name="draughts_widget_black_wins">Czarne\nwygrywają</string>
+    <string name="draughts_widget_victory">Zwycięstwo!</string>
+    <string name="draughts_widget_defeat">Porażka</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

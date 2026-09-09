@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Gabungkan ubin untuk mencapai tujuan!</string>
+    <string name="game2048_score_label">SKOR</string>
+    <string name="game2048_best_label">TERBAIK</string>
+    <string name="game2048_universes_label">SEMESTA</string>
+    <string name="game2048_size_label">Grid:</string>
+    <string name="game2048_target_label">Tujuan:</string>
+    <string name="game2048_new">Baru</string>
+    <string name="game2048_status_play">Geser untuk memindahkan ubin</string>
+    <string name="game2048_status_win">Hebat! Ubin %1$d tercapai! Semesta baru…</string>
+    <string name="game2048_status_over">Terjebak di %1$d. Semesta baru…</string>
+    <string name="game2048_confirm_title">Permainan baru?</string>
+    <string name="game2048_confirm_message">Permainan saat ini akan hilang. Lanjutkan?</string>
+    <string name="game2048_quantum_mode">🐱 Mode Kuantum</string>
+    <string name="game2048_joker_active">🐱 ⚡ AKTIF</string>
+    <string name="game2048_difficulty_easy">Mudah</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Sulit</string>
+    <string name="game2048_difficulty_random">Acak</string>
+</resources>

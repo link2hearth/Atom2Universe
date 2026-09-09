@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">Çizgi</string>
+    <string name="the_line_description">Noktaları bağla, ızgarayı doldur</string>
+    <string name="the_line_back">Geri</string>
+    <string name="the_line_mode_single">Tekli</string>
+    <string name="the_line_mode_multi">Çoklu</string>
+    <string name="the_line_diff_easy">Kolay</string>
+    <string name="the_line_diff_medium">Orta</string>
+    <string name="the_line_diff_hard">Zor</string>
+    <string name="the_line_level">Seviye %1$d</string>
+    <string name="the_line_remaining">Kalan hücre: %1$d</string>
+    <string name="the_line_hint_single">S\'den F\'ye tüm hücreleri ziyaret eden bir yol çiz.</string>
+    <string name="the_line_hint_multi">Her renk çiftini yollar kesişmeden bağla.</string>
+    <string name="the_line_completed">Seviye %1$d tamamlandı!</string>
+    <string name="the_line_error">Izgara oluşturulamadı. Tekrar dene.</string>
+    <string name="the_line_btn_reset">Yeni oyun</string>
+    <string name="the_line_new_game">Yeni oyun</string>
+    <string name="the_line_solved_label">✓ Çözüldü!</string>
+    <string name="the_line_diff_simple">Basit</string>
+    <string name="the_line_diff_multi">Çoklu</string>
+    <string name="the_line_widget_cancel">✕ İptal</string>
+</resources>

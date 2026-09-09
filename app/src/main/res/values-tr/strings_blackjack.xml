@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">4 YZ rakibe kadar casino blackjack</string>
+    <string name="blackjack_hit">ÇEK</string>
+    <string name="blackjack_stand">DUR</string>
+    <string name="blackjack_double">İKİYE KATLA</string>
+    <string name="blackjack_split">BÖL</string>
+    <string name="blackjack_deal">DA</string>
+    <string name="blackjack_bet_label">BAHİS</string>
+    <string name="blackjack_ai_players_label">YZ Oyuncular: %1$d</string>
+    <string name="blackjack_settings_title">Masa ayarları</string>
+    <string name="blackjack_result_win">KAZANÇ +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">KAYBETTİ -%1$d</string>
+    <string name="blackjack_result_push">PUSH</string>
+    <string name="blackjack_result_win_free">KAZANÇ</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">KAYBETTİ</string>
+    <string name="blackjack_bet_free">ÜCRETSİZ</string>
+    <string name="blackjack_neutrino_balance">Nötrinolar: %1$d</string>
+    <string name="blackjack_ia_short">YZ</string>
+    <string name="blackjack_start">Oyna</string>
+    <string name="blackjack_dealer_thinking">Krupiye düşünüyor…</string>
+    <string name="blackjack_new_game_confirm">Yeni oyun?</string>
+    <string name="blackjack_confirm">✓ Onayla</string>
+    <string name="blackjack_cancel">✕ İptal</string>
+</resources>

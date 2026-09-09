@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Show/hide rarities</string>
     <string name="hub_stats_title">Statistics</string>
     <string name="hub_stats_desc">Listening, games and reading recaps</string>
+
+    <string name="back_button_desc">Back</string>
 </resources>

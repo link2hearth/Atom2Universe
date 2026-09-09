@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stars_war_title">Yıldız Savaşı</string>
+    <string name="stars_war_description">Uzay nişancısı — dalgalardan sağ çık!</string>
+    <string name="stars_war_paused">Duraklatıldı</string>
+    <string name="sw_title">YILDIZ  SAVAŞI</string>
+    <string name="sw_start_hint">Hareket etmek için sürükle  •  Otomatik ateş\n\nBaşlamak için dokun</string>
+    <string name="sw_paused">DURAKLATILDI</string>
+    <string name="sw_tap_resume">Devam etmek için dokun</string>
+    <string name="sw_wave_cleared">%1$d. dalga temizlendi!</string>
+    <string name="sw_choose_upgrade">GELİŞTİRME SEÇİN</string>
+    <string name="sw_best_hint" formatted="false">En iyi puan: %1$d  •  En iyi dalga: %2$d</string>
+    <string name="sw_game_over">OYUN  BİTTİ</string>
+    <string name="sw_score">Puan: %1$d</string>
+    <string name="sw_reached_wave">%1$d. dalgaya ulaşıldı</string>
+    <string name="sw_new_best_score">★ Yeni en iyi puan! ★</string>
+    <string name="sw_new_best_wave">★ Yeni en iyi dalga! ★</string>
+    <string name="sw_best_summary" formatted="false">En iyi: %1$d  •  Dalga: %2$d</string>
+    <string name="sw_tap_play_again">Tekrar oynamak için dokun</string>
+    <string name="sw_hud_wave">Dalga %1$d</string>
+    <string name="sw_boss_wave_announce">⚠  PATRON  DALGASI  ⚠</string>
+    <string name="sw_wave_announce">— DALGA  %1$d —</string>
+    <string name="sw_hud_multishot">×%1$dAtış</string>
+    <string name="sw_hud_pierce">Deler×%1$d</string>
+    <string name="sw_hud_rocket_base">Roket</string>
+    <string name="sw_hud_rocket">Roket+%1$d</string>
+    <string name="sw_hud_leech">Kan emici</string>
+    <string name="sw_upg_rapid_fire_name">Hızlı Tetik</string>
+    <string name="sw_upg_rapid_fire_desc">Ateş hızı +5%</string>
+    <string name="sw_upg_multi_shot_name">İkiz Toplar</string>
+    <string name="sw_upg_multi_shot_desc">+1 paralel mermi</string>
+    <string name="sw_upg_power_shot_name">Güçlü Atış</string>
+    <string name="sw_upg_power_shot_desc">Mermi başına +1 hasar</string>
+    <string name="sw_upg_shield_name">Enerji Kalkanı</string>
+    <string name="sw_upg_shield_desc">1 isabet absorbe et</string>
+    <string name="sw_upg_heal_name">Tamir Kiti</string>
+    <string name="sw_upg_heal_desc">1 HP geri yükle</string>
+    <string name="sw_upg_max_hp_name">Gövde Yükseltmesi</string>
+    <string name="sw_upg_max_hp_desc">+1 maks HP</string>
+    <string name="sw_upg_pierce_name">Raylı Tabanca Mermisi</string>
+    <string name="sw_upg_pierce_desc">Mermiler +1 deler</string>
+    <string name="sw_upg_rocket_name">Roket Fırlatıcı</string>
+    <string name="sw_upg_rocket_desc">Güdümlü ×2 hasar / 10s</string>
+    <string name="sw_upg_rocket_rate_name">Roket Güçlendirici</string>
+    <string name="sw_upg_rocket_rate_desc">Roket hızı +5%</string>
+    <string name="sw_upg_rocket_dmg_name">Savaş Başlığı</string>
+    <string name="sw_upg_rocket_dmg_desc">+1 roket hasarı</string>
+    <string name="sw_upg_magnet_name">Manyetik Alan</string>
+    <string name="sw_upg_magnet_desc">Mermileri iter (5s)</string>
+    <string name="sw_upg_magnet_dur_name">Alan Genişletici</string>
+    <string name="sw_upg_magnet_dur_desc">Manyetik alan +1.25s</string>
+    <string name="sw_upg_drone_name">Kanat Dronu</string>
+    <string name="sw_upg_drone_desc">Yardımcı otomatik ateşler</string>
+    <string name="sw_upg_vampire_name">Kan Emici</string>
+    <string name="sw_upg_vampire_desc">Öldürme başına %5 can çalma</string>
+    <string name="sw_upg_nova_name">Nova Darbesi</string>
+    <string name="sw_upg_nova_desc">Yakındaki mermileri temizle</string>
+    <string name="sw_meteor_title">✦ METEOR YAĞMURU ✦</string>
+    <string name="sw_meteor_bonus">MÜKEMMEL! +2 geliştirme</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Объединяйте плитки, чтобы достичь цели!</string>
+    <string name="game2048_score_label">ОЧКИ</string>
+    <string name="game2048_best_label">РЕКОРД</string>
+    <string name="game2048_universes_label">ВСЕЛЕННЫЕ</string>
+    <string name="game2048_size_label">Сетка:</string>
+    <string name="game2048_target_label">Цель:</string>
+    <string name="game2048_new">Новая</string>
+    <string name="game2048_status_play">Проведите пальцем, чтобы переместить плитки</string>
+    <string name="game2048_status_win">Отлично! Плитка %1$d достигнута! Новая вселенная…</string>
+    <string name="game2048_status_over">Заблокировано на %1$d. Новая вселенная…</string>
+    <string name="game2048_confirm_title">Новая игра?</string>
+    <string name="game2048_confirm_message">Текущая игра будет потеряна. Продолжить?</string>
+    <string name="game2048_quantum_mode">🐱 Квантовый режим</string>
+    <string name="game2048_joker_active">🐱 ⚡ АКТИВЕН</string>
+    <string name="game2048_difficulty_easy">Лёгкий</string>
+    <string name="game2048_difficulty_normal">Нормальный</string>
+    <string name="game2048_difficulty_hard">Сложный</string>
+    <string name="game2048_difficulty_random">Случайный</string>
+</resources>

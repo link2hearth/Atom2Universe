@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Сортируйте фишки по цвету</string>
+    <string name="color_stack_back">Назад</string>
+    <string name="color_stack_difficulty_label">Сложность:</string>
+    <string name="color_stack_difficulty_easy">Лёгкий</string>
+    <string name="color_stack_difficulty_medium">Средний</string>
+    <string name="color_stack_difficulty_hard">Сложный</string>
+    <string name="color_stack_moves">Ходы: %1$d</string>
+    <string name="color_stack_moves_zero">Ходы: 0</string>
+    <string name="color_stack_btn_new">Новая</string>
+    <string name="color_stack_btn_restart">Перезапустить</string>
+    <string name="color_stack_btn_undo">Отменить</string>
+    <string name="color_stack_status_new">Новая игра</string>
+    <string name="color_stack_status_restarted">Игра перезапущена</string>
+    <string name="color_stack_status_won">🎉 Поздравляем!</string>
+    <string name="color_stack_new_game">Новая игра</string>
+    <string name="color_stack_widget_cancel">✕ Отмена</string>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Batata Quente</string>
+    <string name="hot_potato_description">Faz a batata saltar, cozinha-a no ponto certo e atira-a pelos lados!</string>
+    <string name="hot_potato_how_to">Puxa para trás como uma fisga para lançar · cozinha-a até à zona verde</string>
+    <string name="hot_potato_tap_to_start">Toca sob a batata para começar</string>
+    <string name="hot_potato_tap_to_retry">Toca para tentar de novo</string>
+    <string name="hot_potato_tap_to_resume">Toca para continuar</string>
+    <string name="hot_potato_game_over">Fim de Jogo</string>
+    <string name="hot_potato_paused">Em pausa</string>
+    <string name="hot_potato_score_label">Pontos</string>
+    <string name="hot_potato_best_label">MELHOR</string>
+    <string name="hot_potato_new_best">Novo recorde!</string>
+    <string name="hot_potato_perfect">Perfeito!</string>
+    <string name="hot_potato_raw">Demasiado crua!</string>
+    <string name="hot_potato_burnt">Queimada!</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Reflex</string>
+    <string name="reflex_description">Tippe so schnell wie möglich auf die Kreise!</string>
+    <string name="reflex_score_label">PUNKTE</string>
+    <string name="reflex_best_easy_label">BESTES (EINFACH)</string>
+    <string name="reflex_best_hard_label">BESTES (SCHWER)</string>
+    <string name="reflex_mode_easy">Einfach</string>
+    <string name="reflex_mode_hard">Schwer</string>
+    <string name="reflex_start">Spielen</string>
+    <string name="reflex_status_ready">Modus wählen und Spielen drücken</string>
+    <string name="reflex_status_go">Los! Tippe auf die Kreise!</string>
+    <string name="reflex_status_hit">Treffer! +%1$d Pkt - Gesamt: %2$d</string>
+    <string name="reflex_status_game_over">Spiel vorbei! Endpunktzahl: %1$d</string>
+    <string name="reflex_status_new_record">Neuer Rekord! Punkte: %1$d</string>
+</resources>

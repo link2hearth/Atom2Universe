@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roguelike_title">Dungeon</string>
+    <string name="roguelike_description">Исследуйте процедурные подземелья и выживите на 5 этажах</string>
+</resources>

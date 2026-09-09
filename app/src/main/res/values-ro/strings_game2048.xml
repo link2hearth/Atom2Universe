@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Îmbinați plăcile pentru a atinge obiectivul!</string>
+    <string name="game2048_score_label">SCOR</string>
+    <string name="game2048_best_label">RECORD</string>
+    <string name="game2048_universes_label">UNIVERSURI</string>
+    <string name="game2048_size_label">Grilă:</string>
+    <string name="game2048_target_label">Obiectiv:</string>
+    <string name="game2048_new">Nou</string>
+    <string name="game2048_status_play">Glisați pentru a muta plăcile</string>
+    <string name="game2048_status_win">Excelent! Placa %1$d atinsă! Univers nou…</string>
+    <string name="game2048_status_over">Blocat la %1$d. Univers nou…</string>
+    <string name="game2048_confirm_title">Joc nou?</string>
+    <string name="game2048_confirm_message">Jocul curent va fi pierdut. Continuați?</string>
+    <string name="game2048_quantum_mode">🐱 Mod Cuantic</string>
+    <string name="game2048_joker_active">🐱 ⚡ ACTIV</string>
+    <string name="game2048_difficulty_easy">Ușor</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Greu</string>
+    <string name="game2048_difficulty_random">Aleatoriu</string>
+</resources>

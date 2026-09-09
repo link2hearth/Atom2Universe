@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Sıcak Patates</string>
+    <string name="hot_potato_description">Patatesi zıplat, tam kıvamında pişir ve kenarlardan fırlat!</string>
+    <string name="hot_potato_how_to">Fırlatmak için sapan gibi geri çek · yeşil bölgeye kadar pişir</string>
+    <string name="hot_potato_tap_to_start">Başlamak için patatesin altına dokun</string>
+    <string name="hot_potato_tap_to_retry">Tekrar denemek için dokun</string>
+    <string name="hot_potato_tap_to_resume">Devam etmek için dokun</string>
+    <string name="hot_potato_game_over">Oyun Bitti</string>
+    <string name="hot_potato_paused">Duraklatıldı</string>
+    <string name="hot_potato_score_label">Skor</string>
+    <string name="hot_potato_best_label">EN İYİ</string>
+    <string name="hot_potato_new_best">Yeni rekor!</string>
+    <string name="hot_potato_perfect">Mükemmel!</string>
+    <string name="hot_potato_raw">Çok çiğ!</string>
+    <string name="hot_potato_burnt">Yandı!</string>
+</resources>

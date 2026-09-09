@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Heiße Kartoffel</string>
+    <string name="hot_potato_description">Lass die Knolle hüpfen, gar sie genau richtig und schnipp sie über die Seiten weg!</string>
+    <string name="hot_potato_how_to">Wie eine Schleuder zurückziehen zum Abschuss · gar sie bis zur grünen Zone</string>
+    <string name="hot_potato_tap_to_start">Tippe unter die Kartoffel zum Starten</string>
+    <string name="hot_potato_tap_to_retry">Tippen für neuen Versuch</string>
+    <string name="hot_potato_tap_to_resume">Tippen zum Fortsetzen</string>
+    <string name="hot_potato_game_over">Spiel vorbei</string>
+    <string name="hot_potato_paused">Pausiert</string>
+    <string name="hot_potato_score_label">Punkte</string>
+    <string name="hot_potato_best_label">BESTE</string>
+    <string name="hot_potato_new_best">Neuer Rekord!</string>
+    <string name="hot_potato_perfect">Perfekt!</string>
+    <string name="hot_potato_raw">Zu roh!</string>
+    <string name="hot_potato_burnt">Verbrannt!</string>
+</resources>

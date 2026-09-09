@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Κόμικς</string>
     <string name="reading_stats_history_title">Ιστορικό</string>
     <string name="reading_stats_top_titles">Τα πιο διαβασμένα</string>
+
+    <string name="stats_tab_day">Σήμερα</string>
+    <string name="stats_tab_week">Εβδομάδα</string>
+    <string name="stats_tab_month">Μήνας</string>
+    <string name="stats_tab_year">Έτος</string>
+    <string name="stats_total_time">Συνολικός χρόνος χρήσης</string>
+    <string name="stats_hours_format">%1$d ώ %2$d λεπτά</string>
+    <string name="stats_minutes_format">%1$d λεπτά</string>
+    <string name="stats_top_artists">Κορυφαίοι καλλιτέχνες</string>
+    <string name="stats_top_albums">Κορυφαία άλμπουμ</string>
+    <string name="stats_top_midi">Πιο εξασκημένα τραγούδια</string>
+    <string name="stats_average_score">Μέσος βαθμός εξάσκησης</string>
+    <string name="stats_no_data">Δεν υπάρχουν δεδομένα για αυτή την περίοδο</string>
+    <string name="stats_tab_calendar">Ημερολόγιο</string>
+    <string name="stats_calendar_no_data">Δεν υπάρχει δραστηριότητα αυτή την ημέρα</string>
+    <string name="stats_calendar_music_section">Μουσική</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Ραδιόφωνο</string>
+    <string name="stats_calendar_tracks_format">%1$d κομμάτια, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (βαθμός: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Σύνολο: %1$s</string>
 </resources>

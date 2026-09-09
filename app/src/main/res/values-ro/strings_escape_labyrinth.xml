@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_title">Evadare din Labirint</string>
+    <string name="escape_description">Furișați-vă prin labirint, colectați toate orbele, ajungeți la ieșire</string>
+    <string name="escape_back">Înapoi</string>
+    <string name="escape_diff_easy">Ușor</string>
+    <string name="escape_diff_medium">Mediu</string>
+    <string name="escape_diff_hard">Greu</string>
+    <string name="escape_btn_new">Nou</string>
+    <string name="escape_turns_label_zero">Tura 0</string>
+    <string name="escape_turns_label">Tura %1$d</string>
+    <string name="escape_turns_prefix">Tura </string>
+    <string name="escape_orbs_label">Orbe %1$d/%2$d</string>
+    <string name="escape_status_generating">Se generează labirintul…</string>
+    <string name="escape_status_gen_error">Generare eșuată. Încercați din nou.</string>
+    <string name="escape_status_ready">Colectați toate orbele, apoi ajungeți la ieșire!</string>
+    <string name="escape_status_playing">Tura %1$d — %2$d/%3$d orbe colectate</string>
+    <string name="escape_status_reach_exit">Toate orbele colectate! Ajungeți la ieșire!</string>
+    <string name="escape_status_missing_orbs">%1$d orbă(e) lipsesc încă!</string>
+    <string name="escape_status_wall">Drum blocat.</string>
+    <string name="escape_status_caught">Descoperit după %1$d ture! Apăsați pentru a reîncerca.</string>
+    <string name="escape_status_win">Evadare în %1$d ture (optim: %2$d). Apăsați pentru a juca din nou.</string>
+    <string name="escape_status_win_perfect">Evadare perfectă în %1$d ture! Apăsați pentru a juca din nou.</string>
+</resources>

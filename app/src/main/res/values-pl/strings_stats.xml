@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Komiksy</string>
     <string name="reading_stats_history_title">Historia</string>
     <string name="reading_stats_top_titles">Najczęściej czytane</string>
+
+    <string name="stats_tab_day">Dzisiaj</string>
+    <string name="stats_tab_week">Tydzień</string>
+    <string name="stats_tab_month">Miesiąc</string>
+    <string name="stats_tab_year">Rok</string>
+    <string name="stats_total_time">Całkowity czas użytkowania</string>
+    <string name="stats_hours_format">%1$d godz %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artyści</string>
+    <string name="stats_top_albums">Top albumy</string>
+    <string name="stats_top_midi">Najczęściej ćwiczone utwory</string>
+    <string name="stats_average_score">Średni wynik ćwiczeń</string>
+    <string name="stats_no_data">Brak danych dla tego okresu</string>
+    <string name="stats_tab_calendar">Kalendarz</string>
+    <string name="stats_calendar_no_data">Brak aktywności w tym dniu</string>
+    <string name="stats_calendar_music_section">Muzyka</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d utworów, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (wynik: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Łącznie: %1$s</string>
 </resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Patience</string>
+    <string name="solitaire_description">Het klassieke Klondike-kaartspel</string>
+    <string name="solitaire_new_game">Nieuw spel</string>
+    <string name="solitaire_moves">Zetten: %1$d</string>
+    <string name="solitaire_status_new_game">Nieuw spel gestart</string>
+    <string name="solitaire_status_restored">Spel hersteld</string>
+    <string name="solitaire_status_won">Gefeliciteerd! Gewonnen!</string>
+    <string name="solitaire_dialog_resume_title">Spel bezig</string>
+    <string name="solitaire_dialog_resume_message">Er is een spel bezig. Hervatten?</string>
+    <string name="solitaire_dialog_new_title">Nieuw spel</string>
+    <string name="solitaire_dialog_new_message">Wil je het huidige spel verlaten?</string>
+    <string name="solitaire_auto_finish">Automatisch voltooien</string>
+    <string name="solitaire_status_won_short">Goed zo!\nOverwinning!</string>
+    <string name="solitaire_new_game_confirm">Nieuw spel?</string>
+    <string name="solitaire_confirm">✓ Bevestigen</string>
+    <string name="solitaire_cancel">✕ Annuleren</string>
+</resources>

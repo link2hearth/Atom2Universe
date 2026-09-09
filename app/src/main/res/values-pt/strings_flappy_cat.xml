@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Jumping Cat</string>
+    <string name="flappy_cat_description">Desvia de pilões e pássaros!</string>
+    <string name="flappy_cat_tap_to_start">Toque para começar</string>
+    <string name="flappy_cat_tap_to_retry">Toque para tentar novamente</string>
+    <string name="flappy_cat_game_over">Game Over</string>
+    <string name="flappy_cat_paused">Em pausa</string>
+    <string name="flappy_cat_tap_to_resume">Toque para retomar</string>
+    <string name="flappy_cat_score_label">Pontuação</string>
+    <string name="flappy_cat_best_label">MELHOR</string>
+    <string name="flappy_cat_new_best">Novo recorde!</string>
+</resources>

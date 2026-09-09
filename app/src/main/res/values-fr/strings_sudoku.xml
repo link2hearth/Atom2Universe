@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Grilles de Sudoku avec 3 niveaux de difficulté</string>
+    <string name="sudoku_difficulty_easy">Facile</string>
+    <string name="sudoku_difficulty_medium">Moyen</string>
+    <string name="sudoku_difficulty_hard">Difficile</string>
+    <string name="sudoku_new_game">Nouvelle partie</string>
+    <string name="sudoku_check">Vérifier</string>
+    <string name="sudoku_clear">Effacer</string>
+    <string name="sudoku_validate">Valider</string>
+    <string name="sudoku_undo">↩ Annuler</string>
+    <string name="sudoku_redo">↪ Refaire</string>
+    <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+    <string name="sudoku_status_generating">Génération en cours…</string>
+    <string name="sudoku_status_generated">Grille %1$s générée (%2$d indices)</string>
+    <string name="sudoku_status_no_error">Aucune erreur pour l\'instant</string>
+    <string name="sudoku_status_errors">%1$d erreur(s) détectée(s)</string>
+    <string name="sudoku_status_mistakes">%1$d case(s) incorrecte(s)</string>
+    <string name="sudoku_status_solved">Félicitations ! Puzzle résolu !</string>
+    <string name="sudoku_dialog_new_game_title">Nouvelle partie</string>
+    <string name="sudoku_dialog_confirm_new_title">Partie en cours</string>
+    <string name="sudoku_dialog_confirm_new_message">Voulez-vous abandonner la partie en cours ?</string>
+    <string name="sudoku_resume_game">Reprendre la partie</string>
+    <string name="sudoku_start_new">Commencer une nouvelle partie</string>
+    <string name="sudoku_result_success">Bravo !</string>
+    <string name="sudoku_result_failure">Raté !</string>
+    <string name="sudoku_widget_cancel">✕ Annuler</string>
+</resources>

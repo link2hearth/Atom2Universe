@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Dama</string>
+    <string name="draughts_description">Yapay zeka ile uluslararası dama (10×10)</string>
+    <string name="draughts_new_game">Yeni oyun</string>
+    <string name="draughts_difficulty_training">Antrenman</string>
+    <string name="draughts_difficulty_training_desc">Zayıf YZ, öğrenmek için ideal</string>
+    <string name="draughts_difficulty_standard">Standart</string>
+    <string name="draughts_difficulty_standard_desc">Orta YZ, dengeli oyun</string>
+    <string name="draughts_difficulty_expert">Uzman</string>
+    <string name="draughts_difficulty_expert_desc">Güçlü YZ, zorlu meydan okuma</string>
+    <string name="draughts_difficulty_two_player">İki oyuncu</string>
+    <string name="draughts_difficulty_two_player_desc">İnsan rakibe karşı oyna</string>
+    <string name="draughts_status_white_turn">Beyazın sırası</string>
+    <string name="draughts_status_black_turn">Siyahın sırası</string>
+    <string name="draughts_status_ai_thinking">YZ düşünüyor…</string>
+    <string name="draughts_status_game_over">%s kazandı!</string>
+    <string name="draughts_color_white">Beyaz</string>
+    <string name="draughts_color_black">Siyah</string>
+    <string name="draughts_draw">Beraberlik</string>
+    <string name="draughts_game_over_title">Oyun bitti</string>
+    <string name="draughts_resume_title">Oyuna devam et?</string>
+    <string name="draughts_resume_message">Kayıtlı oyun bulundu. Devam etmek istiyor musunuz?</string>
+    <string name="draughts_confirm_new_title">Yeni oyun?</string>
+    <string name="draughts_confirm_new_message">Mevcut oyun kaybolacak. Devam et?</string>
+    <string name="draughts_victory_title">Zafer!</string>
+    <string name="draughts_victory_message">Tebrikler! YZ\'yi yendiniz.\n\nÖdüller:\n• %1$d gacha bileti\n• %3$d dakika için ×%2$d güçlendirme</string>
+    <string name="draughts_mandatory_capture">Zorunlu yakalama! Bir düşman taşı almanız gerekiyor.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ İptal</string>
+    <string name="draughts_widget_draw">Beraberlik</string>
+    <string name="draughts_widget_white_wins">Beyaz\nKazandı</string>
+    <string name="draughts_widget_black_wins">Siyah\nKazandı</string>
+    <string name="draughts_widget_victory">Zafer!</string>
+    <string name="draughts_widget_defeat">Yenilgi</string>
+    <string name="draughts_widget_piece_count" formatted="false">○%1$d  ●%2$d</string>
+</resources>

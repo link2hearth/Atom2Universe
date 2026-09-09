@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Riflessi</string>
+    <string name="reflex_description">Tocca i cerchi il più velocemente possibile!</string>
+    <string name="reflex_score_label">PUNTEGGIO</string>
+    <string name="reflex_best_easy_label">MIGLIORE (FACILE)</string>
+    <string name="reflex_best_hard_label">MIGLIORE (DIFFICILE)</string>
+    <string name="reflex_mode_easy">Facile</string>
+    <string name="reflex_mode_hard">Difficile</string>
+    <string name="reflex_start">Gioca</string>
+    <string name="reflex_status_ready">Scegli una modalità e premi Gioca</string>
+    <string name="reflex_status_go">Vai! Tocca i cerchi!</string>
+    <string name="reflex_status_hit">Colpito! +%1$d pts - Totale: %2$d</string>
+    <string name="reflex_status_game_over">Partita finita! Punteggio finale: %1$d</string>
+    <string name="reflex_status_new_record">Nuovo record! Punteggio: %1$d</string>
+</resources>

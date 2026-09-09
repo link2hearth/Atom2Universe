@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Rotate tiles to connect all the pipes</string>
+    <string name="pipetap_moves">%1$d moves</string>
+    <string name="pipetap_solved">Solved!</string>
+    <string name="pipetap_win_message">Solved in %2$s with %1$d rotations.</string>
+    <string name="pipetap_btn_again">New game</string>
+    <string name="pipetap_btn_next">Next size</string>
+    <string name="pipetap_widget_cancel">Cancel</string>
+    <string name="pipetap_widget_confirm">Start</string>
+</resources>

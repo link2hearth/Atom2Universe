@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Zeldzaamheden tonen/verbergen</string>
     <string name="hub_stats_title">Statistieken</string>
     <string name="hub_stats_desc">Overzicht luisteren, games en lezen</string>
+
+    <string name="back_button_desc">Terug</string>
 </resources>

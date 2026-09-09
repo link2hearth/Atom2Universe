@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Putar ubin untuk menyambungkan semua pipa</string>
+    <string name="pipetap_moves">%1$d gerakan</string>
+    <string name="pipetap_solved">Terpecahkan!</string>
+    <string name="pipetap_win_message">Terpecahkan dalam %2$s dengan %1$d rotasi.</string>
+    <string name="pipetap_btn_again">Permainan baru</string>
+    <string name="pipetap_btn_next">Ukuran berikutnya</string>
+    <string name="pipetap_widget_cancel">Batal</string>
+    <string name="pipetap_widget_confirm">Mulai</string>
+</resources>

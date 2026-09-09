@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbita</string>
+    <string name="orbite_description">Wpraw elektron w ruch, omijaj asteroidy i zbieraj kwanty energii!</string>
+    <string name="orbite_subtitle">Jedno dotknięcie odwraca kierunek orbity elektronu</string>
+    <string name="orbite_instructions">Omijaj kosmiczne odłamki przyciągane do jądra · zgarniaj zielone kwanty, by budować combo</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Ponów</string>
+    <string name="orbite_btn_back">Wstecz</string>
+    <string name="orbite_game_over">Kolaps!</string>
+    <string name="orbite_best_label">NAJLEPSZY %1$s</string>
+    <string name="orbite_final_score">Wynik %1$d</string>
+    <string name="orbite_best_score">Najlepszy %1$d</string>
+    <string name="orbite_new_best">★ Nowy rekord! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

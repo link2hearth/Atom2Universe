@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Łącz komórki, aby osiągnąć zero — lub dziesięć!</string>
+    <string name="link_moves_label">Ruchy:</string>
+    <string name="link_difficulty_easy">Mały</string>
+    <string name="link_difficulty_medium">Średni</string>
+    <string name="link_difficulty_hard">Duży</string>
+    <string name="link_pairs_few">Mało bliźniaków</string>
+    <string name="link_pairs_normal">Normalni bliźniacy</string>
+    <string name="link_pairs_many">Dużo bliźniaków</string>
+    <string name="link_mode_classic">Klasyczny</string>
+    <string name="link_mode_perfect">Perfekcyjny</string>
+    <string name="link_btn_undo">Cofnij</string>
+    <string name="link_btn_restart">Uruchom ponownie</string>
+    <string name="link_btn_new_level">Nowy</string>
+    <string name="link_msg_new_level">Nowy poziom %1$s. Połącz %2$d komórki, aby dostosować wartości!</string>
+    <string name="link_msg_new_level_perfect">Tryb perfekcyjny — %1$s. Znajdź %2$d dokładnych ruchów.</string>
+    <string name="link_msg_progress">%1$d normalnych i %2$d komórek plus do dostosowania.</string>
+    <string name="link_msg_invalid_pattern">Nieprawidłowy wzorzec dla tej długości łącza.</string>
+    <string name="link_msg_undo">Ostatni ruch cofnięty.</string>
+    <string name="link_msg_nothing_to_undo">Brak ruchów do cofnięcia.</string>
+    <string name="link_msg_restart">Zagadka zresetowana.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Rozwiązano!</string>
+    <string name="link_victory_moves">%1$d ruchów</string>
+</resources>

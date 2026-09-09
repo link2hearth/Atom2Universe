@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Hubungkan semua bintang dengan jembatan yang tidak bersilangan</string>
+    <string name="starbridges_bridges">%1$d / %2$d jembatan</string>
+    <string name="starbridges_solved">Konstelasi lengkap!</string>
+    <string name="starbridges_solved_header">★ Lengkap!</string>
+    <string name="starbridges_win_message">Selesai dalam %1$s — %2$d gerakan, %3$d jembatan.</string>
+    <string name="starbridges_btn_again">Permainan baru</string>
+    <string name="starbridges_btn_next">Ukuran berikutnya</string>
+    <string name="starbridges_hint_source">Ketuk bintang untuk memulai jembatan.</string>
+    <string name="starbridges_hint_target">Ketuk bintang yang sejajar untuk meletakkan jembatan.</string>
+    <string name="starbridges_restart_desc">Mulai ulang teka-teki</string>
+</resources>

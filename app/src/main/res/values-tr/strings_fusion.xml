@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fusion_title">FÜZYON</string>
+    <string name="fusion_btn">⚛</string>
+    <string name="fusion_recipe_pp_name">Proton-Proton Zinciri</string>
+    <string name="fusion_recipe_triple_alpha_name">Üçlü-Alfa Süreci</string>
+    <string name="fusion_recipe_alpha_capture_name">Neon Yanması</string>
+    <string name="fusion_recipe_carbon_fusion_name">Karbon Yanması</string>
+    <string name="fusion_recipe_oxygen_fusion_name">Oksijen Yanması</string>
+    <string name="fusion_recipe_water_name">Demir Sentezi</string>
+    <string name="fusion_recipe_pp_science">Yıldız çekirdeklerinde 4 proton, kuantum tünelleme yoluyla helyum-4\'e dönüşerek yıldızları milyarlarca yıl besler.</string>
+    <string name="fusion_recipe_triple_alpha_science">Üç helyum-4 çekirdeği, Hoyle rezonansı aracılığıyla çarpışarak bir karbon-12 çekirdeği oluşturur.</string>
+    <string name="fusion_recipe_alpha_capture_science">İki neon-20 çekirdeği, yıldız çekirdeğinde fotodisintegrasyon geçirir ve oksijen-16 ile enerjik alfa parçacıkları serbest bırakır.</string>
+    <string name="fusion_recipe_carbon_fusion_science">İki karbon-12 çekirdeği, kütleli bir yıldızın çekirdeğinde birleşerek neon-20 üretir.</string>
+    <string name="fusion_recipe_oxygen_fusion_science">İki oksijen-16 çekirdeği, bir yıldızın çekirdeğinde birleşerek kükürt-32 üretir.</string>
+    <string name="fusion_recipe_water_science">Ardışık füzyon reaksiyonları aracılığıyla, masif bir yıldızın çekirdeğinde kükürt çekirdekleri tüketilir ve yıldız füzyonunun son noktası olan demir-56 dövülür.</string>
+    <string name="fusion_recipe_pp_game">4 H → He  •  75%%  •  +1%% APS veya APC</string>
+    <string name="fusion_recipe_triple_alpha_game">3 He → C  •  45%%  •  +1%% APS veya APC</string>
+    <string name="fusion_recipe_alpha_capture_game">2 Ne → O  •  40%%  •  +1%% APS veya APC</string>
+    <string name="fusion_recipe_carbon_fusion_game">2 C → Ne  •  35%%  •  +1%% APS veya APC</string>
+    <string name="fusion_recipe_oxygen_fusion_game">2 O → S  •  30%%  •  +1%% APS veya APC</string>
+    <string name="fusion_recipe_water_game">2 S → Fe  •  20%%  •  +1%% APS veya APC</string>
+    <string name="fusion_game_info_bonus" formatted="false">+1% APS veya APC</string>
+    <string name="fusion_game_info_random_output">rastgele %s</string>
+        <string name="fusion_locked">🔒 Önce önceki füzyonu tamamlayın</string>
+    <string name="fusion_stats">%1$d galibiyet / %2$d deneme</string>
+    <string name="fusion_fuse_btn">FÜZYON</string>
+    <string name="fusion_not_enough_elements">Yeterli element yok</string>
+    <string name="fusion_success">BAŞARILI</string>
+    <string name="fusion_fail">BAŞARISIZ</string>
+    <string name="fusion_result_got_element">Elde edildi: %1$s (%2$s)</string>
+    <string name="fusion_result_consumed">Elementler tüketildi.</string>
+    <string name="fusion_tap_continue">Devam etmek için dokunun</string>
+    <string name="fusion_next_bonus_aps">Sonraki galibiyet → +1%% APS</string>
+    <string name="fusion_next_bonus_apc">Sonraki galibiyet → +1%% APC</string>
+    <string name="fusion_recipe_neutron_capture_name">Nötron Yakalama</string>
+    <string name="fusion_recipe_neutron_capture_science">Demirin ötesinde yıldız füzyonu artık ekzotermik değildir. Daha ağır elementler, süpernova patlamaları sırasında nötron yakalama yoluyla oluşur — r-süreci milisaniyeler içinde kobalt, nikel, bakır ve daha fazlasını dövüp şekillendirir.</string>
+    <string name="fusion_recipe_neutron_capture_game">3 Fe → rastgele Supernova elementi  •  12%%  •  +1%% APS veya APC</string>
+    <string name="fusion_card_dropped">Kart kazanıldı: %1$s!</string>
+    <string name="fusion_fuse_all">⚡ HEPSİNİ BİRLEŞTİR (Kademe 1)</string>
+    <string name="fusion_fuse_all_short">HEPSİ</string>
+    <string name="fusion_batch_result">%1$d ✓  /  %2$d ✗</string>
+    <string name="fusion_mute">Sustur</string>
+</resources>

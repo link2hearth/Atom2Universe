@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">3 zorluk seviyeli Sudoku ızgaraları</string>
+    <string name="sudoku_difficulty_easy">Kolay</string>
+    <string name="sudoku_difficulty_medium">Orta</string>
+    <string name="sudoku_difficulty_hard">Zor</string>
+    <string name="sudoku_new_game">Yeni oyun</string>
+    <string name="sudoku_check">Kontrol et</string>
+    <string name="sudoku_clear">Temizle</string>
+    <string name="sudoku_undo">↩ Geri al</string>
+    <string name="sudoku_redo">↪ Yeniden yap</string>
+    <string name="sudoku_status_generating">Oluşturuluyor…</string>
+    <string name="sudoku_status_generated" formatted="false">%1$s ızgara oluşturuldu (%2$d ipucu)</string>
+    <string name="sudoku_status_no_error">Şimdiye kadar hata yok</string>
+    <string name="sudoku_status_errors">%1$d hata tespit edildi</string>
+    <string name="sudoku_status_mistakes">%1$d yanlış hücre</string>
+    <string name="sudoku_status_solved">Tebrikler! Bulmaca çözüldü!</string>
+    <string name="sudoku_dialog_new_game_title">Yeni oyun</string>
+    <string name="sudoku_dialog_confirm_new_title">Oyun devam ediyor</string>
+    <string name="sudoku_dialog_confirm_new_message">Mevcut oyunu bırakmak istiyor musunuz?</string>
+    <string name="sudoku_resume_game">Oyuna devam et</string>
+    <string name="sudoku_start_new">Yeni oyun başlat</string>
+    <string name="sudoku_result_success">Aferin!</string>
+    <string name="sudoku_result_failure">Başarısız!</string>
+    <string name="sudoku_widget_cancel">✕ İptal</string>
+    <string name="sudoku_validate">Doğrula</string>
+    <string name="sudoku_notes">Notlar</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

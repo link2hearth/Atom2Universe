@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Renk Yığını</string>
+    <string name="color_stack_description">Jetonları renge göre sırala</string>
+    <string name="color_stack_back">Geri</string>
+    <string name="color_stack_difficulty_label">Zorluk:</string>
+    <string name="color_stack_difficulty_easy">Kolay</string>
+    <string name="color_stack_difficulty_medium">Orta</string>
+    <string name="color_stack_difficulty_hard">Zor</string>
+    <string name="color_stack_moves">Hamle: %1$d</string>
+    <string name="color_stack_moves_zero">Hamle: 0</string>
+    <string name="color_stack_btn_new">Yeni</string>
+    <string name="color_stack_btn_restart">Yeniden başlat</string>
+    <string name="color_stack_btn_undo">Geri al</string>
+    <string name="color_stack_status_new">Yeni oyun</string>
+    <string name="color_stack_status_restarted">Oyun yeniden başlatıldı</string>
+    <string name="color_stack_status_won">🎉 Tebrikler!</string>
+    <string name="color_stack_new_game">Yeni oyun</string>
+    <string name="color_stack_widget_cancel">✕ İptal</string>
+</resources>

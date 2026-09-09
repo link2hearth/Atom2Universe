@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Slot machine – line up suits and colors to win neutrinos</string>
+    <string name="roulette_spin">SPIN</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Select a bet and spin!</string>
+    <string name="roulette_status_spinning">Spinning…</string>
+    <string name="roulette_status_lose">No win this time.</string>
+    <string name="roulette_status_no_funds">Not enough neutrinos!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">%1$s line! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Full Jokers! ×%1$d</string>
+    <string name="roulette_win_multiple">Multiple wins! ×%1$d total</string>
+    <string name="roulette_win_overlay_title">WIN!</string>
+    <string name="roulette_win_overlay_tap">Tap to continue</string>
+</resources>

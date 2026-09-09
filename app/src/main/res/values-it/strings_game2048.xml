@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Unisci le tessere per raggiungere l\'obiettivo!</string>
+    <string name="game2048_score_label">PUNTEGGIO</string>
+    <string name="game2048_best_label">MIGLIORE</string>
+    <string name="game2048_universes_label">UNIVERSI</string>
+    <string name="game2048_size_label">Griglia:</string>
+    <string name="game2048_target_label">Obiettivo:</string>
+    <string name="game2048_new">Nuovo</string>
+    <string name="game2048_status_play">Scorri per muovere le tessere</string>
+    <string name="game2048_status_win">Ottimo! Tessera %1$d raggiunta! Nuovo universo…</string>
+    <string name="game2048_status_over">Bloccato a %1$d. Nuovo universo…</string>
+    <string name="game2048_confirm_title">Nuova partita?</string>
+    <string name="game2048_confirm_message">La partita attuale andrà persa. Continuare?</string>
+    <string name="game2048_quantum_mode">🐱 Modalità quantistica</string>
+    <string name="game2048_joker_active">🐱 ⚡ ATTIVO</string>
+    <string name="game2048_difficulty_easy">Facile</string>
+    <string name="game2048_difficulty_normal">Normale</string>
+    <string name="game2048_difficulty_hard">Difficile</string>
+    <string name="game2048_difficulty_random">Casuale</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Шашки</string>
+    <string name="draughts_description">Международные шашки (10×10) с ИИ</string>
+    <string name="draughts_new_game">Новая игра</string>
+    <string name="draughts_difficulty_training">Тренировка</string>
+    <string name="draughts_difficulty_training_desc">Слабый ИИ, идеален для обучения</string>
+    <string name="draughts_difficulty_standard">Стандартный</string>
+    <string name="draughts_difficulty_standard_desc">Средний ИИ, сбалансированная игра</string>
+    <string name="draughts_difficulty_expert">Эксперт</string>
+    <string name="draughts_difficulty_expert_desc">Сильный ИИ, сложный вызов</string>
+    <string name="draughts_difficulty_two_player">Два игрока</string>
+    <string name="draughts_difficulty_two_player_desc">Играть против человека</string>
+    <string name="draughts_status_white_turn">Ход белых</string>
+    <string name="draughts_status_black_turn">Ход чёрных</string>
+    <string name="draughts_status_ai_thinking">ИИ думает…</string>
+    <string name="draughts_status_game_over">%s выигрывает!</string>
+    <string name="draughts_color_white">Белые</string>
+    <string name="draughts_color_black">Чёрные</string>
+    <string name="draughts_draw">Ничья</string>
+    <string name="draughts_game_over_title">Игра окончена</string>
+    <string name="draughts_resume_title">Возобновить игру?</string>
+    <string name="draughts_resume_message">Найдена сохранённая игра. Продолжить?</string>
+    <string name="draughts_confirm_new_title">Новая игра?</string>
+    <string name="draughts_confirm_new_message">Текущая игра будет потеряна. Продолжить?</string>
+    <string name="draughts_victory_title">Победа!</string>
+    <string name="draughts_victory_message">Поздравляем! Вы победили ИИ.\n\nНаграды:\n• %1$d билетов гача\n• Буст x%2$d на %3$d минут</string>
+    <string name="draughts_mandatory_capture">Обязательное взятие! Вы должны взять вражескую шашку.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Отмена</string>
+    <string name="draughts_widget_draw">Ничья</string>
+    <string name="draughts_widget_white_wins">Белые\nвыигрывают</string>
+    <string name="draughts_widget_black_wins">Чёрные\nвыигрывают</string>
+    <string name="draughts_widget_victory">Победа!</string>
+    <string name="draughts_widget_defeat">Поражение</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

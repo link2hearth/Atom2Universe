@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Blackjack da casinò con fino a 4 avversari IA</string>
+    <string name="blackjack_hit">CARTA</string>
+    <string name="blackjack_stand">STAI</string>
+    <string name="blackjack_double">RADDOPPIA</string>
+    <string name="blackjack_split">DIVIDI</string>
+    <string name="blackjack_deal">DISTRIBUISCI</string>
+    <string name="blackjack_bet_label">PUNTATA</string>
+    <string name="blackjack_ai_players_label">Giocatori IA: %1$d</string>
+    <string name="blackjack_settings_title">Impostazioni tavolo</string>
+    <string name="blackjack_result_win">VINTO +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">PERSO -%1$d</string>
+    <string name="blackjack_result_push">PARI</string>
+    <string name="blackjack_result_win_free">VINTO</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">PERSO</string>
+    <string name="blackjack_bet_free">GRATIS</string>
+    <string name="blackjack_neutrino_balance">Neutrini: %1$d</string>
+    <string name="blackjack_ia_short">IA</string>
+    <string name="blackjack_start">Gioca</string>
+    <string name="blackjack_dealer_thinking">Il banco sta pensando…</string>
+    <string name="blackjack_new_game_confirm">Nuova partita?</string>
+    <string name="blackjack_confirm">✓ Conferma</string>
+    <string name="blackjack_cancel">✕ Annulla</string>
+</resources>

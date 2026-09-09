@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Καυτή Πατάτα</string>
+    <string name="hot_potato_description">Κάνε την πατάτα να αναπηδά, ψήσε την στο σωστό σημείο και τίναξέ την από τα πλάγια!</string>
+    <string name="hot_potato_how_to">Τράβα πίσω σαν σφεντόνα για εκτόξευση · ψήσε την μέχρι την πράσινη ζώνη</string>
+    <string name="hot_potato_tap_to_start">Πάτα κάτω από την πατάτα για να ξεκινήσεις</string>
+    <string name="hot_potato_tap_to_retry">Πάτα για να ξαναπροσπαθήσεις</string>
+    <string name="hot_potato_tap_to_resume">Πάτα για συνέχεια</string>
+    <string name="hot_potato_game_over">Τέλος Παιχνιδιού</string>
+    <string name="hot_potato_paused">Σε παύση</string>
+    <string name="hot_potato_score_label">Σκορ</string>
+    <string name="hot_potato_best_label">ΚΑΛΥΤΕΡΟ</string>
+    <string name="hot_potato_new_best">Νέο ρεκόρ!</string>
+    <string name="hot_potato_perfect">Τέλεια!</string>
+    <string name="hot_potato_raw">Πολύ ωμή!</string>
+    <string name="hot_potato_burnt">Κάηκε!</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Ναρκαλιευτής</string>
+    <string name="minesweeper_description">Κλασικό παζλ εκκαθάρισης ναρκών</string>
+    <string name="minesweeper_diff_easy">Εύκολο · 10 νάρκες</string>
+    <string name="minesweeper_diff_normal">Κανονικό · 20 νάρκες</string>
+    <string name="minesweeper_diff_medium">Μεσαίο · 40 νάρκες</string>
+    <string name="minesweeper_diff_hard">Δύσκολο · 80 νάρκες</string>
+    <string name="minesweeper_new_game">Νέα παρτίδα</string>
+    <string name="minesweeper_mines">Νάρκες</string>
+    <string name="minesweeper_timer">Χρονόμετρο</string>
+    <string name="minesweeper_won">Νικήσατε! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Νικήσατε! 🏆 Νέο ρεκόρ!  %1$s</string>
+    <string name="minesweeper_lost">Μπουμ! 💥  Τέλος παιχνιδιού</string>
+    <string name="minesweeper_score_diff">Δυσκολία</string>
+    <string name="minesweeper_score_best">Καλύτερος χρόνος</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Νέα παρτίδα</string>
+</resources>

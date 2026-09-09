@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_back">Geri</string>
+    <string name="escape_btn_new">Yeni</string>
+    <string name="escape_description">Labirentin içinden sızın, tüm küreleri toplayın, çıkışa ulaşın</string>
+    <string name="escape_diff_easy">Kolay</string>
+    <string name="escape_diff_hard">Zor</string>
+    <string name="escape_diff_medium">Orta</string>
+    <string name="escape_orbs_label">Küreler %1$d/%2$d</string>
+    <string name="escape_status_caught">%1$d turdan sonra yakalandın! Tekrar denemek için dokun.</string>
+    <string name="escape_status_gen_error">Üretim başarısız. Tekrar dene.</string>
+    <string name="escape_status_generating">Labirent oluşturuluyor…</string>
+    <string name="escape_status_missing_orbs">%1$d küre hâlâ eksik!</string>
+    <string name="escape_status_playing">Tur %1$d — %2$d/%3$d küre toplandı</string>
+    <string name="escape_status_reach_exit">Tüm küreler toplandı! Çıkışa ulaş!</string>
+    <string name="escape_status_ready">Tüm küreleri topla, sonra çıkışa ulaş!</string>
+    <string name="escape_status_wall">Yol tıkalı.</string>
+    <string name="escape_status_win">%1$d turda kaçtın (optimal: %2$d). Tekrar oynamak için dokun.</string>
+    <string name="escape_status_win_perfect">%1$d turda mükemmel kaçış! Tekrar oynamak için dokun.</string>
+    <string name="escape_title">Labirentten Kaçış</string>
+    <string name="escape_turns_label">Tur %1$d</string>
+    <string name="escape_turns_label_zero">Tur 0</string>
+    <string name="escape_turns_prefix">Tur </string>
+</resources>

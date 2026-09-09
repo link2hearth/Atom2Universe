@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memorie</string>
+    <string name="memory_description">Găsiți toate perechile de cărți identice</string>
+    <string name="memory_flips">%1$d întoarceri</string>
+    <string name="memory_solved">Completat!</string>
+    <string name="memory_win_message">Completat în %2$s cu %1$d întoarceri.</string>
+    <string name="memory_btn_again">Joc nou</string>
+    <string name="memory_btn_back">Înapoi</string>
+    <string name="memory_confirm_message">Porniți un joc nou %1$s?</string>
+</resources>

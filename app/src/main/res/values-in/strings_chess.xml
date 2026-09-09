@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Catur</string>
+    <string name="chess_description">Permainan catur dengan AI berlevel</string>
+    <string name="chess_new_game">Permainan baru</string>
+    <string name="chess_difficulty_training">Latihan</string>
+    <string name="chess_difficulty_training_desc">AI lemah, ideal untuk belajar</string>
+    <string name="chess_difficulty_standard">Standar</string>
+    <string name="chess_difficulty_standard_desc">AI menengah, permainan seimbang</string>
+    <string name="chess_difficulty_expert">Ahli</string>
+    <string name="chess_difficulty_expert_desc">AI kuat, tantangan sulit</string>
+    <string name="chess_difficulty_two_player">Dua pemain</string>
+    <string name="chess_difficulty_two_player_desc">Bermain melawan lawan manusia</string>
+    <string name="chess_status_your_turn">Giliran Anda</string>
+    <string name="chess_status_black_turn">Giliran hitam</string>
+    <string name="chess_status_ai_thinking">AI sedang berpikir…</string>
+    <string name="chess_status_check">Skak!</string>
+    <string name="chess_status_checkmate">Skak mat! %s menang</string>
+    <string name="chess_status_stalemate">Remis - Seri</string>
+    <string name="chess_color_white">Putih</string>
+    <string name="chess_color_black">Hitam</string>
+    <string name="chess_resume_title">Lanjutkan permainan?</string>
+    <string name="chess_resume_message">Permainan tersimpan ditemukan. Ingin melanjutkan?</string>
+    <string name="chess_confirm_new_title">Permainan baru?</string>
+    <string name="chess_confirm_new_message">Permainan saat ini akan hilang. Lanjutkan?</string>
+    <string name="chess_promotion_title">Promosi bidak</string>
+    <string name="chess_promotion_queen">Ratu</string>
+    <string name="chess_promotion_rook">Benteng</string>
+    <string name="chess_promotion_bishop">Gajah</string>
+    <string name="chess_promotion_knight">Kuda</string>
+    <string name="chess_victory_title">Menang!</string>
+    <string name="chess_widget_cancel">✕ Batal</string>
+    <string name="chess_captured_label">Ditangkap:</string>
+</resources>

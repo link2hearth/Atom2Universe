@@ -1,55 +1,65 @@
 package com.Atom2Universe.app.games.roguelike
 
+import android.content.Context
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
+/** Implémenté par les enums dont le nom affiché passe par les ressources strings. */
+interface Labeled {
+    @get:StringRes val labelRes: Int
+}
+
 // ─── Rareté ────────────────────────────────────────────────────────────────────
-enum class Rarity(val label: String, val colorArgb: Int, val statCount: Int, val mult: Float) {
-    COMMON   ("Commun",     0xFFAAAAAA.toInt(), 1, 1.00f),
-    UNCOMMON ("Peu commun", 0xFF66BB6A.toInt(), 2, 1.15f),
-    RARE     ("Rare",       0xFF42A5F5.toInt(), 3, 1.35f),
-    EPIC     ("Épique",     0xFFCE93D8.toInt(), 4, 1.60f),
-    LEGENDARY("Légendaire", 0xFFFFB74D.toInt(), 4, 2.20f),
+enum class Rarity(@StringRes override val labelRes: Int, val colorArgb: Int, val statCount: Int, val mult: Float) : Labeled {
+    COMMON   (R.string.roguelike_rarity_common,     0xFFAAAAAA.toInt(), 1, 1.00f),
+    UNCOMMON (R.string.roguelike_rarity_uncommon,   0xFF66BB6A.toInt(), 2, 1.15f),
+    RARE     (R.string.roguelike_rarity_rare,       0xFF42A5F5.toInt(), 3, 1.35f),
+    EPIC     (R.string.roguelike_rarity_epic,       0xFFCE93D8.toInt(), 4, 1.60f),
+    LEGENDARY(R.string.roguelike_rarity_legendary,  0xFFFFB74D.toInt(), 4, 2.20f),
 }
 
 // ─── Stats ──────────────────────────────────────────────────────────────────────
-enum class StatType(val label: String, val isPercent: Boolean) {
-    ATK          ("ATK",     false),
-    DEF          ("DEF",     false),
-    MAX_HP       ("HP max",  false),
-    CRIT_CHANCE  ("Crit",    true),
-    CRIT_DMG     ("Crit×",   true),
-    EVASION      ("Esquive", true),
-    BLOCK        ("Blocage", true),
+enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolean) : Labeled {
+    ATK          (R.string.roguelike_stattype_atk,      false),
+    DEF          (R.string.roguelike_stattype_def,      false),
+    MAX_HP       (R.string.roguelike_stattype_maxhp,    false),
+    CRIT_CHANCE  (R.string.roguelike_stattype_crit,     true),
+    CRIT_DMG     (R.string.roguelike_stattype_critdmg,  true),
+    EVASION      (R.string.roguelike_stattype_evasion,  true),
+    BLOCK        (R.string.roguelike_stattype_block,    true),
 }
 
 // ─── Matière ────────────────────────────────────────────────────────────────────
-enum class EquipMaterial(val label: String, val tierMult: Float, val minFloor: Int) {
-    IRON  ("Fer",    1.0f,  1),
-    GOLD  ("Or",     1.3f,  5),
-    ICE   ("Glace",  1.8f, 15),
-    UNIQUE("Unique", 2.5f, 25),
+enum class EquipMaterial(@StringRes override val labelRes: Int, val tierMult: Float, val minFloor: Int) : Labeled {
+    IRON  (R.string.roguelike_material_iron,   1.0f,  1),
+    GOLD  (R.string.roguelike_gold,             1.3f,  5),
+    ICE   (R.string.roguelike_material_ice,    1.8f, 15),
+    UNIQUE(R.string.roguelike_material_unique, 2.5f, 25),
 }
 
 // ─── Slots ──────────────────────────────────────────────────────────────────────
-enum class EquipSlot(val label: String) {
-    WEAPON ("Arme"), CHEST("Plastron"), HELMET("Casque"),
-    BOOTS("Bottes"), OFFHAND("Bouclier"), AMULET("Amulette"), RING("Anneau")
+enum class EquipSlot(@StringRes override val labelRes: Int) : Labeled {
+    WEAPON (R.string.roguelike_slot_weapon), CHEST(R.string.roguelike_slot_chest), HELMET(R.string.roguelike_slot_helmet),
+    BOOTS(R.string.roguelike_slot_boots), OFFHAND(R.string.roguelike_slot_offhand), AMULET(R.string.roguelike_slot_amulet), RING(R.string.roguelike_slot_ring)
 }
 
 // ─── Data classes ───────────────────────────────────────────────────────────────
 data class StatRoll(val type: StatType, val value: Float) {
-    fun display(): String = if (type.isPercent)
-        "+${(value * 100).roundToInt()}% ${type.label}"
-    else
-        "+${value.roundToInt()} ${type.label}"
+    fun display(context: Context): String {
+        val label = context.getString(type.labelRes)
+        return if (type.isPercent)
+            "+${(value * 100).roundToInt()}% $label"
+        else
+            "+${value.roundToInt()} $label"
+    }
 }
 
 data class Equipment(
     val slot: EquipSlot,
     val material: EquipMaterial,
     val rarity: Rarity,
-    val label: String,
     val stats: List<StatRoll>,
     val spriteRow: Int,
     val spriteCol: Int,
@@ -125,8 +135,12 @@ object LootSystem {
         val slot     = pickSlot(rng)
         val stats    = rollStats(slot, material, rarity, floor, rng)
         val (row, col) = pickSprite(slot, material, rng)
-        return Equipment(slot, material, rarity, buildLabel(slot, material, rarity), stats, row, col)
+        return Equipment(slot, material, rarity, stats, row, col)
     }
+
+    /** Nom affiché de l'équipement, ex. "Grand Fer Arme" / "Great Iron Weapon". */
+    fun displayName(context: Context, e: Equipment): String =
+        "${rarityPrefix(context, e.rarity)}${context.getString(e.material.labelRes)} ${context.getString(e.slot.labelRes)}"
 
     // ── Sélecteurs ──────────────────────────────────────────────────────────────
 
@@ -180,15 +194,12 @@ object LootSystem {
 
     // ── Label ───────────────────────────────────────────────────────────────────
 
-    private fun buildLabel(slot: EquipSlot, mat: EquipMaterial, rar: Rarity): String {
-        val prefix = when (rar) {
-            Rarity.COMMON    -> ""
-            Rarity.UNCOMMON  -> "Bon "
-            Rarity.RARE      -> "Grand "
-            Rarity.EPIC      -> "Épique "
-            Rarity.LEGENDARY -> "Légendaire "
-        }
-        return "$prefix${mat.label} ${slot.label}"
+    private fun rarityPrefix(context: Context, rar: Rarity): String = when (rar) {
+        Rarity.COMMON    -> ""
+        Rarity.UNCOMMON  -> context.getString(R.string.roguelike_rarity_prefix_uncommon)
+        Rarity.RARE      -> context.getString(R.string.roguelike_rarity_prefix_rare)
+        Rarity.EPIC      -> context.getString(R.string.roguelike_rarity_prefix_epic)
+        Rarity.LEGENDARY -> context.getString(R.string.roguelike_rarity_prefix_legendary)
     }
 
     private fun <T> weighted(list: List<Pair<T, Float>>, rng: Random): T {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_back">Назад</string>
+    <string name="escape_btn_new">Новий</string>
+    <string name="escape_description">Пробирайтеся лабіринтом, зберіть усі сфери та знайдіть вихід</string>
+    <string name="escape_diff_easy">Легкий</string>
+    <string name="escape_diff_hard">Важкий</string>
+    <string name="escape_diff_medium">Середній</string>
+    <string name="escape_orbs_label">Сфери %1$d/%2$d</string>
+    <string name="escape_status_caught">Виявлено після %1$d ходів! Натисніть для повтору.</string>
+    <string name="escape_status_gen_error">Помилка генерації. Спробуйте ще раз.</string>
+    <string name="escape_status_generating">Генерація лабіринту…</string>
+    <string name="escape_status_missing_orbs">Ще %1$d сфер(и) не вистачає!</string>
+    <string name="escape_status_playing">Хід %1$d — зібрано %2$d/%3$d сфер</string>
+    <string name="escape_status_reach_exit">Усі сфери зібрано! Досягніть виходу!</string>
+    <string name="escape_status_ready">Зберіть усі сфери, потім досягніть виходу!</string>
+    <string name="escape_status_wall">Шлях заблоковано.</string>
+    <string name="escape_status_win">Втекли за %1$d ходів (оптимально: %2$d). Натисніть, щоб грати знову.</string>
+    <string name="escape_status_win_perfect">Ідеальна втеча за %1$d ходів! Натисніть, щоб грати знову.</string>
+    <string name="escape_title">Втеча з лабіринту</string>
+    <string name="escape_turns_label">Хід %1$d</string>
+    <string name="escape_turns_label_zero">Хід 0</string>
+    <string name="escape_turns_prefix">Хід </string>
+</resources>

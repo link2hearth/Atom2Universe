@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Connect cells to reach zero — or ten!</string>
+    <string name="link_moves_label">Moves:</string>
+    <string name="link_difficulty_easy">Small</string>
+    <string name="link_difficulty_medium">Medium</string>
+    <string name="link_difficulty_hard">Large</string>
+    <string name="link_pairs_few">Few twins</string>
+    <string name="link_pairs_normal">Normal twins</string>
+    <string name="link_pairs_many">Many twins</string>
+    <string name="link_mode_classic">Classic</string>
+    <string name="link_mode_perfect">Perfect</string>
+    <string name="link_btn_undo">Undo</string>
+    <string name="link_btn_restart">Restart</string>
+    <string name="link_btn_new_level">New</string>
+    <string name="link_msg_new_level">New %1$s level. Connect %2$d cells to adjust values!</string>
+    <string name="link_msg_new_level_perfect">Perfect mode — %1$s. Find the %2$d exact moves.</string>
+    <string name="link_msg_progress">%1$d normal and %2$d plus cells left to adjust.</string>
+    <string name="link_msg_invalid_pattern">Invalid pattern for this link length.</string>
+    <string name="link_msg_undo">Last move undone.</string>
+    <string name="link_msg_nothing_to_undo">Nothing to undo.</string>
+    <string name="link_msg_restart">Puzzle reset.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Solved!</string>
+    <string name="link_victory_moves">%1$d moves</string>
+</resources>

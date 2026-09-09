@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Рулетка</string>
+    <string name="roulette_description">Ігровий автомат — вирівняйте масті та кольори, щоб виграти нейтрино</string>
+    <string name="roulette_spin">КРУТИТИ</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Виберіть ставку і крутіть!</string>
+    <string name="roulette_status_spinning">Крутиться…</string>
+    <string name="roulette_status_lose">Цього разу не виграли.</string>
+    <string name="roulette_status_no_funds">Недостатньо нейтрино!</string>
+    <string name="roulette_last_win" formatted="false">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">%1$s лінія! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Джокер! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Повні Джокери! ×%1$d</string>
+    <string name="roulette_win_multiple">Кілька виграшів! Всього ×%1$d</string>
+    <string name="roulette_win_overlay_title">ВИГРАШ!</string>
+    <string name="roulette_win_overlay_tap">Торкніться для продовження</string>
+</resources>

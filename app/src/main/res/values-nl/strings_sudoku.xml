@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Sudoku-puzzels met 3 moeilijkheidsgraden</string>
+    <string name="sudoku_difficulty_easy">Makkelijk</string>
+    <string name="sudoku_difficulty_medium">Gemiddeld</string>
+    <string name="sudoku_difficulty_hard">Moeilijk</string>
+    <string name="sudoku_new_game">Nieuw spel</string>
+    <string name="sudoku_check">Controleren</string>
+    <string name="sudoku_clear">Wissen</string>
+    <string name="sudoku_undo">↩ Ongedaan maken</string>
+    <string name="sudoku_redo">↪ Opnieuw uitvoeren</string>
+    <string name="sudoku_status_generating">Genereren…</string>
+    <string name="sudoku_status_generated">Raster %1$s gegenereerd (%2$d hints)</string>
+    <string name="sudoku_status_no_error">Tot nu toe geen fouten</string>
+    <string name="sudoku_status_errors">%1$d fout(en) gedetecteerd</string>
+    <string name="sudoku_status_mistakes">%1$d onjuiste cel(len)</string>
+    <string name="sudoku_status_solved">Gefeliciteerd! Puzzel opgelost!</string>
+    <string name="sudoku_dialog_new_game_title">Nieuw spel</string>
+    <string name="sudoku_dialog_confirm_new_title">Spel bezig</string>
+    <string name="sudoku_dialog_confirm_new_message">Wil je het huidige spel verlaten?</string>
+    <string name="sudoku_resume_game">Spel hervatten</string>
+    <string name="sudoku_start_new">Nieuw spel starten</string>
+    <string name="sudoku_result_success">Geweldig!</string>
+    <string name="sudoku_result_failure">Mislukt!</string>
+    <string name="sudoku_widget_cancel">✕ Annuleren</string>
+    <string name="sudoku_validate">Bevestigen</string>
+    <string name="sudoku_notes">Notities</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

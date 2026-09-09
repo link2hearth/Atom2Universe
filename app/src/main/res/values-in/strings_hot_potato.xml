@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Kentang Panas</string>
+    <string name="hot_potato_description">Pantulkan kentangnya, masak pas, lalu lempar ke sisi!</string>
+    <string name="hot_potato_how_to">Tarik ke belakang seperti ketapel untuk meluncurkan · masak sampai zona hijau</string>
+    <string name="hot_potato_tap_to_start">Ketuk di bawah kentang untuk mulai</string>
+    <string name="hot_potato_tap_to_retry">Ketuk untuk coba lagi</string>
+    <string name="hot_potato_tap_to_resume">Ketuk untuk lanjut</string>
+    <string name="hot_potato_game_over">Permainan Selesai</string>
+    <string name="hot_potato_paused">Dijeda</string>
+    <string name="hot_potato_score_label">Skor</string>
+    <string name="hot_potato_best_label">TERBAIK</string>
+    <string name="hot_potato_new_best">Rekor baru!</string>
+    <string name="hot_potato_perfect">Sempurna!</string>
+    <string name="hot_potato_raw">Terlalu mentah!</string>
+    <string name="hot_potato_burnt">Gosong!</string>
+</resources>

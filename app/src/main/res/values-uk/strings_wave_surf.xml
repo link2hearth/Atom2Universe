@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wave_surf_title">Хвильовий Серфінг</string>
+    <string name="wave_surf_description">Катайтесь на процедурних хвилях — торкніться, щоб пірнати та набирати швидкість!</string>
+    <string name="wave_surf_restart">Перезапустити</string>
+    <string name="wave_surf_hud_distance">%1$d м</string>
+    <string name="wave_surf_hud_speed">%1$d км/год</string>
+    <string name="wave_surf_hud_altitude">%1$d м ↑</string>
+    <string name="wave_surf_theme_vivid">Яскравий</string>
+    <string name="wave_surf_theme_pastel">Пастельний</string>
+    <string name="wave_surf_theme_old">Старий</string>
+    <string name="wave_surf_theme_gray">Ч&amp;Б</string>
+</resources>

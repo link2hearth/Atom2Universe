@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Kucing Melompat</string>
+    <string name="flappy_cat_description">Hindari tiang dan burung!</string>
+    <string name="flappy_cat_tap_to_start">Ketuk untuk mulai</string>
+    <string name="flappy_cat_tap_to_retry">Ketuk untuk coba lagi</string>
+    <string name="flappy_cat_game_over">Game Over</string>
+    <string name="flappy_cat_paused">Jeda</string>
+    <string name="flappy_cat_tap_to_resume">Ketuk untuk lanjutkan</string>
+    <string name="flappy_cat_score_label">Skor</string>
+    <string name="flappy_cat_best_label">TERBAIK</string>
+    <string name="flappy_cat_new_best">Rekor baru!</string>
+</resources>

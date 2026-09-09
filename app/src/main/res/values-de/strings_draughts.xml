@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Dame</string>
+    <string name="draughts_description">Internationales Damespiel (10×10) mit KI</string>
+    <string name="draughts_new_game">Neues Spiel</string>
+    <string name="draughts_difficulty_training">Training</string>
+    <string name="draughts_difficulty_training_desc">Schwache KI, ideal zum Lernen</string>
+    <string name="draughts_difficulty_standard">Standard</string>
+    <string name="draughts_difficulty_standard_desc">Mittlere KI, ausgewogenes Spiel</string>
+    <string name="draughts_difficulty_expert">Experte</string>
+    <string name="draughts_difficulty_expert_desc">Starke KI, schwierige Herausforderung</string>
+    <string name="draughts_difficulty_two_player">Zwei Spieler</string>
+    <string name="draughts_difficulty_two_player_desc">Gegen einen menschlichen Gegner spielen</string>
+    <string name="draughts_status_white_turn">Weiß ist am Zug</string>
+    <string name="draughts_status_black_turn">Schwarz ist am Zug</string>
+    <string name="draughts_status_ai_thinking">KI denkt nach…</string>
+    <string name="draughts_status_game_over">%s gewinnt!</string>
+    <string name="draughts_color_white">Weiß</string>
+    <string name="draughts_color_black">Schwarz</string>
+    <string name="draughts_draw">Unentschieden</string>
+    <string name="draughts_game_over_title">Spiel vorbei</string>
+    <string name="draughts_resume_title">Spiel fortsetzen?</string>
+    <string name="draughts_resume_message">Ein gespeichertes Spiel wurde gefunden. Möchten Sie fortfahren?</string>
+    <string name="draughts_confirm_new_title">Neues Spiel?</string>
+    <string name="draughts_confirm_new_message">Das aktuelle Spiel geht verloren. Fortfahren?</string>
+    <string name="draughts_victory_title">Sieg!</string>
+    <string name="draughts_victory_message">Glückwunsch! Sie haben die KI besiegt.\n\nBelohnungen:\n• %1$d Gacha-Tickets\n• Boost x%2$d für %3$d Minuten</string>
+    <string name="draughts_mandatory_capture">Pflichtschlag! Sie müssen eine feindliche Figur schlagen.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Abbrechen</string>
+    <string name="draughts_widget_draw">Unentschieden</string>
+    <string name="draughts_widget_white_wins">Weiß\ngewinnt</string>
+    <string name="draughts_widget_black_wins">Schwarz\ngewinnt</string>
+    <string name="draughts_widget_victory">Sieg!</string>
+    <string name="draughts_widget_defeat">Niederlage</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Solitaire</string>
+    <string name="solitaire_description">Clasicul joc de cărți Klondike</string>
+    <string name="solitaire_new_game">Joc nou</string>
+    <string name="solitaire_moves">Mișcări: %1$d</string>
+    <string name="solitaire_status_new_game">Joc nou început</string>
+    <string name="solitaire_status_restored">Joc restaurat</string>
+    <string name="solitaire_status_won">Felicitări! Ați câștigat!</string>
+    <string name="solitaire_dialog_resume_title">Joc în desfășurare</string>
+    <string name="solitaire_dialog_resume_message">Un joc este în desfășurare. Doriți să continuați?</string>
+    <string name="solitaire_dialog_new_title">Joc nou</string>
+    <string name="solitaire_dialog_new_message">Doriți să abandonați jocul curent?</string>
+    <string name="solitaire_auto_finish">Finalizare automată</string>
+    <string name="solitaire_status_won_short">Bravo!\nVictorie!</string>
+    <string name="solitaire_new_game_confirm">Joc nou?</string>
+    <string name="solitaire_confirm">✓ Confirmare</string>
+    <string name="solitaire_cancel">✕ Anulare</string>
+</resources>

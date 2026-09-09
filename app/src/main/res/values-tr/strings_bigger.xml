@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bigger_title">BIGGER</string>
+    <string name="bigger_description">Topları bırakın ve birleştirin, 1024\'e ulaşın</string>
+    <string name="bigger_goal">→ %1$d</string>
+    <string name="bigger_restart">Yeniden başlat</string>
+</resources>

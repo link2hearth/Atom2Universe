@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Laat het elektron draaien, ontwijk de asteroïden en verzamel de energiekwanta!</string>
+    <string name="orbite_subtitle">Eén tik keert de baan van het elektron om</string>
+    <string name="orbite_instructions">Ontwijk het kosmische puin dat naar de kern wordt getrokken · veeg de groene kwanta op voor combo’s</string>
+    <string name="orbite_btn_start">Start</string>
+    <string name="orbite_btn_restart">Opnieuw</string>
+    <string name="orbite_btn_back">Terug</string>
+    <string name="orbite_game_over">Ingestort!</string>
+    <string name="orbite_best_label">BESTE %1$s</string>
+    <string name="orbite_final_score">Score %1$d</string>
+    <string name="orbite_best_score">Beste %1$d</string>
+    <string name="orbite_new_best">★ Nieuw record! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

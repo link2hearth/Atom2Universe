@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Sortiere die Chips nach Farbe</string>
+    <string name="color_stack_back">Zurück</string>
+    <string name="color_stack_difficulty_label">Schwierigkeit:</string>
+    <string name="color_stack_difficulty_easy">Einfach</string>
+    <string name="color_stack_difficulty_medium">Mittel</string>
+    <string name="color_stack_difficulty_hard">Schwer</string>
+    <string name="color_stack_moves">Züge: %1$d</string>
+    <string name="color_stack_moves_zero">Züge: 0</string>
+    <string name="color_stack_btn_new">Neu</string>
+    <string name="color_stack_btn_restart">Neustart</string>
+    <string name="color_stack_btn_undo">Rückgängig</string>
+    <string name="color_stack_status_new">Neues Spiel</string>
+    <string name="color_stack_status_restarted">Spiel neu gestartet</string>
+    <string name="color_stack_status_won">🎉 Glückwunsch!</string>
+    <string name="color_stack_new_game">Neues Spiel</string>
+    <string name="color_stack_widget_cancel">✕ Abbrechen</string>
+</resources>

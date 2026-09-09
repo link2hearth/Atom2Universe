@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Verbind cellen om nul — of tien te bereiken!</string>
+    <string name="link_moves_label">Zetten:</string>
+    <string name="link_difficulty_easy">Klein</string>
+    <string name="link_difficulty_medium">Gemiddeld</string>
+    <string name="link_difficulty_hard">Groot</string>
+    <string name="link_pairs_few">Weinig tweeling</string>
+    <string name="link_pairs_normal">Normale tweeling</string>
+    <string name="link_pairs_many">Veel tweeling</string>
+    <string name="link_mode_classic">Klassiek</string>
+    <string name="link_mode_perfect">Perfect</string>
+    <string name="link_btn_undo">Ongedaan maken</string>
+    <string name="link_btn_restart">Herstart</string>
+    <string name="link_btn_new_level">Nieuw</string>
+    <string name="link_msg_new_level">Nieuw %1$s niveau. Verbind %2$d cellen om waarden aan te passen!</string>
+    <string name="link_msg_new_level_perfect">Perfecte modus — %1$s. Vind de %2$d exacte zetten.</string>
+    <string name="link_msg_progress">%1$d normale en %2$d plus cellen nog aan te passen.</string>
+    <string name="link_msg_invalid_pattern">Ongeldig patroon voor deze koppelingslengte.</string>
+    <string name="link_msg_undo">Laatste zet ongedaan gemaakt.</string>
+    <string name="link_msg_nothing_to_undo">Niets ongedaan te maken.</string>
+    <string name="link_msg_restart">Puzzel gereset.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Opgelost!</string>
+    <string name="link_victory_moves">%1$d zetten</string>
+</resources>

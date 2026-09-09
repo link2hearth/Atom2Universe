@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Μνήμη</string>
+    <string name="memory_description">Βρείτε όλα τα ταιριαστά ζευγάρια καρτών</string>
+    <string name="memory_flips">%1$d αναποδιές</string>
+    <string name="memory_solved">Ολοκληρώθηκε!</string>
+    <string name="memory_win_message">Ολοκληρώθηκε σε %2$s με %1$d αναποδιές.</string>
+    <string name="memory_btn_again">Νέο παιχνίδι</string>
+    <string name="memory_btn_back">Πίσω</string>
+    <string name="memory_confirm_message">Έναρξη νέου παιχνιδιού %1$s;</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Verbinde die Punkte, fülle das Raster</string>
+    <string name="the_line_back">Zurück</string>
+    <string name="the_line_mode_single">Einfach</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Einfach</string>
+    <string name="the_line_diff_medium">Mittel</string>
+    <string name="the_line_diff_hard">Schwer</string>
+    <string name="the_line_level">Level %1$d</string>
+    <string name="the_line_remaining">Verbleibende Zellen: %1$d</string>
+    <string name="the_line_hint_single">Zeichne einen Pfad von S nach F, der jede Zelle besucht.</string>
+    <string name="the_line_hint_multi">Verbinde jedes Farbpaar ohne sich kreuzende Pfade.</string>
+    <string name="the_line_completed">Level %1$d abgeschlossen!</string>
+    <string name="the_line_error">Raster konnte nicht generiert werden. Erneut versuchen.</string>
+    <string name="the_line_btn_reset">Neues Spiel</string>
+    <string name="the_line_new_game">Neues Spiel</string>
+    <string name="the_line_solved_label">✓ Gelöst!</string>
+    <string name="the_line_diff_simple">Einfach</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Abbrechen</string>
+</resources>

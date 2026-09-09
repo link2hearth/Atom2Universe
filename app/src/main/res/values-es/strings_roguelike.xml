@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roguelike_title">Mazmorra</string>
+    <string name="roguelike_description">Explora mazmorras procedurales y sobrevive 5 pisos</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Ruletka</string>
+    <string name="roulette_description">Automat do gier – wyrównaj kolory i znaki, aby wygrać neutrina</string>
+    <string name="roulette_spin">KRĘĆ</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Wybierz zakład i kręć!</string>
+    <string name="roulette_status_spinning">Kręci się…</string>
+    <string name="roulette_status_lose">Tym razem bez wygranej.</string>
+    <string name="roulette_status_no_funds">Za mało neutrinów!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">Linia %1$s! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Pełne Jokery! ×%1$d</string>
+    <string name="roulette_win_multiple">Wiele wygranych! ×%1$d łącznie</string>
+    <string name="roulette_win_overlay_title">WYGRANA!</string>
+    <string name="roulette_win_overlay_tap">Dotknij, aby kontynuować</string>
+</resources>

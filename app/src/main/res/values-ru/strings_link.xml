@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Соединяйте клетки, чтобы достичь нуля — или десяти!</string>
+    <string name="link_moves_label">Ходы:</string>
+    <string name="link_difficulty_easy">Маленький</string>
+    <string name="link_difficulty_medium">Средний</string>
+    <string name="link_difficulty_hard">Большой</string>
+    <string name="link_pairs_few">Мало близнецов</string>
+    <string name="link_pairs_normal">Обычные близнецы</string>
+    <string name="link_pairs_many">Много близнецов</string>
+    <string name="link_mode_classic">Классический</string>
+    <string name="link_mode_perfect">Идеальный</string>
+    <string name="link_btn_undo">Отменить</string>
+    <string name="link_btn_restart">Перезапустить</string>
+    <string name="link_btn_new_level">Новый</string>
+    <string name="link_msg_new_level">Новый уровень %1$s. Соедините %2$d клетки для корректировки значений!</string>
+    <string name="link_msg_new_level_perfect">Идеальный режим — %1$s. Найдите %2$d точных хода.</string>
+    <string name="link_msg_progress">Осталось скорректировать %1$d обычных и %2$d клеток плюс.</string>
+    <string name="link_msg_invalid_pattern">Недопустимый паттерн для этой длины связи.</string>
+    <string name="link_msg_undo">Последний ход отменён.</string>
+    <string name="link_msg_nothing_to_undo">Нечего отменять.</string>
+    <string name="link_msg_restart">Головоломка сброшена.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Решено!</string>
+    <string name="link_victory_moves">%1$d ходов</string>
+</resources>

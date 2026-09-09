@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.roguelike
 
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.*
@@ -16,29 +18,29 @@ data class Pos(val x: Int, val y: Int) {
 
 // ─── Items (consommables) ───────────────────────────────────────────────────────
 enum class ItemType(
-    val symbol: Char, val label: String, val colorArgb: Int,
+    val symbol: Char, @StringRes override val labelRes: Int, val colorArgb: Int,
     val healAmount: Int,
     val spriteRow: Int, val spriteCol: Int
-) {
-    FOOD_SMALL ('f', "Pain",   0xFFFFCC80.toInt(), 10, 32, 0),
-    FOOD_MEDIUM('m', "Viande", 0xFFEF9A9A.toInt(), 25, 30, 0),
-    FOOD_LARGE ('s', "Ragoût", 0xFFFF7043.toInt(), 40, 29, 0),
-    GOLD       ('$', "Or",     0xFFFFD600.toInt(),  0,  9, 15),
+) : Labeled {
+    FOOD_SMALL ('f', R.string.roguelike_item_food_small,  0xFFFFCC80.toInt(), 10, 32, 0),
+    FOOD_MEDIUM('m', R.string.roguelike_item_food_medium, 0xFFEF9A9A.toInt(), 25, 30, 0),
+    FOOD_LARGE ('s', R.string.roguelike_item_food_large,  0xFFFF7043.toInt(), 40, 29, 0),
+    GOLD       ('$', R.string.roguelike_gold,             0xFFFFD600.toInt(),  0,  9, 15),
 }
 
 data class Item(val type: ItemType, var pos: Pos)
 
 // ─── Monstres ───────────────────────────────────────────────────────────────────
 enum class MonsterType(
-    val symbol: Char, val label: String, val colorArgb: Int,
+    val symbol: Char, @StringRes override val labelRes: Int, val colorArgb: Int,
     val baseDef: Int, val goldReward: Int, val minFloor: Int,
     val hpMult: Float, val atkMult: Float
-) {
-    RAT     ('r', "Rat",       0xFF8D6E63.toInt(), 0,  2, 1, 0.50f, 0.50f),
-    GOBLIN  ('g', "Gobelin",   0xFF66BB6A.toInt(), 1,  5, 1, 0.75f, 0.75f),
-    SKELETON('S', "Squelette", 0xFFECEFF1.toInt(), 2,  8, 2, 1.00f, 1.00f),
-    ORC     ('O', "Orc",       0xFF4CAF50.toInt(), 3, 12, 3, 1.40f, 1.20f),
-    DEMON   ('D', "Démon",     0xFFEF5350.toInt(), 4, 18, 4, 2.00f, 1.60f),
+) : Labeled {
+    RAT     ('r', R.string.roguelike_monster_rat,      0xFF8D6E63.toInt(), 0,  2, 1, 0.50f, 0.50f),
+    GOBLIN  ('g', R.string.roguelike_monster_goblin,   0xFF66BB6A.toInt(), 1,  5, 1, 0.75f, 0.75f),
+    SKELETON('S', R.string.roguelike_monster_skeleton, 0xFFECEFF1.toInt(), 2,  8, 2, 1.00f, 1.00f),
+    ORC     ('O', R.string.roguelike_monster_orc,      0xFF4CAF50.toInt(), 3, 12, 3, 1.40f, 1.20f),
+    DEMON   ('D', R.string.roguelike_monster_demon,    0xFFEF5350.toInt(), 4, 18, 4, 2.00f, 1.60f),
 }
 
 class Monster(
@@ -115,6 +117,10 @@ private data class Room(val x: Int, val y: Int, val w: Int, val h: Int) {
 
 enum class GamePhase { PLAYING, GAME_OVER }
 
+// ─── Journal de combat ──────────────────────────────────────────────────────────
+/** Clé de ressource + arguments (nombres ou enums Labeled) — résolue en texte uniquement à l'affichage. */
+data class LogEntry(@StringRes val keyRes: Int, val args: List<Any> = emptyList())
+
 // ─── Moteur principal ──────────────────────────────────────────────────────────
 class RoguelikeGame {
 
@@ -170,7 +176,7 @@ class RoguelikeGame {
             p.hp  = p.hp.coerceAtMost(p.totalMaxHp)
             game.computeFov()
             game.log.clear()
-            game.log.addLast("Aventure reprise — Étage ${p.floor}.")
+            game.log.addLast(LogEntry(R.string.roguelike_log_resume, listOf(p.floor)))
             return game
         }
     }
@@ -179,7 +185,7 @@ class RoguelikeGame {
     var player: Player      = Player(Pos(0, 0))
     var level:  DungeonLevel = generateLevel(1)
     var phase:  GamePhase    = GamePhase.PLAYING
-    val log = ArrayDeque<String>()
+    val log = ArrayDeque<LogEntry>()
     var heroSpritePath: String = "Assets/sprites/Dungeon/Heros/paperdoll_example_%02d.png"
         .format(Random.nextInt(1, 30))
 
@@ -191,7 +197,7 @@ class RoguelikeGame {
     init {
         player.pos = firstFloor(level)
         computeFov()
-        addLog("Tu descends dans le donjon…")
+        addLog(R.string.roguelike_log_descend_start)
     }
 
     // ── Actions publiques ───────────────────────────────────────────────────────
@@ -218,9 +224,9 @@ class RoguelikeGame {
         player.gold -= item.cost
         shopBought.add(item)
         when (item) {
-            ShopItem.POTION  -> { player.maxHp += 10; player.hp = player.totalMaxHp; addLog("HP max +10 ! Soins complets !") }
-            ShopItem.ATK_UP  -> { player.baseAtk++; addLog("Cristal de force. ATK +1 !") }
-            ShopItem.BARRIER -> { player.barrierUnlocked = true; player.barrier = player.totalMaxHp / 5; addLog("Barrière débloquée !") }
+            ShopItem.POTION  -> { player.maxHp += 10; player.hp = player.totalMaxHp; addLog(R.string.roguelike_log_shop_potion) }
+            ShopItem.ATK_UP  -> { player.baseAtk++; addLog(R.string.roguelike_log_shop_atk) }
+            ShopItem.BARRIER -> { player.barrierUnlocked = true; player.barrier = player.totalMaxHp / 5; addLog(R.string.roguelike_log_shop_barrier) }
         }
         return true
     }
@@ -240,7 +246,7 @@ class RoguelikeGame {
         level  = generateLevel(player.floor)
         player.pos = firstFloor(level)
         computeFov()
-        addLog("Étage ${player.floor} — les ténèbres s'approfondissent…")
+        addLog(R.string.roguelike_log_floor_descend, player.floor)
         return true
     }
 
@@ -251,7 +257,7 @@ class RoguelikeGame {
             val gain = item.type.healAmount.coerceAtMost(player.totalMaxHp - player.hp)
             player.hp = min(player.totalMaxHp, player.hp + item.type.healAmount)
             player.inventory.removeAt(index)
-            addLog("${item.type.label} mangé. +$gain HP.")
+            addLog(R.string.roguelike_log_eat_item, item.type, gain)
         }
         endTurn()
     }
@@ -261,12 +267,12 @@ class RoguelikeGame {
         player.equipped[equip.slot] = equip
         player.hp = player.hp.coerceAtMost(player.totalMaxHp)
         pendingEquipDrop = null
-        addLog("${equip.slot.label} équipé : ${equip.label} !")
+        addLog(R.string.roguelike_log_equip, equip.slot, equip)
     }
 
     fun ignorePendingDrop() {
         pendingEquipDrop = null
-        addLog("Objet laissé au sol.")
+        addLog(R.string.roguelike_log_ignore_drop)
     }
 
     fun onStairsTile() =
@@ -286,39 +292,41 @@ class RoguelikeGame {
             player.gold += gld
             onMonsterDied?.invoke()
             if (isCrit)
-                addLog("CRITIQUE ! ${m.type.label} -$dmg. +$gld or.")
+                addLog(R.string.roguelike_log_kill_crit, m.type, dmg, gld)
             else
-                addLog("${m.type.label} -$dmg. +$gld or.")
+                addLog(R.string.roguelike_log_kill, m.type, dmg, gld)
             maybeDrop(m)
         } else {
-            val suffix = if (isCrit) " (CRIT)" else ""
-            addLog("${m.type.label} -$dmg$suffix. (${m.hp}/${m.maxHp})")
+            if (isCrit)
+                addLog(R.string.roguelike_log_hit_crit, m.type, dmg, m.hp, m.maxHp)
+            else
+                addLog(R.string.roguelike_log_hit_normal, m.type, dmg, m.hp, m.maxHp)
         }
     }
 
     private fun meleePlayer(m: Monster) {
         if (Random.nextFloat() < player.evasionChance) {
-            addLog("${m.type.label} rate ! (Esquive)")
+            addLog(R.string.roguelike_log_evaded, m.type)
             return
         }
         var dmg = max(1, m.scaledAtk - player.def + Random.nextInt(-1, 2))
         if (Random.nextFloat() < player.blockChance) {
             dmg = max(1, dmg / 2)
-            addLog("${m.type.label} bloqué → -$dmg HP !")
+            addLog(R.string.roguelike_log_blocked, m.type, dmg)
         }
         if (player.barrier > 0) {
             val absorbed = min(player.barrier, dmg)
             player.barrier -= absorbed
             dmg -= absorbed
             if (dmg <= 0) {
-                addLog("Barrière absorbe l'attaque. (${player.barrier}/${player.maxBarrier})")
+                addLog(R.string.roguelike_log_barrier_absorb, player.barrier, player.maxBarrier)
                 return
             }
         }
         player.hp -= dmg
         onPlayerHit?.invoke()
-        addLog("${m.type.label} frappe -$dmg ! HP ${player.hp}/${player.totalMaxHp}")
-        if (player.hp <= 0) { player.hp = 0; phase = GamePhase.GAME_OVER; addLog("Tu es mort !") }
+        addLog(R.string.roguelike_log_player_hit, m.type, dmg, player.hp, player.totalMaxHp)
+        if (player.hp <= 0) { player.hp = 0; phase = GamePhase.GAME_OVER; addLog(R.string.roguelike_log_player_death) }
     }
 
     private fun checkBarrierRegen() {
@@ -363,13 +371,13 @@ class RoguelikeGame {
             when {
                 it.type == ItemType.GOLD -> {
                     val gain = Random.nextInt(3, 12); player.gold += gain
-                    level.items.remove(it); addLog("+$gain or !")
+                    level.items.remove(it); addLog(R.string.roguelike_log_gold_pickup, gain)
                 }
                 it.type.healAmount > 0 -> {
                     if (player.inventory.size < MAX_INV) {
                         player.inventory.add(it); level.items.remove(it)
-                        addLog("${it.type.label} ramassé.")
-                    } else addLog("Inventaire plein !")
+                        addLog(R.string.roguelike_log_item_pickup, it.type)
+                    } else addLog(R.string.roguelike_log_inventory_full)
                 }
             }
         }
@@ -530,9 +538,9 @@ class RoguelikeGame {
         lv.tiles[cy][cx] = TileType.FLOOR
     }
 
-    private fun addLog(msg: String) {
+    private fun addLog(@StringRes keyRes: Int, vararg args: Any) {
         if (log.size >= 6) log.removeFirst()
-        log.addLast(msg)
+        log.addLast(LogEntry(keyRes, args.toList()))
     }
 
     // ── Sérialisation ────────────────────────────────────────────────────────────

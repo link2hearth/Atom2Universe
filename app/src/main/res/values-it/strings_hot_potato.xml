@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Patata Bollente</string>
+    <string name="hot_potato_description">Fai rimbalzare la patata, cuocila al punto giusto e falla schizzare via dai lati!</string>
+    <string name="hot_potato_how_to">Tira indietro come una fionda per lanciare · cuocila fino alla zona verde</string>
+    <string name="hot_potato_tap_to_start">Tocca sotto la patata per iniziare</string>
+    <string name="hot_potato_tap_to_retry">Tocca per riprovare</string>
+    <string name="hot_potato_tap_to_resume">Tocca per riprendere</string>
+    <string name="hot_potato_game_over">Game Over</string>
+    <string name="hot_potato_paused">In pausa</string>
+    <string name="hot_potato_score_label">Punteggio</string>
+    <string name="hot_potato_best_label">MIGLIORE</string>
+    <string name="hot_potato_new_best">Nuovo record!</string>
+    <string name="hot_potato_perfect">Perfetto!</string>
+    <string name="hot_potato_raw">Troppo cruda!</string>
+    <string name="hot_potato_burnt">Bruciata!</string>
+</resources>

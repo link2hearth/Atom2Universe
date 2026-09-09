@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Springende Katze</string>
+    <string name="flappy_cat_description">Weiche Pylonen und Vögeln aus!</string>
+    <string name="flappy_cat_tap_to_start">Tippen zum Starten</string>
+    <string name="flappy_cat_tap_to_retry">Tippen zum Wiederholen</string>
+    <string name="flappy_cat_game_over">Game Over</string>
+    <string name="flappy_cat_paused">Pause</string>
+    <string name="flappy_cat_tap_to_resume">Tippen zum Fortsetzen</string>
+    <string name="flappy_cat_score_label">Punkte</string>
+    <string name="flappy_cat_best_label">BESTES</string>
+    <string name="flappy_cat_new_best">Neuer Rekord!</string>
+</resources>

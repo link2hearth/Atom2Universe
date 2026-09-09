@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Dam</string>
+    <string name="draughts_description">Dam internasional (10×10) dengan AI</string>
+    <string name="draughts_new_game">Permainan baru</string>
+    <string name="draughts_difficulty_training">Latihan</string>
+    <string name="draughts_difficulty_training_desc">AI lemah, ideal untuk belajar</string>
+    <string name="draughts_difficulty_standard">Standar</string>
+    <string name="draughts_difficulty_standard_desc">AI menengah, permainan seimbang</string>
+    <string name="draughts_difficulty_expert">Ahli</string>
+    <string name="draughts_difficulty_expert_desc">AI kuat, tantangan sulit</string>
+    <string name="draughts_difficulty_two_player">Dua pemain</string>
+    <string name="draughts_difficulty_two_player_desc">Bermain melawan lawan manusia</string>
+    <string name="draughts_status_white_turn">Giliran putih</string>
+    <string name="draughts_status_black_turn">Giliran hitam</string>
+    <string name="draughts_status_ai_thinking">AI sedang berpikir…</string>
+    <string name="draughts_status_game_over">%s menang!</string>
+    <string name="draughts_color_white">Putih</string>
+    <string name="draughts_color_black">Hitam</string>
+    <string name="draughts_draw">Seri</string>
+    <string name="draughts_game_over_title">Permainan selesai</string>
+    <string name="draughts_resume_title">Lanjutkan permainan?</string>
+    <string name="draughts_resume_message">Permainan tersimpan ditemukan. Ingin melanjutkan?</string>
+    <string name="draughts_confirm_new_title">Permainan baru?</string>
+    <string name="draughts_confirm_new_message">Permainan saat ini akan hilang. Lanjutkan?</string>
+    <string name="draughts_victory_title">Menang!</string>
+    <string name="draughts_victory_message">Selamat! Anda mengalahkan AI.\n\nHadiah:\n• %1$d tiket gacha\n• Boost x%2$d selama %3$d menit</string>
+    <string name="draughts_mandatory_capture">Tangkap wajib! Anda harus mengambil bidak musuh.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Batal</string>
+    <string name="draughts_widget_draw">Seri</string>
+    <string name="draughts_widget_white_wins">Putih\nMenang</string>
+    <string name="draughts_widget_black_wins">Hitam\nMenang</string>
+    <string name="draughts_widget_victory">Menang!</string>
+    <string name="draughts_widget_defeat">Kalah</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Ruota le tessere per collegare tutti i tubi</string>
+    <string name="pipetap_moves">%1$d mosse</string>
+    <string name="pipetap_solved">Risolto!</string>
+    <string name="pipetap_win_message">Risolto in %2$s con %1$d rotazioni.</string>
+    <string name="pipetap_btn_again">Nuova partita</string>
+    <string name="pipetap_btn_next">Dimensione successiva</string>
+    <string name="pipetap_widget_cancel">Annulla</string>
+    <string name="pipetap_widget_confirm">Inizia</string>
+</resources>

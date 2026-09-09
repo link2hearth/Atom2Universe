@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Hubungkan titik-titik, isi grid</string>
+    <string name="the_line_back">Kembali</string>
+    <string name="the_line_mode_single">Tunggal</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Mudah</string>
+    <string name="the_line_diff_medium">Sedang</string>
+    <string name="the_line_diff_hard">Sulit</string>
+    <string name="the_line_level">Level %1$d</string>
+    <string name="the_line_remaining">Sel tersisa: %1$d</string>
+    <string name="the_line_hint_single">Buat jalur dari S ke F yang mengunjungi setiap sel.</string>
+    <string name="the_line_hint_multi">Hubungkan setiap pasangan warna tanpa jalur bersilangan.</string>
+    <string name="the_line_completed">Level %1$d selesai!</string>
+    <string name="the_line_error">Tidak dapat membuat grid. Coba lagi.</string>
+    <string name="the_line_btn_reset">Permainan baru</string>
+    <string name="the_line_new_game">Permainan baru</string>
+    <string name="the_line_solved_label">✓ Terpecahkan!</string>
+    <string name="the_line_diff_simple">Sederhana</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Batal</string>
+</resources>

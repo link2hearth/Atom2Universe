@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Połącz wszystkie gwiazdy mostami, które się nie krzyżują</string>
+    <string name="starbridges_bridges">%1$d / %2$d mostów</string>
+    <string name="starbridges_solved">Konstelacja kompletna!</string>
+    <string name="starbridges_solved_header">★ Kompletne!</string>
+    <string name="starbridges_win_message">Ukończono w %1$s — %2$d ruchów, %3$d mostów.</string>
+    <string name="starbridges_btn_again">Nowa gra</string>
+    <string name="starbridges_btn_next">Następny rozmiar</string>
+    <string name="starbridges_hint_source">Dotknij gwiazdę, aby rozpocząć most.</string>
+    <string name="starbridges_hint_target">Dotknij wyrównaną gwiazdę, aby umieścić most.</string>
+    <string name="starbridges_restart_desc">Uruchom ponownie zagadkę</string>
+</resources>

@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Εμφάνιση/απόκρυψη σπανιότητας</string>
     <string name="hub_stats_title">Στατιστικά</string>
     <string name="hub_stats_desc">Σύνοψη ακρόασης, παιχνιδιών και ανάγνωσης</string>
+
+    <string name="back_button_desc">Πίσω</string>
 </resources>

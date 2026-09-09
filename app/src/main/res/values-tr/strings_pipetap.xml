@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Tüm boruları bağlamak için karoları döndür</string>
+    <string name="pipetap_moves">%1$d hamle</string>
+    <string name="pipetap_solved">Çözüldü!</string>
+    <string name="pipetap_win_message" formatted="false">%2$s içinde %1$d rotasyonla çözüldü.</string>
+    <string name="pipetap_btn_again">Yeni oyun</string>
+    <string name="pipetap_btn_next">Sonraki boyut</string>
+    <string name="pipetap_widget_cancel">İptal</string>
+    <string name="pipetap_widget_confirm">Başlat</string>
+</resources>

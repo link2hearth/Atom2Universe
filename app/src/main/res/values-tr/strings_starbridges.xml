@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Yıldız Köprüleri</string>
+    <string name="starbridges_description">Tüm yıldızları kesişmeyen köprülerle bağlayın</string>
+    <string name="starbridges_bridges" formatted="false">%1$d / %2$d köprü</string>
+    <string name="starbridges_solved">Takımyıldızı tamamlandı!</string>
+    <string name="starbridges_solved_header">★ Tamamlandı!</string>
+    <string name="starbridges_win_message" formatted="false">%1$s içinde tamamlandı — %2$d hamle, %3$d köprü.</string>
+    <string name="starbridges_btn_again">Yeni oyun</string>
+    <string name="starbridges_btn_next">Sonraki boyut</string>
+    <string name="starbridges_hint_source">Köprü başlatmak için bir yıldıza dokun.</string>
+    <string name="starbridges_hint_target">Köprüyü yerleştirmek için hizalı bir yıldıza dokun.</string>
+    <string name="starbridges_restart_desc">Bulmacayı yeniden başlat</string>
+</resources>

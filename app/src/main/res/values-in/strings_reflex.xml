@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Refleks</string>
+    <string name="reflex_description">Ketuk lingkaran secepat mungkin!</string>
+    <string name="reflex_score_label">SKOR</string>
+    <string name="reflex_best_easy_label">TERBAIK (MUDAH)</string>
+    <string name="reflex_best_hard_label">TERBAIK (SULIT)</string>
+    <string name="reflex_mode_easy">Mudah</string>
+    <string name="reflex_mode_hard">Sulit</string>
+    <string name="reflex_start">Main</string>
+    <string name="reflex_status_ready">Pilih mode dan tekan Main</string>
+    <string name="reflex_status_go">Ayo! Ketuk lingkaran!</string>
+    <string name="reflex_status_hit">Kena! +%1$d poin - Total: %2$d</string>
+    <string name="reflex_status_game_over">Permainan selesai! Skor akhir: %1$d</string>
+    <string name="reflex_status_new_record">Rekor baru! Skor: %1$d</string>
+</resources>

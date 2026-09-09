@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Sorteer de fiches op kleur</string>
+    <string name="color_stack_back">Terug</string>
+    <string name="color_stack_difficulty_label">Moeilijkheid:</string>
+    <string name="color_stack_difficulty_easy">Makkelijk</string>
+    <string name="color_stack_difficulty_medium">Gemiddeld</string>
+    <string name="color_stack_difficulty_hard">Moeilijk</string>
+    <string name="color_stack_moves">Zetten: %1$d</string>
+    <string name="color_stack_moves_zero">Zetten: 0</string>
+    <string name="color_stack_btn_new">Nieuw</string>
+    <string name="color_stack_btn_restart">Herstart</string>
+    <string name="color_stack_btn_undo">Ongedaan maken</string>
+    <string name="color_stack_status_new">Nieuw spel</string>
+    <string name="color_stack_status_restarted">Spel herstart</string>
+    <string name="color_stack_status_won">🎉 Gefeliciteerd!</string>
+    <string name="color_stack_new_game">Nieuw spel</string>
+    <string name="color_stack_widget_cancel">✕ Annuleren</string>
+</resources>

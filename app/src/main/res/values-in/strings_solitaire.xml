@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Solitaire</string>
+    <string name="solitaire_description">Permainan kartu Klondike klasik</string>
+    <string name="solitaire_new_game">Permainan baru</string>
+    <string name="solitaire_moves">Gerakan: %1$d</string>
+    <string name="solitaire_status_new_game">Permainan baru dimulai</string>
+    <string name="solitaire_status_restored">Permainan dipulihkan</string>
+    <string name="solitaire_status_won">Selamat! Anda menang!</string>
+    <string name="solitaire_dialog_resume_title">Permainan berlangsung</string>
+    <string name="solitaire_dialog_resume_message">Ada permainan yang sedang berlangsung. Lanjutkan?</string>
+    <string name="solitaire_dialog_new_title">Permainan baru</string>
+    <string name="solitaire_dialog_new_message">Apakah Anda ingin meninggalkan permainan saat ini?</string>
+    <string name="solitaire_auto_finish">Selesai otomatis</string>
+    <string name="solitaire_status_won_short">Kerja bagus!\nMenang!</string>
+    <string name="solitaire_new_game_confirm">Permainan baru?</string>
+    <string name="solitaire_confirm">✓ Konfirmasi</string>
+    <string name="solitaire_cancel">✕ Batal</string>
+</resources>

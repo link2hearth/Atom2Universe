@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Afișare/ascundere rarități</string>
     <string name="hub_stats_title">Statistici</string>
     <string name="hub_stats_desc">Recapitulare ascultare, jocuri și lectură</string>
+
+    <string name="back_button_desc">Înapoi</string>
 </resources>

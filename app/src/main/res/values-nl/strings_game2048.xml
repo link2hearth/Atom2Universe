@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Combineer tegels om het doel te bereiken!</string>
+    <string name="game2048_score_label">SCORE</string>
+    <string name="game2048_best_label">BESTE</string>
+    <string name="game2048_universes_label">UNIVERSA</string>
+    <string name="game2048_size_label">Raster:</string>
+    <string name="game2048_target_label">Doel:</string>
+    <string name="game2048_new">Nieuw</string>
+    <string name="game2048_status_play">Veeg om tegels te verplaatsen</string>
+    <string name="game2048_status_win">Geweldig! Tegel %1$d bereikt! Nieuw universum…</string>
+    <string name="game2048_status_over">Geblokkeerd op %1$d. Nieuw universum…</string>
+    <string name="game2048_confirm_title">Nieuw spel?</string>
+    <string name="game2048_confirm_message">Het huidige spel gaat verloren. Doorgaan?</string>
+    <string name="game2048_quantum_mode">🐱 Kwantummodus</string>
+    <string name="game2048_joker_active">🐱 ⚡ ACTIEF</string>
+    <string name="game2048_difficulty_easy">Makkelijk</string>
+    <string name="game2048_difficulty_normal">Normaal</string>
+    <string name="game2048_difficulty_hard">Moeilijk</string>
+    <string name="game2048_difficulty_random">Willekeurig</string>
+</resources>

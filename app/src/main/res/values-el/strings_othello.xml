@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="othello_title">Othello</string>
+    <string name="othello_hub_desc">Κλασικό παιχνίδι στρατηγικής reversi</string>
+    <string name="othello_score">Μαύρα: %1$d · Λευκά: %2$d</string>
+    <string name="othello_status_your_turn">Η σειρά σας (Λευκά)</string>
+    <string name="othello_status_black_turn">Σειρά των Μαύρων</string>
+    <string name="othello_status_white_turn">Σειρά των Λευκών</string>
+    <string name="othello_status_ai_thinking">Ο υπολογιστής σκέφτεται…</string>
+    <string name="othello_status_invalid">Μη έγκυρη κίνηση. Επιλέξτε ένα επισημασμένο κελί.</string>
+    <string name="othello_status_game_over">Τέλος παιχνιδιού — Μαύρα %1$d · Λευκά %2$d. %3$s</string>
+    <string name="othello_result_black">Νίκη Μαύρων!</string>
+    <string name="othello_result_white">Νίκη Λευκών!</string>
+    <string name="othello_result_draw">Ισοπαλία!</string>
+    <string name="othello_mode_solo">Μόνος εναντίον υπολογιστή</string>
+    <string name="othello_mode_duo">2 Παίκτες</string>
+    <string name="othello_new_game">Νέο παιχνίδι</string>
+</resources>

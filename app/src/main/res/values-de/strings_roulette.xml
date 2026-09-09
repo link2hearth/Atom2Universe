@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Spielautomat – reihe Farben und Symbole, um Neutrinos zu gewinnen</string>
+    <string name="roulette_spin">DREHEN</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Einsatz wählen und drehen!</string>
+    <string name="roulette_status_spinning">Dreht sich…</string>
+    <string name="roulette_status_lose">Diesmal kein Gewinn.</string>
+    <string name="roulette_status_no_funds">Nicht genug Neutrinos!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">%1$s-Linie! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Volle Joker! ×%1$d</string>
+    <string name="roulette_win_multiple">Mehrere Gewinne! ×%1$d gesamt</string>
+    <string name="roulette_win_overlay_title">GEWONNEN!</string>
+    <string name="roulette_win_overlay_tap">Tippen zum Fortfahren</string>
+</resources>

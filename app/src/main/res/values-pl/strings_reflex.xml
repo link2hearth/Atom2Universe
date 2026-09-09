@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Refleks</string>
+    <string name="reflex_description">Klikaj w kółka jak najszybciej!</string>
+    <string name="reflex_score_label">WYNIK</string>
+    <string name="reflex_best_easy_label">NAJLEPSZY (ŁATWY)</string>
+    <string name="reflex_best_hard_label">NAJLEPSZY (TRUDNY)</string>
+    <string name="reflex_mode_easy">Łatwy</string>
+    <string name="reflex_mode_hard">Trudny</string>
+    <string name="reflex_start">Graj</string>
+    <string name="reflex_status_ready">Wybierz tryb i naciśnij Graj</string>
+    <string name="reflex_status_go">Naprzód! Klikaj w kółka!</string>
+    <string name="reflex_status_hit">Trafienie! +%1$d pkt — Łącznie: %2$d</string>
+    <string name="reflex_status_game_over">Koniec gry! Wynik końcowy: %1$d</string>
+    <string name="reflex_status_new_record">Nowy rekord! Wynik: %1$d</string>
+</resources>

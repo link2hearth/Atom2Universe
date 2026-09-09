@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Sudoku grids with 3 difficulty levels</string>
+    <string name="sudoku_difficulty_easy">Easy</string>
+    <string name="sudoku_difficulty_medium">Medium</string>
+    <string name="sudoku_difficulty_hard">Hard</string>
+    <string name="sudoku_new_game">New game</string>
+    <string name="sudoku_check">Check</string>
+    <string name="sudoku_clear">Clear</string>
+    <string name="sudoku_validate">Validate</string>
+    <string name="sudoku_undo">↩ Undo</string>
+    <string name="sudoku_redo">↪ Redo</string>
+    <string name="sudoku_notes">Notes</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+    <string name="sudoku_status_generating">Generating…</string>
+    <string name="sudoku_status_generated">%1$s grid generated (%2$d clues)</string>
+    <string name="sudoku_status_no_error">No errors so far</string>
+    <string name="sudoku_status_errors">%1$d error(s) detected</string>
+    <string name="sudoku_status_mistakes">%1$d incorrect cell(s)</string>
+    <string name="sudoku_status_solved">Congratulations! Puzzle solved!</string>
+    <string name="sudoku_dialog_new_game_title">New game</string>
+    <string name="sudoku_dialog_confirm_new_title">Game in progress</string>
+    <string name="sudoku_dialog_confirm_new_message">Do you want to abandon the current game?</string>
+    <string name="sudoku_resume_game">Resume game</string>
+    <string name="sudoku_start_new">Start a new game</string>
+    <string name="sudoku_result_success">Well done!</string>
+    <string name="sudoku_result_failure">Fail!</string>
+    <string name="sudoku_widget_cancel">✕ Cancel</string>
+</resources>

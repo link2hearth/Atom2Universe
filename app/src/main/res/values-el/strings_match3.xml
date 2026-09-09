@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="match3_title">Metal Match</string>
+    <string name="match3_description">Παζλ αντιστοίχισης 3 μετάλλων</string>
+    <string name="match3_score">Βαθμολογία: %1$d</string>
+    <string name="match3_new_game">Νέο</string>
+    <string name="match3_game_over">Τέλος παιχνιδιού</string>
+    <string name="match3_time">Χρόνος: %1$s</string>
+    <string name="match3_neutrinos">⚛ +%1$d νετρίνα</string>
+</resources>

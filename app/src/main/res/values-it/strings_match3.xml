@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="match3_title">Metal Match</string>
+    <string name="match3_description">Puzzle match-3 di metalli</string>
+    <string name="match3_score">Punteggio: %1$d</string>
+    <string name="match3_new_game">Nuovo</string>
+    <string name="match3_game_over">Game Over</string>
+    <string name="match3_time">Tempo: %1$s</string>
+    <string name="match3_neutrinos">⚛ +%1$d neutrini</string>
+</resources>

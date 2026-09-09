@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Rulet</string>
+    <string name="roulette_description">Slot makinesi — nötrino kazanmak için renk ve sembolleri hizalayın</string>
+    <string name="roulette_spin">ÇEVİR</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Bir bahis seçin ve çevirin!</string>
+    <string name="roulette_status_spinning">Çevriliyor…</string>
+    <string name="roulette_status_lose">Bu sefer kazanılamadı.</string>
+    <string name="roulette_status_no_funds">Yeterli nötrino yok!</string>
+    <string name="roulette_last_win" formatted="false">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">%1$s serisi! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Tam Jokerler! ×%1$d</string>
+    <string name="roulette_win_multiple">Çoklu kazanç! Toplam ×%1$d</string>
+    <string name="roulette_win_overlay_title">KAZANÇ!</string>
+    <string name="roulette_win_overlay_tap">Devam etmek için dokun</string>
+</resources>

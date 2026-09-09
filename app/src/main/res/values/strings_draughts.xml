@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Draughts</string>
+    <string name="draughts_description">International draughts (10×10) with AI</string>
+    <string name="draughts_new_game">New game</string>
+    <string name="draughts_difficulty_training">Training</string>
+    <string name="draughts_difficulty_training_desc">Weak AI, ideal for learning</string>
+    <string name="draughts_difficulty_standard">Standard</string>
+    <string name="draughts_difficulty_standard_desc">Average AI, balanced game</string>
+    <string name="draughts_difficulty_expert">Expert</string>
+    <string name="draughts_difficulty_expert_desc">Strong AI, difficult challenge</string>
+    <string name="draughts_difficulty_two_player">Two players</string>
+    <string name="draughts_difficulty_two_player_desc">Play against a human opponent</string>
+    <string name="draughts_status_white_turn">White\'s turn</string>
+    <string name="draughts_status_black_turn">Black\'s turn</string>
+    <string name="draughts_status_ai_thinking">AI thinking…</string>
+    <string name="draughts_status_game_over">%s wins!</string>
+    <string name="draughts_color_white">White</string>
+    <string name="draughts_color_black">Black</string>
+    <string name="draughts_draw">Draw</string>
+    <string name="draughts_game_over_title">Game over</string>
+    <string name="draughts_resume_title">Resume game?</string>
+    <string name="draughts_resume_message">A saved game was found. Do you want to continue?</string>
+    <string name="draughts_confirm_new_title">New game?</string>
+    <string name="draughts_confirm_new_message">The current game will be lost. Continue?</string>
+    <string name="draughts_victory_title">Victory!</string>
+    <string name="draughts_victory_message">Congratulations! You beat the AI.\n\nRewards:\n• %1$d gacha tickets\n• Boost x%2$d for %3$d minutes</string>
+    <string name="draughts_mandatory_capture">Mandatory capture! You must take an enemy piece.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Cancel</string>
+    <string name="draughts_widget_draw">Draw</string>
+    <string name="draughts_widget_white_wins">White\nWins</string>
+    <string name="draughts_widget_black_wins">Black\nWins</string>
+    <string name="draughts_widget_victory">Victory!</string>
+    <string name="draughts_widget_defeat">Defeat</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

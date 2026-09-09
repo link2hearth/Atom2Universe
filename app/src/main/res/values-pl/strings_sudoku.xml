@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Łamigłówki sudoku z 3 poziomami trudności</string>
+    <string name="sudoku_difficulty_easy">Łatwy</string>
+    <string name="sudoku_difficulty_medium">Średni</string>
+    <string name="sudoku_difficulty_hard">Trudny</string>
+    <string name="sudoku_new_game">Nowa gra</string>
+    <string name="sudoku_check">Sprawdź</string>
+    <string name="sudoku_clear">Wyczyść</string>
+    <string name="sudoku_undo">↩ Cofnij</string>
+    <string name="sudoku_redo">↪ Ponów</string>
+    <string name="sudoku_status_generating">Generowanie…</string>
+    <string name="sudoku_status_generated">Siatka %1$s wygenerowana (%2$d wskazówek)</string>
+    <string name="sudoku_status_no_error">Brak błędów na razie</string>
+    <string name="sudoku_status_errors">%1$d wykrytych błędów</string>
+    <string name="sudoku_status_mistakes">%1$d niepoprawnych komórek</string>
+    <string name="sudoku_status_solved">Gratulacje! Zagadka rozwiązana!</string>
+    <string name="sudoku_dialog_new_game_title">Nowa gra</string>
+    <string name="sudoku_dialog_confirm_new_title">Gra w toku</string>
+    <string name="sudoku_dialog_confirm_new_message">Czy chcesz porzucić bieżącą grę?</string>
+    <string name="sudoku_resume_game">Wznów grę</string>
+    <string name="sudoku_start_new">Rozpocznij nową grę</string>
+    <string name="sudoku_result_success">Świetnie!</string>
+    <string name="sudoku_result_failure">Nieudane!</string>
+    <string name="sudoku_widget_cancel">✕ Anuluj</string>
+    <string name="sudoku_validate">Sprawdź</string>
+    <string name="sudoku_notes">Notatki</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

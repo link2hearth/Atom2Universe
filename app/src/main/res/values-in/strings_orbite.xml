@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Orbit</string>
+    <string name="orbite_description">Putar elektron, hindari asteroid, dan kumpulkan kuanta energi!</string>
+    <string name="orbite_subtitle">Sekali ketuk membalik arah orbit elektron</string>
+    <string name="orbite_instructions">Hindari puing kosmik yang tertarik ke inti · sapu kuanta hijau untuk merangkai kombo</string>
+    <string name="orbite_btn_start">Mulai</string>
+    <string name="orbite_btn_restart">Ulangi</string>
+    <string name="orbite_btn_back">Kembali</string>
+    <string name="orbite_game_over">Runtuh!</string>
+    <string name="orbite_best_label">TERBAIK %1$s</string>
+    <string name="orbite_final_score">Skor %1$d</string>
+    <string name="orbite_best_score">Terbaik %1$d</string>
+    <string name="orbite_new_best">★ Rekor baru! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

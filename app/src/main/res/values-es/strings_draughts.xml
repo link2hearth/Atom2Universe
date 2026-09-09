@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Damas</string>
+    <string name="draughts_description">Damas internacionales (10×10) con IA</string>
+    <string name="draughts_new_game">Nueva partida</string>
+    <string name="draughts_difficulty_training">Entrenamiento</string>
+    <string name="draughts_difficulty_training_desc">IA débil, ideal para aprender</string>
+    <string name="draughts_difficulty_standard">Estándar</string>
+    <string name="draughts_difficulty_standard_desc">IA media, juego equilibrado</string>
+    <string name="draughts_difficulty_expert">Experto</string>
+    <string name="draughts_difficulty_expert_desc">IA fuerte, desafío difícil</string>
+    <string name="draughts_difficulty_two_player">Dos jugadores</string>
+    <string name="draughts_difficulty_two_player_desc">Jugar contra un oponente humano</string>
+    <string name="draughts_status_white_turn">Turno de blancas</string>
+    <string name="draughts_status_black_turn">Turno de negras</string>
+    <string name="draughts_status_ai_thinking">La IA está pensando…</string>
+    <string name="draughts_status_game_over">¡%s gana!</string>
+    <string name="draughts_color_white">Blancas</string>
+    <string name="draughts_color_black">Negras</string>
+    <string name="draughts_draw">Empate</string>
+    <string name="draughts_game_over_title">Fin del juego</string>
+    <string name="draughts_resume_title">¿Reanudar partida?</string>
+    <string name="draughts_resume_message">Se encontró una partida guardada. ¿Quieres continuar?</string>
+    <string name="draughts_confirm_new_title">¿Nueva partida?</string>
+    <string name="draughts_confirm_new_message">La partida actual se perderá. ¿Continuar?</string>
+    <string name="draughts_victory_title">¡Victoria!</string>
+    <string name="draughts_victory_message">¡Felicidades! Has vencido a la IA.\n\nRecompensas:\n• %1$d tickets gacha\n• Boost x%2$d durante %3$d minutos</string>
+    <string name="draughts_mandatory_capture">¡Captura obligatoria! Debes tomar una pieza enemiga.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Cancelar</string>
+    <string name="draughts_widget_draw">Empate</string>
+    <string name="draughts_widget_white_wins">Blancas\nganan</string>
+    <string name="draughts_widget_black_wins">Negras\nganan</string>
+    <string name="draughts_widget_victory">¡Victoria!</string>
+    <string name="draughts_widget_defeat">Derrota</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Шахматы</string>
+    <string name="chess_description">Шахматы с многоуровневым ИИ</string>
+    <string name="chess_new_game">Новая игра</string>
+    <string name="chess_difficulty_training">Тренировка</string>
+    <string name="chess_difficulty_training_desc">Слабый ИИ, идеален для обучения</string>
+    <string name="chess_difficulty_standard">Стандартный</string>
+    <string name="chess_difficulty_standard_desc">Средний ИИ, сбалансированная игра</string>
+    <string name="chess_difficulty_expert">Эксперт</string>
+    <string name="chess_difficulty_expert_desc">Сильный ИИ, сложный вызов</string>
+    <string name="chess_difficulty_two_player">Два игрока</string>
+    <string name="chess_difficulty_two_player_desc">Играть против человека</string>
+    <string name="chess_status_your_turn">Ваш ход</string>
+    <string name="chess_status_black_turn">Ход чёрных</string>
+    <string name="chess_status_ai_thinking">ИИ думает…</string>
+    <string name="chess_status_check">Шах!</string>
+    <string name="chess_status_checkmate">Шах и мат! %s выигрывает</string>
+    <string name="chess_status_stalemate">Пат — Ничья</string>
+    <string name="chess_color_white">Белые</string>
+    <string name="chess_color_black">Чёрные</string>
+    <string name="chess_resume_title">Возобновить игру?</string>
+    <string name="chess_resume_message">Найдена сохранённая игра. Продолжить?</string>
+    <string name="chess_confirm_new_title">Новая игра?</string>
+    <string name="chess_confirm_new_message">Текущая игра будет потеряна. Продолжить?</string>
+    <string name="chess_promotion_title">Превращение пешки</string>
+    <string name="chess_promotion_queen">Ферзь</string>
+    <string name="chess_promotion_rook">Ладья</string>
+    <string name="chess_promotion_bishop">Слон</string>
+    <string name="chess_promotion_knight">Конь</string>
+    <string name="chess_victory_title">Победа!</string>
+    <string name="chess_widget_cancel">✕ Отмена</string>
+    <string name="chess_captured_label">Взятые:</string>
+</resources>

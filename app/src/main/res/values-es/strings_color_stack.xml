@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Ordena las fichas por color</string>
+    <string name="color_stack_back">Volver</string>
+    <string name="color_stack_difficulty_label">Dificultad:</string>
+    <string name="color_stack_difficulty_easy">Fácil</string>
+    <string name="color_stack_difficulty_medium">Medio</string>
+    <string name="color_stack_difficulty_hard">Difícil</string>
+    <string name="color_stack_moves">Movimientos: %1$d</string>
+    <string name="color_stack_moves_zero">Movimientos: 0</string>
+    <string name="color_stack_btn_new">Nuevo</string>
+    <string name="color_stack_btn_restart">Reiniciar</string>
+    <string name="color_stack_btn_undo">Deshacer</string>
+    <string name="color_stack_status_new">Nueva partida</string>
+    <string name="color_stack_status_restarted">Partida reiniciada</string>
+    <string name="color_stack_status_won">🎉 ¡Felicidades!</string>
+    <string name="color_stack_new_game">Nueva partida</string>
+    <string name="color_stack_widget_cancel">✕ Cancelar</string>
+</resources>

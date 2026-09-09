@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Пасьянс</string>
+    <string name="solitaire_description">Класична карткова гра Клондайк</string>
+    <string name="solitaire_new_game">Нова гра</string>
+    <string name="solitaire_moves">Ходи: %1$d</string>
+    <string name="solitaire_status_new_game">Нова гра розпочата</string>
+    <string name="solitaire_status_restored">Гру відновлено</string>
+    <string name="solitaire_status_won">Вітаємо! Ви виграли!</string>
+    <string name="solitaire_dialog_resume_title">Гра в процесі</string>
+    <string name="solitaire_dialog_resume_message">Гра в процесі. Бажаєте продовжити?</string>
+    <string name="solitaire_dialog_new_title">Нова гра</string>
+    <string name="solitaire_dialog_new_message">Бажаєте покинути поточну гру?</string>
+    <string name="solitaire_auto_finish">Авто-завершення</string>
+    <string name="solitaire_status_won_short">Молодець!\nПеремога!</string>
+    <string name="solitaire_new_game_confirm">Нова гра?</string>
+    <string name="solitaire_confirm">✓ Підтвердити</string>
+    <string name="solitaire_cancel">✕ Скасувати</string>
+</resources>

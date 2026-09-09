@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memory</string>
+    <string name="memory_description">Vind alle bijbehorende kaartenpaartjes</string>
+    <string name="memory_flips">%1$d omslagen</string>
+    <string name="memory_solved">Voltooid!</string>
+    <string name="memory_win_message">Voltooid in %2$s met %1$d omslagen.</string>
+    <string name="memory_btn_again">Nieuw spel</string>
+    <string name="memory_btn_back">Terug</string>
+    <string name="memory_confirm_message">Nieuw spel van %1$s starten?</string>
+</resources>

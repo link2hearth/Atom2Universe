@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Mayın Tarlası</string>
+    <string name="minesweeper_description">Klasik mayın temizleme bulmacası</string>
+    <string name="minesweeper_diff_easy">Kolay · 10 mayın</string>
+    <string name="minesweeper_diff_normal">Normal · 20 mayın</string>
+    <string name="minesweeper_diff_medium">Orta · 40 mayın</string>
+    <string name="minesweeper_diff_hard">Zor · 80 mayın</string>
+    <string name="minesweeper_new_game">Yeni oyun</string>
+    <string name="minesweeper_mines">Mayınlar</string>
+    <string name="minesweeper_timer">Kronometre</string>
+    <string name="minesweeper_won">Kazandın! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Kazandın! 🏆 Yeni rekor!  %1$s</string>
+    <string name="minesweeper_lost">Bum! 💥  Oyun bitti</string>
+    <string name="minesweeper_score_diff">Zorluk</string>
+    <string name="minesweeper_score_best">En iyi süre</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Yeni oyun</string>
+</resources>

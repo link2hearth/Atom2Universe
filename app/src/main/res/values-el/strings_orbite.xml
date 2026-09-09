@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Τροχιά</string>
+    <string name="orbite_description">Στροβίλισε το ηλεκτρόνιο, απόφυγε τους αστεροειδείς και μάζεψε τα κβάντα ενέργειας!</string>
+    <string name="orbite_subtitle">Ένα πάτημα αντιστρέφει την τροχιά του ηλεκτρονίου</string>
+    <string name="orbite_instructions">Απόφυγε τα κοσμικά συντρίμμια που έλκονται από τον πυρήνα · σάρωσε τα πράσινα κβάντα για combo</string>
+    <string name="orbite_btn_start">Έναρξη</string>
+    <string name="orbite_btn_restart">Ξανά</string>
+    <string name="orbite_btn_back">Πίσω</string>
+    <string name="orbite_game_over">Κατέρρευσε!</string>
+    <string name="orbite_best_label">ΚΑΛΥΤΕΡΟ %1$s</string>
+    <string name="orbite_final_score">Σκορ %1$d</string>
+    <string name="orbite_best_score">Καλύτερο %1$d</string>
+    <string name="orbite_new_best">★ Νέο ρεκόρ! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

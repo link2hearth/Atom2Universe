@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memory</string>
+    <string name="memory_description">Найдите все совпадающие пары карт</string>
+    <string name="memory_flips">%1$d переворотов</string>
+    <string name="memory_solved">Выполнено!</string>
+    <string name="memory_win_message">Выполнено за %2$s с %1$d переворотами.</string>
+    <string name="memory_btn_again">Новая игра</string>
+    <string name="memory_btn_back">Назад</string>
+    <string name="memory_confirm_message">Начать новую игру в %1$s?</string>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Link</string>
+    <string name="link_description">Verbinde Zellen, um null — oder zehn — zu erreichen!</string>
+    <string name="link_moves_label">Züge:</string>
+    <string name="link_difficulty_easy">Klein</string>
+    <string name="link_difficulty_medium">Mittel</string>
+    <string name="link_difficulty_hard">Groß</string>
+    <string name="link_pairs_few">Wenige Zwillinge</string>
+    <string name="link_pairs_normal">Normale Zwillinge</string>
+    <string name="link_pairs_many">Viele Zwillinge</string>
+    <string name="link_mode_classic">Klassisch</string>
+    <string name="link_mode_perfect">Perfekt</string>
+    <string name="link_btn_undo">Rückgängig</string>
+    <string name="link_btn_restart">Neustart</string>
+    <string name="link_btn_new_level">Neu</string>
+    <string name="link_msg_new_level">Neues %1$s-Level. Verbinde %2$d Zellen zum Anpassen der Werte!</string>
+    <string name="link_msg_new_level_perfect">Perfektmodus — %1$s. Finde die genauen %2$d Züge.</string>
+    <string name="link_msg_progress">%1$d normale und %2$d Plus-Zellen noch anzupassen.</string>
+    <string name="link_msg_invalid_pattern">Ungültiges Muster für diese Verbindungslänge.</string>
+    <string name="link_msg_undo">Letzter Zug rückgängig gemacht.</string>
+    <string name="link_msg_nothing_to_undo">Nichts rückgängig zu machen.</string>
+    <string name="link_msg_restart">Rätsel zurückgesetzt.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Gelöst!</string>
+    <string name="link_victory_moves">%1$d Züge</string>
+</resources>

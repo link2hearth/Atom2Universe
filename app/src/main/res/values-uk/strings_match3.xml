@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="match3_title">Metal Match</string>
+    <string name="match3_description">Головоломка match-3 із металів</string>
+    <string name="match3_score">Рахунок: %1$d</string>
+    <string name="match3_new_game">Нова</string>
+    <string name="match3_game_over">Гра закінчена</string>
+    <string name="match3_time">Час: %1$s</string>
+    <string name="match3_neutrinos">⚛ +%1$d нейтрино</string>
+</resources>

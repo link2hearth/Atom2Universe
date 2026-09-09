@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roguelike_title">Donjon</string>
+    <string name="roguelike_description">Explorez des donjons procéduraux et survivez 5 niveaux</string>
+
+    <string name="roguelike_gold">Or</string>
+    <string name="roguelike_stat_hp">HP</string>
+
+    <string name="roguelike_rarity_common">Commun</string>
+    <string name="roguelike_rarity_uncommon">Peu commun</string>
+    <string name="roguelike_rarity_rare">Rare</string>
+    <string name="roguelike_rarity_epic">Épique</string>
+    <string name="roguelike_rarity_legendary">Légendaire</string>
+    <string name="roguelike_rarity_prefix_uncommon">Bon </string>
+    <string name="roguelike_rarity_prefix_rare">Grand </string>
+    <string name="roguelike_rarity_prefix_epic">Épique </string>
+    <string name="roguelike_rarity_prefix_legendary">Légendaire </string>
+
+    <string name="roguelike_stattype_atk">ATK</string>
+    <string name="roguelike_stattype_def">DEF</string>
+    <string name="roguelike_stattype_maxhp">HP max</string>
+    <string name="roguelike_stattype_crit">Crit</string>
+    <string name="roguelike_stattype_critdmg">Crit×</string>
+    <string name="roguelike_stattype_evasion">Esquive</string>
+    <string name="roguelike_stattype_block">Blocage</string>
+
+    <string name="roguelike_material_iron">Fer</string>
+    <string name="roguelike_material_ice">Glace</string>
+    <string name="roguelike_material_unique">Unique</string>
+
+    <string name="roguelike_slot_weapon">Arme</string>
+    <string name="roguelike_slot_chest">Plastron</string>
+    <string name="roguelike_slot_helmet">Casque</string>
+    <string name="roguelike_slot_boots">Bottes</string>
+    <string name="roguelike_slot_offhand">Bouclier</string>
+    <string name="roguelike_slot_amulet">Amulette</string>
+    <string name="roguelike_slot_ring">Anneau</string>
+
+    <string name="roguelike_item_food_small">Pain</string>
+    <string name="roguelike_item_food_medium">Viande</string>
+    <string name="roguelike_item_food_large">Ragoût</string>
+
+    <string name="roguelike_monster_rat">Rat</string>
+    <string name="roguelike_monster_goblin">Gobelin</string>
+    <string name="roguelike_monster_skeleton">Squelette</string>
+    <string name="roguelike_monster_orc">Orc</string>
+    <string name="roguelike_monster_demon">Démon</string>
+
+    <string name="roguelike_log_descend_start">Tu descends dans le donjon…</string>
+    <string name="roguelike_log_shop_potion">HP max +10 ! Soins complets !</string>
+    <string name="roguelike_log_shop_atk">Cristal de force. ATK +1 !</string>
+    <string name="roguelike_log_shop_barrier">Barrière débloquée !</string>
+    <string name="roguelike_log_floor_descend">Étage %1$d — les ténèbres s\'approfondissent…</string>
+    <string name="roguelike_log_eat_item">%1$s mangé. +%2$d HP.</string>
+    <string name="roguelike_log_equip">%1$s équipé : %2$s !</string>
+    <string name="roguelike_log_ignore_drop">Objet laissé au sol.</string>
+    <string name="roguelike_log_kill_crit">CRITIQUE ! %1$s -%2$d. +%3$d or.</string>
+    <string name="roguelike_log_kill">%1$s -%2$d. +%3$d or.</string>
+    <string name="roguelike_log_hit_normal">%1$s -%2$d. (%3$d/%4$d)</string>
+    <string name="roguelike_log_hit_crit">%1$s -%2$d (CRIT). (%3$d/%4$d)</string>
+    <string name="roguelike_log_evaded">%1$s rate ! (Esquive)</string>
+    <string name="roguelike_log_blocked">%1$s bloqué → -%2$d HP !</string>
+    <string name="roguelike_log_barrier_absorb">Barrière absorbe l\'attaque. (%1$d/%2$d)</string>
+    <string name="roguelike_log_player_hit">%1$s frappe -%2$d ! HP %3$d/%4$d</string>
+    <string name="roguelike_log_player_death">Tu es mort !</string>
+    <string name="roguelike_log_gold_pickup">+%1$d or !</string>
+    <string name="roguelike_log_item_pickup">%1$s ramassé.</string>
+    <string name="roguelike_log_inventory_full">Inventaire plein !</string>
+    <string name="roguelike_log_resume">Aventure reprise — Étage %1$d.</string>
+
+    <string name="roguelike_descend_hint">[ &gt; ] Appuyez pour descendre</string>
+    <string name="roguelike_death_title">TU ES MORT</string>
+    <string name="roguelike_floor_gold_summary">Étage %1$d  —  %2$d or</string>
+    <string name="roguelike_tap_replay">Touchez pour recommencer</string>
+    <string name="roguelike_equipment_title">ÉQUIPEMENT</string>
+    <string name="roguelike_stats_title">STATISTIQUES</string>
+    <string name="roguelike_select_slot_hint">← Sélectionne un emplacement</string>
+    <string name="roguelike_empty_slot">— Emplacement vide —</string>
+    <string name="roguelike_shop_title">BOUTIQUE</string>
+    <string name="roguelike_shop_gold_available">%1$d or disponibles</string>
+    <string name="roguelike_shop_potion_name">♥  Vie max +10</string>
+    <string name="roguelike_shop_potion_desc">HP max +10 + soins complets</string>
+    <string name="roguelike_shop_atk_name">⚔  Cristal de force</string>
+    <string name="roguelike_shop_atk_desc">ATK +1 permanent</string>
+    <string name="roguelike_shop_barrier_name">◈  Barrière</string>
+    <string name="roguelike_shop_barrier_desc">Débloque la régénération de barrière</string>
+    <string name="roguelike_shop_price">%1$dor</string>
+    <string name="roguelike_shop_descend">↓  Descendre</string>
+    <string name="roguelike_loot_found_title">— %1$s trouvé —</string>
+    <string name="roguelike_loot_nothing_equipped">(rien d\'équipé)</string>
+    <string name="roguelike_loot_new_badge">NOUVEAU</string>
+    <string name="roguelike_loot_equipped_badge">ÉQUIPÉ</string>
+    <string name="roguelike_loot_equip_btn">Équiper</string>
+    <string name="roguelike_loot_ignore_btn">Garder</string>
+
+    <string name="roguelike_save_in_progress_fallback">partie en cours</string>
+    <string name="roguelike_resume_dialog_message">Une aventure est en cours :\n%1$s\n\nQue veux-tu faire ?</string>
+    <string name="roguelike_resume_dialog_continue">Continuer</string>
+    <string name="roguelike_resume_dialog_new_game">Nouvelle partie</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="match3_title">Metal Match</string>
+    <string name="match3_description">Metal match-3 bulmacası</string>
+    <string name="match3_score">Puan: %1$d</string>
+    <string name="match3_new_game">Yeni</string>
+    <string name="match3_game_over">Oyun Bitti</string>
+    <string name="match3_time">Süre: %1$s</string>
+    <string name="match3_neutrinos">⚛ +%1$d nötrino</string>
+</resources>

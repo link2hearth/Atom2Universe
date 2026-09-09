@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Ρουλέτα</string>
+    <string name="roulette_description">Κουλοχέρης — ευθυγραμμίστε χρώματα και σύμβολα για να κερδίσετε νετρίνα</string>
+    <string name="roulette_spin">ΠΕΡΙΣΤΡΟΦΗ</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Επιλέξτε στοίχημα και περιστρέψτε!</string>
+    <string name="roulette_status_spinning">Περιστρέφεται…</string>
+    <string name="roulette_status_lose">Καμία νίκη αυτή τη φορά.</string>
+    <string name="roulette_status_no_funds">Δεν υπάρχουν αρκετά νετρίνα!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">Γραμμή %1$s! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Πλήρεις Joker! ×%1$d</string>
+    <string name="roulette_win_multiple">Πολλαπλές νίκες! ×%1$d σύνολο</string>
+    <string name="roulette_win_overlay_title">ΝΙΚΗ!</string>
+    <string name="roulette_win_overlay_tap">Πατήστε για συνέχεια</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Campo minato</string>
+    <string name="minesweeper_description">Classico rompicapo di sminamento</string>
+    <string name="minesweeper_diff_easy">Facile · 10 mine</string>
+    <string name="minesweeper_diff_normal">Normale · 20 mine</string>
+    <string name="minesweeper_diff_medium">Medio · 40 mine</string>
+    <string name="minesweeper_diff_hard">Difficile · 80 mine</string>
+    <string name="minesweeper_new_game">Nuova partita</string>
+    <string name="minesweeper_mines">Mine</string>
+    <string name="minesweeper_timer">Cronometro</string>
+    <string name="minesweeper_won">Hai vinto! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Hai vinto! 🏆 Nuovo record!  %1$s</string>
+    <string name="minesweeper_lost">Boom! 💥  Partita finita</string>
+    <string name="minesweeper_score_diff">Difficoltà</string>
+    <string name="minesweeper_score_best">Tempo migliore</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Nuova partita</string>
+</resources>

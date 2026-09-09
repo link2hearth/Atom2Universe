@@ -5,7 +5,20 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.Atom2Universe.app.R
 import kotlin.math.*
+
+/** Résout une entrée de journal : les arguments Labeled/Equipment sont d'abord traduits en texte. */
+private fun LogEntry.resolve(context: Context): String {
+    val resolvedArgs = args.map { a ->
+        when (a) {
+            is Equipment -> LootSystem.displayName(context, a)
+            is Labeled   -> context.getString(a.labelRes)
+            else         -> a
+        }
+    }
+    return context.getString(keyRes, *resolvedArgs.toTypedArray())
+}
 
 class RoguelikeView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
@@ -331,13 +344,13 @@ class RoguelikeView @JvmOverloads constructor(
 
         canvas.drawRect(RectF(hpBarW, hudY, width.toFloat(), height.toFloat()), pOverlay)
         pText.textSize = logSize; pText.textAlign = Paint.Align.LEFT; pText.color = 0xFFDDDDDD.toInt()
-        for ((i, line) in lines.withIndex())
-            canvas.drawText(line, hpBarW + 10f, hudY + 10f + (i + 1) * lineH - 4f, pText)
+        for ((i, entry) in lines.withIndex())
+            canvas.drawText(entry.resolve(context), hpBarW + 10f, hudY + 10f + (i + 1) * lineH - 4f, pText)
         pText.textAlign = Paint.Align.CENTER
 
         if (g.onStairsTile()) {
             pText.color = 0xFFFFD600.toInt(); pText.textSize = hintSize
-            canvas.drawText("[ > ] Tap Descend", (hpBarW + width) / 2f, hudY - 8f, pText)
+            canvas.drawText(context.getString(R.string.roguelike_descend_hint), (hpBarW + width) / 2f, hudY - 8f, pText)
         }
     }
 
@@ -354,11 +367,11 @@ class RoguelikeView @JvmOverloads constructor(
         val cx = width / 2f; val cy = height / 2f
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFEF5350.toInt(); pText.textSize = sd * 28f
-        canvas.drawText("TU ES MORT", cx, cy - 50f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 50f, pText)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 16f
-        canvas.drawText("Étage ${g.player.floor}  —  ${g.player.gold} or", cx, cy, pText)
+        canvas.drawText(context.getString(R.string.roguelike_floor_gold_summary, g.player.floor, g.player.gold), cx, cy, pText)
         pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 14f
-        canvas.drawText("Tap pour recommencer", cx, cy + 50f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_tap_replay), cx, cy + 50f, pText)
     }
 
     // ── Icônes HUD ───────────────────────────────────────────────────────────────
@@ -493,7 +506,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         // Titre
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 14f
-        canvas.drawText("ÉQUIPEMENT", panel.centerX(), panel.top + gap + sd * 14f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_equipment_title), panel.centerX(), panel.top + gap + sd * 14f, pText)
 
         // Bouton fermer ✕
         val closeR = invCloseBtnRect(panel)
@@ -572,7 +585,7 @@ class RoguelikeView @JvmOverloads constructor(
             pText.textAlign = Paint.Align.CENTER
             pText.color = if (isSelected) 0xFF42A5F5.toInt() else 0xFF445566.toInt()
             pText.textSize = slotR.height() * 0.20f
-            canvas.drawText(slot.label, slotR.centerX(), slotR.bottom + slotR.height() * 0.22f, pText)
+            canvas.drawText(context.getString(slot.labelRes), slotR.centerX(), slotR.bottom + slotR.height() * 0.22f, pText)
         }
     }
 
@@ -582,7 +595,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         pText.textAlign = Paint.Align.LEFT
         pText.color = 0xFF888888.toInt(); pText.textSize = sd * 11f
-        canvas.drawText("STATISTIQUES", rect.left + gap * 2, rect.top + gap + sd * 11f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_stats_title), rect.left + gap * 2, rect.top + gap + sd * 11f, pText)
 
         val col1 = rect.left + gap * 2
         val col2 = rect.left + rect.width() * 0.5f
@@ -597,14 +610,14 @@ class RoguelikeView @JvmOverloads constructor(
             canvas.drawText(value, col + rect.width() * 0.2f, y, pText)
         }
 
-        stat("HP",      "${p.hp} / ${p.totalMaxHp}",                      col1, 0)
-        stat("ATK",     "${p.atk}",                                        col2, 0)
-        stat("DEF",     "${p.def}",                                        col1, 1)
-        stat("Crit",    "${(p.critChance * 100).toInt()}%",                col2, 1)
-        stat("Crit×",   "×${"%.1f".format(p.critDmgMult)}",               col1, 2)
-        stat("Esquive", "${(p.evasionChance * 100).toInt()}%",             col2, 2)
-        stat("Blocage", "${(p.blockChance * 100).toInt()}%",               col1, 3)
-        stat("Or",      "${p.gold}",                                       col2, 3)
+        stat(context.getString(R.string.roguelike_stat_hp),               "${p.hp} / ${p.totalMaxHp}",           col1, 0)
+        stat(context.getString(StatType.ATK.labelRes),                    "${p.atk}",                             col2, 0)
+        stat(context.getString(StatType.DEF.labelRes),                    "${p.def}",                             col1, 1)
+        stat(context.getString(StatType.CRIT_CHANCE.labelRes),            "${(p.critChance * 100).toInt()}%",     col2, 1)
+        stat(context.getString(StatType.CRIT_DMG.labelRes),                "×${"%.1f".format(p.critDmgMult)}",    col1, 2)
+        stat(context.getString(StatType.EVASION.labelRes),                "${(p.evasionChance * 100).toInt()}%",  col2, 2)
+        stat(context.getString(StatType.BLOCK.labelRes),                  "${(p.blockChance * 100).toInt()}%",    col1, 3)
+        stat(context.getString(R.string.roguelike_gold),                  "${p.gold}",                            col2, 3)
     }
 
     private fun drawDetailPanel(canvas: Canvas, g: RoguelikeGame, rect: RectF, sd: Float, cr: Float, gap: Float) {
@@ -617,7 +630,7 @@ class RoguelikeView @JvmOverloads constructor(
             pText.color = if (slot == null) 0xFF334455.toInt() else 0xFF556677.toInt()
             pText.textSize = sd * 12f
             canvas.drawText(
-                if (slot == null) "← Sélectionne un emplacement" else "— Emplacement vide —",
+                if (slot == null) context.getString(R.string.roguelike_select_slot_hint) else context.getString(R.string.roguelike_empty_slot),
                 rect.centerX(), rect.centerY() + sd * 6f, pText
             )
             return
@@ -635,18 +648,18 @@ class RoguelikeView @JvmOverloads constructor(
         // Nom + rareté
         pText.textAlign = Paint.Align.LEFT
         pText.color = equip.rarity.colorArgb; pText.textSize = sd * 13f
-        canvas.drawText(equip.label, textX, rect.top + gap + sd * 13f, pText)
+        canvas.drawText(LootSystem.displayName(context, equip), textX, rect.top + gap + sd * 13f, pText)
 
         // Matière
         pText.color = 0xFF556677.toInt(); pText.textSize = sd * 11f
-        canvas.drawText("${equip.material.label} · ${equip.slot.label}", textX, rect.top + gap * 2 + sd * 24f, pText)
+        canvas.drawText("${context.getString(equip.material.labelRes)} · ${context.getString(equip.slot.labelRes)}", textX, rect.top + gap * 2 + sd * 24f, pText)
 
         // Stats
         var statY = rect.top + gap * 3 + sd * 35f
         val statLineH = sd * 13f + gap * 0.4f
         for (stat in equip.stats) {
             pText.color = 0xFF88FFAA.toInt(); pText.textSize = sd * 13f
-            canvas.drawText(stat.display(), textX, statY, pText)
+            canvas.drawText(stat.display(context), textX, statY, pText)
             statY += statLineH
         }
     }
@@ -675,14 +688,14 @@ class RoguelikeView @JvmOverloads constructor(
         canvas.drawRoundRect(panel, cr, cr, pShopBg)
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFFFD600.toInt(); pText.textSize = sd * 20f
-        canvas.drawText("BOUTIQUE", panel.centerX(), panel.top + panel.height() * 0.08f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_shop_title), panel.centerX(), panel.top + panel.height() * 0.08f, pText)
         pText.color = 0xFFAAAAAA.toInt(); pText.textSize = sd * 13f
-        canvas.drawText("${g.player.gold} or disponibles", panel.centerX(), panel.top + panel.height() * 0.13f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_shop_gold_available, g.player.gold), panel.centerX(), panel.top + panel.height() * 0.13f, pText)
 
         val items = listOf(
-            Triple(ShopItem.POTION,  "♥  Vie max +10",       "HP max +10 + soins complets"),
-            Triple(ShopItem.ATK_UP, "⚔  Cristal de force",  "ATK +1 permanent"),
-            Triple(ShopItem.BARRIER,"◈  Barrière",           "Débloque la régénération de barrière")
+            Triple(ShopItem.POTION,  context.getString(R.string.roguelike_shop_potion_name),  context.getString(R.string.roguelike_shop_potion_desc)),
+            Triple(ShopItem.ATK_UP,  context.getString(R.string.roguelike_shop_atk_name),      context.getString(R.string.roguelike_shop_atk_desc)),
+            Triple(ShopItem.BARRIER, context.getString(R.string.roguelike_shop_barrier_name),  context.getString(R.string.roguelike_shop_barrier_desc))
         )
         items.forEachIndexed { i, (item, name, desc) ->
             val r      = shopItemRect(i, panel)
@@ -698,13 +711,13 @@ class RoguelikeView @JvmOverloads constructor(
             canvas.drawRoundRect(badgeR, cr * 0.4f, cr * 0.4f, when { bought -> pShopSold; canBuy -> pShopBuy; else -> pShopSold })
             pText.textAlign = Paint.Align.CENTER
             pText.color = if (bought) 0xFF555555.toInt() else 0xFFFFFFFF.toInt(); pText.textSize = sd * 13f
-            canvas.drawText(if (bought) "✓" else "${item.cost}or", badgeR.centerX(), badgeR.centerY() + sd * 5f, pText)
+            canvas.drawText(if (bought) "✓" else context.getString(R.string.roguelike_shop_price, item.cost), badgeR.centerX(), badgeR.centerY() + sd * 5f, pText)
         }
 
         val dRect = shopDescendRect(panel)
         canvas.drawRoundRect(dRect, cr * 0.6f, cr * 0.6f, pShopDescend)
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 16f
-        canvas.drawText("↓  Descendre", dRect.centerX(), dRect.centerY() + sd * 6f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_shop_descend), dRect.centerX(), dRect.centerY() + sd * 6f, pText)
     }
 
     // ── Popup de loot ────────────────────────────────────────────────────────────
@@ -741,7 +754,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         // ── Titre ──────────────────────────────────────────────────────────────
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 13f
-        canvas.drawText("— ${equip.slot.label} trouvé —", panel.centerX(), panel.top + gap + sd * 13f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_loot_found_title, context.getString(equip.slot.labelRes)), panel.centerX(), panel.top + gap + sd * 13f, pText)
 
         val titleBottom = panel.top + gap * 2 + sd * 13f
 
@@ -760,7 +773,7 @@ class RoguelikeView @JvmOverloads constructor(
             drawItemColumn(canvas, current, colR, isNew = false, sd, cr, gap)
         else {
             pText.textAlign = Paint.Align.CENTER; pText.color = 0xFF555555.toInt(); pText.textSize = sd * 13f
-            canvas.drawText("(rien d'équipé)", colR.centerX(), colR.centerY(), pText)
+            canvas.drawText(context.getString(R.string.roguelike_loot_nothing_equipped), colR.centerX(), colR.centerY(), pText)
         }
 
         // ── Indicateurs de delta par stat (sur la colonne gauche) ──────────────
@@ -772,8 +785,8 @@ class RoguelikeView @JvmOverloads constructor(
         canvas.drawRoundRect(equipR,  cr * 0.6f, cr * 0.6f, pEquipBtn)
         canvas.drawRoundRect(ignoreR, cr * 0.6f, cr * 0.6f, pIgnoreBtn)
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 15f
-        canvas.drawText("Équiper",  equipR.centerX(),  equipR.centerY()  + sd * 6f, pText)
-        canvas.drawText("Garder",   ignoreR.centerX(), ignoreR.centerY() + sd * 6f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_loot_equip_btn),  equipR.centerX(),  equipR.centerY()  + sd * 6f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_loot_ignore_btn), ignoreR.centerX(), ignoreR.centerY() + sd * 6f, pText)
     }
 
     /** Dessine une colonne item (icône + nom rareté + stats). */
@@ -797,19 +810,19 @@ class RoguelikeView @JvmOverloads constructor(
         pText.textAlign = Paint.Align.CENTER
         pText.color = if (isNew) 0xFFFFD600.toInt() else 0xFF888888.toInt()
         pText.textSize = sd * 11f
-        canvas.drawText(if (isNew) "NOUVEAU" else "ÉQUIPÉ", col.centerX(), y + sd * 11f, pText)
+        canvas.drawText(if (isNew) context.getString(R.string.roguelike_loot_new_badge) else context.getString(R.string.roguelike_loot_equipped_badge), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.5f
 
         // Nom avec couleur rareté
         pText.color = equip.rarity.colorArgb; pText.textSize = sd * 13f
-        canvas.drawText(equip.label, col.centerX(), y + sd * 13f, pText)
+        canvas.drawText(LootSystem.displayName(context, equip), col.centerX(), y + sd * 13f, pText)
         y += sd * 13f + gap * 0.6f
 
         // Stats
         for (stat in equip.stats) {
             pText.color = if (isNew) 0xFFDDFFDD.toInt() else 0xFFAAAAAA.toInt()
             pText.textSize = sd * 12f
-            canvas.drawText(stat.display(), col.centerX(), y + sd * 12f, pText)
+            canvas.drawText(stat.display(context), col.centerX(), y + sd * 12f, pText)
             y += sd * 12f + gap * 0.4f
         }
     }

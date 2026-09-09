@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Показати/приховати рідкості</string>
     <string name="hub_stats_title">Статистика</string>
     <string name="hub_stats_desc">Підсумок прослуховування, ігор і читання</string>
+
+    <string name="back_button_desc">Назад</string>
 </resources>

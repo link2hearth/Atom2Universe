@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memory</string>
+    <string name="memory_description">Find all matching pairs of cards</string>
+    <string name="memory_flips">%1$d flips</string>
+    <string name="memory_solved">Completed!</string>
+    <string name="memory_win_message">Completed in %2$s with %1$d flips.</string>
+    <string name="memory_btn_again">New game</string>
+    <string name="memory_btn_back">Back</string>
+    <string name="memory_confirm_message">Start a new %1$s game?</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Шашки</string>
+    <string name="draughts_description">Міжнародні шашки (10×10) з ШІ</string>
+    <string name="draughts_new_game">Нова гра</string>
+    <string name="draughts_difficulty_training">Тренування</string>
+    <string name="draughts_difficulty_training_desc">Слабкий ШІ, ідеально для навчання</string>
+    <string name="draughts_difficulty_standard">Стандарт</string>
+    <string name="draughts_difficulty_standard_desc">Середній ШІ, збалансована гра</string>
+    <string name="draughts_difficulty_expert">Експерт</string>
+    <string name="draughts_difficulty_expert_desc">Сильний ШІ, важке випробування</string>
+    <string name="draughts_difficulty_two_player">Два гравці</string>
+    <string name="draughts_difficulty_two_player_desc">Грати проти людини</string>
+    <string name="draughts_status_white_turn">Хід білих</string>
+    <string name="draughts_status_black_turn">Хід чорних</string>
+    <string name="draughts_status_ai_thinking">ШІ думає…</string>
+    <string name="draughts_status_game_over">%s виграв!</string>
+    <string name="draughts_color_white">Білі</string>
+    <string name="draughts_color_black">Чорні</string>
+    <string name="draughts_draw">Нічия</string>
+    <string name="draughts_game_over_title">Гра закінчена</string>
+    <string name="draughts_resume_title">Продовжити гру?</string>
+    <string name="draughts_resume_message">Знайдено збережену гру. Бажаєте продовжити?</string>
+    <string name="draughts_confirm_new_title">Нова гра?</string>
+    <string name="draughts_confirm_new_message">Поточна гра буде втрачена. Продовжити?</string>
+    <string name="draughts_victory_title">Перемога!</string>
+    <string name="draughts_victory_message">Вітаємо! Ви перемогли ШІ.\n\nНагороди:\n• %1$d gacha-квитків\n• Бонус ×%2$d на %3$d хвилин</string>
+    <string name="draughts_mandatory_capture">Обов\'язкове захоплення! Ви повинні взяти ворожу шашку.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Скасувати</string>
+    <string name="draughts_widget_draw">Нічия</string>
+    <string name="draughts_widget_white_wins">Білі\nВиграли</string>
+    <string name="draughts_widget_black_wins">Чорні\nВиграли</string>
+    <string name="draughts_widget_victory">Перемога!</string>
+    <string name="draughts_widget_defeat">Поразка</string>
+    <string name="draughts_widget_piece_count" formatted="false">○%1$d  ●%2$d</string>
+</resources>

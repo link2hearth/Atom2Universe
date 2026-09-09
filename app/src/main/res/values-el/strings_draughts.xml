@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Ντάμα</string>
+    <string name="draughts_description">Διεθνής ντάμα (10×10) με AI</string>
+    <string name="draughts_new_game">Νέο παιχνίδι</string>
+    <string name="draughts_difficulty_training">Εκπαίδευση</string>
+    <string name="draughts_difficulty_training_desc">Αδύναμο AI, ιδανικό για εκμάθηση</string>
+    <string name="draughts_difficulty_standard">Τυπικό</string>
+    <string name="draughts_difficulty_standard_desc">Μέτριο AI, ισορροπημένο παιχνίδι</string>
+    <string name="draughts_difficulty_expert">Ειδικός</string>
+    <string name="draughts_difficulty_expert_desc">Ισχυρό AI, δύσκολη πρόκληση</string>
+    <string name="draughts_difficulty_two_player">Δύο παίκτες</string>
+    <string name="draughts_difficulty_two_player_desc">Παιχνίδι εναντίον ανθρώπου αντιπάλου</string>
+    <string name="draughts_status_white_turn">Σειρά των Λευκών</string>
+    <string name="draughts_status_black_turn">Σειρά των Μαύρων</string>
+    <string name="draughts_status_ai_thinking">Ο υπολογιστής σκέφτεται…</string>
+    <string name="draughts_status_game_over">%s κερδίζει!</string>
+    <string name="draughts_color_white">Λευκά</string>
+    <string name="draughts_color_black">Μαύρα</string>
+    <string name="draughts_draw">Ισοπαλία</string>
+    <string name="draughts_game_over_title">Τέλος παιχνιδιού</string>
+    <string name="draughts_resume_title">Συνέχεια παιχνιδιού;</string>
+    <string name="draughts_resume_message">Βρέθηκε αποθηκευμένο παιχνίδι. Θέλετε να συνεχίσετε;</string>
+    <string name="draughts_confirm_new_title">Νέο παιχνίδι;</string>
+    <string name="draughts_confirm_new_message">Το τρέχον παιχνίδι θα χαθεί. Συνέχεια;</string>
+    <string name="draughts_victory_title">Νίκη!</string>
+    <string name="draughts_victory_message">Συγχαρητήρια! Κερδίσατε το AI.\n\nΑμοιβές:\n• %1$d εισιτήρια gacha\n• Boost x%2$d για %3$d λεπτά</string>
+    <string name="draughts_mandatory_capture">Υποχρεωτική αιχμαλωσία! Πρέπει να πάρετε ένα εχθρικό πιόνι.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Ακύρωση</string>
+    <string name="draughts_widget_draw">Ισοπαλία</string>
+    <string name="draughts_widget_white_wins">Λευκά\nΝικούν</string>
+    <string name="draughts_widget_black_wins">Μαύρα\nΝικούν</string>
+    <string name="draughts_widget_victory">Νίκη!</string>
+    <string name="draughts_widget_defeat">Ήττα</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

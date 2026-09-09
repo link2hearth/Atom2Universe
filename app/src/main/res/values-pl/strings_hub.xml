@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Pokaż/ukryj rzadkości</string>
     <string name="hub_stats_title">Statystyki</string>
     <string name="hub_stats_desc">Podsumowanie słuchania, gier i czytania</string>
+
+    <string name="back_button_desc">Wstecz</string>
 </resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Puzzles de sudoku com 3 níveis de dificuldade</string>
+    <string name="sudoku_difficulty_easy">Fácil</string>
+    <string name="sudoku_difficulty_medium">Médio</string>
+    <string name="sudoku_difficulty_hard">Difícil</string>
+    <string name="sudoku_new_game">Nova partida</string>
+    <string name="sudoku_check">Verificar</string>
+    <string name="sudoku_clear">Limpar</string>
+    <string name="sudoku_undo">↩ Desfazer</string>
+    <string name="sudoku_redo">↪ Refazer</string>
+    <string name="sudoku_status_generating">A gerar…</string>
+    <string name="sudoku_status_generated">Grelha %1$s gerada (%2$d dicas)</string>
+    <string name="sudoku_status_no_error">Sem erros até agora</string>
+    <string name="sudoku_status_errors">%1$d erro(s) detetado(s)</string>
+    <string name="sudoku_status_mistakes">%1$d célula(s) incorreta(s)</string>
+    <string name="sudoku_status_solved">Parabéns! Puzzle resolvido!</string>
+    <string name="sudoku_dialog_new_game_title">Nova partida</string>
+    <string name="sudoku_dialog_confirm_new_title">Partida em curso</string>
+    <string name="sudoku_dialog_confirm_new_message">Deseja abandonar a partida atual?</string>
+    <string name="sudoku_resume_game">Retomar partida</string>
+    <string name="sudoku_start_new">Iniciar nova partida</string>
+    <string name="sudoku_result_success">Muito bem!</string>
+    <string name="sudoku_result_failure">Falhou!</string>
+    <string name="sudoku_widget_cancel">✕ Cancelar</string>
+    <string name="sudoku_validate">Validar</string>
+    <string name="sudoku_notes">Notas</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

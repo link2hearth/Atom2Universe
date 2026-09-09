@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chess_title">Schaken</string>
+    <string name="chess_description">Schaakspel met meerlaagse AI</string>
+    <string name="chess_new_game">Nieuw spel</string>
+    <string name="chess_difficulty_training">Training</string>
+    <string name="chess_difficulty_training_desc">Zwakke AI, ideaal om te leren</string>
+    <string name="chess_difficulty_standard">Standaard</string>
+    <string name="chess_difficulty_standard_desc">Gemiddelde AI, uitgebalanceerd spel</string>
+    <string name="chess_difficulty_expert">Expert</string>
+    <string name="chess_difficulty_expert_desc">Sterke AI, moeilijke uitdaging</string>
+    <string name="chess_difficulty_two_player">Twee spelers</string>
+    <string name="chess_difficulty_two_player_desc">Speel tegen een menselijke tegenstander</string>
+    <string name="chess_status_your_turn">Jouw beurt</string>
+    <string name="chess_status_black_turn">Beurt van zwart</string>
+    <string name="chess_status_ai_thinking">AI denkt…</string>
+    <string name="chess_status_check">Schaak!</string>
+    <string name="chess_status_checkmate">Schaakmat! %s wint</string>
+    <string name="chess_status_stalemate">Pat — Remise</string>
+    <string name="chess_color_white">Wit</string>
+    <string name="chess_color_black">Zwart</string>
+    <string name="chess_resume_title">Spel hervatten?</string>
+    <string name="chess_resume_message">Er is een opgeslagen spel gevonden. Doorgaan?</string>
+    <string name="chess_confirm_new_title">Nieuw spel?</string>
+    <string name="chess_confirm_new_message">Het huidige spel gaat verloren. Doorgaan?</string>
+    <string name="chess_promotion_title">Pionpromotie</string>
+    <string name="chess_promotion_queen">Dame</string>
+    <string name="chess_promotion_rook">Toren</string>
+    <string name="chess_promotion_bishop">Loper</string>
+    <string name="chess_promotion_knight">Paard</string>
+    <string name="chess_victory_title">Overwinning!</string>
+    <string name="chess_widget_cancel">✕ Annuleren</string>
+    <string name="chess_captured_label">Geslagen:</string>
+</resources>

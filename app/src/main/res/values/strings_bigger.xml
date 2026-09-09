@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bigger_title">BIGGER</string>
+    <string name="bigger_description">Drop and merge marbles to reach 1024</string>
+    <string name="bigger_goal">→ %1$d</string>
+    <string name="bigger_restart">Restart</string>
+</resources>

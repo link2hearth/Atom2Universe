@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="orbite_title">Yörünge</string>
+    <string name="orbite_description">Elektronu döndür, asteroitlerden kaç ve enerji kuantalarını topla!</string>
+    <string name="orbite_subtitle">Tek dokunuş elektronun yörünge yönünü tersine çevirir</string>
+    <string name="orbite_instructions">Çekirdeğe çekilen kozmik enkazdan kaç · combo yapmak için yeşil kuantaları topla</string>
+    <string name="orbite_btn_start">Başla</string>
+    <string name="orbite_btn_restart">Tekrar</string>
+    <string name="orbite_btn_back">Geri</string>
+    <string name="orbite_game_over">Çöktü!</string>
+    <string name="orbite_best_label">EN İYİ %1$s</string>
+    <string name="orbite_final_score">Skor %1$d</string>
+    <string name="orbite_best_score">En iyi %1$d</string>
+    <string name="orbite_new_best">★ Yeni rekor! ★</string>
+    <string name="orbite_reward">+%1$d ⚛</string>
+</resources>

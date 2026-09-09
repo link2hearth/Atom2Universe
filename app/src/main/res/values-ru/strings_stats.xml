@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Комиксы</string>
     <string name="reading_stats_history_title">История</string>
     <string name="reading_stats_top_titles">Самые читаемые</string>
+
+    <string name="stats_tab_day">Сегодня</string>
+    <string name="stats_tab_week">Неделя</string>
+    <string name="stats_tab_month">Месяц</string>
+    <string name="stats_tab_year">Год</string>
+    <string name="stats_total_time">Общее время</string>
+    <string name="stats_hours_format">%1$d ч %2$d мин</string>
+    <string name="stats_minutes_format">%1$d мин</string>
+    <string name="stats_top_artists">Топ исполнителей</string>
+    <string name="stats_top_albums">Топ альбомов</string>
+    <string name="stats_top_midi">Топ MIDI-файлов</string>
+    <string name="stats_average_score">Средний балл практики</string>
+    <string name="stats_no_data">Нет данных за этот период</string>
+    <string name="stats_tab_calendar">Календарь</string>
+    <string name="stats_calendar_no_data">Нет активности за этот день</string>
+    <string name="stats_calendar_music_section">Музыка</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Радио</string>
+    <string name="stats_calendar_tracks_format">%1$d треков, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (счёт: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Итого: %1$s</string>
 </resources>

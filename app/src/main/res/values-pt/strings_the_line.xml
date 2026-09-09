@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Liga os pontos, preenche a grelha</string>
+    <string name="the_line_back">Voltar</string>
+    <string name="the_line_mode_single">Simples</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Fácil</string>
+    <string name="the_line_diff_medium">Médio</string>
+    <string name="the_line_diff_hard">Difícil</string>
+    <string name="the_line_level">Nível %1$d</string>
+    <string name="the_line_remaining">Células restantes: %1$d</string>
+    <string name="the_line_hint_single">Trace um caminho de S a F que visite todas as células.</string>
+    <string name="the_line_hint_multi">Ligue cada par de cores sem cruzar caminhos.</string>
+    <string name="the_line_completed">Nível %1$d concluído!</string>
+    <string name="the_line_error">Não foi possível gerar uma grelha. Tente novamente.</string>
+    <string name="the_line_btn_reset">Nova partida</string>
+    <string name="the_line_new_game">Nova partida</string>
+    <string name="the_line_solved_label">✓ Resolvido!</string>
+    <string name="the_line_diff_simple">Simples</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Cancelar</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Καζίνο blackjack με έως 4 αντιπάλους AI</string>
+    <string name="blackjack_hit">ΧΤΥΠΩ</string>
+    <string name="blackjack_stand">ΜΕΝΩ</string>
+    <string name="blackjack_double">ΔΙΠΛΟ</string>
+    <string name="blackjack_split">ΧΩΡΙΖΩ</string>
+    <string name="blackjack_deal">ΜΟΙΡΑΣΜΑ</string>
+    <string name="blackjack_bet_label">ΣΤΟΙΧΗΜΑ</string>
+    <string name="blackjack_ai_players_label">Παίκτες AI: %1$d</string>
+    <string name="blackjack_settings_title">Ρυθμίσεις τραπεζιού</string>
+    <string name="blackjack_result_win">ΝΙΚΗ +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">ΗΤΤΑ -%1$d</string>
+    <string name="blackjack_result_push">ΙΣΟΠΑΛΙΑ</string>
+    <string name="blackjack_result_win_free">ΝΙΚΗ</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">ΗΤΤΑ</string>
+    <string name="blackjack_bet_free">ΔΩΡΕΑΝ</string>
+    <string name="blackjack_neutrino_balance">Νετρίνα: %1$d</string>
+    <string name="blackjack_ia_short">AI</string>
+    <string name="blackjack_start">Αναπαραγωγή</string>
+    <string name="blackjack_dealer_thinking">Ο dealer σκέφτεται…</string>
+    <string name="blackjack_new_game_confirm">Νέο παιχνίδι;</string>
+    <string name="blackjack_confirm">✓ Επιβεβαίωση</string>
+    <string name="blackjack_cancel">✕ Ακύρωση</string>
+</resources>

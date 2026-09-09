@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_title">Διαφυγή από το Λαβύρινθο</string>
+    <string name="escape_description">Κινηθείτε αθόρυβα στον λαβύρινθο, μαζέψτε όλες τις σφαίρες, φτάστε στην έξοδο</string>
+    <string name="escape_back">Πίσω</string>
+    <string name="escape_diff_easy">Εύκολο</string>
+    <string name="escape_diff_medium">Μέτριο</string>
+    <string name="escape_diff_hard">Δύσκολο</string>
+    <string name="escape_btn_new">Νέο</string>
+    <string name="escape_turns_label_zero">Γύρος 0</string>
+    <string name="escape_turns_label">Γύρος %1$d</string>
+    <string name="escape_turns_prefix">Γύρος </string>
+    <string name="escape_orbs_label">Σφαίρες %1$d/%2$d</string>
+    <string name="escape_status_generating">Δημιουργία λαβυρίνθου…</string>
+    <string name="escape_status_gen_error">Η δημιουργία απέτυχε. Δοκιμάστε ξανά.</string>
+    <string name="escape_status_ready">Μαζέψτε όλες τις σφαίρες, μετά φτάστε στην έξοδο!</string>
+    <string name="escape_status_playing">Γύρος %1$d — %2$d/%3$d σφαίρες συλλέχθηκαν</string>
+    <string name="escape_status_reach_exit">Όλες οι σφαίρες συλλέχθηκαν! Φτάστε στην έξοδο!</string>
+    <string name="escape_status_missing_orbs">%1$d σφαίρα(-ες) λείπει ακόμα!</string>
+    <string name="escape_status_wall">Η διαδρομή εμποδίζεται.</string>
+    <string name="escape_status_caught">Εντοπίστηκε μετά από %1$d γύρους! Πατήστε για επανάληψη.</string>
+    <string name="escape_status_win">Διέφυγε σε %1$d γύρους (βέλτιστο: %2$d). Πατήστε για νέο παιχνίδι.</string>
+    <string name="escape_status_win_perfect">Τέλεια διαφυγή σε %1$d γύρους! Πατήστε για νέο παιχνίδι.</string>
+</resources>

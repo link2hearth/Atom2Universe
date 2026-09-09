@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Соединяйте точки, заполняйте сетку</string>
+    <string name="the_line_back">Назад</string>
+    <string name="the_line_mode_single">Одиночный</string>
+    <string name="the_line_mode_multi">Мульти</string>
+    <string name="the_line_diff_easy">Лёгкий</string>
+    <string name="the_line_diff_medium">Средний</string>
+    <string name="the_line_diff_hard">Сложный</string>
+    <string name="the_line_level">Уровень %1$d</string>
+    <string name="the_line_remaining">Осталось клеток: %1$d</string>
+    <string name="the_line_hint_single">Нарисуйте путь от S до F, проходящий через каждую клетку.</string>
+    <string name="the_line_hint_multi">Соедините каждую пару цветов, не пересекая пути.</string>
+    <string name="the_line_completed">Уровень %1$d пройден!</string>
+    <string name="the_line_error">Не удалось создать сетку. Попробуйте снова.</string>
+    <string name="the_line_btn_reset">Новая игра</string>
+    <string name="the_line_new_game">Новая игра</string>
+    <string name="the_line_solved_label">✓ Решено!</string>
+    <string name="the_line_diff_simple">Простой</string>
+    <string name="the_line_diff_multi">Мульти</string>
+    <string name="the_line_widget_cancel">✕ Отмена</string>
+</resources>

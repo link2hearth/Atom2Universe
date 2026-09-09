@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Minesweeper</string>
+    <string name="minesweeper_description">Klassisches Minenräum-Rätsel</string>
+    <string name="minesweeper_diff_easy">Leicht · 10 Minen</string>
+    <string name="minesweeper_diff_normal">Normal · 20 Minen</string>
+    <string name="minesweeper_diff_medium">Mittel · 40 Minen</string>
+    <string name="minesweeper_diff_hard">Schwer · 80 Minen</string>
+    <string name="minesweeper_new_game">Neues Spiel</string>
+    <string name="minesweeper_mines">Minen</string>
+    <string name="minesweeper_timer">Timer</string>
+    <string name="minesweeper_won">Gewonnen! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Gewonnen! 🏆 Neuer Bestwert!  %1$s</string>
+    <string name="minesweeper_lost">Bumm! 💥  Spiel vorbei</string>
+    <string name="minesweeper_score_diff">Schwierigkeit</string>
+    <string name="minesweeper_score_best">Bestzeit</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Neues Spiel</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Detector de mine</string>
+    <string name="minesweeper_description">Puzzle clasic de detectare a minelor</string>
+    <string name="minesweeper_diff_easy">Ușor · 10 mine</string>
+    <string name="minesweeper_diff_normal">Normal · 20 mine</string>
+    <string name="minesweeper_diff_medium">Mediu · 40 mine</string>
+    <string name="minesweeper_diff_hard">Greu · 80 mine</string>
+    <string name="minesweeper_new_game">Joc nou</string>
+    <string name="minesweeper_mines">Mine</string>
+    <string name="minesweeper_timer">Cronometru</string>
+    <string name="minesweeper_won">Ai câștigat! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Ai câștigat! 🏆 Record nou!  %1$s</string>
+    <string name="minesweeper_lost">Bum! 💥  Joc terminat</string>
+    <string name="minesweeper_score_diff">Dificultate</string>
+    <string name="minesweeper_score_best">Cel mai bun timp</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Joc nou</string>
+</resources>

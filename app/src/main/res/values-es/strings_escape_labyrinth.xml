@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_back">Volver</string>
+    <string name="escape_btn_new">Nuevo</string>
+    <string name="escape_description">Infiltrate en el laberinto, recoge todos los orbes y llega a la salida</string>
+    <string name="escape_diff_easy">Fácil</string>
+    <string name="escape_diff_hard">Difícil</string>
+    <string name="escape_diff_medium">Medio</string>
+    <string name="escape_orbs_label">Orbes %1$d/%2$d</string>
+    <string name="escape_status_caught">¡Descubierto tras %1$d turnos! Toca para reintentar.</string>
+    <string name="escape_status_gen_error">Error de generación. Inténtalo de nuevo.</string>
+    <string name="escape_status_generating">Generando laberinto…</string>
+    <string name="escape_status_missing_orbs">¡%1$d orbe(s) aún faltan!</string>
+    <string name="escape_status_playing">Turno %1$d — %2$d/%3$d orbes recogidos</string>
+    <string name="escape_status_reach_exit">¡Todos los orbes recogidos! ¡Llega a la salida!</string>
+    <string name="escape_status_ready">¡Recoge todos los orbes y llega a la salida!</string>
+    <string name="escape_status_wall">Camino bloqueado.</string>
+    <string name="escape_status_win">Escapado en %1$d turnos (óptimo: %2$d). Toca para jugar de nuevo.</string>
+    <string name="escape_status_win_perfect">¡Fuga perfecta en %1$d turnos! Toca para jugar de nuevo.</string>
+    <string name="escape_title">Fuga del laberinto</string>
+    <string name="escape_turns_label">Turno %1$d</string>
+    <string name="escape_turns_label_zero">Turno 0</string>
+    <string name="escape_turns_prefix">Turno </string>
+</resources>

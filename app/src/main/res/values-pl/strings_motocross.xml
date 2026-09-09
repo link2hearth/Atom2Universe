@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Jedź po proceduralnych trasach — lewo to hamowanie/pochyl do tyłu, prawo to przyspieszenie/pochyl do przodu!</string>
+    <string name="motocross_restart">Uruchom ponownie</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
+</resources>

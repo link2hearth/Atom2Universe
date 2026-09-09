@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Nadirliği göster/gizle</string>
     <string name="hub_stats_title">İstatistikler</string>
     <string name="hub_stats_desc">Dinleme, oyun ve okuma özeti</string>
+
+    <string name="back_button_desc">Geri</string>
 </resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Сапер</string>
+    <string name="minesweeper_description">Класична гра з розмінування</string>
+    <string name="minesweeper_diff_easy">Легко · 10 мін</string>
+    <string name="minesweeper_diff_normal">Нормально · 20 мін</string>
+    <string name="minesweeper_diff_medium">Середньо · 40 мін</string>
+    <string name="minesweeper_diff_hard">Важко · 80 мін</string>
+    <string name="minesweeper_new_game">Нова гра</string>
+    <string name="minesweeper_mines">Міни</string>
+    <string name="minesweeper_timer">Таймер</string>
+    <string name="minesweeper_won">Перемога! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Перемога! 🏆 Новий рекорд!  %1$s</string>
+    <string name="minesweeper_lost">Бабах! 💥  Гру завершено</string>
+    <string name="minesweeper_score_diff">Складність</string>
+    <string name="minesweeper_score_best">Найкращий час</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Нова гра</string>
+</resources>

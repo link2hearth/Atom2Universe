@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Πλέγματα Sudoku με 3 επίπεδα δυσκολίας</string>
+    <string name="sudoku_difficulty_easy">Εύκολο</string>
+    <string name="sudoku_difficulty_medium">Μέτριο</string>
+    <string name="sudoku_difficulty_hard">Δύσκολο</string>
+    <string name="sudoku_new_game">Νέο παιχνίδι</string>
+    <string name="sudoku_check">Έλεγχος</string>
+    <string name="sudoku_clear">Εκκαθάριση</string>
+    <string name="sudoku_undo">↩ Αναίρεση</string>
+    <string name="sudoku_redo">↪ Επαναφορά</string>
+    <string name="sudoku_status_generating">Δημιουργία…</string>
+    <string name="sudoku_status_generated">Πλέγμα %1$s δημιουργήθηκε (%2$d στοιχεία)</string>
+    <string name="sudoku_status_no_error">Δεν υπάρχουν λάθη μέχρι στιγμής</string>
+    <string name="sudoku_status_errors">%1$d λάθος/η εντοπίστηκαν</string>
+    <string name="sudoku_status_mistakes">%1$d λανθασμένο/α κελί/ά</string>
+    <string name="sudoku_status_solved">Συγχαρητήρια! Το παζλ λύθηκε!</string>
+    <string name="sudoku_dialog_new_game_title">Νέο παιχνίδι</string>
+    <string name="sudoku_dialog_confirm_new_title">Παιχνίδι σε εξέλιξη</string>
+    <string name="sudoku_dialog_confirm_new_message">Θέλετε να εγκαταλείψετε το τρέχον παιχνίδι;</string>
+    <string name="sudoku_resume_game">Συνέχεια παιχνιδιού</string>
+    <string name="sudoku_start_new">Έναρξη νέου παιχνιδιού</string>
+    <string name="sudoku_result_success">Μπράβο!</string>
+    <string name="sudoku_result_failure">Αποτυχία!</string>
+    <string name="sudoku_widget_cancel">✕ Ακύρωση</string>
+    <string name="sudoku_validate">Επικύρωση</string>
+    <string name="sudoku_notes">Σημειώσεις</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

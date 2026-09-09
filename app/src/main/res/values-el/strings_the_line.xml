@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Συνδέστε τελείες, γεμίστε το πλέγμα</string>
+    <string name="the_line_back">Πίσω</string>
+    <string name="the_line_mode_single">Μονό</string>
+    <string name="the_line_mode_multi">Πολλαπλό</string>
+    <string name="the_line_diff_easy">Εύκολο</string>
+    <string name="the_line_diff_medium">Μέτριο</string>
+    <string name="the_line_diff_hard">Δύσκολο</string>
+    <string name="the_line_level">Επίπεδο %1$d</string>
+    <string name="the_line_remaining">Κελιά που απομένουν: %1$d</string>
+    <string name="the_line_hint_single">Σχεδιάστε διαδρομή από S έως F που επισκέπτεται κάθε κελί.</string>
+    <string name="the_line_hint_multi">Συνδέστε κάθε ζεύγος χρωμάτων χωρίς να σταυρώνουν διαδρομές.</string>
+    <string name="the_line_completed">Επίπεδο %1$d ολοκληρώθηκε!</string>
+    <string name="the_line_error">Αδύνατη η δημιουργία πλέγματος. Δοκιμάστε ξανά.</string>
+    <string name="the_line_btn_reset">Νέο παιχνίδι</string>
+    <string name="the_line_new_game">Νέο παιχνίδι</string>
+    <string name="the_line_solved_label">✓ Λύθηκε!</string>
+    <string name="the_line_diff_simple">Απλό</string>
+    <string name="the_line_diff_multi">Πολλαπλό</string>
+    <string name="the_line_widget_cancel">✕ Ακύρωση</string>
+</resources>

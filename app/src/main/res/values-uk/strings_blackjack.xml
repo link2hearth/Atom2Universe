@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Казино-блекджек з до 4 гравців ШІ</string>
+    <string name="blackjack_hit">ЩЕ</string>
+    <string name="blackjack_stand">СТОП</string>
+    <string name="blackjack_double">ПОДВОЇТИ</string>
+    <string name="blackjack_split">РОЗДІЛИТИ</string>
+    <string name="blackjack_deal">РОЗДАЧА</string>
+    <string name="blackjack_bet_label">СТАВКА</string>
+    <string name="blackjack_ai_players_label">Гравці ШІ: %1$d</string>
+    <string name="blackjack_settings_title">Налаштування столу</string>
+    <string name="blackjack_result_win">ВИГРАШ +%1$d</string>
+    <string name="blackjack_result_bj">БЛЕКДЖЕК! +%1$d</string>
+    <string name="blackjack_result_lose">ПРОГРАШ -%1$d</string>
+    <string name="blackjack_result_push">НІЧИЯ</string>
+    <string name="blackjack_result_win_free">ВИГРАШ</string>
+    <string name="blackjack_result_bj_free">БЛЕКДЖЕК!</string>
+    <string name="blackjack_result_lose_free">ПРОГРАШ</string>
+    <string name="blackjack_bet_free">БЕЗКОШТОВНО</string>
+    <string name="blackjack_neutrino_balance">Нейтрино: %1$d</string>
+    <string name="blackjack_ia_short">ШІ</string>
+    <string name="blackjack_start">Грати</string>
+    <string name="blackjack_dealer_thinking">Дилер думає…</string>
+    <string name="blackjack_new_game_confirm">Нова гра?</string>
+    <string name="blackjack_confirm">✓ Підтвердити</string>
+    <string name="blackjack_cancel">✕ Скасувати</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Ordina le pedine per colore</string>
+    <string name="color_stack_back">Indietro</string>
+    <string name="color_stack_difficulty_label">Difficoltà:</string>
+    <string name="color_stack_difficulty_easy">Facile</string>
+    <string name="color_stack_difficulty_medium">Medio</string>
+    <string name="color_stack_difficulty_hard">Difficile</string>
+    <string name="color_stack_moves">Mosse: %1$d</string>
+    <string name="color_stack_moves_zero">Mosse: 0</string>
+    <string name="color_stack_btn_new">Nuovo</string>
+    <string name="color_stack_btn_restart">Ricomincia</string>
+    <string name="color_stack_btn_undo">Annulla</string>
+    <string name="color_stack_status_new">Nuova partita</string>
+    <string name="color_stack_status_restarted">Partita riavviata</string>
+    <string name="color_stack_status_won">🎉 Congratulazioni!</string>
+    <string name="color_stack_new_game">Nuova partita</string>
+    <string name="color_stack_widget_cancel">✕ Annulla</string>
+</resources>

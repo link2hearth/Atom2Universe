@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Posortuj żetony według koloru</string>
+    <string name="color_stack_back">Wróć</string>
+    <string name="color_stack_difficulty_label">Trudność:</string>
+    <string name="color_stack_difficulty_easy">Łatwy</string>
+    <string name="color_stack_difficulty_medium">Średni</string>
+    <string name="color_stack_difficulty_hard">Trudny</string>
+    <string name="color_stack_moves">Ruchy: %1$d</string>
+    <string name="color_stack_moves_zero">Ruchy: 0</string>
+    <string name="color_stack_btn_new">Nowy</string>
+    <string name="color_stack_btn_restart">Uruchom ponownie</string>
+    <string name="color_stack_btn_undo">Cofnij</string>
+    <string name="color_stack_status_new">Nowa gra</string>
+    <string name="color_stack_status_restarted">Gra uruchomiona ponownie</string>
+    <string name="color_stack_status_won">🎉 Gratulacje!</string>
+    <string name="color_stack_new_game">Nowa gra</string>
+    <string name="color_stack_widget_cancel">✕ Anuluj</string>
+</resources>

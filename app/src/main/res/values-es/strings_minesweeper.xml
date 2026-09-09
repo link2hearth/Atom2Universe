@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Buscaminas</string>
+    <string name="minesweeper_description">Clásico puzle de despeje de minas</string>
+    <string name="minesweeper_diff_easy">Fácil · 10 minas</string>
+    <string name="minesweeper_diff_normal">Normal · 20 minas</string>
+    <string name="minesweeper_diff_medium">Medio · 40 minas</string>
+    <string name="minesweeper_diff_hard">Difícil · 80 minas</string>
+    <string name="minesweeper_new_game">Nueva partida</string>
+    <string name="minesweeper_mines">Minas</string>
+    <string name="minesweeper_timer">Cronómetro</string>
+    <string name="minesweeper_won">¡Has ganado! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">¡Has ganado! 🏆 ¡Nuevo récord!  %1$s</string>
+    <string name="minesweeper_lost">¡Boom! 💥  Fin de la partida</string>
+    <string name="minesweeper_score_diff">Dificultad</string>
+    <string name="minesweeper_score_best">Mejor tiempo</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Nueva partida</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Réflexes</string>
+    <string name="reflex_description">Tapez les cercles le plus vite possible !</string>
+    <string name="reflex_score_label">SCORE</string>
+    <string name="reflex_best_easy_label">MEILLEUR (FACILE)</string>
+    <string name="reflex_best_hard_label">MEILLEUR (DIFFICILE)</string>
+    <string name="reflex_mode_easy">Facile</string>
+    <string name="reflex_mode_hard">Difficile</string>
+    <string name="reflex_start">Jouer</string>
+    <string name="reflex_status_ready">Choisissez un mode et appuyez sur Jouer</string>
+    <string name="reflex_status_go">C\'est parti ! Tapez les cercles !</string>
+    <string name="reflex_status_hit">Touché ! +%1$d pts - Total : %2$d</string>
+    <string name="reflex_status_game_over">Game over ! Score final : %1$d</string>
+    <string name="reflex_status_new_record">Nouveau record ! Score : %1$d</string>
+</resources>

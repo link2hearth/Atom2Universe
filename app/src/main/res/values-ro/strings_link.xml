@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Legătură</string>
+    <string name="link_description">Conectați celulele pentru a ajunge la zero — sau la zece!</string>
+    <string name="link_moves_label">Mișcări:</string>
+    <string name="link_difficulty_easy">Mic</string>
+    <string name="link_difficulty_medium">Mediu</string>
+    <string name="link_difficulty_hard">Mare</string>
+    <string name="link_pairs_few">Puține perechi</string>
+    <string name="link_pairs_normal">Perechi normale</string>
+    <string name="link_pairs_many">Multe perechi</string>
+    <string name="link_mode_classic">Clasic</string>
+    <string name="link_mode_perfect">Perfect</string>
+    <string name="link_btn_undo">Anulare</string>
+    <string name="link_btn_restart">Repornire</string>
+    <string name="link_btn_new_level">Nou</string>
+    <string name="link_msg_new_level">Nivel nou %1$s. Conectați %2$d celule pentru a ajusta valorile!</string>
+    <string name="link_msg_new_level_perfect">Mod perfect — %1$s. Găsiți cele %2$d mișcări exacte.</string>
+    <string name="link_msg_progress">%1$d celule normale și %2$d celule plus de ajustat.</string>
+    <string name="link_msg_invalid_pattern">Pattern invalid pentru această lungime de legătură.</string>
+    <string name="link_msg_undo">Ultima mișcare anulată.</string>
+    <string name="link_msg_nothing_to_undo">Nimic de anulat.</string>
+    <string name="link_msg_restart">Puzzle resetat.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Rezolvat!</string>
+    <string name="link_victory_moves">%1$d mișcări</string>
+</resources>

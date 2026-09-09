@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Poduri stelare</string>
+    <string name="starbridges_description">Conectați toate stelele cu poduri care nu se încrucișează</string>
+    <string name="starbridges_bridges">%1$d / %2$d poduri</string>
+    <string name="starbridges_solved">Constelație completă!</string>
+    <string name="starbridges_solved_header">★ Completat!</string>
+    <string name="starbridges_win_message">Realizat în %1$s — %2$d mișcări, %3$d poduri.</string>
+    <string name="starbridges_btn_again">Joc nou</string>
+    <string name="starbridges_btn_next">Dimensiune următoare</string>
+    <string name="starbridges_hint_source">Apăsați o stea pentru a începe un pod.</string>
+    <string name="starbridges_hint_target">Apăsați o stea aliniată pentru a plasa podul.</string>
+    <string name="starbridges_restart_desc">Repornire puzzle</string>
+</resources>

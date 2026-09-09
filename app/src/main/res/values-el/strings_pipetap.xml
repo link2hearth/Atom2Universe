@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Περιστρέψτε τα πλακίδια για να συνδέσετε όλους τους σωλήνες</string>
+    <string name="pipetap_moves">%1$d κινήσεις</string>
+    <string name="pipetap_solved">Λύθηκε!</string>
+    <string name="pipetap_win_message">Λύθηκε σε %2$s με %1$d περιστροφές.</string>
+    <string name="pipetap_btn_again">Νέο παιχνίδι</string>
+    <string name="pipetap_btn_next">Επόμενο μέγεθος</string>
+    <string name="pipetap_widget_cancel">Ακύρωση</string>
+    <string name="pipetap_widget_confirm">Έναρξη</string>
+</resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stars_war_title">Зоряна Війна</string>
+    <string name="stars_war_description">Космічний стрілець — виживайте в хвилях!</string>
+    <string name="stars_war_paused">Пауза</string>
+    <string name="sw_title">ЗОРЯНА  ВІЙНА</string>
+    <string name="sw_start_hint">Перетягніть для руху  •  Автовогонь\n\nТоркніться для початку</string>
+    <string name="sw_paused">ПАУЗА</string>
+    <string name="sw_tap_resume">Торкніться для продовження</string>
+    <string name="sw_wave_cleared">Хвиля %1$d пройдена!</string>
+    <string name="sw_choose_upgrade">ВИБЕРІТЬ ПОКРАЩЕННЯ</string>
+    <string name="sw_best_hint" formatted="false">Найкращий рахунок: %1$d  •  Найкраща хвиля: %2$d</string>
+    <string name="sw_game_over">ГРА  ЗАКІНЧЕНА</string>
+    <string name="sw_score">Рахунок: %1$d</string>
+    <string name="sw_reached_wave">Досягнуто хвилі %1$d</string>
+    <string name="sw_new_best_score">★ Новий найкращий рахунок! ★</string>
+    <string name="sw_new_best_wave">★ Нова найкраща хвиля! ★</string>
+    <string name="sw_best_summary" formatted="false">Найкращий: %1$d  •  Хвиля: %2$d</string>
+    <string name="sw_tap_play_again">Торкніться, щоб грати знову</string>
+    <string name="sw_hud_wave">Хвиля %1$d</string>
+    <string name="sw_boss_wave_announce">⚠  БОССОВА  ХВИЛЯ  ⚠</string>
+    <string name="sw_wave_announce">— ХВИЛЯ  %1$d —</string>
+    <string name="sw_hud_multishot">×%1$dПостріл</string>
+    <string name="sw_hud_pierce">Пробиває×%1$d</string>
+    <string name="sw_hud_rocket_base">Ракета</string>
+    <string name="sw_hud_rocket">Ракета+%1$d</string>
+    <string name="sw_hud_leech">Вампір</string>
+    <string name="sw_upg_rapid_fire_name">Швидкий курок</string>
+    <string name="sw_upg_rapid_fire_desc">Швидкість стрільби +5%</string>
+    <string name="sw_upg_multi_shot_name">Подвійні гармати</string>
+    <string name="sw_upg_multi_shot_desc">+1 паралельна куля</string>
+    <string name="sw_upg_power_shot_name">Потужний постріл</string>
+    <string name="sw_upg_power_shot_desc">+1 шкода за кулю</string>
+    <string name="sw_upg_shield_name">Енергетичний щит</string>
+    <string name="sw_upg_shield_desc">Поглинути 1 удар</string>
+    <string name="sw_upg_heal_name">Ремонтний набір</string>
+    <string name="sw_upg_heal_desc">Відновити 1 HP</string>
+    <string name="sw_upg_max_hp_name">Покращення корпусу</string>
+    <string name="sw_upg_max_hp_desc">+1 макс HP</string>
+    <string name="sw_upg_pierce_name">Рейковий снаряд</string>
+    <string name="sw_upg_pierce_desc">Кулі пробивають +1</string>
+    <string name="sw_upg_rocket_name">Ракетна установка</string>
+    <string name="sw_upg_rocket_desc">Самонавідна ×2 шкода / 10с</string>
+    <string name="sw_upg_rocket_rate_name">Ракетний підсилювач</string>
+    <string name="sw_upg_rocket_rate_desc">Швидкість ракети +5%</string>
+    <string name="sw_upg_rocket_dmg_name">Бойова частина</string>
+    <string name="sw_upg_rocket_dmg_desc">+1 шкода ракети</string>
+    <string name="sw_upg_magnet_name">Магнітне поле</string>
+    <string name="sw_upg_magnet_desc">Відштовхувати кулі (5с)</string>
+    <string name="sw_upg_magnet_dur_name">Подовжувач поля</string>
+    <string name="sw_upg_magnet_dur_desc">Магнітне поле +1.25с</string>
+    <string name="sw_upg_drone_name">Крилатий дрон</string>
+    <string name="sw_upg_drone_desc">Супутник автоматично стріляє</string>
+    <string name="sw_upg_vampire_name">Вампір</string>
+    <string name="sw_upg_vampire_desc">5% крадіжка здоров\'я за вбивство</string>
+    <string name="sw_upg_nova_name">Новий імпульс</string>
+    <string name="sw_upg_nova_desc">Очистити кулі поруч</string>
+    <string name="sw_meteor_title">✦ МЕТЕОРИТНИЙ ДОЩ ✦</string>
+    <string name="sw_meteor_bonus">ІДЕАЛЬНО! +2 покращення</string>
+</resources>

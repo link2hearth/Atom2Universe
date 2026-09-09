@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Penyapu Ranjau</string>
+    <string name="minesweeper_description">Teka-teki klasik membersihkan ranjau</string>
+    <string name="minesweeper_diff_easy">Mudah · 10 ranjau</string>
+    <string name="minesweeper_diff_normal">Normal · 20 ranjau</string>
+    <string name="minesweeper_diff_medium">Sedang · 40 ranjau</string>
+    <string name="minesweeper_diff_hard">Sulit · 80 ranjau</string>
+    <string name="minesweeper_new_game">Permainan baru</string>
+    <string name="minesweeper_mines">Ranjau</string>
+    <string name="minesweeper_timer">Pengatur waktu</string>
+    <string name="minesweeper_won">Anda menang! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Anda menang! 🏆 Rekor baru!  %1$s</string>
+    <string name="minesweeper_lost">Bum! 💥  Permainan berakhir</string>
+    <string name="minesweeper_score_diff">Kesulitan</string>
+    <string name="minesweeper_score_best">Waktu terbaik</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Permainan baru</string>
+</resources>

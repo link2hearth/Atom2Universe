@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Solitaire</string>
+    <string name="solitaire_description">Klasik Klondike kart oyunu</string>
+    <string name="solitaire_new_game">Yeni oyun</string>
+    <string name="solitaire_moves">Hamle: %1$d</string>
+    <string name="solitaire_status_new_game">Yeni oyun başladı</string>
+    <string name="solitaire_status_restored">Oyun geri yüklendi</string>
+    <string name="solitaire_status_won">Tebrikler! Kazandınız!</string>
+    <string name="solitaire_dialog_resume_title">Oyun devam ediyor</string>
+    <string name="solitaire_dialog_resume_message">Oyun devam ediyor. Devam etmek istiyor musunuz?</string>
+    <string name="solitaire_dialog_new_title">Yeni oyun</string>
+    <string name="solitaire_dialog_new_message">Mevcut oyunu bırakmak istiyor musunuz?</string>
+    <string name="solitaire_auto_finish">Otomatik tamamla</string>
+    <string name="solitaire_status_won_short">Bravo!\nZafer!</string>
+    <string name="solitaire_new_game_confirm">Yeni oyun?</string>
+    <string name="solitaire_confirm">✓ Onayla</string>
+    <string name="solitaire_cancel">✕ İptal</string>
+</resources>

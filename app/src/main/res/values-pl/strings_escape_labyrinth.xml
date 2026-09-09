@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="escape_back">Wróć</string>
+    <string name="escape_btn_new">Nowy</string>
+    <string name="escape_description">Przemykaj przez labirynt, zbieraj orby i dotrzyj do wyjścia</string>
+    <string name="escape_diff_easy">Łatwy</string>
+    <string name="escape_diff_hard">Trudny</string>
+    <string name="escape_diff_medium">Średni</string>
+    <string name="escape_orbs_label">Orby %1$d/%2$d</string>
+    <string name="escape_status_caught">Zauważony po %1$d turach! Dotknij, aby spróbować ponownie.</string>
+    <string name="escape_status_gen_error">Generowanie nieudane. Spróbuj ponownie.</string>
+    <string name="escape_status_generating">Generowanie labiryntu…</string>
+    <string name="escape_status_missing_orbs">%1$d orb(ów) jeszcze brakuje!</string>
+    <string name="escape_status_playing">Tura %1$d — zebrano %2$d/%3$d orbów</string>
+    <string name="escape_status_reach_exit">Wszystkie orby zebrane! Dotrzyj do wyjścia!</string>
+    <string name="escape_status_ready">Zbierz wszystkie orby, następnie dotrzyj do wyjścia!</string>
+    <string name="escape_status_wall">Droga zablokowana.</string>
+    <string name="escape_status_win">Uciekłeś w %1$d turach (optymalnie: %2$d). Dotknij, aby zagrać ponownie.</string>
+    <string name="escape_status_win_perfect">Perfekcyjna ucieczka w %1$d turach! Dotknij, aby zagrać ponownie.</string>
+    <string name="escape_title">Ucieczka z labiryntu</string>
+    <string name="escape_turns_label">Tura %1$d</string>
+    <string name="escape_turns_label_zero">Tura 0</string>
+    <string name="escape_turns_prefix">Tura </string>
+</resources>

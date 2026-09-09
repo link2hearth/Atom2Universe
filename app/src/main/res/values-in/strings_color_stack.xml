@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Urutkan keping berdasarkan warna</string>
+    <string name="color_stack_back">Kembali</string>
+    <string name="color_stack_difficulty_label">Kesulitan:</string>
+    <string name="color_stack_difficulty_easy">Mudah</string>
+    <string name="color_stack_difficulty_medium">Sedang</string>
+    <string name="color_stack_difficulty_hard">Sulit</string>
+    <string name="color_stack_moves">Gerakan: %1$d</string>
+    <string name="color_stack_moves_zero">Gerakan: 0</string>
+    <string name="color_stack_btn_new">Baru</string>
+    <string name="color_stack_btn_restart">Mulai ulang</string>
+    <string name="color_stack_btn_undo">Batalkan</string>
+    <string name="color_stack_status_new">Permainan baru</string>
+    <string name="color_stack_status_restarted">Permainan diulang</string>
+    <string name="color_stack_status_won">🎉 Selamat!</string>
+    <string name="color_stack_new_game">Permainan baru</string>
+    <string name="color_stack_widget_cancel">✕ Batal</string>
+</resources>

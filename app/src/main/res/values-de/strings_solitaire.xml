@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Solitaire</string>
+    <string name="solitaire_description">Das klassische Klondike-Kartenspiel</string>
+    <string name="solitaire_new_game">Neues Spiel</string>
+    <string name="solitaire_moves">Züge: %1$d</string>
+    <string name="solitaire_status_new_game">Neues Spiel gestartet</string>
+    <string name="solitaire_status_restored">Spiel wiederhergestellt</string>
+    <string name="solitaire_status_won">Glückwunsch! Gewonnen!</string>
+    <string name="solitaire_dialog_resume_title">Spiel läuft</string>
+    <string name="solitaire_dialog_resume_message">Ein Spiel läuft gerade. Fortsetzen?</string>
+    <string name="solitaire_dialog_new_title">Neues Spiel</string>
+    <string name="solitaire_dialog_new_message">Möchten Sie das aktuelle Spiel abbrechen?</string>
+    <string name="solitaire_auto_finish">Auto-Finish</string>
+    <string name="solitaire_status_won_short">Gut gemacht!\nSieg!</string>
+    <string name="solitaire_new_game_confirm">Neues Spiel?</string>
+    <string name="solitaire_confirm">✓ Bestätigen</string>
+    <string name="solitaire_cancel">✕ Abbrechen</string>
+</resources>

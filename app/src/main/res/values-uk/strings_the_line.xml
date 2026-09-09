@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">Лінія</string>
+    <string name="the_line_description">З\'єднуйте точки, заповнюйте сітку</string>
+    <string name="the_line_back">Назад</string>
+    <string name="the_line_mode_single">Одиночний</string>
+    <string name="the_line_mode_multi">Багатокольоровий</string>
+    <string name="the_line_diff_easy">Легкий</string>
+    <string name="the_line_diff_medium">Середній</string>
+    <string name="the_line_diff_hard">Важкий</string>
+    <string name="the_line_level">Рівень %1$d</string>
+    <string name="the_line_remaining">Клітинок залишилось: %1$d</string>
+    <string name="the_line_hint_single">Намалюйте шлях від S до F, відвідавши кожну клітинку.</string>
+    <string name="the_line_hint_multi">З\'єднайте кожну пару кольорів, не перетинаючи шляхи.</string>
+    <string name="the_line_completed">Рівень %1$d завершено!</string>
+    <string name="the_line_error">Не вдалося згенерувати сітку. Спробуйте ще раз.</string>
+    <string name="the_line_btn_reset">Нова гра</string>
+    <string name="the_line_new_game">Нова гра</string>
+    <string name="the_line_solved_label">✓ Вирішено!</string>
+    <string name="the_line_diff_simple">Простий</string>
+    <string name="the_line_diff_multi">Багатокольоровий</string>
+    <string name="the_line_widget_cancel">✕ Скасувати</string>
+</resources>

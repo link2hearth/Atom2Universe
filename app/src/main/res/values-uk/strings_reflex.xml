@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Рефлекс</string>
+    <string name="reflex_description">Торкайтеся кіл якомога швидше!</string>
+    <string name="reflex_score_label">РАХУНОК</string>
+    <string name="reflex_best_easy_label">НАЙКРАЩИЙ (ЛЕГКИЙ)</string>
+    <string name="reflex_best_hard_label">НАЙКРАЩИЙ (ВАЖКИЙ)</string>
+    <string name="reflex_mode_easy">Легкий</string>
+    <string name="reflex_mode_hard">Важкий</string>
+    <string name="reflex_start">Грати</string>
+    <string name="reflex_status_ready">Виберіть режим і натисніть Грати</string>
+    <string name="reflex_status_go">Вперед! Торкайтесь кіл!</string>
+    <string name="reflex_status_hit" formatted="false">Влучання! +%1$d очок - Всього: %2$d</string>
+    <string name="reflex_status_game_over">Гра закінчена! Фінальний рахунок: %1$d</string>
+    <string name="reflex_status_new_record">Новий рекорд! Рахунок: %1$d</string>
+</resources>

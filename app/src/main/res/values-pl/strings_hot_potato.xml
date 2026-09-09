@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Gorący Ziemniak</string>
+    <string name="hot_potato_description">Odbijaj ziemniaka, upiecz go w sam raz i wystrzel go na boki!</string>
+    <string name="hot_potato_how_to">Odciągnij jak procę, by wystrzelić · piecz do zielonej strefy</string>
+    <string name="hot_potato_tap_to_start">Dotknij pod ziemniakiem, aby zacząć</string>
+    <string name="hot_potato_tap_to_retry">Dotknij, aby spróbować ponownie</string>
+    <string name="hot_potato_tap_to_resume">Dotknij, aby wznowić</string>
+    <string name="hot_potato_game_over">Koniec gry</string>
+    <string name="hot_potato_paused">Wstrzymano</string>
+    <string name="hot_potato_score_label">Wynik</string>
+    <string name="hot_potato_best_label">NAJLEPSZY</string>
+    <string name="hot_potato_new_best">Nowy rekord!</string>
+    <string name="hot_potato_perfect">Idealnie!</string>
+    <string name="hot_potato_raw">Za surowy!</string>
+    <string name="hot_potato_burnt">Spalony!</string>
+</resources>

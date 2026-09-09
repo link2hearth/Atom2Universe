@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">Łącz kafelki, aby osiągnąć cel!</string>
+    <string name="game2048_score_label">WYNIK</string>
+    <string name="game2048_best_label">NAJLEPSZY</string>
+    <string name="game2048_universes_label">WSZECHŚWIATY</string>
+    <string name="game2048_size_label">Siatka:</string>
+    <string name="game2048_target_label">Cel:</string>
+    <string name="game2048_new">Nowy</string>
+    <string name="game2048_status_play">Przesuń, aby przesunąć kafelki</string>
+    <string name="game2048_status_win">Świetnie! Osiągnięto kafelek %1$d! Nowy wszechświat…</string>
+    <string name="game2048_status_over">Zablokowany na %1$d. Nowy wszechświat…</string>
+    <string name="game2048_confirm_title">Nowa gra?</string>
+    <string name="game2048_confirm_message">Bieżąca gra zostanie utracona. Kontynuować?</string>
+    <string name="game2048_quantum_mode">🐱 Tryb kwantowy</string>
+    <string name="game2048_joker_active">🐱 ⚡ AKTYWNY</string>
+    <string name="game2048_difficulty_easy">Łatwy</string>
+    <string name="game2048_difficulty_normal">Normalny</string>
+    <string name="game2048_difficulty_hard">Trudny</string>
+    <string name="game2048_difficulty_random">Losowy</string>
+</resources>

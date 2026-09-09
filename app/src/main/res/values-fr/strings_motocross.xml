@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">Pilotez sur des pistes procédurales — gauche pour freiner/pencher, droite pour accélérer !</string>
+    <string name="motocross_restart">Recommencer</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
+    <string name="motocross_hint_brake">◀ Freiner / Pencher</string>
+    <string name="motocross_hint_accelerate">Accélérer / Pencher ▶</string>
+    <string name="motocross_game_over">GAME OVER</string>
+    <string name="motocross_distance_final">Distance : %1$d m</string>
+    <string name="motocross_best">Meilleur : %1$d m</string>
+    <string name="motocross_tap_replay">Appuyez pour rejouer</string>
+</resources>

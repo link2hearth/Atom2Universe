@@ -40,7 +40,7 @@ object SaveManager {
             .getString(KEY, null) ?: return null
         return try {
             val j = JSONObject(str)
-            "Étage ${j.getInt("floor")}  —  ${j.getInt("gold")} or"
+            ctx.getString(com.Atom2Universe.app.R.string.roguelike_floor_gold_summary, j.getInt("floor"), j.getInt("gold"))
         } catch (_: Exception) { null }
     }
 
@@ -50,7 +50,6 @@ object SaveManager {
         put("slot",      e.slot.name)
         put("material",  e.material.name)
         put("rarity",    e.rarity.name)
-        put("label",     e.label)
         put("spriteRow", e.spriteRow)
         put("spriteCol", e.spriteCol)
         put("stats", JSONArray().also { arr ->
@@ -71,7 +70,6 @@ object SaveManager {
             slot      = EquipSlot.valueOf(j.getString("slot")),
             material  = EquipMaterial.valueOf(j.getString("material")),
             rarity    = Rarity.valueOf(j.getString("rarity")),
-            label     = j.getString("label"),
             stats     = stats,
             spriteRow = j.getInt("spriteRow"),
             spriteCol = j.getInt("spriteCol"),

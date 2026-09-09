@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Teka-teki sudoku dengan 3 tingkat kesulitan</string>
+    <string name="sudoku_difficulty_easy">Mudah</string>
+    <string name="sudoku_difficulty_medium">Sedang</string>
+    <string name="sudoku_difficulty_hard">Sulit</string>
+    <string name="sudoku_new_game">Permainan baru</string>
+    <string name="sudoku_check">Periksa</string>
+    <string name="sudoku_clear">Hapus</string>
+    <string name="sudoku_undo">↩ Batalkan</string>
+    <string name="sudoku_redo">↪ Ulangi</string>
+    <string name="sudoku_status_generating">Membuat…</string>
+    <string name="sudoku_status_generated">Grid %1$s dibuat (%2$d petunjuk)</string>
+    <string name="sudoku_status_no_error">Belum ada kesalahan</string>
+    <string name="sudoku_status_errors">%1$d kesalahan terdeteksi</string>
+    <string name="sudoku_status_mistakes">%1$d sel salah</string>
+    <string name="sudoku_status_solved">Selamat! Teka-teki terpecahkan!</string>
+    <string name="sudoku_dialog_new_game_title">Permainan baru</string>
+    <string name="sudoku_dialog_confirm_new_title">Permainan berlangsung</string>
+    <string name="sudoku_dialog_confirm_new_message">Apakah Anda ingin meninggalkan permainan saat ini?</string>
+    <string name="sudoku_resume_game">Lanjutkan permainan</string>
+    <string name="sudoku_start_new">Mulai permainan baru</string>
+    <string name="sudoku_result_success">Bagus!</string>
+    <string name="sudoku_result_failure">Gagal!</string>
+    <string name="sudoku_widget_cancel">✕ Batal</string>
+    <string name="sudoku_validate">Validasi</string>
+    <string name="sudoku_notes">Catatan</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

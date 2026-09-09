@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wave_surf_title">Wave Surf</string>
+    <string name="wave_surf_description">Surfuj po proceduralnych wzgórzach — dotknij, aby zanurzyć się i nabierać prędkości!</string>
+    <string name="wave_surf_restart">Uruchom ponownie</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/h</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Żywy</string>
+    <string name="wave_surf_theme_pastel">Pastel</string>
+    <string name="wave_surf_theme_old">Vintage</string>
+    <string name="wave_surf_theme_gray">C&amp;B</string>
+</resources>

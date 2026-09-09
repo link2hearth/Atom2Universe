@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Color Stack</string>
+    <string name="color_stack_description">Sortați token-urile după culoare</string>
+    <string name="color_stack_back">Înapoi</string>
+    <string name="color_stack_difficulty_label">Dificultate:</string>
+    <string name="color_stack_difficulty_easy">Ușor</string>
+    <string name="color_stack_difficulty_medium">Mediu</string>
+    <string name="color_stack_difficulty_hard">Greu</string>
+    <string name="color_stack_moves">Mișcări: %1$d</string>
+    <string name="color_stack_moves_zero">Mișcări: 0</string>
+    <string name="color_stack_btn_new">Nou</string>
+    <string name="color_stack_btn_restart">Repornire</string>
+    <string name="color_stack_btn_undo">Anulare</string>
+    <string name="color_stack_status_new">Joc nou</string>
+    <string name="color_stack_status_restarted">Joc repornit</string>
+    <string name="color_stack_status_won">🎉 Felicitări!</string>
+    <string name="color_stack_new_game">Joc nou</string>
+    <string name="color_stack_widget_cancel">✕ Anulare</string>
+</resources>

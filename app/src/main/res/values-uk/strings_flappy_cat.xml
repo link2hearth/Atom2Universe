@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Стрибучий Кіт</string>
+    <string name="flappy_cat_description">Уникайте пілонів і птахів!</string>
+    <string name="flappy_cat_tap_to_start">Торкніться для початку</string>
+    <string name="flappy_cat_tap_to_retry">Торкніться, щоб спробувати ще раз</string>
+    <string name="flappy_cat_game_over">Гра Закінчена</string>
+    <string name="flappy_cat_paused">Пауза</string>
+    <string name="flappy_cat_tap_to_resume">Торкніться для продовження</string>
+    <string name="flappy_cat_score_label">Рахунок</string>
+    <string name="flappy_cat_best_label">НАЙКРАЩИЙ</string>
+    <string name="flappy_cat_new_best">Новий рекорд!</string>
+</resources>

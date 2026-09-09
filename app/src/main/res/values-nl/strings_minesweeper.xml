@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Mijnenveger</string>
+    <string name="minesweeper_description">Klassieke mijnenpuzzel</string>
+    <string name="minesweeper_diff_easy">Makkelijk · 10 mijnen</string>
+    <string name="minesweeper_diff_normal">Normaal · 20 mijnen</string>
+    <string name="minesweeper_diff_medium">Gemiddeld · 40 mijnen</string>
+    <string name="minesweeper_diff_hard">Moeilijk · 80 mijnen</string>
+    <string name="minesweeper_new_game">Nieuw spel</string>
+    <string name="minesweeper_mines">Mijnen</string>
+    <string name="minesweeper_timer">Timer</string>
+    <string name="minesweeper_won">Gewonnen! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Gewonnen! 🏆 Nieuw record!  %1$s</string>
+    <string name="minesweeper_lost">Boem! 💥  Game over</string>
+    <string name="minesweeper_score_diff">Moeilijkheid</string>
+    <string name="minesweeper_score_best">Beste tijd</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Nieuw spel</string>
+</resources>

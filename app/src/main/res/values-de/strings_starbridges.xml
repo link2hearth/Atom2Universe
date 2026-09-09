@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Verbinde alle Sterne mit sich nicht kreuzenden Brücken</string>
+    <string name="starbridges_bridges">%1$d / %2$d Brücken</string>
+    <string name="starbridges_solved">Konstellation vollständig!</string>
+    <string name="starbridges_solved_header">★ Vollständig!</string>
+    <string name="starbridges_win_message">Fertig in %1$s — %2$d Züge, %3$d Brücken.</string>
+    <string name="starbridges_btn_again">Neues Spiel</string>
+    <string name="starbridges_btn_next">Nächste Größe</string>
+    <string name="starbridges_hint_source">Tippe auf einen Stern, um eine Brücke zu beginnen.</string>
+    <string name="starbridges_hint_target">Tippe auf einen ausgerichteten Stern, um die Brücke zu platzieren.</string>
+    <string name="starbridges_restart_desc">Rätsel neu starten</string>
+</resources>

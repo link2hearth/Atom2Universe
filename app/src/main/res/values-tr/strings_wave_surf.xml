@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wave_surf_title">Dalga Sörfü</string>
+    <string name="wave_surf_description">Prosedürel tepelerde sörf yapın — dalmak ve hız kazanmak için dokunun!</string>
+    <string name="wave_surf_restart">Yeniden başlat</string>
+    <string name="wave_surf_hud_distance">%1$d m</string>
+    <string name="wave_surf_hud_speed">%1$d km/s</string>
+    <string name="wave_surf_hud_altitude">%1$d m ↑</string>
+    <string name="wave_surf_theme_vivid">Canlı</string>
+    <string name="wave_surf_theme_pastel">Pastel</string>
+    <string name="wave_surf_theme_old">Eski</string>
+    <string name="wave_surf_theme_gray">S&amp;B</string>
+</resources>

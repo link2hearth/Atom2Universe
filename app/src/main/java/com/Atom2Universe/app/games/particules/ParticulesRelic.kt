@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.games.particules
 
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
+
 /**
  * Système de reliques (bonus passifs) collectées pendant un run rogue-like.
  * Chaque relique modifie le comportement du jeu pour le reste du run.
@@ -29,30 +32,30 @@ enum class RelicId {
     PANIC_TRAINER      // mode contact s'active au bout de 30s (au lieu de 60s)
 }
 
-data class Relic(val id: RelicId, val name: String, val desc: String, val rarity: Rarity)
+data class Relic(val id: RelicId, @StringRes val nameRes: Int, @StringRes val descRes: Int, val rarity: Rarity)
 
 object RelicCatalog {
     val ALL = listOf(
-        Relic(RelicId.PADDLE_ZEPHYR,    "Zéphyr",          "Raquette +15%",                Rarity.COMMON),
-        Relic(RelicId.HEAVY_BALL,       "Balle lourde",    "25% chance de double dégât",   Rarity.COMMON),
-        Relic(RelicId.STONE_HEART,      "Cœur de pierre",  "+1 vie maximum",               Rarity.RARE),
-        Relic(RelicId.EXPLOSIVE_FUSE,   "Fusible",         "Explosions +50% de rayon",     Rarity.COMMON),
-        Relic(RelicId.MAGNET_START,     "Aimant discret",  "4s d'aimant à chaque niveau",  Rarity.COMMON),
-        Relic(RelicId.COLLECTOR,        "Collecteur",      "+1 pièce par brique",          Rarity.COMMON),
-        Relic(RelicId.PRESSURE,         "Sous pression",   "Vitesse de balle -5%",         Rarity.COMMON),
-        Relic(RelicId.LUCKY,            "Chance",          "10% de drop sur briques simples", Rarity.RARE),
-        Relic(RelicId.PIERCE_START,     "Percée initiale", "3s de perçage à chaque niveau",Rarity.RARE),
-        Relic(RelicId.SHIELD_START,     "Tortue",          "1 bouclier offert par niveau", Rarity.RARE),
-        Relic(RelicId.GUARDIAN_LASER,   "Gardien laser",   "4s de laser par niveau",       Rarity.RARE),
-        Relic(RelicId.RESONANCE,        "Résonance",       "Combo +50% de durée",          Rarity.COMMON),
-        Relic(RelicId.MULTI_START,      "Multi-particules","2 balles au départ",           Rarity.EPIC),
-        Relic(RelicId.FIRE_HEART,       "Cœur de feu",     "3s de feu à chaque niveau",    Rarity.RARE),
-        Relic(RelicId.BOSS_SLAYER,      "Tueur de boss",   "×2 pièces sur les boss",       Rarity.COMMON),
-        Relic(RelicId.COMBO_GREED,      "Avide",           "×2 pièces dès combo 5",        Rarity.COMMON),
-        Relic(RelicId.PADDLE_GRAVITY,   "Gravité fine",    "Raquette doublement réactive", Rarity.COMMON),
-        Relic(RelicId.PADDLE_SPRINT,    "Sprint",          "Raquette +50% de vitesse",     Rarity.COMMON),
-        Relic(RelicId.SECOND_CHANCE,    "Seconde chance",  "Survit une fois à la défaite", Rarity.EPIC),
-        Relic(RelicId.PANIC_TRAINER,    "Entraînement",    "Contact doigt activé en 30s", Rarity.RARE)
+        Relic(RelicId.PADDLE_ZEPHYR,    R.string.particules_relic_paddle_zephyr_name,   R.string.particules_relic_paddle_zephyr_desc,   Rarity.COMMON),
+        Relic(RelicId.HEAVY_BALL,       R.string.particules_relic_heavy_ball_name,      R.string.particules_relic_heavy_ball_desc,      Rarity.COMMON),
+        Relic(RelicId.STONE_HEART,      R.string.particules_relic_stone_heart_name,     R.string.particules_relic_stone_heart_desc,     Rarity.RARE),
+        Relic(RelicId.EXPLOSIVE_FUSE,   R.string.particules_relic_explosive_fuse_name,  R.string.particules_relic_explosive_fuse_desc,  Rarity.COMMON),
+        Relic(RelicId.MAGNET_START,     R.string.particules_relic_magnet_start_name,    R.string.particules_relic_magnet_start_desc,    Rarity.COMMON),
+        Relic(RelicId.COLLECTOR,        R.string.particules_relic_collector_name,       R.string.particules_relic_collector_desc,       Rarity.COMMON),
+        Relic(RelicId.PRESSURE,         R.string.particules_relic_pressure_name,        R.string.particules_relic_pressure_desc,        Rarity.COMMON),
+        Relic(RelicId.LUCKY,            R.string.particules_relic_lucky_name,           R.string.particules_relic_lucky_desc,           Rarity.RARE),
+        Relic(RelicId.PIERCE_START,     R.string.particules_relic_pierce_start_name,    R.string.particules_relic_pierce_start_desc,    Rarity.RARE),
+        Relic(RelicId.SHIELD_START,     R.string.particules_relic_shield_start_name,    R.string.particules_relic_shield_start_desc,    Rarity.RARE),
+        Relic(RelicId.GUARDIAN_LASER,   R.string.particules_relic_guardian_laser_name,  R.string.particules_relic_guardian_laser_desc,  Rarity.RARE),
+        Relic(RelicId.RESONANCE,        R.string.particules_relic_resonance_name,       R.string.particules_relic_resonance_desc,       Rarity.COMMON),
+        Relic(RelicId.MULTI_START,      R.string.particules_relic_multi_start_name,     R.string.particules_relic_multi_start_desc,     Rarity.EPIC),
+        Relic(RelicId.FIRE_HEART,       R.string.particules_relic_fire_heart_name,      R.string.particules_relic_fire_heart_desc,      Rarity.RARE),
+        Relic(RelicId.BOSS_SLAYER,      R.string.particules_relic_boss_slayer_name,     R.string.particules_relic_boss_slayer_desc,     Rarity.COMMON),
+        Relic(RelicId.COMBO_GREED,      R.string.particules_relic_combo_greed_name,     R.string.particules_relic_combo_greed_desc,     Rarity.COMMON),
+        Relic(RelicId.PADDLE_GRAVITY,   R.string.particules_relic_paddle_gravity_name,  R.string.particules_relic_paddle_gravity_desc,  Rarity.COMMON),
+        Relic(RelicId.PADDLE_SPRINT,    R.string.particules_relic_paddle_sprint_name,   R.string.particules_relic_paddle_sprint_desc,   Rarity.COMMON),
+        Relic(RelicId.SECOND_CHANCE,    R.string.particules_relic_second_chance_name,   R.string.particules_relic_second_chance_desc,   Rarity.EPIC),
+        Relic(RelicId.PANIC_TRAINER,    R.string.particules_relic_panic_trainer_name,   R.string.particules_relic_panic_trainer_desc,   Rarity.RARE)
     )
 
     fun byId(id: RelicId): Relic = ALL.first { it.id == id }

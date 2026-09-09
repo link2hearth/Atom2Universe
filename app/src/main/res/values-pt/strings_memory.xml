@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memória</string>
+    <string name="memory_description">Encontre todos os pares de cartas correspondentes</string>
+    <string name="memory_flips">%1$d viradas</string>
+    <string name="memory_solved">Concluído!</string>
+    <string name="memory_win_message">Concluído em %2$s com %1$d viradas.</string>
+    <string name="memory_btn_again">Nova partida</string>
+    <string name="memory_btn_back">Voltar</string>
+    <string name="memory_confirm_message">Iniciar nova partida de %1$s?</string>
+</resources>

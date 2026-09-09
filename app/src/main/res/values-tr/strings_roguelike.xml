@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roguelike_title">Zindan</string>
+    <string name="roguelike_description">Prosedürel zindanları keşfedin ve 5 katta hayatta kalın</string>
+</resources>

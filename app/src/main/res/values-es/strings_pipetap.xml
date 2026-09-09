@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Gira las fichas para conectar todas las tuberías</string>
+    <string name="pipetap_moves">%1$d movimientos</string>
+    <string name="pipetap_solved">¡Resuelto!</string>
+    <string name="pipetap_win_message">Resuelto en %2$s con %1$d rotaciones.</string>
+    <string name="pipetap_btn_again">Nueva partida</string>
+    <string name="pipetap_btn_next">Siguiente tamaño</string>
+    <string name="pipetap_widget_cancel">Cancelar</string>
+    <string name="pipetap_widget_confirm">Iniciar</string>
+</resources>

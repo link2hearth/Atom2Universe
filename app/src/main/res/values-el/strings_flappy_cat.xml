@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Πηδηχτή Γάτα</string>
+    <string name="flappy_cat_description">Αποφύγετε πυλώνες και πουλιά!</string>
+    <string name="flappy_cat_tap_to_start">Πατήστε για έναρξη</string>
+    <string name="flappy_cat_tap_to_retry">Πατήστε για επανάληψη</string>
+    <string name="flappy_cat_game_over">Τέλος Παιχνιδιού</string>
+    <string name="flappy_cat_paused">Σε παύση</string>
+    <string name="flappy_cat_tap_to_resume">Πατήστε για συνέχεια</string>
+    <string name="flappy_cat_score_label">Σκορ</string>
+    <string name="flappy_cat_best_label">ΚΑΛΥΤΕΡΟ</string>
+    <string name="flappy_cat_new_best">Νέο ρεκόρ!</string>
+</resources>

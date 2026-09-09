@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="color_stack_title">Стек Кольорів</string>
+    <string name="color_stack_description">Сортуйте фішки за кольором</string>
+    <string name="color_stack_back">Назад</string>
+    <string name="color_stack_difficulty_label">Складність:</string>
+    <string name="color_stack_difficulty_easy">Легкий</string>
+    <string name="color_stack_difficulty_medium">Середній</string>
+    <string name="color_stack_difficulty_hard">Важкий</string>
+    <string name="color_stack_moves">Ходи: %1$d</string>
+    <string name="color_stack_moves_zero">Ходи: 0</string>
+    <string name="color_stack_btn_new">Новий</string>
+    <string name="color_stack_btn_restart">Перезапустити</string>
+    <string name="color_stack_btn_undo">Скасувати</string>
+    <string name="color_stack_status_new">Нова гра</string>
+    <string name="color_stack_status_restarted">Гру перезапущено</string>
+    <string name="color_stack_status_won">🎉 Вітаємо!</string>
+    <string name="color_stack_new_game">Нова гра</string>
+    <string name="color_stack_widget_cancel">✕ Скасувати</string>
+</resources>

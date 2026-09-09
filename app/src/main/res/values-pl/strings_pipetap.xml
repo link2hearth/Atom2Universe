@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Obracaj kafelki, aby połączyć wszystkie rury</string>
+    <string name="pipetap_moves">%1$d ruchów</string>
+    <string name="pipetap_solved">Rozwiązane!</string>
+    <string name="pipetap_win_message">Rozwiązano w %2$s przy %1$d obrotach.</string>
+    <string name="pipetap_btn_again">Nowa gra</string>
+    <string name="pipetap_btn_next">Następny rozmiar</string>
+    <string name="pipetap_widget_cancel">Anuluj</string>
+    <string name="pipetap_widget_confirm">Rozpocznij</string>
+</resources>

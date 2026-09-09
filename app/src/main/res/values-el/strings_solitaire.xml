@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="solitaire_title">Σολιτέρ</string>
+    <string name="solitaire_description">Το κλασικό παιχνίδι χαρτιών Klondike</string>
+    <string name="solitaire_new_game">Νέο παιχνίδι</string>
+    <string name="solitaire_moves">Κινήσεις: %1$d</string>
+    <string name="solitaire_status_new_game">Νέο παιχνίδι ξεκίνησε</string>
+    <string name="solitaire_status_restored">Παιχνίδι επαναφέρθηκε</string>
+    <string name="solitaire_status_won">Συγχαρητήρια! Κερδίσατε!</string>
+    <string name="solitaire_dialog_resume_title">Παιχνίδι σε εξέλιξη</string>
+    <string name="solitaire_dialog_resume_message">Υπάρχει παιχνίδι σε εξέλιξη. Θέλετε να συνεχίσετε;</string>
+    <string name="solitaire_dialog_new_title">Νέο παιχνίδι</string>
+    <string name="solitaire_dialog_new_message">Θέλετε να εγκαταλείψετε το τρέχον παιχνίδι;</string>
+    <string name="solitaire_auto_finish">Αυτόματη ολοκλήρωση</string>
+    <string name="solitaire_status_won_short">Μπράβο!\nΝίκη!</string>
+    <string name="solitaire_new_game_confirm">Νέο παιχνίδι;</string>
+    <string name="solitaire_confirm">✓ Επιβεβαίωση</string>
+    <string name="solitaire_cancel">✕ Ακύρωση</string>
+</resources>

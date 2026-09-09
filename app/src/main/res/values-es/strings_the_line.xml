@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Conecta los puntos, rellena la cuadrícula</string>
+    <string name="the_line_back">Volver</string>
+    <string name="the_line_mode_single">Simple</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Fácil</string>
+    <string name="the_line_diff_medium">Medio</string>
+    <string name="the_line_diff_hard">Difícil</string>
+    <string name="the_line_level">Nivel %1$d</string>
+    <string name="the_line_remaining">Celdas restantes: %1$d</string>
+    <string name="the_line_hint_single">Traza un camino de S a F que visite cada celda.</string>
+    <string name="the_line_hint_multi">Conecta cada par de colores sin cruzar caminos.</string>
+    <string name="the_line_completed">¡Nivel %1$d completado!</string>
+    <string name="the_line_error">No se pudo generar la cuadrícula. Inténtalo de nuevo.</string>
+    <string name="the_line_btn_reset">Nueva partida</string>
+    <string name="the_line_new_game">Nueva partida</string>
+    <string name="the_line_solved_label">✓ ¡Resuelto!</string>
+    <string name="the_line_diff_simple">Simple</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Cancelar</string>
+</resources>

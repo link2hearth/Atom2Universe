@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Memory</string>
+    <string name="memory_description">Finde alle passenden Kartenpaare</string>
+    <string name="memory_flips">%1$d Umdrehen</string>
+    <string name="memory_solved">Abgeschlossen!</string>
+    <string name="memory_win_message">Abgeschlossen in %2$s mit %1$d Umdrehen.</string>
+    <string name="memory_btn_again">Neues Spiel</string>
+    <string name="memory_btn_back">Zurück</string>
+    <string name="memory_confirm_message">Neues %1$s-Spiel starten?</string>
+</resources>

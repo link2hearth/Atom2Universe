@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_description">Gokautomaat – lijn kleuren en soorten uit om neutronen te winnen</string>
+    <string name="roulette_spin">DRAAIEN</string>
+    <string name="roulette_balance">⚛ %1$d</string>
+    <string name="roulette_status_idle">Kies een inzet en draai!</string>
+    <string name="roulette_status_spinning">Draait…</string>
+    <string name="roulette_status_lose">Deze keer geen winst.</string>
+    <string name="roulette_status_no_funds">Niet genoeg neutronen!</string>
+    <string name="roulette_last_win">%1$d ⚛ × %2$d = +%3$d ⚛</string>
+    <string name="roulette_win_symbol">%1$s lijn! ×%2$d</string>
+    <string name="roulette_win_joker_wild">%1$s + Joker! ×%2$d</string>
+    <string name="roulette_win_joker_line">🃏🃏🃏 Alle Jokers! ×%1$d</string>
+    <string name="roulette_win_multiple">Meerdere winsten! ×%1$d totaal</string>
+    <string name="roulette_win_overlay_title">GEWONNEN!</string>
+    <string name="roulette_win_overlay_tap">Tik om door te gaan</string>
+</resources>

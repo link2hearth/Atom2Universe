@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Komik</string>
     <string name="reading_stats_history_title">Riwayat</string>
     <string name="reading_stats_top_titles">Paling banyak dibaca</string>
+
+    <string name="stats_tab_day">Hari ini</string>
+    <string name="stats_tab_week">Minggu</string>
+    <string name="stats_tab_month">Bulan</string>
+    <string name="stats_tab_year">Tahun</string>
+    <string name="stats_total_time">Total waktu penggunaan</string>
+    <string name="stats_hours_format">%1$d j %2$d mnt</string>
+    <string name="stats_minutes_format">%1$d mnt</string>
+    <string name="stats_top_artists">Artis teratas</string>
+    <string name="stats_top_albums">Album teratas</string>
+    <string name="stats_top_midi">Lagu paling dilatih</string>
+    <string name="stats_average_score">Skor latihan rata-rata</string>
+    <string name="stats_no_data">Tidak ada data untuk periode ini</string>
+    <string name="stats_tab_calendar">Kalender</string>
+    <string name="stats_calendar_no_data">Tidak ada aktivitas hari ini</string>
+    <string name="stats_calendar_music_section">Musik</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d lagu, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (skor: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Total: %1$s</string>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="memory_title">Hafıza</string>
+    <string name="memory_description">Eşleşen tüm kart çiftlerini bul</string>
+    <string name="memory_flips">%1$d çevirme</string>
+    <string name="memory_solved">Tamamlandı!</string>
+    <string name="memory_win_message" formatted="false">%2$s içinde %1$d çevirmeyle tamamlandı.</string>
+    <string name="memory_btn_again">Yeni oyun</string>
+    <string name="memory_btn_back">Geri</string>
+    <string name="memory_confirm_message">Yeni bir %1$s oyunu başlat?</string>
+</resources>

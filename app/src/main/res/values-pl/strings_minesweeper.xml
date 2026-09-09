@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Saper</string>
+    <string name="minesweeper_description">Klasyczna łamigłówka z minami</string>
+    <string name="minesweeper_diff_easy">Łatwy · 10 min</string>
+    <string name="minesweeper_diff_normal">Normalny · 20 min</string>
+    <string name="minesweeper_diff_medium">Średni · 40 min</string>
+    <string name="minesweeper_diff_hard">Trudny · 80 min</string>
+    <string name="minesweeper_new_game">Nowa gra</string>
+    <string name="minesweeper_mines">Miny</string>
+    <string name="minesweeper_timer">Czas</string>
+    <string name="minesweeper_won">Wygrana! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">Wygrana! 🏆 Nowy rekord!  %1$s</string>
+    <string name="minesweeper_lost">Bum! 💥  Koniec gry</string>
+    <string name="minesweeper_score_diff">Trudność</string>
+    <string name="minesweeper_score_best">Najlepszy czas</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">Nowa gra</string>
+</resources>

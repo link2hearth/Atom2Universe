@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Refleks</string>
+    <string name="reflex_description">Çevrelere mümkün olduğunca hızlı dokun!</string>
+    <string name="reflex_score_label">PUAN</string>
+    <string name="reflex_best_easy_label">EN İYİ (KOLAY)</string>
+    <string name="reflex_best_hard_label">EN İYİ (ZOR)</string>
+    <string name="reflex_mode_easy">Kolay</string>
+    <string name="reflex_mode_hard">Zor</string>
+    <string name="reflex_start">Oyna</string>
+    <string name="reflex_status_ready">Bir mod seçin ve Oyna\'ya basın</string>
+    <string name="reflex_status_go">Hazır! Çevrelere dokun!</string>
+    <string name="reflex_status_hit" formatted="false">İsabet! +%1$d puan - Toplam: %2$d</string>
+    <string name="reflex_status_game_over">Oyun bitti! Final puanı: %1$d</string>
+    <string name="reflex_status_new_record">Yeni rekor! Puan: %1$d</string>
+</resources>

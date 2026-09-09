@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Зв\'язок</string>
+    <string name="link_description">З\'єднайте клітинки, щоб досягти нуля — або десяти!</string>
+    <string name="link_moves_label">Ходи:</string>
+    <string name="link_difficulty_easy">Малий</string>
+    <string name="link_difficulty_medium">Середній</string>
+    <string name="link_difficulty_hard">Великий</string>
+    <string name="link_pairs_few">Мало пар</string>
+    <string name="link_pairs_normal">Нормально пар</string>
+    <string name="link_pairs_many">Багато пар</string>
+    <string name="link_mode_classic">Класичний</string>
+    <string name="link_mode_perfect">Ідеальний</string>
+    <string name="link_btn_undo">Скасувати</string>
+    <string name="link_btn_restart">Перезапустити</string>
+    <string name="link_btn_new_level">Новий</string>
+    <string name="link_msg_new_level" formatted="false">Новий рівень %1$s. З\'єднайте %2$d клітинки для коригування значень!</string>
+    <string name="link_msg_new_level_perfect" formatted="false">Ідеальний режим — %1$s. Знайдіть %2$d точних ходів.</string>
+    <string name="link_msg_progress" formatted="false">%1$d звичайних і %2$d плюс клітинок залишилось.</string>
+    <string name="link_msg_invalid_pattern">Неприпустимий шаблон для цієї довжини зв\'язку.</string>
+    <string name="link_msg_undo">Останній хід скасовано.</string>
+    <string name="link_msg_nothing_to_undo">Нічого скасовувати.</string>
+    <string name="link_msg_restart">Головоломку скинуто.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Вирішено!</string>
+    <string name="link_victory_moves">%1$d ходів</string>
+</resources>

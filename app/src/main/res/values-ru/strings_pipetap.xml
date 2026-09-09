@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pipetap_title">PipeTap</string>
+    <string name="pipetap_description">Вращайте плитки, чтобы соединить все трубы</string>
+    <string name="pipetap_moves">%1$d ходов</string>
+    <string name="pipetap_solved">Решено!</string>
+    <string name="pipetap_win_message">Решено за %2$s с %1$d поворотами.</string>
+    <string name="pipetap_btn_again">Новая игра</string>
+    <string name="pipetap_btn_next">Следующий размер</string>
+    <string name="pipetap_widget_cancel">Отмена</string>
+    <string name="pipetap_widget_confirm">Начать</string>
+</resources>

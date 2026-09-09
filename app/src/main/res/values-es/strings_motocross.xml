@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="motocross_title">Motocross</string>
+    <string name="motocross_description">¡Conduce en pistas procedurales — izquierda para frenar/inclinarte atrás, derecha para acelerar/inclinarte adelante!</string>
+    <string name="motocross_restart">Reiniciar</string>
+    <string name="motocross_hud_distance">%1$d m</string>
+    <string name="motocross_hud_speed">%1$d km/h</string>
+</resources>

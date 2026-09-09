@@ -7,4 +7,25 @@
     <string name="reading_stats_comics_title">Fumetti</string>
     <string name="reading_stats_history_title">Cronologia</string>
     <string name="reading_stats_top_titles">I più letti</string>
+
+    <string name="stats_tab_day">Oggi</string>
+    <string name="stats_tab_week">Settimana</string>
+    <string name="stats_tab_month">Mese</string>
+    <string name="stats_tab_year">Anno</string>
+    <string name="stats_total_time">Tempo totale di utilizzo</string>
+    <string name="stats_hours_format">%1$d h %2$d min</string>
+    <string name="stats_minutes_format">%1$d min</string>
+    <string name="stats_top_artists">Top artisti</string>
+    <string name="stats_top_albums">Top album</string>
+    <string name="stats_top_midi">Brani più praticati</string>
+    <string name="stats_average_score">Punteggio medio di pratica</string>
+    <string name="stats_no_data">Nessun dato per questo periodo</string>
+    <string name="stats_tab_calendar">Calendario</string>
+    <string name="stats_calendar_no_data">Nessuna attività in questo giorno</string>
+    <string name="stats_calendar_music_section">Musica</string>
+    <string name="stats_calendar_midi_section">MIDI</string>
+    <string name="stats_calendar_radio_section">Radio</string>
+    <string name="stats_calendar_tracks_format">%1$d brani, %2$s</string>
+    <string name="stats_calendar_score_format">%1$s (punteggio: %2$.0f%%)</string>
+    <string name="stats_calendar_total_format">Totale: %1$s</string>
 </resources>

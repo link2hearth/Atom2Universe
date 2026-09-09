@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reflex_title">Reflexos</string>
+    <string name="reflex_description">Toque nos círculos o mais rápido possível!</string>
+    <string name="reflex_score_label">PONTUAÇÃO</string>
+    <string name="reflex_best_easy_label">MELHOR (FÁCIL)</string>
+    <string name="reflex_best_hard_label">MELHOR (DIFÍCIL)</string>
+    <string name="reflex_mode_easy">Fácil</string>
+    <string name="reflex_mode_hard">Difícil</string>
+    <string name="reflex_start">Jogar</string>
+    <string name="reflex_status_ready">Escolha um modo e prima Jogar</string>
+    <string name="reflex_status_go">Vai! Toque nos círculos!</string>
+    <string name="reflex_status_hit">Acerto! +%1$d pts - Total: %2$d</string>
+    <string name="reflex_status_game_over">Fim do jogo! Pontuação final: %1$d</string>
+    <string name="reflex_status_new_record">Novo recorde! Pontuação: %1$d</string>
+</resources>

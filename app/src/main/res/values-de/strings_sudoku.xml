@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sudoku_title">Sudoku</string>
+    <string name="sudoku_description">Sudoku-Rätsel mit 3 Schwierigkeitsstufen</string>
+    <string name="sudoku_difficulty_easy">Einfach</string>
+    <string name="sudoku_difficulty_medium">Mittel</string>
+    <string name="sudoku_difficulty_hard">Schwer</string>
+    <string name="sudoku_new_game">Neues Spiel</string>
+    <string name="sudoku_check">Prüfen</string>
+    <string name="sudoku_clear">Löschen</string>
+    <string name="sudoku_undo">↩ Rückgängig</string>
+    <string name="sudoku_redo">↪ Wiederholen</string>
+    <string name="sudoku_status_generating">Wird generiert…</string>
+    <string name="sudoku_status_generated">%1$s Raster generiert (%2$d Hinweise)</string>
+    <string name="sudoku_status_no_error">Bisher keine Fehler</string>
+    <string name="sudoku_status_errors">%1$d Fehler erkannt</string>
+    <string name="sudoku_status_mistakes">%1$d falsche Zelle(n)</string>
+    <string name="sudoku_status_solved">Glückwunsch! Rätsel gelöst!</string>
+    <string name="sudoku_dialog_new_game_title">Neues Spiel</string>
+    <string name="sudoku_dialog_confirm_new_title">Spiel läuft</string>
+    <string name="sudoku_dialog_confirm_new_message">Möchten Sie das aktuelle Spiel abbrechen?</string>
+    <string name="sudoku_resume_game">Spiel fortsetzen</string>
+    <string name="sudoku_start_new">Neues Spiel starten</string>
+    <string name="sudoku_result_success">Gut gemacht!</string>
+    <string name="sudoku_result_failure">Fehlgeschlagen!</string>
+    <string name="sudoku_widget_cancel">✕ Abbrechen</string>
+    <string name="sudoku_validate">Prüfen</string>
+    <string name="sudoku_notes">Notizen</string>
+    <string name="sudoku_widget_verify_icon">?</string>
+    <string name="sudoku_widget_note_icon">✎</string>
+</resources>

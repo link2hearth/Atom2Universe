@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="the_line_title">The Line</string>
+    <string name="the_line_description">Connect the dots, fill the grid</string>
+    <string name="the_line_back">Back</string>
+    <string name="the_line_mode_single">Single</string>
+    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_diff_easy">Easy</string>
+    <string name="the_line_diff_medium">Medium</string>
+    <string name="the_line_diff_hard">Hard</string>
+    <string name="the_line_level">Level %1$d</string>
+    <string name="the_line_remaining">Cells left: %1$d</string>
+    <string name="the_line_hint_single">Draw a path from S to F that visits every cell.</string>
+    <string name="the_line_hint_multi">Connect each color pair without crossing paths.</string>
+    <string name="the_line_completed">Level %1$d completed!</string>
+    <string name="the_line_error">Could not generate a grid. Try again.</string>
+    <string name="the_line_btn_reset">New game</string>
+    <string name="the_line_new_game">New game</string>
+    <string name="the_line_solved_label">✓ Solved!</string>
+    <string name="the_line_diff_simple">Simple</string>
+    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_widget_cancel">✕ Cancel</string>
+</resources>

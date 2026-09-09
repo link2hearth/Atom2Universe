@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="blackjack_title">BlackJack</string>
+    <string name="blackjack_description">Casino blackjack with up to 4 AI opponents</string>
+    <string name="blackjack_hit">HIT</string>
+    <string name="blackjack_stand">STAND</string>
+    <string name="blackjack_double">DOUBLE</string>
+    <string name="blackjack_split">SPLIT</string>
+    <string name="blackjack_deal">DEAL</string>
+    <string name="blackjack_bet_label">BET</string>
+    <string name="blackjack_ai_players_label">AI Players: %1$d</string>
+    <string name="blackjack_settings_title">Table settings</string>
+    <string name="blackjack_result_win">WIN +%1$d</string>
+    <string name="blackjack_result_bj">BLACKJACK! +%1$d</string>
+    <string name="blackjack_result_lose">LOSE -%1$d</string>
+    <string name="blackjack_result_push">PUSH</string>
+    <string name="blackjack_result_win_free">WIN</string>
+    <string name="blackjack_result_bj_free">BLACKJACK!</string>
+    <string name="blackjack_result_lose_free">LOSE</string>
+    <string name="blackjack_bet_free">FREE</string>
+    <string name="blackjack_neutrino_balance">Neutrinos: %1$d</string>
+    <string name="blackjack_ia_short">AI</string>
+    <string name="blackjack_start">Play</string>
+    <string name="blackjack_dealer_thinking">Dealer thinking…</string>
+    <string name="blackjack_new_game_confirm">New game?</string>
+    <string name="blackjack_confirm">✓ Confirm</string>
+    <string name="blackjack_cancel">✕ Cancel</string>
+</resources>

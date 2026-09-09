@@ -38,4 +38,6 @@
     <string name="periodic_toggle_rarities_desc">Seltenheiten ein-/ausblenden</string>
     <string name="hub_stats_title">Statistiken</string>
     <string name="hub_stats_desc">Zusammenfassung: Hören, Spiele und Lesen</string>
+
+    <string name="back_button_desc">Zurück</string>
 </resources>

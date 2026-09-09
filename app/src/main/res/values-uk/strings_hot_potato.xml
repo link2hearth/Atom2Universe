@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hot_potato_title">Гаряча картопля</string>
+    <string name="hot_potato_description">Підкидай картоплю, просмаж її як слід і виштовхни з боків!</string>
+    <string name="hot_potato_how_to">Відтягни як рогатку, щоб запустити · просмаж до зеленої зони</string>
+    <string name="hot_potato_tap_to_start">Натисни під картоплею, щоб почати</string>
+    <string name="hot_potato_tap_to_retry">Натисни, щоб повторити</string>
+    <string name="hot_potato_tap_to_resume">Натисни, щоб продовжити</string>
+    <string name="hot_potato_game_over">Гру закінчено</string>
+    <string name="hot_potato_paused">Пауза</string>
+    <string name="hot_potato_score_label">Рахунок</string>
+    <string name="hot_potato_best_label">НАЙКРАЩЕ</string>
+    <string name="hot_potato_new_best">Новий рекорд!</string>
+    <string name="hot_potato_perfect">Ідеально!</string>
+    <string name="hot_potato_raw">Замало просмажена!</string>
+    <string name="hot_potato_burnt">Підгоріла!</string>
+</resources>

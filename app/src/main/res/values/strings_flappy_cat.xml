@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="flappy_cat_title">Jumping Cat</string>
+    <string name="flappy_cat_description">Dodge pylons and birds!</string>
+    <string name="flappy_cat_tap_to_start">Tap to start</string>
+    <string name="flappy_cat_tap_to_retry">Tap to retry</string>
+    <string name="flappy_cat_game_over">Game Over</string>
+    <string name="flappy_cat_paused">Paused</string>
+    <string name="flappy_cat_tap_to_resume">Tap to resume</string>
+    <string name="flappy_cat_score_label">Score</string>
+    <string name="flappy_cat_best_label">BEST</string>
+    <string name="flappy_cat_new_best">New record!</string>
+</resources>

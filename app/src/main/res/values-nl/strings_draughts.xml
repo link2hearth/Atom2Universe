@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="draughts_title">Dammen</string>
+    <string name="draughts_description">Internationaal dammen (10×10) met AI</string>
+    <string name="draughts_new_game">Nieuw spel</string>
+    <string name="draughts_difficulty_training">Training</string>
+    <string name="draughts_difficulty_training_desc">Zwakke AI, ideaal om te leren</string>
+    <string name="draughts_difficulty_standard">Standaard</string>
+    <string name="draughts_difficulty_standard_desc">Gemiddelde AI, uitgebalanceerd spel</string>
+    <string name="draughts_difficulty_expert">Expert</string>
+    <string name="draughts_difficulty_expert_desc">Sterke AI, moeilijke uitdaging</string>
+    <string name="draughts_difficulty_two_player">Twee spelers</string>
+    <string name="draughts_difficulty_two_player_desc">Speel tegen een menselijke tegenstander</string>
+    <string name="draughts_status_white_turn">Beurt van wit</string>
+    <string name="draughts_status_black_turn">Beurt van zwart</string>
+    <string name="draughts_status_ai_thinking">AI denkt…</string>
+    <string name="draughts_status_game_over">%s wint!</string>
+    <string name="draughts_color_white">Wit</string>
+    <string name="draughts_color_black">Zwart</string>
+    <string name="draughts_draw">Remise</string>
+    <string name="draughts_game_over_title">Spel voorbij</string>
+    <string name="draughts_resume_title">Spel hervatten?</string>
+    <string name="draughts_resume_message">Er is een opgeslagen spel gevonden. Doorgaan?</string>
+    <string name="draughts_confirm_new_title">Nieuw spel?</string>
+    <string name="draughts_confirm_new_message">Het huidige spel gaat verloren. Doorgaan?</string>
+    <string name="draughts_victory_title">Overwinning!</string>
+    <string name="draughts_victory_message">Gefeliciteerd! Je hebt de AI verslagen.\n\nBeloningen:\n• %1$d gacha-tickets\n• Boost x%2$d voor %3$d minuten</string>
+    <string name="draughts_mandatory_capture">Verplichte slag! Je moet een vijandelijk stuk slaan.</string>
+    <string name="draughts_widget_reset_btn">↺</string>
+    <string name="draughts_widget_cancel">✕ Annuleren</string>
+    <string name="draughts_widget_draw">Remise</string>
+    <string name="draughts_widget_white_wins">Wit\nwint</string>
+    <string name="draughts_widget_black_wins">Zwart\nwint</string>
+    <string name="draughts_widget_victory">Overwinning!</string>
+    <string name="draughts_widget_defeat">Nederlaag</string>
+    <string name="draughts_widget_piece_count">○%1$d  ●%2$d</string>
+</resources>

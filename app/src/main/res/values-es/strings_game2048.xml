@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="game2048_title">Quantum 2048</string>
+    <string name="game2048_description">¡Combina fichas para alcanzar el objetivo!</string>
+    <string name="game2048_score_label">PUNTOS</string>
+    <string name="game2048_best_label">MEJOR</string>
+    <string name="game2048_universes_label">UNIVERSOS</string>
+    <string name="game2048_size_label">Cuadrícula:</string>
+    <string name="game2048_target_label">Objetivo:</string>
+    <string name="game2048_new">Nuevo</string>
+    <string name="game2048_status_play">Desliza para mover las fichas</string>
+    <string name="game2048_status_win">¡Genial! ¡Ficha %1$d alcanzada! Nuevo universo…</string>
+    <string name="game2048_status_over">Bloqueado en %1$d. Nuevo universo…</string>
+    <string name="game2048_confirm_title">¿Nueva partida?</string>
+    <string name="game2048_confirm_message">La partida actual se perderá. ¿Continuar?</string>
+    <string name="game2048_quantum_mode">🐱 Modo cuántico</string>
+    <string name="game2048_joker_active">🐱 ⚡ ACTIVO</string>
+    <string name="game2048_difficulty_easy">Fácil</string>
+    <string name="game2048_difficulty_normal">Normal</string>
+    <string name="game2048_difficulty_hard">Difícil</string>
+    <string name="game2048_difficulty_random">Aleatorio</string>
+</resources>

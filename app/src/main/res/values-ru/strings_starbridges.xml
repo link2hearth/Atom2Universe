@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="starbridges_title">Star Bridges</string>
+    <string name="starbridges_description">Соедините все звёзды мостами, которые не пересекаются</string>
+    <string name="starbridges_bridges">%1$d / %2$d мостов</string>
+    <string name="starbridges_solved">Созвездие завершено!</string>
+    <string name="starbridges_solved_header">★ Завершено!</string>
+    <string name="starbridges_win_message">Выполнено за %1$s — %2$d ходов, %3$d мостов.</string>
+    <string name="starbridges_btn_again">Новая игра</string>
+    <string name="starbridges_btn_next">Следующий размер</string>
+    <string name="starbridges_hint_source">Нажмите на звезду, чтобы начать мост.</string>
+    <string name="starbridges_hint_target">Нажмите на выровненную звезду, чтобы разместить мост.</string>
+    <string name="starbridges_restart_desc">Перезапустить головоломку</string>
+</resources>
