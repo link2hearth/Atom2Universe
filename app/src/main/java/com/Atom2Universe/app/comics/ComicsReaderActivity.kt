@@ -156,11 +156,6 @@ class ComicsReaderActivity : ThemedActivity() {
                 withContext(Dispatchers.IO) { dao.insertComic(entry) }
             }
             setupSource()
-            // Met à jour totalPages maintenant qu'on connaît le compte réel
-            val id = comicId
-            if (id != null && totalPages > 0) {
-                withContext(Dispatchers.IO) { dao.updateTotalPages(id, totalPages) }
-            }
         }
     }
 
@@ -298,11 +293,20 @@ class ComicsReaderActivity : ThemedActivity() {
         loadCurrentPage()
     }
 
-    private fun initNavigation() {
+    private suspend fun initNavigation() {
         if (currentPage >= totalPages) currentPage = 0
         seekBar.max = maxOf(0, totalPages - 1)
         seekBar.progress = currentPage
         updatePageText()
+        // Le scan de bibliothèque laisse totalPages à 0 pour les CBZ/dossiers (compte coûteux
+        // à faire pendant le scan) : on le connaît seulement ici, il faut donc le réécrire en base
+        // sinon la barre de progression reste bloquée à 0% pour toujours.
+        val id = comicId
+        if (id != null && totalPages > 0) {
+            withContext(Dispatchers.IO) {
+                ComicsDatabase.getInstance(this@ComicsReaderActivity).comicsDao().updateTotalPages(id, totalPages)
+            }
+        }
     }
 
     private fun navigatePage(delta: Int) {

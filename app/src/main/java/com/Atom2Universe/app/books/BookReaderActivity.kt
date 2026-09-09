@@ -1086,9 +1086,11 @@ class BookReaderActivity : ThemedActivity() {
         var firstChapter = true
         for (id in opf.spineIds) {
             val href = opf.manifest[id] ?: continue
+            // Résolution robuste (gère "./" et "../" dans les hrefs du manifest) : un simple
+            // opfDir+href sans normalisation ratait des chapitres et sous-comptait le total.
+            val bytes = resolveEpubPath(href, opfDir, files) ?: continue
             val path = if (opfDir.isEmpty()) href else "$opfDir/$href"
-            val bytes = files[path] ?: files[href] ?: continue
-            val htmlDir = path.substringBeforeLast('/', "")
+            val htmlDir = normalizePath(path).substringBeforeLast('/', "")
             val sizeBefore = result.size
             extractContentFromHtml(bytes.toString(Charsets.UTF_8), result, files, htmlDir)
             if (result.size > sizeBefore) {
