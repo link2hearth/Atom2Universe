@@ -56,6 +56,25 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun getChunk(cx: Int, cy: Int, cz: Int): Chunk? = chunks[chunkKey(cx, cy, cz)]
     fun getChunkByKey(key: Long): Chunk? = chunks[key]
+
+    /**
+     * Cache local de résolution de chunk, à créer par le buildeur de mesh et jeter ensuite.
+     * Jamais partagé entre appels ni entre threads : évite de reboxer la clé Long et de
+     * rehasher `chunks` quand le même voisin (au bord d'un chunk) est revisité des dizaines
+     * de fois pendant un seul maillage. Mesuré au profiler : ~7 % du CPU pendant un chargement
+     * de chunks intensif venait de ces lookups boîtés.
+     */
+    class ChunkLookupCache {
+        @PublishedApi internal val keys = LongArray(6) { Long.MIN_VALUE }   // chunkKey() ne produit jamais MIN_VALUE (60 bits, positif)
+        @PublishedApi internal val vals = arrayOfNulls<Chunk?>(6)
+        @PublishedApi internal var next = 0
+        inline fun getOrPut(key: Long, compute: () -> Chunk?): Chunk? {
+            for (i in 0 until 6) if (keys[i] == key) return vals[i]
+            val v = compute()
+            keys[next] = key; vals[next] = v; next = (next + 1) % 6
+            return v
+        }
+    }
     fun allChunks(): Collection<Chunk> = chunks.values
 
     fun hasPendingLight(): Boolean = lightQueue.isNotEmpty()
@@ -1972,11 +1991,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Requêtes de bloc / sol pour les entités ───────────────────────────────
 
-    fun blockAt(wx: Int, wy: Int, wz: Int): Short {
+    fun blockAt(wx: Int, wy: Int, wz: Int, cache: ChunkLookupCache? = null): Short {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
-        val chunk = getChunk(cx, cy, cz) ?: return AIR
+        val chunk = (if (cache != null) cache.getOrPut(chunkKey(cx, cy, cz)) { getChunk(cx, cy, cz) } else getChunk(cx, cy, cz))
+            ?: return AIR
         if (!chunk.generated) return AIR
         return chunk.blockAt(wx - cx * CHUNK_SIZE, wy - cy * CHUNK_SIZE, wz - cz * CHUNK_SIZE)
     }
@@ -1995,12 +2015,14 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────
 
-    fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Short {
+    fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Short {
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
             return baseChunk.blockAt(lx, ly, lz)
         val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
         val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
-        val neighbor = getChunk(ncx, ncy, ncz) ?: return AIR
+        val nKey = chunkKey(ncx, ncy, ncz)
+        val neighbor = (if (cache != null) cache.getOrPut(nKey) { getChunk(ncx, ncy, ncz) } else getChunk(ncx, ncy, ncz))
+            ?: return AIR
         if (!neighbor.generated) return AIR
         return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
     }
@@ -2026,12 +2048,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * surface (ciel ouvert), 0 sinon. Garde les bords des chunks de surface éclairés avant que le
      * voisin se charge ; la cascade de LightEngine corrige une fois le voisin disponible.
      */
-    fun skyLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int): Int {
+    fun skyLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Int {
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
             return baseChunk.skyAt(lx, ly, lz)
         val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
         val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
-        val neighbor = getChunk(ncx, ncy, ncz)
+        val neighbor = if (cache != null) cache.getOrPut(chunkKey(ncx, ncy, ncz)) { getChunk(ncx, ncy, ncz) } else getChunk(ncx, ncy, ncz)
         if (neighbor != null && neighbor.generated)
             return neighbor.skyAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
         return if (wy >= surfaceTopY(wx, wz)) 15 else 0

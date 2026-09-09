@@ -119,7 +119,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     invGpCursor   = (pageStart + localCol).coerceAtMost(pageEnd - 1)
                 }
                 updatePageIndicator()
-                pagedAdapter?.notifyDataSetChanged()
+                invPager?.post { pagedAdapter?.notifyDataSetChanged() }
                 hud.updateHotbarForInventory()
             }
         })

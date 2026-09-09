@@ -161,6 +161,7 @@ internal class CaveRenderer(
     private var streamTickAccum = 0f
     private var lastFrameNs = 0L
     private var fpsAccum = 0f; private var fpsFrames = 0   // moyenne FPS sur ~0.5 s
+    private var posAccum = 0f                               // throttle affichage coordonnées ~10 Hz
 
     private val frustum = Array(6) { FloatArray(4) }
     private var cleanupCounter = 0
@@ -1256,7 +1257,11 @@ internal class CaveRenderer(
         // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────
         drawViewmodel(dt)
 
-        posCallback?.invoke(camera.posString())
+        posAccum += dt
+        if (posAccum >= 0.1f) {
+            posAccum = 0f
+            posCallback?.invoke(camera.posString())
+        }
 
         val elapsed2 = System.nanoTime() - now
         val sleepNs = TARGET_FRAME_NS - elapsed2
