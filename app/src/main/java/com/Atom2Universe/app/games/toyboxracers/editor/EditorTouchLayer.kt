@@ -54,7 +54,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     private var longPressTriggered = false
 
     private val longPressRunnable = Runnable {
-        if (dragPointer != MotionEvent.INVALID_POINTER_ID && !longPressTriggered) {
+        if ((dragPointer != MotionEvent.INVALID_POINTER_ID || movePointer != MotionEvent.INVALID_POINTER_ID ||
+                lookPointer != MotionEvent.INVALID_POINTER_ID) && !moved && !longPressTriggered) {
             longPressTriggered = true
             onObjectLongPress?.invoke(longPressX, longPressY)
         }
@@ -82,6 +83,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
                     if (handleDragging) onHandleEnd?.invoke(false)
                     else if (!moved && !longPressTriggered) onTap?.invoke(event.getX(i), event.getY(i))
                     handleDragging = false
+                } else if (!moved && !longPressTriggered) {
+                    onTap?.invoke(event.getX(i), event.getY(i))
                 }
                 stopPointer(event.getPointerId(i))
             }
@@ -95,9 +98,20 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         val x = event.getX(index)
         val y = event.getY(index)
         val joystickZoneTop = height * 0.62f
+        if (event.pointerCount == 1) {
+            longPressX = x
+            longPressY = y
+            longPressTriggered = false
+            moved = false
+            postDelayed(longPressRunnable, LONG_PRESS_MS)
+        } else removeCallbacks(longPressRunnable)
         if (dragPointer == MotionEvent.INVALID_POINTER_ID && onHandleDown?.invoke(x, y) == true) {
+            removeCallbacks(longPressRunnable)
             dragPointer = pointerId
             handleDragging = true
+            moved = false
+            dragLastX = x
+            dragLastY = y
             return
         }
         when {
@@ -121,7 +135,6 @@ internal class EditorTouchLayer(context: Context) : View(context) {
                 longPressY = y
                 longPressTriggered = false
                 moved = false
-                postDelayed(longPressRunnable, LONG_PRESS_MS)
             }
         }
         invalidate()
@@ -139,6 +152,7 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun stopPointer(pointerId: Int) {
+        removeCallbacks(longPressRunnable)
         when (pointerId) {
             movePointer -> {
                 movePointer = MotionEvent.INVALID_POINTER_ID
@@ -177,6 +191,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun updateMove(x: Float, y: Float) {
+        cancelLongPressOnMovement(x, y)
+        if (!moved || longPressTriggered) return
         val axes = axesFrom(moveBaseX, moveBaseY, x, y)
         moveX = axes.first
         moveY = axes.second
@@ -184,6 +200,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
     }
 
     private fun updateLook(x: Float, y: Float) {
+        cancelLongPressOnMovement(x, y)
+        if (!moved || longPressTriggered) return
         val axes = axesFrom(lookBaseX, lookBaseY, x, y)
         lookX = axes.first
         lookY = axes.second
@@ -192,6 +210,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
 
     private fun updateDrag(x: Float, y: Float) {
         if (handleDragging) {
+            if (!moved && hypot(x - dragLastX, y - dragLastY) <= touchSlop) return
+            moved = true
             onHandleMove?.invoke(x, y)
             return
         }
@@ -203,7 +223,14 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         }
         dragLastX = x
         dragLastY = y
-        if (!longPressTriggered) onObjectDrag?.invoke(dx, dy)
+        if (moved && !longPressTriggered) onObjectDrag?.invoke(dx, dy)
+    }
+
+    private fun cancelLongPressOnMovement(x: Float, y: Float) {
+        if (hypot(x - longPressX, y - longPressY) > touchSlop) {
+            moved = true
+            removeCallbacks(longPressRunnable)
+        }
     }
 
     private fun axesFrom(baseX: Float, baseY: Float, x: Float, y: Float): Pair<Float, Float> {

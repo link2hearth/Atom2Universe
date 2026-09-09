@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
 import com.Atom2Universe.app.games.toyboxracers.editor.ActiveWorldKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
+import com.Atom2Universe.app.games.toyboxracers.editor.TrackStyle
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
@@ -373,6 +374,38 @@ internal class ToyboxRacersRenderer(
             ?.first
     }
 
+    enum class EditorPickKind { VOLUME, TRACK, DECOR }
+    data class EditorPick(val kind: EditorPickKind, val id: Long, val distance: Float)
+
+    /** Pick visible parts independently of their collision flag, in camera depth order. */
+    fun pickEditorObject(screenX: Float, screenY: Float, world: ToyboxWorld): EditorPick? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection,0,viewProjection,0)) return null
+        val near = unproject(screenX,screenY,-1f) ?: return null
+        val far = unproject(screenX,screenY,1f) ?: return null
+        val direction = (far-near).normalized()
+        val hits = buildList {
+            world.decorations.forEach { decor ->
+                decor.placement()?.let { placement ->
+                    placement.model.parts.mapNotNull { part ->
+                        rayBoxDistance(near,direction,ToyboxVolume(decor.id,ToyboxVolumeKind.DECOR,
+                            placement.x+placement.rotatedX(part.x,part.z)*placement.scale,
+                            placement.y+part.y*placement.scale,
+                            placement.z+placement.rotatedZ(part.x,part.z)*placement.scale,
+                            part.width*placement.scale,part.height*placement.scale,part.depth*placement.scale,
+                            yawDegrees=placement.yawDegrees))
+                    }.minOrNull()?.let { add(EditorPick(EditorPickKind.DECOR,decor.id,it)) }
+                }
+            }
+            world.trackSections.forEach { section -> section.meshSections.mapNotNull {
+                rayTrackSectionDistance(near,direction,it)
+            }.minOrNull()?.let { add(EditorPick(EditorPickKind.TRACK,section.id,it)) } }
+            world.volumes.forEach { volume -> rayBoxDistance(near,direction,volume)?.let {
+                add(EditorPick(EditorPickKind.VOLUME,volume.id,it))
+            } }
+        }
+        return hits.minByOrNull { it.distance }
+    }
+
     fun pickDecor(screenX: Float, screenY: Float, decorations: List<ToyboxDecor>): Long? {
         if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
         val near = unproject(screenX, screenY, -1f) ?: return null
@@ -396,7 +429,7 @@ internal class ToyboxRacersRenderer(
         val far = unproject(screenX, screenY, 1f) ?: return null
         val direction = (far - near).normalized()
         return sections
-            .mapNotNull { section -> rayTrackSectionDistance(near, direction, section)?.let { distance -> section.id to distance } }
+            .mapNotNull { section -> section.meshSections.mapNotNull { rayTrackSectionDistance(near, direction, it) }.minOrNull()?.let { distance -> section.id to distance } }
             .minByOrNull { it.second }
             ?.first
     }
@@ -713,7 +746,10 @@ internal class ToyboxRacersRenderer(
             decorPreviewMesh?.destroy()
             decorPreviewMesh = decor?.let {
                 PrototypeMeshFactory.world(
-                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList(), decorations = listOf(it))
+                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList(), decorations = listOf(it)),
+                    surfacePriorityStart = currentWorld.decorations.count { decor ->
+                        decor.placement()?.model?.surfacePriority?.let { priority -> priority > 0 } == true
+                    } + 1
                 ).also { mesh -> mesh.upload() }
             }
             lastPreviewDecor = decor
@@ -978,7 +1014,16 @@ internal class ToyboxRacersRenderer(
         val b = point(1f, -1f)
         val c = point(1f, 1f)
         val d = point(-1f, 1f)
-        return listOfNotNull(triangle(a, b, c), triangle(a, c, d)).minOrNull()
+        val hits = mutableListOf<Float>()
+        fun face(p: Vec3, q: Vec3, r: Vec3, s: Vec3) {
+            triangle(p,q,r)?.let(hits::add)
+            triangle(p,r,s)?.let(hits::add)
+        }
+        face(a,b,c,d)
+        val up = Vec3(0f, TrackStyle.BARRIER_HEIGHT, 0f)
+        if (section.barriers and 1 != 0) face(a,b,b+up,a+up)
+        if (section.barriers and 2 != 0) face(d,c,c+up,d+up)
+        return hits.minOrNull()
     }
     private fun rayBoxDistance(
         origin: Vec3,

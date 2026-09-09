@@ -6,6 +6,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -29,14 +32,34 @@ internal class ToyboxWorldStore(private val context: Context) {
 
     fun loadUndoHistory(file: File?): JSONArray? {
         val undoFile = undoFileFor(file)
+        val pending = synchronized(undoWrites) { undoWrites[undoFile]?.snapshot }
+        if (pending != null) return pending()
         if (!undoFile.exists()) return null
         return runCatching { JSONArray(undoFile.readText()) }.getOrNull()
     }
 
-    fun saveUndoHistory(file: File?, history: JSONArray) {
+    fun saveUndoHistory(file: File?, snapshot: () -> JSONArray) {
         val undoFile = undoFileFor(file)
-        undoFile.parentFile?.mkdirs()
-        undoFile.writeText(history.toString(2))
+        synchronized(undoWrites) {
+            undoWrites[undoFile]?.future?.cancel(false)
+            val write = UndoWrite(snapshot)
+            undoWrites[undoFile] = write
+            write.future = undoWriter.schedule({
+                try {
+                    // Both JSON creation and disk I/O stay off the UI thread.
+                    val text = snapshot().toString()
+                    if (synchronized(undoWrites) { undoWrites[undoFile] === write }) {
+                        undoFile.parentFile?.mkdirs()
+                        undoFile.writeText(text)
+                        synchronized(undoWrites) {
+                            if (undoWrites[undoFile] === write) undoWrites.remove(undoFile)
+                        }
+                    }
+                } catch (error: Exception) {
+                    android.util.Log.e("ToyboxWorldStore", "Unable to save undo history", error)
+                }
+            }, 350, TimeUnit.MILLISECONDS)
+        }
     }
 
     fun saveCreation(world: ToyboxWorld, name: String = world.name): File {
@@ -100,6 +123,11 @@ internal class ToyboxWorldStore(private val context: Context) {
         val canonicalFile = file.canonicalFile
         if (!canonicalFile.path.startsWith(canonicalDir.path)) return false
         val undoFile = File(canonicalFile.parentFile, "${canonicalFile.nameWithoutExtension}.undo.json")
+        synchronized(undoWrites) { undoWrites.remove(undoFile)?.future?.cancel(false) }
+        // A write already in progress must finish before the final cleanup.
+        undoWriter.execute {
+            if (synchronized(undoWrites) { !undoWrites.containsKey(undoFile) }) undoFile.delete()
+        }
         if (undoFile.exists()) undoFile.delete()
         return canonicalFile.delete()
     }
@@ -150,6 +178,12 @@ internal class ToyboxWorldStore(private val context: Context) {
     }
 
     companion object {
+        private class UndoWrite(val snapshot: () -> JSONArray) {
+            var future: ScheduledFuture<*>? = null
+        }
+        // Shared across activity recreation; a late write cannot overtake a newer write.
+        private val undoWrites = mutableMapOf<File, UndoWrite>()
+        private val undoWriter = ScheduledThreadPoolExecutor(1).apply { removeOnCancelPolicy = true }
         const val FILE_NAME = "toybox_tablet_house.json"
     }
 }

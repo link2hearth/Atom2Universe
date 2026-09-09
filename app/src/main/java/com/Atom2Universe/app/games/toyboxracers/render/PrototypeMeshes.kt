@@ -6,6 +6,7 @@ import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
+import com.Atom2Universe.app.games.toyboxracers.editor.TrackStyle
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
@@ -89,9 +90,12 @@ internal class ToyboxShader {
     }
 }
 
+internal data class MeshLayer(val firstVertex: Int, var vertexCount: Int, val priority: Int)
+
 internal class ColoredMesh private constructor(
     private val vertexBuffer: java.nio.FloatBuffer,
-    private val vertexCount: Int
+    private val vertexCount: Int,
+    private val layers: List<MeshLayer>
 ) {
     private var vao = 0
     private var vbo = 0
@@ -126,7 +130,20 @@ internal class ColoredMesh private constructor(
         GLES30.glUniformMatrix4fv(shader.mvpLocation, 1, false, mvp, 0)
         GLES30.glUniformMatrix4fv(shader.modelLocation, 1, false, model, 0)
         GLES30.glBindVertexArray(vao)
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+        try {
+            for (layer in layers) {
+                if (layer.priority > 0) {
+                    GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL)
+                    GLES30.glPolygonOffset(-1f, -4f * layer.priority)
+                } else {
+                    GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
+                }
+                GLES30.glDrawArrays(GLES30.GL_TRIANGLES, layer.firstVertex, layer.vertexCount)
+            }
+        } finally {
+            GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
+            GLES30.glPolygonOffset(0f, 0f)
+        }
     }
 
     fun destroy() {
@@ -139,19 +156,29 @@ internal class ColoredMesh private constructor(
     companion object {
         private const val FLOATS_PER_VERTEX = 10
 
-        fun from(values: FloatArray): ColoredMesh {
+        fun from(values: FloatArray, layers: List<MeshLayer> = listOf(MeshLayer(0, values.size / FLOATS_PER_VERTEX, 0))): ColoredMesh {
             val buffer = ByteBuffer.allocateDirect(values.size * Float.SIZE_BYTES)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
                 .apply { put(values); position(0) }
-            return ColoredMesh(buffer, values.size / FLOATS_PER_VERTEX)
+            return ColoredMesh(buffer, values.size / FLOATS_PER_VERTEX, layers)
         }
     }
 }
 
-internal class MeshBuilder {
+internal class MeshBuilder(surfacePriorityStart: Int = 1) {
     private val values = ArrayList<Float>()
     private var placement: DecorPlacement? = null
+    private var priority = 0
+    private var nextSurfacePriority = surfacePriorityStart.coerceAtLeast(1)
+    private val layerRuns = ArrayList<MeshLayer>()
+
+    /** Each overlay gets a stable layer in construction order (also stable after loading). */
+    fun surface(build: () -> Unit) {
+        val previous = priority
+        priority = nextSurfacePriority++
+        try { build() } finally { priority = previous }
+    }
 
     fun placed(value: DecorPlacement, build: () -> Unit) {
         check(placement == null) { "Nested decor transforms are not supported" }
@@ -160,6 +187,12 @@ internal class MeshBuilder {
     }
 
     fun triangle(a: Vec3, b: Vec3, c: Vec3, color: FloatArray) {
+        val previous = layerRuns.lastOrNull()
+        if (previous != null && previous.priority == priority) {
+            previous.vertexCount += 3
+        } else {
+            layerRuns += MeshLayer(values.size / 10, 3, priority)
+        }
         val normal = cross(b - a, c - a).normalized()
         vertex(a, normal, color)
         vertex(b, normal, color)
@@ -290,7 +323,21 @@ internal class MeshBuilder {
         }
     }
 
-    fun build(): ColoredMesh = ColoredMesh.from(values.toFloatArray())
+    fun build(): ColoredMesh {
+        // Batch by layer without changing the vertex format used by every existing mesh.
+        val sorted = FloatArray(values.size)
+        val layers = ArrayList<MeshLayer>()
+        var offset = 0
+        for ((priority, runs) in layerRuns.groupBy { it.priority }.toSortedMap()) {
+            val start = offset
+            for (run in runs) {
+                for (i in run.firstVertex * 10 until (run.firstVertex + run.vertexCount) * 10)
+                    sorted[offset++] = values[i]
+            }
+            layers += MeshLayer(start / 10, (offset - start) / 10, priority)
+        }
+        return ColoredMesh.from(sorted, layers)
+    }
 
     private fun vertex(position: Vec3, normal: Vec3, color: FloatArray) {
         val p = placement
@@ -340,11 +387,12 @@ internal object PrototypeMeshFactory {
     fun world(
         world: ToyboxWorld,
         preview: ToyboxVolume? = null,
-        rotationAxis: ToyboxRotationAxis = ToyboxRotationAxis.YAW
+        rotationAxis: ToyboxRotationAxis = ToyboxRotationAxis.YAW,
+        surfacePriorityStart: Int = 1
     ): ColoredMesh {
-        val builder = MeshBuilder()
+        val builder = MeshBuilder(surfacePriorityStart)
         world.volumes.forEach { addWorldVolume(builder, it, alpha = 1f) }
-        world.trackSections.forEach { addWorldTrackSection(builder, it, alpha = 1f) }
+        world.trackSections.flatMap { it.meshSections }.forEach { addWorldTrackSection(builder, it, alpha = 1f) }
         world.decorations.mapNotNull { it.placement() }.forEach { DecorMeshFactory.add(builder, it) }
         if (preview != null) {
             addWorldVolume(builder, preview, alpha = 0.54f)
@@ -456,7 +504,7 @@ internal object PrototypeMeshFactory {
         } else {
             val theme = RoomThemes.theme(track.scene.room)
             addTerrain(builder, theme)
-            if (track.scene.room == RoomKind.BEDROOM) addPatchworkRug(builder, track)
+            if (track.scene.room == RoomKind.BEDROOM) builder.surface { addPatchworkRug(builder, track) }
             if (theme.floor == FloorKind.TILES) addTiledFloor(builder, theme)
             if (track.scene.room == RoomKind.LIVING_ROOM || track.scene.room == RoomKind.OFFICE) {
                 builder.box(0f, 0.012f, 0f, 90f, 0.02f, 52f, rgb(theme.accent))
@@ -495,6 +543,53 @@ internal object PrototypeMeshFactory {
         val rightFront = section.corner(1f, 1f).toVec3() + lift
         builder.quad(leftBack, leftFront, rightFront, rightBack, road)
 
+        fun surface(t: Float, s: Float): Vec3 =
+            (leftBack + (leftFront-leftBack)*t) * (1f-s) +
+                (rightBack + (rightFront-rightBack)*t) * s + Vec3(0f, 0.009f, 0f)
+        fun mark(a: Float, b: Float, l: Float, r: Float, color: Int) {
+            builder.quad(surface(a,l), surface(b,l), surface(b,r), surface(a,r), rgba(color, alpha))
+        }
+        val accent = section.style.accent
+        val tiles = kotlin.math.ceil(section.length / 1.5f).toInt().coerceIn(1, 128)
+        repeat(tiles) { index ->
+            val a = index.toFloat()/tiles
+            val b = (index+1f)/tiles
+            val span = b-a
+            when (section.style) {
+                TrackStyle.CLASSIC -> mark(a+span*.15f, b-span*.15f, .49f, .51f, 0xFFFFE7A8.toInt())
+                TrackStyle.WOOD -> {
+                    mark(a, a+span*.06f, 0f, 1f, accent)
+                    mark(a+span*.12f, b-span*.08f, .08f, .085f, accent)
+                    mark(a+span*.12f, b-span*.08f, .915f, .92f, accent)
+                }
+                TrackStyle.NEON -> {
+                    mark(a, b, .03f, .055f, accent)
+                    mark(a, b, .945f, .97f, 0xFFFF5ADA.toInt())
+                    mark(a+span*.3f, b-span*.3f, .48f, .52f, accent)
+                }
+                TrackStyle.ICE -> {
+                    builder.quad(surface(a,.14f), surface(b,.7f), surface(b,.715f), surface(a,.155f), rgba(accent, alpha))
+                    mark(a+span*.4f, b, .82f, .83f, accent)
+                }
+                TrackStyle.SAND -> for (lane in 0..3) {
+                    val s = .1f + lane*.23f
+                    builder.quad(surface(a,s), surface(b,s+.07f), surface(b,s+.09f), surface(a,s+.02f), rgba(accent, alpha))
+                }
+                TrackStyle.DIRT, TrackStyle.GRASS -> {
+                    val seed = kotlin.math.abs((section.id xor (index * 7919L)).toInt() % 97)
+                    for (lane in 0..5) {
+                        val s = .04f + lane*.16f
+                        val t = a + span * ((seed + lane*17) % 70) / 100f
+                        mark(t, (t+span*.18f).coerceAtMost(b), s, s+.018f, accent)
+                    }
+                    if (section.style == TrackStyle.DIRT) {
+                        mark(a,b,.22f,.27f,0xFF795033.toInt())
+                        mark(a,b,.73f,.78f,0xFF795033.toInt())
+                    }
+                }
+            }
+        }
+
         val curbWidth = PrototypeTrack.CURB_WIDTH * 1.6f
         fun edge(sideSign: Float, innerBack: Vec3, innerFront: Vec3, color: FloatArray) {
             val outerBack = innerBack + (rightBack - leftBack).normalized() * (sideSign * curbWidth)
@@ -504,8 +599,28 @@ internal object PrototypeMeshFactory {
             val down = Vec3(0f, -thickness, 0f)
             builder.quad(outerFront, outerBack, outerBack + down, outerFront + down, side)
         }
-        edge(-1f, leftBack, leftFront, curbA)
-        edge(1f, rightBack, rightFront, curbB)
+        edge(-1f, leftBack, leftFront, if (section.style == TrackStyle.CLASSIC) curbA else rgba(accent,alpha))
+        edge(1f, rightBack, rightFront, if (section.style == TrackStyle.CLASSIC) curbB else rgba(accent,alpha))
+
+        fun barrier(back: Vec3, front: Vec3, sign: Float) {
+            val outsideBack = back + (rightBack-leftBack).normalized() * (sign*TrackStyle.BARRIER_THICKNESS)
+            val outsideFront = front + (rightFront-leftFront).normalized() * (sign*TrackStyle.BARRIER_THICKNESS)
+            val up = Vec3(0f, TrackStyle.BARRIER_HEIGHT, 0f)
+            val wall = rgba(accent,alpha)
+            if (sign < 0f) {
+                builder.quad(back,back+up,front+up,front,wall)
+                builder.quad(outsideFront,outsideFront+up,outsideBack+up,outsideBack,side)
+                builder.quad(back+up,outsideBack+up,outsideFront+up,front+up,wall)
+            } else {
+                builder.quad(front,front+up,back+up,back,wall)
+                builder.quad(outsideBack,outsideBack+up,outsideFront+up,outsideFront,side)
+                builder.quad(front+up,outsideFront+up,outsideBack+up,back+up,wall)
+            }
+            builder.quad(back,outsideBack,outsideBack+up,back+up,wall)
+            builder.quad(front,front+up,outsideFront+up,outsideFront,wall)
+        }
+        if (section.barriers and 1 != 0) barrier(leftBack,leftFront,-1f)
+        if (section.barriers and 2 != 0) barrier(rightBack,rightFront,1f)
 
         val down = Vec3(0f, -thickness, 0f)
         builder.quad(rightFront + down, leftFront + down, leftBack + down, rightBack + down, underside)

@@ -4,6 +4,8 @@ import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
+import com.Atom2Universe.app.games.toyboxracers.editor.TrackStyle
+import com.Atom2Universe.app.games.toyboxracers.editor.VolumePoint
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import com.Atom2Universe.app.games.toyboxracers.track.CourseSurface
@@ -84,6 +86,7 @@ internal class ArcadeCar(
     private var driftBlend = 0f
     private var editorWorld = ToyboxWorld(volumes = emptyList(), trackSections = emptyList())
     private var editorTrackColliders = emptyList<EditorTrackCollider>()
+    private var editorHasBarriers = false
     private var editorTrackIndex = EditorTrackIndex(emptyList())
     private var editorVolumeIndex = EditorVolumeIndex(emptyList())
     /** Vrai quand un monde d'éditeur (pas un circuit classique) est conduit :
@@ -98,7 +101,8 @@ internal class ArcadeCar(
     fun setEditorWorld(world: ToyboxWorld) {
         if (editorWorld === world) return
         if (editorWorld.trackSections !== world.trackSections) {
-            editorTrackColliders = world.trackSections.map(::EditorTrackCollider)
+            editorHasBarriers = world.trackSections.any { it.barriers != 0 }
+            editorTrackColliders = world.trackSections.flatMap { it.meshSections }.map(::EditorTrackCollider)
             editorTrackIndex = EditorTrackIndex(editorTrackColliders)
         }
         if (editorWorld.volumes !== world.volumes || editorWorld.decorations !== world.decorations) {
@@ -447,7 +451,10 @@ internal class ArcadeCar(
         // hauteur confondait l'arrivée sur un plateau avec un choc de face.
         if (!airborne) resolveGroundRoadCollision(previousWorldX, previousWorldZ)
         if (!sandboxMode) resolveFurnitureSides()
-        if (sandboxMode) resolveEditorWorldSides()
+        if (sandboxMode) {
+            resolveEditorWorldSides(previousWorldX, previousWorldZ)
+            resolveEditorTrackBarriers(previousWorldX, previousWorldZ)
+        }
         if (track.scene.circuit.usesHouseLayout && airborneY < -12f) {
             // Une sortie de la maquette n'abandonne pas le joueur sur un sol invisible.
             velocityX = 0f
@@ -981,10 +988,13 @@ internal class ArcadeCar(
     }
 
     private class EditorTrackCollider(private val section: ToyboxTrackSection) {
+        val barriers = section.barriers
         private val a = section.corner(-1f, -1f)
         private val b = section.corner(1f, -1f)
         private val c = section.corner(1f, 1f)
         private val d = section.corner(-1f, 1f)
+        val leftEdge = a to b
+        val rightEdge = d to c
         private val surfaceA = EditorSurfaceTriangle(a, b, c)
         private val surfaceB = EditorSurfaceTriangle(a, c, d)
         val startY = section.y
@@ -999,26 +1009,119 @@ internal class ArcadeCar(
         fun surfaceYAt(worldX: Float, worldZ: Float) =
             (surfaceA.heightAt(worldX, worldZ) ?: surfaceB.heightAt(worldX, worldZ))?.plus(PrototypeTrack.ROAD_SURFACE_LIFT)
     }
-    private fun resolveEditorWorldSides() {
+    private fun resolveEditorTrackBarriers(previousX: Float, previousZ: Float) {
+        if (!editorHasBarriers) return
+        val margin = CAR_COLLISION_RADIUS + TrackStyle.BARRIER_THICKNESS
+        val travelled = hypot(worldX-previousX, worldZ-previousZ)
+        val candidates = editorTrackIndex.candidates(worldX, worldZ, travelled + margin)
+        fun collide(a: VolumePoint, b: VolumePoint) {
+            val dx = b.x-a.x
+            val dz = b.z-a.z
+            val length = hypot(dx,dz)
+            if (length < .0001f) return
+            val nx = -dz/length
+            val nz = dx/length
+            val before = (previousX-a.x)*nx + (previousZ-a.z)*nz
+            val after = (worldX-a.x)*nx + (worldZ-a.z)*nz
+            val crossing = before*after < 0f
+            val time = if (crossing) (before/(before-after)).coerceIn(0f,1f) else 1f
+            val px = previousX+(worldX-previousX)*time
+            val pz = previousZ+(worldZ-previousZ)*time
+            val along = ((px-a.x)*dx+(pz-a.z)*dz)/(length*length)
+            if (along < -margin/length || along > 1f+margin/length) return
+            val t = along.coerceIn(0f,1f)
+            val base = a.y+(b.y-a.y)*t+PrototypeTrack.ROAD_SURFACE_LIFT
+            if (airborneY+CAR_TOP_FROM_ORIGIN < base ||
+                airborneY-PrototypeTrack.CAR_CLEARANCE > base+TrackStyle.BARRIER_HEIGHT) return
+            val distance = hypot(worldX-(a.x+dx*t), worldZ-(a.z+dz*t))
+            if (!crossing && distance >= margin) return
+            // Retain the side occupied before this step; a fast car cannot tunnel through.
+            val sign = if (before >= 0f) 1f else -1f
+            val correction = margin-sign*after
+            if (correction <= 0f) return
+            worldX += nx*sign*correction
+            worldZ += nz*sign*correction
+            val speedIntoWall = velocityX*nx*sign + velocityZ*nz*sign
+            if (speedIntoWall < 0f) {
+                velocityX -= nx*sign*speedIntoWall*1.12f
+                velocityZ -= nz*sign*speedIntoWall*1.12f
+            }
+        }
+        for (section in candidates) {
+            if (section.barriers and 1 != 0) collide(section.leftEdge.first, section.leftEdge.second)
+            if (section.barriers and 2 != 0) collide(section.rightEdge.first, section.rightEdge.second)
+        }
+    }
+
+    private fun resolveEditorWorldSides(previousX: Float, previousZ: Float) {
         val bottom = airborneY - PrototypeTrack.CAR_CLEARANCE
         val top = airborneY + CAR_TOP_FROM_ORIGIN
-        editorVolumeIndex.visit(worldX, worldZ, CAR_COLLISION_RADIUS) { collider ->
+        val travelled = hypot(worldX - previousX, worldZ - previousZ)
+        editorVolumeIndex.visit(worldX, worldZ, CAR_COLLISION_RADIUS + travelled) { collider ->
             val volume = collider.volume
             if (!volume.blocksSides()) return@visit
             if (bottom >= collider.top - FURNITURE_TOP_SETTLING_MARGIN || top <= collider.bottom) return@visit
             val c = collider.yawCos
             val s = collider.yawSin
-            val localX = (worldX - volume.x) * c - (worldZ - volume.z) * s
-            val localZ = (worldX - volume.x) * s + (worldZ - volume.z) * c
+            fun localX(x: Float, z: Float) = (x - volume.x) * c - (z - volume.z) * s
+            fun localZ(x: Float, z: Float) = (x - volume.x) * s + (z - volume.z) * c
+            var localX = localX(worldX, worldZ)
+            var localZ = localZ(worldX, worldZ)
             val halfWidth = volume.width * 0.5f + CAR_COLLISION_RADIUS
             val halfDepth = volume.depth * 0.5f + CAR_COLLISION_RADIUS
-            if (abs(localX) >= halfWidth || abs(localZ) >= halfDepth) return@visit
+            var sweptNormalX = 0f
+            var sweptNormalZ = 0f
+            var sweptHit = false
+            if (abs(localX) >= halfWidth || abs(localZ) >= halfDepth) {
+                val previousLocalX = localX(previousX, previousZ)
+                val previousLocalZ = localZ(previousX, previousZ)
+                val dx = localX - previousLocalX
+                val dz = localZ - previousLocalZ
+                var enter = 0f
+                var exit = 1f
+                fun clip(start: Float, delta: Float, min: Float, max: Float, axisX: Boolean): Boolean {
+                    if (abs(delta) < 0.0001f) return start in min..max
+                    val a = (min - start) / delta
+                    val b = (max - start) / delta
+                    val axisEnter = minOf(a, b)
+                    if (axisEnter > enter) {
+                        if (axisX) {
+                            sweptNormalX = if (a < b) -1f else 1f
+                            sweptNormalZ = 0f
+                        } else {
+                            sweptNormalX = 0f
+                            sweptNormalZ = if (a < b) -1f else 1f
+                        }
+                    }
+                    enter = maxOf(enter, axisEnter)
+                    exit = minOf(exit, maxOf(a, b))
+                    return enter <= exit
+                }
+                if (!clip(previousLocalX, dx, -halfWidth, halfWidth, axisX = true) ||
+                    !clip(previousLocalZ, dz, -halfDepth, halfDepth, axisX = false) ||
+                    enter !in 0f..1f) return@visit
+                sweptHit = sweptNormalX != 0f || sweptNormalZ != 0f
+                if (sweptHit) {
+                    val targetX = if (sweptNormalX < 0f) -halfWidth else if (sweptNormalX > 0f) halfWidth else localX
+                    val targetZ = if (sweptNormalZ < 0f) -halfDepth else if (sweptNormalZ > 0f) halfDepth else localZ
+                    val correctionX = targetX - localX
+                    val correctionZ = targetZ - localZ
+                    worldX += correctionX * c + correctionZ * s
+                    worldZ += -correctionX * s + correctionZ * c
+                    localX = targetX
+                    localZ = targetZ
+                }
+            }
             val dx = halfWidth - abs(localX)
             val dz = halfDepth - abs(localZ)
             val nx: Float
             val nz: Float
             val penetration: Float
-            if (dx < dz) {
+            if (sweptHit) {
+                nx = sweptNormalX * c + sweptNormalZ * s
+                nz = -sweptNormalX * s + sweptNormalZ * c
+                penetration = 0f
+            } else if (dx < dz) {
                 val sign = if (localX < 0f) -1f else 1f
                 nx = sign * c
                 nz = -sign * s

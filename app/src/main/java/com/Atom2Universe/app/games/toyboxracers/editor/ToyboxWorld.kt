@@ -168,6 +168,9 @@ internal data class ToyboxVolume(
 
 internal data class VolumePoint(val x: Float, val y: Float, val z: Float)
 
+/** Normalized longitudinal position, lateral displacement and altitude above the end-to-end slope. */
+internal data class TrackBend(val t: Float, val side: Float, val height: Float, val along: Float = 0f)
+
 internal data class ToyboxTrackSection(
     val id: Long,
     val x: Float,
@@ -181,8 +184,178 @@ internal data class ToyboxTrackSection(
     val color: Int = 0xFF6F7B91.toInt(),
     val startYawOffset: Float = 0f,
     val endYawOffset: Float = 0f,
-    val endWidth: Float = width
+    val endWidth: Float = width,
+    val bends: List<TrackBend> = emptyList(),
+    val smoothElevation: Boolean = false,
+    val style: TrackStyle = TrackStyle.CLASSIC,
+    /** Bits: 1 = left barrier, 2 = right barrier. */
+    val barriers: Int = 0,
+    val startTangentDegrees: Float? = null,
+    val endTangentDegrees: Float? = null,
+    val startGrade: Float? = null,
+    val endGrade: Float? = null,
+    val startBankDegrees: Float? = null,
+    val endBankDegrees: Float? = null
 ) {
+    fun bankAt(t: Float) = (startBankDegrees ?: bankDegrees) * (1f-t) + (endBankDegrees ?: bankDegrees) * t
+    fun withBank(value: Float) = copy(bankDegrees = value,
+        startBankDegrees = startBankDegrees?.plus(value-bankDegrees),
+        endBankDegrees = endBankDegrees?.plus(value-bankDegrees))
+    private val curved get() = bends.isNotEmpty() || smoothElevation || startTangentDegrees != null || endTangentDegrees != null
+    private val elevationKnots by lazy {
+        listOf(0f to y) + bends.map { it.t to (y + (endY - y) * it.t + it.height) } + (1f to endY)
+    }
+
+    /** Horizontal end tangents join neighbouring ribbons without a sudden change of slope.
+     * Monotone interior tangents round peaks without overshooting the edited heights. */
+    private fun elevationAt(t: Float): Float {
+        val points = elevationKnots
+        val i = (points.indexOfFirst { it.first >= t }.coerceAtLeast(1) - 1).coerceAtMost(points.lastIndex - 1)
+        fun tangent(index: Int): Float {
+            if (index == 0) return (startGrade ?: 0f) * length
+            if (index == points.lastIndex) return (endGrade ?: 0f) * length
+            val h0 = (points[index].first - points[index - 1].first).coerceAtLeast(0.0001f)
+            val h1 = (points[index + 1].first - points[index].first).coerceAtLeast(0.0001f)
+            val d0 = (points[index].second - points[index - 1].second) / h0
+            val d1 = (points[index + 1].second - points[index].second) / h1
+            if (d0 * d1 <= 0f) return 0f
+            val w0 = 2f * h1 + h0
+            val w1 = h1 + 2f * h0
+            return (w0 + w1) / (w0 / d0 + w1 / d1)
+        }
+        val a = points[i]
+        val b = points[i + 1]
+        val span = (b.first - a.first).coerceAtLeast(0.0001f)
+        val u = ((t - a.first) / span).coerceIn(0f, 1f)
+        return (2*u*u*u - 3*u*u + 1)*a.second + (u*u*u - 2*u*u + u)*span*tangent(i) +
+            (-2*u*u*u + 3*u*u)*b.second + (u*u*u - u*u)*span*tangent(i + 1)
+    }
+    private fun displacement(t: Float): TrackBend {
+        val points = listOf(TrackBend(0f, 0f, 0f)) + bends + TrackBend(1f, 0f, 0f)
+        val i = (points.indexOfFirst { it.t >= t }.coerceAtLeast(1) - 1).coerceAtMost(points.lastIndex - 1)
+        val a = points[i]
+        val b = points[i + 1]
+        val before = points[(i - 1).coerceAtLeast(0)]
+        val after = points[(i + 2).coerceAtMost(points.lastIndex)]
+        val span = (b.t - a.t).coerceAtLeast(0.0001f)
+        val u = ((t - a.t) / span).coerceIn(0f, 1f)
+        fun interpolate(startDerivative: Float? = null, endDerivative: Float? = null, value: (TrackBend) -> Float): Float {
+            val m0 = if (i == 0 && startDerivative != null) startDerivative else
+                (value(b) - value(before)) / (b.t - before.t).coerceAtLeast(0.0001f)
+            val m1 = if (i + 1 == points.lastIndex && endDerivative != null) endDerivative else
+                (value(after) - value(a)) / (after.t - a.t).coerceAtLeast(0.0001f)
+            return (2*u*u*u - 3*u*u + 1)*value(a) + (u*u*u - 2*u*u + u)*span*m0 +
+                (-2*u*u*u + 3*u*u)*value(b) + (u*u*u - u*u)*span*m1
+        }
+        val start = startTangentDegrees?.times(kotlin.math.PI.toFloat()/180f)
+        val end = endTangentDegrees?.times(kotlin.math.PI.toFloat()/180f)
+        return TrackBend(t,
+            interpolate(start?.let { length*sin(it) }, end?.let { length*sin(it) }) { it.side },
+            interpolate { it.height },
+            interpolate(start?.let { length*(cos(it)-1f) }, end?.let { length*(cos(it)-1f) }) { it.along })
+    }
+
+    fun centerAt(t: Float): VolumePoint {
+        val offset = displacement(t)
+        return VolumePoint(startX + forwardX * (length * t + offset.along) + rightX * offset.side,
+            if (smoothElevation) elevationAt(t) else y + (endY - y) * t + offset.height,
+            startZ + forwardZ * (length * t + offset.along) + rightZ * offset.side)
+    }
+
+    /** Recomputed on immutable copies: more editable sections on long or strongly bent ribbons. */
+    val editFractions: List<Float> by lazy {
+        val arcLength = (0..32).map { centerAt(it / 32f) }.zipWithNext().sumOf { (a,b) ->
+            kotlin.math.sqrt(((b.x-a.x)*(b.x-a.x)+(b.y-a.y)*(b.y-a.y)+(b.z-a.z)*(b.z-a.z)).toDouble())
+        }
+        val count = kotlin.math.ceil(arcLength / 8.0).toInt().coerceIn(2, 64)
+        (List(count + 1) { it.toFloat() / count } + bends.map { it.t }).sorted()
+            .fold(mutableListOf<Float>()) { result, t ->
+                if (result.isEmpty() || t - result.last() > 0.001f) result.add(t)
+                result
+            }
+    }
+
+    fun withBend(t: Float, worldX: Float, worldY: Float, worldZ: Float): ToyboxTrackSection {
+        val bend = TrackBend(t, localSide(worldX, worldZ), worldY - (y + (endY - y) * t),
+            localAlong(worldX, worldZ) + halfLength - length * t)
+        return copy(bends = (bends.filter { kotlin.math.abs(it.t - t) > 0.001f } + bend).sortedBy { it.t },
+            smoothElevation = true)
+    }
+
+    fun slice(from: Float, to: Float, newId: Long = id): ToyboxTrackSection {
+        val a = centerAt(from)
+        val b = centerAt(to)
+        val yaw = kotlin.math.atan2(b.x-a.x,b.z-a.z)*180f/kotlin.math.PI.toFloat()
+        var result = copy(id=newId, x=(a.x+b.x)*0.5f, z=(a.z+b.z)*0.5f, y=a.y, endY=b.y,
+            yawDegrees=yaw, length=hypot(b.x-a.x,b.z-a.z).coerceAtLeast(0.05f),
+            width=width+(endWidth-width)*from, endWidth=width+(endWidth-width)*to, bends=emptyList(),
+            startYawOffset=yawDegrees+startYawOffset-yaw, endYawOffset=yawDegrees+endYawOffset-yaw)
+        if (curved) {
+            fun derivative(t: Float): VolumePoint {
+                val p = centerAt((t-.0001f).coerceAtLeast(0f))
+                val q = centerAt((t+.0001f).coerceAtMost(1f))
+                return VolumePoint(q.x-p.x,q.y-p.y,q.z-p.z)
+            }
+            val da = derivative(from)
+            val db = derivative(to)
+            result = result.copy(
+                startTangentDegrees=kotlin.math.atan2(da.x,da.z)*180f/kotlin.math.PI.toFloat()-yaw,
+                endTangentDegrees=kotlin.math.atan2(db.x,db.z)*180f/kotlin.math.PI.toFloat()-yaw,
+                startGrade=da.y/hypot(da.x,da.z).coerceAtLeast(.0001f),
+                endGrade=db.y/hypot(db.x,db.z).coerceAtLeast(.0001f),
+                startBankDegrees=bankAt(from),endBankDegrees=bankAt(to))
+            // Retain the sampled shape, including displacement along the new chord.
+            val samples = (List(31) { from+(to-from)*(it+1)/32f } + bends.map { it.t })
+                .filter { it > from && it < to }.distinct().sorted()
+            for (t in samples) {
+                val p = centerAt(t)
+                result = result.withBend((t-from)/(to-from), p.x, p.y, p.z)
+            }
+        }
+        return result
+    }
+
+    /** Shared tessellation for rendering, picking and driving. Preserve the exact legacy quad when straight. */
+    val meshSections: List<ToyboxTrackSection> by lazy {
+        if (!curved) listOf(this) else {
+            val samples = mutableListOf(0f)
+            fun subdivide(a: Float, b: Float, depth: Int) {
+                val p = centerAt(a)
+                val q = centerAt(b)
+                // Quarter samples detect S-shaped profiles whose midpoint lies on the chord.
+                val error = listOf(0.25f, 0.5f, 0.75f).maxOf { fraction ->
+                    val m = centerAt(a + (b-a)*fraction)
+                    hypot(m.x - (p.x+(q.x-p.x)*fraction), m.z - (p.z+(q.z-p.z)*fraction)) +
+                        kotlin.math.abs(m.y - (p.y+(q.y-p.y)*fraction))
+                }
+                val distance = kotlin.math.sqrt((q.x-p.x)*(q.x-p.x) + (q.y-p.y)*(q.y-p.y) + (q.z-p.z)*(q.z-p.z))
+                if (depth < 10 && (error > 0.0025f || distance > 0.75f)) {
+                    subdivide(a, (a+b)*0.5f, depth+1)
+                    subdivide((a+b)*0.5f, b, depth+1)
+                } else samples.add(b)
+            }
+            val knots = (listOf(0f) + bends.map { it.t } + 1f)
+            knots.zipWithNext().forEach { (a,b) -> subdivide(a,b,0) }
+            fun angle(t: Float): Float {
+                if (t == 0f && startTangentDegrees != null) return yawDegrees + startTangentDegrees
+                if (t == 1f && endTangentDegrees != null) return yawDegrees + endTangentDegrees
+                val p = centerAt((t-0.001f).coerceAtLeast(0f))
+                val q = centerAt((t+0.001f).coerceAtMost(1f))
+                return kotlin.math.atan2(q.x-p.x,q.z-p.z)*180f/kotlin.math.PI.toFloat()
+            }
+            samples.zipWithNext().map { (a,b) ->
+                val p = centerAt(a)
+                val q = centerAt(b)
+                val yaw = kotlin.math.atan2(q.x-p.x,q.z-p.z)*180f/kotlin.math.PI.toFloat()
+                copy(x=(p.x+q.x)*0.5f, z=(p.z+q.z)*0.5f, y=p.y, endY=q.y,
+                    length=hypot(q.x-p.x,q.z-p.z).coerceAtLeast(0.0001f), yawDegrees=yaw,
+                    width=width+(endWidth-width)*a, endWidth=width+(endWidth-width)*b,
+                    startYawOffset=angle(a)-yaw, endYawOffset=angle(b)-yaw, bends=emptyList(), smoothElevation=false,
+                    startTangentDegrees=null, endTangentDegrees=null, startGrade=null, endGrade=null,
+                    startBankDegrees=bankAt(a), endBankDegrees=bankAt(b))
+            }
+        }
+    }
     val yawRadians get() = yawDegrees * kotlin.math.PI.toFloat() / 180f
     val bankRadians get() = bankDegrees * kotlin.math.PI.toFloat() / 180f
     val yawSin get() = sin(yawRadians)
@@ -204,8 +377,8 @@ internal data class ToyboxTrackSection(
 
     fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
     fun rotateYaw(deltaDegrees: Float) = copy(yawDegrees = ((yawDegrees + deltaDegrees) % 360f + 360f) % 360f)
-    fun withStartY(value: Float) = copy(y = value)
-    fun withEndY(value: Float) = copy(endY = value)
+    fun withStartY(value: Float) = copy(y = value, smoothElevation = smoothElevation || value != y)
+    fun withEndY(value: Float) = copy(endY = value, smoothElevation = smoothElevation || value != endY)
     fun withEndpoint(finish: Boolean, px: Float, py: Float, pz: Float): ToyboxTrackSection {
         val ax = if (finish) startX else px
         val az = if (finish) startZ else pz
@@ -217,12 +390,16 @@ internal data class ToyboxTrackSection(
         return copy(x = (ax + bx) * 0.5f, z = (az + bz) * 0.5f,
             y = if (finish) y else py, endY = if (finish) py else endY,
             length = distance, yawDegrees = angle,
+            startTangentDegrees = startTangentDegrees?.plus(yawDegrees-angle),
+            endTangentDegrees = endTangentDegrees?.plus(yawDegrees-angle),
+            smoothElevation = smoothElevation || py != (if (finish) endY else y),
             startYawOffset = startYawOffset + yawDegrees - angle,
             endYawOffset = endYawOffset + yawDegrees - angle)
     }
     fun resize(width: Float = this.width, length: Float = this.length) =
         copy(width = width.coerceAtLeast(0.05f), endWidth = endWidth * width / this.width,
-            length = length.coerceAtLeast(0.05f))
+            length = length.coerceAtLeast(0.05f),
+            bends = bends.map { it.copy(along = it.along * length.coerceAtLeast(0.05f) / this.length) })
 
     fun localAlong(worldX: Float, worldZ: Float): Float {
         val dx = worldX - x
@@ -241,6 +418,7 @@ internal data class ToyboxTrackSection(
             localSide(worldX, worldZ) in (-halfWidth - margin)..(halfWidth + margin)
 
     fun surfaceYAt(worldX: Float, worldZ: Float): Float? {
+        if (curved) return meshSections.mapNotNull { it.surfaceYAt(worldX, worldZ) }.maxOrNull()
         val a = corner(-1f, -1f)
         val b = corner(1f, -1f)
         val c = corner(1f, 1f)
@@ -264,7 +442,7 @@ internal data class ToyboxTrackSection(
         val centreY = y + (endY - y) * t
         return VolumePoint(
             x = x + forwardX * along + cos(angle) * side,
-            y = centreY + side * sin(bankRadians),
+            y = centreY + side * sin(bankAt(t) * kotlin.math.PI.toFloat()/180f),
             z = z + forwardZ * along - sin(angle) * side
         )
     }
@@ -319,6 +497,15 @@ internal data class ToyboxTrackSection(
         .put("startYawOffset", startYawOffset.toDouble())
         .put("endYawOffset", endYawOffset.toDouble())
         .put("endWidth", endWidth.toDouble())
+        .put("smoothElevation", smoothElevation)
+        .put("style", style.name)
+        .put("barriers", barriers)
+        .put("startTangentDegrees", startTangentDegrees).put("endTangentDegrees", endTangentDegrees)
+        .put("startGrade", startGrade).put("endGrade", endGrade)
+        .put("startBankDegrees", startBankDegrees).put("endBankDegrees", endBankDegrees)
+        .put("bends", JSONArray().apply { bends.forEach { put(JSONObject()
+            .put("t", it.t.toDouble()).put("side", it.side.toDouble()).put("height", it.height.toDouble())
+            .put("along", it.along.toDouble())) } })
         .put("color", color)
 
     companion object {
@@ -333,6 +520,22 @@ internal data class ToyboxTrackSection(
             startYawOffset = json.optDouble("startYawOffset", 0.0).toFloat(),
             endYawOffset = json.optDouble("endYawOffset", 0.0).toFloat(),
             endWidth = json.optDouble("endWidth", json.optDouble("width", 8.0)).toFloat().coerceAtLeast(0.05f),
+            smoothElevation = json.optBoolean("smoothElevation", (json.optJSONArray("bends")?.length() ?: 0) > 0),
+            style = TrackStyle.parse(json.optString("style")),
+            barriers = json.optInt("barriers", 0) and 3,
+            startTangentDegrees = json.optDouble("startTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+            endTangentDegrees = json.optDouble("endTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+            startGrade = json.optDouble("startGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
+            endGrade = json.optDouble("endGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
+            startBankDegrees = json.optDouble("startBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+            endBankDegrees = json.optDouble("endBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+            bends = json.optJSONArray("bends")?.let { array ->
+                List(array.length()) { array.getJSONObject(it) }.map {
+                    TrackBend(it.optDouble("t").toFloat(), it.optDouble("side", 0.0).toFloat(),
+                        it.optDouble("height", 0.0).toFloat(), it.optDouble("along", 0.0).toFloat())
+                }.filter { it.t.isFinite() && it.t > 0f && it.t < 1f && it.side.isFinite() && it.height.isFinite() && it.along.isFinite() }
+                    .distinctBy { it.t }.sortedBy { it.t }
+            } ?: emptyList(),
             endY = json.optDouble("endY", json.optDouble("y", 0.0)).toFloat(),
             bankDegrees = json.optDouble("bankDegrees", 0.0).toFloat(),
             color = json.optInt("color", 0xFF6F7B91.toInt())
@@ -360,11 +563,22 @@ internal data class ToyboxDecor(
     val z: Float,
     val quarterTurns: Int = 0,
     val scale: Float = 1f,
-    val yawDegrees: Float = quarterTurns * 90f
+    val yawDegrees: Float = quarterTurns * 90f,
+    val solid: Boolean = true,
+    val colors: Map<Int, Int> = emptyMap()
 ) {
-    fun placement(): DecorPlacement? = runCatching {
-        DecorPlacement(DecorCatalog[modelId], x, y, z, quarterTurns, scale, yawDegrees)
-    }.getOrNull()
+    private val resolvedPlacement by lazy {
+        runCatching {
+            val original = DecorCatalog[modelId]
+            val hasCollisionParts = original.parts.any { it.solid }
+            val model = if (solid && hasCollisionParts && colors.isEmpty()) original else original.copy(parts = original.parts.map {
+                it.copy(color = colors[it.color and 0xFFFFFF] ?: it.color,
+                    solid = solid && (it.solid || !hasCollisionParts))
+            })
+            DecorPlacement(model, x, y, z, quarterTurns, scale, yawDegrees)
+        }.getOrNull()
+    }
+    fun placement(): DecorPlacement? = resolvedPlacement
 
     fun moveTo(nx: Float, nz: Float) = copy(x = nx, z = nz)
     fun lift(dy: Float) = copy(y = (y + dy).coerceAtLeast(0f))
@@ -380,6 +594,8 @@ internal data class ToyboxDecor(
     fun toJson() = JSONObject()
         .put("id", id)
         .put("modelId", modelId)
+        .put("solid", solid)
+        .put("colors", colorsToJson(colors))
         .put("x", x.toDouble())
         .put("y", y.toDouble())
         .put("z", z.toDouble())
@@ -388,11 +604,22 @@ internal data class ToyboxDecor(
         .put("yawDegrees", yawDegrees.toDouble())
 
     companion object {
+        fun colorsToJson(colors: Map<Int, Int>) = JSONObject().apply {
+            colors.forEach { (original, replacement) -> put(original.toString(), replacement and 0xFFFFFF) }
+        }
+        fun colorsFromJson(json: JSONObject?): Map<Int, Int> = buildMap {
+            if (json != null) for (key in json.keys()) {
+                val original = key.toIntOrNull() ?: continue
+                put(original and 0xFFFFFF, json.optInt(key, original) and 0xFFFFFF)
+            }
+        }
         fun fromJson(json: JSONObject): ToyboxDecor {
             val quarterTurns = json.optInt("quarterTurns", 0)
             return ToyboxDecor(
                 id = json.optLong("id", System.nanoTime()),
                 modelId = json.optString("modelId"),
+                solid = json.optBoolean("solid", true),
+                colors = colorsFromJson(json.optJSONObject("colors")),
                 x = json.optDouble("x", 0.0).toFloat(),
                 y = json.optDouble("y", 0.0).toFloat(),
                 z = json.optDouble("z", 0.0).toFloat(),

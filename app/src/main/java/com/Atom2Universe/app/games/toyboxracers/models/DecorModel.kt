@@ -1,21 +1,27 @@
 package com.Atom2Universe.app.games.toyboxracers.models
 
 import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
+import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
 internal enum class DecorRoom { KITCHEN, LIVING_ROOM, GARAGE, OFFICE, BATHROOM, OUTDOOR, BEDROOM }
-internal enum class DecorShape { BOX, OVAL, CYLINDER_Y, CYLINDER_X, CONE_Y, GABLE_ROOF }
+internal enum class DecorShape { BOX, OVAL, CYLINDER_Y, CYLINDER_X, CONE_Y, GABLE_ROOF, MESH }
 
 /** Dimensions complètes, origine au centre de la base, façade tournée vers +Z. */
 internal data class DecorPart(
     val shape: DecorShape, val x: Float, val y: Float, val z: Float,
     val width: Float, val height: Float, val depth: Float,
-    val color: Int, val solid: Boolean
+    val color: Int, val solid: Boolean,
+    val triangles: List<Vec3> = emptyList()
 )
 
-internal data class DecorModel(val id: String, val room: DecorRoom, val parts: List<DecorPart>) {
+internal data class DecorModel(
+    val id: String, val room: DecorRoom, val parts: List<DecorPart>,
+    /** Coplanar surface overlays; ordinary furniture remains in the normal depth layer. */
+    val surfacePriority: Int = 0
+) {
     val bounds: RoomBox = run {
         require(parts.isNotEmpty())
         val left = parts.minOf { it.x - it.width / 2 }

@@ -13,11 +13,23 @@ internal object DecorMeshFactory {
     }
 
     fun add(builder: MeshBuilder, placement: DecorPlacement) {
+        if (placement.model.surfacePriority > 0) {
+            builder.surface { addParts(builder, placement) }
+        } else {
+            addParts(builder, placement)
+        }
+    }
+
+    private fun addParts(builder: MeshBuilder, placement: DecorPlacement) {
         builder.placed(placement) {
             for (p in placement.model.parts) {
                 val c = floatArrayOf(((p.color shr 16) and 255) / 255f,
                     ((p.color shr 8) and 255) / 255f, (p.color and 255) / 255f, 1f)
                 when (p.shape) {
+                    DecorShape.MESH -> {
+                        for (i in p.triangles.indices step 3)
+                            builder.triangle(p.triangles[i], p.triangles[i + 1], p.triangles[i + 2], c)
+                    }
                     DecorShape.BOX -> builder.box(p.x, p.y, p.z, p.width, p.height, p.depth, c)
                     DecorShape.OVAL -> builder.lowPolyEllipsoid(p.x, p.y, p.z,
                         p.width / 2, p.height / 2, p.depth / 2, 7, 12, c)

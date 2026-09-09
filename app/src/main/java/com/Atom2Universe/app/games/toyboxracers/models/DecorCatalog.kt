@@ -268,7 +268,7 @@ internal object DecorCatalog {
     }
 
     val all: List<DecorModel> by lazy {
-        (kitchen + livingRoom + garage + DecorExpansion.all + DecorHouseFurniture.all)
+        (kitchen + livingRoom + garage + DecorExpansion.all + DecorHouseFurniture.all + DecorKawaiiCollection.all)
             .also { list -> check(list.map { it.id }.distinct().size == list.size) }
     }
     private val byId by lazy { all.associateBy { it.id } }
