@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.caves.entity.ProjectileKind
 import com.Atom2Universe.app.games.caves.entity.Projectile
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -21,14 +22,18 @@ internal class ProjectileRenderer {
     private var uMvp = 0; private var uTex = 0
 
     private var partShader: ShaderProgram? = null
-    private var pAPos = 0; private var pAUv = 0
-    private var pUMvp = 0; private var pUTex = 0; private var pUAlpha = 0
+    private var pAPos = 0; private var pAUv = 0; private var pAAlpha = 0
+    private var pUMvp = 0; private var pUTex = 0
 
     private val textures = IntArray(8)
     private var vbo = 0
 
     private val MAX_PROJ = 256
     private val vBuf = FloatArray(MAX_PROJ * 6 * 5)
+    // Buffer natif réutilisé pour chaque upload GPU (par groupe de texture et par particule) —
+    // un allocateDirect() par frame (voire par particule) saturait le GC pendant le tir en rafale.
+    private val nativeBuf: FloatBuffer =
+        ByteBuffer.allocateDirect(vBuf.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
     private val VERT = """
         #version 300 es
@@ -55,17 +60,35 @@ internal class ProjectileRenderer {
         }
     """.trimIndent()
 
+    // Alpha par sommet plutôt qu'un uniform : un uniform différent par particule interdisait
+    // de les regrouper en un seul appel de dessin (jusqu'à 128 draw calls/frame en combat
+    // dense — voir renderParticles). Porté par le flux de sommets, tout le lot part ensemble.
+    private val VERT_PART = """
+        #version 300 es
+        in vec3 a_pos;
+        in vec2 a_uv;
+        in float a_alpha;
+        uniform mat4 u_mvp;
+        out vec2 v_uv;
+        out float v_alpha;
+        void main() {
+            gl_Position = u_mvp * vec4(a_pos, 1.0);
+            v_uv = a_uv;
+            v_alpha = a_alpha;
+        }
+    """.trimIndent()
+
     private val FRAG_PART = """
         #version 300 es
         precision mediump float;
         uniform sampler2D u_tex;
-        uniform float u_alpha;
         in vec2 v_uv;
+        in float v_alpha;
         out vec4 fragColor;
         void main() {
             vec4 c = texture(u_tex, v_uv);
             if (c.a < 0.05) discard;
-            fragColor = vec4(c.rgb, c.a * u_alpha);
+            fragColor = vec4(c.rgb, c.a * v_alpha);
         }
     """.trimIndent()
 
@@ -113,10 +136,10 @@ internal class ProjectileRenderer {
         }
         val vboIds = IntArray(1); GLES30.glGenBuffers(1, vboIds, 0); vbo = vboIds[0]
 
-        partShader = ShaderProgram(VERT, FRAG_PART).also {
+        partShader = ShaderProgram(VERT_PART, FRAG_PART).also {
             it.use()
-            pAPos  = it.attrib("a_pos"); pAUv  = it.attrib("a_uv")
-            pUMvp  = it.uniform("u_mvp"); pUTex = it.uniform("u_tex"); pUAlpha = it.uniform("u_alpha")
+            pAPos  = it.attrib("a_pos"); pAUv  = it.attrib("a_uv"); pAAlpha = it.attrib("a_alpha")
+            pUMvp  = it.uniform("u_mvp"); pUTex = it.uniform("u_tex")
         }
     }
 
@@ -139,11 +162,13 @@ internal class ProjectileRenderer {
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
         GLES30.glUniform1i(uTex, 0)
 
-        val byTex = projectiles.filter { it.kind == ProjectileKind.LEGACY }.groupBy { it.weapon.texIndex }
-        for ((texIdx, group) in byTex) {
-            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textures[texIdx.coerceIn(0, 7)])
+        // Regroupement par texture sans allouer de List/HashMap par frame (filter+groupBy
+        // tournait 60x/s même hors tir) : on parcourt les projectiles une fois par texture.
+        for (texIdx in 0 until 8) {
             var si = 0
-            for (p in group) {
+            for (p in projectiles) {
+                if (p.kind != ProjectileKind.LEGACY) continue
+                if (p.weapon.texIndex.coerceIn(0, 7) != texIdx) continue
                 if (si + 6 * 5 > vBuf.size) break
                 val px = (p.x - camX).toFloat()
                 val py = (p.y - camY).toFloat()
@@ -163,10 +188,10 @@ internal class ProjectileRenderer {
             }
             val count = si / 5
             if (count == 0) continue
-            val fb = ByteBuffer.allocateDirect(si * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-            fb.put(vBuf, 0, si); fb.position(0)
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textures[texIdx])
+            nativeBuf.clear(); nativeBuf.put(vBuf, 0, si); nativeBuf.position(0)
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo)
-            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, si * 4, fb, GLES30.GL_DYNAMIC_DRAW)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, si * 4, nativeBuf, GLES30.GL_DYNAMIC_DRAW)
             val stride = 5 * 4
             GLES30.glEnableVertexAttribArray(aPos)
             GLES30.glVertexAttribPointer(aPos, 3, GLES30.GL_FLOAT, false, stride, 0)
@@ -236,9 +261,8 @@ internal class ProjectileRenderer {
 
         var si = 0
         for (p in particles) {
-            if (si + 6 * 5 > vBuf.size) break
+            if (si + 6 * 6 > vBuf.size) break
             val alpha = (p.lifeRem / p.lifeMax).coerceIn(0f, 1f)
-            GLES30.glUniform1f(pUAlpha, alpha)
             val px = (p.x - camX).toFloat()
             val py = (p.y - camY).toFloat()
             val pz = (p.z - camZ).toFloat()
@@ -246,24 +270,27 @@ internal class ProjectileRenderer {
             if (!ProjectileVisibility.inFrontOfNearPlane(px, py, pz, rX, rZ, hw, vpMatrix)) continue
             fun sv(rx: Float, ry: Float, u: Float, v: Float) {
                 vBuf[si++] = px + rX * rx; vBuf[si++] = py + ry; vBuf[si++] = pz + rZ * rx
-                vBuf[si++] = u;             vBuf[si++] = v
+                vBuf[si++] = u;             vBuf[si++] = v;      vBuf[si++] = alpha
             }
             sv(-hw,  hw, 0f, 0f); sv(-hw, -hw, 0f, 1f); sv( hw, -hw, 1f, 1f)
             sv(-hw,  hw, 0f, 0f); sv( hw, -hw, 1f, 1f); sv( hw,  hw, 1f, 0f)
-
-            val fb = ByteBuffer.allocateDirect(si * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-            fb.put(vBuf, 0, si); fb.position(0)
+        }
+        val count = si / 6
+        if (count > 0) {
+            nativeBuf.clear(); nativeBuf.put(vBuf, 0, si); nativeBuf.position(0)
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo)
-            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, si * 4, fb, GLES30.GL_DYNAMIC_DRAW)
-            val stride = 5 * 4
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, si * 4, nativeBuf, GLES30.GL_DYNAMIC_DRAW)
+            val stride = 6 * 4
             GLES30.glEnableVertexAttribArray(pAPos)
             GLES30.glVertexAttribPointer(pAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
             GLES30.glEnableVertexAttribArray(pAUv)
             GLES30.glVertexAttribPointer(pAUv,  2, GLES30.GL_FLOAT, false, stride, 12)
-            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6)
+            GLES30.glEnableVertexAttribArray(pAAlpha)
+            GLES30.glVertexAttribPointer(pAAlpha, 1, GLES30.GL_FLOAT, false, stride, 20)
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, count)
             GLES30.glDisableVertexAttribArray(pAPos)
             GLES30.glDisableVertexAttribArray(pAUv)
-            si = 0
+            GLES30.glDisableVertexAttribArray(pAAlpha)
         }
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)

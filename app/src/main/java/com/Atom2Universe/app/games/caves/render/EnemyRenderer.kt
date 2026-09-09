@@ -10,6 +10,7 @@ import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.FloatBuffer
 import kotlin.math.*
 
 /**
@@ -34,9 +35,17 @@ internal class EnemyRenderer {
     private var colorVbo = 0
     private var digitVbo = 0
 
-    private val boV = FloatArray(MAX_BOXES * 36 * 6)   // un mob à la fois
+    // Tous les mobs visibles à la suite plutôt qu'un mob à la fois : voir le commentaire
+    // sur bodyOffset dans render() — ça permet un seul draw call pour tous les corps.
+    private val boV = FloatArray(MAX_VISIBLE * MAX_BOXES * 36 * 6)
     private val coV = FloatArray(MAX_VISIBLE * 12 * 6)
     private val diV = FloatArray(MAX_VISIBLE * MAX_DIGITS * 6 * 5)
+
+    // Buffer natif réutilisé pour chaque upload GPU (corps, barres de vie, labels) —
+    // un allocateDirect() par mob par frame était le vrai foyer du GC dès qu'un seul mob
+    // traînait à proximité (pas besoin de combat), voir ProjectileRenderer pour le même bug.
+    private val nativeBuf: FloatBuffer =
+        ByteBuffer.allocateDirect(boV.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
 
     // 8 coins (x,y,z) du cube en cours d'émission
     private val corners = FloatArray(8 * 3)
@@ -151,20 +160,25 @@ internal class EnemyRenderer {
         val rightX = (-cos(yawRad)).toFloat()
         val rightZ = sin(yawRad).toFloat()
 
-        // ── 1. Corps voxel : un draw par mob (couleur déjà ombrée/teintée) ──────
+        // ── 1. Corps voxel : tous les mobs dans un seul draw call ───────────────
+        // Même shader, aucun uniforme par mob (couleur déjà ombrée/teintée dans les
+        // sommets) — rien n'empêchait de les regrouper. Jusqu'à 32 draw calls/frame
+        // rien que pour les corps, juste pour l'exploration ambiante sans combat.
         bodyShader?.use()
         GLES30.glUniformMatrix4fv(bodyUMvp, 1, false, vpMatrix, 0)
 
         var drawn = 0
+        var bodyOffset = 0
         for (e in enemies) {
             if (e.hp <= 0) continue
             if (drawn >= MAX_VISIBLE) break
             drawn++
-            val floats = buildBody(e, camX, camY, camZ)
-            if (floats == 0) continue
-            uploadAndBind(bodyVbo, boV, 0, floats)
+            bodyOffset = buildBody(e, camX, camY, camZ, bodyOffset)
+        }
+        if (bodyOffset > 0) {
+            uploadAndBind(bodyVbo, boV, 0, bodyOffset)
             bindBodyAttribs()
-            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, floats / 6)
+            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, bodyOffset / 6)
             disableBodyAttribs()
         }
 
@@ -260,8 +274,8 @@ internal class EnemyRenderer {
 
     // ── Construction de la géométrie voxel d'un mob ─────────────────────────────
 
-    /** Remplit [boV] avec le modèle de [e]. Retourne le nombre de floats écrits. */
-    private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double): Int {
+    /** Ajoute le modèle de [e] dans [boV] à partir de [offset]. Retourne le nouvel offset. */
+    private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double, offset: Int): Int {
         val model = MobModels.get(e.def.model)
         val h = e.baseScale * 2f
         val s = h / MobModels.REF_VOX             // unités monde par voxel
@@ -287,8 +301,9 @@ internal class EnemyRenderer {
         val tint = levelTint(e.level, e.isBoss)
         val flash = e.hitFlash.coerceIn(0f, 1f) * 0.7f
 
-        var n = 0
+        var n = offset
         for (part in model.parts) {
+            if (n + 216 > boV.size) break   // 6 faces × 6 sommets × 6 floats ; boV partagé entre mobs
             // Angle de balancement / pose
             val baseRad = Math.toRadians(part.baseTiltDeg.toDouble()).toFloat()
             val ang = when (part.limb) {
@@ -393,10 +408,9 @@ internal class EnemyRenderer {
     // ── Helpers GL ──────────────────────────────────────────────────────────────
 
     private fun uploadAndBind(vbo: Int, data: FloatArray, offset: Int, floatCount: Int) {
-        val buf = ByteBuffer.allocateDirect(floatCount * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(data, offset, floatCount); buf.position(0)
+        nativeBuf.clear(); nativeBuf.put(data, offset, floatCount); nativeBuf.position(0)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, floatCount * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, floatCount * 4, nativeBuf, GLES30.GL_DYNAMIC_DRAW)
     }
 
     private fun bindBodyAttribs() {

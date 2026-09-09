@@ -53,7 +53,8 @@ internal class CaveRenderer(
     private val touch: TouchController,
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
-    private val savedState: SavedState? = null
+    private val savedState: SavedState? = null,
+    private val terrainVersion: Int = 2
 ) : GLSurfaceView.Renderer {
 
     data class SavedState(
@@ -83,7 +84,7 @@ internal class CaveRenderer(
     private val storage = worldId?.let {
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
-    internal val world = World(seed = worldSeed, storage = storage)
+    internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
@@ -91,7 +92,7 @@ internal class CaveRenderer(
     private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
     private val lodUploadQueueSize = java.util.concurrent.atomic.AtomicInteger(0)
-    private val LOD_RADIUS   = 90
+    private val LOD_RADIUS   = 32
     private val INITIAL_LOD_BUILD_LIMIT = 512
     private val MAX_LOD_TILES = 8000
     private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
@@ -167,12 +168,24 @@ internal class CaveRenderer(
     private var cleanupCounter = 0
     private val CLEANUP_INTERVAL = 60   // nettoyage plus fréquent (~2s)
     private val MAX_MESHES = 1200       // cap mémoire : éviction au-delà
+    // Budget de temps (pas de compte fixe) pour l'upload GPU des meshes de chunk par image —
+    // voir le commentaire au point d'appel : évite qu'une rafale de chunks prêts en même
+    // temps (typiquement au premier chargement) ne fige une seule image pendant ~1s.
+    private val UPLOAD_BUDGET_NS = 6_000_000L   // 6 ms
     private val MAX_LIGHTS = 32
     // Pénombre : luminosité minimale partout (jamais 100 % noir). Une grotte sans torche reste
     // juste assez visible pour s'orienter ; une torche fait une vraie différence par-dessus.
     private val CAVE_FLOOR = 0.07f
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
     private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
+    // Sélection des MAX_LIGHTS sources les plus proches sans allouer de liste : un
+    // filter{}.sortedBy{}.take{} sur TOUTES les sources du monde chargé (potentiellement
+    // des centaines de torches) tournait 20x/s, indépendamment du combat — un vrai foyer
+    // de GC qui empirait avec l'exploration. Ces tableaux réutilisables font le même tri
+    // top-K par insertion bornée, sans jamais allouer.
+    private val lightSelectKey   = arrayOfNulls<Triple<Int,Int,Int>>(MAX_LIGHTS)
+    private val lightSelectScore = DoubleArray(MAX_LIGHTS)
+    private val lightSelectValue = FloatArray(MAX_LIGHTS)
     private var cachedLightCount = 0
     private var lightRefreshCounter = 0
     private var lightsDirty = true
@@ -193,6 +206,11 @@ internal class CaveRenderer(
     private var mineDamage = 0f
 
     val inventory = mutableMapOf<Short, Int>()
+
+    // WeaponDef n'a aucun état mutable (couleur/variante fixes) : partagés plutôt que
+    // réalloués à chaque tir/jet, qui pouvait dépasser 10 fois/s en tir automatique.
+    private val ammoWeaponDef = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+    private val rockWeaponDef = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
 
     // Deux barres de raccourcis séparées (combat : armes/munitions/bonus ; construction :
     // blocs), la bascule entre les deux est instantanée et gratuite — voir [toggleHotbarMode].
@@ -798,7 +816,7 @@ internal class CaveRenderer(
         BlockRegistry.registerGeneratedTexture("Items/torch.png") { size -> createTorchBitmap(size) }
         BlockRegistry.registerGeneratedTexture("ward_stone.png") { size -> createWardStoneBitmap(size) }
 
-        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32)
+        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 64)
         if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
 
@@ -998,41 +1016,47 @@ internal class CaveRenderer(
             waterRebuilt++
         }
 
-        repeat(16) {
-            val (key, ver, verts) = uploadQueue.poll() ?: return@repeat
-            val chunk = world.getChunkByKey(key) ?: return@repeat
+        // Budget de temps partagé plutôt qu'un compte fixe par catégorie (16/16/16/8) :
+        // au premier chargement, des dizaines de chunks finissent leur maillage en même
+        // temps et un compte fixe pouvait forcer 56 glBufferData() dans une seule image
+        // (jusqu'à ~1s de gel mesuré). Le flush GPU se fait ici, item par item, pour que
+        // le temps écoulé reflète le vrai coût — le surplus attend simplement l'image
+        // suivante, rien n'est perdu, juste étalé.
+        val uploadDeadline = System.nanoTime() + UPLOAD_BUDGET_NS
+        while (System.nanoTime() < uploadDeadline) {
+            val (key, ver, verts) = uploadQueue.poll() ?: break
+            val chunk = world.getChunkByKey(key) ?: continue
             if (chunk.version == ver) {
-                meshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
+                val mesh = meshes.getOrPut(key) { ChunkMesh(7) }
+                mesh.upload(verts); mesh.flushPending()
                 refreshChunkLightSources(chunk)
                 if (chunk.cy in 0..SURFACE_CY_MAX) scheduleLodBuild(chunk.cx, chunk.cz)
             }
         }
-        repeat(16) {
-            val (key, verts) = lodUploadQueue.poll() ?: return@repeat
+        while (System.nanoTime() < uploadDeadline) {
+            val (key, verts) = lodUploadQueue.poll() ?: break
             lodUploadQueueSize.decrementAndGet()
             var isNew = false
-            lodMeshes.getOrPut(key) { isNew = true; ChunkMesh(6) }.upload(verts)
+            val mesh = lodMeshes.getOrPut(key) { isNew = true; ChunkMesh(6) }
+            mesh.upload(verts); mesh.flushPending()
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
-        repeat(16) {
-            val (key, ver, verts) = waterUploadQueue.poll() ?: return@repeat
-            val chunk = world.getChunkByKey(key) ?: return@repeat
+        while (System.nanoTime() < uploadDeadline) {
+            val (key, ver, verts) = waterUploadQueue.poll() ?: break
+            val chunk = world.getChunkByKey(key) ?: continue
             if (chunk.version == ver) {
-                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
+                if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
             }
         }
-        repeat(8) {
-            val (key, ver, verts) = waterOnlyUploadQueue.poll() ?: return@repeat
-            val chunk = world.getChunkByKey(key) ?: return@repeat
+        while (System.nanoTime() < uploadDeadline) {
+            val (key, ver, verts) = waterOnlyUploadQueue.poll() ?: break
+            val chunk = world.getChunkByKey(key) ?: continue
             if (chunk.waterVersion == ver) {
-                if (verts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
+                if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
             }
         }
-        meshes.values.forEach { it.flushPending() }
-        lodMeshes.values.forEach { it.flushPending() }
-        waterMeshes.values.forEach { it.flushPending() }
 
         if (++cleanupCounter >= CLEANUP_INTERVAL) {
             cleanupCounter = 0
@@ -1134,23 +1158,44 @@ internal class CaveRenderer(
             lightsDirty = false
             cachedLightCount = 0
             lightData.fill(0f)
-            lightSources.entries
-                .filter { (pos, _) ->
-                    val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                    dx*dx + dy*dy + dz*dz < 160.0 * 160.0
+            // Top-MAX_LIGHTS par score (le plus petit = le plus prioritaire) par insertion
+            // bornée : O(sources × MAX_LIGHTS) au pire, mais zéro allocation, contre trois
+            // listes intermédiaires par cycle avec filter{}.sortedBy{}.take{}.
+            var filled = 0
+            for ((pos, intensity) in lightSources) {
+                val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
+                val distSq = dx*dx + dy*dy + dz*dz
+                if (distSq >= 160.0 * 160.0) continue
+                val score = distSq - (dx * camera.fwdX + dz * camera.fwdZ) * 80.0
+                if (filled < MAX_LIGHTS) {
+                    var i = filled
+                    while (i > 0 && lightSelectScore[i - 1] > score) {
+                        lightSelectScore[i] = lightSelectScore[i - 1]
+                        lightSelectKey[i]   = lightSelectKey[i - 1]
+                        lightSelectValue[i] = lightSelectValue[i - 1]
+                        i--
+                    }
+                    lightSelectScore[i] = score; lightSelectKey[i] = pos; lightSelectValue[i] = intensity
+                    filled++
+                } else if (score < lightSelectScore[filled - 1]) {
+                    var i = filled - 1
+                    while (i > 0 && lightSelectScore[i - 1] > score) {
+                        lightSelectScore[i] = lightSelectScore[i - 1]
+                        lightSelectKey[i]   = lightSelectKey[i - 1]
+                        lightSelectValue[i] = lightSelectValue[i - 1]
+                        i--
+                    }
+                    lightSelectScore[i] = score; lightSelectKey[i] = pos; lightSelectValue[i] = intensity
                 }
-                .sortedBy { (pos, _) ->
-                    val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
-                    dx*dx + dy*dy + dz*dz - (dx * camera.fwdX + dz * camera.fwdZ) * 80.0
-                }
-                .take(MAX_LIGHTS)
-                .forEachIndexed { i, (pos, intensity) ->
-                    lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
-                    lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
-                    lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
-                    lightData[i*4+3] = intensity
-                    cachedLightCount = i + 1
-                }
+            }
+            for (i in 0 until filled) {
+                val pos = lightSelectKey[i]!!
+                lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
+                lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
+                lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
+                lightData[i*4+3] = lightSelectValue[i]
+                cachedLightCount = i + 1
+            }
         } else {
             // Recaler les offsets caméra sans recalculer le tri
             for (i in 0 until cachedLightCount) {
@@ -1298,13 +1343,11 @@ internal class CaveRenderer(
                 continue
             }
             // Sous-pas de 15 cm : même une balle rapide ne saute pas une paroi voxel.
-            val steps=ceil(maxOf(p.speed.toDouble(),abs(p.velY))*dt/.15).toInt().coerceIn(1,256)
+            val steps=p.substeps(dt)
             val step=dt/steps
                 for(i in 0 until steps) {
                 val ox=p.x; val oy=p.y; val oz=p.z
-                p.velY-=p.kind.gravity*step
-                p.x+=p.dirX*p.speed*step; p.y+=p.velY*step; p.z+=p.dirZ*p.speed*step
-                p.travelDist+=sqrt((p.x-ox).pow(2)+(p.y-oy).pow(2)+(p.z-oz).pow(2))
+                p.advance(step)
                 if(p.kind != ProjectileKind.LEGACY && projectileSolid(p.x,p.y,p.z)) {
                     spawnImpact(p.x,p.y,p.z)
                     if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
@@ -1409,14 +1452,14 @@ internal class CaveRenderer(
         val stats = weapon.rolledStats
         val baseDamage = weapon.rolledDamage ?: 1
         val yawRad = Math.toRadians(camera.yaw.toDouble())
-        val rightX = cos(yawRad); val rightZ = -sin(yawRad)
+        val rightX = -cos(yawRad); val rightZ = sin(yawRad)
         val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
         // Départ quasi depuis la tête (précision) avec un léger décalage droite/avant
         // pour l'impression que c'est le bras qui tire — voir le même choix sur le jet à main nue.
         val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
         val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
         val spawnY = camera.playerY - 0.05
-        val ammoWeapon = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+        val ammoWeapon = ammoWeaponDef
         val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
             val spread=profile.spread*heat
@@ -1500,12 +1543,12 @@ internal class CaveRenderer(
             // la droite/l'avant pour donner l'impression que c'est le bras qui lance —
             // un décalage trop grand (ancien 0.45/0.35) désalignait le tir du réticule.
             val yawRad = Math.toRadians(camera.yaw.toDouble())
-            val rightX = cos(yawRad); val rightZ = -sin(yawRad)
+            val rightX = -cos(yawRad); val rightZ = sin(yawRad)
             val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
             val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
             val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
             val spawnY = camera.playerY - 0.05
-            val rockWeapon = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
+            val rockWeapon = rockWeaponDef
             projectiles.add(Projectile(
                 spawnX, spawnY, spawnZ,
                 camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
@@ -1802,8 +1845,8 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
-            meshes.getOrPut(key) { ChunkMesh(7) }.upload(verts)
-            if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.upload(waterVerts)
+            meshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(verts); it.flushPending() }
+            if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(waterVerts); it.flushPending() }
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
             if (ncy in 0..SURFACE_CY_MAX) {
@@ -2250,7 +2293,7 @@ internal class CaveRenderer(
         if (active) {
             android.opengl.Matrix.translateM(equipmentModel,0,0f,-.38f,0f)
             android.opengl.Matrix.rotateM(equipmentModel,0,-camera.pitch,1f,0f,0f)
-            android.opengl.Matrix.translateM(equipmentModel,0,.27f,.03f,-.43f)
+            android.opengl.Matrix.translateM(equipmentModel,0,if(type == "dual_pistols") 0f else .27f,.03f,-.43f)
             drawEquipment(type,throwing || type == null,false)
         }
     }
@@ -2288,8 +2331,19 @@ internal class CaveRenderer(
             android.opengl.Matrix.setIdentityM(equipmentModel,0)
             val charge = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f,1f)
             val recoil = if (equipmentRelease >= 0f) exp(-equipmentRelease*15f)*.065f else 0f
-            android.opengl.Matrix.translateM(equipmentModel,0,.34f-charge*.015f,
-                if(type == "bow") -.16f else -.28f, (if(type == "bow") -.85f else -.72f)+recoil)
+            val offsetX = when(type) {
+                "dual_pistols" -> 0f // Repère central pour une arme de chaque côté.
+                "crossbow" -> .24f
+                else -> .34f
+            }
+            val offsetY = when(type) {
+                "bow" -> -.16f
+                "sling" -> -.38f
+                "crossbow" -> -.34f
+                else -> -.28f
+            }
+            android.opengl.Matrix.translateM(equipmentModel,0,offsetX-charge*.015f,
+                offsetY,(if(type == "bow") -.85f else -.72f)+recoil)
             android.opengl.Matrix.rotateM(equipmentModel,0,recoil*95f,1f,0f,0f)
             drawEquipment(type,throwing || type == null,true)
             return

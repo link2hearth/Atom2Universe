@@ -14,7 +14,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // File de propagation de la skylight (drainée sur le thread GL, séparée du meshing).
     val lightQueue = ConcurrentLinkedQueue<Long>()
     private val lightQueued = ConcurrentHashMap.newKeySet<Long>()
-    val renderRadiusXZ     = 12  // rayon XZ commun aux deux modes
+    val renderRadiusXZ     = 8   // rayon XZ commun aux deux modes
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
     val renderRadiusCave   = 7   // rayon de la sphère souterrain
 

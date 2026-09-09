@@ -300,9 +300,16 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             val tx = Math.floor(e.x + dx + if (dx > 0) r else -r).toInt()
             val zMin = Math.floor(e.z - r + 0.05).toInt()
             val zMax = Math.floor(e.z + r - 0.05).toInt()
-            val freeX = (zMin..zMax).all { bz -> isFreeForMob(tx, footY, bz) && isFreeForMob(tx, headY, bz) }
-            val stepX = !freeX && e.onGround &&
-                (zMin..zMax).all { bz -> isFreeForMob(tx, footY + 1, bz) && isFreeForMob(tx, headY + 1, bz) }
+            // Boucle manuelle plutôt que (zMin..zMax).all{} : appelé plusieurs fois par mob
+            // par frame (déplacement, recul, séparation), un IntRange.all{} alloue son
+            // récepteur à chaque appel — du bruit de fond GC inutile à cette fréquence.
+            var freeX = true
+            for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY, bz) || !isFreeForMob(tx, headY, bz)) { freeX = false; break } }
+            var stepX = false
+            if (!freeX && e.onGround) {
+                stepX = true
+                for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY + 1, bz) || !isFreeForMob(tx, headY + 1, bz)) { stepX = false; break } }
+            }
             when {
                 freeX -> e.x += dx
                 stepX -> { e.velY = STEP_UP_VEL; e.x += dx }
@@ -314,9 +321,13 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             val xMin = Math.floor(e.x - r + 0.05).toInt()
             val xMax = Math.floor(e.x + r - 0.05).toInt()
             val fy2 = Math.floor(e.y + 0.002).toInt(); val hy2 = fy2 + 1
-            val freeZ = (xMin..xMax).all { bx -> isFreeForMob(bx, fy2, tz) && isFreeForMob(bx, hy2, tz) }
-            val stepZ = !freeZ && e.onGround &&
-                (xMin..xMax).all { bx -> isFreeForMob(bx, fy2 + 1, tz) && isFreeForMob(bx, hy2 + 1, tz) }
+            var freeZ = true
+            for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2, tz) || !isFreeForMob(bx, hy2, tz)) { freeZ = false; break } }
+            var stepZ = false
+            if (!freeZ && e.onGround) {
+                stepZ = true
+                for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2 + 1, tz) || !isFreeForMob(bx, hy2 + 1, tz)) { stepZ = false; break } }
+            }
             when {
                 freeZ -> e.z += dz
                 stepZ -> { e.velY = STEP_UP_VEL; e.z += dz }
