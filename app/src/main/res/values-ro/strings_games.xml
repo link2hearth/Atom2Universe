@@ -258,7 +258,8 @@
     <string name="cave_affix_attack_speed">Viteză de atac</string>
     <string name="cave_affix_life_steal">Furt de viață</string>
     <string name="cave_affix_bleed_chance">Șansă de sângerare</string>
-    <string name="cave_affix_shock_chance">Șansă de electrocutare</string>
+    <string name="cave_affix_electric_chance">Șansă electrică</string>
+    <string name="cave_affix_freeze_chance">Șansă de îngheț</string>
     <string name="cave_affix_execute">Execuție</string>
     <string name="cave_affix_aoe_splash">Stropire AoE</string>
     <string name="cave_affix_thorns">Spini</string>

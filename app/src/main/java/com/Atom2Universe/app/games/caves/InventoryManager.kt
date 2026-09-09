@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private val hud      get() = activity.hud
 
     // ── Slots ─────────────────────────────────────────────────────────────────
-    val invSlots = ArrayList<Short?>()
+    // Grille + barre pour chaque mode, séparées comme les deux hotbars du renderer
+    // (voir [CaveRenderer.hotbar]) — sinon une synchro (craft, drag&drop…) faite
+    // pendant que l'autre mode est actif écraserait la mauvaise barre.
+    private val combatInvSlots = ArrayList<Short?>()
+    private val buildInvSlots  = ArrayList<Short?>()
+    val invSlots: ArrayList<Short?> get() =
+        if (renderer.hotbarMode == HotbarMode.COMBAT) combatInvSlots else buildInvSlots
     var invSlotsReady = false
     var selectedSlotIdx = -1
     var dragSourceIdx = -1
@@ -132,21 +139,37 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // ── Gestion slots ─────────────────────────────────────────────────────────
 
     fun initInvSlots() {
-        invSlots.clear()
-        val hotbarTypes = (0 until CaveActivity.ACTIVE_SIZE).mapNotNull { i ->
-            renderer.hotbar[i]?.takeIf { (renderer.inventory[it] ?: 0) > 0 }
-        }.toSet()
-        val gridTypes = renderer.inventory
-            .filter { (t, c) -> c > 0 && t !in hotbarTypes }
-            .keys.sortedBy { it }
-        for (t in gridTypes) invSlots.add(t)
-        repeat(CaveActivity.EMPTY_BUFFER) { invSlots.add(null) }
-        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
-            val t = renderer.hotbar[i]
-            invSlots.add(if (t != null && (renderer.inventory[t] ?: 0) > 0) t else null)
+        fun fill(slots: ArrayList<Short?>, hotbar: Array<Short?>, wantCombat: Boolean) {
+            slots.clear()
+            val hotbarTypes = (0 until CaveActivity.ACTIVE_SIZE).mapNotNull { i ->
+                hotbar[i]?.takeIf { (renderer.inventory[it] ?: 0) > 0 }
+            }.toSet()
+            val gridTypes = renderer.inventory
+                .filter { (t, c) -> c > 0 && t !in hotbarTypes && renderer.isCombatItem(t) == wantCombat }
+                .keys.sortedBy { it }
+            for (t in gridTypes) slots.add(t)
+            repeat(CaveActivity.EMPTY_BUFFER) { slots.add(null) }
+            for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+                val t = hotbar[i]
+                slots.add(if (t != null && (renderer.inventory[t] ?: 0) > 0) t else null)
+            }
         }
+        fill(combatInvSlots, renderer.combatHotbar, wantCombat = true)
+        fill(buildInvSlots,  renderer.buildHotbar,  wantCombat = false)
         invSlotsReady = true
         syncHotbar()
+    }
+
+    /** Appelé quand le bouton combat/construction bascule : la grille et le panneau
+     *  craft/vente doivent refléter la barre désormais active. */
+    fun onHotbarModeChanged() {
+        selectedSlotIdx = -1
+        selectedRecipe = null
+        syncHotbar()
+        refreshPagedAdapter()
+        hud.updateHotbarForInventory()
+        updateInfoPanel()
+        updateCraftingList()
     }
 
     fun addNewType(type: Short) {
@@ -156,6 +179,19 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val gridSlot = (0 until base).firstOrNull { invSlots[it] == null }
         if (gridSlot != null) { invSlots[gridSlot] = type; return }
         invSlots.add(base, type)
+    }
+
+    /** Comme [addNewType], mais range dans la banque correspondant à la catégorie de
+     *  l'objet plutôt que dans celle actuellement affichée (utile pour un résultat de
+     *  craft, obtenu depuis n'importe quelle banque). */
+    private fun addNewTypeByCategory(type: Short) {
+        val slots = if (renderer.isCombatItem(type)) combatInvSlots else buildInvSlots
+        val base = (slots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
+        val hotbarSlot = (base until base + CaveActivity.ACTIVE_SIZE).firstOrNull { slots.getOrNull(it) == null }
+        if (hotbarSlot != null) { slots[hotbarSlot] = type; return }
+        val gridSlot = (0 until base).firstOrNull { slots[it] == null }
+        if (gridSlot != null) { slots[gridSlot] = type; return }
+        slots.add(base, type)
     }
 
     fun syncHotbar() {
@@ -202,31 +238,56 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     // ── Inventaire changed ────────────────────────────────────────────────────
 
-    fun onInventoryChanged(inv: Map<Short, Int>) {
+    /** Réconcilie une banque (grille+barre) précise avec l'inventaire global, en ne lui
+     *  affectant que les objets de sa catégorie — sinon un objet combat pourrait finir
+     *  dans la grille construction juste parce qu'elle était affichée au moment du pickup. */
+    private fun reconcileBank(slots: ArrayList<Short?>, hotbar: Array<Short?>, wantCombat: Boolean, inv: Map<Short, Int>) {
         for (i in 0 until CaveActivity.ACTIVE_SIZE) {
-            val t = renderer.hotbar[i] ?: continue
-            if ((inv[t] ?: 0) <= 0) renderer.hotbar[i] = null
+            val t = hotbar[i] ?: continue
+            if ((inv[t] ?: 0) <= 0) hotbar[i] = null
         }
-        if (invSlotsReady) {
-            for (i in invSlots.indices) {
-                val t = invSlots[i] ?: continue
-                if ((inv[t] ?: 0) <= 0) invSlots[i] = null
-            }
-            val existing = invSlots.filterNotNull().toSet()
-            val base = hotbarBase()
-            for ((type, count) in inv) {
-                if (count > 0 && type !in existing) {
-                    val hotbarIdx = renderer.hotbar.indexOfFirst { it == type }
-                    val directSlot = if (hotbarIdx >= 0) base + hotbarIdx else -1
-                    if (directSlot in invSlots.indices) invSlots[directSlot] = type else addNewType(type)
+        if (slots.isEmpty()) return
+        for (i in slots.indices) {
+            val t = slots[i] ?: continue
+            if ((inv[t] ?: 0) <= 0) slots[i] = null
+        }
+        val existing = slots.filterNotNull().toSet()
+        val base = (slots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
+        for ((type, count) in inv) {
+            if (count <= 0 || type in existing || renderer.isCombatItem(type) != wantCombat) continue
+            val hotbarIdx = hotbar.indexOfFirst { it == type }
+            val directSlot = if (hotbarIdx >= 0) base + hotbarIdx else -1
+            when {
+                directSlot in slots.indices -> slots[directSlot] = type
+                else -> {
+                    val hotbarSlot = (base until base + CaveActivity.ACTIVE_SIZE).firstOrNull { slots.getOrNull(it) == null }
+                    val gridSlot   = if (hotbarSlot == null) (0 until base).firstOrNull { slots[it] == null } else null
+                    when {
+                        hotbarSlot != null -> slots[hotbarSlot] = type
+                        gridSlot   != null -> slots[gridSlot] = type
+                        else               -> slots.add(base, type)
+                    }
                 }
             }
+        }
+    }
+
+    fun onInventoryChanged(inv: Map<Short, Int>) {
+        if (invSlotsReady) {
+            reconcileBank(combatInvSlots, renderer.combatHotbar, wantCombat = true,  inv = inv)
+            reconcileBank(buildInvSlots,  renderer.buildHotbar,  wantCombat = false, inv = inv)
             if (selectedSlotIdx >= invSlots.size) selectedSlotIdx = -1
             syncHotbar()
             if (activity.invOverlay.visibility == View.VISIBLE) {
                 refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
         } else {
+            for (hb in arrayOf(renderer.combatHotbar, renderer.buildHotbar)) {
+                for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+                    val t = hb[i] ?: continue
+                    if ((inv[t] ?: 0) <= 0) hb[i] = null
+                }
+            }
             renderer.hotbarCallback?.invoke(renderer.hotbar.copyOf(), renderer.selectedSlot)
         }
     }
@@ -294,10 +355,18 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val recipe = selectedRecipe
         val dp = activity.resources.displayMetrics.density
         if (recipe != null) {
-            infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
-            infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-            infoNameTv?.text  = activity.blockName(recipe.result)
-            infoCountTv?.text = "×${recipe.resultCount}"
+            val weaponDefId = recipe.resultItemId
+            if (weaponDefId != null) {
+                infoSpriteView?.background = weaponSpriteDrawable(weaponDefId, 6f)
+                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                infoNameTv?.text  = weaponDefId.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                infoCountTv?.text = "×1"
+            } else {
+                infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
+                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                infoNameTv?.text  = activity.blockName(recipe.result)
+                infoCountTv?.text = "×${recipe.resultCount}"
+            }
             infoIngredientsTv?.text = recipe.ingredients.joinToString("\n") { (t, n) -> "${activity.blockName(t)} ×$n" }
             infoDivider?.visibility       = View.VISIBLE
             infoIngredientsTv?.visibility = View.VISIBLE
@@ -349,13 +418,31 @@ internal class InventoryManager(private val activity: CaveActivity) {
         }
     }
 
+    /** Icône d'un résultat de recette d'arme (pas encore d'instance rollée, juste l'aperçu). */
+    private fun weaponSpriteDrawable(defId: String, cornerDp: Float): android.graphics.drawable.Drawable {
+        val dp = activity.resources.displayMetrics.density
+        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(defId)
+        val sprite = def?.sprite ?: defId
+        val bmp = runCatching {
+            android.graphics.BitmapFactory.decodeStream(activity.assets.open("Cave World/Items/$sprite.png"))
+        }.getOrNull()
+        return if (bmp != null) {
+            RoundedBitmapDrawableFactory.create(activity.resources, bmp).apply {
+                cornerRadius = cornerDp * dp; isFilterBitmap = false
+            }
+        } else {
+            GradientDrawable().apply { setColor(0xFF886600.toInt()); cornerRadius = cornerDp * dp }
+        }
+    }
+
     private fun affixLabel(key: String): String = when (key) {
         "crit_chance"   -> activity.getString(R.string.cave_affix_crit_chance)
         "crit_dmg"      -> activity.getString(R.string.cave_affix_crit_dmg)
         "attack_speed"  -> activity.getString(R.string.cave_affix_attack_speed)
         "life_steal"    -> activity.getString(R.string.cave_affix_life_steal)
-        "bleed_chance"  -> activity.getString(R.string.cave_affix_bleed_chance)
-        "shock_chance"  -> activity.getString(R.string.cave_affix_shock_chance)
+        "bleed_chance"    -> activity.getString(R.string.cave_affix_bleed_chance)
+        "electric_chance" -> activity.getString(R.string.cave_affix_electric_chance)
+        "freeze_chance"   -> activity.getString(R.string.cave_affix_freeze_chance)
         "execute"       -> activity.getString(R.string.cave_affix_execute)
         "aoe_splash"    -> activity.getString(R.string.cave_affix_aoe_splash)
         "thorns"        -> activity.getString(R.string.cave_affix_thorns)
@@ -453,10 +540,23 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 for (i in invSlots.indices) { if (invSlots[i] == type) { invSlots[i] = null; break } }
             } else renderer.inventory[type] = after
         }
-        val outType    = recipe.result
-        val outCurrent = renderer.inventory[outType] ?: 0
-        renderer.inventory[outType] = outCurrent + recipe.resultCount
-        if (outCurrent == 0 && outType !in invSlots.filterNotNull()) addNewType(outType)
+        val weaponDefId = recipe.resultItemId
+        if (weaponDefId != null) {
+            val instance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(weaponDefId, kotlin.random.Random.Default)
+            if (instance != null) {
+                val id = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(instance)
+                renderer.inventory[id] = 1
+                addNewTypeByCategory(id)
+            }
+        } else {
+            val outType    = recipe.result
+            val outCurrent = renderer.inventory[outType] ?: 0
+            renderer.inventory[outType] = outCurrent + recipe.resultCount
+            // Le résultat n'est pas forcément dans la banque affichée (ex : flèches
+            // craftées en mode construction, mais rangées côté combat) — on cherche
+            // dans les deux grilles, pas seulement celle actuellement visible.
+            if (outCurrent == 0 && outType !in combatInvSlots && outType !in buildInvSlots) addNewTypeByCategory(outType)
+        }
         if (selectedSlotIdx in invSlots.indices && invSlots[selectedSlotIdx] == null) selectedSlotIdx = -1
         syncHotbar()
         refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
@@ -798,7 +898,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 text = "→"; textSize = 14f; setTextColor(0xAAFFFFFF.toInt())
                 setPadding((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
             })
-            row.addView(blockLabel(holder.root.context, recipe.result, recipe.resultCount, dp))
+            row.addView(
+                if (recipe.resultItemId != null) weaponResultLabel(holder.root.context, recipe.resultItemId, dp)
+                else blockLabel(holder.root.context, recipe.result, recipe.resultCount, dp)
+            )
             holder.root.addView(row)
             val canCraft = recipe.canCraft(renderer.inventory)
             holder.root.addView(Button(holder.root.context).apply {
@@ -828,6 +931,22 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 })
                 addView(TextView(ctx).apply {
                     text = "×$count"; textSize = 12f; setTextColor(0xCCFFFFFF.toInt())
+                    gravity = Gravity.CENTER
+                    layoutParams = LinearLayout.LayoutParams(sq, LinearLayout.LayoutParams.WRAP_CONTENT)
+                })
+            }
+
+        private fun weaponResultLabel(ctx: Context, defId: String, dp: Float): LinearLayout =
+            LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                val sq = (44 * dp).toInt()
+                addView(View(ctx).apply {
+                    layoutParams = LinearLayout.LayoutParams(sq, sq)
+                    background = weaponSpriteDrawable(defId, 4f)
+                })
+                addView(TextView(ctx).apply {
+                    text = "×1"; textSize = 12f; setTextColor(0xCCFFFFFF.toInt())
                     gravity = Gravity.CENTER
                     layoutParams = LinearLayout.LayoutParams(sq, LinearLayout.LayoutParams.WRAP_CONTENT)
                 })

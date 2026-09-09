@@ -264,7 +264,8 @@
     <string name="cave_affix_attack_speed">Vitesse d\'attaque</string>
     <string name="cave_affix_life_steal">Vol de vie</string>
     <string name="cave_affix_bleed_chance">Chance de saignement</string>
-    <string name="cave_affix_shock_chance">Chance d\'étourdissement</string>
+    <string name="cave_affix_electric_chance">Chance électrique</string>
+    <string name="cave_affix_freeze_chance">Chance de gel</string>
     <string name="cave_affix_execute">Exécution</string>
     <string name="cave_affix_aoe_splash">Éclaboussure</string>
     <string name="cave_affix_thorns">Épines</string>

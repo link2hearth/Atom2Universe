@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Velocidad de ataque</string>
     <string name="cave_affix_life_steal">Robo de vida</string>
     <string name="cave_affix_bleed_chance">Prob. de sangrado</string>
-    <string name="cave_affix_shock_chance">Prob. de aturdimiento</string>
+    <string name="cave_affix_electric_chance">Prob. eléctrica</string>
+    <string name="cave_affix_freeze_chance">Prob. de congelación</string>
     <string name="cave_affix_execute">Ejecución</string>
     <string name="cave_affix_aoe_splash">Salpicadura de área</string>
     <string name="cave_affix_thorns">Espinas</string>

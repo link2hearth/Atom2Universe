@@ -1,0 +1,12 @@
+{
+  "id": "gun",
+  "type": "weapon",
+  "weapon_type": "gun",
+  "tier": 4,
+  "attack_speed_ms": 450,
+  "rarity_weights": { "common": 5, "magic": 15, "rare": 30, "epic": 30, "legendary": 20 },
+  "damage_base": [20, 32],
+  "stats": {},
+  "flags": [],
+  "sprite": "gun"
+}

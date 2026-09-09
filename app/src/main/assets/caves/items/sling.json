@@ -1,0 +1,12 @@
+{
+  "id": "sling",
+  "type": "weapon",
+  "weapon_type": "sling",
+  "tier": 1,
+  "attack_speed_ms": 500,
+  "rarity_weights": { "common": 35, "magic": 30, "rare": 20, "epic": 11, "legendary": 4 },
+  "damage_base": [3, 6],
+  "stats": {},
+  "flags": [],
+  "sprite": "sling"
+}

@@ -1,0 +1,12 @@
+{
+  "id": 8011,
+  "name": "bolt",
+  "texture_top": "Items/arrow.png",
+  "texture_side": "Items/arrow.png",
+  "texture_bottom": "Items/arrow.png",
+  "color": "#807060",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "bolt",
+  "creative_tab": "functional"
+}

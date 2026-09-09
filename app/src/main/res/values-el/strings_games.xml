@@ -257,7 +257,8 @@
     <string name="cave_affix_attack_speed">Ταχύτητα επίθεσης</string>
     <string name="cave_affix_life_steal">Κλοπή ζωής</string>
     <string name="cave_affix_bleed_chance">Πιθανότητα αιμορραγίας</string>
-    <string name="cave_affix_shock_chance">Πιθανότητα σοκ</string>
+    <string name="cave_affix_electric_chance">Πιθανότητα ηλεκτρισμού</string>
+    <string name="cave_affix_freeze_chance">Πιθανότητα πάγου</string>
     <string name="cave_affix_execute">Εκτέλεση</string>
     <string name="cave_affix_aoe_splash">Έκρηξη περιοχής</string>
     <string name="cave_affix_thorns">Αγκάθια</string>

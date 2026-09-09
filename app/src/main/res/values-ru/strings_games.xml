@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Скорость атаки</string>
     <string name="cave_affix_life_steal">Кража жизни</string>
     <string name="cave_affix_bleed_chance">Шанс кровотечения</string>
-    <string name="cave_affix_shock_chance">Шанс оглушения</string>
+    <string name="cave_affix_electric_chance">Шанс электрошока</string>
+    <string name="cave_affix_freeze_chance">Шанс заморозки</string>
     <string name="cave_affix_execute">Добивание</string>
     <string name="cave_affix_aoe_splash">Урон по области</string>
     <string name="cave_affix_thorns">Шипы</string>

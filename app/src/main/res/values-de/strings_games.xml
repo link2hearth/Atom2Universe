@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Angriffstempo</string>
     <string name="cave_affix_life_steal">Lebensraub</string>
     <string name="cave_affix_bleed_chance">Blutungschance</string>
-    <string name="cave_affix_shock_chance">Schockchance</string>
+    <string name="cave_affix_electric_chance">Elektrochance</string>
+    <string name="cave_affix_freeze_chance">Einfrierchance</string>
     <string name="cave_affix_execute">Hinrichtung</string>
     <string name="cave_affix_aoe_splash">AoE-Spritzer</string>
     <string name="cave_affix_thorns">Dornen</string>

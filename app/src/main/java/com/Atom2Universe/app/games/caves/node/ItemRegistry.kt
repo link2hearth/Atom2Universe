@@ -24,16 +24,13 @@ internal object ItemRegistry {
         val def = defs[defId] ?: return null
         val rarity = rollRarity(def.rarityWeights, rng)
         val rarityMult = rarityMultiplier(rarity)
+        // Dégâts basés sur la plage propre à l'arme (damage_base du JSON), pas sur les PV
+        // du mob qui l'a droppée : avec une seule def par famille d'arme (plus de paliers
+        // fer/bronze/argent/or/diamant), indexer sur les PV d'un mob de zone 1 (quelques
+        // PV) écrasait le dégât bien en dessous du jet de caillou à main nue.
         val damage = if (def.type == "weapon" && def.damageBase != null) {
-            if (mobMaxHp > 0) {
-                // Dégâts = HP du mob / roll(20..50) × rarityMult
-                val divisor = 20 + rng.nextInt(31)   // 20 à 50
-                (mobMaxHp / divisor.toFloat() * rarityMult).toInt().coerceAtLeast(1)
-            } else {
-                // Fallback (ne devrait pas arriver en jeu normal)
-                val levelMult = 1f + (mobLevel - 1) * 0.08f
-                (def.damageBase.roll(rng) * levelMult * rarityMult).toInt().coerceAtLeast(1)
-            }
+            val levelMult = 1f + (mobLevel - 1) * 0.08f
+            (def.damageBase.roll(rng) * levelMult * rarityMult).toInt().coerceAtLeast(1)
         } else null
         val stats = def.stats.mapValues { (_, range) ->
             val base = range.roll(rng)

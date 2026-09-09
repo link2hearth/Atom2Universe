@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Kecepatan Serangan</string>
     <string name="cave_affix_life_steal">Curi Nyawa</string>
     <string name="cave_affix_bleed_chance">Peluang Pendarahan</string>
-    <string name="cave_affix_shock_chance">Peluang Kejutan</string>
+    <string name="cave_affix_electric_chance">Peluang Listrik</string>
+    <string name="cave_affix_freeze_chance">Peluang Beku</string>
     <string name="cave_affix_execute">Eksekusi</string>
     <string name="cave_affix_aoe_splash">Cipratan AoE</string>
     <string name="cave_affix_thorns">Duri</string>

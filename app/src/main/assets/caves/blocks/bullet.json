@@ -1,0 +1,12 @@
+{
+  "id": 8012,
+  "name": "bullet",
+  "texture_top": "Items/ore_iron.png",
+  "texture_side": "Items/ore_iron.png",
+  "texture_bottom": "Items/ore_iron.png",
+  "color": "#A0906C",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "bullet",
+  "creative_tab": "functional"
+}

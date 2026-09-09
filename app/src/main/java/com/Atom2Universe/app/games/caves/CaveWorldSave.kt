@@ -23,6 +23,7 @@ internal data class CaveWorldSave(
     var playerPitch: Float,
     var inventory: Map<Short, Int>,
     var hotbar: List<Short?>,
+    var buildHotbar: List<Short?> = emptyList(),
     // Progression joueur
     var playerHp: Int = 20,
     var playerLevel: Int = 1,
@@ -90,6 +91,7 @@ internal object CaveWorldSaveManager {
         existing.playerPitch         = snap.playerPitch
         existing.inventory           = snap.inventory
         existing.hotbar              = snap.hotbar
+        existing.buildHotbar         = snap.buildHotbar
         existing.playerHp            = snap.playerHp
         existing.playerLevel         = snap.playerLevel
         existing.playerXp            = snap.playerXp
@@ -135,6 +137,9 @@ internal object CaveWorldSaveManager {
             val hotbarArr = JSONArray()
             save.hotbar.forEach { v -> hotbarArr.put(v?.toInt() ?: -1) }
             put("hotbar", hotbarArr)
+            val buildHotbarArr = JSONArray()
+            save.buildHotbar.forEach { v -> buildHotbarArr.put(v?.toInt() ?: -1) }
+            put("buildHotbar", buildHotbarArr)
             put("playerHp", save.playerHp)
             put("playerLevel", save.playerLevel)
             put("playerXp", save.playerXp)
@@ -184,6 +189,12 @@ internal object CaveWorldSaveManager {
                 val v = hotbarArr.getInt(i); if (v < 0) null else v.toShort()
             }
         } else List(CaveActivity.ACTIVE_SIZE) { null }
+        val buildHotbarArr = j.optJSONArray("buildHotbar")
+        val buildHotbar: List<Short?> = if (buildHotbarArr != null) {
+            (0 until buildHotbarArr.length()).map { i ->
+                val v = buildHotbarArr.getInt(i); if (v < 0) null else v.toShort()
+            }
+        } else emptyList()
         val weaponsArr = j.optJSONArray("playerWeapons")
         val weapons: List<String> = if (weaponsArr != null) {
             (0 until weaponsArr.length()).map { weaponsArr.getString(it) }
@@ -223,6 +234,7 @@ internal object CaveWorldSaveManager {
             playerPitch = j.getDouble("playerPitch").toFloat(),
             inventory = inventory,
             hotbar = hotbar,
+            buildHotbar = buildHotbar,
             playerHp = j.optInt("playerHp", 20),
             playerLevel = j.optInt("playerLevel", 1),
             playerXp = j.optInt("playerXp", 0),

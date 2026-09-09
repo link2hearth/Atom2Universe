@@ -42,6 +42,7 @@ import kotlin.math.*
 import kotlin.random.Random
 
 enum class PlayerMode { WALK, SPECTATOR }
+enum class HotbarMode { COMBAT, BUILD }
 
 internal class CaveRenderer(
     private val context: Context,
@@ -56,6 +57,7 @@ internal class CaveRenderer(
         val yaw: Float, val pitch: Float,
         val inventory: Map<Short, Int>,
         val hotbar: List<Short?>,
+        val buildHotbar: List<Short?> = emptyList(),
         val playerHp: Int = 20,
         val playerLevel: Int = 1,
         val playerXp: Int = 0,
@@ -185,8 +187,33 @@ internal class CaveRenderer(
     private var mineDamage = 0f
 
     val inventory = mutableMapOf<Short, Int>()
-    val hotbar    = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
-    var selectedSlot = 0
+
+    // Deux barres de raccourcis séparées (combat : armes/munitions/bonus ; construction :
+    // blocs), la bascule entre les deux est instantanée et gratuite — voir [toggleHotbarMode].
+    val combatHotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
+    val buildHotbar  = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
+    var hotbarMode = HotbarMode.COMBAT
+        private set
+    val hotbar: Array<Short?> get() = if (hotbarMode == HotbarMode.COMBAT) combatHotbar else buildHotbar
+    // Slot sélectionné mémorisé séparément par mode, pour retrouver la même sélection
+    // en revenant sur un mode plutôt que d'hériter de l'index laissé par l'autre.
+    private var combatSelectedSlot = 0
+    private var buildSelectedSlot  = 0
+    var selectedSlot: Int
+        get() = if (hotbarMode == HotbarMode.COMBAT) combatSelectedSlot else buildSelectedSlot
+        set(v) { if (hotbarMode == HotbarMode.COMBAT) combatSelectedSlot = v else buildSelectedSlot = v }
+
+    fun toggleHotbarMode() {
+        hotbarMode = if (hotbarMode == HotbarMode.COMBAT) HotbarMode.BUILD else HotbarMode.COMBAT
+        hotbarModeCallback?.invoke(hotbarMode)
+        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+    }
+
+    /** Combat = armes équipées, munitions (cailloux/flèches/carreaux/balles) et pierres de garde. */
+    internal fun isCombatItem(id: Short): Boolean =
+        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id) ||
+        id in ROCK_IDS || id == ARROW_ID || id == BOLT_ID || id == BULLET_ID ||
+        id == com.Atom2Universe.app.games.caves.world.WARD_STONE
 
     private var transientVbo = 0
     private var playerBoxVbo = 0
@@ -245,6 +272,13 @@ internal class CaveRenderer(
     private val ROCK_IDS = setOf(2020.toShort(), 2021.toShort())
     private var rockChargeTime = 0f
     private val ROCK_CHARGE_MAX = 1.5f
+    private val RANGED_WEAPON_TYPES = setOf("sling", "bow", "crossbow", "gun")
+    private var weaponChargeTime = 0f   // temps de visée/tension avant de relâcher pour tirer
+    private val WEAPON_CHARGE_VISUAL_MAX = 0.6f   // durée pour atteindre la tension visuelle max
+    private val ARROW_ID: Short = 8010
+    private val BOLT_ID: Short = 8011
+    private val BULLET_ID: Short = 8012
+    private val RANGED_PROJECTILE_SPEED = 24f
     private val PLAYER_KNOCKBACK = 6.0   // vitesse initiale du recul quand le joueur est touché
 
     @Volatile var gamePaused = false
@@ -260,6 +294,7 @@ internal class CaveRenderer(
     var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
+    var hotbarModeCallback: ((HotbarMode) -> Unit)?                       = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
     var swingCallback:    (() -> Unit)?                           = null
@@ -592,8 +627,10 @@ internal class CaveRenderer(
                 if (com.Atom2Universe.app.games.caves.node.ItemRegistry.get(item.defId)?.type == "weapon") {
                     val id = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(item)
                     inventory[id] = 1
-                    val freeHotbarSlot = hotbar.indexOfFirst { it == null }
-                    if (freeHotbarSlot >= 0) hotbar[freeHotbarSlot] = id
+                    // Une arme dropée va toujours dans la barre combat, même si la barre
+                    // construction est active au moment du kill.
+                    val freeHotbarSlot = combatHotbar.indexOfFirst { it == null }
+                    if (freeHotbarSlot >= 0) combatHotbar[freeHotbarSlot] = id
                 }
             }
             inventoryCallback?.invoke(inventory.toMap())
@@ -611,7 +648,19 @@ internal class CaveRenderer(
             camera.x = savedState.x; camera.y = savedState.y; camera.z = savedState.z
             camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
             inventory.putAll(savedState.inventory)
-            savedState.hotbar.take(hotbar.size).forEachIndexed { i, v -> hotbar[i] = v }
+            if (savedState.buildHotbar.isNotEmpty()) {
+                // Format récent : les deux barres sont déjà séparées.
+                savedState.hotbar.take(combatHotbar.size).forEachIndexed { i, v -> combatHotbar[i] = v }
+                savedState.buildHotbar.take(buildHotbar.size).forEachIndexed { i, v -> buildHotbar[i] = v }
+            } else {
+                // Ancienne sauvegarde (une seule barre mixte) : on répartit par catégorie.
+                var ci = 0; var bi = 0
+                for (v in savedState.hotbar) {
+                    if (v == null) continue
+                    if (isCombatItem(v)) { if (ci < combatHotbar.size) combatHotbar[ci++] = v }
+                    else { if (bi < buildHotbar.size) buildHotbar[bi++] = v }
+                }
+            }
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             inventoryCallback?.invoke(inventory.toMap())
             // Restauration progression joueur
@@ -648,15 +697,6 @@ internal class CaveRenderer(
             enemyManager.worldSpawnX = camera.x
             enemyManager.worldSpawnY = camera.y
             enemyManager.worldSpawnZ = camera.z
-            // Donner le laser de minage au joueur dès le départ
-            val laserInstance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(
-                "mining_laser", kotlin.random.Random.Default
-            )
-            if (laserInstance != null) {
-                val laserShortId = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(laserInstance)
-                inventory[laserShortId] = 1
-                hotbar[0] = laserShortId
-            }
         }
         scheduleInitialLodBuilds()
     }
@@ -1242,15 +1282,14 @@ private fun updateProjectiles(dt: Float) {
             }
             if (hit != null) {
                 if (p.isRock) spawnImpact(p.x, p.y, p.z)
-                enemyManager.damageEnemy(hit, p.damage)
+                if (p.isPlayerWeapon) {
+                    applyWeaponHit(hit, p.damage, p.stats, kotlin.random.Random.Default)
+                } else {
+                    enemyManager.damageEnemy(hit, p.damage)
+                }
                 iter.remove()
             }
         }
-    }
-
-    private fun isRockSelected(): Boolean {
-        val id = hotbar[selectedSlot] ?: return false
-        return id in ROCK_IDS
     }
 
     private fun isAimingAtRockBlock(): Boolean {
@@ -1258,104 +1297,131 @@ private fun updateProjectiles(dt: Float) {
         return worldBlockAt(hit.bx, hit.by, hit.bz) in ROCK_IDS
     }
 
-    private fun isMiningLaserSelected(): Boolean {
+    // Munitions possibles pour chaque famille d'arme à distance, dans l'ordre de préférence
+    // de consommation (le lance-pierre accepte les deux variantes de caillou ramassées au sol).
+    private fun ammoCandidatesFor(weaponType: String?): List<Short> = when (weaponType) {
+        "sling"    -> ROCK_IDS.toList()
+        "bow"      -> listOf(ARROW_ID)
+        "crossbow" -> listOf(BOLT_ID)
+        "gun"      -> listOf(BULLET_ID)
+        else       -> emptyList()
+    }
+
+    /** Première munition compatible réellement présente dans l'inventaire (ou null si aucune). */
+    private fun ammoBlockIdFor(weaponType: String?): Short? =
+        ammoCandidatesFor(weaponType).firstOrNull { (inventory[it] ?: 0) > 0 }
+            ?: ammoCandidatesFor(weaponType).firstOrNull()
+
+    /** Le slot sélectionné contient-il une arme à distance (sling/bow/crossbow/gun) ? */
+    private fun isSelectedRangedWeapon(): Boolean {
         val id = hotbar[selectedSlot] ?: return false
         if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return false
         val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return false
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
-        return def.weaponType == "mining_laser"
+        return def.weaponType in RANGED_WEAPON_TYPES
     }
 
+    // Attaque à distance avec l'arme équipée (arc, arbalète…) : consomme 1 munition
+    // dans l'inventaire et applique les mêmes affixes qu'un coup de mêlée (crit, statuts…).
+    private fun tryWeaponRangedAttack(): Boolean {
+        val heldId = hotbar[selectedSlot] ?: return false
+        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(heldId) ?: return false
+        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
+        val ammoId = ammoBlockIdFor(def.weaponType) ?: return false
+        if (weaponAttackCooldown > 0f) return false
+        val ammoCount = inventory[ammoId] ?: 0
+        if (ammoCount <= 0) return false
+
+        val stats = weapon.rolledStats
+        val baseDamage = weapon.rolledDamage ?: 1
+        val yawRad = Math.toRadians(camera.yaw.toDouble())
+        val rightX = cos(yawRad); val rightZ = -sin(yawRad)
+        val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
+        // Départ quasi depuis la tête (précision) avec un léger décalage droite/avant
+        // pour l'impression que c'est le bras qui tire — voir le même choix sur le jet à main nue.
+        val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
+        val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
+        val spawnY = camera.playerY - 0.05
+        val ammoWeapon = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+        projectiles.add(Projectile(
+            spawnX, spawnY, spawnZ,
+            camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
+            RANGED_PROJECTILE_SPEED, baseDamage, ammoWeapon,
+            isRock = true, stats = stats, isPlayerWeapon = true
+        ))
+
+        val newCount = ammoCount - 1
+        if (newCount <= 0) inventory.remove(ammoId) else inventory[ammoId] = newCount
+        inventoryCallback?.invoke(inventory.toMap())
+
+        val speedBonus = stats["attack_speed"] ?: 0
+        val cooldownMs = def.attackSpeedMs.coerceAtLeast(200) * (1f - speedBonus / 100f)
+        weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.15f)
+        swingCallback?.invoke()
+        startSwing()
+        return true
+    }
+
+    // Bouton action en mode combat : tire l'arme sélectionnée (le joueur choisit, on ne
+    // bascule plus jamais tout seul sur une autre arme) ; repli main nue si rien d'utilisable
+    // n'est sélectionné. Sélection mémorisée séparément par mode (voir [selectedSlot]).
     private fun updateRockThrow(dt: Float) {
-        if (!isRockSelected()) {
+        if (hotbarMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
+
+        // Viser un caillou au sol le ramasse plutôt que de tirer dans le vide dessus
+        // (voir [updateMining]) — on n'engage donc pas le tir dans ce cas.
+        if (isAimingAtRockBlock()) { weaponChargeTime = 0f; rockChargeTime = 0f; return }
+
+        if (isSelectedRangedWeapon()) {
             rockChargeTime = 0f
-            // Attaque mêlée uniquement si l'arme équipée n'est pas le laser de minage
-            if (touch.rtChargeRaw > 0.3f && !isMiningLaserSelected()) tryWeaponMeleeAttack()
+            // Vise en tenant le bouton (tension de l'arme), tire seulement au relâchement —
+            // pas de tir instantané à l'appui, pour pouvoir viser d'abord. Si l'arme
+            // sélectionnée n'a plus de munitions, tryWeaponRangedAttack ne fait simplement rien.
+            if (touch.rtChargeRaw > 0.3f) {
+                weaponChargeTime += dt
+            } else if (weaponChargeTime > 0.3f) {
+                tryWeaponRangedAttack()
+                weaponChargeTime = 0f
+            } else {
+                weaponChargeTime = 0f
+            }
             return
         }
+        weaponChargeTime = 0f
+
+        // Repli : jet de caillou à main nue, tant qu'il en reste dans l'inventaire.
+        val rockId = ROCK_IDS.firstOrNull { (inventory[it] ?: 0) > 0 }
+        if (rockId == null) { rockChargeTime = 0f; return }
         val rt = touch.rtChargeRaw
         if (rt > 0.3f) {
-            if (isAimingAtRockBlock()) { rockChargeTime = 0f; return }
             rockChargeTime = (rockChargeTime + dt).coerceAtMost(ROCK_CHARGE_MAX)
         } else if (rockChargeTime > 0.3f) {
             val charge = rockChargeTime / ROCK_CHARGE_MAX
             val speed = 10f + (28f - 10f) * charge
             val damage = (2 + ((5 - 2) * charge)).toInt()
-            // Départ depuis la main droite : décalé à droite + un peu en avant,
-            // sous l'œil (l'œil caméra est à playerY) → la pierre part du bas-droite
-            // de l'écran et non du haut.
+            // Départ quasi depuis la tête (vise juste), avec un tout petit décalage vers
+            // la droite/l'avant pour donner l'impression que c'est le bras qui lance —
+            // un décalage trop grand (ancien 0.45/0.35) désalignait le tir du réticule.
             val yawRad = Math.toRadians(camera.yaw.toDouble())
             val rightX = cos(yawRad); val rightZ = -sin(yawRad)
             val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
-            val spawnX = camera.playerX + rightX * 0.45 + fwdX * 0.35
-            val spawnZ = camera.playerZ + rightZ * 0.45 + fwdZ * 0.35
-            val spawnY = camera.playerY - 0.25
+            val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
+            val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
+            val spawnY = camera.playerY - 0.05
             val rockWeapon = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
             projectiles.add(Projectile(
                 spawnX, spawnY, spawnZ,
                 camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
                 speed, damage, rockWeapon, isRock = true
             ))
-            val blockId = hotbar[selectedSlot]!!
-            val count = (inventory[blockId] ?: 0) - 1
-            if (count <= 0) {
-                inventory.remove(blockId)
-                hotbar[selectedSlot] = null
-            } else {
-                inventory[blockId] = count
-            }
+            startSwing()
+            val count = (inventory[rockId] ?: 0) - 1
+            if (count <= 0) inventory.remove(rockId) else inventory[rockId] = count
             inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             rockChargeTime = 0f
         } else {
             rockChargeTime = 0f
         }
-    }
-
-    // Attaque mêlée avec l'arme équipée (déclenché quand pas de caillou sélectionné)
-    internal fun tryWeaponMeleeAttack(): Boolean {
-        val heldId = hotbar[selectedSlot] ?: return false
-        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(heldId)) return false
-        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(heldId) ?: return false
-        if (weaponAttackCooldown > 0f) return false
-        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
-        val stats = weapon.rolledStats
-        val baseDamage = weapon.rolledDamage ?: 1
-        val range = 2.5
-        val rng = kotlin.random.Random.Default
-        var hit = false
-
-        for (enemy in enemyManager.enemies) {
-            if (enemy.hp <= 0) continue
-            val dx = abs(enemy.x - camera.playerX)
-            val dy = abs(enemy.y - camera.playerY)
-            val dz = abs(enemy.z - camera.playerZ)
-            val inRange = dx <= range + 0.5 && dy <= range + 0.5 && dz <= range + 0.5
-            if (!inRange) continue
-
-            applyWeaponHit(enemy, baseDamage, stats, rng)
-            spawnImpact(enemy.x, enemy.y + 1.0, enemy.z)
-            hit = true
-
-            // Éclaboussure AoE sur les ennemis adjacents
-            val aoeSplash = stats["aoe_splash"] ?: 0
-            if (aoeSplash > 0 && rng.nextInt(100) < aoeSplash) {
-                for (adj in enemyManager.enemies) {
-                    if (adj === enemy || adj.hp <= 0) continue
-                    val ax = abs(adj.x - enemy.x); val az = abs(adj.z - enemy.z)
-                    if (ax < 3.0 && az < 3.0) {
-                        applyWeaponHit(adj, (baseDamage * 0.5f).toInt().coerceAtLeast(1), stats.filterKeys { it == "bleed_chance" || it == "poison_chance" }, rng)
-                    }
-                }
-            }
-        }
-
-        val speedBonus = stats["attack_speed"] ?: 0
-        val cooldownMs = def.attackSpeedMs.coerceAtLeast(300) * (1f - speedBonus / 100f)
-        weaponAttackCooldown = (cooldownMs / 1000f).coerceAtLeast(0.2f)
-        swingCallback?.invoke()
-        startSwing()
-        return hit
     }
 
     private fun applyWeaponHit(
@@ -1392,34 +1458,50 @@ private fun updateProjectiles(dt: Float) {
             }
         }
 
-        // Saignement : 15% des dégâts de base (scalé par crit), tick 0.5s, durée 3s
-        val bleedChance = stats["bleed_chance"] ?: 0
-        if (bleedChance > 0 && rng.nextInt(100) < bleedChance) {
-            enemy.bleedDamage = (baseDamage * 0.15f * critMult).toInt().coerceAtLeast(1)
-            enemy.bleedTimer = 3f
-            enemy.bleedTickTimer = 0.5f
+        // Résistances élémentaires du mob : multiplient à la fois la chance de proc
+        // et l'ampleur de l'effet (dégâts ou durée). 0 = immunisé, >1 = vulnérable.
+        val res = enemy.def.resistances
+
+        // Saignement : chaque proc ajoute à une jauge (façon Dark Souls) ; pleine (100),
+        // elle explose en un gros pourcentage des PV max puis retombe à zéro. Elle
+        // redescend seule si le mob n'est pas retouché (voir EnemyManager).
+        val bleedRes = res["bleed"] ?: 1f
+        val bleedChance = ((stats["bleed_chance"] ?: 0) * bleedRes).toInt()
+        if (bleedRes > 0f && bleedChance > 0 && rng.nextInt(100) < bleedChance) {
+            enemy.bleedBuildup = (enemy.bleedBuildup + 25f * bleedRes).coerceAtMost(100f)
+            enemy.bleedDecayGrace = 2.5f
         }
 
-        // Poison : 10% des dégâts de base (scalé par crit), tick 0.8s, durée 4s
-        val poisonChance = stats["poison_chance"] ?: 0
-        if (poisonChance > 0 && rng.nextInt(100) < poisonChance) {
-            enemy.poisonDamage = (baseDamage * 0.10f * critMult).toInt().coerceAtLeast(1)
+        // Poison : dégâts sur la durée, chance et ampleur réduites si le mob y résiste
+        val poisonRes = res["poison"] ?: 1f
+        val poisonChance = ((stats["poison_chance"] ?: 0) * poisonRes).toInt()
+        if (poisonRes > 0f && poisonChance > 0 && rng.nextInt(100) < poisonChance) {
+            enemy.poisonDamage = (baseDamage * 0.10f * critMult * poisonRes).toInt().coerceAtLeast(1)
             enemy.poisonTimer = 4f
             enemy.poisonTickTimer = 0.8f
         }
 
-        // Feu : 20% des dégâts de base (scalé par crit), tick rapide 0.3s, durée 2s
-        val fireChance = stats["fire_chance"] ?: 0
-        if (fireChance > 0 && rng.nextInt(100) < fireChance) {
-            enemy.fireDamage = (baseDamage * 0.20f * critMult).toInt().coerceAtLeast(1)
+        // Feu : dégâts rapides sur la durée, inefficace contre les mobs résistants au feu
+        val fireRes = res["fire"] ?: 1f
+        val fireChance = ((stats["fire_chance"] ?: 0) * fireRes).toInt()
+        if (fireRes > 0f && fireChance > 0 && rng.nextInt(100) < fireChance) {
+            enemy.fireDamage = (baseDamage * 0.20f * critMult * fireRes).toInt().coerceAtLeast(1)
             enemy.fireTimer = 2f
             enemy.fireTickTimer = 0.3f
         }
 
-        // Étourdissement
-        val shockChance = stats["shock_chance"] ?: 0
-        if (shockChance > 0 && rng.nextInt(100) < shockChance) {
-            enemy.shockTimer = 1.5f
+        // Gel : immobilisation totale, durée modulée par la résistance/vulnérabilité au froid
+        val freezeRes = res["ice"] ?: 1f
+        val freezeChance = ((stats["freeze_chance"] ?: 0) * freezeRes).toInt()
+        if (freezeRes > 0f && freezeChance > 0 && rng.nextInt(100) < freezeChance) {
+            enemy.freezeTimer = 1.5f * freezeRes
+        }
+
+        // Électrique : le mob "bugue" et attaque ses propres alliés un instant
+        val electricRes = res["electric"] ?: 1f
+        val electricChance = ((stats["electric_chance"] ?: 0) * electricRes).toInt()
+        if (electricRes > 0f && electricChance > 0 && rng.nextInt(100) < electricChance) {
+            enemy.confusionTimer = 1.5f * electricRes
         }
     }
 
@@ -1468,11 +1550,12 @@ private fun updateProjectiles(dt: Float) {
             placeBlock()
         }
 
-        val laserAllowed = touch.laserActive && isMiningLaserSelected() && (!isRockSelected() || isAimingAtRockBlock())
-        // Les blocs rock/rock_moss sont minables sans laser, en visant simplement dessus
-        val rockMineActive = touch.laserActive && !isMiningLaserSelected() && isAimingAtRockBlock()
-        // Le laser de minage n'affecte que les blocs : aucun dégât aux mobs.
-        val target = if (laserAllowed || rockMineActive) raycastBlock() else null
+        // Minage libre et gratuit en mode construction, peu importe ce qui est en main.
+        // En mode combat, viser un caillou permet quand même de le ramasser (munitions),
+        // sans avoir à repasser en construction juste pour ça.
+        val canMine = touch.laserActive &&
+            (hotbarMode == HotbarMode.BUILD || (hotbarMode == HotbarMode.COMBAT && isAimingAtRockBlock()))
+        val target = if (canMine) raycastBlock() else null
 
         if (target == null) {
             mineTarget = null
@@ -1516,10 +1599,13 @@ private fun updateProjectiles(dt: Float) {
         // caillou → un seul stack dans l'inventaire.
         val dropType = if (blockType in ROCK_IDS) ROCK else blockType
         inventory[dropType] = (inventory[dropType] ?: 0) + 1
-        if (hotbar.none { it == dropType }) {
-            val emptySlot = hotbar.indexOfFirst { it == null }
+        // Un bloc ramassé va dans la barre correspondant à sa catégorie (combat pour les
+        // munitions/pierres de garde, construction pour le reste), pas forcément la barre visible.
+        val targetBar = if (isCombatItem(dropType)) combatHotbar else buildHotbar
+        if (targetBar.none { it == dropType }) {
+            val emptySlot = targetBar.indexOfFirst { it == null }
             if (emptySlot != -1) {
-                hotbar[emptySlot] = dropType
+                targetBar[emptySlot] = dropType
                 hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             }
         }
@@ -2044,6 +2130,9 @@ private fun updateProjectiles(dt: Float) {
         val sinW = kotlin.math.sin(walkPhase)
         val legSwing = 0.38f * sinW   // jambes : ~22° d'amplitude
         val armSwing = 0.28f * sinW   // bras   : ~16° d'amplitude
+        // Coup de lancer/attaque du bras droit — même minuteur que le viewmodel FPS
+        // ([drawViewmodel]/[startSwing]), pour un retour visuel cohérent en vue TPS aussi.
+        val attackSwing = if (swingActive) 1.6f * kotlin.math.sin((swingTimer / SWING_DUR) * Math.PI.toFloat()) else 0f
 
         val yFeet     = py - 1.62f
         val yWaist    = yFeet + 0.72f
@@ -2142,8 +2231,8 @@ private fun updateProjectiles(dt: Float) {
         box(-0.22f,   0.22f,  yWaist,   yShoulder,        -0.15f,  0.15f,  0.38f, 0.42f, 0.68f)
         // Bras gauche — swing opposé à la jambe gauche (naturel)
         swingLimb(-0.37f, -0.25f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f, -armSwing, 0.38f, 0.42f, 0.68f)
-        // Bras droit — swing opposé à la jambe droite
-        swingLimb( 0.25f,  0.37f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f,  armSwing, 0.38f, 0.42f, 0.68f)
+        // Bras droit — swing opposé à la jambe droite + coup de lancer/attaque éventuel
+        swingLimb( 0.25f,  0.37f, yShoulder, yShoulder - 0.60f, -0.12f, 0.12f,  armSwing + attackSwing, 0.38f, 0.42f, 0.68f)
         // Jambe gauche
         swingLimb(-0.22f, -0.02f, yWaist, yFeet, -0.15f, 0.15f,  legSwing, 0.22f, 0.26f, 0.48f)
         // Jambe droite — toujours opposé à la jambe gauche
@@ -2207,11 +2296,16 @@ private fun updateProjectiles(dt: Float) {
 
         val held = hotbar[selectedSlot]
         val isWeapon = held != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(held)
+        val heldWeaponType = if (isWeapon) {
+            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(held!!)
+                ?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }?.weaponType
+        } else null
 
         drawArm(isWeapon)
 
         if (held != null) {
             when {
+                heldWeaponType in VOXEL_WEAPON_MODELS -> drawHeldVoxelWeapon(heldWeaponType!!)
                 isWeapon                     -> drawHeldWeapon(held)
                 BlockRegistry.isDecoration(held) -> drawHeldFlat(held)
                 else                         -> drawHeldBlock(held)
@@ -2400,6 +2494,94 @@ private fun updateProjectiles(dt: Float) {
         GLES30.glDisableVertexAttribArray(bAUv)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
         GLES30.glDisable(GLES30.GL_BLEND)
+    }
+
+    /** Boîte d'un modèle voxel d'arme tenue, en unités locales (même échelle que [drawArm]). */
+    private data class VmBoxDef(
+        val x0: Float, val x1: Float, val y0: Float, val y1: Float, val z0: Float, val z1: Float,
+        val color: Triple<Float, Float, Float>
+    ) {
+        val r get() = color.first
+        val g get() = color.second
+        val b get() = color.third
+    }
+
+    // Armes à distance sans sprite dédié : rendues en petites boîtes voxel façon EnemyRenderer
+    // plutôt qu'un plan texturé. Repère local : origine = poignée dans le poing, x=droite,
+    // y=haut, z=avant (vers la cible) — chaque modèle s'étend bien vers +Z pour se lire
+    // comme pointant vers la cible, pas seulement empilé verticalement.
+    private val WOOD = Triple(0.42f, 0.28f, 0.14f)
+    private val LEATHER = Triple(0.12f, 0.08f, 0.05f)
+    private val STEEL = Triple(0.55f, 0.55f, 0.58f)
+    private val GUNMETAL = Triple(0.20f, 0.20f, 0.22f)
+    private val GRIP_DARK = Triple(0.30f, 0.20f, 0.10f)
+
+    private val VOXEL_WEAPON_MODELS: Map<String, List<VmBoxDef>> = mapOf(
+        "sling" to listOf(
+            VmBoxDef(-0.018f, 0.018f, -0.10f,  0.04f, -0.018f, 0.018f, WOOD),   // manche, sous la poigne
+            VmBoxDef(-0.022f, 0.022f,  0.04f,  0.10f,  0.00f,   0.02f, WOOD),   // col vers la fourche
+            VmBoxDef(-0.10f,  0.10f,   0.095f, 0.125f, 0.02f,   0.06f, WOOD),   // base de fourche (barre)
+            VmBoxDef(-0.105f,-0.055f,  0.10f,  0.28f,  0.03f,   0.10f, WOOD),   // fourche gauche, vers l'avant
+            VmBoxDef( 0.055f, 0.105f,  0.10f,  0.28f,  0.03f,   0.10f, WOOD)    // fourche droite
+        ),
+        "crossbow" to listOf(
+            VmBoxDef(-0.018f, 0.018f, -0.10f, -0.015f, -0.03f, 0.02f,  GRIP_DARK),  // poignée/détente, sous
+            VmBoxDef(-0.024f, 0.024f, -0.015f, 0.02f,  -0.06f, 0.22f,  WOOD),       // fût, vers l'avant
+            VmBoxDef(-0.03f,  0.03f,  -0.01f,  0.03f,   0.16f, 0.20f,  WOOD),       // renfort avant
+            VmBoxDef(-0.17f,  0.17f,   0.00f,  0.026f,  0.18f, 0.21f,  STEEL)       // arc horizontal, à l'avant
+        ),
+        "gun" to listOf(
+            VmBoxDef(-0.018f, 0.018f, -0.13f, -0.02f, -0.07f, -0.02f, GRIP_DARK),   // crosse, en bas-arrière
+            VmBoxDef(-0.022f, 0.022f, -0.02f,  0.035f,-0.06f,  0.10f, GUNMETAL),    // carcasse
+            VmBoxDef(-0.014f, 0.014f,  0.005f, 0.03f,  0.10f,  0.25f, GUNMETAL)     // canon, vers l'avant
+        )
+    )
+
+    /** Arme sans sprite dédié : petit assemblage de boîtes voxel dans la main (fût-shader),
+     *  avec tension visible en visant et léger recul au tir. */
+    private fun drawHeldVoxelWeapon(weaponType: String) {
+        val boxes = VOXEL_WEAPON_MODELS[weaponType] ?: return
+
+        // Tension en maintenant le bouton (on bande l'arme) : léger recul + bascule vers soi.
+        val chargeT = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f, 1f)
+        // Recul au tir : à-coup vers l'arrière/le haut, même minuteur que le bras (startSwing).
+        val recoil = if (swingActive) 0.05f * kotlin.math.sin((swingTimer / SWING_DUR) * Math.PI.toFloat()) else 0f
+
+        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
+        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.50f, 0.04f - chargeT * 0.025f - recoil)
+        android.opengl.Matrix.rotateM(vmTmp, 0, -10f - chargeT * 3f - recoil * 60f, 1f, 0f, 0f)
+        android.opengl.Matrix.rotateM(vmTmp, 0, -14f, 0f, 1f, 0f)
+        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, vmTmp, 0)
+
+        val extraBoxes = if (weaponType == "sling") 1 else 0
+        val arr = FloatArray((boxes.size + extraBoxes) * 36 * 6)
+        var o = 0
+        for (bx in boxes) o = vmBox(arr, o, bx.x0, bx.x1, bx.y0, bx.y1, bx.z0, bx.z1, bx.r, bx.g, bx.b)
+
+        if (weaponType == "sling") {
+            // Poche du tir : tirée vers l'arrière/le bas quand on bande le lance-pierre,
+            // pour qu'on voie concrètement la tension monter avant le relâchement.
+            val pull = chargeT * 0.14f
+            val py0 = 0.13f - pull * 0.55f; val py1 = py0 + 0.03f
+            val pz0 = 0.05f - pull;         val pz1 = pz0 + 0.03f
+            o = vmBox(arr, o, -0.02f, 0.02f, py0, py1, pz0, pz1, LEATHER.first, LEATHER.second, LEATHER.third)
+        }
+
+        val buf = ByteBuffer.allocateDirect(o * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(arr, 0, o); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, o * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        laserShader?.use()
+        GLES30.glUniformMatrix4fv(lUMvp, 1, false, vmMvp, 0)
+        val stride = 6 * 4
+        GLES30.glEnableVertexAttribArray(lAPos)
+        GLES30.glVertexAttribPointer(lAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(lAColor)
+        GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, o / 6)
+        GLES30.glDisableVertexAttribArray(lAPos)
+        GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     /** Texture GL d'un sprite d'item (cache par nom ; 0 si introuvable). */

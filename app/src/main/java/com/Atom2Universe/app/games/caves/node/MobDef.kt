@@ -25,13 +25,22 @@ internal data class MobDef(
     val lootTable: String,
     val behavior: String,
     val bossEligible: Boolean,
-    val xpBase: Int
+    val xpBase: Int,
+    /** Multiplicateur par élément ("fire","ice","electric","poison","bleed") appliqué à la
+     *  fois à la chance de proc et aux dégâts/durée de l'effet. 0 = immunisé, 1 = neutre
+     *  (valeur par défaut si absent), >1 = vulnérable. */
+    val resistances: Map<String, Float> = emptyMap()
 ) {
     companion object {
         fun fromJson(j: JSONObject): MobDef {
             val biomes = mutableListOf<String>()
             val biomesArr = j.getJSONArray("biomes")
             for (i in 0 until biomesArr.length()) biomes.add(biomesArr.getString(i))
+            val resistances = mutableMapOf<String, Float>()
+            val resJson = j.optJSONObject("resistances")
+            if (resJson != null) {
+                for (key in resJson.keys()) resistances[key] = resJson.getDouble(key).toFloat()
+            }
             return MobDef(
                 id                 = j.getString("id"),
                 hpBase             = j.getInt("hp_base"),
@@ -53,7 +62,8 @@ internal data class MobDef(
                 lootTable          = j.optString("loot_table", "default_loot"),
                 behavior           = j.optString("behavior", "aggressive"),
                 bossEligible       = j.optBoolean("boss_eligible", true),
-                xpBase             = j.optInt("xp_base", 1)
+                xpBase             = j.optInt("xp_base", 1),
+                resistances        = resistances
             )
         }
     }

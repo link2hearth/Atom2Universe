@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Aanvalssnelheid</string>
     <string name="cave_affix_life_steal">Levensroof</string>
     <string name="cave_affix_bleed_chance">Bloedingskans</string>
-    <string name="cave_affix_shock_chance">Verdovingskans</string>
+    <string name="cave_affix_electric_chance">Elektrische kans</string>
+    <string name="cave_affix_freeze_chance">Bevriezingskans</string>
     <string name="cave_affix_execute">Executie</string>
     <string name="cave_affix_aoe_splash">Spatschade</string>
     <string name="cave_affix_thorns">Doornen</string>

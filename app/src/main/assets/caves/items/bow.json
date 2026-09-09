@@ -1,0 +1,12 @@
+{
+  "id": "bow",
+  "type": "weapon",
+  "weapon_type": "bow",
+  "tier": 2,
+  "attack_speed_ms": 750,
+  "rarity_weights": { "common": 30, "magic": 30, "rare": 22, "epic": 13, "legendary": 5 },
+  "damage_base": [6, 11],
+  "stats": {},
+  "flags": [],
+  "sprite": "bow"
+}

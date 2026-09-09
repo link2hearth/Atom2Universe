@@ -40,10 +40,13 @@ internal class Enemy(
     var knockZ = 0.0
 
     // Effets de statut appliqués par les affixes d'arme
-    var bleedTimer: Float = 0f
-    var bleedDamage: Int = 0
-    var bleedTickTimer: Float = 0f
-    var shockTimer: Float = 0f
+    // Saignement : jauge qui monte à chaque proc et explose en gros dégâts à 100
+    // (façon Dark Souls), puis redescend seule si le mob n'est plus touché.
+    var bleedBuildup: Float = 0f
+    var bleedDecayGrace: Float = 0f
+
+    var freezeTimer: Float = 0f      // gel : immobilisation totale, aucune IA
+    var confusionTimer: Float = 0f   // électrique : attaque ses alliés au lieu du joueur
 
     var poisonTimer: Float = 0f
     var poisonDamage: Int = 0
@@ -58,5 +61,8 @@ internal class Enemy(
     companion object {
         const val BOSS_SPRITE_SCALE = 2.2f
         const val BOSS_HP_MULT      = 6
+        const val BLEED_BURST_THRESHOLD = 100f
+        const val BLEED_BURST_FRACTION  = 0.30f   // % des PV max infligés d'un coup
+        const val BLEED_DECAY_PER_SEC   = 12f     // vitesse à laquelle la jauge redescend
     }
 }

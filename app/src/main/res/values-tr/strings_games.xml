@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Saldırı Hızı</string>
     <string name="cave_affix_life_steal">Can Çalma</string>
     <string name="cave_affix_bleed_chance">Kanama Şansı</string>
-    <string name="cave_affix_shock_chance">Şok Şansı</string>
+    <string name="cave_affix_electric_chance">Elektrik Şansı</string>
+    <string name="cave_affix_freeze_chance">Dondurma Şansı</string>
     <string name="cave_affix_execute">İnfaz</string>
     <string name="cave_affix_aoe_splash">Alan Sıçraması</string>
     <string name="cave_affix_thorns">Dikenler</string>

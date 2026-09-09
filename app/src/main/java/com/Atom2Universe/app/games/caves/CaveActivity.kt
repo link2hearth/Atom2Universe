@@ -180,7 +180,7 @@ class CaveActivity : ThemedActivity() {
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
-                inventory = save.inventory, hotbar = save.hotbar,
+                inventory = save.inventory, hotbar = save.hotbar, buildHotbar = save.buildHotbar,
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,
@@ -231,6 +231,7 @@ class CaveActivity : ThemedActivity() {
         val btnMode       = hudView.findViewById<Button>(R.id.cave_btn_mode)
         val btnDayNight   = hudView.findViewById<Button>(R.id.cave_btn_day_night)
         val btnCamera     = hudView.findViewById<Button>(R.id.cave_btn_camera).also { vBtnCamera = it }
+        val btnCombatMode = hudView.findViewById<Button>(R.id.cave_btn_combat_mode)
         minimapView       = hudView.findViewById(R.id.cave_minimap)
         vHudControls      = hudView.findViewById(R.id.cave_hud_controls)
         val btnUp         = hudView.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
@@ -266,6 +267,13 @@ class CaveActivity : ThemedActivity() {
             btnCamera.alpha = if (renderer.camera.thirdPerson) 1.0f else 0.5f
         }
         btnCamera.alpha = 0.5f
+
+        fun applyCombatModeUi(mode: HotbarMode) {
+            btnCombatMode.text = if (mode == HotbarMode.COMBAT) "⚔" else "🧱"
+        }
+        applyCombatModeUi(renderer.hotbarMode)
+        btnCombatMode.setOnClickListener { renderer.toggleHotbarMode() }
+        renderer.hotbarModeCallback = { mode -> uiHandler.post { applyCombatModeUi(mode); invManager.onHotbarModeChanged() } }
 
         val btnMap = hudView.findViewById<Button>(R.id.cave_btn_map)
         btnMap.alpha = 0.5f
@@ -303,7 +311,6 @@ class CaveActivity : ThemedActivity() {
 
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
         renderer.shieldCallback   = { cur, max  -> uiHandler.post { hud.updateShieldBar(cur, max) } }
-        renderer.swingCallback    = { uiHandler.post { hud.triggerSwing() } }
         renderer.sprintCallback   = { active -> uiHandler.post { hud.updateSprintIndicator(active) } }
         renderer.playerHitCallback = { uiHandler.post { hud.flashDamage() } }
 
@@ -384,7 +391,8 @@ class CaveActivity : ThemedActivity() {
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
             inventory = if (isCreative) survivalInventory else renderer.inventory.toMap(),
-            hotbar    = if (isCreative) survivalHotbar    else renderer.hotbar.map { it },
+            hotbar    = if (isCreative) survivalHotbar    else renderer.combatHotbar.map { it },
+            buildHotbar = if (isCreative) emptyList()     else renderer.buildHotbar.map { it },
             isCreative          = isCreative,
             playerHp            = renderer.playerNode.hp,
             playerLevel         = stats.level,

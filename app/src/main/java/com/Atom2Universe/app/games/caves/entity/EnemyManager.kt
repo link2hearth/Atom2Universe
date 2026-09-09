@@ -84,14 +84,17 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private fun updateEnemy(e: Enemy, dt: Float, px: Double, py: Double, pz: Double) {
         if (e.hitFlash > 0f) e.hitFlash -= dt
 
-        // Saignement (tick toutes les 0.5s, 3s)
-        if (e.bleedTimer > 0f) {
-            e.bleedTimer -= dt; e.bleedTickTimer -= dt
-            if (e.bleedTickTimer <= 0f) {
-                e.bleedTickTimer = 0.5f
-                e.hp = (e.hp - e.bleedDamage).coerceAtLeast(0); e.hitFlash = 0.12f
-            }
-            if (e.bleedTimer <= 0f) { e.bleedTimer = 0f; e.bleedDamage = 0; e.bleedTickTimer = 0f }
+        // Saignement : jauge qui redescend seule si le mob n'est pas retouché depuis
+        // un moment ; pleine, elle explose en un gros pourcentage des PV max.
+        if (e.bleedDecayGrace > 0f) {
+            e.bleedDecayGrace -= dt
+        } else if (e.bleedBuildup > 0f) {
+            e.bleedBuildup = (e.bleedBuildup - Enemy.BLEED_DECAY_PER_SEC * dt).coerceAtLeast(0f)
+        }
+        if (e.bleedBuildup >= Enemy.BLEED_BURST_THRESHOLD) {
+            val burst = (e.maxHp * Enemy.BLEED_BURST_FRACTION).toInt().coerceAtLeast(1)
+            e.hp = (e.hp - burst).coerceAtLeast(0); e.hitFlash = 0.25f
+            e.bleedBuildup = 0f
         }
 
         // Poison (tick toutes les 0.8s, 4s — dégâts moindres mais plus durables)
@@ -117,8 +120,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Recul infligé par le joueur — déplacement amorti, même si étourdi.
         applyMobKnockback(e, dt)
 
-        // Étourdissement
-        if (e.shockTimer > 0f) { e.shockTimer -= dt; return }
+        // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
+        if (e.freezeTimer > 0f) { e.freezeTimer -= dt; return }
+
+        if (e.confusionTimer > 0f) e.confusionTimer -= dt
 
 
         val dx = px - e.x; val dy = py - e.y; val dz = pz - e.z
@@ -191,7 +196,26 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Attaque : découplée de l'état de déplacement. Dès que le mob est à portée,
         // le cooldown tourne et il frappe — la séparation entre mobs ne l'empêche plus.
         e.attackCooldown -= dt
-        if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {
+        if (e.confusionTimer > 0f) {
+            // Électrique : le mob "bugue" et attaque l'allié le plus proche à sa portée
+            // au lieu du joueur, tant que la confusion dure.
+            if (e.attackCooldown <= 0f) {
+                var ally: Enemy? = null
+                var bestD2 = Double.MAX_VALUE
+                for (o in enemies) {
+                    if (o === e || o.hp <= 0) continue
+                    val adx = o.x - e.x; val adz = o.z - e.z
+                    val d2 = adx * adx + adz * adz
+                    if (d2 < bestD2) { bestD2 = d2; ally = o }
+                }
+                if (ally != null && bestD2 <= (keep + ATTACK_REACH) * (keep + ATTACK_REACH)) {
+                    e.attackCooldown = ATTACK_CD
+                    ally.hp = (ally.hp - e.scaledDamage).coerceAtLeast(0)
+                    ally.hitFlash = 0.15f
+                    if (ally.state == EnemyState.WANDER) ally.state = EnemyState.CHASE
+                }
+            }
+        } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {
             e.attackCooldown = ATTACK_CD
             playerInvTimer = 0.5f
             val bus = eventBus

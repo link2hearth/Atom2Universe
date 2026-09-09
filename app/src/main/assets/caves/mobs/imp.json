@@ -15,5 +15,6 @@
   "loot_table": "loot_t3",
   "behavior": "aggressive",
   "boss_eligible": true,
-  "xp_base": 6
+  "xp_base": 6,
+  "resistances": { "fire": 0.0, "ice": 1.5 }
 }

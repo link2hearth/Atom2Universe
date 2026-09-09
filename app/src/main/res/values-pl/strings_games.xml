@@ -259,7 +259,8 @@
     <string name="cave_affix_attack_speed">Szybkość ataku</string>
     <string name="cave_affix_life_steal">Kradzież życia</string>
     <string name="cave_affix_bleed_chance">Szansa na krwawienie</string>
-    <string name="cave_affix_shock_chance">Szansa na ogłuszenie</string>
+    <string name="cave_affix_electric_chance">Szansa na porażenie prądem</string>
+    <string name="cave_affix_freeze_chance">Szansa na zamrożenie</string>
     <string name="cave_affix_execute">Egzekucja</string>
     <string name="cave_affix_aoe_splash">Obrażenia obszarowe</string>
     <string name="cave_affix_thorns">Kolce</string>

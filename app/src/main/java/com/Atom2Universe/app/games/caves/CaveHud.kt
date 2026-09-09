@@ -102,25 +102,17 @@ internal class CaveHud(private val activity: CaveActivity) {
             slotCounts[i]?.text = if (eff != null && !isWeapon) count.toString() else ""
         }
 
-        // Arme en main : affiché uniquement si le slot sélectionné contient une arme (pas le laser de minage)
+        // Arme en main : affiché uniquement si le slot sélectionné contient une arme
         val selType = slots.getOrNull(selected)
         val selInstance = selType?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
-        val selDef = selInstance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
-        val isMiningLaser = selDef?.weaponType == "mining_laser"
-        if (selType != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(selType) && !isMiningLaser) {
+        if (selType != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(selType)) {
             if (selInstance != null) showWeaponInHand(selInstance) else hideWeaponInHand()
         } else {
             hideWeaponInHand()
         }
     }
 
-    fun triggerSwing() {
-        weaponSwingView?.triggerSwing()
-    }
-
     private fun hideWeaponInHand() {
-        weaponSwingView?.setWeapon(null)
-        weaponSwingView?.visibility   = View.GONE
         weaponTooltipView?.visibility = View.GONE
     }
 
@@ -301,7 +293,6 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     // ── Arme en main (style Minecraft, bas-droite) ────────────────────────────
 
-    private var weaponSwingView: WeaponSwingView? = null
     private var weaponTooltipView: LinearLayout? = null
     private var weaponTooltipName: android.widget.TextView? = null
     private var weaponTooltipStats: android.widget.TextView? = null
@@ -339,18 +330,6 @@ internal class CaveHud(private val activity: CaveActivity) {
     }
 
     fun buildWeaponInHand(root: FrameLayout) {
-        // Vue animée de swing en bas à droite, avancée vers le centre
-        val swingSize = (200 * dp).toInt()
-        val swingView = WeaponSwingView(activity).apply {
-            layoutParams = FrameLayout.LayoutParams(swingSize, swingSize).also {
-                it.gravity = Gravity.BOTTOM or Gravity.END
-                it.setMargins(0, 0, (180 * dp).toInt(), (40 * dp).toInt())
-            }
-            visibility = View.GONE
-        }
-        root.addView(swingView)
-        weaponSwingView = swingView
-
         // Nom de l'arme affiché dans la barre hotbar (collé à droite)
         val tooltip = LinearLayout(activity).apply {
             orientation = LinearLayout.VERTICAL
@@ -383,11 +362,6 @@ internal class CaveHud(private val activity: CaveActivity) {
     private fun showWeaponInHand(weapon: com.Atom2Universe.app.games.caves.node.ItemInstance) {
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return
         val rarityColor = rarityColor(weapon.rarity)
-
-        // Le sprite d'arme est désormais rendu en 3D dans le viewmodel 1re personne
-        // (bras + arme par-dessus la scène GL) ; l'ancienne vue 2D reste masquée.
-        weaponSwingView?.setWeapon(null)
-        weaponSwingView?.visibility = View.GONE
 
         // Tooltip
         val rarityLabel = weapon.rarity.name.lowercase().replaceFirstChar { it.uppercase() }

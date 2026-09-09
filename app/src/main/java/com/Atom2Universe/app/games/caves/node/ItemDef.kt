@@ -17,7 +17,7 @@ internal data class ItemDef(
     val flags: List<String>,
     val sprite: String,
     val tier: Int = 0,                          // 1-5 : iron/bronze/silver/gold/diamond
-    val weaponType: String? = null,             // "sword","axe","hammer","flail","hoe"
+    val weaponType: String? = null,             // "sling","bow","crossbow","gun"
     val attackSpeedMs: Int = 0                  // cooldown attaque en ms (0 = non-arme)
 ) {
     companion object {
