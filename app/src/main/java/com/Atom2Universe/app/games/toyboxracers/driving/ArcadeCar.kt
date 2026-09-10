@@ -124,6 +124,7 @@ internal class ArcadeCar(
     private var hopCooldownSeconds = 0f
     private var manualDrift = false
     private var releaseRequested = false
+    private var chargeCarrySeconds = 0f
     private var surfaceDrag = 0f
     private var onBoostPad = false
     private var editorWorld = ToyboxWorld(volumes = emptyList(), trackSections = emptyList())
@@ -196,6 +197,7 @@ internal class ArcadeCar(
         hopCooldownSeconds = 0f
         manualDrift = false
         releaseRequested = false
+        chargeCarrySeconds = 0f
         driftDirection = 0
         landingImpact = 0f
         surfaceGrip = 1f
@@ -313,7 +315,9 @@ internal class ArcadeCar(
         // joueur choisit son côté et le tient : c'est la version pilotée. Sans
         // bouton, un virage assez marqué déclenche la même charge tout seul,
         // pour que la conduite tactile d'origine reste jouable telle quelle.
-        val driftBaseValid = !manualDrift && !airborne && !input.braking && turboBoostSeconds <= 0f &&
+        // Charger pendant une relance est autorisé : c'est ce qui permet
+        // d'enchaîner turbo sur turbo au lieu d'attendre la fin du précédent.
+        val driftBaseValid = !manualDrift && !airborne && !input.braking &&
             speed >= DRIFT_SPEED_MIN && forwardSpeed > speed * DRIFT_FORWARD_RATIO_MIN
         val driftRequested = driftBaseValid && abs(steering) >= DRIFT_STEERING_MIN
         val chargeableDrift = driftRequested && slipAngle in DRIFT_ANGLE_MIN..DRIFT_ANGLE_MAX
@@ -341,10 +345,9 @@ internal class ArcadeCar(
             drifting = driftCandidateSeconds >= DRIFT_CONFIRM_SECONDS
             if (drifting) {
                 // Le seuil rend la détection visible, mais la réserve commence à
-                // zéro : aucun petit boost fixe ne peut être spammé.
-                driftEffectiveSeconds = 0f
-                turboCharge = 0f
-                turboLevel = 1
+                // zéro : aucun petit boost fixe ne peut être spammé. Seule une
+                // réserve encore reportée d'un ruban précédent est reprise.
+                inheritOrResetCharge()
                 driftGraceSeconds = 0f
             }
         } else {
@@ -384,13 +387,21 @@ internal class ArcadeCar(
             if (driftBaseValid && abs(steering) < DRIFT_STEERING_MIN) {
                 releaseTurbo(forwardX, forwardZ)
             } else {
-                // Freiner, décoller ou partir en tête-à-queue annule la charge :
-                // seul un vrai redressement en fin de courbe mérite la relance.
-                clearTurboCharge()
+                // Freiner ou partir en tête-à-queue annule la charge : seul un
+                // vrai redressement en fin de courbe mérite la relance. Sauter,
+                // en revanche, n'est pas un abandon.
+                suspendOrClearCharge(input)
             }
             driftDurationSeconds = 0f
             driftGraceSeconds = 0f
             driftCandidateSeconds = 0f
+        }
+        // La fenêtre de report s'épuise si aucune glisse ne reprend la réserve.
+        // Elle ne court pas pendant le saut lui-même : un saut long, en rampe,
+        // ne doit pas coûter le ruban qu'on venait justement chercher.
+        if (!drifting && chargeCarrySeconds > 0f && !(hopping && input.hopping)) {
+            chargeCarrySeconds = (chargeCarrySeconds - dt).coerceAtLeast(0f)
+            if (chargeCarrySeconds <= 0f) clearTurboCharge()
         }
         // L'adhérence a une part fixe et une part proportionnelle au travers :
         // plus la voiture glisse, plus vite elle se recolle. Un taux fixe seul
@@ -668,7 +679,9 @@ internal class ArcadeCar(
 
     /** Dérapage tenu au bouton : engagé à la retombée, relâché à la relance. */
     private fun updateManualDrift(dt: Float, input: Input, steering: Float) {
-        val held = input.hopping && !input.braking && turboBoostSeconds <= 0f
+        // Un turbo en cours n'empêche plus de reprendre une glisse : on charge
+        // le suivant pendant qu'on profite du précédent.
+        val held = input.hopping && !input.braking
         if (!manualDrift) {
             // On engage seulement roues au sol : le saut sert justement à donner
             // au joueur le temps de tourner le stick avant de reposer la voiture.
@@ -678,10 +691,8 @@ internal class ArcadeCar(
                 manualDrift = true
                 drifting = true
                 driftDirection = if (steering > 0f) 1 else -1
-                driftEffectiveSeconds = 0f
                 driftDurationSeconds = 0f
-                turboCharge = 0f
-                turboLevel = 1
+                inheritOrResetCharge()
             }
             return
         }
@@ -708,12 +719,10 @@ internal class ArcadeCar(
             onBoostPad = false
             return
         }
-        // Ni empilement ni raccourcissement : la bande ne fait que garantir un
-        // plancher de puissance et de durée. Un gros Ruban Turbo déjà lancé
-        // reste donc intact, et enchaîner deux bandes ne cumule rien.
-        turboBoostPeakMultiplier = maxOf(turboBoostPeakMultiplier, PAD_BOOST_PEAK)
-        turboBoostSeconds = maxOf(turboBoostSeconds, PAD_BOOST_DURATION)
-        turboBoostTotalSeconds = maxOf(turboBoostTotalSeconds, turboBoostSeconds)
+        // Ni empilement ni raccourcissement : la bande passe par la même porte
+        // que le dérapage libéré, donc un gros Ruban Turbo déjà lancé reste
+        // intact et enchaîner deux bandes ne cumule rien.
+        applyBoost(PAD_BOOST_PEAK, PAD_BOOST_DURATION)
         if (!onBoostPad) {
             onBoostPad = true
             // Le même front que la relance d'un dérapage : secousse de caméra,
@@ -1002,20 +1011,60 @@ internal class ArcadeCar(
             clearTurboCharge()
             return
         }
-        turboBoostPeakMultiplier = boostPeakMultiplier(earnedSeconds)
+        applyBoost(boostPeakMultiplier(earnedSeconds), duration)
         val impulse = (turboBoostPeakMultiplier - 1f) * TURBO_RELEASE_IMPULSE
         velocityX += forwardX * impulse
         velocityZ += forwardZ * impulse
-        turboBoostTotalSeconds = duration
-        turboBoostSeconds = duration
         turboReleaseSerial++
         clearTurboCharge()
+    }
+
+    /** Toute relance passe par ici : dérapage libéré comme bande de piste.
+     *
+     * Elle ne fait que garantir un plancher. Enchaîner ne doit jamais dégrader :
+     * une petite relance lâchée pendant un gros turbo en garderait sinon la
+     * durée courte et la puissance faible, et le joueur serait puni d'avoir
+     * continué à travailler. Le plus fort des deux l'emporte, sur les deux
+     * axes séparément.
+     */
+    private fun applyBoost(peak: Float, duration: Float) {
+        // La puissance du turbo précédent ne compte que s'il tourne encore :
+        // `turboBoostPeakMultiplier` survit à la fin d'une relance.
+        val runningPeak = if (turboBoostSeconds > 0f) turboBoostPeakMultiplier else 1f
+        turboBoostPeakMultiplier = maxOf(runningPeak, peak)
+        turboBoostSeconds = maxOf(turboBoostSeconds, duration)
+        turboBoostTotalSeconds = maxOf(turboBoostTotalSeconds, turboBoostSeconds)
+    }
+
+    /** Le saut n'est pas un abandon : la réserve du ruban en cours lui survit.
+     *
+     * C'est exactement le geste « je glisse déjà, je saute pour reprendre la
+     * même courbe au bouton » : jeter la réserve entre les deux punissait le
+     * joueur d'avoir enchaîné. Le report est borné, sans quoi un ruban lâché
+     * offrirait une avance gratuite à un dérapage bien plus tard.
+     */
+    private fun suspendOrClearCharge(input: Input) {
+        if (input.hopping && airborne && driftEffectiveSeconds > 0f) {
+            chargeCarrySeconds = CHARGE_CARRY_SECONDS
+            return
+        }
+        chargeCarrySeconds = 0f
+        clearTurboCharge()
+    }
+
+    /** Une glisse qui démarre sur une réserve encore vivante la continue. */
+    private fun inheritOrResetCharge() {
+        if (chargeCarrySeconds <= 0f) driftEffectiveSeconds = 0f
+        chargeCarrySeconds = 0f
+        turboCharge = (driftEffectiveSeconds / FULL_CHARGE_SECONDS).coerceIn(0f, 1f)
+        turboLevel = chargeLevel(turboCharge)
     }
 
     private fun clearTurboCharge() {
         turboCharge = 0f
         turboLevel = 0
         driftEffectiveSeconds = 0f
+        chargeCarrySeconds = 0f
     }
 
     private fun updateReverseState(dt: Float, input: Input) {
@@ -1535,6 +1584,7 @@ internal class ArcadeCar(
         private const val DRIFT_CANCEL_ANGLE = 1.25f
         private const val DRIFT_CONFIRM_SECONDS = 0.25f
         private const val DRIFT_EXIT_GRACE_SECONDS = 0.52f
+        private const val CHARGE_CARRY_SECONDS = 0.70f
         private const val FULL_CHARGE_SECONDS = 10f
         private const val TURBO_LEVEL_TWO = 0.25f
         private const val TURBO_LEVEL_THREE = 0.60f

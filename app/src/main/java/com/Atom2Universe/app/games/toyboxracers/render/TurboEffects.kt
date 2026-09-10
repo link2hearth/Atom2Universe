@@ -104,7 +104,11 @@ internal class TurboEffects {
         }
 
         val boosting = car.turboBoostSeconds > 0f
-        val level = if (boosting) BOOST_LEVEL else car.turboLevel.coerceAtLeast(1)
+        // On peut charger pendant une relance : c'est alors le NIVEAU DE CHARGE
+        // qui doit se lire sur le ruban, pas la relance en cours. Le joueur a
+        // besoin de savoir quand relâcher ; que le turbo tourne, les flammes le
+        // disent déjà.
+        val level = if (car.drifting) car.turboLevel.coerceAtLeast(1) else BOOST_LEVEL
         if (car.drifting || boosting) {
             val startsNewRibbon = !recordingTrail
             recordingTrail = true
@@ -118,7 +122,7 @@ internal class TurboEffects {
             trailTimer = TRAIL_INTERVAL
         }
 
-        if (car.drifting && !boosting) {
+        if (car.drifting) {
             dustTimer += dt
             if (dustTimer >= DUST_INTERVAL) {
                 dustTimer -= DUST_INTERVAL

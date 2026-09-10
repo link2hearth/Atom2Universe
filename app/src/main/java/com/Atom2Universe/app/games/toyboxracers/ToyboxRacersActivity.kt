@@ -38,6 +38,7 @@ import com.Atom2Universe.app.games.toyboxracers.editor.TrackMagnet
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
 import com.Atom2Universe.app.games.toyboxracers.input.RacerGamepad
+import com.Atom2Universe.app.games.toyboxracers.input.SteeringJoystickView
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
@@ -228,6 +229,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var editorTouchLayer: EditorTouchLayer
     private val raceHudViews = mutableListOf<View>()
     private val raceControlViews = mutableListOf<View>()
+    private lateinit var steeringStick: SteeringJoystickView
     private val gamepad = RacerGamepad(object : RacerGamepad.Listener {
         override fun onSteering(value: Float) { if (drivingActive()) renderer.setSteering(value) }
         override fun onThrottle(value: Float) { if (drivingActive()) renderer.setThrottle(value) }
@@ -832,20 +834,31 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun addControls(root: FrameLayout) {
         val widthDp = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         val controls = ControlDimensions.forWidth(widthDp)
-        val steering = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
+        // La zone de manche est bien plus large que le manche lui-même : c'est
+        // elle qui donne au socle la place de glisser derrière le pouce. Elle
+        // reste à gauche de la minimap, centrée en bas, pour ne pas la masquer.
+        val stickZone = dp(controls.steering * 3)
+        steeringStick = SteeringJoystickView(
+            this,
+            baseRadius = dp(controls.steering).toFloat() * 0.62f,
+            // Retrait du repos, mesuré depuis le coin de la zone : le pouce a
+            // besoin de pouvoir descendre et partir à gauche du manche, pas
+            // seulement de le pousser vers l'intérieur de l'écran.
+            inset = dp(30).toFloat()
+        ).apply {
+            contentDescription = "Direction"
+            isSteeringEnabled = { drivingActive() }
+            // Le manche parle en repère écran (+1 = droite) ; le jeu compte
+            // l'inverse depuis les anciens boutons, où « ◀ » envoyait +1.
+            onSteering = { value -> if (drivingActive()) renderer.setSteering(-value) }
         }
-        val left = makeButton("◀", controls.steering, 0xA84B617A.toInt())
-        val right = makeButton("▶", controls.steering, 0xA84B617A.toInt())
-        steering.addView(left, LinearLayout.LayoutParams(dp(controls.steering), dp(controls.steering)).apply { rightMargin = dp(controls.gap) })
-        steering.addView(right, LinearLayout.LayoutParams(dp(controls.steering), dp(controls.steering)))
-        root.addView(steering, FrameLayout.LayoutParams(-2, dp(controls.steering)).apply {
+        root.addView(steeringStick, FrameLayout.LayoutParams(stickZone, stickZone).apply {
             gravity = Gravity.BOTTOM or Gravity.START
-            leftMargin = dp(20)
-            bottomMargin = dp(20)
+            leftMargin = dp(12)
+            bottomMargin = dp(12)
         })
-        raceControlViews += steering
+        raceControlViews += steeringStick
+        releaseControls += { steeringStick.reset() }
 
         val brake = makeButton("FREIN\nRECUL", controls.brake, 0xB8735D91.toInt()).apply {
             textSize = 12f
@@ -883,12 +896,6 @@ class ToyboxRacersActivity : ThemedActivity() {
         // changer de circuit ou ouvrir le menu ne doit pas laisser une gâchette
         // enfoncée dans l'état du jeu.
         releaseControls += { gamepad.reset() }
-        bindHoldButton(left) { pressed ->
-            renderer.setSteering(if (pressed) 1f else if (right.isPressed) -1f else 0f)
-        }
-        bindHoldButton(right) { pressed ->
-            renderer.setSteering(if (pressed) -1f else if (left.isPressed) 1f else 0f)
-        }
         bindHoldButton(brake, renderer::setBraking)
         bindHoldButton(accelerator, renderer::setAccelerating)
         bindHoldButton(hop, renderer::setHopping)
@@ -2910,10 +2917,11 @@ class ToyboxRacersActivity : ThemedActivity() {
             racing && state.racePhase == RacePhase.COUNTDOWN -> "Prépare-toi — le départ est verrouillé"
             racing && state.racePhase == RacePhase.FINISHED -> "Course terminée"
             racing && state.wrongWay -> "MAUVAIS SENS — fais demi-tour"
-            state.turboBoosting -> "RUBAN TURBO !  Relance pastel"
-            // La glisse passe avant le vol : un petit saut de dérapage ne doit
-            // pas remplacer la jauge de charge par un message de réception.
+            // La glisse passe avant tout le reste : ni un petit saut de dérapage
+            // ni la relance en cours ne doivent remplacer la jauge de charge.
+            // Charger pendant un turbo est justement le geste à encourager.
             state.drifting -> "Ruban ${"●".repeat(state.turboLevel.coerceAtLeast(1))}${"○".repeat((3 - state.turboLevel).coerceAtLeast(0))}  ${(state.turboCharge * 100).toInt()} %  ·  relâche SAUT pour relancer"
+            state.turboBoosting -> "RUBAN TURBO !  Relance pastel"
             state.airborne && !state.hopping -> "SAUT !  Prépare la réception"
             state.reversing -> "MARCHE ARRIÈRE — relâche FREIN pour repartir"
             state.offRoad -> getString(if (racing) R.string.toybox_return_track else R.string.toybox_explore_hint)
@@ -2987,15 +2995,14 @@ class ToyboxRacersActivity : ThemedActivity() {
     internal data class ControlDimensions(
         val steering: Int,
         val brake: Int,
-        val accelerator: Int,
-        val gap: Int
+        val accelerator: Int
     ) {
         companion object {
             /** Trois tailles gardent les commandes accessibles du petit au grand écran. */
             fun forWidth(widthDp: Float): ControlDimensions = when {
-                widthDp < 640f -> ControlDimensions(70, 80, 96, 8)
-                widthDp < 840f -> ControlDimensions(78, 88, 108, 10)
-                else -> ControlDimensions(88, 98, 118, 12)
+                widthDp < 640f -> ControlDimensions(70, 80, 96)
+                widthDp < 840f -> ControlDimensions(78, 88, 108)
+                else -> ControlDimensions(88, 98, 118)
             }
         }
     }

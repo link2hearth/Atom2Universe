@@ -277,6 +277,76 @@ class ArcadeCarDrivingTest {
         )
     }
 
+    @Test
+    fun onPeutChargerUnNouveauRubanPendantUneRelance() {
+        val car = launchedCar()
+        repeat(150) { car.update(step, hold(steering = 1f, hopping = true)) }
+        car.update(step, hold(steering = 0f, hopping = false))
+        assertTrue("La relance doit tourner", car.turboBoostSeconds > 0f)
+
+        // Reprendre une glisse pendant que le turbo pousse : c'est ce qui rend
+        // la conduite nerveuse, on prépare le suivant sans attendre la fin.
+        repeat(90) { car.update(step, hold(steering = -1f, hopping = true)) }
+
+        assertTrue("Un turbo en cours ne doit plus interdire la glisse", car.drifting)
+        assertTrue("Et la charge doit bien monter", car.turboCharge > 0f)
+    }
+
+    @Test
+    fun enchainerUneRelanceNAffaiblitJamaisCelleEnCours() {
+        val car = launchedCar()
+        // Un long dérapage donne une grosse relance : longue et puissante.
+        repeat(300) { car.update(step, hold(steering = 1f, hopping = true)) }
+        car.update(step, hold(steering = 0f, hopping = false))
+        val strongSeconds = car.turboBoostSeconds
+        val strongSerial = car.turboReleaseSerial
+        assertTrue("La grosse relance doit durer", strongSeconds > 2f)
+
+        // Une glisse minuscule relâchée par-dessus ne doit pas la raccourcir.
+        repeat(20) { car.update(step, hold(steering = -1f, hopping = true)) }
+        car.update(step, hold(steering = 0f, hopping = false))
+
+        assertTrue(
+            "La relance en cours ne doit jamais être dégradée : $strongSeconds -> ${car.turboBoostSeconds}",
+            car.turboBoostSeconds >= strongSeconds - 0.4f
+        )
+        assertTrue(car.turboReleaseSerial >= strongSerial)
+    }
+
+    @Test
+    fun leRubanAutomatiqueNEstPasPerduQuandOnSautePourLeReprendreAuBouton() {
+        // Ruban « classique » : on tourne fort sans toucher au bouton saut.
+        val car = launchedCar()
+        repeat(120) { car.update(step, hold(steering = 1f)) }
+        assertTrue("Le ruban automatique doit s'être installé", car.drifting)
+        val earned = car.turboCharge
+        assertTrue("Il doit avoir accumulé quelque chose : $earned", earned > 0.01f)
+
+        // Puis on saute pour reprendre la même courbe au bouton.
+        repeat(60) { car.update(step, hold(steering = 1f, hopping = true)) }
+
+        assertTrue("La glisse doit être reprise au bouton", car.drifting)
+        assertEquals("Le côté doit être celui de la courbe en cours", 1, car.driftDirection)
+        assertTrue(
+            "La réserve du ruban automatique ne doit pas être jetée : $earned -> ${car.turboCharge}",
+            car.turboCharge >= earned
+        )
+    }
+
+    @Test
+    fun laReserveReporteeSEpuiseSiAucuneGlisseNeLaReprend() {
+        val car = launchedCar()
+        repeat(120) { car.update(step, hold(steering = 1f)) }
+        assertTrue(car.turboCharge > 0.01f)
+
+        // Un saut, puis on relâche tout et on roule droit : la réserve reportée
+        // ne doit pas rester en réserve indéfiniment.
+        car.update(step, hold(steering = 1f, hopping = true))
+        repeat(180) { car.update(step, hold()) }
+
+        assertEquals("La réserve doit finir par se perdre", 0f, car.turboCharge, 0.0001f)
+    }
+
     private fun hold(steering: Float = 0f, hopping: Boolean = false) =
         ArcadeCar.Input(steering, accelerating = false, braking = false, hopping = hopping)
 

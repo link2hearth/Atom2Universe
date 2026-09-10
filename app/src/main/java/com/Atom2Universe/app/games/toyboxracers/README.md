@@ -30,6 +30,32 @@ bouton n'est pas tenu : la conduite tactile sans bouton saut garde exactement le
 comportement d'avant. Les deux entrées alimentent la même charge et la même
 relance, jamais en même temps.
 
+### Enchaîner : la réserve appartient à la voiture
+
+Deux règles font que le travail du joueur n'est jamais jeté.
+
+- **On charge pendant une relance.** Un turbo en cours n'interdit plus de
+  reprendre une glisse : on prépare le suivant en profitant du précédent. C'est
+  ce qui rend la conduite nerveuse. Rien ne s'emballe pour autant, la vitesse
+  restant plafonnée par `MAX_SPEED × puissance`, elle-même bornée.
+- **Toute relance passe par `applyBoost`, qui ne fait que garantir un plancher.**
+  Puissance et durée prennent chacune le plus fort des deux — dérapage libéré
+  comme bande de piste. Sans ça, une petite relance lâchée par-dessus un gros
+  turbo l'aurait raccourci et affaibli : le joueur aurait été puni d'avoir
+  continué à travailler.
+- **Le saut n'est pas un abandon.** Passer d'un ruban automatique à un ruban au
+  bouton — « je glisse déjà, je saute pour reprendre la même courbe » — reporte
+  la réserve accumulée au lieu de la jeter. Le report est borné à 0,7 s après
+  la retombée : sans fenêtre, un ruban lâché offrirait une avance gratuite à un
+  dérapage bien plus tard. Elle ne court pas pendant le saut lui-même, sinon un
+  saut long en rampe coûterait le ruban qu'on venait chercher. Freiner ou partir
+  en tête-à-queue, eux, annulent toujours immédiatement.
+
+Le ruban visuel suit la même logique : dès qu'on glisse, sa couleur montre le
+**niveau de charge** et non la relance en cours, parce que c'est ce dont le
+joueur a besoin pour savoir quand relâcher. Que le turbo tourne, les flammes le
+disent déjà. Le bandeau d'état donne la même priorité à la jauge.
+
 ### Le saut et les contacts : deux pièges réglés
 
 Sauter est la seule façon de décoller **roues au sol**, ce qui a mis au jour deux
@@ -107,16 +133,36 @@ d'attaque, même plafond de vitesse levé, même front `turboReleaseSerial` (don
 secousse de caméra, vibration, étincelles et traînée chaude sans une ligne de
 plus).
 
-La bande ne fait que **garantir un plancher** : `max` sur la puissance (×1,75)
-et sur la durée (1,5 s). Un gros Ruban Turbo déjà lancé reste donc intact, et
-enchaîner deux bandes ne cumule rien. Tant qu'une roue la touche, la durée est
+La bande passe par `applyBoost` comme le dérapage libéré : elle ne fait que
+**garantir un plancher** (×1,75 et 1,5 s). Un gros Ruban Turbo déjà lancé reste
+donc intact, et enchaîner deux bandes ne cumule rien. Tant qu'une roue la touche, la durée est
 maintenue à plein : la poussée dure autant que la bande, puis s'éteint sur la
 courbe habituelle. Une bande juste avant un tremplin envoie donc réellement loin.
 
 Un Ruban Turbo parfait (×1,80, jusqu'à 5 s) reste plus fort qu'une bande : la
 bande gagne en immédiateté, la glisse gagne en durée. Rouler sur une bande
-interrompt un dérapage tenu et en libère la charge — les deux relances ne
-s'additionnent pas, la meilleure l'emporte.
+n'interrompt plus un dérapage tenu — les deux relances ne s'additionnent pas,
+la meilleure l'emporte, et la glisse continue de charger la suivante.
+
+### Direction tactile : un manche au socle glissant
+
+Les deux boutons `◀ ▶` sont remplacés par `input/SteeringJoystickView`, un
+manche **analogique** — la direction n'était de toute façon plus en tout ou rien
+depuis la manette.
+
+Au repos, la silhouette reste posée en bas à gauche : le pouce la retrouve sans
+regarder. Dès que le doigt dépasse le débattement, **le socle glisse pour rester
+à un rayon de lui**. C'est le point qui compte : à fond dans un virage, un pouce
+qui dérive hors de la zone ne coupe plus la direction d'un coup. La tête, elle,
+ne sort jamais de son cercle — la butée restante est une vraie butée de commande.
+
+Un appui qui tombe hors du manche le recentre sous le doigt, **à zéro** : poser
+le pouce de travers ne doit pas donner un braquage complet qu'on n'a pas demandé.
+
+La zone tactile fait trois fois la taille de commande, ce qui donne au socle la
+place de glisser derrière le pouce ; elle reste à gauche de la minimap. La vue ne
+connaît que l'écran (+1 = droite) et l'appelant traduit : les anciens boutons
+comptaient l'inverse, « ◀ » envoyait +1.
 
 ### Manette
 
@@ -175,7 +221,10 @@ pièges de contact ci-dessus : un saut depuis un châssis volontairement enfonc�
 doit décoller au-dessus de la surface enjambée, et un saut dans un monde de
 l'éditeur posé haut ne doit jamais redescendre sous sa piste. Trois cas couvrent
 la bande Boost : elle relance au simple contact, elle ne relance qu'une fois tant
-qu'on reste dessus, et sa poussée s'éteint bien après l'avoir quittée. Deux cas
+qu'on reste dessus, et sa poussée s'éteint bien après l'avoir quittée. Quatre cas gardent l'enchaînement : on peut charger pendant une relance, une
+petite relance n'affaiblit jamais celle en cours, la réserve d'un ruban
+automatique survit au saut qui la reprend au bouton, et elle se perd bien si
+aucune glisse ne la reprend. Deux cas
 gardent la rampe, sur une pente de 31° : marteler le bouton saut en montée ne doit
 jamais faire passer le plancher de la caisse sous la piste, et un saut lancé en
 rampe doit monter *plus* que la rampe dès la première image. Ces tests roulent sur
