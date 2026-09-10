@@ -2652,7 +2652,9 @@ internal class CaveRenderer(
         val tex = runCatching {
             val ids = IntArray(1); GLES30.glGenTextures(1, ids, 0); val t = ids[0]
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, t)
-            val bmp = BitmapFactory.decodeStream(context.assets.open("Cave World/Items/$sprite.png"))
+            val bmp = runCatching {
+                context.assets.open("caves/items/$sprite.png").use { BitmapFactory.decodeStream(it) }
+            }.getOrNull() ?: context.assets.open("caves/weapon_icons/$sprite.png").use { BitmapFactory.decodeStream(it) }
             val b = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
             bmp.copyPixelsToBuffer(b); b.position(0)
             GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bmp.width, bmp.height, 0,

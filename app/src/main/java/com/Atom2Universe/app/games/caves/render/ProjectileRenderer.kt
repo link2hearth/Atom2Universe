@@ -124,7 +124,7 @@ internal class ProjectileRenderer {
         val ids = IntArray(8); GLES30.glGenTextures(8, ids, 0)
         files.forEachIndexed { i, name ->
             textures[i] = ids[i]
-            val bmp = BitmapFactory.decodeStream(assets.open("Cave World/Particles/$name"))
+            val bmp = BitmapFactory.decodeStream(assets.open("caves/particles/$name"))
             val buf = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
             bmp.copyPixelsToBuffer(buf); buf.position(0)
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, ids[i])

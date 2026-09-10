@@ -10,7 +10,7 @@ internal class WeaponIconDrawable(assets: AssetManager, type: String, private va
     private val icon = synchronized(cache) {
         cache.getOrPut(type) {
             runCatching { assets.open("caves/weapon_icons/$type.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
-                ?: runCatching { assets.open("Cave World/Items/$type.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
+                ?: runCatching { assets.open("caves/items/$type.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
                 ?: Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
         }
     }

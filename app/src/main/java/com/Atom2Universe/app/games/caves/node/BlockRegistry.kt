@@ -78,7 +78,7 @@ internal object BlockRegistry {
             bitmaps += when {
                 generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
                 name.startsWith("cozy:") -> cozy.texture(name)
-                name.startsWith("Items/") -> assets.open("Cave World/$name").use { BitmapFactory.decodeStream(it) }
+                name.startsWith("Items/") -> assets.open("caves/items/${name.removePrefix("Items/")}").use { BitmapFactory.decodeStream(it) }
                 else -> error("Unknown Cave World block texture: $name")
             }
             return idx
