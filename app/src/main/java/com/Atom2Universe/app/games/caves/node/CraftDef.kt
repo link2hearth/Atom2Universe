@@ -9,7 +9,10 @@ internal data class CraftDef(
     /** Recette d'arme : id [ItemRegistry] à rouler (rareté/affixes) au lieu d'un simple bloc. */
     val resultItemId: String? = null
 ) {
-    fun canCraft(inv: Map<Short, Int>) = ingredients.all { (id, n) -> (inv[id] ?: 0) >= n }
+    val requiredIngredients: Map<Short, Int> get() = ingredients.groupBy { it.first }.mapValues { (_, entries) -> entries.sumOf { it.second } }
+    fun maxCraftable(inv: Map<Short, Int>): Int = requiredIngredients.entries
+        .minOfOrNull { (id, count) -> if (count > 0) (inv[id] ?: 0) / count else 0 }?.coerceAtLeast(0) ?: 0
+    fun canCraft(inv: Map<Short, Int>) = maxCraftable(inv) > 0
 
     companion object {
         fun fromJson(j: JSONObject): CraftDef {

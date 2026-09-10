@@ -1,9 +1,9 @@
 {
   "id": 9007,
   "name": "cotton_dark_green",
-  "texture_top": "cotton/cotton_dark_green.png",
-  "texture_side": "cotton/cotton_dark_green.png",
-  "texture_bottom": "cotton/cotton_dark_green.png",
+  "texture_top": "cozy:cloth:5:006400",
+  "texture_side": "cozy:cloth:5:006400",
+  "texture_bottom": "cozy:cloth:5:006400",
   "color": "#006400",
   "hardness": 1.0,
   "drop": "cotton_dark_green",

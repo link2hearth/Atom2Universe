@@ -1,9 +1,9 @@
 {
   "id": 9008,
   "name": "cotton_gold",
-  "texture_top": "cotton/cotton_gold.png",
-  "texture_side": "cotton/cotton_gold.png",
-  "texture_bottom": "cotton/cotton_gold.png",
+  "texture_top": "cozy:cloth:5:FFD700",
+  "texture_side": "cozy:cloth:5:FFD700",
+  "texture_bottom": "cozy:cloth:5:FFD700",
   "color": "#FFD700",
   "hardness": 1.0,
   "drop": "cotton_gold",

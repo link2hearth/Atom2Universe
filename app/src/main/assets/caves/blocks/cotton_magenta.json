@@ -1,9 +1,9 @@
 {
   "id": 9015,
   "name": "cotton_magenta",
-  "texture_top": "cotton/cotton_magenta.png",
-  "texture_side": "cotton/cotton_magenta.png",
-  "texture_bottom": "cotton/cotton_magenta.png",
+  "texture_top": "cozy:cloth:5:FF00FF",
+  "texture_side": "cozy:cloth:5:FF00FF",
+  "texture_bottom": "cozy:cloth:5:FF00FF",
   "color": "#FF00FF",
   "hardness": 1.0,
   "drop": "cotton_magenta",

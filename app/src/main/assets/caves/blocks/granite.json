@@ -1,10 +1,10 @@
 {
   "id": 2001,
   "name": "granite",
-  "texture_top": "blocs/greystone_top.png",
-  "texture_side": "blocs/greystone_top.png",
-  "texture_bottom": "blocs/greystone_top.png",
-  "color": "#9B7B6A",
+  "texture_top": "cozy:material:3:B3A29D",
+  "texture_side": "cozy:material:3:B3A29D",
+  "texture_bottom": "cozy:material:3:B3A29D",
+  "color": "#B3A29D",
   "hardness": 3.0,
   "drop": "granite",
   "creative_tab": "stone"

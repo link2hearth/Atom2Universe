@@ -1,0 +1,14 @@
+{
+  "id": 7058,
+  "name": "grass_tuft_tall",
+  "texture_top": "cozy:groundcover:2",
+  "texture_side": "cozy:groundcover:2",
+  "texture_bottom": "cozy:groundcover:2",
+  "color": "#94A57B",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "grass_tuft_tall",
+  "creative_tab": "nature",
+  "sprite_margin": 0.02,
+  "sprite_height": 0.8
+}

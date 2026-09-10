@@ -1,13 +1,15 @@
 {
   "id": 2021,
   "name": "rock_moss",
-  "texture_top": "rock_moss.png",
-  "texture_side": "rock_moss.png",
-  "texture_bottom": "rock_moss.png",
-  "color": "#667744",
+  "texture_top": "cozy:groundcover:4",
+  "texture_side": "cozy:groundcover:4",
+  "texture_bottom": "cozy:groundcover:4",
+  "color": "#96A58C",
   "hardness": 0.3,
   "decoration": true,
   "drop": "rock_moss",
   "creative_tab": "stone",
-  "waterlogged": false
+  "waterlogged": false,
+  "sprite_margin": 0.02,
+  "sprite_height": 0.48
 }

@@ -1,0 +1,14 @@
+{
+  "id": 7056,
+  "name": "grass_tuft_short",
+  "texture_top": "cozy:groundcover:0",
+  "texture_side": "cozy:groundcover:0",
+  "texture_bottom": "cozy:groundcover:0",
+  "color": "#99AE85",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "grass_tuft_short",
+  "creative_tab": "nature",
+  "sprite_margin": 0.02,
+  "sprite_height": 0.42
+}

@@ -1,10 +1,10 @@
 {
   "id": 2012,
   "name": "brick_terracotta",
-  "texture_top": "blocs/brick_terracotta.png",
-  "texture_side": "blocs/brick_terracotta.png",
-  "texture_bottom": "blocs/brick_terracotta.png",
-  "color": "#C76B38",
+  "texture_top": "cozy:material:12:C99378",
+  "texture_side": "cozy:material:12:C99378",
+  "texture_bottom": "cozy:material:12:C99378",
+  "color": "#C99378",
   "hardness": 3.5,
   "drop": "brick_terracotta",
   "creative_tab": "terrain"

@@ -6,6 +6,12 @@ import kotlin.math.hypot
 class TouchController {
     // Left joystick: -1..1
     var moveForward = 0f
+    fun reset() {
+        moveForward = 0f; moveRight = 0f; deltaYaw = 0f; deltaPitch = 0f
+        flyUp = false; flyDown = false; laserActive = false; rtChargeRaw = 0f
+        placeRequested = false; sprintActive = false; leftId = -1; rightId = -1
+        gamepadRightX = 0f; gamepadRightY = 0f
+    }
     var moveRight = 0f
 
     // Camera delta applied each frame then reset
@@ -33,14 +39,17 @@ class TouchController {
 
     private var rightId = -1
     private var rightPx = 0f; private var rightPy = 0f
+    private var rightDownX = 0f; private var rightDownY = 0f
+    private var rightMoved = false
 
     private val JOYSTICK_RADIUS = 120f
+    private val TAP_SLOP = 18f
 
     private var leftTapCount = 0
     private var lastLeftTapMs = 0L
     private val DOUBLE_TAP_MS = 380L
 
-    fun onTouch(event: MotionEvent, screenWidth: Int) {
+    fun onTouch(event: MotionEvent, screenWidth: Int, excludedPointers: Set<Int> = emptySet()) {
         val half = screenWidth / 2f
         val action = event.actionMasked
         val idx = event.actionIndex
@@ -48,6 +57,7 @@ class TouchController {
 
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+                if (pid in excludedPointers) return
                 val ex = event.getX(idx); val ey = event.getY(idx)
                 if (ex < half) {
                     if (leftId == -1) {
@@ -65,12 +75,18 @@ class TouchController {
                         lastLeftTapMs = now
                     }
                 } else {
-                    if (rightId == -1) { rightId = pid; rightPx = ex; rightPy = ey }
+                    if (rightId == -1) {
+                        rightId = pid
+                        rightPx = ex; rightPy = ey
+                        rightDownX = ex; rightDownY = ey
+                        rightMoved = false
+                    }
                 }
             }
             MotionEvent.ACTION_MOVE -> {
                 for (i in 0 until event.pointerCount) {
                     val p = event.getPointerId(i)
+                    if (p in excludedPointers) continue
                     val ex = event.getX(i); val ey = event.getY(i)
                     when (p) {
                         leftId -> {
@@ -84,6 +100,7 @@ class TouchController {
                         rightId -> {
                             deltaYaw   += (ex - rightPx) * 0.14f
                             deltaPitch += (ey - rightPy) * 0.14f
+                            if (!rightMoved && hypot(ex - rightDownX, ey - rightDownY) > TAP_SLOP) rightMoved = true
                             rightPx = ex; rightPy = ey
                         }
                     }
@@ -98,6 +115,9 @@ class TouchController {
             }
         }
     }
+
+    fun isCameraPointer(pid: Int): Boolean = pid == rightId
+    fun didCameraPointerMove(): Boolean = rightMoved
 
     // Axes du stick droit manette (mis à jour par GamepadController, -1..1)
     @Volatile var gamepadRightX = 0f

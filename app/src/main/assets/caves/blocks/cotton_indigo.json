@@ -1,9 +1,9 @@
 {
   "id": 9011,
   "name": "cotton_indigo",
-  "texture_top": "cotton/cotton_indigo.png",
-  "texture_side": "cotton/cotton_indigo.png",
-  "texture_bottom": "cotton/cotton_indigo.png",
+  "texture_top": "cozy:cloth:5:4B0082",
+  "texture_side": "cozy:cloth:5:4B0082",
+  "texture_bottom": "cozy:cloth:5:4B0082",
   "color": "#4B0082",
   "hardness": 1.0,
   "drop": "cotton_indigo",

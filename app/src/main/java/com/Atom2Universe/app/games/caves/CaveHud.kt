@@ -17,6 +17,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class CaveHud(private val activity: CaveActivity) {
+    fun controlIcon(button: Button, kind: String, label: String) {
+        button.text = ""; button.contentDescription = label; button.backgroundTintList = null
+        val inset = android.graphics.drawable.InsetDrawable(CaveActionDrawable(kind), CaveUiStyle.dp(activity, 9))
+        button.background = android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x447DAD8B),
+            android.graphics.drawable.LayerDrawable(arrayOf(CaveUiStyle.panel(activity, 0x66293F33, 0x6686A38C), inset)), null)
+    }
 
     private val res get() = activity.resources
     private val dp  get() = res.displayMetrics.density
@@ -38,16 +44,24 @@ internal class CaveHud(private val activity: CaveActivity) {
     var shieldBarFg: View? = null
     var shieldContainer: View? = null
     private var sprintIndicator: TextView? = null
+    private var vitals: CaveVitalsView? = null
+    private var quickbarWidth = 0
 
 
     // ── Hotbar ────────────────────────────────────────────────────────────────
 
     fun buildHotbarUI(container: LinearLayout) {
-        val sz = (52 * dp).toInt()
+        val sz = (((res.displayMetrics.widthPixels / dp - 88) / CaveActivity.ACTIVE_SIZE).coerceIn(40f, 52f) * dp).toInt()
         container.gravity = Gravity.CENTER
+        container.background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
+        container.setPadding((5*dp).toInt(), (3*dp).toInt(), (5*dp).toInt(), (3*dp).toInt())
+        quickbarWidth = CaveActivity.ACTIVE_SIZE * (sz + (4*dp).toInt()) + (58*dp).toInt()
+        container.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            vitals?.layoutParams = vitals?.layoutParams?.also { it.width = (container.width - 22*dp).toInt().coerceAtLeast(1) }
+        }
         repeat(CaveActivity.ACTIVE_SIZE) { i ->
             val slot = FrameLayout(activity).apply {
-                layoutParams = LinearLayout.LayoutParams(sz, sz).also { it.setMargins(2, 2, 2, 2) }
+                layoutParams = LinearLayout.LayoutParams(sz, sz).also { it.setMargins((2*dp).toInt(), 0, (2*dp).toInt(), 0) }
                 background = slotDrawable(null, false)
                 setOnClickListener {
                     if (activity.invOverlay.visibility == View.VISIBLE)
@@ -57,7 +71,7 @@ internal class CaveHud(private val activity: CaveActivity) {
                 }
             }
             val colorDot = View(activity).apply {
-                layoutParams = FrameLayout.LayoutParams((28 * dp).toInt(), (28 * dp).toInt()).also { it.gravity = Gravity.CENTER }
+                layoutParams = FrameLayout.LayoutParams((40 * dp).toInt(), (40 * dp).toInt()).also { it.gravity = Gravity.CENTER }
                 background = GradientDrawable().apply { setColor(Color.TRANSPARENT) }
             }
             val countTv = TextView(activity).apply {
@@ -66,13 +80,21 @@ internal class CaveHud(private val activity: CaveActivity) {
                 setTextColor(Color.WHITE); textSize = 9f
                 setPadding(0, 0, (2 * dp).toInt(), (1 * dp).toInt())
             }
-            slot.addView(colorDot); slot.addView(countTv); container.addView(slot)
+            val number = TextView(activity).apply {
+                text = (i + 1).toString(); textSize = 8f; setTextColor(0xA9DBE8D6.toInt())
+                setPadding((4*dp).toInt(), (2*dp).toInt(), 0, 0)
+                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            }
+            slot.isFocusable = true
+            countTv.setShadowLayer(2*dp,0f,dp,0xFF203329.toInt())
+            slot.addView(colorDot); slot.addView(number); slot.addView(countTv); container.addView(slot)
             slotViews[i] = slot; slotColors[i] = colorDot; slotCounts[i] = countTv
         }
-        container.addView(Button(activity).apply {
-            layoutParams = LinearLayout.LayoutParams((52 * dp).toInt(), (52 * dp).toInt())
-                .also { it.setMargins(4, 2, 2, 2) }
-            text = "🎒"; textSize = 18f; setBackgroundColor(0x55FFFFFF); setTextColor(Color.WHITE)
+        container.addView(android.widget.ImageButton(activity).apply {
+            layoutParams = LinearLayout.LayoutParams((48*dp).toInt(), (48*dp).toInt()).also { it.marginStart = (6*dp).toInt() }
+            background = CaveUiStyle.panel(activity, 0x99718D70.toInt(), CaveUiStyle.ACCENT)
+            setPadding((10*dp).toInt(),(10*dp).toInt(),(10*dp).toInt(),(10*dp).toInt())
+            setImageDrawable(CaveActionDrawable("bag")); contentDescription = activity.getString(R.string.cave_ui_bag)
             setOnClickListener { activity.invManager.openInventory() }
         })
     }
@@ -83,19 +105,13 @@ internal class CaveHud(private val activity: CaveActivity) {
             val eff      = if (count > 0) type else null
             val isWeapon = eff != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(eff)
 
-            // Bordure : couleur de rareté pour les armes, blanc standard pour les blocs
-            if (isWeapon) {
-                val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(eff!!)
-                val rc = rarityColor(instance?.rarity ?: com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON)
-                slotViews[i]?.background = GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE; setColor(0x44FFFFFF)
-                    setStroke(if (i == selected) (3 * dp).toInt() else (2 * dp).toInt(), rc)
-                    cornerRadius = 4 * dp
-                }
-            } else {
-                slotViews[i]?.background = slotDrawable(eff, i == selected)
-            }
-
+            val instance = eff?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
+            slotViews[i]?.background = CaveUiStyle.panel(activity,
+                if (i == selected) 0xAE688365.toInt() else 0x55405748,
+                if (i == selected) CaveUiStyle.ACCENT else instance?.let { rarityColor(it.rarity) } ?: 0x7786A38C,
+                i == selected)
+            slotViews[i]?.contentDescription = activity.getString(R.string.cave_ui_shortcut_description, i + 1,
+                eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
             slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
             // Les armes n'empilent pas → pas de compteur
@@ -117,13 +133,8 @@ internal class CaveHud(private val activity: CaveActivity) {
     }
 
     fun slotDrawable(type: Short?, selected: Boolean): GradientDrawable =
-        GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            setColor(if (type != null) 0x33FFFFFF else 0x22FFFFFF)
-            setStroke(if (selected) (2 * dp).toInt() else (1 * dp).toInt(),
-                if (selected) Color.WHITE else 0x55FFFFFF)
-            cornerRadius = 4 * dp
-        }
+        CaveUiStyle.panel(activity, if (selected) 0xAE688365.toInt() else 0x55405748,
+            if (selected) CaveUiStyle.ACCENT else 0x7786A38C, selected)
 
     // ── Hotbar highlighting pendant l'inventaire ──────────────────────────────
 
@@ -159,7 +170,7 @@ internal class CaveHud(private val activity: CaveActivity) {
                 background = overlaySlotDrawable(false)
             }
             val colorDot = View(activity).apply {
-                layoutParams = FrameLayout.LayoutParams((28 * dp).toInt(), (28 * dp).toInt())
+                layoutParams = FrameLayout.LayoutParams((40 * dp).toInt(), (40 * dp).toInt())
                     .also { it.gravity = Gravity.CENTER }
                 background = GradientDrawable().apply { setColor(Color.TRANSPARENT) }
             }
@@ -207,89 +218,22 @@ internal class CaveHud(private val activity: CaveActivity) {
     }
 
     fun overlaySlotDrawable(selected: Boolean, cursor: Boolean = false): GradientDrawable =
-        GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            setColor(when { selected -> 0x33FFDD00.toInt(); cursor -> 0x3300DDFF.toInt(); else -> 0x66FFFFFF.toInt() })
-            setStroke(if (selected || cursor) (2 * dp).toInt() else (1 * dp).toInt(),
-                when { selected -> 0xFFFFDD00.toInt(); cursor -> 0xFF00DDFF.toInt(); else -> 0xAAFFFFFF.toInt() })
-            cornerRadius = 4 * dp
-        }
+        CaveUiStyle.panel(activity, if (selected) CaveUiStyle.SELECTED else 0x55405748,
+            if (selected) CaveUiStyle.ACCENT else if (cursor) 0xFFB0D5D3.toInt() else CaveUiStyle.BORDER, selected || cursor)
 
     // ── Barre HP / Bouclier ───────────────────────────────────────────────────
 
     fun buildHealthBar(root: FrameLayout) {
-        val bW = (80 * dp).toInt(); val bH = (10 * dp).toInt()
-        val container = LinearLayout(activity).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.gravity = Gravity.TOP or Gravity.START; it.setMargins((12 * dp).toInt(), (18 * dp).toInt(), 0, 0) }
-            setPadding((6 * dp).toInt(), (4 * dp).toInt(), (8 * dp).toInt(), (4 * dp).toInt())
-            background = GradientDrawable().apply { shape = GradientDrawable.RECTANGLE; setColor(0x99000000.toInt()); cornerRadius = 6 * dp }
+        vitals = CaveVitalsView(activity).also { view ->
+            view.layoutParams = FrameLayout.LayoutParams(quickbarWidth.coerceAtLeast((420*dp).toInt()), (30*dp).toInt()).also {
+                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL; it.bottomMargin = (73*dp).toInt()
+            }
+            root.addView(view)
         }
-        val hpRow = LinearLayout(activity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
-        val heartTv = TextView(activity).apply { text = "❤"; textSize = 12f; setTextColor(0xFFFF4444.toInt()); setPadding(0, 0, (4 * dp).toInt(), 0) }
-        val barFrame = FrameLayout(activity).apply { layoutParams = LinearLayout.LayoutParams(bW, bH).also { it.gravity = Gravity.CENTER_VERTICAL } }
-        val barBg = View(activity).apply { layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0x88440000.toInt()); cornerRadius = 3 * dp } }
-        val barFg = View(activity).apply { layoutParams = FrameLayout.LayoutParams(bW, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0xFF22CC44.toInt()); cornerRadius = 3 * dp } }
-        barFrame.addView(barBg); barFrame.addView(barFg)
-        val tv = TextView(activity).apply { text = "20/20"; textSize = 9f; setTextColor(Color.WHITE); setPadding((4 * dp).toInt(), 0, 0, 0) }
-        hpRow.addView(heartTv); hpRow.addView(barFrame); hpRow.addView(tv)
-        container.addView(hpRow)
-        hpBarFg = barFg; hpText = tv; hpBarMaxWidth = bW
-
-        val sprintTv = TextView(activity).apply {
-            text = "🏃 SPRINT"
-            textSize = 9f
-            setTextColor(0xFF88FFAA.toInt())
-            visibility = View.GONE
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.topMargin = (1 * dp).toInt() }
-        }
-        container.addView(sprintTv)
-        sprintIndicator = sprintTv
-
-        val shRow = LinearLayout(activity).apply {
-            orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
-            visibility = View.GONE
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.topMargin = (2 * dp).toInt() }
-        }
-        val shIconTv = TextView(activity).apply { text = "🛡"; textSize = 10f; setPadding(0, 0, (3 * dp).toInt(), 0) }
-        val shFrame = FrameLayout(activity).apply { layoutParams = LinearLayout.LayoutParams(bW, bH).also { it.gravity = Gravity.CENTER_VERTICAL } }
-        val shBg = View(activity).apply { layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0x88002244.toInt()); cornerRadius = 3 * dp } }
-        val shFg = View(activity).apply { layoutParams = FrameLayout.LayoutParams(bW, FrameLayout.LayoutParams.MATCH_PARENT); background = GradientDrawable().apply { setColor(0xFF0099FF.toInt()); cornerRadius = 3 * dp } }
-        shFrame.addView(shBg); shFrame.addView(shFg)
-        shRow.addView(shIconTv); shRow.addView(shFrame)
-        container.addView(shRow)
-        shieldBarFg = shFg; shieldContainer = shRow
-        root.addView(container)
     }
-
-    fun updateHealthBar(hp: Int, maxHp: Int) {
-        val frac = hp.toFloat() / maxHp.coerceAtLeast(1)
-        hpBarFg?.layoutParams = (hpBarFg?.layoutParams as? FrameLayout.LayoutParams)
-            ?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
-        hpBarFg?.requestLayout()
-        hpText?.text = "$hp/$maxHp"
-        (hpBarFg?.background as? GradientDrawable)?.setColor(
-            when { frac > 0.6f -> 0xFF22CC44.toInt(); frac > 0.3f -> 0xFFDDAA00.toInt(); else -> 0xFFCC2222.toInt() }
-        )
-    }
-
-    fun updateSprintIndicator(active: Boolean) {
-        sprintIndicator?.visibility = if (active) View.VISIBLE else View.GONE
-    }
-
-    fun updateShieldBar(current: Int, max: Int) {
-        if (max <= 0) { shieldContainer?.visibility = View.GONE; return }
-        shieldContainer?.visibility = View.VISIBLE
-        val frac = current.toFloat() / max.coerceAtLeast(1)
-        shieldBarFg?.layoutParams = (shieldBarFg?.layoutParams as? FrameLayout.LayoutParams)
-            ?.also { it.width = (hpBarMaxWidth * frac).toInt().coerceAtLeast(0) }
-        shieldBarFg?.requestLayout()
-    }
+    fun updateHealthBar(hp: Int, maxHp: Int) { vitals?.health(hp, maxHp) }
+    fun updateSprintIndicator(active: Boolean) { vitals?.sprint(active) }
+    fun updateShieldBar(current: Int, max: Int) { vitals?.shield(current, max) }
 
     // ── Arme en main (style Minecraft, bas-droite) ────────────────────────────
 
@@ -338,11 +282,11 @@ internal class CaveHud(private val activity: CaveActivity) {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.END
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
-                it.gravity = Gravity.BOTTOM or Gravity.END
-                it.setMargins(0, 0, (12 * dp).toInt(), (10 * dp).toInt())
+                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                it.setMargins(0, 0, 0, (108 * dp).toInt())
             }
             setPadding((10 * dp).toInt(), (4 * dp).toInt(), (10 * dp).toInt(), (4 * dp).toInt())
-            background = GradientDrawable().apply { setColor(0xAA000000.toInt()); cornerRadius = 8 * dp }
+            background = GradientDrawable().apply { setColor(0x7622382D); cornerRadius = 12 * dp }
             visibility = View.GONE
         }
         val nameTv = android.widget.TextView(activity).apply {

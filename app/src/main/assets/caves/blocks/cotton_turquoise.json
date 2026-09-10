@@ -1,9 +1,9 @@
 {
   "id": 9030,
   "name": "cotton_turquoise",
-  "texture_top": "cotton/cotton_turquoise.png",
-  "texture_side": "cotton/cotton_turquoise.png",
-  "texture_bottom": "cotton/cotton_turquoise.png",
+  "texture_top": "cozy:cloth:5:40E0D0",
+  "texture_side": "cozy:cloth:5:40E0D0",
+  "texture_bottom": "cozy:cloth:5:40E0D0",
   "color": "#40E0D0",
   "hardness": 1.0,
   "drop": "cotton_turquoise",

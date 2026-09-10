@@ -1,10 +1,10 @@
 {
   "id": 2002,
   "name": "quartz",
-  "texture_top": "blocs/greysand_top.png",
-  "texture_side": "blocs/greysand_top.png",
-  "texture_bottom": "blocs/greysand_top.png",
-  "color": "#E8E4D0",
+  "texture_top": "cozy:material:3:D5CCDD",
+  "texture_side": "cozy:material:3:D5CCDD",
+  "texture_bottom": "cozy:material:3:D5CCDD",
+  "color": "#D5CCDD",
   "hardness": 2.5,
   "drop": "quartz",
   "creative_tab": "stone"

@@ -1,0 +1,11 @@
+{
+  "id": 2201,
+  "name": "limestone",
+  "texture_top": "cozy:material:14",
+  "texture_side": "cozy:material:14",
+  "texture_bottom": "cozy:material:14",
+  "color": "#D6C8A7",
+  "hardness": 2.0,
+  "drop": "limestone",
+  "creative_tab": "stone"
+}

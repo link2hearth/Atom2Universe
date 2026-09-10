@@ -1,10 +1,10 @@
 {
   "id": 2010,
   "name": "brick_red",
-  "texture_top": "blocs/brick_red.png",
-  "texture_side": "blocs/brick_red.png",
-  "texture_bottom": "blocs/brick_red.png",
-  "color": "#AA3322",
+  "texture_top": "cozy:material:12:BC8171",
+  "texture_side": "cozy:material:12:BC8171",
+  "texture_bottom": "cozy:material:12:BC8171",
+  "color": "#BC8171",
   "hardness": 3.0,
   "drop": "brick_red",
   "creative_tab": "stone"

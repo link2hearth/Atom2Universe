@@ -1,10 +1,10 @@
 {
   "id": 5001,
   "name": "snow",
-  "texture_top": "blocs/snow_top.png",
-  "texture_side": "blocs/snow_top.png",
-  "texture_bottom": "blocs/snow_top.png",
-  "color": "#EEEEFF",
+  "texture_top": "cozy:utility:10",
+  "texture_side": "cozy:utility:10",
+  "texture_bottom": "cozy:utility:10",
+  "color": "#ECF0ED",
   "hardness": 0.5,
   "drop": "snow",
   "creative_tab": "terrain"

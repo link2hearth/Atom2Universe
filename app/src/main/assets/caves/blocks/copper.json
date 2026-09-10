@@ -1,9 +1,9 @@
 {
   "id": 3004,
   "name": "copper",
-  "texture_top": "Ores/stone_browniron.png",
-  "texture_side": "Ores/stone_browniron.png",
-  "texture_bottom": "Ores/stone_browniron.png",
+  "texture_top": "cozy:ore:3:929EAA:B87333",
+  "texture_side": "cozy:ore:3:929EAA:B87333",
+  "texture_bottom": "cozy:ore:3:929EAA:B87333",
   "color": "#B87333",
   "hardness": 3.5,
   "drop": "copper",

@@ -1,9 +1,9 @@
 {
   "id": 9000,
   "name": "cotton_amber",
-  "texture_top": "cotton/cotton_amber.png",
-  "texture_side": "cotton/cotton_amber.png",
-  "texture_bottom": "cotton/cotton_amber.png",
+  "texture_top": "cozy:cloth:5:FFBF00",
+  "texture_side": "cozy:cloth:5:FFBF00",
+  "texture_bottom": "cozy:cloth:5:FFBF00",
   "color": "#FFBF00",
   "hardness": 1.0,
   "drop": "cotton_amber",

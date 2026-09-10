@@ -1,13 +1,15 @@
 {
   "id": 2020,
   "name": "rock",
-  "texture_top": "rock.png",
-  "texture_side": "rock.png",
-  "texture_bottom": "rock.png",
-  "color": "#888888",
+  "texture_top": "cozy:groundcover:3",
+  "texture_side": "cozy:groundcover:3",
+  "texture_bottom": "cozy:groundcover:3",
+  "color": "#A0ADB8",
   "hardness": 0.3,
   "decoration": true,
   "drop": "rock",
   "creative_tab": "stone",
-  "waterlogged": false
+  "waterlogged": false,
+  "sprite_margin": 0.02,
+  "sprite_height": 0.48
 }

@@ -1,10 +1,10 @@
 {
   "id": 2014,
   "name": "brick_cobalt",
-  "texture_top": "blocs/brick_cobalt.png",
-  "texture_side": "blocs/brick_cobalt.png",
-  "texture_bottom": "blocs/brick_cobalt.png",
-  "color": "#3861CC",
+  "texture_top": "cozy:material:12:809FAE",
+  "texture_side": "cozy:material:12:809FAE",
+  "texture_bottom": "cozy:material:12:809FAE",
+  "color": "#809FAE",
   "hardness": 3.5,
   "drop": "brick_cobalt",
   "creative_tab": "terrain"

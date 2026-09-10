@@ -1,9 +1,9 @@
 {
   "id": 9026,
   "name": "cotton_silver",
-  "texture_top": "cotton/cotton_silver.png",
-  "texture_side": "cotton/cotton_silver.png",
-  "texture_bottom": "cotton/cotton_silver.png",
+  "texture_top": "cozy:cloth:5:C0C0C0",
+  "texture_side": "cozy:cloth:5:C0C0C0",
+  "texture_bottom": "cozy:cloth:5:C0C0C0",
   "color": "#C0C0C0",
   "hardness": 1.0,
   "drop": "cotton_silver",

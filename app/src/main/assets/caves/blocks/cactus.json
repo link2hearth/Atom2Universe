@@ -1,10 +1,10 @@
 {
   "id": 4010,
   "name": "cactus",
-  "texture_top": "cactus_top.png",
-  "texture_side": "cactus_side.png",
-  "texture_bottom": "cactus_inside.png",
-  "color": "#3A7A2A",
+  "texture_top": "cozy:utility:3",
+  "texture_side": "cozy:utility:2",
+  "texture_bottom": "cozy:utility:4",
+  "color": "#92AD87",
   "hardness": 1.0,
   "drop": "cactus",
   "creative_tab": "terrain"

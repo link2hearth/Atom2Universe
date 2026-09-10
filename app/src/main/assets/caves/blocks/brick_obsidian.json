@@ -1,10 +1,10 @@
 {
   "id": 2015,
   "name": "brick_obsidian",
-  "texture_top": "blocs/brick_obsidian.png",
-  "texture_side": "blocs/brick_obsidian.png",
-  "texture_bottom": "blocs/brick_obsidian.png",
-  "color": "#232030",
+  "texture_top": "cozy:material:12:656C7F",
+  "texture_side": "cozy:material:12:656C7F",
+  "texture_bottom": "cozy:material:12:656C7F",
+  "color": "#656C7F",
   "hardness": 3.5,
   "drop": "brick_obsidian",
   "creative_tab": "terrain"

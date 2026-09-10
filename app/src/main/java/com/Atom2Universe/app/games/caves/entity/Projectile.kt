@@ -21,4 +21,13 @@ internal class Projectile(
     var age = 0f
     var travelDist = 0.0
     var velY: Double = dirY * speed.toDouble()
+
+    fun substeps(dt: Float): Int = kotlin.math.ceil(maxOf(speed.toDouble(),kotlin.math.abs(velY))*dt/.15).toInt().coerceIn(1,256)
+
+    fun advance(dt: Float) {
+        val ox=x;val oy=y;val oz=z
+        velY-=kind.gravity*dt
+        x+=dirX*speed*dt;y+=velY*dt;z+=dirZ*speed*dt
+        travelDist+=kotlin.math.sqrt((x-ox)*(x-ox)+(y-oy)*(y-oy)+(z-oz)*(z-oz))
+    }
 }

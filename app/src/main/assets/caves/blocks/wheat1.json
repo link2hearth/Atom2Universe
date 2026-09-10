@@ -1,9 +1,9 @@
 {
   "id": 7020,
   "name": "wheat1",
-  "texture_top": "wheat_stage1.png",
-  "texture_side": "wheat_stage1.png",
-  "texture_bottom": "wheat_stage1.png",
+  "texture_top": "cozy:groundcover:8",
+  "texture_side": "cozy:groundcover:8",
+  "texture_bottom": "cozy:groundcover:8",
   "color": "#88AA44",
   "hardness": 0.1,
   "decoration": true,

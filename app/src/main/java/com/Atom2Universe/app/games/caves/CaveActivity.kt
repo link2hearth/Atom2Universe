@@ -45,6 +45,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.hypot
 
 class CaveActivity : ThemedActivity() {
 
@@ -58,6 +59,11 @@ class CaveActivity : ThemedActivity() {
     internal lateinit var glView: GLSurfaceView
     internal lateinit var renderer: CaveRenderer
     private  val touch   = TouchController()
+    private var vQuickbar: View? = null
+    private val uiTouchIds = mutableSetOf<Int>()
+    internal fun releaseGameInputs() {
+        touch.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
+    }
     private  val gamepad = GamepadController(touch)
     private  val uiHandler = Handler(Looper.getMainLooper())
     private  var worldId: String? = null
@@ -70,6 +76,7 @@ class CaveActivity : ThemedActivity() {
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
+    private val tapCandidates = HashMap<Int, TapCandidate>()
     private var vBtnBack: View? = null
     private var vBtnCamera: Button? = null
     private var vHudControls: View? = null
@@ -86,6 +93,8 @@ class CaveActivity : ThemedActivity() {
     private var minimapView: ImageView? = null
     private var minimapJob: Job? = null
 
+    private data class TapCandidate(val x: Float, val y: Float, val downMs: Long)
+
     // ── Textures ──────────────────────────────────────────────────────────────
 
     internal fun blockBitmap(type: Short): Bitmap? = BlockRegistry.getBitmap(type)
@@ -95,18 +104,9 @@ class CaveActivity : ThemedActivity() {
         if (com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(type)) {
             val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)
             val def = instance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
-            val bmp = def?.let {
-                runCatching {
-                    android.graphics.BitmapFactory.decodeStream(assets.open("Cave World/Items/${it.sprite}.png"))
-                }.getOrNull()
-            }
-            return if (bmp != null) {
-                RoundedBitmapDrawableFactory.create(resources, bmp).apply {
-                    cornerRadius = cornerDp * dp; isFilterBitmap = false
-                }
-            } else {
-                GradientDrawable().apply { setColor(0xFF886600.toInt()); cornerRadius = cornerDp * dp }
-            }
+            return com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(assets,
+                def?.weaponType ?: def?.sprite ?: "gun",
+                instance?.rarity ?: com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON)
         }
         val bmp = blockBitmap(type)
         return if (bmp != null) {
@@ -209,7 +209,8 @@ class CaveActivity : ThemedActivity() {
         renderer = CaveRenderer(
             context = this, touch = touch,
             worldSeed = save?.seed ?: System.currentTimeMillis(),
-            worldId = worldId, savedState = savedState
+            worldId = worldId, savedState = savedState,
+            terrainVersion = save?.terrainVersion ?: 2
         )
         renderer.isCreative = isCreative
         renderer.enemyManager.isCreative = isCreative
@@ -250,6 +251,7 @@ class CaveActivity : ThemedActivity() {
         makeCircular(btnDown,  0x55FFFFFF.toInt())
         makeCircular(btnLaser, 0x66003366.toInt())
         makeCircular(btnPlace, 0x66336600.toInt())
+        btnPlace.visibility = View.GONE
         applyButtonPositions(hudView.findViewById(R.id.cave_game_area))
 
         val miningPanel   = hudView.findViewById<LinearLayout>(R.id.cave_mining_panel)
@@ -258,16 +260,24 @@ class CaveActivity : ThemedActivity() {
         val hotbarLayout  = hudView.findViewById<LinearLayout>(R.id.cave_hotbar)
 
         hud.buildHotbarUI(hotbarLayout)
+        vQuickbar = hotbarLayout
+        btnBack.background = CaveUiStyle.panel(this, 0x66293F33, 0x6686A38C)
+        CaveUiStyle.button(btnMode)
+        hud.controlIcon(btnCamera, "camera", getString(R.string.cave_ui_camera))
+        hud.controlIcon(btnDayNight, "sun", renderer.timeOfDayLabel)
         btnBack.setOnClickListener { showQuitConfirmation() }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { showQuitConfirmation() }
+            override fun handleOnBackPressed() {
+                if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) invManager.closeInventory()
+                else showQuitConfirmation()
+            }
         })
         btnMode.setOnClickListener {
             renderer.pendingMode = if (renderer.playerMode == PlayerMode.WALK) PlayerMode.SPECTATOR else PlayerMode.WALK
         }
         btnDayNight.setOnClickListener {
             renderer.cycleTimeOfDay()
-            btnDayNight.text = renderer.timeOfDayLabel
+            hud.controlIcon(btnDayNight, "sun", renderer.timeOfDayLabel)
         }
         btnCamera.setOnClickListener {
             glView.queueEvent { renderer.camera.thirdPerson = !renderer.camera.thirdPerson }
@@ -276,13 +286,15 @@ class CaveActivity : ThemedActivity() {
         btnCamera.alpha = 0.5f
 
         fun applyCombatModeUi(mode: HotbarMode) {
-            btnCombatMode.text = if (mode == HotbarMode.COMBAT) "⚔" else "🧱"
+            hud.controlIcon(btnCombatMode, if (mode == HotbarMode.COMBAT) "combat" else "place",
+                getString(if (mode == HotbarMode.COMBAT) R.string.cave_ui_equipment else R.string.cave_ui_materials))
         }
         applyCombatModeUi(renderer.hotbarMode)
         btnCombatMode.setOnClickListener { renderer.toggleHotbarMode() }
         renderer.hotbarModeCallback = { mode -> uiHandler.post { applyCombatModeUi(mode); invManager.onHotbarModeChanged() } }
 
         val btnMap = hudView.findViewById<Button>(R.id.cave_btn_map)
+        hud.controlIcon(btnMap, "map", getString(R.string.cave_ui_map))
         btnMap.alpha = 0.5f
         btnMap.setOnClickListener {
             val mapView = minimapView ?: return@setOnClickListener
@@ -395,6 +407,7 @@ class CaveActivity : ThemedActivity() {
         val sb    = renderer.skillBook
         return CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
+            terrainVersion = renderer.world.terrainVersion,
             lastPlayedAt = System.currentTimeMillis(),
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
@@ -502,7 +515,19 @@ class CaveActivity : ThemedActivity() {
     // ── Boutons action ────────────────────────────────────────────────────────
 
     private fun makeCircular(btn: Button, bgColor: Int) {
-        btn.background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(bgColor) }
+        val label = btn.text
+        val kind = when (btn.id) {
+            R.id.cave_btn_laser -> "aim"
+            R.id.cave_btn_place -> "place"
+            R.id.cave_btn_down -> "down"
+            else -> "jump"
+        }
+        btn.contentDescription = label; btn.text = ""
+        btn.backgroundTintList = null; btn.setPadding(0, 0, 0, 0)
+        val icon = android.graphics.drawable.InsetDrawable(CaveActionDrawable(kind), CaveUiStyle.dp(this, 18))
+        btn.background = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList.valueOf(0x557DAD8B),
+            android.graphics.drawable.LayerDrawable(arrayOf(CaveUiStyle.panel(this, 0x66293F33, 0x889EBAA3.toInt()), icon)), null)
     }
 
     private fun applyButtonPositions(gameArea: FrameLayout) {
@@ -529,8 +554,8 @@ class CaveActivity : ThemedActivity() {
     private fun applyModeUi(mode: PlayerMode, btnMode: Button, btnUp: Button, btnDown: View, btnLaser: View, btnPlace: View) {
         btnMode.visibility = if (isCreative) View.VISIBLE else View.GONE
         when (mode) {
-            PlayerMode.SPECTATOR -> { btnMode.text = getString(R.string.cave_mode_spectator); btnUp.text = "▲"; btnDown.visibility = View.VISIBLE; btnLaser.visibility = View.GONE; btnPlace.visibility = View.GONE }
-            PlayerMode.WALK      -> { btnMode.text = getString(R.string.cave_mode_walk); btnUp.text = getString(R.string.cave_jump); btnDown.visibility = View.GONE; btnLaser.visibility = View.VISIBLE; btnPlace.visibility = View.VISIBLE }
+            PlayerMode.SPECTATOR -> { btnMode.text = getString(R.string.cave_mode_spectator); btnUp.contentDescription = getString(R.string.cave_ui_ascend); btnDown.visibility = View.VISIBLE; btnLaser.visibility = View.GONE; btnPlace.visibility = View.GONE }
+            PlayerMode.WALK      -> { btnMode.text = getString(R.string.cave_mode_walk); btnUp.contentDescription = getString(R.string.cave_jump); btnDown.visibility = View.GONE; btnLaser.visibility = View.VISIBLE; btnPlace.visibility = View.GONE }
         }
     }
 
@@ -583,8 +608,8 @@ class CaveActivity : ThemedActivity() {
             if (KeyEvent.isGamepadButton(event.keyCode)) setHudButtonsVisible(false)
             when (event.keyCode) {
                 KeyEvent.KEYCODE_BUTTON_Y  -> { invManager.openInventory(); return true }
-                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + 19) % 19) }; return true }
-                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % 19) }; return true }
+                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + ACTIVE_SIZE) % ACTIVE_SIZE) }; return true }
+                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % ACTIVE_SIZE) }; return true }
                 KeyEvent.KEYCODE_BUTTON_X  -> {
                     val newTps = !renderer.camera.thirdPerson
                     glView.queueEvent { renderer.camera.thirdPerson = newTps }
@@ -611,20 +636,63 @@ class CaveActivity : ThemedActivity() {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val x = ev.getX(idx); val y = ev.getY(idx)
                 fun hit(v: View?) = v != null && v.visibility == View.VISIBLE && v.isHitOnScreen(x, y)
+                val hitsQuickbar = hit(vQuickbar)
+                val hitsHudOnly = listOf(vHudControls, vBtnBack).any { hit(it) }
+                if (hitsQuickbar) {
+                    uiTouchIds.add(pid)
+                    handleQuickbarPointerDown(x, y)
+                }
+                if (hitsHudOnly) uiTouchIds.add(pid)
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
                 if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.flyDown     = true }
                 if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f }
-                if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true }
+                if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true; uiTouchIds.add(pid) }
+                if (!hitsQuickbar && !hitsHudOnly && pid != ptrPlace) {
+                    tapCandidates[pid] = TapCandidate(x, y, ev.eventTime)
+                }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
                 val cancel = action == MotionEvent.ACTION_CANCEL
+                if (!cancel) handleWorldTapCandidate(ev, idx, pid)
                 if (pid == ptrUp    || cancel) { ptrUp    = -1; touch.flyUp       = false }
                 if (pid == ptrDown  || cancel) { ptrDown  = -1; touch.flyDown     = false }
                 if (pid == ptrLaser || cancel) { ptrLaser = -1; touch.laserActive = false; touch.rtChargeRaw = 0f }
                 if (pid == ptrPlace || cancel) { ptrPlace = -1 }
             }
         }
-        touch.onTouch(ev, glView.width); return super.dispatchTouchEvent(ev)
+        touch.onTouch(ev, glView.width, uiTouchIds)
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) uiTouchIds.remove(pid)
+        if (action == MotionEvent.ACTION_CANCEL) { uiTouchIds.clear(); tapCandidates.clear(); touch.reset() }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    private fun handleQuickbarPointerDown(x: Float, y: Float): Boolean {
+        hud.slotViews.forEachIndexed { index, slot ->
+            if (slot != null && slot.visibility == View.VISIBLE && slot.isHitOnScreen(x, y)) {
+                if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) {
+                    invManager.onOverlayActiveSlotClick(index)
+                } else {
+                    glView.queueEvent { renderer.selectSlot(index) }
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun handleWorldTapCandidate(ev: MotionEvent, idx: Int, pid: Int) {
+        val candidate = tapCandidates.remove(pid) ?: return
+        if (renderer.hotbarMode != HotbarMode.BUILD) return
+        val x = ev.getX(idx); val y = ev.getY(idx)
+        val moved = hypot(x - candidate.x, y - candidate.y)
+        val elapsed = ev.eventTime - candidate.downMs
+        val w = glView.width.toFloat().coerceAtLeast(1f)
+        val h = glView.height.toFloat().coerceAtLeast(1f)
+        val centerBand = candidate.x in (w * 0.22f)..(w * 0.88f) && candidate.y in (h * 0.12f)..(h * 0.82f)
+        val wasCameraDrag = touch.isCameraPointer(pid) && touch.didCameraPointerMove()
+        if (centerBand && moved <= 24f && elapsed <= 260L && !wasCameraDrag) {
+            touch.placeRequested = true
+        }
     }
 
     private fun View.isHitOnScreen(x: Float, y: Float): Boolean {

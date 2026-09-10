@@ -12,7 +12,7 @@ internal object CaveControlsPrefs {
     ) {
         UP   ("up",    0.925f, 0.38f, 64),
         DOWN ("down",  0.925f, 0.62f, 64),
-        LASER("laser", 0.915f, 0.88f, 72),
+        LASER("laser", 0.915f, 0.78f, 84),
         PLACE("place", 0.835f, 0.88f, 72)
     }
 

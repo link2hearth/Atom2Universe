@@ -5,7 +5,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.math.*
 import kotlin.random.Random
 
-class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null) {
+class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
+            val terrainVersion: Int = 2) {
+    private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave) }
     private val chunks = ConcurrentHashMap<Long, Chunk>()
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 
@@ -323,8 +325,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // Retourne (lx, lz, rayon) du puits pour la colonne (cx,cz), ou null.
     // Déterministe : le même résultat pour tous les chunks de la colonne.
     private fun cavePitAt(cx: Int, cz: Int): Triple<Int, Int, Float>? {
+        // The new landscape uses winding entrances instead of vertical shafts.
+        if (terrainVersion >= 2) return null
         val rng = chunkRng(cx * 1031 + 17, 9999, cz * 1009 + 31)
-        if (rng.nextFloat() > 0.14f) return null       // ~14% des colonnes ont un puits
+        if (rng.nextFloat() > 0.14f) return null
         val lx = 2 + rng.nextInt(12)
         val lz = 2 + rng.nextInt(12)
         val radius = 2.5f + rng.nextFloat() * 2.5f     // ouverture 2.5 – 5 blocs
@@ -407,10 +411,12 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 colBiome[i] = dom
                 val wx = (chunk.worldX + lx).toDouble()
                 val wz = (chunk.worldZ + lz).toDouble()
-                val h = blendedSurfaceHeight(wx, wz, weights).toInt()
+                val h = (if (terrainVersion >= 2) landscape.height(wx, wz)
+                    else blendedSurfaceHeight(wx, wz, weights)).toInt()
                 heights[i] = h
                 val alt = if (h < SEA_LEVEL) null else altitudeBlock(sb, wx, wz, h)
                 topBlocks[i] = when {
+                    terrainVersion >= 2 -> landscape.topBlock(sb, wx, wz, h)
                     h < SEA_LEVEL -> SAND
                     alt != null   -> alt.block
                     else          -> surfaceNoiseBlock(sb, wx, wz)
@@ -463,11 +469,15 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             carveVerticalWormsFrom(chunk, chunk.cx + dcx, chunk.cz + dcz)
 
         applyOreVeins(chunk, defaultCaveBiome)
-        plantSurfaceTrees(chunk, colBiome)
-        plantSurfaceBushes(chunk, colBiome)
-        applySurfaceDecorations(chunk, colBiome)
-        applySurfaceVegetation(chunk, colBiome)
-        placeStructuresInChunk(chunk)
+        if (terrainVersion >= 2) {
+            landscape.decorate(chunk, heights, topBlocks, colBiome)
+        } else {
+            plantSurfaceTrees(chunk, colBiome)
+            plantSurfaceBushes(chunk, colBiome)
+            applySurfaceDecorations(chunk, colBiome)
+            applySurfaceVegetation(chunk, colBiome)
+            placeStructuresInChunk(chunk)
+        }
     }
 
     // ── Surface souterraine ───────────────────────────────────────────────────
@@ -779,9 +789,22 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Worms de surface → cave (tire-bouchon, percent la surface puis descend ~100 blocs) ─
 
+    /** Reserve the entrance neighborhood before selecting trees and building plots. */
+    private fun nearSurfaceCave(x: Int, z: Int): Boolean {
+        for (cz in Math.floorDiv(z - 32, 16)..Math.floorDiv(z + 32, 16))
+            for (cx in Math.floorDiv(x - 32, 16)..Math.floorDiv(x + 32, 16)) {
+                val rng = chunkRng(cx * 7919 + 13, 88888, cz * 6271 + 7)
+                if (rng.nextFloat() > .025f) continue
+                val dx = cx * 16 + 4 + rng.nextInt(8) - x
+                val dz = cz * 16 + 4 + rng.nextInt(8) - z
+                if (dx * dx + dz * dz < 32 * 32) return true
+            }
+        return false
+    }
+
     private fun carveVerticalWormsFrom(target: Chunk, cx: Int, cz: Int) {
         val rng = chunkRng(cx * 7919 + 13, 88888, cz * 6271 + 7)
-        if (rng.nextFloat() > 0.12f) return   // ~12 % des colonnes ont un worm de surface
+        if (rng.nextFloat() > if (terrainVersion >= 2) 0.025f else 0.12f) return
 
         val startWx = (cx * CHUNK_SIZE + 4 + rng.nextInt(8)).toFloat()
         val startWz = (cz * CHUNK_SIZE + 4 + rng.nextInt(8)).toFloat()
@@ -974,6 +997,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // ── Surface : heightmap et blocs ─────────────────────────────────────────
 
     internal fun surfaceHeight(wx: Double, wz: Double): Double {
+        if (terrainVersion >= 2) return landscape.height(wx, wz)
         val w = DoubleArray(BiomeRegistry.surfaceBiomes.size)
         // Snap aligné sur la grille BIOME_STEP de generateSurface → même biome, donc même hauteur.
         val bx = floor(wx / BIOME_STEP) * BIOME_STEP

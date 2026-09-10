@@ -1,9 +1,9 @@
 {
   "id": 7011,
   "name": "mushroom_brown",
-  "texture_top": "mushroom_brown.png",
-  "texture_side": "mushroom_brown.png",
-  "texture_bottom": "mushroom_brown.png",
+  "texture_top": "cozy:flora:11",
+  "texture_side": "cozy:flora:11",
+  "texture_bottom": "cozy:flora:11",
   "color": "#886644",
   "hardness": 0.3,
   "decoration": true,

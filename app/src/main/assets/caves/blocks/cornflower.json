@@ -1,0 +1,14 @@
+{
+  "id": 7043,
+  "name": "cornflower",
+  "texture_top": "cozy:flora:3",
+  "texture_side": "cozy:flora:3",
+  "texture_bottom": "cozy:flora:3",
+  "color": "#8EA373",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "cornflower",
+  "creative_tab": "nature",
+  "sprite_margin": 0.05,
+  "sprite_height": 0.85
+}

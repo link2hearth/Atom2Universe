@@ -1,0 +1,11 @@
+{
+  "id": 2200,
+  "name": "teal_roof",
+  "texture_top": "cozy:material:13",
+  "texture_side": "cozy:material:13",
+  "texture_bottom": "cozy:material:13",
+  "color": "#6F979D",
+  "hardness": 2.0,
+  "drop": "teal_roof",
+  "creative_tab": "stone"
+}

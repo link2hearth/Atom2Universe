@@ -843,9 +843,8 @@ internal class CaveRenderer(
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        val hotbarPx = (60f * context.resources.displayMetrics.density).toInt()
-        val gameH = (height - hotbarPx).coerceAtLeast(1)
-        GLES30.glViewport(0, hotbarPx, width, gameH)
+        val gameH = height.coerceAtLeast(1)
+        GLES30.glViewport(0, 0, width, gameH)
         camera.setProjection(70f, width.toFloat() / gameH)
         // Projection dédiée au viewmodel (FOV légèrement plus serré, near rapproché)
         android.opengl.Matrix.perspectiveM(vmProj, 0, 62f, width.toFloat() / gameH, 0.04f, 12f)

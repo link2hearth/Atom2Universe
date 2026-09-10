@@ -1,0 +1,18 @@
+<resources>
+    <item type="id" name="cave_inv_dim_area" />
+    <item type="id" name="cave_inv_panel" />
+    <item type="id" name="cave_inv_info_column" />
+    <item type="id" name="cave_inv_info_sprite" />
+    <item type="id" name="cave_inv_info_name" />
+    <item type="id" name="cave_inv_info_count" />
+    <item type="id" name="cave_inv_info_divider" />
+    <item type="id" name="cave_inv_info_ingredients" />
+    <item type="id" name="cave_inv_pager" />
+    <item type="id" name="cave_inv_page_indicator" />
+    <item type="id" name="cave_inv_right_header" />
+    <item type="id" name="cave_inv_crafting_empty" />
+    <item type="id" name="cave_inv_crafting_recycler" />
+    <item type="id" name="cave_inv_sell_panel" />
+    <item type="id" name="cave_inv_sell_price" />
+    <item type="id" name="cave_inv_sell_btn" />
+</resources>

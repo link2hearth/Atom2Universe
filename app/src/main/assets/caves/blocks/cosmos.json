@@ -1,0 +1,14 @@
+{
+  "id": 7042,
+  "name": "cosmos",
+  "texture_top": "cozy:flora:2",
+  "texture_side": "cozy:flora:2",
+  "texture_bottom": "cozy:flora:2",
+  "color": "#8EA373",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "cosmos",
+  "creative_tab": "nature",
+  "sprite_margin": 0.05,
+  "sprite_height": 0.85
+}

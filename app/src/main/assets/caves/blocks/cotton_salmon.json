@@ -1,9 +1,9 @@
 {
   "id": 9025,
   "name": "cotton_salmon",
-  "texture_top": "cotton/cotton_salmon.png",
-  "texture_side": "cotton/cotton_salmon.png",
-  "texture_bottom": "cotton/cotton_salmon.png",
+  "texture_top": "cozy:cloth:5:FA8072",
+  "texture_side": "cozy:cloth:5:FA8072",
+  "texture_bottom": "cozy:cloth:5:FA8072",
   "color": "#FA8072",
   "hardness": 1.0,
   "drop": "cotton_salmon",

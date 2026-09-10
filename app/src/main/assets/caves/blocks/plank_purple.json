@@ -1,10 +1,10 @@
 {
   "id": 1016,
   "name": "plank_purple",
-  "texture_top": "wood/wood_plank_purple.png",
-  "texture_side": "wood/wood_plank_purple.png",
-  "texture_bottom": "wood/wood_plank_purple.png",
-  "color": "#A64DFF",
+  "texture_top": "cozy:material:9:A294BE",
+  "texture_side": "cozy:material:9:A294BE",
+  "texture_bottom": "cozy:material:9:A294BE",
+  "color": "#A294BE",
   "hardness": 2.0,
   "drop": "plank_purple",
   "creative_tab": "wood"

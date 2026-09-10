@@ -16,6 +16,12 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.ArrayAdapter
+import android.widget.AdapterView
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +40,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     private val renderer get() = activity.renderer
     private val hud      get() = activity.hud
+    private lateinit var ui: CaveInventoryPanel
+    private var browsingCraft = false
+    private var assigningShortcut = false
+    private var query = ""
+    private var categoryIndex = 0
+    private var relatedType: Short? = null
+    private var gridIndices = emptyList<Int>()
+    private var gridColumns = CaveActivity.GRID_COLS
+    private val categoryKeys = listOf("", "terrain", "wood", "stone", "nature", "functional", "cotton")
 
     // ── Slots ─────────────────────────────────────────────────────────────────
     // Grille + barre pour chaque mode, séparées comme les deux hotbars du renderer
@@ -84,9 +99,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // ── Init overlay ──────────────────────────────────────────────────────────
 
     fun setupOverlay(invOverlay: View) {
+        ui = CaveInventoryPanel(activity).also { it.populate(invOverlay as FrameLayout) }
         invOverlay.findViewById<View>(R.id.cave_inv_dim_area).setOnClickListener { closeInventory() }
         invOverlay.findViewById<View>(R.id.cave_inv_panel).setOnClickListener { /* consomme */ }
-        invOverlay.findViewById<View>(R.id.cave_inv_info_column).setOnClickListener { closeInventory() }
+        invOverlay.findViewById<View>(R.id.cave_inv_info_column).setOnClickListener { /* details never dismiss the inventory */ }
 
         infoSpriteView       = invOverlay.findViewById(R.id.cave_inv_info_sprite)
         infoNameTv           = invOverlay.findViewById(R.id.cave_inv_info_name)
@@ -99,9 +115,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
         sellPanel            = invOverlay.findViewById(R.id.cave_inv_sell_panel)
         sellPriceTv          = invOverlay.findViewById(R.id.cave_inv_sell_price)
         sellButton           = invOverlay.findViewById<Button>(R.id.cave_inv_sell_btn)
-            ?.also { btn -> btn.setOnClickListener { selectedType()?.let { doSell(it) } } }
+            ?.also { btn -> btn.setOnClickListener { selectedType()?.let { confirmSell(it) } } }
         invPager             = invOverlay.findViewById(R.id.cave_inv_pager)
         pageIndicatorTv      = invOverlay.findViewById(R.id.cave_inv_page_indicator)
+        setupNavigation()
 
         val ca = CraftingAdapter(emptyList()).also { craftingAdapter = it }
         craftingRecyclerView?.apply {
@@ -112,12 +129,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         invPager?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 currentPage = position
-                if (invGpZone == InvGpZone.GRID) {
-                    val pageStart = currentPage * pageSize
-                    val pageEnd   = minOf(pageStart + pageSize, hotbarBase()).coerceAtLeast(pageStart + 1)
-                    val localCol  = invGpCursor % CaveActivity.GRID_COLS
-                    invGpCursor   = (pageStart + localCol).coerceAtMost(pageEnd - 1)
-                }
+                if (invGpZone == InvGpZone.GRID)
+                    invGpCursor = gridIndices.getOrNull(position * pageSize) ?: hotbarBase()
                 updatePageIndicator()
                 invPager?.post { pagedAdapter?.notifyDataSetChanged() }
                 hud.updateHotbarForInventory()
@@ -137,6 +150,106 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     // ── Gestion slots ─────────────────────────────────────────────────────────
+
+    private fun setupNavigation() {
+        ui.close.setOnClickListener { closeInventory() }
+        ui.inventoryTab.setOnClickListener { showLibrary(false) }
+        ui.craftTab.setOnClickListener { showLibrary(true) }
+        ui.combatTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.COMBAT) renderer.toggleHotbarMode() }
+        ui.buildTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.BUILD) renderer.toggleHotbarMode() }
+        val categories = intArrayOf(R.string.cave_ui_all, R.string.cave_ui_terrain, R.string.cave_ui_wood,
+            R.string.cave_ui_stone, R.string.cave_ui_nature, R.string.cave_ui_functional, R.string.cave_ui_cotton)
+        ui.category.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
+            categories.map { activity.getString(it) })
+        ui.category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                (view as? TextView)?.setTextColor(CaveUiStyle.TEXT)
+                categoryIndex = position; currentPage = 0; refreshPagedAdapter()
+            }
+        }
+        ui.search.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                query = s?.toString()?.trim().orEmpty(); currentPage = 0
+                relatedType = null; refreshPagedAdapter(); updateCraftingList()
+            }
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
+        ui.craftable.setOnCheckedChangeListener { _, _ -> updateCraftingList() }
+        ui.previous.setOnClickListener { changePage(-1) }; ui.next.setOnClickListener { changePage(1) }
+        ui.sort.setOnClickListener {
+            val sorted = invSlots.take(hotbarBase()).filterNotNull().sortedBy { activity.blockName(it).lowercase() }
+            for (i in 0 until hotbarBase()) invSlots[i] = sorted.getOrNull(i)
+            selectedSlotIdx = -1; assigningShortcut = false; refreshPagedAdapter(); updateInfoPanel()
+        }
+        ui.assign.setOnClickListener { assigningShortcut = selectedType() != null; updateActions() }
+        ui.cancel.setOnClickListener { assigningShortcut = false; updateActions() }
+        ui.remove.setOnClickListener { removeShortcut() }
+        ui.related.setOnClickListener {
+            relatedType = selectedType(); browsingCraft = true; selectedRecipe = null
+            refreshPagedAdapter(); updateCraftingList(); updateInfoPanel()
+        }
+        ui.craftOne.setOnClickListener { selectedRecipe?.let { doCraft(it) } }
+        ui.craftFive.setOnClickListener { selectedRecipe?.let { doCraft(it, 5) } }
+    }
+
+    private fun showLibrary(craft: Boolean) {
+        browsingCraft = craft; assigningShortcut = false; selectedRecipe = null; relatedType = null
+        invGpZone = if (craft) InvGpZone.CRAFTING else InvGpZone.HOTBAR
+        invGpCursor = if (craft) 0 else hotbarBase()
+        refreshPagedAdapter(); updateCraftingList(); updateInfoPanel()
+    }
+
+    private fun updateActions() {
+        if (!::ui.isInitialized) return
+        val type = selectedType(); val recipe = selectedRecipe
+        ui.assign.visibility = if (!browsingCraft && type != null && !assigningShortcut) View.VISIBLE else View.GONE
+        ui.remove.visibility = if (!browsingCraft && type != null && selectedSlotIdx >= hotbarBase() && !assigningShortcut) View.VISIBLE else View.GONE
+        ui.related.visibility = if (!browsingCraft && type != null && !assigningShortcut) View.VISIBLE else View.GONE
+        ui.cancel.visibility = if (assigningShortcut) View.VISIBLE else View.GONE
+        ui.craftOne.visibility = if (browsingCraft && recipe != null) View.VISIBLE else View.GONE
+        ui.craftFive.visibility = ui.craftOne.visibility
+        ui.craftOne.isEnabled = recipe?.canCraft(renderer.inventory) == true
+        ui.craftFive.isEnabled = (recipe?.maxCraftable(renderer.inventory) ?: 0) >= 5
+        ui.craftOne.alpha = if (ui.craftOne.isEnabled) 1f else .45f
+        ui.craftFive.alpha = if (ui.craftFive.isEnabled) 1f else .45f
+        ui.status.setText(if (assigningShortcut) R.string.cave_ui_choose_shortcut else if (browsingCraft) R.string.cave_ui_select_recipe else R.string.cave_ui_hint)
+        CaveUiStyle.button(ui.inventoryTab, !browsingCraft); CaveUiStyle.button(ui.craftTab, browsingCraft)
+        CaveUiStyle.button(ui.combatTab, renderer.hotbarMode == HotbarMode.COMBAT)
+        CaveUiStyle.button(ui.buildTab, renderer.hotbarMode == HotbarMode.BUILD)
+    }
+
+    private fun selectInventorySlot(index: Int) {
+        if (index !in invSlots.indices) return
+        if (assigningShortcut && index >= hotbarBase() && selectedType() != null) {
+            swapSlots(selectedSlotIdx, index); assigningShortcut = false; selectedSlotIdx = index
+        } else {
+            assigningShortcut = false
+            selectedSlotIdx = if (invSlots[index] != null) index else -1
+        }
+        selectedRecipe = null
+        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
+    }
+
+    private fun removeShortcut() {
+        val index = selectedSlotIdx; val type = selectedType() ?: return
+        if (index < hotbarBase()) return
+        val emptyIndex = (0 until hotbarBase()).firstOrNull { invSlots[it] == null }
+        invSlots[index] = null
+        if (emptyIndex == null) { val base = hotbarBase(); invSlots.add(base, type); selectedSlotIdx = base }
+        else { invSlots[emptyIndex] = type; selectedSlotIdx = emptyIndex }
+        syncHotbar(); refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel()
+        ui.status.setText(R.string.cave_ui_unassigned); activity.saveWorldAsync()
+    }
+
+    private fun confirmSell(id: Short) {
+        val offered = WeaponInstanceRegistry.get(id) ?: return
+        AlertDialog.Builder(activity).setTitle(R.string.cave_inv_sell_btn)
+            .setMessage(activity.getString(R.string.cave_ui_sell_confirm, activity.blockName(id), weaponSellPrice(id)))
+            .setNegativeButton(R.string.cave_ui_cancel, null)
+            .setPositiveButton(R.string.cave_inv_sell_btn) { _, _ -> if (WeaponInstanceRegistry.get(id) === offered) doSell(id) }.show()
+    }
 
     fun initInvSlots() {
         fun fill(slots: ArrayList<Short?>, hotbar: Array<Short?>, wantCombat: Boolean) {
@@ -163,6 +276,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     /** Appelé quand le bouton combat/construction bascule : la grille et le panneau
      *  craft/vente doivent refléter la barre désormais active. */
     fun onHotbarModeChanged() {
+        assigningShortcut = false
         selectedSlotIdx = -1
         selectedRecipe = null
         syncHotbar()
@@ -195,8 +309,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun syncHotbar() {
-        val base = hotbarBase()
-        for (i in 0 until CaveActivity.ACTIVE_SIZE) renderer.hotbar[i] = invSlots.getOrNull(base + i)
+        for ((slots, bar) in listOf(combatInvSlots to renderer.combatHotbar, buildInvSlots to renderer.buildHotbar)) {
+            if (slots.size < CaveActivity.ACTIVE_SIZE) continue
+            val base = slots.size - CaveActivity.ACTIVE_SIZE
+            for (i in bar.indices) bar[i] = slots.getOrNull(base + i)?.takeIf { (renderer.inventory[it] ?: 0) > 0 }
+        }
         renderer.hotbarCallback?.invoke(renderer.hotbar.copyOf(), renderer.selectedSlot)
     }
 
@@ -295,6 +412,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // ── Inventaire open/close ─────────────────────────────────────────────────
 
     fun openInventory() {
+        assigningShortcut = false; selectedSlotIdx = -1; selectedRecipe = null
+        activity.releaseGameInputs()
         if (!invSlotsReady) initInvSlots()
         currentPage = 0
         activity.invOverlay.visibility = View.VISIBLE
@@ -305,11 +424,12 @@ internal class InventoryManager(private val activity: CaveActivity) {
             // Calcule la taille de page selon l'espace réel du pager
             invPager?.let { pager ->
                 if (pager.width > 0) {
-                    val cellSize = pager.width / CaveActivity.GRID_COLS
+                    gridColumns = (pager.width / CaveUiStyle.dp(activity, 64)).coerceIn(4, 10)
+                    val cellSize = pager.width / gridColumns
                     val rows = if (cellSize > 0) (pager.height / cellSize).coerceAtLeast(1) else 5
-                    pageSize = CaveActivity.GRID_COLS * rows
+                    pageSize = gridColumns * rows
                 }
-                val cellSize = if (pager.width > 0) pager.width / CaveActivity.GRID_COLS
+                val cellSize = if (pager.width > 0) pager.width / gridColumns
                                else (52 * activity.resources.displayMetrics.density).toInt()
                 if (pagedAdapter == null) {
                     pagedAdapter = PagedInvPagerAdapter(cellSize).also { pager.adapter = it }
@@ -326,6 +446,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun closeInventory() {
+        assigningShortcut = false; dragSourceIdx = -1
+        (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(ui.search.windowToken, 0)
+        ui.search.clearFocus()
         selectedSlotIdx = -1
         selectedRecipe  = null
         invGpZone       = InvGpZone.HOTBAR
@@ -335,18 +458,30 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun refreshPagedAdapter() {
-        val adapter = pagedAdapter ?: return
-        val pc = pageCount()
-        if (currentPage >= pc) currentPage = (pc - 1).coerceAtLeast(0)
-        adapter.notifyDataSetChanged()
+        gridIndices = (0 until hotbarBase()).filter { index ->
+            val type = invSlots[index] ?: return@filter false
+            (renderer.inventory[type] ?: 0) > 0 && activity.blockName(type).contains(query, ignoreCase = true) &&
+                (categoryIndex == 0 || renderer.hotbarMode == HotbarMode.COMBAT || BlockRegistry.get(type)?.creativeTab == categoryKeys[categoryIndex])
+        }
+        currentPage = currentPage.coerceIn(0, pageCount() - 1)
+        pagedAdapter?.notifyDataSetChanged()
         invPager?.setCurrentItem(currentPage, false)
+        if (::ui.isInitialized) {
+            ui.pager.visibility = if (browsingCraft) View.GONE else View.VISIBLE
+            ui.footer.visibility = if (browsingCraft) View.GONE else View.VISIBLE
+            ui.category.visibility = if (!browsingCraft && renderer.hotbarMode == HotbarMode.BUILD) View.VISIBLE else View.GONE
+            ui.craftable.visibility = if (browsingCraft) View.VISIBLE else View.GONE
+            if (!browsingCraft) ui.empty.visibility = if (gridIndices.isEmpty()) View.VISIBLE else View.GONE
+            updateActions()
+        }
         updatePageIndicator()
     }
 
-    private fun pageCount() = ((hotbarBase() + pageSize - 1) / pageSize).coerceAtLeast(1)
+    private fun pageCount() = ((gridIndices.size + pageSize - 1) / pageSize).coerceAtLeast(1)
 
     private fun updatePageIndicator() {
-        pageIndicatorTv?.text = "${currentPage + 1} / ${pageCount()}"
+        pageIndicatorTv?.text = activity.getString(R.string.cave_ui_page, currentPage + 1, pageCount())
+        if (::ui.isInitialized) { ui.previous.isEnabled = currentPage > 0; ui.next.isEnabled = currentPage + 1 < pageCount() }
     }
 
     // ── Panneau info ──────────────────────────────────────────────────────────
@@ -354,12 +489,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
     fun updateInfoPanel() {
         val recipe = selectedRecipe
         val dp = activity.resources.displayMetrics.density
+        updateActions()
         if (recipe != null) {
             val weaponDefId = recipe.resultItemId
             if (weaponDefId != null) {
                 infoSpriteView?.background = weaponSpriteDrawable(weaponDefId, 6f)
                 infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                infoNameTv?.text  = weaponDefId.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+                infoNameTv?.text  = activity.weaponName(weaponDefId)
                 infoCountTv?.text = "×1"
             } else {
                 infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
@@ -367,11 +503,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoNameTv?.text  = activity.blockName(recipe.result)
                 infoCountTv?.text = "×${recipe.resultCount}"
             }
-            infoIngredientsTv?.text = recipe.ingredients.joinToString("\n") { (t, n) -> "${activity.blockName(t)} ×$n" }
+            infoIngredientsTv?.text = recipe.ingredients.joinToString("\n") { (t, n) -> activity.getString(R.string.cave_ui_ingredient, activity.blockName(t), renderer.inventory[t] ?: 0, n) } + "\n\n" + activity.getString(R.string.cave_ui_available_batches, recipe.maxCraftable(renderer.inventory))
             infoDivider?.visibility       = View.VISIBLE
             infoIngredientsTv?.visibility = View.VISIBLE
         } else {
-            val type = selectedType()
+            val type = if (browsingCraft) null else selectedType()
             val isWeapon = type != null && WeaponInstanceRegistry.isWeapon(type)
             if (isWeapon) {
                 val instance = WeaponInstanceRegistry.get(type!!)
@@ -385,15 +521,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoCountTv?.text = ""
                 infoDivider?.visibility = View.VISIBLE
                 val dmg   = instance?.rolledDamage ?: 0
-                val speed = def?.attackSpeedMs?.let { "${it}ms" } ?: ""
+                val speed = def?.attackSpeedMs ?: 0
                 val extra = instance?.rolledStats?.entries?.joinToString("\n") { (k, v) ->
                     val label = affixLabel(k)
                     val suffix = affixSuffix(k)
                     "$label: $v$suffix"
                 } ?: ""
                 infoIngredientsTv?.text = buildString {
-                    append("⚔ $dmg dmg")
-                    if (speed.isNotEmpty()) append("  •  $speed")
+                    append(activity.getString(R.string.cave_ui_damage, dmg, speed))
                     if (extra.isNotEmpty()) { append("\n"); append(extra) }
                     val description=activity.resources.getIdentifier("cave_weapon_style_${def?.id}","string",activity.packageName)
                     if(description!=0) { append("\n");append(activity.getString(description)) }
@@ -408,13 +543,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         cornerRadius = 6 * dp
                     }
                     infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                    infoNameTv?.text  = activity.getString(R.string.cave_inv_info_empty)
+                    infoNameTv?.text  = activity.getString(if (browsingCraft) R.string.cave_ui_select_recipe else R.string.cave_ui_select_item)
                     infoCountTv?.text = ""
                 } else {
                     infoSpriteView?.background = activity.blockDrawable(type, 6f)
                     infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
                     infoNameTv?.text  = activity.blockName(type)
-                    infoCountTv?.text = "×${renderer.inventory[type] ?: 0}"
+                    infoCountTv?.text = activity.getString(R.string.cave_ui_owned, renderer.inventory[type] ?: 0)
                 }
             }
         }
@@ -422,19 +557,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     /** Icône d'un résultat de recette d'arme (pas encore d'instance rollée, juste l'aperçu). */
     private fun weaponSpriteDrawable(defId: String, cornerDp: Float): android.graphics.drawable.Drawable {
-        val dp = activity.resources.displayMetrics.density
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(defId)
-        val sprite = def?.sprite ?: defId
-        val bmp = runCatching {
-            android.graphics.BitmapFactory.decodeStream(activity.assets.open("Cave World/Items/$sprite.png"))
-        }.getOrNull()
-        return if (bmp != null) {
-            RoundedBitmapDrawableFactory.create(activity.resources, bmp).apply {
-                cornerRadius = cornerDp * dp; isFilterBitmap = false
-            }
-        } else {
-            GradientDrawable().apply { setColor(0xFF886600.toInt()); cornerRadius = cornerDp * dp }
-        }
+        return com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(activity.assets,
+            def?.weaponType ?: def?.sprite ?: defId,ItemRarity.COMMON)
     }
 
     private fun affixLabel(key: String): String = when (key) {
@@ -462,7 +587,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private fun weaponRarityColor(rarity: ItemRarity) = when (rarity) {
         ItemRarity.COMMON    -> 0xFFAAAAAA.toInt()
         ItemRarity.MAGIC     -> 0xFF4488FF.toInt()
-        ItemRarity.RARE      -> 0xFFFFDD00.toInt()
+        ItemRarity.RARE      -> CaveUiStyle.ACCENT
         ItemRarity.EPIC      -> 0xFFCC44FF.toInt()
         ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
     }
@@ -484,44 +609,36 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun updateCraftingList() {
         val type = selectedType()
-        val isWeapon = type != null && WeaponInstanceRegistry.isWeapon(type)
-
-        if (isWeapon) {
-            // Panneau sell
-            rightHeaderTv?.text = activity.getString(R.string.cave_inv_sell_header)
-            craftingEmptyTv?.visibility      = View.GONE
-            craftingRecyclerView?.visibility = View.GONE
-            val price = weaponSellPrice(type!!)
-            val priceLabel = activity.getString(R.string.cave_inv_sell_price_label)
-            val stoneLabel = activity.getString(R.string.cave_inv_sell_ward_stones)
-            sellPriceTv?.text = "$priceLabel: $price $stoneLabel"
-            sellPanel?.visibility = View.VISIBLE
-        } else {
-            // Panneau craft normal
-            rightHeaderTv?.text = activity.getString(R.string.cave_inv_crafting_header)
-            sellPanel?.visibility = View.GONE
-            val recipes = if (type == null) emptyList()
-                          else CraftRegistry.all().filter { r -> r.ingredients.any { it.first == type } }
-            craftingAdapter?.recipes = recipes
-            craftingAdapter?.notifyDataSetChanged()
-            craftingEmptyTv?.visibility      = if (recipes.isEmpty()) View.VISIBLE else View.GONE
-            craftingRecyclerView?.visibility = if (recipes.isEmpty()) View.GONE    else View.VISIBLE
-        }
+        sellPanel?.visibility = if (!browsingCraft && type != null && WeaponInstanceRegistry.get(type) != null) View.VISIBLE else View.GONE
+        if (type != null) sellPriceTv?.text = activity.getString(R.string.cave_inv_sell_price_label) + ": " + weaponSellPrice(type) + " " + activity.getString(R.string.cave_inv_sell_ward_stones)
+        rightHeaderTv?.setText(if (browsingCraft) R.string.cave_ui_workshop else R.string.cave_ui_details)
+        val recipes = CraftRegistry.all().filter { r ->
+            (!ui.craftable.isChecked || r.canCraft(renderer.inventory)) &&
+                (relatedType == null || r.ingredients.any { it.first == relatedType }) &&
+                (recipeName(r).contains(query, true) || r.ingredients.any { activity.blockName(it.first).contains(query, true) })
+        }.sortedWith(compareByDescending<CraftDef> { it.canCraft(renderer.inventory) }.thenBy { recipeName(it) })
+        craftingAdapter?.recipes = recipes
+        craftingAdapter?.notifyDataSetChanged()
+        craftingRecyclerView?.visibility = if (browsingCraft && recipes.isNotEmpty()) View.VISIBLE else View.GONE
+        craftingEmptyTv?.visibility = if (browsingCraft && recipes.isEmpty() || !browsingCraft && gridIndices.isEmpty()) View.VISIBLE else View.GONE
+        updateActions()
     }
 
+    private fun recipeName(recipe: CraftDef) = recipe.resultItemId?.let { activity.weaponName(it) } ?: activity.blockName(recipe.result)
+
     fun doSell(id: Short) {
-        if (!WeaponInstanceRegistry.isWeapon(id)) return
+        if (WeaponInstanceRegistry.get(id) == null || (renderer.inventory[id] ?: 0) <= 0) return
         val price = weaponSellPrice(id)
         // Rémunération en ward stones
         if (price > 0) {
             val WARD_STONE = com.Atom2Universe.app.games.caves.world.WARD_STONE
             renderer.inventory[WARD_STONE] = (renderer.inventory[WARD_STONE] ?: 0) + price
             val existing = invSlots.filterNotNull().toSet()
-            if (WARD_STONE !in existing) addNewType(WARD_STONE)
+            if (WARD_STONE !in combatInvSlots && WARD_STONE !in buildInvSlots) addNewTypeByCategory(WARD_STONE)
         }
         // Retirer l'arme
         renderer.inventory.remove(id)
-        for (i in invSlots.indices) { if (invSlots[i] == id) { invSlots[i] = null; break } }
+        for (slots in listOf(combatInvSlots, buildInvSlots)) for (i in slots.indices) { if (slots[i] == id) slots[i] = null }
         for (i in renderer.hotbar.indices) { if (renderer.hotbar[i] == id) renderer.hotbar[i] = null }
         WeaponInstanceRegistry.free(id)
         selectedSlotIdx = -1
@@ -533,135 +650,91 @@ internal class InventoryManager(private val activity: CaveActivity) {
         activity.saveWorldAsync()
     }
 
-    fun doCraft(recipe: CraftDef) {
-        if (!recipe.canCraft(renderer.inventory)) return
-        for ((type, need) in recipe.ingredients) {
-            val after = (renderer.inventory[type] ?: 0) - need
-            if (after <= 0) {
-                renderer.inventory.remove(type)
-                for (i in invSlots.indices) { if (invSlots[i] == type) { invSlots[i] = null; break } }
-            } else renderer.inventory[type] = after
+    fun doCraft(recipe: CraftDef, batches: Int = 1) {
+        if (batches !in 1..5 || recipe.maxCraftable(renderer.inventory) < batches) {
+            ui.status.setText(R.string.cave_ui_missing); return
         }
+        val allocated = mutableListOf<Short>()
         val weaponDefId = recipe.resultItemId
         if (weaponDefId != null) {
-            val instance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(weaponDefId, kotlin.random.Random.Default)
-            if (instance != null) {
-                val id = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(instance)
-                renderer.inventory[id] = 1
-                addNewTypeByCategory(id)
+            val prepared = runCatching {
+                repeat(batches) {
+                    val instance = com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(weaponDefId, kotlin.random.Random.Default)
+                        ?: error("Unknown craft output")
+                    allocated += WeaponInstanceRegistry.allocate(instance)
+                }
             }
-        } else {
-            val outType    = recipe.result
-            val outCurrent = renderer.inventory[outType] ?: 0
-            renderer.inventory[outType] = outCurrent + recipe.resultCount
-            // Le résultat n'est pas forcément dans la banque affichée (ex : flèches
-            // craftées en mode construction, mais rangées côté combat) — on cherche
-            // dans les deux grilles, pas seulement celle actuellement visible.
-            if (outCurrent == 0 && outType !in combatInvSlots && outType !in buildInvSlots) addNewTypeByCategory(outType)
+            if (prepared.isFailure) {
+                allocated.forEach { WeaponInstanceRegistry.free(it) }
+                ui.status.setText(R.string.cave_ui_craft_failed); return
+            }
+        } else if ((renderer.inventory[recipe.result] ?: 0).toLong() + recipe.resultCount.toLong() * batches > Int.MAX_VALUE) {
+            ui.status.setText(R.string.cave_ui_craft_failed); return
         }
-        if (selectedSlotIdx in invSlots.indices && invSlots[selectedSlotIdx] == null) selectedSlotIdx = -1
-        syncHotbar()
-        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
+        for ((type, need) in recipe.requiredIngredients) {
+            val after = (renderer.inventory[type] ?: 0) - need * batches
+            if (after <= 0) {
+                renderer.inventory.remove(type)
+                for (slots in listOf(combatInvSlots, buildInvSlots)) for (i in slots.indices)
+                    if (slots[i] == type) slots[i] = null
+            } else renderer.inventory[type] = after
+        }
+        if (weaponDefId != null) for (id in allocated) {
+            renderer.inventory[id] = 1; addNewTypeByCategory(id)
+        } else {
+            val out = recipe.result
+            renderer.inventory[out] = (renderer.inventory[out] ?: 0) + recipe.resultCount * batches
+            if (out !in combatInvSlots && out !in buildInvSlots) addNewTypeByCategory(out)
+        }
+        selectedSlotIdx = -1
+        syncHotbar(); refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
+        ui.status.text = activity.getString(R.string.cave_ui_crafted, recipeName(recipe), if (weaponDefId != null) batches else recipe.resultCount * batches)
         activity.saveWorldAsync()
     }
 
     // ── Slot click hotbar réelle (pendant inventaire) ─────────────────────────
 
     fun onOverlayActiveSlotClick(i: Int) {
-        val invIdx = hotbarBase() + i
-        when {
-            selectedSlotIdx == invIdx -> {
-                selectedSlotIdx = -1
-                hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-            }
-            selectedSlotIdx >= 0 -> {
-                swapSlots(selectedSlotIdx, invIdx); selectedSlotIdx = -1
-                refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-            }
-            invSlots.getOrNull(invIdx) != null -> {
-                selectedSlotIdx = invIdx; selectedRecipe = null
-                hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-            }
-        }
+        selectInventorySlot(hotbarBase() + i)
     }
 
     // ── Navigation manette inventaire ─────────────────────────────────────────
 
     fun moveInvCursor(dx: Int, dy: Int) {
         val base = hotbarBase()
-        val cols = CaveActivity.GRID_COLS
         when (invGpZone) {
             InvGpZone.GRID -> {
-                val pageStart = currentPage * pageSize
-                val pageEnd   = minOf(pageStart + pageSize, base).coerceAtLeast(pageStart + 1)
-                val localIdx  = (invGpCursor - pageStart).coerceIn(0, pageEnd - pageStart - 1)
-                val localCol  = localIdx % cols
-                val localRow  = localIdx / cols
-
-                when {
-                    dy < 0 && localRow == 0 -> {
-                        invGpZone   = InvGpZone.HOTBAR
-                        invGpCursor = base + localCol.coerceAtMost(CaveActivity.ACTIVE_SIZE - 1)
-                    }
-                    dy != 0 -> {
-                        val newLocal = localIdx + dy * cols
-                        invGpCursor = (pageStart + newLocal.coerceIn(0, pageEnd - pageStart - 1))
-                    }
-                    dx < 0 && localCol == 0 -> changePage(-1)
-                    dx > 0 && localCol == cols - 1 -> changePage(1)
-                    dx != 0 -> {
-                        val clamped = (pageStart + localRow * cols + (localCol + dx)
-                            .coerceIn(0, cols - 1)).coerceAtMost(pageEnd - 1)
-                        invGpCursor = clamped
-                    }
+                val pos = gridIndices.indexOf(invGpCursor).coerceAtLeast(0)
+                val next = pos + dx + dy * gridColumns
+                if (next < 0 || next >= gridIndices.size) {
+                    invGpZone = InvGpZone.HOTBAR; invGpCursor = base
+                } else {
+                    invGpCursor = gridIndices[next]; currentPage = next / pageSize
+                    invPager?.setCurrentItem(currentPage, false)
                 }
             }
             InvGpZone.HOTBAR -> {
-                val rel = invGpCursor - base
-                when {
-                    dy < 0 && base > 0 -> {
-                        invGpZone = InvGpZone.GRID
-                        val pageStart = currentPage * pageSize
-                        val pageEnd   = minOf(pageStart + pageSize, base).coerceAtLeast(pageStart + 1)
-                        val lastRowStart = ((pageEnd - 1) / cols) * cols
-                        invGpCursor = (lastRowStart + rel.coerceAtMost(cols - 1)).coerceAtMost(pageEnd - 1)
-                    }
-                    dx < 0 -> invGpCursor = base + (rel - 1 + CaveActivity.ACTIVE_SIZE) % CaveActivity.ACTIVE_SIZE
-                    dx > 0 -> invGpCursor = base + (rel + 1) % CaveActivity.ACTIVE_SIZE
-                }
+                if (dy < 0 && gridIndices.isNotEmpty() && !browsingCraft) {
+                    invGpZone = InvGpZone.GRID
+                    invGpCursor = gridIndices[minOf((currentPage + 1) * pageSize, gridIndices.size) - 1]
+                } else invGpCursor = base + Math.floorMod(invGpCursor - base + dx, CaveActivity.ACTIVE_SIZE)
             }
             InvGpZone.CRAFTING -> {
                 val count = craftingAdapter?.itemCount ?: 0
-                if (count > 0) {
-                    invGpCursor = (invGpCursor + dy + count) % count
-                    craftingRecyclerView?.scrollToPosition(invGpCursor)
-                }
+                if (count > 0) { invGpCursor = Math.floorMod(invGpCursor + dy, count); craftingRecyclerView?.scrollToPosition(invGpCursor) }
             }
         }
-        refreshInvGpCursorUi()
+        updatePageIndicator(); refreshInvGpCursorUi()
     }
 
     fun changePage(delta: Int) {
-        val newPage = (currentPage + delta).coerceIn(0, pageCount() - 1)
-        if (newPage == currentPage) return
-        currentPage = newPage
+        currentPage = (currentPage + delta).coerceIn(0, pageCount() - 1)
         invPager?.setCurrentItem(currentPage, true)
-        if (invGpZone == InvGpZone.GRID) {
-            val pageStart = currentPage * pageSize
-            val pageEnd   = minOf(pageStart + pageSize, hotbarBase()).coerceAtLeast(pageStart + 1)
-            val localCol  = invGpCursor % CaveActivity.GRID_COLS
-            invGpCursor   = (pageStart + localCol).coerceAtMost(pageEnd - 1)
-        }
-        updatePageIndicator()
-        refreshInvGpCursorUi()
+        if (invGpZone == InvGpZone.GRID) invGpCursor = gridIndices.getOrNull(currentPage * pageSize) ?: hotbarBase()
+        updatePageIndicator(); refreshInvGpCursorUi()
     }
 
-    fun exitCraftingZone() {
-        invGpZone = InvGpZone.HOTBAR
-        invGpCursor = hotbarBase()
-        selectedRecipe = null
-        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-    }
+    fun exitCraftingZone() { showLibrary(false) }
 
     fun handleInvGamepadMotion(event: MotionEvent): Boolean {
         if (event.source and InputDevice.SOURCE_JOYSTICK != InputDevice.SOURCE_JOYSTICK) return false
@@ -690,57 +763,29 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun handleInvGamepadKey(keyCode: Int): Boolean = when (keyCode) {
-        KeyEvent.KEYCODE_BUTTON_Y -> {
-            if (invGpZone == InvGpZone.CRAFTING) exitCraftingZone()
-            else {
-                if (invSlots.getOrNull(invGpCursor) != null) {
-                    selectedSlotIdx = invGpCursor
-                    invGpZone = InvGpZone.CRAFTING; invGpCursor = 0
-                    updateInfoPanel(); updateCraftingList()
-                    craftingRecyclerView?.scrollToPosition(0)
-                    craftingAdapter?.notifyDataSetChanged()
-                }
-            }
-            true
-        }
+        KeyEvent.KEYCODE_BUTTON_Y -> { showLibrary(!browsingCraft); true }
         KeyEvent.KEYCODE_BUTTON_A -> {
             if (invGpZone == InvGpZone.CRAFTING) {
-                craftingAdapter?.recipes?.getOrNull(invGpCursor)?.let { doCraft(it) }
-            } else {
-                val base = hotbarBase()
-                val effectiveIdx = if (invGpZone == InvGpZone.HOTBAR) invGpCursor else invGpCursor
-                when {
-                    selectedSlotIdx == effectiveIdx -> {
-                        selectedSlotIdx = -1
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                    selectedSlotIdx >= 0 -> {
-                        swapSlots(selectedSlotIdx, effectiveIdx); selectedSlotIdx = -1
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                    invSlots.getOrNull(effectiveIdx) != null -> {
-                        selectedSlotIdx = effectiveIdx; selectedRecipe = null
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                }
-            }
+                selectedRecipe = craftingAdapter?.recipes?.getOrNull(invGpCursor)
+                craftingAdapter?.notifyDataSetChanged(); updateInfoPanel()
+            } else selectInventorySlot(invGpCursor)
+            true
+        }
+        KeyEvent.KEYCODE_BUTTON_X -> {
+            if (browsingCraft) selectedRecipe?.let { doCraft(it) }
+            else if (selectedType() != null) { assigningShortcut = true; invGpZone = InvGpZone.HOTBAR; invGpCursor = hotbarBase(); updateActions() }
             true
         }
         KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BACK -> {
-            when {
-                invGpZone == InvGpZone.CRAFTING -> exitCraftingZone()
-                selectedSlotIdx >= 0 -> {
-                    selectedSlotIdx = -1
-                    refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                }
-                else -> closeInventory()
-            }
+            when { assigningShortcut -> { assigningShortcut = false; updateActions() }
+                browsingCraft -> showLibrary(false)
+                else -> closeInventory() }
             true
         }
-        KeyEvent.KEYCODE_DPAD_LEFT  -> { invGpLastMoveMs = 0; moveInvCursor(-1,  0); true }
-        KeyEvent.KEYCODE_DPAD_RIGHT -> { invGpLastMoveMs = 0; moveInvCursor( 1,  0); true }
-        KeyEvent.KEYCODE_DPAD_UP    -> { invGpLastMoveMs = 0; moveInvCursor( 0, -1); true }
-        KeyEvent.KEYCODE_DPAD_DOWN  -> { invGpLastMoveMs = 0; moveInvCursor( 0,  1); true }
+        KeyEvent.KEYCODE_DPAD_LEFT -> { moveInvCursor(-1, 0); true }
+        KeyEvent.KEYCODE_DPAD_RIGHT -> { moveInvCursor(1, 0); true }
+        KeyEvent.KEYCODE_DPAD_UP -> { moveInvCursor(0, -1); true }
+        KeyEvent.KEYCODE_DPAD_DOWN -> { moveInvCursor(0, 1); true }
         else -> false
     }
 
@@ -756,13 +801,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
         inner class PageVH(val rv: RecyclerView) : RecyclerView.ViewHolder(rv)
 
-        fun pageCount() = ((hotbarBase() + pageSize - 1) / pageSize).coerceAtLeast(1)
+        fun pageCount() = ((gridIndices.size + pageSize - 1) / pageSize).coerceAtLeast(1)
 
         override fun getItemCount() = pageCount()
 
         override fun onCreateViewHolder(parent: ViewGroup, vt: Int): PageVH {
             val rv = RecyclerView(parent.context).apply {
-                layoutManager = GridLayoutManager(parent.context, CaveActivity.GRID_COLS)
+                layoutManager = GridLayoutManager(parent.context, gridColumns)
                 isNestedScrollingEnabled = false
                 overScrollMode = View.OVER_SCROLL_NEVER
                 layoutParams = ViewGroup.LayoutParams(
@@ -775,8 +820,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
         override fun onBindViewHolder(holder: PageVH, position: Int) {
             val start = position * pageSize
-            val slots = (0 until pageSize).map { invSlots.getOrNull(start + it) }
-            holder.rv.adapter = PageSlotAdapter(slots, start, cellSize)
+            val indices = gridIndices.drop(start).take(pageSize)
+            holder.rv.adapter = PageSlotAdapter(indices.map { invSlots.getOrNull(it) }, indices, cellSize)
         }
     }
 
@@ -784,7 +829,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     inner class PageSlotAdapter(
         val items: List<Short?>,
-        val startIdx: Int,
+        val indices: List<Int>,
         val cellSize: Int
     ) : RecyclerView.Adapter<PageSlotAdapter.VH>() {
 
@@ -798,12 +843,12 @@ internal class InventoryManager(private val activity: CaveActivity) {
         override fun onCreateViewHolder(parent: ViewGroup, vt: Int): VH {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_cave_inv_block, parent, false)
-            view.layoutParams = RecyclerView.LayoutParams(cellSize, cellSize)
+            view.layoutParams = RecyclerView.LayoutParams(cellSize - CaveUiStyle.dp(activity, 6), cellSize - CaveUiStyle.dp(activity, 6)).also { it.setMargins(3, 3, 3, 3) }
             return VH(view)
         }
 
         override fun onBindViewHolder(holder: VH, position: Int) {
-            val absIdx = startIdx + position
+            val absIdx = indices[position]
             val type   = items.getOrNull(position)
             val count  = if (type != null) renderer.inventory[type] ?: 0 else 0
             val isSel    = absIdx == selectedSlotIdx
@@ -815,9 +860,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
             } else null
             holder.itemView.background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                setColor(when { isSel -> 0x44FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); type != null -> 0x28FFFFFF.toInt(); else -> 0x12FFFFFF.toInt() })
+                setColor(when { isSel -> CaveUiStyle.SELECTED; isCursor -> 0x66567570; type != null -> 0x28FFFFFF.toInt(); else -> 0x12FFFFFF.toInt() })
                 val strokeW = if (isSel || isCursor || rarityStroke != null) (2 * dp).toInt() else (1 * dp).toInt()
-                val strokeC = when { isSel -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); rarityStroke != null -> rarityStroke; type != null -> 0x55FFFFFF.toInt(); else -> 0x28FFFFFF.toInt() }
+                val strokeC = when { isSel -> CaveUiStyle.ACCENT; isCursor -> 0xFFB0D5D3.toInt(); rarityStroke != null -> rarityStroke; type != null -> 0x55FFFFFF.toInt(); else -> 0x28FFFFFF.toInt() }
                 setStroke(strokeW, strokeC)
                 cornerRadius = 5 * dp
             }
@@ -828,28 +873,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
             holder.itemView.setOnClickListener {
                 val pos = holder.bindingAdapterPosition
                 if (pos == RecyclerView.NO_POSITION) return@setOnClickListener
-                val aIdx = startIdx + pos
-                when {
-                    selectedSlotIdx == aIdx -> {
-                        selectedSlotIdx = -1
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                    selectedSlotIdx >= 0 -> {
-                        swapSlots(selectedSlotIdx, aIdx); selectedSlotIdx = -1
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                    type != null -> {
-                        selectedSlotIdx = aIdx; selectedRecipe = null
-                        refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-                    }
-                }
+                selectInventorySlot(indices[pos])
             }
             holder.itemView.setOnLongClickListener {
                 val pos = holder.bindingAdapterPosition
-                if (pos != RecyclerView.NO_POSITION) { startSlotDrag(it, startIdx + pos); true } else false
+                if (pos != RecyclerView.NO_POSITION) { startSlotDrag(it, indices[pos]); true } else false
             }
             holder.itemView.setOnDragListener(makeSlotDragListener {
-                holder.bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION }?.let { startIdx + it } ?: -1
+                holder.bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION }?.let { indices.getOrNull(it) } ?: -1
             })
         }
     }
@@ -865,7 +896,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
             val ll = LinearLayout(parent.context).apply {
                 orientation = LinearLayout.VERTICAL
                 layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
-                val m = (6 * dp).toInt(); setPadding(m, m, m, m)
+                val m = (10 * dp).toInt(); setPadding(m, m, m, m)
+                (layoutParams as RecyclerView.LayoutParams).bottomMargin = (8 * dp).toInt()
             }
             return VH(ll)
         }
@@ -873,53 +905,28 @@ internal class InventoryManager(private val activity: CaveActivity) {
         override fun getItemCount() = recipes.size
 
         override fun onBindViewHolder(holder: VH, position: Int) {
-            val recipe   = recipes[position]
-            val dp       = activity.resources.displayMetrics.density
-            val isSelRec = recipe == selectedRecipe
-            val isCursor = invGpZone == InvGpZone.CRAFTING && position == invGpCursor
+            val recipe = recipes[position]
+            val chosen = recipe == selectedRecipe
+            val cursor = invGpZone == InvGpZone.CRAFTING && position == invGpCursor
             holder.root.removeAllViews()
-            holder.root.background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                setColor(when { isSelRec -> 0x33FFDD00.toInt(); isCursor -> 0x3300DDFF.toInt(); else -> 0x22FFFFFF })
-                cornerRadius = 6 * dp
-                setStroke(if (isSelRec || isCursor) (2 * dp).toInt() else 1,
-                    when { isSelRec -> 0xFFFFDD00.toInt(); isCursor -> 0xFF00DDFF.toInt(); else -> 0x33FFFFFF })
-            }
-            val row = LinearLayout(holder.root.context).apply {
-                orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            }
-            recipe.ingredients.forEachIndexed { idx, (type, need) ->
-                if (idx > 0) row.addView(TextView(holder.root.context).apply {
-                    text = "+"; textSize = 12f; setTextColor(0x88FFFFFF.toInt())
-                    setPadding((4 * dp).toInt(), 0, (4 * dp).toInt(), 0)
+            holder.root.background = CaveUiStyle.panel(activity, if (chosen) CaveUiStyle.SELECTED else 0x66334A3D,
+                if (chosen || cursor) CaveUiStyle.ACCENT else CaveUiStyle.BORDER, chosen || cursor)
+            val row = LinearLayout(activity).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+            row.addView(View(activity).apply {
+                background = recipe.resultItemId?.let { weaponSpriteDrawable(it, 6f) } ?: activity.blockDrawable(recipe.result, 6f)
+            }, LinearLayout.LayoutParams(CaveUiStyle.dp(activity, 48), CaveUiStyle.dp(activity, 48)))
+            row.addView(LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL; setPadding(CaveUiStyle.dp(activity, 12), 0, 0, 0)
+                addView(TextView(activity).apply { text = recipeName(recipe); textSize = 15f; setTextColor(CaveUiStyle.TEXT); setTypeface(typeface, 1) })
+                addView(TextView(activity).apply {
+                    text = activity.getString(if (recipe.canCraft(renderer.inventory)) R.string.cave_ui_ready else R.string.cave_ui_missing)
+                    textSize = 12f; setTextColor(if (recipe.canCraft(renderer.inventory)) CaveUiStyle.ACCENT else CaveUiStyle.MUTED)
                 })
-                row.addView(blockLabel(holder.root.context, type, need, dp))
-            }
-            row.addView(TextView(holder.root.context).apply {
-                text = "→"; textSize = 14f; setTextColor(0xAAFFFFFF.toInt())
-                setPadding((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
-            })
-            row.addView(
-                if (recipe.resultItemId != null) weaponResultLabel(holder.root.context, recipe.resultItemId, dp)
-                else blockLabel(holder.root.context, recipe.result, recipe.resultCount, dp)
-            )
+            }, LinearLayout.LayoutParams(0, -2, 1f))
             holder.root.addView(row)
-            val canCraft = recipe.canCraft(renderer.inventory)
-            holder.root.addView(Button(holder.root.context).apply {
-                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (32 * dp).toInt())
-                lp.topMargin = (6 * dp).toInt(); layoutParams = lp
-                text = activity.getString(R.string.cave_inv_craft_btn); textSize = 11f
-                isEnabled = canCraft; alpha = if (canCraft) 1f else 0.4f
-                setBackgroundColor(if (canCraft) 0xFF336633.toInt() else 0x44FFFFFF.toInt())
-                setTextColor(Color.WHITE); setPadding(0, 0, 0, 0)
-                setOnClickListener { doCraft(recipe) }
-            })
-            holder.root.setOnClickListener {
-                selectedRecipe = if (selectedRecipe == recipe) null else recipe
-                notifyDataSetChanged()
-                updateInfoPanel()
-            }
+            holder.root.contentDescription = recipeName(recipe)
+            holder.root.isFocusable = true
+            holder.root.setOnClickListener { selectedRecipe = recipe; notifyDataSetChanged(); updateInfoPanel() }
         }
 
         private fun blockLabel(ctx: Context, type: Short, count: Int, dp: Float): LinearLayout =

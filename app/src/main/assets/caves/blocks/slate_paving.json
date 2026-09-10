@@ -1,0 +1,11 @@
+{
+  "id": 2202,
+  "name": "slate_paving",
+  "texture_top": "cozy:material:15",
+  "texture_side": "cozy:material:15",
+  "texture_bottom": "cozy:material:15",
+  "color": "#8997A3",
+  "hardness": 2.0,
+  "drop": "slate_paving",
+  "creative_tab": "stone"
+}

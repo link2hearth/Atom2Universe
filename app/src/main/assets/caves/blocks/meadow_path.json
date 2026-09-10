@@ -1,0 +1,11 @@
+{
+  "id": 106,
+  "name": "meadow_path",
+  "texture_top": "cozy:material:4:C6B38C",
+  "texture_side": "cozy:material:4:C6B38C",
+  "texture_bottom": "cozy:material:4:C6B38C",
+  "color": "#C6B38C",
+  "hardness": 2.0,
+  "drop": "meadow_path",
+  "creative_tab": "terrain"
+}

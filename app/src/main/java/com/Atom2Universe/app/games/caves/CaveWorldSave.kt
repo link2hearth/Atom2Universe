@@ -46,7 +46,8 @@ internal data class CaveWorldSave(
     var skillAcrobaticsXp: Int = 0,
     // IDs ≥ 10000 → instances d'armes dynamiques
     var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
-    var recoverableAmmo: List<StuckAmmo> = emptyList()
+    var recoverableAmmo: List<StuckAmmo> = emptyList(),
+    val terrainVersion: Int = 2
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -129,6 +130,7 @@ internal object CaveWorldSaveManager {
             put("id", save.id)
             put("name", save.name)
             put("seed", save.seed)
+            put("terrainVersion", save.terrainVersion)
             put("createdAt", save.createdAt)
             put("lastPlayedAt", save.lastPlayedAt)
             put("playerX", save.playerX)
@@ -236,6 +238,7 @@ internal object CaveWorldSaveManager {
             id = j.getString("id"),
             name = j.getString("name"),
             seed = j.getLong("seed"),
+            terrainVersion = j.optInt("terrainVersion", 1),
             createdAt = j.getLong("createdAt"),
             lastPlayedAt = j.getLong("lastPlayedAt"),
             playerX = j.getDouble("playerX"),

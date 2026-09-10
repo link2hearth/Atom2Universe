@@ -1,9 +1,9 @@
 {
   "id": 9033,
   "name": "cotton_yellow",
-  "texture_top": "cotton/cotton_yellow.png",
-  "texture_side": "cotton/cotton_yellow.png",
-  "texture_bottom": "cotton/cotton_yellow.png",
+  "texture_top": "cozy:cloth:5:EEEE00",
+  "texture_side": "cozy:cloth:5:EEEE00",
+  "texture_bottom": "cozy:cloth:5:EEEE00",
   "color": "#EEEE00",
   "hardness": 1.0,
   "drop": "cotton_yellow",

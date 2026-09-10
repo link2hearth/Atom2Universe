@@ -1,9 +1,9 @@
 {
   "id": 9014,
   "name": "cotton_lime",
-  "texture_top": "cotton/cotton_lime.png",
-  "texture_side": "cotton/cotton_lime.png",
-  "texture_bottom": "cotton/cotton_lime.png",
+  "texture_top": "cozy:cloth:5:32CD32",
+  "texture_side": "cozy:cloth:5:32CD32",
+  "texture_bottom": "cozy:cloth:5:32CD32",
   "color": "#32CD32",
   "hardness": 1.0,
   "drop": "cotton_lime",

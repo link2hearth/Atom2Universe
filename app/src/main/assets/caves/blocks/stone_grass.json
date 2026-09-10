@@ -1,10 +1,10 @@
 {
   "id": 2030,
   "name": "stone_grass",
-  "texture_top": "blocs/grass_top.png",
-  "texture_side": "blocs/stone_grass_side.png",
-  "texture_bottom": "blocs/stone_top.png",
-  "color": "#5A8A3A",
+  "texture_top": "cozy:material:0:819A5E",
+  "texture_side": "cozy:cap:3:A0ABB4:0",
+  "texture_bottom": "cozy:material:3:A0ABB4",
+  "color": "#819A5E",
   "hardness": 3.0,
   "drop": "stone_grass",
   "creative_tab": "terrain"

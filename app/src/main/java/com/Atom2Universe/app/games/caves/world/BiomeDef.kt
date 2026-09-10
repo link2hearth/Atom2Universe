@@ -91,6 +91,9 @@ internal fun blockIdByName(name: String): Short = when (name) {
     "mushroom_brown" -> MUSHROOM_BROWN
     "mushroom_tan"   -> MUSHROOM_TAN
     "wheat1" -> WHEAT1; "wheat2" -> WHEAT2; "wheat3" -> WHEAT3; "wheat4" -> WHEAT4
+    "grass_tuft_short" -> GRASS_TUFT_SHORT
+    "grass_tuft_meadow" -> GRASS_TUFT_MEADOW
+    "grass_tuft_tall" -> GRASS_TUFT_TALL
     else -> AIR.also { android.util.Log.w("BiomeDef", "Unknown block name: $name") }
 }
 

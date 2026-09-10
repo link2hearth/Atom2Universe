@@ -1,10 +1,10 @@
 {
   "id": 2031,
   "name": "stone_dirt",
-  "texture_top": "blocs/dirt_top.png",
-  "texture_side": "blocs/stone_dirt_side.png",
-  "texture_bottom": "blocs/stone_top.png",
-  "color": "#8B6914",
+  "texture_top": "cozy:material:2:A47D58",
+  "texture_side": "cozy:cap:3:A0ABB4:2",
+  "texture_bottom": "cozy:material:3:A0ABB4",
+  "color": "#A47D58",
   "hardness": 3.0,
   "drop": "stone_dirt",
   "creative_tab": "terrain"

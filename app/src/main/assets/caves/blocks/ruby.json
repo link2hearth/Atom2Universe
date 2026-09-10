@@ -1,9 +1,9 @@
 {
   "id": 3005,
   "name": "ruby",
-  "texture_top": "Ores/greystone_ruby.png",
-  "texture_side": "Ores/greystone_ruby.png",
-  "texture_bottom": "Ores/greystone_ruby.png",
+  "texture_top": "cozy:ore:3:929EAA:CC1111",
+  "texture_side": "cozy:ore:3:929EAA:CC1111",
+  "texture_bottom": "cozy:ore:3:929EAA:CC1111",
   "color": "#CC1111",
   "hardness": 4.5,
   "drop": "ruby",

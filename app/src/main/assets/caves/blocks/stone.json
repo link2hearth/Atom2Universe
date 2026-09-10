@@ -1,14 +1,13 @@
 {
   "id": 2000,
   "name": "stone",
-  "texture_top": "blocs/stone_top.png",
-  "texture_side": "blocs/stone_top.png",
-  "texture_bottom": "blocs/stone_top.png",
-  "color": "#808080",
+  "texture_top": "cozy:material:3:A0ABB4",
+  "texture_side": "cozy:material:3:A0ABB4",
+  "texture_bottom": "cozy:material:3:A0ABB4",
+  "color": "#A0ABB4",
   "hardness": 3.0,
-  "texture_side_grass": "blocs/stone_grass_side.png",
-  "texture_side_sand": "blocs/stone_sand_side.png",
-  "texture_side_snow": "blocs/stone_snow_side.png",
+  "texture_side_sand": "cozy:cap:3:A0ABB4:5",
+  "texture_side_snow": "cozy:cap:3:A0ABB4:10:utility",
   "drop": "stone",
   "creative_tab": "stone"
 }

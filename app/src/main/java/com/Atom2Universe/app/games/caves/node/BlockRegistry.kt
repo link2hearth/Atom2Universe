@@ -68,6 +68,7 @@ internal object BlockRegistry {
         topBitmapById.clear()
 
         val bitmaps = mutableListOf<Bitmap>()
+        val cozy = CozyTextureAtlas(assets, tileSize)
 
         fun register(name: String): Int {
             textureIndexMap[name]?.let { return it }
@@ -76,11 +77,9 @@ internal object BlockRegistry {
             textureOrder += name
             bitmaps += when {
                 generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
-                else -> {
-                    val path = if (name.startsWith("Items/")) "Cave World/$name"
-                               else "Cave World/Tiles/$name"
-                    BitmapFactory.decodeStream(assets.open(path))
-                }
+                name.startsWith("cozy:") -> cozy.texture(name)
+                name.startsWith("Items/") -> assets.open("Cave World/$name").use { BitmapFactory.decodeStream(it) }
+                else -> error("Unknown Cave World block texture: $name")
             }
             return idx
         }
@@ -108,6 +107,7 @@ internal object BlockRegistry {
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 
+        cozy.close()
         return bitmaps
     }
 

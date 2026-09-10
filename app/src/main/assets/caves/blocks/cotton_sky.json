@@ -1,9 +1,9 @@
 {
   "id": 9027,
   "name": "cotton_sky",
-  "texture_top": "cotton/cotton_sky.png",
-  "texture_side": "cotton/cotton_sky.png",
-  "texture_bottom": "cotton/cotton_sky.png",
+  "texture_top": "cozy:cloth:5:87CEEB",
+  "texture_side": "cozy:cloth:5:87CEEB",
+  "texture_bottom": "cozy:cloth:5:87CEEB",
   "color": "#87CEEB",
   "hardness": 1.0,
   "drop": "cotton_sky",

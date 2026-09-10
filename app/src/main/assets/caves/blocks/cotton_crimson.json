@@ -1,9 +1,9 @@
 {
   "id": 9005,
   "name": "cotton_crimson",
-  "texture_top": "cotton/cotton_crimson.png",
-  "texture_side": "cotton/cotton_crimson.png",
-  "texture_bottom": "cotton/cotton_crimson.png",
+  "texture_top": "cozy:cloth:5:DC143C",
+  "texture_side": "cozy:cloth:5:DC143C",
+  "texture_bottom": "cozy:cloth:5:DC143C",
   "color": "#DC143C",
   "hardness": 1.0,
   "drop": "cotton_crimson",

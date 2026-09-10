@@ -1,10 +1,10 @@
 {
   "id": 105,
   "name": "dirt_snow",
-  "texture_top": "blocs/snow_top.png",
-  "texture_side": "blocs/dirt_snow_side.png",
-  "texture_bottom": "blocs/dirt_top.png",
-  "color": "#D8D8D8",
+  "texture_top": "cozy:utility:10",
+  "texture_side": "cozy:material:2",
+  "texture_bottom": "cozy:material:5:DAE6E9",
+  "color": "#DAE6E9",
   "hardness": 1.5,
   "drop": "dirt_snow",
   "creative_tab": "terrain"

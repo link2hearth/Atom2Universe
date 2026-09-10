@@ -1,0 +1,14 @@
+{
+  "id": 7049,
+  "name": "golden_grass",
+  "texture_top": "cozy:groundcover:12",
+  "texture_side": "cozy:groundcover:12",
+  "texture_bottom": "cozy:groundcover:12",
+  "color": "#8EA373",
+  "hardness": 0.1,
+  "decoration": true,
+  "drop": "golden_grass",
+  "creative_tab": "nature",
+  "sprite_margin": 0.05,
+  "sprite_height": 0.85
+}

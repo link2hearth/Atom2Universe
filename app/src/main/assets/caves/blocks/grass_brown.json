@@ -1,12 +1,13 @@
 {
   "id": 7004,
   "name": "grass_brown",
-  "texture_top": "grass_brown.png",
-  "texture_side": "grass_brown.png",
-  "texture_bottom": "grass_brown.png",
-  "color": "#8B7040",
+  "texture_top": "cozy:groundcover:12",
+  "texture_side": "cozy:groundcover:12",
+  "texture_bottom": "cozy:groundcover:12",
+  "color": "#94A76E",
   "hardness": 0.1,
   "decoration": true,
   "drop": "",
-  "creative_tab": "nature"
+  "creative_tab": "nature",
+  "sprite_height": 0.65
 }

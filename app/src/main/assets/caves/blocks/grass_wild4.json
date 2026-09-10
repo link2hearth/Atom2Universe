@@ -1,12 +1,13 @@
 {
   "id": 7003,
   "name": "grass_wild4",
-  "texture_top": "grass4.png",
-  "texture_side": "grass4.png",
-  "texture_bottom": "grass4.png",
-  "color": "#6A9A18",
+  "texture_top": "cozy:groundcover:1",
+  "texture_side": "cozy:groundcover:1",
+  "texture_bottom": "cozy:groundcover:1",
+  "color": "#94A76E",
   "hardness": 0.1,
   "decoration": true,
   "drop": "",
-  "creative_tab": "nature"
+  "creative_tab": "nature",
+  "sprite_height": 0.6
 }

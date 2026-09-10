@@ -1,10 +1,10 @@
 {
   "id": 101,
   "name": "grass",
-  "texture_top": "blocs/grass_top.png",
-  "texture_side": "blocs/dirt_grass_side.png",
-  "texture_bottom": "blocs/dirt_top.png",
-  "color": "#55AA33",
+  "texture_top": "cozy:material:0",
+  "texture_side": "cozy:material:1",
+  "texture_bottom": "cozy:material:2",
+  "color": "#819A5E",
   "hardness": 0.8,
   "drop": "dirt",
   "creative_tab": "terrain"

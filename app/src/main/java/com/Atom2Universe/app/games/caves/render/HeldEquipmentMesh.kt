@@ -86,11 +86,12 @@ internal class HeldEquipmentMesh {
         clear()
         val m = this
         if(type=="dual_pistols") {
+            val spacing = if(fps) .30f else .26f
             for(side in listOf(-1f,1f)) {
-                rod(side*.24f,if(fps) -.24f else -.03f,if(fps) .10f else .43f,side*.16f,-.06f,.02f,.06f,0x435B78,.038f)
-                hand(side*.16f,-.025f,.02f)
+                rod(side*(if(fps) .38f else .27f),if(fps) -.24f else -.03f,if(fps) .10f else .43f,side*spacing,-.06f,.02f,.06f,0x435B78,.038f)
+                hand(side*spacing,-.025f,.02f)
             }
-            weapon(type,charge,release,loaded,accent,reload=reload,shotIndex=shotIndex)
+            weapon(type,charge,release,loaded,accent,reload=reload,shotIndex=shotIndex,dualSpacing=spacing)
             return
         }
         val follow = if (release >= 0f) sin((release/.55f).coerceIn(0f,1f)*PI.toFloat()) else 0f
@@ -145,7 +146,7 @@ internal class HeldEquipmentMesh {
     }
 
     /** Grip à l'origine. Les pièces mobiles utilisent le même repère dans les deux vues. */
-    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true, reload: Float = 0f, shotIndex: Int = 0) {
+    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true, reload: Float = 0f, shotIndex: Int = 0, dualSpacing: Float = .16f) {
         val wood = 0x85502C; val leather = 0x392B28; val metal = 0xA9BBC7
         val snap = if (release >= 0f) sin(release*38f)*exp(-release*10f)*.085f else 0f
         when (type) {
@@ -154,7 +155,7 @@ internal class HeldEquipmentMesh {
                 for(side in 0..1) {
                     val start=count
                     weapon("gun",0f,if(side==shotIndex%2) release else -1f,loaded,accent,reload=reload)
-                    for(i in start until count step 6) vertices[i]+=if(side==0) -.16f else .16f
+                    for(i in start until count step 6) vertices[i]+=if(side==0) -dualSpacing else dualSpacing
                 }
             }
             "sling" -> {

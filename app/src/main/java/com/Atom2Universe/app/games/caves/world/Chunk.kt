@@ -116,6 +116,9 @@ const val WHEAT1: Short = 7020
 const val WHEAT2: Short = 7021
 const val WHEAT3: Short = 7022
 const val WHEAT4: Short = 7023
+const val GRASS_TUFT_SHORT: Short = 7056
+const val GRASS_TUFT_MEADOW: Short = 7057
+const val GRASS_TUFT_TALL: Short = 7058
 
 // ── Famille 8000 : Fonctionnel ────────────────────────────────────────────────
 const val FURNACE:    Short = 8000
