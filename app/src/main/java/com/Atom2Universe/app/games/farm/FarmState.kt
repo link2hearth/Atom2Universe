@@ -45,6 +45,8 @@ class FarmState(private val prefs: SharedPreferences) {
         private set
     var harvests = 0
         private set
+    var bushBonusDay = -1L
+        private set
     var selected = FarmCrop.RADISH
     var wateringLevel = 0
         private set
@@ -128,7 +130,14 @@ class FarmState(private val prefs: SharedPreferences) {
             coins = restoredCoins; harvests = restoredHarvests; selected = selection; wateringLevel = restoredWatering
             livestock.restore(restoredHerd.toJson())
             runCatching { largeFields.restore(json.optJSONObject("largeFields")) }
+            bushBonusDay = json.optLong("bushBonusDay", -1)
         }
+    }
+    /** One free pile of coins a day, tucked behind the bush above parcel 1. */
+    fun bushBonusReady(now: Long = System.currentTimeMillis()) = bushBonusDay != now / 86_400_000L
+    fun claimBushBonus(): Boolean {
+        if (!bushBonusReady()) return false
+        coins += 5; bushBonusDay = System.currentTimeMillis() / 86_400_000L; save(); return true
     }
 
     fun unlockLivestock(kind: LivestockKind): Boolean {
@@ -329,6 +338,7 @@ class FarmState(private val prefs: SharedPreferences) {
         prefs.edit().putString("state", JSONObject().put("version", 4).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
             .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
-            .put("largeFields", largeFields.json()).put("livestock", livestock.toJson()).toString()).apply()
+            .put("largeFields", largeFields.json()).put("livestock", livestock.toJson())
+            .put("bushBonusDay", bushBonusDay).toString()).apply()
     }
 }

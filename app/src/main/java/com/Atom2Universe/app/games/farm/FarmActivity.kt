@@ -60,6 +60,7 @@ class FarmActivity : ThemedActivity() {
         world.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
         world.onLivestockPen = ::livestockPen
         world.onRegionTap = { message(getString(world.region.description)) }
+        world.onBushBonus = { message(getString(R.string.farm_bush_bonus)); refresh() }
         root.addView(world, FrameLayout.LayoutParams(-1, -1))
         fieldPanel = column().apply { visibility = View.GONE; setBackgroundColor(sage) }
         fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(4)) }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="farm_title">Ma ferme</string>
+    <string name="farm_bush_bonus">Une pile de pièces se cachait dans le buisson ! +5 pièces</string>
     <string name="farm_description">Cultivez votre potager et votre verger</string>
     <string name="farm_back">Retour</string>
     <string name="farm_wheat">Blé</string>

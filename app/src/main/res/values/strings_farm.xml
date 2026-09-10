@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="farm_title">My farm</string>
+    <string name="farm_bush_bonus">A pile of coins was hiding in the bush! +5 coins</string>
     <string name="farm_description">Grow crops and tend your orchard</string>
     <string name="farm_back">Back</string>
     <string name="farm_wheat">Wheat</string>

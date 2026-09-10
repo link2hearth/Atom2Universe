@@ -303,6 +303,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
     var region = FarmRegion.HOME
         private set
     var onRegionTap: (() -> Unit)? = null
+    var onBushBonus: (() -> Unit)? = null
+    // Tucked in the gap between the house and parcel 1, centred over its gate; a coin pile only
+    // shows through it - and only gets a tap - while the once-a-day bonus hasn't been claimed yet.
+    private val treasureBush = RectF(965f, 15f, 1095f, 145f)
     private data class Camera(val zoom: Float, val x: Float, val y: Float)
     private val cameras = mutableMapOf<FarmRegion, Camera>()
     private val worldWidth get() = if (region == FarmRegion.HOME) FarmLayout.worldWidth else 1600f
@@ -365,6 +369,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
             }
             if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return true }
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
+            if (state.bushBonusReady() && treasureBush.contains(x, y)) {
+                if (state.claimBushBonus()) { onBushBonus?.invoke(); invalidate() }
+                return true
+            }
             if (wateringMode) { handleWateringTap(x, y); return true }
             val parcel = lands.indexOfFirst { x >= it.left && x <= it.right && y >= it.top - 12 && y <= it.bottom + 20 }
             if (parcel < 0) return true
@@ -530,7 +538,28 @@ class FarmWorldView(context: Context, private val state: FarmState,
             label(canvas, context.getString(R.string.farm_parcel_label, index + 1, context.getString(state.parcels[index].use.label)), land.centerX(), land.top + 10, 15f)
         }
         scenery.objects(canvas, visible)
+        if (RectF.intersects(treasureBush, visible)) drawTreasureBush(canvas)
         canvas.restore()
+    }
+    /** A coin pile only peeks out from under the bush - with a quiet, static glint - while unclaimed. */
+    private fun drawTreasureBush(canvas: Canvas) {
+        if (state.bushBonusReady()) {
+            val cx = treasureBush.centerX(); val cy = treasureBush.bottom - 22
+            paint.color = Color.rgb(196, 137, 44)
+            canvas.drawOval(cx - 20, cy - 5, cx + 20, cy + 11, paint)
+            paint.color = Color.rgb(241, 196, 90)
+            for ((dx, dy) in listOf(-9f to 0f, 8f to -4f, 1f to 5f)) canvas.drawCircle(cx + dx, cy + dy, 8f, paint)
+            paint.color = Color.rgb(255, 226, 150); paint.strokeWidth = 2f
+            for ((dx, dy) in listOf(-9f to 0f, 8f to -4f, 1f to 5f)) canvas.drawCircle(cx + dx - 2, cy + dy - 2, 3f, paint)
+        }
+        sprites.environment(canvas, 2, 3, treasureBush)
+        if (state.bushBonusReady()) {
+            val sx = treasureBush.right - 14; val sy = treasureBush.top + 20
+            paint.color = Color.argb(150, 255, 250, 214); paint.strokeWidth = 2.5f
+            canvas.drawLine(sx - 8, sy, sx + 8, sy, paint); canvas.drawLine(sx, sy - 8, sx, sy + 8, paint)
+            paint.color = Color.argb(90, 255, 250, 214)
+            canvas.drawLine(sx - 5, sy - 5, sx + 5, sy + 5, paint); canvas.drawLine(sx - 5, sy + 5, sx + 5, sy - 5, paint)
+        }
     }
     private fun label(canvas: Canvas, text: String, x: Float, y: Float, size: Float) {
         paint.color = Color.rgb(255, 245, 208); paint.textSize = size; paint.textAlign = Paint.Align.CENTER
