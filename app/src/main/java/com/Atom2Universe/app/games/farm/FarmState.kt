@@ -164,21 +164,23 @@ class FarmState(private val prefs: SharedPreferences) {
             if (coins < f.seedCost) return false
             coins -= f.seedCost; f.paid = true
         }
-        if (f.route.isEmpty()) f.move(f.start)
+        f.begin()
         save(); return true
     }
     fun finishField(): Boolean {
         val f = largeFields.fields[largeFields.selected]
-        if (!f.paid || f.phase == 2 || f.coverage < 60) return false
+        if (!f.paid || f.phase == 2) return false
         when (f.phase) {
-            0 -> { f.eligible = f.route.toList(); f.phase = 1 }
-            1 -> { f.eligible = f.route.toList(); f.phase = 2; f.readyAt = System.currentTimeMillis() + 6 * 3600_000L }
+            0 -> { f.eligible = f.painted.copyOf(); f.phase = 1; f.beginPass() }
+            1 -> { f.eligible = f.painted.copyOf(); f.phase = 2; f.readyAt = System.currentTimeMillis() + 6 * 3600_000L; f.beginPass() }
             3 -> {
-                largeFields.grain += f.route.size * 2L + if (f.route.size == f.size) f.size / 2 else 0
-                f.phase = 0; f.paid = false; f.eligible = (0 until f.size).toList(); f.readyAt = 0
+                val worked = f.painted.indices.count { f.painted[it] && f.eligible[it] } / (LargeField.SUB * LargeField.SUB)
+                largeFields.grain += worked * 2L + if (f.complete) f.size / 2 else 0
+                f.phase = 0; f.paid = false; f.eligible = BooleanArray(f.maskCols * f.maskRows) { true }; f.readyAt = 0
+                f.beginCycle()
             }
         }
-        f.route.clear(); save(); return true
+        save(); return true
     }
     fun advanceFields() {
         var changed = false

@@ -141,16 +141,11 @@
     <string name="farm_pair_needed">Un mâle et une femelle adultes sont nécessaires pour lancer la reproduction.</string>
     <string name="farm_next_birth">Prochaine naissance dans %1$s</string>
     <string name="farm_next_adult">Un petit devient adulte dans %1$s</string>
-    <string name="farm_field_steer">Guide le tracteur au doigt. Ne croise pas ta trace. Relâche pour arrêter.</string>
-    <string name="farm_fields_select">Champs</string>
-    <string name="farm_field_retry">Réessayer</string>
-    <string name="farm_field_retry_confirm">Recommencer ce passage ? Les graines ne seront pas repayées.</string>
-    <string name="farm_field_finish">Terminer</string>
-    <string name="farm_field_finish_confirm">Couverture : %1$d%%. Continuer avec cette surface ? Le terrain non travaillé ne rapporte rien. Un champ complet rapporte 25%% de blé en plus.</string>
+    <string name="farm_field_steer">Guide le tracteur au doigt, où tu veux. Le passage se termine tout seul quand le champ est couvert ou que le réservoir est vide.</string>
     <string name="farm_field_silo">Silo à blé</string>
     <string name="farm_field_stock">%1$d blés en réserve</string>
     <string name="farm_field_sell">Vendre 10 blés · 10 pièces</string>
-    <string name="farm_field_rules" formatted="false">Laboure, sème, puis récolte après 6 heures, même hors ligne. Couvre au moins 60 % pour terminer un passage. Un champ entier rapporte +25 % de blé. Graines payées une fois par culture, essais gratuits. Le blé peut aussi accélérer la croissance des jeunes animaux.</string>
+    <string name="farm_field_rules" formatted="false">Laboure, sème, puis récolte après 6 heures, même hors ligne. Chaque passage se termine tout seul une fois le champ entièrement couvert ou le réservoir vide ; un passage incomplet réduit simplement la surface du suivant. Un champ entier rapporte +25 % de blé. Des haies et des souches bloquent le chemin et changent à chaque passage. Graines payées une fois par culture. Le blé peut aussi accélérer la croissance des jeunes animaux.</string>
     <string name="farm_field_number">Champ %1$d</string>
     <string name="farm_field_buy">Débloquer le champ %1$d · %2$d pièces</string>
     <string name="farm_field_feed_help">Ration de blé : les jeunes grandissent deux fois plus vite pendant 12 heures maximum. Aucun effet sur la reproduction. Les animaux déjà boostés doivent attendre avant une nouvelle ration.</string>
@@ -161,5 +156,4 @@
     <string name="farm_field_harvest">Récolte</string>
     <string name="farm_field_status">Champ %1$d · %2$s · %3$d%%</string>
     <string name="farm_field_start">Débuter · %1$d pièces</string>
-    <string name="farm_field_go">Conduire</string>
 </resources>

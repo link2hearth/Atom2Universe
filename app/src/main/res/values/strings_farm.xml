@@ -141,16 +141,11 @@
     <string name="farm_pair_needed">An adult male and female are needed to start breeding.</string>
     <string name="farm_next_birth">Next birth in %1$s</string>
     <string name="farm_next_adult">Next young animal grows up in %1$s</string>
-    <string name="farm_field_steer">Guide the tractor with your finger. No crossing your tracks. Lift to stop.</string>
-    <string name="farm_fields_select">Fields</string>
-    <string name="farm_field_retry">Retry</string>
-    <string name="farm_field_retry_confirm">Restart this pass? Seeds are not charged again.</string>
-    <string name="farm_field_finish">Finish pass</string>
-    <string name="farm_field_finish_confirm">Coverage: %1$d%%. Continue with this footprint? Unworked land yields nothing. A complete field earns 25%% extra wheat.</string>
+    <string name="farm_field_steer">Guide the tractor with your finger, anywhere you like. The pass ends on its own at full coverage or when the tank runs dry.</string>
     <string name="farm_field_silo">Wheat silo</string>
     <string name="farm_field_stock">%1$d wheat in storage</string>
     <string name="farm_field_sell">Sell 10 wheat · 10 coins</string>
-    <string name="farm_field_rules" formatted="false">Plough, sow, then harvest after 6 hours (also offline). Cover at least 60% to finish a pass. Cover the entire field for +25% wheat. Seeds are paid once per crop; retries are free. Wheat can also boost young livestock.</string>
+    <string name="farm_field_rules" formatted="false">Plough, sow, then harvest after 6 hours (also offline). Each pass ends on its own once the field is fully covered or the fuel runs out; an incomplete pass simply shrinks the field for the next one. Cover the entire field for +25% wheat. Hedges and tree stumps block the way and are redrawn every pass. Seeds are paid once per crop. Wheat can also boost young livestock.</string>
     <string name="farm_field_number">Field %1$d</string>
     <string name="farm_field_buy">Unlock field %1$d · %2$d coins</string>
     <string name="farm_field_feed_help">Wheat ration: young animals grow twice as fast for up to 12 hours. No effect on reproduction. Animals already boosted cannot receive another ration yet.</string>
@@ -161,5 +156,4 @@
     <string name="farm_field_harvest">Harvest</string>
     <string name="farm_field_status">Field %1$d · %2$s · %3$d%%</string>
     <string name="farm_field_start">Start · %1$d coins</string>
-    <string name="farm_field_go">Drive</string>
 </resources>

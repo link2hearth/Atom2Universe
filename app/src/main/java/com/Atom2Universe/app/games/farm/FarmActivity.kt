@@ -25,8 +25,9 @@ class FarmActivity : ThemedActivity() {
     private lateinit var fieldPanel: LinearLayout
     private lateinit var fieldView: FieldArcadeView
     private lateinit var fieldInfo: TextView
-    private lateinit var fieldAction: Button
-    private lateinit var fieldRetry: Button
+    private lateinit var fuelTrack: FrameLayout
+    private lateinit var fuelFill: View
+    private val fuelDrawable = GradientDrawable().apply { setColor(Color.rgb(126, 187, 90)); cornerRadius = 999f }
     private lateinit var world: FarmWorldView
     private lateinit var toolbar: LinearLayout
     private lateinit var balance: TextView
@@ -61,38 +62,18 @@ class FarmActivity : ThemedActivity() {
         world.onRegionTap = { message(getString(world.region.description)) }
         root.addView(world, FrameLayout.LayoutParams(-1, -1))
         fieldPanel = column().apply { visibility = View.GONE; setBackgroundColor(sage) }
-        fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(8)) }
+        fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(4)) }
         fieldPanel.addView(fieldInfo)
+        fuelTrack = FrameLayout(this).apply { background = rounded(Color.rgb(210, 199, 165), 8, border) }
+        fuelFill = View(this).apply { background = fuelDrawable; pivotX = 0f }
+        fuelTrack.addView(fuelFill, FrameLayout.LayoutParams(-1, dp(10)))
+        fieldPanel.addView(fuelTrack, LinearLayout.LayoutParams(-1, dp(10)).apply {
+            leftMargin = dp(16); rightMargin = dp(16); bottomMargin = dp(6)
+        })
         fieldView = FieldArcadeView(this, state) { refresh() }
         fieldView.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
         fieldPanel.addView(fieldView, LinearLayout.LayoutParams(-1, 0, 1f))
         fieldPanel.addView(text(getString(R.string.farm_field_steer), 12).apply { gravity = Gravity.CENTER; setPadding(dp(10), dp(4), dp(10), dp(4)) })
-        val controls = LinearLayout(this)
-        controls.addView(button(getString(R.string.farm_fields_select)) { fieldShop() }, LinearLayout.LayoutParams(0, -2, 1f))
-        fieldRetry = button(getString(R.string.farm_field_retry)) {
-            fieldView.stop()
-            showBubble(getString(R.string.farm_field_retry)) { body ->
-                body.addView(text(getString(R.string.farm_field_retry_confirm)))
-                body.addView(button(getString(R.string.farm_field_retry)) {
-                    state.largeFields.fields[state.largeFields.selected].retry(); state.save()
-                    fieldView.resetMotion(); closeBubble(); refresh()
-                })
-            }
-        }
-        controls.addView(fieldRetry, LinearLayout.LayoutParams(0, -2, 1f))
-        fieldAction = button("") {
-            fieldView.stop()
-            val f = state.largeFields.fields[state.largeFields.selected]
-            if (f.route.isEmpty()) { state.startField(); refresh() }
-            else showBubble(getString(R.string.farm_field_finish)) { body ->
-                body.addView(text(getString(R.string.farm_field_finish_confirm, f.coverage)))
-                body.addView(button(getString(R.string.farm_field_finish)) {
-                    state.finishField(); fieldView.resetMotion(); closeBubble(); refresh()
-                })
-            }
-        }
-        controls.addView(fieldAction, LinearLayout.LayoutParams(0, -2, 1f))
-        fieldPanel.addView(controls)
         root.addView(fieldPanel, FrameLayout.LayoutParams(-1, -1).apply { topMargin = dp(74) })
         toolbar = LinearLayout(this).apply {
             gravity = Gravity.CENTER_VERTICAL
@@ -601,12 +582,14 @@ class FarmActivity : ThemedActivity() {
         if (world.region != FarmRegion.FIELDS) fieldView.stop()
         val f = state.largeFields.fields[state.largeFields.selected]
         val phaseLabel = listOf(R.string.farm_field_plough, R.string.farm_field_seed, R.string.farm_field_grow, R.string.farm_field_harvest)[f.phase]
-        fieldInfo.text = getString(R.string.farm_field_status, f.index + 1, getString(phaseLabel), f.coverage) +
-            if (f.phase == 2) " · " + duration(((f.readyAt - System.currentTimeMillis()).coerceAtLeast(0) / 1000).toInt()) else ""
-        fieldAction.text = if (f.route.isNotEmpty()) getString(R.string.farm_field_finish)
-            else if (!f.paid) getString(R.string.farm_field_start, f.seedCost) else getString(R.string.farm_field_go)
-        fieldAction.isEnabled = f.phase != 2 && (if (f.route.isEmpty()) f.paid || state.coins >= f.seedCost else f.coverage >= 60)
-        fieldRetry.isEnabled = f.phase != 2 && f.route.isNotEmpty()
+        fieldInfo.text = getString(R.string.farm_field_status, f.index + 1, getString(phaseLabel), f.coverage) + when {
+            f.phase == 2 -> " · " + duration(((f.readyAt - System.currentTimeMillis()).coerceAtLeast(0) / 1000).toInt())
+            !f.paid -> " · " + getString(R.string.farm_field_start, f.seedCost)
+            else -> ""
+        }
+        fuelTrack.visibility = if (f.phase == 2) View.GONE else View.VISIBLE
+        fuelFill.scaleX = f.fuel.coerceIn(0f, 1f)
+        fuelDrawable.setColor(when { f.fuel > .5f -> Color.rgb(126, 187, 90); f.fuel > .2f -> Color.rgb(224, 167, 63); else -> Color.rgb(196, 64, 58) })
         fieldView.invalidate()
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
         wateringIcon.visibility = seedGroup.visibility
