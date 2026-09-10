@@ -2101,10 +2101,15 @@ class MainClickerActivity : ThemedActivity() {
         if (shuffleManager.imageCount() == 0) return
         if (backgroundJob?.isActive == true) return
 
+        val elapsedSinceLastChange = (System.currentTimeMillis() - MainClickerPreferences.getSlideshowLastChangeAt(this))
+            .coerceAtLeast(0L)
+        val initialDelay = (slideshowIntervalMs - elapsedSinceLastChange).coerceIn(0L, slideshowIntervalMs)
+
         backgroundJob = lifecycleScope.launch {
+            delay(initialDelay)
             while (isActive) {
-                delay(slideshowIntervalMs)
                 showNextBackgroundImage(restartTimer = false, notifyIfMissing = false)
+                delay(slideshowIntervalMs)
             }
         }
     }
@@ -2127,6 +2132,7 @@ class MainClickerActivity : ThemedActivity() {
             uri = nextUri,
             advanceOnFailure = true
         )
+        MainClickerPreferences.setSlideshowLastChangeAt(this, System.currentTimeMillis())
         if (restartTimer) {
             updateAutoBackgroundLoop()
         } else {
@@ -2147,6 +2153,7 @@ class MainClickerActivity : ThemedActivity() {
             uri = previousUri,
             advanceOnFailure = true
         )
+        MainClickerPreferences.setSlideshowLastChangeAt(this, System.currentTimeMillis())
         if (restartTimer) {
             updateAutoBackgroundLoop()
         } else {

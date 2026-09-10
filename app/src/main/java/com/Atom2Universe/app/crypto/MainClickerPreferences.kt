@@ -81,6 +81,7 @@ object MainClickerPreferences {
     private const val KEY_BANNER_TOGGLE_ORDER = "banner_toggle_order"
     private const val KEY_FAVORITES_MODE = "favorites_mode"
     private const val KEY_CLICKER_SOUND_ENABLED = "clicker_sound_enabled"
+    private const val KEY_SLIDESHOW_LAST_CHANGE_AT = "slideshow_last_change_at"
 
     val ALL_WIDGET_KEYS = listOf(
         "clicker", "crypto", "news", "earth", "music",
@@ -413,6 +414,13 @@ object MainClickerPreferences {
     fun setSlideshowMinutes(context: Context, minutes: Int) {
         val value = if (minutes == 0) "off" else minutes.toString()
         prefs(context).edit { putString(KEY_INTERVAL, value) }
+    }
+
+    fun getSlideshowLastChangeAt(context: Context): Long =
+        prefs(context).getLong(KEY_SLIDESHOW_LAST_CHANGE_AT, 0L)
+
+    fun setSlideshowLastChangeAt(context: Context, timestampMs: Long) {
+        prefs(context).edit { putLong(KEY_SLIDESHOW_LAST_CHANGE_AT, timestampMs) }
     }
 
     fun isBannerToggleEarthVisible(context: Context): Boolean =
