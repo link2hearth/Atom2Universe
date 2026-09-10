@@ -51,6 +51,8 @@ class FarmState(private val prefs: SharedPreferences) {
     val parcels = List(FarmLayout.lands.size) { FarmParcel(unlocked = it == 0) }
     val plots = List(FarmLayout.cellCount) { FarmPlot(debris = 1 + (it * 7 % 3)) }
     val seeds = IntArray(FarmCrop.entries.size)
+    val livestock = LivestockState()
+    val largeFields = LargeFieldState()
 
     init {
         // Parse into temporary objects: invalid saves must never partially overwrite the farm.
@@ -90,6 +92,8 @@ class FarmState(private val prefs: SharedPreferences) {
                 val inv = json.getJSONObject("seeds")
                 IntArray(seeds.size) { inv.optInt(FarmCrop.entries[it].name).coerceIn(0, 9999) }
             } else IntArray(seeds.size)
+            // Validate the herd before applying either part of the save.
+            val restoredHerd = LivestockState().apply { restore(json.optJSONObject("livestock")) }
             if (version >= 2) {
                 restored.forEachIndexed { i, p ->
                     val parcel = lands[if (version == 2) i / 12 else FarmLayout.parcelOf(i)]
@@ -122,9 +126,82 @@ class FarmState(private val prefs: SharedPreferences) {
             lands.forEachIndexed { i, p -> parcels[i].apply { unlocked = p.unlocked; use = p.use } }
             inventory.copyInto(seeds)
             coins = restoredCoins; harvests = restoredHarvests; selected = selection; wateringLevel = restoredWatering
+            livestock.restore(restoredHerd.toJson())
+            runCatching { largeFields.restore(json.optJSONObject("largeFields")) }
         }
     }
 
+    fun unlockLivestock(kind: LivestockKind): Boolean {
+        if (coins < kind.landPrice || !livestock.unlock(kind)) return false
+        coins -= kind.landPrice; save(); return true
+    }
+    fun buyAnimal(kind: LivestockKind, male: Boolean): Boolean {
+        val now = System.currentTimeMillis()
+        advanceLivestock(now)
+        if (coins < kind.price || !livestock.buy(kind, male, now)) return false
+        coins -= kind.price; save(); return true
+    }
+    fun sellAnimal(id: Long): Int {
+        val now = System.currentTimeMillis()
+        advanceLivestock(now)
+        val value = livestock.sell(id, now)
+        if (value > 0) { coins += value; save() }
+        return value
+    }
+    fun advanceLivestock(now: Long = System.currentTimeMillis()) {
+        if (livestock.advance(now)) save()
+    }
+    fun unlockField(index: Int): Boolean {
+        if (index != largeFields.unlocked || index !in 1..2) return false
+        val f = largeFields.fields[index]
+        if (coins < f.price) return false
+        coins -= f.price; largeFields.unlocked++; largeFields.selected = index; save(); return true
+    }
+    fun startField(): Boolean {
+        val f = largeFields.fields[largeFields.selected]
+        if (f.phase == 2) return false
+        if (!f.paid) {
+            if (coins < f.seedCost) return false
+            coins -= f.seedCost; f.paid = true
+        }
+        if (f.route.isEmpty()) f.move(f.start)
+        save(); return true
+    }
+    fun finishField(): Boolean {
+        val f = largeFields.fields[largeFields.selected]
+        if (!f.paid || f.phase == 2 || f.coverage < 60) return false
+        when (f.phase) {
+            0 -> { f.eligible = f.route.toList(); f.phase = 1 }
+            1 -> { f.eligible = f.route.toList(); f.phase = 2; f.readyAt = System.currentTimeMillis() + 6 * 3600_000L }
+            3 -> {
+                largeFields.grain += f.route.size * 2L + if (f.route.size == f.size) f.size / 2 else 0
+                f.phase = 0; f.paid = false; f.eligible = (0 until f.size).toList(); f.readyAt = 0
+            }
+        }
+        f.route.clear(); save(); return true
+    }
+    fun advanceFields() {
+        var changed = false
+        largeFields.fields.forEach { if (it.phase == 2 && System.currentTimeMillis() >= it.readyAt) { it.phase = 3; changed = true } }
+        if (changed) save()
+    }
+    fun sellGrain(): Boolean {
+        if (largeFields.grain < 10) return false
+        largeFields.grain -= 10; coins += 10; save(); return true
+    }
+    fun feedYoung(kind: LivestockKind): Boolean {
+        val now = System.currentTimeMillis()
+        advanceLivestock(now)
+        val young = livestock.animals.filter { it.kind == kind && !it.adult && it.boostUntil <= now }
+        val cost = young.size * (kind.ordinal + 1) * 5L
+        if (young.isEmpty() || largeFields.grain < cost) return false
+        young.forEach {
+            val remaining = it.adultAt - now
+            it.adultAt -= minOf(12 * 3600_000L, remaining / 2)
+            it.boostUntil = minOf(it.adultAt, now + 12 * 3600_000L)
+        }
+        largeFields.grain -= cost; save(); return true
+    }
     private fun copyPlot(from: FarmPlot, to: FarmPlot) {
         to.crop = from.crop; to.planted = from.planted; to.watered = from.watered
         to.variant = from.variant; to.established = from.established; to.debris = from.debris
@@ -223,25 +300,21 @@ class FarmState(private val prefs: SharedPreferences) {
         save()
     }
     fun cheatAddCoins(amount: Long) { coins += amount.coerceAtLeast(0); save() }
-    fun cheatSkipTime(millis: Long) { plots.forEach { if (it.watered) it.planted -= millis }; save() }
+    fun cheatSkipTime(millis: Long) {
+        plots.forEach { if (it.watered) it.planted -= millis }
+        largeFields.fields.forEach { if (it.phase == 2) it.readyAt = (it.readyAt - millis).coerceAtLeast(0) }
+        advanceFields(); save()
+    }
     fun cheatCompleteGrowth() {
         val now = System.currentTimeMillis()
         plots.forEach { if (it.watered) it.planted = now - it.duration() * 1000L - 1000L }
+        largeFields.fields.forEach { if (it.phase == 2) it.readyAt = now }
+        advanceFields()
         save()
     }
     /** Clears parcel 1's debris and plants a mix of unwatered vegetables, ready to test watering. */
-    fun cheatSeedForTesting() {
-        val now = System.currentTimeMillis()
-        parcels[0].unlocked = true; parcels[0].use = FarmLandUse.CROPS
-        val choices = FarmCrop.entries.filter { !it.tree }
-        FarmLayout.cells(0).forEach { i ->
-            plots[i].apply {
-                debris = 0; crop = choices.random(); planted = now; watered = false
-                established = false; critical = false; variant = kotlin.random.Random.nextInt(2)
-            }
-        }
-        save()
-    }
+    /** Waters every thirsty plant across every unlocked parcel at once. */
+    fun cheatWaterAll() { waterMany(plots.indices.toList(), System.currentTimeMillis()) }
     fun save() {
         val array = JSONArray()
         plots.forEach { p -> array.put(JSONObject().put("crop", p.crop?.name ?: "").put("planted", p.planted)
@@ -253,6 +326,7 @@ class FarmState(private val prefs: SharedPreferences) {
         FarmCrop.entries.forEach { inventory.put(it.name, seeds[it.ordinal]) }
         prefs.edit().putString("state", JSONObject().put("version", 4).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
-            .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel).toString()).apply()
+            .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
+            .put("largeFields", largeFields.json()).put("livestock", livestock.toJson()).toString()).apply()
     }
 }

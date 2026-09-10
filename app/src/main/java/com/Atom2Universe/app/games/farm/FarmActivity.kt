@@ -22,6 +22,11 @@ class FarmActivity : ThemedActivity() {
     private lateinit var state: FarmState
     private lateinit var sprites: FarmSprites
     private lateinit var root: FrameLayout
+    private lateinit var fieldPanel: LinearLayout
+    private lateinit var fieldView: FieldArcadeView
+    private lateinit var fieldInfo: TextView
+    private lateinit var fieldAction: Button
+    private lateinit var fieldRetry: Button
     private lateinit var world: FarmWorldView
     private lateinit var toolbar: LinearLayout
     private lateinit var balance: TextView
@@ -29,6 +34,8 @@ class FarmActivity : ThemedActivity() {
     private lateinit var wateringIcon: FarmArtView
     private lateinit var status: TextView
     private var bubble: LinearLayout? = null
+    private val livestockUi = mutableListOf<() -> Unit>()
+    private lateinit var seedGroup: LinearLayout
     private var bubbleFeedback: TextView? = null
     private val purchases = mutableListOf<Pair<Button, Int>>()
     private val stockLabels = mutableListOf<Pair<TextView, FarmCrop>>()
@@ -50,8 +57,43 @@ class FarmActivity : ThemedActivity() {
         root = FrameLayout(this)
         world = FarmWorldView(this, state, ::interact, ::parcelMenu, ::removePlant, ::debrisCleared, ::watered, ::harvested)
         world.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
+        world.onLivestockPen = ::livestockPen
         world.onRegionTap = { message(getString(world.region.description)) }
         root.addView(world, FrameLayout.LayoutParams(-1, -1))
+        fieldPanel = column().apply { visibility = View.GONE; setBackgroundColor(sage) }
+        fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(8)) }
+        fieldPanel.addView(fieldInfo)
+        fieldView = FieldArcadeView(this, state) { refresh() }
+        fieldView.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
+        fieldPanel.addView(fieldView, LinearLayout.LayoutParams(-1, 0, 1f))
+        fieldPanel.addView(text(getString(R.string.farm_field_steer), 12).apply { gravity = Gravity.CENTER; setPadding(dp(10), dp(4), dp(10), dp(4)) })
+        val controls = LinearLayout(this)
+        controls.addView(button(getString(R.string.farm_fields_select)) { fieldShop() }, LinearLayout.LayoutParams(0, -2, 1f))
+        fieldRetry = button(getString(R.string.farm_field_retry)) {
+            fieldView.stop()
+            showBubble(getString(R.string.farm_field_retry)) { body ->
+                body.addView(text(getString(R.string.farm_field_retry_confirm)))
+                body.addView(button(getString(R.string.farm_field_retry)) {
+                    state.largeFields.fields[state.largeFields.selected].retry(); state.save()
+                    fieldView.resetMotion(); closeBubble(); refresh()
+                })
+            }
+        }
+        controls.addView(fieldRetry, LinearLayout.LayoutParams(0, -2, 1f))
+        fieldAction = button("") {
+            fieldView.stop()
+            val f = state.largeFields.fields[state.largeFields.selected]
+            if (f.route.isEmpty()) { state.startField(); refresh() }
+            else showBubble(getString(R.string.farm_field_finish)) { body ->
+                body.addView(text(getString(R.string.farm_field_finish_confirm, f.coverage)))
+                body.addView(button(getString(R.string.farm_field_finish)) {
+                    state.finishField(); fieldView.resetMotion(); closeBubble(); refresh()
+                })
+            }
+        }
+        controls.addView(fieldAction, LinearLayout.LayoutParams(0, -2, 1f))
+        fieldPanel.addView(controls)
+        root.addView(fieldPanel, FrameLayout.LayoutParams(-1, -1).apply { topMargin = dp(74) })
         toolbar = LinearLayout(this).apply {
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(4), dp(4), dp(4), dp(4))
@@ -69,7 +111,7 @@ class FarmActivity : ThemedActivity() {
         toolbar.addView(icon(FarmArtView.Kind.SHOP, R.string.farm_shop) { shop() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         // A small sub-group: the seed bag (opens the picker) beside a plain crop icon for whatever is
         // currently selected - gold border there, unlike the action icons, since it shows a state.
-        val seedGroup = LinearLayout(this).apply {
+        seedGroup = LinearLayout(this).apply {
             gravity = Gravity.CENTER_VERTICAL; background = rounded(sage, 16)
             setPadding(dp(2), dp(2), dp(2), dp(2))
         }
@@ -109,7 +151,7 @@ class FarmActivity : ThemedActivity() {
         refresh()
         val regionName = savedInstanceState?.getString("farm_region")
         FarmRegion.entries.firstOrNull { it.name == regionName }?.let { region ->
-            world.post { world.switchRegion(region) }
+            world.post { world.switchRegion(region); refresh() }
         }
     }
 
@@ -121,8 +163,8 @@ class FarmActivity : ThemedActivity() {
                     background = rounded(if (region == world.region) sage else cream, 14, border)
                     isFocusable = true
                     setOnClickListener {
-                        closeBubble(); world.switchRegion(region)
-                        message(getString(region.description))
+                        closeBubble(); world.switchRegion(region); fieldView.resetMotion(); refresh()
+                        if (region != FarmRegion.FIELDS) message(getString(region.description))
                     }
                 }
                 row.addView(text(getString(region.label), 17, true))
@@ -153,8 +195,8 @@ class FarmActivity : ThemedActivity() {
             }, LinearLayout.LayoutParams(-1, dp(48)).apply { bottomMargin = dp(14) })
 
             body.addView(text(getString(R.string.farm_dev_testing), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
-            body.addView(button(getString(R.string.farm_dev_seed_for_testing)) {
-                state.cheatSeedForTesting(); closeBubble(); world.focusParcel(0); message(getString(R.string.farm_dev_seeded))
+            body.addView(button(getString(R.string.farm_dev_water_all)) {
+                state.cheatWaterAll(); message(getString(R.string.farm_dev_done)); refresh()
             }, LinearLayout.LayoutParams(-1, dp(48)).apply { bottomMargin = dp(14) })
 
             body.addView(text(getString(R.string.farm_dev_reset), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
@@ -244,6 +286,7 @@ class FarmActivity : ThemedActivity() {
     }
     private fun closeBubble() {
         bubble?.let { root.removeView(it) }
+        livestockUi.clear()
         bubble = null; bubbleFeedback = null; purchases.clear(); stockLabels.clear()
     }
     private fun message(value: String) {
@@ -254,7 +297,129 @@ class FarmActivity : ThemedActivity() {
             handler.removeCallbacks(hideStatus); handler.postDelayed(hideStatus, 4200)
         }
     }
+    private fun livestockShop() {
+        state.advanceLivestock()
+        showBubble(getString(R.string.farm_animal_shop)) { body ->
+            body.addView(text(getString(R.string.farm_breeding_rules), 13))
+            for (kind in LivestockKind.entries) {
+                val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+                row.addView(LivestockIcon(this, sprites, kind.female + "_1"), LinearLayout.LayoutParams(dp(70), dp(70)))
+                val details = column()
+                details.addView(text(getString(kind.label), 17, true))
+                details.addView(button(getString(R.string.farm_herd_open)) { livestockPen(kind, true) })
+                row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
+                body.addView(row)
+                if (!state.livestock.available(kind)) {
+                    body.addView(button(getString(R.string.farm_locked_price, kind.landPrice)) { livestockPen(kind, false) })
+                } else {
+                    for (male in listOf(false, true)) {
+                        val action = button(getString(R.string.farm_animal_buy, getString(if (male) R.string.farm_male else R.string.farm_female), kind.price)) {
+                            val ok = state.buyAnimal(kind, male)
+                            message(getString(if (ok) R.string.farm_animal_bought else R.string.farm_animal_unavailable)); refresh()
+                        }
+                        body.addView(action, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
+                        livestockUi.add { action.isEnabled = state.coins >= kind.price && state.livestock.count(kind) < LivestockState.CAPACITY }
+                    }
+                }
+            }
+        }
+    }
+    private fun livestockPen(kind: LivestockKind, details: Boolean) {
+        state.advanceLivestock()
+        if (!state.livestock.available(kind)) {
+            showBubble(getString(kind.label)) { body ->
+                body.addView(LivestockIcon(this, sprites, kind.shelter), LinearLayout.LayoutParams(-1, dp(120)))
+                body.addView(text(getString(R.string.farm_animal_land_info)))
+                if (kind.ordinal != state.livestock.unlocked) {
+                    body.addView(text(getString(R.string.farm_animal_order, getString(LivestockKind.entries[kind.ordinal - 1].label))))
+                } else {
+                    val action = button(getString(R.string.farm_locked_price, kind.landPrice)) {
+                        if (state.unlockLivestock(kind)) { livestockPen(kind, true); message(getString(R.string.farm_unlocked)) }
+                        else message(getString(R.string.farm_no_coins))
+                        refresh()
+                    }
+                    body.addView(action)
+                    livestockUi.add { action.isEnabled = state.coins >= kind.landPrice }
+                }
+            }
+            return
+        }
+        showBubble(getString(kind.label)) { body ->
+            val summary = text("", 15, true); body.addView(summary)
+            livestockUi.add { summary.text = getString(R.string.farm_herd_count, state.livestock.count(kind), LivestockState.CAPACITY) }
+            for (group in 0..2) {
+                val id = (when (group) { 0 -> kind.female; 1 -> kind.male; else -> kind.young }) + "_1"
+                val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+                row.addView(LivestockIcon(this, sprites, id), LinearLayout.LayoutParams(dp(70), dp(70)))
+                val column = column()
+                val count = text("", 15, true); column.addView(count)
+                fun matching() = state.livestock.animals.filter { it.kind == kind && if (group == 2) !it.adult else it.adult && it.male == (group == 1) }
+                livestockUi.add { count.text = getString(R.string.farm_animal_group, getString(when(group) {
+                    0 -> R.string.farm_females; 1 -> R.string.farm_males; else -> R.string.farm_young
+                }), matching().size) }
+                if (group < 2) {
+                    val sell = button(getString(R.string.farm_sell_adult, kind.sale)) {
+                        matching().firstOrNull()?.let { state.sellAnimal(it.id) }
+                        refresh()
+                    }
+                    column.addView(sell)
+                    livestockUi.add { sell.isEnabled = matching().isNotEmpty() }
+                }
+                row.addView(column, LinearLayout.LayoutParams(0, -2, 1f)); body.addView(row)
+            }
+            val timing = text("", 13); body.addView(timing)
+            livestockUi.add {
+                val herd = state.livestock.animals.filter { it.kind == kind }
+                val now = System.currentTimeMillis()
+                val birth = herd.filter { it.birthAt > 0 }.minOfOrNull { it.birthAt }
+                val growth = herd.filter { !it.adult }.minOfOrNull { it.adultAt }
+                timing.text = (if (state.livestock.count(kind) >= LivestockState.CAPACITY) getString(R.string.farm_herd_full)
+                    else if (birth == null) getString(R.string.farm_pair_needed)
+                    else getString(R.string.farm_next_birth, duration(((birth - now).coerceAtLeast(0) / 1000).toInt()))) +
+                    (growth?.let { "\n" + getString(R.string.farm_next_adult, duration(((it - now).coerceAtLeast(0) / 1000).toInt())) } ?: "")
+            }
+            val ration = button("") { state.feedYoung(kind); refresh() }
+            body.addView(text(getString(R.string.farm_field_feed_help)))
+            body.addView(ration)
+            livestockUi.add {
+                val now = System.currentTimeMillis()
+                val young = state.livestock.animals.filter { it.kind == kind && !it.adult && it.boostUntil <= now }
+                val cost = young.size * (kind.ordinal + 1) * 5L
+                ration.text = getString(R.string.farm_field_feed, cost, state.largeFields.grain)
+                ration.isEnabled = young.isNotEmpty() && state.largeFields.grain >= cost
+            }
+            body.addView(button(getString(R.string.farm_animal_shop)) { livestockShop() })
+            body.addView(text(getString(R.string.farm_breeding_rules), 12))
+        }
+    }
+
+    private fun fieldShop() {
+        fieldView.stop()
+        showBubble(getString(R.string.farm_field_silo)) { body ->
+            val stock = text("", 18, true)
+            body.addView(stock)
+            livestockUi.add { stock.text = getString(R.string.farm_field_stock, state.largeFields.grain) }
+            val sell = button(getString(R.string.farm_field_sell)) { state.sellGrain(); refresh() }
+            body.addView(sell)
+            livestockUi.add { sell.isEnabled = state.largeFields.grain >= 10 }
+            body.addView(text(getString(R.string.farm_field_rules)))
+            state.largeFields.fields.forEach { f ->
+                val open = f.index < state.largeFields.unlocked
+                val label = if (open) getString(R.string.farm_field_number, f.index + 1)
+                    else getString(R.string.farm_field_buy, f.index + 1, f.price)
+                val action = button(label) {
+                    if (open) { state.largeFields.selected = f.index; state.save() }
+                    else if (!state.unlockField(f.index)) return@button
+                    fieldView.resetMotion(); closeBubble(); refresh()
+                }
+                body.addView(action)
+                livestockUi.add { action.isEnabled = open || (f.index == state.largeFields.unlocked && state.coins >= f.price) }
+            }
+        }
+    }
     private fun shop(trees: Boolean = false, bonuses: Boolean = false) {
+        if (world.region == FarmRegion.FIELDS) { fieldShop(); return }
+        if (world.region == FarmRegion.LIVESTOCK) { livestockShop(); return }
         showBubble(getString(R.string.farm_shop_title)) { body ->
             val tabs = LinearLayout(this)
             listOf(R.string.farm_use_crops, R.string.farm_use_orchard, R.string.farm_bonuses).forEachIndexed { i, label ->
@@ -313,6 +478,7 @@ class FarmActivity : ThemedActivity() {
         }
     }
     private fun inventory() {
+        if (world.region == FarmRegion.LIVESTOCK) { livestockShop(); return }
         showBubble(getString(R.string.farm_inventory)) { body ->
             val available = FarmCrop.entries.filter { state.seeds[it.ordinal] > 0 }
             if (available.isEmpty()) body.addView(text(getString(R.string.farm_inventory_empty)).apply { setPadding(dp(8), dp(12), dp(8), dp(12)) })
@@ -359,7 +525,9 @@ class FarmActivity : ThemedActivity() {
                     refresh()
                 }, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
                 body.addView(button(getString(R.string.farm_manage_plants)) { plantList(index) })
-                body.addView(text(getString(R.string.farm_livestock_future), 12).apply { setPadding(0, dp(12), 0, 0) })
+                body.addView(button(getString(R.string.farm_region_livestock)) {
+                    closeBubble(); world.switchRegion(FarmRegion.LIVESTOCK); refresh()
+                })
             }
         }
     }
@@ -427,6 +595,22 @@ class FarmActivity : ThemedActivity() {
         }
     }
     private fun refresh() {
+        state.advanceLivestock()
+        state.advanceFields()
+        fieldPanel.visibility = if (world.region == FarmRegion.FIELDS) View.VISIBLE else View.GONE
+        if (world.region != FarmRegion.FIELDS) fieldView.stop()
+        val f = state.largeFields.fields[state.largeFields.selected]
+        val phaseLabel = listOf(R.string.farm_field_plough, R.string.farm_field_seed, R.string.farm_field_grow, R.string.farm_field_harvest)[f.phase]
+        fieldInfo.text = getString(R.string.farm_field_status, f.index + 1, getString(phaseLabel), f.coverage) +
+            if (f.phase == 2) " · " + duration(((f.readyAt - System.currentTimeMillis()).coerceAtLeast(0) / 1000).toInt()) else ""
+        fieldAction.text = if (f.route.isNotEmpty()) getString(R.string.farm_field_finish)
+            else if (!f.paid) getString(R.string.farm_field_start, f.seedCost) else getString(R.string.farm_field_go)
+        fieldAction.isEnabled = f.phase != 2 && (if (f.route.isEmpty()) f.paid || state.coins >= f.seedCost else f.coverage >= 60)
+        fieldRetry.isEnabled = f.phase != 2 && f.route.isNotEmpty()
+        fieldView.invalidate()
+        seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
+        wateringIcon.visibility = seedGroup.visibility
+        livestockUi.forEach { it() }
         balance.text = state.coins.toString()
         balance.contentDescription = getString(R.string.farm_balance, state.coins, state.harvests)
         selection.crop = state.selected; selection.stock = state.seeds[state.selected.ordinal]
@@ -442,7 +626,7 @@ class FarmActivity : ThemedActivity() {
     override fun onResume() { super.onResume(); applySystemBarsVisibility(false, false); handler.post(tick) }
     override fun onPause() {
         handler.removeCallbacks(tick); handler.removeCallbacks(hideStatus)
-        closeBubble(); state.save(); super.onPause()
+        fieldView.stop(); closeBubble(); state.save(); super.onPause()
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 }

@@ -298,6 +298,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
     var dismissBubble: (() -> Boolean)? = null
     private var dismissGesture = false
     private val regionScenery = FarmRegionScenery(sprites)
+    private val livestockScene = LivestockScene(context, sprites, state.livestock)
+    var onLivestockPen: ((LivestockKind, Boolean) -> Unit)? = null
     var region = FarmRegion.HOME
         private set
     var onRegionTap: (() -> Unit)? = null
@@ -357,6 +359,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             if (multiTouch) return true
             performClick()
+            if (region == FarmRegion.LIVESTOCK) {
+                LivestockScene.hit((e.x - cameraX) / zoom, (e.y - cameraY) / zoom)?.let { onLivestockPen?.invoke(it, false) }
+                return true
+            }
             if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return true }
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
             if (wateringMode) { handleWateringTap(x, y); return true }
@@ -370,6 +376,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
             return true
         }
         override fun onLongPress(e: MotionEvent) {
+            if (region == FarmRegion.LIVESTOCK && !multiTouch) {
+                LivestockScene.hit((e.x - cameraX) / zoom, (e.y - cameraY) / zoom)?.let { onLivestockPen?.invoke(it, true) }
+                return
+            }
             if (region != FarmRegion.HOME || multiTouch || wateringMode) return
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
             val cell = cells.indexOfFirst { it.contains(x, y) }
@@ -456,7 +466,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
             sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80))
         }
         if (region != FarmRegion.HOME) {
-            regionScenery.draw(canvas, region, visible)
+            if (region == FarmRegion.LIVESTOCK) livestockScene.draw(canvas, visible)
+            else regionScenery.draw(canvas, region, visible)
             canvas.restore(); return
         }
         scenery.ground(canvas)

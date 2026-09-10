@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "frameType": "static_idle",
+  "units": "pixels",
+  "rectFormat": "x,y,width,height",
+  "sprites": [
+    {
+      "id": "cow_1",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        0,
+        0,
+        560,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "calf_1",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        560,
+        0,
+        400,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "bull_1",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        960,
+        0,
+        576,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "cow_2",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        0,
+        512,
+        560,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "calf_2",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        560,
+        512,
+        400,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "bull_2",
+      "sheet": "cattle_v1.png",
+      "rect": [
+        960,
+        512,
+        576,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "ewe_1",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "ram_1",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "lamb_1",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "ewe_2",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "ram_2",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "lamb_2",
+      "sheet": "sheep_v1.png",
+      "rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "hen_1",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "rooster_1",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "chick_1",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "hen_2",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "rooster_2",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "chick_2",
+      "sheet": "poultry_v1.png",
+      "rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "boar_1",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        0,
+        0,
+        560,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "sow_1",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        560,
+        0,
+        590,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "piglet_1",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        1150,
+        0,
+        386,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "boar_2",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        0,
+        512,
+        560,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "sow_2",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        560,
+        512,
+        590,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "piglet_2",
+      "sheet": "pigs_v1.png",
+      "rect": [
+        1150,
+        512,
+        386,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "feed_trough",
+      "sheet": "decor_v1.png",
+      "rect": [
+        0,
+        0,
+        505,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "water_trough",
+      "sheet": "decor_v1.png",
+      "rect": [
+        505,
+        0,
+        450,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "cattle_shelter",
+      "sheet": "decor_v1.png",
+      "rect": [
+        955,
+        0,
+        581,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "sheep_shelter",
+      "sheet": "decor_v1.png",
+      "rect": [
+        0,
+        512,
+        505,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "chicken_coop",
+      "sheet": "decor_v1.png",
+      "rect": [
+        505,
+        512,
+        450,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    },
+    {
+      "id": "pig_shelter",
+      "sheet": "decor_v1.png",
+      "rect": [
+        955,
+        512,
+        581,
+        512
+      ],
+      "anchor": [
+        0.5,
+        1
+      ]
+    }
+  ]
+}
