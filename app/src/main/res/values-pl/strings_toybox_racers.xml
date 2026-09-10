@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Kanał</string>
     <string name="toybox_title_furniture">Mebel</string>
     <string name="toybox_title_decor">Dekoracja</string>
+    <string name="toybox_hop">SKOK</string>
+    <string name="toybox_style_boost">Pas boost</string>
 </resources>

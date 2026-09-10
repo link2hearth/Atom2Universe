@@ -8,7 +8,8 @@ internal object TrackMagnet {
         val t get() = if (finish) 1f else 0f
         val point get() = piece.centerAt(t)
         val width get() = if (finish) piece.endWidth else piece.width
-        val bank get() = piece.bankAt(t)
+        val leftBank get() = piece.leftBankAt(t)
+        val rightBank get() = piece.rightBankAt(t)
         val direction: Float get() {
             val override = if (finish) piece.endTangentDegrees else piece.startTangentDegrees
             if (override != null) return (piece.yawDegrees+override)*PI.toFloat()/180f
@@ -61,17 +62,25 @@ internal object TrackMagnet {
             val otherDirection = other.direction + if (sign < 0f) PI.toFloat() else 0f
             val direction = atan2(sin(own.direction)+sin(otherDirection),cos(own.direction)+cos(otherDirection))
             val grade = (own.grade + other.grade*sign)*.5f
-            val bank = (own.bank + other.bank*sign)*.5f
+            // Mirrored joints (sign<0) also swap which physical edge is which: travelling
+            // through the seam, the other piece's own right becomes this one's left.
+            val otherLeftForOwn = if (sign < 0f) -other.rightBank else other.leftBank
+            val otherRightForOwn = if (sign < 0f) -other.leftBank else other.rightBank
+            val leftBank = (own.leftBank + otherLeftForOwn)*.5f
+            val rightBank = (own.rightBank + otherRightForOwn)*.5f
             val width = (own.width+other.width)*.5f
-            fun join(piece: ToyboxTrackSection, end: Boolean, heading: Float, slope: Float, roll: Float): ToyboxTrackSection {
+            fun join(piece: ToyboxTrackSection, end: Boolean, heading: Float, slope: Float, left: Float, right: Float): ToyboxTrackSection {
                 val offset = heading*180f/PI.toFloat()-piece.yawDegrees
                 return if (end) piece.copy(endTangentDegrees=offset,endGrade=slope,
-                    endBankDegrees=roll,endWidth=width,smoothElevation=true)
+                    endBankDegrees=left,endRightBankDegrees=right,endWidth=width,smoothElevation=true)
                 else piece.copy(startTangentDegrees=offset,startGrade=slope,
-                    startBankDegrees=roll,width=width,smoothElevation=true)
+                    startBankDegrees=left,startRightBankDegrees=right,width=width,smoothElevation=true)
             }
-            val a = join(moved,finish,direction,grade,bank)
-            val b = join(other.piece,other.finish,direction + if (sign < 0f) PI.toFloat() else 0f,grade*sign,bank*sign)
+            val a = join(moved,finish,direction,grade,leftBank,rightBank)
+            val otherHeading = direction + if (sign < 0f) PI.toFloat() else 0f
+            val bLeft = if (sign < 0f) -rightBank else leftBank
+            val bRight = if (sign < 0f) -leftBank else rightBank
+            val b = join(other.piece,other.finish,otherHeading,grade*sign,bLeft,bRight)
             result = result.map { when (it.id) { a.id -> a; b.id -> b; else -> it } }
             used += other.piece.id to other.finish
         }

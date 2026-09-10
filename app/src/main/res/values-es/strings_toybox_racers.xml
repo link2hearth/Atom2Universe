@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Conducto</string>
     <string name="toybox_title_furniture">Mueble</string>
     <string name="toybox_title_decor">Decoración</string>
+    <string name="toybox_hop">SALTO</string>
+    <string name="toybox_style_boost">Cinta de turbo</string>
 </resources>

@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Воздуховод</string>
     <string name="toybox_title_furniture">Мебель</string>
     <string name="toybox_title_decor">Декорация</string>
+    <string name="toybox_hop">ПРЫЖОК</string>
+    <string name="toybox_style_boost">Полоса ускорения</string>
 </resources>

@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Saluran</string>
     <string name="toybox_title_furniture">Furnitur</string>
     <string name="toybox_title_decor">Dekorasi</string>
+    <string name="toybox_hop">LOMPAT</string>
+    <string name="toybox_style_boost">Pita boost</string>
 </resources>

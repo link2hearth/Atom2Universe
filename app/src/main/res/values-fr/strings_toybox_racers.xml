@@ -175,4 +175,6 @@
     <string name="toybox_prop_rug_chevrons">Tapis à chevrons</string>
     <string name="toybox_prop_rug_diamonds">Tapis à losanges</string>
     <string name="toybox_prop_rug_medallion">Tapis médaillon</string>
+    <string name="toybox_hop">SAUT</string>
+    <string name="toybox_style_boost">Ruban Boost</string>
 </resources>

@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.Gravity
+import android.view.InputDevice
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -30,10 +32,12 @@ import com.Atom2Universe.app.games.toyboxracers.editor.ActiveWorldKind
 import com.Atom2Universe.app.games.toyboxracers.editor.EditorTouchLayer
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
+import com.Atom2Universe.app.games.toyboxracers.editor.TrackEdge
 import com.Atom2Universe.app.games.toyboxracers.editor.TrackStyle
 import com.Atom2Universe.app.games.toyboxracers.editor.TrackMagnet
 import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
 import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
+import com.Atom2Universe.app.games.toyboxracers.input.RacerGamepad
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.CircuitKind
@@ -97,12 +101,18 @@ class ToyboxRacersActivity : ThemedActivity() {
         val gridIndex: Int,
         val trackStyle: TrackStyle = TrackStyle.CLASSIC,
         val trackBarriers: Int = 0,
-        val decorColors: Map<Int,Int> = emptyMap()
+        val decorColors: Map<Int,Int> = emptyMap(),
+        val trackLeftBankDegrees: Float = 0f,
+        val trackRightBankDegrees: Float = 0f,
+        val trackBankEdge: TrackEdge = TrackEdge.BOTH
     ) {
         fun toJson() = JSONObject()
             .put("decorColors", ToyboxDecor.colorsToJson(decorColors))
             .put("trackStyle", trackStyle.name)
             .put("trackBarriers", trackBarriers)
+            .put("trackLeftBankDegrees", trackLeftBankDegrees.toDouble())
+            .put("trackRightBankDegrees", trackRightBankDegrees.toDouble())
+            .put("trackBankEdge", trackBankEdge.name)
             .put("world", world.toJson())
             .put("selectedVolumeId", selectedVolumeId)
             .put("selectedTrackId", selectedTrackId)
@@ -162,7 +172,10 @@ class ToyboxRacersActivity : ThemedActivity() {
                     gridIndex = json.optInt("gridIndex", 0),
                     trackStyle = TrackStyle.parse(json.optString("trackStyle")),
                     trackBarriers = json.optInt("trackBarriers", 0) and 3,
-                    decorColors = ToyboxDecor.colorsFromJson(json.optJSONObject("decorColors"))
+                    decorColors = ToyboxDecor.colorsFromJson(json.optJSONObject("decorColors")),
+                    trackLeftBankDegrees = json.optDouble("trackLeftBankDegrees", 0.0).toFloat(),
+                    trackRightBankDegrees = json.optDouble("trackRightBankDegrees", 0.0).toFloat(),
+                    trackBankEdge = TrackEdge.entries.find { it.name == json.optString("trackBankEdge") } ?: TrackEdge.BOTH
                 )
             }
         }
@@ -205,6 +218,8 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var editorRotateRightButton: Button
     private lateinit var editorRotationStepButton: Button
     private lateinit var editorRotationAxisButton: Button
+    private lateinit var editorTrackBankEdgeButton: Button
+    private lateinit var editorTrackBankEdgeRow: LinearLayout
     private lateinit var editorUndoButton: Button
     private lateinit var editorWidthPicker: NumberPicker
     private lateinit var editorHeightPicker: NumberPicker
@@ -213,6 +228,19 @@ class ToyboxRacersActivity : ThemedActivity() {
     private lateinit var editorTouchLayer: EditorTouchLayer
     private val raceHudViews = mutableListOf<View>()
     private val raceControlViews = mutableListOf<View>()
+    private val gamepad = RacerGamepad(object : RacerGamepad.Listener {
+        override fun onSteering(value: Float) { if (drivingActive()) renderer.setSteering(value) }
+        override fun onThrottle(value: Float) { if (drivingActive()) renderer.setThrottle(value) }
+        override fun onBrake(value: Float) { if (drivingActive()) renderer.setBrakeAmount(value) }
+        override fun onHop(pressed: Boolean) { if (drivingActive()) renderer.setHopping(pressed) }
+        override fun onPause() { if (!editorActive) if (paused) resumeGame() else showPause() }
+        override fun onRestart() {
+            if (!drivingActive()) return
+            releaseControls.forEach { it() }
+            resultPanel.visibility = View.GONE
+            renderer.requestReset()
+        }
+    })
     private var currentScene = SceneChoice()
     private lateinit var housePlan: HousePlan
     private lateinit var minimap: ToyboxMinimapView
@@ -236,6 +264,9 @@ class ToyboxRacersActivity : ThemedActivity() {
     private var editorYawDegrees = 0f
     private var editorPitchDegrees = 0f
     private var editorRollDegrees = 0f
+    private var editorTrackLeftBankDegrees = 0f
+    private var editorTrackRightBankDegrees = 0f
+    private var editorTrackBankEdge = TrackEdge.BOTH
     private var editorFloorY = 0f
     private var editorSolid = true
     private var editorColor = editorKind.color
@@ -394,6 +425,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorYawDegrees = 0f
         editorPitchDegrees = 0f
         editorRollDegrees = 0f
+        editorTrackLeftBankDegrees = 0f
+        editorTrackRightBankDegrees = 0f
         worldStore.save(editorWorld)
         renderer.setEditorWorld(editorWorld)
         currentWorldKind = ActiveWorldKind.CUSTOM
@@ -495,6 +528,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorYawDegrees = 0f
         editorPitchDegrees = 0f
         editorRollDegrees = 0f
+        editorTrackLeftBankDegrees = 0f
+        editorTrackRightBankDegrees = 0f
         currentWorldKind = ActiveWorldKind.CUSTOM
         renderer.setActiveWorldKind(currentWorldKind)
         currentMode = PlayMode.EXPLORATION
@@ -832,6 +867,22 @@ class ToyboxRacersActivity : ThemedActivity() {
         })
         raceControlViews += accelerator
 
+        // Le saut se tient : appuyer en virage engage la glisse, relâcher relance.
+        // Il est posé au-dessus des gaz, sous le pouce droit, comme sur une manette.
+        val hop = makeButton(getString(R.string.toybox_hop), controls.brake, 0xB84B8A9A.toInt()).apply {
+            textSize = 12f
+        }
+        root.addView(hop, FrameLayout.LayoutParams(dp(controls.brake), dp(controls.brake)).apply {
+            gravity = Gravity.BOTTOM or Gravity.END
+            rightMargin = dp(22)
+            bottomMargin = dp(16 + controls.accelerator + 10)
+        })
+        raceControlViews += hop
+
+        // La manette suit le même relâchement global que les boutons tactiles :
+        // changer de circuit ou ouvrir le menu ne doit pas laisser une gâchette
+        // enfoncée dans l'état du jeu.
+        releaseControls += { gamepad.reset() }
         bindHoldButton(left) { pressed ->
             renderer.setSteering(if (pressed) 1f else if (right.isPressed) -1f else 0f)
         }
@@ -840,6 +891,30 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         bindHoldButton(brake, renderer::setBraking)
         bindHoldButton(accelerator, renderer::setAccelerating)
+        bindHoldButton(hop, renderer::setHopping)
+    }
+
+    /** Vrai quand les commandes de conduite doivent être écoutées. */
+    private fun drivingActive() = !paused && !editorActive
+
+    override fun onGenericMotionEvent(event: MotionEvent): Boolean =
+        gamepad.onGenericMotion(event) || super.onGenericMotionEvent(event)
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        // Seuls les vrais périphériques de jeu sont détournés, et jamais pendant
+        // l'édition : un clavier ou une télécommande garde sa navigation par
+        // flèches, et les panneaux de l'éditeur restent atteignables.
+        val fromGamepad = event.source and InputDevice.SOURCE_GAMEPAD == InputDevice.SOURCE_GAMEPAD ||
+            event.source and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK
+        if (fromGamepad && !editorActive) {
+            val consumed = when (event.action) {
+                KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
+                KeyEvent.ACTION_UP -> gamepad.onKeyUp(event.keyCode)
+                else -> false
+            }
+            if (consumed) return true
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -1142,6 +1217,10 @@ class ToyboxRacersActivity : ThemedActivity() {
             editorRotationStepIndex = (editorRotationStepIndex + 1) % EDITOR_ROTATION_STEPS.size
             pushEditorPreview()
         }
+        editorTrackBankEdgeButton = action("") {
+            editorTrackBankEdge = editorTrackBankEdge.next()
+            pushEditorPreview()
+        }
         bindRepeatingEditorAction(moveUp) { moveEditorObject(0f, 1f) }
         bindRepeatingEditorAction(moveLeft) { moveEditorObject(1f, 0f) }
         bindRepeatingEditorAction(moveRight) { moveEditorObject(-1f, 0f) }
@@ -1171,7 +1250,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         )
         row(editorPositionPanel, moveHigher, moveLower)
         row(editorPositionPanel, editorRotateLeftButton, editorRotationAxisButton, editorRotateRightButton)
-        row(editorPositionPanel, editorRotationStepButton, bottomDp = 0)
+        row(editorPositionPanel, editorRotationStepButton, bottomDp = 2)
+        editorTrackBankEdgeRow = row(editorPositionPanel, editorTrackBankEdgeButton, bottomDp = 0)
         root.addView(editorPositionPanel, FrameLayout.LayoutParams(dp(206), -2).apply {
             gravity = Gravity.BOTTOM or Gravity.START
             leftMargin = dp(18)
@@ -1263,6 +1343,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorYawDegrees = 0f
         editorPitchDegrees = 0f
         editorRollDegrees = 0f
+        editorTrackLeftBankDegrees = 0f
+        editorTrackRightBankDegrees = 0f
         editorFloorY = maxOf(editorFloorY, 0f)
         editorSolid = true
         editorColor = 0xFF6F7B91.toInt()
@@ -1480,7 +1562,8 @@ class ToyboxRacersActivity : ThemedActivity() {
                 length = editorDepth,
                 width = editorWidth,
                 endY = editorFloorY + editorHeight,
-                bankDegrees = editorRollDegrees,
+                bankDegrees = editorTrackLeftBankDegrees,
+                rightBankDegrees = editorTrackRightBankDegrees,
                     style = editorTrackStyle, barriers = editorTrackBarriers,
                 color = editorColor
             )
@@ -1681,7 +1764,10 @@ class ToyboxRacersActivity : ThemedActivity() {
         gridIndex = editorGridIndex,
         trackStyle = editorTrackStyle,
         trackBarriers = editorTrackBarriers,
-        decorColors = editorDecorColors.toMap()
+        decorColors = editorDecorColors.toMap(),
+        trackLeftBankDegrees = editorTrackLeftBankDegrees,
+        trackRightBankDegrees = editorTrackRightBankDegrees,
+        trackBankEdge = editorTrackBankEdge
     )
 
     private fun undoEditorAction() {
@@ -1740,6 +1826,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorTrackStyle = state.trackStyle
         editorTrackBarriers = state.trackBarriers
         editorDecorColors = state.decorColors
+        editorTrackLeftBankDegrees = state.trackLeftBankDegrees
+        editorTrackRightBankDegrees = state.trackRightBankDegrees
+        editorTrackBankEdge = state.trackBankEdge
     }
 
     private fun updateEditorUndoButton() {
@@ -1835,6 +1924,11 @@ class ToyboxRacersActivity : ThemedActivity() {
             editorRotateLeftButton.text = "↺ ${formatEditorNumber(rotationStep())}"
             editorRotateRightButton.text = "↻ ${formatEditorNumber(rotationStep())}"
         }
+        if (::editorTrackBankEdgeButton.isInitialized) {
+            editorTrackBankEdgeButton.text = editorTrackBankEdge.label
+            val showBankEdge = canEditTrack && editorRotationAxis == ToyboxRotationAxis.ROLL
+            editorTrackBankEdgeRow.visibility = if (showBankEdge) View.VISIBLE else View.GONE
+        }
         editorGroupButton.alpha = if (editorGroupMode == EditorGroupMode.OFF) 0.82f else 1f
         val selectedFloor = selected?.kind == ToyboxVolumeKind.FLOOR
         editorSolidButton.text = when {
@@ -1894,7 +1988,8 @@ class ToyboxRacersActivity : ThemedActivity() {
                 append("  Largeur ").append(formatEditorNumber(editorWidth))
                 append("  Longueur ").append(formatEditorNumber(editorDepth))
                 append("  Deniv ").append(formatEditorNumber(editorHeight))
-                append("  Banking ").append(formatEditorNumber(editorRollDegrees)).append(" deg")
+                append("  Banking G ").append(formatEditorNumber(editorTrackLeftBankDegrees))
+                append(" D ").append(formatEditorNumber(editorTrackRightBankDegrees)).append(" deg")
             } else if (canEditDecor) {
                 val yaw = selectedDecor?.yawDegrees ?: editorDecorYawDegrees
                 val scale = selectedDecor?.scale ?: editorDecorScale
@@ -1953,7 +2048,8 @@ class ToyboxRacersActivity : ThemedActivity() {
                     length = editorDepth,
                     width = editorWidth,
                     endY = editorFloorY + editorHeight,
-                    bankDegrees = editorRollDegrees,
+                    bankDegrees = editorTrackLeftBankDegrees,
+                    rightBankDegrees = editorTrackRightBankDegrees,
                     style = editorTrackStyle, barriers = editorTrackBarriers,
                     color = editorColor
                 ).let { draft ->
@@ -2050,7 +2146,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorDepth = section.length
         editorYawDegrees = section.yawDegrees
         editorPitchDegrees = 0f
-        editorRollDegrees = section.bankDegrees
+        editorTrackLeftBankDegrees = section.bankDegrees
+        editorTrackRightBankDegrees = section.rightBankDegrees
         editorFloorY = section.y
         editorSolid = true
         editorColor = section.color
@@ -2181,10 +2278,16 @@ class ToyboxRacersActivity : ThemedActivity() {
                     ToyboxRotationAxis.PITCH -> section.withEndY(section.endY + deltaDegrees * 0.12f).also {
                         editorHeight = it.endY - it.y
                     }
-                    ToyboxRotationAxis.ROLL -> section.withBank(
-                        (section.bankDegrees + deltaDegrees).coerceIn(-38f, 38f)
-                    ).also {
-                        editorRollDegrees = it.bankDegrees
+                    ToyboxRotationAxis.ROLL -> {
+                        var updated = section
+                        if (editorTrackBankEdge != TrackEdge.RIGHT) updated = updated.withBank(
+                            TrackEdge.LEFT, (section.bankDegrees + deltaDegrees).coerceIn(-38f, 38f))
+                        if (editorTrackBankEdge != TrackEdge.LEFT) updated = updated.withBank(
+                            TrackEdge.RIGHT, (section.rightBankDegrees + deltaDegrees).coerceIn(-38f, 38f))
+                        updated.also {
+                            editorTrackLeftBankDegrees = it.bankDegrees
+                            editorTrackRightBankDegrees = it.rightBankDegrees
+                        }
                     }
                 }
             }
@@ -2195,7 +2298,12 @@ class ToyboxRacersActivity : ThemedActivity() {
             when (editorRotationAxis) {
                 ToyboxRotationAxis.YAW -> editorYawDegrees = ((editorYawDegrees + deltaDegrees) % 360f + 360f) % 360f
                 ToyboxRotationAxis.PITCH -> editorHeight += deltaDegrees * 0.12f
-                ToyboxRotationAxis.ROLL -> editorRollDegrees = (editorRollDegrees + deltaDegrees).coerceIn(-38f, 38f)
+                ToyboxRotationAxis.ROLL -> {
+                    if (editorTrackBankEdge != TrackEdge.RIGHT) editorTrackLeftBankDegrees =
+                        (editorTrackLeftBankDegrees + deltaDegrees).coerceIn(-38f, 38f)
+                    if (editorTrackBankEdge != TrackEdge.LEFT) editorTrackRightBankDegrees =
+                        (editorTrackRightBankDegrees + deltaDegrees).coerceIn(-38f, 38f)
+                }
             }
             pushEditorPreview()
             return
@@ -2268,6 +2376,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorYawDegrees = 0f
         editorPitchDegrees = 0f
         editorRollDegrees = 0f
+        editorTrackLeftBankDegrees = 0f
+        editorTrackRightBankDegrees = 0f
         pushEditorPreview()
     }
 
@@ -2359,7 +2469,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         val section = ToyboxTrackSection(System.nanoTime(),
             source.finishX + kotlin.math.sin(radians) * length * 0.5f, source.endY,
             source.finishZ + kotlin.math.cos(radians) * length * 0.5f,
-            tangent, length, source.endWidth, bankDegrees = source.bankDegrees, color = source.color,
+            tangent, length, source.endWidth, bankDegrees = source.bankDegrees,
+            rightBankDegrees = source.rightBankDegrees, color = source.color,
             style = source.style, barriers = source.barriers)
         editorWorld = editorWorld.copy(trackSections = editorWorld.trackSections + section)
         worldStore.save(editorWorld)
@@ -2799,13 +2910,15 @@ class ToyboxRacersActivity : ThemedActivity() {
             racing && state.racePhase == RacePhase.COUNTDOWN -> "Prépare-toi — le départ est verrouillé"
             racing && state.racePhase == RacePhase.FINISHED -> "Course terminée"
             racing && state.wrongWay -> "MAUVAIS SENS — fais demi-tour"
-            state.airborne -> "SAUT !  Prépare la réception"
-            state.reversing -> "MARCHE ARRIÈRE — relâche FREIN pour repartir"
             state.turboBoosting -> "RUBAN TURBO !  Relance pastel"
-            state.drifting -> "Ruban ${"●".repeat(state.turboLevel.coerceAtLeast(1))}${"○".repeat((3 - state.turboLevel).coerceAtLeast(0))}  ${(state.turboCharge * 100).toInt()} %"
+            // La glisse passe avant le vol : un petit saut de dérapage ne doit
+            // pas remplacer la jauge de charge par un message de réception.
+            state.drifting -> "Ruban ${"●".repeat(state.turboLevel.coerceAtLeast(1))}${"○".repeat((3 - state.turboLevel).coerceAtLeast(0))}  ${(state.turboCharge * 100).toInt()} %  ·  relâche SAUT pour relancer"
+            state.airborne && !state.hopping -> "SAUT !  Prépare la réception"
+            state.reversing -> "MARCHE ARRIÈRE — relâche FREIN pour repartir"
             state.offRoad -> getString(if (racing) R.string.toybox_return_track else R.string.toybox_explore_hint)
             state.scene.circuit == CircuitKind.SLALOM -> getString(R.string.toybox_slalom_hint)
-            else -> "Maintiens GAZ — tourne, puis redresse pour le Ruban Turbo"
+            else -> "Maintiens GAZ — tiens SAUT en virage pour glisser"
         }
     }
 

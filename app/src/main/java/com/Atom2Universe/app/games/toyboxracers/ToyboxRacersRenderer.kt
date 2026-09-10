@@ -43,6 +43,8 @@ internal class ToyboxRacersRenderer(
         val lap: Int,
         val elapsedSeconds: Float,
         val airborne: Boolean,
+        /** Vrai seulement pour le petit saut du bouton, pas pour un vrai vol. */
+        val hopping: Boolean,
         val offRoad: Boolean,
         val drifting: Boolean,
         val turboCharge: Float,
@@ -79,6 +81,9 @@ internal class ToyboxRacersRenderer(
     @Volatile private var steeringInput = 0f
     @Volatile private var acceleratorInput = false
     @Volatile private var brakeInput = false
+    @Volatile private var hopInput = false
+    @Volatile private var throttleInput = 0f
+    @Volatile private var brakeAmountInput = 0f
     @Volatile private var resetRequested = false
     @Volatile private var requestedDifficulty = initialDifficulty
     @Volatile private var requestedMode = PlayMode.EXPLORATION
@@ -116,6 +121,7 @@ internal class ToyboxRacersRenderer(
     private lateinit var trackMesh: ColoredMesh
     private lateinit var environmentMesh: ColoredMesh
     private lateinit var carMesh: ColoredMesh
+    private lateinit var wheelMesh: ColoredMesh
     private lateinit var shadowMesh: ColoredMesh
     private lateinit var rivalMeshes: List<ColoredMesh>
     private var worldMesh: ColoredMesh? = null
@@ -135,6 +141,7 @@ internal class ToyboxRacersRenderer(
     private val viewProjection = FloatArray(16)
     private val identity = FloatArray(16)
     private val carModel = FloatArray(16)
+    private val wheelModel = FloatArray(16)
     private val shadowModel = FloatArray(16)
     private val rivalModels = Array(5) { FloatArray(16) }
     private val inverseViewProjection = FloatArray(16)
@@ -149,6 +156,17 @@ internal class ToyboxRacersRenderer(
     private var cameraKickVisual = 0f
     private var visualDriftLean = 0f
     private var visualRoll = 0f
+    // Animation du véhicule : braquage des roues avant, rotation des roues,
+    // assiette sous les gaz/au frein, écrasement à la réception et inclinaison
+    // du châssis dans la glisse. Tout est visuel et n'entre jamais en physique.
+    private var visualSteer = 0f
+    private var wheelSpinDegrees = 0f
+    private var visualDrive = 0f
+    private var visualLean = 0f
+    private var suspensionSquash = 0f
+    private var hopLift = 0f
+    private var lastLandingSerial = 0
+    private var lastHopSerial = 0
     private var editorCameraPosition = Vec3(0f, 16f, -38f)
     private var editorCameraYaw = 0f
     private var editorCameraPitch = -0.22f
@@ -183,6 +201,20 @@ internal class ToyboxRacersRenderer(
         acceleratorInput = accelerating
     }
 
+    /** Bouton saut/dérapage : tenu pour glisser, relâché pour relancer. */
+    fun setHopping(hopping: Boolean) {
+        hopInput = hopping
+    }
+
+    /** Gâchette analogique. Le tactile n'y touche pas et garde le tout ou rien. */
+    fun setThrottle(value: Float) {
+        throttleInput = value.coerceIn(0f, 1f)
+    }
+
+    fun setBrakeAmount(value: Float) {
+        brakeAmountInput = value.coerceIn(0f, 1f)
+    }
+
     fun requestReset() {
         resetRequested = true
     }
@@ -208,6 +240,9 @@ internal class ToyboxRacersRenderer(
             steeringInput = 0f
             acceleratorInput = false
             brakeInput = false
+            hopInput = false
+            throttleInput = 0f
+            brakeAmountInput = 0f
         }
         discardFrameTime = true
         paused = value
@@ -225,6 +260,9 @@ internal class ToyboxRacersRenderer(
             steeringInput = 0f
             acceleratorInput = false
             brakeInput = false
+            hopInput = false
+            throttleInput = 0f
+            brakeAmountInput = 0f
             editorCameraPosition = Vec3(renderCarPosition.x, maxOf(7f, renderCarPosition.y + 8f), renderCarPosition.z - 28f)
             editorCameraYaw = renderCarYaw
             editorCameraPitch = -0.22f
@@ -461,7 +499,8 @@ internal class ToyboxRacersRenderer(
         shader = ToyboxShader()
         trackMesh = PrototypeMeshFactory.track(track).also { it.upload() }
         environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload() }
-        carMesh = PrototypeMeshFactory.car().also { it.upload() }
+        carMesh = PrototypeMeshFactory.carBody().also { it.upload() }
+        wheelMesh = PrototypeMeshFactory.carWheel().also { it.upload() }
         val rivalColors = arrayOf(
             floatArrayOf(0.42f, 0.85f, 0.70f, 1f),
             floatArrayOf(0.68f, 0.58f, 0.92f, 1f),
@@ -586,6 +625,7 @@ internal class ToyboxRacersRenderer(
                     lap = raceSession.playerLap,
                     elapsedSeconds = if (mode == PlayMode.RACE) raceSession.raceSeconds else explorationSeconds,
                     airborne = car.airborne,
+                    hopping = car.hopping,
                     offRoad = car.offRoad,
                     drifting = car.drifting,
                     turboCharge = car.turboCharge,
@@ -649,7 +689,19 @@ internal class ToyboxRacersRenderer(
 
     private fun updatePlayer() {
         val previousRelease = car.turboReleaseSerial
-        car.update(FIXED_STEP, ArcadeCar.Input(steeringInput, acceleratorInput, brakeInput))
+        val throttle = maxOf(throttleInput, if (acceleratorInput) 1f else 0f)
+        val brakeAmount = maxOf(brakeAmountInput, if (brakeInput) 1f else 0f)
+        car.update(
+            FIXED_STEP,
+            ArcadeCar.Input(
+                steering = steeringInput,
+                accelerating = throttle > TRIGGER_ENGAGE,
+                braking = brakeAmount > TRIGGER_ENGAGE,
+                hopping = hopInput,
+                throttle = throttle,
+                brakeAmount = brakeAmount
+            )
+        )
         turboEffects.update(FIXED_STEP, car)
         if (car.turboReleaseSerial != previousRelease) cameraKick = 1f
     }
@@ -673,8 +725,13 @@ internal class ToyboxRacersRenderer(
         cameraKickVisual += (cameraKick - cameraKickVisual) * smoothing(5f, frameSeconds)
         val target = renderCarPosition + horizontalForward * 2.1f +
             right * (visualDriftLean * 0.9f) + Vec3(0f, 0.60f, 0f)
-        val wanted = renderCarPosition - horizontalForward * (5.2f + cameraKickVisual * 0.55f) +
-            right * (visualDriftLean * 1.15f) + Vec3(0f, 3.0f + cameraKickVisual * 0.12f, 0f)
+        // La caméra recule avec la vitesse : c'est ce qui fait sentir le turbo
+        // même quand le compteur est déjà proche du plafond.
+        val speedPull = (car.speed * 0.048f).coerceIn(0f, 1.05f)
+        val wanted = renderCarPosition -
+            horizontalForward * (5.2f + speedPull + cameraKickVisual * 0.55f) +
+            right * (visualDriftLean * 1.15f) +
+            Vec3(0f, 3.0f + speedPull * 0.25f + cameraKickVisual * 0.12f, 0f)
         if (!cameraReady) {
             cameraPosition = wanted
             cameraReady = true
@@ -830,14 +887,85 @@ internal class ToyboxRacersRenderer(
         // plus vite sur un écran 120 Hz que sur un 60 Hz.
         visualPitch += (targetPitch - visualPitch) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
         visualRoll += (targetRoll - visualRoll) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
+        updateCarAnimation(frameSeconds)
         Matrix.setIdentityM(carModel, 0)
         Matrix.translateM(carModel, 0, renderCarPosition.x, renderCarPosition.y, renderCarPosition.z)
         Matrix.rotateM(carModel, 0, heading * 180f / PI.toFloat(), 0f, 1f, 0f)
         Matrix.rotateM(carModel, 0, -visualPitch * 180f / PI.toFloat(), 1f, 0f, 0f)
         Matrix.rotateM(carModel, 0, visualRoll * 180f / PI.toFloat(), 0f, 0f, 1f)
         Matrix.translateM(carModel, 0, 0f, CAR_VISUAL_SUSPENSION_OFFSET, 0f)
+        // Les roues sont posées sur le repère du véhicule avant qu'il ne prenne
+        // son assiette : elles suivent la carrosserie sans s'enfoncer dans le sol.
+        drawWheels()
+        // La carrosserie seule reçoit le tangage moteur, la gîte et l'écrasement.
+        Matrix.rotateM(carModel, 0, -visualDrive * 180f / PI.toFloat(), 1f, 0f, 0f)
+        Matrix.rotateM(carModel, 0, visualLean * 180f / PI.toFloat(), 0f, 0f, 1f)
+        Matrix.translateM(carModel, 0, 0f, hopLift, 0f)
+        Matrix.scaleM(
+            carModel, 0,
+            1f + suspensionSquash * 0.10f,
+            1f - suspensionSquash * 0.20f,
+            1f + suspensionSquash * 0.07f
+        )
         carMesh.draw(shader, viewProjection, carModel)
         renderRivals()
+    }
+
+    /** Toute l'animation du véhicule : elle ne modifie jamais la simulation. */
+    private fun updateCarAnimation(frameSeconds: Float) {
+        val seconds = frameSeconds.coerceAtMost(0.05f)
+        // Braquage : la commande du joueur, plus le contre-braquage naturel que
+        // demande le travers. En glisse, les roues avant pointent vers l'extérieur.
+        val wantedSteer = (car.steeringVisual * 0.55f + car.headingOffset * 0.80f)
+            .coerceIn(-1f, 1f)
+        visualSteer += (wantedSteer - visualSteer) * smoothing(11f, seconds)
+
+        val forwardSpeed = car.speed * kotlin.math.cos(car.headingOffset)
+        val direction = if (car.reversing) -1f else 1f
+        wheelSpinDegrees += forwardSpeed * direction / PrototypeMeshFactory.CAR_WHEEL_RADIUS *
+            seconds * 180f / PI.toFloat()
+        if (wheelSpinDegrees > 360f || wheelSpinDegrees < -360f) wheelSpinDegrees %= 360f
+
+        // Assiette moteur : la voiture s'assoit sur l'arrière aux gaz et plonge
+        // sur l'avant au frein. Le turbo appuie franchement le mouvement.
+        val wantedDrive = when {
+            car.airborne -> 0f
+            car.turboBoostSeconds > 0f -> -0.075f
+            brakeInput || brakeAmountInput > TRIGGER_ENGAGE -> 0.055f
+            acceleratorInput || throttleInput > TRIGGER_ENGAGE -> -0.040f
+            else -> 0f
+        }
+        visualDrive += (wantedDrive - visualDrive) * smoothing(6f, seconds)
+
+        // Gîte : le châssis se couche vers l'extérieur du virage, d'autant plus
+        // que la voiture est en travers. C'est ce qui rend la glisse lisible.
+        val wantedLean = (-car.headingOffset * 0.60f).coerceIn(-0.30f, 0.30f)
+        visualLean += (wantedLean - visualLean) * smoothing(8f, seconds)
+
+        if (car.hopSerial != lastHopSerial) {
+            lastHopSerial = car.hopSerial
+            hopLift = HOP_VISUAL_LIFT
+        }
+        hopLift += (0f - hopLift) * smoothing(9f, seconds)
+        if (car.landingSerial != lastLandingSerial) {
+            lastLandingSerial = car.landingSerial
+            suspensionSquash = (car.landingImpact / 9f).coerceIn(0.25f, 1f)
+        }
+        suspensionSquash += (0f - suspensionSquash) * smoothing(9f, seconds)
+    }
+
+    private fun drawWheels() {
+        val steerDegrees = visualSteer * MAX_WHEEL_STEER_DEGREES
+        for (wheelZ in PrototypeMeshFactory.CAR_WHEEL_Z) {
+            val steered = wheelZ > 0f
+            for (wheelX in PrototypeMeshFactory.CAR_WHEEL_X) {
+                System.arraycopy(carModel, 0, wheelModel, 0, 16)
+                Matrix.translateM(wheelModel, 0, wheelX, PrototypeMeshFactory.CAR_WHEEL_Y, wheelZ)
+                if (steered) Matrix.rotateM(wheelModel, 0, steerDegrees, 0f, 1f, 0f)
+                Matrix.rotateM(wheelModel, 0, wheelSpinDegrees, 1f, 0f, 0f)
+                wheelMesh.draw(shader, viewProjection, wheelModel)
+            }
+        }
     }
 
     private fun renderRivals() {
@@ -865,6 +993,14 @@ internal class ToyboxRacersRenderer(
         cameraKickVisual = 0f
         visualDriftLean = 0f
         visualRoll = 0f
+        visualSteer = 0f
+        wheelSpinDegrees = 0f
+        visualDrive = 0f
+        visualLean = 0f
+        suspensionSquash = 0f
+        hopLift = 0f
+        lastLandingSerial = car.landingSerial
+        lastHopSerial = car.hopSerial
         captureSimulationState()
         interpolateSimulationState()
         turboEffects.reset(car.turboReleaseSerial)
@@ -1064,6 +1200,9 @@ internal class ToyboxRacersRenderer(
         private const val PITCH_SMOOTHING_RATE = 9.05f
         private const val MAX_VISUAL_PITCH = 0.76f
         private const val CAR_VISUAL_SUSPENSION_OFFSET = -0.21f
+        private const val MAX_WHEEL_STEER_DEGREES = 26f
+        private const val HOP_VISUAL_LIFT = 0.05f
+        private const val TRIGGER_ENGAGE = 0.12f
         private const val PREVIEW_ID = -1L
     }
 }

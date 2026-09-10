@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Kanal</string>
     <string name="toybox_title_furniture">Mobilya</string>
     <string name="toybox_title_decor">Dekorasyon</string>
+    <string name="toybox_hop">ZIPLA</string>
+    <string name="toybox_style_boost">Hız şeridi</string>
 </resources>

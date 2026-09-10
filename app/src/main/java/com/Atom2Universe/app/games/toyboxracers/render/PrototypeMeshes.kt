@@ -541,11 +541,18 @@ internal object PrototypeMeshFactory {
         val rightBack = section.corner(-1f, 1f).toVec3() + lift
         val leftFront = section.corner(1f, -1f).toVec3() + lift
         val rightFront = section.corner(1f, 1f).toVec3() + lift
-        builder.quad(leftBack, leftFront, rightFront, rightBack, road)
+        // The two edges can bank independently, so the slab is split at the centreline instead
+        // of a single quad: that is where the crease between a raised left and flat right sits.
+        val midBack = section.corner(-1f, 0f).toVec3() + lift
+        val midFront = section.corner(1f, 0f).toVec3() + lift
+        builder.quad(leftBack, leftFront, midFront, midBack, road)
+        builder.quad(midBack, midFront, rightFront, rightBack, road)
 
-        fun surface(t: Float, s: Float): Vec3 =
-            (leftBack + (leftFront-leftBack)*t) * (1f-s) +
-                (rightBack + (rightFront-rightBack)*t) * s + Vec3(0f, 0.009f, 0f)
+        fun surface(t: Float, s: Float): Vec3 {
+            val back = if (s < 0.5f) leftBack + (midBack-leftBack)*(s*2f) else midBack + (rightBack-midBack)*(s*2f-1f)
+            val front = if (s < 0.5f) leftFront + (midFront-leftFront)*(s*2f) else midFront + (rightFront-midFront)*(s*2f-1f)
+            return back + (front-back)*t + Vec3(0f, 0.009f, 0f)
+        }
         fun mark(a: Float, b: Float, l: Float, r: Float, color: Int) {
             builder.quad(surface(a,l), surface(b,l), surface(b,r), surface(a,r), rgba(color, alpha))
         }
@@ -574,6 +581,22 @@ internal object PrototypeMeshFactory {
                 TrackStyle.SAND -> for (lane in 0..3) {
                     val s = .1f + lane*.23f
                     builder.quad(surface(a,s), surface(b,s+.07f), surface(b,s+.09f), surface(a,s+.02f), rgba(accent, alpha))
+                }
+                TrackStyle.BOOST -> {
+                    // Chevrons vers l'avant, bâtis en marches de `mark` plutôt
+                    // qu'en diagonales : même orientation de faces que les autres
+                    // styles, donc aucun risque de quad retourné.
+                    val steps = 6
+                    val slice = 0.5f / steps
+                    repeat(steps) { leg ->
+                        val lead = span * 0.45f * leg / (steps - 1)
+                        val t0 = a + span * 0.10f + lead
+                        val t1 = (t0 + span * 0.30f).coerceAtMost(b)
+                        mark(t0, t1, leg * slice, (leg + 1) * slice - 0.004f, accent)
+                        mark(t0, t1, 1f - (leg + 1) * slice + 0.004f, 1f - leg * slice, accent)
+                    }
+                    mark(a, b, .02f, .05f, accent)
+                    mark(a, b, .95f, .98f, accent)
                 }
                 TrackStyle.DIRT, TrackStyle.GRASS -> {
                     val seed = kotlin.math.abs((section.id xor (index * 7919L)).toInt() % 97)
@@ -968,21 +991,46 @@ internal object PrototypeMeshFactory {
         builder.lowPolyEllipsoid(x, ground + 7.9f, z, 1.1f, 0.65f, 1.1f, 4, 10, MINT)
     }
 
+    /** Voiture d'un seul tenant : les rivaux n'ont pas de roues animées. */
     fun car(bodyColor: FloatArray = PINK): ColoredMesh {
         val builder = MeshBuilder()
+        carBodyInto(builder, bodyColor)
+        for (z in CAR_WHEEL_Z) {
+            for (x in CAR_WHEEL_X) wheelInto(builder, x, CAR_WHEEL_Y, z)
+        }
+        return builder.build()
+    }
+
+    /** Carrosserie seule : les quatre roues sont dessinées à part pour tourner. */
+    fun carBody(bodyColor: FloatArray = PINK): ColoredMesh {
+        val builder = MeshBuilder()
+        carBodyInto(builder, bodyColor)
+        return builder.build()
+    }
+
+    /** Une roue centrée sur l'origine, axe de rotation X. */
+    fun carWheel(): ColoredMesh {
+        val builder = MeshBuilder()
+        wheelInto(builder, 0f, 0f, 0f)
+        return builder.build()
+    }
+
+    private fun carBodyInto(builder: MeshBuilder, bodyColor: FloatArray) {
         builder.box(0f, 0.25f, 0f, 0.82f, 0.30f, 1.28f, bodyColor)
         builder.box(0f, 0.48f, -0.05f, 0.62f, 0.30f, 0.60f, CREAM)
         builder.box(0f, 0.51f, 0.19f, 0.53f, 0.15f, 0.06f, WINDOW)
         builder.box(-0.42f, 0.31f, 0.40f, 0.06f, 0.12f, 0.22f, CREAM)
         builder.box(0.42f, 0.31f, 0.40f, 0.06f, 0.12f, 0.22f, CREAM)
-        for (z in floatArrayOf(0.46f, -0.46f)) {
-            builder.box(0f, 0.19f, z, 0.86f, 0.07f, 0.08f, DARK)
-            for (x in floatArrayOf(-0.49f, 0.49f)) {
-                builder.cylinderX(x, 0.18f, z, 0.16f, 0.21f, 10, DARK)
-                builder.cylinderX(x, 0.18f, z, 0.17f, 0.11f, 10, CREAM)
-            }
-        }
-        return builder.build()
+        for (z in CAR_WHEEL_Z) builder.box(0f, 0.19f, z, 0.86f, 0.07f, 0.08f, DARK)
+    }
+
+    private fun wheelInto(builder: MeshBuilder, x: Float, y: Float, z: Float) {
+        builder.cylinderX(x, y, z, 0.16f, 0.21f, 10, DARK)
+        builder.cylinderX(x, y, z, 0.17f, 0.11f, 10, CREAM)
+        // Une croix d'enjoliveur : sans elle, un cylindre qui tourne sur son axe
+        // reste parfaitement immobile à l'écran, roues animées ou non.
+        builder.box(x, y, z, 0.18f, 0.05f, 0.33f, CREAM)
+        builder.box(x, y, z, 0.18f, 0.33f, 0.05f, CREAM)
     }
 
     fun shadow(): ColoredMesh {
@@ -1001,6 +1049,12 @@ internal object PrototypeMeshFactory {
         }
         return builder.build()
     }
+
+    /** Ancrages des roues, partagés par le maillage et l'animation du rendu. */
+    val CAR_WHEEL_X = floatArrayOf(-0.49f, 0.49f)
+    val CAR_WHEEL_Z = floatArrayOf(0.46f, -0.46f)
+    const val CAR_WHEEL_Y = 0.18f
+    const val CAR_WHEEL_RADIUS = 0.21f
 
     private fun color(r: Float, g: Float, b: Float) = floatArrayOf(r, g, b, 1f)
 }

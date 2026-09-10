@@ -25,7 +25,23 @@ internal class ArcadeCar(
     private val spec: VehicleSpec = VehicleSpec.ToyCar
 ) {
 
-    data class Input(val steering: Float, val accelerating: Boolean, val braking: Boolean)
+    /** Commandes d'une image.
+     *
+     * `steering` accepte tout le continu entre -1 et 1 : les boutons tactiles
+     * n'envoient que les extrêmes, le stick d'une manette envoie le reste.
+     * `throttle` et `brakeAmount` font la même chose pour les gâchettes ; ils
+     * valent 1 quand seuls les booléens sont renseignés, pour que le tactile
+     * garde exactement son comportement d'avant.
+     * `hopping` est le bouton saut/dérapage tenu, à la façon des jeux de kart.
+     */
+    data class Input(
+        val steering: Float,
+        val accelerating: Boolean,
+        val braking: Boolean,
+        val hopping: Boolean = false,
+        val throttle: Float = if (accelerating) 1f else 0f,
+        val brakeAmount: Float = if (braking) 1f else 0f
+    )
 
     var distance = track.length * 0.015f
         private set
@@ -65,6 +81,26 @@ internal class ArcadeCar(
         private set
     var reversing = false
         private set
+    /** Vrai pendant le petit saut déclenché par le bouton, pas pendant une chute. */
+    var hopping = false
+        private set
+    /** Front montant du saut : le rendu et le son n'ont pas à deviner l'instant. */
+    var hopSerial = 0
+        private set
+    /** Front montant d'une réception, avec sa violence, pour l'écrasement visuel. */
+    var landingSerial = 0
+        private set
+    var landingImpact = 0f
+        private set
+    /** Côté du dérapage tenu : -1, 0 ou +1. Zéro hors dérapage au bouton. */
+    var driftDirection = 0
+        private set
+    /** Adhérence moyenne du sol sous les roues portantes (1 = bitume). */
+    var surfaceGrip = 1f
+        private set
+    /** Braquage lissé du joueur : les roues avant s'en servent pour s'orienter. */
+    var steeringVisual = 0f
+        private set
 
     private var verticalVelocity = 0f
     private var airborneY = 0f
@@ -84,6 +120,12 @@ internal class ArcadeCar(
     private var reverseHoldSeconds = 0f
     private var steeringSmoothed = 0f
     private var driftBlend = 0f
+    private var hopHeld = false
+    private var hopCooldownSeconds = 0f
+    private var manualDrift = false
+    private var releaseRequested = false
+    private var surfaceDrag = 0f
+    private var onBoostPad = false
     private var editorWorld = ToyboxWorld(volumes = emptyList(), trackSections = emptyList())
     private var editorTrackColliders = emptyList<EditorTrackCollider>()
     private var editorHasBarriers = false
@@ -147,7 +189,18 @@ internal class ArcadeCar(
         reversing = false
         reverseHoldSeconds = 0f
         steeringSmoothed = 0f
+        steeringVisual = 0f
         driftBlend = 0f
+        hopping = false
+        hopHeld = false
+        hopCooldownSeconds = 0f
+        manualDrift = false
+        releaseRequested = false
+        driftDirection = 0
+        landingImpact = 0f
+        surfaceGrip = 1f
+        surfaceDrag = 0f
+        onBoostPad = false
         verticalVelocity = 0f
         velocityX = 0f
         velocityZ = 0f
@@ -172,7 +225,15 @@ internal class ArcadeCar(
             steeringTarget * steeringSmoothed < 0f
         ) STEERING_RETURN_RATE else STEERING_RATE
         steeringSmoothed = approach(steeringSmoothed, steeringTarget, steeringRate * dt)
+        steeringVisual = steeringSmoothed
         val steering = steeringSmoothed
+        // Saut puis dérapage tenu : la mécanique de kart. Les deux se règlent
+        // avant l'orientation, car ils décident du braquage réellement appliqué.
+        updateHop(dt, input)
+        updateManualDrift(dt, input, steering)
+        // Dans un dérapage tenu, le stick ne choisit plus le côté : il resserre
+        // ou élargit la courbe. C'est ce braquage-là qui fait tourner la voiture.
+        val steerCommand = if (manualDrift) driftSteering(steering) else steering
         if (airborne) {
             // Correction arcade modérée de la trajectoire, sans ajouter de vitesse.
             val turn = steering * .55f * dt
@@ -191,7 +252,7 @@ internal class ArcadeCar(
         // basculer d'une image à l'autre : l'arrière sort progressivement.
         driftBlend = approach(driftBlend, if (drifting) 1f else 0f, DRIFT_BLEND_RATE * dt)
         val wheelGrip = wheelGripScale()
-        if (!airborne && speed > 0.35f && abs(steering) > 0.01f) {
+        if (!airborne && speed > 0.35f && abs(steerCommand) > 0.01f) {
             // Une trajectoire courbe demande une accélération latérale v × ω.
             // Faire pivoter le nez plus vite que ce que les pneus peuvent tenir
             // ne fait pas tourner la voiture : ça la met en travers. On plafonne
@@ -203,7 +264,7 @@ internal class ArcadeCar(
                 (DRIFT_CORNERING_GRIP - CORNERING_GRIP) * driftBlend) * spec.lateralGrip * wheelGrip
             val tractionRate = corneringGrip / max(speed, STEER_LIMIT_MIN_SPEED)
             val reverseSteering = if (currentForwardSpeed < -0.2f) -1f else 1f
-            yawRadians += steering * reverseSteering * minOf(desiredRate, tractionRate) * dt
+            yawRadians += steerCommand * reverseSteering * minOf(desiredRate, tractionRate) * dt
         }
         // Rappel d'alignement : le nez revient de lui-même dans l'axe de la
         // trajectoire. Sans lui, seule l'adhérence latérale corrige un travers,
@@ -219,12 +280,16 @@ internal class ArcadeCar(
 
         val forwardX = sin(yawRadians)
         val forwardZ = cos(yawRadians)
+        // Une gâchette à moitié enfoncée n'envoie qu'une moitié de couple : sur
+        // une surface peu adhérente, c'est le seul moyen de repartir sans patiner.
+        val throttle = input.throttle.coerceIn(0f, 1f)
+        val brakeAmount = input.brakeAmount.coerceIn(0f, 1f)
         if (!airborne && input.accelerating) {
-            velocityX += forwardX * ENGINE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
-            velocityZ += forwardZ * ENGINE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
+            velocityX += forwardX * ENGINE_ACCELERATION * throttle * spec.longitudinalGrip * wheelGrip * dt
+            velocityZ += forwardZ * ENGINE_ACCELERATION * throttle * spec.longitudinalGrip * wheelGrip * dt
         } else if (!airborne && reversing) {
-            velocityX -= forwardX * REVERSE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
-            velocityZ -= forwardZ * REVERSE_ACCELERATION * spec.longitudinalGrip * wheelGrip * dt
+            velocityX -= forwardX * REVERSE_ACCELERATION * brakeAmount * spec.longitudinalGrip * wheelGrip * dt
+            velocityZ -= forwardZ * REVERSE_ACCELERATION * brakeAmount * spec.longitudinalGrip * wheelGrip * dt
         }
 
         var forwardSpeed = velocityX * forwardX + velocityZ * forwardZ
@@ -232,15 +297,43 @@ internal class ArcadeCar(
         val rightZ = -forwardX
         var lateralSpeed = velocityX * rightX + velocityZ * rightZ
         val slipAngle = abs(atan2(lateralSpeed, max(0.1f, abs(forwardSpeed))))
+        // Le relâchement du bouton a été constaté avant l'orientation, mais la
+        // relance a besoin de l'axe de la voiture : elle est encaissée ici, et
+        // avant l'automate automatique pour qu'il ne vide pas la charge d'abord.
+        if (releaseRequested) {
+            releaseRequested = false
+            releaseTurbo(forwardX, forwardZ)
+            drifting = false
+            driftDurationSeconds = 0f
+            driftGraceSeconds = 0f
+            driftCandidateSeconds = 0f
+        }
         val wasDrifting = drifting
-        // Le Ruban Turbo est automatique : le joueur garde GAZ et conduit
-        // normalement. Un virage assez marqué assouplit légèrement l'adhérence,
-        // puis le redressement libère la charge sans combinaison de boutons.
-        val driftBaseValid = !airborne && !input.braking && turboBoostSeconds <= 0f &&
+        // Deux entrées mènent au même Ruban Turbo. Au bouton (façon kart), le
+        // joueur choisit son côté et le tient : c'est la version pilotée. Sans
+        // bouton, un virage assez marqué déclenche la même charge tout seul,
+        // pour que la conduite tactile d'origine reste jouable telle quelle.
+        val driftBaseValid = !manualDrift && !airborne && !input.braking && turboBoostSeconds <= 0f &&
             speed >= DRIFT_SPEED_MIN && forwardSpeed > speed * DRIFT_FORWARD_RATIO_MIN
         val driftRequested = driftBaseValid && abs(steering) >= DRIFT_STEERING_MIN
         val chargeableDrift = driftRequested && slipAngle in DRIFT_ANGLE_MIN..DRIFT_ANGLE_MAX
-        if (!wasDrifting) {
+        if (manualDrift) {
+            // Le bouton fait foi : ni la fenêtre d'angle ni le délai de
+            // confirmation de l'automatique n'ont leur mot à dire.
+            driftCandidateSeconds = 0f
+            driftGraceSeconds = 0f
+            driftDurationSeconds += dt
+            // En l'air la charge est suspendue, jamais perdue : franchir une
+            // bosse au milieu d'une courbe ne doit pas punir le joueur.
+            if (!airborne) {
+                val speedQuality = ((speed - DRIFT_SPEED_MIN) /
+                    (MAX_SPEED - DRIFT_SPEED_MIN)).coerceIn(0f, 1f)
+                driftEffectiveSeconds += dt *
+                    (MANUAL_CHARGE_BASE + MANUAL_CHARGE_SPEED_GAIN * speedQuality)
+                turboCharge = (driftEffectiveSeconds / FULL_CHARGE_SECONDS).coerceIn(0f, 1f)
+                turboLevel = chargeLevel(turboCharge)
+            }
+        } else if (!wasDrifting) {
             // La confirmation repose sur un vrai virage maintenu, pas sur une fenêtre
             // d'angle que la voiture peut traverser entre deux images. L'angle sert
             // ensuite à doser la charge et à refuser une perte de contrôle.
@@ -269,7 +362,7 @@ internal class ArcadeCar(
                 drifting = false
             }
         }
-        if (drifting) {
+        if (!manualDrift && drifting) {
             driftDurationSeconds += dt
             if (driftRequested) {
                 val angleQuality = ((slipAngle - DRIFT_ANGLE_MIN) /
@@ -287,7 +380,7 @@ internal class ArcadeCar(
                 turboCharge = (driftEffectiveSeconds / FULL_CHARGE_SECONDS).coerceIn(0f, 1f)
                 turboLevel = chargeLevel(turboCharge)
             }
-        } else if (wasDrifting) {
+        } else if (!manualDrift && wasDrifting) {
             if (driftBaseValid && abs(steering) < DRIFT_STEERING_MIN) {
                 releaseTurbo(forwardX, forwardZ)
             } else {
@@ -303,14 +396,15 @@ internal class ArcadeCar(
         // plus la voiture glisse, plus vite elle se recolle. Un taux fixe seul
         // mettait plusieurs secondes à effacer une grosse glissade, d'où la
         // sensation de patinage qui ne s'arrête jamais.
+        val slipping = driftRequested || manualDrift
         val gripBase = when {
             airborne -> 0f
-            driftRequested -> DRIFT_GRIP
+            slipping -> DRIFT_GRIP
             else -> NORMAL_GRIP
         }
         val gripGain = when {
             airborne -> 0f
-            driftRequested -> DRIFT_GRIP_GAIN
+            slipping -> DRIFT_GRIP_GAIN
             else -> NORMAL_GRIP_GAIN
         }
         // Lever le pied ou freiner rend de l'adhérence : c'est le geste naturel
@@ -322,10 +416,17 @@ internal class ArcadeCar(
         val grip = ((gripBase + gripGain * abs(lateralSpeed)) *
             liftBonus * spec.lateralGrip * wheelGrip).coerceAtMost(MAX_GRIP)
         val speedBeforeGrip = hypot(forwardSpeed, lateralSpeed)
-        lateralSpeed = approach(lateralSpeed, 0f, grip * dt)
+        // Hors dérapage tenu, les pneus ramènent le travers à zéro. Dans un
+        // dérapage tenu, ils le ramènent vers un travers *choisi* : c'est ce qui
+        // fait glisser la voiture en crabe au lieu de la laisser simplement
+        // patiner, et ce qui rend la glisse stable et reproductible.
+        val slipTarget = if (manualDrift && !airborne) {
+            -driftDirection * DRIFT_SLIP_RATIO * speed * driftBlend
+        } else 0f
+        lateralSpeed = approach(lateralSpeed, slipTarget, grip * dt)
         velocityX = forwardX * forwardSpeed + rightX * lateralSpeed
         velocityZ = forwardZ * forwardSpeed + rightZ * lateralSpeed
-        if (driftRequested) {
+        if (slipping) {
             // Le ruban ne prélève aucune énergie cachée. Frein, collisions et
             // erreurs restent les seules causes de perte d'élan.
             val speedAfterGrip = hypot(velocityX, velocityZ)
@@ -341,10 +442,14 @@ internal class ArcadeCar(
             0f
         } else {
             when {
-                input.braking && !reversing -> BRAKE_DECELERATION
+                input.braking && !reversing -> BRAKE_DECELERATION * brakeAmount
                 !input.accelerating -> ROLLING_DECELERATION
                 else -> 0f
-            } + if (offRoad && !track.scene.circuit.usesFurnitureLayout) OFF_ROAD_DECELERATION else 0f
+            } + (if (offRoad && !track.scene.circuit.usesFurnitureLayout) OFF_ROAD_DECELERATION else 0f) +
+                // La matière du sol freine indépendamment de l'accroche : le
+                // sable ralentit sans faire glisser, la glace fait glisser
+                // sans ralentir.
+                surfaceDrag
         }
         applyDeceleration(deceleration * dt)
         limitReverseSpeed(forwardX, forwardZ)
@@ -389,7 +494,27 @@ internal class ArcadeCar(
         val groundedContacts = wheelContacts.filter { it.grounded }
         groundedWheelCount = groundedContacts.size
         groundedOnRoad = groundedContacts.any { it.road }
-        val maximumBodySurfaceY = worldPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f
+        // Roues en l'air : on garde la dernière matière connue. Sinon l'adhérence
+        // repartirait de 1 à chaque bosse et la réception collerait d'un coup.
+        if (groundedContacts.isNotEmpty()) {
+            surfaceGrip = groundedContacts.sumOf { it.grip.toDouble() }.toFloat() / groundedContacts.size
+            surfaceDrag = groundedContacts.sumOf { it.drag.toDouble() }.toFloat() / groundedContacts.size
+        }
+        // Une seule roue sur la bande suffit : effleurer le bord doit relancer,
+        // sinon la bande punit une trajectoire propre qui la longe.
+        updateBoostPad(groundedContacts.any { it.boost })
+        // Une dalle au-dessus de la caisse ne peut pas la porter — sinon la
+        // voiture se ferait hisser sur un pont qu'elle survole. Mais le sol a pu
+        // MONTER sous elle pendant qu'elle avançait : sur une rampe, la surface
+        // devant est plus haute que celle qu'elle vient de quitter, et la
+        // refuser faisait traverser la piste en vol. Le plafond admissible suit
+        // donc le pas horizontal réellement parcouru, jamais une marge fixe.
+        // Il reste sous la hauteur de la caisse : c'est ce qui garantit qu'une
+        // dalle sous laquelle on peut passer ne devient jamais un appui.
+        val horizontalStep = hypot(worldX - previousWorldX, worldZ - previousWorldZ)
+        val climbAllowance = (horizontalStep * SUPPORT_CLIMB_SLOPE)
+            .coerceIn(0.02f, MAX_SUPPORT_CLIMB)
+        val maximumBodySurfaceY = worldPosition.y - PrototypeTrack.CAR_CLEARANCE + climbAllowance
         val floorY = (if (sandboxMode) {
             maxOf(
                 editorTrackSurfaceHeightAt(worldX, worldZ, maximumBodySurfaceY),
@@ -418,24 +543,31 @@ internal class ArcadeCar(
             airborneY += verticalVelocity * dt - 0.5f * GRAVITY * dt * dt
             verticalVelocity -= GRAVITY * dt
             resolveFurnitureCeilings(previousAirborneY)
-            landedOnRoadThisStep = resolveAirborneRoadCollision(
-                previousWorldX,
-                previousWorldZ,
-                previousAirborneY
-            )
+            // Un monde de l'éditeur n'a pas de piste procédurale : celle-ci
+            // existe encore en mémoire, invisible, et la consulter en vol
+            // faisait atterrir la voiture sur une dalle qui n'est pas là — donc
+            // *au travers* de la piste construite quand elle est plus haute.
+            if (!sandboxMode) {
+                landedOnRoadThisStep = resolveAirborneRoadCollision(
+                    previousWorldX,
+                    previousWorldZ,
+                    previousAirborneY
+                )
+            }
             if (
                 airborne &&
                 verticalVelocity <= 0f &&
                 airborneY <= floorY
             ) {
-                val landingImpact = -verticalVelocity
+                val impact = -verticalVelocity
                 airborne = false
                 airborneY = floorY
                 verticalVelocity = 0f
                 groundedOnRoad = false
+                noteLanding(impact)
                 // Le parquet et les meubles reçoivent aussi les petits sauts
                 // sans prélever arbitrairement 20 % de la vitesse à chaque contact.
-                val retention = (1f - (landingImpact - 4f).coerceAtLeast(0f) * .012f).coerceAtLeast(.8f)
+                val retention = (1f - (impact - 4f).coerceAtLeast(0f) * .012f).coerceAtLeast(.8f)
                 velocityX *= retention
                 velocityZ *= retention
             }
@@ -449,7 +581,7 @@ internal class ArcadeCar(
         }
         // Résoudre les flancs avec la hauteur de cette image : l'ancienne
         // hauteur confondait l'arrivée sur un plateau avec un choc de face.
-        if (!airborne) resolveGroundRoadCollision(previousWorldX, previousWorldZ)
+        if (!airborne && !sandboxMode) resolveGroundRoadCollision(previousWorldX, previousWorldZ)
         if (!sandboxMode) resolveFurnitureSides()
         if (sandboxMode) {
             resolveEditorWorldSides(previousWorldX, previousWorldZ)
@@ -461,14 +593,140 @@ internal class ArcadeCar(
             velocityZ = 0f
             verticalVelocity = 0f
             airborne = false
+            hopping = false
             groundedOnRoad = true
             groundedWheelCount = 4
             pitchRadians = 0f
             rollRadians = 0f
+            // Un retour au départ n'est pas une sortie de virage : la glisse en
+            // cours est abandonnée sans relance, charge comprise.
+            manualDrift = false
+            driftDirection = 0
+            drifting = false
+            releaseRequested = false
+            clearTurboCharge()
             placeAtStart()
         }
         speed = hypot(velocityX, velocityZ)
         worldPosition = Vec3(worldX, airborneY, worldZ)
+    }
+
+    /** Petit saut : la porte d'entrée du dérapage, pas un saut de plateforme.
+     *
+     * Il décolle les roues juste assez longtemps pour que le joueur choisisse
+     * son côté avant que l'adhérence n'ait redressé la voiture. En l'air, ni
+     * moteur ni charge : il ne raccourcit donc aucun tour à lui seul.
+     */
+    private fun updateHop(dt: Float, input: Input) {
+        hopCooldownSeconds = (hopCooldownSeconds - dt).coerceAtLeast(0f)
+        val pressed = input.hopping && !hopHeld
+        hopHeld = input.hopping
+        if (!pressed || airborne || hopCooldownSeconds > 0f) return
+        // Au repos, le châssis suit la MOYENNE des appuis de roues. Sur une
+        // bosse, son plancher passe donc sous la surface qui le porte en son
+        // milieu — c'est voulu, la caisse enjambe le sommet. Mais partir en vol
+        // depuis là fait répondre « non » à toutes les questions du type
+        // « étais-tu au-dessus de cette dalle ? », et le premier contact est
+        // alors pris pour un choc de flanc au lieu d'une réception. Le saut
+        // commence donc par poser la caisse sur le point le plus haut qu'elle
+        // enjambe : c'est le seul état d'où le vol est cohérent.
+        airborneY = maxOf(airborneY, highestSupportUnderBody() + PrototypeTrack.CAR_CLEARANCE)
+        airborne = true
+        hopping = true
+        // Le saut s'AJOUTE à la montée en cours. En rampe, la suspension donne
+        // déjà à la caisse la vitesse verticale de la pente (14 unités/s à 30 %
+        // font +4 unités/s) : écraser cette valeur par l'impulsion revenait à
+        // freiner la montée au moment du saut, et la rampe passait par-dessus
+        // la voiture. Une pente descendante ne retire rien : on saute toujours
+        // vers le haut par rapport à la surface qu'on quitte. La part héritée
+        // est bornée, car la suspension recale la caisse d'un bloc sur une
+        // marche : sans plafond, une arête suffirait à envoyer la voiture en
+        // orbite. La borne couvre une vraie rampe raide à pleine allure.
+        verticalVelocity = verticalVelocity.coerceIn(0f, HOP_CLIMB_CARRY_MAX) + HOP_IMPULSE
+        hopCooldownSeconds = HOP_COOLDOWN_SECONDS
+        hopSerial++
+    }
+
+    /** La surface la plus haute que la caisse enjambe : ses quatre roues et son milieu. */
+    private fun highestSupportUnderBody(): Float {
+        val forwardX = sin(yawRadians)
+        val forwardZ = cos(yawRadians)
+        val rightX = forwardZ
+        val rightZ = -forwardX
+        val halfTrack = spec.trackWidth * 0.5f
+        val halfBase = spec.wheelBase * 0.5f
+        var highest = supportAt(worldX, worldZ).surfaceY
+        for (localX in floatArrayOf(-halfTrack, halfTrack)) {
+            for (localZ in floatArrayOf(-halfBase, halfBase)) {
+                val x = worldX + rightX * localX + forwardX * localZ
+                val z = worldZ + rightZ * localX + forwardZ * localZ
+                highest = maxOf(highest, supportAt(x, z).surfaceY)
+            }
+        }
+        return highest
+    }
+
+    /** Dérapage tenu au bouton : engagé à la retombée, relâché à la relance. */
+    private fun updateManualDrift(dt: Float, input: Input, steering: Float) {
+        val held = input.hopping && !input.braking && turboBoostSeconds <= 0f
+        if (!manualDrift) {
+            // On engage seulement roues au sol : le saut sert justement à donner
+            // au joueur le temps de tourner le stick avant de reposer la voiture.
+            if (held && !airborne && speed >= DRIFT_SPEED_MIN &&
+                abs(steering) >= HOP_DRIFT_STEERING_MIN
+            ) {
+                manualDrift = true
+                drifting = true
+                driftDirection = if (steering > 0f) 1 else -1
+                driftEffectiveSeconds = 0f
+                driftDurationSeconds = 0f
+                turboCharge = 0f
+                turboLevel = 1
+            }
+            return
+        }
+        // Trop lent ou à l'arrêt : la glisse n'a plus de sens, la charge non plus.
+        val stillValid = held && speed >= DRIFT_HOLD_MIN_SPEED
+        if (stillValid) return
+        manualDrift = false
+        driftDirection = 0
+        // Relâcher le bouton relance ; caler ou freiner annule. La relance elle-même
+        // attend l'axe de la voiture, calculé plus loin dans le pas.
+        if (held) clearTurboCharge() else releaseRequested = true
+    }
+
+    /** Dans un dérapage tenu, le stick module la courbe sans changer de côté. */
+    private fun driftSteering(steering: Float): Float {
+        val side = driftDirection.toFloat()
+        val inward = (steering * side).coerceIn(-1f, 1f)
+        return side * (DRIFT_STEER_BASE + DRIFT_STEER_MODULATION * inward)
+    }
+
+    /** Bande de relance : elle pousse tant qu'on roule dessus, puis s'éteint. */
+    private fun updateBoostPad(touching: Boolean) {
+        if (!touching) {
+            onBoostPad = false
+            return
+        }
+        // Ni empilement ni raccourcissement : la bande ne fait que garantir un
+        // plancher de puissance et de durée. Un gros Ruban Turbo déjà lancé
+        // reste donc intact, et enchaîner deux bandes ne cumule rien.
+        turboBoostPeakMultiplier = maxOf(turboBoostPeakMultiplier, PAD_BOOST_PEAK)
+        turboBoostSeconds = maxOf(turboBoostSeconds, PAD_BOOST_DURATION)
+        turboBoostTotalSeconds = maxOf(turboBoostTotalSeconds, turboBoostSeconds)
+        if (!onBoostPad) {
+            onBoostPad = true
+            // Le même front que la relance d'un dérapage : secousse de caméra,
+            // vibration, flammes et traînée sont déjà branchées dessus.
+            turboReleaseSerial++
+        }
+    }
+
+    private fun noteLanding(impact: Float) {
+        hopping = false
+        if (impact < LANDING_NOTICE_SPEED) return
+        landingImpact = impact
+        landingSerial++
     }
 
     private fun placeAtStart() {
@@ -498,9 +756,17 @@ internal class ArcadeCar(
         return alongTrack * sample.tangent.y / horizontalLength
     }
 
+    /** Accroche disponible : combien de roues touchent, et sur quelle matière.
+     *
+     * Les deux facteurs sont lus tels qu'ils ont été mesurés à la fin du pas
+     * précédent — comme `groundedWheelCount` l'était déjà. Un pas de retard sur
+     * un changement de sol est invisible ; recalculer les appuis deux fois par
+     * image, non.
+     */
     private fun wheelGripScale(): Float {
         if (airborne) return 0f
-        return (0.35f + groundedWheelCount * 0.1625f).coerceIn(0f, 1f)
+        val contact = (0.35f + groundedWheelCount * 0.1625f).coerceIn(0f, 1f)
+        return contact * surfaceGrip
     }
 
     private data class WheelContact(
@@ -508,7 +774,10 @@ internal class ArcadeCar(
         val localZ: Float,
         val surfaceY: Float,
         val grounded: Boolean,
-        val road: Boolean
+        val road: Boolean,
+        val grip: Float,
+        val drag: Float,
+        val boost: Boolean
     )
 
     private fun sampleWheelContacts(): List<WheelContact> {
@@ -539,19 +808,41 @@ internal class ArcadeCar(
         val support = supportAt(wheelX, wheelZ)
         val suspensionExtension = airborneY - support.surfaceY - spec.rideHeight
         val grounded = !airborne && suspensionExtension in -MAX_SUPPORT_RISE..GROUND_FOLLOW_DISTANCE
-        return WheelContact(localX, localZ, support.surfaceY, grounded, support.road)
+        return WheelContact(
+            localX, localZ, support.surfaceY, grounded, support.road,
+            support.grip, support.drag, support.boost
+        )
     }
 
-    private data class Support(val surfaceY: Float, val road: Boolean)
+    private data class Support(
+        val surfaceY: Float,
+        val road: Boolean,
+        val grip: Float = 1f,
+        val drag: Float = 0f,
+        val boost: Boolean = false
+    )
 
     /** L'appui est la plus haute surface accessible sous la roue, sans biais de tour. */
     private fun supportAt(wheelX: Float, wheelZ: Float): Support {
         val maximumY = airborneY - spec.rideHeight + if (airborne) .02f else MAX_SUPPORT_RISE
         if (sandboxMode) {
-            val editorRoadY = editorTrackSurfaceHeightAt(wheelX, wheelZ, maximumY)
+            // La bande la plus haute sous la roue donne aussi sa matière : un
+            // ruban de glace posé sur du bitume glisse bien pour de vrai.
+            var editorRoadY = Float.NEGATIVE_INFINITY
+            var roadStyle = TrackStyle.CLASSIC
+            for (section in editorTrackIndex.candidates(wheelX, wheelZ, spec.wheelRadius)) {
+                val surfaceY = section.surfaceYAt(wheelX, wheelZ) ?: continue
+                if (surfaceY > maximumY + EDITOR_WORLD_SURFACE_TOLERANCE) continue
+                if (surfaceY > editorRoadY) {
+                    editorRoadY = surfaceY
+                    roadStyle = section.style
+                }
+            }
             val editorY = editorWorldSurfaceHeightAt(wheelX, wheelZ, maximumY)
             val surface = maxOf(editorRoadY, editorY).coerceAtLeast(SANDBOX_FALLBACK_GROUND_Y)
-            return Support(surface, editorRoadY >= surface - 0.20f)
+            val onRoad = editorRoadY >= surface - 0.20f
+            return if (onRoad) Support(surface, true, roadStyle.grip, roadStyle.drag, roadStyle.boosts)
+            else Support(surface, false, SANDBOX_GROUND_GRIP, 0f)
         }
         val collision = track.decksAt(wheelX, wheelZ, spec.wheelRadius)
             .filter { it.sample.position.y + PrototypeTrack.ROAD_SURFACE_LIFT <= maximumY }
@@ -564,11 +855,12 @@ internal class ArcadeCar(
             maximumY
         )
         val realSurfaceY = maxOf(track.groundHeightAt(wheelX, wheelZ), furnitureY)
-        return if (onDeck && roadSurfaceY >= realSurfaceY - 0.20f) {
-            Support(roadSurfaceY, true)
-        } else {
-            Support(realSurfaceY, false)
-        }
+        if (onDeck && roadSurfaceY >= realSurfaceY - 0.20f) return Support(roadSurfaceY, true)
+        // Dans les circuits de mobilier, le plancher *est* la piste : lui
+        // retirer de l'accroche transformerait le parcours prévu en patinoire.
+        val floorGrip = if (track.scene.circuit.usesFurnitureLayout) 1f
+        else if (furnitureY >= realSurfaceY - 0.01f) FURNITURE_GRIP else FLOOR_GRIP
+        return Support(realSurfaceY, false, floorGrip, 0f)
     }
 
     private fun updateSuspensionPose(
@@ -641,6 +933,7 @@ internal class ArcadeCar(
                 airborneY = slabTop + PrototypeTrack.CAR_CLEARANCE
                 verticalVelocity = 0f
                 groundedOnRoad = true
+                noteLanding(impact)
                 distance = collision.sample.distance
                 lateralOffset = collision.lateralOffset
                 offRoad = false
@@ -989,14 +1282,20 @@ internal class ArcadeCar(
 
     private class EditorTrackCollider(private val section: ToyboxTrackSection) {
         val barriers = section.barriers
+        val style = section.style
         private val a = section.corner(-1f, -1f)
         private val b = section.corner(1f, -1f)
         private val c = section.corner(1f, 1f)
         private val d = section.corner(-1f, 1f)
+        // Independent left/right banking creases at the centreline: match the render split.
+        private val m1 = section.corner(-1f, 0f)
+        private val m2 = section.corner(1f, 0f)
         val leftEdge = a to b
         val rightEdge = d to c
-        private val surfaceA = EditorSurfaceTriangle(a, b, c)
-        private val surfaceB = EditorSurfaceTriangle(a, c, d)
+        private val surfaceLeftA = EditorSurfaceTriangle(a, b, m2)
+        private val surfaceLeftB = EditorSurfaceTriangle(a, m2, m1)
+        private val surfaceRightA = EditorSurfaceTriangle(m1, m2, c)
+        private val surfaceRightB = EditorSurfaceTriangle(m1, c, d)
         val startY = section.y
         val endY = section.endY
         val yawRadians = section.yawRadians
@@ -1007,7 +1306,9 @@ internal class ArcadeCar(
         val minZ = minOf(a.z, b.z, c.z, d.z)
         val maxZ = maxOf(a.z, b.z, c.z, d.z)
         fun surfaceYAt(worldX: Float, worldZ: Float) =
-            (surfaceA.heightAt(worldX, worldZ) ?: surfaceB.heightAt(worldX, worldZ))?.plus(PrototypeTrack.ROAD_SURFACE_LIFT)
+            (surfaceLeftA.heightAt(worldX, worldZ) ?: surfaceLeftB.heightAt(worldX, worldZ)
+                ?: surfaceRightA.heightAt(worldX, worldZ) ?: surfaceRightB.heightAt(worldX, worldZ))
+                ?.plus(PrototypeTrack.ROAD_SURFACE_LIFT)
     }
     private fun resolveEditorTrackBarriers(previousX: Float, previousZ: Float) {
         if (!editorHasBarriers) return
@@ -1161,7 +1462,27 @@ internal class ArcadeCar(
 
     companion object {
         private const val GRAVITY = 26f
+        private const val HOP_IMPULSE = 5.4f
+        private const val HOP_CLIMB_CARRY_MAX = 9f
+        private const val HOP_COOLDOWN_SECONDS = 0.22f
+        private const val HOP_DRIFT_STEERING_MIN = 0.22f
+        private const val DRIFT_HOLD_MIN_SPEED = 3.5f
+        private const val DRIFT_STEER_BASE = 0.64f
+        private const val DRIFT_STEER_MODULATION = 0.36f
+        private const val DRIFT_SLIP_RATIO = 0.38f
+        private const val MANUAL_CHARGE_BASE = 1.50f
+        private const val MANUAL_CHARGE_SPEED_GAIN = 0.70f
+        private const val LANDING_NOTICE_SPEED = 2.2f
+        private const val PAD_BOOST_PEAK = 1.75f
+        private const val PAD_BOOST_DURATION = 1.5f
+        private const val FLOOR_GRIP = 0.74f
+        private const val FURNITURE_GRIP = 0.88f
+        private const val SANDBOX_GROUND_GRIP = 0.80f
         private const val MAX_SUPPORT_RISE = .55f
+        /** Pente maximale qu'un appui peut avoir gagné sous la voiture en un pas (~63°). */
+        private const val SUPPORT_CLIMB_SLOPE = 2f
+        /** Plafonné sous la hauteur de la caisse (0,92) : un toit reste un toit. */
+        private const val MAX_SUPPORT_CLIMB = .80f
         private const val GROUND_FOLLOW_DISTANCE = .65f
         private const val MAX_SPEED = 20f
         private const val TURBO_ACCELERATION = 11.0f

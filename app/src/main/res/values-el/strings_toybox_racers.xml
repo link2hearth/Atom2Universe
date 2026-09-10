@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Αγωγός</string>
     <string name="toybox_title_furniture">Έπιπλο</string>
     <string name="toybox_title_decor">Διακόσμηση</string>
+    <string name="toybox_hop">ΑΛΜΑ</string>
+    <string name="toybox_style_boost">Λωρίδα επιτάχυνσης</string>
 </resources>

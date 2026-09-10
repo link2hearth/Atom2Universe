@@ -175,4 +175,6 @@
     <string name="toybox_prop_rug_chevrons">Chevron rug</string>
     <string name="toybox_prop_rug_diamonds">Diamond rug</string>
     <string name="toybox_prop_rug_medallion">Medallion rug</string>
+    <string name="toybox_hop">HOP</string>
+    <string name="toybox_style_boost">Boost strip</string>
 </resources>

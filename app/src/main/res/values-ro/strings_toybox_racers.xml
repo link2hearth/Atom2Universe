@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Conductă</string>
     <string name="toybox_title_furniture">Mobilă</string>
     <string name="toybox_title_decor">Decor</string>
+    <string name="toybox_hop">SALT</string>
+    <string name="toybox_style_boost">Bandă boost</string>
 </resources>

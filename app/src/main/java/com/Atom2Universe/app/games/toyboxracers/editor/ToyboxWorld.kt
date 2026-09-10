@@ -171,6 +171,19 @@ internal data class VolumePoint(val x: Float, val y: Float, val z: Float)
 /** Normalized longitudinal position, lateral displacement and altitude above the end-to-end slope. */
 internal data class TrackBend(val t: Float, val side: Float, val height: Float, val along: Float = 0f)
 
+/** Which edge of the ribbon a banking edit applies to: the two edges tilt independently. */
+internal enum class TrackEdge(val label: String) {
+    LEFT("Bord G"),
+    BOTH("Bords G+D"),
+    RIGHT("Bord D");
+
+    fun next() = when (this) {
+        LEFT -> BOTH
+        BOTH -> RIGHT
+        RIGHT -> LEFT
+    }
+}
+
 internal data class ToyboxTrackSection(
     val id: Long,
     val x: Float,
@@ -181,6 +194,7 @@ internal data class ToyboxTrackSection(
     val width: Float,
     val endY: Float = y,
     val bankDegrees: Float = 0f,
+    val rightBankDegrees: Float = bankDegrees,
     val color: Int = 0xFF6F7B91.toInt(),
     val startYawOffset: Float = 0f,
     val endYawOffset: Float = 0f,
@@ -195,12 +209,32 @@ internal data class ToyboxTrackSection(
     val startGrade: Float? = null,
     val endGrade: Float? = null,
     val startBankDegrees: Float? = null,
-    val endBankDegrees: Float? = null
+    val endBankDegrees: Float? = null,
+    val startRightBankDegrees: Float? = null,
+    val endRightBankDegrees: Float? = null
 ) {
-    fun bankAt(t: Float) = (startBankDegrees ?: bankDegrees) * (1f-t) + (endBankDegrees ?: bankDegrees) * t
-    fun withBank(value: Float) = copy(bankDegrees = value,
-        startBankDegrees = startBankDegrees?.plus(value-bankDegrees),
-        endBankDegrees = endBankDegrees?.plus(value-bankDegrees))
+    /** Zero-tangent Hermite ease (same shape as elevation's spline with no imposed slope):
+     * a section's banking now eases in/out instead of ramping at a constant rate, so it no
+     * longer kinks abruptly the moment it meets the next section's ramp. */
+    private fun bankEase(t: Float): Float { val u = t.coerceIn(0f, 1f); return u * u * (3f - 2f * u) }
+    fun leftBankAt(t: Float): Float {
+        val u = bankEase(t)
+        return (startBankDegrees ?: bankDegrees) * (1f - u) + (endBankDegrees ?: bankDegrees) * u
+    }
+    fun rightBankAt(t: Float): Float {
+        val u = bankEase(t)
+        return (startRightBankDegrees ?: rightBankDegrees) * (1f - u) + (endRightBankDegrees ?: rightBankDegrees) * u
+    }
+    fun bankAt(edge: TrackEdge, t: Float) = if (edge == TrackEdge.RIGHT) rightBankAt(t) else leftBankAt(t)
+    fun withBank(edge: TrackEdge, value: Float): ToyboxTrackSection = when (edge) {
+        TrackEdge.LEFT -> copy(bankDegrees = value,
+            startBankDegrees = startBankDegrees?.plus(value - bankDegrees),
+            endBankDegrees = endBankDegrees?.plus(value - bankDegrees))
+        TrackEdge.RIGHT -> copy(rightBankDegrees = value,
+            startRightBankDegrees = startRightBankDegrees?.plus(value - rightBankDegrees),
+            endRightBankDegrees = endRightBankDegrees?.plus(value - rightBankDegrees))
+        TrackEdge.BOTH -> withBank(TrackEdge.LEFT, value).withBank(TrackEdge.RIGHT, value)
+    }
     private val curved get() = bends.isNotEmpty() || smoothElevation || startTangentDegrees != null || endTangentDegrees != null
     private val elevationKnots by lazy {
         listOf(0f to y) + bends.map { it.t to (y + (endY - y) * it.t + it.height) } + (1f to endY)
@@ -262,12 +296,15 @@ internal data class ToyboxTrackSection(
             startZ + forwardZ * (length * t + offset.along) + rightZ * offset.side)
     }
 
-    /** Recomputed on immutable copies: more editable sections on long or strongly bent ribbons. */
+    /** Recomputed on immutable copies: more editable sections on long or strongly bent ribbons.
+     * Horizontal distance only: a steep elevation edit at a single point must not inflate how
+     * many handles the whole ribbon gets, or a big vertical move degrades editing everywhere
+     * else on the ribbon into a swarm of tightly-packed, barely-useful points. */
     val editFractions: List<Float> by lazy {
-        val arcLength = (0..32).map { centerAt(it / 32f) }.zipWithNext().sumOf { (a,b) ->
-            kotlin.math.sqrt(((b.x-a.x)*(b.x-a.x)+(b.y-a.y)*(b.y-a.y)+(b.z-a.z)*(b.z-a.z)).toDouble())
+        val planarLength = (0..32).map { centerAt(it / 32f) }.zipWithNext().sumOf { (a,b) ->
+            kotlin.math.hypot((b.x-a.x).toDouble(), (b.z-a.z).toDouble())
         }
-        val count = kotlin.math.ceil(arcLength / 8.0).toInt().coerceIn(2, 64)
+        val count = kotlin.math.ceil(planarLength / 8.0).toInt().coerceIn(2, 32)
         (List(count + 1) { it.toFloat() / count } + bends.map { it.t }).sorted()
             .fold(mutableListOf<Float>()) { result, t ->
                 if (result.isEmpty() || t - result.last() > 0.001f) result.add(t)
@@ -303,13 +340,18 @@ internal data class ToyboxTrackSection(
                 endTangentDegrees=kotlin.math.atan2(db.x,db.z)*180f/kotlin.math.PI.toFloat()-yaw,
                 startGrade=da.y/hypot(da.x,da.z).coerceAtLeast(.0001f),
                 endGrade=db.y/hypot(db.x,db.z).coerceAtLeast(.0001f),
-                startBankDegrees=bankAt(from),endBankDegrees=bankAt(to))
-            // Retain the sampled shape, including displacement along the new chord.
-            val samples = (List(31) { from+(to-from)*(it+1)/32f } + bends.map { it.t })
-                .filter { it > from && it < to }.distinct().sorted()
-            for (t in samples) {
-                val p = centerAt(t)
-                result = result.withBend((t-from)/(to-from), p.x, p.y, p.z)
+                startBankDegrees=leftBankAt(from),endBankDegrees=leftBankAt(to),
+                startRightBankDegrees=rightBankAt(from),endRightBankDegrees=rightBankAt(to))
+            // Carry over only the ribbon's own intentional bends, re-expressed on the new
+            // chord: the boundary tangent/grade/bank above already reconstructs the same
+            // curve shape between them. A previous version also baked 31 evenly-sampled
+            // points into permanent bends "just in case", which silently multiplied a
+            // section's point count on every split and made the result nearly impossible
+            // to edit afterwards (each bend only reshapes its own tiny neighbourhood).
+            for (bend in bends) {
+                if (bend.t <= from || bend.t >= to) continue
+                val p = centerAt(bend.t)
+                result = result.withBend((bend.t-from)/(to-from), p.x, p.y, p.z)
             }
         }
         return result
@@ -352,12 +394,12 @@ internal data class ToyboxTrackSection(
                     width=width+(endWidth-width)*a, endWidth=width+(endWidth-width)*b,
                     startYawOffset=angle(a)-yaw, endYawOffset=angle(b)-yaw, bends=emptyList(), smoothElevation=false,
                     startTangentDegrees=null, endTangentDegrees=null, startGrade=null, endGrade=null,
-                    startBankDegrees=bankAt(a), endBankDegrees=bankAt(b))
+                    startBankDegrees=leftBankAt(a), endBankDegrees=leftBankAt(b),
+                    startRightBankDegrees=rightBankAt(a), endRightBankDegrees=rightBankAt(b))
             }
         }
     }
     val yawRadians get() = yawDegrees * kotlin.math.PI.toFloat() / 180f
-    val bankRadians get() = bankDegrees * kotlin.math.PI.toFloat() / 180f
     val yawSin get() = sin(yawRadians)
     val yawCos get() = cos(yawRadians)
     val forwardX get() = yawSin
@@ -434,16 +476,22 @@ internal data class ToyboxTrackSection(
         return triangle(a, b, c) ?: triangle(a, c, d)
     }
 
+    /** sideSign -1/0/+1 = left edge / centreline / right edge. Each edge pivots the cross-section
+     * rigidly around the centreline instead of shearing it, so the projected width foreshortens
+     * with the bank like a real tilted plane; left and right can tilt independently (only one
+     * edge lifted mid-turn instead of the whole width), meeting at the centreline point. */
     fun corner(alongSign: Float, sideSign: Float): VolumePoint {
         val along = alongSign * halfLength
         val side = sideSign * (if (alongSign < 0f) width else endWidth) * 0.5f
         val angle = (yawDegrees + if (alongSign < 0f) startYawOffset else endYawOffset) * kotlin.math.PI.toFloat() / 180f
         val t = (along + halfLength) / length.coerceAtLeast(0.0001f)
         val centreY = y + (endY - y) * t
+        val bank = (if (sideSign < 0f) leftBankAt(t) else rightBankAt(t)) * kotlin.math.PI.toFloat() / 180f
+        val tiltedSide = side * cos(bank)
         return VolumePoint(
-            x = x + forwardX * along + cos(angle) * side,
-            y = centreY + side * sin(bankAt(t) * kotlin.math.PI.toFloat()/180f),
-            z = z + forwardZ * along - sin(angle) * side
+            x = x + forwardX * along + cos(angle) * tiltedSide,
+            y = centreY + side * sin(bank),
+            z = z + forwardZ * along - sin(angle) * tiltedSide
         )
     }
 
@@ -494,6 +542,7 @@ internal data class ToyboxTrackSection(
         .put("width", width.toDouble())
         .put("endY", endY.toDouble())
         .put("bankDegrees", bankDegrees.toDouble())
+        .put("rightBankDegrees", rightBankDegrees.toDouble())
         .put("startYawOffset", startYawOffset.toDouble())
         .put("endYawOffset", endYawOffset.toDouble())
         .put("endWidth", endWidth.toDouble())
@@ -503,43 +552,59 @@ internal data class ToyboxTrackSection(
         .put("startTangentDegrees", startTangentDegrees).put("endTangentDegrees", endTangentDegrees)
         .put("startGrade", startGrade).put("endGrade", endGrade)
         .put("startBankDegrees", startBankDegrees).put("endBankDegrees", endBankDegrees)
+        .put("startRightBankDegrees", startRightBankDegrees).put("endRightBankDegrees", endRightBankDegrees)
         .put("bends", JSONArray().apply { bends.forEach { put(JSONObject()
             .put("t", it.t.toDouble()).put("side", it.side.toDouble()).put("height", it.height.toDouble())
             .put("along", it.along.toDouble())) } })
         .put("color", color)
 
     companion object {
-        fun fromJson(json: JSONObject) = ToyboxTrackSection(
-            id = json.optLong("id", System.nanoTime()),
-            x = json.optDouble("x", 0.0).toFloat(),
-            y = json.optDouble("y", 0.0).toFloat(),
-            z = json.optDouble("z", 0.0).toFloat(),
-            yawDegrees = json.optDouble("yawDegrees", 0.0).toFloat(),
-            length = json.optDouble("length", 24.0).toFloat().coerceAtLeast(0.05f),
-            width = json.optDouble("width", 8.0).toFloat().coerceAtLeast(0.05f),
-            startYawOffset = json.optDouble("startYawOffset", 0.0).toFloat(),
-            endYawOffset = json.optDouble("endYawOffset", 0.0).toFloat(),
-            endWidth = json.optDouble("endWidth", json.optDouble("width", 8.0)).toFloat().coerceAtLeast(0.05f),
-            smoothElevation = json.optBoolean("smoothElevation", (json.optJSONArray("bends")?.length() ?: 0) > 0),
-            style = TrackStyle.parse(json.optString("style")),
-            barriers = json.optInt("barriers", 0) and 3,
-            startTangentDegrees = json.optDouble("startTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
-            endTangentDegrees = json.optDouble("endTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
-            startGrade = json.optDouble("startGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
-            endGrade = json.optDouble("endGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
-            startBankDegrees = json.optDouble("startBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
-            endBankDegrees = json.optDouble("endBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
-            bends = json.optJSONArray("bends")?.let { array ->
-                List(array.length()) { array.getJSONObject(it) }.map {
-                    TrackBend(it.optDouble("t").toFloat(), it.optDouble("side", 0.0).toFloat(),
-                        it.optDouble("height", 0.0).toFloat(), it.optDouble("along", 0.0).toFloat())
-                }.filter { it.t.isFinite() && it.t > 0f && it.t < 1f && it.side.isFinite() && it.height.isFinite() && it.along.isFinite() }
-                    .distinctBy { it.t }.sortedBy { it.t }
-            } ?: emptyList(),
-            endY = json.optDouble("endY", json.optDouble("y", 0.0)).toFloat(),
-            bankDegrees = json.optDouble("bankDegrees", 0.0).toFloat(),
-            color = json.optInt("color", 0xFF6F7B91.toInt())
-        )
+        fun fromJson(json: JSONObject): ToyboxTrackSection {
+            val bankDegrees = json.optDouble("bankDegrees", 0.0).toFloat()
+            val startBankDegrees = json.optDouble("startBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() }
+            val endBankDegrees = json.optDouble("endBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() }
+            // Older saves only had one symmetric bank: an absent right-edge key falls back to the
+            // left value so those tracks keep looking the same; an explicit null (new saves where
+            // only the left edge has a start/end override) is respected as-is.
+            return ToyboxTrackSection(
+                id = json.optLong("id", System.nanoTime()),
+                x = json.optDouble("x", 0.0).toFloat(),
+                y = json.optDouble("y", 0.0).toFloat(),
+                z = json.optDouble("z", 0.0).toFloat(),
+                yawDegrees = json.optDouble("yawDegrees", 0.0).toFloat(),
+                length = json.optDouble("length", 24.0).toFloat().coerceAtLeast(0.05f),
+                width = json.optDouble("width", 8.0).toFloat().coerceAtLeast(0.05f),
+                startYawOffset = json.optDouble("startYawOffset", 0.0).toFloat(),
+                endYawOffset = json.optDouble("endYawOffset", 0.0).toFloat(),
+                endWidth = json.optDouble("endWidth", json.optDouble("width", 8.0)).toFloat().coerceAtLeast(0.05f),
+                smoothElevation = json.optBoolean("smoothElevation", (json.optJSONArray("bends")?.length() ?: 0) > 0),
+                style = TrackStyle.parse(json.optString("style")),
+                barriers = json.optInt("barriers", 0) and 3,
+                startTangentDegrees = json.optDouble("startTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+                endTangentDegrees = json.optDouble("endTangentDegrees", Double.NaN).toFloat().takeIf { it.isFinite() },
+                startGrade = json.optDouble("startGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
+                endGrade = json.optDouble("endGrade", Double.NaN).toFloat().takeIf { it.isFinite() },
+                startBankDegrees = startBankDegrees,
+                endBankDegrees = endBankDegrees,
+                startRightBankDegrees = if (json.has("startRightBankDegrees"))
+                    json.optDouble("startRightBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() }
+                else startBankDegrees,
+                endRightBankDegrees = if (json.has("endRightBankDegrees"))
+                    json.optDouble("endRightBankDegrees", Double.NaN).toFloat().takeIf { it.isFinite() }
+                else endBankDegrees,
+                bends = json.optJSONArray("bends")?.let { array ->
+                    List(array.length()) { array.getJSONObject(it) }.map {
+                        TrackBend(it.optDouble("t").toFloat(), it.optDouble("side", 0.0).toFloat(),
+                            it.optDouble("height", 0.0).toFloat(), it.optDouble("along", 0.0).toFloat())
+                    }.filter { it.t.isFinite() && it.t > 0f && it.t < 1f && it.side.isFinite() && it.height.isFinite() && it.along.isFinite() }
+                        .distinctBy { it.t }.sortedBy { it.t }
+                } ?: emptyList(),
+                endY = json.optDouble("endY", json.optDouble("y", 0.0)).toFloat(),
+                bankDegrees = bankDegrees,
+                rightBankDegrees = json.optDouble("rightBankDegrees", bankDegrees.toDouble()).toFloat(),
+                color = json.optInt("color", 0xFF6F7B91.toInt())
+            )
+        }
     }
 }
 

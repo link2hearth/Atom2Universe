@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Condotto</string>
     <string name="toybox_title_furniture">Mobile</string>
     <string name="toybox_title_decor">Decorazione</string>
+    <string name="toybox_hop">SALTO</string>
+    <string name="toybox_style_boost">Nastro boost</string>
 </resources>

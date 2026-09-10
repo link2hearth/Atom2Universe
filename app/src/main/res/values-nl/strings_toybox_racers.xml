@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Kanaal</string>
     <string name="toybox_title_furniture">Meubel</string>
     <string name="toybox_title_decor">Decoratie</string>
+    <string name="toybox_hop">HOP</string>
+    <string name="toybox_style_boost">Boostbaan</string>
 </resources>

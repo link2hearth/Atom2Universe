@@ -159,4 +159,6 @@
     <string name="toybox_title_duct">Schacht</string>
     <string name="toybox_title_furniture">Möbel</string>
     <string name="toybox_title_decor">Dekoration</string>
+    <string name="toybox_hop">HOP</string>
+    <string name="toybox_style_boost">Boost-Band</string>
 </resources>
