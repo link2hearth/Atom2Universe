@@ -59,6 +59,14 @@ class GamesActivity : BaseHubActivity() {
     override fun getHubSubtitle(): Int? = null
 
     override fun getDefaultTiles(): List<HubTile> = listOf(
+        HubTile(
+            id = "farm",
+            titleRes = R.string.farm_title,
+            descriptionRes = R.string.farm_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_caves,
+            activityClass = com.Atom2Universe.app.games.farm.FarmActivity::class.java
+        ),
         // Clicker en tête
         HubTile(
             id = "clicker",
