@@ -179,6 +179,12 @@
     <string name="farm_fertilizer_level">%1$d%% double harvests</string>
     <string name="farm_fertilizer_upgrade">Better fertiliser · %1$s coins</string>
     <string name="farm_fertilizer_upgraded">Fertiliser improved!</string>
+    <string name="farm_aim_title">Steady hand</string>
+    <string name="farm_aim_body">Widens the zone to hit on the watering gauge, at every level of the can. The marker still has to be caught, but a slightly late tap is forgiven.</string>
+    <string name="farm_aim_level_none">Standard zone</string>
+    <string name="farm_aim_level">Zone widened by %1$d%%</string>
+    <string name="farm_aim_upgrade">Steadier hand · %1$s coins</string>
+    <string name="farm_aim_upgraded">Your aim is steadier!</string>
     <string name="farm_silo_title">Silo</string>
     <string name="farm_silo_body">A field never grows while the garden does, so the silo raises what a wheat grain is worth. It does not change how much wheat a pass brings in.</string>
     <string name="farm_silo_level">Wheat price · %1$s coins each</string>

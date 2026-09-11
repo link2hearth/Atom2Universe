@@ -179,6 +179,12 @@
     <string name="farm_fertilizer_level">%1$d%% de récoltes doubles</string>
     <string name="farm_fertilizer_upgrade">Meilleur engrais · %1$s pièces</string>
     <string name="farm_fertilizer_upgraded">Engrais amélioré !</string>
+    <string name="farm_aim_title">Main sûre</string>
+    <string name="farm_aim_body">Élargit la zone à toucher sur la jauge d’arrosage, quel que soit le niveau de l’arrosoir. Il faut toujours attraper le repère, mais un appui un peu en retard passe quand même.</string>
+    <string name="farm_aim_level_none">Zone normale</string>
+    <string name="farm_aim_level">Zone élargie de %1$d%%</string>
+    <string name="farm_aim_upgrade">Main plus sûre · %1$s pièces</string>
+    <string name="farm_aim_upgraded">Votre visée est plus sûre !</string>
     <string name="farm_silo_title">Silo</string>
     <string name="farm_silo_body">Un champ ne grandit jamais alors que le potager grandit, donc le silo augmente le prix du blé. Il ne change pas la quantité récoltée par passage.</string>
     <string name="farm_silo_level">Prix du blé · %1$s pièces l’unité</string>

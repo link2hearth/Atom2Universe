@@ -548,6 +548,21 @@ class FarmActivity : ThemedActivity() {
                     purchases.add(buy to cost)
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
+
+                body.addView(text(getString(R.string.farm_aim_title), 17, true).apply { setPadding(0, dp(6), 0, 0) })
+                body.addView(text(getString(R.string.farm_aim_body)).apply { setPadding(0, dp(6), 0, dp(12)) })
+                body.addView(text(if (state.aimLevel == 0) getString(R.string.farm_aim_level_none)
+                    else getString(R.string.farm_aim_level, state.aimBonusPercent()), 13)
+                    .apply { setPadding(0, 0, 0, dp(10)) })
+                if (state.aimLevel < 2) {
+                    val cost = state.aimUpgradeCost(state.aimLevel + 1)
+                    val buy = button(getString(R.string.farm_aim_upgrade, money(cost))) {
+                        message(getString(if (state.upgradeAim()) R.string.farm_aim_upgraded else R.string.farm_no_coins))
+                        refresh()
+                    }
+                    purchases.add(buy to cost)
+                    body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
+                }
             } else if (trees) {
                 body.addView(text(getString(R.string.farm_orchard_parked)).apply { setPadding(dp(4), dp(16), dp(4), dp(16)) })
             } else FarmCrop.ladder.forEach { crop ->

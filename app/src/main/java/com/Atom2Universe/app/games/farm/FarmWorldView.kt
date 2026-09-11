@@ -44,8 +44,10 @@ private class DebrisGame(val cell: Int, debris: Int, val startTime: Long) {
  * (easing at the ends, fast through the middle); tapping the cell while it sits in the
  * highlighted zone scores a hit. Several hits in a row are needed - more for a bigger job -
  * and the zone narrows after each one. A miss never costs progress, only another try.
+ * [zoneScale] is the bought aim assist: it stretches every zone, early and late alike.
  */
-private class WateringGauge(val cell: Int, val targets: List<Int>, val startTime: Long, val needed: Int) {
+private class WateringGauge(val cell: Int, val targets: List<Int>, val startTime: Long, val needed: Int,
+                            val zoneScale: Float = 1f) {
     companion object { const val PERIOD = 2400L }
     var hits = 0
     var missAt = 0L
@@ -56,7 +58,7 @@ private class WateringGauge(val cell: Int, val targets: List<Int>, val startTime
     var targetWidth = 0f
     init { rerollTarget() }
     private fun rerollTarget() {
-        targetWidth = .34f - .2f * (hits.toFloat() / (needed - 1).coerceAtLeast(1))
+        targetWidth = (.34f - .2f * (hits.toFloat() / (needed - 1).coerceAtLeast(1))) * zoneScale
         targetStart = .06f + kotlin.random.Random(cell * 53 + hits * 97 + startTime.toInt()).nextFloat() * (.88f - targetWidth)
     }
     fun pos(now: Long): Float {
@@ -181,7 +183,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     private fun ensureWateringTicking() { if (!wateringTicking) { wateringTicking = true; postOnAnimation(wateringTick) } }
     private fun startWateringGauge(cell: Int) {
-        wateringGame = WateringGauge(cell, state.wateringTargets(cell), System.currentTimeMillis(), state.wateringHitsNeeded())
+        wateringGame = WateringGauge(cell, state.wateringTargets(cell), System.currentTimeMillis(),
+            state.wateringHitsNeeded(), state.wateringZoneScale())
         ensureWateringTicking(); invalidate()
     }
     private fun handleWateringTap(x: Float, y: Float) {

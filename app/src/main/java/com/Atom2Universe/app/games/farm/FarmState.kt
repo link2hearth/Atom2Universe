@@ -100,6 +100,8 @@ class FarmState(private val prefs: SharedPreferences) {
         private set
     var fertilizerLevel = 0
         private set
+    var aimLevel = 0
+        private set
     val parcels = List(FarmLayout.lands.size) { FarmParcel(unlocked = it == 0) }
     val plots = List(FarmLayout.cellCount) { FarmPlot(debris = 1 + (it * 7 % 3)) }
     val seeds = IntArray(FarmCrop.entries.size)
@@ -135,6 +137,7 @@ class FarmState(private val prefs: SharedPreferences) {
             val restoredWatering = if (version >= 4) json.getInt("wateringLevel").coerceIn(0, 2) else 0
             val restoredHarvestLevel = json.optInt("harvestLevel").coerceIn(0, 2)
             val restoredFertilizer = json.optInt("fertilizerLevel").coerceIn(0, 2)
+            val restoredAim = json.optInt("aimLevel").coerceIn(0, 2)
             val lands = if (version >= 2) {
                 val array = json.getJSONArray("parcels")
                 require(version != 2 || array.length() == 6)
@@ -180,7 +183,7 @@ class FarmState(private val prefs: SharedPreferences) {
             lands.forEachIndexed { i, p -> parcels[i].apply { unlocked = p.unlocked; use = p.use } }
             inventory.copyInto(seeds)
             coins = restoredCoins; harvests = restoredHarvests; selected = selection; wateringLevel = restoredWatering
-            harvestLevel = restoredHarvestLevel; fertilizerLevel = restoredFertilizer
+            harvestLevel = restoredHarvestLevel; fertilizerLevel = restoredFertilizer; aimLevel = restoredAim
             livestock.restore(restoredHerd.toJson())
             runCatching { largeFields.restore(json.optJSONObject("largeFields")) }
             bushBonusDay = json.optLong("bushBonusDay", -1)
@@ -426,7 +429,20 @@ class FarmState(private val prefs: SharedPreferences) {
     }
     fun wateringTargets(cell: Int): List<Int> = areaTargets(cell, wateringLevel)
     fun harvestTargets(cell: Int): List<Int> = areaTargets(cell, harvestLevel)
-    fun wateringHitsNeeded(): Int = when (wateringLevel) { 0 -> 3; 1 -> 5; else -> 7 }
+    fun wateringHitsNeeded(): Int = when (wateringLevel) { 0 -> 2; 1 -> 3; else -> 5 }
+    /**
+     * Aim assist widens the good zone on the watering gauge - it never removes a tap, it only
+     * forgives a late one. Sold dear, because a farm that waters itself has no game left in it.
+     */
+    fun wateringZoneScale(): Float = when (aimLevel) { 0 -> 1f; 1 -> 1.4f; else -> 1.8f }
+    fun aimBonusPercent(): Int = ((wateringZoneScale() - 1f) * 100f).toInt()
+    fun aimUpgradeCost(level: Int): Long = if (level == 1) 80_000L else 500_000L
+    fun upgradeAim(): Boolean {
+        if (aimLevel >= 2) return false
+        val cost = aimUpgradeCost(aimLevel + 1)
+        if (coins < cost) return false
+        coins -= cost; aimLevel++; save(); return true
+    }
     fun wateringUpgradeCost(level: Int): Long = if (level == 1) 3_000L else 20_000L
     fun upgradeWatering(): Boolean {
         if (wateringLevel >= 2) return false
@@ -491,7 +507,7 @@ class FarmState(private val prefs: SharedPreferences) {
     /** Every stored value the farm owns, back to a brand new game - herd and fields included. */
     fun cheatReset() {
         coins = STARTING_COINS; harvests = 0
-        wateringLevel = 0; harvestLevel = 0; fertilizerLevel = 0
+        wateringLevel = 0; harvestLevel = 0; fertilizerLevel = 0; aimLevel = 0
         selected = FarmCrop.RADISH
         bushBonusDay = -1
         parcels.forEachIndexed { i, p -> p.unlocked = i == 0; p.use = FarmLandUse.CROPS }
@@ -536,7 +552,7 @@ class FarmState(private val prefs: SharedPreferences) {
         prefs.edit().putString("state", JSONObject().put("version", 6).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
             .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
-            .put("harvestLevel", harvestLevel).put("fertilizerLevel", fertilizerLevel)
+            .put("harvestLevel", harvestLevel).put("fertilizerLevel", fertilizerLevel).put("aimLevel", aimLevel)
             .put("largeFields", largeFields.json()).put("livestock", livestock.toJson())
             .put("bushBonusDay", bushBonusDay).toString()).apply()
     }
