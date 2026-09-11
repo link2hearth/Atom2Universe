@@ -108,20 +108,24 @@ private class HarvestGauge(val cell: Int, val startTime: Long, val downX: Float,
     }
 }
 
+private const val HARVEST_FLY_DURATION = 900L
+
 /** Coordinates stay in world units; drawing and hit testing use the same transform. */
 class FarmWorldView(context: Context, private val state: FarmState,
                     private val onPlant: (Int) -> Unit, private val onParcel: (Int) -> Unit,
                     private val onRemove: (Int) -> Unit, private val onDebrisCleared: (Int) -> Unit,
                     private val onWatered: (Int) -> Unit,
-                    private val onHarvested: (cell: Int, amount: Int, count: Int) -> Unit) : View(context) {
+                    private val onHarvested: (cell: Int, result: FarmHarvestResult) -> Unit) : View(context) {
+    var harvestTarget: (() -> PointF?)? = null
     private var harvestGame: HarvestGauge? = null
     private var harvestTicking = false
     private val harvestTick = object : Runnable {
         override fun run() {
             harvestTicking = false
             val game = harvestGame
+            val now = System.currentTimeMillis()
             if (game != null) {
-                if (game.done && System.currentTimeMillis() - game.doneAt > 420L) harvestGame = null
+                if (game.done && now - game.doneAt > HARVEST_FLY_DURATION) harvestGame = null
                 else { harvestTicking = true; postOnAnimation(this) }
             }
             invalidate()
@@ -146,8 +150,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 val game = harvestGame ?: return false
                 if (!game.done && game.tryPull(game.downY - y, now)) {
                     // One pull reaps whatever the basket reaches: this cell, its row, or the parcel.
-                    val (amount, count) = state.harvestMany(state.harvestTargets(game.cell), now)
-                    onHarvested(game.cell, amount, count)
+                    val result = state.harvestMany(state.harvestTargets(game.cell), now)
+                    onHarvested(game.cell, result)
                 }
                 invalidate(); ensureHarvestTicking(); true
             }
@@ -314,8 +318,16 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val treasureBush = RectF(965f, 15f, 1095f, 145f)
     private data class Camera(val zoom: Float, val x: Float, val y: Float)
     private val cameras = mutableMapOf<FarmRegion, Camera>()
-    private val worldWidth get() = if (region == FarmRegion.HOME) FarmLayout.worldWidth else 1600f
-    private val worldHeight get() = if (region == FarmRegion.HOME) FarmLayout.worldHeight else 1500f
+    private val worldWidth get() = when (region) {
+        FarmRegion.HOME -> FarmLayout.worldWidth
+        FarmRegion.GREENHOUSE -> 900f
+        else -> 1600f
+    }
+    private val worldHeight get() = when (region) {
+        FarmRegion.HOME -> FarmLayout.worldHeight
+        FarmRegion.GREENHOUSE -> 1600f
+        else -> 1500f
+    }
     private val worldTop get() = if (region == FarmRegion.HOME) FarmLayout.worldTop else 0f
     private val lands = FarmLayout.lands.map { RectF(it.x, it.y, it.x + it.width, it.y + it.height) }
     private val cells = List(FarmLayout.cellCount) { i ->
@@ -475,8 +487,23 @@ class FarmWorldView(context: Context, private val state: FarmState,
         canvas.drawColor(Color.rgb(87, 133, 57))
         canvas.save(); canvas.translate(cameraX, cameraY); canvas.scale(zoom, zoom)
         val visible = RectF(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
-        for (row in kotlin.math.floor(visible.top / 80).toInt().coerceAtLeast(kotlin.math.floor(worldTop / 80).toInt())..(visible.bottom / 80).toInt().coerceAtMost((worldHeight / 80).toInt()))
-            for (col in (visible.left / 80).toInt().coerceAtLeast(0)..(visible.right / 80).toInt().coerceAtMost((worldWidth / 80).toInt())) {
+        // The centered greenhouse can leave visible margins outside its world bounds.
+        // Tile those margins too; floor also covers partially visible negative coordinates.
+        val extendGrass = region == FarmRegion.GREENHOUSE
+        val firstRow = kotlin.math.floor(visible.top / 80).toInt().let {
+            if (extendGrass) it else it.coerceAtLeast(kotlin.math.floor(worldTop / 80).toInt())
+        }
+        val lastRow = (visible.bottom / 80).toInt().let {
+            if (extendGrass) it else it.coerceAtMost((worldHeight / 80).toInt())
+        }
+        val firstCol = kotlin.math.floor(visible.left / 80).toInt().let {
+            if (extendGrass) it else it.coerceAtLeast(0)
+        }
+        val lastCol = (visible.right / 80).toInt().let {
+            if (extendGrass) it else it.coerceAtMost((worldWidth / 80).toInt())
+        }
+        for (row in firstRow..lastRow)
+            for (col in firstCol..lastCol) {
             sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80), col, row)
         }
         if (region != FarmRegion.HOME) {
@@ -704,10 +731,25 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     private fun drawHarvestGauge(canvas: Canvas, cell: RectF, game: HarvestGauge, now: Long) {
         if (game.done) {
-            val t = ((now - game.doneAt) / 420f).coerceIn(0f, 1f)
+            val t = ((now - game.doneAt) / HARVEST_FLY_DURATION.toFloat()).coerceIn(0f, 1f)
+            val eased = t * t * (3f - 2f * t)
+            val targetScreen = harvestTarget?.invoke()
+            val targetX = targetScreen?.let { (it.x - cameraX) / zoom } ?: cell.centerX()
+            val targetY = targetScreen?.let { (it.y - cameraY) / zoom } ?: (cell.top - 68f)
+            val startCenterX = cell.centerX()
+            val startCenterY = cell.centerY() - 12f
+            val lift = kotlin.math.sin(eased * Math.PI).toFloat() * 90f
+            val centerX = startCenterX + (targetX - startCenterX) * eased
+            val centerY = startCenterY + (targetY - startCenterY) * eased - lift
+            val scale = 1f - eased * .42f
+            val w = (cell.width() + 4f) * scale
+            val h = (cell.height() + 4f) * scale
+            val fadeStart = .72f
+            val alpha = if (t < fadeStart) 255 else ((1f - (t - fadeStart) / (1f - fadeStart)) * 255).toInt()
+                .coerceIn(0, 255)
             game.cropAtStart?.let { crop ->
-                paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
-                val rect = RectF(cell.left - 2, cell.top - 9 - t * 60f, cell.right + 2, cell.bottom - 5 - t * 60f)
+                paint.alpha = alpha
+                val rect = RectF(centerX - w / 2f, centerY - h / 2f, centerX + w / 2f, centerY + h / 2f)
                 sprites.crop(canvas, crop, game.variant, 4, rect)
                 paint.alpha = 255
             }
@@ -716,8 +758,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
             game.angles.forEach { a ->
                 val rad = a * kotlin.math.PI / 180
                 val dx = (kotlin.math.cos(rad) * t * spread).toFloat(); val dy = (kotlin.math.sin(rad) * t * spread - t * 28).toFloat()
-                paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
-                canvas.drawCircle(cell.centerX() + dx, cell.top + dy, (3f * (1f - t)).coerceAtLeast(0f), paint)
+                paint.alpha = alpha
+                canvas.drawCircle(centerX + dx, centerY - h * .35f + dy, (3f * (1f - t)).coerceAtLeast(0f), paint)
             }
             paint.alpha = 255
             return

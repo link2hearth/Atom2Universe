@@ -62,6 +62,31 @@ class FarmSprites(private val context: Context) {
             target.centerX() + w / 2, target.bottom), paint)
     }
 
+    fun flower(canvas: Canvas, sheetName: String, row: Int, stage: Int, target: RectF) {
+        val bitmap = sheet(sheetName)
+        val rows = 8
+        val key = "$sheetName:$row:$stage"
+        val source = bounds.getOrPut(key) {
+            val cell = Rect(stage * bitmap.width / 5, row * bitmap.height / rows,
+                (stage + 1) * bitmap.width / 5, (row + 1) * bitmap.height / rows)
+            var left = cell.right; var top = cell.bottom; var right = cell.left; var bottom = cell.top
+            for (y in cell.top until cell.bottom) for (x in cell.left until cell.right) {
+                if ((bitmap.getPixel(x, y) ushr 24) > 128) {
+                    left = minOf(left, x); top = minOf(top, y)
+                    right = maxOf(right, x + 1); bottom = maxOf(bottom, y + 1)
+                }
+            }
+            if (right > left && bottom > top) Rect(left, top, right, bottom) else cell
+        }
+        val cellWidth = bitmap.width / 5f
+        val cellHeight = bitmap.height / rows.toFloat()
+        val scale = minOf(target.width() / cellWidth, target.height() / cellHeight)
+        val w = source.width() * scale
+        val h = source.height() * scale
+        canvas.drawBitmap(bitmap, source, RectF(target.centerX() - w / 2, target.bottom - h,
+            target.centerX() + w / 2, target.bottom), paint)
+    }
+
     /**
      * Row 0 of the environment sheet holds four interchangeable lawns. Which one a tile gets is
      * hashed from the tile's own coordinates, never drawn at random: the ground is repainted from
