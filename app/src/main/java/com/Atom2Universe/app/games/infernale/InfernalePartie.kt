@@ -34,10 +34,10 @@ enum class Refus {
 class Partie(val tableau: Tableau) {
 
     /** Le monde. Il existe des le debut : on voit le decor avant de poser. */
-    var plateau: Plateau = Tableaux.monter(tableau, avecSolution = false)
+    var plateau: Plateau = Tableaux.monter(tableau)
         private set
 
-    private val posees = ArrayList<Pose>()
+    private val placements = ArrayList<Pose>()
     private val corps = ArrayList<Piece>()
     private val restant = HashMap<TypePiece, Int>(tableau.inventaire)
 
@@ -49,7 +49,7 @@ class Partie(val tableau: Tableau) {
     var chrono = 0f
         private set
 
-    /** Nombre de lancements depuis le debut du tableau. Sert au bareme et aux indices. */
+    /** Nombre de lancements depuis le debut du tableau, pour information. */
     var essais = 0
         private set
 
@@ -72,10 +72,17 @@ class Partie(val tableau: Tableau) {
     fun stock(type: TypePiece): Int = restant[type] ?: 0
 
     /** Les poses du joueur, dans l'ordre. */
-    fun placees(): List<Pose> = posees.toList()
+    fun placees(): List<Pose> = placements.toList()
 
-    /** Vrai quand tout l'inventaire est sur le tableau. */
-    val toutPose: Boolean get() = restant.values.all { it == 0 }
+    /**
+     * Nombre de pieces posees.
+     *
+     * C'est devenu la note du tableau. Le joueur a toute la panoplie a chaque fois, donc
+     * finir n'est plus la question — **finir avec peu** l'est. Les etoiles se comptent
+     * la-dessus et plus sur le nombre d'essais : recommencer ne doit rien couter, sinon on
+     * decourage precisement le geste qui fait ce jeu, qui est de reessayer en regardant.
+     */
+    val posees: Int get() = placements.size
 
     /**
      * Peut-on poser cette piece la ? Rend la raison du refus, [Refus.OK] si ca passe.
@@ -88,7 +95,7 @@ class Partie(val tableau: Tableau) {
      */
     fun verifier(pose: Pose, sauf: Int = -1): Refus {
         if (lancee) return Refus.DEJA_LANCEE
-        if (sauf !in posees.indices && stock(pose.type) <= 0) return Refus.PLUS_EN_STOCK
+        if (sauf !in placements.indices && stock(pose.type) <= 0) return Refus.PLUS_EN_STOCK
         val essai = pose.creer()
         if (!Placement.dansLeCadre(essai, tableau.cadreMinX, tableau.cadreMaxX, tableau.cadreMaxY)) {
             return Refus.HORS_TABLEAU
@@ -117,7 +124,7 @@ class Partie(val tableau: Tableau) {
         val verdict = verifier(pose)
         if (verdict != Refus.OK) return verdict
         corps.add(plateau.poser(pose.creer()))
-        posees.add(pose)
+        placements.add(pose)
         restant[pose.type] = stock(pose.type) - 1
         return Refus.OK
     }
@@ -131,25 +138,25 @@ class Partie(val tableau: Tableau) {
      */
     fun deplacer(index: Int, pose: Pose): Refus {
         if (lancee) return Refus.DEJA_LANCEE
-        if (index !in posees.indices) return Refus.OCCUPE
-        if (pose.type != posees[index].type) return Refus.OCCUPE
+        if (index !in placements.indices) return Refus.OCCUPE
+        if (pose.type != placements[index].type) return Refus.OCCUPE
         val verdict = verifier(pose, sauf = index)
         if (verdict != Refus.OK) return verdict
         corps[index] = plateau.remplacer(index, pose.creer())
-        posees[index] = pose
+        placements[index] = pose
         return Refus.OK
     }
 
     /** Reprend la derniere piece posee et la remet au stock. */
     fun reprendre(): Boolean {
-        if (lancee || posees.isEmpty()) return false
-        return reprendre(posees.lastIndex)
+        if (lancee || placements.isEmpty()) return false
+        return reprendre(placements.lastIndex)
     }
 
     /** Reprend la piece posee a l'indice [index]. */
     fun reprendre(index: Int): Boolean {
-        if (lancee || index !in posees.indices) return false
-        val pose = posees.removeAt(index)
+        if (lancee || index !in placements.indices) return false
+        val pose = placements.removeAt(index)
         plateau.retirer(corps.removeAt(index))
         restant[pose.type] = stock(pose.type) + 1
         return true
@@ -174,7 +181,7 @@ class Partie(val tableau: Tableau) {
      * apres un essai rate, quand on veut juste corriger un domino.
      */
     fun rejouer() {
-        val garde = posees.toList()
+        val garde = placements.toList()
         val comptes = essais
         remonter()
         essais = comptes
@@ -189,41 +196,14 @@ class Partie(val tableau: Tableau) {
     }
 
     private fun remonter() {
-        plateau = Tableaux.monter(tableau, avecSolution = false)
+        plateau = Tableaux.monter(tableau)
         corps.clear()
-        posees.clear()
+        placements.clear()
         restant.clear()
         restant.putAll(tableau.inventaire)
         lancee = false
         chrono = 0f
         essais = 0
-    }
-
-    /**
-     * Pose la solution du generateur a la place de ce que le joueur avait mis.
-     *
-     * C'est l'indice de derniere extremite, et il est volontairement total : montrer une
-     * seule piece de la solution ne veut rien dire, puisqu'une piece de machine infernale
-     * ne se comprend que par ce qu'elle transmet a la suivante.
-     */
-    fun montrerSolution() {
-        remonter()
-        for (p in tableau.solution) poser(p)
-    }
-
-    /** Vrai si le tableau est exactement la solution du generateur, a un doigt pres. */
-    fun suitLaSolution(): Boolean {
-        if (posees.size != tableau.solution.size) return false
-        val restants = tableau.solution.toMutableList()
-        for (p in posees) {
-            val jumelle = restants.firstOrNull {
-                it.type == p.type &&
-                    kotlin.math.abs(it.x - p.x) < 0.08f &&
-                    kotlin.math.abs(it.y - p.y) < 0.08f
-            } ?: return false
-            restants.remove(jumelle)
-        }
-        return true
     }
 
     /** Tout ce qui occupe deja de la place : les pieces posees et la bille. */

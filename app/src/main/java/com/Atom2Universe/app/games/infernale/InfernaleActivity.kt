@@ -59,12 +59,10 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private lateinit var libelleReglage: TextView
     private lateinit var curseur: SeekBar
     private lateinit var boutonLancer: TextView
-    private lateinit var boutonSolution: TextView
     private lateinit var prefs: SharedPreferences
 
     private var niveau = 1
     private var niveauMax = 1
-    private var solutionVue = false
     private var gagneAnnonce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +83,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         libelleReglage = findViewById(R.id.infernale_slope_label)
         curseur = findViewById(R.id.infernale_slope)
         boutonLancer = findViewById(R.id.infernale_btn_launch)
-        boutonSolution = findViewById(R.id.infernale_btn_solution)
         vue.listener = this
 
         findViewById<ImageButton>(R.id.infernale_btn_back).setOnClickListener { finish() }
@@ -100,13 +97,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         findViewById<TextView>(R.id.infernale_btn_replay).setOnClickListener {
             vue.surPartie { it.rejouer() }
             vue.effacerTrainee()
-            rafraichir()
-        }
-        boutonSolution.setOnClickListener {
-            solutionVue = true
-            vue.surPartie { it.montrerSolution() }
-            vue.effacerTrainee()
-            vue.typeChoisi = null
             rafraichir()
         }
         boutonLancer.setOnClickListener { lancerOuSuivant() }
@@ -150,15 +140,14 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     }
 
     private fun charger(n: Int) {
-        solutionVue = false
         gagneAnnonce = false
         etat.text = getString(R.string.infernale_loading)
         etat.setTextColor(0xFF94A3B8.toInt())
         titre.text = getString(R.string.infernale_board, n)
         reserve.removeAllViews()
-        // Le tirage fait tourner des machines completes jusqu'a en trouver une qui
-        // gagne : c'est rapide, mais ce n'est pas instantane, donc pas sur le fil
-        // principal.
+        // Le tirage ne fait plus qu'une chose couteuse : lacher la bille sur le tableau
+        // vide pour verifier qu'il ne se gagne pas tout seul. C'est quelques dizaines de
+        // millisecondes, ce qui ne se voit pas mais n'a rien a faire sur le fil principal.
         Thread {
             val tableau = Tableaux.pourNiveau(n)
             runOnUiThread {
@@ -188,9 +177,14 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         if (gagneAnnonce) return
         gagneAnnonce = true
 
-        val etoiles = if (solutionVue) 0 else when {
-            partie.essais <= 1 -> 3
-            partie.essais <= 3 -> 2
+        // **Le bareme porte sur la machine, pas sur la patience.** Le joueur a toutes les
+        // pieces et peut relancer autant qu'il veut ; compter les essais reviendrait a
+        // punir le seul geste qui fait ce jeu, qui est d'essayer en regardant. Ce qu'on
+        // note, c'est l'economie : faire tenir la chaine en moins de pieces que le « par ».
+        val par = partie.tableau.par
+        val etoiles = when {
+            partie.posees <= par -> 3
+            partie.posees <= par + 3 -> 2
             else -> 1
         }
         val avant = prefs.getInt(CLE_ETOILES + niveau, 0)
@@ -208,11 +202,11 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         }
 
         etat.setTextColor(0xFF55E08A.toInt())
-        etat.text = if (etoiles == 0) {
-            getString(R.string.infernale_won_hint)
-        } else {
-            getString(R.string.infernale_won, "★".repeat(etoiles) + "☆".repeat(3 - etoiles))
-        }
+        etat.text = getString(
+            R.string.infernale_won,
+            "★".repeat(etoiles) + "☆".repeat(3 - etoiles),
+            partie.posees
+        )
         majCommandes()
     }
 
@@ -232,10 +226,10 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         val partie = vue.partieCourante() ?: return
         if (!partie.gagne && !partie.lancee) {
             etat.setTextColor(0xFF94A3B8.toInt())
-            etat.text = if (partie.toutPose) {
-                getString(R.string.infernale_ready)
+            etat.text = if (partie.posees == 0) {
+                getString(R.string.infernale_hint)
             } else {
-                getString(R.string.infernale_hint, partie.tableau.pieces - partie.placees().size)
+                getString(R.string.infernale_placed, partie.posees, partie.tableau.par)
             }
         }
         majReglage()
@@ -251,8 +245,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         )
         boutonLancer.isEnabled = gagne || partie?.lancee == false
         boutonLancer.alpha = if (boutonLancer.isEnabled) 1f else 0.45f
-        boutonSolution.visibility =
-            if (partie != null && !gagne && partie.essais >= 2) View.VISIBLE else View.GONE
         titre.text = getString(R.string.infernale_board, niveau) + etoilesDuNiveau()
     }
 

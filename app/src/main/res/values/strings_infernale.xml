@@ -15,14 +15,13 @@
     <string name="infernale_title">Infernal Machine</string>
     <string name="infernale_description">Build a chain reaction so the ball opens the portal</string>
     <string name="infernale_back">Back</string>
-    <string name="infernale_new">New</string>
     <string name="infernale_launch">Launch</string>
     <string name="infernale_replay">Replay</string>
     <string name="infernale_clear">Clear</string>
-    <string name="infernale_won">The portal opens!  %1$s</string>
+    <string name="infernale_won">The portal opens!  %1$s   %2$d pieces</string>
     <string name="infernale_failed">The machine stopped. Adjust and try again.</string>
     <string name="infernale_board">Board %1$d</string>
-    <string name="infernale_hint">Pick a piece, then tap the board. Drag a placed piece to move it, tap it to take it back. %1$d left.</string>
+    <string name="infernale_hint">The ball is here, the portal is there. Place whatever you like, then launch.</string>
     <string name="infernale_slope">Slope: %1$d°</string>
     <string name="infernale_piece_ramp">Ramp</string>
     <string name="infernale_piece_plot">Bumper</string>
@@ -30,11 +29,8 @@
     <string name="infernale_piece_domino">Domino</string>
     <string name="infernale_piece_seesaw">Seesaw</string>
     <string name="infernale_piece_trampoline">Springboard</string>
-    <string name="infernale_ready">Everything is placed. Launch the machine!</string>
     <string name="infernale_loading">Building the board…</string>
-    <string name="infernale_won_hint">The portal opens — but you looked at the answer.</string>
     <string name="infernale_next">Next</string>
-    <string name="infernale_solution">Answer</string>
     <string name="infernale_blow">Blows at: %1$d°</string>
     <string name="infernale_hinge">Hinge: %1$s</string>
     <string name="infernale_hinge_left">left</string>
@@ -42,4 +38,5 @@
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
+    <string name="infernale_placed">%1$d pieces placed (par: %2$d)</string>
 </resources>

@@ -207,6 +207,36 @@ class Plateau(
         return b
     }
 
+    /**
+     * Le socle qui porte le bouton, quand il est perché. `null` quand il est à même le sol.
+     *
+     * C'est un vrai corps scellé et pas un pilier dessiné. Un bouton qui flotterait devant
+     * un décor peint se laisserait traverser par la bille, et le joueur y verrait à juste
+     * titre un bug — le décor du trébuchet a coûté assez cher pour qu'on se souvienne que
+     * ce qu'on voit doit être ce qui existe. Et c'est ce socle qui fait tout l'intérêt d'un
+     * bouton en hauteur : il faut poser la bille **sur** quelque chose, ce qui est un autre
+     * problème que l'amener quelque part.
+     */
+    var socle: PhysBody? = null
+        private set
+
+    /** Dresse le socle du bouton. [hauteur] est mesurée depuis le sol. */
+    fun poserSocle(x: Float, hauteur: Float): PhysBody {
+        socle?.let { monde.remove(it) }
+        val pilier = PhysBody(0.22f, hauteur / 2f, 0f).apply {
+            this.x = x
+            this.y = hauteur / 2f
+            lockPosition = true
+            lockRotation = true
+            friction = 0.55f
+            restitution = 0.02f
+            refreshMass()
+        }
+        monde.add(pilier)
+        socle = pilier
+        return pilier
+    }
+
     /** Les jets d'air des ventilateurs posés. Refait à chaque image, il est court. */
     private val souffles = ArrayList<Souffle>()
 

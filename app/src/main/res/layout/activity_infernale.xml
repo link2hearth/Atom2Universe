@@ -153,18 +153,6 @@
             android:textSize="13sp"
             android:background="#1B2540" />
 
-        <TextView
-            android:id="@+id/infernale_btn_solution"
-            android:layout_width="0dp"
-            android:layout_height="46dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            android:gravity="center"
-            android:text="@string/infernale_solution"
-            android:textColor="#E0A055"
-            android:textSize="13sp"
-            android:background="#1B2540"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/infernale_btn_launch"

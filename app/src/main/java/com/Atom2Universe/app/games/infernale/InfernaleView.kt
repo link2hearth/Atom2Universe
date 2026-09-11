@@ -422,6 +422,7 @@ class InfernaleView @JvmOverloads constructor(
 
         peindreCaverne(c, p.tableau)
         peindreSol(c)
+        p.plateau.socle?.let { boite(c, it, 0, pierre, pierreClaire) }
         peindrePortail(c, p)
 
         for (piece in p.plateau.pieces) peindrePiece(c, piece)

@@ -2,8 +2,8 @@ package com.Atom2Universe.app.games.infernale
 
 import com.Atom2Universe.app.games.physics.PhysBody
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.hypot
-import kotlin.math.sqrt
 import kotlin.random.Random
 
 /**
@@ -129,6 +129,56 @@ object Placement {
  * Il ne contient aucun corps : c'est une recette, pas un monde. On en monte autant de
  * mondes qu'on veut, ce qui permet de rejouer un essai sans rien reinitialiser.
  */
+/**
+ * Ce que le joueur a dans les mains, et c'est le meme jeu a tous les tableaux.
+ *
+ * ## Pourquoi tout donner
+ *
+ * La version precedente distribuait **exactement** les pieces d'une solution que le
+ * generateur avait verifiee. C'etait defendable sur le papier — aucune piece inutile,
+ * aucun tableau insoluble — et c'etait une erreur de conception : neuf dixiemes du travail
+ * du generateur servaient a prouver une chose que le joueur ne voit jamais, et le prix en
+ * etait un jeu ou l'on devine la solution d'un autre au lieu d'inventer la sienne. Recevoir
+ * « une bascule et six dominos » **est** l'indice, et un indice qu'on ne peut pas refuser.
+ *
+ * Avec toute la panoplie a chaque tableau, le probleme redevient celui qu'on voulait poser :
+ * la bille est ici, le bouton est la, debrouillez-vous. Deux joueurs ne rendront pas la meme
+ * machine, ce qui est la definition meme d'un bac a sable reussi.
+ *
+ * ## Pourquoi pas l'infini
+ *
+ * Les comptes sont larges — assez pour qu'on ne les sente jamais — mais finis, pour deux
+ * raisons qui n'ont rien a voir avec la difficulte. La reserve doit afficher un nombre ;
+ * et trente dominos qui se touchent sont le pire cas du solveur, cf. le cout du chateau du
+ * trebuchet. Ce qui recompense l'economie de pieces, c'est le bareme en etoiles, pas la
+ * penurie.
+ */
+object Panoplie {
+
+    /** L'inventaire, identique pour tous les tableaux. */
+    val COMPLET: Map<TypePiece, Int> = mapOf(
+        // Huit rampes : de quoi batir un toboggan d'un bout a l'autre du tableau. C'est la
+        // seule cote qui ait ete calculee, parce que c'est la piece a tout faire — scellee,
+        // donc elle tient en l'air ou l'on veut, et le bouton est toujours plus bas que la
+        // bille.
+        TypePiece.RAMPE to 8,
+        TypePiece.PLOT to 4,
+        TypePiece.BLOC to 4,
+        TypePiece.DOMINO to 10,
+        TypePiece.BASCULE to 2,
+        TypePiece.TREMPLIN to 2,
+        TypePiece.VENTILATEUR to 3,
+        TypePiece.TAMBOUR to 2,
+        TypePiece.POULIE to 1
+    )
+}
+
+/**
+ * Un tableau : d'ou part la bille, ou est le bouton, et rien d'autre.
+ *
+ * Il ne contient aucun corps : c'est une recette, pas un monde. On en monte autant de
+ * mondes qu'on veut, ce qui permet de rejouer un essai sans rien reinitialiser.
+ */
 class Tableau(
     val graine: Long,
     val billeX: Float,
@@ -136,41 +186,41 @@ class Tableau(
     val boutonX: Float,
     val boutonBas: Float,
     /**
-     * Le placement qui gagne — celui que le generateur a verifie.
+     * Hauteur du socle qui porte le bouton, ou zero s'il est a meme le sol.
      *
-     * Il sert a deux choses et jamais a une troisieme : prouver que le tableau est
-     * soluble, et fabriquer l'inventaire. Il n'est **pas** « la » solution : rien
-     * n'empeche le joueur d'en trouver une autre avec les memes pieces, et c'est
-     * meme tout l'interet.
+     * Le socle est un vrai corps scelle, pas un decor peint : un bouton qui flotterait en
+     * l'air devant un pilier dessine se laisserait traverser par la bille, et le joueur y
+     * verrait a juste titre un bug. Il est aussi ce qui rend un bouton en hauteur
+     * interessant — il faut poser la bille **sur** quelque chose, pas seulement l'amener
+     * quelque part.
      */
-    val solution: List<Pose>,
-    /** Temps qu'a mis la solution du generateur, en secondes. Sert au bareme. */
-    val tempsReference: Float = 0f
+    val socleHauteur: Float = 0f
 ) {
-    /**
-     * Ce que le joueur recoit : exactement les pieces de la solution, pas une de plus.
-     *
-     * C'est le reglage de difficulte le plus honnete qui soit. Donner trois dominos de
-     * trop transforme un casse-tete en bac a sable ; en donner exactement ce qu'il faut
-     * oblige a comprendre a quoi sert chaque piece, sans jamais rendre le tableau
-     * insoluble.
-     */
-    val inventaire: Map<TypePiece, Int> = solution.groupingBy { it.type }.eachCount()
+    /** Ce que le joueur recoit : toute la panoplie, a chaque tableau. */
+    val inventaire: Map<TypePiece, Int> get() = Panoplie.COMPLET
 
-    /** Nombre total de pieces a poser. */
-    val pieces: Int get() = solution.size
+    /**
+     * Le nombre de pieces qu'on attend d'une machine soignee — le « par » du parcours.
+     *
+     * Il vaut a peu pres ce que coute un toboggan de rampes entre la bille et le bouton,
+     * plus une. Ce n'est pas un objectif impose : c'est l'echelle du bareme en etoiles, qui
+     * a remplace le comptage des essais. Recommencer autant qu'on veut ne coute plus rien,
+     * et bien faire du premier coup ne rapporte plus rien non plus — ce qu'on note, c'est
+     * la machine, pas la patience.
+     */
+    val par: Int = (ceil(hypot(boutonX - billeX, billeY - boutonBas) / 1.5f).toInt() + 1)
+        .coerceIn(3, 10)
 
     // ── Le cadre de jeu ──────────────────────────────────────────────────────
     //
     // Le plateau fait dix metres de large, mais un tableau n'en occupe qu'une partie.
     // Montrer les dix metres sur un telephone rend la bille grosse comme une tete
-    // d'epingle ; en montrer six rend le jeu lisible. Le cadre est donc calcule sur ce
-    // que le tableau utilise vraiment.
+    // d'epingle ; en montrer sept rend le jeu lisible.
     //
-    // **Et c'est aussi la limite de construction.** Le joueur ne peut poser une piece
-    // que dans ce qu'il voit : une piece posee hors cadre serait invisible, donc
-    // impossible a reprendre, et le tableau paraitrait casse. Une seule zone pour les
-    // deux usages, c'est une incoherence de moins a inventer.
+    // **Et c'est aussi la limite de construction.** Le joueur ne peut poser une piece que
+    // dans ce qu'il voit : une piece posee hors cadre serait invisible, donc impossible a
+    // reprendre, et le tableau paraitrait casse. Une seule zone pour les deux usages, c'est
+    // une incoherence de moins a inventer.
 
     /** Bord gauche du cadre, en metres. */
     val cadreMinX: Float
@@ -182,737 +232,147 @@ class Tableau(
     val cadreMaxY: Float
 
     init {
-        var lo = minOf(billeX, boutonX)
-        var hi = maxOf(billeX, boutonX)
-        var haut = maxOf(billeY, boutonBas)
-        for (p in solution) {
-            lo = minOf(lo, p.x - 1.3f)
-            hi = maxOf(hi, p.x + 1.3f)
-            // 1,8 m et pas 0,9 : la pose d'une poulie designe le **pied** de son bati,
-            // qui monte a un metre cinquante au-dessus. Une marge taillee sur les pieces
-            // plates laissait la traverse hors cadre, donc impossible a poser.
-            haut = maxOf(haut, p.y + 2.1f)
-        }
-        lo -= 1.1f
-        hi += 1.1f
-        haut += 0.8f
-
-        // Une largeur plancher, sinon un tableau ramasse se retrouve grossi au point que
-        // le moindre geste du doigt deplace une piece d'un demi-metre.
-        val largeurMini = 5.5f
-        if (hi - lo < largeurMini) {
+        var lo = minOf(billeX, boutonX) - MARGE_CADRE
+        var hi = maxOf(billeX, boutonX) + MARGE_CADRE
+        if (hi - lo < LARGEUR_MINI) {
             val centre = (lo + hi) / 2f
-            lo = centre - largeurMini / 2f
-            hi = centre + largeurMini / 2f
+            lo = centre - LARGEUR_MINI / 2f
+            hi = centre + LARGEUR_MINI / 2f
         }
-        val limite = 5f
-        if (lo < -limite) { hi += -limite - lo; lo = -limite }
-        if (hi > limite) { lo -= hi - limite; hi = limite }
+        val limite = Plateau.LARGEUR / 2f
+        if (lo < -limite) {
+            hi += -limite - lo
+            lo = -limite
+        }
+        if (hi > limite) {
+            lo -= hi - limite
+            hi = limite
+        }
         cadreMinX = lo.coerceAtLeast(-limite)
         cadreMaxX = hi.coerceAtMost(limite)
-        cadreMaxY = haut.coerceIn(3f, 6.8f)
+        // De la place au-dessus de la bille : c'est la qu'on pose le premier aiguillage,
+        // et un cadre qui s'arreterait a la bille interdirait de la devier des le depart.
+        cadreMaxY = (billeY + 1.2f).coerceIn(3f, 6.8f)
     }
 
-    /** Les types qui apparaissent, dans l'ordre de l'enumeration : le resume d'un tableau. */
-    val panoplie: List<TypePiece> get() = TypePiece.entries.filter { it in inventaire }
-}
-
-/** Un instant de la course de la bille : ou elle est, et ou elle va. */
-class Echantillon(val t: Float, val x: Float, val y: Float, val vx: Float, val vy: Float) {
-    val vitesse: Float get() = hypot(vx, vy)
-
-    /** Le sens du deplacement horizontal : +1 a droite, -1 a gauche. */
-    fun sens(defaut: Float): Float = when {
-        vx > 0.3f -> 1f
-        vx < -0.3f -> -1f
-        else -> defaut
+    private companion object {
+        const val MARGE_CADRE = 1.6f
+        const val LARGEUR_MINI = 6.5f
     }
 }
 
 /**
- * Ce qu'a fait la bille pendant un essai : sa course echantillonnee, et ce qui l'a
- * arretee.
+ * La fabrique de tableaux : elle place la bille, le bouton, et s'arrete la.
  *
- * C'est le retour d'information dont vit le generateur. Une machine infernale ne se
- * calcule pas — trois rebonds et la moindre erreur d'un centimetre change tout. Mais
- * elle se **regarde** : il suffit de la faire tourner et de noter ou la bille est
- * passee, ce qui coute quelques millisecondes et ne se trompe jamais.
- */
-class Trace(
-    val points: List<Echantillon>,
-    /** La bille est sortie du tableau : l'essai ne vaut rien. */
-    val perdue: Boolean,
-    /** Longueur totale parcourue, en metres. C'est la mesure de « il s'est passe quelque chose ». */
-    val parcours: Float
-) {
-    val fin: Echantillon? get() = points.lastOrNull()
-    val duree: Float get() = fin?.t ?: 0f
-}
-
-/**
- * La fabrique de tableaux.
+ * ## Ce qu'elle ne fait plus, et pourquoi c'est mieux
  *
- * ## Comment on garantit qu'un tableau est soluble
+ * Elle construisait une machine complete a la place du joueur, la faisait tourner dans le
+ * moteur, elaguait ce qui ne servait a rien, et ne livrait que l'inventaire de ce qui
+ * restait. Trois cents lignes, des secondes de calcul par niveau, et un jeu qui posait en
+ * creux la mauvaise question : « retrouvez ce que la machine a trouve ». On lui prefere
+ * desormais la bonne : « la bille est ici, le bouton est la ».
  *
- * Tirer un decor au hasard puis se demander s'il a une solution est un probleme qu'on ne
- * sait pas resoudre : il faudrait explorer tous les placements possibles de toutes les
- * pieces. On fait donc l'inverse, et c'est la vieille ruse des generateurs de niveaux :
- * **on construit la solution d'abord, on la verifie en la faisant tourner, et on la
- * retire.**
+ * ## La solubilite n'est plus une chose a prouver
  *
- * ## Ce qui a change : on ne tire plus la machine, on la fait pousser
+ * Elle etait le probleme central de l'ancienne fabrique, qui montait et simulait une
+ * machine entiere pour s'en assurer. Avec toute la panoplie dans les mains du joueur, elle
+ * cesse d'etre un probleme : huit rampes scellees, qui tiennent en l'air ou l'on veut,
+ * descendent de n'importe ou a n'importe ou. La fabrique se contente donc d'une regle de
+ * dessin — **le bouton est toujours plus bas que la bille** — qui evite de demander la
+ * seule chose que la panoplie fasse mal, monter.
  *
- * La premiere version tirait une forme unique — une rampe, une ligne de dominos — avec
- * des cotes qui variaient. Tous les tableaux se ressemblaient, et pour cause : la seule
- * facon de tirer une machine complete au hasard et d'esperer qu'elle marche, c'est de
- * n'en tirer qu'une sorte.
- *
- * Ici, la machine **pousse etape par etape**, et chaque etape est choisie en regardant ce
- * que la bille vient de faire :
- *
- *  1. on lache la bille sur le tableau tel qu'il est, et on note toute sa course ;
- *  2. on choisit un instant de cette course — la bille tombe ici, elle roule la ;
- *  3. on propose une piece qui sait agir sur cet instant-la : une rampe sous une chute,
- *     un tremplin sous ce qui tombe, un ventilateur derriere ce qui roule ;
- *  4. on relance tout, et on ne garde la piece que si **la bille va plus loin qu'avant**.
- *
- * Le critere de l'etape 4 est ce qui tient l'ensemble. Il est monotone — chaque piece
- * ajoute du parcours — donc la machine ne peut pas tourner en rond, et il est mesure sur
- * le moteur lui-meme, donc il ne ment pas.
- *
- * ## Et l'inventaire ne contient que des pieces utiles
- *
- * A la fin, [elaguer] retire une a une les pieces dont l'absence ne change pas l'issue.
- * C'est ce qui empeche le generateur de refiler au joueur un domino decoratif, pose
- * quelque part ou rien ne le touche : une piece de l'inventaire est une piece dont on a
- * **verifie** que la machine echoue sans elle.
+ * Reste un unique garde-fou mesure : le tableau vide ne doit pas se gagner tout seul. Il
+ * coute une simulation, il ne rate presque jamais, et il couvre le seul accident que le
+ * dessin ne couvre pas.
  */
 object Tableaux {
 
-    /** Pas de simulation. Le meme que celui du jeu : une solution verifiee est jouable. */
-    private const val PAS = 1f / 120f
+    /** Ecart horizontal minimal entre la bille et le bouton. */
+    private const val ECART_MIN = 2.6f
 
-    /** Duree laissee a une machine pour faire ses preuves. */
-    private const val PATIENCE = 9f
+    /** Ecart horizontal maximal. */
+    private const val ECART_MAX = 7f
 
-    /** Nombre de placements tentes avant d'abandonner une etape. */
-    private const val TENTATIVES = 14
+    /** De combien le bouton est au moins plus bas que la bille : on ne demande pas de monter. */
+    private const val DENIVELE_MIN = 1.3f
 
-    /** Parcours supplementaire exige d'une piece pour etre gardee, en metres. */
-    private const val PROGRES_MINIMUM = 0.45f
-
-    /**
-     * Deplacement exige du **point d'arrivee** de la bille, en metres.
-     *
-     * C'est le critere qui a sauve le generateur. Il ne demandait d'abord qu'un parcours
-     * plus long, et le resultat etait desolant : sur vingt niveaux, quatorze se
-     * resolvaient avec **une seule piece**. La raison est limpide une fois vue — le
-     * bouton finit la ou la bille s'arrete, et la bille roule jusqu'au meme coin quel que
-     * soit le chemin qu'on lui fait prendre. Rallonger sa course ne change donc rien a
-     * l'endroit ou elle finit, et l'elagage avait raison de tout jeter.
-     *
-     * Exiger que le point d'arrivee **bouge** rend chaque piece responsable de la fin de
-     * l'histoire, et donc indispensable. C'est la meme mesure que celle de l'elagage, prise
-     * a l'avance au lieu d'etre subie.
-     */
-    private const val DEPLACEMENT_ARRIVEE = 0.45f
-
-    /** Plafond de pieces : au-dela, le tableau devient illisible sur un telephone. */
-    private const val PIECES_MAX = 11
-
-    /** Chute de la bille jusqu'a la margelle du godet d'une poulie, en metres. */
-    private const val CHUTE_GODET = 0.3f
-
-    /**
-     * Duree pendant laquelle la bille doit rester immobile pour qu'on arrete l'essai.
-     *
-     * Le monde entier au repos etait le critere, et il coutait cher : un ventilateur
-     * pose quelque part maintient un corps eveille indefiniment, si bien que chaque essai
-     * allait au bout de ses neuf secondes. Or ce qu'on mesure est la **course de la
-     * bille** ; quand elle est arretee depuis une demi-seconde, la suite ne dira rien de
-     * plus. La generation d'un niveau est passee de huit secondes a moins d'une.
-     */
-    private const val REPOS_BILLE = 0.5f
-
-    /**
-     * Tire un tableau soluble a partir de [graine], ou rend `null` si aucun des
-     * [essais] candidats n'a gagne.
-     *
-     * Le meme nombre rend toujours le meme tableau : c'est ce qui permet de partager un
-     * tableau par son seul numero.
-     */
-    fun generer(graine: Long, etapes: Int = 3, essais: Int = 24): Tableau? {
-        val hasard = Random(graine)
-        repeat(essais) {
-            val candidat = construire(graine, hasard, etapes)
-            if (candidat != null) return candidat
-        }
-        return null
-    }
-
-    /**
-     * Le premier tableau soluble a partir de [graine], en essayant les graines suivantes
-     * si celle-la ne donne rien. Ne rend jamais `null`.
-     *
-     * ## Et il redescend d'une etape plutot que d'echouer
-     *
-     * Une machine a cinq maillons ou chaque maillon doit **deplacer l'arrivee de la
-     * bille** est un evenement rare : la probabilite est celle d'une etape, a la
-     * puissance cinq. Le generateur a bel et bien echoue sur les vingt-quatre graines du
-     * niveau onze, et il levait une exception au milieu de l'ecran de chargement.
-     *
-     * Servir un tableau a quatre maillons est infiniment preferable a ne rien servir du
-     * tout : le joueur verra un niveau un peu plus facile que prevu, ce qu'il ne
-     * remarquera meme pas, la ou un plantage se remarque beaucoup. On redescend donc
-     * d'un cran jusqu'a deux, et deux maillons, on en trouve toujours.
-     */
-    fun genererSurement(graine: Long, etapes: Int = 3): Tableau {
-        var exigence = etapes
-        while (exigence >= 2) {
-            repeat(24) { essai ->
-                // **Des graines ecartees, pas la suivante.** En prenant `graine + 1`, la
-                // graine 1 qui echoue et la graine 2 qui reussit rendaient le meme
-                // tableau : sur vingt numeros, huit tableaux distincts seulement, et un
-                // numero de tableau ne voulait plus rien dire. Multiplier par un nombre
-                // plus grand que le nombre d'essais rend toute collision impossible.
-                generer(graine * 101L + essai, exigence)?.let { return it }
-            }
-            exigence--
-        }
-        error("aucun tableau soluble autour de la graine $graine")
-    }
+    /** Duree laissee au tableau vide pour prouver qu'il ne se gagne pas tout seul. */
+    private const val PATIENCE = 8f
 
     /**
      * Le tableau du niveau [niveau], numerote a partir de 1.
      *
-     * La difficulte ne monte pas en ajoutant des pieces au hasard : elle monte en
-     * ajoutant des **etapes**, c'est-a-dire des maillons a la chaine. Un tableau a deux
-     * etapes se lit d'un coup d'oeil ; un tableau a cinq demande de comprendre ce que
-     * chaque piece transmet a la suivante.
+     * La difficulte ne monte pas en retirant des pieces — le joueur les a toutes, toujours.
+     * Elle monte par la **geometrie** : le bouton s'eloigne, et il finit par se percher sur
+     * un socle. Un bouton a meme le sol se gagne en faisant rouler la bille jusqu'a lui ;
+     * un bouton a deux metres de haut demande de la poser **sur** quelque chose, ce qui est
+     * un autre probleme.
      */
     fun pourNiveau(niveau: Int): Tableau {
-        val etapes = 2 + (niveau - 1) / 4
-        return genererSurement(niveau.toLong() * 7919L, etapes.coerceIn(2, 4))
+        val avance = ((niveau - 1) / 9f).coerceAtMost(1f)
+        return generer(
+            graine = niveau.toLong() * 7919L,
+            ecartMin = ECART_MIN + avance * 2.2f,
+            // Un socle une fois sur deux a partir du niveau quatre, jamais avant : le
+            // premier tableau doit s'expliquer tout seul.
+            socle = niveau >= 4 && niveau % 2 == 0,
+            hauteurSocle = 0.8f + avance * 1.4f
+        )
     }
 
     /**
-     * Monte un monde a partir d'un tableau. [avecSolution] pose les pieces gagnantes —
-     * c'est ce dont se sert la verification, et ce qui permet de montrer la reponse.
+     * Tire un tableau. Le meme nombre rend toujours le meme : c'est ce qui permet de
+     * partager un tableau par son seul numero.
      */
-    fun monter(tableau: Tableau, avecSolution: Boolean = false): Plateau {
+    fun generer(
+        graine: Long,
+        ecartMin: Float = ECART_MIN,
+        socle: Boolean = false,
+        hauteurSocle: Float = 1.4f
+    ): Tableau {
+        val hasard = Random(graine)
+        // La bille part d'un cote ou de l'autre, tire au sort : sans ca, tous les tableaux
+        // se lisent de gauche a droite et se ressemblent au premier coup d'oeil.
+        val sens = if (hasard.nextBoolean()) 1f else -1f
+
+        val ecart = (ecartMin + hasard.nextFloat() * 1.6f).coerceAtMost(ECART_MAX)
+        val billeY = 4.1f + hasard.nextFloat() * 1f
+
+        // Le socle ne monte jamais assez haut pour approcher la bille : sinon on demanderait
+        // de la faire monter, ce que la panoplie ne sait faire que sur soixante-dix
+        // centimetres, avec la poulie.
+        val socleH = if (socle) hauteurSocle.coerceAtMost(billeY - DENIVELE_MIN) else 0f
+
+        // On centre l'ensemble avant de l'ecarter : le tableau occupe le cadre au lieu de
+        // se tasser dans un coin.
+        val billeX = -sens * ecart / 2f + (hasard.nextFloat() - 0.5f) * 0.8f
+        val bord = Plateau.LARGEUR / 2f - 0.6f
+        var boutonX = (billeX + sens * ecart).coerceIn(-bord, bord)
+
+        var tableau = Tableau(graine, billeX, billeY, boutonX, socleH, socleH)
+        // Le garde-fou : un tableau qui se gagne sans poser une seule piece n'est pas un
+        // tableau. On decale le bouton et on recommence, ce qui n'arrive presque jamais.
+        var essais = 0
+        while (gagneSansRien(tableau) && essais < 8) {
+            essais++
+            boutonX = (boutonX + sens * 0.5f).coerceIn(-bord, bord)
+            tableau = Tableau(graine, billeX, billeY, boutonX, socleH, socleH)
+        }
+        return tableau
+    }
+
+    /** Monte un monde a partir d'un tableau : le sol, le socle, le bouton, la bille. */
+    fun monter(tableau: Tableau): Plateau {
         val p = Plateau()
+        if (tableau.socleHauteur > 0f) p.poserSocle(tableau.boutonX, tableau.socleHauteur)
         p.poserBouton(x = tableau.boutonX, bas = tableau.boutonBas)
-        if (avecSolution) for (pose in tableau.solution) p.poser(pose.creer())
         p.poserBille(x = tableau.billeX, y = tableau.billeY)
         return p
     }
 
-    // ── La croissance ────────────────────────────────────────────────────────
-
-    private fun construire(graine: Long, hasard: Random, etapes: Int): Tableau? {
-        val billeX = -(hasard.nextFloat() * 1.1f + 2.9f)
-        val billeY = hasard.nextFloat() * 1.2f + 3.7f
-
-        var poses = emptyList<Pose>()
-        var trace = simuler(billeX, billeY, poses)
-        if (trace.perdue) return null
-
-        // On rejoue une etape ratee au lieu de l'abandonner. Une etape echoue le plus
-        // souvent parce que le point tire au hasard sur la course ne se pretait a rien ;
-        // en retirer un autre coute une poignee de simulations et reussit souvent. Sans
-        // cette reprise, un seul point malheureux condamnait toute la machine, et le
-        // generateur ne servait qu'un tableau sur deux.
-        var reprises = 0
-        while (poses.size < etapes && reprises < etapes * 2) {
-            reprises++
-            val suivante = pousser(poses, trace, billeX, billeY, hasard) ?: continue
-            poses = suivante.first
-            trace = suivante.second
-        }
-        // Une machine plus courte que demande n'est pas un tableau rate : c'est un tableau
-        // d'un autre niveau. On la rejette plutot que de la servir a la place de celle
-        // qu'on avait promise.
-        if (poses.size < etapes) return null
-
-        val fini = achever(poses, trace, billeX, billeY, hasard) ?: return null
-        val (avecFin, bouton) = fini
-
-        val retenues = elaguer(avecFin, billeX, billeY, bouton)
-        if (retenues.size < etapes || retenues.size > PIECES_MAX) return null
-
-        val tableau = Tableau(
-            graine = graine,
-            billeX = billeX,
-            billeY = billeY,
-            boutonX = bouton.first,
-            boutonBas = bouton.second,
-            solution = retenues,
-            tempsReference = 0f
-        )
-        val temps = verifier(tableau) ?: return null
-        if (gagneSansRien(tableau)) return null
-        if (!posable(tableau)) return null
-        return Tableau(
-            graine, billeX, billeY, bouton.first, bouton.second, retenues, temps
-        )
-    }
-
-    /**
-     * Ajoute une piece si elle fait aller la bille plus loin, et rend le nouvel etat.
-     *
-     * L'echec n'est pas une erreur : une etape qui ne trouve rien laisse simplement la
-     * machine telle quelle, et le tableau sera plus court. Mieux vaut un tableau a trois
-     * pieces qui marche qu'un tableau a cinq qu'on n'a pas su batir.
-     */
-    private fun pousser(
-        poses: List<Pose>,
-        trace: Trace,
-        billeX: Float,
-        billeY: Float,
-        hasard: Random
-    ): Pair<List<Pose>, Trace>? {
-        repeat(TENTATIVES) {
-            val candidate = proposer(trace, hasard) ?: return@repeat
-            if (!placable(candidate, poses)) return@repeat
-            val essai = poses + candidate
-            val apres = simuler(billeX, billeY, essai)
-            if (apres.perdue) return@repeat
-            if (apres.parcours < trace.parcours + PROGRES_MINIMUM) return@repeat
-            if (!deplaceLArrivee(trace, apres)) return@repeat
-            return essai to apres
-        }
-        return null
-    }
-
-    /** Vrai si la piece ajoutee a change l'endroit ou la bille finit sa course. */
-    private fun deplaceLArrivee(avant: Trace, apres: Trace): Boolean {
-        val a = avant.fin ?: return false
-        val b = apres.fin ?: return false
-        return hypot(b.x - a.x, b.y - a.y) > DEPLACEMENT_ARRIVEE
-    }
-
-    /**
-     * Choisit un instant de la course, puis une piece qui sait agir sur cet instant.
-     *
-     * Les modules sont essayes dans un ordre tire au hasard : c'est ce qui evite que
-     * tous les tableaux commencent par une rampe, ce qui etait exactement le defaut de
-     * la premiere version.
-     */
-    private fun proposer(trace: Trace, hasard: Random): Pose? {
-        val point = choisirPoint(trace, hasard) ?: return null
-        val modules = MODULES.shuffled(hasard)
-        for (module in modules) {
-            val pose = module(point, hasard)
-            if (pose != null) return pose
-        }
-        return null
-    }
-
-    /**
-     * Un instant ou la bille bouge encore.
-     *
-     * On ecarte le tout debut — une piece posee sous la bille immobile ne fait rien de
-     * plus que le sol — et on ecarte la fin, ou la bille est deja arretee.
-     */
-    private fun choisirPoint(trace: Trace, hasard: Random): Echantillon? {
-        val vivants = trace.points.filter { it.t > 0.25f && it.vitesse > 0.9f }
-        if (vivants.isEmpty()) return null
-        // Biais vers la fin de la course : c'est la que la machine a besoin d'etre
-        // prolongee. Le carre d'un tirage uniforme suffit a pencher franchement.
-        val u = hasard.nextFloat()
-        val index = ((1f - u * u) * (vivants.size - 1)).toInt().coerceIn(0, vivants.size - 1)
-        return vivants[index]
-    }
-
-    // ── Les modules ──────────────────────────────────────────────────────────
-
-    private val MODULES: List<(Echantillon, Random) -> Pose?> = listOf(
-        ::moduleRampe,
-        ::modulePlot,
-        ::moduleTambour,
-        ::moduleTremplin,
-        ::moduleBascule,
-        ::moduleVentilateur,
-        ::moduleBloc
-    )
-
-    /** Une planche sous une bille qui tombe : elle la rattrape et la renvoie de cote. */
-    private fun moduleRampe(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vy > -0.8f || pt.y < 0.9f) return null
-        val sens = pt.sens(if (hasard.nextBoolean()) 1f else -1f)
-        val longueur = hasard.nextFloat() * 0.8f + 1.3f
-        val pente = (hasard.nextFloat() * 14f + 16f) * sens
-        return Pose(
-            TypePiece.RAMPE,
-            x = pt.x + sens * longueur * 0.3f,
-            y = pt.y - 0.32f,
-            reglage = pente,
-            taille = longueur
-        )
-    }
-
-    /** Un plot sous une chute : la bille repart de biais, et c'est imprevisible a l'oeil. */
-    private fun modulePlot(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vy > -1.6f || pt.y < 0.7f) return null
-        val rayon = hasard.nextFloat() * 0.08f + 0.13f
-        val decalage = (hasard.nextFloat() * 0.14f + 0.04f) * (if (hasard.nextBoolean()) 1f else -1f)
-        return Pose(
-            TypePiece.PLOT,
-            x = pt.x + decalage,
-            y = pt.y - 0.3f - rayon,
-            taille = rayon
-        )
-    }
-
-    /** Un tambour sous une chute franche : la bille remonte presque aussi haut. */
-    private fun moduleTambour(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vy > -2.6f || pt.y < 0.6f) return null
-        val largeur = hasard.nextFloat() * 0.3f + 0.6f
-        return Pose(
-            TypePiece.TAMBOUR,
-            x = pt.x + pt.vx * 0.05f,
-            y = pt.y - 0.34f,
-            taille = largeur
-        )
-    }
-
-    /**
-     * Un tremplin sous une chute : la bille repart **en avant**, pas en l'air.
-     *
-     * Le sens de la charniere est ce qui compte : le volet tourne autour d'elle, donc la
-     * bille est chassee du cote oppose. On met donc la charniere derriere le sens de la
-     * course.
-     */
-    private fun moduleTremplin(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vy > -1.4f || pt.y < 1.0f) return null
-        val bas = pt.y - 0.48f
-        if (bas < 0.02f) return null
-        val sens = pt.sens(if (hasard.nextBoolean()) 1f else -1f)
-        val longueur = hasard.nextFloat() * 0.25f + 0.6f
-        return Pose(
-            TypePiece.TREMPLIN,
-            x = pt.x - sens * longueur / 2f,
-            y = bas,
-            reglage = sens,
-            taille = longueur
-        )
-    }
-
-    /** Une bascule sous une chute : ce qui tombe d'un cote fait monter l'autre. */
-    private fun moduleBascule(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vy > -1.2f || pt.y < 0.9f) return null
-        val bas = pt.y - 0.42f
-        if (bas < 0.02f) return null
-        val sens = pt.sens(if (hasard.nextBoolean()) 1f else -1f)
-        val longueur = hasard.nextFloat() * 0.5f + 1f
-        return Pose(
-            TypePiece.BASCULE,
-            x = pt.x - sens * longueur * 0.38f,
-            y = bas,
-            taille = longueur
-        )
-    }
-
-    /**
-     * Un ventilateur derriere la bille : il la pousse la ou la pente ne la mene pas.
-     *
-     * Le carter est place **en arriere de la course**, jamais devant : un obstacle scelle
-     * en travers du chemin arreterait la bille au lieu de la pousser, et c'est la seule
-     * facon de rater completement l'effet recherche.
-     */
-    private fun moduleVentilateur(pt: Echantillon, hasard: Random): Pose? {
-        if (pt.vitesse < 1f) return null
-        val vertical = hasard.nextInt(3) == 0
-        if (vertical) {
-            val bas = pt.y - 1.3f
-            if (bas < 0.25f) return null
-            return Pose(TypePiece.VENTILATEUR, x = pt.x, y = bas, reglage = 90f)
-        }
-        val sens = pt.sens(if (hasard.nextBoolean()) 1f else -1f)
-        val recul = hasard.nextFloat() * 0.5f + 0.9f
-        val y = pt.y.coerceAtLeast(0.25f)
-        return Pose(
-            TypePiece.VENTILATEUR,
-            x = pt.x - sens * recul,
-            y = y,
-            reglage = if (sens > 0f) 0f else 180f
-        )
-    }
-
-    /** Un bloc en travers : la bille bute, retombe, et repart ailleurs. */
-    private fun moduleBloc(pt: Echantillon, hasard: Random): Pose? {
-        if (abs(pt.vx) < 1.2f) return null
-        val sens = pt.sens(1f)
-        val cote = hasard.nextFloat() * 0.25f + 0.3f
-        return Pose(
-            TypePiece.BLOC,
-            x = pt.x + sens * (0.4f + cote / 2f),
-            y = pt.y + cote * 0.1f,
-            taille = cote
-        )
-    }
-
-    // ── La fin : le bouton ───────────────────────────────────────────────────
-
-    /**
-     * Termine la machine et pose le bouton. Rend la solution complete et la position du
-     * bouton, ou `null` si aucune fin ne convient.
-     *
-     * Trois fins, essayees dans un ordre tire au hasard, parce qu'une fin toujours
-     * identique se reconnait des le premier coup d'oeil et tue le casse-tete :
-     *
-     *  - **la poulie** : la bille tombe dans le godet et le contrepoids monte declencher
-     *    le bouton, seule facon d'atteindre un bouton place en hauteur ;
-     *  - **les dominos** : la ligne classique, qui demande de la precision au placement ;
-     *  - **l'arrivee directe** : le bouton la ou la bille finit sa course.
-     */
-    private fun achever(
-        poses: List<Pose>,
-        trace: Trace,
-        billeX: Float,
-        billeY: Float,
-        hasard: Random
-    ): Pair<List<Pose>, Pair<Float, Float>>? {
-        // Les deux vraies fins d'abord, dans un ordre tire au hasard ; l'arrivee directe
-        // ensuite, et seulement si aucune des deux n'a pris.
-        //
-        // L'ordre n'est pas cosmetique. Une machine qui finit sur une ligne de dominos ou
-        // sur un contrepoids qui monte a un bouton **qu'on ne peut pas atteindre
-        // autrement** ; une machine qui finit la ou la bille s'arrete a un bouton que la
-        // moitie des machines plus courtes atteindrait aussi. Preferer les premieres, c'est
-        // preferer les tableaux ou chaque piece compte.
-        val fins = listOf(::finPoulie, ::finDominos).shuffled(hasard) + listOf(::finDirecte)
-        for (fin in fins) {
-            val resultat = fin(poses, trace, hasard) ?: continue
-            val essai = simulerAvecBouton(billeX, billeY, resultat.first, resultat.second)
-            if (essai) return resultat
-        }
-        return null
-    }
-
-    /** La poulie : la bille tombe dans le godet, le contrepoids monte sur le bouton. */
-    private fun finPoulie(
-        poses: List<Pose>,
-        trace: Trace,
-        hasard: Random
-    ): Pair<List<Pose>, Pair<Float, Float>>? {
-        val hauteur = Pieces.POULIE_HAUTEUR
-        val candidats = trace.points.filter { it.t > 0.4f && it.vy < -1.2f && it.y > hauteur }
-        if (candidats.isEmpty()) return null
-        val pt = candidats[hasard.nextInt(candidats.size)]
-
-        // La margelle du godet se place [CHUTE_GODET] plus bas que la bille : assez pour
-        // qu'elle soit franchement dedans, assez peu pour qu'elle n'ait pas le temps de
-        // deriver loin. [Pieces.poulieGodetHaut] donne la cote, on ne la recalcule pas ici.
-        val margelle = pt.y - CHUTE_GODET
-        val bas = margelle - hauteur + 0.55f
-        if (bas < 0.05f) return null
-
-        // **On vise ou la bille sera, pas ou elle est.** Elle tombe de trente centimetres
-        // en un quart de seconde, et a deux metres par seconde d'elan horizontal cela fait
-        // cinquante centimetres de derive — deux fois la largeur du godet. Sans cette
-        // correction, un candidat sur dix touchait le godet.
-        val vol = sqrt(2f * CHUTE_GODET / 9.81f)
-        val arrivee = pt.x + pt.vx * vol
-        val x = arrivee + Pieces.POULIE_ECART
-        val pose = Pose(TypePiece.POULIE, x = x, y = bas, taille = hauteur)
-        if (!placable(pose, poses)) return null
-
-        val boutonX = x + Pieces.POULIE_ECART
-        val boutonBas = Pieces.poulieContrepoidsHaut(bas) - 0.02f
-        return (poses + pose) to (boutonX to boutonBas)
-    }
-
-    /** La ligne de dominos, posee sur un tronçon ou la bille roule au sol. */
-    private fun finDominos(
-        poses: List<Pose>,
-        trace: Trace,
-        hasard: Random
-    ): Pair<List<Pose>, Pair<Float, Float>>? {
-        val candidats = trace.points.filter {
-            it.t > 0.4f && it.y < 0.32f && abs(it.vx) > 1f
-        }
-        if (candidats.isEmpty()) return null
-        val pt = candidats[hasard.nextInt(candidats.size)]
-        val sens = pt.sens(1f)
-        val nombre = hasard.nextInt(4, 8)
-        val ecart = hasard.nextFloat() * 0.06f + 0.26f
-        val premier = pt.x + sens * 0.5f
-        val dernier = premier + sens * (nombre - 1) * ecart
-        // Le dernier domino doit tomber dans la zone : sa pointe decrit un arc dont le
-        // rayon est sa hauteur, donc on met le bouton d'un peu moins que ca.
-        val boutonX = dernier + sens * 0.48f
-        if (abs(boutonX) > 4.4f) return null
-        val ligne = (0 until nombre).map {
-            Pose(TypePiece.DOMINO, x = premier + sens * it * ecart, y = 0f)
-        }
-        for (d in ligne) if (!placable(d, poses)) return null
-        return (poses + ligne) to (boutonX to 0f)
-    }
-
-    /** Le bouton la ou la bille s'arrete. */
-    private fun finDirecte(
-        poses: List<Pose>,
-        trace: Trace,
-        hasard: Random
-    ): Pair<List<Pose>, Pair<Float, Float>>? {
-        if (poses.size < 2) return null
-        val fin = trace.fin ?: return null
-        if (fin.vitesse > 0.6f) return null
-        if (abs(fin.x) > 4.4f) return null
-        return poses to (fin.x to (fin.y - 0.12f).coerceAtLeast(0f))
-    }
-
-    // ── Verification et elagage ──────────────────────────────────────────────
-
-    /**
-     * Retire une a une les pieces dont l'absence ne change rien.
-     *
-     * **C'est ce qui rend l'inventaire honnete.** Le generateur pose des pieces en
-     * regardant la course de la bille, mais une piece posee a l'etape deux peut se
-     * retrouver hors du chemin apres qu'on en a pose une a l'etape trois. La laisser dans
-     * l'inventaire, c'est donner au joueur une piece dont il n'a aucun moyen de deviner
-     * a quoi elle sert — parce qu'elle ne sert a rien.
-     *
-     * On procede de la derniere vers la premiere : retirer une piece tardive a moins de
-     * chances de casser les suivantes, donc l'elagage converge plus vite.
-     *
-     * ## Et on repasse jusqu'a ce que plus rien ne parte
-     *
-     * Une seule passe ne suffit pas, et la raison est jolie : **la physique n'est pas
-     * monotone.** Une piece peut etre indispensable dans un tableau a six pieces et
-     * parfaitement inutile dans le tableau a quatre pieces qu'on obtient apres en avoir
-     * retire deux autres — le trajet de la bille n'est plus le meme, et elle ne la touche
-     * plus. Une passe unique laissait donc passer des pieces mortes, et le test qui verifie
-     * qu'aucune piece n'est superflue le voyait tout de suite.
-     *
-     * La boucle s'arrete forcement : chaque tour qui change quelque chose retire au moins
-     * une piece, et il n'y en a jamais plus d'une douzaine.
-     */
-    private fun elaguer(
-        poses: List<Pose>,
-        billeX: Float,
-        billeY: Float,
-        bouton: Pair<Float, Float>
-    ): List<Pose> {
-        var retenues = poses
-        var encore = true
-        while (encore) {
-            encore = false
-            var i = retenues.size - 1
-            while (i >= 0) {
-                if (retenues.size <= 1) break
-                val sans = retenues.toMutableList().also { it.removeAt(i) }
-                if (simulerAvecBouton(billeX, billeY, sans, bouton)) {
-                    retenues = sans
-                    encore = true
-                }
-                i--
-            }
-        }
-        return retenues
-    }
-
-    /** Fait tourner une solution et rend le temps qu'elle a mis, ou `null` si elle perd. */
-    private fun verifier(tableau: Tableau): Float? {
-        val monde = monter(tableau, avecSolution = true)
-        val temps = monde.derouler(PATIENCE)
-        return if (monde.gagne) temps else null
-    }
-
-    /**
-     * Vrai si le tableau se gagne sans poser une seule piece.
-     *
-     * Le garde-fou indispensable : si le decor seul suffisait, l'inventaire ne servirait
-     * a rien et le generateur ne genererait qu'une animation.
-     */
     private fun gagneSansRien(tableau: Tableau): Boolean {
-        val monde = monter(tableau, avecSolution = false)
+        val monde = monter(tableau)
         monde.derouler(PATIENCE)
         return monde.gagne
-    }
-
-    /**
-     * Vrai si le joueur peut effectivement poser la solution, une piece apres l'autre.
-     *
-     * Une solution que les regles de placement refusent est un tableau insoluble a la
-     * main : soluble sur le papier, impossible au doigt, et absolument indiagnosticable
-     * en jouant. La verification coute une partie montee a blanc, c'est-a-dire rien.
-     */
-    private fun posable(tableau: Tableau): Boolean {
-        val partie = Partie(tableau)
-        for (pose in tableau.solution) if (partie.poser(pose) != Refus.OK) return false
-        return true
-    }
-
-    /** Vrai si cette solution-la, avec ce bouton-la, gagne. */
-    private fun simulerAvecBouton(
-        billeX: Float,
-        billeY: Float,
-        poses: List<Pose>,
-        bouton: Pair<Float, Float>
-    ): Boolean {
-        val p = Plateau()
-        p.poserBouton(x = bouton.first, bas = bouton.second)
-        for (pose in poses) p.poser(pose.creer())
-        p.poserBille(billeX, billeY)
-        p.derouler(PATIENCE)
-        return p.gagne
-    }
-
-    /** Vrai si la piece tient dans le tableau sans en heurter une autre. */
-    private fun placable(pose: Pose, poses: List<Pose>): Boolean {
-        val piece = pose.creer()
-        if (!Placement.dansLeTableau(piece, Plateau.LARGEUR, Plateau.HAUTEUR)) return false
-        val occupants = ArrayList<PhysBody>()
-        for (p in poses) occupants.addAll(p.creer().corps)
-        for (c in occupants) c.updateAabb()
-        return !Placement.heurte(piece, occupants)
-    }
-
-    /**
-     * Lache la bille sur une machine et note toute sa course.
-     *
-     * L'arret est decide par le moteur, pas par un chronometre : des que plus rien ne
-     * bouge, la suite ne dira rien de plus. C'est ce qui rend la generation rapide malgre
-     * le nombre d'essais — une machine qui echoue s'arrete au bout d'une seconde.
-     */
-    private fun simuler(
-        billeX: Float,
-        billeY: Float,
-        poses: List<Pose>,
-        duree: Float = PATIENCE
-    ): Trace {
-        val p = Plateau()
-        for (pose in poses) p.poser(pose.creer())
-        val bille = p.poserBille(billeX, billeY)
-
-        val points = ArrayList<Echantillon>()
-        var t = 0f
-        var parcours = 0f
-        var px = bille.x
-        var py = bille.y
-        var image = 0
-        var perdue = false
-        var immobileDepuis = 0f
-        while (t < duree) {
-            p.avancer(PAS)
-            t += PAS
-            image++
-            parcours += hypot(bille.x - px, bille.y - py)
-            px = bille.x
-            py = bille.y
-            if (image % 4 == 0) {
-                points.add(Echantillon(t, bille.x, bille.y, bille.vx, bille.vy))
-            }
-            if (p.billePerdue()) {
-                perdue = true
-                break
-            }
-            immobileDepuis = if (bille.speedSq < 0.0025f) immobileDepuis + PAS else 0f
-            if (t > 0.6f && immobileDepuis > REPOS_BILLE) break
-        }
-        points.add(Echantillon(t, bille.x, bille.y, bille.vx, bille.vy))
-        return Trace(points, perdue, parcours)
     }
 }

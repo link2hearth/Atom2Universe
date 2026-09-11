@@ -5,162 +5,142 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.abs
 
 /**
- * Le generateur de tableaux.
+ * Le generateur de tableaux, dans sa version simple.
  *
- * Une seule promesse compte, et elle est dure a tenir : **tout tableau propose a un
- * joueur doit avoir une solution**. Rien n'est plus decourageant qu'un casse-tete
- * insoluble, et rien n'est plus difficile a prouver apres coup. La fabrique s'y prend
- * donc a l'envers — elle construit la solution, la fait tourner, et ne garde que ce
- * qui a gagne.
+ * ## Ce qu'il promet maintenant, et ce qu'il ne promet plus
+ *
+ * Il construisait la machine a la place du joueur, la faisait tourner, elaguait ce qui ne
+ * servait a rien, et ne distribuait que l'inventaire de ce qui restait. Il ne fait plus
+ * rien de tout cela : il pose la bille, il pose le bouton, et le joueur recoit toute la
+ * panoplie. Trois cents lignes en moins, et surtout la bonne question posee au joueur.
+ *
+ * La solubilite, elle, a cesse d'etre une question. Avec toute la panoplie dans les mains
+ * du joueur — huit rampes scellees qui tiennent en l'air ou l'on veut — on descend de
+ * n'importe ou a n'importe ou. Il n'y a donc rien a prouver ici, et surtout pas en
+ * ecrivant un resolveur : ce qui reste a verifier, ce sont les regles de dessin du
+ * tableau, et le seul accident qu'elles ne couvrent pas.
  */
 class InfernaleTableauTest {
 
     @Test
-    fun `toutes les graines donnent un tableau soluble`() {
-        // **Le test qui porte tout.** Il monte et fait tourner des machines completes, et
-        // il tourne en quelques secondes : c'est le genre de garantie qu'on ne peut se
-        // payer que parce que le jeu se simule sans ecran.
-        //
-        // C'est [Tableaux.genererSurement] qui est interroge, et non [Tableaux.generer],
-        // parce que c'est lui que le jeu appelle et lui seul qui promet de toujours
-        // rendre quelque chose. Une tentative isolee a parfaitement le droit d'echouer :
-        // elle batit une machine au hasard et la refuse si chaque piece n'y est pas
-        // indispensable, ce qui est exigeant par construction.
-        for (graine in 1L..25L) {
-            val tableau = Tableaux.genererSurement(graine)
-            val monde = Tableaux.monter(tableau, avecSolution = true)
-            monde.derouler(12f)
-            assertTrue("la graine $graine a produit un tableau que sa propre solution " +
-                "ne gagne pas", monde.gagne)
+    fun `un tableau vide ne se gagne pas tout seul`() {
+        // Le seul garde-fou que la geometrie ne couvre pas, et le seul que le generateur
+        // mesure encore. Si le decor suffisait, l'inventaire ne servirait a rien et le
+        // tableau ne serait qu'une animation.
+        for (niveau in 1..30) {
+            val monde = Tableaux.monter(Tableaux.pourNiveau(niveau))
+            monde.derouler(10f)
+            assertFalse("le niveau $niveau se gagne sans poser une seule piece", monde.gagne)
         }
     }
 
     @Test
-    fun `une tentative isolee aboutit le plus souvent`() {
-        // Le garde-fou de cout. [Tableaux.genererSurement] finit toujours par trouver,
-        // donc il ne dira jamais que le generateur s'est mis a echouer neuf fois sur
-        // dix — il le paiera seulement en secondes d'attente devant le joueur. Ce
-        // test-ci mesure le taux brut, et c'est lui qui previent avant que l'ecran de
-        // chargement ne s'eternise.
-        var trouves = 0
-        for (graine in 1L..50L) if (Tableaux.generer(graine) != null) trouves++
-        assertTrue("seulement $trouves tableaux sur 50 du premier coup : le generateur " +
-            "echoue trop souvent, et chaque echec se paie en attente", trouves >= 30)
+    fun `le bouton est toujours plus bas que la bille`() {
+        // La regle de dessin qui porte tout le reste. Un bouton plus haut que la bille
+        // demanderait de la faire monter, ce que la panoplie ne sait faire que sur
+        // soixante-dix centimetres avec la poulie : le tableau serait injouable sans que
+        // rien a l'ecran ne le dise.
+        for (niveau in 1..40) {
+            val t = Tableaux.pourNiveau(niveau)
+            assertTrue(
+                "le niveau $niveau place le bouton a ${t.boutonBas} pour une bille a ${t.billeY}",
+                t.boutonBas <= t.billeY - 1.2f
+            )
+            assertTrue(
+                "le niveau $niveau colle la bille au bouton (${abs(t.boutonX - t.billeX)} m)",
+                abs(t.boutonX - t.billeX) >= 2.4f
+            )
+        }
+    }
+
+    @Test
+    fun `tout tient dans le cadre`() {
+        // Le cadre est a la fois ce qu'on voit et ce ou l'on peut batir. La bille ou le
+        // bouton qui en sortirait serait invisible, et le tableau paraitrait casse.
+        for (niveau in 1..40) {
+            val t = Tableaux.pourNiveau(niveau)
+            assertTrue("niveau $niveau : la bille est hors cadre",
+                t.billeX > t.cadreMinX && t.billeX < t.cadreMaxX)
+            assertTrue("niveau $niveau : le bouton est hors cadre",
+                t.boutonX > t.cadreMinX && t.boutonX < t.cadreMaxX)
+            assertTrue("niveau $niveau : la bille depasse le plafond",
+                t.billeY < t.cadreMaxY)
+            assertTrue("niveau $niveau : cadre trop etroit (${t.cadreMaxX - t.cadreMinX} m)",
+                t.cadreMaxX - t.cadreMinX >= 6f)
+        }
     }
 
     @Test
     fun `la meme graine rend exactement le meme tableau`() {
-        // Un tableau se partage par son numero : deux joueurs qui tapent la meme graine
-        // doivent avoir le meme casse-tete, sinon le numero ne veut rien dire.
-        for (graine in listOf(1L, 7L, 42L, 1234L)) {
-            val a = Tableaux.genererSurement(graine)
-            val b = Tableaux.genererSurement(graine)
-            assertEquals("la graine $graine ne donne pas deux fois la meme bille",
+        // Un tableau se partage par son numero : deux joueurs qui tapent le meme doivent
+        // avoir le meme casse-tete, sinon le numero ne veut rien dire.
+        for (niveau in listOf(1, 7, 12, 33)) {
+            val a = Tableaux.pourNiveau(niveau)
+            val b = Tableaux.pourNiveau(niveau)
+            assertEquals("le niveau $niveau ne rend pas deux fois la meme bille",
                 a.billeX to a.billeY, b.billeX to b.billeY)
-            assertEquals("la graine $graine ne donne pas deux fois le meme bouton",
-                a.boutonX, b.boutonX, 0f)
-            assertEquals("la graine $graine ne donne pas deux fois la meme solution",
-                a.solution, b.solution)
+            assertEquals("le niveau $niveau ne rend pas deux fois le meme bouton",
+                a.boutonX to a.boutonBas, b.boutonX to b.boutonBas)
+            assertEquals("le niveau $niveau ne rend pas deux fois le meme socle",
+                a.socleHauteur, b.socleHauteur, 0f)
         }
     }
 
     @Test
-    fun `deux graines differentes donnent des tableaux differents`() {
-        val tableaux = (1L..20L).map { Tableaux.genererSurement(it) }
-        val distincts = tableaux.map { it.solution }.toSet()
-        assertTrue("le generateur se repete : ${distincts.size} tableaux distincts sur 20",
-            distincts.size >= 18)
+    fun `deux niveaux differents donnent des tableaux differents`() {
+        val vus = (1..30).map { n ->
+            val t = Tableaux.pourNiveau(n)
+            Triple(t.billeX, t.boutonX, t.boutonBas)
+        }.toSet()
+        assertTrue("le generateur se repete : ${vus.size} tableaux distincts sur 30",
+            vus.size >= 28)
     }
 
     @Test
-    fun `un tableau vide ne se gagne pas tout seul`() {
-        // Le pendant du test precedent, et il est indispensable. Si le decor seul
-        // suffisait a declencher le bouton, l'inventaire ne servirait a rien et le
-        // « generateur » ne genererait qu'une animation.
-        for (graine in 1L..20L) {
-            val tableau = Tableaux.genererSurement(graine)
-            val monde = Tableaux.monter(tableau, avecSolution = false)
-            monde.derouler(12f)
-            assertFalse("la graine $graine se gagne sans poser une seule piece",
-                monde.gagne)
+    fun `la bille part des deux cotes`() {
+        // Sans ce tirage, tous les tableaux se lisent de gauche a droite et se ressemblent
+        // au premier coup d'oeil, quelles que soient les cotes.
+        val versLaDroite = (1..30).count { n ->
+            val t = Tableaux.pourNiveau(n)
+            t.boutonX > t.billeX
         }
+        assertTrue("le sens ne varie pas : $versLaDroite tableaux sur 30 vont a droite",
+            versLaDroite in 8..22)
     }
 
     @Test
-    fun `l inventaire correspond exactement a la solution`() {
-        for (graine in 1L..10L) {
-            val tableau = Tableaux.genererSurement(graine)
-            assertEquals("graine $graine : l'inventaire ne compte pas les memes pieces " +
-                "que la solution", tableau.pieces, tableau.inventaire.values.sum())
-            assertTrue("graine $graine : un tableau sans aucune piece a poser",
-                tableau.pieces >= 1)
-        }
-    }
-
-    @Test
-    fun `les tableaux restent de taille raisonnable`() {
-        // La contrainte de cout : peu de dominos et gros. Une ligne de trente dominos
-        // fins couterait plus cher qu'un chateau au moteur, pour le meme effet.
-        for (graine in 1L..30L) {
-            val tableau = Tableaux.genererSurement(graine)
-            val dominos = tableau.inventaire[TypePiece.DOMINO] ?: 0
-            assertTrue("la graine $graine demande $dominos dominos", dominos <= 8)
-            assertTrue("la graine $graine demande ${tableau.pieces} pieces en tout",
-                tableau.pieces <= 11)
-        }
-    }
-
-    @Test
-    fun `le generateur ne se contente pas d une seule forme de machine`() {
-        // **Le test qui dit si la refonte du generateur a servi a quelque chose.** La
-        // version precedente ne savait produire qu'une rampe suivie d'une ligne de
-        // dominos : tous les tableaux se ressemblaient, et deux types de pieces sur neuf
-        // n'etaient jamais distribues. Exiger cinq types differents sur trente tableaux
-        // est modeste, et c'etait pourtant impossible avant.
-        val vus = HashSet<TypePiece>()
-        for (graine in 1L..30L) vus.addAll(Tableaux.genererSurement(graine).inventaire.keys)
-        assertTrue("le generateur n'emploie que ${vus.size} types de pieces : $vus",
-            vus.size >= 5)
-    }
-
-    @Test
-    fun `chaque piece de l inventaire est indispensable`() {
-        // L'elagage promet qu'une piece donnee au joueur sert a quelque chose. C'est la
-        // promesse la plus facile a rompre sans s'en apercevoir — une piece posee a
-        // l'etape deux peut se retrouver hors du chemin apres l'etape trois — et la plus
-        // penible pour le joueur, qui cherche a quoi sert une piece qui ne sert a rien.
-        for (graine in 1L..12L) {
-            val tableau = Tableaux.genererSurement(graine)
-            if (tableau.pieces < 2) continue
-            for (i in tableau.solution.indices) {
-                val ampute = tableau.solution.toMutableList().also { it.removeAt(i) }
-                val monde = Plateau()
-                monde.poserBouton(tableau.boutonX, tableau.boutonBas)
-                for (pose in ampute) monde.poser(pose.creer())
-                monde.poserBille(tableau.billeX, tableau.billeY)
-                monde.derouler(9f)
-                assertFalse(
-                    "graine $graine : la machine gagne sans sa piece ${tableau.solution[i].type} " +
-                        "(rang $i) — elle n'avait rien a faire dans l'inventaire",
-                    monde.gagne
-                )
+    fun `le socle apparait sans jamais depasser la bille`() {
+        // Un socle est ce qui rend un bouton en hauteur interessant : il faut poser la
+        // bille **sur** quelque chose. Mais un socle plus haut que la bille demanderait de
+        // la faire monter, donc il est borne a la construction.
+        var perches = 0
+        for (niveau in 1..30) {
+            val t = Tableaux.pourNiveau(niveau)
+            if (t.socleHauteur > 0f) {
+                perches++
+                assertTrue("le niveau $niveau perche le bouton a ${t.socleHauteur} m " +
+                    "pour une bille a ${t.billeY} m", t.socleHauteur <= t.billeY - 1.2f)
+                assertEquals("le socle et le bouton ne sont pas a la meme hauteur",
+                    t.socleHauteur, t.boutonBas, 1e-4f)
             }
         }
+        assertTrue("aucun tableau ne perche son bouton", perches >= 5)
     }
 
     @Test
-    fun `chaque niveau propose un tableau soluble`() {
-        // La difficulte monte par etapes, donc le generateur travaille plus dur au
-        // niveau douze qu'au niveau un. C'est exactement la ou un generateur cesse de
-        // trouver, et c'est donc la qu'il faut le mesurer.
-        for (niveau in 1..12) {
-            val tableau = Tableaux.pourNiveau(niveau)
-            val monde = Tableaux.monter(tableau, avecSolution = true)
-            monde.derouler(12f)
-            assertTrue("le niveau $niveau n'est pas soluble par sa propre solution",
-                monde.gagne)
+    fun `la panoplie est la meme partout et contient les neuf pieces`() {
+        // Le joueur a tout, tout le temps : c'est le coeur du reglage de difficulte, qui
+        // porte desormais sur la geometrie du probleme et pas sur ce qu'on retire.
+        for (type in TypePiece.entries) {
+            assertTrue("la panoplie ne contient pas de $type",
+                (Panoplie.COMPLET[type] ?: 0) > 0)
+        }
+        for (niveau in listOf(1, 5, 20)) {
+            assertEquals("le niveau $niveau n'a pas la panoplie complete",
+                Panoplie.COMPLET, Tableaux.pourNiveau(niveau).inventaire)
         }
     }
 
@@ -180,8 +160,8 @@ class InfernaleTableauTest {
 
     @Test
     fun `chaque type de piece sait se recreer depuis une pose`() {
-        // Garde-fou contre l'oubli : ajouter un type de piece sans l'ajouter a `creer`
-        // ne compilerait meme pas, mais rien ne garantit qu'il produise quelque chose.
+        // Garde-fou contre l'oubli : ajouter un type de piece sans l'ajouter a `creer` ne
+        // compilerait meme pas, mais rien ne garantit qu'il produise quelque chose.
         for (type in TypePiece.entries) {
             val piece = Pose(type, x = 0f, y = 0.5f, reglage = 20f).creer()
             assertNotNull("le type $type ne produit aucune piece", piece)
