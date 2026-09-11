@@ -166,13 +166,19 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
             }
 
             TypePiece.POULIE -> {
-                c.drawRect(cx - u * 1.5f, cy - u * 1.4f, cx + u * 1.5f, cy - u * 1.1f, fer)
-                c.drawCircle(cx - u * 0.8f, cy - u * 1.1f, u * 0.3f, ferClair)
-                c.drawCircle(cx + u * 0.8f, cy - u * 1.1f, u * 0.3f, ferClair)
-                c.drawLine(cx - u * 0.8f, cy - u * 1.1f, cx - u * 0.8f, cy + u * 0.2f, corde)
-                c.drawLine(cx + u * 0.8f, cy - u * 1.1f, cx + u * 0.8f, cy + u * 0.9f, corde)
-                c.drawRect(cx - u * 1.2f, cy + u * 0.2f, cx - u * 0.4f, cy + u * 0.8f, boisSombre)
-                c.drawRect(cx + u * 0.5f, cy + u * 0.9f, cx + u * 1.1f, cy + u * 1.4f, fer)
+                // Un mat au milieu, un rea a son sommet, et les deux plateaux de part et
+                // d'autre : c'est le dessin d'une balance, et c'est ce que la piece fait.
+                // La vignette suivait l'ancienne forme — mat de cote, deux caisses du meme
+                // cote — et apprenait donc au joueur une correspondance fausse.
+                val rea = cy - u * 1.3f
+                c.drawRect(cx - u * 0.12f, rea, cx + u * 0.12f, cy + u * 1.4f, fer)
+                c.drawLine(cx, rea, cx - u * 1.1f, cy + u * 0.1f, corde)
+                c.drawLine(cx, rea, cx + u * 1.1f, cy + u * 0.9f, corde)
+                c.drawCircle(cx, rea, u * 0.3f, ferClair)
+                // Le godet, en haut a gauche : vide, donc c'est lui qui est leve.
+                c.drawRect(cx - u * 1.5f, cy + u * 0.1f, cx - u * 0.7f, cy + u * 0.6f, boisSombre)
+                // Le contrepoids, en bas a droite : c'est lui qui pese.
+                c.drawRect(cx + u * 0.8f, cy + u * 0.9f, cx + u * 1.4f, cy + u * 1.4f, fer)
             }
         }
     }

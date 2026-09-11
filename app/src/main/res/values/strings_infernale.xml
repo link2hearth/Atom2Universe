@@ -38,5 +38,15 @@
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
-    <string name="infernale_placed">%1$d pieces placed (par: %2$d)</string>
+    <string name="infernale_placed">Placed: %1$d  ·  par %2$d</string>
+    <string name="infernale_role_ramp">Fixed sloped plank. It guides the ball where it falls.</string>
+    <string name="infernale_role_plot">Fixed bouncy peg. The ball leaves at an angle.</string>
+    <string name="infernale_role_block">Fixed wall. It blocks, or sends back.</string>
+    <string name="infernale_role_domino">Falls when pushed, and pushes the next one.</string>
+    <string name="infernale_role_seesaw">Fixed foot, free plank. What drops on one side lifts the other.</string>
+    <string name="infernale_role_trampoline">Spring-loaded flap. What lands on it is thrown forward.</string>
+    <string name="infernale_role_fan">Blows a jet of air. It pushes light things; it cannot lift the ball.</string>
+    <string name="infernale_role_drum">Taut skin. What falls on it comes back up almost as high.</string>
+    <string name="infernale_role_pulley">Bucket and counterweight. The ball falling in raises the counterweight.</string>
+    <string name="infernale_piece_named">%1$s — %2$s</string>
 </resources>

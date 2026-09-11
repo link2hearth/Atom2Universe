@@ -282,7 +282,7 @@ object Pieces {
      * Le godet est a gauche, le contrepoids a droite, et le bouton que vise le generateur
      * se pose exactement a l'aplomb du second.
      */
-    const val POULIE_ECART = 0.3f
+    const val POULIE_ECART = 0.5f
 
     /** Course verticale du contrepoids, bornee par ses deux tablettes. */
     const val POULIE_COURSE = 0.7f
@@ -301,9 +301,6 @@ object Pieces {
 
     /** Hauteur du centre du contrepoids au repos, au-dessus du pied du mat. */
     private const val CONTREPOIDS_REPOS = 0.24f
-
-    /** Ecart entre le centre de la piece et le mat. */
-    private const val POULIE_MAT = 0.62f
 
     /** Masse du godet vide. Il doit etre **plus leger** que le contrepoids. */
     private const val POULIE_MASSE_GODET = 0.4f
@@ -628,12 +625,11 @@ object Pieces {
      * [bas] est le pied du mât.
      */
     fun poulie(x: Float, bas: Float, hauteur: Float = POULIE_HAUTEUR): Piece {
-        val matX = x + POULIE_MAT
-        val reaX = matX
+        val reaX = x
         val reaY = bas + hauteur
 
         val mat = scelle(PhysBody(0.06f, hauteur / 2f, 0f).apply {
-            this.x = matX
+            this.x = x
             this.y = bas + hauteur / 2f
             friction = FROTTEMENT
         }.marquer(Element.BATI))

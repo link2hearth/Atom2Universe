@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.RadialGradient
 import android.graphics.Path
 import android.graphics.Shader
 import android.util.AttributeSet
@@ -376,8 +377,10 @@ class InfernaleView @JvmOverloads constructor(
         val hauteurMonde = (t.cadreMaxY + SOL_VISIBLE).coerceAtLeast(1f)
         echelle = minOf(w / largeurMonde, h / hauteurMonde)
         origineX = w / 2f - (t.cadreMinX + t.cadreMaxX) / 2f * echelle
-        val marge = (h - hauteurMonde * echelle) / 2f
-        basY = marge + t.cadreMaxY * echelle
+        // Tout le mou vertical passe **au-dessus**, et pas moitie-moitie. Centrer laissait
+        // un quart de l'ecran de terre sous les pieds pour rien, alors que la place utile
+        // est en haut : c'est la qu'on pose les premieres rampes.
+        basY = h - SOL_VISIBLE * echelle
         preparerDecor(t)
     }
 
@@ -402,10 +405,19 @@ class InfernaleView @JvmOverloads constructor(
             rocherY[i] = -0.05f - suivant() * 0.35f
             rocherR[i] = 0.04f + suivant() * 0.09f
         }
+        // **Les torches vivent sur les parois, jamais au milieu du tableau.** Semees sur
+        // toute la largeur, elles se retrouvaient derriere la machine, et on a vu a
+        // l'ecran la bille passer pile devant une flamme : deux ronds clairs l'un sur
+        // l'autre, impossible de dire lequel etait la bille.
         for (i in 0 until TORCHES) {
-            torcheX[i] = l + 0.5f + (i + 0.5f) / TORCHES * (r - l - 1f)
-            torcheY[i] = t.cadreMaxY * (0.55f + suivant() * 0.3f)
+            val gauche = i % 2 == 0
+            torcheX[i] = if (gauche) l + 0.18f else r - 0.18f
+            torcheY[i] = t.cadreMaxY * (0.34f + (i / 2) * 0.3f + suivant() * 0.06f)
         }
+        halo.shader = RadialGradient(
+            0f, 0f, echelle * 1.6f,
+            0x66FF9A2E, 0x00FF9A2E, Shader.TileMode.CLAMP
+        )
         fond.shader = LinearGradient(
             0f, 0f, 0f, hauteurVue.toFloat().coerceAtLeast(1f),
             0xFF080B16.toInt(), 0xFF1B1526.toInt(), Shader.TileMode.CLAMP
@@ -446,25 +458,30 @@ class InfernaleView @JvmOverloads constructor(
     private fun peindreCaverne(c: Canvas, t: Tableau) {
         val gauche = ex(t.cadreMinX)
         val droite = ex(t.cadreMaxX)
-        // Deux parois de roche, l'une derriere l'autre : c'est ce qui donne de la
-        // profondeur sans une seule texture.
-        val epaisseur = echelle * 0.7f
-        c.drawRect(0f, 0f, gauche + epaisseur, height.toFloat(), roche)
-        c.drawRect(droite - epaisseur, 0f, width.toFloat(), height.toFloat(), roche)
-        c.drawRect(0f, 0f, gauche + epaisseur * 0.45f, height.toFloat(), rocheClaire)
-        c.drawRect(droite - epaisseur * 0.45f, 0f, width.toFloat(), height.toFloat(), rocheClaire)
+        // Les parois s'arretent **exactement** au bord du cadre. Elles debordaient de
+        // soixante-dix centimetres a l'interieur, donc sur une bande ou l'on a parfaitement
+        // le droit de batir : le decor disait « mur » la ou le jeu disait « libre ».
+        val liseret = echelle * 0.22f
+        c.drawRect(0f, 0f, gauche, height.toFloat(), rocheClaire)
+        c.drawRect(droite, 0f, width.toFloat(), height.toFloat(), rocheClaire)
+        c.drawRect(0f, 0f, gauche - liseret, height.toFloat(), roche)
+        c.drawRect(droite + liseret, 0f, width.toFloat(), height.toFloat(), roche)
 
         for (i in 0 until TORCHES) {
             val x = ex(torcheX[i])
             val y = ey(torcheY[i])
-            // Le vacillement : deux sinusoides de periodes premieres entre elles, ce qui
-            // suffit a ce que l'oeil n'y voie aucune boucle.
-            val vif = 0.75f + 0.25f * sin(horloge * 6.1f + i) * cos(horloge * 2.7f + i * 2f)
-            halo.alpha = (34 * vif).toInt().coerceIn(8, 60)
-            c.drawCircle(x, y, echelle * 1.25f * vif, halo)
-            c.drawRect(x - echelle * 0.035f, y, x + echelle * 0.035f, y + echelle * 0.3f, fer)
-            c.drawCircle(x, y, echelle * 0.09f * vif, torche)
-            c.drawCircle(x, y - echelle * 0.05f, echelle * 0.05f * vif, or)
+            // **Une respiration, pas un clignotement.** Le vacillement etait deux
+            // sinusoides a une demi-seconde de periode, et ca papillotait au point d'attirer
+            // l'oeil loin de la machine — le seul endroit ou il doit etre. Un sixieme de
+            // hertz et un dixieme d'amplitude suffisent a ce que ca ne paraisse pas fige.
+            val vif = 0.92f + 0.08f * sin(horloge * 1.1f + i * 2.1f)
+            c.save()
+            c.translate(x, y)
+            c.drawCircle(0f, 0f, echelle * 1.6f, halo)
+            c.restore()
+            c.drawRect(x - echelle * 0.035f, y, x + echelle * 0.035f, y + echelle * 0.26f, fer)
+            c.drawCircle(x, y, echelle * 0.085f * vif, torche)
+            c.drawCircle(x, y - echelle * 0.04f, echelle * 0.045f * vif, or)
         }
     }
 
@@ -560,14 +577,19 @@ class InfernaleView @JvmOverloads constructor(
             c.drawLine(ex(poulie.groundAX), ey(poulie.groundAY), ex(ancre[0]), ey(ancre[1]), corde)
             poulie.anchorBWorld(ancre)
             c.drawLine(ex(poulie.groundBX), ey(poulie.groundBY), ex(ancre[0]), ey(ancre[1]), corde)
-            for (cote in 0..1) {
-                val rx = if (cote == 0) poulie.groundAX else poulie.groundBX
-                val ry = if (cote == 0) poulie.groundAY else poulie.groundBY
-                c.drawCircle(ex(rx), ey(ry), echelle * 0.1f, fer)
-                c.drawCircle(ex(rx), ey(ry), echelle * 0.055f, ferClair)
+            // Un seul rea dans le cas courant : les deux points de renvoi sont confondus,
+            // et dessiner deux roues au meme endroit ne ferait qu'epaissir le trait.
+            roue(c, poulie.groundAX, poulie.groundAY)
+            if (poulie.groundAX != poulie.groundBX || poulie.groundAY != poulie.groundBY) {
+                roue(c, poulie.groundBX, poulie.groundBY)
             }
         }
         for (corps in piece.corps) peindreCorps(c, corps)
+    }
+
+    private fun roue(c: Canvas, x: Float, y: Float) {
+        c.drawCircle(ex(x), ey(y), echelle * 0.11f, fer)
+        c.drawCircle(ex(x), ey(y), echelle * 0.06f, ferClair)
     }
 
     private fun peindreCorps(c: Canvas, corps: PhysBody) {
@@ -797,14 +819,26 @@ class InfernaleView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Un seul cadre autour de toute la piece, et pas un par corps.
+     *
+     * Une poulie a quatre corps : le mat, le godet, le contrepoids et ses tablettes. Quatre
+     * rectangles bleus emboites ne designaient plus rien — on ne voyait plus la piece sous
+     * le marquage.
+     */
     private fun encadrer(c: Canvas, piece: Piece) {
+        var loX = Float.MAX_VALUE
+        var hiX = -Float.MAX_VALUE
+        var loY = Float.MAX_VALUE
+        var hiY = -Float.MAX_VALUE
         for (corps in piece.corps) {
             corps.updateAabb()
-            c.drawRect(
-                ex(corps.aabbMinX) - 4f, ey(corps.aabbMaxY) - 4f,
-                ex(corps.aabbMaxX) + 4f, ey(corps.aabbMinY) + 4f, marqueur
-            )
+            if (corps.aabbMinX < loX) loX = corps.aabbMinX
+            if (corps.aabbMaxX > hiX) hiX = corps.aabbMaxX
+            if (corps.aabbMinY < loY) loY = corps.aabbMinY
+            if (corps.aabbMaxY > hiY) hiY = corps.aabbMaxY
         }
+        c.drawRect(ex(loX) - 5f, ey(hiY) - 5f, ex(hiX) + 5f, ey(loY) + 5f, marqueur)
     }
 
     private fun dessinerCoins(c: Canvas, pts: FloatArray, peinture: Paint) {
@@ -967,7 +1001,7 @@ class InfernaleView @JvmOverloads constructor(
         const val DECOR = 26
 
         /** Nombre de torches accrochees aux parois. */
-        const val TORCHES = 3
+        const val TORCHES = 4
 
         /** Hauteur de sol visible sous l'altitude zero, en metres. */
         const val SOL_VISIBLE = 0.45f

@@ -104,7 +104,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         curseur.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progres: Int, deLUsager: Boolean) {
                 if (!deLUsager) return
-                val type = typeReglable() ?: return
+                val type = typeEnMain() ?: return
                 val reglage = reglagePour(type) ?: return
                 vue.reglage(type, reglage.valeur(progres))
                 majReglage()
@@ -226,10 +226,18 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         val partie = vue.partieCourante() ?: return
         if (!partie.gagne && !partie.lancee) {
             etat.setTextColor(0xFF94A3B8.toInt())
-            etat.text = if (partie.posees == 0) {
-                getString(R.string.infernale_hint)
-            } else {
-                getString(R.string.infernale_placed, partie.posees, partie.tableau.par)
+            val type = typeEnMain()
+            etat.text = when {
+                // **La piece en main s'explique elle-meme.** Neuf pieces dont plusieurs ne
+                // ressemblent a rien de connu — un tambour, une poulie a godet — et une
+                // vignette de soixante pixels n'a jamais dit a quoi une piece sert. Tant
+                // qu'on en tient une, la ligne d'etat la nomme et dit ce qu'elle fait ; le
+                // compteur reprend sa place des qu'on la lache.
+                type != null -> getString(
+                    R.string.infernale_piece_named, getString(nom(type)), getString(role(type))
+                )
+                partie.posees == 0 -> getString(R.string.infernale_hint)
+                else -> getString(R.string.infernale_placed, partie.posees, partie.tableau.par)
             }
         }
         majReglage()
@@ -253,11 +261,39 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         return if (e <= 0) "" else "  " + "★".repeat(e)
     }
 
-    /** Le type dont le curseur regle la valeur : celui qu'on tient, ou celui qu'on a designe. */
-    private fun typeReglable(): TypePiece? {
+    /**
+     * La piece « en main » : celle qu'on a choisie dans la reserve, ou celle qu'on a
+     * designee sur le tableau. C'est elle que le curseur regle et que la ligne d'etat
+     * explique.
+     */
+    private fun typeEnMain(): TypePiece? {
         vue.typeChoisi?.let { return it }
         val partie = vue.partieCourante() ?: return null
         return partie.placees().getOrNull(vue.selection)?.type
+    }
+
+    private fun nom(type: TypePiece): Int = when (type) {
+        TypePiece.RAMPE -> R.string.infernale_piece_ramp
+        TypePiece.PLOT -> R.string.infernale_piece_plot
+        TypePiece.BLOC -> R.string.infernale_piece_block
+        TypePiece.DOMINO -> R.string.infernale_piece_domino
+        TypePiece.BASCULE -> R.string.infernale_piece_seesaw
+        TypePiece.TREMPLIN -> R.string.infernale_piece_trampoline
+        TypePiece.VENTILATEUR -> R.string.infernale_piece_fan
+        TypePiece.TAMBOUR -> R.string.infernale_piece_drum
+        TypePiece.POULIE -> R.string.infernale_piece_pulley
+    }
+
+    private fun role(type: TypePiece): Int = when (type) {
+        TypePiece.RAMPE -> R.string.infernale_role_ramp
+        TypePiece.PLOT -> R.string.infernale_role_plot
+        TypePiece.BLOC -> R.string.infernale_role_block
+        TypePiece.DOMINO -> R.string.infernale_role_domino
+        TypePiece.BASCULE -> R.string.infernale_role_seesaw
+        TypePiece.TREMPLIN -> R.string.infernale_role_trampoline
+        TypePiece.VENTILATEUR -> R.string.infernale_role_fan
+        TypePiece.TAMBOUR -> R.string.infernale_role_drum
+        TypePiece.POULIE -> R.string.infernale_role_pulley
     }
 
     private fun reglagePour(type: TypePiece): Reglage? = when (type) {
@@ -271,7 +307,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     }
 
     private fun majReglage() {
-        val type = typeReglable()
+        val type = typeEnMain()
         val reglage = type?.let { reglagePour(it) }
         if (type == null || reglage == null) {
             ligneReglage.visibility = View.GONE

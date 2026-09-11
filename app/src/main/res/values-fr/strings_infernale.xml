@@ -38,5 +38,15 @@
     <string name="infernale_piece_fan">Ventilateur</string>
     <string name="infernale_piece_drum">Tambour</string>
     <string name="infernale_piece_pulley">Poulie</string>
-    <string name="infernale_placed">%1$d pièces posées (par : %2$d)</string>
+    <string name="infernale_placed">Posées : %1$d  ·  par %2$d</string>
+    <string name="infernale_role_ramp">Planche inclinée, scellée. Elle guide la bille qui tombe dessus.</string>
+    <string name="infernale_role_plot">Plot rebondissant, scellé. La bille repart de biais.</string>
+    <string name="infernale_role_block">Mur scellé. Il barre le passage, ou il renvoie.</string>
+    <string name="infernale_role_domino">Tombe quand on le pousse, et pousse le suivant.</string>
+    <string name="infernale_role_seesaw">Pied scellé, planche libre. Ce qui tombe d\'un côté soulève l\'autre.</string>
+    <string name="infernale_role_trampoline">Volet sur ressort. Ce qui tombe dessus repart en avant.</string>
+    <string name="infernale_role_fan">Souffle un jet d\'air. Il pousse ce qui est léger, jamais assez pour soulever la bille.</string>
+    <string name="infernale_role_drum">Peau tendue. Ce qui tombe dessus repart presque aussi haut.</string>
+    <string name="infernale_role_pulley">Godet et contrepoids. La bille qui tombe dedans fait monter le contrepoids.</string>
+    <string name="infernale_piece_named">%1$s — %2$s</string>
 </resources>
