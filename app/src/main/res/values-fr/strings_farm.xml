@@ -16,6 +16,9 @@
     <string name="farm_pepper">Poivron</string>
     <string name="farm_peas">Petits pois</string>
     <string name="farm_cauliflower">Chou-fleur</string>
+    <string name="farm_chili">Piment</string>
+    <string name="farm_carrot">Carotte</string>
+    <string name="farm_potato">Pomme de terre</string>
     <string name="farm_apple">Pommier</string>
     <string name="farm_pear">Poirier</string>
     <string name="farm_cherry">Cerisier</string>

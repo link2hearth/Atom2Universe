@@ -16,6 +16,9 @@
     <string name="farm_pepper">Bell pepper</string>
     <string name="farm_peas">Peas</string>
     <string name="farm_cauliflower">Cauliflower</string>
+    <string name="farm_chili">Chili pepper</string>
+    <string name="farm_carrot">Carrot</string>
+    <string name="farm_potato">Potato</string>
     <string name="farm_apple">Apple tree</string>
     <string name="farm_pear">Pear tree</string>
     <string name="farm_cherry">Cherry tree</string>

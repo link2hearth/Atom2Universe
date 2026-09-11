@@ -47,12 +47,20 @@ class FarmScenery(private val sprites: FarmSprites) {
         trail(1860f, 1730f, 2060f, 1640f, 2310f, 1730f, 2540f, 1680f)
         trail(1310f, 1960f, 1050f, 2010f, 560f, 1970f, 100f, 1990f)
         trail(1310f, 1960f, 1500f, 2020f, 1700f, 1990f, 1840f, 2010f)
+        // The two southern lanes. They leave the spine at points that lie on it, so the junction
+        // reads as a fork rather than a road starting in the middle of a field.
+        trail(1309f, 2278f, 1000f, 2470f, 620f, 2430f, 180f, 2450f)
+        trail(1324f, 2576f, 1450f, 2620f, 1620f, 2550f, 1790f, 2580f)
         // Each spur ends precisely at its parcel gate.
         val junctions = listOf(
             PointF(965f, 629f), PointF(1580f, 625f), PointF(2040f, 700f), PointF(435f, 680f),
             PointF(310f, 1380f), PointF(925f, 1350f), PointF(1650f, 1040f), PointF(2100f, 1690f),
-            PointF(215f, 1980f), PointF(780f, 1980f), PointF(1555f, 2000f), PointF(2050f, 2470f)
+            PointF(215f, 1980f), PointF(780f, 1980f), PointF(1555f, 2000f), PointF(2050f, 2470f),
+            PointF(245f, 2446f), PointF(1545f, 2583f)
         )
+        // Written by hand, one per parcel: adding land without adding its gate would otherwise fail
+        // with an out-of-range index several frames into the first draw.
+        require(junctions.size == FarmLayout.lands.size) { "une jonction manque pour une parcelle" }
         FarmLayout.lands.forEachIndexed { i, land ->
             val gateX = land.x + land.width / land.columns * 1.5f
             val gateY = land.y + land.height + 14

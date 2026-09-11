@@ -18,7 +18,10 @@ object FarmLayout {
         Land(180f, 850f, 5, 4, 7_000), Land(790f, 740f, 4, 5, 15_000),
         Land(1530f, 720f, 3, 2, 18_000), Land(1970f, 1070f, 6, 5, 28_000),
         Land(80f, 1550f, 5, 3, 45_000), Land(640f, 1470f, 7, 4, 70_000),
-        Land(1420f, 1320f, 4, 6, 110_000), Land(1920f, 1850f, 6, 6, 200_000)
+        Land(1420f, 1320f, 4, 6, 110_000), Land(1920f, 1850f, 6, 6, 200_000),
+        // The southern clearings. They sit below every existing bed, on either side of the spine
+        // trail, so no road had to be rerouted - only two lanes added to reach their gates.
+        Land(110f, 2030f, 6, 3, 350_000), Land(1420f, 2070f, 4, 4, 600_000)
     )
     private val offsets = lands.runningFold(0) { total, land -> total + land.capacity }
     val cellCount = offsets.last()

@@ -6,7 +6,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * The seed ladder: one new crop per parcel bought, [rank] 1..12 in that order.
+ * The seed ladder: one new crop per parcel bought, [rank] 1..14 in that order.
  *
  * Ranks come in pairs. The odd rank of a pair is the quick crop you harvest while you are here, the
  * even rank is the overnight crop - so every second purchase widens what you can do in a session,
@@ -19,14 +19,18 @@ import org.json.JSONObject
  * harvests beat one overnight harvest by about 1.8x, two of them still edge past it. Every extra
  * visit pays, which was exactly what the old table did not do.
  *
- * Trees keep rank 0: the orchard is parked until its own balancing pass.
+ * Rank 0 means "not for sale". Trees keep it because the orchard is parked until its own
+ * balancing pass, and wheat keeps it because the large fields already grow wheat by the hectare -
+ * selling it again by the seed made the same plant mean two different things. The chilli took over
+ * wheat's rung with wheat's exact numbers, so the ladder's curve is unchanged. The sprite stays in
+ * use: [FieldArcadeView] and [FarmRegion] still draw wheat for the large fields.
  *
  * Declaration order is NOT the ladder. It must stay as it is: the legacy v1 save migration indexes
  * `oldSeconds` by ordinal.
  */
 enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: Int, val cost: Int,
                     val sale: Int, val seconds: Int, val tree: Boolean = false) {
-    WHEAT(R.string.farm_wheat, "garden_wheat_radish_lettuce_zucchini_v1.png", 0, 4, 8, 45, 8 * 3600),
+    WHEAT(R.string.farm_wheat, "garden_wheat_radish_lettuce_zucchini_v1.png", 0, 0, 8, 45, 8 * 3600),
     RADISH(R.string.farm_radish, "garden_wheat_radish_lettuce_zucchini_v1.png", 2, 1, 2, 12, 2 * 3600),
     LETTUCE(R.string.farm_lettuce, "garden_wheat_radish_lettuce_zucchini_v1.png", 4, 2, 3, 20, 6 * 3600),
     ZUCCHINI(R.string.farm_zucchini, "garden_wheat_radish_lettuce_zucchini_v1.png", 6, 6, 16, 92, 10 * 3600),
@@ -40,7 +44,10 @@ enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: I
     CAULIFLOWER(R.string.farm_cauliflower, "garden_corn_pepper_peas_cauliflower_clean.png", 6, 10, 68, 396, 16 * 3600),
     APPLE(R.string.farm_apple, "garden_fruit_trees_v1.png", 0, 0, 20, 12, 48 * 3600, true),
     PEAR(R.string.farm_pear, "garden_fruit_trees_v1.png", 2, 0, 25, 15, 72 * 3600, true),
-    CHERRY(R.string.farm_cherry, "garden_fruit_trees_v1.png", 4, 0, 30, 18, 96 * 3600, true);
+    CHERRY(R.string.farm_cherry, "garden_fruit_trees_v1.png", 4, 0, 30, 18, 96 * 3600, true),
+    CHILI(R.string.farm_chili, "garden_carrot_potato_chili_watermelon_v1.png", 4, 4, 8, 45, 8 * 3600),
+    CARROT(R.string.farm_carrot, "garden_carrot_potato_chili_watermelon_v1.png", 0, 13, 182, 1072, 10 * 3600),
+    POTATO(R.string.farm_potato, "garden_carrot_potato_chili_watermelon_v1.png", 2, 14, 284, 1665, 24 * 3600);
 
     /** Net coins per hour, the number the shop shows so the trade-off is readable before buying. */
     val coinsPerHour: Float get() = (sale - cost) * 3600f / seconds
@@ -51,7 +58,12 @@ enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: I
      */
     val manureCost: Int get() = rank
     companion object {
-        /** The ladder, in buying order. Trees are absent while the orchard is parked. */
+        /**
+         * The ladder, in buying order. Trees are absent while the orchard is parked, and so is the
+         * watermelon that row 6 of the chilli sheet already holds: the ladder is built in pairs, so
+         * crops join it two at a time, and a fifteenth rung alone would leave half a pair missing.
+         * It waits there for the sixteenth parcel and the crop that pairs with it.
+         */
         val ladder = entries.filter { it.rank > 0 }.sortedBy { it.rank }
     }
 }
@@ -100,7 +112,7 @@ class FarmState(private val prefs: SharedPreferences) {
             val raw = prefs.getString("state", null) ?: return@runCatching
             val json = JSONObject(raw)
             val version = json.getInt("version")
-            require(version in 1..5)
+            require(version in 1..6)
             val savedLandCount = if (version >= 2) json.getJSONArray("parcels").length() else 6
             require(savedLandCount in 1..parcels.size)
             val saved = json.getJSONArray("plots")
@@ -173,7 +185,22 @@ class FarmState(private val prefs: SharedPreferences) {
             runCatching { largeFields.restore(json.optJSONObject("largeFields")) }
             bushBonusDay = json.optLong("bushBonusDay", -1)
             if (version < 5) migrateToRebalancedEconomy()
+            if (version < 6) migrateWheatOffTheLadder()
         }
+    }
+    /**
+     * Version 6 took wheat out of the shop and put the chilli on its rung. Wheat already in the
+     * ground is left alone - it grows and sells exactly as before - but the seeds in the bag would
+     * be unplantable, since an unlisted crop can no longer be selected. They become chillies, one
+     * for one: same price, same sale, same delay, so nothing is gained or lost in the trade.
+     */
+    private fun migrateWheatOffTheLadder() {
+        val wheat = FarmCrop.WHEAT.ordinal
+        val chili = FarmCrop.CHILI.ordinal
+        seeds[chili] = (seeds[chili] + seeds[wheat]).coerceAtMost(9999)
+        seeds[wheat] = 0
+        if (selected == FarmCrop.WHEAT) selected = FarmCrop.CHILI
+        save()
     }
     /**
      * Version 5 rescaled every price and every sale roughly eightfold, so a purse saved under the old
@@ -499,7 +526,7 @@ class FarmState(private val prefs: SharedPreferences) {
         parcels.forEach { lands.put(JSONObject().put("unlocked", it.unlocked).put("use", it.use.name)) }
         val inventory = JSONObject()
         FarmCrop.entries.forEach { inventory.put(it.name, seeds[it.ordinal]) }
-        prefs.edit().putString("state", JSONObject().put("version", 5).put("coins", coins)
+        prefs.edit().putString("state", JSONObject().put("version", 6).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
             .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
             .put("harvestLevel", harvestLevel).put("fertilizerLevel", fertilizerLevel)

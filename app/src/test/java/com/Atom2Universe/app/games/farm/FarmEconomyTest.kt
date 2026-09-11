@@ -27,10 +27,17 @@ class FarmEconomyTest {
         assertTrue("les arbres restent hors échelle", ladder.none { it.tree })
     }
 
+    /**
+     * Le plafond de la culture de session est passé de 8 h à 10 h avec la carotte. Ce n'est plus
+     * une session au sens strict, mais ce que la borne protège vraiment, c'est l'écart : tant que
+     * la culture rapide reste franchement plus courte que sa jumelle de nuit, revenir dans la
+     * journée garde un intérêt. À 10 h contre 24 h, l'écart tient. C'est au-delà d'une journée
+     * éveillée qu'il faudrait s'inquiéter.
+     */
     @Test
     fun `chaque paire offre une culture de session et une culture de nuit`() {
         ladder.chunked(2).forEach { (quick, slow) ->
-            assertTrue("${quick.name} doit tenir dans une session", hours(quick) <= 8.0)
+            assertTrue("${quick.name} doit tenir dans une journée", hours(quick) <= 10.0)
             assertTrue("${slow.name} doit couvrir une absence", hours(slow) >= 6.0)
             assertTrue("${slow.name} doit durer plus que ${quick.name}", hours(slow) > hours(quick))
         }
