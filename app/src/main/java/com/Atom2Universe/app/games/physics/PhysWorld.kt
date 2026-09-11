@@ -58,6 +58,56 @@ class PhysWorld {
     /** Les liaisons à résoudre : celles dont au moins un corps est éveillé. */
     private val activeJoints = ArrayList<Joint>()
 
+    /**
+     * Les couples de corps qui se touchent, suivis d'un pas à l'autre.
+     *
+     * C'est volontairement une table **à part** de [arbiters], et c'est le prix d'une
+     * distinction qui compte. Un contact du solveur, c'est un couple de **formes** : un
+     * corps composé de trois boîtes posé sur une planche en fabrique trois. Un
+     * événement de jeu, c'est un couple de **corps** : la caisse a touché la planche,
+     * une fois. Compter les naissances sur les arbitres aurait donné trois « la caisse
+     * arrive » puis, au gré des coins qui se décollent, des « elle repart » alors
+     * qu'elle est toujours posée.
+     *
+     * L'ordre d'insertion est gardé pour la même raison que celui des contacts : les
+     * événements doivent tomber dans le même ordre à chaque relecture d'une graine.
+     */
+    private val touches = LinkedHashMap<Long, Touch>()
+    private val doomedTouches = ArrayList<Long>()
+
+    /** Un couple de corps qui se touchent, et la date de la dernière fois qu'on l'a vu. */
+    private class Touch(val a: PhysBody, val b: PhysBody, val sensor: Boolean) {
+        var stamp = 0
+    }
+
+    /**
+     * Les événements du pas écoulé, et la réserve d'objets qui les porte.
+     *
+     * Les objets sont réemployés : une machine qui déclenche trente contacts par
+     * seconde n'a pas à faire travailler le ramasse-miettes pour autant. [events] ne
+     * contient jamais que les [ContactEvent] de tête de [eventPool], dans l'ordre, ce
+     * qui rend l'indexation de la réserve triviale.
+     */
+    private val eventPool = ArrayList<ContactEvent>()
+    private val events = ArrayList<ContactEvent>()
+
+    /**
+     * Ce qui s'est touché et ce qui s'est séparé pendant le dernier [stepFrame] ou
+     * [step] — voir [ContactEvent].
+     *
+     * **La liste est remplie pendant le pas et lue après**, jamais l'inverse : le jeu
+     * ne reçoit pas de rappel au milieu d'une résolution. C'est délibéré. Un rappel
+     * qui tombe entre deux sous-pas invite à retirer un corps, en ajouter un autre ou
+     * vider le monde pendant que le solveur travaille dessus, et ce genre de panne ne
+     * se reproduit jamais deux fois de la même façon. Ici, quand la liste se lit, le
+     * pas est fini : on peut tout faire.
+     *
+     * Un même couple peut y figurer deux fois dans la même image, une naissance et une
+     * mort, et c'est exactement ce qu'il faut savoir : une boule rapide a traversé la
+     * zone entre deux affichages.
+     */
+    val contactEvents: List<ContactEvent> get() = events
+
     // Tampons de la recherche de paires. Ils vivent avec le monde plutôt que dans la
     // méthode : un pas ne doit rien allouer du tout.
     private var aabbMinX = FloatArray(0)
@@ -207,7 +257,27 @@ class PhysWorld {
         bodies.remove(body)
         wakeNeighbours(body)
         forgetContacts(body)
+        forgetTouches(body)
         joints.removeAll { it.a === body || it.b === body }
+    }
+
+    /**
+     * Oublie les couples de contact d'un corps qui **quitte le monde**, sans émettre
+     * d'événement.
+     *
+     * La tentation serait d'annoncer la séparation — le contact a bien cessé, après
+     * tout. Mais il a cessé parce que le jeu vient lui-même de retirer la pièce : il
+     * n'apprendrait rien, et l'événement lui rendrait un corps qu'il a déjà jeté. Ne
+     * rien dire est plus honnête que de parler d'un absent.
+     *
+     * À ne pas confondre avec [forgetContacts], qui sert à téléporter un corps **resté**
+     * dans le monde : celui-là garde ses couples, et la séparation lui sera annoncée
+     * normalement au pas suivant, puisqu'elle aura bien lieu.
+     */
+    private fun forgetTouches(body: PhysBody) {
+        doomedTouches.clear()
+        for ((k, t) in touches) if (t.a === body || t.b === body) doomedTouches.add(k)
+        for (k in doomedTouches) touches.remove(k)
     }
 
     /**
@@ -258,6 +328,13 @@ class PhysWorld {
         arbiters.clear()
         active.clear()
         activeJoints.clear()
+        // Les couples et les événements parlent de corps qui viennent de disparaître.
+        // La réserve, elle, survit au vidage : on lui retire donc ses références à la
+        // main, sinon un niveau abandonné resterait accroché par ses derniers contacts
+        // jusqu'à ce que le niveau suivant réemploie les objets un par un.
+        touches.clear()
+        events.clear()
+        for (e in eventPool) e.set(null, null)
     }
 
     /**
@@ -291,6 +368,11 @@ class PhysWorld {
             if (arb.a.owner === owner || arb.b.owner === owner) doomed.add(k)
         }
         for (k in doomed) arbiters.remove(k)
+        doomedTouches.clear()
+        for ((k, t) in touches) {
+            if (t.a.owner === owner || t.b.owner === owner) doomedTouches.add(k)
+        }
+        for (k in doomedTouches) touches.remove(k)
         active.clear()
         activeJoints.clear()
     }
@@ -329,6 +411,10 @@ class PhysWorld {
         // fois pour toutes au début de l'image aurait taillé les pas pour un bras
         // immobile, et le reste de l'image se serait joué à pleine vitesse avec des
         // pas énormes — le boulet traversait sa butée.
+        // Les événements du pas précédent ont été lus, ou ne le seront jamais. Ceux de
+        // cette image s'accumulent sur **tous** les sous-pas : c'est tout l'intérêt,
+        // puisque c'est dans un sous-pas que passe la boule trop rapide pour l'image.
+        events.clear()
         var remaining = dt
         var guard = 0
         while (remaining > 1e-6f && guard < 4 * maxSubSteps) {
@@ -490,7 +576,10 @@ class PhysWorld {
         ceil(dt / safeStep(dt)).toInt().coerceIn(1, maxSubSteps)
 
     /** Simule un pas unique et consomme les forces extérieures accumulées. */
-    fun step(dt: Float) = stepInternal(dt, clearForces = true)
+    fun step(dt: Float) {
+        events.clear()
+        stepInternal(dt, clearForces = true)
+    }
 
     private fun stepInternal(dt: Float, clearForces: Boolean) {
         if (dt <= 0f) return
@@ -774,11 +863,19 @@ class PhysWorld {
                 if (aabbMinX[j] > aMaxX) break
                 if (aabbMinY[j] > aMaxY || aabbMaxY[j] < aMinY) continue
                 val b = bodies[j]
-                if (a.immovable && b.immovable) continue
-                // Deux corps qui dorment ne peuvent rien se faire. C'est ici que se
-                // gagne le prix d'un château au repos : la paire est reconnue et
-                // abandonnée en trois comparaisons.
-                if (a.frozen && b.frozen) continue
+                // Les deux renvois qui suivent écartent des couples qui ne peuvent plus
+                // rien changer — sauf quand l'un des deux est un capteur, qui n'a
+                // justement rien à changer et tout à constater. Une boule qui s'endort
+                // à l'intérieur d'une zone de détection en sortirait sinon aussitôt,
+                // faute d'avoir été revue, et le jeu croirait qu'elle est repartie.
+                val watched = a.isSensor || b.isSensor
+                if (!watched) {
+                    if (a.immovable && b.immovable) continue
+                    // Deux corps qui dorment ne peuvent rien se faire. C'est ici que se
+                    // gagne le prix d'un château au repos : la paire est reconnue et
+                    // abandonnée en trois comparaisons.
+                    if (a.frozen && b.frozen) continue
+                }
                 if (!a.collidesWith(b)) continue
                 if (np == pairBuf.size) pairBuf = pairBuf.copyOf(np * 2)
                 val lo = if (i < j) i else j
@@ -806,6 +903,15 @@ class PhysWorld {
         for ((k, arb) in arbiters) if (arb.stamp != stamp) doomed.add(k)
         for (k in doomed) arbiters.remove(k)
 
+        // Même chose pour les couples suivis, mais eux le disent en partant : un couple
+        // qu'on ne revoit pas est un contact qui s'est défait.
+        doomedTouches.clear()
+        for ((k, t) in touches) if (t.stamp != stamp) doomedTouches.add(k)
+        for (k in doomedTouches) {
+            val t = touches.remove(k) ?: continue
+            pushEvent(t.a, t.b, begin = false, sensor = t.sensor)
+        }
+
         // Le solveur travaillera sur cette liste, dans l'ordre de la table.
         active.clear()
         for (arb in arbiters.values) active.add(arb)
@@ -813,10 +919,30 @@ class PhysWorld {
 
     /** Contacts entre deux corps proches, forme par forme. */
     private fun narrowPhase(a: PhysBody, b: PhysBody) {
+        // Une zone de détection constate et ne pousse pas : pas de contact à fabriquer,
+        // donc rien à résoudre, et surtout **aucun dormeur à réveiller**. Une zone qui
+        // tiendrait éveillé ce qu'elle observe coûterait, à elle seule, le prix d'un
+        // décor entier qui aurait dû dormir.
+        //
+        // Un seul recouvrement suffit à répondre : on s'arrête au premier trouvé.
+        if (a.isSensor || b.isSensor) {
+            for (pa in a.parts.indices) {
+                for (pb in b.parts.indices) {
+                    if (Collider.collide(a, pa, b, pb, fresh) > 0) {
+                        markTouching(a, b, sensor = true)
+                        return
+                    }
+                }
+            }
+            return
+        }
+
+        var touching = false
         for (pa in a.parts.indices) {
             for (pb in b.parts.indices) {
                 val n = Collider.collide(a, pa, b, pb, fresh)
                 if (n <= 0) continue
+                touching = true
                 val arb = arbiters.getOrPut(pairKey(a, pa, b, pb)) { Arbiter(a, b, pa, pb) }
                 arb.update(fresh, n, Collider.normalX, Collider.normalY)
                 arb.stamp = stamp
@@ -833,6 +959,46 @@ class PhysWorld {
                 if (a.sleeping && !b.frozen) a.wake()
             }
         }
+        if (touching) markTouching(a, b, sensor = false)
+    }
+
+    /**
+     * Note que ces deux corps se touchent à ce pas-ci, et annonce la naissance du
+     * contact si c'est la première fois.
+     */
+    private fun markTouching(a: PhysBody, b: PhysBody, sensor: Boolean) {
+        val key = touchKey(a, b)
+        val known = touches[key]
+        if (known != null) {
+            known.stamp = stamp
+            return
+        }
+        touches[key] = Touch(a, b, sensor).also { it.stamp = stamp }
+        pushEvent(a, b, begin = true, sensor = sensor)
+    }
+
+    /**
+     * Range un événement dans la liste, en réemployant l'objet de la fois d'avant.
+     *
+     * [events] ne contient jamais que les premiers éléments de [eventPool], dans le
+     * même ordre : sa taille est donc exactement l'indice du prochain objet libre.
+     */
+    private fun pushEvent(a: PhysBody, b: PhysBody, begin: Boolean, sensor: Boolean) {
+        val slot = events.size
+        val e = if (slot < eventPool.size) eventPool[slot]
+        else ContactEvent().also { eventPool.add(it) }
+        e.set(a, b, begin, sensor)
+        events.add(e)
+    }
+
+    /**
+     * Clé d'un couple de **corps**, indépendante de l'ordre dans lequel on les présente.
+     * À ne pas confondre avec [pairKey], qui descend jusqu'aux formes.
+     */
+    private fun touchKey(a: PhysBody, b: PhysBody): Long {
+        val ida = a.id.toLong() and 0xFFFFFFFFL
+        val idb = b.id.toLong() and 0xFFFFFFFFL
+        return if (ida < idb) (ida shl 32) or idb else (idb shl 32) or ida
     }
 
     /**

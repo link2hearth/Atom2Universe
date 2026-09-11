@@ -336,6 +336,45 @@ class PhysBody private constructor(
     var tag: Any? = null
 
     /**
+     * Un corps qui **constate** au lieu de repousser : une zone de détection.
+     *
+     * Il est vu par la recherche de contacts exactement comme les autres, mais aucun
+     * contact n'est fabriqué pour lui : rien ne le pousse, il ne pousse rien, et ce
+     * qui le traverse le traverse sans ralentir. Ce qu'il donne à la place est un
+     * événement — voir [PhysWorld.contactEvents] : « quelque chose est entré », puis
+     * « c'est ressorti ».
+     *
+     * C'est la pièce qui manquait pour un jeu de mécanismes. Une machine infernale ne
+     * demande jamais « où est la boule » : elle demande « la boule est-elle arrivée
+     * **là** », et la réponse doit tomber au moment exact où c'est vrai. Interroger les
+     * positions à chaque image donne la même réponse la plupart du temps et la rate
+     * précisément quand elle compte — une boule rapide traverse une zone de dix
+     * centimètres entre deux images.
+     *
+     * Un capteur n'a pas besoin de masse : `PhysBody.box(...)` avec `lockPosition` et
+     * `lockRotation` suffit, et coûte alors trois comparaisons par image.
+     */
+    var isSensor = false
+
+    /**
+     * Vitesse de défilement de la **surface** du corps, en m/s, comptée le long de son
+     * axe local +X. Zéro par défaut : la surface est celle d'un corps ordinaire.
+     *
+     * C'est un tapis roulant. La bande avance sans que le corps bouge : ce qui se pose
+     * dessus est entraîné par le frottement, exactement comme il le serait par un sol
+     * qui glisserait sous lui. Tout ce que le frottement sait déjà faire reste vrai —
+     * l'entraînement est borné par l'adhérence (loi de Coulomb), donc une caisse posée
+     * sans appui sur un tapis vertical ne monte pas, et une bande qui va plus vite que
+     * ce que l'adhérence transmet patine au lieu d'arracher sa charge.
+     *
+     * **Un tapis est un moteur, et il ajoute de l'énergie** : c'est la seule entorse
+     * consentie à la règle du solveur, et elle est honnête puisqu'un vrai convoyeur est
+     * branché sur le secteur. Ce qu'il ajoute reste borné par `μ × impulsion normale`,
+     * donc par ce que le poids posé dessus autorise.
+     */
+    var surfaceSpeed = 0f
+
+    /**
      * Catégorie du corps : un bit, à choisir par le jeu.
      *
      * Avec [collidesWith], elle permet de dire qui touche qui. Deux pièces d'une

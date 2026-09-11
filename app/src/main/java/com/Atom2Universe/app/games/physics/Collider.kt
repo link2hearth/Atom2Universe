@@ -592,6 +592,18 @@ class Arbiter(
     var impactEnergy = 0f
         private set
 
+    /**
+     * Vitesse que les deux surfaces cherchent à avoir l'une par rapport à l'autre, le
+     * long de la tangente du contact, en m/s. Zéro partout sauf si un tapis roulant est
+     * en jeu — voir [PhysBody.surfaceSpeed].
+     *
+     * Elle est calculée une fois par sous-pas, dans [measure], et pas à chaque passe du
+     * solveur : elle ne dépend que de la normale et de l'orientation des corps, qui ne
+     * bougent pas pendant qu'on résout.
+     */
+    var surfaceTangent = 0f
+        private set
+
     private var posInvDt = 0f
 
     /** Reprend les impulsions des contacts précédents quand ils correspondent (warm starting). */
@@ -653,6 +665,26 @@ class Arbiter(
 
         impacting = false
         impactEnergy = 0f
+
+        // Entraînement des surfaces : la bande de A et celle de B, projetées sur la
+        // tangente. Le test d'abord, parce que presque aucun contact n'est un tapis et
+        // que deux cosinus par contact et par sous-pas se paient sur un château entier.
+        //
+        // **Le sens est celui de A moins B, et pas l'inverse.** Le frottement ne regarde
+        // pas les centres de gravité, il regarde les deux matières qui se frôlent : la
+        // matière de A au point de contact va à `vA + sA`, celle de B à `vB + sB`, et
+        // c'est leur écart qu'il annule. Développé, il cherche donc à amener `vB − vA`
+        // sur `sA − sB`. Pris à l'envers — c'est l'erreur qu'on a faite — le tapis
+        // entraîne exactement à rebours de sa bande, ce qui se voit tout de suite mais
+        // ne se devine pas.
+        surfaceTangent = if (a.surfaceSpeed == 0f && b.surfaceSpeed == 0f) 0f else {
+            val sa = a.surfaceSpeed
+            val sb = b.surfaceSpeed
+            val ax = cos(a.angle) * sa; val ay = sin(a.angle) * sa
+            val bx = cos(b.angle) * sb; val by = sin(b.angle) * sb
+            (ax - bx) * tx + (ay - by) * ty
+        }
+
         for (i in 0 until count) {
             val c = contacts[i]
             c.rax = c.px - a.x; c.ray = c.py - a.y
@@ -785,7 +817,12 @@ class Arbiter(
             // -- Composante tangentielle : le frottement, borné par la loi de Coulomb --
             dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
             dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
-            val vt = dvx * tx + dvy * ty
+            // La vitesse visée n'est pas toujours zéro : sur un tapis roulant, le
+            // frottement cherche à amener la charge à la vitesse de la bande au lieu de
+            // l'immobiliser. C'est le même calcul, décalé de [surfaceTangent] ; la borne
+            // de Coulomb, elle, ne bouge pas, donc la bande patine dès qu'elle demande
+            // plus que ce que le poids posé dessus permet de transmettre.
+            val vt = dvx * tx + dvy * ty - surfaceTangent
             var dPt = c.massTangent * (-vt)
             val maxPt = friction * c.normalImpulse
             val oldPt = c.tangentImpulse

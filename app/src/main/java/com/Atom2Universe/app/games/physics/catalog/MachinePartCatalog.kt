@@ -165,9 +165,9 @@ object MachinePartCatalog {
             listOf(length("length", 0.25f), mass(default = 5f)), listOf(port("guide", PortKind.LINEAR_MECHANICAL), port("mount", PortKind.STRUCTURAL))))
         add(definition("linear.lead_screw", "Vis de translation", "Convertit une rotation en translation précise.", PartCategory.LINEAR, SimulationSupport.CATALOG_ONLY,
             listOf(length("lead_per_turn", 0.005f), force("force_limit", 50_000f), percent("efficiency", 0.4f)), listOf(port("shaft", PortKind.ROTARY_SHAFT), port("nut", PortKind.LINEAR_MECHANICAL))))
-        add(definition("linear.spring", "Ressort", "Ressort linéaire avec raideur et précharge.", PartCategory.ENERGY, SimulationSupport.COMPOSABLE,
+        add(definition("linear.spring", "Ressort", "Ressort linéaire avec raideur et précharge.", PartCategory.ENERGY, SimulationSupport.NATIVE,
             listOf(force("preload", 0f), ratio("stiffness_n_per_m", 1_000f, 0f, 1e15f), length("rest_length", 0.5f)), listOf(port("end_a", PortKind.STRUCTURAL), port("end_b", PortKind.STRUCTURAL)), setOf("energy_storage"), collidable = false))
-        add(definition("linear.damper", "Amortisseur", "Dissipation visqueuse entre deux points.", PartCategory.LINEAR, SimulationSupport.COMPOSABLE,
+        add(definition("linear.damper", "Amortisseur", "Dissipation visqueuse entre deux points.", PartCategory.LINEAR, SimulationSupport.NATIVE,
             listOf(ratio("damping_ns_per_m", 200f, 0f, 1e15f), force("max_force", 20_000f)), listOf(port("end_a", PortKind.STRUCTURAL), port("end_b", PortKind.STRUCTURAL)), collidable = false))
         add(definition("linear.gas_spring", "Vérin à gaz", "Ressort progressif par compression d'une chambre.", PartCategory.PNEUMATIC, SimulationSupport.COMPOSABLE,
             listOf(length("stroke", 0.3f), area("piston_area", 0.001f), pressure("pressure", 1e6f)), listOf(port("end_a", PortKind.STRUCTURAL), port("end_b", PortKind.STRUCTURAL))))
@@ -181,7 +181,7 @@ object MachinePartCatalog {
             listOf(length("link_length", 0.4f), force("load_limit", 100_000f)), listOf(port("input", PortKind.LINEAR_MECHANICAL), port("output", PortKind.LINEAR_MECHANICAL))))
         add(definition("linear.scissor_lift", "Ciseaux", "Élévateur extensible à bras croisés.", PartCategory.LINEAR, SimulationSupport.COMPOSABLE,
             listOf(length("link_length", 1f), count("stages", 2), force("load_limit", 20_000f)), listOf(port("base", PortKind.STRUCTURAL), port("platform", PortKind.LINEAR_MECHANICAL))))
-        add(definition("linear.conveyor", "Convoyeur", "Bande mobile entraînée entre rouleaux.", PartCategory.LINEAR, SimulationSupport.CATALOG_ONLY,
+        add(definition("linear.conveyor", "Convoyeur", "Bande mobile entraînée entre rouleaux.", PartCategory.LINEAR, SimulationSupport.NATIVE,
             listOf(length("length", 5f), length("width", 0.8f), ratio("speed_mps", 1f, 0f, 1e5f)), listOf(port("drive", PortKind.ROTARY_SHAFT), port("frame", PortKind.STRUCTURAL))))
 
         addAll(pneumaticDefinitions())
@@ -334,6 +334,8 @@ object MachinePartCatalog {
             listOf(force("range", 100_000f)), listOf(port("mount_a", PortKind.STRUCTURAL), port("mount_b", PortKind.STRUCTURAL), port("signal", PortKind.CONTROL_SIGNAL, PortDirection.OUTPUT, PortLayerRule.ANY_LAYER)), collidable = false),
         definition("sensor.position", "Capteur de position", "Mesure la course d'une glissière.", PartCategory.SENSOR, SimulationSupport.COMPOSABLE,
             listOf(length("range", 1f)), listOf(port("linear", PortKind.LINEAR_MECHANICAL, PortDirection.INPUT), port("signal", PortKind.CONTROL_SIGNAL, PortDirection.OUTPUT, PortLayerRule.ANY_LAYER)), collidable = false),
+        definition("sensor.zone", "Zone de détection", "Volume qui signale ce qui le traverse sans rien repousser.", PartCategory.SENSOR, SimulationSupport.NATIVE,
+            listOf(length("width", 0.5f), length("height", 0.5f)), listOf(port("detected", PortKind.CONTROL_SIGNAL, PortDirection.OUTPUT, PortLayerRule.ANY_LAYER)), setOf("sensor", "trigger"), collidable = false),
         definition("sensor.limit_switch", "Fin de course", "Émet un signal à une position limite.", PartCategory.SENSOR, SimulationSupport.COMPOSABLE,
             emptyList(), listOf(port("trigger", PortKind.LINEAR_MECHANICAL, PortDirection.INPUT), port("signal", PortKind.CONTROL_SIGNAL, PortDirection.OUTPUT, PortLayerRule.ANY_LAYER)), collidable = false),
         definition("safety.rupture_disk", "Disque de rupture", "S'ouvre définitivement au-dessus de la pression réglée.", PartCategory.SAFETY, SimulationSupport.CATALOG_ONLY,
