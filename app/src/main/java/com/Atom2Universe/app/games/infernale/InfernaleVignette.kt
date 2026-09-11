@@ -28,12 +28,6 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
             invalidate()
         }
 
-    var reste: Int = 0
-        set(value) {
-            field = value
-            invalidate()
-        }
-
     var choisie: Boolean = false
         set(value) {
             field = value
@@ -61,9 +55,7 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
         color = 0xFFCBA76A.toInt(); strokeWidth = 2.5f; isAntiAlias = true
     }
     private val fondClair = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
-    private val texte = Paint().apply {
-        isAntiAlias = true; textAlign = Paint.Align.CENTER; isFakeBoldText = true
-    }
+    private val flamme = Paint().apply { color = 0xFFFFB33C.toInt(); isAntiAlias = true }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val cote = (resources.displayMetrics.density * 62f).toInt()
@@ -78,14 +70,10 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
         bordure.color = if (choisie) 0xFF9BC2FF.toInt() else 0xFF2A3450.toInt()
         c.drawRoundRect(2f, 2f, w - 2f, h - 2f, 10f, 10f, bordure)
 
-        val cx = w / 2f
-        val cy = h * 0.44f
-        val u = w * 0.17f
-        icone(c, cx, cy, u)
-
-        texte.color = if (choisie) 0xFFFFFFFF.toInt() else 0xFFCBD5E1.toInt()
-        texte.textSize = h * 0.2f
-        c.drawText("×$reste", cx, h - h * 0.08f, texte)
+        // **Plus de compteur.** Les pieces etaient comptees, puis largement comptees, puis
+        // plus du tout : dans un bac a sable, un nombre sur une vignette n'est qu'une
+        // contrainte qui agace, et la vignette sans lui respire.
+        icone(c, w / 2f, h / 2f, w * 0.2f)
     }
 
     /** Chaque icone est le croquis de ce que la piece fait, pas de ce qu'elle est. */
@@ -185,6 +173,12 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
             TypePiece.BILLE -> {
                 c.drawCircle(cx, cy, u * 0.95f, ivoire)
                 c.drawCircle(cx - u * 0.3f, cy - u * 0.32f, u * 0.3f, fondClair)
+            }
+
+            TypePiece.TORCHE -> {
+                c.drawRect(cx - u * 0.14f, cy - u * 0.4f, cx + u * 0.14f, cy + u * 1.1f, fer)
+                c.drawCircle(cx, cy - u * 0.55f, u * 0.42f, flamme)
+                c.drawCircle(cx, cy - u * 0.72f, u * 0.22f, ivoire)
             }
 
             TypePiece.TAPIS -> {

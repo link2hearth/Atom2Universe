@@ -6,9 +6,6 @@ import com.Atom2Universe.app.games.physics.PhysBody
 enum class Refus {
     OK,
 
-    /** Il ne reste plus de piece de ce type dans l'inventaire. */
-    PLUS_EN_STOCK,
-
     /** La piece sortirait du tableau. */
     HORS_TABLEAU,
 
@@ -39,7 +36,6 @@ class Partie(val tableau: Tableau) {
 
     private val placements = ArrayList<Pose>()
     private val corps = ArrayList<Piece>()
-    private val restant = HashMap<TypePiece, Int>(tableau.inventaire)
 
     /** Vrai une fois la machine lancee : plus rien ne se pose. */
     var lancee = false
@@ -66,11 +62,6 @@ class Partie(val tableau: Tableau) {
     val echoue: Boolean
         get() = lancee && !gagne && chrono > 1.2f && (plateau.billePerdue() || plateau.immobile())
 
-    /** Ce qu'il reste a poser, par type. */
-    fun stock(): Map<TypePiece, Int> = restant.filterValues { it > 0 }
-
-    fun stock(type: TypePiece): Int = restant[type] ?: 0
-
     /** Les poses du joueur, dans l'ordre. */
     fun placees(): List<Pose> = placements.toList()
 
@@ -95,7 +86,6 @@ class Partie(val tableau: Tableau) {
      */
     fun verifier(pose: Pose, sauf: Int = -1): Refus {
         if (lancee) return Refus.DEJA_LANCEE
-        if (sauf !in placements.indices && stock(pose.type) <= 0) return Refus.PLUS_EN_STOCK
         val essai = pose.creer()
         if (!Placement.dansLeCadre(essai, tableau.cadreMinX, tableau.cadreMaxX, tableau.cadreMaxY)) {
             return Refus.HORS_TABLEAU
@@ -125,7 +115,6 @@ class Partie(val tableau: Tableau) {
         if (verdict != Refus.OK) return verdict
         corps.add(plateau.poser(pose.creer()))
         placements.add(pose)
-        restant[pose.type] = stock(pose.type) - 1
         return Refus.OK
     }
 
@@ -156,9 +145,8 @@ class Partie(val tableau: Tableau) {
     /** Reprend la piece posee a l'indice [index]. */
     fun reprendre(index: Int): Boolean {
         if (lancee || index !in placements.indices) return false
-        val pose = placements.removeAt(index)
+        placements.removeAt(index)
         plateau.retirer(corps.removeAt(index))
-        restant[pose.type] = stock(pose.type) + 1
         return true
     }
 
@@ -199,8 +187,6 @@ class Partie(val tableau: Tableau) {
         plateau = Tableaux.monter(tableau)
         corps.clear()
         placements.clear()
-        restant.clear()
-        restant.putAll(tableau.inventaire)
         lancee = false
         chrono = 0f
         essais = 0

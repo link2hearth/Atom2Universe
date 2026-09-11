@@ -33,41 +33,33 @@ class InfernalePartieTest {
     private fun partie(niveau: Int = 1) = Partie(Tableaux.pourNiveau(niveau))
 
     @Test
-    fun `une partie commence avec toute la panoplie et rien de pose`() {
+    fun `une partie commence sans rien de pose`() {
         val p = partie()
-        assertEquals("l'inventaire de depart n'est pas la panoplie complete",
-            Panoplie.COMPLET, p.stock())
         assertEquals("des pieces sont deja posees", 0, p.posees)
         assertFalse("la partie demarre lancee", p.lancee)
         assertFalse("la partie demarre gagnee", p.gagne)
     }
 
     @Test
-    fun `poser decompte le stock et reprendre le rend`() {
+    fun `poser compte la piece et la retirer la decompte`() {
         val p = essai()
-        val avant = p.stock(TypePiece.DOMINO)
-
         assertEquals(Refus.OK, p.poser(domino()))
-        assertEquals("le stock n'a pas baisse", avant - 1, p.stock(TypePiece.DOMINO))
         assertEquals(1, p.posees)
 
         assertTrue(p.reprendre())
-        assertEquals("le stock n'est pas revenu", avant, p.stock(TypePiece.DOMINO))
-        assertEquals("la piece reprise est restee posee", 0, p.posees)
+        assertEquals("la piece retiree est restee posee", 0, p.posees)
     }
 
     @Test
-    fun `on ne pose pas plus que ce qu on a`() {
+    fun `on pose autant de pieces qu on veut`() {
+        // **Le bac a sable ne compte rien.** Il y a eu un inventaire taille sur une
+        // solution, puis un inventaire large mais compte. Les deux etaient le meme
+        // malentendu : compter les pieces d'un bac a sable n'apporte qu'un agacement.
         val p = essai()
-        val stock = p.stock(TypePiece.DOMINO)
-        // On les pose tous en file, a droite du bouton : assez ecartes pour qu'aucun ne
-        // gene l'autre, et loin de la bille comme de la zone du bouton.
-        repeat(stock) {
-            assertEquals("pose $it refusee", Refus.OK, p.poser(domino(x = 3.2f + it * 0.3f)))
+        repeat(40) {
+            assertEquals("pose $it refusee", Refus.OK, p.poser(domino(x = 3.2f + it * 0.12f)))
         }
-        assertEquals("il devrait etre en rupture", 0, p.stock(TypePiece.DOMINO))
-        assertEquals("on a pu poser un domino de trop", Refus.PLUS_EN_STOCK,
-            p.poser(domino(x = -1f)))
+        assertEquals(40, p.posees)
     }
 
     @Test
@@ -115,14 +107,12 @@ class InfernalePartieTest {
         // sa liste de poses en parallele de celle du plateau. Une piece qui change de rang
         // en bougeant ferait deplacer la voisine au geste suivant.
         val p = essai()
-        val stock = p.stock(TypePiece.DOMINO)
         repeat(5) { assertEquals(Refus.OK, p.poser(domino(x = -1f + it * 0.35f))) }
 
         val vise = p.placees()[1].copy(x = -2.5f)
         assertEquals(Refus.OK, p.deplacer(1, vise))
         assertEquals("la piece deplacee a change de rang", vise, p.placees()[1])
-        assertEquals("le stock a bouge alors qu'on n'a fait que deplacer",
-            stock - 5, p.stock(TypePiece.DOMINO))
+        assertEquals("deplacer a change le nombre de pieces posees", 5, p.posees)
         assertEquals("le plateau et la liste des poses ont diverge",
             -2.5f, p.plateau.pieces[1].principal.x, 1e-4f)
     }
@@ -184,12 +174,11 @@ class InfernalePartieTest {
     }
 
     @Test
-    fun `raser rend tout au stock`() {
+    fun `raser vide le tableau`() {
         val p = partie()
         assertTrue("rien n'a pu etre pose", batirUnPeu(p) > 0)
         p.tableauRase()
         assertEquals("le tableau rase garde des pieces", 0, p.posees)
-        assertEquals("le stock n'est pas revenu au complet", Panoplie.COMPLET, p.stock())
     }
 
     @Test

@@ -18,33 +18,32 @@ data class Pose(
     val x: Float,
     val y: Float,
     /**
-     * Reglage libre, dont le sens depend du type : la **pente** d'une rampe en degres, la
-     * **direction** du jet d'un ventilateur. Les pieces sans reglage l'ignorent.
+     * Reglage libre, dont le sens depend du type : la **pente** d'une rampe, d'un tapis ou
+     * d'un tambour en degres, la **direction** du jet d'un ventilateur. Les autres
+     * l'ignorent.
      */
     val reglage: Float = 0f,
     /**
-     * La piece est-elle retournee ?
-     *
-     * Un reglage separe et pas un signe glisse dans [reglage], parce que ce sont deux
-     * questions distinctes : « de combien » et « de quel cote ». Les melanger obligeait le
-     * tremplin a detourner la pente pour y coder son cote de charniere, et laissait la
-     * poulie sans aucun moyen d'etre retournee. Avec deux champs, la regle se dit en une
-     * phrase — **le curseur regle la quantite, le miroir regle le cote** — et elle vaut
-     * pour toutes les pieces.
-     */
-    val miroir: Boolean = false,
-    /**
-     * Cote principale de la piece — sa longueur, son rayon, son cote. Zero prend celle
+     * Cote principale de la piece — sa longueur, son rayon, sa hauteur. Zero prend celle
      * par defaut.
      *
-     * **Elle fait partie de la pose, et ce n'est pas un detail de confort.** Sans elle,
-     * le generateur calculait ou lacher la bille pour une rampe de deux metres pendant
-     * que `creer` en fabriquait une de un metre cinquante : la bille tombait cinq
-     * centimetres avant le bord, ratait la planche, repartait sur le coin dans l'autre
-     * sens, et **aucun** tableau tire au hasard n'etait soluble. Une pose qui ne decrit
-     * pas entierement sa piece est une pose qui ment.
+     * **Elle fait partie de la pose, et ce n'est pas un detail de confort.** Une pose qui ne
+     * decrit pas entierement sa piece est une pose qui ment : le jour ou le generateur
+     * calculait ou lacher la bille pour une rampe de deux metres pendant que `creer` en
+     * fabriquait une de un metre cinquante, aucun tableau n'etait soluble.
      */
-    val taille: Float = 0f
+    val taille: Float = 0f,
+    /** Seconde cote, pour les pieces qui en ont deux. Le bloc seul s'en sert : sa hauteur. */
+    val taille2: Float = 0f,
+    /**
+     * La piece est-elle retournee ?
+     *
+     * Reserve a ce qu'aucun angle ne dit : le sens de marche d'un tapis, le cote de la
+     * charniere d'un tremplin, lequel des deux plateaux d'une poulie porte le godet. Une
+     * rampe, elle, n'en a pas besoin — son angle dit deja tout, et le miroir n'y voudrait
+     * rien dire.
+     */
+    val miroir: Boolean = false
 ) {
     /** -1 quand la piece est retournee, +1 sinon. */
     private val cote: Float get() = if (miroir) -1f else 1f
@@ -52,42 +51,48 @@ data class Pose(
     fun creer(): Piece = when (type) {
         TypePiece.RAMPE -> Pieces.rampe(
             x, y,
-            pente = reglage * cote,
-            longueur = taille(Pieces.RAMPE_LONGUEUR)
+            pente = reglage,
+            longueur = cote(Pieces.RAMPE_LONGUEUR)
         )
-        TypePiece.PLOT -> Pieces.plot(x, y, rayon = taille(Pieces.PLOT_RAYON))
+        TypePiece.PLOT -> Pieces.plot(x, y, rayon = cote(Pieces.PLOT_RAYON))
         TypePiece.BLOC -> Pieces.bloc(
             x, y,
-            largeur = taille(Pieces.BLOC_COTE),
-            hauteur = taille(Pieces.BLOC_COTE)
+            largeur = cote(Pieces.BLOC_COTE),
+            hauteur = if (taille2 > 0f) taille2 else cote(Pieces.BLOC_COTE)
         )
-        TypePiece.DOMINO -> Pieces.domino(x, y, hauteur = taille(Pieces.DOMINO_HAUTEUR))
-        TypePiece.BASCULE -> Pieces.bascule(x, y, longueur = taille(Pieces.BASCULE_LONGUEUR))
+        TypePiece.DOMINO -> Pieces.domino(x, y, hauteur = cote(Pieces.DOMINO_HAUTEUR))
+        TypePiece.BASCULE -> Pieces.bascule(x, y, longueur = cote(Pieces.BASCULE_LONGUEUR))
         TypePiece.TREMPLIN -> Pieces.tremplin(
             x, y,
-            longueur = taille(Pieces.TREMPLIN_LONGUEUR),
-            sens = cote
+            longueur = cote(Pieces.TREMPLIN_LONGUEUR),
+            sens = this.cote
         )
         TypePiece.VENTILATEUR -> Pieces.ventilateur(
             x, y,
-            direction = if (miroir) 180f - reglage else reglage,
-            cote = taille(Pieces.VENTILATEUR_COTE)
+            direction = reglage,
+            cote = cote(Pieces.VENTILATEUR_COTE)
         )
-        TypePiece.TAMBOUR -> Pieces.tambour(x, y, largeur = taille(Pieces.TAMBOUR_LARGEUR))
+        TypePiece.TAMBOUR -> Pieces.tambour(
+            x, y,
+            largeur = cote(Pieces.TAMBOUR_LARGEUR),
+            pente = reglage
+        )
         TypePiece.POULIE -> Pieces.poulie(
             x, y,
-            hauteur = taille(Pieces.POULIE_HAUTEUR),
-            sens = cote
+            hauteur = cote(Pieces.POULIE_HAUTEUR),
+            sens = this.cote
         )
-        TypePiece.BILLE -> Pieces.bille(x, y, rayon = taille(Pieces.BILLE_RAYON))
+        TypePiece.BILLE -> Pieces.bille(x, y, rayon = cote(Pieces.BILLE_RAYON))
         TypePiece.TAPIS -> Pieces.tapis(
             x, y,
-            longueur = taille(Pieces.TAPIS_LONGUEUR),
-            sens = cote
+            longueur = cote(Pieces.TAPIS_LONGUEUR),
+            pente = reglage,
+            sens = this.cote
         )
+        TypePiece.TORCHE -> Pieces.torche(x, y)
     }
 
-    private fun taille(defaut: Float): Float = if (taille > 0f) taille else defaut
+    private fun cote(defaut: Float): Float = if (taille > 0f) taille else defaut
 }
 
 /**
@@ -154,62 +159,15 @@ object Placement {
 }
 
 /**
- * Un tableau : d'ou part la bille, ou est le bouton, et de quoi dispose le joueur.
+ * Un tableau : d'ou part la bille, et ou est le bouton. Rien d'autre.
  *
  * Il ne contient aucun corps : c'est une recette, pas un monde. On en monte autant de
  * mondes qu'on veut, ce qui permet de rejouer un essai sans rien reinitialiser.
- */
-/**
- * Ce que le joueur a dans les mains, et c'est le meme jeu a tous les tableaux.
  *
- * ## Pourquoi tout donner
- *
- * La version precedente distribuait **exactement** les pieces d'une solution que le
- * generateur avait verifiee. C'etait defendable sur le papier — aucune piece inutile,
- * aucun tableau insoluble — et c'etait une erreur de conception : neuf dixiemes du travail
- * du generateur servaient a prouver une chose que le joueur ne voit jamais, et le prix en
- * etait un jeu ou l'on devine la solution d'un autre au lieu d'inventer la sienne. Recevoir
- * « une bascule et six dominos » **est** l'indice, et un indice qu'on ne peut pas refuser.
- *
- * Avec toute la panoplie a chaque tableau, le probleme redevient celui qu'on voulait poser :
- * la bille est ici, le bouton est la, debrouillez-vous. Deux joueurs ne rendront pas la meme
- * machine, ce qui est la definition meme d'un bac a sable reussi.
- *
- * ## Pourquoi pas l'infini
- *
- * Les comptes sont larges — assez pour qu'on ne les sente jamais — mais finis, pour deux
- * raisons qui n'ont rien a voir avec la difficulte. La reserve doit afficher un nombre ;
- * et trente dominos qui se touchent sont le pire cas du solveur, cf. le cout du chateau du
- * trebuchet. Ce qui recompense l'economie de pieces, c'est le bareme en etoiles, pas la
- * penurie.
- */
-object Panoplie {
-
-    /** L'inventaire, identique pour tous les tableaux. */
-    val COMPLET: Map<TypePiece, Int> = mapOf(
-        // Douze rampes : de quoi batir un toboggan d'un bout a l'autre des seize metres du
-        // plateau. C'est la seule cote qui ait ete calculee, parce que c'est la piece a
-        // tout faire — scellee, donc elle tient en l'air ou l'on veut, et le bouton est
-        // toujours plus bas que la bille.
-        TypePiece.RAMPE to 12,
-        TypePiece.PLOT to 6,
-        TypePiece.BLOC to 6,
-        TypePiece.DOMINO to 14,
-        TypePiece.BASCULE to 3,
-        TypePiece.TREMPLIN to 3,
-        TypePiece.VENTILATEUR to 4,
-        TypePiece.TAMBOUR to 3,
-        TypePiece.POULIE to 2,
-        TypePiece.BILLE to 3,
-        TypePiece.TAPIS to 3
-    )
-}
-
-/**
- * Un tableau : d'ou part la bille, ou est le bouton, et rien d'autre.
- *
- * Il ne contient aucun corps : c'est une recette, pas un monde. On en monte autant de
- * mondes qu'on veut, ce qui permet de rejouer un essai sans rien reinitialiser.
+ * **Il n'y a plus d'inventaire.** Il y en a eu un, taille sur une solution verifiee, puis
+ * un autre, large mais compte. Les deux se sont reveles etre le meme malentendu : ce qu'on
+ * construit ici est un bac a sable, et compter les pieces d'un bac a sable n'apporte rien
+ * qu'un agacement. On pose ce qu'on veut, autant qu'on veut.
  */
 class Tableau(
     val graine: Long,
@@ -228,9 +186,6 @@ class Tableau(
      */
     val socleHauteur: Float = 0f
 ) {
-    /** Ce que le joueur recoit : toute la panoplie, a chaque tableau. */
-    val inventaire: Map<TypePiece, Int> get() = Panoplie.COMPLET
-
     /**
      * Le nombre de pieces qu'on attend d'une machine soignee — le « par » du parcours.
      *

@@ -88,6 +88,17 @@ class InfernaleView @JvmOverloads constructor(
 
     fun miroir(type: TypePiece): Boolean = miroirs[type] ?: false
 
+    /** Retire la piece designee, s'il y en a une. */
+    fun supprimerDesignee() {
+        synchronized(verrou) {
+            val p = partie ?: return@synchronized
+            if (selection < 0) return@synchronized
+            p.reprendre(selection)
+            selection = -1
+            viser(null)
+        }
+    }
+
     /** Retourne le type [type], et la piece designee si c'en est une du meme type. */
     fun basculerMiroir(type: TypePiece) {
         val valeur = !miroir(type)
@@ -210,10 +221,12 @@ class InfernaleView @JvmOverloads constructor(
     }
     private val or = Paint().apply { color = 0xFFFFC65A.toInt(); isAntiAlias = true }
     private val orPale = Paint().apply { color = 0x66FFC65A; isAntiAlias = true }
-    private val torche = Paint().apply { color = 0xFFFFB33C.toInt(); isAntiAlias = true }
+    private val torcheP = Paint().apply { color = 0xFFFFB33C.toInt(); isAntiAlias = true }
     private val halo = Paint().apply { color = 0x22FF9A2E; isAntiAlias = true }
     private val apercuOk = Paint().apply { color = 0x9955E08A.toInt(); isAntiAlias = true }
     private val apercuNon = Paint().apply { color = 0x99E05555.toInt(); isAntiAlias = true }
+    private val priseFond = Paint().apply { color = 0xCC0B1020.toInt(); isAntiAlias = true }
+    private val priseCoeur = Paint().apply { color = 0xFF9BC2FF.toInt(); isAntiAlias = true }
     private val marqueur = Paint().apply {
         color = 0xFF9BC2FF.toInt(); style = Paint.Style.STROKE
         strokeWidth = 3f; isAntiAlias = true
@@ -244,8 +257,6 @@ class InfernaleView @JvmOverloads constructor(
     private val rocherX = FloatArray(DECOR)
     private val rocherY = FloatArray(DECOR)
     private val rocherR = FloatArray(DECOR)
-    private val torcheX = FloatArray(TORCHES)
-    private val torcheY = FloatArray(TORCHES)
     private var decorPret = false
 
     private var echelle = 40f
@@ -409,12 +420,17 @@ class InfernaleView @JvmOverloads constructor(
         // un quart de l'ecran de terre sous les pieds pour rien, alors que la place utile
         // est en haut : c'est la qu'on pose les premieres rampes.
         basY = h - SOL_VISIBLE * echelle
-        echelleDepart = echelle
+        // Les bornes du zoom sont absolues : « tout le plateau tient a l'ecran » d'un cote,
+        // « on voit la moitie d'un domino » de l'autre. Les rapporter au cadrage d'arrivee
+        // donnait une course differente a chaque tableau, et souvent trop courte.
+        echelleMin = w / (Plateau.LARGEUR + 1f)
+        echelleMax = maxOf(echelleMin * 6f, 260f)
         preparerDecor(t)
     }
 
-    /** L'echelle du cadrage d'origine. Elle borne le zoom des deux cotes. */
-    private var echelleDepart = 40f
+    /** Echelles extremes, en pixels par metre. Posees au cadrage, absolues ensuite. */
+    private var echelleMin = 20f
+    private var echelleMax = 400f
 
     /** Remet la camera ou elle etait en arrivant. */
     fun recadrer() {
@@ -424,42 +440,55 @@ class InfernaleView @JvmOverloads constructor(
     }
 
     /**
-     * Deplace et grossit la camera, en gardant [ancreX]/[ancreY] sous le doigt.
+     * Grossit et deplace la camera.
      *
-     * C'est la seule facon de faire un zoom qui ne donne pas le mal de mer : ce que les
-     * deux doigts tiennent doit rester exactement entre les deux doigts, sinon le monde
-     * glisse sous la main a chaque pincement.
+     * [ancreX]/[ancreY] est le point de l'ecran qui ne doit pas bouger — le milieu des deux
+     * doigts **avant** le mouvement — et [dx]/[dy] le deplacement de ce milieu depuis. Les
+     * prendre au meme instant etait l'erreur : en ancrant sur le milieu d'apres tout en
+     * ajoutant son deplacement, on appliquait le glissement deux fois, et le monde fuyait
+     * sous la main a chaque pincement.
      */
     private fun bougerCamera(dScale: Float, dx: Float, dy: Float, ancreX: Float, ancreY: Float) {
-        val vise = (echelle * dScale).coerceIn(echelleDepart * 0.45f, echelleDepart * 3.5f)
+        val vise = (echelle * dScale).coerceIn(echelleMin, echelleMax)
         val facteur = vise / echelle
-        // Le point du monde sous l'ancre ne doit pas bouger : on corrige l'origine de
-        // l'ecart que le changement d'echelle vient d'introduire.
         origineX = ancreX - (ancreX - origineX) * facteur + dx
         basY = ancreY - (ancreY - basY) * facteur + dy
         echelle = vise
         borner()
     }
 
+    /** Fait glisser la camera de [dx]/[dy] pixels. */
+    private fun glisserCamera(dx: Float, dy: Float) {
+        origineX += dx
+        basY += dy
+        borner()
+    }
+
     /**
      * Empeche la camera de partir dans le vide.
      *
-     * Sans bornes, deux doigts distraits envoient le tableau hors de l'ecran et rien
-     * n'indique par ou revenir. On garde toujours le plateau a portee : au moins un bout
-     * de sol visible, et jamais plus d'un demi-ecran au-dela des bords.
+     * **Et surtout, elle ne descend pas sous terre.** On pouvait remonter la vue au point de
+     * n'avoir que de la terre a l'ecran, ce qui n'est pas seulement laid : il n'y a rien a
+     * faire sous le sol, donc c'est un etat dont on ne peut que vouloir sortir. La ligne de
+     * sol reste donc toujours au ras du bas de l'ecran ou plus bas, jamais au-dessus.
      */
     private fun borner() {
-        val t = synchronized(verrou) { partie }?.tableau ?: return
         val w = largeurVue.toFloat()
         val h = hauteurVue.toFloat()
-        val marge = w * 0.5f
-        val gauche = ex(t.cadreMinX)
-        val droite = ex(t.cadreMaxX)
-        if (gauche > marge) origineX -= gauche - marge
-        if (droite < w - marge) origineX += (w - marge) - droite
-        // En vertical : le sol ne monte jamais au-dessus du tiers haut de l'ecran, et ne
-        // descend jamais sous le bas.
-        basY = basY.coerceIn(h * 0.33f, h + SOL_VISIBLE * echelle)
+        if (w <= 0f || h <= 0f) return
+
+        // Horizontal : on garde toujours un bout de plateau a l'ecran.
+        val demi = Plateau.LARGEUR / 2f
+        val marge = w * 0.35f
+        val gauche = ex(-demi)
+        val droite = ex(demi)
+        if (gauche > w - marge) origineX -= gauche - (w - marge)
+        if (droite < marge) origineX += marge - droite
+
+        // Vertical : le sol au ras du bas au plus haut, le plafond du plateau au plus bas.
+        val plancher = h - SOL_VISIBLE * echelle
+        val plafond = (Plateau.HAUTEUR + 1f) * echelle
+        basY = basY.coerceAtLeast(plancher).coerceAtMost(maxOf(plancher, plafond))
     }
 
     private fun ex(x: Float) = origineX + x * echelle
@@ -483,15 +512,6 @@ class InfernaleView @JvmOverloads constructor(
             rocherY[i] = -0.05f - suivant() * 0.35f
             rocherR[i] = 0.04f + suivant() * 0.09f
         }
-        // **Les torches vivent sur les parois, jamais au milieu du tableau.** Semees sur
-        // toute la largeur, elles se retrouvaient derriere la machine, et on a vu a
-        // l'ecran la bille passer pile devant une flamme : deux ronds clairs l'un sur
-        // l'autre, impossible de dire lequel etait la bille.
-        for (i in 0 until TORCHES) {
-            val gauche = i % 2 == 0
-            torcheX[i] = if (gauche) l + 0.18f else r - 0.18f
-            torcheY[i] = t.cadreMaxY * (0.34f + (i / 2) * 0.3f + suivant() * 0.06f)
-        }
         halo.shader = RadialGradient(
             0f, 0f, echelle * 1.6f,
             0x66FF9A2E, 0x00FF9A2E, Shader.TileMode.CLAMP
@@ -510,7 +530,7 @@ class InfernaleView @JvmOverloads constructor(
         val p = partie ?: return
         if (!decorPret) preparerDecor(p.tableau)
 
-        peindreCaverne(c, p.tableau)
+        peindreParois(c, p)
         peindreSol(c)
         p.plateau.socle?.let { boite(c, it, 0, pierre, pierreClaire) }
         peindrePortail(c, p)
@@ -524,6 +544,7 @@ class InfernaleView @JvmOverloads constructor(
         // La piece designee, en dernier : elle doit se voir par-dessus ses voisines.
         if (selection >= 0) {
             p.plateau.pieces.getOrNull(selection)?.let { encadrer(c, it) }
+            p.placees().getOrNull(selection)?.let { peindrePoignees(c, it) }
         }
 
         apercuPiece?.let { fantome ->
@@ -533,33 +554,29 @@ class InfernaleView @JvmOverloads constructor(
         }
     }
 
-    private fun peindreCaverne(c: Canvas, t: Tableau) {
-        val gauche = ex(t.cadreMinX)
-        val droite = ex(t.cadreMaxX)
-        // Les parois s'arretent **exactement** au bord du cadre. Elles debordaient de
-        // soixante-dix centimetres a l'interieur, donc sur une bande ou l'on a parfaitement
-        // le droit de batir : le decor disait « mur » la ou le jeu disait « libre ».
-        val liseret = echelle * 0.22f
-        c.drawRect(0f, 0f, gauche, height.toFloat(), rocheClaire)
-        c.drawRect(droite, 0f, width.toFloat(), height.toFloat(), rocheClaire)
-        c.drawRect(0f, 0f, gauche - liseret, height.toFloat(), roche)
-        c.drawRect(droite + liseret, 0f, width.toFloat(), height.toFloat(), roche)
-
-        for (i in 0 until TORCHES) {
-            val x = ex(torcheX[i])
-            val y = ey(torcheY[i])
-            // **Une respiration, pas un clignotement.** Le vacillement etait deux
-            // sinusoides a une demi-seconde de periode, et ca papillotait au point d'attirer
-            // l'oeil loin de la machine — le seul endroit ou il doit etre. Un sixieme de
-            // hertz et un dixieme d'amplitude suffisent a ce que ca ne paraisse pas fige.
-            val vif = 0.92f + 0.08f * sin(horloge * 1.1f + i * 2.1f)
-            c.save()
-            c.translate(x, y)
-            c.drawCircle(0f, 0f, echelle * 1.6f, halo)
-            c.restore()
-            c.drawRect(x - echelle * 0.035f, y, x + echelle * 0.035f, y + echelle * 0.26f, fer)
-            c.drawCircle(x, y, echelle * 0.085f * vif, torche)
-            c.drawCircle(x, y - echelle * 0.04f, echelle * 0.045f * vif, or)
+    /**
+     * Les parois du plateau, dessinees **la ou elles sont**.
+     *
+     * Il y avait deux bandes plates peintes sur les cotes de l'ecran, qui n'existaient
+     * nulle part dans le monde : elles suivaient la fenetre et pas le plateau, si bien
+     * qu'en se deplacant on voyait deux rectangles bleus glisser sur rien. Le moteur a
+     * deux murs, a une position connue ; on dessine ceux-la, et ce qu'on voit redevient ce
+     * qui existe.
+     */
+    private fun peindreParois(c: Canvas, p: Partie) {
+        for (mur in p.plateau.murs) {
+            mur.updateAabb()
+            val gauche = ex(mur.aabbMinX)
+            val droite = ex(mur.aabbMaxX)
+            if (droite < 0f || gauche > width) continue
+            c.drawRect(gauche, 0f, droite, height.toFloat(), roche)
+            // Un liseret plus clair du cote du tableau : c'est ce qui donne l'epaisseur.
+            val versLInterieur = if (mur.x < 0f) droite else gauche
+            val liseret = echelle * 0.07f
+            c.drawRect(
+                minOf(versLInterieur, versLInterieur - liseret), 0f,
+                maxOf(versLInterieur, versLInterieur - liseret), height.toFloat(), rocheClaire
+            )
         }
     }
 
@@ -683,6 +700,7 @@ class InfernaleView @JvmOverloads constructor(
             Element.CONTREPOIDS -> for (i in corps.parts.indices) boite(c, corps, i, fer, ferClair)
             Element.BILLE -> bille(c, corps)
             Element.TAPIS -> tapis(c, corps)
+            Element.TORCHE -> torche(c, corps)
             null -> for (i in corps.parts.indices) boite(c, corps, i, pierre, pierreClaire)
         }
     }
@@ -768,6 +786,31 @@ class InfernaleView @JvmOverloads constructor(
             c.drawRect(-hw, -hh, hw, -hh + minOf(hh * 0.45f, echelle * 0.03f), clair)
             c.drawRect(-hw, -hh, hw, hh, contour)
         }
+    }
+
+    /**
+     * Une torche posee : l'applique, la flamme, et la lueur autour.
+     *
+     * **Une respiration, pas un clignotement.** Les torches du decor vacillaient a deux
+     * hertz et papillotaient au point d'attirer l'oeil loin de la machine, qui est le seul
+     * endroit ou il doit etre. Un hertz et un dixieme d'amplitude suffisent a ce que ca ne
+     * paraisse pas fige.
+     */
+    private fun torche(c: Canvas, corps: PhysBody) {
+        corps.partWorld(0, centre)
+        val x = ex(centre[0])
+        val bas = ey(centre[1] - corps.parts[0].halfH)
+        val haut = ey(centre[1] + corps.parts[0].halfH)
+        val vif = 0.92f + 0.08f * sin(horloge * 1.1f + corps.id)
+
+        c.save()
+        c.translate(x, haut)
+        c.drawCircle(0f, 0f, echelle * 1.6f, halo)
+        c.restore()
+
+        c.drawRect(x - echelle * 0.035f, haut, x + echelle * 0.035f, bas, fer)
+        c.drawCircle(x, haut, echelle * 0.085f * vif, torcheP)
+        c.drawCircle(x, haut - echelle * 0.04f, echelle * 0.045f * vif, or)
     }
 
     /** Une bille posee par le joueur : la meme que celle du tableau, sans la traine. */
@@ -974,6 +1017,24 @@ class InfernaleView @JvmOverloads constructor(
         c.drawRect(ex(loX) - 5f, ey(hiY) - 5f, ex(hiX) + 5f, ey(loY) + 5f, marqueur)
     }
 
+    /**
+     * Les poignees de la piece designee.
+     *
+     * Deux cercles concentriques et rien de plus : elles doivent se voir sur du bois comme
+     * sur de la pierre, et ne rien cacher de la piece qu'on regle. Leur taille est en
+     * **pixels** et non en metres — une poignee est faite pour un doigt, dont la largeur ne
+     * depend pas du zoom.
+     */
+    private fun peindrePoignees(c: Canvas, pose: Pose) {
+        for (poignee in Poignees.pour(pose)) {
+            val x = ex(poignee.x)
+            val y = ey(poignee.y)
+            c.drawCircle(x, y, 17f, priseFond)
+            c.drawCircle(x, y, 17f, marqueur)
+            c.drawCircle(x, y, 5f, priseCoeur)
+        }
+    }
+
     private fun dessinerCoins(c: Canvas, pts: FloatArray, peinture: Paint) {
         trace.rewind()
         trace.moveTo(ex(pts[0]), ey(pts[1]))
@@ -985,23 +1046,43 @@ class InfernaleView @JvmOverloads constructor(
     }
 
     // ── Doigt ────────────────────────────────────────────────────────────────
+    //
+    // ## Le geste, et ce qu'il veut dire
+    //
+    // Quatre intentions, une seule regle de depart : **ce qu'il y a sous le doigt decide.**
+    //
+    //  - une poignee de la piece designee -> on la regle (longueur, angle, taille) ;
+    //  - une piece posee -> on la deplace, et un simple appui la **designe** ;
+    //  - une piece choisie dans la reserve -> on la pose ;
+    //  - rien du tout -> on fait glisser la camera.
+    //
+    // Le point qui a coute le plus : **un appui sur une piece la designe, il ne la supprime
+    // plus.** Tapoter supprimait, ce qui rendait litteralement inatteignable tout reglage
+    // d'une piece posee — la designer pour ouvrir sa barre d'outils la faisait disparaitre.
+    // La suppression a maintenant son propre bouton, ce qui est aussi plus sur.
 
+    /** Ce que le doigt est en train de faire. */
+    private enum class Geste { RIEN, POSER, DEPLACER, POIGNEE, CAMERA }
+
+    private var geste = Geste.RIEN
     private var doigtIndex = -1
+    private var priseActive: Prise? = null
     private var doigtDepartX = 0f
     private var doigtDepartY = 0f
+    private var dernierX = 0f
+    private var dernierY = 0f
     private var aBouge = false
 
-    // La camera a deux doigts. `camera` est vrai des qu'un second doigt touche, et le
-    // reste jusqu'a ce que tous soient partis : sans ce verrou, lever un doigt sur deux
-    // reprendrait le geste de pose la ou le pincement l'avait laisse, et poserait une
-    // piece au milieu de l'ecran sans que personne l'ait demande.
-    private var camera = false
+    // La camera a deux doigts. `pince` reste vrai jusqu'a ce que tous les doigts soient
+    // partis : sans ce verrou, lever un doigt sur deux reprendrait le geste precedent la ou
+    // le pincement l'avait laisse, et poserait une piece sans que personne l'ait demande.
+    private var pince = false
     private var pinceEcart = 0f
     private var pinceX = 0f
     private var pinceY = 0f
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.pointerCount >= 2 || camera) return piloterCamera(event)
+        if (event.pointerCount >= 2 || pince) return piloterPince(event)
 
         val mx = (event.x - origineX) / echelle
         val my = (basY - event.y) / echelle
@@ -1010,84 +1091,140 @@ class InfernaleView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 doigtDepartX = event.x
                 doigtDepartY = event.y
+                dernierX = event.x
+                dernierY = event.y
                 aBouge = false
-                synchronized(verrou) {
-                    val p = partie ?: return true
-                    if (p.lancee) return true
-                    if (typeChoisi != null) {
-                        doigtIndex = -1
-                        majApercu(p, mx, my)
-                    } else {
-                        // Sans piece choisie, le doigt attrape ce qu'il touche.
-                        doigtIndex = pieceSous(p, mx, my)
-                        selection = doigtIndex
-                    }
+                synchronized(verrou) { commencer(mx, my) }
+                if (geste == Geste.DEPLACER || geste == Geste.POIGNEE) {
+                    post { listener?.surChangement() }
                 }
-                if (doigtIndex >= 0) post { listener?.surChangement() }
             }
 
             MotionEvent.ACTION_MOVE -> {
-                if (hypot(event.x - doigtDepartX, event.y - doigtDepartY) > SEUIL_GLISSE) aBouge = true
-                synchronized(verrou) {
-                    val p = partie ?: return true
-                    if (p.lancee) return true
-                    if (typeChoisi != null) {
-                        majApercu(p, mx, my)
-                    } else if (doigtIndex >= 0 && aBouge) {
-                        val pose = p.placees().getOrNull(doigtIndex) ?: return true
-                        val vise = poseA(pose.type, mx, my).copy(taille = pose.taille)
-                        viser(vise, p.verifier(vise, sauf = doigtIndex))
-                    }
+                if (hypot(event.x - doigtDepartX, event.y - doigtDepartY) > SEUIL_GLISSE) {
+                    aBouge = true
                 }
+                synchronized(verrou) { continuer(event, mx, my) }
+                dernierX = event.x
+                dernierY = event.y
             }
 
             MotionEvent.ACTION_UP -> {
-                synchronized(verrou) {
-                    val p = partie ?: return true
-                    if (p.lancee) {
-                        viser(null)
-                        return@synchronized
-                    }
-                    val type = typeChoisi
-                    if (type != null) {
-                        if (p.poser(poseA(type, mx, my)) == Refus.OK && p.stock(type) <= 0) {
-                            typeChoisi = null
-                        }
-                    } else if (doigtIndex >= 0) {
-                        val pose = p.placees().getOrNull(doigtIndex)
-                        if (pose != null) {
-                            if (aBouge) {
-                                // Glisser deplace.
-                                p.deplacer(doigtIndex, poseA(pose.type, mx, my).copy(taille = pose.taille))
-                            } else {
-                                // Tapoter reprend.
-                                p.reprendre(doigtIndex)
-                                selection = -1
-                            }
-                        }
-                    }
-                    viser(null)
-                    doigtIndex = -1
-                }
+                synchronized(verrou) { finir(mx, my) }
                 post { listener?.surChangement() }
             }
 
             MotionEvent.ACTION_CANCEL -> synchronized(verrou) {
                 viser(null)
+                geste = Geste.RIEN
                 doigtIndex = -1
+                priseActive = null
             }
         }
         return true
     }
 
+    private fun commencer(mx: Float, my: Float) {
+        val p = partie
+        if (p == null || p.lancee) {
+            geste = Geste.CAMERA
+            return
+        }
+        // Les poignees d'abord : elles sont petites et se superposent a la piece, donc les
+        // tester apres reviendrait a ne jamais les atteindre.
+        val prise = priseSous(p, mx, my)
+        if (prise != null) {
+            priseActive = prise
+            geste = Geste.POIGNEE
+            return
+        }
+        val type = typeChoisi
+        if (type != null) {
+            geste = Geste.POSER
+            majApercu(p, mx, my)
+            return
+        }
+        val index = pieceSous(p, mx, my)
+        if (index >= 0) {
+            doigtIndex = index
+            selection = index
+            geste = Geste.DEPLACER
+            return
+        }
+        geste = Geste.CAMERA
+    }
+
+    private fun continuer(event: MotionEvent, mx: Float, my: Float) {
+        val p = partie ?: return
+        when (geste) {
+            Geste.POSER -> majApercu(p, mx, my)
+
+            Geste.POIGNEE -> {
+                val prise = priseActive ?: return
+                val pose = p.placees().getOrNull(selection) ?: return
+                val vise = Poignees.tirer(pose, prise, accrocher(mx), accrocher(my))
+                p.deplacer(selection, vise)
+            }
+
+            Geste.DEPLACER -> {
+                if (!aBouge) return
+                val pose = p.placees().getOrNull(doigtIndex) ?: return
+                val vise = deplacee(pose, mx, my)
+                viser(vise, p.verifier(vise, sauf = doigtIndex))
+            }
+
+            // Un doigt sur le vide fait glisser la camera. C'est le geste le plus courant
+            // sur un terrain de seize metres, et lui demander deux doigts serait une taxe.
+            Geste.CAMERA -> glisserCamera(event.x - dernierX, event.y - dernierY)
+
+            Geste.RIEN -> Unit
+        }
+    }
+
+    private fun finir(mx: Float, my: Float) {
+        val p = partie
+        when (geste) {
+            // La piece choisie le reste : dans un bac a sable on en pose dix d'affilee, et
+            // devoir la rechoisir a chaque fois serait insupportable.
+            Geste.POSER -> typeChoisi?.let { p?.poser(poseA(it, mx, my)) }
+
+            Geste.DEPLACER -> {
+                val pose = p?.placees()?.getOrNull(doigtIndex)
+                // Sans mouvement, l'appui a seulement designe la piece — c'est deja fait.
+                if (pose != null && aBouge) p.deplacer(doigtIndex, deplacee(pose, mx, my))
+            }
+
+            // Un appui sur le vide deselectionne : c'est la facon la plus naturelle de
+            // ranger les poignees quand on a fini de regler.
+            Geste.CAMERA -> if (!aBouge) selection = -1
+
+            else -> Unit
+        }
+        viser(null)
+        geste = Geste.RIEN
+        doigtIndex = -1
+        priseActive = null
+    }
+
+    /** La meme piece, ailleurs : deplacer ne touche ni aux cotes ni a l'angle. */
+    private fun deplacee(pose: Pose, mx: Float, my: Float): Pose {
+        val gy = accrocher(my)
+        return pose.copy(
+            x = accrocher(mx),
+            y = if (pose.type.ancrage == Ancrage.SCELLE) gy else gy.coerceAtLeast(0f)
+        )
+    }
+
     /** Deux doigts : on deplace et on grossit, on ne pose rien. */
-    private fun piloterCamera(event: MotionEvent): Boolean {
+    private fun piloterPince(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_DOWN -> {
-                camera = true
+                pince = true
                 synchronized(verrou) {
                     viser(null)
+                    geste = Geste.RIEN
                     doigtIndex = -1
+                    priseActive = null
                 }
                 mesurerPince(event)
             }
@@ -1099,7 +1236,7 @@ class InfernaleView @JvmOverloads constructor(
                 val ecart = hypot(event.getX(0) - event.getX(1), event.getY(0) - event.getY(1))
                 if (pinceEcart > 1f && ecart > 1f) {
                     synchronized(verrou) {
-                        bougerCamera(ecart / pinceEcart, cx - pinceX, cy - pinceY, cx, cy)
+                        bougerCamera(ecart / pinceEcart, cx - pinceX, cy - pinceY, pinceX, pinceY)
                     }
                 }
                 pinceEcart = ecart
@@ -1109,7 +1246,7 @@ class InfernaleView @JvmOverloads constructor(
 
             MotionEvent.ACTION_POINTER_UP -> mesurerPince(event)
 
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> camera = false
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> pince = false
         }
         return true
     }
@@ -1133,25 +1270,34 @@ class InfernaleView @JvmOverloads constructor(
     /**
      * Ou tombe une piece quand le doigt est la.
      *
-     * Les pieces libres et mixtes se posent **par leur base** : on pose un domino sur un
-     * sol, on ne vise pas son centre. Les pieces scellees, elles, se posent par leur
-     * centre, puisqu'elles flottent ou l'on veut.
-     *
-     * Et tout est accroche a une grille de cinq centimetres. Sans elle, deux dominos
-     * poses cote a cote ne sont jamais alignes, et une ligne de six demande une minute
-     * de retouches au doigt pour un resultat qu'on n'a pas choisi.
+     * Les pieces scellees se posent par leur centre, puisqu'elles flottent ou l'on veut ;
+     * les libres et les mixtes par leur base, puisqu'on les pose sur quelque chose. Un
+     * domino vise par son centre s'enfonce a moitie dans le sol.
      */
     private fun poseA(type: TypePiece, x: Float, y: Float): Pose {
         val gx = accrocher(x)
         val gy = accrocher(y)
-        // Les pieces scellees se posent par leur centre, puisqu'elles flottent ou l'on
-        // veut ; les libres et les mixtes par leur base, puisqu'on les pose sur quelque
-        // chose. Un domino vise par son centre s'enfonce a moitie dans le sol.
         val hauteur = if (type.ancrage == Ancrage.SCELLE) gy else gy.coerceAtLeast(0f)
         return Pose(type, gx, hauteur, reglage = reglage(type), miroir = miroir(type))
     }
 
     private fun accrocher(v: Float): Float = Math.round(v / GRILLE) * GRILLE
+
+    /** La poignee de la piece designee qui se trouve sous le doigt, ou `null`. */
+    private fun priseSous(p: Partie, x: Float, y: Float): Prise? {
+        val pose = p.placees().getOrNull(selection) ?: return null
+        val portee = RAYON_PRISE / echelle
+        var meilleure: Prise? = null
+        var plusProche = portee
+        for (poignee in Poignees.pour(pose)) {
+            val d = hypot(poignee.x - x, poignee.y - y)
+            if (d <= plusProche) {
+                plusProche = d
+                meilleure = poignee.prise
+            }
+        }
+        return meilleure
+    }
 
     private fun pieceSous(p: Partie, x: Float, y: Float): Int {
         val placees = p.placees()
@@ -1169,8 +1315,6 @@ class InfernaleView @JvmOverloads constructor(
 
     private fun reglageParDefaut(type: TypePiece): Float = when (type) {
         TypePiece.RAMPE -> 20f
-        TypePiece.VENTILATEUR -> 0f
-        TypePiece.TREMPLIN -> 1f
         else -> 0f
     }
 
@@ -1184,9 +1328,6 @@ class InfernaleView @JvmOverloads constructor(
         /** Nombre de cailloux et de brins du decor. */
         const val DECOR = 26
 
-        /** Nombre de torches accrochees aux parois. */
-        const val TORCHES = 4
-
         /** Hauteur de sol visible sous l'altitude zero, en metres. */
         const val SOL_VISIBLE = 0.45f
 
@@ -1198,5 +1339,8 @@ class InfernaleView @JvmOverloads constructor(
 
         /** Deplacement au-dela duquel un appui devient un glissement, en pixels. */
         const val SEUIL_GLISSE = 18f
+
+        /** Rayon de saisie d'une poignee, en pixels. Genereux : un doigt est large. */
+        const val RAYON_PRISE = 46f
     }
 }

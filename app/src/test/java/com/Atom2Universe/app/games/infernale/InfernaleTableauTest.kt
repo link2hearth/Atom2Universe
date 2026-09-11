@@ -131,20 +131,6 @@ class InfernaleTableauTest {
     }
 
     @Test
-    fun `la panoplie est la meme partout et contient les neuf pieces`() {
-        // Le joueur a tout, tout le temps : c'est le coeur du reglage de difficulte, qui
-        // porte desormais sur la geometrie du probleme et pas sur ce qu'on retire.
-        for (type in TypePiece.entries) {
-            assertTrue("la panoplie ne contient pas de $type",
-                (Panoplie.COMPLET[type] ?: 0) > 0)
-        }
-        for (niveau in listOf(1, 5, 20)) {
-            assertEquals("le niveau $niveau n'a pas la panoplie complete",
-                Panoplie.COMPLET, Tableaux.pourNiveau(niveau).inventaire)
-        }
-    }
-
-    @Test
     fun `une pose se recree a l identique`() {
         // Une pose est un souvenir : la recreer deux fois doit donner deux pieces
         // identiques, sinon rien ne se sauvegarde ni ne se rejoue.

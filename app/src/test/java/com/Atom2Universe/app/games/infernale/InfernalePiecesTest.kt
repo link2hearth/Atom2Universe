@@ -216,21 +216,71 @@ class InfernalePiecesTest {
         assertEquals("la bille ne repose pas sur le point vise", 1f, posee.y - posee.radius, 1e-4f)
     }
 
+    @Test
+    fun `un tapis descendant lance plus fort qu une planche`() {
+        // A quoi sert l'inclinaison, puisqu'elle ne fait pas remonter : a **lancer**. Une
+        // bande descendante ajoute sa vitesse a celle de la chute, ce qu'aucune planche ne
+        // sait faire.
+        fun essai(tapis: Boolean): Float {
+            val monde = Plateau()
+            val pose = if (tapis) {
+                Pose(TypePiece.TAPIS, x = 0f, y = 1f, reglage = 20f, taille = 3f)
+            } else {
+                Pose(TypePiece.RAMPE, x = 0f, y = 1f, reglage = 20f, taille = 3f)
+            }
+            monde.poser(pose.creer())
+            monde.poserBille(x = -1.2f, y = 1.7f)
+            repeat(210) { monde.avancer(PAS) }
+            return monde.bille!!.x
+        }
+        val avec = essai(tapis = true)
+        val sans = essai(tapis = false)
+        assertTrue("le tapis ne lance pas plus loin qu'une planche : $avec contre $sans",
+            avec > sans + 0.5f)
+    }
+
+    @Test
+    fun `un tapis ne remonte pas une bille`() {
+        // **Ce test consigne une limite, pas un objectif.** Un tapis impose une vitesse au
+        // point de contact ; pour une bille, les deux tiers de cette vitesse partent en
+        // rotation, et le tiers restant ne suffit pas contre la pesanteur. C'est ce que fait
+        // un vrai tapis, qui transporte des caisses et pas des billes. Le jour ou quelqu'un
+        // « corrigera » ca en montant le frottement, ce test dira que le probleme est
+        // ailleurs — et la documentation de `Pieces.tapis` dira ou.
+        val monde = Plateau()
+        monde.poser(Pose(TypePiece.TAPIS, x = 0f, y = 1f, reglage = -15f, taille = 3f).creer())
+        monde.poserBille(x = -1.2f, y = 1.1f)
+        repeat(60) { monde.avancer(PAS) }
+        val surLaBande = monde.bille!!.y
+        var sommet = surLaBande
+        repeat(240) {
+            monde.avancer(PAS)
+            if (monde.bille!!.y > sommet) sommet = monde.bille!!.y
+        }
+        assertTrue(
+            "la bille est montee de ${sommet - surLaBande} m : la limite documentee a bouge",
+            sommet < surLaBande + 0.1f
+        )
+    }
+
     // ── Le miroir ────────────────────────────────────────────────────────────
 
     @Test
-    fun `le miroir retourne la rampe et le tapis`() {
-        val pente = Pose(TypePiece.RAMPE, x = 0f, y = 1f, reglage = 25f)
-        assertEquals(
-            "le miroir n'inverse pas la pente",
-            -pente.creer().principal.angle, pente.copy(miroir = true).creer().principal.angle,
-            1e-4f
-        )
+    fun `le miroir inverse le sens de marche du tapis`() {
+        // Le tapis est la seule piece dont le cote ne soit **pas** un angle : une bande
+        // horizontale peut entrainer dans les deux sens. C'est exactement pour ce cas-la
+        // que le miroir existe encore, la rampe et le ventilateur ayant leur angle.
         val tapis = Pose(TypePiece.TAPIS, x = 0f, y = 1f)
         assertEquals(
             "le miroir n'inverse pas la bande",
             -tapis.creer().principal.surfaceSpeed,
             tapis.copy(miroir = true).creer().principal.surfaceSpeed,
+            1e-4f
+        )
+        assertEquals(
+            "le miroir a aussi touche a l'inclinaison",
+            tapis.creer().principal.angle,
+            tapis.copy(miroir = true).creer().principal.angle,
             1e-4f
         )
     }

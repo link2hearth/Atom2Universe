@@ -103,18 +103,12 @@
 
         <TextView
             android:id="@+id/infernale_slope_label"
-            android:layout_width="110dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="#CBD5E1"
             android:textSize="13sp" />
 
-        <SeekBar
-            android:id="@+id/infernale_slope"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            android:max="40" />
 
         <TextView
             android:id="@+id/infernale_btn_mirror"
@@ -127,6 +121,20 @@
             android:paddingEnd="10dp"
             android:text="⇄"
             android:textColor="#CBD5E1"
+            android:textSize="16sp"
+            android:background="#1B2540" />
+
+        <TextView
+            android:id="@+id/infernale_btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:minWidth="52dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="✕"
+            android:textColor="#E05555"
             android:textSize="16sp"
             android:background="#1B2540" />
     </LinearLayout>

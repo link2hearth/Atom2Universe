@@ -91,7 +91,8 @@ class Plateau(
         refreshMass()
     }
 
-    private val murs = listOf(
+    /** Les deux parois du plateau. Publiques : la vue les dessine telles qu'elles sont. */
+    val murs = listOf(
         mur(-largeur / 2f - 0.25f),
         mur(largeur / 2f + 0.25f)
     )

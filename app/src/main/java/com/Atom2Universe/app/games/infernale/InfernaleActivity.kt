@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.LinearLayout
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.edit
 import com.Atom2Universe.app.R
@@ -31,33 +30,14 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         const val CLE_ETOILES = "etoiles_"
     }
 
-    /**
-     * Ce qu'un reglage fait varier, et de combien.
-     *
-     * Un seul curseur pour toutes les pieces reglables, dont la course et le libelle
-     * changent avec le type. C'est une barre a l'ecran au lieu de trois, et surtout un
-     * seul chemin de code : ajouter un reglage a une nouvelle piece se fait ici, en une
-     * ligne, et l'interface suit toute seule.
-     */
-    private class Reglage(
-        val min: Int,
-        val pas: Int,
-        val crans: Int,
-        val libelle: Int
-    ) {
-        fun valeur(progres: Int): Float = (min + progres * pas).toFloat()
-        fun progres(valeur: Float): Int =
-            ((valeur.toInt() - min) / pas).coerceIn(0, crans)
-    }
-
     private lateinit var vue: InfernaleView
     private lateinit var etat: TextView
     private lateinit var titre: TextView
     private lateinit var reserve: LinearLayout
     private lateinit var ligneReglage: View
     private lateinit var libelleReglage: TextView
-    private lateinit var curseur: SeekBar
     private lateinit var boutonMiroir: TextView
+    private lateinit var boutonSupprimer: TextView
     private lateinit var boutonLancer: TextView
     private lateinit var prefs: SharedPreferences
 
@@ -79,8 +59,8 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         reserve = findViewById(R.id.infernale_stock)
         ligneReglage = findViewById(R.id.infernale_slope_row)
         libelleReglage = findViewById(R.id.infernale_slope_label)
-        curseur = findViewById(R.id.infernale_slope)
         boutonMiroir = findViewById(R.id.infernale_btn_mirror)
+        boutonSupprimer = findViewById(R.id.infernale_btn_delete)
         boutonLancer = findViewById(R.id.infernale_btn_launch)
         vue.listener = this
 
@@ -89,6 +69,10 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonMiroir.setOnClickListener {
             val type = typeEnMain() ?: return@setOnClickListener
             vue.basculerMiroir(type)
+            rafraichir()
+        }
+        boutonSupprimer.setOnClickListener {
+            vue.supprimerDesignee()
             rafraichir()
         }
         findViewById<TextView>(R.id.infernale_btn_prev).setOnClickListener { allerAu(niveau - 1) }
@@ -105,18 +89,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
             rafraichir()
         }
         boutonLancer.setOnClickListener { lancerOuSuivant() }
-
-        curseur.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(sb: SeekBar?, progres: Int, deLUsager: Boolean) {
-                if (!deLUsager) return
-                val type = typeEnMain() ?: return
-                val reglage = reglagePour(type) ?: return
-                vue.reglage(type, reglage.valeur(progres))
-                majReglage()
-            }
-            override fun onStartTrackingTouch(sb: SeekBar?) = Unit
-            override fun onStopTrackingTouch(sb: SeekBar?) = Unit
-        })
 
         charger(niveau)
     }
@@ -265,8 +237,8 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
 
     /**
      * La piece « en main » : celle qu'on a choisie dans la reserve, ou celle qu'on a
-     * designee sur le tableau. C'est elle que le curseur regle et que la ligne d'etat
-     * explique.
+     * designee sur le tableau. C'est elle que la barre d'outils regle et que la ligne
+     * d'etat explique.
      */
     private fun typeEnMain(): TypePiece? {
         vue.typeChoisi?.let { return it }
@@ -286,6 +258,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.POULIE -> R.string.infernale_piece_pulley
         TypePiece.BILLE -> R.string.infernale_piece_ball
         TypePiece.TAPIS -> R.string.infernale_piece_belt
+        TypePiece.TORCHE -> R.string.infernale_piece_torch
     }
 
     private fun role(type: TypePiece): Int = when (type) {
@@ -300,44 +273,29 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.POULIE -> R.string.infernale_role_pulley
         TypePiece.BILLE -> R.string.infernale_role_ball
         TypePiece.TAPIS -> R.string.infernale_role_belt
+        TypePiece.TORCHE -> R.string.infernale_role_torch
     }
 
     /**
-     * Le curseur regle **la quantite**, le bouton miroir regle **le cote**.
+     * La barre d'outils de la piece en main : son nom, son miroir, sa corbeille.
      *
-     * La pente d'une rampe se donnait de -40 a +40 degres, le signe decidant du sens ; le
-     * tremplin, lui, detournait ce meme curseur pour coder un cote de charniere a deux
-     * positions, et la poulie n'avait aucun moyen d'etre retournee. Une regle unique pour
-     * les onze pieces vaut mieux que trois conventions : le curseur ne dit plus que
-     * l'ampleur, et il n'y a plus qu'un geste a apprendre pour retourner quoi que ce soit.
+     * **Il n'y a plus de curseur.** Il y en avait un, qui reglait la pente d'une rampe et
+     * la direction d'un jet — deux nombres a traduire depuis une intention geometrique,
+     * puis a corriger l'un apres l'autre parce que changer l'angle avait deplace le bout
+     * qu'on voulait garder. Les poignees font la meme chose d'un seul geste et sans
+     * traduction. Garder les deux aurait ete de l'encombrement.
      */
-    private fun reglagePour(type: TypePiece): Reglage? = when (type) {
-        TypePiece.RAMPE -> Reglage(min = 5, pas = 2, crans = 20, libelle = R.string.infernale_slope)
-        TypePiece.VENTILATEUR -> Reglage(min = 0, pas = 15, crans = 23, libelle = R.string.infernale_blow)
-        else -> null
-    }
-
     private fun majReglage() {
         val type = typeEnMain()
-        val reglage = type?.let { reglagePour(it) }
-        val miroitable = type?.miroitable == true
-        if (type == null || (reglage == null && !miroitable)) {
+        val designee = vue.selection >= 0
+        if (type == null) {
             ligneReglage.visibility = View.GONE
             return
         }
         ligneReglage.visibility = View.VISIBLE
+        libelleReglage.text = getString(nom(type))
 
-        val avecCurseur = reglage != null
-        curseur.visibility = if (avecCurseur) View.VISIBLE else View.GONE
-        if (reglage != null) {
-            val valeur = vue.reglage(type)
-            curseur.max = reglage.crans
-            curseur.progress = reglage.progres(valeur)
-            libelleReglage.text = getString(reglage.libelle, valeur.toInt())
-        } else {
-            libelleReglage.text = getString(nom(type))
-        }
-
+        val miroitable = type.miroitable
         boutonMiroir.visibility = if (miroitable) View.VISIBLE else View.GONE
         // Le bouton dit l'etat, pas seulement l'action : une piece retournee doit se voir
         // dans la barre, sinon on la retourne deux fois sans s'en apercevoir.
@@ -347,6 +305,9 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonMiroir.setBackgroundColor(
             if (miroitable && vue.miroir(type)) 0xFF9BC2FF.toInt() else 0xFF1B2540.toInt()
         )
+        // La corbeille ne s'ouvre que sur une piece posee : c'est elle qui a remplace
+        // l'appui-qui-supprime, lequel rendait tout reglage inatteignable.
+        boutonSupprimer.visibility = if (designee) View.VISIBLE else View.GONE
     }
 
     /**
@@ -360,17 +321,12 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private fun construireReserve(partie: Partie) {
         reserve.removeAllViews()
         if (partie.lancee) return
-        val stock = partie.stock()
-        for (type in TypePiece.entries) {
-            val reste = stock[type] ?: continue
-            reserve.addView(caseReserve(type, reste))
-        }
+        for (type in TypePiece.entries) reserve.addView(caseReserve(type))
     }
 
-    private fun caseReserve(type: TypePiece, reste: Int): View =
+    private fun caseReserve(type: TypePiece): View =
         InfernaleVignette(this).apply {
             this.type = type
-            this.reste = reste
             choisie = vue.typeChoisi == type
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

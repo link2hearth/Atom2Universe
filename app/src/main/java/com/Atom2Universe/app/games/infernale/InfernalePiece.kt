@@ -88,7 +88,10 @@ enum class Element {
     BILLE,
 
     /** Bande d'un tapis roulant. */
-    TAPIS
+    TAPIS,
+
+    /** Applique d'une torche. */
+    TORCHE
 }
 
 /**
@@ -213,17 +216,37 @@ enum class TypePiece(val ancrage: Ancrage) {
      * exactement ce qu'il faut quand la bille est arrivée en bas et qu'il reste deux mètres
      * à franchir.
      */
-    TAPIS(Ancrage.SCELLE);
+    TAPIS(Ancrage.SCELLE),
 
     /**
-     * La pièce a-t-elle un côté ? Alors le bouton miroir la retourne.
+     * Une torche, pour y voir.
      *
-     * Une bascule et un tambour sont symétriques : les retourner ne ferait rien, et
-     * proposer le bouton mentirait sur ce qu'il fait.
+     * ## Pourquoi c'est une piece et pas du decor
+     *
+     * Il y en avait trois, semees par le generateur sur les parois. C'etait joli et c'etait
+     * une decision prise a la place du joueur : elles tombaient ou elles voulaient, parfois
+     * derriere la machine, et personne ne pouvait ni les bouger ni s'en passer. Un terrain
+     * d'experimentation n'a pas a decider de son propre eclairage.
+     *
+     * Elle a un corps — une petite applique scellee — parce qu'un objet qu'on voit doit
+     * exister : une torche traversee par la bille serait un mensonge de plus. Elle est assez
+     * menue pour ne gener personne, et assez solide pour servir de minuscule rebord a qui
+     * voudra.
+     */
+    TORCHE(Ancrage.SCELLE);
+
+    /**
+     * La piece a-t-elle un cote que rien d'autre ne regle ? Alors le bouton miroir la
+     * retourne.
+     *
+     * La liste s'est raccourcie le jour ou les poignees sont arrivees. Une rampe et un
+     * ventilateur s'orientent maintenant en tirant sur un bout, donc « retourner » n'y veut
+     * plus rien dire — l'angle dit tout. Ne restent que les trois pieces dont le cote n'est
+     * pas un angle : le sens de marche d'un tapis, le cote de la charniere d'un tremplin, et
+     * lequel des deux plateaux d'une poulie porte le godet.
      */
     val miroitable: Boolean
-        get() = this == RAMPE || this == TREMPLIN || this == POULIE ||
-            this == VENTILATEUR || this == TAPIS
+        get() = this == TAPIS || this == TREMPLIN || this == POULIE
 }
 
 /**
@@ -619,11 +642,13 @@ object Pieces {
         x: Float,
         y: Float,
         largeur: Float = TAMBOUR_LARGEUR,
+        pente: Float = 0f,
         rebond: Float = 0.92f
     ): Piece {
         val peau = PhysBody(largeur / 2f, 0.05f, 0f).apply {
             this.x = x
             this.y = y
+            angle = -Math.toRadians(pente.toDouble()).toFloat()
             friction = 0.12f
             restitution = rebond
         }.marquer(Element.PEAU)
@@ -803,21 +828,55 @@ object Pieces {
      * D'ou le frottement eleve de la bande. Les frottements se combinent en racine du
      * produit, et une bille a 0,25 sur une bande a 0,25 ne serait entrainee qu'au quart de
      * son poids : le tapis patinerait.
+     *
+     * ## Un tapis ne remonte pas une bille, et ce n'est pas un defaut
+     *
+     * Mesure : une bande inclinee a dix degres, qui tourne vers le haut a 2,4 m/s, laisse
+     * la bille **redescendre**. A vingt degres elle repart franchement en arriere. Et sur
+     * une bande horizontale a 2,4 m/s, la bille ne depasse jamais 1 m/s.
+     *
+     * La raison est jolie et n'a rien a voir avec le frottement. Le tapis impose une vitesse
+     * au **point de contact**, pas au centre. L'impulsion tangentielle change la vitesse du
+     * centre de `J/m` et la rotation de `J·r/I` ; pour un disque plein, `r²/I = 2/m`, donc
+     * le point de contact accelere **trois fois plus vite** que le centre. Le tapis a
+     * rattrape sa vitesse relative alors que la bille n'a pris que le tiers du chemin : le
+     * reste est parti en rotation. Sur une pente, ce tiers ne suffit pas contre la pesanteur.
+     *
+     * C'est exactement ce que fait un vrai tapis : il transporte des caisses, pas des billes.
+     * L'inclinaison reste utile — une bande descendante lance bien plus fort qu'une planche,
+     * et une bande inclinee devie — mais elle ne fait pas gagner de hauteur. Pour remonter,
+     * il y a la poulie.
      */
     fun tapis(
         x: Float,
         y: Float,
         longueur: Float = TAPIS_LONGUEUR,
+        pente: Float = 0f,
         sens: Float = 1f,
         vitesse: Float = 2.4f
     ): Piece {
+        // La bande entraine le long de son propre x, donc l'inclinaison suffit a en faire
+        // un tapis qui monte : le moteur applique la vitesse de surface dans le repere du
+        // corps, et un corps incline entraine en pente. Rien de plus a ecrire.
         val bande = PhysBody(longueur / 2f, 0.07f, 0f).apply {
             this.x = x
             this.y = y
+            angle = -Math.toRadians(pente.toDouble()).toFloat()
             friction = 1.4f
             restitution = 0f
             surfaceSpeed = if (sens < 0f) -vitesse else vitesse
         }.marquer(Element.TAPIS)
         return Piece(TypePiece.TAPIS, listOf(scelle(bande)), emptyList())
+    }
+
+    /** Une torche murale. [y] est le bas de son applique. */
+    fun torche(x: Float, y: Float): Piece {
+        val applique = PhysBody(0.05f, 0.13f, 0f).apply {
+            this.x = x
+            this.y = y + 0.13f
+            friction = FROTTEMENT
+            restitution = 0.05f
+        }.marquer(Element.TORCHE)
+        return Piece(TypePiece.TORCHE, listOf(scelle(applique)), emptyList())
     }
 }

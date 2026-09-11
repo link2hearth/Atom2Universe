@@ -21,8 +21,7 @@
     <string name="infernale_won">The portal opens!  %1$s   %2$d pieces</string>
     <string name="infernale_failed">The machine stopped. Adjust and try again.</string>
     <string name="infernale_board">Board %1$d</string>
-    <string name="infernale_hint">The ball is here, the portal is there. Place whatever you like, then launch.</string>
-    <string name="infernale_slope">Slope: %1$d°</string>
+    <string name="infernale_hint">Drag with one finger to move around, two to zoom. Pick a piece, tap the board to place it.</string>
     <string name="infernale_piece_ramp">Ramp</string>
     <string name="infernale_piece_plot">Bumper</string>
     <string name="infernale_piece_block">Block</string>
@@ -31,7 +30,6 @@
     <string name="infernale_piece_trampoline">Springboard</string>
     <string name="infernale_loading">Building the board…</string>
     <string name="infernale_next">Next</string>
-    <string name="infernale_blow">Blows at: %1$d°</string>
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
@@ -52,4 +50,7 @@
     <string name="infernale_role_belt">Fixed belt. It carries along, flat, without losing height.</string>
     <string name="infernale_mirror">Flip</string>
     <string name="infernale_frame">Recentre</string>
+    <string name="infernale_piece_torch">Torch</string>
+    <string name="infernale_role_torch">A wall torch. It lights up, and that is all it is asked to do.</string>
+    <string name="infernale_delete">Remove</string>
 </resources>

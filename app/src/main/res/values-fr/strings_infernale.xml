@@ -21,8 +21,7 @@
     <string name="infernale_won">Le portail s\'ouvre !  %1$s   %2$d pièces</string>
     <string name="infernale_failed">La machine s\'est arrêtée. Corrigez et réessayez.</string>
     <string name="infernale_board">Tableau %1$d</string>
-    <string name="infernale_hint">La bille est ici, le portail est là-bas. Posez ce que vous voulez, puis lancez.</string>
-    <string name="infernale_slope">Pente : %1$d°</string>
+    <string name="infernale_hint">Un doigt pour se déplacer, deux pour zoomer. Choisissez une pièce, touchez le tableau pour la poser.</string>
     <string name="infernale_piece_ramp">Rampe</string>
     <string name="infernale_piece_plot">Plot</string>
     <string name="infernale_piece_block">Bloc</string>
@@ -31,7 +30,6 @@
     <string name="infernale_piece_trampoline">Tremplin</string>
     <string name="infernale_loading">Construction du tableau…</string>
     <string name="infernale_next">Suivant</string>
-    <string name="infernale_blow">Souffle vers : %1$d°</string>
     <string name="infernale_piece_fan">Ventilateur</string>
     <string name="infernale_piece_drum">Tambour</string>
     <string name="infernale_piece_pulley">Poulie</string>
@@ -52,4 +50,7 @@
     <string name="infernale_role_belt">Bande roulante scellée. Elle transporte à plat, sans perdre de hauteur.</string>
     <string name="infernale_mirror">Retourner</string>
     <string name="infernale_frame">Recadrer</string>
+    <string name="infernale_piece_torch">Torche</string>
+    <string name="infernale_role_torch">Une torche murale. Elle éclaire, et c\'est tout ce qu\'on lui demande.</string>
+    <string name="infernale_delete">Retirer</string>
 </resources>
