@@ -75,7 +75,10 @@ class InfernaleView @JvmOverloads constructor(
     private val apercuNon = Paint().apply { color = 0x88E05555.toInt(); isAntiAlias = true }
 
     private val coins = FloatArray(8)
-    private val centre = FloatArray(2)
+    // Trois flottants, pas deux : `partWorld` rend x, y **et l'angle**. La taille a ete
+    // deduite de la signature au lieu d'etre lue dans la documentation, et la vue
+    // plantait des la premiere image.
+    private val centre = FloatArray(3)
     private val trace = Path()
 
     private var echelle = 40f
