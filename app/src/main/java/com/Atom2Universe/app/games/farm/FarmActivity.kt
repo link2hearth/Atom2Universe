@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.farm
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.PointF
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
@@ -32,6 +34,7 @@ class FarmActivity : ThemedActivity() {
     private lateinit var toolbar: LinearLayout
     private lateinit var balance: TextView
     private lateinit var selection: FarmArtView
+    private lateinit var produceIcon: FarmArtView
     private lateinit var wateringIcon: FarmArtView
     private lateinit var manureIcon: FarmArtView
     private lateinit var status: TextView
@@ -41,6 +44,10 @@ class FarmActivity : ThemedActivity() {
     private var bubbleFeedback: TextView? = null
     private val purchases = mutableListOf<Pair<Button, Long>>()
     private val stockLabels = mutableListOf<Pair<TextView, FarmCrop>>()
+    private val produceSellSelection = mutableMapOf<Pair<FarmCrop, FarmCropQuality>, Int>()
+    private var stepRepeat: Runnable? = null
+    private var stepRepeatDelay = 260L
+    private var stepRepeatStarted = false
     private val handler = Handler(Looper.getMainLooper())
     private val hideStatus = Runnable { status.visibility = View.GONE }
     private val ink = Color.rgb(76, 73, 48)
@@ -54,7 +61,7 @@ class FarmActivity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        state = FarmState(getSharedPreferences("farm_v1", MODE_PRIVATE))
+        state = FarmState(getSharedPreferences(FarmState.PREFS, MODE_PRIVATE))
         sprites = FarmSprites(this)
         root = FrameLayout(this)
         world = FarmWorldView(this, state, ::interact, ::parcelMenu, ::removePlant, ::debrisCleared, ::watered, ::harvested)
@@ -85,13 +92,15 @@ class FarmActivity : ThemedActivity() {
         }
         toolbar.addView(icon(FarmArtView.Kind.BACK, R.string.farm_back) { if (bubble != null) closeBubble() else finish() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         val purse = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+        purse.addView(icon(FarmArtView.Kind.SHOP, R.string.farm_shop) { shop() }, LinearLayout.LayoutParams(dp(44), dp(44)).apply {
+            rightMargin = dp(4)
+        })
         purse.addView(FarmArtView(this, FarmArtView.Kind.COIN), LinearLayout.LayoutParams(dp(28), dp(36)))
         balance = text("", 16, true).apply { setSingleLine(); ellipsize = android.text.TextUtils.TruncateAt.END }
         purse.addView(balance, LinearLayout.LayoutParams(0, -2, 1f))
         // Hidden dev entry point: long-press the balance, never a visible button reachable in normal play.
         purse.setOnLongClickListener { cheatMenu(); true }
         toolbar.addView(purse, LinearLayout.LayoutParams(0, -2, 1f))
-        toolbar.addView(icon(FarmArtView.Kind.SHOP, R.string.farm_shop) { shop() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         // A small sub-group: the seed bag (opens the picker) beside a plain crop icon for whatever is
         // currently selected - gold border there, unlike the action icons, since it shows a state.
         seedGroup = LinearLayout(this).apply {
@@ -104,14 +113,23 @@ class FarmActivity : ThemedActivity() {
         }
         seedGroup.addView(selection, LinearLayout.LayoutParams(dp(44), dp(44)).apply { leftMargin = dp(2) })
         toolbar.addView(seedGroup, LinearLayout.LayoutParams(dp(92), dp(48)).apply { leftMargin = dp(2) })
+        produceIcon = icon(FarmArtView.Kind.CRATE, R.string.farm_produce_inventory) { produceInventory() }
+        toolbar.addView(produceIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
+        world.harvestTarget = {
+            val icon = IntArray(2); val view = IntArray(2)
+            produceIcon.getLocationOnScreen(icon); world.getLocationOnScreen(view)
+            PointF(icon[0] - view[0] + produceIcon.width / 2f, icon[1] - view[1] + produceIcon.height / 2f)
+        }
         // Between the seed bag and the watering can: what goes in the ground, then what starts it.
         manureIcon = icon(FarmArtView.Kind.MANURE, R.string.farm_manure_title) { manurePit() }
         toolbar.addView(manureIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
         wateringIcon = icon(FarmArtView.Kind.WATER, R.string.farm_watering_mode) { toggleWatering() }
-        toolbar.addView(wateringIcon, LinearLayout.LayoutParams(dp(48), dp(48)))
         toolbar.addView(icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }, LinearLayout.LayoutParams(dp(48), dp(48)))
         root.addView(toolbar, FrameLayout.LayoutParams(-1, dp(58), Gravity.TOP).apply {
             setMargins(dp(10), dp(8), dp(10), 0)
+        })
+        root.addView(wateringIcon, FrameLayout.LayoutParams(dp(56), dp(56), Gravity.TOP or Gravity.LEFT).apply {
+            setMargins(dp(16), dp(76), 0, 0)
         })
         status = text("", 13).apply {
             background = rounded(cream, 16, border)
@@ -313,6 +331,7 @@ class FarmActivity : ThemedActivity() {
         refresh()
     }
     private fun closeBubble() {
+        stopStepRepeat()
         bubble?.let { root.removeView(it) }
         livestockUi.clear()
         bubble = null; bubbleFeedback = null; purchases.clear(); stockLabels.clear()
@@ -634,6 +653,186 @@ class FarmActivity : ThemedActivity() {
             body.addView(button(getString(R.string.farm_shop)) { shop() })
         }
     }
+    private fun produceInventory() {
+        showBubble(getString(R.string.farm_produce_inventory)) { body ->
+            val crops = FarmCrop.entries.filter { state.cropProduceTotal(it) > 0 }
+            if (crops.isEmpty()) {
+                body.addView(text(getString(R.string.farm_produce_empty)).apply {
+                    setPadding(dp(8), dp(12), dp(8), dp(12))
+                })
+                return@showBubble
+            }
+            val sellAll = button(getString(R.string.farm_sell_all_produce)) {
+                val gained = state.sellProduce()
+                produceSellSelection.clear()
+                message(getString(R.string.farm_produce_sold, money(gained)))
+                refresh(); produceInventory()
+            }
+            body.addView(sellAll, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) })
+            crops.forEach { crop ->
+                val group = LinearLayout(this).apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                    background = rounded(Color.rgb(247, 238, 211), 16, border)
+                    setPadding(dp(6), dp(6), dp(6), dp(6))
+                }
+                val cropBadge = column().apply {
+                    gravity = Gravity.CENTER
+                    setPadding(0, 0, dp(6), 0)
+                }
+                cropBadge.addView(preview(crop), LinearLayout.LayoutParams(dp(46), dp(48)))
+                cropBadge.addView(text(getString(crop.label), 11, true).apply {
+                    gravity = Gravity.CENTER
+                    maxLines = 1
+                    ellipsize = android.text.TextUtils.TruncateAt.END
+                }, LinearLayout.LayoutParams(dp(58), -2))
+                cropBadge.addView(text("×${state.cropProduceTotal(crop)}", 12, true).apply {
+                    gravity = Gravity.CENTER
+                    setTextColor(Color.rgb(116, 78, 48))
+                }, LinearLayout.LayoutParams(dp(58), -2))
+                group.addView(cropBadge, LinearLayout.LayoutParams(dp(64), -1))
+                val rows = column()
+                FarmCropQuality.entries.forEach { quality ->
+                    val count = state.produce[crop.ordinal][quality.ordinal]
+                    if (count > 0) rows.addView(qualitySellRow(crop, quality, count),
+                        LinearLayout.LayoutParams(-1, dp(46)).apply { topMargin = dp(3) })
+                }
+                group.addView(rows, LinearLayout.LayoutParams(0, -2, 1f))
+                body.addView(group, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+            }
+        }
+    }
+    private fun qualitySellRow(crop: FarmCrop, quality: FarmCropQuality, count: Int) = LinearLayout(this).apply {
+        gravity = Gravity.CENTER_VERTICAL
+        background = rounded(qualityTint(quality), 12, qualityColor(quality))
+        setPadding(dp(7), dp(3), dp(5), dp(3))
+        val key = crop to quality
+        var selected = produceSellSelection[key]?.coerceIn(1, count) ?: 1
+        produceSellSelection[key] = selected
+        addView(qualityChip(quality, count), LinearLayout.LayoutParams(0, dp(32), 1f))
+        val selectedText = text(selected.toString(), 15, true).apply {
+            gravity = Gravity.CENTER
+            setTextColor(ink)
+        }
+        lateinit var sellButton: Button
+        fun update(delta: Int) {
+            val next = (selected + delta).coerceIn(1, count)
+            if (next == selected) return
+            selected = next
+            produceSellSelection[key] = selected
+            selectedText.text = selected.toString()
+            sellButton.text = getString(R.string.farm_sell_selected_produce,
+                money(selected.toLong() * crop.sale * quality.multiplier))
+        }
+        addView(stepButton("−") { update(-1) }, LinearLayout.LayoutParams(dp(36), dp(36)).apply { leftMargin = dp(4) })
+        addView(selectedText, LinearLayout.LayoutParams(dp(32), dp(36)))
+        sellButton = button(getString(R.string.farm_sell_selected_produce, money(selected.toLong() * crop.sale * quality.multiplier))) {
+            confirmProduceSale(crop, quality, selected)
+        }
+        addView(sellButton, LinearLayout.LayoutParams(dp(98), dp(40)).apply { leftMargin = dp(5); rightMargin = dp(5) })
+        addView(stepButton("+") { update(1) }, LinearLayout.LayoutParams(dp(36), dp(36)))
+        contentDescription = getString(R.string.farm_quality_count, getString(quality.label), count)
+    }
+    private fun confirmProduceSale(crop: FarmCrop, quality: FarmCropQuality, quantity: Int) {
+        val amount = quantity.toLong() * crop.sale * quality.multiplier
+        showBubble(getString(R.string.farm_confirm_sale_title)) { body ->
+            val row = LinearLayout(this).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                background = rounded(qualityTint(quality), 16, qualityColor(quality))
+                setPadding(dp(8), dp(8), dp(8), dp(8))
+            }
+            row.addView(preview(crop), LinearLayout.LayoutParams(dp(58), dp(62)))
+            val details = column().apply { setPadding(dp(10), 0, 0, 0) }
+            details.addView(text(getString(R.string.farm_confirm_sale_body,
+                quantity, getString(crop.label), getString(quality.label)), 16, true).apply {
+                setTextColor(qualityTextColor(quality))
+            })
+            details.addView(text(getString(R.string.farm_confirm_sale_value, money(amount)), 13).apply {
+                setTextColor(ink)
+            })
+            row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
+            body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) })
+            val actions = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+            actions.addView(button(getString(R.string.farm_cancel)) { produceInventory() },
+                LinearLayout.LayoutParams(0, dp(48), 1f).apply { rightMargin = dp(6) })
+            actions.addView(button(getString(R.string.farm_confirm)) {
+                val gained = state.sellProduce(crop, quality, quantity)
+                val left = state.produce[crop.ordinal][quality.ordinal]
+                val key = crop to quality
+                if (left <= 0) produceSellSelection.remove(key) else produceSellSelection[key] = quantity.coerceAtMost(left)
+                message(getString(R.string.farm_produce_sold, money(gained)))
+                refresh(); produceInventory()
+            }, LinearLayout.LayoutParams(0, dp(48), 1f).apply { leftMargin = dp(6) })
+            body.addView(actions)
+        }
+    }
+    private fun stepButton(label: String, action: () -> Unit) = TextView(this).apply {
+        text = label; textSize = 22f; typeface = Typeface.DEFAULT_BOLD; gravity = Gravity.CENTER
+        setTextColor(ink); isFocusable = true
+        background = RippleDrawable(ColorStateList.valueOf(0x337D9966), rounded(cream, 12, border), null)
+        setOnClickListener { action() }
+        setOnTouchListener { view, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    view.isPressed = true
+                    startStepRepeat(action)
+                    true
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    view.isPressed = false
+                    val repeated = stepRepeatStarted
+                    stopStepRepeat()
+                    if (!repeated && event.actionMasked == MotionEvent.ACTION_UP) action()
+                    true
+                }
+                else -> true
+            }
+        }
+    }
+    private fun startStepRepeat(action: () -> Unit) {
+        stopStepRepeat()
+        stepRepeatDelay = 260L
+        stepRepeatStarted = false
+        val repeat = object : Runnable {
+            override fun run() {
+                stepRepeatStarted = true
+                action()
+                stepRepeatDelay = (stepRepeatDelay * .78f).toLong().coerceAtLeast(42L)
+                handler.postDelayed(this, stepRepeatDelay)
+            }
+        }
+        stepRepeat = repeat
+        handler.postDelayed(repeat, 360L)
+    }
+    private fun stopStepRepeat() {
+        stepRepeat?.let { handler.removeCallbacks(it) }
+        stepRepeat = null
+    }
+    private fun qualityChip(quality: FarmCropQuality, count: Int) = LinearLayout(this).apply {
+        gravity = Gravity.CENTER
+        addView(text("★", 22, true).apply {
+            gravity = Gravity.CENTER
+            setTextColor(qualityColor(quality))
+        }, LinearLayout.LayoutParams(dp(30), dp(30)))
+        contentDescription = getString(R.string.farm_quality_count, getString(quality.label), count)
+    }
+    private fun qualityColor(quality: FarmCropQuality) = when (quality) {
+        FarmCropQuality.COMMON -> Color.rgb(112, 137, 80)
+        FarmCropQuality.RARE -> Color.rgb(53, 132, 194)
+        FarmCropQuality.EPIC -> Color.rgb(139, 73, 184)
+        FarmCropQuality.LEGENDARY -> Color.rgb(218, 137, 25)
+    }
+    private fun qualityTint(quality: FarmCropQuality) = when (quality) {
+        FarmCropQuality.COMMON -> Color.rgb(232, 239, 215)
+        FarmCropQuality.RARE -> Color.rgb(218, 238, 250)
+        FarmCropQuality.EPIC -> Color.rgb(237, 222, 248)
+        FarmCropQuality.LEGENDARY -> Color.rgb(255, 238, 196)
+    }
+    private fun qualityTextColor(quality: FarmCropQuality) = when (quality) {
+        FarmCropQuality.COMMON -> Color.rgb(67, 91, 47)
+        FarmCropQuality.RARE -> Color.rgb(32, 93, 142)
+        FarmCropQuality.EPIC -> Color.rgb(91, 49, 132)
+        FarmCropQuality.LEGENDARY -> Color.rgb(139, 83, 20)
+    }
     private fun parcelMenu(index: Int) {
         val land = state.parcels[index]
         showBubble(getString(R.string.farm_parcel_label, index + 1, getString(land.use.label)), index) { body ->
@@ -714,9 +913,9 @@ class FarmActivity : ThemedActivity() {
                 else -> getString(R.string.farm_no_seeds)
             }
             p.progress(now) >= 1f -> {
-                val (amount, count) = state.harvestMany(state.harvestTargets(index), now)
-                if (count > 1) getString(R.string.farm_harvested_many, money(amount), count)
-                else getString(R.string.farm_earned, money(amount))
+                val result = state.harvestMany(state.harvestTargets(index), now)
+                if (result.count > 1) getString(R.string.farm_harvested_many, result.count)
+                else getString(R.string.farm_harvested_one, harvestStackLabel(result.stacks.firstOrNull()))
             }
             state.water(index, now) -> getString(R.string.farm_water_started, duration(p.remaining(now)))
             else -> getString(R.string.farm_wait_long, duration(p.remaining(now)))
@@ -727,20 +926,29 @@ class FarmActivity : ThemedActivity() {
         message(getString(R.string.farm_cleaned)); refresh()
     }
     private fun toggleWatering() {
+        if (!state.hasPlantsNeedingWater()) return
         world.wateringMode = !world.wateringMode
-        wateringIcon.background = RippleDrawable(ColorStateList.valueOf(0x337D9966),
-            rounded(if (world.wateringMode) Color.rgb(190, 225, 235) else sage, 16, if (world.wateringMode) border else null), null)
+        updateWateringIcon()
         message(getString(if (world.wateringMode) R.string.farm_watering_on else R.string.farm_watering_off))
     }
     private fun watered(count: Int) {
         message(getString(if (count < 0) R.string.farm_watering_nothing else R.string.farm_watering_done, count.coerceAtLeast(0)))
+        if (!state.hasPlantsNeedingWater()) world.wateringMode = false
         refresh()
     }
-    private fun harvested(index: Int, amount: Int, count: Int) {
-        message(if (count > 1) getString(R.string.farm_harvested_many, money(amount), count)
-            else getString(R.string.farm_earned, money(amount)))
+    private fun updateWateringIcon() {
+        wateringIcon.background = RippleDrawable(ColorStateList.valueOf(0x337D9966),
+            rounded(if (world.wateringMode) Color.rgb(190, 225, 235) else cream, 18, border), null)
+        wateringIcon.elevation = dp(if (world.wateringMode) 9 else 6).toFloat()
+    }
+    private fun harvested(index: Int, result: FarmHarvestResult) {
+        message(if (result.count > 1) getString(R.string.farm_harvested_many, result.count)
+            else getString(R.string.farm_harvested_one, harvestStackLabel(result.stacks.firstOrNull())))
         refresh()
     }
+    private fun harvestStackLabel(stack: FarmHarvestStack?): String = stack?.let {
+        getString(R.string.farm_harvest_stack_label, getString(it.crop.label), getString(it.quality.label))
+    } ?: getString(R.string.farm_produce_inventory)
     private fun removePlant(index: Int) {
         if (state.plots[index].crop == null) return
         showBubble(getString(R.string.farm_clear), FarmLayout.parcelOf(index)) { body ->
@@ -765,7 +973,11 @@ class FarmActivity : ThemedActivity() {
         fuelDrawable.setColor(when { f.fuel > .5f -> Color.rgb(126, 187, 90); f.fuel > .2f -> Color.rgb(224, 167, 63); else -> Color.rgb(196, 64, 58) })
         fieldView.invalidate()
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
-        wateringIcon.visibility = seedGroup.visibility
+        produceIcon.visibility = seedGroup.visibility
+        val wateringAvailable = world.region == FarmRegion.HOME && state.hasPlantsNeedingWater()
+        if (!wateringAvailable) world.wateringMode = false
+        wateringIcon.visibility = if (wateringAvailable) View.VISIBLE else View.GONE
+        updateWateringIcon()
         // Hidden until the pens exist: an icon for a system you have never seen is just a puzzle.
         manureIcon.visibility = if (seedGroup.visibility == View.VISIBLE && state.livestockUnlocked())
             View.VISIBLE else View.GONE
@@ -777,6 +989,9 @@ class FarmActivity : ThemedActivity() {
         balance.contentDescription = getString(R.string.farm_balance, money(state.coins), state.harvests)
         selection.crop = state.selected; selection.stock = state.seeds[state.selected.ordinal]
         selection.contentDescription = getString(R.string.farm_seed_stock, getString(state.selected.label), state.seeds[state.selected.ordinal])
+        produceIcon.crop = FarmCrop.entries.firstOrNull { state.cropProduceTotal(it) > 0 } ?: state.selected
+        produceIcon.stock = state.produceCount().takeIf { it > 0 }
+        produceIcon.contentDescription = getString(R.string.farm_produce_stock, state.produceCount())
         purchases.forEach { (button, price) -> button.isEnabled = state.coins >= price; button.alpha = if (button.isEnabled) 1f else .45f }
         stockLabels.forEach { (label, crop) -> label.text = getString(R.string.farm_stock_count, state.seeds[crop.ordinal]) }
         world.invalidate()

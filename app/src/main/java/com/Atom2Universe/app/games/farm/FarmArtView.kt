@@ -6,7 +6,7 @@ import android.view.View
 
 /** Small native illustrations remain crisp at any density; crop previews reuse the game art. */
 class FarmArtView(context: Context, private val kind: Kind, private val sprites: FarmSprites? = null) : View(context) {
-    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER, MANURE }
+    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER, MANURE, CRATE }
     var crop: FarmCrop? = null
         set(value) { field = value; invalidate() }
     var stock: Int? = null
@@ -78,6 +78,24 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
                 line(canvas, 24f, 17f, 24f, 29f, Color.rgb(201, 143, 46), 3f)
             }
             Kind.CROP -> crop?.let { sprites?.crop(canvas, it, 0, 4, RectF(0f, 0f, 48f, 46f)) }
+            Kind.CRATE -> {
+                rect(canvas, 8f, 18f, 40f, 42f, Color.rgb(116, 78, 48), 5f)
+                rect(canvas, 10f, 15f, 38f, 25f, Color.rgb(188, 132, 72), 4f)
+                rect(canvas, 10f, 25f, 38f, 40f, Color.rgb(156, 101, 56), 4f)
+                line(canvas, 13f, 29f, 35f, 37f, Color.rgb(104, 68, 42), 2f)
+                line(canvas, 35f, 29f, 13f, 37f, Color.rgb(104, 68, 42), 2f)
+                crop?.let { sprites?.crop(canvas, it, 0, 4, RectF(13f, 2f, 35f, 24f)) }
+                paint.color = Color.rgb(255, 224, 91)
+                val star = Path()
+                for (i in 0 until 10) {
+                    val a = -Math.PI / 2 + i * Math.PI / 5
+                    val r = if (i % 2 == 0) 5.2f else 2.4f
+                    val x = 36f + kotlin.math.cos(a).toFloat() * r
+                    val y = 13f + kotlin.math.sin(a).toFloat() * r
+                    if (i == 0) star.moveTo(x, y) else star.lineTo(x, y)
+                }
+                star.close(); canvas.drawPath(star, paint)
+            }
             Kind.MANURE -> {
                 val burlap = Color.rgb(184, 151, 99)
                 val muck = Color.rgb(88, 59, 34)
@@ -111,16 +129,27 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
                 canvas.drawCircle(40f, 9f, 1f, paint)
             }
             Kind.WATER -> {
-                val blue = Color.rgb(118, 200, 232)
-                canvas.rotate(-14f, 24f, 26f)
-                rect(canvas, 12f, 20f, 34f, 40f, brown, 8f)
-                rect(canvas, 14f, 22f, 32f, 38f, blue, 6f)
-                rect(canvas, 30f, 14f, 40f, 20f, brown, 4f)
-                line(canvas, 20f, 16f, 12f, 10f, brown, 4f)
-                canvas.rotate(14f, 24f, 26f)
+                val blue = Color.rgb(112, 197, 232)
+                val darkBlue = Color.rgb(55, 122, 170)
+                val rim = Color.rgb(236, 250, 255)
+                rect(canvas, 9f, 40f, 38f, 44f, 0x22745233, 2f)
+                canvas.rotate(-10f, 24f, 26f)
+                rect(canvas, 13f, 18f, 35f, 39f, darkBlue, 8f)
+                rect(canvas, 15f, 20f, 33f, 37f, blue, 6f)
+                rect(canvas, 16f, 18f, 32f, 23f, rim, 4f)
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f
+                paint.strokeCap = Paint.Cap.ROUND
+                paint.color = darkBlue
+                canvas.drawArc(RectF(6f, 20f, 20f, 36f), 95f, 170f, false, paint)
+                canvas.drawArc(RectF(28f, 22f, 46f, 39f), -85f, 145f, false, paint)
+                line(canvas, 29f, 15f, 42f, 11f, darkBlue, 4f)
+                line(canvas, 37f, 12f, 44f, 16f, darkBlue, 3f)
+                paint.style = Paint.Style.FILL
+                canvas.rotate(10f, 24f, 26f)
                 paint.color = blue
-                canvas.drawCircle(15f, 44f, 2.2f, paint)
-                canvas.drawCircle(21f, 46f, 1.6f, paint)
+                for ((x, y) in listOf(37f to 30f, 41f to 34f, 34f to 36f))
+                    canvas.drawCircle(x, y, 2.1f, paint)
             }
         }
         stock?.let {

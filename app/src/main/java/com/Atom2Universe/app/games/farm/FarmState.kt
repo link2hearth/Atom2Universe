@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.farm
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.Atom2Universe.app.R
 import org.json.JSONArray
@@ -72,6 +73,13 @@ enum class FarmLandUse(val label: Int) {
     CROPS(R.string.farm_use_crops), ORCHARD(R.string.farm_use_orchard)
 }
 
+enum class FarmCropQuality(val label: Int, val multiplier: Int) {
+    COMMON(R.string.farm_quality_common, 1),
+    RARE(R.string.farm_quality_rare, 2),
+    EPIC(R.string.farm_quality_epic, 3),
+    LEGENDARY(R.string.farm_quality_legendary, 4)
+}
+
 data class FarmPlot(var crop: FarmCrop? = null, var planted: Long = 0, var watered: Boolean = false,
                     var variant: Int = 0, var established: Boolean = false, var debris: Int = 0,
                     var critical: Boolean = false, var rich: Boolean = false) {
@@ -84,6 +92,9 @@ data class FarmPlot(var crop: FarmCrop? = null, var planted: Long = 0, var water
 }
 
 data class FarmParcel(var unlocked: Boolean = false, var use: FarmLandUse = FarmLandUse.CROPS)
+
+data class FarmHarvestStack(val crop: FarmCrop, val quality: FarmCropQuality, val count: Int)
+data class FarmHarvestResult(val value: Int, val count: Int, val stacks: List<FarmHarvestStack>)
 
 class FarmState(private val prefs: SharedPreferences) {
     // A deliberately thin purse: five radishes, and the pile under the bush matters on day one.
@@ -105,6 +116,7 @@ class FarmState(private val prefs: SharedPreferences) {
     val parcels = List(FarmLayout.lands.size) { FarmParcel(unlocked = it == 0) }
     val plots = List(FarmLayout.cellCount) { FarmPlot(debris = 1 + (it * 7 % 3)) }
     val seeds = IntArray(FarmCrop.entries.size)
+    val produce = Array(FarmCrop.entries.size) { IntArray(FarmCropQuality.entries.size) }
     val livestock = LivestockState()
     val largeFields = LargeFieldState()
 
@@ -114,7 +126,7 @@ class FarmState(private val prefs: SharedPreferences) {
             val raw = prefs.getString("state", null) ?: return@runCatching
             val json = JSONObject(raw)
             val version = json.getInt("version")
-            require(version in 1..6)
+            require(version in 1..7)
             val savedLandCount = if (version >= 2) json.getJSONArray("parcels").length() else 6
             require(savedLandCount in 1..parcels.size)
             val saved = json.getJSONArray("plots")
@@ -149,6 +161,17 @@ class FarmState(private val prefs: SharedPreferences) {
                 val inv = json.getJSONObject("seeds")
                 IntArray(seeds.size) { inv.optInt(FarmCrop.entries[it].name).coerceIn(0, 9999) }
             } else IntArray(seeds.size)
+            val restoredProduce = Array(FarmCrop.entries.size) { IntArray(FarmCropQuality.entries.size) }
+            if (version >= 7) {
+                val produceJson = json.optJSONObject("produce") ?: JSONObject()
+                FarmCrop.entries.forEach { crop ->
+                    val cropJson = produceJson.optJSONObject(crop.name) ?: return@forEach
+                    FarmCropQuality.entries.forEach { quality ->
+                        restoredProduce[crop.ordinal][quality.ordinal] =
+                            cropJson.optInt(quality.name).coerceIn(0, 999999)
+                    }
+                }
+            }
             // Validate the herd before applying either part of the save.
             val restoredHerd = LivestockState().apply { restore(json.optJSONObject("livestock")) }
             if (version >= 2) {
@@ -182,6 +205,7 @@ class FarmState(private val prefs: SharedPreferences) {
             }
             lands.forEachIndexed { i, p -> parcels[i].apply { unlocked = p.unlocked; use = p.use } }
             inventory.copyInto(seeds)
+            restoredProduce.forEachIndexed { i, row -> row.copyInto(produce[i]) }
             coins = restoredCoins; harvests = restoredHarvests; selected = selection; wateringLevel = restoredWatering
             harvestLevel = restoredHarvestLevel; fertilizerLevel = restoredFertilizer; aimLevel = restoredAim
             livestock.restore(restoredHerd.toJson())
@@ -228,6 +252,7 @@ class FarmState(private val prefs: SharedPreferences) {
         FarmRegion.HOME -> true
         FarmRegion.FIELDS -> fieldsUnlocked()
         FarmRegion.LIVESTOCK -> livestockUnlocked()
+        FarmRegion.GREENHOUSE -> true
     }
 
     /**
@@ -414,6 +439,10 @@ class FarmState(private val prefs: SharedPreferences) {
         if (watered.isNotEmpty()) save()
         return watered
     }
+    fun hasPlantsNeedingWater(now: Long = System.currentTimeMillis()): Boolean = plots.indices.any { i ->
+        val p = plots[i]
+        parcels[FarmLayout.parcelOf(i)].unlocked && p.crop != null && !p.watered && p.progress(now) < 1f
+    }
     /** One cell, its row, or the whole parcel - shared by the watering can and the harvest basket. */
     private fun areaTargets(cell: Int, level: Int): List<Int> {
         val parcel = FarmLayout.parcelOf(cell)
@@ -470,31 +499,66 @@ class FarmState(private val prefs: SharedPreferences) {
         if (coins < cost) return false
         coins -= cost; fertilizerLevel++; save(); return true
     }
-    private fun harvestOne(index: Int, now: Long): Int {
+    private fun harvestOne(index: Int, now: Long): FarmHarvestStack? {
         val p = plots[index]
-        val crop = p.crop ?: return 0
-        if (!parcels[FarmLayout.parcelOf(index)].unlocked || p.progress(now) < 1f) return 0
-        // Rich soil and a critical stack: a lucky plant on manure sells for four times its price.
-        var amount = crop.sale
-        if (p.critical) amount *= 2
-        if (p.rich) amount *= 2
-        coins += amount; harvests++
+        val crop = p.crop ?: return null
+        if (!parcels[FarmLayout.parcelOf(index)].unlocked || p.progress(now) < 1f) return null
+        val quality = when {
+            p.critical && p.rich -> FarmCropQuality.LEGENDARY
+            p.rich -> FarmCropQuality.EPIC
+            p.critical -> FarmCropQuality.RARE
+            else -> FarmCropQuality.COMMON
+        }
+        produce[crop.ordinal][quality.ordinal] = (produce[crop.ordinal][quality.ordinal] + 1).coerceAtMost(999999)
+        harvests++
         if (crop.tree) { p.established = true; p.planted = now }
         else { p.crop = null; p.established = false }
         p.watered = false; p.critical = false; p.rich = false
-        return amount
+        return FarmHarvestStack(crop, quality, 1)
     }
-    fun harvest(index: Int, now: Long): Int {
-        val amount = harvestOne(index, now)
-        if (amount > 0) save()
-        return amount
+    fun harvest(index: Int, now: Long): FarmHarvestResult {
+        val stack = harvestOne(index, now)
+        if (stack != null) save()
+        return harvestResult(listOfNotNull(stack))
     }
     /** Reaped together so a whole row costs a single save, mirroring [waterMany]. */
-    fun harvestMany(indices: List<Int>, now: Long): Pair<Int, Int> {
-        var total = 0; var count = 0
-        indices.forEach { val gain = harvestOne(it, now); if (gain > 0) { total += gain; count++ } }
-        if (count > 0) save()
-        return total to count
+    fun harvestMany(indices: List<Int>, now: Long): FarmHarvestResult {
+        val stacks = mutableListOf<FarmHarvestStack>()
+        indices.forEach { harvestOne(it, now)?.let(stacks::add) }
+        if (stacks.isNotEmpty()) save()
+        return harvestResult(stacks)
+    }
+    private fun harvestResult(stacks: List<FarmHarvestStack>): FarmHarvestResult {
+        val grouped = stacks.groupBy { it.crop to it.quality }.map { (key, rows) ->
+            FarmHarvestStack(key.first, key.second, rows.sumOf { it.count })
+        }
+        val value = grouped.sumOf { it.crop.sale * it.quality.multiplier * it.count }
+        return FarmHarvestResult(value, grouped.sumOf { it.count }, grouped)
+    }
+    fun produceCount(): Int = produce.sumOf { row -> row.sum() }
+    fun cropProduceTotal(crop: FarmCrop): Int = produce[crop.ordinal].sum()
+    fun sellProduce(crop: FarmCrop? = null): Long {
+        var total = 0L
+        val crops = crop?.let { listOf(it) } ?: FarmCrop.entries
+        crops.forEach { item ->
+            FarmCropQuality.entries.forEach { quality ->
+                val count = produce[item.ordinal][quality.ordinal]
+                if (count > 0) {
+                    total += count.toLong() * item.sale * quality.multiplier
+                    produce[item.ordinal][quality.ordinal] = 0
+                }
+            }
+        }
+        if (total > 0) { coins += total; save() }
+        return total
+    }
+    fun sellProduce(crop: FarmCrop, quality: FarmCropQuality, quantity: Int): Long {
+        val sold = quantity.coerceIn(0, produce[crop.ordinal][quality.ordinal])
+        if (sold <= 0) return 0
+        produce[crop.ordinal][quality.ordinal] -= sold
+        val total = sold.toLong() * crop.sale * quality.multiplier
+        coins += total; save()
+        return total
     }
     fun clear(index: Int) {
         if (!parcels[FarmLayout.parcelOf(index)].unlocked) return
@@ -517,6 +581,7 @@ class FarmState(private val prefs: SharedPreferences) {
             p.debris = 1 + (i * 7 % 3)
         }
         seeds.fill(0)
+        produce.forEach { it.fill(0) }
         livestock.reset()
         largeFields.reset()
         save()
@@ -549,15 +614,42 @@ class FarmState(private val prefs: SharedPreferences) {
         parcels.forEach { lands.put(JSONObject().put("unlocked", it.unlocked).put("use", it.use.name)) }
         val inventory = JSONObject()
         FarmCrop.entries.forEach { inventory.put(it.name, seeds[it.ordinal]) }
-        prefs.edit().putString("state", JSONObject().put("version", 6).put("coins", coins)
+        val produceJson = JSONObject()
+        FarmCrop.entries.forEach { crop ->
+            val cropJson = JSONObject()
+            FarmCropQuality.entries.forEach { quality -> cropJson.put(quality.name, produce[crop.ordinal][quality.ordinal]) }
+            produceJson.put(crop.name, cropJson)
+        }
+        prefs.edit().putString("state", JSONObject().put("version", 7).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
             .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
+            .put("produce", produceJson)
             .put("harvestLevel", harvestLevel).put("fertilizerLevel", fertilizerLevel).put("aimLevel", aimLevel)
             .put("largeFields", largeFields.json()).put("livestock", livestock.toJson())
             .put("bushBonusDay", bushBonusDay).toString()).apply()
     }
 
+    /**
+     * Plants that can be harvested right now. Exactly the condition [harvestOne] checks, so a badge
+     * showing three is a promise of three harvests - a looser count would send the player to an
+     * empty field. Trees count too: an established tree at full progress is picked the same way.
+     */
+    fun readyToHarvest(now: Long = System.currentTimeMillis()): Int = plots.indices.count { i ->
+        val p = plots[i]
+        p.crop != null && parcels[FarmLayout.parcelOf(i)].unlocked && p.progress(now) >= 1f
+    }
+
     companion object {
+        /** Save file. Shared with whoever only wants to peek at the farm, like the games hub. */
+        const val PREFS = "farm_v1"
+        /**
+         * Reads the save and counts the ready harvests without opening the game. It goes through
+         * [FarmState] on purpose: a second, lighter reader of the same JSON would have to know about
+         * every save version, and would drift the day the format moves again.
+         */
+        fun readyToHarvest(context: Context): Int =
+            FarmState(context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)).readyToHarvest()
+
         /** Milestones. The fields and the pens are earned by playing, not found in a menu. */
         const val FIELDS_HARVESTS = 100
         const val LIVESTOCK_HARVESTS = 200
