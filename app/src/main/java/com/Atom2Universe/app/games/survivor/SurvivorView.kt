@@ -61,7 +61,7 @@ class SurvivorView @JvmOverloads constructor(
     // Couleurs pré-parsées — Color.parseColor() interdit dans la boucle 60fps
     private val C_BG          = Color.parseColor("#0D0D0F")
     private val C_XP_BG       = Color.parseColor("#220044")
-    private val C_XP_FILL     = Color.parseColor("#AA44FF")
+    private val C_XP_FILL     = Color.parseColor("#B1DF8C")
     private val C_HP_BG       = Color.parseColor("#1A0000")
     private val C_SHIELD_BG   = Color.parseColor("#001A2A")
     private val C_SHIELD_FILL = Color.parseColor("#44CCFF")
@@ -78,10 +78,10 @@ class SurvivorView @JvmOverloads constructor(
     private val C_ORB_GLOW    = Color.parseColor("#224466")
     private val C_POISON      = Color.parseColor("#44FF88")
     private val C_BURN        = Color.parseColor("#FF6600")
-    private val C_GRAY        = Color.parseColor("#AAAAAA")
-    private val C_CARD_BG     = Color.parseColor("#1A1A2E")
-    private val C_BTN_BG      = Color.parseColor("#2A2A3A")
-    private val C_BTN_BORDER  = Color.parseColor("#555566")
+    private val C_GRAY        = Color.parseColor("#A5C2BD")
+    private val C_CARD_BG     = Color.parseColor("#18383F")
+    private val C_BTN_BG      = Color.parseColor("#23535A")
+    private val C_BTN_BORDER  = Color.parseColor("#70B4A5")
     private val C_GAMEOVER    = Color.parseColor("#FF4444")
 
     // Joystick state (written from touch thread, read from game thread)
@@ -128,10 +128,11 @@ class SurvivorView @JvmOverloads constructor(
     private val pStroke= Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val pText  = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textAlign = Paint.Align.CENTER }
     private val pTextL = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textAlign = Paint.Align.LEFT }
+    private val ellipsisPaint = android.text.TextPaint(Paint.ANTI_ALIAS_FLAG)
     private val pGlow  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL; maskFilter = BlurMaskFilter(12f, BlurMaskFilter.Blur.NORMAL) }
 
     // Chemin réutilisé pour les formes géométriques ennemies
-    private val shapePath = Path()
+    private val art = SurvivorArt()
 
     // Card rects computed each draw pass
     private val cardRects = Array(3) { RectF() }
@@ -351,146 +352,33 @@ class SurvivorView @JvmOverloads constructor(
         }
     }
 
-    // ─── Background stars ─────────────────────────────────────────────────────
-
-    private val starPositions by lazy {
-        val rng = kotlin.random.Random(42)
-        Array(80) { Pair(rng.nextFloat() * 4000f - 2000f, rng.nextFloat() * 4000f - 2000f) }
-    }
-
     private fun drawStars(canvas: Canvas) {
-        val camX = game.player.x; val camY = game.player.y
-        val cx = width / 2f; val cy = height / 2f
-        pFill.color = Color.WHITE
-        for ((sx, sy) in starPositions) {
-            val screenX = cx + ((sx - camX * 0.3f) % width + width) % width - width / 2f
-            val screenY = cy + ((sy - camY * 0.3f) % height + height) % height - height / 2f
-            canvas.drawCircle(screenX, screenY, 1f, pFill)
-        }
+        art.terrain(canvas, game.player.x, game.player.y, game.survivalTime)
     }
-
-    // ─── Player ───────────────────────────────────────────────────────────────
 
     private fun drawPlayer(canvas: Canvas, sx: Float, sy: Float) {
         val p = game.player
-        val r = SurvivorGame.PLAYER_R.toFloat()
-        val flashing = p.iframeCd > 0f && ((p.iframeCd * 10).toInt() % 2 == 0)
-        if (flashing) return
-
-        // Glow
-        pGlow.color = game.playerColor(p.hpRatio()) and 0x66FFFFFF.toInt()
-        canvas.drawCircle(sx, sy, r * 1.6f, pGlow)
-
-        // Body
-        pFill.color = game.playerColor(p.hpRatio())
-        canvas.drawCircle(sx, sy, r, pFill)
-
-        // Outline
-        pStroke.color = Color.WHITE; pStroke.strokeWidth = 2f; pStroke.alpha = 180
-        canvas.drawCircle(sx, sy, r, pStroke)
-        pStroke.alpha = 255
+        if (p.iframeCd > 0f && (p.iframeCd * 10).toInt() % 2 == 0) return
+        art.player(canvas, sx, sy, SurvivorGame.PLAYER_R.toFloat(), game.survivalTime,
+            abs(jx) + abs(jy) > 0.05f)
     }
 
-    // ─── Enemies ──────────────────────────────────────────────────────────────
-
     private fun drawEnemies(canvas: Canvas, wx: (Float) -> Float, wy: (Float) -> Float) {
-        val pulse     = (sin(game.survivalTime * 5.5f)  * 0.5f + 0.5f).toFloat()
-        val pulseFast = (sin(game.survivalTime * 10.0f) * 0.5f + 0.5f).toFloat()
         for (e in game.enemies) {
             val sx = wx(e.x); val sy = wy(e.y)
-            if (sx < -e.radius * 2 || sx > width + e.radius * 2 || sy < -e.radius * 2 || sy > height + e.radius * 2) continue
-
-            val col = when (e.type) {
-                EnemyType.SHOOTER -> {
-                    val bv = (180 + (pulse * 75f).toInt()).coerceIn(0, 255)
-                    val rv = (80  + (pulse * 60f).toInt()).coerceIn(0, 255)
-                    Color.rgb(rv, 15, bv)
-                }
-                EnemyType.FAST -> {
-                    // rouge vif / pastel → bordeaux selon HP, pulse rapide
-                    val hp = e.hpRatio
-                    val r = (100 + hp * 155f + pulseFast * hp * 55f).toInt().coerceIn(0, 255)
-                    val g = (pulseFast * hp * 125f).toInt().coerceIn(0, 255)
-                    val b = (hp * 18f  + pulseFast * hp * 70f).toInt().coerceIn(0, 255)
-                    Color.rgb(r, g, b)
-                }
-                else -> game.enemyColor(e.hpRatio)
-            }
-
-            // Rayon visuel pulsant pour les FAST (sans toucher au rayon de collision)
-            val drawR = if (e.type == EnemyType.FAST) e.radius * (0.87f + pulseFast * 0.26f) else e.radius
-
-            // Halo (pFill simple — pGlow/BlurMaskFilter trop coûteux sur N centaines d'ennemis)
-            pFill.color = col and 0x44FFFFFF.toInt()
-            canvas.drawCircle(sx, sy, drawR * 1.4f, pFill)
-
-            // Corps — forme selon le type
-            pFill.color = col
-            val isCircle = e.type == EnemyType.ZOMBIE
-            val angleToPlayer = if (e.type == EnemyType.FAST)
-                atan2(game.player.y - e.y, game.player.x - e.x) else 0f
-            if (!isCircle) buildEnemyPath(e.type, sx, sy, drawR, angleToPlayer)
-            if (isCircle) canvas.drawCircle(sx, sy, drawR, pFill)
-            else canvas.drawPath(shapePath, pFill)
-
-            // Contour
-            pStroke.color = Color.argb(100, 255, 255, 255); pStroke.strokeWidth = 1.5f
-            if (isCircle) canvas.drawCircle(sx, sy, drawR, pStroke)
-            else canvas.drawPath(shapePath, pStroke)
-            pStroke.alpha = 255
-
-            // Indicateurs DoT
+            if (sx < -e.radius * 2 || sx > width + e.radius * 2 ||
+                sy < -e.radius * 2 || sy > height + e.radius * 2) continue
+            art.enemy(canvas, e, sx, sy, game.survivalTime, game.player.x, game.player.y)
             if (e.poisonTimer > 0f) {
-                pStroke.color = Color.argb(180, 68, 255, 136); pStroke.strokeWidth = 2f
+                pStroke.color = C_POISON; pStroke.strokeWidth = 2f
                 canvas.drawCircle(sx, sy, e.radius + 3f, pStroke)
             }
             if (e.burnTimer > 0f) {
-                pStroke.color = Color.argb(180, 255, 102, 0); pStroke.strokeWidth = 2f
-                canvas.drawCircle(sx, sy, e.radius + 3f + (if (e.poisonTimer > 0f) 4f else 0f), pStroke)
-            }
-
-            // Anneau boss
-            if (e.type == EnemyType.MINI_BOSS) {
-                pStroke.color = Color.WHITE; pStroke.strokeWidth = 2.5f
-                canvas.drawCircle(sx, sy, e.radius + 4f, pStroke)
+                pStroke.color = C_BURN; pStroke.strokeWidth = 2f
+                canvas.drawCircle(sx, sy, e.radius + 7f, pStroke)
             }
         }
     }
-
-    private fun buildEnemyPath(type: EnemyType, cx: Float, cy: Float, r: Float, angleToPlayer: Float = 0f) {
-        when (type) {
-            EnemyType.FAST     -> setPolygonPath(cx, cy, r, 3, angleToPlayer)   // pointe vers le joueur
-            EnemyType.ERRATIC  -> setPolygonPath(cx, cy, r, 4, PI.toFloat() / 4f)    // losange
-            EnemyType.ORBITER  -> setPolygonPath(cx, cy, r, 6, 0f)                    // hexagone
-            EnemyType.SHOOTER  -> setPolygonPath(cx, cy, r, 4, PI.toFloat() / 4f)    // losange (distinct par couleur)
-            EnemyType.MINI_BOSS-> setStarPath(cx, cy, r, r * 0.45f, 5)               // étoile 5 branches
-            else -> {}
-        }
-    }
-
-    private fun setPolygonPath(cx: Float, cy: Float, r: Float, sides: Int, rotOffset: Float) {
-        shapePath.reset()
-        val step = 2f * PI.toFloat() / sides
-        for (i in 0 until sides) {
-            val a = step * i + rotOffset
-            val x = cx + cos(a) * r; val y = cy + sin(a) * r
-            if (i == 0) shapePath.moveTo(x, y) else shapePath.lineTo(x, y)
-        }
-        shapePath.close()
-    }
-
-    private fun setStarPath(cx: Float, cy: Float, outerR: Float, innerR: Float, points: Int) {
-        shapePath.reset()
-        val total = points * 2
-        for (i in 0 until total) {
-            val a = PI.toFloat() / points * i - PI.toFloat() / 2f
-            val r = if (i % 2 == 0) outerR else innerR
-            val x = cx + cos(a) * r; val y = cy + sin(a) * r
-            if (i == 0) shapePath.moveTo(x, y) else shapePath.lineTo(x, y)
-        }
-        shapePath.close()
-    }
-
     // ─── Aura ─────────────────────────────────────────────────────────────────
 
     private fun drawAura(canvas: Canvas, sx: Float, sy: Float) {
@@ -635,59 +523,71 @@ class SurvivorView @JvmOverloads constructor(
 
     // ─── HUD ──────────────────────────────────────────────────────────────────
 
+    private val xpPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var xpGradientWidth = -1
+    private val hudText = Paint(Paint.ANTI_ALIAS_FLAG)
+
     private fun drawHUD(canvas: Canvas) {
         val p = game.player
-        val barW = dp(12f)
-        val barMargin = dp(4f)
-        val xpH = dp(8f)
-        val topPad = dp(2f)
+        val edge = dp(4f)
+        val barWidth = dp(10f)
+        val xpLeft = dp(4f)
+        val xpRight = width - dp(4f)
+        val xpTop = dp(3f)
+        val xpBottom = dp(8f)
+        if (xpGradientWidth != width) {
+            xpGradientWidth = width
+            // Dégradé ancré sur toute la piste : de nouvelles teintes apparaissent avec l'XP.
+            xpPaint.shader = LinearGradient(xpLeft, 0f, xpRight, 0f,
+                intArrayOf(0xFF579A92.toInt(), 0xFF85B995.toInt(), 0xFFC1C38C.toInt(), 0xFFC79894.toInt()),
+                null, Shader.TileMode.CLAMP)
+        }
+        pFill.color = Color.argb(145, 12, 30, 30)
+        canvas.drawRoundRect(xpLeft, xpTop, xpRight, xpBottom, dp(2f), dp(2f), pFill)
+        if (p.xpRatio() > 0f) {
+            canvas.save()
+            canvas.clipRect(xpLeft, xpTop, xpLeft + (xpRight - xpLeft) * p.xpRatio(), xpBottom)
+            canvas.drawRoundRect(xpLeft, xpTop, xpRight, xpBottom, dp(2f), dp(2f), xpPaint)
+            canvas.restore()
+        }
+        hudText.color = Color.rgb(195, 211, 199)
+        hudText.textSize = sp(11f); hudText.textAlign = Paint.Align.CENTER
+        canvas.drawText(context.getString(R.string.survivor_hud_level, p.level), width / 2f, dp(25f), hudText)
 
-        // XP bar — top
-        pFill.color = C_XP_BG
-        canvas.drawRect(0f, topPad, width.toFloat(), topPad + xpH, pFill)
-        pFill.color = C_XP_FILL
-        canvas.drawRect(0f, topPad, width * p.xpRatio(), topPad + xpH, pFill)
-
-        // HP bar — left
-        val hpTop = topPad + xpH + barMargin
-        val barH = height - hpTop - barMargin
+        val barTop = dp(16f)
+        val barBottom = height - dp(8f)
+        val barHeight = (barBottom - barTop).coerceAtLeast(0f)
         pFill.color = C_HP_BG
-        canvas.drawRect(barMargin, hpTop, barMargin + barW, hpTop + barH, pFill)
-        val hpFill = barH * p.hpRatio()
-        pFill.color = game.playerColor(p.hpRatio())
-        canvas.drawRect(barMargin, hpTop + barH - hpFill, barMargin + barW, hpTop + barH, pFill)
-
-        // Shield bar — right
+        canvas.drawRoundRect(edge, barTop, edge + barWidth, barBottom, dp(5f), dp(5f), pFill)
+        pFill.color = if (p.hpRatio() < 0.3f) C_GAMEOVER else Color.rgb(119, 222, 172)
+        canvas.drawRoundRect(edge, barBottom - barHeight * p.hpRatio(), edge + barWidth, barBottom, dp(5f), dp(5f), pFill)
+        hudText.textSize = sp(10f); hudText.textAlign = Paint.Align.LEFT
+        hudText.color = Color.rgb(154, 220, 180)
+        canvas.drawText(context.getString(R.string.survivor_hud_health, p.hp.toInt(), p.maxHp.toInt()),
+            edge + barWidth + dp(6f), height - dp(12f), hudText)
         if (p.maxShield > 0f) {
-            val rx = width - barMargin - barW
+            val shieldLeft = width - edge - barWidth
             pFill.color = C_SHIELD_BG
-            canvas.drawRect(rx, hpTop, rx + barW, hpTop + barH, pFill)
-            val shFill = barH * p.shieldRatio()
+            canvas.drawRoundRect(shieldLeft, barTop, width - edge, barBottom, dp(5f), dp(5f), pFill)
             pFill.color = C_SHIELD_FILL
-            canvas.drawRect(rx, hpTop + barH - shFill, rx + barW, hpTop + barH, pFill)
+            canvas.drawRoundRect(shieldLeft, barBottom - barHeight * p.shieldRatio(), width - edge, barBottom, dp(5f), dp(5f), pFill)
+            hudText.textAlign = Paint.Align.RIGHT; hudText.color = Color.rgb(146, 206, 231)
+            canvas.drawText(context.getString(R.string.survivor_hud_shield, p.shield.toInt(), p.maxShield.toInt()),
+                shieldLeft - dp(6f), height - dp(12f), hudText)
         }
-
-        // Revive icons — bottom-left above HP bar base
         if (p.revivesLeft > 0) {
-            pText.textSize = sp(14f)
-            pText.textAlign = Paint.Align.LEFT
-            val heartStr = "❤".repeat(p.revivesLeft)
-            pText.color = Color.argb(220, 255, 255, 255)
-            canvas.drawText(heartStr, barMargin + barW + dp(4f), hpTop + barH - dp(4f), pText)
-            pText.textAlign = Paint.Align.CENTER
+            hudText.textAlign = Paint.Align.LEFT; hudText.color = Color.WHITE; hudText.textSize = sp(12f)
+            canvas.drawText("❤".repeat(p.revivesLeft), edge + barWidth + dp(6f), height - dp(30f), hudText)
         }
-
-    }
-
-    // ─── Joystick ─────────────────────────────────────────────────────────────
+    }    // ─── Joystick ─────────────────────────────────────────────────────────────
 
     private fun drawJoystick(canvas: Canvas) {
         if (!joystickActive) return
-        pFill.color = Color.argb(50, 255, 255, 255)
+        pFill.color = Color.argb(100, 18, 53, 59)
         canvas.drawCircle(joyCenterX, joyCenterY, JOY_OUTER_R, pFill)
-        pStroke.color = Color.argb(100, 255, 255, 255); pStroke.strokeWidth = 2f
+        pStroke.color = Color.argb(160, 125, 220, 194); pStroke.strokeWidth = 2f
         canvas.drawCircle(joyCenterX, joyCenterY, JOY_OUTER_R, pStroke)
-        pFill.color = Color.argb(150, 255, 255, 255)
+        pFill.color = Color.argb(180, 149, 224, 204)
         canvas.drawCircle(joyKnobX, joyKnobY, JOY_INNER_R, pFill)
     }
 
@@ -719,10 +619,14 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun drawWeaponSelect(canvas: Canvas) {
         val cx = width / 2f
-        pText.color = Color.WHITE; pText.textSize = sp(34f)
+        pFill.color = Color.argb(190, 9, 25, 32)
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
+        pText.color = C_XP_FILL; pText.textSize = sp(28f)
         canvas.drawText(sTitle, cx, dp(52f), pText)
 
-        var nextY = dp(78f)
+        pText.textSize = sp(11f); pText.color = C_GRAY
+        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, dp(73f), pText)
+        var nextY = dp(98f)
         if (game.bestTime > 0f) {
             val sec = game.bestTime.toInt()
             pText.textSize = sp(12f); pText.color = C_GRAY
@@ -733,9 +637,9 @@ class SurvivorView @JvmOverloads constructor(
         canvas.drawText(sSelectWeapon, cx, nextY, pText)
 
         val cardW = width * 0.84f
-        val cardH = dp(60f)
-        val gap   = dp(9f)
+        val gap   = dp(7f)
         val startY = nextY + dp(14f)
+        val cardH = min(dp(68f), (height - startY - dp(14f) - gap * 6f) / 7f).coerceAtLeast(dp(30f))
 
         wpnCards.forEachIndexed { i, card ->
             val top   = startY + i * (cardH + gap)
@@ -745,6 +649,8 @@ class SurvivorView @JvmOverloads constructor(
 
             pFill.color = C_CARD_BG
             canvas.drawRoundRect(weaponCardRects[i], dp(12f), dp(12f), pFill)
+            pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = dp(0.6f)
+            canvas.drawRoundRect(weaponCardRects[i], dp(12f), dp(12f), pStroke)
 
             pFill.color = card.color
             canvas.drawRoundRect(left, top, left + dp(6f), top + cardH, dp(3f), dp(3f), pFill)
@@ -752,14 +658,20 @@ class SurvivorView @JvmOverloads constructor(
             val iconCx = left + dp(46f)
             val iconCy = top + cardH / 2f
             pFill.color = Color.argb(180, Color.red(card.color), Color.green(card.color), Color.blue(card.color))
-            canvas.drawCircle(iconCx, iconCy, dp(19f), pFill)
+            canvas.drawCircle(iconCx, iconCy, min(dp(19f), cardH * 0.35f), pFill)
             pText.color = Color.WHITE; pText.textSize = sp(10f)
             canvas.drawText(card.shortLabel, iconCx, iconCy + sp(4f), pText)
 
-            pTextL.color = Color.WHITE; pTextL.textSize = sp(15f)
-            canvas.drawText(context.getString(card.labelRes), left + dp(75f), top + cardH * 0.42f, pTextL)
-            pTextL.color = C_GRAY; pTextL.textSize = sp(12f)
-            canvas.drawText(context.getString(card.descRes), left + dp(75f), top + cardH * 0.73f, pTextL)
+            pTextL.color = Color.WHITE; pTextL.textSize = min(sp(15f), cardH * 0.25f)
+            ellipsisPaint.set(pTextL)
+            val label = android.text.TextUtils.ellipsize(context.getString(card.labelRes),
+                ellipsisPaint, cardW - dp(87f), android.text.TextUtils.TruncateAt.END)
+            canvas.drawText(label.toString(), left + dp(75f), top + cardH * 0.42f, pTextL)
+            pTextL.color = C_GRAY; pTextL.textSize = min(sp(12f), cardH * 0.21f)
+            ellipsisPaint.set(pTextL)
+            val description = android.text.TextUtils.ellipsize(context.getString(card.descRes),
+                ellipsisPaint, cardW - dp(87f), android.text.TextUtils.TruncateAt.END)
+            canvas.drawText(description.toString(), left + dp(75f), top + cardH * 0.73f, pTextL)
         }
         pText.color = Color.WHITE
     }
@@ -768,8 +680,13 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun drawMenu(canvas: Canvas) {
         val cx = width / 2f; val cy = height / 2f
-        pText.color = Color.WHITE; pText.textSize = sp(36f)
+        pFill.color = Color.argb(225, 12, 30, 37)
+        canvas.drawRoundRect(dp(18f), cy - dp(176f), width - dp(18f), cy + dp(64f), dp(24f), dp(24f), pFill)
+        art.player(canvas, cx, cy - dp(123f), dp(28f), 0f, false)
+        pText.color = C_XP_FILL; pText.textSize = sp(30f)
         canvas.drawText(sTitle, cx, cy - dp(60f), pText)
+        pText.textSize = sp(11f); pText.color = C_GRAY
+        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, cy - dp(35f), pText)
         pText.textSize = sp(16f); pText.color = C_GRAY
         canvas.drawText(sTapStart, cx, cy, pText)
         if (game.bestTime > 0f) {
@@ -851,6 +768,8 @@ class SurvivorView @JvmOverloads constructor(
         val cx = width / 2f; val cy = height / 2f
         pText.color = Color.WHITE; pText.textSize = sp(30f)
         canvas.drawText(sPaused, cx, cy - dp(60f), pText)
+        pText.textSize = sp(13f); pText.color = C_GRAY
+        canvas.drawText("$sWave ${game.wave}   ·   $sKills ${game.player.kills}", cx, cy - dp(30f), pText)
         drawTwoButtons(canvas, cx, cy, sResume, sQuit)
     }
 

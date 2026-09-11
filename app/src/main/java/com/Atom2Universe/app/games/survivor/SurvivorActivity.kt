@@ -22,7 +22,7 @@ class SurvivorActivity : ThemedActivity() {
             tvTitle.text = when (g.phase) {
                 GamePhase.PLAYING, GamePhase.LEVEL_UP, GamePhase.PAUSED -> {
                     val sec = g.survivalTime.toInt()
-                    "Lv.${g.player.level}   %d:%02d   ${g.player.kills}".format(sec / 60, sec % 60)
+                    "%d:%02d".format(sec / 60, sec % 60)
                 }
                 else -> getString(R.string.survivor_title)
             }

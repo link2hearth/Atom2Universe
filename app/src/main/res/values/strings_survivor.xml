@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_bomb">Throws bombs that explode on impact</string>
     <string name="survivor_weapon_desc_chain_lightning">Lightning that chains between enemies</string>
     <string name="survivor_weapon_desc_orbital">Orbs orbiting you that shoot at enemies</string>
+    <string name="survivor_sanctuary">THE LIVING SANCTUARY</string>
+    <string name="survivor_hud_level">LEVEL %1$d</string>
+    <string name="survivor_hud_health">HEALTH %1$d / %2$d</string>
+    <string name="survivor_hud_shield">SHIELD %1$d / %2$d</string>
 </resources>

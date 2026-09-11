@@ -22,7 +22,7 @@ class SPlayer {
     var x = 0f; var y = 0f
     var hp = 100f; var maxHp = 100f
     var shield = 0f; var maxShield = 0f
-    var xp = 0f; var xpToNext = 50f; var level = 1
+    var xp = 0f; var xpToNext = 30f; var level = 1
     var speed = 180f
     var iframeCd = 0f
     var shieldRegenDelay = 0f
@@ -43,7 +43,7 @@ class SEnemy(
     var x: Float, var y: Float,
     var hp: Float, val maxHp: Float,
     val baseSpeed: Float, val damage: Float,
-    val xpDrop: Float, val radius: Float,
+    val xpDrop: Float, radius: Float,
     val type: EnemyType,
     var slowFactor: Float = 1f,
     var slowCd: Float = 0f,
@@ -61,6 +61,9 @@ class SEnemy(
     // Formation
     var formation: SFormation? = null
 ) {
+    // Rayon commun au rendu et aux collisions, y compris dans les formations.
+    val radius: Float = radius * 1.65f
+    val visualSeed: Float = ((x.toBits() xor y.toBits()) and 1023) * 0.017f
     val hpRatio get() = (hp / maxHp).coerceIn(0f, 1f)
 }
 
@@ -113,7 +116,7 @@ class SBomb(
     var lifetime: Float, val isCrit: Boolean
 )
 
-data class FormationSlot(val enemy: SEnemy, val offX: Float, val offY: Float)
+data class FormationSlot(val enemy: SEnemy, var offX: Float, var offY: Float)
 
 class SFormation(
     var worldX: Float,   // position absolue dans le monde
@@ -199,7 +202,7 @@ class SurvivorGame(private val ctx: Context) {
     var bestTime = 0f
     var bestKills = 0
     var pendingUpgrades: List<UpgradeOption>? = null
-    var formationCd = 55f
+    var formationCd = 180f
     var pendingLevelUps = 0
     var resumeRampTimer = 0f
     var reviveFlashTimer = 0f
@@ -215,25 +218,25 @@ class SurvivorGame(private val ctx: Context) {
 
     companion object {
         const val WAVE_DUR = 30f
-        const val BOSS_INTERVAL = 90f
+        const val BOSS_INTERVAL = 180f
         const val SPAWN_DIST = 700f
         const val IFRAME = 0.5f
         const val PLAYER_R = 16f
 
-        const val PROJ_DMG = 5f;    const val PROJ_RATE = 2f
+        const val PROJ_DMG = 6f;    const val PROJ_RATE = 2.2f
         const val PROJ_SPEED = 300f; const val PROJ_R = 4f; const val PROJ_LIFE = 2f
 
-        const val LASER_DMG = 5f;   const val LASER_RATE = 1f
-        const val LASER_RANGE = 250f; const val LASER_W = 6f; const val LASER_DUR = 0.4f
+        const val LASER_DMG = 7f;   const val LASER_RATE = 1.3f
+        const val LASER_RANGE = 300f; const val LASER_W = 6f; const val LASER_DUR = 0.4f
 
         const val AURA_DMG = 3f;    const val AURA_R = 120f
         const val AURA_TICK = 2.5f; const val AURA_SLOW = 0.7f
 
-        const val BOUNCE_DMG = 5f;   const val BOUNCE_RATE = 0.8f
-        const val BOUNCE_SPEED = 220f; const val BOUNCE_MAX = 1; const val BOUNCE_R = 7f
+        const val BOUNCE_DMG = 7f;   const val BOUNCE_RATE = 1.1f
+        const val BOUNCE_SPEED = 280f; const val BOUNCE_MAX = 1; const val BOUNCE_R = 7f
 
         const val BOMB_DMG = 20f;   const val BOMB_RATE = 0.5f
-        const val BOMB_SPEED = 120f; const val BOMB_EXPL_R = 70f
+        const val BOMB_SPEED = 170f; const val BOMB_EXPL_R = 90f
         const val BOMB_R = 8f;      const val BOMB_LIFE = 3f
         const val RESIDUE_BASE_DURATION = 2f
         const val RESIDUE_TICK_INTERVAL = 0.5f
@@ -243,7 +246,7 @@ class SurvivorGame(private val ctx: Context) {
         const val CHAIN_RANGE = 300f
 
         const val ORB_RADIUS = 60f;    const val ORB_SPEED = 2.5f
-        const val ORB_PROJ_DMG = 2.5f; const val ORB_R = 10f
+        const val ORB_PROJ_DMG = 3f; const val ORB_R = 10f
         const val ORB_FIRE_RATE = 1.5f; const val ORB_CONTACT_CD = 0.3f
         const val RESUME_RAMP_DURATION = 0.5f
         const val ORB_RADIUS_OUTER = 110f
@@ -270,7 +273,8 @@ class SurvivorGame(private val ctx: Context) {
     private val _killBombs    = HashSet<SBomb>(8)
     private val _killExpl     = HashSet<SExplosion>(8)
     private val _killResidue  = HashSet<SResidue>(8)
-    private var separationFrame = 0
+    private val separationOrder = ArrayList<SEnemy>(256)
+    private val separationComparator = compareBy<SEnemy> { it.x - it.radius }
     private val enemySnapshot  = ArrayList<SEnemy>(128)
     private var lifeStealFactor = 0f
 
@@ -345,7 +349,7 @@ class SurvivorGame(private val ctx: Context) {
             x = 0f; y = 0f
             hp = 100f; maxHp = 100f
             shield = 0f; maxShield = 0f
-            xp = 0f; xpToNext = 50f; level = 1
+            xp = 0f; xpToNext = 30f; level = 1
             speed = 180f; iframeCd = 0f; shieldRegenDelay = 0f; lifeStealCd = 0f
             revivesLeft = 0; kills = 0
             upgrades.clear()
@@ -358,7 +362,7 @@ class SurvivorGame(private val ctx: Context) {
         particles.clear(); dmgNums.clear(); orbitalCount = 0
         orbitalFireCds.fill(0f); orbitalContactCds.fill(0f)
         formations.clear()
-        formationCd = 55f
+        formationCd = 180f
         playerDps = 0f; dpsAccum = 0f; dpsWindowCd = 5f
         wave = 1; survivalTime = 0f; spawnCd = 0f
         waveCd = WAVE_DUR; bossCd = BOSS_INTERVAL; auraCd = 0f; bossWarning = 0f
@@ -386,11 +390,11 @@ class SurvivorGame(private val ctx: Context) {
         regenShield(eff)
         regenHp(eff)
         updateEnemies(eff)
-        separateEnemies()
         updateFormations(eff)
         updateDoTs(eff)
         spawnEnemies(eff)
         updateWave(eff)
+        separateEnemies()
         fireWeapons(eff)
         fireAura(eff)
         updateOrbital(eff)
@@ -450,7 +454,7 @@ class SurvivorGame(private val ctx: Context) {
         if (wave >= 3) {
             formationCd -= dt
             if (formationCd <= 0f) {
-                formationCd = 65f + rng.nextFloat() * 40f
+                formationCd = 85f + rng.nextFloat() * 25f
                 val blockFormation = survivalTime < 900f && formations.isNotEmpty()
                 if (!blockFormation) spawnFormation()
             }
@@ -493,10 +497,18 @@ class SurvivorGame(private val ctx: Context) {
         }
     }
 
+    // Compter aussi les tireurs hors écran évite des arrivées dépassant le plafond.
+    private fun availableShooterSlots(): Int {
+        val limit = 2 + (survivalTime.toInt() / 60 - 1).coerceIn(0, 9)
+        return (limit - enemies.count { it.type == EnemyType.SHOOTER && it.hp > 0f }).coerceAtLeast(0)
+    }
+
     private fun spawnFormation() {
-        val hpScale  = 1f + wave * 0.10f
-        val total    = (20 + wave * 2).coerceIn(20, 50)
-        val shooters = (2 + wave / 4).coerceIn(2, 6)
+        val hpScale  = 1f + (wave - 1) * 0.06f
+        val total = (8 + ((survivalTime - 180f).coerceAtLeast(0f) / 60f).toInt()).coerceAtMost(18)
+            .coerceAtMost(availableEnemySlots())
+        if (total < 6) return
+        val shooters = (1 + wave / 8).coerceAtMost(3).coerceAtMost(availableShooterSlots())
         val troops   = total - shooters
 
         // Position de départ hors-écran sur un bord aléatoire
@@ -520,7 +532,7 @@ class SurvivorGame(private val ctx: Context) {
         // Tireurs au centre en cercle serré
         repeat(shooters) { i ->
             val a = i * 2f * PI.toFloat() / shooters
-            val offX = cos(a) * 45f; val offY = sin(a) * 45f
+            val offX = cos(a) * 70f; val offY = sin(a) * 70f
             val e = SEnemy(worldCx + offX, worldCy + offY, 5f * hpScale, 5f * hpScale, 0f, 5f, 10f, 20f, EnemyType.SHOOTER)
             e.shootCd = 1f + rng.nextFloat() * 2f; e.formation = f
             f.slots.add(FormationSlot(e, offX, offY)); enemies.add(e)
@@ -528,9 +540,9 @@ class SurvivorGame(private val ctx: Context) {
 
         // Troupes dans des anneaux concentriques
         var remaining = troops
-        for (ringRadius in floatArrayOf(95f, 160f, 230f)) {
+        for (ringRadius in floatArrayOf(140f, 210f, 280f)) {
             if (remaining <= 0) break
-            val capacity = (2f * PI.toFloat() * ringRadius / 33f).toInt().coerceAtMost(remaining)
+            val capacity = (2f * PI.toFloat() * ringRadius / 52f).toInt().coerceAtMost(remaining)
             repeat(capacity) { i ->
                 val a = i * 2f * PI.toFloat() / capacity + rng.nextFloat() * 0.08f
                 val offX = cos(a) * ringRadius; val offY = sin(a) * ringRadius
@@ -548,31 +560,57 @@ class SurvivorGame(private val ctx: Context) {
     }
 
     private fun separateEnemies() {
-        if (enemies.size > 100) return
-        if (++separationFrame % 3 != 0) return
-        val list = enemies
-        val n = list.size
-        for (i in 0 until n) {
-            val a = list[i]
-            if (a.formation != null) continue
-            for (j in i + 1 until n) {
-                val b = list[j]
-                if (b.formation != null) continue
-                val dx = b.x - a.x
-                val dy = b.y - a.y
-                val minDist = a.radius + b.radius + 1f
-                val distSq = dx * dx + dy * dy
-                if (distSq < minDist * minDist && distSq > 0.0001f) {
+        // Balayage spatial : ne comparer que les disques proches sur X, sans limite de population.
+        val order = separationOrder
+        order.clear()
+        for (enemy in enemies) if (enemy.hp > 0f) order.add(enemy)
+        repeat(6) {
+            order.sortWith(separationComparator)
+            var corrected = false
+            for (i in order.indices) {
+                val a = order[i]
+                // Le corps courant peut être déplacé pendant le balayage. La passe suivante
+                // retrie les positions et résout les contacts créés par ces corrections.
+                val right = a.x + a.radius + 2f
+                for (j in i + 1 until order.size) {
+                    val b = order[j]
+                    if (b.x - b.radius > right) break
+                    val minDist = a.radius + b.radius + 2f
+                    var dx = b.x - a.x
+                    var dy = b.y - a.y
+                    val distSq = dx * dx + dy * dy
+                    if (distSq >= minDist * minDist) continue
                     val dist = sqrt(distSq)
-                    val push = (minDist - dist) * 0.5f / dist
-                    val px = dx * push; val py = dy * push
-                    a.x -= px; a.y -= py
-                    b.x += px; b.y += py
+                    if (dist < 0.001f) {
+                        // Une normale déterministe sépare aussi deux centres identiques.
+                        val angle = (i * 2.399963f + j * 0.754877f)
+                        dx = cos(angle); dy = sin(angle)
+                    } else {
+                        dx /= dist; dy /= dist
+                    }
+                    val push = (minDist - dist) * 0.5f
+                    a.x -= dx * push; a.y -= dy * push
+                    b.x += dx * push; b.y += dy * push
+                    corrected = true
                 }
             }
+            if (!corrected) {
+                syncFormationOffsets()
+                order.clear()
+                return
+            }
         }
+        syncFormationOffsets()
+        order.clear()
     }
 
+    private fun syncFormationOffsets() {
+        // Conserver les corrections : le déplacement de la formation ne doit pas les annuler.
+        for (formation in formations) for (slot in formation.slots) {
+            slot.offX = slot.enemy.x - formation.worldX
+            slot.offY = slot.enemy.y - formation.worldY
+        }
+    }
     private fun updateDoTs(dt: Float) {
         val toKill = _killEnemies.also { it.clear() }
         for (e in enemySnapshot) {
@@ -655,34 +693,45 @@ class SurvivorGame(private val ctx: Context) {
         enemyBullets.removeAll(dead)
     }
 
+    // Plafond commun aux apparitions individuelles et aux formations ; boss à part.
+    // Population doublée : 32 au départ, 40 à 2 minutes, jusqu'à 120.
+    private fun enemyPopulationLimit(): Int {
+        val minutes = survivalTime / 60f
+        val baseLimit = if (minutes < 2f) 16 + (minutes * 2f).toInt()
+        else (20 + ((minutes - 2f) * 5f).toInt()).coerceAtMost(60)
+        return baseLimit * 2
+    }
+
+    private fun availableEnemySlots(): Int = (enemyPopulationLimit() -
+        enemies.count { it.hp > 0f && it.type != EnemyType.MINI_BOSS }).coerceAtLeast(0)
+
     private fun spawnEnemies(dt: Float) {
         spawnCd -= dt
         if (spawnCd > 0f) return
-
-        // Pression de spawn : peu d'ennemis ou DPS joueur élevé → spawn plus vite et en plus grand groupe
-        val nonFormationEnemies = enemies.count { it.formation == null }
-        val minTarget = (6 + wave * 2).coerceAtMost(28)
-        val countPressure = if (nonFormationEnemies < minTarget)
-            (minTarget.toFloat() / (nonFormationEnemies + 1f)).coerceAtMost(4f) else 1f
-        val targetDps = 8f + wave * 5f
-        val dpsPressure = if (playerDps > targetDps)
-            (playerDps / targetDps).coerceAtMost(4f) else 1f
-        val pressure = maxOf(countPressure, dpsPressure)
-
-        val interval = (0.5f - wave * 0.02f).coerceAtLeast(0.1f) / pressure
-        spawnCd = interval + rng.nextFloat() * 0.05f
-
+        val slots = availableEnemySlots()
+        // Six secondes de respiration en fin de vague, à partir de la deuxième.
+        if (slots == 0 || (survivalTime >= 30f && survivalTime % WAVE_DUR >= 24f)) {
+            spawnCd = 0.4f
+            return
+        }
+        val minutes = survivalTime / 60f
+        // Début plus actif, puis raccord progressif à la cadence existante à 2 minutes.
+        val interval = if (minutes < 2f) 0.95f + minutes * 0.06f
+            else (1.25f - minutes * 0.09f).coerceAtLeast(0.38f)
+        val occupancy = 1f - slots.toFloat() / enemyPopulationLimit()
+        // Quand le terrain est déjà chargé, laisser le joueur le désengorger.
+        val crowdDelay = if (occupancy >= 0.65f) 1.8f else 1f
+        // Doubler le débit, y compris la variation aléatoire de l'intervalle.
+        spawnCd = (interval * crowdDelay + rng.nextFloat() * 0.15f) * 0.5f
         val type = pickEnemyType()
         doSpawn(type)
-
-        val allowGroup = type != EnemyType.SHOOTER && type != EnemyType.ORBITER && type != EnemyType.MINI_BOSS
-        val groupChance = (0.12f + (pressure - 1f) * 0.10f).coerceAtMost(0.50f)
-        if (allowGroup && wave >= 2 && rng.nextFloat() < groupChance) {
-            val n = (2 + rng.nextInt(wave.coerceAtMost(5))).coerceAtMost(8)
-            repeat(n) { doSpawn(type) }
+        if (survivalTime >= 20f && occupancy < 0.65f &&
+            type != EnemyType.SHOOTER && type != EnemyType.ORBITER &&
+            rng.nextFloat() < 0.12f) {
+            // Un seul renfort ; chaque apparition revérifie le plafond partagé.
+            doSpawn(type)
         }
     }
-
     private fun updateDpsWindow(dt: Float) {
         dpsWindowCd -= dt
         if (dpsWindowCd <= 0f) {
@@ -695,10 +744,10 @@ class SurvivorGame(private val ctx: Context) {
     private fun pickEnemyType(): EnemyType {
         val r = rng.nextFloat()
         return when {
-            wave >= 5 && r < 0.08f -> EnemyType.SHOOTER
-            wave >= 4 && r < 0.18f -> EnemyType.ORBITER
-            wave >= 3 && r < 0.30f -> EnemyType.ERRATIC
-            wave >= 2 && r < (0.35f + wave * 0.02f).coerceAtMost(0.55f) -> EnemyType.FAST
+            survivalTime >= 120f && r < 0.04f -> EnemyType.SHOOTER
+            survivalTime >= 150f && r < 0.11f -> EnemyType.ORBITER
+            survivalTime >= 90f && r < 0.20f -> EnemyType.ERRATIC
+            survivalTime >= 60f && r < (0.15f + survivalTime / 3000f).coerceAtMost(0.35f) -> EnemyType.FAST
             else -> EnemyType.ZOMBIE
         }
     }
@@ -716,8 +765,10 @@ class SurvivorGame(private val ctx: Context) {
     }
 
     private fun doSpawn(type: EnemyType) {
+        if (type != EnemyType.MINI_BOSS && availableEnemySlots() == 0) return
+        if (type == EnemyType.SHOOTER && availableShooterSlots() == 0) return
         val (ex, ey) = spawnEdgePos()
-        val hpScale = 1f + wave * 0.10f
+        val hpScale = 1f + (wave - 1) * 0.06f
         val e = when (type) {
             EnemyType.ZOMBIE   -> SEnemy(ex, ey, 8f   * hpScale, 8f   * hpScale, 80f,  10f, 5f,   14f, type)
             EnemyType.FAST     -> SEnemy(ex, ey, 4f   * hpScale, 4f   * hpScale, 140f, 5f,  3f,   11f, type)
@@ -1274,7 +1325,7 @@ class SurvivorGame(private val ctx: Context) {
         while (player.xp >= player.xpToNext) {
             player.xp -= player.xpToNext
             player.level++
-            player.xpToNext *= 1.15f
+            player.xpToNext *= 1.13f
             pendingLevelUps++
         }
         if (phase == GamePhase.PLAYING && pendingLevelUps > 0) {
@@ -1298,6 +1349,12 @@ class SurvivorGame(private val ctx: Context) {
             true
         }.toMutableList()
         avail.shuffle()
+        // Toujours proposer une progression pour une arme déjà équipée.
+        val weaponUpgrade = avail.firstOrNull { it.weaponType in player.weapons }
+        if (weaponUpgrade != null) {
+            avail.remove(weaponUpgrade)
+            return (listOf(weaponUpgrade) + avail.take(2)).shuffled()
+        }
         return avail.take(3)
     }
 
