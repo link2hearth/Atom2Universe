@@ -110,7 +110,8 @@ private class HarvestGauge(val cell: Int, val startTime: Long, val downX: Float,
 class FarmWorldView(context: Context, private val state: FarmState,
                     private val onPlant: (Int) -> Unit, private val onParcel: (Int) -> Unit,
                     private val onRemove: (Int) -> Unit, private val onDebrisCleared: (Int) -> Unit,
-                    private val onWatered: (Int) -> Unit, private val onHarvested: (Int, Int) -> Unit) : View(context) {
+                    private val onWatered: (Int) -> Unit,
+                    private val onHarvested: (cell: Int, amount: Int, count: Int) -> Unit) : View(context) {
     private var harvestGame: HarvestGauge? = null
     private var harvestTicking = false
     private val harvestTick = object : Runnable {
@@ -142,8 +143,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
             MotionEvent.ACTION_MOVE -> {
                 val game = harvestGame ?: return false
                 if (!game.done && game.tryPull(game.downY - y, now)) {
-                    val amount = state.harvest(game.cell, now)
-                    onHarvested(game.cell, amount)
+                    // One pull reaps whatever the basket reaches: this cell, its row, or the parcel.
+                    val (amount, count) = state.harvestMany(state.harvestTargets(game.cell), now)
+                    onHarvested(game.cell, amount, count)
                 }
                 invalidate(); ensureHarvestTicking(); true
             }
@@ -303,7 +305,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     var region = FarmRegion.HOME
         private set
     var onRegionTap: (() -> Unit)? = null
-    var onBushBonus: (() -> Unit)? = null
+    var onBushBonus: ((Long) -> Unit)? = null
     // Tucked in the gap between the house and parcel 1, centred over its gate; a coin pile only
     // shows through it - and only gets a tap - while the once-a-day bonus hasn't been claimed yet.
     private val treasureBush = RectF(965f, 15f, 1095f, 145f)
@@ -370,7 +372,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
             if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return true }
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
             if (state.bushBonusReady() && treasureBush.contains(x, y)) {
-                if (state.claimBushBonus()) { onBushBonus?.invoke(); invalidate() }
+                val gained = state.claimBushBonus()
+                if (gained > 0) { onBushBonus?.invoke(gained); invalidate() }
                 return true
             }
             if (wateringMode) { handleWateringTap(x, y); return true }
@@ -504,9 +507,16 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     else if (p.debris == 3) sprites.environment(canvas, 3, 0, cell)
                     else sprites.environment(canvas, if (p.debris == 1) 2 else 3, 3, cell)
                 } else {
-                    paint.color = if (p.watered) Color.rgb(94, 65, 44) else Color.rgb(151, 104, 60)
+                    // Manured ground reads as a darker, richer earth - the bonus has to be visible
+                    // from the moment the seed goes in, not only on the harvest total.
+                    paint.color = when {
+                        p.rich && p.watered -> Color.rgb(58, 39, 25)
+                        p.rich -> Color.rgb(104, 68, 37)
+                        p.watered -> Color.rgb(94, 65, 44)
+                        else -> Color.rgb(151, 104, 60)
+                    }
                     canvas.drawRoundRect(RectF(cell.left, cell.top + 34, cell.right, cell.bottom), 5f, 5f, paint)
-                    paint.color = Color.rgb(112, 70, 43)
+                    paint.color = if (p.rich) Color.rgb(76, 47, 26) else Color.rgb(112, 70, 43)
                     for (r in 0..2) canvas.drawRect(cell.left + 5, cell.top + 40 + r * 9, cell.right - 5, cell.top + 42 + r * 9, paint)
                     val crop = p.crop
                     val grip = harvestGame?.takeIf { it.cell == i && !it.done && now - it.startTime >= HarvestGauge.GRIP_DELAY }
@@ -531,7 +541,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 RectF(land.left + col * fenceWidth, land.bottom - 27, land.left + (col + 1) * fenceWidth, land.bottom + 20))
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)
-                label(canvas, context.getString(R.string.farm_locked_price, state.unlockCost(index)), land.centerX(), land.centerY(), 20f)
+                val price = java.text.NumberFormat.getIntegerInstance().format(state.unlockCost(index).toLong())
+                label(canvas, context.getString(R.string.farm_locked_price, price), land.centerX(), land.centerY(), 20f)
             }
             paint.color = Color.rgb(61, 76, 40)
             canvas.drawRoundRect(RectF(land.left + 45, land.top - 12, land.right - 45, land.top + 20), 8f, 8f, paint)

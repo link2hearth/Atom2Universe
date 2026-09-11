@@ -33,12 +33,13 @@ class FarmActivity : ThemedActivity() {
     private lateinit var balance: TextView
     private lateinit var selection: FarmArtView
     private lateinit var wateringIcon: FarmArtView
+    private lateinit var manureIcon: FarmArtView
     private lateinit var status: TextView
     private var bubble: LinearLayout? = null
     private val livestockUi = mutableListOf<() -> Unit>()
     private lateinit var seedGroup: LinearLayout
     private var bubbleFeedback: TextView? = null
-    private val purchases = mutableListOf<Pair<Button, Int>>()
+    private val purchases = mutableListOf<Pair<Button, Long>>()
     private val stockLabels = mutableListOf<Pair<TextView, FarmCrop>>()
     private val handler = Handler(Looper.getMainLooper())
     private val hideStatus = Runnable { status.visibility = View.GONE }
@@ -60,7 +61,7 @@ class FarmActivity : ThemedActivity() {
         world.dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
         world.onLivestockPen = ::livestockPen
         world.onRegionTap = { message(getString(world.region.description)) }
-        world.onBushBonus = { message(getString(R.string.farm_bush_bonus)); refresh() }
+        world.onBushBonus = { gained -> message(getString(R.string.farm_bush_bonus, money(gained))); refresh() }
         root.addView(world, FrameLayout.LayoutParams(-1, -1))
         fieldPanel = column().apply { visibility = View.GONE; setBackgroundColor(sage) }
         fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(4)) }
@@ -103,6 +104,9 @@ class FarmActivity : ThemedActivity() {
         }
         seedGroup.addView(selection, LinearLayout.LayoutParams(dp(44), dp(44)).apply { leftMargin = dp(2) })
         toolbar.addView(seedGroup, LinearLayout.LayoutParams(dp(92), dp(48)).apply { leftMargin = dp(2) })
+        // Between the seed bag and the watering can: what goes in the ground, then what starts it.
+        manureIcon = icon(FarmArtView.Kind.MANURE, R.string.farm_manure_title) { manurePit() }
+        toolbar.addView(manureIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
         wateringIcon = icon(FarmArtView.Kind.WATER, R.string.farm_watering_mode) { toggleWatering() }
         toolbar.addView(wateringIcon, LinearLayout.LayoutParams(dp(48), dp(48)))
         toolbar.addView(icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }, LinearLayout.LayoutParams(dp(48), dp(48)))
@@ -132,27 +136,64 @@ class FarmActivity : ThemedActivity() {
         })
         refresh()
         val regionName = savedInstanceState?.getString("farm_region")
-        FarmRegion.entries.firstOrNull { it.name == regionName }?.let { region ->
+        FarmRegion.entries.firstOrNull { it.name == regionName && state.regionUnlocked(it) }?.let { region ->
             world.post { world.switchRegion(region); refresh() }
         }
+    }
+
+    /** The milestone still to reach, or null when the region is open. */
+    private fun regionLock(region: FarmRegion): String? = when {
+        state.regionUnlocked(region) -> null
+        region == FarmRegion.FIELDS ->
+            getString(R.string.farm_region_locked_fields, FarmState.FIELDS_HARVESTS, state.harvests)
+        else -> getString(R.string.farm_region_locked_livestock, FarmState.LIVESTOCK_HARVESTS,
+            FarmState.LIVESTOCK_FIELD_CYCLES, state.harvests, state.largeFields.cycles)
+    }
+    private fun goToRegion(region: FarmRegion) {
+        val locked = regionLock(region)
+        if (locked != null) { message(locked); return }
+        closeBubble(); world.switchRegion(region); fieldView.resetMotion(); refresh()
+        if (region != FarmRegion.FIELDS) message(getString(region.description))
     }
 
     private fun chooseRegion() {
         showBubble(getString(R.string.farm_regions)) { body ->
             FarmRegion.entries.forEach { region ->
+                val locked = regionLock(region)
                 val row = column().apply {
                     setPadding(dp(12), dp(10), dp(12), dp(10))
                     background = rounded(if (region == world.region) sage else cream, 14, border)
                     isFocusable = true
-                    setOnClickListener {
-                        closeBubble(); world.switchRegion(region); fieldView.resetMotion(); refresh()
-                        if (region != FarmRegion.FIELDS) message(getString(region.description))
-                    }
+                    alpha = if (locked == null) 1f else .6f
+                    setOnClickListener { goToRegion(region) }
                 }
                 row.addView(text(getString(region.label), 17, true))
                 row.addView(text(getString(region.description), 13))
+                if (locked != null) row.addView(text("🔒 " + locked, 13, true))
                 body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
+        }
+    }
+
+    /** How many plantings of the selected seed the pit can still enrich. */
+    private fun manureServings(): Int {
+        val cost = state.selected.manureCost
+        return if (cost <= 0) 0 else (state.livestock.manure / cost).toInt()
+    }
+    private fun manurePit() {
+        state.advanceLivestock()
+        showBubble(getString(R.string.farm_manure_title)) { body ->
+            val pit = text("", 17, true)
+            body.addView(pit)
+            val servings = text("", 15)
+            body.addView(servings.apply { setPadding(0, dp(4), 0, dp(10)) })
+            livestockUi.add {
+                pit.text = getString(R.string.farm_manure_stock, money(state.livestock.manure),
+                    money(state.livestock.manureCapacity()), money(state.livestock.manurePerDay()))
+                servings.text = getString(R.string.farm_manure_plantings, manureServings(),
+                    getString(state.selected.label), state.selected.manureCost)
+            }
+            body.addView(text(getString(R.string.farm_manure_body), 13))
         }
     }
 
@@ -160,9 +201,11 @@ class FarmActivity : ThemedActivity() {
         showBubble(getString(R.string.farm_dev_title)) { body ->
             body.addView(text(getString(R.string.farm_dev_coins), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
             val coinsRow = LinearLayout(this)
-            for (amount in listOf(100, 1000)) coinsRow.addView(button(getString(R.string.farm_dev_add_coins, amount)) {
-                state.cheatAddCoins(amount.toLong()); message(getString(R.string.farm_dev_done)); refresh()
-            }, LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(0, 0, dp(4), 0) })
+            // Amounts that match the rebalanced scale: a parcel, an upgrade, the whole ladder.
+            for (amount in listOf(1_000L, 100_000L, 10_000_000L)) coinsRow.addView(
+                button(getString(R.string.farm_dev_add_coins, money(amount))) {
+                    state.cheatAddCoins(amount); message(getString(R.string.farm_dev_done)); refresh()
+                }, LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(0, 0, dp(4), 0) })
             body.addView(coinsRow, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(14) })
 
             body.addView(text(getString(R.string.farm_dev_time), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
@@ -183,7 +226,10 @@ class FarmActivity : ThemedActivity() {
 
             body.addView(text(getString(R.string.farm_dev_reset), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
             body.addView(button(getString(R.string.farm_dev_reset_confirm)) {
-                state.cheatReset(); closeBubble(); world.focusParcel(0); message(getString(R.string.farm_dev_reset_done))
+                state.cheatReset(); closeBubble()
+                // The fields and the pens are locked again: standing in one of them would be a dead end.
+                world.switchRegion(FarmRegion.HOME); fieldView.resetMotion(); world.focusParcel(0)
+                refresh(); message(getString(R.string.farm_dev_reset_done))
             })
         }
     }
@@ -282,6 +328,14 @@ class FarmActivity : ThemedActivity() {
     private fun livestockShop() {
         state.advanceLivestock()
         showBubble(getString(R.string.farm_animal_shop)) { body ->
+            body.addView(text(getString(R.string.farm_manure_title), 17, true))
+            val pit = text("", 15, true)
+            body.addView(pit)
+            livestockUi.add {
+                pit.text = getString(R.string.farm_manure_stock, money(state.livestock.manure),
+                    money(state.livestock.manureCapacity()), money(state.livestock.manurePerDay()))
+            }
+            body.addView(text(getString(R.string.farm_manure_body), 13).apply { setPadding(0, dp(4), 0, dp(12)) })
             body.addView(text(getString(R.string.farm_breeding_rules), 13))
             for (kind in LivestockKind.entries) {
                 val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -292,10 +346,10 @@ class FarmActivity : ThemedActivity() {
                 row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
                 body.addView(row)
                 if (!state.livestock.available(kind)) {
-                    body.addView(button(getString(R.string.farm_locked_price, kind.landPrice)) { livestockPen(kind, false) })
+                    body.addView(button(getString(R.string.farm_locked_price, money(kind.landPrice))) { livestockPen(kind, false) })
                 } else {
                     for (male in listOf(false, true)) {
-                        val action = button(getString(R.string.farm_animal_buy, getString(if (male) R.string.farm_male else R.string.farm_female), kind.price)) {
+                        val action = button(getString(R.string.farm_animal_buy, getString(if (male) R.string.farm_male else R.string.farm_female), money(kind.price))) {
                             val ok = state.buyAnimal(kind, male)
                             message(getString(if (ok) R.string.farm_animal_bought else R.string.farm_animal_unavailable)); refresh()
                         }
@@ -314,8 +368,10 @@ class FarmActivity : ThemedActivity() {
                 body.addView(text(getString(R.string.farm_animal_land_info)))
                 if (kind.ordinal != state.livestock.unlocked) {
                     body.addView(text(getString(R.string.farm_animal_order, getString(LivestockKind.entries[kind.ordinal - 1].label))))
+                } else if (!state.livestockRequirementMet(kind)) {
+                    body.addView(text(requirementText(kind), 14, true))
                 } else {
-                    val action = button(getString(R.string.farm_locked_price, kind.landPrice)) {
+                    val action = button(getString(R.string.farm_locked_price, money(kind.landPrice))) {
                         if (state.unlockLivestock(kind)) { livestockPen(kind, true); message(getString(R.string.farm_unlocked)) }
                         else message(getString(R.string.farm_no_coins))
                         refresh()
@@ -340,7 +396,7 @@ class FarmActivity : ThemedActivity() {
                     0 -> R.string.farm_females; 1 -> R.string.farm_males; else -> R.string.farm_young
                 }), matching().size) }
                 if (group < 2) {
-                    val sell = button(getString(R.string.farm_sell_adult, kind.sale)) {
+                    val sell = button(getString(R.string.farm_sell_adult, money(kind.sale))) {
                         matching().firstOrNull()?.let { state.sellAnimal(it.id) }
                         refresh()
                     }
@@ -375,20 +431,50 @@ class FarmActivity : ThemedActivity() {
         }
     }
 
+    /** What a pen still asks for: harvests, and a working herd of the animal before it. */
+    private fun requirementText(kind: LivestockKind): String {
+        val previous = LivestockKind.entries.getOrNull(kind.ordinal - 1)
+            ?: return getString(R.string.farm_animal_requirement_first, kind.harvestsNeeded)
+        return getString(R.string.farm_animal_requirement, kind.harvestsNeeded,
+            FarmState.LIVESTOCK_HERD_NEEDED, getString(previous.label))
+    }
+
     private fun fieldShop() {
         fieldView.stop()
         showBubble(getString(R.string.farm_field_silo)) { body ->
             val stock = text("", 18, true)
             body.addView(stock)
             livestockUi.add { stock.text = getString(R.string.farm_field_stock, state.largeFields.grain) }
-            val sell = button(getString(R.string.farm_field_sell)) { state.sellGrain(); refresh() }
+            val sell = button("") {
+                val gained = state.sellGrain()
+                if (gained > 0) message(getString(R.string.farm_grain_sold, money(gained)))
+                refresh()
+            }
             body.addView(sell)
-            livestockUi.add { sell.isEnabled = state.largeFields.grain >= 10 }
+            livestockUi.add {
+                sell.text = getString(R.string.farm_field_sell, money(state.largeFields.grain * state.grainPrice()))
+                sell.isEnabled = state.largeFields.grain > 0
+            }
+
+            body.addView(text(getString(R.string.farm_silo_title), 17, true).apply { setPadding(0, dp(10), 0, 0) })
+            body.addView(text(getString(R.string.farm_silo_body), 13).apply { setPadding(0, dp(4), 0, dp(8)) })
+            val siloLevel = text("", 13)
+            body.addView(siloLevel)
+            livestockUi.add { siloLevel.text = getString(R.string.farm_silo_level, money(state.grainPrice())) }
+            if (state.largeFields.silo < 3) {
+                val cost = state.siloUpgradeCost(state.largeFields.silo + 1)
+                val upgrade = button(getString(R.string.farm_silo_upgrade, money(cost))) {
+                    message(getString(if (state.upgradeSilo()) R.string.farm_silo_upgraded else R.string.farm_no_coins))
+                    closeBubble(); refresh()
+                }
+                body.addView(upgrade, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(12) })
+                livestockUi.add { upgrade.isEnabled = state.coins >= cost }
+            }
             body.addView(text(getString(R.string.farm_field_rules)))
             state.largeFields.fields.forEach { f ->
                 val open = f.index < state.largeFields.unlocked
                 val label = if (open) getString(R.string.farm_field_number, f.index + 1)
-                    else getString(R.string.farm_field_buy, f.index + 1, f.price)
+                    else getString(R.string.farm_field_buy, f.index + 1, money(f.price))
                 val action = button(label) {
                     if (open) { state.largeFields.selected = f.index; state.save() }
                     else if (!state.unlockField(f.index)) return@button
@@ -422,43 +508,91 @@ class FarmActivity : ThemedActivity() {
                     val nextLevel = state.wateringLevel + 1
                     val cost = state.wateringUpgradeCost(nextLevel)
                     val label = if (nextLevel == 1) R.string.farm_watering_upgrade_row else R.string.farm_watering_upgrade_parcel
-                    val buy = button(getString(label, cost)) {
+                    val buy = button(getString(label, money(cost))) {
                         message(getString(if (state.upgradeWatering()) R.string.farm_watering_upgraded else R.string.farm_no_coins))
                         refresh()
                     }
-                    purchases.add(buy to cost.toInt())
+                    purchases.add(buy to cost)
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
+
                 body.addView(text(getString(R.string.farm_parcel_bonus_title), 17, true).apply { setPadding(0, dp(6), 0, 0) })
-                body.addView(text(getString(R.string.farm_parcel_bonus_future)).apply { setPadding(0, dp(6), 0, dp(16)) })
-            } else FarmCrop.entries.filter { it.tree == trees }.forEach { crop ->
-                val row = LinearLayout(this).apply {
-                    gravity = Gravity.CENTER_VERTICAL; background = rounded(Color.rgb(247, 238, 211), 16)
-                    setPadding(dp(6), dp(8), dp(8), dp(8))
-                }
-                row.addView(preview(crop), LinearLayout.LayoutParams(dp(66), dp(80)))
-                val details = column().apply { setPadding(dp(10), 0, 0, 0) }
-                details.addView(text(getString(crop.label), 16, true))
-                details.addView(text(getString(R.string.farm_shop_details, duration(crop.seconds), crop.sale), 12))
-                if (crop.tree) details.addView(text(getString(R.string.farm_shop_regrowth), 12))
-                val count = text("", 12)
-                stockLabels.add(count to crop); details.addView(count)
-                val buy = LinearLayout(this)
-                for (quantity in listOf(1, 6)) {
-                    val price = quantity * crop.cost
-                    val action = button(getString(R.string.farm_buy_short, quantity, price)) {
-                        message(getString(if (state.buy(crop, quantity)) R.string.farm_bought else R.string.farm_no_coins))
+                body.addView(text(getString(R.string.farm_parcel_bonus_future)).apply { setPadding(0, dp(6), 0, dp(12)) })
+                body.addView(text(getString(when (state.harvestLevel) {
+                    0 -> R.string.farm_harvest_level_cell
+                    1 -> R.string.farm_harvest_level_row
+                    else -> R.string.farm_harvest_level_parcel
+                }), 13).apply { setPadding(0, 0, 0, dp(10)) })
+                if (state.harvestLevel < 2) {
+                    val nextLevel = state.harvestLevel + 1
+                    val cost = state.harvestUpgradeCost(nextLevel)
+                    val label = if (nextLevel == 1) R.string.farm_harvest_upgrade_row else R.string.farm_harvest_upgrade_parcel
+                    val buy = button(getString(label, money(cost))) {
+                        message(getString(if (state.upgradeHarvest()) R.string.farm_harvest_upgraded else R.string.farm_no_coins))
                         refresh()
                     }
-                    purchases.add(action to price)
-                    buy.addView(action, LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(0, dp(6), dp(4), 0) })
+                    purchases.add(buy to cost)
+                    body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
-                details.addView(buy)
-                row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
-                body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+
+                body.addView(text(getString(R.string.farm_fertilizer_title), 17, true).apply { setPadding(0, dp(6), 0, 0) })
+                body.addView(text(getString(R.string.farm_fertilizer_body)).apply { setPadding(0, dp(6), 0, dp(12)) })
+                body.addView(text(getString(R.string.farm_fertilizer_level, state.criticalChance()), 13)
+                    .apply { setPadding(0, 0, 0, dp(10)) })
+                if (state.fertilizerLevel < 2) {
+                    val cost = state.fertilizerUpgradeCost(state.fertilizerLevel + 1)
+                    val buy = button(getString(R.string.farm_fertilizer_upgrade, money(cost))) {
+                        message(getString(if (state.upgradeFertilizer()) R.string.farm_fertilizer_upgraded else R.string.farm_no_coins))
+                        refresh()
+                    }
+                    purchases.add(buy to cost)
+                    body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
+                }
+            } else if (trees) {
+                body.addView(text(getString(R.string.farm_orchard_parked)).apply { setPadding(dp(4), dp(16), dp(4), dp(16)) })
+            } else FarmCrop.ladder.forEach { crop ->
+                body.addView(seedRow(crop), LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
         }
     }
+    /** One shop line. Locked rungs stay visible: seeing the next seed is what a parcel really sells. */
+    private fun seedRow(crop: FarmCrop): LinearLayout {
+        val open = state.cropUnlocked(crop)
+        val row = LinearLayout(this).apply {
+            gravity = Gravity.CENTER_VERTICAL; background = rounded(Color.rgb(247, 238, 211), 16)
+            setPadding(dp(6), dp(8), dp(8), dp(8)); alpha = if (open) 1f else .55f
+        }
+        row.addView(preview(crop), LinearLayout.LayoutParams(dp(66), dp(80)))
+        val details = column().apply { setPadding(dp(10), 0, 0, 0) }
+        details.addView(text(getString(crop.label), 16, true))
+        details.addView(text(getString(R.string.farm_shop_details, duration(crop.seconds), money(crop.sale), perHour(crop)), 12))
+        if (!open) {
+            details.addView(text(getString(R.string.farm_crop_locked, crop.rank), 13, true))
+            row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
+            return row
+        }
+        val count = text("", 12)
+        stockLabels.add(count to crop); details.addView(count)
+        val buy = LinearLayout(this)
+        // A third button buys exactly what the empty cells need - clicking x1 sixty times is not play.
+        val fill = state.emptyCells(crop.tree).coerceAtMost(FarmState.MAX_SEED_BATCH)
+        val offers = listOf(1, 6) + if (fill > 6) listOf(fill) else emptyList()
+        offers.forEachIndexed { index, quantity ->
+            val price = quantity.toLong() * crop.cost
+            val label = if (index > 1) getString(R.string.farm_buy_fill, quantity, money(price))
+                else getString(R.string.farm_buy_short, quantity, money(price))
+            val action = button(label) {
+                message(getString(if (state.buy(crop, quantity)) R.string.farm_bought else R.string.farm_no_coins))
+                refresh()
+            }
+            purchases.add(action to price)
+            buy.addView(action, LinearLayout.LayoutParams(0, dp(48), 1f).apply { setMargins(0, dp(6), dp(4), 0) })
+        }
+        details.addView(buy)
+        row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
+        return row
+    }
+
     private fun inventory() {
         if (world.region == FarmRegion.LIVESTOCK) { livestockShop(); return }
         showBubble(getString(R.string.farm_inventory)) { body ->
@@ -492,24 +626,39 @@ class FarmActivity : ThemedActivity() {
                 FarmLayout.lands[index].rows, FarmLayout.lands[index].capacity)).apply { setPadding(0, dp(8), 0, dp(12)) })
             if (!land.unlocked) {
                 body.addView(text(getString(R.string.farm_unlock_new_body)))
-                val price = state.unlockCost(index)
-                val buy = button(getString(R.string.farm_locked_price, price)) {
-                    if (state.unlock(index)) { closeBubble(); message(getString(R.string.farm_unlocked)) }
-                    else message(getString(R.string.farm_no_coins))
-                    refresh()
+                // The seed is the real purchase; say so before the price.
+                FarmCrop.ladder.firstOrNull { it.rank == index + 1 }?.let { seed ->
+                    body.addView(text(getString(R.string.farm_unlock_seed, getString(seed.label)), 16, true)
+                        .apply { setPadding(0, dp(10), 0, 0) })
+                    body.addView(text(getString(R.string.farm_shop_details, duration(seed.seconds),
+                        money(seed.sale), perHour(seed)), 13))
                 }
-                purchases.add(buy to price)
-                body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
+                if (!state.unlockAvailable(index)) {
+                    body.addView(text(getString(R.string.farm_unlock_order, index))
+                        .apply { setPadding(0, dp(12), 0, 0) })
+                } else {
+                    val price = state.unlockCost(index).toLong()
+                    val buy = button(getString(R.string.farm_locked_price, money(price))) {
+                        if (state.unlock(index)) { closeBubble(); message(getString(R.string.farm_unlocked)) }
+                        else message(getString(R.string.farm_no_coins))
+                        refresh()
+                    }
+                    purchases.add(buy to price)
+                    body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
+                }
             } else {
-                for (use in FarmLandUse.entries) body.addView(button(getString(use.label)) {
-                    if (state.changeUse(index, use)) { closeBubble(); message(getString(R.string.farm_use_changed)) }
-                    else message(getString(R.string.farm_empty_required))
-                    refresh()
-                }, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+                for (use in FarmLandUse.entries) {
+                    val parked = use == FarmLandUse.ORCHARD && land.use != FarmLandUse.ORCHARD
+                    body.addView(button(getString(use.label)) {
+                        if (parked) { message(getString(R.string.farm_orchard_parked)); return@button }
+                        if (state.changeUse(index, use)) { closeBubble(); message(getString(R.string.farm_use_changed)) }
+                        else message(getString(R.string.farm_empty_required))
+                        refresh()
+                    }.apply { alpha = if (parked) .5f else 1f },
+                        LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+                }
                 body.addView(button(getString(R.string.farm_manage_plants)) { plantList(index) })
-                body.addView(button(getString(R.string.farm_region_livestock)) {
-                    closeBubble(); world.switchRegion(FarmRegion.LIVESTOCK); refresh()
-                })
+                body.addView(button(getString(R.string.farm_region_livestock)) { goToRegion(FarmRegion.LIVESTOCK) })
             }
         }
     }
@@ -544,10 +693,16 @@ class FarmActivity : ThemedActivity() {
             p.crop == null -> when {
                 state.selected.tree != (state.parcels[parcel].use == FarmLandUse.ORCHARD) -> getString(R.string.farm_wrong_use)
                 state.seeds[state.selected.ordinal] == 0 -> { inventory(); return }
-                state.plant(index, now) -> getString(R.string.farm_planted_water, getString(state.selected.label))
+                state.plant(index, now) -> getString(
+                    if (p.rich) R.string.farm_planted_rich else R.string.farm_planted_water,
+                    getString(state.selected.label))
                 else -> getString(R.string.farm_no_seeds)
             }
-            p.progress(now) >= 1f -> getString(R.string.farm_earned, state.harvest(index, now))
+            p.progress(now) >= 1f -> {
+                val (amount, count) = state.harvestMany(state.harvestTargets(index), now)
+                if (count > 1) getString(R.string.farm_harvested_many, money(amount), count)
+                else getString(R.string.farm_earned, money(amount))
+            }
             state.water(index, now) -> getString(R.string.farm_water_started, duration(p.remaining(now)))
             else -> getString(R.string.farm_wait_long, duration(p.remaining(now)))
         }
@@ -566,8 +721,10 @@ class FarmActivity : ThemedActivity() {
         message(getString(if (count < 0) R.string.farm_watering_nothing else R.string.farm_watering_done, count.coerceAtLeast(0)))
         refresh()
     }
-    private fun harvested(index: Int, amount: Int) {
-        message(getString(R.string.farm_earned, amount)); refresh()
+    private fun harvested(index: Int, amount: Int, count: Int) {
+        message(if (count > 1) getString(R.string.farm_harvested_many, money(amount), count)
+            else getString(R.string.farm_earned, money(amount)))
+        refresh()
     }
     private fun removePlant(index: Int) {
         if (state.plots[index].crop == null) return
@@ -594,9 +751,15 @@ class FarmActivity : ThemedActivity() {
         fieldView.invalidate()
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
         wateringIcon.visibility = seedGroup.visibility
+        // Hidden until the pens exist: an icon for a system you have never seen is just a puzzle.
+        manureIcon.visibility = if (seedGroup.visibility == View.VISIBLE && state.livestockUnlocked())
+            View.VISIBLE else View.GONE
+        manureIcon.stock = manureServings()
+        manureIcon.contentDescription = getString(R.string.farm_manure_plantings, manureServings(),
+            getString(state.selected.label), state.selected.manureCost)
         livestockUi.forEach { it() }
-        balance.text = state.coins.toString()
-        balance.contentDescription = getString(R.string.farm_balance, state.coins, state.harvests)
+        balance.text = money(state.coins)
+        balance.contentDescription = getString(R.string.farm_balance, money(state.coins), state.harvests)
         selection.crop = state.selected; selection.stock = state.seeds[state.selected.ordinal]
         selection.contentDescription = getString(R.string.farm_seed_stock, getString(state.selected.label), state.seeds[state.selected.ordinal])
         purchases.forEach { (button, price) -> button.isEnabled = state.coins >= price; button.alpha = if (button.isEnabled) 1f else .45f }
@@ -613,4 +776,8 @@ class FarmActivity : ThemedActivity() {
         fieldView.stop(); closeBubble(); state.save(); super.onPause()
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
+    /** Six-digit prices are unreadable run together; the grouping follows the app language. */
+    private fun money(value: Long): String = java.text.NumberFormat.getIntegerInstance().format(value)
+    private fun money(value: Int): String = money(value.toLong())
+    private fun perHour(crop: FarmCrop): String = String.format("%.1f", crop.coinsPerHour)
 }

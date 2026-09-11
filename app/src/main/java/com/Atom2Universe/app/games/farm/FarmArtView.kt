@@ -6,7 +6,7 @@ import android.view.View
 
 /** Small native illustrations remain crisp at any density; crop previews reuse the game art. */
 class FarmArtView(context: Context, private val kind: Kind, private val sprites: FarmSprites? = null) : View(context) {
-    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER }
+    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER, MANURE }
     var crop: FarmCrop? = null
         set(value) { field = value; invalidate() }
     var stock: Int? = null
@@ -78,6 +78,38 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
                 line(canvas, 24f, 17f, 24f, 29f, Color.rgb(201, 143, 46), 3f)
             }
             Kind.CROP -> crop?.let { sprites?.crop(canvas, it, 0, 4, RectF(0f, 0f, 48f, 46f)) }
+            Kind.MANURE -> {
+                val burlap = Color.rgb(184, 151, 99)
+                val muck = Color.rgb(88, 59, 34)
+                val stink = Color.rgb(150, 176, 86)
+                // The smell rises behind the sack, so the squiggles never cut across the burlap.
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 2.2f; paint.strokeCap = Paint.Cap.ROUND
+                paint.color = stink
+                for ((x, base) in listOf(14f to 16f, 24f to 14f, 34f to 16f)) {
+                    val wisp = Path()
+                    wisp.moveTo(x, base)
+                    wisp.quadTo(x - 4f, base - 3f, x, base - 6f)
+                    wisp.quadTo(x + 4f, base - 9f, x, base - 12f)
+                    canvas.drawPath(wisp, paint)
+                }
+                paint.style = Paint.Style.FILL
+                rect(canvas, 10f, 42f, 38f, 46f, 0x22745233, 2f)
+                // The heap first: the sack body then hides its bottom half and leaves a mound showing.
+                paint.color = muck; canvas.drawOval(15f, 15f, 33f, 27f, paint)
+                paint.color = Color.rgb(66, 44, 26)
+                canvas.drawCircle(21f, 19f, 2.2f, paint)
+                canvas.drawCircle(27f, 20f, 1.6f, paint)
+                rect(canvas, 12f, 23f, 36f, 43f, burlap, 8f)
+                rect(canvas, 12f, 36f, 36f, 43f, Color.rgb(160, 129, 83), 8f)
+                rect(canvas, 11f, 22f, 37f, 27f, Color.rgb(206, 177, 124), 4f)
+                line(canvas, 19f, 30f, 19f, 40f, Color.rgb(156, 125, 80), 1.6f)
+                line(canvas, 29f, 30f, 29f, 40f, Color.rgb(156, 125, 80), 1.6f)
+                // Two flies, because it really does stink.
+                paint.color = Color.rgb(58, 52, 40)
+                canvas.drawCircle(8f, 12f, 1.2f, paint)
+                canvas.drawCircle(40f, 9f, 1f, paint)
+            }
             Kind.WATER -> {
                 val blue = Color.rgb(118, 200, 232)
                 canvas.rotate(-14f, 24f, 26f)

@@ -36,8 +36,8 @@ class LargeField(val index: Int) {
     val columns = 6 + index
     val rows = 9 + index
     val size get() = columns * rows
-    val price get() = listOf(0, 400, 1200)[index]
-    val seedCost get() = listOf(5, 10, 20)[index]
+    val price get() = listOf(0, 40_000, 250_000)[index]
+    val seedCost get() = listOf(10, 50, 200)[index]
     val maskCols = columns * SUB
     val maskRows = rows * SUB
     var phase = 0 // plough, seed, growing, harvest
@@ -138,6 +138,12 @@ class LargeField(val index: Int) {
     fun beginPass() { painted = BooleanArray(maskCols * maskRows); pos = startPoint(); distanceUsed = 0f; started = false }
     /** Starts a fresh plough-to-harvest cycle: new obstacles, then a clean first pass. */
     fun beginCycle() { obstacles = randomObstacles(); beginPass() }
+    /** Back to an untouched, unpaid field: the dev reset must not leave a half-ploughed cycle. */
+    fun reset() {
+        phase = 0; readyAt = 0; paid = false
+        eligible = BooleanArray(maskCols * maskRows) { true }
+        beginCycle()
+    }
     fun json(): JSONObject {
         fun mask(m: BooleanArray) = String(CharArray(m.size) { if (m[it]) '1' else '0' })
         val obs = JSONArray(obstacles.map {
@@ -182,13 +188,27 @@ class LargeFieldState {
     var unlocked = 1
     var selected = 0
     var grain = 0L
+    /** Plough-to-harvest cycles finished, all fields together. The livestock milestone reads it. */
+    var cycles = 0
+    /**
+     * A field keeps its size forever while the vegetable garden grows eight hundredfold, so the silo
+     * raises what a grain is worth rather than how much grain comes in - feeding the young stays a
+     * real decision that way.
+     */
+    var silo = 0
+    val siloMultiplier get() = when (silo) { 0 -> 1; 1 -> 4; 2 -> 16; else -> 64 }
+    fun reset() {
+        unlocked = 1; selected = 0; grain = 0; cycles = 0; silo = 0
+        fields.forEach { it.reset() }
+    }
     fun json() = JSONObject().put("unlocked", unlocked).put("selected", selected).put("grain", grain)
-        .put("fields", JSONArray(fields.map { it.json() }))
+        .put("cycles", cycles).put("silo", silo).put("fields", JSONArray(fields.map { it.json() }))
     fun restore(j: JSONObject?) {
         if (j == null) return
         val u = j.getInt("unlocked"); require(u in 1..3)
         val restored = List(3) { i -> LargeField(i).apply { restore(j.getJSONArray("fields").getJSONObject(i)) } }
         unlocked = u; selected = j.optInt("selected").coerceIn(0, u - 1); grain = j.optLong("grain").coerceAtLeast(0)
+        cycles = j.optInt("cycles").coerceAtLeast(0); silo = j.optInt("silo").coerceIn(0, 3)
         restored.forEachIndexed { i, f -> fields[i].restore(f.json()) }
     }
 }
