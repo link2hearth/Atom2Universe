@@ -295,16 +295,18 @@ class ArcadeCarDrivingTest {
     @Test
     fun enchainerUneRelanceNAffaiblitJamaisCelleEnCours() {
         val car = launchedCar()
-        // Un long dérapage donne une grosse relance : longue et puissante.
-        repeat(300) { car.update(step, hold(steering = 1f, hopping = true)) }
-        car.update(step, hold(steering = 0f, hopping = false))
+        // Cinq secondes de glisse, gaz au plancher : sans gaz la voiture cale
+        // avant la fin (la glisse ne fait que coûter de la vitesse) et la charge
+        // est annulée par la règle « trop lent, plus de ruban ».
+        repeat(300) { car.update(step, drive(steering = 1f, hopping = true)) }
+        car.update(step, drive(steering = 0f, hopping = false))
         val strongSeconds = car.turboBoostSeconds
         val strongSerial = car.turboReleaseSerial
-        assertTrue("La grosse relance doit durer", strongSeconds > 2f)
+        assertTrue("La grosse relance doit durer : $strongSeconds", strongSeconds > 2f)
 
         // Une glisse minuscule relâchée par-dessus ne doit pas la raccourcir.
-        repeat(20) { car.update(step, hold(steering = -1f, hopping = true)) }
-        car.update(step, hold(steering = 0f, hopping = false))
+        repeat(20) { car.update(step, drive(steering = -1f, hopping = true)) }
+        car.update(step, drive(steering = 0f, hopping = false))
 
         assertTrue(
             "La relance en cours ne doit jamais être dégradée : $strongSeconds -> ${car.turboBoostSeconds}",
@@ -349,6 +351,10 @@ class ArcadeCarDrivingTest {
 
     private fun hold(steering: Float = 0f, hopping: Boolean = false) =
         ArcadeCar.Input(steering, accelerating = false, braking = false, hopping = hopping)
+
+    /** Comme [hold], mais gaz tenu : une glisse longue n'a de sens qu'à vitesse entretenue. */
+    private fun drive(steering: Float = 0f, hopping: Boolean = false) =
+        ArcadeCar.Input(steering, accelerating = true, braking = false, hopping = hopping)
 
     /** Voiture posée sur une grande dalle plate, lancée dans son axe. */
     private fun launchedCar(
