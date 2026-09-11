@@ -13,6 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/tile_artwork"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!-- Quick access container : moitié gauche, 3 boutons empilés verticalement -->
         <LinearLayout
             android:id="@+id/tile_quick_access_container"
@@ -115,6 +127,10 @@
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
+            android:shadowColor="#CC000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             app:layout_constraintBottom_toTopOf="@id/tile_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tile_quick_access_container"
@@ -132,10 +148,32 @@
             android:textSize="12sp"
             android:maxLines="2"
             android:ellipsize="end"
+            android:shadowColor="#CC000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tile_quick_access_container"
             app:layout_constraintTop_toBottomOf="@id/tile_title" />
+
+
+        <!-- Pastille de notification (ex. recoltes pretes), collee au coin de l'icone -->
+        <TextView
+            android:id="@+id/tile_notification_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:minWidth="20dp"
+            android:background="@drawable/hub_notification_badge_bg"
+            android:gravity="center"
+            android:paddingHorizontal="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:translationX="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/tile_icon"
+            app:layout_constraintTop_toTopOf="@id/tile_icon" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

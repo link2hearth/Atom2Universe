@@ -40,4 +40,5 @@
     <string name="hub_stats_desc">Récap écoute, jeux et lecture</string>
 
     <string name="back_button_desc">Retour</string>
+    <string name="hub_tile_ready_badge">%1$d prêt(s)</string>
 </resources>

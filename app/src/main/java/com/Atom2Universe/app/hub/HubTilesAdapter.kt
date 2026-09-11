@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class HubTilesAdapter(
     private var isGridMode: Boolean = true
     private var showQuickAccessButtons: Boolean = false
     private var spanCount: Int = 2
+    private val artworkCache = mutableMapOf<String, Drawable>()
 
     fun setTiles(newTiles: List<HubTile>) {
         tiles.clear()
@@ -113,6 +115,18 @@ class HubTilesAdapter(
         if (index != -1) {
             tiles[index].customColorHex = null
             tiles[index].textColorMode = "auto"
+            notifyItemChanged(index)
+        }
+    }
+
+    /**
+     * Pose ou retire la pastille d'une tuile. Ne redessine que cette tuile : le hub appelle cela a
+     * chaque retour a l'ecran, un notifyDataSetChanged y couperait les animations en cours.
+     */
+    fun setNotificationCount(tileId: String, count: Int) {
+        val index = tiles.indexOfFirst { it.id == tileId }
+        if (index != -1 && tiles[index].notificationCount != count) {
+            tiles[index].notificationCount = count
             notifyItemChanged(index)
         }
     }
@@ -198,6 +212,7 @@ class HubTilesAdapter(
 
     inner class TileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val card: MaterialCardView = itemView.findViewById(R.id.tile_card)
+        private val artwork: ImageView? = itemView.findViewById(R.id.tile_artwork)
         private val icon: ImageView = itemView.findViewById(R.id.tile_icon)
         private val title: TextView = itemView.findViewById(R.id.tile_title)
         private val description: TextView? = itemView.findViewById(R.id.tile_description)
@@ -206,6 +221,7 @@ class HubTilesAdapter(
         private val badge1: TextView? = itemView.findViewById(R.id.tile_quick_access_1)
         private val badge2: TextView? = itemView.findViewById(R.id.tile_quick_access_2)
         private val badge3: TextView? = itemView.findViewById(R.id.tile_quick_access_3)
+        private val notificationBadge: TextView? = itemView.findViewById(R.id.tile_notification_badge)
 
         fun bind(tile: HubTile) {
             val bgColor = if (tile.customColorHex != null) {
@@ -219,18 +235,31 @@ class HubTilesAdapter(
             }
             card.setCardBackgroundColor(bgColor)
 
-            val textColor = calculateTextColor(bgColor, tile.textColorMode)
-            val subtitleColor = calculateSubtitleColor(bgColor, tile.textColorMode)
+            val customArtwork = tile.artworkClass?.let { artworkClass ->
+                artworkCache.getOrPut("${tile.id}:${artworkClass.qualifiedName}") {
+                    createArtwork(artworkClass.java)
+                }
+            }
+            artwork?.setImageDrawable(customArtwork)
+            artwork?.visibility = if (customArtwork != null) View.VISIBLE else View.GONE
+            val textColor = if (customArtwork != null) Color.WHITE else calculateTextColor(bgColor, tile.textColorMode)
+            val subtitleColor = if (customArtwork != null) Color.argb(230, 255, 255, 255)
+                else calculateSubtitleColor(bgColor, tile.textColorMode)
 
-            icon.setImageResource(tile.iconRes)
-            val avd = icon.drawable as? AnimatedVectorDrawable
-            if (avd != null) {
-                // Globe animé : pas de teinte, on conserve les couleurs d'origine
-                icon.clearColorFilter()
-                ImageViewCompat.setImageTintList(icon, null)
-                avd.start()
+            if (customArtwork != null) {
+                icon.visibility = View.GONE
             } else {
-                icon.setColorFilter(textColor)
+                icon.visibility = View.VISIBLE
+                icon.setImageResource(tile.iconRes)
+                val avd = icon.drawable as? AnimatedVectorDrawable
+                if (avd != null) {
+                    // Globe animé : pas de teinte, on conserve les couleurs d'origine
+                    icon.clearColorFilter()
+                    ImageViewCompat.setImageTintList(icon, null)
+                    avd.start()
+                } else {
+                    icon.setColorFilter(textColor)
+                }
             }
 
             title.setText(tile.titleRes)
@@ -248,9 +277,29 @@ class HubTilesAdapter(
             }
 
             bindQuickAccessBadges(tile)
+            bindNotificationBadge(tile)
 
             if (isEditMode) startWobble(bindingAdapterPosition) else stopWobble()
         }
+
+        /**
+         * La pastille disparait en mode edition : le coin de la tuile appartient alors au crayon,
+         * et on ne veut pas faire trembler un compteur qu'on ne peut pas toucher.
+         */
+        private fun bindNotificationBadge(tile: HubTile) {
+            val badge = notificationBadge ?: return
+            val count = tile.notificationCount
+            if (count <= 0 || isEditMode) {
+                badge.visibility = View.GONE
+                return
+            }
+            badge.visibility = View.VISIBLE
+            badge.text = if (count > 99) "99+" else count.toString()
+            badge.contentDescription = context.getString(R.string.hub_tile_ready_badge, count)
+        }
+
+        private fun createArtwork(clazz: Class<out Drawable>): Drawable =
+            clazz.getConstructor(Context::class.java).newInstance(context)
 
         private fun bindQuickAccessBadges(tile: HubTile) {
             val items = tile.quickAccessItems

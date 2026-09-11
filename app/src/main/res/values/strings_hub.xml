@@ -40,4 +40,5 @@
     <string name="hub_stats_desc">Listening, games and reading recaps</string>
 
     <string name="back_button_desc">Back</string>
+    <string name="hub_tile_ready_badge">%1$d ready</string>
 </resources>

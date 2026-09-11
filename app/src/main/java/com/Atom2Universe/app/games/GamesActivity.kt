@@ -33,6 +33,8 @@ import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.balance.BalanceActivity
+import com.Atom2Universe.app.games.farm.FarmHubTileDrawable
+import com.Atom2Universe.app.games.farm.FarmState
 import com.Atom2Universe.app.games.trebuchet.TrebuchetActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
@@ -58,21 +60,24 @@ class GamesActivity : BaseHubActivity() {
 
     override fun getHubSubtitle(): Int? = null
 
+    override fun normalizeTileOrder(tiles: List<HubTile>): List<HubTile> {
+        val infernale = tiles.find { it.id == "infernale" } ?: return tiles
+        val withoutInfernale = tiles.filterNot { it.id == "infernale" }
+        val trebuchetIndex = withoutInfernale.indexOfFirst { it.id == "trebuchet" }
+        if (trebuchetIndex == -1) return tiles
+        return withoutInfernale.toMutableList().apply {
+            add(trebuchetIndex + 1, infernale)
+        }
+    }
+
     override fun getDefaultTiles(): List<HubTile> = listOf(
-        HubTile(
-            id = "infernale",
-            titleRes = R.string.infernale_title,
-            descriptionRes = R.string.infernale_description,
-            iconRes = android.R.drawable.ic_menu_manage,
-            defaultColorRes = R.color.game_tile_caves,
-            activityClass = com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java
-        ),
         HubTile(
             id = "farm",
             titleRes = R.string.farm_title,
             descriptionRes = R.string.farm_description,
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_caves,
+            artworkClass = FarmHubTileDrawable::class,
             activityClass = com.Atom2Universe.app.games.farm.FarmActivity::class.java
         ),
         // Clicker en tête
@@ -392,6 +397,14 @@ class GamesActivity : BaseHubActivity() {
             defaultColorRes = R.color.game_tile_trebuchet,
             activityClass = TrebuchetActivity::class.java
         ),
+        HubTile(
+            id = "infernale",
+            titleRes = R.string.infernale_title,
+            descriptionRes = R.string.infernale_description,
+            iconRes = android.R.drawable.ic_menu_manage,
+            defaultColorRes = R.color.game_tile_caves,
+            activityClass = com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java
+        ),
         // Bigger (Suika)
         HubTile(
             id = "bigger",
@@ -409,5 +422,15 @@ class GamesActivity : BaseHubActivity() {
         } else {
             Toast.makeText(this, R.string.games_coming_soon, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /**
+     * La tuile de la ferme porte une pastille avec le nombre de cultures pretes. Elle est recalculee
+     * a chaque retour sur le hub et nulle part ailleurs : les plantes murissent en heures, une
+     * minuterie qui tourne pendant qu'on regarde la grille ne changerait jamais le chiffre.
+     */
+    override fun onResume() {
+        super.onResume()
+        tilesAdapter.setNotificationCount("farm", FarmState.readyToHarvest(this))
     }
 }

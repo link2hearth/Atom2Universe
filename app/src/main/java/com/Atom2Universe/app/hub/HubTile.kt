@@ -3,6 +3,7 @@ package com.Atom2Universe.app.hub
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import kotlin.reflect.KClass
 
 data class QuickAccessItem(
     val label: String,
@@ -21,6 +22,12 @@ data class HubTile(
     @ColorRes val defaultColorRes: Int,
     var customColorHex: String? = null,
     var textColorMode: String = "auto",
+    val artworkClass: KClass<out android.graphics.drawable.Drawable>? = null,
     val activityClass: Class<*>? = null,
-    var quickAccessItems: List<QuickAccessItem> = emptyList()
+    var quickAccessItems: List<QuickAccessItem> = emptyList(),
+    /**
+     * Pastille de notification : 0 = rien a signaler. C'est le hub qui la remplit, la tuile ne
+     * sait pas ce qu'elle compte (recoltes pretes, etc.), et rien n'en est sauvegarde.
+     */
+    var notificationCount: Int = 0
 )

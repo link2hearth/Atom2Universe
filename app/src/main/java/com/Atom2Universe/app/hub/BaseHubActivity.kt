@@ -82,6 +82,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
     abstract fun getHubTitle(): Int
     abstract fun getHubSubtitle(): Int?
     abstract fun getDefaultTiles(): List<HubTile>
+    open fun normalizeTileOrder(tiles: List<HubTile>): List<HubTile> = tiles
     abstract fun onTileClicked(tile: HubTile)
 
     open fun onQuickAccessClicked(tile: HubTile, item: QuickAccessItem) {}
@@ -232,7 +233,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
             tilesWithCustomization
         }
 
-        tilesAdapter.setTiles(orderedTiles)
+        tilesAdapter.setTiles(normalizeTileOrder(orderedTiles))
     }
 
     private fun loadTileOrder(): List<String> {
