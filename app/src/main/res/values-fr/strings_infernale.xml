@@ -12,4 +12,22 @@
     <string name="infernale_art_gauge">Manomètre</string>
     <string name="infernale_art_ball">Bille</string>
     <string name="infernale_art_button">Bouton</string>
+    <string name="infernale_title">Machine infernale</string>
+    <string name="infernale_description">Placez rampes et dominos pour que la bille atteigne le bouton</string>
+    <string name="infernale_back">Retour</string>
+    <string name="infernale_new">Nouveau</string>
+    <string name="infernale_launch">Lancer</string>
+    <string name="infernale_replay">Rejouer</string>
+    <string name="infernale_clear">Tout enlever</string>
+    <string name="infernale_won">Le bouton est enfoncé !</string>
+    <string name="infernale_failed">La bille s\'est arrêtée. Corrigez et réessayez.</string>
+    <string name="infernale_board">Tableau %1$d</string>
+    <string name="infernale_hint">Choisissez une pièce, puis touchez le tableau. Touchez une pièce posée pour la reprendre.</string>
+    <string name="infernale_slope">Pente : %1$d°</string>
+    <string name="infernale_piece_ramp">Rampe</string>
+    <string name="infernale_piece_plot">Plot</string>
+    <string name="infernale_piece_block">Bloc</string>
+    <string name="infernale_piece_domino">Domino</string>
+    <string name="infernale_piece_seesaw">Bascule</string>
+    <string name="infernale_piece_trampoline">Tremplin</string>
 </resources>

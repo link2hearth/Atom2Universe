@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#070B18">
+
+    <!-- Barre supérieure : retour, tableau, nouveau -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp"
+        android:background="#0D1428">
+
+        <ImageButton
+            android:id="@+id/infernale_btn_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="#94A3B8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/infernale_back" />
+
+        <TextView
+            android:id="@+id/infernale_board"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:textColor="#E2E8F0"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/infernale_btn_new"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@string/infernale_new"
+            android:textColor="#CBD5E1"
+            android:textSize="14sp"
+            android:background="#1B2540" />
+    </LinearLayout>
+
+    <!-- Le tableau -->
+    <com.Atom2Universe.app.games.infernale.InfernaleView
+        android:id="@+id/infernale_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Message d'état -->
+    <TextView
+        android:id="@+id/infernale_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:textColor="#94A3B8"
+        android:textSize="13sp"
+        android:background="#0D1428" />
+
+    <!-- Réglage de pente, visible seulement quand une rampe est choisie -->
+    <LinearLayout
+        android:id="@+id/infernale_slope_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:background="#0D1428"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/infernale_slope_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CBD5E1"
+            android:textSize="13sp" />
+
+        <SeekBar
+            android:id="@+id/infernale_slope"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:max="50" />
+    </LinearLayout>
+
+    <!-- La réserve : une case par type de pièce restant -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0D1428"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/infernale_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp" />
+    </HorizontalScrollView>
+
+    <!-- Les commandes -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#0D1428">
+
+        <TextView
+            android:id="@+id/infernale_btn_clear"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/infernale_clear"
+            android:textColor="#CBD5E1"
+            android:textSize="14sp"
+            android:background="#1B2540" />
+
+        <TextView
+            android:id="@+id/infernale_btn_replay"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/infernale_replay"
+            android:textColor="#CBD5E1"
+            android:textSize="14sp"
+            android:background="#1B2540" />
+
+        <TextView
+            android:id="@+id/infernale_btn_launch"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1.4"
+            android:gravity="center"
+            android:text="@string/infernale_launch"
+            android:textColor="#0B1020"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:background="#55E08A" />
+    </LinearLayout>
+</LinearLayout>

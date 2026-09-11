@@ -60,6 +60,14 @@ class GamesActivity : BaseHubActivity() {
 
     override fun getDefaultTiles(): List<HubTile> = listOf(
         HubTile(
+            id = "infernale",
+            titleRes = R.string.infernale_title,
+            descriptionRes = R.string.infernale_description,
+            iconRes = android.R.drawable.ic_menu_manage,
+            defaultColorRes = R.color.game_tile_caves,
+            activityClass = com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java
+        ),
+        HubTile(
             id = "farm",
             titleRes = R.string.farm_title,
             descriptionRes = R.string.farm_description,
