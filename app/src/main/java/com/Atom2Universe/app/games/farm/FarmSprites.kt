@@ -62,10 +62,24 @@ class FarmSprites(private val context: Context) {
             target.centerX() + w / 2, target.bottom), paint)
     }
 
-    fun grass(canvas: Canvas, target: RectF) {
+    /**
+     * Row 0 of the environment sheet holds four interchangeable lawns. Which one a tile gets is
+     * hashed from the tile's own coordinates, never drawn at random: the ground is repainted from
+     * scratch on every frame, so a random pick would make the whole map crawl the moment the camera
+     * moved. The same coordinates must always give the same blade of grass.
+     *
+     * Three lawns share the ground evenly and the flowered one is held back to about one tile in
+     * twelve - that is what keeps it reading as a patch of wildflowers instead of a meadow.
+     */
+    fun grass(canvas: Canvas, target: RectF, column: Int, row: Int) {
         val bitmap = sheet("garden_environment_v1.png")
-        // Interior of the first tile avoids the irregular generated tile edges.
-        canvas.drawBitmap(bitmap, Rect(55, 60, 280, 280), target, paint)
+        var hash = column * 0x1f1f1f1f xor row * 0x27d4eb2d
+        hash = hash xor (hash ushr 15)
+        // ushr, not shr: the northern scenery gives rows negative indices, and a negative remainder
+        // would index outside the row.
+        val variant = if ((hash ushr 3) % 12 == 0) FLOWERED else PLAIN_LAWNS[(hash ushr 8) % PLAIN_LAWNS.size]
+        val left = LAWN_LEFT[variant]
+        canvas.drawBitmap(bitmap, Rect(left, LAWN_TOP, left + LAWN_SIZE, LAWN_TOP + LAWN_SIZE), target, paint)
     }
 
     fun farmstead(canvas: Canvas, target: RectF) {
@@ -87,6 +101,28 @@ class FarmSprites(private val context: Context) {
             if ((bitmap.getPixel(x, y) ushr 24) > 24) return false
         }
         return true
+    }
+
+    private companion object {
+        /** Columns of row 0 that are plain grass. The fourth, the flowered one, is drawn rarely. */
+        val PLAIN_LAWNS = intArrayOf(0, 1, 3)
+        const val FLOWERED = 2
+        /**
+         * Measured, not computed. The generated sheet is NOT a clean grid: dark gutters separate the
+         * tiles and they are not evenly spaced - the four lawns really start at 41, 339, 640 and 937
+         * on a 1254 px sheet, where a quarter-width step would say 0, 313, 627 and 940. [environment]
+         * gets away with that step because rows 2 and 3 are objects floating on transparent padding,
+         * so its error lands in the padding. A lawn covers its whole tile, so the same error drags
+         * the gutter in and paints a black seam across the map. These four offsets are the measured
+         * tile starts plus a 23 px inset, chosen by scanning for the crop whose own edges are closest
+         * in brightness to its middle - the generated tiles shade off well before the gutter, and
+         * that shading is what draws the faint grid you can still see on the ground today. It goes
+         * from 37 levels of difference down to 10. The square keeps all four lawns at one scale, and
+         * 220 px is what the single lawn already used, so the grass does not change size.
+         */
+        val LAWN_LEFT = intArrayOf(64, 362, 663, 960)
+        const val LAWN_TOP = 53
+        const val LAWN_SIZE = 220
     }
 
     fun environment(canvas: Canvas, column: Int, row: Int, target: RectF) {

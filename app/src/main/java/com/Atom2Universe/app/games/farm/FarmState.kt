@@ -369,6 +369,13 @@ class FarmState(private val prefs: SharedPreferences) {
         parcel.unlocked && plots[i].debris == 0 && plots[i].crop == null &&
             tree == (parcel.use == FarmLandUse.ORCHARD)
     }
+    /**
+     * True while a cell of this parcel holds nothing growing - free soil, or soil still under
+     * debris. This is what the gate drawn on the map reports, so it deliberately counts debris as
+     * idle: a parcel that needs clearing has as much waiting for you as an empty one.
+     */
+    fun parcelHasIdleGround(index: Int): Boolean = parcels[index].unlocked &&
+        FarmLayout.cells(index).any { plots[it].crop == null }
     fun clean(index: Int): Boolean {
         val p = plots[index]
         if (!parcels[FarmLayout.parcelOf(index)].unlocked || p.debris == 0) return false

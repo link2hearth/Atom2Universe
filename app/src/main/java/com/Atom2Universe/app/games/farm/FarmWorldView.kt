@@ -474,7 +474,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val visible = RectF(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
         for (row in kotlin.math.floor(visible.top / 80).toInt().coerceAtLeast(kotlin.math.floor(worldTop / 80).toInt())..(visible.bottom / 80).toInt().coerceAtMost((worldHeight / 80).toInt()))
             for (col in (visible.left / 80).toInt().coerceAtLeast(0)..(visible.right / 80).toInt().coerceAtMost((worldWidth / 80).toInt())) {
-            sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80))
+            sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80), col, row)
         }
         if (region != FarmRegion.HOME) {
             if (region == FarmRegion.LIVESTOCK) livestockScene.draw(canvas, visible)
@@ -537,7 +537,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     harvestGame?.takeIf { it.cell == i }?.let { drawHarvestGauge(canvas, cell, it, now) }
                 }
             }
-            for (col in 0 until spec.columns) sprites.environment(canvas, 0, if (col == 1) 3 else 2,
+            // The gate stands open while some ground here is still idle, and shuts once every cell
+            // is growing. It is the one piece of state the map shows from across the farm, zoomed out,
+            // without a badge or a number: which fields still want you.
+            val gateOpen = state.parcelHasIdleGround(index)
+            for (col in 0 until spec.columns) sprites.environment(canvas,
+                if (col == 1 && gateOpen) 1 else 0, if (col == 1) 3 else 2,
                 RectF(land.left + col * fenceWidth, land.bottom - 27, land.left + (col + 1) * fenceWidth, land.bottom + 20))
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)

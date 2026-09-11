@@ -145,7 +145,7 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                 while (tx < width) {
                     bc.save()
                     if ((gx + gy) % 2 == 0) bc.scale(-1f, 1f, tx + tile / 2, ty)
-                    sprites.grass(bc, RectF(tx, ty, tx + tile, ty + tile))
+                    sprites.grass(bc, RectF(tx, ty, tx + tile, ty + tile), gx, gy)
                     bc.restore()
                     tx += tile; gx++
                 }
