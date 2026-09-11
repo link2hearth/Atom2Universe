@@ -81,7 +81,7 @@ object MainClickerPreferences {
     private const val KEY_BANNER_TOGGLE_ORDER = "banner_toggle_order"
     private const val KEY_FAVORITES_MODE = "favorites_mode"
     private const val KEY_CLICKER_SOUND_ENABLED = "clicker_sound_enabled"
-    private const val KEY_SLIDESHOW_LAST_CHANGE_AT = "slideshow_last_change_at"
+    private const val KEY_SLIDESHOW_REMAINING_MS = "slideshow_remaining_ms"
 
     val ALL_WIDGET_KEYS = listOf(
         "clicker", "crypto", "news", "earth", "music",
@@ -416,11 +416,12 @@ object MainClickerPreferences {
         prefs(context).edit { putString(KEY_INTERVAL, value) }
     }
 
-    fun getSlideshowLastChangeAt(context: Context): Long =
-        prefs(context).getLong(KEY_SLIDESHOW_LAST_CHANGE_AT, 0L)
+    /** Temps restant (ms) avant le prochain changement d'image, mémorisé à chaque mise en pause. -1 = jamais calculé. */
+    fun getSlideshowRemainingMs(context: Context): Long =
+        prefs(context).getLong(KEY_SLIDESHOW_REMAINING_MS, -1L)
 
-    fun setSlideshowLastChangeAt(context: Context, timestampMs: Long) {
-        prefs(context).edit { putLong(KEY_SLIDESHOW_LAST_CHANGE_AT, timestampMs) }
+    fun setSlideshowRemainingMs(context: Context, remainingMs: Long) {
+        prefs(context).edit { putLong(KEY_SLIDESHOW_REMAINING_MS, remainingMs) }
     }
 
     fun isBannerToggleEarthVisible(context: Context): Boolean =

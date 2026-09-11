@@ -317,6 +317,8 @@ class MainClickerActivity : ThemedActivity() {
 
     private var refreshJob: Job? = null
     private var backgroundJob: Job? = null
+    private var backgroundDelaySegmentMs: Long = 0L
+    private var backgroundDelaySegmentStartedAt: Long = 0L
     private var astronomyJob: Job? = null
     private var eurUsdJob: Job? = null
     private var activeBtcCall: Call? = null
@@ -2101,9 +2103,9 @@ class MainClickerActivity : ThemedActivity() {
         if (shuffleManager.imageCount() == 0) return
         if (backgroundJob?.isActive == true) return
 
-        val elapsedSinceLastChange = (System.currentTimeMillis() - MainClickerPreferences.getSlideshowLastChangeAt(this))
-            .coerceAtLeast(0L)
-        val initialDelay = (slideshowIntervalMs - elapsedSinceLastChange).coerceIn(0L, slideshowIntervalMs)
+        val storedRemaining = MainClickerPreferences.getSlideshowRemainingMs(this)
+        val initialDelay = if (storedRemaining >= 0L) storedRemaining.coerceIn(0L, slideshowIntervalMs) else slideshowIntervalMs
+        markBackgroundDelaySegment(initialDelay)
 
         backgroundJob = lifecycleScope.launch {
             delay(initialDelay)
@@ -2115,8 +2117,25 @@ class MainClickerActivity : ThemedActivity() {
     }
 
     private fun stopBackgroundLoop() {
+        if (backgroundJob?.isActive == true) {
+            val elapsed = (System.currentTimeMillis() - backgroundDelaySegmentStartedAt).coerceAtLeast(0L)
+            val remaining = (backgroundDelaySegmentMs - elapsed).coerceAtLeast(0L)
+            MainClickerPreferences.setSlideshowRemainingMs(this, remaining)
+        }
         backgroundJob?.cancel()
         backgroundJob = null
+    }
+
+    /** Enregistre le point de départ du compte à rebours en cours, pour pouvoir calculer le temps restant si on met en pause. */
+    private fun markBackgroundDelaySegment(delayMs: Long) {
+        backgroundDelaySegmentMs = delayMs
+        backgroundDelaySegmentStartedAt = System.currentTimeMillis()
+    }
+
+    /** Repart sur un intervalle complet après un changement d'image (auto ou manuel). */
+    private fun resetSlideshowCountdown() {
+        MainClickerPreferences.setSlideshowRemainingMs(this, slideshowIntervalMs)
+        markBackgroundDelaySegment(slideshowIntervalMs)
     }
 
     private fun showNextBackgroundImage(restartTimer: Boolean, notifyIfMissing: Boolean) {
@@ -2132,7 +2151,7 @@ class MainClickerActivity : ThemedActivity() {
             uri = nextUri,
             advanceOnFailure = true
         )
-        MainClickerPreferences.setSlideshowLastChangeAt(this, System.currentTimeMillis())
+        resetSlideshowCountdown()
         if (restartTimer) {
             updateAutoBackgroundLoop()
         } else {
@@ -2153,7 +2172,7 @@ class MainClickerActivity : ThemedActivity() {
             uri = previousUri,
             advanceOnFailure = true
         )
-        MainClickerPreferences.setSlideshowLastChangeAt(this, System.currentTimeMillis())
+        resetSlideshowCountdown()
         if (restartTimer) {
             updateAutoBackgroundLoop()
         } else {
