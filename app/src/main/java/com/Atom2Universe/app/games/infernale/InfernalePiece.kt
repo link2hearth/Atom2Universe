@@ -120,6 +120,15 @@ object Pieces {
     /** Frottement commun : du bois sur du bois, ça accroche. */
     private const val FROTTEMENT = 0.6f
 
+    // Les cotes par defaut, nommees pour qu'une [Pose] puisse s'y referer au lieu de
+    // les recopier — deux copies d'une meme cote finissent toujours par diverger.
+    const val RAMPE_LONGUEUR = 1.5f
+    const val PLOT_RAYON = 0.15f
+    const val BLOC_COTE = 0.4f
+    const val DOMINO_HAUTEUR = 0.44f
+    const val BASCULE_LONGUEUR = 1.2f
+    const val TREMPLIN_LONGUEUR = 0.7f
+
     private fun scelle(corps: PhysBody): PhysBody = corps.apply {
         lockPosition = true
         lockRotation = true
@@ -135,7 +144,7 @@ object Pieces {
      * appel — sinon chaque rampe posée dans le jeu devrait le refaire, et l'une d'elles
      * l'oublierait.
      */
-    fun rampe(x: Float, y: Float, pente: Float = 20f, longueur: Float = 1.5f): Piece {
+    fun rampe(x: Float, y: Float, pente: Float = 20f, longueur: Float = RAMPE_LONGUEUR): Piece {
         val planche = PhysBody(longueur / 2f, 0.04f, 0f).apply {
             this.x = x
             this.y = y
@@ -147,7 +156,7 @@ object Pieces {
     }
 
     /** Plot rond et rebondissant, scellé au fond. */
-    fun plot(x: Float, y: Float, rayon: Float = 0.15f): Piece {
+    fun plot(x: Float, y: Float, rayon: Float = PLOT_RAYON): Piece {
         val disque = PhysBody.circle(rayon, 0f).apply {
             this.x = x
             this.y = y
@@ -158,7 +167,7 @@ object Pieces {
     }
 
     /** Mur scellé. */
-    fun bloc(x: Float, y: Float, largeur: Float = 0.4f, hauteur: Float = 0.4f): Piece {
+    fun bloc(x: Float, y: Float, largeur: Float = BLOC_COTE, hauteur: Float = BLOC_COTE): Piece {
         val mur = PhysBody(largeur / 2f, hauteur / 2f, 0f).apply {
             this.x = x
             this.y = y
@@ -176,7 +185,7 @@ object Pieces {
      * solveur, et une rangée de trente dominos fins coûte plus cher qu'un château —
      * huit gros dominos font le même effet pour une fraction du prix.
      */
-    fun domino(x: Float, bas: Float, hauteur: Float = 0.44f, epaisseur: Float = 0.08f): Piece {
+    fun domino(x: Float, bas: Float, hauteur: Float = DOMINO_HAUTEUR, epaisseur: Float = 0.08f): Piece {
         val piece = PhysBody(epaisseur / 2f, hauteur / 2f, 0.5f).apply {
             this.x = x
             this.y = bas + hauteur / 2f
@@ -196,7 +205,7 @@ object Pieces {
      *
      * [y] est le bas du pied.
      */
-    fun bascule(x: Float, bas: Float, longueur: Float = 1.2f, hauteurPied: Float = 0.3f): Piece {
+    fun bascule(x: Float, bas: Float, longueur: Float = BASCULE_LONGUEUR, hauteurPied: Float = 0.3f): Piece {
         val pied = scelle(PhysBody(0.07f, hauteurPied / 2f, 0f).apply {
             this.x = x
             this.y = bas + hauteurPied / 2f
@@ -245,7 +254,7 @@ object Pieces {
     fun tremplin(
         x: Float,
         bas: Float,
-        longueur: Float = 0.7f,
+        longueur: Float = TREMPLIN_LONGUEUR,
         raideur: Float = 900f,
         masseVolet: Float = 0.3f,
         amortissement: Float = 1f,
