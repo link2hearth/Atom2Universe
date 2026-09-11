@@ -71,8 +71,8 @@ class Bouton internal constructor(
  * pièces, on lâche la bille, on demande si le bouton est tombé.
  */
 class Plateau(
-    val largeur: Float = 10f,
-    val hauteur: Float = 7f
+    val largeur: Float = LARGEUR,
+    val hauteur: Float = HAUTEUR
 ) {
     val monde = PhysWorld().apply {
         // Les pièces posées passent beaucoup de temps immobiles à attendre leur tour :
@@ -108,6 +108,12 @@ class Plateau(
     val pieces = ArrayList<Piece>()
 
     companion object {
+        /** Largeur du tableau, en metres. */
+        const val LARGEUR = 10f
+
+        /** Hauteur utile du tableau, en metres. */
+        const val HAUTEUR = 7f
+
         /** Categorie du decor et des pieces scellees : le capteur les ignore. */
         const val DECOR = 1
 
@@ -136,6 +142,21 @@ class Plateau(
     fun retirer(piece: Piece) {
         piece.retirer(monde)
         pieces.remove(piece)
+    }
+
+    /**
+     * Echange la piece [index] contre une autre **sans changer son rang**.
+     *
+     * Le rang n'est pas cosmetique : la partie tient la liste des poses du joueur en
+     * parallele de celle-ci, et l'interface designe une piece par son indice. Retirer
+     * puis reposer aurait renvoye la piece deplacee en fin de liste, et le doigt aurait
+     * deplace la voisine au geste suivant.
+     */
+    fun remplacer(index: Int, piece: Piece): Piece {
+        pieces[index].retirer(monde)
+        piece.poser(monde)
+        pieces[index] = piece
+        return piece
     }
 
     /**
@@ -186,6 +207,34 @@ class Plateau(
         return b
     }
 
+    /** Les jets d'air des ventilateurs posés. Refait à chaque image, il est court. */
+    private val souffles = ArrayList<Souffle>()
+
+    /**
+     * Les ventilateurs poussent **avant** le pas, jamais pendant.
+     *
+     * Le moteur remet les forces à zéro à la fin de chaque image et pas entre les
+     * sous-pas : une force posée ici vaut donc pour toute l'image, ce qui est exactement
+     * ce qu'on veut d'un vent — il ne change pas trois fois pendant un centième de
+     * seconde.
+     *
+     * Une force posée sur un corps le **réveille**. C'est voulu pour ce qui flotte dans
+     * le jet, et c'est pourquoi [Souffle.appliquer] refuse les corps scellés : un
+     * ventilateur qui soufflerait sur son propre carter empêcherait le tableau entier
+     * de s'endormir, et un tableau qui ne dort jamais coûte le prix fort à ne rien faire.
+     */
+    private fun souffler() {
+        souffles.clear()
+        for (p in pieces) p.souffle?.let { souffles.add(it) }
+        if (souffles.isEmpty()) return
+        val corps = monde.bodies
+        for (i in corps.indices) {
+            val c = corps[i]
+            if (!c.inWorld || c.immovable || c.isSensor) continue
+            for (j in souffles.indices) souffles[j].appliquer(c)
+        }
+    }
+
     /**
      * Une image de simulation, puis la lecture de ce qui s'est passe pendant.
      *
@@ -194,6 +243,7 @@ class Plateau(
      * permet de retirer une piece ou de rebatir le tableau ici sans rien casser.
      */
     fun avancer(dt: Float) {
+        souffler()
         monde.stepFrame(dt)
         val b = bouton ?: return
         for (e in monde.contactEvents) {
@@ -201,6 +251,20 @@ class Plateau(
             val entre = e.other(b.zone) ?: continue
             b.activer(entre)
         }
+    }
+
+    /**
+     * Vrai quand plus rien ne bouge assez pour que la suite change quoi que ce soit.
+     *
+     * C'est ce que le générateur interroge pour savoir qu'une machine a fini de dérouler
+     * ce qu'elle avait à dérouler : inutile de simuler dix secondes de dominos immobiles.
+     */
+    fun immobile(): Boolean = monde.isAtRest()
+
+    /** Vrai quand la bille est sortie du tableau — une machine ratée, pas une machine lente. */
+    fun billePerdue(): Boolean {
+        val b = bille ?: return true
+        return b.x < -largeur / 2f - 0.5f || b.x > largeur / 2f + 0.5f || b.y < -1f || b.y > hauteur + 3f
     }
 
     /**

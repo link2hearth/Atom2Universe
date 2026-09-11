@@ -61,6 +61,12 @@ object NeutrinoRewards {
     private val SOKOBAN_VALUES = intArrayOf(1, 2, 4, 5)
     fun sokoban(difficultyOrdinal: Int) = SOKOBAN_VALUES[difficultyOrdinal]
 
+    // ── Machine infernale : par tableau, selon le nombre d'étoiles ────────────
+    // Zéro étoile veut dire « la réponse a été montrée » : le tableau est fini, mais
+    // il n'a rien coûté, donc il ne rapporte rien.
+    private val INFERNALE_VALUES = intArrayOf(0, 3, 6, 12)
+    fun infernale(stars: Int) = INFERNALE_VALUES[stars.coerceIn(0, 3)]
+
     // ── Équilibre : EASY à EXTREME, par niveau réussi ─────────────────────────
     // Chaque test qui n'aboutit pas (raté ou interrompu) retire un neutrino,
     // sans jamais descendre sous 1 : réfléchir avant de relâcher le levier paie.
@@ -162,6 +168,11 @@ object NeutrinoRewards {
             Entry(R.string.balance_title, list(BALANCE_VALUES.toList()), R.string.neutrino_info_note_retry),
             Entry(R.string.the_line_title, list(THELINE_VALUES), R.string.neutrino_info_note_level),
             Entry(R.string.sokoban_title, list(SOKOBAN_VALUES.toList()), R.string.neutrino_info_note_level),
+            Entry(
+                R.string.infernale_title,
+                "${infernale(1)} / ${infernale(2)} / ${infernale(3)}",
+                R.string.neutrino_info_note_level
+            ),
             Entry(
                 R.string.link_title,
                 "${linkBase(0)}/${linkBase(1)}/${linkBase(2)} × ${linkMultiplier(0)}/${linkMultiplier(1)}/${linkMultiplier(2)}",

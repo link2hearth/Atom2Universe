@@ -6,14 +6,14 @@
     android:orientation="vertical"
     android:background="#070B18">
 
-    <!-- Barre supérieure : retour, tableau, nouveau -->
+    <!-- Barre supérieure : retour, tableau, navigation entre niveaux -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="4dp"
-        android:paddingEnd="12dp"
+        android:paddingEnd="8dp"
         android:background="#0D1428">
 
         <ImageButton
@@ -37,15 +37,24 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/infernale_btn_new"
-            android:layout_width="wrap_content"
+            android:id="@+id/infernale_btn_prev"
+            android:layout_width="44dp"
             android:layout_height="36dp"
             android:gravity="center"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:text="@string/infernale_new"
+            android:text="◀"
             android:textColor="#CBD5E1"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:background="#1B2540" />
+
+        <TextView
+            android:id="@+id/infernale_btn_next"
+            android:layout_width="44dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="6dp"
+            android:gravity="center"
+            android:text="▶"
+            android:textColor="#CBD5E1"
+            android:textSize="15sp"
             android:background="#1B2540" />
     </LinearLayout>
 
@@ -69,7 +78,7 @@
         android:textSize="13sp"
         android:background="#0D1428" />
 
-    <!-- Réglage de pente, visible seulement quand une rampe est choisie -->
+    <!-- Réglage, visible seulement quand la pièce en tête en a un -->
     <LinearLayout
         android:id="@+id/infernale_slope_row"
         android:layout_width="match_parent"
@@ -83,7 +92,7 @@
 
         <TextView
             android:id="@+id/infernale_slope_label"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:textColor="#CBD5E1"
             android:textSize="13sp" />
@@ -94,10 +103,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="10dp"
-            android:max="50" />
+            android:max="40" />
     </LinearLayout>
 
-    <!-- La réserve : une case par type de pièce restant -->
+    <!-- La réserve : une vignette par type de pièce restant -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -129,7 +138,7 @@
             android:gravity="center"
             android:text="@string/infernale_clear"
             android:textColor="#CBD5E1"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="#1B2540" />
 
         <TextView
@@ -141,8 +150,21 @@
             android:gravity="center"
             android:text="@string/infernale_replay"
             android:textColor="#CBD5E1"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="#1B2540" />
+
+        <TextView
+            android:id="@+id/infernale_btn_solution"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/infernale_solution"
+            android:textColor="#E0A055"
+            android:textSize="13sp"
+            android:background="#1B2540"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/infernale_btn_launch"

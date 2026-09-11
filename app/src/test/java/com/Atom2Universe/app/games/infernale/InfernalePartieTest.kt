@@ -7,13 +7,34 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * La partie : poser, reprendre, lancer, recommencer.
+ * La partie : poser, reprendre, deplacer, lancer, recommencer.
  *
- * Le test qui compte est le dernier — **poser la solution du generateur gagne
- * vraiment**. Il ferme la boucle : le generateur promet qu'un tableau est soluble, et
- * c'est en passant par les memes gestes que le joueur qu'on verifie sa promesse.
+ * Le test qui compte est `poser la solution du generateur gagne vraiment` — il ferme la
+ * boucle : le generateur promet qu'un tableau est soluble, et c'est en passant par les
+ * memes gestes que le joueur qu'on verifie sa promesse.
+ *
+ * ## Pourquoi les regles de placement se testent sur un tableau ecrit a la main
+ *
+ * Elles se testaient sur un tableau tire au hasard, et elles ont casse le jour ou le
+ * generateur a cesse de produire toujours la meme forme de machine : plus aucune graine
+ * ne garantissait un domino dans l'inventaire, ni un metre de libre a l'endroit ou le
+ * test voulait poser sa piece. Un test de regle n'a pas a dependre de ce que le hasard a
+ * bien voulu donner — il se donne son propre tableau, et il dit exactement ce qu'il
+ * mesure.
  */
 class InfernalePartieTest {
+
+    /** Un tableau ecrit a la main : cinq dominos, un bouton, de la place autour. */
+    private fun tableauEssai(): Tableau = Tableau(
+        graine = 0L,
+        billeX = -3.5f,
+        billeY = 3.5f,
+        boutonX = 2.5f,
+        boutonBas = 0f,
+        solution = (0 until 5).map { Pose(TypePiece.DOMINO, x = -1f + it * 0.3f, y = 0f) }
+    )
+
+    private fun essai() = Partie(tableauEssai())
 
     private fun partie(graine: Long = 1L) = Partie(Tableaux.genererSurement(graine))
 
@@ -29,8 +50,8 @@ class InfernalePartieTest {
 
     @Test
     fun `poser decompte le stock et reprendre le rend`() {
-        val p = partie()
-        val pose = p.tableau.solution.first { it.type == TypePiece.DOMINO }
+        val p = essai()
+        val pose = p.tableau.solution.first()
         val avant = p.stock(TypePiece.DOMINO)
 
         assertEquals(Refus.OK, p.poser(pose))
@@ -44,8 +65,8 @@ class InfernalePartieTest {
 
     @Test
     fun `on ne pose pas plus que ce qu on a`() {
-        val p = partie()
-        val modele = p.tableau.solution.first { it.type == TypePiece.DOMINO }
+        val p = essai()
+        val modele = p.tableau.solution.first()
         val stock = p.stock(TypePiece.DOMINO)
         // On les pose tous, bien ecartes pour qu'aucun ne gene l'autre.
         repeat(stock) {
@@ -54,22 +75,22 @@ class InfernalePartieTest {
         }
         assertEquals("il devrait etre en rupture", 0, p.stock(TypePiece.DOMINO))
         assertEquals("on a pu poser un domino de trop", Refus.PLUS_EN_STOCK,
-            p.poser(modele.copy(x = 3f)))
+            p.poser(modele.copy(x = 1.5f)))
     }
 
     @Test
     fun `on ne pose pas une piece sur une autre`() {
-        val p = partie()
-        val modele = p.tableau.solution.first { it.type == TypePiece.DOMINO }
+        val p = essai()
+        val modele = p.tableau.solution.first()
         assertEquals(Refus.OK, p.poser(modele.copy(x = -3f)))
         assertEquals("deux pieces au meme endroit ont ete acceptees", Refus.OCCUPE,
             p.poser(modele.copy(x = -3f)))
     }
 
     @Test
-    fun `on ne pose pas une piece hors du tableau`() {
-        val p = partie()
-        val modele = p.tableau.solution.first { it.type == TypePiece.DOMINO }
+    fun `on ne pose pas une piece hors du cadre`() {
+        val p = essai()
+        val modele = p.tableau.solution.first()
         assertEquals("une piece a ete posee au-dela du bord droit", Refus.HORS_TABLEAU,
             p.poser(modele.copy(x = 50f)))
         assertEquals("une piece a ete posee sous le sol", Refus.HORS_TABLEAU,
@@ -77,9 +98,52 @@ class InfernalePartieTest {
     }
 
     @Test
+    fun `on ne pose pas une piece mobile dans la zone du bouton`() {
+        // **Le trou par lequel on gagnerait sans rien construire.** Un domino pose dans
+        // la zone declencherait le capteur des le premier pas de simulation : le tableau
+        // serait gagne avant d'avoir commence.
+        val p = essai()
+        val modele = p.tableau.solution.first()
+        assertEquals("un domino pose dans la zone du bouton a ete accepte", Refus.OCCUPE,
+            p.poser(modele.copy(x = p.tableau.boutonX)))
+    }
+
+    @Test
+    fun `une piece scellee peut couvrir la zone du bouton`() {
+        // Le pendant du test precedent. Une rampe scellee appartient au decor : le
+        // capteur ne la voit pas, donc rien ne justifie de refuser le placement, et
+        // l'interdire condamnerait tout un pan du tableau sans raison lisible.
+        val p = Partie(
+            Tableau(
+                graine = 0L, billeX = -3f, billeY = 3f, boutonX = 1f, boutonBas = 0.5f,
+                solution = listOf(Pose(TypePiece.RAMPE, x = 0f, y = 1.5f, reglage = 15f))
+            )
+        )
+        assertEquals("une rampe scellee a ete refusee au-dessus du bouton", Refus.OK,
+            p.poser(Pose(TypePiece.RAMPE, x = 1f, y = 0.55f, reglage = 0f)))
+    }
+
+    @Test
+    fun `deplacer garde le rang de la piece`() {
+        // Le rang compte : l'interface designe une piece par son indice, et la partie
+        // tient sa liste de poses en parallele de celle du plateau. Une piece qui change
+        // de rang en bougeant ferait deplacer la voisine au geste suivant.
+        val p = essai()
+        for (pose in p.tableau.solution) assertEquals(Refus.OK, p.poser(pose))
+
+        val vise = p.placees()[1].copy(x = -2.5f)
+        assertEquals(Refus.OK, p.deplacer(1, vise))
+        assertEquals("la piece deplacee a change de rang", vise, p.placees()[1])
+        assertEquals("le stock a bouge alors qu'on n'a fait que deplacer",
+            0, p.stock(TypePiece.DOMINO))
+        assertEquals("le plateau et la liste des poses ont divergé",
+            -2.5f, p.plateau.pieces[1].principal.x, 1e-4f)
+    }
+
+    @Test
     fun `on ne pose plus rien une fois la machine lancee`() {
-        val p = partie()
-        val modele = p.tableau.solution.first { it.type == TypePiece.DOMINO }
+        val p = essai()
+        val modele = p.tableau.solution.first()
         p.lancer()
         assertEquals(Refus.DEJA_LANCEE, p.poser(modele.copy(x = -3f)))
         assertFalse("on a pu reprendre une piece en pleine course", p.reprendre())
@@ -89,9 +153,8 @@ class InfernalePartieTest {
     fun `rien ne bouge tant qu on n a pas lance`() {
         // Le premier des deux temps : pendant la pose, le monde est fige. Sinon le
         // premier domino serait tombe avant qu'on ait pose le second.
-        val p = partie()
-        val pose = p.tableau.solution.first { it.type == TypePiece.DOMINO }
-        p.poser(pose)
+        val p = essai()
+        p.poser(p.tableau.solution.first())
         val bille = p.plateau.bille!!
         val depart = bille.x to bille.y
         repeat(600) { p.avancer(1f / 120f) }
@@ -117,6 +180,17 @@ class InfernalePartieTest {
             assertTrue("graine $graine : la solution verifiee ne gagne pas en partie",
                 p.gagne)
         }
+    }
+
+    @Test
+    fun `montrer la solution gagne aussi`() {
+        val p = partie(4L)
+        p.montrerSolution()
+        assertEquals("la solution montree n'a pas tout pose",
+            p.tableau.solution.size, p.placees().size)
+        p.lancer()
+        repeat(1500) { p.avancer(1f / 120f) }
+        assertTrue("la solution montree ne gagne pas", p.gagne)
     }
 
     @Test

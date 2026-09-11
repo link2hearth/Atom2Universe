@@ -49,7 +49,22 @@ class Partie(val tableau: Tableau) {
     var chrono = 0f
         private set
 
+    /** Nombre de lancements depuis le debut du tableau. Sert au bareme et aux indices. */
+    var essais = 0
+        private set
+
     val gagne: Boolean get() = plateau.gagne
+
+    /**
+     * Vrai quand la machine s'est arretee sans gagner : c'est un echec, pas une attente.
+     *
+     * On le mesure sur le moteur plutot que sur un chronometre. Une machine lente qui
+     * fait encore tomber son dernier domino n'a pas echoue ; une machine ou plus rien ne
+     * bouge, si — et le joueur n'a aucune raison d'attendre dix secondes pour
+     * l'apprendre.
+     */
+    val echoue: Boolean
+        get() = lancee && !gagne && chrono > 1.2f && (plateau.billePerdue() || plateau.immobile())
 
     /** Ce qu'il reste a poser, par type. */
     fun stock(): Map<TypePiece, Int> = restant.filterValues { it > 0 }
@@ -67,20 +82,29 @@ class Partie(val tableau: Tableau) {
      *
      * C'est separe de [poser] a dessein : l'interface a besoin de la reponse **avant**
      * de lacher le doigt, pour montrer la piece en rouge pendant qu'on la traine.
+     *
+     * [sauf] permet d'ignorer une piece deja posee — celle qu'on est en train de
+     * deplacer, qui ne doit evidemment pas se chevaucher elle-meme.
      */
-    fun verifier(pose: Pose): Refus {
+    fun verifier(pose: Pose, sauf: Int = -1): Refus {
         if (lancee) return Refus.DEJA_LANCEE
-        if (stock(pose.type) <= 0) return Refus.PLUS_EN_STOCK
+        if (sauf !in posees.indices && stock(pose.type) <= 0) return Refus.PLUS_EN_STOCK
         val essai = pose.creer()
-        val limite = plateau.largeur / 2f
-        for (c in essai.corps) c.updateAabb()
-        for (c in essai.corps) {
-            if (c.aabbMinX < -limite || c.aabbMaxX > limite) return Refus.HORS_TABLEAU
-            if (c.aabbMinY < -MARGE || c.aabbMaxY > plateau.hauteur) return Refus.HORS_TABLEAU
+        if (!Placement.dansLeCadre(essai, tableau.cadreMinX, tableau.cadreMaxX, tableau.cadreMaxY)) {
+            return Refus.HORS_TABLEAU
         }
-        val places = occupants()
-        for (c in essai.corps) {
-            for (autre in places) if (seChevauchent(c, autre)) return Refus.OCCUPE
+        if (Placement.heurte(essai, occupants(sauf))) return Refus.OCCUPE
+        // La zone du bouton n'arrete que ce qui bouge. Une rampe scellee posee par-dessus
+        // ne la declenchera jamais — sa categorie est celle du decor — alors qu'un domino
+        // pose dedans gagnerait la partie avant meme le premier pas. Le distinguo est donc
+        // la seule facon d'avoir a la fois un placement libre et un jeu non triche.
+        plateau.bouton?.let { b ->
+            b.zone.updateAabb()
+            for (c in essai.corps) {
+                if (c.immovable) continue
+                c.updateAabb()
+                if (Placement.seChevauchent(c, b.zone)) return Refus.OCCUPE
+            }
         }
         return Refus.OK
     }
@@ -98,13 +122,28 @@ class Partie(val tableau: Tableau) {
         return Refus.OK
     }
 
+    /**
+     * Deplace la piece [index] a un nouvel endroit, sans passer par le stock.
+     *
+     * C'est le geste qu'on fait vingt fois par tableau : la rampe est presque bonne, il
+     * lui manque dix centimetres. Reprendre puis reposer marcherait, mais la piece
+     * changerait de rang dans la liste et le doigt perdrait ce qu'il tenait.
+     */
+    fun deplacer(index: Int, pose: Pose): Refus {
+        if (lancee) return Refus.DEJA_LANCEE
+        if (index !in posees.indices) return Refus.OCCUPE
+        if (pose.type != posees[index].type) return Refus.OCCUPE
+        val verdict = verifier(pose, sauf = index)
+        if (verdict != Refus.OK) return verdict
+        corps[index] = plateau.remplacer(index, pose.creer())
+        posees[index] = pose
+        return Refus.OK
+    }
+
     /** Reprend la derniere piece posee et la remet au stock. */
     fun reprendre(): Boolean {
         if (lancee || posees.isEmpty()) return false
-        val pose = posees.removeAt(posees.lastIndex)
-        plateau.retirer(corps.removeAt(corps.lastIndex))
-        restant[pose.type] = stock(pose.type) + 1
-        return true
+        return reprendre(posees.lastIndex)
     }
 
     /** Reprend la piece posee a l'indice [index]. */
@@ -118,7 +157,9 @@ class Partie(val tableau: Tableau) {
 
     /** Lance la machine. Plus rien ne se pose ensuite. */
     fun lancer() {
+        if (lancee) return
         lancee = true
+        essais++
     }
 
     /** Une image, et seulement si la machine est lancee. */
@@ -134,18 +175,20 @@ class Partie(val tableau: Tableau) {
      */
     fun rejouer() {
         val garde = posees.toList()
-        plateau = Tableaux.monter(tableau, avecSolution = false)
-        corps.clear()
-        posees.clear()
-        restant.clear()
-        restant.putAll(tableau.inventaire)
-        lancee = false
-        chrono = 0f
+        val comptes = essais
+        remonter()
+        essais = comptes
         for (p in garde) poser(p)
     }
 
     /** Vide le tableau et rend tout au stock. */
     fun tableauRase() {
+        val comptes = essais
+        remonter()
+        essais = comptes
+    }
+
+    private fun remonter() {
         plateau = Tableaux.monter(tableau, avecSolution = false)
         corps.clear()
         posees.clear()
@@ -153,37 +196,45 @@ class Partie(val tableau: Tableau) {
         restant.putAll(tableau.inventaire)
         lancee = false
         chrono = 0f
-    }
-
-    /** Tout ce qui occupe deja de la place : les pieces posees, la bille, le bouton. */
-    private fun occupants(): List<PhysBody> {
-        val out = ArrayList<PhysBody>()
-        for (p in corps) out.addAll(p.corps)
-        plateau.bille?.let { out.add(it) }
-        plateau.bouton?.let { out.add(it.zone) }
-        for (c in out) c.updateAabb()
-        return out
+        essais = 0
     }
 
     /**
-     * Chevauchement par boites englobantes, avec une marge de tolerance.
+     * Pose la solution du generateur a la place de ce que le joueur avait mis.
      *
-     * **Pas par cercles englobants**, et ca s'est paye : le cercle circonscrit d'un
-     * domino pose au sol plonge sous le sol (son centre est a 22 cm, son rayon a 22,4),
-     * si bien qu'aucune piece n'etait posable. Et celui d'une rampe de deux metres fait
-     * un metre de rayon, ce qui lui faisait « chevaucher » tout ce qui passait a moins
-     * d'un metre — y compris la solution du generateur. Un cercle est une mauvaise
-     * approximation des pieces longues et plates, et elles le sont presque toutes ici.
-     *
-     * La marge autorise les pieces qui se touchent sans se penetrer : un domino pose
-     * contre une rampe est un placement legitime, et souvent le bon.
+     * C'est l'indice de derniere extremite, et il est volontairement total : montrer une
+     * seule piece de la solution ne veut rien dire, puisqu'une piece de machine infernale
+     * ne se comprend que par ce qu'elle transmet a la suivante.
      */
-    private fun seChevauchent(a: PhysBody, b: PhysBody): Boolean =
-        a.aabbMinX < b.aabbMaxX - MARGE && b.aabbMinX < a.aabbMaxX - MARGE &&
-            a.aabbMinY < b.aabbMaxY - MARGE && b.aabbMinY < a.aabbMaxY - MARGE
+    fun montrerSolution() {
+        remonter()
+        for (p in tableau.solution) poser(p)
+    }
 
-    private companion object {
-        /** Tolerance de placement, en metres. */
-        const val MARGE = 0.02f
+    /** Vrai si le tableau est exactement la solution du generateur, a un doigt pres. */
+    fun suitLaSolution(): Boolean {
+        if (posees.size != tableau.solution.size) return false
+        val restants = tableau.solution.toMutableList()
+        for (p in posees) {
+            val jumelle = restants.firstOrNull {
+                it.type == p.type &&
+                    kotlin.math.abs(it.x - p.x) < 0.08f &&
+                    kotlin.math.abs(it.y - p.y) < 0.08f
+            } ?: return false
+            restants.remove(jumelle)
+        }
+        return true
+    }
+
+    /** Tout ce qui occupe deja de la place : les pieces posees et la bille. */
+    private fun occupants(sauf: Int): List<PhysBody> {
+        val out = ArrayList<PhysBody>()
+        for (i in corps.indices) {
+            if (i == sauf) continue
+            out.addAll(corps[i].corps)
+        }
+        plateau.bille?.let { out.add(it) }
+        for (c in out) c.updateAabb()
+        return out
     }
 }
