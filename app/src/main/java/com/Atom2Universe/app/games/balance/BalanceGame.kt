@@ -185,7 +185,19 @@ class BalanceWeight(
  * du pivot est interdite. Les briques peuvent s'empiler : une lourde posée de
  * travers sur une petite bascule, exactement comme dans la réalité.
  */
-class BalanceGame {
+class BalanceGame(
+    /**
+     * D'ou viennent les masses d'un niveau.
+     *
+     * En jeu, le hasard du systeme : chaque partie doit tirer un niveau different. En test,
+     * une graine — et c'est tout l'interet de ce parametre. Deux tests posaient des
+     * assertions chiffrees sur le niveau tire, donc ils passaient ou echouaient **selon le
+     * tirage** : ils tombaient une fois sur dix, jamais les memes, et jamais quand on
+     * relancait la classe seule. Un test qui n'echoue que les mauvais jours accuse toujours
+     * le mauvais coupable.
+     */
+    private val rng: Random = Random.Default
+) {
 
     /**
      * Difficulté : nombre de poids, tolérance d'inclinaison acceptée à l'arrivée
@@ -284,8 +296,6 @@ class BalanceGame {
     /** Hauteur de la surface sur laquelle il se posera (planche ou pile). */
     var dragPreviewTop = 0f
         private set
-
-    private val rng = Random.Default
 
     init {
         buildWorld()

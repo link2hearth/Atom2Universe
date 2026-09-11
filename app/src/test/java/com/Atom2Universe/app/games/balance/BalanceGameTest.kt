@@ -5,6 +5,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
+import kotlin.random.Random
 
 /**
  * Vérifie les règles du jeu d'équilibre : les niveaux tirés au sort doivent
@@ -173,8 +174,18 @@ class BalanceGameTest {
         repeat((seconds / dt).toInt()) { step(dt) }
     }
 
-    private fun newGame(diff: BalanceGame.Difficulty): BalanceGame {
-        val game = BalanceGame()
+    /**
+     * Un niveau **reproductible**.
+     *
+     * La graine est obligatoire, et c'est deliberement penible : sans elle, `BalanceGame`
+     * tire ses masses sur le hasard du systeme, et deux tests posaient des assertions
+     * chiffrees sur le niveau tire. Ils tombaient une fois sur dix, jamais les memes, et
+     * jamais quand on relancait la classe seule — le pire genre de test, qui passe des mois
+     * puis accuse le mauvais coupable un jour de malchance. Une graine obligatoire rend
+     * impossible d'en ecrire un autre par distraction.
+     */
+    private fun newGame(diff: BalanceGame.Difficulty, graine: Long): BalanceGame {
+        val game = BalanceGame(Random(graine))
         game.setViewport(8f)
         game.newLevel(diff)
         return game
@@ -202,8 +213,8 @@ class BalanceGameTest {
     @Test
     fun `chaque niveau admet une repartition exacte et posable`() {
         for (diff in BalanceGame.Difficulty.entries) {
-            repeat(25) {
-                val game = newGame(diff)
+            repeat(25) { essai ->
+                val game = newGame(diff, graine = 100L * diff.ordinal + essai)
                 assertEquals(diff.weightCount, game.weights.size)
                 assertNotNull(
                     "niveau sans disposition réalisable : ${game.weights.map { w -> w.mass }}",
@@ -215,8 +226,8 @@ class BalanceGameTest {
 
     @Test
     fun `les masses d un niveau sont toutes differentes`() {
-        repeat(25) {
-            val game = newGame(BalanceGame.Difficulty.MEDIUM)
+        repeat(25) { essai ->
+            val game = newGame(BalanceGame.Difficulty.MEDIUM, graine = 200L + essai)
             val masses = game.weights.map { it.mass }
             assertEquals("masses en double : $masses", masses.size, masses.toSet().size)
         }
@@ -254,7 +265,7 @@ class BalanceGameTest {
     @Test
     fun `une brique est d autant plus grosse qu elle est lourde`() {
         for (diff in BalanceGame.Difficulty.entries) {
-            val game = newGame(diff)
+            val game = newGame(diff, graine = 300L + diff.ordinal)
             for (w in game.weights) {
                 val attendu = BalanceRules.areaForMass(w.mass)
                 assertEquals(
@@ -278,7 +289,7 @@ class BalanceGameTest {
 
     @Test
     fun `poser sur le pivot est refuse`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 501L)
         val w = game.weights.first()
         game.beginDrag(w, w.body.x, w.body.y)
         game.dragTo(0f, BalanceRules.PLANK_TOP + 0.45f)
@@ -291,7 +302,7 @@ class BalanceGameTest {
 
     @Test
     fun `on pose librement, sans aimantation`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 502L)
         val w = game.weights.first()
         val target = 0.93f
         game.put(w, target)
@@ -308,7 +319,7 @@ class BalanceGameTest {
 
     @Test
     fun `une brique peut depasser du bord en restant suffisamment soutenue`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 503L)
         val w = game.weights.first()
         game.put(w, BalanceRules.PLANK_HALF_LENGTH + 0.3f)
         game.simulate(1f)
@@ -321,7 +332,7 @@ class BalanceGameTest {
 
     @Test
     fun `le test n est possible qu une fois tous les poids poses`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 504L)
         assertTrue("test autorisé alors que rien n'est posé", !game.canTest())
         game.put(game.weights[0], 0.6f)
         assertTrue("test autorisé avec un seul poids posé", !game.canTest())
@@ -347,8 +358,8 @@ class BalanceGameTest {
         var couvertes = 0
         for (diff in BalanceGame.Difficulty.entries) {
             var vues = 0
-            repeat(5) {
-                val game = newGame(diff)
+            repeat(5) { essai ->
+                val game = newGame(diff, graine = 400L * diff.ordinal + essai)
                 if (!layoutSolution(game)) return@repeat
                 vues++
                 assertTrue("tous les poids devraient être posés", game.canTest())
@@ -374,7 +385,7 @@ class BalanceGameTest {
 
     @Test
     fun `une repartition desequilibree est refusee`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 505L)
         // Tout du même côté : la planche doit franchement pencher.
         var x = 0.4f
         for (w in game.weights) {
@@ -394,19 +405,29 @@ class BalanceGameTest {
 
     @Test
     fun `l inclinaison prevue correspond a l inclinaison mesuree`() {
-        val game = newGame(BalanceGame.Difficulty.MEDIUM)
+        val game = newGame(BalanceGame.Difficulty.MEDIUM, graine = 506L)
         assertTrue("aucune disposition trouvée", layoutSolution(game))
-        // Solution exacte, puis on décale légèrement le poids le plus léger :
-        // le déséquilibre reste petit, donc rien ne glisse et la prévision vaut.
-        val lightest = game.weights.minByOrNull { it.mass }!!
-        val side = if (lightest.body.x < 0f) -1f else 1f
-        val room = lightest.maxDistance - abs(lightest.body.x)
-        val shift = if (room > 0.2f) 0.2f else -0.2f
-        game.put(lightest, lightest.body.x + side * shift)
-        game.simulate(1.5f)
 
-        val predicted = game.predictedLeanDeg
-        assertTrue("le déséquilibre du test est nul", abs(predicted) > 0.4f)
+        // Solution exacte, puis on décale le poids le plus léger : le déséquilibre reste
+        // petit, donc rien ne glisse et la prévision vaut.
+        //
+        // **Le décalage se cherche au lieu d'être posé à 20 cm.** Vingt centimètres d'un
+        // poids léger ne font pas toujours 0,4° d'inclinaison — cela dépend des masses du
+        // niveau — et le test échouait alors sur sa propre mise en scène, en annonçant
+        // « le déséquilibre du test est nul » alors qu'il n'avait rien mesuré du tout. On
+        // prend donc le plus petit décalage qui produise quelque chose à mesurer.
+        val lightest = game.weights.minByOrNull { it.mass }!!
+        val depart = lightest.body.x
+        val side = if (depart < 0f) -1f else 1f
+        var predicted = 0f
+        for (shift in floatArrayOf(0.2f, 0.35f, 0.5f, 0.7f)) {
+            val room = lightest.maxDistance - abs(depart)
+            game.put(lightest, depart + side * if (room > shift) shift else -shift)
+            game.simulate(1.5f)
+            predicted = game.predictedLeanDeg
+            if (abs(predicted) > 0.4f) break
+        }
+        assertTrue("aucun décalage ne déséquilibre ce niveau", abs(predicted) > 0.4f)
 
         game.startTest()
         game.simulate(12f)
@@ -421,7 +442,7 @@ class BalanceGameTest {
 
     @Test
     fun `le levier ne s effondre pas apres le verdict`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 507L)
         assertTrue("aucune disposition trouvée", layoutSolution(game))
         game.startTest()
         game.simulate(10f)
@@ -437,7 +458,7 @@ class BalanceGameTest {
 
     @Test
     fun `interrompre un test en cours ramene les poids a leur place choisie`() {
-        val game = newGame(BalanceGame.Difficulty.MEDIUM)
+        val game = newGame(BalanceGame.Difficulty.MEDIUM, graine = 508L)
         assertTrue("aucune disposition trouvée", layoutSolution(game))
         // Déséquilibre volontaire : la planche penche pendant le test, donc les
         // briques se déplacent réellement avant qu'on interrompe.
@@ -446,7 +467,14 @@ class BalanceGameTest {
         val room = lightest.maxDistance - abs(lightest.body.x)
         game.put(lightest, lightest.body.x + side * if (room > 0.3f) 0.3f else -0.3f)
         game.simulate(1.5f)
-        val before = game.weights.map { it.body.x }
+
+        // **On retient l'abscisse choisie, pas celle où la brique a fini par se caler.**
+        // C'est ce que `resumePlacing` restitue, sa documentation le dit en toutes lettres,
+        // et le titre de ce test aussi — « leur place choisie ». L'assertion, elle, comparait
+        // à `body.x` relevé après une seconde et demie de tassement : une brique qui avait
+        // glissé de quatorze centimètres en se calant faisait échouer le test sur un écart
+        // qui n'avait rien à voir avec l'interruption.
+        val choisies = game.weights.map { it.plankX }
 
         game.startTest()
         game.simulate(1.2f)
@@ -459,13 +487,14 @@ class BalanceGameTest {
         assertEquals("la planche n'est pas revenue à plat", 0f, game.leanDeg, 0.01f)
         assertTrue("des poids ont été renvoyés au plateau", game.allPlaced)
         for ((i, w) in game.weights.withIndex()) {
-            assertEquals("le poids ${w.mass} kg n'a pas retrouvé sa place", before[i], w.body.x, 0.02f)
+            assertEquals("le poids ${w.mass} kg n'a pas retrouvé sa place choisie",
+                choisies[i], w.body.x, 0.02f)
         }
     }
 
     @Test
     fun `les essais sont comptes, le test gagnant excepte`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 509L)
         assertTrue("aucune disposition trouvée", layoutSolution(game))
         assertEquals(0, game.testAttempts)
         assertEquals(0, game.failedAttempts)
@@ -486,9 +515,10 @@ class BalanceGameTest {
 
     @Test
     fun `ajuster garde les poids en place et remet la planche a plat`() {
-        val game = newGame(BalanceGame.Difficulty.EASY)
+        val game = newGame(BalanceGame.Difficulty.EASY, graine = 510L)
         assertTrue("aucune disposition trouvée", layoutSolution(game))
-        val before = game.weights.map { it.body.x }
+        // Meme raison qu'au test precedent : c'est l'abscisse choisie qui est restituee.
+        val choisies = game.weights.map { it.plankX }
 
         game.startTest()
         game.simulate(10f)
@@ -503,7 +533,7 @@ class BalanceGameTest {
         assertEquals("la planche n'est pas revenue à plat", 0f, game.leanDeg, 0.01f)
         assertTrue("des poids ont été renvoyés au plateau", game.allPlaced)
         for ((i, w) in game.weights.withIndex()) {
-            assertEquals("le poids ${w.mass} kg a bougé", before[i], w.body.x, 0.15f)
+            assertEquals("le poids ${w.mass} kg a bougé", choisies[i], w.body.x, 0.15f)
         }
     }
 }
