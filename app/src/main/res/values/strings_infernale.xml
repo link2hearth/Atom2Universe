@@ -1,0 +1,15 @@
+<resources>
+    <string name="infernale_art_title">Infernale · Workshop</string>
+    <string name="infernale_art_beam">Beam</string>
+    <string name="infernale_art_frame">Frame</string>
+    <string name="infernale_art_gear">Gear</string>
+    <string name="infernale_art_wheel">Wheel</string>
+    <string name="infernale_art_spring">Spring</string>
+    <string name="infernale_art_piston">Cylinder</string>
+    <string name="infernale_art_conveyor">Conveyor</string>
+    <string name="infernale_art_motor">Motor</string>
+    <string name="infernale_art_tank">Tank</string>
+    <string name="infernale_art_gauge">Pressure gauge</string>
+    <string name="infernale_art_ball">Ball</string>
+    <string name="infernale_art_button">Button</string>
+</resources>

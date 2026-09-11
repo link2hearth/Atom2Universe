@@ -1,0 +1,15 @@
+<resources>
+    <string name="infernale_art_title">Infernale · Atelier</string>
+    <string name="infernale_art_beam">Poutre</string>
+    <string name="infernale_art_frame">Châssis</string>
+    <string name="infernale_art_gear">Engrenage</string>
+    <string name="infernale_art_wheel">Roue</string>
+    <string name="infernale_art_spring">Ressort</string>
+    <string name="infernale_art_piston">Vérin</string>
+    <string name="infernale_art_conveyor">Convoyeur</string>
+    <string name="infernale_art_motor">Moteur</string>
+    <string name="infernale_art_tank">Réservoir</string>
+    <string name="infernale_art_gauge">Manomètre</string>
+    <string name="infernale_art_ball">Bille</string>
+    <string name="infernale_art_button">Bouton</string>
+</resources>
