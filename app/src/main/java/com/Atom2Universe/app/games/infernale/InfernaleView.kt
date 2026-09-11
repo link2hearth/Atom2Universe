@@ -81,19 +81,40 @@ class InfernaleView @JvmOverloads constructor(
      */
     private val reglages = HashMap<TypePiece, Float>()
 
+    /** Le sens de chaque type : le curseur regle la quantite, le miroir regle le cote. */
+    private val miroirs = HashMap<TypePiece, Boolean>()
+
     fun reglage(type: TypePiece): Float = reglages[type] ?: reglageParDefaut(type)
+
+    fun miroir(type: TypePiece): Boolean = miroirs[type] ?: false
+
+    /** Retourne le type [type], et la piece designee si c'en est une du meme type. */
+    fun basculerMiroir(type: TypePiece) {
+        val valeur = !miroir(type)
+        miroirs[type] = valeur
+        appliquerAuDesigne(type) { it.copy(miroir = valeur) }
+    }
 
     fun reglage(type: TypePiece, valeur: Float) {
         reglages[type] = valeur
-        // Une piece deja posee suit son reglage : c'est ce qui permet d'ajuster une rampe
-        // apres coup au lieu de la reprendre et de la reposer au jugé.
+        appliquerAuDesigne(type) { it.copy(reglage = valeur) }
+    }
+
+    /**
+     * Applique un changement de reglage a la piece designee, si elle est du bon type.
+     *
+     * C'est ce qui permet d'ajuster une rampe deja posee au lieu de la reprendre et de la
+     * reposer au juge. Le refus eventuel de [Partie.deplacer] — la piece retournee
+     * chevaucherait sa voisine — est silencieux : la piece reste comme elle etait, ce que
+     * le joueur voit tout de suite.
+     */
+    private fun appliquerAuDesigne(type: TypePiece, changer: (Pose) -> Pose) {
         val index = selection
-        if (index >= 0) {
-            synchronized(verrou) {
-                val p = partie ?: return@synchronized
-                val pose = p.placees().getOrNull(index) ?: return@synchronized
-                if (pose.type == type) p.deplacer(index, pose.copy(reglage = valeur))
-            }
+        if (index < 0) return
+        synchronized(verrou) {
+            val p = partie ?: return@synchronized
+            val pose = p.placees().getOrNull(index) ?: return@synchronized
+            if (pose.type == type) p.deplacer(index, changer(pose))
         }
     }
 
@@ -369,19 +390,76 @@ class InfernaleView @JvmOverloads constructor(
 
     // ── Cadrage ──────────────────────────────────────────────────────────────
 
+    /**
+     * Ouvre la camera sur ce qui compte : la bille, le bouton, et de la place autour.
+     *
+     * Le plateau fait seize metres ; on n'en montre que la fenetre utile, et le joueur
+     * ecarte les doigts pour voir le reste. Tenter de tout montrer d'un coup rendrait la
+     * bille grosse comme une tete d'epingle.
+     */
     private fun cadrer(w: Int, h: Int) {
         val p = synchronized(verrou) { partie } ?: return
         if (w <= 0 || h <= 0) return
         val t = p.tableau
-        val largeurMonde = (t.cadreMaxX - t.cadreMinX).coerceAtLeast(1f)
-        val hauteurMonde = (t.cadreMaxY + SOL_VISIBLE).coerceAtLeast(1f)
+        val largeurMonde = (t.vueMaxX - t.vueMinX).coerceAtLeast(1f)
+        val hauteurMonde = (t.vueMaxY + SOL_VISIBLE).coerceAtLeast(1f)
         echelle = minOf(w / largeurMonde, h / hauteurMonde)
-        origineX = w / 2f - (t.cadreMinX + t.cadreMaxX) / 2f * echelle
+        origineX = w / 2f - (t.vueMinX + t.vueMaxX) / 2f * echelle
         // Tout le mou vertical passe **au-dessus**, et pas moitie-moitie. Centrer laissait
         // un quart de l'ecran de terre sous les pieds pour rien, alors que la place utile
         // est en haut : c'est la qu'on pose les premieres rampes.
         basY = h - SOL_VISIBLE * echelle
+        echelleDepart = echelle
         preparerDecor(t)
+    }
+
+    /** L'echelle du cadrage d'origine. Elle borne le zoom des deux cotes. */
+    private var echelleDepart = 40f
+
+    /** Remet la camera ou elle etait en arrivant. */
+    fun recadrer() {
+        synchronized(verrou) {
+            if (largeurVue > 0 && hauteurVue > 0) cadrer(largeurVue, hauteurVue)
+        }
+    }
+
+    /**
+     * Deplace et grossit la camera, en gardant [ancreX]/[ancreY] sous le doigt.
+     *
+     * C'est la seule facon de faire un zoom qui ne donne pas le mal de mer : ce que les
+     * deux doigts tiennent doit rester exactement entre les deux doigts, sinon le monde
+     * glisse sous la main a chaque pincement.
+     */
+    private fun bougerCamera(dScale: Float, dx: Float, dy: Float, ancreX: Float, ancreY: Float) {
+        val vise = (echelle * dScale).coerceIn(echelleDepart * 0.45f, echelleDepart * 3.5f)
+        val facteur = vise / echelle
+        // Le point du monde sous l'ancre ne doit pas bouger : on corrige l'origine de
+        // l'ecart que le changement d'echelle vient d'introduire.
+        origineX = ancreX - (ancreX - origineX) * facteur + dx
+        basY = ancreY - (ancreY - basY) * facteur + dy
+        echelle = vise
+        borner()
+    }
+
+    /**
+     * Empeche la camera de partir dans le vide.
+     *
+     * Sans bornes, deux doigts distraits envoient le tableau hors de l'ecran et rien
+     * n'indique par ou revenir. On garde toujours le plateau a portee : au moins un bout
+     * de sol visible, et jamais plus d'un demi-ecran au-dela des bords.
+     */
+    private fun borner() {
+        val t = synchronized(verrou) { partie }?.tableau ?: return
+        val w = largeurVue.toFloat()
+        val h = hauteurVue.toFloat()
+        val marge = w * 0.5f
+        val gauche = ex(t.cadreMinX)
+        val droite = ex(t.cadreMaxX)
+        if (gauche > marge) origineX -= gauche - marge
+        if (droite < w - marge) origineX += (w - marge) - droite
+        // En vertical : le sol ne monte jamais au-dessus du tiers haut de l'ecran, et ne
+        // descend jamais sous le bas.
+        basY = basY.coerceIn(h * 0.33f, h + SOL_VISIBLE * echelle)
     }
 
     private fun ex(x: Float) = origineX + x * echelle
@@ -398,8 +476,8 @@ class InfernaleView @JvmOverloads constructor(
             graine = graine * 6364136223846793005L + 1442695040888963407L
             return ((graine ushr 40).toInt() and 0xFFFFFF) / 16777216f
         }
-        val l = t.cadreMinX
-        val r = t.cadreMaxX
+        val l = t.vueMinX
+        val r = t.vueMaxX
         for (i in 0 until DECOR) {
             rocherX[i] = l + suivant() * (r - l)
             rocherY[i] = -0.05f - suivant() * 0.35f
@@ -603,6 +681,8 @@ class InfernaleView @JvmOverloads constructor(
             Element.PEAU -> for (i in corps.parts.indices) tambour(c, corps, i)
             Element.GODET -> for (i in corps.parts.indices) boite(c, corps, i, boisSombre, bois)
             Element.CONTREPOIDS -> for (i in corps.parts.indices) boite(c, corps, i, fer, ferClair)
+            Element.BILLE -> bille(c, corps)
+            Element.TAPIS -> tapis(c, corps)
             null -> for (i in corps.parts.indices) boite(c, corps, i, pierre, pierreClaire)
         }
     }
@@ -688,6 +768,59 @@ class InfernaleView @JvmOverloads constructor(
             c.drawRect(-hw, -hh, hw, -hh + minOf(hh * 0.45f, echelle * 0.03f), clair)
             c.drawRect(-hw, -hh, hw, hh, contour)
         }
+    }
+
+    /** Une bille posee par le joueur : la meme que celle du tableau, sans la traine. */
+    private fun bille(c: Canvas, corps: PhysBody) {
+        corps.partWorld(0, centre)
+        val r = corps.parts[0].radius * echelle
+        val x = ex(centre[0])
+        val y = ey(centre[1])
+        c.drawCircle(x, y, r, billeP)
+        c.drawCircle(x - r * 0.3f, y - r * 0.32f, r * 0.32f, billeReflet)
+        c.drawCircle(x, y, r, contour)
+    }
+
+    /**
+     * Le tapis : une bande, deux tambours aux bouts, et des chevrons qui defilent.
+     *
+     * Le sens se lit dans `surfaceSpeed`, que le moteur porte deja sur le corps : rien a
+     * ranger a cote, rien qui puisse diverger du comportement reel. Un tapis dessine dans
+     * le mauvais sens serait le pire des bugs de cette piece, puisque le sens est la seule
+     * chose qu'elle ait a dire.
+     */
+    private fun tapis(c: Canvas, corps: PhysBody) {
+        val sens = if (corps.surfaceSpeed < 0f) -1f else 1f
+        surForme(c, corps, 0) { hw, hh ->
+            c.drawRect(-hw, -hh, hw, hh, fer)
+            c.drawRect(-hw, -hh, hw, -hh + hh * 0.5f, ferClair)
+            // Les chevrons defilent dans le sens de la bande. Le repere local a le y vers
+            // le bas, mais le x vers la droite comme le monde : le sens s'y lit tel quel.
+            val pas = hh * 3f
+            val defile = ((horloge * 1.6f * sens) % 1f) * pas
+            var n = 0
+            var x = -hw + defile - pas
+            while (x < hw && n + 8 <= segments.size) {
+                val a = x.coerceIn(-hw, hw)
+                val b = (x + hh * 1.2f).coerceIn(-hw, hw)
+                if (b > a) {
+                    segments[n] = a
+                    segments[n + 1] = hh * 0.55f
+                    segments[n + 2] = b
+                    segments[n + 3] = -hh * 0.55f
+                    n += 4
+                }
+                x += pas
+            }
+            if (n > 0) c.drawLines(segments, 0, n, grain)
+            c.drawRect(-hw, -hh, hw, hh, contour)
+        }
+        // Les tambours d'about, dessines dans le repere du monde pour rester ronds.
+        corps.partWorld(0, centre)
+        val demi = corps.parts[0].halfW * echelle
+        val rayon = corps.parts[0].halfH * echelle
+        c.drawCircle(ex(centre[0]) - demi, ey(centre[1]), rayon, ferClair)
+        c.drawCircle(ex(centre[0]) + demi, ey(centre[1]), rayon, ferClair)
     }
 
     private fun tambour(c: Canvas, corps: PhysBody, part: Int) {
@@ -858,7 +991,18 @@ class InfernaleView @JvmOverloads constructor(
     private var doigtDepartY = 0f
     private var aBouge = false
 
+    // La camera a deux doigts. `camera` est vrai des qu'un second doigt touche, et le
+    // reste jusqu'a ce que tous soient partis : sans ce verrou, lever un doigt sur deux
+    // reprendrait le geste de pose la ou le pincement l'avait laisse, et poserait une
+    // piece au milieu de l'ecran sans que personne l'ait demande.
+    private var camera = false
+    private var pinceEcart = 0f
+    private var pinceX = 0f
+    private var pinceY = 0f
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.pointerCount >= 2 || camera) return piloterCamera(event)
+
         val mx = (event.x - origineX) / echelle
         val my = (basY - event.y) / echelle
 
@@ -936,6 +1080,50 @@ class InfernaleView @JvmOverloads constructor(
         return true
     }
 
+    /** Deux doigts : on deplace et on grossit, on ne pose rien. */
+    private fun piloterCamera(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_DOWN -> {
+                camera = true
+                synchronized(verrou) {
+                    viser(null)
+                    doigtIndex = -1
+                }
+                mesurerPince(event)
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                if (event.pointerCount < 2) return true
+                val cx = (event.getX(0) + event.getX(1)) / 2f
+                val cy = (event.getY(0) + event.getY(1)) / 2f
+                val ecart = hypot(event.getX(0) - event.getX(1), event.getY(0) - event.getY(1))
+                if (pinceEcart > 1f && ecart > 1f) {
+                    synchronized(verrou) {
+                        bougerCamera(ecart / pinceEcart, cx - pinceX, cy - pinceY, cx, cy)
+                    }
+                }
+                pinceEcart = ecart
+                pinceX = cx
+                pinceY = cy
+            }
+
+            MotionEvent.ACTION_POINTER_UP -> mesurerPince(event)
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> camera = false
+        }
+        return true
+    }
+
+    private fun mesurerPince(event: MotionEvent) {
+        if (event.pointerCount < 2) {
+            pinceEcart = 0f
+            return
+        }
+        pinceEcart = hypot(event.getX(0) - event.getX(1), event.getY(0) - event.getY(1))
+        pinceX = (event.getX(0) + event.getX(1)) / 2f
+        pinceY = (event.getY(0) + event.getY(1)) / 2f
+    }
+
     private fun majApercu(p: Partie, mx: Float, my: Float) {
         val type = typeChoisi ?: return
         val pose = poseA(type, mx, my)
@@ -956,15 +1144,11 @@ class InfernaleView @JvmOverloads constructor(
     private fun poseA(type: TypePiece, x: Float, y: Float): Pose {
         val gx = accrocher(x)
         val gy = accrocher(y)
-        return when (type) {
-            TypePiece.RAMPE, TypePiece.VENTILATEUR ->
-                Pose(type, gx, gy, reglage = reglage(type))
-            TypePiece.PLOT, TypePiece.BLOC, TypePiece.TAMBOUR ->
-                Pose(type, gx, gy)
-            TypePiece.TREMPLIN ->
-                Pose(type, gx, gy.coerceAtLeast(0f), reglage = reglage(type))
-            else -> Pose(type, gx, gy.coerceAtLeast(0f))
-        }
+        // Les pieces scellees se posent par leur centre, puisqu'elles flottent ou l'on
+        // veut ; les libres et les mixtes par leur base, puisqu'on les pose sur quelque
+        // chose. Un domino vise par son centre s'enfonce a moitie dans le sol.
+        val hauteur = if (type.ancrage == Ancrage.SCELLE) gy else gy.coerceAtLeast(0f)
+        return Pose(type, gx, hauteur, reglage = reglage(type), miroir = miroir(type))
     }
 
     private fun accrocher(v: Float): Float = Math.round(v / GRILLE) * GRILLE

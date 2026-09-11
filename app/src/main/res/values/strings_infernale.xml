@@ -32,9 +32,6 @@
     <string name="infernale_loading">Building the board…</string>
     <string name="infernale_next">Next</string>
     <string name="infernale_blow">Blows at: %1$d°</string>
-    <string name="infernale_hinge">Hinge: %1$s</string>
-    <string name="infernale_hinge_left">left</string>
-    <string name="infernale_hinge_right">right</string>
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
@@ -49,4 +46,10 @@
     <string name="infernale_role_drum">Taut skin. What falls on it comes back up almost as high.</string>
     <string name="infernale_role_pulley">Bucket and counterweight. The ball falling in raises the counterweight.</string>
     <string name="infernale_piece_named">%1$s — %2$s</string>
+    <string name="infernale_piece_ball">Extra ball</string>
+    <string name="infernale_piece_belt">Conveyor</string>
+    <string name="infernale_role_ball">A second ball. It waits where you put it until something frees it.</string>
+    <string name="infernale_role_belt">Fixed belt. It carries along, flat, without losing height.</string>
+    <string name="infernale_mirror">Flip</string>
+    <string name="infernale_frame">Recentre</string>
 </resources>

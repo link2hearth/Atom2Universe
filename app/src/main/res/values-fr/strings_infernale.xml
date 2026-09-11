@@ -32,9 +32,6 @@
     <string name="infernale_loading">Construction du tableau…</string>
     <string name="infernale_next">Suivant</string>
     <string name="infernale_blow">Souffle vers : %1$d°</string>
-    <string name="infernale_hinge">Charnière : %1$s</string>
-    <string name="infernale_hinge_left">à gauche</string>
-    <string name="infernale_hinge_right">à droite</string>
     <string name="infernale_piece_fan">Ventilateur</string>
     <string name="infernale_piece_drum">Tambour</string>
     <string name="infernale_piece_pulley">Poulie</string>
@@ -49,4 +46,10 @@
     <string name="infernale_role_drum">Peau tendue. Ce qui tombe dessus repart presque aussi haut.</string>
     <string name="infernale_role_pulley">Godet et contrepoids. La bille qui tombe dedans fait monter le contrepoids.</string>
     <string name="infernale_piece_named">%1$s — %2$s</string>
+    <string name="infernale_piece_ball">Bille</string>
+    <string name="infernale_piece_belt">Tapis</string>
+    <string name="infernale_role_ball">Une seconde bille. Elle attend où vous la posez jusqu\'à ce qu\'on la libère.</string>
+    <string name="infernale_role_belt">Bande roulante scellée. Elle transporte à plat, sans perdre de hauteur.</string>
+    <string name="infernale_mirror">Retourner</string>
+    <string name="infernale_frame">Recadrer</string>
 </resources>

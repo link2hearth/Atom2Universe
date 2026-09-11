@@ -82,7 +82,13 @@ enum class Element {
     GODET,
 
     /** Contrepoids de la poulie. */
-    CONTREPOIDS
+    CONTREPOIDS,
+
+    /** Bille posee par le joueur, en plus de celle du tableau. */
+    BILLE,
+
+    /** Bande d'un tapis roulant. */
+    TAPIS
 }
 
 /**
@@ -179,7 +185,45 @@ enum class TypePiece(val ancrage: Ancrage) {
     TAMBOUR(Ancrage.SCELLE),
 
     /** Godet et contrepoids sur une corde : la chute d'un côté devient montée de l'autre. */
-    POULIE(Ancrage.MIXTE)
+    POULIE(Ancrage.MIXTE),
+
+    /**
+     * Une bille de plus, libre.
+     *
+     * ## Pourquoi c'est une pièce et pas un décor
+     *
+     * Tout le reste du jeu transmet un mouvement que la bille du tableau apporte. Poser une
+     * **seconde** bille, c'est apporter une deuxième source : deux kilos de plus, immobiles
+     * jusqu'à ce que quelque chose les libère, et qui repartent alors dans une direction que
+     * la première n'aurait pas pu prendre. C'est ce qui permet la machine en deux temps —
+     * la première bille remplit le godet d'une poulie, le contrepoids qui monte fait tomber
+     * le domino qui retenait la seconde, et celle-ci part sur une pente que la première
+     * avait déjà dépassée.
+     *
+     * Elle est en tout point la bille du tableau : même rayon, même masse, même faible
+     * rebond. Une bille de joueur qui se comporterait autrement serait un piège.
+     */
+    BILLE(Ancrage.LIBRE),
+
+    /**
+     * Tapis roulant : une bande scellée qui entraîne ce qui roule dessus.
+     *
+     * C'est la seule pièce qui transporte **à plat**, sans perdre d'altitude. Tout le reste
+     * échange de la hauteur contre du mouvement ; un tapis en fabrique, ce qui est
+     * exactement ce qu'il faut quand la bille est arrivée en bas et qu'il reste deux mètres
+     * à franchir.
+     */
+    TAPIS(Ancrage.SCELLE);
+
+    /**
+     * La pièce a-t-elle un côté ? Alors le bouton miroir la retourne.
+     *
+     * Une bascule et un tambour sont symétriques : les retourner ne ferait rien, et
+     * proposer le bouton mentirait sur ce qu'il fait.
+     */
+    val miroitable: Boolean
+        get() = this == RAMPE || this == TREMPLIN || this == POULIE ||
+            this == VENTILATEUR || this == TAPIS
 }
 
 /**
@@ -252,6 +296,8 @@ object Pieces {
     const val TREMPLIN_LONGUEUR = 0.7f
     const val VENTILATEUR_COTE = 0.34f
     const val TAMBOUR_LARGEUR = 0.8f
+    const val BILLE_RAYON = 0.11f
+    const val TAPIS_LONGUEUR = 1.3f
     const val POULIE_HAUTEUR = 1.8f
 
     // ── Le ventilateur ───────────────────────────────────────────────────────
@@ -624,7 +670,15 @@ object Pieces {
      *
      * [bas] est le pied du mât.
      */
-    fun poulie(x: Float, bas: Float, hauteur: Float = POULIE_HAUTEUR): Piece {
+    fun poulie(
+        x: Float,
+        bas: Float,
+        hauteur: Float = POULIE_HAUTEUR,
+        sens: Float = 1f
+    ): Piece {
+        // Le miroir echange les deux plateaux : le godet passe a droite, le contrepoids a
+        // gauche. Rien d'autre ne change, le mat restant au milieu.
+        val cote = if (sens < 0f) -1f else 1f
         val reaX = x
         val reaY = bas + hauteur
 
@@ -642,14 +696,14 @@ object Pieces {
             box(GODET_DEMI_LARGEUR, 0.03f, 0f, -GODET_DEMI_HAUTEUR)
             box(0.03f, GODET_DEMI_HAUTEUR, -GODET_DEMI_LARGEUR, 0f)
             box(0.03f, GODET_DEMI_HAUTEUR, GODET_DEMI_LARGEUR, 0f)
-        }.parPremiereForme(x - POULIE_ECART, godetCentre - GODET_DEMI_HAUTEUR).apply {
+        }.parPremiereForme(x - cote * POULIE_ECART, godetCentre - GODET_DEMI_HAUTEUR).apply {
             friction = FROTTEMENT
             restitution = 0.02f
         }.marquer(Element.GODET)
 
         val contrepoidsBas = poulieContrepoidsBas(bas)
         val contrepoids = PhysBody(0.1f, CONTREPOIDS_DEMI_HAUTEUR, POULIE_MASSE_CONTREPOIDS).apply {
-            this.x = x + POULIE_ECART
+            this.x = x + cote * POULIE_ECART
             this.y = contrepoidsBas
             friction = FROTTEMENT
             restitution = 0.05f
@@ -679,7 +733,7 @@ object Pieces {
             box(0.05f, 0.035f, 0.13f, 0f)
             box(0.05f, 0.035f, -0.13f, hautTablette - basTablette)
             box(0.05f, 0.035f, 0.13f, hautTablette - basTablette)
-        }.parPremiereForme(x + POULIE_ECART - 0.13f, basTablette).apply {
+        }.parPremiereForme(x + cote * POULIE_ECART - 0.13f, basTablette).apply {
             friction = FROTTEMENT
             restitution = 0f
         }.marquer(Element.BATI))
@@ -713,5 +767,57 @@ object Pieces {
             listOf(mat, godet, contrepoids, butees),
             listOf(railGodet, railMasse, corde)
         )
+    }
+
+    /**
+     * Une bille de plus, posee par le joueur. [bas] est le point ou elle touche.
+     *
+     * Rigoureusement identique a celle du tableau — meme rayon, meme masse, meme faible
+     * rebond. Une bille de joueur qui se comporterait autrement serait un piege, et le
+     * joueur passerait son temps a se demander laquelle il regarde.
+     */
+    fun bille(x: Float, bas: Float, rayon: Float = BILLE_RAYON, masse: Float = 2f): Piece {
+        val boule = PhysBody.circle(rayon, masse).apply {
+            this.x = x
+            this.y = bas + rayon
+            friction = 0.25f
+            restitution = 0.1f
+        }.marquer(Element.BILLE)
+        return Piece(TypePiece.BILLE, listOf(boule), emptyList())
+    }
+
+    /**
+     * Tapis roulant : une bande scellee qui entraine ce qui roule dessus, dans le sens
+     * [sens].
+     *
+     * C'est la seule piece qui transporte **a plat**. Tout le reste du jeu echange de la
+     * hauteur contre du mouvement ; un tapis en fabrique, ce qui est exactement ce qu'il
+     * faut quand la bille est arrivee en bas et qu'il reste deux metres a franchir.
+     *
+     * Le moteur savait deja le faire : `PhysBody.surfaceSpeed` demande aux deux surfaces
+     * en contact une vitesse relative le long de la tangente, et le solveur la fournit
+     * dans la limite de `mu x impulsion normale` — donc dans la limite de ce que le poids
+     * pose dessus autorise. Un tapis ne peut pas entrainer ce qui ne le touche pas, et
+     * n'entraine que mollement ce qui l'effleure : c'est ce que fait un vrai tapis.
+     *
+     * D'ou le frottement eleve de la bande. Les frottements se combinent en racine du
+     * produit, et une bille a 0,25 sur une bande a 0,25 ne serait entrainee qu'au quart de
+     * son poids : le tapis patinerait.
+     */
+    fun tapis(
+        x: Float,
+        y: Float,
+        longueur: Float = TAPIS_LONGUEUR,
+        sens: Float = 1f,
+        vitesse: Float = 2.4f
+    ): Piece {
+        val bande = PhysBody(longueur / 2f, 0.07f, 0f).apply {
+            this.x = x
+            this.y = y
+            friction = 1.4f
+            restitution = 0f
+            surfaceSpeed = if (sens < 0f) -vitesse else vitesse
+        }.marquer(Element.TAPIS)
+        return Piece(TypePiece.TAPIS, listOf(scelle(bande)), emptyList())
     }
 }

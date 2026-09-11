@@ -108,11 +108,18 @@ class Plateau(
     val pieces = ArrayList<Piece>()
 
     companion object {
-        /** Largeur du tableau, en metres. */
-        const val LARGEUR = 10f
+        /**
+         * Largeur du tableau, en metres.
+         *
+         * Seize et non plus dix : ce qu'on construit ici est un **terrain
+         * d'experimentation**, et dix metres se remplissaient en une machine. La vue
+         * n'essaie plus de tout montrer d'un coup — on s'y deplace a deux doigts — donc
+         * rien n'empeche plus le plateau d'etre large.
+         */
+        const val LARGEUR = 16f
 
         /** Hauteur utile du tableau, en metres. */
-        const val HAUTEUR = 7f
+        const val HAUTEUR = 10f
 
         /** Categorie du decor et des pieces scellees : le capteur les ignore. */
         const val DECOR = 1

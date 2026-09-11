@@ -28,7 +28,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private companion object {
         const val PREFS = "infernale"
         const val CLE_NIVEAU = "niveau"
-        const val CLE_MAX = "niveau_max"
         const val CLE_ETOILES = "etoiles_"
     }
 
@@ -58,11 +57,11 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private lateinit var ligneReglage: View
     private lateinit var libelleReglage: TextView
     private lateinit var curseur: SeekBar
+    private lateinit var boutonMiroir: TextView
     private lateinit var boutonLancer: TextView
     private lateinit var prefs: SharedPreferences
 
     private var niveau = 1
-    private var niveauMax = 1
     private var gagneAnnonce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +72,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
 
         prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
         niveau = prefs.getInt(CLE_NIVEAU, 1)
-        niveauMax = prefs.getInt(CLE_MAX, 1)
 
         vue = findViewById(R.id.infernale_view)
         etat = findViewById(R.id.infernale_status)
@@ -82,10 +80,17 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         ligneReglage = findViewById(R.id.infernale_slope_row)
         libelleReglage = findViewById(R.id.infernale_slope_label)
         curseur = findViewById(R.id.infernale_slope)
+        boutonMiroir = findViewById(R.id.infernale_btn_mirror)
         boutonLancer = findViewById(R.id.infernale_btn_launch)
         vue.listener = this
 
         findViewById<ImageButton>(R.id.infernale_btn_back).setOnClickListener { finish() }
+        findViewById<TextView>(R.id.infernale_btn_frame).setOnClickListener { vue.recadrer() }
+        boutonMiroir.setOnClickListener {
+            val type = typeEnMain() ?: return@setOnClickListener
+            vue.basculerMiroir(type)
+            rafraichir()
+        }
         findViewById<TextView>(R.id.infernale_btn_prev).setOnClickListener { allerAu(niveau - 1) }
         findViewById<TextView>(R.id.infernale_btn_next).setOnClickListener { allerAu(niveau + 1) }
         findViewById<TextView>(R.id.infernale_btn_clear).setOnClickListener {
@@ -129,10 +134,12 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     // ── Niveaux ──────────────────────────────────────────────────────────────
 
     private fun allerAu(n: Int) {
-        // On ne saute pas devant : un niveau se debloque en gagnant le precedent, sinon
-        // la progression ne veut rien dire et le joueur tombe sur une chaine a cinq
-        // maillons avant d'avoir compris a quoi sert une bascule.
-        val vise = n.coerceIn(1, niveauMax)
+        // **Aucun verrou.** Les tableaux etaient deverrouilles un a un en gagnant le
+        // precedent, ce qui a du sens dans un jeu a progression. Ce qu'on fait ici est un
+        // terrain d'experimentation : y interdire un tableau parce qu'on n'a pas fini le
+        // precedent n'apporte rien et empeche d'aller chercher la configuration qu'on
+        // voulait essayer.
+        val vise = n.coerceAtLeast(1)
         if (vise == niveau) return
         niveau = vise
         prefs.edit { putInt(CLE_NIVEAU, niveau) }
@@ -162,7 +169,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private fun lancerOuSuivant() {
         val partie = vue.partieCourante() ?: return
         if (partie.gagne) {
-            if (niveau < niveauMax) allerAu(niveau + 1) else charger(niveau)
+            allerAu(niveau + 1)
             return
         }
         vue.surPartie { it.lancer() }
@@ -196,11 +203,6 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
             val gain = NeutrinoRewards.infernale(etoiles) - NeutrinoRewards.infernale(avant)
             if (gain > 0) NeutrinoRepository(this).addBalance(gain)
         }
-        if (niveau >= niveauMax) {
-            niveauMax = niveau + 1
-            prefs.edit { putInt(CLE_MAX, niveauMax) }
-        }
-
         etat.setTextColor(0xFF55E08A.toInt())
         etat.text = getString(
             R.string.infernale_won,
@@ -282,6 +284,8 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.VENTILATEUR -> R.string.infernale_piece_fan
         TypePiece.TAMBOUR -> R.string.infernale_piece_drum
         TypePiece.POULIE -> R.string.infernale_piece_pulley
+        TypePiece.BILLE -> R.string.infernale_piece_ball
+        TypePiece.TAPIS -> R.string.infernale_piece_belt
     }
 
     private fun role(type: TypePiece): Int = when (type) {
@@ -294,36 +298,55 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.VENTILATEUR -> R.string.infernale_role_fan
         TypePiece.TAMBOUR -> R.string.infernale_role_drum
         TypePiece.POULIE -> R.string.infernale_role_pulley
+        TypePiece.BILLE -> R.string.infernale_role_ball
+        TypePiece.TAPIS -> R.string.infernale_role_belt
     }
 
+    /**
+     * Le curseur regle **la quantite**, le bouton miroir regle **le cote**.
+     *
+     * La pente d'une rampe se donnait de -40 a +40 degres, le signe decidant du sens ; le
+     * tremplin, lui, detournait ce meme curseur pour coder un cote de charniere a deux
+     * positions, et la poulie n'avait aucun moyen d'etre retournee. Une regle unique pour
+     * les onze pieces vaut mieux que trois conventions : le curseur ne dit plus que
+     * l'ampleur, et il n'y a plus qu'un geste a apprendre pour retourner quoi que ce soit.
+     */
     private fun reglagePour(type: TypePiece): Reglage? = when (type) {
-        // Pente d'une rampe : positive, elle descend vers la droite.
-        TypePiece.RAMPE -> Reglage(min = -40, pas = 2, crans = 40, libelle = R.string.infernale_slope)
-        // Direction du jet, dans le sens trigonometrique.
+        TypePiece.RAMPE -> Reglage(min = 5, pas = 2, crans = 20, libelle = R.string.infernale_slope)
         TypePiece.VENTILATEUR -> Reglage(min = 0, pas = 15, crans = 23, libelle = R.string.infernale_blow)
-        // Cote de la charniere : -1 a droite, +1 a gauche.
-        TypePiece.TREMPLIN -> Reglage(min = -1, pas = 2, crans = 1, libelle = R.string.infernale_hinge)
         else -> null
     }
 
     private fun majReglage() {
         val type = typeEnMain()
         val reglage = type?.let { reglagePour(it) }
-        if (type == null || reglage == null) {
+        val miroitable = type?.miroitable == true
+        if (type == null || (reglage == null && !miroitable)) {
             ligneReglage.visibility = View.GONE
             return
         }
         ligneReglage.visibility = View.VISIBLE
-        val valeur = vue.reglage(type)
-        curseur.max = reglage.crans
-        curseur.progress = reglage.progres(valeur)
-        libelleReglage.text = when (type) {
-            TypePiece.TREMPLIN -> getString(
-                reglage.libelle,
-                getString(if (valeur < 0f) R.string.infernale_hinge_right else R.string.infernale_hinge_left)
-            )
-            else -> getString(reglage.libelle, valeur.toInt())
+
+        val avecCurseur = reglage != null
+        curseur.visibility = if (avecCurseur) View.VISIBLE else View.GONE
+        if (reglage != null) {
+            val valeur = vue.reglage(type)
+            curseur.max = reglage.crans
+            curseur.progress = reglage.progres(valeur)
+            libelleReglage.text = getString(reglage.libelle, valeur.toInt())
+        } else {
+            libelleReglage.text = getString(nom(type))
         }
+
+        boutonMiroir.visibility = if (miroitable) View.VISIBLE else View.GONE
+        // Le bouton dit l'etat, pas seulement l'action : une piece retournee doit se voir
+        // dans la barre, sinon on la retourne deux fois sans s'en apercevoir.
+        boutonMiroir.setTextColor(
+            if (miroitable && vue.miroir(type)) 0xFF0B1020.toInt() else 0xFFCBD5E1.toInt()
+        )
+        boutonMiroir.setBackgroundColor(
+            if (miroitable && vue.miroir(type)) 0xFF9BC2FF.toInt() else 0xFF1B2540.toInt()
+        )
     }
 
     /**

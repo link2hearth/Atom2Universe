@@ -18,11 +18,21 @@ data class Pose(
     val x: Float,
     val y: Float,
     /**
-     * Reglage libre, dont le sens depend du type : la pente d'une rampe en degres, la
-     * direction du jet d'un ventilateur en degres, le cote de la charniere d'un tremplin
-     * (negatif = miroir).
+     * Reglage libre, dont le sens depend du type : la **pente** d'une rampe en degres, la
+     * **direction** du jet d'un ventilateur. Les pieces sans reglage l'ignorent.
      */
     val reglage: Float = 0f,
+    /**
+     * La piece est-elle retournee ?
+     *
+     * Un reglage separe et pas un signe glisse dans [reglage], parce que ce sont deux
+     * questions distinctes : « de combien » et « de quel cote ». Les melanger obligeait le
+     * tremplin a detourner la pente pour y coder son cote de charniere, et laissait la
+     * poulie sans aucun moyen d'etre retournee. Avec deux champs, la regle se dit en une
+     * phrase — **le curseur regle la quantite, le miroir regle le cote** — et elle vaut
+     * pour toutes les pieces.
+     */
+    val miroir: Boolean = false,
     /**
      * Cote principale de la piece — sa longueur, son rayon, son cote. Zero prend celle
      * par defaut.
@@ -36,27 +46,48 @@ data class Pose(
      */
     val taille: Float = 0f
 ) {
+    /** -1 quand la piece est retournee, +1 sinon. */
+    private val cote: Float get() = if (miroir) -1f else 1f
+
     fun creer(): Piece = when (type) {
-        TypePiece.RAMPE -> Pieces.rampe(x, y, pente = reglage, longueur = cote(Pieces.RAMPE_LONGUEUR))
-        TypePiece.PLOT -> Pieces.plot(x, y, rayon = cote(Pieces.PLOT_RAYON))
-        TypePiece.BLOC -> Pieces.bloc(x, y, largeur = cote(Pieces.BLOC_COTE), hauteur = cote(Pieces.BLOC_COTE))
-        TypePiece.DOMINO -> Pieces.domino(x, y, hauteur = cote(Pieces.DOMINO_HAUTEUR))
-        TypePiece.BASCULE -> Pieces.bascule(x, y, longueur = cote(Pieces.BASCULE_LONGUEUR))
+        TypePiece.RAMPE -> Pieces.rampe(
+            x, y,
+            pente = reglage * cote,
+            longueur = taille(Pieces.RAMPE_LONGUEUR)
+        )
+        TypePiece.PLOT -> Pieces.plot(x, y, rayon = taille(Pieces.PLOT_RAYON))
+        TypePiece.BLOC -> Pieces.bloc(
+            x, y,
+            largeur = taille(Pieces.BLOC_COTE),
+            hauteur = taille(Pieces.BLOC_COTE)
+        )
+        TypePiece.DOMINO -> Pieces.domino(x, y, hauteur = taille(Pieces.DOMINO_HAUTEUR))
+        TypePiece.BASCULE -> Pieces.bascule(x, y, longueur = taille(Pieces.BASCULE_LONGUEUR))
         TypePiece.TREMPLIN -> Pieces.tremplin(
             x, y,
-            longueur = cote(Pieces.TREMPLIN_LONGUEUR),
-            sens = if (reglage < 0f) -1f else 1f
+            longueur = taille(Pieces.TREMPLIN_LONGUEUR),
+            sens = cote
         )
         TypePiece.VENTILATEUR -> Pieces.ventilateur(
             x, y,
-            direction = reglage,
-            cote = cote(Pieces.VENTILATEUR_COTE)
+            direction = if (miroir) 180f - reglage else reglage,
+            cote = taille(Pieces.VENTILATEUR_COTE)
         )
-        TypePiece.TAMBOUR -> Pieces.tambour(x, y, largeur = cote(Pieces.TAMBOUR_LARGEUR))
-        TypePiece.POULIE -> Pieces.poulie(x, y, hauteur = cote(Pieces.POULIE_HAUTEUR))
+        TypePiece.TAMBOUR -> Pieces.tambour(x, y, largeur = taille(Pieces.TAMBOUR_LARGEUR))
+        TypePiece.POULIE -> Pieces.poulie(
+            x, y,
+            hauteur = taille(Pieces.POULIE_HAUTEUR),
+            sens = cote
+        )
+        TypePiece.BILLE -> Pieces.bille(x, y, rayon = taille(Pieces.BILLE_RAYON))
+        TypePiece.TAPIS -> Pieces.tapis(
+            x, y,
+            longueur = taille(Pieces.TAPIS_LONGUEUR),
+            sens = cote
+        )
     }
 
-    private fun cote(defaut: Float): Float = if (taille > 0f) taille else defaut
+    private fun taille(defaut: Float): Float = if (taille > 0f) taille else defaut
 }
 
 /**
@@ -81,11 +112,10 @@ object Placement {
         dansLeCadre(piece, -largeur / 2f, largeur / 2f, hauteur)
 
     /**
-     * Vrai si la piece tient entierement dans le cadre de jeu.
+     * Vrai si la piece tient entierement dans la zone constructible.
      *
-     * Le cadre est ce que le joueur voit. Une piece qui en sort serait invisible donc
-     * impossible a reprendre : le refus est ici la seule facon de ne jamais mettre le
-     * joueur dans une impasse dont il ne comprendrait pas la cause.
+     * C'est le plateau entier, pas ce que la camera montre : on se deplace a deux doigts,
+     * donc rien n'oblige a batir dans la fenetre de depart.
      */
     fun dansLeCadre(piece: Piece, minX: Float, maxX: Float, maxY: Float): Boolean {
         for (c in piece.corps) c.updateAabb()
@@ -157,19 +187,21 @@ object Panoplie {
 
     /** L'inventaire, identique pour tous les tableaux. */
     val COMPLET: Map<TypePiece, Int> = mapOf(
-        // Huit rampes : de quoi batir un toboggan d'un bout a l'autre du tableau. C'est la
-        // seule cote qui ait ete calculee, parce que c'est la piece a tout faire — scellee,
-        // donc elle tient en l'air ou l'on veut, et le bouton est toujours plus bas que la
-        // bille.
-        TypePiece.RAMPE to 8,
-        TypePiece.PLOT to 4,
-        TypePiece.BLOC to 4,
-        TypePiece.DOMINO to 10,
-        TypePiece.BASCULE to 2,
-        TypePiece.TREMPLIN to 2,
-        TypePiece.VENTILATEUR to 3,
-        TypePiece.TAMBOUR to 2,
-        TypePiece.POULIE to 1
+        // Douze rampes : de quoi batir un toboggan d'un bout a l'autre des seize metres du
+        // plateau. C'est la seule cote qui ait ete calculee, parce que c'est la piece a
+        // tout faire — scellee, donc elle tient en l'air ou l'on veut, et le bouton est
+        // toujours plus bas que la bille.
+        TypePiece.RAMPE to 12,
+        TypePiece.PLOT to 6,
+        TypePiece.BLOC to 6,
+        TypePiece.DOMINO to 14,
+        TypePiece.BASCULE to 3,
+        TypePiece.TREMPLIN to 3,
+        TypePiece.VENTILATEUR to 4,
+        TypePiece.TAMBOUR to 3,
+        TypePiece.POULIE to 2,
+        TypePiece.BILLE to 3,
+        TypePiece.TAPIS to 3
     )
 }
 
@@ -211,53 +243,54 @@ class Tableau(
     val par: Int = (ceil(hypot(boutonX - billeX, billeY - boutonBas) / 1.5f).toInt() + 1)
         .coerceIn(3, 10)
 
-    // ── Le cadre de jeu ──────────────────────────────────────────────────────
+    // ── Ou l'on batit, et ce qu'on voit en arrivant ──────────────────────────
     //
-    // Le plateau fait dix metres de large, mais un tableau n'en occupe qu'une partie.
-    // Montrer les dix metres sur un telephone rend la bille grosse comme une tete
-    // d'epingle ; en montrer sept rend le jeu lisible.
+    // **Ce sont deux choses differentes, et les confondre a coute cher.** Elles n'en
+    // faisaient qu'une : un cadre calcule autour de la bille et du bouton, qui servait a la
+    // fois de fenetre d'affichage et de limite de construction. Tant que la vue montrait
+    // tout d'un coup, c'etait defendable. Des lors qu'on peut zoomer et se deplacer a deux
+    // doigts, ca ne l'est plus : brider la construction a ce que la camera montrait au
+    // depart reviendrait a offrir un terrain de seize metres et a en interdire onze.
     //
-    // **Et c'est aussi la limite de construction.** Le joueur ne peut poser une piece que
-    // dans ce qu'il voit : une piece posee hors cadre serait invisible, donc impossible a
-    // reprendre, et le tableau paraitrait casse. Une seule zone pour les deux usages, c'est
-    // une incoherence de moins a inventer.
+    // On batit donc **partout sur le plateau**, et la camera se contente de s'ouvrir sur ce
+    // qui compte.
 
-    /** Bord gauche du cadre, en metres. */
-    val cadreMinX: Float
+    /** Bord gauche de la zone constructible. */
+    val cadreMinX: Float get() = -Plateau.LARGEUR / 2f
 
-    /** Bord droit du cadre. */
-    val cadreMaxX: Float
+    /** Bord droit de la zone constructible. */
+    val cadreMaxX: Float get() = Plateau.LARGEUR / 2f
 
-    /** Plafond du cadre. Le plancher est toujours le sol. */
-    val cadreMaxY: Float
+    /** Plafond de la zone constructible. */
+    val cadreMaxY: Float get() = Plateau.HAUTEUR
+
+    /** Bord gauche de la vue au chargement. */
+    val vueMinX: Float
+
+    /** Bord droit de la vue au chargement. */
+    val vueMaxX: Float
+
+    /** Plafond de la vue au chargement. */
+    val vueMaxY: Float
 
     init {
-        var lo = minOf(billeX, boutonX) - MARGE_CADRE
-        var hi = maxOf(billeX, boutonX) + MARGE_CADRE
+        var lo = minOf(billeX, boutonX) - MARGE_VUE
+        var hi = maxOf(billeX, boutonX) + MARGE_VUE
         if (hi - lo < LARGEUR_MINI) {
             val centre = (lo + hi) / 2f
             lo = centre - LARGEUR_MINI / 2f
             hi = centre + LARGEUR_MINI / 2f
         }
-        val limite = Plateau.LARGEUR / 2f
-        if (lo < -limite) {
-            hi += -limite - lo
-            lo = -limite
-        }
-        if (hi > limite) {
-            lo -= hi - limite
-            hi = limite
-        }
-        cadreMinX = lo.coerceAtLeast(-limite)
-        cadreMaxX = hi.coerceAtMost(limite)
-        // De la place au-dessus de la bille : c'est la qu'on pose le premier aiguillage,
-        // et un cadre qui s'arreterait a la bille interdirait de la devier des le depart.
-        cadreMaxY = (billeY + 1.2f).coerceIn(3f, 6.8f)
+        vueMinX = lo.coerceAtLeast(cadreMinX)
+        vueMaxX = hi.coerceAtMost(cadreMaxX)
+        // De la place au-dessus de la bille : c'est la qu'on pose le premier aiguillage, et
+        // une vue qui s'arreterait a la bille obligerait a dezoomer avant le premier geste.
+        vueMaxY = (billeY + 1.4f).coerceIn(3f, cadreMaxY)
     }
 
     private companion object {
-        const val MARGE_CADRE = 1.6f
-        const val LARGEUR_MINI = 6.5f
+        const val MARGE_VUE = 1.8f
+        const val LARGEUR_MINI = 7f
     }
 }
 
@@ -288,10 +321,10 @@ class Tableau(
 object Tableaux {
 
     /** Ecart horizontal minimal entre la bille et le bouton. */
-    private const val ECART_MIN = 2.6f
+    private const val ECART_MIN = 3.4f
 
     /** Ecart horizontal maximal. */
-    private const val ECART_MAX = 7f
+    private const val ECART_MAX = 9f
 
     /** De combien le bouton est au moins plus bas que la bille : on ne demande pas de monter. */
     private const val DENIVELE_MIN = 1.3f
@@ -312,11 +345,11 @@ object Tableaux {
         val avance = ((niveau - 1) / 9f).coerceAtMost(1f)
         return generer(
             graine = niveau.toLong() * 7919L,
-            ecartMin = ECART_MIN + avance * 2.2f,
+            ecartMin = ECART_MIN + avance * 3.4f,
             // Un socle une fois sur deux a partir du niveau quatre, jamais avant : le
             // premier tableau doit s'expliquer tout seul.
             socle = niveau >= 4 && niveau % 2 == 0,
-            hauteurSocle = 0.8f + avance * 1.4f
+            hauteurSocle = 1f + avance * 2f
         )
     }
 
@@ -335,8 +368,8 @@ object Tableaux {
         // se lisent de gauche a droite et se ressemblent au premier coup d'oeil.
         val sens = if (hasard.nextBoolean()) 1f else -1f
 
-        val ecart = (ecartMin + hasard.nextFloat() * 1.6f).coerceAtMost(ECART_MAX)
-        val billeY = 4.1f + hasard.nextFloat() * 1f
+        val ecart = (ecartMin + hasard.nextFloat() * 2f).coerceAtMost(ECART_MAX)
+        val billeY = 4.8f + hasard.nextFloat() * 1.4f
 
         // Le socle ne monte jamais assez haut pour approcher la bille : sinon on demanderait
         // de la faire monter, ce que la panoplie ne sait faire que sur soixante-dix

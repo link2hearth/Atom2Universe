@@ -60,13 +60,14 @@ class InfernalePartieTest {
     fun `on ne pose pas plus que ce qu on a`() {
         val p = essai()
         val stock = p.stock(TypePiece.DOMINO)
-        // On les pose tous, bien ecartes pour qu'aucun ne gene l'autre.
+        // On les pose tous en file, a droite du bouton : assez ecartes pour qu'aucun ne
+        // gene l'autre, et loin de la bille comme de la zone du bouton.
         repeat(stock) {
-            assertEquals("pose $it refusee", Refus.OK, p.poser(domino(x = -4f + it * 0.5f)))
+            assertEquals("pose $it refusee", Refus.OK, p.poser(domino(x = 3.2f + it * 0.3f)))
         }
         assertEquals("il devrait etre en rupture", 0, p.stock(TypePiece.DOMINO))
         assertEquals("on a pu poser un domino de trop", Refus.PLUS_EN_STOCK,
-            p.poser(domino(x = 1.5f)))
+            p.poser(domino(x = -1f)))
     }
 
     @Test

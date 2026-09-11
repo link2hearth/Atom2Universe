@@ -182,6 +182,94 @@ class InfernalePiecesTest {
         assertTrue("la poulie n'a pas declenche le bouton", monde.gagne)
     }
 
+    // ── Le tapis et la bille du joueur ───────────────────────────────────────
+
+    @Test
+    fun `le tapis entraine ce qui roule dessus`() {
+        // Un tapis ne « donne » pas une vitesse : il demande aux deux surfaces une vitesse
+        // relative, que le solveur fournit dans la limite du frottement. Ce qui se mesure,
+        // c'est donc que la bille parte — et qu'elle parte du bon cote.
+        fun essai(miroir: Boolean): Float {
+            val monde = Plateau()
+            monde.poser(Pose(TypePiece.TAPIS, x = 0f, y = 0.5f, taille = 3f, miroir = miroir).creer())
+            monde.poserBille(x = -0.6f, y = 0.85f)
+            repeat(180) { monde.avancer(PAS) }
+            return monde.bille!!.x
+        }
+        val droite = essai(miroir = false)
+        val gauche = essai(miroir = true)
+        assertTrue("le tapis n'entraine pas vers la droite : $droite", droite > 0.2f)
+        assertTrue("le miroir n'inverse pas le tapis : $gauche", gauche < -1f)
+    }
+
+    @Test
+    fun `la bille du joueur est en tout point celle du tableau`() {
+        // Une bille de joueur qui se comporterait autrement serait un piege : le joueur
+        // passerait son temps a se demander laquelle il regarde.
+        val piece = Pose(TypePiece.BILLE, x = 0f, y = 1f).creer()
+        val posee = piece.principal
+        val reference = Plateau().poserBille(0f, 1f)
+        assertEquals("le rayon differe", reference.radius, posee.radius, 1e-4f)
+        assertEquals("la masse differe", reference.mass, posee.mass, 1e-4f)
+        assertEquals("le rebond differe", reference.restitution, posee.restitution, 1e-4f)
+        assertTrue("la bille du joueur est scellee", !posee.immovable)
+        assertEquals("la bille ne repose pas sur le point vise", 1f, posee.y - posee.radius, 1e-4f)
+    }
+
+    // ── Le miroir ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `le miroir retourne la rampe et le tapis`() {
+        val pente = Pose(TypePiece.RAMPE, x = 0f, y = 1f, reglage = 25f)
+        assertEquals(
+            "le miroir n'inverse pas la pente",
+            -pente.creer().principal.angle, pente.copy(miroir = true).creer().principal.angle,
+            1e-4f
+        )
+        val tapis = Pose(TypePiece.TAPIS, x = 0f, y = 1f)
+        assertEquals(
+            "le miroir n'inverse pas la bande",
+            -tapis.creer().principal.surfaceSpeed,
+            tapis.copy(miroir = true).creer().principal.surfaceSpeed,
+            1e-4f
+        )
+    }
+
+    @Test
+    fun `le miroir echange les deux plateaux de la poulie`() {
+        // Le godet a gauche et le contrepoids a droite, ou l'inverse. C'est la seule chose
+        // que le miroir doive faire sur cette piece, et elle ne doit rien casser d'autre :
+        // la meme machine, vue dans un miroir, gagne toujours.
+        val droite = Pose(TypePiece.POULIE, x = 0f, y = 0.2f)
+        val gauche = droite.copy(miroir = true)
+        assertTrue("le godet n'est pas passe a droite",
+            droite.creer().corps[1].x < 0f && gauche.creer().corps[1].x > 0f)
+        assertTrue("le contrepoids n'est pas passe a gauche",
+            droite.creer().corps[2].x > 0f && gauche.creer().corps[2].x < 0f)
+
+        val monde = Plateau()
+        monde.poser(gauche.creer())
+        monde.poserBouton(x = -Pieces.POULIE_ECART, bas = Pieces.poulieContrepoidsHaut(0.2f) - 0.02f)
+        monde.poserBille(x = Pieces.POULIE_ECART, y = Pieces.poulieGodetHaut(0.2f) + 0.25f)
+        monde.derouler(10f)
+        assertTrue("la poulie retournee ne fonctionne plus", monde.gagne)
+    }
+
+    @Test
+    fun `seules les pieces qui ont un cote sont miroitables`() {
+        // Proposer le bouton sur une bascule ou un tambour mentirait sur ce qu'il fait :
+        // les retourner ne change rien.
+        // On compare **tous** les corps, pas seulement le principal. Le mat d'une poulie
+        // est au milieu : il ne bouge pas au retournement, et regarder lui seul concluait
+        // que la poulie n'avait pas de cote.
+        for (type in TypePiece.entries) {
+            fun pose(miroir: Boolean) = Pose(type, x = 0f, y = 1.2f, reglage = 20f, miroir = miroir)
+                .creer().corps.map { listOf(it.x, it.y, it.angle, it.surfaceSpeed) }
+            val change = pose(false) != pose(true)
+            assertEquals("le type $type annonce mal son cote", type.miroitable, change)
+        }
+    }
+
     // ── Toutes ───────────────────────────────────────────────────────────────
 
     @Test

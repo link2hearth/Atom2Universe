@@ -60,6 +60,7 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
     private val corde = Paint().apply {
         color = 0xFFCBA76A.toInt(); strokeWidth = 2.5f; isAntiAlias = true
     }
+    private val fondClair = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
     private val texte = Paint().apply {
         isAntiAlias = true; textAlign = Paint.Align.CENTER; isFakeBoldText = true
     }
@@ -179,6 +180,21 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
                 c.drawRect(cx - u * 1.5f, cy + u * 0.1f, cx - u * 0.7f, cy + u * 0.6f, boisSombre)
                 // Le contrepoids, en bas a droite : c'est lui qui pese.
                 c.drawRect(cx + u * 0.8f, cy + u * 0.9f, cx + u * 1.4f, cy + u * 1.4f, fer)
+            }
+
+            TypePiece.BILLE -> {
+                c.drawCircle(cx, cy, u * 0.95f, ivoire)
+                c.drawCircle(cx - u * 0.3f, cy - u * 0.32f, u * 0.3f, fondClair)
+            }
+
+            TypePiece.TAPIS -> {
+                c.drawRect(cx - u * 1.4f, cy - u * 0.3f, cx + u * 1.4f, cy + u * 0.3f, fer)
+                c.drawCircle(cx - u * 1.4f, cy, u * 0.3f, ferClair)
+                c.drawCircle(cx + u * 1.4f, cy, u * 0.3f, ferClair)
+                for (k in -1..1) {
+                    val x = cx + k * u * 0.7f
+                    c.drawLine(x - u * 0.2f, cy + u * 0.18f, x + u * 0.2f, cy - u * 0.18f, souffle)
+                }
             }
         }
     }
