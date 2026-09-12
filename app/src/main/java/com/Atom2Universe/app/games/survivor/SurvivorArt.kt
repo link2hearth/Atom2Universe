@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.survivor
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LightingColorFilter
 import android.graphics.Paint
 import android.graphics.Path
 import kotlin.math.*
@@ -14,6 +15,13 @@ internal class SurvivorArt {
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
     }
+    // Filtres réutilisés : saisons de mousse, givre, ambre et crépuscule.
+    private val waveTints = arrayOf(
+        LightingColorFilter(0xFFFFFFFF.toInt(), 0),
+        LightingColorFilter(0xFF9AC5EF.toInt(), 0x00101D28),
+        LightingColorFilter(0xFFEABB88.toInt(), 0x00201507),
+        LightingColorFilter(0xFFD09DDE.toInt(), 0x00160822)
+    )
     private val path = Path()
     private val ink = Color.rgb(12, 28, 36)
     private val mint = Color.rgb(132, 244, 207)
@@ -93,6 +101,8 @@ internal class SurvivorArt {
         val r = e.radius
         oval(c, x, y + r * 0.65f, r * 0.95f, r * 0.42f, 0x55081017)
         c.save(); c.translate(x, y); c.scale(r, r)
+        fill.colorFilter = waveTints[e.visualPalette]
+        line.colorFilter = waveTints[e.visualPalette]
         val t = time * (if (e.type == EnemyType.FAST) 13f else 6f) + e.visualSeed
         val gait = sin(t)
         // Les appendices sont décoratifs ; le corps plein épouse le disque de collision.
@@ -169,6 +179,9 @@ internal class SurvivorArt {
                 oval(c, 0f, 0.12f, 0.12f + charge * 0.1f, 0.12f + charge * 0.1f, 0xFFFFADD8.toInt())
             }
             EnemyType.MINI_BOSS -> {
+                if (e.visualVariant != 0) {
+                    drawBossVariant(c, e.visualVariant, t)
+                } else {
                 for (s in -1..1 step 2) {
                     stroke(c, s * 0.46f, 0.36f, s * 0.57f, 0.88f + gait * s * 0.07f, ink, 0.38f)
                     oval(c, s * 0.72f, 0.03f + gait * s * 0.08f, 0.33f, 0.51f, 0xFFA86154.toInt())
@@ -182,14 +195,135 @@ internal class SurvivorArt {
                 for (i in 0..2) stroke(c, -0.38f, i * 0.18f, 0.38f, i * 0.18f, ink, 0.055f)
                 oval(c, 0f, 0.16f, 0.17f, 0.25f, 0xFFFFB880.toInt())
             }
+                }
         }
+        if (e.type != EnemyType.MINI_BOSS && e.visualVariant == 1) drawVariantDetails(c, e.type, t)
         c.restore()
+        fill.colorFilter = null; line.colorFilter = null
         if (e.hpRatio < 0.99f) {
             stroke(c, x - r * 0.7f, y - r - 7f, x + r * 0.7f, y - r - 7f, ink, 3f)
             stroke(c, x - r * 0.7f, y - r - 7f, x - r * 0.7f + r * 1.4f * e.hpRatio, y - r - 7f, bone, 3f)
         }
     }
 
+    private fun drawVariantDetails(c: Canvas, type: EnemyType, t: Float) {
+        when (type) {
+            EnemyType.ZOMBIE -> {
+                // Rôdeur à spores : collerette et champignons sur le crâne.
+                for (i in -1..1) {
+                    val xx = i * 0.32f
+                    stroke(c, xx, -0.62f, xx + sin(t + i) * 0.04f, -0.92f, bone, 0.08f)
+                    oval(c, xx, -0.91f, 0.19f, 0.12f, 0xFFC48B66.toInt())
+                    oval(c, xx - 0.04f, -0.95f, 0.04f, 0.025f, bone)
+                }
+                oval(c, 0f, 0.35f, 0.37f, 0.25f, 0xFF667A47.toInt())
+                stroke(c, -0.2f, 0.3f, 0.18f, 0.42f, bone, 0.05f)
+            }
+            EnemyType.FAST -> {
+                // Scarabée tigré : trois bandes et une corne centrale.
+                for (i in 0..2) stroke(c, -0.38f, i * 0.28f - 0.22f,
+                    0.38f, i * 0.28f - 0.1f, 0xFFE8BF72.toInt(), 0.1f)
+                path.reset(); path.moveTo(-0.14f, -0.77f)
+                path.lineTo(0f, -1.11f); path.lineTo(0.14f, -0.77f); path.close()
+                fill.color = bone; c.drawPath(path, fill)
+            }
+            EnemyType.ERRATIC -> {
+                // Méduse couronnée : frange perlée, deux yeux au lieu du cyclope.
+                oval(c, 0f, -0.12f, 0.39f, 0.29f, 0xFF776A9F.toInt())
+                for (side in -1..1 step 2) {
+                    oval(c, side * 0.17f, -0.13f, 0.11f, 0.14f, ink)
+                    oval(c, side * 0.17f, -0.15f, 0.045f, 0.065f, bone)
+                }
+                for (i in -2..2) oval(c, i * 0.28f, -0.7f - cos(i.toFloat()) * 0.12f,
+                    0.075f, 0.09f + sin(t + i) * 0.02f, bone)
+            }
+            EnemyType.ORBITER -> {
+                // Astre mécanique : rivets et iris à trois branches.
+                for (i in 0..5) {
+                    val a = i * PI.toFloat() / 3f
+                    oval(c, cos(a) * 0.76f, sin(a) * 0.76f, 0.08f, 0.08f, ink)
+                }
+                oval(c, 0f, 0f, 0.28f, 0.28f, 0xFF78B3A2.toInt())
+                for (i in 0..2) {
+                    val a = i * PI.toFloat() * 2f / 3f + t * 0.06f
+                    stroke(c, 0f, 0f, cos(a) * 0.22f, sin(a) * 0.22f, ink, 0.07f)
+                }
+            }
+            EnemyType.SHOOTER -> {
+                // Amanite écarlate : chapeau à pois, bouche de tir toujours visible.
+                oval(c, 0f, -0.36f, 0.92f, 0.46f, 0xFFAE656A.toInt())
+                oval(c, -0.14f, -0.53f, 0.6f, 0.22f, 0xFFD58A85.toInt())
+                for (i in -2..2) oval(c, i * 0.3f, -0.38f - (i and 1) * 0.17f,
+                    0.085f, 0.055f, bone)
+                stroke(c, -0.5f, -0.05f, 0.5f, -0.05f, bone, 0.07f)
+            }
+            else -> Unit
+        }
+    }
+
+    private fun drawBossVariant(c: Canvas, variant: Int, t: Float) {
+        val gait = sin(t) * 0.07f
+        when (variant) {
+            1 -> {
+                // Roi scarabée : pinces articulées, élytres et corne d'ivoire.
+                for (side in -1..1 step 2) {
+                    val s = side.toFloat()
+                    for (i in 0..2) {
+                        val yy = i * 0.37f - 0.25f
+                        stroke(c, s * 0.5f, yy, s * 0.95f, yy + gait * s, 0xFF708F8D.toInt(), 0.15f)
+                        stroke(c, s * 0.95f, yy + gait * s, s * 0.83f, yy + 0.22f, bone, 0.07f)
+                    }
+                }
+                oval(c, 0f, 0.03f, 0.78f, 0.89f, 0xFF315B64.toInt())
+                for (side in -1..1 step 2) {
+                    oval(c, side * 0.32f, 0.16f, 0.34f, 0.65f, 0xFF5D9A9A.toInt())
+                    stroke(c, side * 0.18f, -0.15f, side * 0.42f, 0.56f, 0xFFB6CAB3.toInt(), 0.06f)
+                }
+                oval(c, 0f, -0.53f, 0.46f, 0.35f, ink)
+                for (side in -1..1 step 2) oval(c, side * 0.2f, -0.55f, 0.09f, 0.07f, 0xFFFFB778.toInt())
+                path.reset(); path.moveTo(-0.2f, -0.73f); path.lineTo(-0.08f, -1.08f)
+                path.lineTo(0.22f, -0.97f); path.lineTo(0.08f, -0.72f); path.close()
+                fill.color = bone; c.drawPath(path, fill)
+            }
+            2 -> {
+                // Matriarche abyssale : cloche massive, tentacules et couronne de perles.
+                for (i in -3..3) {
+                    val xx = i * 0.23f
+                    path.reset(); path.moveTo(xx, 0.18f)
+                    path.cubicTo(xx + sin(t + i) * 0.3f, 0.52f, xx - 0.15f, 0.86f,
+                        xx + sin(t * 0.8f + i) * 0.15f, 1.02f)
+                    line.color = 0xFFAD87B6.toInt(); line.strokeWidth = 0.13f; c.drawPath(path, line)
+                }
+                oval(c, 0f, -0.12f, 0.95f, 0.74f, 0xFF654E80.toInt())
+                oval(c, -0.13f, -0.34f, 0.72f, 0.42f, 0xFFAB89BD.toInt())
+                for (i in -2..2) oval(c, i * 0.3f, -0.72f - cos(i.toFloat()) * 0.12f, 0.1f, 0.14f, bone)
+                oval(c, 0f, -0.1f, 0.43f, 0.32f, ink)
+                oval(c, 0f, -0.1f, 0.25f, 0.23f, 0xFFEAB6C8.toInt())
+                oval(c, sin(t * 0.3f) * 0.07f, -0.1f, 0.08f, 0.19f, ink)
+            }
+            else -> {
+                // Golem fongique : poings de pierre, masque et champignons de couronne.
+                for (side in -1..1 step 2) {
+                    oval(c, side * 0.43f, 0.67f + gait * side, 0.28f, 0.29f, 0xFF546353.toInt())
+                    oval(c, side * 0.74f, 0.15f - gait * side, 0.29f, 0.46f, 0xFF839373.toInt())
+                }
+                oval(c, 0f, 0.04f, 0.73f, 0.85f, 0xFF677D60.toInt())
+                oval(c, -0.12f, -0.17f, 0.51f, 0.59f, 0xFFA2B38A.toInt())
+                for (i in -1..1) {
+                    stroke(c, i * 0.38f, -0.53f, i * 0.4f, -0.89f, bone, 0.12f)
+                    oval(c, i * 0.4f, -0.88f, 0.28f, 0.15f, 0xFFC28662.toInt())
+                    oval(c, i * 0.4f - 0.06f, -0.93f, 0.07f, 0.03f, bone)
+                }
+                for (side in -1..1 step 2) {
+                    oval(c, side * 0.22f, -0.25f, 0.14f, 0.11f, ink)
+                    oval(c, side * 0.22f, -0.25f, 0.06f, 0.06f, mint)
+                }
+                stroke(c, -0.2f, 0.07f, 0.16f, 0.12f, ink, 0.06f)
+                oval(c, 0f, 0.4f, 0.23f, 0.23f, 0xFF3B6857.toInt())
+                oval(c, 0f, 0.4f, 0.1f, 0.13f, mint)
+            }
+        }
+    }
     fun player(c: Canvas, x: Float, y: Float, radius: Float, time: Float, moving: Boolean) {
         oval(c, x, y + radius * 0.7f, radius, radius * 0.4f, 0x77081017)
         c.save(); c.translate(x, y); c.scale(radius, radius)

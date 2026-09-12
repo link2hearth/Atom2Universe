@@ -39,6 +39,7 @@ import com.Atom2Universe.app.games.trebuchet.TrebuchetActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
+import com.Atom2Universe.app.games.survivor.SurvivorHubTileDrawable
 import com.Atom2Universe.app.games.nuclea.NucleaActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
@@ -105,6 +106,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.survivor_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_survivor,
+            artworkClass = SurvivorHubTileDrawable::class,
             activityClass = SurvivorActivity::class.java
         ),
         // Nucléa (twin-stick de fusion)
