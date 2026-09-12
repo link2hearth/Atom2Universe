@@ -90,6 +90,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.hub_clicker_desc,
             iconRes = R.drawable.ic_clicker,
             defaultColorRes = R.color.audio_hub_tile_clicker,
+            artworkClass = com.Atom2Universe.app.crypto.ClickerHubTileDrawable::class,
             activityClass = MainClickerActivity::class.java
         ),
         // Quiz en 2ème

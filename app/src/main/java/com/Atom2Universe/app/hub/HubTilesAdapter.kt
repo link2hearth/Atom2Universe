@@ -222,6 +222,12 @@ class HubTilesAdapter(
         private val badge2: TextView? = itemView.findViewById(R.id.tile_quick_access_2)
         private val badge3: TextView? = itemView.findViewById(R.id.tile_quick_access_3)
         private val notificationBadge: TextView? = itemView.findViewById(R.id.tile_notification_badge)
+        // Taille et ombre d'origine, lues une fois : les vues sont recyclees, un titre agrandi ou
+        // assombri pour une tuile ne doit ni s'additionner, ni deteindre sur la tuile suivante.
+        private val titleBaseSize = title.textSize
+        private val titleBaseShadow = floatArrayOf(title.shadowRadius, title.shadowDx, title.shadowDy)
+        private val titleBaseShadowColor = title.shadowColor
+        private val badgeBaseSize = badge1?.textSize ?: 0f
 
         fun bind(tile: HubTile) {
             val bgColor = if (tile.customColorHex != null) {
@@ -262,8 +268,17 @@ class HubTilesAdapter(
                 }
             }
 
+            val textStyle = if (customArtwork != null)
+                tile.activityClass?.let { HubTileArtworks.textStyleFor(it.name) } else null
             title.setText(tile.titleRes)
-            title.setTextColor(textColor)
+            title.setTextColor(textStyle?.color ?: textColor)
+            title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, titleBaseSize * (textStyle?.scale ?: 1f))
+            if (textStyle != null) {
+                // Sous un texte sombre, l'ombre noire d'origine salit les lettres : un halo clair le detache.
+                title.setShadowLayer(4f, 0f, 1f, 0x99FFFFFF.toInt())
+            } else {
+                title.setShadowLayer(titleBaseShadow[0], titleBaseShadow[1], titleBaseShadow[2], titleBaseShadowColor)
+            }
 
             description?.setText(tile.descriptionRes)
             description?.setTextColor(subtitleColor)
@@ -322,7 +337,8 @@ class HubTilesAdapter(
                                 createArtwork(art.java)
                             }
                         }
-                        if (badgeArtwork != null) applyBadgeArtwork(badge, badgeArtwork)
+                        if (badgeArtwork != null) applyBadgeArtwork(badge, badgeArtwork,
+                            HubTileArtworks.textStyleFor(item.activityClassName))
                         else applyBadgeColor(badge, item.colorHex)
                     } else {
                         badge.visibility = View.GONE
@@ -342,14 +358,17 @@ class HubTilesAdapter(
             }
         }
 
-        private fun applyBadgeArtwork(badge: TextView, art: Drawable) {
+        private fun applyBadgeArtwork(badge: TextView, art: Drawable, style: HubTileArtworks.TextStyle?) {
             badge.background = art
             badge.backgroundTintList = null
             badge.outlineProvider = roundedBadgeOutline
             badge.clipToOutline = true
-            badge.setTextColor(Color.WHITE)
-            // Le titre est pose directement sur le dessin : une ombre le garde lisible.
-            badge.setShadowLayer(3f, 0f, 1f, 0xCC000000.toInt())
+            badge.setTextColor(style?.color ?: Color.WHITE)
+            badge.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, badgeBaseSize * (style?.scale ?: 1f))
+            // Le titre est pose directement sur le dessin : une ombre le garde lisible, claire sous
+            // un texte sombre, sombre sous un texte clair.
+            if (style != null) badge.setShadowLayer(4f, 0f, 1f, 0x99FFFFFF.toInt())
+            else badge.setShadowLayer(3f, 0f, 1f, 0xCC000000.toInt())
         }
 
         private fun applyBadgeColor(badge: TextView, colorHex: String?) {
@@ -358,6 +377,7 @@ class HubTilesAdapter(
             badge.outlineProvider = android.view.ViewOutlineProvider.BACKGROUND
             badge.clipToOutline = false
             badge.setShadowLayer(0f, 0f, 0f, 0)
+            badge.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, badgeBaseSize)
             if (colorHex != null) {
                 try {
                     val color = Color.parseColor(colorHex)
