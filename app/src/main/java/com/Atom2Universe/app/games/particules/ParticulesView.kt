@@ -223,6 +223,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private var ballR = 0f
 
     // ── Paints (reused, configured inline) ───────────────────────
+    private val art = ParticulesArt()
     private val pNebula  = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pOverlay = Paint().apply { color = 0xCC040810.toInt() }
     private val pBall    = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFFFFFFF.toInt() }
@@ -333,7 +334,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
         pNebula.shader = LinearGradient(
             0f, 0f, 0f, h,
-            intArrayOf(0xFF1E0F42.toInt(), 0xFF0A0820.toInt(), 0xFF1B0A45.toInt()),
+            intArrayOf(0xFF102639.toInt(), 0xFF060E1C.toInt(), 0xFF0C2431.toInt()),
             floatArrayOf(0f, 0.55f, 1f),
             Shader.TileMode.CLAMP
         )
@@ -1524,6 +1525,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         canvas.drawRect(0f, 0f, W, H, pNebula)
         drawNebulaPulse(canvas)
         drawStars(canvas)
+        art.arena(canvas, W, H, brickAreaTop)
 
         val saved = canvas.save()
         if (shakeAmount > 0f && state == State.PLAYING) {
@@ -1562,10 +1564,10 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         val y2 = H * (0.7f + 0.1f * sin(t.toDouble() * 0.8).toFloat())
         val r1 = W * 0.35f; val r2 = W * 0.3f
         pPath.shader = RadialGradient(x1, y1, r1,
-            0x33AA4FFF.toInt(), 0x00000000, Shader.TileMode.CLAMP)
+            0x163CCED6.toInt(), 0x00000000, Shader.TileMode.CLAMP)
         canvas.drawCircle(x1, y1, r1, pPath)
         pPath.shader = RadialGradient(x2, y2, r2,
-            0x33FF5FAA.toInt(), 0x00000000, Shader.TileMode.CLAMP)
+            0x125677BA.toInt(), 0x00000000, Shader.TileMode.CLAMP)
         canvas.drawCircle(x2, y2, r2, pPath)
         pPath.shader = null
     }
@@ -1651,146 +1653,23 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         canvas.drawRect(0f, H - h, W, H - h + 3f, pFloor)
     }
 
-    private fun drawBrickShape(canvas: Canvas, b: Brick, rect: RectF) {
-        when (b.shape) {
-            Shape.RECT -> canvas.drawRoundRect(rect, 5f, 5f, pBrick)
-            Shape.PILL -> canvas.drawRoundRect(rect, rect.height() / 2f, rect.height() / 2f, pBrick)
-            Shape.DIAMOND -> {
-                val cx = rect.centerX(); val cy = rect.centerY()
-                rect.width() / 2f; rect.height() / 2f
-                brickPath.rewind()
-                brickPath.moveTo(cx, rect.top)
-                brickPath.lineTo(rect.right, cy)
-                brickPath.lineTo(cx, rect.bottom)
-                brickPath.lineTo(rect.left, cy)
-                brickPath.close()
-                canvas.drawPath(brickPath, pBrick)
-            }
-            Shape.HEX -> {
-                rect.centerX(); val cy = rect.centerY()
-                rect.width() / 2f; rect.height() / 2f
-                val inset = rect.width() * 0.22f
-                brickPath.rewind()
-                brickPath.moveTo(rect.left + inset, rect.top)
-                brickPath.lineTo(rect.right - inset, rect.top)
-                brickPath.lineTo(rect.right, cy)
-                brickPath.lineTo(rect.right - inset, rect.bottom)
-                brickPath.lineTo(rect.left + inset, rect.bottom)
-                brickPath.lineTo(rect.left, cy)
-                brickPath.close()
-                canvas.drawPath(brickPath, pBrick)
-            }
-        }
-    }
-
-    private fun drawBrickBorder(canvas: Canvas, b: Brick, rect: RectF) {
-        when (b.shape) {
-            Shape.RECT -> canvas.drawRoundRect(rect, 5f, 5f, pCrack)
-            Shape.PILL -> canvas.drawRoundRect(rect, rect.height() / 2f, rect.height() / 2f, pCrack)
-            else -> canvas.drawPath(brickPath, pCrack)
-        }
-    }
-
     private fun drawBricks(canvas: Canvas) {
         for (b in bricks) {
             if (b.hits <= 0) continue
-            val t = 1f - b.hits.toFloat() / b.maxHits
-            val shakeDx = if (b.shake > 0f) (Random.nextFloat() - 0.5f) * b.shake * 4f else 0f
-            val base = blendColor(b.baseColor, 0xFF2A2A3A.toInt(), t * 0.55f)
-            val flashed = blendColor(base, 0xFFFFFFFF.toInt(), b.flash * 0.6f)
-            pBrick.color = flashed
-
-            tmpBrickRect.set(b.rect.left + shakeDx, b.rect.top, b.rect.right + shakeDx, b.rect.bottom)
-            val rect = tmpBrickRect
-
-            val glowColor = when (b.type) {
-                BType.EXPLOSIVE -> 0x55FF5522.toInt()
-                BType.BONUS     -> 0x55FFD700.toInt()
-                BType.REGEN     -> 0x4422DDAA.toInt()
-                BType.ICE       -> 0x4488E5FF.toInt()
-                BType.INDESTRUCTIBLE -> 0x33000000.toInt()
-                else -> 0
+            val tint = when (b.type) {
+                BType.SIMPLE -> blendColor(b.baseColor, 0xFF57DEDF.toInt(), .35f)
+                BType.RESISTANT -> 0xFFB6A3FF.toInt()
+                BType.BONUS -> 0xFFFFD166.toInt()
+                BType.EXPLOSIVE -> 0xFFFF795A.toInt()
+                BType.INDESTRUCTIBLE -> 0xFF92A6BB.toInt()
+                BType.REGEN -> 0xFF64E9AE.toInt()
+                BType.ICE -> 0xFFA4E9FF.toInt()
             }
-            if (glowColor != 0) {
-                pBrickGlow.color = glowColor
-                when (b.shape) {
-                    Shape.RECT, Shape.PILL -> canvas.drawRoundRect(
-                        rect.left - 3f, rect.top - 3f, rect.right + 3f, rect.bottom + 3f,
-                        if (b.shape == Shape.PILL) rect.height() / 2f else 7f,
-                        if (b.shape == Shape.PILL) rect.height() / 2f else 7f,
-                        pBrickGlow
-                    )
-                    else -> canvas.drawRoundRect(
-                        rect.left - 3f, rect.top - 3f, rect.right + 3f, rect.bottom + 3f, 7f, 7f, pBrickGlow
-                    )
-                }
-            }
-
-            drawBrickShape(canvas, b, rect)
-
-            when (b.type) {
-                BType.EXPLOSIVE -> {
-                    pCrack.color = 0xCCFFFFFF.toInt(); pCrack.strokeWidth = 2f
-                    val cx = rect.centerX(); val cy = rect.centerY()
-                    val r1 = minOf(rect.width(), rect.height()) * 0.18f
-                    canvas.drawCircle(cx, cy, r1, pCrack)
-                    pCrack.strokeWidth = 1f
-                    canvas.drawLine(cx - r1 * 1.8f, cy, cx + r1 * 1.8f, cy, pCrack)
-                    canvas.drawLine(cx, cy - r1 * 1.8f, cx, cy + r1 * 1.8f, pCrack)
-                }
-                BType.INDESTRUCTIBLE -> {
-                    pCrack.color = 0xFF9999AA.toInt(); pCrack.strokeWidth = 1.2f
-                    val step = rect.width() / 4f
-                    for (i in 1..3) canvas.drawLine(
-                        rect.left + step * i, rect.top + 3f,
-                        rect.left + step * i, rect.bottom - 3f, pCrack
-                    )
-                }
-                BType.BONUS -> {
-                    pCrack.color = 0xFFFFF6A0.toInt(); pCrack.strokeWidth = 2f
-                    val cx = rect.centerX(); val cy = rect.centerY()
-                    val rr = minOf(rect.width(), rect.height()) * 0.22f
-                    canvas.drawCircle(cx, cy, rr, pCrack)
-                }
-                BType.REGEN -> {
-                    pCrack.color = 0xFFAAFFEE.toInt(); pCrack.strokeWidth = 1.8f
-                    val cx = rect.centerX(); val cy = rect.centerY()
-                    canvas.drawArc(cx - 8f, cy - 8f, cx + 8f, cy + 8f, 40f, 280f, false, pCrack)
-                }
-                BType.ICE -> {
-                    pCrack.color = 0xCCFFFFFF.toInt(); pCrack.strokeWidth = 1.2f
-                    val cx = rect.centerX(); val cy = rect.centerY()
-                    val r1 = minOf(rect.width(), rect.height()) * 0.28f
-                    for (i in 0..2) {
-                        val a = i * PI.toFloat() / 3f
-                        canvas.drawLine(cx - cos(a) * r1, cy - sin(a) * r1,
-                            cx + cos(a) * r1, cy + sin(a) * r1, pCrack)
-                    }
-                }
-                BType.RESISTANT -> {
-                    val damageCount = b.maxHits - b.hits
-                    if (damageCount > 0) {
-                        pCrack.color = 0x99000000.toInt()
-                        pCrack.strokeWidth = 1.6f
-                        val cx = rect.centerX(); val cy = rect.centerY()
-                        val wHalf = rect.width() * 0.30f
-                        val hHalf = rect.height() * 0.30f
-                        if (damageCount >= 1) canvas.drawLine(cx - wHalf, cy - hHalf, cx + wHalf, cy + hHalf, pCrack)
-                        if (damageCount >= 2) canvas.drawLine(cx - wHalf, cy + hHalf, cx + wHalf, cy - hHalf, pCrack)
-                        if (damageCount >= 3) canvas.drawLine(cx - wHalf * 1.1f, cy, cx + wHalf * 1.1f, cy, pCrack)
-                        if (damageCount >= 4) canvas.drawLine(cx, cy - hHalf * 1.1f, cx, cy + hHalf * 1.1f, pCrack)
-                        if (damageCount >= 5) canvas.drawLine(cx - wHalf * 0.6f, cy - hHalf, cx + wHalf * 0.2f, cy + hHalf * 0.4f, pCrack)
-                    }
-                }
-                else -> {}
-            }
-
-            pCrack.color = blendColor(0xAAFFFFFF.toInt(), 0x22FFFFFF.toInt(), t)
-            pCrack.strokeWidth = 1f
-            drawBrickBorder(canvas, b, rect)
+            val dx = if (b.shake > 0f) (Random.nextFloat() - .5f) * b.shake * 4f else 0f
+            tmpBrickRect.set(b.rect.left + dx, b.rect.top, b.rect.right + dx, b.rect.bottom)
+            art.brick(canvas, tmpBrickRect, b.shape, b.type, tint, b.hits, b.maxHits, b.flash)
         }
     }
-
     private fun drawShockwaves(canvas: Canvas) {
         for (sw in shockwaves) {
             pShock.color = sw.color
@@ -1811,19 +1690,10 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     private fun drawPowerUps(canvas: Canvas) {
         for (pu in powerUps) {
-            val color = puColors[pu.type] ?: 0xFFFFFFFF.toInt()
-            val wob = sin(pu.wob) * 2f
-            pBrickGlow.color = (color and 0x00FFFFFF) or 0x55000000.toInt()
-            canvas.drawRoundRect(pu.x - 26f + wob, pu.y - 26f, pu.x + 26f + wob, pu.y + 26f, 9f, 9f, pBrickGlow)
-            pBrick.color = color
-            canvas.drawRoundRect(pu.x - 22f + wob, pu.y - 22f, pu.x + 22f + wob, pu.y + 22f, 7f, 7f, pBrick)
-            pPuLabel.color = darken(color, 0.55f)
-            pPuLabel.isFakeBoldText = true
-            pPuLabel.textAlign = Paint.Align.CENTER
-            canvas.drawText(puLabels[pu.type] ?: "P", pu.x + wob, pu.y + pPuLabel.textSize * 0.38f, pPuLabel)
+            art.capsule(canvas, pu.x + sin(pu.wob) * 2f, pu.y, 22f,
+                pu.type, puColors[pu.type] ?: Color.WHITE)
         }
     }
-
     private fun drawLasers(canvas: Canvas) {
         for (l in lasers) {
             pLaser.alpha = 220
@@ -1845,12 +1715,13 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     private fun drawPaddle(canvas: Canvas) {
-        refreshPaddlePaint()
-        canvas.drawRoundRect(paddle, paddleH / 2, paddleH / 2, pPaddle)
-        pBall.color = 0x66FFFFFF
-        canvas.drawRoundRect(
-            RectF(paddle.left + 4f, paddle.top + 1f, paddle.right - 4f, paddle.top + paddleH * 0.45f),
-            paddleH / 3, paddleH / 3, pBall)
+        val tint = when {
+            timerLaser > 0L -> 0xFFFF78AE.toInt()
+            timerMagnet > 0L -> 0xFFD5A0FF.toInt()
+            timerExtend > 0L -> 0xFF8CF0AF.toInt()
+            else -> 0xFF66E5EF.toInt()
+        }
+        art.paddle(canvas, paddle, tint)
         if (timerMagnet > 0L) {
             pShock.color = 0xFFE255FF.toInt()
             pShock.alpha = ((sin(System.currentTimeMillis() / 160.0).toFloat() + 1f) * 60f).toInt().coerceIn(40, 160)
@@ -1907,26 +1778,34 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     private fun drawTimerBadges(canvas: Canvas) {
-        var x = 14f; val y = H * 0.93f; val bh = H * 0.034f; val bw = bh * 2.6f
-        pPuLabel.textSize = bh * 0.65f; pPuLabel.textAlign = Paint.Align.LEFT
-        fun badge(timer: Long, color: Int, label: String, textDark: Boolean) {
+        val margin = W * .025f
+        var x = margin
+        var y = H * .915f
+        val bh = minOf(H * .030f, W * .065f)
+        val bw = (W - margin * 5f) / 4f
+        fun badge(timer: Long, type: PType) {
             if (timer <= 0L) return
-            pBrick.color = color
-            canvas.drawRoundRect(x, y, x + bw, y + bh, 4f, 4f, pBrick)
-            pPuLabel.color = if (textDark) darken(color, 0.6f) else 0xFFFFFFFF.toInt()
-            canvas.drawText("$label ${timer / 1000}s", x + 5f, y + bh * 0.76f, pPuLabel)
-            x += bw + 6f
+            if (x + bw > W - margin + 1f) { x = margin; y += bh * 1.4f }
+            val tint = puColors[type] ?: Color.WHITE
+            pBrick.color = 0xEE10273B.toInt()
+            canvas.drawRoundRect(x, y, x + bw, y + bh, 5f, 5f, pBrick)
+            art.capsule(canvas, x + bh * .5f, y + bh * .5f, bh * .36f, type, tint)
+            pPuLabel.textSize = bh * .6f
+            pPuLabel.textAlign = Paint.Align.LEFT
+            pPuLabel.color = Color.WHITE
+            canvas.drawText(context.getString(R.string.particules_effect_seconds, timer / 1000),
+                x + bh * 1.05f, y + bh * .73f, pPuLabel)
+            x += bw + margin
         }
-        badge(timerExtend, puColors[PType.EXTEND]!!, "L", true)
-        badge(timerLaser,  puColors[PType.LASER]!!,  "T", false)
-        badge(timerSpeed,  puColors[PType.SPEED]!!,  "S", false)
-        badge(timerSlow,   puColors[PType.SLOW]!!,   "R", true)
-        badge(timerFloor,  puColors[PType.FLOOR]!!,  "F", true)
-        badge(timerPierce, puColors[PType.PIERCE]!!, "P", true)
-        badge(timerFire,   puColors[PType.FIRE]!!,   "B", false)
-        badge(timerMagnet, puColors[PType.MAGNET]!!, "A", false)
+        badge(timerExtend, PType.EXTEND)
+        badge(timerLaser, PType.LASER)
+        badge(timerSpeed, PType.SPEED)
+        badge(timerSlow, PType.SLOW)
+        badge(timerFloor, PType.FLOOR)
+        badge(timerPierce, PType.PIERCE)
+        badge(timerFire, PType.FIRE)
+        badge(timerMagnet, PType.MAGNET)
     }
-
     private fun drawComboBanner(canvas: Canvas) {
         if (combo < 3 || comboTimer <= 0L) return
         val alpha = (comboTimer.toFloat() / comboGrace).coerceIn(0f, 1f)
@@ -1993,7 +1872,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             val x0 = margin + i * (cardW + gap)
             choiceRects[i].set(x0, top, x0 + cardW, top + cardH)
 
-            pCard.color = 0xFF1A1F3A.toInt()
+            pCard.color = 0xFF142C40.toInt()
             canvas.drawRoundRect(choiceRects[i], 14f, 14f, pCard)
             pCardStroke.color = rarityColor(r.rarity)
             canvas.drawRoundRect(choiceRects[i], 14f, 14f, pCardStroke)
@@ -2030,7 +1909,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         val btnW = W * 0.32f; val btnH = H * 0.044f
         val btnY = top + cardH + H * 0.025f
         skipRelicRect.set(W / 2 - btnW / 2, btnY, W / 2 + btnW / 2, btnY + btnH)
-        pCard.color = 0xFF1A1020.toInt()
+        pCard.color = 0xFF102435.toInt()
         canvas.drawRoundRect(skipRelicRect, 8f, 8f, pCard)
         pCardStroke.color = 0xFF776688.toInt()
         canvas.drawRoundRect(skipRelicRect, 8f, 8f, pCardStroke)
@@ -2092,7 +1971,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
             val price = item.price * (cur + 1)
             val canBuy = !maxed && gold >= price
 
-            pCard.color = if (canBuy) 0xFF1A1F3A.toInt() else 0xFF111122.toInt()
+            pCard.color = if (canBuy) 0xFF142C40.toInt() else 0xFF0D1B2A.toInt()
             canvas.drawRoundRect(shopRects[i], 10f, 10f, pCard)
             pCardStroke.color = when {
                 maxed   -> 0xFF44DD66.toInt()
@@ -2123,7 +2002,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         val btnW = W * 0.35f; val btnH = H * 0.045f
         val btnY = startY + ((shopItems.size + 1) / 2) * (cardH + gap) + gap
         shopBackRect.set(W / 2 - btnW / 2, btnY, W / 2 + btnW / 2, btnY + btnH)
-        pCard.color = 0xFF2A1F4A.toInt()
+        pCard.color = 0xFF154354.toInt()
         canvas.drawRoundRect(shopBackRect, 8f, 8f, pCard)
         pCardStroke.color = 0xFFAABBCC.toInt()
         canvas.drawRoundRect(shopBackRect, 8f, 8f, pCardStroke)
@@ -2142,6 +2021,7 @@ class ParticulesView(context: Context) : SurfaceView(context), SurfaceHolder.Cal
                 pTitle.color = 0xFFFFFFFF.toInt()
                 pTitle.textSize = maxOf(H * 0.042f, 28f)
                 if (level == 1) {
+                    art.emblem(canvas, W / 2f, cy - H * .16f, minOf(W * .10f, H * .065f))
                     canvas.drawText(context.getString(R.string.particules_title), W / 2, cy - pTitle.textSize, pTitle)
                     pSub.color = 0xFFAABBCC.toInt()
                     canvas.drawText(context.getString(R.string.particules_tagline), W / 2, cy + 10f, pSub)

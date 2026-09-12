@@ -90,4 +90,5 @@
     <string name="particules_relic_second_chance_desc">Survives defeat once</string>
     <string name="particules_relic_panic_trainer_name">Training</string>
     <string name="particules_relic_panic_trainer_desc">Touch contact triggers after 30s</string>
+    <string name="particules_effect_seconds">%1$d s</string>
 </resources>

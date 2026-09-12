@@ -90,4 +90,5 @@
     <string name="particules_relic_second_chance_desc">Survit une fois à la défaite</string>
     <string name="particules_relic_panic_trainer_name">Entraînement</string>
     <string name="particules_relic_panic_trainer_desc">Contact doigt activé en 30s</string>
+    <string name="particules_effect_seconds">%1$d s</string>
 </resources>
