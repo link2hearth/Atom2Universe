@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.survivor
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
@@ -15,6 +16,7 @@ class SurvivorActivity : ThemedActivity() {
 
     private lateinit var gameView: SurvivorView
     private lateinit var tvTitle: TextView
+    private lateinit var btnPause: ImageButton
     private val handler = Handler(Looper.getMainLooper())
     private val titleUpdater = object : Runnable {
         override fun run() {
@@ -22,10 +24,12 @@ class SurvivorActivity : ThemedActivity() {
             tvTitle.text = when (g.phase) {
                 GamePhase.PLAYING, GamePhase.LEVEL_UP, GamePhase.PAUSED -> {
                     val sec = g.survivalTime.toInt()
-                    "%d:%02d".format(sec / 60, sec % 60)
+                    getString(R.string.survivor_time_mmss, sec / 60, sec % 60)
                 }
                 else -> getString(R.string.survivor_title)
             }
+            // Un bouton pause n'a de sens qu'en plein combat : ailleurs il ne ferait rien.
+            btnPause.visibility = if (g.phase == GamePhase.PLAYING) View.VISIBLE else View.INVISIBLE
             handler.postDelayed(this, 500)
         }
     }
@@ -39,21 +43,18 @@ class SurvivorActivity : ThemedActivity() {
         gameView = findViewById(R.id.survivor_view)
         tvTitle  = findViewById(R.id.survivor_tv_title)
 
-        val prefs = getSharedPreferences("survivor_save", MODE_PRIVATE)
-        gameView.game.bestTime  = prefs.getFloat("best_time", 0f)
-        gameView.game.bestKills = prefs.getInt("best_kills", 0)
+        // Records et partie en cours sont lus avant que la boucle ne démarre.
+        gameView.showHome()
 
         onBackPressedDispatcher.addCallback(this) {
-            if (gameView.game.phase == GamePhase.WEAPON_SELECT) finish()
-            else gameView.requestMenu()
+            if (!gameView.onBackPressed()) finish()
         }
 
         findViewById<ImageButton>(R.id.survivor_btn_back).setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
-        findViewById<ImageButton>(R.id.survivor_btn_pause).setOnClickListener {
-            gameView.requestPause()
-        }
+        btnPause = findViewById(R.id.survivor_btn_pause)
+        btnPause.setOnClickListener { gameView.requestPause() }
     }
 
     override fun onResume() {
@@ -64,15 +65,10 @@ class SurvivorActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
+        // La boucle est arrêtée d'abord : la sauvegarde parcourt les listes du jeu.
         gameView.pause()
         handler.removeCallbacks(titleUpdater)
-        val g = gameView.game
-        if (g.bestTime > 0f) {
-            getSharedPreferences("survivor_save", MODE_PRIVATE).edit()
-                .putFloat("best_time", g.bestTime)
-                .putInt("best_kills", g.bestKills)
-                .apply()
-        }
+        gameView.persist()
     }
 
 }

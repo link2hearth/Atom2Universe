@@ -100,18 +100,24 @@ class SurvivorView @JvmOverloads constructor(
     // Level-up card selection
     @Volatile private var pendingCardIndex = -1
 
+    /**
+     * Ce que le fil d'affichage peut demander. Tout est appliqué dans la boucle de jeu :
+     * charger ou sauvegarder pendant qu'un `update` tourne casserait les listes.
+     */
+    private enum class SAction { HOME, NEW_GAME, LOAD_RUN, PAUSE, RESUME }
+
     // Actions demandées depuis le thread UI, exécutées dans le thread de jeu
-    @Volatile private var pendingWeaponSelect = false
+    @Volatile private var pendingAction: SAction? = null
     @Volatile private var pendingStartWeapon: WeaponType? = null
-    @Volatile private var pendingPhase: GamePhase? = null
+
+    /** En-tête de la partie sauvegardée, relu à chaque retour au menu. */
+    @Volatile private var savedRun: SurvivorSave.RunSummary? = null
+    private var prevPhase = GamePhase.MENU
 
     // Strings cached
-    private val sTapStart  by lazy { ctx.getString(R.string.survivor_tap_to_start) }
     private val sLevelUp   by lazy { ctx.getString(R.string.survivor_level_up) }
     private val sChoose    by lazy { ctx.getString(R.string.survivor_choose_upgrade) }
     private val sGameOver  by lazy { ctx.getString(R.string.survivor_game_over) }
-    private val sRestart   by lazy { ctx.getString(R.string.survivor_restart) }
-    private val sQuit      by lazy { ctx.getString(R.string.survivor_quit) }
     private val sMenu      by lazy { ctx.getString(R.string.survivor_menu) }
     private val sResume    by lazy { ctx.getString(R.string.survivor_resume) }
     private val sPaused    by lazy { ctx.getString(R.string.survivor_paused) }
@@ -122,6 +128,11 @@ class SurvivorView @JvmOverloads constructor(
     private val sTitle        by lazy { ctx.getString(R.string.survivor_title) }
     private val sSelectWeapon by lazy { ctx.getString(R.string.survivor_select_weapon) }
     private val sRevived      by lazy { ctx.getString(R.string.survivor_revived) }
+    private val sNewGame      by lazy { ctx.getString(R.string.survivor_new_game) }
+    private val sSavedRun     by lazy { ctx.getString(R.string.survivor_saved_run) }
+    private val sRetry        by lazy { ctx.getString(R.string.survivor_retry) }
+    private val sTime         by lazy { ctx.getString(R.string.survivor_time) }
+    private val sLevel        by lazy { ctx.getString(R.string.survivor_level) }
 
     // Paints
     private val pFill  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
@@ -150,9 +161,9 @@ class SurvivorView @JvmOverloads constructor(
         WpnCard(WeaponType.ORBITAL,        R.string.survivor_weapon_orbital,           R.string.survivor_weapon_desc_orbital,         "ORB",  Color.parseColor("#AADDFF")),
     ) }
 
-    // Pause / game-over button rects
-    private val btnRect1 = RectF()
-    private val btnRect2 = RectF()
+    // Boutons empilés des menus (accueil, pause, mort) : au plus trois à la fois
+    private val menuBtns = Array(3) { RectF() }
+    private var menuBtnCount = 0
 
     init { holder.addCallback(this) }
 
@@ -195,9 +206,13 @@ class SurvivorView @JvmOverloads constructor(
             lastNanos = now
 
             // Traiter les actions demandées depuis le thread UI
-            if (pendingWeaponSelect) { pendingWeaponSelect = false; game.phase = GamePhase.WEAPON_SELECT }
-            pendingStartWeapon?.let { w -> pendingStartWeapon = null; game.startGame(w) }
-            pendingPhase?.let { ph -> pendingPhase = null; game.phase = ph }
+            pendingAction?.let { a -> pendingAction = null; applyAction(a) }
+            pendingStartWeapon?.let { w ->
+                pendingStartWeapon = null
+                // Une nouvelle partie remplace l'ancienne : plus rien à reprendre.
+                SurvivorSave.clearRun(context); savedRun = null
+                game.startGame(w)
+            }
             val card = pendingCardIndex
             if (card >= 0) {
                 pendingCardIndex = -1
@@ -205,6 +220,14 @@ class SurvivorView @JvmOverloads constructor(
             }
 
             game.update(dt, jx, jy)
+
+            // La mort clôt la partie : le record est posé, la sauvegarde n'a plus d'objet.
+            if (game.phase == GamePhase.GAME_OVER && prevPhase != GamePhase.GAME_OVER) {
+                SurvivorSave.saveBest(context, game)
+                SurvivorSave.clearRun(context)
+                savedRun = null
+            }
+            prevPhase = game.phase
 
             // Si le jeu n'est plus en cours de jeu, le joystick doit être relâché
             if (game.phase != GamePhase.PLAYING) {
@@ -238,7 +261,17 @@ class SurvivorView @JvmOverloads constructor(
     }
 
     private fun handleMenuTouch(ev: MotionEvent) {
-        if (ev.action == MotionEvent.ACTION_UP) pendingWeaponSelect = true
+        if (ev.action != MotionEvent.ACTION_UP) return
+        when (tappedButton(ev.x, ev.y)) {
+            0 -> pendingAction = if (savedRun != null) SAction.LOAD_RUN else SAction.NEW_GAME
+            1 -> pendingAction = SAction.NEW_GAME
+        }
+    }
+
+    /** Index du bouton empilé touché, ou -1. */
+    private fun tappedButton(x: Float, y: Float): Int {
+        for (i in 0 until menuBtnCount) if (menuBtns[i].contains(x, y)) return i
+        return -1
     }
 
     private fun handleWeaponSelectTouch(ev: MotionEvent) {
@@ -294,18 +327,69 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun handlePausedTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
-        val x = ev.x; val y = ev.y
-        if (btnRect1.contains(x, y)) pendingPhase = GamePhase.PLAYING
-        if (btnRect2.contains(x, y)) pendingWeaponSelect = true
+        when (tappedButton(ev.x, ev.y)) {
+            0 -> pendingAction = SAction.RESUME
+            1 -> pendingAction = SAction.HOME
+        }
     }
 
     private fun handleGameOverTouch(ev: MotionEvent) {
         if (ev.action != MotionEvent.ACTION_UP) return
-        if (btnRect1.contains(ev.x, ev.y)) pendingWeaponSelect = true
+        when (tappedButton(ev.x, ev.y)) {
+            0 -> pendingAction = SAction.NEW_GAME
+            1 -> pendingAction = SAction.HOME
+        }
     }
 
-    fun requestMenu()  { pendingWeaponSelect = true }
-    fun requestPause() { if (game.phase == GamePhase.PLAYING) pendingPhase = GamePhase.PAUSED }
+    /** Exécuté dans le fil de jeu, boucle à l'arrêt entre deux images. */
+    private fun applyAction(a: SAction) {
+        when (a) {
+            // Quitter une partie en cours ne l'efface pas : elle attend au menu.
+            SAction.HOME -> {
+                SurvivorSave.saveRun(context, game)
+                savedRun = SurvivorSave.peekRun(context)
+                game.phase = GamePhase.MENU
+            }
+            SAction.NEW_GAME -> game.phase = GamePhase.WEAPON_SELECT
+            SAction.LOAD_RUN -> {
+                SurvivorSave.loadRun(context, game)
+                savedRun = SurvivorSave.peekRun(context)
+            }
+            SAction.PAUSE    -> if (game.phase == GamePhase.PLAYING) game.phase = GamePhase.PAUSED
+            SAction.RESUME   -> if (game.phase == GamePhase.PAUSED) game.resumePlaying()
+        }
+    }
+
+    /** Ouvre le jeu sur son menu d'accueil. Appelé avant le démarrage de la boucle. */
+    fun showHome() {
+        SurvivorSave.loadBest(context, game)
+        savedRun = SurvivorSave.peekRun(context)
+        game.phase = GamePhase.MENU
+        prevPhase = GamePhase.MENU
+    }
+
+    /**
+     * Écrit records et partie en cours. À n'appeler qu'après [pause],
+     * la boucle arrêtée : la sérialisation parcourt les listes du jeu.
+     */
+    fun persist() {
+        SurvivorSave.saveBest(context, game)
+        SurvivorSave.saveRun(context, game)
+        // Revenir dans l'application ne doit pas relancer le combat sans prévenir.
+        if (game.phase == GamePhase.PLAYING) game.phase = GamePhase.PAUSED
+    }
+
+    /** Retour système. Retourne faux quand il ne reste plus qu'à fermer l'activité. */
+    fun onBackPressed(): Boolean {
+        pendingAction = when (game.phase) {
+            GamePhase.MENU -> return false
+            GamePhase.PLAYING -> SAction.PAUSE
+            else -> SAction.HOME
+        }
+        return true
+    }
+
+    fun requestPause() { pendingAction = SAction.PAUSE }
 
     // ─── Drawing ──────────────────────────────────────────────────────────────
 
@@ -320,7 +404,7 @@ class SurvivorView @JvmOverloads constructor(
         fun wy(wy: Float) = cy + (wy - camY)
 
         when (game.phase) {
-            GamePhase.MENU          -> drawMenu(canvas)
+            GamePhase.MENU          -> drawHome(canvas)
             GamePhase.WEAPON_SELECT -> drawWeaponSelect(canvas)
             GamePhase.PLAYING, GamePhase.LEVEL_UP, GamePhase.PAUSED -> {
                 drawAura(canvas, wx(game.player.x), wy(game.player.y))
@@ -619,26 +703,21 @@ class SurvivorView @JvmOverloads constructor(
 
     private fun drawWeaponSelect(canvas: Canvas) {
         val cx = width / 2f
-        pFill.color = Color.argb(190, 9, 25, 32)
+        pFill.color = Color.argb(205, 9, 25, 32)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
+        pText.textAlign = Paint.Align.CENTER
         pText.color = C_XP_FILL; pText.textSize = sp(28f)
         canvas.drawText(sTitle, cx, dp(52f), pText)
 
         pText.textSize = sp(11f); pText.color = C_GRAY
         canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, dp(73f), pText)
-        var nextY = dp(98f)
-        if (game.bestTime > 0f) {
-            val sec = game.bestTime.toInt()
-            pText.textSize = sp(12f); pText.color = C_GRAY
-            canvas.drawText("$sBest: %d:%02d  ${game.bestKills}☠".format(sec / 60, sec % 60), cx, nextY, pText)
-            nextY += dp(16f)
-        }
+        val nextY = dp(98f)
         pText.textSize = sp(14f); pText.color = C_GRAY
         canvas.drawText(sSelectWeapon, cx, nextY, pText)
 
         val cardW = width * 0.84f
-        val gap   = dp(7f)
-        val startY = nextY + dp(14f)
+        val gap   = dp(8f)
+        val startY = nextY + dp(18f)
         val cardH = min(dp(68f), (height - startY - dp(14f) - gap * 6f) / 7f).coerceAtLeast(dp(30f))
 
         wpnCards.forEachIndexed { i, card ->
@@ -676,25 +755,79 @@ class SurvivorView @JvmOverloads constructor(
         pText.color = Color.WHITE
     }
 
-    // ─── Menu ─────────────────────────────────────────────────────────────────
+    // ─── Accueil ──────────────────────────────────────────────────────────────
 
-    private fun drawMenu(canvas: Canvas) {
-        val cx = width / 2f; val cy = height / 2f
-        pFill.color = Color.argb(225, 12, 30, 37)
-        canvas.drawRoundRect(dp(18f), cy - dp(176f), width - dp(18f), cy + dp(64f), dp(24f), dp(24f), pFill)
-        art.player(canvas, cx, cy - dp(123f), dp(28f), 0f, false)
-        pText.color = C_XP_FILL; pText.textSize = sp(30f)
-        canvas.drawText(sTitle, cx, cy - dp(60f), pText)
+    private fun drawHome(canvas: Canvas) {
+        val cx = width / 2f
+        pFill.color = Color.argb(210, 9, 25, 32)
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
+
+        // Un bloc titre : la silhouette du survivant, le nom, la devise.
+        val headY = height * 0.16f
+        art.player(canvas, cx, headY, dp(30f), 0f, false)
+        pText.textAlign = Paint.Align.CENTER
+        pText.color = C_XP_FILL; pText.textSize = sp(34f)
+        canvas.drawText(sTitle, cx, headY + dp(66f), pText)
         pText.textSize = sp(11f); pText.color = C_GRAY
-        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, cy - dp(35f), pText)
-        pText.textSize = sp(16f); pText.color = C_GRAY
-        canvas.drawText(sTapStart, cx, cy, pText)
+        canvas.drawText(context.getString(R.string.survivor_sanctuary), cx, headY + dp(86f), pText)
+
+        var y = headY + dp(118f)
         if (game.bestTime > 0f) {
-            val sec = game.bestTime.toInt()
-            pText.textSize = sp(13f)
-            canvas.drawText("$sBest: %d:%02d  ${game.bestKills}☠".format(sec / 60, sec % 60), cx, cy + dp(30f), pText)
+            pText.textSize = sp(13f); pText.color = C_GRAY
+            canvas.drawText("$sBest ${mmss(game.bestTime)}   ${killsText(game.bestKills)}", cx, y, pText)
+            y += dp(26f)
         }
+
+        // La partie sauvegardée se montre avant de se proposer : on voit ce qu'on reprend.
+        val run = savedRun
+        val labels = ArrayList<String>(2)
+        if (run != null) {
+            y = drawRunCard(canvas, cx, y, run) + dp(20f)
+            labels.add(sResume)
+        } else {
+            y += dp(10f)
+        }
+        labels.add(sNewGame)
+        // Les boutons gardent la même hauteur qu'il y ait une partie à reprendre ou non :
+        // sinon l'unique bouton flotterait au milieu du vide.
+        drawButtonStack(canvas, cx, max(y, height * 0.60f), labels)
         pText.color = Color.WHITE
+    }
+
+    private val runCardRect = RectF()
+
+    /** Carte d'accroche de la partie sauvegardée ; retourne son bord bas. */
+    private fun drawRunCard(canvas: Canvas, cx: Float, top: Float, run: SurvivorSave.RunSummary): Float {
+        val cardW = min(dp(300f), width * 0.84f)
+        val cardH = dp(88f)
+        runCardRect.set(cx - cardW / 2f, top, cx + cardW / 2f, top + cardH)
+        pFill.color = C_CARD_BG
+        canvas.drawRoundRect(runCardRect, dp(14f), dp(14f), pFill)
+        pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = dp(0.8f)
+        canvas.drawRoundRect(runCardRect, dp(14f), dp(14f), pStroke)
+        pFill.color = C_XP_FILL
+        canvas.drawRoundRect(runCardRect.left, top, runCardRect.left + dp(6f), top + cardH, dp(3f), dp(3f), pFill)
+
+        val textLeft = runCardRect.left + dp(20f)
+        pTextL.color = C_GRAY; pTextL.textSize = sp(10f)
+        canvas.drawText(sSavedRun, textLeft, top + dp(22f), pTextL)
+        pTextL.color = Color.WHITE; pTextL.textSize = sp(26f)
+        canvas.drawText(mmss(run.survivalTime), textLeft, top + dp(52f), pTextL)
+        pTextL.color = C_GRAY; pTextL.textSize = sp(11f)
+        canvas.drawText("${levelText(run.level)}   $sWave ${run.wave}   ${killsText(run.kills)}",
+            textLeft, top + dp(72f), pTextL)
+
+        // Les armes portées, en pastilles, à droite de la carte.
+        var chipCx = runCardRect.right - dp(26f)
+        for (w in run.weapons.reversed()) {
+            val card = wpnCards.firstOrNull { it.type == w } ?: continue
+            pFill.color = Color.argb(180, Color.red(card.color), Color.green(card.color), Color.blue(card.color))
+            canvas.drawCircle(chipCx, top + cardH / 2f, dp(17f), pFill)
+            pText.color = Color.WHITE; pText.textSize = sp(9f)
+            canvas.drawText(card.shortLabel, chipCx, top + cardH / 2f + sp(3f), pText)
+            chipCx -= dp(40f)
+        }
+        return top + cardH
     }
 
     // ─── Level-up ─────────────────────────────────────────────────────────────
@@ -746,7 +879,7 @@ class SurvivorView @JvmOverloads constructor(
             val lvl = game.player.upg(opt.id)
             if (lvl > 0) {
                 pTextL.color = opt.cardColor; pTextL.textSize = sp(11f)
-                canvas.drawText("Lv.$lvl", right - dp(40f), top + cardH * 0.35f, pTextL)
+                canvas.drawText(levelText(lvl), right - dp(40f), top + cardH * 0.35f, pTextL)
             }
 
             // Description
@@ -760,72 +893,118 @@ class SurvivorView @JvmOverloads constructor(
         }
     }
 
-    // ─── Paused ───────────────────────────────────────────────────────────────
+    // ─── Pause ────────────────────────────────────────────────────────────────
 
     private fun drawPaused(canvas: Canvas) {
-        pFill.color = Color.argb(180, 0, 0, 0)
+        pFill.color = Color.argb(190, 6, 18, 24)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
-        val cx = width / 2f; val cy = height / 2f
+        val cx = width / 2f
+        val top = height * 0.22f
+        pText.textAlign = Paint.Align.CENTER
         pText.color = Color.WHITE; pText.textSize = sp(30f)
-        canvas.drawText(sPaused, cx, cy - dp(60f), pText)
-        pText.textSize = sp(13f); pText.color = C_GRAY
-        canvas.drawText("$sWave ${game.wave}   ·   $sKills ${game.player.kills}", cx, cy - dp(30f), pText)
-        drawTwoButtons(canvas, cx, cy, sResume, sQuit)
+        canvas.drawText(sPaused, cx, top, pText)
+
+        val p = game.player
+        val y = drawStatGrid(canvas, cx, top + dp(28f), listOf(
+            sTime  to mmss(game.survivalTime),
+            sLevel to p.level.toString(),
+            sWave  to game.wave.toString(),
+            sKills to p.kills.toString()
+        ))
+        // Le retour au menu garde la partie : ce n'est pas un abandon.
+        drawButtonStack(canvas, cx, y + dp(30f), listOf(sResume, sMenu))
+        pText.color = Color.WHITE
     }
 
-    // ─── Game over ────────────────────────────────────────────────────────────
+    // ─── Fin de partie ────────────────────────────────────────────────────────
 
     private fun drawGameOver(canvas: Canvas) {
-        pFill.color = Color.argb(200, 0, 0, 0)
+        pFill.color = Color.argb(205, 6, 12, 16)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pFill)
-        val cx = width / 2f; val cy = height / 2f
+        val cx = width / 2f
+        val top = height * 0.22f
+        pText.textAlign = Paint.Align.CENTER
         pText.color = C_GAMEOVER; pText.textSize = sp(34f)
-        canvas.drawText(sGameOver, cx, cy - dp(80f), pText)
-        pText.color = Color.WHITE; pText.textSize = sp(14f)
+        canvas.drawText(sGameOver, cx, top, pText)
+
         val p = game.player
-        val sec = game.survivalTime.toInt()
-        canvas.drawText("%d:%02d  —  Lv.%d  —  %d kills".format(sec / 60, sec % 60, p.level, p.kills), cx, cy - dp(40f), pText)
+        var y = drawStatGrid(canvas, cx, top + dp(28f), listOf(
+            sTime  to mmss(game.survivalTime),
+            sLevel to p.level.toString(),
+            sWave  to game.wave.toString(),
+            sKills to p.kills.toString()
+        ))
         if (game.bestTime > 0f) {
-            val bs = game.bestTime.toInt()
-            pText.color = C_GRAY; pText.textSize = sp(12f)
-            canvas.drawText("$sBest %d:%02d  ${game.bestKills}☠".format(bs / 60, bs % 60), cx, cy - dp(16f), pText)
+            y += dp(26f)
+            // Un record battu se lit dans la couleur, sans mot de plus.
+            pText.color = if (game.survivalTime >= game.bestTime) C_XP_FILL else C_GRAY
+            pText.textSize = sp(12f)
+            canvas.drawText("$sBest ${mmss(game.bestTime)}   ${killsText(game.bestKills)}", cx, y, pText)
+        }
+        drawButtonStack(canvas, cx, y + dp(28f), listOf(sRetry, sMenu))
+        pText.color = Color.WHITE
+    }
+
+    // ─── Blocs de menu ────────────────────────────────────────────────────────
+
+    /** Une ligne de chiffres : la valeur au-dessus, son intitulé en dessous. */
+    private fun drawStatGrid(canvas: Canvas, cx: Float, top: Float, stats: List<Pair<String, String>>): Float {
+        if (stats.isEmpty()) return top
+        val gridW = min(dp(300f), width * 0.86f)
+        val colW = gridW / stats.size
+        val left = cx - gridW / 2f
+        pText.textAlign = Paint.Align.CENTER
+        stats.forEachIndexed { i, (label, value) ->
+            val colCx = left + colW * (i + 0.5f)
+            pText.color = Color.WHITE; pText.textSize = sp(19f)
+            canvas.drawText(value, colCx, top + dp(24f), pText)
+            pText.color = C_GRAY; pText.textSize = sp(10f)
+            canvas.drawText(label, colCx, top + dp(40f), pText)
+        }
+        return top + dp(40f)
+    }
+
+    /**
+     * Empile des boutons pleine largeur sous [topY]. Le premier est le bouton principal :
+     * seul lui est rempli, les autres restent en contour. Retourne le bas de la pile.
+     */
+    private fun drawButtonStack(canvas: Canvas, cx: Float, topY: Float, labels: List<String>): Float {
+        val bw = min(dp(260f), width * 0.74f)
+        val bh = dp(50f)
+        val gap = dp(12f)
+        menuBtnCount = labels.size.coerceAtMost(menuBtns.size)
+        for (r in menuBtns) r.setEmpty()
+        var y = topY
+        for (i in 0 until menuBtnCount) {
+            val r = menuBtns[i]
+            r.set(cx - bw / 2f, y, cx + bw / 2f, y + bh)
+            val primary = i == 0
+            pFill.color = if (primary) C_BTN_BG else Color.argb(80, 18, 45, 51)
+            canvas.drawRoundRect(r, dp(12f), dp(12f), pFill)
+            pStroke.color = if (primary) C_BTN_BORDER else Color.argb(110, 112, 180, 165)
+            pStroke.strokeWidth = dp(if (primary) 1.4f else 1f)
+            canvas.drawRoundRect(r, dp(12f), dp(12f), pStroke)
+            pText.textAlign = Paint.Align.CENTER
+            pText.color = if (primary) Color.WHITE else C_GRAY
+            pText.textSize = sp(if (primary) 16f else 14f)
+            canvas.drawText(labels[i], r.centerX(), r.centerY() + sp(5.5f), pText)
+            y += bh + gap
         }
         pText.color = Color.WHITE
-        drawOneButton(canvas, cx, cy + dp(10f), sMenu)
-    }
-
-    // ─── Button helper ────────────────────────────────────────────────────────
-
-    private fun drawOneButton(canvas: Canvas, cx: Float, cy: Float, label: String) {
-        val bw = dp(160f); val bh = dp(44f); val by = cy + dp(20f)
-        btnRect1.set(cx - bw / 2f, by, cx + bw / 2f, by + bh)
-        btnRect2.setEmpty()
-        pFill.color = C_BTN_BG
-        canvas.drawRoundRect(btnRect1, dp(10f), dp(10f), pFill)
-        pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = 1.5f
-        canvas.drawRoundRect(btnRect1, dp(10f), dp(10f), pStroke)
-        pText.color = Color.WHITE; pText.textSize = sp(15f)
-        canvas.drawText(label, btnRect1.centerX(), btnRect1.centerY() + sp(5f), pText)
-    }
-
-    private fun drawTwoButtons(canvas: Canvas, cx: Float, cy: Float, label1: String, label2: String) {
-        val bw = dp(140f); val bh = dp(44f); val gap = dp(20f)
-        val by = cy + dp(20f)
-
-        btnRect1.set(cx - bw - gap / 2f, by, cx - gap / 2f, by + bh)
-        btnRect2.set(cx + gap / 2f, by, cx + bw + gap / 2f, by + bh)
-
-        for ((rect, label) in listOf(btnRect1 to label1, btnRect2 to label2)) {
-            pFill.color = C_BTN_BG
-            canvas.drawRoundRect(rect, dp(10f), dp(10f), pFill)
-            pStroke.color = C_BTN_BORDER; pStroke.strokeWidth = 1.5f
-            canvas.drawRoundRect(rect, dp(10f), dp(10f), pStroke)
-            pText.color = Color.WHITE; pText.textSize = sp(15f)
-            canvas.drawText(label, rect.centerX(), rect.centerY() + sp(5f), pText)
-        }
+        return y - gap
     }
 
     // ─── Util ─────────────────────────────────────────────────────────────────
+
+    /** mm:ss — le format vit dans les ressources, pas ici. */
+    private fun mmss(seconds: Float): String {
+        val s = seconds.toInt()
+        return context.getString(R.string.survivor_time_mmss, s / 60, s % 60)
+    }
+
+    private fun killsText(n: Int) = context.getString(R.string.survivor_kills_count, n)
+
+    private fun levelText(n: Int) = context.getString(R.string.survivor_level_short, n)
 
     private fun dp(v: Float) = v * _dp
     private fun sp(v: Float) = v * _sp

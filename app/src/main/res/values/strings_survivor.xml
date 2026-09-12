@@ -151,4 +151,12 @@
     <string name="survivor_hud_level">LEVEL %1$d</string>
     <string name="survivor_hud_health">HEALTH %1$d / %2$d</string>
     <string name="survivor_hud_shield">SHIELD %1$d / %2$d</string>
+    <string name="survivor_new_game">NEW GAME</string>
+    <string name="survivor_saved_run">Run in progress</string>
+    <string name="survivor_retry">REPLAY</string>
+    <string name="survivor_time">Time</string>
+    <string name="survivor_time_mmss">%1$d:%2$02d</string>
+    <string name="survivor_kills_count">%1$d☠</string>
+    <string name="survivor_level_short">Lv.%1$d</string>
+    <string name="survivor_level">Level</string>
 </resources>

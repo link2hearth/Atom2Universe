@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Блискавка, що перескакує між ворогами</string>
     <string name="survivor_weapon_desc_orbital">Кулі, що обертаються навколо вас і стріляють у ворогів</string>
     <string name="survivor_revived">✦ ВІДРОДЖЕНО! ✦</string>
+    <string name="survivor_new_game">НОВА ГРА</string>
+    <string name="survivor_saved_run">Незавершена гра</string>
+    <string name="survivor_retry">ЩЕ РАЗ</string>
+    <string name="survivor_time">Час</string>
 </resources>

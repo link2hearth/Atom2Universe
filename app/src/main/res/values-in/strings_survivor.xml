@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Petir yang melompat antar musuh</string>
     <string name="survivor_weapon_desc_orbital">Bola yang mengorbit di sekitarmu dan menembak musuh</string>
     <string name="survivor_revived">✦ DIHIDUPKAN KEMBALI! ✦</string>
+    <string name="survivor_new_game">PERMAINAN BARU</string>
+    <string name="survivor_saved_run">Permainan berlangsung</string>
+    <string name="survivor_retry">MAIN LAGI</string>
+    <string name="survivor_time">Waktu</string>
 </resources>

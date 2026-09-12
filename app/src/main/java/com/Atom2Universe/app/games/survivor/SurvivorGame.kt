@@ -63,7 +63,9 @@ class SEnemy(
 ) {
     // Rayon commun au rendu et aux collisions, y compris dans les formations.
     val radius: Float = radius * 1.65f
-    val visualSeed: Float = ((x.toBits() xor y.toBits()) and 1023) * 0.017f
+    var visualVariant = 0
+    var visualPalette = 0
+    var visualSeed: Float = ((x.toBits() xor y.toBits()) and 1023) * 0.017f
     val hpRatio get() = (hp / maxHp).coerceIn(0f, 1f)
 }
 
@@ -212,6 +214,8 @@ class SurvivorGame(private val ctx: Context) {
     private var dpsAccum = 0f
     private var dpsWindowCd = 5f
 
+    var appearanceSerial = 0
+    var bossAppearanceSerial = 0
     private val rng = Random.Default
     private val orbitalFireCds    = FloatArray(20)
     private val orbitalContactCds = FloatArray(20)
@@ -357,16 +361,54 @@ class SurvivorGame(private val ctx: Context) {
             weaponCds.clear()
         }
         lifeStealFactor = 0f
-        enemies.clear(); enemyBullets.clear(); projectiles.clear(); lasers.clear()
-        chainLightnings.clear(); bouncingProjs.clear(); bombs.clear(); explosions.clear(); residues.clear()
-        particles.clear(); dmgNums.clear(); orbitalCount = 0
-        orbitalFireCds.fill(0f); orbitalContactCds.fill(0f)
-        formations.clear()
+        clearTransient()
+        appearanceSerial = 0; bossAppearanceSerial = 0
         formationCd = 180f
         playerDps = 0f; dpsAccum = 0f; dpsWindowCd = 5f
         wave = 1; survivalTime = 0f; spawnCd = 0f
         waveCd = WAVE_DUR; bossCd = BOSS_INTERVAL; auraCd = 0f; bossWarning = 0f
         pendingUpgrades = null; pendingLevelUps = 0; resumeRampTimer = 0f; reviveFlashTimer = 0f
+    }
+
+    /** Vide tout ce qui est éphémère : ennemis, tirs, particules, orbitales. */
+    private fun clearTransient() {
+        enemies.clear(); enemyBullets.clear(); projectiles.clear(); lasers.clear()
+        chainLightnings.clear(); bouncingProjs.clear(); bombs.clear(); explosions.clear(); residues.clear()
+        particles.clear(); dmgNums.clear(); orbitalCount = 0
+        orbitalFireCds.fill(0f); orbitalContactCds.fill(0f)
+        formations.clear()
+    }
+
+    /**
+     * Remet le jeu à plat avant d'y verser une partie sauvegardée.
+     * Seuls les ennemis et le joueur seront réécrits ; tout le reste repart de zéro.
+     */
+    fun prepareForLoad() {
+        clearTransient()
+        playerDps = 0f; dpsAccum = 0f; dpsWindowCd = 5f
+        bossWarning = 0f; resumeRampTimer = 0f; reviveFlashTimer = 0f
+        pendingUpgrades = null
+        player.iframeCd = 0f; player.shieldRegenDelay = 0f; player.lifeStealCd = 0f
+    }
+
+    /** Recalcule ce qui se déduit des améliorations (et n'est donc pas sauvegardé). */
+    fun recomputeDerivedStats() {
+        lifeStealFactor = player.upg("lifeSteal") * 0.10f
+    }
+
+    /**
+     * Retour au jeu depuis la pause ou après un chargement.
+     * S'il reste des montées de niveau en attente, c'est l'écran de choix qui s'ouvre.
+     */
+    fun resumePlaying() {
+        if (pendingLevelUps > 0) {
+            pendingLevelUps--
+            pendingUpgrades = buildChoices()
+            phase = GamePhase.LEVEL_UP
+        } else {
+            resumeRampTimer = RESUME_RAMP_DURATION
+            phase = GamePhase.PLAYING
+        }
     }
 
     // ─── Update ───────────────────────────────────────────────────────────────
@@ -535,7 +577,7 @@ class SurvivorGame(private val ctx: Context) {
             val offX = cos(a) * 70f; val offY = sin(a) * 70f
             val e = SEnemy(worldCx + offX, worldCy + offY, 5f * hpScale, 5f * hpScale, 0f, 5f, 10f, 20f, EnemyType.SHOOTER)
             e.shootCd = 1f + rng.nextFloat() * 2f; e.formation = f
-            f.slots.add(FormationSlot(e, offX, offY)); enemies.add(e)
+            f.slots.add(FormationSlot(e, offX, offY)); addStyledEnemy(e)
         }
 
         // Troupes dans des anneaux concentriques
@@ -552,7 +594,7 @@ class SurvivorGame(private val ctx: Context) {
                 else
                     SEnemy(worldCx + offX, worldCy + offY, 8f * hpScale, 8f * hpScale, 0f, 10f, 6f, 14f, EnemyType.ZOMBIE)
                 e.formation = f
-                f.slots.add(FormationSlot(e, offX, offY)); enemies.add(e)
+                f.slots.add(FormationSlot(e, offX, offY)); addStyledEnemy(e)
             }
             remaining -= capacity
         }
@@ -764,6 +806,13 @@ class SurvivorGame(private val ctx: Context) {
         }
     }
 
+    private fun addStyledEnemy(enemy: SEnemy) {
+        // Apparence figée à la naissance : pas de recoloration des survivants entre les vagues.
+        enemy.visualPalette = ((wave - 1) / 3) % 4
+        enemy.visualVariant = if (enemy.type == EnemyType.MINI_BOSS) bossAppearanceSerial++ % 4
+            else appearanceSerial++ % 2
+        enemies.add(enemy)
+    }
     private fun doSpawn(type: EnemyType) {
         if (type != EnemyType.MINI_BOSS && availableEnemySlots() == 0) return
         if (type == EnemyType.SHOOTER && availableShooterSlots() == 0) return
@@ -788,7 +837,7 @@ class SurvivorGame(private val ctx: Context) {
             EnemyType.SHOOTER -> e.shootCd = 1f + rng.nextFloat() * 1.5f
             else -> {}
         }
-        enemies.add(e)
+        addStyledEnemy(e)
     }
 
     private fun updateWave(dt: Float) {
@@ -1374,14 +1423,7 @@ class SurvivorGame(private val ctx: Context) {
             "unlock_orbital"       -> player.weapons.add(WeaponType.ORBITAL)
         }
         pendingUpgrades = null
-        if (pendingLevelUps > 0) {
-            pendingLevelUps--
-            pendingUpgrades = buildChoices()
-            phase = GamePhase.LEVEL_UP
-        } else {
-            resumeRampTimer = RESUME_RAMP_DURATION
-            phase = GamePhase.PLAYING
-        }
+        resumePlaying()
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────

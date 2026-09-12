@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Raio que salta entre inimigos</string>
     <string name="survivor_weapon_desc_orbital">Orbes que orbitam ao seu redor e disparam em inimigos</string>
     <string name="survivor_revived">✦ REVIVIDO! ✦</string>
+    <string name="survivor_new_game">NOVO JOGO</string>
+    <string name="survivor_saved_run">Partida em curso</string>
+    <string name="survivor_retry">JOGAR DE NOVO</string>
+    <string name="survivor_time">Tempo</string>
 </resources>

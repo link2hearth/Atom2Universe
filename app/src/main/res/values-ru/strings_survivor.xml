@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Молния, прыгающая между врагами</string>
     <string name="survivor_weapon_desc_orbital">Шары, вращающиеся вокруг вас и стреляющие во врагов</string>
     <string name="survivor_revived">✦ ВОЗРОЖДЁН! ✦</string>
+    <string name="survivor_new_game">НОВАЯ ИГРА</string>
+    <string name="survivor_saved_run">Незавершённая игра</string>
+    <string name="survivor_retry">ЗАНОВО</string>
+    <string name="survivor_time">Время</string>
 </resources>

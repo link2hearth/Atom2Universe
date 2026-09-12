@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Blitz, der zwischen Feinden springt</string>
     <string name="survivor_weapon_desc_orbital">Kugeln, die um dich kreisen und auf Feinde schießen</string>
     <string name="survivor_revived">✦ WIEDERBELEBT! ✦</string>
+    <string name="survivor_new_game">NEUES SPIEL</string>
+    <string name="survivor_saved_run">Laufende Partie</string>
+    <string name="survivor_retry">NOCHMAL</string>
+    <string name="survivor_time">Zeit</string>
 </resources>

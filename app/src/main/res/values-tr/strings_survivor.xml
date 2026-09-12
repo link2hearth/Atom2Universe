@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Düşmanlar arasında zincirleme yapan şimşek</string>
     <string name="survivor_weapon_desc_orbital">Etrafınızda dönen ve düşmanlara ateş eden küreler</string>
     <string name="survivor_revived">✦ YENİDEN DOĞDU! ✦</string>
+    <string name="survivor_new_game">YENİ OYUN</string>
+    <string name="survivor_saved_run">Devam eden oyun</string>
+    <string name="survivor_retry">TEKRAR OYNA</string>
+    <string name="survivor_time">Süre</string>
 </resources>

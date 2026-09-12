@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_bomb">Aruncă bombe care explodează la impact</string>
     <string name="survivor_weapon_desc_chain_lightning">Fulger care sare între inamici</string>
     <string name="survivor_weapon_desc_orbital">Orbe care orbitează în jurul dvs. și trag la inamici</string>
+    <string name="survivor_new_game">JOC NOU</string>
+    <string name="survivor_saved_run">Partidă în curs</string>
+    <string name="survivor_retry">REJOACĂ</string>
+    <string name="survivor_time">Timp</string>
 </resources>

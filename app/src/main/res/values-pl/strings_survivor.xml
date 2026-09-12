@@ -147,4 +147,8 @@
     <string name="survivor_weapon_desc_chain_lightning">Błyskawica skacząca między wrogami</string>
     <string name="survivor_weapon_desc_orbital">Kule krążące wokół ciebie i strzelające do wrogów</string>
     <string name="survivor_revived">✦ WSKRZESZONY! ✦</string>
+    <string name="survivor_new_game">NOWA GRA</string>
+    <string name="survivor_saved_run">Gra w toku</string>
+    <string name="survivor_retry">ZAGRAJ PONOWNIE</string>
+    <string name="survivor_time">Czas</string>
 </resources>

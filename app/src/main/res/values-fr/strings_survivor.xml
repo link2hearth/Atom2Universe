@@ -151,4 +151,12 @@
     <string name="survivor_hud_level">NIVEAU %1$d</string>
     <string name="survivor_hud_health">VIE %1$d / %2$d</string>
     <string name="survivor_hud_shield">BOUCLIER %1$d / %2$d</string>
+    <string name="survivor_new_game">NOUVELLE PARTIE</string>
+    <string name="survivor_saved_run">Partie en cours</string>
+    <string name="survivor_retry">REJOUER</string>
+    <string name="survivor_time">Temps</string>
+    <string name="survivor_time_mmss">%1$d:%2$02d</string>
+    <string name="survivor_kills_count">%1$d☠</string>
+    <string name="survivor_level_short">Nv.%1$d</string>
+    <string name="survivor_level">Niveau</string>
 </resources>
