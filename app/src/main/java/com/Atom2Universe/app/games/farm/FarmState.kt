@@ -7,7 +7,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * The seed ladder: one new crop per parcel bought, [rank] 1..14 in that order.
+ * The seed ladder: each parcel unlocks its original crop, [rank] 1..14 in that order.
  *
  * Ranks come in pairs. The odd rank of a pair is the quick crop you harvest while you are here, the
  * even rank is the overnight crop - so every second purchase widens what you can do in a session,
@@ -30,7 +30,7 @@ import org.json.JSONObject
  * `oldSeconds` by ordinal.
  */
 enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: Int, val cost: Int,
-                    val sale: Int, val seconds: Int, val tree: Boolean = false) {
+                    val sale: Int, val seconds: Int, val tree: Boolean = false, val alwaysAvailable: Boolean = false) {
     WHEAT(R.string.farm_wheat, "garden_wheat_radish_lettuce_zucchini_v1.png", 0, 0, 8, 45, 8 * 3600),
     RADISH(R.string.farm_radish, "garden_wheat_radish_lettuce_zucchini_v1.png", 2, 1, 2, 12, 2 * 3600),
     LETTUCE(R.string.farm_lettuce, "garden_wheat_radish_lettuce_zucchini_v1.png", 4, 2, 3, 20, 6 * 3600),
@@ -48,13 +48,20 @@ enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: I
     CHERRY(R.string.farm_cherry, "garden_fruit_trees_v1.png", 4, 0, 30, 18, 96 * 3600, true),
     CHILI(R.string.farm_chili, "garden_carrot_potato_chili_watermelon_v1.png", 4, 4, 8, 45, 8 * 3600),
     CARROT(R.string.farm_carrot, "garden_carrot_potato_chili_watermelon_v1.png", 0, 13, 182, 1072, 10 * 3600),
-    POTATO(R.string.farm_potato, "garden_carrot_potato_chili_watermelon_v1.png", 2, 14, 284, 1665, 24 * 3600);
+    POTATO(R.string.farm_potato, "garden_carrot_potato_chili_watermelon_v1.png", 2, 14, 284, 1665, 24 * 3600),
+    // Append only: old enum ordinals are part of the legacy save format. Native art needs no sheet.
+    ONION(R.string.farm_onion, "", 0, 2, 3, 20, 6 * 3600, alwaysAvailable = true),
+    TOMATO(R.string.farm_tomato, "", 0, 5, 10, 58, 4 * 3600, alwaysAvailable = true),
+    BROCCOLI(R.string.farm_broccoli, "", 0, 6, 16, 92, 10 * 3600, alwaysAvailable = true),
+    RASPBERRY(R.string.farm_raspberry, "", 0, 7, 21, 120, 5 * 3600, alwaysAvailable = true),
+    LEEK(R.string.farm_leek, "", 0, 8, 32, 186, 12 * 3600, alwaysAvailable = true),
+    GRAPE(R.string.farm_grape, "", 0, 9, 42, 243, 6 * 3600, alwaysAvailable = true),
+    ARTICHOKE(R.string.farm_artichoke, "", 0, 10, 68, 396, 16 * 3600, alwaysAvailable = true),
+    WATERMELON(R.string.farm_watermelon, "", 0, 12, 155, 900, 24 * 3600, alwaysAvailable = true),
+    PINEAPPLE(R.string.farm_pineapple, "", 0, 14, 284, 1665, 24 * 3600, alwaysAvailable = true);
 
-    /** Procedural crops have four designs; the remaining PNG sheets contain two rows per crop. */
-    val visualVariantCount: Int get() = when (this) {
-        RADISH, CARROT, LETTUCE, POTATO, CAULIFLOWER, ZUCCHINI, PEPPER, EGGPLANT -> 4
-        else -> 2
-    }
+    /** Every crop has four native designs, chosen once per planting and saved with the plot. */
+    val visualVariantCount: Int get() = 4
     /** Net coins per hour, the number the shop shows so the trade-off is readable before buying. */
     val coinsPerHour: Float get() = (sale - cost) * 3600f / seconds
     /**
@@ -64,13 +71,9 @@ enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: I
      */
     val manureCost: Int get() = rank
     companion object {
-        /**
-         * The ladder, in buying order. Trees are absent while the orchard is parked, and so is the
-         * watermelon that row 6 of the chilli sheet already holds: the ladder is built in pairs, so
-         * crops join it two at a time, and a fifteenth rung alone would leave half a pair missing.
-         * It waits there for the sixteenth parcel and the crop that pairs with it.
-         */
-        val ladder = entries.filter { it.rank > 0 }.sortedBy { it.rank }
+        /** Original parcel progression stays independent from the immediately available additions. */
+        val ladder = entries.filter { it.rank > 0 && !it.alwaysAvailable }.sortedBy { it.rank }
+        val catalog = entries.filter { it.rank > 0 }.sortedBy { it.rank }
     }
 }
 
@@ -196,7 +199,7 @@ class FarmState(private val prefs: SharedPreferences) {
                 val oldSeconds = intArrayOf(45, 30, 60, 90, 120, 240, 150, 210, 100, 180, 75, 180, 300, 360, 420)
                 restored.forEach { p ->
                     p.crop?.let { crop ->
-                        val oldDuration = oldSeconds[crop.ordinal] * 1000L
+                        val oldDuration = (oldSeconds.getOrNull(crop.ordinal) ?: crop.seconds) * 1000L
                         val elapsed = (now - p.planted).coerceAtLeast(0)
                         val progress = ((elapsed + if (p.watered) oldDuration / 4 else 0).toDouble() / oldDuration).coerceIn(0.0, 1.0)
                         p.watered = true
@@ -249,7 +252,7 @@ class FarmState(private val prefs: SharedPreferences) {
 
     /** Crops are sold parcel by parcel: owning N parcels puts the first N rungs of the ladder on sale. */
     val unlockedParcels get() = parcels.count { it.unlocked }
-    fun cropUnlocked(crop: FarmCrop) = crop.rank in 1..unlockedParcels
+    fun cropUnlocked(crop: FarmCrop) = crop.alwaysAvailable || crop.rank in 1..unlockedParcels
     /** Nothing gates the fields and the pens today; both now open on a visible milestone. */
     fun fieldsUnlocked() = harvests >= FIELDS_HARVESTS
     fun livestockUnlocked() = harvests >= LIVESTOCK_HARVESTS && largeFields.cycles >= LIVESTOCK_FIELD_CYCLES

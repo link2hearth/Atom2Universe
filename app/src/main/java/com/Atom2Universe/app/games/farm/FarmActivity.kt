@@ -113,7 +113,9 @@ class FarmActivity : ThemedActivity() {
             background = RippleDrawable(ColorStateList.valueOf(0x337D9966), rounded(Color.rgb(255, 238, 196), 14, Color.rgb(224, 167, 63)), null)
         }
         seedGroup.addView(selection, LinearLayout.LayoutParams(dp(44), dp(44)).apply { leftMargin = dp(2) })
-        toolbar.addView(seedGroup, LinearLayout.LayoutParams(dp(92), dp(48)).apply { leftMargin = dp(2) })
+        // Wrapped rather than a fixed 92dp: the selected-seed icon beside the bag disappears once
+        // that seed runs out, and a fixed width would leave half a sage pill sitting empty.
+        toolbar.addView(seedGroup, LinearLayout.LayoutParams(-2, dp(48)).apply { leftMargin = dp(2) })
         produceIcon = icon(FarmArtView.Kind.CRATE, R.string.farm_produce_inventory) { produceInventory() }
         toolbar.addView(produceIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
         world.harvestTarget = {
@@ -507,14 +509,17 @@ class FarmActivity : ThemedActivity() {
             }
         }
     }
-    private fun shop(trees: Boolean = false, bonuses: Boolean = false) {
+    private fun shop(bonuses: Boolean = false) {
         if (world.region == FarmRegion.FIELDS) { fieldShop(); return }
         if (world.region == FarmRegion.LIVESTOCK) { livestockShop(); return }
         showBubble(getString(R.string.farm_shop_title)) { body ->
             val tabs = LinearLayout(this)
-            listOf(R.string.farm_use_crops, R.string.farm_use_orchard, R.string.farm_bonuses).forEachIndexed { i, label ->
-                tabs.addView(button(getString(label)) { shop(i == 1, i == 2) }.apply {
-                    alpha = if ((bonuses && i == 2) || (!bonuses && i == if (trees) 1 else 0)) 1f else .65f
+            // The orchard used to have a tab of its own, holding nothing but a notice that fruit
+            // trees were being reworked. It is gone until they are back. A parcel can still be set
+            // to orchard use from its own sign - this was only ever the shop tab.
+            listOf(R.string.farm_use_crops, R.string.farm_bonuses).forEachIndexed { i, label ->
+                tabs.addView(button(getString(label)) { shop(i == 1) }.apply {
+                    alpha = if (bonuses == (i == 1)) 1f else .65f
                 }, LinearLayout.LayoutParams(0, -2, 1f).apply { setMargins(dp(2), dp(6), dp(2), dp(10)) })
             }
             body.addView(tabs)
@@ -557,6 +562,9 @@ class FarmActivity : ThemedActivity() {
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
 
+                // Shown as "lucky seed": it is a chance, rolled when the plant is watered, of a
+                // better harvest quality. The state field and these string keys still say
+                // fertilizer - fertilizerLevel is written into the save file and cannot be renamed.
                 body.addView(text(getString(R.string.farm_fertilizer_title), 17, true).apply { setPadding(0, dp(6), 0, 0) })
                 body.addView(text(getString(R.string.farm_fertilizer_body)).apply { setPadding(0, dp(6), 0, dp(12)) })
                 body.addView(text(getString(R.string.farm_fertilizer_level, state.criticalChance()), 13)
@@ -585,9 +593,7 @@ class FarmActivity : ThemedActivity() {
                     purchases.add(buy to cost)
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
-            } else if (trees) {
-                body.addView(text(getString(R.string.farm_orchard_parked)).apply { setPadding(dp(4), dp(16), dp(4), dp(16)) })
-            } else FarmCrop.ladder.forEach { crop ->
+            } else FarmCrop.catalog.forEach { crop ->
                 body.addView(seedRow(crop), LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
         }
@@ -1006,8 +1012,13 @@ class FarmActivity : ThemedActivity() {
         livestockUi.forEach { it() }
         balance.text = money(state.coins)
         balance.contentDescription = getString(R.string.farm_balance, money(state.coins), state.harvests)
-        selection.crop = state.selected; selection.stock = state.seeds[state.selected.ordinal]
-        selection.contentDescription = getString(R.string.farm_seed_stock, getString(state.selected.label), state.seeds[state.selected.ordinal])
+        val inStock = state.seeds[state.selected.ordinal]
+        // Nothing left of this seed means nothing to plant, so the little crop beside the bag goes
+        // away entirely rather than sitting there reading "0 in stock". The bag stays: it is what
+        // opens the picker, and it is where you go to get more.
+        selection.visibility = if (inStock > 0) View.VISIBLE else View.GONE
+        selection.crop = state.selected; selection.stock = inStock
+        selection.contentDescription = getString(R.string.farm_seed_stock, getString(state.selected.label), inStock)
         produceIcon.crop = FarmCrop.entries.firstOrNull { state.cropProduceTotal(it) > 0 } ?: state.selected
         produceIcon.stock = state.produceCount().takeIf { it > 0 }
         produceIcon.contentDescription = getString(R.string.farm_produce_stock, state.produceCount())

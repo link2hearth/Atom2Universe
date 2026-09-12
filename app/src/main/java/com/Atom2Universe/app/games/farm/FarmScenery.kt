@@ -258,14 +258,14 @@ class FarmScenery(private val sprites: FarmSprites) {
     private val bushSprites = mutableMapOf<Int, Bitmap>()
     private val bentBushSprites = mutableMapOf<Int, Bitmap>()
     /** Painted once per variant into an 80×80 silhouette, echoing the design's paintBush(). */
-    private fun bushSprite(id: Int): Bitmap {
-        return bushSprites.getOrPut(id) {
+    private fun bushSprite(id: Int, clumps: Int = BUSH_CLUMPS): Bitmap {
+        return bushSprites.getOrPut(id * 8 + clumps) {
             val bitmap = Bitmap.createBitmap(80, 80, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             val fill = Paint().apply { isAntiAlias = false }
             val s = 24f; val bx0 = 40f; val by0 = 72f
             fill.color = Color.rgb(0x57, 0x97, 0x56); canvas.drawOval(bx0 - s, by0 - 3f, bx0 + s, by0 + 7f, fill)
-            for (i in 0 until 5) {
+            for (i in 0 until clumps) {
                 val bx = bx0 + sin(i * 2.7f + id) * s * .5f; val by = by0 - 5f - i * 3f
                 fill.color = Color.rgb(0x32, 0x7e, 0x58); canvas.drawOval(bx - s * .62f, by - s * .49f, bx + s * .62f, by + s * .49f, fill)
                 fill.color = Color.rgb(0x43, 0x9b, 0x60); canvas.drawOval(bx - 1f - s * .55f, by - 3f - s * .43f, bx - 1f + s * .55f, by - 3f + s * .43f, fill)
@@ -309,19 +309,170 @@ class FarmScenery(private val sprites: FarmSprites) {
         canvas.drawBitmap(bent, null, RectF(baseX - 40f * scale, baseY - 72f * scale,
             baseX + 40f * scale, baseY + 8f * scale), paint)
     }
+    /**
+     * The bush with only its lowest [clumps] volumes left, standing still. The clearing mini-game
+     * tears one volume off per pull, so the bush comes apart in the player's hand instead of a few
+     * loose sprigs being plucked off ground that looked untouched.
+     *
+     * Unbent on purpose: [bush] caches one bitmap per wind frame, and keying that cache by clump
+     * count as well would multiply it fivefold for a bush that is about to be pulled out anyway.
+     */
+    fun bushClumps(canvas: Canvas, rect: RectF, clumps: Int, alpha: Int = 255,
+                   seed: Int = decorationHash(rect)) {
+        if (clumps <= 0) return
+        val sprite = bushSprite((seed and Int.MAX_VALUE) % 6, clumps.coerceIn(1, BUSH_CLUMPS))
+        val scale = rect.width() / 60f
+        val baseX = rect.centerX(); val baseY = rect.bottom - 4f
+        paint.alpha = alpha
+        canvas.drawBitmap(sprite, null, RectF(baseX - 40f * scale, baseY - 72f * scale,
+            baseX + 40f * scale, baseY + 8f * scale), paint)
+        paint.alpha = 255
+    }
+    /** Where volume [index] of a bush sits on the map - the mini-game bursts leaves at the one it just tore off. */
+    fun bushClumpCenter(rect: RectF, index: Int, seed: Int = decorationHash(rect)): PointF {
+        val id = (seed and Int.MAX_VALUE) % 6
+        val scale = rect.width() / 60f
+        // Mirrors the placement inside bushSprite: s = 24, base at sprite (40, 72).
+        return PointF(rect.centerX() + sin(index * 2.7f + id) * 24f * .5f * scale,
+            rect.bottom - 4f + (-5f - index * 3f) * scale)
+    }
+    /** The fenced beds, plus their sign and the width of their fence: no wild grass grows inside. */
+    private val beds = FarmLayout.lands.map {
+        RectF(it.x - 10, it.y - 20, it.x + it.width + 10, it.y + it.height + 12)
+    }
+    /**
+     * Whether a loose tuft of grass may root at this world point. Ground that belongs to something
+     * else does not grow wild grass: the planting beds, the trodden trails, and anything already
+     * standing on it. Only the root is tested, not the whole blade - a tuft growing right up
+     * against a path leans a little over it, which is what a verge looks like.
+     *
+     * Reads nothing but state fixed in the constructor, so the meadow bake can call it off the UI thread.
+     */
+    fun tuftAllowed(x: Float, y: Float): Boolean {
+        if (beds.any { it.contains(x, y) }) return false
+        if (nearestPathDistance(x, y) < PATH_HALF_WIDTH + 5f) return false
+        if (shed.contains(x, y) || well.contains(x, y)) return false
+        return decorations.none { it.rect.contains(x, y) }
+    }
+    /** One piece of clutter to pull out of a neglected cell: a weed clump or a small stone. */
+    class Rubble(val fx: Float, val fy: Float, val stone: Boolean, val scale: Float, val seed: Int)
+
+    /**
+     * What a cluttered cell is made of: four pieces on average, weeds and stones mixed, laid out
+     * from the cell's own hash. The art and the hit testing both read this one list, so what the
+     * finger grabs is always what the eye sees - which is what the sprite-sheet version got wrong.
+     * It drew one flat PNG square of weeds at rest, then a completely different set of little
+     * bushes as soon as the mini-game started.
+     */
+    fun rubbleLayout(rect: RectF, seed: Int = decorationHash(rect)): List<Rubble> {
+        val random = Random(seed)
+        val count = 3 + random.nextInt(3)
+        // Slots on a loose 3x2 grid, then jittered: scattering purely at random piles pieces on top
+        // of one another, and two overlapping pieces cannot be told apart or grabbed separately.
+        return (0 until 6).shuffled(random).take(count).map { slot ->
+            Rubble(.18f + slot % 3 * .32f + (random.nextFloat() - .5f) * .13f,
+                // Each piece stands ON its fy line and is drawn upwards from it, so the rows sit
+                // low in the cell: placed around the middle, the clutter all bunches near the top.
+                .50f + slot / 3 * .31f + (random.nextFloat() - .5f) * .10f,
+                random.nextFloat() < .35f, .85f + random.nextFloat() * .45f, random.nextInt())
+        }
+    }
+    /** The whole cluttered cell, at rest. */
+    fun rubble(canvas: Canvas, rect: RectF, windTime: Float) {
+        rubbleLayout(rect).forEach { rubblePiece(canvas, rect, it, windTime) }
+    }
+    /** One piece of it - the mini-game draws them one by one so it can leave out what was pulled. */
+    fun rubblePiece(canvas: Canvas, rect: RectF, item: Rubble, windTime: Float, alpha: Int = 255) {
+        val x = rect.left + item.fx * rect.width()
+        val y = rect.top + item.fy * rect.height()
+        if (item.stone) {
+            val w = 18f * item.scale; val h = 13f * item.scale
+            paint.alpha = alpha
+            pixelSprite(canvas, "pebble:${(item.seed and Int.MAX_VALUE) % 3}", 32, 22,
+                RectF(x - w / 2, y - h, x + w / 2, y)) {
+                drawRock(it, RectF(4f, 2f, 28f, 22f), (item.seed and Int.MAX_VALUE) % 3)
+            }
+            paint.alpha = 255
+        } else {
+            val w = 22f * item.scale; val h = 18f * item.scale
+            canvas.save()
+            // The sprite is cached upright and the whole clump is tilted about its own root, so the
+            // weeds catch the wind without a cached bitmap per lean angle.
+            canvas.rotate(FarmSprites.gustAt(x, windTime) * 5f, x, y)
+            paint.alpha = alpha
+            pixelSprite(canvas, "weed:${(item.seed and Int.MAX_VALUE) % 4}", 32, 26,
+                RectF(x - w / 2, y - h, x + w / 2, y)) { drawWeed(it, (item.seed and Int.MAX_VALUE) % 4) }
+            paint.alpha = 255
+            canvas.restore()
+        }
+    }
+    /** A rough clump of tall weeds: blades fanning out of one root, in the three greens the beds use. */
+    private fun drawWeed(canvas: Canvas, variant: Int) {
+        // 32x26 with the root at (16, 23): checked against the widest fan and the longest blade, the
+        // tips clear every edge by about three pixels. A blade cut off by the sprite's border reads
+        // as a straight razor line and gives the whole clump away as a rectangle.
+        val rootX = 16f; val rootY = 23f
+        val brush = Paint().apply { isAntiAlias = false; strokeCap = Paint.Cap.BUTT }
+        brush.style = Paint.Style.FILL
+        brush.color = Color.rgb(0x1d, 0x6b, 0x3d)
+        canvas.drawOval(rootX - 5f, rootY - 2f, rootX + 5f, rootY + 3f, brush)
+        brush.style = Paint.Style.STROKE
+        for (blade in 0 until 5) {
+            val spread = (blade - 2) * .36f + sin(variant * 2.1f + blade * 1.7f) * .12f
+            val length = 13f + sin(variant * 3.3f + blade * 2.9f) * 4f
+            val tipX = rootX + sin(spread) * length
+            val tipY = rootY - cos(spread) * length
+            // A wide dark stroke with a narrower bright one laid over it reads as a curved blade
+            // without any of the maths a real curve would need.
+            brush.strokeWidth = 4f; brush.color = Color.rgb(0x23, 0x7e, 0x45)
+            canvas.drawLine(rootX, rootY, tipX, tipY, brush)
+            brush.strokeWidth = 2f
+            brush.color = if (blade % 2 == 0) Color.rgb(0x5f, 0xb8, 0x4a) else Color.rgb(0x9a, 0xd9, 0x53)
+            canvas.drawLine(rootX, rootY - 1f, tipX - sin(spread) * 3f, tipY + cos(spread) * 3f, brush)
+        }
+    }
     /** A stable, wind-free rock: shaded facets plus an optional moss tuft, echoing the design's rock(). */
-    fun rock(canvas: Canvas, rect: RectF, seed: Int = decorationHash(rect)) {
+    private fun rockStable(seed: Int): Int {
         var hash = seed xor (seed ushr 16)
         hash *= 0x45d9f3b
-        val stable = (hash xor (hash ushr 16)) and Int.MAX_VALUE
+        return (hash xor (hash ushr 16)) and Int.MAX_VALUE
+    }
+    /** The art box of one rock variant inside the 48x40 sprite - the single source for its geometry. */
+    private fun rockBody(variant: Int): RectF {
+        val width = when (variant / 2) { 0 -> 48f; 1 -> 41f; else -> 44f }
+        val height = when (variant / 2) { 0 -> 40f; 1 -> 40f; else -> 30f }
+        return RectF((48f - width) / 2f, 40f - height, (48f + width) / 2f, 40f)
+    }
+    /**
+     * Where the rock really sits inside [rect]. It STANDS on the bottom of its cell rather than
+     * filling it, so its middle is nowhere near the middle of the cell - between 9 and 14 world
+     * units lower, depending on the variant. Anything that has to turn a rock, aim at one or throw
+     * its dust must use this; spinning it about the cell centre visibly swings it round a point
+     * hanging in the air above it.
+     */
+    fun rockCenter(rect: RectF, seed: Int = decorationHash(rect)): PointF {
+        val variant = rockStable(seed) % 6
+        val body = rockBody(variant)
+        val s = body.width() / 2.4f
+        val vScale = if (variant % 3 == 1) .8f else 1f
+        // drawRock puts the base 4 art pixels above the sprite's foot and spans -1.1s to +0.07s
+        // around it, so the silhouette's middle is a little over half of 1.1s up from that base.
+        val centerY = (body.bottom - 4f) - .515f * s * vScale
+        return PointF(rect.left + body.centerX() / 48f * rect.width(),
+            rect.top + centerY / 40f * rect.height())
+    }
+    /**
+     * [alpha] has to be passed in: this class paints with its own Paint, so a caller dimming its own
+     * one and then calling here changed nothing at all - which is why the cleared rock never faded.
+     */
+    fun rock(canvas: Canvas, rect: RectF, alpha: Int = 255, seed: Int = decorationHash(rect)) {
+        val stable = rockStable(seed)
         val variant = stable % 6
         canvas.save()
         if ((stable ushr 4) and 1 != 0) canvas.scale(-1f, 1f, rect.centerX(), rect.centerY())
-        pixelSprite(canvas, "rock:$variant", 48, 40, rect) {
-            val width = when (variant / 2) { 0 -> 48f; 1 -> 41f; else -> 44f }
-            val height = when (variant / 2) { 0 -> 40f; 1 -> 40f; else -> 30f }
-            drawRock(it, RectF((48f - width) / 2f, 40f - height, (48f + width) / 2f, 40f), variant % 3)
-        }
+        paint.alpha = alpha
+        pixelSprite(canvas, "rock:$variant", 48, 40, rect) { drawRock(it, rockBody(variant), variant % 3) }
+        paint.alpha = 255
         canvas.restore()
     }
     private fun drawRock(canvas: Canvas, rect: RectF, variant: Int) {
@@ -515,12 +666,14 @@ class FarmScenery(private val sprites: FarmSprites) {
         block(canvas, 0f, 34f, 100f, 4f, Color.rgb(105, 70, 50))
         canvas.restore()
     }
-    private companion object {
-        const val GRID_CELL = 48f
-        const val PATH_HALF_WIDTH = 31f
-        const val GROUND_SCALE = .25f
+    companion object {
+        /** Volumes a full bush is built from. The clearing mini-game tears them off one by one. */
+        const val BUSH_CLUMPS = 5
+        private const val GRID_CELL = 48f
+        private const val PATH_HALF_WIDTH = 31f
+        private const val GROUND_SCALE = .25f
         // Half-width + its wobble (2.7) + the green blend margin (6), rounded up: nothing outside
         // this radius of a path sample can ever be coloured, so the splat need not reach further.
-        const val MAX_MARGIN = 42f
+        private const val MAX_MARGIN = 42f
     }
 }

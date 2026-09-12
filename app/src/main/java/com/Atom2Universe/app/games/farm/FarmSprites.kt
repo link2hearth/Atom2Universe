@@ -39,40 +39,10 @@ class FarmSprites(private val context: Context) {
     }
 
     fun crop(canvas: Canvas, crop: FarmCrop, variant: Int, stage: Int, target: RectF,
-             growth: Float? = null, windTime: Float? = null, artVariant: Int = variant) {
-        // Crops ported to procedural Kotlin drawing (see FarmPlantArt) bypass the sprite sheet
-        // entirely; every caller - field, harvest minigame, shop and inventory previews, produce
-        // icon - already goes through this one function, so nothing else needs to change.
-        if (FarmPlantArt.supports(crop)) {
-            FarmPlantArt.draw(canvas, crop, artVariant, growth ?: (stage / 4f), target, windTime)
-            return
-        }
-        val bitmap = sheet(crop.sheet)
-        val rows = if (crop.tree) 6 else 8
-        val row = crop.row + variant
-        val key = "${crop.name}:$variant:$stage"
-        val source = bounds.getOrPut(key) {
-            val cell = Rect(stage * bitmap.width / 5, row * bitmap.height / rows,
-                (stage + 1) * bitmap.width / 5, (row + 1) * bitmap.height / rows)
-            // Alpha bounds remove export padding and align each sprite to the soil surface.
-            var left = cell.right; var top = cell.bottom; var right = cell.left; var bottom = cell.top
-            for (y in cell.top until cell.bottom) for (x in cell.left until cell.right) {
-                if ((bitmap.getPixel(x, y) ushr 24) > 128) {
-                    left = minOf(left, x); top = minOf(top, y)
-                    right = maxOf(right, x + 1); bottom = maxOf(bottom, y + 1)
-                }
-            }
-            if (right > left && bottom > top) Rect(left, top, right, bottom) else cell
-        }
-        val cellWidth = bitmap.width / 5f
-        val cellHeight = bitmap.height / rows.toFloat()
-        val scale = minOf(target.width() / cellWidth, target.height() / cellHeight)
-        val w = source.width() * scale
-        val h = source.height() * scale
-        canvas.drawBitmap(bitmap, source, RectF(target.centerX() - w / 2, target.bottom - h,
-            target.centerX() + w / 2, target.bottom), paint)
+             growth: Float? = null, windTime: Float? = null, artVariant: Int = variant,
+             established: Boolean = false) {
+        FarmPlantArt.draw(canvas, crop, artVariant, growth ?: (stage / 4f), target, windTime, established)
     }
-
     fun flower(canvas: Canvas, sheetName: String, row: Int, stage: Int, target: RectF) {
         val bitmap = sheet(sheetName)
         val rows = 8
@@ -305,7 +275,7 @@ class FarmSprites(private val context: Context) {
         return bitmap
     }
     /** The loose tufts alone, upright, on transparent ground - the layer that gets slid. See [bakeMeadowBed]. */
-    fun bakeMeadowTufts(columnStart: Int, rowStart: Int, columns: Int, rows: Int): Bitmap {
+    fun bakeMeadowTufts(columnStart: Int, rowStart: Int, columns: Int, rows: Int, mask: TuftMask): Bitmap {
         val tile = (GRASS_TILE * MEADOW_SCALE).toInt()
         val bitmap = Bitmap.createBitmap(columns * tile, rows * tile, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -315,9 +285,10 @@ class FarmSprites(private val context: Context) {
         val cache = mutableMapOf<Int, Bitmap>()
         // One tile of bleed on every side: a tuft stands well above its own base, so the ones rooted
         // just outside still lean into this bitmap. They are clipped by its edges, which is right.
-        forEachTuft(columnStart - 1, rowStart - 1, columns + 2, rows + 2) { x, y, tuft ->
-            canvas.drawBitmap(tuftSprite(cache, brush, tuft.height, 0f, tuft.flower, tuft.seed),
-                null, tuftTarget(x, y, 1f), brush)
+        forEachTuft(columnStart - 1, rowStart - 1, columns + 2, rows + 2) { column, row, slot, x, y, tuft ->
+            if (mask.allows(column, row, slot))
+                canvas.drawBitmap(tuftSprite(cache, brush, tuft.height, 0f, tuft.flower, tuft.seed),
+                    null, tuftTarget(x, y, 1f), brush)
         }
         return bitmap
     }
@@ -328,21 +299,49 @@ class FarmSprites(private val context: Context) {
      * at full zoom-out this would be thousands of draws per frame, which is the wall the baked
      * layer exists to avoid.
      */
-    fun tufts(canvas: Canvas, columnStart: Int, rowStart: Int, columns: Int, rows: Int, windTime: Float) {
-        forEachTuft(columnStart, rowStart, columns, rows) { x, y, tuft ->
-            drawTuft(canvas, x, y, tuft.height, windAt(x, windTime), tuft.flower, tuft.seed)
+    fun tufts(canvas: Canvas, columnStart: Int, rowStart: Int, columns: Int, rows: Int,
+              windTime: Float, mask: TuftMask) {
+        forEachTuft(columnStart, rowStart, columns, rows) { column, row, slot, x, y, tuft ->
+            if (mask.allows(column, row, slot))
+                drawTuft(canvas, x, y, tuft.height, windAt(x, windTime), tuft.flower, tuft.seed)
         }
     }
     private inline fun forEachTuft(columnStart: Int, rowStart: Int, columns: Int, rows: Int,
-                                   action: (x: Float, y: Float, tuft: Tuft) -> Unit) {
+                                   action: (column: Int, row: Int, slot: Int, x: Float, y: Float, tuft: Tuft) -> Unit) {
         for (row in 0 until rows) for (column in 0 until columns) {
-            val left = (columnStart + column) * GRASS_TILE.toFloat()
-            val top = (rowStart + row) * GRASS_TILE.toFloat()
+            val c = columnStart + column; val r = rowStart + row
+            val left = c * GRASS_TILE.toFloat(); val top = r * GRASS_TILE.toFloat()
             for (slot in 0 until 3) {
-                val tuft = tuftAt(columnStart + column, rowStart + row, slot) ?: continue
-                action(left + tuft.dx, top + tuft.dy, tuft)
+                val tuft = tuftAt(c, r, slot) ?: continue
+                action(c, r, slot, left + tuft.dx, top + tuft.dy, tuft)
             }
         }
+    }
+
+    /**
+     * Which tuft slots are allowed to grow at all. Grass has no business sprouting through a
+     * planting bed, a trodden path or the middle of a bush, but asking that question costs a walk
+     * over every trail sample and every decoration on the map - far too much to repeat for a
+     * thousand blades on every frame. The answer never changes, so it is settled once, off the UI
+     * thread, and read back here as a single array lookup.
+     */
+    class TuftMask(val columnStart: Int, val rowStart: Int, val columns: Int, val rows: Int) {
+        val bits = BooleanArray(columns * rows * 3)
+        fun index(column: Int, row: Int, slot: Int) =
+            ((row - rowStart) * columns + (column - columnStart)) * 3 + slot
+        fun allows(column: Int, row: Int, slot: Int): Boolean =
+            column >= columnStart && row >= rowStart &&
+                column < columnStart + columns && row < rowStart + rows &&
+                bits[index(column, row, slot)]
+    }
+    /** Settles [TuftMask] over a tile range; [clear] answers whether one world point may carry grass. */
+    fun tuftMask(columnStart: Int, rowStart: Int, columns: Int, rows: Int,
+                 clear: (x: Float, y: Float) -> Boolean): TuftMask {
+        val mask = TuftMask(columnStart, rowStart, columns, rows)
+        forEachTuft(columnStart, rowStart, columns, rows) { column, row, slot, x, y, _ ->
+            mask.bits[mask.index(column, row, slot)] = clear(x, y)
+        }
+        return mask
     }
 
     fun farmstead(canvas: Canvas, target: RectF) {

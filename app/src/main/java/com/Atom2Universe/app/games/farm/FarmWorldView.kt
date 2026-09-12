@@ -8,18 +8,31 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import com.Atom2Universe.app.R
 
+/** Pulls needed to tear a bush out. One volume comes off each time; the last stub goes with the burst. */
+private const val BUSH_PULLS = 4
+/** How far the finger must travel from where it pressed for one pull to count, in world units. */
+private const val PULL_THRESHOLD = 26f
+
 /**
  * A quick tactile mini-game before a debris cell actually clears.
- * Rock: circle a finger around the cell to roll it away (rotation accumulates from the finger's angle).
- * Weed/tuft: a few small sprigs sit at fixed spots; drag each one out past a short threshold, one by one.
+ * Rock: circle a finger around it to roll it away (rotation accumulates from the finger's angle).
+ * Bush: grab it anywhere and pull - each pull rips off one of the volumes it is built from, so the
+ *   bush visibly comes apart in your hand. Drag back towards where you pressed to take another.
+ * Cluttered ground: four-odd weed clumps and small stones lie about; drag each one out past a
+ *   short threshold. Their placement comes from FarmScenery.rubbleLayout, the same list the art
+ *   reads, so a piece is always grabbed exactly where it is drawn.
  */
-private class DebrisGame(val cell: Int, debris: Int, val startTime: Long) {
+private class DebrisGame(val cell: Int, debris: Int, val startTime: Long,
+                        val rubble: List<FarmScenery.Rubble> = emptyList()) {
     val rock = debris == 2
-    val anchors = if (rock) emptyList() else List(if (debris == 1) 3 else 2) { i ->
-        val r = kotlin.random.Random(cell * 97 + i * 13)
-        PointF(.22f + r.nextFloat() * .56f, .4f + r.nextFloat() * .4f)
-    }
-    val plucked = BooleanArray(anchors.size)
+    val bush = debris == 1
+    /** Volumes torn off so far, and whether the finger has come back far enough to take another. */
+    var torn = 0
+    var armed = true
+    var pulling = false
+    var pullFromX = 0f
+    var pullFromY = 0f
+    val plucked = BooleanArray(rubble.size)
     var rotation = 0f
     var lastAngle = Float.NaN
     var dragAnchor = -1
@@ -34,8 +47,12 @@ private class DebrisGame(val cell: Int, debris: Int, val startTime: Long) {
     var done = false
     var doneAt = 0L
     val angles = FloatArray(6) { kotlin.random.Random(cell * 31 + it).nextFloat() * 360f }
-    fun progress() = if (rock) (rotation / 720f).coerceIn(0f, 1f)
-        else if (anchors.isEmpty()) 1f else plucked.count { it } / anchors.size.toFloat()
+    fun progress() = when {
+        rock -> (rotation / 720f).coerceIn(0f, 1f)
+        bush -> torn / BUSH_PULLS.toFloat()
+        rubble.isEmpty() -> 1f
+        else -> plucked.count { it } / rubble.size.toFloat()
+    }
     fun checkDone(now: Long) { if (!done && progress() >= 1f) { done = true; doneAt = now } }
 }
 
@@ -244,9 +261,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             debrisTicking = false
             val game = debrisGame
             if (game != null) when {
-                game.done && System.currentTimeMillis() - game.doneAt > 480L -> {
-                    state.clean(game.cell); debrisGame = null; onDebrisCleared(game.cell)
-                }
+                game.done && System.currentTimeMillis() - game.doneAt > 480L -> finishDebrisGame(game)
                 !game.done && System.currentTimeMillis() - game.lastActivityAt > 6000L -> debrisGame = null
                 else -> { debrisTicking = true; postOnAnimation(this) }
             }
@@ -254,19 +269,36 @@ class FarmWorldView(context: Context, private val state: FarmState,
         }
     }
     private fun ensureDebrisTicking() { if (!debrisTicking) { debrisTicking = true; postOnAnimation(debrisTick) } }
+    /** Settles a won game now instead of at the end of its fade - see [startDebrisGame]. */
+    private fun finishDebrisGame(game: DebrisGame) {
+        state.clean(game.cell); debrisGame = null; onDebrisCleared(game.cell)
+    }
     private fun startDebrisGame(cell: Int): DebrisGame {
-        val game = DebrisGame(cell, state.plots[cell].debris, System.currentTimeMillis())
+        // A won game stays here for the length of its fade, and only then does its cell get cleaned.
+        // Replacing it without settling it first drops that clean-up on the floor, and the cell that
+        // was just cleared comes straight back with all its debris.
+        debrisGame?.takeIf { it.done }?.let { finishDebrisGame(it) }
+        val game = DebrisGame(cell, state.plots[cell].debris, System.currentTimeMillis(),
+            scenery.rubbleLayout(cells[cell]))
         debrisGame = game; ensureDebrisTicking(); invalidate()
         return game
     }
-    private fun angleOf(cell: RectF, x: Float, y: Float) =
-        Math.toDegrees(kotlin.math.atan2((y - cell.centerY()).toDouble(), (x - cell.centerX()).toDouble())).toFloat()
+    /**
+     * The angle of the finger about the rock's OWN centre. It used to be measured about the centre
+     * of the cell, which sits well above the rock - a rock stands on the bottom of its square - so
+     * circling the stone turned it about a point hanging in the air and it swung instead of rolling.
+     */
+    private fun angleOf(cell: RectF, x: Float, y: Float): Float {
+        val pivot = scenery.rockCenter(cell)
+        return Math.toDegrees(kotlin.math.atan2((y - pivot.y).toDouble(), (x - pivot.x).toDouble())).toFloat()
+    }
     private fun nearestAnchor(game: DebrisGame, x: Float, y: Float): Int {
         val cell = cells[game.cell]
         var best = -1; var bestDist = 30f
-        game.anchors.forEachIndexed { i, anchor ->
+        game.rubble.forEachIndexed { i, item ->
             if (game.plucked[i]) return@forEachIndexed
-            val dist = kotlin.math.hypot((x - (cell.left + anchor.x * cell.width())).toDouble(), (y - (cell.top + anchor.y * cell.height())).toDouble()).toFloat()
+            val dist = kotlin.math.hypot((x - (cell.left + item.fx * cell.width())).toDouble(),
+                (y - (cell.top + item.fy * cell.height())).toDouble()).toFloat()
             if (dist < bestDist) { best = i; bestDist = dist }
         }
         return best
@@ -279,8 +311,15 @@ class FarmWorldView(context: Context, private val state: FarmState,
         return when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 val existing = debrisGame
+                // A cell that has just been won still shows its debris for another instant, while
+                // the pieces fade out and before state.clean() runs. Pressing it again inside that
+                // window used to fall through and open a BRAND NEW game on the very same cell, with
+                // its pull count back at zero - so one pull too many put back everything that had
+                // just been torn out. The cell is finished: swallow the press.
+                if (existing != null && existing.done && cells[existing.cell].contains(x, y)) return true
                 val onExisting = existing != null && !existing.done &&
-                    if (existing.rock) cells[existing.cell].contains(x, y) else nearestAnchor(existing, x, y) >= 0
+                    if (existing.rock || existing.bush) cells[existing.cell].contains(x, y)
+                    else nearestAnchor(existing, x, y) >= 0
                 // A tap on a fresh debris cell always starts its own mini-game, even if another one sits unfinished elsewhere.
                 val game = if (onExisting) existing!! else {
                     val cell = cells.indexOfFirst { it.contains(x, y) }
@@ -289,7 +328,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 }
                 game.lastActivityAt = now
                 if (game.rock) game.lastAngle = angleOf(cells[game.cell], x, y)
-                else { val anchor = nearestAnchor(game, x, y); game.dragAnchor = anchor
+                else if (game.bush) {
+                    game.pulling = true; game.armed = true
+                    game.pullFromX = x; game.pullFromY = y; game.dragX = x; game.dragY = y
+                } else { val anchor = nearestAnchor(game, x, y); game.dragAnchor = anchor
                     if (anchor >= 0) { game.dragFromX = x; game.dragFromY = y; game.dragX = x; game.dragY = y } }
                 invalidate(); true
             }
@@ -305,11 +347,22 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         game.rotation += kotlin.math.abs(delta); game.checkDone(now)
                     }
                     game.lastAngle = angle
+                } else if (game.bush) {
+                    game.dragX = x; game.dragY = y
+                    val pulled = kotlin.math.hypot((x - game.pullFromX).toDouble(), (y - game.pullFromY).toDouble()).toFloat()
+                    if (game.armed && pulled > PULL_THRESHOLD) {
+                        game.torn++
+                        // The volumes are stripped from the top down, so the one that just came off
+                        // is whichever was highest a moment ago - that is where the leaves scatter.
+                        val burst = scenery.bushClumpCenter(cells[game.cell], FarmScenery.BUSH_CLUMPS - game.torn)
+                        game.burstAt = now; game.burstX = burst.x; game.burstY = burst.y
+                        game.armed = false; game.checkDone(now)
+                    } else if (!game.armed && pulled < 10f) game.armed = true
                 } else if (game.dragAnchor >= 0) {
                     game.dragX = x; game.dragY = y
-                    val cell = cells[game.cell]; val anchor = game.anchors[game.dragAnchor]
-                    val ax = cell.left + anchor.x * cell.width(); val ay = cell.top + anchor.y * cell.height()
-                    if (kotlin.math.hypot((x - ax).toDouble(), (y - ay).toDouble()) > 26.0) {
+                    val cell = cells[game.cell]; val item = game.rubble[game.dragAnchor]
+                    val ax = cell.left + item.fx * cell.width(); val ay = cell.top + item.fy * cell.height()
+                    if (kotlin.math.hypot((x - ax).toDouble(), (y - ay).toDouble()) > PULL_THRESHOLD) {
                         game.plucked[game.dragAnchor] = true
                         game.burstAt = now; game.burstX = ax; game.burstY = ay
                         game.dragAnchor = -1; game.checkDone(now)
@@ -319,7 +372,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val game = debrisGame ?: return false
-                game.lastAngle = Float.NaN; game.dragAnchor = -1; invalidate(); true
+                game.lastAngle = Float.NaN; game.dragAnchor = -1; game.pulling = false; invalidate(); true
             }
             else -> debrisGame != null
         }
@@ -333,7 +386,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     // used to do - only bought a 48 MB texture upload several times a second and the stutter that
     // came with it. Nearest-neighbour on purpose: these are art pixels, they must stay square.
     private class Meadow(val columnStart: Int, val rowStart: Int, val columns: Int, val rows: Int,
-                        val bed: Bitmap, val tufts: Bitmap)
+                        val bed: Bitmap, val tufts: Bitmap, val mask: FarmSprites.TuftMask)
     private val meadows = mutableMapOf<FarmRegion, Meadow>()
     private val meadowsBaking = mutableSetOf<FarmRegion>()
     private val meadowPaint = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
@@ -347,6 +400,14 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private var cameraX = 0f
     private var cameraY = 0f
     private var multiTouch = false
+    /**
+     * Set when a one-finger gesture starts on a planting cell of an unlocked parcel. Those cells
+     * answer to gestures of their own - pull to harvest, tug to clear, tap to water - and a drag
+     * that begins on one is meant for the plant, not for the camera. Panning would otherwise slide
+     * the whole farm out from under the finger on the first pixel of movement. Taps and long
+     * presses are untouched: the detector still sees every event, only the scroll is refused.
+     */
+    private var cellHeld = false
     var dismissBubble: (() -> Boolean)? = null
     private var dismissGesture = false
     private val regionScenery = FarmRegionScenery(sprites)
@@ -418,6 +479,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val gestures = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent) = true
         override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+            if (cellHeld) return true
             if (!multiTouch && !scale.isInProgress) {
                 cameraX -= distanceX; cameraY -= distanceY; constrain(); invalidate()
             }
@@ -506,6 +568,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
             mapTop() + (height - mapTop() - mapHeight) / 2 - worldTop * zoom
         else cameraY.coerceIn(height - worldHeight * zoom, mapTop() - worldTop * zoom)
     }
+    /** True where a one-finger drag must stay with the plant rather than move the camera. */
+    private fun onPlantingCell(x: Float, y: Float): Boolean {
+        if (region != FarmRegion.HOME) return false
+        val cell = cells.indexOfFirst { it.contains(x, y) }
+        return cell >= 0 && state.parcels[FarmLayout.parcelOf(cell)].unlocked
+    }
     /** Which raw handler owns the CURRENT gesture, decided once at ACTION_DOWN and never re-decided mid-gesture. */
     private enum class TouchClaim { NONE, DEBRIS, HARVEST }
     private var touchClaim = TouchClaim.NONE
@@ -532,11 +600,17 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     touchClaim = if (handleDebrisTouch(event)) TouchClaim.DEBRIS
                         else if (handleHarvestTouch(event)) TouchClaim.HARVEST else TouchClaim.NONE
                 }
-                if (touchClaim == TouchClaim.NONE) { scale.onTouchEvent(event); gestures.onTouchEvent(event) }
+                if (touchClaim == TouchClaim.NONE) {
+                    if (event.actionMasked == MotionEvent.ACTION_DOWN)
+                        cellHeld = onPlantingCell((event.x - cameraX) / zoom, (event.y - cameraY) / zoom)
+                    scale.onTouchEvent(event); gestures.onTouchEvent(event)
+                }
             }
         }
-        if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL)
+        if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
+            cellHeld = false
             parent?.requestDisallowInterceptTouchEvent(false)
+        }
         return true
     }
     override fun performClick(): Boolean { super.performClick(); return true }
@@ -564,10 +638,15 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val (firstColumn, firstRow, columns, rows) = meadowTiles(target)
         Thread {
             val bed = sprites.bakeMeadowBed(firstColumn, firstRow, columns, rows)
-            val tufts = sprites.bakeMeadowTufts(firstColumn, firstRow, columns, rows)
+            // A tile wider than the meadow on every side, because the bake itself reaches that far
+            // for the tufts that lean in from just outside.
+            val mask = sprites.tuftMask(firstColumn - 1, firstRow - 1, columns + 2, rows + 2) { x, y ->
+                target != FarmRegion.HOME || scenery.tuftAllowed(x, y)
+            }
+            val tufts = sprites.bakeMeadowTufts(firstColumn, firstRow, columns, rows, mask)
             post {
                 meadowsBaking.remove(target)
-                meadows[target] = Meadow(firstColumn, firstRow, columns, rows, bed, tufts)
+                meadows[target] = Meadow(firstColumn, firstRow, columns, rows, bed, tufts, mask)
                 invalidate()
             }
         }.apply { name = "farm-meadow-bake"; priority = Thread.MIN_PRIORITY }.start()
@@ -604,7 +683,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val columns = lastColumn - firstColumn + 1; val rows = lastRow - firstRow + 1
         if (columns <= 0 || rows <= 0) return
         if (columns.toLong() * rows <= LIVE_TUFT_TILES)
-            sprites.tufts(canvas, firstColumn, firstRow, columns, rows, windTime)
+            sprites.tufts(canvas, firstColumn, firstRow, columns, rows, windTime, meadow.mask)
         else
             drawMeadowLayer(canvas, meadow, meadow.tufts, FarmSprites.gustAt(visible.centerX(), windTime) * 5f)
     }
@@ -645,7 +724,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 if (p.debris != 0) {
                     val game = debrisGame?.takeIf { it.cell == i }
                     if (game != null) drawDebrisGame(canvas, cell, p.debris, game, now)
-                    else if (p.debris == 3) sprites.environment(canvas, 3, 0, cell)
+                    else if (p.debris == 3) scenery.rubble(canvas, cell, windTime)
                     else if (p.debris == 1) scenery.bush(canvas, cell, windTime)
                     else scenery.rock(canvas, cell)
                 } else {
@@ -668,7 +747,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         canvas.save(); canvas.translate(shakeX, 0f)
                         cropRect.set(cell.left - 2, cell.top - 9, cell.right + 2, cell.bottom - 5)
                         sprites.crop(canvas, crop, p.variant, p.stage(now), cropRect,
-                            growth = p.progress(now), windTime = windTime)
+                            growth = p.progress(now), windTime = windTime, established = p.established)
                         canvas.restore()
                         FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical)
                         if (p.progress(now) >= 1) label(canvas, context.getString(R.string.farm_ready), cell.centerX(), cell.top + 8, 10f)
@@ -725,19 +804,19 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private fun drawDebrisGame(canvas: Canvas, cell: RectF, debris: Int, game: DebrisGame, now: Long) {
         if (game.rock) {
             val fade = if (game.done) (1f - (now - game.doneAt) / 480f).coerceIn(0f, 1f) else 1f
+            // Everything here turns about the stone itself, never about the square it stands in.
+            val pivot = scenery.rockCenter(cell)
             canvas.save()
-            canvas.translate(cell.centerX(), cell.centerY())
+            canvas.translate(pivot.x, pivot.y)
             canvas.rotate(game.rotation % 360f)
             canvas.scale(fade, fade)
-            canvas.translate(-cell.centerX(), -cell.centerY())
-            paint.alpha = (fade * 255).toInt()
-            scenery.rock(canvas, cell)
-            paint.alpha = 255
+            canvas.translate(-pivot.x, -pivot.y)
+            scenery.rock(canvas, cell, (fade * 255).toInt())
             canvas.restore()
             if (!game.done) {
                 paint.style = Paint.Style.STROKE; paint.strokeWidth = 5f; paint.color = Color.rgb(255, 210, 90)
                 val r = cell.width() * .58f
-                canvas.drawArc(RectF(cell.centerX() - r, cell.centerY() - r, cell.centerX() + r, cell.centerY() + r),
+                canvas.drawArc(RectF(pivot.x - r, pivot.y - r, pivot.x + r, pivot.y + r),
                     -90f, 360f * game.progress(), false, paint)
                 paint.style = Paint.Style.FILL
             } else {
@@ -747,20 +826,30 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     val rad = a * kotlin.math.PI / 180
                     val dx = (kotlin.math.cos(rad) * t * 42).toFloat(); val dy = (kotlin.math.sin(rad) * t * 42 - t * 14).toFloat()
                     paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
-                    canvas.drawCircle(cell.centerX() + dx, cell.centerY() + dy, (3.5f * (1f - t)).coerceAtLeast(0f), paint)
+                    canvas.drawCircle(pivot.x + dx, pivot.y + dy, (3.5f * (1f - t)).coerceAtLeast(0f), paint)
                 }
             }
+        } else if (game.bush) {
+            val fade = if (game.done) (1f - (now - game.doneAt) / 400f).coerceIn(0f, 1f) else 1f
+            // The bush leans towards the pull, so the finger has something to fight against.
+            val lean = if (game.pulling) .35f else 0f
+            canvas.save()
+            canvas.translate((game.dragX - game.pullFromX).coerceIn(-20f, 20f) * lean,
+                (game.dragY - game.pullFromY).coerceIn(-20f, 20f) * lean)
+            // The last stub is yanked down into the ground rather than simply blinking out.
+            if (game.done) canvas.scale(fade, fade, cell.centerX(), cell.bottom)
+            scenery.bushClumps(canvas, cell, FarmScenery.BUSH_CLUMPS - game.torn, (fade * 255).toInt())
+            canvas.restore()
+            if (now - game.burstAt < 400) drawLeafBurst(canvas, game, now)
         } else {
             val fade = if (game.done) (1f - (now - game.doneAt) / 400f).coerceIn(0f, 1f) else 1f
-            game.anchors.forEachIndexed { i, anchor ->
+            game.rubble.forEachIndexed { i, item ->
                 if (game.plucked[i]) return@forEachIndexed
-                val ax = cell.left + anchor.x * cell.width(); val ay = cell.top + anchor.y * cell.height()
+                val ax = cell.left + item.fx * cell.width(); val ay = cell.top + item.fy * cell.height()
                 val dragging = game.dragAnchor == i
                 canvas.save()
                 if (dragging) canvas.translate((game.dragX - game.dragFromX) * .5f, (game.dragY - game.dragFromY) * .5f)
-                paint.alpha = (fade * 255).toInt()
-                scenery.bush(canvas, RectF(ax - 12f, ay - 16f, ax + 12f, ay + 12f), windTime)
-                paint.alpha = 255
+                scenery.rubblePiece(canvas, cell, item, windTime, (fade * 255).toInt())
                 canvas.restore()
                 if (dragging) {
                     paint.style = Paint.Style.STROKE; paint.strokeWidth = 3f; paint.color = Color.argb(160, 255, 248, 225)
@@ -768,18 +857,20 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     paint.style = Paint.Style.FILL
                 }
             }
-            if (now - game.burstAt < 400) {
-                val t = (now - game.burstAt) / 400f
-                paint.color = Color.rgb(126, 168, 88)
-                game.angles.take(4).forEach { a ->
-                    val rad = a * kotlin.math.PI / 180
-                    val dx = (kotlin.math.cos(rad) * t * 30).toFloat(); val dy = (kotlin.math.sin(rad) * t * 30 - t * 20).toFloat()
-                    paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
-                    canvas.drawCircle(game.burstX + dx, game.burstY + dy, (3f * (1f - t)).coerceAtLeast(0f), paint)
-                }
-            }
+            if (now - game.burstAt < 400) drawLeafBurst(canvas, game, now)
         }
         paint.style = Paint.Style.FILL; paint.alpha = 255
+    }
+    /** Leaves thrown off wherever the last piece of greenery was torn away. */
+    private fun drawLeafBurst(canvas: Canvas, game: DebrisGame, now: Long) {
+        val t = (now - game.burstAt) / 400f
+        paint.color = Color.rgb(126, 168, 88)
+        game.angles.take(4).forEach { a ->
+            val rad = a * kotlin.math.PI / 180
+            val dx = (kotlin.math.cos(rad) * t * 30).toFloat(); val dy = (kotlin.math.sin(rad) * t * 30 - t * 20).toFloat()
+            paint.alpha = ((1f - t) * 255).toInt().coerceIn(0, 255)
+            canvas.drawCircle(game.burstX + dx, game.burstY + dy, (3f * (1f - t)).coerceAtLeast(0f), paint)
+        }
     }
     /** A shallow arc above the plant, like a rainbow gauge: the marker sweeps it, a band marks the zone to hit. */
     private fun drawWateringGauge(canvas: Canvas, cell: RectF, game: WateringGauge, now: Long) {

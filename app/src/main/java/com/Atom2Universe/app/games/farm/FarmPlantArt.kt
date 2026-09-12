@@ -8,40 +8,44 @@ import android.graphics.RectF
 import android.util.LruCache
 import kotlin.math.*
 
-/** Native port of the three validated My Farm HTML studies. No WebView or asset PNG. */
+/** Native pixel crops: validated HTML studies and matching art for the remaining farm species. */
 object FarmPlantArt {
-    private val supported = setOf(FarmCrop.RADISH, FarmCrop.CARROT, FarmCrop.LETTUCE,
-        FarmCrop.POTATO, FarmCrop.CAULIFLOWER, FarmCrop.ZUCCHINI, FarmCrop.PEPPER, FarmCrop.EGGPLANT)
+    private val supported = FarmCrop.entries.toSet()
     fun supports(crop: FarmCrop) = crop in supported
     private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
-    private data class Key(val crop: FarmCrop, val variant: Int, val growth: Int)
+    private data class Key(val crop: FarmCrop, val variant: Int, val growth: Int, val established: Boolean)
     // Bound the cache by bytes: planting times differ, so growth snapshots cannot grow forever.
     private val cache = object : LruCache<Key, Bitmap>(12 * 1024 * 1024) {
         override fun sizeOf(key: Key, value: Bitmap) = value.allocationByteCount
     }
     fun draw(canvas: Canvas, crop: FarmCrop, variant: Int, growth: Float, target: RectF,
-             windTime: Float? = null) {
+             windTime: Float? = null, established: Boolean = false) {
         if (target.width() <= 0f || target.height() <= 0f) return
-        val key = Key(crop, Math.floorMod(variant, 4), (growth.coerceIn(0f, 1f) * 256).roundToInt())
+        val key = Key(crop, Math.floorMod(variant, 4), (growth.coerceIn(0f, 1f) * 256).roundToInt(), established && crop.tree)
         val bitmap = cache[key] ?: run {
             // Lettuce leaves extend below the root line; retain that transparent padding.
             val small = Bitmap.createBitmap(80, 88, Bitmap.Config.ARGB_8888)
-            PlantPainter(Canvas(small), key.variant, key.growth / 256.0).draw(crop)
+            PlantPainter(Canvas(small), key.variant, key.growth / 256.0, key.established).draw(crop)
             val enlarged = Bitmap.createScaledBitmap(small, 240, 264, false)
             small.recycle()
             cache.put(key, enlarged)
             enlarged
         }
         val artHeight = when (crop) {
+            FarmCrop.APPLE, FarmCrop.PEAR, FarmCrop.CHERRY -> 72f
+            FarmCrop.CORN, FarmCrop.WHEAT -> 66f
+            FarmCrop.PEAS, FarmCrop.CHILI, FarmCrop.BLUEBERRY -> 58f
             FarmCrop.POTATO -> 64f
-            FarmCrop.PEPPER, FarmCrop.EGGPLANT -> 62f
+            FarmCrop.PEPPER, FarmCrop.EGGPLANT, FarmCrop.TOMATO, FarmCrop.GRAPE -> 66f
+            FarmCrop.BROCCOLI, FarmCrop.ARTICHOKE, FarmCrop.LEEK, FarmCrop.RASPBERRY,
+            FarmCrop.PINEAPPLE -> 58f
             FarmCrop.LETTUCE -> 38f
             else -> 46f
         }
         val scale = min(target.width() / 72f, target.height() / artHeight)
         val bottomPadding = when (crop) {
             FarmCrop.LETTUCE -> 14f
-            FarmCrop.ZUCCHINI -> 10f
+            FarmCrop.ZUCCHINI, FarmCrop.PUMPKIN, FarmCrop.STRAWBERRY, FarmCrop.WATERMELON -> 10f
             else -> 5f
         }
         val base = target.bottom - bottomPadding * scale
@@ -52,7 +56,8 @@ object FarmPlantArt {
             // be its own copy of the formula with its own numbers - a 640-unit wave at 32 units a
             // second - so the vegetables rippled on their own clock, out of step with the meadow.
             // Only the timing is shared: the bend below, and its growth taper, stay the crop's own.
-            val bend = 1.1 * FarmSprites.gustAt(target.centerX(), windTime) * growth.coerceIn(0f, 1f)
+            val bend = (if (crop.tree) .65 else 1.1) * FarmSprites.gustAt(target.centerX(), windTime) *
+                (if (established && crop.tree) 1f else growth.coerceIn(0f, 1f))
             canvas.skew((-bend / artHeight).toFloat(), 0f)
         }
         // Art pixels remain large; only the transform samples the 3x image for gentle movement.
@@ -63,7 +68,8 @@ object FarmPlantArt {
 }
 
 /** Integer raster primitives match the HTML's scanline polygons instead of drawing vectors at zoom. */
-private class PlantPainter(private val canvas: Canvas, variant: Int, private val g: Double) {
+private class PlantPainter(private val canvas: Canvas, variant: Int, private val g: Double,
+                           private val established: Boolean = false) {
     private val paint = Paint().apply { isAntiAlias = false }
     private val s = 100 + variant * 17
     private val colors = HashMap<String, Int>()
@@ -134,10 +140,19 @@ private class PlantPainter(private val canvas: Canvas, variant: Int, private val
         val a=p(.08,0.0);val b=p(.88,0.0);line(a.first,a.second,b.first,b.second,1.0,pal[2])
     }
     fun draw(crop: FarmCrop) {
-        if (g < .055) { oval(x,y,7.0,2.0,"#5c4128");rect(x-1,y-1,3.0,1.0,"#e1ba79") }
+        if (g < .055 && !established) { oval(x,y,7.0,2.0,"#5c4128");rect(x-1,y-1,3.0,1.0,"#e1ba79") }
         val a=smooth(.025,.19)
-        if(a>0){line(x,y,x,y-9*a,1.0,pal[0]);leaf(x,y-9*a+1,-7*a,-3*a,2*a);leaf(x,y-9*a,6*a,-4*a,2*a)}
+        if(a>0 && !established){line(x,y,x,y-9*a,1.0,pal[0]);leaf(x,y-9*a+1,-7*a,-3*a,2*a);leaf(x,y-9*a,6*a,-4*a,2*a)}
         when(crop){
+            FarmCrop.TOMATO -> tomato()
+            FarmCrop.BROCCOLI -> broccoli()
+            FarmCrop.WATERMELON -> watermelon()
+            FarmCrop.GRAPE -> grape()
+            FarmCrop.ARTICHOKE -> artichoke()
+            FarmCrop.LEEK -> leek()
+            FarmCrop.ONION -> onion()
+            FarmCrop.RASPBERRY -> raspberry()
+            FarmCrop.PINEAPPLE -> pineapple()
             FarmCrop.RADISH -> radish()
             FarmCrop.CARROT -> carrot()
             FarmCrop.LETTUCE -> lettuce()
@@ -146,9 +161,464 @@ private class PlantPainter(private val canvas: Canvas, variant: Int, private val
             FarmCrop.ZUCCHINI -> zucchini()
             FarmCrop.PEPPER -> fruitPlant(false)
             FarmCrop.EGGPLANT -> fruitPlant(true)
-            else -> Unit
+            FarmCrop.WHEAT -> wheat()
+            FarmCrop.CORN -> corn()
+            FarmCrop.PEAS -> peas()
+            FarmCrop.CHILI -> chili()
+            FarmCrop.STRAWBERRY -> strawberry()
+            FarmCrop.BLUEBERRY -> blueberry()
+            FarmCrop.PUMPKIN -> pumpkin()
+            FarmCrop.APPLE, FarmCrop.PEAR, FarmCrop.CHERRY -> fruitTree(crop)
         }
     }
+    private fun blossom(cx: Double, cy: Double, amount: Double, petal: String = "#ffe8e4") {
+        if (amount <= 0.0) return
+        for (i in 0..4) {
+            val angle = i * PI * 2 / 5
+            oval(cx + cos(angle) * 2 * amount, cy + sin(angle) * 2 * amount,
+                1.7 * amount, 1.5 * amount, petal)
+        }
+        rect(cx, cy, 1.0, 1.0, "#edc36c")
+    }
+
+    // Tomato and broccoli retain the silhouettes of the approved HTML studies.
+    private fun tomato() {
+        val a=smooth(.1,.58);if(a==0.0)return
+        val h=(48+hash(1)*12)*a;val lean=(hash(2)-.5)*8
+        line(x,y,x+lean,y-h,2.0,pal[0]);line(x,y,x+lean*.9,y-h*.9,1.0,pal[2])
+        val sites=ArrayList<Triple<Double,Double,Int>>()
+        for(i in 0..6){val b=smooth(.14+i*.047,.34+i*.047);if(b==0.0)continue
+            val side=if(i%2==1)1 else -1;val u=.24+i*.1
+            val bx=x+lean*u;val by=y-h*u;val dx=side*(12+hash(10+i)*7)*b;val dy=-(4+hash(20+i)*6)*b
+            line(bx,by,bx+dx,by+dy,1.0,pal[1])
+            leaf(bx+dx,by+dy,side*(10+hash(30+i)*6)*b,-7*b,5.5*b)
+            leaf(bx+dx*.57,by+dy*.57,side*9*b,-11*b,4.5*b)
+            if(i<5)sites.add(Triple(bx+dx*.82,by+dy*.82+3,i))
+        }
+        for((fx,fy,i)in sites){val delay=i*.026;val bloom=smooth(.43+delay,.5+delay);val fruit=smooth(.56+delay,.79+delay)
+            if(bloom==0.0)continue
+            if(fruit<.13){blossom(fx,fy,bloom,"#ffe48c");continue}
+            val ripe=smooth(.75+delay*.5,.98);val r=(5+hash(50+i)*2.4)*fruit;val ry=r*(.85+hash(60+i)*.3)
+            val red=arrayOf("#ef6956","#e65950","#ed7856","#e85f63")[s%4]
+            oval(fx,fy+ry*.65,r,ry,mix("#4c8750","#a83e43",ripe))
+            oval(fx-.6,fy+ry*.4,r*.88,ry*.83,mix("#87bb60",red,ripe))
+            oval(fx-r*.28,fy+ry*.12,r*.5,ry*.45,mix("#b5d87a","#ff9a7a",ripe))
+            rect(fx-r*.42,fy,max(1.0,r*.35),1.0,mix("#d6eaa0","#ffd0a1",ripe))
+            leaf(fx,fy-ry*.2,-3*fruit,-1.0,1.0);leaf(fx,fy-ry*.2,3*fruit,-1.0,1.0)
+        }
+    }
+
+    private fun broccoli() {
+        val a=smooth(.13,.65);val h=(24+hash(401)*6)*a
+        if(a>0){
+            poly(listOf((x-4*a) to y,(x-3*a) to (y-h),(x+3*a) to (y-h),(x+5*a) to y),pal[0])
+            line(x,y,x,y-h,2*a,pal[2])
+            leaf(x-2,y-7*a,-22*a,-15*a,7*a);leaf(x+2,y-10*a,21*a,-17*a,7*a)
+        }
+        val head=smooth(.38,.98);if(head==0.0)return
+        val size=(13+hash(430)*3)*head
+        for(side in listOf(-1,1))line(x,y-5*a,x+side*size*.72,y-h+1,3*a,pal[2])
+        val clusters=listOf(Triple(-.8,.15,.6),Triple(.8,.08,.6),Triple(-.48,-.38,.65),
+            Triple(.43,-.49,.7),Triple(0.0,-.65,.7),Triple(0.0,.07,.67))
+        clusters.forEachIndexed{i,(dx,dy,r)->
+            val cx=x+dx*size;val cy=y-h+dy*size;val radius=size*r
+            oval(cx,cy+1,radius,radius*.71,"#245e43");oval(cx-.5,cy-1,radius*.93,radius*.68,"#39834f")
+            for(j in 0..9){val angle=hash(301+j,s+i*29)*PI*2;val d=sqrt(hash(321+j,s+i*29))*radius*.7
+                val px=cx+cos(angle)*d;val py=cy-1+sin(angle)*d*.58
+                oval(px,py,radius*.27+1,radius*.2+.5,mix("#60a75f","#72b6a0",(s%4)*.13))
+                rect(px-1,py-1,1.0,1.0,"#a9d69b")}
+        }
+    }
+
+    private fun watermelon() {
+        val a=smooth(.08,.65);if(a==0.0)return
+        for(i in 0..5){val angle=-2.8+i*.5;val b=smooth(.08+i*.03,.48+i*.03)
+            val dx=cos(angle)*(26+hash(1200+i)*5)*b;val dy=sin(angle)*22*b
+            line(x,y-2,x+dx,y+dy,2*b,pal[1]);leaf(x+dx*.5,y+dy*.5,dx*.55,dy*.6,7*b)}
+        line(x-27*a,y-1,x+29*a,y-3,a,pal[2])
+        val b=smooth(.42,.98);if(b==0.0)return
+        val rx=(16+hash(1210)*5)*b;val ry=(11+hash(1211)*4)*b;val cy=y-ry*.3
+        val skin=arrayOf("#7bb273","#90bb70","#68a883","#a6c47e")[s%4]
+        oval(x,cy+1,rx,ry,pal[0]);oval(x,cy,rx*.94,ry*.91,skin)
+        // Clip every stripe to the fruit's ellipse, including the narrowing ends.
+        for(row in -floor(ry*.86).toInt()..floor(ry*.86).toInt()){
+            val half=rx*.91*sqrt(max(0.0,1-row*row/(ry*ry)))
+            for(k in -2..2){val xx=k*rx*.32+sin(row/ry*2+k+hash(1220))*rx*.045
+                if(abs(xx)+b<half)rect(x+xx,cy+row,2*b,1.0,pal[1])}
+        }
+        oval(x-rx*.3,cy-ry*.35,rx*.22,ry*.17,"#c4dc98")
+        line(x+rx*.83,cy-ry*.3,x+rx+4*b,cy-ry*.6,b,pal[0])
+    }
+
+    private fun grape() {
+        val a=smooth(.08,.58);if(a==0.0)return
+        // A compact trellis stays inside one planting cell.
+        for(side in listOf(-1,1)){
+            rect(x+side*23-1,y-53*a,3.0,53*a,"#92714f")
+            rect(x+side*23-1,y-53*a,1.0,51*a,"#d6b88a")}
+        for(i in 1..3)rect(x-23,y-i*15*a,48.0,2.0,"#b39165")
+        var px=x;var py=y
+        for(i in 1..18){val u=i/18.0;val xx=x+sin(u*8)*10*a;val yy=y-54*a*u
+            line(px,py,xx,yy,2*a,pal[0]);px=xx;py=yy}
+        for(i in 0..5){val b=smooth(.13+i*.035,.49+i*.03);val side=if(i%2==0)-1 else 1
+            leaf(x,y-(17+i*6)*a,side*24*b,-8*b,8*b)}
+        for(i in 0..2){val b=smooth(.46+i*.04,.95);val cx=x+(i-1)*15;val cy=y-35-(i%2)*12
+            if(b<.1){blossom(cx,cy,smooth(.32,.46),"#ecedc2");continue}
+            val ripe=smooth(.65,.98);val c=arrayOf("#ac89c8","#dca6b8","#b4cd81","#8c93c9")[s%4]
+            for(row in 0..3)for(col in 0 until 4-row){val bx=cx+(col-(3-row)*.5)*4.5*b;val by=cy+row*4*b
+                oval(bx,by,2.8*b,3*b,mix(pal[0],"#726282",ripe))
+                oval(bx-.3,by-.6,2.2*b,2.2*b,mix("#b1c985",c,ripe))
+                rect(bx-b,by-b,b,b,"#eadfcf")}
+        }
+    }
+
+    private fun artichoke() {
+        val a=smooth(.08,.64);if(a==0.0)return
+        for(i in 0..6){val angle=-2.9+i*.45;val b=smooth(.1+i*.025,.5+i*.025)
+            val dx=cos(angle)*31*b;val dy=sin(angle)*29*b
+            leaf(x,y-3,dx,dy,6*b)
+            line(x,y-3,x+dx*.85,y-3+dy*.85,b,"#a7c9ae")}
+        for(i in 0..2){val h=(i==1).let { if(it)39.0 else 26.0 }*a;val cx=x+(i-1)*14*a
+            line(x,y,cx,y-h,3*a,"#476f59");line(x,y,cx,y-h,a,"#a4c7a5")
+            val b=smooth(.4+i*.035,.97);if(b==0.0)continue
+            val r=(i==1).let{if(it)8.5 else 6.0}*b;val cy=y-h
+            oval(cx,cy,r,r*1.25,"#436a54")
+            for(row in 0..3)for(col in 0..2){val xx=cx+(col-1)*r*.55;val yy=cy-r*.65+row*r*.48
+                poly(listOf((xx-r*.38) to (yy+r*.3),xx to (yy-r*.6),(xx+r*.38) to (yy+r*.3),xx to (yy+r*.57)),
+                    if((row+col)%2==0)"#8fb99b" else "#6c9b80")
+                rect(xx,yy-r*.5,b,2*b,mix("#c5d4ac","#d6b8d7",.35+(s%4)*.15))}
+        }
+    }
+
+    private fun leek() {
+        val a=smooth(.08,.95);if(a==0.0)return
+        val lean=(hash(1260)-.5)*6*a;val h=(36+hash(1261)*8)*a
+        poly(listOf((x-4*a) to y,(x-3*a+lean) to (y-23*a),(x+3*a+lean) to (y-23*a),(x+5*a) to y),"#709383")
+        rect(x-2*a,y-18*a,5*a,18*a,"#e5e4c2");rect(x-2*a,y-16*a,2*a,15*a,"#fff2d6")
+        for(i in 0..6){val b=smooth(.08+i*.03,.68+i*.035);val dx=(i-3)*8*b;val by=y-14*a
+            val top=by-h*b*(.72+hash(1270+i)*.25)
+            poly(listOf((x+lean) to by,(x+dx*.7) to (top-3*b),(x+dx) to (top+4*b),
+                (x+dx*.7+3*b) to (top+2*b),(x+3*b+lean) to by),"#3f786b")
+            line(x+lean,by,x+dx*.7,top,2*b,arrayOf("#8cb5a4","#79ac9b","#99bdad","#70a995")[s%4])}
+    }
+
+    private fun onion() {
+        val a=smooth(.08,.61);if(a==0.0)return
+        for(i in 0..6){val h=(25+hash(1300+i)*13)*a;val dx=(i-3)*4*a
+            line(x,y-4*a,x+dx*.75,y-h,2*a,pal[0]);line(x,y-4*a,x+dx*.75,y-h,a,pal[2])
+            line(x+dx*.75,y-h,x+dx,y-h+5*a,a,pal[2])}
+        val b=smooth(.38,.98);val r=(8+hash(1310)*3)*b;if(b==0.0)return
+        val c=arrayOf("#dfb580","#d9a4b6","#e9d7ae","#c99aab")[s%4]
+        oval(x,y-r*.2,r,r*.78,"#9e795e");oval(x-.4,y-r*.35,r*.9,r*.7,c)
+        for(side in listOf(-1,0,1)){
+            line(x+side*r*.25,y-r*.88,x+side*r*.5,y-r*.2,b,"#f2d9b2")
+            line(x+side*r*.5,y-r*.2,x+side*r*.2,y+r*.32,b,"#f2d9b2")}
+        poly(listOf((x-3*b) to (y-r*.8),x to (y-r*1.5),(x+3*b) to (y-r*.8)),"#b5b37d")
+        for(i in -1..1)line(x+i*b,y+r*.55,x+i*3*b,y+r*.55+2*b,b,"#b9a17c")
+    }
+
+    private fun raspberry() {
+        val a=smooth(.08,.63);if(a==0.0)return
+        for(stem in 0..2){val side=stem-1;val height=(36+hash(1340+stem)*10)*a
+            var px=x;var py=y
+            for(j in 1..12){val u=j/12.0;val xx=x+side*18*a*u*u;val yy=y-height*u+8*a*u*u*u
+                line(px,py,xx,yy,2*a,"#846655");px=xx;py=yy}
+            for(i in 0..2){val b=smooth(.12+i*.07,.52+i*.05);val cx=x+side*(8+i*5)*a;val cy=y-height*(.4+i*.2)
+                leaf(cx,cy,-11*b,-8*b,4*b);leaf(cx,cy,11*b,-7*b,4*b)
+                val fruit=smooth(.46+i*.04,.95);val fx=cx+side*5;val fy=cy+7
+                if(fruit<.1){blossom(fx,fy,smooth(.32,.48),"#ffdfdf");continue}
+                val ripe=smooth(.66,.98);val c=arrayOf("#e897ac","#dc7f9f","#e8a19c","#c786b1")[s%4]
+                for(row in 0..2)for(col in 0..2){val bx=fx+(col-1)*(3-row*.4)*fruit;val by=fy+row*2.5*fruit
+                    oval(bx,by,2*fruit,2*fruit,mix("#799363","#a45072",ripe))
+                    oval(bx-.3,by-.5,1.5*fruit,1.5*fruit,mix("#bacb8f",c,ripe))}
+                rect(fx-2*fruit,fy-2*fruit,4*fruit,fruit,pal[2])
+            }
+        }
+    }
+
+    private fun pineapple() {
+        val a=smooth(.08,.63);if(a==0.0)return
+        for(i in 0..8){val angle=-2.9+i*.34;val b=smooth(.09+i*.02,.49+i*.02)
+            val length=(26+hash(1380+i)*7)*b;val dx=cos(angle)*length;val dy=sin(angle)*length
+            poly(listOf((x-2*b) to y,(x+dx) to (y+dy),(x+3*b) to (y-2*b)),"#3d7660")
+            line(x,y-2*b,x+dx*.87,y+dy*.87,b,"#95bb91")}
+        val b=smooth(.43,.98);if(b==0.0)return
+        val rx=(8+hash(1390)*2)*b;val ry=13*b;val cy=y-19*b;val ripe=smooth(.65,.98)
+        oval(x,cy,rx,ry,mix(pal[0],"#a17b4f",ripe));oval(x-.4,cy-1,rx*.9,ry*.91,mix("#a6b776","#e4bd79",ripe))
+        for(row in -3..3)for(col in -2..2){val xx=col*3.5*b+(row%2)*1.7*b;val yy=row*3.5*b
+            if(xx*xx/(rx*rx)+yy*yy/(ry*ry)<.74){
+                poly(listOf((x+xx-1.5*b) to (cy+yy),(x+xx) to (cy+yy-1.7*b),
+                    (x+xx+1.5*b) to (cy+yy),(x+xx) to (cy+yy+1.7*b)),mix("#678b5e","#c89460",ripe))
+                rect(x+xx,cy+yy-b,b,b,"#f9dda2")}}
+        for(i in -2..2){val dx=i*4*b;val top=cy-ry-(11-abs(i)*2)*b
+            poly(listOf((x-2*b) to (cy-ry+2*b),(x+dx) to top,(x+2*b) to (cy-ry+2*b)),pal[0])
+            line(x,cy-ry,x+dx,top,b,pal[2])}
+    }
+
+    private fun wheat() {
+        val mature = smooth(.55, 1.0)
+        val stemColor = mix(pal[1], "#bf9350", mature)
+        val grainColor = mix("#9cbd64", arrayOf("#e9c774", "#e4bc69", "#eed18a", "#dfb268")[s % 4], mature)
+        val shade = mix(pal[0], "#9e733d", mature)
+        for (i in 0..6) {
+            val a = smooth(.07 + i * .013, .62 + i * .02)
+            if (a == 0.0) continue
+            val dx = (i - 3) * (3.4 + hash(i + 501)) * a
+            val h = (37 + hash(i + 511) * 19) * a
+            val root = x + (i - 3) * 1.3
+            line(root, y, x + dx, y - h, 1.0, stemColor)
+            leaf(root + dx * .3, y - h * .3, if (i % 2 == 0) -11 * a else 12 * a, -13 * a, 1.7 * a)
+            val ear = smooth(.35 + i * .012, .82 + i * .014)
+            for (k in 0..5) {
+                val cy = y - h + k * 2.7 * ear
+                val radius = (2.8 - k * .13) * ear
+                for (side in listOf(-1, 1)) {
+                    val cx = x + dx + side * radius
+                    oval(cx, cy, radius, 1.6 * ear, shade)
+                    oval(cx - .5, cy - 1, radius * .82, 1.2 * ear, grainColor)
+                    line(cx, cy - 1, cx + side * 2 * ear, cy - 4 * ear, 1.0, grainColor)
+                }
+            }
+            line(x + dx, y - h, x + dx, y - h - 4 * ear, 1.0, grainColor)
+        }
+    }
+
+    private fun corn() {
+        val a = smooth(.08, .7)
+        if (a == 0.0) return
+        val height = (48 + hash(550) * 7) * a
+        val lean = (hash(551) - .5) * 5 * a
+        line(x, y, x + lean, y - height, 3 * a, pal[0])
+        line(x, y, x + lean, y - height, 1.0, pal[2])
+        for (i in 0..5) {
+            val b = smooth(.1 + i * .035, .52 + i * .04)
+            val side = if (i % 2 == 0) -1 else 1
+            val cy = y - height * (.2 + i * .115)
+            val length = (23 + hash(560 + i) * 7) * b
+            val bx = x + lean * (y - cy) / max(1.0, height)
+            // Long folded blades with a hanging tip distinguish maize from the broad-leaf crops.
+            poly(listOf(bx to cy, (bx + side * length * .55) to (cy - 11 * b),
+                (bx + side * length) to (cy - 2 * b), (bx + side * length * .72) to (cy - 3 * b),
+                (bx + side * length * .42) to (cy - 5 * b)), pal[0])
+            poly(listOf(bx to cy, (bx + side * length * .53) to (cy - 9 * b),
+                (bx + side * length * .9) to (cy - 3 * b), (bx + side * length * .48) to (cy - 6 * b)), pal[2])
+        }
+        val tassel = smooth(.46, .75)
+        for (i in -2..2) line(x + lean, y - height, x + lean + i * 3 * tassel,
+            y - height - (6 - abs(i)) * tassel, 1.0, "#e5cc91")
+        for (i in 0..1) {
+            val b = smooth(.47 + i * .06, .95)
+            if (b == 0.0) continue
+            val side = if (i == 0) -1 else 1
+            val cx = x + side * 7 * b
+            val cy = y - height * (.44 + i * .19)
+            oval(cx, cy, 5 * b, 10 * b, pal[0])
+            oval(cx, cy - 1, 3.8 * b, 8.5 * b, mix("#c5d18a", "#eac363", smooth(.7, 1.0)))
+            for (r in -3..3) for (col in -1..1) {
+                rect(cx + col * 2 * b, cy + r * 2 * b, b, b, if ((r + col) % 2 == 0) "#fff0a5" else "#d8a84e")
+            }
+            leaf(cx, cy + 9 * b, -side * 6 * b, -16 * b, 2.5 * b)
+        }
+    }
+
+    private fun peas() {
+        val a = smooth(.07, .62)
+        if (a == 0.0) return
+        val h = (38 + hash(600) * 8) * a
+        // Two stems and small tendrils, without inventing a large support structure in the plot.
+        for (stem in 0..1) {
+            val offset = if (stem == 0) -5.0 else 6.0
+            var px = x; var py = y
+            for (j in 1..14) {
+                val u = j / 14.0
+                val xx = x + offset * u + sin(u * 6 + stem) * 3 * a
+                val yy = y - h * u
+                line(px, py, xx, yy, 1.0, pal[1]); px = xx; py = yy
+            }
+            for (i in 0..3) {
+                val b = smooth(.13 + i * .055, .55 + i * .055)
+                val bx = x + offset * (.35 + i * .18)
+                val by = y - h * (.35 + i * .18)
+                leaf(bx, by, -10 * b, -6 * b, 4 * b)
+                leaf(bx, by, 10 * b, -5 * b, 4 * b)
+                line(bx, by, bx + 9 * b, by - 9 * b, 1.0, pal[2])
+                line(bx + 9 * b, by - 9 * b, bx + 6 * b, by - 10 * b, 1.0, pal[2])
+                if (i < 2) {
+                    val pod = smooth(.49 + i * .07 + stem * .02, .93)
+                    val cx = bx + (if (stem == 0) -10 else 9) * b
+                    if (pod < .12) blossom(cx, by + 2, smooth(.36, .52), "#f3e8ec")
+                    else {
+                        line(bx, by, cx, by + 2, 1.0, pal[1])
+                        poly(listOf((cx - 3 * pod) to by, (cx + 3 * pod) to (by + pod),
+                            (cx + 4 * pod) to (by + 11 * pod), (cx + pod) to (by + 17 * pod),
+                            (cx - 3 * pod) to (by + 12 * pod)), pal[0])
+                        oval(cx, by + 7 * pod, 2.8 * pod, 7 * pod, "#85bc6b")
+                        for (k in 0..2) oval(cx - .4, by + (3 + k * 4) * pod, 1.7 * pod, 1.5 * pod, "#c1df8c")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun chili() {
+        val a = smooth(.1, .61)
+        if (a == 0.0) return
+        val h = (34 + hash(640) * 10) * a
+        line(x, y, x, y - h, 2.0, pal[0])
+        for (i in 0..5) {
+            val b = smooth(.12 + i * .035, .49 + i * .05)
+            val side = if (i % 2 == 0) -1 else 1
+            val by = y - h * (.25 + i * .12)
+            val dx = side * (12 + hash(650 + i) * 6) * b
+            line(x, by, x + dx, by - 5 * b, 1.0, pal[1])
+            leaf(x + dx * .65, by - 4 * b, side * 11 * b, -9 * b, 3.5 * b)
+            if (i < 4) {
+                val fruit = smooth(.5 + i * .025, .94)
+                val cx = x + dx; val cy = by - 2 * b
+                if (fruit < .1) blossom(cx, cy, smooth(.36, .48), "#fff0d2")
+                else {
+                    val len = (12 + hash(670 + i) * 5) * fruit
+                    val ripe = smooth(.67, .99)
+                    poly(listOf((cx - 2 * fruit) to cy, (cx + 3 * fruit) to cy,
+                        (cx + 3 * fruit) to (cy + len * .55), (cx + side * 4 * fruit) to (cy + len),
+                        (cx - 2 * fruit) to (cy + len * .67)), mix(pal[0], "#a63e44", ripe))
+                    poly(listOf((cx - fruit) to cy, (cx + 2 * fruit) to (cy + fruit),
+                        (cx + fruit) to (cy + len * .65), (cx + side * 4 * fruit) to (cy + len)),
+                        mix("#85bc68", arrayOf("#ef7660", "#e66a62", "#f09360", "#e67e77")[s % 4], ripe))
+                    line(cx, cy + 2 * fruit, cx, cy + 6 * fruit, 1.0, "#f9cba0")
+                    rect(cx - 2 * fruit, cy - 2 * fruit, 4 * fruit, 2 * fruit, pal[1])
+                }
+            }
+        }
+    }
+
+    private fun strawberry() {
+        for (i in 0..4) {
+            val a = smooth(.08 + i * .025, .54 + i * .035)
+            val angle = -2.7 + i * .54
+            val cx = x + cos(angle) * 20 * a; val cy = y + sin(angle) * 22 * a - 4
+            line(x, y, cx, cy, 1.0, pal[1])
+            // Three serrated leaflets form each strawberry leaf.
+            leaf(cx, cy, -8 * a, -7 * a, 4 * a)
+            leaf(cx, cy, 2 * a, -12 * a, 4.5 * a)
+            leaf(cx, cy, 9 * a, -5 * a, 4 * a)
+        }
+        for (i in 0..3) {
+            val b = smooth(.49 + i * .026, .94)
+            val cx = x + (i - 1.5) * 10 + (hash(710 + i) - .5) * 3
+            val cy = y - 9 - (i % 2) * 5
+            if (b < .12) blossom(cx, cy, smooth(.32 + i * .02, .48), "#fff1df")
+            else {
+                val r = (4.5 + hash(720 + i) * 1.5) * b
+                val ripe = smooth(.68 + i * .01, .99)
+                poly(listOf((cx-r) to cy, (cx-r*.65) to (cy-r*.6), (cx+r*.65) to (cy-r*.6),
+                    (cx+r) to cy, (cx+r*.7) to (cy+r), cx to (cy+r*1.6), (cx-r*.7) to (cy+r)), mix("#78945b", "#a84358", ripe))
+                oval(cx-.5, cy+r*.25, r*.82, r*.85, mix("#c8d49b", "#ed7890", ripe))
+                for (j in 0..4) rect(cx+(j%2*2-1)*r*.35, cy+(j/2)*r*.38, 1.0, 1.0, "#ffe6b0")
+                leaf(cx,cy-r*.3,-4*b,-2*b,1.5*b);leaf(cx,cy-r*.3,4*b,-2*b,1.5*b)
+            }
+        }
+    }
+
+    private fun blueberry() {
+        val a = smooth(.09, .66)
+        for (branch in -1..1) {
+            val h = (31 + hash(750 + branch) * 8) * a
+            val dx = branch * 14 * a
+            line(x, y, x+dx, y-h, 2*a, "#79604a")
+            for (i in 0..4) {
+                val b = smooth(.12+i*.045, .55+i*.04)
+                val u = .25+i*.16;val cx=x+dx*u;val cy=y-h*u
+                leaf(cx,cy,-9*b,-6*b,3.6*b);leaf(cx,cy,9*b,-5*b,3.6*b)
+                if (i % 2 == 0) {
+                    val fruit=smooth(.48+i*.02,.96)
+                    if(fruit<.1)blossom(cx+5*b,cy+2,smooth(.35,.5),"#f0dce8")
+                    else for(k in 0..1){val bx=cx+(if(k==0)-5 else 5)*b;val by=cy+3+k*3
+                        val r=(2.5+hash(780+i+branch)*.6)*fruit;val ripe=smooth(.67,1.0)
+                        oval(bx,by,r,r,mix("#72976a","#45466d",ripe))
+                        oval(bx-.5,by-.5,r*.8,r*.75,mix("#b1cc9a",arrayOf("#858aca","#929bd1","#777fba","#a199d1")[s%4],ripe))
+                        rect(bx-1,by-1,1.0,1.0,"#cdd5eb");rect(bx,by+1,1.0,1.0,"#50577e")}
+                }
+            }
+        }
+    }
+
+    private fun pumpkin() {
+        val a = smooth(.08,.63)
+        line(x-26*a,y-2,x+27*a,y-3,2*a,pal[1])
+        for(i in 0..4){val b=smooth(.1+i*.03,.57+i*.03);val angle=-2.75+i*.54
+            leaf(x,y-3,cos(angle)*(28+hash(820+i)*4)*b,sin(angle)*27*b,9*b)}
+        val b=smooth(.42,1.0)
+        if(b<=0)return
+        val r=(16+hash(830)*3)*b;val ry=(12+hash(831)*3)*b;val cy=y-ry*.45
+        val ripe=smooth(.61,.98)
+        oval(x,cy+1,r,ry,mix(pal[0],"#aa633d",ripe))
+        for(i in listOf(-2,2,-1,1,0)){
+            val cx=x+i*r*.27;val rx=r*(if(abs(i)==2).36 else .4)
+            oval(cx,cy,rx,ry*(1-abs(i)*.06),mix("#99b66c",arrayOf("#eaa165","#e9b372","#e58f61","#edbc7e")[s%4],ripe))
+            oval(cx-rx*.18,cy-ry*.23,rx*.4,ry*.58,mix("#c1d28c","#ffd394",ripe))
+        }
+        line(x,cy-ry,x+2*b,cy-ry-5*b,3*b,"#6f7145")
+        line(x,cy-ry,x+b,cy-ry-4*b,b,"#b1bf77")
+        line(x+2*b,cy-ry-3*b,x+8*b,cy-ry-5*b,b,pal[1])
+    }
+
+    private fun fruitTree(crop: FarmCrop) {
+        val a = if (established) 1.0 else smooth(.04,.75)
+        if(a<=0)return
+        val tall = crop == FarmCrop.PEAR
+        val trunk=(25+hash(870)*5)*a
+        val lean=(hash(871)-.5)*5*a
+        poly(listOf((x-5*a) to y,(x-3*a+lean) to (y-trunk-13*a),
+            (x+3*a+lean) to (y-trunk-13*a),(x+5*a) to y),"#75503b")
+        line(x-2*a,y-2*a,x+lean-a,y-trunk,2*a,"#bb8755")
+        for(side in listOf(-1,1))line(x,y-12*a,x+side*15*a,y-trunk-9*a,3*a,"#8f6644")
+        val cx=x+lean;val cy=y-trunk-13*a
+        val radius=(if(tall)20 else 25)*a
+        val lobes=listOf(Triple(-.58,.05,.65),Triple(.57,.0,.66),Triple(-.35,-.55,.7),
+            Triple(.35,-.55,.7),Triple(0.0,if(tall)-.9 else -.68,.76),Triple(0.0,.1,.75))
+        for((i,lobe)in lobes.withIndex()){
+            val bx=cx+lobe.first*radius;val by=cy+lobe.second*radius*(if(tall)1.13 else .8)
+            val r=radius*lobe.third
+            oval(bx,by+2*a,r,r*.7,pal[0]);oval(bx-a,by,r*.92,r*.66,pal[1])
+            oval(bx-2*a,by-3*a,r*.74,r*.49,pal[2])
+            for(j in 0..8){val angle=hash(900+i*9+j)*PI*2;val d=sqrt(hash(980+i*9+j))*r*.65
+                rect(bx+cos(angle)*d,by-3*a+sin(angle)*d*.5,3*a,2*a,if(j%3==0)pal[3]else pal[1])}
+        }
+        // Established trees keep their canopy while a new fruit cycle begins at zero.
+        val fruit=smooth(if(established).22 else .68,1.0)
+        val bloom=smooth(if(established).02 else .53,if(established).2 else .7)
+        for(i in 0..6){
+            val angle=i*2.4+hash(1060)*.4;val d=(.35+hash(1070+i)*.38)*radius
+            val fx=cx+cos(angle)*d;val fy=cy+sin(angle)*d*.7
+            if(fruit<.12){blossom(fx,fy,bloom,if(crop==FarmCrop.CHERRY)"#ffd5e2"else "#fff0df");continue}
+            val r=(if(crop==FarmCrop.CHERRY)2.6 else 4.4)*fruit*(.9+hash(1100+i)*.2)
+            val ripe=smooth(if(established).6 else .8,1.0)
+            when(crop){
+                FarmCrop.APPLE->{
+                    val red=arrayOf("#ed8e85","#e79a78","#e87a79","#edab87")[s%4]
+                    oval(fx,fy,r,r*.92,mix("#6d9452","#ab5158",ripe));oval(fx-.5,fy-.5,r*.83,r*.76,mix("#b8ce7b",red,ripe))
+                    rect(fx-r*.4,fy-r*.3,r*.5,1.0,"#ffe3ba");line(fx,fy-r,fx+1,fy-r-2,1.0,"#6f553b")
+                    leaf(fx+1,fy-r-1,3*fruit,-fruit,fruit)
+                }
+                FarmCrop.PEAR->{
+                    oval(fx,fy+r*.3,r,r,mix("#779654","#a39552",ripe))
+                    oval(fx,fy-r*.55,r*.6,r*.85,mix("#abc77b","#e0cc82",ripe))
+                    oval(fx-.5,fy+r*.2,r*.8,r*.84,mix("#bad484","#eddc9c",ripe))
+                    rect(fx-r*.4,fy,r*.4,2*fruit,"#fff0c5");line(fx,fy-r,fx+1,fy-r-3*fruit,1.0,"#795c3b")
+                }
+                FarmCrop.CHERRY->{
+                    for(side in listOf(-1,1)){
+                        val bx=fx+side*2*fruit;val by=fy+abs(side)*2*fruit
+                        line(fx,fy-4*fruit,bx,by,1.0,pal[0]);oval(bx,by,r,r,mix("#94b465","#923e59",ripe))
+                        oval(bx-.4,by-.6,r*.77,r*.7,mix("#becf7e","#dd7898",ripe));rect(bx-1,by-1,1.0,1.0,"#ffcad7")
+                    }
+                }
+                else -> Unit
+            }
+        }
+    }
+
     private fun radish(){
         val a=smooth(.35,.95);val w=(6+hash(41)*3)*a;val h=(6+hash(42)*3)*a
         if(a>0){
@@ -249,9 +719,13 @@ private class PlantPainter(private val canvas: Canvas, variant: Int, private val
             if(bloom==0.0)continue
             if(b<.12){oval(fx,fy,3*bloom,2*bloom,if(egg)"#d2afe7" else "#fff0cb");rect(fx-1,fy-1,2.0,2.0,"#f4d578");continue}
             val ripe=smooth(.73,.98);val w=(if(egg)5 else 6)*b*(.9+hash(i+141)*.2);val fh=(if(egg)14 else 10)*b*(.85+hash(i+151)*.25)
-            val c=(if(egg)arrayOf("#775294","#865ba3","#68448a","#925ba1")else arrayOf("#e76955","#edb64e","#ef9356","#de635b"))[s%4]
-            if(egg){oval(fx+1,fy+fh*.55,w,fh*.65,"#443252");oval(fx,fy+fh*.5,w*.82,fh*.58,mix("#82a365",c,ripe))
-                oval(fx-w*.25,fy+fh*.35,w*.34,fh*.36,mix("#b9cf8b","#ba91cb",ripe));line(fx-w*.32,fy+fh*.14,fx-w*.32,fy+fh*.4,1.0,"#e2c5e3")
+            val c=(if(egg)arrayOf("#775294","#eee5cf","#68448a","#b783bb")else arrayOf("#e76955","#edb64e","#ef9356","#de635b"))[s%4]
+            if(egg){oval(fx+1,fy+fh*.55,w,fh*.65,if(s%4==1)"#9c947d" else "#443252");oval(fx,fy+fh*.5,w*.82,fh*.58,mix("#82a365",c,ripe))
+                oval(fx-w*.25,fy+fh*.35,w*.34,fh*.36,mix("#b9cf8b",if(s%4==1)"#fff4df" else "#ba91cb",ripe))
+                if(s%4==3)for(stripe in -1..1){
+                    val sx=fx+stripe*w*.38
+                    line(sx,fy+fh*.2,sx+w*.08,fy+fh*.75,b,mix("#b9cf8b","#f5dfe1",ripe))}
+                line(fx-w*.32,fy+fh*.14,fx-w*.32,fy+fh*.4,1.0,"#f2dfeb")
             }else for(j in -1..1){val cx=fx+j*w*.55;val cy=fy+fh*.5+abs(j)*b
                 oval(cx,cy,w*.6,fh*.65,mix("#376c40","#9d4b3e",ripe));oval(cx-.5,cy-1,w*.48,fh*.55,mix("#6bad58",c,ripe))
                 if(j<1)line(cx-1,cy-fh*.27,cx-1,cy+fh*.13,1.0,mix("#b2d583","#ffda94",ripe))}
