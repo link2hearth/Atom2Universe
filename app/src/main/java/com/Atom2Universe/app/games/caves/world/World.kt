@@ -6,7 +6,9 @@ import kotlin.math.*
 import kotlin.random.Random
 
 class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
-            val terrainVersion: Int = 2) {
+            val terrainVersion: Int = 2,
+            /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
+            private val source: WorldSource? = null) {
     private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave) }
     private val chunks = ConcurrentHashMap<Long, Chunk>()
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
@@ -353,6 +355,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // ── Pipeline de génération ────────────────────────────────────────────────
 
     fun generate(chunk: Chunk) {
+        val src = source
+        if (src != null) src.fill(chunk) else generateProcedural(chunk)
+        storage?.applyDiff(chunk)
+        storage?.applyMetaDiff(chunk)
+    }
+
+    private fun generateProcedural(chunk: Chunk) {
         when {
             chunk.cy in 0..SURFACE_CY_MAX                           -> generateSurface(chunk)
             chunk.cy < 0 && isUndergroundSurface(chunk.cy)         -> generateUndergroundSurface(chunk)
@@ -360,8 +369,6 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             chunk.cy >= ISLAND_CY_MIN                               -> generateIsland(chunk)
             // sky void : chunk reste AIR (ByteArray initialisé à 0)
         }
-        storage?.applyDiff(chunk)
-        storage?.applyMetaDiff(chunk)
     }
 
     private val defaultCaveBiome: CaveBiomeDef by lazy {

@@ -26,6 +26,8 @@ import com.Atom2Universe.app.games.caves.entity.WeaponColor
 import com.Atom2Universe.app.games.caves.entity.WeaponDef
 import com.Atom2Universe.app.games.caves.entity.WeaponVariant
 import com.Atom2Universe.app.games.caves.input.TouchController
+import com.Atom2Universe.app.games.caves.mode.GameMode
+import com.Atom2Universe.app.games.caves.mode.SurvivalMode
 import com.Atom2Universe.app.games.caves.render.HeldEquipmentMesh
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
@@ -197,7 +199,7 @@ internal class CaveRenderer(
     var playerMode = PlayerMode.WALK
     @Volatile var pendingMode: PlayerMode? = null
     var isCreative = false
-    private val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }
+    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -284,11 +286,14 @@ internal class CaveRenderer(
     private val enemyRenderer      = EnemyRenderer()
     private val projRenderer       = ProjectileRenderer()
 
+    // ── Règles de la partie ───────────────────────────────────────────────────
+    // Ce qui est propre au mode (monstres, XP, butin…) vit dans le mode, pas ici.
+    // SurvivalMode ne lit le renderer qu'une fois la surface GL créée.
+    internal val mode: GameMode = SurvivalMode(this)
+
     // ── Progression joueur ────────────────────────────────────────────────────
 
     val skillBook   = com.Atom2Universe.app.games.caves.entity.SkillBook()
-    // HP max du dernier mob tué — plafond pour les gains d'endurance
-    private var lastKilledMobMaxHp = 20
     val playerStats = PlayerStats()
     val projectiles = ArrayList<Projectile>(64)
     @Volatile var recoverableAmmoSnapshot: List<StuckAmmo> = emptyList()
@@ -609,67 +614,16 @@ internal class CaveRenderer(
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
         playerNode.onShieldChanged = { cur, max -> shieldCallback?.invoke(cur, max) }
-        playerNode.onEnduranceXp   = { xp ->
-            skillBook.enduranceXp += xp
-            val formula = skillBook.computedMaxHp
-            val newMax  = formula.coerceAtMost(lastKilledMobMaxHp)
-            if (newMax > playerNode.maxHp) {
-                playerNode.setMaxHp(newMax)
-                playerStats.maxHp = newMax
-            }
-        }
-
-        physics.skillBook = skillBook
-        physics.onJumped = { skillBook.athleticsXp += 1 }
-        physics.onFallLanded = { fallBlocks ->
-            val sb = skillBook
-            val threshold = sb.fallSafeBlocks
-            if (fallBlocks > threshold) {
-                val damage = ((fallBlocks - threshold) * 2.5).toInt().coerceAtLeast(1)
-                playerNode.applyDamage(damage)
-                val xpGain = ((fallBlocks - threshold) * 10).toInt().coerceAtLeast(1)
-                sb.acrobaticsXp += xpGain
-            } else {
-                // Chute sans dégâts : petit XP acrobatics quand même
-                sb.acrobaticsXp += (fallBlocks * 2).toInt().coerceAtLeast(1)
-            }
-        }
-
-        enemyManager.player        = playerNode
-        enemyManager.eventBus      = eventBus
-        enemyManager.thornsProvider = { equippedWeaponStat("thorns") }
         eventBus.subscribe { event ->
             if (event is GameEvent.PlayerHit) {
                 // Recul du joueur (dans le sens attaquant → joueur) + flash rouge écran.
                 physics.applyKnockback(event.dirX * PLAYER_KNOCKBACK, event.dirZ * PLAYER_KNOCKBACK)
                 playerHitCallback?.invoke()
-                return@subscribe
-            }
-            if (event !is GameEvent.MobDied) return@subscribe
-            val xpGain = if (event.isBoss) 5 * event.level else event.level
-            playerStats.addXp(xpGain)
-            // Le dernier mob tué fixe le plafond HP pour les gains d'endurance
-            lastKilledMobMaxHp = event.mobMaxHp.coerceAtLeast(20)
-            if (event.isBoss) {
-                inventory[WARD_STONE] = (inventory[WARD_STONE] ?: 0) + 1
-                inventoryCallback?.invoke(inventory.toMap())
             }
         }
 
-        lootNode.onItemsDropped = { items ->
-            for (item in items) {
-                if (com.Atom2Universe.app.games.caves.node.ItemRegistry.get(item.defId)?.type == "weapon") {
-                    val id = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(item)
-                    inventory[id] = 1
-                    // Une arme dropée va toujours dans la barre combat, même si la barre
-                    // construction est active au moment du kill.
-                    val freeHotbarSlot = combatHotbar.indexOfFirst { it == null }
-                    if (freeHotbarSlot >= 0) combatHotbar[freeHotbarSlot] = id
-                }
-            }
-            inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
-        }
+        // Règles propres au mode (survie : XP, butin, monstres…) et restauration de sa progression.
+        mode.onSurfaceCreated(savedState)
 
         val ids = IntArray(3)
         GLES30.glGenBuffers(3, ids, 0)
@@ -697,34 +651,17 @@ internal class CaveRenderer(
             }
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             inventoryCallback?.invoke(inventory.toMap())
-            // Restauration progression joueur
-            playerStats.level    = savedState.playerLevel
-            playerStats.xp       = savedState.playerXp
-            playerStats.xpToNext = playerStats.xpRequired(savedState.playerLevel)
-            playerStats.maxHp    = savedState.playerMaxHp
-            playerStats.shield   = savedState.playerShield
-            playerNode.maxHp    = savedState.playerMaxHp
-            playerNode.hp       = savedState.playerHp.coerceAtMost(savedState.playerMaxHp)
-            playerNode.maxShield = savedState.playerShield
-            playerNode.shield   = savedState.playerShieldCurrent.coerceAtMost(savedState.playerShield)
-            savedState.wardStonePositions.forEach { (x, z) -> enemyManager.wardStoneZones.add(Pair(x, z)) }
             recoverableAmmoSnapshot=savedState.recoverableAmmo
             for(a in savedState.recoverableAmmo) {
                 projectiles.add(Projectile(a.x,a.y,a.z,a.vx,a.vy,a.vz,1f,0,
                     WeaponDef(WeaponColor.WHITE,WeaponVariant.SQUARE),kind=if(a.ammoId==ARROW_ID) ProjectileKind.ARROW else ProjectileKind.BOLT,
                     ammoId=a.ammoId).also { it.stuck=true;it.age=1f })
             }
-            skillBook.athleticsXp  = savedState.skillAthleticsXp
-            skillBook.speedXp      = savedState.skillSpeedXp
-            skillBook.enduranceXp  = savedState.skillEnduranceXp
-            skillBook.acrobaticsXp = savedState.skillAcrobaticsXp
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             val spawn = world.findSpawnPoint()
-            enemyManager.worldSpawnX      = spawn[0].toDouble()
-            enemyManager.worldSpawnY      = spawn[1].toDouble()
-            enemyManager.worldSpawnZ      = spawn[2].toDouble()
+            mode.onPlayerPlaced(spawn[0].toDouble(), spawn[1].toDouble(), spawn[2].toDouble())
         } else {
             // Nouvelle partie : démarrer à 10h du matin IG (portion jour, 100 000 ms/heure → 4h après 6h).
             gameTimeMs = NEW_GAME_START_MS
@@ -734,9 +671,7 @@ internal class CaveRenderer(
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
             for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
-            enemyManager.worldSpawnX = camera.x
-            enemyManager.worldSpawnY = camera.y
-            enemyManager.worldSpawnZ = camera.z
+            mode.onPlayerPlaced(camera.x, camera.y, camera.z)
         }
         scheduleInitialLodBuilds()
     }
@@ -1250,7 +1185,7 @@ internal class CaveRenderer(
         }
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
-        if (!gamePaused) enemyManager.update(dt, camera.playerX, camera.playerY, camera.playerZ)
+        if (!gamePaused) mode.update(dt)
         enemyRenderer.render(
             enemyManager.enemies,
             camera.x, camera.y, camera.z,
