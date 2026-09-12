@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.Shader
@@ -19,7 +18,6 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val rect = RectF()
-    private val path = Path()
     private var cachedBitmap: Bitmap? = null
     private var cachedWidth = 0
     private var cachedHeight = 0
@@ -50,7 +48,7 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
 
         paint.shader = LinearGradient(
             0f, 0f, 0f, h,
-            intArrayOf(Color.rgb(124, 190, 117), Color.rgb(82, 145, 74), Color.rgb(87, 68, 43)),
+            intArrayOf(Color.rgb(124, 190, 117), Color.rgb(96, 160, 84), Color.rgb(72, 130, 64)),
             floatArrayOf(0f, 0.58f, 1f),
             Shader.TileMode.CLAMP
         )
@@ -73,31 +71,11 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
             row++
         }
 
-        drawSoilRows(canvas, w, h)
+        // Grass and plants only: the plants stand straight in the meadow, no strips of bare soil.
+        drawFruits(canvas, w, h)
         drawCrops(canvas, w, h)
-        drawFlowers(canvas, w, h)
-
-        paint.color = Color.argb(168, 0, 0, 0)
-        canvas.drawRect(0f, h * 0.47f, w, h, paint)
-        paint.shader = LinearGradient(0f, h * 0.34f, 0f, h, Color.TRANSPARENT, Color.argb(215, 0, 0, 0), Shader.TileMode.CLAMP)
-        canvas.drawRect(0f, h * 0.34f, w, h, paint)
-        paint.shader = null
 
         canvas.restore()
-    }
-
-    private fun drawSoilRows(canvas: Canvas, w: Float, h: Float) {
-        paint.style = Paint.Style.FILL
-        listOf(0.43f, 0.58f, 0.73f).forEachIndexed { index, y ->
-            path.reset()
-            path.moveTo(-w * 0.08f, h * y)
-            path.quadTo(w * 0.5f, h * (y - 0.08f), w * 1.08f, h * (y + 0.02f))
-            path.lineTo(w * 1.08f, h * (y + 0.12f))
-            path.quadTo(w * 0.5f, h * (y + 0.03f), -w * 0.08f, h * (y + 0.1f))
-            path.close()
-            paint.color = if (index % 2 == 0) Color.rgb(116, 82, 50) else Color.rgb(139, 96, 55)
-            canvas.drawPath(path, paint)
-        }
     }
 
     private fun drawCrops(canvas: Canvas, w: Float, h: Float) {
@@ -111,14 +89,18 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
         }
     }
 
-    private fun drawFlowers(canvas: Canvas, w: Float, h: Float) {
-        repeat(5) { i ->
-            val size = h * 0.18f
+    /**
+     * The back row, where the flowers used to stand: fruit this time, drawn by the same native art as
+     * the game. Drawn before the vegetables so the front row overlaps it, as it would in a real bed.
+     */
+    private fun drawFruits(canvas: Canvas, w: Float, h: Float) {
+        val fruits = arrayOf(FarmCrop.TOMATO, FarmCrop.RASPBERRY, FarmCrop.WATERMELON, FarmCrop.GRAPE, FarmCrop.PINEAPPLE)
+        fruits.forEachIndexed { i, crop ->
+            val size = h * if (crop == FarmCrop.WATERMELON) 0.22f else 0.2f
             val x = w * (0.1f + i * 0.2f)
-            val y = h * (0.2f + (i % 2) * 0.08f)
+            val y = h * (0.22f + (i % 2) * 0.07f)
             rect.set(x - size * 0.5f, y - size, x + size * 0.5f, y)
-            val sheet = if (i % 2 == 0) FLOWERS_A else FLOWERS_B
-            sprites.flower(canvas, sheet, (i % 4) * 2, 4, rect)
+            sprites.crop(canvas, crop, (i + 1) % 4, 4, rect)
         }
     }
 
@@ -132,9 +114,4 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
 
     @Deprecated("Deprecated in Java")
     override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
-
-    private companion object {
-        const val FLOWERS_A = "garden_flowers_sunflower_tulip_lavender_daisy_v1.png"
-        const val FLOWERS_B = "garden_flowers_rose_hydrangea_poppy_orchid_v1.png"
-    }
 }

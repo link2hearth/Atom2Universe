@@ -1,11 +1,14 @@
 package com.Atom2Universe.app.games.farm
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.ViewConfiguration
+import android.view.animation.DecelerateInterpolator
 import com.Atom2Universe.app.R
 
 /** Pulls needed to tear a bush out. One volume comes off each time; the last stub goes with the burst. */
@@ -137,6 +140,17 @@ private const val MEADOW_MARGIN_TILES = 3
  * climbs into the thousands - the very thing the bake exists to prevent.
  */
 private const val LIVE_TUFT_TILES = 420
+/**
+ * Below this share of a parcel's own framing zoom, the map counts as zoomed far out over it: a
+ * double tap there flies in to the parcel. Closer in, the cells are big enough to tap one by one,
+ * and a double tap is simply two taps.
+ */
+private const val FAR_ZOOM_RATIO = .6f
+private const val PARCEL_FLIGHT_MS = 420L
+/** A watering gauge that has been tapped at, left alone this long since its last tap, gives up. */
+private const val WATERING_IDLE_MS = 8000L
+/** A watering gauge nobody has tapped at yet gives up this long after it opened. */
+private const val WATERING_UNTOUCHED_MS = 5000L
 
 /** Coordinates stay in world units; drawing and hit testing use the same transform. */
 class FarmWorldView(context: Context, private val state: FarmState,
@@ -162,7 +176,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private fun ensureHarvestTicking() { if (!harvestTicking) { harvestTicking = true; postOnAnimation(harvestTick) } }
     /** Consumes the whole gesture once started on a ripe cell, mirroring the debris/watering handlers. */
     private fun handleHarvestTouch(event: MotionEvent): Boolean {
-        if (region != FarmRegion.HOME || wateringMode) return false
+        if (region != FarmRegion.HOME || wateringActive()) return false
         val x = (event.x - cameraX) / zoom; val y = (event.y - cameraY) / zoom
         val now = System.currentTimeMillis()
         return when (event.actionMasked) {
@@ -211,8 +225,6 @@ class FarmWorldView(context: Context, private val state: FarmState,
         if (value != goal) ensureDecorTicking()
         return value
     }
-    var wateringMode = false
-        set(value) { field = value; wateringGame = null; invalidate() }
     private var wateringGame: WateringGauge? = null
     private data class WaterBurst(val cell: Int, val startAt: Long)
     private val waterBursts = mutableListOf<WaterBurst>()
@@ -222,7 +234,14 @@ class FarmWorldView(context: Context, private val state: FarmState,
             wateringTicking = false
             val now = System.currentTimeMillis()
             val game = wateringGame
-            if (game != null && ((game.done && now - game.doneAt > 260L) || (!game.done && now - game.startTime > 20000L)))
+            // Given up after a few idle seconds: while it swings every tap belongs to it, so a gauge
+            // started by mistake must not hold the whole map hostage for long.
+            // A gauge never touched was most likely opened by mistake, so it goes sooner than one
+            // the player is actually trying - and missing - to hit.
+            val tried = game != null && (game.hitAt > 0L || game.missAt > 0L)
+            val idleLimit = if (tried) WATERING_IDLE_MS else WATERING_UNTOUCHED_MS
+            if (game != null && ((game.done && now - game.doneAt > 260L) ||
+                    (!game.done && now - maxOf(game.startTime, game.hitAt, game.missAt) > idleLimit)))
                 wateringGame = null
             waterBursts.removeAll { now - it.startAt > 520L }
             invalidate()
@@ -235,24 +254,27 @@ class FarmWorldView(context: Context, private val state: FarmState,
             state.wateringHitsNeeded(), state.wateringZoneScale())
         ensureWateringTicking(); invalidate()
     }
-    private fun handleWateringTap(x: Float, y: Float) {
+    /**
+     * True while a watering gauge swings. There is no watering mode any more: tapping a thirsty
+     * plant starts the gauge, and until it is won or given up, a tap anywhere on screen is the timing
+     * attempt - no need to hit the tiny cell again, and nothing else on the map answers meanwhile.
+     */
+    private fun wateringActive() = wateringGame?.done == false
+    private fun attemptWatering() {
+        val game = wateringGame ?: return
         val now = System.currentTimeMillis()
-        val game = wateringGame
-        // Once the gauge is swinging, a tap anywhere on screen is the timing attempt - no need to hit the tiny cell.
-        if (game != null && !game.done) {
-            if (game.attempt(now) && game.done) {
-                val watered = state.waterMany(game.targets, now)
-                watered.forEach { waterBursts.add(WaterBurst(it, now)) }
-                if (watered.isNotEmpty()) onWatered(watered.size)
-            }
-            ensureWateringTicking(); invalidate(); return
+        if (game.attempt(now) && game.done) {
+            // The bought reach applies here: the gauge was started with this cell's row or parcel.
+            val watered = state.waterMany(game.targets, now)
+            watered.forEach { waterBursts.add(WaterBurst(it, now)) }
+            if (watered.isNotEmpty()) onWatered(watered.size)
         }
-        val cell = cells.indexOfFirst { it.contains(x, y) }
-        if (cell < 0) { onWatered(-1); return }
+        ensureWateringTicking(); invalidate()
+    }
+    /** A plant in the ground that has not been watered yet, so it is not growing. */
+    private fun thirsty(cell: Int, now: Long): Boolean {
         val p = state.plots[cell]
-        // A miss here is a silent trap otherwise: nothing to water means every other action (plant, harvest) also does nothing while the mode stays on.
-        if (!state.parcels[FarmLayout.parcelOf(cell)].unlocked || p.crop == null || p.watered || p.progress(now) >= 1f) { onWatered(-1); return }
-        startWateringGauge(cell)
+        return state.parcels[FarmLayout.parcelOf(cell)].unlocked && p.crop != null && !p.watered && p.progress(now) < 1f
     }
     private var debrisGame: DebrisGame? = null
     private var debrisTicking = false
@@ -305,7 +327,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     /** Consumes the whole gesture while a debris mini-game is running, so panning/zoom never fights it. */
     private fun handleDebrisTouch(event: MotionEvent): Boolean {
-        if (region != FarmRegion.HOME || wateringMode) return false
+        if (region != FarmRegion.HOME || wateringActive()) return false
         val x = (event.x - cameraX) / zoom; val y = (event.y - cameraY) / zoom
         val now = System.currentTimeMillis()
         return when (event.actionMasked) {
@@ -450,6 +472,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private fun mapTop() = 80f * resources.displayMetrics.density
     fun switchRegion(next: FarmRegion) {
         if (next == region) return
+        // Nothing started on the old map may finish on the new one.
+        cameraAnimator?.cancel(); dropPendingTap(); lastTapParcel = -1; wateringGame = null
         cameras[region] = Camera(zoom, cameraX, cameraY)
         region = next
         contentDescription = context.getString(next.label)
@@ -487,37 +511,14 @@ class FarmWorldView(context: Context, private val state: FarmState,
         override fun onSingleTapUp(e: MotionEvent): Boolean {
             if (multiTouch) return true
             performClick()
-            if (region == FarmRegion.LIVESTOCK) {
-                LivestockScene.hit((e.x - cameraX) / zoom, (e.y - cameraY) / zoom)?.let { onLivestockPen?.invoke(it, false) }
-                return true
-            }
-            if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return true }
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
-            if (state.bushBonusReady() && treasureBush.contains(x, y)) {
-                val gained = state.claimBushBonus()
-                if (gained > 0) { onBushBonus?.invoke(gained); invalidate() }
-                return true
-            }
-            if (wateringMode) { handleWateringTap(x, y); return true }
-            // The parcel banner carries its own prev/next arrows, so hopping across the farm never
-            // needs a drag or a pinch - only its own index moves, never a shared "current" pointer.
-            val bannerParcel = lands.indexOfFirst { y >= it.top - 12 && y <= it.top + 20 && x >= it.left + 45 && x <= it.right - 45 }
-            if (bannerParcel >= 0) {
-                val banner = lands[bannerParcel]
-                when {
-                    x < banner.left + 45 + ARROW_ZONE -> focusParcel((bannerParcel - 1).coerceAtLeast(0))
-                    x > banner.right - 45 - ARROW_ZONE -> focusParcel((bannerParcel + 1).coerceAtMost(lands.size - 1))
-                    else -> onParcel(bannerParcel)
-                }
-                return true
-            }
-            val parcel = lands.indexOfFirst { x >= it.left && x <= it.right && y >= it.top - 12 && y <= it.bottom + 20 }
-            if (parcel < 0) return true
-            if (!state.parcels[parcel].unlocked) onParcel(parcel)
-            else {
-                val cell = cells.indexOfFirst { it.contains(x, y) }
-                if (cell >= 0) onPlant(cell) else onParcel(parcel)
-            }
+            // Zoomed far out over a parcel, this tap may be the first half of a double tap: it waits
+            // out the double-tap delay, and a second tap cancels it. Everywhere else it acts at once -
+            // planting a row or hitting the watering gauge needs every tap, and needs it now.
+            if (farParcelAt(x, y) >= 0) {
+                pendingTapX = x; pendingTapY = y; hasPendingTap = true
+                postDelayed(pendingTap, ViewConfiguration.getDoubleTapTimeout().toLong())
+            } else tap(x, y)
             return true
         }
         override fun onLongPress(e: MotionEvent) {
@@ -525,7 +526,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 LivestockScene.hit((e.x - cameraX) / zoom, (e.y - cameraY) / zoom)?.let { onLivestockPen?.invoke(it, true) }
                 return
             }
-            if (region != FarmRegion.HOME || multiTouch || wateringMode) return
+            if (region != FarmRegion.HOME || multiTouch || wateringActive()) return
             val x = (e.x - cameraX) / zoom; val y = (e.y - cameraY) / zoom
             val cell = cells.indexOfFirst { it.contains(x, y) }
             if (cell < 0 || !state.parcels[FarmLayout.parcelOf(cell)].unlocked) return
@@ -537,8 +538,106 @@ class FarmWorldView(context: Context, private val state: FarmState,
         }
         // SimpleOnGestureListener also implements OnDoubleTapListener, which GestureDetector picks up
         // automatically; that silently swallows every other rapid tap while it waits to see if a pair
-        // of nearby taps forms a double-tap. Nothing here ever wants that, so it's turned off below.
+        // of nearby taps forms a double-tap. Nothing here ever wants that, so it's turned off below -
+        // the one double tap the map does answer to is recognised by hand, see [isSecondTap].
     }).apply { setOnDoubleTapListener(null) }
+
+    /** What a single tap does at the world point ([x], [y]), once it is sure not to be a double tap. */
+    private fun tap(x: Float, y: Float) {
+        if (region == FarmRegion.LIVESTOCK) {
+            LivestockScene.hit(x, y)?.let { onLivestockPen?.invoke(it, false) }
+            return
+        }
+        if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return }
+        if (state.bushBonusReady() && treasureBush.contains(x, y)) {
+            val gained = state.claimBushBonus()
+            if (gained > 0) { onBushBonus?.invoke(gained); invalidate() }
+            return
+        }
+        if (wateringActive()) { attemptWatering(); return }
+        // The parcel banner carries its own prev/next arrows, so hopping across the farm never
+        // needs a drag or a pinch - only its own index moves, never a shared "current" pointer.
+        val bannerParcel = lands.indexOfFirst { y >= it.top - 12 && y <= it.top + 20 && x >= it.left + 45 && x <= it.right - 45 }
+        if (bannerParcel >= 0) {
+            val banner = lands[bannerParcel]
+            when {
+                x < banner.left + 45 + ARROW_ZONE -> focusParcel((bannerParcel - 1).coerceAtLeast(0))
+                x > banner.right - 45 - ARROW_ZONE -> focusParcel((bannerParcel + 1).coerceAtMost(lands.size - 1))
+                else -> onParcel(bannerParcel)
+            }
+            return
+        }
+        val parcel = parcelAt(x, y)
+        if (parcel < 0) return
+        if (!state.parcels[parcel].unlocked) onParcel(parcel)
+        else {
+            val cell = cells.indexOfFirst { it.contains(x, y) }
+            when {
+                cell < 0 -> onParcel(parcel)
+                thirsty(cell, System.currentTimeMillis()) -> startWateringGauge(cell)
+                else -> onPlant(cell)
+            }
+        }
+    }
+    /** A parcel with its banner above and its gate below: the area a finger means when it aims at it. */
+    private fun parcelAt(x: Float, y: Float) =
+        lands.indexOfFirst { x >= it.left && x <= it.right && y >= it.top - 12 && y <= it.bottom + 20 }
+    /** The parcel under this world point, but only while the map is zoomed far out over it; else -1. */
+    private fun farParcelAt(x: Float, y: Float): Int {
+        if (region != FarmRegion.HOME || wateringActive()) return -1
+        val parcel = parcelAt(x, y)
+        return if (parcel >= 0 && zoom < parcelCamera(parcel).zoom * FAR_ZOOM_RATIO) parcel else -1
+    }
+
+    // A tap held back while it might still turn into a double tap, kept in world units so a camera
+    // that moves in the meantime cannot make it land on another cell.
+    private var hasPendingTap = false
+    private var pendingTapX = 0f
+    private var pendingTapY = 0f
+    private val pendingTap = Runnable { hasPendingTap = false; tap(pendingTapX, pendingTapY) }
+    /** A new gesture that is not the second tap settles the held one first, so taps keep their order. */
+    private fun flushPendingTap() {
+        if (!hasPendingTap) return
+        removeCallbacks(pendingTap); pendingTap.run()
+    }
+    private fun dropPendingTap() { removeCallbacks(pendingTap); hasPendingTap = false }
+
+    // The last quick tap on a parcel seen from far out, whichever handler took it: a tap on debris or
+    // on a ripe plant is claimed by its mini-game and never reaches the gesture detector, yet it can
+    // still be the first half of a double tap.
+    private var lastTapParcel = -1
+    private var lastTapTime = 0L
+    private var lastTapX = 0f
+    private var lastTapY = 0f
+    private var downTime = 0L
+    private var downX = 0f
+    private var downY = 0f
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private val doubleTapSlop = ViewConfiguration.get(context).scaledDoubleTapSlop
+    private fun isSecondTap(event: MotionEvent) = lastTapParcel >= 0 &&
+        event.eventTime - lastTapTime <= ViewConfiguration.getDoubleTapTimeout() &&
+        kotlin.math.hypot(event.x - lastTapX, event.y - lastTapY) < doubleTapSlop &&
+        farParcelAt((event.x - cameraX) / zoom, (event.y - cameraY) / zoom) == lastTapParcel
+
+    /**
+     * Two fingers move the map as well as zoom it: the camera follows the midpoint of the fingers.
+     * The pinch alone only zoomed about that midpoint and held it still, so the map could be
+     * stretched but never dragged without lifting a finger. The midpoint restarts whenever a finger
+     * goes down or up - otherwise the jump from a two-finger to a one-finger centre would fling the map.
+     */
+    private var fingersX = Float.NaN
+    private var fingersY = Float.NaN
+    private fun panWithFingers(event: MotionEvent) {
+        if (event.actionMasked != MotionEvent.ACTION_MOVE) { fingersX = Float.NaN; return }
+        var sumX = 0f; var sumY = 0f
+        for (i in 0 until event.pointerCount) { sumX += event.getX(i); sumY += event.getY(i) }
+        val midX = sumX / event.pointerCount; val midY = sumY / event.pointerCount
+        if (!fingersX.isNaN()) {
+            cameraX += midX - fingersX; cameraY += midY - fingersY
+            constrain(); invalidate()
+        }
+        fingersX = midX; fingersY = midY
+    }
     init {
         isClickable = true
         contentDescription = context.getString(R.string.farm_map_description)
@@ -551,12 +650,50 @@ class FarmWorldView(context: Context, private val state: FarmState,
             zoom = zoom.coerceIn(minimumZoom(), maximumZoom()); constrain()
         }
     }
-    fun focusParcel(index: Int) {
+    /** The framing that shows one parcel whole, a margin around it, centred below the toolbar. */
+    private fun parcelCamera(index: Int): Camera {
         val land = lands[index]
-        zoom = minOf(width / (land.width() + 80f), (height - 100 * resources.displayMetrics.density).coerceAtLeast(1f) / (land.height() + 80f)).coerceIn(minimumZoom(), maximumZoom())
-        cameraX = width / 2f - land.centerX() * zoom
-        cameraY = height / 2f + 30 * resources.displayMetrics.density - land.centerY() * zoom
+        val density = resources.displayMetrics.density
+        val z = minOf(width / (land.width() + 80f), (height - 100 * density).coerceAtLeast(1f) / (land.height() + 80f))
+            .coerceIn(minimumZoom(), maximumZoom())
+        return Camera(z, width / 2f - land.centerX() * z, height / 2f + 30 * density - land.centerY() * z)
+    }
+    fun focusParcel(index: Int) {
+        cameraAnimator?.cancel()
+        parcelCamera(index).let { zoom = it.zoom; cameraX = it.x; cameraY = it.y }
         constrain(); invalidate()
+    }
+    private var cameraAnimator: ValueAnimator? = null
+    /**
+     * [focusParcel], flown rather than cut. The zoom moves geometrically and the point at the centre
+     * of the screen in a straight line: interpolating the camera offsets directly instead makes the
+     * view swoop off to one side and come back, because an offset means something different at
+     * every zoom. Any new touch stops the flight where it is.
+     */
+    private fun flyToParcel(index: Int) {
+        cameraAnimator?.cancel()
+        val fromZoom = zoom; val fromX = cameraX; val fromY = cameraY
+        focusParcel(index)
+        val toZoom = zoom
+        val toCenterX = (width / 2f - cameraX) / zoom; val toCenterY = (height / 2f - cameraY) / zoom
+        zoom = fromZoom; cameraX = fromX; cameraY = fromY
+        val fromCenterX = (width / 2f - cameraX) / zoom; val fromCenterY = (height / 2f - cameraY) / zoom
+        cameraAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = PARCEL_FLIGHT_MS
+            interpolator = DecelerateInterpolator(1.6f)
+            addUpdateListener {
+                val t = it.animatedValue as Float
+                zoom = fromZoom * Math.pow((toZoom / fromZoom).toDouble(), t.toDouble()).toFloat()
+                cameraX = width / 2f - (fromCenterX + (toCenterX - fromCenterX) * t) * zoom
+                cameraY = height / 2f - (fromCenterY + (toCenterY - fromCenterY) * t) * zoom
+                constrain(); invalidate()
+            }
+            start()
+        }
+    }
+    override fun onDetachedFromWindow() {
+        cameraAnimator?.cancel(); dropPendingTap()
+        super.onDetachedFromWindow()
     }
 
     private fun constrain() {
@@ -574,7 +711,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         return cell >= 0 && state.parcels[FarmLayout.parcelOf(cell)].unlocked
     }
     /** Which raw handler owns the CURRENT gesture, decided once at ACTION_DOWN and never re-decided mid-gesture. */
-    private enum class TouchClaim { NONE, DEBRIS, HARVEST }
+    private enum class TouchClaim { NONE, DEBRIS, HARVEST, DOUBLE_TAP }
     private var touchClaim = TouchClaim.NONE
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN) dismissGesture = dismissBubble?.invoke() == true
@@ -582,11 +719,18 @@ class FarmWorldView(context: Context, private val state: FarmState,
         if (dismissGesture) return true
         if (event.actionMasked == MotionEvent.ACTION_DOWN) {
             multiTouch = false; touchClaim = TouchClaim.NONE; parent?.requestDisallowInterceptTouchEvent(true)
+            cameraAnimator?.cancel(); fingersX = Float.NaN
+            downTime = event.eventTime; downX = event.x; downY = event.y
+            // The second tap of a double tap belongs to nobody else: not to a mini-game on the cell
+            // under it, and not to the single tap still waiting from the first half.
+            if (isSecondTap(event)) { touchClaim = TouchClaim.DOUBLE_TAP; dropPendingTap() }
+            else flushPendingTap()
         }
         if (event.pointerCount > 1) multiTouch = true
         if (multiTouch) {
-            scale.onTouchEvent(event); gestures.onTouchEvent(event)
+            panWithFingers(event); scale.onTouchEvent(event); gestures.onTouchEvent(event)
         } else when (touchClaim) {
+            TouchClaim.DOUBLE_TAP -> Unit
             // A gesture claimed by a mini-game at its DOWN stays with that same handler for its
             // whole life; an unclaimed gesture goes to the normal detectors for its whole life too.
             // Re-deciding per event (the old `handleDebrisTouch(event) || handleHarvestTouch(event)`
@@ -605,6 +749,17 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     scale.onTouchEvent(event); gestures.onTouchEvent(event)
                 }
             }
+        }
+        if (event.actionMasked == MotionEvent.ACTION_UP) {
+            val quickTap = !multiTouch && event.eventTime - downTime <= ViewConfiguration.getDoubleTapTimeout() &&
+                kotlin.math.hypot(event.x - downX, event.y - downY) < touchSlop
+            if (touchClaim == TouchClaim.DOUBLE_TAP) {
+                if (quickTap) flyToParcel(lastTapParcel)
+                lastTapParcel = -1
+            } else if (quickTap) {
+                lastTapParcel = farParcelAt((event.x - cameraX) / zoom, (event.y - cameraY) / zoom)
+                lastTapTime = event.eventTime; lastTapX = event.x; lastTapY = event.y
+            } else lastTapParcel = -1
         }
         if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
             cellHeld = false
@@ -747,8 +902,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         sprites.crop(canvas, crop, p.variant, p.stage(now), cropRect,
                             growth = p.progress(now), windTime = windTime, established = p.established)
                         canvas.restore()
-                        FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical)
-                        if (p.progress(now) >= 1) label(canvas, context.getString(R.string.farm_ready), cell.centerX(), cell.top + 8, 10f)
+                        // A ripe plant says so through its bar's shimmer, not a word written over its leaves.
+                        FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical, windTime)
                         waterBursts.firstOrNull { it.cell == i }?.let { drawWaterBurst(canvas, cell, it, now) }
                     }
                     wateringGame?.takeIf { it.cell == i }?.let { drawWateringGauge(canvas, cell, it, now) }
@@ -766,14 +921,73 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 val price = priceFormat.format(state.unlockCost(index).toLong())
                 label(canvas, context.getString(R.string.farm_locked_price, price), land.centerX(), land.centerY(), 20f)
             }
-            paint.color = Color.rgb(61, 76, 40)
-            canvas.drawRoundRect(RectF(land.left + 45, land.top - 12, land.right - 45, land.top + 20), 8f, 8f, paint)
-            label(canvas, "‹", land.left + 45 + ARROW_ZONE / 2, land.top + 10, 18f)
-            label(canvas, context.getString(R.string.farm_parcel_label, index + 1), land.centerX(), land.top + 10, 15f)
-            label(canvas, "›", land.right - 45 - ARROW_ZONE / 2, land.top + 10, 18f)
+            drawBanner(canvas, index, land)
         }
         if (RectF.intersects(treasureBush, visible)) drawTreasureBush(canvas)
         canvas.restore()
+    }
+    // Reused every frame by drawBanner: one counter per crop and the crop names looked up once.
+    private val bannerRect = RectF()
+    private val cropCounts = IntArray(FarmCrop.entries.size)
+    private val cropLabels = FarmCrop.entries.map { context.getString(it.label) }
+    /** The crop standing in most of a parcel's cells, or null while nothing grows there. */
+    private fun mainCrop(parcel: Int): FarmCrop? {
+        cropCounts.fill(0)
+        for (i in FarmLayout.cells(parcel)) state.plots[i].crop?.let { cropCounts[it.ordinal]++ }
+        var best = -1
+        for (c in cropCounts.indices) if (cropCounts[c] > 0 && (best < 0 || cropCounts[c] > cropCounts[best])) best = c
+        return if (best < 0) null else FarmCrop.entries[best]
+    }
+    /**
+     * The sign above a parcel: its number and what mostly grows in it, so the farm reads from afar
+     * without opening a single parcel - "3 · Radish" rather than "Parcel 3". A bare parcel, or one
+     * still for sale, keeps its plain number. The two ends are round buttons stepping to the previous
+     * and next parcel; they sit exactly on the ARROW_ZONE strips the tap handler tests.
+     */
+    private fun drawBanner(canvas: Canvas, index: Int, land: RectF) {
+        val left = land.left + 45; val right = land.right - 45
+        val top = land.top - 12; val bottom = land.top + 20
+        val centerY = (top + bottom) / 2
+        paint.style = Paint.Style.FILL
+        paint.color = Color.argb(70, 35, 40, 20)
+        bannerRect.set(left, top + 3, right, bottom + 3); canvas.drawRoundRect(bannerRect, 16f, 16f, paint)
+        paint.color = Color.rgb(250, 238, 205)
+        bannerRect.set(left, top, right, bottom); canvas.drawRoundRect(bannerRect, 16f, 16f, paint)
+        paint.style = Paint.Style.STROKE; paint.strokeWidth = 2.5f; paint.color = Color.rgb(132, 90, 50)
+        canvas.drawRoundRect(bannerRect, 16f, 16f, paint)
+        paint.style = Paint.Style.FILL
+        arrowButton(canvas, left + ARROW_ZONE / 2, centerY, -1, index > 0)
+        arrowButton(canvas, right - ARROW_ZONE / 2, centerY, 1, index < lands.size - 1)
+
+        val crop = if (state.parcels[index].unlocked) mainCrop(index) else null
+        val text = if (crop != null) context.getString(R.string.farm_parcel_banner, index + 1, cropLabels[crop.ordinal])
+            else context.getString(R.string.farm_parcel_label, index + 1)
+        paint.typeface = Typeface.DEFAULT_BOLD; paint.textAlign = Paint.Align.CENTER; paint.textSize = 15f
+        // The narrowest parcel leaves little room between its buttons: a long name shrinks to fit
+        // rather than running under them.
+        val room = right - left - 2 * ARROW_ZONE - 8f
+        val width = paint.measureText(text)
+        if (width > room) paint.textSize = (15f * room / width).coerceAtLeast(9f)
+        paint.color = Color.rgb(84, 56, 32)
+        canvas.drawText(text, land.centerX(), centerY + paint.textSize * .36f, paint)
+        paint.typeface = Typeface.DEFAULT
+    }
+    /** A round wooden-gold button with a drawn chevron; [direction] -1 points left. Faded at either end of the farm. */
+    private fun arrowButton(canvas: Canvas, x: Float, y: Float, direction: Int, enabled: Boolean) {
+        val alpha = if (enabled) 255 else 90
+        paint.style = Paint.Style.FILL
+        paint.color = Color.rgb(150, 96, 38); paint.alpha = alpha
+        canvas.drawCircle(x, y + 1.5f, 13f, paint)
+        paint.color = Color.rgb(226, 162, 70); paint.alpha = alpha
+        canvas.drawCircle(x, y, 12f, paint)
+        paint.color = Color.rgb(244, 198, 118); paint.alpha = alpha
+        canvas.drawCircle(x - 3f, y - 4f, 4f, paint)
+        paint.style = Paint.Style.STROKE; paint.strokeWidth = 3f; paint.strokeCap = Paint.Cap.ROUND
+        paint.color = Color.rgb(255, 248, 225); paint.alpha = alpha
+        val tip = x + direction * 3f; val tail = x - direction * 3f
+        canvas.drawLine(tail, y - 5f, tip, y, paint)
+        canvas.drawLine(tip, y, tail, y + 5f, paint)
+        paint.style = Paint.Style.FILL; paint.alpha = 255
     }
     /** A coin pile only peeks out from under the bush - with a quiet, static glint - while unclaimed. */
     private fun drawTreasureBush(canvas: Canvas) {

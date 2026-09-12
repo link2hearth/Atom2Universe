@@ -57,6 +57,9 @@
     <string name="farm_inventory">Choisir des graines ou des arbres</string>
     <string name="farm_produce_inventory">Inventaire</string>
     <string name="farm_currently_selected">✓ Actuellement sélectionnée</string>
+    <string name="farm_plant_all">Tout planter · ×%1$d</string>
+    <string name="farm_planted_all">%1$d × %2$s en terre. Arrosez-les pour lancer la pousse.</string>
+    <string name="farm_plant_all_none">Aucun emplacement libre et nettoyé pour cette graine.</string>
     <string name="farm_seed_stock">%1$s · %2$d en stock ▾</string>
     <string name="farm_shop_offer">%1$s · Achat %2$d · Récolte %3$d · %4$s</string>
     <string name="farm_tree_cycle">Pour un verger. Premiers fruits après 2 à 4 jours selon l’arbre, puis toutes les 24 heures. Arrosez après plantation et après chaque récolte pour lancer le cycle suivant.</string>
@@ -64,6 +67,7 @@
     <string name="farm_buy_quantity">Acheter %1$d · %2$d pièces</string>
     <string name="farm_bought">Graines ajoutées au stock et sélectionnées. Touchez un emplacement nettoyé pour planter.</string>
     <string name="farm_parcel_label">Parcelle %1$d</string>
+    <string name="farm_parcel_banner">%1$d · %2$s</string>
     <string name="farm_locked_price">Débloquer · %1$s pièces</string>
     <string name="farm_unlock_body">Agrandissez votre ferme avec 12 nouveaux emplacements à nettoyer. Cette parcelle peut accueillir un potager ou un verger.</string>
     <string name="farm_unlock">Débloquer</string>
@@ -79,7 +83,7 @@
     <string name="farm_planted_water">%1$s en terre. Touchez à nouveau pour arroser et lancer la pousse.</string>
     <string name="farm_water_started">Arrosé. Maturité dans %1$s, même en votre absence.</string>
     <string name="farm_wait_long">En pousse · maturité dans %1$s</string>
-    <string name="farm_map_description">Carte du jardin. Glissez pour déplacer, pincez pour zoomer. Touchez une parcelle pour l’acheter, ou son panneau pour accéder à ses emplacements.</string>
+    <string name="farm_plant_growing">%1$s · %2$s · mûr dans %3$s</string>    <string name="farm_map_description">Carte du jardin. Glissez pour déplacer, pincez pour zoomer. Touchez une parcelle pour l’acheter, ou son panneau pour accéder à ses emplacements.</string>
     <string name="farm_close">Fermer</string>
     <string name="farm_confirm">OK</string>
     <string name="farm_cancel">Annuler</string>

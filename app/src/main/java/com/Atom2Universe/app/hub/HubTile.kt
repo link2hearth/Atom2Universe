@@ -25,6 +25,8 @@ data class HubTile(
     val artworkClass: KClass<out android.graphics.drawable.Drawable>? = null,
     val activityClass: Class<*>? = null,
     var quickAccessItems: List<QuickAccessItem> = emptyList(),
+    /** Faux pour une tuile dont l'illustration se suffit : seul le titre reste affiche dessus. */
+    val showDescription: Boolean = true,
     /**
      * Pastille de notification : 0 = rien a signaler. C'est le hub qui la remplit, la tuile ne
      * sait pas ce qu'elle compte (recoltes pretes, etc.), et rien n'en est sauvegarde.

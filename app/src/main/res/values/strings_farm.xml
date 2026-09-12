@@ -57,6 +57,9 @@
     <string name="farm_inventory">Select seeds or saplings</string>
     <string name="farm_produce_inventory">Inventory</string>
     <string name="farm_currently_selected">✓ Currently selected</string>
+    <string name="farm_plant_all">Plant all · ×%1$d</string>
+    <string name="farm_planted_all">%1$d × %2$s planted. Water them to start growing.</string>
+    <string name="farm_plant_all_none">No free, cleared space for this seed.</string>
     <string name="farm_seed_stock">%1$s · %2$d in stock ▾</string>
     <string name="farm_shop_offer">%1$s · Buy %2$d · Harvest %3$d · %4$s</string>
     <string name="farm_tree_cycle">For an orchard. First fruit after 2–4 days depending on the tree, then every 24 hours. Water after planting and after each harvest to start the next cycle.</string>
@@ -64,6 +67,7 @@
     <string name="farm_buy_quantity">Buy %1$d · %2$d coins</string>
     <string name="farm_bought">Seeds added to your stock and selected. Tap a cleared space to plant.</string>
     <string name="farm_parcel_label">Parcel %1$d</string>
+    <string name="farm_parcel_banner">%1$d · %2$s</string>
     <string name="farm_locked_price">Unlock · %1$s coins</string>
     <string name="farm_unlock_body">Expand your farm with 12 new spaces to clear. You can use this parcel as a vegetable garden or an orchard.</string>
     <string name="farm_unlock">Unlock</string>
@@ -79,7 +83,7 @@
     <string name="farm_planted_water">%1$s planted. Tap again to water and start growth.</string>
     <string name="farm_water_started">Watered. Ready in %1$s, even while away.</string>
     <string name="farm_wait_long">Growing · ready in %1$s</string>
-    <string name="farm_map_description">Garden map. Drag to move, pinch to zoom. Tap a parcel to buy it, or its sign to access individual spaces.</string>
+    <string name="farm_plant_growing">%1$s · %2$s · ready in %3$s</string>    <string name="farm_map_description">Garden map. Drag to move, pinch to zoom. Tap a parcel to buy it, or its sign to access individual spaces.</string>
     <string name="farm_close">Close</string>
     <string name="farm_confirm">OK</string>
     <string name="farm_cancel">Cancel</string>

@@ -35,38 +35,39 @@ import org.json.JSONObject
  * Declaration order is NOT the ladder. It must stay as it is: the legacy v1 save migration indexes
  * `oldSeconds` by ordinal.
  */
-enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: Int, val cost: Int,
-                    val sale: Int, val seconds: Int, val tree: Boolean = false) {
-    WHEAT(R.string.farm_wheat, "garden_wheat_radish_lettuce_zucchini_v1.png", 0, 0, 8, 45, 8 * 3600),
-    RADISH(R.string.farm_radish, "garden_wheat_radish_lettuce_zucchini_v1.png", 2, 1, 2, 12, 2 * 3600),
-    LETTUCE(R.string.farm_lettuce, "garden_wheat_radish_lettuce_zucchini_v1.png", 4, 2, 3, 20, 6 * 3600),
-    ZUCCHINI(R.string.farm_zucchini, "garden_wheat_radish_lettuce_zucchini_v1.png", 6, 6, 16, 92, 10 * 3600),
-    STRAWBERRY(R.string.farm_strawberry, "garden_fruit_vegetables_variants_v1.png", 0, 7, 21, 120, 5 * 3600),
-    PUMPKIN(R.string.farm_pumpkin, "garden_fruit_vegetables_variants_v1.png", 2, 12, 155, 900, 24 * 3600),
-    EGGPLANT(R.string.farm_eggplant, "garden_fruit_vegetables_variants_v1.png", 4, 8, 32, 186, 12 * 3600),
-    BLUEBERRY(R.string.farm_blueberry, "garden_fruit_vegetables_variants_v1.png", 6, 11, 90, 520, 8 * 3600),
-    CORN(R.string.farm_corn, "garden_corn_pepper_peas_cauliflower_clean.png", 0, 5, 10, 58, 4 * 3600),
-    PEPPER(R.string.farm_pepper, "garden_corn_pepper_peas_cauliflower_clean.png", 2, 9, 42, 243, 6 * 3600),
-    PEAS(R.string.farm_peas, "garden_corn_pepper_peas_cauliflower_clean.png", 4, 3, 5, 27, 3 * 3600),
-    CAULIFLOWER(R.string.farm_cauliflower, "garden_corn_pepper_peas_cauliflower_clean.png", 6, 10, 68, 396, 16 * 3600),
-    APPLE(R.string.farm_apple, "garden_fruit_trees_v1.png", 0, 0, 20, 12, 48 * 3600, true),
-    PEAR(R.string.farm_pear, "garden_fruit_trees_v1.png", 2, 0, 25, 15, 72 * 3600, true),
-    CHERRY(R.string.farm_cherry, "garden_fruit_trees_v1.png", 4, 0, 30, 18, 96 * 3600, true),
-    CHILI(R.string.farm_chili, "garden_carrot_potato_chili_watermelon_v1.png", 4, 4, 8, 45, 8 * 3600),
-    CARROT(R.string.farm_carrot, "garden_carrot_potato_chili_watermelon_v1.png", 0, 13, 182, 1072, 10 * 3600),
-    POTATO(R.string.farm_potato, "garden_carrot_potato_chili_watermelon_v1.png", 2, 14, 284, 1665, 24 * 3600),
-    // Append only: old enum ordinals are part of the legacy save format. Native art needs no sheet.
+enum class FarmCrop(val label: Int, val rank: Int, val cost: Int, val sale: Int, val seconds: Int,
+                    val tree: Boolean = false) {
+    // Every crop is drawn natively by FarmPlantArt; the sprite sheets these entries once named are gone.
+    WHEAT(R.string.farm_wheat, 0, 8, 45, 8 * 3600),
+    RADISH(R.string.farm_radish, 1, 2, 12, 2 * 3600),
+    LETTUCE(R.string.farm_lettuce, 2, 3, 20, 6 * 3600),
+    ZUCCHINI(R.string.farm_zucchini, 6, 16, 92, 10 * 3600),
+    STRAWBERRY(R.string.farm_strawberry, 7, 21, 120, 5 * 3600),
+    PUMPKIN(R.string.farm_pumpkin, 12, 155, 900, 24 * 3600),
+    EGGPLANT(R.string.farm_eggplant, 8, 32, 186, 12 * 3600),
+    BLUEBERRY(R.string.farm_blueberry, 11, 90, 520, 8 * 3600),
+    CORN(R.string.farm_corn, 5, 10, 58, 4 * 3600),
+    PEPPER(R.string.farm_pepper, 9, 42, 243, 6 * 3600),
+    PEAS(R.string.farm_peas, 3, 5, 27, 3 * 3600),
+    CAULIFLOWER(R.string.farm_cauliflower, 10, 68, 396, 16 * 3600),
+    APPLE(R.string.farm_apple, 0, 20, 12, 48 * 3600, true),
+    PEAR(R.string.farm_pear, 0, 25, 15, 72 * 3600, true),
+    CHERRY(R.string.farm_cherry, 0, 30, 18, 96 * 3600, true),
+    CHILI(R.string.farm_chili, 4, 8, 45, 8 * 3600),
+    CARROT(R.string.farm_carrot, 13, 182, 1072, 10 * 3600),
+    POTATO(R.string.farm_potato, 14, 284, 1665, 24 * 3600),
+    // Append only: old enum ordinals are part of the legacy save format.
     // Ranks 15 to 23. u = 520 for onion/leek, then x1.85 per pair: 961, 1776, 3282, and 6066 for
     // the pineapple alone. Seed at 17 % of the sale, like every rung below.
-    ONION(R.string.farm_onion, "", 0, 15, 301, 1772, 8 * 3600),
-    TOMATO(R.string.farm_tomato, "", 0, 17, 483, 2837, 6 * 3600),
-    BROCCOLI(R.string.farm_broccoli, "", 0, 18, 787, 4632, 16 * 3600),
-    RASPBERRY(R.string.farm_raspberry, "", 0, 19, 813, 4785, 5 * 3600),
-    LEEK(R.string.farm_leek, "", 0, 16, 476, 2802, 20 * 3600),
-    GRAPE(R.string.farm_grape, "", 0, 21, 1901, 11185, 8 * 3600),
-    ARTICHOKE(R.string.farm_artichoke, "", 0, 20, 1260, 7413, 12 * 3600),
-    WATERMELON(R.string.farm_watermelon, "", 0, 22, 3294, 19374, 24 * 3600),
-    PINEAPPLE(R.string.farm_pineapple, "", 0, 23, 3929, 23110, 10 * 3600);
+    ONION(R.string.farm_onion, 15, 301, 1772, 8 * 3600),
+    TOMATO(R.string.farm_tomato, 17, 483, 2837, 6 * 3600),
+    BROCCOLI(R.string.farm_broccoli, 18, 787, 4632, 16 * 3600),
+    RASPBERRY(R.string.farm_raspberry, 19, 813, 4785, 5 * 3600),
+    LEEK(R.string.farm_leek, 16, 476, 2802, 20 * 3600),
+    GRAPE(R.string.farm_grape, 21, 1901, 11185, 8 * 3600),
+    ARTICHOKE(R.string.farm_artichoke, 20, 1260, 7413, 12 * 3600),
+    WATERMELON(R.string.farm_watermelon, 22, 3294, 19374, 24 * 3600),
+    PINEAPPLE(R.string.farm_pineapple, 23, 3929, 23110, 10 * 3600);
 
     /** Every crop has four native designs, chosen once per planting and saved with the plot. */
     val visualVariantCount: Int get() = 4
@@ -104,6 +105,16 @@ data class FarmPlot(var crop: FarmCrop? = null, var planted: Long = 0, var water
     fun stage(now: Long): Int = if (established) { if (progress(now) >= 1f) 4 else 3 }
         else (progress(now) * 4).toInt().coerceAtMost(4)
     fun remaining(now: Long): Int = kotlin.math.ceil((1.0 - progress(now)) * duration()).toInt()
+    /**
+     * The quality this plant will be harvested at. Both of its causes are settled before harvest -
+     * manure when it is planted, the lucky roll when it is watered - so it can be shown while it grows.
+     */
+    fun quality(): FarmCropQuality = when {
+        critical && rich -> FarmCropQuality.LEGENDARY
+        rich -> FarmCropQuality.EPIC
+        critical -> FarmCropQuality.RARE
+        else -> FarmCropQuality.COMMON
+    }
 }
 
 data class FarmParcel(var unlocked: Boolean = false, var use: FarmLandUse = FarmLandUse.CROPS)
@@ -428,18 +439,40 @@ class FarmState(private val prefs: SharedPreferences) {
         p.debris = 0; save(); return true
     }
     fun plant(index: Int, now: Long): Boolean {
+        advanceLivestock(now)
+        val ok = plantOne(index, selected, now)
+        if (ok) save()
+        return ok
+    }
+    /**
+     * Every seed of [crop] in the bag, into every free cell that takes it, parcel 1 first and then in
+     * parcel order - the order the cells are numbered in. One save for the whole farm, like [waterMany].
+     * Returns how many went in the ground.
+     */
+    fun plantAll(crop: FarmCrop, now: Long): Int {
+        advanceLivestock(now)
+        var planted = 0
+        for (index in plots.indices) {
+            if (seeds[crop.ordinal] == 0) break
+            if (plantOne(index, crop, now)) planted++
+        }
+        if (planted > 0) { selected = crop; save() }
+        return planted
+    }
+    /** How many seeds of [crop] a [plantAll] would put in the ground right now. */
+    fun plantAllCount(crop: FarmCrop): Int = minOf(seeds[crop.ordinal], emptyCells(crop.tree))
+    private fun plantOne(index: Int, crop: FarmCrop, now: Long): Boolean {
         val p = plots[index]
         val land = parcels[FarmLayout.parcelOf(index)]
-        if (!land.unlocked || p.debris != 0 || p.crop != null || seeds[selected.ordinal] == 0 ||
-            selected.tree != (land.use == FarmLandUse.ORCHARD)) return false
-        seeds[selected.ordinal]--
-        p.crop = selected; p.planted = now; p.watered = false; p.established = false; p.critical = false
-        p.variant = kotlin.random.Random.nextInt(selected.visualVariantCount)
+        if (!land.unlocked || p.debris != 0 || p.crop != null || seeds[crop.ordinal] == 0 ||
+            crop.tree != (land.use == FarmLandUse.ORCHARD)) return false
+        seeds[crop.ordinal]--
+        p.crop = crop; p.planted = now; p.watered = false; p.established = false; p.critical = false
+        p.variant = kotlin.random.Random.nextInt(crop.visualVariantCount)
         // The pit empties by itself into whatever goes in the ground. No choice to make: the only
         // crops worth planting are the newest rungs anyway, which are also the ones worth enriching.
-        advanceLivestock(now)
-        p.rich = livestock.spendManure(selected.manureCost)
-        save(); return true
+        p.rich = livestock.spendManure(crop.manureCost)
+        return true
     }
     private fun waterOne(index: Int, now: Long): Boolean {
         val p = plots[index]
@@ -448,18 +481,11 @@ class FarmState(private val prefs: SharedPreferences) {
         p.critical = kotlin.random.Random.nextInt(100) < criticalChance()
         return true
     }
-    fun water(index: Int, now: Long): Boolean {
-        val ok = waterOne(index, now); if (ok) save(); return ok
-    }
     /** All watered at once so a whole row or parcel costs a single save, not one per cell. */
     fun waterMany(indices: List<Int>, now: Long): List<Int> {
         val watered = indices.filter { waterOne(it, now) }
         if (watered.isNotEmpty()) save()
         return watered
-    }
-    fun hasPlantsNeedingWater(now: Long = System.currentTimeMillis()): Boolean = plots.indices.any { i ->
-        val p = plots[i]
-        parcels[FarmLayout.parcelOf(i)].unlocked && p.crop != null && !p.watered && p.progress(now) < 1f
     }
     /** One cell, its row, or the whole parcel - shared by the watering can and the harvest basket. */
     private fun areaTargets(cell: Int, level: Int): List<Int> {
@@ -521,12 +547,7 @@ class FarmState(private val prefs: SharedPreferences) {
         val p = plots[index]
         val crop = p.crop ?: return null
         if (!parcels[FarmLayout.parcelOf(index)].unlocked || p.progress(now) < 1f) return null
-        val quality = when {
-            p.critical && p.rich -> FarmCropQuality.LEGENDARY
-            p.rich -> FarmCropQuality.EPIC
-            p.critical -> FarmCropQuality.RARE
-            else -> FarmCropQuality.COMMON
-        }
+        val quality = p.quality()
         produce[crop.ordinal][quality.ordinal] = (produce[crop.ordinal][quality.ordinal] + 1).coerceAtMost(999999)
         harvests++
         if (crop.tree) { p.established = true; p.planted = now }

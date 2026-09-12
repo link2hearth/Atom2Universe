@@ -35,7 +35,6 @@ class FarmActivity : ThemedActivity() {
     private lateinit var balance: TextView
     private lateinit var selection: FarmArtView
     private lateinit var produceIcon: FarmArtView
-    private lateinit var wateringIcon: FarmArtView
     private lateinit var manureIcon: FarmArtView
     private lateinit var regionIcon: FarmArtView
     private lateinit var status: TextView
@@ -126,14 +125,10 @@ class FarmActivity : ThemedActivity() {
         // Between the seed bag and the watering can: what goes in the ground, then what starts it.
         manureIcon = icon(FarmArtView.Kind.MANURE, R.string.farm_manure_title) { manurePit() }
         toolbar.addView(manureIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
-        wateringIcon = icon(FarmArtView.Kind.WATER, R.string.farm_watering_mode) { toggleWatering() }
         regionIcon = icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }
         toolbar.addView(regionIcon, LinearLayout.LayoutParams(dp(48), dp(48)))
         root.addView(toolbar, FrameLayout.LayoutParams(-1, dp(58), Gravity.TOP).apply {
             setMargins(dp(10), dp(8), dp(10), 0)
-        })
-        root.addView(wateringIcon, FrameLayout.LayoutParams(dp(56), dp(56), Gravity.TOP or Gravity.LEFT).apply {
-            setMargins(dp(16), dp(76), 0, 0)
         })
         status = text("", 13).apply {
             background = rounded(cream, 16, border)
@@ -657,6 +652,18 @@ class FarmActivity : ThemedActivity() {
                     setTextColor(Color.rgb(150, 108, 30))
                 })
                 row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
+                // Fills every free cell of the farm with this seed, parcel 1 first. The count is what
+                // will really go in: the smaller of the bag and the free, cleared cells.
+                val count = state.plantAllCount(crop)
+                row.addView(button(getString(R.string.farm_plant_all, count)) {
+                    val planted = state.plantAll(crop, System.currentTimeMillis())
+                    closeBubble()
+                    message(if (planted > 0) getString(R.string.farm_planted_all, planted, getString(crop.label))
+                        else getString(R.string.farm_plant_all_none))
+                    refresh()
+                }.apply {
+                    isEnabled = count > 0; alpha = if (count > 0) 1f else .45f
+                }, LinearLayout.LayoutParams(-2, dp(48)).apply { leftMargin = dp(6) })
                 body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
             body.addView(button(getString(R.string.farm_shop)) { shop() })
@@ -941,29 +948,19 @@ class FarmActivity : ThemedActivity() {
                 if (result.count > 1) getString(R.string.farm_harvested_many, result.count)
                 else getString(R.string.farm_harvested_one, harvestStackLabel(result.stacks.firstOrNull()))
             }
-            state.water(index, now) -> getString(R.string.farm_water_started, duration(p.remaining(now)))
-            else -> getString(R.string.farm_wait_long, duration(p.remaining(now)))
+            // A thirsty plant never gets here: the map starts the watering gauge on it instead.
+            // Name and quality first: "growing" goes without saying for a plant that is not ripe yet.
+            else -> getString(R.string.farm_plant_growing, getString(p.crop!!.label),
+                getString(p.quality().label), duration(p.remaining(now)))
         }
         message(result); refresh()
     }
     private fun debrisCleared(index: Int) {
         message(getString(R.string.farm_cleaned)); refresh()
     }
-    private fun toggleWatering() {
-        if (!state.hasPlantsNeedingWater()) return
-        world.wateringMode = !world.wateringMode
-        updateWateringIcon()
-        message(getString(if (world.wateringMode) R.string.farm_watering_on else R.string.farm_watering_off))
-    }
     private fun watered(count: Int) {
-        message(getString(if (count < 0) R.string.farm_watering_nothing else R.string.farm_watering_done, count.coerceAtLeast(0)))
-        if (!state.hasPlantsNeedingWater()) world.wateringMode = false
+        message(getString(R.string.farm_watering_done, count))
         refresh()
-    }
-    private fun updateWateringIcon() {
-        wateringIcon.background = RippleDrawable(ColorStateList.valueOf(0x337D9966),
-            rounded(if (world.wateringMode) Color.rgb(190, 225, 235) else cream, 18, border), null)
-        wateringIcon.elevation = dp(if (world.wateringMode) 9 else 6).toFloat()
     }
     private fun harvested(index: Int, result: FarmHarvestResult) {
         message(if (result.count > 1) getString(R.string.farm_harvested_many, result.count)
@@ -999,10 +996,6 @@ class FarmActivity : ThemedActivity() {
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
         produceIcon.visibility = seedGroup.visibility
         regionIcon.alert = state.fieldsNeedAttention()
-        val wateringAvailable = world.region == FarmRegion.HOME && state.hasPlantsNeedingWater()
-        if (!wateringAvailable) world.wateringMode = false
-        wateringIcon.visibility = if (wateringAvailable) View.VISIBLE else View.GONE
-        updateWateringIcon()
         // Hidden until the pens exist: an icon for a system you have never seen is just a puzzle.
         manureIcon.visibility = if (seedGroup.visibility == View.VISIBLE && state.livestockUnlocked())
             View.VISIBLE else View.GONE

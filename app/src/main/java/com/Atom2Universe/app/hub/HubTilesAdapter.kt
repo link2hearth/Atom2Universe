@@ -267,6 +267,7 @@ class HubTilesAdapter(
 
             description?.setText(tile.descriptionRes)
             description?.setTextColor(subtitleColor)
+            description?.visibility = if (tile.showDescription) View.VISIBLE else View.GONE
 
             if (isEditMode && editButton != null) {
                 editButton.visibility = View.VISIBLE
@@ -314,7 +315,15 @@ class HubTilesAdapter(
                         badge.visibility = View.VISIBLE
                         badge.text = item.label
                         badge.setOnClickListener { onQuickAccessClick?.invoke(tile, item) }
-                        applyBadgeColor(badge, item.colorHex)
+                        // Un raccourci vers un jeu illustre reprend le dessin de sa tuile : la couleur
+                        // enregistree avec lui est celle cachee sous le dessin, souvent presque noire.
+                        val badgeArtwork = HubTileArtworks.forActivity(item.activityClassName)?.let { art ->
+                            artworkCache.getOrPut("quick:${tile.id}:$index:${art.qualifiedName}") {
+                                createArtwork(art.java)
+                            }
+                        }
+                        if (badgeArtwork != null) applyBadgeArtwork(badge, badgeArtwork)
+                        else applyBadgeColor(badge, item.colorHex)
                     } else {
                         badge.visibility = View.GONE
                         badge.setOnClickListener(null)
@@ -326,7 +335,29 @@ class HubTilesAdapter(
             }
         }
 
+        /** Meme arrondi que quick_access_badge_bg : le dessin est rogne a la forme du badge. */
+        private val roundedBadgeOutline = object : android.view.ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: android.graphics.Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 10f * view.resources.displayMetrics.density)
+            }
+        }
+
+        private fun applyBadgeArtwork(badge: TextView, art: Drawable) {
+            badge.background = art
+            badge.backgroundTintList = null
+            badge.outlineProvider = roundedBadgeOutline
+            badge.clipToOutline = true
+            badge.setTextColor(Color.WHITE)
+            // Le titre est pose directement sur le dessin : une ombre le garde lisible.
+            badge.setShadowLayer(3f, 0f, 1f, 0xCC000000.toInt())
+        }
+
         private fun applyBadgeColor(badge: TextView, colorHex: String?) {
+            // Les vues sont recyclees : un badge qui portait un dessin doit retrouver son fond normal.
+            badge.setBackgroundResource(R.drawable.quick_access_badge_bg)
+            badge.outlineProvider = android.view.ViewOutlineProvider.BACKGROUND
+            badge.clipToOutline = false
+            badge.setShadowLayer(0f, 0f, 0f, 0)
             if (colorHex != null) {
                 try {
                     val color = Color.parseColor(colorHex)

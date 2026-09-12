@@ -72,54 +72,25 @@ class FarmRegionScenery(private val sprites: FarmSprites) {
             sprites.environment(canvas, 2, 3, RectF(x, 1350f + i % 3 * 20, x + 70, 1410f + i % 3 * 20))
         }
     }
+    // The flowers were the last sprite sheets of the greenhouse. They are gone until the flowers
+    // get drawn natively like the crops; the planters stay in place, empty, waiting for them.
+    private val bands = listOf(RectF(95f, 120f, 805f, 310f), RectF(95f, 1320f, 805f, 1510f))
+    private val beds = listOf(
+        RectF(95f, 390f, 365f, 620f), RectF(535f, 390f, 805f, 620f),
+        RectF(95f, 690f, 365f, 920f), RectF(535f, 690f, 805f, 920f),
+        RectF(95f, 990f, 365f, 1220f), RectF(535f, 990f, 805f, 1220f)
+    )
     private fun drawGreenhouse(canvas: Canvas, visible: RectF) {
         greenhouseDecor.draw(canvas)
-
-        val topBand = RectF(95f, 120f, 805f, 310f)
-        val bottomBand = RectF(95f, 1320f, 805f, 1510f)
-        drawFlowerBand(canvas, topBand, 0)
-        drawFlowerBand(canvas, bottomBand, 4)
-
-        val beds = listOf(
-            RectF(95f, 390f, 365f, 620f), RectF(535f, 390f, 805f, 620f),
-            RectF(95f, 690f, 365f, 920f), RectF(535f, 690f, 805f, 920f),
-            RectF(95f, 990f, 365f, 1220f), RectF(535f, 990f, 805f, 1220f)
-        )
-        beds.forEachIndexed { i, bed ->
-            if (!RectF.intersects(bed, visible)) return@forEachIndexed
-            drawFlowerBed(canvas, bed, i)
+        bands.forEach { greenhouseDecor.drawPlanter(canvas, it) }
+        beds.forEach { bed ->
+            if (!RectF.intersects(bed, visible)) return@forEach
+            greenhouseDecor.drawPlanter(canvas, bed)
+            paint.color = Color.rgb(80, 55, 36)
+            paint.alpha = 90
+            canvas.drawRoundRect(bed.left + 28f, bed.bottom - 28f, bed.right - 28f, bed.bottom - 17f, 6f, 6f, paint)
+            paint.alpha = 255
         }
-
         greenhouseDecor.drawEntrance(canvas)
-    }
-    private fun drawFlowerBand(canvas: Canvas, band: RectF, offset: Int) {
-        greenhouseDecor.drawPlanter(canvas, band)
-        for (i in 0..7) {
-            val x = band.left + 55f + i * (band.width() - 110f) / 7f
-            val flower = (i + offset) % 8
-            val sheet = if (flower < 4) FLOWERS_A else FLOWERS_B
-            val row = (flower % 4) * 2 + (i + offset) % 2
-            sprites.flower(canvas, sheet, row, 4, RectF(x - 48f, band.top + 38f, x + 48f, band.bottom - 18f))
-        }
-    }
-    private fun drawFlowerBed(canvas: Canvas, bed: RectF, index: Int) {
-        greenhouseDecor.drawPlanter(canvas, bed)
-        val sheet = if (index < 3) FLOWERS_A else FLOWERS_B
-        val baseRow = (index % 4) * 2
-        for (row in 0..1) for (col in 0..2) {
-            val stage = 2 + (row + col + index) % 3
-            val variant = (row + col + index) % 2
-            val x = bed.left + 58f + col * (bed.width() - 116f) / 2f
-            val y = bed.top + 88f + row * 82f
-            sprites.flower(canvas, sheet, baseRow + variant, stage, RectF(x - 48f, y - 72f, x + 48f, y + 52f))
-        }
-        paint.color = Color.rgb(80, 55, 36)
-        paint.alpha = 90
-        canvas.drawRoundRect(bed.left + 28f, bed.bottom - 28f, bed.right - 28f, bed.bottom - 17f, 6f, 6f, paint)
-        paint.alpha = 255
-    }
-    private companion object {
-        const val FLOWERS_A = "garden_flowers_sunflower_tulip_lavender_daisy_v1.png"
-        const val FLOWERS_B = "garden_flowers_rose_hydrangea_poppy_orchid_v1.png"
     }
 }

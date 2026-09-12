@@ -79,6 +79,8 @@ class GamesActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_caves,
             artworkClass = FarmHubTileDrawable::class,
+            // The garden art says what the game is; the title alone sits over it, no text band.
+            showDescription = false,
             activityClass = com.Atom2Universe.app.games.farm.FarmActivity::class.java
         ),
         // Clicker en tête
