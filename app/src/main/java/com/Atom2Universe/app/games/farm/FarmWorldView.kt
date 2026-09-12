@@ -167,6 +167,26 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private var auraTicking = false
     private val auraTick = Runnable { auraTicking = false; invalidate() }
     private fun ensureAuraTicking() { if (!auraTicking) { auraTicking = true; postOnAnimation(auraTick) } }
+    /** The shared wind clock and each parcel's gate never stop animating while the map is drawn. */
+    private var lastDecorFrameNanos = 0L
+    private var windTime = 0f
+    private var decorTicking = false
+    private val decorTick = Runnable { decorTicking = false; invalidate() }
+    private fun ensureDecorTicking() { if (!decorTicking) { decorTicking = true; postOnAnimation(decorTick) } }
+    // NaN means "never drawn yet": the gate then snaps straight to its real state instead of
+    // swinging open from closed the first time a parcel scrolls into view.
+    private val gateOpening = FloatArray(FarmLayout.lands.size) { Float.NaN }
+    private fun updateGateOpening(index: Int, open: Boolean, dt: Float): Float {
+        val goal = if (open) 1f else 0f
+        var value = gateOpening[index]
+        value = if (value.isNaN()) goal else {
+            val step = 1.1f * dt
+            value + (goal - value).coerceIn(-step, step)
+        }
+        gateOpening[index] = value
+        if (value != goal) ensureDecorTicking()
+        return value
+    }
     var wateringMode = false
         set(value) { field = value; wateringGame = null; invalidate() }
     private var wateringGame: WateringGauge? = null
@@ -487,6 +507,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
         canvas.drawColor(Color.rgb(87, 133, 57))
         canvas.save(); canvas.translate(cameraX, cameraY); canvas.scale(zoom, zoom)
         val visible = RectF(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
+        // The wind field animates in every region the grass is drawn in, not only on the home map.
+        val frameNanos = System.nanoTime()
+        val dt = if (lastDecorFrameNanos == 0L) 0f else ((frameNanos - lastDecorFrameNanos) / 1_000_000_000f).coerceIn(0f, .1f)
+        lastDecorFrameNanos = frameNanos
+        windTime += dt
+        ensureDecorTicking()
         // The centered greenhouse can leave visible margins outside its world bounds.
         // Tile those margins too; floor also covers partially visible negative coordinates.
         val extendGrass = region == FarmRegion.GREENHOUSE
@@ -504,7 +530,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         }
         for (row in firstRow..lastRow)
             for (col in firstCol..lastCol) {
-            sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80), col, row)
+            sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80), col, row, windTime)
         }
         if (region != FarmRegion.HOME) {
             if (region == FarmRegion.LIVESTOCK) livestockScene.draw(canvas, visible)
@@ -523,11 +549,11 @@ class FarmWorldView(context: Context, private val state: FarmState,
             val fenceWidth = land.width() / spec.columns
             paint.color = Color.argb(24, 83, 102, 40)
             canvas.drawRoundRect(land, 22f, 22f, paint)
-            for (col in 0 until spec.columns) sprites.environment(canvas, 0, 2,
+            for (col in 0 until spec.columns) scenery.fenceRail(canvas,
                 RectF(land.left + col * fenceWidth, land.top + 14, land.left + (col + 1) * fenceWidth, land.top + 64))
             for (row in 0 until spec.rows + 1) {
-                sprites.environment(canvas, 1, 2, RectF(land.left - 9, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.left + 12, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
-                sprites.environment(canvas, 1, 2, RectF(land.right - 12, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.right + 9, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
+                scenery.fencePost(canvas, RectF(land.left - 9, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.left + 12, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
+                scenery.fencePost(canvas, RectF(land.right - 12, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.right + 9, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
             }
             for (i in FarmLayout.cells(index)) {
                 val cell = cells[i]; val p = state.plots[i]
@@ -571,9 +597,11 @@ class FarmWorldView(context: Context, private val state: FarmState,
             // is growing. It is the one piece of state the map shows from across the farm, zoomed out,
             // without a badge or a number: which fields still want you.
             val gateOpen = state.parcelHasIdleGround(index)
-            for (col in 0 until spec.columns) sprites.environment(canvas,
-                if (col == 1 && gateOpen) 1 else 0, if (col == 1) 3 else 2,
-                RectF(land.left + col * fenceWidth, land.bottom - 27, land.left + (col + 1) * fenceWidth, land.bottom + 20))
+            val opening = updateGateOpening(index, gateOpen, dt)
+            for (col in 0 until spec.columns) {
+                val segment = RectF(land.left + col * fenceWidth, land.bottom - 27, land.left + (col + 1) * fenceWidth, land.bottom + 20)
+                if (col == 1) scenery.gate(canvas, segment, opening) else scenery.fenceRail(canvas, segment)
+            }
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)
                 val price = java.text.NumberFormat.getIntegerInstance().format(state.unlockCost(index).toLong())
@@ -583,7 +611,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             canvas.drawRoundRect(RectF(land.left + 45, land.top - 12, land.right - 45, land.top + 20), 8f, 8f, paint)
             label(canvas, context.getString(R.string.farm_parcel_label, index + 1, context.getString(state.parcels[index].use.label)), land.centerX(), land.top + 10, 15f)
         }
-        scenery.objects(canvas, visible)
+        scenery.objects(canvas, visible, windTime)
         if (RectF.intersects(treasureBush, visible)) drawTreasureBush(canvas)
         canvas.restore()
     }
@@ -598,7 +626,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             paint.color = Color.rgb(255, 226, 150); paint.strokeWidth = 2f
             for ((dx, dy) in listOf(-9f to 0f, 8f to -4f, 1f to 5f)) canvas.drawCircle(cx + dx - 2, cy + dy - 2, 3f, paint)
         }
-        sprites.environment(canvas, 2, 3, treasureBush)
+        scenery.bush(canvas, treasureBush, windTime)
         if (state.bushBonusReady()) {
             val sx = treasureBush.right - 14; val sy = treasureBush.top + 20
             paint.color = Color.argb(150, 255, 250, 214); paint.strokeWidth = 2.5f

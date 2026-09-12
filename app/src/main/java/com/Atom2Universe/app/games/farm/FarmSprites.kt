@@ -4,9 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import kotlin.math.cos
+import kotlin.random.Random
 
 class FarmSprites(private val context: Context) {
     private val livestockAtlas by lazy {
@@ -36,6 +39,10 @@ class FarmSprites(private val context: Context) {
     }
 
     fun crop(canvas: Canvas, crop: FarmCrop, variant: Int, stage: Int, target: RectF) {
+        // Crops ported to procedural Kotlin drawing (see FarmCropArt) bypass the sprite sheet
+        // entirely; every caller - field, harvest minigame, shop and inventory previews, produce
+        // icon - already goes through this one function, so nothing else needs to change.
+        if (crop == FarmCrop.RADISH) { FarmCropArt.radish(canvas, variant, stage, target); return }
         val bitmap = sheet(crop.sheet)
         val rows = if (crop.tree) 6 else 8
         val row = crop.row + variant
@@ -88,23 +95,117 @@ class FarmSprites(private val context: Context) {
     }
 
     /**
-     * Row 0 of the environment sheet holds four interchangeable lawns. Which one a tile gets is
-     * hashed from the tile's own coordinates, never drawn at random: the ground is repainted from
-     * scratch on every frame, so a random pick would make the whole map crawl the moment the camera
-     * moved. The same coordinates must always give the same blade of grass.
-     *
-     * Three lawns share the ground evenly and the flowered one is held back to about one tile in
-     * twelve - that is what keeps it reading as a patch of wildflowers instead of a meadow.
+     * The reference design paints its whole meadow as one continuous field - `sin(x/31+y/48) +
+     * sin(y/22-x/67) + noise` evaluated straight in world coordinates - so nothing ever repeats and
+     * there is nothing to seam. A sprite-sheet lawn had to fall back on a handful of interchangeable
+     * tiles instead; now that the source is code, not a PNG, there is no reason to keep that
+     * fallback. Each on-screen tile is still baked once into its own small cached bitmap - the
+     * camera must not repaint the world from scratch every frame - but the wave inside it is
+     * sampled at that tile's true world position, so neighbouring tiles pick up the pattern exactly
+     * where the last one left off instead of each showing an identical, recognisable blob.
      */
-    fun grass(canvas: Canvas, target: RectF, column: Int, row: Int) {
-        val bitmap = sheet("garden_environment_v1.png")
-        var hash = column * 0x1f1f1f1f xor row * 0x27d4eb2d
-        hash = hash xor (hash ushr 15)
-        // ushr, not shr: the northern scenery gives rows negative indices, and a negative remainder
-        // would index outside the row.
-        val variant = if ((hash ushr 3) % 12 == 0) FLOWERED else PLAIN_LAWNS[(hash ushr 8) % PLAIN_LAWNS.size]
-        val left = LAWN_LEFT[variant]
-        canvas.drawBitmap(bitmap, Rect(left, LAWN_TOP, left + LAWN_SIZE, LAWN_TOP + LAWN_SIZE), target, paint)
+    private val grassTiles = mutableMapOf<Long, Bitmap>()
+    private fun tileKey(column: Int, row: Int) = (column.toLong() shl 32) or (row.toLong() and 0xFFFFFFFFL)
+
+    /**
+     * Every one of these runs through a raw pixel index, never a Canvas draw call. A camera pan
+     * can reveal dozens of never-seen tiles in a single frame, each baked on the spot - going
+     * through drawRect()/drawCircle() thousands of times per tile (their per-call overhead, not
+     * the pixel count, is what's expensive) was the actual first-paint stutter; an index write has
+     * none of that overhead, so baking a tile is now pure, cheap arithmetic.
+     */
+    private fun buildGrassTile(column: Int, row: Int): Bitmap {
+        val size = GRASS_TILE
+        val pixels = IntArray(size * size)
+        val random = Random(column * -0x61c88647 xor row * 0x9e3779b1.toInt())
+        fun setPixel(x: Int, y: Int, color: Int) { if (x in 0 until size && y in 0 until size) pixels[y * size + x] = color }
+        // Sampled every 2×2 block, matching the reference's own grain rather than every single
+        // pixel - a quarter of the trig calls for a texture that reads identically.
+        var ly = 0
+        while (ly < size) {
+            var lx = 0
+            while (lx < size) {
+                val wx = (column * size + lx).toDouble(); val wy = (row * size + ly).toDouble()
+                val wave = kotlin.math.sin(wx / 31.0 + wy / 48.0) + kotlin.math.sin(wy / 22.0 - wx / 67.0)
+                val n = wave + random.nextFloat() * .6
+                val color = GRASS_PALETTE[kotlin.math.floor(n + 2.4).toInt().coerceIn(0, GRASS_PALETTE.size - 1)]
+                setPixel(lx, ly, color); setPixel(lx + 1, ly, color)
+                setPixel(lx, ly + 1, color); setPixel(lx + 1, ly + 1, color)
+                lx += 2
+            }
+            ly += 2
+        }
+        // A one-time bake costs nothing once the tile is cached, so most of the meadow's density -
+        // fine speckle, small static blades, the occasional flower - lives here rather than being
+        // redrawn live every frame; only a couple of extra blades per tile actually sway (see
+        // grass() below), which is what keeps the wind cheap while the ground still reads as dense.
+        repeat(1800) {
+            val x = random.nextInt(size); val y = random.nextInt(size)
+            val color = GRASS_SPECKLE[random.nextInt(GRASS_SPECKLE.size)]
+            val len = random.nextInt(1, 4)
+            for (i in 0 until len) setPixel(x + i, y, color)
+        }
+        repeat(14) {
+            val x = 4 + random.nextInt(size - 8); val y = 10 + random.nextInt(size - 14)
+            val h = 4 + random.nextInt(5)
+            for (t in 0..h) {
+                val f = t / h.toFloat()
+                setPixel(x - (2 * f).toInt(), y - t, Color.rgb(0x4c, 0x99, 0x58))
+                setPixel(x + (2 * f).toInt(), y - (t * .8f).toInt(), Color.rgb(0x5c, 0xa7, 0x54))
+            }
+        }
+        repeat(3) {
+            val x = 6 + random.nextInt(size - 12); val y = 6 + random.nextInt(size - 12)
+            val color = GRASS_FLOWERS[random.nextInt(GRASS_FLOWERS.size)]
+            for (dx in -1..1) for (dy in -1..1) setPixel(x + dx, y + dy, color)
+            setPixel(x, y, Color.rgb(235, 190, 76))
+        }
+        // Bitmap.createBitmap(pixels, ...) returns an immutable bitmap, which Canvas refuses to
+        // wrap - build a blank mutable one instead and fill it with the computed pixels.
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+        return bitmap
+    }
+
+    /** The whole meadow shares one travelling gust: left to right, a 16-second cycle. */
+    fun windAt(x: Float, timeSeconds: Float): Float {
+        val phase = 2.0 * Math.PI * (x - WIND_SPEED * timeSeconds) / WIND_WAVELENGTH
+        val gust = 0.5 + 0.5 * cos(phase)
+        return (WIND_STRENGTH * gust * gust).toFloat()
+    }
+
+    /** A single leaning tuft of grass, its base fixed to the ground and only its blades swaying. */
+    private fun drawTuft(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
+        paint.style = Paint.Style.FILL; paint.color = Color.rgb(0x69, 0xa6, 0x57)
+        canvas.drawRect(x - 3f, y, x + 4f, y + 2f, paint)
+        paint.style = Paint.Style.STROKE; paint.strokeWidth = 1.3f
+        paint.color = Color.rgb(0x4c, 0x99, 0x58); canvas.drawLine(x, y, x + sway, y - height, paint)
+        paint.color = Color.rgb(0xa8, 0xdf, 0x7b); canvas.drawLine(x - 1f, y, x - 4f + sway, y - height + 2f, paint)
+        paint.color = Color.rgb(0x5c, 0xa7, 0x54); canvas.drawLine(x + 1f, y, x + 4f + sway, y - height + 1f, paint)
+        paint.style = Paint.Style.FILL
+        if (flower) {
+            val fx = x + sway; val fy = y - height - 1f
+            paint.color = GRASS_FLOWERS[seed and 3]; canvas.drawCircle(fx, fy, 2.2f, paint)
+            paint.color = Color.rgb(0xff, 0xe2, 0x8b); canvas.drawCircle(fx, fy, 1f, paint)
+        }
+    }
+
+    fun grass(canvas: Canvas, target: RectF, column: Int, row: Int, windTime: Float = 0f) {
+        val bitmap = grassTiles.getOrPut(tileKey(column, row)) { buildGrassTile(column, row) }
+        canvas.drawBitmap(bitmap, null, target, paint)
+        // Three independent slots per tile, each very likely to carry a loose tuft that leans with
+        // the shared wind field. Most of the meadow's density is baked into the tile itself (free);
+        // these are only the blades that actually need to move every frame, so the count stays
+        // modest even though the visible result reads as a dense, swaying meadow.
+        for (slot in 0 until 3) {
+            var tuft = column * 0x2c1b3c6d xor row * 0x165667b1 xor (slot * 0x9e3779b1.toInt())
+            tuft = tuft xor (tuft ushr 13)
+            if ((tuft ushr 3) % 6 == 0) continue
+            val fx = target.left + 8 + (tuft ushr 8) % 64
+            val fy = target.top + 20 + (tuft ushr 15) % 52
+            val height = 7f + (tuft ushr 21) % 8
+            drawTuft(canvas, fx, fy, height, windAt(fx, windTime), (tuft ushr 25) % 4 == 0, tuft)
+        }
     }
 
     fun farmstead(canvas: Canvas, target: RectF) {
@@ -129,25 +230,21 @@ class FarmSprites(private val context: Context) {
     }
 
     private companion object {
-        /** Columns of row 0 that are plain grass. The fourth, the flowered one, is drawn rarely. */
-        val PLAIN_LAWNS = intArrayOf(0, 1, 3)
-        const val FLOWERED = 2
-        /**
-         * Measured, not computed. The generated sheet is NOT a clean grid: dark gutters separate the
-         * tiles and they are not evenly spaced - the four lawns really start at 41, 339, 640 and 937
-         * on a 1254 px sheet, where a quarter-width step would say 0, 313, 627 and 940. [environment]
-         * gets away with that step because rows 2 and 3 are objects floating on transparent padding,
-         * so its error lands in the padding. A lawn covers its whole tile, so the same error drags
-         * the gutter in and paints a black seam across the map. These four offsets are the measured
-         * tile starts plus a 23 px inset, chosen by scanning for the crop whose own edges are closest
-         * in brightness to its middle - the generated tiles shade off well before the gutter, and
-         * that shading is what draws the faint grid you can still see on the ground today. It goes
-         * from 37 levels of difference down to 10. The square keeps all four lawns at one scale, and
-         * 220 px is what the single lawn already used, so the grass does not change size.
-         */
-        val LAWN_LEFT = intArrayOf(64, 362, 663, 960)
-        const val LAWN_TOP = 53
-        const val LAWN_SIZE = 220
+        const val GRASS_TILE = 80
+        val GRASS_PALETTE = intArrayOf(
+            Color.parseColor("#74bb60"), Color.parseColor("#7cc45f"), Color.parseColor("#82c862"),
+            Color.parseColor("#8acd66"), Color.parseColor("#91d16b"), Color.parseColor("#86c565")
+        )
+        val GRASS_SPECKLE = intArrayOf(
+            Color.parseColor("#91d16b"), Color.parseColor("#9bd574"), Color.parseColor("#6bb65c"),
+            Color.parseColor("#80c262"), Color.parseColor("#5a9a4d")
+        )
+        val GRASS_FLOWERS = intArrayOf(
+            Color.parseColor("#ffe8b0"), Color.parseColor("#ffd0df"), Color.parseColor("#e0d0ff"), Color.parseColor("#fff2d7")
+        )
+        const val WIND_SPEED = 20f
+        const val WIND_WAVELENGTH = 320f
+        const val WIND_STRENGTH = 1.7f
     }
 
     fun environment(canvas: Canvas, column: Int, row: Int, target: RectF) {

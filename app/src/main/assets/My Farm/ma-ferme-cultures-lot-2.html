@@ -1,0 +1,177 @@
+<div id="farm-crops-second">
+ <div class="viz-controls">
+  <label class="form-label">Croissance · <span data-age>100 %</span><input class="form-range" data-growth type="range" min="0" max="100" value="100" step="0.1" aria-label="Croissance des cultures"></label>
+  <button class="btn" type="button" data-play>Voir la pousse</button>
+  <label class="form-check"><input class="form-check-input" type="checkbox" data-wind checked><span class="form-check-label">Vent doux →</span></label>
+ </div>
+ <div class="crop-row"><div>Radis</div><canvas data-crop="radish" width="360" height="82" role="img" aria-label="Quatre radis roses aux épaules visibles et aux grandes feuilles nervurées."></canvas></div>
+ <div class="crop-row"><div>Pommes de terre</div><canvas data-crop="potato" width="360" height="100" role="img" aria-label="Quatre plants de pommes de terre, feuillage fourni et petites fleurs crème ou mauves. Les tubercules restent sous terre."></canvas></div>
+ <div class="crop-row"><div>Choux-fleurs</div><canvas data-crop="cauliflower" width="360" height="88" role="img" aria-label="Quatre choux-fleurs aux pommes ivoire entourées de larges feuilles."></canvas></div>
+ <div class="crop-row"><div>Brocolis</div><canvas data-crop="broccoli" width="360" height="94" role="img" aria-label="Quatre brocolis aux tiges épaisses et aux bouquets verts détaillés."></canvas></div>
+</div>
+<style>
+ #farm-crops-second .crop-row{margin-top:12px}
+ #farm-crops-second canvas{display:block;width:100%;height:auto;image-rendering:pixelated;margin-top:6px}
+</style>
+<script>
+(() => {
+ const root=document.getElementById('farm-crops-second'),slider=root.querySelector('[data-growth]'),age=root.querySelector('[data-age]'),play=root.querySelector('[data-play]'),windSwitch=root.querySelector('[data-wind]');
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;windSwitch.checked=!reduced;
+ const clamp=x=>Math.max(0,Math.min(1,x));
+ const smooth=(a,b,g)=>{const p=clamp((g-a)/(b-a));return p*p*(3-2*p);};
+ const hash=(s,k)=>{let n=Math.imul(s+13,k+713)^0x68bc21eb;n=Math.imul(n^(n>>>16),0x45d9f3b);return ((n^(n>>>16))>>>0)/4294967296;};
+ const vent={direction:1,speed:16,wavelength:320,strength:1.1};
+ let time=0,growth=1,playing=false,last=0,ctx;
+ const windAt=x=>windSwitch.checked?vent.direction*vent.strength*Math.pow(.5+.5*Math.cos(2*Math.PI*(x-vent.speed*time)/vent.wavelength),2):0;
+ // Draw stable pixel silhouettes; animate the whole plant at higher display resolution.
+ const breeze=()=>0;
+ const RES=3;
+ function rect(x,y,w,h,c){if(w<=0||h<=0)return;ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)));}
+ function poly(pts,c){
+  const ys=pts.map(p=>p[1]);
+  for(let y=Math.ceil(Math.min(...ys));y<=Math.max(...ys);y++){
+   const hits=[];for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];if((a[1]<=y&&b[1]>y)||(b[1]<=y&&a[1]>y))hits.push(a[0]+(y-a[1])*(b[0]-a[0])/(b[1]-a[1]));}
+   hits.sort((a,b)=>a-b);for(let i=0;i+1<hits.length;i+=2)rect(Math.ceil(hits[i]),y,Math.max(1,Math.floor(hits[i+1])-Math.ceil(hits[i])),1,c);
+  }
+ }
+ function line(x,y,X,Y,w,c){const n=Math.ceil(Math.max(Math.abs(X-x),Math.abs(Y-y)));for(let i=0;i<=n;i++)rect(x+(X-x)*i/Math.max(1,n),y+(Y-y)*i/Math.max(1,n),w,w,c);}
+ function oval(x,y,rx,ry,c){if(rx<.4||ry<.4)return;for(let j=-Math.floor(ry);j<=ry;j++){const w=Math.sqrt(Math.max(0,1-j*j/(ry*ry)))*rx;rect(x-w,y+j,w*2,1,c);}}
+ function mix(a,b,t){return '#'+[1,3,5].map(i=>Math.round(parseInt(a.slice(i,i+2),16)*(1-t)+parseInt(b.slice(i,i+2),16)*t).toString(16).padStart(2,'0')).join('');}
+ const greens=[['#21573d','#398949','#69b654','#b7df87'],['#205c47','#3c9460','#79bf76','#c5e8a0'],['#305e35','#4c9444','#88bd55','#d0e695'],['#20553f','#318551','#68b36a','#b4df98']];
+ // A pointed, slightly toothed leaf with a lighter upper plane and visible midrib.
+ function leaf(x,y,dx,dy,width,pal){
+  const len=Math.hypot(dx,dy);if(len<1)return;
+  const nx=-dy/len*width,ny=dx/len*width;
+  const P=(u,v)=>[x+dx*u+nx*v,y+dy*u+ny*v];
+  poly([P(0,0),P(.25,-.65),P(.38,-.52),P(.49,-1),P(.62,-.65),P(.76,-.72),P(1,0),P(.74,.65),P(.62,.52),P(.45,.9),P(.3,.5)],pal[0]);
+  poly([P(.1,0),P(.3,-.4),P(.5,-.75),P(.74,-.4),P(.95,0),P(.55,.37),P(.3,.32)],pal[1]);
+  poly([P(.15,0),P(.52,-.55),P(.85,-.2),P(.6,0)],pal[2]);
+  line(...P(.08,0),...P(.88,0),1,pal[2]);
+ }
+ function sprout(x,y,g,pal,s){
+  const a=smooth(.025,.19,g),h=9*a;
+  if(a<=0)return;
+  const dx=breeze(x)*a*.4;line(x,y,x+dx,y-h,1,pal[0]);
+  leaf(x+dx,y-h+1,-7*a,-3*a,2*a,pal);leaf(x+dx,y-h,6*a,-4*a,2*a,pal);
+ }
+ function radish(x,y,g,s,pal){
+  sprout(x,y,g,pal,s);
+  const a=smooth(.35,.95,g),w=(6+hash(s,41)*3)*a,h=(6+hash(s,42)*3)*a;
+  if(a>0){
+   oval(x,y-2,w,h,'#983e58');oval(x-.7,y-3,w*.86,h*.82,['#e45f85','#ee7093','#d95d8b','#ed7c91'][s%4]);
+   oval(x-w*.32,y-5,w*.42,h*.45,'#ffafbf');rect(x-w*.42,y-5,2*a,1,'#ffd3d7');
+   oval(x,y+2,w*.58,2*a,'#fff0d4');rect(x-2,y+3,4,2,'#a47b55');
+  }
+  for(let i=0;i<5;i++){
+   const b=smooth(.06+i*.035,.45+i*.075,g);if(b===0)continue;
+   const angle=-2.65+i*.53+(hash(s,i+71)-.5)*.14,L=(23+hash(s,i+81)*9)*b;
+   const dx=Math.cos(angle)*L,dy=Math.sin(angle)*L;
+   line(x,y-5,x+dx*.48,y-5+dy*.48,1,pal[1]);
+   leaf(x+dx*.24,y-5+dy*.24,dx*.8,dy*.8,(5+hash(s,i+91)*2)*b,pal);
+  }
+ }
+ function potato(x,y,g,s,pal){
+  sprout(x,y,g,pal,s);
+  for(let branch=0;branch<3;branch++){
+   const b=smooth(.1+branch*.04,.58+branch*.06,g);if(b===0)continue;
+   const h=(32+hash(s,branch+130)*12)*b,dx=(branch-1)*(13+hash(s,branch+140)*4)*b;
+   line(x,y,x+dx,y-h,2,pal[0]);line(x,y,x+dx,y-h,1,pal[2]);
+   for(let k=0;k<4;k++){
+    const u=.28+k*.2,a=smooth(.15+k*.05+branch*.025,.49+k*.06,g);if(a===0)continue;
+    const bx=x+dx*u,by=y-h*u;
+    for(const side of [-1,1]){
+     const length=(9+hash(s,branch*10+k+150)*5)*a;
+     leaf(bx,by,side*length,-(4+k)*a,4.5*a,pal);
+    }
+   }
+   leaf(x+dx,y-h,2*b,-10*b,4*b,pal);
+   const bloom=smooth(.64+branch*.035,.86+branch*.02,g);
+   if(bloom>0)for(let i=0;i<2;i++){
+    const bx=x+dx+(i?4:-3),by=y-h-5-i*3;
+    line(x+dx,y-h,bx,by,1,pal[1]);
+    const petal=s%2?'#e1c7ee':'#fff2d4',shade=s%2?'#b797cd':'#d4c4a0';
+    for(let k=0;k<5;k++){const t=k/5*Math.PI*2;oval(bx+Math.cos(t)*2*bloom,by+Math.sin(t)*2*bloom,2*bloom,1.7*bloom,shade);oval(bx+Math.cos(t)*2*bloom,by+Math.sin(t)*2*bloom-1,1.5*bloom,1.3*bloom,petal);}
+    rect(bx,by,2,2,'#ebc25e');rect(bx,by,1,1,'#ffdf7e');
+   }
+  }
+ }
+ function cabbageLeaves(x,y,g,s,pal,front){
+  const angles=front?[-.38,-2.78]:[-2.55,-2.13,-1.55,-1.02,-.52];
+  angles.forEach((angle,i)=>{
+   const a=smooth(.08+i*.035,.55+i*.047,g);if(a===0)return;
+   const L=(front?25:29+hash(s,210+i)*6)*a;
+   leaf(x,y-3,Math.cos(angle)*L,Math.sin(angle)*L,(front?8:8.5)*a,pal);
+  });
+ }
+ function floret(x,y,r,s,cream){
+  const colors=cream?['#b2ac80','#d8d2a4','#f0eac6','#fff7dc']:['#245e43','#39834f','#60a75f','#99cd7c'];
+  oval(x,y+1,r,r*.71,colors[0]);oval(x-.5,y-1,r*.93,r*.68,colors[1]);
+  for(let i=0;i<10;i++){
+   const a=hash(s,301+i)*Math.PI*2,d=Math.sqrt(hash(s,321+i))*r*.7;
+   const px=x+Math.cos(a)*d,py=y-1+Math.sin(a)*d*.58;
+   oval(px,py,r*.27+1,r*.2+.5,colors[2]);rect(px-1,py-1,1,1,colors[3]);
+  }
+ }
+ function cauliflower(x,y,g,s,pal){
+  sprout(x,y,g,pal,s);cabbageLeaves(x,y,g,s,pal,false);
+  const a=smooth(.4,.98,g),size=(14+hash(s,240)*3)*a;
+  if(a>0){
+   oval(x,y-9*a,size+1,size*.67,'#819065');
+   const clusters=[[-.48,-.14,.55],[.45,-.2,.56],[0,-.6,.57],[-.35,.2,.52],[.38,.21,.51],[0,-.03,.6]];
+   clusters.forEach(([dx,dy,r],i)=>floret(x+dx*size,y-9*a+dy*size,r*size,s+i*13,true));
+  }
+  cabbageLeaves(x,y,g,s,pal,true);
+ }
+ function broccoli(x,y,g,s,pal){
+  sprout(x,y,g,pal,s);
+  const a=smooth(.13,.65,g),h=(24+hash(s,401)*6)*a;
+  if(a>0){
+   poly([[x-4*a,y],[x-3*a,y-h],[x+3*a,y-h],[x+5*a,y]],pal[0]);
+   poly([[x-2*a,y],[x-a,y-h],[x+2*a,y-h],[x+2*a,y]],pal[2]);
+   leaf(x-2,y-7*a,-22*a,-15*a,7*a,pal);leaf(x+2,y-10*a,21*a,-17*a,7*a,pal);
+  }
+  const head=smooth(.38,.98,g);
+  if(head>0){
+   const size=(13+hash(s,430)*3)*head;
+   for(const side of [-1,1]){line(x,y-5*a,x+side*size*.72,y-h+1,3*a,pal[1]);line(x,y-5*a,x+side*size*.72,y-h+1,a,pal[2]);}
+   const clusters=[[-.8,.15,.6],[.8,.08,.6],[-.48,-.38,.65],[.43,-.49,.7],[0,-.65,.7],[0,.07,.67]];
+   clusters.forEach(([dx,dy,r],i)=>floret(x+dx*size,y-h+dy*size,size*r,s+i*29,false));
+  }
+ }
+ const rows=[...root.querySelectorAll('canvas')].map((canvas,index)=>{
+  const bg=document.createElement('canvas');bg.width=canvas.width;bg.height=canvas.height;ctx=bg.getContext('2d');
+  rect(0,0,360,bg.height,'#bbd39a');
+  for(let i=0;i<950;i++){const x=hash(21,i)*360,y=hash(22,i)*bg.height;rect(x,y,1+hash(23,i)*2,1,['#bed69f','#b6ce95','#c2d7a3'][i%3]);}
+  const base=canvas.height-17;
+  for(let j=0;j<4;j++){
+   const x=46+j*89;oval(x+1,base+4,32,8,'#70a557');oval(x,base+1,30,8,'#956c4c');oval(x,base-1,29,7,'#b3875a');
+   for(let i=0;i<90;i++){const a=hash(j+40,i)*Math.PI*2,r=Math.sqrt(hash(j+60,i));rect(x+Math.cos(a)*r*27,base-1+Math.sin(a)*r*5,1+(i%3===0),1,i%2?'#c69a69':'#9c734d');}
+  }
+  const plants=document.createElement('canvas');plants.width=360;plants.height=bg.height;
+  const enlarged=document.createElement('canvas');enlarged.width=360*RES;enlarged.height=bg.height*RES;
+  canvas.width=enlarged.width;canvas.height=enlarged.height;
+  return {canvas,bg,base,index,plants,enlarged,cachedGrowth:-1};
+ });
+ function render(){for(const row of rows){
+  if(row.cachedGrowth!==growth){
+   ctx=row.plants.getContext('2d');ctx.clearRect(0,0,360,row.plants.height);
+   for(let i=0;i<4;i++){const x=46+i*89;if(growth<.055)rect(x-1,row.base,3,1,'#e1ba79');[radish,potato,cauliflower,broccoli][row.index](x,row.base,growth,100+i*17,greens[i]);}
+   const big=row.enlarged.getContext('2d');big.clearRect(0,0,row.enlarged.width,row.enlarged.height);big.imageSmoothingEnabled=false;big.drawImage(row.plants,0,0,row.enlarged.width,row.enlarged.height);row.cachedGrowth=growth;
+  }
+  ctx=row.canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.drawImage(row.bg,0,0,row.canvas.width,row.canvas.height);
+  // Continuous anchored transform, not independently rounded leaf/pixel positions.
+  for(let i=0;i<4;i++){
+   const x=46+i*89,left=i*89,span=i===3?93:89;
+   const shear=-windAt(x)*smooth(.1,.7,growth)/(row.index===0?58:row.index===1?38:65);
+   ctx.save();ctx.translate(x*RES,row.base*RES);ctx.transform(1,0,shear,1,0,0);ctx.imageSmoothingEnabled=true;
+   ctx.drawImage(row.enlarged,left*RES,0,span*RES,row.canvas.height,(left-x)*RES,-row.base*RES,span*RES,row.canvas.height);ctx.restore();
+  }
+ }}
+ function update(){slider.value=(growth*100).toFixed(1);age.textContent=Math.round(growth*100)+' %';}
+ slider.addEventListener('input',()=>{playing=false;play.textContent='Voir la pousse';growth=Number(slider.value)/100;update();render();});
+ play.addEventListener('click',()=>{playing=!playing;if(playing&&growth>=1)growth=0;play.textContent=playing?'Arrêter la pousse':'Voir la pousse';update();render();});
+ windSwitch.addEventListener('change',render);
+ function frame(now){const dt=Math.min(.05,(now-last)/1000||0);last=now;time+=dt;if(playing){growth=Math.min(1,growth+dt/26);if(growth>=1){playing=false;play.textContent='Revoir la pousse';}update();}render();if(root.isConnected)requestAnimationFrame(frame);}
+ render();requestAnimationFrame(frame);
+})();
+</script>
