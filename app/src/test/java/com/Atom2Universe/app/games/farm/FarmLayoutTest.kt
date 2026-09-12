@@ -34,10 +34,37 @@ class FarmLayoutTest {
     fun `chaque parcelle tient dans le monde`() {
         FarmLayout.lands.forEachIndexed { i, land ->
             val r = bords(land)
-            assertTrue("la parcelle $i sort par le haut", r[1] >= FarmLayout.worldTop)
+            assertTrue("la parcelle $i sort par le haut", r[1] >= 0f)
             assertTrue("la parcelle $i sort par la gauche", r[0] >= 0f)
             assertTrue("la parcelle $i sort par la droite", r[2] <= FarmLayout.worldWidth)
             assertTrue("la parcelle $i sort par le bas", r[3] <= FarmLayout.worldHeight)
+        }
+    }
+
+    /**
+     * Le plan a été entièrement redessiné, mais les cellules sont sauvegardées par index : si une des
+     * quatorze parcelles d'avant changeait de taille, toutes les plantations suivantes glisseraient
+     * d'une case, et la sauvegarde refuserait de se charger.
+     */
+    @Test
+    fun `les quatorze parcelles d'origine gardent leur taille`() {
+        val tailles = listOf(4 to 3, 3 to 4, 6 to 3, 4 to 4, 5 to 4, 4 to 5, 3 to 2, 6 to 5, 5 to 3,
+            7 to 4, 4 to 6, 6 to 6, 6 to 3, 4 to 4)
+        assertEquals(tailles, FarmLayout.lands.take(tailles.size).map { it.columns to it.rows })
+    }
+
+    /** La cour (hangar et puits) et le buisson au trésor sont posés par le plan, pas à la main. */
+    @Test
+    fun `la cour et le buisson ne mordent sur aucune parcelle`() {
+        listOf("la cour" to FarmLayout.yard, "le buisson" to FarmLayout.treasure).forEach { (nom, zone) ->
+            assertTrue("$nom sort du monde", zone.left >= 0f && zone.top >= 0f &&
+                zone.right <= FarmLayout.worldWidth && zone.bottom <= FarmLayout.worldHeight)
+            FarmLayout.lands.forEachIndexed { i, land ->
+                val r = bords(land)
+                val touche = zone.left < r[2] + marge && zone.right > r[0] - marge &&
+                    zone.top < r[3] + marge && zone.bottom > r[1] - marge
+                assertTrue("$nom touche la parcelle $i", !touche)
+            }
         }
     }
 

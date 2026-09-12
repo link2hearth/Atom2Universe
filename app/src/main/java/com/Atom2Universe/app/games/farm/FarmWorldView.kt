@@ -417,9 +417,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
         private set
     var onRegionTap: (() -> Unit)? = null
     var onBushBonus: ((Long) -> Unit)? = null
-    // Tucked in the gap between the house and parcel 1, centred over its gate; a coin pile only
-    // shows through it - and only gets a tap - while the once-a-day bonus hasn't been claimed yet.
-    private val treasureBush = RectF(965f, 15f, 1095f, 145f)
+    // Tucked in the grass just above parcel 1; a coin pile only shows through it - and only gets a
+    // tap - while the once-a-day bonus hasn't been claimed yet. FarmLayout places it, which is how
+    // the scenery knows to keep its trees and rocks off it.
+    private val treasureBush = FarmLayout.treasure.let { RectF(it.left, it.top, it.right, it.bottom) }
     private data class Camera(val zoom: Float, val x: Float, val y: Float)
     private val cameras = mutableMapOf<FarmRegion, Camera>()
     private fun worldWidth(region: FarmRegion) = when (region) {
@@ -432,10 +433,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
         FarmRegion.GREENHOUSE -> 1600f
         else -> 1500f
     }
-    private fun worldTop(region: FarmRegion) = if (region == FarmRegion.HOME) FarmLayout.worldTop else 0f
     private val worldWidth get() = worldWidth(region)
     private val worldHeight get() = worldHeight(region)
-    private val worldTop get() = worldTop(region)
     private val lands = FarmLayout.lands.map { RectF(it.x, it.y, it.x + it.width, it.y + it.height) }
     private val cells = List(FarmLayout.cellCount) { i ->
         val parcel = FarmLayout.parcelOf(i)
@@ -461,11 +460,11 @@ class FarmWorldView(context: Context, private val state: FarmState,
         } else {
             zoom = minimumZoom()
             cameraX = (width - worldWidth * zoom) / 2
-            cameraY = mapTop() + (height - mapTop() - (worldHeight - worldTop) * zoom) / 2 - worldTop * zoom
+            cameraY = mapTop() + (height - mapTop() - worldHeight * zoom) / 2
         }
         constrain(); invalidate()
     }
-    private fun minimumZoom() = minOf(width / worldWidth, (height - mapTop()).coerceAtLeast(1f) / (worldHeight - worldTop)).coerceAtLeast(.01f)
+    private fun minimumZoom() = minOf(width / worldWidth, (height - mapTop()).coerceAtLeast(1f) / worldHeight).coerceAtLeast(.01f)
     private val scale = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean { multiTouch = true; return true }
         override fun onScale(detector: ScaleGestureDetector): Boolean {
@@ -563,10 +562,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private fun constrain() {
         cameraX = if (worldWidth * zoom <= width) (width - worldWidth * zoom) / 2
             else cameraX.coerceIn(width - worldWidth * zoom, 0f)
-        val mapHeight = (worldHeight - worldTop) * zoom
+        val mapHeight = worldHeight * zoom
         cameraY = if (mapHeight <= height - mapTop())
-            mapTop() + (height - mapTop() - mapHeight) / 2 - worldTop * zoom
-        else cameraY.coerceIn(height - worldHeight * zoom, mapTop() - worldTop * zoom)
+            mapTop() + (height - mapTop() - mapHeight) / 2
+        else cameraY.coerceIn(height - mapHeight, mapTop())
     }
     /** True where a one-finger drag must stay with the plant rather than move the camera. */
     private fun onPlantingCell(x: Float, y: Float): Boolean {
@@ -621,11 +620,10 @@ class FarmWorldView(context: Context, private val state: FarmState,
      */
     private fun meadowTiles(region: FarmRegion): IntArray {
         val tile = FarmSprites.GRASS_TILE
-        val top = kotlin.math.floor(worldTop(region) / tile).toInt()
         val margin = if (region == FarmRegion.GREENHOUSE) MEADOW_MARGIN_TILES else 0
-        return intArrayOf(-margin, top - margin,
+        return intArrayOf(-margin, -margin,
             (worldWidth(region) / tile).toInt() + 1 + 2 * margin,
-            (worldHeight(region) / tile).toInt() - top + 1 + 2 * margin)
+            (worldHeight(region) / tile).toInt() + 1 + 2 * margin)
     }
     /**
      * Bakes the current region's meadow if it is missing, off the UI thread - it is a few tens of

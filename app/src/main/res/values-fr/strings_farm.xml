@@ -49,8 +49,6 @@
     <string name="farm_clear_confirm">Retirer ce plant ? La graine n’est remboursée que si elle n’a jamais été arrosée.</string>
     <string name="farm_use_crops">Potager</string>
     <string name="farm_use_orchard">Verger</string>
-    <string name="farm_help">Aide</string>
-    <string name="farm_help_body">Faites glisser pour explorer et pincez pour zoomer. Vue globale affiche les six parcelles clôturées. Touchez le panneau d’une parcelle pour la gérer.\n\nNettoyez buissons, herbes et pierres avec un petit geste tactile : dessinez des cercles avec le doigt autour d’une pierre pour la faire rouler, ou tirez chaque brin d’herbe un par un. Achetez des graines en boutique, sélectionnez votre stock puis touchez un emplacement vide pour planter.\n\nPour arroser, activez le mode arrosage avec l’icône arrosoir de la bannière, touchez un plant qui a soif pour faire apparaître sa jauge, puis touchez à nouveau quand le curseur oscillant est dans la zone surlignée. Il faut enchaîner plusieurs réussites ; un raté ne coûte rien, on retente. La pousse continue quand l’application est fermée.\n\nPour récolter, maintenez un plant mûr : il commence à trembler et une petite jauge verticale apparaît à côté, puis tirez le doigt vers le haut quand le curseur est dans la bande du haut pour l’arracher et le vendre.\n\nLes cultures prennent 2 à 24 heures. Les arbres donnent leurs premiers fruits après 2 à 4 jours, puis toutes les 24 heures après arrosage. Un appui long retire un plant et rembourse son achat.\n\nDébloquez des parcelles avec vos pièces. Une parcelle sans plants peut devenir un potager ou un verger. Améliorez l’arrosoir dans l’onglet Bonus de la boutique pour arroser toute une ligne, puis toute une parcelle en une fois. L’élevage et les engrais viendront plus tard.</string>
     <string name="farm_welcome_new">Nettoyez votre première parcelle. Achetez, plantez, puis arrosez. Glissez pour explorer, pincez pour zoomer.</string>
     <string name="farm_shop">Boutique</string>
     <string name="farm_parcels">Parcelles</string>
@@ -127,7 +125,7 @@
     <string name="farm_unlock_new_body">Un nouveau coin de jardin. Ce qu’il vend vraiment, c’est la graine ci-dessous : le terrain est le bonus.</string>
     <string name="farm_regions">Explorer le domaine</string>
     <string name="farm_region_home">Ferme principale</string>
-    <string name="farm_region_home_info">Votre maison, vos potagers et vos vergers.</string>
+    <string name="farm_region_home_info">Vos potagers et vos vergers.</string>
     <string name="farm_region_livestock">Élevage</string>
     <string name="farm_region_livestock_info">Achetez les parcelles et les reproducteurs. Appui long sur une parcelle pour consulter les effectifs et vendre les adultes.</string>
     <string name="farm_region_fields">Grands champs</string>

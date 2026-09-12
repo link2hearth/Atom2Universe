@@ -49,8 +49,6 @@
     <string name="farm_clear_confirm">Remove this plant? The seed is only refunded if it has never been watered.</string>
     <string name="farm_use_crops">Vegetable garden</string>
     <string name="farm_use_orchard">Orchard</string>
-    <string name="farm_help">Help</string>
-    <string name="farm_help_body">Drag to explore and pinch to zoom. Overview shows all six fenced parcels. Tap a parcel sign to manage it.\n\nClear bushes, weeds and rocks with a quick tactile gesture: circle a finger around a rock to roll it away, or drag each weed sprig out one by one. Buy seeds from the shop, select your stock, then tap an empty space to plant.\n\nTo water, turn on watering mode with the can icon in the banner, tap a thirsty plant to raise its gauge, then tap again when the swinging marker sits in the highlighted zone. A few good hits in a row are needed; misses cost nothing, just try again. Growth continues while the app is closed.\n\nTo harvest, hold a ripe plant: it starts trembling and a small vertical gauge appears beside it, then drag your finger upward while the marker sits in the top band to pull it free and sell it.\n\nVegetables take 2–24 hours. Trees take 2–4 days for their first fruit, then 24 hours per harvest, after watering. Long press a plant to remove it and recover its purchase cost.\n\nUnlock more parcels with coins. A parcel can become a vegetable garden or an orchard when it has no plants. Upgrade the watering can in the shop’s Bonuses tab to water a whole row, then a whole parcel at once. Livestock and fertilizer will come later.</string>
     <string name="farm_welcome_new">Clear your first parcel. Buy seeds, plant, then water. Drag to explore; pinch to zoom.</string>
     <string name="farm_shop">Shop</string>
     <string name="farm_parcels">Parcels</string>
@@ -127,7 +125,7 @@
     <string name="farm_unlock_new_body">A new corner of the garden. What it really sells is the seed below: more ground is the bonus.</string>
     <string name="farm_regions">Explore the estate</string>
     <string name="farm_region_home">Main farm</string>
-    <string name="farm_region_home_info">Your house, vegetable gardens and orchards.</string>
+    <string name="farm_region_home_info">Your vegetable gardens and orchards.</string>
     <string name="farm_region_livestock">Livestock</string>
     <string name="farm_region_livestock_info">Buy pens and breeding animals. Long press a pen to view counts and sell adults.</string>
     <string name="farm_region_fields">Large fields</string>

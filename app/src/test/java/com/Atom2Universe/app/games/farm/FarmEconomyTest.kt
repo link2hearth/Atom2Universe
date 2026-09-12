@@ -14,6 +14,8 @@ import kotlin.math.sqrt
 class FarmEconomyTest {
 
     private val ladder = FarmCrop.ladder
+    /** Les paires complètes. Avec un nombre impair de graines, la dernière reste seule. */
+    private val pairs = ladder.chunked(2).filter { it.size == 2 }
     /** Gain net d'une récolte. */
     private fun gain(crop: FarmCrop) = (crop.sale - crop.cost).toDouble()
     private fun hours(crop: FarmCrop) = crop.seconds / 3600.0
@@ -36,7 +38,7 @@ class FarmEconomyTest {
      */
     @Test
     fun `chaque paire offre une culture de session et une culture de nuit`() {
-        ladder.chunked(2).forEach { (quick, slow) ->
+        pairs.forEach { (quick, slow) ->
             assertTrue("${quick.name} doit tenir dans une journée", hours(quick) <= 10.0)
             assertTrue("${slow.name} doit couvrir une absence", hours(slow) >= 6.0)
             assertTrue("${slow.name} doit durer plus que ${quick.name}", hours(slow) > hours(quick))
@@ -50,7 +52,7 @@ class FarmEconomyTest {
      */
     @Test
     fun `le coefficient est partage a l'interieur d'une paire`() {
-        ladder.chunked(2).forEach { (quick, slow) ->
+        pairs.forEach { (quick, slow) ->
             val ecart = unit(slow) / unit(quick)
             assertTrue("${quick.name}/${slow.name} : coefficients trop éloignés ($ecart)",
                 ecart in 0.95..1.05)
@@ -66,12 +68,26 @@ class FarmEconomyTest {
     }
 
     /**
+     * Vingt-trois graines : la dernière, l'ananas, n'a pas de jumelle. Elle doit être une culture de
+     * session. Seule en haut de l'échelle, une culture de nuit serait à la fois la plus longue et la
+     * plus rentable à l'heure - exactement ce que toute la table interdit.
+     */
+    @Test
+    fun `la graine seule en haut de l'echelle est une culture de session`() {
+        if (ladder.size % 2 == 0) return
+        val derniere = ladder.last()
+        assertTrue("${derniere.name} doit tenir dans une journée", hours(derniere) <= 10.0)
+        assertTrue("${derniere.name} doit être la meilleure à l'heure",
+            ladder.dropLast(1).all { it.coinsPerHour < derniere.coinsPerHour })
+    }
+
+    /**
      * La promesse faite au joueur : chaque passage supplémentaire rapporte. Trois récoltes de la
      * culture de session battent nettement une seule récolte de nuit, et deux la dépassent déjà.
      */
     @Test
     fun `jouer rapporte plus que laisser tourner`() {
-        ladder.chunked(2).forEach { (quick, slow) ->
+        pairs.forEach { (quick, slow) ->
             val trois = 3 * gain(quick) / gain(slow)
             val deux = 2 * gain(quick) / gain(slow)
             assertTrue("${quick.name} ×3 ne bat pas ${slow.name} ($trois)", trois >= 1.6)

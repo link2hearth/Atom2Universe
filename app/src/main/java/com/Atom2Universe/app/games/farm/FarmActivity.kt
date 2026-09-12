@@ -593,7 +593,7 @@ class FarmActivity : ThemedActivity() {
                     purchases.add(buy to cost)
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
-            } else FarmCrop.catalog.forEach { crop ->
+            } else FarmCrop.ladder.forEach { crop ->
                 body.addView(seedRow(crop), LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
         }

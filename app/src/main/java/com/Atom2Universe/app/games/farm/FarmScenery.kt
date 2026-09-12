@@ -22,9 +22,10 @@ class FarmScenery(private val sprites: FarmSprites) {
     private val pathSamples = mutableListOf<PointF>()
     private data class Decoration(val kind: Int, val rect: RectF)
     private val decorations = mutableListOf<Decoration>()
-    private val shed = RectF(710f, 2150f, 920f, 2330f)
-    private val well = RectF(1050f, 2070f, 1160f, 2210f)
-    private val farmstead = RectF(180f, -810f, 2480f, -810f + 2300f / 3f)
+    // The shed and the well share the yard, the one clearing of the grid without a parcel.
+    private val shed = FarmLayout.yard.let { RectF(it.left, it.bottom - 180f, it.left + 210f, it.bottom) }
+    private val well = FarmLayout.yard.let { RectF(it.right - 110f, it.bottom - 140f, it.right, it.bottom) }
+    private val treasure = FarmLayout.treasure.let { RectF(it.left, it.top, it.right, it.bottom) }
     private val plots = FarmLayout.lands.map { RectF(it.x - 45, it.y - 50, it.x + it.width + 45, it.y + it.height + 50) }
 
     private fun trail(x: Float, y: Float, vararg curves: Float) {
@@ -41,83 +42,59 @@ class FarmScenery(private val sprites: FarmSprites) {
         }
     }
     init {
-        trail(1320f, 40f, 1320f, 0f, 1310f, -35f, 1320f, -85f)
-        // One winding spine and short lanes into clearings, rather than roads spanning a grid.
-        trail(1300f, FarmLayout.worldHeight,
-            1410f, 2390f, 1210f, 2170f, 1310f, 1960f,
-            1410f, 1740f, 1270f, 1480f, 1300f, 1300f,
-            1370f, 1100f, 1240f, 900f, 1300f, 660f,
-            1390f, 440f, 1250f, 240f, 1320f, 40f)
-        trail(1300f, 660f, 1000f, 560f, 660f, 700f, 110f, 680f)
-        trail(1310f, 610f, 1610f, 570f, 2000f, 720f, 2540f, 740f)
-        trail(1300f, 1300f, 980f, 1350f, 530f, 1390f, 90f, 1370f)
-        trail(1315f, 1070f, 1490f, 1080f, 1740f, 1010f, 1870f, 1040f,
-            1830f, 1270f, 1900f, 1500f, 1860f, 1730f,
-            1810f, 2010f, 1840f, 2260f, 1850f, 2450f,
-            1960f, 2490f, 2180f, 2460f, 2500f, 2490f)
-        trail(1860f, 1730f, 2060f, 1640f, 2310f, 1730f, 2540f, 1680f)
-        trail(1310f, 1960f, 1050f, 2010f, 560f, 1970f, 100f, 1990f)
-        trail(1310f, 1960f, 1500f, 2020f, 1700f, 1990f, 1840f, 2010f)
-        // The two southern lanes. They leave the spine at points that lie on it, so the junction
-        // reads as a fork rather than a road starting in the middle of a field.
-        trail(1309f, 2278f, 1000f, 2470f, 620f, 2430f, 180f, 2450f)
-        trail(1324f, 2576f, 1450f, 2620f, 1620f, 2550f, 1790f, 2580f)
-        // Each spur ends precisely at its parcel gate.
-        val junctions = listOf(
-            PointF(965f, 629f), PointF(1580f, 625f), PointF(2040f, 700f), PointF(435f, 680f),
-            PointF(310f, 1380f), PointF(925f, 1350f), PointF(1650f, 1040f), PointF(2100f, 1690f),
-            PointF(215f, 1980f), PointF(780f, 1980f), PointF(1555f, 2000f), PointF(2050f, 2470f),
-            PointF(245f, 2446f), PointF(1545f, 2583f)
-        )
-        // Written by hand, one per parcel: adding land without adding its gate would otherwise fail
-        // with an out-of-range index several frames into the first draw.
-        require(junctions.size == FarmLayout.lands.size) { "une jonction manque pour une parcelle" }
-        FarmLayout.lands.forEachIndexed { i, land ->
-            val gateX = land.x + land.width / land.columns * 1.5f
-            val gateY = land.y + land.height + 14
-            val destination = junctions[i]
-            trail(gateX, gateY, gateX - 12, gateY + 40, destination.x + 24, destination.y - 35, destination.x, destination.y)
+        // One winding spine down the middle of the map. It comes in at the top edge and leaves at the
+        // bottom one, so it reads as a road passing through rather than a path giving up in a field.
+        val spine = mutableListOf<Float>()
+        var spineY = 0f
+        while (true) {
+            spine += spineX(spineY); spine += spineY
+            if (spineY >= FarmLayout.worldHeight) break
+            spineY = minOf(FarmLayout.worldHeight, spineY + 280f)
         }
-        trail(825f, 1985f, 770f, 2040f, 840f, 2080f, 815f, 2330f)
-        trail(1100f, 1990f, 1120f, 2020f, 1140f, 2040f, 1105f, 2170f)
+        trailThrough(spine.toFloatArray())
+        // One lane under each band of parcels, only as long as that band needs: from the spine out to
+        // its farthest gate. Lanes crossing the whole map would turn the clearings into a city grid.
+        val lastBand = FarmLayout.BANDS - 1
+        for (band in 0 until FarmLayout.BANDS) {
+            val stops = FarmLayout.lands.indices.filter { FarmLayout.lands[it].band == band }
+                .map { FarmLayout.gateX(it) + SPUR_SHIFT }.toMutableList()
+            if (band == lastBand) { stops += shedDoorX(); stops += well.centerX() }
+            stops += spineX(FarmLayout.laneY(band))
+            val end = stops.max()
+            val lane = mutableListOf<Float>()
+            var x = stops.min()
+            while (true) {
+                lane += x; lane += laneY(band, x)
+                if (x >= end) break
+                x = minOf(end, x + 190f)
+            }
+            trailThrough(lane.toFloatArray())
+        }
+        // Each spur runs from a gate down onto the lane of its band, landing on a point of that lane.
+        FarmLayout.lands.forEachIndexed { i, land ->
+            val gateX = FarmLayout.gateX(i); val gateY = FarmLayout.gateY(i)
+            val endX = gateX + SPUR_SHIFT; val endY = laneY(land.band, endX)
+            trail(gateX, gateY, gateX - 10f, gateY + 40f, endX + 6f, endY - 45f, endX, endY)
+        }
+        for (x in floatArrayOf(shedDoorX(), well.centerX())) {
+            val endY = laneY(lastBand, x)
+            trail(x, shed.bottom - 4f, x - 6f, shed.bottom + 35f, x + 6f, endY - 35f, x, endY)
+        }
         // Reproducible clusters; keep complete canopies clear of beds, signs and paths.
         val random = Random(7041)
-        repeat(900) {
+        repeat(2400) {
             val kind = random.nextInt(5)
             val w = if (kind == 0) random.nextInt(95, 150).toFloat() else random.nextInt(38, 80).toFloat()
             val h = if (kind == 0) w * 1.3f else w * .8f
             val x = random.nextFloat() * (FarmLayout.worldWidth - w - 40) + 20
             val y = random.nextFloat() * (FarmLayout.worldHeight - h - 40) + 20
             val rect = RectF(x, y, x + w, y + h)
-            if (decorations.size < 180 && plots.none { RectF.intersects(it, rect) } &&
+            if (decorations.size < 300 && plots.none { RectF.intersects(it, rect) } &&
                 !RectF.intersects(shed, rect) && !RectF.intersects(well, rect) &&
+                !RectF.intersects(treasure, rect) &&
                 decorations.none { RectF.intersects(it.rect, rect) } &&
                 pathSamples.none { rect.left - 38 < it.x && rect.right + 38 > it.x && rect.top - 38 < it.y && rect.bottom + 38 > it.y }) {
                 decorations.add(Decoration(kind, rect))
-            }
-        }
-        // Populate the northern extension too, following the farm image's transparent silhouette.
-        // Separate seed preserves all the existing field decorations.
-        val northernRandom = Random(9052)
-        val entrance = RectF(1170f, -210f, 1470f, 80f)
-        var northernCount = 0
-        repeat(1400) {
-            if (northernCount >= 85) return@repeat
-            val kind = if (northernRandom.nextInt(3) == 0) 0 else 1
-            val w = if (kind == 0) northernRandom.nextInt(145, 235).toFloat()
-                else northernRandom.nextInt(65, 115).toFloat()
-            val h = if (kind == 0) w * 1.3f else w * .8f
-            val x = 20 + northernRandom.nextFloat() * (FarmLayout.worldWidth - w - 40)
-            val y = FarmLayout.worldTop + 20 + northernRandom.nextFloat() * (-FarmLayout.worldTop - h - 20)
-            val rect = RectF(x, y, x + w, y + h)
-            val clearance = RectF(rect).apply { inset(-12f, -12f) }
-            if (!RectF.intersects(entrance, clearance) &&
-                plots.none { RectF.intersects(it, clearance) } &&
-                decorations.none { RectF.intersects(it.rect, clearance) } &&
-                pathSamples.none { clearance.contains(it.x, it.y) } &&
-                sprites.farmsteadTransparent(clearance, farmstead)) {
-                decorations.add(Decoration(kind, rect))
-                northernCount++
             }
         }
         // Kind 4 used to be a posy of five wildflowers drawn from one seedless, cached sprite, so
@@ -129,6 +106,32 @@ class FarmScenery(private val sprites: FarmSprites) {
         // other bush, rock and tree on the map.
         decorations.removeAll { it.kind == 4 }
         decorations.sortBy { it.rect.bottom }
+    }
+    /** The spine sways gently around [FarmLayout.spineX] as it goes down the map. */
+    private fun spineX(y: Float) = FarmLayout.spineX + 36f * sin(y / 310f)
+    /** A band's lane undulates a little; spurs read this too, so they land on the lane itself. */
+    private fun laneY(band: Int, x: Float) = FarmLayout.laneY(band) + 9f * sin(x / 170f + band * 1.9f)
+    /** The shed's door, in the right half of its front - see [building]. */
+    private fun shedDoorX() = shed.left + shed.width() * .64f
+    /**
+     * A smooth trail through [points], given as x, y pairs. Each span is a Catmull-Rom curve written
+     * as the cubic [trail] expects, so the road passes exactly through every point with no kinks.
+     */
+    private fun trailThrough(points: FloatArray) {
+        val n = points.size / 2
+        if (n < 2) return
+        fun px(i: Int) = points[2 * i.coerceIn(0, n - 1)]
+        fun py(i: Int) = points[2 * i.coerceIn(0, n - 1) + 1]
+        val curves = FloatArray((n - 1) * 6)
+        for (i in 0 until n - 1) {
+            curves[i * 6] = px(i) + (px(i + 1) - px(i - 1)) / 6f
+            curves[i * 6 + 1] = py(i) + (py(i + 1) - py(i - 1)) / 6f
+            curves[i * 6 + 2] = px(i + 1) - (px(i + 2) - px(i)) / 6f
+            curves[i * 6 + 3] = py(i + 1) - (py(i + 2) - py(i)) / 6f
+            curves[i * 6 + 4] = px(i + 1)
+            curves[i * 6 + 5] = py(i + 1)
+        }
+        trail(points[0], points[1], *curves)
     }
     /**
      * A grid of the trail's own sample points (already spaced 24 units apart along every lane),
@@ -163,7 +166,7 @@ class FarmScenery(private val sprites: FarmSprites) {
     private val groundTexture: Bitmap by lazy { buildGroundTexture() }
     private fun buildGroundTexture(): Bitmap {
         val bw = kotlin.math.ceil(FarmLayout.worldWidth * GROUND_SCALE).toInt() + 1
-        val bh = kotlin.math.ceil((FarmLayout.worldHeight - FarmLayout.worldTop) * GROUND_SCALE).toInt() + 1
+        val bh = kotlin.math.ceil(FarmLayout.worldHeight * GROUND_SCALE).toInt() + 1
         val random = Random(20260912)
         val green = Color.rgb(112, 166, 83)
         val sandMid = Color.rgb(176, 172, 101)
@@ -177,12 +180,12 @@ class FarmScenery(private val sprites: FarmSprites) {
         val distSq = FloatArray(bw * bh) { Float.MAX_VALUE }
         val marginCells = kotlin.math.ceil(MAX_MARGIN * GROUND_SCALE).toInt()
         pathSamples.forEach { p ->
-            val cbx = (p.x * GROUND_SCALE).toInt(); val cby = ((p.y - FarmLayout.worldTop) * GROUND_SCALE).toInt()
+            val cbx = (p.x * GROUND_SCALE).toInt(); val cby = (p.y * GROUND_SCALE).toInt()
             for (oy in -marginCells..marginCells) {
                 val by = cby + oy; if (by !in 0 until bh) continue
                 for (ox in -marginCells..marginCells) {
                     val bx = cbx + ox; if (bx !in 0 until bw) continue
-                    val wx = bx / GROUND_SCALE; val wy = by / GROUND_SCALE + FarmLayout.worldTop
+                    val wx = bx / GROUND_SCALE; val wy = by / GROUND_SCALE
                     val ddx = wx - p.x; val ddy = wy - p.y
                     val d2 = ddx * ddx + ddy * ddy
                     val idx = by * bw + bx
@@ -195,7 +198,7 @@ class FarmScenery(private val sprites: FarmSprites) {
             val idx = by * bw + bx
             if (distSq[idx] == Float.MAX_VALUE) continue
             val d = kotlin.math.sqrt(distSq[idx])
-            val wx = bx / GROUND_SCALE; val wy = by / GROUND_SCALE + FarmLayout.worldTop
+            val wx = bx / GROUND_SCALE; val wy = by / GROUND_SCALE
             val edge = PATH_HALF_WIDTH + 1.4f * kotlin.math.sin(wx * .031f) + 1.3f * kotlin.math.sin(wy * .043f + wx * .017f)
             var color = 0
             if (d < edge + 6f && random.nextFloat() > .12f) color = green
@@ -215,7 +218,7 @@ class FarmScenery(private val sprites: FarmSprites) {
             val r = random.nextFloat() * 26f
             val px = base.x + cos(angle) * r; val py = base.y + sin(angle) * r
             if (nearestPathDistance(px, py) < 15f) {
-                val bx = (px * GROUND_SCALE).toInt(); val by = ((py - FarmLayout.worldTop) * GROUND_SCALE).toInt()
+                val bx = (px * GROUND_SCALE).toInt(); val by = (py * GROUND_SCALE).toInt()
                 val color = pebbles[random.nextInt(pebbles.size)]
                 val len = 1 + random.nextInt(3)
                 for (i in 0 until len) setPixel(bx + i, by, color)
@@ -231,12 +234,11 @@ class FarmScenery(private val sprites: FarmSprites) {
     }
     fun ground(canvas: Canvas) {
         canvas.save()
-        canvas.translate(0f, FarmLayout.worldTop); canvas.scale(1f / GROUND_SCALE, 1f / GROUND_SCALE)
+        canvas.scale(1f / GROUND_SCALE, 1f / GROUND_SCALE)
         canvas.drawBitmap(groundTexture, 0f, 0f, paint)
         canvas.restore()
     }
     fun objects(canvas: Canvas, visible: RectF, windTime: Float) {
-        if (RectF.intersects(farmstead, visible)) sprites.farmstead(canvas, farmstead)
         decorations.forEach { decoration ->
             val rect = decoration.rect
             if (!RectF.intersects(rect, visible)) return@forEach
@@ -670,6 +672,8 @@ class FarmScenery(private val sprites: FarmSprites) {
         /** Volumes a full bush is built from. The clearing mini-game tears them off one by one. */
         const val BUSH_CLUMPS = 5
         private const val GRID_CELL = 48f
+        /** How far right of its gate a spur meets the lane, so it leans instead of dropping straight. */
+        private const val SPUR_SHIFT = 18f
         private const val PATH_HALF_WIDTH = 31f
         private const val GROUND_SCALE = .25f
         // Half-width + its wobble (2.7) + the green blend margin (6), rounded up: nothing outside

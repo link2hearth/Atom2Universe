@@ -344,27 +344,6 @@ class FarmSprites(private val context: Context) {
         return mask
     }
 
-    fun farmstead(canvas: Canvas, target: RectF) {
-        val bitmap = sheet("garden_farmstead_v1.png")
-        canvas.drawBitmap(bitmap, null, target, paint)
-    }
-
-    /** Check actual alpha, so scenery can fill the transparent silhouette without hiding the house. */
-    fun farmsteadTransparent(area: RectF, target: RectF): Boolean {
-        if (!RectF.intersects(area, target)) return true
-        val bitmap = sheet("garden_farmstead_v1.png")
-        val sx = bitmap.width / target.width()
-        val sy = bitmap.height / target.height()
-        val left = ((area.left - target.left) * sx).toInt().coerceIn(0, bitmap.width)
-        val top = ((area.top - target.top) * sy).toInt().coerceIn(0, bitmap.height)
-        val right = kotlin.math.ceil((area.right - target.left) * sx).toInt().coerceIn(0, bitmap.width)
-        val bottom = kotlin.math.ceil((area.bottom - target.top) * sy).toInt().coerceIn(0, bitmap.height)
-        for (y in top until bottom) for (x in left until right) {
-            if ((bitmap.getPixel(x, y) ushr 24) > 24) return false
-        }
-        return true
-    }
-
     companion object {
         /**
          * The gust itself, 0 to 1: ONE wave, travelling left to right, shared by the entire farm -
