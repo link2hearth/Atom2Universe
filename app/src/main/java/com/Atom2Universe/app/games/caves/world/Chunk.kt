@@ -126,6 +126,9 @@ const val TABLE:      Short = 8001
 const val TORCH:      Short = 8002
 const val GLASS:      Short = 8003
 const val WARD_STONE: Short = 8004
+// Balises du mode Assaut : posées en créatif, elles deviennent des points d'apparition à l'export.
+const val SPAWN_MARKER_A: Short = 8005
+const val SPAWN_MARKER_B: Short = 8006
 
 // ── Famille 9000 : Cotton (34 couleurs) ──────────────────────────────────────
 const val COTTON_AMBER:      Short = 9000

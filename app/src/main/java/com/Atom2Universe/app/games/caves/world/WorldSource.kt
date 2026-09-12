@@ -4,12 +4,20 @@ package com.Atom2Universe.app.games.caves.world
  * D'où viennent les blocs d'un chunk qui n'a encore jamais été chargé.
  *
  * Sans source, [World] utilise sa génération procédurale (biomes, grottes, îles). Une source
- * permet de remplacer ce bruit par un lieu préparé à l'avance : c'est la porte d'entrée du futur
- * mode Assaut (voir CAVE_WORLD_ASSAUT.md à la racine).
- *
- * [fill] reçoit un chunk vide (tout en AIR) et y écrit ses blocs. Il est appelé depuis les threads
- * de génération, plusieurs à la fois : une source ne doit rien modifier d'autre que le chunk reçu.
+ * remplace ce bruit par un lieu préparé à l'avance : c'est la porte d'entrée du mode Assaut
+ * (voir [MapSource] et CAVE_WORLD_ASSAUT.md à la racine).
  */
-fun interface WorldSource {
+interface WorldSource {
+
+    /**
+     * Écrit ses blocs dans [chunk], reçu vide (tout en AIR). Appelé depuis les threads de
+     * génération, plusieurs à la fois : ne rien modifier d'autre que le chunk reçu.
+     */
     fun fill(chunk: Chunk)
+
+    /**
+     * Y monde à partir duquel la colonne ([wx], [wz]) est à ciel ouvert. Sert de repli à la
+     * lumière du ciel quand un chunk voisin n'est pas encore chargé.
+     */
+    fun skyTopY(wx: Int, wz: Int): Int
 }

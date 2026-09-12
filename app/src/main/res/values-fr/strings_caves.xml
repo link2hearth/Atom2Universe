@@ -228,6 +228,26 @@
 
     <string name="cave_menu_deleted">Monde supprimé</string>
 
+    <!-- Mode Assaut -->
+    <string name="cave_block_spawn_marker_a">Balise d\'apparition A (Assaut)</string>
+    <string name="cave_block_spawn_marker_b">Balise d\'apparition B (Assaut)</string>
+    <string name="cave_menu_assault">Assaut</string>
+    <string name="cave_assault_pick_map">Choisir une carte</string>
+    <string name="cave_assault_builtin_arena">Arène d\'essai (100 × 100)</string>
+    <string name="cave_assault_no_maps">Aucune carte pour l\'instant.\n\nDans un monde créatif, construisez votre arène et posez les balises d\'apparition A et B. Ouvrez ensuite l\'outil de capture (📐), placez les coins A et B autour de l\'arène, puis appuyez sur 🗺 pour l\'exporter.</string>
+    <string name="cave_assault_map_load_failed">Impossible de charger cette carte.</string>
+    <string name="cave_map_export_title">Exporter en carte Assaut</string>
+    <string name="cave_map_export_hint">Nom de la carte</string>
+    <string name="cave_map_export_confirm">Exporter</string>
+    <string name="cave_map_export_done">Carte exportée : %1$s</string>
+    <string name="cave_map_export_not_loaded">Une partie de la zone n\'est pas chargée. Rapprochez-vous et réessayez.</string>
+    <string name="cave_map_export_too_big">Zone trop grande : %1$d blocs (max %2$d).</string>
+    <string name="cave_map_export_no_spawn">Aucune balise d\'apparition dans la zone. Posez au moins une balise A ou B.</string>
+    <string name="cave_map_export_failed">Échec de l\'export.</string>
+    <string name="cave_storage_access_title">Accès au stockage requis</string>
+    <string name="cave_storage_access_message">Autorisez l\'accès à tous les fichiers pour utiliser Documents/cave_world/.</string>
+    <string name="cave_storage_open_settings">Ouvrir les paramètres</string>
+
     <string name="cave_place">■ POSER</string>
 
     <string name="cave_map_surface">Surface</string>

@@ -2066,6 +2066,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val surfaceTopCache = ConcurrentHashMap<Long, Int>()
 
     fun surfaceTopY(wx: Int, wz: Int): Int {
+        source?.let { return it.skyTopY(wx, wz) }
         val key = (wx.toLong() and 0xFFFFFFFFL) or ((wz.toLong() and 0xFFFFFFFFL) shl 32)
         surfaceTopCache[key]?.let { return it }
         val v = surfaceHeight(wx + 0.5, wz + 0.5).toInt()

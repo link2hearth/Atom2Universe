@@ -24,4 +24,13 @@ internal interface GameMode {
 
     /** Une image de jeu. N'est pas appelé quand la partie est en pause. */
     fun update(dt: Float)
+
+    /**
+     * Point d'apparition d'une nouvelle partie (x, y des yeux, z).
+     * Null = celui que le monde trouve lui-même ([World.findSpawnPoint]).
+     */
+    fun spawnPoint(): FloatArray? = null
+
+    /** Le joueur peut-il creuser et poser des blocs ? */
+    val allowsWorldEdits: Boolean get() = true
 }

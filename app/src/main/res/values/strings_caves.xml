@@ -228,6 +228,26 @@
 
     <string name="cave_menu_deleted">World deleted</string>
 
+    <!-- Mode Assaut -->
+    <string name="cave_block_spawn_marker_a">Spawn marker A (Assault)</string>
+    <string name="cave_block_spawn_marker_b">Spawn marker B (Assault)</string>
+    <string name="cave_menu_assault">Assault</string>
+    <string name="cave_assault_pick_map">Choose a map</string>
+    <string name="cave_assault_builtin_arena">Test arena (100 × 100)</string>
+    <string name="cave_assault_no_maps">No map yet.\n\nIn a creative world, build your arena and place spawn markers A and B. Then open the capture tool (📐), set corners A and B around the arena, and press 🗺 to export it.</string>
+    <string name="cave_assault_map_load_failed">This map could not be loaded.</string>
+    <string name="cave_map_export_title">Export as Assault map</string>
+    <string name="cave_map_export_hint">Map name</string>
+    <string name="cave_map_export_confirm">Export</string>
+    <string name="cave_map_export_done">Map exported: %1$s</string>
+    <string name="cave_map_export_not_loaded">Part of the zone is not loaded. Move closer to it and try again.</string>
+    <string name="cave_map_export_too_big">Zone too large: %1$d blocks (max %2$d).</string>
+    <string name="cave_map_export_no_spawn">No spawn marker in the zone. Place at least one A or B marker.</string>
+    <string name="cave_map_export_failed">Export failed.</string>
+    <string name="cave_storage_access_title">Storage access required</string>
+    <string name="cave_storage_access_message">Allow access to all files to use Documents/cave_world/.</string>
+    <string name="cave_storage_open_settings">Open settings</string>
+
     <string name="cave_place">■ PLACE</string>
 
     <string name="cave_map_surface">Surface</string>

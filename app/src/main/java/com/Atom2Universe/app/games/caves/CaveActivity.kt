@@ -1,5 +1,10 @@
 package com.Atom2Universe.app.games.caves
 
+import com.Atom2Universe.app.games.caves.mode.AssaultMode
+import com.Atom2Universe.app.games.caves.mode.SurvivalMode
+import com.Atom2Universe.app.games.caves.world.A2MapStorage
+import com.Atom2Universe.app.games.caves.world.MapSource
+
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import androidx.activity.OnBackPressedCallback
@@ -51,6 +56,8 @@ class CaveActivity : ThemedActivity() {
 
     companion object {
         const val EXTRA_WORLD_ID = "cave_world_id"
+        /** Chemin d'une carte Assaut (voir A2MapStorage) : lance le mode Assaut au lieu d'un monde. */
+        const val EXTRA_MAP_PATH = "cave_map_path"
         const val ACTIVE_SIZE    = 9
         const val GRID_COLS      = 6
         const val EMPTY_BUFFER   = 36
@@ -71,6 +78,8 @@ class CaveActivity : ThemedActivity() {
     private val music by lazy { CaveProceduralMusic(lifecycleScope) }
 
     internal var isCreative = false
+    /** Partie du mode Assaut : carte préparée, ni construction, ni destruction, ni sauvegarde. */
+    internal var isAssault = false
     private  var survivalInventory: Map<Short, Int> = emptyMap()
     private  var survivalHotbar: List<Short?> = List(ACTIVE_SIZE) { null }
 
@@ -148,7 +157,20 @@ class CaveActivity : ThemedActivity() {
         forceImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        worldId = intent.getStringExtra(EXTRA_WORLD_ID)
+        // Mode Assaut : une carte préparée, sans sauvegarde. Le menu a déjà vérifié qu'elle se lit ;
+        // si elle a disparu entre-temps, on repart au menu plutôt que d'ouvrir un monde vide.
+        val mapPath = intent.getStringExtra(EXTRA_MAP_PATH)
+        val mapSource = mapPath?.let { path ->
+            runCatching { MapSource(A2MapStorage.load(this, path)) }.getOrNull()
+        }
+        if (mapPath != null && mapSource == null) {
+            android.widget.Toast.makeText(this, R.string.cave_assault_map_load_failed, android.widget.Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+        isAssault = mapSource != null
+
+        worldId = if (isAssault) null else intent.getStringExtra(EXTRA_WORLD_ID)
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
         isCreative = save?.isCreative ?: false
         if (isCreative) {
@@ -210,7 +232,9 @@ class CaveActivity : ThemedActivity() {
             context = this, touch = touch,
             worldSeed = save?.seed ?: System.currentTimeMillis(),
             worldId = worldId, savedState = savedState,
-            terrainVersion = save?.terrainVersion ?: 2
+            terrainVersion = save?.terrainVersion ?: 2,
+            worldSource = mapSource,
+            modeFactory = if (mapSource != null) { r -> AssaultMode(r, mapSource) } else ::SurvivalMode
         )
         renderer.isCreative = isCreative
         renderer.enemyManager.isCreative = isCreative
@@ -365,6 +389,14 @@ class CaveActivity : ThemedActivity() {
         }
 
         applyModeUi(if (isCreative) PlayerMode.SPECTATOR else PlayerMode.WALK, btnMode, btnUp as Button, btnDown, btnLaser, btnPlace)
+
+        // Le mode Assaut distribue son kit d'armes au démarrage : l'UI relit tout.
+        renderer.loadoutChangedCallback = { uiHandler.post { refreshInventoryUi() } }
+        if (isAssault) {
+            // Shooter : ni construction ni destruction, donc pas de bascule vers la barre des matériaux.
+            btnCombatMode.visibility = View.GONE
+        }
+
         soundEngine = CaveSoundEngine(lifecycleScope).also {
             it.start()
             it.subscribe(renderer.eventBus)
@@ -393,10 +425,20 @@ class CaveActivity : ThemedActivity() {
     override fun onPause()   { super.onPause();   glView.onPause();  music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel() }
     override fun onDestroy() {
         super.onDestroy()
+        // Carte Assaut illisible : l'activité se ferme dans onCreate, avant d'avoir créé le renderer.
+        if (!::renderer.isInitialized) return
         renderer.destroy()
         music.stop()
         soundEngine?.destroy()
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
+    }
+
+    /** À appeler sur le thread UI quand le renderer a remplacé l'inventaire d'un bloc (kit d'armes). */
+    private fun refreshInventoryUi() {
+        // Les anciennes banques UI ne doivent pas réécrire les slots du kit.
+        invManager.initInvSlots()
+        renderer.hotbarModeCallback?.invoke(renderer.hotbarMode)
+        renderer.inventoryCallback?.invoke(renderer.inventory.toMap())
     }
 
     // ── Save ──────────────────────────────────────────────────────────────────
@@ -489,10 +531,7 @@ class CaveActivity : ThemedActivity() {
                 glView.queueEvent {
                     renderer.giveWeaponTestKit()
                     uiHandler.post {
-                        // Les anciennes banques UI ne doivent pas réécrire les slots du kit.
-                        invManager.initInvSlots()
-                        renderer.hotbarModeCallback?.invoke(renderer.hotbarMode)
-                        renderer.inventoryCallback?.invoke(renderer.inventory.toMap())
+                        refreshInventoryUi()
                         android.widget.Toast.makeText(this@CaveActivity,
                             R.string.cave_cheat_weapon_kit_done,android.widget.Toast.LENGTH_LONG).show()
                     }

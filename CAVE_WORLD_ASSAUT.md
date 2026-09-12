@@ -123,4 +123,21 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
   - **Encore à trier** (à traiter quand le mode Assaut en aura besoin, en phase 1) :
     XP de vitesse dans `updateWalk`, pierres de garde posées/minées, minage et pose de blocs,
     ticks d'eau et de chute de blocs, cache LOD, sauvegarde dans `CaveActivity`.
-  - Compile. À vérifier en jeu : la survie doit se comporter exactement comme avant.
+  - Compile. Vérifié en jeu par l'utilisateur : la survie se comporte comme avant. Commité.
+- **13/09/2026** : phase 1.
+  - `world/A2Map.kt` : format `.a2map` (suites de blocs identiques + GZIP) et capture d'une zone.
+    Tests : `A2MapTest` (relecture identique, taille des aplats, placement dans les chunks, ciel).
+  - Balises `spawn_marker_a` / `spawn_marker_b` (ids 8005 / 8006) : posées en créatif, elles
+    deviennent des points d'apparition à l'export et laissent de l'air à leur place.
+  - Export : bouton 🗺 dans l'outil de capture (📐) → `Documents/cave_world/maps/`.
+  - `world/MapSource.kt` : pose la carte à y = 64, vide autour, ciel ouvert calculé par colonne.
+  - `mode/AssaultMode.kt` : kit d'armes à distance, retour au point d'apparition si on tombe.
+  - Bouton « Assaut » dans le menu de Cave World → liste des cartes (assets + Documents).
+  - Demandes de l'utilisateur : **aucune construction ni destruction** dans le shooter (boutons
+    masqués + `allowsWorldEdits = false`), **pas de LOD** pour une carte (~100 × 100).
+  - Retour de l'utilisateur : l'export depuis l'outil de capture **ne marche pas** chez lui
+    (cause non recherchée). Remplacé pour l'instant par une **arène d'essai intégrée**
+    (`world/BuiltinMaps.kt`) : sol d'herbe 100 × 100, murs de pierre de 5 blocs, camp A dans un
+    coin, camp B dans le coin opposé. Toujours en tête de la liste « Assaut ».
+  - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
+    (demande de toucher aux shaders du monde, à traiter à part).

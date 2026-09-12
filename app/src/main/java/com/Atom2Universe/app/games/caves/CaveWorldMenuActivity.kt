@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
@@ -17,6 +18,10 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.Atom2Universe.app.games.caves.world.A2MapStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CaveWorldMenuActivity : ThemedActivity() {
 
@@ -43,6 +48,40 @@ class CaveWorldMenuActivity : ThemedActivity() {
         }
         findViewById<FloatingActionButton>(R.id.cave_menu_fab_controls).setOnClickListener {
             startActivity(Intent(this, CaveControlsEditorActivity::class.java))
+        }
+        findViewById<View>(R.id.cave_menu_fab_assault).setOnClickListener { showAssaultMaps() }
+    }
+
+    // ── Mode Assaut ───────────────────────────────────────────────────────────
+
+    private fun showAssaultMaps() {
+        lifecycleScope.launch {
+            val maps = withContext(Dispatchers.IO) { A2MapStorage.list(this@CaveWorldMenuActivity) }
+            val builder = MaterialAlertDialogBuilder(this@CaveWorldMenuActivity, R.style.Theme_A2U_AlertDialog_Dark)
+                .setTitle(R.string.cave_assault_pick_map)
+                .setNegativeButton(android.R.string.cancel, null)
+            if (maps.isEmpty()) {
+                builder.setMessage(R.string.cave_assault_no_maps)
+            } else {
+                builder.setItems(maps.map { it.name }.toTypedArray()) { _, which -> launchAssault(maps[which]) }
+            }
+            builder.show()
+        }
+    }
+
+    private fun launchAssault(entry: A2MapStorage.Entry) {
+        lifecycleScope.launch {
+            // On vérifie que la carte se lit avant d'ouvrir le jeu : un fichier abîmé reste ici.
+            val readable = withContext(Dispatchers.IO) {
+                runCatching { A2MapStorage.load(this@CaveWorldMenuActivity, entry.path) }.isSuccess
+            }
+            if (!readable) {
+                Toast.makeText(this@CaveWorldMenuActivity, R.string.cave_assault_map_load_failed, Toast.LENGTH_LONG).show()
+                return@launch
+            }
+            startActivity(Intent(this@CaveWorldMenuActivity, CaveActivity::class.java).apply {
+                putExtra(CaveActivity.EXTRA_MAP_PATH, entry.path)
+            })
         }
     }
 

@@ -56,7 +56,11 @@ internal class CaveRenderer(
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
     private val savedState: SavedState? = null,
-    private val terrainVersion: Int = 2
+    private val terrainVersion: Int = 2,
+    /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
+    private val worldSource: WorldSource? = null,
+    /** Règles de la partie : la survie par défaut. */
+    modeFactory: (CaveRenderer) -> GameMode = ::SurvivalMode,
 ) : GLSurfaceView.Renderer {
 
     data class SavedState(
@@ -86,7 +90,8 @@ internal class CaveRenderer(
     private val storage = worldId?.let {
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
-    internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion)
+    internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
+                               source = worldSource)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
 
@@ -288,8 +293,8 @@ internal class CaveRenderer(
 
     // ── Règles de la partie ───────────────────────────────────────────────────
     // Ce qui est propre au mode (monstres, XP, butin…) vit dans le mode, pas ici.
-    // SurvivalMode ne lit le renderer qu'une fois la surface GL créée.
-    internal val mode: GameMode = SurvivalMode(this)
+    // Les modes ne lisent le renderer qu'une fois la surface GL créée.
+    internal val mode: GameMode = modeFactory(this)
 
     // ── Progression joueur ────────────────────────────────────────────────────
 
@@ -337,6 +342,8 @@ internal class CaveRenderer(
     var sprintCallback:       ((Boolean) -> Unit)?                = null
     var jumpChargeCallback:   ((Float) -> Unit)?                  = null
     var playerHitCallback:    (() -> Unit)?                       = null
+    /** L'inventaire et les barres ont été remplacés d'un bloc (kit d'armes) : l'UI doit tout relire. */
+    var loadoutChangedCallback: (() -> Unit)?                     = null
     private var weaponAttackCooldown = 0f
 
     // ── Shaders ───────────────────────────────────────────────────────────────
@@ -665,7 +672,9 @@ internal class CaveRenderer(
         } else {
             // Nouvelle partie : démarrer à 10h du matin IG (portion jour, 100 000 ms/heure → 4h après 6h).
             gameTimeMs = NEW_GAME_START_MS
-            val spawn = world.findSpawnPoint()
+            // Une carte préparée connaît ses points d'apparition ; sinon le monde en cherche un
+            // (et peut construire une île : à ne jamais faire sur une carte).
+            val spawn = mode.spawnPoint() ?: world.findSpawnPoint()
             camera.playerX = spawn[0].toDouble(); camera.playerY = spawn[1].toDouble(); camera.playerZ = spawn[2].toDouble()
             camera.x = camera.playerX; camera.y = camera.playerY; camera.z = camera.playerZ
             val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
@@ -1621,6 +1630,11 @@ internal class CaveRenderer(
     private val MINE_REACH = 6
 
     private fun updateMining(dt: Float) {
+        // Mode sans construction ni destruction (Assaut) : la carte ne se touche pas.
+        if (!mode.allowsWorldEdits) {
+            touch.placeRequested = false
+            return
+        }
         if (touch.placeRequested) {
             touch.placeRequested = false
             placeBlock()
@@ -2618,6 +2632,8 @@ internal class CaveRenderer(
     }
 
     private fun scheduleLodBuild(cx: Int, cz: Int) {
+        // Une carte préparée tient entière dans la distance de vue : le LOD lointain ne sert à rien.
+        if (worldSource != null) return
         val key = lodKey(cx, cz)
         if (!lodBuilding.add(key)) return
         scope.launch {

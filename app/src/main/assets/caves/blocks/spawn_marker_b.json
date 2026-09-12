@@ -1,0 +1,11 @@
+{
+  "id": 8006,
+  "name": "spawn_marker_b",
+  "texture_top": "cozy:cloth:5:00A0FF",
+  "texture_side": "cozy:cloth:5:00A0FF",
+  "texture_bottom": "cozy:cloth:5:00A0FF",
+  "color": "#00A0FF",
+  "hardness": 0.3,
+  "drop": "spawn_marker_b",
+  "creative_tab": "functional"
+}

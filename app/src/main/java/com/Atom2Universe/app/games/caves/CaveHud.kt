@@ -340,6 +340,7 @@ internal class CaveHud(private val activity: CaveActivity) {
     private var btnStructSave: Button? = null
     private var structPanel: LinearLayout? = null
     private var structPanelExpanded = false
+    private var btnStructMap: android.widget.Button? = null
 
     fun buildStructurePanel(root: FrameLayout) {
         val panel = LinearLayout(activity).apply {
@@ -401,12 +402,20 @@ internal class CaveHud(private val activity: CaveActivity) {
         }
         btnStructSave = bSave
         row.addView(bSave)
+
+        // Même zone, mais exportée en carte du mode Assaut.
+        val bMap = mkBtn("🗺").also {
+            it.setBackgroundColor(0x88FF8C00.toInt()); it.visibility = View.GONE
+        }
+        btnStructMap = bMap
+        row.addView(bMap)
         panel.addView(row)
         root.addView(panel)
 
         bA.setOnClickListener { onCornerAPressed() }
         bB.setOnClickListener { onCornerBPressed() }
         bSave.setOnClickListener { onSaveStructurePressed() }
+        bMap.setOnClickListener { onExportMapPressed() }
     }
 
     fun showStructurePanel(show: Boolean) {
@@ -442,9 +451,11 @@ internal class CaveHud(private val activity: CaveActivity) {
             tvStructDims?.text = "${sx}×${sy}×${sz}"
             tvStructDims?.visibility = View.VISIBLE
             btnStructSave?.visibility = View.VISIBLE
+            btnStructMap?.visibility = View.VISIBLE
         } else {
             tvStructDims?.visibility = View.GONE
             btnStructSave?.visibility = View.GONE
+            btnStructMap?.visibility = View.GONE
         }
     }
 
@@ -491,5 +502,83 @@ internal class CaveHud(private val activity: CaveActivity) {
             }
             .setNegativeButton("Annuler", null)
             .show()
+    }
+
+    // ── Export en carte Assaut ────────────────────────────────────────────────
+
+    private fun onExportMapPressed() {
+        val a = activity.renderer.structCornerA ?: return
+        val b = activity.renderer.structCornerB ?: return
+
+        if (!com.Atom2Universe.app.games.caves.world.StructureCapture.hasStorageAccess()) {
+            android.app.AlertDialog.Builder(activity)
+                .setTitle(com.Atom2Universe.app.R.string.cave_storage_access_title)
+                .setMessage(com.Atom2Universe.app.R.string.cave_storage_access_message)
+                .setPositiveButton(com.Atom2Universe.app.R.string.cave_storage_open_settings) { _, _ ->
+                    com.Atom2Universe.app.games.caves.world.StructureCapture.openStorageSettings(activity)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+            return
+        }
+
+        val minX = minOf(a.first, b.first);   val maxX = maxOf(a.first, b.first)
+        val minY = minOf(a.second, b.second); val maxY = maxOf(a.second, b.second)
+        val minZ = minOf(a.third, b.third);   val maxZ = maxOf(a.third, b.third)
+        val sx = maxX - minX + 1; val sy = maxY - minY + 1; val sz = maxZ - minZ + 1
+        val volume = sx.toLong() * sy * sz
+        val maxVolume = com.Atom2Universe.app.games.caves.world.A2Map.MAX_VOLUME
+        if (volume > maxVolume) {
+            android.widget.Toast.makeText(activity,
+                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_too_big, volume, maxVolume),
+                android.widget.Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val input = android.widget.EditText(activity).apply {
+            setHint(com.Atom2Universe.app.R.string.cave_map_export_hint); setSingleLine(true)
+        }
+        android.app.AlertDialog.Builder(activity)
+            .setTitle(com.Atom2Universe.app.R.string.cave_map_export_title)
+            .setView(input)
+            .setPositiveButton(com.Atom2Universe.app.R.string.cave_map_export_confirm) { _, _ ->
+                val name = input.text.toString().trim().ifEmpty { "map_${System.currentTimeMillis() / 1000}" }
+                val world = activity.renderer.world
+                activity.lifecycleScope.launch(Dispatchers.IO) {
+                    val message = runCatching {
+                        if (!isZoneLoaded(world, minX..maxX, minY..maxY, minZ..maxZ)) {
+                            activity.getString(com.Atom2Universe.app.R.string.cave_map_export_not_loaded)
+                        } else {
+                            val map = com.Atom2Universe.app.games.caves.world.A2Map.capture(name, sx, sy, sz,
+                                blockAt = { x, y, z -> world.blockAt(minX + x, minY + y, minZ + z) },
+                                metaAt  = { x, y, z -> world.metaAt(minX + x, minY + y, minZ + z) })
+                            if (map.spawnsA.isEmpty() && map.spawnsB.isEmpty()) {
+                                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_no_spawn)
+                            } else {
+                                val file = com.Atom2Universe.app.games.caves.world.A2MapStorage.save(map, name)
+                                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_done, file.name)
+                            }
+                        }
+                    }.getOrElse { activity.getString(com.Atom2Universe.app.R.string.cave_map_export_failed) }
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(activity, message, android.widget.Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    /** Vrai si tous les chunks de la zone sont chargés : ailleurs, la capture ne lirait que de l'air. */
+    private fun isZoneLoaded(
+        world: com.Atom2Universe.app.games.caves.world.World,
+        xs: IntRange, ys: IntRange, zs: IntRange
+    ): Boolean {
+        val size = com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
+        for (cy in Math.floorDiv(ys.first, size)..Math.floorDiv(ys.last, size))
+            for (cz in Math.floorDiv(zs.first, size)..Math.floorDiv(zs.last, size))
+                for (cx in Math.floorDiv(xs.first, size)..Math.floorDiv(xs.last, size))
+                    if (world.getChunk(cx, cy, cz)?.generated != true) return false
+        return true
     }
 }
