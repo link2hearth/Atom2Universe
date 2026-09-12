@@ -28,7 +28,7 @@ Atom2Universe is an ever-growing Android app made of many different modules. At 
 - Platform: Android (minSdk 26)
 - Development: active, constantly evolving
 - Architecture: modular (native C + Java + Kotlin)
-- Localization: 14 languages — English, French, German, Spanish, Italian, Greek, Portuguese, Dutch, Romanian, Russian, Turkish, Ukrainian, Polish, Indonesian
+- Localization: English and French are maintained; 12 further locales (German, Spanish, Italian, Greek, Portuguese, Dutch, Romanian, Russian, Turkish, Ukrainian, Polish, Indonesian) remain from earlier translation passes and still ship
 
 ---
 

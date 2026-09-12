@@ -155,7 +155,7 @@ Le premier prototype utilisera seulement le sol, quelques cubes et des barrière
 - Réutilisation possible des **principes techniques génériques** déjà éprouvés dans Cave World (cycle de rendu, shaders, buffers, caméra), sans coupler les deux jeux.
 - Nouveau moteur de course contenu dans son propre dossier afin de ne pas fragiliser Cave World.
 - Interface Android superposée au rendu 3D lorsque cela simplifie l'accessibilité et la traduction.
-- Chaînes ajoutées aux 14 langues seulement au moment de l'intégration visible dans le hub.
+- Chaînes ajoutées en anglais et en français seulement au moment de l'intégration visible dans le hub.
 
 ### Organisation prévue
 
@@ -300,7 +300,7 @@ games/toyboxracers/
 - [x] Ajouter une première tuile fonctionnelle au hub des jeux.
 - [x] Déclarer l'activité dans le manifeste et créer la couleur et l'icône vectorielle de la tuile.
 - [x] Traduire le titre et la description de la tuile dans les 14 langues.
-- [ ] Remplacer les textes provisoires du jeu et traduire toute l'interface finale dans les 14 langues.
+- [ ] Remplacer les textes provisoires du jeu et traduire toute l'interface finale en anglais et en français.
 - [ ] Définir les récompenses via `NeutrinoRewards`, source unique de vérité.
 - [ ] Ajouter Toybox Racers au résumé des récompenses.
 - [ ] Brancher les statistiques communes pertinentes.
