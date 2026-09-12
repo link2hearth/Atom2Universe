@@ -20,4 +20,17 @@ interface WorldSource {
      * lumière du ciel quand un chunk voisin n'est pas encore chargé.
      */
     fun skyTopY(wx: Int, wz: Int): Int
+
+    /**
+     * Zone du monde qui contient des blocs, en chunks, ou null pour un monde infini.
+     * Un monde fini est chargé en entier et jamais déchargé, quelle que soit la distance de vue.
+     */
+    fun chunkBounds(): ChunkBounds? = null
 }
+
+/** Pavé de chunks, bornes incluses. */
+data class ChunkBounds(
+    val minCx: Int, val maxCx: Int,
+    val minCy: Int, val maxCy: Int,
+    val minCz: Int, val maxCz: Int,
+)

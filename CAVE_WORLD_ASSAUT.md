@@ -139,5 +139,8 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
     (cause non recherchée). Remplacé pour l'instant par une **arène d'essai intégrée**
     (`world/BuiltinMaps.kt`) : sol d'herbe 100 × 100, murs de pierre de 5 blocs, camp A dans un
     coin, camp B dans le coin opposé. Toujours en tête de la liste « Assaut ».
+  - Arène testée en jeu par l'utilisateur : ça marche. Phase 1 commitée.
+  - **Carte chargée en entier** : `WorldSource.chunkBounds()` donne la zone finie ; `World` en
+    charge tous les chunks (49 pour l'arène) sans distance de vue et n'en décharge aucun.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).

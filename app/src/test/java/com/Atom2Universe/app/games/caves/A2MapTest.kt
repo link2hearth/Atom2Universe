@@ -131,6 +131,26 @@ class A2MapTest {
     }
 
     @Test
+    fun `toute l arene est chargee, meme loin du joueur, et rien n est decharge`() {
+        val source = MapSource(com.Atom2Universe.app.games.caves.world.BuiltinMaps.arena())
+        // 100 blocs = chunks 0 à 6 en x et z ; hauteur 64..69 = chunk 4 seulement.
+        assertEquals(com.Atom2Universe.app.games.caves.world.ChunkBounds(0, 6, 4, 4, 0, 6), source.chunkBounds())
+
+        val world = com.Atom2Universe.app.games.caves.world.World(source = source)
+        val loaded = ArrayList<Chunk>()
+        // Joueur dans le coin (0, 4, 0) : le coin opposé (6, 4, 6) serait hors d'un rayon de vue réduit.
+        world.updateAroundPlayer(0, 4, 0) { loaded += it }
+        assertEquals(49, loaded.size)
+        assertTrue(loaded.any { it.cx == 6 && it.cz == 6 })
+
+        // Le joueur s'éloigne très loin : aucun chunk n'est déchargé, aucun nouveau n'est demandé.
+        loaded.forEach { world.markGenerated(it) }
+        world.updateAroundPlayer(500, 4, 500) { loaded += it }
+        assertEquals(49, loaded.size)
+        assertEquals(49, world.allChunks().size)
+    }
+
+    @Test
     fun `on apparait les pieds sur la case de la balise`() {
         val source = MapSource(arena(), originX = 100, originY = 64, originZ = -50)
         assertArrayEquals(floatArrayOf(102.5f, 65 + 1.62f, -47.5f), source.spawnPoint(0), 1e-4f)

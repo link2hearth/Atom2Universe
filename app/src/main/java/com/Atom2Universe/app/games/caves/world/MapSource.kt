@@ -41,6 +41,12 @@ internal class MapSource(
         }
     }
 
+    override fun chunkBounds(): ChunkBounds = ChunkBounds(
+        Math.floorDiv(originX, CHUNK_SIZE), Math.floorDiv(originX + map.sizeX - 1, CHUNK_SIZE),
+        Math.floorDiv(originY, CHUNK_SIZE), Math.floorDiv(originY + map.sizeY - 1, CHUNK_SIZE),
+        Math.floorDiv(originZ, CHUNK_SIZE), Math.floorDiv(originZ + map.sizeZ - 1, CHUNK_SIZE),
+    )
+
     override fun skyTopY(wx: Int, wz: Int): Int {
         val mx = wx - originX; val mz = wz - originZ
         if (mx !in 0 until map.sizeX || mz !in 0 until map.sizeZ) return Int.MIN_VALUE

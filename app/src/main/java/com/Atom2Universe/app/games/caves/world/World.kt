@@ -108,6 +108,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         maxNewChunks: Int = Int.MAX_VALUE,
         onNeedGenerate: (Chunk) -> Unit
     ): Boolean {
+        // Monde fini (carte Assaut) : on charge toute la carte, sans distance de vue.
+        source?.chunkBounds()?.let { bounds ->
+            return streamWholeWorld(bounds, pcx, pcy, pcz, viewDirX, viewDirZ, maxNewChunks, onNeedGenerate)
+        }
+
         val candidates = mutableListOf<ChunkCandidate>()
         val isSurface = pcy >= 0
 
@@ -165,6 +170,37 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val dx = c.cx - pcx; val dy = c.cy - pcy; val dz = c.cz - pcz
                 !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && dx * dx + dy * dy + dz * dz > unloadR2
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
+        }
+        return candidates.size > scheduled
+    }
+
+    /**
+     * Charge tous les chunks de [bounds], les plus proches du joueur d'abord, et n'en décharge
+     * jamais aucun : une carte est petite (une arène de 100 × 100 = 49 chunks), elle tient en entier.
+     */
+    private fun streamWholeWorld(
+        bounds: ChunkBounds, pcx: Int, pcy: Int, pcz: Int,
+        viewDirX: Float, viewDirZ: Float, maxNewChunks: Int,
+        onNeedGenerate: (Chunk) -> Unit
+    ): Boolean {
+        val candidates = mutableListOf<ChunkCandidate>()
+        for (cz in bounds.minCz..bounds.maxCz)
+            for (cy in bounds.minCy..bounds.maxCy)
+                for (cx in bounds.minCx..bounds.maxCx) {
+                    val key = chunkKey(cx, cy, cz)
+                    if (!chunks.containsKey(key) && !inFlight.contains(key))
+                        candidates.add(ChunkCandidate(cx, cy, cz, key,
+                            streamPriority(cx - pcx, cy - pcy, cz - pcz, viewDirX, viewDirZ)))
+                }
+        candidates.sortBy { it.priority }
+        var scheduled = 0
+        for (c in candidates) {
+            if (scheduled >= maxNewChunks) break
+            if (!inFlight.add(c.key)) continue
+            val chunk = Chunk(c.cx, c.cy, c.cz)
+            chunks[c.key] = chunk
+            onNeedGenerate(chunk)
+            scheduled++
         }
         return candidates.size > scheduled
     }
