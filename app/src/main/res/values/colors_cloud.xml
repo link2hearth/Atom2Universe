@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+      Une couleur par domaine du cloud. Elles servent deux fois : la pastille de
+      chaque ligne et le segment correspondant dans la barre de proportion. Le
+      fond étant sombre (#121212), toutes sont choisies claires et désaturées
+      juste assez pour rester distinguables côte à côte dans la barre.
+    -->
+    <color name="cloud_cat_listens_color">#4DB6E2</color>
+    <color name="cloud_cat_music_color">#7BD88F</color>
+    <color name="cloud_cat_artist_images_color">#E8A33D</color>
+    <color name="cloud_cat_games_color">#C792EA</color>
+    <color name="cloud_cat_reading_color">#F2836B</color>
+    <color name="cloud_cat_stats_color">#56C8C8</color>
+    <color name="cloud_cat_backup_color">#9AA3B0</color>
+    <color name="cloud_cat_obsolete_color">#6E7681</color>
+    <color name="cloud_cat_unknown_color">#D96C8F</color>
+
+    <!-- Piste vide derrière la barre de proportion. -->
+    <color name="cloud_bar_track">#2A2A3A</color>
+
+    <!-- Actions destructives. -->
+    <color name="cloud_danger">#E05C5C</color>
+
+</resources>

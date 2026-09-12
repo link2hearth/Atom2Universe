@@ -70,6 +70,13 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
+        <!-- Compte Google et gestion du cloud, communs a tous les modules -->
+        <activity
+            android:name=".cloud.CloudActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+
         <!-- Radio -->
         <activity
             android:name=".radio.RadioActivity"

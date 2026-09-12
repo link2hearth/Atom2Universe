@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Écran cloud : titre et accès -->
+    <string name="cloud_title">Google account &amp; cloud</string>
+    <string name="hub_cloud">Google account and cloud</string>
+    <string name="cloud_settings_entry">Google account &amp; cloud</string>
+    <string name="cloud_settings_entry_desc">Link your account, sync and manage storage</string>
+
+    <!-- Compte -->
+    <string name="cloud_section_account">Account</string>
+    <string name="cloud_not_signed_in">Not signed in</string>
+    <string name="cloud_sign_in">Sign in with Google</string>
+    <string name="cloud_sign_out">Sign out</string>
+    <string name="cloud_sign_in_hint">Sign in to sync your listen counts, lyrics, games and reading progress across your devices.</string>
+    <string name="cloud_sign_in_failed">Sign-in failed</string>
+    <string name="cloud_sign_out_title">Sign out?</string>
+    <string name="cloud_sign_out_message">Syncing will stop. Nothing is deleted, neither on this device nor in the cloud.</string>
+
+    <!-- Synchronisation -->
+    <string name="cloud_section_sync">Sync</string>
+    <string name="cloud_sync_enabled">Automatic sync</string>
+    <string name="cloud_sync_enabled_desc">Nightly, plus after a listening session</string>
+    <string name="cloud_sync_now">Sync now</string>
+    <string name="cloud_syncing">Syncing…</string>
+    <string name="cloud_sync_success">Sync complete</string>
+    <string name="cloud_sync_failed">Sync failed: %1$s</string>
+    <string name="cloud_sync_unavailable">Sync unavailable</string>
+    <string name="cloud_sync_not_signed_in">Sign in first</string>
+    <string name="cloud_last_sync">Last sync: %1$s</string>
+    <string name="cloud_last_sync_never">Never synced</string>
+
+    <!-- Occupation -->
+    <string name="cloud_section_usage">Cloud storage</string>
+    <string name="cloud_usage_total">%1$s across %2$d files</string>
+    <string name="cloud_usage_line">%1$s · %2$d files</string>
+    <string name="cloud_loading">Reading the cloud…</string>
+    <string name="cloud_empty">Nothing stored in the cloud yet.</string>
+    <string name="cloud_refresh">Refresh</string>
+    <string name="cloud_usage_hint">This is the hidden app folder in your Drive. It does not count against your Google storage quota, but it is worth keeping tidy.</string>
+
+    <!-- Tailles -->
+    <string name="cloud_size_bytes">%1$d B</string>
+    <string name="cloud_size_kb">%1$.1f KB</string>
+    <string name="cloud_size_mb">%1$.1f MB</string>
+
+    <!-- Domaines -->
+    <string name="cloud_cat_listens">Listen history</string>
+    <string name="cloud_cat_listens_desc">One journal per device, feeding your play counts</string>
+    <string name="cloud_cat_listens_warning">Play counts already merged on your devices are kept. Each device republishes its own journal at its next sync — but only devices you still use.</string>
+
+    <string name="cloud_cat_music">Music library</string>
+    <string name="cloud_cat_music_desc">Favourites, lyrics, playlists, equaliser presets</string>
+    <string name="cloud_cat_music_warning">Your devices keep their local copies and will republish them. A device that is retired loses what only it held.</string>
+
+    <string name="cloud_cat_artist_images">Artist artwork</string>
+    <string name="cloud_cat_artist_images_desc">Custom images for your favourite artists</string>
+    <string name="cloud_cat_artist_images_warning">Usually the heaviest item. Images still on a device are re-uploaded; the others are lost.</string>
+
+    <string name="cloud_cat_games">Game saves</string>
+    <string name="cloud_cat_games_desc">Clicker, neutrinos, achievements, game progress</string>
+    <string name="cloud_cat_games_warning">Your progress on this device is untouched and will be republished. Progress that exists only in the cloud is lost.</string>
+
+    <string name="cloud_cat_reading">Reading progress</string>
+    <string name="cloud_cat_reading_desc">Where you are in your books and comics</string>
+    <string name="cloud_cat_reading_warning">Bookmarks on this device are kept. Those coming from another device are lost until that device syncs again.</string>
+
+    <string name="cloud_cat_stats">Usage stats</string>
+    <string name="cloud_cat_stats_desc">Time spent per module, across devices</string>
+    <string name="cloud_cat_stats_warning">History gathered from your other devices is lost. This device republishes its own.</string>
+
+    <string name="cloud_cat_backup">Backup</string>
+    <string name="cloud_cat_backup_desc">Full snapshot published by the primary device</string>
+    <string name="cloud_cat_backup_warning">You lose the ability to restore a fresh install from the cloud. Day-to-day syncing is unaffected.</string>
+
+    <string name="cloud_cat_obsolete">Obsolete files</string>
+    <string name="cloud_cat_obsolete_desc">Left over from an older sync format</string>
+    <string name="cloud_cat_obsolete_warning">Nothing reads these any more. Deleting them is safe.</string>
+
+    <string name="cloud_cat_unknown">Unrecognised</string>
+    <string name="cloud_cat_unknown_desc">Files this screen does not know about</string>
+
+    <!-- Journaux par appareil -->
+    <string name="cloud_section_journals">Device journals</string>
+    <string name="cloud_journals_hint">Each device publishes its own listen journal. One you no longer use will sit here forever.</string>
+    <string name="cloud_journal_this_device">This device</string>
+    <string name="cloud_journal_other">Device %1$s</string>
+    <string name="cloud_journal_meta">%1$s · last write %2$s</string>
+    <string name="cloud_journal_delete">Delete this journal</string>
+    <string name="cloud_journal_delete_self_title">That is this device\'s journal</string>
+    <string name="cloud_journal_delete_self_message">It will be republished in full at the next sync, so deleting it frees nothing for long. Delete anyway?</string>
+
+    <!-- Suppression -->
+    <string name="cloud_delete">Delete</string>
+    <string name="cloud_delete_title">Delete “%1$s”?</string>
+    <string name="cloud_delete_size">%1$s will be freed, in %2$d files.</string>
+    <string name="cloud_delete_continue">Continue</string>
+    <string name="cloud_delete_confirm_title">Confirm deletion</string>
+    <string name="cloud_delete_confirm_message">This cannot be undone. Type DELETE to confirm.</string>
+    <string name="cloud_delete_confirm_word">DELETE</string>
+    <string name="cloud_delete_confirm_hint">Type %1$s</string>
+    <string name="cloud_deleted">%1$d file(s) deleted</string>
+    <string name="cloud_delete_failed">Deletion failed</string>
+    <string name="cloud_cancel">Cancel</string>
+
+    <string name="cloud_delete_all">Erase everything in the cloud</string>
+    <string name="cloud_delete_all_desc">Last resort. Your devices keep their data and will republish it.</string>
+
+</resources>

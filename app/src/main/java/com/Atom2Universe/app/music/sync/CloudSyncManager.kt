@@ -76,6 +76,15 @@ object CloudSyncManager {
     private const val DEBOUNCE_DELAY_MINUTES = 10L  // 10 minutes debounce
     private const val STARTUP_SYNC_THRESHOLD_MS = 3600_000L  // 1 hour since last sync
 
+    /**
+     * Les journaux d'écoutes vus sur Drive pendant la phase de téléchargement.
+     *
+     * Sert à une seule chose : savoir si le nôtre y est encore. Sans cela, un
+     * journal effacé côté cloud (ménage, réinstallation) ne serait jamais
+     * republié, parce que le raccourci d'envoi ne regarde que l'état local.
+     */
+    private var remoteJournals: Set<String> = emptySet()
+
     private lateinit var appContext: Context
     private lateinit var syncMetadataDao: SyncMetadataDao
 
@@ -477,6 +486,7 @@ object CloudSyncManager {
     private suspend fun downloadAndMergeListenEvents(client: GoogleDriveAppDataClient): Int {
         val selfDeviceId = DeviceIdentity.getDeviceId(appContext)
         val files = client.listFilesWithPrefix(ListenEventsSyncFile.FILE_PREFIX)
+        remoteJournals = files.toSet()
         var imported = 0
 
         for (filename in files) {
@@ -812,15 +822,16 @@ object CloudSyncManager {
         val latestAt = payload.events.maxOfOrNull { it.listenedAt }
             ?: payload.archive.maxOfOrNull { it.lastAt }
             ?: 0L
+        val filename = ListenEventsSyncFile.filenameFor(deviceId)
         val prefs = appContext.getSharedPreferences(PREFS_SYNC_STATE, Context.MODE_PRIVATE)
         if (prefs.getLong(KEY_UPLOADED_EVENTS_COUNT, -1L) == total &&
-            prefs.getLong(KEY_UPLOADED_EVENTS_LATEST, -1L) == latestAt
+            prefs.getLong(KEY_UPLOADED_EVENTS_LATEST, -1L) == latestAt &&
+            remoteJournals.contains(filename)
         ) {
             Log.d(TAG, "Listen events unchanged since last upload ($total), skipping")
             return
         }
 
-        val filename = ListenEventsSyncFile.filenameFor(deviceId)
         val body = ListenEventsSyncFile.encode(payload).toString()
         val success = client.writeJsonFile(filename, body)
 
@@ -1636,6 +1647,24 @@ object CloudSyncManager {
     }
 
     /**
+     * Oublie ce que cet appareil croit avoir déjà publié comme journal d'écoutes.
+     *
+     * À appeler après toute suppression de journaux côté cloud : sans cela, le
+     * raccourci d'envoi tiendrait le fichier pour à jour et ne le republierait
+     * qu'à la prochaine écoute.
+     */
+    fun forgetUploadedEventsState() {
+        if (!isInitialized) return
+        appContext.getSharedPreferences(PREFS_SYNC_STATE, Context.MODE_PRIVATE)
+            .edit()
+            .remove(KEY_UPLOADED_EVENTS_COUNT)
+            .remove(KEY_UPLOADED_EVENTS_LATEST)
+            .apply()
+        remoteJournals = emptySet()
+        Log.d(TAG, "Uploaded listen-events state forgotten")
+    }
+
+    /**
      * Deletes ALL cloud data from Google Drive appDataFolder.
      * This is a destructive, irreversible operation.
      *
@@ -1671,6 +1700,7 @@ object CloudSyncManager {
 
             // Reset last sync timestamp
             syncMetadataDao.updateLastSyncTimestamp(0)
+            forgetUploadedEventsState()
 
             Log.d(TAG, "Deleted all cloud data: $deletedCount files")
 

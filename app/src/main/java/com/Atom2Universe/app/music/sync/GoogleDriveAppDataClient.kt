@@ -361,6 +361,68 @@ class GoogleDriveAppDataClient(
     }
 
     /**
+     * Inventaire complet du dossier applicatif : un descripteur par fichier.
+     *
+     * Contrairement à [listFiles], la liste est paginée jusqu'au bout — sans quoi
+     * Drive s'arrête à sa page par défaut et l'addition des tailles serait fausse
+     * dès qu'un compte dépasse la centaine de fichiers.
+     *
+     * @return La liste des fichiers, ou une liste vide en cas d'erreur.
+     */
+    suspend fun listFileDetails(): List<DriveFileInfo> = withContext(Dispatchers.IO) {
+        try {
+            val result = mutableListOf<DriveFileInfo>()
+            var pageToken: String? = null
+            do {
+                val page = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setFields("nextPageToken, files(id, name, size, modifiedTime)")
+                    .setPageSize(1000)
+                    .setPageToken(pageToken)
+                    .execute()
+
+                page.files.forEach { file ->
+                    result += DriveFileInfo(
+                        id = file.id,
+                        name = file.name ?: "",
+                        size = file.getSize() ?: 0L,
+                        modifiedTime = file.modifiedTime?.value ?: 0L
+                    )
+                }
+                pageToken = page.nextPageToken
+            } while (pageToken != null)
+
+            Log.d(TAG, "Inventory: ${result.size} file(s), ${result.sumOf { it.size }} bytes")
+            result
+        } catch (e: Exception) {
+            Log.e(TAG, "Error listing file details", e)
+            emptyList()
+        }
+    }
+
+    /**
+     * Supprime des fichiers déjà identifiés par [listFileDetails].
+     *
+     * Passer par l'identifiant évite la recherche par nom que fait [deleteFile] :
+     * une seule requête par fichier au lieu de deux.
+     *
+     * @return Le nombre de fichiers réellement supprimés.
+     */
+    suspend fun deleteByIds(ids: List<String>): Int = withContext(Dispatchers.IO) {
+        var deleted = 0
+        for (id in ids) {
+            try {
+                driveService.files().delete(id).execute()
+                deleted++
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to delete file id=$id", e)
+            }
+        }
+        Log.d(TAG, "Deleted $deleted of ${ids.size} file(s) by id")
+        deleted
+    }
+
+    /**
      * Lists files matching a prefix pattern.
      *
      * @param prefix The prefix to match (e.g., "artist_img_")
@@ -430,3 +492,18 @@ class GoogleDriveAppDataClient(
         }
     }
 }
+
+/**
+ * Un fichier du dossier applicatif, tel que Drive le décrit.
+ *
+ * @property id identifiant Drive, seule clé utilisable pour supprimer sans re-chercher
+ * @property name nom du fichier, c'est lui qui porte le domaine (musique, jeux…)
+ * @property size taille en octets ; Drive renvoie null pour un fichier vide, on lit 0
+ * @property modifiedTime date de dernière écriture, en millisecondes epoch
+ */
+data class DriveFileInfo(
+    val id: String,
+    val name: String,
+    val size: Long,
+    val modifiedTime: Long
+)

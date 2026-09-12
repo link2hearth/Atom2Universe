@@ -7,6 +7,18 @@
     android:background="@color/startup_background"
     android:padding="24dp">
 
+    <!-- Cloud button : la teinte dit d'un coup d'oeil si un compte est lie -->
+    <ImageButton
+        android:id="@+id/cloud_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/hub_cloud"
+        android:src="@drawable/ic_cloud_off"
+        app:tint="@color/startup_text_secondary"
+        app:layout_constraintEnd_toStartOf="@id/settings_button"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Settings button -->
     <ImageButton
         android:id="@+id/settings_button"

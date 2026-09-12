@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Écran cloud : titre et accès -->
+    <string name="cloud_title">Compte Google et cloud</string>
+    <string name="hub_cloud">Compte Google et cloud</string>
+    <string name="cloud_settings_entry">Compte Google et cloud</string>
+    <string name="cloud_settings_entry_desc">Lier son compte, synchroniser et gérer l\'espace</string>
+
+    <!-- Compte -->
+    <string name="cloud_section_account">Compte</string>
+    <string name="cloud_not_signed_in">Aucun compte lié</string>
+    <string name="cloud_sign_in">Se connecter avec Google</string>
+    <string name="cloud_sign_out">Se déconnecter</string>
+    <string name="cloud_sign_in_hint">Liez votre compte pour retrouver vos compteurs d\'écoutes, vos paroles, vos parties et votre progression de lecture sur tous vos appareils.</string>
+    <string name="cloud_sign_in_failed">Échec de la connexion</string>
+    <string name="cloud_sign_out_title">Se déconnecter ?</string>
+    <string name="cloud_sign_out_message">La synchronisation s\'arrête. Rien n\'est supprimé, ni sur l\'appareil ni dans le cloud.</string>
+
+    <!-- Synchronisation -->
+    <string name="cloud_section_sync">Synchronisation</string>
+    <string name="cloud_sync_enabled">Synchronisation automatique</string>
+    <string name="cloud_sync_enabled_desc">Chaque nuit, et après une session d\'écoute</string>
+    <string name="cloud_sync_now">Synchroniser maintenant</string>
+    <string name="cloud_syncing">Synchronisation…</string>
+    <string name="cloud_sync_success">Synchronisation terminée</string>
+    <string name="cloud_sync_failed">Échec de la synchronisation : %1$s</string>
+    <string name="cloud_sync_unavailable">Synchronisation indisponible</string>
+    <string name="cloud_sync_not_signed_in">Connectez-vous d\'abord</string>
+    <string name="cloud_last_sync">Dernière sync : %1$s</string>
+    <string name="cloud_last_sync_never">Jamais synchronisé</string>
+
+    <!-- Occupation -->
+    <string name="cloud_section_usage">Occupation du cloud</string>
+    <string name="cloud_usage_total">%1$s répartis sur %2$d fichiers</string>
+    <string name="cloud_usage_line">%1$s · %2$d fichiers</string>
+    <string name="cloud_loading">Lecture du cloud…</string>
+    <string name="cloud_empty">Rien n\'est encore stocké dans le cloud.</string>
+    <string name="cloud_refresh">Actualiser</string>
+    <string name="cloud_usage_hint">Il s\'agit du dossier applicatif caché de votre Drive. Il ne compte pas dans votre quota Google, mais mieux vaut le garder propre.</string>
+
+    <!-- Tailles -->
+    <string name="cloud_size_bytes">%1$d o</string>
+    <string name="cloud_size_kb">%1$.1f Ko</string>
+    <string name="cloud_size_mb">%1$.1f Mo</string>
+
+    <!-- Domaines -->
+    <string name="cloud_cat_listens">Journal d\'écoutes</string>
+    <string name="cloud_cat_listens_desc">Un journal par appareil, il alimente vos compteurs</string>
+    <string name="cloud_cat_listens_warning">Les compteurs déjà fusionnés sur vos appareils sont conservés. Chaque appareil republie son journal à sa prochaine sync — mais seulement ceux que vous utilisez encore.</string>
+
+    <string name="cloud_cat_music">Bibliothèque musicale</string>
+    <string name="cloud_cat_music_desc">Favoris, paroles, listes de lecture, préréglages d\'égaliseur</string>
+    <string name="cloud_cat_music_warning">Vos appareils gardent leur copie locale et la republieront. Un appareil mis de côté perd ce que lui seul détenait.</string>
+
+    <string name="cloud_cat_artist_images">Images d\'artistes</string>
+    <string name="cloud_cat_artist_images_desc">Visuels personnalisés de vos artistes favoris</string>
+    <string name="cloud_cat_artist_images_warning">C\'est le poste le plus lourd en général. Les images encore présentes sur un appareil sont renvoyées ; les autres sont perdues.</string>
+
+    <string name="cloud_cat_games">Sauvegardes de jeux</string>
+    <string name="cloud_cat_games_desc">Clicker, neutrinos, succès, progression des jeux</string>
+    <string name="cloud_cat_games_warning">Votre progression sur cet appareil n\'est pas touchée et sera republiée. Ce qui n\'existait que dans le cloud est perdu.</string>
+
+    <string name="cloud_cat_reading">Progression de lecture</string>
+    <string name="cloud_cat_reading_desc">Où vous en êtes dans vos livres et vos BD</string>
+    <string name="cloud_cat_reading_warning">Les marque-pages de cet appareil sont conservés. Ceux venus d\'un autre appareil sont perdus jusqu\'à sa prochaine sync.</string>
+
+    <string name="cloud_cat_stats">Statistiques d\'usage</string>
+    <string name="cloud_cat_stats_desc">Temps passé par module, tous appareils confondus</string>
+    <string name="cloud_cat_stats_warning">L\'historique venu de vos autres appareils est perdu. Cet appareil republie le sien.</string>
+
+    <string name="cloud_cat_backup">Sauvegarde complète</string>
+    <string name="cloud_cat_backup_desc">Instantané publié par l\'appareil principal</string>
+    <string name="cloud_cat_backup_warning">Vous perdez la possibilité de restaurer une installation neuve depuis le cloud. La synchronisation courante n\'est pas affectée.</string>
+
+    <string name="cloud_cat_obsolete">Fichiers obsolètes</string>
+    <string name="cloud_cat_obsolete_desc">Restes d\'un ancien format de synchronisation</string>
+    <string name="cloud_cat_obsolete_warning">Plus rien ne les lit. Les supprimer est sans risque.</string>
+
+    <string name="cloud_cat_unknown">Non reconnus</string>
+    <string name="cloud_cat_unknown_desc">Fichiers que cet écran ne sait pas classer</string>
+
+    <!-- Journaux par appareil -->
+    <string name="cloud_section_journals">Journaux par appareil</string>
+    <string name="cloud_journals_hint">Chaque appareil publie son propre journal d\'écoutes. Celui d\'un appareil que vous n\'utilisez plus restera là indéfiniment.</string>
+    <string name="cloud_journal_this_device">Cet appareil</string>
+    <string name="cloud_journal_other">Appareil %1$s</string>
+    <string name="cloud_journal_meta">%1$s · dernière écriture %2$s</string>
+    <string name="cloud_journal_delete">Supprimer ce journal</string>
+    <string name="cloud_journal_delete_self_title">C\'est le journal de cet appareil</string>
+    <string name="cloud_journal_delete_self_message">Il sera republié intégralement à la prochaine sync : le supprimer ne libère donc rien durablement. Supprimer quand même ?</string>
+
+    <!-- Suppression -->
+    <string name="cloud_delete">Supprimer</string>
+    <string name="cloud_delete_title">Supprimer « %1$s » ?</string>
+    <string name="cloud_delete_size">%1$s seront libérés, sur %2$d fichiers.</string>
+    <string name="cloud_delete_continue">Continuer</string>
+    <string name="cloud_delete_confirm_title">Confirmer la suppression</string>
+    <string name="cloud_delete_confirm_message">L\'opération est irréversible. Tapez SUPPRIMER pour confirmer.</string>
+    <string name="cloud_delete_confirm_word">SUPPRIMER</string>
+    <string name="cloud_delete_confirm_hint">Tapez %1$s</string>
+    <string name="cloud_deleted">%1$d fichier(s) supprimé(s)</string>
+    <string name="cloud_delete_failed">Échec de la suppression</string>
+    <string name="cloud_cancel">Annuler</string>
+
+    <string name="cloud_delete_all">Tout effacer dans le cloud</string>
+    <string name="cloud_delete_all_desc">En dernier recours. Vos appareils gardent leurs données et les republieront.</string>
+
+</resources>

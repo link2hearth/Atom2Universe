@@ -17,6 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.content.ContextCompat
+import com.Atom2Universe.app.cloud.CloudActivity
+import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -116,6 +118,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
     private lateinit var languageButton: Button
     private lateinit var sleepTimerButton: ImageButton
     private lateinit var settingsButton: ImageButton
+    private lateinit var cloudButton: ImageButton
 
     private var isGridMode = true
     private var isEditMode = false
@@ -213,6 +216,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         languageButton = findViewById(R.id.language_button)
         sleepTimerButton = findViewById(R.id.sleep_timer_button)
         settingsButton = findViewById(R.id.settings_button)
+        cloudButton = findViewById(R.id.cloud_button)
 
         // Initialize playback controller
         playbackController = AudioHubPlaybackController(this)
@@ -225,6 +229,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         updateLanguageButtonLabel()
         setupSleepTimerButton()
         setupSettingsButton()
+        setupCloudButton()
         setupModuleTiles()
 
         // Restore saved view mode (only if not restored from savedInstanceState)
@@ -372,6 +377,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         // Refresh state when returning to activity
         playbackController.refreshState()
         updateLanguageButtonLabel()
+        updateCloudButtonState()
         // Reload tiles to pick up any new quick-access shortcuts set from sub-hubs
         if (::tilesAdapter.isInitialized) {
             loadTiles()
@@ -537,6 +543,31 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         settingsButton.setOnClickListener {
             startActivity(Intent(this, HubSettingsActivity::class.java))
         }
+    }
+
+    private fun setupCloudButton() {
+        cloudButton.setOnClickListener {
+            startActivity(CloudActivity.intent(this))
+        }
+    }
+
+    /**
+     * Le bouton porte l'etat du compte : nuage plein et colore s'il est lie,
+     * nuage barre et gris sinon.
+     *
+     * C'est relu a chaque retour sur le hub parce que la connexion peut avoir
+     * change entre-temps, y compris depuis les reglages Android.
+     */
+    private fun updateCloudButtonState() {
+        if (!::cloudButton.isInitialized) return
+        val signedIn = GoogleSignInManager(this).isSignedIn()
+        cloudButton.setImageResource(
+            if (signedIn) R.drawable.ic_cloud else R.drawable.ic_cloud_off
+        )
+        cloudButton.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (signedIn) R.color.cloud_cat_music_color else R.color.startup_text_secondary
+        )
     }
 
     private fun showLanguageDialog() {

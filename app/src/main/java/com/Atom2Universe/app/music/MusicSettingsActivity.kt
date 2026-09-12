@@ -8,25 +8,24 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.cloud.CloudActivity
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.music.lyrics.api.ApiTestResult
 import com.Atom2Universe.app.music.lyrics.api.GenericLyricsApiClient
 import com.Atom2Universe.app.music.lyrics.api.LyricsApiConfig
 import com.Atom2Universe.app.music.navidrome.SubsonicApiClient
-import com.Atom2Universe.app.music.sync.BackupManager
 import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
-import com.Atom2Universe.app.music.sync.SyncResult
 import com.Atom2Universe.app.music.sync.peer.A2USyncService
 import com.Atom2Universe.app.music.sync.peer.TrustedNetworkManager
 import com.google.android.material.appbar.MaterialToolbar
@@ -82,44 +81,16 @@ class MusicSettingsActivity : ThemedActivity() {
     private lateinit var editNavidromePassword: TextInputEditText
     private lateinit var btnTestNavidrome: MaterialButton
 
-    // Cloud Sync Views
-    private lateinit var textGoogleEmail: TextView
-    private lateinit var btnSignInOut: MaterialButton
-    private lateinit var optionEnableSync: LinearLayout
-    private lateinit var switchEnableSync: SwitchMaterial
-    private lateinit var textLastSync: TextView
-    private lateinit var btnSyncNow: MaterialButton
+    // Porte d'entree vers l'ecran cloud, plus le bouton de remise a plat des compteurs
+    private lateinit var optionCloudLink: LinearLayout
+    private lateinit var iconCloudLink: ImageView
+    private lateinit var textCloudLinkSummary: TextView
     private lateinit var btnResetPlayCounts: MaterialButton
 
     // LAN Sync Views
     private lateinit var optionTrustedWifi: LinearLayout
     private lateinit var switchTrustedWifi: SwitchMaterial
     private lateinit var textTrustedWifiStatus: TextView
-
-    // Backup Views
-    private lateinit var dividerBackup: View
-    private lateinit var textBackupSection: TextView
-    private lateinit var optionPrimaryDevice: LinearLayout
-    private lateinit var switchPrimaryDevice: SwitchMaterial
-    private lateinit var textLastBackup: TextView
-    private lateinit var btnRestoreBackup: MaterialButton
-    private lateinit var btnDeleteCloudData: MaterialButton
-    private var isUpdatingPrimarySwitch = false // Prevent listener trigger on programmatic update
-
-    private val signInLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val account = googleSignInManager.handleSignInResult(result.data)
-        if (account != null) {
-            updateCloudSyncUI()
-            lifecycleScope.launch {
-                CloudSyncManager.init(this@MusicSettingsActivity)
-                CloudSyncManager.scheduleNightlySync()
-                // Check for existing backup on first sign-in
-                checkForExistingBackup()
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,10 +102,15 @@ class MusicSettingsActivity : ThemedActivity() {
 
         setupToolbar()
         setupViews()
-        setupCloudSyncSection()
+        setupCloudLinkSection()
         setupTrustedWifiSection()
-        setupBackupSection()
         loadPreferences()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Le compte a pu etre lie ou delie depuis l'ecran cloud.
+        if (::optionCloudLink.isInitialized) updateCloudLinkUI()
     }
 
     private fun setupToolbar() {
@@ -676,51 +652,36 @@ class MusicSettingsActivity : ThemedActivity() {
 
     // ==================== Cloud Sync ====================
 
-    private fun setupCloudSyncSection() {
-        textGoogleEmail = findViewById(R.id.text_google_email)
-        btnSignInOut = findViewById(R.id.btn_sign_in_out)
-        optionEnableSync = findViewById(R.id.option_enable_sync)
-        switchEnableSync = findViewById(R.id.switch_enable_sync)
-        textLastSync = findViewById(R.id.text_last_sync)
-        btnSyncNow = findViewById(R.id.btn_sync_now)
+    private fun setupCloudLinkSection() {
+        optionCloudLink = findViewById(R.id.option_cloud_link)
+        iconCloudLink = findViewById(R.id.icon_cloud_link)
+        textCloudLinkSummary = findViewById(R.id.text_cloud_link_summary)
         btnResetPlayCounts = findViewById(R.id.btn_reset_play_counts)
 
-        btnSignInOut.setOnClickListener {
-            if (googleSignInManager.isSignedIn()) {
-                // Sign out
-                lifecycleScope.launch {
-                    googleSignInManager.signOut()
-                    CloudSyncManager.setSyncEnabled(false)
-                    updateCloudSyncUI()
-                }
-            } else {
-                // Sign in
-                signInLauncher.launch(googleSignInManager.getSignInIntent())
-            }
-        }
-
-        optionEnableSync.setOnClickListener {
-            switchEnableSync.toggle()
-        }
-
-        switchEnableSync.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                CloudSyncManager.init(this@MusicSettingsActivity)
-                CloudSyncManager.setSyncEnabled(isChecked)
-                updateSyncControlsVisibility(isChecked)
-            }
-        }
-
-        btnSyncNow.setOnClickListener {
-            performManualSync()
+        optionCloudLink.setOnClickListener {
+            startActivity(CloudActivity.intent(this))
         }
 
         btnResetPlayCounts.setOnClickListener {
             showResetPlayCountsDialog()
         }
 
-        // Initial UI update
-        updateCloudSyncUI()
+        updateCloudLinkUI()
+    }
+
+    /**
+     * La ligne cloud montre le compte lie, et le bouton de remise a plat des
+     * compteurs n'apparait que dans ce cas : il touche aussi au cloud.
+     */
+    private fun updateCloudLinkUI() {
+        val email = googleSignInManager.getSignedInEmail()
+        val signedIn = email != null
+
+        textCloudLinkSummary.text = email ?: getString(R.string.cloud_settings_entry_desc)
+        iconCloudLink.setImageResource(
+            if (signedIn) R.drawable.ic_cloud else R.drawable.ic_cloud_off
+        )
+        btnResetPlayCounts.visibility = if (signedIn) View.VISIBLE else View.GONE
     }
 
     private fun showResetPlayCountsDialog() {
@@ -763,40 +724,6 @@ class MusicSettingsActivity : ThemedActivity() {
                 ).show()
             }
         }
-    }
-
-    private fun updateCloudSyncUI() {
-        val isSignedIn = googleSignInManager.isSignedIn()
-
-        if (isSignedIn) {
-            textGoogleEmail.text = googleSignInManager.getSignedInEmail()
-            btnSignInOut.text = getString(R.string.music_settings_sign_out)
-            optionEnableSync.visibility = View.VISIBLE
-
-            lifecycleScope.launch {
-                CloudSyncManager.init(this@MusicSettingsActivity)
-                val syncEnabled = CloudSyncManager.isSyncEnabled()
-                switchEnableSync.isChecked = syncEnabled
-                updateSyncControlsVisibility(syncEnabled)
-                updateLastSyncDisplay()
-            }
-        } else {
-            textGoogleEmail.text = getString(R.string.music_settings_not_signed_in)
-            btnSignInOut.text = getString(R.string.music_settings_sign_in)
-            optionEnableSync.visibility = View.GONE
-            textLastSync.visibility = View.GONE
-            btnSyncNow.visibility = View.GONE
-            btnResetPlayCounts.visibility = View.GONE
-        }
-    }
-
-    private fun updateSyncControlsVisibility(syncEnabled: Boolean) {
-        textLastSync.visibility = if (syncEnabled) View.VISIBLE else View.GONE
-        btnSyncNow.visibility = if (syncEnabled) View.VISIBLE else View.GONE
-        // Reset button hidden but kept in code for future use if needed
-        // btnResetPlayCounts.visibility = if (syncEnabled) View.VISIBLE else View.GONE
-        // Also show/hide backup section when sync is enabled/disabled
-        updateBackupSectionVisibility(syncEnabled && googleSignInManager.isSignedIn())
     }
 
     // ==================== LAN Sync Section ====================
@@ -850,341 +777,6 @@ class MusicSettingsActivity : ThemedActivity() {
         switchTrustedWifi.isEnabled = onWifi
     }
 
-    // ==================== Backup Section ====================
-
-    private fun setupBackupSection() {
-        dividerBackup = findViewById(R.id.divider_backup)
-        textBackupSection = findViewById(R.id.text_backup_section)
-        optionPrimaryDevice = findViewById(R.id.option_primary_device)
-        switchPrimaryDevice = findViewById(R.id.switch_primary_device)
-        textLastBackup = findViewById(R.id.text_last_backup)
-        btnRestoreBackup = findViewById(R.id.btn_restore_backup)
-        btnDeleteCloudData = findViewById(R.id.btn_delete_cloud_data)
-
-        btnDeleteCloudData.setOnClickListener {
-            showDeleteCloudDataWarning()
-        }
-
-        optionPrimaryDevice.setOnClickListener {
-            switchPrimaryDevice.toggle()
-        }
-
-        switchPrimaryDevice.setOnCheckedChangeListener { _, isChecked ->
-            // Skip if this is a programmatic update (not user action)
-            if (isUpdatingPrimarySwitch) return@setOnCheckedChangeListener
-
-            lifecycleScope.launch {
-                CloudSyncManager.init(this@MusicSettingsActivity)
-                val success = CloudSyncManager.setPrimaryDevice(isChecked)
-                if (success) {
-                    val messageRes = if (isChecked) {
-                        R.string.music_settings_primary_device_set
-                    } else {
-                        R.string.music_settings_primary_device_unset
-                    }
-                    Toast.makeText(this@MusicSettingsActivity, messageRes, Toast.LENGTH_SHORT).show()
-                    // Update button text based on new primary status
-                    updateBackupButtonState(isChecked)
-                } else {
-                    // Revert switch on failure
-                    isUpdatingPrimarySwitch = true
-                    switchPrimaryDevice.isChecked = !isChecked
-                    isUpdatingPrimarySwitch = false
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_sync_error,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-
-        btnRestoreBackup.setOnClickListener {
-            if (switchPrimaryDevice.isChecked) {
-                performBackup()
-            } else {
-                performRestore()
-            }
-        }
-
-        // Initial state hidden
-        updateBackupSectionVisibility(false)
-    }
-
-    private fun updateBackupButtonState(isPrimary: Boolean) {
-        if (isPrimary) {
-            btnRestoreBackup.text = getString(R.string.music_settings_backup_now)
-        } else {
-            btnRestoreBackup.text = getString(R.string.music_settings_restore_backup)
-        }
-    }
-
-    private fun updateBackupSectionVisibility(visible: Boolean) {
-        val visibility = if (visible) View.VISIBLE else View.GONE
-        dividerBackup.visibility = visibility
-        textBackupSection.visibility = visibility
-        optionPrimaryDevice.visibility = visibility
-        textLastBackup.visibility = visibility
-        btnRestoreBackup.visibility = visibility
-        btnDeleteCloudData.visibility = visibility
-
-        if (visible) {
-            updateBackupUI()
-        }
-    }
-
-    /**
-     * First step: Show warning dialog about deleting cloud data
-     */
-    private fun showDeleteCloudDataWarning() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.music_settings_delete_cloud_data_title)
-            .setMessage(R.string.music_settings_delete_cloud_data_warning)
-            .setPositiveButton(R.string.music_settings_delete_cloud_data_continue) { _, _ ->
-                showDeleteCloudDataConfirmation()
-            }
-            .setNegativeButton(R.string.music_cancel, null)
-            .show()
-    }
-
-    /**
-     * Second step: Require user to type confirmation word
-     */
-    private fun showDeleteCloudDataConfirmation() {
-        val confirmWord = getString(R.string.music_settings_delete_cloud_data_confirm_word)
-
-        val inputLayout = com.google.android.material.textfield.TextInputLayout(this).apply {
-            hint = getString(R.string.music_settings_delete_cloud_data_confirm_hint, confirmWord)
-            boxBackgroundMode = com.google.android.material.textfield.TextInputLayout.BOX_BACKGROUND_OUTLINE
-            setPadding(48, 32, 48, 0)
-        }
-
-        val editText = TextInputEditText(inputLayout.context).apply {
-            inputType = android.text.InputType.TYPE_CLASS_TEXT
-        }
-        inputLayout.addView(editText)
-
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(R.string.music_settings_delete_cloud_data_confirm_title)
-            .setMessage(getString(R.string.music_settings_delete_cloud_data_confirm_message, confirmWord))
-            .setView(inputLayout)
-            .setPositiveButton(R.string.music_settings_delete_cloud_data_delete, null) // Set later
-            .setNegativeButton(R.string.music_cancel, null)
-            .create()
-
-        dialog.setOnShowListener {
-            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            positiveButton.isEnabled = false
-
-            // Enable button only when correct word is typed
-            editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: Editable?) {
-                    positiveButton.isEnabled = s.toString().equals(confirmWord, ignoreCase = true)
-                }
-            })
-
-            positiveButton.setOnClickListener {
-                dialog.dismiss()
-                performDeleteCloudData()
-            }
-        }
-
-        dialog.show()
-    }
-
-    /**
-     * Actually delete all cloud data
-     */
-    private fun performDeleteCloudData() {
-        btnDeleteCloudData.isEnabled = false
-        btnDeleteCloudData.text = getString(R.string.music_settings_delete_cloud_data_in_progress)
-
-        lifecycleScope.launch {
-            CloudSyncManager.init(this@MusicSettingsActivity)
-            val result = CloudSyncManager.deleteAllCloudData()
-
-            btnDeleteCloudData.isEnabled = true
-            btnDeleteCloudData.text = getString(R.string.music_settings_delete_cloud_data)
-
-            if (result.success) {
-                Toast.makeText(
-                    this@MusicSettingsActivity,
-                    getString(R.string.music_settings_delete_cloud_data_success, result.deletedFilesCount),
-                    Toast.LENGTH_LONG
-                ).show()
-                // Refresh UI
-                updateBackupUI()
-                updateLastSyncDisplay()
-            } else {
-                Toast.makeText(
-                    this@MusicSettingsActivity,
-                    getString(R.string.music_settings_delete_cloud_data_error, result.errorMessage),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    private fun updateBackupUI() {
-        lifecycleScope.launch {
-            CloudSyncManager.init(this@MusicSettingsActivity)
-
-            // Check if this device is primary
-            val isPrimary = CloudSyncManager.isPrimaryDevice()
-            // Prevent listener from firing during programmatic update
-            isUpdatingPrimarySwitch = true
-            switchPrimaryDevice.isChecked = isPrimary
-            isUpdatingPrimarySwitch = false
-            updateBackupButtonState(isPrimary)
-
-            // Check for backup info
-            val manifest = BackupManager.checkBackupExists(this@MusicSettingsActivity)
-            if (manifest != null) {
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                val dateStr = dateFormat.format(Date(manifest.createdAt))
-                textLastBackup.text = getString(
-                    R.string.music_settings_last_backup_format,
-                    dateStr,
-                    manifest.deviceName
-                )
-            } else {
-                textLastBackup.text = getString(R.string.music_settings_last_backup_never)
-            }
-        }
-    }
-
-    private suspend fun checkForExistingBackup() {
-        val manifest = BackupManager.checkBackupExists(this@MusicSettingsActivity)
-        if (manifest != null && manifest.contents.playCountsCount > 0) {
-            // Found a backup, show dialog on main thread
-            val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            val dateStr = dateFormat.format(Date(manifest.createdAt))
-
-            val totalFavorites = manifest.contents.trackFavoritesCount + manifest.contents.albumFavoritesCount
-
-            runOnUiThread {
-                AlertDialog.Builder(this@MusicSettingsActivity)
-                    .setTitle(R.string.music_backup_found_title)
-                    .setMessage(getString(
-                        R.string.music_backup_found_message,
-                        manifest.contents.playCountsCount,
-                        totalFavorites,
-                        manifest.contents.playlistsCount,
-                        manifest.contents.artistImagesCount,
-                        manifest.contents.lyricsCount,
-                        dateStr,
-                        manifest.deviceName
-                    ))
-                    .setPositiveButton(R.string.music_backup_restore) { _, _ ->
-                        performRestore()
-                    }
-                    .setNegativeButton(R.string.music_backup_ignore, null)
-                    .show()
-            }
-        }
-    }
-
-    private fun performBackup() {
-        btnRestoreBackup.isEnabled = false
-        btnRestoreBackup.text = getString(R.string.music_settings_backup_in_progress)
-
-        lifecycleScope.launch {
-            val result = BackupManager.performBackup(this@MusicSettingsActivity)
-
-            btnRestoreBackup.isEnabled = true
-            updateBackupButtonState(switchPrimaryDevice.isChecked)
-
-            when (result) {
-                is BackupManager.BackupResult.Success -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_backup_success,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    // Refresh backup info
-                    updateBackupUI()
-                }
-                is BackupManager.BackupResult.Error -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        getString(R.string.music_settings_backup_error, result.message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is BackupManager.BackupResult.NotSignedIn -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_not_signed_in,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                is BackupManager.BackupResult.NotPrimaryDevice -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        "Not primary device",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
-    private fun performRestore() {
-        btnRestoreBackup.isEnabled = false
-        btnRestoreBackup.text = getString(R.string.music_settings_restore_in_progress)
-
-        lifecycleScope.launch {
-            val result = BackupManager.performRestore(this@MusicSettingsActivity)
-
-            btnRestoreBackup.isEnabled = true
-            updateBackupButtonState(switchPrimaryDevice.isChecked)
-
-            when (result) {
-                is BackupManager.RestoreResult.Success -> {
-                    val summary = result.summary
-                    AlertDialog.Builder(this@MusicSettingsActivity)
-                        .setTitle(R.string.music_restore_summary_title)
-                        .setMessage(getString(
-                            R.string.music_restore_summary_message,
-                            summary.playCountsRestored,
-                            summary.trackFavoritesRestored,
-                            summary.albumFavoritesRestored,
-                            summary.artistCustomizationsRestored,
-                            summary.playlistsRestored,
-                            summary.artistImagesRestored,
-                            summary.lyricsRestored,
-                            summary.listenEventsRestored
-                        ))
-                        .setPositiveButton(R.string.common_ok, null)
-                        .show()
-                }
-                is BackupManager.RestoreResult.NoBackupFound -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_no_backup_found,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is BackupManager.RestoreResult.Error -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        getString(R.string.music_settings_restore_error, result.message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is BackupManager.RestoreResult.NotSignedIn -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_not_signed_in,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
     // ==================== Navidrome Configuration ====================
 
     private fun setupNavidromeSection() {
@@ -1236,58 +828,6 @@ class MusicSettingsActivity : ThemedActivity() {
                 btnTestNavidrome.isEnabled = true
                 val msgRes = if (ok) R.string.navidrome_connected else R.string.navidrome_connection_failed
                 Toast.makeText(this@MusicSettingsActivity, msgRes, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun updateLastSyncDisplay() {
-        lifecycleScope.launch {
-            val lastSync = CloudSyncManager.getLastSyncTimestamp()
-            if (lastSync > 0) {
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                val dateStr = dateFormat.format(Date(lastSync))
-                textLastSync.text = getString(R.string.music_settings_last_sync_format, dateStr)
-            } else {
-                textLastSync.text = getString(R.string.music_settings_last_sync_never)
-            }
-        }
-    }
-
-    private fun performManualSync() {
-        btnSyncNow.isEnabled = false
-        btnSyncNow.text = getString(R.string.music_settings_sync_in_progress)
-
-        lifecycleScope.launch {
-            CloudSyncManager.init(this@MusicSettingsActivity)
-            val result = CloudSyncManager.syncNow()
-
-            btnSyncNow.isEnabled = true
-            btnSyncNow.text = getString(R.string.music_settings_sync_now)
-
-            when (result) {
-                is SyncResult.Success -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_sync_success,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateLastSyncDisplay()
-                }
-                is SyncResult.Error -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        getString(R.string.music_settings_sync_error, result.message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is SyncResult.NotSignedIn -> {
-                    Toast.makeText(
-                        this@MusicSettingsActivity,
-                        R.string.music_settings_not_signed_in,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {}
             }
         }
     }

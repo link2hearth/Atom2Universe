@@ -7,10 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import com.Atom2Universe.app.cloud.CloudActivity
+import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.SystemBarsManager
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
@@ -46,6 +50,9 @@ class HubSettingsActivity : ThemedActivity() {
     private lateinit var cleanupNowButton: Button
     private lateinit var cleanupStatusText: TextView
     private lateinit var aboutButton: LinearLayout
+    private lateinit var cloudSetting: LinearLayout
+    private lateinit var cloudSettingIcon: ImageView
+    private lateinit var cloudSettingSummary: TextView
 
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -67,6 +74,24 @@ class HubSettingsActivity : ThemedActivity() {
     override fun onResume() {
         super.onResume()
         updateThemeValue()
+        updateCloudSummary()
+    }
+
+    /**
+     * La ligne cloud affiche le compte lie plutot que sa description generique
+     * des qu'il y en a un : c'est l'information qu'on vient verifier.
+     */
+    private fun updateCloudSummary() {
+        val email = GoogleSignInManager(this).getSignedInEmail()
+        val signedIn = email != null
+        cloudSettingSummary.text = email ?: getString(R.string.cloud_settings_entry_desc)
+        cloudSettingIcon.setImageResource(
+            if (signedIn) R.drawable.ic_cloud else R.drawable.ic_cloud_off
+        )
+        cloudSettingIcon.imageTintList = ContextCompat.getColorStateList(
+            this,
+            if (signedIn) R.color.cloud_cat_music_color else R.color.startup_text_secondary
+        )
     }
 
     private fun setupViews() {
@@ -82,9 +107,17 @@ class HubSettingsActivity : ThemedActivity() {
         cleanupNowButton = findViewById(R.id.cleanup_now_button)
         cleanupStatusText = findViewById(R.id.cleanup_status_text)
         aboutButton = findViewById(R.id.about_button)
+        cloudSetting = findViewById(R.id.cloud_setting)
+        cloudSettingIcon = findViewById(R.id.cloud_setting_icon)
+        cloudSettingSummary = findViewById(R.id.cloud_setting_summary)
 
         backButton.setOnClickListener {
             navigateBackToHub()
+        }
+
+        // Compte Google et cloud : l'ecran dedie porte tout, ici on n'a qu'une porte
+        cloudSetting.setOnClickListener {
+            startActivity(CloudActivity.intent(this))
         }
 
         // Auto-resume setting
