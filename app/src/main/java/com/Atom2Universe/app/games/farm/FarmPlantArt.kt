@@ -48,8 +48,11 @@ object FarmPlantArt {
         canvas.save()
         canvas.translate(target.centerX(), base)
         if (windTime != null) {
-            val gust = .5 + .5 * cos(2 * PI * (target.centerX() / 2.0 - 16 * windTime) / 320)
-            val bend = 1.1 * gust * gust * growth.coerceIn(0f, 1f)
+            // The farm's one gust, the same wave the grass and the bushes lean with. This used to
+            // be its own copy of the formula with its own numbers - a 640-unit wave at 32 units a
+            // second - so the vegetables rippled on their own clock, out of step with the meadow.
+            // Only the timing is shared: the bend below, and its growth taper, stay the crop's own.
+            val bend = 1.1 * FarmSprites.gustAt(target.centerX(), windTime) * growth.coerceIn(0f, 1f)
             canvas.skew((-bend / artHeight).toFloat(), 0f)
         }
         // Art pixels remain large; only the transform samples the 3x image for gentle movement.

@@ -111,6 +111,15 @@ private class HarvestGauge(val cell: Int, val startTime: Long, val downX: Float,
 private const val HARVEST_FLY_DURATION = 900L
 /** Width, in world units, of each tappable arrow at either end of a parcel's banner. */
 private const val ARROW_ZONE = 34f
+/** Grass tiles baked beyond the world bounds, for the regions whose map does not fill the screen. */
+private const val MEADOW_MARGIN_TILES = 3
+/**
+ * How many grass tiles may be on screen before the loose tufts stop being drawn blade by blade and
+ * the baked layer takes over. Roughly a third of the map at once; below that the live draw is a few
+ * hundred stamps, which is what the meadow always cost before it was baked, and above it the count
+ * climbs into the thousands - the very thing the bake exists to prevent.
+ */
+private const val LIVE_TUFT_TILES = 420
 
 /** Coordinates stay in world units; drawing and hit testing use the same transform. */
 class FarmWorldView(context: Context, private val state: FarmState,
@@ -318,6 +327,22 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val sprites = FarmSprites(context)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val scenery = FarmScenery(sprites)
+    // The meadow is baked once per region into a single bitmap laid out in world coordinates (see
+    // FarmSprites.bakeMeadow) and stamped back with one drawBitmap. Nothing here is ever repainted:
+    // the ground is static, so following the camera with a screen-sized cache - which is what this
+    // used to do - only bought a 48 MB texture upload several times a second and the stutter that
+    // came with it. Nearest-neighbour on purpose: these are art pixels, they must stay square.
+    private class Meadow(val columnStart: Int, val rowStart: Int, val columns: Int, val rows: Int,
+                        val bed: Bitmap, val tufts: Bitmap)
+    private val meadows = mutableMapOf<FarmRegion, Meadow>()
+    private val meadowsBaking = mutableSetOf<FarmRegion>()
+    private val meadowPaint = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
+    // Scratch rectangles for the per-cell draws below. Every visible cell used to allocate two of
+    // these per frame, and at 120 Hz over a whole parcel that is pure garbage for the collector.
+    private val soilRect = RectF()
+    private val cropRect = RectF()
+    /** Built once: asking ICU for a formatter every frame, for every locked parcel, is not free. */
+    private val priceFormat = java.text.NumberFormat.getIntegerInstance()
     private var zoom = 1f
     private var cameraX = 0f
     private var cameraY = 0f
@@ -336,17 +361,20 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val treasureBush = RectF(965f, 15f, 1095f, 145f)
     private data class Camera(val zoom: Float, val x: Float, val y: Float)
     private val cameras = mutableMapOf<FarmRegion, Camera>()
-    private val worldWidth get() = when (region) {
+    private fun worldWidth(region: FarmRegion) = when (region) {
         FarmRegion.HOME -> FarmLayout.worldWidth
         FarmRegion.GREENHOUSE -> 900f
         else -> 1600f
     }
-    private val worldHeight get() = when (region) {
+    private fun worldHeight(region: FarmRegion) = when (region) {
         FarmRegion.HOME -> FarmLayout.worldHeight
         FarmRegion.GREENHOUSE -> 1600f
         else -> 1500f
     }
-    private val worldTop get() = if (region == FarmRegion.HOME) FarmLayout.worldTop else 0f
+    private fun worldTop(region: FarmRegion) = if (region == FarmRegion.HOME) FarmLayout.worldTop else 0f
+    private val worldWidth get() = worldWidth(region)
+    private val worldHeight get() = worldHeight(region)
+    private val worldTop get() = worldTop(region)
     private val lands = FarmLayout.lands.map { RectF(it.x, it.y, it.x + it.width, it.y + it.height) }
     private val cells = List(FarmLayout.cellCount) { i ->
         val parcel = FarmLayout.parcelOf(i)
@@ -512,10 +540,76 @@ class FarmWorldView(context: Context, private val state: FarmState,
         return true
     }
     override fun performClick(): Boolean { super.performClick(); return true }
+    /**
+     * The tile range one region's meadow has to cover. Everywhere but the greenhouse the grass
+     * stops at the world bounds, exactly as it did when it was tiled live; the greenhouse is
+     * centred and can show margin beyond its own map, so its bake is widened to cover that.
+     */
+    private fun meadowTiles(region: FarmRegion): IntArray {
+        val tile = FarmSprites.GRASS_TILE
+        val top = kotlin.math.floor(worldTop(region) / tile).toInt()
+        val margin = if (region == FarmRegion.GREENHOUSE) MEADOW_MARGIN_TILES else 0
+        return intArrayOf(-margin, top - margin,
+            (worldWidth(region) / tile).toInt() + 1 + 2 * margin,
+            (worldHeight(region) / tile).toInt() - top + 1 + 2 * margin)
+    }
+    /**
+     * Bakes the current region's meadow if it is missing, off the UI thread - it is a few tens of
+     * milliseconds of pure pixel work and it must not land inside a frame. Until it comes back the
+     * map simply shows its flat grass backdrop, which is what the very first frames showed anyway.
+     */
+    private fun ensureMeadow() {
+        val target = region
+        if (meadows.containsKey(target) || !meadowsBaking.add(target)) return
+        val (firstColumn, firstRow, columns, rows) = meadowTiles(target)
+        Thread {
+            val bed = sprites.bakeMeadowBed(firstColumn, firstRow, columns, rows)
+            val tufts = sprites.bakeMeadowTufts(firstColumn, firstRow, columns, rows)
+            post {
+                meadowsBaking.remove(target)
+                meadows[target] = Meadow(firstColumn, firstRow, columns, rows, bed, tufts)
+                invalidate()
+            }
+        }.apply { name = "farm-meadow-bake"; priority = Thread.MIN_PRIORITY }.start()
+    }
+    /** Stamps one baked meadow layer back, in world units. Inside the camera transform. */
+    private fun drawMeadowLayer(canvas: Canvas, meadow: Meadow, layer: Bitmap, sway: Float) {
+        canvas.save()
+        canvas.translate(meadow.columnStart * FarmSprites.GRASS_TILE + sway,
+            meadow.rowStart * FarmSprites.GRASS_TILE.toFloat())
+        canvas.scale(1f / FarmSprites.MEADOW_SCALE, 1f / FarmSprites.MEADOW_SCALE)
+        canvas.drawBitmap(layer, 0f, 0f, meadowPaint)
+        canvas.restore()
+    }
+    /**
+     * The bed, then the tufts - and the tufts are where the wind lives.
+     *
+     * Close in, the visible ones are drawn blade by blade so each leans by the gust at its own x,
+     * which is the travelling ripple the meadow always had. Far out there are far too many for
+     * that, so the baked layer is stamped instead and slid bodily by a world unit or two: at that
+     * distance a blade is barely two pixels tall, and a whole field breathing together reads the
+     * same as a field rippling - what would show is a field standing perfectly still.
+     */
+    private fun drawMeadow(canvas: Canvas, visible: RectF) {
+        ensureMeadow()
+        val meadow = meadows[region] ?: return
+        drawMeadowLayer(canvas, meadow, meadow.bed, 0f)
+        val tile = FarmSprites.GRASS_TILE
+        // A tile of bleed: a tuft stands about half a tile above its own base, so one rooted just
+        // off screen still leans into view and has to be drawn.
+        val firstColumn = (kotlin.math.floor(visible.left / tile).toInt() - 1).coerceAtLeast(meadow.columnStart)
+        val firstRow = (kotlin.math.floor(visible.top / tile).toInt() - 1).coerceAtLeast(meadow.rowStart)
+        val lastColumn = ((visible.right / tile).toInt() + 1).coerceAtMost(meadow.columnStart + meadow.columns - 1)
+        val lastRow = ((visible.bottom / tile).toInt() + 1).coerceAtMost(meadow.rowStart + meadow.rows - 1)
+        val columns = lastColumn - firstColumn + 1; val rows = lastRow - firstRow + 1
+        if (columns <= 0 || rows <= 0) return
+        if (columns.toLong() * rows <= LIVE_TUFT_TILES)
+            sprites.tufts(canvas, firstColumn, firstRow, columns, rows, windTime)
+        else
+            drawMeadowLayer(canvas, meadow, meadow.tufts, FarmSprites.gustAt(visible.centerX(), windTime) * 5f)
+    }
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawColor(Color.rgb(87, 133, 57))
-        canvas.save(); canvas.translate(cameraX, cameraY); canvas.scale(zoom, zoom)
         val visible = RectF(-cameraX / zoom, -cameraY / zoom, (width - cameraX) / zoom, (height - cameraY) / zoom)
         // The wind field animates in every region the grass is drawn in, not only on the home map.
         val frameNanos = System.nanoTime()
@@ -523,31 +617,19 @@ class FarmWorldView(context: Context, private val state: FarmState,
         lastDecorFrameNanos = frameNanos
         windTime += dt
         ensureDecorTicking()
-        // The centered greenhouse can leave visible margins outside its world bounds.
-        // Tile those margins too; floor also covers partially visible negative coordinates.
-        val extendGrass = region == FarmRegion.GREENHOUSE
-        val firstRow = kotlin.math.floor(visible.top / 80).toInt().let {
-            if (extendGrass) it else it.coerceAtLeast(kotlin.math.floor(worldTop / 80).toInt())
-        }
-        val lastRow = (visible.bottom / 80).toInt().let {
-            if (extendGrass) it else it.coerceAtMost((worldHeight / 80).toInt())
-        }
-        val firstCol = kotlin.math.floor(visible.left / 80).toInt().let {
-            if (extendGrass) it else it.coerceAtLeast(0)
-        }
-        val lastCol = (visible.right / 80).toInt().let {
-            if (extendGrass) it else it.coerceAtMost((worldWidth / 80).toInt())
-        }
-        for (row in firstRow..lastRow)
-            for (col in firstCol..lastCol) {
-            sprites.grass(canvas, RectF(col * 80f, row * 80f, col * 80f + 80, row * 80f + 80), col, row, windTime)
-        }
+        canvas.drawColor(Color.rgb(87, 133, 57))
+        canvas.save(); canvas.translate(cameraX, cameraY); canvas.scale(zoom, zoom)
+        drawMeadow(canvas, visible)
         if (region != FarmRegion.HOME) {
             if (region == FarmRegion.LIVESTOCK) livestockScene.draw(canvas, visible)
             else regionScenery.draw(canvas, region, visible)
             canvas.restore(); return
         }
+        // Trails and scattered decorations, live rather than cached: the trail network is already a
+        // single world-sized bitmap of its own, and the decorations are a couple hundred stamps of
+        // sprites that are cached per variant - both far below the cost of keeping a copy of them.
         scenery.ground(canvas)
+        scenery.objects(canvas, visible, windTime)
 
         val now = System.currentTimeMillis()
         lands.forEachIndexed { index, land ->
@@ -575,7 +657,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
                         p.watered -> Color.rgb(94, 65, 44)
                         else -> Color.rgb(151, 104, 60)
                     }
-                    canvas.drawRoundRect(RectF(cell.left, cell.top + 34, cell.right, cell.bottom), 5f, 5f, paint)
+                    soilRect.set(cell.left, cell.top + 34, cell.right, cell.bottom)
+                    canvas.drawRoundRect(soilRect, 5f, 5f, paint)
                     paint.color = if (p.rich) Color.rgb(76, 47, 26) else Color.rgb(112, 70, 43)
                     for (r in 0..2) canvas.drawRect(cell.left + 5, cell.top + 40 + r * 9, cell.right - 5, cell.top + 42 + r * 9, paint)
                     val crop = p.crop
@@ -583,8 +666,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     if (crop != null) {
                         val shakeX = grip?.let { (kotlin.math.sin((now - it.startTime) / 28.0) * 4).toFloat() } ?: 0f
                         canvas.save(); canvas.translate(shakeX, 0f)
-                        sprites.crop(canvas, crop, p.variant, p.stage(now),
-                            RectF(cell.left - 2, cell.top - 9, cell.right + 2, cell.bottom - 5),
+                        cropRect.set(cell.left - 2, cell.top - 9, cell.right + 2, cell.bottom - 5)
+                        sprites.crop(canvas, crop, p.variant, p.stage(now), cropRect,
                             growth = p.progress(now), windTime = windTime)
                         canvas.restore()
                         FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical)
@@ -603,7 +686,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             scenery.fenceFront(canvas, land, spec.columns, opening)
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)
-                val price = java.text.NumberFormat.getIntegerInstance().format(state.unlockCost(index).toLong())
+                val price = priceFormat.format(state.unlockCost(index).toLong())
                 label(canvas, context.getString(R.string.farm_locked_price, price), land.centerX(), land.centerY(), 20f)
             }
             paint.color = Color.rgb(61, 76, 40)
@@ -612,7 +695,6 @@ class FarmWorldView(context: Context, private val state: FarmState,
             label(canvas, context.getString(R.string.farm_parcel_label, index + 1), land.centerX(), land.top + 10, 15f)
             label(canvas, "›", land.right - 45 - ARROW_ZONE / 2, land.top + 10, 18f)
         }
-        scenery.objects(canvas, visible, windTime)
         if (RectF.intersects(treasureBush, visible)) drawTreasureBush(canvas)
         canvas.restore()
     }

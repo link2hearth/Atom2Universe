@@ -119,10 +119,26 @@ class FarmSprites(private val context: Context) {
      * none of that overhead, so baking a tile is now pure, cheap arithmetic.
      */
     private fun buildGrassTile(column: Int, row: Int): Bitmap {
+        val size = GRASS_TILE / 4
+        val pixels = IntArray(size * size)
+        grassTilePixels(column, row, pixels)
+        // Bitmap.createBitmap(pixels, ...) returns an immutable bitmap, which Canvas refuses to
+        // wrap - build a blank mutable one instead and fill it with the computed pixels.
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+        return bitmap
+    }
+
+    /**
+     * Fills [pixels] with one tile's texels. Split out of [buildGrassTile] so the whole-map bake
+     * ([bakeMeadow]) can write tile after tile into one big buffer instead of allocating a bitmap
+     * per tile - and so it touches nothing this class caches, which is what lets it run off the
+     * UI thread.
+     */
+    private fun grassTilePixels(column: Int, row: Int, pixels: IntArray) {
         // One art pixel spans four world units, like the coarse dirt texture. The camera
         // enlarges these texels without filtering instead of shrinking 80 noisy texels.
         val size = GRASS_TILE / 4
-        val pixels = IntArray(size * size)
         val random = Random(column * -0x61c88647 xor row * 0x9e3779b1.toInt())
         fun setPixel(x: Int, y: Int, color: Int) { if (x in 0 until size && y in 0 until size) pixels[y * size + x] = color }
         // Sampled every 2×2 block, matching the reference's own grain rather than every single
@@ -151,44 +167,50 @@ class FarmSprites(private val context: Context) {
             val len = random.nextInt(1, 4)
             for (i in 0 until len) setPixel(x + i, y, color)
         }
+        // A short sprig, 2 to 4 texels - 8 to 16 world units. It used to be the TALLER of the two
+        // kinds of blade the meadow grows, at 16 to 32, which put the big grass in the layer that
+        // cannot move and the small grass in the one that sways: backwards, and it showed. The
+        // sizes are now swapped with the loose tufts (see [tuftAt]), so what waves is what stands out.
         repeat(1) {
             val x = 4 + random.nextInt(size - 8); val y = 10 + random.nextInt(size - 14)
-            val h = 4 + random.nextInt(5)
+            val h = 2 + random.nextInt(3)
             for (t in 0..h) {
                 val f = t / h.toFloat()
                 setPixel(x - (2 * f).toInt(), y - t, Color.rgb(0x4c, 0x99, 0x58))
                 setPixel(x + (2 * f).toInt(), y - (t * .8f).toInt(), Color.rgb(0x5c, 0xa7, 0x54))
             }
         }
-        // Bitmap.createBitmap(pixels, ...) returns an immutable bitmap, which Canvas refuses to
-        // wrap - build a blank mutable one instead and fill it with the computed pixels.
-        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
-        bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
-        return bitmap
     }
 
-    /** The whole meadow shares one travelling gust: left to right, a 16-second cycle. */
-    fun windAt(x: Float, timeSeconds: Float): Float {
-        val phase = 2.0 * Math.PI * (x - WIND_SPEED * timeSeconds) / WIND_WAVELENGTH
-        val gust = 0.5 + 0.5 * cos(phase)
-        return (WIND_STRENGTH * gust * gust).toFloat()
-    }
 
     /** A single leaning tuft of grass, its base fixed to the ground and only its blades swaying. */
     private val tuftSprites = mutableMapOf<Int, Bitmap>()
-    private fun drawTuft(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
-        val h = (height / 2f).toInt().coerceIn(3, 7)
+    /**
+     * The tuft's own footprint in world units, anchored on the point [tuftAt] reports - which is
+     * where its base sits, art pixel (7, 20) of a 16x24 sprite, at two world units per art pixel.
+     */
+    private fun tuftTarget(x: Float, y: Float, scale: Float) =
+        RectF(x - 14f * scale, y - 40f * scale, x + 18f * scale, y + 8f * scale)
+    private fun tuftSprite(cache: MutableMap<Int, Bitmap>, brush: Paint,
+                           height: Float, sway: Float, flower: Boolean, seed: Int): Bitmap {
+        // Two world units per art pixel. The sprite is 24 tall rather than 16 because these are now
+        // the meadow's TALL blades; at h = 16 the tip reaches art row 4 and a flower still fits above it.
+        val h = (height / 2f).toInt().coerceIn(8, 16)
         val bend = kotlin.math.round(sway).toInt().coerceIn(0, 2)
         val color = seed and 3
         val key = h * 32 + bend * 8 + (if (flower) 4 else 0) + color
-        val bitmap = tuftSprites.getOrPut(key) {
-            Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888).also {
-                drawTuftPixels(Canvas(it), 7f, 12f, h.toFloat(), bend.toFloat(), flower, color)
+        return cache.getOrPut(key) {
+            Bitmap.createBitmap(16, 24, Bitmap.Config.ARGB_8888).also {
+                drawTuftPixels(Canvas(it), brush, 7f, 20f, h.toFloat(), bend.toFloat(), flower, color)
             }
         }
-        canvas.drawBitmap(bitmap, null, RectF(x - 14f, y - 24f, x + 18f, y + 8f), paint)
     }
-    private fun drawTuftPixels(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
+    private fun drawTuft(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float,
+                         flower: Boolean, seed: Int, scale: Float = 1f) {
+        canvas.drawBitmap(tuftSprite(tuftSprites, paint, height, sway, flower, seed), null,
+            tuftTarget(x, y, scale), paint)
+    }
+    private fun drawTuftPixels(canvas: Canvas, paint: Paint, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
         paint.style = Paint.Style.FILL; paint.color = Color.rgb(0x69, 0xa6, 0x57)
         canvas.drawRect(x - 3f, y, x + 4f, y + 2f, paint)
         paint.style = Paint.Style.STROKE; paint.strokeWidth = 1.3f
@@ -205,21 +227,121 @@ class FarmSprites(private val context: Context) {
         }
     }
 
-    fun grass(canvas: Canvas, target: RectF, column: Int, row: Int, windTime: Float = 0f) {
+    fun grass(canvas: Canvas, target: RectF, column: Int, row: Int, windTime: Float = 0f, detailed: Boolean = true) {
         val bitmap = grassTiles.getOrPut(tileKey(column, row)) { buildGrassTile(column, row) }
         canvas.drawBitmap(bitmap, null, target, paint)
         // Three independent slots per tile, each very likely to carry a loose tuft that leans with
         // the shared wind field. Most of the meadow's density is baked into the tile itself (free);
         // these are only the blades that actually need to move every frame, so the count stays
-        // modest even though the visible result reads as a dense, swaying meadow.
+        // modest even though the visible result reads as a dense, swaying meadow. Skipped past a
+        // couple hundred visible tiles (zoomed far out): individual blades are sub-pixel there anyway.
+        if (!detailed) return
+        // Tuft placement and size are authored in world units, against a GRASS_TILE-wide tile. The
+        // hub icon and the arcade field tile the meadow at their own smaller pitch, so everything
+        // is scaled to whatever tile they asked for rather than stamped at its absolute size - at
+        // 34 pixels a tile, an unscaled tuft would stand taller than the tile it grows in.
+        val scale = target.width() / GRASS_TILE
         for (slot in 0 until 3) {
-            var tuft = column * 0x2c1b3c6d xor row * 0x165667b1 xor (slot * 0x9e3779b1.toInt())
-            tuft = tuft xor (tuft ushr 13)
-            if ((tuft ushr 3) % 6 == 0) continue
-            val fx = target.left + 8 + (tuft ushr 8) % 64
-            val fy = target.top + 20 + (tuft ushr 15) % 52
-            val height = 7f + (tuft ushr 21) % 8
-            drawTuft(canvas, fx, fy, height, windAt(fx, windTime), (tuft ushr 25) % 4 == 0, tuft)
+            val tuft = tuftAt(column, row, slot) ?: continue
+            val fx = target.left + tuft.dx * scale; val fy = target.top + tuft.dy * scale
+            drawTuft(canvas, fx, fy, tuft.height, windAt(fx, windTime), tuft.flower, tuft.seed, scale)
+        }
+    }
+
+    /**
+     * Where a tile's three tuft slots sit, if they carry one at all. The placement is pure hash, so
+     * the live draw above and the whole-map bake below plant exactly the same blades in exactly the
+     * same spots - the meadow must not shift when one takes over from the other.
+     */
+    private class Tuft(val dx: Float, val dy: Float, val height: Float, val flower: Boolean, val seed: Int)
+    private fun tuftAt(column: Int, row: Int, slot: Int): Tuft? {
+        var tuft = column * 0x2c1b3c6d xor row * 0x165667b1 xor (slot * 0x9e3779b1.toInt())
+        tuft = tuft xor (tuft ushr 13)
+        if ((tuft ushr 3) % 6 == 0) return null
+        return Tuft(8f + (tuft ushr 8) % 64, 20f + (tuft ushr 15) % 52,
+            16f + (tuft ushr 21) % 17, (tuft ushr 25) % 4 == 0, tuft)
+    }
+
+    /**
+     * The meadow, painted ONCE into bitmaps laid out in WORLD coordinates at [MEADOW_SCALE] texels
+     * per world unit, which the camera then stamps back with one drawBitmap per frame.
+     *
+     * It comes in two layers, and the split is what buys back the wind. The bed - grass, speckle,
+     * baked blades - never moves, so it is baked flat and forgotten. The loose tufts and their
+     * wildflowers DO move, so they get their own transparent layer: zoomed out the whole layer is
+     * slid a world unit or two with the gust, and zoomed in it is left aside entirely while the
+     * visible tufts are drawn live, blade by blade, bending exactly as they always did (see
+     * [tufts]). Baking them into the bed instead would freeze the meadow solid.
+     *
+     * This replaces a screen-sized cache that was rebuilt several times a second: on a 1752x2800
+     * tablet that came to 48 MB of pixels re-uploaded to the GPU every 150 ms, and the map stuttered
+     * in step with it. That cost was the same whatever the meadow contained, which is also why
+     * stripping detail out of it never helped.
+     *
+     * Touches only local caches and no field of this class, so it is safe to run off the UI thread.
+     */
+    fun bakeMeadowBed(columnStart: Int, rowStart: Int, columns: Int, rows: Int): Bitmap {
+        val source = GRASS_TILE / 4
+        val tile = (GRASS_TILE * MEADOW_SCALE).toInt()
+        val step = tile / source
+        val w = columns * tile; val h = rows * tile
+        val pixels = IntArray(w * h)
+        val cell = IntArray(source * source)
+        for (row in 0 until rows) for (column in 0 until columns) {
+            grassTilePixels(columnStart + column, rowStart + row, cell)
+            // Each source texel becomes a step x step block. The camera already magnified those very
+            // texels without filtering, so blowing them up here changes not one pixel on screen.
+            val ox = column * tile; val oy = row * tile
+            for (sy in 0 until source) for (sx in 0 until source) {
+                val color = cell[sy * source + sx]
+                for (dy in 0 until step) {
+                    var index = (oy + sy * step + dy) * w + ox + sx * step
+                    for (dx in 0 until step) pixels[index++] = color
+                }
+            }
+        }
+        val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
+        return bitmap
+    }
+    /** The loose tufts alone, upright, on transparent ground - the layer that gets slid. See [bakeMeadowBed]. */
+    fun bakeMeadowTufts(columnStart: Int, rowStart: Int, columns: Int, rows: Int): Bitmap {
+        val tile = (GRASS_TILE * MEADOW_SCALE).toInt()
+        val bitmap = Bitmap.createBitmap(columns * tile, rows * tile, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        canvas.scale(MEADOW_SCALE, MEADOW_SCALE)
+        canvas.translate(-columnStart * GRASS_TILE.toFloat(), -rowStart * GRASS_TILE.toFloat())
+        val brush = Paint().apply { isFilterBitmap = false; isAntiAlias = false }
+        val cache = mutableMapOf<Int, Bitmap>()
+        // One tile of bleed on every side: a tuft stands well above its own base, so the ones rooted
+        // just outside still lean into this bitmap. They are clipped by its edges, which is right.
+        forEachTuft(columnStart - 1, rowStart - 1, columns + 2, rows + 2) { x, y, tuft ->
+            canvas.drawBitmap(tuftSprite(cache, brush, tuft.height, 0f, tuft.flower, tuft.seed),
+                null, tuftTarget(x, y, 1f), brush)
+        }
+        return bitmap
+    }
+    /**
+     * The live, bending tufts over a range of tiles - the zoomed-in half of the deal [bakeMeadowBed]
+     * describes. Each blade leans by the gust sampled at its own x, so the wind travels across the
+     * meadow instead of the whole field nodding together. Only ever called for what is on screen:
+     * at full zoom-out this would be thousands of draws per frame, which is the wall the baked
+     * layer exists to avoid.
+     */
+    fun tufts(canvas: Canvas, columnStart: Int, rowStart: Int, columns: Int, rows: Int, windTime: Float) {
+        forEachTuft(columnStart, rowStart, columns, rows) { x, y, tuft ->
+            drawTuft(canvas, x, y, tuft.height, windAt(x, windTime), tuft.flower, tuft.seed)
+        }
+    }
+    private inline fun forEachTuft(columnStart: Int, rowStart: Int, columns: Int, rows: Int,
+                                   action: (x: Float, y: Float, tuft: Tuft) -> Unit) {
+        for (row in 0 until rows) for (column in 0 until columns) {
+            val left = (columnStart + column) * GRASS_TILE.toFloat()
+            val top = (rowStart + row) * GRASS_TILE.toFloat()
+            for (slot in 0 until 3) {
+                val tuft = tuftAt(columnStart + column, rowStart + row, slot) ?: continue
+                action(left + tuft.dx, top + tuft.dy, tuft)
+            }
         }
     }
 
@@ -244,22 +366,56 @@ class FarmSprites(private val context: Context) {
         return true
     }
 
-    private companion object {
+    companion object {
+        /**
+         * The gust itself, 0 to 1: ONE wave, travelling left to right, shared by the entire farm -
+         * grass, tufts, bushes and the crops in their beds (FarmPlantArt reads it too). It used to
+         * be two formulas written apart, and the vegetables rippled on a twenty-second cycle while
+         * the meadow around them ran on sixteen.
+         *
+         * It is kept separate from [windAt] so that changing how far the grass leans cannot quietly
+         * change how far everything else does: each consumer scales this by its own amplitude.
+         */
+        fun gustAt(x: Float, timeSeconds: Float): Float {
+            val phase = 2.0 * Math.PI * (x - WIND_SPEED * timeSeconds) / WIND_WAVELENGTH
+            val gust = 0.5 + 0.5 * cos(phase)
+            return (gust * gust).toFloat()
+        }
+        /** How far a blade of grass leans, in sprite pixels, under the gust at [x]. */
+        fun windAt(x: Float, timeSeconds: Float) = WIND_STRENGTH * gustAt(x, timeSeconds)
+        /**
+         * Texels per world unit in the baked meadow. Exactly twice the grass tile's own resolution
+         * (one texel per four world units), so every tile texel lands on a clean 2x2 block and the
+         * 16-pixel tuft sprites still bake at their native size.
+         */
+        const val MEADOW_SCALE = .5f
+        /** The side of one grass tile, in world units. */
         const val GRASS_TILE = 80
-        val GRASS_PALETTE = intArrayOf(
+        private val GRASS_PALETTE = intArrayOf(
             Color.parseColor("#74bb60"), Color.parseColor("#7cc45f"), Color.parseColor("#82c862"),
             Color.parseColor("#8acd66"), Color.parseColor("#91d16b"), Color.parseColor("#86c565")
         )
-        val GRASS_SPECKLE = intArrayOf(
+        private val GRASS_SPECKLE = intArrayOf(
             Color.parseColor("#91d16b"), Color.parseColor("#9bd574"), Color.parseColor("#6bb65c"),
             Color.parseColor("#80c262"), Color.parseColor("#5a9a4d")
         )
-        val GRASS_FLOWERS = intArrayOf(
+        private val GRASS_FLOWERS = intArrayOf(
             Color.parseColor("#ffe8b0"), Color.parseColor("#ffd0df"), Color.parseColor("#e0d0ff"), Color.parseColor("#fff2d7")
         )
-        const val WIND_SPEED = 20f
-        const val WIND_WAVELENGTH = 320f
-        const val WIND_STRENGTH = 1.7f
+        /**
+         * World units per second the gust travels. At a 320-unit wavelength this sets the cycle a
+         * given blade lives through: 30 puts it near eleven seconds. It was twice that, and a
+         * meadow where each blade stirred once every sixteen seconds read as a still photograph.
+         */
+        private const val WIND_SPEED = 30f
+        private const val WIND_WAVELENGTH = 320f
+        /**
+         * Peak lean in sprite pixels. The lean is rounded to a whole pixel and capped at 2, so this
+         * governs how OFTEN a blade sits at full lean rather than how far it goes: measured over a
+         * cycle, 1.7 held the full lean 16% of the time and 2.3 holds it 29%. The blade still never
+         * leans further than two pixels - the livelier meadow comes mostly from [WIND_SPEED].
+         */
+        private const val WIND_STRENGTH = 2.3f
     }
 
     fun environment(canvas: Canvas, column: Int, row: Int, target: RectF) {

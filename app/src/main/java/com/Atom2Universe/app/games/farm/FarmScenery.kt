@@ -120,6 +120,14 @@ class FarmScenery(private val sprites: FarmSprites) {
                 northernCount++
             }
         }
+        // Kind 4 used to be a posy of five wildflowers drawn from one seedless, cached sprite, so
+        // every one of them was the same five flowers in the same diagonal - two of them in view at
+        // once was enough to read as a copy-paste. The meadow now carries its own wildflowers, one
+        // per grass tuft, seeded per tuft and leaning with the wind, so the posies are dropped.
+        // They are cleared here rather than never generated: the placement draws from a seeded
+        // random and checks what is already down, so skipping them earlier would shuffle every
+        // other bush, rock and tree on the map.
+        decorations.removeAll { it.kind == 4 }
         decorations.sortBy { it.rect.bottom }
     }
     /**
@@ -236,17 +244,6 @@ class FarmScenery(private val sprites: FarmSprites) {
                 0 -> sprites.crop(canvas, FarmCrop.APPLE, 0, 3, rect)
                 1, 2 -> bush(canvas, rect, windTime)
                 3 -> rock(canvas, rect)
-                else -> {
-                    // Individual wildflowers, without the square grass backing of the atlas tile.
-                    for (i in 0..4) {
-                        val x = rect.left + rect.width() * (.15f + (i * 3 % 5) * .16f)
-                        val y = rect.top + rect.height() * (.2f + (i * 2 % 5) * .15f)
-                        paint.color = if (i % 2 == 0) Color.rgb(255, 241, 213) else Color.rgb(232, 177, 169)
-                        canvas.drawCircle(x - 2, y, 3f, paint); canvas.drawCircle(x + 2, y, 3f, paint)
-                        canvas.drawCircle(x, y - 2, 3f, paint); canvas.drawCircle(x, y + 2, 3f, paint)
-                        paint.color = Color.rgb(235, 190, 76); canvas.drawCircle(x, y, 2f, paint)
-                    }
-                }
             }
         }
         if (RectF.intersects(shed, visible)) building(canvas, shed, false)
@@ -297,7 +294,7 @@ class FarmScenery(private val sprites: FarmSprites) {
         val sprite = bushSprite(id)
         val scale = rect.width() / 60f
         val baseX = rect.centerX(); val baseY = rect.bottom - 4f
-        val frame = (sprites.windAt(baseX, windTime) * 10f).toInt().coerceIn(0, 17)
+        val frame = (FarmSprites.gustAt(baseX, windTime) * 17f).toInt().coerceIn(0, 17)
         val bent = bentBushSprites.getOrPut(id * 18 + frame) {
             Bitmap.createBitmap(80, 80, Bitmap.Config.ARGB_8888).also { bitmap ->
                 val buffer = Canvas(bitmap)
