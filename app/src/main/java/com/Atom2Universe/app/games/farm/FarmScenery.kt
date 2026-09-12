@@ -7,7 +7,18 @@ import kotlin.random.Random
 
 /** Permanent scenery: never part of the crop inventory or the interactive hit regions. */
 class FarmScenery(private val sprites: FarmSprites) {
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
+    // Rasterize small authored silhouettes BEFORE the camera transform. Turning AA off on
+    // full-resolution paths alone still produces vector-sized edges, not enlarged art pixels.
+    private val pixelSprites = mutableMapOf<String, Bitmap>()
+    private fun pixelSprite(canvas: Canvas, key: String, width: Int, height: Int,
+                            target: RectF, draw: (Canvas) -> Unit) {
+        val bitmap = pixelSprites.getOrPut(key) {
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { draw(Canvas(it)) }
+        }
+        paint.style = Paint.Style.FILL
+        canvas.drawBitmap(bitmap, null, target, paint)
+    }
     private val pathSamples = mutableListOf<PointF>()
     private data class Decoration(val kind: Int, val rect: RectF)
     private val decorations = mutableListOf<Decoration>()
@@ -224,7 +235,7 @@ class FarmScenery(private val sprites: FarmSprites) {
             when (decoration.kind) {
                 0 -> sprites.crop(canvas, FarmCrop.APPLE, 0, 3, rect)
                 1, 2 -> bush(canvas, rect, windTime)
-                3 -> rock(canvas, rect, decorationHash(rect) % 3)
+                3 -> rock(canvas, rect)
                 else -> {
                     // Individual wildflowers, without the square grass backing of the atlas tile.
                     for (i in 0..4) {
@@ -248,6 +259,7 @@ class FarmScenery(private val sprites: FarmSprites) {
         return (h ushr 1) and 0x7fffffff
     }
     private val bushSprites = mutableMapOf<Int, Bitmap>()
+    private val bentBushSprites = mutableMapOf<Int, Bitmap>()
     /** Painted once per variant into an 80×80 silhouette, echoing the design's paintBush(). */
     private fun bushSprite(id: Int): Bitmap {
         return bushSprites.getOrPut(id) {
@@ -280,24 +292,42 @@ class FarmScenery(private val sprites: FarmSprites) {
      * is stamped back in coarse horizontal bands, each shifted a little more than the one below, so
      * the whole bush leans without redrawing its shape from scratch every frame.
      */
-    fun bush(canvas: Canvas, rect: RectF, windTime: Float) {
-        val id = decorationHash(rect) % 6
+    fun bush(canvas: Canvas, rect: RectF, windTime: Float, seed: Int = decorationHash(rect)) {
+        val id = (seed and Int.MAX_VALUE) % 6
         val sprite = bushSprite(id)
         val scale = rect.width() / 60f
         val baseX = rect.centerX(); val baseY = rect.bottom - 4f
-        val bend = sprites.windAt(baseX, windTime) * 1.4f
-        val bands = 10
-        for (band in 0 until bands) {
-            val rowStart = band * 80 / bands; val rowEnd = (band + 1) * 80 / bands
-            val heightFrac = ((72 - (rowStart + rowEnd) / 2f) / 32f).coerceAtLeast(0f)
-            val dx = bend * heightFrac * heightFrac * scale
-            val dst = RectF(baseX - 40f * scale + dx, baseY - (72 - rowStart) * scale,
-                baseX + 40f * scale + dx, baseY - (72 - rowEnd) * scale)
-            canvas.drawBitmap(sprite, Rect(0, rowStart, 80, rowEnd), dst, paint)
+        val frame = (sprites.windAt(baseX, windTime) * 10f).toInt().coerceIn(0, 17)
+        val bent = bentBushSprites.getOrPut(id * 18 + frame) {
+            Bitmap.createBitmap(80, 80, Bitmap.Config.ARGB_8888).also { bitmap ->
+                val buffer = Canvas(bitmap)
+                for (row in 0 until 80) {
+                    val heightFrac = ((72 - row) / 32f).coerceAtLeast(0f)
+                    val dx = kotlin.math.round(frame * .14f * heightFrac * heightFrac).toInt()
+                    buffer.drawBitmap(sprite, Rect(0, row, 80, row + 1),
+                        Rect(dx, row, 80 + dx, row + 1), paint)
+                }
+            }
         }
+        canvas.drawBitmap(bent, null, RectF(baseX - 40f * scale, baseY - 72f * scale,
+            baseX + 40f * scale, baseY + 8f * scale), paint)
     }
     /** A stable, wind-free rock: shaded facets plus an optional moss tuft, echoing the design's rock(). */
-    private fun rock(canvas: Canvas, rect: RectF, variant: Int) {
+    fun rock(canvas: Canvas, rect: RectF, seed: Int = decorationHash(rect)) {
+        var hash = seed xor (seed ushr 16)
+        hash *= 0x45d9f3b
+        val stable = (hash xor (hash ushr 16)) and Int.MAX_VALUE
+        val variant = stable % 6
+        canvas.save()
+        if ((stable ushr 4) and 1 != 0) canvas.scale(-1f, 1f, rect.centerX(), rect.centerY())
+        pixelSprite(canvas, "rock:$variant", 48, 40, rect) {
+            val width = when (variant / 2) { 0 -> 48f; 1 -> 41f; else -> 44f }
+            val height = when (variant / 2) { 0 -> 40f; 1 -> 40f; else -> 30f }
+            drawRock(it, RectF((48f - width) / 2f, 40f - height, (48f + width) / 2f, 40f), variant % 3)
+        }
+        canvas.restore()
+    }
+    private fun drawRock(canvas: Canvas, rect: RectF, variant: Int) {
         val s = rect.width() / 2.4f; val x = rect.centerX(); val y = rect.bottom - 4f
         val vScale = if (variant == 1) .8f else 1f
         paint.style = Paint.Style.FILL; paint.color = Color.rgb(0x65, 0x9e, 0x57)
@@ -331,8 +361,48 @@ class FarmScenery(private val sprites: FarmSprites) {
         paint.color = color; canvas.drawLine(a[0], a[1], b[0], b[1], paint)
         paint.style = Paint.Style.FILL
     }
+    /** Posts have a fixed silhouette; spacing must never stretch a post into a side rail. */
+    private fun parcelPost(canvas: Canvas, x: Float, base: Float) {
+        fencePost(canvas, RectF(x - 9f, base - 56f, x + 9f, base))
+    }
+    fun fenceBack(canvas: Canvas, land: RectF, columns: Int, rows: Int) {
+        val step = land.width() / columns
+        val topBase = land.top + 64f
+        val bottomBase = land.bottom + 20f
+        for (col in 0 until columns) {
+            fenceRail(canvas, RectF(land.left + col * step, land.top + 14f,
+                land.left + (col + 1) * step, topBase))
+        }
+        // In this front-facing projection, receding rails are seen edge-on. Connect them
+        // continuously behind short upright posts instead of stacking elongated posts.
+        for (x in floatArrayOf(land.left, land.right)) {
+            pixelSprite(canvas, "side-rail", 4, 16,
+                RectF(x - 3f, topBase - 34f, x + 3f, bottomBase - 12f)) { c ->
+                paint.color = Color.rgb(142, 94, 54); c.drawRect(0f, 0f, 4f, 16f, paint)
+                paint.color = Color.rgb(231, 170, 88); c.drawRect(0f, 0f, 3f, 16f, paint)
+                paint.color = Color.rgb(255, 207, 124); c.drawRect(0f, 0f, 1f, 16f, paint)
+            }
+            val gaps = rows + 1
+            for (row in 1 until gaps) parcelPost(canvas, x,
+                topBase + (bottomBase - topBase) * row / gaps)
+        }
+        for (col in 0..columns) parcelPost(canvas, land.left + col * step, topBase)
+    }
+    fun fenceFront(canvas: Canvas, land: RectF, columns: Int, opening: Float) {
+        val step = land.width() / columns
+        for (col in 0 until columns) {
+            val segment = RectF(land.left + col * step, land.bottom - 27f,
+                land.left + (col + 1) * step, land.bottom + 20f)
+            if (col == 1) gate(canvas, segment, opening) else fenceRail(canvas, segment)
+        }
+        // Both gate jambs and every rail junction share the same ground line.
+        for (col in 0..columns) parcelPost(canvas, land.left + col * step, land.bottom + 20f)
+    }
     /** Two golden-brown planks spanning the rect, echoing the design's rail() sprite without an atlas. */
     fun fenceRail(canvas: Canvas, rect: RectF) {
+        pixelSprite(canvas, "rail", 54, 28, rect) { drawFenceRail(it, RectF(0f, 0f, 54f, 28f)) }
+    }
+    private fun drawFenceRail(canvas: Canvas, rect: RectF) {
         val h = rect.height()
         for ((top, bottom) in listOf(.08f to .30f, .52f to .74f)) {
             val ry0 = rect.top + h * top; val ry1 = rect.top + h * bottom
@@ -344,11 +414,16 @@ class FarmScenery(private val sprites: FarmSprites) {
     }
     /** A post with a rounded pixel top and a grained shaft, echoing the design's post() sprite. */
     fun fencePost(canvas: Canvas, rect: RectF) {
+        pixelSprite(canvas, "post", 10, 32, rect) { drawFencePost(it, RectF(0f, 0f, 10f, 32f)) }
+    }
+    private fun drawFencePost(canvas: Canvas, rect: RectF) {
         canvas.save(); canvas.translate(rect.left, rect.top); canvas.scale(rect.width() / 20f, rect.height() / 64f)
         paint.style = Paint.Style.FILL
         paint.color = Color.argb(60, 60, 90, 45); canvas.drawOval(1f, 58f, 19f, 66f, paint)
-        paint.color = Color.rgb(130, 84, 54); canvas.drawRect(2f, 4f, 18f, 10f, paint)
-        paint.color = Color.rgb(255, 219, 139); canvas.drawRect(4f, 1f, 16f, 5f, paint)
+        paint.color = Color.rgb(130, 84, 54); canvas.drawRect(2f, 6f, 18f, 14f, paint)
+        canvas.drawRect(4f, 2f, 16f, 8f, paint); canvas.drawRect(6f, 0f, 14f, 4f, paint)
+        paint.color = Color.rgb(255, 219, 139); canvas.drawRect(4f, 6f, 16f, 12f, paint)
+        canvas.drawRect(6f, 2f, 14f, 8f, paint)
         paint.color = Color.rgb(205, 144, 72); canvas.drawRect(3f, 8f, 17f, 60f, paint)
         paint.color = Color.rgb(240, 189, 105); canvas.drawRect(3f, 8f, 9f, 58f, paint)
         paint.color = Color.rgb(172, 108, 54); canvas.drawRect(13f, 9f, 17f, 58f, paint)
@@ -362,6 +437,17 @@ class FarmScenery(private val sprites: FarmSprites) {
      * thickness, not drawn as a fixed-width line, so the perspective holds at every angle.
      */
     fun gate(canvas: Canvas, rect: RectF, opening: Float) {
+        val frame = (opening.coerceIn(0f, 1f) * 48f).toInt()
+        val sx = rect.width() / 54f
+        val sy = rect.height() / 28f
+        // Include the thickness, outward swing and shadow, not only the closed rectangle.
+        val target = RectF(rect.left - 6f * sx, rect.top - 2f * sy,
+            rect.left + 66f * sx, rect.bottom + 38f * sy)
+        pixelSprite(canvas, "gate:$frame", 72, 68, target) {
+            drawGate(it, RectF(6f, 2f, 60f, 30f), frame / 48f)
+        }
+    }
+    private fun drawGate(canvas: Canvas, rect: RectF, opening: Float) {
         canvas.save(); canvas.translate(rect.left, rect.bottom); canvas.scale(rect.width() / 54f, rect.height() / 28f)
         val angle = opening.coerceIn(0f, 1f) * 1.18f
         val w = cos(angle) * 54f; val depth = sin(angle) * 27f
@@ -435,7 +521,7 @@ class FarmScenery(private val sprites: FarmSprites) {
     private companion object {
         const val GRID_CELL = 48f
         const val PATH_HALF_WIDTH = 31f
-        const val GROUND_SCALE = .5f
+        const val GROUND_SCALE = .25f
         // Half-width + its wobble (2.7) + the green blend margin (6), rounded up: nothing outside
         // this radius of a path sample can ever be coloured, so the splat need not reach further.
         const val MAX_MARGIN = 42f

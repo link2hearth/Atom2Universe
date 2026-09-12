@@ -38,11 +38,15 @@ class FarmSprites(private val context: Context) {
             ?: error("Invalid farm sprite sheet: $name")
     }
 
-    fun crop(canvas: Canvas, crop: FarmCrop, variant: Int, stage: Int, target: RectF) {
-        // Crops ported to procedural Kotlin drawing (see FarmCropArt) bypass the sprite sheet
+    fun crop(canvas: Canvas, crop: FarmCrop, variant: Int, stage: Int, target: RectF,
+             growth: Float? = null, windTime: Float? = null, artVariant: Int = variant) {
+        // Crops ported to procedural Kotlin drawing (see FarmPlantArt) bypass the sprite sheet
         // entirely; every caller - field, harvest minigame, shop and inventory previews, produce
         // icon - already goes through this one function, so nothing else needs to change.
-        if (crop == FarmCrop.RADISH) { FarmCropArt.radish(canvas, variant, stage, target); return }
+        if (FarmPlantArt.supports(crop)) {
+            FarmPlantArt.draw(canvas, crop, artVariant, growth ?: (stage / 4f), target, windTime)
+            return
+        }
         val bitmap = sheet(crop.sheet)
         val rows = if (crop.tree) 6 else 8
         val row = crop.row + variant
@@ -115,7 +119,9 @@ class FarmSprites(private val context: Context) {
      * none of that overhead, so baking a tile is now pure, cheap arithmetic.
      */
     private fun buildGrassTile(column: Int, row: Int): Bitmap {
-        val size = GRASS_TILE
+        // One art pixel spans four world units, like the coarse dirt texture. The camera
+        // enlarges these texels without filtering instead of shrinking 80 noisy texels.
+        val size = GRASS_TILE / 4
         val pixels = IntArray(size * size)
         val random = Random(column * -0x61c88647 xor row * 0x9e3779b1.toInt())
         fun setPixel(x: Int, y: Int, color: Int) { if (x in 0 until size && y in 0 until size) pixels[y * size + x] = color }
@@ -139,13 +145,13 @@ class FarmSprites(private val context: Context) {
         // fine speckle, small static blades, the occasional flower - lives here rather than being
         // redrawn live every frame; only a couple of extra blades per tile actually sway (see
         // grass() below), which is what keeps the wind cheap while the ground still reads as dense.
-        repeat(1800) {
+        repeat((size * size * .04f).toInt()) {
             val x = random.nextInt(size); val y = random.nextInt(size)
             val color = GRASS_SPECKLE[random.nextInt(GRASS_SPECKLE.size)]
             val len = random.nextInt(1, 4)
             for (i in 0 until len) setPixel(x + i, y, color)
         }
-        repeat(14) {
+        repeat(1) {
             val x = 4 + random.nextInt(size - 8); val y = 10 + random.nextInt(size - 14)
             val h = 4 + random.nextInt(5)
             for (t in 0..h) {
@@ -153,12 +159,6 @@ class FarmSprites(private val context: Context) {
                 setPixel(x - (2 * f).toInt(), y - t, Color.rgb(0x4c, 0x99, 0x58))
                 setPixel(x + (2 * f).toInt(), y - (t * .8f).toInt(), Color.rgb(0x5c, 0xa7, 0x54))
             }
-        }
-        repeat(3) {
-            val x = 6 + random.nextInt(size - 12); val y = 6 + random.nextInt(size - 12)
-            val color = GRASS_FLOWERS[random.nextInt(GRASS_FLOWERS.size)]
-            for (dx in -1..1) for (dy in -1..1) setPixel(x + dx, y + dy, color)
-            setPixel(x, y, Color.rgb(235, 190, 76))
         }
         // Bitmap.createBitmap(pixels, ...) returns an immutable bitmap, which Canvas refuses to
         // wrap - build a blank mutable one instead and fill it with the computed pixels.
@@ -175,7 +175,20 @@ class FarmSprites(private val context: Context) {
     }
 
     /** A single leaning tuft of grass, its base fixed to the ground and only its blades swaying. */
+    private val tuftSprites = mutableMapOf<Int, Bitmap>()
     private fun drawTuft(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
+        val h = (height / 2f).toInt().coerceIn(3, 7)
+        val bend = kotlin.math.round(sway).toInt().coerceIn(0, 2)
+        val color = seed and 3
+        val key = h * 32 + bend * 8 + (if (flower) 4 else 0) + color
+        val bitmap = tuftSprites.getOrPut(key) {
+            Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888).also {
+                drawTuftPixels(Canvas(it), 7f, 12f, h.toFloat(), bend.toFloat(), flower, color)
+            }
+        }
+        canvas.drawBitmap(bitmap, null, RectF(x - 14f, y - 24f, x + 18f, y + 8f), paint)
+    }
+    private fun drawTuftPixels(canvas: Canvas, x: Float, y: Float, height: Float, sway: Float, flower: Boolean, seed: Int) {
         paint.style = Paint.Style.FILL; paint.color = Color.rgb(0x69, 0xa6, 0x57)
         canvas.drawRect(x - 3f, y, x + 4f, y + 2f, paint)
         paint.style = Paint.Style.STROKE; paint.strokeWidth = 1.3f
@@ -185,8 +198,10 @@ class FarmSprites(private val context: Context) {
         paint.style = Paint.Style.FILL
         if (flower) {
             val fx = x + sway; val fy = y - height - 1f
-            paint.color = GRASS_FLOWERS[seed and 3]; canvas.drawCircle(fx, fy, 2.2f, paint)
-            paint.color = Color.rgb(0xff, 0xe2, 0x8b); canvas.drawCircle(fx, fy, 1f, paint)
+            paint.color = GRASS_FLOWERS[seed and 3]
+            canvas.drawRect(fx - 2f, fy - 1f, fx + 3f, fy + 2f, paint)
+            canvas.drawRect(fx - 1f, fy - 2f, fx + 2f, fy + 3f, paint)
+            paint.color = Color.rgb(0xff, 0xe2, 0x8b); canvas.drawRect(fx, fy, fx + 1f, fy + 1f, paint)
         }
     }
 

@@ -109,6 +109,8 @@ private class HarvestGauge(val cell: Int, val startTime: Long, val downX: Float,
 }
 
 private const val HARVEST_FLY_DURATION = 900L
+/** Width, in world units, of each tappable arrow at either end of a parcel's banner. */
+private const val ARROW_ZONE = 34f
 
 /** Coordinates stay in world units; drawing and hit testing use the same transform. */
 class FarmWorldView(context: Context, private val state: FarmState,
@@ -163,10 +165,6 @@ class FarmWorldView(context: Context, private val state: FarmState,
             else -> true
         }
     }
-    /** Keeps redrawing, frame by frame, only while at least one ripe critical plant needs its pulsing aura. */
-    private var auraTicking = false
-    private val auraTick = Runnable { auraTicking = false; invalidate() }
-    private fun ensureAuraTicking() { if (!auraTicking) { auraTicking = true; postOnAnimation(auraTick) } }
     /** The shared wind clock and each parcel's gate never stop animating while the map is drawn. */
     private var lastDecorFrameNanos = 0L
     private var windTime = 0f
@@ -412,6 +410,18 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 return true
             }
             if (wateringMode) { handleWateringTap(x, y); return true }
+            // The parcel banner carries its own prev/next arrows, so hopping across the farm never
+            // needs a drag or a pinch - only its own index moves, never a shared "current" pointer.
+            val bannerParcel = lands.indexOfFirst { y >= it.top - 12 && y <= it.top + 20 && x >= it.left + 45 && x <= it.right - 45 }
+            if (bannerParcel >= 0) {
+                val banner = lands[bannerParcel]
+                when {
+                    x < banner.left + 45 + ARROW_ZONE -> focusParcel((bannerParcel - 1).coerceAtLeast(0))
+                    x > banner.right - 45 - ARROW_ZONE -> focusParcel((bannerParcel + 1).coerceAtMost(lands.size - 1))
+                    else -> onParcel(bannerParcel)
+                }
+                return true
+            }
             val parcel = lands.indexOfFirst { x >= it.left && x <= it.right && y >= it.top - 12 && y <= it.bottom + 20 }
             if (parcel < 0) return true
             if (!state.parcels[parcel].unlocked) onParcel(parcel)
@@ -540,28 +550,22 @@ class FarmWorldView(context: Context, private val state: FarmState,
         scenery.ground(canvas)
 
         val now = System.currentTimeMillis()
-        if (state.plots.any { it.critical && it.crop != null }) ensureAuraTicking()
         lands.forEachIndexed { index, land ->
             if (land.right + 20 < visible.left || land.left - 20 > visible.right ||
                 land.bottom + 20 < visible.top || land.top - 20 > visible.bottom) return@forEachIndexed
             val unlocked = state.parcels[index].unlocked
             val spec = FarmLayout.lands[index]
-            val fenceWidth = land.width() / spec.columns
             paint.color = Color.argb(24, 83, 102, 40)
             canvas.drawRoundRect(land, 22f, 22f, paint)
-            for (col in 0 until spec.columns) scenery.fenceRail(canvas,
-                RectF(land.left + col * fenceWidth, land.top + 14, land.left + (col + 1) * fenceWidth, land.top + 64))
-            for (row in 0 until spec.rows + 1) {
-                scenery.fencePost(canvas, RectF(land.left - 9, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.left + 12, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
-                scenery.fencePost(canvas, RectF(land.right - 12, land.top + 40 + row * (land.height() - 40) / (spec.rows + 1), land.right + 9, land.top + 40 + (row + 1) * (land.height() - 40) / (spec.rows + 1)))
-            }
+            scenery.fenceBack(canvas, land, spec.columns, spec.rows)
             for (i in FarmLayout.cells(index)) {
                 val cell = cells[i]; val p = state.plots[i]
                 if (p.debris != 0) {
                     val game = debrisGame?.takeIf { it.cell == i }
                     if (game != null) drawDebrisGame(canvas, cell, p.debris, game, now)
                     else if (p.debris == 3) sprites.environment(canvas, 3, 0, cell)
-                    else sprites.environment(canvas, if (p.debris == 1) 2 else 3, 3, cell)
+                    else if (p.debris == 1) scenery.bush(canvas, cell, windTime)
+                    else scenery.rock(canvas, cell)
                 } else {
                     // Manured ground reads as a darker, richer earth - the bonus has to be visible
                     // from the moment the seed goes in, not only on the harvest total.
@@ -579,14 +583,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     if (crop != null) {
                         val shakeX = grip?.let { (kotlin.math.sin((now - it.startTime) / 28.0) * 4).toFloat() } ?: 0f
                         canvas.save(); canvas.translate(shakeX, 0f)
-                        sprites.crop(canvas, crop, p.variant, p.stage(now), RectF(cell.left - 2, cell.top - 9, cell.right + 2, cell.bottom - 5))
+                        sprites.crop(canvas, crop, p.variant, p.stage(now),
+                            RectF(cell.left - 2, cell.top - 9, cell.right + 2, cell.bottom - 5),
+                            growth = p.progress(now), windTime = windTime)
                         canvas.restore()
-                        paint.color = Color.rgb(48, 66, 36)
-                        canvas.drawRect(cell.left + 8, cell.bottom - 3, cell.right - 8, cell.bottom + 1, paint)
-                        paint.color = if (p.progress(now) >= 1) Color.rgb(255, 224, 91) else Color.rgb(95, 201, 222)
-                        canvas.drawRect(cell.left + 8, cell.bottom - 3, cell.left + 8 + (cell.width() - 16) * p.progress(now), cell.bottom + 1, paint)
+                        FarmGrowthBar.draw(canvas, cell, p.progress(now), p.rich, p.critical)
                         if (p.progress(now) >= 1) label(canvas, context.getString(R.string.farm_ready), cell.centerX(), cell.top + 8, 10f)
-                        if (p.critical && p.progress(now) >= 1) drawCriticalAura(canvas, cell, now)
                         waterBursts.firstOrNull { it.cell == i }?.let { drawWaterBurst(canvas, cell, it, now) }
                     }
                     wateringGame?.takeIf { it.cell == i }?.let { drawWateringGauge(canvas, cell, it, now) }
@@ -598,10 +600,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             // without a badge or a number: which fields still want you.
             val gateOpen = state.parcelHasIdleGround(index)
             val opening = updateGateOpening(index, gateOpen, dt)
-            for (col in 0 until spec.columns) {
-                val segment = RectF(land.left + col * fenceWidth, land.bottom - 27, land.left + (col + 1) * fenceWidth, land.bottom + 20)
-                if (col == 1) scenery.gate(canvas, segment, opening) else scenery.fenceRail(canvas, segment)
-            }
+            scenery.fenceFront(canvas, land, spec.columns, opening)
             if (!unlocked) {
                 paint.color = Color.argb(145, 30, 49, 27); canvas.drawRect(land, paint)
                 val price = java.text.NumberFormat.getIntegerInstance().format(state.unlockCost(index).toLong())
@@ -609,7 +608,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
             }
             paint.color = Color.rgb(61, 76, 40)
             canvas.drawRoundRect(RectF(land.left + 45, land.top - 12, land.right - 45, land.top + 20), 8f, 8f, paint)
-            label(canvas, context.getString(R.string.farm_parcel_label, index + 1, context.getString(state.parcels[index].use.label)), land.centerX(), land.top + 10, 15f)
+            label(canvas, "‹", land.left + 45 + ARROW_ZONE / 2, land.top + 10, 18f)
+            label(canvas, context.getString(R.string.farm_parcel_label, index + 1), land.centerX(), land.top + 10, 15f)
+            label(canvas, "›", land.right - 45 - ARROW_ZONE / 2, land.top + 10, 18f)
         }
         scenery.objects(canvas, visible, windTime)
         if (RectF.intersects(treasureBush, visible)) drawTreasureBush(canvas)
@@ -648,7 +649,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             canvas.scale(fade, fade)
             canvas.translate(-cell.centerX(), -cell.centerY())
             paint.alpha = (fade * 255).toInt()
-            sprites.environment(canvas, 3, 3, cell)
+            scenery.rock(canvas, cell)
             paint.alpha = 255
             canvas.restore()
             if (!game.done) {
@@ -676,7 +677,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                 canvas.save()
                 if (dragging) canvas.translate((game.dragX - game.dragFromX) * .5f, (game.dragY - game.dragFromY) * .5f)
                 paint.alpha = (fade * 255).toInt()
-                sprites.environment(canvas, if (debris == 1) 2 else 3, 3, RectF(ax - 12f, ay - 16f, ax + 12f, ay + 12f))
+                scenery.bush(canvas, RectF(ax - 12f, ay - 16f, ax + 12f, ay + 12f), windTime)
                 paint.alpha = 255
                 canvas.restore()
                 if (dragging) {
@@ -807,25 +808,5 @@ class FarmWorldView(context: Context, private val state: FarmState,
         val my = barBottom - game.phase(now) * (barBottom - barTop)
         paint.color = Color.rgb(240, 250, 255); canvas.drawCircle((barLeft + barRight) / 2, my, 5f, paint)
         paint.color = Color.rgb(120, 200, 232); canvas.drawCircle((barLeft + barRight) / 2, my, 2.6f, paint)
-    }
-    /** A pulsing gold halo with orbiting sparkles, so a ripe critical plant reads as special at a glance. */
-    private fun drawCriticalAura(canvas: Canvas, cell: RectF, now: Long) {
-        val pulse = (0.5f + 0.5f * kotlin.math.sin(now / 260.0)).toFloat()
-        val cx = cell.centerX(); val cy = cell.centerY() - 14f
-        paint.style = Paint.Style.STROKE
-        for (ring in 0..1) {
-            paint.strokeWidth = 2.5f
-            paint.color = Color.argb((110 - ring * 40 + (pulse * 40).toInt()).coerceIn(0, 170), 255, 190, 70)
-            canvas.drawCircle(cx, cy, cell.width() * (.42f + ring * .1f) + pulse * 4f, paint)
-        }
-        paint.style = Paint.Style.FILL
-        for (i in 0..2) {
-            val angle = (now / 6.0 + i * 120) % 360.0
-            val rad = angle * kotlin.math.PI / 180
-            val sx = cx + (kotlin.math.cos(rad) * cell.width() * .5f).toFloat()
-            val sy = cy + (kotlin.math.sin(rad) * cell.width() * .5f).toFloat()
-            paint.color = Color.argb((160 + pulse * 60).toInt().coerceIn(0, 255), 255, 224, 120)
-            canvas.drawCircle(sx, sy, 2.2f, paint)
-        }
     }
 }

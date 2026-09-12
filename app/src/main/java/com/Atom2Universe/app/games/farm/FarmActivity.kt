@@ -37,6 +37,7 @@ class FarmActivity : ThemedActivity() {
     private lateinit var produceIcon: FarmArtView
     private lateinit var wateringIcon: FarmArtView
     private lateinit var manureIcon: FarmArtView
+    private lateinit var regionIcon: FarmArtView
     private lateinit var status: TextView
     private var bubble: LinearLayout? = null
     private val livestockUi = mutableListOf<() -> Unit>()
@@ -124,7 +125,8 @@ class FarmActivity : ThemedActivity() {
         manureIcon = icon(FarmArtView.Kind.MANURE, R.string.farm_manure_title) { manurePit() }
         toolbar.addView(manureIcon, LinearLayout.LayoutParams(dp(48), dp(48)).apply { leftMargin = dp(2) })
         wateringIcon = icon(FarmArtView.Kind.WATER, R.string.farm_watering_mode) { toggleWatering() }
-        toolbar.addView(icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }, LinearLayout.LayoutParams(dp(48), dp(48)))
+        regionIcon = icon(FarmArtView.Kind.MAP, R.string.farm_regions) { chooseRegion() }
+        toolbar.addView(regionIcon, LinearLayout.LayoutParams(dp(48), dp(48)))
         root.addView(toolbar, FrameLayout.LayoutParams(-1, dp(58), Gravity.TOP).apply {
             setMargins(dp(10), dp(8), dp(10), 0)
         })
@@ -185,7 +187,8 @@ class FarmActivity : ThemedActivity() {
                     alpha = if (locked == null) 1f else .6f
                     setOnClickListener { goToRegion(region) }
                 }
-                row.addView(text(getString(region.label), 17, true))
+                val ready = region == FarmRegion.FIELDS && state.fieldsNeedAttention()
+                row.addView(text(getString(region.label) + if (ready) " 🚜" else "", 17, true))
                 row.addView(text(getString(region.description), 13))
                 if (locked != null) row.addView(text("🔒 " + locked, 13, true))
                 body.addView(row, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
@@ -662,12 +665,7 @@ class FarmActivity : ThemedActivity() {
                 })
                 return@showBubble
             }
-            val sellAll = button(getString(R.string.farm_sell_all_produce)) {
-                val gained = state.sellProduce()
-                produceSellSelection.clear()
-                message(getString(R.string.farm_produce_sold, money(gained)))
-                refresh(); produceInventory()
-            }
+            val sellAll = button(getString(R.string.farm_sell_all_produce)) { confirmSellAllProduce() }
             body.addView(sellAll, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) })
             crops.forEach { crop ->
                 val group = LinearLayout(this).apply {
@@ -765,6 +763,27 @@ class FarmActivity : ThemedActivity() {
             body.addView(actions)
         }
     }
+    private fun confirmSellAllProduce() {
+        val amount = state.produceValue()
+        showBubble(getString(R.string.farm_confirm_sale_title)) { body ->
+            body.addView(text(getString(R.string.farm_confirm_sale_all_body, state.produceCount()), 16, true).apply {
+                setTextColor(ink); setPadding(0, 0, 0, dp(6))
+            })
+            body.addView(text(getString(R.string.farm_confirm_sale_value, money(amount)), 13).apply {
+                setTextColor(ink); setPadding(0, 0, 0, dp(12))
+            })
+            val actions = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
+            actions.addView(button(getString(R.string.farm_cancel)) { produceInventory() },
+                LinearLayout.LayoutParams(0, dp(48), 1f).apply { rightMargin = dp(6) })
+            actions.addView(button(getString(R.string.farm_confirm)) {
+                val gained = state.sellProduce()
+                produceSellSelection.clear()
+                message(getString(R.string.farm_produce_sold, money(gained)))
+                refresh(); produceInventory()
+            }, LinearLayout.LayoutParams(0, dp(48), 1f).apply { leftMargin = dp(6) })
+            body.addView(actions)
+        }
+    }
     private fun stepButton(label: String, action: () -> Unit) = TextView(this).apply {
         text = label; textSize = 22f; typeface = Typeface.DEFAULT_BOLD; gravity = Gravity.CENTER
         setTextColor(ink); isFocusable = true
@@ -835,7 +854,7 @@ class FarmActivity : ThemedActivity() {
     }
     private fun parcelMenu(index: Int) {
         val land = state.parcels[index]
-        showBubble(getString(R.string.farm_parcel_label, index + 1, getString(land.use.label)), index) { body ->
+        showBubble(getString(R.string.farm_parcel_label, index + 1), index) { body ->
             body.addView(text(getString(R.string.farm_parcel_size, FarmLayout.lands[index].columns,
                 FarmLayout.lands[index].rows, FarmLayout.lands[index].capacity)).apply { setPadding(0, dp(8), 0, dp(12)) })
             if (!land.unlocked) {
@@ -861,41 +880,40 @@ class FarmActivity : ThemedActivity() {
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(12) })
                 }
             } else {
-                for (use in FarmLandUse.entries) {
-                    val parked = use == FarmLandUse.ORCHARD && land.use != FarmLandUse.ORCHARD
-                    body.addView(button(getString(use.label)) {
-                        if (parked) { message(getString(R.string.farm_orchard_parked)); return@button }
-                        if (state.changeUse(index, use)) { closeBubble(); message(getString(R.string.farm_use_changed)) }
-                        else message(getString(R.string.farm_empty_required))
-                        refresh()
-                    }.apply { alpha = if (parked) .5f else 1f },
-                        LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+                parcelStatusLines(index).forEach { line ->
+                    body.addView(text(line, 14).apply { setPadding(0, 0, 0, dp(4)) })
                 }
-                body.addView(button(getString(R.string.farm_manage_plants)) { plantList(index) })
-                body.addView(button(getString(R.string.farm_region_livestock)) { goToRegion(FarmRegion.LIVESTOCK) })
             }
         }
     }
-    private fun plantList(parcel: Int) {
-        showBubble(getString(R.string.farm_manage_plants), parcel) { body ->
-            val now = System.currentTimeMillis()
-            FarmLayout.cells(parcel).forEach { i ->
-                val p = state.plots[i]
-                val description = when {
-                    p.debris != 0 -> getString(R.string.farm_debris)
-                    p.crop == null -> getString(R.string.farm_empty)
-                    else -> getString(p.crop!!.label) + " · " + when {
-                        !p.watered -> getString(R.string.farm_needs_water)
-                        p.progress(now) >= 1f -> getString(R.string.farm_ready)
-                        else -> duration(p.remaining(now))
-                    }
+    /** Grouped, at-a-glance status of a parcel's spaces: e.g. "3 empty spaces", "5 Radish · Growing". */
+    private fun parcelStatusLines(parcel: Int): List<String> {
+        val now = System.currentTimeMillis()
+        var empty = 0; var debris = 0
+        val byCropState = linkedMapOf<Pair<FarmCrop, Int>, Int>()
+        FarmLayout.cells(parcel).forEach { i ->
+            val p = state.plots[i]
+            when {
+                p.debris != 0 -> debris++
+                p.crop == null -> empty++
+                else -> {
+                    val stateIndex = when { !p.watered -> 0; p.progress(now) >= 1f -> 2; else -> 1 }
+                    val key = p.crop!! to stateIndex
+                    byCropState[key] = (byCropState[key] ?: 0) + 1
                 }
-                body.addView(button(getString(R.string.farm_cell_info, FarmLayout.localCell(i) + 1, description)) {
-                    closeBubble(); interact(i)
-                }.apply { setOnLongClickListener { if (p.crop == null) false else { removePlant(i); true } } },
-                    LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(6) })
             }
         }
+        val lines = mutableListOf<String>()
+        if (empty > 0) lines += getString(R.string.farm_parcel_status_empty, empty)
+        if (debris > 0) lines += getString(R.string.farm_parcel_status_debris, debris)
+        byCropState.forEach { (key, count) ->
+            val (crop, stateIndex) = key
+            val stateLabel = getString(when (stateIndex) {
+                0 -> R.string.farm_needs_water; 2 -> R.string.farm_ready; else -> R.string.farm_field_grow
+            })
+            lines += getString(R.string.farm_parcel_status_line, count, getString(crop.label), stateLabel)
+        }
+        return lines
     }
     private fun interact(index: Int) {
         val p = state.plots[index]
@@ -974,6 +992,7 @@ class FarmActivity : ThemedActivity() {
         fieldView.invalidate()
         seedGroup.visibility = if (world.region == FarmRegion.HOME) View.VISIBLE else View.GONE
         produceIcon.visibility = seedGroup.visibility
+        regionIcon.alert = state.fieldsNeedAttention()
         val wateringAvailable = world.region == FarmRegion.HOME && state.hasPlantsNeedingWater()
         if (!wateringAvailable) world.wateringMode = false
         wateringIcon.visibility = if (wateringAvailable) View.VISIBLE else View.GONE

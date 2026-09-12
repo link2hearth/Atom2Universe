@@ -50,6 +50,11 @@ enum class FarmCrop(val label: Int, val sheet: String, val row: Int, val rank: I
     CARROT(R.string.farm_carrot, "garden_carrot_potato_chili_watermelon_v1.png", 0, 13, 182, 1072, 10 * 3600),
     POTATO(R.string.farm_potato, "garden_carrot_potato_chili_watermelon_v1.png", 2, 14, 284, 1665, 24 * 3600);
 
+    /** Procedural crops have four designs; the remaining PNG sheets contain two rows per crop. */
+    val visualVariantCount: Int get() = when (this) {
+        RADISH, CARROT, LETTUCE, POTATO, CAULIFLOWER, ZUCCHINI, PEPPER, EGGPLANT -> 4
+        else -> 2
+    }
     /** Net coins per hour, the number the shop shows so the trade-off is readable before buying. */
     val coinsPerHour: Float get() = (sale - cost) * 3600f / seconds
     /**
@@ -139,7 +144,7 @@ class FarmState(private val prefs: SharedPreferences) {
                 val p = saved.getJSONObject(index)
                 val crop = p.optString("crop").takeIf { it.isNotEmpty() }?.let { FarmCrop.valueOf(it) }
                 FarmPlot(crop, p.optLong("planted").coerceAtLeast(0), p.optBoolean("watered"),
-                    p.optInt("variant").coerceIn(0, 1), p.optBoolean("established") && crop?.tree == true,
+                    p.optInt("variant").coerceIn(0, (crop?.visualVariantCount ?: 2) - 1), p.optBoolean("established") && crop?.tree == true,
                     if (crop == null) p.optInt("debris").coerceIn(0, 3) else 0,
                     p.optBoolean("critical") && crop != null, p.optBoolean("rich") && crop != null)
             }
@@ -254,6 +259,9 @@ class FarmState(private val prefs: SharedPreferences) {
         FarmRegion.LIVESTOCK -> livestockUnlocked()
         FarmRegion.GREENHOUSE -> true
     }
+    /** True while some unlocked large field wants the player: anything but the passive growing phase. */
+    fun fieldsNeedAttention() = fieldsUnlocked() &&
+        largeFields.fields.take(largeFields.unlocked).any { it.phase != 2 }
 
     /**
      * Half a harvest of the best crop you can grow: five coins next to the first radishes, hundreds
@@ -416,7 +424,7 @@ class FarmState(private val prefs: SharedPreferences) {
             selected.tree != (land.use == FarmLandUse.ORCHARD)) return false
         seeds[selected.ordinal]--
         p.crop = selected; p.planted = now; p.watered = false; p.established = false; p.critical = false
-        p.variant = kotlin.random.Random.nextInt(2)
+        p.variant = kotlin.random.Random.nextInt(selected.visualVariantCount)
         // The pit empties by itself into whatever goes in the ground. No choice to make: the only
         // crops worth planting are the newest rungs anyway, which are also the ones worth enriching.
         advanceLivestock(now)
@@ -537,6 +545,16 @@ class FarmState(private val prefs: SharedPreferences) {
     }
     fun produceCount(): Int = produce.sumOf { row -> row.sum() }
     fun cropProduceTotal(crop: FarmCrop): Int = produce[crop.ordinal].sum()
+    fun produceValue(crop: FarmCrop? = null): Long {
+        var total = 0L
+        val crops = crop?.let { listOf(it) } ?: FarmCrop.entries
+        crops.forEach { item ->
+            FarmCropQuality.entries.forEach { quality ->
+                total += produce[item.ordinal][quality.ordinal].toLong() * item.sale * quality.multiplier
+            }
+        }
+        return total
+    }
     fun sellProduce(crop: FarmCrop? = null): Long {
         var total = 0L
         val crops = crop?.let { listOf(it) } ?: FarmCrop.entries

@@ -17,6 +17,7 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val land = RectF()
     private val sprites = FarmSprites(context)
+    private val scenery by lazy { FarmScenery(sprites) }
     private val atlas = context.assets.open("generated/garden/field_vehicles.png").use { BitmapFactory.decodeStream(it) }
     // Measured alpha bounds, including the combine's header which extends across an atlas third.
     private val sources = listOf(Rect(125, 96, 461, 791), Rect(644, 96, 1120, 802), Rect(1161, 80, 1754, 809))
@@ -90,10 +91,11 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
     private fun drawObstacle(c: Canvas, cell: Float, o: Obstacle) {
         val ox = land.left + o.cx * cell; val oy = land.top + o.cy * cell
         when (o) {
-            // A rock pile from the environment sheet reads better as a field obstacle than a stump would.
+            // Match the main farm's pixel rocks; seed from field coordinates, not screen size.
             is Obstacle.Trunk -> {
                 val d = o.r * cell * 2.6f
-                sprites.environment(c, 3, 3, RectF(ox - d / 2, oy - d / 2, ox + d / 2, oy + d / 2))
+                scenery.rock(c, RectF(ox - d / 2, oy - d / 2, ox + d / 2, oy + d / 2),
+                    o.cx.toBits() xor (o.cy.toBits() * 31))
             }
             // The bush tile is round, so a long hedge is a short row of bushes rather than one stretched sprite.
             is Obstacle.Hedge -> {
@@ -105,7 +107,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                     val t = (k + .5f) / count - .5f
                     val bx = if (horizontal) ox + t * length else ox
                     val by = if (horizontal) oy else oy + t * length
-                    sprites.environment(c, 2, 3, RectF(bx - bush / 2, by - bush / 2, bx + bush / 2, by + bush / 2))
+                    scenery.bush(c, RectF(bx - bush / 2, by - bush / 2, bx + bush / 2, by + bush / 2), 0f,
+                        (o.cx.toBits() xor o.cy.toBits()) + k * 31)
                 }
             }
         }

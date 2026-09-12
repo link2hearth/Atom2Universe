@@ -11,6 +11,9 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
         set(value) { field = value; invalidate() }
     var stock: Int? = null
         set(value) { field = value; invalidate() }
+    /** A small "something needs you" dot, independent of [stock] - top corner, never the same spot. */
+    var alert: Boolean = false
+        set(value) { field = value; invalidate() }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private fun rect(c: Canvas, l: Float, t: Float, r: Float, b: Float, color: Int, radius: Float = 3f) {
         paint.color = color; paint.style = Paint.Style.FILL
@@ -157,6 +160,13 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
             paint.color = Color.WHITE; paint.textSize = if (it > 99) 8f else 10f
             paint.typeface = Typeface.DEFAULT_BOLD; paint.textAlign = Paint.Align.CENTER
             canvas.drawText(it.toString(), 37f, 43f, paint)
+        }
+        if (alert) {
+            paint.style = Paint.Style.FILL; paint.color = rose
+            canvas.drawCircle(38f, 10f, 9f, paint)
+            paint.color = cream; paint.textSize = 12f
+            paint.typeface = Typeface.DEFAULT_BOLD; paint.textAlign = Paint.Align.CENTER
+            canvas.drawText("i", 38f, 14.5f, paint)
         }
         canvas.restore()
     }

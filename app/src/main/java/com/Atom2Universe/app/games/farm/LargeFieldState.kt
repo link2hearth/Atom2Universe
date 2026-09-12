@@ -52,7 +52,10 @@ class LargeField(val index: Int) {
     init { obstacles = randomObstacles() }
 
     private val eligibleArea get() = eligible.count { it } / (SUB * SUB).toFloat()
-    val budget get() = eligibleArea * BUDGET_FACTOR
+    // Each of the three tractor passes (plough, seed, harvest) gets more slack than the last, so
+    // running short late in the cycle is rarer than on the first, most obstacle-heavy pass.
+    private val passBonus get() = when (phase) { 0 -> 1.10f; 1 -> 1.20f; else -> 1.30f }
+    val budget get() = eligibleArea * BUDGET_FACTOR * passBonus
     val fuel get() = (1f - distanceUsed / budget).coerceIn(0f, 1f)
     val coverage: Int get() {
         var elig = 0; var done = 0
