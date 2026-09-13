@@ -49,7 +49,10 @@ class TouchController {
     private var lastLeftTapMs = 0L
     private val DOUBLE_TAP_MS = 380L
 
-    fun onTouch(event: MotionEvent, screenWidth: Int, excludedPointers: Set<Int> = emptySet()) {
+    fun onTouch(
+        event: MotionEvent, screenWidth: Int,
+        excludedPointers: Set<Int> = emptySet(), actionCameraPointer: Boolean = false
+    ) {
         val half = screenWidth / 2f
         val action = event.actionMasked
         val idx = event.actionIndex
@@ -59,7 +62,8 @@ class TouchController {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 if (pid in excludedPointers) return
                 val ex = event.getX(idx); val ey = event.getY(idx)
-                if (ex < half) {
+                // Jump/fire drags aim even when the editor moves those buttons to the left.
+                if (ex < half && !actionCameraPointer) {
                     if (leftId == -1) {
                         leftId = pid; leftCx = ex; leftCy = ey
                         val now = System.currentTimeMillis()

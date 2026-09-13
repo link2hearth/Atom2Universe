@@ -272,6 +272,8 @@
     <string name="cave_controls_reset_confirm">Remettre tous les boutons à leur position et taille par défaut ?</string>
 
     <string name="cave_controls_saved">Contrôles sauvegardés</string>
+    <string name="cave_controls_save_failed">Impossible de sauvegarder les contrôles. Veuillez réessayer.</string>
+    <string name="cave_controls_size_value">%1$d dp</string>
 
     <string name="cave_controls_hint">Glissez pour déplacer • Appuyez pour sélectionner</string>
 
@@ -280,6 +282,10 @@
     <string name="cave_controls_select_hint">Appuyez sur un bouton pour le sélectionner</string>
 
     <string name="cave_controls_selected">Sélectionné : %1$s</string>
+
+    <string name="cave_controls_crouch">ACCROUPIR</string>
+
+    <string name="cave_controls_shoot">TIRER</string>
 
     <string name="cave_controls_size">Taille</string>
 

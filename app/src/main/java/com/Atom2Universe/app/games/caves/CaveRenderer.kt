@@ -1847,6 +1847,45 @@ internal class CaveRenderer(
         val startY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
         val startZ = if (camera.thirdPerson) camera.playerZ else camera.z
 
+        return raycastBlock(startX, startY, startZ, dirX, dirY, dirZ, MINE_REACH.toDouble())
+    }
+
+    /** Called on the GL thread; unproject the touched pixel using the actual rendered camera. */
+    fun placeBlockAtScreen(xf: Float, yf: Float) {
+        if (!mode.allowsWorldEdits || hotbarMode != HotbarMode.BUILD) return
+        if (!xf.isFinite() || !yf.isFinite() || xf !in 0f..1f || yf !in 0f..1f) return
+        val inverse = FloatArray(16)
+        if (!android.opengl.Matrix.invertM(inverse, 0, camera.vpMatrix, 0)) return
+        val point = FloatArray(4)
+        android.opengl.Matrix.multiplyMV(point, 0, inverse, 0,
+            floatArrayOf(2f * xf - 1f, 1f - 2f * yf, -1f, 1f), 0)
+        if (point[3] == 0f) return
+        // Floating origin: the unprojected point is relative to the rendering eye.
+        val dx = (point[0] / point[3]).toDouble()
+        val dy = (point[1] / point[3]).toDouble()
+        val dz = (point[2] / point[3]).toDouble()
+        val length = sqrt(dx * dx + dy * dy + dz * dz)
+        if (!length.isFinite() || length <= 0.0) return
+        val orbitDistance = sqrt(
+            (camera.x - camera.playerX).let { it * it } +
+            (camera.y - camera.playerY).let { it * it } +
+            (camera.z - camera.playerZ).let { it * it })
+        val target = raycastBlock(camera.x, camera.y, camera.z,
+            dx / length, dy / length, dz / length, MINE_REACH + orbitDistance) ?: return
+        // A third-person camera must not extend the player's building reach.
+        val px = camera.playerX.coerceIn(target.bx.toDouble(), target.bx + 1.0)
+        val py = camera.playerY.coerceIn(target.by.toDouble(), target.by + 1.0)
+        val pz = camera.playerZ.coerceIn(target.bz.toDouble(), target.bz + 1.0)
+        val distanceSquared = (px - camera.playerX).let { it * it } +
+            (py - camera.playerY).let { it * it } + (pz - camera.playerZ).let { it * it }
+        if (distanceSquared > MINE_REACH * MINE_REACH) return
+        placeBlock(target)
+    }
+
+    private fun raycastBlock(
+        startX: Double, startY: Double, startZ: Double,
+        dirX: Double, dirY: Double, dirZ: Double, reach: Double
+    ): RayHit? {
         var bx = floorInt(startX); var by = floorInt(startY); var bz = floorInt(startZ)
 
         val stepX = if (dirX > 0) 1 else -1
@@ -1862,9 +1901,8 @@ internal class CaveRenderer(
         var tMaxZ = if (dirZ > 0) (bz + 1 - startZ) * tDZ else (startZ - bz) * tDZ
 
         var fnx = 0; var fny = 0; var fnz = -1
-        val reach = MINE_REACH.toDouble()
 
-        repeat(MINE_REACH * 4) {
+        repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && !isWater(b)) return RayHit(bx, by, bz, fnx, fny, fnz)
             when {
@@ -3175,7 +3213,7 @@ internal class CaveRenderer(
         }
     }
 
-    private fun placeBlock() {
+    private fun placeBlock(target: RayHit? = raycastBlock()) {
         val blockType = hotbar[selectedSlot] ?: return
         startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
@@ -3183,10 +3221,10 @@ internal class CaveRenderer(
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             return
         }
+        target ?: return
 
         // Seau vide : raycast ignorant l'eau → l'eau est dans la position de face adjacente
         if (blockType == BUCKET_EMPTY) {
-            val target = raycastBlock() ?: return
             // Le rayon traverse l'eau ; la source est dans la case côté joueur (face normale)
             val wx = target.bx + target.fnx
             val wy = target.by + target.fny
@@ -3201,7 +3239,6 @@ internal class CaveRenderer(
 
         // Seau plein : poser une source d'eau et récupérer un seau vide
         if (blockType == BUCKET_FULL) {
-            val target = raycastBlock() ?: return
             val px = target.bx + target.fnx
             val py = target.by + target.fny
             val pz = target.bz + target.fnz
@@ -3214,7 +3251,6 @@ internal class CaveRenderer(
             return
         }
 
-        val target = raycastBlock() ?: return
         val px = target.bx + target.fnx
         val py = target.by + target.fny
         val pz = target.bz + target.fnz

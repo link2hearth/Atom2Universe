@@ -272,6 +272,8 @@
     <string name="cave_controls_reset_confirm">Reset all buttons to their default position and size?</string>
 
     <string name="cave_controls_saved">Controls saved</string>
+    <string name="cave_controls_save_failed">Could not save controls. Please try again.</string>
+    <string name="cave_controls_size_value">%1$d dp</string>
 
     <string name="cave_controls_hint">Drag buttons to reposition • Tap to select</string>
 
@@ -280,6 +282,10 @@
     <string name="cave_controls_select_hint">Tap a button to select it</string>
 
     <string name="cave_controls_selected">Selected: %1$s</string>
+
+    <string name="cave_controls_crouch">CROUCH</string>
+
+    <string name="cave_controls_shoot">SHOOT</string>
 
     <string name="cave_controls_size">Size</string>
 
