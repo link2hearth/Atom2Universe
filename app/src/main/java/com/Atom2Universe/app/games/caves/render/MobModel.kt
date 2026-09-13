@@ -58,14 +58,9 @@ internal object MobModels {
             "imp"      to imp(),
             "mummy"    to mummy(),
             "slime"    to slime(),
-            "dummy"    to dummy(DUMMY_CANVAS),
-            "runner"   to dummy(RUNNER_CANVAS)
+            "soldier"  to soldier()
         )
     }
-
-    // Mannequin cible (toile beige) et mannequin coureur qui teste la navigation (toile bleue).
-    private const val DUMMY_CANVAS = 0xFFC9B48A.toInt()
-    private const val RUNNER_CANVAS = 0xFF7FA7C9.toInt()
 
     fun get(model: String): MobModel = models[model] ?: models.getValue("slime")
 
@@ -84,22 +79,28 @@ internal object MobModels {
 
     // ── Humanoïdes ──────────────────────────────────────────────────────────
 
-    /** Mannequin d'entraînement du mode Assaut : silhouette en toile [canvas], cible rouge au torse et au visage. */
-    private fun dummy(canvas: Int): MobModel {
-        val strap = 0xFF6B4F2E.toInt()
-        val red = 0xFFC62828.toInt(); val white = 0xFFF2EEE4.toInt()
+    /** Soldat du mode Assaut : treillis olive, gilet, casque et fusil tenu à deux mains. */
+    private fun soldier(): MobModel {
+        val uniform = 0xFF55603F.toInt(); val vest = 0xFF3B432E.toInt(); val skin = 0xFFC8A07A.toInt()
+        val helmet = 0xFF3E4632.toInt(); val boots = 0xFF2A2822.toInt(); val gun = 0xFF1C1C1C.toInt()
+        val eye = 0xFF1A1A12.toInt()
         return MobModel(listOf(
-            p(-2.5f, 6f, 0f, 3.5f, 12f, 3.5f, canvas, Limb.LEG, -1),
-            p( 2.5f, 6f, 0f, 3.5f, 12f, 3.5f, canvas, Limb.LEG,  1),
-            p( 0f, 17f, 0f, 10f, 11f, 6f, canvas),                          // torse
-            p( 0f, 12.2f, 0f, 10.4f, 1.4f, 6.4f, strap),                     // ceinture
-            p( 0f, 18f, 3.1f, 6f, 6f, 0.4f, white),                          // cible : anneau blanc
-            p( 0f, 18f, 3.4f, 3f, 3f, 0.4f, red, emissive = true),           // cible : centre rouge
-            p(-6.5f, 16.5f, 0f, 3f, 11f, 3f, canvas, Limb.ARM, -1, pivotY = 22f),
-            p( 6.5f, 16.5f, 0f, 3f, 11f, 3f, canvas, Limb.ARM,  1, pivotY = 22f),
-            p( 0f, 26.5f, 0f, 8f, 8f, 8f, canvas),                          // tête
-            p( 0f, 26.5f, 4.1f, 2.4f, 2.4f, 0.4f, red, emissive = true)      // point rouge au visage
-        ), heightVox = 30.5f)
+            p(-2.5f, 6f, 0f, 3.8f, 12f, 3.8f, uniform, Limb.LEG, -1),
+            p( 2.5f, 6f, 0f, 3.8f, 12f, 3.8f, uniform, Limb.LEG,  1),
+            // Les bottes balancent avec la jambe : même pivot, à la hanche.
+            p(-2.5f, 1f, 0.5f, 4f, 2f, 4.8f, boots, Limb.LEG, -1, pivotY = 12f),
+            p( 2.5f, 1f, 0.5f, 4f, 2f, 4.8f, boots, Limb.LEG,  1, pivotY = 12f),
+            p( 0f, 17f, 0f, 10f, 11f, 6f, uniform),                             // torse
+            p( 0f, 17.5f, 0f, 10.6f, 8f, 6.6f, vest),                            // gilet
+            // Bras tendus vers l'avant, comme pour tenir le fusil.
+            p(-6.5f, 16.5f, 0f, 3f, 11f, 3f, uniform, Limb.ARM, -1, pivotY = 22f, baseTiltDeg = -70f),
+            p( 6.5f, 16.5f, 0f, 3f, 11f, 3f, uniform, Limb.ARM,  1, pivotY = 22f, baseTiltDeg = -80f),
+            p( 1.5f, 19.5f, 9f, 2f, 2.6f, 13f, gun),                             // fusil
+            p( 0f, 26.5f, 0f, 8f, 8f, 8f, skin),                                 // tête
+            p( 0f, 30.5f, 0f, 8.8f, 2.4f, 8.8f, helmet),                         // casque
+            p(-1.8f, 27f, 4.1f, 1.4f, 1.4f, 0.4f, eye, emissive = true),
+            p( 1.8f, 27f, 4.1f, 1.4f, 1.4f, 0.4f, eye, emissive = true)
+        ), heightVox = 31.7f)
     }
 
     private fun zombie(): MobModel {

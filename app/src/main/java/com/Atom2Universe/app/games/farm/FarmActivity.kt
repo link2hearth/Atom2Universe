@@ -25,6 +25,13 @@ class FarmActivity : ThemedActivity() {
     private lateinit var sprites: FarmSprites
     private lateinit var root: FrameLayout
     private lateinit var fieldPanel: LinearLayout
+    private lateinit var livestockPanel: LinearLayout
+    private lateinit var habitat: LivestockHabitatView
+    private lateinit var habitatTitle: TextView
+    private lateinit var habitatCount: TextView
+    private lateinit var habitatPrevious: Button
+    private lateinit var habitatNext: Button
+    private lateinit var habitatManage: Button
     private lateinit var fieldView: FieldArcadeView
     private lateinit var fieldInfo: TextView
     private lateinit var fuelTrack: FrameLayout
@@ -84,6 +91,31 @@ class FarmActivity : ThemedActivity() {
         fieldPanel.addView(fieldView, LinearLayout.LayoutParams(-1, 0, 1f))
         fieldPanel.addView(text(getString(R.string.farm_field_steer), 12).apply { gravity = Gravity.CENTER; setPadding(dp(10), dp(4), dp(10), dp(4)) })
         root.addView(fieldPanel, FrameLayout.LayoutParams(-1, -1).apply { topMargin = dp(74) })
+        livestockPanel = column().apply { visibility = View.GONE; setBackgroundColor(cream) }
+        habitat = LivestockHabitatView(this, sprites, state.livestock).apply {
+            onOpen = { livestockPen(it, true) }
+            dismissBubble = { if (bubble != null) { closeBubble(); true } else false }
+            onPageChanged = { refreshHabitat() }
+        }
+        val habitatNavigation = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL; setPadding(dp(8), dp(2), dp(8), dp(2)) }
+        habitatPrevious = button(getString(R.string.farm_page_previous_symbol)) {
+            LivestockKind.entries.getOrNull(habitat.selected.ordinal - 1)?.let { habitat.select(it) }
+        }.apply { contentDescription = getString(R.string.farm_page_previous) }
+        habitatNext = button(getString(R.string.farm_page_next_symbol)) {
+            LivestockKind.entries.getOrNull(habitat.selected.ordinal + 1)?.let { habitat.select(it) }
+        }.apply { contentDescription = getString(R.string.farm_page_next) }
+        habitatTitle = text("", 18, true).apply { gravity = Gravity.CENTER; accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE }
+        habitatNavigation.addView(habitatPrevious, LinearLayout.LayoutParams(dp(48), dp(48)))
+        habitatNavigation.addView(habitatTitle, LinearLayout.LayoutParams(0, -2, 1f))
+        habitatNavigation.addView(habitatNext, LinearLayout.LayoutParams(dp(48), dp(48)))
+        livestockPanel.addView(habitatNavigation)
+        habitatCount = text("", 13).apply { gravity = Gravity.CENTER; setPadding(dp(8), 0, dp(8), dp(6)) }
+        livestockPanel.addView(habitatCount)
+        livestockPanel.addView(habitat, LinearLayout.LayoutParams(-1, 0, 1f))
+        habitatManage = button(getString(R.string.farm_herd_open)) { livestockPen(habitat.selected, true) }
+        livestockPanel.addView(habitatManage, LinearLayout.LayoutParams(-1, dp(48)).apply { setMargins(dp(12), dp(5), dp(12), 0) })
+        livestockPanel.addView(text(getString(R.string.farm_page_swipe), 12).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(4), dp(8), dp(6)) })
+        root.addView(livestockPanel, FrameLayout.LayoutParams(-1, -1).apply { topMargin = dp(74) })
         toolbar = LinearLayout(this).apply {
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(4), dp(4), dp(4), dp(4))
@@ -152,6 +184,8 @@ class FarmActivity : ThemedActivity() {
             override fun handleOnBackPressed() { if (bubble != null) closeBubble() else finish() }
         })
         refresh()
+        val restoredHabitat = savedInstanceState?.getInt("farm_livestock_page", 0) ?: 0
+        habitat.select(LivestockKind.entries[restoredHabitat.coerceIn(0, LivestockKind.entries.lastIndex)], false)
         val regionName = savedInstanceState?.getString("farm_region")
         FarmRegion.entries.firstOrNull { it.name == regionName && state.regionUnlocked(it) }?.let { region ->
             world.post { world.switchRegion(region); refresh() }
@@ -254,6 +288,7 @@ class FarmActivity : ThemedActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("farm_region", world.region.name)
+        outState.putInt("farm_livestock_page", habitat.selected.ordinal)
         super.onSaveInstanceState(outState)
     }
 
@@ -380,6 +415,7 @@ class FarmActivity : ThemedActivity() {
         }
     }
     private fun livestockPen(kind: LivestockKind, details: Boolean) {
+        habitat.select(kind, false)
         state.advanceLivestock()
         if (!state.livestock.available(kind)) {
             showBubble(getString(kind.label)) { body ->
@@ -977,10 +1013,22 @@ class FarmActivity : ThemedActivity() {
             body.addView(button(getString(R.string.farm_clear)) { state.clear(index); closeBubble(); refresh() })
         }
     }
+    private fun refreshHabitat() {
+        val kind = habitat.selected
+        habitatTitle.text = getString(R.string.farm_page_title, getString(kind.label), kind.ordinal + 1, LivestockKind.entries.size)
+        habitatCount.text = if (state.livestock.available(kind)) getString(R.string.farm_herd_count, state.livestock.count(kind), LivestockState.CAPACITY)
+            else getString(R.string.farm_locked_price, money(kind.landPrice))
+        habitatPrevious.isEnabled = kind.ordinal > 0
+        habitatNext.isEnabled = kind.ordinal < LivestockKind.entries.lastIndex
+        habitatManage.text = getString(if (state.livestock.available(kind)) R.string.farm_herd_open else R.string.farm_habitat_unlock)
+    }
     private fun refresh() {
         state.advanceLivestock()
         state.advanceFields()
         fieldPanel.visibility = if (world.region == FarmRegion.FIELDS) View.VISIBLE else View.GONE
+        livestockPanel.visibility = if (world.region == FarmRegion.LIVESTOCK) View.VISIBLE else View.GONE
+        world.visibility = if (world.region == FarmRegion.LIVESTOCK) View.INVISIBLE else View.VISIBLE
+        refreshHabitat()
         if (world.region != FarmRegion.FIELDS) fieldView.stop()
         val f = state.largeFields.fields[state.largeFields.selected]
         val phaseLabel = listOf(R.string.farm_field_plough, R.string.farm_field_seed, R.string.farm_field_grow, R.string.farm_field_harvest)[f.phase]

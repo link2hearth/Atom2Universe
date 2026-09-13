@@ -21,6 +21,16 @@ internal sealed class GameEvent {
     data class MobHit(val isBoss: Boolean) : GameEvent()
 
     data class MobNearby(val isBoss: Boolean) : GameEvent()
+
+    /** Un ennemi vient de tirer (soldat du mode Assaut). */
+    object EnemyFired : GameEvent()
+
+    /**
+     * Un soldat du mode Assaut vient de tomber. À ne pas confondre avec [MobDied], qui veut dire
+     * « un monstre de la survie est mort » : ce dernier déclenche le butin et l'XP, et le butin
+     * cherche la fiche du monstre dans MobRegistry, où les soldats n'existent pas.
+     */
+    object SoldierDown : GameEvent()
 }
 
 internal class EventBus {

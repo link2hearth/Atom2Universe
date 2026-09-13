@@ -1263,6 +1263,16 @@ internal class CaveRenderer(
         return block != AIR && !BlockRegistry.isDecoration(block) && !BlockRegistry.isWater(block)
     }
 
+    private val PLAYER_HIT_RADIUS = 0.4
+
+    /** Une balle traverse-t-elle le corps du joueur ? Cylindre qui va des pieds au sommet du crâne. */
+    private fun projectileHitsPlayer(p: Projectile): Boolean {
+        if (playerMode != PlayerMode.WALK) return false
+        val dx = p.x - camera.playerX; val dz = p.z - camera.playerZ
+        if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return false
+        return p.y >= camera.playerY - 1.62 && p.y <= camera.playerY + 0.2
+    }
+
     private fun canRecover(p: Projectile): Boolean {
         val dx=p.x-camera.playerX; val dy=p.y-(camera.playerY-.5); val dz=p.z-camera.playerZ
         if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return false
@@ -1299,6 +1309,16 @@ internal class CaveRenderer(
                         p.x=ox;p.y=oy;p.z=oz;p.stuck=true;recovered=true
                     } else { iter.remove() }
                     break
+                }
+                if (p.fromEnemy) {
+                    // Balle de soldat : elle ne touche que le joueur (pas de tir ami entre soldats).
+                    if (projectileHitsPlayer(p)) {
+                        spawnImpact(p.x,p.y,p.z)
+                        mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
+                        iter.remove();break
+                    }
+                    if(p.travelDist>p.maxRange) { iter.remove();break }
+                    continue
                 }
                 val hit=enemyManager.enemies.find { e ->
                     val radius=e.def.radius.toDouble()+.5
@@ -1435,6 +1455,8 @@ internal class CaveRenderer(
         val speedBonus = stats["attack_speed"] ?: 0
         weaponAttackCooldown=(profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
         if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) magazine.reload()
+        // Un coup de feu s'entend : le mode prévient les ennemis à portée d'oreille.
+        mode.onPlayerFired()
         swingCallback?.invoke()
         startSwing()
         equipmentRelease = 0f

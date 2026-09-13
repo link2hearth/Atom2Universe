@@ -15,7 +15,9 @@ internal class Projectile(
     val isPlayerWeapon: Boolean = false,
     val kind: ProjectileKind = if (isRock) ProjectileKind.ROCK else ProjectileKind.LEGACY,
     val ammoId: Short? = null,
-    val maxRange: Float = 90f
+    val maxRange: Float = 90f,
+    /** Tiré par un ennemi (soldat du mode Assaut) : ne touche que le joueur, jamais les autres ennemis. */
+    val fromEnemy: Boolean = false
 ) {
     var stuck = false
     var age = 0f

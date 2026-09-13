@@ -557,10 +557,14 @@ internal class CaveHud(private val activity: CaveActivity) {
             matchMessage?.visibility = View.GONE
             return
         }
-        val verdict = if (end == com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.CLEARED)
-            activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_cleared, s.lastTimeBonus)
-        else
-            activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_time_up, s.targetsDown, s.targetsTotal)
+        val verdict = when (end) {
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.CLEARED ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_cleared, s.lastTimeBonus)
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.TIME_UP ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_time_up, s.targetsDown, s.targetsTotal)
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.DIED ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_died, s.targetsDown, s.targetsTotal)
+        }
         val next = activity.getString(com.Atom2Universe.app.R.string.cave_assault_next_round, s.pauseSecondsLeft)
         matchMessage?.text = "$verdict\n$next"
         matchMessage?.visibility = View.VISIBLE

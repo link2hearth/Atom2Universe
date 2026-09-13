@@ -6,9 +6,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
 import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.random.Random
 
 class FarmSprites(private val context: Context) {
@@ -21,7 +23,15 @@ class FarmSprites(private val context: Context) {
             entry.getString("id") to (entry.getString("sheet") to Rect(r.getInt(0), r.getInt(1), r.getInt(0) + r.getInt(2), r.getInt(1) + r.getInt(3)))
         }
     }
-    fun livestock(canvas: Canvas, id: String, target: RectF) {
+    fun livestock(canvas: Canvas, id: String, target: RectF, pose: FarmAnimalArt.Pose = FarmAnimalArt.Pose()) {
+        if (LivestockHabitatArt.supports(id)) {
+            LivestockHabitatArt.asset(canvas, id, target)
+            return
+        }
+        if (FarmAnimalArt.supports(id)) {
+            FarmAnimalArt.draw(canvas, id, target, pose)
+            return
+        }
         val (name, source) = livestockAtlas.getValue(id)
         val bitmap = sheet("livestock/$name")
         val scale = minOf(target.width() / source.width(), target.height() / source.height())
@@ -372,9 +382,93 @@ class FarmSprites(private val context: Context) {
     }
 
     fun environment(canvas: Canvas, column: Int, row: Int, target: RectF) {
-        val bitmap = sheet("garden_environment_v1.png")
-        // The supplied sheet has a 4 × 4 grid with transparent padding around objects.
-        canvas.drawBitmap(bitmap, Rect(column * bitmap.width / 4, row * bitmap.height / 4,
-            (column + 1) * bitmap.width / 4, (row + 1) * bitmap.height / 4), target, paint)
+        when {
+            column == 0 && (row == 2 || row == 3) -> environmentFenceRail(canvas, target, row == 3)
+            column == 1 && row == 2 -> environmentFencePost(canvas, target)
+            column == 2 && row == 3 -> environmentBush(canvas, target)
+            else -> environmentPebble(canvas, target)
+        }
+    }
+
+    private fun environmentFenceRail(canvas: Canvas, target: RectF, brighter: Boolean) {
+        val shadow = RectF(target.left, target.top + target.height() * .58f, target.right, target.bottom)
+        paint.style = Paint.Style.FILL
+        paint.color = Color.argb(45, 57, 72, 40)
+        canvas.drawOval(shadow, paint)
+        val dark = if (brighter) Color.rgb(164, 100, 52) else Color.rgb(130, 83, 50)
+        val mid = if (brighter) Color.rgb(236, 170, 82) else Color.rgb(210, 142, 70)
+        val light = if (brighter) Color.rgb(255, 215, 128) else Color.rgb(244, 188, 103)
+        for ((top, bottom) in listOf(.18f to .38f, .56f to .76f)) {
+            val y0 = target.top + target.height() * top
+            val y1 = target.top + target.height() * bottom
+            paint.color = dark
+            canvas.drawRect(target.left, y0, target.right, y1, paint)
+            paint.color = mid
+            canvas.drawRect(target.left, y0, target.right, y0 + (y1 - y0) * .58f, paint)
+            paint.color = light
+            canvas.drawRect(target.left, y0, target.right, y0 + (y1 - y0) * .22f, paint)
+        }
+    }
+
+    private fun environmentFencePost(canvas: Canvas, target: RectF) {
+        val x = target.centerX()
+        val w = target.width().coerceAtLeast(10f) * .68f
+        val body = RectF(x - w / 2, target.top + target.height() * .12f, x + w / 2, target.bottom)
+        paint.style = Paint.Style.FILL
+        paint.color = Color.argb(45, 57, 72, 40)
+        canvas.drawOval(body.left - w * .4f, body.bottom - w * .22f, body.right + w * .4f, body.bottom + w * .22f, paint)
+        paint.color = Color.rgb(127, 78, 48)
+        canvas.drawRoundRect(body, w * .18f, w * .18f, paint)
+        paint.color = Color.rgb(214, 145, 71)
+        canvas.drawRect(body.left + w * .14f, body.top + w * .22f, body.right - w * .18f, body.bottom - w * .05f, paint)
+        paint.color = Color.rgb(255, 211, 124)
+        canvas.drawRect(body.left + w * .22f, body.top + w * .25f, body.left + w * .47f, body.bottom - w * .13f, paint)
+        val cap = Path().apply {
+            moveTo(x, target.top)
+            lineTo(body.right, body.top + w * .28f)
+            lineTo(body.right, body.top + w * .62f)
+            lineTo(body.left, body.top + w * .62f)
+            lineTo(body.left, body.top + w * .28f)
+            close()
+        }
+        paint.color = Color.rgb(112, 70, 47)
+        canvas.drawPath(cap, paint)
+        paint.color = Color.rgb(255, 207, 122)
+        canvas.drawRect(body.left + w * .2f, body.top + w * .34f, body.right - w * .2f, body.top + w * .52f, paint)
+    }
+
+    private fun environmentBush(canvas: Canvas, target: RectF) {
+        val seed = ((target.left.toInt() * 31) xor target.top.toInt()) and Int.MAX_VALUE
+        val baseX = target.centerX()
+        val baseY = target.bottom - target.height() * .12f
+        val s = minOf(target.width(), target.height()) * .33f
+        paint.style = Paint.Style.FILL
+        paint.color = Color.argb(50, 45, 74, 36)
+        canvas.drawOval(baseX - s * 1.05f, baseY - s * .18f, baseX + s * 1.05f, baseY + s * .22f, paint)
+        for (i in 0 until 5) {
+            val bx = baseX + sin(seed + i * 2.7f) * s * .52f
+            val by = baseY - s * .25f - i * s * .12f
+            paint.color = Color.rgb(48, 126, 88)
+            canvas.drawOval(bx - s * .55f, by - s * .43f, bx + s * .55f, by + s * .43f, paint)
+            paint.color = Color.rgb(93, 176, 91)
+            canvas.drawOval(bx - s * .36f, by - s * .36f, bx + s * .36f, by + s * .22f, paint)
+        }
+        paint.color = Color.rgb(178, 220, 126)
+        canvas.drawRect(baseX - s * .15f, baseY - s * .76f, baseX + s * .02f, baseY - s * .67f, paint)
+        paint.color = Color.rgb(240, 186, 211)
+        canvas.drawRect(baseX + s * .3f, baseY - s * .55f, baseX + s * .45f, baseY - s * .4f, paint)
+    }
+
+    private fun environmentPebble(canvas: Canvas, target: RectF) {
+        val cx = target.centerX()
+        val cy = target.centerY()
+        val s = minOf(target.width(), target.height()) * .34f
+        paint.style = Paint.Style.FILL
+        paint.color = Color.argb(45, 57, 72, 40)
+        canvas.drawOval(cx - s, cy + s * .1f, cx + s, cy + s * .48f, paint)
+        paint.color = Color.rgb(124, 132, 140)
+        canvas.drawOval(cx - s * .85f, cy - s * .45f, cx + s * .85f, cy + s * .35f, paint)
+        paint.color = Color.rgb(199, 202, 202)
+        canvas.drawOval(cx - s * .45f, cy - s * .35f, cx + s * .2f, cy - s * .02f, paint)
     }
 }

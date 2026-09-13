@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="farm_page_previous_symbol">‹</string>
+    <string name="farm_page_next_symbol">›</string>
+    <string name="farm_page_previous">Previous animal</string>
+    <string name="farm_page_next">Next animal</string>
+    <string name="farm_page_title">%1$s · %2$d/%3$d</string>
+    <string name="farm_page_swipe">Swipe to change animals</string>
+    <string name="farm_habitat_unlock">Unlock this enclosure</string>
     <string name="farm_title">My farm</string>
     <string name="farm_bush_bonus">A pile of coins was hiding in the bush! +%1$s coins</string>
     <string name="farm_description">Grow crops and tend your orchard</string>

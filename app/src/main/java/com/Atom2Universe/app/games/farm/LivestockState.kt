@@ -20,12 +20,14 @@ enum class LivestockKind(val label: Int, val female: String, val male: String, v
     PIGS(R.string.farm_pigs, "sow", "boar", "piglet", "pig_shelter", 150_000, 10_000, 8_000, 120, 1_200, 8),
     CATTLE(R.string.farm_cattle, "cow", "bull", "calf", "cattle_shelter", 500_000, 30_000, 24_000, 168, 2_500, 10);
     val cycleMillis get() = cycleHours * 3_600_000L
+    val visualVariantCount get() = 4
 }
 
 data class FarmAnimal(val id: Long, val kind: LivestockKind, val male: Boolean, val variant: Int,
                       var adultAt: Long = 0, var birthAt: Long = 0, var boostUntil: Long = 0) {
     val adult get() = adultAt == 0L
-    val sprite get() = (if (!adult) kind.young else if (male) kind.male else kind.female) + "_" + variant
+    val sprite get() = (if (!adult) kind.young else if (male) kind.male else kind.female) + "_" +
+        variant
 }
 
 class LivestockState {
@@ -56,7 +58,7 @@ class LivestockState {
     }
     fun buy(kind: LivestockKind, male: Boolean, now: Long): Boolean {
         if (!available(kind) || count(kind) >= CAPACITY) return false
-        herd.add(FarmAnimal(nextId++, kind, male, kotlin.random.Random.nextInt(1, 3)))
+        herd.add(FarmAnimal(nextId++, kind, male, kotlin.random.Random.nextInt(1, kind.visualVariantCount + 1)))
         lastTime = maxOf(now, lastTime)
         schedule(lastTime); return true
     }
@@ -114,7 +116,7 @@ class LivestockState {
             mothers.forEach { mother ->
                 if (herd.any { it.kind == mother.kind && it.adult && it.male } && count(mother.kind) < CAPACITY) {
                     herd.add(FarmAnimal(nextId++, mother.kind, kotlin.random.Random.nextBoolean(),
-                        kotlin.random.Random.nextInt(1, 3), next + mother.kind.cycleMillis))
+                        kotlin.random.Random.nextInt(1, mother.kind.visualVariantCount + 1), next + mother.kind.cycleMillis))
                 }
                 mother.birthAt = next + mother.kind.cycleMillis; changed = true
             }
@@ -169,7 +171,7 @@ class LivestockState {
         } }
         require(restored.map { it.id }.distinct().size == restored.size)
         require(restored.none { it.male && it.birthAt != 0L })
-        require(restored.all { it.id > 0 && it.kind.ordinal < opened && it.variant in 1..2 && it.adultAt >= 0 && it.birthAt >= 0 && (it.adult || it.birthAt == 0L) })
+        require(restored.all { it.id > 0 && it.kind.ordinal < opened && it.variant in 1..it.kind.visualVariantCount && it.adultAt >= 0 && it.birthAt >= 0 && (it.adult || it.birthAt == 0L) })
         require(LivestockKind.entries.all { kind -> restored.count { it.kind == kind } <= CAPACITY })
         val id = json.getLong("nextId"); require(id > (restored.maxOfOrNull { it.id } ?: 0))
         val time = json.getLong("lastTime"); require(time >= 0)

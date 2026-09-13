@@ -69,6 +69,19 @@ class AssaultMatchTest {
     }
 
     @Test
+    fun `mourir perd la manche sans bonus mais garde les points`() {
+        val m = match()
+        m.update(0.016f)
+        m.onTargetDown(headshot = false)
+        assertEquals(Event.ROUND_ENDED, m.onPlayerDied())
+        val s = m.status()
+        assertEquals(RoundEnd.DIED, s.lastEnd)
+        assertEquals(0, s.lastTimeBonus)
+        assertEquals(100, s.score)
+        assertEquals(Event.NONE, m.onPlayerDied())   // déjà en pause : rien de plus
+    }
+
+    @Test
     fun `une cible abattue pendant la pause ne compte pas`() {
         val m = match()
         m.update(0.016f)

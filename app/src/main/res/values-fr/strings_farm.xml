@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="farm_page_previous_symbol">‹</string>
+    <string name="farm_page_next_symbol">›</string>
+    <string name="farm_page_previous">Animal précédent</string>
+    <string name="farm_page_next">Animal suivant</string>
+    <string name="farm_page_title">%1$s · %2$d/%3$d</string>
+    <string name="farm_page_swipe">Glissez pour changer d’animal</string>
+    <string name="farm_habitat_unlock">Débloquer cet enclos</string>
     <string name="farm_title">Ma ferme</string>
     <string name="farm_bush_bonus">Une pile de pièces se cachait dans le buisson ! +%1$s pièces</string>
     <string name="farm_description">Cultivez votre potager et votre verger</string>

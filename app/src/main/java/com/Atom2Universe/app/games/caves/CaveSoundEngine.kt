@@ -34,6 +34,7 @@ internal class CaveSoundEngine(private val scope: CoroutineScope) {
         private const val CH9: Byte = 0x99.toByte()   // Note On, channel 9
         private const val MOB_HIT_COOLDOWN_MS = 120L
         private const val PLAYER_HIT_COOLDOWN_MS = 200L
+        private const val ENEMY_SHOT_COOLDOWN_MS = 60L
     }
 
     fun start() {
@@ -60,8 +61,20 @@ internal class CaveSoundEngine(private val scope: CoroutineScope) {
                 is GameEvent.PlayerHit  -> onPlayerHit()
                 is GameEvent.MobDied    -> onMobDied(event.isBoss)
                 is GameEvent.BossSpawned -> onBossSpawned()
+                is GameEvent.EnemyFired -> onEnemyFired()
+                is GameEvent.SoldierDown -> onMobDied(isBoss = false)
             }
         }
+    }
+
+    private var lastEnemyShotMs = 0L
+
+    /** 37 = Side Stick : un claquement sec qui passe pour un coup de feu lointain. */
+    private fun onEnemyFired() {
+        val now = System.currentTimeMillis()
+        if (now - lastEnemyShotMs < ENEMY_SHOT_COOLDOWN_MS) return
+        lastEnemyShotMs = now
+        note(37, 75)
     }
 
     // ── Sons ─────────────────────────────────────────────────────────────────

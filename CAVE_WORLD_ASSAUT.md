@@ -168,5 +168,21 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
     coureur**, il marche toujours vers le joueur. Normal pour la démo : il connaît en permanence la
     position du joueur (il triche). **À corriger en phase 4** : un soldat ne va que là où il a vu ou
     entendu le joueur pour la dernière fois, et finit par oublier. On doit pouvoir le semer.
+- **13/09/2026** : phase 4, le soldat.
+  - `ai/Soldier.kt` (Kotlin pur, `SoldierTest` : 6 tests). **Il ne triche plus** : il ne connaît la
+    position du joueur que s'il le voit (champ de vision 110°, portée 45, ligne de vue), l'entend
+    tirer (35 blocs) ou se fait toucher. Il retient la dernière position connue et l'oublie après
+    8 s sans nouvelle information : on peut le semer (retour de l'utilisateur en phase 3).
+  - États par priorité : RELOAD (abri le plus proche hors de vue du joueur, 2,2 s) > ENGAGE
+    (s'arrête, temps de réaction 0,35 à 0,6 s, visée de 7° qui se resserre jusqu'à 1,2° et se
+    dérègle si le joueur court en travers) > SEARCH (va vérifier, puis regarde autour) > PATROL.
+  - Manche : 3 soldats qui apparaissent près du coin adverse, 3 minutes. Mannequins et coureur retirés.
+  - Joueur : 100 PV, balles de soldat à 8 dégâts (champ `Projectile.fromEnemy`, pas de tir ami).
+    Mort = manche perdue (`RoundEnd.DIED`), soigné et replacé à la manche suivante.
+  - Sons : alerte quand un soldat repère le joueur, touché, mort, et nouveau son de tir ennemi.
+  - Modèle `soldier` (treillis, gilet, casque, fusil). Bouton 🧭 : chemins de tous les soldats.
+  - **Crash au premier kill** (signalé par l'utilisateur) : la mort d'un soldat publiait `MobDied`,
+    que `LootNode` écoute pour le butin de la survie ; il cherchait `assault_soldier` dans
+    `MobRegistry` et levait une exception. Corrigé avec un événement dédié `SoldierDown`.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).

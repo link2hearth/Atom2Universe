@@ -47,6 +47,12 @@ internal interface GameMode {
     /** Un projectile du joueur ou d'un allié vient de toucher [enemy], à la tête si [headshot]. */
     fun onEnemyHit(enemy: Enemy, headshot: Boolean) = Unit
 
+    /** Une balle ennemie vient de toucher le joueur. [dirX], [dirZ] : sens de la balle, pour le recul. */
+    fun onPlayerShot(damage: Int, dirX: Double, dirZ: Double) = Unit
+
+    /** Le joueur vient de tirer : les ennemis proches peuvent l'entendre. */
+    fun onPlayerFired() = Unit
+
     /**
      * Segments de debug à tracer au sol (chemin d'un bot…), écrits dans [out] : 6 valeurs par
      * segment (x0, y0, z0, x1, y1, z1), en coordonnées monde. Renvoie le nombre de segments écrits,

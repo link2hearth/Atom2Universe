@@ -234,12 +234,13 @@
     <string name="cave_menu_assault">Assaut</string>
     <string name="cave_assault_pick_map">Choisir une carte</string>
     <string name="cave_assault_builtin_arena">Arène d\'essai (100 × 100)</string>
-    <string name="cave_assault_hud">Manche %1$d  ·  %2$d:%3$02d  ·  Cibles %4$d/%5$d  ·  Têtes %6$d  ·  Score %7$d</string>
+    <string name="cave_assault_hud">Manche %1$d  ·  %2$d:%3$02d  ·  Ennemis %4$d/%5$d  ·  Têtes %6$d  ·  Score %7$d</string>
     <string name="cave_assault_round_cleared">Manche réussie ! Bonus de temps +%1$d</string>
-    <string name="cave_assault_round_time_up">Temps écoulé ! %1$d/%2$d cibles</string>
+    <string name="cave_assault_round_time_up">Temps écoulé ! %1$d/%2$d ennemis</string>
+    <string name="cave_assault_round_died">Tu es mort ! %1$d/%2$d ennemis</string>
     <string name="cave_assault_next_round">Manche suivante dans %1$d</string>
     <string name="cave_assault_headshot">Tir à la tête !</string>
-    <string name="cave_assault_show_path">Afficher le chemin du coureur</string>
+    <string name="cave_assault_show_path">Afficher le chemin des soldats</string>
     <string name="cave_assault_no_maps">Aucune carte pour l\'instant.\n\nDans un monde créatif, construisez votre arène et posez les balises d\'apparition A et B. Ouvrez ensuite l\'outil de capture (📐), placez les coins A et B autour de l\'arène, puis appuyez sur 🗺 pour l\'exporter.</string>
     <string name="cave_assault_map_load_failed">Impossible de charger cette carte.</string>
     <string name="cave_map_export_title">Exporter en carte Assaut</string>

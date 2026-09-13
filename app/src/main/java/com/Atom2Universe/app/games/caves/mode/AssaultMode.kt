@@ -1,53 +1,55 @@
 package com.Atom2Universe.app.games.caves.mode
 
 import com.Atom2Universe.app.games.caves.CaveRenderer
-import com.Atom2Universe.app.games.caves.ai.IntList
-import com.Atom2Universe.app.games.caves.ai.LineOfSight
 import com.Atom2Universe.app.games.caves.ai.NavGrid
 import com.Atom2Universe.app.games.caves.ai.PathFinder
-import com.Atom2Universe.app.games.caves.ai.PathFollower
+import com.Atom2Universe.app.games.caves.ai.PlayerSnapshot
+import com.Atom2Universe.app.games.caves.ai.ShotSink
 import com.Atom2Universe.app.games.caves.ai.SolidGrid
+import com.Atom2Universe.app.games.caves.ai.Soldier
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
+import com.Atom2Universe.app.games.caves.entity.Projectile
+import com.Atom2Universe.app.games.caves.entity.ProjectileKind
+import com.Atom2Universe.app.games.caves.entity.WeaponColor
+import com.Atom2Universe.app.games.caves.entity.WeaponDef
+import com.Atom2Universe.app.games.caves.entity.WeaponVariant
+import com.Atom2Universe.app.games.caves.node.GameEvent
 import com.Atom2Universe.app.games.caves.node.MobDef
 import com.Atom2Universe.app.games.caves.world.AIR
 import com.Atom2Universe.app.games.caves.world.MapSource
 import com.Atom2Universe.app.games.caves.world.isDecoration
 import com.Atom2Universe.app.games.caves.world.isWater
 import kotlin.math.atan2
-import kotlin.math.sqrt
 import kotlin.random.Random
 
 /**
  * Le mode Assaut : une carte préparée, jouée au fusil (voir CAVE_WORLD_ASSAUT.md).
  *
- * Phase 2 : des manches contre des mannequins immobiles. Chaque manche place [AssaultMatch.targetsPerRound]
- * mannequins au hasard sur la carte ; il faut tous les abattre avant la fin du chrono. Toutes les
+ * Chaque manche oppose le joueur à [SOLDIERS_PER_ROUND] soldats, qui apparaissent de l'autre côté
+ * de la carte. Il faut tous les éliminer avant la fin du chrono ; mourir perd la manche. Toutes les
  * armes sont prêtées, les munitions de réserve sont illimitées, l'heure est figée à midi, et la
  * carte ne se creuse pas.
  *
- * Phase 3 : un mannequin **coureur** (bleu) teste la navigation. Il suit le joueur en contournant
- * les obstacles et s'arrête dès qu'il le voit à moins de [RUNNER_STOP_DISTANCE] blocs. Il ne compte
- * pas dans la manche ; abattu, il repart du coin opposé. [showPath] trace son chemin au sol.
- *
- * Mannequins et coureur sont de simples [Enemy] rangés dans la liste de l'EnemyManager : le renderer
- * les dessine et les balles les touchent comme des monstres. Mais l'EnemyManager n'est jamais mis à
- * jour ici : c'est ce mode qui décide de leurs mouvements.
+ * Les soldats pensent avec [Soldier] (Kotlin pur, testé seul). Leur corps est un simple [Enemy]
+ * rangé dans la liste de l'EnemyManager : le renderer le dessine et les balles du joueur le
+ * touchent. L'EnemyManager n'est jamais mis à jour ici : c'est ce mode qui place les corps là où
+ * les cerveaux ont décidé d'aller.
  */
 internal class AssaultMode(
     private val r: CaveRenderer,
     private val source: MapSource,
 ) : GameMode {
 
-    val match = AssaultMatch()
+    val match = AssaultMatch(targetsPerRound = SOLDIERS_PER_ROUND, roundSeconds = ROUND_SECONDS)
 
     /** Nouvel état de la partie à afficher. Appelé sur le thread GL, une dizaine de fois par seconde au plus. */
     @Volatile var onStatus: ((AssaultMatch.Status) -> Unit)? = null
 
-    /** Un mannequin vient de tomber d'un tir à la tête. Appelé sur le thread GL. */
+    /** Un soldat vient de tomber d'un tir à la tête. Appelé sur le thread GL. */
     @Volatile var onHeadshotKill: (() -> Unit)? = null
 
-    /** Tracer au sol le chemin du coureur (bouton 🧭). */
+    /** Tracer au sol le chemin des soldats (bouton 🧭). */
     @Volatile var showPath = false
 
     override val allowsWorldEdits: Boolean get() = false
@@ -55,11 +57,15 @@ internal class AssaultMode(
     override val fixedTimeOfDayMs: Long get() = NOON_MS
     override val headshotMultiplier: Float get() = HEADSHOT_MULTIPLIER
 
-    private val targets get() = r.enemyManager.enemies
+    /** Un soldat : son corps (dessiné, touché par les balles) et son cerveau. */
+    private class Trooper(val body: Enemy, val brain: Soldier)
 
-    // Dernier coup reçu par chaque mannequin (par id) : c'est lui qui dit s'il est tombé d'un tir à la tête.
+    private val units = ArrayList<Trooper>(SOLDIERS_PER_ROUND)
+    private val bodies get() = r.enemyManager.enemies
+
+    // Dernier coup reçu par chaque soldat (par id) : c'est lui qui dit s'il est tombé d'un tir à la tête.
     private val lastHitWasHead = HashMap<Int, Boolean>()
-    private var nextTargetId = 1
+    private var nextSoldierId = 1
     private val rng = Random.Default
     private var statusTimer = 0f
 
@@ -67,10 +73,22 @@ internal class AssaultMode(
     private val solid = SolidGrid { x, y, z -> blocksMovement(source.map.blockAt(x, y, z)) }
     private var navGrid: NavGrid? = null
     private var pathFinder: PathFinder? = null
-    private var follower: PathFollower? = null
-    private var runner: Enemy? = null
-    private val pathBuffer = IntList(128)
-    private var repathTimer = 0f
+
+    // ── Le joueur vu par les soldats (coordonnées de la carte) ──
+    private val player = PlayerSnapshot()
+    private var prevPlayerX = Double.NaN
+    private var prevPlayerZ = Double.NaN
+
+    // Balles des soldats : même aspect que les balles du joueur, dégâts fixes.
+    private val bulletLook = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+    private val shotSink = ShotSink { x, y, z, dx, dy, dz ->
+        r.projectiles.add(Projectile(
+            x + source.originX, y + source.originY, z + source.originZ, dx, dy, dz,
+            BULLET_SPEED, SOLDIER_DAMAGE, bulletLook,
+            kind = ProjectileKind.BULLET, maxRange = BULLET_RANGE, fromEnemy = true,
+        ))
+        r.eventBus.publish(GameEvent.EnemyFired)
+    }
 
     override fun spawnPoint(): FloatArray = source.spawnPoint()
 
@@ -78,18 +96,34 @@ internal class AssaultMode(
         // Pas encore d'équipement de match : on prête toutes les armes à distance.
         r.giveWeaponTestKit()
         r.loadoutChangedCallback?.invoke()
+        r.playerNode.setMaxHp(PLAYER_MAX_HP, PLAYER_MAX_HP)
 
         val map = source.map
         val grid = NavGrid.build(map.sizeX, map.sizeY, map.sizeZ, solid)
         navGrid = grid
         pathFinder = PathFinder(grid)
-        follower = PathFollower(grid)
     }
 
-    override fun onPlayerPlaced(x: Double, y: Double, z: Double) = Unit
+    override fun onPlayerPlaced(x: Double, y: Double, z: Double) = kotlin.Unit
 
     override fun onEnemyHit(enemy: Enemy, headshot: Boolean) {
         lastHitWasHead[enemy.id] = headshot
+        r.eventBus.publish(GameEvent.MobHit(false))
+        // Touché : il sait d'où vient le tir, même sans avoir vu le tireur.
+        val unit = units.firstOrNull { it.body === enemy } ?: return
+        refreshPlayerPosition()
+        unit.brain.onDamaged(player.x, player.eyeY, player.z)
+    }
+
+    override fun onPlayerShot(damage: Int, dirX: Double, dirZ: Double) {
+        if (match.phase != AssaultMatch.Phase.PLAYING || r.playerNode.hp <= 0) return
+        r.playerNode.applyDamage(damage)
+        r.eventBus.publish(GameEvent.PlayerHit(damage, dirX.toFloat(), dirZ.toFloat()))
+    }
+
+    override fun onPlayerFired() {
+        refreshPlayerPosition()
+        for (u in units) u.brain.hearShot(player.x, player.eyeY, player.z)
     }
 
     override fun update(dt: Float) {
@@ -97,16 +131,24 @@ internal class AssaultMode(
         if (r.camera.playerY < source.originY - FALL_LIMIT) respawnPlayer()
 
         // L'EnemyManager ne tourne pas dans ce mode : on éteint nous-mêmes le flash des coups.
-        for (t in targets) if (t.hitFlash > 0f) t.hitFlash -= dt
+        for (b in bodies) if (b.hitFlash > 0f) b.hitFlash -= dt
 
-        updateRunner(dt)
-        collectFallenTargets()
+        updatePlayerSnapshot(dt)
 
         var forceStatus = false
+        if (match.phase == AssaultMatch.Phase.PLAYING && r.playerNode.hp <= 0 &&
+            match.onPlayerDied() == AssaultMatch.Event.ROUND_ENDED) {
+            clearSoldiers()
+            forceStatus = true
+        }
+
+        updateSoldiers(dt)
+        if (collectFallenSoldiers()) forceStatus = true
+
         when (match.update(dt)) {
             AssaultMatch.Event.ROUND_STARTED -> { startRound(); forceStatus = true }
-            AssaultMatch.Event.ROUND_ENDED -> { clearTargets(); forceStatus = true }
-            AssaultMatch.Event.NONE -> Unit
+            AssaultMatch.Event.ROUND_ENDED -> { clearSoldiers(); forceStatus = true }
+            AssaultMatch.Event.NONE -> kotlin.Unit
         }
 
         statusTimer += dt
@@ -119,164 +161,146 @@ internal class AssaultMode(
     override fun debugSegments(out: DoubleArray): Int {
         if (!showPath) return 0
         val grid = navGrid ?: return 0
-        val f = follower ?: return 0
-        if (f.arrived) return 0
         val max = out.size / 6
         var count = 0
-        // Du coureur à sa prochaine case, puis de case en case jusqu'au bout.
-        var fromX = f.x + source.originX; var fromY = f.y + source.originY + PATH_LIFT; var fromZ = f.z + source.originZ
-        for (i in f.nextIndex until f.path.size) {
-            if (count >= max) break
-            val n = f.path[i]
-            val toX = grid.nodeX[n] + 0.5 + source.originX
-            val toY = grid.nodeY[n] + source.originY + PATH_LIFT
-            val toZ = grid.nodeZ[n] + 0.5 + source.originZ
-            val o = count * 6
-            out[o] = fromX; out[o + 1] = fromY; out[o + 2] = fromZ
-            out[o + 3] = toX; out[o + 4] = toY; out[o + 5] = toZ
-            count++
-            fromX = toX; fromY = toY; fromZ = toZ
+        for (u in units) {
+            val f = u.brain.follower
+            if (f.arrived) continue
+            // Du soldat à sa prochaine case, puis de case en case jusqu'au bout.
+            var fromX = f.x + source.originX; var fromY = f.y + source.originY + PATH_LIFT; var fromZ = f.z + source.originZ
+            for (i in f.nextIndex until f.path.size) {
+                if (count >= max) return count
+                val n = f.path[i]
+                val toX = grid.nodeX[n] + 0.5 + source.originX
+                val toY = grid.nodeY[n] + source.originY + PATH_LIFT
+                val toZ = grid.nodeZ[n] + 0.5 + source.originZ
+                val o = count * 6
+                out[o] = fromX; out[o + 1] = fromY; out[o + 2] = fromZ
+                out[o + 3] = toX; out[o + 4] = toY; out[o + 5] = toZ
+                count++
+                fromX = toX; fromY = toY; fromZ = toZ
+            }
         }
         return count
     }
 
-    // ── Coureur ───────────────────────────────────────────────────────────────
+    // ── Soldats ───────────────────────────────────────────────────────────────
 
-    private fun updateRunner(dt: Float) {
-        val grid = navGrid ?: return
-        val finder = pathFinder ?: return
-        val f = follower ?: return
-        val bot = runner ?: return
-        if (bot.hp <= 0) { resetRunner(); return }
+    private fun updateSoldiers(dt: Float) {
+        for (u in units) {
+            val brain = u.brain
+            brain.update(dt, player, shotSink)
+            if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
 
-        // Le joueur, en coordonnées de la carte (pieds et yeux).
-        val camera = r.camera
-        val px = camera.playerX - source.originX
-        val pz = camera.playerZ - source.originZ
-        val eyeY = camera.playerY - source.originY
-        val feetY = eyeY - EYE_HEIGHT
-
-        val dx = px - f.x; val dz = pz - f.z
-        val distance = sqrt(dx * dx + dz * dz)
-        val seesPlayer = distance <= RUNNER_STOP_DISTANCE &&
-            LineOfSight.isClear(f.x, f.y + EYE_HEIGHT, f.z, px, eyeY, pz, solid)
-
-        if (seesPlayer) {
-            // Assez près et rien entre nous : il s'arrête et regarde le joueur.
-            f.stop()
-            bot.state = EnemyState.WANDER
-            if (distance > 0.1) bot.yaw = Math.toDegrees(atan2(dx, dz)).toFloat()
-        } else {
-            repathTimer -= dt
-            if (repathTimer <= 0f || f.arrived) {
-                repathTimer = REPATH_INTERVAL
-                val from = grid.nodeUnder(f.x, f.y, f.z)
-                val to = grid.nodeUnder(px, feetY, pz)
-                if (from >= 0 && to >= 0 && from != to && finder.findPath(from, to, pathBuffer)) f.follow(pathBuffer)
-            }
-            if (f.advance(dt, RUNNER_SPEED)) {
-                bot.state = EnemyState.CHASE   // jambes et bras qui balancent
-                bot.animTime += dt
-                bot.yaw = f.yawDeg
+            val body = u.body
+            body.x = brain.x + source.originX
+            body.y = brain.y + source.originY
+            body.z = brain.z + source.originZ
+            body.yaw = brain.yawDeg
+            if (brain.isMoving) {
+                body.state = EnemyState.CHASE   // jambes et bras qui balancent
+                body.animTime += dt
             } else {
-                bot.state = EnemyState.WANDER
+                body.state = EnemyState.WANDER
             }
         }
-        bot.x = f.x + source.originX
-        bot.y = f.y + source.originY
-        bot.z = f.z + source.originZ
     }
 
-    /** (Re)place le coureur au dernier point d'apparition (coin opposé au joueur), PV au maximum. */
-    private fun resetRunner() {
-        val f = follower ?: return
-        val spawn = source.spawnPoint(1)
-        f.place(
-            spawn[0].toDouble() - source.originX,
-            spawn[1].toDouble() - EYE_HEIGHT - source.originY,
-            spawn[2].toDouble() - source.originZ,
-        )
-        val bot = runner ?: Enemy(RUNNER_ID, RUNNER, 0.0, 0.0, 0.0).also {
-            runner = it
-            targets += it
-        }
-        if (bot !in targets) targets += bot
-        bot.hp = bot.maxHp
-        bot.hitFlash = 0f
-        bot.state = EnemyState.WANDER
-        bot.x = f.x + source.originX; bot.y = f.y + source.originY; bot.z = f.z + source.originZ
-        lastHitWasHead.remove(bot.id)
-        repathTimer = 0f
-    }
-
-    // ── Manches ───────────────────────────────────────────────────────────────
-
-    private fun collectFallenTargets() {
-        var i = targets.size - 1
+    /** Retire les soldats abattus. Renvoie vrai si l'affichage de la partie doit être rafraîchi. */
+    private fun collectFallenSoldiers(): Boolean {
+        var changed = false
+        var i = units.size - 1
         while (i >= 0) {
-            val t = targets[i]
-            if (t.hp <= 0 && t !== runner) {
-                targets.removeAt(i)
-                val headshot = lastHitWasHead.remove(t.id) == true
+            val body = units[i].body
+            if (body.hp <= 0) {
+                units.removeAt(i)
+                bodies.remove(body)
+                changed = true
+                val headshot = lastHitWasHead.remove(body.id) == true
                 if (headshot) onHeadshotKill?.invoke()
+                // Pas MobDied : lui déclenche le butin de la survie, qui ne connaît pas les soldats.
+                r.eventBus.publish(GameEvent.SoldierDown)
                 if (match.onTargetDown(headshot) == AssaultMatch.Event.ROUND_ENDED) {
-                    // Dernier mannequin : la manche est gagnée, le bilan s'affiche tout de suite.
-                    clearTargets()
-                    onStatus?.invoke(match.status())
-                    return
+                    clearSoldiers()
+                    return true
                 }
             }
             i--
         }
+        return changed
     }
 
     private fun startRound() {
-        clearTargets()
+        clearSoldiers()
         respawnPlayer()
-        resetRunner()
-        placeTargets()
+        r.playerNode.setMaxHp(PLAYER_MAX_HP, PLAYER_MAX_HP)
+        spawnSoldiers()
     }
 
-    /** Retire les mannequins de la manche ; le coureur reste. */
-    private fun clearTargets() {
-        val bot = runner
-        targets.clear()
+    private fun clearSoldiers() {
+        units.clear()
+        bodies.clear()
         lastHitWasHead.clear()
-        if (bot != null) targets += bot
+        // Les balles encore en vol ne doivent pas toucher le joueur pendant la pause.
+        r.projectiles.removeAll { it.fromEnemy }
     }
 
     /**
-     * Pose les mannequins au hasard : au niveau du sol de départ (ni sur un mur, ni dans un trou),
-     * loin du point d'apparition, et pas collés les uns aux autres.
+     * Fait apparaître les soldats près du point d'apparition adverse (coin opposé), bien loin du
+     * joueur et un peu espacés entre eux.
      */
-    private fun placeTargets() {
-        val spawn = source.spawnPoint()
-        val spawnX = spawn[0].toDouble(); val spawnZ = spawn[2].toDouble()
-        val floorY = (spawn[1] - EYE_HEIGHT).toInt()
-        val map = source.map
-        val spanX = map.sizeX - 2 * TARGET_MARGIN
-        val spanZ = map.sizeZ - 2 * TARGET_MARGIN
-        if (spanX <= 0 || spanZ <= 0) return
+    private fun spawnSoldiers() {
+        val grid = navGrid ?: return
+        val finder = pathFinder ?: return
+        if (grid.nodeCount == 0) return
+        val playerSpawn = source.spawnPoint(0)
+        val enemySpawn = source.spawnPoint(1)
+        val px = playerSpawn[0].toDouble() - source.originX; val pz = playerSpawn[2].toDouble() - source.originZ
+        val ex = enemySpawn[0].toDouble() - source.originX; val ez = enemySpawn[2].toDouble() - source.originZ
 
-        var placed = 0
         var attempts = 0
-        while (placed < match.targetsPerRound && attempts < MAX_PLACEMENT_ATTEMPTS) {
+        while (units.size < SOLDIERS_PER_ROUND && attempts < MAX_SPAWN_ATTEMPTS) {
             attempts++
-            val bx = source.originX + TARGET_MARGIN + rng.nextInt(spanX)
-            val bz = source.originZ + TARGET_MARGIN + rng.nextInt(spanZ)
-            if (source.skyTopY(bx, bz) != floorY) continue
+            val n = rng.nextInt(grid.nodeCount)
+            val x = grid.nodeX[n] + 0.5; val z = grid.nodeZ[n] + 0.5
+            // D'abord autour du camp adverse ; si ça ne suffit pas, n'importe où loin du joueur.
+            val nearEnemySpawn = attempts < MAX_SPAWN_ATTEMPTS / 2
+            if (nearEnemySpawn && distSq(x, z, ex, ez) > ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS) continue
+            if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
+            if (units.any { distSq(x, z, it.brain.x, it.brain.z) < MIN_SOLDIER_SPACING * MIN_SOLDIER_SPACING }) continue
 
-            val x = bx + 0.5; val z = bz + 0.5
-            if (distSq(x, z, spawnX, spawnZ) < MIN_DIST_FROM_SPAWN * MIN_DIST_FROM_SPAWN) continue
-            if (targets.any { distSq(x, z, it.x, it.z) < MIN_TARGET_SPACING * MIN_TARGET_SPACING }) continue
-
-            val target = Enemy(nextTargetId++, DUMMY, x, floorY.toDouble(), z)
-            target.hp = target.maxHp
-            // Face au point d'apparition, pour que le joueur voie la cible peinte sur le torse.
-            target.yaw = Math.toDegrees(atan2(spawnX - x, spawnZ - z)).toFloat()
-            targets += target
-            placed++
+            val brain = Soldier(grid, solid, finder, rng)
+            brain.place(x, grid.nodeY[n].toDouble(), z)
+            val body = Enemy(nextSoldierId++, SOLDIER, x + source.originX, grid.nodeY[n].toDouble() + source.originY, z + source.originZ)
+            body.hp = body.maxHp
+            units += Trooper(body, brain)
+            bodies += body
         }
+    }
+
+    // ── Joueur ────────────────────────────────────────────────────────────────
+
+    private fun refreshPlayerPosition() {
+        val camera = r.camera
+        player.x = camera.playerX - source.originX
+        player.eyeY = camera.playerY - source.originY
+        player.z = camera.playerZ - source.originZ
+        player.alive = r.playerNode.hp > 0
+    }
+
+    private fun updatePlayerSnapshot(dt: Float) {
+        refreshPlayerPosition()
+        // Vitesse à l'horizontale, pour que les soldats visent moins bien un joueur qui court.
+        if (!prevPlayerX.isNaN() && dt > 0f) {
+            val vx = (player.x - prevPlayerX) / dt
+            val vz = (player.z - prevPlayerZ) / dt
+            // Une téléportation (réapparition) n'est pas une course.
+            val teleported = vx * vx + vz * vz > MAX_PLAYER_SPEED * MAX_PLAYER_SPEED
+            player.velX = if (teleported) 0.0 else vx
+            player.velZ = if (teleported) 0.0 else vz
+        }
+        prevPlayerX = player.x
+        prevPlayerZ = player.z
     }
 
     private fun respawnPlayer() {
@@ -305,39 +329,37 @@ internal class AssaultMode(
         /** Midi dans le cycle de CaveRenderer (6 h = 0 ms, 100 000 ms par heure de jour). */
         const val NOON_MS = 600_000L
 
+        const val SOLDIERS_PER_ROUND = 3
+        const val ROUND_SECONDS = 180f
+        const val PLAYER_MAX_HP = 100
         const val HEADSHOT_MULTIPLIER = 2f
-        const val EYE_HEIGHT = 1.62f
         const val STATUS_INTERVAL = 0.1f
 
-        const val TARGET_MARGIN = 4
-        const val MIN_DIST_FROM_SPAWN = 20.0
-        const val MIN_TARGET_SPACING = 5.0
-        const val MAX_PLACEMENT_ATTEMPTS = 500
+        /** Dégâts d'une balle de soldat : une douzaine suffisent à abattre le joueur. */
+        const val SOLDIER_DAMAGE = 8
+        const val BULLET_SPEED = 70f
+        const val BULLET_RANGE = 90f
 
-        const val RUNNER_ID = -1
-        const val RUNNER_SPEED = 4f
-        const val RUNNER_STOP_DISTANCE = 8.0
-        const val REPATH_INTERVAL = 0.5f
+        const val ENEMY_SPAWN_RADIUS = 15.0
+        const val MIN_DIST_FROM_PLAYER = 40.0
+        const val MIN_SOLDIER_SPACING = 3.0
+        const val MAX_SPAWN_ATTEMPTS = 2000
+        const val MAX_PLAYER_SPEED = 30.0
+
         /** Hauteur du tracé au-dessus du sol, pour qu'il ne clignote pas dans l'herbe. */
         const val PATH_LIFT = 0.06
 
         /** Même règle que la physique du joueur : l'air, la déco et l'eau ne bloquent pas. */
         fun blocksMovement(block: Short) = block != AIR && !isDecoration(block) && !isWater(block)
 
-        /**
-         * Mannequin : 100 PV (3 à 5 balles de pistolet au corps, 2 ou 3 à la tête), aucune attaque,
-         * aucun déplacement, insensible aux effets élémentaires (qui ne s'appliqueraient pas ici).
-         */
-        val DUMMY = MobDef(
-            id = "assault_dummy", hpBase = 100, damageBase = 0, speed = 0f,
-            attackRange = 0.0, detectRange = 0.0, eyeHeight = 1.7f, radius = 0.45f,
+        /** Soldat : 100 PV (3 à 5 balles de pistolet au corps, 2 ou 3 à la tête), insensible aux effets élémentaires. */
+        val SOLDIER = MobDef(
+            id = "assault_soldier", hpBase = 100, damageBase = SOLDIER_DAMAGE, speed = 4.2f,
+            attackRange = 45.0, detectRange = 45.0, eyeHeight = 1.62f, radius = 0.45f,
             spriteScale = 0.9f, hpScalePerLevel = 1.0, hpScaleCap = 1.0, damageScalePer3Lvl = 0,
-            speedScalePerLevel = 0f, biomes = emptyList(), model = "dummy", spawnZoneMin = 0,
-            spawnWeight = 0f, lootTable = "", behavior = "static", bossEligible = false, xpBase = 0,
+            speedScalePerLevel = 0f, biomes = emptyList(), model = "soldier", spawnZoneMin = 0,
+            spawnWeight = 0f, lootTable = "", behavior = "soldier", bossEligible = false, xpBase = 0,
             resistances = mapOf("bleed" to 0f, "poison" to 0f, "fire" to 0f, "ice" to 0f, "electric" to 0f),
         )
-
-        /** Le coureur : même mannequin, en bleu, qui marche. */
-        val RUNNER = DUMMY.copy(id = "assault_runner", model = "runner", speed = RUNNER_SPEED)
     }
 }
