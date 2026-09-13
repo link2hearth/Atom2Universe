@@ -481,5 +481,36 @@
     <string name="cave_ui_map">Map</string>
     <string name="cave_ui_ascend">Ascend</string>
     <string name="cave_ui_descend">Descend</string>
+    <string name="cave_menu_tagline">One block. Endless possibilities.</string>
+    <string name="cave_menu_infinite">Infinite worlds</string>
+    <string name="cave_menu_worlds_short">Survival &amp; Creative</string>
+    <string name="cave_menu_assault_short">Arenas &amp; combat</string>
+    <string name="cave_menu_tab">%1$s. %2$s</string>
+    <string name="cave_menu_tab_selected">%1$s. %2$s. Selected</string>
+    <string name="cave_menu_worlds_description">Explore, gather and build at your own pace. The same worlds, in Survival or Creative.</string>
+    <string name="cave_menu_assault_description">Pick an arena. Defeat the soldiers before time runs out and chain together rounds.</string>
+    <string name="cave_menu_worlds_heading">Your worlds</string>
+    <string name="cave_menu_maps_heading">Choose your arena</string>
+    <string name="cave_menu_loading">Loading…</string>
+    <string name="cave_menu_load_failed">Unable to load the menu</string>
+    <string name="cave_menu_retry_hint">Please try again to display your worlds and maps.</string>
+    <string name="cave_menu_retry">Try again</string>
+    <string name="cave_menu_empty_title">Your next adventure starts here</string>
+    <string name="cave_menu_empty_hint">Create your first world using the button above. You can switch between Survival and Creative later.</string>
+    <string name="cave_menu_survival">Survival</string>
+    <string name="cave_menu_play">Play</string>
+    <string name="cave_menu_manage">Manage</string>
+    <string name="cave_menu_manage_named">Manage %1$s</string>
+    <string name="cave_menu_bundled_map">Included arena</string>
+    <string name="cave_menu_personal_map">Your arena</string>
+    <string name="cave_menu_launch_assault">Launch assault</string>
+    <string name="cave_menu_switch_survival">Switch to Survival</string>
+    <string name="cave_menu_switch_creative">Switch to Creative</string>
+    <string name="cave_menu_details">Seed</string>
+    <string name="cave_menu_create_hint">One world, two ways to play. You can change the mode later from Manage.</string>
+    <string name="cave_menu_game_mode">Starting mode</string>
+    <string name="cave_menu_survival_choice">Survival · Gather, explore, survive</string>
+    <string name="cave_menu_creative_choice">Creative · Build freely</string>
+    <string name="cave_menu_invalid_seed">Enter a whole number between −9223372036854775808 and 9223372036854775807, or leave empty.</string>
+    <string name="cave_menu_save_failed">Unable to save this change. Please try again.</string>
 </resources>
-

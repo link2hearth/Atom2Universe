@@ -481,5 +481,36 @@
     <string name="cave_ui_map">Carte</string>
     <string name="cave_ui_ascend">Monter</string>
     <string name="cave_ui_descend">Descendre</string>
+    <string name="cave_menu_tagline">Un bloc. Mille possibilités.</string>
+    <string name="cave_menu_infinite">Mondes infinis</string>
+    <string name="cave_menu_worlds_short">Survie &amp; Créatif</string>
+    <string name="cave_menu_assault_short">Arènes &amp; combats</string>
+    <string name="cave_menu_tab">%1$s. %2$s</string>
+    <string name="cave_menu_tab_selected">%1$s. %2$s. Sélectionné</string>
+    <string name="cave_menu_worlds_description">Explorez, récoltez et construisez à votre rythme. Les mêmes mondes, en Survie ou en Créatif.</string>
+    <string name="cave_menu_assault_description">Choisissez une arène. Éliminez les soldats avant la fin du chrono et enchaînez les manches.</string>
+    <string name="cave_menu_worlds_heading">Vos mondes</string>
+    <string name="cave_menu_maps_heading">Choisissez votre arène</string>
+    <string name="cave_menu_loading">Chargement…</string>
+    <string name="cave_menu_load_failed">Impossible de charger le menu</string>
+    <string name="cave_menu_retry_hint">Réessayez pour afficher vos mondes et vos cartes.</string>
+    <string name="cave_menu_retry">Réessayer</string>
+    <string name="cave_menu_empty_title">Votre prochaine aventure commence ici</string>
+    <string name="cave_menu_empty_hint">Créez votre premier monde avec le bouton ci-dessus. Vous pourrez ensuite passer de Survie à Créatif.</string>
+    <string name="cave_menu_survival">Survie</string>
+    <string name="cave_menu_play">Jouer</string>
+    <string name="cave_menu_manage">Gérer</string>
+    <string name="cave_menu_manage_named">Gérer %1$s</string>
+    <string name="cave_menu_bundled_map">Arène incluse</string>
+    <string name="cave_menu_personal_map">Votre arène</string>
+    <string name="cave_menu_launch_assault">Lancer l’assaut</string>
+    <string name="cave_menu_switch_survival">Passer en Survie</string>
+    <string name="cave_menu_switch_creative">Passer en Créatif</string>
+    <string name="cave_menu_details">Graine</string>
+    <string name="cave_menu_create_hint">Un monde, deux façons de jouer. Le mode reste modifiable depuis Gérer.</string>
+    <string name="cave_menu_game_mode">Mode de départ</string>
+    <string name="cave_menu_survival_choice">Survie · Récolter, explorer, survivre</string>
+    <string name="cave_menu_creative_choice">Créatif · Construire en toute liberté</string>
+    <string name="cave_menu_invalid_seed">Saisissez un entier entre −9223372036854775808 et 9223372036854775807, ou laissez vide.</string>
+    <string name="cave_menu_save_failed">Impossible d’enregistrer cette modification. Réessayez.</string>
 </resources>
-

@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/midi_surface"
-    android:padding="24dp">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/cave_dialog_name_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/cave_menu_world_name_hint"
-        android:layout_marginBottom="16dp"
-        app:boxStrokeColor="?attr/a2uMidiAccent"
-        app:hintTextColor="@color/midi_text_secondary"
-        app:counterEnabled="false"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cave_dialog_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/cave_dialog_seed_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/cave_menu_seed_hint"
-        app:boxStrokeColor="?attr/a2uMidiAccent"
-        app:hintTextColor="@color/midi_text_secondary"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/cave_dialog_seed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:inputType="numberSigned" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-</LinearLayout>
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="24dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/cave_menu_create_hint" android:textColor="#B0C3C9"
+            android:textSize="14sp" android:layout_marginBottom="16dp" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cave_dialog_name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="@string/cave_menu_world_name_hint" android:layout_marginBottom="12dp"
+            app:boxStrokeColor="#A6DDAC" app:hintTextColor="#B0C3C9">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/cave_dialog_name"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:singleLine="true" android:maxLength="80" android:textColor="#EFF5F2"
+                android:inputType="textCapSentences" android:imeOptions="actionNext" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/cave_menu_game_mode" android:textStyle="bold"
+            android:textColor="#EFF5F2" android:textSize="14sp" />
+        <RadioGroup android:id="@+id/cave_dialog_mode" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:checkedButton="@id/cave_dialog_survival"
+            android:orientation="vertical" android:layout_marginBottom="12dp">
+            <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/cave_dialog_survival"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+                android:text="@string/cave_menu_survival_choice" android:textColor="#EFF5F2" app:buttonTint="#A6DDAC" />
+            <com.google.android.material.radiobutton.MaterialRadioButton android:id="@+id/cave_dialog_creative"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp"
+                android:text="@string/cave_menu_creative_choice" android:textColor="#EFF5F2" app:buttonTint="#A3C8F9" />
+        </RadioGroup>
+        <com.google.android.material.textfield.TextInputLayout android:id="@+id/cave_dialog_seed_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:hint="@string/cave_menu_seed_hint" app:boxStrokeColor="#A6DDAC" app:hintTextColor="#B0C3C9">
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/cave_dialog_seed"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:singleLine="true" android:textColor="#EFF5F2"
+                android:inputType="numberSigned" android:imeOptions="actionDone" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+</ScrollView>

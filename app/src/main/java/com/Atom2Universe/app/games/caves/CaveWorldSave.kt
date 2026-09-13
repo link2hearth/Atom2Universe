@@ -69,11 +69,11 @@ internal object CaveWorldSaveManager {
             ?.sortedByDescending { it.lastPlayedAt }
             ?: emptyList()
 
-    fun createWorld(context: Context, name: String, seed: Long): CaveWorldSave {
+    fun createWorld(context: Context, name: String, seed: Long, isCreative: Boolean = false): CaveWorldSave {
         val id = "${System.currentTimeMillis()}_${(1000..9999).random()}"
         val now = System.currentTimeMillis()
         val save = CaveWorldSave(
-            id = id, name = name, seed = seed,
+            id = id, name = name, seed = seed, isCreative = isCreative,
             createdAt = now, lastPlayedAt = now,
             playerX = 0.0, playerY = 0.0, playerZ = 0.0,
             playerYaw = 0f, playerPitch = 0f,
