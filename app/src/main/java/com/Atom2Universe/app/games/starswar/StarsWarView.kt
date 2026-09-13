@@ -134,6 +134,7 @@ class StarsWarView @JvmOverloads constructor(
         val sinAmp: Float, val sinFreq: Float,
         val isBoss: Boolean = false,
         var elapsed: Float = 0f,
+        var hitFlash: Float = 0f,
         // Champs pour les chemins en formation (PATH_ENTRY_*/PATH_LOOP_*)
         val entryX0: Float = 0f,
         val entryY0: Float = 0f,
@@ -151,7 +152,7 @@ class StarsWarView @JvmOverloads constructor(
         val dmg: Int = -1,       // -1 = utilise bulletDmg
         val isDrone: Boolean = false
     )
-    private data class Rocket(var x: Float, var y: Float)
+    private data class Rocket(var x: Float, var y: Float, var angle: Float = 0f)
     private data class Drone(var angle: Float, var fireCooldown: Float)
     private data class Meteor(var x: Float, var y: Float, val radius: Float, val speed: Float, val dx: Float = 0f)
     private data class PendingSpawn(
@@ -166,11 +167,11 @@ class StarsWarView @JvmOverloads constructor(
 
     private data class UpgradeData(
         val id: Int, val name: String, val desc: String,
-        val hexColor: String, val maxStack: Int
+        val maxStack: Int
     )
 
-    // ── Enemy definitions (7 types matching JS) ───────────────────────────────
-    // Order matches SPRITE_DEFINITIONS: drone, fast, gunner, tank, kamikaze, sniper, carrier
+    // ── Enemy definitions (7 silhouettes permanentes) ───────────────────────────────
+    // Ordre partagé avec SpaceFightArt : éclaireur, rapide, artilleur, blindé, percuteur, prisme, porteur
     private val enemyDefs = arrayOf(
         EnemyDef(hp = 1, speed = 75f,  score = 50,  path = PATH_LINE),                                   // 0 drone
         EnemyDef(hp = 1, speed = 155f, score = 70,  path = PATH_SIN),                                    // 1 fast
@@ -180,26 +181,26 @@ class StarsWarView @JvmOverloads constructor(
         EnemyDef(hp = 2, speed = 60f,  score = 110, canShoot = true, fireRate = 1.5f, path = PATH_LINE), // 5 sniper
         EnemyDef(hp = 2, speed = 55f,  score = 90,  canShoot = true, fireRate = 2.5f, path = PATH_SIN)   // 6 carrier
     )
-    // Per-type display sizes (pixels) — matches JS: drone/fast/etc=40px, tank=48px
+    // Dimensions logiques conservées pour le dessin et les collisions
     private val enemySizes = floatArrayOf(46f, 46f, 46f, 54f, 44f, 46f, 50f)
 
     // ── Upgrade pool ──────────────────────────────────────────────────────────
     private val upgradePool by lazy { listOf(
-        UpgradeData(UPG_RAPID_FIRE,  s(R.string.sw_upg_rapid_fire_name),   s(R.string.sw_upg_rapid_fire_desc),   "#FF8C00", 99),
-        UpgradeData(UPG_MULTI_SHOT,  s(R.string.sw_upg_multi_shot_name),   s(R.string.sw_upg_multi_shot_desc),   "#4488FF",  3),
-        UpgradeData(UPG_POWER_SHOT,  s(R.string.sw_upg_power_shot_name),   s(R.string.sw_upg_power_shot_desc),   "#FF3344", 99),
-        UpgradeData(UPG_SHIELD,      s(R.string.sw_upg_shield_name),       s(R.string.sw_upg_shield_desc),       "#00CED1",  3),
-        UpgradeData(UPG_HEAL,        s(R.string.sw_upg_heal_name),         s(R.string.sw_upg_heal_desc),         "#44DD55", 99),
-        UpgradeData(UPG_MAX_HP_RARE, s(R.string.sw_upg_max_hp_name),       s(R.string.sw_upg_max_hp_desc),       "#228B22",  3),
-        UpgradeData(UPG_PIERCE,      s(R.string.sw_upg_pierce_name),       s(R.string.sw_upg_pierce_desc),       "#CC44FF",  3),
-        UpgradeData(UPG_ROCKET,      s(R.string.sw_upg_rocket_name),       s(R.string.sw_upg_rocket_desc),       "#FF6600",  1),
-        UpgradeData(UPG_ROCKET_RATE, s(R.string.sw_upg_rocket_rate_name),  s(R.string.sw_upg_rocket_rate_desc),  "#FFAA00", 99),
-        UpgradeData(UPG_ROCKET_DMG,  s(R.string.sw_upg_rocket_dmg_name),   s(R.string.sw_upg_rocket_dmg_desc),   "#FF4400", 99),
-        UpgradeData(UPG_MAGNET,      s(R.string.sw_upg_magnet_name),       s(R.string.sw_upg_magnet_desc),       "#8844FF",  1),
-        UpgradeData(UPG_MAGNET_DUR,  s(R.string.sw_upg_magnet_dur_name),   s(R.string.sw_upg_magnet_dur_desc),   "#AA66FF",  4),
-        UpgradeData(UPG_DRONE,       s(R.string.sw_upg_drone_name),        s(R.string.sw_upg_drone_desc),        "#44FFAA",  3),
-        UpgradeData(UPG_VAMPIRE,     s(R.string.sw_upg_vampire_name),      s(R.string.sw_upg_vampire_desc),      "#FF4488",  1),
-        UpgradeData(UPG_NOVA,        s(R.string.sw_upg_nova_name),         s(R.string.sw_upg_nova_desc),         "#FFEE44",  1)
+        UpgradeData(UPG_RAPID_FIRE,  s(R.string.sw_upg_rapid_fire_name),   s(R.string.sw_upg_rapid_fire_desc), 99),
+        UpgradeData(UPG_MULTI_SHOT,  s(R.string.sw_upg_multi_shot_name),   s(R.string.sw_upg_multi_shot_desc),  3),
+        UpgradeData(UPG_POWER_SHOT,  s(R.string.sw_upg_power_shot_name),   s(R.string.sw_upg_power_shot_desc), 99),
+        UpgradeData(UPG_SHIELD,      s(R.string.sw_upg_shield_name),       s(R.string.sw_upg_shield_desc),  3),
+        UpgradeData(UPG_HEAL,        s(R.string.sw_upg_heal_name),         s(R.string.sw_upg_heal_desc), 99),
+        UpgradeData(UPG_MAX_HP_RARE, s(R.string.sw_upg_max_hp_name),       s(R.string.sw_upg_max_hp_desc),  3),
+        UpgradeData(UPG_PIERCE,      s(R.string.sw_upg_pierce_name),       s(R.string.sw_upg_pierce_desc),  3),
+        UpgradeData(UPG_ROCKET,      s(R.string.sw_upg_rocket_name),       s(R.string.sw_upg_rocket_desc),  1),
+        UpgradeData(UPG_ROCKET_RATE, s(R.string.sw_upg_rocket_rate_name),  s(R.string.sw_upg_rocket_rate_desc), 99),
+        UpgradeData(UPG_ROCKET_DMG,  s(R.string.sw_upg_rocket_dmg_name),   s(R.string.sw_upg_rocket_dmg_desc), 99),
+        UpgradeData(UPG_MAGNET,      s(R.string.sw_upg_magnet_name),       s(R.string.sw_upg_magnet_desc),  1),
+        UpgradeData(UPG_MAGNET_DUR,  s(R.string.sw_upg_magnet_dur_name),   s(R.string.sw_upg_magnet_dur_desc),  4),
+        UpgradeData(UPG_DRONE,       s(R.string.sw_upg_drone_name),        s(R.string.sw_upg_drone_desc),  3),
+        UpgradeData(UPG_VAMPIRE,     s(R.string.sw_upg_vampire_name),      s(R.string.sw_upg_vampire_desc),  1),
+        UpgradeData(UPG_NOVA,        s(R.string.sw_upg_nova_name),         s(R.string.sw_upg_nova_desc),  1)
     ) }
 
     // ── Phase & threading ─────────────────────────────────────────────────────
@@ -257,7 +258,6 @@ class StarsWarView @JvmOverloads constructor(
 
     // Nova state
     private var novaAvailable = false
-    private var novaFlashTimer = 0f
     private var lastSecondFingerTapMs = 0L
 
     // Perfect cycle & meteor phase
@@ -266,9 +266,6 @@ class StarsWarView @JvmOverloads constructor(
     private var meteorSpawnTimer = 0f
     private var meteorSessionCount = 0  // nb de phases météore déclenchées dans cette partie
     private var pendingUpgradePicks = 1
-
-    // Active upgrades list for HUD display
-    private val activeUpgrades = mutableListOf<String>()
 
     // ── Wave state ────────────────────────────────────────────────────────────
     private var waveNumber = 0
@@ -305,30 +302,16 @@ class StarsWarView @JvmOverloads constructor(
     private var newBestScore = false
     private var newBestWave = false
 
-    // ── Bitmaps ───────────────────────────────────────────────────────────────
-    private var playerBmp: Bitmap? = null
-    private val enemyBmps = arrayOfNulls<Bitmap>(7)   // 7 types matching JS
-    private val bossBmps  = arrayOfNulls<Bitmap>(2)   // 2 boss sprites from top half
+    private val art = SpaceFightArt()
+    private var playerBank = 0f
+    private var previousPlayerX = VW / 2f
+    private var phaseBeforePause = Phase.RUNNING
+    @Volatile private var pendingPauseToggle = false
+    @Volatile private var pendingPower = 0
 
-    // ── Sprite sets ───────────────────────────────────────────────────────────
-    // [shipsPath] for original sheet, [shipsPath, boss1Path, boss2Path] for families
-    private val spriteSets = arrayOf(
-        arrayOf("Stars war/StarsWar.png"),
-        arrayOf("Stars war/ships/neonships.png",    "Stars war/Boss/neonboss1.png",    "Stars war/Boss/neonboss2.png"),
-        arrayOf("Stars war/ships/Chtuluships.png",  "Stars war/Boss/Chtuluboss1.png",  "Stars war/Boss/chtuluboss2.png"),
-        arrayOf("Stars war/ships/peintureships.png","Stars war/Boss/peintureboss1.png","Stars war/Boss/peintureboss2.png"),
-        arrayOf("Stars war/ships/kawaiships.png",   "Stars war/Boss/kawaiboss1.png",   "Stars war/Boss/kawaiboss2.png")
-    )
-    private var currentSetIdx = -1
-    @Volatile private var pendingFrame: SpriteFrame? = null
-    private var pendingSetIdx = -1
-    private var preloadThread: Thread? = null
-
-    private class SpriteFrame(
-        val player: Bitmap,
-        val enemies: Array<Bitmap?>,
-        val bosses: Array<Bitmap?>
-    )
+    // Seuls des états modifiés sont envoyés à l'interface Android, sur son fil.
+    var onControlsChanged: ((Int, Int, Boolean, Boolean) -> Unit)? = null
+    private var previousControls = Int.MIN_VALUE
 
     // ── Callbacks audio (branchés depuis StarsWarActivity) ───────────────────
     var onPlayerShot:     (() -> Unit)? = null
@@ -350,52 +333,11 @@ class StarsWarView @JvmOverloads constructor(
     private var offX = 0f
     private var offY = 0f
 
-    // ── Paints ───────────────────────────────────────────────────────────────
-    private val spritePaint    = Paint(Paint.ANTI_ALIAS_FLAG).apply { isFilterBitmap = true }
-    private val pbPaint        = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#80E8FF") }
-    private val ebPaint        = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FF4055") }
-    private val starPaint      = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val hpBarPaint     = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val overlayBgPaint = Paint().apply { color = Color.parseColor("#DD040810") }
-    private val cardBgPaint    = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#BB0a1228") }
-    private val cardBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE; strokeWidth = 1.5f; color = Color.parseColor("#446688")
+    private val uiPaint = android.text.TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+        typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
     }
-    private val hudPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE; typeface = Typeface.DEFAULT_BOLD; textSize = 24f
-        setShadowLayer(4f, 2f, 2f, Color.parseColor("#AA000000"))
-    }
-    private val hudSmall = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#AABBCC"); textSize = 17f
-        setShadowLayer(2f, 1f, 1f, Color.parseColor("#88000000"))
-    }
-    private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE; typeface = Typeface.DEFAULT_BOLD; textSize = 40f
-        textAlign = Paint.Align.CENTER
-        setShadowLayer(8f, 0f, 0f, Color.parseColor("#BB0055FF"))
-    }
-    private val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#BBDDFF"); textSize = 22f; textAlign = Paint.Align.CENTER
-        setShadowLayer(3f, 1f, 1f, Color.parseColor("#99000000"))
-    }
-    private val cardTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE; typeface = Typeface.DEFAULT_BOLD; textSize = 21f
-        setShadowLayer(3f, 1f, 1f, Color.parseColor("#88000000"))
-    }
-    private val cardDescPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#AABBDD"); textSize = 16f
-    }
-    private val popupPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#AAFFCC"); textSize = 16f; textAlign = Paint.Align.CENTER
-    }
-    private val waveAnnPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE; typeface = Typeface.DEFAULT_BOLD; textSize = 48f
-        textAlign = Paint.Align.CENTER
-        setShadowLayer(12f, 0f, 0f, Color.parseColor("#CC0088FF"))
-    }
-    private val upgHudPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#88AABB"); textSize = 13f
-    }
+    private val starPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val cardBounds = Array(3) { i -> RectF(28f, 216f + i * 126f, 452f, 324f + i * 126f) }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     private fun s(id: Int) = context.getString(id)
@@ -408,7 +350,6 @@ class StarsWarView @JvmOverloads constructor(
     init {
         holder.addCallback(this)
         isFocusable = true
-        loadSpriteSet(0)
         bestScore = prefs.getInt("best_score", 0)
         bestWave  = prefs.getInt("best_wave", 0)
         initStars()
@@ -424,121 +365,6 @@ class StarsWarView @JvmOverloads constructor(
                 alpha  = Random.nextFloat() * 0.7f + 0.3f
             )
         }
-    }
-
-    // ── Asset loading ─────────────────────────────────────────────────────────
-    // Chargement synchrone (initial ou fallback)
-    private fun loadSpriteSet(idx: Int) {
-        val set = spriteSets[idx]
-        val frame = if (set.size == 1) loadOriginalFrame() else loadFamilyFrame(set[0], set[1], set[2])
-        frame?.let { applySpriteFrame(it, idx) }
-    }
-
-    private fun applySpriteFrame(frame: SpriteFrame, idx: Int) {
-        playerBmp?.recycle(); playerBmp = frame.player
-        for (i in 0..6) { enemyBmps[i]?.recycle(); enemyBmps[i] = frame.enemies[i] }
-        for (i in 0..1) { bossBmps[i]?.recycle(); bossBmps[i] = frame.bosses[i] }
-        currentSetIdx = idx
-    }
-
-    // Spritesheet original 1024×1024 — retourne un SpriteFrame (thread-safe, pas d'accès aux fields)
-    private fun loadOriginalFrame(): SpriteFrame? {
-        var result: SpriteFrame? = null
-        loadBitmap("Stars war/StarsWar.png") { sheet ->
-            val enemyCoords = arrayOf(
-                intArrayOf(0, 512), intArrayOf(512, 768), intArrayOf(0, 768),
-                intArrayOf(256, 512), intArrayOf(768, 512), intArrayOf(256, 768), intArrayOf(512, 512)
-            )
-            val enemies = arrayOfNulls<Bitmap>(7)
-            for ((i, coord) in enemyCoords.withIndex()) {
-                val src = cropArgb(sheet, coord[0], coord[1], 256, 256)
-                enemies[i] = scaledArgb(src, enemySizes[i].toInt(), enemySizes[i].toInt()).also { src.recycle() }
-            }
-            val pSrc = cropArgb(sheet, 768, 768, 256, 256)
-            val player = rotated180(scaledArgb(pSrc, PLAYER_SIZE.toInt(), PLAYER_SIZE.toInt()).also { pSrc.recycle() })
-            val bosses = arrayOfNulls<Bitmap>(2)
-            for (i in 0..1) {
-                val bSrc = cropArgb(sheet, if (i == 0) 512 else 0, 0, 512, 512)
-                bosses[i] = scaledArgb(bSrc, BOSS_SIZE.toInt(), BOSS_SIZE.toInt()).also { bSrc.recycle() }
-            }
-            sheet.recycle()
-            result = SpriteFrame(player, enemies, bosses)
-        }
-        return result
-    }
-
-    // Familles custom : grille 2×4, ships face le HAUT → rotation 180° ennemis, joueur sans rotation
-    private fun loadFamilyFrame(shipsPath: String, boss1Path: String, boss2Path: String): SpriteFrame? {
-        val enemies = arrayOfNulls<Bitmap>(7)
-        var player: Bitmap? = null
-        loadBitmap(shipsPath) { raw ->
-            val sheet = removeWhite(raw)   // raw recycled
-            val cW = sheet.width / 4; val cH = sheet.height / 2
-            for (t in 0..6) {
-                val src = cropArgb(sheet, (t % 4) * cW, (t / 4) * cH, cW, cH)
-                enemies[t] = rotated180(scaledArgb(src, enemySizes[t].toInt(), enemySizes[t].toInt()).also { src.recycle() })
-            }
-            val pSrc = cropArgb(sheet, 3 * cW, cH, cW, cH)
-            player = scaledArgb(pSrc, PLAYER_SIZE.toInt(), PLAYER_SIZE.toInt()).also { pSrc.recycle() }
-            sheet.recycle()
-        }
-        val bosses = arrayOfNulls<Bitmap>(2)
-        loadBitmap(boss1Path) { raw ->
-            bosses[0] = scaledArgb(removeWhite(raw), BOSS_SIZE.toInt(), BOSS_SIZE.toInt())
-        }
-        loadBitmap(boss2Path) { raw ->
-            bosses[1] = scaledArgb(removeWhite(raw), BOSS_SIZE.toInt(), BOSS_SIZE.toInt())
-        }
-        return player?.let { SpriteFrame(it, enemies, bosses) }
-    }
-
-    // Remplace les pixels blancs/quasi-blancs par du transparent (color-key)
-    private fun removeWhite(src: Bitmap, threshold: Int = 238): Bitmap {
-        val w = src.width; val h = src.height
-        val pixels = IntArray(w * h)
-        src.getPixels(pixels, 0, w, 0, 0, w, h)
-        for (i in pixels.indices) {
-            val c = pixels[i]
-            if ((c shr 16 and 0xFF) >= threshold &&
-                (c shr 8  and 0xFF) >= threshold &&
-                (c        and 0xFF) >= threshold) pixels[i] = 0
-        }
-        val dst = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        dst.setPixels(pixels, 0, w, 0, 0, w, h)
-        src.recycle()
-        return dst
-    }
-
-    // Extrait une région en ARGB_8888 propre via Canvas (préserve la transparence)
-    private fun cropArgb(src: Bitmap, x: Int, y: Int, w: Int, h: Int): Bitmap {
-        val dst = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        Canvas(dst).drawBitmap(src, Rect(x, y, x + w, y + h), Rect(0, 0, w, h), Paint(Paint.FILTER_BITMAP_FLAG))
-        return dst
-    }
-
-    // Scale en ARGB_8888 via Canvas — préserve la transparence même sur bitmap hardware
-    private fun scaledArgb(src: Bitmap, w: Int, h: Int): Bitmap {
-        val soft = if (src.config == Bitmap.Config.HARDWARE) src.copy(Bitmap.Config.ARGB_8888, false) else src
-        val dst = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-        Canvas(dst).drawBitmap(soft, null, RectF(0f, 0f, w.toFloat(), h.toFloat()), Paint(Paint.FILTER_BITMAP_FLAG))
-        if (soft !== src) soft.recycle()
-        return dst
-    }
-
-    // Rotation 180° via Canvas — consomme src
-    private fun rotated180(src: Bitmap): Bitmap {
-        val dst = Bitmap.createBitmap(src.width, src.height, Bitmap.Config.ARGB_8888)
-        val m = Matrix().apply { postRotate(180f, src.width / 2f, src.height / 2f) }
-        Canvas(dst).drawBitmap(src, m, Paint(Paint.FILTER_BITMAP_FLAG))
-        src.recycle()
-        return dst
-    }
-
-    private inline fun loadBitmap(path: String, block: (Bitmap) -> Unit) {
-        try {
-            val opts = BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.ARGB_8888 }
-            context.assets.open(path).use { BitmapFactory.decodeStream(it, null, opts)?.let(block) }
-        } catch (_: Exception) {}
     }
 
     // ── Surface callbacks ─────────────────────────────────────────────────────
@@ -573,7 +399,10 @@ class StarsWarView @JvmOverloads constructor(
 
     // ── Public controls ───────────────────────────────────────────────────────
     fun pause() {
-        if (phase == Phase.RUNNING) phase = Phase.PAUSED
+        if (phase == Phase.RUNNING || phase == Phase.METEOR) {
+            phaseBeforePause = phase
+            phase = Phase.PAUSED
+        }
         running = false
         joinThread()
     }
@@ -585,11 +414,44 @@ class StarsWarView @JvmOverloads constructor(
         }
     }
 
-    fun togglePause() {
-        phase = when (phase) {
-            Phase.RUNNING -> Phase.PAUSED
-            Phase.PAUSED  -> Phase.RUNNING
-            else          -> phase
+    fun togglePause() { pendingPauseToggle = true }
+    fun requestMagnet() { pendingPower = 1 }
+    fun requestNova() { pendingPower = 2 }
+
+    private fun applyPauseToggle() {
+        if (phase == Phase.PAUSED) phase = phaseBeforePause
+        else if (phase == Phase.RUNNING || phase == Phase.METEOR) {
+            phaseBeforePause = phase
+            phase = Phase.PAUSED
+        }
+    }
+
+    private fun usePower(nova: Boolean) {
+        if (phase != Phase.RUNNING) return
+        if (nova) {
+            if (upgradeStacks[UPG_NOVA] > 0 && novaAvailable) launchNova()
+        } else if (upgradeStacks[UPG_MAGNET] > 0 && !magnetActive && magnetCooldown <= 0f) {
+            magnetActive = true
+            magnetTimer = magnetDuration()
+            magnetCooldown = MAGNET_COOLDOWN_MAX
+        }
+    }
+
+    private fun publishControls() {
+        // -2 : non acquis ; -1 : prêt ; > 0 : recharge ; < -2 : champ actif.
+        val mag = when {
+            upgradeStacks[UPG_MAGNET] == 0 -> -2
+            magnetActive -> -3 - ceil(magnetTimer).toInt()
+            magnetCooldown > 0f -> ceil(magnetCooldown).toInt()
+            else -> -1
+        }
+        val nova = if (upgradeStacks[UPG_NOVA] == 0) -2 else if (novaAvailable) -1 else 0
+        val active = phase == Phase.RUNNING
+        val paused = phase == Phase.PAUSED
+        val signature = (mag + 20) * 100 + (nova + 2) * 10 + (if (active) 1 else 0) + (if (paused) 2 else 0)
+        if (signature != previousControls) {
+            previousControls = signature
+            onControlsChanged?.invoke(mag, nova, active, paused)
         }
     }
 
@@ -608,20 +470,21 @@ class StarsWarView @JvmOverloads constructor(
                 pendingUpgradeTap = false
                 if (phase == Phase.UPGRADE) handleUpgradeTap(pendingUpgradeX, pendingUpgradeY)
             }
+            if (pendingPauseToggle) { pendingPauseToggle = false; applyPauseToggle() }
+            if (pendingPower != 0) {
+                val action = pendingPower; pendingPower = 0
+                usePower(action == 2)
+            }
             if (pendingSecondFinger != 0) {
-                val doubleAppui = pendingSecondFinger == 2
-                pendingSecondFinger = 0
-                if (phase == Phase.RUNNING || phase == Phase.METEOR) {
-                    if (doubleAppui && upgradeStacks[UPG_NOVA] > 0 && novaAvailable) {
-                        launchNova()
-                    } else if (!doubleAppui && upgradeStacks[UPG_MAGNET] > 0 &&
-                        !magnetActive && magnetCooldown <= 0f
-                    ) {
-                        magnetActive = true
-                        magnetTimer = magnetDuration()
-                        magnetCooldown = MAGNET_COOLDOWN_MAX
-                    }
-                }
+                val action = pendingSecondFinger; pendingSecondFinger = 0
+                usePower(action == 2)
+            }
+            if (phase != Phase.PAUSED) {
+                art.update(dt)
+                val targetBank = ((playerX - previousPlayerX) * 2.5f).coerceIn(-14f, 14f)
+                playerBank += (targetBank - playerBank) * (dt * 9f).coerceAtMost(1f)
+                previousPlayerX = playerX
+                if (phase == Phase.RUNNING || phase == Phase.METEOR) art.trail(dt, playerX, playerY)
             }
 
             when (phase) {
@@ -634,6 +497,7 @@ class StarsWarView @JvmOverloads constructor(
             // Une toile nulle veut dire que la surface n'est pas prête. On attend quand
             // même : le `continue` d'avant sautait le sommeil, et la boucle occupait un
             // cœur à tourner à vide le temps d'un changement d'écran.
+            publishControls()
             val c = lockFrame()
             if (c != null) {
                 try { drawFrame(c) } finally { holder.unlockCanvasAndPost(c) }
@@ -646,19 +510,8 @@ class StarsWarView @JvmOverloads constructor(
 
     // ── Wave lifecycle ────────────────────────────────────────────────────────
     private fun startWave(n: Int) {
-        // Début d'un nouveau groupe → appliquer le set préchargé (ou charger en sync si pas prêt)
-        if ((n - 1) % 5 == 0) {
-            perfectCycle = true
-            preloadThread?.join(); preloadThread = null
-            val frame = pendingFrame; pendingFrame = null
-            if (frame != null) {
-                applySpriteFrame(frame, pendingSetIdx)
-            } else {
-                // Fallback synchrone (1ère vague ou preload raté)
-                val next = (spriteSets.indices - currentSetIdx).random()
-                loadSpriteSet(next)
-            }
-        }
+        // Chaque secteur change d'ambiance, les personnages gardent leur identité.
+        if ((n - 1) % 5 == 0) perfectCycle = true
         onNewWaveCb?.invoke(n)
         waveNumber = n
         val isBossWave = n % 5 == 0
@@ -744,22 +597,9 @@ class StarsWarView @JvmOverloads constructor(
             UPG_VAMPIRE     -> { /* stacks tracked via upgradeStacks */ }
             UPG_NOVA        -> { novaAvailable = true }
         }
-        rebuildUpgradeHudList()
+        if (upg.id == UPG_HEAL || upg.id == UPG_MAX_HP_RARE) art.repair(playerX, playerY)
         pendingUpgradePicks--
         showNextUpgradeOrWave()
-    }
-
-    private fun rebuildUpgradeHudList() {
-        activeUpgrades.clear()
-        if (fireRateMult < 0.99f) activeUpgrades += "RF×${upgradeStacks[UPG_RAPID_FIRE]}"
-        if (bulletCount > 1)      activeUpgrades += s(R.string.sw_hud_multishot, bulletCount)
-        if (bulletDmg > 1)        activeUpgrades += "Dmg+${bulletDmg - 1}"
-        if (pierceCount > 0)      activeUpgrades += s(R.string.sw_hud_pierce, pierceCount)
-        if (hasRocket)            activeUpgrades += if (upgradeStacks[UPG_ROCKET_RATE] > 0)
-            s(R.string.sw_hud_rocket, upgradeStacks[UPG_ROCKET_RATE]) else s(R.string.sw_hud_rocket_base)
-        if (upgradeStacks[UPG_ROCKET_DMG] > 0) activeUpgrades += "RktDmg+${upgradeStacks[UPG_ROCKET_DMG]}"
-        if (drones.isNotEmpty())              activeUpgrades += "×${drones.size}Drone"
-        if (upgradeStacks[UPG_VAMPIRE] > 0)  activeUpgrades += s(R.string.sw_hud_leech)
     }
 
     // ── Update ────────────────────────────────────────────────────────────────
@@ -853,8 +693,6 @@ class StarsWarView @JvmOverloads constructor(
             magnetCooldown = (magnetCooldown - dt).coerceAtLeast(0f)
         }
 
-        // Flash nova
-        if (novaFlashTimer > 0f) novaFlashTimer = (novaFlashTimer - dt).coerceAtLeast(0f)
 
         // Drones : orbite + tir
         val droneDmg = (bulletDmg / 2).coerceAtLeast(1)
@@ -907,6 +745,7 @@ class StarsWarView @JvmOverloads constructor(
         val dead = mutableListOf<Enemy>()
         for (enemy in enemies) {
             enemy.elapsed += dt
+            enemy.hitFlash = (enemy.hitFlash - dt).coerceAtLeast(0f)
             when (enemy.path) {
                 PATH_LINE -> {
                     enemy.y += enemy.speed * dt
@@ -970,6 +809,8 @@ class StarsWarView @JvmOverloads constructor(
             val toRemovePb = mutableListOf<Bullet>()
             for (pb in playerBullets) {
                 if (circleOverlap(pb.x, pb.y, PBULLET_W / 2f, enemy.x, enemy.y, hitR)) {
+                    enemy.hitFlash = .16f
+                    art.hit(pb.x, pb.y)
                     enemy.hp -= if (pb.dmg >= 0) pb.dmg else bulletDmg
                     if (pb.pierceLeft > 0) pb.pierceLeft-- else toRemovePb += pb
                 }
@@ -981,14 +822,14 @@ class StarsWarView @JvmOverloads constructor(
                     ?: if (enemy.isBoss) 500 + waveNumber * 50 else 80
                 scorePopups += ScorePopup(
                     enemy.x, enemy.y, 0.9f,
-                    "+${enemyDefs.getOrNull(enemy.typeIdx)?.score ?: (500 + waveNumber * 50)}",
+                    s(R.string.sw_gain, enemyDefs.getOrNull(enemy.typeIdx)?.score ?: (500 + waveNumber * 50)),
                     enemy.isBoss
                 )
                 waveEnemiesKilled++
                 dead += enemy
+                art.burst(enemy.x, enemy.y, if (enemy.isBoss) SpaceFightArt.GOLD else SpaceFightArt.LILAC, enemy.isBoss)
                 if (enemy.isBoss) onBossDestroyed?.invoke() else onEnemyDestroyed?.invoke()
-                if (upgradeStacks[UPG_VAMPIRE] > 0 && Random.nextFloat() < 0.05f)
-                    playerHp = (playerHp + 1).coerceAtMost(playerMaxHp)
+                recoverEnergy()
             }
         }
         // Rockets : mouvement + collision
@@ -1001,6 +842,7 @@ class StarsWarView @JvmOverloads constructor(
                 if (target != null) {
                     val dx = target.x - rocket.x; val dy = target.y - rocket.y
                     val dist = sqrt(dx * dx + dy * dy).coerceAtLeast(0.01f)
+                    rocket.angle = Math.toDegrees(atan2(dy, dx).toDouble()).toFloat() + 90f
                     rocket.x += dx / dist * ROCKET_SPEED * dt
                     rocket.y += dy / dist * ROCKET_SPEED * dt
                 } else {
@@ -1014,14 +856,17 @@ class StarsWarView @JvmOverloads constructor(
                     val eSize = if (enemy.isBoss) BOSS_SIZE else enemySizes.getOrElse(enemy.typeIdx) { ENEMY_SIZE_DEFAULT }
                     val hitR = eSize * (if (enemy.isBoss) 0.40f else 0.42f)
                     if (circleOverlap(rocket.x, rocket.y, ROCKET_R, enemy.x, enemy.y, hitR)) {
+                        enemy.hitFlash = .16f
+                        art.burst(rocket.x, rocket.y, SpaceFightArt.GOLD)
                         enemy.hp -= bulletDmg * (2 + upgradeStacks[UPG_ROCKET_DMG])
                         if (enemy.hp <= 0) {
                             val pts = enemyDefs.getOrNull(enemy.typeIdx)?.score ?: if (enemy.isBoss) 500 + waveNumber * 50 else 80
                             score += pts
-                            scorePopups += ScorePopup(enemy.x, enemy.y, 0.9f, "+$pts", enemy.isBoss)
+                            scorePopups += ScorePopup(enemy.x, enemy.y, 0.9f, s(R.string.sw_gain, pts), enemy.isBoss)
                             waveEnemiesKilled++; dead += enemy
-                            if (upgradeStacks[UPG_VAMPIRE] > 0 && Random.nextFloat() < 0.05f)
-                                playerHp = (playerHp + 1).coerceAtMost(playerMaxHp)
+                            art.burst(enemy.x, enemy.y, if (enemy.isBoss) SpaceFightArt.GOLD else SpaceFightArt.LILAC, enemy.isBoss)
+                            if (enemy.isBoss) onBossDestroyed?.invoke() else onEnemyDestroyed?.invoke()
+                            recoverEnergy()
                         }
                         deadRockets += rocket; break
                     }
@@ -1041,15 +886,10 @@ class StarsWarView @JvmOverloads constructor(
         // Score popups
         scorePopups.removeAll { p -> p.y -= 55f * dt; p.life -= dt; p.life <= 0f }
 
+        // Un impact fatal prime sur la transition de vague.
+        if (phase != Phase.RUNNING) return
         // Wave complete?
         if (waveEnemiesSpawned >= waveEnemyCount && enemies.isEmpty() && enemyBullets.isEmpty()) {
-            if (waveNumber % 5 == 0 && preloadThread == null) {
-                pendingSetIdx = (spriteSets.indices - currentSetIdx).random()
-                val idx = pendingSetIdx; val set = spriteSets[idx]
-                preloadThread = Thread {
-                    pendingFrame = if (set.size == 1) loadOriginalFrame() else loadFamilyFrame(set[0], set[1], set[2])
-                }.also { it.start() }
-            }
             if (waveNumber % 5 == 0 && perfectCycle) {
                 startMeteorPhase()
             } else {
@@ -1060,12 +900,20 @@ class StarsWarView @JvmOverloads constructor(
         }
     }
 
+    private fun recoverEnergy() {
+        if (upgradeStacks[UPG_VAMPIRE] > 0 && Random.nextFloat() < .05f && playerHp < playerMaxHp) {
+            playerHp++
+            art.repair(playerX, playerY)
+        }
+    }
+
     private fun fireBullets() {
         val spacing = 18f
         for (i in 0 until bulletCount) {
             val offset = (i - (bulletCount - 1) / 2f) * spacing
             playerBullets += Bullet(playerX + offset, playerY - PLAYER_SIZE / 2f, pierceCount)
         }
+        art.fire()
         onPlayerShot?.invoke()
     }
 
@@ -1125,6 +973,7 @@ class StarsWarView @JvmOverloads constructor(
             if (m.y > VH + m.radius * 2) { dead += m; continue }
             if (playerDamageTimer <= 0f && circleOverlap(m.x, m.y, m.radius * 0.75f, playerX, playerY, PLAYER_HITBOX_R)) {
                 pendingUpgradePicks = 1
+                art.playerHit(playerX, playerY, true)
                 playerDamageTimer = PLAYER_DAMAGE_COOLDOWN
                 playerBlinkTimer = 0f
             }
@@ -1154,11 +1003,13 @@ class StarsWarView @JvmOverloads constructor(
 
     private fun launchNova() {
         novaAvailable = false
-        novaFlashTimer = 0.45f
+        art.nova(playerX, playerY)
         val novaR2 = NOVA_RADIUS * NOVA_RADIUS
         enemyBullets.removeAll { b ->
             val dx = b.x - playerX; val dy = b.y - playerY
-            dx * dx + dy * dy <= novaR2
+            val erased = dx * dx + dy * dy <= novaR2
+            if (erased) art.hit(b.x, b.y)
+            erased
         }
     }
 
@@ -1323,7 +1174,8 @@ class StarsWarView @JvmOverloads constructor(
     }
 
     private fun hitPlayer() {
-        if (playerDamageTimer > 0f) return
+        if (playerDamageTimer > 0f || phase != Phase.RUNNING) return
+        art.playerHit(playerX, playerY, shieldCharges > 0)
         if (shieldCharges > 0) {
             shieldCharges--
             playerDamageTimer = PLAYER_DAMAGE_COOLDOWN * 0.5f
@@ -1359,14 +1211,16 @@ class StarsWarView @JvmOverloads constructor(
         shieldCharges = 0; pierceCount = 0
         hasRocket = false; rocketFireRate = 10f; rocketFireTimer = 0f
         magnetActive = false; magnetTimer = 0f; magnetCooldown = 0f
-        novaAvailable = false; novaFlashTimer = 0f; lastSecondFingerTapMs = 0L
+        novaAvailable = false; lastSecondFingerTapMs = 0L
         perfectCycle = true; meteorPhaseTimer = 0f; meteorSpawnTimer = 0f; meteorSessionCount = 0; pendingUpgradePicks = 1
         drones.clear(); meteors.clear()
-        upgradeStacks.fill(0); activeUpgrades.clear()
+        upgradeStacks.fill(0)
         enemies.clear(); playerBullets.clear(); enemyBullets.clear(); rockets.clear(); scorePopups.clear()
         spawnQueue.clear(); convoyTimer = 0f; enemyShotCounter = 0
         score = 0; elapsed = 0f; newBestScore = false; newBestWave = false
         waveNumber = 0; upgradeChoices = emptyList()
+        art.clear(); playerBank = 0f; previousPlayerX = playerX
+        pendingPower = 0; pendingSecondFinger = 0
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
@@ -1374,14 +1228,13 @@ class StarsWarView @JvmOverloads constructor(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 when (phase) {
-                    Phase.READY -> {
+                    Phase.READY, Phase.GAME_OVER -> {
                         pendingReset = true; phase = Phase.RUNNING
                         // Will call startWave(1) after reset — handled via waveNumber==0 check in update
                         dragPointerId = event.getPointerId(0)
                         lastTouchX = toVx(event.x); lastTouchY = toVy(event.y)
                     }
-                    Phase.GAME_OVER -> phase = Phase.READY
-                    Phase.PAUSED    -> phase = Phase.RUNNING
+                    Phase.PAUSED    -> pendingPauseToggle = true
                     Phase.UPGRADE   -> {
                         // On note le point touché, le fil de jeu appliquera le choix.
                         pendingUpgradeX = toVx(event.x); pendingUpgradeY = toVy(event.y)
@@ -1434,14 +1287,10 @@ class StarsWarView @JvmOverloads constructor(
 
     private fun handleUpgradeTap(vx: Float, vy: Float) {
         if (upgradeChoices.isEmpty()) return
-        val cardW = VW * 0.86f
-        val cardH = 88f
-        val cardX = (VW - cardW) / 2f
-        val cardYs = floatArrayOf(VH * 0.30f, VH * 0.48f, VH * 0.66f)
         upgradeChoices.forEachIndexed { i, upg ->
-            val cy = cardYs.getOrElse(i) { return }
-            if (vx >= cardX && vx <= cardX + cardW && vy >= cy && vy <= cy + cardH) {
+            if (cardBounds[i].contains(vx, vy)) {
                 applyUpgrade(upg)
+                return
             }
         }
     }
@@ -1449,344 +1298,251 @@ class StarsWarView @JvmOverloads constructor(
     private fun toVx(sx: Float) = (sx - offX) / scaleX
     private fun toVy(sy: Float) = (sy - offY) / scaleY
 
-    // ── Render ────────────────────────────────────────────────────────────────
-    private fun drawFrame(canvas: Canvas) {
-        // Le jeu se dessine dans un cadre à ses proportions, centré : selon la forme de
-        // l'écran il reste des bandes en haut et en bas, ou à gauche et à droite, que
-        // **rien ne peint**. Sur canevas logiciel elles gardaient ce qu'il y avait ;
-        // sur canevas matériel le contenu de l'image précédente n'existe plus, et ces
-        // bandes montreraient n'importe quoi. On les noircit donc exprès, avant la
-        // transformation.
-        canvas.drawColor(Color.BLACK)
-        canvas.save()
-        canvas.translate(offX, offY)
-        canvas.scale(scaleX, scaleY)
+    // ── Rendu Space Fight : coordonnées communes au dessin et aux zones tactiles ──
+    private fun text(c: Canvas, value: String, x: Float, y: Float, size: Float = 18f,
+                     color: Int = SpaceFightArt.IVORY, align: Paint.Align = Paint.Align.LEFT,
+                     maxWidth: Float = VW - 48f) {
+        uiPaint.shader = null
+        uiPaint.color = color
+        uiPaint.alpha = Color.alpha(color)
+        uiPaint.textAlign = align
+        uiPaint.textSize = size
+        val measured = uiPaint.measureText(value)
+        if (measured > maxWidth) uiPaint.textSize = (size * maxWidth / measured).coerceAtLeast(11f)
+        // Les noms traduits très longs sont coupés proprement, les descriptions sont
+        // réparties sur plusieurs lignes par wrappedText.
+        val fitted = if (uiPaint.measureText(value) <= maxWidth) value else
+            android.text.TextUtils.ellipsize(value, uiPaint, maxWidth, android.text.TextUtils.TruncateAt.END)
+        c.drawText(fitted.toString(), x, y, uiPaint)
+    }
 
-        drawBackground(canvas)
-        if (phase == Phase.METEOR) {
-            drawMeteors(canvas)
-            drawPlayerBullets(canvas)
-            drawDrones(canvas)
-            drawPlayer(canvas)
-            drawMeteorHud(canvas)
-        } else {
-            drawPlayerBullets(canvas)
-            drawEnemyBullets(canvas)
-            drawRockets(canvas)
-            drawDrones(canvas)
-            drawEnemies(canvas)
-            drawPlayer(canvas)
-            drawScorePopups(canvas)
-            drawHud(canvas)
-            if (waveAnnounceTimer > 0f && (phase == Phase.RUNNING || phase == Phase.WAVE_CLEAR)) {
-                drawWaveAnnounce(canvas)
-            }
-            when (phase) {
-                Phase.READY     -> drawOverlay(canvas, s(R.string.sw_title), s(R.string.sw_start_hint))
-                Phase.PAUSED    -> drawOverlay(canvas, s(R.string.sw_paused), s(R.string.sw_tap_resume))
-                Phase.GAME_OVER -> drawGameOver(canvas)
-                Phase.UPGRADE   -> drawUpgradeScreen(canvas)
-                Phase.WAVE_CLEAR -> {
-                    val alpha = ((waveClearTimer / WAVE_CLEAR_DELAY) * 200).toInt().coerceIn(0, 200)
-                    val p = Paint(bodyPaint).apply { this.alpha = alpha; textSize = 30f; color = Color.parseColor("#88FFBB") }
-                    canvas.drawText(s(R.string.sw_wave_cleared, waveNumber), VW / 2f, VH * 0.5f, p)
+    private fun wrappedText(c: Canvas, value: String, x: Float, y: Float, width: Float,
+                            size: Float = 16f, color: Int = SpaceFightArt.MUTED,
+                            centered: Boolean = false, maxLines: Int = 4) {
+        var baseline = y
+        var lines = 0
+        for (paragraph in value.split('\n')) {
+            if (paragraph.isEmpty()) { baseline += size * .6f; continue }
+            var rest = paragraph
+            while (rest.isNotEmpty() && lines < maxLines) {
+                uiPaint.textSize = size
+                var count = uiPaint.breakText(rest, true, width, null).coerceAtLeast(1)
+                if (count < rest.length) {
+                    val space = rest.lastIndexOf(' ', count - 1)
+                    if (space > 0) count = space
                 }
-                else -> {}
+                val line = if (lines == maxLines - 1) rest else rest.substring(0, count)
+                text(c, line, x, baseline, size, color,
+                    if (centered) Paint.Align.CENTER else Paint.Align.LEFT, width)
+                rest = rest.substring(count).trimStart()
+                baseline += size * 1.4f
+                lines++
             }
         }
-
-        canvas.restore()
     }
 
-    private fun drawMeteors(canvas: Canvas) {
-        val list = meteors.toList()
-        val outerP = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#CC554433") }
-        val innerP = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FF332211") }
-        val craterP = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#88221100") }
-        for (m in list) {
-            canvas.drawCircle(m.x, m.y, m.radius, outerP)
-            canvas.drawCircle(m.x, m.y, m.radius * 0.65f, innerP)
-            canvas.drawCircle(m.x - m.radius * 0.25f, m.y - m.radius * 0.2f, m.radius * 0.22f, craterP)
+    private fun sectorName(): String = s(when (((waveNumber.coerceAtLeast(1) - 1) / 5) % 3) {
+        0 -> R.string.sw_sector_helium
+        1 -> R.string.sw_sector_ion
+        else -> R.string.sw_sector_ice
+    })
+
+    private fun upgradeColor(id: Int): Int = when (id) {
+        UPG_SHIELD, UPG_HEAL, UPG_MAX_HP_RARE, UPG_DRONE -> SpaceFightArt.MINT
+        UPG_PIERCE, UPG_MAGNET, UPG_MAGNET_DUR, UPG_VAMPIRE -> SpaceFightArt.LILAC
+        UPG_POWER_SHOT, UPG_ROCKET_DMG -> SpaceFightArt.CORAL
+        else -> SpaceFightArt.GOLD
+    }
+
+    private fun drawFrame(c: Canvas) {
+        c.drawColor(SpaceFightArt.INK)
+        c.save()
+        c.translate(offX, offY)
+        c.scale(scaleX, scaleY)
+        c.clipRect(0f, 0f, VW, VH)
+        art.background(c, ((waveNumber.coerceAtLeast(1) - 1) / 5) % 3, phase == Phase.METEOR)
+        for (star in stars) {
+            val twinkle = .75f + sin(art.time * 1.2f + star.x) * .25f
+            starPaint.color = SpaceFightArt.alpha(SpaceFightArt.MUTED, (star.alpha * twinkle * 155f).toInt())
+            val y = (star.y + art.time * star.speed * .08f) % VH
+            if (star.radius > 1.9f) art.sparkle(c, star.x, y, star.radius * 1.3f, starPaint.color)
+            else c.drawCircle(star.x, y, star.radius * .65f, starPaint)
         }
+
+        when (phase) {
+            Phase.READY -> drawWelcome(c)
+            Phase.UPGRADE -> drawUpgradeScreen(c)
+            Phase.GAME_OVER -> drawGameOver(c)
+            else -> {
+                drawWorld(c)
+                if (phase == Phase.METEOR || phase == Phase.PAUSED && phaseBeforePause == Phase.METEOR) drawMeteorHud(c)
+                else drawHud(c)
+                if (phase == Phase.PAUSED) drawPause(c)
+                else if (phase == Phase.WAVE_CLEAR) {
+                    text(c, s(R.string.sw_wave_cleared, waveNumber), VW / 2f, 335f, 25f, SpaceFightArt.MINT, Paint.Align.CENTER)
+                } else if (waveAnnounceTimer > 0f && phase == Phase.RUNNING) drawWaveAnnounce(c)
+            }
+        }
+        c.restore()
     }
 
-    private fun drawMeteorHud(canvas: Canvas) {
-        // Titre
-        val titleP = Paint(waveAnnPaint).apply { textSize = 34f; alpha = 220 }
-        canvas.drawText(s(R.string.sw_meteor_title), VW / 2f, 44f, titleP)
-        // Barre de temps restant
-        val ratio = (meteorPhaseTimer / METEOR_PHASE_DURATION).coerceIn(0f, 1f)
-        val barW = VW * 0.7f; val barH = 6f
-        val barX = (VW - barW) / 2f; val barY = 58f
-        hpBarPaint.color = Color.parseColor("#33FFFFFF")
-        canvas.drawRect(barX, barY, barX + barW, barY + barH, hpBarPaint)
-        hpBarPaint.color = Color.parseColor("#FF88FFCC")
-        canvas.drawRect(barX, barY, barX + barW * ratio, barY + barH, hpBarPaint)
-        // Indicateur +2 upgrades
-        val bonusP = Paint(hudSmall).apply { textAlign = Paint.Align.CENTER; color = Color.parseColor("#FFEE44"); alpha = 200 }
-        canvas.drawText(s(R.string.sw_meteor_bonus), VW / 2f, VH - 16f, bonusP)
-        // HP joueur
-        hudPaint.textAlign = Paint.Align.RIGHT
-        hudPaint.color = Color.parseColor("#FF6688")
-        canvas.drawText("♥".repeat(playerHp.coerceAtLeast(0)), VW - 12f, 32f, hudPaint)
-        hudPaint.color = Color.WHITE
-    }
-
-    private fun drawDrones(canvas: Canvas) {
-        if (drones.isEmpty()) return
-        val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#4444FFAA") }
-        val core = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#CC44FFAA") }
+    private fun drawWorld(c: Canvas) {
+        for (m in meteors) art.meteor(c, m.x, m.y, m.radius, m.dx)
+        if (magnetActive) art.magnetic(c, playerX, playerY, MAGNET_RADIUS, magnetTimer)
+        for (b in playerBullets) art.photon(c, b.x, b.y, if (b.isDrone) b.dx else 0f,
+            if (b.isDrone) b.dy else -1f, bulletDmg, b.pierceLeft > 0, b.isDrone)
+        for (b in enemyBullets) art.hostileBullet(c, b.x, b.y, b.dx, b.dy, b.isMissile)
+        for (r in rockets) art.rocket(c, r.x, r.y, r.angle)
+        for (enemy in enemies) {
+            val size = if (enemy.isBoss) BOSS_SIZE else enemySizes[enemy.typeIdx]
+            val charge = if (enemy.canShoot) (1f - enemy.fireCooldown / .4f).coerceIn(0f, 1f) else 0f
+            if (enemy.isBoss) {
+                art.boss(c, enemy.typeIdx, enemy.x, enemy.y, size, charge, enemy.hitFlash)
+                val left = (enemy.x - 48f).coerceIn(8f, VW - 104f)
+                val top = enemy.y + size * .61f
+                art.panel(c, left, top, left + 96f, top + 4f, SpaceFightArt.EDGE, 2f, Color.TRANSPARENT)
+                val ratio = (enemy.hp.toFloat() / enemy.maxHp).coerceIn(0f, 1f)
+                art.panel(c, left, top, left + 96f * ratio, top + 4f, SpaceFightArt.LILAC, 2f, Color.TRANSPARENT)
+            } else art.enemy(c, enemy.typeIdx, enemy.x, enemy.y, size, enemy.elapsed, charge, enemy.hitFlash)
+        }
         for (drone in drones) {
             val dx = playerX + cos(drone.angle) * DRONE_ORBIT_R
             val dy = playerY + sin(drone.angle) * DRONE_ORBIT_R
-            canvas.drawCircle(dx, dy, 9f, glow)
-            canvas.drawCircle(dx, dy, 4.5f, core)
+            art.satellite(c, dx, dy, 20f, drone.fireCooldown < .3f)
+        }
+        art.shield(c, playerX, playerY, shieldCharges)
+        // Le scintillement laisse toujours la coque perceptible, sans flash plein écran.
+        if (playerVisible) art.player(c, playerX, playerY, PLAYER_SIZE, playerBank, true)
+        else art.ellipse(c, playerX, playerY, PLAYER_HITBOX_R, PLAYER_HITBOX_R, SpaceFightArt.alpha(SpaceFightArt.MINT, 60))
+        art.repairHalo(c, playerX, playerY)
+        art.effects(c)
+        for (popup in scorePopups) text(c, popup.text, popup.x, popup.y, if (popup.isGold) 20f else 15f,
+            SpaceFightArt.alpha(if (popup.isGold) SpaceFightArt.GOLD else SpaceFightArt.MINT,
+                (popup.life / .9f * 230).toInt()), Paint.Align.CENTER)
+    }
+
+    private fun drawHull(c: Canvas) {
+        text(c, s(R.string.sw_hull_label), VW - 18f, 18f, 11f, SpaceFightArt.MUTED, Paint.Align.RIGHT, 88f)
+        for (i in 0 until playerMaxHp) {
+            val left = VW - 28f - (playerMaxHp - 1 - i) * 13f
+            art.panel(c, left, 25f, left + 9f, 38f,
+                if (i < playerHp) SpaceFightArt.MINT else SpaceFightArt.EDGE, 3f, Color.TRANSPARENT)
+        }
+        repeat(shieldCharges) { art.ellipse(c, VW - 24f - it * 13f, 46f, 2.2f, 2.2f, SpaceFightArt.LILAC) }
+    }
+
+    private fun drawHud(c: Canvas) {
+        art.panel(c, 0f, 0f, VW, 53f, SpaceFightArt.alpha(SpaceFightArt.INK, 215), 0f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_score_label), 18f, 18f, 11f, SpaceFightArt.MUTED, maxWidth = 112f)
+        text(c, s(R.string.sw_number, score), 18f, 40f, 22f, maxWidth = 112f)
+        text(c, sectorName(), VW / 2f, 18f, 11f, SpaceFightArt.MUTED, Paint.Align.CENTER, 205f)
+        text(c, s(R.string.sw_hud_wave, waveNumber), VW / 2f, 40f, 18f, SpaceFightArt.IVORY, Paint.Align.CENTER, 180f)
+        drawHull(c)
+        var slot = 0
+        for (upg in upgradePool) {
+            val count = if (upg.id == UPG_SHIELD) shieldCharges else upgradeStacks[upg.id]
+            if (count <= 0) continue
+            val x = 22f + slot * 30f
+            art.upgrade(c, upg.id, x, VH - 22f, 18f)
+            text(c, s(R.string.sw_number, count), x, VH - 5f, 10f, SpaceFightArt.MUTED, Paint.Align.CENTER, 28f)
+            slot++
         }
     }
 
-    private fun drawRockets(canvas: Canvas) {
-        val list = rockets.toList()
-        if (list.isEmpty()) return
-        val glow = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#66FF6600") }
-        val core = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#FFFF8800") }
-        for (r in list) {
-            canvas.drawCircle(r.x, r.y, ROCKET_R * 2.2f, glow)
-            canvas.drawCircle(r.x, r.y, ROCKET_R, core)
-        }
+    private fun drawMeteorHud(c: Canvas) {
+        art.panel(c, 0f, 0f, VW, 71f, SpaceFightArt.alpha(SpaceFightArt.INK, 220), 0f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_meteor_title), 18f, 27f, 20f, SpaceFightArt.IVORY, maxWidth = 328f)
+        text(c, s(R.string.sw_seconds, ceil(meteorPhaseTimer).toInt()), VW - 18f, 27f, 18f, SpaceFightArt.MINT, Paint.Align.RIGHT, 86f)
+        val ratio = (meteorPhaseTimer / METEOR_PHASE_DURATION).coerceIn(0f, 1f)
+        art.panel(c, 18f, 42f, VW - 18f, 47f, SpaceFightArt.EDGE, 2f, Color.TRANSPARENT)
+        art.panel(c, 18f, 42f, 18f + (VW - 36f) * ratio, 47f, SpaceFightArt.MINT, 2f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_meteor_hint), VW / 2f, 65f, 12f, SpaceFightArt.MUTED, Paint.Align.CENTER)
+        text(c, s(if (pendingUpgradePicks == 2) R.string.sw_meteor_bonus else R.string.sw_meteor_single),
+            VW / 2f, VH - 18f, 17f, SpaceFightArt.GOLD, Paint.Align.CENTER)
     }
 
-    private fun drawBackground(canvas: Canvas) {
-        canvas.drawColor(Color.parseColor("#06080f"))
-        for (s in stars) {
-            starPaint.color = Color.argb((s.alpha * 255f).toInt(), 255, 255, 255)
-            canvas.drawCircle(s.x, s.y, s.radius, starPaint)
-        }
-    }
-
-    private fun drawPlayerBullets(canvas: Canvas) {
-        val bulletList = playerBullets.toList()
-        val droneBulletPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.parseColor("#BB44FFAA") }
-        for (b in bulletList) {
-            if (b.isDrone) {
-                canvas.drawCircle(b.x, b.y, 4f, droneBulletPaint)
-            } else {
-                pbPaint.alpha = 60
-                canvas.drawRoundRect(b.x - PBULLET_W, b.y - PBULLET_H, b.x + PBULLET_W, b.y + PBULLET_H,
-                    PBULLET_W, PBULLET_W, pbPaint)
-                pbPaint.alpha = 255
-                canvas.drawRoundRect(b.x - PBULLET_W / 2f, b.y - PBULLET_H / 2f,
-                    b.x + PBULLET_W / 2f, b.y + PBULLET_H / 2f,
-                    PBULLET_W / 2f, PBULLET_W / 2f, pbPaint)
-            }
-        }
-    }
-
-    private fun drawEnemyBullets(canvas: Canvas) {
-        val bulletList = enemyBullets.toList()
-        for (b in bulletList) {
-            canvas.drawRoundRect(b.x - EBULLET_W / 2f, b.y - EBULLET_H / 2f,
-                b.x + EBULLET_W / 2f, b.y + EBULLET_H / 2f,
-                EBULLET_W / 2f, EBULLET_W / 2f, ebPaint)
-        }
-    }
-
-    private fun drawEnemies(canvas: Canvas) {
-        val enemyList = enemies.toList()
-        for (enemy in enemyList) {
-            val size = if (enemy.isBoss) BOSS_SIZE else enemySizes.getOrElse(enemy.typeIdx) { ENEMY_SIZE_DEFAULT }
-            val half = size / 2f
-            val bmp = if (enemy.isBoss) bossBmps[(enemy.typeIdx - 8).coerceIn(0, 1)] else enemyBmps.getOrNull(enemy.typeIdx)
-            if (bmp == null) {
-                hpBarPaint.color = if (enemy.isBoss) Color.parseColor("#FF22AA") else Color.RED
-                canvas.drawCircle(enemy.x, enemy.y, half, hpBarPaint)
-            } else {
-                canvas.drawBitmap(bmp, null,
-                    RectF(enemy.x - half, enemy.y - half, enemy.x + half, enemy.y + half),
-                    spritePaint)
-            }
-            if (enemy.isBoss) {
-                val barW = size * 0.9f; val barH = 7f
-                val barX = enemy.x - barW / 2f; val barY = enemy.y + half + 3f
-                hpBarPaint.color = Color.parseColor("#33222222")
-                canvas.drawRect(barX, barY, barX + barW, barY + barH, hpBarPaint)
-                val ratio = enemy.hp.toFloat() / enemy.maxHp.toFloat()
-                hpBarPaint.color = if (enemy.isBoss) Color.parseColor("#FF4488") else Color.parseColor("#44FF66")
-                canvas.drawRect(barX, barY, barX + barW * ratio, barY + barH, hpBarPaint)
-            }
-        }
-    }
-
-    private fun drawPlayer(canvas: Canvas) {
-        if (!playerVisible) return
-        // Flash nova
-        if (novaFlashTimer > 0f) {
-            val ratio = novaFlashTimer / 0.45f
-            hpBarPaint.color = Color.argb((ratio * 140).toInt(), 255, 238, 80)
-            canvas.drawCircle(playerX, playerY, NOVA_RADIUS * (1f - ratio * 0.25f), hpBarPaint)
-        }
-        // Aura magnétique
-        if (magnetActive) {
-            val ratio = (magnetTimer / magnetDuration()).coerceIn(0f, 1f)
-            val outerAlpha = (ratio * 55 + 25).toInt()
-            hpBarPaint.color = Color.argb(outerAlpha, 180, 100, 255)
-            canvas.drawCircle(playerX, playerY, MAGNET_RADIUS, hpBarPaint)
-            hpBarPaint.color = Color.argb((outerAlpha * 0.6f).toInt(), 140, 70, 255)
-            canvas.drawCircle(playerX, playerY, MAGNET_RADIUS * 0.55f, hpBarPaint)
-        }
-        // Shield glow
-        if (shieldCharges > 0) {
-            hpBarPaint.color = Color.parseColor("#5500CCFF")
-            canvas.drawCircle(playerX, playerY, PLAYER_SIZE * 0.7f, hpBarPaint)
-        }
-        val bmp = playerBmp
-        val half = PLAYER_SIZE / 2f
-        if (bmp == null) {
-            hpBarPaint.color = Color.parseColor("#00CCFF"); canvas.drawCircle(playerX, playerY, half, hpBarPaint)
-        } else {
-            canvas.drawBitmap(bmp, null,
-                RectF(playerX - half, playerY - half, playerX + half, playerY + half), spritePaint)
-        }
-    }
-
-    private fun drawScorePopups(canvas: Canvas) {
-        val list = scorePopups.toList()
-        for (p in list) {
-            val a = (p.life / 0.9f * 255f).toInt().coerceIn(0, 255)
-            popupPaint.alpha = a
-            if (p.isGold) popupPaint.color = Color.parseColor("#FFD700") else popupPaint.color = Color.parseColor("#AAFFCC")
-            canvas.drawText(p.text, p.x, p.y, popupPaint)
-        }
-        popupPaint.alpha = 255
-    }
-
-    private fun drawHud(canvas: Canvas) {
-        hudPaint.textAlign = Paint.Align.LEFT
-        canvas.drawText("$score", 12f, 32f, hudPaint)
-
-        hudPaint.textAlign = Paint.Align.CENTER
-        canvas.drawText(s(R.string.sw_hud_wave, waveNumber), VW / 2f, 32f, hudPaint)
-
-        hudPaint.textAlign = Paint.Align.RIGHT
-        hudPaint.color = Color.parseColor("#FF6688")
-        canvas.drawText("♥".repeat(playerHp.coerceAtLeast(0)), VW - 12f, 32f, hudPaint)
-        hudPaint.color = Color.WHITE
-
-        if (shieldCharges > 0) {
-            hudSmall.textAlign = Paint.Align.RIGHT
-            hudSmall.color = Color.parseColor("#00CED1")
-            canvas.drawText("◆".repeat(shieldCharges), VW - 12f, 52f, hudSmall)
-        }
-
-        if (activeUpgrades.isNotEmpty()) {
-            upgHudPaint.textAlign = Paint.Align.LEFT
-            canvas.drawText(activeUpgrades.joinToString("  "), 12f, VH - 10f, upgHudPaint)
-        }
-
-        // Indicateur du champ magnétique et nova
-        if (upgradeStacks[UPG_MAGNET] > 0 || upgradeStacks[UPG_NOVA] > 0) {
-            val parts = mutableListOf<Pair<String, Int>>()
-            if (upgradeStacks[UPG_MAGNET] > 0) {
-                val magText = when {
-                    magnetActive        -> "MAG ${ceil(magnetTimer).toInt()}s"
-                    magnetCooldown > 0f -> "MAG ${ceil(magnetCooldown).toInt()}s"
-                    else                -> "MAG ●"
-                }
-                val magColor = when {
-                    magnetActive        -> Color.parseColor("#CC88FF")
-                    magnetCooldown > 0f -> Color.parseColor("#664488")
-                    else                -> Color.parseColor("#AA66FF")
-                }
-                parts += Pair(magText, magColor)
-            }
-            if (upgradeStacks[UPG_NOVA] > 0) {
-                val novaText = if (novaAvailable) "NOVA ●" else "NOVA ✗"
-                val novaColor = if (novaAvailable) Color.parseColor("#FFEE44") else Color.parseColor("#665500")
-                parts += Pair(novaText, novaColor)
-            }
-            var rx = VW - 12f
-            upgHudPaint.textAlign = Paint.Align.RIGHT
-            for ((text, color) in parts.reversed()) {
-                upgHudPaint.color = color
-                canvas.drawText(text, rx, VH - 10f, upgHudPaint)
-                rx -= upgHudPaint.measureText(text) + 14f
-            }
-            upgHudPaint.color = Color.parseColor("#88AABB")
-        }
-    }
-
-    private fun drawWaveAnnounce(canvas: Canvas) {
-        val ratio = waveAnnounceTimer / WAVE_ANNOUNCE_DURATION
-        val alpha = when {
-            ratio > 0.7f -> 255
-            else         -> ((ratio / 0.7f) * 255).toInt()
-        }
-        waveAnnPaint.alpha = alpha
+    private fun drawWaveAnnounce(c: Canvas) {
+        val a = (waveAnnounceTimer / .5f * 230f).toInt().coerceIn(0, 230)
         val isBoss = waveNumber % 5 == 0
-        val text = if (isBoss) s(R.string.sw_boss_wave_announce) else s(R.string.sw_wave_announce, waveNumber)
-        canvas.drawText(text, VW / 2f, VH * 0.42f, waveAnnPaint)
+        val label = if (isBoss) s(if ((waveNumber / 5) % 2 == 1) R.string.sw_boss_rings else R.string.sw_boss_sun)
+            else s(R.string.sw_wave_announce, waveNumber)
+        art.panel(c, 64f, 254f, VW - 64f, 329f, SpaceFightArt.alpha(SpaceFightArt.PANEL, a), 20f, Color.TRANSPARENT)
+        text(c, if (isBoss) s(R.string.sw_boss_wave_announce) else sectorName(), VW / 2f, 279f, 12f,
+            SpaceFightArt.alpha(SpaceFightArt.MUTED, a), Paint.Align.CENTER, 330f)
+        text(c, label, VW / 2f, 311f, 25f, SpaceFightArt.alpha(if (isBoss) SpaceFightArt.LILAC else SpaceFightArt.MINT, a), Paint.Align.CENTER, 320f)
     }
 
-    private fun drawUpgradeScreen(canvas: Canvas) {
-        canvas.drawRect(0f, 0f, VW, VH, overlayBgPaint)
-        titlePaint.textSize = 28f
-        canvas.drawText(s(R.string.sw_choose_upgrade), VW / 2f, VH * 0.20f, titlePaint)
-        titlePaint.textSize = 40f
+    private fun drawWelcome(c: Canvas) {
+        text(c, s(R.string.sw_brand_name), VW / 2f, 94f, 45f, SpaceFightArt.IVORY, Paint.Align.CENTER)
+        text(c, s(R.string.sw_subtitle), VW / 2f, 127f, 15f, SpaceFightArt.MINT, Paint.Align.CENTER)
+        c.save(); c.rotate(-17f, 240f, 261f)
+        art.arc(c, 240f, 261f, 105f, 50f, 0f, 360f, SpaceFightArt.alpha(SpaceFightArt.LILAC, 100))
+        c.restore()
+        val hover = sin(art.time * 1.5f) * 5f
+        art.player(c, 240f, 253f + hover, 118f, sin(art.time * .7f) * 3f)
+        art.satellite(c, 240f + cos(art.time * .6f) * 110f, 267f + sin(art.time * .6f) * 46f, 29f)
+        text(c, s(R.string.sw_probe_label), VW / 2f, 355f, 14f, SpaceFightArt.MUTED, Paint.Align.CENTER)
+        wrappedText(c, s(R.string.sw_start_hint), VW / 2f, 411f, 372f, 19f, centered = true)
+        art.panel(c, 77f, 515f, 403f, 574f, SpaceFightArt.MINT, 20f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_launch), VW / 2f, 552f, 23f, SpaceFightArt.INK, Paint.Align.CENTER, 306f)
+        wrappedText(c, s(R.string.sw_best_hint, bestScore, bestWave), VW / 2f, 617f, 395f, 15f, centered = true)
+        text(c, s(R.string.sw_brand_line), VW / 2f, 691f, 11f, SpaceFightArt.MUTED, Paint.Align.CENTER)
+    }
 
-        val cardW = VW * 0.86f
-        val cardH = 88f
-        val cardX = (VW - cardW) / 2f
-        val cardYs = floatArrayOf(VH * 0.30f, VH * 0.48f, VH * 0.66f)
-        val cornerR = 12f
-
+    private fun drawUpgradeScreen(c: Canvas) {
+        text(c, s(R.string.sw_workshop), VW / 2f, 51f, 30f, SpaceFightArt.IVORY, Paint.Align.CENTER)
+        art.player(c, 240f, 114f + sin(art.time * 2f) * 3f, 70f)
+        text(c, s(R.string.sw_choose_upgrade), VW / 2f, 182f, 22f, SpaceFightArt.IVORY, Paint.Align.CENTER)
+        text(c, s(R.string.sw_picks_remaining, pendingUpgradePicks), VW / 2f, 203f, 13f, SpaceFightArt.MUTED, Paint.Align.CENTER)
         upgradeChoices.forEachIndexed { i, upg ->
-            val cy = cardYs.getOrElse(i) { return@forEachIndexed }
-            // Card background
-            val cardRect = RectF(cardX, cy, cardX + cardW, cy + cardH)
-            canvas.drawRoundRect(cardRect, cornerR, cornerR, cardBgPaint)
-            canvas.drawRoundRect(cardRect, cornerR, cornerR, cardBorderPaint)
-            // Color accent bar on left
-            val accentPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = Color.parseColor(upg.hexColor); alpha = 200
-            }
-            val accentRect = RectF(cardX, cy, cardX + 8f, cy + cardH)
-            canvas.drawRoundRect(accentRect, cornerR, cornerR, accentPaint)
-            canvas.drawRect(accentRect.right - cornerR, cy, accentRect.right, cy + cardH, accentPaint)
-            // Text
-            val tx = cardX + 22f
-            canvas.drawText(upg.name, tx, cy + 34f, cardTitlePaint)
-            canvas.drawText(upg.desc, tx, cy + 58f, cardDescPaint)
-            // Stack indicator
-            val stacks = upgradeStacks[upg.id]
-            if (stacks > 0 && upg.id != UPG_SHIELD) {
-                val stkPaint = Paint(cardDescPaint).apply { color = Color.parseColor(upg.hexColor); textAlign = Paint.Align.RIGHT }
-                canvas.drawText("[$stacks/${upg.maxStack}]", cardX + cardW - 12f, cy + 34f, stkPaint)
-            }
+            val bounds = cardBounds[i]
+            val accent = upgradeColor(upg.id)
+            art.panel(c, bounds.left, bounds.top, bounds.right, bounds.bottom, SpaceFightArt.PANEL, 20f, SpaceFightArt.alpha(accent, 130))
+            art.ellipse(c, bounds.left + 42f, bounds.centerY(), 29f, 29f, SpaceFightArt.alpha(accent, 15))
+            art.upgrade(c, upg.id, bounds.left + 42f, bounds.centerY(), 45f)
+            val tx = bounds.left + 82f
+            text(c, s(R.string.sw_module_index, i + 1), tx, bounds.top + 20f, 11f, accent, maxWidth = 220f)
+            text(c, upg.name, tx, bounds.top + 47f, 21f, maxWidth = 312f)
+            wrappedText(c, upg.desc, tx, bounds.top + 70f, 312f, 15f, maxLines = 2)
+            val stacks = if (upg.id == UPG_SHIELD) shieldCharges else upgradeStacks[upg.id]
+            if (stacks > 0) text(c, s(R.string.sw_fraction, stacks, upg.maxStack), bounds.right - 16f,
+                bounds.top + 20f, 12f, accent, Paint.Align.RIGHT, 90f)
         }
-
-        val hintP = Paint(hudSmall).apply { textAlign = Paint.Align.CENTER; alpha = 160 }
-        canvas.drawText(s(R.string.sw_best_hint, bestScore, bestWave), VW / 2f, VH * 0.88f, hintP)
+        wrappedText(c, s(R.string.sw_best_hint, bestScore, bestWave), VW / 2f, 631f, 390f, 14f, centered = true)
     }
 
-    private fun drawOverlay(canvas: Canvas, title: String, msg: String) {
-        canvas.drawRect(0f, 0f, VW, VH, overlayBgPaint)
-        canvas.drawText(title, VW / 2f, VH * 0.38f, titlePaint)
-        var y = VH * 0.52f
-        for (line in msg.split("\n")) { canvas.drawText(line, VW / 2f, y, bodyPaint); y += 36f }
+    private fun drawPause(c: Canvas) {
+        art.panel(c, 24f, 75f, VW - 24f, 654f, SpaceFightArt.PANEL, 25f)
+        text(c, s(R.string.sw_paused), VW / 2f, 126f, 31f, SpaceFightArt.IVORY, Paint.Align.CENTER)
+        art.player(c, VW / 2f, 190f, 68f)
+        text(c, s(R.string.sw_modules_title), VW / 2f, 260f, 16f, SpaceFightArt.MINT, Paint.Align.CENTER)
+        var index = 0
+        for (upg in upgradePool) {
+            val count = if (upg.id == UPG_SHIELD) shieldCharges else upgradeStacks[upg.id]
+            if (count <= 0) continue
+            val x = 47f + index % 2 * 202f
+            val y = 293f + index / 2 * 29f
+            art.upgrade(c, upg.id, x + 8f, y - 4f, 19f)
+            text(c, s(R.string.sw_module_owned, upg.name, count), x + 27f, y, 13f, maxWidth = 165f)
+            index++
+        }
+        if (index == 0) text(c, s(R.string.sw_modules_empty), VW / 2f, 314f, 16f, SpaceFightArt.MUTED, Paint.Align.CENTER, 360f)
+        wrappedText(c, s(R.string.sw_power_gestures), VW / 2f, 548f, 370f, 14f, centered = true, maxLines = 3)
+        art.panel(c, 78f, 593f, 402f, 637f, SpaceFightArt.MINT, 15f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_tap_resume), VW / 2f, 622f, 18f, SpaceFightArt.INK, Paint.Align.CENTER, 300f)
     }
 
-    private fun drawGameOver(canvas: Canvas) {
-        canvas.drawRect(0f, 0f, VW, VH, overlayBgPaint)
-        canvas.drawText(s(R.string.sw_game_over), VW / 2f, VH * 0.32f, titlePaint)
-        val lines = mutableListOf<String>()
-        lines += s(R.string.sw_score, score)
-        lines += s(R.string.sw_reached_wave, waveNumber)
-        if (newBestScore) lines += s(R.string.sw_new_best_score)
-        if (newBestWave)  lines += s(R.string.sw_new_best_wave)
-        lines += ""
-        lines += s(R.string.sw_best_summary, bestScore, bestWave)
-        lines += ""
-        lines += s(R.string.sw_tap_play_again)
-        var y = VH * 0.47f
-        for (line in lines) { canvas.drawText(line, VW / 2f, y, bodyPaint); y += 32f }
+    private fun drawGameOver(c: Canvas) {
+        text(c, s(R.string.sw_game_over), VW / 2f, 99f, 34f, SpaceFightArt.IVORY, Paint.Align.CENTER)
+        art.player(c, VW / 2f, 188f + sin(art.time) * 3f, 89f, -7f)
+        art.panel(c, 58f, 271f, 422f, 470f, SpaceFightArt.PANEL, 24f)
+        text(c, s(R.string.sw_score_label), VW / 2f, 307f, 13f, SpaceFightArt.MUTED, Paint.Align.CENTER)
+        text(c, s(R.string.sw_number, score), VW / 2f, 359f, 43f, SpaceFightArt.MINT, Paint.Align.CENTER, 320f)
+        text(c, s(R.string.sw_reached_wave, waveNumber), VW / 2f, 399f, 20f, SpaceFightArt.IVORY, Paint.Align.CENTER, 320f)
+        if (newBestScore || newBestWave) text(c, s(if (newBestScore) R.string.sw_new_best_score else R.string.sw_new_best_wave),
+            VW / 2f, 441f, 17f, SpaceFightArt.GOLD, Paint.Align.CENTER, 320f)
+        wrappedText(c, s(R.string.sw_best_summary, bestScore, bestWave), VW / 2f, 505f, 382f, 15f, centered = true)
+        art.panel(c, 77f, 577f, 403f, 635f, SpaceFightArt.MINT, 20f, Color.TRANSPARENT)
+        text(c, s(R.string.sw_tap_play_again), VW / 2f, 613f, 20f, SpaceFightArt.INK, Paint.Align.CENTER, 304f)
     }
 }

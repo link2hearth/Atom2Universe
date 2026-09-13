@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sw_ink">#141C31</color>
+    <color name="sw_panel">#1D2B41</color>
+    <color name="sw_edge">#455970</color>
+    <color name="sw_ivory">#F6F3E7</color>
+    <color name="sw_mint">#A7E8D1</color>
+    <color name="sw_gold">#F5D9A0</color>
+</resources>

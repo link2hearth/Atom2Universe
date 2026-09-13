@@ -141,9 +141,9 @@ class GamesActivity : BaseHubActivity() {
         ),
         HubTile(
             id = "starswar",
-            titleRes = R.string.stars_war_title,
+            titleRes = R.string.sw_brand_name,
             descriptionRes = R.string.stars_war_description,
-            iconRes = android.R.drawable.ic_menu_compass,
+            iconRes = R.drawable.ic_space_fight,
             defaultColorRes = R.color.game_tile_starswar,
             activityClass = StarsWarActivity::class.java
         ),

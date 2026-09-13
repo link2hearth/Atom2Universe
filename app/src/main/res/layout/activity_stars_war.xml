@@ -3,42 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/startup_background">
+    android:background="@color/sw_ink">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
+        android:minHeight="64dp"
         android:orientation="horizontal"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="6dp"
         android:gravity="center_vertical"
-        android:background="@color/startup_background">
+        android:background="@color/sw_panel">
 
         <ImageButton
             android:id="@+id/stars_war_btn_back"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_arrow_back"
+            android:tint="@color/sw_ivory"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/back" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/stars_war_title"
-            android:textSize="20sp"
-            android:textColor="@color/startup_text_primary"
+            android:orientation="vertical"
             android:gravity="center"
-            android:textStyle="bold" />
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sw_brand_name"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="21sp"
+                android:letterSpacing="0.08"
+                android:textColor="@color/sw_ivory" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sw_subtitle"
+                android:textSize="10sp"
+                android:letterSpacing="0.12"
+                android:textColor="@color/sw_mint" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/stars_war_btn_pause"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_pause"
+            android:tint="@color/sw_ivory"
             android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="@string/stars_war_paused" />
+            android:contentDescription="@string/sw_pause_action" />
 
     </LinearLayout>
 
@@ -48,4 +65,45 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp"
+        android:background="@color/sw_panel">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sw_magnet_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/sw_power_background"
+            android:text="@string/sw_power_magnet"
+            android:textColor="@color/sw_mint"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:padding="8dp"
+            android:enabled="false" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sw_nova_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="56dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/sw_power_background"
+            android:text="@string/sw_power_nova"
+            android:textColor="@color/sw_gold"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:padding="8dp"
+            android:enabled="false" />
+    </LinearLayout>
 </LinearLayout>
