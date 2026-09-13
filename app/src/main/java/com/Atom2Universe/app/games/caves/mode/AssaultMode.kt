@@ -283,7 +283,7 @@ internal class AssaultMode(
     private fun refreshPlayerPosition() {
         val camera = r.camera
         player.x = camera.playerX - source.originX
-        player.eyeY = camera.playerY - source.originY
+        player.eyeY = camera.eyeY - source.originY
         player.z = camera.playerZ - source.originZ
         player.alive = r.playerNode.hp > 0
     }

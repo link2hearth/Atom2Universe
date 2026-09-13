@@ -10,6 +10,9 @@ class TouchController {
         moveForward = 0f; moveRight = 0f; deltaYaw = 0f; deltaPitch = 0f
         flyUp = false; flyDown = false; laserActive = false; rtChargeRaw = 0f
         placeRequested = false; sprintActive = false; leftId = -1; rightId = -1
+        crouchLatched = false
+        runHeld = false; runId = -1
+        l3Pressed = false; l3RunHeld = false
         gamepadRightX = 0f; gamepadRightY = 0f
     }
     var moveRight = 0f
@@ -21,6 +24,14 @@ class TouchController {
     // Fly buttons (set by Activity touch listeners)
     @Volatile var flyUp = false
     @Volatile var flyDown = false
+    @Volatile var crouchToggleEnabled = false
+    @Volatile var crouchLatched = false
+    val crouchRequested get() = if (crouchToggleEnabled) crouchLatched else flyDown
+
+    fun pressDown() {
+        if (!flyDown && crouchToggleEnabled) crouchLatched = !crouchLatched
+        flyDown = true
+    }
 
     // Laser / minage (maintenu enfoncé pour miner)
     @Volatile var laserActive = false
@@ -31,8 +42,27 @@ class TouchController {
     // Pose de bloc (1 bloc par appui, consommé par le renderer)
     @Volatile var placeRequested = false
 
-    // Sprint (double-tap joystick gauche, ou toggle L3 manette)
+    // Toggle state (Run button / gamepad L3) and the independent hold gesture.
     @Volatile var sprintActive = false
+    @Volatile var runToggleEnabled = false
+    @Volatile private var runHeld = false
+    @Volatile private var l3RunHeld = false
+    private var l3Pressed = false
+    private var runId = -1
+    val sprintRequested get() = sprintActive || runHeld || l3RunHeld
+
+    fun cancelSprint() { sprintActive = false; runHeld = false; l3RunHeld = false }
+
+    fun pressGamepadRun() {
+        if (l3Pressed) return // Android key repeats must not toggle repeatedly.
+        l3Pressed = true
+        if (runToggleEnabled) sprintActive = !sprintActive else l3RunHeld = true
+    }
+
+    fun releaseGamepadRun() {
+        l3Pressed = false
+        l3RunHeld = false
+    }
 
     private var leftId = -1
     private var leftCx = 0f; private var leftCy = 0f
@@ -45,13 +75,10 @@ class TouchController {
     private val JOYSTICK_RADIUS = 120f
     private val TAP_SLOP = 18f
 
-    private var leftTapCount = 0
-    private var lastLeftTapMs = 0L
-    private val DOUBLE_TAP_MS = 380L
-
     fun onTouch(
         event: MotionEvent, screenWidth: Int,
-        excludedPointers: Set<Int> = emptySet(), actionCameraPointer: Boolean = false
+        excludedPointers: Set<Int> = emptySet(), actionCameraPointer: Boolean = false,
+        runButtonPointer: Boolean = false
     ) {
         val half = screenWidth / 2f
         val action = event.actionMasked
@@ -62,21 +89,21 @@ class TouchController {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 if (pid in excludedPointers) return
                 val ex = event.getX(idx); val ey = event.getY(idx)
+                if (runButtonPointer) {
+                    runId = pid
+                    if (runToggleEnabled) sprintActive = !sprintActive else runHeld = true
+                    // Holding Run starts a fresh, neutral movement joystick at the finger,
+                    // even if the editor placed this button on the right side.
+                    if (!runToggleEnabled || leftId == -1) {
+                        leftId = pid; leftCx = ex; leftCy = ey
+                        moveForward = 0f; moveRight = 0f
+                    }
+                    return
+                }
                 // Jump/fire drags aim even when the editor moves those buttons to the left.
                 if (ex < half && !actionCameraPointer) {
                     if (leftId == -1) {
                         leftId = pid; leftCx = ex; leftCy = ey
-                        val now = System.currentTimeMillis()
-                        if (now - lastLeftTapMs < DOUBLE_TAP_MS) {
-                            leftTapCount++
-                            if (leftTapCount >= 2) {
-                                sprintActive = !sprintActive
-                                leftTapCount = 0
-                            }
-                        } else {
-                            leftTapCount = 1
-                        }
-                        lastLeftTapMs = now
                     }
                 } else {
                     if (rightId == -1) {
@@ -111,10 +138,12 @@ class TouchController {
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP -> {
+                if (pid == runId) { runId = -1; runHeld = false }
                 if (pid == leftId)  { leftId  = -1; moveForward = 0f; moveRight = 0f }
                 if (pid == rightId) { rightId = -1 }
             }
             MotionEvent.ACTION_CANCEL -> {
+                runId = -1; cancelSprint()
                 leftId = -1; rightId = -1; moveForward = 0f; moveRight = 0f
             }
         }

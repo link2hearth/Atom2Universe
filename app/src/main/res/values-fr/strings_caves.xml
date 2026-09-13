@@ -274,6 +274,12 @@
     <string name="cave_controls_saved">Contrôles sauvegardés</string>
     <string name="cave_controls_save_failed">Impossible de sauvegarder les contrôles. Veuillez réessayer.</string>
     <string name="cave_controls_size_value">%1$d dp</string>
+    <string name="cave_controls_close">Fermer</string>
+    <string name="cave_controls_hold">Maintenir pour s’accroupir</string>
+    <string name="cave_controls_run">Course</string>
+    <string name="cave_controls_run_hold">Maintenir et glisser pour courir</string>
+    <string name="cave_controls_run_toggle">Appuyer pour activer / désactiver</string>
+    <string name="cave_controls_toggle">Appuyer pour basculer</string>
 
     <string name="cave_controls_hint">Glissez pour déplacer • Appuyez pour sélectionner</string>
 
@@ -474,5 +480,6 @@
     <string name="cave_ui_camera">Vue caméra</string>
     <string name="cave_ui_map">Carte</string>
     <string name="cave_ui_ascend">Monter</string>
+    <string name="cave_ui_descend">Descendre</string>
 </resources>
 

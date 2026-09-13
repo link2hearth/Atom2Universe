@@ -38,6 +38,26 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
                 val path = Path().apply { moveTo(16f,5f); lineTo(26f,11f); lineTo(26f,23f); lineTo(16f,29f); lineTo(6f,23f); lineTo(6f,11f); close(); moveTo(6f,11f); lineTo(16f,17f); lineTo(26f,11f); moveTo(16f,17f); lineTo(16f,29f) }
                 canvas.drawPath(path, paint)
             }
+            "run" -> {
+                canvas.drawCircle(21f, 6f, 3f, paint)
+                val path = Path().apply {
+                    moveTo(19f, 10f); lineTo(14f, 17f); lineTo(22f, 21f); lineTo(26f, 28f)
+                    moveTo(14f, 17f); lineTo(10f, 24f); lineTo(4f, 25f)
+                    moveTo(17f, 12f); lineTo(10f, 10f); lineTo(6f, 15f)
+                    moveTo(17f, 12f); lineTo(23f, 15f); lineTo(28f, 12f)
+                }
+                canvas.drawPath(path, paint)
+            }
+            "crouch" -> {
+                canvas.drawCircle(18f, 7f, 3f, paint)
+                val path = Path().apply {
+                    moveTo(17f, 11f); lineTo(12f, 17f); lineTo(21f, 21f)
+                    lineTo(15f, 27f); lineTo(23f, 27f)
+                    moveTo(15f, 13f); lineTo(22f, 16f); lineTo(27f, 16f)
+                }
+                canvas.drawPath(path, paint)
+                canvas.drawLine(5f, 29f, 27f, 29f, paint)
+            }
             "aim" -> {
                 canvas.drawCircle(16f,16f,8f,paint)
                 canvas.drawLine(16f,3f,16f,10f,paint); canvas.drawLine(16f,22f,16f,29f,paint)

@@ -93,6 +93,9 @@ class CaveActivity : ThemedActivity() {
     private var vHudControls: View? = null
     private var hudTouchButtonsVisible = true
     private var vBtnUp:    View? = null; private var vBtnDown:  View? = null
+    private var vBtnRun: View? = null
+    private var crouchingUi = false
+    private var walkingUi = true
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
     private var vGameArea: FrameLayout? = null
 
@@ -271,6 +274,8 @@ class CaveActivity : ThemedActivity() {
         vHudControls      = hudView.findViewById(R.id.cave_hud_controls)
         val btnUp         = hudView.findViewById<Button>(R.id.cave_btn_up).also    { vBtnUp    = it }
         val btnDown       = hudView.findViewById<Button>(R.id.cave_btn_down).also  { vBtnDown  = it }
+        val btnRun = hudView.findViewById<Button>(R.id.cave_btn_run).also { vBtnRun = it }
+        hud.controlIcon(btnRun, "run", getString(R.string.cave_controls_run))
         val btnLaser      = hudView.findViewById<Button>(R.id.cave_btn_laser).also { vBtnLaser = it }
         val btnPlace      = hudView.findViewById<Button>(R.id.cave_btn_place).also { vBtnPlace = it }
 
@@ -292,7 +297,10 @@ class CaveActivity : ThemedActivity() {
         val miningBar     = hudView.findViewById<android.widget.ProgressBar>(R.id.cave_mining_progress)
         val hotbarLayout  = hudView.findViewById<LinearLayout>(R.id.cave_hotbar)
 
-        hud.buildHotbarUI(hotbarLayout)
+        val hotbarModeButton = if (!isAssault) btnCombatMode.also {
+            (it.parent as android.view.ViewGroup).removeView(it)
+        } else null
+        hud.buildHotbarUI(hotbarLayout, hotbarModeButton)
         vQuickbar = hotbarLayout
         btnBack.background = CaveUiStyle.panel(this, 0x66293F33, 0x6686A38C)
         CaveUiStyle.button(btnMode)
@@ -372,6 +380,10 @@ class CaveActivity : ThemedActivity() {
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
         renderer.shieldCallback   = { cur, max  -> uiHandler.post { hud.updateShieldBar(cur, max) } }
         renderer.sprintCallback   = { active -> uiHandler.post { hud.updateSprintIndicator(active) } }
+        renderer.crouchCallback = { crouching -> uiHandler.post {
+            crouchingUi = crouching
+            vBtnRun?.visibility = if (walkingUi && !crouching) View.VISIBLE else View.GONE
+        } }
         renderer.playerHitCallback = { uiHandler.post { hud.flashDamage() } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
@@ -463,6 +475,8 @@ class CaveActivity : ThemedActivity() {
     override fun onResume()  {
         super.onResume()
         glView.onResume()
+        touch.crouchToggleEnabled = CaveControlsPrefs.crouchToggle(this)
+        touch.runToggleEnabled = CaveControlsPrefs.runToggle(this)
         soundEngine?.resume()
         music.resume()
         forceImmersiveMode()
@@ -622,6 +636,7 @@ class CaveActivity : ThemedActivity() {
             applyBtnLayout(vBtnDown,  CaveControlsPrefs.Btn.DOWN,  w, h)
             applyBtnLayout(vBtnLaser, CaveControlsPrefs.Btn.LASER, w, h)
             applyBtnLayout(vBtnPlace, CaveControlsPrefs.Btn.PLACE, w, h)
+            applyBtnLayout(vBtnRun, CaveControlsPrefs.Btn.RUN, w, h)
         }
     }
 
@@ -656,10 +671,16 @@ class CaveActivity : ThemedActivity() {
     // ── Mode UI ───────────────────────────────────────────────────────────────
 
     private fun applyModeUi(mode: PlayerMode, btnMode: Button, btnUp: Button, btnDown: View, btnLaser: View) {
+        walkingUi = mode == PlayerMode.WALK
+        vBtnRun?.visibility = if (walkingUi && !crouchingUi) View.VISIBLE else View.GONE
         btnMode.visibility = if (isCreative) View.VISIBLE else View.GONE
+        btnDown.visibility = View.VISIBLE
+        hud.controlIcon(btnDown as Button,
+            if (mode == PlayerMode.WALK) "crouch" else "down",
+            getString(if (mode == PlayerMode.WALK) R.string.cave_controls_crouch else R.string.cave_ui_descend))
         when (mode) {
             PlayerMode.SPECTATOR -> { btnMode.text = getString(R.string.cave_mode_spectator); btnUp.contentDescription = getString(R.string.cave_ui_ascend); btnDown.visibility = View.VISIBLE; btnLaser.visibility = View.GONE }
-            PlayerMode.WALK      -> { btnMode.text = getString(R.string.cave_mode_walk); btnUp.contentDescription = getString(R.string.cave_jump); btnDown.visibility = View.GONE; btnLaser.visibility = View.VISIBLE }
+            PlayerMode.WALK      -> { btnMode.text = getString(R.string.cave_mode_walk); btnUp.contentDescription = getString(R.string.cave_jump); btnLaser.visibility = View.VISIBLE }
         }
     }
 
@@ -687,7 +708,7 @@ class CaveActivity : ThemedActivity() {
         if (hudTouchButtonsVisible == visible) return
         hudTouchButtonsVisible = visible
         val a = if (visible) 1f else 0f
-        listOf(vBtnBack, vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).forEach { v ->
+        listOf(vBtnBack, vBtnUp, vBtnDown, vBtnLaser, vBtnPlace, vBtnRun).forEach { v ->
             v?.alpha = a; v?.isEnabled = visible
         }
         vHudControls?.alpha = a
@@ -740,22 +761,24 @@ class CaveActivity : ThemedActivity() {
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) setHudButtonsVisible(true)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) return super.dispatchTouchEvent(ev)
         val action = ev.actionMasked; val idx = ev.actionIndex; val pid = ev.getPointerId(idx)
+        var hitsRun = false
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
                 val x = ev.getX(idx); val y = ev.getY(idx)
                 fun hit(v: View?) = v != null && v.visibility == View.VISIBLE && v.isHitOnScreen(x, y)
                 val hitsQuickbar = hit(vQuickbar)
                 val hitsHudOnly = listOf(vHudControls, vBtnBack).any { hit(it) }
+                hitsRun = hit(vBtnRun)
                 if (hitsQuickbar) {
                     uiTouchIds.add(pid)
                     handleQuickbarPointerDown(x, y)
                 }
                 if (hitsHudOnly) uiTouchIds.add(pid)
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
-                if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.flyDown     = true }
+                if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.pressDown() }
                 if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f }
                 if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true; uiTouchIds.add(pid) }
-                val hitsAction = listOf(vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).any { hit(it) }
+                val hitsAction = hitsRun || listOf(vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).any { hit(it) }
                 if (!hitsQuickbar && !hitsHudOnly && !hitsAction) {
                     tapCandidates[pid] = TapCandidate(x, y, ev.eventTime)
                 }
@@ -782,7 +805,8 @@ class CaveActivity : ThemedActivity() {
             }
         }
         touch.onTouch(ev, glView.width, uiTouchIds,
-            actionCameraPointer = pid == ptrUp || pid == ptrDown || pid == ptrLaser)
+            actionCameraPointer = pid == ptrUp || pid == ptrDown || pid == ptrLaser,
+            runButtonPointer = hitsRun)
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) uiTouchIds.remove(pid)
         if (action == MotionEvent.ACTION_CANCEL) { uiTouchIds.clear(); tapCandidates.clear(); touch.reset() }
         return super.dispatchTouchEvent(ev)

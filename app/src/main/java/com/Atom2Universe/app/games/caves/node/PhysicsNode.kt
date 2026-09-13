@@ -9,6 +9,21 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     var onGround  = false
 
     var isSprinting = false
+    var isCrouching = false
+        private set
+    val eyeDrop: Double get() = if (isCrouching) 0.6 else 0.0
+    val heightAbove: Double get() = PLAYER_H_ABOVE - eyeDrop
+
+    // Keep the standing eye reference: posture does not move feet or saved positions.
+    fun updateCrouch(pressed: Boolean, x: Double, y: Double, z: Double) {
+        val blockedStanding = collidesAt(x, y, z, PLAYER_H_ABOVE)
+        isCrouching = pressed || (blockedStanding &&
+            (isCrouching || !collidesAt(x, y, z, PLAYER_H_ABOVE - 0.6)))
+        if (isCrouching) {
+            isSprinting = false
+            stepUpRemaining = 0.0
+        }
+    }
 
     // Recul horizontal (knockback) quand le joueur est touché — vitesse amortie.
     private var knockX = 0.0
@@ -78,18 +93,18 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         // ── Mouvement horizontal ──────────────────────────────────────────────
         val groundSpeed = if (isSprinting) sb?.sprintSpeed ?: com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_SPRINT_SPEED
                           else             com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_WALK_SPEED
-        val hSpeed = when {
+        val hSpeed = (when {
             inWater  -> WATER_SPEED * dt
             onGround -> groundSpeed * dt
             else     -> AIR_SPEED   * dt
-        }
+        }) * if (isCrouching) 0.35 else 1.0
         val dx = (fwdX * moveForward - rgtX * moveRight) * hSpeed
         val dz = (fwdZ * moveForward - rgtZ * moveRight) * hSpeed
 
         val newX = x + dx
         if (!collidesAt(newX, y, z)) {
             x = newX
-        } else if ((onGround || inWater) && dx != 0.0 &&
+        } else if (!isCrouching && (onGround || inWater) && dx != 0.0 &&
                    !collidesAt(newX, y + STEP_MAX, z)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = STEP_MAX
         }
@@ -97,7 +112,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val newZ = z + dz
         if (!collidesAt(x, y, newZ)) {
             z = newZ
-        } else if ((onGround || inWater) && dz != 0.0 &&
+        } else if (!isCrouching && (onGround || inWater) && dz != 0.0 &&
                    !collidesAt(x, y + STEP_MAX, newZ)) {
             if (stepUpRemaining == 0.0) stepUpRemaining = STEP_MAX
         }
@@ -226,9 +241,11 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         return hi
     }
 
-    fun collidesAt(px: Double, py: Double, pz: Double): Boolean {
+    fun collidesAt(px: Double, py: Double, pz: Double): Boolean = collidesAt(px, py, pz, heightAbove)
+
+    private fun collidesAt(px: Double, py: Double, pz: Double, top: Double): Boolean {
         val x0 = floor(px - PLAYER_W).toInt();  val x1 = floor(px + PLAYER_WI).toInt()
-        val y0 = floor(py - PLAYER_H_BELOW).toInt(); val y1 = floor(py + PLAYER_H_ABOVE).toInt()
+        val y0 = floor(py - PLAYER_H_BELOW).toInt(); val y1 = floor(py + top).toInt()
         val z0 = floor(pz - PLAYER_W).toInt();  val z1 = floor(pz + PLAYER_WI).toInt()
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = blockAt(bx, by, bz)
@@ -241,9 +258,11 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         isWater(blockAt(floor(px).toInt(), floor(py - 0.9).toInt(), floor(pz).toInt()))
 
     fun isHeadInWater(px: Double, py: Double, pz: Double): Boolean =
-        isWater(blockAt(floor(px).toInt(), floor(py - 0.1).toInt(), floor(pz).toInt()))
+        isWater(blockAt(floor(px).toInt(), floor(py - eyeDrop - 0.1).toInt(), floor(pz).toInt()))
 
     fun reset() {
+        isCrouching    = false
+        isSprinting    = false
         velocityY       = 0.0
         knockX          = 0.0
         knockZ          = 0.0

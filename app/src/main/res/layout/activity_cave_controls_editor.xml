@@ -2,30 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DD111111">
+    android:background="#101C22">
 
-    <!-- Canvas draggable = hauteur identique à la zone de jeu (sans la hotbar de bas) -->
+    <!-- Full-screen coordinates match the game. -->
     <FrameLayout
         android:id="@+id/cave_editor_canvas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="122dp" />
-
-    <!-- Simulation de la hotbar en bas -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom"
-        android:background="#BB000000" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:text="@string/cave_controls_hotbar_mock"
-        android:textColor="#44FFFFFF"
-        android:textSize="11sp" />
+        android:layout_height="match_parent" />
 
     <!-- Indice centre -->
     <TextView
@@ -79,64 +62,6 @@
             android:text="@string/cave_controls_save"
             android:textColor="#FFFFFF"
             android:textSize="10sp" />
-
-    </LinearLayout>
-
-    <!-- Panneau bas : bouton sélectionné + taille -->
-    <LinearLayout
-        android:id="@+id/cave_editor_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="56dp"
-        android:background="#EE000000"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/cave_editor_selected_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="@string/cave_controls_select_hint"
-            android:textColor="#AAFFFFFF"
-            android:textSize="12sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="@string/cave_controls_size"
-                android:textColor="#AAFFFFFF"
-                android:textSize="10sp" />
-
-            <SeekBar
-                android:id="@+id/cave_editor_seekbar"
-                android:layout_width="0dp"
-                android:layout_height="18dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:max="100"
-                android:progress="50"
-                android:progressTint="#FFAA66"
-                android:thumbTint="#FFD6FF" />
-
-            <TextView
-                android:id="@+id/cave_editor_size_value"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:gravity="end"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

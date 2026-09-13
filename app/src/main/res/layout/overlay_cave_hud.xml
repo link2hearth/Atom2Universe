@@ -157,7 +157,14 @@
             android:textColor="#FFFFFF"
             android:textSize="22sp" />
 
-        <!-- FLY DOWN (spectateur seulement) -->
+        <Button
+            android:id="@+id/cave_btn_run"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="top|start"
+            android:text="@string/cave_controls_run" />
+
+        <!-- Accroupissement / descente en vol -->
         <Button
             android:id="@+id/cave_btn_down"
             android:layout_width="64dp"

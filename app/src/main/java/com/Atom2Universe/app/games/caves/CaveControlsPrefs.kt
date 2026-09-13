@@ -15,7 +15,8 @@ internal object CaveControlsPrefs {
         UP   ("up",    0.925f, 0.38f, 64),
         DOWN ("down",  0.925f, 0.62f, 64),
         LASER("laser", 0.915f, 0.78f, 84),
-        PLACE("place", 0.835f, 0.88f, 72)
+        PLACE("place", 0.835f, 0.88f, 72),
+        RUN  ("run",   0.07f,  0.86f, 72)
     }
 
     fun xf(ctx: Context, btn: Btn) = rawF(ctx, "${btn.key}_x", btn.defaultXf).coerceIn(0f, 1f)
@@ -27,9 +28,14 @@ internal object CaveControlsPrefs {
 
     data class Layout(val xf: Float, val yf: Float, val sizeDp: Int)
 
-    fun saveAll(ctx: Context, layouts: Map<Btn, Layout>): Boolean {
+    fun crouchToggle(ctx: Context) = prefs(ctx).getBoolean("crouch_toggle", false)
+    fun runToggle(ctx: Context) = prefs(ctx).getBoolean("run_toggle", false)
+
+    fun saveAll(ctx: Context, layouts: Map<Btn, Layout>, crouchToggle: Boolean = false, runToggle: Boolean = false): Boolean {
         if (layouts.keys != Btn.entries.toSet()) return false
         val editor = prefs(ctx).edit()
+        editor.putBoolean("crouch_toggle", crouchToggle)
+        editor.putBoolean("run_toggle", runToggle)
         for ((btn, layout) in layouts) {
             if (!layout.xf.isFinite() || !layout.yf.isFinite()) return false
             editor.putFloat("${btn.key}_x", layout.xf.coerceIn(0f, 1f))

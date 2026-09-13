@@ -23,6 +23,13 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
     private lateinit var selectedNameTv: TextView
     private lateinit var seekBar: SeekBar
     private lateinit var sizeValueTv: TextView
+    private lateinit var bubble: ScrollView
+    private lateinit var crouchChoices: RadioGroup
+    private lateinit var holdChoice: RadioButton
+    private lateinit var toggleChoice: RadioButton
+    private var crouchToggle = false
+    private var runToggle = false
+    private var updatingChoices = false
 
     private data class BtnState(
         val cfg: CaveControlsPrefs.Btn,
@@ -39,9 +46,10 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         setContentView(R.layout.activity_cave_controls_editor)
 
         canvas         = findViewById(R.id.cave_editor_canvas)
-        selectedNameTv = findViewById(R.id.cave_editor_selected_name)
-        seekBar        = findViewById(R.id.cave_editor_seekbar)
-        sizeValueTv    = findViewById(R.id.cave_editor_size_value)
+        crouchToggle = CaveControlsPrefs.crouchToggle(this)
+        runToggle = CaveControlsPrefs.runToggle(this)
+        createBubble()
+        canvas.setOnClickListener { closeBubble() }
         seekBar.max = SIZE_MAX_DP - SIZE_MIN_DP
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -65,6 +73,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         canvas.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) {
                 states.forEach(::applyStateSize)
+                if (bubble.visibility == View.VISIBLE) positionBubble()
             }
         }
     }
@@ -115,7 +124,87 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
             attachDrag(btn, state)
         }
 
-        states.firstOrNull()?.let { selectState(it) }
+        closeBubble()
+    }
+
+    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
+
+    private fun createBubble() {
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(12))
+        }
+        val header = LinearLayout(this).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+        selectedNameTv = TextView(this).apply { setTextColor(Color.WHITE); textSize = 15f }
+        header.addView(selectedNameTv, LinearLayout.LayoutParams(0, -2, 1f))
+        header.addView(Button(this).apply {
+            setText(R.string.cave_controls_close)
+            isAllCaps = false
+            setOnClickListener { closeBubble() }
+        }, LinearLayout.LayoutParams(-2, dp(48)))
+        content.addView(header)
+        val sizeRow = LinearLayout(this).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
+        sizeRow.addView(TextView(this).apply {
+            setText(R.string.cave_controls_size); setTextColor(Color.LTGRAY)
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        sizeValueTv = TextView(this).apply { setTextColor(Color.WHITE) }
+        sizeRow.addView(sizeValueTv)
+        content.addView(sizeRow)
+        seekBar = SeekBar(this)
+        content.addView(seekBar, LinearLayout.LayoutParams(-1, dp(48)))
+        crouchChoices = RadioGroup(this).apply { orientation = RadioGroup.VERTICAL }
+        holdChoice = RadioButton(this).apply {
+            id = View.generateViewId(); setText(R.string.cave_controls_hold); setTextColor(Color.WHITE)
+        }
+        toggleChoice = RadioButton(this).apply {
+            id = View.generateViewId(); setText(R.string.cave_controls_toggle); setTextColor(Color.WHITE)
+        }
+        crouchChoices.addView(holdChoice, RadioGroup.LayoutParams(-1, dp(48)))
+        crouchChoices.addView(toggleChoice, RadioGroup.LayoutParams(-1, dp(48)))
+        crouchChoices.setOnCheckedChangeListener { _, id ->
+            if (!updatingChoices) {
+                when (selected?.cfg) {
+                    CaveControlsPrefs.Btn.DOWN -> crouchToggle = id == toggleChoice.id
+                    CaveControlsPrefs.Btn.RUN -> runToggle = id == toggleChoice.id
+                    else -> Unit
+                }
+            }
+        }
+        content.addView(crouchChoices)
+        bubble = ScrollView(this).apply {
+            visibility = View.GONE
+            elevation = dp(12).toFloat()
+            background = GradientDrawable().apply {
+                setColor(0xFA21343E.toInt()); cornerRadius = dp(20).toFloat()
+                setStroke(dp(1), 0xFF7398AA.toInt())
+            }
+            addView(content)
+        }
+        (canvas.parent as FrameLayout).addView(bubble, FrameLayout.LayoutParams(dp(320), -2))
+    }
+
+    private fun closeBubble() {
+        bubble.visibility = View.GONE
+        selected = null
+        states.forEach { it.view.alpha = 1f }
+    }
+
+    private fun positionBubble() {
+        val state = selected ?: return
+        val gap = dp(10)
+        val top = findViewById<View>(R.id.cave_editor_topbar).bottom + gap
+        val width = dp(320).coerceAtMost((canvas.width - gap * 2).coerceAtLeast(1))
+        val availableHeight = (canvas.height - top - gap).coerceAtLeast(1)
+        bubble.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(availableHeight, View.MeasureSpec.AT_MOST))
+        bubble.layoutParams = FrameLayout.LayoutParams(width, bubble.measuredHeight)
+        val button = state.view
+        val right = button.x + button.layoutParams.width + gap
+        val left = button.x - width - gap
+        bubble.x = (if (right + width <= canvas.width - gap) right else left)
+            .coerceIn(gap.toFloat(), (canvas.width - width - gap).coerceAtLeast(gap).toFloat())
+        bubble.y = (button.y + button.layoutParams.height / 2f - bubble.measuredHeight / 2f)
+            .coerceIn(top.toFloat(), (canvas.height - bubble.measuredHeight - gap).coerceAtLeast(top).toFloat())
     }
 
     private fun normalizeStateSize(sizeDp: Int): Int = sizeDp.coerceIn(SIZE_MIN_DP, SIZE_MAX_DP)
@@ -144,7 +233,9 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
                 MotionEvent.ACTION_DOWN -> {
                     originTx = localX
                     originTy = localY
-                    selectState(state)
+                    selected = state
+                    bubble.visibility = View.GONE
+                    findViewById<View>(R.id.cave_editor_topbar).visibility = View.INVISIBLE
                     true
                 }
                 MotionEvent.ACTION_MOVE -> {
@@ -158,6 +249,8 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
                     true
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    findViewById<View>(R.id.cave_editor_topbar).visibility = View.VISIBLE
+                    selectState(state)
                     true
                 }
                 else -> false
@@ -171,13 +264,22 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         seekBar.progress = (state.sizeDp - SIZE_MIN_DP).coerceIn(0, seekBar.max)
         sizeValueTv.text = getString(R.string.cave_controls_size_value, state.sizeDp)
         states.forEach { s -> s.view.alpha = if (s == state) 1f else 0.5f }
+        val isRun = state.cfg == CaveControlsPrefs.Btn.RUN
+        crouchChoices.visibility = if (state.cfg == CaveControlsPrefs.Btn.DOWN || isRun) View.VISIBLE else View.GONE
+        holdChoice.setText(if (isRun) R.string.cave_controls_run_hold else R.string.cave_controls_hold)
+        toggleChoice.setText(if (isRun) R.string.cave_controls_run_toggle else R.string.cave_controls_toggle)
+        updatingChoices = true
+        crouchChoices.check(if (if (isRun) runToggle else crouchToggle) toggleChoice.id else holdChoice.id)
+        updatingChoices = false
+        bubble.visibility = View.VISIBLE
+        positionBubble()
     }
 
     private fun saveAll() {
         if (states.size != CaveControlsPrefs.Btn.entries.size) return
         val saved = CaveControlsPrefs.saveAll(this, states.associate { s ->
             s.cfg to CaveControlsPrefs.Layout(s.xf, s.yf, s.sizeDp)
-        })
+        }, crouchToggle, runToggle)
         if (!saved) {
             Toast.makeText(this, R.string.cave_controls_save_failed, Toast.LENGTH_LONG).show()
             return
@@ -192,6 +294,8 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
             .setMessage(R.string.cave_controls_reset_confirm)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 CaveControlsPrefs.reset(this)
+                crouchToggle = false
+                runToggle = false
                 createButtons()
             }
             .setNegativeButton(android.R.string.cancel, null)
@@ -203,10 +307,11 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         CaveControlsPrefs.Btn.DOWN  -> getString(R.string.cave_controls_crouch)
         CaveControlsPrefs.Btn.LASER -> getString(R.string.cave_controls_shoot)
         CaveControlsPrefs.Btn.PLACE -> getString(R.string.cave_place)
+        CaveControlsPrefs.Btn.RUN -> getString(R.string.cave_controls_run)
     }
 
     private fun btnColor(cfg: CaveControlsPrefs.Btn) = when (cfg) {
-        CaveControlsPrefs.Btn.UP, CaveControlsPrefs.Btn.DOWN -> 0x55FFFFFF.toInt()
+        CaveControlsPrefs.Btn.UP, CaveControlsPrefs.Btn.DOWN, CaveControlsPrefs.Btn.RUN -> 0x55FFFFFF.toInt()
         CaveControlsPrefs.Btn.LASER                          -> 0x66003366.toInt()
         CaveControlsPrefs.Btn.PLACE                          -> 0x66336600.toInt()
     }

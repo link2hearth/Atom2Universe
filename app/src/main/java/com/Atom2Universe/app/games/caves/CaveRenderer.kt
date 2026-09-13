@@ -340,6 +340,7 @@ internal class CaveRenderer(
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
     var swingCallback:    (() -> Unit)?                           = null
     var sprintCallback:       ((Boolean) -> Unit)?                = null
+    var crouchCallback:       ((Boolean) -> Unit)?                = null
     var jumpChargeCallback:   ((Float) -> Unit)?                  = null
     var playerHitCallback:    (() -> Unit)?                       = null
     /** L'inventaire et les barres ont été remplacés d'un bloc (kit d'armes) : l'UI doit tout relire. */
@@ -819,6 +820,7 @@ internal class CaveRenderer(
                 PlayerMode.WALK      -> updateWalk(dt)
             }
         }
+        camera.eyeDrop = if (playerMode == PlayerMode.WALK) physics.eyeDrop else 0.0
         camera.update()
         adjustTpsCamera()
 
@@ -1270,7 +1272,7 @@ internal class CaveRenderer(
         if (playerMode != PlayerMode.WALK) return false
         val dx = p.x - camera.playerX; val dz = p.z - camera.playerZ
         if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return false
-        return p.y >= camera.playerY - 1.62 && p.y <= camera.playerY + 0.2
+        return p.y >= camera.playerY - 1.62 && p.y <= camera.playerY + physics.heightAbove
     }
 
     private fun canRecover(p: Projectile): Boolean {
@@ -1430,7 +1432,7 @@ internal class CaveRenderer(
         // pour l'impression que c'est le bras qui tire — voir le même choix sur le jet à main nue.
         val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
         val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
-        val spawnY = camera.playerY - 0.05
+        val spawnY = camera.eyeY - 0.05
         val ammoWeapon = ammoWeaponDef
         val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
@@ -1523,7 +1525,7 @@ internal class CaveRenderer(
             val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
             val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
             val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
-            val spawnY = camera.playerY - 0.05
+            val spawnY = camera.eyeY - 0.05
             val rockWeapon = rockWeaponDef
             projectiles.add(Projectile(
                 spawnX, spawnY, spawnZ,
@@ -1844,7 +1846,7 @@ internal class CaveRenderer(
 
         // En TPS le ray part du point d'orbite (aligné avec la croix : caméra→orbite→bloc).
         val startX = if (camera.thirdPerson) camera.playerX else camera.x
-        val startY = if (camera.thirdPerson) camera.playerY + Camera.TPP_ORBIT_DY else camera.y
+        val startY = if (camera.thirdPerson) camera.orbitY else camera.y
         val startZ = if (camera.thirdPerson) camera.playerZ else camera.z
 
         return raycastBlock(startX, startY, startZ, dirX, dirY, dirZ, MINE_REACH.toDouble())
@@ -2302,7 +2304,7 @@ internal class CaveRenderer(
     private fun adjustTpsCamera() {
         if (!camera.thirdPerson) return
         val headX = camera.playerX
-        val headY = camera.playerY + Camera.TPP_ORBIT_DY
+        val headY = camera.orbitY
         val headZ = camera.playerZ
 
         val dx = camera.x - headX
@@ -2340,7 +2342,8 @@ internal class CaveRenderer(
         val moving = hypot(camera.playerX-walkLastX, camera.playerZ-walkLastZ) > .001
         if (moving && !gamePaused) walkPhase += dt*7.5f
         walkLastX = camera.playerX; walkLastZ = camera.playerZ
-        val step = if (moving) sin(walkPhase)*.24f else 0f
+        val crouchDrop = if (physics.isCrouching && playerMode == PlayerMode.WALK) physics.eyeDrop.toFloat() else 0f
+        val step = if (moving) sin(walkPhase) * (if (crouchDrop > 0f) .07f else .24f) else 0f
         val m = equipmentMesh
         m.clear()
         // Explorateur : veste, ceinture, bottes, sac et visage.
@@ -2354,9 +2357,11 @@ internal class CaveRenderer(
             m.box(side*.073f,-.15f,-.174f,.035f,.028f,.008f,0xEEE9DE)
             m.box(side*.073f,-.15f,-.184f,.015f,.019f,.006f,0x263B43)
             m.box(side*.15f,-.58f,-.145f,.026f,.25f,.017f,0x896C44)
-            m.rod(side*.115f,-.9f,0f,side*.115f,-1.25f,side*step,.103f,0x293C53,.086f)
-            m.rod(side*.115f,-1.25f,side*step,side*.115f,-1.53f,side*step*.8f,.085f,0x293C53,.072f)
-            m.box(side*.115f,-1.565f,side*step*.8f-.035f,.09f,.055f,.145f,0x332F2C)
+            val kneeY = -1.25f + crouchDrop * .88f
+            val kneeZ = side * step - crouchDrop * .47f
+            m.rod(side*.115f,-.9f,0f,side*.115f,kneeY,kneeZ,.103f,0x293C53,.086f)
+            m.rod(side*.115f,kneeY,kneeZ,side*.115f,-1.53f+crouchDrop,side*step*.8f,.085f,0x293C53,.072f)
+            m.box(side*.115f,-1.565f+crouchDrop,side*step*.8f-.035f,.09f,.055f,.145f,0x332F2C)
         }
         m.box(0f,-.57f,.205f,.18f,.235f,.075f,0x786042)
         m.box(0f,-.66f,.29f,.12f,.09f,.024f,0x9C8055)
@@ -2375,6 +2380,8 @@ internal class CaveRenderer(
         equipmentModel[12] = (camera.playerX-camera.x).toFloat()
         equipmentModel[13] = (camera.playerY-camera.y).toFloat()
         equipmentModel[14] = (camera.playerZ-camera.z).toFloat()
+        // Lower the intact torso; bent knees and raised local feet compensate this translation.
+        android.opengl.Matrix.translateM(equipmentModel, 0, 0f, -crouchDrop, 0f)
         drawEquipmentMesh(equipmentModel,camera.vpMatrix)
         if (active) {
             android.opengl.Matrix.translateM(equipmentModel,0,0f,-.38f,0f)
@@ -3087,6 +3094,7 @@ internal class CaveRenderer(
 
     private var speedXpAccum = 0f
     private var prevSprinting = false
+    private var prevCrouching = false
 
     private fun updateWalk(dt: Float) {
         val yawRad = Math.toRadians(camera.yaw.toDouble())
@@ -3094,7 +3102,13 @@ internal class CaveRenderer(
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
         val chargeMul = if (rockChargeTime > 0f) 0.55f else 1f
 
-        physics.isSprinting = touch.sprintActive && physics.onGround
+        physics.updateCrouch(touch.crouchRequested, camera.playerX, camera.playerY, camera.playerZ)
+        if (physics.isCrouching) touch.cancelSprint()
+        if (physics.isCrouching != prevCrouching) {
+            prevCrouching = physics.isCrouching
+            crouchCallback?.invoke(prevCrouching)
+        }
+        physics.isSprinting = touch.sprintRequested && physics.onGround && !physics.isCrouching
         val nowSprinting = physics.isSprinting
         if (nowSprinting != prevSprinting) {
             prevSprinting = nowSprinting
@@ -3112,7 +3126,7 @@ internal class CaveRenderer(
         if (physics.onGround) {
             val dx = newX - camera.playerX; val dz = newZ - camera.playerZ
             val dist = sqrt(dx * dx + dz * dz).toFloat()
-            val rate = if (touch.sprintActive) 0.3f else 0.1f
+            val rate = if (nowSprinting) 0.3f else 0.1f
             speedXpAccum += dist * rate
             if (speedXpAccum >= 1f) {
                 skillBook.speedXp += speedXpAccum.toInt()
@@ -3143,6 +3157,8 @@ internal class CaveRenderer(
     // ── Mode switch ───────────────────────────────────────────────────────────
 
     private fun applyModeSwitch(newMode: PlayerMode) {
+        touch.crouchLatched = false
+        touch.cancelSprint()
         if (newMode == PlayerMode.WALK) {
             val bcx = Math.floorDiv(floorInt(camera.playerX), CHUNK_SIZE)
             val bcy = Math.floorDiv(floorInt(camera.playerY), CHUNK_SIZE)
@@ -3297,7 +3313,7 @@ internal class CaveRenderer(
 
     private fun isInsidePlayer(bx: Int, by: Int, bz: Int): Boolean {
         val x0 = floorInt(camera.playerX - 0.3); val x1 = floorInt(camera.playerX + 0.29)
-        val y0 = floorInt(camera.playerY - 1.62); val y1 = floorInt(camera.playerY + 0.18)
+        val y0 = floorInt(camera.playerY - 1.62); val y1 = floorInt(camera.playerY + physics.heightAbove)
         val z0 = floorInt(camera.playerZ - 0.3); val z1 = floorInt(camera.playerZ + 0.29)
         return bx in x0..x1 && by in y0..y1 && bz in z0..z1
     }

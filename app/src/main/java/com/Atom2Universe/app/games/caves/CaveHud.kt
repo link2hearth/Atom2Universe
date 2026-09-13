@@ -50,12 +50,21 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     // ── Hotbar ────────────────────────────────────────────────────────────────
 
-    fun buildHotbarUI(container: LinearLayout) {
-        val sz = (((res.displayMetrics.widthPixels / dp - 88) / CaveActivity.ACTIVE_SIZE).coerceIn(40f, 52f) * dp).toInt()
+    fun buildHotbarUI(container: LinearLayout, modeButton: Button? = null) {
+        val sideButtonsWidth = 54 + if (modeButton != null) 54 else 0
+        val fixedWidth = sideButtonsWidth + 10 + CaveActivity.ACTIVE_SIZE * 4
+        val sz = (((res.displayMetrics.widthPixels / dp - 16 - fixedWidth) / CaveActivity.ACTIVE_SIZE)
+            .coerceIn(24f, 52f) * dp).toInt()
         container.gravity = Gravity.CENTER
         container.background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
         container.setPadding((5*dp).toInt(), (3*dp).toInt(), (5*dp).toInt(), (3*dp).toInt())
-        quickbarWidth = CaveActivity.ACTIVE_SIZE * (sz + (4*dp).toInt()) + (58*dp).toInt()
+        quickbarWidth = CaveActivity.ACTIVE_SIZE * sz + (fixedWidth * dp).toInt()
+        modeButton?.let { button ->
+            button.layoutParams = LinearLayout.LayoutParams((48*dp).toInt(), (48*dp).toInt()).also {
+                it.marginEnd = (6*dp).toInt()
+            }
+            container.addView(button)
+        }
         container.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             vitals?.layoutParams = vitals?.layoutParams?.also { it.width = (container.width - 22*dp).toInt().coerceAtLeast(1) }
         }
@@ -71,7 +80,8 @@ internal class CaveHud(private val activity: CaveActivity) {
                 }
             }
             val colorDot = View(activity).apply {
-                layoutParams = FrameLayout.LayoutParams((40 * dp).toInt(), (40 * dp).toInt()).also { it.gravity = Gravity.CENTER }
+                val iconSize = minOf((40 * dp).toInt(), sz - (8 * dp).toInt())
+                layoutParams = FrameLayout.LayoutParams(iconSize, iconSize).also { it.gravity = Gravity.CENTER }
                 background = GradientDrawable().apply { setColor(Color.TRANSPARENT) }
             }
             val countTv = TextView(activity).apply {

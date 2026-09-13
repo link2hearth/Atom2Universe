@@ -17,6 +17,9 @@ internal class Camera(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) {
     var yaw = 0f
     var pitch = 0f
     var thirdPerson = false
+    var eyeDrop = 0.0
+    val eyeY get() = playerY - eyeDrop
+    val orbitY get() = eyeY + TPP_ORBIT_DY
 
     val vpMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
@@ -55,7 +58,7 @@ internal class Camera(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) {
             val backZ = -(cos(pitchRad) * cos(yawRad))
             // Point d'orbite : au-dessus du sommet de la boîte (playerY - 0.02),
             // la visée passe juste au-dessus de la tête sans toucher la boîte.
-            val headY = playerY + TPP_ORBIT_DY
+            val headY = orbitY
             x = playerX + backX * TPP_DIST
             y = headY   + backY * TPP_DIST
             z = playerZ + backZ * TPP_DIST
@@ -66,7 +69,7 @@ internal class Camera(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) {
             val len = sqrt(ax * ax + ay * ay + az * az).coerceAtLeast(0.001f)
             aimX = ax / len; aimY = ay / len; aimZ = az / len
         } else {
-            x = playerX; y = playerY; z = playerZ
+            x = playerX; y = eyeY; z = playerZ
             aimX = lookX; aimY = lookY; aimZ = lookZ
         }
 
@@ -94,7 +97,7 @@ internal class Camera(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) {
     // Appelé après une collision caméra : repositionne l'œil et reconstruit les matrices.
     fun applyCollision(ex: Double, ey: Double, ez: Double) {
         x = ex; y = ey; z = ez
-        val headY = playerY + TPP_ORBIT_DY
+        val headY = orbitY
         val ax = (playerX - x).toFloat()
         val ay = (headY   - y).toFloat()
         val az = (playerZ - z).toFloat()

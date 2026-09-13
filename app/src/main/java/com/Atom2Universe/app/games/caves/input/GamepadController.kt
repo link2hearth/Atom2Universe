@@ -12,7 +12,8 @@ import kotlin.math.abs
  *   Stick gauche    → déplacement (avant/arrière/strafe)
  *   Stick droit     → caméra (yaw/pitch)
  *   A               → sauter / monter (spectateur)
- *   B               → descendre (spectateur)
+ *   B               → s'accroupir / descendre (spectateur)
+ *   L3              → courir (maintien ou bascule selon les réglages Course)
  *   RT (gâchette D) → laser / miner
  *   LT (gâchette G) → poser un bloc
  *   R1 / L1         → naviguer hotbar droite / gauche
@@ -51,14 +52,15 @@ class GamepadController(private val touch: TouchController) {
 
     fun onKeyDown(keyCode: Int): Boolean = when (keyCode) {
         KeyEvent.KEYCODE_BUTTON_A      -> { touch.flyUp   = true; true }
-        KeyEvent.KEYCODE_BUTTON_B      -> { touch.flyDown = true; true }
-        KeyEvent.KEYCODE_BUTTON_THUMBL -> { touch.sprintActive = !touch.sprintActive; true }
+        KeyEvent.KEYCODE_BUTTON_B      -> { touch.pressDown(); true }
+        KeyEvent.KEYCODE_BUTTON_THUMBL -> { touch.pressGamepadRun(); true }
         else -> false
     }
 
     fun onKeyUp(keyCode: Int): Boolean = when (keyCode) {
         KeyEvent.KEYCODE_BUTTON_A -> { touch.flyUp   = false; true }
         KeyEvent.KEYCODE_BUTTON_B -> { touch.flyDown = false; true }
+        KeyEvent.KEYCODE_BUTTON_THUMBL -> { touch.releaseGamepadRun(); true }
         else -> false
     }
 

@@ -274,6 +274,12 @@
     <string name="cave_controls_saved">Controls saved</string>
     <string name="cave_controls_save_failed">Could not save controls. Please try again.</string>
     <string name="cave_controls_size_value">%1$d dp</string>
+    <string name="cave_controls_close">Close</string>
+    <string name="cave_controls_hold">Hold to crouch</string>
+    <string name="cave_controls_run">Run</string>
+    <string name="cave_controls_run_hold">Hold and slide to run</string>
+    <string name="cave_controls_run_toggle">Tap to toggle running</string>
+    <string name="cave_controls_toggle">Tap to toggle crouch</string>
 
     <string name="cave_controls_hint">Drag buttons to reposition • Tap to select</string>
 
@@ -474,5 +480,6 @@
     <string name="cave_ui_camera">Camera view</string>
     <string name="cave_ui_map">Map</string>
     <string name="cave_ui_ascend">Ascend</string>
+    <string name="cave_ui_descend">Descend</string>
 </resources>
 
