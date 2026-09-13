@@ -175,8 +175,8 @@ class SurvivorView @JvmOverloads constructor(
         start()
     }
     override fun surfaceChanged(h: SurfaceHolder, fmt: Int, w: Int, h2: Int) {
-        game.screenW = w.toFloat()
-        game.screenH = h2.toFloat()
+        game.screenW = SurvivorBalance.WORLD_WIDTH
+        game.screenH = h2 * SurvivorBalance.WORLD_WIDTH / w.coerceAtLeast(1)
     }
     override fun surfaceDestroyed(h: SurfaceHolder) { stop() }
 
@@ -397,7 +397,7 @@ class SurvivorView @JvmOverloads constructor(
         canvas.drawColor(C_BG)
         drawStars(canvas)
 
-        val cx = width / 2f; val cy = height / 2f
+        val cx = game.screenW / 2f; val cy = game.screenH / 2f
         val camX = game.player.x; val camY = game.player.y
 
         fun wx(wx: Float) = cx + (wx - camX)
@@ -407,6 +407,9 @@ class SurvivorView @JvmOverloads constructor(
             GamePhase.MENU          -> drawHome(canvas)
             GamePhase.WEAPON_SELECT -> drawWeaponSelect(canvas)
             GamePhase.PLAYING, GamePhase.LEVEL_UP, GamePhase.PAUSED -> {
+                canvas.save()
+                val worldScale = width / game.screenW
+                canvas.scale(worldScale, worldScale)
                 drawAura(canvas, wx(game.player.x), wy(game.player.y))
                 drawOrbital(canvas, ::wx, ::wy)
                 drawResidues(canvas, ::wx, ::wy)
@@ -421,6 +424,7 @@ class SurvivorView @JvmOverloads constructor(
                 drawEnemyBullets(canvas, ::wx, ::wy)
                 drawPlayer(canvas, wx(game.player.x), wy(game.player.y))
                 drawDmgNums(canvas, ::wx, ::wy)
+                canvas.restore()
                 drawHUD(canvas)
                 drawJoystick(canvas)
                 if (game.bossWarning > 0f) drawBossWarning(canvas)
@@ -429,7 +433,11 @@ class SurvivorView @JvmOverloads constructor(
                 if (game.phase == GamePhase.PAUSED)   drawPaused(canvas)
             }
             GamePhase.GAME_OVER -> {
+                canvas.save()
+                val worldScale = width / game.screenW
+                canvas.scale(worldScale, worldScale)
                 drawEnemies(canvas, ::wx, ::wy)
+                canvas.restore()
                 drawHUD(canvas)
                 drawGameOver(canvas)
             }
@@ -437,7 +445,11 @@ class SurvivorView @JvmOverloads constructor(
     }
 
     private fun drawStars(canvas: Canvas) {
-        art.terrain(canvas, game.player.x, game.player.y, game.survivalTime)
+        canvas.save()
+        val worldScale = width / game.screenW
+        canvas.scale(worldScale, worldScale)
+        art.terrain(canvas, game.player.x, game.player.y, game.survivalTime, game.screenW, game.screenH)
+        canvas.restore()
     }
 
     private fun drawPlayer(canvas: Canvas, sx: Float, sy: Float) {
@@ -450,10 +462,10 @@ class SurvivorView @JvmOverloads constructor(
     private fun drawEnemies(canvas: Canvas, wx: (Float) -> Float, wy: (Float) -> Float) {
         for (e in game.enemies) {
             val sx = wx(e.x); val sy = wy(e.y)
-            if (sx < -e.radius * 2 || sx > width + e.radius * 2 ||
-                sy < -e.radius * 2 || sy > height + e.radius * 2) continue
+            if (sx < -e.radius * 2 || sx > game.screenW + e.radius * 2 ||
+                sy < -e.radius * 2 || sy > game.screenH + e.radius * 2) continue
             art.enemy(canvas, e, sx, sy, game.survivalTime, game.player.x, game.player.y)
-            if (e.poisonTimer > 0f) {
+            if (e.poisonTimer > 0f || e.orbitalPoisonTimer > 0f) {
                 pStroke.color = C_POISON; pStroke.strokeWidth = 2f
                 canvas.drawCircle(sx, sy, e.radius + 3f, pStroke)
             }
@@ -884,7 +896,10 @@ class SurvivorView @JvmOverloads constructor(
 
             // Description
             pTextL.color = C_GRAY; pTextL.textSize = sp(12f)
-            canvas.drawText(context.getString(opt.descRes), left + dp(82f), top + cardH * 0.72f, pTextL)
+            ellipsisPaint.set(pTextL)
+            val description = android.text.TextUtils.ellipsize(context.getString(opt.descRes),
+                ellipsisPaint, (cardW - dp(94f)).coerceAtLeast(1f), android.text.TextUtils.TruncateAt.END)
+            canvas.drawText(description.toString(), left + dp(82f), top + cardH * 0.72f, pTextL)
         }
 
         // Fill unused card slots if fewer than 3 choices

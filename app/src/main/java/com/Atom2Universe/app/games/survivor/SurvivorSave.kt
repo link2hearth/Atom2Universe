@@ -126,9 +126,11 @@ object SurvivorSave {
     private fun encode(game: SurvivorGame): JSONObject {
         val o = JSONObject()
         o.put("v", VERSION)
+        o.put("balance", SurvivorBalance.VERSION)
         o.put("st", game.survivalTime.toDouble())
         o.put("w", game.wave)
         o.put("spc", game.spawnCd.toDouble())
+        o.put("spb", game.spawnBoost.toDouble())
         o.put("wvc", game.waveCd.toDouble())
         o.put("bsc", game.bossCd.toDouble())
         o.put("aur", game.auraCd.toDouble())
@@ -174,6 +176,9 @@ object SurvivorSave {
             je.put("bd", e.burnDmg.toDouble()); je.put("bt", e.burnTimer.toDouble())
             je.put("pd", e.poisonDmg.toDouble()); je.put("pt", e.poisonTimer.toDouble())
             je.put("ptc", e.poisonTickCd.toDouble())
+            je.put("opd", e.orbitalPoisonDmg.toDouble())
+            je.put("opt", e.orbitalPoisonTimer.toDouble())
+            je.put("opc", e.orbitalPoisonTickCd.toDouble())
             je.put("vv", e.visualVariant); je.put("vp", e.visualPalette)
             je.put("vs", e.visualSeed.toDouble())
             val slot = offsets[e]
@@ -215,14 +220,21 @@ object SurvivorSave {
 
     private fun decode(o: JSONObject, game: SurvivorGame) {
         game.prepareForLoad()
+        val savedBalance = o.optInt("balance", 1)
+        val migrateBalance = savedBalance < 2
 
         game.survivalTime = o.optDouble("st").toFloat()
         game.wave = o.optInt("w", 1).coerceAtLeast(1)
         game.spawnCd = o.optDouble("spc").toFloat()
+        game.spawnBoost = o.optDouble("spb", 1.0).toFloat().coerceIn(1f, SurvivorBalance.MAX_SPAWN_BOOST)
         game.waveCd = o.optDouble("wvc", SurvivorGame.WAVE_DUR.toDouble()).toFloat()
         game.bossCd = o.optDouble("bsc", SurvivorGame.BOSS_INTERVAL.toDouble()).toFloat()
         game.auraCd = o.optDouble("aur").toFloat()
-        game.formationCd = o.optDouble("fmc", 180.0).toFloat()
+        game.formationCd = o.optDouble("fmc", 90.0).toFloat()
+        if (migrateBalance) {
+            game.formationCd = game.formationCd.coerceAtMost(60f)
+            game.spawnCd = game.spawnCd.coerceAtMost(1f)
+        }
         game.pendingLevelUps = o.optInt("plu")
         game.appearanceSerial = o.optInt("as")
         game.bossAppearanceSerial = o.optInt("bas")
@@ -247,11 +259,18 @@ object SurvivorSave {
         for (i in 0 until eArr.length()) {
             val je = eArr.getJSONObject(i)
             val type = EnemyType.entries.getOrNull(je.optInt("t")) ?: continue
+            val stats = if (migrateBalance) SurvivorBalance.enemy(type, game.wave) else null
+            val savedMaxHp = je.optDouble("mhp", 1.0).toFloat().coerceAtLeast(1f)
+            val savedHp = je.optDouble("hp").toFloat()
             val e = SEnemy(
                 x = je.optDouble("x").toFloat(), y = je.optDouble("y").toFloat(),
-                hp = je.optDouble("hp").toFloat(), maxHp = je.optDouble("mhp", 1.0).toFloat(),
-                baseSpeed = je.optDouble("sp").toFloat(), damage = je.optDouble("dm").toFloat(),
-                xpDrop = je.optDouble("xd").toFloat(), radius = je.optDouble("r", 14.0).toFloat(),
+                hp = if (stats != null) stats.hp * (savedHp / savedMaxHp).coerceIn(0f, 1f) else savedHp,
+                maxHp = stats?.hp ?: savedMaxHp,
+                // La révision 3 ne reconvertit ni les PV ni les effets de la révision 2.
+                baseSpeed = if (savedBalance < 3) SurvivorBalance.enemy(type, game.wave).speed
+                    else je.optDouble("sp").toFloat(),
+                damage = stats?.damage ?: je.optDouble("dm").toFloat(),
+                xpDrop = stats?.xp ?: je.optDouble("xd").toFloat(), radius = je.optDouble("r", 14.0).toFloat(),
                 type = type,
                 slowFactor = je.optDouble("sf", 1.0).toFloat(), slowCd = je.optDouble("sc").toFloat(),
                 orbitAngle = je.optDouble("oa").toFloat(), orbitRadius = je.optDouble("orr").toFloat(),
@@ -259,8 +278,17 @@ object SurvivorSave {
                 shootCd = je.optDouble("shc", 2.0).toFloat(),
                 burnDmg = je.optDouble("bd").toFloat(), burnTimer = je.optDouble("bt").toFloat(),
                 poisonDmg = je.optDouble("pd").toFloat(), poisonTimer = je.optDouble("pt").toFloat(),
-                poisonTickCd = je.optDouble("ptc").toFloat()
+                poisonTickCd = je.optDouble("ptc").toFloat(),
+                orbitalPoisonDmg = je.optDouble("opd").toFloat(),
+                orbitalPoisonTimer = je.optDouble("opt").toFloat(),
+                orbitalPoisonTickCd = je.optDouble("opc").toFloat()
             )
+            if (migrateBalance) {
+                // Les anciens DoT ne distinguaient pas leurs sources.
+                e.burnDmg = 0f; e.burnTimer = 0f
+                e.poisonDmg = 0f; e.poisonTimer = 0f; e.poisonTickCd = 0f
+                e.slowFactor = 1f; e.slowCd = 0f
+            }
             if (e.hp <= 0f) continue
             e.visualVariant = je.optInt("vv")
             e.visualPalette = je.optInt("vp")

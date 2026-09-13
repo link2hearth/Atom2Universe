@@ -44,16 +44,17 @@ internal class SurvivorArt {
 
     private val terrainPaint = Paint() // Pixels nets, indépendant des peintures des personnages.
 
-    fun terrain(c: Canvas, cameraX: Float, cameraY: Float, time: Float) {
+    fun terrain(c: Canvas, cameraX: Float, cameraY: Float, time: Float,
+                worldWidth: Float = c.width.toFloat(), worldHeight: Float = c.height.toFloat()) {
         c.drawColor(0xFF192D2C.toInt())
         val cell = 240f
-        val left = cameraX - c.width / 2f
-        val top = cameraY - c.height / 2f
+        val left = cameraX - worldWidth / 2f
+        val top = cameraY - worldHeight / 2f
         // Marge : un détail n'apparaît/disparaît que lorsqu'il est entièrement hors champ.
         val minX = floor((left - 32f) / cell).toInt()
-        val maxX = floor((left + c.width + 32f) / cell).toInt()
+        val maxX = floor((left + worldWidth + 32f) / cell).toInt()
         val minY = floor((top - 32f) / cell).toInt()
-        val maxY = floor((top + c.height + 32f) / cell).toInt()
+        val maxY = floor((top + worldHeight + 32f) / cell).toInt()
         for (gy in minY..maxY) for (gx in minX..maxX) {
             val seed = hash(gx, gy)
             val x = gx * cell + 35f + seed % 170 - left

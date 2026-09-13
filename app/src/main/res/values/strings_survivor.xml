@@ -22,29 +22,29 @@
     <string name="survivor_boss">BOSS!</string>
     <string name="survivor_revived">✦ REVIVED! ✦</string>
     <string name="survivor_upg_speed">Speed</string>
-    <string name="survivor_upg_speed_desc">Movement speed bonus</string>
+    <string name="survivor_upg_speed_desc">+12 movement speed</string>
     <string name="survivor_upg_max_hp">Max Health</string>
-    <string name="survivor_upg_max_hp_desc">Max HP increase and full heal</string>
+    <string name="survivor_upg_max_hp_desc">+20 max HP and restore 20 HP</string>
     <string name="survivor_upg_life_steal">Life Steal</string>
-    <string name="survivor_upg_life_steal_desc">Life steal on hit</string>
+    <string name="survivor_upg_life_steal_desc" formatted="false">+2% life steal on direct damage</string>
     <string name="survivor_upg_regen">Regeneration</string>
-    <string name="survivor_upg_regen_desc">HP regeneration per second</string>
+    <string name="survivor_upg_regen_desc">+0.35 HP regeneration per second</string>
     <string name="survivor_upg_armor">Armor</string>
     <string name="survivor_upg_armor_desc">Damage reduction bonus</string>
     <string name="survivor_upg_crit">Critical Hit</string>
     <string name="survivor_upg_crit_desc">Critical hit chance bonus</string>
     <string name="survivor_upg_crit_mult">Crit Multiplier</string>
-    <string name="survivor_upg_crit_mult_desc">Critical damage multiplier bonus</string>
+    <string name="survivor_upg_crit_mult_desc">+0.25 critical damage multiplier</string>
     <string name="survivor_upg_revive">Revive</string>
     <string name="survivor_upg_revive_desc">Automatic revive on death</string>
     <string name="survivor_upg_xp_bonus">XP Boost</string>
     <string name="survivor_upg_xp_bonus_desc">XP gain bonus</string>
     <string name="survivor_upg_shield">Shield</string>
-    <string name="survivor_upg_shield_desc">Max shield increase</string>
+    <string name="survivor_upg_shield_desc">+20 max shield and restore 20 shield</string>
     <string name="survivor_upg_thorns">Thorns</string>
     <string name="survivor_upg_thorns_desc">Shield reflects absorbed damage to nearby enemies</string>
     <string name="survivor_upg_explosion_on_kill">Chain Reaction</string>
-    <string name="survivor_upg_explosion_on_kill_desc">Chance for killed enemies to explode</string>
+    <string name="survivor_upg_explosion_on_kill_desc" formatted="false">+8% chance of an explosion on kill</string>
     <string name="survivor_upg_unlock_laser">Laser Beam</string>
     <string name="survivor_upg_unlock_laser_desc">Unlock: fire a laser at the nearest enemy</string>
     <string name="survivor_upg_unlock_aura">Damage Aura</string>
@@ -58,7 +58,7 @@
     <string name="survivor_upg_unlock_chain_lightning">Chain Lightning</string>
     <string name="survivor_upg_unlock_chain_lightning_desc">Unlock: lightning that chains between multiple enemies</string>
     <string name="survivor_upg_proj_count">+1 Projectile</string>
-    <string name="survivor_upg_proj_count_desc">Fires an additional projectile per shot</string>
+    <string name="survivor_upg_proj_count_desc" formatted="false">Extra projectile dealing 70% damage</string>
     <string name="survivor_upg_proj_dmg">Projectile Damage</string>
     <string name="survivor_upg_proj_dmg_desc">Projectile damage bonus</string>
     <string name="survivor_upg_proj_rate">Fire Rate</string>
@@ -70,7 +70,7 @@
     <string name="survivor_upg_proj_range">Projectile Range</string>
     <string name="survivor_upg_proj_range_desc">Projectile range bonus</string>
     <string name="survivor_upg_proj_fork">Forking Shot</string>
-    <string name="survivor_upg_proj_fork_desc">Projectiles split on impact</string>
+    <string name="survivor_upg_proj_fork_desc" formatted="false">Two fragments dealing 35% damage</string>
     <string name="survivor_upg_poison">Poison</string>
     <string name="survivor_upg_poison_desc">Projectiles apply a poison DoT (stackable)</string>
     <string name="survivor_upg_laser_range">Laser Range</string>
@@ -82,7 +82,7 @@
     <string name="survivor_upg_laser_rate">Laser Fire Rate</string>
     <string name="survivor_upg_laser_rate_desc">Laser fire rate bonus</string>
     <string name="survivor_upg_laser_multi">Multi-Laser</string>
-    <string name="survivor_upg_laser_multi_desc">Adds an additional parallel laser</string>
+    <string name="survivor_upg_laser_multi_desc">An extra beam toward another enemy</string>
     <string name="survivor_upg_aura_radius">Aura Radius</string>
     <string name="survivor_upg_aura_radius_desc">Aura radius bonus</string>
     <string name="survivor_upg_aura_dmg">Aura Damage</string>
@@ -106,11 +106,11 @@
     <string name="survivor_upg_bomb_rate">Bomb Fire Rate</string>
     <string name="survivor_upg_bomb_rate_desc">Bomb fire rate bonus</string>
     <string name="survivor_upg_bomb_multi">Multi-Bomb</string>
-    <string name="survivor_upg_bomb_multi_desc">Additional bomb per throw</string>
+    <string name="survivor_upg_bomb_multi_desc" formatted="false">Extra bomb dealing 65% damage</string>
     <string name="survivor_upg_bomb_residue">Residue</string>
-    <string name="survivor_upg_bomb_residue_desc">Explosions leave a lingering toxic zone</string>
+    <string name="survivor_upg_bomb_residue_desc">Toxic zones; up to two deal damage</string>
     <string name="survivor_upg_bomb_residue_duration">Residue Duration</string>
-    <string name="survivor_upg_bomb_residue_duration_desc">Increases residue zone duration</string>
+    <string name="survivor_upg_bomb_residue_duration_desc">+0.4 seconds of toxic residue</string>
     <string name="survivor_upg_chain_dmg">Lightning Damage</string>
     <string name="survivor_upg_chain_dmg_desc">Lightning damage bonus</string>
     <string name="survivor_upg_chain_bounces">More Chains</string>
@@ -120,7 +120,7 @@
     <string name="survivor_upg_chain_range">Lightning Range</string>
     <string name="survivor_upg_chain_range_desc">Lightning range bonus</string>
     <string name="survivor_upg_chain_split">Chain Split</string>
-    <string name="survivor_upg_chain_split_desc">Chance to fork lightning at each enemy</string>
+    <string name="survivor_upg_chain_split_desc" formatted="false">+8% chance of a short lightning fork</string>
     <string name="survivor_upg_orbital_count">+1 Orbital</string>
     <string name="survivor_upg_orbital_count_desc">Adds an orbiting orb</string>
     <string name="survivor_upg_orbital_dmg">Orbital Damage</string>
@@ -130,9 +130,9 @@
     <string name="survivor_upg_orbital_rate">Orbital Fire Rate</string>
     <string name="survivor_upg_orbital_rate_desc">Orbital fire rate bonus</string>
     <string name="survivor_upg_orbital_multi">+1 Orbital Shot</string>
-    <string name="survivor_upg_orbital_multi_desc">Each orb fires additional projectiles</string>
+    <string name="survivor_upg_orbital_multi_desc" formatted="false">Extra shot per orb at 65% damage</string>
     <string name="survivor_upg_orbital_frag">Orbital Fragmentation</string>
-    <string name="survivor_upg_orbital_frag_desc">Orbital projectiles split on impact</string>
+    <string name="survivor_upg_orbital_frag_desc" formatted="false">Two orbital fragments at 35% damage</string>
     <string name="survivor_upg_orbital_poison">Orbital Poison</string>
     <string name="survivor_upg_orbital_poison_desc">Orbital projectiles apply a poison DoT</string>
     <string name="survivor_upg_orbital_burn">Orbital Burn</string>
