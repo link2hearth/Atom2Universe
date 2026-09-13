@@ -153,5 +153,20 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
   - Heure figée à midi, bouton jour/nuit masqué. Panneau de manche en haut de l'écran, « Tir à la tête ! ».
   - Reporté à la phase 4 : les balles qui touchent le joueur (rien ne lui tire dessus pour l'instant).
   - Testée en jeu par l'utilisateur : ça marche. Commitée.
+- **13/09/2026** : phase 3, les yeux et les jambes de l'IA (nouveau dossier `caves/ai/`, Kotlin pur).
+  - `NavGrid` : cases praticables (sol dessous, 2 blocs libres), liaisons vers les 8 voisines (plat,
+    marche d'un bloc, descente jusqu'à 3 blocs, diagonales qui ne rasent pas les coins), couverture
+    par case (mur de 2 blocs = totale, muret d'1 bloc = à moitié).
+  - `PathFinder` : A* sans allocation par recherche. `LineOfSight` : rayon bloc par bloc.
+    `PathFollower` : glisse d'une case à l'autre. `SolidGrid` évite d'emballer les entiers.
+  - Tests : `NavigationTest` (10). Deux tests étaient faux au premier essai (colonne mal comptée,
+    œil placé au niveau du muret) ; le code, lui, était juste.
+  - Arène d'essai : murets, caisses et pilier central, recopiés en miroir dans les quatre quarts.
+  - Démonstration : un mannequin **coureur bleu** suit le joueur en contournant les obstacles et
+    s'arrête quand il le voit à moins de 8 blocs. Bouton 🧭 : son chemin tracé au sol en cyan.
+  - Testée en jeu par l'utilisateur : ça marche. Commitée. Remarque : **impossible de semer le
+    coureur**, il marche toujours vers le joueur. Normal pour la démo : il connaît en permanence la
+    position du joueur (il triche). **À corriger en phase 4** : un soldat ne va que là où il a vu ou
+    entendu le joueur pour la dernière fois, et finit par oublier. On doit pouvoir le semer.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).

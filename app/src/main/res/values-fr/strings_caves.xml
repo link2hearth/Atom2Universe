@@ -239,6 +239,7 @@
     <string name="cave_assault_round_time_up">Temps écoulé ! %1$d/%2$d cibles</string>
     <string name="cave_assault_next_round">Manche suivante dans %1$d</string>
     <string name="cave_assault_headshot">Tir à la tête !</string>
+    <string name="cave_assault_show_path">Afficher le chemin du coureur</string>
     <string name="cave_assault_no_maps">Aucune carte pour l\'instant.\n\nDans un monde créatif, construisez votre arène et posez les balises d\'apparition A et B. Ouvrez ensuite l\'outil de capture (📐), placez les coins A et B autour de l\'arène, puis appuyez sur 🗺 pour l\'exporter.</string>
     <string name="cave_assault_map_load_failed">Impossible de charger cette carte.</string>
     <string name="cave_map_export_title">Exporter en carte Assaut</string>

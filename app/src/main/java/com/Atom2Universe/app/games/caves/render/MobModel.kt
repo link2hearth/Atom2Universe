@@ -58,9 +58,14 @@ internal object MobModels {
             "imp"      to imp(),
             "mummy"    to mummy(),
             "slime"    to slime(),
-            "dummy"    to dummy()
+            "dummy"    to dummy(DUMMY_CANVAS),
+            "runner"   to dummy(RUNNER_CANVAS)
         )
     }
+
+    // Mannequin cible (toile beige) et mannequin coureur qui teste la navigation (toile bleue).
+    private const val DUMMY_CANVAS = 0xFFC9B48A.toInt()
+    private const val RUNNER_CANVAS = 0xFF7FA7C9.toInt()
 
     fun get(model: String): MobModel = models[model] ?: models.getValue("slime")
 
@@ -79,9 +84,9 @@ internal object MobModels {
 
     // ── Humanoïdes ──────────────────────────────────────────────────────────
 
-    /** Mannequin d'entraînement du mode Assaut : silhouette en toile, cible rouge au torse et au visage. */
-    private fun dummy(): MobModel {
-        val canvas = 0xFFC9B48A.toInt(); val strap = 0xFF6B4F2E.toInt()
+    /** Mannequin d'entraînement du mode Assaut : silhouette en toile [canvas], cible rouge au torse et au visage. */
+    private fun dummy(canvas: Int): MobModel {
+        val strap = 0xFF6B4F2E.toInt()
         val red = 0xFFC62828.toInt(); val white = 0xFFF2EEE4.toInt()
         return MobModel(listOf(
             p(-2.5f, 6f, 0f, 3.5f, 12f, 3.5f, canvas, Limb.LEG, -1),

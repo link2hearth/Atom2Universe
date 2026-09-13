@@ -124,7 +124,14 @@ class A2MapTest {
         assertEquals(com.Atom2Universe.app.games.caves.world.GRASS, map.blockAt(50, 0, 50))
         assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(0, 5, 40))
         assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99, 1, 99))
-        assertEquals(AIR, map.blockAt(50, 1, 50))
+        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(50, 3, 50))   // pilier central
+        assertEquals(AIR, map.blockAt(50, 4, 50))
+        // Obstacles recopiés en miroir : le muret long existe dans les quatre quarts.
+        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(20, 2, 15))
+        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99 - 20, 2, 15))
+        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(20, 2, 99 - 15))
+        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99 - 20, 2, 99 - 15))
+        assertEquals(AIR, map.blockAt(50, 1, 5))
         assertEquals(listOf(MapPoint(2, 1, 2)), map.spawnsA)
         assertEquals(listOf(MapPoint(97, 1, 97)), map.spawnsB)
         assertEquals(AIR, map.blockAt(2, 1, 2))

@@ -1201,6 +1201,7 @@ internal class CaveRenderer(
             camera.x, camera.y, camera.z,
             camera.yaw, camera.vpMatrix
         )
+        renderDebugSegments()
 
         // ── Rendu projectiles + particules d'impact ───────────────────────────
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
@@ -2005,6 +2006,73 @@ internal class CaveRenderer(
         GLES30.glDisableVertexAttribArray(lAPos); GLES30.glDisableVertexAttribArray(lAColor)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
         GLES30.glDepthMask(true); GLES30.glDisable(GLES30.GL_BLEND)
+    }
+
+    // ── Tracés de debug du mode (chemin d'un bot) ─────────────────────────────
+    // Tableaux et tampon GPU alloués une fois : ce tracé peut être dessiné à chaque image.
+
+    private val MAX_DEBUG_SEGMENTS = 256
+    private val DEBUG_HALF_WIDTH = 0.08f
+    private val debugSegments = DoubleArray(MAX_DEBUG_SEGMENTS * 6)
+    private val debugVerts = FloatArray(MAX_DEBUG_SEGMENTS * 6 * 6)
+    private val debugBuf: java.nio.FloatBuffer = ByteBuffer.allocateDirect(debugVerts.size * 4)
+        .order(ByteOrder.nativeOrder()).asFloatBuffer()
+
+    /** Dessine les segments fournis par le mode comme des rubans lumineux posés au sol. */
+    private fun renderDebugSegments() {
+        val count = mode.debugSegments(debugSegments).coerceAtMost(MAX_DEBUG_SEGMENTS)
+        if (count == 0) return
+        var v = 0
+        for (s in 0 until count) {
+            val i = s * 6
+            // Floating origin : positions relatives à la caméra.
+            val x0 = (debugSegments[i] - camera.x).toFloat()
+            val y0 = (debugSegments[i + 1] - camera.y).toFloat()
+            val z0 = (debugSegments[i + 2] - camera.z).toFloat()
+            val x1 = (debugSegments[i + 3] - camera.x).toFloat()
+            val y1 = (debugSegments[i + 4] - camera.y).toFloat()
+            val z1 = (debugSegments[i + 5] - camera.z).toFloat()
+            // Largeur du ruban : perpendiculaire horizontale au segment.
+            var px = -(z1 - z0); var pz = x1 - x0
+            val len = sqrt(px * px + pz * pz)
+            if (len < 1e-4f) continue
+            px = px / len * DEBUG_HALF_WIDTH; pz = pz / len * DEBUG_HALF_WIDTH
+            v = putDebugVertex(v, x0 - px, y0, z0 - pz)
+            v = putDebugVertex(v, x0 + px, y0, z0 + pz)
+            v = putDebugVertex(v, x1 + px, y1, z1 + pz)
+            v = putDebugVertex(v, x0 - px, y0, z0 - pz)
+            v = putDebugVertex(v, x1 + px, y1, z1 + pz)
+            v = putDebugVertex(v, x1 - px, y1, z1 - pz)
+        }
+        if (v == 0) return
+
+        debugBuf.clear()
+        debugBuf.put(debugVerts, 0, v)
+        debugBuf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, transientVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, v * 4, debugBuf, GLES30.GL_DYNAMIC_DRAW)
+        laserShader?.use()
+        GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
+        GLES30.glEnable(GLES30.GL_BLEND); GLES30.glBlendFunc(GLES30.GL_ONE, GLES30.GL_ONE)
+        GLES30.glDepthMask(false)
+        // Le ruban se voit du dessus comme du dessous : pas d'élimination des faces arrière.
+        val cullWasOn = GLES30.glIsEnabled(GLES30.GL_CULL_FACE)
+        if (cullWasOn) GLES30.glDisable(GLES30.GL_CULL_FACE)
+        val stride = 6 * 4
+        GLES30.glEnableVertexAttribArray(lAPos); GLES30.glVertexAttribPointer(lAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
+        GLES30.glEnableVertexAttribArray(lAColor); GLES30.glVertexAttribPointer(lAColor, 3, GLES30.GL_FLOAT, false, stride, 12)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, v / 6)
+        GLES30.glDisableVertexAttribArray(lAPos); GLES30.glDisableVertexAttribArray(lAColor)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
+        if (cullWasOn) GLES30.glEnable(GLES30.GL_CULL_FACE)
+        GLES30.glDepthMask(true); GLES30.glDisable(GLES30.GL_BLEND)
+    }
+
+    /** Écrit un sommet cyan (position + couleur) à l'indice [v] et renvoie l'indice suivant. */
+    private fun putDebugVertex(v: Int, x: Float, y: Float, z: Float): Int {
+        debugVerts[v] = x; debugVerts[v + 1] = y; debugVerts[v + 2] = z
+        debugVerts[v + 3] = 0.15f; debugVerts[v + 4] = 0.85f; debugVerts[v + 5] = 1f
+        return v + 6
     }
 
     // ── Rendu laser + highlight ───────────────────────────────────────────────
