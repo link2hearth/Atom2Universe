@@ -142,5 +142,16 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
   - Arène testée en jeu par l'utilisateur : ça marche. Phase 1 commitée.
   - **Carte chargée en entier** : `WorldSource.chunkBounds()` donne la zone finie ; `World` en
     charge tous les chunks (49 pour l'arène) sans distance de vue et n'en décharge aucun.
+- **13/09/2026** : phase 2, la boucle de match.
+  - Consignes de l'utilisateur : **toutes les armes restent disponibles**, **munitions illimitées**
+    (la réserve n'est pas entamée ; le chargeur et le rechargement restent, à rediscuter si besoin).
+  - `mode/AssaultMatch.kt` : manches, chrono (60 s), score (100 par cible, +50 à la tête, +10 par
+    seconde restante si la manche est gagnée), pause de 4 s entre les manches. Tests : `AssaultMatchTest`.
+  - Mannequins d'entraînement (modèle `dummy`, 100 PV) : 8 par manche, posés au hasard au niveau du
+    sol, loin du point d'apparition, tournés vers lui. Ce sont des `Enemy` jamais mis à jour : immobiles.
+  - Tir à la tête : au-dessus de 74 % de la hauteur du corps (`MobModels.HEAD_START`), dégâts × 2 en Assaut.
+  - Heure figée à midi, bouton jour/nuit masqué. Panneau de manche en haut de l'écran, « Tir à la tête ! ».
+  - Reporté à la phase 4 : les balles qui touchent le joueur (rien ne lui tire dessus pour l'instant).
+  - Testée en jeu par l'utilisateur : ça marche. Commitée.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).

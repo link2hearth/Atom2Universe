@@ -504,6 +504,75 @@ internal class CaveHud(private val activity: CaveActivity) {
             .show()
     }
 
+    // ── Mode Assaut : manche, chrono, score ───────────────────────────────────
+
+    private var matchLine: android.widget.TextView? = null
+    private var matchMessage: android.widget.TextView? = null
+    private var headshotView: android.widget.TextView? = null
+    private val hideHeadshot = Runnable { headshotView?.visibility = View.GONE }
+
+    fun buildMatchPanel(root: FrameLayout) {
+        val panel = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
+                it.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                it.topMargin = (10 * dp).toInt()
+            }
+        }
+        val line = android.widget.TextView(activity).apply {
+            textSize = 13f; setTextColor(Color.WHITE)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setPadding((12 * dp).toInt(), (5 * dp).toInt(), (12 * dp).toInt(), (5 * dp).toInt())
+            background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
+        }
+        val message = android.widget.TextView(activity).apply {
+            textSize = 18f; setTextColor(0xFFFFE082.toInt()); gravity = Gravity.CENTER
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            setPadding(0, (10 * dp).toInt(), 0, 0)
+            visibility = View.GONE
+        }
+        val headshot = android.widget.TextView(activity).apply {
+            text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_headshot)
+            textSize = 16f; setTextColor(0xFFFF5252.toInt())
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            setPadding(0, (8 * dp).toInt(), 0, 0)
+            visibility = View.GONE
+        }
+        panel.addView(line); panel.addView(message); panel.addView(headshot)
+        root.addView(panel)
+        matchLine = line; matchMessage = message; headshotView = headshot
+    }
+
+    fun updateMatchPanel(s: com.Atom2Universe.app.games.caves.mode.AssaultMatch.Status) {
+        val seconds = s.secondsLeft
+        matchLine?.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_hud,
+            s.round, seconds / 60, seconds % 60, s.targetsDown, s.targetsTotal, s.headshots, s.score)
+
+        val end = s.lastEnd
+        val between = s.phase == com.Atom2Universe.app.games.caves.mode.AssaultMatch.Phase.BETWEEN_ROUNDS
+        if (!between || end == null) {
+            matchMessage?.visibility = View.GONE
+            return
+        }
+        val verdict = if (end == com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.CLEARED)
+            activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_cleared, s.lastTimeBonus)
+        else
+            activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_time_up, s.targetsDown, s.targetsTotal)
+        val next = activity.getString(com.Atom2Universe.app.R.string.cave_assault_next_round, s.pauseSecondsLeft)
+        matchMessage?.text = "$verdict\n$next"
+        matchMessage?.visibility = View.VISIBLE
+    }
+
+    fun flashHeadshot() {
+        val view = headshotView ?: return
+        view.removeCallbacks(hideHeadshot)
+        view.visibility = View.VISIBLE
+        view.postDelayed(hideHeadshot, 900)
+    }
+
     // ── Export en carte Assaut ────────────────────────────────────────────────
 
     private fun onExportMapPressed() {

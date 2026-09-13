@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves.mode
 
 import com.Atom2Universe.app.games.caves.CaveRenderer
+import com.Atom2Universe.app.games.caves.entity.Enemy
 
 /**
  * Les règles d'une partie de Cave World.
@@ -33,4 +34,16 @@ internal interface GameMode {
 
     /** Le joueur peut-il creuser et poser des blocs ? */
     val allowsWorldEdits: Boolean get() = true
+
+    /** Les tirs ne consomment pas de munitions de réserve (le chargeur se recharge quand même). */
+    val infiniteAmmo: Boolean get() = false
+
+    /** Heure de jeu figée (en ms de cycle, voir CaveRenderer.gameTimeMs) ; null = le jour et la nuit tournent. */
+    val fixedTimeOfDayMs: Long? get() = null
+
+    /** Multiplicateur de dégâts d'un tir qui touche la tête d'un ennemi. */
+    val headshotMultiplier: Float get() = 1f
+
+    /** Un projectile du joueur ou d'un allié vient de toucher [enemy], à la tête si [headshot]. */
+    fun onEnemyHit(enemy: Enemy, headshot: Boolean) = Unit
 }

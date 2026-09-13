@@ -671,7 +671,7 @@ internal class CaveRenderer(
             mode.onPlayerPlaced(spawn[0].toDouble(), spawn[1].toDouble(), spawn[2].toDouble())
         } else {
             // Nouvelle partie : démarrer à 10h du matin IG (portion jour, 100 000 ms/heure → 4h après 6h).
-            gameTimeMs = NEW_GAME_START_MS
+            gameTimeMs = mode.fixedTimeOfDayMs ?: NEW_GAME_START_MS
             // Une carte préparée connaît ses points d'apparition ; sinon le monde en cherche un
             // (et peut construire une île : à ne jamais faire sur une carte).
             val spawn = mode.spawnPoint() ?: world.findSpawnPoint()
@@ -823,7 +823,8 @@ internal class CaveRenderer(
         adjustTpsCamera()
 
         elapsed += dt
-        if (!gamePaused) gameTimeMs += (dt * 1_000f).toLong()
+        // Heure figée par le mode (Assaut : midi) ; sinon le jour et la nuit tournent.
+        if (!gamePaused && mode.fixedTimeOfDayMs == null) gameTimeMs += (dt * 1_000f).toLong()
 
         waterTickAccum += dt
         if (waterTickAccum >= 0.25f) {
@@ -1305,8 +1306,13 @@ internal class CaveRenderer(
                 }
                 if(hit!=null) {
                     if(p.kind!=ProjectileKind.LEGACY) spawnImpact(p.x,p.y,p.z)
-                    if(p.isPlayerWeapon) applyWeaponHit(hit,p.damage,p.stats,Random.Default)
-                    else enemyManager.damageEnemy(hit,p.damage)
+                    // Tête : le haut du corps, au-dessus de MobModels.HEAD_START. Le mode décide ce
+                    // qu'elle vaut (la survie ne change rien, l'Assaut double les dégâts).
+                    val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
+                    val damage = if (headshot) (p.damage * mode.headshotMultiplier).roundToInt() else p.damage
+                    if(p.isPlayerWeapon) applyWeaponHit(hit,damage,p.stats,Random.Default)
+                    else enemyManager.damageEnemy(hit,damage)
+                    mode.onEnemyHit(hit, headshot)
                     iter.remove();break
                 }
                 if(p.travelDist>p.maxRange) { iter.remove();break }
@@ -1383,8 +1389,10 @@ internal class CaveRenderer(
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
         val ammoId = ammoBlockIdFor(def.weaponType) ?: return false
         if (weaponAttackCooldown > 0f) return false
+        // Munitions illimitées (Assaut) : la réserve n'est ni vérifiée ni entamée, seul le chargeur compte.
+        val infiniteAmmo = mode.infiniteAmmo
         val ammoCount = inventory[ammoId] ?: 0
-        if (ammoCount <= 0) return false
+        if (!infiniteAmmo && ammoCount <= 0) return false
 
         val profile = RangedProfile.all[def.weaponType] ?: return false
         val magazine = if(profile.magazine>0) magazines.getOrPut(heldId) { MagazineState(profile.magazine,profile.reload) } else null
@@ -1417,13 +1425,15 @@ internal class CaveRenderer(
                 maxRange=profile.range))
         }
 
-        val newCount = ammoCount - 1
-        if (newCount <= 0) inventory.remove(ammoId) else inventory[ammoId] = newCount
-        inventoryCallback?.invoke(inventory.toMap())
+        val newCount = if (infiniteAmmo) ammoCount else ammoCount - 1
+        if (!infiniteAmmo) {
+            if (newCount <= 0) inventory.remove(ammoId) else inventory[ammoId] = newCount
+            inventoryCallback?.invoke(inventory.toMap())
+        }
 
         val speedBonus = stats["attack_speed"] ?: 0
         weaponAttackCooldown=(profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
-        if(magazine?.remaining==0 && newCount>0) magazine.reload()
+        if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) magazine.reload()
         swingCallback?.invoke()
         startSwing()
         equipmentRelease = 0f

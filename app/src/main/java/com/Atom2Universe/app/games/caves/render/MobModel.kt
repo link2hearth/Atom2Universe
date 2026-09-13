@@ -57,7 +57,8 @@ internal object MobModels {
             "spider"   to spider(),
             "imp"      to imp(),
             "mummy"    to mummy(),
-            "slime"    to slime()
+            "slime"    to slime(),
+            "dummy"    to dummy()
         )
     }
 
@@ -70,7 +71,31 @@ internal object MobModels {
     fun bodyHeightWorld(model: String, baseScale: Float): Float =
         get(model).heightVox * (baseScale * 2f / REF_VOX)
 
+    /**
+     * Bas de la tête, en fraction de la hauteur du corps. Chez les humanoïdes (jambes 12, torse 11,
+     * tête 8 voxels), la tête commence vers 74 % : un tir au-dessus touche la tête.
+     */
+    const val HEAD_START = 0.74f
+
     // ── Humanoïdes ──────────────────────────────────────────────────────────
+
+    /** Mannequin d'entraînement du mode Assaut : silhouette en toile, cible rouge au torse et au visage. */
+    private fun dummy(): MobModel {
+        val canvas = 0xFFC9B48A.toInt(); val strap = 0xFF6B4F2E.toInt()
+        val red = 0xFFC62828.toInt(); val white = 0xFFF2EEE4.toInt()
+        return MobModel(listOf(
+            p(-2.5f, 6f, 0f, 3.5f, 12f, 3.5f, canvas, Limb.LEG, -1),
+            p( 2.5f, 6f, 0f, 3.5f, 12f, 3.5f, canvas, Limb.LEG,  1),
+            p( 0f, 17f, 0f, 10f, 11f, 6f, canvas),                          // torse
+            p( 0f, 12.2f, 0f, 10.4f, 1.4f, 6.4f, strap),                     // ceinture
+            p( 0f, 18f, 3.1f, 6f, 6f, 0.4f, white),                          // cible : anneau blanc
+            p( 0f, 18f, 3.4f, 3f, 3f, 0.4f, red, emissive = true),           // cible : centre rouge
+            p(-6.5f, 16.5f, 0f, 3f, 11f, 3f, canvas, Limb.ARM, -1, pivotY = 22f),
+            p( 6.5f, 16.5f, 0f, 3f, 11f, 3f, canvas, Limb.ARM,  1, pivotY = 22f),
+            p( 0f, 26.5f, 0f, 8f, 8f, 8f, canvas),                          // tête
+            p( 0f, 26.5f, 4.1f, 2.4f, 2.4f, 0.4f, red, emissive = true)      // point rouge au visage
+        ), heightVox = 30.5f)
+    }
 
     private fun zombie(): MobModel {
         val skin = 0xFF6E8B57.toInt(); val shirt = 0xFF3B4A2A.toInt(); val pants = 0xFF2B3340.toInt()

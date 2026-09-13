@@ -395,6 +395,13 @@ class CaveActivity : ThemedActivity() {
         if (isAssault) {
             // Shooter : ni construction ni destruction, donc pas de bascule vers la barre des matériaux.
             btnCombatMode.visibility = View.GONE
+            // L'heure est figée à midi : le bouton jour/nuit n'a plus de sens.
+            btnDayNight.visibility = View.GONE
+            hud.buildMatchPanel(root)
+            (renderer.mode as? AssaultMode)?.let { mode ->
+                mode.onStatus = { status -> uiHandler.post { hud.updateMatchPanel(status) } }
+                mode.onHeadshotKill = { uiHandler.post { hud.flashHeadshot() } }
+            }
         }
 
         soundEngine = CaveSoundEngine(lifecycleScope).also {
