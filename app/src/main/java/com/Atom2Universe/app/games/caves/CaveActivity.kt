@@ -450,6 +450,10 @@ class CaveActivity : ThemedActivity() {
                         else getString(names[zone])
                 } }
                 val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
+                val villageNames = resources.getStringArray(R.array.cave_showcase_village_names)
+                mode.onVillageCaption = { index -> uiHandler.post {
+                    caption.text = villageNames[index]
+                } }
                 mode.onColdCaption = { index -> uiHandler.post {
                     caption.text = coldNames[index]
                 } }

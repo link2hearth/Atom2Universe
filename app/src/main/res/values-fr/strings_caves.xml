@@ -557,7 +557,12 @@
     <string name="cave_block_moss">Mousse</string>
     <string name="cave_block_basalt">Basalte</string>
     <string name="cave_assault_showcase">Atelier des biomes · visite libre</string>
-    <string name="cave_showcase_hint">Explorez six paysages, les arbres, les blocs, puis les créatures au fond. Visite paisible.</string>
+    <string name="cave_showcase_hint">Villages sur l’allée latérale à l’entrée ; paysages, arbres, blocs et créatures au fond.</string>
+    <string-array name="cave_showcase_village_names">
+        <item>Hameau nordique · chalet, atelier et maison à cour · statue du gardien</item>
+        <item>Village de l’oasis · 5 bâtiments variés en grès · pyramide à chambre intérieure</item>
+        <item>Bourg de pierre · 6 bâtiments, dont boutique et maison-tour · grand temple</item>
+    </string-array>
     <string-array name="cave_showcase_mob_names">
         <item>Nain</item><item>Gobelin</item><item>Golem</item><item>Diablotin</item><item>Momie</item><item>Ogre</item>
         <item>Squelette</item><item>Slime</item><item>Araignée</item><item>Troll</item><item>Spectre</item><item>Zombie</item><item>Soldat d’Assaut</item>
@@ -576,7 +581,7 @@
     <string name="cave_showcase_marsh">Marais et argile</string>
     <string name="cave_showcase_volcano">Roches volcaniques</string>
     <string name="cave_showcase_gallery">Galerie des blocs</string>
-    <string name="cave_showcase_walk">Chemins · paysages, arbres, blocs et créatures</string>
+    <string name="cave_showcase_walk">Villages sur l’allée transversale à l’entrée · paysages et galeries au fond</string>
     <string name="cave_showcase_sample">Échantillon proche : %1$s</string>
     <string name="cave_palette_pastel">Palette : Pastel</string>
     <string name="cave_palette_vivid">Palette : Vif</string>

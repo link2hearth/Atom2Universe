@@ -5,14 +5,17 @@ import kotlin.math.abs
 
 /** A finite, hand-composed material garden. Never used by the survival generator. */
 internal object ShowcaseMap {
-    const val WIDTH = 72
+    private const val ORIGINAL_WIDTH = 72
+    const val WIDTH = 232
+    fun villageAt(x: Int, z: Int): Int? =
+        if (x in 76..227 && z in 4..51) ((x - 76) / 52).takeIf { (x - 76) % 52 < 48 } else null
     const val HEIGHT = 40
     const val FLOOR = 4
     const val TREE_Z = 50
     const val COLD_Z = 158
     const val GALLERY_Z = 212
     fun coldAt(x: Int, z: Int): Int? {
-        if (x !in 0 until WIDTH || z !in COLD_Z until GALLERY_Z - 2) return null
+        if (x !in 0 until ORIGINAL_WIDTH || z !in COLD_Z until GALLERY_Z - 2) return null
         return ((z - COLD_Z) / 18 * 3 + x / 24).takeIf { it in 0..7 }
     }
     val treeTypes = listOf("oak", "birch", "sapin", "darkwood", "jungle", "redwood",
@@ -20,7 +23,7 @@ internal object ShowcaseMap {
         "giant_redwood", "giant_pine", "broad_oak", "baobab", "acacia", "willow")
 
     fun treeAt(x: Int, z: Int): Int? {
-        if (x !in 0 until WIDTH || z !in TREE_Z until COLD_Z - 2) return null
+        if (x !in 0 until ORIGINAL_WIDTH || z !in TREE_Z until COLD_Z - 2) return null
         val index = (z - TREE_Z) / 18 * 3 + x / 24
         return index.takeIf { it in treeTypes.indices }
     }
@@ -42,6 +45,7 @@ internal object ShowcaseMap {
     }
 
     fun climateAt(x: Int, z: Int): Int {
+        villageAt(x, z)?.let { return when (it) { 0 -> 4; 1 -> 1; else -> 0 } }
         if (coldAt(x, z) != null) return 4
         // Adjacent grass samples on the avenue make the narrow color transition inspectable.
         if (z in 44..46 && x in 4..19) return if (x < 12) 0 else 3
@@ -57,6 +61,7 @@ internal object ShowcaseMap {
     fun create(): A2Map {
         val exhibits = galleryBlocks()
         val depth = mobGalleryZ() + ((mobBayCount()+2)/3)*10 + 4
+        require(WIDTH.toLong() * HEIGHT * depth <= A2Map.MAX_VOLUME)
         val blocks = ShortArray(WIDTH * HEIGHT * depth)
         val meta = ByteArray(blocks.size)
         fun put(x: Int, y: Int, z: Int, block: Short, rotation: Byte = 0) {
@@ -68,11 +73,20 @@ internal object ShowcaseMap {
             for (y in y0..y1) for (z in z0..z1) for (x in x0..x1) put(x, y, z, block)
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
+            // L-shaped extension: keep the long existing exhibition and widen only its entrance.
+            if (x >= ORIGINAL_WIDTH && z > 55) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
-            if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1)
+            if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
+                (x == ORIGINAL_WIDTH - 1 && z > 55) || (x >= ORIGINAL_WIDTH && z == 55))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
+        for ((index, style) in VillageArchitecture.Style.entries.withIndex()) {
+            VillageArchitecture.generate(style, 260914 + index, listOf(3, 5, 6)[index]) { x, y, z, id ->
+                put(76 + index * 52 + x, FLOOR + y, 4 + z, id)
+            }
+        }
+        fill(65, FLOOR, 5, WIDTH - 2, FLOOR, 7, COBBLESTONE)
         val tops = IntArray(WIDTH * depth) { FLOOR }
         for (zone in 0..5) {
             val ox = 4 + zone % 3 * 22

@@ -557,7 +557,12 @@
     <string name="cave_block_moss">Moss</string>
     <string name="cave_block_basalt">Basalt</string>
     <string name="cave_assault_showcase">Biome workshop · free visit</string>
-    <string name="cave_showcase_hint">Explore six landscapes, trees, blocks and the creature gallery beyond. Peaceful visit.</string>
+    <string name="cave_showcase_hint">Villages along the side avenue at the entrance; landscapes, trees, blocks and creatures ahead.</string>
+    <string-array name="cave_showcase_village_names">
+        <item>Nordic hamlet · cottage, workshop and courtyard home · guardian statue</item>
+        <item>Oasis village · 5 varied sandstone buildings · pyramid with inner chamber</item>
+        <item>Stone borough · 6 buildings including shop and tower house · great temple</item>
+    </string-array>
     <string-array name="cave_showcase_mob_names">
         <item>Dwarf</item><item>Goblin</item><item>Golem</item><item>Imp</item><item>Mummy</item><item>Ogre</item>
         <item>Skeleton</item><item>Slime</item><item>Spider</item><item>Troll</item><item>Wraith</item><item>Zombie</item><item>Assault soldier</item>
@@ -576,7 +581,7 @@
     <string name="cave_showcase_marsh">Marsh and clay</string>
     <string name="cave_showcase_volcano">Volcanic rocks</string>
     <string name="cave_showcase_gallery">Block gallery</string>
-    <string name="cave_showcase_walk">Paths · landscapes, trees, blocks and creatures</string>
+    <string name="cave_showcase_walk">Villages across the entrance avenue · landscapes and galleries ahead</string>
     <string name="cave_showcase_sample">Nearby sample: %1$s</string>
     <string name="cave_palette_pastel">Palette: Pastel</string>
     <string name="cave_palette_vivid">Palette: Vivid</string>
