@@ -56,6 +56,7 @@ internal object BlockRegistry {
 
     fun load(assets: AssetManager) {
         if (defs.isNotEmpty()) return
+        FarmSoil.registerTextures()
         val files = assets.list("caves/blocks") ?: return
         for (file in files) {
             if (!file.endsWith(".json")) continue
@@ -70,6 +71,15 @@ internal object BlockRegistry {
             if (def.waterlogged) waterloggedTable[idx] = true
             orientModeTable[idx] = def.orientMode
         }
+        for (def in FarmShowcasePlants.definitions(requireNotNull(defs[7020.toShort()]))) {
+            require(def.id !in defs) { "Duplicate farm showcase block ${def.id}" }
+            defs[def.id] = def
+            decorationTable[def.id.toInt()] = true
+        }
+        for (def in FarmItems.definitions(requireNotNull(defs[FarmSoil.HOE]))) {
+            require(def.id !in defs) { "Duplicate farm item ${def.id}" }
+            defs[def.id] = def
+        }
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {
             require(def.harvestCategory in setOf("recoverable", "covered_soil", "fractured_stone",
@@ -77,8 +87,10 @@ internal object BlockRegistry {
                 "Unknown harvest category for ${def.name}: ${def.harvestCategory}"
             }
             require(def.dropCount > 0) { "Invalid drop count for ${def.name}" }
-            require(def.placementRule in setOf("any", "solid", "soil", "sand", "cactus", "reeds"))
+            require(def.placementRule in setOf("any", "solid", "soil", "farmland", "sand", "cactus", "reeds"))
             require(def.hardness > 0f && def.spriteMargin >= 0f && def.spriteMargin < .5f && def.spriteHeight > 0f)
+            require(def.spriteWidth > 0f && def.spriteWidth.isFinite())
+            require(def.blockHeight > 0f && def.blockHeight <= 1f)
             if (def.drop.isBlank()) continue
             val target = requireNotNull(byName[def.drop]) { "Unknown drop '${def.drop}' for ${def.name}" }
             harvestDrops[def.id] = target.id to def.dropCount
@@ -232,13 +244,15 @@ internal object BlockRegistry {
 
     fun getBitmap(id: Short): Bitmap? = topBitmapById[id]
 
-    fun getSpriteMargin(id: Short): Float = defs[id]?.spriteMargin ?: 0.10f
+    fun getSpriteMargin(id: Short): Float = defs[id]?.let {
+        (1f - (1f - 2f * it.spriteMargin) * it.spriteWidth) / 2f
+    } ?: 0.10f
 
     fun getSpriteHeight(id: Short): Float = defs[id]?.spriteHeight ?: 0.90f
 
     fun creativeList(): List<Short> =
         defs.values
-            .filter { !it.water }
+            .filter { !it.water && FarmShowcasePlants.sample(it.id) == null }
             .sortedBy { it.id }
             .map { it.id }
 

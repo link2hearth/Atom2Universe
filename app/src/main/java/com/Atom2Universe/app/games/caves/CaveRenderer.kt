@@ -48,7 +48,7 @@ import kotlin.math.*
 import kotlin.random.Random
 
 enum class PlayerMode { WALK, SPECTATOR }
-enum class HotbarMode { COMBAT, BUILD }
+enum class HotbarMode { COMBAT, BUILD, GARDEN }
 
 internal class CaveRenderer(
     private val context: Context,
@@ -71,6 +71,8 @@ internal class CaveRenderer(
         val inventory: Map<Short, Int>,
         val hotbar: List<Short?>,
         val buildHotbar: List<Short?> = emptyList(),
+        val gardenHotbar: List<Short?> = emptyList(),
+        val farming: String = "{}",
         val playerHp: Int = 20,
         val playerLevel: Int = 1,
         val playerXp: Int = 0,
@@ -174,6 +176,7 @@ internal class CaveRenderer(
     private var streamNeedsMore = false
     private var streamTickAccum = 0f
     private var lastFrameNs = 0L
+    private var farmSessionReady = false
     private var fpsAccum = 0f; private var fpsFrames = 0   // moyenne FPS sur ~0.5 s
     private var posAccum = 0f                               // throttle affichage coordonnées ~10 Hz
 
@@ -214,7 +217,7 @@ internal class CaveRenderer(
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
-    private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0 }
+    private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
     private var mineTarget: RayHit? = null
     private var mineDamage = 0f
 
@@ -229,19 +232,32 @@ internal class CaveRenderer(
     // blocs), la bascule entre les deux est instantanée et gratuite — voir [toggleHotbarMode].
     val combatHotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
     val buildHotbar  = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
+    val gardenHotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
+    internal val farming by lazy { com.Atom2Universe.app.games.caves.world.Farming(world, ::forceMeshRebuild) }
     var hotbarMode = HotbarMode.COMBAT
         private set
-    val hotbar: Array<Short?> get() = if (hotbarMode == HotbarMode.COMBAT) combatHotbar else buildHotbar
+    fun bar(mode: HotbarMode): Array<Short?> = when(mode) {
+        HotbarMode.COMBAT -> combatHotbar
+        HotbarMode.BUILD -> buildHotbar
+        HotbarMode.GARDEN -> gardenHotbar
+    }
+    val hotbar: Array<Short?> get() = bar(hotbarMode)
+    internal fun itemMode(id: Short) = if (com.Atom2Universe.app.games.caves.node.FarmItems.isItem(id)) HotbarMode.GARDEN
+        else if (isCombatItem(id)) HotbarMode.COMBAT else HotbarMode.BUILD
     // Slot sélectionné mémorisé séparément par mode, pour retrouver la même sélection
     // en revenant sur un mode plutôt que d'hériter de l'index laissé par l'autre.
     private var combatSelectedSlot = 0
     private var buildSelectedSlot  = 0
+    private var gardenSelectedSlot = 0
     var selectedSlot: Int
-        get() = if (hotbarMode == HotbarMode.COMBAT) combatSelectedSlot else buildSelectedSlot
-        set(v) { if (hotbarMode == HotbarMode.COMBAT) combatSelectedSlot = v else buildSelectedSlot = v }
+        get() = when(hotbarMode) { HotbarMode.COMBAT -> combatSelectedSlot; HotbarMode.BUILD -> buildSelectedSlot; HotbarMode.GARDEN -> gardenSelectedSlot }
+        set(v) { when(hotbarMode) { HotbarMode.COMBAT -> combatSelectedSlot = v; HotbarMode.BUILD -> buildSelectedSlot = v; HotbarMode.GARDEN -> gardenSelectedSlot = v } }
 
     fun toggleHotbarMode() {
-        hotbarMode = if (hotbarMode == HotbarMode.COMBAT) HotbarMode.BUILD else HotbarMode.COMBAT
+        switchHotbarMode(HotbarMode.entries[(hotbarMode.ordinal+1)%HotbarMode.entries.size])
+    }
+    fun switchHotbarMode(next: HotbarMode) {
+        hotbarMode = next
         hotbarModeCallback?.invoke(hotbarMode)
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
@@ -343,6 +359,7 @@ internal class CaveRenderer(
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var hotbarModeCallback: ((HotbarMode) -> Unit)?                       = null
+    var farmMessageCallback: ((String) -> Unit)? = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
     var swingCallback:    (() -> Unit)?                           = null
@@ -589,6 +606,10 @@ internal class CaveRenderer(
     // ── Lifecycle GL ──────────────────────────────────────────────────────────
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        val liveFarmInventory = if (farmSessionReady) inventory.filterKeys {
+            com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
+        } else null
+        val liveGardenBar = if (farmSessionReady) gardenHotbar.toList() else null
         GLES30.glClearColor(0.682f, 0.910f, 0.973f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
         lastFrameNs = System.nanoTime()
@@ -717,6 +738,37 @@ internal class CaveRenderer(
                 world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
             mode.onPlayerPlaced(camera.x, camera.y, camera.z)
         }
+        if (!farmSessionReady) farming.restore(savedState?.farming ?: "{}")
+        liveFarmInventory?.let { live ->
+            inventory.keys.removeAll { com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it) }
+            inventory.putAll(live)
+        }
+        if (mode.allowsWorldEdits) {
+            val hoe = com.Atom2Universe.app.games.caves.node.FarmSoil.HOE
+            inventory[hoe] = 1
+            (liveGardenBar ?: savedState?.gardenHotbar)?.take(gardenHotbar.size)?.forEachIndexed { i, id ->
+                gardenHotbar[i] = id?.takeIf { itemMode(it) == HotbarMode.GARDEN && (inventory[it] ?: 0) > 0 }
+            }
+            for (bar in arrayOf(buildHotbar,combatHotbar)) for (i in bar.indices) {
+                if (bar[i]?.let { itemMode(it) == HotbarMode.GARDEN } == true) bar[i] = null
+            }
+            gardenHotbar[0] = hoe
+            if (farming.initialize()) for (crop in com.Atom2Universe.app.games.caves.node.FarmItems.crops.indices) {
+                val seed = com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
+                inventory[seed] = (inventory[seed] ?: 0) + 3
+            }
+            for (crop in com.Atom2Universe.app.games.caves.node.FarmItems.crops.indices) {
+                val seed = com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
+                if ((inventory[seed] ?: 0) > 0 && seed !in gardenHotbar) {
+                    val empty = gardenHotbar.indexOfFirst { it == null }
+                    if (empty >= 0) gardenHotbar[empty] = seed
+                }
+            }
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        }
+        farmSessionReady = true
+        lastFrameNs = System.nanoTime()
         scheduleInitialLodBuilds()
     }
 
@@ -745,7 +797,9 @@ internal class CaveRenderer(
         }
 
 
-        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32, vivid = vividStyle)
+        // Preserve the native crop silhouettes in every playable world.
+        val tileSize = 96
+        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, tileSize, vivid = vividStyle)
         if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
 
@@ -810,6 +864,7 @@ internal class CaveRenderer(
 
         elapsed += dt
         // Heure figée par le mode (Assaut : midi) ; sinon le jour et la nuit tournent.
+        if (!gamePaused && mode.allowsWorldEdits && rawDt < 1f) farming.advance((rawDt * 1000f).toLong())
         if (!gamePaused && mode.fixedTimeOfDayMs == null) gameTimeMs += (dt * 1_000f).toLong()
 
         waterTickAccum += dt
@@ -1710,6 +1765,8 @@ internal class CaveRenderer(
         miningCallback?.invoke(mineDamage, blockType)
 
         if (mineDamage >= 1f) {
+            val farmDrops = farming.harvest(bx, by, bz, uproot = true)
+            if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
             world.enqueueIfFalling(bx, by + 1, bz)
@@ -1731,12 +1788,16 @@ internal class CaveRenderer(
     }
 
     private fun collectBlock(blockType: Short) {
+        if (blockType.toInt() in 7020..7023) {
+            grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(0) to 1))
+            return
+        }
         // Resolve once: breaking stone yields cobble, never recursively breaks the result.
         val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
         inventory[dropType] = (inventory[dropType] ?: 0) + count
         // Un bloc ramassé va dans la barre correspondant à sa catégorie (combat pour les
         // munitions/pierres de garde, construction pour le reste), pas forcément la barre visible.
-        val targetBar = if (isCombatItem(dropType)) combatHotbar else buildHotbar
+        val targetBar = bar(itemMode(dropType))
         if (targetBar.none { it == dropType }) {
             val emptySlot = targetBar.indexOfFirst { it == null }
             if (emptySlot != -1) {
@@ -1759,6 +1820,8 @@ internal class CaveRenderer(
                 val def = BlockRegistry.get(id) ?: continue
                 if (def.placementRule == "any") continue
                 if (com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(id, nx, ny, nz, world.metaAt(nx, ny, nz)) { a, b, c -> world.blockAt(a, b, c) }) continue
+                val farmDrops = farming.harvest(nx, ny, nz, uproot = true)
+                if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
                 world.setBlock(nx, ny, nz, AIR)
                 forceMeshRebuild(nx, ny, nz)
                 if (!isCreative) collectBlock(id)
@@ -1884,7 +1947,7 @@ internal class CaveRenderer(
 
     /** Called on the GL thread; unproject the touched pixel using the actual rendered camera. */
     fun placeBlockAtScreen(xf: Float, yf: Float) {
-        if (!mode.allowsWorldEdits || hotbarMode != HotbarMode.BUILD) return
+        if (!mode.allowsWorldEdits || hotbarMode == HotbarMode.COMBAT) return
         if (!xf.isFinite() || !yf.isFinite() || xf !in 0f..1f || yf !in 0f..1f) return
         val inverse = FloatArray(16)
         if (!android.opengl.Matrix.invertM(inverse, 0, camera.vpMatrix, 0)) return
@@ -1914,7 +1977,26 @@ internal class CaveRenderer(
         placeBlock(target)
     }
 
-    private fun raycastBlock(
+    /** Expanded crop sprites can extend outside their base voxel; stop them at solid occluders. */
+    private fun raycastBlock(startX: Double, startY: Double, startZ: Double,
+        dirX: Double, dirY: Double, dirZ: Double, reach: Double,
+        includeWater: Boolean = hotbar[selectedSlot] == BUCKET_EMPTY): RayHit? {
+        var best = raycastVoxel(startX,startY,startZ,dirX,dirY,dirZ,reach,includeWater)
+        var distance = best?.distance ?: reach
+        if (!mode.allowsWorldEdits) return best
+        for (plant in farming.nearby(startX,startY,startZ,reach)) {
+            val p=plant.position; val id=worldBlockAt(p.x,p.y,p.z)
+            if (com.Atom2Universe.app.games.caves.node.FarmShowcasePlants.sample(id)?.first != plant.crop) continue
+            val hit = BlockRegistry.decorationMask(id)?.hitDistance(startX-p.x,
+                startY-p.y-plantSoilOffset(p.x,p.y,p.z),startZ-p.z,dirX,dirY,dirZ,
+                BlockRegistry.getSpriteMargin(id).toDouble(),BlockRegistry.getSpriteHeight(id).toDouble(),
+                0.0,distance) ?: continue
+            distance=hit
+            best=RayHit(p.x,p.y,p.z,0,1,0).apply { this.distance=hit; hitY=startY+dirY*hit-p.y }
+        }
+        return best
+    }
+    private fun raycastVoxel(
         startX: Double, startY: Double, startZ: Double,
         dirX: Double, dirY: Double, dirZ: Double, reach: Double,
         includeWater: Boolean = hotbar[selectedSlot] == BUCKET_EMPTY,
@@ -1939,22 +2021,22 @@ internal class CaveRenderer(
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
-                if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true)) {
+                if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true || (BlockRegistry.get(b)?.blockHeight ?: 1f) < 1f)) {
                     val stairHit = PartialBlockModel.intersect(world.metaAt(bx, by, bz),
                         startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, BlockRegistry.get(b)?.slab == true, BlockRegistry.get(b)?.blockHeight ?: 1f, stairMaskAt(bx, by, bz))
                     if (stairHit != null) return RayHit(bx, by, bz, stairHit.nx, stairHit.ny, stairHit.nz).apply {
-                        hitY = startY + dirY * stairHit.distance - by
+                        distance = stairHit.distance; hitY = startY + dirY * stairHit.distance - by
                     }
                 }
-                val hit = if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true)) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
+                val hit = if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true || (BlockRegistry.get(b)?.blockHeight ?: 1f) < 1f)) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
                     startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ))
                 else !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
-                    startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
+                    startX - bx, startY - by - plantSoilOffset(bx, by, bz), startZ - bz, dirX, dirY, dirZ,
                     BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ),
                 ) == true
-                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz).apply { hitY = startY + dirY * entryDistance - by }
+                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz).apply { distance = entryDistance; hitY = startY + dirY * entryDistance - by }
             }
             when {
                 tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
@@ -2340,7 +2422,7 @@ internal class CaveRenderer(
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
-        if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)) {
+        if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true || (BlockRegistry.get(block)?.blockHeight ?: 1f) < 1f)) {
             val vertices = ArrayList<Float>()
             val normals = arrayOf(floatArrayOf(0f,ep,0f), floatArrayOf(0f,-ep,0f),
                 floatArrayOf(ep,0f,0f), floatArrayOf(-ep,0f,0f), floatArrayOf(0f,0f,ep), floatArrayOf(0f,0f,-ep))
@@ -2356,7 +2438,7 @@ internal class CaveRenderer(
         if (block == TORCH) return TorchModel.highlight(world.metaAt(target.bx, target.by, target.bz),
             x, y, z, cr, cg, cb)
         if (isDecoration(block)) {
-            return BlockRegistry.decorationMask(block)?.highlight(x, y, z,
+            return BlockRegistry.decorationMask(block)?.highlight(x, y + plantSoilOffset(target.bx, target.by, target.bz), z,
                 BlockRegistry.getSpriteMargin(block), BlockRegistry.getSpriteHeight(block), cr, cg, cb)
                 ?: floatArrayOf()
         }
@@ -2522,7 +2604,7 @@ internal class CaveRenderer(
         if (held != null) {
             when {
                 isWeapon                     -> drawHeldWeapon(held)
-                BlockRegistry.isDecoration(held) -> drawHeldFlat(held)
+                BlockRegistry.isDecoration(held) || com.Atom2Universe.app.games.caves.node.FarmItems.isItem(held) -> drawHeldFlat(held)
                 else                         -> drawHeldBlock(held)
             }
         }
@@ -3311,8 +3393,66 @@ internal class CaveRenderer(
         }
     }
 
+    private fun plantSoilOffset(x: Int, y: Int, z: Int): Float =
+        if (worldBlockAt(x, y - 1, z) == com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND) -1f / 16f else 0f
+
+    private fun grantFarmItems(items: List<Pair<Short, Int>>) {
+        for ((id,count) in items) {
+            inventory[id] = ((inventory[id] ?: 0).toLong()+count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            if (id !in gardenHotbar) {
+                val empty = (1 until gardenHotbar.size).firstOrNull { gardenHotbar[it] == null }
+                if (empty != null) gardenHotbar[empty] = id
+            }
+        }
+        inventoryCallback?.invoke(inventory.toMap())
+        hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+    }
+    private fun consumeFarmItem(id: Short) {
+        if (isCreative) return
+        val left=(inventory[id] ?: 0)-1
+        if (left > 0) inventory[id]=left else {
+            inventory.remove(id)
+            for (i in 1 until gardenHotbar.size) if (gardenHotbar[i] == id) gardenHotbar[i]=null
+        }
+        inventoryCallback?.invoke(inventory.toMap())
+        hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+    }
+
     private fun placeBlock(target: RayHit? = raycastBlock()) {
+        if (hotbarMode == HotbarMode.GARDEN && target != null) {
+            val drops = farming.harvest(target.bx,target.by,target.bz,uproot=false)
+            if (drops != null) {
+                if (drops.isEmpty()) farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_farm_not_ready))
+                else { grantFarmItems(drops); startSwing() }
+                return
+            }
+        }
         val blockType = hotbar[selectedSlot] ?: return
+        com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(blockType)?.let { crop ->
+            if ((inventory[blockType] ?: 0) <= 0 || target == null) return
+            if (target.fny == 1 && farming.plant(target.bx,target.by+1,target.bz,crop)) {
+                consumeFarmItem(blockType); startSwing()
+            } else farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_farm_plant_hint))
+            return
+        }
+        com.Atom2Universe.app.games.caves.node.FarmItems.produceCrop(blockType)?.let {
+            val player=enemyManager.player ?: return
+            if ((inventory[blockType] ?: 0) <= 0 || !player.isAlive || player.hp >= player.maxHp) return
+            player.applyHeal(3); consumeFarmItem(blockType); startSwing()
+            return
+        }
+        if (blockType == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) {
+            if (!mode.allowsWorldEdits || (inventory[blockType] ?: 0) <= 0 || target == null || target.fny != 1) return
+            val soil = world.blockAt(target.bx, target.by, target.bz)
+            if (soil == com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND ||
+                "soil" !in BlockRegistry.get(soil)?.tags.orEmpty() ||
+                world.blockAt(target.bx, target.by + 1, target.bz) != AIR) return
+            world.setBlock(target.bx, target.by, target.bz, com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND)
+            world.setMeta(target.bx, target.by, target.bz, 0)
+            forceMeshRebuild(target.bx, target.by, target.bz)
+            startSwing()
+            return
+        }
         if (blockType.toInt() in 3130..3132) {
             val player = enemyManager.player ?: return
             val count = inventory[blockType] ?: 0

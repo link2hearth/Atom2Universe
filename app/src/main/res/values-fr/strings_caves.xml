@@ -557,7 +557,7 @@
     <string name="cave_block_moss">Mousse</string>
     <string name="cave_block_basalt">Basalte</string>
     <string name="cave_assault_showcase">Atelier des biomes · visite libre</string>
-    <string name="cave_showcase_hint">Villages sur l’allée latérale à l’entrée ; paysages, arbres, blocs et créatures au fond.</string>
+    <string name="cave_showcase_hint">Jardin derrière les villages : 19 cultures de Ma Ferme, cinq stades chacune. Paysages et galeries au fond.</string>
     <string-array name="cave_showcase_village_names">
         <item>Hameau nordique · chalet, atelier et maison à cour · statue du gardien</item>
         <item>Village de l’oasis · 5 bâtiments variés en grès · pyramide à chambre intérieure</item>
@@ -581,7 +581,7 @@
     <string name="cave_showcase_marsh">Marais et argile</string>
     <string name="cave_showcase_volcano">Roches volcaniques</string>
     <string name="cave_showcase_gallery">Galerie des blocs</string>
-    <string name="cave_showcase_walk">Villages sur l’allée transversale à l’entrée · paysages et galeries au fond</string>
+    <string name="cave_showcase_walk">Jardin derrière les villages, au bout de leur allée centrale · paysages et galeries au fond</string>
     <string name="cave_showcase_sample">Échantillon proche : %1$s</string>
     <string name="cave_palette_pastel">Palette : Pastel</string>
     <string name="cave_palette_vivid">Palette : Vif</string>
@@ -673,4 +673,24 @@
     <string name="cave_block_slab_brick_obsidian">Dalle en briques de basalte</string>
     <string name="cave_block_slab_weathered_marble">Dalle en marbre</string>
     <string name="cave_block_slab_slate_paving">Dalle en ardoise</string>
+    <string name="cave_showcase_garden_sample">%1$s · %2$s</string>
+    <string name="cave_showcase_garden_caption">Jardin de Ma Ferme · %1$s · %2$s\nCinq stades fixes par rangée, du jeune plant au plant mûr · sprites croisés</string>
+    <string-array name="cave_showcase_garden_stages">
+        <item>Jeune pousse</item>
+        <item>Développement</item>
+        <item>Croissance intermédiaire</item>
+        <item>Maturation</item>
+        <item>Plant mûr</item>
+    </string-array>
+    <string name="cave_block_farmland">Terre labourée</string>
+    <string name="cave_block_hoe">Houe</string>
+    <string name="cave_block_desc_farmland">Terre retournée aux sillons humides. Accueille les plantes sans irrigation.</string>
+    <string name="cave_block_desc_hoe">Utiliser sur le dessus d’une terre dégagée pour la labourer. Ne s’use pas.</string>
+    <string name="cave_ui_garden">Jardinage</string>
+    <string name="cave_farm_seed_name">Graines · %1$s</string>
+    <string name="cave_farm_seed_hint">Planter sur une terre labourée dégagée. Récolte après %1$d minutes passées dans ce monde. Aucune eau nécessaire. La récolte rend des graines.</string>
+    <string name="cave_farm_produce_hint">Aliment récolté. Utiliser pour récupérer 3 points de vie. En Jardinage, utiliser un plant mûr pour le récolter.</string>
+    <string name="cave_farm_not_ready">Cette plante pousse encore.</string>
+    <string name="cave_farm_plant_hint">Planter sur une terre labourée avec deux blocs libres au-dessus du plant.</string>
+    <string name="cave_farm_controls">Houe : labourer une terre dégagée · Graines : planter · Plant mûr : récolter</string>
 </resources>

@@ -65,6 +65,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         private const val COYOTE_SEC     = 0.12f  // s après quitter un bord
         private const val STEP_MAX       = 1.0    // max step-up en blocs
         private const val STEP_RATE      = 12.0   // blocs/s montée step-up
+        private const val GROUND_FOLLOW  = 0.125  // small lips follow the floor without an auto-climb
         private const val PLAYER_W       = 0.30
         private const val PLAYER_WI      = 0.29
         private const val PLAYER_H_BELOW = 1.62
@@ -108,6 +109,11 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val newX = x + dx
         if (!collidesAt(newX, y, z)) {
             x = newX
+        } else if (onGround && !inWater && !jumpPressed && velocityY <= 0.0 &&
+            stepUpRemaining == 0.0 && !collidesAt(x, y + GROUND_FOLLOW, z) &&
+            !collidesAt(newX, y + GROUND_FOLLOW, z)) {
+            y = smallStepHeight(newX, y, z)
+            x = newX
         } else if ((onGround || inWater) && dx != 0.0 &&
                    (!collidesAt(newX, y + .5, z) || (!isCrouching && !collidesAt(newX, y + STEP_MAX, z)))) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(newX, y + .5, z)) .5 else STEP_MAX
@@ -115,6 +121,11 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
         val newZ = z + dz
         if (!collidesAt(x, y, newZ)) {
+            z = newZ
+        } else if (onGround && !inWater && !jumpPressed && velocityY <= 0.0 &&
+            stepUpRemaining == 0.0 && !collidesAt(x, y + GROUND_FOLLOW, z) &&
+            !collidesAt(x, y + GROUND_FOLLOW, newZ)) {
+            y = smallStepHeight(x, y, newZ)
             z = newZ
         } else if ((onGround || inWater) && dz != 0.0 &&
                    (!collidesAt(x, y + .5, newZ) || (!isCrouching && !collidesAt(x, y + STEP_MAX, newZ)))) {
@@ -131,6 +142,13 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             knockX -= knockX * damp
             knockZ -= knockZ * damp
             if (abs(knockX) < 0.1 && abs(knockZ) < 0.1) { knockX = 0.0; knockZ = 0.0 }
+        }
+
+        // Stay supported on shallow descents as well. Never snap during a jump, swimming,
+        // an auto-climb or a real fall, and never bridge a drop larger than GROUND_FOLLOW.
+        if (onGround && !inWater && !jumpPressed && velocityY <= 0.0 && stepUpRemaining == 0.0 &&
+            !collidesAt(x, y - .002, z) && collidesAt(x, y - GROUND_FOLLOW, z)) {
+            y = binarySearchFloor(x, y, z, -GROUND_FOLLOW)
         }
 
         // ── Phase verticale ───────────────────────────────────────────────────
@@ -235,6 +253,17 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
     private fun jumpHoldRatio(): Float =
         if (jumpHoldMaxTime <= 0f) 0f else (jumpHoldTime / jumpHoldMaxTime).coerceIn(0f, 1f)
+
+    /** Lowest collision-free height at the destination, rather than a half-block overshoot. */
+    private fun smallStepHeight(x: Double, y: Double, z: Double): Double {
+        var blocked = y
+        var clear = y + GROUND_FOLLOW
+        repeat(12) {
+            val mid = (blocked + clear) * .5
+            if (collidesAt(x, mid, z)) blocked = mid else clear = mid
+        }
+        return clear
+    }
 
     private fun binarySearchFloor(x: Double, y: Double, z: Double, dy: Double): Double {
         var lo = y + dy; var hi = y

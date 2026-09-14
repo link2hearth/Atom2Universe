@@ -38,6 +38,7 @@ internal data class BlockDef(
     val replaceable: Boolean = false,
     val stairs: Boolean = false,
     val slab: Boolean = false,
+    val spriteWidth: Float = 1f,
     val blockHeight: Float = 1f,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
@@ -79,6 +80,7 @@ internal data class BlockDef(
                 creativeTab     = j.optString("creative_tab", "terrain"),
                 spriteMargin    = j.optDouble("sprite_margin", 0.10).toFloat(),
                 spriteHeight    = j.optDouble("sprite_height", 0.90).toFloat(),
+                spriteWidth     = j.optDouble("sprite_width", 1.0).toFloat(),
                 blockHeight     = j.optDouble("block_height", 1.0).toFloat(),
                 orientMode      = orientMode,
                 placeable       = j.optBoolean("placeable", true),

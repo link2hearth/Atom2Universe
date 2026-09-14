@@ -52,22 +52,26 @@ internal class SpriteHitMask(val width: Int, val height: Int, pixels: IntArray) 
         dx: Double, dy: Double, dz: Double,
         margin: Double, spriteHeight: Double,
         near: Double, far: Double,
-    ): Boolean {
+    ): Boolean = hitDistance(x,y,z,dx,dy,dz,margin,spriteHeight,near,far) != null
+
+    fun hitDistance(x: Double, y: Double, z: Double, dx: Double, dy: Double, dz: Double,
+                    margin: Double, spriteHeight: Double, near: Double, far: Double): Double? {
         val span = 1.0 - 2.0 * margin
-        if (span <= 0.0 || spriteHeight <= 0.0 || far < near) return false
-        fun plane(origin: Double, direction: Double, along: Double, alongDirection: Double): Boolean {
+        if (span <= 0.0 || spriteHeight <= 0.0 || far < near) return null
+        fun plane(origin: Double, direction: Double, along: Double, alongDirection: Double): Double? {
             // A ray parallel to a plane cannot see its surface (including its zero-width edge).
-            if (direction == 0.0) return false
+            if (direction == 0.0) return null
             val t = (0.5 - origin) / direction
-            if (t < near || t > far) return false
+            if (t < near || t > far) return null
             val u = (along + t * alongDirection - margin) / span
             val v = 1.0 - (y + t * dy) / spriteHeight
-            if (u < 0.0 || u > 1.0 || v < 0.0 || v > 1.0) return false
+            if (u < 0.0 || u > 1.0 || v < 0.0 || v > 1.0) return null
             val px = floor(u * width).toInt().coerceIn(0, width - 1)
             val py = floor(v * height).toInt().coerceIn(0, height - 1)
-            return opaque[py * width + px]
+            return t.takeIf { opaque[py * width + px] }
         }
         // Test both planes: a transparent pixel on the nearer one must not hide the other.
-        return plane(z, dz, x, dx) || plane(x, dx, z, dz)
+        val a=plane(z,dz,x,dx); val b=plane(x,dx,z,dz)
+        return if (a == null) b else if (b == null) a else minOf(a,b)
     }
 }

@@ -7,6 +7,7 @@ import com.Atom2Universe.app.games.caves.world.MapSource
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -144,6 +145,17 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal fun blockName(type: Short): String {
+        com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)?.let { crop ->
+            return getString(R.string.cave_farm_seed_name, getString(com.Atom2Universe.app.games.caves.node.FarmItems.crops[crop].label))
+        }
+        com.Atom2Universe.app.games.caves.node.FarmItems.produceCrop(type)?.let { crop ->
+            return getString(com.Atom2Universe.app.games.caves.node.FarmItems.crops[crop].label)
+        }
+        com.Atom2Universe.app.games.caves.node.FarmShowcasePlants.sample(type)?.let { (crop, stage) ->
+            return getString(R.string.cave_showcase_garden_sample,
+                getString(com.Atom2Universe.app.games.caves.node.FarmShowcasePlants.crops[crop].label),
+                resources.getStringArray(R.array.cave_showcase_garden_stages)[stage])
+        }
         val name = BlockRegistry.get(type)?.name ?: return "?"
         val resId = resources.getIdentifier("cave_block_$name", "string", packageName).takeIf { it != 0 }
             ?: resources.getIdentifier("cave_item_$name", "string", packageName).takeIf { it != 0 }
@@ -207,6 +219,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
+                gardenHotbar = save.gardenHotbar, farming = save.farming,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -228,6 +241,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
+                gardenHotbar = save.gardenHotbar, farming = save.farming,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -332,12 +346,13 @@ class CaveActivity : ThemedActivity() {
         btnCamera.alpha = 0.5f
 
         fun applyCombatModeUi(mode: HotbarMode) {
-            hud.controlIcon(btnCombatMode, if (mode == HotbarMode.COMBAT) "combat" else "place",
-                getString(if (mode == HotbarMode.COMBAT) R.string.cave_ui_equipment else R.string.cave_ui_materials))
+            hud.controlIcon(btnCombatMode, when(mode) { HotbarMode.COMBAT -> "combat"; HotbarMode.BUILD -> "place"; HotbarMode.GARDEN -> "garden" },
+                getString(when(mode) { HotbarMode.COMBAT -> R.string.cave_ui_equipment; HotbarMode.BUILD -> R.string.cave_ui_materials; HotbarMode.GARDEN -> R.string.cave_ui_garden }))
         }
         applyCombatModeUi(renderer.hotbarMode)
         applyBuildModeUi(renderer.hotbarMode, btnPlace)
         btnCombatMode.setOnClickListener { renderer.toggleHotbarMode() }
+        renderer.farmMessageCallback = { message -> uiHandler.post { Toast.makeText(this, message, Toast.LENGTH_SHORT).show() } }
         renderer.hotbarModeCallback = { mode ->
             uiHandler.post {
                 applyCombatModeUi(mode)
@@ -450,6 +465,12 @@ class CaveActivity : ThemedActivity() {
                         else getString(names[zone])
                 } }
                 val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
+                val gardenStages = resources.getStringArray(R.array.cave_showcase_garden_stages)
+                mode.onGardenCaption = { crop, stage -> uiHandler.post {
+                    caption.text = getString(R.string.cave_showcase_garden_caption,
+                        getString(com.Atom2Universe.app.games.caves.node.FarmShowcasePlants.crops[crop].label),
+                        gardenStages[stage])
+                } }
                 val villageNames = resources.getStringArray(R.array.cave_showcase_village_names)
                 mode.onVillageCaption = { index -> uiHandler.post {
                     caption.text = villageNames[index]
@@ -590,9 +611,12 @@ class CaveActivity : ThemedActivity() {
             lastPlayedAt = System.currentTimeMillis(),
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
-            inventory = if (isCreative) survivalInventory else renderer.inventory.toMap(),
+            inventory = if (isCreative) survivalInventory + renderer.inventory.filterKeys {
+                com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
+            } else renderer.inventory.toMap(),
             hotbar    = if (isCreative) survivalHotbar    else renderer.combatHotbar.map { it },
             buildHotbar = if (isCreative) emptyList()     else renderer.buildHotbar.map { it },
+            gardenHotbar = renderer.gardenHotbar.toList(), farming = renderer.farming.snapshot(),
             isCreative          = isCreative,
             playerHp            = renderer.playerNode.hp,
             playerLevel         = stats.level,
@@ -763,7 +787,9 @@ class CaveActivity : ThemedActivity() {
     }
 
     private fun applyBuildModeUi(mode: HotbarMode, btnPlace: View) {
-        btnPlace.visibility = if (mode == HotbarMode.BUILD) View.VISIBLE else View.GONE
+        btnPlace.visibility = if (mode != HotbarMode.COMBAT) View.VISIBLE else View.GONE
+        if (btnPlace is Button) hud.controlIcon(btnPlace, if (mode == HotbarMode.GARDEN) "garden" else "place",
+            getString(if (mode == HotbarMode.GARDEN) R.string.cave_farm_controls else R.string.cave_ui_materials))
     }
 
     // ── Mode immersif ─────────────────────────────────────────────────────────
@@ -906,7 +932,7 @@ class CaveActivity : ThemedActivity() {
 
     private fun handleWorldTapCandidate(ev: MotionEvent, idx: Int, pid: Int) {
         val candidate = tapCandidates.remove(pid) ?: return
-        if (renderer.hotbarMode != HotbarMode.BUILD) return
+        if (renderer.hotbarMode == HotbarMode.COMBAT) return
         val x = ev.getX(idx); val y = ev.getY(idx)
         val moved = hypot(x - candidate.x, y - candidate.y)
         val elapsed = ev.eventTime - candidate.downMs

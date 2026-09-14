@@ -56,8 +56,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // pendant que l'autre mode est actif écraserait la mauvaise barre.
     private val combatInvSlots = ArrayList<Short?>()
     private val buildInvSlots  = ArrayList<Short?>()
+    private val gardenInvSlots = ArrayList<Short?>()
     val invSlots: ArrayList<Short?> get() =
-        if (renderer.hotbarMode == HotbarMode.COMBAT) combatInvSlots else buildInvSlots
+        when(renderer.hotbarMode) { HotbarMode.COMBAT -> combatInvSlots; HotbarMode.BUILD -> buildInvSlots; HotbarMode.GARDEN -> gardenInvSlots }
     var invSlotsReady = false
     var selectedSlotIdx = -1
     var dragSourceIdx = -1
@@ -155,8 +156,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.close.setOnClickListener { closeInventory() }
         ui.inventoryTab.setOnClickListener { showLibrary(false) }
         ui.craftTab.setOnClickListener { showLibrary(true) }
-        ui.combatTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.COMBAT) renderer.toggleHotbarMode() }
-        ui.buildTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.BUILD) renderer.toggleHotbarMode() }
+        ui.combatTab.setOnClickListener { renderer.switchHotbarMode(HotbarMode.COMBAT) }
+        ui.buildTab.setOnClickListener { renderer.switchHotbarMode(HotbarMode.BUILD) }
+        ui.gardenTab.setOnClickListener { renderer.switchHotbarMode(HotbarMode.GARDEN) }
         val categories = intArrayOf(R.string.cave_ui_all, R.string.cave_ui_terrain, R.string.cave_ui_wood,
             R.string.cave_ui_stone, R.string.cave_ui_nature, R.string.cave_ui_functional, R.string.cave_ui_cotton,
             R.string.cave_ui_ores, R.string.cave_ui_resources)
@@ -205,6 +207,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private fun updateActions() {
         if (!::ui.isInitialized) return
         val type = selectedType(); val recipe = selectedRecipe
+        val movable = type != com.Atom2Universe.app.games.caves.node.FarmSoil.HOE
+        ui.assign.isEnabled = movable; ui.remove.isEnabled = movable
         ui.assign.visibility = if (!browsingCraft && type != null && !assigningShortcut) View.VISIBLE else View.GONE
         ui.remove.visibility = if (!browsingCraft && type != null && selectedSlotIdx >= hotbarBase() && !assigningShortcut) View.VISIBLE else View.GONE
         ui.related.visibility = if (!browsingCraft && type != null && !assigningShortcut) View.VISIBLE else View.GONE
@@ -219,6 +223,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         CaveUiStyle.button(ui.inventoryTab, !browsingCraft); CaveUiStyle.button(ui.craftTab, browsingCraft)
         CaveUiStyle.button(ui.combatTab, renderer.hotbarMode == HotbarMode.COMBAT)
         CaveUiStyle.button(ui.buildTab, renderer.hotbarMode == HotbarMode.BUILD)
+        CaveUiStyle.button(ui.gardenTab, renderer.hotbarMode == HotbarMode.GARDEN)
     }
 
     private fun selectInventorySlot(index: Int) {
@@ -235,6 +240,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     private fun removeShortcut() {
         val index = selectedSlotIdx; val type = selectedType() ?: return
+        if (type == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return
         if (index < hotbarBase()) return
         val emptyIndex = (0 until hotbarBase()).firstOrNull { invSlots[it] == null }
         invSlots[index] = null
@@ -253,13 +259,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun initInvSlots() {
-        fun fill(slots: ArrayList<Short?>, hotbar: Array<Short?>, wantCombat: Boolean) {
+        fun fill(slots: ArrayList<Short?>, hotbar: Array<Short?>, bankMode: HotbarMode) {
             slots.clear()
             val hotbarTypes = (0 until CaveActivity.ACTIVE_SIZE).mapNotNull { i ->
                 hotbar[i]?.takeIf { (renderer.inventory[it] ?: 0) > 0 }
             }.toSet()
             val gridTypes = renderer.inventory
-                .filter { (t, c) -> c > 0 && t !in hotbarTypes && renderer.isCombatItem(t) == wantCombat }
+                .filter { (t, c) -> c > 0 && t !in hotbarTypes && renderer.itemMode(t) == bankMode }
                 .keys.sortedBy { it }
             for (t in gridTypes) slots.add(t)
             repeat(CaveActivity.EMPTY_BUFFER) { slots.add(null) }
@@ -268,8 +274,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 slots.add(if (t != null && (renderer.inventory[t] ?: 0) > 0) t else null)
             }
         }
-        fill(combatInvSlots, renderer.combatHotbar, wantCombat = true)
-        fill(buildInvSlots,  renderer.buildHotbar,  wantCombat = false)
+        fill(combatInvSlots, renderer.combatHotbar, bankMode = HotbarMode.COMBAT)
+        fill(buildInvSlots,  renderer.buildHotbar,  bankMode = HotbarMode.BUILD)
+        fill(gardenInvSlots, renderer.gardenHotbar, bankMode = HotbarMode.GARDEN)
         invSlotsReady = true
         syncHotbar()
     }
@@ -300,7 +307,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
      *  l'objet plutôt que dans celle actuellement affichée (utile pour un résultat de
      *  craft, obtenu depuis n'importe quelle banque). */
     private fun addNewTypeByCategory(type: Short) {
-        val slots = if (renderer.isCombatItem(type)) combatInvSlots else buildInvSlots
+        val slots = when(renderer.itemMode(type)) { HotbarMode.COMBAT -> combatInvSlots; HotbarMode.BUILD -> buildInvSlots; HotbarMode.GARDEN -> gardenInvSlots }
         val base = (slots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
         val hotbarSlot = (base until base + CaveActivity.ACTIVE_SIZE).firstOrNull { slots.getOrNull(it) == null }
         if (hotbarSlot != null) { slots[hotbarSlot] = type; return }
@@ -310,9 +317,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun syncHotbar() {
-        for ((slots, bar) in listOf(combatInvSlots to renderer.combatHotbar, buildInvSlots to renderer.buildHotbar)) {
+        for ((slots, bar) in listOf(combatInvSlots to renderer.combatHotbar, buildInvSlots to renderer.buildHotbar, gardenInvSlots to renderer.gardenHotbar)) {
             if (slots.size < CaveActivity.ACTIVE_SIZE) continue
             val base = slots.size - CaveActivity.ACTIVE_SIZE
+            if (bar === renderer.gardenHotbar) slots[base] = com.Atom2Universe.app.games.caves.node.FarmSoil.HOE
             for (i in bar.indices) bar[i] = slots.getOrNull(base + i)?.takeIf { (renderer.inventory[it] ?: 0) > 0 }
         }
         renderer.hotbarCallback?.invoke(renderer.hotbar.copyOf(), renderer.selectedSlot)
@@ -320,6 +328,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun swapSlots(a: Int, b: Int) {
         if (a == b || a !in invSlots.indices || b !in invSlots.indices) return
+        if (invSlots[a] == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE ||
+            invSlots[b] == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return
         val tmp = invSlots[a]; invSlots[a] = invSlots[b]; invSlots[b] = tmp
         syncHotbar(); activity.saveWorldAsync()
     }
@@ -328,6 +338,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun startSlotDrag(view: View, idx: Int) {
         if (invSlots.getOrNull(idx) == null) return
+        if (invSlots.getOrNull(idx) == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return
         dragSourceIdx = idx
         val clip = ClipData.newPlainText("slot", idx.toString())
         view.startDragAndDrop(clip, View.DragShadowBuilder(view), idx, 0)
@@ -359,7 +370,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     /** Réconcilie une banque (grille+barre) précise avec l'inventaire global, en ne lui
      *  affectant que les objets de sa catégorie — sinon un objet combat pourrait finir
      *  dans la grille construction juste parce qu'elle était affichée au moment du pickup. */
-    private fun reconcileBank(slots: ArrayList<Short?>, hotbar: Array<Short?>, wantCombat: Boolean, inv: Map<Short, Int>) {
+    private fun reconcileBank(slots: ArrayList<Short?>, hotbar: Array<Short?>, bankMode: HotbarMode, inv: Map<Short, Int>) {
         for (i in 0 until CaveActivity.ACTIVE_SIZE) {
             val t = hotbar[i] ?: continue
             if ((inv[t] ?: 0) <= 0) hotbar[i] = null
@@ -372,7 +383,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val existing = slots.filterNotNull().toSet()
         val base = (slots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
         for ((type, count) in inv) {
-            if (count <= 0 || type in existing || renderer.isCombatItem(type) != wantCombat) continue
+            if (count <= 0 || type in existing || renderer.itemMode(type) != bankMode) continue
             val hotbarIdx = hotbar.indexOfFirst { it == type }
             val directSlot = if (hotbarIdx >= 0) base + hotbarIdx else -1
             when {
@@ -392,15 +403,16 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun onInventoryChanged(inv: Map<Short, Int>) {
         if (invSlotsReady) {
-            reconcileBank(combatInvSlots, renderer.combatHotbar, wantCombat = true,  inv = inv)
-            reconcileBank(buildInvSlots,  renderer.buildHotbar,  wantCombat = false, inv = inv)
+            reconcileBank(combatInvSlots, renderer.combatHotbar, bankMode = HotbarMode.COMBAT,  inv = inv)
+            reconcileBank(buildInvSlots,  renderer.buildHotbar,  bankMode = HotbarMode.BUILD, inv = inv)
+            reconcileBank(gardenInvSlots, renderer.gardenHotbar, bankMode = HotbarMode.GARDEN, inv = inv)
             if (selectedSlotIdx >= invSlots.size) selectedSlotIdx = -1
             syncHotbar()
             if (activity.invOverlay.visibility == View.VISIBLE) {
                 refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
             }
         } else {
-            for (hb in arrayOf(renderer.combatHotbar, renderer.buildHotbar)) {
+            for (hb in arrayOf(renderer.combatHotbar, renderer.buildHotbar, renderer.gardenHotbar)) {
                 for (i in 0 until CaveActivity.ACTIVE_SIZE) {
                     val t = hb[i] ?: continue
                     if ((inv[t] ?: 0) <= 0) hb[i] = null
@@ -462,7 +474,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         gridIndices = (0 until hotbarBase()).filter { index ->
             val type = invSlots[index] ?: return@filter false
             (renderer.inventory[type] ?: 0) > 0 && activity.blockName(type).contains(query, ignoreCase = true) &&
-                (categoryIndex == 0 || renderer.hotbarMode == HotbarMode.COMBAT || BlockRegistry.get(type)?.creativeTab == categoryKeys[categoryIndex])
+                (categoryIndex == 0 || renderer.hotbarMode != HotbarMode.BUILD || BlockRegistry.get(type)?.creativeTab == categoryKeys[categoryIndex])
         }
         currentPage = currentPage.coerceIn(0, pageCount() - 1)
         pagedAdapter?.notifyDataSetChanged()
@@ -558,6 +570,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     val def = BlockRegistry.get(type)
                     val drop = BlockRegistry.harvestDrop(type)
                     infoIngredientsTv?.text = when {
+                        com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type) != null -> {
+                            val crop = com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)!!
+                            activity.getString(R.string.cave_farm_seed_hint,
+                                com.Atom2Universe.app.games.caves.node.FarmItems.durationMs(crop)/60_000L)
+                        }
+                        com.Atom2Universe.app.games.caves.node.FarmItems.produceCrop(type) != null -> activity.getString(R.string.cave_farm_produce_hint)
+                        type == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE -> activity.getString(R.string.cave_block_desc_hoe)
+                        type == com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND -> activity.getString(R.string.cave_block_desc_farmland)
                         type == 8000.toShort() -> activity.getString(R.string.cave_craft_furnace_hint)
                         type == 8001.toShort() -> activity.getString(R.string.cave_craft_table_hint)
                         type == 10000.toShort() || type == 10001.toShort() -> activity.getString(R.string.cave_craft_bucket_hint)

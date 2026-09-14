@@ -24,6 +24,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
     val craftTab = button(R.string.cave_ui_workshop)
     val combatTab = button(R.string.cave_ui_equipment)
     val buildTab = button(R.string.cave_ui_materials)
+    val gardenTab = button(R.string.cave_ui_garden)
     val close = button(R.string.cave_ui_close)
     val search = EditText(activity).apply {
         setSingleLine(); textSize = 14f; setTextColor(CaveUiStyle.TEXT); setHintTextColor(CaveUiStyle.MUTED)
@@ -70,7 +71,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         panel.addView(row().apply {
             addView(inventoryTab); addView(craftTab)
             addView(Space(activity), LinearLayout.LayoutParams(0, 1, 1f))
-            addView(combatTab); addView(buildTab); addView(close)
+            addView(combatTab); addView(buildTab); addView(gardenTab); addView(close)
         })
         val body = row().apply { gravity = Gravity.TOP }
         panel.addView(body, LinearLayout.LayoutParams(-1, 0, 1f))

@@ -10,6 +10,30 @@ import kotlin.math.*
 
 /** Native pixel crops: validated HTML studies and matching art for the remaining farm species. */
 object FarmPlantArt {
+    /** Top-view leaves for Cave World's layered plants; the farm's own drawing is unchanged. */
+    fun worldFoliage(crop: FarmCrop, size: Int): Bitmap {
+        val native = Bitmap.createBitmap(96, 96, Bitmap.Config.ARGB_8888)
+        PlantPainter(Canvas(native), 0, 1.0).canopy(crop)
+        if (size == 96) return native
+        return Bitmap.createScaledBitmap(native, size, size, false).also { native.recycle() }
+    }
+
+    /** Fixed world-space framing, independent of growth; no UI cache or wind state is shared. */
+    fun worldSprite(crop: FarmCrop, growth: Float, size: Int): Bitmap {
+        val native = Bitmap.createBitmap(96, 96, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(native)
+        // Root line sits on the soil. Low spreading leaves retain their lower pixels.
+        val padding = when (crop) {
+            FarmCrop.LETTUCE -> 8f
+            FarmCrop.PUMPKIN, FarmCrop.WATERMELON, FarmCrop.ZUCCHINI, FarmCrop.STRAWBERRY -> 5f
+            else -> 1f
+        }
+        canvas.translate(8f, 24f - padding)
+        PlantPainter(canvas, 0, growth.coerceIn(.06f, 1f).toDouble()).draw(crop)
+        if (size == 96) return native
+        return Bitmap.createScaledBitmap(native, size, size, false).also { native.recycle() }
+    }
+
     private val supported = FarmCrop.entries.toSet()
     fun supports(crop: FarmCrop) = crop in supported
     private val paint = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
@@ -139,6 +163,19 @@ private class PlantPainter(private val canvas: Canvas, variant: Int, private val
         poly(listOf(p(.15,0.0),p(.52,-.55),p(.85,-.2),p(.6,0.0)),pal[2])
         val a=p(.08,0.0);val b=p(.88,0.0);line(a.first,a.second,b.first,b.second,1.0,pal[2])
     }
+    fun canopy(crop: FarmCrop) {
+        val width = when (crop) {
+            FarmCrop.CHILI -> 5.0
+            FarmCrop.EGGPLANT -> 10.0
+            else -> 7.0
+        }
+        // Gaps between the leaves keep the hanging fruit visible through the upper tiers.
+        for (i in 0..5) {
+            val angle = i * PI / 3 + .2
+            leaf(48.0, 48.0, cos(angle) * 35, sin(angle) * 35, width)
+        }
+    }
+
     fun draw(crop: FarmCrop) {
         if (g < .055 && !established) { oval(x,y,7.0,2.0,"#5c4128");rect(x-1,y-1,3.0,1.0,"#e1ba79") }
         val a=smooth(.025,.19)

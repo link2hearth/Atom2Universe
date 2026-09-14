@@ -29,6 +29,12 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
                 val path = Path().apply { moveTo(8f,25f); lineTo(23f,6f); lineTo(27f,5f); lineTo(27f,9f); lineTo(12f,28f); close(); moveTo(7f,19f); lineTo(18f,27f) }
                 canvas.drawPath(path,paint)
             }
+            "garden" -> {
+                canvas.drawLine(16f,28f,16f,12f,paint)
+                canvas.drawOval(5f,7f,16f,17f,paint)
+                canvas.drawOval(16f,3f,27f,13f,paint)
+                canvas.drawLine(7f,28f,25f,28f,paint)
+            }
             "bag" -> {
                 canvas.drawRoundRect(8f,10f,24f,27f,4f,4f,paint)
                 canvas.drawRoundRect(12f,5f,20f,12f,3f,3f,paint)

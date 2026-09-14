@@ -22,6 +22,7 @@ internal object BlockPlacement {
         return when (rule) {
             "solid" -> below != AIR && !isDecoration(below) && !isWater(below) && below != LAVA
             "soil" -> "soil" in tags
+            "farmland" -> "farmland" in tags
             "sand" -> "sand" in tags
             "cactus" -> ("sand" in tags || below == CACTUS) &&
                 listOf(x - 1 to z, x + 1 to z, x to z - 1, x to z + 1).all { (nx, nz) ->

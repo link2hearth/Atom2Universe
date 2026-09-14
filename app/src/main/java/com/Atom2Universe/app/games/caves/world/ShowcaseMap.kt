@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.FarmShowcasePlants
 import kotlin.math.abs
 
 /** A finite, hand-composed material garden. Never used by the survival generator. */
@@ -14,6 +15,14 @@ internal object ShowcaseMap {
     const val TREE_Z = 50
     const val COLD_Z = 158
     const val GALLERY_Z = 212
+    fun gardenContains(x: Int, z: Int) = x in 76..151 && z in 56..113
+    fun gardenSample(x: Int, z: Int): Pair<Int, Int>? {
+        if (!gardenContains(x, z)) return null
+        val bank = if (x < 114) 0 else 1
+        val row = ((z - 60) / 4).coerceIn(0, if (bank == 0) 9 else 8)
+        val stage = ((x - (82 + bank * 38) + 2) / 5).coerceIn(0, 4)
+        return (bank * 10 + row) to stage
+    }
     fun coldAt(x: Int, z: Int): Int? {
         if (x !in 0 until ORIGINAL_WIDTH || z !in COLD_Z until GALLERY_Z - 2) return null
         return ((z - COLD_Z) / 18 * 3 + x / 24).takeIf { it in 0..7 }
@@ -74,13 +83,38 @@ internal object ShowcaseMap {
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
             // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55) continue
+            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z)) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
-                (x == ORIGINAL_WIDTH - 1 && z > 55) || (x >= ORIGINAL_WIDTH && z == 55))
+                (x == ORIGINAL_WIDTH - 1 && z > 55) ||
+                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
+        // Two banks of ten/nine species. Five fixed growth snapshots along each bed.
+        // Open paths let the player compare front, side and overhead views of crossed sprites.
+        for (crop in FarmShowcasePlants.crops.indices) {
+            val x0 = 82 + crop / 10 * 38
+            val z0 = 62 + crop % 10 * 4
+            fill(x0 - 2, FLOOR, z0 - 1, x0 + 22, FLOOR, z0 + 1,
+                com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND)
+            for (stage in FarmShowcasePlants.growth.indices) {
+                put(x0 + stage * 5, FLOOR + 1, z0, FarmShowcasePlants.id(crop, stage))
+            }
+            // A dense mature patch after the five samples: one plant per adjacent soil block.
+            fill(x0 + 25, FLOOR, z0 - 1, x0 + 27, FLOOR, z0 + 1,
+                com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND)
+            fill(x0 + 25, FLOOR + 1, z0 - 1, x0 + 27, FLOOR + 1, z0 + 1,
+                FarmShowcasePlants.id(crop, FarmShowcasePlants.growth.lastIndex))
+        }
+        // Low border and a contrasting entrance path behind the villages.
+        for (z in 56..113) {
+            put(76, FLOOR + 1, z, COBBLESTONE)
+            put(151, FLOOR + 1, z, COBBLESTONE)
+        }
+        fill(76, FLOOR + 1, 113, 151, FLOOR + 1, 113, COBBLESTONE)
+        fill(111, FLOOR, 52, 116, FLOOR, 112, COBBLESTONE)
+        fill(98, FLOOR, 52, 116, FLOOR, 54, COBBLESTONE)
         for ((index, style) in VillageArchitecture.Style.entries.withIndex()) {
             VillageArchitecture.generate(style, 260914 + index, listOf(3, 5, 6)[index]) { x, y, z, id ->
                 put(76 + index * 52 + x, FLOOR + y, 4 + z, id)

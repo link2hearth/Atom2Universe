@@ -1,0 +1,13 @@
+{
+  "id": 9300,
+  "name": "farmland",
+  "texture_top": "farm_soil:top",
+  "texture_side": "farm_soil:side",
+  "texture_bottom": "cozy:material:2",
+  "color": "#533925",
+  "hardness": 0.8,
+  "block_height": 0.9375,
+  "drop": "dirt",
+  "creative_tab": "terrain",
+  "tags": ["soil", "farmland"]
+}

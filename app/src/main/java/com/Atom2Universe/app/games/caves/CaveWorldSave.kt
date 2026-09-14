@@ -27,6 +27,8 @@ internal data class CaveWorldSave(
     var inventory: Map<Short, Int>,
     var hotbar: List<Short?>,
     var buildHotbar: List<Short?> = emptyList(),
+    var gardenHotbar: List<Short?> = emptyList(),
+    var farming: String = "{}",
     // Progression joueur
     var playerHp: Int = 20,
     var playerLevel: Int = 1,
@@ -98,6 +100,8 @@ internal object CaveWorldSaveManager {
         existing.inventory           = snap.inventory
         existing.hotbar              = snap.hotbar
         existing.buildHotbar         = snap.buildHotbar
+        existing.gardenHotbar = snap.gardenHotbar
+        existing.farming = snap.farming
         existing.playerHp            = snap.playerHp
         existing.playerLevel         = snap.playerLevel
         existing.playerXp            = snap.playerXp
@@ -150,6 +154,8 @@ internal object CaveWorldSaveManager {
             val buildHotbarArr = JSONArray()
             save.buildHotbar.forEach { v -> buildHotbarArr.put(v?.toInt() ?: -1) }
             put("buildHotbar", buildHotbarArr)
+            put("gardenHotbar", JSONArray().also { a -> save.gardenHotbar.forEach { a.put(it?.toInt() ?: -1) } })
+            put("farming", save.farming)
             put("playerHp", save.playerHp)
             put("playerLevel", save.playerLevel)
             put("playerXp", save.playerXp)
@@ -253,6 +259,8 @@ internal object CaveWorldSaveManager {
             inventory = inventory,
             hotbar = hotbar,
             buildHotbar = buildHotbar,
+            gardenHotbar = j.optJSONArray("gardenHotbar")?.let { a -> (0 until a.length()).map { a.optInt(it, -1).takeIf { id -> id >= 0 }?.toShort() } } ?: emptyList(),
+            farming = j.optString("farming", "{}"),
             playerHp = j.optInt("playerHp", 20),
             playerLevel = j.optInt("playerLevel", 1),
             playerXp = j.optInt("playerXp", 0),

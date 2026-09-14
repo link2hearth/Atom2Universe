@@ -2,12 +2,12 @@ package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.MeadowTextures
+import com.Atom2Universe.app.games.caves.node.FarmShowcasePlants
 
 internal object MeshBuilder {
     private val faceTriangles = intArrayOf(0, 1, 2, 0, 2, 3)
     private val faceOffsets = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
         intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
-
 
     fun build(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
@@ -25,7 +25,9 @@ internal object MeshBuilder {
                 continue
             }
             if (isDecoration(block)) {
-                addCrossSprite(buf, x, y, z, block, chunk.skyAt(lx, ly, lz) / 15f)
+                val below = world.neighborBlock(chunk, lx, ly - 1, lz, cache)
+                val offset = if (below == com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND) -1f/16f else 0f
+                addCrossSprite(buf, x, y + offset, z, block, chunk.skyAt(lx, ly, lz) / 15f)
                 continue
             }
 
@@ -101,7 +103,7 @@ internal object MeshBuilder {
         return light / 15f
     }
     private fun isVisible(block: Short) =
-        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || (BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)
+        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || (BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true || (BlockRegistry.get(block)?.blockHeight ?: 1f) < 1f)
 
     private fun shouldRenderFace(block: Short, neighbor: Short): Boolean {
         if (!isVisible(neighbor)) return false
@@ -159,6 +161,30 @@ internal object MeshBuilder {
         buf.add7(x+0.5f, y,   z+margin,    0f, 1f, packed, sky)
         buf.add7(x+0.5f, y+h, z+1f-margin, 1f, 0f, packed, sky)
         buf.add7(x+0.5f, y+h, z+margin,    0f, 0f, packed, sky)
+        FarmShowcasePlants.sample(block)?.let { (crop, stage) ->
+            if (FarmShowcasePlants.hasLeafTiers(crop) && stage > 0) {
+                val growth = FarmShowcasePlants.stemGrowth(stage)
+                val foliage = BlockRegistry.get(block)!!.layerSide.toFloat()
+                val crown = h * FarmShowcasePlants.crownHeight(crop) * growth
+                for (tier in 0..1) {
+                    val halfWidth = (if (tier == 0) .85f else .7f) * growth
+                    val cy = y + crown * (if (tier == 0) .65f else 1f)
+                    val tilt = .12f * growth * (if (tier == 0) 1f else -1f)
+                    // Shallow tilted leaf planes above the fruit-bearing branches, not copies
+                    // of the entire plant. The upper tier is turned for a less rigid silhouette.
+                    val angle = if (tier == 0) 0f else (Math.PI / 6).toFloat()
+                    val cos = kotlin.math.cos(angle); val sin = kotlin.math.sin(angle)
+                    fun point(dx: Float, dz: Float) = floatArrayOf(
+                        x + .5f + dx * cos - dz * sin,
+                        cy + if (dz < 0f) -tilt else tilt,
+                        z + .5f + dx * sin + dz * cos)
+                    val a = point(-halfWidth, -halfWidth); val b = point(halfWidth, -halfWidth)
+                    val c = point(halfWidth, halfWidth); val d = point(-halfWidth, halfWidth)
+                    buf.quad(a[0],a[1],a[2], b[0],b[1],b[2], c[0],c[1],c[2], d[0],d[1],d[2],
+                        foliage, false, sky)
+                }
+            }
+        }
     }
 
     private fun GrowableFloatArray.quad(
