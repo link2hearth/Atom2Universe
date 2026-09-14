@@ -1,0 +1,17 @@
+{
+  "id": 2602,
+  "name": "glowstone_violet",
+  "texture_top": "underground:violet",
+  "texture_side": "underground:violet",
+  "texture_bottom": "underground:violet",
+  "color": "#BB91E8",
+  "hardness": 1.5,
+  "light_emission": 8,
+  "drop": "glowstone_violet",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

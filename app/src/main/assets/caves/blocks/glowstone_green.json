@@ -1,0 +1,17 @@
+{
+  "id": 2601,
+  "name": "glowstone_green",
+  "texture_top": "underground:green",
+  "texture_side": "underground:green",
+  "texture_bottom": "underground:green",
+  "color": "#80CAA0",
+  "hardness": 1.5,
+  "light_emission": 8,
+  "drop": "glowstone_green",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

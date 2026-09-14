@@ -15,6 +15,9 @@ internal class MeshLightingSnapshot(private val chunk: Chunk, private val world:
         neighbors[i]?.takeIf { it.generated }?.light
     }
 
+    /** A light refresh may be shown provisionally; an unloaded/replaced owner may not. */
+    fun belongsTo(current: Chunk): Boolean = current === chunk
+
     fun isCurrent(): Boolean {
         for (i in neighbors.indices) {
             val dx = if (i == 1) 1 else if (i == 2) -1 else 0

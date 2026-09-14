@@ -5,12 +5,15 @@ import com.Atom2Universe.app.games.caves.node.MeadowTextures
 import com.Atom2Universe.app.games.caves.node.FarmShowcasePlants
 
 internal object MeshBuilder {
+    private val solidScratch = ThreadLocal.withInitial { GrowableFloatArray() }
+    private val waterScratch = ThreadLocal.withInitial { GrowableFloatArray() }
+    private val emptyVertices = FloatArray(0)
     private val faceTriangles = intArrayOf(0, 1, 2, 0, 2, 3)
     private val faceOffsets = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
         intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
 
     fun build(chunk: Chunk, world: World): FloatArray {
-        val buf = GrowableFloatArray()
+        val buf = solidScratch.get()!!.also { it.clear() }
         val cache = World.ChunkLookupCache()
 
         for (lz in 0 until CHUNK_SIZE)
@@ -32,7 +35,7 @@ internal object MeshBuilder {
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
-            val definition = BlockRegistry.get(block)
+            val definition = if (BlockRegistry.isPartial(block)) BlockRegistry.get(block) else null
             if (definition != null && (definition.stairs || definition.slab || definition.blockHeight < 1f)) {
                 val sky = skyOf(chunk, world, lx, ly, lz, cache)
                 val mask = StairConnections.maskAt(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz,
@@ -69,10 +72,12 @@ internal object MeshBuilder {
             if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))  addFace(buf, x, y, z, 4, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz + 1, cache))
             if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))  addFace(buf, x, y, z, 5, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz - 1, cache))
         }
-        val raw = buf.toFloatArray()
-        val colored = FloatArray(raw.size / 7 * 11)
+        if (buf.size == 0) return emptyVertices
+        // Read the reusable builder directly; avoid a second full-sized intermediate array.
+        val raw = buf.data
+        val colored = FloatArray(buf.size / 7 * 11)
         val blend = ClimateBlend(chunk.worldX, chunk.worldZ, BlockRegistry.vividStyle, world::vegetationClimateAt)
-        for (vertex in 0 until raw.size / 7) {
+        for (vertex in 0 until buf.size / 7) {
             val src = vertex * 7; val dst = vertex * 11
             raw.copyInto(colored, dst, src, src + 7)
             val mask = BlockRegistry.climateMask(raw[src + 5].toInt() % 4096)
@@ -88,9 +93,9 @@ internal object MeshBuilder {
     private fun skyOf(chunk: Chunk, world: World, lx: Int, ly: Int, lz: Int,
                       cache: World.ChunkLookupCache? = null): Float {
         val block = world.neighborBlock(chunk, lx, ly, lz, cache)
-        val def = BlockRegistry.get(block)
         var light = world.skyLightAt(chunk, lx, ly, lz, cache)
-        if (def == null || (!def.stairs && !def.slab && def.blockHeight >= 1f)) return light / 15f
+        if (!BlockRegistry.isPartial(block)) return light / 15f
+        val def = BlockRegistry.get(block) ?: return light / 15f
         val wx = chunk.worldX + lx; val wy = chunk.worldY + ly; val wz = chunk.worldZ + lz
         val cells = PartialBlockModel.boxes(world.metaAt(wx, wy, wz), def.slab, def.blockHeight,
             StairConnections.maskAt(wx, wy, wz, { x, y, z -> world.blockAt(x, y, z, cache) }, world::metaAt))
@@ -103,7 +108,7 @@ internal object MeshBuilder {
         return light / 15f
     }
     private fun isVisible(block: Short) =
-        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || (BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true || (BlockRegistry.get(block)?.blockHeight ?: 1f) < 1f)
+        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || BlockRegistry.isPartial(block)
 
     private fun shouldRenderFace(block: Short, neighbor: Short): Boolean {
         if (!isVisible(neighbor)) return false
@@ -116,7 +121,7 @@ internal object MeshBuilder {
         val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer)
             else baseLayer
         val rotCW  = face > 1
-        val packed = face * 4096f + layer.toFloat()
+        val packed = (if (BlockRegistry.lightEmission(block) > 0) 7 else face) * 4096f + layer.toFloat()
         when (face) {
             0 -> buf.quad(x,y+1,z,  x+1,y+1,z,  x+1,y+1,z+1, x,y+1,z+1, packed, false, sky)
             1 -> buf.quad(x,y,z+1,  x+1,y,z+1,  x+1,y,z,     x,y,z,     packed, false, sky)
@@ -146,7 +151,7 @@ internal object MeshBuilder {
         val layer = BlockRegistry.getLayerForDecoration(block)
         val margin = BlockRegistry.getSpriteMargin(block)
         val h      = BlockRegistry.getSpriteHeight(block)
-        val packed = layer.toFloat()
+        val packed = (if (BlockRegistry.lightEmission(block) > 0) 7 * 4096f else 0f) + layer.toFloat()
 
         buf.add7(x+margin,   y,   z+0.5f, 0f, 1f, packed, sky)
         buf.add7(x+1f-margin,y,   z+0.5f, 1f, 1f, packed, sky)
@@ -204,7 +209,7 @@ internal object MeshBuilder {
     }
 
     fun buildWater(chunk: Chunk, world: World): FloatArray {
-        val buf = GrowableFloatArray()
+        val buf = waterScratch.get()!!.also { it.clear() }
         val cache = World.ChunkLookupCache()
         for (lz in 0 until CHUNK_SIZE)
             for (ly in 0 until CHUNK_SIZE)
@@ -286,12 +291,19 @@ internal object MeshBuilder {
     }
 
     private class GrowableFloatArray(capacity: Int = 16384) {
-        private var data = FloatArray(capacity)
-        private var size = 0
+        var data = FloatArray(capacity)
+            private set
+        var size = 0
+            private set
+        fun clear() {
+            size = 0
+            // Do not pin an exceptional, multi-megabyte chunk on every coroutine worker.
+            if (data.size > 131072) data = FloatArray(16384)
+        }
         fun add(v: Float) {
             if (size == data.size) data = data.copyOf(data.size * 2)
             data[size++] = v
         }
-        fun toFloatArray(): FloatArray = data.copyOf(size)
+        fun toFloatArray(): FloatArray = if (size == 0) emptyVertices else data.copyOf(size)
     }
 }

@@ -6,7 +6,7 @@ import kotlin.math.*
 import kotlin.random.Random
 
 class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
-            val terrainVersion: Int = 3,
+            val terrainVersion: Int = 4,
             /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
             private val source: WorldSource? = null) {
     private val natural by lazy { NaturalTerrain(seed) }
@@ -239,9 +239,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private data class ChunkCandidate(val cx: Int, val cy: Int, val cz: Int, val key: Long, val priority: Int)
 
     private fun streamPriority(dx: Int, dy: Int, dz: Int, viewDirX: Float, viewDirZ: Float): Int {
-        val dist = dx * dx + dz * dz + dy * dy * 8
-        val dot = dx * viewDirX + dz * viewDirZ
-        return dist - (dot * renderRadiusXZ * 2).toInt()
+        val dist = dx * dx + dz * dz + dy * dy
+        val horizontal = sqrt((dx * dx + dz * dz).toFloat()).coerceAtLeast(1f)
+        val facing = ((dx * viewDirX + dz * viewDirZ) / horizontal).coerceIn(-1f, 1f)
+        // Distance always wins. Looking ahead only breaks ties on the same distance shell.
+        return dist * 32 + ((1f - facing) * 8f).toInt()
     }
 
     fun abandonChunk(chunk: Chunk) {
@@ -255,6 +257,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         inFlight.remove(key)
         chunk.generated = true
         chunk.meshDirty = true
+        rebuildQueue.add(key)
         enqueueLight(key)
         // Les fluides ne traversent jamais un chunk non généré. Quand ce chunk devient
         // disponible, on réveille uniquement les écoulements qui attendaient précisément
@@ -269,6 +272,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val nb = getChunk(nx, ny, nz) ?: continue
             if (nb.generated) {
                 nb.meshDirty = true
+                rebuildQueue.add(chunkKey(nx, ny, nz))
                 enqueueLight(nx, ny, nz)
             }
         }
@@ -283,6 +287,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         inFlight.remove(key)
         chunk.generated = true
         chunk.meshDirty = true
+        rebuildQueue.add(key)
         enqueueLight(key)
         resumeDeferredWaterActivations(key)
         return chunk
@@ -2213,16 +2218,18 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // Cache de la hauteur de surface analytique par colonne (déterministe pour une seed donnée,
     // insensible aux éditions du joueur). Sert d'oracle « ciel ouvert » quand le chunk au-dessus
-    // n'est pas encore chargé. Entrée minuscule (Long→Int) ; croît lentement avec l'exploration.
-    private val surfaceTopCache = ConcurrentHashMap<Long, Int>()
+    // n'est pas encore chargé. Cache borné par worker, sans boxing ni croissance à l'exploration.
+    private val surfaceTopCache = ThreadLocal.withInitial { SurfaceColumnCache() }
 
     fun surfaceTopY(wx: Int, wz: Int): Int {
         source?.let { return it.skyTopY(wx, wz) }
-        val key = (wx.toLong() and 0xFFFFFFFFL) or ((wz.toLong() and 0xFFFFFFFFL) shl 32)
-        surfaceTopCache[key]?.let { return it }
+        val key = columnCacheKey(wx, wz)
+        val cache = surfaceTopCache.get()!!
+        val cached = cache.get(key)
+        if (cached != Int.MIN_VALUE) return cached
         val v = if (terrainVersion >= 3) max(SEA_LEVEL, natural.height(wx.toDouble(), wz.toDouble()).toInt()) + 1
             else surfaceHeight(wx + 0.5, wz + 0.5).toInt()
-        surfaceTopCache[key] = v
+        cache.put(key, v)
         return v
     }
 
@@ -2240,6 +2247,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val neighbor = if (cache != null) cache.getOrPut(chunkKey(ncx, ncy, ncz)) { getChunk(ncx, ncy, ncz) } else getChunk(ncx, ncy, ncz)
         if (neighbor != null && neighbor.generated)
             return neighbor.skyAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
+        // Natural terrain's analytic sky starts above max(sea level, ground).
+        // Missing deep neighbours therefore need no height lookup at all.
+        if (source == null && terrainVersion >= 3 && wy <= SEA_LEVEL) return 0
         return if (wy >= surfaceTopY(wx, wz)) 15 else 0
     }
 }

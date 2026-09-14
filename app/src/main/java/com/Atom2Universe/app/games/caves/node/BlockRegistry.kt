@@ -19,6 +19,10 @@ internal object BlockRegistry {
     private val waterTable       = BooleanArray(65536)
     private val fallingTable     = BooleanArray(65536)
     private val waterloggedTable = BooleanArray(65536)
+    private val emissionTable = ByteArray(65536)
+    private val partialTable = BooleanArray(65536)
+    fun isPartial(id: Short): Boolean = partialTable[id.toInt() and 0xffff]
+    fun lightEmission(id: Short): Int = emissionTable[id.toInt() and 0xffff].toInt()
 
     // Tables de layers pré-calculées après buildTextureAtlas()
     private val layerTopTable       = IntArray(65536)
@@ -57,6 +61,7 @@ internal object BlockRegistry {
     fun load(assets: AssetManager) {
         if (defs.isNotEmpty()) return
         FarmSoil.registerTextures()
+        UndergroundTextures.register()
         val files = assets.list("caves/blocks") ?: return
         for (file in files) {
             if (!file.endsWith(".json")) continue
@@ -64,6 +69,8 @@ internal object BlockRegistry {
             val def = BlockDef.fromJson(JSONObject(json))
             defs[def.id] = def
             val idx = def.id.toInt() and 0xFFFF
+            emissionTable[idx] = def.lightEmission.coerceIn(0, 15).toByte()
+            partialTable[idx] = def.stairs || def.slab || def.blockHeight < 1f
             if (def.decoration)  decorationTable[idx]  = true
             if (def.transparent) transparentTable[idx] = true
             if (def.water)       waterTable[idx]       = true

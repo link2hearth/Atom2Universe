@@ -1,0 +1,17 @@
+{
+  "id": 2607,
+  "name": "cave_mycelium",
+  "texture_top": "underground:mycelium",
+  "texture_side": "underground:mycelium",
+  "texture_bottom": "underground:mycelium",
+  "color": "#96849F",
+  "hardness": 0.6,
+  "light_emission": 0,
+  "drop": "cave_mycelium",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
+}

@@ -693,4 +693,29 @@
     <string name="cave_farm_not_ready">Cette plante pousse encore.</string>
     <string name="cave_farm_plant_hint">Planter sur une terre labourée avec deux blocs libres au-dessus du plant.</string>
     <string name="cave_farm_controls">Houe : labourer une terre dégagée · Graines : planter · Plant mûr : récolter</string>
+
+    <string name="cave_block_glowstone_amber">Pierre lumineuse ambre</string>
+    <string name="cave_block_glowstone_green">Pierre lumineuse verte</string>
+    <string name="cave_block_glowstone_violet">Pierre lumineuse violette</string>
+    <string name="cave_block_glowstone_cyan">Pierre lumineuse cyan</string>
+    <string name="cave_block_glowstone_blue">Pierre lumineuse bleue</string>
+    <string name="cave_block_glowstone_ember">Basalte incandescent</string>
+    <string name="cave_block_glow_moss">Mousse luminescente</string>
+    <string name="cave_block_cave_mycelium">Mycélium souterrain</string>
+    <string name="cave_block_cave_root">Racine souterraine</string>
+    <string name="cave_block_giant_mushroom_stem">Pied de champignon géant</string>
+    <string name="cave_block_giant_mushroom_cap">Chapeau de champignon géant</string>
+    <string name="cave_block_glow_mushroom">Champignon luminescent</string>
+    <string name="cave_block_frosted_stone">Pierre givrée</string>
+    <string name="cave_block_cave_calcite">Concrétion de calcite</string>
+    <string name="cave_block_cave_crystal">Cristal décoratif souterrain</string>
+    <string name="cave_loading_terrain">Préparation du terrain alentour…</string>
+    <string-array name="cave_showcase_underground_names">
+        <item>Grotte de calcite · soleil ambré</item>
+        <item>Grotte des racines · rameaux verts</item>
+        <item>Grotte fongique · œil violet</item>
+        <item>Grotte de cristal · étoile cyan</item>
+        <item>Grotte gelée · flocon bleu</item>
+        <item>Grotte de basalte · braise orange</item>
+    </string-array>
 </resources>

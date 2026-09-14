@@ -1,0 +1,17 @@
+{
+  "id": 2611,
+  "name": "glow_mushroom",
+  "texture_top": "underground:fungus",
+  "texture_side": "underground:fungus",
+  "texture_bottom": "underground:fungus",
+  "color": "#C6A2EB",
+  "hardness": 0.6,
+  "light_emission": 7,
+  "drop": "glow_mushroom",
+  "creative_tab": "nature",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": [],
+  "decoration": true,
+  "sprite_height": 0.8
+}

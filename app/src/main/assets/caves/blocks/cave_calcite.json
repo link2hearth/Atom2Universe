@@ -1,0 +1,17 @@
+{
+  "id": 2613,
+  "name": "cave_calcite",
+  "texture_top": "underground:calcite",
+  "texture_side": "underground:calcite",
+  "texture_bottom": "underground:calcite",
+  "color": "#CDBF9E",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_calcite",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

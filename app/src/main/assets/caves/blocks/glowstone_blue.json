@@ -1,0 +1,17 @@
+{
+  "id": 2604,
+  "name": "glowstone_blue",
+  "texture_top": "underground:blue",
+  "texture_side": "underground:blue",
+  "texture_bottom": "underground:blue",
+  "color": "#9BAFEA",
+  "hardness": 1.5,
+  "light_emission": 8,
+  "drop": "glowstone_blue",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

@@ -693,4 +693,29 @@
     <string name="cave_farm_not_ready">This plant is still growing.</string>
     <string name="cave_farm_plant_hint">Plant on farmland with two empty blocks above the planting space.</string>
     <string name="cave_farm_controls">Hoe: till clear soil · Seeds: plant · Mature plant: harvest</string>
+
+    <string name="cave_block_glowstone_amber">Amber glowstone</string>
+    <string name="cave_block_glowstone_green">Green glowstone</string>
+    <string name="cave_block_glowstone_violet">Violet glowstone</string>
+    <string name="cave_block_glowstone_cyan">Cyan glowstone</string>
+    <string name="cave_block_glowstone_blue">Blue glowstone</string>
+    <string name="cave_block_glowstone_ember">Ember glowstone</string>
+    <string name="cave_block_glow_moss">Luminous moss</string>
+    <string name="cave_block_cave_mycelium">Cave mycelium</string>
+    <string name="cave_block_cave_root">Cave root</string>
+    <string name="cave_block_giant_mushroom_stem">Giant mushroom stem</string>
+    <string name="cave_block_giant_mushroom_cap">Giant mushroom cap</string>
+    <string name="cave_block_glow_mushroom">Luminous mushroom</string>
+    <string name="cave_block_frosted_stone">Frosted stone</string>
+    <string name="cave_block_cave_calcite">Calcite formation</string>
+    <string name="cave_block_cave_crystal">Decorative cave crystal</string>
+    <string name="cave_loading_terrain">Preparing the surrounding terrain…</string>
+    <string-array name="cave_showcase_underground_names">
+        <item>Calcite cave · amber sun</item>
+        <item>Root cave · green fronds</item>
+        <item>Fungal cave · violet eye</item>
+        <item>Crystal cave · cyan star</item>
+        <item>Frozen cave · blue snowflake</item>
+        <item>Basalt cave · orange ember</item>
+    </string-array>
 </resources>

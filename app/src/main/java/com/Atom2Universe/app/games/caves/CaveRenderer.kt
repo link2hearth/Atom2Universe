@@ -56,7 +56,7 @@ internal class CaveRenderer(
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
     private val savedState: SavedState? = null,
-    private val terrainVersion: Int = 3,
+    private val terrainVersion: Int = 4,
     /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
     private val worldSource: WorldSource? = null,
     /** Règles de la partie : la survie par défaut. */
@@ -123,13 +123,13 @@ internal class CaveRenderer(
     private var lodShader:   ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wASky = 0; private var wUMvp = 0; private var wUTex = 0
     private var wUChunkOffset = 0; private var wUAmbient = 0; private var wUCaveFloor = 0
-    private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
+    private var wULightColors = 0; private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
     private var wUUnderwater = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0; private var lUAlpha = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
     private var wWAPos = 0; private var wWAUv = 0; private var wWASky = 0; private var wWUMvp = 0
     private var wWUChunkOffset = 0; private var wWUAmbient = 0; private var wWUCaveFloor = 0
-    private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
+    private var wWULightColors = 0; private var wWULights = 0; private var wWULightCount = 0; private var wWUTime = 0
     private var lodAPos = 0; private var lodARgb = 0; private var lodUMvp = 0
     private var lodUChunkOffset = 0; private var lodUAmbient = 0
     private var blockTexArray = 0
@@ -163,11 +163,35 @@ internal class CaveRenderer(
     private val lightDispatcher = Dispatchers.Default.limitedParallelism(1)
     private val lightWorkerRunning = java.util.concurrent.atomic.AtomicBoolean(false)
     private val building = ConcurrentHashMap.newKeySet<Long>()
+    private val generationJobs = java.util.concurrent.atomic.AtomicInteger()
+    private val meshJobs = java.util.concurrent.atomic.AtomicInteger()
+    private val pendingMeshBytes = java.util.concurrent.atomic.AtomicLong()
+    private val MAX_PENDING_MESH_BYTES = 8L * 1024 * 1024
+    private var waitingMeshChunks = 0
+    private var waitingFirstMeshes = 0
+    // GL-thread backlog: retain waiting requests instead of reallocating a queue node
+    // and sorting the entire backlog every frame.
+    private val pendingMeshKeys = LinkedHashSet<Long>()
+    private var meshDispatchSerial = 0L
+    private var refreshMeshUploads = 0
+    private var firstMeshUploads = 0
+    private var provisionalUploads = 0
+    private var perfLogNs = 0L
+    private var perfFrames = 0
 
     private data class LitMeshUpload(
         val key: Long, val version: Int, val vertices: FloatArray,
         val lighting: MeshLightingSnapshot
     )
+    private fun enqueueMesh(queue: ConcurrentLinkedQueue<LitMeshUpload>, upload: LitMeshUpload) {
+        pendingMeshBytes.addAndGet(upload.vertices.size.toLong() * 4)
+        queue.add(upload)
+    }
+    private fun pollMesh(queue: ConcurrentLinkedQueue<LitMeshUpload>): LitMeshUpload? {
+        val upload = queue.poll() ?: return null
+        pendingMeshBytes.addAndGet(-upload.vertices.size.toLong() * 4)
+        return upload
+    }
     // Le LOD ignore la skylight : mémoriser la géométrie déjà soumise.
     private val lodGeometryVersions = HashMap<Long, Pair<Chunk, Int>>()
     private val lodDispatcher = Dispatchers.Default.limitedParallelism(1)
@@ -193,7 +217,12 @@ internal class CaveRenderer(
     // juste assez visible pour s'orienter ; une torche fait une vraie différence par-dessus.
     private val CAVE_FLOOR = 0.07f
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
+    private data class ChunkLightState(val chunk: Chunk, val version: Int, val positions: List<Triple<Int, Int, Int>>)
+    private val chunkLightStates = HashMap<Long, ChunkLightState>()
+    private val lightColors = FloatArray(MAX_LIGHTS * 4)
     private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
+    private val chunkLightData = FloatArray(MAX_LIGHTS * 4)
+    private val chunkLightColors = FloatArray(MAX_LIGHTS * 4)
     // Sélection des MAX_LIGHTS sources les plus proches sans allouer de liste : un
     // filter{}.sortedBy{}.take{} sur TOUTES les sources du monde chargé (potentiellement
     // des centaines de torches) tournait 20x/s, indépendamment du combat — un vrai foyer
@@ -345,7 +374,17 @@ internal class CaveRenderer(
     private val RANGED_PROJECTILE_SPEED = 24f
     private val PLAYER_KNOCKBACK = 6.0   // vitesse initiale du recul quand le joueur est touché
 
-    @Volatile var gamePaused = false
+    @Volatile private var requestedPause = false
+    @Volatile var spawnReady = false
+        private set
+    @Volatile var loadingCallback: ((Boolean) -> Unit)? = null
+    private val spawnChunks = HashSet<Long>()
+    private var caveBlend = 0f
+    private var caveFogUniform = -1
+    private var waterCaveFogUniform = -1
+    var gamePaused: Boolean
+        get() = requestedPause || !spawnReady
+        set(value) { requestedPause = value }
 
     // ── Outil de capture de structure (mode créatif) ──────────────────────────
     @Volatile var structCornerA: Triple<Int, Int, Int>? = null
@@ -406,9 +445,11 @@ internal class CaveRenderer(
         uniform float u_ambient;
         uniform float u_caveFloor;
         uniform vec4 u_lights[32];
+        uniform vec4 u_lightColors[32];
         uniform int u_lightCount;
         uniform float u_time;
         uniform float u_underwater;
+        uniform vec3 u_caveFog;
         in vec2 v_uv;
         in float v_layer;
         in float v_faceDir;
@@ -434,40 +475,44 @@ internal class CaveRenderer(
             vec3 normal = fd < 1.5 ? vec3(0.0, 1.0, 0.0)
                 : fd < 3.5 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 0.0, 1.0);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
-            vec3 torchColor = vec3(1.0, 0.68, 0.30);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
-                float flicker = 1.0 + 0.025 * sin(u_time * 7.3 + float(i) * 2.1)
-                    + 0.012 * sin(u_time * 13.7 + float(i) * 4.3);
+                float flicker = u_lightColors[i].w;
                 float radius = 16.0 * u_lights[i].w;
-                float d = length(v_worldPos - u_lights[i].xyz);
+                vec3 delta = v_worldPos - u_lights[i].xyz;
+                float distanceSquared = dot(delta, delta);
+                if (distanceSquared >= radius * radius) continue;
+                float d = sqrt(distanceSquared);
                 float atten = clamp(1.0 - d / radius, 0.0, 1.0);
                 atten = atten * atten;
                 vec3 toLight = (u_lights[i].xyz - v_worldPos) / max(d, 0.001);
                 float diffuse = 0.35 + 0.65 * abs(dot(normal, toLight));
-                torchContrib += atten * diffuse * u_lights[i].w * flicker * torchColor;
+                torchContrib += atten * diffuse * u_lights[i].w * flicker * u_lightColors[i].rgb;
             }
             // Lumière du ciel cuite (0..1) × ambiance jour/nuit ; plancher pénombre pour ne jamais
             // être 100 % noir ; les torches s'ajoutent par-dessus dans les zones non exposées.
             float sky = v_skyLight * u_ambient;
             vec3 baseLight = vec3(max(sky, u_caveFloor));
             vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
-            float glow = 0.94 + 0.06 * sin(u_time * 9.0);
+            float glow = fd > 6.5 ? 1.0 : 0.94 + 0.06 * sin(u_time * 9.0);
             // Directional face shading belongs to skylight; a torch can illuminate a ceiling.
             vec3 lit = baseLight * faceLight + (lighting - baseLight);
             fragColor = vec4(fd > 5.5 ? col.rgb * glow : col.rgb * lit, 1.0);
             if (u_underwater > 0.5) {
                 fragColor = vec4(fragColor.rgb * vec3(0.18, 0.48, 0.88) * 0.55, 1.0);
             }
+            fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
     """.trimIndent()
 
     private val FRAG_WATER = """
         #version 300 es
         precision mediump float;
+        uniform vec3 u_caveFog;
         uniform float u_ambient;
         uniform float u_caveFloor;
         uniform vec4 u_lights[32];
+        uniform vec4 u_lightColors[32];
         uniform int u_lightCount;
         uniform float u_time;
         in vec2 v_uv;
@@ -484,21 +529,23 @@ internal class CaveRenderer(
             vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
             float fd = floor(v_faceDir + 0.5);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : 0.72;
-            vec3 torchColor = vec3(1.0, 0.68, 0.30);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
-                float flicker = 1.0 + 0.025 * sin(u_time * 7.3 + float(i) * 2.1)
-                    + 0.012 * sin(u_time * 13.7 + float(i) * 4.3);
+                float flicker = u_lightColors[i].w;
                 float radius = 16.0 * u_lights[i].w;
-                float d = length(v_worldPos - u_lights[i].xyz);
+                vec3 delta = v_worldPos - u_lights[i].xyz;
+                float distanceSquared = dot(delta, delta);
+                if (distanceSquared >= radius * radius) continue;
+                float d = sqrt(distanceSquared);
                 float atten = clamp(1.0 - d / radius, 0.0, 1.0);
                 atten = atten * atten;
-                torchContrib += atten * u_lights[i].w * flicker * torchColor;
+                torchContrib += atten * u_lights[i].w * flicker * u_lightColors[i].rgb;
             }
             float sky = v_skyLight * u_ambient;
             vec3 baseLight = vec3(max(sky, u_caveFloor));
             vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
             fragColor = vec4(baseColor * faceLight * lighting, 0.75);
+            fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
     """.trimIndent()
 
@@ -606,6 +653,8 @@ internal class CaveRenderer(
     // ── Lifecycle GL ──────────────────────────────────────────────────────────
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        val startupNs = System.nanoTime()
+        if (com.Atom2Universe.app.BuildConfig.DEBUG) android.util.Log.i("CavePerf", "startupBegin")
         val liveFarmInventory = if (farmSessionReady) inventory.filterKeys {
             com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
         } else null
@@ -616,6 +665,7 @@ internal class CaveRenderer(
 
         worldShader = ShaderProgram(VERT_WORLD, FRAG_WORLD).also {
             it.use()
+            caveFogUniform = it.uniform("u_caveFog")
             wAPos         = it.attrib("a_pos")
             wAUv          = it.attrib("a_uv")
             wASky         = it.attrib("a_skyLight")
@@ -625,6 +675,7 @@ internal class CaveRenderer(
             wUChunkOffset = it.uniform("u_chunk_offset")
             wUAmbient     = it.uniform("u_ambient")
             wUCaveFloor   = it.uniform("u_caveFloor")
+            wULightColors = it.uniform("u_lightColors[0]")
             wULights      = it.uniform("u_lights[0]")
             wULightCount  = it.uniform("u_lightCount")
             wUTime        = it.uniform("u_time")
@@ -632,6 +683,7 @@ internal class CaveRenderer(
         }
         waterShader = ShaderProgram(VERT_WORLD, FRAG_WATER).also {
             it.use()
+            waterCaveFogUniform = it.uniform("u_caveFog")
             wWAPos         = it.attrib("a_pos")
             wWAUv          = it.attrib("a_uv")
             wWASky         = it.attrib("a_skyLight")
@@ -639,6 +691,7 @@ internal class CaveRenderer(
             wWUChunkOffset = it.uniform("u_chunk_offset")
             wWUAmbient     = it.uniform("u_ambient")
             wWUCaveFloor   = it.uniform("u_caveFloor")
+            wWULightColors = it.uniform("u_lightColors[0]")
             wWULights      = it.uniform("u_lights[0]")
             wWULightCount  = it.uniform("u_lightCount")
             wWUTime        = it.uniform("u_time")
@@ -720,9 +773,7 @@ internal class CaveRenderer(
                     WeaponDef(WeaponColor.WHITE,WeaponVariant.SQUARE),kind=if(a.ammoId==ARROW_ID) ProjectileKind.ARROW else ProjectileKind.BOLT,
                     ammoId=a.ammoId).also { it.stuck=true;it.age=1f })
             }
-            val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
-            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
-                world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
+            warmSpawnNeighborhood()
             val spawn = world.findSpawnPoint()
             mode.onPlayerPlaced(spawn[0].toDouble(), spawn[1].toDouble(), spawn[2].toDouble())
         } else {
@@ -733,9 +784,7 @@ internal class CaveRenderer(
             val spawn = mode.spawnPoint() ?: world.findSpawnPoint()
             camera.playerX = spawn[0].toDouble(); camera.playerY = spawn[1].toDouble(); camera.playerZ = spawn[2].toDouble()
             camera.x = camera.playerX; camera.y = camera.playerY; camera.z = camera.playerZ
-            val pcx = camera.chunkX(); val pcy = camera.chunkY(); val pcz = camera.chunkZ()
-            for (dy in -1..1) for (dz in -1..1) for (dx in -1..1)
-                world.pregenerateChunk(pcx + dx, pcy + dy, pcz + dz)
+            warmSpawnNeighborhood()
             mode.onPlayerPlaced(camera.x, camera.y, camera.z)
         }
         if (!farmSessionReady) farming.restore(savedState?.farming ?: "{}")
@@ -769,7 +818,34 @@ internal class CaveRenderer(
         }
         farmSessionReady = true
         lastFrameNs = System.nanoTime()
+        if (com.Atom2Universe.app.BuildConfig.DEBUG)
+            android.util.Log.i("CavePerf", "startupReady ms=${(lastFrameNs - startupNs) / 1_000_000}")
         scheduleInitialLodBuilds()
+    }
+
+    private fun warmSpawnNeighborhood() {
+        val pcx = camera.chunkX(); val pcz = camera.chunkZ()
+        spawnReady = false
+        loadingCallback?.invoke(true)
+        spawnChunks.clear()
+        val bounds = worldSource?.chunkBounds()
+        for (dy in -1..1) for (dz in -1..1) for (dx in -1..1) {
+            val cx = pcx + dx
+            val cy = camera.chunkY() + dy
+            val cz = pcz + dz
+            // Finite maps never stream chunks outside these bounds. Waiting for them
+            // would leave spawns near an edge or the map's top permanently loading.
+            if (bounds != null && (cx !in bounds.minCx..bounds.maxCx ||
+                    cy !in bounds.minCy..bounds.maxCy || cz !in bounds.minCz..bounds.maxCz)) continue
+            if (worldSource == null && world.terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < 625) continue
+            spawnChunks.add(world.chunkKey(cx, cy, cz))
+        }
+        // Keep a full horizontal safety ring, but only the vertical chunks supporting
+        // the player's feet/body. The other layers stream asynchronously near-first.
+        val bottom = Math.floorDiv(floorInt(camera.playerY - 2.75), CHUNK_SIZE)
+        val top = Math.floorDiv(floorInt(camera.playerY + .25), CHUNK_SIZE)
+        for (cy in bottom..top) for (dz in -1..1) for (dx in -1..1)
+            world.pregenerateChunk(pcx + dx, cy, pcz + dz)
     }
 
     private fun scheduleInitialLodBuilds() {
@@ -849,8 +925,10 @@ internal class CaveRenderer(
         pendingMode?.let { newMode -> pendingMode = null; applyModeSwitch(newMode) }
 
         val (dy, dp) = touch.consumeDeltas()
-        camera.yaw   -= dy
-        camera.pitch += dp
+        if (spawnReady) {
+            camera.yaw -= dy
+            camera.pitch += dp
+        }
 
         if (!gamePaused) {
             when (playerMode) {
@@ -893,7 +971,9 @@ internal class CaveRenderer(
         val movedChunk = cx != lastCx || cy != lastCy || cz != lastCz
         streamTickAccum += dt
         if (movedChunk || (streamNeedsMore && streamTickAccum >= 0.08f)) {
-            val batchSize = if (movedChunk) 64 else 24
+            // Workers must not accumulate hundreds of jobs/vertex arrays behind the renderer.
+            val batchSize = if (waitingFirstMeshes >= 64 || pendingMeshBytes.get() >= MAX_PENDING_MESH_BYTES) 0
+                else (8 - generationJobs.get()).coerceAtLeast(0)
             lastCx = cx; lastCy = cy; lastCz = cz
             streamTickAccum = 0f
             streamNeedsMore = world.updateAroundPlayer(
@@ -912,32 +992,56 @@ internal class CaveRenderer(
             }
         }
 
-        // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
-        // bloquent les proches dans le FIFO. Le tri porte sur TOUS les éléments en attente.
-        val pendingSet = HashSet<Long>()
+        // Drain and deduplicate new requests; waiting work remains in the GL-owned set.
+        // Only select work when a worker and upload budget are actually available.
+        val pendingSet = pendingMeshKeys
         while (true) { pendingSet.add(world.rebuildQueue.poll() ?: break) }
-        val rebuildBatch = pendingSet.sortedBy { key ->
-            val dx = world.keyToCx(key) - cx; val dy = world.keyToCy(key) - cy; val dz = world.keyToCz(key) - cz
-            dx * dx + dz * dz + dy * dy * 8
+        pendingSet.removeAll { world.getChunkByKey(it) == null }
+        waitingMeshChunks = pendingSet.size
+        waitingFirstMeshes = pendingSet.count { key ->
+            !meshes.containsKey(key) && world.getChunkByKey(key)?.generated == true
         }
         var rebuilt = 0
-        for (key in rebuildBatch) {
-            if (rebuilt >= 16) { world.rebuildQueue.add(key); continue }
+        val dispatchedSolids = HashSet<Long>(2)
+        while (rebuilt < 2 && meshJobs.get() < 2 && pendingMeshBytes.get() < MAX_PENDING_MESH_BYTES) {
+            // Alternate first geometry and refreshes even when only one worker is free.
+            // A continuous stream of new chunks must not starve existing dark meshes.
+            val preferFirst = meshDispatchSerial % 2L == 0L
+            var bestKey: Long? = null
+            var bestClass = Int.MAX_VALUE
+            var bestDistance = Int.MAX_VALUE
+            for (candidate in pendingSet) {
+                if (candidate in building || world.getChunkByKey(candidate)?.generated != true) continue
+                val priority = if ((!meshes.containsKey(candidate)) == preferFirst) 0 else 1
+                val dx = world.keyToCx(candidate) - cx
+                val dy = world.keyToCy(candidate) - cy
+                val dz = world.keyToCz(candidate) - cz
+                val distance = dx * dx + dy * dy + dz * dz
+                if (priority < bestClass || (priority == bestClass && distance < bestDistance)) {
+                    bestKey = candidate
+                    bestClass = priority
+                    bestDistance = distance
+                }
+            }
+            val key = bestKey ?: break
             val chunk = world.getChunkByKey(key) ?: continue
-            if (!chunk.generated) { world.rebuildQueue.add(key); continue }
-            if (!building.add(key)) { world.rebuildQueue.add(key); continue }
+            if (!building.add(key)) continue
+            pendingSet.remove(key)
+            dispatchedSolids.add(key)
+            meshDispatchSerial++
             chunk.meshDirty = false
             chunk.waterMeshDirty = false
             val snapVersion  = chunk.version
             val snapWaterVer = chunk.waterVersion
+            meshJobs.incrementAndGet()
             scope.launch(meshDispatcher) {
                 try {
                     val lighting = MeshLightingSnapshot(chunk, world)
                     val verts      = MeshBuilder.build(chunk, world)
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.version == snapVersion) {
-                        uploadQueue.add(LitMeshUpload(key, snapVersion, verts, lighting))
-                        waterUploadQueue.add(LitMeshUpload(key, snapVersion, waterVerts, lighting))
+                        enqueueMesh(uploadQueue, LitMeshUpload(key, snapVersion, verts, lighting))
+                        enqueueMesh(waterUploadQueue, LitMeshUpload(key, snapVersion, waterVerts, lighting))
                     }
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
@@ -946,6 +1050,7 @@ internal class CaveRenderer(
                     chunk.meshDirty = true
                     world.rebuildQueue.add(key)
                 } finally {
+                    meshJobs.decrementAndGet()
                     building.remove(key)
                 }
             }
@@ -956,27 +1061,32 @@ internal class CaveRenderer(
         val pendingWaterSet = HashSet<Long>()
         while (true) { pendingWaterSet.add(world.waterRebuildQueue.poll() ?: break) }
         pendingWaterSet -= pendingSet  // les chunks déjà en rebuild solide reconstruisent l'eau aussi
+        pendingWaterSet -= dispatchedSolids
         val waterBatch = pendingWaterSet.sortedBy { key ->
             val dx = world.keyToCx(key) - cx; val dy = world.keyToCy(key) - cy; val dz = world.keyToCz(key) - cz
             dx * dx + dz * dz + dy * dy * 8
         }
         var waterRebuilt = 0
         for (key in waterBatch) {
-            if (waterRebuilt >= 8) { world.waterRebuildQueue.add(key); continue }
+            if (waterRebuilt >= 2 || meshJobs.get() >= 2 || pendingMeshBytes.get() >= MAX_PENDING_MESH_BYTES) {
+                world.waterRebuildQueue.add(key); continue
+            }
             val chunk = world.getChunkByKey(key) ?: continue
             if (!chunk.generated) { world.waterRebuildQueue.add(key); continue }
             if (!building.add(key)) { world.waterRebuildQueue.add(key); continue }
             chunk.waterMeshDirty = false
             val snapWaterVer = chunk.waterVersion
+            meshJobs.incrementAndGet()
             scope.launch(meshDispatcher) {
                 try {
                     val lighting = MeshLightingSnapshot(chunk, world)
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.waterVersion == snapWaterVer) {
-                        waterOnlyUploadQueue.add(LitMeshUpload(key, snapWaterVer, waterVerts, lighting))
+                        enqueueMesh(waterOnlyUploadQueue, LitMeshUpload(key, snapWaterVer, waterVerts, lighting))
                     }
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
                 } finally {
+                    meshJobs.decrementAndGet()
                     building.remove(key)
                 }
             }
@@ -991,15 +1101,18 @@ internal class CaveRenderer(
         // suivante, rien n'est perdu, juste étalé.
         val uploadDeadline = System.nanoTime() + UPLOAD_BUDGET_NS
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts, lighting) = uploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = pollMesh(uploadQueue) ?: break
             val chunk = world.getChunkByKey(key) ?: continue
-            if (!lighting.isCurrent()) {
-                world.rebuildQueue.add(key)
-                continue
-            }
-            if (chunk.version == ver) {
+            if (lighting.belongsTo(chunk) && chunk.version == ver) {
+                val needsLightRefresh = !lighting.isCurrent()
+                if (!meshes.containsKey(key)) firstMeshUploads++ else refreshMeshUploads++
                 val mesh = meshes.getOrPut(key) { ChunkMesh(11) }
                 mesh.upload(verts); mesh.flushPending()
+                // Show valid geometry now. A changing neighbour light must never leave a hole.
+                if (needsLightRefresh) {
+                    provisionalUploads++
+                    world.rebuildQueue.add(key)
+                }
                 refreshChunkLightSources(chunk)
                 if (chunk.cy in 0..world.surfaceChunkMax) {
                     val previous = lodGeometryVersions[key]
@@ -1019,27 +1132,21 @@ internal class CaveRenderer(
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts, lighting) = waterUploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = pollMesh(waterUploadQueue) ?: break
             val chunk = world.getChunkByKey(key) ?: continue
-            if (!lighting.isCurrent()) {
-                world.rebuildQueue.add(key)
-                continue
-            }
-            if (chunk.version == ver) {
+            if (lighting.belongsTo(chunk) && chunk.version == ver) {
                 if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
+                if (!lighting.isCurrent()) world.waterRebuildQueue.add(key)
             }
         }
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts, lighting) = waterOnlyUploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = pollMesh(waterOnlyUploadQueue) ?: break
             val chunk = world.getChunkByKey(key) ?: continue
-            if (!lighting.isCurrent()) {
-                world.waterRebuildQueue.add(key)
-                continue
-            }
-            if (chunk.waterVersion == ver) {
+            if (lighting.belongsTo(chunk) && chunk.waterVersion == ver) {
                 if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
+                if (!lighting.isCurrent()) world.waterRebuildQueue.add(key)
             }
         }
 
@@ -1054,12 +1161,15 @@ internal class CaveRenderer(
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
             waterMeshes.keys.filter { it !in loadedKeys }.forEach { key -> waterMeshes.remove(key)?.destroy() }
             // Nettoyer les sources de lumière des chunks déchargés
-            if (lightSources.isNotEmpty()) {
-                lightSources.keys.removeAll { (x, y, z) ->
-                    val kcx = Math.floorDiv(x, CHUNK_SIZE)
-                    val kcy = Math.floorDiv(y, CHUNK_SIZE)
-                    val kcz = Math.floorDiv(z, CHUNK_SIZE)
-                    world.chunkKey(kcx, kcy, kcz) !in loadedKeys
+            if (chunkLightStates.isNotEmpty()) {
+                val iterator = chunkLightStates.entries.iterator()
+                while (iterator.hasNext()) {
+                    val entry = iterator.next()
+                    if (entry.key !in loadedKeys) {
+                        for (position in entry.value.positions) lightSources.remove(position)
+                        iterator.remove()
+                        lightsDirty = true
+                    }
                 }
             }
             // Cap mémoire : éviction des meshes distants uniquement (jamais de re-queue immédiate
@@ -1113,25 +1223,41 @@ internal class CaveRenderer(
             }
         }
 
+        if (!spawnReady && spawnChunks.all { meshes.containsKey(it) }) {
+            spawnReady = true
+            loadingCallback?.invoke(false)
+        }
+
+        // Reserve the dark background/fog for depths below sea level. A roof alone
+        // must not darken an outdoor view from a cave in a mountainside.
+        // Fade over one chunk in altitude, in addition to the local roof-depth test.
+        val roofDepth = world.surfaceTopY(floorInt(camera.x), floorInt(camera.z)) - camera.y
+        val altitudeBlend = ((NaturalTerrain.SEA_LEVEL - camera.y) / CHUNK_SIZE)
+            .toFloat().coerceIn(0f, 1f)
+        val targetCave = ((roofDepth - 3.0) / 12.0).toFloat().coerceIn(0f, 1f) * altitudeBlend
+        caveBlend += (targetCave - caveBlend) * (dt * 4f).coerceAtMost(1f)
+        caveBlend = caveBlend.coerceAtMost(altitudeBlend)
         // ── Cycle jour/nuit ───────────────────────────────────────────────────
         val dayT = dayFraction()
         val (skyR, skyG, skyB) = skyColorFor(dayT)
-        GLES30.glClearColor(skyR, skyG, skyB, 1f)
+        GLES30.glClearColor(skyR * (1f - caveBlend), skyG * (1f - caveBlend), skyB * (1f - caveBlend), 1f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         // ── Corps célestes (avant le terrain — depth mask off pour laisser le terrain gagner) ──
         GLES30.glDepthMask(false)
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-        renderSkyBody(sunTex,  sunAngleFor(dayT),  12f, sunAlphaFor(dayT),  false)
-        renderSkyBody(moonTex, moonAngleFor(dayT),  8f, moonAlphaFor(dayT), true)
-        renderStars(starsAlphaFor(dayT))
+        renderSkyBody(sunTex,  sunAngleFor(dayT),  12f, sunAlphaFor(dayT) * (1f - caveBlend),  false)
+        renderSkyBody(moonTex, moonAngleFor(dayT),  8f, moonAlphaFor(dayT) * (1f - caveBlend), true)
+        renderStars(starsAlphaFor(dayT) * (1f - caveBlend))
         GLES30.glDisable(GLES30.GL_BLEND)
         GLES30.glDepthMask(true)
 
         // ── Rendu chunks ─────────────────────────────────────────────────────
         val headUnderwater = isHeadInWater()
         worldShader?.use()
+        val caveFogEnd = (minOf(world.renderRadiusCave, world.renderRadiusYSurface) - 1) * CHUNK_SIZE.toFloat()
+        GLES30.glUniform3f(caveFogUniform, caveBlend, caveFogEnd * 0.55f, caveFogEnd)
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wUAmbient, if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT))
         GLES30.glUniform1f(wUCaveFloor, CAVE_FLOOR)
@@ -1152,7 +1278,10 @@ internal class CaveRenderer(
                 val dx = pos.first + 0.5 - camX; val dy = pos.second + 0.5 - camY; val dz = pos.third + 0.5 - camZ
                 val distSq = dx*dx + dy*dy + dz*dz
                 if (distSq >= 160.0 * 160.0) continue
-                val score = distSq - (dx * camera.fwdX + dz * camera.fwdZ) * 80.0
+                // Prioritize lights that can reach the nearby scene; numerous small cave
+                // lights farther ahead must not displace the player's nearby torches.
+                val score = distSq / (intensity * intensity).coerceAtLeast(.09f) -
+                    (dx * camera.fwdX + dz * camera.fwdZ) * 4.0
                 if (filled < MAX_LIGHTS) {
                     var i = filled
                     while (i > 0 && lightSelectScore[i - 1] > score) {
@@ -1176,7 +1305,16 @@ internal class CaveRenderer(
             }
             for (i in 0 until filled) {
                 val pos = lightSelectKey[i]!!
-                val flame = if (world.blockAt(pos.first, pos.second, pos.third) == TORCH)
+                val lightBlock = world.blockAt(pos.first, pos.second, pos.third)
+                val naturalLight = lightBlock != TORCH && lightBlock != LAVA
+                val color = if (naturalLight) BlockRegistry.get(lightBlock)?.color ?: 0xFFFFFFFF.toInt() else 0xFFFFAD4D.toInt()
+                lightColors[i*4+0] = ((color ushr 16) and 255) / 255f
+                lightColors[i*4+1] = ((color ushr 8) and 255) / 255f
+                lightColors[i*4+2] = (color and 255) / 255f
+                // Flicker is constant across pixels: evaluate once on the CPU, not in every fragment.
+                lightColors[i*4+3] = if (naturalLight) 1f else
+                    1f + .025f * sin(elapsed * 7.3f + i * 2.1f) + .012f * sin(elapsed * 13.7f + i * 4.3f)
+                val flame = if (lightBlock == TORCH)
                     TorchModel.flame(world.metaAt(pos.first, pos.second, pos.third)) else null
                 lightData[i*4+0] = (pos.first.toDouble()  + (flame?.x ?: .5f) - camX).toFloat()
                 lightData[i*4+1] = (pos.second.toDouble() + (flame?.y ?: .5f) - camY).toFloat()
@@ -1194,6 +1332,7 @@ internal class CaveRenderer(
         }
         lastLightCamX = camX; lastLightCamY = camY; lastLightCamZ = camZ
         GLES30.glUniform4fv(wULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform4fv(wULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
         GLES30.glUniform1i(wULightCount, cachedLightCount)
 
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
@@ -1208,8 +1347,13 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
+            uploadChunkLights(offX, offY, offZ, wULights, wULightColors, wULightCount)
             mesh.draw(wAPos, wAUv, wASky, wATint)
         }
+        // Keep the complete selection available to non-chunk world draws.
+        GLES30.glUniform4fv(wULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform4fv(wULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
+        GLES30.glUniform1i(wULightCount, cachedLightCount)
 
         // ── Rendu LOD (couleur des blocs, visible de loin) ────────────────────
         // Shader dédié : couleur plate (BlockDef.color) × ambiance, pas de texture.
@@ -1220,7 +1364,7 @@ internal class CaveRenderer(
         meshes.keys.forEach { k -> columnsWithMesh.add(lodKey(world.keyToCx(k), world.keyToCz(k))) }
         lodShader?.use()
         GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
-        GLES30.glUniform1f(lodUAmbient, ambientFor(dayT))
+        GLES30.glUniform1f(lodUAmbient, ambientFor(dayT) * (1f - caveBlend))
         // Itère par super-tuiles (8×8 colonnes) : ~125 tests frustum au lieu de 8000.
         for ((sk, keys) in lodGrid) {
             val scx = superKeyToCx(sk) * LOD_SUPER
@@ -1280,11 +1424,13 @@ internal class CaveRenderer(
         // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
         val waterAmbient = if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT)
         waterShader?.use()
+        GLES30.glUniform3f(waterCaveFogUniform, caveBlend, caveFogEnd * 0.55f, caveFogEnd)
         GLES30.glUniformMatrix4fv(wWUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wWUAmbient, waterAmbient)
         GLES30.glUniform1f(wWUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wWUTime, elapsed)
         GLES30.glUniform4fv(wWULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
+        GLES30.glUniform4fv(wWULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
         GLES30.glUniform1i(wWULightCount, cachedLightCount)
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
@@ -1296,6 +1442,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wWUChunkOffset, offX, offY, offZ)
+            uploadChunkLights(offX, offY, offZ, wWULights, wWULightColors, wWULightCount)
             mesh.draw(wWAPos, wWAUv, wWASky)
         }
         GLES30.glDepthMask(true)
@@ -1310,9 +1457,52 @@ internal class CaveRenderer(
             posCallback?.invoke(camera.posString())
         }
 
+        if (com.Atom2Universe.app.BuildConfig.DEBUG) {
+            perfFrames++
+            if (perfLogNs == 0L) perfLogNs = now
+            val period = now - perfLogNs
+            if (period >= 5_000_000_000L) {
+                val runtime = Runtime.getRuntime()
+                val heapMb = (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024)
+                val fps = perfFrames * 1_000_000_000L / period
+                android.util.Log.i("CavePerf", "fps=$fps heapMB=$heapMb genJobs=${generationJobs.get()} " +
+                    "meshJobs=${meshJobs.get()} waitingMeshes=$waitingMeshChunks " +
+                    "uploadKB=${pendingMeshBytes.get() / 1024} lights=${lightSources.size} " +
+                    "waitingFirst=$waitingFirstMeshes firstUploads=$firstMeshUploads provisional=$provisionalUploads " +
+                    "refreshUploads=$refreshMeshUploads lightWorker=${lightWorkerRunning.get()} " +
+                    "lightPending=${world.hasPendingLight()} lodJobs=${lodBuilding.size} " +
+                    "meshes=${meshes.size} position=$cx,$cy,$cz")
+                firstMeshUploads = 0
+                refreshMeshUploads = 0
+                provisionalUploads = 0
+                perfFrames = 0
+                perfLogNs = now
+            }
+        }
         val elapsed2 = System.nanoTime() - now
         val sleepNs = TARGET_FRAME_NS - elapsed2
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
+    }
+
+    /** Exact sphere/AABB rejection: distant cave lights cost no fragments on this chunk. */
+    private fun uploadChunkLights(x: Float, y: Float, z: Float, lights: Int, colors: Int, countUniform: Int) {
+        var count = 0
+        for (i in 0 until cachedLightCount) {
+            val src = i * 4
+            val dx = maxOf(x - lightData[src], 0f, lightData[src] - x - CHUNK_SIZE)
+            val dy = maxOf(y - lightData[src + 1], 0f, lightData[src + 1] - y - CHUNK_SIZE)
+            val dz = maxOf(z - lightData[src + 2], 0f, lightData[src + 2] - z - CHUNK_SIZE)
+            val radius = 16f * lightData[src + 3]
+            if (dx * dx + dy * dy + dz * dz >= radius * radius) continue
+            lightData.copyInto(chunkLightData, count * 4, src, src + 4)
+            lightColors.copyInto(chunkLightColors, count * 4, src, src + 4)
+            count++
+        }
+        if (count > 0) {
+            GLES30.glUniform4fv(lights, count, chunkLightData, 0)
+            GLES30.glUniform4fv(colors, count, chunkLightColors, 0)
+        }
+        GLES30.glUniform1i(countUniform, count)
     }
 
     private fun stairMaskAt(x: Int, y: Int, z: Int) =
@@ -1831,22 +2021,28 @@ internal class CaveRenderer(
     }
 
     private fun refreshChunkLightSources(chunk: Chunk) {
+        val key = world.chunkKey(chunk.cx, chunk.cy, chunk.cz)
+        val previous = chunkLightStates[key]
+        if (previous?.chunk === chunk && previous.version == chunk.version) return
         lightsDirty = true
         val wx0 = chunk.worldX; val wy0 = chunk.worldY; val wz0 = chunk.worldZ
-        val wxEnd = wx0 + CHUNK_SIZE; val wyEnd = wy0 + CHUNK_SIZE; val wzEnd = wz0 + CHUNK_SIZE
-        lightSources.keys.removeAll { (x, y, z) ->
-            x in wx0 until wxEnd && y in wy0 until wyEnd && z in wz0 until wzEnd
-        }
+        previous?.positions?.forEach { lightSources.remove(it) }
+        val positions = ArrayList<Triple<Int, Int, Int>>()
         for (ly in 0 until CHUNK_SIZE)
             for (lz in 0 until CHUNK_SIZE)
                 for (lx in 0 until CHUNK_SIZE) {
-            val intensity = when (chunk.blockAt(lx, ly, lz)) {
+            val intensity = when (val block = chunk.blockAt(lx, ly, lz)) {
                 TORCH -> 1.0f
                 LAVA  -> 0.85f
-                else  -> 0f
+                else  -> BlockRegistry.lightEmission(block) / 15f
             }
-            if (intensity > 0f) lightSources[Triple(wx0 + lx, wy0 + ly, wz0 + lz)] = intensity
+            if (intensity > 0f) {
+                val position = Triple(wx0 + lx, wy0 + ly, wz0 + lz)
+                positions.add(position)
+                lightSources[position] = intensity
+            }
         }
+        chunkLightStates[key] = ChunkLightState(chunk, chunk.version, positions)
     }
 
     // Offsets voisins par bit de face du masque renvoyé par LightEngine.computeSky.
@@ -1881,7 +2077,7 @@ internal class CaveRenderer(
                     if (nb.generated) world.enqueueLight(nb.cx, nb.cy, nb.cz)   // propager la lumière
                 }
                 world.enqueueLight(key)                // re-vérifier ce chunk jusqu'à stabilisation
-            } else if (chunk.lightMeshDirty || chunk.meshDirty) {
+            } else if (chunk.lightMeshDirty) {
                 chunk.lightMeshDirty = false           // stabilisé → un seul rebuild du mesh
                 chunk.meshDirty = true
                 world.rebuildQueue.add(key)
@@ -1894,7 +2090,7 @@ internal class CaveRenderer(
                     if (bd and (1 shl f) == 0) continue
                     val o = LIGHT_FACE_OFFSETS[f]
                     val nb = world.getChunk(chunk.cx + o[0], chunk.cy + o[1], chunk.cz + o[2]) ?: continue
-                    if (nb.generated && !nb.lightMeshDirty) {
+                    if (nb.generated) {
                         nb.meshDirty = true
                         world.rebuildQueue.add(world.chunkKey(nb.cx, nb.cy, nb.cz))
                     }
@@ -3344,6 +3540,7 @@ internal class CaveRenderer(
     private fun scheduleChunkBuild(chunk: com.Atom2Universe.app.games.caves.world.Chunk) {
         val key = world.chunkKey(chunk.cx, chunk.cy, chunk.cz)
         if (!building.add(key)) return
+        generationJobs.incrementAndGet()
         scope.launch(genDispatcher) {
             try {
                 world.generate(chunk)
@@ -3352,6 +3549,7 @@ internal class CaveRenderer(
                 // Libère le chunk (OOM inclus) pour qu'il puisse être regénéré
                 world.abandonChunk(chunk)
             } finally {
+                generationJobs.decrementAndGet()
                 building.remove(key)
             }
         }

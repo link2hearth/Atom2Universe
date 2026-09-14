@@ -83,14 +83,19 @@ internal object ShowcaseMap {
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
             // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z)) continue
+            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !CaveShowcase.contains(x, z)) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
                 (x == ORIGINAL_WIDTH - 1 && z > 55) ||
-                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149))
+                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149 && x !in 184..191))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
+        // Right-hand wing, reached from the village promenade through an eight-block gate.
+        for (z in 52..154) for (x in 184..191) put(x, FLOOR, z, COBBLESTONE)
+        for (z in 56..155) put(156, FLOOR + 1, z, COBBLESTONE)
+        for (x in 156..231) put(x, FLOOR + 1, 155, COBBLESTONE)
+        CaveShowcase.build { x, y, z, id -> put(x, y, z, id) }
         // Two banks of ten/nine species. Five fixed growth snapshots along each bed.
         // Open paths let the player compare front, side and overhead views of crossed sprites.
         for (crop in FarmShowcasePlants.crops.indices) {

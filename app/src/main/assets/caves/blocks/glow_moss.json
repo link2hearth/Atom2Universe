@@ -1,0 +1,17 @@
+{
+  "id": 2606,
+  "name": "glow_moss",
+  "texture_top": "underground:moss",
+  "texture_side": "underground:moss",
+  "texture_bottom": "underground:moss",
+  "color": "#83BC89",
+  "hardness": 0.6,
+  "light_emission": 6,
+  "drop": "glow_moss",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
+}

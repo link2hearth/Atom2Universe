@@ -1,0 +1,15 @@
+{
+  "id": 2609,
+  "name": "giant_mushroom_stem",
+  "texture_top": "underground:stem",
+  "texture_side": "underground:stem",
+  "texture_bottom": "underground:stem",
+  "color": "#C9B5AD",
+  "hardness": 0.6,
+  "light_emission": 0,
+  "drop": "giant_mushroom_stem",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

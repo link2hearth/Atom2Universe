@@ -254,7 +254,7 @@ class CaveActivity : ThemedActivity() {
             context = this, touch = touch,
             worldSeed = save?.seed ?: System.currentTimeMillis(),
             worldId = worldId, savedState = savedState,
-            terrainVersion = save?.terrainVersion ?: 3,
+            terrainVersion = save?.terrainVersion ?: 4,
             worldSource = mapSource,
             modeFactory = if (mapSource != null) { r ->
                 if (mapSource.isShowcase) com.Atom2Universe.app.games.caves.mode.ShowcaseMode(r, mapSource)
@@ -465,6 +465,8 @@ class CaveActivity : ThemedActivity() {
                         else getString(names[zone])
                 } }
                 val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
+                val caveNames = resources.getStringArray(R.array.cave_showcase_underground_names)
+                mode.onCaveCaption = { index -> uiHandler.post { caption.text = caveNames[index] } }
                 val gardenStages = resources.getStringArray(R.array.cave_showcase_garden_stages)
                 mode.onGardenCaption = { crop, stage -> uiHandler.post {
                     caption.text = getString(R.string.cave_showcase_garden_caption,
@@ -545,6 +547,22 @@ class CaveActivity : ThemedActivity() {
                 })
             }
         }
+
+        val loadingCover = android.widget.TextView(this).apply {
+            setText(R.string.cave_loading_terrain)
+            gravity = android.view.Gravity.CENTER
+            setTextColor(android.graphics.Color.WHITE)
+            setBackgroundColor(android.graphics.Color.rgb(12, 15, 20))
+            textSize = 20f
+            isClickable = true
+            isFocusable = true
+        }
+        root.addView(loadingCover, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        renderer.loadingCallback = { loading ->
+            uiHandler.post { loadingCover.visibility = if (loading) View.VISIBLE else View.GONE }
+        }
+        loadingCover.visibility = if (renderer.spawnReady) View.GONE else View.VISIBLE
 
         soundEngine = CaveSoundEngine(lifecycleScope).also {
             it.start()

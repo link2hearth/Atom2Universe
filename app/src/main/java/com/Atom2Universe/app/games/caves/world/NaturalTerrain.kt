@@ -24,12 +24,13 @@ internal object NaturalTerrainSettings {
     }
 }
 
-/** Version 3: a single surface, unstratified caves and world-coordinate deposits. */
+/** A single surface with branching, world-coordinate cave networks. */
 internal class NaturalTerrain(private val seed: Long, private val profiles: List<NaturalBiomeProfile> = NaturalTerrainSettings.profiles) {
     companion object { const val SEA_LEVEL = 74; const val SURFACE_MAX_CY = 255 }
     private val offset = ((seed xor (seed ushr 32)) and 0xFFFFFF).toDouble() * .013
     private data class Relief(val base: Double, val amplitude: Double)
     private val relief = ConcurrentHashMap<Long, Relief>()
+    private val underground by lazy { UndergroundDecor(seed, this) }
     private fun n(x: Double, z: Double, scale: Double, salt: Double) =
         SimplexNoise.noise(x * scale + offset + salt, z * scale - offset)
     private fun smooth(v: Double) = v.coerceIn(0.0, 1.0).let { it * it * (3 - 2 * it) }
@@ -76,7 +77,7 @@ internal class NaturalTerrain(private val seed: Long, private val profiles: List
         val biome = BiomeRegistry.surfaceBiomes.first { it.id == id }
         return topBlock(biome, x.toDouble(), z.toDouble(), h)
     }
-    private fun reliefAt(x: Int, z: Int): Relief = relief.getOrPut((x.toLong() shl 32) xor (z.toLong() and 0xffffffffL)) {
+    private fun reliefAt(x: Int, z: Int): Relief = relief.getOrPut(columnCacheKey(x, z)) {
         if (relief.size > 8192) relief.clear()
         val w = DoubleArray(profiles.size); weights(x * 192.0, z * 192.0, w)
         Relief(profiles.indices.sumOf { w[it] * profiles[it].base }, profiles.indices.sumOf { w[it] * profiles[it].amplitude })
@@ -116,19 +117,39 @@ internal class NaturalTerrain(private val seed: Long, private val profiles: List
         }
     }
 
-    /** Signed field: positive means air. No periodic Y bands, cylinders or flat cavern floors. */
+    /**
+     * Broad galleries and their branches share one warped vertical field, so their
+     * intersections form junctions instead of unrelated pockets. Frequencies and
+     * widths leave room for the shared four-block sampling lattice and the player.
+     * All inputs are world coordinates: no per-chunk RNG or generation-order state.
+     */
     fun caveField(x: Double, y: Double, z: Double): Double {
         val depth = height(x, z) - y
         if (depth < -8) return -10.0
-        val warp = SimplexNoise.noise(x * .008 + offset, y * .012, z * .008) * 9
-        val chamber = SimplexNoise.noise((x + warp) * .012 + offset + 180, y * .019, (z - warp) * .012)
-        val a = SimplexNoise.noise((x + warp) * .022 + offset + 510, y * .029, z * .022)
-        val b = SimplexNoise.noise(x * .024 + offset + 950, y * .031, (z - warp) * .024)
-        val entrance = smooth((n(x, z, .012, 177.0) + .08) / .32)
-        val width = .12 + .035 * smooth(depth / 70) - (1 - entrance) * .16 * (1 - smooth(depth / 24))
-        val tunnel = (width - max(abs(a), abs(b))) * 22
-        val room = (chamber - .44) * 30 - (1 - smooth(depth / 36)) * 14
-        return max(tunnel, room)
+        val warpX = SimplexNoise.noise(x * .006 + offset + 131, y * .008, z * .006) * 18
+        val warpZ = SimplexNoise.noise(x * .006 + offset + 317, y * .008, z * .006) * 18
+        val px = x + warpX; val pz = z + warpZ
+        val region = SimplexNoise.noise(x * .003 + offset + 711, y * .004, z * .003)
+        val spacious = smooth((region + .45) / .9)
+        val vertical = SimplexNoise.noise(px * .009 + offset + 510, y * .027, pz * .009)
+        val main = SimplexNoise.noise(px * .015 + offset + 950, y * .009, pz * .015)
+        val branch = SimplexNoise.noise(px * .023 + offset + 1350, y * .012, pz * .023)
+        val width = .19 + spacious * .07
+        val gallery = min((width - abs(main)) * 34, (.21 - abs(vertical)) * 25)
+        val branches = min((.16 - abs(branch)) * 30, (.18 - abs(vertical)) * 25)
+        val chamber = SimplexNoise.noise(px * .010 + offset + 180, y * .017, pz * .010)
+        val room = (chamber - mix(.57, .34, spacious)) * 38
+        // A smooth union widens mouths into chambers without angular seams.
+        fun join(a: Double, b: Double, radius: Double): Double {
+            val blend = max(radius - abs(a - b), 0.0) / radius
+            return max(a, b) + blend * blend * radius * .25
+        }
+        val network = join(join(gallery, branches, 1.5), room, 3.0)
+        // Open only selected parts of the network at the surface. Underground,
+        // the restriction fades continuously; oceans retain their separate seal.
+        val entrance = smooth((n(x, z, .009, 177.0) - .22) / .24)
+        val cover = (1 - smooth(depth / 32)) * (1 - entrance) * 12
+        return network - cover
     }
     fun caveAt(x: Int, y: Int, z: Int): Boolean {
         val h = height(x.toDouble(), z.toDouble()).toInt()
@@ -170,7 +191,8 @@ internal class NaturalTerrain(private val seed: Long, private val profiles: List
         return when { geology > .44 -> BASALT; geology < -.45 -> 2201; geology > .23 -> GRANITE; geology < -.28 -> QUARTZ; else -> STONE }
     }
 
-    fun generate(chunk: Chunk, landscape: CozyLandscape) {
+    @JvmOverloads
+    fun generate(chunk: Chunk, landscape: CozyLandscape, decorateUnderground: Boolean = true) {
         val biomes = BiomeRegistry.surfaceBiomes
         val heights = IntArray(256); val tops = ShortArray(256); val indices = IntArray(256)
         for (z in 0..15) for (x in 0..15) {
@@ -208,6 +230,7 @@ internal class NaturalTerrain(private val seed: Long, private val profiles: List
             }
             chunk.setBlock(x, y, z, block)
         }
+        if (decorateUnderground) underground.decorate(chunk, heights, field)
         landscape.decorate(chunk, heights, tops, indices)
     }
 }

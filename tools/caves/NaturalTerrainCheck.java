@@ -31,18 +31,45 @@ public class NaturalTerrainCheck {
    CozyLandscape decor=new CozyLandscape(seed,(x,z)->terrain.caveAt(x,(int)terrain.height(x,z),z),terrain);
    int carved=0,solid=0;
    for(int cy:new int[]{-1,-59,-60,-61,-69,-70,-71,-129})for(int cx=-1;cx<=1;cx++){
-    Chunk c=new Chunk(cx,cy,-1);terrain.generate(c,decor);
+    Chunk c=new Chunk(cx,cy,-1);terrain.generate(c,decor,false);
     for(int z=0;z<16;z++)for(int y=0;y<16;y++)for(int x=0;x<16;x++){
      boolean air=c.blockAt(x,y,z)==0;
      check(air==terrain.caveAt(c.getWorldX()+x,c.getWorldY()+y,c.getWorldZ()+z),"Shared cave lattice at negative coordinates");
      if(air)carved++;else solid++;
     }
-    Chunk again=new Chunk(cx,cy,-1);terrain.generate(again,decor);check(Arrays.equals(c.getBlocks(),again.getBlocks()),"Load-order independent chunk");
+    Chunk decorated=new Chunk(cx,cy,-1);terrain.generate(decorated,decor);
+    // Generate a neighbour between repeats to catch leaked worker-buffer state.
+    terrain.generate(new Chunk(cx+1,cy+1,-2),decor);
+    Chunk again=new Chunk(cx,cy,-1);terrain.generate(again,decor);
+    check(Arrays.equals(decorated.getBlocks(),again.getBlocks()),"Load-order independent decorations");
+    for(int i=0;i<c.getBlocks().length;i++) {
+     short raw=c.getBlocks()[i],result=decorated.getBlocks()[i];
+     check(raw==0 || result!=0,"Decorations do not excavate rock");
+     if(raw>=3000 && raw<=3008)check(raw==result,"Decorations preserve ore deposits");
+    }
    }
    check(carved>500 && solid>carved,"Caves with solid mass around them");
    for(int cy:new int[]{256,625,1000}){Chunk sky=new Chunk(0,cy,0);terrain.generate(sky,decor);for(short b:sky.getBlocks())check(b==0,"No sky islands");}
-   World world=new World(seed,null,3,null);float[] spawn=world.findSpawnPoint();int sx=(int)Math.floor(spawn[0]),sy=Math.round(spawn[1]-1.62f),sz=(int)Math.floor(spawn[2]);
+   // Surface queries must preserve a solid seabed with the new cave network.
+   for(int z=-2048;z<=2048;z+=64)for(int x=-2048;x<=2048;x+=64){int h=(int)terrain.height(x,z);if(h<=74)for(int d=0;d<8;d++)check(!terrain.caveAt(x,h-d,z),"Sealed seabed");}
+   World world=new World(seed,null,4,null);float[] spawn=world.findSpawnPoint();int sx=(int)Math.floor(spawn[0]),sy=Math.round(spawn[1]-1.62f),sz=(int)Math.floor(spawn[2]);
    check(sy>74 && world.blockAt(sx,sy,sz,null)==0 && world.blockAt(sx,sy+1,sz,null)==0 && world.blockAt(sx,sy-1,sz,null)!=0,"Safe natural spawn");
+   Method priority=World.class.getDeclaredMethod("streamPriority",int.class,int.class,int.class,float.class,float.class);
+   priority.setAccessible(true);
+   for(int[] direction:new int[][]{{1,0},{-1,0},{0,1},{0,-1}}) {
+    int dx=direction[0],dz=direction[1];
+    int behind=(int)priority.invoke(world,-dx,0,-dz,(float)dx,(float)dz);
+    int farAhead=(int)priority.invoke(world,8*dx,0,8*dz,(float)dx,(float)dz);
+    check(behind<farAhead,"Nearby terrain behind the player precedes distant terrain ahead");
+    check((int)priority.invoke(world,0,-1,0,(float)dx,(float)dz)<farAhead,"Ground below precedes distant terrain ahead");
+   }
+   Chunk owner=world.pregenerateChunk(0,-1,0);
+   MeshLightingSnapshot snapshot=new MeshLightingSnapshot(owner,world);
+   check(snapshot.isCurrent(),"Fresh mesh snapshot");
+   world.pregenerateChunk(1,-1,0);
+   check(snapshot.belongsTo(owner) && !snapshot.isCurrent(),"New neighbour permits provisional geometry with refreshed light later");
+   world.abandonChunk(owner);
+   check(!snapshot.belongsTo(world.pregenerateChunk(0,-1,0)),"Old mesh cannot attach to a replacement chunk");
    System.out.printf(Locale.ROOT,"Seed %d: height %.0f..%.0f, sampled slope %.2f, caves %.1f%%, spawn %d/%d/%d%n",seed,min,max,slope,carved*100.0/(carved+solid),sx,sy,sz);
   }
   check(seen.size()>=18,"Biome diversity");
