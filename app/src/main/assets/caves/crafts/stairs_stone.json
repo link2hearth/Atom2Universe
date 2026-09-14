@@ -1,10 +1,10 @@
 {
+  "result_count": 1,
+  "result": 2404,
   "ingredients": [
     {
       "id": 2000,
       "count": 1
     }
-  ],
-  "result": 2011,
-  "result_count": 1
+  ]
 }

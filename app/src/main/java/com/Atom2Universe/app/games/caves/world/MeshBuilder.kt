@@ -26,6 +26,19 @@ internal object MeshBuilder {
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
+            if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)) {
+                val sky = maxOf(chunk.skyAt(lx, ly, lz) / 15f, skyOf(chunk, world, lx, ly + 1, lz, cache))
+                for (face in PartialBlockModel.faces(meta, BlockRegistry.get(block)?.slab == true)) {
+                    val packed = face.direction * 4096f + BlockRegistry.getLayerForFace(block, face.direction, AIR)
+                    for (i in intArrayOf(0, 1, 2, 0, 2, 3)) {
+                        val v = face.vertices[i]
+                        val u = when (face.direction) { 2, 3 -> v[2]; else -> v[0] }
+                        val vv = if (face.direction < 2) v[2] else 1f - v[1]
+                        buf.add7(x+v[0], y+v[1], z+v[2], u, vv, packed, sky)
+                    }
+                }
+                continue
+            }
             val knotFace = if (BlockRegistry.isWood(block))
                 MeadowTextures.rareKnotFace(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz)
                 else -1
@@ -57,7 +70,7 @@ internal object MeshBuilder {
         world.skyLightAt(chunk, lx, ly, lz, cache) / 15f
 
     private fun isVisible(block: Short) =
-        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block)
+        block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || (BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)
 
     private fun shouldRenderFace(block: Short, neighbor: Short): Boolean {
         if (!isVisible(neighbor)) return false

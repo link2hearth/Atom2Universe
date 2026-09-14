@@ -1,0 +1,16 @@
+{
+  "id": 2404,
+  "name": "stairs_stone",
+  "texture_top": "cozy:material:3:A0ABB4",
+  "texture_side": "cozy:material:3:A0ABB4",
+  "texture_bottom": "cozy:material:3:A0ABB4",
+  "color": "#A0ABB4",
+  "hardness": 3.0,
+  "drop": "stairs_stone",
+  "harvest_category": "recoverable",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "stairs": true
+}

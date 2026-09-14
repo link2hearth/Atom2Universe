@@ -1,0 +1,16 @@
+{
+  "id": 2506,
+  "name": "slab_brick_grey",
+  "texture_top": "cozy:material:12:9DA5AE",
+  "texture_side": "cozy:material:12:9DA5AE",
+  "texture_bottom": "cozy:material:12:9DA5AE",
+  "color": "#9DA5AE",
+  "hardness": 3.0,
+  "drop": "slab_brick_grey",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

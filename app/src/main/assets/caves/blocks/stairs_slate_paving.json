@@ -1,0 +1,16 @@
+{
+  "id": 2411,
+  "name": "stairs_slate_paving",
+  "texture_top": "cozy:material:15",
+  "texture_side": "cozy:material:15",
+  "texture_bottom": "cozy:material:15",
+  "color": "#8997A3",
+  "hardness": 2.0,
+  "drop": "stairs_slate_paving",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "stairs": true,
+  "harvest_category": "recoverable"
+}

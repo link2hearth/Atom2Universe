@@ -36,6 +36,8 @@ internal data class BlockDef(
     val tags: Set<String> = emptySet(),
     val placementRule: String = "any",
     val replaceable: Boolean = false,
+    val stairs: Boolean = false,
+    val slab: Boolean = false,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
@@ -83,6 +85,8 @@ internal data class BlockDef(
                 tags            = j.optJSONArray("tags")?.let { a -> (0 until a.length()).map { a.getString(it) }.toSet() } ?: emptySet(),
                 placementRule   = j.optString("placement_rule", "any"),
                 replaceable     = j.optBoolean("replaceable", false),
+                stairs          = j.optBoolean("stairs", false),
+                slab            = j.optBoolean("slab", false),
             )
         }
     }

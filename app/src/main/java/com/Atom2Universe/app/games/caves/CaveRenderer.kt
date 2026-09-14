@@ -210,11 +210,11 @@ internal class CaveRenderer(
     var playerMode = PlayerMode.WALK
     @Volatile var pendingMode: PlayerMode? = null
     var isCreative = false
-    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }
+    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply { metaAt = { x, y, z -> world.metaAt(x, y, z) } }
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
-    private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int)
+    private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0 }
     private var mineTarget: RayHit? = null
     private var mineDamage = 0f
 
@@ -1929,7 +1929,14 @@ internal class CaveRenderer(
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
-                val hit = if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
+                if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true)) {
+                    val stairHit = PartialBlockModel.intersect(world.metaAt(bx, by, bz),
+                        startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, BlockRegistry.get(b)?.slab == true)
+                    if (stairHit != null) return RayHit(bx, by, bz, stairHit.nx, stairHit.ny, stairHit.nz).apply {
+                        hitY = startY + dirY * stairHit.distance - by
+                    }
+                }
+                val hit = if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true)) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
                     startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ))
                 else !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
@@ -1937,7 +1944,7 @@ internal class CaveRenderer(
                     BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ),
                 ) == true
-                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz)
+                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz).apply { hitY = startY + dirY * entryDistance - by }
             }
             when {
                 tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
@@ -2323,6 +2330,19 @@ internal class CaveRenderer(
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
+        if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)) {
+            val vertices = ArrayList<Float>()
+            val normals = arrayOf(floatArrayOf(0f,ep,0f), floatArrayOf(0f,-ep,0f),
+                floatArrayOf(ep,0f,0f), floatArrayOf(-ep,0f,0f), floatArrayOf(0f,0f,ep), floatArrayOf(0f,0f,-ep))
+            for (face in PartialBlockModel.faces(world.metaAt(target.bx, target.by, target.bz), BlockRegistry.get(block)?.slab == true)) {
+                val n = normals[face.direction]
+                for (i in intArrayOf(0,1,2,0,2,3)) {
+                    val v = face.vertices[i]
+                    vertices.addAll(listOf(x+v[0]+n[0], y+v[1]+n[1], z+v[2]+n[2], cr,cg,cb))
+                }
+            }
+            return vertices.toFloatArray()
+        }
         if (block == TORCH) return TorchModel.highlight(world.metaAt(target.bx, target.by, target.bz),
             x, y, z, cr, cg, cb)
         if (isDecoration(block)) {
@@ -3345,7 +3365,14 @@ internal class CaveRenderer(
         if (isInsidePlayer(px, py, pz)) return
         val existing = world.blockAt(px, py, pz)
         if (existing != AIR && BlockRegistry.get(existing)?.replaceable != true) return
-        val orientMeta = if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        val orientMeta = if (BlockRegistry.get(blockType)?.slab == true) {
+            (if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
+        } else if (BlockRegistry.get(blockType)?.stairs == true) {
+            val facing = if (abs(camera.fwdX) > abs(camera.fwdZ)) {
+                if (camera.fwdX > 0) 1 else 3
+            } else if (camera.fwdZ > 0) 0 else 2
+            (facing or if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
+        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         world.setMeta(px, py, pz, orientMeta)

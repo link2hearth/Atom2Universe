@@ -1,0 +1,16 @@
+{
+  "id": 2507,
+  "name": "slab_brick_red",
+  "texture_top": "cozy:material:12:BC8171",
+  "texture_side": "cozy:material:12:BC8171",
+  "texture_bottom": "cozy:material:12:BC8171",
+  "color": "#BC8171",
+  "hardness": 3.0,
+  "drop": "slab_brick_red",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

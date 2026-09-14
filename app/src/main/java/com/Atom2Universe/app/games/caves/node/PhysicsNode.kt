@@ -5,6 +5,7 @@ import kotlin.math.*
 
 class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
+    var metaAt: (Int, Int, Int) -> Byte = { _, _, _ -> 0 }
     var velocityY = 0.0
     var onGround  = false
 
@@ -105,16 +106,16 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         if (!collidesAt(newX, y, z)) {
             x = newX
         } else if (!isCrouching && (onGround || inWater) && dx != 0.0 &&
-                   !collidesAt(newX, y + STEP_MAX, z)) {
-            if (stepUpRemaining == 0.0) stepUpRemaining = STEP_MAX
+                   (!collidesAt(newX, y + .5, z) || !collidesAt(newX, y + STEP_MAX, z))) {
+            if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(newX, y + .5, z)) .5 else STEP_MAX
         }
 
         val newZ = z + dz
         if (!collidesAt(x, y, newZ)) {
             z = newZ
         } else if (!isCrouching && (onGround || inWater) && dz != 0.0 &&
-                   !collidesAt(x, y + STEP_MAX, newZ)) {
-            if (stepUpRemaining == 0.0) stepUpRemaining = STEP_MAX
+                   (!collidesAt(x, y + .5, newZ) || !collidesAt(x, y + STEP_MAX, newZ))) {
+            if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(x, y + .5, newZ)) .5 else STEP_MAX
         }
 
         // ── Recul (knockback) ─────────────────────────────────────────────────
@@ -249,7 +250,14 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val z0 = floor(pz - PLAYER_W).toInt();  val z1 = floor(pz + PLAYER_WI).toInt()
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = blockAt(bx, by, bz)
-            if (b != AIR && !isDecoration(b) && !isWater(b)) return true
+            if (b != AIR && !isDecoration(b) && !isWater(b)) {
+                if (BlockRegistry.get(b)?.stairs != true && BlockRegistry.get(b)?.slab != true) return true
+                if (PartialBlockModel.boxes(metaAt(bx, by, bz), BlockRegistry.get(b)?.slab == true).any { box ->
+                    px + PLAYER_WI > bx + box.x && px - PLAYER_W < bx + box.x + .5 &&
+                    py + top > by + box.y && py - PLAYER_H_BELOW < by + box.y + .5 &&
+                    pz + PLAYER_WI > bz + box.z && pz - PLAYER_W < bz + box.z + .5
+                }) return true
+            }
         }
         return false
     }

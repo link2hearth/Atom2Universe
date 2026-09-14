@@ -1,0 +1,16 @@
+{
+  "id": 2505,
+  "name": "slab_cobblestone",
+  "texture_top": "cozy:nature:0",
+  "texture_side": "cozy:nature:0",
+  "texture_bottom": "cozy:nature:0",
+  "color": "#929DA4",
+  "hardness": 3,
+  "drop": "slab_cobblestone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

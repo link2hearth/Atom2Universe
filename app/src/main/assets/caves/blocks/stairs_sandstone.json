@@ -1,0 +1,16 @@
+{
+  "id": 2408,
+  "name": "stairs_sandstone",
+  "texture_top": "cozy:nature:2",
+  "texture_side": "cozy:nature:2",
+  "texture_bottom": "cozy:nature:2",
+  "color": "#CBB68D",
+  "hardness": 2,
+  "drop": "stairs_sandstone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "stairs": true,
+  "harvest_category": "recoverable"
+}
