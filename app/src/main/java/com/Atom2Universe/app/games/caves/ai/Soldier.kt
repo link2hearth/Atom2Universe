@@ -11,21 +11,25 @@ import kotlin.random.Random
 /** Réglages d'un soldat. Angles en degrés, distances en blocs, durées en secondes. */
 internal data class SoldierTuning(
     val fovDegrees: Float = 110f,
-    val sightRange: Double = 45.0,
+    val sightRange: Double = 65.0,
+    /** Après un bruit ou un impact, peut identifier le tireur au bout de l'arène, sans voir à travers les murs. */
+    val alertedSightRange: Double = 160.0,
     /** En dessous de cette distance, il sent le joueur même dans son dos. */
     val closeAwareness: Double = 2.5,
-    val hearingRange: Double = 35.0,
+    val hearingRange: Double = 160.0,
     /** Sans rien voir ni entendre pendant ce temps, il abandonne la traque. */
     val memorySeconds: Float = 8f,
     val reactionMin: Float = 0.35f,
     val reactionMax: Float = 0.6f,
-    val aimErrorStartDeg: Float = 7f,
-    val aimErrorMinDeg: Float = 1.2f,
-    val aimErrorMaxDeg: Float = 10f,
+    val aimErrorStartDeg: Float = 2f,
+    val aimErrorMinDeg: Float = 0.18f,
+    val aimErrorMaxDeg: Float = 3f,
     /** De combien la visée se resserre chaque seconde où il garde le joueur en vue. */
-    val aimSettleDegPerSec: Float = 4f,
-    /** De combien elle se dérègle chaque seconde, par bloc/s de course du joueur en travers. */
-    val aimMovePenaltyDeg: Float = 1.2f,
+    val aimSettleDegPerSec: Float = 3f,
+    /** Écart supplémentaire par bloc/s de course en travers, sans accumulation dans le temps. */
+    val aimMovePenaltyDeg: Float = 0.04f,
+    val bulletSpeed: Float = 120f,
+    val bulletRange: Float = 160f,
     val fireInterval: Float = 0.45f,
     val magazineSize: Int = 10,
     val reloadSeconds: Float = 2.2f,
@@ -33,6 +37,9 @@ internal data class SoldierTuning(
     val runSpeed: Float = 4.2f,
     /** Rayon (en blocs) où il cherche un abri pour recharger. */
     val coverRadius: Int = 10,
+    val coverHoldSeconds: Float = 1.2f,
+    val coverCooldownSeconds: Float = 5f,
+    val repositionSeconds: Float = 3f,
 )
 
 /** Le joueur tel que les soldats le perçoivent à cette image. Coordonnées locales à la carte, réutilisé d'une image à l'autre. */
@@ -58,9 +65,10 @@ internal fun interface ShotSink {
  * ligne de vue), l'entend tirer, ou se fait toucher. Il retient alors la *dernière position connue*
  * et l'oublie au bout de [SoldierTuning.memorySeconds] sans nouvelle information : on peut le semer.
  *
- * À chaque image, il choisit un état, dans cet ordre de priorité :
+ * Rechargement et repli sont menés à leur terme ; les autres actions sont choisies par scores :
  * - [State.RELOAD] : chargeur vide, il court vers un abri et recharge ;
- * - [State.ENGAGE] : il voit le joueur, il s'arrête et tire, après un temps de réaction ;
+ * - [State.COVER] : blessé sous le feu, il rejoint un abri et attend avant de ressortir ;
+ * - [State.ENGAGE] : il voit le joueur, tire après réaction et change parfois de position ;
  * - [State.SEARCH] : il l'a perdu de vue, il va vérifier la dernière position connue et regarde autour ;
  * - [State.PATROL] : il ne sait rien, il se promène d'un point à l'autre.
  *
@@ -73,12 +81,27 @@ internal class Soldier(
     private val finder: PathFinder,
     private val rng: Random,
     val tuning: SoldierTuning = SoldierTuning(),
+    private val clearance: BodyClearance? = null,
 ) {
-    enum class State { PATROL, ENGAGE, SEARCH, RELOAD }
+    enum class State { PATROL, ENGAGE, SEARCH, COVER, RELOAD }
 
     /** Déplacement le long de la grille (lecture seule à l'extérieur : position, chemin pour le debug). */
-    val follower = PathFollower(grid)
+    val follower = PathFollower(grid, clearance)
+    private var blockedFor = 0f
+    val reloadProgress: Float get() = if (reloading && follower.arrived)
+        (1f - reloadLeft / tuning.reloadSeconds).coerceIn(0f, 1f) else 0f
     private val path = IntList(128)
+    private val coverCandidates = IntArray(8)
+    private val coverDistances = DoubleArray(8)
+    private var recentHitLeft = 0f
+    private var coverCooldown = 0f
+    private var coverHoldLeft = 0f
+    private var coverTravelLeft = 0f
+    private var repositionLeft = tuning.repositionSeconds
+    private var reloading = false
+
+    /** Santé propre du soldat, fournie par le combat ; aucune information sur le joueur. */
+    var healthFraction = 1f
 
     var state = State.PATROL; private set
     val x: Double get() = follower.x
@@ -119,6 +142,9 @@ internal class Soldier(
         memoryAge = 0f; searchNode = -1
         ammo = tuning.magazineSize; reloadLeft = 0f; fireCooldown = 0f
         patrolWait = 0f
+        recentHitLeft = 0f; coverCooldown = 0f; coverHoldLeft = 0f; coverTravelLeft = 0f
+        repositionLeft = tuning.repositionSeconds; reloading = false
+        healthFraction = 1f; aimErrorDeg = tuning.aimErrorStartDeg; reactionLeft = 0f
     }
 
     /** Un coup de feu du joueur part de (x, eyeY, z) : s'il est à portée d'oreille, il sait où aller voir. */
@@ -126,16 +152,29 @@ internal class Soldier(
         val dx = x - follower.x; val dz = z - follower.z
         if (dx * dx + dz * dz > tuning.hearingRange * tuning.hearingRange) return
         remember(x, eyeY, z)
+        if (!seesPlayer) yawDeg = yawTo(x, z)
     }
 
     /** Il vient d'être touché par une balle tirée de (x, eyeY, z) : il se retourne vers le tireur. */
     fun onDamaged(fromX: Double, fromEyeY: Double, fromZ: Double) {
         remember(fromX, fromEyeY, fromZ)
+        recentHitLeft = 2f
         if (!seesPlayer) yawDeg = yawTo(fromX, fromZ)
     }
 
     fun update(dt: Float, player: PlayerSnapshot, shots: ShotSink) {
         justSpotted = false
+        if (clearance != null && !follower.arrived) {
+            blockedFor = if (isMoving) 0f else blockedFor + dt
+            if (blockedFor > .7f) {
+                val goal = follower.path[follower.path.size - 1]
+                val from = grid.nodeUnder(x, y, z)
+                if (finder.findPath(from, goal, path, clearance)) follower.follow(path)
+                blockedFor = 0f
+            }
+        }
+        recentHitLeft = (recentHitLeft - dt).coerceAtLeast(0f)
+        coverCooldown = (coverCooldown - dt).coerceAtLeast(0f)
         if (fireCooldown > 0f) fireCooldown = (fireCooldown - dt).coerceAtLeast(0f)
 
         // 1. Perception et mémoire.
@@ -156,25 +195,32 @@ internal class Soldier(
             }
         }
 
-        // 2. Le rechargement se termine où qu'il en soit.
-        if (reloadLeft > 0f) {
-            reloadLeft -= dt
-            if (reloadLeft <= 0f) {
-                reloadLeft = 0f
-                ammo = tuning.magazineSize
+        // 2. Une action engagée dure jusqu'à son terme : pas d'oscillation à chaque image.
+        val previous = state
+        val decision = when {
+            reloading -> State.RELOAD
+            previous == State.COVER && coverHoldLeft > 0f -> State.COVER
+            else -> SoldierDecision.choose(seesPlayer, knowsPlayer, healthFraction,
+                recentHitLeft > 0f, coverCooldown <= 0f)
+        }
+        state = decision
+        if (state == State.COVER && previous != State.COVER) {
+            coverCooldown = tuning.coverCooldownSeconds
+            if (routeToCover()) {
+                coverHoldLeft = tuning.coverHoldSeconds
+                coverTravelLeft = 4f
+            } else {
+                state = if (seesPlayer) State.ENGAGE else State.SEARCH
             }
         }
-
-        // 3. Décision, puis action.
-        state = when {
-            reloadLeft > 0f -> State.RELOAD
-            seesPlayer -> State.ENGAGE
-            knowsPlayer -> State.SEARCH
-            else -> State.PATROL
+        if (state == State.ENGAGE && previous != State.ENGAGE) {
+            follower.stop()
+            repositionLeft = tuning.repositionSeconds
         }
         isMoving = false
         when (state) {
             State.RELOAD -> actReload(dt)
+            State.COVER -> actCover(dt)
             State.ENGAGE -> actEngage(dt, player, shots)
             State.SEARCH -> actSearch(dt)
             State.PATROL -> actPatrol(dt)
@@ -186,7 +232,8 @@ internal class Soldier(
     private fun canSee(p: PlayerSnapshot): Boolean {
         val dx = p.x - follower.x; val dz = p.z - follower.z
         val distSq = dx * dx + dz * dz
-        if (distSq > tuning.sightRange * tuning.sightRange) return false
+        val range = if (knowsPlayer) tuning.alertedSightRange else tuning.sightRange
+        if (distSq > range * range) return false
         // Déjà en train de le suivre des yeux, ou collé à lui : inutile qu'il soit dans le champ de vision.
         if (!seesPlayer && distSq > tuning.closeAwareness * tuning.closeAwareness) {
             if (abs(angleDiff(yawTo(p.x, p.z), yawDeg)) > tuning.fovDegrees / 2f) return false
@@ -203,8 +250,15 @@ internal class Soldier(
     // ── Actions ───────────────────────────────────────────────────────────────
 
     private fun actEngage(dt: Float, p: PlayerSnapshot, shots: ShotSink) {
-        follower.stop()
         searchNode = -1   // en le perdant de vue, il repartira vers la position la plus récente
+        val inWeaponRange = (p.x - x) * (p.x - x) + (p.z - z) * (p.z - z) <=
+            tuning.bulletRange * tuning.bulletRange * .81
+        repositionLeft -= dt
+        if (inWeaponRange && follower.arrived && repositionLeft <= 0f) {
+            repositionLeft = tuning.repositionSeconds + rng.nextFloat()
+            reposition()
+        }
+        if (inWeaponRange && !follower.arrived) isMoving = follower.advance(dt, tuning.patrolSpeed)
         yawDeg = yawTo(p.x, p.z)
 
         // La visée se resserre tant qu'il garde le joueur en vue ; une course en travers la dérègle.
@@ -213,12 +267,25 @@ internal class Soldier(
         val ux = dx / dist; val uz = dz / dist
         val along = p.velX * ux + p.velZ * uz
         val lateral = sqrt((p.velX - along * ux).let { it * it } + (p.velZ - along * uz).let { it * it })
-        aimErrorDeg = (aimErrorDeg - tuning.aimSettleDegPerSec * dt + (lateral * tuning.aimMovePenaltyDeg * dt).toFloat())
+        val targetError = (tuning.aimErrorMinDeg + lateral.toFloat() * tuning.aimMovePenaltyDeg)
             .coerceIn(tuning.aimErrorMinDeg, tuning.aimErrorMaxDeg)
+        val correction = tuning.aimSettleDegPerSec * dt
+        aimErrorDeg += (targetError - aimErrorDeg).coerceIn(-correction, correction)
 
+        if (dist > tuning.bulletRange * .9) {
+            val goal = grid.nodeUnder(lastKnownX - ux * 2, lastKnownEyeY - EYE_HEIGHT,
+                lastKnownZ - uz * 2)
+            if (follower.arrived && goal >= 0) pathTo(goal)
+            if (!follower.arrived) isMoving = follower.advance(dt, tuning.runSpeed)
+            return
+        }
         if (reactionLeft > 0f) { reactionLeft -= dt; return }
         if (fireCooldown > 0f) return
         if (ammo <= 0) { startReload(); return }
+
+        // La position a pu changer depuis la perception : aucun tir à travers un angle de mur.
+        if (!LineOfSight.isClear(x, y + EYE_HEIGHT - 0.15, z,
+                p.x, p.eyeY - AIM_BELOW_EYE, p.z, world)) return
 
         fire(p, shots)
         ammo--
@@ -228,7 +295,13 @@ internal class Soldier(
 
     private fun fire(p: PlayerSnapshot, shots: ShotSink) {
         val ox = follower.x; val oy = follower.y + EYE_HEIGHT - 0.15; val oz = follower.z
-        var dx = p.x - ox; var dy = (p.eyeY - AIM_BELOW_EYE) - oy; var dz = p.z - oz
+        // Anticipation partielle de la course visible, limitée à 1,5 s : un changement de
+        // direction après le départ de la balle permet toujours de l'esquiver.
+        val distance = sqrt((p.x - ox) * (p.x - ox) + (p.z - oz) * (p.z - oz))
+        val lead = (distance / tuning.bulletSpeed).coerceAtMost(1.5) * 0.85
+        var dx = p.x + p.velX * lead - ox
+        var dy = (p.eyeY - AIM_BELOW_EYE) - oy
+        var dz = p.z + p.velZ * lead - oz
         var len = sqrt(dx * dx + dy * dy + dz * dz)
         if (len < 1e-6) return
         dx /= len; dy /= len; dz /= len
@@ -247,18 +320,61 @@ internal class Soldier(
     }
 
     private fun startReload() {
+        reloading = true
         reloadLeft = tuning.reloadSeconds
         state = State.RELOAD
-        val cover = findCover()
-        if (cover >= 0) pathTo(cover) else follower.stop()
+        coverTravelLeft = 4f
+        routeToCover()
+        searchNode = -1
     }
 
     private fun actReload(dt: Float) {
-        if (!follower.arrived) {
+        if (!follower.arrived && coverTravelLeft > 0f) {
+            coverTravelLeft -= dt
             isMoving = follower.advance(dt, tuning.runSpeed)
             yawDeg = follower.yawDeg
-        } else if (knowsPlayer) {
-            yawDeg = yawTo(lastKnownX, lastKnownZ)
+            return
+        }
+        follower.stop()
+        if (knowsPlayer) yawDeg = yawTo(lastKnownX, lastKnownZ)
+        // Le compte à rebours commence une fois arrivé ; faute d'abri, recharge sur place.
+        reloadLeft = (reloadLeft - dt).coerceAtLeast(0f)
+        if (reloadLeft <= 0f) {
+            ammo = tuning.magazineSize
+            reloading = false
+        }
+    }
+
+    private fun actCover(dt: Float) {
+        searchNode = -1
+        if (!follower.arrived && coverTravelLeft > 0f) {
+            coverTravelLeft -= dt
+            isMoving = follower.advance(dt, tuning.runSpeed)
+            yawDeg = follower.yawDeg
+            return
+        }
+        follower.stop()
+        if (knowsPlayer) yawDeg = yawTo(lastKnownX, lastKnownZ)
+        coverHoldLeft = (coverHoldLeft - dt).coerceAtLeast(0f)
+        if (coverHoldLeft <= 0f) coverCooldown = tuning.coverCooldownSeconds
+    }
+
+    /** Petit déplacement latéral, sur le même sol, en conservant une ligne de tir. */
+    private fun reposition() {
+        val from = grid.nodeUnder(x, y, z)
+        if (from < 0) return
+        val angle = Math.toRadians(yawDeg.toDouble())
+        val side = if (rng.nextBoolean()) 1 else -1
+        for (sign in intArrayOf(side, -side)) {
+            val nx = floor(x + cos(angle) * sign * 2).toInt()
+            val nz = floor(z - sin(angle) * sign * 2).toInt()
+            val n = grid.nodeAt(nx, grid.nodeY[from], nz)
+            if (n < 0 || !LineOfSight.isClear(nx + 0.5, y + EYE_HEIGHT - 0.15, nz + 0.5,
+                    lastKnownX, lastKnownEyeY - AIM_BELOW_EYE, lastKnownZ, world)) continue
+            if (finder.findPath(from, n, path, clearance) && path.size in 2..4) {
+                follower.follow(path)
+                return
+            }
         }
     }
 
@@ -302,31 +418,52 @@ internal class Soldier(
 
     private fun pathTo(goal: Int) {
         val from = grid.nodeUnder(follower.x, follower.y, follower.z)
-        if (from >= 0 && finder.findPath(from, goal, path)) follower.follow(path) else follower.stop()
+        if (from >= 0 && finder.findPath(from, goal, path, clearance)) follower.follow(path) else follower.stop()
     }
 
     /**
-     * La case la plus proche (dans [SoldierTuning.coverRadius]) où le joueur, depuis sa dernière
-     * position connue, ne verrait pas la tête du soldat debout. -1 s'il n'y en a pas.
+     * Rejoint un des abris proches accessibles, caché depuis la dernière position connue.
+     * Renvoie faux si aucun des candidats retenus n'a de chemin raisonnablement court.
      */
-    private fun findCover(): Int {
-        if (!knowsPlayer) return -1
+    private fun routeToCover(): Boolean {
+        follower.stop()
+        searchNode = -1
+        if (!knowsPlayer) return false
+        val from = grid.nodeUnder(x, y, z)
+        if (from < 0) return false
+        coverCandidates.fill(-1)
+        coverDistances.fill(Double.POSITIVE_INFINITY)
         val cx = floor(follower.x).toInt(); val cz = floor(follower.z).toInt()
         val r = tuning.coverRadius
-        var best = -1
-        var bestDistSq = Int.MAX_VALUE
         for (nz in cz - r..cz + r) for (nx in cx - r..cx + r) {
             val distSq = (nx - cx) * (nx - cx) + (nz - cz) * (nz - cz)
-            if (distSq > r * r || distSq >= bestDistSq) continue
+            if (distSq > r * r || distSq >= coverDistances.last()) continue
             for (ny in 0 until grid.sizeY) {
                 val n = grid.nodeAt(nx, ny, nz)
                 if (n < 0) continue
                 val hidden = !LineOfSight.isClear(lastKnownX, lastKnownEyeY, lastKnownZ,
                     nx + 0.5, ny + EYE_HEIGHT, nz + 0.5, world)
-                if (hidden) { best = n; bestDistSq = distSq; break }
+                if (hidden) {
+                    val distance = distSq.toDouble() + abs(ny - y) * 2.0
+                    var slot = coverCandidates.lastIndex
+                    if (distance >= coverDistances[slot]) continue
+                    while (slot > 0 && distance < coverDistances[slot - 1]) {
+                        coverCandidates[slot] = coverCandidates[slot - 1]
+                        coverDistances[slot] = coverDistances[slot - 1]
+                        slot--
+                    }
+                    coverCandidates[slot] = n; coverDistances[slot] = distance
+                }
             }
         }
-        return best
+        // Huit candidats au maximum : un abri proche à vol d'oiseau peut être inaccessible.
+        for (n in coverCandidates) {
+            if (n >= 0 && finder.findPath(from, n, path, clearance) && path.size <= tuning.coverRadius * 3 + 1) {
+                follower.follow(path)
+                return true
+            }
+        }
+        return false
     }
 
     private fun yawTo(tx: Double, tz: Double): Float =

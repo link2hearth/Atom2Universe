@@ -23,6 +23,8 @@ internal class Enemy(
     var coat = 0
     /** Seconds remaining in the shared rifle recoil animation. */
     var shotRecoil = 0f
+    var heldWeaponType: String? = null
+    var weaponReload = 0f
     /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
     var strikeTime = 0f
     var walkPhase = 0f

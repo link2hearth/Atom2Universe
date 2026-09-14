@@ -7,6 +7,10 @@ import com.Atom2Universe.app.games.caves.ai.PlayerSnapshot
 import com.Atom2Universe.app.games.caves.ai.ShotSink
 import com.Atom2Universe.app.games.caves.ai.SolidGrid
 import com.Atom2Universe.app.games.caves.ai.Soldier
+import com.Atom2Universe.app.games.caves.ai.SoldierTuning
+import com.Atom2Universe.app.games.caves.ai.BodyClearance
+import com.Atom2Universe.app.games.caves.ai.SoldierCollision
+import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
 import com.Atom2Universe.app.games.caves.entity.Projectile
@@ -58,7 +62,7 @@ internal class AssaultMode(
     override val headshotMultiplier: Float get() = HEADSHOT_MULTIPLIER
 
     /** Un soldat : son corps (dessiné, touché par les balles) et son cerveau. */
-    private class Trooper(val body: Enemy, val brain: Soldier)
+    private class Trooper(val body: Enemy, val brain: Soldier, val damage: Int)
 
     private val units = ArrayList<Trooper>(SOLDIERS_PER_ROUND)
     private val bodies get() = r.enemyManager.enemies
@@ -96,13 +100,16 @@ internal class AssaultMode(
 
     // Balles des soldats : même aspect que les balles du joueur, dégâts fixes.
     private val bulletLook = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+    private val soldierTuning = SoldierTuning()
     private var firingBody: Enemy? = null
+    private var firingUnit: Trooper? = null
     private val shotSink = ShotSink { x, y, z, dx, dy, dz ->
         firingBody?.shotRecoil = .16f
+        val unit = firingUnit ?: error("Tir sans soldat actif")
         r.projectiles.add(Projectile(
             x + source.originX, y + source.originY, z + source.originZ, dx, dy, dz,
-            BULLET_SPEED, SOLDIER_DAMAGE, bulletLook,
-            kind = ProjectileKind.BULLET, maxRange = BULLET_RANGE, fromEnemy = true,
+            unit.brain.tuning.bulletSpeed, unit.damage, bulletLook,
+            kind = ProjectileKind.BULLET, maxRange = unit.brain.tuning.bulletRange, fromEnemy = true,
         ))
         r.eventBus.publish(GameEvent.EnemyFired)
     }
@@ -110,6 +117,11 @@ internal class AssaultMode(
     override fun spawnPoint(): FloatArray = source.spawnPoint()
 
     override fun onSurfaceCreated(savedState: CaveRenderer.SavedState?) {
+        r.physics.dynamicCollision = { x, feetY, z, height ->
+            units.any { it.body.hp > 0 && SoldierCollision.overlaps(
+                it.brain.x, it.brain.y, it.brain.z,
+                x - source.originX, feetY - source.originY, z - source.originZ, height) }
+        }
         // Pas encore d'équipement de match : on prête toutes les armes à distance.
         r.giveWeaponTestKit()
         r.loadoutChangedCallback?.invoke()
@@ -128,6 +140,7 @@ internal class AssaultMode(
         r.eventBus.publish(GameEvent.MobHit(false))
         // Touché : il sait d'où vient le tir, même sans avoir vu le tireur.
         val unit = units.firstOrNull { it.body === enemy } ?: return
+        unit.brain.healthFraction = enemy.hp.toFloat() / enemy.maxHp.coerceAtLeast(1)
         refreshPlayerPosition()
         unit.brain.onDamaged(player.x, player.eyeY, player.z)
     }
@@ -205,14 +218,20 @@ internal class AssaultMode(
 
     private fun updateSoldiers(dt: Float) {
         for (u in units) {
+            // Les impacts sont traités avant ce passage : un soldat abattu ne doit plus tirer.
+            if (u.body.hp <= 0) continue
             val brain = u.brain
+            brain.healthFraction = u.body.hp.toFloat() / u.body.maxHp.coerceAtLeast(1)
             u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
             firingBody = u.body
+            firingUnit = u
             brain.update(dt, player, shotSink)
             firingBody = null
+            firingUnit = null
             if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
 
             val body = u.body
+            body.weaponReload = brain.reloadProgress
             body.x = brain.x + source.originX
             body.y = brain.y + source.originY
             body.z = brain.z + source.originZ
@@ -304,11 +323,30 @@ internal class AssaultMode(
             if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
             if (units.any { distSq(x, z, it.brain.x, it.brain.z) < MIN_SOLDIER_SPACING * MIN_SOLDIER_SPACING }) continue
 
-            val brain = Soldier(grid, solid, finder, rng)
+            if (units.any { SoldierCollision.overlaps(x, grid.nodeY[n].toDouble(), z,
+                    it.brain.x, it.brain.y, it.brain.z) }) continue
+            val weaponType = arrayOf("gun", "smg", "lever_rifle")[units.size]
+            val profile = RangedProfile.all.getValue(weaponType)
+            val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
+                fireInterval = profile.interval, magazineSize = profile.magazine, reloadSeconds = profile.reload)
+            lateinit var brain: Soldier
+            val clearance = BodyClearance { bx, by, bz ->
+                SoldierCollision.clearsWorld(solid, bx, by, bz) &&
+                    units.none { it.brain !== brain && it.body.hp > 0 &&
+                        SoldierCollision.overlaps(bx, by, bz, it.brain.x, it.brain.y, it.brain.z) } &&
+                    !(r.playerNode.hp > 0 && SoldierCollision.overlaps(bx, by, bz,
+                        r.camera.playerX - source.originX, r.camera.playerY - source.originY - 1.62,
+                        r.camera.playerZ - source.originZ,
+                        (r.camera.eyeY - r.camera.playerY + 1.8).coerceAtLeast(.5)))
+            }
+            brain = Soldier(grid, solid, finder, rng, tuning, clearance)
             brain.place(x, grid.nodeY[n].toDouble(), z)
             val body = Enemy(nextSoldierId++, SOLDIER, x + source.originX, grid.nodeY[n].toDouble() + source.originY, z + source.originZ)
             body.hp = body.maxHp
-            units += Trooper(body, brain)
+            body.heldWeaponType = weaponType
+            // Cadences identiques au joueur ; dégâts ajustés pour le solo, surtout la SMG.
+            val damage = when (weaponType) { "smg" -> 3; "lever_rifle" -> 16; else -> 8 }
+            units += Trooper(body, brain, damage)
             bodies += body
         }
     }
@@ -372,8 +410,6 @@ internal class AssaultMode(
 
         /** Dégâts d'une balle de soldat : une douzaine suffisent à abattre le joueur. */
         const val SOLDIER_DAMAGE = 8
-        const val BULLET_SPEED = 70f
-        const val BULLET_RANGE = 90f
 
         const val ENEMY_SPAWN_RADIUS = 15.0
         const val MIN_DIST_FROM_PLAYER = 40.0

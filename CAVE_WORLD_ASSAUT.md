@@ -73,6 +73,13 @@ Kotlin pur, sans Android, **avec tests automatiques** :
 
 ### Phase 4 : le soldat
 
+**État : jouable, compléments tactiques en cours de validation.** Perception, mémoire, tirs,
+PV et manches sont intégrés. La suite du 14/09 ajoute les décisions par scores, le repli
+après blessure, les déplacements latéraux et le rechargement après arrivée à un abri accessible.
+Les collisions de volume contre le décor, entre soldats et avec le joueur sont désormais intégrées,
+ainsi que les modèles d'armes du joueur et leurs profils de cadence/chargeur/portée. Ces ajouts
+restent à valider sur tablette. La coordination entre soldats relève de la phase 5.
+
 `SoldierManager` séparé de `EnemyManager` (les monstres ont saignement, poison, gel : inutile ici).
 On extrait la collision partagée (`move()`) et on réutilise le rendu des modèles.
 
@@ -111,6 +118,35 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
 3. **Look des soldats** : boîtes façon Minecraft comme les monstres actuels, ou plus détaillés ?
 
 ## Journal
+
+- **14/09/2026 — collisions et armes de la phase 4 :**
+  - Volume debout de rayon 0,30 et hauteur 1,80, vérifié par petits pas contre le décor et les corps.
+    Montée préalable des marches et descente lorsque le rebord est dégagé. Le joueur est lui aussi
+    bloqué par les soldats via un callback optionnel de sa physique, actif seulement dans Assaut.
+  - A* exclut les cases occupées ; nouvelle recherche après 0,7 s sans déplacement. Si un passage
+    reste occupé et aucun détour n'existe, le soldat attend. Pas de poussée entre personnages.
+  - Un pistolet, une SMG et un fusil à levier par groupe. Modèles issus de `HeldEquipmentMesh`,
+    géométrie conservée en cache par phase de recul/rechargement, même rendu groupé que les corps.
+  - Vitesse, portée, cadence, chargeur et durée de rechargement issus de `RangedProfile` du joueur.
+    Les dégâts restent équilibrés pour le solo : 8 / 3 / 16. La dispersion humaine reste propre à l'IA.
+    Hors portée de son arme, le soldat se rapproche au lieu de gaspiller des tirs.
+  - Cinq cas de régression de collision ajoutés, non exécutés (compileDebugKotlin uniquement).
+    Vérifier sur tablette les croisements, marches, passages étroits et le placement visuel des armes.
+
+- **14/09/2026 — suite de la phase 4 :**
+  - `SoldierDecision` compare les scores de patrouille, recherche, engagement et repli selon
+    perception, mémoire, santé et coups récents. Un repli est mené à terme avec attente à couvert
+    et délai avant une nouvelle fuite ; la faible santé seule ne provoque pas une fuite permanente.
+  - Recherche bornée d'abris : huit candidats proches, chemin A* vérifié avant de s'engager.
+    En l'absence d'abri accessible, riposte ou rechargement sur place. Le temps de rechargement
+    commence à l'arrivée ; un trajet trop long est interrompu après quatre secondes.
+  - En combat, déplacement latéral court toutes les trois à quatre secondes si une ligne de tir
+    et un chemin court existent. Nouvelle vérification du rayon depuis l'arme après déplacement.
+  - Les soldats morts sont ignorés avant leur mise à jour : plus de dernier tir après un impact mortel.
+  - Un nouveau chemin revient au centre de la case de départ pour éviter de couper un angle
+    lorsqu'un déplacement est interrompu. Cela ne remplace pas encore des collisions physiques.
+  - Cas de régression ajoutés pour décisions, repli, absence d'abri et déplacement latéral.
+    Non exécutés : le dépôt autorise seulement `compileDebugKotlin`. À valider sur tablette.
 
 - **13/09/2026** : plan établi. Phase 0, première passe :
   - `world/WorldSource.kt` : l'interface existe, `World` l'accepte (paramètre `source`, null par
@@ -184,6 +220,15 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
   - **Crash au premier kill** (signalé par l'utilisateur) : la mort d'un soldat publiait `MobDied`,
     que `LootNode` écoute pour le butin de la survie ; il cherchait `assault_soldier` dans
     `MobRegistry` et levait une exception. Corrigé avec un événement dédié `SoldierDown`.
+- **14/09/2026** : réglage après essais des soldats : réaction trop courte portée, visée trop imprécise.
+  - Vue normale 65 blocs, vue après alerte et audition des tirs 160 blocs ; un bruit fait regarder
+    vers son origine, mais les murs bloquent toujours la vue et la mémoire expire toujours après 8 s.
+  - Visée initiale 2°, minimum 0,18°, convergence 3°/s ; la course ajoute un écart borné au lieu
+    d'accumuler une pénalité à chaque image. Délai de réaction et dégâts inchangés, visée au torse.
+  - Balles à 120 blocs/s, portée 160 ; anticipation partielle du déplacement visible, réglage de
+    vitesse partagé entre cerveau et projectiles. Réserves illimitées et rechargement conservés.
+  - Cas de régression ajoutés : riposte lointaine, occultation par un mur, précision sur cible mobile.
+    Tests non exécutés (politique du dépôt : compileDebugKotlin uniquement). Équilibrage à valider en jeu.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).
 

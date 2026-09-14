@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.caves.ai.ShotSink
 import com.Atom2Universe.app.games.caves.ai.SolidGrid
 import com.Atom2Universe.app.games.caves.ai.Soldier
 import com.Atom2Universe.app.games.caves.ai.SoldierTuning
+import com.Atom2Universe.app.games.caves.ai.SoldierDecision
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -107,9 +108,59 @@ class SoldierTest {
         run(s, nobody, 8f)
         assertTrue(hypot(s.x - 30.5, s.z - 5.5) < 1.5)
 
-        val deaf = soldier(TestWorld(80, 6, 40), 5.5, 5.5)
+        val deaf = soldier(TestWorld(80, 6, 40), 5.5, 5.5, SoldierTuning(hearingRange = 35.0))
         deaf.hearShot(70.5, 2.62, 5.5)                 // 65 blocs : trop loin pour l'entendre
         assertFalse(deaf.knowsPlayer)
+    }
+
+    @Test
+    fun `un tir ou un impact lointain declenche la riposte mais pas a travers un mur`() {
+        val world = TestWorld(12, 6, 150)
+        val p = player(5.5, 5.5)
+        for (hit in listOf(false, true)) {
+            val s = soldier(world, 5.5, 140.5)
+            val shots = Shots()
+            if (hit) s.onDamaged(p.x, p.eyeY, p.z) else s.hearShot(p.x, p.eyeY, p.z)
+            run(s, p, 1.5f, shots)
+            assertTrue("riposte à 135 blocs", shots.count > 0)
+        }
+        world.wall(0, 11, 75, 75, 3)
+        val hidden = soldier(world, 5.5, 140.5)
+        val shots = Shots()
+        hidden.hearShot(p.x, p.eyeY, p.z)
+        run(hidden, p, 1f, shots)
+        assertFalse(hidden.seesPlayer)
+        assertEquals(0, shots.count)
+        assertEquals(Soldier.State.SEARCH, hidden.state)
+    }
+
+    @Test
+    fun `la visee converge sur une cible mobile et anticipe sa course`() {
+        val s = soldier(TestWorld(100, 6, 100), 40.5, 5.5,
+            SoldierTuning(magazineSize = 100))
+        val p = player(40.5, 55.5).also { it.velX = 4.0 }
+        var hits = 0
+        var total = 0
+        var elapsed = 0f
+        val shots = ShotSink { x, y, z, dx, dy, dz ->
+            if (elapsed >= 2f) {
+                val travel = (p.z - z) / dz
+                val seconds = travel / s.tuning.bulletSpeed
+                val futureX = p.x + p.velX * seconds
+                val hitY = y + dy * travel
+                total++
+                if (kotlin.math.abs(x + dx * travel - futureX) <= 0.30 &&
+                    hitY in (p.eyeY - 1.62)..(p.eyeY + 0.18)) hits++
+            }
+        }
+        repeat(120) {
+            elapsed += 0.05f
+            p.x += p.velX * 0.05
+            s.update(0.05f, p, shots)
+        }
+        assertTrue("la course ne fait pas diverger la visée", s.aimErrorDeg < 0.5f)
+        assertTrue(total >= 5)
+        assertTrue("au moins un tiers des tirs stabilisés touchent le corps", hits * 3 >= total)
     }
 
     @Test
@@ -130,7 +181,62 @@ class SoldierTest {
         assertTrue("il doit être passé derrière le muret", s.z < 10.0)
         assertFalse(LineOfSight.isClear(p.x, p.eyeY, p.z, s.x, s.y + 1.62, s.z, world))
 
+        run(s, p, 4f, shots)
+        assertTrue("rechargement terminé après le trajet et l'attente", s.ammo > 0 || shots.count > 2)
+    }
+
+    @Test
+    fun `les scores privilegient le repli apres blessure puis autorisent la riposte`() {
+        assertEquals(Soldier.State.COVER, SoldierDecision.choose(true, true, .4f, true, true))
+        assertEquals(Soldier.State.ENGAGE, SoldierDecision.choose(true, true, .4f, true, false))
+        assertEquals(Soldier.State.ENGAGE, SoldierDecision.choose(true, true, .4f, false, true))
+        assertEquals(Soldier.State.SEARCH, SoldierDecision.choose(false, true, 1f, false, true))
+        assertEquals(Soldier.State.PATROL, SoldierDecision.choose(false, false, .1f, false, true))
+    }
+
+    @Test
+    fun `blesse il gagne un abri sans tirer et finit par ressortir`() {
+        val world = TestWorld(30, 6, 40).also { it.wall(6, 14, 10, 10, 2) }
+        val s = soldier(world, 10.5, 12.5)
+        val p = player(10.5, 28.5)
+        s.healthFraction = .4f
+        s.onDamaged(p.x, p.eyeY, p.z)
+        val shots = Shots()
+        s.update(.05f, p, shots)
+        assertEquals(Soldier.State.COVER, s.state)
+        var reachedCover = false
+        repeat(120) {
+            if (s.state == Soldier.State.COVER && s.follower.arrived) reachedCover = true
+            val before = shots.count
+            val covering = s.state == Soldier.State.COVER
+            s.update(.05f, p, shots)
+            if (covering && s.state == Soldier.State.COVER) assertEquals(before, shots.count)
+        }
+        assertTrue(reachedCover)
+        assertTrue(s.state != Soldier.State.COVER)
+    }
+
+    @Test
+    fun `sans abri le soldat blesse riposte au lieu de rester bloque`() {
+        val s = soldier(TestWorld(30, 6, 30), 5.5, 5.5)
+        val p = player(5.5, 20.5)
+        s.healthFraction = .3f
+        s.onDamaged(p.x, p.eyeY, p.z)
+        val shots = Shots()
         run(s, p, 1.5f, shots)
-        assertTrue("rechargement terminé", s.state != Soldier.State.RELOAD)
+        assertEquals(Soldier.State.ENGAGE, s.state)
+        assertTrue(shots.count > 0)
+    }
+
+    @Test
+    fun `un soldat expose change de position en gardant le contact`() {
+        val s = soldier(TestWorld(30, 6, 40), 15.5, 5.5,
+            SoldierTuning(magazineSize = 100, repositionSeconds = 1f))
+        val p = player(15.5, 30.5)
+        val shots = Shots()
+        run(s, p, 2f, shots)
+        assertTrue(kotlin.math.abs(s.x - 15.5) > .5)
+        assertTrue(s.seesPlayer)
+        assertTrue(shots.count > 0)
     }
 }

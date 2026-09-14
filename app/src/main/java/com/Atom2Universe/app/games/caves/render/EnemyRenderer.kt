@@ -277,6 +277,9 @@ internal class EnemyRenderer {
     // ── Construction de la géométrie voxel d'un mob ─────────────────────────────
 
     /** Ajoute le modèle de [e] dans [boV] à partir de [offset]. Retourne le nouvel offset. */
+    private val heldMesh by lazy { HeldEquipmentMesh() }
+    private val heldFrames = HashMap<String, FloatArray>()
+
     private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double, offset: Int): Int {
         val model = if (e.def.behavior == "passive") AnimalModels.get(e.def.model, e.young, e.coat) else MobModels.get(e.def.model)
         val h = e.baseScale * 2f
@@ -318,6 +321,8 @@ internal class EnemyRenderer {
 
         var n = offset
         for (part in model.parts) {
+            if (soldier && e.heldWeaponType != null &&
+                (part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) continue
             if (model.squash && part === model.parts.first()) {
                 val mesh=SlimeGeometry.vertices
                 if (n+mesh.size/4*6>boV.size) break
@@ -420,6 +425,32 @@ internal class EnemyRenderer {
             else { pr = cr * tint[0]; pg = cg * tint[1]; pb = cb * tint[2] }
 
             n = emitBox(boV, n, pr, pg, pb, flash, part.emissive)
+        }
+        val weaponType = e.heldWeaponType
+        if (soldier && !reference && weaponType != null) {
+            val reloadFrame = (e.weaponReload * 8).toInt().coerceIn(0, 8)
+            val shotFrame = if (reloadFrame == 0 && e.shotRecoil > 0f)
+                ((.16f - e.shotRecoil) / .04f).toInt().coerceIn(0, 3) else -1
+            val key = "$weaponType:$reloadFrame:$shotFrame"
+            val verts = heldFrames.getOrPut(key) {
+                heldMesh.clear()
+                heldMesh.weapon(weaponType, 0f, if (shotFrame < 0) -1f else shotFrame * .04f,
+                    true, 0xD5BB75, reload = reloadFrame / 8f)
+                heldMesh.vertices.copyOf(heldMesh.count)
+            }
+            if (n + verts.size <= boV.size) {
+                val recoil = e.shotRecoil.coerceIn(0f, .16f) / .16f
+                for (i in verts.indices step 6) {
+                    // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
+                    val px = .09f - verts[i]
+                    val py = 1.16f + verts[i + 1] + recoil * .027f
+                    val pz = .36f - verts[i + 2] - recoil * .108f
+                    boV[n++] = ex + px * cosY + pz * sinY
+                    boV[n++] = ey + py
+                    boV[n++] = ez - px * sinY + pz * cosY
+                    boV[n++] = verts[i + 3]; boV[n++] = verts[i + 4]; boV[n++] = verts[i + 5]
+                }
+            }
         }
         return n
     }

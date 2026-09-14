@@ -33,7 +33,7 @@ internal class PathFinder(private val grid: NavGrid) {
      * Cherche le plus court chemin de [start] à [goal]. S'il existe, l'écrit dans [out] (départ et
      * arrivée compris, dans l'ordre) et renvoie vrai ; sinon [out] reste vide.
      */
-    fun findPath(start: Int, goal: Int, out: IntList): Boolean {
+    fun findPath(start: Int, goal: Int, out: IntList, clearance: BodyClearance? = null): Boolean {
         out.clear()
         if (start !in 0 until count || goal !in 0 until count) return false
         search++
@@ -58,6 +58,8 @@ internal class PathFinder(private val grid: NavGrid) {
             val paid = gScore[current]
             for (e in grid.edgeStart[current] until grid.edgeStart[current + 1]) {
                 val next = grid.edgeTarget[e]
+                if (clearance != null && !clearance.isFree(grid.nodeX[next] + .5,
+                        grid.nodeY[next].toDouble(), grid.nodeZ[next] + .5)) continue
                 if (closedBy[next] == search) continue
                 val cost = paid + grid.edgeCost[e]
                 if (seenBy[next] != search || cost < gScore[next]) {

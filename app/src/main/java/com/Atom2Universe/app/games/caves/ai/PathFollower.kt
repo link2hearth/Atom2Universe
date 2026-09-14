@@ -10,7 +10,7 @@ import kotlin.math.sqrt
  * que chaque liaison est praticable : pas besoin de collisions, on glisse d'un centre à l'autre et
  * la hauteur suit la case visée (marche, descente). Coordonnées locales à la carte, pieds.
  */
-internal class PathFollower(private val grid: NavGrid) {
+internal class PathFollower(private val grid: NavGrid, private val clearance: BodyClearance? = null) {
 
     /** Le chemin suivi, départ compris. */
     val path = IntList(64)
@@ -32,10 +32,10 @@ internal class PathFollower(private val grid: NavGrid) {
         stop()
     }
 
-    /** Suit [newPath] à partir de sa 2e case : la 1re est celle où l'on se trouve déjà. */
+    /** Revient d'abord au centre de la case de départ si un trajet a été interrompu. */
     fun follow(newPath: IntList) {
         path.copyFrom(newPath)
-        next = if (path.size > 1) 1 else path.size
+        next = if (path.size > 1) 0 else path.size
     }
 
     fun stop() {
@@ -45,6 +45,7 @@ internal class PathFollower(private val grid: NavGrid) {
 
     /** Avance de [speed] blocs par seconde pendant [dt] secondes. Renvoie vrai s'il a bougé. */
     fun advance(dt: Float, speed: Float): Boolean {
+        if (clearance != null) return advanceWithCollisions(dt, speed)
         if (arrived) return false
         var budget = (speed * dt).toDouble()
         while (budget > 0.0 && next < path.size) {
@@ -71,6 +72,42 @@ internal class PathFollower(private val grid: NavGrid) {
             else -> y
         }
         return true
+    }
+
+    private fun advanceWithCollisions(dt: Float, speed: Float): Boolean {
+        var remaining = dt.coerceAtLeast(0f)
+        var moved = false
+        while (remaining > 0f && !arrived) {
+            val step = minOf(remaining, .016f)
+            remaining -= step
+            val node = path[next]
+            val tx = grid.nodeX[node] + .5; val tz = grid.nodeZ[node] + .5
+            val ty = grid.nodeY[node].toDouble()
+            val dx = tx - x; val dz = tz - z
+            val distance = sqrt(dx * dx + dz * dz)
+            val travel = minOf(distance, speed * step.toDouble())
+            val nx = if (distance > .00001) x + dx / distance * travel else tx
+            val nz = if (distance > .00001) z + dz / distance * travel else tz
+            // Monte avant de franchir la marche ; redescend seulement après dégagement du rebord.
+            if (ty > y + .0001) {
+                val ny = minOf(ty, y + VERTICAL_SPEED * step)
+                if (!clearance!!.isFree(x, ny, z)) break
+                y = ny; moved = true
+                if (y < ty - .0001) continue
+            }
+            if (!clearance!!.isFree(nx, y, nz)) break
+            if (travel > .00001) {
+                yawDeg = Math.toDegrees(atan2(dx, dz)).toFloat()
+                moved = true
+            }
+            x = nx; z = nz
+            if (ty < y) {
+                val ny = maxOf(ty, y - VERTICAL_SPEED * step)
+                if (clearance.isFree(x, ny, z)) { y = ny; moved = true }
+            }
+            if (distance <= travel + .00001 && kotlin.math.abs(y - ty) < .0001) next++
+        }
+        return moved
     }
 
     private companion object {
