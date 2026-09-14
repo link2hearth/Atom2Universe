@@ -1,5 +1,7 @@
 {
   "id": "red_desert",
+  "temperature": 0.95,
+  "humidity": 0.12,
   "noise_offsets": [
     -400.0,
     0.0,

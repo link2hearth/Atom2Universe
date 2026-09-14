@@ -513,4 +513,23 @@
     <string name="cave_menu_creative_choice">Créatif · Construire en toute liberté</string>
     <string name="cave_menu_invalid_seed">Saisissez un entier entre −9223372036854775808 et 9223372036854775807, ou laissez vide.</string>
     <string name="cave_menu_save_failed">Impossible d’enregistrer cette modification. Réessayez.</string>
+    <string name="cave_block_cobblestone">Pierre brute</string>
+    <string name="cave_block_mossy_cobblestone">Pierre brute moussue</string>
+    <string name="cave_block_sandstone">Grès</string>
+    <string name="cave_block_mud">Boue</string>
+    <string name="cave_block_clay">Argile</string>
+    <string name="cave_block_forest_floor">Sol forestier</string>
+    <string name="cave_block_moss">Mousse</string>
+    <string name="cave_block_basalt">Basalte</string>
+    <string name="cave_assault_showcase">Atelier des biomes · visite libre</string>
+    <string name="cave_showcase_hint">Explorez six paysages, puis la galerie des blocs. Sans ennemis ni chronomètre.</string>
+    <string name="cave_showcase_mountain">Montagne et minerais</string>
+    <string name="cave_showcase_desert">Désert et grès</string>
+    <string name="cave_showcase_beach">Plage et rivage</string>
+    <string name="cave_showcase_forest">Forêt et sous-bois</string>
+    <string name="cave_showcase_marsh">Marais et argile</string>
+    <string name="cave_showcase_volcano">Roches volcaniques</string>
+    <string name="cave_showcase_gallery">Galerie des blocs</string>
+    <string name="cave_showcase_walk">Chemins · six paysages et une galerie de blocs</string>
+    <string name="cave_showcase_sample">Échantillon proche : %1$s</string>
 </resources>

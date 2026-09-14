@@ -1,0 +1,11 @@
+{
+  "id": 2303,
+  "name": "mud",
+  "texture_top": "cozy:nature:3",
+  "texture_side": "cozy:nature:3",
+  "texture_bottom": "cozy:nature:3",
+  "color": "#827565",
+  "hardness": 1,
+  "drop": "mud",
+  "creative_tab": "terrain"
+}

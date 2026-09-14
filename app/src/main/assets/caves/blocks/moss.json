@@ -1,0 +1,11 @@
+{
+  "id": 2306,
+  "name": "moss",
+  "texture_top": "cozy:nature:6",
+  "texture_side": "cozy:nature:6",
+  "texture_bottom": "cozy:nature:6",
+  "color": "#81986B",
+  "hardness": 1,
+  "drop": "moss",
+  "creative_tab": "terrain"
+}

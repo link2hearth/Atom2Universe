@@ -1,9 +1,9 @@
 {
   "id": 8000,
   "name": "furnace",
-  "texture_top": "cozy:material:3:A0ABB4",
-  "texture_side": "cozy:material:3:A0ABB4",
-  "texture_bottom": "cozy:material:3:A0ABB4",
+  "texture_top": "cozy:utility:13",
+  "texture_side": "cozy:utility:12",
+  "texture_bottom": "cozy:utility:13",
   "texture_front": "cozy:utility:0",
   "color": "#B4B9B7",
   "hardness": 3.0,

@@ -1,5 +1,7 @@
 {
   "id": "dark_forest",
+  "temperature": 0.55,
+  "humidity": 0.85,
   "noise_offsets": [1400.0, 0.0, -1100.0],
   "surface_blocks": [
     {"block": "grass", "noise_min": -99.0}

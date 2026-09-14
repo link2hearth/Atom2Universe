@@ -13,6 +13,7 @@ internal object A2MapStorage {
     private const val ASSET_DIR = "caves/maps"
     private const val ASSET_PREFIX = "asset:"
     private const val BUILTIN_PREFIX = "builtin:"
+    const val SHOWCASE_PATH = "builtin:biome_showcase"
 
     /**
      * [path] : chemin de fichier, « asset:… » pour une carte livrée avec l'appli, ou
@@ -38,11 +39,15 @@ internal object A2MapStorage {
         val builtin = Entry(
             context.getString(com.Atom2Universe.app.R.string.cave_assault_builtin_arena),
             "$BUILTIN_PREFIX${BuiltinMaps.ARENA_ID}")
-        return listOf(builtin) + (bundled + user).sortedBy { it.name.lowercase() }
+        val showcase = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_showcase), SHOWCASE_PATH)
+        return listOf(showcase, builtin) + (bundled + user).sortedBy { it.name.lowercase() }
     }
 
     fun load(context: Context, path: String): A2Map =
-        if (path == "$BUILTIN_PREFIX${BuiltinMaps.ARENA_ID}") {
+        if (path == SHOWCASE_PATH) {
+            com.Atom2Universe.app.games.caves.node.BlockRegistry.load(context.assets)
+            ShowcaseMap.create()
+        } else if (path == "$BUILTIN_PREFIX${BuiltinMaps.ARENA_ID}") {
             BuiltinMaps.arena()
         } else if (path.startsWith(ASSET_PREFIX)) {
             context.assets.open(path.removePrefix(ASSET_PREFIX)).buffered().use { A2Map.read(it) }

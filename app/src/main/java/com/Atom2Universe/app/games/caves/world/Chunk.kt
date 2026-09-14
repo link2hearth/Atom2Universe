@@ -54,6 +54,14 @@ const val LEAVES_PINK:     Short = 1029
 const val LEAVES_SAPIN:    Short = 1031
 
 // ── Famille 2000 : Pierre ─────────────────────────────────────────────────────
+const val COBBLESTONE: Short = 2300
+const val MOSSY_COBBLESTONE: Short = 2301
+const val SANDSTONE: Short = 2302
+const val MUD: Short = 2303
+const val CLAY: Short = 2304
+const val FOREST_FLOOR: Short = 2305
+const val MOSS: Short = 2306
+const val BASALT: Short = 2307
 const val STONE:               Short = 2000
 const val GRANITE:             Short = 2001
 const val QUARTZ:              Short = 2002

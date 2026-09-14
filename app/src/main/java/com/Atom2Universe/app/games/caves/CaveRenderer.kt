@@ -703,65 +703,15 @@ internal class CaveRenderer(
         }
     }
 
-    private fun createWardStoneBitmap(size: Int): android.graphics.Bitmap {
-        val bmp = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(bmp)
-        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
-        val s = size.toFloat()
-        // Base : pierre sombre bleutée
-        paint.color = android.graphics.Color.rgb(35, 30, 70)
-        canvas.drawRect(0f, 0f, s, s, paint)
-        // Veines violettes
-        paint.color = android.graphics.Color.rgb(90, 50, 160)
-        paint.strokeWidth = s * 0.06f; paint.style = android.graphics.Paint.Style.STROKE
-        canvas.drawLine(s * 0.1f, s * 0.3f, s * 0.5f, s * 0.7f, paint)
-        canvas.drawLine(s * 0.6f, s * 0.1f, s * 0.9f, s * 0.6f, paint)
-        canvas.drawLine(s * 0.2f, s * 0.8f, s * 0.7f, s * 0.4f, paint)
-        // Cristal central lumineux
-        paint.style = android.graphics.Paint.Style.FILL
-        paint.color = android.graphics.Color.rgb(150, 90, 255)
-        val cx = s * 0.5f; val cy = s * 0.45f
-        val path = android.graphics.Path().apply {
-            moveTo(cx, cy - s * 0.22f)
-            lineTo(cx + s * 0.14f, cy)
-            lineTo(cx, cy + s * 0.22f)
-            lineTo(cx - s * 0.14f, cy)
-            close()
-        }
-        canvas.drawPath(path, paint)
-        paint.color = android.graphics.Color.rgb(210, 170, 255)
-        val pathInner = android.graphics.Path().apply {
-            moveTo(cx, cy - s * 0.12f)
-            lineTo(cx + s * 0.07f, cy)
-            lineTo(cx, cy + s * 0.12f)
-            lineTo(cx - s * 0.07f, cy)
-            close()
-        }
-        canvas.drawPath(pathInner, paint)
-        return bmp
-    }
-
-    private fun createTorchBitmap(size: Int): android.graphics.Bitmap {
-        val bmp = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(bmp)
-        val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
-        val s = size.toFloat()
-        paint.color = android.graphics.Color.rgb(110, 65, 22)
-        canvas.drawRect(s * 0.38f, s * 0.38f, s * 0.62f, s * 1.0f, paint)
-        paint.color = android.graphics.Color.rgb(220, 95, 15)
-        canvas.drawOval(android.graphics.RectF(s * 0.20f, s * 0.02f, s * 0.80f, s * 0.50f), paint)
-        paint.color = android.graphics.Color.rgb(255, 195, 30)
-        canvas.drawOval(android.graphics.RectF(s * 0.30f, s * 0.08f, s * 0.70f, s * 0.42f), paint)
-        paint.color = android.graphics.Color.rgb(255, 250, 180)
-        canvas.drawOval(android.graphics.RectF(s * 0.40f, s * 0.14f, s * 0.60f, s * 0.32f), paint)
-        return bmp
-    }
-
     private fun loadBlockTextures(): Int {
-        BlockRegistry.registerGeneratedTexture("Items/torch.png") { size -> createTorchBitmap(size) }
-        BlockRegistry.registerGeneratedTexture("ward_stone.png") { size -> createWardStoneBitmap(size) }
+        com.Atom2Universe.app.games.caves.node.MeadowTextures.itemTextureNames.forEach { name ->
+            BlockRegistry.registerGeneratedTexture(name) { size ->
+                com.Atom2Universe.app.games.caves.node.MeadowTextures.texture(name, size)
+            }
+        }
 
-        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 64)
+
+        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32)
         if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
 

@@ -11,7 +11,10 @@ internal class MapSource(
     val originX: Int = 0,
     val originY: Int = DEFAULT_ORIGIN_Y,
     val originZ: Int = 0,
+    val isShowcase: Boolean = false,
 ) : WorldSource {
+    override fun vegetationClimateAt(wx: Int, wz: Int): Int? =
+        if (isShowcase) ShowcaseMap.climateAt(wx - originX, wz - originZ) else null
 
     // Pour chaque colonne de la carte : Y monde juste au-dessus de son bloc le plus haut.
     // Calculé une fois ici, parce que la lumière du ciel le demande très souvent.

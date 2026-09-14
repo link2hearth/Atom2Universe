@@ -1,0 +1,11 @@
+{
+  "id": 2305,
+  "name": "forest_floor",
+  "texture_top": "cozy:nature:5",
+  "texture_side": "cozy:nature:5",
+  "texture_bottom": "cozy:nature:5",
+  "color": "#88735D",
+  "hardness": 1,
+  "drop": "forest_floor",
+  "creative_tab": "terrain"
+}

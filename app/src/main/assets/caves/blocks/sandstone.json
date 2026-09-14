@@ -1,0 +1,11 @@
+{
+  "id": 2302,
+  "name": "sandstone",
+  "texture_top": "cozy:nature:2",
+  "texture_side": "cozy:nature:2",
+  "texture_bottom": "cozy:nature:2",
+  "color": "#CBB68D",
+  "hardness": 2,
+  "drop": "sandstone",
+  "creative_tab": "stone"
+}

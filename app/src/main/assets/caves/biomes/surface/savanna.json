@@ -1,5 +1,7 @@
 {
   "id": "savanna",
+  "temperature": 0.85,
+  "humidity": 0.25,
   "noise_offsets": [
     200.0,
     0.0,

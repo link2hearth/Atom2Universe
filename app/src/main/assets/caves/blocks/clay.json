@@ -1,0 +1,11 @@
+{
+  "id": 2304,
+  "name": "clay",
+  "texture_top": "cozy:nature:4",
+  "texture_side": "cozy:nature:4",
+  "texture_bottom": "cozy:nature:4",
+  "color": "#B7A69B",
+  "hardness": 1,
+  "drop": "clay",
+  "creative_tab": "terrain"
+}

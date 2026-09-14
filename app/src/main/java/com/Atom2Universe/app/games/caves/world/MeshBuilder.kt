@@ -1,12 +1,14 @@
 package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.MeadowTextures
 
 internal object MeshBuilder {
 
     fun build(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
         val cache = World.ChunkLookupCache()
+        val climates = IntArray(CHUNK_SIZE * CHUNK_SIZE) { -1 }
 
         for (lz in 0 until CHUNK_SIZE)
             for (ly in 0 until CHUNK_SIZE)
@@ -14,20 +16,28 @@ internal object MeshBuilder {
             val block = chunk.blockAt(lx, ly, lz)
             if (block == AIR || isWater(block)) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
+            val column = lz * CHUNK_SIZE + lx
+            val climate = if (chunk.worldY >= 0 && BlockRegistry.hasClimate(block)) {
+                if (climates[column] < 0) climates[column] = world.vegetationClimateAt(chunk.worldX + lx, chunk.worldZ + lz)
+                climates[column]
+            } else 0
 
             if (isDecoration(block)) {
-                addCrossSprite(buf, x, y, z, block, chunk.skyAt(lx, ly, lz) / 15f)
+                addCrossSprite(buf, x, y, z, block, chunk.skyAt(lx, ly, lz) / 15f, climate)
                 continue
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
+            val knotFace = if (BlockRegistry.isWood(block))
+                MeadowTextures.rareKnotFace(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz)
+                else -1
             val above = world.neighborBlock(chunk, lx, ly + 1, lz, cache)
-            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above, meta, skyOf(chunk, world, lx, ly + 1, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz, cache)))  addFace(buf, x, y, z, 1, block, AIR,  meta, skyOf(chunk, world, lx, ly - 1, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz, cache)))  addFace(buf, x, y, z, 2, block, above, meta, skyOf(chunk, world, lx + 1, ly, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz, cache)))  addFace(buf, x, y, z, 3, block, above, meta, skyOf(chunk, world, lx - 1, ly, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))  addFace(buf, x, y, z, 4, block, above, meta, skyOf(chunk, world, lx, ly, lz + 1, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))  addFace(buf, x, y, z, 5, block, above, meta, skyOf(chunk, world, lx, ly, lz - 1, cache))
+            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above, meta, climate, knotFace, skyOf(chunk, world, lx, ly + 1, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz, cache)))  addFace(buf, x, y, z, 1, block, AIR,  meta, climate, knotFace, skyOf(chunk, world, lx, ly - 1, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz, cache)))  addFace(buf, x, y, z, 2, block, above, meta, climate, knotFace, skyOf(chunk, world, lx + 1, ly, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz, cache)))  addFace(buf, x, y, z, 3, block, above, meta, climate, knotFace, skyOf(chunk, world, lx - 1, ly, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))  addFace(buf, x, y, z, 4, block, above, meta, climate, knotFace, skyOf(chunk, world, lx, ly, lz + 1, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))  addFace(buf, x, y, z, 5, block, above, meta, climate, knotFace, skyOf(chunk, world, lx, ly, lz - 1, cache))
         }
         return buf.toFloatArray()
     }
@@ -45,8 +55,10 @@ internal object MeshBuilder {
         return true
     }
 
-    private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Short, above: Short, meta: Byte = 0, sky: Float = 1f) {
-        val layer  = BlockRegistry.getLayerForFace(block, face, above, meta)
+    private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Short, above: Short, meta: Byte = 0, climate: Int = 0, knotFace: Int = -1, sky: Float = 1f) {
+        val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
+        val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer)
+            else BlockRegistry.climateLayer(baseLayer, climate)
         val rotCW  = face > 1
         val packed = face * 4096f + layer.toFloat()
         when (face) {
@@ -59,8 +71,8 @@ internal object MeshBuilder {
         }
     }
 
-    private fun addCrossSprite(buf: GrowableFloatArray, x: Float, y: Float, z: Float, block: Short, sky: Float = 1f) {
-        val layer  = BlockRegistry.getLayerForDecoration(block)
+    private fun addCrossSprite(buf: GrowableFloatArray, x: Float, y: Float, z: Float, block: Short, sky: Float = 1f, climate: Int = 0) {
+        val layer = BlockRegistry.climateLayer(BlockRegistry.getLayerForDecoration(block), climate)
         val margin = BlockRegistry.getSpriteMargin(block)
         val h      = BlockRegistry.getSpriteHeight(block)
         val packed = layer.toFloat()

@@ -4,6 +4,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 internal fun blockIdByName(name: String): Short = when (name) {
+    "cobblestone" -> COBBLESTONE
+    "mossy_cobblestone" -> MOSSY_COBBLESTONE
+    "sandstone" -> SANDSTONE
+    "mud" -> MUD
+    "clay" -> CLAY
+    "forest_floor" -> FOREST_FLOOR
+    "moss" -> MOSS
+    "basalt" -> BASALT
     "air"         -> AIR
     "dirt"        -> DIRT
     "grass"       -> GRASS
@@ -249,6 +257,8 @@ data class SurfaceBiomeDef(
     val vegetationBlocks: List<VegetationEntry>,
     val wheatEnabled: Boolean,
     val structures: List<StructureEntry>,
+    val temperature: Float = .55f,
+    val humidity: Float = .55f,
 ) {
     companion object {
         fun fromJson(j: JSONObject): SurfaceBiomeDef {
@@ -260,6 +270,8 @@ data class SurfaceBiomeDef(
             val bushStr = j.optString("bush_block", "")
             return SurfaceBiomeDef(
                 id                   = j.getString("id"),
+                temperature          = j.optDouble("temperature", .55).toFloat().coerceIn(0f, 1f),
+                humidity             = j.optDouble("humidity", .55).toFloat().coerceIn(0f, 1f),
                 noiseOffsets         = doubleArrayOf(off.getDouble(0), off.getDouble(1), off.getDouble(2)),
                 surfaceBlocks        = (0 until surfArr.length()).map { i ->
                     val o = surfArr.getJSONObject(i)

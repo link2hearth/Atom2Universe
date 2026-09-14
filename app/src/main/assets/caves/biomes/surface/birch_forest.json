@@ -1,5 +1,7 @@
 {
   "id": "birch_forest",
+  "temperature": 0.45,
+  "humidity": 0.6,
   "noise_offsets": [700.0, 0.0, -700.0],
   "surface_blocks": [
     {"block": "grass", "noise_min": -99.0}

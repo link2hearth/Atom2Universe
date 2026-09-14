@@ -167,7 +167,7 @@ class CaveActivity : ThemedActivity() {
         // si elle a disparu entre-temps, on repart au menu plutôt que d'ouvrir un monde vide.
         val mapPath = intent.getStringExtra(EXTRA_MAP_PATH)
         val mapSource = mapPath?.let { path ->
-            runCatching { MapSource(A2MapStorage.load(this, path)) }.getOrNull()
+            runCatching { MapSource(A2MapStorage.load(this, path), isShowcase = path == A2MapStorage.SHOWCASE_PATH) }.getOrNull()
         }
         if (mapPath != null && mapSource == null) {
             android.widget.Toast.makeText(this, R.string.cave_assault_map_load_failed, android.widget.Toast.LENGTH_LONG).show()
@@ -240,7 +240,10 @@ class CaveActivity : ThemedActivity() {
             worldId = worldId, savedState = savedState,
             terrainVersion = save?.terrainVersion ?: 2,
             worldSource = mapSource,
-            modeFactory = if (mapSource != null) { r -> AssaultMode(r, mapSource) } else ::SurvivalMode
+            modeFactory = if (mapSource != null) { r ->
+                if (mapSource.isShowcase) com.Atom2Universe.app.games.caves.mode.ShowcaseMode(r, mapSource)
+                else AssaultMode(r, mapSource)
+            } else ::SurvivalMode
         )
         renderer.isCreative = isCreative
         renderer.enemyManager.isCreative = isCreative
@@ -425,7 +428,26 @@ class CaveActivity : ThemedActivity() {
             btnCombatMode.visibility = View.GONE
             // L'heure est figée à midi : le bouton jour/nuit n'a plus de sens.
             btnDayNight.visibility = View.GONE
-            hud.buildMatchPanel(root)
+            if (mapSource?.isShowcase != true) hud.buildMatchPanel(root)
+            (renderer.mode as? com.Atom2Universe.app.games.caves.mode.ShowcaseMode)?.let { mode ->
+                val caption = android.widget.TextView(this).apply {
+                    setTextColor(Color.WHITE)
+                    setBackgroundColor(0x99404B43.toInt())
+                    textSize = 13f
+                    setPadding(16, 8, 16, 8)
+                    setText(R.string.cave_showcase_hint)
+                }
+                root.addView(caption, FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = (56 * resources.displayMetrics.density).toInt() })
+                val names = intArrayOf(R.string.cave_showcase_mountain, R.string.cave_showcase_desert,
+                    R.string.cave_showcase_beach, R.string.cave_showcase_forest, R.string.cave_showcase_marsh,
+                    R.string.cave_showcase_volcano, R.string.cave_showcase_gallery, R.string.cave_showcase_walk)
+                mode.onCaption = { zone, block -> uiHandler.post {
+                    caption.text = if (block != null) getString(R.string.cave_showcase_sample, blockName(block))
+                        else getString(names[zone])
+                } }
+            }
             (renderer.mode as? AssaultMode)?.let { mode ->
                 mode.onStatus = { status -> uiHandler.post { hud.updateMatchPanel(status) } }
                 mode.onHeadshotKill = { uiHandler.post { hud.flashHeadshot() } }

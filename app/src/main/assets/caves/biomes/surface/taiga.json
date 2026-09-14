@@ -1,5 +1,7 @@
 {
   "id": "taiga",
+  "temperature": 0.2,
+  "humidity": 0.6,
   "noise_offsets": [
     1600.0,
     0.0,

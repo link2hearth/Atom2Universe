@@ -1,0 +1,11 @@
+{
+  "id": 2301,
+  "name": "mossy_cobblestone",
+  "texture_top": "cozy:nature:1",
+  "texture_side": "cozy:nature:1",
+  "texture_bottom": "cozy:nature:1",
+  "color": "#929DA4",
+  "hardness": 3,
+  "drop": "mossy_cobblestone",
+  "creative_tab": "stone"
+}

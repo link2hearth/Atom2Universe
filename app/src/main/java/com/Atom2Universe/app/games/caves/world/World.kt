@@ -10,6 +10,28 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
             private val source: WorldSource? = null) {
     private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave) }
+
+    /** Visual climate only: does not alter generation, block IDs, or saved chunks. */
+    internal fun vegetationClimateAt(wx: Int, wz: Int): Int {
+        source?.vegetationClimateAt(wx, wz)?.let { return it }
+        val biomes = BiomeRegistry.surfaceBiomes
+        if (biomes.isEmpty()) return 0
+        val weights = DoubleArray(biomes.size)
+        BiomeMap.biomeWeights(wx.toDouble(), wz.toDouble(), seed, weights)
+        var temperature = 0.0
+        var humidity = 0.0
+        for (i in biomes.indices) {
+            temperature += weights[i] * biomes[i].temperature
+            humidity += weights[i] * biomes[i].humidity
+        }
+        return when {
+            temperature < .30 -> 4
+            humidity > .78 && temperature < .72 -> 3
+            humidity < .36 -> 1
+            temperature > .70 && humidity > .62 -> 2
+            else -> 0
+        }
+    }
     private val chunks = ConcurrentHashMap<Long, Chunk>()
     private val inFlight = ConcurrentHashMap.newKeySet<Long>()
 

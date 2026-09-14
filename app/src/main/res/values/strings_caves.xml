@@ -513,4 +513,23 @@
     <string name="cave_menu_creative_choice">Creative · Build freely</string>
     <string name="cave_menu_invalid_seed">Enter a whole number between −9223372036854775808 and 9223372036854775807, or leave empty.</string>
     <string name="cave_menu_save_failed">Unable to save this change. Please try again.</string>
+    <string name="cave_block_cobblestone">Cobblestone</string>
+    <string name="cave_block_mossy_cobblestone">Mossy cobblestone</string>
+    <string name="cave_block_sandstone">Sandstone</string>
+    <string name="cave_block_mud">Mud</string>
+    <string name="cave_block_clay">Clay</string>
+    <string name="cave_block_forest_floor">Forest floor</string>
+    <string name="cave_block_moss">Moss</string>
+    <string name="cave_block_basalt">Basalt</string>
+    <string name="cave_assault_showcase">Biome workshop · free visit</string>
+    <string name="cave_showcase_hint">Explore six landscapes, then the block gallery. No enemies or timer.</string>
+    <string name="cave_showcase_mountain">Mountain and minerals</string>
+    <string name="cave_showcase_desert">Desert and sandstone</string>
+    <string name="cave_showcase_beach">Beach and shoreline</string>
+    <string name="cave_showcase_forest">Forest and undergrowth</string>
+    <string name="cave_showcase_marsh">Marsh and clay</string>
+    <string name="cave_showcase_volcano">Volcanic rocks</string>
+    <string name="cave_showcase_gallery">Block gallery</string>
+    <string name="cave_showcase_walk">Paths · six landscapes and a block gallery</string>
+    <string name="cave_showcase_sample">Nearby sample: %1$s</string>
 </resources>

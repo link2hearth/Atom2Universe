@@ -31,6 +31,18 @@ internal object BlockRegistry {
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
     private val textureIndexMap = HashMap<String, Int>()
+    private var climateLayers = emptyArray<IntArray>()
+    private var knotLayers = IntArray(0)
+
+    fun knotLayer(layer: Int): Int = knotLayers.getOrNull(layer) ?: layer
+
+    fun climateLayer(layer: Int, climate: Int): Int =
+        climateLayers.getOrNull(layer)?.getOrNull(climate) ?: layer
+
+    fun hasClimate(block: Short): Boolean {
+        val layer = layerTopTable[block.toInt() and 0xFFFF]
+        return climateLayer(layer, 1) != layer
+    }
 
     // Textures générées par le renderer (ex: torch, ward_stone)
     private val generatedProviders = HashMap<String, (Int) -> Bitmap>()
@@ -68,7 +80,6 @@ internal object BlockRegistry {
         topBitmapById.clear()
 
         val bitmaps = mutableListOf<Bitmap>()
-        val cozy = CozyTextureAtlas(assets, tileSize)
 
         fun register(name: String): Int {
             textureIndexMap[name]?.let { return it }
@@ -77,7 +88,7 @@ internal object BlockRegistry {
             textureOrder += name
             bitmaps += when {
                 generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
-                name.startsWith("cozy:") -> cozy.texture(name)
+                name.startsWith("cozy:") -> MeadowTextures.texture(name, tileSize)
                 name.startsWith("Items/") -> assets.open("caves/items/${name.removePrefix("Items/")}").use { BitmapFactory.decodeStream(it) }
                 else -> error("Unknown Cave World block texture: $name")
             }
@@ -107,7 +118,24 @@ internal object BlockRegistry {
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 
-        cozy.close()
+        // Keep base layer indices stable, then append only vegetation variants (shared by blocks).
+        val baseCount = bitmaps.size
+        climateLayers = Array(baseCount) { layer -> IntArray(MeadowTextures.CLIMATE_COUNT) { layer } }
+        knotLayers = IntArray(baseCount) { it }
+        for (layer in 0 until baseCount) {
+            val name = textureOrder[layer]
+            if (MeadowTextures.hasKnotVariant(name)) {
+                knotLayers[layer] = bitmaps.size
+                textureOrder += "$name:knot"
+                bitmaps += MeadowTextures.texture("$name:knot", tileSize)
+            }
+            if (!MeadowTextures.isClimateTexture(name)) continue
+            for (climate in 1 until MeadowTextures.CLIMATE_COUNT) {
+                climateLayers[layer][climate] = bitmaps.size
+                textureOrder += "$name@climate$climate"
+                bitmaps += MeadowTextures.texture(name, tileSize, climate)
+            }
+        }
         return bitmaps
     }
 

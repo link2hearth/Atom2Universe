@@ -1,5 +1,7 @@
 {
   "id": "tundra",
+  "temperature": 0.1,
+  "humidity": 0.35,
   "noise_offsets": [
     -900.0,
     0.0,

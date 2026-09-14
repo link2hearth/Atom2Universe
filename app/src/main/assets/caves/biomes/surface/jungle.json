@@ -1,5 +1,7 @@
 {
   "id": "jungle",
+  "temperature": 0.9,
+  "humidity": 0.9,
   "noise_offsets": [-1400.0, 0.0, 1600.0],
   "surface_blocks": [
     {"block": "grass", "noise_min": -99.0}

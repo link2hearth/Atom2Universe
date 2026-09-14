@@ -1,5 +1,7 @@
 {
   "id": "redwood_forest",
+  "temperature": 0.55,
+  "humidity": 0.75,
   "noise_offsets": [1800.0, 0.0, -1700.0],
   "surface_blocks": [
     {"block": "grass", "noise_min": -99.0}

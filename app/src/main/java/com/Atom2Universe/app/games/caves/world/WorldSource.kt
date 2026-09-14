@@ -26,6 +26,7 @@ interface WorldSource {
      * Un monde fini est chargé en entier et jamais déchargé, quelle que soit la distance de vue.
      */
     fun chunkBounds(): ChunkBounds? = null
+    fun vegetationClimateAt(wx: Int, wz: Int): Int? = null
 }
 
 /** Pavé de chunks, bornes incluses. */
