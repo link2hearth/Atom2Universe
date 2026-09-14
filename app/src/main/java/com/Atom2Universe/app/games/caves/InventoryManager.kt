@@ -48,7 +48,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private var relatedType: Short? = null
     private var gridIndices = emptyList<Int>()
     private var gridColumns = CaveActivity.GRID_COLS
-    private val categoryKeys = listOf("", "terrain", "wood", "stone", "nature", "functional", "cotton")
+    private val categoryKeys = listOf("", "terrain", "wood", "stone", "nature", "functional", "cotton", "ores", "resources")
 
     // ── Slots ─────────────────────────────────────────────────────────────────
     // Grille + barre pour chaque mode, séparées comme les deux hotbars du renderer
@@ -158,7 +158,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.combatTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.COMBAT) renderer.toggleHotbarMode() }
         ui.buildTab.setOnClickListener { if (renderer.hotbarMode != HotbarMode.BUILD) renderer.toggleHotbarMode() }
         val categories = intArrayOf(R.string.cave_ui_all, R.string.cave_ui_terrain, R.string.cave_ui_wood,
-            R.string.cave_ui_stone, R.string.cave_ui_nature, R.string.cave_ui_functional, R.string.cave_ui_cotton)
+            R.string.cave_ui_stone, R.string.cave_ui_nature, R.string.cave_ui_functional, R.string.cave_ui_cotton,
+            R.string.cave_ui_ores, R.string.cave_ui_resources)
         ui.category.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
             categories.map { activity.getString(it) })
         ui.category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -550,6 +551,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
                     infoNameTv?.text  = activity.blockName(type)
                     infoCountTv?.text = activity.getString(R.string.cave_ui_owned, renderer.inventory[type] ?: 0)
+                    val def = BlockRegistry.get(type)
+                    val drop = BlockRegistry.harvestDrop(type)
+                    infoIngredientsTv?.text = when {
+                        def?.placeable == false -> activity.getString(R.string.cave_ui_raw_resource_hint)
+                        drop == null -> activity.getString(R.string.cave_ui_harvest_none)
+                        else -> activity.getString(R.string.cave_ui_harvest_result, drop.second, activity.blockName(drop.first))
+                    }
+                    infoDivider?.visibility = View.VISIBLE
+                    infoIngredientsTv?.visibility = View.VISIBLE
                 }
             }
         }

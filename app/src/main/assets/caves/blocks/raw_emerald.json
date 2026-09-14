@@ -1,0 +1,15 @@
+{
+  "id": 3106,
+  "name": "raw_emerald",
+  "texture_top": "cozy:resource:6:7DA98C",
+  "texture_side": "cozy:resource:6:7DA98C",
+  "texture_bottom": "cozy:resource:6:7DA98C",
+  "color": "#7DA98C",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_emerald",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

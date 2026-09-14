@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:material:6:C9977B",
   "color": "#C9977B",
   "hardness": 3.0,
-  "drop": "redstone_redsand",
+  "drop": "redsand",
+  "harvest_category": "fractured_stone",
   "creative_tab": "terrain"
 }

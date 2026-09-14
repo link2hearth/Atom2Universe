@@ -1,0 +1,15 @@
+{
+  "id": 3107,
+  "name": "raw_crystal",
+  "texture_top": "cozy:resource:7:A2B6D6",
+  "texture_side": "cozy:resource:7:A2B6D6",
+  "texture_bottom": "cozy:resource:7:A2B6D6",
+  "color": "#A2B6D6",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_crystal",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

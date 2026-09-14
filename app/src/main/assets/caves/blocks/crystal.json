@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:ore:3:929EAA:88FFFF",
   "color": "#88FFFF",
   "hardness": 5.0,
-  "drop": "crystal",
+  "drop": "raw_crystal",
+  "harvest_category": "ore",
   "creative_tab": "ores"
 }

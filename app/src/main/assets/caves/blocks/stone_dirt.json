@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:material:3:A0ABB4",
   "color": "#A47D58",
   "hardness": 3.0,
-  "drop": "stone_dirt",
+  "drop": "cobblestone",
+  "harvest_category": "fractured_stone",
   "creative_tab": "terrain"
 }

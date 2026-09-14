@@ -30,6 +30,9 @@ internal data class BlockDef(
     val spriteMargin: Float,
     val spriteHeight: Float,
     val orientMode: Byte = ORIENT_NONE,
+    val placeable: Boolean = true,
+    val harvestCategory: String = "recoverable",
+    val dropCount: Int = 1,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
@@ -71,6 +74,9 @@ internal data class BlockDef(
                 spriteMargin    = j.optDouble("sprite_margin", 0.10).toFloat(),
                 spriteHeight    = j.optDouble("sprite_height", 0.90).toFloat(),
                 orientMode      = orientMode,
+                placeable       = j.optBoolean("placeable", true),
+                harvestCategory = j.optString("harvest_category", "recoverable"),
+                dropCount       = j.optInt("drop_count", 1),
             )
         }
     }

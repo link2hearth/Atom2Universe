@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_ui_ores">Ores</string>
+    <string name="cave_ui_resources">Raw resources</string>
+    <string name="cave_ui_raw_resource_hint">Crafting resource · cannot be placed as a block.</string>
+    <string name="cave_ui_harvest_none">Breaking this block gives no item.</string>
+    <string name="cave_ui_harvest_result">When broken: %1$d × %2$s</string>
+    <string name="cave_block_raw_coal">Coal chunk</string>
+    <string name="cave_block_raw_iron">Raw iron</string>
+    <string name="cave_block_raw_silver">Raw silver</string>
+    <string name="cave_block_raw_gold">Raw gold</string>
+    <string name="cave_block_raw_copper">Raw copper</string>
+    <string name="cave_block_raw_ruby">Ruby gem</string>
+    <string name="cave_block_raw_emerald">Emerald gem</string>
+    <string name="cave_block_raw_crystal">Crystal shard</string>
+    <string name="cave_block_raw_redstone">Red mineral fragment</string>
 
     <string name="cave_title">Cave World</string>
 

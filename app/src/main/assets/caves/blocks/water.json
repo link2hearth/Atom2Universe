@@ -8,5 +8,6 @@
   "hardness": 100.0,
   "water": true,
   "drop": "",
+  "harvest_category": "liquid",
   "creative_tab": "terrain"
 }

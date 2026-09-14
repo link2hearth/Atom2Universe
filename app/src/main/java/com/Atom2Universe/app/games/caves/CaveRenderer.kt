@@ -1695,10 +1695,9 @@ internal class CaveRenderer(
     }
 
     private fun collectBlock(blockType: Short) {
-        // Tous les cailloux (normal, moussu/poussiéreux…) donnent un seul et même
-        // caillou → un seul stack dans l'inventaire.
-        val dropType = if (blockType in ROCK_IDS) ROCK else blockType
-        inventory[dropType] = (inventory[dropType] ?: 0) + 1
+        // Resolve once: breaking stone yields cobble, never recursively breaks the result.
+        val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
+        inventory[dropType] = (inventory[dropType] ?: 0) + count
         // Un bloc ramassé va dans la barre correspondant à sa catégorie (combat pour les
         // munitions/pierres de garde, construction pour le reste), pas forcément la barre visible.
         val targetBar = if (isCombatItem(dropType)) combatHotbar else buildHotbar
@@ -1878,21 +1877,32 @@ internal class CaveRenderer(
         var tMaxZ = if (dirZ > 0) (bz + 1 - startZ) * tDZ else (startZ - bz) * tDZ
 
         var fnx = 0; var fny = 0; var fnz = -1
+        var entryDistance = 0.0
 
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
-            if (b != AIR && !isWater(b)) return RayHit(bx, by, bz, fnx, fny, fnz)
+            if (b != AIR && !isWater(b)) {
+                val hit = !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
+                    startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
+                    BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
+                    entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ),
+                ) == true
+                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz)
+            }
             when {
                 tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
                     if (tMaxX > reach) return null
+                    entryDistance = tMaxX
                     fnx = -stepX; fny = 0; fnz = 0; bx += stepX; tMaxX += tDX
                 }
                 tMaxY <= tMaxZ -> {
                     if (tMaxY > reach) return null
+                    entryDistance = tMaxY
                     fnx = 0; fny = -stepY; fnz = 0; by += stepY; tMaxY += tDY
                 }
                 else -> {
                     if (tMaxZ > reach) return null
+                    entryDistance = tMaxZ
                     fnx = 0; fny = 0; fnz = -stepZ; bz += stepZ; tMaxZ += tDZ
                 }
             }
@@ -3206,6 +3216,7 @@ internal class CaveRenderer(
 
     private fun placeBlock(target: RayHit? = raycastBlock()) {
         val blockType = hotbar[selectedSlot] ?: return
+        if (BlockRegistry.get(blockType)?.placeable == false) return
         startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
             hotbar[selectedSlot] = null

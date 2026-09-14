@@ -1,0 +1,15 @@
+{
+  "id": 3102,
+  "name": "raw_silver",
+  "texture_top": "cozy:resource:2:CCD2D6",
+  "texture_side": "cozy:resource:2:CCD2D6",
+  "texture_bottom": "cozy:resource:2:CCD2D6",
+  "color": "#CCD2D6",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_silver",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

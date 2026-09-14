@@ -91,8 +91,8 @@ leur identité. Le sous-sol à altitude négative et les icônes d'inventaire ga
 la palette de base.
 
 Après ajout des huit matériaux naturels et des faces du four et de l'établi,
-la banque utilise 172 recettes de base. Voir [l'atelier des biomes](ATELIER_BIOMES.md).
-Le résultat utilise 181 couches de 32 × 32 RGBA, soit environ 724 Kio de pixels
+la banque utilise 182 recettes de base. Voir [l'atelier des biomes](ATELIER_BIOMES.md).
+Le résultat utilise 191 couches de 32 × 32 RGBA, soit environ 764 Kio de pixels
 GPU hors structures de gestion et copies UI : les anciennes images par climat
 ont été retirées. Le maillage du terrain passe de 7 à 11 flottants par sommet
 pour transporter le mélange RGB et son masque. Les calculs climatiques sont
@@ -109,7 +109,7 @@ végétales, avec le même masque pixelisé que la bordure d'herbe d'origine.
   absence de recoloration de la terre sous l'herbe vérifiées.
 - Symétrie des troncs et des quatre stades de blé vérifiée pixel par pixel.
 - Asymétrie des marques du bouleau vérifiée séparément.
-- Pastel/Vif : transparences des 172 recettes préservées ; couleur médiane,
+- Pastel/Vif : transparences des 182 recettes préservées ; couleur médiane,
   largeur de deux blocs et raccords entre chunks positifs/négatifs vérifiés
   depuis le code compilé. Le comparatif illustre ce champ de couleur, sans
   simuler l'éclairage du jeu. Le shader OpenGL reste à valider sur appareil.

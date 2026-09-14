@@ -7,6 +7,7 @@
   "color": "#C5DFDE",
   "hardness": 1.5,
   "transparent": true,
-  "drop": "glass",
+  "drop": "",
+  "harvest_category": "fragile",
   "creative_tab": "functional"
 }

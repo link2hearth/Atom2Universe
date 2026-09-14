@@ -1,0 +1,15 @@
+{
+  "id": 3103,
+  "name": "raw_gold",
+  "texture_top": "cozy:resource:3:D2B56B",
+  "texture_side": "cozy:resource:3:D2B56B",
+  "texture_bottom": "cozy:resource:3:D2B56B",
+  "color": "#D2B56B",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_gold",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

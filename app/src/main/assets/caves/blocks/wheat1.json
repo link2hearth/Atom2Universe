@@ -8,5 +8,6 @@
   "hardness": 0.1,
   "decoration": true,
   "drop": "",
+  "harvest_category": "unharvestable_crop",
   "creative_tab": "nature"
 }

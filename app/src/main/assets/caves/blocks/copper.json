@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:ore:3:929EAA:B87333",
   "color": "#B87333",
   "hardness": 3.5,
-  "drop": "copper",
+  "drop": "raw_copper",
+  "harvest_category": "ore",
   "creative_tab": "ores"
 }

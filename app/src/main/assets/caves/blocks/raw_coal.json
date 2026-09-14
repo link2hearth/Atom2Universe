@@ -1,0 +1,15 @@
+{
+  "id": 3100,
+  "name": "raw_coal",
+  "texture_top": "cozy:resource:0:52585B",
+  "texture_side": "cozy:resource:0:52585B",
+  "texture_bottom": "cozy:resource:0:52585B",
+  "color": "#52585B",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_coal",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

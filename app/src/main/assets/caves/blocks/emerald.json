@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:ore:3:929EAA:50C878",
   "color": "#50C878",
   "hardness": 4.5,
-  "drop": "emerald",
+  "drop": "raw_emerald",
+  "harvest_category": "ore",
   "creative_tab": "ores"
 }

@@ -1,0 +1,15 @@
+{
+  "id": 3105,
+  "name": "raw_ruby",
+  "texture_top": "cozy:resource:5:C8787E",
+  "texture_side": "cozy:resource:5:C8787E",
+  "texture_bottom": "cozy:resource:5:C8787E",
+  "color": "#C8787E",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_ruby",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

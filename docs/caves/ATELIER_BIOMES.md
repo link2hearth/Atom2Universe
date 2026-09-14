@@ -75,7 +75,7 @@ Le comportement de collecte de la pierre existante ne change pas.
 - Aller-retour sérialisation A2Map vérifié, blocs et orientations conservés.
 - Plan produit depuis le générateur Kotlin compilé, avec les identifiants et
   couleurs des JSON réels. Ce plan ne représente pas l'éclairage 3D du jeu.
-- 172 recettes de textures utilisées, 181 couches GPU de 32 × 32, variantes d'écorce comprises.
+- 182 recettes de textures utilisées, 191 couches GPU de 32 × 32, variantes d'écorce comprises.
   Le climat utilise désormais un champ de couleur interpolé plutôt que des couches supplémentaires.
 
 Le parcours, les collisions et le rendu final restent à vérifier sur appareil.

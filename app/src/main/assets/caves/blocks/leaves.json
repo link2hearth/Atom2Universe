@@ -6,7 +6,8 @@
   "texture_bottom": "cozy:leaf:10:829D65",
   "color": "#829D65",
   "hardness": 0.3,
-  "drop": "leaves",
+  "drop": "",
+  "harvest_category": "fragile",
   "creative_tab": "wood",
   "transparent": true
 }

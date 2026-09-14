@@ -1,0 +1,15 @@
+{
+  "id": 3101,
+  "name": "raw_iron",
+  "texture_top": "cozy:resource:1:A3A8AD",
+  "texture_side": "cozy:resource:1:A3A8AD",
+  "texture_bottom": "cozy:resource:1:A3A8AD",
+  "color": "#A3A8AD",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_iron",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

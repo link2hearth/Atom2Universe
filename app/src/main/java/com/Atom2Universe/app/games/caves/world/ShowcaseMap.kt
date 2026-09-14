@@ -12,7 +12,7 @@ internal object ShowcaseMap {
     const val COLUMNS = 16
     fun mobGalleryZ() = GALLERY_Z + ((galleryBlocks().size + COLUMNS - 1) / COLUMNS) * 4 + 8
 
-    fun galleryBlocks(): List<Short> = BlockRegistry.all().map { it.id }.filter { it != AIR }.sorted()
+    fun galleryBlocks(): List<Short> = BlockRegistry.all().filter { it.placeable }.map { it.id }.filter { it != AIR }.sorted()
 
     // Each vignette occupies 16 x 16 = 256 ground cells, with wide flat paths between them.
     fun zoneAt(x: Int, z: Int): Int {

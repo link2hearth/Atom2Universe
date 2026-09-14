@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_ui_ores">Minerais</string>
+    <string name="cave_ui_resources">Ressources brutes</string>
+    <string name="cave_ui_raw_resource_hint">Ressource de fabrication · ne se pose pas comme un bloc.</string>
+    <string name="cave_ui_harvest_none">Casser ce bloc ne donne aucun objet.</string>
+    <string name="cave_ui_harvest_result">À la casse : %1$d × %2$s</string>
+    <string name="cave_block_raw_coal">Morceau de charbon</string>
+    <string name="cave_block_raw_iron">Fer brut</string>
+    <string name="cave_block_raw_silver">Argent brut</string>
+    <string name="cave_block_raw_gold">Or brut</string>
+    <string name="cave_block_raw_copper">Cuivre brut</string>
+    <string name="cave_block_raw_ruby">Rubis</string>
+    <string name="cave_block_raw_emerald">Émeraude</string>
+    <string name="cave_block_raw_crystal">Éclat de cristal</string>
+    <string name="cave_block_raw_redstone">Fragment de minerai rouge</string>
 
     <string name="cave_title">Cave World</string>
 

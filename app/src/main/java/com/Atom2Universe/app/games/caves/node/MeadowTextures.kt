@@ -59,7 +59,7 @@ internal object MeadowTextures {
     fun supports(name: String): Boolean {
         if (name in itemTextureNames) return true
         val p = name.split(':')
-        return p.getOrNull(1) in setOf("material", "leaf", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature")
+        return p.getOrNull(1) in setOf("material", "leaf", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature", "resource")
     }
 
     fun texture(name: String, outputSize: Int, climate: Int = 0, vivid: Boolean = false): Bitmap {
@@ -79,6 +79,7 @@ internal object MeadowTextures {
             ?: (0xFF000000.toInt() or materials[tile.coerceIn(0, 15)])
         val canvas = Tile()
         when (family) {
+            "resource" -> canvas.resource(tile, base)
             "nature" -> canvas.nature(tile)
             "item" -> canvas.item(tile)
             "utility" -> canvas.utility(tile, p.getOrNull(3)?.let { Color.parseColor("#$it") })
@@ -603,6 +604,26 @@ internal object MeadowTextures {
                         rect(14, 9, 4, 3, shade(petal, 12))
                     }
                 }
+            }
+        }
+
+        /** Loose mineral, transparent background: visually distinct from its ore block. */
+        fun resource(tile: Int, color: Int) {
+            if (tile in 5..7) {
+                // Cut crystal silhouette with aligned two-pixel facets.
+                for (y in 4 until 28) {
+                    val half = if (y < 12) 4 + (y - 4) / 2 * 2 else (12 - (y - 12) / 2).coerceAtLeast(2)
+                    rect(16 - half, y, half * 2, 1, shade(color, -25))
+                    rect(16 - half + 2, y, (half - 2).coerceAtLeast(0), 1, shade(color, 25))
+                    rect(16, y, (half - 2).coerceAtLeast(0), 1, color)
+                }
+            } else {
+                rect(6, 12, 20, 12, shade(color, -30))
+                rect(10, 6, 12, 18, color)
+                rect(6, 14, 8, 8, color)
+                rect(12, 8, 8, 4, shade(color, 30))
+                rect(8, 14, 4, 4, shade(color, 18))
+                rect(20, 16, 4, 6, shade(color, -15))
             }
         }
 

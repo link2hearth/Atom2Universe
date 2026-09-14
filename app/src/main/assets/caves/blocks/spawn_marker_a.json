@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:cloth:5:FF8C00",
   "color": "#FF8C00",
   "hardness": 0.3,
-  "drop": "spawn_marker_a",
+  "drop": "",
+  "harvest_category": "technical",
   "creative_tab": "functional"
 }

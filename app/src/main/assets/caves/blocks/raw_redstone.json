@@ -1,0 +1,15 @@
+{
+  "id": 3108,
+  "name": "raw_redstone",
+  "texture_top": "cozy:resource:8:B97F75",
+  "texture_side": "cozy:resource:8:B97F75",
+  "texture_bottom": "cozy:resource:8:B97F75",
+  "color": "#B97F75",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_redstone",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

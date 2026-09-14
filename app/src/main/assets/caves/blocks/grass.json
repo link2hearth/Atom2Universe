@@ -7,5 +7,6 @@
   "color": "#819A5E",
   "hardness": 0.8,
   "drop": "dirt",
+  "harvest_category": "covered_soil",
   "creative_tab": "terrain"
 }

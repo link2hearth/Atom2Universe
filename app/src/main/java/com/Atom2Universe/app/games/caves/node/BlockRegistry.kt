@@ -4,10 +4,14 @@ import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import org.json.JSONObject
+import com.Atom2Universe.app.games.caves.world.SpriteHitMask
 
 internal object BlockRegistry {
 
     private val defs = HashMap<Short, BlockDef>()
+    private val harvestDrops = HashMap<Short, Pair<Short, Int>>()
+
+    fun harvestDrop(id: Short): Pair<Short, Int>? = harvestDrops[id]
 
     // Tables O(1) pour le hot path du rendu — indexées par id.toInt() and 0xFFFF
     private val decorationTable  = BooleanArray(65536)
@@ -45,6 +49,9 @@ internal object BlockRegistry {
 
     // Copies des faces top pour l'UI — stockées avant le recycle GL dans CaveRenderer
     private val topBitmapById = HashMap<Short, Bitmap>()
+    private val decorationMasks = HashMap<Short, SpriteHitMask>()
+
+    fun decorationMask(id: Short): SpriteHitMask? = decorationMasks[id]
 
     fun load(assets: AssetManager) {
         if (defs.isNotEmpty()) return
@@ -62,6 +69,17 @@ internal object BlockRegistry {
             if (def.waterlogged) waterloggedTable[idx] = true
             orientModeTable[idx] = def.orientMode
         }
+        val byName = defs.values.associateBy { it.name }
+        for (def in defs.values) {
+            require(def.harvestCategory in setOf("recoverable", "covered_soil", "fractured_stone",
+                "fragile", "liquid", "unharvestable_crop", "technical", "ore", "resource")) {
+                "Unknown harvest category for ${def.name}: ${def.harvestCategory}"
+            }
+            require(def.dropCount > 0) { "Invalid drop count for ${def.name}" }
+            if (def.drop.isBlank()) continue
+            val target = requireNotNull(byName[def.drop]) { "Unknown drop '${def.drop}' for ${def.name}" }
+            harvestDrops[def.id] = target.id to def.dropCount
+        }
     }
 
     fun registerGeneratedTexture(name: String, provider: (Int) -> Bitmap) {
@@ -75,6 +93,8 @@ internal object BlockRegistry {
         textureOrder.clear()
         topBitmapById.values.forEach { it.recycle() }
         topBitmapById.clear()
+        decorationMasks.clear()
+        val masksByLayer = HashMap<Int, SpriteHitMask>()
 
         val bitmaps = mutableListOf<Bitmap>()
 
@@ -112,6 +132,13 @@ internal object BlockRegistry {
 
             // Copie indépendante pour l'UI : survivra au recycle GL dans CaveRenderer
             val src = bitmaps[def.layerTop]
+            if (def.decoration) {
+                decorationMasks[def.id] = masksByLayer.getOrPut(def.layerTop) {
+                    val pixels = IntArray(src.width * src.height)
+                    src.getPixels(pixels, 0, src.width, 0, 0, src.width, src.height)
+                    SpriteHitMask(src.width, src.height, pixels)
+                }
+            }
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 

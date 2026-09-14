@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:material:5:A7B0B7",
   "color": "#A7B0B7",
   "hardness": 3.5,
-  "drop": "greystone_greysand",
+  "drop": "greystone",
+  "harvest_category": "fractured_stone",
   "creative_tab": "terrain"
 }

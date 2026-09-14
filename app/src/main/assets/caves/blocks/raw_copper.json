@@ -1,0 +1,15 @@
+{
+  "id": 3104,
+  "name": "raw_copper",
+  "texture_top": "cozy:resource:4:BF967B",
+  "texture_side": "cozy:resource:4:BF967B",
+  "texture_bottom": "cozy:resource:4:BF967B",
+  "color": "#BF967B",
+  "hardness": 1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "raw_copper",
+  "harvest_category": "resource",
+  "creative_tab": "resources"
+}

@@ -6,6 +6,7 @@
   "texture_bottom": "cozy:nature:5",
   "color": "#88735D",
   "hardness": 1,
-  "drop": "forest_floor",
+  "drop": "dirt",
+  "harvest_category": "covered_soil",
   "creative_tab": "terrain"
 }

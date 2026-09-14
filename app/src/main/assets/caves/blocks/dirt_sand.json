@@ -2,10 +2,11 @@
   "id": 104,
   "name": "dirt_sand",
   "texture_top": "cozy:material:5",
-  "texture_side": "cozy:material:2",
-  "texture_bottom": "cozy:material:5",
+  "texture_side": "cozy:cap:2:94765C:5",
+  "texture_bottom": "cozy:material:2",
   "color": "#DDC799",
   "hardness": 1.5,
-  "drop": "dirt_sand",
+  "drop": "dirt",
+  "harvest_category": "covered_soil",
   "creative_tab": "terrain"
 }
