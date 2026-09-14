@@ -121,6 +121,7 @@
     <string name="farm_dev_complete_growth">Finish all growth now</string>
     <string name="farm_dev_testing">Testing</string>
     <string name="farm_dev_water_all">Water everything</string>
+    <string name="farm_dev_harvest_all">Harvest everything</string>
     <string name="farm_dev_reset">Reset</string>
     <string name="farm_dev_reset_confirm">Reset the whole farm to a fresh start</string>
     <string name="farm_dev_reset_done">Farm reset.</string>

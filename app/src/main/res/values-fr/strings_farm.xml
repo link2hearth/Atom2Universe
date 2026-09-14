@@ -121,6 +121,7 @@
     <string name="farm_dev_complete_growth">Terminer toute la pousse maintenant</string>
     <string name="farm_dev_testing">Tests</string>
     <string name="farm_dev_water_all">Arroser tout</string>
+    <string name="farm_dev_harvest_all">Arracher tout</string>
     <string name="farm_dev_reset">Réinitialiser</string>
     <string name="farm_dev_reset_confirm">Réinitialiser toute la ferme à zéro</string>
     <string name="farm_dev_reset_done">Ferme réinitialisée.</string>

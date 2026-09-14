@@ -183,7 +183,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
             } else bmp.eraseColor(Color.TRANSPARENT)
             val cc = Canvas(bmp)
             if (f.phase == 2 || f.phase == 3) {
-                val stage = if (f.phase == 3) 4 else 3
+                val growth = f.growthProgress(System.currentTimeMillis())
+                val stage = (growth * 4).toInt()
                 for (i in 0 until f.size) {
                     val col = i % f.columns; val row = i / f.columns
                     val x = col * cell; val y = row * cell
@@ -194,7 +195,8 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                         if (!f.eligible[idx] || (f.phase == 3 && f.painted[idx])) continue
                         val sx = x + (a + .5f) * cell / 4; val sy = y + (b + .85f) * cell / 4
                         val sw = cell / 4 * .95f; val sh = cell / 4 * 1.35f
-                        sprites.crop(cc, FarmCrop.WHEAT, (a + b) % 2, stage, RectF(sx - sw / 2, sy - sh, sx + sw / 2, sy))
+                        sprites.crop(cc, FarmCrop.WHEAT, (a + b) % 2, stage,
+                            RectF(sx - sw / 2, sy - sh, sx + sw / 2, sy), growth = growth)
                     }
                 }
             } else if (f.phase == 1) {
@@ -208,7 +210,7 @@ class FieldArcadeView(context: Context, private val state: FarmState, private va
                         if (!f.eligible[idx] || !f.painted[idx]) continue
                         val sx = x + a * cell / 4; val sy = y + b * cell / 4
                         val sw = cell / 6f; val sh = cell / 5f
-                        sprites.crop(cc, FarmCrop.WHEAT, (a + b) % 2, 1, RectF(sx - sw / 2, sy - sh, sx + sw / 2, sy))
+                        sprites.crop(cc, FarmCrop.WHEAT, (a + b) % 2, 0, RectF(sx - sw / 2, sy - sh, sx + sw / 2, sy))
                     }
                 }
             }

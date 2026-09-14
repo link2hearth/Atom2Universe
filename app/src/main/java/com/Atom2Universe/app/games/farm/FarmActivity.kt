@@ -272,6 +272,10 @@ class FarmActivity : ThemedActivity() {
             }, LinearLayout.LayoutParams(-1, dp(48)).apply { bottomMargin = dp(14) })
 
             body.addView(text(getString(R.string.farm_dev_testing), 15, true).apply { setPadding(0, 0, 0, dp(6)) })
+            body.addView(button(getString(R.string.farm_dev_harvest_all)) {
+                val result = state.harvestMany(state.plots.indices.toList(), System.currentTimeMillis())
+                message(getString(R.string.farm_harvested_many, result.count)); refresh()
+            }, LinearLayout.LayoutParams(-1, dp(48)).apply { bottomMargin = dp(4) })
             body.addView(button(getString(R.string.farm_dev_water_all)) {
                 state.cheatWaterAll(); message(getString(R.string.farm_dev_done)); refresh()
             }, LinearLayout.LayoutParams(-1, dp(48)).apply { bottomMargin = dp(14) })

@@ -348,7 +348,7 @@ class FarmState(private val prefs: SharedPreferences) {
         if (!f.paid || f.phase == 2) return false
         when (f.phase) {
             0 -> { f.eligible = f.painted.copyOf(); f.phase = 1; f.beginPass() }
-            1 -> { f.eligible = f.painted.copyOf(); f.phase = 2; f.readyAt = System.currentTimeMillis() + 6 * 3600_000L; f.beginPass() }
+            1 -> { f.eligible = f.painted.copyOf(); f.phase = 2; f.readyAt = System.currentTimeMillis() + LargeField.GROWTH_MILLIS; f.beginPass() }
             3 -> {
                 val worked = f.painted.indices.count { f.painted[it] && f.eligible[it] } / (LargeField.SUB * LargeField.SUB)
                 largeFields.grain += worked * 2L + if (f.complete) f.size / 2 else 0
@@ -516,7 +516,7 @@ class FarmState(private val prefs: SharedPreferences) {
         if (coins < cost) return false
         coins -= cost; aimLevel++; save(); return true
     }
-    fun wateringUpgradeCost(level: Int): Long = if (level == 1) 3_000L else 20_000L
+    fun wateringUpgradeCost(level: Int): Long = if (level == 1) 1_500L else 20_000L
     fun upgradeWatering(): Boolean {
         if (wateringLevel >= 2) return false
         val cost = wateringUpgradeCost(wateringLevel + 1)
@@ -527,7 +527,7 @@ class FarmState(private val prefs: SharedPreferences) {
      * Late game, a full farm is 237 cells. Pulling each one by hand three times a day is not a game,
      * so the basket reaches a row, then a parcel - the same ladder as the watering can.
      */
-    fun harvestUpgradeCost(level: Int): Long = if (level == 1) 60_000L else 400_000L
+    fun harvestUpgradeCost(level: Int): Long = if (level == 1) 1_500L else 400_000L
     fun upgradeHarvest(): Boolean {
         if (harvestLevel >= 2) return false
         val cost = harvestUpgradeCost(harvestLevel + 1)
