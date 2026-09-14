@@ -6,9 +6,24 @@ import kotlin.math.abs
 /** A finite, hand-composed material garden. Never used by the survival generator. */
 internal object ShowcaseMap {
     const val WIDTH = 72
-    const val HEIGHT = 32
+    const val HEIGHT = 40
     const val FLOOR = 4
-    const val GALLERY_Z = 50
+    const val TREE_Z = 50
+    const val COLD_Z = 158
+    const val GALLERY_Z = 212
+    fun coldAt(x: Int, z: Int): Int? {
+        if (x !in 0 until WIDTH || z !in COLD_Z until GALLERY_Z - 2) return null
+        return ((z - COLD_Z) / 18 * 3 + x / 24).takeIf { it in 0..7 }
+    }
+    val treeTypes = listOf("oak", "birch", "sapin", "darkwood", "jungle", "redwood",
+        "apple", "pear", "pink", "purple", "blue", "yellow",
+        "giant_redwood", "giant_pine", "broad_oak", "baobab", "acacia", "willow")
+
+    fun treeAt(x: Int, z: Int): Int? {
+        if (x !in 0 until WIDTH || z !in TREE_Z until COLD_Z - 2) return null
+        val index = (z - TREE_Z) / 18 * 3 + x / 24
+        return index.takeIf { it in treeTypes.indices }
+    }
     const val COLUMNS = 16
     fun mobGalleryZ() = GALLERY_Z + ((galleryBlocks().size + COLUMNS - 1) / COLUMNS) * 4 + 8
     private fun mobBayCount() = com.Atom2Universe.app.games.caves.node.MobRegistry.all().size + 1 +
@@ -23,10 +38,11 @@ internal object ShowcaseMap {
             val oz = 4 + zone / 3 * 22
             if (x in ox until ox + 16 && z in oz until oz + 16) return zone
         }
-        return if (z >= GALLERY_Z - 2) 6 else 7
+        return if (treeAt(x, z) != null) 8 else if (z >= GALLERY_Z - 2) 6 else 7
     }
 
     fun climateAt(x: Int, z: Int): Int {
+        if (coldAt(x, z) != null) return 4
         // Adjacent grass samples on the avenue make the narrow color transition inspectable.
         if (z in 44..46 && x in 4..19) return if (x < 12) 0 else 3
         if (z in 44..46 && x in 48..63) return if (x < 56) 1 else 2
@@ -130,6 +146,25 @@ internal object ShowcaseMap {
         put(38, 5, 45, TABLE, 2)
         for (z in 44..46) for (x in (4..19) + (48..63)) put(x, FLOOR, z, GRASS)
         for (x in intArrayOf(6, 10, 13, 17, 50, 54, 57, 61)) put(x, FLOOR + 1, 45, 7056)
+        // Full production trees, separated by walking aisles; fruit species are explicit.
+        for ((index, type) in treeTypes.withIndex()) {
+            val tx = 12 + index % 3 * 24
+            val tz = TREE_Z + 8 + index / 3 * 18
+            fill(tx - 7, FLOOR, tz - 7, tx + 7, FLOOR, tz + 7, if (type == "baobab" || type == "acacia") SAND else GRASS)
+            TreeShape.generate(type, kotlin.random.Random(8100 + index)) { dx, dy, dz, block, onlyAir ->
+                val x = tx + dx; val y = FLOOR + dy; val z = tz + dz
+                if (!onlyAir || blocks[x + WIDTH * (z + depth * y)] == AIR)
+                    put(x, y, z, block, if (isLeaf(block)) LeafSupport.PERSISTENT else 0)
+            }
+        }
+        for (kind in 0..7) {
+            val tx = 12 + kind % 3 * 24
+            val tz = COLD_Z + 8 + kind / 3 * 18
+            fill(tx - 7, FLOOR, tz - 7, tx + 7, FLOOR, tz + 7, DIRT_SNOW)
+            ColdLandscape.generate(kind, kotlin.random.Random(9140 + kind), { _, _ -> FLOOR }) { x, y, z, id, rotation ->
+                put(tx + x, y, tz + z, id, rotation)
+            }
+        }
         // Every registered block, including markers and liquids. No capture(): it would strip markers.
         for ((i, block) in exhibits.withIndex()) {
             val x = 4 + i % COLUMNS * 4

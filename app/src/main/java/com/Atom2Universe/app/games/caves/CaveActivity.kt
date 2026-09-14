@@ -449,6 +449,14 @@ class CaveActivity : ThemedActivity() {
                     caption.text = if (block != null) getString(R.string.cave_showcase_sample, blockName(block))
                         else getString(names[zone])
                 } }
+                val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
+                mode.onColdCaption = { index -> uiHandler.post {
+                    caption.text = coldNames[index]
+                } }
+                val treeNames = resources.getStringArray(R.array.cave_showcase_tree_names)
+                mode.onTreeCaption = { index -> uiHandler.post {
+                    caption.text = getString(R.string.cave_showcase_tree_caption, treeNames[index])
+                } }
                 val modelIds = listOf("dwarf", "goblin", "golem", "imp", "mummy", "ogre",
                     "skeleton", "slime", "spider", "troll", "wraith", "zombie", "soldier")
                 val mobNames = resources.getStringArray(R.array.cave_showcase_mob_names)

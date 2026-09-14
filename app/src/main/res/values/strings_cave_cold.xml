@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_cracked_ice">Cracked ice</string>
+    <string name="cave_block_lichen_stone">Lichen-covered stone</string>
+    <string-array name="cave_showcase_cold_names">
+        <item>Ice outcrop</item>
+        <item>Hollow fallen trunk and stump</item>
+        <item>Lone standing stone</item>
+        <item>Frozen pond</item>
+        <item>Windswept tree</item>
+        <item>Snowy rocks and lichens</item>
+        <item>Incomplete stone circle</item>
+        <item>Standing stone alignment</item>
+    </string-array>
+</resources>

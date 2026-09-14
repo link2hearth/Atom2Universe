@@ -59,7 +59,7 @@ internal object MeadowTextures {
     fun supports(name: String): Boolean {
         if (name in itemTextureNames) return true
         val p = name.split(':')
-        return p.getOrNull(1) in setOf("material", "leaf", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature", "resource")
+        return p.getOrNull(1) in setOf("material", "leaf", "fruit", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature", "resource")
     }
 
     fun texture(name: String, outputSize: Int, climate: Int = 0, vivid: Boolean = false): Bitmap {
@@ -86,7 +86,11 @@ internal object MeadowTextures {
             "glass" -> canvas.glass()
             "flora" -> canvas.flora(tile)
             "groundcover" -> canvas.groundcover(tile)
-            "leaf" -> canvas.leaves(base)
+                        "leaf" -> {
+                canvas.leaves(base)
+                if (tile >= 20) canvas.leafDetail(tile)
+            }
+            "fruit" -> canvas.fruit(tile, 12, 12)
             "cloth" -> {
                 val soft = mix(base, 0xFFD8CDBE.toInt(), .20f)
                 canvas.fill(soft)
@@ -97,7 +101,8 @@ internal object MeadowTextures {
             }
             else -> {
                 canvas.material(tile, base)
-                if (tile == 7 && p.getOrNull(4) == "knot") canvas.knot(base)
+                if (tile == 7 && "rough" in p) canvas.roughBark(base)
+                if (tile == 7 && "knot" in p) canvas.knot(base)
                 if (family == "ore") canvas.ore(Color.parseColor("#${p[4]}"))
                 if (family == "cap") {
                     val cap = p[4].toInt()
@@ -107,6 +112,7 @@ internal object MeadowTextures {
                 }
             }
         }
+        if (p.lastOrNull() == "cracked") canvas.iceCracks()
         if (climate != 0 && isClimateTexture(name)) {
             val target = 0xFF000000.toInt() or climateColors[climate]
             val side = family == "cap" || (family == "material" && tile == 1)
@@ -165,8 +171,9 @@ internal object MeadowTextures {
         }
 
         private fun wrappedRect(x: Int, y: Int, w: Int, h: Int, color: Int) {
+            // Kotlin's remainder keeps the sign: use floorMod for patterns crossing the top/left edges.
             for (dy in 0 until h) for (dx in 0 until w)
-                data[((y + dy) % SIZE) * SIZE + (x + dx) % SIZE] = color
+                data[Math.floorMod(y + dy, SIZE) * SIZE + Math.floorMod(x + dx, SIZE)] = color
         }
 
         private fun mirrorRect(x: Int, y: Int, w: Int, h: Int, color: Int) {
@@ -645,6 +652,53 @@ internal object MeadowTextures {
                 rect(x, depth, 1, 1, shade(color, -20))
             }
             for (x in 2..31 step 8) rect(x, 2, 4, 2, shade(color, 13))
+        }
+        fun fruit(kind: Int, x: Int, y: Int) {
+            val color = when (kind) { 1 -> 0xFFB2A357.toInt(); 2 -> 0xFF984D53.toInt(); else -> 0xFFB65E4D.toInt() }
+            rect(x + 3, y - 3, 1, 4, 0xFF675343.toInt())
+            rect(x + 4, y - 3, 3, 2, 0xFF668052.toInt())
+            rect(x + 1, y, 6, 7, shade(color, -20))
+            rect(x, y + 1, 7, 4, color)
+            rect(x + 1, y + 1, 2, 2, shade(color, 27))
+            if (kind == 1) rect(x + 2, y - 2, 3, 4, color)
+            if (kind == 2) {
+                rect(x + 7, y - 2, 1, 5, 0xFF675343.toInt())
+                rect(x + 6, y + 2, 5, 5, color)
+                rect(x + 6, y + 2, 2, 1, shade(color, 24))
+            }
+        }
+        fun leafDetail(tile: Int) {
+            if (tile != 20) { fruit(tile - 21, 11, 14); return }
+            for ((x, y) in arrayOf(7 to 9, 23 to 22)) {
+                val petal = 0xFFE3C9BF.toInt()
+                rect(x - 2, y - 1, 5, 3, petal)
+                rect(x - 1, y - 2, 3, 5, petal)
+                rect(x, y, 1, 1, 0xFFC4A264.toInt())
+            }
+        }
+        fun roughBark(base: Int) {
+            fill(base)
+            // Uneven plates and broken furrows, rather than mirrored continuous stripes.
+            for (row in 0..3) for (col in 0..4) {
+                val x = col * 7 + (row % 2) * 3 - 2
+                val y = row * 9 - col % 3
+                wrappedRect(x, y, 5, 7, shade(base, 7 + (row + col) % 3 * 3))
+                wrappedRect(x, y + 1, 1, 5, shade(base, -12))
+                wrappedRect(x + 1, y + 6, 4, 1, shade(base, -8))
+                wrappedRect(x + 3, y + 2, 1, 3, shade(base, 17))
+            }
+        }
+        fun iceCracks() {
+            val dark = 0xFF7899A6.toInt()
+            for (i in 0..15) {
+                val x = 5 + i / 3; val y = i + 3
+                rect(x, y, 1, 1, dark)
+                rect(x + 1, y, 1, 1, 0xFFDBE7E5.toInt())
+            }
+            for (i in 0..10) {
+                rect(10 + i, 17 + i / 2, 1, 1, dark)
+                if (i < 7) rect(10 - i, 17 + i, 1, 1, dark)
+            }
         }
         fun leaves(base: Int) {
             fill(base)

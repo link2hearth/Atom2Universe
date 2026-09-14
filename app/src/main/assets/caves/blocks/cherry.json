@@ -1,0 +1,18 @@
+{
+  "id": 3132,
+  "name": "cherry",
+  "texture_top": "cozy:fruit:2:984D53",
+  "texture_side": "cozy:fruit:2:984D53",
+  "texture_bottom": "cozy:fruit:2:984D53",
+  "color": "#984D53",
+  "hardness": 0.3,
+  "drop": "cherry",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "transparent": true,
+  "decoration": true,
+  "placeable": false,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

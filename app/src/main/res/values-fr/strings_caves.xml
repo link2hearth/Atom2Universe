@@ -557,7 +557,7 @@
     <string name="cave_block_moss">Mousse</string>
     <string name="cave_block_basalt">Basalte</string>
     <string name="cave_assault_showcase">Atelier des biomes · visite libre</string>
-    <string name="cave_showcase_hint">Explorez six paysages, les blocs, puis la galerie des créatures au fond. Visite paisible.</string>
+    <string name="cave_showcase_hint">Explorez six paysages, les arbres, les blocs, puis les créatures au fond. Visite paisible.</string>
     <string-array name="cave_showcase_mob_names">
         <item>Nain</item><item>Gobelin</item><item>Golem</item><item>Diablotin</item><item>Momie</item><item>Ogre</item>
         <item>Squelette</item><item>Slime</item><item>Araignée</item><item>Troll</item><item>Spectre</item><item>Zombie</item><item>Soldat d’Assaut</item>
@@ -576,7 +576,7 @@
     <string name="cave_showcase_marsh">Marais et argile</string>
     <string name="cave_showcase_volcano">Roches volcaniques</string>
     <string name="cave_showcase_gallery">Galerie des blocs</string>
-    <string name="cave_showcase_walk">Chemins · six paysages et une galerie de blocs</string>
+    <string name="cave_showcase_walk">Chemins · paysages, arbres, blocs et créatures</string>
     <string name="cave_showcase_sample">Échantillon proche : %1$s</string>
     <string name="cave_palette_pastel">Palette : Pastel</string>
     <string name="cave_palette_vivid">Palette : Vif</string>

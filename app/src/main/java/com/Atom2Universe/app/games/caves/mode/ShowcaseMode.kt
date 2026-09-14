@@ -16,6 +16,8 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
     override val fixedTimeOfDayMs = 600_000L
     @Volatile var onCaption: ((Int, Short?) -> Unit)? = null
     @Volatile var onMobCaption: ((Enemy, ExhibitPose) -> Unit)? = null
+    @Volatile var onTreeCaption: ((Int) -> Unit)? = null
+    @Volatile var onColdCaption: ((Int) -> Unit)? = null
     val mannequins = mutableListOf<Enemy>()
     private val exhibits = ShowcaseMap.galleryBlocks()
     private var captionTimer = 0f
@@ -87,6 +89,14 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
                 dx * dx + dz * dz
             }
             if (nearest != null) onMobCaption?.invoke(nearest, nearest.exhibitPose!!)
+            return
+        }
+        ShowcaseMap.treeAt(x, z)?.let {
+            onTreeCaption?.invoke(it)
+            return
+        }
+        ShowcaseMap.coldAt(x, z)?.let {
+            onColdCaption?.invoke(it)
             return
         }
         val zone = ShowcaseMap.zoneAt(x, z)

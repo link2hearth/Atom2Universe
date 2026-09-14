@@ -166,7 +166,7 @@ internal object BlockRegistry {
     fun isDecoration(block: Short)  = decorationTable[block.toInt() and 0xFFFF]
     fun isWaterlogged(block: Short) = waterloggedTable[block.toInt() and 0xFFFF]
     fun isWood(block: Short)  = block.toInt() in 1000..1009
-    fun isLeaf(block: Short)  = block.toInt() in 1020..1031
+    fun isLeaf(block: Short)  = block.toInt() in 1020..1035
     fun isTransparent(block: Short) = transparentTable[block.toInt() and 0xFFFF]
     fun isWater(block: Short)       = waterTable[block.toInt() and 0xFFFF]
     fun isFalling(block: Short)     = fallingTable[block.toInt() and 0xFFFF]

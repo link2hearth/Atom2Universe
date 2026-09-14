@@ -803,6 +803,7 @@ internal class CaveRenderer(
         if (waterTickAccum >= 0.25f) {
             waterTickAccum = 0f
             world.tickWater()
+            if (!gamePaused && mode.allowsWorldEdits) world.tickLeaves { if (!isCreative) collectBlock(it) }
         }
 
         gravityTickAccum += dt
@@ -3261,6 +3262,22 @@ internal class CaveRenderer(
 
     private fun placeBlock(target: RayHit? = raycastBlock()) {
         val blockType = hotbar[selectedSlot] ?: return
+        if (blockType.toInt() in 3130..3132) {
+            val player = enemyManager.player ?: return
+            val count = inventory[blockType] ?: 0
+            if (count <= 0 || !player.isAlive || player.hp >= player.maxHp) return
+            player.applyHeal(if (blockType.toInt() == 3132) 3 else 5)
+            startSwing()
+            if (!isCreative) {
+                if (count == 1) {
+                    inventory.remove(blockType)
+                    for (i in buildHotbar.indices) if (buildHotbar[i] == blockType) buildHotbar[i] = null
+                } else inventory[blockType] = count - 1
+            }
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            return
+        }
         if (BlockRegistry.get(blockType)?.placeable == false && blockType != BUCKET_EMPTY && blockType != BUCKET_FULL) return
         startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
@@ -3309,7 +3326,7 @@ internal class CaveRenderer(
         if (existing != AIR && BlockRegistry.get(existing)?.replaceable != true) return
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
-        val orientMeta = computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        val orientMeta = if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))

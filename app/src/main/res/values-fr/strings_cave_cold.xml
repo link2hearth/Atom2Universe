@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_cracked_ice">Glace fissurée</string>
+    <string name="cave_block_lichen_stone">Pierre couverte de lichens</string>
+    <string-array name="cave_showcase_cold_names">
+        <item>Affleurement de glace</item>
+        <item>Tronc creux couché et souche</item>
+        <item>Menhir solitaire</item>
+        <item>Mare gelée</item>
+        <item>Arbre battu par le vent</item>
+        <item>Rochers enneigés et lichens</item>
+        <item>Cercle incomplet de menhirs</item>
+        <item>Alignement de menhirs</item>
+    </string-array>
+</resources>

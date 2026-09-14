@@ -1,0 +1,18 @@
+{
+  "id": 1034,
+  "name": "leaves_pear",
+  "texture_top": "cozy:leaf:22:829466",
+  "texture_side": "cozy:leaf:22:829466",
+  "texture_bottom": "cozy:leaf:22:829466",
+  "color": "#829466",
+  "hardness": 0.3,
+  "drop": "pear",
+  "harvest_category": "fragile",
+  "creative_tab": "wood",
+  "transparent": true,
+  "decoration": false,
+  "placeable": true,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

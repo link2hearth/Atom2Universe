@@ -393,6 +393,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val lz = wz - cz * CHUNK_SIZE
         val old = chunk.blockAt(lx, ly, lz)
         if (old == type) return
+        if (isWood(old) || isLeaf(old)) {
+            for (dz in -6..6) for (dy in -6..6) for (dx in -6..6) {
+                if (kotlin.math.abs(dx) + kotlin.math.abs(dy) + kotlin.math.abs(dz) <= 6 &&
+                    isLeaf(blockAt(wx + dx, wy + dy, wz + dz)))
+                    leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
+            }
+        }
         chunk.setBlock(lx, ly, lz, type)
         chunk.version++; chunk.meshDirty = true
         val key = chunkKey(cx, cy, cz)
@@ -1734,6 +1741,43 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         enqueueLight(cx, cy, cz + 1)
     }
 
+    private val leafChecks = java.util.LinkedHashSet<Triple<Int, Int, Int>>()
+    private var leafScanChunks = emptyList<Long>()
+    private var leafScanChunk = 0
+    private var leafScanIndex = 0
+
+    /** Bounded background sweep also resumes decay after saving/reloading or chunk streaming. */
+    fun tickLeaves(onDecay: (Short) -> Unit) {
+        if (leafScanChunk >= leafScanChunks.size) {
+            leafScanChunks = chunks.keys.toList()
+            leafScanChunk = 0
+            leafScanIndex = 0
+        }
+        var scans = 0
+        while (leafScanChunk < leafScanChunks.size && scans++ < 512) {
+            val chunk = chunks[leafScanChunks[leafScanChunk]]
+            if (chunk == null || !chunk.generated) { leafScanChunk++; leafScanIndex = 0; continue }
+            val i = leafScanIndex++
+            val x = i % 16; val y = i / 16 % 16; val z = i / 256
+            if (isLeaf(chunk.blockAt(x, y, z))) leafChecks.add(Triple(chunk.worldX + x, chunk.worldY + y, chunk.worldZ + z))
+            if (leafScanIndex == 4096) { leafScanIndex = 0; leafScanChunk++ }
+            if (leafChecks.size >= 32) break
+        }
+        repeat(8) {
+            val p = leafChecks.firstOrNull() ?: return
+            leafChecks.remove(p)
+            val (x, y, z) = p
+            val id = blockAt(x, y, z)
+            if (!isLeaf(id) || metaAt(x, y, z) == LeafSupport.PERSISTENT) return@repeat
+            if (!LeafSupport.supported(x, y, z) { a, b, c ->
+                getChunk(Math.floorDiv(a, 16), Math.floorDiv(b, 16), Math.floorDiv(c, 16))
+                    ?.takeIf { it.generated }?.blockAt(Math.floorMod(a, 16), Math.floorMod(b, 16), Math.floorMod(c, 16))
+            }) {
+                setBlock(x, y, z, AIR)
+                onDecay(id)
+            }
+        }
+    }
     fun setBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
@@ -1742,6 +1786,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
         val old = chunk.blockAt(lx, ly, lz)
         if (old == type) return
+        if (isWood(old) || isLeaf(old)) {
+            for (dz in -6..6) for (dy in -6..6) for (dx in -6..6) {
+                if (kotlin.math.abs(dx) + kotlin.math.abs(dy) + kotlin.math.abs(dz) <= 6 &&
+                    isLeaf(blockAt(wx + dx, wy + dy, wz + dz)))
+                    leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
+            }
+        }
         chunk.setBlock(lx, ly, lz, type)
         if (old == WATER_FLOW) clearWaterFlowLevel(wx, wy, wz)
         if (type == WATER_FLOW) setWaterFlowLevel(wx, wy, wz, 1)

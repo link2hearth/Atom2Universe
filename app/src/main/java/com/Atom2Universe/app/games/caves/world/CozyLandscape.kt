@@ -12,6 +12,15 @@ internal class CozyLandscape(private val seed: Long,
     private data class Site(val x: Int, val z: Int, val y: Int, val kind: Int)
     private val relief = ConcurrentHashMap<Long, Relief>()
     private val sites = ConcurrentHashMap<Long, Site>()
+    private val cold by lazy {
+        ColdLandscape(seed, { x, z -> height(x.toDouble(), z.toDouble()).toInt() },
+            { x, z -> natural?.biomeIdAt(x.toDouble(), z.toDouble())
+                ?: BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed).id },
+            { x, z ->
+                val plot = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
+                nearCave(x, z) || (plot.kind >= 0 && x in plot.x - 7..plot.x + 19 && z in plot.z - 7..plot.z + 19)
+            })
+    }
     private val offset = (seed and 0xFFFFF) * 0.0001
     private fun key(x: Int, z: Int) = (x.toLong() shl 32) xor (z.toLong() and 0xffffffffL)
     private fun random(x: Int, z: Int, salt: Long) =
@@ -89,8 +98,9 @@ internal class CozyLandscape(private val seed: Long,
     }
 
     fun decorate(c: Chunk, heights: IntArray, tops: ShortArray, biomes: IntArray) {
-        if (c.worldY > heights.max() + 14 || c.worldY + 16 <= heights.min() - 3) return
+        if (c.worldY > heights.max() + TreeShape.HEIGHT || c.worldY + 16 <= heights.min() - 3) return
         trees(c)
+        cold.decorate(c)
         for (z in 0..15) for (x in 0..15) {
             val i = z * 16 + x; val h = heights[i]
             val y = h + 1 - c.worldY
@@ -99,6 +109,7 @@ internal class CozyLandscape(private val seed: Long,
             if (y > 0 && c.blockAt(x, y - 1, z) != tops[i]) continue
             val wx = c.worldX + x; val wz = c.worldZ + z
             if (y == 0 && nearCave(wx, wz)) continue
+            if (cold.reserves(wx, wz)) continue
             val rng = random(wx, wz, 71893L)
             val biome = BiomeRegistry.surfaceBiomes[biomes[i]]
             val patch = SimplexNoise.noise(wx * .042 + offset + 49, wz * .042)
@@ -132,42 +143,52 @@ internal class CozyLandscape(private val seed: Long,
     }
 
     private fun trees(c: Chunk) {
-        for (gz in Math.floorDiv(c.worldZ - 4, 7)..Math.floorDiv(c.worldZ + 19, 7))
-            for (gx in Math.floorDiv(c.worldX - 4, 7)..Math.floorDiv(c.worldX + 19, 7)) {
+        for (gz in Math.floorDiv(c.worldZ - TreeShape.REACH, 7)..Math.floorDiv(c.worldZ + 15 + TreeShape.REACH, 7))
+            for (gx in Math.floorDiv(c.worldX - TreeShape.REACH, 7)..Math.floorDiv(c.worldX + 15 + TreeShape.REACH, 7)) {
                 val rng = random(gx, gz, 44281L)
                 val x = gx * 7 + 1 + rng.nextInt(5); val z = gz * 7 + 1 + rng.nextInt(5)
                 val biome = natural?.let { terrain -> BiomeRegistry.surfaceBiomes.first { it.id == terrain.biomeIdAt(x.toDouble(), z.toDouble()) } }
                     ?: BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed)
-                if (biome.treeType == "none") continue
+                val arid = biome.id in setOf("desert", "red_desert")
+                if (biome.treeType == "none" && !arid) continue
                 val grove = SimplexNoise.noise(x * .018 + offset + 83, z * .018)
-                if (rng.nextFloat() > (biome.treeDensityBase * 12 + grove * .25).coerceIn(.025, .78)) continue
-                if (nearCave(x, z)) continue
-                val s = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
-                if (s.kind >= 0 && x in s.x - 5..s.x + 17 && z in s.z - 5..s.z + 17) continue
-                val y = height(x.toDouble(), z.toDouble()).toInt()
-                if (y <= 75 || topBlock(biome, x.toDouble(), z.toDouble(), y) !in shortArrayOf(GRASS, DIRT_SNOW, SNOW, FOREST_FLOOR, MOSS)) continue
-                val tall = biome.treeMinHeight.coerceIn(4, 8) + rng.nextInt(3)
-                if (c.worldY > y + tall + 4 || c.worldY + 16 <= y) continue
-                val (wood, leaf) = when (biome.treeType) {
-                    "birch" -> WOOD_WHITE to LEAVES
-                    "sapin" -> WOOD_SAPIN to LEAVES_SAPIN
-                    "darkwood" -> WOOD_DARK to LEAVES_DARK
-                    "jungle", "jungle_small" -> WOOD_JUNGLE to LEAVES_JUNGLE
-                    "redwood" -> WOOD_RED to LEAVES_ORANGE
-                    "pink" -> WOOD_PINK to LEAVES_PINK
-                    "purple" -> WOOD_PURPLE to LEAVES_PURPLE
-                    "blue" -> WOOD_BLUE to LEAVES_BLUE
-                    "yellow" -> WOOD_YELLOW to LEAVES_YELLOW
-                    else -> WOOD to LEAVES
+                val density = if (arid) .025 else (biome.treeDensityBase * 12 + grove * .25).coerceIn(.025, .78)
+                if (rng.nextFloat() > density) continue
+                val variant = random(gx, gz, 91283L)
+                val spacious = Math.floorMod(gx, 3) == 0 && Math.floorMod(gz, 3) == 0
+                val treeType = when {
+                    arid -> if (variant.nextInt(3) == 0) "acacia" else "baobab"
+                    biome.id == "savanna" && variant.nextBoolean() -> "acacia"
+                    biome.id == "wetlands" && variant.nextInt(3) == 0 -> "willow"
+                    biome.treeType == "redwood" && spacious -> "giant_redwood"
+                    biome.treeType == "sapin" && spacious -> "giant_pine"
+                    biome.treeType in setOf("oak", "darkwood") && variant.nextInt(5) == 0 -> "broad_oak"
+                    else -> biome.treeType
                 }
-                for (dy in 1..tall) put(c, x, y + dy, z, wood)
-                val pine = biome.treeType == "sapin"
-                for (dy in (if (pine) 2 else tall - 2)..tall + 2) {
-                    val r = if (pine) ((tall + 3 - dy) / 2.4).coerceIn(.6, 3.0)
-                        else sqrt((1.0 - ((dy - tall) / 3.0).pow(2)).coerceAtLeast(0.0)) * 3.2
-                    for (dz in -3..3) for (dx in -3..3)
-                        if (dx * dx + dz * dz <= r * r && (dx != 0 || dz != 0 || dy > tall))
-                            put(c, x + dx, y + dy, z + dz, leaf, true)
+                if (nearCave(x, z) || cold.reserves(x, z, TreeShape.REACH)) continue
+                val s = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
+                if (s.kind >= 0 && x in s.x - TreeShape.REACH..s.x + 12 + TreeShape.REACH && z in s.z - TreeShape.REACH..s.z + 12 + TreeShape.REACH) continue
+                val y = height(x.toDouble(), z.toDouble()).toInt()
+                val soil = topBlock(biome, x.toDouble(), z.toDouble(), y)
+                if (y <= 75 || (soil !in shortArrayOf(GRASS, DIRT_SNOW, SNOW, FOREST_FLOOR, MOSS) &&
+                        !(treeType in setOf("baobab", "acacia") && soil in shortArrayOf(SAND, REDSAND)))) continue
+                // Wide trunks need a stable footprint, not a cliff edge or a cave mouth.
+                val footprint = when (treeType) {
+                    "baobab" -> -2..2
+                    "giant_redwood", "giant_pine", "broad_oak", "willow" -> 0..1
+                    else -> 0..0
+                }
+                if (footprint.any { dx -> footprint.any { dz ->
+                    val ground = height((x + dx).toDouble(), (z + dz).toDouble()).toInt()
+                    ground !in y - 2..y || nearCave(x + dx, z + dz)
+                } }) continue
+                if (c.worldY > y + TreeShape.HEIGHT || c.worldY + 16 <= y) continue
+                TreeShape.generate(treeType, rng) { dx, dy, dz, block, onlyAir ->
+                    if (dy == 1 && com.Atom2Universe.app.games.caves.node.BlockRegistry.isWood(block)) {
+                        val ground = height((x + dx).toDouble(), (z + dz).toDouble()).toInt()
+                        for (rootY in ground + 1..y) put(c, x + dx, rootY, z + dz, block, true)
+                    }
+                    put(c, x + dx, y + dy, z + dz, block, onlyAir)
                 }
             }
     }

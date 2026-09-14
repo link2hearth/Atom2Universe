@@ -180,7 +180,7 @@ internal class NaturalTerrain(private val seed: Long, private val profiles: List
             indices[i] = biomes.indexOfFirst { it.id == id }.coerceAtLeast(0)
             tops[i] = topBlock(biomes[indices[i]], wx.toDouble(), wz.toDouble(), h)
         }
-        if (chunk.worldY > max(SEA_LEVEL, heights.max()) + 16) return
+        if (chunk.worldY > max(SEA_LEVEL, heights.max()) + TreeShape.HEIGHT) return
         // Shared 4-block lattice: interpolation remains identical across chunk boundaries.
         val field = DoubleArray(125)
         for (z in 0..4) for (y in 0..4) for (x in 0..4)

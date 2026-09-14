@@ -1,0 +1,15 @@
+{
+  "id": 5003,
+  "name": "cracked_ice",
+  "texture_top": "cozy:utility:11:ACC8CE:cracked",
+  "texture_side": "cozy:utility:11:ACC8CE:cracked",
+  "texture_bottom": "cozy:utility:11:ACC8CE:cracked",
+  "color": "#ACC8CE",
+  "hardness": 2.5,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}
