@@ -59,17 +59,6 @@ class CaveWorldMenuActivity : ThemedActivity() {
             addSpaced(button(R.string.cave_menu_controls) {
                 startActivity(Intent(this@CaveWorldMenuActivity, CaveControlsEditorActivity::class.java))
             })
-            val palette = MaterialButton(this@CaveWorldMenuActivity).apply {
-                fun refresh() {
-                    setText(if (CaveVisualStyle.isVivid(context)) R.string.cave_palette_vivid else R.string.cave_palette_pastel)
-                }
-                refresh()
-                setOnClickListener {
-                    CaveVisualStyle.setVivid(context, !CaveVisualStyle.isVivid(context))
-                    refresh()
-                }
-            }
-            addSpaced(palette)
         }
         recycler = findViewById(R.id.cave_menu_recycler)
         recycler.layoutManager = LinearLayoutManager(this)
@@ -180,19 +169,35 @@ class CaveWorldMenuActivity : ThemedActivity() {
 
     private fun header(): View = column().apply {
         val banner = FrameLayout(this@CaveWorldMenuActivity).apply {
-            minimumHeight = dp(76)
+            minimumHeight = dp(132)
             background = surface(Color.rgb(28, 53, 62))
             clipToOutline = true
         }
-        banner.addView(CaveMenuArt(this@CaveWorldMenuActivity, if (assault) 2 else 0), FrameLayout.LayoutParams(-1, -1))
-        banner.addView(label(getString(if (assault) R.string.cave_menu_assault else R.string.cave_menu_infinite), 25f, ink, true).apply {
+        // Give the artwork its own height: MATCH_PARENT inside a wrapping FrameLayout
+        // can be measured at zero after the title stops filling the parent.
+        banner.addView(CaveMenuArt(this@CaveWorldMenuActivity, if (assault) 2 else 0), FrameLayout.LayoutParams(-1, dp(132)))
+        banner.addView(label(getString(if (assault) R.string.cave_menu_assault else R.string.cave_menu_infinite), 29f, Color.WHITE, true).apply {
             gravity = Gravity.CENTER_VERTICAL
             minimumHeight = dp(76)
+            typeface = Typeface.create("sans-serif-condensed", Typeface.BOLD)
+            letterSpacing = 0.035f
+            setShadowLayer(dp(2).toFloat(), 0f, dp(2).toFloat(), 0xCC101820.toInt())
             setPadding(dp(16), dp(14), dp(16), dp(14))
-            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
-                intArrayOf(0xFF172834.toInt(), 0xD9172834.toInt(), 0x40172834))
-        }, FrameLayout.LayoutParams(-1, -2))
-        addSpaced(banner)
+        }, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.START))
+        val palette = MaterialButton(this@CaveWorldMenuActivity).apply {
+            setText(CaveVisualStyle.current(context).label)
+            contentDescription = getString(R.string.cave_palette_change, text)
+            setTextColor(Color.WHITE)
+            backgroundTintList = ColorStateList.valueOf(0xDD20252B.toInt())
+            setOnClickListener {
+                CaveVisualStyle.cycle(context)
+                menuAdapter.notifyDataSetChanged()
+            }
+        }
+        banner.addView(palette, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.END).apply {
+            rightMargin = dp(12); bottomMargin = dp(8); leftMargin = dp(12)
+        })
+        addView(banner, LinearLayout.LayoutParams(-1, dp(132)))
         addSpaced(label(getString(if (assault) R.string.cave_menu_assault_description else R.string.cave_menu_worlds_description), 14f, muted), 10)
         val title = if (assault) R.string.cave_menu_maps_heading else R.string.cave_menu_worlds_heading
         val heading = label(getString(title), 16f, accent, true)

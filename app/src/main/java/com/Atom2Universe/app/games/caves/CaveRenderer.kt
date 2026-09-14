@@ -63,6 +63,7 @@ internal class CaveRenderer(
     modeFactory: (CaveRenderer) -> GameMode = ::SurvivalMode,
 ) : GLSurfaceView.Renderer {
     private val vividStyle = CaveVisualStyle.isVivid(context)
+    private val grayscaleStyle = CaveVisualStyle.current(context) == CaveVisualStyle.Theme.GRAYSCALE
     private var wATint = -1
 
     data class SavedState(
@@ -653,6 +654,7 @@ internal class CaveRenderer(
     // ── Lifecycle GL ──────────────────────────────────────────────────────────
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        ShaderProgram.grayscale.set(grayscaleStyle)
         val startupNs = System.nanoTime()
         if (com.Atom2Universe.app.BuildConfig.DEBUG) android.util.Log.i("CavePerf", "startupBegin")
         val liveFarmInventory = if (farmSessionReady) inventory.filterKeys {
@@ -1240,7 +1242,11 @@ internal class CaveRenderer(
         // ── Cycle jour/nuit ───────────────────────────────────────────────────
         val dayT = dayFraction()
         val (skyR, skyG, skyB) = skyColorFor(dayT)
-        GLES30.glClearColor(skyR * (1f - caveBlend), skyG * (1f - caveBlend), skyB * (1f - caveBlend), 1f)
+        val skyGray = skyR * .2126f + skyG * .7152f + skyB * .0722f
+        GLES30.glClearColor(
+            (if (grayscaleStyle) skyGray else skyR) * (1f - caveBlend),
+            (if (grayscaleStyle) skyGray else skyG) * (1f - caveBlend),
+            (if (grayscaleStyle) skyGray else skyB) * (1f - caveBlend), 1f)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         // ── Corps célestes (avant le terrain — depth mask off pour laisser le terrain gagner) ──

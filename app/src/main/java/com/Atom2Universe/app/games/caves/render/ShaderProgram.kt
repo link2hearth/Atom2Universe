@@ -4,11 +4,27 @@ import android.opengl.GLES30
 import android.util.Log
 
 internal class ShaderProgram(vertSrc: String, fragSrc: String) {
+    companion object {
+        // Each GLSurfaceView owns its GL thread, so simultaneous previews cannot
+        // change another renderer's shader palette.
+        val grayscale = ThreadLocal.withInitial { false }
+    }
     val id: Int
 
     init {
         val vert = compile(GLES30.GL_VERTEX_SHADER, vertSrc)
-        val frag = compile(GLES30.GL_FRAGMENT_SHADER, fragSrc)
+        val source = if (grayscale.get() == true) {
+            // Convert the final shaded colour, preserving alpha, discard and early returns.
+            fragSrc.replace(Regex("void\\s+main\\s*\\(\\s*\\)"), "void caveColorMain()") + """
+
+                void main() {
+                    caveColorMain();
+                    float gray = dot(fragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+                    fragColor.rgb = vec3(gray);
+                }
+            """.trimIndent()
+        } else fragSrc
+        val frag = compile(GLES30.GL_FRAGMENT_SHADER, source)
         id = GLES30.glCreateProgram()
         GLES30.glAttachShader(id, vert)
         GLES30.glAttachShader(id, frag)

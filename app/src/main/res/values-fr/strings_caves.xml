@@ -718,4 +718,6 @@
         <item>Grotte gelée · flocon bleu</item>
         <item>Grotte de basalte · braise orange</item>
     </string-array>
+    <string name="cave_palette_grayscale">Noir et blanc</string>
+    <string name="cave_palette_change">Thème : %1$s. Toucher pour changer.</string>
 </resources>

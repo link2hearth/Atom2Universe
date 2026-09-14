@@ -718,4 +718,6 @@
         <item>Frozen cave · blue snowflake</item>
         <item>Basalt cave · orange ember</item>
     </string-array>
+    <string name="cave_palette_grayscale">Black and white</string>
+    <string name="cave_palette_change">Theme: %1$s. Tap to change.</string>
 </resources>
