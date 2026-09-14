@@ -4,7 +4,17 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 
 /** Placement constraints apply to player edits, not to biome generation or map imports. */
 internal object BlockPlacement {
-    fun supported(id: Short, x: Int, y: Int, z: Int, blockAt: (Int, Int, Int) -> Short): Boolean {
+    fun supported(id: Short, x: Int, y: Int, z: Int, blockAt: (Int, Int, Int) -> Short): Boolean =
+        supported(id, x, y, z, 0, blockAt)
+
+    fun supported(id: Short, x: Int, y: Int, z: Int, meta: Byte, blockAt: (Int, Int, Int) -> Short): Boolean {
+        if (id == TORCH) {
+            if (meta.toInt() !in 0..4) return false
+            val (nx, nz) = TorchModel.normal(meta)
+            val support = blockAt(x - nx, y - if (meta == 0.toByte()) 1 else 0, z - nz)
+            return support != AIR && BlockRegistry.get(support) != null &&
+                !isDecoration(support) && !isWater(support) && support != LAVA
+        }
         val rule = BlockRegistry.get(id)?.placementRule ?: return false
         if (rule == "any") return true
         val below = blockAt(x, y - 1, z)

@@ -384,7 +384,7 @@ internal class CaveRenderer(
 
     private val FRAG_WORLD = """
         #version 300 es
-        precision mediump float;
+        precision highp float;
         uniform sampler2DArray u_tex;
         uniform float u_ambient;
         uniform float u_caveFloor;
@@ -412,22 +412,33 @@ internal class CaveRenderer(
             }
             col.rgb = clamp(col.rgb * (vec3(1.0) + v_tint.rgb * mask), 0.0, 1.0);
             float fd = floor(v_faceDir + 0.5);
+            // Voxel face axes are known: screen derivatives become tiny on nearby faces,
+            // causing unstable normals (and dark patches) at mobile mediump precision.
+            vec3 normal = fd < 1.5 ? vec3(0.0, 1.0, 0.0)
+                : fd < 3.5 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 0.0, 1.0);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
-            vec3 torchColor = vec3(1.0, 0.72, 0.25);
+            vec3 torchColor = vec3(1.0, 0.68, 0.30);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
-                float flicker = 1.0 + 0.015 * sin(u_time * 3.1 + float(i) * 2.1);
-                float radius = 24.0 * u_lights[i].w * flicker;
+                float flicker = 1.0 + 0.025 * sin(u_time * 7.3 + float(i) * 2.1)
+                    + 0.012 * sin(u_time * 13.7 + float(i) * 4.3);
+                float radius = 16.0 * u_lights[i].w;
                 float d = length(v_worldPos - u_lights[i].xyz);
                 float atten = clamp(1.0 - d / radius, 0.0, 1.0);
                 atten = atten * atten;
-                torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
+                vec3 toLight = (u_lights[i].xyz - v_worldPos) / max(d, 0.001);
+                float diffuse = 0.35 + 0.65 * abs(dot(normal, toLight));
+                torchContrib += atten * diffuse * u_lights[i].w * flicker * torchColor;
             }
             // Lumière du ciel cuite (0..1) × ambiance jour/nuit ; plancher pénombre pour ne jamais
             // être 100 % noir ; les torches s'ajoutent par-dessus dans les zones non exposées.
             float sky = v_skyLight * u_ambient;
-            vec3 lighting = max(max(vec3(sky), vec3(u_caveFloor)), torchContrib);
-            fragColor = vec4(col.rgb * faceLight * lighting, 1.0);
+            vec3 baseLight = vec3(max(sky, u_caveFloor));
+            vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
+            float glow = 0.94 + 0.06 * sin(u_time * 9.0);
+            // Directional face shading belongs to skylight; a torch can illuminate a ceiling.
+            vec3 lit = baseLight * faceLight + (lighting - baseLight);
+            fragColor = vec4(fd > 5.5 ? col.rgb * glow : col.rgb * lit, 1.0);
             if (u_underwater > 0.5) {
                 fragColor = vec4(fragColor.rgb * vec3(0.18, 0.48, 0.88) * 0.55, 1.0);
             }
@@ -456,18 +467,20 @@ internal class CaveRenderer(
             vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
             float fd = floor(v_faceDir + 0.5);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : 0.72;
-            vec3 torchColor = vec3(1.0, 0.72, 0.25);
+            vec3 torchColor = vec3(1.0, 0.68, 0.30);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
-                float flicker = 1.0 + 0.015 * sin(u_time * 3.1 + float(i) * 2.1);
-                float radius = 24.0 * u_lights[i].w * flicker;
+                float flicker = 1.0 + 0.025 * sin(u_time * 7.3 + float(i) * 2.1)
+                    + 0.012 * sin(u_time * 13.7 + float(i) * 4.3);
+                float radius = 16.0 * u_lights[i].w;
                 float d = length(v_worldPos - u_lights[i].xyz);
                 float atten = clamp(1.0 - d / radius, 0.0, 1.0);
                 atten = atten * atten;
-                torchContrib = max(torchContrib, atten * u_lights[i].w * torchColor);
+                torchContrib += atten * u_lights[i].w * flicker * torchColor;
             }
             float sky = v_skyLight * u_ambient;
-            vec3 lighting = max(max(vec3(sky), vec3(u_caveFloor)), torchContrib);
+            vec3 baseLight = vec3(max(sky, u_caveFloor));
+            vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
             fragColor = vec4(baseColor * faceLight * lighting, 0.75);
         }
     """.trimIndent()
@@ -1108,9 +1121,11 @@ internal class CaveRenderer(
             }
             for (i in 0 until filled) {
                 val pos = lightSelectKey[i]!!
-                lightData[i*4+0] = (pos.first  + 0.5 - camX).toFloat()
-                lightData[i*4+1] = (pos.second + 0.5 - camY).toFloat()
-                lightData[i*4+2] = (pos.third  + 0.5 - camZ).toFloat()
+                val flame = if (world.blockAt(pos.first, pos.second, pos.third) == TORCH)
+                    TorchModel.flame(world.metaAt(pos.first, pos.second, pos.third)) else null
+                lightData[i*4+0] = (pos.first.toDouble()  + (flame?.x ?: .5f) - camX).toFloat()
+                lightData[i*4+1] = (pos.second.toDouble() + (flame?.y ?: .5f) - camY).toFloat()
+                lightData[i*4+2] = (pos.third.toDouble()  + (flame?.z ?: .5f) - camZ).toFloat()
                 lightData[i*4+3] = lightSelectValue[i]
                 cachedLightCount = i + 1
             }
@@ -1733,7 +1748,7 @@ internal class CaveRenderer(
                 val id = world.blockAt(nx, ny, nz)
                 val def = BlockRegistry.get(id) ?: continue
                 if (def.placementRule == "any") continue
-                if (com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(id, nx, ny, nz) { a, b, c -> world.blockAt(a, b, c) }) continue
+                if (com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(id, nx, ny, nz, world.metaAt(nx, ny, nz)) { a, b, c -> world.blockAt(a, b, c) }) continue
                 world.setBlock(nx, ny, nz, AIR)
                 forceMeshRebuild(nx, ny, nz)
                 if (!isCreative) collectBlock(id)
@@ -1914,7 +1929,10 @@ internal class CaveRenderer(
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
-                val hit = !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
+                val hit = if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
+                    startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
+                    entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ))
+                else !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
                     startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
                     BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ),
@@ -2305,6 +2323,8 @@ internal class CaveRenderer(
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
+        if (block == TORCH) return TorchModel.highlight(world.metaAt(target.bx, target.by, target.bz),
+            x, y, z, cr, cg, cb)
         if (isDecoration(block)) {
             return BlockRegistry.decorationMask(block)?.highlight(x, y, z,
                 BlockRegistry.getSpriteMargin(block), BlockRegistry.getSpriteHeight(block), cr, cg, cb)
@@ -3235,6 +3255,7 @@ internal class CaveRenderer(
     // AXIS  : axe dérivé de la face cliquée (X si paroi E/W, Z si paroi N/S, Y sinon).
     // FACING: direction vers le joueur depuis la face cliquée ; sur sol/plafond → yaw caméra.
     private fun computeOrientMeta(blockType: Short, fnx: Int, fny: Int, fnz: Int): Byte {
+        if (blockType == TORCH) return TorchModel.orientation(fnx, fny, fnz)
         if (!BlockRegistry.isOrientable(blockType)) return 0
         return when (BlockRegistry.getOrientMode(blockType)) {
             ORIENT_AXIS -> when {
@@ -3324,9 +3345,9 @@ internal class CaveRenderer(
         if (isInsidePlayer(px, py, pz)) return
         val existing = world.blockAt(px, py, pz)
         if (existing != AIR && BlockRegistry.get(existing)?.replaceable != true) return
-        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz) { a, b, c -> world.blockAt(a, b, c) }) return
-        world.setBlock(px, py, pz, blockType)
         val orientMeta = if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
+        world.setBlock(px, py, pz, blockType)
         world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))

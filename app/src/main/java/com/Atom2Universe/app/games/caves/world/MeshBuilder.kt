@@ -16,6 +16,10 @@ internal object MeshBuilder {
             if (block == AIR || isWater(block)) continue
             val x = lx.toFloat(); val y = ly.toFloat(); val z = lz.toFloat()
 
+            if (block == TORCH) {
+                addTorch(buf, x, y, z, chunk.metaAt(lx, ly, lz), chunk.skyAt(lx, ly, lz) / 15f)
+                continue
+            }
             if (isDecoration(block)) {
                 addCrossSprite(buf, x, y, z, block, chunk.skyAt(lx, ly, lz) / 15f)
                 continue
@@ -74,6 +78,21 @@ internal object MeshBuilder {
             3 -> buf.quad(x,y,z,    x,y+1,z,     x,y+1,z+1,   x,y,z+1,   packed, rotCW, sky)
             4 -> buf.quad(x,y,z+1,  x,y+1,z+1,   x+1,y+1,z+1, x+1,y,z+1, packed, rotCW, sky)
             5 -> buf.quad(x+1,y,z,  x+1,y+1,z,   x,y+1,z,     x,y,z,     packed, rotCW, sky)
+        }
+    }
+
+    private fun addTorch(buf: GrowableFloatArray, x: Float, y: Float, z: Float, meta: Byte, sky: Float) {
+        for (part in TorchModel.parts) {
+            val vertices = TorchModel.vertices(meta, part)
+            for ((faceIndex, face) in TorchModel.faces.withIndex()) {
+                // Face marker 6 is emissive, independent of daylight and face shading.
+                val packed = (if (part.material >= 2) 6 else faceIndex) * 4096f +
+                    BlockRegistry.torchLayers[part.material]
+                val a = vertices[face[0]]; val b = vertices[face[1]]
+                val c = vertices[face[2]]; val d = vertices[face[3]]
+                buf.quad(x+a.x,y+a.y,z+a.z, x+b.x,y+b.y,z+b.z,
+                    x+c.x,y+c.y,z+c.z, x+d.x,y+d.y,z+d.z, packed, faceIndex > 1, sky)
+            }
         }
     }
 

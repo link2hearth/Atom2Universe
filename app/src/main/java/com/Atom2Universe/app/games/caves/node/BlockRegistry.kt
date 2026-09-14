@@ -39,6 +39,7 @@ internal object BlockRegistry {
     var vividStyle = false
         private set
     private var knotLayers = IntArray(0)
+    val torchLayers = IntArray(4)
 
     fun knotLayer(layer: Int): Int = knotLayers.getOrNull(layer) ?: layer
 
@@ -155,6 +156,27 @@ internal object BlockRegistry {
                 textureOrder += "$name:knot"
                 bitmaps += MeadowTextures.texture("$name:knot", tileSize, vivid = vivid)
             }
+        }
+        // Small opaque procedural materials for the volumetric torch; keep its inventory icon.
+        val colors = intArrayOf(0xFF89502B.toInt(), 0xFF49434A.toInt(),
+            0xFFFF941F.toInt(), 0xFFFFDF79.toInt())
+        for (material in colors.indices) {
+            torchLayers[material] = bitmaps.size
+            textureOrder += "torch_model_$material"
+            val pixels = IntArray(tileSize * tileSize) { index ->
+                val color = colors[material]
+                val px = index % tileSize; val py = index / tileSize
+                val shade = when (material) {
+                    0 -> if ((px / 3 + py / 11) % 3 == 0) .78f else 1f
+                    1 -> if (py < tileSize / 5 || py > tileSize * 4 / 5) 1.3f else .85f
+                    else -> 1f - .12f * py / tileSize
+                }
+                0xFF000000.toInt() or
+                    ((((color shr 16) and 255) * shade).toInt().coerceAtMost(255) shl 16) or
+                    ((((color shr 8) and 255) * shade).toInt().coerceAtMost(255) shl 8) or
+                    (((color and 255) * shade).toInt().coerceAtMost(255))
+            }
+            bitmaps += Bitmap.createBitmap(pixels, tileSize, tileSize, Bitmap.Config.ARGB_8888)
         }
         return bitmaps
     }
