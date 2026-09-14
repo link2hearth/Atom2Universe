@@ -194,7 +194,8 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val meta   = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
     // Lumière du ciel par voxel : niveau 0..15 dans le quartet bas (le quartet haut est réservé
     // à une éventuelle lumière de bloc). Rempli par LightEngine, lu par MeshBuilder.
-    val light  = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+    @Volatile var light = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+        internal set
 
     @Volatile var generated = false
     @Volatile var meshDirty = false

@@ -96,10 +96,11 @@ internal class CaveRenderer(
     internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
                                source = worldSource)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
-    private val uploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
+    private val uploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
     private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
+    private val lodRebuildRequested = ConcurrentHashMap.newKeySet<Long>()
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
     private val lodUploadQueueSize = java.util.concurrent.atomic.AtomicInteger(0)
     private val LOD_RADIUS   = 32
@@ -132,8 +133,8 @@ internal class CaveRenderer(
     private var blockTexArray = 0
 
     private val waterMeshes         = ConcurrentHashMap<Long, ChunkMesh>()
-    private val waterUploadQueue    = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
-    private val waterOnlyUploadQueue = ConcurrentLinkedQueue<Triple<Long, Int, FloatArray>>()
+    private val waterUploadQueue    = ConcurrentLinkedQueue<LitMeshUpload>()
+    private val waterOnlyUploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     // ── Étoiles ───────────────────────────────────────────────────────────────
     private val STAR_COUNT  = 250
@@ -161,11 +162,13 @@ internal class CaveRenderer(
     private val lightWorkerRunning = java.util.concurrent.atomic.AtomicBoolean(false)
     private val building = ConcurrentHashMap.newKeySet<Long>()
 
-    // Backstop d'éclairage : chunks maillés alors que la skylight n'était pas encore stabilisée.
-    // Leurs faces ont pu échantillonner une lumière de voisin non-finale (repli analytique trop
-    // clair au lancement). On les re-maille une fois que la cascade de lumière s'est drainée.
-    private val fluxMeshedKeys = ConcurrentHashMap.newKeySet<Long>()
-    private var lightPendingPrev = false
+    private data class LitMeshUpload(
+        val key: Long, val version: Int, val vertices: FloatArray,
+        val lighting: MeshLightingSnapshot
+    )
+    // Le LOD ignore la skylight : mémoriser la géométrie déjà soumise.
+    private val lodGeometryVersions = HashMap<Long, Pair<Chunk, Int>>()
+    private val lodDispatcher = Dispatchers.Default.limitedParallelism(1)
 
     private var lastCx = Int.MAX_VALUE; private var lastCy = Int.MAX_VALUE; private var lastCz = Int.MAX_VALUE
     private var streamNeedsMore = false
@@ -840,23 +843,6 @@ internal class CaveRenderer(
             }
         }
 
-        // Backstop d'éclairage : quand la cascade de skylight vient de se drainer entièrement
-        // (transition en-cours → drainé), la lumière de tous les chunks chargés est désormais
-        // finale. On re-maille les chunks qui avaient été maillés pendant le flux : ils s'étaient
-        // peut-être figés trop clairs (repli analytique d'un voisin pas encore chargé). Le read
-        // volatile de lightWorkerRunning établit le happens-before avec les écritures de chunk.light.
-        val lightPendingNow = world.hasPendingLight() || lightWorkerRunning.get()
-        if (lightPendingPrev && !lightPendingNow && fluxMeshedKeys.isNotEmpty()) {
-            val it = fluxMeshedKeys.iterator()
-            while (it.hasNext()) {
-                val key = it.next(); it.remove()
-                val chunk = world.getChunkByKey(key)?.takeIf { c -> c.generated } ?: continue
-                chunk.meshDirty = true
-                world.rebuildQueue.add(key)
-            }
-        }
-        lightPendingPrev = lightPendingNow
-
         // Drain complet + déduplication : évite que les chunks générés en premier (lointains)
         // bloquent les proches dans le FIFO. Le tri porte sur TOUS les éléments en attente.
         val pendingSet = HashSet<Long>()
@@ -877,16 +863,13 @@ internal class CaveRenderer(
             val snapWaterVer = chunk.waterVersion
             scope.launch(meshDispatcher) {
                 try {
+                    val lighting = MeshLightingSnapshot(chunk, world)
                     val verts      = MeshBuilder.build(chunk, world)
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.version == snapVersion) {
-                        uploadQueue.add(Triple(key, snapVersion, verts))
-                        waterUploadQueue.add(Triple(key, snapVersion, waterVerts))
+                        uploadQueue.add(LitMeshUpload(key, snapVersion, verts, lighting))
+                        waterUploadQueue.add(LitMeshUpload(key, snapVersion, waterVerts, lighting))
                     }
-                    // Maillé pendant que la skylight converge encore → la lumière des voisins
-                    // (et le repli analytique des voisins non chargés) peut être non-finale.
-                    // On le re-maillera une fois la cascade drainée.
-                    if (world.hasPendingLight() || lightWorkerRunning.get()) fluxMeshedKeys.add(key)
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
                 } catch (_: OutOfMemoryError) {
@@ -918,9 +901,10 @@ internal class CaveRenderer(
             val snapWaterVer = chunk.waterVersion
             scope.launch(meshDispatcher) {
                 try {
+                    val lighting = MeshLightingSnapshot(chunk, world)
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.waterVersion == snapWaterVer) {
-                        waterOnlyUploadQueue.add(Triple(key, snapWaterVer, waterVerts))
+                        waterOnlyUploadQueue.add(LitMeshUpload(key, snapWaterVer, waterVerts, lighting))
                     }
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
                 } finally {
@@ -938,13 +922,23 @@ internal class CaveRenderer(
         // suivante, rien n'est perdu, juste étalé.
         val uploadDeadline = System.nanoTime() + UPLOAD_BUDGET_NS
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts) = uploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = uploadQueue.poll() ?: break
             val chunk = world.getChunkByKey(key) ?: continue
+            if (!lighting.isCurrent()) {
+                world.rebuildQueue.add(key)
+                continue
+            }
             if (chunk.version == ver) {
                 val mesh = meshes.getOrPut(key) { ChunkMesh(11) }
                 mesh.upload(verts); mesh.flushPending()
                 refreshChunkLightSources(chunk)
-                if (chunk.cy in 0..world.surfaceChunkMax) scheduleLodBuild(chunk.cx, chunk.cz)
+                if (chunk.cy in 0..world.surfaceChunkMax) {
+                    val previous = lodGeometryVersions[key]
+                    if (previous?.first !== chunk || previous.second != ver) {
+                        lodGeometryVersions[key] = chunk to ver
+                        scheduleLodBuild(chunk.cx, chunk.cz)
+                    }
+                }
             }
         }
         while (System.nanoTime() < uploadDeadline) {
@@ -956,16 +950,24 @@ internal class CaveRenderer(
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
         }
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts) = waterUploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = waterUploadQueue.poll() ?: break
             val chunk = world.getChunkByKey(key) ?: continue
+            if (!lighting.isCurrent()) {
+                world.rebuildQueue.add(key)
+                continue
+            }
             if (chunk.version == ver) {
                 if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
             }
         }
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts) = waterOnlyUploadQueue.poll() ?: break
+            val (key, ver, verts, lighting) = waterOnlyUploadQueue.poll() ?: break
             val chunk = world.getChunkByKey(key) ?: continue
+            if (!lighting.isCurrent()) {
+                world.waterRebuildQueue.add(key)
+                continue
+            }
             if (chunk.waterVersion == ver) {
                 if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
                 else waterMeshes.remove(key)?.destroy()
@@ -979,6 +981,7 @@ internal class CaveRenderer(
             val allChunks = world.allChunks()
             val loadedKeys = allChunks.mapTo(HashSet()) { world.chunkKey(it.cx, it.cy, it.cz) }
             // Supprimer les meshes de chunks déchargés
+            lodGeometryVersions.keys.retainAll(loadedKeys)
             meshes.keys.filter { it !in loadedKeys }.forEach { key -> meshes.remove(key)?.destroy() }
             waterMeshes.keys.filter { it !in loadedKeys }.forEach { key -> waterMeshes.remove(key)?.destroy() }
             // Nettoyer les sources de lumière des chunks déchargés
@@ -2802,18 +2805,23 @@ internal class CaveRenderer(
         // Une carte préparée tient entière dans la distance de vue : le LOD lointain ne sert à rien.
         if (worldSource != null) return
         val key = lodKey(cx, cz)
+        lodRebuildRequested.add(key)
         if (!lodBuilding.add(key)) return
-        scope.launch {
-            val verts = LodBuilder.buildColumn(cx, cz, world, lodCache)
-            if (verts.isNotEmpty() && lodUploadQueueSize.get() < 64) {
-                lodUploadQueueSize.incrementAndGet()
-                lodUploadQueue.add(Pair(key, verts))
-            } else if (verts.isNotEmpty()) {
-                // Queue saturée : on relibère le verrou pour replanifier plus tard
+        scope.launch(lodDispatcher) {
+            try {
+                do {
+                    lodRebuildRequested.remove(key)
+                    val verts = LodBuilder.buildColumn(cx, cz, world, lodCache)
+                    if (verts.isNotEmpty() && lodUploadQueueSize.get() < 64) {
+                        lodUploadQueueSize.incrementAndGet()
+                        lodUploadQueue.add(Pair(key, verts))
+                    }
+                    // Conserver une édition/génération survenue pendant le calcul.
+                } while (isActive && lodRebuildRequested.contains(key))
+            } finally {
                 lodBuilding.remove(key)
-                return@launch
+                if (scope.isActive && lodRebuildRequested.contains(key)) scheduleLodBuild(cx, cz)
             }
-            lodBuilding.remove(key)
         }
     }
 

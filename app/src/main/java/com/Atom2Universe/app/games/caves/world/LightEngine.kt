@@ -33,27 +33,27 @@ internal object LightEngine {
      * propager aux voisins ; bit 6 (0x40) = au moins un voxel a changé → le mesh est périmé.
      */
     fun computeSky(chunk: Chunk, world: World): Int {
-        // Scratch alloué localement : négligeable face au FloatArray du mesh, et computeSky est
-        // appelé exclusivement depuis le passage de lumière mono-thread (thread GL).
-        val scratch = scratchLocal.get()
+        // Buffers réutilisés sur le worker de lumière, distinct du thread GL.
+        val scratch = checkNotNull(scratchLocal.get())
         scratch.fill(0)
-        val queue = queueLocal.get()
+        val queue = checkNotNull(queueLocal.get())
         queue.clear()
+        val neighbors = World.ChunkLookupCache()
 
         // ── Amorçage depuis les six voisins ───────────────────────────────────
         for (lz in 0 until N) for (lx in 0 until N) {
             // Face +Y (haut) : flux descendant → 15 conservé sans atténuation.
-            seed(chunk, world, scratch, queue, lx, N - 1, lz, lx, N, lz, downward = true)
+            seed(chunk, world, scratch, queue, lx, N - 1, lz, lx, N, lz, downward = true, neighbors = neighbors)
             // Face −Y (bas) : flux montant → toujours atténué.
-            seed(chunk, world, scratch, queue, lx, 0, lz, lx, -1, lz, downward = false)
+            seed(chunk, world, scratch, queue, lx, 0, lz, lx, -1, lz, downward = false, neighbors = neighbors)
         }
         for (ly in 0 until N) for (lx in 0 until N) {
-            seed(chunk, world, scratch, queue, lx, ly, N - 1, lx, ly, N, downward = false)   // +Z
-            seed(chunk, world, scratch, queue, lx, ly, 0,     lx, ly, -1, downward = false)  // −Z
+            seed(chunk, world, scratch, queue, lx, ly, N - 1, lx, ly, N, downward = false, neighbors = neighbors)   // +Z
+            seed(chunk, world, scratch, queue, lx, ly, 0,     lx, ly, -1, downward = false, neighbors = neighbors)  // −Z
         }
         for (ly in 0 until N) for (lz in 0 until N) {
-            seed(chunk, world, scratch, queue, N - 1, ly, lz, N, ly, lz, downward = false)   // +X
-            seed(chunk, world, scratch, queue, 0,     ly, lz, -1, ly, lz, downward = false)  // −X
+            seed(chunk, world, scratch, queue, N - 1, ly, lz, N, ly, lz, downward = false, neighbors = neighbors)   // +X
+            seed(chunk, world, scratch, queue, 0,     ly, lz, -1, ly, lz, downward = false, neighbors = neighbors)  // −X
         }
 
         // ── Flood-fill interne ────────────────────────────────────────────────
@@ -76,12 +76,14 @@ internal object LightEngine {
         // ── Écriture + détection des changements de bord ──────────────────────
         var faceMask = 0
         val light = chunk.light
+        var updated: ByteArray? = null
         for (lz in 0 until N) for (ly in 0 until N) for (lx in 0 until N) {
             val i = idx(lx, ly, lz)
             val nv = scratch[i].toInt()
             val old = light[i].toInt() and 0x0F
             if (nv == old) continue
-            light[i] = ((light[i].toInt() and 0xF0) or nv).toByte()
+            val output = updated ?: light.copyOf().also { updated = it }
+            output[i] = ((light[i].toInt() and 0xF0) or nv).toByte()
             faceMask = faceMask or 0x40   // un voxel a changé → mesh périmé
             if (ly == N - 1) faceMask = faceMask or 0x01
             if (ly == 0)     faceMask = faceMask or 0x02
@@ -90,16 +92,19 @@ internal object LightEngine {
             if (lz == N - 1) faceMask = faceMask or 0x10
             if (lz == 0)     faceMask = faceMask or 0x20
         }
+        // Publication atomique : aucun lecteur ne voit un tableau partiellement recalculé.
+        updated?.let { chunk.light = it }
         return faceMask
     }
 
     // Amorce le voxel de bord (inLx,inLy,inLz) depuis le voxel extérieur (outLx,outLy,outLz).
     private fun seed(
         chunk: Chunk, world: World, scratch: ByteArray, queue: IntQueue,
-        inLx: Int, inLy: Int, inLz: Int, outLx: Int, outLy: Int, outLz: Int, downward: Boolean
+        inLx: Int, inLy: Int, inLz: Int, outLx: Int, outLy: Int, outLz: Int, downward: Boolean,
+        neighbors: World.ChunkLookupCache
     ) {
         if (!passable(chunk.blockAt(inLx, inLy, inLz))) return
-        val outside = world.skyLightAt(chunk, outLx, outLy, outLz)
+        val outside = world.skyLightAt(chunk, outLx, outLy, outLz, neighbors)
         val incoming = if (downward && outside == MAX_LIGHT) MAX_LIGHT else outside - 1
         if (incoming <= 0) return
         val i = idx(inLx, inLy, inLz)

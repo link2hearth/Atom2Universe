@@ -7,6 +7,27 @@ internal object LodBuilder {
     fun buildColumn(cx: Int, cz: Int, world: World, cache: LodCache? = null): FloatArray {
         val H = CHUNK_SIZE
         val buf = Buf()
+        // Une seule résolution des chunks par colonne voisine, au lieu de rescanner la
+        // table du monde pour chacun des 64 blocs situés sur le bord du LOD.
+        val neighborColumns = HashMap<Long, List<Chunk>>(4)
+        fun adjHeight(ncx: Int, ncz: Int, lx: Int, lz: Int): Int {
+            val key = world.chunkKey(ncx, 0, ncz)
+            val loaded = neighborColumns.getOrPut(key) {
+                buildList {
+                    for (cy in world.surfaceChunkMax downTo -2) {
+                        world.getChunk(ncx, cy, ncz)?.takeIf { it.generated }?.let { add(it) }
+                    }
+                }
+            }
+            for (chunk in loaded) {
+                for (ly in H - 1 downTo 0) {
+                    val b = chunk.blockAt(lx, ly, lz)
+                    if (b != AIR && !isDecoration(b) && !isWater(b)) return chunk.worldY + ly
+                }
+            }
+            val h = cache?.get(ncx, ncz)?.heights?.get(lz * H + lx)
+            return if (h == null || h == Short.MIN_VALUE) Int.MIN_VALUE else h.toInt()
+        }
 
         // ── Heightmap ────────────────────────────────────────────────────────
         // Hauteur (absY du bloc le plus haut) et type pour chaque cellule (lx, lz).
@@ -91,7 +112,7 @@ internal object LodBuilder {
 
             // +X
             val hPX = if (lx < H - 1) heights[lz * H + lx + 1]
-                      else adjHeight(cx + 1, cz, 0, lz, world, cache)
+                      else adjHeight(cx + 1, cz, 0, lz)
             if (hPX != Int.MIN_VALUE && hPX < h) {
                 val yb = (hPX + 1).toFloat()
                 val x = (lx + 1).toFloat(); val z = lz.toFloat()
@@ -102,7 +123,7 @@ internal object LodBuilder {
 
             // -X
             val hMX = if (lx > 0) heights[lz * H + lx - 1]
-                      else adjHeight(cx - 1, cz, H - 1, lz, world, cache)
+                      else adjHeight(cx - 1, cz, H - 1, lz)
             if (hMX != Int.MIN_VALUE && hMX < h) {
                 val yb = (hMX + 1).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
@@ -113,7 +134,7 @@ internal object LodBuilder {
 
             // +Z
             val hPZ = if (lz < H - 1) heights[(lz + 1) * H + lx]
-                      else adjHeight(cx, cz + 1, lx, 0, world, cache)
+                      else adjHeight(cx, cz + 1, lx, 0)
             if (hPZ != Int.MIN_VALUE && hPZ < h) {
                 val yb = (hPZ + 1).toFloat()
                 val x = lx.toFloat(); val z = (lz + 1).toFloat()
@@ -124,7 +145,7 @@ internal object LodBuilder {
 
             // -Z
             val hMZ = if (lz > 0) heights[(lz - 1) * H + lx]
-                      else adjHeight(cx, cz - 1, lx, H - 1, world, cache)
+                      else adjHeight(cx, cz - 1, lx, H - 1)
             if (hMZ != Int.MIN_VALUE && hMZ < h) {
                 val yb = (hMZ + 1).toFloat()
                 val x = lx.toFloat(); val z = lz.toFloat()
@@ -135,30 +156,6 @@ internal object LodBuilder {
         }
 
         return buf.toArray()
-    }
-
-    // Hauteur du voisin : chunk monde en priorité, sinon cache LOD.
-    private fun adjHeight(cx: Int, cz: Int, lx: Int, lz: Int, world: World, cache: LodCache?): Int {
-        val worldH = columnHeight(cx, cz, lx, lz, world)
-        if (worldH != Int.MIN_VALUE) return worldH
-        val entry = cache?.get(cx, cz) ?: return Int.MIN_VALUE
-        val idx = lz * CHUNK_SIZE + lx
-        val h = entry.heights[idx]
-        return if (h == Short.MIN_VALUE) Int.MIN_VALUE else h.toInt()
-    }
-
-    // Hauteur du bloc le plus haut en (lx, lz) dans la colonne d'un chunk adjacent.
-    private fun columnHeight(cx: Int, cz: Int, lx: Int, lz: Int, world: World): Int {
-        for (cy in world.surfaceChunkMax downTo -2) {
-            val chunk = world.getChunk(cx, cy, cz) ?: continue
-            if (!chunk.generated) continue
-            for (ly in CHUNK_SIZE - 1 downTo 0) {
-                val b = chunk.blockAt(lx, ly, lz)
-                if (b == AIR || isDecoration(b) || isWater(b)) continue
-                return cy * CHUNK_SIZE + ly
-            }
-        }
-        return Int.MIN_VALUE
     }
 
     private class Buf(cap: Int = 8192) {
