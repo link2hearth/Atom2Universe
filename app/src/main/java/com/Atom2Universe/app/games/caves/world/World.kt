@@ -1817,7 +1817,17 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
         // La physique de l'eau est entièrement événementielle : un bloc de terrain
         // ajouté/enlevé ne réveille que son voisinage immédiat.
+        markWaterMeshDirty(wx, wy, wz)
         activateWaterNeighborhood(wx, wy, wz)
+        // Un obstacle ou un trou peut modifier un chemin à plusieurs cases de distance.
+        // Inclure les sorties voisines pour retirer les branches devenues non prioritaires.
+        val routingRadius = WaterFlowRouting.SEARCH_DISTANCE + 1
+        for (dy in 0..1) for (dz in -routingRadius..routingRadius)
+            for (dx in -routingRadius..routingRadius) {
+                if (kotlin.math.abs(dx) + kotlin.math.abs(dz) <= routingRadius &&
+                    isWater(blockAt(wx + dx, wy + dy, wz + dz)))
+                    queueWaterUpdate(wx + dx, wy + dy, wz + dz)
+            }
     }
 
     fun setMeta(wx: Int, wy: Int, wz: Int, value: Byte) {
@@ -1860,7 +1870,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private val waterFlowLevels = ConcurrentHashMap<Long, Byte>()
     private val waterSpreadQueue = ConcurrentLinkedQueue<IntArray>() // [wx, wy, wz]
     private val waterQueued = ConcurrentHashMap.newKeySet<Long>()
-    private val deferredWaterActivations = ConcurrentHashMap<Long, ConcurrentLinkedQueue<IntArray>>()
+    private val deferredWaterActivations = ConcurrentHashMap<Long, ConcurrentHashMap<Long, IntArray>>()
     private val horizontalWaterDirs = arrayOf(
         intArrayOf(1, 0, 0), intArrayOf(-1, 0, 0),
         intArrayOf(0, 0, 1), intArrayOf(0, 0, -1)
@@ -1870,6 +1880,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         *horizontalWaterDirs
     )
     private val MAX_WATER_FLOW_LEVEL = 8
+    // Réutilisé pendant un seul tick ; AIR et WATER_FLOW ont la même traversabilité.
+    private val waterRouteMasks = HashMap<Long, Int>()
 
     /** Niveau de flux : 0 pour une source ou une chute, 1..8 pour une eau qui s'étale. */
     fun waterFlowLevel(wx: Int, wy: Int, wz: Int): Int =
@@ -1942,6 +1954,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         fun markNeighbor(ncx: Int, ncy: Int, ncz: Int) {
             val neighbor = getChunk(ncx, ncy, ncz) ?: return
             if (neighbor.generated) {
+                neighbor.waterVersion++
                 neighbor.waterMeshDirty = true
                 waterRebuildQueue.add(chunkKey(ncx, ncy, ncz))
             }
@@ -1952,6 +1965,16 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         if (ly == CHUNK_SIZE - 1) markNeighbor(cx, cy + 1, cz)
         if (lz == 0) markNeighbor(cx, cy, cz - 1)
         if (lz == CHUNK_SIZE - 1) markNeighbor(cx, cy, cz + 1)
+        // Les hauteurs des coins lisent aussi les voisins diagonaux, y compris sous
+        // une colonne pleine située à la frontière verticale du chunk.
+        val dx = if (lx == 0) -1 else if (lx == CHUNK_SIZE - 1) 1 else 0
+        val dz = if (lz == 0) -1 else if (lz == CHUNK_SIZE - 1) 1 else 0
+        if (dx != 0 && dz != 0) markNeighbor(cx + dx, cy, cz + dz)
+        if (ly == 0) {
+            if (dx != 0) markNeighbor(cx + dx, cy - 1, cz)
+            if (dz != 0) markNeighbor(cx, cy - 1, cz + dz)
+            if (dx != 0 && dz != 0) markNeighbor(cx + dx, cy - 1, cz + dz)
+        }
     }
 
     /** Modifie seulement le mesh eau : les faces solides restent valides face à eau ou air. */
@@ -1963,6 +1986,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
         val old = chunk.blockAt(lx, ly, lz)
         if (old == type) return false
+        if (old == WATER || type == WATER) waterRouteMasks.clear()
         if (old == WATER_FLOW) clearWaterFlowLevel(wx, wy, wz)
         chunk.setBlock(lx, ly, lz, type)
         markWaterMeshDirty(wx, wy, wz)
@@ -1996,14 +2020,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             Math.floorDiv(targetY, CHUNK_SIZE),
             Math.floorDiv(targetZ, CHUNK_SIZE)
         )
-        deferredWaterActivations.getOrPut(targetKey) { ConcurrentLinkedQueue() }
-            .add(intArrayOf(sourceX, sourceY, sourceZ))
+        deferredWaterActivations.getOrPut(targetKey) { ConcurrentHashMap() }
+            .putIfAbsent(waterKey(sourceX, sourceY, sourceZ), intArrayOf(sourceX, sourceY, sourceZ))
     }
 
     private fun resumeDeferredWaterActivations(chunkKey: Long) {
         val waiting = deferredWaterActivations.remove(chunkKey) ?: return
-        while (true) {
-            val source = waiting.poll() ?: break
+        for (source in waiting.values) {
             activateWaterNeighborhood(source[0], source[1], source[2])
         }
     }
@@ -2041,19 +2064,38 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         return below != AIR && below != WATER_FLOW
     }
 
+    private fun waterDirections(wx: Int, wy: Int, wz: Int, level: Int): Int {
+        val key = waterKey(wx, wy, wz)
+        waterRouteMasks[key]?.let { if (it ushr 4 == level) return it and 15 }
+        val cache = ChunkLookupCache()
+        val mask = WaterFlowRouting.directions(wx, wy, wz, MAX_WATER_FLOW_LEVEL - level) { x, y, z ->
+            if (isGeneratedBlock(x, y, z)) blockAt(x, y, z, cache)
+            else {
+                deferWaterActivation(wx, wy, wz, x, y, z)
+                null
+            }
+        }
+        waterRouteMasks[key] = (level shl 4) or mask
+        return mask
+    }
+
     private fun incomingWaterLevel(wx: Int, wy: Int, wz: Int): Int? {
         var best = Int.MAX_VALUE
         val above = blockAt(wx, wy + 1, wz)
-        if (isWater(above)) best = min(best, waterFlowLevelKnown(above, wx, wy + 1, wz))
-        for (d in horizontalWaterDirs) {
+        // La chute renouvelle la portée horizontale, sans créer une source permanente.
+        // Quand l'alimentation supérieure disparaît, ce flux peut donc se vider.
+        if (isWater(above)) return 0
+        for ((direction, d) in horizontalWaterDirs.withIndex()) {
             val nx = wx + d[0]; val nz = wz + d[2]
-            when (blockAt(nx, wy, nz)) {
-                WATER -> best = min(best, 1)
-                WATER_FLOW -> {
-                    val next = cachedWaterFlowLevel(nx, wy, nz) + 1
-                    if (next <= MAX_WATER_FLOW_LEVEL) best = min(best, next)
-                }
-            }
+            val neighbor = blockAt(nx, wy, nz)
+            if (!isWater(neighbor)) continue
+            val level = waterFlowLevelKnown(neighbor, nx, wy, nz)
+            if (level >= MAX_WATER_FLOW_LEVEL) continue
+            // Même règle en réception qu'en émission, sinon les cases latérales
+            // réveillées aspireraient l'eau malgré le chemin sélectionné.
+            val towardCell = 1 shl (direction xor 1)
+            if (waterDirections(nx, wy, nz, level) and towardCell != 0)
+                best = min(best, level + 1)
         }
         return best.takeIf { it != Int.MAX_VALUE }
     }
@@ -2070,6 +2112,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 deferWaterActivation(wx, wy, wz, nx, wy, nz)
                 hasMissingInput = true
             }
+            if (blockAt(nx, wy, nz) == WATER_FLOW && !isGeneratedBlock(nx, wy - 1, nz)) {
+                deferWaterActivation(wx, wy, wz, nx, wy - 1, nz)
+                hasMissingInput = true
+            }
         }
         return hasMissingInput
     }
@@ -2080,13 +2126,17 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             deferWaterActivation(wx, wy, wz, wx, belowY, wz)
             return
         }
-        if (blockAt(wx, belowY, wz) == AIR) {
-            setFlowWater(wx, belowY, wz, level)
+        val below = blockAt(wx, belowY, wz)
+        if (below == AIR) {
+            setFlowWater(wx, belowY, wz, 0)
             return
         }
+        if (below == WATER_FLOW) return
         if (level >= MAX_WATER_FLOW_LEVEL) return
         val nextLevel = level + 1
-        for (d in horizontalWaterDirs) {
+        val directions = waterDirections(wx, wy, wz, level)
+        for ((direction, d) in horizontalWaterDirs.withIndex()) {
+            if (directions and (1 shl direction) == 0) continue
             val nx = wx + d[0]; val nz = wz + d[2]
             if (!isGeneratedBlock(nx, wy, nz)) {
                 deferWaterActivation(wx, wy, wz, nx, wy, nz)
@@ -2130,7 +2180,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * bornée par tick et se vide naturellement dès que le liquide est stable.
      */
     fun tickWater(maxOps: Int = 128) {
-        repeat(maxOps) {
+        waterRouteMasks.clear()
+        // Ne pas traiter immédiatement les cellules réveillées pendant cette vague.
+        // Une limite temporelle complète le budget d'opérations sur les appareils lents.
+        val count = minOf(maxOps.coerceAtLeast(0), waterQueued.size)
+        val deadline = System.nanoTime() + 2_000_000L
+        repeat(count) {
+            if (it > 0 && System.nanoTime() >= deadline) return
             val item = waterSpreadQueue.poll() ?: return
             waterQueued.remove(waterKey(item[0], item[1], item[2]))
             updateWaterAt(item[0], item[1], item[2])

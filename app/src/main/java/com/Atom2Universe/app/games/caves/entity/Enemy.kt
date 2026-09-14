@@ -40,6 +40,8 @@ internal class Enemy(
     var hp: Int = def.hpBase
     var state = EnemyState.WANDER
     var velY = 0.0
+    var waterDriftX = 0.0
+    var waterDriftZ = 0.0
     var onGround = false
     var wanderTimer = 0f
     var wanderDirX = 0f

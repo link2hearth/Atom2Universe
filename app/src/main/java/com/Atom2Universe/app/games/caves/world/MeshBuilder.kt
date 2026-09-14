@@ -208,6 +208,9 @@ internal object MeshBuilder {
         }
     }
 
+    private fun waterFaceVisible(block: Short): Boolean = !isWater(block) &&
+        (block == AIR || isDecoration(block) || isTransparent(block) || BlockRegistry.isPartial(block))
+
     fun buildWater(chunk: Chunk, world: World): FloatArray {
         val buf = waterScratch.get()!!.also { it.clear() }
         val cache = World.ChunkLookupCache()
@@ -228,7 +231,7 @@ internal object MeshBuilder {
 
             // Les coins partagent leurs hauteurs avec les cases voisines : le flux crée ainsi
             // une pente continue au lieu de cubes d'eau empilés.
-            val needsSurface = above == AIR || east == AIR || west == AIR || south == AIR || north == AIR
+            val needsSurface = waterFaceVisible(above) || waterFaceVisible(east) || waterFaceVisible(west) || waterFaceVisible(south) || waterFaceVisible(north)
             val hNW: Float
             val hNE: Float
             val hSE: Float
@@ -251,17 +254,17 @@ internal object MeshBuilder {
                 hNW = 1f; hNE = 1f; hSE = 1f; hSW = 1f
             }
 
-            if (above == AIR)
+            if (waterFaceVisible(above))
                 buf.quad(x,y+hNW,z, x+1f,y+hNE,z, x+1f,y+hSE,z+1f, x,y+hSW,z+1f, packed, false, skyOf(chunk, world, lx, ly + 1, lz, cache))
-            if (below == AIR)
+            if (waterFaceVisible(below))
                 buf.quad(x,y,z+1f, x+1f,y,z+1f, x+1f,y,z, x,y,z, packed, false, skyOf(chunk, world, lx, ly - 1, lz, cache))
-            if (east == AIR)
+            if (waterFaceVisible(east))
                 buf.quad(x+1f,y,z+1f, x+1f,y+hSE,z+1f, x+1f,y+hNE,z, x+1f,y,z, packed, true, skyOf(chunk, world, lx + 1, ly, lz, cache))
-            if (west == AIR)
+            if (waterFaceVisible(west))
                 buf.quad(x,y,z, x,y+hNW,z, x,y+hSW,z+1f, x,y,z+1f, packed, true, skyOf(chunk, world, lx - 1, ly, lz, cache))
-            if (south == AIR)
+            if (waterFaceVisible(south))
                 buf.quad(x,y,z+1f, x,y+hSW,z+1f, x+1f,y+hSE,z+1f, x+1f,y,z+1f, packed, true, skyOf(chunk, world, lx, ly, lz + 1, cache))
-            if (north == AIR)
+            if (waterFaceVisible(north))
                 buf.quad(x+1f,y,z, x+1f,y+hNE,z, x,y+hNW,z, x,y,z, packed, true, skyOf(chunk, world, lx, ly, lz - 1, cache))
         }
         return buf.toFloatArray()
@@ -270,13 +273,16 @@ internal object MeshBuilder {
     private fun waterHeight(world: World, wx: Int, wy: Int, wz: Int, cache: World.ChunkLookupCache? = null): Float {
         val block = world.blockAt(wx, wy, wz, cache)
         if (!isWater(block)) return 0f
-        // Une colonne avec de l'eau au-dessus est pleine. Les chutes (niveau 0) le sont aussi.
+        // Seules les cellules couvertes d'eau sont pleines, pour raccorder les chutes.
+        // Une surface libre reste légèrement sous le bord du bloc, même à niveau 0.
         if (isWater(world.blockAt(wx, wy + 1, wz, cache))) return 1f
         val level = world.waterFlowLevelKnown(block, wx, wy, wz)
-        return if (level == 0) 1f else (9 - level).coerceAtLeast(1) / 9f
+        return (8f / 9f) * (9 - level.coerceIn(0, 8)) / 9f
     }
 
     private fun averageWaterHeights(a: Float, b: Float, c: Float, d: Float): Float {
+        // Une colonne pleine doit rejoindre exactement l'étage supérieur.
+        if (a >= 1f || b >= 1f || c >= 1f || d >= 1f) return 1f
         var total = 0f
         var count = 0
         if (a > 0f) { total += a; count++ }
@@ -284,6 +290,29 @@ internal object MeshBuilder {
         if (c > 0f) { total += c; count++ }
         if (d > 0f) { total += d; count++ }
         return if (count == 0) 0f else total / count
+    }
+
+    /** Même interpolation triangulaire que le mesh, sans créer de géométrie. */
+    fun isPointInWater(world: World, x: Double, y: Double, z: Double): Boolean {
+        val wx = kotlin.math.floor(x).toInt()
+        val wy = kotlin.math.floor(y).toInt()
+        val wz = kotlin.math.floor(z).toInt()
+        if (!isWater(world.blockAt(wx, wy, wz))) return false
+        if (isWater(world.blockAt(wx, wy + 1, wz))) return true
+        val cache = World.ChunkLookupCache()
+        val c = waterHeight(world, wx, wy, wz, cache)
+        val w = waterHeight(world, wx - 1, wy, wz, cache)
+        val e = waterHeight(world, wx + 1, wy, wz, cache)
+        val n = waterHeight(world, wx, wy, wz - 1, cache)
+        val s = waterHeight(world, wx, wy, wz + 1, cache)
+        val nw = averageWaterHeights(c, w, n, waterHeight(world, wx - 1, wy, wz - 1, cache))
+        val ne = averageWaterHeights(c, e, n, waterHeight(world, wx + 1, wy, wz - 1, cache))
+        val se = averageWaterHeights(c, e, s, waterHeight(world, wx + 1, wy, wz + 1, cache))
+        val sw = averageWaterHeights(c, w, s, waterHeight(world, wx - 1, wy, wz + 1, cache))
+        val fx = x - wx; val fz = z - wz
+        val height = if (fx >= fz) nw + (ne - nw) * fx + (se - ne) * fz
+                     else nw + (se - sw) * fx + (sw - nw) * fz
+        return y - wy < height
     }
 
     private fun GrowableFloatArray.add7(x:Float,y:Float,z:Float, u:Float,v:Float,p:Float, sky:Float) {

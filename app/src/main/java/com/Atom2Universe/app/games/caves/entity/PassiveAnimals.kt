@@ -96,6 +96,7 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                     }
                 }
             }
+            if (applyWaterMotion(a, dt)) continue
             if (!a.resting) {
                 val speed = a.def.speed * dt.coerceAtMost(.05f) * if (shy) 1.8 else 1.0
                 val nx = a.x+a.wanderDirX*speed; val nz = a.z+a.wanderDirZ*speed
@@ -112,6 +113,58 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                     .put("yaw", a.yaw.toDouble()).put("resting", a.resting).put("timer", a.wanderTimer.toDouble())) }
             })) }
         }.toString()
+    }
+
+    private val current = DoubleArray(4)
+
+    /** La faune reste entraînée au repos et continue de tomber après une cascade. */
+    private fun applyWaterMotion(a: Enemy, dt: Float): Boolean {
+        WaterCurrent.sample(world, a.x, a.y + 0.25, a.z, current)
+        val wet = current[3] > 0.0
+        if (!wet && a.velY == 0.0) {
+            a.waterDriftX = 0.0; a.waterDriftZ = 0.0
+            return false
+        }
+        val step = dt.coerceIn(0f, 0.05f).toDouble()
+        val response = 1.0 - exp(-4.0 * step)
+        if (wet) {
+            a.waterDriftX += (current[0] - a.waterDriftX) * response
+            a.waterDriftZ += (current[2] - a.waterDriftZ) * response
+        } else { a.waterDriftX = 0.0; a.waterDriftZ = 0.0 }
+        val swim = if (wet && !a.resting) a.def.speed * 0.45 else 0.0
+        val dx = (a.waterDriftX + a.wanderDirX * swim) * step
+        val dz = (a.waterDriftZ + a.wanderDirZ * swim) * step
+        if (waterSpaceFree(a, a.x + dx, a.y, a.z)) a.x += dx
+        if (waterSpaceFree(a, a.x, a.y, a.z + dz)) a.z += dz
+        if (wet) a.velY += (current[1] - a.velY) * response
+        a.velY = (a.velY - (if (wet) 4.0 else 20.0) * step).coerceAtLeast(if (wet) -3.0 else -12.0)
+        val dy = a.velY * step
+        if (waterSpaceFree(a, a.x, a.y + dy, a.z)) a.y += dy
+        else {
+            // Approcher le sol sans l'enfoncer ni figer l'animal au-dessus.
+            var free = 0.0; var blocked = 1.0
+            repeat(8) {
+                val fraction = (free + blocked) * 0.5
+                if (waterSpaceFree(a, a.x, a.y + dy * fraction, a.z)) free = fraction
+                else blocked = fraction
+            }
+            a.y += dy * free
+            a.velY = 0.0
+        }
+        return true
+    }
+
+    private fun waterSpaceFree(a: Enemy, x: Double, y: Double, z: Double): Boolean {
+        val r = radius(a)
+        val height = maxOf(0.6, a.def.eyeHeight.toDouble() * if (a.young) 0.72 else 1.0)
+        for (bx in floor(x-r).toInt()..floor(x+r).toInt())
+            for (bz in floor(z-r).toInt()..floor(z+r).toInt())
+                for (by in floor(y+0.002).toInt()..floor(y+height).toInt()) {
+                    if (!loaded(bx.toDouble(), by.toDouble(), bz.toDouble())) return false
+                    val block = world.blockAt(bx, by, bz)
+                    if (block != AIR && !isWater(block) && !isDecoration(block)) return false
+                }
+        return true
     }
 
     private fun loaded(x: Double, y: Double, z: Double) = world.getChunk(floor(x/16).toInt(), floor(y/16).toInt(), floor(z/16).toInt())?.generated == true

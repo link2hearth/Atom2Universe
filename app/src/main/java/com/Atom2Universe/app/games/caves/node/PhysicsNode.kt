@@ -8,6 +8,13 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     var dynamicCollision: ((Double, Double, Double, Double) -> Boolean)? = null
 
     var metaAt: (Int, Int, Int) -> Byte = { _, _, _ -> 0 }
+    var sampleWaterCurrent: (Double, Double, Double, DoubleArray) -> Unit = { _, _, _, out -> out.fill(0.0) }
+    private val current = DoubleArray(4)
+    private var driftX = 0.0
+    private var driftZ = 0.0
+    var waterContainsPoint: (Double, Double, Double) -> Boolean = { x, y, z ->
+        isWater(blockAt(floor(x).toInt(), floor(y).toInt(), floor(z).toInt()))
+    }
     var velocityY = 0.0
     var onGround  = false
 
@@ -83,6 +90,12 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
         var x = px; var y = py; var z = pz
         val inWater = isBodyInWater(x, y, z)
+        if (inWater) sampleWaterCurrent(x, y - 0.9, z, current) else current.fill(0.0)
+        val response = 1.0 - exp(-4.0 * dt)
+        if (inWater) {
+            driftX += (current[0] - driftX) * response
+            driftZ += (current[2] - driftZ) * response
+        } else { driftX = 0.0; driftZ = 0.0 }
         val sb = skillBook
 
         // ── Coyote time ───────────────────────────────────────────────────────
@@ -103,8 +116,8 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             onGround -> groundSpeed * dt
             else     -> AIR_SPEED   * dt
         }) * if (isCrouching) 0.35 else 1.0
-        val dx = (fwdX * moveForward - rgtX * moveRight) * hSpeed
-        val dz = (fwdZ * moveForward - rgtZ * moveRight) * hSpeed
+        val dx = (fwdX * moveForward - rgtX * moveRight) * hSpeed + driftX * dt
+        val dz = (fwdZ * moveForward - rgtZ * moveRight) * hSpeed + driftZ * dt
 
         val newX = x + dx
         if (!collidesAt(newX, y, z)) {
@@ -114,7 +127,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             !collidesAt(newX, y + GROUND_FOLLOW, z)) {
             y = smallStepHeight(newX, y, z)
             x = newX
-        } else if ((onGround || inWater) && dx != 0.0 &&
+        } else if ((onGround || inWater) && dx != 0.0 && (moveForward != 0f || moveRight != 0f) &&
                    (!collidesAt(newX, y + .5, z) || (!isCrouching && !collidesAt(newX, y + STEP_MAX, z)))) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(newX, y + .5, z)) .5 else STEP_MAX
         }
@@ -127,7 +140,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             !collidesAt(x, y + GROUND_FOLLOW, newZ)) {
             y = smallStepHeight(x, y, newZ)
             z = newZ
-        } else if ((onGround || inWater) && dz != 0.0 &&
+        } else if ((onGround || inWater) && dz != 0.0 && (moveForward != 0f || moveRight != 0f) &&
                    (!collidesAt(x, y + .5, newZ) || (!isCrouching && !collidesAt(x, y + STEP_MAX, newZ)))) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(x, y + .5, newZ)) .5 else STEP_MAX
         }
@@ -166,6 +179,9 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             }
 
             inWater -> {
+                // Freine aussi une chute rapide à l'entrée dans l'eau. Le courant
+                // descendant gêne la remontée, mais le joueur peut encore nager.
+                velocityY += (current[1] - velocityY) * response
                 if (jumpPressed) velocityY = minOf(velocityY + WATER_SPEED * dt * 8, WATER_MAX_VY)
                 velocityY = (velocityY - WATER_GRAVITY * dt).coerceAtLeast(-WATER_MAX_VY)
                 val dy = velocityY * dt
@@ -296,10 +312,10 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     }
 
     fun isBodyInWater(px: Double, py: Double, pz: Double): Boolean =
-        isWater(blockAt(floor(px).toInt(), floor(py - 0.9).toInt(), floor(pz).toInt()))
+        waterContainsPoint(px, py - 0.9, pz)
 
     fun isHeadInWater(px: Double, py: Double, pz: Double): Boolean =
-        isWater(blockAt(floor(px).toInt(), floor(py - eyeDrop - 0.1).toInt(), floor(pz).toInt()))
+        waterContainsPoint(px, py - eyeDrop, pz)
 
     fun reset() {
         isCrouching    = false

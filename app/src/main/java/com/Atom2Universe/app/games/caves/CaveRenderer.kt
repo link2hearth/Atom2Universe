@@ -121,6 +121,8 @@ internal class CaveRenderer(
     private var laserShader: ShaderProgram? = null
     private var starShader:  ShaderProgram? = null
     private var waterShader: ShaderProgram? = null
+    private var waterPhaseUniform = 0
+    private val visibleWaterKeys = ArrayList<Long>()
     private var lodShader:   ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wASky = 0; private var wUMvp = 0; private var wUTex = 0
     private var wUChunkOffset = 0; private var wUAmbient = 0; private var wUCaveFloor = 0
@@ -136,7 +138,6 @@ internal class CaveRenderer(
     private var blockTexArray = 0
 
     private val waterMeshes         = ConcurrentHashMap<Long, ChunkMesh>()
-    private val waterUploadQueue    = ConcurrentLinkedQueue<LitMeshUpload>()
     private val waterOnlyUploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     // ── Étoiles ───────────────────────────────────────────────────────────────
@@ -243,7 +244,11 @@ internal class CaveRenderer(
     var playerMode = PlayerMode.WALK
     @Volatile var pendingMode: PlayerMode? = null
     var isCreative = false
-    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply { metaAt = { x, y, z -> world.metaAt(x, y, z) } }
+    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply {
+        metaAt = { x, y, z -> world.metaAt(x, y, z) }
+        waterContainsPoint = { x, y, z -> MeshBuilder.isPointInWater(world, x, y, z) }
+        sampleWaterCurrent = { x, y, z, out -> WaterCurrent.sample(world, x, y, z, out) }
+    }
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -508,7 +513,8 @@ internal class CaveRenderer(
 
     private val FRAG_WATER = """
         #version 300 es
-        precision mediump float;
+        precision highp float;
+        uniform vec3 u_wavePhase;
         uniform vec3 u_caveFog;
         uniform float u_ambient;
         uniform float u_caveFloor;
@@ -523,13 +529,26 @@ internal class CaveRenderer(
         in float v_skyLight;
         out vec4 fragColor;
         void main() {
-            float wave = 0.5 + 0.5 * sin(v_worldPos.x * 1.1 + u_time * 1.7)
-                                   * sin(v_worldPos.z * 0.85 + u_time * 1.3);
+            // Phases ancrées au monde, calculées en double côté CPU, sans grandes
+            // coordonnées dans le shader. Deux rides, aucune texture supplémentaire.
+            float a = v_worldPos.x * 1.1 + u_wavePhase.x;
+            float b = v_worldPos.z * 0.85 + u_wavePhase.y;
+            vec3 normal = normalize(cross(dFdx(v_worldPos), dFdy(v_worldPos)));
+            float top = smoothstep(0.55, 0.95, abs(normal.y));
+            float ripple = sin(a) * sin(b);
+            float fall = sin(v_worldPos.y * 5.0 + u_wavePhase.z + sin(a));
+            float wave = 0.5 + 0.5 * mix(fall, ripple, top);
+            vec3 viewDir = normalize(-v_worldPos);
+            if (dot(normal, viewDir) < 0.0) normal = -normal;
+            float fade = 1.0 - smoothstep(24.0, 80.0, length(v_worldPos));
+            normal = normalize(normal + vec3(cos(a) * sin(b), 0.0,
+                sin(a) * cos(b)) * (0.09 * top * fade));
+            float grazing = 1.0 - clamp(dot(normal, viewDir), 0.0, 1.0);
+            float fresnel = 0.04 + 0.96 * grazing * grazing * grazing * grazing * grazing;
             vec3 deepColor    = ${if (vividStyle) "vec3(0.025, 0.24, 0.74)" else "vec3(0.05, 0.28, 0.72)"};
             vec3 shallowColor = ${if (vividStyle) "vec3(0.08, 0.55, 0.94)" else "vec3(0.16, 0.50, 0.90)"};
             vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
-            float fd = floor(v_faceDir + 0.5);
-            float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : 0.72;
+            float faceLight = mix(0.78, 1.0, top);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
                 float flicker = u_lightColors[i].w;
@@ -545,7 +564,11 @@ internal class CaveRenderer(
             float sky = v_skyLight * u_ambient;
             vec3 baseLight = vec3(max(sky, u_caveFloor));
             vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
-            fragColor = vec4(baseColor * faceLight * lighting, 0.75);
+            vec3 reflection = vec3(0.40, 0.64, 0.80) * sky;
+            vec3 color = mix(baseColor * faceLight * lighting, reflection, fresnel * 0.65);
+            float glint = pow(max(dot(normal, normalize(viewDir + vec3(0.35, 0.85, 0.4))), 0.0), 48.0);
+            color += vec3(0.65, 0.8, 0.9) * glint * sky * top * fade * 0.28;
+            fragColor = vec4(color, mix(0.48, 0.86, fresnel));
             fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
     """.trimIndent()
@@ -685,6 +708,7 @@ internal class CaveRenderer(
         }
         waterShader = ShaderProgram(VERT_WORLD, FRAG_WATER).also {
             it.use()
+            waterPhaseUniform = it.uniform("u_wavePhase")
             waterCaveFogUniform = it.uniform("u_caveFog")
             wWAPos         = it.attrib("a_pos")
             wWAUv          = it.attrib("a_uv")
@@ -1043,7 +1067,8 @@ internal class CaveRenderer(
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.version == snapVersion) {
                         enqueueMesh(uploadQueue, LitMeshUpload(key, snapVersion, verts, lighting))
-                        enqueueMesh(waterUploadQueue, LitMeshUpload(key, snapVersion, waterVerts, lighting))
+                        if (chunk.waterVersion == snapWaterVer)
+                            enqueueMesh(waterOnlyUploadQueue, LitMeshUpload(key, snapWaterVer, waterVerts, lighting))
                     }
                     if (chunk.meshDirty || chunk.version != snapVersion) world.rebuildQueue.add(key)
                     if (chunk.waterMeshDirty || chunk.waterVersion != snapWaterVer) world.waterRebuildQueue.add(key)
@@ -1132,15 +1157,6 @@ internal class CaveRenderer(
             val mesh = lodMeshes.getOrPut(key) { isNew = true; ChunkMesh(6) }
             mesh.upload(verts); mesh.flushPending()
             if (isNew) lodGrid.getOrPut(superKey(lodKeyToCx(key), lodKeyToCz(key))) { ArrayList() }.add(key)
-        }
-        while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts, lighting) = pollMesh(waterUploadQueue) ?: break
-            val chunk = world.getChunkByKey(key) ?: continue
-            if (lighting.belongsTo(chunk) && chunk.version == ver) {
-                if (verts.isNotEmpty()) { val mesh = waterMeshes.getOrPut(key) { ChunkMesh(7) }; mesh.upload(verts); mesh.flushPending() }
-                else waterMeshes.remove(key)?.destroy()
-                if (!lighting.isCurrent()) world.waterRebuildQueue.add(key)
-            }
         }
         while (System.nanoTime() < uploadDeadline) {
             val (key, ver, verts, lighting) = pollMesh(waterOnlyUploadQueue) ?: break
@@ -1435,15 +1451,32 @@ internal class CaveRenderer(
         GLES30.glUniform1f(wWUAmbient, waterAmbient)
         GLES30.glUniform1f(wWUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wWUTime, elapsed)
+        GLES30.glUniform3f(waterPhaseUniform,
+            ((camera.x * 1.1 + elapsed.toDouble() * 1.7) % (2.0 * Math.PI)).toFloat(),
+            ((camera.z * 0.85 + elapsed.toDouble() * 1.3) % (2.0 * Math.PI)).toFloat(),
+            ((camera.y * 5.0 + elapsed.toDouble() * 4.0) % (2.0 * Math.PI)).toFloat())
         GLES30.glUniform4fv(wWULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
         GLES30.glUniform4fv(wWULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
         GLES30.glUniform1i(wWULightCount, cachedLightCount)
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
         GLES30.glDepthMask(false)
-        for ((key, mesh) in waterMeshes) {
+        // Tri des chunks visibles seulement : transparence stable, tampon réutilisé.
+        visibleWaterKeys.clear()
+        for (key in waterMeshes.keys) {
+            if (isChunkInFrustum(world.keyToCx(key), world.keyToCy(key), world.keyToCz(key)))
+                visibleWaterKeys.add(key)
+        }
+        fun waterDistance(key: Long): Double {
+            val x = world.keyToCx(key).toDouble() * CHUNK_SIZE + CHUNK_SIZE * 0.5 - camera.x
+            val y = world.keyToCy(key).toDouble() * CHUNK_SIZE + CHUNK_SIZE * 0.5 - camera.y
+            val z = world.keyToCz(key).toDouble() * CHUNK_SIZE + CHUNK_SIZE * 0.5 - camera.z
+            return x * x + y * y + z * z
+        }
+        visibleWaterKeys.sortWith(Comparator { a, b -> waterDistance(b).compareTo(waterDistance(a)) })
+        for (key in visibleWaterKeys) {
+            val mesh = waterMeshes[key] ?: continue
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
-            if (!isChunkInFrustum(kcx, kcy, kcz)) continue
             val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
@@ -3704,7 +3737,8 @@ internal class CaveRenderer(
             val py = target.by + target.fny
             val pz = target.bz + target.fnz
             if (isInsidePlayer(px, py, pz)) return
-            if (world.blockAt(px, py, pz) != AIR) return
+            val destination = world.blockAt(px, py, pz)
+            if (destination != AIR && destination != WATER_FLOW) return
             world.setBlock(px, py, pz, WATER)
             world.onWaterSourcePlaced(px, py, pz)
             forceMeshRebuild(px, py, pz)
@@ -3718,7 +3752,7 @@ internal class CaveRenderer(
         val pz = target.bz + target.fnz
         if (isInsidePlayer(px, py, pz)) return
         val existing = world.blockAt(px, py, pz)
-        if (existing != AIR && BlockRegistry.get(existing)?.replaceable != true) return
+        if (existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return
         val orientMeta = if (BlockRegistry.get(blockType)?.slab == true) {
             (if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
         } else if (BlockRegistry.get(blockType)?.stairs == true) {

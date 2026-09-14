@@ -10,6 +10,7 @@ import kotlin.random.Random
 internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     val enemies = ArrayList<Enemy>(32)
+    private val current = DoubleArray(4)
 
     val wardStoneZones: MutableList<Pair<Double, Double>> = mutableListOf()
 
@@ -135,6 +136,15 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
         if (e.freezeTimer > 0f) { e.freezeTimer -= dt; return }
 
+        WaterCurrent.sample(world, e.x, e.y + 0.25, e.z, current)
+        val inWater = current[3] > 0.0
+        val response = 1.0 - exp(-4.0 * dt)
+        if (inWater) {
+            e.waterDriftX += (current[0] - e.waterDriftX) * response
+            e.waterDriftZ += (current[2] - e.waterDriftZ) * response
+            move(e, e.waterDriftX * dt, e.waterDriftZ * dt, allowStep = false)
+        } else { e.waterDriftX = 0.0; e.waterDriftZ = 0.0 }
+
         if (e.confusionTimer > 0f) e.confusionTimer -= dt
 
 
@@ -161,7 +171,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobNearby(e.isBoss))
         }
 
-        val spd = e.scaledSpeed.toDouble() * dt
+        val spd = e.scaledSpeed.toDouble() * dt * if (inWater) 0.45 else 1.0
         when (e.state) {
             EnemyState.WANDER -> {
                 e.stuckTimer = 0f
@@ -250,7 +260,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Séparation : les mobs s'évitent entre eux pour ne pas s'empiler.
         applySeparation(e, dt)
 
-        e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
+        if (inWater) {
+            e.velY += (current[1] - e.velY) * response
+            e.velY = (e.velY - 4.0 * dt).coerceAtLeast(-3.0)
+        } else e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
         val newY = e.y + e.velY * dt
         val ground = solidGroundBelow(e.x, e.z, newY + 1.0)
         if (ground != null && newY < ground) {
@@ -305,7 +318,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     // ── Déplacement + collision ───────────────────────────────────────────────
 
-    private fun move(e: Enemy, dx: Double, dz: Double) {
+    private fun move(e: Enemy, dx: Double, dz: Double, allowStep: Boolean = true) {
         val r = e.def.radius.toDouble()
         val footY = Math.floor(e.y + 0.002).toInt()
         val headY = footY + 1
@@ -320,7 +333,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             var freeX = true
             for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY, bz) || !isFreeForMob(tx, headY, bz)) { freeX = false; break } }
             var stepX = false
-            if (!freeX && e.onGround) {
+            if (!freeX && e.onGround && allowStep) {
                 stepX = true
                 for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY + 1, bz) || !isFreeForMob(tx, headY + 1, bz)) { stepX = false; break } }
             }
@@ -338,7 +351,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             var freeZ = true
             for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2, tz) || !isFreeForMob(bx, hy2, tz)) { freeZ = false; break } }
             var stepZ = false
-            if (!freeZ && e.onGround) {
+            if (!freeZ && e.onGround && allowStep) {
                 stepZ = true
                 for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2 + 1, tz) || !isFreeForMob(bx, hy2 + 1, tz)) { stepZ = false; break } }
             }
