@@ -12,4 +12,6 @@
         <item>Incomplete stone circle</item>
         <item>Standing stone alignment</item>
     </string-array>
+    <string name="cave_block_weathered_marble">Weathered marble</string>
+    <string name="cave_block_monolith_stone">Monolith stone</string>
 </resources>

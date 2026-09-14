@@ -20,10 +20,29 @@ class ColdLandscapeTest {
             assertTrue(result.isNotEmpty())
             for ((p, block) in result) {
                 assertTrue(p.first in -7..7 && p.third in -7..7)
-                assertTrue(p.second in 79..90)
+                assertTrue(p.second in 79..94)
                 assertNotEquals(AIR, block.first)
                 assertNotEquals(WATER, block.first)
             }
+        }
+    }
+
+    @Test fun unsnowyGroundNeverReceivesSnowCaps() {
+        for (kind in 0..7) repeat(10) { seed ->
+            val blocks = mutableListOf<Short>()
+            ColdLandscape.generate(kind, Random(seed), { _, _ -> 80 }, { _, _ -> false }) { _, _, _, id, _ -> blocks += id }
+            assertFalse(blocks.contains(SNOW))
+        }
+    }
+
+    @Test fun menhirIsBroadTallAndUsesDedicatedStone() {
+        repeat(20) { seed ->
+            val blocks = recipe(2, seed)
+            val stone = blocks.filterValues { it.first == ColdLandscape.MARBLE || it.first == ColdLandscape.MONOLITH }
+            assertTrue(stone.size >= 40)
+            assertTrue(stone.keys.maxOf { it.second } >= 88)
+            assertEquals(1, stone.values.map { it.first }.toSet().size)
+            for (z in 0..1) for (x in -1..1) assertTrue(stone.containsKey(Triple(x, 80, z)))
         }
     }
 

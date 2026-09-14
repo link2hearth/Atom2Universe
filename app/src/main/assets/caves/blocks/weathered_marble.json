@@ -1,0 +1,15 @@
+{
+  "id": 2321,
+  "name": "weathered_marble",
+  "texture_top": "cozy:monument:0:C7C6B9",
+  "texture_side": "cozy:monument:0:C7C6B9",
+  "texture_bottom": "cozy:monument:0:C7C6B9",
+  "color": "#C7C6B9",
+  "hardness": 4.0,
+  "drop": "weathered_marble",
+  "harvest_category": "recoverable",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

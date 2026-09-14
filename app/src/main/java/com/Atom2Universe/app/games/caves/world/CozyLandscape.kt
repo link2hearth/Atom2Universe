@@ -17,6 +17,13 @@ internal class CozyLandscape(private val seed: Long,
             { x, z -> natural?.biomeIdAt(x.toDouble(), z.toDouble())
                 ?: BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed).id },
             { x, z ->
+                val id = natural?.biomeIdAt(x.toDouble(), z.toDouble())
+                    ?: BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed).id
+                val b = BiomeRegistry.surfaceBiomes.first { it.id == id }
+                val h = height(x.toDouble(), z.toDouble()).toInt()
+                topBlock(b, x.toDouble(), z.toDouble(), h) in shortArrayOf(SNOW, DIRT_SNOW)
+            },
+            { x, z ->
                 val plot = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
                 nearCave(x, z) || (plot.kind >= 0 && x in plot.x - 7..plot.x + 19 && z in plot.z - 7..plot.z + 19)
             })

@@ -9,6 +9,7 @@ internal class ColdLandscape(
     private val seed: Long,
     private val height: (Int, Int) -> Int,
     private val biome: (Int, Int) -> String,
+    private val snowy: (Int, Int) -> Boolean,
     private val blocked: (Int, Int) -> Boolean
 ) {
     private data class Site(val x: Int, val z: Int, val kind: Int, val seed: Long)
@@ -20,13 +21,13 @@ internal class ColdLandscape(
             if (sites.size > 4096) sites.clear()
             val s = seed xor (cx.toLong() * 341873128712L) xor (cz.toLong() * 132897987541L) xor 618923L
             val rng = Random(s)
-            val x = cx * 24 + 8 + rng.nextInt(8)
-            val z = cz * 24 + 8 + rng.nextInt(8)
+            val x = cx * CELL + 24 + rng.nextInt(16)
+            val z = cz * CELL + 24 + rng.nextInt(16)
             val region = biome(x, z)
-            if (region !in setOf("tundra", "taiga") || rng.nextFloat() > .58f) return@getOrPut absent
+            if (region !in setOf("tundra", "taiga") || rng.nextFloat() > .35f) return@getOrPut absent
             // Taiga favors dead wood; tundra favors exposed stone and ice. Circles stay rare.
             val roll = rng.nextInt(100)
-            val kind = when {
+            var kind = when {
                 roll < 4 -> 6
                 roll < 10 -> 7
                 roll < 23 -> 3
@@ -37,6 +38,8 @@ internal class ColdLandscape(
                 roll < 82 -> 5
                 else -> 4
             }
+            // An unsnowy taiga gets wood and rock, not isolated ice formations.
+            if (kind in setOf(0, 3) && !snowy(x, z)) kind = if (kind == 0) 5 else 1
             val h = height(x, z)
             if (h <= 76) return@getOrPut absent
             for (dz in -7..7) for (dx in -7..7) {
@@ -50,8 +53,8 @@ internal class ColdLandscape(
     }
 
     fun reserves(x: Int, z: Int, margin: Int = 0): Boolean {
-        for (cz in Math.floorDiv(z - 7 - margin, 24)..Math.floorDiv(z + 7 + margin, 24))
-            for (cx in Math.floorDiv(x - 7 - margin, 24)..Math.floorDiv(x + 7 + margin, 24)) {
+        for (cz in Math.floorDiv(z - 7 - margin, CELL)..Math.floorDiv(z + 7 + margin, CELL))
+            for (cx in Math.floorDiv(x - 7 - margin, CELL)..Math.floorDiv(x + 7 + margin, CELL)) {
                 val s = site(cx, cz) ?: continue
                 if (abs(s.x - x) <= 7 + margin && abs(s.z - z) <= 7 + margin) return true
             }
@@ -59,10 +62,11 @@ internal class ColdLandscape(
     }
 
     fun decorate(chunk: Chunk) {
-        for (cz in Math.floorDiv(chunk.worldZ - 7, 24)..Math.floorDiv(chunk.worldZ + 22, 24))
-            for (cx in Math.floorDiv(chunk.worldX - 7, 24)..Math.floorDiv(chunk.worldX + 22, 24)) {
+        for (cz in Math.floorDiv(chunk.worldZ - 7, CELL)..Math.floorDiv(chunk.worldZ + 22, CELL))
+            for (cx in Math.floorDiv(chunk.worldX - 7, CELL)..Math.floorDiv(chunk.worldX + 22, CELL)) {
                 val s = site(cx, cz) ?: continue
-                generate(s.kind, Random(s.seed), { x, z -> height(s.x + x, s.z + z) }) { x, y, z, id, meta ->
+                generate(s.kind, Random(s.seed), { x, z -> height(s.x + x, s.z + z) },
+                    { x, z -> snowy(s.x + x, s.z + z) }) { x, y, z, id, meta ->
                     val lx = s.x + x - chunk.worldX; val ly = y - chunk.worldY; val lz = s.z + z - chunk.worldZ
                     if (lx in 0..15 && ly in 0..15 && lz in 0..15) {
                         chunk.setBlock(lx, ly, lz, id)
@@ -73,20 +77,37 @@ internal class ColdLandscape(
     }
 
     companion object {
+        // Neighboring candidates are at least 49 blocks apart, leaving 35 blocks between footprints.
+        const val CELL = 64
+        const val MARBLE: Short = 2321
+        const val MONOLITH: Short = 2322
         const val CRACKED_ICE: Short = 5003
         const val LICHEN_STONE: Short = 2320
 
         /** Recipes can also be displayed on flat exhibition ground. No water source or air carving. */
         fun generate(kind: Int, rng: Random, ground: (Int, Int) -> Int,
+                     snowAt: (Int, Int) -> Boolean = { _, _ -> true },
                      put: (Int, Int, Int, Short, Byte) -> Unit) {
             fun column(x: Int, z: Int, h: Int, id: Short, snow: Boolean = true) {
                 val floor = ground(x, z)
                 for (y in 1..h) put(x, floor + y, z, id, 0)
-                if (snow) put(x, floor + h + 1, z, SNOW, 0)
+                if (snow && snowAt(x, z)) put(x, floor + h + 1, z, SNOW, 0)
             }
             fun stone(x: Int, z: Int, h: Int) {
                 column(x, z, h, LICHEN_STONE, false)
                 column(x + 1, z, (h - 1).coerceAtLeast(1), STONE)
+            }
+            val monumentMaterial = if (rng.nextBoolean()) MARBLE else MONOLITH
+            fun menhir(x: Int, z: Int, h: Int) {
+                val base = (-1..1).maxOf { dx -> (0..1).maxOf { dz -> ground(x + dx, z + dz) } }
+                val chippedSide = if (rng.nextBoolean()) -1 else 1
+                // A single broad upright mass: buried foot, tapered shoulders and an uneven summit.
+                for (dz in 0..1) for (dx in -1..1) {
+                    val top = h - if (dx == chippedSide) 2 else if (dx != 0 || dz == 1) 1 else 0
+                    for (y in ground(x + dx, z + dz)..base + top)
+                        put(x + dx, y, z + dz, monumentMaterial, 0)
+                    if (snowAt(x + dx, z + dz)) put(x + dx, base + top + 1, z + dz, SNOW, 0)
+                }
             }
             when (kind) {
                 0 -> { // Broken ice outcrop, with a low skirt and a blue core.
@@ -109,7 +130,7 @@ internal class ColdLandscape(
                         // Support the underside continuously on uneven ground.
                         if (dy == 0) for (y in ground(x, z) + 1..base) put(x, y, z, WOOD_SAPIN, if (alongX) 1 else 2)
                         put(x, base + 1 + dy, z, WOOD_SAPIN, if (alongX) 1 else 2)
-                        if (dy == 2 && rng.nextInt(3) != 0) put(x, base + 4, z, SNOW, 0)
+                        if (dy == 2 && rng.nextInt(3) != 0 && snowAt(x, z)) put(x, base + 4, z, SNOW, 0)
                     }
                     // Short root remnants and a ragged stump, kept within the site footprint.
                     for (side in listOf(-2, 2)) {
@@ -121,7 +142,7 @@ internal class ColdLandscape(
                     column(-4, -3, 1, WOOD_SAPIN)
                     column(-5, -2, 1, WOOD_SAPIN, false)
                 }
-                2 -> stone(0, 0, 3 + rng.nextInt(3))
+                2 -> menhir(0, 0, 8 + rng.nextInt(4))
                 3 -> { // Flat frozen pond with sealed bed and a continuous solid bank.
                     val y = (-4..4).maxOf { z -> (-5..5).maxOf { x -> ground(x, z) } }
                     for (z in -4..4) for (x in -5..5) {
@@ -129,7 +150,7 @@ internal class ColdLandscape(
                         if (d > 1.2) continue
                         put(x, y - 1, z, CLAY, 0)
                         put(x, y, z, if (d < .8) { if (rng.nextInt(4) == 0) CRACKED_ICE else ICE } else LICHEN_STONE, 0)
-                        if (d >= .8 && rng.nextInt(3) == 0) put(x, y + 1, z, SNOW, 0)
+                        if (d >= .8 && rng.nextInt(3) == 0 && snowAt(x, z)) put(x, y + 1, z, SNOW, 0)
                     }
                 }
                 4 -> { // Wind-bent snag, sometimes with a sparse living crown.
@@ -144,9 +165,9 @@ internal class ColdLandscape(
                 5 -> { stone(-2, -1, 1); stone(2, 1, 2); column(0, 3, 1, LICHEN_STONE) }
                 6 -> { // Deliberately incomplete ring with an entrance facing south.
                     for ((x, z) in listOf(-4 to 0, -3 to -3, 0 to -4, 3 to -3, 4 to 0, -3 to 3))
-                        stone(x, z, 2 + rng.nextInt(4))
+                        menhir(x, z, 5 + rng.nextInt(4))
                 }
-                7 -> for (x in -4..4 step 4) stone(x, 0, 2 + rng.nextInt(4))
+                7 -> for (x in -4..4 step 4) menhir(x, 0, 6 + rng.nextInt(4))
             }
             // Sparse dry vegetation and lichen stones tie each group to its surroundings.
             for (i in 0..5) {

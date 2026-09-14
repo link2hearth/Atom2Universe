@@ -12,4 +12,6 @@
         <item>Cercle incomplet de menhirs</item>
         <item>Alignement de menhirs</item>
     </string-array>
+    <string name="cave_block_weathered_marble">Marbre patiné</string>
+    <string name="cave_block_monolith_stone">Pierre monolithique</string>
 </resources>

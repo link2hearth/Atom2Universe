@@ -59,7 +59,7 @@ internal object MeadowTextures {
     fun supports(name: String): Boolean {
         if (name in itemTextureNames) return true
         val p = name.split(':')
-        return p.getOrNull(1) in setOf("material", "leaf", "fruit", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature", "resource")
+        return p.getOrNull(1) in setOf("material", "leaf", "fruit", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature", "resource", "monument")
     }
 
     fun texture(name: String, outputSize: Int, climate: Int = 0, vivid: Boolean = false): Bitmap {
@@ -79,6 +79,7 @@ internal object MeadowTextures {
             ?: (0xFF000000.toInt() or materials[tile.coerceIn(0, 15)])
         val canvas = Tile()
         when (family) {
+            "monument" -> canvas.monument(tile, base)
             "resource" -> canvas.resource(tile, base)
             "nature" -> canvas.nature(tile)
             "item" -> canvas.item(tile)
@@ -674,6 +675,26 @@ internal object MeadowTextures {
                 rect(x - 2, y - 1, 5, 3, petal)
                 rect(x - 1, y - 2, 3, 5, petal)
                 rect(x, y, 1, 1, 0xFFC4A264.toInt())
+            }
+        }
+        fun monument(kind: Int, base: Int) {
+            fill(base)
+            if (kind == 0) {
+                // Ivory marble with fine, stepped mineral veins rather than masonry joints.
+                for (y in 0..31) {
+                    val bend = intArrayOf(0, 1, 2, 2, 1, 0, -1, -1)[y / 4]
+                    wrappedRect(6 + y / 3 + bend, y, 3, 1, shade(base, -8))
+                    wrappedRect(7 + y / 3 + bend, y, 1, 1, shade(base, -26))
+                    wrappedRect(24 + y / 4 - bend, y, 1, 1, shade(base, -15))
+                }
+            } else {
+                // Dense charcoal stone with broad worn faces and restrained mineral grain.
+                for (row in 0..3) for (col in 0..3) {
+                    val x = col * 9 + row % 3; val y = row * 9 + col % 2
+                    wrappedRect(x, y, 5, 7, shade(base, (row + col) % 3 * 4 - 4))
+                    wrappedRect(x + 2, y + 3, 1, 1, shade(base, 13))
+                }
+                for (y in 0..31) wrappedRect(21 - y / 5, y, 1, 1, shade(base, -11))
             }
         }
         fun roughBark(base: Int) {

@@ -1,0 +1,15 @@
+{
+  "id": 2322,
+  "name": "monolith_stone",
+  "texture_top": "cozy:monument:1:535958",
+  "texture_side": "cozy:monument:1:535958",
+  "texture_bottom": "cozy:monument:1:535958",
+  "color": "#535958",
+  "hardness": 4.0,
+  "drop": "monolith_stone",
+  "harvest_category": "recoverable",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}
