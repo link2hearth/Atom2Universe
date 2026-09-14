@@ -11,6 +11,8 @@ internal object ShowcaseMap {
     const val GALLERY_Z = 50
     const val COLUMNS = 16
     fun mobGalleryZ() = GALLERY_Z + ((galleryBlocks().size + COLUMNS - 1) / COLUMNS) * 4 + 8
+    private fun mobBayCount() = com.Atom2Universe.app.games.caves.node.MobRegistry.all().size + 1 +
+        com.Atom2Universe.app.games.caves.entity.PassiveAnimals.displays.size
 
     fun galleryBlocks(): List<Short> = BlockRegistry.all().filter { it.placeable }.map { it.id }.filter { it != AIR }.sorted()
 
@@ -38,7 +40,7 @@ internal object ShowcaseMap {
 
     fun create(): A2Map {
         val exhibits = galleryBlocks()
-        val depth = mobGalleryZ() + 54
+        val depth = mobGalleryZ() + ((mobBayCount()+2)/3)*10 + 4
         val blocks = ShortArray(WIDTH * HEIGHT * depth)
         val meta = ByteArray(blocks.size)
         fun put(x: Int, y: Int, z: Int, block: Short, rotation: Byte = 0) {
@@ -139,8 +141,8 @@ internal object ShowcaseMap {
             }
         }
         // Flush ground bays, three display bodies per species, with open walking aisles.
-        for (row in 0..4) for (column in 0..2) {
-            if (row * 3 + column >= 13) continue
+        for (row in 0 until (mobBayCount()+2)/3) for (column in 0..2) {
+            if (row * 3 + column >= mobBayCount()) continue
             val centerX = 12 + column * 24
             val centerZ = mobGalleryZ() + 5 + row * 10
             fill(centerX - 8, FLOOR, centerZ - 2, centerX + 8, FLOOR, centerZ + 2, SANDSTONE)

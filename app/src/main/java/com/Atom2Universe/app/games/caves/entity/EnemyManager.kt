@@ -62,7 +62,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         player?.tickShield(dt)
 
-        for (e in enemies) if (e.hp > 0) e.animTime += dt
+        for (e in enemies) if (e.hp > 0 && e.freezeTimer <= 0f) e.animTime += dt
 
         val despawnDist2 = (DESPAWN_CHUNKS * CHUNK_SIZE).toDouble().let { it * it }
         enemies.removeAll { e ->
@@ -76,7 +76,19 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         spawnManager.update(dt, px, py, pz)
 
-        for (e in enemies) updateEnemy(e, dt, px, py, pz)
+        for (e in enemies) {
+            val frozen=e.freezeTimer>0f
+            if(!frozen) e.strikeTime = (e.strikeTime-dt).coerceAtLeast(0f)
+            val oldX=e.x; val oldZ=e.z
+            updateEnemy(e, dt, px, py, pz)
+            val distance=hypot(e.x-oldX,e.z-oldZ).toFloat()
+            if(!frozen) {
+                val target=if(distance>.001f) 1f else 0f
+                e.motionBlend += (target-e.motionBlend)*(dt*12f).coerceAtMost(1f)
+                val gait=com.Atom2Universe.app.games.caves.render.MobModels.get(e.def.model).gait
+                e.walkPhase += distance*gait/2f
+            }
+        }
     }
 
     // ── IA ennemis ────────────────────────────────────────────────────────────
@@ -210,6 +222,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 }
                 if (ally != null && bestD2 <= (keep + ATTACK_REACH) * (keep + ATTACK_REACH)) {
                     e.attackCooldown = ATTACK_CD
+                    e.strikeTime = .55f
                     ally.hp = (ally.hp - e.scaledDamage).coerceAtLeast(0)
                     ally.hitFlash = 0.15f
                     if (ally.state == EnemyState.WANDER) ally.state = EnemyState.CHASE
@@ -217,6 +230,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             }
         } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {
             e.attackCooldown = ATTACK_CD
+            e.strikeTime = .55f
             playerInvTimer = 0.5f
             val bus = eventBus
             val p   = player

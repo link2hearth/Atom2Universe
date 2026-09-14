@@ -82,6 +82,7 @@ internal class CaveRenderer(
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
         val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
         val recoverableAmmo: List<StuckAmmo> = emptyList(),
+        val passiveAnimals: String = "[]",
         val skillAthleticsXp:  Int = 0,
         val skillSpeedXp:      Int = 0,
         val skillEnduranceXp:  Int = 0,
@@ -291,6 +292,7 @@ internal class CaveRenderer(
     internal val lootNode           = LootNode(eventBus)
     internal val enemyManager      = EnemyManager(world, worldSeed)
     private val enemyRenderer      = EnemyRenderer()
+    internal val passiveAnimals = com.Atom2Universe.app.games.caves.entity.PassiveAnimals(world, worldSeed).apply { restore(savedState?.passiveAnimals ?: "[]") }
     private val projRenderer       = ProjectileRenderer()
 
     // ── Règles de la partie ───────────────────────────────────────────────────
@@ -1164,6 +1166,10 @@ internal class CaveRenderer(
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) mode.update(dt)
+        if (worldSource == null) {
+            if (!gamePaused) passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ)
+            enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+        }
         enemyRenderer.render(
             enemyManager.enemies,
             camera.x, camera.y, camera.z,

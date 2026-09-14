@@ -206,6 +206,7 @@ class CaveActivity : ThemedActivity() {
                 playerWeapons       = save.playerWeapons,
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
+                passiveAnimals = save.passiveAnimals,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -226,6 +227,7 @@ class CaveActivity : ThemedActivity() {
                 playerWeapons       = save.playerWeapons,
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
+                passiveAnimals = save.passiveAnimals,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -450,21 +452,43 @@ class CaveActivity : ThemedActivity() {
                 val modelIds = listOf("dwarf", "goblin", "golem", "imp", "mummy", "ogre",
                     "skeleton", "slime", "spider", "troll", "wraith", "zombie", "soldier")
                 val mobNames = resources.getStringArray(R.array.cave_showcase_mob_names)
-                mode.onMobCaption = { model, pose -> uiHandler.post {
-                    val animatedIdle = model == "slime" || model == "wraith"
+                mode.onMobCaption = { animal, pose -> uiHandler.post {
+                    val model = animal.def.model
+                    val passive = animal.def.behavior == "passive"
+                    val animatedIdle = !passive
                     val poseName = when (pose) {
                         com.Atom2Universe.app.games.caves.entity.ExhibitPose.REFERENCE -> R.string.cave_showcase_reference
                         com.Atom2Universe.app.games.caves.entity.ExhibitPose.IDLE ->
-                            if (animatedIdle) R.string.cave_showcase_idle else R.string.cave_showcase_still
+                            when {
+                                model == "chicken" -> R.string.cave_animal_pecking
+                                model == "pig" -> R.string.cave_animal_rooting
+                                passive -> R.string.cave_animal_grazing
+                                animatedIdle -> R.string.cave_showcase_idle
+                                else -> R.string.cave_showcase_still
+                            }
                         com.Atom2Universe.app.games.caves.entity.ExhibitPose.ACTION -> when (model) {
                             "soldier" -> R.string.cave_showcase_firing
-                            "spider" -> R.string.cave_showcase_walking
-                            "slime", "wraith" -> R.string.cave_showcase_idle
-                            else -> R.string.cave_showcase_attacking
+                            "sheep", "cow", "chicken", "pig" -> R.string.cave_showcase_walking
+                            else -> R.string.cave_showcase_walk_attack
                         }
                     }
-                    caption.text = getString(R.string.cave_showcase_mob_caption,
-                        mobNames[modelIds.indexOf(model).coerceAtLeast(0)], getString(poseName))
+                    val name = if (passive) {
+                        val speciesName = when (model) {
+                            "sheep" -> if (animal.young) R.string.cave_animal_lamb else R.string.cave_animal_sheep
+                            "cow" -> if (animal.young) R.string.cave_animal_calf else R.string.cave_animal_cow
+                            "chicken" -> if (animal.young) R.string.cave_animal_chick else R.string.cave_animal_chicken
+                            else -> if (animal.young) R.string.cave_animal_piglet else R.string.cave_animal_pig
+                        }
+                        val palette = when (model) {
+                            "sheep" -> R.array.cave_sheep_coats
+                            "cow" -> R.array.cave_cow_coats
+                            "chicken" -> if (animal.young) R.array.cave_chick_coats else R.array.cave_chicken_coats
+                            else -> R.array.cave_pig_coats
+                        }
+                        val coats=resources.getStringArray(palette)
+                        getString(R.string.cave_animal_variant, getString(speciesName), coats[animal.coat.coerceIn(0,coats.lastIndex)])
+                    } else mobNames[modelIds.indexOf(model).coerceAtLeast(0)]
+                    caption.text = getString(R.string.cave_showcase_mob_caption, name, getString(poseName))
                 } }
             }
             (renderer.mode as? AssaultMode)?.let { mode ->
@@ -570,6 +594,7 @@ class CaveActivity : ThemedActivity() {
             skillEnduranceXp    = sb.enduranceXp,
             skillAcrobaticsXp   = sb.acrobaticsXp,
             weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
+            passiveAnimals = renderer.passiveAnimals.snapshot,
             recoverableAmmo = renderer.recoverableAmmoSnapshot
         )
     }

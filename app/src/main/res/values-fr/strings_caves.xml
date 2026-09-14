@@ -626,4 +626,22 @@
     <string name="cave_block_wood_red">Bois rouge</string>
     <string name="cave_block_wood_sapin">Bois de sapin</string>
     <string name="cave_block_wood_yellow">Bois jaune</string>
+    <string name="cave_animal_sheep">Mouton</string>
+    <string name="cave_animal_cow">Vache</string>
+    <string name="cave_animal_grazing">Broutage</string>
+    <string name="cave_animal_lamb">Agneau</string>
+    <string name="cave_animal_calf">Veau</string>
+    <string name="cave_animal_chicken">Poulet</string>
+    <string name="cave_animal_chick">Poussin</string>
+    <string name="cave_animal_pig">Cochon</string>
+    <string name="cave_animal_piglet">Porcelet</string>
+    <string name="cave_animal_pecking">Picorage</string>
+    <string name="cave_animal_rooting">Renifle le sol</string>
+    <string name="cave_animal_variant">%1$s · %2$s</string>
+    <string-array name="cave_sheep_coats"><item>Blanc</item><item>Gris clair</item><item>Gris ardoise</item><item>Noir</item></string-array>
+    <string-array name="cave_cow_coats"><item>Taches noires</item><item>Taches brunes</item><item>Taches rousses</item></string-array>
+    <string-array name="cave_chicken_coats"><item>Ivoire</item><item>Fauve</item><item>Charbon</item></string-array>
+    <string-array name="cave_chick_coats"><item>Jaune beurre</item><item>Duvet doré</item><item>Duvet gris</item></string-array>
+    <string-array name="cave_pig_coats"><item>Rose</item><item>Rose sable</item><item>Gris perle</item></string-array>
+    <string name="cave_showcase_walk_attack">Marche et attaque</string>
 </resources>

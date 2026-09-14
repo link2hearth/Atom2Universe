@@ -46,6 +46,7 @@ internal object A2MapStorage {
     fun load(context: Context, path: String): A2Map =
         if (path == SHOWCASE_PATH) {
             com.Atom2Universe.app.games.caves.node.BlockRegistry.load(context.assets)
+            com.Atom2Universe.app.games.caves.node.MobRegistry.load(context.assets)
             ShowcaseMap.create()
         } else if (path == "$BUILTIN_PREFIX${BuiltinMaps.ARENA_ID}") {
             BuiltinMaps.arena()

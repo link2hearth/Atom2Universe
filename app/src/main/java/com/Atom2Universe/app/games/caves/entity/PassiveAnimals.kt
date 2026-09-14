@@ -1,0 +1,185 @@
+package com.Atom2Universe.app.games.caves.entity
+
+import com.Atom2Universe.app.games.caves.node.MobDef
+import com.Atom2Universe.app.games.caves.render.AnimalModels
+import com.Atom2Universe.app.games.caves.world.*
+import org.json.JSONArray
+import org.json.JSONObject
+import kotlin.math.*
+import kotlin.random.Random
+
+/** Faune indépendante des vagues, niveaux et récompenses des monstres. Thread GL uniquement. */
+internal class PassiveAnimals(private val world: World, private val seed: Long) {
+    val visible = ArrayList<Enemy>()
+    private val residents = linkedMapOf<String, MutableList<Enemy>>()
+    private val random = Random(seed xor 71623L)
+    private var timer = 0f
+    @Volatile var snapshot: String = "[]"
+        private set
+
+    fun restore(json: String) {
+        residents.clear()
+        runCatching { JSONArray(json) }.getOrNull()?.let { cells ->
+            for (i in 0 until cells.length()) {
+                val cell = cells.optJSONObject(i) ?: continue
+                val key = cell.optString("cell")
+                if (!key.matches(Regex("-?\\d+:-?\\d+"))) continue
+                val animals = mutableListOf<Enemy>()
+                val list = cell.optJSONArray("animals") ?: continue
+                for (j in 0 until list.length()) {
+                    val a = list.optJSONObject(j) ?: continue
+                    val def = definitions.firstOrNull { it.id == a.optString("species") } ?: continue
+                    val xyz = listOf("x", "y", "z").map { a.optDouble(it) }
+                    if (xyz.any { !it.isFinite() }) continue
+                    animals += Enemy(j, def, xyz[0], xyz[1], xyz[2]).apply {
+                        young = a.optBoolean("young", false)
+                        coat = a.optInt("coat", if(def.id == "cow") 1 else 0)
+                            .coerceIn(0, AnimalModels.coatCount(def.id)-1)
+                        yaw = a.optDouble("yaw", 0.0).toFloat().takeIf { it.isFinite() } ?: 0f
+                        resting = a.optBoolean("resting", true)
+                        wanderTimer = a.optDouble("timer", 2.0).toFloat().takeIf { it.isFinite() }?.coerceIn(0f, 8f) ?: 2f
+                        wanderDirX = sin(yaw * PI.toFloat() / 180)
+                        wanderDirZ = cos(yaw * PI.toFloat() / 180)
+                    }
+                }
+                residents[key] = animals
+            }
+        }
+        snapshot = json
+    }
+
+    fun update(dt: Float, px: Double, py: Double, pz: Double) {
+        timer -= dt
+        if (timer <= 0f) {
+            timer = 2f
+            val cx = floor(px / 32).toInt(); val cz = floor(pz / 32).toInt()
+            for (z in cz - 1..cz + 1) for (x in cx - 1..cx + 1) populate(x, z, py)
+            visible.clear()
+            for (group in residents.values) for (a in group) {
+                if (visible.size < 32 && abs(a.y - py) < 24 && (a.x-px).pow(2) + (a.z-pz).pow(2) < 48.0.pow(2) && loaded(a.x, a.y, a.z)) visible += a
+            }
+        }
+        for (a in visible) {
+            if (!loaded(a.x, a.y, a.z)) continue
+            a.animTime += dt
+            a.wanderTimer -= dt
+            if (a.wanderTimer <= 0) {
+                a.resting = random.nextInt(3) == 0
+                a.yaw = random.nextFloat() * 360
+                a.wanderDirX = sin(a.yaw * PI.toFloat()/180)
+                a.wanderDirZ = cos(a.yaw * PI.toFloat()/180)
+                a.wanderTimer = 2f + random.nextFloat() * 4
+            }
+            // Le joueur très proche fait s'écarter l'animal, sans riposte.
+            val dx = a.x-px; val dz = a.z-pz; val distance = hypot(dx, dz)
+            val shy = distance < 2.5 && abs(a.y-py) < 3
+            if (shy && distance > .01) {
+                a.resting = false
+                a.wanderDirX = (dx/distance).toFloat(); a.wanderDirZ = (dz/distance).toFloat()
+                a.yaw = atan2(a.wanderDirX, a.wanderDirZ)*180/PI.toFloat()
+            }
+            // Les petits rejoignent un adulte de leur espèce au lieu de se disperser.
+            if (a.young && !shy) {
+                var adult: Enemy? = null
+                var nearest = Double.MAX_VALUE
+                for (other in visible) {
+                    if (other.young || other.def.id != a.def.id || abs(other.y-a.y)>=3) continue
+                    val d2=(other.x-a.x).pow(2)+(other.z-a.z).pow(2)
+                    if (d2<nearest) { nearest=d2; adult=other }
+                }
+                if (adult != null) {
+                    val ax=adult.x-a.x; val az=adult.z-a.z; val dist=hypot(ax,az)
+                    if (dist > 3.5) {
+                        a.resting=false
+                        a.wanderDirX=(ax/dist).toFloat(); a.wanderDirZ=(az/dist).toFloat()
+                        a.yaw=atan2(a.wanderDirX,a.wanderDirZ)*180/PI.toFloat()
+                    }
+                }
+            }
+            if (!a.resting) {
+                val speed = a.def.speed * dt.coerceAtMost(.05f) * if (shy) 1.8 else 1.0
+                val nx = a.x+a.wanderDirX*speed; val nz = a.z+a.wanderDirZ*speed
+                val ground = floorAt(nx, nz, a.y, radius(a))
+                val crowded = visible.any { it !== a && abs(it.y-a.y)<2 && hypot(it.x-nx, it.z-nz) < radius(a)+radius(it) }
+                if (ground != null && !crowded) { a.x=nx; a.z=nz; a.y=ground }
+                else { a.wanderTimer=0f; a.resting=true }
+            }
+        }
+        if (timer == 2f) snapshot = JSONArray().also { cells ->
+            residents.forEach { (key, group) -> cells.put(JSONObject().put("cell", key).put("animals", JSONArray().also { list ->
+                group.forEach { a -> list.put(JSONObject().put("species", a.def.id).put("x", a.x).put("y", a.y).put("z", a.z)
+                    .put("young", a.young).put("coat", a.coat)
+                    .put("yaw", a.yaw.toDouble()).put("resting", a.resting).put("timer", a.wanderTimer.toDouble())) }
+            })) }
+        }.toString()
+    }
+
+    private fun loaded(x: Double, y: Double, z: Double) = world.getChunk(floor(x/16).toInt(), floor(y/16).toInt(), floor(z/16).toInt())?.generated == true
+
+    /** Volume entier libre et appui sec sous toute l'empreinte ; aucune marche dans le vide. */
+    private fun radius(a: Enemy): Double = a.def.radius.toDouble() * if(a.young) .72 else 1.0
+
+    private fun floorAt(x: Double, z: Double, y: Double, radius: Double): Double? {
+        for (floor in floor(y).toInt() downTo floor(y).toInt()-2) {
+            var safe = true
+            for (bx in floor(x-radius).toInt()..floor(x+radius).toInt())
+                for (bz in floor(z-radius).toInt()..floor(z+radius).toInt()) {
+                for (by in floor..floor+2) {
+                    if (!loaded(bx.toDouble(), by.toDouble(), bz.toDouble())) { safe=false; break }
+                    val b = world.blockAt(bx, by, bz)
+                    if (by == floor) {
+                        if (b == AIR || isWater(b) || isDecoration(b)) safe=false
+                    } else if (b != AIR && !isDecoration(b)) safe=false
+                }
+            }
+            if (safe && abs(floor+1-y) <= 1.01) return floor+1.0
+        }
+        return null
+    }
+
+    private fun populate(cx: Int, cz: Int, py: Double) {
+        val key = "$cx:$cz"
+        if (key in residents) return
+        val rng = Random(seed xor (cx.toLong()*73428767) xor (cz.toLong()*912931))
+        val x = cx*32 + 8.5 + rng.nextInt(12); val z = cz*32 + 8.5 + rng.nextInt(12)
+        val y = floor(world.surfaceHeight(x,z))+1
+        if (abs(py-y)>24 || !loaded(x,y,z)) return
+        val biome = world.naturalSurfaceBiomeAt(x,y,z) ?: BiomeMap.surfaceBiomeAt(x,z,seed).id
+        val allowed = definitions.filter { biome in it.biomes }
+        val group = mutableListOf<Enemy>()
+        if (allowed.isNotEmpty() && rng.nextInt(3) != 0) {
+            val def=allowed[rng.nextInt(allowed.size)]
+            for (i in 0..2) {
+                val nx=x+i*2.5
+                val animal=Enemy(i,def,nx,y,z).apply {
+                    young=i == 2 && group.isNotEmpty()
+                    coat=rng.nextInt(AnimalModels.coatCount(def.id))
+                    resting=true; wanderTimer=1f+i
+                }
+                val ground=floorAt(nx,z,y,radius(animal)) ?: return // Réessayer une fois tous les chunks disponibles.
+                val b=world.blockAt(floor(nx).toInt(),ground.toInt()-1,floor(z).toInt())
+                if (b != GRASS && b != FOREST_FLOOR && b != MOSS) continue
+                animal.y=ground
+                group += animal
+            }
+        }
+        residents[key]=group
+    }
+
+    data class Display(val def: MobDef, val young: Boolean, val coat: Int)
+
+    companion object {
+        val definitions = listOf(definition("sheep", .9f, listOf("plains", "forest", "birch_forest", "taiga")),
+            definition("cow", 1.05f, listOf("plains", "forest", "birch_forest")),
+            definition("chicken", .8f, listOf("plains", "forest", "birch_forest", "jungle_edge"), .65f, .85f),
+            definition("pig", .95f, listOf("plains", "forest", "birch_forest", "dark_forest"), 1.1f, .6f))
+        val displays: List<Display> get() = definitions.flatMap { def ->
+            listOf(false,true).flatMap { young -> (0 until AnimalModels.coatCount(def.id)).map { Display(def,young,it) } }
+        }
+        private fun definition(id: String, scale: Float, biomes: List<String>, radius: Float=1.15f, speed: Float=.65f) = MobDef(
+            id=id, hpBase=20, damageBase=0, speed=speed, attackRange=0.0, detectRange=0.0,
+            eyeHeight=1f, radius=radius, spriteScale=scale, hpScalePerLevel=1.0, hpScaleCap=1.0,
+            damageScalePer3Lvl=0, speedScalePerLevel=0f, biomes=biomes, model=id, spawnZoneMin=0,
+            spawnWeight=0f, lootTable="", behavior="passive", bossEligible=false, xpBase=0)
+    }
+}

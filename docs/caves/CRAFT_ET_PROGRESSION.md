@@ -69,7 +69,9 @@ lots de quatre, sans simulation de machine ni attente en arrière-plan.
 2. **Animaux passifs** : moutons, vaches, puis poules/cochons. Modèles, déplacements,
    apparition par biome, évitement des obstacles, sons, reproduction et persistance.
    Les moutons apporteraient une vraie filière laine/tonte ; les vaches viande/cuir/lait ;
-   les poules plumes/œufs. Aucun animal nouveau n’est ajouté par cette passe.
+   les poules plumes/œufs. Moutons, vaches, poulets et cochons intégrés avec jeunes
+   et variations de robes (croissance et reproduction à venir) : voir
+   [les animaux passifs](ANIMAUX_PASSIFS.md) pour le périmètre et les suites.
 3. **Agriculture et nourriture** : semences, terre cultivée, eau, croissance du blé,
    récoltes selon maturité, pain et utilisation des aliments. Le blé actuel reste
    décoratif ; aucune fausse recette de nourriture sans effet n’a été ajoutée.

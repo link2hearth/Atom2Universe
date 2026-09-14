@@ -626,4 +626,22 @@
     <string name="cave_block_wood_red">Red log</string>
     <string name="cave_block_wood_sapin">Fir log</string>
     <string name="cave_block_wood_yellow">Yellow log</string>
+    <string name="cave_animal_sheep">Sheep</string>
+    <string name="cave_animal_cow">Cow</string>
+    <string name="cave_animal_grazing">Grazing</string>
+    <string name="cave_animal_lamb">Lamb</string>
+    <string name="cave_animal_calf">Calf</string>
+    <string name="cave_animal_chicken">Chicken</string>
+    <string name="cave_animal_chick">Chick</string>
+    <string name="cave_animal_pig">Pig</string>
+    <string name="cave_animal_piglet">Piglet</string>
+    <string name="cave_animal_pecking">Pecking</string>
+    <string name="cave_animal_rooting">Sniffing the ground</string>
+    <string name="cave_animal_variant">%1$s · %2$s</string>
+    <string-array name="cave_sheep_coats"><item>White</item><item>Light grey</item><item>Slate grey</item><item>Black</item></string-array>
+    <string-array name="cave_cow_coats"><item>Black patches</item><item>Brown patches</item><item>Reddish patches</item></string-array>
+    <string-array name="cave_chicken_coats"><item>Ivory</item><item>Buff</item><item>Charcoal</item></string-array>
+    <string-array name="cave_chick_coats"><item>Butter yellow</item><item>Golden down</item><item>Grey down</item></string-array>
+    <string-array name="cave_pig_coats"><item>Pink</item><item>Sandy pink</item><item>Pearl grey</item></string-array>
+    <string name="cave_showcase_walk_attack">Walk and attack</string>
 </resources>

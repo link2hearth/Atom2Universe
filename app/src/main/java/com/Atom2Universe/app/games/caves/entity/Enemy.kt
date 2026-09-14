@@ -18,8 +18,15 @@ internal class Enemy(
     var animTime: Float = 0f
     var exhibitPose: ExhibitPose? = null
     var resting = false
+    /** Aspect de la faune, indépendant du niveau et conservé dans la sauvegarde. */
+    var young = false
+    var coat = 0
     /** Seconds remaining in the shared rifle recoil animation. */
     var shotRecoil = 0f
+    /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
+    var strikeTime = 0f
+    var walkPhase = 0f
+    var motionBlend = 0f
 
     // HP = hpBase × level² : linéaire au carré, sans cap, calibré à ~500 HP à level 10 (hpBase=5)
     private fun scaledHp(): Int = (def.hpBase.toLong() * level * level).toInt().coerceAtLeast(1)
