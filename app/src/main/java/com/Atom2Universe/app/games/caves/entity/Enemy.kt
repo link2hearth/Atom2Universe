@@ -4,6 +4,7 @@ import com.Atom2Universe.app.games.caves.node.MobDef
 import kotlin.math.pow
 
 internal enum class EnemyState { WANDER, CHASE, ATTACK }
+internal enum class ExhibitPose { REFERENCE, IDLE, ACTION }
 
 internal class Enemy(
     val id: Int,
@@ -15,6 +16,10 @@ internal class Enemy(
     var level: Int = 1
     var isBoss: Boolean = false
     var animTime: Float = 0f
+    var exhibitPose: ExhibitPose? = null
+    var resting = false
+    /** Seconds remaining in the shared rifle recoil animation. */
+    var shotRecoil = 0f
 
     // HP = hpBase × level² : linéaire au carré, sans cap, calibré à ~500 HP à level 10 (hpBase=5)
     private fun scaledHp(): Int = (def.hpBase.toLong() * level * level).toInt().coerceAtLeast(1)

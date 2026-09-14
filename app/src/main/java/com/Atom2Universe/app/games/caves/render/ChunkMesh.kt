@@ -59,7 +59,7 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
         }
     }
 
-    fun draw(aPos: Int, aUv: Int, aSky: Int = -1) {
+    fun draw(aPos: Int, aUv: Int, aSky: Int = -1, aTint: Int = -1) {
         if (!ready || vertexCount == 0) return
         val stride = floatsPerVertex * 4
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
@@ -71,7 +71,15 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
             GLES30.glEnableVertexAttribArray(aSky)
             GLES30.glVertexAttribPointer(aSky, 1, GLES30.GL_FLOAT, false, stride, 24)
         }
+        if (aTint >= 0 && floatsPerVertex >= 11) {
+            GLES30.glEnableVertexAttribArray(aTint)
+            GLES30.glVertexAttribPointer(aTint, 4, GLES30.GL_FLOAT, false, stride, 28)
+        }
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+        if (aTint >= 0) {
+            GLES30.glDisableVertexAttribArray(aTint)
+            GLES30.glVertexAttrib4f(aTint, 0f, 0f, 0f, 0f)
+        }
         GLES30.glDisableVertexAttribArray(aPos)
         GLES30.glDisableVertexAttribArray(aUv)
         if (aSky >= 0) GLES30.glDisableVertexAttribArray(aSky)

@@ -59,6 +59,17 @@ class CaveWorldMenuActivity : ThemedActivity() {
             addSpaced(button(R.string.cave_menu_controls) {
                 startActivity(Intent(this@CaveWorldMenuActivity, CaveControlsEditorActivity::class.java))
             })
+            val palette = MaterialButton(this@CaveWorldMenuActivity).apply {
+                fun refresh() {
+                    setText(if (CaveVisualStyle.isVivid(context)) R.string.cave_palette_vivid else R.string.cave_palette_pastel)
+                }
+                refresh()
+                setOnClickListener {
+                    CaveVisualStyle.setVivid(context, !CaveVisualStyle.isVivid(context))
+                    refresh()
+                }
+            }
+            addSpaced(palette)
         }
         recycler = findViewById(R.id.cave_menu_recycler)
         recycler.layoutManager = LinearLayoutManager(this)

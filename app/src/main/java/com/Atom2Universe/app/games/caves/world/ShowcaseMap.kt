@@ -10,6 +10,7 @@ internal object ShowcaseMap {
     const val FLOOR = 4
     const val GALLERY_Z = 50
     const val COLUMNS = 16
+    fun mobGalleryZ() = GALLERY_Z + ((galleryBlocks().size + COLUMNS - 1) / COLUMNS) * 4 + 8
 
     fun galleryBlocks(): List<Short> = BlockRegistry.all().map { it.id }.filter { it != AIR }.sorted()
 
@@ -23,16 +24,21 @@ internal object ShowcaseMap {
         return if (z >= GALLERY_Z - 2) 6 else 7
     }
 
-    fun climateAt(x: Int, z: Int): Int = when (zoneAt(x, z)) {
+    fun climateAt(x: Int, z: Int): Int {
+        // Adjacent grass samples on the avenue make the narrow color transition inspectable.
+        if (z in 44..46 && x in 4..19) return if (x < 12) 0 else 3
+        if (z in 44..46 && x in 48..63) return if (x < 56) 1 else 2
+        return when (zoneAt(x, z)) {
         0 -> 4
         1, 5 -> 1
         4 -> 3
         else -> 0
+        }
     }
 
     fun create(): A2Map {
         val exhibits = galleryBlocks()
-        val depth = GALLERY_Z + ((exhibits.size + COLUMNS - 1) / COLUMNS) * 4 + 4
+        val depth = mobGalleryZ() + 54
         val blocks = ShortArray(WIDTH * HEIGHT * depth)
         val meta = ByteArray(blocks.size)
         fun put(x: Int, y: Int, z: Int, block: Short, rotation: Byte = 0) {
@@ -120,6 +126,8 @@ internal object ShowcaseMap {
         put(30, 5, 45, TABLE)
         put(34, 5, 45, FURNACE, 2)
         put(38, 5, 45, TABLE, 2)
+        for (z in 44..46) for (x in (4..19) + (48..63)) put(x, FLOOR, z, GRASS)
+        for (x in intArrayOf(6, 10, 13, 17, 50, 54, 57, 61)) put(x, FLOOR + 1, 45, 7056)
         // Every registered block, including markers and liquids. No capture(): it would strip markers.
         for ((i, block) in exhibits.withIndex()) {
             val x = 4 + i % COLUMNS * 4
@@ -129,6 +137,13 @@ internal object ShowcaseMap {
                 put(x - 1, FLOOR + 1, z, GLASS); put(x + 1, FLOOR + 1, z, GLASS)
                 put(x, FLOOR + 1, z - 1, GLASS); put(x, FLOOR + 1, z + 1, GLASS)
             }
+        }
+        // Flush ground bays, three display bodies per species, with open walking aisles.
+        for (row in 0..4) for (column in 0..2) {
+            if (row * 3 + column >= 13) continue
+            val centerX = 12 + column * 24
+            val centerZ = mobGalleryZ() + 5 + row * 10
+            fill(centerX - 8, FLOOR, centerZ - 2, centerX + 8, FLOOR, centerZ + 2, SANDSTONE)
         }
         return A2Map("biome_showcase", WIDTH, HEIGHT, depth, blocks, meta,
             listOf(MapPoint(35, 5, 2)), emptyList())

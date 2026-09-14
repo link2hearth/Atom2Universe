@@ -31,18 +31,14 @@ internal object BlockRegistry {
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
     private val textureIndexMap = HashMap<String, Int>()
-    private var climateLayers = emptyArray<IntArray>()
+    private var climateMasks = IntArray(0)
+    var vividStyle = false
+        private set
     private var knotLayers = IntArray(0)
 
     fun knotLayer(layer: Int): Int = knotLayers.getOrNull(layer) ?: layer
 
-    fun climateLayer(layer: Int, climate: Int): Int =
-        climateLayers.getOrNull(layer)?.getOrNull(climate) ?: layer
-
-    fun hasClimate(block: Short): Boolean {
-        val layer = layerTopTable[block.toInt() and 0xFFFF]
-        return climateLayer(layer, 1) != layer
-    }
+    fun climateMask(layer: Int): Int = climateMasks.getOrNull(layer) ?: 0
 
     // Textures générées par le renderer (ex: torch, ward_stone)
     private val generatedProviders = HashMap<String, (Int) -> Bitmap>()
@@ -72,7 +68,8 @@ internal object BlockRegistry {
         generatedProviders[name] = provider
     }
 
-    fun buildTextureAtlas(assets: AssetManager, tileSize: Int): List<Bitmap> {
+    fun buildTextureAtlas(assets: AssetManager, tileSize: Int, vivid: Boolean = false): List<Bitmap> {
+        vividStyle = vivid
         // Réinitialise l'état texture pour chaque reconstruction (recréation de surface GL)
         textureIndexMap.clear()
         textureOrder.clear()
@@ -88,7 +85,7 @@ internal object BlockRegistry {
             textureOrder += name
             bitmaps += when {
                 generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
-                name.startsWith("cozy:") -> MeadowTextures.texture(name, tileSize)
+                name.startsWith("cozy:") -> MeadowTextures.texture(name, tileSize, vivid = vivid)
                 name.startsWith("Items/") -> assets.open("caves/items/${name.removePrefix("Items/")}").use { BitmapFactory.decodeStream(it) }
                 else -> error("Unknown Cave World block texture: $name")
             }
@@ -118,22 +115,16 @@ internal object BlockRegistry {
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 
-        // Keep base layer indices stable, then append only vegetation variants (shared by blocks).
+        // Climate now travels with mesh vertices; only rare bark variants need extra layers.
         val baseCount = bitmaps.size
-        climateLayers = Array(baseCount) { layer -> IntArray(MeadowTextures.CLIMATE_COUNT) { layer } }
+        climateMasks = IntArray(baseCount) { MeadowTextures.climateMask(textureOrder[it]) }
         knotLayers = IntArray(baseCount) { it }
         for (layer in 0 until baseCount) {
             val name = textureOrder[layer]
             if (MeadowTextures.hasKnotVariant(name)) {
                 knotLayers[layer] = bitmaps.size
                 textureOrder += "$name:knot"
-                bitmaps += MeadowTextures.texture("$name:knot", tileSize)
-            }
-            if (!MeadowTextures.isClimateTexture(name)) continue
-            for (climate in 1 until MeadowTextures.CLIMATE_COUNT) {
-                climateLayers[layer][climate] = bitmaps.size
-                textureOrder += "$name@climate$climate"
-                bitmaps += MeadowTextures.texture(name, tileSize, climate)
+                bitmaps += MeadowTextures.texture("$name:knot", tileSize, vivid = vivid)
             }
         }
         return bitmaps
@@ -179,7 +170,10 @@ internal object BlockRegistry {
 
     fun getLayerForDecoration(id: Short): Int = layerTopTable[id.toInt() and 0xFFFF]
 
-    fun getColor(id: Short): Int = defs[id]?.color ?: 0xFF444444.toInt()
+    fun getColor(id: Short): Int {
+        val color = defs[id]?.color ?: 0xFF444444.toInt()
+        return if (vividStyle) CavePalette.vivid(color) else color
+    }
 
     fun getHardness(id: Short): Float = defs[id]?.hardness ?: 1f
 

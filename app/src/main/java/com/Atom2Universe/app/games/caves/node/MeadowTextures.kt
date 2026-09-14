@@ -29,6 +29,15 @@ internal object MeadowTextures {
     }
     // Temperate, warm/dry, warm/humid, wetland, cold: muted, readable greens.
     private val climateColors = intArrayOf(0x779B62, 0xA6A16A, 0x689969, 0x708366, 0x8FA68D)
+    fun climateColor(climate: Int, vivid: Boolean): Int {
+        val color = 0xFF000000.toInt() or climateColors[climate]
+        return if (vivid) CavePalette.vivid(color) else color
+    }
+
+    fun climateMask(name: String): Int {
+        if (!isClimateTexture(name)) return 0
+        return if (name.startsWith("cozy:cap:") || name == "cozy:material:1") 2 else 1
+    }
 
     fun isClimateTexture(name: String): Boolean {
         val p = name.split(':')
@@ -53,15 +62,15 @@ internal object MeadowTextures {
         return p.getOrNull(1) in setOf("material", "leaf", "ore", "cloth", "cap", "groundcover", "utility", "glass", "flora", "item", "nature")
     }
 
-    fun texture(name: String, outputSize: Int, climate: Int = 0): Bitmap {
-        val pixels = pixels(name, climate)
+    fun texture(name: String, outputSize: Int, climate: Int = 0, vivid: Boolean = false): Bitmap {
+        val pixels = pixels(name, climate, vivid)
         val bitmap = Bitmap.createBitmap(pixels, SIZE, SIZE, Bitmap.Config.ARGB_8888)
         if (outputSize == SIZE) return bitmap
         return Bitmap.createScaledBitmap(bitmap, outputSize, outputSize, false).also { bitmap.recycle() }
     }
 
     /** Exposed internally so preview tooling can exercise the exact production recipes. */
-    fun pixels(name: String, climate: Int = 0): IntArray {
+    fun pixels(name: String, climate: Int = 0, vivid: Boolean = false): IntArray {
         val item = itemTextureNames.indexOf(name)
         val p = (if (item >= 0) "cozy:item:$item" else name).split(':')
         val family = p[1]
@@ -110,6 +119,9 @@ internal object MeadowTextures {
                     (Color.green(c) * Color.green(target) / 155).coerceIn(0, 255),
                     (Color.blue(c) * Color.blue(target) / 98).coerceIn(0, 255))
             }
+        }
+        if (vivid) for (i in canvas.data.indices) {
+            if (canvas.data[i] != Color.TRANSPARENT) canvas.data[i] = CavePalette.vivid(canvas.data[i])
         }
         return canvas.data
     }

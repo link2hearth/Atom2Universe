@@ -447,6 +447,25 @@ class CaveActivity : ThemedActivity() {
                     caption.text = if (block != null) getString(R.string.cave_showcase_sample, blockName(block))
                         else getString(names[zone])
                 } }
+                val modelIds = listOf("dwarf", "goblin", "golem", "imp", "mummy", "ogre",
+                    "skeleton", "slime", "spider", "troll", "wraith", "zombie", "soldier")
+                val mobNames = resources.getStringArray(R.array.cave_showcase_mob_names)
+                mode.onMobCaption = { model, pose -> uiHandler.post {
+                    val animatedIdle = model == "slime" || model == "wraith"
+                    val poseName = when (pose) {
+                        com.Atom2Universe.app.games.caves.entity.ExhibitPose.REFERENCE -> R.string.cave_showcase_reference
+                        com.Atom2Universe.app.games.caves.entity.ExhibitPose.IDLE ->
+                            if (animatedIdle) R.string.cave_showcase_idle else R.string.cave_showcase_still
+                        com.Atom2Universe.app.games.caves.entity.ExhibitPose.ACTION -> when (model) {
+                            "soldier" -> R.string.cave_showcase_firing
+                            "spider" -> R.string.cave_showcase_walking
+                            "slime", "wraith" -> R.string.cave_showcase_idle
+                            else -> R.string.cave_showcase_attacking
+                        }
+                    }
+                    caption.text = getString(R.string.cave_showcase_mob_caption,
+                        mobNames[modelIds.indexOf(model).coerceAtLeast(0)], getString(poseName))
+                } }
             }
             (renderer.mode as? AssaultMode)?.let { mode ->
                 mode.onStatus = { status -> uiHandler.post { hud.updateMatchPanel(status) } }

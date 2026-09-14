@@ -9,7 +9,7 @@ package com.Atom2Universe.app.games.caves.render
  *
  * Aucune dépendance Android : géométrie pure, testable, sans GL.
  */
-internal enum class Limb { NONE, LEG, ARM }
+internal enum class Limb { NONE, LEG, ARM, WEAPON, MUZZLE_FLASH }
 
 /** Une boîte du modèle. Tailles pleines (w,h,d), centre (cx,cy,cz). */
 internal class MobPart(
@@ -95,7 +95,8 @@ internal object MobModels {
             // Bras tendus vers l'avant, comme pour tenir le fusil.
             p(-6.5f, 16.5f, 0f, 3f, 11f, 3f, uniform, Limb.ARM, -1, pivotY = 22f, baseTiltDeg = -70f),
             p( 6.5f, 16.5f, 0f, 3f, 11f, 3f, uniform, Limb.ARM,  1, pivotY = 22f, baseTiltDeg = -80f),
-            p( 1.5f, 19.5f, 9f, 2f, 2.6f, 13f, gun),                             // fusil
+            p( 1.5f, 19.5f, 9f, 2f, 2.6f, 13f, gun, Limb.WEAPON),
+            p( 1.5f, 19.5f, 17f, 2.2f, 2.2f, 3f, 0xFFFFD785.toInt(), Limb.MUZZLE_FLASH, emissive = true),
             p( 0f, 26.5f, 0f, 8f, 8f, 8f, skin),                                 // tête
             p( 0f, 30.5f, 0f, 8.8f, 2.4f, 8.8f, helmet),                         // casque
             p(-1.8f, 27f, 4.1f, 1.4f, 1.4f, 0.4f, eye, emissive = true),

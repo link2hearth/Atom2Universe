@@ -62,6 +62,8 @@ internal class CaveRenderer(
     /** Règles de la partie : la survie par défaut. */
     modeFactory: (CaveRenderer) -> GameMode = ::SurvivalMode,
 ) : GLSurfaceView.Renderer {
+    private val vividStyle = CaveVisualStyle.isVivid(context)
+    private var wATint = -1
 
     data class SavedState(
         val x: Double, val y: Double, val z: Double,
@@ -354,6 +356,7 @@ internal class CaveRenderer(
         in vec3 a_pos;
         in vec3 a_uv;
         in float a_skyLight;
+        in vec4 a_tint;
         uniform mat4 u_mvp;
         uniform vec3 u_chunk_offset;
         out vec2 v_uv;
@@ -361,6 +364,7 @@ internal class CaveRenderer(
         out float v_faceDir;
         out vec3 v_worldPos;
         out float v_skyLight;
+        out vec4 v_tint;
         void main() {
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
@@ -369,6 +373,7 @@ internal class CaveRenderer(
             v_faceDir = floor(a_uv.z / 4096.0);
             v_worldPos = worldPos;
             v_skyLight = a_skyLight;
+            v_tint = a_tint;
         }
     """.trimIndent()
 
@@ -387,10 +392,20 @@ internal class CaveRenderer(
         in float v_faceDir;
         in vec3 v_worldPos;
         in float v_skyLight;
+        in vec4 v_tint;
         out vec4 fragColor;
         void main() {
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
             if (col.a < 0.5) discard;
+            float mask = v_tint.w > 0.5 ? 1.0 : 0.0;
+            if (v_tint.w > 1.5) {
+                // Same integer fringe as MeadowTextures.capDepth; soil is never recolored.
+                vec2 pixel = clamp(floor(v_uv * 32.0), vec2(0.0), vec2(31.0));
+                int i = int(min(pixel.x, 31.0 - pixel.x)) / 2;
+                float depth = i >= 6 ? 10.0 : (i == 2 || i == 3 || i == 5) ? 8.0 : 6.0;
+                mask = pixel.y <= depth ? 1.0 : 0.0;
+            }
+            col.rgb = clamp(col.rgb * (vec3(1.0) + v_tint.rgb * mask), 0.0, 1.0);
             float fd = floor(v_faceDir + 0.5);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : fd < 3.5 ? 0.72 : 0.62;
             vec3 torchColor = vec3(1.0, 0.72, 0.25);
@@ -431,8 +446,8 @@ internal class CaveRenderer(
         void main() {
             float wave = 0.5 + 0.5 * sin(v_worldPos.x * 1.1 + u_time * 1.7)
                                    * sin(v_worldPos.z * 0.85 + u_time * 1.3);
-            vec3 deepColor    = vec3(0.05, 0.28, 0.72);
-            vec3 shallowColor = vec3(0.16, 0.50, 0.90);
+            vec3 deepColor    = ${if (vividStyle) "vec3(0.025, 0.24, 0.74)" else "vec3(0.05, 0.28, 0.72)"};
+            vec3 shallowColor = ${if (vividStyle) "vec3(0.08, 0.55, 0.94)" else "vec3(0.16, 0.50, 0.90)"};
             vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
             float fd = floor(v_faceDir + 0.5);
             float faceLight = fd < 0.5 ? 1.0 : fd < 1.5 ? 0.45 : 0.72;
@@ -565,6 +580,7 @@ internal class CaveRenderer(
             wAPos         = it.attrib("a_pos")
             wAUv          = it.attrib("a_uv")
             wASky         = it.attrib("a_skyLight")
+            wATint        = it.attrib("a_tint")
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
@@ -706,12 +722,12 @@ internal class CaveRenderer(
     private fun loadBlockTextures(): Int {
         com.Atom2Universe.app.games.caves.node.MeadowTextures.itemTextureNames.forEach { name ->
             BlockRegistry.registerGeneratedTexture(name) { size ->
-                com.Atom2Universe.app.games.caves.node.MeadowTextures.texture(name, size)
+                com.Atom2Universe.app.games.caves.node.MeadowTextures.texture(name, size, vivid = vividStyle)
             }
         }
 
 
-        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32)
+        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, 32, vivid = vividStyle)
         if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
 
@@ -923,7 +939,7 @@ internal class CaveRenderer(
             val (key, ver, verts) = uploadQueue.poll() ?: break
             val chunk = world.getChunkByKey(key) ?: continue
             if (chunk.version == ver) {
-                val mesh = meshes.getOrPut(key) { ChunkMesh(7) }
+                val mesh = meshes.getOrPut(key) { ChunkMesh(11) }
                 mesh.upload(verts); mesh.flushPending()
                 refreshChunkLightSources(chunk)
                 if (chunk.cy in 0..SURFACE_CY_MAX) scheduleLodBuild(chunk.cx, chunk.cz)
@@ -1116,7 +1132,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
-            mesh.draw(wAPos, wAUv, wASky)
+            mesh.draw(wAPos, wAUv, wASky, wATint)
         }
 
         // ── Rendu LOD (couleur des blocs, visible de loin) ────────────────────
@@ -1153,6 +1169,15 @@ internal class CaveRenderer(
             camera.x, camera.y, camera.z,
             camera.yaw, camera.vpMatrix
         )
+        (mode as? com.Atom2Universe.app.games.caves.mode.ShowcaseMode)?.let { showcase ->
+            // Separate display bodies from combat targets; respect the renderer batch capacity.
+            showcase.mannequins.filter {
+                val dx = it.x - camera.x; val dz = it.z - camera.z
+                dx * dx + dz * dz < 32.0 * 32.0
+            }.chunked(32).forEach { batch ->
+                enemyRenderer.render(batch, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+            }
+        }
         renderDebugSegments()
 
         // ── Rendu projectiles + particules d'impact ───────────────────────────
@@ -1778,7 +1803,7 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
-            meshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(verts); it.flushPending() }
+            meshes.getOrPut(key) { ChunkMesh(11) }.also { it.upload(verts); it.flushPending() }
             if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(waterVerts); it.flushPending() }
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
@@ -2854,7 +2879,7 @@ internal class CaveRenderer(
         val night  = Triple(0.010f, 0.015f, 0.060f)
         val dawn1  = Triple(0.350f, 0.130f, 0.050f)
         val dawn2  = Triple(0.980f, 0.520f, 0.180f)
-        val day    = Triple(0.682f, 0.910f, 0.973f)
+        val day    = if (vividStyle) Triple(0.39f, 0.76f, 0.97f) else Triple(0.682f, 0.910f, 0.973f)
         val dusk2  = Triple(0.980f, 0.480f, 0.150f)
         val dusk1  = Triple(0.300f, 0.090f, 0.060f)
 

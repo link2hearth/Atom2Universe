@@ -522,7 +522,18 @@
     <string name="cave_block_moss">Moss</string>
     <string name="cave_block_basalt">Basalt</string>
     <string name="cave_assault_showcase">Biome workshop · free visit</string>
-    <string name="cave_showcase_hint">Explore six landscapes, then the block gallery. No enemies or timer.</string>
+    <string name="cave_showcase_hint">Explore six landscapes, blocks and the creature gallery beyond. Peaceful visit.</string>
+    <string-array name="cave_showcase_mob_names">
+        <item>Dwarf</item><item>Goblin</item><item>Golem</item><item>Imp</item><item>Mummy</item><item>Ogre</item>
+        <item>Skeleton</item><item>Slime</item><item>Spider</item><item>Troll</item><item>Wraith</item><item>Zombie</item><item>Assault soldier</item>
+    </string-array>
+    <string name="cave_showcase_mob_caption">%1$s · %2$s\nLeft: reference · middle: idle · right: action</string>
+    <string name="cave_showcase_reference">Reference pose (T-pose for humanoids)</string>
+    <string name="cave_showcase_idle">Idle animation</string>
+    <string name="cave_showcase_still">Idle (no animation)</string>
+    <string name="cave_showcase_firing">Rifle burst: recoil and muzzle flash</string>
+    <string name="cave_showcase_walking">Walking in place</string>
+    <string name="cave_showcase_attacking">Attack animation</string>
     <string name="cave_showcase_mountain">Mountain and minerals</string>
     <string name="cave_showcase_desert">Desert and sandstone</string>
     <string name="cave_showcase_beach">Beach and shoreline</string>
@@ -532,4 +543,6 @@
     <string name="cave_showcase_gallery">Block gallery</string>
     <string name="cave_showcase_walk">Paths · six landscapes and a block gallery</string>
     <string name="cave_showcase_sample">Nearby sample: %1$s</string>
+    <string name="cave_palette_pastel">Palette: Pastel</string>
+    <string name="cave_palette_vivid">Palette: Vivid</string>
 </resources>

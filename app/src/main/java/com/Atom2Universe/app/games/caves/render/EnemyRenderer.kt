@@ -8,6 +8,7 @@ import android.graphics.Typeface
 import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
+import com.Atom2Universe.app.games.caves.entity.ExhibitPose
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -188,6 +189,7 @@ internal class EnemyRenderer {
             if (e.hp <= 0) continue
             if (count >= MAX_VISIBLE) break
             count++
+            if (e.exhibitPose != null) continue
 
             val ex = (e.x - camX).toFloat()
             val ey = (e.y - camY).toFloat()
@@ -287,31 +289,35 @@ internal class EnemyRenderer {
         val ez = (e.z - camZ).toFloat()
         var ey = (e.y - camY).toFloat()
 
-        val moving = e.state == EnemyState.CHASE || e.state == EnemyState.WANDER
-        val attacking = e.state == EnemyState.ATTACK
+        val reference = e.exhibitPose == ExhibitPose.REFERENCE
+        val moving = !e.resting && (e.state == EnemyState.CHASE || e.state == EnemyState.WANDER)
+        val attacking = !e.resting && e.state == EnemyState.ATTACK
         val walk = if (moving) sin(e.animTime * WALK_FREQ) else 0f
 
         var sxz = 1f; var syY = 1f
-        if (model.squash) {
+        if (model.squash && !reference) {
             val q = sin(e.animTime * BOUNCE_FREQ)
             syY = 1f + 0.12f * q; sxz = 1f - 0.10f * q
         }
-        if (model.floats) ey += 0.15f * sin(e.animTime * FLOAT_FREQ).toFloat()
+        if (model.floats && !reference) ey += 0.15f * sin(e.animTime * FLOAT_FREQ).toFloat()
 
         val tint = levelTint(e.level, e.isBoss)
         val flash = e.hitFlash.coerceIn(0f, 1f) * 0.7f
 
         var n = offset
         for (part in model.parts) {
+            if (part.limb == Limb.MUZZLE_FLASH && (reference || e.shotRecoil < .11f)) continue
+            if (part.limb == Limb.WEAPON && reference) continue
             if (n + 216 > boV.size) break   // 6 faces × 6 sommets × 6 floats ; boV partagé entre mobs
             // Angle de balancement / pose
             val baseRad = Math.toRadians(part.baseTiltDeg.toDouble()).toFloat()
-            val ang = when (part.limb) {
+            val ang = if (reference && part.limb != Limb.NONE) 0f else when (part.limb) {
                 Limb.LEG -> baseRad + part.side * walk * MAX_LEG
                 Limb.ARM ->
-                    if (attacking) baseRad - ATTACK_RAISE * (0.55f + 0.45f * sin(e.animTime * ATTACK_FREQ))
+                    if (e.def.model == "soldier") baseRad
+                    else if (attacking) baseRad - ATTACK_RAISE * (0.55f + 0.45f * sin(e.animTime * ATTACK_FREQ))
                     else baseRad - part.side * walk * MAX_LEG * 0.8f
-                Limb.NONE -> baseRad
+                Limb.NONE, Limb.WEAPON, Limb.MUZZLE_FLASH -> baseRad
             }
             val cosA = cos(ang); val sinA = sin(ang)
 
@@ -325,8 +331,20 @@ internal class EnemyRenderer {
                 lx *= sxz; lz *= sxz; ly *= syY
                 // Rotation du membre autour de son pivot (axe X)
                 val dy = ly - part.pivotY; val dz = lz - part.cz
-                val ry = part.pivotY + dy * cosA - dz * sinA
-                val rz = part.cz + dy * sinA + dz * cosA
+                var ry = part.pivotY + dy * cosA - dz * sinA
+                var rz = part.cz + dy * sinA + dz * cosA
+                if (reference && part.limb == Limb.ARM) {
+                    val armX = lx - part.cx
+                    val armY = ly - part.pivotY
+                    lx = part.cx - part.side * armY
+                    ry = part.pivotY + part.side * armX
+                }
+                if (!reference && e.def.model == "soldier" &&
+                    (part.limb == Limb.ARM || part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) {
+                    val recoil = (e.shotRecoil / .16f).coerceIn(0f, 1f)
+                    rz -= recoil * 1.8f
+                    ry += recoil * .45f
+                }
                 // Échelle voxel→monde
                 val px = lx * s; val py = ry * s; val pz = rz * s
                 // Orientation (yaw) puis translation au pied du mob

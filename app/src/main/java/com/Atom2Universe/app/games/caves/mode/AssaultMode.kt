@@ -81,7 +81,9 @@ internal class AssaultMode(
 
     // Balles des soldats : même aspect que les balles du joueur, dégâts fixes.
     private val bulletLook = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
+    private var firingBody: Enemy? = null
     private val shotSink = ShotSink { x, y, z, dx, dy, dz ->
+        firingBody?.shotRecoil = .16f
         r.projectiles.add(Projectile(
             x + source.originX, y + source.originY, z + source.originZ, dx, dy, dz,
             BULLET_SPEED, SOLDIER_DAMAGE, bulletLook,
@@ -189,7 +191,10 @@ internal class AssaultMode(
     private fun updateSoldiers(dt: Float) {
         for (u in units) {
             val brain = u.brain
+            u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
+            firingBody = u.body
             brain.update(dt, player, shotSink)
+            firingBody = null
             if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
 
             val body = u.body
@@ -197,6 +202,7 @@ internal class AssaultMode(
             body.y = brain.y + source.originY
             body.z = brain.z + source.originZ
             body.yaw = brain.yawDeg
+            body.resting = !brain.isMoving
             if (brain.isMoving) {
                 body.state = EnemyState.CHASE   // jambes et bras qui balancent
                 body.animTime += dt
@@ -322,7 +328,7 @@ internal class AssaultMode(
         return dx * dx + dz * dz
     }
 
-    private companion object {
+    companion object {
         /** Blocs de chute sous la carte avant d'être ramené. */
         const val FALL_LIMIT = 16
 
