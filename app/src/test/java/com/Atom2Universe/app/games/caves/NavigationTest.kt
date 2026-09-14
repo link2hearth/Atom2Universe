@@ -9,6 +9,7 @@ import com.Atom2Universe.app.games.caves.ai.SolidGrid
 import com.Atom2Universe.app.games.caves.world.BuiltinMaps
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -147,6 +148,11 @@ class NavigationTest {
         }
         val a = map.spawnsA.first(); val b = map.spawnsB.first()
         val route = path(grid, Triple(a.x, a.y, a.z), Triple(b.x, b.y, b.z))!!
-        assertTrue(route.size in 96..200)
+        assertTrue(route.size in 120..260)
+        // Chaque étage est accessible depuis le camp A, ainsi que la voie basse.
+        for ((x, y, z) in listOf(Triple(47, 10, 35), Triple(92, 10, 35),
+                Triple(47, 10, 79), Triple(92, 10, 79), Triple(70, 2, 59))) {
+            assertNotNull(path(grid, Triple(a.x, a.y, a.z), Triple(x, y, z)))
+        }
     }
 }

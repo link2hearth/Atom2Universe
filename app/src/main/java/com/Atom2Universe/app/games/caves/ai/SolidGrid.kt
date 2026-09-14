@@ -8,6 +8,10 @@ package com.Atom2Universe.app.games.caves.ai
  */
 internal fun interface SolidGrid {
     fun isSolid(x: Int, y: Int, z: Int): Boolean
+
+    /** Navigation conservatrice par voxel ; visibilité précise pour les blocs partiels. */
+    fun blocksSight(x: Int, y: Int, z: Int, x0: Double, y0: Double, z0: Double,
+                    dx: Double, dy: Double, dz: Double): Boolean = isSolid(x, y, z)
 }
 
 /** Liste d'entiers qui grandit toute seule, sans emballer les valeurs (réutilisable d'une recherche à l'autre). */

@@ -186,3 +186,37 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
     `MobRegistry` et levait une exception. Corrigé avec un événement dédié `SoldierDown`.
   - **Idée notée : du brouillard** pour fondre les bords de la carte dans le lointain
     (demande de toucher aux shaders du monde, à traiter à part).
+
+### Refonte du terrain intégré — Quartier des fonderies
+
+- Remplace le terrain de test par un quartier original de **140 × 120 × 16 blocs**.
+  Chargement intégral : 72 chunks, contre 49 auparavant.
+- Camps ouest/est séparés, cours de déploiement protégées, repères bleus/rouges.
+  Le mode reste le combat solo contre les soldats existants ; cette refonte ne crée pas de bots alliés.
+- Quatre bâtiments principaux : grande salle, petits bureaux, étage, fenêtres ouvertes,
+  escalier intérieur avec trémie et second accès extérieur. Quatre annexes traversantes.
+- Trois axes principaux et contournements périphériques avec chicanes, caisses cerclées,
+  comptoirs bas et couvertures debout. Voie centrale deux blocs plus bas ; pont accessible
+  et passage inférieur de trois blocs libres. Les blocs pleins restent compatibles avec NavGrid.
+- Géométrie est/ouest identique hors chicanes et parapets centraux ; matériaux différents
+  pour se repérer. Aucun nouveau bloc ni texture supplémentaire nécessaire.
+- Déploiement des ennemis de la carte intégrée limité au sol dans la cour est :
+  les toits ne sont plus des candidats. Les cartes importées conservent leur tirage existant.
+- Assertions de dimensions, couverture des chunks et chemins vers les étages mises à jour.
+  Validation autorisée : compileDebugKotlin ; essai visuel et jouabilité sur appareil à faire.
+
+### Finitions architecturales du quartier
+
+- Marches remplacées par les escaliers en briques grises existants (2406), orientés
+  selon la montée et réfléchis correctement entre les camps. Supports pleins conservés.
+  Les métadonnées sont désormais écrites dans la carte pour conserver ces orientations.
+- Dalles grises (2506) pour les linteaux de meurtrières, banquettes et auvents minces.
+  Embrasures allongées au RDC et à l'étage, postes bas dans les ruelles et fentes dans
+  les chicanes périphériques. Le soubassement reste plein et les extrémités offrent un abri.
+- Une banquette de demi-bloc relève les pieds : yeux accroupis et canon passent dans la
+  fente, tandis que la tête debout est masquée par le linteau. Ce décalage est nécessaire
+  car le canon est placé 0,05 bloc sous les yeux.
+- Collision des projectiles et visibilité des soldats respectent maintenant les volumes
+  réels des dalles/escaliers. Navigation des soldats conservatrice par voxel inchangée.
+- Tests ajoutés pour les orientations après export et les hauteurs de tir/visibilité.
+  Non exécutés conformément à la politique du dépôt ; compileDebugKotlin réussi.

@@ -1821,8 +1821,22 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val cz = Math.floorDiv(wz, CHUNK_SIZE)
         val chunk = getChunk(cx, cy, cz)?.takeIf { it.generated } ?: return
         val lx = wx - cx * CHUNK_SIZE; val ly = wy - cy * CHUNK_SIZE; val lz = wz - cz * CHUNK_SIZE
+        if (chunk.metaAt(lx, ly, lz) == value) return
         chunk.setMeta(lx, ly, lz, value)
         storage?.recordMetaChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, value)
+        // Orientation changes also change the shape of adjacent stair corners.
+        chunk.version++
+        chunk.meshDirty = true
+        rebuildQueue.add(chunkKey(cx, cy, cz))
+        for ((nx, ny, nz) in arrayOf(
+            intArrayOf(cx - 1, cy, cz), intArrayOf(cx + 1, cy, cz),
+            intArrayOf(cx, cy - 1, cz), intArrayOf(cx, cy + 1, cz),
+            intArrayOf(cx, cy, cz - 1), intArrayOf(cx, cy, cz + 1)
+        )) {
+            val neighbor = getChunk(nx, ny, nz)?.takeIf { it.generated } ?: continue
+            neighbor.meshDirty = true
+            rebuildQueue.add(chunkKey(nx, ny, nz))
+        }
     }
 
     fun metaAt(wx: Int, wy: Int, wz: Int): Byte {

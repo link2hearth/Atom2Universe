@@ -4,6 +4,8 @@ import com.Atom2Universe.app.games.caves.world.*
 import kotlin.math.*
 
 class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
+    /** Obstacle mobile optionnel : centre X/Z, pieds, hauteur totale du joueur. */
+    var dynamicCollision: ((Double, Double, Double, Double) -> Boolean)? = null
 
     var metaAt: (Int, Int, Int) -> Byte = { _, _, _ -> 0 }
     var velocityY = 0.0
@@ -17,12 +19,13 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
     // Keep the standing eye reference: posture does not move feet or saved positions.
     fun updateCrouch(pressed: Boolean, x: Double, y: Double, z: Double) {
+        val wasCrouching = isCrouching
         val blockedStanding = collidesAt(x, y, z, PLAYER_H_ABOVE)
         isCrouching = pressed || (blockedStanding &&
             (isCrouching || !collidesAt(x, y, z, PLAYER_H_ABOVE - 0.6)))
         if (isCrouching) {
             isSprinting = false
-            stepUpRemaining = 0.0
+            if (!wasCrouching) stepUpRemaining = 0.0
         }
     }
 
@@ -105,16 +108,16 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val newX = x + dx
         if (!collidesAt(newX, y, z)) {
             x = newX
-        } else if (!isCrouching && (onGround || inWater) && dx != 0.0 &&
-                   (!collidesAt(newX, y + .5, z) || !collidesAt(newX, y + STEP_MAX, z))) {
+        } else if ((onGround || inWater) && dx != 0.0 &&
+                   (!collidesAt(newX, y + .5, z) || (!isCrouching && !collidesAt(newX, y + STEP_MAX, z)))) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(newX, y + .5, z)) .5 else STEP_MAX
         }
 
         val newZ = z + dz
         if (!collidesAt(x, y, newZ)) {
             z = newZ
-        } else if (!isCrouching && (onGround || inWater) && dz != 0.0 &&
-                   (!collidesAt(x, y + .5, newZ) || !collidesAt(x, y + STEP_MAX, newZ))) {
+        } else if ((onGround || inWater) && dz != 0.0 &&
+                   (!collidesAt(x, y + .5, newZ) || (!isCrouching && !collidesAt(x, y + STEP_MAX, newZ)))) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(x, y + .5, newZ)) .5 else STEP_MAX
         }
 
@@ -245,17 +248,18 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     fun collidesAt(px: Double, py: Double, pz: Double): Boolean = collidesAt(px, py, pz, heightAbove)
 
     private fun collidesAt(px: Double, py: Double, pz: Double, top: Double): Boolean {
+        if (dynamicCollision?.invoke(px, py - PLAYER_H_BELOW, pz, PLAYER_H_BELOW + top) == true) return true
         val x0 = floor(px - PLAYER_W).toInt();  val x1 = floor(px + PLAYER_WI).toInt()
         val y0 = floor(py - PLAYER_H_BELOW).toInt(); val y1 = floor(py + top).toInt()
         val z0 = floor(pz - PLAYER_W).toInt();  val z1 = floor(pz + PLAYER_WI).toInt()
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = blockAt(bx, by, bz)
             if (b != AIR && !isDecoration(b) && !isWater(b)) {
-                if (BlockRegistry.get(b)?.stairs != true && BlockRegistry.get(b)?.slab != true) return true
-                if (PartialBlockModel.boxes(metaAt(bx, by, bz), BlockRegistry.get(b)?.slab == true).any { box ->
-                    px + PLAYER_WI > bx + box.x && px - PLAYER_W < bx + box.x + .5 &&
-                    py + top > by + box.y && py - PLAYER_H_BELOW < by + box.y + .5 &&
-                    pz + PLAYER_WI > bz + box.z && pz - PLAYER_W < bz + box.z + .5
+                if (BlockRegistry.get(b)?.stairs != true && BlockRegistry.get(b)?.slab != true && (BlockRegistry.get(b)?.blockHeight ?: 1f) >= 1f) return true
+                if (PartialBlockModel.boxes(metaAt(bx, by, bz), BlockRegistry.get(b)?.slab == true, BlockRegistry.get(b)?.blockHeight ?: 1f, StairConnections.maskAt(bx, by, bz, blockAt, metaAt)).any { box ->
+                    px + PLAYER_WI > bx + box.x && px - PLAYER_W < bx + box.x + box.width &&
+                    py + top > by + box.y && py - PLAYER_H_BELOW < by + box.y + box.height &&
+                    pz + PLAYER_WI > bz + box.z && pz - PLAYER_W < bz + box.z + box.depth
                 }) return true
             }
         }

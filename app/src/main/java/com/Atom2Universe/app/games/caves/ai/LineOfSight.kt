@@ -44,7 +44,7 @@ internal object LineOfSight {
             if (tMaxX < tMaxY && tMaxX < tMaxZ) { x += stepX; tMaxX += tDeltaX }
             else if (tMaxY < tMaxZ) { y += stepY; tMaxY += tDeltaY }
             else { z += stepZ; tMaxZ += tDeltaZ }
-            if (world.isSolid(x, y, z)) return false
+            if (world.blocksSight(x, y, z, x0, y0, z0, dx, dy, dz)) return false
         }
         return true
     }

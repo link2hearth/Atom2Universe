@@ -1260,11 +1260,21 @@ internal class CaveRenderer(
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
     }
 
-    private fun projectileSolid(x: Double,y: Double,z: Double): Boolean {
-        val block = worldBlockAt(floor(x).toInt(),floor(y).toInt(),floor(z).toInt())
-        return block != AIR && !BlockRegistry.isDecoration(block) && !BlockRegistry.isWater(block)
-    }
+    private fun stairMaskAt(x: Int, y: Int, z: Int) =
+        StairConnections.maskAt(x, y, z, ::worldBlockAt, world::metaAt)
 
+    private fun projectileSolid(x: Double, y: Double, z: Double): Boolean {
+        val bx = floor(x).toInt(); val by = floor(y).toInt(); val bz = floor(z).toInt()
+        val block = worldBlockAt(bx, by, bz)
+        if (block == AIR || BlockRegistry.isDecoration(block) || BlockRegistry.isWater(block)) return false
+        val def = BlockRegistry.get(block) ?: return true
+        if (!def.stairs && !def.slab && def.blockHeight >= 1f) return true
+        return PartialBlockModel.boxes(world.metaAt(bx, by, bz), def.slab, def.blockHeight, stairMaskAt(bx, by, bz)).any {
+            x - bx >= it.x && x - bx <= it.x + it.width &&
+                y - by >= it.y && y - by <= it.y + it.height &&
+                z - bz >= it.z && z - bz <= it.z + it.depth
+        }
+    }
     private val PLAYER_HIT_RADIUS = 0.4
 
     /** Une balle traverse-t-elle le corps du joueur ? Cylindre qui va des pieds au sommet du crâne. */
@@ -1931,7 +1941,7 @@ internal class CaveRenderer(
             if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
                 if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true)) {
                     val stairHit = PartialBlockModel.intersect(world.metaAt(bx, by, bz),
-                        startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, BlockRegistry.get(b)?.slab == true)
+                        startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, BlockRegistry.get(b)?.slab == true, BlockRegistry.get(b)?.blockHeight ?: 1f, stairMaskAt(bx, by, bz))
                     if (stairHit != null) return RayHit(bx, by, bz, stairHit.nx, stairHit.ny, stairHit.nz).apply {
                         hitY = startY + dirY * stairHit.distance - by
                     }
@@ -2334,7 +2344,7 @@ internal class CaveRenderer(
             val vertices = ArrayList<Float>()
             val normals = arrayOf(floatArrayOf(0f,ep,0f), floatArrayOf(0f,-ep,0f),
                 floatArrayOf(ep,0f,0f), floatArrayOf(-ep,0f,0f), floatArrayOf(0f,0f,ep), floatArrayOf(0f,0f,-ep))
-            for (face in PartialBlockModel.faces(world.metaAt(target.bx, target.by, target.bz), BlockRegistry.get(block)?.slab == true)) {
+            for (face in PartialBlockModel.faces(world.metaAt(target.bx, target.by, target.bz), BlockRegistry.get(block)?.slab == true, BlockRegistry.get(block)?.blockHeight ?: 1f, stairMaskAt(target.bx, target.by, target.bz))) {
                 val n = normals[face.direction]
                 for (i in intArrayOf(0,1,2,0,2,3)) {
                     val v = face.vertices[i]

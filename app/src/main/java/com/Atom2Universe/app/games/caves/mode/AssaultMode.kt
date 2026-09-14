@@ -70,7 +70,22 @@ internal class AssaultMode(
     private var statusTimer = 0f
 
     // ── Navigation (construite dans onSurfaceCreated, une fois les blocs connus) ──
-    private val solid = SolidGrid { x, y, z -> blocksMovement(source.map.blockAt(x, y, z)) }
+    private val solid = object : SolidGrid {
+        override fun isSolid(x: Int, y: Int, z: Int) = blocksMovement(source.map.blockAt(x, y, z))
+
+        override fun blocksSight(x: Int, y: Int, z: Int, x0: Double, y0: Double, z0: Double,
+                                 dx: Double, dy: Double, dz: Double): Boolean {
+            if (!isSolid(x, y, z)) return false
+            val def = com.Atom2Universe.app.games.caves.node.BlockRegistry.get(source.map.blockAt(x, y, z))
+                ?: return true
+            if (!def.stairs && !def.slab && def.blockHeight >= 1f) return true
+            return com.Atom2Universe.app.games.caves.world.PartialBlockModel.intersect(
+                source.map.metaAt(x, y, z), x0 - x, y0 - y, z0 - z, dx, dy, dz, 1.0,
+                def.slab, def.blockHeight,
+                com.Atom2Universe.app.games.caves.world.StairConnections.maskAt(
+                    x, y, z, source.map::blockAt, source.map::metaAt)) != null
+        }
+    }
     private var navGrid: NavGrid? = null
     private var pathFinder: PathFinder? = null
 
@@ -264,10 +279,24 @@ internal class AssaultMode(
         val px = playerSpawn[0].toDouble() - source.originX; val pz = playerSpawn[2].toDouble() - source.originZ
         val ex = enemySpawn[0].toDouble() - source.originX; val ez = enemySpawn[2].toDouble() - source.originZ
 
+        // Sur la carte intégrée, déployer au sol dans la cour est, jamais sur les toits.
+        val deployment = if (source.map.name == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_ID &&
+            source.map.sizeX == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_SIZE &&
+            source.map.sizeZ == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_DEPTH &&
+            source.map.spawnsB.isNotEmpty()) {
+            (0 until grid.nodeCount).filter { n ->
+                grid.nodeY[n] == source.map.spawnsB.first().y &&
+                    grid.nodeX[n] >= source.map.sizeX - 23 &&
+                    kotlin.math.abs(grid.nodeZ[n] + 0.5 - ez) <= 13 &&
+                    distSq(grid.nodeX[n] + 0.5, grid.nodeZ[n] + 0.5, ex, ez) <=
+                    ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS
+            }
+        } else null
+        if (deployment != null && deployment.isEmpty()) return
         var attempts = 0
         while (units.size < SOLDIERS_PER_ROUND && attempts < MAX_SPAWN_ATTEMPTS) {
             attempts++
-            val n = rng.nextInt(grid.nodeCount)
+            val n = deployment?.let { it[rng.nextInt(it.size)] } ?: rng.nextInt(grid.nodeCount)
             val x = grid.nodeX[n] + 0.5; val z = grid.nodeZ[n] + 0.5
             // D'abord autour du camp adverse ; si ça ne suffit pas, n'importe où loin du joueur.
             val nearEnemySpawn = attempts < MAX_SPAWN_ATTEMPTS / 2

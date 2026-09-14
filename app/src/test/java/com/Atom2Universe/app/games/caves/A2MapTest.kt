@@ -117,44 +117,43 @@ class A2MapTest {
     }
 
     @Test
-    fun `l arene d essai a son sol, ses murs et un spawn dans chaque coin`() {
+    fun `le quartier a deux camps opposes et un passage sous le pont`() {
         val map = com.Atom2Universe.app.games.caves.world.BuiltinMaps.arena()
-        assertEquals(100, map.sizeX)
-        assertEquals(100, map.sizeZ)
-        assertEquals(com.Atom2Universe.app.games.caves.world.GRASS, map.blockAt(50, 0, 50))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(0, 5, 40))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99, 1, 99))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(50, 3, 50))   // pilier central
-        assertEquals(AIR, map.blockAt(50, 4, 50))
-        // Obstacles recopiés en miroir : le muret long existe dans les quatre quarts.
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(20, 2, 15))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99 - 20, 2, 15))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(20, 2, 99 - 15))
-        assertEquals(com.Atom2Universe.app.games.caves.world.STONE, map.blockAt(99 - 20, 2, 99 - 15))
-        assertEquals(AIR, map.blockAt(50, 1, 5))
-        assertEquals(listOf(MapPoint(2, 1, 2)), map.spawnsA)
-        assertEquals(listOf(MapPoint(97, 1, 97)), map.spawnsB)
-        assertEquals(AIR, map.blockAt(2, 1, 2))
+        assertEquals(140, map.sizeX)
+        assertEquals(120, map.sizeZ)
+        assertEquals(listOf(MapPoint(9, 4, 58)), map.spawnsA)
+        assertEquals(listOf(MapPoint(130, 4, 58)), map.spawnsB)
+        for (spawn in map.spawnsA + map.spawnsB) {
+            assertEquals(AIR, map.blockAt(spawn.x, spawn.y, spawn.z))
+            assertEquals(AIR, map.blockAt(spawn.x, spawn.y + 1, spawn.z))
+            assertTrue(map.blockAt(spawn.x, spawn.y - 1, spawn.z) != AIR)
+        }
+        // Voie basse : trois blocs libres sous le tablier.
+        for (y in 2..4) assertEquals(AIR, map.blockAt(70, y, 59))
+        assertTrue(map.blockAt(70, 5, 59) != AIR)
+        // Les camps ont la même géométrie, avec des matériaux différents.
+        for (y in 0 until map.sizeY) for (z in 0 until map.sizeZ) for (x in 0 until 63) {
+            assertEquals(map.blockAt(x, y, z) == AIR, map.blockAt(139 - x, y, z) == AIR)
+        }
     }
-
     @Test
     fun `toute l arene est chargee, meme loin du joueur, et rien n est decharge`() {
         val source = MapSource(com.Atom2Universe.app.games.caves.world.BuiltinMaps.arena())
-        // 100 blocs = chunks 0 à 6 en x et z ; hauteur 64..69 = chunk 4 seulement.
-        assertEquals(com.Atom2Universe.app.games.caves.world.ChunkBounds(0, 6, 4, 4, 0, 6), source.chunkBounds())
+        // 140 × 120 blocs : 9 × 8 chunks, hauteur 64..79 dans le chunk 4.
+        assertEquals(com.Atom2Universe.app.games.caves.world.ChunkBounds(0, 8, 4, 4, 0, 7), source.chunkBounds())
 
         val world = com.Atom2Universe.app.games.caves.world.World(source = source)
         val loaded = ArrayList<Chunk>()
         // Joueur dans le coin (0, 4, 0) : le coin opposé (6, 4, 6) serait hors d'un rayon de vue réduit.
         world.updateAroundPlayer(0, 4, 0) { loaded += it }
-        assertEquals(49, loaded.size)
-        assertTrue(loaded.any { it.cx == 6 && it.cz == 6 })
+        assertEquals(72, loaded.size)
+        assertTrue(loaded.any { it.cx == 8 && it.cz == 7 })
 
         // Le joueur s'éloigne très loin : aucun chunk n'est déchargé, aucun nouveau n'est demandé.
         loaded.forEach { world.markGenerated(it) }
         world.updateAroundPlayer(500, 4, 500) { loaded += it }
-        assertEquals(49, loaded.size)
-        assertEquals(49, world.allChunks().size)
+        assertEquals(72, loaded.size)
+        assertEquals(72, world.allChunks().size)
     }
 
     @Test

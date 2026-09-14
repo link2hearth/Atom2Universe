@@ -4,6 +4,10 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.MeadowTextures
 
 internal object MeshBuilder {
+    private val faceTriangles = intArrayOf(0, 1, 2, 0, 2, 3)
+    private val faceOffsets = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
+        intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
+
 
     fun build(chunk: Chunk, world: World): FloatArray {
         val buf = GrowableFloatArray()
@@ -26,11 +30,24 @@ internal object MeshBuilder {
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
-            if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)) {
-                val sky = maxOf(chunk.skyAt(lx, ly, lz) / 15f, skyOf(chunk, world, lx, ly + 1, lz, cache))
-                for (face in PartialBlockModel.faces(meta, BlockRegistry.get(block)?.slab == true)) {
+            val definition = BlockRegistry.get(block)
+            if (definition != null && (definition.stairs || definition.slab || definition.blockHeight < 1f)) {
+                val sky = skyOf(chunk, world, lx, ly, lz, cache)
+                val mask = StairConnections.maskAt(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz,
+                    { bx, by, bz -> world.blockAt(bx, by, bz, cache) }, world::metaAt)
+                for (face in PartialBlockModel.faces(meta, definition.slab, definition.blockHeight, mask)) {
+                    // Low soil keeps its recessed top, but buried bottoms and shared sides
+                    // need no vertices. Do not apply full-face occlusion to stairs or slabs.
+                    if (definition.blockHeight < 1f && face.direction != 0) {
+                        val offset = faceOffsets[face.direction]
+                        val neighbor = world.neighborBlock(chunk, lx+offset[0], ly+offset[1], lz+offset[2], cache)
+                        val other = BlockRegistry.get(neighbor)
+                        if (neighbor != AIR && other != null && !other.decoration && !other.transparent &&
+                            !other.water && !other.stairs && !other.slab &&
+                            other.blockHeight >= (if (face.direction == 1) 1f else definition.blockHeight)) continue
+                    }
                     val packed = face.direction * 4096f + BlockRegistry.getLayerForFace(block, face.direction, AIR)
-                    for (i in intArrayOf(0, 1, 2, 0, 2, 3)) {
+                    for (i in faceTriangles) {
                         val v = face.vertices[i]
                         val u = when (face.direction) { 2, 3 -> v[2]; else -> v[0] }
                         val vv = if (face.direction < 2) v[2] else 1f - v[1]
@@ -66,9 +83,23 @@ internal object MeshBuilder {
     }
 
     // Lumière du ciel (0..1) du voxel d'air adjacent à une face.
-    private fun skyOf(chunk: Chunk, world: World, lx: Int, ly: Int, lz: Int, cache: World.ChunkLookupCache? = null): Float =
-        world.skyLightAt(chunk, lx, ly, lz, cache) / 15f
-
+    private fun skyOf(chunk: Chunk, world: World, lx: Int, ly: Int, lz: Int,
+                      cache: World.ChunkLookupCache? = null): Float {
+        val block = world.neighborBlock(chunk, lx, ly, lz, cache)
+        val def = BlockRegistry.get(block)
+        var light = world.skyLightAt(chunk, lx, ly, lz, cache)
+        if (def == null || (!def.stairs && !def.slab && def.blockHeight >= 1f)) return light / 15f
+        val wx = chunk.worldX + lx; val wy = chunk.worldY + ly; val wz = chunk.worldZ + lz
+        val cells = PartialBlockModel.boxes(world.metaAt(wx, wy, wz), def.slab, def.blockHeight,
+            StairConnections.maskAt(wx, wy, wz, { x, y, z -> world.blockAt(x, y, z, cache) }, world::metaAt))
+        // The voxel itself is opaque to skylight, but its empty part sees adjacent air.
+        // Sample only open boundaries: a slab's solid half must not light a ceiling through its roof.
+        for ((face, offset) in faceOffsets.withIndex()) {
+            if (!PartialBlockModel.hasOpenBoundary(cells, face)) continue
+            light = maxOf(light, world.skyLightAt(chunk, lx + offset[0], ly + offset[1], lz + offset[2], cache))
+        }
+        return light / 15f
+    }
     private fun isVisible(block: Short) =
         block == AIR || isDecoration(block) || isTransparent(block) || isWater(block) || (BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true)
 
