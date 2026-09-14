@@ -7,5 +7,8 @@
   "color": "#D2B48C",
   "hardness": 1.0,
   "drop": "cotton_tan",
-  "creative_tab": "cotton"
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

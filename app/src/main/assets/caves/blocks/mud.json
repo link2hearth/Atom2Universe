@@ -7,5 +7,10 @@
   "color": "#827565",
   "hardness": 1,
   "drop": "mud",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
 }

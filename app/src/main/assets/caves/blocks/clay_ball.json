@@ -1,0 +1,18 @@
+{
+  "id": 3118,
+  "name": "clay_ball",
+  "texture_top": "cozy:resource:18:A6A8AF",
+  "texture_side": "cozy:resource:18:A6A8AF",
+  "texture_bottom": "cozy:resource:18:A6A8AF",
+  "color": "#A6A8AF",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "clay_ball",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -26,7 +26,7 @@ internal object LodBuilder {
 
         // Chunks chargés de la colonne, du plus haut au plus bas (un seul balayage cy).
         val loaded = ArrayList<Chunk>()
-        for (cy in SURFACE_CY_MAX downTo -2) {
+        for (cy in world.surfaceChunkMax downTo -2) {
             val chunk = world.getChunk(cx, cy, cz) ?: continue
             if (chunk.generated) loaded.add(chunk)
         }
@@ -149,7 +149,7 @@ internal object LodBuilder {
 
     // Hauteur du bloc le plus haut en (lx, lz) dans la colonne d'un chunk adjacent.
     private fun columnHeight(cx: Int, cz: Int, lx: Int, lz: Int, world: World): Int {
-        for (cy in SURFACE_CY_MAX downTo -2) {
+        for (cy in world.surfaceChunkMax downTo -2) {
             val chunk = world.getChunk(cx, cy, cz) ?: continue
             if (!chunk.generated) continue
             for (ly in CHUNK_SIZE - 1 downTo 0) {

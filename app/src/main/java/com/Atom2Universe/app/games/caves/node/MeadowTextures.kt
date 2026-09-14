@@ -609,7 +609,18 @@ internal object MeadowTextures {
 
         /** Loose mineral, transparent background: visually distinct from its ore block. */
         fun resource(tile: Int, color: Int) {
-            if (tile in 5..7) {
+            if (tile == 10) {
+                rect(13, 3, 6, 26, shade(color, -20)); rect(13, 3, 2, 24, shade(color, 22))
+            } else if (tile == 11 || tile == 12) {
+                for (i in 0..3) {
+                    rect(7 + i * 5, 7 + i % 2 * 3, 2, 17, shade(color, i * 9 - 12))
+                    if (tile == 12) rect(7 + i * 5, 22, 7, 2, color)
+                }
+                if (tile == 11) rect(6, 16, 21, 3, shade(color, -25))
+            } else if (tile in 14..17 || tile == 19) {
+                rect(4, 12, 24, 12, shade(color, -25)); rect(7, 8, 18, 6, shade(color, 22))
+                rect(5, 14, 22, 7, color); rect(6, 14, 2, 7, shade(color, 12))
+            } else if (tile in 5..7) {
                 // Cut crystal silhouette with aligned two-pixel facets.
                 for (y in 4 until 28) {
                     val half = if (y < 12) 4 + (y - 4) / 2 * 2 else (12 - (y - 12) / 2).coerceAtLeast(2)

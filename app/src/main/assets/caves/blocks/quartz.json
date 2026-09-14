@@ -7,5 +7,8 @@
   "color": "#D5CCDD",
   "hardness": 2.5,
   "drop": "quartz",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

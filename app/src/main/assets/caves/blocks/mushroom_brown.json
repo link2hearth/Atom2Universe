@@ -8,5 +8,8 @@
   "hardness": 0.3,
   "decoration": true,
   "drop": "mushroom_brown",
-  "creative_tab": "nature"
+  "creative_tab": "nature",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": []
 }

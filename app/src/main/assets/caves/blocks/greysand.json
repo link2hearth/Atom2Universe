@@ -5,8 +5,13 @@
   "texture_side": "cozy:material:5:A7B0B7",
   "texture_bottom": "cozy:material:5:A7B0B7",
   "color": "#A7B0B7",
-  "hardness": 3.0,
+  "hardness": 0.5,
   "drop": "greysand",
-  "creative_tab": "terrain",
-  "falling": true
+  "creative_tab": "stone",
+  "falling": true,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "sand"
+  ]
 }

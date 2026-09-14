@@ -244,6 +244,12 @@ internal class SpawnManager(
     // Identifiant de biome sous forme de chaîne pour MobRegistry.allEligibleFor().
     // En surface → SurfaceBiome.name.lowercase(), en cave → Biome.name.lowercase().
     private fun biomeAt(wx: Double, sy: Double, wz: Double): String {
+        if (world.terrainVersion >= 3) {
+            world.naturalSurfaceBiomeAt(wx, sy, wz)?.let { return it }
+            // Cavern ecology follows the cave biome noise, even inside a mountain above Y=0.
+            return BiomeMap.biomeAt(floor(wx / CHUNK_SIZE).toInt(), floor(sy / CHUNK_SIZE).toInt(),
+                floor(wz / CHUNK_SIZE).toInt(), worldSeed).id
+        }
         val chunkY = Math.floorDiv(sy.toInt(), CHUNK_SIZE)
         return if (chunkY >= 0) {
             BiomeMap.surfaceBiomeAt(wx, wz, worldSeed).id

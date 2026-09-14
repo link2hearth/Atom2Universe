@@ -1,0 +1,17 @@
+{
+  "ingredients": [
+    {
+      "count": 1,
+      "tag": "logs"
+    },
+    {
+      "count": 2,
+      "tag": "planks"
+    }
+  ],
+  "result": 3113,
+  "result_count": 1,
+  "tools": [
+    8000
+  ]
+}

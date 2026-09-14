@@ -9,5 +9,8 @@
   "drop": "",
   "harvest_category": "fragile",
   "creative_tab": "wood",
-  "transparent": true
+  "transparent": true,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

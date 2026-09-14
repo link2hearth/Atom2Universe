@@ -7,5 +7,10 @@
   "color": "#D6C8A7",
   "hardness": 2.0,
   "drop": "limestone",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
 }

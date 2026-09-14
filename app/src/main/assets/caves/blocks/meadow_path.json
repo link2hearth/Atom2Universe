@@ -8,5 +8,10 @@
   "hardness": 2.0,
   "drop": "dirt",
   "harvest_category": "covered_soil",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
 }

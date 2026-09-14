@@ -238,7 +238,7 @@ class CaveActivity : ThemedActivity() {
             context = this, touch = touch,
             worldSeed = save?.seed ?: System.currentTimeMillis(),
             worldId = worldId, savedState = savedState,
-            terrainVersion = save?.terrainVersion ?: 2,
+            terrainVersion = save?.terrainVersion ?: 3,
             worldSource = mapSource,
             modeFactory = if (mapSource != null) { r ->
                 if (mapSource.isShowcase) com.Atom2Universe.app.games.caves.mode.ShowcaseMode(r, mapSource)

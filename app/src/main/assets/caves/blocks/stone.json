@@ -10,5 +10,10 @@
   "texture_side_snow": "cozy:cap:3:A0ABB4:10:utility",
   "drop": "cobblestone",
   "harvest_category": "fractured_stone",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
 }

@@ -9,5 +9,8 @@
   "decoration": true,
   "drop": "",
   "harvest_category": "unharvestable_crop",
-  "creative_tab": "nature"
+  "creative_tab": "nature",
+  "placement_rule": "soil",
+  "replaceable": false,
+  "tags": []
 }

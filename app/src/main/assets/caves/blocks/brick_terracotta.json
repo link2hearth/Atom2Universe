@@ -7,5 +7,8 @@
   "color": "#C99378",
   "hardness": 3.5,
   "drop": "brick_terracotta",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

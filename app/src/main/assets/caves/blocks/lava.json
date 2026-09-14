@@ -9,5 +9,8 @@
   "light_emission": 15,
   "drop": "",
   "harvest_category": "liquid",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

@@ -5,8 +5,11 @@
   "texture_side": "cozy:material:4",
   "texture_bottom": "cozy:material:4",
   "color": "#ABA595",
-  "hardness": 0.8,
+  "hardness": 0.6,
   "falling": true,
   "drop": "gravel",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

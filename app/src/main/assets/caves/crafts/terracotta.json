@@ -1,0 +1,17 @@
+{
+  "ingredients": [
+    {
+      "id": 2304,
+      "count": 4
+    },
+    {
+      "count": 1,
+      "tag": "fuel"
+    }
+  ],
+  "result": 2308,
+  "result_count": 4,
+  "tools": [
+    8000
+  ]
+}

@@ -7,5 +7,8 @@
   "color": "#8997A3",
   "hardness": 2.0,
   "drop": "slate_paving",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

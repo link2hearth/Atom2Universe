@@ -47,7 +47,7 @@ internal data class CaveWorldSave(
     // IDs ≥ 10000 → instances d'armes dynamiques
     var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
-    val terrainVersion: Int = 2
+    val terrainVersion: Int = 3
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())

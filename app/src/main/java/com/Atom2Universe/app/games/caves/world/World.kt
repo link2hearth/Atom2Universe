@@ -6,10 +6,15 @@ import kotlin.math.*
 import kotlin.random.Random
 
 class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
-            val terrainVersion: Int = 2,
+            val terrainVersion: Int = 3,
             /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
             private val source: WorldSource? = null) {
-    private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave) }
+    private val natural by lazy { NaturalTerrain(seed) }
+    val surfaceChunkMax get() = if (terrainVersion >= 3) NaturalTerrain.SURFACE_MAX_CY else SURFACE_CY_MAX
+    private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave, if (terrainVersion >= 3) natural else null) }
+
+    internal fun naturalSurfaceBiomeAt(x: Double, y: Double, z: Double): String? =
+        if (terrainVersion >= 3 && y >= natural.height(x, z) - 12) natural.biomeIdAt(x, z) else null
 
     /** Visual climate only: does not alter generation, block IDs, or saved chunks. */
     internal fun vegetationClimateAt(wx: Int, wz: Int): Int {
@@ -23,6 +28,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         for (i in biomes.indices) {
             temperature += weights[i] * biomes[i].temperature
             humidity += weights[i] * biomes[i].humidity
+        }
+        if (terrainVersion >= 3) {
+            temperature = natural.temperature(wx.toDouble(), wz.toDouble()) - max(0.0, natural.height(wx.toDouble(), wz.toDouble()) - 200) / 1600
+            humidity = natural.humidity(wx.toDouble(), wz.toDouble())
         }
         return when {
             temperature < .30 -> 4
@@ -136,7 +145,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
 
         val candidates = mutableListOf<ChunkCandidate>()
-        val isSurface = pcy >= 0
+        val isSurface = if (terrainVersion >= 3) pcy * CHUNK_SIZE >= surfaceHeight(pcx * 16.0 + 8, pcz * 16.0 + 8) - 32 else pcy >= 0
 
         if (isSurface) {
             // Cylindre : disque XZ + plage Y fixe — simple et stable
@@ -147,7 +156,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     for (dx in -rxz..rxz) {
                 if (dx * dx + dz * dz > rxz2) continue
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
-                if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
+                if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
                 if (!chunks.containsKey(key) && !inFlight.contains(key))
                     candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
@@ -160,7 +169,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     for (dx in -r..r) {
                 if (dx * dx + dy * dy + dz * dz > r2) continue
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
-                if (cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
+                if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
                 if (!chunks.containsKey(key) && !inFlight.contains(key))
                     candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
@@ -280,16 +289,33 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     fun findSpawnPoint(): FloatArray {
+        if (terrainVersion >= 3 && source == null) {
+            // Search dry, walkable terrain before loading chunks, including ocean seeds.
+            for (radius in 0..128) for (side in 0 until if (radius == 0) 1 else radius * 8) {
+                val span = max(1, radius * 2)
+                val edge = side / span; val step = side % span - radius
+                val wx = 8 + 16 * when (edge) { 0 -> step; 1 -> radius; 2 -> -step; else -> -radius }
+                val wz = 8 + 16 * when (edge) { 0 -> -radius; 1 -> step; 2 -> radius; else -> -step }
+                val h = natural.height(wx.toDouble(), wz.toDouble()).toInt()
+                if (h < SEA_LEVEL + 3 || nearSurfaceCave(wx, wz)) continue
+                if (listOf(-2 to 0, 2 to 0, 0 to -2, 0 to 2).any { (dx, dz) ->
+                        abs(natural.height((wx + dx).toDouble(), (wz + dz).toDouble()) - h) > 2.5 }) continue
+                val cx = Math.floorDiv(wx, 16); val cz = Math.floorDiv(wz, 16)
+                for (cy in Math.floorDiv(h, 16)..Math.floorDiv(h + 3, 16)) pregenerateChunk(cx, cy, cz)
+                if (blockAt(wx, h + 1, wz) != AIR || blockAt(wx, h + 2, wz) != AIR) continue
+                return floatArrayOf(wx + .5f, h + 1 + 1.62f, wz + .5f)
+            }
+        }
         val approxCy = (surfaceHeight(8.0, 8.0) / CHUNK_SIZE).toInt()
 
         // Prégenère les chunks dans le rayon de recherche
         for (dcy in 0 downTo -2) for (dcz in -1..1) for (dcx in -1..1)
-            pregenerateChunk(dcx, (approxCy + dcy).coerceIn(0, SURFACE_CY_MAX), dcz)
+            pregenerateChunk(dcx, (approxCy + dcy).coerceIn(0, surfaceChunkMax), dcz)
 
         // Cherche un sol solide (non eau) dans un carré 32×32 centré sur (8,8)
         for (dcy in 0 downTo -2) {
             val cyCand = approxCy + dcy
-            if (cyCand !in 0..SURFACE_CY_MAX) continue
+            if (cyCand !in 0..surfaceChunkMax) continue
             for (dz in -16..16) for (dx in -16..16) {
                 val wx = 8 + dx; val wz = 8 + dz
                 val chx = Math.floorDiv(wx, CHUNK_SIZE)
@@ -420,6 +446,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     private fun generateProcedural(chunk: Chunk) {
+        if (terrainVersion >= 3) { natural.generate(chunk, landscape); return }
         when {
             chunk.cy in 0..SURFACE_CY_MAX                           -> generateSurface(chunk)
             chunk.cy < 0 && isUndergroundSurface(chunk.cy)         -> generateUndergroundSurface(chunk)
@@ -856,6 +883,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     /** Reserve the entrance neighborhood before selecting trees and building plots. */
     private fun nearSurfaceCave(x: Int, z: Int): Boolean {
+        if (terrainVersion >= 3) return natural.caveAt(x, natural.height(x.toDouble(), z.toDouble()).toInt(), z)
         for (cz in Math.floorDiv(z - 32, 16)..Math.floorDiv(z + 32, 16))
             for (cx in Math.floorDiv(x - 32, 16)..Math.floorDiv(x + 32, 16)) {
                 val rng = chunkRng(cx * 7919 + 13, 88888, cz * 6271 + 7)
@@ -2127,7 +2155,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         source?.let { return it.skyTopY(wx, wz) }
         val key = (wx.toLong() and 0xFFFFFFFFL) or ((wz.toLong() and 0xFFFFFFFFL) shl 32)
         surfaceTopCache[key]?.let { return it }
-        val v = surfaceHeight(wx + 0.5, wz + 0.5).toInt()
+        val v = if (terrainVersion >= 3) max(SEA_LEVEL, natural.height(wx.toDouble(), wz.toDouble()).toInt()) + 1
+            else surfaceHeight(wx + 0.5, wz + 0.5).toInt()
         surfaceTopCache[key] = v
         return v
     }

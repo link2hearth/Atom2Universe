@@ -9,5 +9,8 @@
   "transparent": true,
   "drop": "",
   "harvest_category": "fragile",
-  "creative_tab": "functional"
+  "creative_tab": "functional",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

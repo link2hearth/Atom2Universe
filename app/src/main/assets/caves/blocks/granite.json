@@ -7,5 +7,10 @@
   "color": "#B3A29D",
   "hardness": 3.0,
   "drop": "granite",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
 }

@@ -7,5 +7,8 @@
   "color": "#94A180",
   "hardness": 3.5,
   "drop": "brick_moss",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

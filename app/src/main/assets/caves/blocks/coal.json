@@ -8,5 +8,10 @@
   "hardness": 3.5,
   "drop": "raw_coal",
   "harvest_category": "ore",
-  "creative_tab": "ores"
+  "creative_tab": "ores",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "ore"
+  ]
 }

@@ -8,5 +8,8 @@
   "hardness": 2.0,
   "drop": "table",
   "creative_tab": "functional",
-  "orient_mode": "facing"
+  "orient_mode": "facing",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

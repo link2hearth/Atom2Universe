@@ -5,8 +5,13 @@
   "texture_side": "cozy:ore:3:929EAA:88FFFF",
   "texture_bottom": "cozy:ore:3:929EAA:88FFFF",
   "color": "#88FFFF",
-  "hardness": 5.0,
+  "hardness": 3.5,
   "drop": "raw_crystal",
   "harvest_category": "ore",
-  "creative_tab": "ores"
+  "creative_tab": "ores",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "ore"
+  ]
 }

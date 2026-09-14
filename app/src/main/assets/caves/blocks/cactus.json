@@ -5,7 +5,10 @@
   "texture_side": "cozy:utility:2",
   "texture_bottom": "cozy:utility:4",
   "color": "#92AD87",
-  "hardness": 1.0,
+  "hardness": 0.6,
   "drop": "cactus",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "cactus",
+  "replaceable": false,
+  "tags": []
 }

@@ -7,9 +7,13 @@
   "color": "#94A57B",
   "hardness": 0.1,
   "decoration": true,
-  "drop": "",
-  "harvest_category": "fragile",
+  "drop": "plant_fiber",
+  "harvest_category": "plant",
   "creative_tab": "nature",
   "sprite_margin": 0.02,
-  "sprite_height": 0.8
+  "sprite_height": 0.8,
+  "placement_rule": "soil",
+  "replaceable": true,
+  "drop_count": 1,
+  "tags": []
 }

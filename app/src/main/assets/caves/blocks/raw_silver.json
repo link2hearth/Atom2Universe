@@ -11,5 +11,8 @@
   "placeable": false,
   "drop": "raw_silver",
   "harvest_category": "resource",
-  "creative_tab": "resources"
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

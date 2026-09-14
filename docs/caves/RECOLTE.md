@@ -9,9 +9,11 @@ Le mode créatif continue de détruire sans récolter. L’atelier reste non mod
 | Catégorie | Règle actuelle |
 | --- | --- |
 | `covered_soil` | Herbe, terre enneigée/sablée, sol forestier et chemin → terre. Terre graveleuse → gravier. |
-| `fractured_stone` | Pierre ordinaire et ses couvertures → cobble. Cobble moussue → cobble ; caillou moussu → caillou. Roche grise sablée → roche grise ; variante sable rouge → sable rouge. |
+| `fractured_stone` | Pierre ordinaire et ses couvertures → cobble ; caillou moussu → caillou. Roche grise sablée → roche grise ; variante sable rouge → sable rouge. |
 | `ore` | Les neuf minerais → une ressource brute chacun, IDs 3100–3108. |
-| `fragile` | Verre, glaces, feuillages, herbes et fougères → aucun objet. |
+| `fragile` | Verre, glaces et feuillages → aucun objet. |
+| `plant` | Herbes et fougères → fibre végétale. |
+| `resource_block` | Argile → quatre boules d’argile. |
 | `liquid` | Eau et lave → aucun objet au minage. Le seau garde son fonctionnement propre. |
 | `unharvestable_crop` | Le blé décoratif n’a pas encore de récolte agricole ; aucun objet, conformément à ses JSON. |
 | `technical` | Marqueurs de départ → aucun objet. |
@@ -35,11 +37,13 @@ Le panneau d’inventaire montre le résultat et distingue les ressources non po
 
 ## Fabrication et sauvegardes
 
-Les recettes d’origine restent présentes pour les stocks des anciennes sauvegardes.
-Des variantes `_harvest.json` acceptent la cobble et les ressources brutes. Une
-recette cobble → pierre permet aussi de retrouver le bloc lisse pour construire.
+Les recettes d’origine et les doublons `_harvest.json` sont remplacés par 92 recettes
+cohérentes. Les anciens minerais stockés restent utilisables grâce à des recettes
+d’extraction. La cobble devient de la pierre avec combustible et four conservé.
 Les IDs existants et les sauvegardes ne sont pas convertis. Les nouvelles ressources
 ont des icônes procédurales 32 × 32 et une catégorie « Ressources brutes ».
+Voir [la progression et les travaux restants](CRAFT_ET_PROGRESSION.md) et
+[l’audit de chaque définition](AUDIT_BLOCS.md).
 
 La terre enneigée a un dessus neigeux, une frange latérale de neige et un dessous
 de terre. La terre sablée reçoit également son rebord et son dessous de terre.

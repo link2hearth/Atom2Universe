@@ -5,7 +5,12 @@
   "texture_side": "cozy:material:9:89A9B7",
   "texture_bottom": "cozy:material:9:89A9B7",
   "color": "#89A9B7",
-  "hardness": 2.0,
+  "hardness": 1.5,
   "drop": "plank_blue",
-  "creative_tab": "wood"
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "planks"
+  ]
 }

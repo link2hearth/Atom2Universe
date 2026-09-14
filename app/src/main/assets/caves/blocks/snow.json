@@ -7,5 +7,8 @@
   "color": "#ECF0ED",
   "hardness": 0.5,
   "drop": "snow",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

@@ -8,5 +8,9 @@
   "hardness": 0.1,
   "decoration": true,
   "drop": "bolt",
-  "creative_tab": "functional"
+  "creative_tab": "functional",
+  "placement_rule": "any",
+  "replaceable": false,
+  "placeable": false,
+  "tags": []
 }

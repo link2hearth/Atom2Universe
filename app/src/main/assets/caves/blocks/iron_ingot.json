@@ -1,0 +1,18 @@
+{
+  "id": 3114,
+  "name": "iron_ingot",
+  "texture_top": "cozy:resource:14:A7B1B8",
+  "texture_side": "cozy:resource:14:A7B1B8",
+  "texture_bottom": "cozy:resource:14:A7B1B8",
+  "color": "#A7B1B8",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "iron_ingot",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

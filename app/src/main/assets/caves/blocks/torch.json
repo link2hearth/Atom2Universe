@@ -9,5 +9,8 @@
   "decoration": true,
   "light_emission": 8,
   "drop": "torch",
-  "creative_tab": "functional"
+  "creative_tab": "functional",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": []
 }

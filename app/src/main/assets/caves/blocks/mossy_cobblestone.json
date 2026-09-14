@@ -6,7 +6,10 @@
   "texture_bottom": "cozy:nature:1",
   "color": "#929DA4",
   "hardness": 3,
-  "drop": "cobblestone",
-  "harvest_category": "fractured_stone",
-  "creative_tab": "stone"
+  "drop": "mossy_cobblestone",
+  "harvest_category": "recoverable",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

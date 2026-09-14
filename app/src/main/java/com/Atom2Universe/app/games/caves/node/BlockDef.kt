@@ -33,6 +33,9 @@ internal data class BlockDef(
     val placeable: Boolean = true,
     val harvestCategory: String = "recoverable",
     val dropCount: Int = 1,
+    val tags: Set<String> = emptySet(),
+    val placementRule: String = "any",
+    val replaceable: Boolean = false,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
@@ -77,6 +80,9 @@ internal data class BlockDef(
                 placeable       = j.optBoolean("placeable", true),
                 harvestCategory = j.optString("harvest_category", "recoverable"),
                 dropCount       = j.optInt("drop_count", 1),
+                tags            = j.optJSONArray("tags")?.let { a -> (0 until a.length()).map { a.getString(it) }.toSet() } ?: emptySet(),
+                placementRule   = j.optString("placement_rule", "any"),
+                replaceable     = j.optBoolean("replaceable", false),
             )
         }
     }

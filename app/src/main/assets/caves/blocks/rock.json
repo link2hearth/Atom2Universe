@@ -11,5 +11,8 @@
   "creative_tab": "stone",
   "waterlogged": false,
   "sprite_margin": 0.02,
-  "sprite_height": 0.48
+  "sprite_height": 0.48,
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": []
 }

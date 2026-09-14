@@ -7,5 +7,10 @@
   "color": "#929DA4",
   "hardness": 3,
   "drop": "cobblestone",
-  "creative_tab": "stone"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
 }

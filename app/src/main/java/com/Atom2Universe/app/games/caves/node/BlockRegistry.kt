@@ -72,10 +72,12 @@ internal object BlockRegistry {
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {
             require(def.harvestCategory in setOf("recoverable", "covered_soil", "fractured_stone",
-                "fragile", "liquid", "unharvestable_crop", "technical", "ore", "resource")) {
+                "fragile", "liquid", "unharvestable_crop", "technical", "ore", "resource", "plant", "resource_block")) {
                 "Unknown harvest category for ${def.name}: ${def.harvestCategory}"
             }
             require(def.dropCount > 0) { "Invalid drop count for ${def.name}" }
+            require(def.placementRule in setOf("any", "solid", "soil", "sand", "cactus", "reeds"))
+            require(def.hardness > 0f && def.spriteMargin >= 0f && def.spriteMargin < .5f && def.spriteHeight > 0f)
             if (def.drop.isBlank()) continue
             val target = requireNotNull(byName[def.drop]) { "Unknown drop '${def.drop}' for ${def.name}" }
             harvestDrops[def.id] = target.id to def.dropCount

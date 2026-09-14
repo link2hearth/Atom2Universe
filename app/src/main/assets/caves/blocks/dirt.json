@@ -7,5 +7,10 @@
   "color": "#A47D58",
   "hardness": 0.8,
   "drop": "dirt",
-  "creative_tab": "terrain"
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
 }

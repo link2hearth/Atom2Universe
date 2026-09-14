@@ -504,7 +504,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoNameTv?.text  = activity.blockName(recipe.result)
                 infoCountTv?.text = "×${recipe.resultCount}"
             }
-            infoIngredientsTv?.text = recipe.ingredients.joinToString("\n") { (t, n) -> activity.getString(R.string.cave_ui_ingredient, activity.blockName(t), renderer.inventory[t] ?: 0, n) } + "\n\n" + activity.getString(R.string.cave_ui_available_batches, recipe.maxCraftable(renderer.inventory))
+            val lines = recipe.ingredients.map { (t, n) -> activity.getString(R.string.cave_ui_ingredient, activity.blockName(t), renderer.inventory[t] ?: 0, n) } +
+                recipe.groups.map { group -> activity.getString(R.string.cave_ui_ingredient, craftGroupName(group.tag), group.available(renderer.inventory), group.count) } +
+                recipe.tools.map { activity.getString(R.string.cave_craft_equipment, activity.blockName(it),
+                    activity.getString(if ((renderer.inventory[it] ?: 0) > 0) R.string.cave_ui_ready else R.string.cave_ui_missing)) }
+            infoIngredientsTv?.text = lines.joinToString("\n") + "\n\n" + activity.getString(R.string.cave_ui_available_batches, recipe.maxCraftable(renderer.inventory))
             infoDivider?.visibility       = View.VISIBLE
             infoIngredientsTv?.visibility = View.VISIBLE
         } else {
@@ -554,6 +558,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     val def = BlockRegistry.get(type)
                     val drop = BlockRegistry.harvestDrop(type)
                     infoIngredientsTv?.text = when {
+                        type == 8000.toShort() -> activity.getString(R.string.cave_craft_furnace_hint)
+                        type == 8001.toShort() -> activity.getString(R.string.cave_craft_table_hint)
+                        type == 10000.toShort() || type == 10001.toShort() -> activity.getString(R.string.cave_craft_bucket_hint)
                         def?.placeable == false -> activity.getString(R.string.cave_ui_raw_resource_hint)
                         drop == null -> activity.getString(R.string.cave_ui_harvest_none)
                         else -> activity.getString(R.string.cave_ui_harvest_result, drop.second, activity.blockName(drop.first))
@@ -624,8 +631,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         rightHeaderTv?.setText(if (browsingCraft) R.string.cave_ui_workshop else R.string.cave_ui_details)
         val recipes = CraftRegistry.all().filter { r ->
             (!ui.craftable.isChecked || r.canCraft(renderer.inventory)) &&
-                (relatedType == null || r.ingredients.any { it.first == relatedType }) &&
-                (recipeName(r).contains(query, true) || r.ingredients.any { activity.blockName(it.first).contains(query, true) })
+                (relatedType == null || relatedType in r.inputIds) &&
+                (recipeName(r).contains(query, true) || r.inputIds.any { activity.blockName(it).contains(query, true) } || r.groups.any { craftGroupName(it.tag).contains(query, true) })
         }.sortedWith(compareByDescending<CraftDef> { it.canCraft(renderer.inventory) }.thenBy { recipeName(it) })
         craftingAdapter?.recipes = recipes
         craftingAdapter?.notifyDataSetChanged()
@@ -635,6 +642,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     private fun recipeName(recipe: CraftDef) = recipe.resultItemId?.let { activity.weaponName(it) } ?: activity.blockName(recipe.result)
+
+    private fun craftGroupName(tag: String): String = activity.getString(when (tag) {
+        "logs" -> R.string.cave_craft_logs
+        "planks" -> R.string.cave_craft_planks
+        "fuel" -> R.string.cave_craft_fuel
+        "sand" -> R.string.cave_craft_sand
+        else -> R.string.cave_craft_stone
+    })
 
     fun doSell(id: Short) {
         if (WeaponInstanceRegistry.get(id) == null || (renderer.inventory[id] ?: 0) <= 0) return
@@ -665,6 +680,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             ui.status.setText(R.string.cave_ui_missing); return
         }
         val allocated = mutableListOf<Short>()
+        val consumption = recipe.consumption(renderer.inventory, batches) ?: return
         val weaponDefId = recipe.resultItemId
         if (weaponDefId != null) {
             val prepared = runCatching {
@@ -681,8 +697,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         } else if ((renderer.inventory[recipe.result] ?: 0).toLong() + recipe.resultCount.toLong() * batches > Int.MAX_VALUE) {
             ui.status.setText(R.string.cave_ui_craft_failed); return
         }
-        for ((type, need) in recipe.requiredIngredients) {
-            val after = (renderer.inventory[type] ?: 0) - need * batches
+        for ((type, need) in consumption) {
+            val after = (renderer.inventory[type] ?: 0) - need
             if (after <= 0) {
                 renderer.inventory.remove(type)
                 for (slots in listOf(combatInvSlots, buildInvSlots)) for (i in slots.indices)

@@ -10,5 +10,8 @@
   "drop": "daisy",
   "creative_tab": "nature",
   "sprite_margin": 0.05,
-  "sprite_height": 0.85
+  "sprite_height": 0.85,
+  "placement_rule": "soil",
+  "replaceable": false,
+  "tags": []
 }

@@ -5,8 +5,13 @@
   "texture_side": "cozy:ore:3:929EAA:50C878",
   "texture_bottom": "cozy:ore:3:929EAA:50C878",
   "color": "#50C878",
-  "hardness": 4.5,
+  "hardness": 3.5,
   "drop": "raw_emerald",
   "harvest_category": "ore",
-  "creative_tab": "ores"
+  "creative_tab": "ores",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "ore"
+  ]
 }

@@ -16,9 +16,11 @@ internal object BiomeRegistry {
     val gigaCaveBiomes:    List<GigaCaveBiomeDef> get() = _gigaCave
 
     fun load(assets: AssetManager) {
+        NaturalTerrainSettings.load(assets)
         if (_cave.isNotEmpty()) return
         loadDir(assets, "caves/biomes/cave")         { _cave        += CaveBiomeDef.fromJson(it)     }
         loadDir(assets, "caves/biomes/surface")      { _surface     += SurfaceBiomeDef.fromJson(it)  }
+        require(NaturalTerrainSettings.profiles.all { p -> _surface.any { it.id == p.id } })
         loadDir(assets, "caves/biomes/underground")  { _underground += SurfaceBiomeDef.fromJson(it)  }
         loadDir(assets, "caves/biomes/gigacave")     { _gigaCave    += GigaCaveBiomeDef.fromJson(it) }
     }

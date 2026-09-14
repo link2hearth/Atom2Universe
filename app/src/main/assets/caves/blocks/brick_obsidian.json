@@ -7,5 +7,8 @@
   "color": "#656C7F",
   "hardness": 3.5,
   "drop": "brick_obsidian",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

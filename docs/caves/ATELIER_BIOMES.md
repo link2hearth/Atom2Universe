@@ -22,7 +22,7 @@ différentes. Le four possède désormais des côtés à évents et un dessus d�
 l'établi possède des côtés avec tiroir et tablette, et un dessous en bois encadré.
 
 La galerie expose automatiquement chaque entrée du registre, triée par identifiant :
-166 blocs actuellement, directement posés au sol sans socle, y compris les marqueurs et liquides. Les liquides sont
+162 blocs actuellement, directement posés au sol sans socle, y compris les marqueurs et liquides. Les liquides sont
 placés dans des récipients en verre. Le bandeau affiche la zone, puis le nom de
 l'échantillon proche dans la galerie. Ce nom dépend de la position, pas de la visée.
 La longueur de la carte augmente automatiquement si le registre s'agrandit.
@@ -75,7 +75,7 @@ Le comportement de collecte de la pierre existante ne change pas.
 - Aller-retour sérialisation A2Map vérifié, blocs et orientations conservés.
 - Plan produit depuis le générateur Kotlin compilé, avec les identifiants et
   couleurs des JSON réels. Ce plan ne représente pas l'éclairage 3D du jeu.
-- 182 recettes de textures utilisées, 191 couches GPU de 32 × 32, variantes d'écorce comprises.
+- 194 recettes de textures utilisées, 203 couches GPU de 32 × 32, variantes d'écorce comprises.
   Le climat utilise désormais un champ de couleur interpolé plutôt que des couches supplémentaires.
 
 Le parcours, les collisions et le rendu final restent à vérifier sur appareil.

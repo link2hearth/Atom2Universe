@@ -6,7 +6,8 @@ import kotlin.random.Random
 
 /** Version 2 only. Every feature is a function of world coordinates, never chunk load order. */
 internal class CozyLandscape(private val seed: Long,
-                             private val nearCave: (Int, Int) -> Boolean = { _, _ -> false }) {
+                             private val nearCave: (Int, Int) -> Boolean = { _, _ -> false },
+                             private val natural: NaturalTerrain? = null) {
     private data class Relief(val base: Double, val amplitude: Double)
     private data class Site(val x: Int, val z: Int, val y: Int, val kind: Int)
     private val relief = ConcurrentHashMap<Long, Relief>()
@@ -33,6 +34,7 @@ internal class CozyLandscape(private val seed: Long,
 
     /** Smooth biome interpolation removes the former two-block height discontinuities. */
     internal fun naturalHeight(x: Double, z: Double): Double {
+        natural?.let { return it.height(x, z) }
         val gx = floor(x / 64).toInt(); val gz = floor(z / 64).toInt()
         val tx = smooth(x / 64 - gx); val tz = smooth(z / 64 - gz)
         val a = reliefAt(gx, gz); val b = reliefAt(gx + 1, gz)
@@ -50,6 +52,7 @@ internal class CozyLandscape(private val seed: Long,
     }
 
     private fun site(x: Int, z: Int): Site = sites.getOrPut(key(x, z)) {
+        if (natural != null) return@getOrPut Site(x * 128, z * 128, 0, -1)
         if (sites.size > 2048) sites.clear()
         val rng = random(x, z, 983741L)
         val sx = x * 128 + 24 + rng.nextInt(64)
@@ -72,6 +75,7 @@ internal class CozyLandscape(private val seed: Long,
     }
 
     fun topBlock(b: SurfaceBiomeDef, x: Double, z: Double, h: Int): Short {
+        natural?.let { return it.topBlock(b, x, z, h) }
         if (h <= 74) return SAND
         if (b.surfaceBlocks.any { it.block == GRASS }) return GRASS
         val n = SimplexNoise.noise(x * b.surfaceVarietyScale + b.surfaceVarietyOffset, z * b.surfaceVarietyScale)
@@ -90,7 +94,7 @@ internal class CozyLandscape(private val seed: Long,
         for (z in 0..15) for (x in 0..15) {
             val i = z * 16 + x; val h = heights[i]
             val y = h + 1 - c.worldY
-            if (y !in 0..15 || c.blockAt(x, y, z) != AIR || h < 75) continue
+            if (y !in 0..15 || c.blockAt(x, y, z) != AIR || h < if (natural != null) 74 else 75) continue
             // Check the actual carved ground; never suspend plants over cave mouths.
             if (y > 0 && c.blockAt(x, y - 1, z) != tops[i]) continue
             val wx = c.worldX + x; val wz = c.worldZ + z
@@ -99,7 +103,9 @@ internal class CozyLandscape(private val seed: Long,
             val biome = BiomeRegistry.surfaceBiomes[biomes[i]]
             val patch = SimplexNoise.noise(wx * .042 + offset + 49, wz * .042)
             val block: Short = when {
-                tops[i] == GRASS && rng.nextFloat() < .18 + max(0.0, patch) * .08 -> {
+                natural != null && h == 74 && rng.nextFloat() < .18f -> 7052
+                natural != null && tops[i] in shortArrayOf(SAND, REDSAND) && h > 76 && rng.nextFloat() < .006f -> CACTUS
+                tops[i] in shortArrayOf(GRASS, FOREST_FLOOR, MOSS) && rng.nextFloat() < .18 + max(0.0, patch) * .08 -> {
                     when {
                         h < 77 && rng.nextFloat() < .20f -> 7052 // occasional reeds along the water
                         biome.treeDensityBase > .06f && patch < .05 && rng.nextFloat() < .18f ->
@@ -113,10 +119,11 @@ internal class CozyLandscape(private val seed: Long,
                 tops[i] == SAND && h > 76 && rng.nextFloat() < .018f -> 7053
                 tops[i] != GRASS && biome.decorationBlocks.isNotEmpty() && rng.nextFloat() < biome.decorationDensity ->
                     biome.decorationBlocks[rng.nextInt(biome.decorationBlocks.size)]
-                tops[i] == GRASS && rng.nextFloat() < .005f -> ROCK_MOSS
+                tops[i] in shortArrayOf(GRASS, FOREST_FLOOR, MOSS) && rng.nextFloat() < .005f -> ROCK_MOSS
                 else -> continue
             }
-            put(c, wx, h + 1, wz, block, true)
+            if (natural == null || BlockPlacement.supported(block, wx, h + 1, wz, natural::groundAt))
+                put(c, wx, h + 1, wz, block, true)
         }
         // Each plot fits within its own 128-block cell, including the seven-block skirt.
         val s = site(Math.floorDiv(c.worldX, 128), Math.floorDiv(c.worldZ, 128))
@@ -129,7 +136,8 @@ internal class CozyLandscape(private val seed: Long,
             for (gx in Math.floorDiv(c.worldX - 4, 7)..Math.floorDiv(c.worldX + 19, 7)) {
                 val rng = random(gx, gz, 44281L)
                 val x = gx * 7 + 1 + rng.nextInt(5); val z = gz * 7 + 1 + rng.nextInt(5)
-                val biome = BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed)
+                val biome = natural?.let { terrain -> BiomeRegistry.surfaceBiomes.first { it.id == terrain.biomeIdAt(x.toDouble(), z.toDouble()) } }
+                    ?: BiomeMap.surfaceBiomeAt(x.toDouble(), z.toDouble(), seed)
                 if (biome.treeType == "none") continue
                 val grove = SimplexNoise.noise(x * .018 + offset + 83, z * .018)
                 if (rng.nextFloat() > (biome.treeDensityBase * 12 + grove * .25).coerceIn(.025, .78)) continue
@@ -137,7 +145,7 @@ internal class CozyLandscape(private val seed: Long,
                 val s = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
                 if (s.kind >= 0 && x in s.x - 5..s.x + 17 && z in s.z - 5..s.z + 17) continue
                 val y = height(x.toDouble(), z.toDouble()).toInt()
-                if (y <= 75 || topBlock(biome, x.toDouble(), z.toDouble(), y) !in shortArrayOf(GRASS, DIRT_SNOW, SNOW)) continue
+                if (y <= 75 || topBlock(biome, x.toDouble(), z.toDouble(), y) !in shortArrayOf(GRASS, DIRT_SNOW, SNOW, FOREST_FLOOR, MOSS)) continue
                 val tall = biome.treeMinHeight.coerceIn(4, 8) + rng.nextInt(3)
                 if (c.worldY > y + tall + 4 || c.worldY + 16 <= y) continue
                 val (wood, leaf) = when (biome.treeType) {

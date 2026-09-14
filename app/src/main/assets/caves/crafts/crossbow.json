@@ -1,0 +1,17 @@
+{
+  "ingredients": [
+    {
+      "count": 3,
+      "tag": "planks"
+    },
+    {
+      "id": 3114,
+      "count": 3
+    },
+    {
+      "id": 3112,
+      "count": 2
+    }
+  ],
+  "result_item": "crossbow"
+}

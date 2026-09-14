@@ -56,7 +56,7 @@ internal class CaveRenderer(
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
     private val savedState: SavedState? = null,
-    private val terrainVersion: Int = 2,
+    private val terrainVersion: Int = 3,
     /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
     private val worldSource: WorldSource? = null,
     /** Règles de la partie : la survie par défaut. */
@@ -106,7 +106,7 @@ internal class CaveRenderer(
     private val MAX_LOD_TILES = 8000
     private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
     // Hauteur (blocs) de la bande de surface, pour les bounding-box de frustum LOD.
-    private val SURFACE_BAND_H = ((SURFACE_CY_MAX + 1) * CHUNK_SIZE).toFloat()
+    private val SURFACE_BAND_H = ((world.surfaceChunkMax + 1) * CHUNK_SIZE).toFloat()
     private val lodGrid      = HashMap<Long, ArrayList<Long>>() // super-tuile → liste de clés LOD
     private val lodCache = worldId?.let {
         LodCache(java.io.File(context.filesDir, "cave_worlds/$it/lod_cache.bin"))
@@ -942,7 +942,7 @@ internal class CaveRenderer(
                 val mesh = meshes.getOrPut(key) { ChunkMesh(11) }
                 mesh.upload(verts); mesh.flushPending()
                 refreshChunkLightSources(chunk)
-                if (chunk.cy in 0..SURFACE_CY_MAX) scheduleLodBuild(chunk.cx, chunk.cz)
+                if (chunk.cy in 0..world.surfaceChunkMax) scheduleLodBuild(chunk.cx, chunk.cz)
             }
         }
         while (System.nanoTime() < uploadDeadline) {
@@ -1688,6 +1688,7 @@ internal class CaveRenderer(
                 else       -> { if (!isCreative) collectBlock(blockType) }
             }
             if (blockType in ROCK_IDS) rockChargeTime = 0f
+            clearUnsupportedAround(bx, by, bz)
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
@@ -1709,6 +1710,26 @@ internal class CaveRenderer(
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
+    }
+
+    private fun clearUnsupportedAround(x: Int, y: Int, z: Int) {
+        val pending = java.util.ArrayDeque<Triple<Int, Int, Int>>()
+        pending.add(Triple(x, y, z))
+        var budget = 256
+        while (pending.isNotEmpty() && budget-- > 0) {
+            val (cx, cy, cz) = pending.removeFirst()
+            for ((nx, ny, nz) in listOf(Triple(cx, cy + 1, cz), Triple(cx - 1, cy, cz),
+                Triple(cx + 1, cy, cz), Triple(cx, cy, cz - 1), Triple(cx, cy, cz + 1))) {
+                val id = world.blockAt(nx, ny, nz)
+                val def = BlockRegistry.get(id) ?: continue
+                if (def.placementRule == "any") continue
+                if (com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(id, nx, ny, nz) { a, b, c -> world.blockAt(a, b, c) }) continue
+                world.setBlock(nx, ny, nz, AIR)
+                forceMeshRebuild(nx, ny, nz)
+                if (!isCreative) collectBlock(id)
+                pending.add(Triple(nx, ny, nz))
+            }
+        }
     }
 
     private fun refreshChunkLightSources(chunk: Chunk) {
@@ -1806,7 +1827,7 @@ internal class CaveRenderer(
             if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(waterVerts); it.flushPending() }
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
-            if (ncy in 0..SURFACE_CY_MAX) {
+            if (ncy in 0..world.surfaceChunkMax) {
                 lodCache?.invalidate(ncx, ncz)
                 scheduleLodBuild(ncx, ncz)
             }
@@ -1860,7 +1881,8 @@ internal class CaveRenderer(
 
     private fun raycastBlock(
         startX: Double, startY: Double, startZ: Double,
-        dirX: Double, dirY: Double, dirZ: Double, reach: Double
+        dirX: Double, dirY: Double, dirZ: Double, reach: Double,
+        includeWater: Boolean = hotbar[selectedSlot] == BUCKET_EMPTY,
     ): RayHit? {
         var bx = floorInt(startX); var by = floorInt(startY); var bz = floorInt(startZ)
 
@@ -1881,7 +1903,7 @@ internal class CaveRenderer(
 
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
-            if (b != AIR && !isWater(b)) {
+            if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
                 val hit = !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
                     startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
                     BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
@@ -1928,6 +1950,8 @@ internal class CaveRenderer(
             if (fb.done) {
                 world.onFallingBlockLanded(fb.wx, fb.wy - 1, fb.wz, fb.type)
                 world.enqueueIfFalling(fb.wx, fb.wy - 1, fb.wz)
+                clearUnsupportedAround(fb.wx, fb.wy, fb.wz)
+                clearUnsupportedAround(fb.wx, fb.wy - 1, fb.wz)
                 forceMeshRebuild(fb.wx, fb.wy - 1, fb.wz)
                 iter.remove()
             }
@@ -2269,6 +2293,13 @@ internal class CaveRenderer(
 
         val t = progress.coerceIn(0f, 1f)
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
+
+        val block = worldBlockAt(target.bx, target.by, target.bz)
+        if (isDecoration(block)) {
+            return BlockRegistry.decorationMask(block)?.highlight(x, y, z,
+                BlockRegistry.getSpriteMargin(block), BlockRegistry.getSpriteHeight(block), cr, cg, cb)
+                ?: floatArrayOf()
+        }
 
         val out = FloatArray(36 * 6)
         var i = 0
@@ -3216,7 +3247,7 @@ internal class CaveRenderer(
 
     private fun placeBlock(target: RayHit? = raycastBlock()) {
         val blockType = hotbar[selectedSlot] ?: return
-        if (BlockRegistry.get(blockType)?.placeable == false) return
+        if (BlockRegistry.get(blockType)?.placeable == false && blockType != BUCKET_EMPTY && blockType != BUCKET_FULL) return
         startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
             hotbar[selectedSlot] = null
@@ -3228,13 +3259,15 @@ internal class CaveRenderer(
         // Seau vide : raycast ignorant l'eau → l'eau est dans la position de face adjacente
         if (blockType == BUCKET_EMPTY) {
             // Le rayon traverse l'eau ; la source est dans la case côté joueur (face normale)
-            val wx = target.bx + target.fnx
-            val wy = target.by + target.fny
-            val wz = target.bz + target.fnz
+            val directSource = world.blockAt(target.bx, target.by, target.bz) == WATER
+            val wx = target.bx + if (directSource) 0 else target.fnx
+            val wy = target.by + if (directSource) 0 else target.fny
+            val wz = target.bz + if (directSource) 0 else target.fnz
             if (world.blockAt(wx, wy, wz) != WATER) return
             world.setBlock(wx, wy, wz, AIR)
             world.onWaterSourceRemoved(wx, wy, wz)
             forceMeshRebuild(wx, wy, wz)
+            clearUnsupportedAround(wx, wy, wz)
             swapBucketInInventory(BUCKET_EMPTY, BUCKET_FULL)
             return
         }
@@ -3249,6 +3282,7 @@ internal class CaveRenderer(
             world.setBlock(px, py, pz, WATER)
             world.onWaterSourcePlaced(px, py, pz)
             forceMeshRebuild(px, py, pz)
+            clearUnsupportedAround(px, py, pz)
             swapBucketInInventory(BUCKET_FULL, BUCKET_EMPTY)
             return
         }
@@ -3257,13 +3291,17 @@ internal class CaveRenderer(
         val py = target.by + target.fny
         val pz = target.bz + target.fnz
         if (isInsidePlayer(px, py, pz)) return
+        val existing = world.blockAt(px, py, pz)
+        if (existing != AIR && BlockRegistry.get(existing)?.replaceable != true) return
+        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         val orientMeta = computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
-        if (orientMeta != 0.toByte()) world.setMeta(px, py, pz, orientMeta)
+        world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
         if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)
         if (isFalling(blockType)) world.enqueueIfFalling(px, py, pz)
+        clearUnsupportedAround(px, py, pz)
         if (!isCreative) {
             inventory[blockType] = (inventory[blockType] ?: 1) - 1
             if ((inventory[blockType] ?: 0) <= 0) {

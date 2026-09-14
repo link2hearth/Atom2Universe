@@ -1,0 +1,18 @@
+{
+  "id": 3111,
+  "name": "plant_fiber",
+  "texture_top": "cozy:resource:11:C5BE8C",
+  "texture_side": "cozy:resource:11:C5BE8C",
+  "texture_bottom": "cozy:resource:11:C5BE8C",
+  "color": "#C5BE8C",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "plant_fiber",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

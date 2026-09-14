@@ -10,5 +10,8 @@
   "drop": "honey_mushrooms",
   "creative_tab": "nature",
   "sprite_margin": 0.05,
-  "sprite_height": 0.6
+  "sprite_height": 0.6,
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": []
 }

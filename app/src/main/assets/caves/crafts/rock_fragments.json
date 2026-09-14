@@ -1,0 +1,10 @@
+{
+  "ingredients": [
+    {
+      "count": 1,
+      "tag": "stone"
+    }
+  ],
+  "result": 2020,
+  "result_count": 4
+}

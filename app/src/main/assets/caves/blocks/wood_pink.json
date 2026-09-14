@@ -8,5 +8,10 @@
   "hardness": 2.0,
   "drop": "wood_pink",
   "creative_tab": "wood",
-  "orient_mode": "axis"
+  "orient_mode": "axis",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "logs"
+  ]
 }

@@ -9,5 +9,8 @@
   "hardness": 3.0,
   "drop": "furnace",
   "creative_tab": "functional",
-  "orient_mode": "facing"
+  "orient_mode": "facing",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

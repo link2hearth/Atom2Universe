@@ -7,5 +7,10 @@
   "color": "#8494A4",
   "hardness": 3.5,
   "drop": "greystone",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
 }

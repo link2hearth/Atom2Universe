@@ -8,5 +8,8 @@
   "hardness": 3.5,
   "drop": "greystone",
   "harvest_category": "fractured_stone",
-  "creative_tab": "terrain"
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
 }

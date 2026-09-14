@@ -1,0 +1,17 @@
+{
+  "ingredients": [
+    {
+      "count": 4,
+      "tag": "sand"
+    },
+    {
+      "count": 1,
+      "tag": "fuel"
+    }
+  ],
+  "result": 8003,
+  "result_count": 4,
+  "tools": [
+    8000
+  ]
+}
