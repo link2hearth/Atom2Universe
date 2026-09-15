@@ -1,111 +1,91 @@
 package com.Atom2Universe.app.games.starswar
 
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.SoundPool
+import android.os.SystemClock
 import android.util.Log
-import org.billthefarmer.mididriver.MidiDriver
 
-internal class StarsWarSoundEngine {
+/** Petits sons PCM originaux, préchargés ; aucune note MIDI ni thread par tir. */
+internal class StarsWarSoundEngine(private val context: Context) {
+    private var pool: SoundPool? = null
+    private val ids = mutableMapOf<String, Int>()
+    private val loaded = mutableSetOf<Int>()
+    private val lastPlayed = mutableMapOf<String, Long>()
+    private val streams = mutableMapOf<Int, Long>()
+    private var shot = 0
+    private var paused = false
 
-    private var driver: MidiDriver? = null
-    private var ready = false
-
-    private var shotCooldown = 0L
-
-    companion object {
-        private const val TAG = "StarsWarSFX"
-        private const val CH0: Byte = 0x90.toByte()
-        private const val CH9: Byte = 0x99.toByte()
-        private const val SHOT_COOLDOWN_MS = 150L
-    }
-
-    fun start() {
-        val d = MidiDriver.getInstance {
-            ready = true
-            programChange(0, 80)   // ch0 utilisé pour game over / nouvelle vague
-            controlChange(0, 7, 100)
-            Log.d(TAG, "EAS prêt")
+    @Synchronized fun start() {
+        if (pool != null) return
+        val sounds = SoundPool.Builder().setMaxStreams(8).setAudioAttributes(
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        ).build()
+        pool = sounds
+        sounds.setOnLoadCompleteListener { source, id, status ->
+            synchronized(this) {
+                if (source === pool && status == 0) loaded.add(id)
+            }
         }
-        driver = d
-        d.start()
-        Log.d(TAG, "start()")
+        for (name in listOf("shot_0", "shot_1", "shot_2", "pop", "hit", "boss", "wave", "meteor", "game_over")) {
+            try {
+                context.assets.openFd("spacefight/audio/$name.wav").use {
+                    ids[name] = sounds.load(it, 1)
+                }
+            } catch (e: Exception) {
+                Log.w("SpaceFightAudio", "Cannot load $name", e)
+            }
+        }
+        lastPlayed.clear()
+        streams.clear()
     }
 
-    fun stop() {
-        Log.d(TAG, "stop()")
-        ready = false
-        driver?.stop()
-        driver = null
+    @Synchronized fun stop() {
+        pool?.release()
+        pool = null
+        ids.clear()
+        loaded.clear()
+        lastPlayed.clear()
+        streams.clear()
     }
 
-    // ── Sons de combat ────────────────────────────────────────────────────────
-
-    fun onPlayerShot() {
-        val now = System.currentTimeMillis()
-        if (now - shotCooldown < SHOT_COOLDOWN_MS) return
-        shotCooldown = now
-        noteOnOff(CH0, 84, 60, 70)   // Do6 — piou court et aigu
+    @Synchronized fun setPaused(value: Boolean) {
+        paused = value
+        // Paused one-shots should not replay when the game resumes.
+        if (value) {
+            streams.keys.forEach { pool?.stop(it) }
+            streams.clear()
+        }
     }
 
-    fun onEnemyDestroyed() {
-        perc(36, 100)                              // Kick
-        noteDelayed(CH9, 49, 80, delayMs = 60)     // Crash décalé
+    @Synchronized fun onPlayerShot() {
+        play("shot_${shot % 3}", .48f, 1, "shot", 115)
+        shot = (shot + 1) % 3
     }
+    fun onEnemyDestroyed() = play("pop", .65f, 2, "pop", 85)
+    fun onBossDestroyed() = play("boss", .85f, 4)
+    fun onPlayerHit() = play("hit", .8f, 5, "hit", 180)
+    fun onGameOver() = play("game_over", .85f, 6)
+    fun onNewWave() = play("wave", .65f, 3)
+    fun onMeteorPhase() = play("meteor", .55f, 3)
 
-    fun onBossDestroyed() {
-        perc(49, 127)                              // Crash fort
-        noteDelayed(CH9, 57, 110, delayMs = 150)   // Crash cymbal décalé
-    }
-
-    fun onPlayerHit() {
-        perc(35, 127)   // Bass drum grave
-    }
-
-    fun onGameOver() {
-        // Séquence descendante 3 notes : Sol4→Mi4→Do4, 300ms chacune
-        noteOnOff(CH0, 67, 90, 280)
-        noteDelayed(CH0, 64, 85, delayMs = 320)
-        noteDelayed(CH0, 60, 80, delayMs = 640)
-    }
-
-    fun onNewWave() {
-        perc(49, 90)
-        noteOnOff(CH0, 72, 80, 200)   // Do5
-    }
-
-    fun onMeteorPhase() {
-        perc(46, 100)
-        noteDelayed(CH9, 46, 95, delayMs = 120)   // Open hi-hat x2 rapide
-    }
-
-    // ── Bas niveau ───────────────────────────────────────────────────────────
-
-    private fun perc(pitch: Int, velocity: Int) {
-        if (!ready) return
-        driver?.queueEvent(byteArrayOf(CH9, pitch.toByte(), velocity.toByte()))
-    }
-
-    private fun noteOnOff(ch: Byte, pitch: Int, velocity: Int, durationMs: Long) {
-        if (!ready) return
-        val chOff = (ch.toInt() and 0x0F or 0x80).toByte()
-        driver?.queueEvent(byteArrayOf(ch, pitch.toByte(), velocity.toByte()))
-        Thread {
-            try { Thread.sleep(durationMs) } catch (_: InterruptedException) {}
-            if (ready) driver?.queueEvent(byteArrayOf(chOff, pitch.toByte(), 0))
-        }.start()
-    }
-
-    private fun noteDelayed(ch: Byte, pitch: Int, velocity: Int, delayMs: Long) {
-        if (!ready) return
-        Thread {
-            try { Thread.sleep(delayMs) } catch (_: InterruptedException) {}
-            if (ready) driver?.queueEvent(byteArrayOf(ch, pitch.toByte(), velocity.toByte()))
-        }.start()
-    }
-
-    private fun programChange(ch: Int, prog: Int) {
-        driver?.queueEvent(byteArrayOf((0xC0 or ch).toByte(), prog.toByte()))
-    }
-
-    private fun controlChange(ch: Int, cc: Int, value: Int) {
-        driver?.queueEvent(byteArrayOf((0xB0 or ch).toByte(), cc.toByte(), value.toByte()))
+    @Synchronized private fun play(
+        name: String, volume: Float, priority: Int, group: String = name, cooldown: Long = 0
+    ) {
+        if (paused) return
+        val sounds = pool ?: return
+        val id = ids[name] ?: return
+        if (id !in loaded) return
+        val now = SystemClock.uptimeMillis()
+        val previous = lastPlayed[group]
+        if (previous != null && now - previous < cooldown) return
+        streams.entries.removeAll { it.value <= now }
+        val stream = sounds.play(id, volume, volume, priority, 0, 1f)
+        if (stream != 0) {
+            lastPlayed[group] = now
+            // Longest asset is 1.54 s; retain IDs briefly to stop every active one-shot.
+            streams[stream] = now + 1600
+        }
     }
 }

@@ -252,7 +252,21 @@ internal class EnemyRenderer {
             if (e.hp <= 0) continue
             if (drawn >= MAX_VISIBLE) break
             drawn++
-            bodyOffset = buildBody(e, camX, camY, camZ, bodyOffset)
+            val weaponVertices = heldWeaponVertices(e)
+            val model = if (e.def.behavior == "passive") AnimalModels.get(e.def.model, e.young, e.coat)
+                else MobModels.get(e.def.model)
+            // Include the detailed weapon and the slime mesh, not just the body boxes.
+            val required = model.parts.size * 216 + (weaponVertices?.size ?: 0) +
+                if (model.squash) SlimeGeometry.vertices.size / 4 * 6 else 0
+            check(required <= boV.size) { "Enemy geometry exceeds render buffer: ${e.def.model}" }
+            if (bodyOffset + required > boV.size) {
+                uploadAndBind(bodyVbo, boV, 0, bodyOffset)
+                bindBodyAttribs()
+                GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, bodyOffset / 6)
+                disableBodyAttribs()
+                bodyOffset = 0
+            }
+            bodyOffset = buildBody(e, camX, camY, camZ, bodyOffset, weaponVertices)
         }
         if (bodyOffset > 0) {
             uploadAndBind(bodyVbo, boV, 0, bodyOffset)
@@ -358,7 +372,24 @@ internal class EnemyRenderer {
     private val heldMesh by lazy { HeldEquipmentMesh() }
     private val heldFrames = HashMap<String, FloatArray>()
 
-    private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double, offset: Int): Int {
+    private fun heldWeaponVertices(e: Enemy): FloatArray? {
+        val weaponType = e.heldWeaponType ?: return null
+        if (e.def.model == "soldier" && e.exhibitPose != ExhibitPose.REFERENCE) {
+            val reloadFrame = (e.weaponReload * 8).toInt().coerceIn(0, 8)
+            val shotFrame = if (reloadFrame == 0 && e.shotRecoil > 0f)
+                ((.16f - e.shotRecoil) / .04f).toInt().coerceIn(0, 3) else -1
+            val key = "$weaponType:$reloadFrame:$shotFrame"
+            return heldFrames.getOrPut(key) {
+                heldMesh.clear()
+                heldMesh.weapon(weaponType, 0f, if (shotFrame < 0) -1f else shotFrame * .04f,
+                    true, 0xD5BB75, reload = reloadFrame / 8f)
+                heldMesh.vertices.copyOf(heldMesh.count)
+            }
+        }
+        return null
+    }
+
+    private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double, offset: Int, weaponVertices: FloatArray?): Int {
         val model = if (e.def.behavior == "passive") AnimalModels.get(e.def.model, e.young, e.coat) else MobModels.get(e.def.model)
         val h = e.baseScale * 2f
         val s = h / MobModels.REF_VOX             // unités monde par voxel
@@ -504,18 +535,8 @@ internal class EnemyRenderer {
 
             n = emitBox(boV, n, pr, pg, pb, flash, part.emissive)
         }
-        val weaponType = e.heldWeaponType
-        if (soldier && !reference && weaponType != null) {
-            val reloadFrame = (e.weaponReload * 8).toInt().coerceIn(0, 8)
-            val shotFrame = if (reloadFrame == 0 && e.shotRecoil > 0f)
-                ((.16f - e.shotRecoil) / .04f).toInt().coerceIn(0, 3) else -1
-            val key = "$weaponType:$reloadFrame:$shotFrame"
-            val verts = heldFrames.getOrPut(key) {
-                heldMesh.clear()
-                heldMesh.weapon(weaponType, 0f, if (shotFrame < 0) -1f else shotFrame * .04f,
-                    true, 0xD5BB75, reload = reloadFrame / 8f)
-                heldMesh.vertices.copyOf(heldMesh.count)
-            }
+        if (weaponVertices != null) {
+            val verts = weaponVertices
             if (n + verts.size <= boV.size) {
                 val recoil = e.shotRecoil.coerceIn(0f, .16f) / .16f
                 for (i in verts.indices step 6) {

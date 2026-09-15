@@ -398,6 +398,8 @@ class StarsWarView @JvmOverloads constructor(
     }
 
     // ── Public controls ───────────────────────────────────────────────────────
+    val isAudioPaused: Boolean get() = phase == Phase.PAUSED
+
     fun pause() {
         if (phase == Phase.RUNNING || phase == Phase.METEOR) {
             phaseBeforePause = phase

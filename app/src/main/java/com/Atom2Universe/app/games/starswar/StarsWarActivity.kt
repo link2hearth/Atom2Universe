@@ -12,8 +12,10 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 class StarsWarActivity : ThemedActivity() {
 
     private lateinit var gameView: StarsWarView
-    private val sfx   by lazy { StarsWarSoundEngine() }
+    private val sfx   by lazy { StarsWarSoundEngine(applicationContext) }
     private val music by lazy { StarsWarProceduralMusic(lifecycleScope) }
+    private var audioResumed = false
+    private var gamePaused = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,11 @@ class StarsWarActivity : ThemedActivity() {
         gameView.onControlsChanged = { mag, nova, active, paused ->
             gameView.post {
                 if (!isDestroyed) {
+                    gamePaused = paused
+                    if (audioResumed) {
+                        music.setPaused(paused)
+                        sfx.setPaused(paused)
+                    }
                     fun status(value: Int): String = when {
                         value == -2 -> getString(R.string.sw_power_locked)
                         value == -1 -> getString(R.string.sw_power_ready)
@@ -57,19 +64,27 @@ class StarsWarActivity : ThemedActivity() {
         gameView.onBossDestroyed  = { sfx.onBossDestroyed() }
         gameView.onPlayerHitCb    = { sfx.onPlayerHit() }
         gameView.onGameOverCb     = { sfx.onGameOver() }
-        gameView.onNewWaveCb      = { n -> sfx.onNewWave(); music.onWaveChanged(n) }
+        gameView.onNewWaveCb      = { n ->
+            sfx.onNewWave()
+            gameView.post { if (!isDestroyed) music.onWaveChanged(n) }
+        }
         gameView.onMeteorPhaseCb  = { sfx.onMeteorPhase() }
     }
 
     override fun onResume() {
         super.onResume()
+        audioResumed = true
+        gamePaused = gameView.isAudioPaused
+        sfx.setPaused(gamePaused)
+        music.setPaused(gamePaused)
         sfx.start()
-        music.start(1)
+        music.start()
         gameView.resume()
     }
 
     override fun onPause() {
         super.onPause()
+        audioResumed = false
         gameView.pause()
         sfx.stop()
         music.stop()
