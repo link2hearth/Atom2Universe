@@ -196,13 +196,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <ImageView
+            <com.Atom2Universe.app.periodic.ProceduralElementCardView
                 android:id="@+id/fusion_card_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginVertical="88dp"
+                android:layout_gravity="center" />
 
             <TextView
                 android:id="@+id/fusion_card_tap_hint"

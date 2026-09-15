@@ -45,6 +45,13 @@
 
   </LinearLayout>
 
+  <Button
+    android:id="@+id/card_studio_button"
+    android:visibility="gone"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/card_studio_open" />
+
   <HorizontalScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -2,7 +2,7 @@ package com.Atom2Universe.app.crypto.fusion
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
-import android.graphics.BitmapFactory
+import com.Atom2Universe.app.periodic.ProceduralElementCardView
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Matrix
@@ -15,7 +15,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
-import android.widget.ImageView
+
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -47,7 +47,7 @@ class FusionActivity : ThemedActivity() {
     private lateinit var bonusApsText: TextView
     private lateinit var nextBonusText: TextView
     private lateinit var cardOverlay: FrameLayout
-    private lateinit var cardImageView: ImageView
+    private lateinit var cardImageView: ProceduralElementCardView
     private lateinit var cardTapHint: TextView
     private lateinit var btnMute: TextView
 
@@ -380,13 +380,7 @@ class FusionActivity : ThemedActivity() {
     }
 
     private fun showCardOverlay(card: ElementCard, onDismiss: () -> Unit) {
-        try {
-            val bmp = BitmapFactory.decodeStream(assets.open(card.file))
-            cardImageView.setImageBitmap(bmp)
-        } catch (_: Exception) {
-            onDismiss()
-            return
-        }
+        cardImageView.element = com.Atom2Universe.app.periodic.getPeriodicElements().first { it.atomicNumber == card.atomicNumber }
         soundEngine.playSpecialCard()
 
         val maxTilt = 18f

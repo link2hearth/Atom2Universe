@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.core.content.edit
 import org.json.JSONObject
 
-data class ElementCard(val atomicNumber: Int, val file: String)
+data class ElementCard(val atomicNumber: Int)
 
 private data class FusionCardPool(val dropRate: Double, val cards: List<ElementCard>)
 
@@ -99,7 +99,7 @@ class ElementCardRepository(context: Context) {
             val cardsArr = obj.getJSONArray("cards")
             val cards = (0 until cardsArr.length()).map { j ->
                 val c = cardsArr.getJSONObject(j)
-                ElementCard(c.getInt("atomicNumber"), c.getString("file"))
+                ElementCard(c.getInt("atomicNumber"))
             }
             result[fusionId] = FusionCardPool(dropRate, cards)
         }

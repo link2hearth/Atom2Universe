@@ -2,13 +2,13 @@ package com.Atom2Universe.app.periodic
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
+
 import android.os.Build
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageButton
-import android.widget.ImageView
+
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -65,7 +65,7 @@ class PeriodicTableActivity : ThemedActivity() {
   private var propMeltVal: TextView? = null
   private var propBoilVal: TextView? = null
   private var propDiscoveredVal: TextView? = null
-  private var panelCardView: ImageView? = null
+  private var panelCardView: ProceduralElementCardView? = null
 
   private val rarityCornerViews = mutableListOf<View>()
   private var rarityVisible = true
@@ -74,6 +74,9 @@ class PeriodicTableActivity : ThemedActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_periodic_table)
     enableImmersiveMode()
+    findViewById<View>(R.id.card_studio_button).setOnClickListener {
+      ElementCardStudioDialog(this).show()
+    }
 
     gridLayout = findViewById(R.id.periodic_grid)
     descriptionProvider = PeriodicElementDescriptionProvider(this)
@@ -174,9 +177,9 @@ class PeriodicTableActivity : ThemedActivity() {
     topRow.addView(nameBlock)
 
     // Miniature carte (entre le nom et le compteur)
-    panelCardView = ImageView(this).apply {
-      scaleType = ImageView.ScaleType.FIT_CENTER
-      adjustViewBounds = true
+    panelCardView = ProceduralElementCardView(this).apply {
+      motionEnabled = false
+
       visibility = View.GONE
       val cardW = dpToPx(42)
       val cardH = dpToPx(58)
@@ -309,18 +312,13 @@ class PeriodicTableActivity : ThemedActivity() {
     if (card != null) {
       panelCardView?.apply {
         visibility = View.VISIBLE
-        try {
-          val bmp = BitmapFactory.decodeStream(assets.open(card.file))
-          setImageBitmap(bmp)
-        } catch (_: Exception) {
-          visibility = View.GONE
-        }
+        this.element = getPeriodicElements().first { it.atomicNumber == card.atomicNumber }
         setOnClickListener { showCardFullscreen(card) }
       }
     } else {
       panelCardView?.apply {
         visibility = View.GONE
-        setImageBitmap(null)
+
         setOnClickListener(null)
       }
     }
@@ -1072,9 +1070,8 @@ class PeriodicTableActivity : ThemedActivity() {
     }
     root.addView(starfield)
 
-    val cardImage = ImageView(this).apply {
-      scaleType = ImageView.ScaleType.FIT_CENTER
-      adjustViewBounds = true
+    val cardImage = ProceduralElementCardView(this).apply {
+
       val maxW = (resources.displayMetrics.widthPixels * 0.80).toInt()
       val maxH = (resources.displayMetrics.heightPixels * 0.75).toInt()
       layoutParams = FrameLayout.LayoutParams(maxW, maxH).apply {
@@ -1088,13 +1085,7 @@ class PeriodicTableActivity : ThemedActivity() {
       cameraDistance = resources.displayMetrics.density * 8000f
     }
 
-    try {
-      val bmp = BitmapFactory.decodeStream(assets.open(card.file))
-      cardImage.setImageBitmap(bmp)
-    } catch (_: Exception) {
-      dialog.dismiss()
-      return
-    }
+    cardImage.element = getPeriodicElements().first { it.atomicNumber == card.atomicNumber }
     root.addView(cardImage)
 
     // ── Tilt 3D au doigt ─────────────────────────────────────────────────
