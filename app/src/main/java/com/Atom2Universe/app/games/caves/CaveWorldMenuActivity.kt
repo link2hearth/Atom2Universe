@@ -258,7 +258,11 @@ class CaveWorldMenuActivity : ThemedActivity() {
         addSpaced(label(getString(if (entry.path.startsWith("builtin:") || entry.path.startsWith("asset:"))
             R.string.cave_menu_bundled_map else R.string.cave_menu_personal_map), 12f, orange, true))
         addSpaced(label(entry.name, 20f, ink, true), 5)
-        addSpaced(button(R.string.cave_menu_launch_assault, true) { launchAssault(entry) }, 10)
+        isFocusable = true
+        val ripple = android.util.TypedValue()
+        theme.resolveAttribute(android.R.attr.selectableItemBackground, ripple, true)
+        foreground = getDrawable(ripple.resourceId)
+        setOnClickListener { launchAssault(entry) }
     }
 
     private fun showCreateDialog() {
@@ -354,19 +358,9 @@ class CaveWorldMenuActivity : ThemedActivity() {
     private fun launchAssault(entry: A2MapStorage.Entry) {
         if (launching) return
         launching = true
-        lifecycleScope.launch {
-            val readable = withContext(Dispatchers.IO) {
-                runCatching { A2MapStorage.load(this@CaveWorldMenuActivity, entry.path) }.isSuccess
-            }
-            if (!readable) {
-                launching = false
-                Toast.makeText(this@CaveWorldMenuActivity, R.string.cave_assault_map_load_failed, Toast.LENGTH_LONG).show()
-            } else {
-                startActivity(Intent(this@CaveWorldMenuActivity, CaveActivity::class.java).apply {
-                    putExtra(CaveActivity.EXTRA_MAP_PATH, entry.path)
-                })
-            }
-        }
+        startActivity(Intent(this, CaveActivity::class.java).apply {
+            putExtra(CaveActivity.EXTRA_MAP_PATH, entry.path)
+        })
     }
 
     // The header scrolls with the list, keeping every action reachable on short screens and at large font sizes.

@@ -8,7 +8,7 @@ import android.view.View
 import com.Atom2Universe.app.R
 
 /** Small pixel hearts above the quickbar; no full-width background covers the world. */
-internal class CaveVitalsView(context: Context) : View(context) {
+internal class CaveVitalsView(context: Context, private val assault: Boolean = false) : View(context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val density = resources.displayMetrics.density
     private var hp = 20; private var maxHp = 20
@@ -21,6 +21,11 @@ internal class CaveVitalsView(context: Context) : View(context) {
         super.onDraw(canvas)
         canvas.save(); canvas.scale(density, density)
         val totalWidth = width / density
+        if (assault) {
+            drawAssaultVitals(canvas, totalWidth)
+            canvas.restore()
+            return
+        }
         val step = 15f; val unit = 1.6f
         paint.setShadowLayer(2f, 0f, 1f, 0xCC18291F.toInt())
         for (i in 0..9) {
@@ -53,5 +58,29 @@ internal class CaveVitalsView(context: Context) : View(context) {
             paint.textAlign = Paint.Align.LEFT
         }
         paint.clearShadowLayer(); canvas.restore()
+    }
+
+    private fun drawAssaultVitals(canvas: Canvas, totalWidth: Float) {
+        val healthLabel = context.getString(R.string.cave_assault_health_value, hp, maxHp)
+        val shieldLabel = context.getString(R.string.cave_assault_shield_value, shield, maxShield)
+        fun bar(top: Float, value: Int, maximum: Int, color: Int, label: String) {
+            paint.style = Paint.Style.FILL
+            paint.color = 0xCC14232E.toInt()
+            canvas.drawRoundRect(0f, top, totalWidth, top + 18f, 4f, 4f, paint)
+            val fill = value.toFloat() / maximum.coerceAtLeast(1)
+            if (fill > 0f) {
+                paint.color = color
+                canvas.drawRoundRect(0f, top, totalWidth * fill.coerceIn(0f, 1f), top + 18f, 4f, 4f, paint)
+            }
+            paint.color = 0xFFF0F7FF.toInt()
+            paint.textSize = 11f
+            paint.textAlign = Paint.Align.CENTER
+            paint.setShadowLayer(2f, 0f, 1f, 0xFF000000.toInt())
+            canvas.drawText(label, totalWidth / 2f, top + 13f, paint)
+            paint.clearShadowLayer()
+            paint.textAlign = Paint.Align.LEFT
+        }
+        bar(1f, hp, maxHp, 0xFF944C46.toInt(), healthLabel)
+        bar(23f, shield, maxShield, 0xFF287CA3.toInt(), shieldLabel)
     }
 }

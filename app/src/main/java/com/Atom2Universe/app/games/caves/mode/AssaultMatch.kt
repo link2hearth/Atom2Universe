@@ -13,10 +13,11 @@ internal class AssaultMatch(
     val targetsPerRound: Int = 8,
     val roundSeconds: Float = 60f,
     val pauseSeconds: Float = 4f,
+    private val chooseWeaponEachRound: Boolean = false,
 ) {
-    enum class Phase { PLAYING, BETWEEN_ROUNDS }
+    enum class Phase { PLAYING, BETWEEN_ROUNDS, CHOOSING_WEAPON }
     enum class RoundEnd { CLEARED, TIME_UP, DIED }
-    enum class Event { NONE, ROUND_STARTED, ROUND_ENDED }
+    enum class Event { NONE, ROUND_STARTED, ROUND_ENDED, WEAPON_CHOICE }
 
     /** Photo de la partie, pour l'affichage. Les secondes sont arrondies au-dessus (1 tant qu'il en reste). */
     data class Status(
@@ -55,6 +56,7 @@ internal class AssaultMatch(
     /** Fait avancer le chrono de [dt] secondes et dit si une manche vient de commencer ou de finir. */
     fun update(dt: Float): Event {
         when (phase) {
+            Phase.CHOOSING_WEAPON -> return Event.NONE
             Phase.PLAYING -> {
                 timeLeft -= dt
                 if (timeLeft <= 0f) {
@@ -66,12 +68,23 @@ internal class AssaultMatch(
             Phase.BETWEEN_ROUNDS -> {
                 pauseLeft -= dt
                 if (pauseLeft <= 0f) {
+                    if (chooseWeaponEachRound) {
+                        phase = Phase.CHOOSING_WEAPON
+                        return Event.WEAPON_CHOICE
+                    }
                     startRound()
                     return Event.ROUND_STARTED
                 }
             }
         }
         return Event.NONE
+    }
+
+    /** Le chrono ne démarre qu'une fois le choix validé ; les doubles clics sont ignorés. */
+    fun confirmWeapon(): Boolean {
+        if (phase != Phase.CHOOSING_WEAPON) return false
+        startRound()
+        return true
     }
 
     /**

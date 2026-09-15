@@ -37,6 +37,8 @@ internal interface GameMode {
 
     /** Les tirs ne consomment pas de munitions de réserve (le chargeur se recharge quand même). */
     val infiniteAmmo: Boolean get() = false
+    val singleWeapon: Boolean get() = false
+    val allowsCombat: Boolean get() = true
 
     /** Heure de jeu figée (en ms de cycle, voir CaveRenderer.gameTimeMs) ; null = le jour et la nuit tournent. */
     val fixedTimeOfDayMs: Long? get() = null

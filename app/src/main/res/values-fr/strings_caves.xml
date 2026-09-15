@@ -268,6 +268,9 @@
     <string name="cave_block_spawn_marker_b">Balise d\'apparition B (Assaut)</string>
     <string name="cave_menu_assault">Assaut</string>
     <string name="cave_assault_pick_map">Choisir une carte</string>
+    <string name="cave_assault_choose_weapon">Manche %1$d · Choisissez votre arme</string>
+    <string name="cave_assault_weapon_rules">Vous et tous les soldats utilisez la même arme. Réserves de munitions illimitées ; les chargeurs doivent toujours être rechargés. La manche commence après votre choix.</string>
+    <string name="cave_assault_magazine">Chargeur %1$d/%2$d · Réserve ∞</string>
     <string name="cave_assault_builtin_arena">Quartier des fonderies (140 × 120)</string>
     <string name="cave_assault_office_tower">Tour du crépuscule (140 × 120 · 5 niveaux + toit)</string>
     <string name="cave_assault_hud">Manche %1$d  ·  %2$d:%3$02d  ·  Ennemis %4$d/%5$d  ·  Têtes %6$d  ·  Score %7$d</string>
@@ -276,6 +279,9 @@
     <string name="cave_assault_round_died">Tu es mort ! %1$d/%2$d ennemis</string>
     <string name="cave_assault_next_round">Manche suivante dans %1$d</string>
     <string name="cave_assault_headshot">Tir à la tête !</string>
+    <string name="cave_assault_health_value">Vie %1$d / %2$d</string>
+    <string name="cave_assault_shield_value">Bouclier %1$d / %2$d</string>
+    <string name="cave_assault_shield_collected">Bouclier +%1$d</string>
     <string name="cave_assault_show_path">Afficher le chemin des soldats</string>
     <string name="cave_assault_no_maps">Aucune carte pour l\'instant.\n\nDans un monde créatif, construisez votre arène et posez les balises d\'apparition A et B. Ouvrez ensuite l\'outil de capture (📐), placez les coins A et B autour de l\'arène, puis appuyez sur 🗺 pour l\'exporter.</string>
     <string name="cave_assault_map_load_failed">Impossible de charger cette carte.</string>

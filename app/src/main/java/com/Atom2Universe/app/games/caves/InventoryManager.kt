@@ -425,6 +425,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // ── Inventaire open/close ─────────────────────────────────────────────────
 
     fun openInventory() {
+        if (renderer.mode.singleWeapon) return
         assigningShortcut = false; selectedSlotIdx = -1; selectedRecipe = null
         activity.releaseGameInputs()
         if (!invSlotsReady) initInvSlots()

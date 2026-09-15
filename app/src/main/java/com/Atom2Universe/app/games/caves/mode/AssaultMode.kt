@@ -13,6 +13,7 @@ import com.Atom2Universe.app.games.caves.ai.SoldierCollision
 import com.Atom2Universe.app.games.caves.ai.RouteQueue
 import com.Atom2Universe.app.games.caves.ai.SoldierCrowd
 import com.Atom2Universe.app.games.caves.ai.TowerDeployment
+import com.Atom2Universe.app.games.caves.ai.LineOfSight
 import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.entity.Enemy
@@ -52,7 +53,13 @@ internal class AssaultMode(
     private val isTower = source.map.name == OfficeTowerMap.ID
     private val soldierCount = if (isTower) 60 else SOLDIERS_PER_ROUND
     val match = AssaultMatch(targetsPerRound = soldierCount,
-        roundSeconds = if (isTower) 20 * 60f else ROUND_SECONDS)
+        roundSeconds = if (isTower) 20 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
+    private var roundWeapon = "gun"
+    val weaponChoices: List<String> = RangedProfile.all.filterValues { it.magazine > 0 }.keys.toList()
+    private val recovery = AssaultRecovery(r.playerNode)
+    private val pickups = ArrayList<ShieldPickup>()
+    val shieldPickups: List<ShieldPickup> get() = pickups
+    @Volatile var onShieldCollected: ((Int) -> Unit)? = null
 
     /** Nouvel état de la partie à afficher. Appelé sur le thread GL, une dizaine de fois par seconde au plus. */
     @Volatile var onStatus: ((AssaultMatch.Status) -> Unit)? = null
@@ -65,6 +72,8 @@ internal class AssaultMode(
 
     override val allowsWorldEdits: Boolean get() = false
     override val infiniteAmmo: Boolean get() = true
+    override val singleWeapon: Boolean get() = true
+    override val allowsCombat: Boolean get() = match.phase == AssaultMatch.Phase.PLAYING
     override val fixedTimeOfDayMs: Long get() =
         if (source.map.name == com.Atom2Universe.app.games.caves.world.OfficeTowerMap.ID)
             com.Atom2Universe.app.games.caves.world.OfficeTowerMap.DUSK_MS else NOON_MS
@@ -123,11 +132,20 @@ internal class AssaultMode(
     private val shotSink = ShotSink { x, y, z, dx, dy, dz ->
         firingBody?.shotRecoil = .16f
         val unit = firingUnit ?: error("Tir sans soldat actif")
-        r.projectiles.add(Projectile(
-            x + source.originX, y + source.originY, z + source.originZ, dx, dy, dz,
-            unit.brain.tuning.bulletSpeed, unit.damage, bulletLook,
-            kind = ProjectileKind.BULLET, maxRange = unit.brain.tuning.bulletRange, fromEnemy = true,
-        ))
+        val profile = RangedProfile.all.getValue(roundWeapon)
+        repeat(profile.pellets) {
+            val spread = profile.spread.toDouble()
+            var sx = dx + rng.nextDouble(-spread, spread)
+            var sy = dy + rng.nextDouble(-spread, spread)
+            var sz = dz + rng.nextDouble(-spread, spread)
+            val length = kotlin.math.sqrt(sx * sx + sy * sy + sz * sz).coerceAtLeast(.0001)
+            sx /= length; sy /= length; sz /= length
+            r.projectiles.add(Projectile(
+                x + source.originX, y + source.originY, z + source.originZ, sx, sy, sz,
+                profile.speed, (unit.damage / profile.pellets).coerceAtLeast(1), bulletLook,
+                kind = profile.kind, maxRange = profile.range, fromEnemy = true,
+            ))
+        }
         r.eventBus.publish(GameEvent.EnemyFired)
     }
 
@@ -137,10 +155,8 @@ internal class AssaultMode(
         r.physics.dynamicCollision = { x, feetY, z, height ->
             crowd.overlaps(x - source.originX, feetY - source.originY, z - source.originZ, height = height)
         }
-        // Pas encore d'équipement de match : on prête toutes les armes à distance.
-        r.giveWeaponTestKit()
-        r.loadoutChangedCallback?.invoke()
-        r.playerNode.setMaxHp(PLAYER_MAX_HP, PLAYER_MAX_HP)
+        // L'arme et les ennemis seront créés après le choix de début de manche.
+        recovery.reset()
 
         val map = source.map
         val grid = NavGrid.build(map.sizeX, map.sizeY, map.sizeZ, solid)
@@ -165,7 +181,8 @@ internal class AssaultMode(
 
     override fun onPlayerShot(damage: Int, dirX: Double, dirZ: Double) {
         if (match.phase != AssaultMatch.Phase.PLAYING || r.playerNode.hp <= 0) return
-        r.playerNode.applyDamage(damage)
+        if (damage <= 0) return
+        recovery.hit(damage)
         r.eventBus.publish(GameEvent.PlayerHit(damage, dirX.toFloat(), dirZ.toFloat()))
     }
 
@@ -186,6 +203,10 @@ internal class AssaultMode(
         for (b in bodies) if (b.hitFlash > 0f) b.hitFlash -= dt
 
         updatePlayerSnapshot(dt)
+        if (match.phase == AssaultMatch.Phase.PLAYING && r.playerNode.isAlive) {
+            recovery.update(dt)
+            collectShieldPickups()
+        }
 
         var forceStatus = false
         if (match.phase == AssaultMatch.Phase.PLAYING && r.playerNode.hp <= 0 &&
@@ -198,6 +219,7 @@ internal class AssaultMode(
         if (collectFallenSoldiers()) forceStatus = true
 
         when (match.update(dt)) {
+            AssaultMatch.Event.WEAPON_CHOICE -> { clearSoldiers(); forceStatus = true }
             AssaultMatch.Event.ROUND_STARTED -> { startRound(); forceStatus = true }
             AssaultMatch.Event.ROUND_ENDED -> { clearSoldiers(); forceStatus = true }
             AssaultMatch.Event.NONE -> kotlin.Unit
@@ -208,6 +230,17 @@ internal class AssaultMode(
             statusTimer = 0f
             onStatus?.invoke(match.status())
         }
+    }
+
+    /** Appelé sur le thread GL depuis le sélecteur en jeu. */
+    fun chooseWeapon(type: String): Boolean {
+        if (match.phase != AssaultMatch.Phase.CHOOSING_WEAPON || type !in weaponChoices) return false
+        if (!r.equipAssaultWeapon(type)) return false
+        roundWeapon = type
+        if (!match.confirmWeapon()) return false
+        startRound()
+        onStatus?.invoke(match.status())
+        return true
     }
 
     override fun debugSegments(out: DoubleArray): Int {
@@ -319,6 +352,8 @@ internal class AssaultMode(
                 crowd.remove(body.id)
                 units.removeAt(i)
                 bodies.remove(body)
+                if (rng.nextFloat() < AssaultRecovery.DROP_CHANCE)
+                    pickups.add(ShieldPickup(body.x, body.y, body.z))
                 changed = true
                 val headshot = lastHitWasHead.remove(body.id) == true
                 if (headshot) onHeadshotKill?.invoke()
@@ -337,7 +372,7 @@ internal class AssaultMode(
     private fun startRound() {
         clearSoldiers()
         respawnPlayer()
-        r.playerNode.setMaxHp(PLAYER_MAX_HP, PLAYER_MAX_HP)
+        recovery.reset()
         spawnSoldiers()
         match.setDeployedTargets(units.size)
     }
@@ -349,9 +384,34 @@ internal class AssaultMode(
         updateCursor = 0
         units.clear()
         bodies.clear()
+        pickups.clear()
         lastHitWasHead.clear()
         // Les balles encore en vol ne doivent pas toucher le joueur pendant la pause.
-        r.projectiles.removeAll { it.fromEnemy }
+        r.projectiles.clear()
+    }
+
+    private fun collectShieldPickups() {
+        if (r.playerNode.shield >= r.playerNode.maxShield) return
+        val feetY = r.camera.playerY - source.originY - 1.62
+        var restored = 0
+        var i = pickups.lastIndex
+        while (i >= 0 && r.playerNode.shield < r.playerNode.maxShield) {
+            val pickup = pickups[i]
+            val x = pickup.x - source.originX
+            val y = pickup.y - source.originY
+            val z = pickup.z - source.originZ
+            // Le test vertical et le segment empêchent la collecte à travers murs et dalles.
+            if (distSq(x, z, player.x, player.z) <= 1.8 * 1.8 &&
+                kotlin.math.abs(y - feetY) <= 1.1 &&
+                LineOfSight.isClear(player.x, player.eyeY, player.z, x, y + .5, z, solid)) {
+                val amount = recovery.recharge(pickup.charge)
+                pickup.charge -= amount
+                restored += amount
+                if (pickup.charge == 0) pickups.removeAt(i)
+            }
+            i--
+        }
+        if (restored > 0) onShieldCollected?.invoke(restored)
     }
 
     /**
@@ -398,7 +458,7 @@ internal class AssaultMode(
 
             if (units.any { SoldierCollision.overlaps(x, grid.nodeY[n].toDouble(), z,
                     it.brain.x, it.brain.y, it.brain.z) }) continue
-            val weaponType = WEAPONS[units.size % WEAPONS.size]
+            val weaponType = roundWeapon
             val profile = RangedProfile.all.getValue(weaponType)
             val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
                 fireInterval = profile.interval, magazineSize = profile.magazine, reloadSeconds = profile.reload)
@@ -417,7 +477,9 @@ internal class AssaultMode(
             body.hp = body.maxHp
             body.heldWeaponType = weaponType
             // Cadences identiques au joueur ; dégâts ajustés pour le solo, surtout la SMG.
-            val damage = when (weaponType) { "smg" -> 3; "lever_rifle" -> 16; else -> 8 }
+            val damage = when (weaponType) {
+                "smg" -> 3; "dual_pistols" -> 5; "shotgun" -> 24; "lever_rifle" -> 16; else -> 8
+            }
             units += Trooper(body, brain, damage).also { it.elapsed = rng.nextFloat() }
             bodies += body
             crowd.move(id, brain.x, brain.y, brain.z)
@@ -476,7 +538,6 @@ internal class AssaultMode(
         const val NOON_MS = 600_000L
 
         const val SOLDIERS_PER_ROUND = 3
-        private val WEAPONS = arrayOf("gun", "smg", "lever_rifle")
         const val ROUND_SECONDS = 180f
         const val PLAYER_MAX_HP = 100
         const val HEADSHOT_MULTIPLIER = 2f

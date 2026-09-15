@@ -292,6 +292,7 @@ internal class CaveRenderer(
         set(v) { when(hotbarMode) { HotbarMode.COMBAT -> combatSelectedSlot = v; HotbarMode.BUILD -> buildSelectedSlot = v; HotbarMode.GARDEN -> gardenSelectedSlot = v } }
 
     fun toggleHotbarMode() {
+        if (mode.singleWeapon) return
         switchHotbarMode(HotbarMode.entries[(hotbarMode.ordinal+1)%HotbarMode.entries.size])
     }
     fun switchHotbarMode(next: HotbarMode) {
@@ -1419,6 +1420,10 @@ internal class CaveRenderer(
             camera.x, camera.y, camera.z,
             camera.yaw, camera.vpMatrix
         )
+        (mode as? com.Atom2Universe.app.games.caves.mode.AssaultMode)?.let { assault ->
+            enemyRenderer.renderShieldPickups(assault.shieldPickups,
+                camera.x, camera.y, camera.z, camera.vpMatrix, elapsed)
+        }
         (mode as? com.Atom2Universe.app.games.caves.mode.ShowcaseMode)?.let { showcase ->
             // Separate display bodies from combat targets; respect the renderer batch capacity.
             showcase.mannequins.filter {
@@ -1694,6 +1699,7 @@ internal class CaveRenderer(
     // de consommation (le lance-pierre accepte les deux variantes de caillou ramassées au sol).
     /** Kit de test, appelé sur le thread GL. Réutilise les armes déjà possédées. */
     fun giveWeaponTestKit() {
+        if (mode.singleWeapon) return
         val registry = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
         val types = RangedProfile.all.keys.toList()
         magazines.clear()
@@ -1713,6 +1719,36 @@ internal class CaveRenderer(
         weaponChargeTime = 0f; rockChargeTime = 0f
         equipmentRelease = -1f; releasedEquipment = null
         // L’activité reconstruit les banques UI avant de publier les changements.
+    }
+
+    private val assaultWeaponIds = HashMap<String, Short>()
+
+    /** Un seul prêt par famille, sans affixes aléatoires qui modifieraient la cadence. Thread GL. */
+    fun equipAssaultWeapon(type: String): Boolean {
+        if (!mode.singleWeapon) return false
+        val def = ItemRegistry.get(type) ?: return false
+        val profile = RangedProfile.all[type] ?: return false
+        if (profile.magazine <= 0) return false
+        val id = assaultWeaponIds.getOrPut(type) {
+            val damage = def.damageBase?.let { (it.min + it.max) / 2 } ?: 1
+            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(
+                com.Atom2Universe.app.games.caves.node.ItemInstance(type,
+                    com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON, damage, emptyMap(), tier = def.tier))
+        }
+        inventory.clear()
+        inventory[id] = 1
+        combatHotbar.fill(null)
+        combatHotbar[0] = id
+        hotbarMode = HotbarMode.COMBAT
+        selectedSlot = 0
+        magazines.clear()
+        magazines[id] = MagazineState(profile.magazine, profile.reload)
+        weaponAttackCooldown = 0f
+        weaponChargeTime = 0f; rockChargeTime = 0f
+        equipmentRelease = -1f; releasedEquipment = null
+        fireWasDown = false
+        hotbarCallback?.invoke(combatHotbar.copyOf(), selectedSlot)
+        return true
     }
 
     private fun ammoCandidatesFor(weaponType: String?): List<Short> = when (weaponType) {
@@ -1803,6 +1839,11 @@ internal class CaveRenderer(
     // bascule plus jamais tout seul sur une autre arme) ; repli main nue si rien d'utilisable
     // n'est sélectionné. Sélection mémorisée séparément par mode (voir [selectedSlot]).
     private fun updateRockThrow(dt: Float) {
+        if (!mode.allowsCombat) {
+            fireWasDown = false
+            rockChargeTime = 0f; weaponChargeTime = 0f
+            return
+        }
         val down=touch.rtChargeRaw>.3f
         val pressed=down && !fireWasDown
         fireWasDown=down
@@ -1815,7 +1856,7 @@ internal class CaveRenderer(
 
         // Viser un caillou au sol le ramasse plutôt que de tirer dans le vide dessus
         // (voir [updateMining]) — on n'engage donc pas le tir dans ce cas.
-        if (isAimingAtRockBlock()) { weaponChargeTime = 0f; rockChargeTime = 0f; return }
+        if (mode.allowsWorldEdits && isAimingAtRockBlock()) { weaponChargeTime = 0f; rockChargeTime = 0f; return }
 
         if (isSelectedRangedWeapon()) {
             val profile=RangedProfile.all[selectedEquipmentType()]
@@ -3081,6 +3122,8 @@ internal class CaveRenderer(
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazines.getOrPut(id) { MagazineState(profile.magazine,profile.reload) } else null
         val status=if(hotbarMode!=HotbarMode.COMBAT || mag==null) ""
             else if(mag.reloadRemaining>0f) context.getString(com.Atom2Universe.app.R.string.cave_weapon_reloading)
+            else if(mode.infiniteAmmo) context.getString(com.Atom2Universe.app.R.string.cave_assault_magazine,
+                mag.remaining, profile?.magazine ?: 0)
             else context.getString(com.Atom2Universe.app.R.string.cave_weapon_magazine,minOf(mag.remaining,reserve),reserve)
         if(status!=lastWeaponStatus) { lastWeaponStatus=status;weaponStatusCallback?.invoke(status) }
     }
@@ -3635,6 +3678,7 @@ internal class CaveRenderer(
     }
 
     fun selectSlot(index: Int) {
+        if (mode.singleWeapon && index != 0) return
         if (index !in 0..18) return
         selectedSlot = index
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)

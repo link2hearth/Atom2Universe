@@ -268,6 +268,9 @@
     <string name="cave_block_spawn_marker_b">Spawn marker B (Assault)</string>
     <string name="cave_menu_assault">Assault</string>
     <string name="cave_assault_pick_map">Choose a map</string>
+    <string name="cave_assault_choose_weapon">Round %1$d · Choose your weapon</string>
+    <string name="cave_assault_weapon_rules">You and every soldier use the selected weapon. Unlimited ammunition reserves; magazines still need reloading. The round starts after your choice.</string>
+    <string name="cave_assault_magazine">Magazine %1$d/%2$d · Reserve ∞</string>
     <string name="cave_assault_builtin_arena">Foundry district (140 × 120)</string>
     <string name="cave_assault_office_tower">Dusk office tower (140 × 120 · 5 floors + rooftop)</string>
     <string name="cave_assault_hud">Round %1$d  ·  %2$d:%3$02d  ·  Enemies %4$d/%5$d  ·  Headshots %6$d  ·  Score %7$d</string>
@@ -276,6 +279,9 @@
     <string name="cave_assault_round_died">You died! %1$d/%2$d enemies</string>
     <string name="cave_assault_next_round">Next round in %1$d</string>
     <string name="cave_assault_headshot">Headshot!</string>
+    <string name="cave_assault_health_value">Health %1$d / %2$d</string>
+    <string name="cave_assault_shield_value">Shield %1$d / %2$d</string>
+    <string name="cave_assault_shield_collected">Shield +%1$d</string>
     <string name="cave_assault_show_path">Show the soldiers\' paths</string>
     <string name="cave_assault_no_maps">No map yet.\n\nIn a creative world, build your arena and place spawn markers A and B. Then open the capture tool (📐), set corners A and B around the arena, and press 🗺 to export it.</string>
     <string name="cave_assault_map_load_failed">This map could not be loaded.</string>

@@ -233,10 +233,10 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     // ── Barre HP / Bouclier ───────────────────────────────────────────────────
 
-    fun buildHealthBar(root: FrameLayout) {
-        vitals = CaveVitalsView(activity).also { view ->
-            view.layoutParams = FrameLayout.LayoutParams(quickbarWidth.coerceAtLeast((420*dp).toInt()), (30*dp).toInt()).also {
-                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL; it.bottomMargin = (73*dp).toInt()
+    fun buildHealthBar(root: FrameLayout, assault: Boolean = false) {
+        vitals = CaveVitalsView(activity, assault).also { view ->
+            view.layoutParams = FrameLayout.LayoutParams(quickbarWidth.coerceAtLeast((420*dp).toInt()), ((if (assault) 44 else 30)*dp).toInt()).also {
+                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL; it.bottomMargin = ((if (assault) 16 else 73)*dp).toInt()
             }
             root.addView(view)
         }
@@ -293,7 +293,7 @@ internal class CaveHud(private val activity: CaveActivity) {
             gravity = Gravity.END
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
                 it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                it.setMargins(0, 0, 0, (108 * dp).toInt())
+                it.setMargins(0, 0, 0, ((if (activity.renderer.mode.singleWeapon) 66 else 108) * dp).toInt())
             }
             setPadding((10 * dp).toInt(), (4 * dp).toInt(), (10 * dp).toInt(), (4 * dp).toInt())
             background = GradientDrawable().apply { setColor(0x7622382D); cornerRadius = 12 * dp }
@@ -320,6 +320,13 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     private fun showWeaponInHand(weapon: com.Atom2Universe.app.games.caves.node.ItemInstance) {
         val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return
+        if (activity.renderer.mode.singleWeapon) {
+            weaponTooltipName?.text = activity.weaponName(def.id)
+            weaponTooltipName?.setTextColor(Color.WHITE)
+            weaponTooltipStats?.visibility = View.GONE
+            weaponTooltipView?.visibility = View.VISIBLE
+            return
+        }
         val rarityColor = rarityColor(weapon.rarity)
 
         // Tooltip
@@ -519,6 +526,8 @@ internal class CaveHud(private val activity: CaveActivity) {
     private var matchLine: android.widget.TextView? = null
     private var matchMessage: android.widget.TextView? = null
     private var headshotView: android.widget.TextView? = null
+    private var shieldPickupView: android.widget.TextView? = null
+    private val hideShieldPickup = Runnable { shieldPickupView?.visibility = View.GONE }
     private val hideHeadshot = Runnable { headshotView?.visibility = View.GONE }
 
     fun buildMatchPanel(root: FrameLayout) {
@@ -552,11 +561,22 @@ internal class CaveHud(private val activity: CaveActivity) {
             visibility = View.GONE
         }
         panel.addView(line); panel.addView(message); panel.addView(headshot)
+        shieldPickupView = android.widget.TextView(activity).apply {
+            textSize = 15f; setTextColor(0xFF6DE3FF.toInt())
+            gravity = Gravity.CENTER
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            visibility = View.GONE
+        }.also { panel.addView(it) }
         root.addView(panel)
         matchLine = line; matchMessage = message; headshotView = headshot
     }
 
     fun updateMatchPanel(s: com.Atom2Universe.app.games.caves.mode.AssaultMatch.Status) {
+        if (s.phase == com.Atom2Universe.app.games.caves.mode.AssaultMatch.Phase.CHOOSING_WEAPON) {
+            matchLine?.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_choose_weapon, s.round + 1)
+            matchMessage?.visibility = View.GONE
+            return
+        }
         val seconds = s.secondsLeft
         matchLine?.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_hud,
             s.round, seconds / 60, seconds % 60, s.targetsDown, s.targetsTotal, s.headshots, s.score)
@@ -585,6 +605,14 @@ internal class CaveHud(private val activity: CaveActivity) {
         view.removeCallbacks(hideHeadshot)
         view.visibility = View.VISIBLE
         view.postDelayed(hideHeadshot, 900)
+    }
+
+    fun flashShieldPickup(amount: Int) {
+        val view = shieldPickupView ?: return
+        view.removeCallbacks(hideShieldPickup)
+        view.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_shield_collected, amount)
+        view.visibility = View.VISIBLE
+        view.postDelayed(hideShieldPickup, 1400)
     }
 
     // ── Export en carte Assaut ────────────────────────────────────────────────

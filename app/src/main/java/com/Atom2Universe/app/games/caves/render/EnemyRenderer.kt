@@ -9,6 +9,7 @@ import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
 import com.Atom2Universe.app.games.caves.entity.ExhibitPose
+import com.Atom2Universe.app.games.caves.mode.ShieldPickup
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -149,6 +150,43 @@ internal class EnemyRenderer {
     }
 
     // ── Rendu ─────────────────────────────────────────────────────────────────
+
+    /** Batteries cyan : un seul lot, buffers existants, aucune nouvelle source de lumière. */
+    fun renderShieldPickups(pickups: List<ShieldPickup>, camX: Double, camY: Double, camZ: Double,
+                            vpMatrix: FloatArray, time: Float) {
+        if (pickups.isEmpty()) return
+        val shader = bodyShader ?: return
+        var offset = 0
+        val c = cos(time * .9f); val s = sin(time * .9f)
+        for (pickup in pickups) {
+            val x = (pickup.x - camX).toFloat()
+            val y = (pickup.y - camY).toFloat() + .42f + .06f * sin(time * 2f)
+            val z = (pickup.z - camZ).toFloat()
+            if (x * x + y * y + z * z > 80f * 80f) continue
+            if (offset + 3 * 36 * 6 > boV.size) break
+            fun box(cy: Float, width: Float, height: Float, depth: Float, r: Float, g: Float, b: Float) {
+                for (i in 0..7) {
+                    val dx = if (i and 1 == 0) -width / 2 else width / 2
+                    val dy = if (i and 2 == 0) -height / 2 else height / 2
+                    val dz = if (i and 4 == 0) -depth / 2 else depth / 2
+                    corners[i * 3] = x + dx * c - dz * s
+                    corners[i * 3 + 1] = y + cy + dy
+                    corners[i * 3 + 2] = z + dx * s + dz * c
+                }
+                offset = emitBox(boV, offset, r, g, b, 0f, true)
+            }
+            box(0f, .36f, .46f, .24f, .05f, .35f, .65f)
+            box(0f, .22f, .28f, .27f, .25f, .9f, 1f)
+            box(.27f, .16f, .08f, .14f, .8f, .95f, 1f)
+        }
+        if (offset == 0) return
+        shader.use()
+        GLES30.glUniformMatrix4fv(bodyUMvp, 1, false, vpMatrix, 0)
+        uploadAndBind(bodyVbo, boV, 0, offset)
+        bindBodyAttribs()
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, offset / 6)
+        disableBodyAttribs()
+    }
 
     fun render(
         enemies: List<Enemy>, camX: Double, camY: Double, camZ: Double,

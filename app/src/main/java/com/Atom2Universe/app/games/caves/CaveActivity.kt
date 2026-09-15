@@ -69,6 +69,8 @@ class CaveActivity : ThemedActivity() {
     internal lateinit var renderer: CaveRenderer
     private  val touch   = TouchController()
     private var vQuickbar: View? = null
+    private var assaultWeaponDialog: AlertDialog? = null
+    private var assaultWeaponPending = false
     private val uiTouchIds = mutableSetOf<Int>()
     internal fun releaseGameInputs() {
         touch.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
@@ -168,26 +170,57 @@ class CaveActivity : ThemedActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BlockRegistry.load(assets)
-        BiomeRegistry.load(assets)
-        CraftRegistry.load(assets)
         enableImmersiveMode()
         forceImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        // Mode Assaut : une carte préparée, sans sauvegarde. Le menu a déjà vérifié qu'elle se lit ;
-        // si elle a disparu entre-temps, on repart au menu plutôt que d'ouvrir un monde vide.
+        val root = FrameLayout(this)
+        val loadingCover = createLoadingCover()
+        root.addView(loadingCover, FrameLayout.LayoutParams(-1, -1))
+        setContentView(root)
         val mapPath = intent.getStringExtra(EXTRA_MAP_PATH)
-        val mapSource = mapPath?.let { path ->
-            runCatching { MapSource(A2MapStorage.load(this, path), isShowcase = path == A2MapStorage.SHOWCASE_PATH) }.getOrNull()
+        lifecycleScope.launch {
+            val mapSource = withContext(Dispatchers.IO) {
+                BlockRegistry.load(assets)
+                BiomeRegistry.load(assets)
+                CraftRegistry.load(assets)
+                mapPath?.let { path ->
+                    runCatching {
+                        MapSource(A2MapStorage.load(this@CaveActivity, path),
+                            isShowcase = path == A2MapStorage.SHOWCASE_PATH)
+                    }.getOrNull()
+                }
+            }
+            if (isFinishing || isDestroyed) return@launch
+            if (mapPath != null && mapSource == null) {
+                android.widget.Toast.makeText(this@CaveActivity, R.string.cave_assault_map_load_failed,
+                    android.widget.Toast.LENGTH_LONG).show()
+                finish()
+                return@launch
+            }
+            initializeGame(mapSource, root, loadingCover)
+            if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                resumeGame()
+            } else {
+                glView.onPause()
+                music.pause()
+                soundEngine?.pause()
+            }
         }
-        if (mapPath != null && mapSource == null) {
-            android.widget.Toast.makeText(this, R.string.cave_assault_map_load_failed, android.widget.Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
-        isAssault = mapSource != null
+    }
 
+    private fun createLoadingCover() = android.widget.TextView(this).apply {
+        setText(R.string.cave_loading_terrain)
+        gravity = Gravity.CENTER
+        setTextColor(Color.WHITE)
+        setBackgroundColor(Color.rgb(12, 15, 20))
+        textSize = 20f
+        isClickable = true
+        isFocusable = true
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initializeGame(mapSource: MapSource?, root: FrameLayout, loadingCover: View) {
+        isAssault = mapSource != null
         worldId = if (isAssault) null else intent.getStringExtra(EXTRA_WORLD_ID)
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
         isCreative = save?.isCreative ?: false
@@ -265,8 +298,6 @@ class CaveActivity : ThemedActivity() {
         renderer.enemyManager.isCreative = isCreative
         if (isCreative) renderer.pendingMode = PlayerMode.SPECTATOR
 
-        val root = FrameLayout(this)
-        setContentView(root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
             view.setPadding(0, 0, 0, 0); WindowInsetsCompat.CONSUMED
         }
@@ -320,6 +351,7 @@ class CaveActivity : ThemedActivity() {
             (it.parent as android.view.ViewGroup).removeView(it)
         } else null
         hud.buildHotbarUI(hotbarLayout, hotbarModeButton)
+        if (renderer.mode.singleWeapon) hotbarLayout.visibility = View.GONE
         vQuickbar = hotbarLayout
         btnBack.background = CaveUiStyle.panel(this, 0x66293F33, 0x6686A38C)
         CaveUiStyle.button(btnMode)
@@ -392,7 +424,7 @@ class CaveActivity : ThemedActivity() {
         renderer.inventoryCallback = { inv -> uiHandler.post { invManager.onInventoryChanged(inv); saveWorldAsync() } }
         renderer.hotbarCallback    = { slots, selected -> uiHandler.post { hud.updateHotbarUI(slots, selected) } }
 
-        hud.buildHealthBar(root)
+        hud.buildHealthBar(root, renderer.mode is AssaultMode)
         hud.buildWeaponInHand(root)
         renderer.weaponStatusCallback = { text -> uiHandler.post { hud.updateWeaponStatus(text) } }
         hud.buildDamageFlash(root)
@@ -527,8 +559,17 @@ class CaveActivity : ThemedActivity() {
                 } }
             }
             (renderer.mode as? AssaultMode)?.let { mode ->
-                mode.onStatus = { status -> uiHandler.post { hud.updateMatchPanel(status) } }
+                mode.onStatus = { status -> uiHandler.post {
+                    hud.updateMatchPanel(status)
+                    if (status.phase == com.Atom2Universe.app.games.caves.mode.AssaultMatch.Phase.CHOOSING_WEAPON) {
+                        showAssaultWeaponChoice(mode, status.round + 1)
+                    } else {
+                        assaultWeaponPending = false
+                        assaultWeaponDialog?.dismiss()
+                    }
+                } }
                 mode.onHeadshotKill = { uiHandler.post { hud.flashHeadshot() } }
+                mode.onShieldCollected = { amount -> uiHandler.post { hud.flashShieldPickup(amount) } }
 
                 // Bouton 🧭 : trace au sol le chemin du mannequin coureur (test de la navigation).
                 val density = resources.displayMetrics.density
@@ -548,17 +589,7 @@ class CaveActivity : ThemedActivity() {
             }
         }
 
-        val loadingCover = android.widget.TextView(this).apply {
-            setText(R.string.cave_loading_terrain)
-            gravity = android.view.Gravity.CENTER
-            setTextColor(android.graphics.Color.WHITE)
-            setBackgroundColor(android.graphics.Color.rgb(12, 15, 20))
-            textSize = 20f
-            isClickable = true
-            isFocusable = true
-        }
-        root.addView(loadingCover, FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+        loadingCover.bringToFront()
         renderer.loadingCallback = { loading ->
             uiHandler.post { loadingCover.visibility = if (loading) View.VISIBLE else View.GONE }
         }
@@ -567,6 +598,120 @@ class CaveActivity : ThemedActivity() {
         soundEngine = CaveSoundEngine(lifecycleScope).also {
             it.start()
             it.subscribe(renderer.eventBus)
+        }
+    }
+
+    private fun showAssaultWeaponChoice(mode: AssaultMode, round: Int) {
+        if (isFinishing || isDestroyed || assaultWeaponDialog != null || assaultWeaponPending) return
+        releaseGameInputs()
+        val density = resources.displayMetrics.density
+        fun dp(value: Int) = (value * density).toInt()
+        fun surface(color: Int, stroke: Int) = android.graphics.drawable.GradientDrawable().apply {
+            setColor(color)
+            cornerRadius = dp(16).toFloat()
+            setStroke(dp(1), stroke)
+        }
+        val panel = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(20), dp(18), dp(20), dp(12))
+            background = surface(0xFF111B27.toInt(), 0xFF35465B.toInt())
+        }
+        panel.addView(android.widget.TextView(this).apply {
+            text = getString(R.string.cave_assault_choose_weapon, round)
+            setTextColor(Color.WHITE)
+            textSize = 22f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+        })
+        panel.addView(android.widget.TextView(this).apply {
+            setText(R.string.cave_assault_weapon_rules)
+            setTextColor(0xFFB8C8DA.toInt())
+            textSize = 13f
+            setPadding(0, dp(6), 0, dp(16))
+        })
+        val widthDp = resources.displayMetrics.widthPixels / density
+        val columns = if (widthDp >= 680) 3 else 2
+        val grid = android.widget.GridLayout(this).apply { columnCount = columns }
+        panel.addView(grid, LinearLayout.LayoutParams(-1, -2))
+        panel.addView(android.widget.TextView(this).apply {
+            setText(R.string.cave_quit_confirm)
+            setTextColor(0xFFB8C8DA.toInt())
+            textSize = 14f
+            gravity = Gravity.CENTER
+            minHeight = dp(48)
+            isFocusable = true
+            setOnClickListener { finish() }
+        }, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
+        val scroll = android.widget.ScrollView(this).apply {
+            isFillViewport = false
+            addView(panel)
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setCancelable(false)
+            .create()
+        dialog.setView(scroll, 0, 0, 0, 0)
+        for ((index, type) in mode.weaponChoices.withIndex()) {
+            val card = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                setPadding(dp(8), dp(10), dp(8), dp(10))
+                background = android.graphics.drawable.StateListDrawable().apply {
+                    addState(intArrayOf(android.R.attr.state_pressed), surface(0xFF304B63.toInt(), 0xFF74CFFF.toInt()))
+                    addState(intArrayOf(android.R.attr.state_focused), surface(0xFF304B63.toInt(), 0xFF74CFFF.toInt()))
+                    addState(intArrayOf(), surface(0xFF1C2B3C.toInt(), 0xFF3B5068.toInt()))
+                }
+                isFocusable = true
+                contentDescription = weaponName(type)
+                addView(android.widget.ImageView(this@CaveActivity).apply {
+                    setImageDrawable(com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(
+                        assets, type, com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON))
+                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                }, LinearLayout.LayoutParams(dp(72), dp(72)))
+                addView(android.widget.TextView(this@CaveActivity).apply {
+                    text = weaponName(type)
+                    setTextColor(Color.WHITE)
+                    textSize = 14f
+                    gravity = Gravity.CENTER
+                    setTypeface(typeface, android.graphics.Typeface.BOLD)
+                    setPadding(0, dp(8), 0, 0)
+                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+                }, LinearLayout.LayoutParams(-1, -2))
+                setOnClickListener {
+                    if (assaultWeaponPending) return@setOnClickListener
+                    assaultWeaponPending = true
+                    releaseGameInputs()
+                    dialog.dismiss()
+                    glView.queueEvent {
+                        val accepted = mode.chooseWeapon(type)
+                        if (!accepted) uiHandler.post {
+                            assaultWeaponPending = false
+                            showAssaultWeaponChoice(mode, round)
+                        }
+                    }
+                }
+            }
+            grid.addView(card, android.widget.GridLayout.LayoutParams(
+                android.widget.GridLayout.spec(index / columns),
+                android.widget.GridLayout.spec(index % columns, 1f)).apply {
+                width = 0
+                height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                setMargins(dp(4), dp(4), dp(4), dp(4))
+            })
+        }
+        assaultWeaponDialog = dialog
+        dialog.setOnDismissListener {
+            if (assaultWeaponDialog === dialog) assaultWeaponDialog = null
+            releaseGameInputs()
+        }
+        dialog.show()
+        dialog.window?.let { w ->
+            w.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+            val maxHeight = resources.displayMetrics.heightPixels - dp(32)
+            val dialogWidth = minOf(dp(760), resources.displayMetrics.widthPixels - dp(32))
+            scroll.measure(View.MeasureSpec.makeMeasureSpec(dialogWidth, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST))
+            w.setLayout(dialogWidth, minOf(scroll.measuredHeight, maxHeight))
+            w.setDimAmount(0.65f)
+            WindowInsetsControllerCompat(w, w.decorView).hide(WindowInsetsCompat.Type.systemBars())
         }
     }
 
@@ -590,6 +735,10 @@ class CaveActivity : ThemedActivity() {
 
     override fun onResume()  {
         super.onResume()
+        if (::glView.isInitialized) resumeGame()
+    }
+
+    private fun resumeGame() {
         glView.onResume()
         touch.crouchToggleEnabled = CaveControlsPrefs.crouchToggle(this)
         touch.runToggleEnabled = CaveControlsPrefs.runToggle(this)
@@ -598,8 +747,10 @@ class CaveActivity : ThemedActivity() {
         forceImmersiveMode()
         vGameArea?.let { applyButtonPositions(it) }
     }
-    override fun onPause()   { super.onPause();   glView.onPause();  music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel() }
+    override fun onPause()   { super.onPause(); if (!::glView.isInitialized) return; glView.onPause();  music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel() }
     override fun onDestroy() {
+        assaultWeaponDialog?.dismiss()
+        assaultWeaponDialog = null
         super.onDestroy()
         // Carte Assaut illisible : l'activité se ferme dans onCreate, avant d'avoir créé le renderer.
         if (!::renderer.isInitialized) return
@@ -703,7 +854,7 @@ class CaveActivity : ThemedActivity() {
         dialogRoot.addView(btnRow)
         val dialog = AlertDialog.Builder(this).setView(dialogRoot).create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialogRoot.addView(Button(this).apply {
+        if (!renderer.mode.singleWeapon) dialogRoot.addView(Button(this).apply {
             setText(R.string.cave_cheat_weapon_kit)
             setTextColor(0xFF9FD5FF.toInt())
             setOnClickListener {
@@ -842,6 +993,7 @@ class CaveActivity : ThemedActivity() {
     // ── Input manette ─────────────────────────────────────────────────────────
 
     override fun onGenericMotionEvent(event: android.view.MotionEvent): Boolean {
+        if (!::glView.isInitialized) return super.onGenericMotionEvent(event)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE)
             return invManager.handleInvGamepadMotion(event)
         if (event.source and InputDevice.SOURCE_JOYSTICK == InputDevice.SOURCE_JOYSTICK)
@@ -850,6 +1002,7 @@ class CaveActivity : ThemedActivity() {
     }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+        if (!::glView.isInitialized) return super.dispatchKeyEvent(event)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) {
             if (event.action == KeyEvent.ACTION_DOWN && invManager.handleInvGamepadKey(event.keyCode)) return true
             if (event.action == KeyEvent.ACTION_UP) return true
@@ -880,6 +1033,7 @@ class CaveActivity : ThemedActivity() {
     // ── Touch multipoint ─────────────────────────────────────────────────────
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (!::glView.isInitialized) return super.dispatchTouchEvent(ev)
         if (ev.actionMasked == MotionEvent.ACTION_DOWN) setHudButtonsVisible(true)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) return super.dispatchTouchEvent(ev)
         val action = ev.actionMasked; val idx = ev.actionIndex; val pid = ev.getPointerId(idx)
