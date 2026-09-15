@@ -99,6 +99,7 @@ class CaveActivity : ThemedActivity() {
     private var vBtnRun: View? = null
     private var crouchingUi = false
     private var walkingUi = true
+    private var vBtnReload: View? = null
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
     private var vGameArea: FrameLayout? = null
 
@@ -335,6 +336,14 @@ class CaveActivity : ThemedActivity() {
         makeCircular(btnPlace, 0x66336600.toInt())
         btnPlace.visibility = View.GONE
         vGameArea = hudView.findViewById(R.id.cave_game_area)
+        if (renderer.mode is AssaultMode) {
+            val reload = Button(this).apply {
+                hud.controlIcon(this, "reload", getString(R.string.cave_controls_reload))
+                setOnClickListener { glView.queueEvent { renderer.reloadAssaultWeapon() } }
+            }
+            vBtnReload = reload
+            vGameArea?.addView(reload, FrameLayout.LayoutParams(60, 60))
+        }
         vGameArea?.let { applyButtonPositions(it) }
         vGameArea?.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (right - left != oldRight - oldLeft || bottom - top != oldBottom - oldTop) {
@@ -908,6 +917,7 @@ class CaveActivity : ThemedActivity() {
             applyBtnLayout(vBtnLaser, CaveControlsPrefs.Btn.LASER, w, h)
             applyBtnLayout(vBtnPlace, CaveControlsPrefs.Btn.PLACE, w, h)
             applyBtnLayout(vBtnRun, CaveControlsPrefs.Btn.RUN, w, h)
+            applyBtnLayout(vBtnReload, CaveControlsPrefs.Btn.RELOAD, w, h)
         }
     }
 
@@ -981,7 +991,7 @@ class CaveActivity : ThemedActivity() {
         if (hudTouchButtonsVisible == visible) return
         hudTouchButtonsVisible = visible
         val a = if (visible) 1f else 0f
-        listOf(vBtnBack, vBtnUp, vBtnDown, vBtnLaser, vBtnPlace, vBtnRun).forEach { v ->
+        listOf(vBtnBack, vBtnUp, vBtnDown, vBtnLaser, vBtnPlace, vBtnRun, vBtnReload).forEach { v ->
             v?.alpha = a; v?.isEnabled = visible
         }
         vHudControls?.alpha = a
@@ -1015,13 +1025,21 @@ class CaveActivity : ThemedActivity() {
                 KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + ACTIVE_SIZE) % ACTIVE_SIZE) }; return true }
                 KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % ACTIVE_SIZE) }; return true }
                 KeyEvent.KEYCODE_BUTTON_X  -> {
-                    val newTps = !renderer.camera.thirdPerson
-                    glView.queueEvent { renderer.camera.thirdPerson = newTps }
-                    vBtnCamera?.alpha = if (newTps) 1.0f else 0.5f
+                    if (event.repeatCount == 0) glView.queueEvent { renderer.reloadAssaultWeapon() }
+                    return true
+                }
+                KeyEvent.KEYCODE_BUTTON_THUMBR -> {
+                    if (event.repeatCount == 0) glView.queueEvent {
+                        val newTps = !renderer.camera.thirdPerson
+                        renderer.camera.thirdPerson = newTps
+                        uiHandler.post { vBtnCamera?.alpha = if (newTps) 1.0f else 0.5f }
+                    }
                     return true
                 }
             }
         }
+        if (event.action == KeyEvent.ACTION_UP &&
+            (event.keyCode == KeyEvent.KEYCODE_BUTTON_X || event.keyCode == KeyEvent.KEYCODE_BUTTON_THUMBR)) return true
         val consumed = when (event.action) {
             KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
             KeyEvent.ACTION_UP   -> gamepad.onKeyUp(event.keyCode)
@@ -1043,7 +1061,7 @@ class CaveActivity : ThemedActivity() {
                 val x = ev.getX(idx); val y = ev.getY(idx)
                 fun hit(v: View?) = v != null && v.visibility == View.VISIBLE && v.isHitOnScreen(x, y)
                 val hitsQuickbar = hit(vQuickbar)
-                val hitsHudOnly = listOf(vHudControls, vBtnBack).any { hit(it) }
+                val hitsHudOnly = listOf(vHudControls, vBtnBack, vBtnReload).any { hit(it) }
                 hitsRun = hit(vBtnRun)
                 if (hitsQuickbar) {
                     uiTouchIds.add(pid)

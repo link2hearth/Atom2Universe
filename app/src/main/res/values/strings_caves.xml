@@ -727,4 +727,5 @@
     </string-array>
     <string name="cave_palette_grayscale">Black and white</string>
     <string name="cave_palette_change">Theme: %1$s. Tap to change.</string>
+    <string name="cave_controls_reload">Reload</string>
 </resources>

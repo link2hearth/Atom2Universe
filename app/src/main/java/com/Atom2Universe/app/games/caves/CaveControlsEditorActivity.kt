@@ -308,10 +308,11 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         CaveControlsPrefs.Btn.LASER -> getString(R.string.cave_controls_shoot)
         CaveControlsPrefs.Btn.PLACE -> getString(R.string.cave_place)
         CaveControlsPrefs.Btn.RUN -> getString(R.string.cave_controls_run)
+        CaveControlsPrefs.Btn.RELOAD -> getString(R.string.cave_controls_reload)
     }
 
     private fun btnColor(cfg: CaveControlsPrefs.Btn) = when (cfg) {
-        CaveControlsPrefs.Btn.UP, CaveControlsPrefs.Btn.DOWN, CaveControlsPrefs.Btn.RUN -> 0x55FFFFFF.toInt()
+        CaveControlsPrefs.Btn.UP, CaveControlsPrefs.Btn.DOWN, CaveControlsPrefs.Btn.RUN, CaveControlsPrefs.Btn.RELOAD -> 0x55FFFFFF.toInt()
         CaveControlsPrefs.Btn.LASER                          -> 0x66003366.toInt()
         CaveControlsPrefs.Btn.PLACE                          -> 0x66336600.toInt()
     }

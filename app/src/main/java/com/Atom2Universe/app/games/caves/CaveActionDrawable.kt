@@ -17,6 +17,11 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
                 val path = Path().apply { moveTo(5f,8f); lineTo(12f,5f); lineTo(20f,8f); lineTo(27f,5f); lineTo(27f,24f); lineTo(20f,27f); lineTo(12f,24f); lineTo(5f,27f); close(); moveTo(12f,5f); lineTo(12f,24f); moveTo(20f,8f); lineTo(20f,27f) }
                 canvas.drawPath(path, paint)
             }
+            "reload" -> {
+                canvas.drawArc(7f, 7f, 25f, 25f, 45f, 285f, false, paint)
+                val arrow = Path().apply { moveTo(20f, 5f); lineTo(25f, 11f); lineTo(18f, 12f) }
+                canvas.drawPath(arrow, paint)
+            }
             "camera" -> {
                 canvas.drawRoundRect(5f,10f,27f,26f,4f,4f,paint); canvas.drawCircle(16f,18f,5f,paint)
                 canvas.drawLine(10f,10f,12f,6f,paint); canvas.drawLine(12f,6f,20f,6f,paint); canvas.drawLine(20f,6f,22f,10f,paint)

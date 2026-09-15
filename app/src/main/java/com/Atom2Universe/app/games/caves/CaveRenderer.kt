@@ -3114,6 +3114,16 @@ internal class CaveRenderer(
     private var equipmentRelease = -1f
     private var releasedEquipment: String? = null
 
+    /** Called on the GL thread, like firing and magazine updates. */
+    fun reloadAssaultWeapon() {
+        if (mode !is com.Atom2Universe.app.games.caves.mode.AssaultMode || !mode.allowsCombat) return
+        val profile = RangedProfile.all[selectedEquipmentType()] ?: return
+        val id = hotbar[selectedSlot] ?: return
+        if (profile.magazine <= 0) return
+        magazines.getOrPut(id) { MagazineState(profile.magazine, profile.reload) }.reload()
+        publishWeaponStatus()
+    }
+
     private fun publishWeaponStatus() {
         val type=selectedEquipmentType()
         val profile=RangedProfile.all[type]

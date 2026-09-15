@@ -14,6 +14,8 @@ import kotlin.math.abs
  *   A               → sauter / monter (spectateur)
  *   B               → s'accroupir / descendre (spectateur)
  *   L3              → courir (maintien ou bascule selon les réglages Course)
+ *   R3              → changer de caméra (géré par CaveActivity)
+ *   X               → recharger en Assaut (géré par CaveActivity)
  *   RT (gâchette D) → laser / miner
  *   LT (gâchette G) → poser un bloc
  *   R1 / L1         → naviguer hotbar droite / gauche

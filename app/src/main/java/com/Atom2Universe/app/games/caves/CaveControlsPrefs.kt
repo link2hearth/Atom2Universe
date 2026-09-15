@@ -16,7 +16,8 @@ internal object CaveControlsPrefs {
         DOWN ("down",  0.925f, 0.62f, 64),
         LASER("laser", 0.915f, 0.78f, 84),
         PLACE("place", 0.835f, 0.88f, 72),
-        RUN  ("run",   0.07f,  0.86f, 72)
+        RUN  ("run",   0.07f,  0.86f, 72),
+        RELOAD("reload", 0.925f, 0.22f, 60)
     }
 
     fun xf(ctx: Context, btn: Btn) = rawF(ctx, "${btn.key}_x", btn.defaultXf).coerceIn(0f, 1f)
