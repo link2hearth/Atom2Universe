@@ -225,6 +225,8 @@ class HubTilesAdapter(
         // Taille et ombre d'origine, lues une fois : les vues sont recyclees, un titre agrandi ou
         // assombri pour une tuile ne doit ni s'additionner, ni deteindre sur la tuile suivante.
         private val titleBaseSize = title.textSize
+        private val titleBaseLayout = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
+            title.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams)
         private val titleBaseShadow = floatArrayOf(title.shadowRadius, title.shadowDx, title.shadowDy)
         private val titleBaseShadowColor = title.shadowColor
         private val badgeBaseSize = badge1?.textSize ?: 0f
@@ -270,10 +272,23 @@ class HubTilesAdapter(
 
             val textStyle = if (customArtwork != null)
                 tile.activityClass?.let { HubTileArtworks.textStyleFor(it.name) } else null
-            title.setText(tile.titleRes)
+            val label = context.getString(tile.titleRes)
+            title.text = if (customArtwork != null)
+                HubTileArtworks.titleCase(label, context.resources.configuration.locales[0]) else label
             title.setTextColor(textStyle?.color ?: textColor)
             title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, titleBaseSize * (textStyle?.scale ?: 1f))
-            if (textStyle != null) {
+            title.layoutParams = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(titleBaseLayout).apply {
+                if (isGridMode && textStyle?.lowerTitle == true) {
+                    topToBottom = -1
+                    bottomToTop = -1
+                    topToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    topMargin = 0
+                    bottomMargin = (8f * context.resources.displayMetrics.density).toInt()
+                    verticalBias = .82f
+                }
+            }
+            if (textStyle?.color == Color.BLACK) {
                 // Sous un texte sombre, l'ombre noire d'origine salit les lettres : un halo clair le detache.
                 title.setShadowLayer(4f, 0f, 1f, 0x99FFFFFF.toInt())
             } else {
@@ -340,6 +355,15 @@ class HubTilesAdapter(
                         if (badgeArtwork != null) applyBadgeArtwork(badge, badgeArtwork,
                             HubTileArtworks.textStyleFor(item.activityClassName))
                         else applyBadgeColor(badge, item.colorHex)
+                        if (badgeArtwork != null) {
+                            // Les anciens raccourcis ont mémorisé le nom avant le renommage.
+                            val badgeLabel = if (item.activityClassName ==
+                                com.Atom2Universe.app.games.othello.OthelloActivity::class.java.name &&
+                                item.label.equals("Othello", ignoreCase = true))
+                                context.getString(R.string.othello_title) else item.label
+                            badge.text = HubTileArtworks.titleCase(
+                                badgeLabel, context.resources.configuration.locales[0])
+                        }
                     } else {
                         badge.visibility = View.GONE
                         badge.setOnClickListener(null)
@@ -367,7 +391,7 @@ class HubTilesAdapter(
             badge.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, badgeBaseSize * (style?.scale ?: 1f))
             // Le titre est pose directement sur le dessin : une ombre le garde lisible, claire sous
             // un texte sombre, sombre sous un texte clair.
-            if (style != null) badge.setShadowLayer(4f, 0f, 1f, 0x99FFFFFF.toInt())
+            if (style?.color == Color.BLACK) badge.setShadowLayer(4f, 0f, 1f, 0x99FFFFFF.toInt())
             else badge.setShadowLayer(3f, 0f, 1f, 0xCC000000.toInt())
         }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="othello_title">Othello</string>
+    <string name="othello_title">Reversi</string>
     <string name="othello_hub_desc">Classic reversi strategy game</string>
     <string name="othello_score">Black: %1$d · White: %2$d</string>
     <string name="othello_status_your_turn">Your turn (White)</string>

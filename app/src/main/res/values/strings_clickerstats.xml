@@ -17,7 +17,7 @@
     <string name="stat_nuclea_wave">NUCLÉA – Best wave</string>
     <string name="stat_trebuchet_distance">Trebuchet – Distance</string>
     <string name="stat_trebuchet_sites">Trebuchet – Sites destroyed</string>
-    <string name="stat_othello_won">Othello</string>
+    <string name="stat_othello_won">Reversi</string>
     <string name="stat_roguelike_floor">Dungeon – Deepest floor</string>
     <string name="stat_escape_solved">Escape the Labyrinth – Solved</string>
     <string name="stat_escape_perfect">Escape the Labyrinth – Perfect</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_title">Roulette</string>
     <string name="roulette_description">Slot machine – line up suits and colors to win neutrinos</string>
     <string name="roulette_spin">SPIN</string>
     <string name="roulette_balance">⚛ %1$d</string>

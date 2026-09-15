@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="roulette_title">🎰 Roulette</string>
+    <string name="roulette_title">Roulette</string>
     <string name="roulette_description">Machine à sous – alignez enseignes et couleurs pour gagner des neutrinos</string>
     <string name="roulette_spin">LANCER</string>
     <string name="roulette_balance">⚛ %1$d</string>
