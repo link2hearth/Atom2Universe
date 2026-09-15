@@ -30,6 +30,8 @@ google-services.json
 # APK / AAB outputs
 *.apk
 *.aab
+# Generated release outputs (metadata and packaged baseline profiles)
+/app/release/
 
 # Images de cache / album art (kept local only, not app resources)
 app/src/main/assets/images/
