@@ -188,6 +188,8 @@ class CaveActivity : ThemedActivity() {
                     runCatching {
                         MapSource(A2MapStorage.load(this@CaveActivity, path),
                             isShowcase = path == A2MapStorage.SHOWCASE_PATH)
+                    }.onFailure { error ->
+                        android.util.Log.e("CaveMap", "Unable to load map: $path", error)
                     }.getOrNull()
                 }
             }
@@ -508,6 +510,7 @@ class CaveActivity : ThemedActivity() {
                 val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
                 val caveNames = resources.getStringArray(R.array.cave_showcase_underground_names)
                 mode.onCaveCaption = { index -> uiHandler.post { caption.text = caveNames[index] } }
+                mode.onDecorCaption = { uiHandler.post { caption.setText(R.string.cave_showcase_decor) } }
                 val gardenStages = resources.getStringArray(R.array.cave_showcase_garden_stages)
                 mode.onGardenCaption = { crop, stage -> uiHandler.post {
                     caption.text = getString(R.string.cave_showcase_garden_caption,

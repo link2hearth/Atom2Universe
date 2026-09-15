@@ -21,6 +21,7 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
     @Volatile var onVillageCaption: ((Int) -> Unit)? = null
     @Volatile var onGardenCaption: ((Int, Int) -> Unit)? = null
     @Volatile var onCaveCaption: ((Int) -> Unit)? = null
+    @Volatile var onDecorCaption: (() -> Unit)? = null
     val mannequins = mutableListOf<Enemy>()
     private val exhibits = ShowcaseMap.galleryBlocks()
     private var captionTimer = 0f
@@ -86,6 +87,10 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
         captionTimer = 0f
         val x = floor(r.camera.playerX - source.originX).toInt()
         val z = floor(r.camera.playerZ - source.originZ).toInt()
+        if (ShowcaseMap.decorContains(x, z)) {
+            onDecorCaption?.invoke()
+            return
+        }
         com.Atom2Universe.app.games.caves.world.CaveShowcase.biomeAt(x, z)?.let {
             onCaveCaption?.invoke(it)
             return

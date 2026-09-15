@@ -12,6 +12,41 @@ Style visé : « Counter-Strike en blocs » (esprit *Block Strike* / *Pixel Gun 
 
 ---
 
+## Décors 3D de l’Expo (premier lot)
+
+L’Expo démarre désormais dans la cour de mobilier, derrière le jardin de cultures
+(point local 113, 5, 119). Le passage central rejoint le jardin puis les autres galeries.
+Le lot comprend un bureau avec écran, clavier, souris et tour de PC, une chaise,
+un canapé, un fauteuil, une table basse, une étagère et une voiture familiale.
+
+Un deuxième lot ajoute 24 objets : cuisine (réfrigérateur, four, évier, plan de travail,
+grille-pain, bouilloire, table et deux chaises), salon (télévision, lampadaire, livres,
+plante), atelier (établi, servante, boîte à outils, pneus, caisse, deux cônes) et extérieur
+(banc, jardinière, boîte aux lettres, haie). Les petits accessoires reposent sur leurs
+meubles, et les allées existantes restent dégagées. Ces modèles viennent directement
+du catalogue Toybox, sans copie de leur géométrie.
+
+La chambre ouverte près de l’allée centrale (x 100–110, z 118–131) ajoute un lit double,
+deux chevets, une lampe de chevet, des livres, une armoire et une commode sur un parquet.
+Le lit et les chevets sont définis dans `DecorBedroom.kt`, avec les primitives communes.
+`DecorGarden.kt` remplace les anciens modèles partagés de jardinière et de haie : bac à
+lattes, terre en retrait, tiges courbes, pétales et feuilles pliées, silhouette de buisson
+irrégulière. Les feuilles, tiges et pétales fins sont visuels ; les volumes principaux restent solides.
+
+- `world/CaveDecor.kt` décrit les objets à taille libre et réutilise les modèles Kotlin
+  de Toybox Racers. Le bureau simple est construit avec les mêmes primitives.
+- `render/CaveDecorRenderer.kt` regroupe le lot en un mesh statique et applique
+  l’origine flottante, l’éclairage ambiant, le brouillard souterrain et le mode gris de Cave World.
+  Les lampes locales et les ombres portées des objets ne sont pas encore prises en charge.
+- Les collisions sont des boîtes par pièce solide, indexées par cellule ; elles restent
+  approximatives pour les parties arrondies. Les tirs testent aussi leur segment de déplacement
+  pour ne pas traverser un plateau fin. La navigation des soldats réserve les cellules occupées,
+  tandis que leur visibilité teste les boîtes des pièces.
+- Le format `.a2map` v2 ajoute les identifiants, positions, échelles et rotations des objets
+  après les suites de blocs. La lecture des cartes v1 reste prise en charge.
+- Les objets sont fixes : pas encore de placement depuis l’inventaire, de destruction ou de recette.
+  Ils ne sont pas générés dans le monde infini. L’Expo reste une visite paisible.
+
 ## Pourquoi le voxel simplifie l'IA
 
 Dans un FPS classique, il faut une bibliothèque comme Recast pour savoir où les bots peuvent marcher.

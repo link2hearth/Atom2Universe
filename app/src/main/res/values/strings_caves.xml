@@ -728,4 +728,21 @@
     <string name="cave_palette_grayscale">Black and white</string>
     <string name="cave_palette_change">Theme: %1$s. Tap to change.</string>
     <string name="cave_controls_reload">Reload</string>
+    <string name="cave_showcase_decor">3D decor — Bedroom, kitchen, lounge, office, workshop and garden. Walk around them and try their collisions.</string>
+    <string name="cave_assault_maple_crossing">Maple Crossing — suburban crossroads</string>
+    <string name="cave_block_street_asphalt">Asphalt</string>
+    <string name="cave_block_street_concrete">Concrete</string>
+    <string name="cave_block_street_sidewalk">Sidewalk paving</string>
+    <string name="cave_block_street_curb">Low concrete curb</string>
+    <string name="cave_block_street_manhole">Manhole cover</string>
+    <string name="cave_block_street_drain">Storm drain</string>
+    <string name="cave_block_street_lane_ns">Double yellow line — north/south</string>
+    <string name="cave_block_street_lane_ew">Double yellow line — east/west</string>
+    <string name="cave_block_street_cross_ns">Crosswalk — north/south</string>
+    <string name="cave_block_street_cross_ew">Crosswalk — east/west</string>
+    <string name="cave_block_street_stop_ns">Stop line — north/south</string>
+    <string name="cave_block_street_stop_ew">Stop line — east/west</string>
+    <string name="cave_block_street_shingles">Roof shingles</string>
+    <string name="cave_block_street_tile">Ceramic floor tiles</string>
+    <string name="cave_block_street_light">Warm ceiling light</string>
 </resources>

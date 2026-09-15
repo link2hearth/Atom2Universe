@@ -126,9 +126,14 @@ internal class ColoredMesh private constructor(
     }
 
     fun draw(shader: ToyboxShader, viewProjection: FloatArray, model: FloatArray) {
+        draw(viewProjection, model, shader.mvpLocation, shader.modelLocation)
+    }
+
+    /** Allows another game to reuse the geometry with its own lighting shader. */
+    fun draw(viewProjection: FloatArray, model: FloatArray, mvpLocation: Int, modelLocation: Int) {
         Matrix.multiplyMM(mvp, 0, viewProjection, 0, model, 0)
-        GLES30.glUniformMatrix4fv(shader.mvpLocation, 1, false, mvp, 0)
-        GLES30.glUniformMatrix4fv(shader.modelLocation, 1, false, model, 0)
+        GLES30.glUniformMatrix4fv(mvpLocation, 1, false, mvp, 0)
+        GLES30.glUniformMatrix4fv(modelLocation, 1, false, model, 0)
         GLES30.glBindVertexArray(vao)
         try {
             for (layer in layers) {

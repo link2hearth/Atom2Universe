@@ -62,6 +62,7 @@ internal object BlockRegistry {
         if (defs.isNotEmpty()) return
         FarmSoil.registerTextures()
         UndergroundTextures.register()
+        StreetMaterials.register()
         val files = assets.list("caves/blocks") ?: return
         for (file in files) {
             if (!file.endsWith(".json")) continue

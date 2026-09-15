@@ -99,6 +99,8 @@ internal class CaveRenderer(
     internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
                                source = worldSource)
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
+    private val decorSource = worldSource as? MapSource
+    private val decorRenderer = decorSource?.let { com.Atom2Universe.app.games.caves.render.CaveDecorRenderer(it) }
     private val uploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
@@ -248,6 +250,7 @@ internal class CaveRenderer(
     @Volatile var pendingMode: PlayerMode? = null
     var isCreative = false
     internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply {
+        decorCollision = { x, feet, z, height -> decorSource?.decorCollides(x, feet, z, height, .30) == true }
         metaAt = { x, y, z -> world.metaAt(x, y, z) }
         waterContainsPoint = { x, y, z -> MeshBuilder.isPointInWater(world, x, y, z) }
         sampleWaterCurrent = { x, y, z, out -> WaterCurrent.sample(world, x, y, z, out) }
@@ -756,6 +759,7 @@ internal class CaveRenderer(
         LootTableRegistry.load(context.assets)
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets)
+        decorRenderer?.onSurfaceCreated()
         projRenderer.onSurfaceCreated(context.assets)
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
@@ -1409,6 +1413,8 @@ internal class CaveRenderer(
             }
         }
 
+        decorRenderer?.draw(camera, if (headUnderwater) ambientFor(dayT) * .4f else ambientFor(dayT), caveBlend, caveFogEnd)
+
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) mode.update(dt)
         if (worldSource == null) {
@@ -1592,6 +1598,7 @@ internal class CaveRenderer(
         StairConnections.maskAt(x, y, z, ::worldBlockAt, world::metaAt)
 
     private fun projectileSolid(x: Double, y: Double, z: Double): Boolean {
+        if (decorSource?.decorHitsSegment(x, y, z, x, y, z) == true) return true
         val bx = floor(x).toInt(); val by = floor(y).toInt(); val bz = floor(z).toInt()
         val block = worldBlockAt(bx, by, bz)
         if (block == AIR || BlockRegistry.isDecoration(block) || BlockRegistry.isWater(block)) return false
@@ -1643,7 +1650,8 @@ internal class CaveRenderer(
                 for(i in 0 until steps) {
                 val ox=p.x; val oy=p.y; val oz=p.z
                 p.advance(step)
-                if(p.kind != ProjectileKind.LEGACY && projectileSolid(p.x,p.y,p.z)) {
+                if(p.kind != ProjectileKind.LEGACY && (projectileSolid(p.x,p.y,p.z) ||
+                    decorSource?.decorHitsSegment(ox,oy,oz,p.x,p.y,p.z) == true)) {
                     spawnImpact(p.x,p.y,p.z)
                     if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
                         p.x=ox;p.y=oy;p.z=oz;p.stuck=true;recovered=true
@@ -3919,6 +3927,7 @@ internal class CaveRenderer(
         waterShader?.destroy()
         lodShader?.destroy()
         enemyRenderer.destroy()
+        decorRenderer?.destroy()
         projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)

@@ -51,9 +51,10 @@ internal class AssaultMode(
 ) : GameMode {
 
     private val isTower = source.map.name == OfficeTowerMap.ID
-    private val soldierCount = if (isTower) 60 else SOLDIERS_PER_ROUND
+    private val isSuburb = source.map.name == com.Atom2Universe.app.games.caves.world.MapleCrossingMap.ID
+    private val soldierCount = if (isTower) 60 else if (isSuburb) 8 else SOLDIERS_PER_ROUND
     val match = AssaultMatch(targetsPerRound = soldierCount,
-        roundSeconds = if (isTower) 20 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
+        roundSeconds = if (isTower) 20 * 60f else if (isSuburb) 10 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
     private var roundWeapon = "gun"
     val weaponChoices: List<String> = RangedProfile.all.filterValues { it.magazine > 0 }.keys.toList()
     private val recovery = AssaultRecovery(r.playerNode)
@@ -99,11 +100,13 @@ internal class AssaultMode(
 
     // ── Navigation (construite dans onSurfaceCreated, une fois les blocs connus) ──
     private val solid = object : SolidGrid {
-        override fun isSolid(x: Int, y: Int, z: Int) = blocksMovement(source.map.blockAt(x, y, z))
+        override fun isSolid(x: Int, y: Int, z: Int) =
+            blocksMovement(source.map.blockAt(x, y, z)) || source.decor.occupied(x, y, z)
 
         override fun blocksSight(x: Int, y: Int, z: Int, x0: Double, y0: Double, z0: Double,
                                  dx: Double, dy: Double, dz: Double): Boolean {
-            if (!isSolid(x, y, z)) return false
+            if (source.decor.blocksSight(x, y, z, x0, y0, z0, dx, dy, dz)) return true
+            if (!blocksMovement(source.map.blockAt(x, y, z))) return false
             val def = com.Atom2Universe.app.games.caves.node.BlockRegistry.get(source.map.blockAt(x, y, z))
                 ?: return true
             if (!def.stairs && !def.slab && def.blockHeight >= 1f) return true
@@ -118,6 +121,7 @@ internal class AssaultMode(
     private var pathFinder: PathFinder? = null
     private var routes: RouteQueue? = null
     private var towerDeployment: TowerDeployment? = null
+    private var suburbDeployment: com.Atom2Universe.app.games.caves.ai.SuburbDeployment? = null
 
     // ── Le joueur vu par les soldats (coordonnées de la carte) ──
     private val player = PlayerSnapshot()
@@ -164,6 +168,7 @@ internal class AssaultMode(
         pathFinder = PathFinder(grid)
         routes = RouteQueue(grid)
         if (isTower) towerDeployment = TowerDeployment(grid, map.spawnsA.first())
+        if (isSuburb) suburbDeployment = com.Atom2Universe.app.games.caves.ai.SuburbDeployment(grid,map.spawnsA.first())
     }
 
     override fun onPlayerPlaced(x: Double, y: Double, z: Double) = kotlin.Unit
@@ -426,7 +431,7 @@ internal class AssaultMode(
         val enemySpawn = source.spawnPoint(1)
         val px = playerSpawn[0].toDouble() - source.originX; val pz = playerSpawn[2].toDouble() - source.originZ
         val ex = enemySpawn[0].toDouble() - source.originX; val ez = enemySpawn[2].toDouble() - source.originZ
-        val towerNodes = towerDeployment?.choose(soldierCount, rng)
+        val towerNodes = towerDeployment?.choose(soldierCount, rng) ?: suburbDeployment?.choose(soldierCount,rng)
 
         // Sur la carte intégrée, déployer au sol dans la cour est, jamais sur les toits.
         val deployment = if (source.map.name == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_ID &&

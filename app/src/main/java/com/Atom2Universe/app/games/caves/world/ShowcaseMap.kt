@@ -15,6 +15,60 @@ internal object ShowcaseMap {
     const val TREE_Z = 50
     const val COLD_Z = 158
     const val GALLERY_Z = 212
+    fun decorContains(x: Int, z: Int) = x in 76..151 && z in 116..145
+
+    private fun furniture() = listOf(
+        CaveDecor("cave.desk", 92f, 5f, 124f, .1f),
+        CaveDecor("office.computer", 91.7f, 6.1f, 124f, .065f),
+        CaveDecor("office.pc_tower", 92.7f, 6.1f, 124f, .065f),
+        CaveDecor("living.dining_chair", 91.5f, 5f, 126f, .105f, 2),
+        CaveDecor("living.sofa", 92f, 5f, 135f, .14f),
+        CaveDecor("living.armchair", 95f, 5f, 137f, .14f, 3),
+        CaveDecor("living.coffee_table", 92f, 5f, 137f, .1f),
+        CaveDecor("garage.storage_rack", 133f, 5f, 138f, .12f),
+        CaveDecor("outdoor.family_car", 133f, 5f, 125f, .22f),
+
+        // Kitchen: small appliances sit exactly on the counter (9.6 model units high).
+        CaveDecor("kitchen.fridge", 80f, 5f, 119f, .11f),
+        CaveDecor("kitchen.oven", 81.5f, 5f, 119f, .11f),
+        CaveDecor("kitchen.sink", 83f, 5f, 119f, .11f),
+        CaveDecor("kitchen.counter", 84.6f, 5f, 119f, .11f),
+        CaveDecor("kitchen.toaster", 84.3f, 6.056f, 119f, .075f),
+        CaveDecor("kitchen.kettle", 85f, 6.056f, 119f, .075f),
+        CaveDecor("living.dining_table", 82.5f, 5f, 123f, .1f),
+        CaveDecor("living.dining_chair", 82.5f, 5f, 121.7f, .105f),
+        CaveDecor("living.dining_chair", 82.5f, 5f, 124.3f, .105f, 2),
+
+        // Complete the existing lounge: screen faces the sofa; books rest on the coffee table.
+        CaveDecor("living.tv_cabinet", 92f, 5f, 140f, .12f, 2),
+        CaveDecor("living.floor_lamp", 89.8f, 5f, 135f, .12f),
+        CaveDecor("living.books", 91.8f, 5.4795f, 137f, .065f),
+        CaveDecor("living.plant", 95f, 5f, 140f, .13f),
+
+        // Workshop and roadside props, leaving room to circle the original car.
+        CaveDecor("garage.workbench", 138f, 5f, 138f, .11f),
+        CaveDecor("garage.tool_chest", 140.5f, 5f, 138f, .11f),
+        CaveDecor("garage.toolbox", 137.5f, 6.1f, 138.1f, .075f),
+        CaveDecor("garage.tires", 138f, 5f, 133f, .13f),
+        CaveDecor("garage.crate", 140f, 5.013f, 133f, .13f),
+        CaveDecor("garage.cone", 131.5f, 5f, 129f, .13f),
+        CaveDecor("garage.cone", 134.5f, 5f, 129f, .13f),
+
+        // A small outdoor rest area near the central promenade.
+        CaveDecor("outdoor.bench", 105f, 5f, 139f, .13f, 2),
+        CaveDecor("outdoor.planter", 102.8f, 5f, 139f, .13f),
+        CaveDecor("outdoor.mailbox", 108f, 5f, 139f, .11f, 2),
+        CaveDecor("outdoor.hedge", 105f, 5f, 141f, .13f),
+
+        // Open bedroom beside the central aisle. Bedside tops are 5.7 model units high.
+        CaveDecor("bedroom.double_bed", 104f, 5f, 124f, .12f),
+        CaveDecor("bedroom.nightstand", 102.4f, 5f, 122.9f, .12f),
+        CaveDecor("bedroom.nightstand", 105.6f, 5f, 122.9f, .12f),
+        CaveDecor("bedroom.table_lamp", 102.4f, 5.684f, 122.9f, .1f),
+        CaveDecor("living.books", 105.6f, 5.684f, 122.9f, .06f),
+        CaveDecor("bedroom.wardrobe", 108f, 5f, 120f, .12f, 3),
+        CaveDecor("office.dresser", 108f, 5f, 128f, .12f, 3)
+    )
     fun gardenContains(x: Int, z: Int) = x in 76..151 && z in 56..113
     fun gardenSample(x: Int, z: Int): Pair<Int, Int>? {
         if (!gardenContains(x, z)) return null
@@ -83,7 +137,7 @@ internal object ShowcaseMap {
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
             // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !CaveShowcase.contains(x, z)) continue
+            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !decorContains(x, z) && !CaveShowcase.contains(x, z)) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
@@ -120,6 +174,23 @@ internal object ShowcaseMap {
         fill(76, FLOOR + 1, 113, 151, FLOOR + 1, 113, COBBLESTONE)
         fill(111, FLOOR, 52, 116, FLOOR, 112, COBBLESTONE)
         fill(98, FLOOR, 52, 116, FLOOR, 54, COBBLESTONE)
+        // Furniture court behind the crop garden; connect through its central gate.
+        fill(111, FLOOR + 1, 113, 116, FLOOR + 1, 113, AIR)
+        fill(111, FLOOR, 113, 116, FLOOR, 144, COBBLESTONE)
+        for (x in 76..151) put(x, FLOOR + 1, 145, COBBLESTONE)
+        for (z in 116..145) {
+            put(76, FLOOR + 1, z, COBBLESTONE)
+            put(151, FLOOR + 1, z, COBBLESTONE)
+        }
+        for (z in intArrayOf(124, 136)) {
+            fill(84, FLOOR, z - 4, 101, FLOOR, z + 4, 2202)
+            fill(125, FLOOR, z - 4, 141, FLOOR, z + 4, 2202)
+            fill(102, FLOOR, z, 124, FLOOR, z + 1, COBBLESTONE)
+        }
+        // Two walls and a wooden floor frame the bedroom, open towards the promenade.
+        fill(100, FLOOR, 118, 110, FLOOR, 131, PLANK)
+        fill(100, FLOOR + 1, 118, 100, FLOOR + 3, 131, WOOD_PLANK_WHITE)
+        fill(100, FLOOR + 1, 118, 110, FLOOR + 3, 118, WOOD_PLANK_WHITE)
         for ((index, style) in VillageArchitecture.Style.entries.withIndex()) {
             VillageArchitecture.generate(style, 260914 + index, listOf(3, 5, 6)[index]) { x, y, z, id ->
                 put(76 + index * 52 + x, FLOOR + y, 4 + z, id)
@@ -236,6 +307,6 @@ internal object ShowcaseMap {
             fill(centerX - 8, FLOOR, centerZ - 2, centerX + 8, FLOOR, centerZ + 2, SANDSTONE)
         }
         return A2Map("biome_showcase", WIDTH, HEIGHT, depth, blocks, meta,
-            listOf(MapPoint(35, 5, 2)), emptyList())
+            listOf(MapPoint(113, 5, 119)), emptyList(), furniture())
     }
 }

@@ -6,6 +6,8 @@ import kotlin.math.*
 class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     /** Obstacle mobile optionnel : centre X/Z, pieds, hauteur totale du joueur. */
     var dynamicCollision: ((Double, Double, Double, Double) -> Boolean)? = null
+    /** Static map props, kept separate from the moving soldiers' collision callback. */
+    var decorCollision: ((Double, Double, Double, Double) -> Boolean)? = null
 
     var metaAt: (Int, Int, Int) -> Byte = { _, _, _ -> 0 }
     var sampleWaterCurrent: (Double, Double, Double, DoubleArray) -> Unit = { _, _, _, out -> out.fill(0.0) }
@@ -293,6 +295,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     fun collidesAt(px: Double, py: Double, pz: Double): Boolean = collidesAt(px, py, pz, heightAbove)
 
     private fun collidesAt(px: Double, py: Double, pz: Double, top: Double): Boolean {
+        if (decorCollision?.invoke(px, py - PLAYER_H_BELOW, pz, PLAYER_H_BELOW + top) == true) return true
         if (dynamicCollision?.invoke(px, py - PLAYER_H_BELOW, pz, PLAYER_H_BELOW + top) == true) return true
         val x0 = floor(px - PLAYER_W).toInt();  val x1 = floor(px + PLAYER_WI).toInt()
         val y0 = floor(py - PLAYER_H_BELOW).toInt(); val y1 = floor(py + top).toInt()

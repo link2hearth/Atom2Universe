@@ -1,0 +1,15 @@
+{
+  "id": 2703,
+  "name": "street_curb",
+  "texture_top": "street:curb",
+  "texture_side": "street:curb",
+  "texture_bottom": "street:curb",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_curb",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "block_height": 0.5
+}

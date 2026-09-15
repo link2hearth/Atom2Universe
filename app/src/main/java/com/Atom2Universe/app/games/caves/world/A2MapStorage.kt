@@ -42,7 +42,9 @@ internal object A2MapStorage {
         val showcase = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_showcase), SHOWCASE_PATH)
         val tower = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_office_tower),
             "$BUILTIN_PREFIX${OfficeTowerMap.ID}")
-        return listOf(showcase, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
+        val suburb = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_maple_crossing),
+            "$BUILTIN_PREFIX${MapleCrossingMap.ID}")
+        return listOf(showcase, suburb, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
     }
 
     fun load(context: Context, path: String): A2Map =
@@ -54,6 +56,9 @@ internal object A2MapStorage {
             BuiltinMaps.arena()
         } else if (path == "$BUILTIN_PREFIX${OfficeTowerMap.ID}") {
             OfficeTowerMap.create()
+        } else if (path == "$BUILTIN_PREFIX${MapleCrossingMap.ID}") {
+            com.Atom2Universe.app.games.caves.node.BlockRegistry.load(context.assets)
+            MapleCrossingMap.create()
         } else if (path.startsWith(ASSET_PREFIX)) {
             context.assets.open(path.removePrefix(ASSET_PREFIX)).buffered().use { A2Map.read(it) }
         } else {

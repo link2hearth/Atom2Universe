@@ -13,6 +13,14 @@ internal class MapSource(
     val originZ: Int = 0,
     val isShowcase: Boolean = false,
 ) : WorldSource {
+    val decor = CaveDecorScene(map.decor)
+
+    fun decorCollides(x: Double, feet: Double, z: Double, height: Double, radius: Double) =
+        decor.collides(x - originX, feet - originY, z - originZ, height, radius)
+
+    fun decorHitsSegment(x: Double, y: Double, z: Double, endX: Double, endY: Double, endZ: Double) =
+        decor.hitsSegment(x-originX, y-originY, z-originZ, endX-originX, endY-originY, endZ-originZ)
+
     override fun vegetationClimateAt(wx: Int, wz: Int): Int? =
         if (isShowcase) ShowcaseMap.climateAt(wx - originX, wz - originZ) else null
 

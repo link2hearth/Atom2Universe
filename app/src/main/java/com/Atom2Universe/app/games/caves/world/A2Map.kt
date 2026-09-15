@@ -27,6 +27,7 @@ internal class A2Map(
     val meta: ByteArray,
     val spawnsA: List<MapPoint>,
     val spawnsB: List<MapPoint>,
+    val decor: List<CaveDecor> = emptyList(),
 ) {
     val volume: Int
 
@@ -35,6 +36,8 @@ internal class A2Map(
         require(sizeX.toLong() * sizeY * sizeZ <= MAX_VOLUME) { "Carte trop grande" }
         volume = sizeX * sizeY * sizeZ
         require(blocks.size == volume && meta.size == volume) { "Tableaux de taille incohérente" }
+        require(decor.size <= MAX_DECOR)
+        require(decor.all { it.x >= 0 && it.x < sizeX && it.y >= 0 && it.y < sizeY && it.z >= 0 && it.z < sizeZ })
     }
 
     fun contains(x: Int, y: Int, z: Int): Boolean =
@@ -69,6 +72,12 @@ internal class A2Map(
             writeVarInt(data, run)
             i += run
         }
+        data.writeInt(decor.size)
+        for (obj in decor) {
+            data.writeUTF(obj.modelId)
+            data.writeFloat(obj.x); data.writeFloat(obj.y); data.writeFloat(obj.z)
+            data.writeFloat(obj.scale); data.writeByte(obj.quarterTurns)
+        }
         data.flush()
         gzip.finish()
     }
@@ -80,14 +89,15 @@ internal class A2Map(
         const val MAX_VOLUME = 4_000_000
 
         private const val MAGIC = 0x41324D50   // "A2MP"
-        private const val VERSION = 1
+        private const val VERSION = 2
+        internal const val MAX_DECOR = 512
         private const val MAX_SPAWNS = 64
 
         fun read(input: InputStream): A2Map {
             val data = DataInputStream(GZIPInputStream(input))
             if (data.readInt() != MAGIC) throw IOException("Pas une carte Atom2Universe")
             val version = data.readInt()
-            if (version != VERSION) throw IOException("Version de carte inconnue : $version")
+            if (version !in 1..VERSION) throw IOException("Version de carte inconnue : $version")
             val name = data.readUTF()
             val sx = data.readInt(); val sy = data.readInt(); val sz = data.readInt()
             if (sx <= 0 || sy <= 0 || sz <= 0 || sx.toLong() * sy * sz > MAX_VOLUME)
@@ -108,7 +118,19 @@ internal class A2Map(
                 meta.fill(m, i, i + run)
                 i += run
             }
-            return A2Map(name, sx, sy, sz, blocks, meta, spawnsA, spawnsB)
+            val decor = if (version >= 2) {
+                val count = data.readInt()
+                if (count !in 0..MAX_DECOR) throw IOException("Nombre de décors invalide")
+                List(count) {
+                    try {
+                        CaveDecor(data.readUTF(), data.readFloat(), data.readFloat(), data.readFloat(),
+                            data.readFloat(), data.readUnsignedByte()).also {
+                            require(it.x >= 0 && it.x < sx && it.y >= 0 && it.y < sy && it.z >= 0 && it.z < sz)
+                        }
+                    } catch (e: IllegalArgumentException) { throw IOException("Décor de carte invalide", e) }
+                }
+            } else emptyList()
+            return A2Map(name, sx, sy, sz, blocks, meta, spawnsA, spawnsB, decor)
         }
 
         /**

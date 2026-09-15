@@ -728,4 +728,21 @@
     <string name="cave_palette_grayscale">Noir et blanc</string>
     <string name="cave_palette_change">Thème : %1$s. Toucher pour changer.</string>
     <string name="cave_controls_reload">Recharger</string>
+    <string name="cave_showcase_decor">Décors 3D — Chambre, cuisine, salon, bureau, atelier et jardin. Faites le tour pour tester les collisions.</string>
+    <string name="cave_assault_maple_crossing">Maple Crossing — lotissement américain</string>
+    <string name="cave_block_street_asphalt">Asphalte</string>
+    <string name="cave_block_street_concrete">Béton</string>
+    <string name="cave_block_street_sidewalk">Dalles de trottoir</string>
+    <string name="cave_block_street_curb">Bordure basse en béton</string>
+    <string name="cave_block_street_manhole">Plaque d’égout</string>
+    <string name="cave_block_street_drain">Grille d’évacuation</string>
+    <string name="cave_block_street_lane_ns">Double ligne jaune — nord/sud</string>
+    <string name="cave_block_street_lane_ew">Double ligne jaune — est/ouest</string>
+    <string name="cave_block_street_cross_ns">Passage piéton — nord/sud</string>
+    <string name="cave_block_street_cross_ew">Passage piéton — est/ouest</string>
+    <string name="cave_block_street_stop_ns">Ligne d’arrêt — nord/sud</string>
+    <string name="cave_block_street_stop_ew">Ligne d’arrêt — est/ouest</string>
+    <string name="cave_block_street_shingles">Bardeaux de toiture</string>
+    <string name="cave_block_street_tile">Carrelage céramique</string>
+    <string name="cave_block_street_light">Plafonnier chaud</string>
 </resources>

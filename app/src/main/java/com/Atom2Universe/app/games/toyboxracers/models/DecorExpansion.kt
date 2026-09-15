@@ -229,8 +229,7 @@ internal object DecorExpansion {
             for (x in floatArrayOf(-3f, 2f)) oval(x, 12f, 5.3f, 1.2f, 1.2f, 1.2f, ROSE, false)
         },
         model("outdoor.hedge", DecorRoom.OUTDOOR) {
-            box(0f, 0.4f, 0f, 15f, 0.8f, 5.5f, WOOD)
-            for (x in floatArrayOf(-5f, 0f, 5f)) oval(x, 3.8f, 0f, 7f, 7f, 6f, if (x == 0f) MINT else LEAF)
+            DecorGarden.hedge(this)
         },
         model("outdoor.bench", DecorRoom.OUTDOOR) {
             legs(11f, 4f, 4.5f, 0.8f, METAL)
@@ -270,16 +269,7 @@ internal object DecorExpansion {
             for (z in floatArrayOf(-9.6f, 9.6f)) box(0f, 2.7f, z, 9.5f, 0.6f, 0.6f, WOOD)
         },
         model("outdoor.planter", DecorRoom.OUTDOOR) {
-            box(0f, 1.6f, 0f, 10f, 3.2f, 4f, WOOD)
-            box(0f, 3.3f, 0f, 10.5f, 0.3f, 4.5f, CREAM)
-            box(0f, 3.5f, 0f, 9.5f, 0.12f, 3.5f, WOOD, false)
-            for (i in 0..3) {
-                val x = -3.6f + i * 2.4f
-                cylinder(x, 4.5f, 0f, 0.1f, 2.4f, LEAF)
-                oval(x + 0.45f, 4.4f, 0f, 1.3f, 0.55f, 0.7f, LEAF, false)
-                oval(x, 5.8f, 0f, 1.8f, 1.8f, 1.8f, if (i % 2 == 0) ROSE else LILAC)
-                oval(x, 5.8f, 0.8f, 0.6f, 0.6f, 0.3f, GOLD, false)
-            }
+            DecorGarden.planter(this)
         }
     ) }
 

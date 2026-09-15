@@ -1,0 +1,15 @@
+{
+  "id": 2714,
+  "name": "street_light",
+  "texture_top": "street:light",
+  "texture_side": "street:light",
+  "texture_bottom": "street:light",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_light",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "light_emission": 14
+}
