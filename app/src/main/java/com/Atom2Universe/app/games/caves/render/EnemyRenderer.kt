@@ -50,6 +50,8 @@ internal class EnemyRenderer {
 
     // 8 coins (x,y,z) du cube en cours d'émission
     private val corners = FloatArray(8 * 3)
+    private val visible = ArrayList<Enemy>(100)
+    private val planes = FloatArray(24)
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -149,6 +151,44 @@ internal class EnemyRenderer {
     // ── Rendu ─────────────────────────────────────────────────────────────────
 
     fun render(
+        enemies: List<Enemy>, camX: Double, camY: Double, camZ: Double,
+        cameraYaw: Float, vpMatrix: FloatArray,
+    ) {
+        // Ne pas rendre les premiers 32 ennemis arbitrairement : une garnison entière
+        // doit rester visible. Éliminer hors-champ, puis réutiliser les buffers par lots.
+        for (axis in 0..2) for (side in 0..1) {
+            val p = (axis * 2 + side) * 4
+            val sign = if (side == 0) 1f else -1f
+            for (c in 0..3) planes[p + c] = vpMatrix[c * 4 + 3] + sign * vpMatrix[c * 4 + axis]
+            val length = sqrt(planes[p] * planes[p] + planes[p + 1] * planes[p + 1] + planes[p + 2] * planes[p + 2])
+            if (length > 0f) for (c in 0..3) planes[p + c] /= length
+        }
+        visible.clear()
+        for (e in enemies) {
+            if (e.hp <= 0) continue
+            val height = MobModels.bodyHeightWorld(e.def.model, e.baseScale)
+            val radius = maxOf(2f, height * 1.5f)
+            val x = (e.x - camX).toFloat()
+            val y = (e.y - camY).toFloat() + height * .5f
+            val z = (e.z - camZ).toFloat()
+            var outside = false
+            for (p in 0 until 24 step 4) {
+                if (planes[p] * x + planes[p + 1] * y + planes[p + 2] * z + planes[p + 3] < -radius) {
+                    outside = true
+                    break
+                }
+            }
+            if (!outside) visible.add(e)
+        }
+        var start = 0
+        while (start < visible.size) {
+            val end = minOf(start + MAX_VISIBLE, visible.size)
+            renderBatch(visible.subList(start, end), camX, camY, camZ, cameraYaw, vpMatrix)
+            start = end
+        }
+    }
+
+    private fun renderBatch(
         enemies: List<Enemy>,
         camX: Double, camY: Double, camZ: Double,
         cameraYaw: Float,

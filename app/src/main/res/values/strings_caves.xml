@@ -269,6 +269,7 @@
     <string name="cave_menu_assault">Assault</string>
     <string name="cave_assault_pick_map">Choose a map</string>
     <string name="cave_assault_builtin_arena">Foundry district (140 × 120)</string>
+    <string name="cave_assault_office_tower">Dusk office tower (140 × 120 · 5 floors + rooftop)</string>
     <string name="cave_assault_hud">Round %1$d  ·  %2$d:%3$02d  ·  Enemies %4$d/%5$d  ·  Headshots %6$d  ·  Score %7$d</string>
     <string name="cave_assault_round_cleared">Round cleared! Time bonus +%1$d</string>
     <string name="cave_assault_round_time_up">Time\'s up! %1$d/%2$d enemies</string>

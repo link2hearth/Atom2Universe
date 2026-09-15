@@ -224,7 +224,10 @@ internal class CaveRenderer(
     private val lightColors = FloatArray(MAX_LIGHTS * 4)
     private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
     private val chunkLightData = FloatArray(MAX_LIGHTS * 4)
-    private val chunkLightColors = FloatArray(MAX_LIGHTS * 4)
+    // Sélection spatiale stable par chunk : les torches d'une salle éloignée éclairent
+    // cette salle même si les 32 sources proches du joueur sont dans un autre étage.
+    private class LocalLights(val data: FloatArray, val colors: FloatArray)
+    private val localLights = HashMap<Long, LocalLights>()
     // Sélection des MAX_LIGHTS sources les plus proches sans allouer de liste : un
     // filter{}.sortedBy{}.take{} sur TOUTES les sources du monde chargé (potentiellement
     // des centaines de torches) tournait 20x/s, indépendamment du combat — un vrai foyer
@@ -1185,6 +1188,7 @@ internal class CaveRenderer(
                     val entry = iterator.next()
                     if (entry.key !in loadedKeys) {
                         for (position in entry.value.positions) lightSources.remove(position)
+                        localLights.clear()
                         iterator.remove()
                         lightsDirty = true
                     }
@@ -1369,7 +1373,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
-            uploadChunkLights(offX, offY, offZ, wULights, wULightColors, wULightCount)
+            uploadChunkLights(key, offX, offY, offZ, wULights, wULightColors, wULightCount)
             mesh.draw(wAPos, wAUv, wASky, wATint)
         }
         // Keep the complete selection available to non-chunk world draws.
@@ -1481,7 +1485,7 @@ internal class CaveRenderer(
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wWUChunkOffset, offX, offY, offZ)
-            uploadChunkLights(offX, offY, offZ, wWULights, wWULightColors, wWULightCount)
+            uploadChunkLights(key, offX, offY, offZ, wWULights, wWULightColors, wWULightCount)
             mesh.draw(wWAPos, wWAUv, wWASky)
         }
         GLES30.glDepthMask(true)
@@ -1523,23 +1527,58 @@ internal class CaveRenderer(
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
     }
 
-    /** Exact sphere/AABB rejection: distant cave lights cost no fragments on this chunk. */
-    private fun uploadChunkLights(x: Float, y: Float, z: Float, lights: Int, colors: Int, countUniform: Int) {
-        var count = 0
-        for (i in 0 until cachedLightCount) {
+    /** Les sources sont choisies par volume éclairé, puis mises en cache hors du shader. */
+    private fun selectChunkLights(key: Long): LocalLights {
+        val wx = world.keyToCx(key).toDouble() * CHUNK_SIZE
+        val wy = world.keyToCy(key).toDouble() * CHUNK_SIZE
+        val wz = world.keyToCz(key).toDouble() * CHUNK_SIZE
+        val candidates = lightSources.entries.mapNotNull { entry ->
+            val p = entry.key
+            val dx = maxOf(wx - p.first - .5, 0.0, p.first + .5 - wx - CHUNK_SIZE)
+            val dy = maxOf(wy - p.second - .5, 0.0, p.second + .5 - wy - CHUNK_SIZE)
+            val dz = maxOf(wz - p.third - .5, 0.0, p.third + .5 - wz - CHUNK_SIZE)
+            val radius = 16.0 * entry.value + 1.0 // marge pour la flamme murale
+            if (dx * dx + dy * dy + dz * dz >= radius * radius) null else entry
+        }.sortedBy { entry ->
+            val dx = entry.key.first + .5 - wx - CHUNK_SIZE * .5
+            val dy = entry.key.second + .5 - wy - CHUNK_SIZE * .5
+            val dz = entry.key.third + .5 - wz - CHUNK_SIZE * .5
+            (dx * dx + dy * dy + dz * dz) / (entry.value * entry.value).coerceAtLeast(.01f)
+        }.take(MAX_LIGHTS)
+        val data = FloatArray(candidates.size * 4)
+        val colors = FloatArray(data.size)
+        candidates.forEachIndexed { i, entry ->
+            val p = entry.key
+            val block = world.blockAt(p.first, p.second, p.third)
+            val natural = block != TORCH && block != LAVA
+            val color = if (natural) BlockRegistry.get(block)?.color ?: -1 else 0xFFFFAD4D.toInt()
+            val flame = if (block == TORCH) TorchModel.flame(world.metaAt(p.first, p.second, p.third)) else null
+            data[i * 4] = (p.first - wx + (flame?.x ?: .5f)).toFloat()
+            data[i * 4 + 1] = (p.second - wy + (flame?.y ?: .5f)).toFloat()
+            data[i * 4 + 2] = (p.third - wz + (flame?.z ?: .5f)).toFloat()
+            data[i * 4 + 3] = entry.value
+            colors[i * 4] = ((color ushr 16) and 255) / 255f
+            colors[i * 4 + 1] = ((color ushr 8) and 255) / 255f
+            colors[i * 4 + 2] = (color and 255) / 255f
+            colors[i * 4 + 3] = 1f
+        }
+        return LocalLights(data, colors)
+    }
+
+    private fun uploadChunkLights(key: Long, x: Float, y: Float, z: Float,
+                                  lights: Int, colors: Int, countUniform: Int) {
+        val selected = localLights.getOrPut(key) { selectChunkLights(key) }
+        val count = selected.data.size / 4
+        for (i in 0 until count) {
             val src = i * 4
-            val dx = maxOf(x - lightData[src], 0f, lightData[src] - x - CHUNK_SIZE)
-            val dy = maxOf(y - lightData[src + 1], 0f, lightData[src + 1] - y - CHUNK_SIZE)
-            val dz = maxOf(z - lightData[src + 2], 0f, lightData[src + 2] - z - CHUNK_SIZE)
-            val radius = 16f * lightData[src + 3]
-            if (dx * dx + dy * dy + dz * dz >= radius * radius) continue
-            lightData.copyInto(chunkLightData, count * 4, src, src + 4)
-            lightColors.copyInto(chunkLightColors, count * 4, src, src + 4)
-            count++
+            chunkLightData[src] = selected.data[src] + x
+            chunkLightData[src + 1] = selected.data[src + 1] + y
+            chunkLightData[src + 2] = selected.data[src + 2] + z
+            chunkLightData[src + 3] = selected.data[src + 3]
         }
         if (count > 0) {
             GLES30.glUniform4fv(lights, count, chunkLightData, 0)
-            GLES30.glUniform4fv(colors, count, chunkLightColors, 0)
+            GLES30.glUniform4fv(colors, count, selected.colors, 0)
         }
         GLES30.glUniform1i(countUniform, count)
     }
@@ -2082,6 +2121,7 @@ internal class CaveRenderer(
             }
         }
         chunkLightStates[key] = ChunkLightState(chunk, chunk.version, positions)
+        if (positions.isNotEmpty() || previous?.positions?.isNotEmpty() == true) localLights.clear()
     }
 
     // Offsets voisins par bit de face du masque renvoyé par LightEngine.computeSky.

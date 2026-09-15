@@ -38,6 +38,14 @@ internal class AssaultMatch(
     var targetsDown = 0; private set
     var headshots = 0; private set
     var score = 0; private set
+    private var deployedTargets = targetsPerRound
+
+    /** Le HUD et la victoire suivent le nombre réellement placé, même sur une carte importée exiguë. */
+    fun setDeployedTargets(count: Int) {
+        require(count >= 0 && targetsDown == 0 && phase == Phase.PLAYING)
+        deployedTargets = count
+        if (count == 0) endRound(RoundEnd.CLEARED)
+    }
 
     private var timeLeft = 0f
     private var pauseLeft = 0f
@@ -78,7 +86,7 @@ internal class AssaultMatch(
             headshots++
             score += HEADSHOT_BONUS
         }
-        if (targetsDown < targetsPerRound) return Event.NONE
+        if (targetsDown < deployedTargets) return Event.NONE
         endRound(RoundEnd.CLEARED)
         return Event.ROUND_ENDED
     }
@@ -91,7 +99,7 @@ internal class AssaultMatch(
     }
 
     fun status() = Status(
-        round, phase, ceil(timeLeft).toInt(), targetsDown, targetsPerRound, headshots, score,
+        round, phase, ceil(timeLeft).toInt(), targetsDown, deployedTargets, headshots, score,
         lastEnd, lastTimeBonus, ceil(pauseLeft.coerceAtLeast(0f)).toInt(),
     )
 
@@ -100,6 +108,7 @@ internal class AssaultMatch(
         phase = Phase.PLAYING
         timeLeft = roundSeconds
         targetsDown = 0
+        deployedTargets = targetsPerRound
         lastEnd = null
         lastTimeBonus = 0
     }

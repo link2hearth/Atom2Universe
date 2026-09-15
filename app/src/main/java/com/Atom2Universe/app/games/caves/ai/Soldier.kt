@@ -82,6 +82,7 @@ internal class Soldier(
     private val rng: Random,
     val tuning: SoldierTuning = SoldierTuning(),
     private val clearance: BodyClearance? = null,
+    private val routes: RouteQueue? = null,
 ) {
     enum class State { PATROL, ENGAGE, SEARCH, COVER, RELOAD }
 
@@ -119,6 +120,13 @@ internal class Soldier(
     var lastKnownZ = 0.0; private set
     private var memoryAge = 0f
     private var searchNode = -1
+    private var searchRefreshLeft = 0f
+    private var pendingRoute: RouteQueue.Request? = null
+
+    fun cancelRoute() {
+        pendingRoute?.cancelled = true
+        pendingRoute = null
+    }
 
     // ── Vue et visée ──
     var seesPlayer = false; private set
@@ -136,10 +144,11 @@ internal class Soldier(
     private var patrolWait = 0f
 
     fun place(x: Double, y: Double, z: Double) {
+        cancelRoute()
         follower.place(x, y, z)
         state = State.PATROL
         knowsPlayer = false; seesPlayer = false; justSpotted = false
-        memoryAge = 0f; searchNode = -1
+        memoryAge = 0f; searchNode = -1; searchRefreshLeft = 0f
         ammo = tuning.magazineSize; reloadLeft = 0f; fireCooldown = 0f
         patrolWait = 0f
         recentHitLeft = 0f; coverCooldown = 0f; coverHoldLeft = 0f; coverTravelLeft = 0f
@@ -150,7 +159,8 @@ internal class Soldier(
     /** Un coup de feu du joueur part de (x, eyeY, z) : s'il est à portée d'oreille, il sait où aller voir. */
     fun hearShot(x: Double, eyeY: Double, z: Double) {
         val dx = x - follower.x; val dz = z - follower.z
-        if (dx * dx + dz * dz > tuning.hearingRange * tuning.hearingRange) return
+        val dy = eyeY - EYE_HEIGHT - follower.y
+        if (dx * dx + dy * dy + dz * dz > tuning.hearingRange * tuning.hearingRange) return
         remember(x, eyeY, z)
         if (!seesPlayer) yawDeg = yawTo(x, z)
     }
@@ -164,12 +174,12 @@ internal class Soldier(
 
     fun update(dt: Float, player: PlayerSnapshot, shots: ShotSink) {
         justSpotted = false
+        searchRefreshLeft = (searchRefreshLeft - dt).coerceAtLeast(0f)
         if (clearance != null && !follower.arrived) {
             blockedFor = if (isMoving) 0f else blockedFor + dt
             if (blockedFor > .7f) {
                 val goal = follower.path[follower.path.size - 1]
-                val from = grid.nodeUnder(x, y, z)
-                if (finder.findPath(from, goal, path, clearance)) follower.follow(path)
+                pathTo(goal, avoidBodies = true)
                 blockedFor = 0f
             }
         }
@@ -204,6 +214,7 @@ internal class Soldier(
                 recentHitLeft > 0f, coverCooldown <= 0f)
         }
         state = decision
+        if (state != previous) cancelRoute()
         if (state == State.COVER && previous != State.COVER) {
             coverCooldown = tuning.coverCooldownSeconds
             if (routeToCover()) {
@@ -361,6 +372,7 @@ internal class Soldier(
 
     /** Petit déplacement latéral, sur le même sol, en conservant une ligne de tir. */
     private fun reposition() {
+        cancelRoute()
         val from = grid.nodeUnder(x, y, z)
         if (from < 0) return
         val angle = Math.toRadians(yawDeg.toDouble())
@@ -371,7 +383,7 @@ internal class Soldier(
             val n = grid.nodeAt(nx, grid.nodeY[from], nz)
             if (n < 0 || !LineOfSight.isClear(nx + 0.5, y + EYE_HEIGHT - 0.15, nz + 0.5,
                     lastKnownX, lastKnownEyeY - AIM_BELOW_EYE, lastKnownZ, world)) continue
-            if (finder.findPath(from, n, path, clearance) && path.size in 2..4) {
+            if (finder.findPath(from, n, path, clearance, maxCost = 4.5f) && path.size in 2..4) {
                 follower.follow(path)
                 return
             }
@@ -380,7 +392,8 @@ internal class Soldier(
 
     private fun actSearch(dt: Float) {
         val target = grid.nodeUnder(lastKnownX, lastKnownEyeY - EYE_HEIGHT, lastKnownZ)
-        if (target != searchNode) {
+        if (target != searchNode && searchRefreshLeft <= 0f && pendingRoute == null) {
+            searchRefreshLeft = .4f + rng.nextFloat() * .2f
             searchNode = target
             if (target >= 0) pathTo(target)
         }
@@ -405,20 +418,41 @@ internal class Soldier(
         // Prochaine destination : une case au hasard, ni trop près ni trop loin.
         repeat(PATROL_PICK_ATTEMPTS) {
             val n = rng.nextInt(grid.nodeCount)
+            // Une patrouille locale ne doit pas viser une pièce quatre étages plus haut.
+            if (abs(grid.nodeY[n] - follower.y) > 2.0) return@repeat
             val dx = grid.nodeX[n] + 0.5 - follower.x; val dz = grid.nodeZ[n] + 0.5 - follower.z
             val distSq = dx * dx + dz * dz
             if (distSq in PATROL_MIN_SQ..PATROL_MAX_SQ) {
-                pathTo(n)
-                if (!follower.arrived) return
+                pathTo(n, maxCost = 60f)
+                if (!follower.arrived || pendingRoute != null) return
             }
         }
     }
 
     // ── Outils ────────────────────────────────────────────────────────────────
 
-    private fun pathTo(goal: Int) {
+    private fun pathTo(goal: Int, maxCost: Float = Float.POSITIVE_INFINITY, avoidBodies: Boolean = false) {
         val from = grid.nodeUnder(follower.x, follower.y, follower.z)
-        if (from >= 0 && finder.findPath(from, goal, path, clearance)) follower.follow(path) else follower.stop()
+        if (routes != null && from >= 0) {
+            if (pendingRoute != null) return
+            follower.stop()
+            // La navigation statique suffit normalement ; la collision réelle reste contrôlée
+            // à chaque pas. En cas de blocage, contourner les corps, sans interdire la cible
+            // occupée par le joueur (sinon A* explorerait toute la tour pour la refuser).
+            val routingClearance = if (avoidBodies && clearance != null) BodyClearance { x, y, z ->
+                (floor(x).toInt() == grid.nodeX[goal] && floor(y).toInt() == grid.nodeY[goal] &&
+                    floor(z).toInt() == grid.nodeZ[goal]) || clearance.isFree(x, y, z)
+            } else null
+            pendingRoute = routes.request(from, goal, maxCost, routingClearance) { result ->
+                pendingRoute = null
+                if (!result.isEmpty()) follower.follow(result) else {
+                    searchNode = -1
+                    searchRefreshLeft = 1f
+                }
+            }
+            return
+        }
+        if (from >= 0 && finder.findPath(from, goal, path, clearance, maxCost)) follower.follow(path) else follower.stop()
     }
 
     /**
@@ -426,6 +460,7 @@ internal class Soldier(
      * Renvoie faux si aucun des candidats retenus n'a de chemin raisonnablement court.
      */
     private fun routeToCover(): Boolean {
+        cancelRoute()
         follower.stop()
         searchNode = -1
         if (!knowsPlayer) return false
@@ -438,7 +473,7 @@ internal class Soldier(
         for (nz in cz - r..cz + r) for (nx in cx - r..cx + r) {
             val distSq = (nx - cx) * (nx - cx) + (nz - cz) * (nz - cz)
             if (distSq > r * r || distSq >= coverDistances.last()) continue
-            for (ny in 0 until grid.sizeY) {
+            for (ny in maxOf(1, floor(y).toInt() - 2)..minOf(grid.sizeY - 1, floor(y).toInt() + 2)) {
                 val n = grid.nodeAt(nx, ny, nz)
                 if (n < 0) continue
                 val hidden = !LineOfSight.isClear(lastKnownX, lastKnownEyeY, lastKnownZ,
@@ -458,7 +493,8 @@ internal class Soldier(
         }
         // Huit candidats au maximum : un abri proche à vol d'oiseau peut être inaccessible.
         for (n in coverCandidates) {
-            if (n >= 0 && finder.findPath(from, n, path, clearance) && path.size <= tuning.coverRadius * 3 + 1) {
+            if (n >= 0 && finder.findPath(from, n, path, clearance,
+                    maxCost = tuning.coverRadius * 4.8f) && path.size <= tuning.coverRadius * 3 + 1) {
                 follower.follow(path)
                 return true
             }

@@ -10,6 +10,10 @@ import com.Atom2Universe.app.games.caves.ai.Soldier
 import com.Atom2Universe.app.games.caves.ai.SoldierTuning
 import com.Atom2Universe.app.games.caves.ai.BodyClearance
 import com.Atom2Universe.app.games.caves.ai.SoldierCollision
+import com.Atom2Universe.app.games.caves.ai.RouteQueue
+import com.Atom2Universe.app.games.caves.ai.SoldierCrowd
+import com.Atom2Universe.app.games.caves.ai.TowerDeployment
+import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
@@ -30,9 +34,9 @@ import kotlin.random.Random
 /**
  * Le mode Assaut : une carte préparée, jouée au fusil (voir CAVE_WORLD_ASSAUT.md).
  *
- * Chaque manche oppose le joueur à [SOLDIERS_PER_ROUND] soldats, qui apparaissent de l'autre côté
- * de la carte. Il faut tous les éliminer avant la fin du chrono ; mourir perd la manche. Toutes les
- * armes sont prêtées, les munitions de réserve sont illimitées, l'heure est figée à midi, et la
+ * Chaque manche déploie sa garnison dès le départ : 60 gardes dans la tour, répartis par niveau.
+ * Il faut tous les éliminer avant la fin du chrono ; mourir perd la manche. Toutes les
+ * armes sont prêtées, les munitions de réserve sont illimitées, l'heure est figée selon la carte, et la
  * carte ne se creuse pas.
  *
  * Les soldats pensent avec [Soldier] (Kotlin pur, testé seul). Leur corps est un simple [Enemy]
@@ -45,7 +49,10 @@ internal class AssaultMode(
     private val source: MapSource,
 ) : GameMode {
 
-    val match = AssaultMatch(targetsPerRound = SOLDIERS_PER_ROUND, roundSeconds = ROUND_SECONDS)
+    private val isTower = source.map.name == OfficeTowerMap.ID
+    private val soldierCount = if (isTower) 60 else SOLDIERS_PER_ROUND
+    val match = AssaultMatch(targetsPerRound = soldierCount,
+        roundSeconds = if (isTower) 20 * 60f else ROUND_SECONDS)
 
     /** Nouvel état de la partie à afficher. Appelé sur le thread GL, une dizaine de fois par seconde au plus. */
     @Volatile var onStatus: ((AssaultMatch.Status) -> Unit)? = null
@@ -58,13 +65,21 @@ internal class AssaultMode(
 
     override val allowsWorldEdits: Boolean get() = false
     override val infiniteAmmo: Boolean get() = true
-    override val fixedTimeOfDayMs: Long get() = NOON_MS
+    override val fixedTimeOfDayMs: Long get() =
+        if (source.map.name == com.Atom2Universe.app.games.caves.world.OfficeTowerMap.ID)
+            com.Atom2Universe.app.games.caves.world.OfficeTowerMap.DUSK_MS else NOON_MS
     override val headshotMultiplier: Float get() = HEADSHOT_MULTIPLIER
 
     /** Un soldat : son corps (dessiné, touché par les balles) et son cerveau. */
-    private class Trooper(val body: Enemy, val brain: Soldier, val damage: Int)
+    private class Trooper(val body: Enemy, val brain: Soldier, val damage: Int) {
+        var elapsed = 0f
+    }
 
-    private val units = ArrayList<Trooper>(SOLDIERS_PER_ROUND)
+    private val units = ArrayList<Trooper>(soldierCount)
+    private val crowd = SoldierCrowd(source.map.sizeX, source.map.sizeY, source.map.sizeZ)
+    private var updateCursor = 0
+    private var aiLogSeconds = 0f
+    private var aiPeakNs = 0L
     private val bodies get() = r.enemyManager.enemies
 
     // Dernier coup reçu par chaque soldat (par id) : c'est lui qui dit s'il est tombé d'un tir à la tête.
@@ -92,6 +107,8 @@ internal class AssaultMode(
     }
     private var navGrid: NavGrid? = null
     private var pathFinder: PathFinder? = null
+    private var routes: RouteQueue? = null
+    private var towerDeployment: TowerDeployment? = null
 
     // ── Le joueur vu par les soldats (coordonnées de la carte) ──
     private val player = PlayerSnapshot()
@@ -100,7 +117,7 @@ internal class AssaultMode(
 
     // Balles des soldats : même aspect que les balles du joueur, dégâts fixes.
     private val bulletLook = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
-    private val soldierTuning = SoldierTuning()
+    private val soldierTuning = if (isTower) SoldierTuning(hearingRange = 48.0) else SoldierTuning()
     private var firingBody: Enemy? = null
     private var firingUnit: Trooper? = null
     private val shotSink = ShotSink { x, y, z, dx, dy, dz ->
@@ -118,9 +135,7 @@ internal class AssaultMode(
 
     override fun onSurfaceCreated(savedState: CaveRenderer.SavedState?) {
         r.physics.dynamicCollision = { x, feetY, z, height ->
-            units.any { it.body.hp > 0 && SoldierCollision.overlaps(
-                it.brain.x, it.brain.y, it.brain.z,
-                x - source.originX, feetY - source.originY, z - source.originZ, height) }
+            crowd.overlaps(x - source.originX, feetY - source.originY, z - source.originZ, height = height)
         }
         // Pas encore d'équipement de match : on prête toutes les armes à distance.
         r.giveWeaponTestKit()
@@ -131,6 +146,8 @@ internal class AssaultMode(
         val grid = NavGrid.build(map.sizeX, map.sizeY, map.sizeZ, solid)
         navGrid = grid
         pathFinder = PathFinder(grid)
+        routes = RouteQueue(grid)
+        if (isTower) towerDeployment = TowerDeployment(grid, map.spawnsA.first())
     }
 
     override fun onPlayerPlaced(x: Double, y: Double, z: Double) = kotlin.Unit
@@ -143,6 +160,7 @@ internal class AssaultMode(
         unit.brain.healthFraction = enemy.hp.toFloat() / enemy.maxHp.coerceAtLeast(1)
         refreshPlayerPosition()
         unit.brain.onDamaged(player.x, player.eyeY, player.z)
+        unit.elapsed = 1f // priorité au prochain passage, même si ce garde était au repos
     }
 
     override fun onPlayerShot(damage: Int, dirX: Double, dirZ: Double) {
@@ -153,7 +171,11 @@ internal class AssaultMode(
 
     override fun onPlayerFired() {
         refreshPlayerPosition()
-        for (u in units) u.brain.hearShot(player.x, player.eyeY, player.z)
+        for (u in units) {
+            // Les dalles épaisses atténuent le bruit : un tir n'alerte pas les six niveaux.
+            if (!isTower || kotlin.math.abs(u.brain.y + 1.62 - player.eyeY) < 4.0)
+                u.brain.hearShot(player.x, player.eyeY, player.z)
+        }
     }
 
     override fun update(dt: Float) {
@@ -217,17 +239,47 @@ internal class AssaultMode(
     // ── Soldats ───────────────────────────────────────────────────────────────
 
     private fun updateSoldiers(dt: Float) {
+        val started = System.nanoTime()
+        // Les morts ne participent plus aux collisions ni aux recherches, dès cette image.
         for (u in units) {
-            // Les impacts sont traités avant ce passage : un soldat abattu ne doit plus tirer.
+            if (u.body.hp <= 0) { crowd.remove(u.body.id); u.brain.cancelRoute(); continue }
+            u.elapsed += dt
+            u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
+        }
+        routes?.update()
+        pathFinder?.remainingExpansions = 256 // petites recherches d'abri et pas latéraux
+        if (units.isEmpty()) return
+        val deadline = System.nanoTime() + 2_000_000L
+        var updated = 0
+        var inspected = 0
+        while (inspected < units.size && updated < 8) {
+            if (updated > 0 && System.nanoTime() >= deadline) break
+            updateCursor %= units.size
+            val u = units[updateCursor]
+            updateCursor = (updateCursor + 1) % units.size
+            inspected++
             if (u.body.hp <= 0) continue
             val brain = u.brain
+            val distance = distSq(brain.x, brain.z, player.x, player.z)
+            val floorDistance = kotlin.math.abs(brain.y + 1.62 - player.eyeY)
+            val interval = when {
+                brain.knowsPlayer || (floorDistance < 5 && distance < 40 * 40) -> .05f
+                floorDistance < 8 && distance < 80 * 80 -> .2f
+                else -> 1f
+            }
+            if (u.elapsed < interval) continue
+            // Pas de rattrapage massif après un gel : les gardes lointains restent présents,
+            // avec une patrouille lente, sans téléportation ni apparition à l'approche.
+            val step = u.elapsed.coerceAtMost(.15f)
+            u.elapsed = 0f
+            updated++
             brain.healthFraction = u.body.hp.toFloat() / u.body.maxHp.coerceAtLeast(1)
-            u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
             firingBody = u.body
             firingUnit = u
-            brain.update(dt, player, shotSink)
+            brain.update(step, player, shotSink)
             firingBody = null
             firingUnit = null
+            crowd.move(u.body.id, brain.x, brain.y, brain.z)
             if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
 
             val body = u.body
@@ -239,9 +291,19 @@ internal class AssaultMode(
             body.resting = !brain.isMoving
             if (brain.isMoving) {
                 body.state = EnemyState.CHASE   // jambes et bras qui balancent
-                body.animTime += dt
+                body.animTime += step
             } else {
                 body.state = EnemyState.WANDER
+            }
+        }
+        if (com.Atom2Universe.app.BuildConfig.DEBUG) {
+            aiPeakNs = maxOf(aiPeakNs, System.nanoTime() - started)
+            aiLogSeconds += dt
+            if (aiLogSeconds >= 5f) {
+                android.util.Log.i("CavePerf", "assaultSoldiers=${units.size} aiPeakUs=${aiPeakNs / 1000} " +
+                    "routesWaiting=${routes?.waitingCount ?: 0}")
+                aiPeakNs = 0L
+                aiLogSeconds = 0f
             }
         }
     }
@@ -253,6 +315,8 @@ internal class AssaultMode(
         while (i >= 0) {
             val body = units[i].body
             if (body.hp <= 0) {
+                units[i].brain.cancelRoute()
+                crowd.remove(body.id)
                 units.removeAt(i)
                 bodies.remove(body)
                 changed = true
@@ -275,9 +339,14 @@ internal class AssaultMode(
         respawnPlayer()
         r.playerNode.setMaxHp(PLAYER_MAX_HP, PLAYER_MAX_HP)
         spawnSoldiers()
+        match.setDeployedTargets(units.size)
     }
 
     private fun clearSoldiers() {
+        units.forEach { it.brain.cancelRoute() }
+        routes?.clear()
+        crowd.clear()
+        updateCursor = 0
         units.clear()
         bodies.clear()
         lastHitWasHead.clear()
@@ -297,6 +366,7 @@ internal class AssaultMode(
         val enemySpawn = source.spawnPoint(1)
         val px = playerSpawn[0].toDouble() - source.originX; val pz = playerSpawn[2].toDouble() - source.originZ
         val ex = enemySpawn[0].toDouble() - source.originX; val ez = enemySpawn[2].toDouble() - source.originZ
+        val towerNodes = towerDeployment?.choose(soldierCount, rng)
 
         // Sur la carte intégrée, déployer au sol dans la cour est, jamais sur les toits.
         val deployment = if (source.map.name == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_ID &&
@@ -313,41 +383,44 @@ internal class AssaultMode(
         } else null
         if (deployment != null && deployment.isEmpty()) return
         var attempts = 0
-        while (units.size < SOLDIERS_PER_ROUND && attempts < MAX_SPAWN_ATTEMPTS) {
+        while (units.size < soldierCount && attempts < MAX_SPAWN_ATTEMPTS) {
             attempts++
-            val n = deployment?.let { it[rng.nextInt(it.size)] } ?: rng.nextInt(grid.nodeCount)
+            val n = if (towerNodes != null) towerNodes.getOrNull(units.size) ?: break
+                else deployment?.let { it[rng.nextInt(it.size)] } ?: rng.nextInt(grid.nodeCount)
             val x = grid.nodeX[n] + 0.5; val z = grid.nodeZ[n] + 0.5
             // D'abord autour du camp adverse ; si ça ne suffit pas, n'importe où loin du joueur.
             val nearEnemySpawn = attempts < MAX_SPAWN_ATTEMPTS / 2
-            if (nearEnemySpawn && distSq(x, z, ex, ez) > ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS) continue
-            if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
-            if (units.any { distSq(x, z, it.brain.x, it.brain.z) < MIN_SOLDIER_SPACING * MIN_SOLDIER_SPACING }) continue
+            if (towerNodes == null) {
+                if (nearEnemySpawn && distSq(x, z, ex, ez) > ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS) continue
+                if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
+                if (units.any { distSq(x, z, it.brain.x, it.brain.z) < MIN_SOLDIER_SPACING * MIN_SOLDIER_SPACING }) continue
+            }
 
             if (units.any { SoldierCollision.overlaps(x, grid.nodeY[n].toDouble(), z,
                     it.brain.x, it.brain.y, it.brain.z) }) continue
-            val weaponType = arrayOf("gun", "smg", "lever_rifle")[units.size]
+            val weaponType = WEAPONS[units.size % WEAPONS.size]
             val profile = RangedProfile.all.getValue(weaponType)
             val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
                 fireInterval = profile.interval, magazineSize = profile.magazine, reloadSeconds = profile.reload)
-            lateinit var brain: Soldier
+            val id = nextSoldierId++
             val clearance = BodyClearance { bx, by, bz ->
                 SoldierCollision.clearsWorld(solid, bx, by, bz) &&
-                    units.none { it.brain !== brain && it.body.hp > 0 &&
-                        SoldierCollision.overlaps(bx, by, bz, it.brain.x, it.brain.y, it.brain.z) } &&
+                    !crowd.overlaps(bx, by, bz, except = id) &&
                     !(r.playerNode.hp > 0 && SoldierCollision.overlaps(bx, by, bz,
                         r.camera.playerX - source.originX, r.camera.playerY - source.originY - 1.62,
                         r.camera.playerZ - source.originZ,
                         (r.camera.eyeY - r.camera.playerY + 1.8).coerceAtLeast(.5)))
             }
-            brain = Soldier(grid, solid, finder, rng, tuning, clearance)
+            val brain = Soldier(grid, solid, finder, rng, tuning, clearance, routes)
             brain.place(x, grid.nodeY[n].toDouble(), z)
-            val body = Enemy(nextSoldierId++, SOLDIER, x + source.originX, grid.nodeY[n].toDouble() + source.originY, z + source.originZ)
+            val body = Enemy(id, SOLDIER, x + source.originX, grid.nodeY[n].toDouble() + source.originY, z + source.originZ)
             body.hp = body.maxHp
             body.heldWeaponType = weaponType
             // Cadences identiques au joueur ; dégâts ajustés pour le solo, surtout la SMG.
             val damage = when (weaponType) { "smg" -> 3; "lever_rifle" -> 16; else -> 8 }
-            units += Trooper(body, brain, damage)
+            units += Trooper(body, brain, damage).also { it.elapsed = rng.nextFloat() }
             bodies += body
+            crowd.move(id, brain.x, brain.y, brain.z)
         }
     }
 
@@ -403,6 +476,7 @@ internal class AssaultMode(
         const val NOON_MS = 600_000L
 
         const val SOLDIERS_PER_ROUND = 3
+        private val WEAPONS = arrayOf("gun", "smg", "lever_rifle")
         const val ROUND_SECONDS = 180f
         const val PLAYER_MAX_HP = 100
         const val HEADSHOT_MULTIPLIER = 2f
