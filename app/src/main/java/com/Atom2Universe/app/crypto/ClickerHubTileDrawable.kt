@@ -2,7 +2,6 @@ package com.Atom2Universe.app.crypto
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -17,29 +16,29 @@ import kotlin.math.min
 import kotlin.random.Random
 
 /**
- * Illustration de la tuile Clicker : quelques atomes stylises de "Atom low", eclates sur un fond
+ * Illustration de la tuile Clicker : quelques atomes dessines en Kotlin, eclates sur un fond
  * bleu profond parseme d'etoiles. Calculee une fois par taille, comme les autres tuiles illustrees :
  * la tuile du hub et le raccourci du hub principal n'ont pas la meme forme, chacun a son rendu.
  */
 class ClickerHubTileDrawable(private val context: Context) : Drawable() {
     private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val atomPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+    private val atomRenderer = com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer()
     private val rect = RectF()
     private var cachedBitmap: Bitmap? = null
 
     /** Position en fraction de la tuile, taille en fraction de son plus petit cote, angle en degres. */
-    private class Placement(val file: String, val x: Float, val y: Float, val size: Float, val angle: Float)
+    private class Placement(val variant: Int, val x: Float, val y: Float, val size: Float, val angle: Float)
 
     // Cinq atomes seulement, pas toute la serie : ceux dont les couleurs se distinguent le mieux
     // sur le bleu. Tailles et angles differents, pour qu'ils aient l'air eparpilles et pas alignes.
     // La bande du milieu reste libre : c'est la que le hub pose le titre et la description.
     private val placements = listOf(
-        Placement("Atom4.png", 0.22f, 0.26f, 0.48f, -14f),
-        Placement("Atom0.png", 0.78f, 0.22f, 0.40f, 18f),
-        Placement("Atom8.png", 0.52f, 0.90f, 0.30f, -8f),
-        Placement("Atom3.png", 0.12f, 0.82f, 0.28f, 26f),
-        Placement("Atom7.png", 0.88f, 0.80f, 0.26f, -24f)
+        Placement(4, 0.22f, 0.26f, 0.48f, -14f),
+        Placement(0, 0.78f, 0.22f, 0.40f, 18f),
+        Placement(8, 0.52f, 0.90f, 0.30f, -8f),
+        Placement(3, 0.12f, 0.82f, 0.28f, 26f),
+        Placement(7, 0.88f, 0.80f, 0.26f, -24f)
     )
 
     override fun draw(canvas: Canvas) {
@@ -83,19 +82,13 @@ class ClickerHubTileDrawable(private val context: Context) : Drawable() {
             canvas.drawCircle(cx, cy, half * 1.1f, paint)
             paint.shader = null
 
-            val atom = loadAtom(p.file) ?: return@forEach
             canvas.save()
             canvas.rotate(p.angle, cx, cy)
             rect.set(cx - half, cy - half, cx + half, cy + half)
-            canvas.drawBitmap(atom, null, rect, atomPaint)
+            atomRenderer.draw(canvas, cx, cy, half * 2f, p.variant, p.variant * 0.7f)
             canvas.restore()
-            atom.recycle()
         }
     }
-
-    private fun loadAtom(file: String): Bitmap? = runCatching {
-        context.assets.open("Assets/Image/Atom low/$file").use { BitmapFactory.decodeStream(it) }
-    }.getOrNull()
 
     override fun setAlpha(alpha: Int) {
         bitmapPaint.alpha = alpha

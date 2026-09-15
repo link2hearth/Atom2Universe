@@ -24,7 +24,7 @@ class CosmoRunGame {
         const val JUMP_CLEAR_MAX = 0.82f
         const val HIT_DEPTH = 1.4f           // demi-épaisseur de collision sur Z (m)
         const val ATOM_SCORE = 25
-        const val ATOM_VARIANTS = 4          // nombre de sprites d'atomes différents
+        const val ATOM_VARIANTS = com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer.VARIANT_COUNT
     }
 
     enum class EntityType { ASTEROID, BARRIER, ATOM }

@@ -16,15 +16,11 @@ class AtomSpringView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : View(context, attrs) {
 
-    private val normalAtomFiles = listOf(
-        "Atom.png", "Atom0.png", "Atom1.png", "Atom2.png", "Atom3.png",
-        "Atom4.png", "Atom5.png", "Atom6.png", "Atom7.png", "Atom8.png",
-        "Atom9.png", "Atom10.png", "Atom11.png", "Atom12.png"
-    )
-
+    private val renderer = AnimatedAtomRenderer()
+    private var seconds = 0f
     private var customImageUris: List<Uri> = emptyList()
     private val isCustomMode get() = customImageUris.isNotEmpty()
-    private val fileCount get() = if (isCustomMode) customImageUris.size else normalAtomFiles.size
+    private val fileCount get() = if (isCustomMode) customImageUris.size else AnimatedAtomRenderer.VARIANT_COUNT
 
     var isLowAnimation = false
         private set
@@ -39,9 +35,7 @@ class AtomSpringView @JvmOverloads constructor(
             context.contentResolver.openInputStream(customImageUris[index])
                 ?.use { BitmapFactory.decodeStream(it) }
         } else {
-            context.assets.open("Assets/Image/Atom low/${normalAtomFiles[index]}").use {
-                BitmapFactory.decodeStream(it)
-            }
+            null
         }
     } catch (_: Exception) { null }
 
@@ -63,6 +57,12 @@ class AtomSpringView @JvmOverloads constructor(
     }
 
     fun setAtomIndex(index: Int) {
+        if (!isCustomMode) {
+            currentIndex = index.coerceIn(0, fileCount - 1)
+            currentBitmap = null
+            invalidate()
+            return
+        }
         val start = index.coerceIn(0, (fileCount - 1).coerceAtLeast(0))
         var i = start
         var bmp = loadBitmap(i)
@@ -116,10 +116,11 @@ class AtomSpringView @JvmOverloads constructor(
             val delta = if (lastFrameNs == 0L) 0f
                         else ((frameTimeNanos - lastFrameNs) / 1_000_000_000f).coerceIn(0f, 0.05f)
             lastFrameNs = frameTimeNanos
+            seconds += delta * motionFactor
             updateClickStrength()
             updateSpring(delta, targetStrength)
             invalidate()
-            choreographer.postFrameCallback(this)
+            if (isShown && windowVisibility == VISIBLE) choreographer.postFrameCallback(this)
         }
     }
 
@@ -254,7 +255,24 @@ class AtomSpringView @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        choreographer.postFrameCallback(tick)
+        resumeAnimation()
+    }
+
+    private fun resumeAnimation() {
+        choreographer.removeFrameCallback(tick)
+        lastFrameNs = 0L
+        if (isAttachedToWindow && isShown && windowVisibility == VISIBLE)
+            choreographer.postFrameCallback(tick)
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) resumeAnimation()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) resumeAnimation()
     }
 
     override fun onDetachedFromWindow() {
@@ -263,6 +281,13 @@ class AtomSpringView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (!isCustomMode) {
+            val dp = resources.displayMetrics.density
+            val size = if (isBiggerImage) minOf(width, height) * 0.72f else minOf(190f * dp, minOf(width, height) * 0.85f)
+            renderer.draw(canvas, width / 2f + posX * dp * motionFactor,
+                height / 2f + posY * dp * motionFactor, size, currentIndex, seconds, intensity)
+            return
+        }
         val bmp = currentBitmap ?: return
         val cx = width / 2f
         val cy = height / 2f

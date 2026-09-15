@@ -1052,31 +1052,22 @@ class MainClickerActivity : ThemedActivity() {
 
     // ── Popup atome sur clic critique ─────────────────────────────────────────
 
-    private val critAtomFileNames = listOf(
-        "Atom.png", "Atom0.png", "Atom1.png", "Atom2.png", "Atom3.png",
-        "Atom4.png", "Atom5.png", "Atom6.png", "Atom7.png", "Atom8.png",
-        "Atom9.png", "Atom10.png", "Atom11.png"
-    )
-
-    private val critAtomBitmaps: List<android.graphics.Bitmap> by lazy {
-        critAtomFileNames.mapNotNull { name ->
-            try { assets.open("Assets/Image/Atom low/$name").use { android.graphics.BitmapFactory.decodeStream(it) } }
-            catch (_: Exception) { null }
-        }
-    }
-
     private fun spawnCritAtom(x: Float, y: Float) {
-        val bitmaps = critAtomBitmaps
-        if (bitmaps.isEmpty()) return
-        val bitmap = bitmaps.random()
-
+        val variant = kotlin.random.Random.nextInt(com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer.VARIANT_COUNT)
         val density  = resources.displayMetrics.density
         val sizePx   = (56 * density).toInt()
         val rootView = findViewById<ViewGroup>(android.R.id.content)
         val floorY   = rootView.height.toFloat() - sizePx
 
-        val img = android.widget.ImageView(this)
-        img.setImageBitmap(bitmap)
+        val img = object : View(this) {
+            private val renderer = com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer()
+            private val started = android.os.SystemClock.uptimeMillis()
+            override fun onDraw(canvas: android.graphics.Canvas) {
+                renderer.draw(canvas, width / 2f, height / 2f, width.toFloat(), variant,
+                    (android.os.SystemClock.uptimeMillis() - started) / 1000f)
+                if (isShown && windowVisibility == VISIBLE) postInvalidateOnAnimation()
+            }
+        }
         img.layoutParams = ViewGroup.LayoutParams(sizePx, sizePx)
         img.translationX = x - sizePx / 2f
         img.translationY = y - sizePx / 2f

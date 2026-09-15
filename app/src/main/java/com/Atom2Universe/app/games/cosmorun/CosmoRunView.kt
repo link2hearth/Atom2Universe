@@ -92,7 +92,7 @@ class CosmoRunView @JvmOverloads constructor(
 
     // ── Sprites ────────────────────────────────────────────────────────────────
     private var astronautBmp: Bitmap? = null
-    private val atomBmps = arrayOfNulls<Bitmap>(CosmoRunGame.ATOM_VARIANTS)
+    private val atomRenderer = com.Atom2Universe.app.crypto.clicker.AnimatedAtomRenderer()
 
     // ── Paints ─────────────────────────────────────────────────────────────────
     private val skyPaint = Paint()
@@ -121,7 +121,6 @@ class CosmoRunView @JvmOverloads constructor(
 
     private fun loadAssets() {
         astronautBmp = loadBitmap("Assets/Image/Astronaute.png")
-        for (i in atomBmps.indices) atomBmps[i] = loadBitmap("Assets/Image/Atom$i.png")
     }
 
     private fun loadBitmap(path: String): Bitmap? =
@@ -354,14 +353,8 @@ class CosmoRunView @JvmOverloads constructor(
         val y = screenY(e.z) - laneSpacing * 0.28f * s + bob
         val size = laneSpacing * 0.5f * s
         if (size < 2f) return
-        val bmp = atomBmps[e.variant % atomBmps.size]
-        if (bmp != null) {
-            canvas.drawBitmap(bmp, null, RectF(x - size / 2, y - size / 2, x + size / 2, y + size / 2), bmpPaint)
-        } else {
-            entityPaint.shader = null
-            entityPaint.color = Color.rgb(90, 220, 255)
-            canvas.drawCircle(x, y, size * 0.4f, entityPaint)
-        }
+        atomRenderer.draw(canvas, x, y, size, e.variant, game.distance * 0.08f)
+
     }
 
     private fun drawPlayer(canvas: Canvas) {
