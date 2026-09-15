@@ -7,11 +7,11 @@ enum class RouletteSymbol(
 ) {
     STAR    ("★",  "Assets/Image/terre.png",          1f),
     EARTH   ("🌍", "Assets/Image/jupiter.png",         1f),
-    SUN     ("☀",  "Assets/Image/Sun.png",             1f),
+    SUN     ("☀",  null,             1f),
     MOON    ("🌕", "Assets/Image/FullMoon2010.png",    1f),
     SATURN  ("🪐", "Assets/Image/saturn.png",          1f),
     BLACKHOLE("⚫","Assets/sprites/blackhole.jpg",     1f),
-    JOKER   ("🃏", "Assets/Image/RainbowStar.gif",    0.5f);
+    JOKER   ("🃏", null,    0.5f);
 
     val isJoker: Boolean get() = this == JOKER
     val isBlackhole: Boolean get() = this == BLACKHOLE

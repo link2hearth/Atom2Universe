@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Science</string>
     <string name="hub_science_desc">Periodic table, simulations…</string>
@@ -170,7 +170,7 @@
     <string name="cosmic_mode_scroll">Scroll</string>
     <string name="cosmic_mode_free">Free</string>
     <string name="cosmic_hint_swipe">←  swipe to scroll through the scale  →</string>
-    <string name="cosmic_label_radius">Radius %1$s</string>
+    <string name="cosmic_label_radius">Radius ≈ %1$s</string>
     <string name="cosmic_ratio_radius">%1$s ≈ %2$s× the radius of %3$s</string>
     <string name="cosmic_ratio_volume">i.e. ≈ %1$s× in volume</string>
     <string name="cosmic_ratio_equal">Nearly identical size</string>
@@ -182,7 +182,29 @@
     <string name="cosmic_type_gas">Gas giant</string>
     <string name="cosmic_type_star">Star</string>
     <string name="cosmic_type_blackhole">Black hole</string>
-    <string name="cosmic_credits">Star texture: SolarSystemScope (CC BY 4.0) · Planet textures: NASA</string>
+    <string name="cosmic_credits">Illustrated stellar surfaces · Tap an information card for sources and limitations.</string>
+    <string name="cosmic_label_horizon">Schwarzschild radius ≈ %1$s</string>
+    <string name="cosmic_label_radius_no_rings">Globe radius, excluding rings ≈ %1$s</string>
+    <string name="cosmic_details_hint">Sources and interpretation · tap</string>
+    <string name="cosmic_uncertain_marker"> · uncertain size</string>
+    <string name="cosmic_type_ice">Ice giant</string>
+    <string name="cosmic_type_hot_star">Hot blue-white star</string>
+    <string name="cosmic_type_red_supergiant">Red supergiant</string>
+    <string name="cosmic_type_giant">Cool giant</string>
+    <string name="cosmic_star_fact">%1$s · ≈ %2$d K</string>
+    <string name="cosmic_mass_fact">≈ %1$s M☉</string>
+    <string name="cosmic_source_label">Reference (measurement or physical interpretation):</string>
+    <string name="cosmic_science_method">Sizes follow the adopted radii, not a definitive ranking. Stellar radii and temperatures depend on measurements, distance and models; variable stars change over time. Surface patterns and their motion are illustrations, not observed maps or physical timescales. Screen colours approximate visible light at reduced brightness; contrast is enhanced to show structure. No exact colour calibration is claimed.</string>
+    <string name="cosmic_note_sun">The Sun emits nearly white visible light. Its photosphere has fine granulation and sometimes darker sunspots. Orange solar images often use selected wavelengths or assigned colours. The display uses an illustrative photosphere at about 5,772 K.</string>
+    <string name="cosmic_note_sirius">Sirius A is a hot, nearly white star with a bluish tint. Davis et al. (2011) measured a radius of 1.713 ± 0.009 solar radii. This replaces the incorrect value of 1.19 previously used here. Its surface is illustrated with subtle detail, not a solar photograph recoloured blue.</string>
+    <string name="cosmic_note_arcturus">Arcturus is a cool orange giant. Ramírez and Allende Prieto (2011) give 4,286 ± 30 K and a radius of 25.4 ± 0.2 solar radii. The displayed surface cells are illustrative.</string>
+    <string name="cosmic_note_betelgeuse">Betelgeuse is a variable red supergiant. The adopted radius, 764 solar radii, comes from Joyce et al. (2020), with an uncertainty of −62/+116 solar radii in that model. Other methods give different estimates. Large surface structures are illustrated, not a current map of the star.</string>
+    <string name="cosmic_note_uy">The comparison retains the published 2013 estimate of 1,708 ± 192 solar radii and 3,365 ± 134 K (Arroyo-Torres et al.). These values depend strongly on the adopted distance and atmosphere model; they are not a settled current size or a reliable largest-star ranking.</string>
+    <string name="cosmic_note_stephenson">The existing value of 2,150 solar radii is retained only as an uncertain comparison scenario. This revision has not validated that number as a measured radius. Do not read its position in the list as proof that this is the largest known star. The surface is a generic cool-supergiant illustration.</string>
+    <string name="cosmic_note_star">Colour follows the adopted effective temperature approximately: hotter stars appear blue-white, cooler giants warmer. Cool supergiants can show large surface structures; the exact pattern, contrast and motion shown here are illustrative. The catalogue values are approximate adopted values, not a new measurement of each star.</string>
+    <string name="cosmic_note_ice">Uranus and Neptune are both pale greenish-blue; Neptune is only slightly bluer. Irwin et al. (2024) showed that familiar dark-blue Neptune images were contrast-enhanced. This view retains texture details and slightly exaggerates the difference in hue to help distinguish the planets; it is not a calibrated reconstruction of the observations.</string>
+    <string name="cosmic_note_planet">The sphere represents an adopted mean radius; flattening is not modelled. Existing planetary textures are retained as illustrations: colour balance and observation dates may differ. Lighting and rotation are chosen for comparison, not to reproduce the current view from Earth.</string>
+    <string name="cosmic_note_bh">This is a schematic non-rotating event horizon, with radius 2GM/c² from the adopted mass. It is not a photograph: the bright accretion ring and gravitationally enlarged shadow are different from the horizon itself. Real black-hole spin changes this model. Mass estimates, especially for distant quasars, are uncertain; the generic stellar black hole is an example, not an identified object.</string>
     <!-- Body names -->
     <string name="cosmic_name_moon">Moon</string>
     <string name="cosmic_name_mercury">Mercury</string>

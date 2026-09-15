@@ -7,6 +7,8 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils
 import android.opengl.Matrix
+import com.Atom2Universe.app.graphics.SunAnimationState
+import com.Atom2Universe.app.graphics.SunPlasmaShader
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -77,14 +79,7 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
             varying vec2 vUV;
             void main(){ gl_Position = uMVP * aPos; vUV = aUV; }""".trimIndent()
 
-        val SUN_FRAG = """
-            precision mediump float;
-            uniform sampler2D uTex;
-            varying vec2 vUV;
-            void main(){
-              vec4 c = texture2D(uTex, vUV);
-              gl_FragColor = vec4(c.rgb * 1.2, c.a);
-            }""".trimIndent()
+        val SUN_FRAG = SunPlasmaShader.glsl
 
         // Distance du repère solaire en unités de scène (non physique, juste pour visibilité)
         const val SUN_INDICATOR_DIST = 80f
@@ -97,7 +92,12 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var pAmbient = 0; private var pTex = 0
     private var pPos = 0; private var pUV = 0; private var pNorm = 0
 
-    private var sunProg = 0; private var sMVP = 0; private var sTex = 0
+    private var sunProg = 0; private var sMVP = 0
+    private var sSize = 0; private var sPhase = 0; private var sAge = 0
+    private var sShape = 0; private var sDetail = 0
+    private val sunAnimation = SunAnimationState()
+    private val sunCenter = FloatArray(4)
+    private val sunViewCenter = FloatArray(4)
     private var sPos = 0; private var sUV = 0
 
     private var lineProg = 0; private var lMVP = 0; private var lColor = 0; private var lPos = 0
@@ -105,10 +105,10 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     // GPU buffers
     private var sphereVBO = 0; private var sphereEBO = 0; private var sphereIdxCount = 0
-    private var orbitVBO = 0; private var starsVBO = 0
+    private var orbitVBO = 0; private var starsVBO = 0; private var sunVBO = 0
 
     // Textures
-    private var earthTexId = 0; private var moonTexId = 0; private var sunTexId = 0
+    private var earthTexId = 0; private var moonTexId = 0
 
     // Matrices
     private val proj = FloatArray(16); private val view = FloatArray(16)
@@ -171,12 +171,15 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        val nowMs = System.currentTimeMillis()
+        val nowMs = android.os.SystemClock.uptimeMillis()
         if (lastFrameMs < 0) lastFrameMs = nowMs
-        val dtRealMs = (nowMs - lastFrameMs).coerceAtMost(100)
+        val dtRealMs = (nowMs - lastFrameMs).coerceIn(0L, 100L)
         lastFrameMs = nowMs
 
-        if (!paused) elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
+        if (!paused) {
+            elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
+            sunAnimation.advance(dtRealMs)
+        }
 
         val dtSec = dtRealMs / 1000f
         currentBlend += (targetBlend - currentBlend).let { it.coerceIn(-3f * dtSec, 3f * dtSec) }
@@ -268,36 +271,38 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     private fun renderSunIndicator(sunPos: FloatArray) {
-        // Sphère non éclairée dans la direction du Soleil, à distance fixe (repère visuel)
-        val dist = SUN_INDICATOR_DIST
-        val r    = SUN_INDICATOR_RADIUS
-        val sx = sunPos[0] / 1000f * dist
-        val sy = sunPos[1] / 1000f * dist
-        val sz = sunPos[2] / 1000f * dist
-
+        // Repère tourné vers la caméra : même diamètre du disque, marge pour les éjections.
+        sunCenter[0] = sunPos[0] / 1000f * SUN_INDICATOR_DIST
+        sunCenter[1] = sunPos[1] / 1000f * SUN_INDICATOR_DIST
+        sunCenter[2] = sunPos[2] / 1000f * SUN_INDICATOR_DIST
+        sunCenter[3] = 1f
+        Matrix.multiplyMV(sunViewCenter, 0, view, 0, sunCenter, 0)
         Matrix.setIdentityM(model, 0)
-        Matrix.translateM(model, 0, sx, sy, sz)
-        Matrix.scaleM(model, 0, r, r, r)
-        Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
+        Matrix.translateM(model, 0, sunViewCenter[0], sunViewCenter[1], sunViewCenter[2])
+        val halfSize = SUN_INDICATOR_RADIUS / (2f * 0.309f)
+        Matrix.scaleM(model, 0, halfSize, halfSize, 1f)
+        Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
 
         GLES20.glUseProgram(sunProg)
         GLES20.glUniformMatrix4fv(sMVP, 1, false, mvp, 0)
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sunTexId)
-        GLES20.glUniform1i(sTex, 0)
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, sphereVBO)
-        val stride = 8 * 4
+        GLES20.glUniform2f(sSize, 512f, 512f)
+        GLES20.glUniform1f(sPhase, sunAnimation.phase)
+        GLES20.glUniform1f(sAge, sunAnimation.eruptionAge)
+        GLES20.glUniform4fv(sShape, 1, sunAnimation.shape, 0)
+        GLES20.glUniform4fv(sDetail, 1, sunAnimation.detail, 0)
+        // Le shader commun produit du RGB prémultiplié, y compris pour la couronne.
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        GLES20.glDepthMask(false)
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, sunVBO)
         GLES20.glEnableVertexAttribArray(sPos)
-        GLES20.glVertexAttribPointer(sPos, 3, GLES20.GL_FLOAT, false, stride, 0)
+        GLES20.glVertexAttribPointer(sPos, 3, GLES20.GL_FLOAT, false, 20, 0)
         GLES20.glEnableVertexAttribArray(sUV)
-        GLES20.glVertexAttribPointer(sUV, 2, GLES20.GL_FLOAT, false, stride, 12)
-        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, sphereEBO)
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, sphereIdxCount, GLES20.GL_UNSIGNED_SHORT, 0)
+        GLES20.glVertexAttribPointer(sUV, 2, GLES20.GL_FLOAT, false, 20, 12)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
-        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0)
+        GLES20.glDepthMask(true)
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
     }
-
     private fun renderMoonOrbit(lunarPos: LunarCalculator.LunarPosition) {
         // Rayon moyen = 10 unités, orbite inclinée de MOON_INCL_DEG autour du nœud ascendant
         val omegaRad = Math.toRadians(lunarPos.ascendingNodeDeg).toFloat()
@@ -380,7 +385,10 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         pPos = al(planetProg, "aPos"); pUV = al(planetProg, "aUV"); pNorm = al(planetProg, "aNorm")
 
         sunProg = link(SUN_VERT, SUN_FRAG)
-        sMVP = ul(sunProg, "uMVP"); sTex = ul(sunProg, "uTex")
+        sMVP = ul(sunProg, "uMVP")
+        sSize = ul(sunProg, "size"); sPhase = ul(sunProg, "phase")
+        sAge = ul(sunProg, "eruptionAge"); sShape = ul(sunProg, "eruptionShape")
+        sDetail = ul(sunProg, "eruptionDetail")
         sPos = al(sunProg, "aPos"); sUV = al(sunProg, "aUV")
 
         lineProg = link(LINE_VERT, LINE_FRAG)
@@ -406,8 +414,17 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     // ─────────────────────────────────────────────────────────────
     private fun buildGeometry() {
-        val vbos = IntArray(3); GLES20.glGenBuffers(3, vbos, 0)
-        sphereVBO = vbos[0]; orbitVBO = vbos[1]; starsVBO = vbos[2]
+        val vbos = IntArray(4); GLES20.glGenBuffers(4, vbos, 0)
+        sphereVBO = vbos[0]; orbitVBO = vbos[1]; starsVBO = vbos[2]; sunVBO = vbos[3]
+        val sunQuad = floatArrayOf(
+            -1f, -1f, 0f, 0f, 1f,
+             1f, -1f, 0f, 1f, 1f,
+            -1f,  1f, 0f, 0f, 0f,
+             1f,  1f, 0f, 1f, 0f)
+        val sunBuffer = ByteBuffer.allocateDirect(sunQuad.size * 4)
+            .order(ByteOrder.nativeOrder()).asFloatBuffer().apply { put(sunQuad); position(0) }
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, sunVBO)
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, sunQuad.size * 4, sunBuffer, GLES20.GL_STATIC_DRAW)
         val ebo = IntArray(1); GLES20.glGenBuffers(1, ebo, 0); sphereEBO = ebo[0]
 
         val (sv, si, ic) = buildSphere(); sphereIdxCount = ic
@@ -487,7 +504,6 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private fun loadTextures() {
         earthTexId = loadTex("textures/earth.jpg",         0xFF2244AA.toInt())
         moonTexId  = loadTex("textures/moon.jpg",          0xFFCCCCCC.toInt())
-        sunTexId   = loadTex(SolarSystemData.SUN_TEXTURE,  SolarSystemData.SUN_FALLBACK_COLOR)
     }
 
     private fun loadTex(asset: String, fallback: Int): Int {

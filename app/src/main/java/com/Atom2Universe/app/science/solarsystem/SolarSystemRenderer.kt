@@ -51,20 +51,9 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
               gl_FragColor = vec4(c.rgb * (uAmbient + d * (1.0 - uAmbient)), c.a);
             }""".trimIndent()
 
-        val SUN_VERT = """
-            attribute vec4 aPos; attribute vec2 aUV;
-            uniform mat4 uMVP; uniform mat4 uM;
-            varying vec2 vUV;
-            void main(){ gl_Position = uMVP * aPos; vUV = aUV; }""".trimIndent()
+        val SUN_VERT = com.Atom2Universe.app.science.StellarSurfaceShader.vertex
 
-        val SUN_FRAG = """
-            precision mediump float;
-            uniform sampler2D uTex;
-            varying vec2 vUV;
-            void main(){
-              vec4 c = texture2D(uTex, vUV);
-              gl_FragColor = vec4(c.rgb * 1.15, c.a);
-            }""".trimIndent()
+        val SUN_FRAG = com.Atom2Universe.app.science.StellarSurfaceShader.fragment
 
         val LINE_VERT = """
             attribute vec4 aPos; uniform mat4 uMVP;
@@ -102,7 +91,8 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     private var pPos=0; private var pUV=0; private var pNorm=0
 
     private var sunProg = 0; private var sMVP=0; private var sM=0
-    private var sTex=0; private var sPos=0; private var sUV=0
+    private var sPos=0; private var sNorm=0; private var sTint=0; private var sPattern=0; private var sTime=0
+    private var sunVisualSeconds = 0f
 
     private var lineProg = 0; private var lMVP=0; private var lColor=0; private var lPos=0
     private var starProg = 0; private var stMVP=0; private var stPos=0
@@ -115,7 +105,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     // ── Textures ──────────────────────────────────────────────────
     private val planetTexIds = IntArray(8)
-    private var sunTexId = 0; private var ringsTexId = 0
+    private var ringsTexId = 0
 
     // ── Matrices ──────────────────────────────────────────────────
     private var screenAspect = 1f
@@ -195,6 +185,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         if (!paused) elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
 
         val dtSec = dtRealMs / 1000f
+        if (!paused) sunVisualSeconds += dtSec
 
         // Smooth mode blend
         val blendSpeed = 3f
@@ -243,11 +234,11 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
         GLES20.glUseProgram(sunProg)
         GLES20.glUniformMatrix4fv(sMVP, 1, false, mvp, 0)
-        GLES20.glUniformMatrix4fv(sM, 1, false, model, 0)
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sunTexId)
-        GLES20.glUniform1i(sTex, 0)
-        drawSphere(sPos, sUV, -1)
+        GLES20.glUniformMatrix4fv(sM, 1, false, view, 0)
+        GLES20.glUniform3f(sTint, 1f, 0.98f, 0.95f)
+        GLES20.glUniform4f(sPattern, 55f, 0.22f, 0.45f, 48.86f)
+        GLES20.glUniform1f(sTime, sunVisualSeconds * 0.2f)
+        drawSphere(sPos, -1, sNorm)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -423,8 +414,9 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         pPos = al(planetProg, "aPos"); pUV = al(planetProg, "aUV"); pNorm = al(planetProg, "aNorm")
 
         sunProg = link(SUN_VERT, SUN_FRAG)
-        sMVP = ul(sunProg, "uMVP"); sM = ul(sunProg, "uM"); sTex = ul(sunProg, "uTex")
-        sPos = al(sunProg, "aPos"); sUV = al(sunProg, "aUV")
+        sMVP = ul(sunProg, "uMVP"); sM = ul(sunProg, "uRot")
+        sTint = ul(sunProg, "uTint"); sPattern = ul(sunProg, "uPattern"); sTime = ul(sunProg, "uTime")
+        sPos = al(sunProg, "aPos"); sNorm = al(sunProg, "aNorm")
 
         lineProg = link(LINE_VERT, LINE_FRAG)
         lMVP = ul(lineProg, "uMVP"); lColor = ul(lineProg, "uColor"); lPos = al(lineProg, "aPos")
@@ -556,7 +548,6 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     // ─────────────────────────────────────────────────────────────
     // Chargement des textures
     private fun loadTextures() {
-        sunTexId = loadTex(SolarSystemData.SUN_TEXTURE, SolarSystemData.SUN_FALLBACK_COLOR)
         SolarSystemData.planets.forEach { p ->
             planetTexIds[p.id] = loadTex(p.textureAsset, p.fallbackColor)
         }

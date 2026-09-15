@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hub_science_title">Science</string>
     <string name="hub_science_desc">Tableau périodique, simulations…</string>
@@ -170,7 +170,7 @@
     <string name="cosmic_mode_scroll">Défilement</string>
     <string name="cosmic_mode_free">Libre</string>
     <string name="cosmic_hint_swipe">←  glissez pour parcourir l\'échelle  →</string>
-    <string name="cosmic_label_radius">Rayon %1$s</string>
+    <string name="cosmic_label_radius">Rayon ≈ %1$s</string>
     <string name="cosmic_ratio_radius">%1$s ≈ %2$s× le rayon de %3$s</string>
     <string name="cosmic_ratio_volume">soit ≈ %1$s× en volume</string>
     <string name="cosmic_ratio_equal">Taille quasi identique</string>
@@ -182,7 +182,29 @@
     <string name="cosmic_type_gas">Géante gazeuse</string>
     <string name="cosmic_type_star">Étoile</string>
     <string name="cosmic_type_blackhole">Trou noir</string>
-    <string name="cosmic_credits">Texture d\'étoile : SolarSystemScope (CC BY 4.0) · Textures de planètes : NASA</string>
+    <string name="cosmic_credits">Surfaces stellaires illustrées · Touchez une fiche pour consulter les sources et les limites.</string>
+    <string name="cosmic_label_horizon">Rayon de Schwarzschild ≈ %1$s</string>
+    <string name="cosmic_label_radius_no_rings">Rayon du globe, hors anneaux ≈ %1$s</string>
+    <string name="cosmic_details_hint">Sources et interprétation · toucher</string>
+    <string name="cosmic_uncertain_marker"> · taille incertaine</string>
+    <string name="cosmic_type_ice">Géante de glace</string>
+    <string name="cosmic_type_hot_star">Étoile chaude blanc bleuté</string>
+    <string name="cosmic_type_red_supergiant">Supergéante rouge</string>
+    <string name="cosmic_type_giant">Géante froide</string>
+    <string name="cosmic_star_fact">%1$s · ≈ %2$d K</string>
+    <string name="cosmic_mass_fact">≈ %1$s M☉</string>
+    <string name="cosmic_source_label">Référence (mesure ou interprétation physique) :</string>
+    <string name="cosmic_science_method">Les tailles suivent les rayons adoptés, pas un classement définitif. Les rayons et températures stellaires dépendent des mesures, distances et modèles ; les étoiles variables évoluent. Les motifs de surface et leurs mouvements sont illustratifs, sans reproduire une carte observée ni une durée physique. Les couleurs approchent la lumière visible à luminosité réduite ; le contraste est accentué pour montrer les structures. Aucune calibration exacte des couleurs n’est revendiquée.</string>
+    <string name="cosmic_note_sun">Le Soleil émet une lumière visible presque blanche. Sa photosphère présente une granulation fine et parfois des taches sombres. Les images solaires orangées utilisent souvent des longueurs d’onde sélectionnées ou des couleurs attribuées. Le rendu illustre une photosphère à environ 5 772 K.</string>
+    <string name="cosmic_note_sirius">Sirius A est une étoile chaude, presque blanche et légèrement bleutée. Davis et al. (2011) mesurent un rayon de 1,713 ± 0,009 rayon solaire. Cette valeur remplace le chiffre erroné de 1,19 auparavant utilisé ici. Sa surface est illustrée avec des détails discrets, sans recolorer une photographie du Soleil en bleu.</string>
+    <string name="cosmic_note_arcturus">Arcturus est une géante froide orangée. Ramírez et Allende Prieto (2011) donnent 4 286 ± 30 K et un rayon de 25,4 ± 0,2 rayons solaires. Les cellules affichées à sa surface sont illustratives.</string>
+    <string name="cosmic_note_betelgeuse">Bételgeuse est une supergéante rouge variable. Le rayon adopté de 764 rayons solaires vient de Joyce et al. (2020), avec une incertitude de −62/+116 rayons solaires dans ce modèle. D’autres méthodes donnent des estimations différentes. Les grandes structures de surface sont illustrées, sans constituer une carte actuelle de l’étoile.</string>
+    <string name="cosmic_note_uy">La comparaison conserve l’estimation publiée en 2013 de 1 708 ± 192 rayons solaires et 3 365 ± 134 K (Arroyo-Torres et al.). Ces valeurs dépendent fortement de la distance et du modèle atmosphérique adoptés ; elles ne constituent ni une taille actuelle définitive ni un classement fiable des plus grandes étoiles.</string>
+    <string name="cosmic_note_stephenson">La valeur existante de 2 150 rayons solaires est conservée uniquement comme scénario de comparaison incertain. Cette révision ne valide pas ce nombre comme un rayon mesuré. Sa place dans la liste ne prouve pas qu’il s’agit de la plus grande étoile connue. La surface est une illustration générique de supergéante froide.</string>
+    <string name="cosmic_note_star">La couleur suit approximativement la température effective adoptée : les étoiles chaudes sont blanc bleuté, les géantes froides plus orangées. Les supergéantes froides peuvent présenter de grandes structures de surface ; les motifs, contrastes et mouvements précis affichés restent illustratifs. Les valeurs du catalogue sont des approximations adoptées, pas une nouvelle mesure de chaque étoile.</string>
+    <string name="cosmic_note_ice">Uranus et Neptune sont toutes deux bleu-vert pâle ; Neptune est seulement un peu plus bleue. Irwin et al. (2024) montrent que les célèbres images bleu foncé de Neptune avaient un contraste accentué. Le rendu conserve les détails de texture et accentue légèrement la différence de teinte pour distinguer les planètes ; ce n’est pas une reconstruction calibrée des observations.</string>
+    <string name="cosmic_note_planet">La sphère représente un rayon moyen adopté ; l’aplatissement n’est pas modélisé. Les textures planétaires existantes sont conservées comme illustrations : leurs couleurs et dates d’observation peuvent différer. L’éclairage et la rotation servent la comparaison, sans reproduire la vue actuelle depuis la Terre.</string>
+    <string name="cosmic_note_bh">Ce disque représente schématiquement un horizon sans rotation, de rayon 2GM/c² calculé à partir de la masse adoptée. Ce n’est pas une photographie : l’anneau lumineux d’accrétion et l’ombre agrandie par la gravitation diffèrent de l’horizon lui-même. La rotation réelle du trou noir modifie ce modèle. Les masses estimées, notamment celles des quasars lointains, sont incertaines ; le trou noir stellaire générique est un exemple, pas un objet identifié.</string>
     <!-- Noms des astres -->
     <string name="cosmic_name_moon">Lune</string>
     <string name="cosmic_name_mercury">Mercure</string>

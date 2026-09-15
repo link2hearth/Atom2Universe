@@ -43,8 +43,6 @@ data class PlanetDef(
 
 object SolarSystemData {
     const val SUN_RADIUS_KM = 696_000f
-    const val SUN_TEXTURE = "textures/planets/sun.jpg"
-    val SUN_FALLBACK_COLOR = 0xFFFDB813.toInt()
 
     // Source : Meeus "Astronomical Algorithms" Table 31.a + VSOP87 simplifié.
     // L0 = longitude moyenne à J2000 (°), L1 = mouvement moyen (°/siècle julien),

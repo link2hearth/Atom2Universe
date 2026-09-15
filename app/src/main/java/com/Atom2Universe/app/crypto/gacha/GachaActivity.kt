@@ -1,10 +1,8 @@
 package com.Atom2Universe.app.crypto.gacha
 
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.graphics.Color
-import android.graphics.ImageDecoder
-import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.Animatable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +23,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.graphics.NativeSunDrawable
+import com.Atom2Universe.app.graphics.SunArtwork
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.crypto.AstronomyCalculator
 import com.Atom2Universe.app.crypto.EarthMoonCanvasView
 import com.Atom2Universe.app.crypto.bigbang.BigBangActivity
@@ -98,7 +100,7 @@ class GachaActivity : AppCompatActivity() {
     private var isAnimating = false
     private var isFirstDiscovery = false
     private val handler = Handler(Looper.getMainLooper())
-    private var glowPulseAnimator: ValueAnimator? = null
+
     private var discoveryAnimator: ValueAnimator? = null
 
     private val dismissGesture by lazy {
@@ -164,10 +166,9 @@ class GachaActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        loadSunGif()
+        loadSunVisual()
         configureEarthMoon()
-        startGlowPulse()
-        startSunRotation()
+        hideSunGlow()
 
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         drawMultiplier = prefs.getInt(KEY_DRAW_MULTIPLIER, 1)
@@ -205,22 +206,24 @@ class GachaActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSunGif() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val source = ImageDecoder.createSource(assets, "Assets/Image/Sun.gif")
-                val drawable = ImageDecoder.decodeDrawable(source)
-                sunImage.setImageDrawable(drawable)
-                if (drawable is AnimatedImageDrawable) drawable.start()
-            } else {
-                val stream = assets.open("Assets/Image/Sun.gif")
-                sunImage.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(stream, null))
-                stream.close()
+    private fun loadSunVisual() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            try {
+                val nativeSun = NativeSunDrawable()
+                // Davantage de place pour les éjections, même diamètre du disque solaire.
+                sunImage.layoutParams = sunImage.layoutParams.apply {
+                    width = sunBtn.layoutParams.width
+                    height = sunBtn.layoutParams.height
+                }
+                sunImage.setImageDrawable(nativeSun)
+                return
+            } catch (error: IllegalArgumentException) {
+                android.util.Log.w("GachaSun", "Shader solaire indisponible, génération fixe", error)
             }
-        } catch (e: Exception) {
-            // Fallback : cercle solaire simple via tint
-            sunImage.setBackgroundResource(R.drawable.gacha_glow_ring)
-            sunImage.setColorFilter(Color.parseColor("#FF8800"))
+        }
+        lifecycleScope.launch {
+            val bitmap = withContext(Dispatchers.Default) { SunArtwork.createBitmap() }
+            sunImage.setImageBitmap(bitmap)
         }
     }
 
@@ -234,23 +237,9 @@ class GachaActivity : AppCompatActivity() {
         earthMoonView.updateSnapshot(snapshot)
     }
 
-    private fun startGlowPulse() {
-        glowPulseAnimator = ValueAnimator.ofFloat(0.2f, 0.7f).apply {
-            duration = 1800
-            repeatMode = ValueAnimator.REVERSE
-            repeatCount = ValueAnimator.INFINITE
-            addUpdateListener { sunGlow.alpha = it.animatedValue as Float }
-            start()
-        }
-    }
-
-    private fun startSunRotation() {
-        ObjectAnimator.ofFloat(sunImage, "rotation", 0f, 360f).apply {
-            duration = 60_000
-            repeatCount = ObjectAnimator.INFINITE
-            interpolator = null
-            start()
-        }
+    private fun hideSunGlow() {
+        sunGlow.animate().cancel()
+        sunGlow.alpha = 0f
     }
 
     private fun startGachaDraw() {
@@ -271,9 +260,10 @@ class GachaActivity : AppCompatActivity() {
                 isFirstDiscovery = isFirst
 
                 // Cacher soleil et Terre/Lune dès le début de l'animation
-                sunBtn.animate().alpha(0f).setDuration(300).start()
+                sunBtn.animate().alpha(0f).setDuration(300).withEndAction {
+                    (sunImage.drawable as? Animatable)?.stop()
+                }.start()
                 earthMoonView.animate().alpha(0f).setDuration(300).start()
-                glowPulseAnimator?.cancel()
 
                 // Démarrer les particules
                 particleView.post {
@@ -346,9 +336,10 @@ class GachaActivity : AppCompatActivity() {
                             .withEndAction {
                                 sunBtn.animate().scaleX(1f).scaleY(1f).setDuration(100)
                                     .withEndAction {
-                                        sunBtn.animate().alpha(0f).setDuration(300).start()
+                                        sunBtn.animate().alpha(0f).setDuration(300).withEndAction {
+                                            (sunImage.drawable as? Animatable)?.stop()
+                                        }.start()
                                         earthMoonView.animate().alpha(0f).setDuration(300).start()
-                                        glowPulseAnimator?.cancel()
                                         cont.resume(Unit)
                                     }.start()
                             }.start()
@@ -468,8 +459,16 @@ class GachaActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (sunBtn.alpha > 0f) {
+            (sunImage.drawable as? Animatable)?.start()
+        }
         loadAndDisplayTickets()
         updateBigBangButtonVisibility()
+    }
+
+    override fun onPause() {
+        (sunImage.drawable as? Animatable)?.stop()
+        super.onPause()
     }
 
     private fun updateBigBangButtonVisibility() {
@@ -559,9 +558,12 @@ class GachaActivity : AppCompatActivity() {
             particleView.stop()
 
             sunGlow.setBackgroundResource(R.drawable.gacha_glow_ring)
+            if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                (sunImage.drawable as? Animatable)?.start()
+            }
             sunBtn.animate().alpha(1f).setDuration(300).start()
             earthMoonView.animate().alpha(1f).setDuration(300).start()
-            startGlowPulse()
+            hideSunGlow()
         }.start()
     }
 
@@ -594,8 +596,8 @@ class GachaActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        (sunImage.drawable as? Animatable)?.stop()
         super.onDestroy()
-        glowPulseAnimator?.cancel()
         discoveryAnimator?.cancel()
         miniCardAnimators.forEach { it.cancel() }
         particleView.stop()

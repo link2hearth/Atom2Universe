@@ -34,12 +34,6 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         const val FILL_FRACTION = 0.80f
         /** En deçà de ce rayon écran (px), l'astre est dessiné comme un point lumineux. */
         const val MIN_PIXEL_RADIUS = 1.6f
-        // Calibration de l'image de trou noir (Assets/sprites/blackhole.jpg, 296×139) :
-        // le bord externe de l'anneau de photons occupe 0.66 de la demi-hauteur de l'image.
-        // On l'aligne sur rWorld → la taille visible correspond au rayon de Schwarzschild.
-        const val BH_ASPECT = 296f / 139f
-        const val BH_RING_FRAC = 0.66f
-
         val PLANET_VERT = """
             attribute vec4 aPos; attribute vec2 aUV; attribute vec3 aNorm;
             uniform mat4 uMVP; uniform mat4 uRot;
@@ -53,7 +47,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         // Lumière directionnelle fixe (haut-gauche, vers la caméra) — pas de Soleil dans la scène.
         val PLANET_FRAG = """
             precision mediump float;
-            uniform sampler2D uTex; uniform vec3 uTint;
+            uniform sampler2D uTex; uniform vec3 uTint; uniform float uIce;
             varying vec2 vUV; varying vec3 vNorm;
             const vec3 L = vec3(-0.45, 0.55, 0.70);
             void main(){
@@ -61,22 +55,19 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
               float d = max(dot(n, normalize(L)), 0.0);
               float lit = 0.10 + 0.90 * d;
               vec4 c = texture2D(uTex, vUV);
-              gl_FragColor = vec4(c.rgb * uTint * lit, c.a);
+              vec3 surface = c.rgb;
+              if (uIce > 0.5) {
+                  float luma = dot(c.rgb, vec3(0.2126,0.7152,0.0722));
+                  // Écart de teinte accentué pour la comparaison ; détails moins écrasés.
+                  vec3 iceColor = mix(vec3(0.65,0.84,0.80),vec3(0.48,0.70,0.86),uIce-1.0);
+                  float detail = clamp(0.94+(luma-0.5)*0.75,0.62,1.18);
+                  surface = clamp(iceColor*detail,0.0,1.0);
+              }
+              gl_FragColor = vec4(surface * uTint * lit, c.a);
             }""".trimIndent()
 
         // Étoile : auto-émissive, teintée par température, assombrissement centre-bord (limb darkening).
-        val STAR_FRAG = """
-            precision mediump float;
-            uniform sampler2D uTex; uniform vec3 uTint;
-            varying vec2 vUV; varying vec3 vNorm;
-            void main(){
-              vec3 n = normalize(vNorm);
-              float mu = clamp(n.z, 0.0, 1.0);              // angle vers la caméra (+Z)
-              float limb = 0.45 + 0.55 * pow(mu, 0.45);     // plus sombre au limbe
-              vec3 surf = texture2D(uTex, vUV).rgb;
-              vec3 col = surf * uTint * limb * 1.25;
-              gl_FragColor = vec4(col, 1.0);
-            }""".trimIndent()
+        val STAR_FRAG = com.Atom2Universe.app.science.StellarSurfaceShader.fragment
 
         // Halo / couronne : quad additif, dégradé radial.
         val GLOW_VERT = """
@@ -96,31 +87,17 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
               gl_FragColor = vec4(uColor * a, a);
             }""".trimIndent()
 
-        // Trou noir : billboard texturé sur fond noir → blend additif (le noir se fond, l'anneau ressort).
-        val BH_FRAG = """
-            precision mediump float;
-            uniform sampler2D uTex; varying vec2 vUV;
-            void main(){
-              gl_FragColor = vec4(texture2D(uTex, vUV).rgb * 1.18, 1.0);
-            }""".trimIndent()
-
-        // Disque/anneau procédural (fallback trou noir sans texture).
+        // Disque d'horizon schématique à l'échelle de Schwarzschild, sans faux disque d'accrétion.
         val BHPROC_FRAG = """
             precision mediump float;
-            uniform float uTime; varying vec2 vUV;
-            void main(){
-              vec2 p = vUV * 2.0 - 1.0;
-              float r = length(p);
-              float horizon = smoothstep(0.34, 0.30, r);          // disque noir central
-              float ring = smoothstep(0.30, 0.42, r) * smoothstep(0.95, 0.55, r);
-              float ang = atan(p.y, p.x);
-              float beam = 0.65 + 0.35 * sin(ang + uTime);         // dissymétrie Doppler
-              vec3 hot = mix(vec3(1.0,0.55,0.12), vec3(1.0,0.9,0.6), ring);
-              vec3 col = hot * ring * beam;
-              float a = max(ring, 0.0) * (1.0 - horizon);
-              gl_FragColor = vec4(col, a);
-            }""".trimIndent()
-
+            varying vec2 vUV;
+            void main() {
+                float r = length(vUV*2.0-1.0)*1.05;
+                float edge = 1.0-smoothstep(0.995,1.005,r);
+                float rim = exp(-abs(r-0.995)*180.0)*0.18;
+                gl_FragColor = vec4(vec3(rim),edge);
+            }
+        """.trimIndent()
         val RINGS_FRAG = """
             precision mediump float;
             uniform sampler2D uTex; varying vec2 vUV;
@@ -153,14 +130,14 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     // ── Programmes (locations en cache) ──────────────────────────────
     private var planetProg = 0; private var pMVP = 0; private var pRot = 0; private var pTex = 0; private var pTint = 0
-    private var pPos = 0; private var pUV = 0; private var pNorm = 0
+    private var pPos = 0; private var pUV = 0; private var pNorm = 0; private var pIce = 0
 
     private var starProg = 0; private var stMVP = 0; private var stRot = 0; private var stTex = 0; private var stTint = 0
-    private var stPos = 0; private var stUV = 0; private var stNorm = 0
+    private var stPos = 0; private var stUV = -1; private var stNorm = 0
+    private var stPattern = 0; private var stTime = 0
 
     private var glowProg = 0; private var gMVP = 0; private var gColor = 0; private var gStrength = 0; private var gPos = 0; private var gUV = 0
-    private var bhProg = 0; private var bhMVP = 0; private var bhTex = 0; private var bhPos = 0; private var bhUV = 0
-    private var bhpProg = 0; private var bhpMVP = 0; private var bhpTime = 0; private var bhpPos = 0; private var bhpUV = 0
+    private var bhpProg = 0; private var bhpMVP = 0; private var bhpPos = 0; private var bhpUV = 0
     private var ringsProg = 0; private var rMVP = 0; private var rTex = 0; private var rPos = 0; private var rUV = 0
     private var bgProg = 0; private var bgPos = 0; private var bgBright = 0
     private var pointProg = 0; private var ptSize = 0; private var ptColor = 0; private var ptPos = 0
@@ -236,8 +213,8 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         }
 
         when (body.kind) {
-            BodyKind.STAR -> drawStar(body, rWorld, spin)
-            BodyKind.BLACK_HOLE -> drawBlackHole(body, rWorld, tSec)
+            BodyKind.STAR -> drawStar(body, rWorld, spin, tSec)
+            BodyKind.BLACK_HOLE -> drawBlackHole(rWorld)
             else -> drawPlanet(body, rWorld, spin)
         }
     }
@@ -266,6 +243,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glUniformMatrix4fv(pMVP, 1, false, mvp, 0)
         GLES20.glUniformMatrix4fv(pRot, 1, false, rot, 0)
         GLES20.glUniform3f(pTint, 1f, 1f, 1f)
+        GLES20.glUniform1f(pIce, when (body.id) { "uranus" -> 1f; "neptune" -> 2f; else -> 0f })
         bindTex(pTex, body.textureAsset, body.tintColor)
         drawSphere(pPos, pUV, pNorm)
 
@@ -273,62 +251,45 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
     }
 
     // ── Étoile (couronne additive + sphère émissive) ─────────────────
-    private fun drawStar(body: CosmicBody, rWorld: Float, spin: Float) {
+    private fun drawStar(body: CosmicBody, rWorld: Float, spin: Float, tSec: Float) {
         val c = body.tintColor
         val cr = Color.red(c) / 255f; val cg = Color.green(c) / 255f; val cb = Color.blue(c) / 255f
 
         // Couronne (quad additif derrière la sphère)
         GLES20.glDepthMask(false)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE)
-        drawGlowQuad(rWorld * 2.1f, cr, cg, cb, strength = 0.9f)
+        drawGlowQuad(rWorld * 2.1f, cr, cg, cb, strength = 0.42f)
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
         GLES20.glDepthMask(true)
 
         // Sphère stellaire
-        buildModel(rWorld, spin, tiltDeg = 12f)
+        buildModel(rWorld, spin * 0.12f, tiltDeg = 12f)
         Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
         GLES20.glUseProgram(starProg)
         GLES20.glUniformMatrix4fv(stMVP, 1, false, mvp, 0)
         GLES20.glUniformMatrix4fv(stRot, 1, false, rot, 0)
         GLES20.glUniform3f(stTint, cr, cg, cb)
-        bindTexFor(stTex, body.textureAsset, c)
+        val hot = body.temperatureK >= 7500
+        val supergiant = body.radiusInSuns >= 100
+        val giant = body.radiusInSuns >= 5
+        val scale = when { hot -> 38f; supergiant -> 3.5f; giant -> 14f; else -> 55f }
+        val contrast = when { hot -> 0.10f; supergiant -> 0.55f; giant -> 0.30f; else -> 0.22f }
+        val seed = (body.id.hashCode().toLong() and 0xffffL).toFloat() / 997f
+        GLES20.glUniform4f(stPattern, scale, contrast, if (body.id == "sun") 0.45f else 0f, seed)
+        GLES20.glUniform1f(stTime, tSec * 0.2f)
         drawSphere(stPos, stUV, stNorm)
     }
 
-    // ── Trou noir (billboard image, fallback procédural) ────────────
-    // L'horizon n'émet rien : on rend l'image de l'anneau de photons + disque, calée pour
-    // que l'anneau externe = rWorld (cohérent avec le rayon dessiné des planètes/étoiles).
-    private fun drawBlackHole(body: CosmicBody, rWorld: Float, tSec: Float) {
-        val asset = body.textureAsset
-        val hasRealTex = asset != null && assetLoaded[asset] == true
+    // Horizon théorique non tournant : son rayon visible est exactement rWorld.
+    private fun drawBlackHole(rWorld: Float) {
+        buildBillboard(rWorld * 1.05f, rWorld * 1.05f)
+        Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
         GLES20.glDepthMask(false)
-
-        if (hasRealTex) {
-            val sy = rWorld / BH_RING_FRAC
-            val sx = sy * BH_ASPECT
-            buildBillboard(sx, sy)
-            Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
-            GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE)   // additif : le noir de l'image disparaît
-            GLES20.glUseProgram(bhProg)
-            GLES20.glUniformMatrix4fv(bhMVP, 1, false, mvp, 0)
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, resolveTex(asset, body.tintColor))
-            GLES20.glUniform1i(bhTex, 0)
-            drawQuad(bhPos, bhUV)
-        } else {
-            val s = rWorld / 0.42f   // l'anneau procédural occupe ~0.42 du quad
-            buildBillboard(s, s)
-            Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
-            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE)
-            GLES20.glUseProgram(bhpProg)
-            GLES20.glUniformMatrix4fv(bhpMVP, 1, false, mvp, 0)
-            GLES20.glUniform1f(bhpTime, tSec)
-            drawQuad(bhpPos, bhpUV)
-        }
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+        GLES20.glUseProgram(bhpProg)
+        GLES20.glUniformMatrix4fv(bhpMVP, 1, false, mvp, 0)
+        drawQuad(bhpPos, bhpUV)
         GLES20.glDepthMask(true)
     }
-
     // ── Anneaux de Saturne ───────────────────────────────────────────
     private fun drawRings(rWorld: Float, spin: Float) {
         Matrix.setIdentityM(model, 0)
@@ -410,8 +371,10 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         val stride = 8 * 4
         GLES20.glEnableVertexAttribArray(posAttr)
         GLES20.glVertexAttribPointer(posAttr, 3, GLES20.GL_FLOAT, false, stride, 0)
-        GLES20.glEnableVertexAttribArray(uvAttr)
-        GLES20.glVertexAttribPointer(uvAttr, 2, GLES20.GL_FLOAT, false, stride, 12)
+        if (uvAttr >= 0) {
+            GLES20.glEnableVertexAttribArray(uvAttr)
+            GLES20.glVertexAttribPointer(uvAttr, 2, GLES20.GL_FLOAT, false, stride, 12)
+        }
         GLES20.glEnableVertexAttribArray(normAttr)
         GLES20.glVertexAttribPointer(normAttr, 3, GLES20.GL_FLOAT, false, stride, 20)
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, sphereEBO)
@@ -483,20 +446,19 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         planetProg = link(PLANET_VERT, PLANET_FRAG)
         pMVP = ul(planetProg, "uMVP"); pRot = ul(planetProg, "uRot"); pTex = ul(planetProg, "uTex"); pTint = ul(planetProg, "uTint")
         pPos = al(planetProg, "aPos"); pUV = al(planetProg, "aUV"); pNorm = al(planetProg, "aNorm")
+        pIce = ul(planetProg, "uIce")
 
-        starProg = link(PLANET_VERT, STAR_FRAG)
+        starProg = link(com.Atom2Universe.app.science.StellarSurfaceShader.vertex, STAR_FRAG)
         stMVP = ul(starProg, "uMVP"); stRot = ul(starProg, "uRot"); stTex = ul(starProg, "uTex"); stTint = ul(starProg, "uTint")
-        stPos = al(starProg, "aPos"); stUV = al(starProg, "aUV"); stNorm = al(starProg, "aNorm")
+        stPos = al(starProg, "aPos"); stNorm = al(starProg, "aNorm")
+        stPattern = ul(starProg, "uPattern"); stTime = ul(starProg, "uTime")
 
         glowProg = link(GLOW_VERT, GLOW_FRAG)
         gMVP = ul(glowProg, "uMVP"); gColor = ul(glowProg, "uColor"); gStrength = ul(glowProg, "uStrength")
         gPos = al(glowProg, "aPos"); gUV = al(glowProg, "aUV")
 
-        bhProg = link(GLOW_VERT, BH_FRAG)
-        bhMVP = ul(bhProg, "uMVP"); bhTex = ul(bhProg, "uTex"); bhPos = al(bhProg, "aPos"); bhUV = al(bhProg, "aUV")
-
         bhpProg = link(GLOW_VERT, BHPROC_FRAG)
-        bhpMVP = ul(bhpProg, "uMVP"); bhpTime = ul(bhpProg, "uTime"); bhpPos = al(bhpProg, "aPos"); bhpUV = al(bhpProg, "aUV")
+        bhpMVP = ul(bhpProg, "uMVP"); bhpPos = al(bhpProg, "aPos"); bhpUV = al(bhpProg, "aUV")
 
         ringsProg = link(GLOW_VERT, RINGS_FRAG)
         rMVP = ul(ringsProg, "uMVP"); rTex = ul(ringsProg, "uTex"); rPos = al(ringsProg, "aPos"); rUV = al(ringsProg, "aUV")

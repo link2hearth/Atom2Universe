@@ -3459,10 +3459,12 @@ internal class CaveRenderer(
         }
     }
 
-    private fun loadSkyTexture(assetPath: String): Int {
+    private fun loadSkyTexture(assetPath: String): Int =
+        uploadSkyTexture(context.assets.open(assetPath).use { BitmapFactory.decodeStream(it) })
+
+    private fun uploadSkyTexture(bmp: android.graphics.Bitmap): Int {
         val ids = IntArray(1); GLES30.glGenTextures(1, ids, 0); val texId = ids[0]
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)
-        val bmp = BitmapFactory.decodeStream(context.assets.open(assetPath))
         val buf = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
         bmp.copyPixelsToBuffer(buf); buf.position(0)
         GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bmp.width, bmp.height, 0, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, buf)
@@ -3482,7 +3484,7 @@ internal class CaveRenderer(
             bUAlpha = it.uniform("u_alpha")
             bUMask  = it.uniform("u_mask")
         }
-        sunTex  = loadSkyTexture("Assets/Image/Sun.png")
+        sunTex  = uploadSkyTexture(com.Atom2Universe.app.graphics.SunArtwork.createBitmap())
         moonTex = loadSkyTexture("Assets/Image/FullMoon2010.png")
         val ids = IntArray(1); GLES30.glGenBuffers(1, ids, 0); billboardVbo = ids[0]
     }

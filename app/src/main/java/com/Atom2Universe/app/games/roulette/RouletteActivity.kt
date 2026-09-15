@@ -4,10 +4,7 @@ import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.ImageDecoder
-import android.graphics.drawable.AnimatedImageDrawable
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,7 +22,6 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.util.enableImmersiveMode
-import java.nio.ByteBuffer
 
 class RouletteActivity : ThemedActivity() {
 
@@ -52,7 +48,6 @@ class RouletteActivity : ThemedActivity() {
     private val betLevels = listOf(1, 2, 5, 10, 25)
 
     private val bitmapCache = mutableMapOf<RouletteSymbol, Bitmap>()
-    private var jokerGifBytes: ByteArray? = null
 
     private val SPIN_DURATION_MS = 2000L
     private val COLUMN_DELAY_MS  = 800L
@@ -86,7 +81,6 @@ class RouletteActivity : ThemedActivity() {
         // Chargement des bitmaps en arrière-plan
         Thread {
             RouletteSymbol.entries.filter { !it.isJoker }.forEach { getBitmap(it) }
-            jokerGifBytes = try { assets.open("Assets/Image/RainbowStar.gif").readBytes() } catch (e: Exception) { null }
             runOnUiThread {
                 bitmapsReady = true
                 for (r in 0..2) for (c in 0..2) applyCellSymbol(r, c, RouletteSymbol.BLACKHOLE, false)
@@ -326,6 +320,7 @@ class RouletteActivity : ThemedActivity() {
         bitmapCache.getOrPut(symbol) { loadBitmap(symbol) }
 
     private fun loadBitmap(symbol: RouletteSymbol): Bitmap {
+        if (symbol == RouletteSymbol.SUN) return com.Atom2Universe.app.graphics.SunArtwork.createBitmap()
         val path = symbol.assetPath ?: return createFallbackBitmap()
         return try {
             val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
@@ -368,25 +363,14 @@ class RouletteActivity : ThemedActivity() {
             else           -> dpI(8f)
         }
         iv.setPadding(pad, pad, pad, pad)
-        if (symbol.isJoker) applyJokerGif(iv) else iv.setImageBitmap(getBitmap(symbol))
+        (iv.drawable as? RainbowStarDrawable)?.stop()
+        if (symbol.isJoker) {
+            val star = (iv.drawable as? RainbowStarDrawable) ?: RainbowStarDrawable()
+            iv.setImageDrawable(star)
+            if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) star.start()
+        } else iv.setImageBitmap(getBitmap(symbol))
         val bg = iv.background as? GradientDrawable
         if (bg != null) bg.setColor(if (isBlackhole) Color.BLACK else colorNormBg)
-    }
-
-    private fun applyJokerGif(iv: ImageView) {
-        val bytes = jokerGifBytes
-        if (bytes != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            try {
-                val source = ImageDecoder.createSource(ByteBuffer.wrap(bytes))
-                val drawable = ImageDecoder.decodeDrawable(source)
-                iv.setImageDrawable(drawable)
-                (drawable as? AnimatedImageDrawable)?.start()
-                return
-            } catch (_: Exception) {}
-        }
-        // Fallback API 26-27 : première frame statique
-        bytes?.let { iv.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size)) }
-            ?: iv.setImageBitmap(createFallbackBitmap())
     }
 
     private fun applyCellBorder(iv: ImageView, highlight: Boolean, isBlackhole: Boolean = false) {
@@ -416,6 +400,7 @@ class RouletteActivity : ThemedActivity() {
 
     override fun onPause() {
         super.onPause()
+        for (row in cellViews) for (cell in row) (cell.drawable as? RainbowStarDrawable)?.stop()
         music.stop()
         handler.removeCallbacksAndMessages(null)
         neutrinoRepo.setBalance(balance)
@@ -423,6 +408,7 @@ class RouletteActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
+        for (row in cellViews) for (cell in row) (cell.drawable as? RainbowStarDrawable)?.start()
         music.start()
     }
 

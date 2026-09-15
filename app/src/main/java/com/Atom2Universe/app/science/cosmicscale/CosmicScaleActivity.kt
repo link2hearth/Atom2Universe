@@ -11,6 +11,10 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.widget.ScrollView
 import androidx.cardview.widget.CardView
 import androidx.core.content.edit
 import com.Atom2Universe.app.R
@@ -199,6 +203,13 @@ class CosmicScaleActivity : ThemedActivity() {
         }
         val fact = TextView(this).apply { textSize = 12f; setTextColor(0xFFB9B9B9.toInt()) }
         content.addView(name); content.addView(type); content.addView(radius); content.addView(fact)
+        content.addView(TextView(this).apply {
+            text = getString(R.string.cosmic_details_hint)
+            textSize = 11f
+            setTextColor(0xFF9CCFFF.toInt())
+            setPadding(0, dp(6), 0, 0)
+        })
+        card.setOnClickListener { showScientificDetails(if (isLeft) left else right) }
         card.addView(content)
         if (isLeft) {
             leftName = name; leftType = type; leftRadius = radius; leftFact = fact
@@ -280,7 +291,12 @@ class CosmicScaleActivity : ThemedActivity() {
     private fun fillCard(b: CosmicBody, name: TextView, type: TextView, radius: TextView, fact: TextView) {
         name.text = getString(b.nameRes)
         type.text = getString(typeRes(b))
-        radius.text = getString(R.string.cosmic_label_radius, radiusValue(b))
+        if (b.id == "stephenson218" || b.id == "uyscuti") type.append(getString(R.string.cosmic_uncertain_marker))
+        radius.text = getString(when {
+            b.kind == BodyKind.BLACK_HOLE -> R.string.cosmic_label_horizon
+            b.hasRings -> R.string.cosmic_label_radius_no_rings
+            else -> R.string.cosmic_label_radius
+        }, radiusValue(b))
         val f = factValue(b)
         fact.visibility = if (f == null) View.GONE else View.VISIBLE
         if (f != null) fact.text = f
@@ -293,21 +309,67 @@ class CosmicScaleActivity : ThemedActivity() {
         tvRatio.text = if (ratio < 1.02) getString(R.string.cosmic_ratio_equal)
         else getString(R.string.cosmic_ratio_radius,
             getString(larger.nameRes), ratioStr(ratio), getString(smaller.nameRes)) +
-            "\n" + getString(R.string.cosmic_ratio_volume, ratioStr(ratio.pow(3.0)))
+            if (left.kind == BodyKind.BLACK_HOLE || right.kind == BodyKind.BLACK_HOLE) ""
+            else "\n" + getString(R.string.cosmic_ratio_volume, ratioStr(ratio.pow(3.0)))
     }
 
     private fun typeRes(b: CosmicBody): Int = when {
         b.id == "moon" -> R.string.cosmic_type_moon
         b.kind == BodyKind.ROCKY -> R.string.cosmic_type_rocky
+        b.id == "uranus" || b.id == "neptune" -> R.string.cosmic_type_ice
         b.kind == BodyKind.GAS -> R.string.cosmic_type_gas
+        b.kind == BodyKind.STAR && b.temperatureK >= 7500 -> R.string.cosmic_type_hot_star
+        b.kind == BodyKind.STAR && b.radiusInSuns >= 100 -> R.string.cosmic_type_red_supergiant
+        b.kind == BodyKind.STAR && b.radiusInSuns >= 5 -> R.string.cosmic_type_giant
         b.kind == BodyKind.STAR -> R.string.cosmic_type_star
         else -> R.string.cosmic_type_blackhole
     }
 
     private fun factValue(b: CosmicBody): String? = when (b.kind) {
-        BodyKind.STAR -> "${b.spectralType} · ${b.temperatureK} K"
-        BodyKind.BLACK_HOLE -> b.massSolar?.let { "≈ ${massStr(it)} M☉" }
+        BodyKind.STAR -> getString(R.string.cosmic_star_fact, b.spectralType, b.temperatureK)
+        BodyKind.BLACK_HOLE -> b.massSolar?.let { getString(R.string.cosmic_mass_fact, massStr(it)) }
         else -> null
+    }
+
+    private fun showScientificDetails(body: CosmicBody) {
+        val note = when (body.id) {
+            "sirius" -> R.string.cosmic_note_sirius
+            "arcturus" -> R.string.cosmic_note_arcturus
+            "betelgeuse" -> R.string.cosmic_note_betelgeuse
+            "uyscuti" -> R.string.cosmic_note_uy
+            "stephenson218" -> R.string.cosmic_note_stephenson
+            "sun" -> R.string.cosmic_note_sun
+            "uranus", "neptune" -> R.string.cosmic_note_ice
+            else -> when (body.kind) {
+                BodyKind.STAR -> R.string.cosmic_note_star
+                BodyKind.BLACK_HOLE -> R.string.cosmic_note_bh
+                else -> R.string.cosmic_note_planet
+            }
+        }
+        val source = when (body.id) {
+            "sirius" -> "https://arxiv.org/abs/1010.3790"
+            "arcturus" -> "https://arxiv.org/abs/1109.4425"
+            "betelgeuse" -> "https://arxiv.org/abs/2006.09837"
+            "uyscuti" -> "https://arxiv.org/abs/1305.6179"
+            "uranus", "neptune" -> "https://academic.oup.com/mnras/article/527/4/11521/7511973"
+            "sun" -> "https://science.nasa.gov/sun/facts/"
+            else -> when (body.kind) {
+                BodyKind.STAR -> "https://www.eso.org/public/news/eso1726/"
+                BodyKind.BLACK_HOLE -> "https://science.nasa.gov/universe/black-holes/anatomy/"
+                else -> "https://science.nasa.gov/solar-system/planets/"
+            }
+        }
+        val message = TextView(this).apply {
+            setPadding(dp(20), dp(12), dp(20), dp(16))
+            textSize = 14f
+            autoLinkMask = Linkify.WEB_URLS
+            text = getString(note) + "\n\n" + getString(R.string.cosmic_science_method) +
+                "\n\n" + getString(R.string.cosmic_source_label) + "\n" + source
+            movementMethod = LinkMovementMethod.getInstance()
+        }
+        AlertDialog.Builder(this).setTitle(body.nameRes)
+            .setView(ScrollView(this).apply { addView(message) })
+            .setPositiveButton(android.R.string.ok, null).show()
     }
 
     // ── Helpers UI ──────────────────────────────────────────────────
