@@ -1,6 +1,7 @@
 package com.Atom2Universe.app
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,11 +13,19 @@ open class ThemedActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocaleHelper.ensureLocale(this)
         // Active l'affichage de bord à bord (edge-to-edge) pour Android 15+
         // Assure la rétrocompatibilité sur les versions antérieures
         enableEdgeToEdge()
 
         AppThemeManager.applyTheme(this)
         super.onCreate(savedInstanceState)
+        // AppCompat may have reapplied the configuration supplied by the ROM.
+        LocaleHelper.ensureLocale(this)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.ensureLocale(this)
     }
 }

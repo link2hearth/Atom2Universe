@@ -582,7 +582,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
                 val selectedLanguage = languages[which]
                 if (selectedLanguage != currentLanguage) {
                     LocaleHelper.setLanguage(this, selectedLanguage)
-                    // Recreate activity to apply new language
+                    // Also refresh when a vendor ROM ignores the system locale change.
                     recreate()
                 }
                 dialog.dismiss()

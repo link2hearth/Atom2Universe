@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.hub
 
 import android.content.Context
+import android.content.res.Configuration
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -61,7 +62,9 @@ abstract class BaseHubActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocaleHelper.ensureLocale(this)
         super.onCreate(savedInstanceState)
+        LocaleHelper.ensureLocale(this)
         enableImmersiveMode()
         setContentView(getLayoutResId())
 
@@ -75,6 +78,11 @@ abstract class BaseHubActivity : AppCompatActivity() {
 
         isGridMode = hubPrefs.getString(KEY_VIEW_MODE, VIEW_MODE_GRID) == VIEW_MODE_GRID
         updateViewMode()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.ensureLocale(this)
     }
 
     abstract fun getLayoutResId(): Int
