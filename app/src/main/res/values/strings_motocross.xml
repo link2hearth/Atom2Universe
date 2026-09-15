@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="motocross_title">Motocross</string>
-    <string name="motocross_description">Ride procedural tracks — left to brake/lean back, right to accelerate/lean forward!</string>
+    <string name="motocross_description">Ride modular trails with suspended wheels, rider balance and checkpoints.</string>
     <string name="motocross_restart">Restart</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
@@ -11,4 +11,30 @@
     <string name="motocross_distance_final">Distance: %1$d m</string>
     <string name="motocross_best">Best: %1$d m</string>
     <string name="motocross_tap_replay">Tap to play again</string>
+    <string name="motocross_checkpoint_retry">Return to checkpoint. Hold to restart this track.</string>
+    <string name="motocross_new_track">Generate a new track</string>
+    <string name="motocross_lean_back">◀ Back</string>
+    <string name="motocross_lean_forward">Forward ▶</string>
+    <string name="motocross_brake">Brake</string>
+    <string name="motocross_throttle">Throttle</string>
+    <string name="motocross_lean_back_accessibility">Lean back. Hold, or activate to toggle.</string>
+    <string name="motocross_lean_forward_accessibility">Lean forward. Hold, or activate to toggle.</string>
+    <string name="motocross_brake_accessibility">Brake. Hold, or activate to toggle.</string>
+    <string name="motocross_throttle_accessibility">Accelerate. Hold, or activate to toggle.</string>
+    <string name="motocross_surface_description">Motocross track. After a crash, activate to return to the checkpoint. After finishing, activate for a new track.</string>
+    <string name="motocross_progress">%1$d / %2$d m</string>
+    <string name="motocross_run_summary">%1$d:%2$02d · %3$d faults</string>
+    <string name="motocross_track_info">Track %1$d · Checkpoint %2$d/%3$d</string>
+    <string name="motocross_checkpoint_number">%1$d</string>
+    <string name="motocross_checkpoint_saved">Checkpoint %1$d saved</string>
+    <string name="motocross_finish_flag">FINISH</string>
+    <string name="motocross_finished">Track complete!</string>
+    <string name="motocross_crashed">Crash!</string>
+    <string name="motocross_next_hint">Tap for a new track · ↻ to replay this one</string>
+    <string name="motocross_retry_hint">Tap to return to the last checkpoint</string>
+    <string name="motocross_controls_hint">Balance on the left · Brake and throttle on the right</string>
+    <string name="motocross_bridge_sign">UPPER ROUTE</string>
+    <string name="motocross_loop_sign">LOOP</string>
+    <string name="motocross_bridge_hint">Jump onto the bridge · A lower route runs underneath</string>
+    <string name="motocross_loop_hint">Build up speed and keep the throttle on through the loop</string>
 </resources>

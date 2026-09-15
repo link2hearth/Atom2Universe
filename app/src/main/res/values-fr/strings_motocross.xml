@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="motocross_title">Motocross</string>
-    <string name="motocross_description">Pilotez sur des pistes procédurales — gauche pour freiner/pencher, droite pour accélérer !</string>
+    <string name="motocross_description">Parcourez des pistes modulaires avec suspensions, équilibre du pilote et checkpoints.</string>
     <string name="motocross_restart">Recommencer</string>
     <string name="motocross_hud_distance">%1$d m</string>
     <string name="motocross_hud_speed">%1$d km/h</string>
@@ -11,4 +11,30 @@
     <string name="motocross_distance_final">Distance : %1$d m</string>
     <string name="motocross_best">Meilleur : %1$d m</string>
     <string name="motocross_tap_replay">Appuyez pour rejouer</string>
+    <string name="motocross_checkpoint_retry">Revenir au checkpoint. Maintenir pour recommencer cette piste.</string>
+    <string name="motocross_new_track">Générer une nouvelle piste</string>
+    <string name="motocross_lean_back">◀ Arrière</string>
+    <string name="motocross_lean_forward">Avant ▶</string>
+    <string name="motocross_brake">Frein</string>
+    <string name="motocross_throttle">Gaz</string>
+    <string name="motocross_lean_back_accessibility">Se pencher en arrière. Maintenir, ou activer pour basculer.</string>
+    <string name="motocross_lean_forward_accessibility">Se pencher en avant. Maintenir, ou activer pour basculer.</string>
+    <string name="motocross_brake_accessibility">Freiner. Maintenir, ou activer pour basculer.</string>
+    <string name="motocross_throttle_accessibility">Accélérer. Maintenir, ou activer pour basculer.</string>
+    <string name="motocross_surface_description">Piste de motocross. Après une chute, activer pour revenir au checkpoint. Après l’arrivée, activer pour une nouvelle piste.</string>
+    <string name="motocross_progress">%1$d / %2$d m</string>
+    <string name="motocross_run_summary">%1$d:%2$02d · %3$d fautes</string>
+    <string name="motocross_track_info">Piste %1$d · Checkpoint %2$d/%3$d</string>
+    <string name="motocross_checkpoint_number">%1$d</string>
+    <string name="motocross_checkpoint_saved">Checkpoint %1$d enregistré</string>
+    <string name="motocross_finish_flag">ARRIVÉE</string>
+    <string name="motocross_finished">Piste terminée !</string>
+    <string name="motocross_crashed">Chute !</string>
+    <string name="motocross_next_hint">Toucher : nouvelle piste · ↻ : rejouer celle-ci</string>
+    <string name="motocross_retry_hint">Touchez pour reprendre au dernier checkpoint</string>
+    <string name="motocross_controls_hint">Équilibre à gauche · Frein et gaz à droite</string>
+    <string name="motocross_bridge_sign">PISTE HAUTE</string>
+    <string name="motocross_loop_sign">LOOPING</string>
+    <string name="motocross_bridge_hint">Vise le pont · Une piste basse passe en dessous</string>
+    <string name="motocross_loop_hint">Prends de la vitesse et garde les gaz dans le looping</string>
 </resources>
