@@ -59,6 +59,19 @@ class CaveWorldMenuActivity : ThemedActivity() {
             addSpaced(button(R.string.cave_menu_controls) {
                 startActivity(Intent(this@CaveWorldMenuActivity, CaveControlsEditorActivity::class.java))
             })
+            addSpaced(button(R.string.cave_audio_credits_title) {
+                val credits = TextView(this@CaveWorldMenuActivity).apply {
+                    setText(R.string.cave_audio_credits_body)
+                    setPadding(dp(24), dp(12), dp(24), dp(12))
+                    setTextIsSelectable(true)
+                    android.text.util.Linkify.addLinks(this, android.text.util.Linkify.WEB_URLS)
+                    movementMethod = android.text.method.LinkMovementMethod.getInstance()
+                }
+                MaterialAlertDialogBuilder(this@CaveWorldMenuActivity)
+                    .setTitle(R.string.cave_audio_credits_title)
+                    .setView(android.widget.ScrollView(this@CaveWorldMenuActivity).apply { addView(credits) })
+                    .setPositiveButton(android.R.string.ok, null).show()
+            })
         }
         recycler = findViewById(R.id.cave_menu_recycler)
         recycler.layoutManager = LinearLayoutManager(this)

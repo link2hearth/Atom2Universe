@@ -74,6 +74,7 @@ class CaveActivity : ThemedActivity() {
     private val uiTouchIds = mutableSetOf<Int>()
     internal fun releaseGameInputs() {
         touch.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
+        ptrReload = -1; vBtnReload?.isPressed = false
         tapCandidates.clear()
     }
     private  val gamepad = GamepadController(touch)
@@ -90,6 +91,7 @@ class CaveActivity : ThemedActivity() {
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
+    private var ptrReload = -1
     private val tapCandidates = HashMap<Int, TapCandidate>()
     private var vBtnBack: View? = null
     private var vBtnCamera: Button? = null
@@ -342,6 +344,10 @@ class CaveActivity : ThemedActivity() {
             val reload = Button(this).apply {
                 hud.controlIcon(this, "reload", getString(R.string.cave_controls_reload))
                 setOnClickListener { glView.queueEvent { renderer.reloadAssaultWeapon() } }
+                // dispatchTouchEvent handles each finger, including a second finger while walking.
+                // Consume native touch clicks to avoid a second reload on release; retain
+                // performClick for accessibility and keyboard activation.
+                setOnTouchListener { _, _ -> true }
             }
             vBtnReload = reload
             vGameArea?.addView(reload, FrameLayout.LayoutParams(60, 60))
@@ -607,9 +613,24 @@ class CaveActivity : ThemedActivity() {
         }
         loadingCover.visibility = if (renderer.spawnReady) View.GONE else View.VISIBLE
 
-        soundEngine = CaveSoundEngine(lifecycleScope).also {
+        soundEngine = CaveSoundEngine(this).also {
             it.start()
             it.subscribe(renderer.eventBus)
+        }
+        renderer.eventBus.subscribe { event ->
+            if (event is com.Atom2Universe.app.games.caves.node.GameEvent.MobDied ||
+                event is com.Atom2Universe.app.games.caves.node.GameEvent.SoldierDown) {
+                uiHandler.post {
+                    if (!renderer.gamePaused && lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                        music.playKillDing()
+                    }
+                }
+            }
+            if (event is com.Atom2Universe.app.games.caves.node.GameEvent.WeaponFired ||
+                event is com.Atom2Universe.app.games.caves.node.GameEvent.PlayerHit ||
+                event is com.Atom2Universe.app.games.caves.node.GameEvent.EnemyFired) {
+                uiHandler.post { music.onCombat() }
+            }
         }
     }
 
@@ -755,7 +776,7 @@ class CaveActivity : ThemedActivity() {
         touch.crouchToggleEnabled = CaveControlsPrefs.crouchToggle(this)
         touch.runToggleEnabled = CaveControlsPrefs.runToggle(this)
         soundEngine?.resume()
-        music.resume()
+        if (renderer.mode !is AssaultMode) music.resume()
         forceImmersiveMode()
         vGameArea?.let { applyButtonPositions(it) }
     }
@@ -1071,6 +1092,11 @@ class CaveActivity : ThemedActivity() {
                     handleQuickbarPointerDown(x, y)
                 }
                 if (hitsHudOnly) uiTouchIds.add(pid)
+                if (ptrReload == -1 && hit(vBtnReload) && vBtnReload?.isEnabled == true) {
+                    ptrReload = pid
+                    vBtnReload?.isPressed = true
+                    vBtnReload?.performClick()
+                }
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
                 if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.pressDown() }
                 if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f }
@@ -1099,6 +1125,7 @@ class CaveActivity : ThemedActivity() {
                 if (pid == ptrDown  || cancel) { ptrDown  = -1; touch.flyDown     = false }
                 if (pid == ptrLaser || cancel) { ptrLaser = -1; touch.laserActive = false; touch.rtChargeRaw = 0f }
                 if (pid == ptrPlace || cancel) { ptrPlace = -1 }
+                if (pid == ptrReload || cancel) { ptrReload = -1; vBtnReload?.isPressed = false }
             }
         }
         touch.onTouch(ev, glView.width, uiTouchIds,

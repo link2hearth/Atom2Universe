@@ -150,7 +150,7 @@ internal class AssaultMode(
                 kind = profile.kind, maxRange = profile.range, fromEnemy = true,
             ))
         }
-        r.eventBus.publish(GameEvent.EnemyFired)
+        r.eventBus.publish(GameEvent.EnemyFired(roundWeapon))
     }
 
     override fun spawnPoint(): FloatArray = source.spawnPoint()

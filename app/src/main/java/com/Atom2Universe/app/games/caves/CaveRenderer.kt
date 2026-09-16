@@ -970,6 +970,7 @@ internal class CaveRenderer(
                 PlayerMode.WALK      -> updateWalk(dt)
             }
         }
+        if (gamePaused || playerMode != PlayerMode.WALK) eventBus.publish(GameEvent.Footstep())
         camera.eyeDrop = if (playerMode == PlayerMode.WALK) physics.eyeDrop else 0.0
         camera.update()
         adjustTpsCamera()
@@ -1418,7 +1419,10 @@ internal class CaveRenderer(
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) mode.update(dt)
         if (worldSource == null) {
-            if (!gamePaused) passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ)
+            if (!gamePaused) {
+                passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ)
+                updateAnimalAudio(dt)
+            }
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
         }
         enemyRenderer.render(
@@ -1797,7 +1801,7 @@ internal class CaveRenderer(
         val profile = RangedProfile.all[def.weaponType] ?: return false
         val magazine = if(profile.magazine>0) magazines.getOrPut(heldId) { MagazineState(profile.magazine,profile.reload) } else null
         if(magazine != null && !magazine.shoot()) {
-            magazine.reload()
+            reloadWithSound(magazine)
             return false
         }
         val stats = weapon.rolledStats
@@ -1833,7 +1837,8 @@ internal class CaveRenderer(
 
         val speedBonus = stats["attack_speed"] ?: 0
         weaponAttackCooldown=(profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
-        if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) magazine.reload()
+        eventBus.publish(GameEvent.WeaponFired(def.weaponType ?: "gun"))
+        if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) reloadWithSound(magazine)
         // Un coup de feu s'entend : le mode prévient les ennemis à portée d'oreille.
         mode.onPlayerFired()
         swingCallback?.invoke()
@@ -1859,7 +1864,13 @@ internal class CaveRenderer(
         if(held!=lastFireWeapon) {
             rockChargeTime=0f;weaponChargeTime=0f;lastFireWeapon=held
         }
-        magazines[held]?.update(dt)
+        magazines[held]?.let { magazine ->
+            val wasReloading = magazine.reloadRemaining > 0f
+            magazine.update(dt)
+            if (wasReloading && magazine.reloadRemaining == 0f) {
+                eventBus.publish(GameEvent.WeaponReload(complete = true))
+            }
+        }
         if (hotbarMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
 
         // Viser un caillou au sol le ramasse plutôt que de tirer dans le vide dessus
@@ -3128,8 +3139,16 @@ internal class CaveRenderer(
         val profile = RangedProfile.all[selectedEquipmentType()] ?: return
         val id = hotbar[selectedSlot] ?: return
         if (profile.magazine <= 0) return
-        magazines.getOrPut(id) { MagazineState(profile.magazine, profile.reload) }.reload()
+        reloadWithSound(magazines.getOrPut(id) { MagazineState(profile.magazine, profile.reload) })
         publishWeaponStatus()
+    }
+
+    private fun reloadWithSound(magazine: MagazineState) {
+        val wasReloading = magazine.reloadRemaining > 0f
+        magazine.reload()
+        if (!wasReloading && magazine.reloadRemaining > 0f) {
+            eventBus.publish(GameEvent.WeaponReload(complete = false))
+        }
     }
 
     private fun publishWeaponStatus() {
@@ -3596,6 +3615,39 @@ internal class CaveRenderer(
     private var speedXpAccum = 0f
     private var prevSprinting = false
     private var prevCrouching = false
+    private var footstepQuietTime = 0.0
+    private var footstepsMoving = false
+    private var animalSoundTimer = 6f
+    private val audioRandom = Random(worldSeed xor 9152026L)
+
+    private fun updateAnimalAudio(dt: Float) {
+        animalSoundTimer -= dt
+        if (animalSoundTimer > 0f) return
+        animalSoundTimer = 7f + audioRandom.nextFloat() * 7f
+        val nearby = passiveAnimals.visible.filter { animal ->
+            val dx = animal.x - camera.playerX
+            val dz = animal.z - camera.playerZ
+            abs(animal.y - (camera.playerY - 1.62)) < 4 && dx * dx + dz * dz < 18 * 18
+        }
+        if (nearby.isEmpty()) return
+        val animal = nearby[audioRandom.nextInt(nearby.size)]
+        val dx = animal.x - camera.playerX
+        val dz = animal.z - camera.playerZ
+        val distance = hypot(dx, dz)
+        // Muffle a call behind terrain; no loud farm voices through a cave ceiling.
+        val raySteps = (distance * 2).toInt().coerceAtLeast(1)
+        val blocked = (1 until raySteps).any { step ->
+            val fraction = step.toDouble() / raySteps
+            val block = worldBlockAt(floorInt(camera.playerX + dx * fraction),
+                floorInt(camera.playerY + (animal.y + .7 - camera.playerY) * fraction),
+                floorInt(camera.playerZ + dz * fraction))
+            block != AIR && !isDecoration(block) && !isWater(block)
+        }
+        val yaw = Math.toRadians(camera.yaw.toDouble())
+        val pan = ((-cos(yaw) * dx + sin(yaw) * dz) / distance.coerceAtLeast(1.0)).toFloat() * .65f
+        eventBus.publish(GameEvent.AnimalCall(animal.def.id,
+            (.45f * (1f - distance.toFloat() / 18f) * if (blocked) .2f else 1f).coerceIn(0f, .45f), pan))
+    }
 
     private fun updateWalk(dt: Float) {
         val yawRad = Math.toRadians(camera.yaw.toDouble())
@@ -3622,6 +3674,34 @@ internal class CaveRenderer(
             fX, fZ, rX, rZ,
             touch.moveForward * chargeMul, touch.moveRight * chargeMul, touch.flyUp
         )
+
+        // Send movement state, never individual beats. SoundPool loops on its audio clock.
+        val travelled = hypot(newX - camera.playerX, newZ - camera.playerZ)
+        val input = hypot(touch.moveForward, touch.moveRight).coerceAtMost(1f)
+        val feetBlock = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 + .10), floorInt(newZ))
+        val eligible = !physics.isCrouching && input > .03f && !isWater(feetBlock)
+        val movingOnGround = physics.onGround && travelled > .0001 && travelled < 2
+        footstepQuietTime = if (movingOnGround) 0.0 else footstepQuietTime + dt
+        if (eligible && (movingOnGround || (footstepsMoving && footstepQuietTime < .12))) {
+            footstepsMoving = true
+            // Stable intended speed avoids collision/frame jitter changing the tempo.
+            // Actual travel still gates playback, so pushing a wall never sustains steps.
+            val speed = (if (nowSprinting) skillBook.sprintSpeed else
+                com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_WALK_SPEED) * input * chargeMul
+            val stride = 1.6 + (speed - 3.5).coerceAtLeast(0.0) * .10
+            val interval = (stride / speed.coerceAtLeast(.1)).coerceIn(.23, .92).toFloat()
+            val ground = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 - .08), floorInt(newZ))
+            val surface = when (ground) {
+                GRASS, DIRT, DIRT_SAND, DIRT_SNOW, SAND, SNOW, FOREST_FLOOR, MOSS -> "earth"
+                in WOOD..PLANK_SAPIN -> "wood"
+                else -> "stone"
+            }
+            // During a short ground-contact gap keep the current loop/rate untouched.
+            if (movingOnGround) eventBus.publish(GameEvent.Footstep(surface, nowSprinting, true, interval))
+        } else {
+            footstepsMoving = false
+            eventBus.publish(GameEvent.Footstep())
+        }
 
         // XP Speed : distance parcourue au sol
         if (physics.onGround) {
@@ -3658,6 +3738,9 @@ internal class CaveRenderer(
     // ── Mode switch ───────────────────────────────────────────────────────────
 
     private fun applyModeSwitch(newMode: PlayerMode) {
+        footstepsMoving = false
+        eventBus.publish(GameEvent.Footstep())
+        footstepQuietTime = 0.0
         touch.crouchLatched = false
         touch.cancelSprint()
         if (newMode == PlayerMode.WALK) {
