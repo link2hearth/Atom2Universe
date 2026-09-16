@@ -12,7 +12,14 @@ internal object TreeShape {
     const val PEAR_LEAF: Short = 1034
     const val CHERRY_LEAF: Short = 1035
 
-    fun generate(type: String, rng: Random, put: (Int, Int, Int, Short, Boolean) -> Unit) {
+    fun generate(type: String, rng: Random, rawPut: (Int, Int, Int, Short, Boolean) -> Unit) {
+        // A crown centred low on a short tree dips under the trunk base: y = 0 is the ground the
+        // tree stands on, so those blocks are dropped instead of overwriting the terrain. Clipping
+        // here rather than inside foliage() keeps the rng draws — and so the rest of the tree —
+        // identical.
+        val put = { x: Int, y: Int, z: Int, id: Short, onlyAir: Boolean ->
+            if (y >= 1) rawPut(x, y, z, id, onlyAir)
+        }
         if (type in GrandTrees.types) {
             GrandTrees.generate(type, rng, put)
             return
