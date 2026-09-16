@@ -45,7 +45,23 @@ object HubTileArtworks {
         com.Atom2Universe.app.games.roulette.RouletteActivity::class.java.name to
             com.Atom2Universe.app.games.roulette.RouletteHubTileDrawable::class,
         com.Atom2Universe.app.games.hotpotato.HotPotatoActivity::class.java.name to
-            com.Atom2Universe.app.games.hotpotato.HotPotatoHubTileDrawable::class
+            com.Atom2Universe.app.games.hotpotato.HotPotatoHubTileDrawable::class,
+        com.Atom2Universe.app.games.flappycat.FlappyCatActivity::class.java.name to
+            com.Atom2Universe.app.games.flappycat.JumpingCatHubTileDrawable::class,
+        com.Atom2Universe.app.games.motocross.MotocrossActivity::class.java.name to
+            com.Atom2Universe.app.games.motocross.MotocrossHubTileDrawable::class,
+        com.Atom2Universe.app.games.hexrunner.HexRunnerActivity::class.java.name to
+            com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,
+        com.Atom2Universe.app.games.game2048.Game2048Activity::class.java.name to
+            com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
+        com.Atom2Universe.app.games.sudoku.SudokuActivity::class.java.name to
+            com.Atom2Universe.app.games.sudoku.SudokuHubTileDrawable::class,
+        com.Atom2Universe.app.games.circles.CirclesActivity::class.java.name to
+            com.Atom2Universe.app.games.circles.CirclesHubTileDrawable::class,
+        com.Atom2Universe.app.games.balance.BalanceActivity::class.java.name to
+            com.Atom2Universe.app.games.balance.BalanceHubTileDrawable::class,
+        com.Atom2Universe.app.games.trebuchet.TrebuchetActivity::class.java.name to
+            com.Atom2Universe.app.games.trebuchet.TrebuchetHubTileDrawable::class
     )
 
     fun forActivity(activityClassName: String): KClass<out Drawable>? = byActivity[activityClassName]

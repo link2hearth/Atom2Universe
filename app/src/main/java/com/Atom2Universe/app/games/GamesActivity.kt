@@ -236,7 +236,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.flappy_cat_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_flappycat,
-            activityClass = FlappyCatActivity::class.java
+            activityClass = FlappyCatActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.flappycat.JumpingCatHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "hotpotato",
@@ -270,7 +272,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.motocross_description,
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_motocross,
-            activityClass = MotocrossActivity::class.java
+            activityClass = MotocrossActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.motocross.MotocrossHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "toybox_racers",
@@ -294,7 +298,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.hex_runner_hub_desc,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_hexrunner,
-            activityClass = HexRunnerActivity::class.java
+            activityClass = HexRunnerActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "cosmorun",
@@ -327,7 +333,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.game2048_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_game2048,
-            activityClass = Game2048Activity::class.java
+            activityClass = Game2048Activity::class.java,
+            artworkClass = com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "sudoku",
@@ -335,7 +343,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.sudoku_description,
             iconRes = android.R.drawable.ic_dialog_dialer,
             defaultColorRes = R.color.game_tile_sudoku,
-            activityClass = SudokuActivity::class.java
+            activityClass = SudokuActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.sudoku.SudokuHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "minesweeper",
@@ -367,7 +377,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.circles_hub_desc,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_circles,
-            activityClass = CirclesActivity::class.java
+            activityClass = CirclesActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.circles.CirclesHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "starbridges",
@@ -417,7 +429,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.balance_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_balance,
-            activityClass = BalanceActivity::class.java
+            activityClass = BalanceActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.balance.BalanceHubTileDrawable::class,
+            showDescription = false
         ),
         // Trébuchet (machine de jet)
         HubTile(
@@ -426,7 +440,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.trebuchet_description,
             iconRes = android.R.drawable.ic_menu_send,
             defaultColorRes = R.color.game_tile_trebuchet,
-            activityClass = TrebuchetActivity::class.java
+            activityClass = TrebuchetActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.trebuchet.TrebuchetHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "infernale",
