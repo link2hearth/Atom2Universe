@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="flappy_cat_title">Jumping Cat</string>
-    <string name="flappy_cat_description">Dodge pylons and birds!</string>
+    <string name="flappy_cat_description">Dodge birds and electric wires!</string>
     <string name="flappy_cat_tap_to_start">Tap to start</string>
     <string name="flappy_cat_tap_to_retry">Tap to retry</string>
     <string name="flappy_cat_game_over">Game Over</string>
@@ -10,4 +10,11 @@
     <string name="flappy_cat_score_label">Score</string>
     <string name="flappy_cat_best_label">BEST</string>
     <string name="flappy_cat_new_best">New record!</string>
+    <string name="cat_controls">Tap to jump again in mid-air.\nFind a path between the hazards.</string>
+    <string name="cat_intro">Tap to jump, even in mid-air.\nThree hearts. Watch out for wires!</string>
+    <string name="cat_ouch">Oops… ruffled fur!</string>
+    <string name="cat_retry_hint">Catch your breath, little adventurer.</string>
+    <string name="cat_result">%1$d obstacles cleared</string>
+    <string name="cat_score">Score · %1$d</string>
+    <string name="cat_best">BEST · %1$d</string>
 </resources>
