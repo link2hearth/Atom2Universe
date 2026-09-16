@@ -56,6 +56,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
         com.Atom2Universe.app.games.sudoku.SudokuActivity::class.java.name to
             com.Atom2Universe.app.games.sudoku.SudokuHubTileDrawable::class,
+        com.Atom2Universe.app.games.minesweeper.MinesweeperActivity::class.java.name to
+            com.Atom2Universe.app.games.minesweeper.MinesweeperHubTileDrawable::class,
         com.Atom2Universe.app.games.circles.CirclesActivity::class.java.name to
             com.Atom2Universe.app.games.circles.CirclesHubTileDrawable::class,
         com.Atom2Universe.app.games.balance.BalanceActivity::class.java.name to

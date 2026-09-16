@@ -24,6 +24,8 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
     var gameState: GameState = GameState.IDLE
     var flagsPlaced: Int = 0
     var revealedCount: Int = 0
+    var detonatedCell: Pair<Int, Int>? = null
+        private set
     private val safeCells get() = cols * rows - mineCount
 
     fun reset() {
@@ -31,6 +33,7 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
         gameState = GameState.IDLE
         flagsPlaced = 0
         revealedCount = 0
+        detonatedCell = null
     }
 
     private fun placeMines(safeRow: Int, safeCol: Int) {
@@ -72,6 +75,7 @@ class MinesweeperGame(val cols: Int, val rows: Int, val mineCount: Int) {
         if (gameState != GameState.PLAYING) return
 
         if (cell.isMine) {
+            detonatedCell = Pair(row, col)
             cell.state = CellState.REVEALED
             gameState = GameState.LOST
             revealAllMines()

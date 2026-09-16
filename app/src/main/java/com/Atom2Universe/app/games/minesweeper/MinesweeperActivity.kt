@@ -9,7 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -23,8 +23,15 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
 
     private lateinit var gridView: MinesweeperGridView
     private lateinit var timerText: TextView
-    private lateinit var statusOverlay: FrameLayout
-    private lateinit var statusMessage: TextView
+    private lateinit var sonarStatus: TextView
+    private lateinit var minesText: TextView
+    private lateinit var exploredText: TextView
+    private lateinit var explorationProgress: ProgressBar
+    private var pendingResult: String? = null
+    private val resultRunnable = Runnable {
+        pendingResult?.let { showScoreboard(it) }
+        pendingResult = null
+    }
     private lateinit var difficultySpinner: Spinner
     private lateinit var newGameButton: ImageButton
     private lateinit var gridContainer: FrameLayout
@@ -52,8 +59,10 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
         setContentView(R.layout.activity_minesweeper)
 
         timerText = findViewById(R.id.tv_timer)
-        statusOverlay = findViewById(R.id.overlay_status)
-        statusMessage = findViewById(R.id.tv_status_message)
+        sonarStatus = findViewById(R.id.tv_sonar_status)
+        minesText = findViewById(R.id.tv_mines)
+        exploredText = findViewById(R.id.tv_explored)
+        explorationProgress = findViewById(R.id.exploration_progress)
         difficultySpinner = findViewById(R.id.spinner_difficulty)
         newGameButton = findViewById(R.id.btn_new_game)
         gridContainer = findViewById(R.id.grid_container)
@@ -69,7 +78,7 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
 
         setupDifficultySpinner()
         newGameButton.setOnClickListener { startNewGame() }
-        statusOverlay.setOnClickListener { statusOverlay.visibility = View.GONE }
+
         findViewById<ImageButton>(R.id.btn_back).setOnClickListener { finish() }
     }
 
@@ -80,8 +89,8 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
             getString(R.string.minesweeper_diff_medium),
             getString(R.string.minesweeper_diff_hard)
         )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, R.layout.minesweeper_spinner_item, labels)
+        adapter.setDropDownViewResource(R.layout.minesweeper_spinner_item)
         difficultySpinner.adapter = adapter
 
         difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -109,22 +118,24 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
             val (elapsed, game) = saved
             elapsedSecs = elapsed
             timerText.text = formatTime(elapsed)
-            statusOverlay.visibility = View.GONE
-            newGameButton.setImageResource(android.R.drawable.ic_menu_recent_history)
+            sonarStatus.setText(R.string.minesweeper_ready)
+            newGameButton.setImageResource(R.drawable.ic_refresh)
             gridView.restoreGame(game)
-            startTimer()
+            if (game.gameState == GameState.PLAYING) startTimer()
         } else {
             startNewGame()
         }
     }
 
     private fun startNewGame() {
+        timerHandler.removeCallbacks(resultRunnable)
+        pendingResult = null
         stopTimer()
         prefs.clearSavedGame()
         elapsedSecs = 0
         timerText.text = formatTime(0)
-        statusOverlay.visibility = View.GONE
-        newGameButton.setImageResource(android.R.drawable.ic_menu_recent_history)
+        sonarStatus.setText(R.string.minesweeper_ready)
+        newGameButton.setImageResource(R.drawable.ic_refresh)
         gridView.newGame(difficulty.cols, difficulty.mines)
     }
 
@@ -143,18 +154,38 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
             getString(R.string.minesweeper_won_best, formatTime(elapsedSecs))
         else
             getString(R.string.minesweeper_won, formatTime(elapsedSecs))
-        newGameButton.setImageResource(android.R.drawable.ic_menu_info_details)
-        showScoreboard(resultText)
+        sonarStatus.setText(R.string.minesweeper_secured)
+        scheduleScoreboard(resultText)
     }
 
     override fun onGameLost() {
         stopTimer()
         prefs.clearSavedGame()
-        newGameButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
-        showScoreboard(getString(R.string.minesweeper_lost))
+        sonarStatus.setText(R.string.minesweeper_contact)
+        scheduleScoreboard(getString(R.string.minesweeper_lost))
     }
 
-    override fun onFlagsChanged(flags: Int) {}
+    override fun onFlagsChanged(flags: Int) {
+        val game = gridView.game ?: return
+        minesText.text = getString(R.string.minesweeper_remaining, game.mineCount - flags)
+        val safe = (game.rows * game.cols - game.mineCount).coerceAtLeast(1)
+        val percent = game.revealedCount * 100 / safe
+        exploredText.text = getString(R.string.minesweeper_explored, percent)
+        explorationProgress.progress = percent
+        sonarStatus.setText(when (game.gameState) {
+            GameState.IDLE -> R.string.minesweeper_ready
+            GameState.PLAYING -> R.string.minesweeper_scanning
+            GameState.WON -> R.string.minesweeper_secured
+            GameState.LOST -> R.string.minesweeper_contact
+        })
+    }
+
+    private fun scheduleScoreboard(result: String) {
+        pendingResult = result
+        timerHandler.removeCallbacks(resultRunnable)
+        val delay = if (android.animation.ValueAnimator.areAnimatorsEnabled()) 1450L else 0L
+        timerHandler.postDelayed(resultRunnable, delay)
+    }
 
     private fun showScoreboard(resultText: String) {
         val view = LayoutInflater.from(this).inflate(R.layout.dialog_minesweeper_scores, null)
@@ -178,22 +209,26 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
             val time = view.findViewById<TextView>(ids.second)
             lbl.text = diffLabels[diff]
             val best = prefs.getBestTime(diff)
-            time.text = if (best > 0) formatTime(best) else getString(R.string.minesweeper_score_none)
+            time.text = if (best >= 0) formatTime(best) else getString(R.string.minesweeper_score_none)
             // Highlight current difficulty
             if (diff == difficulty) {
-                lbl.setTextColor(0xFF4CAF50.toInt())
-                time.setTextColor(0xFF4CAF50.toInt())
+                lbl.setTextColor(0xFF65E3CD.toInt())
+                time.setTextColor(0xFF65E3CD.toInt())
             }
         }
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setView(view)
             .setPositiveButton(R.string.minesweeper_new_game_btn) { _, _ -> startNewGame() }
             .setNegativeButton(android.R.string.ok, null)
             .show()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.minesweeper_panel)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(0xFF65E3CD.toInt())
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(0xFFB4D7DE.toInt())
     }
 
     private fun startTimer() {
+        if (timerRunning) return
         timerRunning = true
         timerHandler.postDelayed(timerRunnable, 1000)
     }
@@ -203,15 +238,24 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
         timerHandler.removeCallbacks(timerRunnable)
     }
 
-    private fun formatTime(secs: Int) = "%02d:%02d".format(secs / 60, secs % 60)
+    private fun formatTime(secs: Int) = getString(R.string.minesweeper_time_format, secs / 60, secs % 60)
 
     override fun onPause() {
         super.onPause()
+        stopTimer()
+        timerHandler.removeCallbacks(resultRunnable)
         val g = gridView.game ?: return
         prefs.saveGame(difficulty, elapsedSecs, g)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (gridView.game?.gameState == GameState.PLAYING) startTimer()
+        if (pendingResult != null) timerHandler.post(resultRunnable)
+    }
+
     override fun onDestroy() {
+        timerHandler.removeCallbacks(resultRunnable)
         super.onDestroy()
         stopTimer()
     }

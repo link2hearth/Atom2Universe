@@ -16,4 +16,15 @@
     <string name="minesweeper_score_best">Best time</string>
     <string name="minesweeper_score_none">—</string>
     <string name="minesweeper_new_game_btn">New game</string>
+    <string name="minesweeper_abyss">ABYSS</string>
+    <string name="minesweeper_operation">MINESWEEPER / SONAR OPERATION</string>
+    <string name="minesweeper_ready">Sonar ready · Choose a sector</string>
+    <string name="minesweeper_scanning">Exploration in progress</string>
+    <string name="minesweeper_secured">Zone secured · Mission complete</string>
+    <string name="minesweeper_contact">Mine contact · Signal lost</string>
+    <string name="minesweeper_hint">Tap to explore · Hold to flag</string>
+    <string name="minesweeper_remaining">Mines − flags: %1$d</string>
+    <string name="minesweeper_explored">Explored: %1$d%%</string>
+    <string name="minesweeper_time_format">%1$02d:%2$02d</string>
+    <string name="minesweeper_number">%1$d</string>
 </resources>
