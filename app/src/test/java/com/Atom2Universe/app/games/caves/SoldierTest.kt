@@ -77,6 +77,41 @@ class SoldierTest {
     }
 
     @Test
+    fun `un ordre radio l'envoie en position sans rien lui apprendre sur le joueur`() {
+        val world = TestWorld(40, 6, 40)
+        val grid = NavGrid.build(world.sizeX, world.sizeY, world.sizeZ, world)
+        val s = Soldier(grid, world, PathFinder(grid), Random(5)).also { it.place(5.5, 1.0, 5.5) }
+        s.order(grid.nodeAt(25, 1, 5), strict = false)
+
+        // Joueur absent de sa perception : seul l'ordre le fait bouger.
+        run(s, player(35.5, 35.5, alive = false), 12f)
+        assertTrue("il doit avoir rejoint son poste", hypot(s.x - 25.5, s.z - 5.5) < 1.5)
+        assertFalse("la radio ne lui montre pas le joueur", s.knowsPlayer)
+    }
+
+    @Test
+    fun `en reserve, un contact lointain le met en mouvement au lieu de le figer`() {
+        val world = TestWorld(90, 6, 90)
+        val s = soldier(world, 5.5, 5.5)          // regard initial vers +Z
+        val p = player(5.5, 60.5)                 // 55 blocs devant : vu, mais hors de son duel
+
+        s.leashTo(5.5, 5.5, 12.0)
+        val held = Shots()
+        run(s, p, 3f, held)
+        assertTrue("il le voit", s.seesPlayer)
+        assertEquals("pas de duel à 55 blocs depuis son poste", 0, held.count)
+        // Le vrai défaut à éviter : rester planté à le regarder sans rien faire.
+        assertTrue("il doit se porter en avant (z=${s.z})", s.z > 9.0)
+        assertTrue("mais sans quitter son secteur", hypot(s.x - 5.5, s.z - 5.5) <= 13.5)
+
+        // L'escouade est activée : plus de laisse, il engage.
+        s.leashTo(5.5, 5.5, Double.POSITIVE_INFINITY)
+        val released = Shots()
+        run(s, p, 3f, released)
+        assertTrue("libéré, il doit engager", released.count > 0)
+    }
+
+    @Test
     fun `il va voir la derniere position connue, pas la vraie`() {
         val s = soldier(TestWorld(40, 6, 40), 5.5, 5.5)
         s.update(0.05f, player(5.5, 15.5), Shots())

@@ -32,22 +32,7 @@ internal class SuburbDeployment(private val grid: NavGrid, spawn: MapPoint) {
         }
     }
 
-    fun choose(count: Int,rng: Random): IntArray {
-        val chosen=ArrayList<Int>()
-        val sectors=plots.filter { it.isNotEmpty() }.shuffled(rng)
-        if(sectors.isEmpty()) return IntArray(0)
-        for(i in 0 until count) {
-            val pool=sectors[i%sectors.size]
-            if(pool.isEmpty()) continue
-            val offset=rng.nextInt(pool.size)
-            for(j in pool.indices) {
-                val n=pool[(offset+j)%pool.size]
-                if(chosen.none { old ->
-                    val dx=grid.nodeX[n]-grid.nodeX[old]; val dz=grid.nodeZ[n]-grid.nodeZ[old]
-                    dx*dx+dz*dz<24*24
-                }) { chosen.add(n); break }
-            }
-        }
-        return chosen.toIntArray()
-    }
+    /** Une escouade par parcelle, parcelles tirées au hasard et donc bien séparées. */
+    fun chooseSquads(count: Int, size: Int, rng: Random): List<IntArray> =
+        SquadSpawn.fromZones(grid, plots.filter { it.isNotEmpty() }, count, size, rng)
 }

@@ -588,22 +588,6 @@ class CaveActivity : ThemedActivity() {
                 } }
                 mode.onHeadshotKill = { uiHandler.post { hud.flashHeadshot() } }
                 mode.onShieldCollected = { amount -> uiHandler.post { hud.flashShieldPickup(amount) } }
-
-                // Bouton 🧭 : trace au sol le chemin du mannequin coureur (test de la navigation).
-                val density = resources.displayMetrics.density
-                root.addView(Button(this).apply {
-                    text = "🧭"; textSize = 14f; setBackgroundColor(0x55FFFFFF); setTextColor(Color.WHITE)
-                    contentDescription = getString(R.string.cave_assault_show_path)
-                    layoutParams = FrameLayout.LayoutParams((40 * density).toInt(), (40 * density).toInt()).also {
-                        it.gravity = Gravity.TOP or Gravity.END
-                        it.setMargins(0, (8 * density).toInt(), (8 * density).toInt(), 0)
-                    }
-                    alpha = 0.6f
-                    setOnClickListener {
-                        mode.showPath = !mode.showPath
-                        alpha = if (mode.showPath) 1.0f else 0.6f
-                    }
-                })
             }
         }
 

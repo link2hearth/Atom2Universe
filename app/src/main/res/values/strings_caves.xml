@@ -282,7 +282,6 @@
     <string name="cave_assault_health_value">Health %1$d / %2$d</string>
     <string name="cave_assault_shield_value">Shield %1$d / %2$d</string>
     <string name="cave_assault_shield_collected">Shield +%1$d</string>
-    <string name="cave_assault_show_path">Show the soldiers\' paths</string>
     <string name="cave_assault_no_maps">No map yet.\n\nIn a creative world, build your arena and place spawn markers A and B. Then open the capture tool (📐), set corners A and B around the arena, and press 🗺 to export it.</string>
     <string name="cave_assault_map_load_failed">This map could not be loaded.</string>
     <string name="cave_map_export_title">Export as Assault map</string>

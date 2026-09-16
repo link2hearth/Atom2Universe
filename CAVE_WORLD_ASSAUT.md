@@ -129,10 +129,13 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
 
 ### Phase 5 : l'escouade
 
-- Tableau partagé par camp : « l'ennemi a été vu là ».
-- Rôles : un bot cloue le joueur sur place pendant qu'un autre contourne.
-- Contournement : un A* où les cases **visibles depuis la cible** coûtent très cher. Les bots
-  trouvent seuls le chemin par derrière, sans script.
+**État : première passe intégrée le 16/09/2026** (voir le journal en fin de document).
+Faits : garnison déployée par escouades de 4 à 6, tableau partagé (la radio), une seule escouade
+engagée à la fois avec relève, regroupement avant l'assaut, postes de tir répartis tout autour.
+
+Restent ouverts :
+- Contournement par un A* où les cases **visibles depuis la cible** coûtent très cher. Aujourd'hui
+  l'encerclement vient des postes assignés, pas du chemin choisi pour les rejoindre.
 - Annonces (« Contact ! », « Je recharge ! ») en bulles ou sons : l'astuce de F.E.A.R., qui fait
   paraître l'IA bien plus maligne qu'elle ne l'est.
 - Mode en équipe avec bots alliés.
@@ -341,3 +344,287 @@ totalement ignorés** (on pouvait courir dans le dos d'un soldat sans qu'il réa
   le joueur au bloc près.
 - Tests ajoutés : des pas proches alertent et font se retourner, des pas lointains non, et un tir
   s'entend là où des pas ne portent pas. 76 tests Cave World, seul `world.TreeShapeTest` reste rouge.
+
+### Les escouades et le talkie-walkie — 16/09/2026
+
+Demande de l'utilisateur : des escouades de quatre à six hommes, **une seule sur le joueur à la
+fois**, les autres qui tiennent leur secteur et prennent le relais quand elle tombe. Le joueur doit
+rester sous pression sans être submergé — et surtout pas servi en file indienne.
+
+**`ai/SquadCommand.kt` (Kotlin pur, `SquadCommandTest` : 8 cas).** L'état-major du camp adverse.
+
+- **Ce qu'il sait** : la position approximative du joueur, en permanence, floutée de 3 blocs et
+  rafraîchie toutes les 2 secondes. C'est la seule concession assumée à la règle « l'IA ne triche
+  pas » : sans elle, soixante hommes dans une tour ne retrouveraient jamais un joueur mobile.
+- **Ce qu'il ne fait pas** : voir à la place de ses soldats. L'interface `SquadMember` n'expose
+  que trois ordres — rejoindre une case, écouter une annonce, tenir un secteur. Un soldat ne tire
+  toujours que sur ce que ses propres yeux trouvent.
+- **Cycle d'une escouade** : `HOLD` (réserve, secteur de 14 blocs, regard tourné vers la direction
+  annoncée) → `RALLY` (regroupement à 22 blocs du joueur, **hors de sa vue**) → `ASSAULT` (postes
+  de tir à 9–15 blocs, répartis à 0°, ±70°, ±130° et 180° de l'axe d'arrivée).
+- **Anti-file indienne** : c'est le regroupement qui fait le travail. Personne n'approche seul ;
+  l'assaut ne part que lorsque les deux tiers de l'escouade sont en place (ou au bout de 25 s, ou
+  tout de suite si elle est repérée — attendre bien rangée sous le feu n'aurait aucun sens).
+- **Relève** : lancée quand l'escouade engagée est anéantie (5 s de répit) ou qu'il ne lui reste
+  qu'un homme (7 s). Le rescapé n'est pas rappelé, il finit son assaut. À distance comparable, on
+  choisit l'escouade qui arrive **par un autre azimut** que la précédente : pas trois vagues dans
+  le même couloir.
+
+**`ai/Soldier.kt`** gagne trois consignes, et rien d'autre : `order(case, strict)`, `radioContact`
+et `leashTo(secteur)`.
+
+- Le **secteur** borne la patrouille, la recherche, *et le tir* : un homme en réserve qui aperçoit
+  le joueur à l'autre bout de la carte ne le mitraille pas et ne quitte pas son poste (marge de
+  8 blocs). L'escouade engagée reçoit un rayon infini : elle, elle a le droit d'aller le chercher.
+- Un ordre **strict** (regroupement) passe avant ce qu'il a seulement *entendu* — sinon une
+  fusillade à l'autre bout vide le point de ralliement et on retombe dans la file indienne. Ce
+  qu'il **voit** reste toujours prioritaire : un ordre ne l'empêche jamais de se défendre.
+- En poste sans rien avoir vu, il balaie du regard la direction annoncée au lieu de tourner sur
+  lui-même : c'est là qu'on voit une garnison prévenue.
+
+**`ai/SquadSpawn.kt` + déploiements.** Les cartes font désormais apparaître les escouades
+**groupées**, ce qui leur donne un secteur et un côté d'où arriver :
+- tour : 12 escouades de 5 (60 hommes, inchangé), une par pièce, deux par niveau ;
+- pavillons : 2 escouades de 4 (8 hommes, inchangé), une par parcelle ;
+- fonderies et cartes importées : **3 escouades de 4 au lieu de 3 soldats isolés**, semées au sol
+  dans la moitié adverse, séparées de 26 blocs. Manche portée de 3 à 5 minutes en conséquence.
+
+**Deux pièges rencontrés en chemin :**
+- une escouade qui replanifie s'arrêtait net à chaque calcul de trajet (`pathTo` figeait le soldat
+  en attendant la file A*). Elle poursuit maintenant son trajet en cours et bascule à l'arrivée du
+  nouveau ; le seuil de replanification est passé à 10 blocs, bien au-dessus du flou des annonces.
+- les réserves ne regardaient jamais dans la bonne direction : sans ordre ni mémoire, elles sont
+  en `PATROL`, pas en `SEARCH`, et le balayage n'avait été branché que sur la recherche.
+
+**Tests** : 86 cas Cave World, tous verts (`SquadCommandTest` : 8 nouveaux, `SoldierTest` : 2
+nouveaux sur l'ordre radio et le secteur de tir). `compileDebugKotlin` réussi.
+
+**À valider en jeu** — c'est là que se jouent les réglages : taille d'escouade, rayon des postes
+(9–15 blocs, peut-être trop serré à cinq fusils), durées de répit entre deux vagues, et le
+comportement des escouades de la tour qui doivent trouver l'escalier pour changer d'étage.
+
+### Rôles dans l'escouade, et le bug du regard fixe — 16/09/2026
+
+Retour de l'utilisateur après essai : « ça marche à peu près, mais des fois les soldats me
+regardent sans rien faire », et « il faudrait un éclaireur, un backup qui prend à revers, rendre le
+groupe vivant ».
+
+**Le regard fixe était un défaut de conception de la veille.** Le secteur tenu par les réserves
+bornait *le tir* (`if (!inSector) return` en plein milieu de `actEngage`) : un homme qui apercevait
+le joueur hors de son secteur restait en `ENGAGE`, suivait sa cible du regard, et ne faisait rien
+d'autre — indéfiniment. Deux corrections :
+
+- la limite passe du **secteur** à une **portée d'engagement** (`reserveEngageRange`, 32 blocs) et
+  surtout elle est évaluée **dans la décision**, pas au milieu de l'action : trop loin pour un duel,
+  il bascule en `SEARCH` et se porte en avant dans son secteur pour prendre une position de tir.
+  Règle générale à retenir : *une condition qui empêche d'agir doit être lue là où l'on choisit
+  l'action, jamais après* — sinon elle produit un état sans comportement.
+- **canon masqué** (ses yeux passent, pas son arme : rebord, embrasure, angle de mur) : il se
+  décalait pas, il attendait. Au bout de 0,45 s sans ligne de tir, il change de place.
+- Plafond de cerveaux mis à jour par image porté de 8 à 12 (l'échéance de 2 ms reste la vraie
+  limite) : un soldat non mis à jour garde sa pose et son regard, et paraît lui aussi figé.
+
+**Les rôles** (`Squad.Role`), attribués au rang et **redistribués à chaque plan**, donc les pertes
+se comblent d'elles-mêmes :
+
+| Rang | Rôle | Poste | Détour |
+|---|---|---|---|
+| 1 | `POINT` — éclaireur | axe d'arrivée, 0,65 × rayon | — |
+| 2 | `ANCHOR` — base de feu | +40°, 1,4 × rayon | — |
+| 3-4 | `FLANK` — contournement | ∓112°, 0,95 × rayon | ∓160°, 1,75 × rayon, hors de vue |
+| 5 | `SUPPORT` — soutien | −45°, 1,15 × rayon | — |
+| 6 | `FLANK` | 170°, 1 × rayon | 178°, 1,6 × rayon |
+
+- **L'éclaireur ne se regroupe pas** : il part devant dès l'activation, à 0,8 × rayon, chercher le
+  contact. C'est lui qu'on voit arriver en premier, et souvent tomber en premier. Tant qu'il n'a
+  rien trouvé, le reste du groupe se met en place tranquillement ; **dès qu'il voit le joueur, les
+  autres n'ont plus que 8 secondes** (`contactRallySeconds`) pour se placer avant l'assaut.
+- **Le contournement passe par un point de passage** large et hors de vue avant de se rabattre sur
+  son poste. Sans ce détour, quatre lignes droites vers quatre points restent quatre lignes
+  droites et le joueur les voit toutes arriver ; c'est le détour qui se lit comme « il m'a pris à
+  revers ». (Ce n'est pas encore l'A* pondéré par la visibilité prévu au plan, mais ça en donne la
+  lecture pour un coût nul.)
+- **Le « Contact ! » est joué en déplacements, pas en réplique** : dès qu'un homme voit le joueur,
+  toute l'escouade se recale sur sa position réelle et **cesse de contourner** — ils sont trouvés,
+  la discrétion n'a plus d'objet. Garde-fou de 2 s entre deux plans déclenchés par un contact, le
+  joueur passant sans arrêt derrière un mur.
+- **Sous le feu** (`shaken`), l'assaut part immédiatement : attendre bien rangé pendant qu'on vous
+  tire dessus n'a aucun sens.
+
+**Tests** : 91 cas Cave World, tous verts. Quatre ajoutés (éclaireur en avant, détour puis
+rabattement, abandon du détour au contact, redistribution des rôles après la perte de la pointe) ;
+trois anciens réécrits, dont un qui cachait un vrai défaut — le rôle d'un mort restait inscrit au
+tableau, si bien que « la pointe » était tenue par un cadavre.
+
+**À valider en jeu.** Ce qu'il reste de plus évident pour la vie du groupe : les annonces sonores
+(l'astuce de F.E.A.R.), qui demandent des sons et des chaînes EN + FR.
+
+### Pourquoi les escouades ne bougeaient plus — 16/09/2026
+
+Retour de l'utilisateur : « ils bougent très peu et restent statiques en groupe de 2/3. Le premier
+groupe que je croise bouge à peu près, puis les groupes suivants c'est de pire en pire. » Deux
+causes distinctes, et la seconde explique la progression.
+
+**1. Les réserves étaient des statues.** `actPatrol` tire une case au hasard **dans toute la carte**
+(`rng.nextInt(grid.nodeCount)`) puis refuse ce qui sort du secteur. Sur la tour, un secteur de 14
+blocs représente une centaine de cases sur des dizaines de milliers : vingt tirages échouaient
+pratiquement toujours, et le soldat ne partait en ronde qu'une fois par minute. La laisse ajoutée
+la veille avait transformé la patrouille en loterie perdue d'avance. Le tirage se fait maintenant
+**dans le disque du secteur** (`randomSectorNode`), et le pas minimal de ronde y tombe à 3 blocs.
+
+*Règle : un filtre posé après un tirage aléatoire n'est pas un filtre, c'est un rejet. Tirer
+directement dans l'ensemble voulu.*
+
+**2. La file de calcul de chemins s'engorgeait, et l'engorgement empirait.** Elle est partagée,
+servie dans l'ordre d'arrivée, un trajet à la fois. Trois sources la noyaient :
+- chaque soldat qui entend un tir passe en recherche et demande un trajet ; le joueur bouge, la
+  destination glisse de deux blocs, il en redemande un. Un **seuil de 3 blocs**
+  (`worthRepathing`) supprime cette agitation.
+- deux soldats coincés l'un contre l'autre relançaient chacun un contournement toutes les 0,7 s,
+  indéfiniment. Le délai **double à chaque échec** jusqu'à 4 s.
+- rien ne distinguait la ronde d'un réserviste du trajet d'une escouade qui doit traverser la
+  carte. Les demandes de l'escouade engagée (laisse infinie) **passent devant**.
+
+Budget de la file porté à 2 ms et 2048 extractions par image. Replanification d'assaut ramenée à
+6 s / 8 blocs, la file n'étant plus saturée. Plafond de cerveaux par image : 12.
+
+**Diagnostic sur appareil** : le journal `CavePerf` (debug) affiche maintenant `routeStalled=` (le
+nombre de soldats en attente d'un trajet) et `squads=[H5 H5 A3 …]` (posture et effectif debout de
+chaque escouade). Si `routeStalled` monte avec la manche, c'est encore la file.
+
+Tests : 91 cas Cave World, tous verts. À revalider en jeu.
+
+### Ce que l'escouade coûtait, et ce qu'elle coûte — 16/09/2026
+
+Retour de l'utilisateur : « ça lag et ça chauffe ». Vérifié : oui, et une partie était de la
+dépense pure, sans contrepartie à l'écran.
+
+**La faute de fond : tout tournait à la cadence de l'écran.** La tablette affiche 120 images par
+seconde ; la file de chemins consommait donc son budget de 1,5 ms **cent vingt fois par seconde**,
+et les cerveaux le leur autant — pour un résultat identique, puisqu'un soldat ne réfléchit au mieux
+qu'à 20 Hz. `updateSoldiers` travaille maintenant à **pas fixe de 1/60 s** : sur cet écran, c'est
+deux fois moins de calcul pour exactement le même jeu. Rien à interpoler, les corps ne bougeaient
+déjà qu'aux mises à jour de leur cerveau.
+
+**Trois autres coupes :**
+- `SquadCommand.update` décidait à chaque image. Un état-major n'est pas un réflexe : **six
+  décisions par seconde** suffisent, soit vingt fois moins de balayages et de comptages.
+- `postNear` sondait jusqu'à **315 positions** par poste (5 rayons × 9 angles × 7 niveaux), chacune
+  payant une ligne de vue d'une trentaine de pas de voxels. En intérieur, où la vue est presque
+  toujours coupée, ce maximum était atteint à chaque fois, six fois par escouade et par plan.
+  Ramené à **45 sondages** (3 × 5 × 3) : la qualité des postes ne change pas, le repli sur le
+  premier emplacement trouvé faisait déjà le travail.
+- Les comptages d'escouade (`living`, contacts, barycentres) parcouraient des `List` avec un
+  itérateur alloué à chaque appel, plusieurs fois par image. Passés en tableaux et boucles
+  indexées : plus une allocation dans le chemin chaud.
+
+**Et deux élargissements de la veille rendus :** budget de la file revenu à 1,5 ms / 1024
+extractions, plafond de cerveaux revenu à 8 par pas. C'était la **priorité** des demandes qui
+réglait l'engorgement des escouades lointaines, pas la taille du budget ; élargir ne faisait que
+brûler du processeur à chaque image.
+
+**Ordres de grandeur** (plafonds théoriques, pas des mesures) : le travail d'IA au pire passe
+d'environ 480 ms par seconde à environ 210, soit **sous le niveau d'avant les escouades** (420).
+
+**Pour mesurer plutôt que croire**, `adb logcat -s CavePerf` : `aiPeakUs` donne la pointe d'IA par
+pas — **état-major compris** depuis cette passe, il ne l'était pas et le journal sous-estimait donc
+le coût réel. Si `aiPeakUs` reste petit et que ça chauffe quand même, la cause est ailleurs : voir
+les notes sur les allocations GL et les appels de dessin de Cave World.
+
+### La tour : borner l'IA, et savoir d'où vient la chute — 16/09/2026
+
+Mesures de l'utilisateur sur la Tour du crépuscule (6 niveaux, 60 gardes) : **15 images/s de
+moyenne seul, sans aucune escouade engagée**, et **moins de 10** quand deux ou trois escouades
+l'entendent en début de partie. Son hypothèse : la différence de niveaux.
+
+**Sur les étages, il a raison, mais pas pour l'IA de décision.** Ce qui coûte cher en bâtiment, ce
+sont les recherches de chemin **qui échouent** : un point tiré dans un secteur tombe souvent
+derrière une cloison, et sans plafond de coût serré A* fouille tout l'étage avant d'abandonner.
+Deux gardes-fous posés avant que ça se voie :
+
+- **Rondes plafonnées au secteur** (`leashRadius × 1,8` au lieu de 60) : une ronde ratée explore
+  quelques centaines de cases au lieu de plus de dix mille.
+- **Rondes espacées quand la radio annonce le joueur à plus de 45 blocs** : 6 à 12 s au lieu de 1
+  à 2,5 s. Réparer les statues avait ouvert une trentaine de recherches par seconde sur un graphe
+  de dizaines de milliers de cases — pour des hommes que personne ne regarde marcher.
+- **Recherche d'abri plafonnée à 160 lignes de vue** (elle en faisait jusqu'à deux mille, et dans
+  un bâtiment chaque pas sur un escalier ou une dalle déclenche un test de volume).
+
+**Mais 15 images/s *seul* ne peut pas venir de l'IA** : à ce moment-là, soixante réservistes
+réfléchissent une fois par seconde, ce qui est négligeable. Le soupçon porte sur le rendu de la
+tour elle-même : 72 chunks chargés en entier, 42 blocs de haut, six étages de géométrie intérieure,
+**sans LOD** (choix assumé pour les cartes). Voir les notes sur les allocations GL et les appels de
+dessin de Cave World.
+
+**Le test qui tranche, sans une ligne de code** : l'écran de **choix d'arme** en début de manche
+n'a aucun soldat (`clearSoldiers()` est appelé sur `WEAPON_CHOICE`) mais affiche toute la tour.
+Si les images par seconde y sont les mêmes qu'en pleine manche, la chute ne vient pas de l'IA.
+
+**Et le chiffre qui compte pour la chauffe** est maintenant dans `adb logcat -s CavePerf` :
+`aiPerSecUs`, les microsecondes d'IA dépensées par seconde de jeu (1 000 000 = un cœur saturé).
+En dessous de ~50 000, l'IA n'est pas en cause.
+
+### Le lag de la tour venait du dessin des soldats, pas de l'IA — 16/09/2026
+
+Observation décisive de l'utilisateur : **le lag dépend de la direction du regard**. Tourné vers
+l'intérieur de la tour, ça rame ; tourné vers un mur extérieur, plus du tout ; et ça s'améliore à
+mesure que les escouades tombent. Écran de choix d'arme (tour affichée, aucun soldat) : 29-30 fps.
+Rien de ce qui dépend du regard ne peut être de l'IA.
+
+**Mesure sur la Lenovo TB320FC**, `simpleperf` pendant une partie réelle, piles d'appels :
+
+| | part du processeur de l'appli |
+|---|---|
+| `EnemyRenderer.buildBody` (inclusif) | **60 à 67 %** |
+| `AssaultMode.update` — toute l'IA, escouades comprises | **0,4 %** |
+
+Fenêtre sans lag (regard vers l'extérieur) : 508 échantillons en 6 s ; vers la tour : ~4 000.
+
+**Deux causes, qui se multiplient :**
+1. **Aucune élimination par les murs.** `EnemyRenderer` ne rejetait que ce qui sort du cône de
+   vue. Tourné vers la tour, les 60 gardes des six étages étaient dans le cône et chaque corps était
+   reconstruit sommet par sommet, envoyé au GPU et dessiné derrière les dalles, à chaque image.
+2. **`buildBody` tournait interprété.** Une méthode de 170 lignes à boucles imbriquées que le JIT
+   ne compilait pas ; l'essentiel de son temps partait dans `Jit::MaybeDoOnStackReplacement` →
+   `RuntimeCallbacks::HaveLocalsChanged`, un crochet de débogage qui fait un `malloc`/`free` sous
+   verrou **à chaque tour de boucle**. Il est activé par l'agent qu'Android Studio injecte dans les
+   versions de débogage lancées depuis l'IDE (`code_cache/startup_agents/…-agent.so`, vu dans le
+   processus). Une version de production ne paierait pas ce crochet — mais la cause 1, si.
+
+**Correctifs :**
+- `AssaultMode.updateOcclusion` : deux rayons caméra → soldat (tête, torse), une douzaine de soldats
+  par pas d'IA, soit chacun revu toutes les ~80 ms. Seuls les **blocs pleins et opaques** cachent :
+  ni vitre, ni escalier, ni dalle, ni meuble — dans le doute on dessine. Un soldat reste affiché
+  0,2 s après avoir été vu, et toujours à moins de 6 blocs, pour ne pas surgir en retard à un coin.
+  Le renderer ignore les `Enemy.occluded`.
+- `buildBody` découpé en petites méthodes (`preparePose`, `limbAngle`, `placeCorner`, `emitPart`,
+  `emitWeapon`, `emitSlime`) qui lisent la pose depuis des champs : même géométrie, mais du code
+  que le JIT compile.
+- Allocations par soldat et par image supprimées : clé texte du cache d'arme, tableau de teinte,
+  `Triple` de couleur de label, `toString()` du niveau, `subList`, itérateurs.
+
+**Règle** : sur un bug qui dépend de la direction de la caméra, chercher dans le dessin, pas dans la
+simulation. Et avant de juger un chiffre de performance, vérifier si un agent de l'IDE est chargé.
+
+À revalider sur tablette : regard vers la tour en début de manche, et vérifier qu'aucun soldat
+n'apparaît en retard au coin d'un couloir ni ne disparaît derrière une vitre.
+
+**Mesure après correctif (même tablette, même déroulé, 16/09/2026 au soir)** : regard vers la tour
+et combat rapproché, **29-30 fps** au compteur du jeu (le plafond, identique à l'écran de choix
+d'arme), contre moins de 10-15 avant. Processeur de l'appli divisé par ~4 (≈ 750 échantillons par
+fenêtre de 5 s contre ≈ 2 750). `buildBody` passe de 60-67 % à 1-2 %, et l'occlusion elle-même
+coûte moins de 1 %. Reste à confirmer à l'œil : pas de soldat qui surgit en retard à un angle.
+
+À savoir pour mesurer : l'agent d'Android Studio reste chargé même lancé depuis l'icône, et il ne
+faut pas le supprimer — le code à jour est livré par un dossier superposé
+(`code_cache/.overlay`) que cet agent charge ; l'APK de base, lui, date de la dernière vraie
+installation.
+
+**Retour en jeu : oui, des soldats apparaissaient en retard en sortant d'un angle.** Deux causes :
+la cadence (chaque soldat revu toutes les ~80 ms) et la visée (le centre du corps reste caché alors
+que l'épaule et le fusil dépassent déjà). Idée de l'utilisateur, retenue : **forcer l'affichage des
+soldats qui savent où est le joueur**. Ce sont exactement ceux qui débouchent vers lui, alors que le
+coût venait des réserves des autres étages. Sont désormais dessinés à chaque pas, sans rayon : ceux
+qui connaissent ou voient le joueur, ceux d'une escouade en regroupement ou à l'assaut, et tout
+soldat à moins de 12 blocs (au lieu de 6). Pour les autres, deux rayons de flanc (±0,55 bloc) sont
+tirés si la tête et le torse sont cachés.

@@ -24,6 +24,11 @@ internal class Enemy(
     /** Seconds remaining in the shared rifle recoil animation. */
     var shotRecoil = 0f
     var heldWeaponType: String? = null
+    /**
+     * Entièrement caché par des murs pleins du point de vue de la caméra : le renderer ne le
+     * construit pas. Seul le mode Assaut le calcule ; ailleurs il reste faux.
+     */
+    var occluded = false
     var weaponReload = 0f
     /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
     var strikeTime = 0f

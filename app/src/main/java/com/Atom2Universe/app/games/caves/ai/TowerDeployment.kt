@@ -4,9 +4,9 @@ import com.Atom2Universe.app.games.caves.world.MapPoint
 import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import kotlin.random.Random
 
-/** Garnison créée une fois par manche, répartie par niveau puis par aile. Aucun renfort. */
+/** Garnison créée une fois par manche, répartie en escouades par niveau puis par aile. Aucun renfort. */
 internal class TowerDeployment(private val grid: NavGrid, spawn: MapPoint) {
-    private val zones = Array(OfficeTowerMap.PLAYABLE_LEVELS) { Array(8) { ArrayList<Int>() } }
+    private val zones = Array(OfficeTowerMap.PLAYABLE_LEVELS) { Array(ROOMS) { ArrayList<Int>() } }
 
     init {
         // Écarter les surfaces décoratives isolées et les pièces inaccessibles au joueur.
@@ -40,28 +40,29 @@ internal class TowerDeployment(private val grid: NavGrid, spawn: MapPoint) {
         }
     }
 
-    fun choose(count: Int, rng: Random): IntArray {
-        val chosen = ArrayList<Int>(count)
+    /**
+     * Une escouade par pièce, réparties sur tous les niveaux : deux par étage pour une garnison de
+     * douze. Les hommes d'une même escouade démarrent groupés, c'est ce qui leur donne un secteur
+     * à tenir et un côté d'où arriver quand la radio les envoie.
+     */
+    fun chooseSquads(count: Int, size: Int, rng: Random): List<IntArray> {
+        val result = ArrayList<IntArray>(count)
+        val used = HashSet<Int>()
         for (i in 0 until count) {
             val level = i % zones.size
-            val preferredRoom = (i / zones.size) % 8
-            var selected = -1
-            for (offset in 0 until 8) {
-                val pool = zones[level][(preferredRoom + offset) % 8]
-                if (pool.isEmpty()) continue
-                val start = rng.nextInt(pool.size)
-                for (j in pool.indices) {
-                    val n = pool[(start + j) % pool.size]
-                    if (chosen.none { old ->
-                        val dx = grid.nodeX[n] - grid.nodeX[old]
-                        val dz = grid.nodeZ[n] - grid.nodeZ[old]
-                        grid.nodeY[n] == grid.nodeY[old] && dx * dx + dz * dz < 16
-                    }) { selected = n; break }
-                }
-                if (selected >= 0) break
+            val first = rng.nextInt(ROOMS)
+            for (offset in 0 until ROOMS) {
+                val room = (first + offset) % ROOMS
+                if (!used.add(level * ROOMS + room)) continue
+                val group = SquadSpawn.grab(grid, zones[level][room], size, rng)
+                if (group.size >= 2) { result.add(group); break }
             }
-            if (selected >= 0) chosen.add(selected)
         }
-        return chosen.toIntArray()
+        return result
+    }
+
+    private companion object {
+        /** Deux ailes de quatre pièces par niveau. */
+        const val ROOMS = 8
     }
 }

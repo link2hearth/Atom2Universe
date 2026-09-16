@@ -54,11 +54,4 @@ internal interface GameMode {
 
     /** Le joueur vient de tirer : les ennemis proches peuvent l'entendre. */
     fun onPlayerFired() = Unit
-
-    /**
-     * Segments de debug à tracer au sol (chemin d'un bot…), écrits dans [out] : 6 valeurs par
-     * segment (x0, y0, z0, x1, y1, z1), en coordonnées monde. Renvoie le nombre de segments écrits,
-     * sans dépasser la place disponible. Appelé à chaque image sur le thread GL.
-     */
-    fun debugSegments(out: DoubleArray): Int = 0
 }

@@ -12,8 +12,15 @@ import com.Atom2Universe.app.games.caves.ai.BodyClearance
 import com.Atom2Universe.app.games.caves.ai.SoldierCollision
 import com.Atom2Universe.app.games.caves.ai.RouteQueue
 import com.Atom2Universe.app.games.caves.ai.SoldierCrowd
+import com.Atom2Universe.app.games.caves.ai.Squad
+import com.Atom2Universe.app.games.caves.ai.SquadCommand
+import com.Atom2Universe.app.games.caves.ai.SquadMember
+import com.Atom2Universe.app.games.caves.ai.SquadSpawn
+import com.Atom2Universe.app.games.caves.ai.SuburbDeployment
 import com.Atom2Universe.app.games.caves.ai.TowerDeployment
 import com.Atom2Universe.app.games.caves.ai.LineOfSight
+import com.Atom2Universe.app.games.caves.world.BuiltinMaps
+import com.Atom2Universe.app.games.caves.world.MapleCrossingMap
 import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.entity.Enemy
@@ -51,8 +58,15 @@ internal class AssaultMode(
 ) : GameMode {
 
     private val isTower = source.map.name == OfficeTowerMap.ID
-    private val isSuburb = source.map.name == com.Atom2Universe.app.games.caves.world.MapleCrossingMap.ID
-    private val soldierCount = if (isTower) 60 else if (isSuburb) 8 else SOLDIERS_PER_ROUND
+    private val isSuburb = source.map.name == MapleCrossingMap.ID
+    /** Le quartier des fonderies : déploiement au sol dans la moitié est, jamais sur les toits. */
+    private val isArena = source.map.name == BuiltinMaps.ARENA_ID &&
+        source.map.sizeX == BuiltinMaps.ARENA_SIZE && source.map.sizeZ == BuiltinMaps.ARENA_DEPTH &&
+        source.map.spawnsB.isNotEmpty()
+    // Une escouade tient un secteur et monte à l'assaut d'un seul bloc : quatre à six hommes.
+    private val squadSize = if (isTower) TOWER_SQUAD_SIZE else FIELD_SQUAD_SIZE
+    private val squadCount = if (isTower) TOWER_SQUADS else if (isSuburb) SUBURB_SQUADS else FIELD_SQUADS
+    private val soldierCount = squadSize * squadCount
     val match = AssaultMatch(targetsPerRound = soldierCount,
         roundSeconds = if (isTower) 20 * 60f else if (isSuburb) 10 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
     private var roundWeapon = "gun"
@@ -68,9 +82,6 @@ internal class AssaultMode(
     /** Un soldat vient de tomber d'un tir à la tête. Appelé sur le thread GL. */
     @Volatile var onHeadshotKill: (() -> Unit)? = null
 
-    /** Tracer au sol le chemin des soldats (bouton 🧭). */
-    @Volatile var showPath = false
-
     override val allowsWorldEdits: Boolean get() = false
     override val infiniteAmmo: Boolean get() = true
     override val singleWeapon: Boolean get() = true
@@ -80,16 +91,37 @@ internal class AssaultMode(
             com.Atom2Universe.app.games.caves.world.OfficeTowerMap.DUSK_MS else NOON_MS
     override val headshotMultiplier: Float get() = HEADSHOT_MULTIPLIER
 
-    /** Un soldat : son corps (dessiné, touché par les balles) et son cerveau. */
-    private class Trooper(val body: Enemy, val brain: Soldier, val damage: Int) {
+    /**
+     * Un soldat : son corps (dessiné, touché par les balles), son cerveau, et son escouade.
+     *
+     * C'est lui qui fait le [SquadMember] : l'état-major ne connaît ni l'`Enemy` ni le renderer,
+     * il ne sait que donner une case à rejoindre et un secteur à tenir.
+     */
+    private class Trooper(val body: Enemy, val brain: Soldier, val damage: Int) : SquadMember {
         var elapsed = 0f
+        var squad: Squad? = null
+        /** Dernier instant (horloge d'occlusion) où la caméra l'a vu. */
+        var lastSeenAt = Float.NEGATIVE_INFINITY
+
+        override val alive: Boolean get() = body.hp > 0
+        override val x: Double get() = brain.x
+        override val y: Double get() = brain.y
+        override val z: Double get() = brain.z
+        override val seesTarget: Boolean get() = brain.seesPlayer
+        override val shaken: Boolean get() = brain.shaken
+        override fun order(node: Int, strict: Boolean) = brain.order(node, strict)
+        override fun radioContact(x: Double, z: Double) = brain.radioContact(x, z)
+        override fun leashTo(x: Double, z: Double, radius: Double) = brain.leashTo(x, z, radius)
     }
 
     private val units = ArrayList<Trooper>(soldierCount)
     private val crowd = SoldierCrowd(source.map.sizeX, source.map.sizeY, source.map.sizeZ)
     private var updateCursor = 0
+    private var aiAccumulator = 0f
+    private var commandNs = 0L
     private var aiLogSeconds = 0f
     private var aiPeakNs = 0L
+    private var aiTotalNs = 0L
     private val bodies get() = r.enemyManager.enemies
 
     // Dernier coup reçu par chaque soldat (par id) : c'est lui qui dit s'il est tombé d'un tir à la tête.
@@ -121,7 +153,9 @@ internal class AssaultMode(
     private var pathFinder: PathFinder? = null
     private var routes: RouteQueue? = null
     private var towerDeployment: TowerDeployment? = null
-    private var suburbDeployment: com.Atom2Universe.app.games.caves.ai.SuburbDeployment? = null
+    private var suburbDeployment: SuburbDeployment? = null
+    /** Le « talkie-walkie » : une seule escouade sur le joueur à la fois (voir [SquadCommand]). */
+    private var command: SquadCommand? = null
 
     // ── Le joueur vu par les soldats (coordonnées de la carte) ──
     private val player = PlayerSnapshot()
@@ -167,6 +201,7 @@ internal class AssaultMode(
         navGrid = grid
         pathFinder = PathFinder(grid)
         routes = RouteQueue(grid)
+        command = SquadCommand(grid, solid, rng)
         if (!listeningSteps) {
             listeningSteps = true
             // Les soldats entendent exactement les pas que le joueur entend : même cadence, et
@@ -181,7 +216,7 @@ internal class AssaultMode(
             }
         }
         if (isTower) towerDeployment = TowerDeployment(grid, map.spawnsA.first())
-        if (isSuburb) suburbDeployment = com.Atom2Universe.app.games.caves.ai.SuburbDeployment(grid,map.spawnsA.first())
+        if (isSuburb) suburbDeployment = SuburbDeployment(grid, map.spawnsA.first())
     }
 
     override fun onPlayerPlaced(x: Double, y: Double, z: Double) = kotlin.Unit
@@ -268,6 +303,10 @@ internal class AssaultMode(
             recovery.update(dt)
             collectShieldPickups()
             emitFootsteps(dt)
+            // La radio raisonne en cases de la grille : on lui donne les pieds, pas les yeux.
+            val startedCommand = System.nanoTime()
+            command?.update(dt, player.x, player.eyeY - EYE_HEIGHT, player.z)
+            commandNs = System.nanoTime() - startedCommand
         }
 
         var forceStatus = false
@@ -305,38 +344,26 @@ internal class AssaultMode(
         return true
     }
 
-    override fun debugSegments(out: DoubleArray): Int {
-        if (!showPath) return 0
-        val grid = navGrid ?: return 0
-        val max = out.size / 6
-        var count = 0
-        for (u in units) {
-            val f = u.brain.follower
-            if (f.arrived) continue
-            // Du soldat à sa prochaine case, puis de case en case jusqu'au bout.
-            var fromX = f.x + source.originX; var fromY = f.y + source.originY + PATH_LIFT; var fromZ = f.z + source.originZ
-            for (i in f.nextIndex until f.path.size) {
-                if (count >= max) return count
-                val n = f.path[i]
-                val toX = grid.nodeX[n] + 0.5 + source.originX
-                val toY = grid.nodeY[n] + source.originY + PATH_LIFT
-                val toZ = grid.nodeZ[n] + 0.5 + source.originZ
-                val o = count * 6
-                out[o] = fromX; out[o + 1] = fromY; out[o + 2] = fromZ
-                out[o + 3] = toX; out[o + 4] = toY; out[o + 5] = toZ
-                count++
-                fromX = toX; fromY = toY; fromZ = toZ
-            }
-        }
-        return count
-    }
-
     // ── Soldats ───────────────────────────────────────────────────────────────
 
-    private fun updateSoldiers(dt: Float) {
+    /**
+     * Fait réfléchir la garnison, à **cadence fixe** et non à celle de l'écran.
+     *
+     * La tablette affiche 120 images par seconde : sans ce pas fixe, la file de chemins et les
+     * cerveaux consommaient leur budget deux fois plus souvent que sur un écran 60 Hz, pour un
+     * résultat rigoureusement identique — les soldats ne pensent de toute façon qu'à 20 Hz au
+     * mieux. C'était du processeur brûlé, et de la chaleur, sans rien à l'écran en échange.
+     */
+    private fun updateSoldiers(frameDt: Float) {
+        aiAccumulator += frameDt
+        if (aiAccumulator < AI_STEP) return
+        val dt = aiAccumulator
+        aiAccumulator = 0f
         val started = System.nanoTime()
-        // Les morts ne participent plus aux collisions ni aux recherches, dès cette image.
-        for (u in units) {
+        updateOcclusion(dt)
+        // Les morts ne participent plus aux collisions ni aux recherches, dès ce pas.
+        for (i in units.indices) {
+            val u = units[i]
             if (u.body.hp <= 0) { crowd.remove(u.body.id); u.brain.cancelRoute(); continue }
             u.elapsed += dt
             u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
@@ -347,7 +374,9 @@ internal class AssaultMode(
         val deadline = System.nanoTime() + 2_000_000L
         var updated = 0
         var inspected = 0
-        while (inspected < units.size && updated < 8) {
+        // Le plafond par image compte ceux qui *pensent* : un soldat non mis à jour garde sa
+        // pose et son regard, et paraît figé. La vraie limite reste l'échéance en temps.
+        while (inspected < units.size && updated < MAX_BRAINS_PER_FRAME) {
             if (updated > 0 && System.nanoTime() >= deadline) break
             updateCursor %= units.size
             val u = units[updateCursor]
@@ -357,8 +386,11 @@ internal class AssaultMode(
             val brain = u.brain
             val distance = distSq(brain.x, brain.z, player.x, player.z)
             val floorDistance = kotlin.math.abs(brain.y + 1.62 - player.eyeY)
+            // Une escouade qui se regroupe ou monte à l'assaut réfléchit à pleine cadence, même
+            // loin du joueur : sinon elle traverse la carte au ralenti et arrive en ordre dispersé.
+            val committed = (u.squad?.stance ?: Squad.Stance.HOLD) != Squad.Stance.HOLD
             val interval = when {
-                brain.knowsPlayer || (floorDistance < 5 && distance < 40 * 40) -> .05f
+                committed || brain.knowsPlayer || (floorDistance < 5 && distance < 40 * 40) -> .05f
                 floorDistance < 8 && distance < 80 * 80 -> .2f
                 else -> 1f
             }
@@ -393,15 +425,116 @@ internal class AssaultMode(
             }
         }
         if (com.Atom2Universe.app.BuildConfig.DEBUG) {
-            aiPeakNs = maxOf(aiPeakNs, System.nanoTime() - started)
+            val spent = commandNs + System.nanoTime() - started
+            aiPeakNs = maxOf(aiPeakNs, spent)
+            aiTotalNs += spent
             aiLogSeconds += dt
             if (aiLogSeconds >= 5f) {
-                android.util.Log.i("CavePerf", "assaultSoldiers=${units.size} aiPeakUs=${aiPeakNs / 1000} " +
-                    "routesWaiting=${routes?.waitingCount ?: 0}")
+                // « HOLD 5 » = cinq hommes debout en réserve ; « ASSAULT 3 » = trois à l'assaut.
+                val roster = command?.all.orEmpty()
+                    .filter { it.living > 0 }
+                    .joinToString(" ") { "${it.stance.name.take(1)}${it.living}" }
+                // aiPerSecUs est le chiffre qui compte pour la chauffe : combien de microsecondes
+                // d'IA sont dépensées par seconde de jeu. 1 000 000 = un cœur saturé. En dessous
+                // de ~50 000 (5 %), une baisse d'images ne vient pas d'ici.
+                android.util.Log.i("CavePerf", "assaultSoldiers=${units.size} " +
+                    "aiPerSecUs=${(aiTotalNs / 1000 / aiLogSeconds).toLong()} " +
+                    "aiPeakUs=${aiPeakNs / 1000} routesWaiting=${routes?.waitingCount ?: 0} " +
+                    "routeStalled=${units.count { it.brain.waitingForRoute }} squads=[$roster]")
                 aiPeakNs = 0L
+                aiTotalNs = 0L
                 aiLogSeconds = 0f
             }
         }
+    }
+
+    // ── Soldats cachés derrière les murs ──────────────────────────────────────
+
+    // Ce qui cache un soldat à l'écran : un bloc plein et opaque. Ni vitre, ni escalier, ni dalle,
+    // ni meuble — dans le doute on dessine : mieux vaut un soldat construit pour rien qu'un soldat
+    // invisible alors qu'on devrait le voir. Cache par identifiant de bloc (0 = pas encore vu).
+    private val occluderKind = ByteArray(65536)
+    private val occluders = SolidGrid { x, y, z ->
+        val block = source.map.blockAt(x, y, z)
+        val key = block.toInt() and 0xFFFF
+        var kind = occluderKind[key]
+        if (kind == 0.toByte()) {
+            val def = com.Atom2Universe.app.games.caves.node.BlockRegistry.get(block)
+            val opaque = blocksMovement(block) && def != null &&
+                !com.Atom2Universe.app.games.caves.node.BlockRegistry.isTransparent(block) &&
+                !def.stairs && !def.slab && def.blockHeight >= 1f
+            kind = if (opaque) OCCLUDES else SEE_THROUGH
+            occluderKind[key] = kind
+        }
+        kind == OCCLUDES
+    }
+    private var occlusionCursor = 0
+    private var occlusionClock = 0f
+
+    /**
+     * Marque les soldats que la caméra ne peut pas voir, pour que le renderer ne les construise pas.
+     *
+     * Mesuré sur tablette le 16/09/2026 : dès que le joueur se tournait vers la tour, les 60 gardes
+     * des six étages entraient dans le cône de vue et **chaque corps était reconstruit à chaque
+     * image**, à travers les dalles — 60 à 67 % du processeur de l'appli, contre 0,4 % pour toute
+     * l'IA. Tourné vers un mur extérieur : plus rien. Le renderer n'éliminait que ce qui sort du
+     * cône, jamais ce qui est derrière un mur.
+     *
+     * **Toujours dessinés, sans attendre de rayon** : ceux qui savent où est le joueur, ceux dont
+     * l'escouade monte à l'assaut, et ceux qui sont à moins de [ALWAYS_DRAWN_DISTANCE] blocs.
+     * Essai en jeu : sans cette règle, les soldats qui débouchaient d'un angle de couloir
+     * apparaissaient en retard. Or ce sont justement eux qui viennent vers le joueur ; les rayons,
+     * eux, servent à écarter les réserves des autres étages, qui étaient tout le coût.
+     *
+     * Pour les autres, une douzaine de soldats par pas : chacun revu toutes les ~80 ms, par rayons
+     * vers la tête, le torse, puis les deux flancs — une épaule qui dépasse de l'angle suffit.
+     * Un soldat reste dessiné [OCCLUSION_GRACE] après avoir été vu.
+     */
+    private fun updateOcclusion(dt: Float) {
+        occlusionClock += dt
+        if (units.isEmpty()) return
+        val camera = r.camera
+        val cx = camera.x - source.originX
+        val cy = camera.y - source.originY
+        val cz = camera.z - source.originZ
+        // 1. Les soldats qui comptent, à chaque pas : une simple lecture de drapeaux.
+        for (i in units.indices) {
+            val u = units[i]
+            if (u.body.hp <= 0) continue
+            if (mustDraw(u, cx, cz)) {
+                u.lastSeenAt = occlusionClock
+                u.body.occluded = false
+            }
+        }
+        // 2. Les autres, à tour de rôle, par rayons.
+        repeat(minOf(units.size, OCCLUSION_PER_STEP)) {
+            occlusionCursor %= units.size
+            val u = units[occlusionCursor]
+            occlusionCursor++
+            if (u.body.hp <= 0 || mustDraw(u, cx, cz)) return@repeat
+            if (visibleFrom(cx, cy, cz, u.brain)) u.lastSeenAt = occlusionClock
+            u.body.occluded = occlusionClock - u.lastSeenAt > OCCLUSION_GRACE
+        }
+    }
+
+    private fun mustDraw(u: Trooper, cx: Double, cz: Double): Boolean {
+        val brain = u.brain
+        return brain.knowsPlayer || brain.seesPlayer ||
+            (u.squad?.stance ?: Squad.Stance.HOLD) != Squad.Stance.HOLD ||
+            distSq(brain.x, brain.z, cx, cz) < ALWAYS_DRAWN_DISTANCE * ALWAYS_DRAWN_DISTANCE
+    }
+
+    /** Tête, torse, puis les deux flancs à hauteur de torse, perpendiculairement au regard. */
+    private fun visibleFrom(cx: Double, cy: Double, cz: Double, brain: Soldier): Boolean {
+        val x = brain.x; val y = brain.y; val z = brain.z
+        if (LineOfSight.isClear(cx, cy, cz, x, y + OCCLUSION_HEAD, z, occluders)) return true
+        if (LineOfSight.isClear(cx, cy, cz, x, y + OCCLUSION_CHEST, z, occluders)) return true
+        val dx = x - cx; val dz = z - cz
+        val length = kotlin.math.sqrt(dx * dx + dz * dz).coerceAtLeast(1e-6)
+        val sideX = -dz / length * OCCLUSION_SIDE
+        val sideZ = dx / length * OCCLUSION_SIDE
+        return LineOfSight.isClear(cx, cy, cz, x + sideX, y + OCCLUSION_CHEST, z + sideZ, occluders) ||
+            LineOfSight.isClear(cx, cy, cz, x - sideX, y + OCCLUSION_CHEST, z - sideZ, occluders)
     }
 
     /**
@@ -464,6 +597,7 @@ internal class AssaultMode(
     }
 
     private fun clearSoldiers() {
+        command?.clear()
         units.forEach { it.brain.cancelRoute() }
         routes?.clear()
         crowd.clear()
@@ -501,75 +635,94 @@ internal class AssaultMode(
     }
 
     /**
-     * Fait apparaître les soldats près du point d'apparition adverse (coin opposé), bien loin du
-     * joueur et un peu espacés entre eux.
+     * Déploie la garnison **par escouades**. Chaque groupe de quatre à six hommes apparaît au même
+     * endroit : c'est ce qui lui donne un secteur à tenir et un côté d'où arriver. Sans ça, le
+     * premier ordre de regroupement ferait traverser la carte à chacun séparément, et l'assaut
+     * arriverait en file indienne — précisément ce que la coordination cherche à éviter.
      */
     private fun spawnSoldiers() {
         val grid = navGrid ?: return
         val finder = pathFinder ?: return
+        val headquarters = command ?: return
         if (grid.nodeCount == 0) return
-        val playerSpawn = source.spawnPoint(0)
-        val enemySpawn = source.spawnPoint(1)
-        val px = playerSpawn[0].toDouble() - source.originX; val pz = playerSpawn[2].toDouble() - source.originZ
-        val ex = enemySpawn[0].toDouble() - source.originX; val ez = enemySpawn[2].toDouble() - source.originZ
-        val towerNodes = towerDeployment?.choose(soldierCount, rng) ?: suburbDeployment?.choose(soldierCount,rng)
-
-        // Sur la carte intégrée, déployer au sol dans la cour est, jamais sur les toits.
-        val deployment = if (source.map.name == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_ID &&
-            source.map.sizeX == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_SIZE &&
-            source.map.sizeZ == com.Atom2Universe.app.games.caves.world.BuiltinMaps.ARENA_DEPTH &&
-            source.map.spawnsB.isNotEmpty()) {
-            (0 until grid.nodeCount).filter { n ->
-                grid.nodeY[n] == source.map.spawnsB.first().y &&
-                    grid.nodeX[n] >= source.map.sizeX - 23 &&
-                    kotlin.math.abs(grid.nodeZ[n] + 0.5 - ez) <= 13 &&
-                    distSq(grid.nodeX[n] + 0.5, grid.nodeZ[n] + 0.5, ex, ez) <=
-                    ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS
-            }
-        } else null
-        if (deployment != null && deployment.isEmpty()) return
-        var attempts = 0
-        while (units.size < soldierCount && attempts < MAX_SPAWN_ATTEMPTS) {
-            attempts++
-            val n = if (towerNodes != null) towerNodes.getOrNull(units.size) ?: break
-                else deployment?.let { it[rng.nextInt(it.size)] } ?: rng.nextInt(grid.nodeCount)
-            val x = grid.nodeX[n] + 0.5; val z = grid.nodeZ[n] + 0.5
-            // D'abord autour du camp adverse ; si ça ne suffit pas, n'importe où loin du joueur.
-            val nearEnemySpawn = attempts < MAX_SPAWN_ATTEMPTS / 2
-            if (towerNodes == null) {
-                if (nearEnemySpawn && distSq(x, z, ex, ez) > ENEMY_SPAWN_RADIUS * ENEMY_SPAWN_RADIUS) continue
-                if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
-                if (units.any { distSq(x, z, it.brain.x, it.brain.z) < MIN_SOLDIER_SPACING * MIN_SOLDIER_SPACING }) continue
-            }
-
-            if (units.any { SoldierCollision.overlaps(x, grid.nodeY[n].toDouble(), z,
-                    it.brain.x, it.brain.y, it.brain.z) }) continue
-            val weaponType = roundWeapon
-            val profile = RangedProfile.all.getValue(weaponType)
-            val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
-                fireInterval = profile.interval, magazineSize = profile.magazine, reloadSeconds = profile.reload)
-            val id = nextSoldierId++
-            val clearance = BodyClearance { bx, by, bz ->
-                SoldierCollision.clearsWorld(solid, bx, by, bz) &&
-                    !crowd.overlaps(bx, by, bz, except = id) &&
-                    !(r.playerNode.hp > 0 && SoldierCollision.overlaps(bx, by, bz,
-                        r.camera.playerX - source.originX, r.camera.playerY - source.originY - 1.62,
-                        r.camera.playerZ - source.originZ,
-                        (r.camera.eyeY - r.camera.playerY + 1.8).coerceAtLeast(.5)))
-            }
-            val brain = Soldier(grid, solid, finder, rng, tuning, clearance, routes)
-            brain.place(x, grid.nodeY[n].toDouble(), z)
-            val body = Enemy(id, SOLDIER, x + source.originX, grid.nodeY[n].toDouble() + source.originY, z + source.originZ)
-            body.hp = body.maxHp
-            body.heldWeaponType = weaponType
-            // Cadences identiques au joueur ; dégâts ajustés pour le solo, surtout la SMG.
-            val damage = when (weaponType) {
-                "smg" -> 3; "dual_pistols" -> 5; "shotgun" -> 24; "lever_rifle" -> 16; else -> 8
-            }
-            units += Trooper(body, brain, damage).also { it.elapsed = rng.nextFloat() }
-            bodies += body
-            crowd.move(id, brain.x, brain.y, brain.z)
+        for (nodes in planSquads(grid)) {
+            val members = ArrayList<Trooper>(nodes.size)
+            for (n in nodes) members += enlistSoldier(grid, finder, n) ?: continue
+            if (members.isEmpty()) continue
+            val squad = headquarters.enlist(members)
+            for (m in members) m.squad = squad
         }
+        // La garnison sait par où l'attaque commence : c'est l'entrée, pas un don de voyance.
+        val spawn = source.spawnPoint(0)
+        headquarters.start(spawn[0].toDouble() - source.originX,
+            spawn[1].toDouble() - source.originY, spawn[2].toDouble() - source.originZ)
+    }
+
+    /** Les cases de départ, déjà groupées par escouade, selon la carte jouée. */
+    private fun planSquads(grid: NavGrid): List<IntArray> {
+        towerDeployment?.let { return it.chooseSquads(squadCount, squadSize, rng) }
+        suburbDeployment?.let { return it.chooseSquads(squadCount, squadSize, rng) }
+        val pool = deploymentPool(grid)
+        if (pool.isEmpty()) return emptyList()
+        return SquadSpawn.cluster(grid, pool, squadCount, squadSize, rng)
+    }
+
+    /**
+     * Cases candidates hors carte dédiée : loin du point d'apparition du joueur, et au sol dans la
+     * moitié adverse pour le quartier des fonderies (les toits n'ont jamais été des postes).
+     */
+    private fun deploymentPool(grid: NavGrid): List<Int> {
+        val playerSpawn = source.spawnPoint(0)
+        val px = playerSpawn[0].toDouble() - source.originX
+        val pz = playerSpawn[2].toDouble() - source.originZ
+        val groundY = if (isArena) source.map.spawnsB.first().y else -1
+        val halfX = source.map.sizeX / 2
+        val pool = ArrayList<Int>()
+        for (n in 0 until grid.nodeCount) {
+            if (groundY >= 0 && (grid.nodeY[n] != groundY || grid.nodeX[n] < halfX)) continue
+            val x = grid.nodeX[n] + 0.5
+            val z = grid.nodeZ[n] + 0.5
+            if (distSq(x, z, px, pz) < MIN_DIST_FROM_PLAYER * MIN_DIST_FROM_PLAYER) continue
+            pool.add(n)
+        }
+        return pool
+    }
+
+    /** Corps et cerveau d'un soldat sur la case [node], ou null si la place est déjà prise. */
+    private fun enlistSoldier(grid: NavGrid, finder: PathFinder, node: Int): Trooper? {
+        val x = grid.nodeX[node] + 0.5
+        val y = grid.nodeY[node].toDouble()
+        val z = grid.nodeZ[node] + 0.5
+        if (units.any { SoldierCollision.overlaps(x, y, z, it.brain.x, it.brain.y, it.brain.z) })
+            return null
+        val weaponType = roundWeapon
+        val profile = RangedProfile.all.getValue(weaponType)
+        val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
+            fireInterval = profile.interval, magazineSize = profile.magazine,
+            reloadSeconds = profile.reload)
+        val id = nextSoldierId++
+        val clearance = BodyClearance { bx, by, bz ->
+            SoldierCollision.clearsWorld(solid, bx, by, bz) &&
+                !crowd.overlaps(bx, by, bz, except = id) &&
+                !(r.playerNode.hp > 0 && SoldierCollision.overlaps(bx, by, bz,
+                    r.camera.playerX - source.originX, r.camera.playerY - source.originY - EYE_HEIGHT,
+                    r.camera.playerZ - source.originZ,
+                    (r.camera.eyeY - r.camera.playerY + 1.8).coerceAtLeast(.5)))
+        }
+        val brain = Soldier(grid, solid, finder, rng, tuning, clearance, routes)
+        brain.place(x, y, z)
+        val body = Enemy(id, SOLDIER, x + source.originX, y + source.originY, z + source.originZ)
+        body.hp = body.maxHp
+        body.heldWeaponType = weaponType
+        // Cadences identiques au joueur ; dégâts ajustés pour le solo, surtout la SMG.
+        val damage = when (weaponType) {
+            "smg" -> 3; "dual_pistols" -> 5; "shotgun" -> 24; "lever_rifle" -> 16; else -> 8
+        }
+        val trooper = Trooper(body, brain, damage).also { it.elapsed = rng.nextFloat() }
+        units += trooper
+        bodies += body
+        crowd.move(id, brain.x, brain.y, brain.z)
+        return trooper
     }
 
     // ── Joueur ────────────────────────────────────────────────────────────────
@@ -623,7 +776,15 @@ internal class AssaultMode(
         /** Midi dans le cycle de CaveRenderer (6 h = 0 ms, 100 000 ms par heure de jour). */
         const val NOON_MS = 600_000L
 
-        const val SOLDIERS_PER_ROUND = 3
+        /** Hauteur des yeux d'un personnage debout, joueur comme soldat. */
+        const val EYE_HEIGHT = 1.62
+
+        // Effectifs : une seule escouade attaque à la fois, la garnison entière sert de réserve.
+        const val TOWER_SQUAD_SIZE = 5
+        const val TOWER_SQUADS = 12
+        const val FIELD_SQUAD_SIZE = 4
+        const val SUBURB_SQUADS = 2
+        const val FIELD_SQUADS = 3
 
         /** Sans nouveau pas publié pendant ce temps, le joueur s'est arrêté. */
         const val STEP_SILENCE = 0.25f
@@ -638,22 +799,32 @@ internal class AssaultMode(
         const val NEAR_MISS_RADIUS = 1.6
         const val NEAR_MISS_LOOKAHEAD = 12.0
         const val NEAR_MISS_CHEST = 1.0
-        const val ROUND_SECONDS = 180f
+        const val ROUND_SECONDS = 300f
         const val PLAYER_MAX_HP = 100
         const val HEADSHOT_MULTIPLIER = 2f
         const val STATUS_INTERVAL = 0.1f
+        /** Cerveaux mis à jour par pas d'IA, sous réserve de l'échéance de 2 ms. */
+        const val MAX_BRAINS_PER_FRAME = 8
+
+        /** Pas de réflexion de la garnison : 60 fois par seconde, quel que soit l'écran. */
+        const val AI_STEP = 1f / 60f
+
+        // Occlusion des soldats par le décor (voir updateOcclusion).
+        const val OCCLUSION_PER_STEP = 12
+        const val OCCLUSION_GRACE = .2f
+        const val ALWAYS_DRAWN_DISTANCE = 12.0
+        /** Demi-largeur visée sur les flancs : épaule et fusil dépassent avant le centre du corps. */
+        const val OCCLUSION_SIDE = .55
+        const val OCCLUSION_HEAD = 1.55
+        const val OCCLUSION_CHEST = .9
+        const val OCCLUDES: Byte = 1
+        const val SEE_THROUGH: Byte = 2
 
         /** Dégâts d'une balle de soldat : une douzaine suffisent à abattre le joueur. */
         const val SOLDIER_DAMAGE = 8
 
-        const val ENEMY_SPAWN_RADIUS = 15.0
         const val MIN_DIST_FROM_PLAYER = 40.0
-        const val MIN_SOLDIER_SPACING = 3.0
-        const val MAX_SPAWN_ATTEMPTS = 2000
         const val MAX_PLAYER_SPEED = 30.0
-
-        /** Hauteur du tracé au-dessus du sol, pour qu'il ne clignote pas dans l'herbe. */
-        const val PATH_LIFT = 0.06
 
         /** Même règle que la physique du joueur : l'air, la déco et l'eau ne bloquent pas. */
         fun blocksMovement(block: Short) = block != AIR && !isDecoration(block) && !isWater(block)

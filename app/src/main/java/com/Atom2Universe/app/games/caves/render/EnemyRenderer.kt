@@ -53,6 +53,7 @@ internal class EnemyRenderer {
     private val corners = FloatArray(8 * 3)
     private val visible = ArrayList<Enemy>(100)
     private val planes = FloatArray(24)
+    private val labelBg = FloatArray(3)
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -202,8 +203,11 @@ internal class EnemyRenderer {
             if (length > 0f) for (c in 0..3) planes[p + c] /= length
         }
         visible.clear()
-        for (e in enemies) {
-            if (e.hp <= 0) continue
+        for (index in enemies.indices) {
+            val e = enemies[index]
+            // Masqué par un mur plein (voir AssaultMode.updateOcclusion) : ni construit ni dessiné.
+            // Le cône de vue seul laissait passer toute une garnison à travers six étages de dalles.
+            if (e.hp <= 0 || e.occluded) continue
             val height = MobModels.bodyHeightWorld(e.def.model, e.baseScale)
             val radius = maxOf(2f, height * 1.5f)
             val x = (e.x - camX).toFloat()
@@ -221,18 +225,19 @@ internal class EnemyRenderer {
         var start = 0
         while (start < visible.size) {
             val end = minOf(start + MAX_VISIBLE, visible.size)
-            renderBatch(visible.subList(start, end), camX, camY, camZ, cameraYaw, vpMatrix)
+            renderBatch(start, end, camX, camY, camZ, cameraYaw, vpMatrix)
             start = end
         }
     }
 
+    /** Dessine [visible] de [from] inclus à [to] exclu (déjà filtrés : vivants et visibles). */
     private fun renderBatch(
-        enemies: List<Enemy>,
+        from: Int, to: Int,
         camX: Double, camY: Double, camZ: Double,
         cameraYaw: Float,
         vpMatrix: FloatArray
     ) {
-        if (enemies.none { it.hp > 0 }) return
+        if (from >= to) return
 
         // Vecteur "droite caméra" pour les billboards (barre de vie + label).
         val yawRad = Math.toRadians(cameraYaw.toDouble())
@@ -248,7 +253,8 @@ internal class EnemyRenderer {
 
         var drawn = 0
         var bodyOffset = 0
-        for (e in enemies) {
+        for (index in from until to) {
+            val e = visible[index]
             if (e.hp <= 0) continue
             if (drawn >= MAX_VISIBLE) break
             drawn++
@@ -277,7 +283,8 @@ internal class EnemyRenderer {
 
         // ── 2. Barres de vie + labels (accumulés puis dessinés batchés) ─────────
         var ci = 0; var di = 0; var count = 0
-        for (e in enemies) {
+        for (index in from until to) {
+            val e = visible[index]
             if (e.hp <= 0) continue
             if (count >= MAX_VISIBLE) break
             count++
@@ -294,7 +301,8 @@ internal class EnemyRenderer {
             val barY1 = barY0 + 0.14f
             val hpFrac = e.hp.toFloat() / e.maxHp.coerceAtLeast(1)
             val fgX1 = -barW * 0.5f + barW * hpFrac
-            val (bgR, bgG, bgB) = levelBgColor(e.level)
+            levelBgColor(e.level, labelBg)
+            val bgR = labelBg[0]; val bgG = labelBg[1]; val bgB = labelBg[2]
 
             fun cv(rx: Float, ry: Float, r: Float, g: Float, b: Float) {
                 coV[ci++] = ex + rightX * rx; coV[ci++] = ry; coV[ci++] = ez + rightZ * rx
@@ -307,7 +315,8 @@ internal class EnemyRenderer {
             cv(bx0, barY1, gr, gg, 0f); cv(bx0, barY0, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f)
             cv(bx0, barY1, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f); cv(fgX1, barY1, gr, gg, 0f)
 
-            val levelStr = if (e.isBoss) "BOSS" else e.level.toString()
+            val levelStr = if (e.isBoss) "BOSS" else if (e.level in LEVEL_LABELS.indices)
+                LEVEL_LABELS[e.level] else e.level.toString()
             val digitW = if (e.isBoss) 0.20f else 0.16f
             val digitH = if (e.isBoss) 0.28f else 0.22f
             val gap = 0.02f
@@ -368,9 +377,9 @@ internal class EnemyRenderer {
 
     // ── Construction de la géométrie voxel d'un mob ─────────────────────────────
 
-    /** Ajoute le modèle de [e] dans [boV] à partir de [offset]. Retourne le nouvel offset. */
     private val heldMesh by lazy { HeldEquipmentMesh() }
-    private val heldFrames = HashMap<String, FloatArray>()
+    /** Images d'arme par type : 9 étapes de rechargement × (repos + 4 étapes de recul). */
+    private val heldFrames = HashMap<String, Array<FloatArray?>>()
 
     private fun heldWeaponVertices(e: Enemy): FloatArray? {
         val weaponType = e.heldWeaponType ?: return null
@@ -378,178 +387,228 @@ internal class EnemyRenderer {
             val reloadFrame = (e.weaponReload * 8).toInt().coerceIn(0, 8)
             val shotFrame = if (reloadFrame == 0 && e.shotRecoil > 0f)
                 ((.16f - e.shotRecoil) / .04f).toInt().coerceIn(0, 3) else -1
-            val key = "$weaponType:$reloadFrame:$shotFrame"
-            return heldFrames.getOrPut(key) {
-                heldMesh.clear()
-                heldMesh.weapon(weaponType, 0f, if (shotFrame < 0) -1f else shotFrame * .04f,
-                    true, 0xD5BB75, reload = reloadFrame / 8f)
-                heldMesh.vertices.copyOf(heldMesh.count)
-            }
+            // Pas de clé texte fabriquée à neuf : c'était une chaîne par soldat et par image.
+            val frames = heldFrames.getOrPut(weaponType) { arrayOfNulls(9 * 5) }
+            val slot = reloadFrame * 5 + shotFrame + 1
+            frames[slot]?.let { return it }
+            heldMesh.clear()
+            heldMesh.weapon(weaponType, 0f, if (shotFrame < 0) -1f else shotFrame * .04f,
+                true, 0xD5BB75, reload = reloadFrame / 8f)
+            return heldMesh.vertices.copyOf(heldMesh.count).also { frames[slot] = it }
         }
         return null
     }
 
+    // ── Pose du mob en cours de construction ──────────────────────────────────
+    //
+    // Calculée une fois par mob, puis lue par de petites méthodes. Mesuré sur tablette le
+    // 16/09/2026 : l'ancien buildBody, une seule méthode de 170 lignes à boucles imbriquées, ne se
+    // faisait pas compiler par le JIT et tournait **interprété** — 60 à 67 % du processeur de
+    // l'appli dès qu'une garnison était dans le champ, dont une grosse part dans un crochet de
+    // débogage appelé à chaque tour de boucle. Des méthodes courtes se compilent, elles.
+    private var pS = 0f
+    private var pCosY = 0f; private var pSinY = 0f
+    private var pEx = 0f; private var pEy = 0f; private var pEz = 0f
+    private var pReference = false; private var pPassive = false; private var pSoldier = false
+    private var pHeavyArms = false; private var pResting = false; private var pMoving = false
+    private var pGait = 0f; private var pLocomotion = 0f; private var pWalk = 0f
+    private var pStrike = 0f; private var pBreath = 0f; private var pFlinch = 0f
+    private var pGrazingDrop = 0f; private var pSxz = 1f; private var pSyY = 1f
+    private var pAnimTime = 0f; private var pId = 0; private var pRecoil = 0f; private var pFlash = 0f
+    private val pTint = FloatArray(3)
+
+    /** Ajoute le modèle de [e] dans [boV] à partir de [offset]. Retourne le nouvel offset. */
     private fun buildBody(e: Enemy, camX: Double, camY: Double, camZ: Double, offset: Int, weaponVertices: FloatArray?): Int {
         val model = if (e.def.behavior == "passive") AnimalModels.get(e.def.model, e.young, e.coat) else MobModels.get(e.def.model)
-        val h = e.baseScale * 2f
-        val s = h / MobModels.REF_VOX             // unités monde par voxel
-
-        val yawRad = Math.toRadians(e.yaw.toDouble())
-        val cosY = cos(yawRad).toFloat(); val sinY = sin(yawRad).toFloat()
-
-        val ex = (e.x - camX).toFloat()
-        val ez = (e.z - camZ).toFloat()
-        var ey = (e.y - camY).toFloat()
-
-        val reference = e.exhibitPose == ExhibitPose.REFERENCE
-        val passive = e.def.behavior == "passive"
-        val soldier = e.def.model == "soldier"
-        val moving = !e.resting && (e.state == EnemyState.CHASE || e.state == EnemyState.WANDER)
-        val gaitPhase = if (passive || soldier) e.animTime*model.gait else e.walkPhase
-        val locomotion = if (passive || soldier) { if(moving) 1f else 0f } else e.motionBlend
-        val walk = if (reference) 0f else sin(gaitPhase)*locomotion
-        val strike = if (reference || passive || soldier) 0f else (e.strikeTime/.55f).coerceIn(0f,1f)
-        val breath = if (reference || passive) 0f else sin(e.animTime*1.8f+e.id*.73f)*model.breath
-        val flinch = if (reference || passive) 0f else e.hitFlash.coerceIn(0f,.25f)*2f
-        // Descente du cou pendant le broutage, commune à toute la tête (yeux,
-        // museau, oreilles et cornes), en unités voxel avant l'échelle monde.
-        val grazingDrop = if (!reference && e.resting && e.def.behavior == "passive")
-            model.feedingDrop * (1f + .09f * sin(e.animTime * if (e.def.model == "chicken") 7f else 2f)) else 0f
-
-        var sxz = 1f; var syY = 1f
-        if (model.squash && !reference) {
-            val q = sin(if(locomotion>.1f) gaitPhase else e.animTime*2f)
-            syY = 1f + 0.14f * q - .18f*strike; sxz = 1f / sqrt(syY)
-        }
-        if (model.floats && !reference) ey += 0.15f * sin(e.animTime * FLOAT_FREQ).toFloat()
-
-        val tint = levelTint(if (e.def.behavior == "passive") 2 else e.level, e.isBoss)
-        // La progression reste lisible sur le label ; elle ne masque plus les matériaux pastel.
-        if (!passive) for(i in tint.indices) tint[i]=1f+(tint[i]-1f)*.3f
-        val flash = e.hitFlash.coerceIn(0f, 1f) * 0.7f
-
+        preparePose(e, model, camX, camY, camZ)
+        val skipModelWeapon = pSoldier && e.heldWeaponType != null
+        val parts = model.parts
         var n = offset
-        for (part in model.parts) {
-            if (soldier && e.heldWeaponType != null &&
-                (part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) continue
-            if (model.squash && part === model.parts.first()) {
-                val mesh=SlimeGeometry.vertices
-                if (n+mesh.size/4*6>boV.size) break
-                for(i in mesh.indices step 4) {
-                    val px=mesh[i]*sxz*s
-                    val py=mesh[i+1]*syY*s
-                    val pz=mesh[i+2]*sxz*s
-                    boV[n++]=ex+px*cosY+pz*sinY
-                    boV[n++]=ey+py
-                    boV[n++]=ez-px*sinY+pz*cosY
-                    for(channel in 0..2) {
-                        val color=((part.color ushr (16-channel*8)) and 255)/255f
-                        boV[n++]=(color*tint[channel]*mesh[i+3]*(1f-flash)+
-                            (if(channel==0) 1f else .15f)*flash).coerceIn(0f,1f)
-                    }
-                }
+        for (i in parts.indices) {
+            val part = parts[i]
+            if (skipModelWeapon && (part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) continue
+            if (model.squash && i == 0) {
+                if (n + SlimeGeometry.vertices.size / 4 * 6 > boV.size) break
+                n = emitSlime(part, n)
                 continue
             }
-            if (part.limb == Limb.MUZZLE_FLASH && (reference || e.shotRecoil < .11f)) continue
-            if (part.limb == Limb.WEAPON && reference) continue
+            if (part.limb == Limb.MUZZLE_FLASH && (pReference || pRecoil < .11f)) continue
+            if (part.limb == Limb.WEAPON && pReference) continue
             if (n + 216 > boV.size) break   // 6 faces × 6 sommets × 6 floats ; boV partagé entre mobs
-            // Angle de balancement / pose
-            val baseRad = Math.toRadians(part.baseTiltDeg.toDouble()).toFloat()
-            val ang = if (reference && part.limb != Limb.NONE) 0f else when (part.limb) {
-                Limb.LEG -> baseRad + part.side * walk * model.stride
-                Limb.ARM ->
-                    if (e.def.model == "soldier") baseRad
-                    else baseRad - strike*(if(e.def.model == "ogre" || e.def.model == "golem") 1.15f else if(part.side>0) 1f else .65f) - part.side*walk*model.stride*.65f
-                Limb.HEAD -> if (e.resting) .65f + .12f * sin(e.animTime * 2f) else .04f * sin(e.animTime * 2f)
-                Limb.TAIL -> .18f * sin(e.animTime * 2.5f)
-                Limb.WING -> if (reference) 0f else if (moving) .22f * sin(e.animTime * 12f) else .04f * sin(e.animTime * 2f)
-                Limb.LOOK -> if(reference) 0f else .04f*sin(e.animTime*1.8f+e.id*.73f)-strike*.10f
-                Limb.CLOTH -> baseRad + if(reference) 0f else .10f*sin(e.animTime*2.3f+part.side)+walk*.12f
-                Limb.CRAWL -> if(reference) 0f else part.side*walk*.22f
-                Limb.NONE, Limb.WEAPON, Limb.MUZZLE_FLASH -> baseRad
-            }
-            val cosA = cos(ang); val sinA = sin(ang)
-
-            val hw = part.w * 0.5f; val hh = part.h * 0.5f; val hd = part.d * 0.5f
-            var k = 0
-            for (zi in 0..1) for (yi in 0..1) for (xi in 0..1) {
-                var lx = part.cx + if (xi == 1) hw else -hw
-                var ly = part.cy + if (yi == 1) hh else -hh
-                var lz = part.cz + if (zi == 1) hd else -hd
-                // Écrasement gélatineux (autour des pieds / de l'axe central)
-                lx *= sxz; lz *= sxz; ly *= syY
-                // Rotation du membre autour de son pivot (axe X)
-                val pivotZ = if (part.limb == Limb.HEAD) model.headPivotZ else part.pivotZ
-                val dy = ly - part.pivotY; val dz = lz - pivotZ
-                var ry = part.pivotY + dy * cosA - dz * sinA
-                var rz = pivotZ + dy * sinA + dz * cosA
-                if (part.limb == Limb.HEAD) ry -= grazingDrop
-                if (part.limb == Limb.LOOK && !reference) {
-                    val turn=if(soldier && !e.resting) 0f else .09f*sin(e.animTime*.8f+e.id*.73f)
-                    val hx=lx-part.pivotX; val hz=rz-part.pivotZ
-                    lx=part.pivotX+hx*cos(turn)+hz*sin(turn)
-                    rz=part.pivotZ-hx*sin(turn)+hz*cos(turn)
-                }
-                if (part.limb == Limb.CRAWL && !reference) {
-                    ry += kotlin.math.max(0f,part.side*sin(gaitPhase))*.7f*locomotion
-                }
-                if (!passive && !reference && part.limb != Limb.LEG && part.limb != Limb.CRAWL) {
-                    ry += breath
-                    rz += (strike*.6f-flinch*.45f)*(ly/model.heightVox).coerceIn(0f,1f)
-                }
-                if (part.limb == Limb.WING) {
-                    // Aile articulée sur le flanc, autour de Z, vers l'extérieur.
-                    val pivotX=if(passive) part.cx-part.side*part.w*.5f else part.pivotX
-                    val wingX=lx-pivotX
-                    lx=pivotX+wingX*cosA-dy*sinA*part.side
-                    ry=part.pivotY+wingX*sinA*part.side+dy*cosA
-                    rz=lz
-                }
-                if (reference && part.limb == Limb.ARM) {
-                    val armX = lx - part.cx
-                    val armY = ly - part.pivotY
-                    lx = part.cx - part.side * armY
-                    ry = part.pivotY + part.side * armX
-                }
-                if (!reference && e.def.model == "soldier" &&
-                    (part.limb == Limb.ARM || part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) {
-                    val recoil = (e.shotRecoil / .16f).coerceIn(0f, 1f)
-                    rz -= recoil * 1.8f
-                    ry += recoil * .45f
-                }
-                // Échelle voxel→monde
-                val px = lx * s; val py = ry * s; val pz = rz * s
-                // Orientation (yaw) puis translation au pied du mob
-                corners[k++] = ex + (px * cosY + pz * sinY)
-                corners[k++] = ey + py
-                corners[k++] = ez + (-px * sinY + pz * cosY)
-            }
-
-            // Couleur de base (teinte de niveau sauf pièces auto-éclairées)
-            val cr = ((part.color ushr 16) and 0xFF) / 255f
-            val cg = ((part.color ushr 8) and 0xFF) / 255f
-            val cb = (part.color and 0xFF) / 255f
-            val pr: Float; val pg: Float; val pb: Float
-            if (part.emissive) { pr = cr; pg = cg; pb = cb }
-            else { pr = cr * tint[0]; pg = cg * tint[1]; pb = cb * tint[2] }
-
-            n = emitBox(boV, n, pr, pg, pb, flash, part.emissive)
+            placeCorners(model, part)
+            n = emitPart(part, n)
         }
-        if (weaponVertices != null) {
-            val verts = weaponVertices
-            if (n + verts.size <= boV.size) {
-                val recoil = e.shotRecoil.coerceIn(0f, .16f) / .16f
-                for (i in verts.indices step 6) {
-                    // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
-                    val px = .09f - verts[i]
-                    val py = 1.16f + verts[i + 1] + recoil * .027f
-                    val pz = .36f - verts[i + 2] - recoil * .108f
-                    boV[n++] = ex + px * cosY + pz * sinY
-                    boV[n++] = ey + py
-                    boV[n++] = ez - px * sinY + pz * cosY
-                    boV[n++] = verts[i + 3]; boV[n++] = verts[i + 4]; boV[n++] = verts[i + 5]
-                }
+        if (weaponVertices != null && n + weaponVertices.size <= boV.size) n = emitWeapon(weaponVertices, n)
+        return n
+    }
+
+    private fun preparePose(e: Enemy, model: MobModel, camX: Double, camY: Double, camZ: Double) {
+        pS = e.baseScale * 2f / MobModels.REF_VOX             // unités monde par voxel
+        val yawRad = Math.toRadians(e.yaw.toDouble())
+        pCosY = cos(yawRad).toFloat(); pSinY = sin(yawRad).toFloat()
+        pEx = (e.x - camX).toFloat()
+        pEz = (e.z - camZ).toFloat()
+        pEy = (e.y - camY).toFloat()
+
+        pReference = e.exhibitPose == ExhibitPose.REFERENCE
+        pPassive = e.def.behavior == "passive"
+        pSoldier = e.def.model == "soldier"
+        pHeavyArms = e.def.model == "ogre" || e.def.model == "golem"
+        pResting = e.resting
+        pAnimTime = e.animTime
+        pId = e.id
+        pRecoil = e.shotRecoil
+        pMoving = !e.resting && (e.state == EnemyState.CHASE || e.state == EnemyState.WANDER)
+        pGait = if (pPassive || pSoldier) e.animTime * model.gait else e.walkPhase
+        pLocomotion = if (pPassive || pSoldier) { if (pMoving) 1f else 0f } else e.motionBlend
+        pWalk = if (pReference) 0f else sin(pGait) * pLocomotion
+        pStrike = if (pReference || pPassive || pSoldier) 0f else (e.strikeTime / .55f).coerceIn(0f, 1f)
+        pBreath = if (pReference || pPassive) 0f else sin(e.animTime * 1.8f + e.id * .73f) * model.breath
+        pFlinch = if (pReference || pPassive) 0f else e.hitFlash.coerceIn(0f, .25f) * 2f
+        // Descente du cou pendant le broutage, commune à toute la tête (yeux,
+        // museau, oreilles et cornes), en unités voxel avant l'échelle monde.
+        pGrazingDrop = if (!pReference && e.resting && pPassive)
+            model.feedingDrop * (1f + .09f * sin(e.animTime * if (e.def.model == "chicken") 7f else 2f)) else 0f
+
+        pSxz = 1f; pSyY = 1f
+        if (model.squash && !pReference) {
+            val q = sin(if (pLocomotion > .1f) pGait else e.animTime * 2f)
+            pSyY = 1f + 0.14f * q - .18f * pStrike; pSxz = 1f / sqrt(pSyY)
+        }
+        if (model.floats && !pReference) pEy += 0.15f * sin(e.animTime * FLOAT_FREQ)
+
+        levelTint(if (pPassive) 2 else e.level, e.isBoss, pTint)
+        // La progression reste lisible sur le label ; elle ne masque plus les matériaux pastel.
+        if (!pPassive) for (i in 0..2) pTint[i] = 1f + (pTint[i] - 1f) * .3f
+        pFlash = e.hitFlash.coerceIn(0f, 1f) * 0.7f
+    }
+
+    private fun emitSlime(part: MobPart, offset: Int): Int {
+        val mesh = SlimeGeometry.vertices
+        var n = offset
+        var i = 0
+        while (i < mesh.size) {
+            val px = mesh[i] * pSxz * pS
+            val py = mesh[i + 1] * pSyY * pS
+            val pz = mesh[i + 2] * pSxz * pS
+            boV[n++] = pEx + px * pCosY + pz * pSinY
+            boV[n++] = pEy + py
+            boV[n++] = pEz - px * pSinY + pz * pCosY
+            for (channel in 0..2) {
+                val color = ((part.color ushr (16 - channel * 8)) and 255) / 255f
+                boV[n++] = (color * pTint[channel] * mesh[i + 3] * (1f - pFlash) +
+                    (if (channel == 0) 1f else .15f) * pFlash).coerceIn(0f, 1f)
             }
+            i += 4
+        }
+        return n
+    }
+
+    /** Angle de balancement / pose du membre. */
+    private fun limbAngle(model: MobModel, part: MobPart): Float {
+        val baseRad = Math.toRadians(part.baseTiltDeg.toDouble()).toFloat()
+        if (pReference && part.limb != Limb.NONE) return 0f
+        return when (part.limb) {
+            Limb.LEG -> baseRad + part.side * pWalk * model.stride
+            Limb.ARM ->
+                if (pSoldier) baseRad
+                else baseRad - pStrike * (if (pHeavyArms) 1.15f else if (part.side > 0) 1f else .65f) -
+                    part.side * pWalk * model.stride * .65f
+            Limb.HEAD -> if (pResting) .65f + .12f * sin(pAnimTime * 2f) else .04f * sin(pAnimTime * 2f)
+            Limb.TAIL -> .18f * sin(pAnimTime * 2.5f)
+            Limb.WING -> if (pMoving) .22f * sin(pAnimTime * 12f) else .04f * sin(pAnimTime * 2f)
+            Limb.LOOK -> .04f * sin(pAnimTime * 1.8f + pId * .73f) - pStrike * .10f
+            Limb.CLOTH -> baseRad + .10f * sin(pAnimTime * 2.3f + part.side) + pWalk * .12f
+            Limb.CRAWL -> part.side * pWalk * .22f
+            Limb.NONE, Limb.WEAPON, Limb.MUZZLE_FLASH -> baseRad
+        }
+    }
+
+    /** Remplit [corners] avec les 8 coins de [part], posés, animés et orientés. */
+    private fun placeCorners(model: MobModel, part: MobPart) {
+        val ang = limbAngle(model, part)
+        val cosA = cos(ang); val sinA = sin(ang)
+        for (corner in 0 until 8) placeCorner(model, part, corner, cosA, sinA)
+    }
+
+    /** Coin [corner] (bit0 = x, bit1 = y, bit2 = z ; 0 = min, 1 = max), voir [FACE_IDX]. */
+    private fun placeCorner(model: MobModel, part: MobPart, corner: Int, cosA: Float, sinA: Float) {
+        val hw = part.w * 0.5f; val hh = part.h * 0.5f; val hd = part.d * 0.5f
+        var lx = part.cx + if (corner and 1 == 1) hw else -hw
+        var ly = part.cy + if ((corner shr 1) and 1 == 1) hh else -hh
+        var lz = part.cz + if ((corner shr 2) and 1 == 1) hd else -hd
+        // Écrasement gélatineux (autour des pieds / de l'axe central)
+        lx *= pSxz; lz *= pSxz; ly *= pSyY
+        // Rotation du membre autour de son pivot (axe X)
+        val pivotZ = if (part.limb == Limb.HEAD) model.headPivotZ else part.pivotZ
+        val dy = ly - part.pivotY; val dz = lz - pivotZ
+        var ry = part.pivotY + dy * cosA - dz * sinA
+        var rz = pivotZ + dy * sinA + dz * cosA
+        if (part.limb == Limb.HEAD) ry -= pGrazingDrop
+        if (part.limb == Limb.LOOK && !pReference) {
+            val turn = if (pSoldier && !pResting) 0f else .09f * sin(pAnimTime * .8f + pId * .73f)
+            val hx = lx - part.pivotX; val hz = rz - part.pivotZ
+            lx = part.pivotX + hx * cos(turn) + hz * sin(turn)
+            rz = part.pivotZ - hx * sin(turn) + hz * cos(turn)
+        }
+        if (part.limb == Limb.CRAWL && !pReference) {
+            ry += max(0f, part.side * sin(pGait)) * .7f * pLocomotion
+        }
+        if (!pPassive && !pReference && part.limb != Limb.LEG && part.limb != Limb.CRAWL) {
+            ry += pBreath
+            rz += (pStrike * .6f - pFlinch * .45f) * (ly / model.heightVox).coerceIn(0f, 1f)
+        }
+        if (part.limb == Limb.WING) {
+            // Aile articulée sur le flanc, autour de Z, vers l'extérieur.
+            val pivotX = if (pPassive) part.cx - part.side * part.w * .5f else part.pivotX
+            val wingX = lx - pivotX
+            lx = pivotX + wingX * cosA - dy * sinA * part.side
+            ry = part.pivotY + wingX * sinA * part.side + dy * cosA
+            rz = lz
+        }
+        if (pReference && part.limb == Limb.ARM) {
+            val armX = lx - part.cx
+            val armY = ly - part.pivotY
+            lx = part.cx - part.side * armY
+            ry = part.pivotY + part.side * armX
+        }
+        if (!pReference && pSoldier &&
+            (part.limb == Limb.ARM || part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) {
+            val recoil = (pRecoil / .16f).coerceIn(0f, 1f)
+            rz -= recoil * 1.8f
+            ry += recoil * .45f
+        }
+        // Échelle voxel→monde, orientation (yaw) puis translation au pied du mob
+        val px = lx * pS; val py = ry * pS; val pz = rz * pS
+        val k = corner * 3
+        corners[k] = pEx + (px * pCosY + pz * pSinY)
+        corners[k + 1] = pEy + py
+        corners[k + 2] = pEz + (-px * pSinY + pz * pCosY)
+    }
+
+    /** Couleur de la pièce (teinte de niveau sauf pièces auto-éclairées), puis ses 6 faces. */
+    private fun emitPart(part: MobPart, offset: Int): Int {
+        val cr = ((part.color ushr 16) and 0xFF) / 255f
+        val cg = ((part.color ushr 8) and 0xFF) / 255f
+        val cb = (part.color and 0xFF) / 255f
+        return if (part.emissive) emitBox(boV, offset, cr, cg, cb, pFlash, true)
+            else emitBox(boV, offset, cr * pTint[0], cg * pTint[1], cb * pTint[2], pFlash, false)
+    }
+
+    private fun emitWeapon(verts: FloatArray, offset: Int): Int {
+        var n = offset
+        val recoil = pRecoil.coerceIn(0f, .16f) / .16f
+        var i = 0
+        while (i < verts.size) {
+            // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
+            val px = .09f - verts[i]
+            val py = 1.16f + verts[i + 1] + recoil * .027f
+            val pz = .36f - verts[i + 2] - recoil * .108f
+            boV[n++] = pEx + px * pCosY + pz * pSinY
+            boV[n++] = pEy + py
+            boV[n++] = pEz - px * pSinY + pz * pCosY
+            boV[n++] = verts[i + 3]; boV[n++] = verts[i + 4]; boV[n++] = verts[i + 5]
+            i += 6
         }
         return n
     }
@@ -587,28 +646,34 @@ internal class EnemyRenderer {
 
     // ── Teinte selon niveau ─────────────────────────────────────────────────────
 
-    private fun levelTint(level: Int, boss: Boolean): FloatArray {
-        val t = when {
-            level <= 1  -> floatArrayOf(0.85f, 0.88f, 0.85f)
-            level <= 3  -> floatArrayOf(1.0f, 1.0f, 1.0f)
-            level <= 5  -> floatArrayOf(0.82f, 1.05f, 0.82f)
-            level <= 8  -> floatArrayOf(1.10f, 1.0f, 0.65f)
-            level <= 11 -> floatArrayOf(1.15f, 0.78f, 0.55f)
-            level <= 14 -> floatArrayOf(1.20f, 0.60f, 0.55f)
-            else        -> floatArrayOf(1.0f, 0.55f, 1.15f)
+    // Écrites dans des tableaux fournis : ces deux-là allouaient un tableau et un Triple par mob
+    // et par image.
+    private fun levelTint(level: Int, boss: Boolean, out: FloatArray) {
+        val row = when {
+            level <= 1  -> 0
+            level <= 3  -> 1
+            level <= 5  -> 2
+            level <= 8  -> 3
+            level <= 11 -> 4
+            level <= 14 -> 5
+            else        -> 6
         }
-        if (boss) { t[0] *= 0.95f; t[1] *= 0.68f; t[2] *= 0.68f }
-        return t
+        out[0] = LEVEL_TINTS[row * 3]; out[1] = LEVEL_TINTS[row * 3 + 1]; out[2] = LEVEL_TINTS[row * 3 + 2]
+        if (boss) { out[0] *= 0.95f; out[1] *= 0.68f; out[2] *= 0.68f }
     }
 
-    private fun levelBgColor(level: Int): Triple<Float, Float, Float> = when {
-        level <= 1  -> Triple(0.20f, 0.20f, 0.20f)
-        level <= 3  -> Triple(0.05f, 0.10f, 0.40f)
-        level <= 5  -> Triple(0.05f, 0.30f, 0.05f)
-        level <= 8  -> Triple(0.35f, 0.30f, 0.00f)
-        level <= 11 -> Triple(0.40f, 0.18f, 0.00f)
-        level <= 14 -> Triple(0.40f, 0.02f, 0.02f)
-        else        -> Triple(0.30f, 0.00f, 0.35f)
+    private fun levelBgColor(level: Int, out: FloatArray) {
+        val row = when {
+            level <= 1  -> 0
+            level <= 3  -> 1
+            level <= 5  -> 2
+            level <= 8  -> 3
+            level <= 11 -> 4
+            level <= 14 -> 5
+            else        -> 6
+        }
+        out[0] = LEVEL_BACKGROUNDS[row * 3]; out[1] = LEVEL_BACKGROUNDS[row * 3 + 1]
+        out[2] = LEVEL_BACKGROUNDS[row * 3 + 2]
     }
 
     // ── Helpers GL ──────────────────────────────────────────────────────────────
@@ -704,6 +769,18 @@ internal class EnemyRenderer {
 
         // Ombrage par face : haut clair → bas sombre. Index = ordre de FACE_IDX.
         private val FACE_SHADE = floatArrayOf(1.00f, 0.45f, 0.85f, 0.70f, 0.62f, 0.60f)
+
+        // Teinte et fond de label par tranche de niveau (voir levelTint / levelBgColor).
+        private val LEVEL_TINTS = floatArrayOf(
+            0.85f, 0.88f, 0.85f,  1.0f, 1.0f, 1.0f,  0.82f, 1.05f, 0.82f,  1.10f, 1.0f, 0.65f,
+            1.15f, 0.78f, 0.55f,  1.20f, 0.60f, 0.55f,  1.0f, 0.55f, 1.15f,
+        )
+        private val LEVEL_BACKGROUNDS = floatArrayOf(
+            0.20f, 0.20f, 0.20f,  0.05f, 0.10f, 0.40f,  0.05f, 0.30f, 0.05f,  0.35f, 0.30f, 0.00f,
+            0.40f, 0.18f, 0.00f,  0.40f, 0.02f, 0.02f,  0.30f, 0.00f, 0.35f,
+        )
+        /** Étiquettes de niveau prêtes : pas de `toString()` par mob et par image. */
+        private val LEVEL_LABELS = Array(100) { it.toString() }
 
         // 6 faces × 4 coins. Encodage coin : bit0=x, bit1=y, bit2=z (0=min,1=max).
         private val FACE_IDX = intArrayOf(

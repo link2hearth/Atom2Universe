@@ -35,6 +35,12 @@ internal data class SoldierTuning(
     val reloadSeconds: Float = 2.2f,
     val patrolSpeed: Float = 2.5f,
     val runSpeed: Float = 4.2f,
+    /**
+     * Portée à laquelle un homme **en réserve** accepte le duel. Au-delà, il ne reste pas planté à
+     * regarder : il se déplace dans son secteur pour prendre une position de tir. Sans secteur
+     * (escouade engagée), seule la portée de l'arme compte.
+     */
+    val reserveEngageRange: Double = 32.0,
     /** Rayon (en blocs) où il cherche un abri pour recharger. */
     val coverRadius: Int = 10,
     val coverHoldSeconds: Float = 1.2f,
@@ -101,6 +107,7 @@ internal class Soldier(
     /** Déplacement le long de la grille (lecture seule à l'extérieur : position, chemin pour le debug). */
     val follower = PathFollower(grid, clearance)
     private var blockedFor = 0f
+    private var unblockDelay = UNBLOCK_FIRST_DELAY
     val reloadProgress: Float get() = if (reloading && follower.arrived)
         (1f - reloadLeft / tuning.reloadSeconds).coerceIn(0f, 1f) else 0f
     private val path = IntList(128)
@@ -111,6 +118,8 @@ internal class Soldier(
     private var coverHoldLeft = 0f
     private var coverTravelLeft = 0f
     private var repositionLeft = tuning.repositionSeconds
+    /** Depuis combien de temps il voit le joueur sans avoir de ligne de tir dégagée. */
+    private var blockedLineFor = 0f
     private var reloading = false
 
     /** Santé propre du soldat, fournie par le combat ; aucune information sur le joueur. */
@@ -125,6 +134,23 @@ internal class Soldier(
     var yawDeg = 0f; private set
     var isMoving = false; private set
 
+    /** Touché ou frôlé il y a peu : l'escouade n'a plus de raison de rester discrète. */
+    val shaken: Boolean get() = recentHitLeft > 0f || suppressedLeft > 0f
+
+    // ── Consignes de l'escouade (voir SquadCommand) ──
+    /** Case à rejoindre sur ordre radio tant qu'il ne voit rien lui-même ; -1 le laisse libre. */
+    private var orderedNode = -1
+    /** Un poste de regroupement se tient : le bruit d'une fusillade voisine ne l'en fait pas partir. */
+    private var orderStrict = false
+    private var leashX = 0.0
+    private var leashZ = 0.0
+    /** Rayon du secteur tenu ; infini = libre de ses mouvements. */
+    private var leashRadius = Double.POSITIVE_INFINITY
+    private var radioX = 0.0
+    private var radioZ = 0.0
+    private var hasRadio = false
+    private var lookPhase = 0f
+
     // ── Mémoire ──
     var knowsPlayer = false; private set
     var lastKnownX = 0.0; private set
@@ -135,9 +161,44 @@ internal class Soldier(
     private var searchRefreshLeft = 0f
     private var pendingRoute: RouteQueue.Request? = null
 
+    /** Il attend un trajet de la file partagée : tant que oui, il ne bouge pas. */
+    val waitingForRoute: Boolean get() = pendingRoute != null
+
     fun cancelRoute() {
         pendingRoute?.cancelled = true
         pendingRoute = null
+    }
+
+    /**
+     * Ordre radio : la case où se rendre tant qu'il ne voit rien lui-même. -1 le laisse libre.
+     *
+     * Avec [strict], l'ordre passe avant ce qu'il a entendu : c'est ce qui tient une escouade
+     * groupée au point de regroupement au lieu de l'éparpiller au premier coup de feu lointain.
+     * Ce qu'il **voit** reste toujours prioritaire : un ordre ne l'empêche pas de se défendre.
+     */
+    fun order(node: Int, strict: Boolean = false) {
+        orderStrict = strict
+        if (node == orderedNode) return
+        orderedNode = node
+        searchNode = -1
+        searchRefreshLeft = 0f
+    }
+
+    /**
+     * Position approximative du joueur annoncée à la radio. Elle ne lui apprend rien sur ce qu'il
+     * voit : elle lui dit seulement de quel côté regarder quand il est en poste.
+     */
+    fun radioContact(x: Double, z: Double) {
+        radioX = x; radioZ = z; hasRadio = true
+    }
+
+    /**
+     * Secteur à tenir. Hors contact direct, il n'en sort pas ; et il ne tire pas sur ce qu'il
+     * aperçoit bien au-delà (un homme en réserve n'ouvre pas le feu à travers tout le quartier).
+     * Un rayon infini le libère : c'est l'état de l'escouade qui monte à l'assaut.
+     */
+    fun leashTo(x: Double, z: Double, radius: Double) {
+        leashX = x; leashZ = z; leashRadius = radius
     }
 
     // ── Vue et visée ──
@@ -170,10 +231,12 @@ internal class Soldier(
         ammo = tuning.magazineSize; reloadLeft = 0f; fireCooldown = 0f
         patrolWait = 0f
         recentHitLeft = 0f; coverCooldown = 0f; coverHoldLeft = 0f; coverTravelLeft = 0f
-        repositionLeft = tuning.repositionSeconds; reloading = false
+        repositionLeft = tuning.repositionSeconds; reloading = false; blockedLineFor = 0f
         healthFraction = 1f; aimErrorDeg = tuning.aimErrorStartDeg; reactionLeft = 0f
         trackedVelX = 0.0; trackedVelZ = 0.0; suppressedLeft = 0f
         shotsInBurst = 0; burstTarget = tuning.burstMin
+        orderedNode = -1; orderStrict = false; hasRadio = false; lookPhase = 0f
+        leashRadius = Double.POSITIVE_INFINITY
     }
 
     /**
@@ -223,11 +286,15 @@ internal class Soldier(
         justSpotted = false
         searchRefreshLeft = (searchRefreshLeft - dt).coerceAtLeast(0f)
         if (clearance != null && !follower.arrived) {
-            blockedFor = if (isMoving) 0f else blockedFor + dt
-            if (blockedFor > .7f) {
+            if (isMoving) { blockedFor = 0f; unblockDelay = UNBLOCK_FIRST_DELAY }
+            else blockedFor += dt
+            if (blockedFor > unblockDelay) {
                 val goal = follower.path[follower.path.size - 1]
                 pathTo(goal, avoidBodies = true)
                 blockedFor = 0f
+                // Recul progressif : deux soldats bloqués l'un contre l'autre relançaient chacun
+                // un contournement toutes les 0,7 s, et noyaient la file pour tout le monde.
+                unblockDelay = (unblockDelay * 2f).coerceAtMost(UNBLOCK_MAX_DELAY)
             }
         }
         recentHitLeft = (recentHitLeft - dt).coerceAtLeast(0f)
@@ -256,13 +323,17 @@ internal class Soldier(
             }
         }
 
-        // 2. Une action engagée dure jusqu'à son terme : pas d'oscillation à chaque image.
+        // 2. Voir n'est pas pouvoir tirer : en réserve, un contact trop lointain le met en
+        // recherche (il va prendre une position dans son secteur) au lieu de le figer en
+        // contemplation. C'est ici que ça se décide, jamais au milieu d'une action.
+        val engageable = seesPlayer && canEngage(player)
         val previous = state
         val decision = when {
             reloading -> State.RELOAD
             previous == State.COVER && coverHoldLeft > 0f -> State.COVER
-            else -> SoldierDecision.choose(seesPlayer, knowsPlayer, healthFraction,
-                recentHitLeft > 0f || suppressedLeft > 0f, coverCooldown <= 0f)
+            // Un ordre radio vaut une raison de se déplacer, même sans rien savoir du joueur.
+            else -> SoldierDecision.choose(engageable, knowsPlayer || orderedNode >= 0,
+                healthFraction, recentHitLeft > 0f || suppressedLeft > 0f, coverCooldown <= 0f)
         }
         state = decision
         if (state != previous) cancelRoute()
@@ -273,7 +344,7 @@ internal class Soldier(
                     (1f + (1f - healthFraction.coerceIn(0f, 1f)) * LOW_HEALTH_COVER_EXTRA)
                 coverTravelLeft = 4f
             } else {
-                state = if (seesPlayer) State.ENGAGE else State.SEARCH
+                state = if (engageable) State.ENGAGE else State.SEARCH
             }
         }
         if (state == State.ENGAGE && previous != State.ENGAGE) {
@@ -351,7 +422,17 @@ internal class Soldier(
 
         // La position a pu changer depuis la perception : aucun tir à travers un angle de mur.
         if (!LineOfSight.isClear(x, y + EYE_HEIGHT - 0.15, z,
-                p.x, p.eyeY - AIM_BELOW_EYE, p.z, world)) return
+                p.x, p.eyeY - AIM_BELOW_EYE, p.z, world)) {
+            // Ses yeux passent mais pas son canon (rebord, embrasure, angle de mur). Rester planté
+            // là à le regarder est le pire de tout : il se décale pour dégager sa ligne de tir.
+            blockedLineFor += dt
+            if (blockedLineFor >= BLOCKED_LINE_SECONDS && follower.arrived) {
+                blockedLineFor = 0f
+                reposition()
+            }
+            return
+        }
+        blockedLineFor = 0f
 
         fire(p, shots)
         ammo--
@@ -453,8 +534,14 @@ internal class Soldier(
     }
 
     private fun actSearch(dt: Float) {
-        val target = grid.nodeUnder(lastKnownX, lastKnownEyeY - EYE_HEIGHT, lastKnownZ)
-        if (target != searchNode && searchRefreshLeft <= 0f && pendingRoute == null) {
+        // Ce qu'il a perçu lui-même l'emporte sur son poste, sauf sous un ordre strict : on ne
+        // disperse pas une escouade en cours de regroupement. Sa destination reste bornée au
+        // secteur qu'on lui a confié (rayon infini pour l'escouade engagée : elle va partout).
+        val target = if (knowsPlayer && !(orderStrict && orderedNode >= 0))
+            leashed(grid.nodeUnder(lastKnownX, lastKnownEyeY - EYE_HEIGHT, lastKnownZ))
+        else orderedNode
+        if (target != searchNode && worthRepathing(target) && searchRefreshLeft <= 0f &&
+            pendingRoute == null) {
             searchRefreshLeft = .4f + rng.nextFloat() * .2f
             searchNode = target
             if (target >= 0) pathTo(target)
@@ -462,6 +549,12 @@ internal class Soldier(
         if (!follower.arrived) {
             isMoving = follower.advance(dt, tuning.runSpeed)
             yawDeg = follower.yawDeg
+        } else if (hasRadio && !knowsPlayer) {
+            // En poste, sans rien avoir vu : il balaie le secteur annoncé à la radio, plutôt que
+            // de tourner sur lui-même. C'est là qu'on voit une garnison prévenue.
+            lookPhase += dt * LOOK_SWEEP_PER_SEC
+            yawDeg = normalizeDeg(yawTo(radioX, radioZ) +
+                sin(lookPhase.toDouble()).toFloat() * LOOK_SWEEP_DEG)
         } else {
             // Arrivé là où il l'a perdu : il regarde autour de lui en attendant d'oublier.
             yawDeg = normalizeDeg(yawDeg + LOOK_AROUND_DEG_PER_SEC * dt)
@@ -475,17 +568,40 @@ internal class Soldier(
             return
         }
         patrolWait -= dt
+        if (hasRadio) {
+            // En réserve, il ne bouge pas, mais la radio lui a dit de quel côté ça se passe :
+            // il surveille cette direction au lieu de contempler un mur au hasard.
+            lookPhase += dt * LOOK_SWEEP_PER_SEC
+            yawDeg = normalizeDeg(yawTo(radioX, radioZ) +
+                sin(lookPhase.toDouble()).toFloat() * LOOK_SWEEP_DEG)
+        }
         if (patrolWait > 0f) return
-        patrolWait = 1f + rng.nextFloat() * 1.5f
-        // Prochaine destination : une case au hasard, ni trop près ni trop loin.
+        // Une ronde coûte une recherche de chemin. Soixante hommes qui en demandent une toutes
+        // les deux secondes, c'est trente recherches par seconde sur un graphe de dizaines de
+        // milliers de cases — et personne pour les regarder marcher. Loin de ce que la radio
+        // annonce, ils prennent leur temps ; c'est invisible et c'est dix fois moins cher.
+        val far = hasRadio && !seesPlayer &&
+            distSq2D(radioX, radioZ, follower.x, follower.z) > FAR_PATROL_SQ
+        patrolWait = if (far) FAR_PATROL_WAIT + rng.nextFloat() * FAR_PATROL_WAIT
+            else 1f + rng.nextFloat() * 1.5f
+        // Prochaine destination : une case au hasard. **Tirée dans le secteur** quand il en tient
+        // un : tirer dans toute la carte puis refuser ce qui en sort ne tombe pratiquement jamais
+        // dedans (une centaine de cases sur des dizaines de milliers), et le soldat ne bouge plus.
+        val minimum = if (leashRadius.isInfinite()) PATROL_MIN_SQ else SECTOR_PATROL_MIN_SQ
         repeat(PATROL_PICK_ATTEMPTS) {
-            val n = rng.nextInt(grid.nodeCount)
+            val n = if (leashRadius.isInfinite()) rng.nextInt(grid.nodeCount) else randomSectorNode()
+            if (n < 0) return@repeat
             // Une patrouille locale ne doit pas viser une pièce quatre étages plus haut.
             if (abs(grid.nodeY[n] - follower.y) > 2.0) return@repeat
+            if (!withinLeash(grid.nodeX[n] + 0.5, grid.nodeZ[n] + 0.5)) return@repeat
             val dx = grid.nodeX[n] + 0.5 - follower.x; val dz = grid.nodeZ[n] + 0.5 - follower.z
             val distSq = dx * dx + dz * dz
-            if (distSq in PATROL_MIN_SQ..PATROL_MAX_SQ) {
-                pathTo(n, maxCost = 60f)
+            if (distSq in minimum..PATROL_MAX_SQ) {
+                // Le plafond de coût est ce qui borne une recherche **qui échoue** : un point tiré
+                // dans le secteur tombe souvent derrière une cloison, et sans plafond serré A*
+                // fouille tout l'étage avant d'abandonner. C'est le vrai prix d'une ronde.
+                pathTo(n, maxCost = if (leashRadius.isInfinite()) 60f
+                    else (leashRadius * SECTOR_PATH_SLACK).toFloat())
                 if (!follower.arrived || pendingRoute != null) return
             }
         }
@@ -493,11 +609,66 @@ internal class Soldier(
 
     // ── Outils ────────────────────────────────────────────────────────────────
 
+    /**
+     * Le nouvel objectif vaut-il un recalcul ? Une cible qui glisse de deux blocs parce que le
+     * joueur a fait un pas ne justifie pas un A* : à soixante soldats, cette agitation seule
+     * sature la file et fige tout le monde.
+     */
+    private fun worthRepathing(target: Int): Boolean {
+        if (target < 0 || searchNode < 0) return true
+        val dx = grid.nodeX[target] - grid.nodeX[searchNode]
+        val dy = grid.nodeY[target] - grid.nodeY[searchNode]
+        val dz = grid.nodeZ[target] - grid.nodeZ[searchNode]
+        return dx * dx + dz * dz + dy * dy * 4 > REPATH_MIN_SHIFT_SQ
+    }
+
+    /** Une case au hasard dans le secteur tenu, ou -1 si le tirage tombe dans un mur. */
+    private fun randomSectorNode(): Int {
+        val angle = rng.nextDouble() * 2.0 * Math.PI
+        val radius = leashRadius * sqrt(rng.nextDouble())   // tirage uniforme sur le disque
+        return grid.nodeUnder(leashX + cos(angle) * radius, follower.y, leashZ + sin(angle) * radius)
+    }
+
+    private fun withinLeash(tx: Double, tz: Double): Boolean {
+        if (leashRadius.isInfinite()) return true
+        val dx = tx - leashX; val dz = tz - leashZ
+        return dx * dx + dz * dz <= leashRadius * leashRadius
+    }
+
+    /**
+     * Peut-il ouvrir le feu sur ce qu'il voit ? En réserve, il ne prend que les duels de son
+     * voisinage : un homme en poste ne canarde pas à travers tout le quartier. Une fois son
+     * escouade engagée, la laisse saute et seule la portée de son arme compte.
+     */
+    private fun canEngage(p: PlayerSnapshot): Boolean {
+        if (leashRadius.isInfinite()) return true
+        val dx = p.x - follower.x; val dz = p.z - follower.z
+        val r = tuning.reserveEngageRange
+        return dx * dx + dz * dz <= r * r
+    }
+
+    /**
+     * Ramène une destination dans le secteur tenu : il avance vers le joueur jusqu'au bord de sa
+     * zone, et s'arrête là. Sans secteur, la destination est rendue telle quelle.
+     */
+    private fun leashed(node: Int): Int {
+        if (node < 0 || leashRadius.isInfinite()) return node
+        val tx = grid.nodeX[node] + 0.5; val tz = grid.nodeZ[node] + 0.5
+        if (withinLeash(tx, tz)) return node
+        val dx = tx - leashX; val dz = tz - leashZ
+        val d = sqrt(dx * dx + dz * dz)
+        if (d < 1e-6) return node
+        return grid.nodeUnder(leashX + dx / d * leashRadius, follower.y, leashZ + dz / d * leashRadius)
+    }
+
     private fun pathTo(goal: Int, maxCost: Float = Float.POSITIVE_INFINITY, avoidBodies: Boolean = false) {
         val from = grid.nodeUnder(follower.x, follower.y, follower.z)
         if (routes != null && from >= 0) {
             if (pendingRoute != null) return
-            follower.stop()
+            // On ne le fige pas pendant le calcul : il poursuit son trajet en cours et bascule à
+            // l'arrivée du nouveau. Sinon une escouade qui remet son plan à jour en marchant
+            // s'arrête net toutes les quelques secondes, et arrive en ordre dispersé.
+            if (follower.arrived) follower.stop()
             // La navigation statique suffit normalement ; la collision réelle reste contrôlée
             // à chaque pas. En cas de blocage, contourner les corps, sans interdire la cible
             // occupée par le joueur (sinon A* explorerait toute la tour pour la refuser).
@@ -505,7 +676,12 @@ internal class Soldier(
                 (floor(x).toInt() == grid.nodeX[goal] && floor(y).toInt() == grid.nodeY[goal] &&
                     floor(z).toInt() == grid.nodeZ[goal]) || clearance.isFree(x, y, z)
             } else null
-            pendingRoute = routes.request(from, goal, maxCost, routingClearance) { result ->
+            // L'escouade engagée (laisse infinie) passe devant : c'est elle qui doit traverser
+            // la carte tout de suite. Sans cette priorité, ses trajets attendent derrière ceux de
+            // toutes les réserves qui ont entendu un tir, et elle avance au ralenti — d'autant
+            // plus que la manche avance et que la garnison entière est en alerte.
+            pendingRoute = routes.request(from, goal, maxCost, routingClearance,
+                    priority = leashRadius.isInfinite()) { result ->
                 pendingRoute = null
                 if (!result.isEmpty()) follower.follow(result) else {
                     searchNode = -1
@@ -532,12 +708,17 @@ internal class Soldier(
         coverDistances.fill(Double.POSITIVE_INFINITY)
         val cx = floor(follower.x).toInt(); val cz = floor(follower.z).toInt()
         val r = tuning.coverRadius
-        for (nz in cz - r..cz + r) for (nx in cx - r..cx + r) {
+        // Chaque candidat coûte une ligne de vue, soit une vingtaine de pas de voxels — et dans
+        // un bâtiment, chaque pas sur un escalier ou une dalle déclenche un test de volume. Le
+        // balayage complet, c'est deux mille lignes de vue pour un seul soldat qui recharge.
+        var probes = COVER_PROBE_BUDGET
+        scan@ for (nz in cz - r..cz + r) for (nx in cx - r..cx + r) {
             val distSq = (nx - cx) * (nx - cx) + (nz - cz) * (nz - cz)
             if (distSq > r * r || distSq >= coverDistances.last()) continue
             for (ny in maxOf(1, floor(y).toInt() - 2)..minOf(grid.sizeY - 1, floor(y).toInt() + 2)) {
                 val n = grid.nodeAt(nx, ny, nz)
                 if (n < 0) continue
+                if (probes-- <= 0) break@scan
                 val hidden = !LineOfSight.isClear(lastKnownX, lastKnownEyeY, lastKnownZ,
                     nx + 0.5, ny + EYE_HEIGHT, nz + 0.5, world)
                 if (hidden) {
@@ -564,6 +745,11 @@ internal class Soldier(
         return false
     }
 
+    private fun distSq2D(ax: Double, az: Double, bx: Double, bz: Double): Double {
+        val dx = ax - bx; val dz = az - bz
+        return dx * dx + dz * dz
+    }
+
     private fun yawTo(tx: Double, tz: Double): Float =
         Math.toDegrees(atan2(tx - follower.x, tz - follower.z)).toFloat()
 
@@ -572,11 +758,29 @@ internal class Soldier(
         /** Il vise le haut du torse plutôt que les yeux. */
         const val AIM_BELOW_EYE = 0.35
         const val LOOK_AROUND_DEG_PER_SEC = 60f
+        /** Balayage du regard autour de la direction annoncée à la radio. */
+        const val LOOK_SWEEP_PER_SEC = 1.1f
+        const val LOOK_SWEEP_DEG = 55f
+        /** Temps passé à voir le joueur sans ligne de tir avant de changer de place. */
+        const val BLOCKED_LINE_SECONDS = .45f
         /** Temps de planque supplémentaire, en proportion, quand il est au plus bas. */
         const val LOW_HEALTH_COVER_EXTRA = 1.5f
         const val PATROL_PICK_ATTEMPTS = 20
         const val PATROL_MIN_SQ = 8.0 * 8.0
+        /** Dans un secteur de quelques blocs, une ronde de trois blocs est déjà un déplacement. */
+        const val SECTOR_PATROL_MIN_SQ = 3.0 * 3.0
         const val PATROL_MAX_SQ = 30.0 * 30.0
+        /** Déplacement minimal de l'objectif avant de refaire un trajet. */
+        const val REPATH_MIN_SHIFT_SQ = 3 * 3
+        const val UNBLOCK_FIRST_DELAY = .7f
+        const val UNBLOCK_MAX_DELAY = 4f
+        /** Marge de détour tolérée pour rejoindre un point de ronde dans son secteur. */
+        const val SECTOR_PATH_SLACK = 1.8
+        /** Au-delà de cette distance de ce qu'annonce la radio, les rondes s'espacent. */
+        const val FAR_PATROL_SQ = 45.0 * 45.0
+        const val FAR_PATROL_WAIT = 6f
+        /** Lignes de vue au plus pour trouver un abri : au-delà, on prend ce qu'on a trouvé. */
+        const val COVER_PROBE_BUDGET = 160
 
         fun normalizeDeg(a: Float): Float {
             var v = a % 360f
