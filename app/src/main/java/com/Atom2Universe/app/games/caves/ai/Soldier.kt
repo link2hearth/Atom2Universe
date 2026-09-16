@@ -16,7 +16,7 @@ internal data class SoldierTuning(
     val alertedSightRange: Double = 160.0,
     /** En dessous de cette distance, il sent le joueur même dans son dos. */
     val closeAwareness: Double = 2.5,
-    val hearingRange: Double = 160.0,
+    val hearingRange: Double = 80.0,
     /** Sans rien voir ni entendre pendant ce temps, il abandonne la traque. */
     val memorySeconds: Float = 8f,
     val reactionMin: Float = 0.35f,
@@ -40,6 +40,18 @@ internal data class SoldierTuning(
     val coverHoldSeconds: Float = 1.2f,
     val coverCooldownSeconds: Float = 5f,
     val repositionSeconds: Float = 3f,
+    /** Retard de son estimation de ta course : il tire où tu allais, pas où tu vas exactement. */
+    val velocityLagSeconds: Float = 0.35f,
+    /** Écart supplémentaire tant qu'il se déplace lui-même : tirer en marchant coûte cher. */
+    val aimMoveSelfPenaltyDeg: Float = 0.8f,
+    /** Rafales courtes puis pause, plutôt qu'un tir régulier de métronome. */
+    val burstMin: Int = 3,
+    val burstMax: Int = 5,
+    val burstPauseMin: Float = 0.5f,
+    val burstPauseMax: Float = 1.1f,
+    /** Durée pendant laquelle une balle qui l'a frôlé le perturbe. */
+    val suppressionSeconds: Float = 1.5f,
+    val suppressionAimPenaltyDeg: Float = 1.2f,
 )
 
 /** Le joueur tel que les soldats le perçoivent à cette image. Coordonnées locales à la carte, réutilisé d'une image à l'autre. */
@@ -134,6 +146,12 @@ internal class Soldier(
     var justSpotted = false; private set
     var aimErrorDeg = 0f; private set
     private var reactionLeft = 0f
+    // Estimation retardée de la course du joueur : il ne lit jamais sa vitesse réelle pour viser.
+    private var trackedVelX = 0.0
+    private var trackedVelZ = 0.0
+    private var suppressedLeft = 0f
+    private var shotsInBurst = 0
+    private var burstTarget = tuning.burstMin
 
     // ── Arme ──
     var ammo = tuning.magazineSize; private set
@@ -154,22 +172,51 @@ internal class Soldier(
         recentHitLeft = 0f; coverCooldown = 0f; coverHoldLeft = 0f; coverTravelLeft = 0f
         repositionLeft = tuning.repositionSeconds; reloading = false
         healthFraction = 1f; aimErrorDeg = tuning.aimErrorStartDeg; reactionLeft = 0f
+        trackedVelX = 0.0; trackedVelZ = 0.0; suppressedLeft = 0f
+        shotsInBurst = 0; burstTarget = tuning.burstMin
     }
 
-    /** Un coup de feu du joueur part de (x, eyeY, z) : s'il est à portée d'oreille, il sait où aller voir. */
-    fun hearShot(x: Double, eyeY: Double, z: Double) {
+    /**
+     * Un bruit perçu en (x, eyeY, z), audible jusqu'à [range] blocs : il retient l'endroit et se
+     * tourne vers lui. La portée dépend du bruit : un coup de feu s'entend de très loin, des pas
+     * seulement de tout près (voir `AssaultMode.emitFootsteps`).
+     */
+    fun hearNoise(x: Double, eyeY: Double, z: Double, range: Double) {
         val dx = x - follower.x; val dz = z - follower.z
         val dy = eyeY - EYE_HEIGHT - follower.y
-        if (dx * dx + dy * dy + dz * dz > tuning.hearingRange * tuning.hearingRange) return
+        if (dx * dx + dy * dy + dz * dz > range * range) return
         remember(x, eyeY, z)
         if (!seesPlayer) yawDeg = yawTo(x, z)
     }
+
+    /** Un coup de feu du joueur part de (x, eyeY, z) : s'il est à portée d'oreille, il sait où aller voir. */
+    fun hearShot(x: Double, eyeY: Double, z: Double) = hearNoise(x, eyeY, z, tuning.hearingRange)
 
     /** Il vient d'être touché par une balle tirée de (x, eyeY, z) : il se retourne vers le tireur. */
     fun onDamaged(fromX: Double, fromEyeY: Double, fromZ: Double) {
         remember(fromX, fromEyeY, fromZ)
         recentHitLeft = 2f
         if (!seesPlayer) yawDeg = yawTo(fromX, fromZ)
+    }
+
+    /**
+     * Une balle du joueur vient de le frôler. Il se fait tout petit : sa visée se dégrade un
+     * instant, et s'il est déjà blessé, cela suffit à le décider à plonger à couvert.
+     */
+    fun onNearMiss() {
+        suppressedLeft = tuning.suppressionSeconds
+        aimErrorDeg = maxOf(aimErrorDeg, tuning.suppressionAimPenaltyDeg)
+    }
+
+    /**
+     * Met à jour son idée de la course du joueur, avec du retard (moyenne glissante). C'est cette
+     * estimation, et non la vitesse réelle, qui sert à anticiper : changer brusquement de
+     * direction le prend donc à contre-pied.
+     */
+    private fun trackPlayerRun(dt: Float, p: PlayerSnapshot) {
+        val k = (dt / (tuning.velocityLagSeconds + dt)).toDouble()
+        trackedVelX += (p.velX - trackedVelX) * k
+        trackedVelZ += (p.velZ - trackedVelZ) * k
     }
 
     fun update(dt: Float, player: PlayerSnapshot, shots: ShotSink) {
@@ -184,6 +231,7 @@ internal class Soldier(
             }
         }
         recentHitLeft = (recentHitLeft - dt).coerceAtLeast(0f)
+        suppressedLeft = (suppressedLeft - dt).coerceAtLeast(0f)
         coverCooldown = (coverCooldown - dt).coerceAtLeast(0f)
         if (fireCooldown > 0f) fireCooldown = (fireCooldown - dt).coerceAtLeast(0f)
 
@@ -196,7 +244,10 @@ internal class Soldier(
                 justSpotted = true
                 reactionLeft = tuning.reactionMin + rng.nextFloat() * (tuning.reactionMax - tuning.reactionMin)
                 aimErrorDeg = tuning.aimErrorStartDeg
+                // Il vient de le repérer : il ignore encore à quelle vitesse il court.
+                trackedVelX = 0.0; trackedVelZ = 0.0
             }
+            trackPlayerRun(dt, player)
         } else if (knowsPlayer) {
             memoryAge += dt
             if (memoryAge > tuning.memorySeconds) {
@@ -211,14 +262,15 @@ internal class Soldier(
             reloading -> State.RELOAD
             previous == State.COVER && coverHoldLeft > 0f -> State.COVER
             else -> SoldierDecision.choose(seesPlayer, knowsPlayer, healthFraction,
-                recentHitLeft > 0f, coverCooldown <= 0f)
+                recentHitLeft > 0f || suppressedLeft > 0f, coverCooldown <= 0f)
         }
         state = decision
         if (state != previous) cancelRoute()
         if (state == State.COVER && previous != State.COVER) {
             coverCooldown = tuning.coverCooldownSeconds
             if (routeToCover()) {
-                coverHoldLeft = tuning.coverHoldSeconds
+                coverHoldLeft = tuning.coverHoldSeconds *
+                    (1f + (1f - healthFraction.coerceIn(0f, 1f)) * LOW_HEALTH_COVER_EXTRA)
                 coverTravelLeft = 4f
             } else {
                 state = if (seesPlayer) State.ENGAGE else State.SEARCH
@@ -278,7 +330,10 @@ internal class Soldier(
         val ux = dx / dist; val uz = dz / dist
         val along = p.velX * ux + p.velZ * uz
         val lateral = sqrt((p.velX - along * ux).let { it * it } + (p.velZ - along * uz).let { it * it })
-        val targetError = (tuning.aimErrorMinDeg + lateral.toFloat() * tuning.aimMovePenaltyDeg)
+        val selfMove = if (isMoving) tuning.aimMoveSelfPenaltyDeg else 0f
+        val suppression = if (suppressedLeft > 0f) tuning.suppressionAimPenaltyDeg else 0f
+        val targetError = (tuning.aimErrorMinDeg + lateral.toFloat() * tuning.aimMovePenaltyDeg +
+            selfMove + suppression)
             .coerceIn(tuning.aimErrorMinDeg, tuning.aimErrorMaxDeg)
         val correction = tuning.aimSettleDegPerSec * dt
         aimErrorDeg += (targetError - aimErrorDeg).coerceIn(-correction, correction)
@@ -300,19 +355,26 @@ internal class Soldier(
 
         fire(p, shots)
         ammo--
-        fireCooldown = tuning.fireInterval
+        shotsInBurst++
+        fireCooldown = if (shotsInBurst >= burstTarget) {
+            // Fin de rafale : une pause, qui laisse au joueur une fenêtre pour riposter ou fuir.
+            shotsInBurst = 0
+            burstTarget = tuning.burstMin + rng.nextInt((tuning.burstMax - tuning.burstMin + 1).coerceAtLeast(1))
+            tuning.burstPauseMin + rng.nextFloat() * (tuning.burstPauseMax - tuning.burstPauseMin)
+        } else tuning.fireInterval
         if (ammo == 0) startReload()
     }
 
     private fun fire(p: PlayerSnapshot, shots: ShotSink) {
         val ox = follower.x; val oy = follower.y + EYE_HEIGHT - 0.15; val oz = follower.z
-        // Anticipation partielle de la course visible, limitée à 1,5 s : un changement de
-        // direction après le départ de la balle permet toujours de l'esquiver.
+        // Anticipation du temps de vol de la balle, d'après l'estimation retardée de la course
+        // (voir [trackPlayerRun]) : une course régulière est donc bien devancée, mais un
+        // changement de direction le prend à contre-pied et la balle passe derrière.
         val distance = sqrt((p.x - ox) * (p.x - ox) + (p.z - oz) * (p.z - oz))
-        val lead = (distance / tuning.bulletSpeed).coerceAtMost(1.5) * 0.85
-        var dx = p.x + p.velX * lead - ox
+        val lead = (distance / tuning.bulletSpeed).coerceAtMost(1.5)
+        var dx = p.x + trackedVelX * lead - ox
         var dy = (p.eyeY - AIM_BELOW_EYE) - oy
-        var dz = p.z + p.velZ * lead - oz
+        var dz = p.z + trackedVelZ * lead - oz
         var len = sqrt(dx * dx + dy * dy + dz * dz)
         if (len < 1e-6) return
         dx /= len; dy /= len; dz /= len
@@ -510,6 +572,8 @@ internal class Soldier(
         /** Il vise le haut du torse plutôt que les yeux. */
         const val AIM_BELOW_EYE = 0.35
         const val LOOK_AROUND_DEG_PER_SEC = 60f
+        /** Temps de planque supplémentaire, en proportion, quand il est au plus bas. */
+        const val LOW_HEALTH_COVER_EXTRA = 1.5f
         const val PATROL_PICK_ATTEMPTS = 20
         const val PATROL_MIN_SQ = 8.0 * 8.0
         const val PATROL_MAX_SQ = 30.0 * 30.0

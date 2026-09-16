@@ -117,15 +117,24 @@ class SoldierTest {
     fun `un tir ou un impact lointain declenche la riposte mais pas a travers un mur`() {
         val world = TestWorld(12, 6, 150)
         val p = player(5.5, 5.5)
-        for (hit in listOf(false, true)) {
-            val s = soldier(world, 5.5, 140.5)
-            val shots = Shots()
-            if (hit) s.onDamaged(p.x, p.eyeY, p.z) else s.hearShot(p.x, p.eyeY, p.z)
-            run(s, p, 1.5f, shots)
-            assertTrue("riposte à 135 blocs", shots.count > 0)
-        }
-        world.wall(0, 11, 75, 75, 3)
-        val hidden = soldier(world, 5.5, 140.5)
+
+        // Un tir entendu (55 blocs, dans la portée d'oreille) fait riposter.
+        val entend = soldier(world, 5.5, 60.5)
+        val tirsEntendus = Shots()
+        entend.hearShot(p.x, p.eyeY, p.z)
+        run(entend, p, 1.5f, tirsEntendus)
+        assertTrue("riposte après un tir entendu à 55 blocs", tirsEntendus.count > 0)
+
+        // Une balle reçue alerte quelle que soit la distance : il la sent, il ne l'entend pas.
+        val touche = soldier(world, 5.5, 140.5)
+        val tirsRiposte = Shots()
+        touche.onDamaged(p.x, p.eyeY, p.z)
+        run(touche, p, 1.5f, tirsRiposte)
+        assertTrue("riposte après un impact à 135 blocs", tirsRiposte.count > 0)
+
+        // Même tir entendu, mais un mur entre les deux : il vient voir sans jamais tirer.
+        world.wall(0, 11, 30, 30, 3)
+        val hidden = soldier(world, 5.5, 60.5)
         val shots = Shots()
         hidden.hearShot(p.x, p.eyeY, p.z)
         run(hidden, p, 1f, shots)
@@ -238,5 +247,85 @@ class SoldierTest {
         assertTrue(kotlin.math.abs(s.x - 15.5) > .5)
         assertTrue(s.seesPlayer)
         assertTrue(shots.count > 0)
+    }
+
+    @Test
+    fun `il devance une course reguliere mais rate un demi-tour`() {
+        val s = soldier(TestWorld(100, 6, 100), 40.5, 5.5, SoldierTuning(magazineSize = 100,
+            reactionMin = 0f, reactionMax = 0f, fireInterval = 0.05f, burstMin = 99, burstMax = 99))
+        val p = player(40.5, 55.5).also { it.velX = 4.0 }
+        var lead = 0.0
+        val shots = ShotSink { x, _, z, dx, _, dz ->
+            // Distance entre le point visé et le joueur : positive quand la balle part devant lui.
+            val travel = (p.z - z) / dz
+            lead = x + dx * travel - p.x
+        }
+        repeat(80) { p.x += p.velX * 0.05; s.update(0.05f, p, shots) }   // 4 s de course régulière
+        assertTrue("il devance une course régulière", lead > 0.8)
+
+        // Demi-tour brutal : son estimation met environ une demi-seconde à se corriger, et ses
+        // premières balles partent encore du côté d'où le joueur vient. C'est la fenêtre d'esquive.
+        p.velX = -4.0
+        repeat(3) { p.x += p.velX * 0.05; s.update(0.05f, p, shots) }
+        assertTrue("sa balle part encore du mauvais côté", lead > 0.5)
+    }
+
+    @Test
+    fun `il tire par rafales entrecoupees de pauses`() {
+        val s = soldier(TestWorld(60, 6, 60), 30.5, 5.5, SoldierTuning(magazineSize = 100,
+            reactionMin = 0f, reactionMax = 0f, fireInterval = 0.1f,
+            burstMin = 3, burstMax = 3, burstPauseMin = 1f, burstPauseMax = 1f))
+        val p = player(30.5, 25.5)
+        val times = ArrayList<Float>()
+        var elapsed = 0f
+        val shots = ShotSink { _, _, _, _, _, _ -> times.add(elapsed) }
+        repeat(40) { elapsed += 0.05f; s.update(0.05f, p, shots) }
+        assertTrue("trois balles coup sur coup", times.size >= 4 && times[2] - times[0] < 0.4f)
+        assertTrue("puis une pause", times[3] - times[2] >= 0.9f)
+    }
+
+    @Test
+    fun `une balle qui frole un soldat blesse le fait plonger a couvert`() {
+        val world = TestWorld(30, 6, 40).also { it.wall(6, 14, 10, 10, 2) }
+        val s = soldier(world, 10.5, 12.5)
+        val p = player(10.5, 28.5)
+        s.update(0.05f, p, Shots())
+        assertEquals(Soldier.State.ENGAGE, s.state)
+
+        // En pleine forme : il vise moins bien, mais il tient sa position.
+        s.onNearMiss()
+        s.update(0.05f, p, Shots())
+        assertTrue(s.aimErrorDeg >= 1f)
+        assertEquals(Soldier.State.ENGAGE, s.state)
+
+        // Blessé, la même balle le décide à rompre le contact.
+        s.healthFraction = 0.4f
+        s.onNearMiss()
+        s.update(0.05f, p, Shots())
+        assertEquals(Soldier.State.COVER, s.state)
+    }
+
+    @Test
+    fun `des pas proches l alertent et le font se retourner, des pas lointains non`() {
+        val proche = soldier(TestWorld(60, 6, 60), 30.5, 30.5)   // regard initial vers +Z
+        proche.hearNoise(30.5, 2.62, 20.5, range = 12.0)          // bruit 10 blocs derrière lui
+        assertTrue(proche.knowsPlayer)
+        assertTrue("il se retourne vers le bruit", kotlin.math.abs(proche.yawDeg - 180f) < 5f)
+
+        val loin = soldier(TestWorld(60, 6, 60), 30.5, 30.5)
+        loin.hearNoise(30.5, 2.62, 5.5, range = 12.0)             // 25 blocs : hors de portée
+        assertFalse(loin.knowsPlayer)
+    }
+
+    @Test
+    fun `un tir s entend bien plus loin que des pas`() {
+        val world = TestWorld(200, 6, 200)
+        val pas = soldier(world, 100.5, 100.5)
+        pas.hearNoise(100.5, 2.62, 60.5, range = 12.0)            // 40 blocs de pas : rien
+        assertFalse(pas.knowsPlayer)
+
+        val tir = soldier(world, 100.5, 100.5)
+        tir.hearShot(100.5, 2.62, 60.5)                           // même distance, mais un tir
+        assertTrue(tir.knowsPlayer)
     }
 }

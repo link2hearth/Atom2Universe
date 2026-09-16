@@ -167,6 +167,19 @@ internal class AssaultMode(
         navGrid = grid
         pathFinder = PathFinder(grid)
         routes = RouteQueue(grid)
+        if (!listeningSteps) {
+            listeningSteps = true
+            // Les soldats entendent exactement les pas que le joueur entend : même cadence, et
+            // rien du tout accroupi ou dans l'eau, puisque le renderer n'y publie aucun pas.
+            r.eventBus.subscribe { event ->
+                if (event is GameEvent.Footstep && event.moving) {
+                    stepInterval = event.interval
+                    stepRunning = event.running
+                    stepSurface = event.surface
+                    stepSilence = 0f
+                }
+            }
+        }
         if (isTower) towerDeployment = TowerDeployment(grid, map.spawnsA.first())
         if (isSuburb) suburbDeployment = com.Atom2Universe.app.games.caves.ai.SuburbDeployment(grid,map.spawnsA.first())
     }
@@ -200,6 +213,49 @@ internal class AssaultMode(
         }
     }
 
+    // Dernier pas publié par le renderer (le même que celui qu'on entend) : cadence, surface,
+    // course, et temps écoulé depuis. Au-delà de [STEP_SILENCE] sans publication, le joueur s'est arrêté.
+    private var listeningSteps = false
+    private var stepInterval = 0f
+    private var stepRunning = false
+    private var stepSurface = "earth"
+    private var stepSilence = 1f
+    private var stepTimer = 0f
+
+    /**
+     * Le bruit des pas du joueur, calé sur le son réellement joué : un bruit par pas entendu.
+     *
+     * Contrairement aux tirs, il ne porte que de près, et la surface compte : la pierre claque,
+     * la terre étouffe. Accroupi ou dans l'eau, le renderer ne publie aucun pas, donc les soldats
+     * n'entendent rien. L'origine du bruit est brouillée d'un bloc environ : le soldat vient voir
+     * l'endroit, il ne pointe pas le joueur au bloc près.
+     */
+    private fun emitFootsteps(dt: Float) {
+        stepSilence += dt
+        if (stepSilence > STEP_SILENCE) { stepTimer = 0f; return }
+        if (units.isEmpty()) return
+        stepTimer += dt
+        if (stepTimer < stepInterval.coerceAtLeast(STEP_MIN_INTERVAL)) return
+        stepTimer = 0f
+
+        val range = (if (stepRunning) FOOTSTEP_RANGE_RUN else FOOTSTEP_RANGE_WALK) *
+            surfaceLoudness(stepSurface)
+        val nx = player.x + rng.nextDouble(-FOOTSTEP_BLUR, FOOTSTEP_BLUR)
+        val nz = player.z + rng.nextDouble(-FOOTSTEP_BLUR, FOOTSTEP_BLUR)
+        for (u in units) {
+            if (u.body.hp <= 0) continue
+            // Comme pour les tirs, les dalles épaisses de la tour arrêtent le bruit entre étages.
+            if (isTower && kotlin.math.abs(u.brain.y + 1.62 - player.eyeY) >= 4.0) continue
+            u.brain.hearNoise(nx, player.eyeY, nz, range)
+        }
+    }
+
+    private fun surfaceLoudness(surface: String) = when (surface) {
+        "stone" -> 1.15
+        "wood" -> 1.05
+        else -> 0.85
+    }
+
     override fun update(dt: Float) {
         // Tombé hors de la carte : retour au point d'apparition.
         if (r.camera.playerY < source.originY - FALL_LIMIT) respawnPlayer()
@@ -211,6 +267,7 @@ internal class AssaultMode(
         if (match.phase == AssaultMatch.Phase.PLAYING && r.playerNode.isAlive) {
             recovery.update(dt)
             collectShieldPickups()
+            emitFootsteps(dt)
         }
 
         var forceStatus = false
@@ -312,6 +369,7 @@ internal class AssaultMode(
             u.elapsed = 0f
             updated++
             brain.healthFraction = u.body.hp.toFloat() / u.body.maxHp.coerceAtLeast(1)
+            noticeNearMisses(brain, u.body)
             firingBody = u.body
             firingUnit = u
             brain.update(step, player, shotSink)
@@ -342,6 +400,29 @@ internal class AssaultMode(
                     "routesWaiting=${routes?.waitingCount ?: 0}")
                 aiPeakNs = 0L
                 aiLogSeconds = 0f
+            }
+        }
+    }
+
+    /**
+     * Prévient un soldat qu'une balle du joueur va passer tout près de lui.
+     *
+     * On projette la trajectoire de la balle au lieu de comparer des positions : à 120 blocs par
+     * seconde, une balle traverse plus de six blocs entre deux images et ne serait jamais vue
+     * « à côté » du soldat.
+     */
+    private fun noticeNearMisses(brain: Soldier, body: Enemy) {
+        for (p in r.projectiles) {
+            if (p.fromEnemy || p.stuck) continue
+            val dx = body.x - p.x
+            val dy = body.y + NEAR_MISS_CHEST - p.y
+            val dz = body.z - p.z
+            val ahead = dx * p.dirX + dy * p.dirY + dz * p.dirZ
+            if (ahead < 0.0 || ahead > NEAR_MISS_LOOKAHEAD) continue
+            val ex = dx - p.dirX * ahead; val ey = dy - p.dirY * ahead; val ez = dz - p.dirZ * ahead
+            if (ex * ex + ey * ey + ez * ez <= NEAR_MISS_RADIUS * NEAR_MISS_RADIUS) {
+                brain.onNearMiss()
+                return
             }
         }
     }
@@ -543,6 +624,20 @@ internal class AssaultMode(
         const val NOON_MS = 600_000L
 
         const val SOLDIERS_PER_ROUND = 3
+
+        /** Sans nouveau pas publié pendant ce temps, le joueur s'est arrêté. */
+        const val STEP_SILENCE = 0.25f
+        const val STEP_MIN_INTERVAL = 0.2f
+        /** Portée d'un pas : marcher s'entend à une dizaine de blocs, courir à près de vingt. */
+        const val FOOTSTEP_RANGE_WALK = 11.0
+        const val FOOTSTEP_RANGE_RUN = 18.0
+        /** Flou sur l'origine du bruit : le soldat vient voir la zone, pas le bloc exact. */
+        const val FOOTSTEP_BLUR = 1.0
+
+        /** Une balle qui passe à moins d'un bloc et demi du torse fait réagir le soldat. */
+        const val NEAR_MISS_RADIUS = 1.6
+        const val NEAR_MISS_LOOKAHEAD = 12.0
+        const val NEAR_MISS_CHEST = 1.0
         const val ROUND_SECONDS = 180f
         const val PLAYER_MAX_HP = 100
         const val HEADSHOT_MULTIPLIER = 2f

@@ -300,3 +300,44 @@ On extrait la collision partagée (`move()`) et on réutilise le rendu des modè
   réels des dalles/escaliers. Navigation des soldats conservatrice par voxel inchangée.
 - Tests ajoutés pour les orientations après export et les hauteurs de tir/visibilité.
   Non exécutés conformément à la politique du dépôt ; compileDebugKotlin réussi.
+
+### Combat individuel des soldats — 16/09/2026
+
+- **Anticipation fondée sur une estimation retardée** de la course du joueur (moyenne glissante,
+  constante 0,35 s), et non plus sur 85 % de sa vitesse réelle. Une course régulière est donc
+  correctement devancée ; un demi-tour prend le soldat à contre-pied pendant ~0,15 s, puis son
+  estimation se corrige. L'estimation repart de zéro dès qu'il repère le joueur.
+- **Visée dégradée quand il se déplace** (`aimMoveSelfPenaltyDeg`) : ses pas de côté lui coûtaient
+  jusqu'ici zéro précision.
+- **Tirs en rafales** de 3 à 5 balles puis une pause de 0,5 à 1,1 s, au lieu d'une cadence régulière :
+  cela ouvre des fenêtres pour riposter, se soigner ou changer de couverture.
+- **Balles qui frôlent** : `AssaultMode.noticeNearMisses` projette la trajectoire des balles du
+  joueur (une balle à 120 blocs/s franchit six blocs entre deux images, une comparaison de
+  positions ne verrait jamais rien). À moins d'1,6 bloc du torse, le soldat est gêné : sa visée se
+  dégrade 1,5 s, et **s'il est déjà blessé**, cela suffit à le décider à plonger à couvert.
+  En pleine forme, il tient sa position : la peur seule ne le fait pas fuir.
+- **Blessé, il reste plus longtemps à couvert** avant de ressortir (jusqu'à 2,5 × la durée normale).
+- Tests : le test de visée sur cible mobile, **rouge et jamais exécuté depuis le 14/09**, passe
+  maintenant. Trois cas ajoutés : devancer une course régulière mais rater un demi-tour, rafales
+  entrecoupées de pauses, balle qui frôle un soldat blessé. 74 tests Cave World, seul
+  `world.TreeShapeTest` (forme des arbres, sans rapport avec l'IA) reste rouge — il l'était déjà.
+- À valider en jeu ; la coordination entre soldats reste la phase 5.
+
+### Les soldats entendent enfin les pas — 16/09/2026
+
+Retour de l'utilisateur : les tirs alertaient bien les soldats proches, mais **les pas étaient
+totalement ignorés** (on pouvait courir dans le dos d'un soldat sans qu'il réagisse). Seul
+`onPlayerFired` faisait du bruit.
+
+- `Soldier.hearNoise(x, eyeY, z, range)` généralise `hearShot` : même mémoire, même demi-tour vers
+  la source, mais une portée qui dépend du bruit. `hearShot` n'en est plus qu'un cas particulier.
+- `AssaultMode.emitFootsteps` s'abonne à **l'événement `GameEvent.Footstep` déjà publié pour le son**
+  des pas. Les soldats entendent donc exactement ce que le joueur entend : même cadence, et rien du
+  tout quand il est accroupi ou dans l'eau, puisque le renderer n'y publie aucun pas.
+- Portées : marcher ≈ 11 blocs, courir ≈ 18, modulées par la surface (pierre 1,15 ; bois 1,05 ;
+  terre et herbe 0,85). Un tir porte à 80 blocs (portée ramenée de 160 à 80 après essai en jeu :
+  elle alertait trop large), et 48 dans la tour, valeur jugée bonne telle quelle.
+- L'origine du bruit est brouillée d'un bloc : le soldat vient inspecter la zone, il ne pointe pas
+  le joueur au bloc près.
+- Tests ajoutés : des pas proches alertent et font se retourner, des pas lointains non, et un tir
+  s'entend là où des pas ne portent pas. 76 tests Cave World, seul `world.TreeShapeTest` reste rouge.
