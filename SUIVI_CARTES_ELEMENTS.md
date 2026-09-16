@@ -4,7 +4,7 @@
 
 - Priorité : métaux et éléments connus. Conserver les motifs sobres des éléments peu connus et les collisionneurs des instables (direction approuvée).
 - Chercher une silhouette reconnaissable et un lien documenté à l’élément.
-- Mutualiser les primitives et les six cadres. Une couleur différente ne suffit pas à rendre un motif distinct.
+- Mutualiser les primitives. Les six cadres de rareté restent la base ; la passe 32–42 possède des cadres propres aux éléments (nouvelle demande du propriétaire). Une couleur différente ne suffit pas à rendre un motif distinct.
 - Préciser les composés, minerais, alliages, isotopes et usages représentés.
 - **Direction approuvée par le propriétaire : arbre du carbone. Feuillage vert demandé et ajouté.**
 - Seule vérification de build autorisée : `compileDebugKotlin`. Le propriétaire effectue le build et la validation sur téléphone.
@@ -62,24 +62,24 @@ Les pistes ci-dessous restent **à sourcer avant dessin**. Elles ne sont pas pr�
 | 29 | Cuivre (Cu) | Bobinage | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
 | 30 | Zinc (Zn) | Bouclier galvanisé | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
 | 31 | Gallium (Ga) | Bloc fondant dans une flaque métallique | Passe ciblée dessinée | Validation visuelle sur téléphone |
-| 32 | Germanium (Ge) | Circuit intégré | Dessiné ; sujet partagé | Différencier la composition ou choisir un autre usage documenté |
-| 33 | Arsenic (As) | Éclats gris | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
-| 34 | Sélénium (Se) | Agrégat strié | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
-| 35 | Brome (Br) | Gouttes brun-rouge | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
-| 36 | Krypton (Kr) | Tubes lumineux | Dessiné ; sujet partagé | Différencier la composition ou choisir un autre usage documenté |
-| 37 | Rubidium (Rb) | Échantillon sous verre | À différencier | Piste à sourcer : Horloge atomique |
-| 38 | Strontium (Sr) | Échantillon sous verre | À différencier | Piste à sourcer : Pyrotechnie rouge : composé de strontium |
-| 39 | Yttrium (Y) | Échantillon sous verre | À différencier | Piste à sourcer : Cristal laser YAG |
-| 40 | Zirconium (Zr) | Échantillon sous verre | À différencier | Piste à sourcer : Céramique en zircone |
-| 41 | Niobium (Nb) | Échantillon sous verre | À différencier | Piste à sourcer : Aimant supraconducteur en alliage |
-| 42 | Molybdène (Mo) | Échantillon sous verre | À différencier | Piste à sourcer : Outil en acier allié |
-| 43 | Technétium (Tc) | Installation de recherche nucléaire | Sujet partagé ; à varier | Chercher un motif de recherche ou historique documenté ; éviter les usages inventés |
-| 44 | Ruthénium (Ru) | Échantillon sous verre | À différencier | Piste à sourcer : Contact électrique |
-| 45 | Rhodium (Rh) | Échantillon sous verre | À différencier | Piste à sourcer : Catalyseur automobile |
-| 46 | Palladium (Pd) | Échantillon sous verre | À différencier | Piste à sourcer : Catalyseur et hydrogène |
+| 32 | Germanium (Ge) | Objectif infrarouge, rayons en fausses couleurs | Passe 32–42 dessinée ; cadre iris optique | Validation visuelle sur téléphone |
+| 33 | Arsenic (As) | Échantillon gris en grandes lamelles étagées | Passe 32–42 dessinée ; cadre en gradins | Validation visuelle sur téléphone |
+| 34 | Sélénium (Se) | Posemètre avec cellule et aiguille sensible à la lumière | Passe 32–42 dessinée ; cadre solaire Art déco | Validation visuelle sur téléphone |
+| 35 | Brome (Br) | Ampoule scellée, liquide rouge-brun et vapeur | Passe 32–42 dessinée ; cadre ondulé | Validation visuelle sur téléphone |
+| 36 | Krypton (Kr) | Appareil photo avec lampe flash | Passe 32–42 dessinée ; cadre à éclairs | Validation visuelle sur téléphone |
+| 37 | Rubidium (Rb) | Cadran symbolique et cellule de vapeur | Passe 32–42 dessinée ; cadre gradué | Validation visuelle sur téléphone |
+| 38 | Strontium (Sr) | Fusée de signalisation rouge | Passe 32–42 dessinée ; cadre rayonnant | Validation visuelle ; sels de strontium |
+| 39 | Yttrium (Y) | Barreau laser YAG dopé entre miroirs | Passe 32–42 dessinée ; cadre prismatique | Validation visuelle ; faisceau schématique |
+| 40 | Zirconium (Zr) | Couteau à lame blanche en zircone | Passe 32–42 dessinée ; cadre à carreaux céramiques | Validation visuelle ; oxyde, pas métal |
+| 41 | Niobium (Nb) | Bobine supraconductrice et champ symbolique | Passe 32–42 dessinée ; cadre à spires | Validation visuelle ; alliage à très basse température |
+| 42 | Molybdène (Mo) | Foret hélicoïdal en acier allié | Passe 32–42 dessinée ; cadre denté | Validation visuelle ; alliage, pas métal pur |
+| 43 | Technétium (Tc) | Cyclotron en coupe et cible de molybdène irradiée | Passe 43–49 dessinée ; cadre à pans coupés | Validation visuelle ; motif historique, pas d’échantillon visible |
+| 44 | Ruthénium (Ru) | Contacts électriques d’un interrupteur, pivot animé | Passe 43–49 dessinée ; cadre en circuit imprimé | Validation visuelle ; alliage de contact, pas l’interrupteur entier |
+| 45 | Rhodium (Rh) | Pot catalytique ouvert sur son nid d’abeille | Passe 43–49 dessinée ; cadre à pans coupés et hexagones | Validation visuelle ; revêtement catalytique, pas le support |
+| 46 | Palladium (Pd) | Membrane de purification, dissociation puis recombinaison | Passe 43–49 dessinée ; cadre à molécules | Validation visuelle ; diffusion schématisée, pas un tamis |
 | 47 | Argent (Ag) | Pièces argentées avec laurier | Passe ciblée dessinée | Validation visuelle sur téléphone |
-| 48 | Cadmium (Cd) | Échantillon sous verre | À différencier | Piste à sourcer : Pigment historique et toxicité |
-| 49 | Indium (In) | Échantillon sous verre | À différencier | Piste à sourcer : Écran tactile, oxyde conducteur |
+| 48 | Cadmium (Cd) | Palette de pigments jaunes, orange et rouges | Passe 43–49 dessinée ; cadre mouluré irrégulier | Validation visuelle ; composés historiques, toxicité signalée en légende |
+| 49 | Indium (In) | Écran tactile et couche conductrice ITO décalée | Passe 43–49 dessinée ; cadre à dalle arrondie | Validation visuelle ; oxyde transparent, pas d’indium pur |
 | 50 | Étain (Sn) | Conserve en acier étamé | Passe ciblée dessinée | Validation visuelle sur téléphone |
 | 51 | Antimoine (Sb) | Aiguilles de stibine Sb₂S₃ | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
 | 52 | Tellure (Te) | Éventail argenté | Dessiné ; à revoir dans l’ordre | Vérifier lisibilité et caractère distinct |
@@ -175,6 +175,8 @@ Les pistes ci-dessous restent **à sourcer avant dessin**. Elles ne sont pas pr�
 - `ElementCardArt.kt` : choix du sujet et illustrations existantes.
 - `EarlyElementCardArt.kt` : nouvelles illustrations de la passe 1–20.
 - `RevisedElementCardArt.kt` : corrections 11/12/18/19 et nouveaux motifs 21/23/25/27 ; ces dessins remplacent les anciennes versions dans le routage actif.
+- `ScientificElementCardArt.kt` : illustrations, palettes et cadres spécifiques de 32 à 42.
+- `IndustrialElementCardArt.kt` : illustrations, palettes et cadres spécifiques de 43 à 46, 48 et 49.
 - `ProceduralElementCardView.kt` : noms, légendes, palettes et présentation.
 - `strings_card_studio.xml` en anglais et français : textes.
 - Ce fichier : décisions et prochaines cartes à traiter.
@@ -190,4 +192,50 @@ Les pistes ci-dessous restent **à sourcer avant dessin**. Elles ne sont pas pr�
 - Miniature fixe ; grands formats animés. Les animations se suspendent lorsque la vue ou son parent est masqué.
 - Obtention, compteurs et lots de fusion conservés. Les anciens fichiers ont été supprimés avec leurs références de chemins ; les numéros atomiques et les lots sont conservés.
 - Vérification sur téléphone : ouvrir deux miniatures différentes, ouvrir une carte en plein écran, puis afficher et fermer une récompense de fusion.
+
+## Passe 32–42 — 16 septembre 2026
+
+- Onze compositions distinctes, avec palettes, silhouettes de cadres et ornements liés au sujet.
+- Animations pilotées par la phase commune : reflets, aiguille, vapeur confinée, flash doux, signal rouge, faisceau, champ symbolique et foret. Miniatures fixes et pause existante conservées.
+- La pierre supérieure et le libellé conservent la rareté réelle. Les effets de bord restent hors de la zone des textes et des badges.
+- Légendes françaises et anglaises explicites sur les composés, alliages et fausses couleurs. Pas de nouvel asset bitmap.
+- Les cartes ciblées précédemment (31, 47, 50, 78, 79) sont conservées. Aucune carte n’est marquée visuellement validée sans retour du propriétaire.
+- Prochaine reprise : 43 (technétium), puis 44–46 et 48–49 ; conserver les cartes déjà appréciées.
+- Validation téléphone à faire : lisibilité des onze miniatures, grands formats animés, cadres sans chevauchement des badges, pause/reprise et fermeture des cartes.
+- Vérifications locales : `compileDebugKotlin` réussi ; planche des onze motifs et cadres rendue avec le Canvas natif via le layoutlib d’Android Studio et inspectée. Cette planche utilise un habillage de prévisualisation, pas l’écran complet de l’application ; elle ne remplace pas la validation téléphone.
+
+Références des sujets :
+
+- [RSC — germanium, transmission infrarouge](https://periodic-table.rsc.org/element/32/germanium)
+- [RSC — arsenic gris, aspect métallique et cassant](https://periodic-table.rsc.org/element/33/arsenic)
+- [RSC — sélénium, cellules sensibles à la lumière](https://periodic-table.rsc.org/element/34/selenium)
+- [National Science and Media Museum — posemètres photoélectriques au sélénium](https://blog.scienceandmediamuseum.org.uk/photography-a-z-exposure-meters/)
+- [RSC — brome, liquide rouge](https://periodic-table.rsc.org/element/35/bromine)
+- [RSC — krypton, lampes flash](https://periodic-table.rsc.org/element/36/krypton)
+- [NIST — horloges et cellule de vapeur de rubidium](https://www.nist.gov/atomic-clocks/how-atomic-clocks-work/clocks-galore)
+- [RSC — sels de strontium et signaux rouges](https://periodic-table.rsc.org/element/38/strontium)
+- [RSC — yttrium et lasers YAG](https://periodic-table.rsc.org/element/39/yttrium)
+- [RSC — zircone et couteaux céramiques](https://periodic-table.rsc.org/element/40/zirconium)
+- [RSC — niobium et aimants supraconducteurs](https://periodic-table.rsc.org/element/41/niobium)
+- [RSC — molybdène et alliages pour forets](https://periodic-table.rsc.org/element/42/molybdenum)
+
+## Passe 43–49 — 16 septembre 2026
+
+- Six compositions distinctes pour 43, 44, 45, 46, 48 et 49. La carte 47 (argent, monnaies) est conservée telle quelle.
+- Même méthode que la passe précédente : palette, silhouette de cadre et ornements propres au sujet, animations pilotées par la phase commune (faisceau du cyclotron, ouverture des contacts, flux du pot catalytique, traversée de la membrane, reflets de la palette, ondes du tactile).
+- Chaque sujet illustre un **usage** documenté, jamais un échantillon massif inventé : alliage de contact, revêtement catalytique, composés pigmentaires, oxyde conducteur. Les légendes anglaises et françaises le disent explicitement.
+- Le technétium quitte le motif « installation de recherche » partagé pour un motif historique : identification en 1937 dans du molybdène irradié.
+- Pas de nouvel asset bitmap ; la pierre de rareté et le libellé restent inchangés.
+- Vérification locale : `compileDebugKotlin` réussi. **Validation téléphone à faire** : lisibilité des six miniatures, grands formats animés, cadres sans chevauchement des badges, pause/reprise et fermeture des cartes.
+- Prochaine reprise : 55 (césium, à différencier du rubidium), puis 56–59 ; revoir aussi 51–54 déjà dessinées mais au motif encore partagé.
+
+Références des sujets :
+
+- [RSC — technétium](https://periodic-table.rsc.org/element/43/technetium)
+- [RSC — ruthénium](https://periodic-table.rsc.org/element/44/ruthenium)
+- [RSC — rhodium](https://periodic-table.rsc.org/element/45/rhodium)
+- [RSC — palladium](https://periodic-table.rsc.org/element/46/palladium)
+- [RSC — cadmium](https://periodic-table.rsc.org/element/48/cadmium)
+- [RSC — indium](https://periodic-table.rsc.org/element/49/indium)
+
 - Atelier conservé en code ; bouton masqué avec visibility=gone. Dossier cartes elements supprimé (environ 35 Mio).

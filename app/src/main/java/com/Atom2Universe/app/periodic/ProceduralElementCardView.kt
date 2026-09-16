@@ -23,6 +23,23 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
     private val path = Path()
     private val art = ElementCardArt()
     val sceneNameRes: Int get() = when (art.scene) {
+        ElementCardArt.Scene.CYCLOTRON -> R.string.card_scene_cyclotron
+        ElementCardArt.Scene.CONTACTS -> R.string.card_scene_contacts
+        ElementCardArt.Scene.CATALYTIC_CONVERTER -> R.string.card_scene_catalytic_converter
+        ElementCardArt.Scene.HYDROGEN_MEMBRANE -> R.string.card_scene_hydrogen_membrane
+        ElementCardArt.Scene.PIGMENTS -> R.string.card_scene_pigments
+        ElementCardArt.Scene.TOUCHSCREEN -> R.string.card_scene_touchscreen
+        ElementCardArt.Scene.INFRARED -> R.string.card_scene_infrared
+        ElementCardArt.Scene.ARSENIC -> R.string.card_scene_arsenic
+        ElementCardArt.Scene.LIGHT_METER -> R.string.card_scene_light_meter
+        ElementCardArt.Scene.BROMINE -> R.string.card_scene_bromine
+        ElementCardArt.Scene.CAMERA_FLASH -> R.string.card_scene_camera_flash
+        ElementCardArt.Scene.ATOMIC_CLOCK -> R.string.card_scene_atomic_clock
+        ElementCardArt.Scene.SIGNAL_FLARE -> R.string.card_scene_signal_flare
+        ElementCardArt.Scene.YAG_LASER -> R.string.card_scene_yag_laser
+        ElementCardArt.Scene.CERAMIC_KNIFE -> R.string.card_scene_ceramic_knife
+        ElementCardArt.Scene.SUPERCONDUCTOR -> R.string.card_scene_superconductor
+        ElementCardArt.Scene.DRILL -> R.string.card_scene_drill
         ElementCardArt.Scene.STAR -> R.string.card_scene_star
         ElementCardArt.Scene.VAPOUR -> R.string.card_scene_vapour
         ElementCardArt.Scene.DISCHARGE -> R.string.card_scene_discharge
@@ -79,6 +96,23 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
         ElementCardArt.Scene.CERAMIC -> R.string.card_scene_ceramic
     }
     private val motifNote: String get() = context.getString(when (art.scene) {
+        ElementCardArt.Scene.CYCLOTRON -> R.string.card_note_cyclotron
+        ElementCardArt.Scene.CONTACTS -> R.string.card_note_contacts
+        ElementCardArt.Scene.CATALYTIC_CONVERTER -> R.string.card_note_catalytic_converter
+        ElementCardArt.Scene.HYDROGEN_MEMBRANE -> R.string.card_note_hydrogen_membrane
+        ElementCardArt.Scene.PIGMENTS -> R.string.card_note_pigments
+        ElementCardArt.Scene.TOUCHSCREEN -> R.string.card_note_touchscreen
+        ElementCardArt.Scene.INFRARED -> R.string.card_note_infrared
+        ElementCardArt.Scene.ARSENIC -> R.string.card_note_arsenic
+        ElementCardArt.Scene.LIGHT_METER -> R.string.card_note_light_meter
+        ElementCardArt.Scene.BROMINE -> R.string.card_note_bromine
+        ElementCardArt.Scene.CAMERA_FLASH -> R.string.card_note_camera_flash
+        ElementCardArt.Scene.ATOMIC_CLOCK -> R.string.card_note_atomic_clock
+        ElementCardArt.Scene.SIGNAL_FLARE -> R.string.card_note_signal_flare
+        ElementCardArt.Scene.YAG_LASER -> R.string.card_note_yag_laser
+        ElementCardArt.Scene.CERAMIC_KNIFE -> R.string.card_note_ceramic_knife
+        ElementCardArt.Scene.SUPERCONDUCTOR -> R.string.card_note_superconductor
+        ElementCardArt.Scene.DRILL -> R.string.card_note_drill
         ElementCardArt.Scene.STAR -> if (element.atomicNumber == 1) R.string.card_note_hydrogen else R.string.card_note_helium
         ElementCardArt.Scene.BATTERY -> R.string.card_note_battery
         ElementCardArt.Scene.SALT -> R.string.card_note_salt
@@ -184,6 +218,14 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
             accent = 0xFF67CC78.toInt()
             secondary = 0xFFB6E788.toInt()
         }
+        if (ScientificElementCardArt.supports(element.atomicNumber)) {
+            accent = ScientificElementCardArt.accent(element.atomicNumber)
+            secondary = ScientificElementCardArt.secondary(element.atomicNumber)
+        }
+        if (IndustrialElementCardArt.supports(element.atomicNumber)) {
+            accent = IndustrialElementCardArt.accent(element.atomicNumber)
+            secondary = IndustrialElementCardArt.secondary(element.atomicNumber)
+        }
     }
 
     private fun syncAnimation() {
@@ -244,7 +286,13 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
         glow(canvas, 280f, 350f, 155f, alpha(secondary, 35))
         val t = phase * (2 * PI).toFloat()
         // No dust in an atomic diagram: every point must be an actual counted particle.
-        for (i in 0 until if (art.scene == ElementCardArt.Scene.STAR) 0 else 60) {
+        val dustCount = when {
+            art.scene == ElementCardArt.Scene.STAR -> 0
+            IndustrialElementCardArt.supports(element.atomicNumber) -> 12
+            ScientificElementCardArt.supports(element.atomicNumber) -> 16
+            else -> 60
+        }
+        for (i in 0 until dustCount) {
             val x = 28 + stars[i * 3] * 304
             val y = 100 + stars[i * 3 + 1] * 275 + sin(t + i) * 8f
             val a = (55 + 130 * (0.5 + 0.5 * sin(t * 2 + i))).toInt()

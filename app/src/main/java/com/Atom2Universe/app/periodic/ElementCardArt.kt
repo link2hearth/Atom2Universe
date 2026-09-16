@@ -11,10 +11,14 @@ import kotlin.random.Random
  * real particles, but its orbit is a schematic, not a quantum trajectory.
  */
 internal class ElementCardArt {
-    enum class Scene { STAR, VAPOUR, DISCHARGE, FORGE, GEARS, FOUNDRY, TREASURE, GARDEN, MINERAL, LIQUID, CIRCUIT, AURORA, REACTOR, ACCELERATOR, BATTERY, SALT, BONES, AIRCRAFT, CHROME, SHIELD, MAGNET, COIL, SPECIMEN, BALLOON, TELESCOPE, WHEAT, LUNGS, TOOTH, FLASH, FOIL, WATER, BULB, FRUIT, BICYCLE, SPRING, DRYCELL, CERAMIC, FLAME, MELTING, COINS, CAN, BARS, RING }
+    enum class Scene { STAR, VAPOUR, DISCHARGE, FORGE, GEARS, FOUNDRY, TREASURE, GARDEN, MINERAL, LIQUID, CIRCUIT, AURORA, REACTOR, ACCELERATOR, BATTERY, SALT, BONES, AIRCRAFT, CHROME, SHIELD, MAGNET, COIL, SPECIMEN, BALLOON, TELESCOPE, WHEAT, LUNGS, TOOTH, FLASH, FOIL, WATER, BULB, FRUIT, BICYCLE, SPRING, DRYCELL, CERAMIC, FLAME, MELTING, COINS, CAN, BARS, RING,
+        INFRARED, ARSENIC, LIGHT_METER, BROMINE, CAMERA_FLASH, ATOMIC_CLOCK, SIGNAL_FLARE, YAG_LASER, CERAMIC_KNIFE, SUPERCONDUCTOR, DRILL,
+        CYCLOTRON, CONTACTS, CATALYTIC_CONVERTER, HYDROGEN_MEMBRANE, PIGMENTS, TOUCHSCREEN }
     private val earlyArt = EarlyElementCardArt()
     private val revisedArt = RevisedElementCardArt()
     private val metalArt = MetalElementCardArt()
+    private val scientificArt = ScientificElementCardArt()
+    private val industrialArt = IndustrialElementCardArt()
     private val p = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private var samples = FloatArray(160)
@@ -40,6 +44,23 @@ internal class ElementCardArt {
             z == 18 -> Scene.BULB
             z == 19 -> Scene.FLAME
             z == 31 -> Scene.MELTING
+            z == 32 -> Scene.INFRARED
+            z == 33 -> Scene.ARSENIC
+            z == 34 -> Scene.LIGHT_METER
+            z == 35 -> Scene.BROMINE
+            z == 36 -> Scene.CAMERA_FLASH
+            z == 37 -> Scene.ATOMIC_CLOCK
+            z == 38 -> Scene.SIGNAL_FLARE
+            z == 39 -> Scene.YAG_LASER
+            z == 40 -> Scene.CERAMIC_KNIFE
+            z == 41 -> Scene.SUPERCONDUCTOR
+            z == 42 -> Scene.DRILL
+            z == 43 -> Scene.CYCLOTRON
+            z == 44 -> Scene.CONTACTS
+            z == 45 -> Scene.CATALYTIC_CONVERTER
+            z == 46 -> Scene.HYDROGEN_MEMBRANE
+            z == 48 -> Scene.PIGMENTS
+            z == 49 -> Scene.TOUCHSCREEN
             z == 47 -> Scene.COINS
             z == 50 -> Scene.CAN
             z == 78 -> Scene.RING
@@ -58,20 +79,20 @@ internal class ElementCardArt {
             z == 60 || z == 62 -> Scene.MAGNET
             z == 29 -> Scene.COIL
             z == 6 -> Scene.GARDEN
-            z == 35 || z == 80 -> Scene.LIQUID
+            z == 80 -> Scene.LIQUID
             z in listOf(47, 78, 79) -> Scene.TREASURE
             z in listOf(7, 8, 9) -> Scene.VAPOUR
             // Group 18 does not mean a usable discharge tube: Og is a research element.
-            z in listOf(10, 18, 36, 54) -> Scene.DISCHARGE
+            z in listOf(10, 18, 54) -> Scene.DISCHARGE
             z == 92 || z == 94 -> Scene.REACTOR
             // Avoid invented visible bulk samples of short-lived elements (Fr, At, Rn…).
             z >= 84 -> Scene.ACCELERATOR
             rarityOf(z) == GachaRarity.SYNTHETIQUE -> Scene.ACCELERATOR
-            z == 14 || z == 32 -> Scene.CIRCUIT
+            z == 14 -> Scene.CIRCUIT
             z == 26 -> Scene.FORGE
             z == 28 -> Scene.GEARS // Mechanical alloys, not pure nickel gears.
             z == 13 || z == 50 -> Scene.FOUNDRY
-            z in listOf(5, 15, 16, 33, 34, 51, 52, 53, 83) -> Scene.MINERAL
+            z in listOf(5, 15, 16, 51, 52, 53, 83) -> Scene.MINERAL
             // No arbitrary equipment/aurora assignment to every metal or lanthanide.
             else -> Scene.SPECIMEN
         }
@@ -139,6 +160,14 @@ internal class ElementCardArt {
     }
 
     fun frame(c: Canvas, rarity: GachaRarity, t: Float) {
+        if (IndustrialElementCardArt.supports(z)) {
+            industrialArt.frame(c, z, rarity.color, t)
+            return
+        }
+        if (ScientificElementCardArt.supports(z)) {
+            scientificArt.frame(c, z, rarity.color, t)
+            return
+        }
         val color = rarity.color
         val gold = 0xFFE7C68A.toInt()
         val round = rarity == GachaRarity.PRIMORDIAL || rarity == GachaRarity.NEUTRONIQUE
@@ -222,7 +251,8 @@ internal class ElementCardArt {
         a=accent; b=secondary
         c.save(); c.clipRect(38f,94f,322f,327f)
         // Family texture behind the subject: gas currents, metal hatching, mineral veins.
-        for(i in 0..13) {
+        val hasCustomScene = ScientificElementCardArt.supports(z) || IndustrialElementCardArt.supports(z)
+        for(i in 0 until if (hasCustomScene) 0 else 14) {
             val x=48f+samples[i]*264; val y=105f+samples[i+16]*205
             when(scene) {
                 Scene.STAR -> Unit // Keep the atomic diagram free of particle-like ornaments.
@@ -235,6 +265,11 @@ internal class ElementCardArt {
             }
         }
         when(scene) {
+            Scene.CYCLOTRON, Scene.CONTACTS, Scene.CATALYTIC_CONVERTER,
+            Scene.HYDROGEN_MEMBRANE, Scene.PIGMENTS, Scene.TOUCHSCREEN -> industrialArt.draw(c,z,t)
+            Scene.INFRARED, Scene.ARSENIC, Scene.LIGHT_METER, Scene.BROMINE,
+            Scene.CAMERA_FLASH, Scene.ATOMIC_CLOCK, Scene.SIGNAL_FLARE, Scene.YAG_LASER,
+            Scene.CERAMIC_KNIFE, Scene.SUPERCONDUCTOR, Scene.DRILL -> scientificArt.draw(c,z,t)
             Scene.FLAME, Scene.MELTING, Scene.COINS, Scene.CAN, Scene.BARS, Scene.RING -> metalArt.draw(c,z,t)
             Scene.STAR -> star(c,t)
             Scene.VAPOUR -> vapour(c,t)
