@@ -34,7 +34,5 @@
     <string name="motocross_retry_hint">Tap to return to the last checkpoint</string>
     <string name="motocross_controls_hint">Balance on the left · Brake and throttle on the right</string>
     <string name="motocross_bridge_sign">UPPER ROUTE</string>
-    <string name="motocross_loop_sign">LOOP</string>
     <string name="motocross_bridge_hint">Jump onto the bridge · A lower route runs underneath</string>
-    <string name="motocross_loop_hint">Build up speed and keep the throttle on through the loop</string>
 </resources>

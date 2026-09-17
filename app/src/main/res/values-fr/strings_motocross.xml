@@ -34,7 +34,5 @@
     <string name="motocross_retry_hint">Touchez pour reprendre au dernier checkpoint</string>
     <string name="motocross_controls_hint">Équilibre à gauche · Frein et gaz à droite</string>
     <string name="motocross_bridge_sign">PISTE HAUTE</string>
-    <string name="motocross_loop_sign">LOOPING</string>
     <string name="motocross_bridge_hint">Vise le pont · Une piste basse passe en dessous</string>
-    <string name="motocross_loop_hint">Prends de la vitesse et garde les gaz dans le looping</string>
 </resources>

@@ -152,21 +152,14 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         val smooth = 1f - exp(-4.5f * dt)
         val lookAhead = (5f + max(0f, bike.vx) * .12f).coerceAtMost(8.5f)
-        val framingLoop = bike.activeLoop ?: track.loops.firstOrNull {
-            abs(bike.x - it.x) < it.radius + 10f
-        }
-        val targetX = framingLoop?.x ?: (bike.x + lookAhead)
+        val targetX = bike.x + lookAhead
         camX += (targetX - camX) * smooth
         val aheadGround = track.heightBelow(bike.x + 12f, bike.y + 3f)
-        val targetY = framingLoop?.y
-            ?: max(bike.y + 1.8f, aheadGround + 1.8f).coerceAtMost(bike.y + 4.5f)
+        val targetY = max(bike.y + 1.8f, aheadGround + 1.8f).coerceAtMost(bike.y + 4.5f)
         camY += (targetY - camY) * (1f - exp(-3f * dt))
         val altitude = (bike.y - track.heightBelow(bike.x, bike.y) - 1f).coerceAtLeast(0f)
-        var targetZoom = (1f - (hypot(bike.vx, bike.vy) / 28f).coerceIn(0f, 1f) * .18f - altitude * .02f)
+        val targetZoom = (1f - (hypot(bike.vx, bike.vy) / 28f).coerceIn(0f, 1f) * .18f - altitude * .02f)
             .coerceIn(.60f, 1f)
-        if (framingLoop != null) {
-            targetZoom = min(1f, 16f / (framingLoop.radius * 2f + 6f))
-        }
         zoom += (targetZoom - zoom) * smooth
         hudClock += dt
         if (hudClock >= .1f) { hudClock = 0f; reportStats() }
@@ -387,56 +380,30 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
         val right = camX + width / (2f * scale) + 3f
         for (road in track.roads) {
             if (road.maxX < left || road.minX > right) continue
-            if (road.loopId < 0) {
-                // Charpente en arrière-plan ; seules les bandes de roulement
-                // constituent une surface solide dans le plan de la moto.
-                for (i in 0 until road.points.lastIndex step 50) {
-                    val p = road.points[i]
-                    if (p.x !in left..right || p.y - track.height(p.x) < 2f) continue
-                    val q = road.points[min(i + 50, road.points.lastIndex)]
-                    val floor = track.height(p.x)
-                    val tint = Color.argb(140, 88, 118, 128)
-                    line(canvas, p.x, floor, p.x, p.y - .18f, tint, .14f)
-                    line(canvas, p.x, p.y - 1.3f, q.x, q.y - .18f, tint, .09f)
-                    line(canvas, p.x, p.y - .18f, q.x, q.y - 1.3f, tint, .09f)
-                }
+            // Charpente en arrière-plan ; seules les bandes de roulement
+            // constituent une surface solide dans le plan de la moto.
+            for (i in 0 until road.points.lastIndex step 50) {
+                val p = road.points[i]
+                if (p.x !in left..right || p.y - track.height(p.x) < 2f) continue
+                val q = road.points[min(i + 50, road.points.lastIndex)]
+                val floor = track.height(p.x)
+                val tint = Color.argb(140, 88, 118, 128)
+                line(canvas, p.x, floor, p.x, p.y - .18f, tint, .14f)
+                line(canvas, p.x, p.y - 1.3f, q.x, q.y - .18f, tint, .09f)
+                line(canvas, p.x, p.y - .18f, q.x, q.y - 1.3f, tint, .09f)
             }
             path.reset()
             for ((i, p) in road.points.withIndex()) {
                 if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y)
             }
-            ink.style = Paint.Style.STROKE; ink.strokeWidth = .16f
-            ink.color = if (road.loopId < 0) STEEL else GOLD
+            ink.style = Paint.Style.STROKE; ink.strokeWidth = .16f; ink.color = STEEL
             canvas.drawPath(path, ink)
             ink.strokeWidth = .045f; ink.color = WHITE
             canvas.drawPath(path, ink)
-            if (road.loopId < 0) {
-                for (i in road.points.indices step 7) {
-                    val p = road.points[i]
-                    if (p.x in left..right) circle(canvas, p.x, p.y, .04f, DARK)
-                }
+            for (i in road.points.indices step 7) {
+                val p = road.points[i]
+                if (p.x in left..right) circle(canvas, p.x, p.y, .04f, DARK)
             }
-        }
-        for (loop in track.loops) {
-            if (loop.x + loop.radius < left || loop.x - loop.radius > right) continue
-            val r = loop.radius
-            // La branche descendante passe derrière la voie d'entrée/sortie.
-            // Les flèches rendent le sens de circulation lisible même au plafond.
-            for (i in 1..7) {
-                val angle = i * PI.toFloat() / 4f
-                val nx = -sin(angle); val ny = cos(angle)
-                val tx = cos(angle); val ty = sin(angle)
-                val x = loop.x + sin(angle) * (r - .55f)
-                val y = loop.y - cos(angle) * (r - .55f)
-                val color = if (i >= 5) STEEL else MINT
-                line(canvas, x - tx * .3f + nx * .2f, y - ty * .3f + ny * .2f,
-                    x + tx * .25f, y + ty * .25f, color, .07f)
-                line(canvas, x - tx * .3f - nx * .2f, y - ty * .3f - ny * .2f,
-                    x + tx * .25f, y + ty * .25f, color, .07f)
-            }
-            line(canvas, loop.x - 3f, .015f, loop.x + 3f, .015f, GOLD, .10f)
-            worldText(canvas, context.getString(R.string.motocross_loop_sign),
-                loop.x, loop.y * 2f + 1.2f, .65f, GOLD)
         }
         for (section in track.sections) {
             if (section.kind != MotocrossTrack.Kind.BRIDGE || section.start !in left..right) continue
@@ -485,13 +452,11 @@ class MotocrossView @JvmOverloads constructor(context: Context, attrs: Attribute
                 width / 2f, 43f * dp, 12f * dp, WHITE)
         } else if (!bike.crashed && !finished) {
             val feature = track.sections.firstOrNull {
-                bike.x >= it.start + 5f && bike.x <= it.start + 36f &&
-                    (it.kind == MotocrossTrack.Kind.LOOP || it.kind == MotocrossTrack.Kind.BRIDGE)
+                bike.x >= it.start + 5f && bike.x <= it.start + 36f && it.kind == MotocrossTrack.Kind.BRIDGE
             }
             if (feature != null) {
-                val hint = if (feature.kind == MotocrossTrack.Kind.LOOP) R.string.motocross_loop_hint
-                    else R.string.motocross_bridge_hint
-                screenText(canvas, context.getString(hint), width / 2f, 43f * dp, 12f * dp, WHITE)
+                screenText(canvas, context.getString(R.string.motocross_bridge_hint),
+                    width / 2f, 43f * dp, 12f * dp, WHITE)
             }
         }
         if (bike.crashed || finished) {

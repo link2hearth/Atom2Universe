@@ -7,15 +7,14 @@ import kotlin.random.Random
 internal class MotocrossTrack(val seed: Int) {
     data class Point(val x: Float, val y: Float)
     data class Section(val start: Float, val end: Float, val kind: Kind, val difficulty: Int)
-    enum class Kind { ROLLERS, TABLE, DOUBLE, VALLEY, STEPS, RIDGE, JUMP, REST, BRIDGE, LOOP }
+    enum class Kind { ROLLERS, TABLE, DOUBLE, VALLEY, STEPS, RIDGE, JUMP, REST, BRIDGE }
     private data class Module(val kind: Kind, val difficulty: Int, val knots: List<Point>, val launchXs: Set<Float>)
 
     val points = ArrayList<Point>()
     val sections = ArrayList<Section>()
     val checkpoints = ArrayList<Float>()
     val roads = ArrayList<MotocrossRoad>()
-    val loops = ArrayList<MotocrossLoop>()
-    private data class Rail(val a: Point, val b: Point, val loopId: Int, val roadId: Int) {
+    private data class Rail(val a: Point, val b: Point, val roadId: Int) {
         val dx = b.x - a.x
         val dy = b.y - a.y
         val length2 = dx * dx + dy * dy
@@ -35,22 +34,12 @@ internal class MotocrossTrack(val seed: Int) {
         val recent = ArrayList<Module>()
         repeat(36) { index ->
             val tier = when { index < 8 -> 0; index < 20 -> 1; else -> 2 }
-            val special = when (index % 8) {
-                1 -> MotocrossStructures.bridges[random.nextInt(tier + 1)]
-                3 -> MotocrossStructures.looping(index, 6.5f + tier + random.nextInt(2) * .5f)
-                else -> null
-            }
+            val special = if (index % 8 == 1) MotocrossStructures.bridges[random.nextInt(tier + 1)] else null
             if (special != null) {
                 val end = x + special.ground.last().x
-                val kind = if (special.loop != null) Kind.LOOP else Kind.BRIDGE
-                sections.add(Section(x, end, kind, tier))
+                sections.add(Section(x, end, Kind.BRIDGE, tier))
                 for (p in special.ground.drop(1)) points.add(Point(x + p.x, p.y))
                 for (deck in special.decks) roads.add(MotocrossRoad(deck.map { Point(x + it.x, it.y) }))
-                special.loop?.let {
-                    val loop = it.copy(x = x + it.x)
-                    loops.add(loop)
-                    roads.add(MotocrossStructures.loopRoad(loop))
-                }
                 checkpoints.add(end - 2f)
                 x = end
                 return@repeat
@@ -77,7 +66,7 @@ internal class MotocrossTrack(val seed: Int) {
         finishX = x + 8f
         points.add(Point(finishX + 30f, 0f))
         for ((roadId, road) in roads.withIndex()) for ((a, b) in road.points.zipWithNext()) {
-            val rail = Rail(a, b, road.loopId, roadId)
+            val rail = Rail(a, b, roadId)
             require(rail.length2 > 0f)
             for (bucket in floor(min(a.x, b.x) / 8f).toInt()..floor(max(a.x, b.x) / 8f).toInt()) {
                 railBuckets.getOrPut(bucket) { ArrayList() }.add(rail)
@@ -104,7 +93,7 @@ internal class MotocrossTrack(val seed: Int) {
 
     /** Point de contact le plus proche, normale sortante. Pas d'allocation par roue. */
     fun contact(x: Float, y: Float, mountX: Float, mountY: Float,
-                upX: Float, upY: Float, activeLoopId: Int, ignoredDecks: Set<Int>, out: FloatArray) {
+                upX: Float, upY: Float, ignoredDecks: Set<Int>, out: FloatArray) {
         var best = Float.POSITIVE_INFINITY
         var i = segmentAt(x - 1.2f)
         while (i < points.lastIndex && points[i].x <= x + 1.2f) {
@@ -129,7 +118,6 @@ internal class MotocrossTrack(val seed: Int) {
             val rails = railBuckets[bucket] ?: continue
             for (rail in rails) {
                 if (rail.roadId in ignoredDecks) continue
-                if (rail.loopId >= 0 && rail.loopId != activeLoopId) continue
                 if (rail.nx * upX + rail.ny * upY <= .2f) continue
                 val mountSide = (mountX - rail.a.x) * rail.nx + (mountY - rail.a.y) * rail.ny
                 if (mountSide <= .02f) continue // Aucun accrochage depuis le dessous d'un pont.
@@ -161,13 +149,12 @@ internal class MotocrossTrack(val seed: Int) {
     }
 
     /** Collision avec les surfaces de la voie suivie, jamais le pont traversé dessous. */
-    fun hitsBody(x: Float, y: Float, radius: Float, activeLoopId: Int, ignoredDecks: Set<Int>): Boolean {
+    fun hitsBody(x: Float, y: Float, radius: Float, ignoredDecks: Set<Int>): Boolean {
         if (y - radius < height(x)) return true
         val reach = radius + .08f
         for (bucket in floor((x - reach) / 8f).toInt()..floor((x + reach) / 8f).toInt()) {
             for (rail in railBuckets[bucket] ?: continue) {
                 if (rail.roadId in ignoredDecks) continue
-                if (rail.loopId >= 0 && rail.loopId != activeLoopId) continue
                 val t = (((x - rail.a.x) * rail.dx + (y - rail.a.y) * rail.dy) / rail.length2).coerceIn(0f, 1f)
                 val dx = x - rail.a.x - t * rail.dx
                 val dy = y - rail.a.y - t * rail.dy
@@ -181,7 +168,6 @@ internal class MotocrossTrack(val seed: Int) {
      * sa rampe de sortie finit par descendre sous le casque puis sous les roues. */
     fun updateUnderpasses(x: Float, y: Float, ignoredDecks: MutableSet<Int>) {
         for ((id, road) in roads.withIndex()) {
-            if (road.loopId >= 0) continue
             if (x < road.minX - 2f || x > road.maxX + 2f) {
                 ignoredDecks.remove(id)
                 continue
@@ -207,7 +193,7 @@ internal class MotocrossTrack(val seed: Int) {
     fun heightBelow(x: Float, y: Float): Float {
         var result = height(x)
         for (rail in railBuckets[floor(x / 8f).toInt()] ?: return result) {
-            if (rail.loopId >= 0 || rail.dx <= 0f || x < rail.a.x || x > rail.b.x) continue
+            if (rail.dx <= 0f || x < rail.a.x || x > rail.b.x) continue
             val h = rail.a.y + rail.dy * (x - rail.a.x) / rail.dx
             if (h <= y && h > result) result = h
         }

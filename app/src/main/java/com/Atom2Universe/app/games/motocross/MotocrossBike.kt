@@ -25,11 +25,7 @@ internal class MotocrossBike {
     var impact = 0f; private set
     val headLocalX: Float get() = .12f + lean * .30f
     val headLocalY: Float get() = 1.05f - impact * .08f
-    var activeLoop: MotocrossLoop? = null; private set
-    private val exitedLoops = HashSet<Int>()
     private val ignoredDecks = HashSet<Int>()
-    private var lastLoopAngle = 0f
-    private var loopTravel = 0f
     private val contact = FloatArray(4)
     private var forceX = 0f
     private var forceY = 0f
@@ -39,7 +35,6 @@ internal class MotocrossBike {
         x = atX; y = track.height(x) + .84f
         vx = 0f; vy = 0f; angle = 0f; angularVelocity = 0f; lean = 0f
         crashed = false; impact = 0f
-        activeLoop = null; exitedLoops.clear(); loopTravel = 0f
         ignoredDecks.clear()
         rear.compression = 0f; front.compression = 0f
         rear.spin = 0f; front.spin = 0f
@@ -50,7 +45,6 @@ internal class MotocrossBike {
 
     fun step(dt: Float, throttle: Boolean, brake: Boolean, leanInput: Float, track: MotocrossTrack) {
         if (crashed) return
-        updateLoopRoute(track)
         track.updateUnderpasses(x, y, ignoredDecks)
         lean += (leanInput - lean) * (1f - exp(-10f * dt))
         impact *= exp(-9f * dt)
@@ -61,12 +55,17 @@ internal class MotocrossBike {
         suspension(front, HALF_BASE, false, dt, throttle, brake, track)
         val airborne = !rear.grounded && !front.grounded
         if (airborne) {
-            // Réponse immédiate pour lancer/inverser un salto ; le pilote dessiné
-            // conserve son interpolation. Relâcher amortit la rotation pour atterrir.
+            // "lean" est déjà lissé (constante ~0,1 s) : une pression brève ne
+            // déclenche donc plus un salto instantané. Relâcher amortit la rotation.
             val damping = if (leanInput == 0f) 2.4f else .35f
-            torque += -leanInput * AIR_TORQUE - angularVelocity * damping
+            torque += -lean * AIR_TORQUE - angularVelocity * damping
         } else {
-            torque += -angularVelocity * .48f - lean * 2.7f
+            // Au sol (jamais en chute libre), le pilote qui se penche déplace son
+            // centre de masse : la gravité, appliquée à côté de l'appui des roues,
+            // crée un vrai couple de wheelie/stoppie. Rien d'inventé : c'est la
+            // suspension (deux ressorts indépendants) qui tient déjà l'équilibre ;
+            // se pencher ne fait que déplacer le point où la gravité tire.
+            torque += -MASS * GRAVITY * cos(angle) * lean * RIDER_SHIFT - angularVelocity * .15f
         }
         vx += forceX / MASS * dt
         vy += forceY / MASS * dt
@@ -83,40 +82,10 @@ internal class MotocrossBike {
         val ca = cos(angle); val sa = sin(angle)
         val headX = x + ca * headLocalX - sa * headLocalY
         val headY = y + sa * headLocalX + ca * headLocalY
-        val loopId = activeLoop?.id ?: -1
         track.updateUnderpasses(x, y, ignoredDecks)
-        if (track.hitsBody(headX, headY, .20f, loopId, ignoredDecks) ||
-            track.hitsBody(x, y, .13f, loopId, ignoredDecks) || y < -12f ||
+        if (track.hitsBody(headX, headY, .20f, ignoredDecks) ||
+            track.hitsBody(x, y, .13f, ignoredDecks) || y < -12f ||
             !x.isFinite() || !y.isFinite() || !angle.isFinite()) crashed = true
-    }
-
-    private fun updateLoopRoute(track: MotocrossTrack) {
-        val loop = activeLoop
-        if (loop == null) {
-            for (candidate in track.loops) {
-                // Le croisement du pied comporte deux voies de profondeur : on
-                // prend la boucle depuis sa tangente, pas à travers son côté gauche.
-                if (candidate.id !in exitedLoops && x >= candidate.x - .5f &&
-                    x <= candidate.x + .8f && y < 2f && vx > 1f && abs(angle) < .6f) {
-                    activeLoop = candidate
-                    lastLoopAngle = atan2(x - candidate.x, candidate.y - y)
-                    loopTravel = 0f
-                    break
-                }
-            }
-            return
-        }
-        val phase = atan2(x - loop.x, loop.y - y)
-        val delta = atan2(sin(phase - lastLoopAngle), cos(phase - lastLoopAngle))
-        loopTravel += delta
-        lastLoopAngle = phase
-        // Après le tour, la voie de sortie passe devant le pied de la boucle.
-        // Aucun changement de position, vitesse ou angle : la moto reste simulée.
-        if (loopTravel >= 2f * PI.toFloat() - .08f ||
-            hypot(x - loop.x, y - loop.y) > loop.radius + 3f) {
-            exitedLoops.add(loop.id)
-            activeLoop = null
-        }
     }
 
     private fun placeWheel(wheel: Wheel, localX: Float) {
@@ -133,7 +102,7 @@ internal class MotocrossBike {
         val restX = x + ca * localX + sa * REST
         val restY = y + sa * localX - ca * REST
         track.contact(restX, restY, x + ca * localX, y + sa * localX,
-            -sa, ca, activeLoop?.id ?: -1, ignoredDecks, contact)
+            -sa, ca, ignoredDecks, contact)
         val nx = contact[2]; val ny = contact[3]
         wheel.surfaceX = contact[0]; wheel.surfaceY = contact[1]
         wheel.normalX = nx; wheel.normalY = ny
@@ -160,8 +129,7 @@ internal class MotocrossBike {
             val fx = nx * load + ny * traction
             val fy = ny * load - nx * traction
             forceX += fx; forceY += fy
-            // Le déplacement du pilote change le bras de levier des appuis.
-            torque += (rx - ca * lean * .14f) * fy - (ry - sa * lean * .14f) * fx
+            torque += rx * fy - ry * fx
             impact = max(impact, (load / 95f).coerceIn(0f, 1f))
             // Butée : correction séparée, puis suppression de la vitesse entrante.
             val excess = penetration - TRAVEL * alignment
@@ -192,9 +160,10 @@ internal class MotocrossBike {
         private const val GRAVITY = 12f
         private const val SPRING = 115f
         private const val DAMPER = 9f
+        private const val RIDER_SHIFT = .4f
         private const val ENGINE_FORCE = 36f
         private const val MOTOR_SPEED = 28f
-        private const val AIR_TORQUE = 22f
-        private const val MAX_ROTATION_SPEED = 10f
+        private const val AIR_TORQUE = 15f
+        private const val MAX_ROTATION_SPEED = 6f
     }
 }

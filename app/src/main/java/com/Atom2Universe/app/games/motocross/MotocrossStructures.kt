@@ -3,24 +3,16 @@ package com.Atom2Universe.app.games.motocross
 import kotlin.math.*
 
 /** Surfaces minces : leur vide inférieur reste réellement praticable. */
-internal data class MotocrossRoad(
-    val points: List<MotocrossTrack.Point>,
-    val loopId: Int = -1
-) {
+internal data class MotocrossRoad(val points: List<MotocrossTrack.Point>) {
     val minX = points.minOf { it.x }
     val maxX = points.maxOf { it.x }
-}
-
-internal data class MotocrossLoop(val id: Int, val x: Float, val radius: Float) {
-    val y: Float get() = radius
 }
 
 /** Portions complètes : sol de secours, surfaces suspendues et raccords plats. */
 internal object MotocrossStructures {
     data class Recipe(
         val ground: List<MotocrossTrack.Point>,
-        val decks: List<List<MotocrossTrack.Point>> = emptyList(),
-        val loop: MotocrossLoop? = null
+        val decks: List<List<MotocrossTrack.Point>> = emptyList()
     )
 
     private fun profile(vararg xy: Float, launchX: Float? = null): List<MotocrossTrack.Point> {
@@ -72,22 +64,4 @@ internal object MotocrossStructures {
             )
         )
     )
-
-    fun looping(id: Int, radius: Float): Recipe = Recipe(
-        ground = profile(0f,0f, 70f,0f, 80f,2f, 90f,0f, 102f,2.8f, 114f,0f, 132f,0f),
-        loop = MotocrossLoop(id, 42f, radius)
-    )
-
-    fun loopRoad(loop: MotocrossLoop): MotocrossRoad {
-        // Sens de parcours : droite au pied, montée à droite, plafond vers la
-        // gauche, descente à gauche. Les normales pointent vers l'intérieur.
-        val count = ceil(2f * PI.toFloat() * loop.radius / .16f).toInt()
-        val points = (0..count).map { i ->
-            val angle = i.toFloat() / count * 2f * PI.toFloat()
-            if (i == count) MotocrossTrack.Point(loop.x, 0f)
-            else MotocrossTrack.Point(loop.x + sin(angle) * loop.radius,
-                loop.y - cos(angle) * loop.radius)
-        }
-        return MotocrossRoad(points, loop.id)
-    }
 }
