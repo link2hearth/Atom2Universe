@@ -113,6 +113,10 @@ class RoguelikeGame(
         /** Un poursuivant à cette distance à la fin d'un combat enchaîne directement. */
         const val CHAIN_DISTANCE = 2
         const val REST_HEAL      = 0.15f
+        /** Chance, à chaque tour de repos, d'attirer un monstre errant. */
+        const val REST_NOISE_CHANCE = 0.08f
+        const val WANDERER_MIN_STEPS = 5
+        const val WANDERER_MAX_STEPS = 10
         const val DEATH_GOLD_LOSS = 0.30f
         const val POTION_PRICE   = 15
         const val CHECKPOINT     = 1
@@ -195,8 +199,30 @@ class RoguelikeGame(
         if (!canRest()) return false
         hero.heal(ceil(hero.maxHp * REST_HEAL).toInt())
         addLog(R.string.roguelike_log_rest, hero.hp, hero.maxHp)
+        if (rng.nextFloat() < REST_NOISE_CHANCE) spawnWanderer()
         endMapTurn(resting = true)
         return true
+    }
+
+    /**
+     * Le repos fait du bruit : un monstre errant surgit hors de vue, à quelques pas, et
+     * vient droit sur nous. S'il arrive sans qu'on l'ait vu, c'est une embuscade.
+     */
+    private fun spawnWanderer() {
+        val dist = DungeonGenerator.distances(level.tiles, playerPos)
+        val spots = mutableListOf<Pos>()
+        for (y in 0 until level.h) for (x in 0 until level.w) {
+            if (dist[y][x] !in WANDERER_MIN_STEPS..WANDERER_MAX_STEPS || level.visible[y][x]) continue
+            if (level.tiles[y][x] != TileType.FLOOR || level.packAt(x, y) != null) continue
+            spots += Pos(x, y)
+        }
+        val pos = spots.randomOrNull(rng) ?: return
+        level.packs += MonsterPack(Encounters.roll(floor, rng), pos).apply {
+            state = PackState.CHASING
+            // Il nous a entendus : il ne renonce pas tant qu'il n'a pas fait le chemin
+            lostTurns = -WANDERER_MAX_STEPS
+        }
+        addLog(R.string.roguelike_log_rest_noise)
     }
 
     fun openMerchant() {

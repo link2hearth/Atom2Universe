@@ -111,6 +111,7 @@
     <string name="roguelike_stat_roll_flat">+%1$d %2$s</string>
     <string name="roguelike_stat_roll_percent">+%1$d %% %2$s</string>
     <string name="roguelike_relic_fireball">Boule de feu</string>
+    <string name="roguelike_log_rest_noise">Ton repos a fait du bruit… quelque chose approche !</string>
     <string name="roguelike_log_rest">Tu reprends ton souffle. PV %1$d/%2$d</string>
     <string name="roguelike_log_victory">Victoire ! +%1$d or.</string>
     <string name="roguelike_log_chain">Un autre ennemi te saute dessus !</string>

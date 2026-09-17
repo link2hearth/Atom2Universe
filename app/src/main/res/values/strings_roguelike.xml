@@ -111,6 +111,7 @@
     <string name="roguelike_stat_roll_flat">+%1$d %2$s</string>
     <string name="roguelike_stat_roll_percent">+%1$d%% %2$s</string>
     <string name="roguelike_relic_fireball">Fireball</string>
+    <string name="roguelike_log_rest_noise">Your rest made noise… something is coming!</string>
     <string name="roguelike_log_rest">You catch your breath. HP %1$d/%2$d</string>
     <string name="roguelike_log_victory">Victory! +%1$d gold.</string>
     <string name="roguelike_log_chain">Another enemy jumps on you!</string>

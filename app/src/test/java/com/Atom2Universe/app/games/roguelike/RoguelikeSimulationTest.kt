@@ -23,9 +23,9 @@ class RoguelikeSimulationTest {
         EXPERT (0.45f, 0.45f, 0.45f, 0.40f),
     }
 
-    private val profiles = 60
-    private val maxFloor = 15
-    private val maxMapTurns = 40_000
+    private val profiles = 30
+    private val maxFloor = 40
+    private val maxMapTurns = 250_000
 
     class FloorStat {
         var entries = 0; var deaths = 0; var fights = 0; var chains = 0; var ambushes = 0
@@ -37,7 +37,13 @@ class RoguelikeSimulationTest {
         val floors = sortedMapOf<Int, FloorStat>()
         val bestFloors = mutableListOf<Int>()
         val deathsBeforeFloor = mutableMapOf<Int, MutableList<Int>>()   // étage -> morts cumulées avant d'y arriver
+        val gearOnArrival = mutableMapOf<Int, MutableList<Int>>()       // étage -> note totale de l'équipement porté
+        var restNoises = 0
         var timeouts = 0
+        /** D'où viennent les morts : PV au début du combat fatal, embuscade, enchaînement, taille du groupe. */
+        var deathsFullHp = 0; var deathsAmbush = 0; var deathsChained = 0
+        val deathsByGroup = IntArray(4)
+        var nextFightChained = false
         fun f(n: Int) = floors.getOrPut(n) { FloorStat() }
     }
 
@@ -46,7 +52,9 @@ class RoguelikeSimulationTest {
         val out = StringBuilder()
         for (skill in Skill.entries) {
             val r = Report(skill)
+            restNoisesCounter = 0
             repeat(profiles) { i -> playProfile(skill, r, Random(i * 7919L + skill.ordinal)) }
+            r.restNoises = restNoisesCounter
             out.append(format(r))
         }
         File("build/roguelike-sim.txt").writeText(out.toString())
@@ -115,7 +123,10 @@ class RoguelikeSimulationTest {
             if (g.floor != lastFloor) {
                 lastFloor = g.floor
                 r.f(g.floor).entries++
-                if (reached.add(g.floor)) r.deathsBeforeFloor.getOrPut(g.floor) { mutableListOf() } += deaths
+                if (reached.add(g.floor)) {
+                    r.deathsBeforeFloor.getOrPut(g.floor) { mutableListOf() } += deaths
+                    r.gearOnArrival.getOrPut(g.floor) { mutableListOf() } += g.hero.equipped.values.sumOf { LootSystem.rating(it) }
+                }
                 best = maxOf(best, g.floor)
             }
             when {
@@ -145,13 +156,22 @@ class RoguelikeSimulationTest {
         fs.groupSizes += c.enemies.size
         if (c.phase == CombatPhase.ENEMY_TURN) fs.ambushes++
         val hpStart = c.hero.hp
+        val ambush = c.phase == CombatPhase.ENEMY_TURN
+        val chained = r.nextFightChained
         playCombat(c, skill, fs, rng)
         val died = c.phase == CombatPhase.DEFEAT
+        if (died) {
+            if (hpStart >= c.hero.maxHp * 0.9f) r.deathsFullHp++
+            if (ambush) r.deathsAmbush++
+            if (chained) r.deathsChained++
+            r.deathsByGroup[c.enemies.size]++
+        }
         fs.dmgPct += (hpStart - if (died) 0 else c.hero.hp).coerceAtLeast(0).toDouble() / c.hero.maxHp
         if (died) fs.deaths++
         val floorBefore = g.floor
         g.finishCombat()
-        if (!died && g.combat != null) r.f(floorBefore).chains++
+        r.nextFightChained = !died && g.combat != null
+        if (r.nextFightChained) r.f(floorBefore).chains++
         return died
     }
 
@@ -204,7 +224,12 @@ class RoguelikeSimulationTest {
             if (chaser != null && moveToward(g, listOf(chaser.pos), avoidPacks = false)) return
         }
         // Souffler dès qu'on peut
-        if (g.canRest() && hero.hp < hero.maxHp * 0.9f) { g.rest(); return }
+        if (g.canRest() && hero.hp < hero.maxHp * 0.9f) {
+            val packsBefore = lv.packs.size
+            g.rest()
+            if (g.level === lv && lv.packs.size > packsBefore) restNoisesCounter++
+            return
+        }
 
         // Explorer ce qui ne l'est pas, puis l'escalier
         val front = frontier(g)
@@ -217,6 +242,8 @@ class RoguelikeSimulationTest {
             if (g.onStairsTile()) g.openMerchant() else if (stairs.isNotEmpty()) moveToward(g, stairs, avoidPacks = false)
         }
     }
+
+    private var restNoisesCounter = 0
 
     private fun stairsKnown(g: RoguelikeGame): List<Pos> {
         val lv = g.level
@@ -271,8 +298,17 @@ class RoguelikeSimulationTest {
         appendLine("══════ ${r.skill} ($profiles profils, max étage $maxFloor, $maxMapTurns tours de carte) ══════")
         val b = r.bestFloors.sorted()
         appendLine("Meilleur étage : médiane ${b[b.size / 2]}, min ${b.first()}, max ${b.last()}   blocages : ${r.timeouts}")
-        appendLine("Morts avant d'atteindre l'étage (médiane, profils arrivés) : " +
-            r.deathsBeforeFloor.toSortedMap().entries.joinToString { (fl, l) -> val s = l.sorted(); "$fl:${s[s.size / 2]} (${s.size})" })
+        val totalDeaths = r.floors.values.sumOf { it.deaths }.coerceAtLeast(1)
+        appendLine("Morts : $totalDeaths dont ${100 * r.deathsFullHp / totalDeaths} % en commençant le combat à plus de 90 % des PV, " +
+            "${100 * r.deathsAmbush / totalDeaths} % en embuscade, ${100 * r.deathsChained / totalDeaths} % en combat enchaîné ; " +
+            "par taille de groupe : 1 → ${100 * r.deathsByGroup[1] / totalDeaths} %, 2 → ${100 * r.deathsByGroup[2] / totalDeaths} %, 3 → ${100 * r.deathsByGroup[3] / totalDeaths} %")
+        appendLine("Monstres attirés par le repos : ${r.restNoises}")
+        appendLine("Arrivée à l'étage : profils arrivés | morts cumulées (médiane) | note totale de l'équipement porté (médiane)")
+        for ((fl, l) in r.deathsBeforeFloor.toSortedMap()) {
+            if (fl % 5 != 0 && fl != 1) continue
+            val d = l.sorted(); val gear = r.gearOnArrival.getValue(fl).sorted()
+            appendLine(String.format("  %2d | %2d | %4d | %5d", fl, d.size, d[d.size / 2], gear[gear.size / 2]))
+        }
         appendLine("Ét. | passages | tours de carte/passage | combats/passage | combats | ennemis/combat | embuscades | enchaînés | dégâts/combat (% PV max) | tours/combat | potions/combat | morts")
         for ((fl, f) in r.floors) {
             val n = f.fights.coerceAtLeast(1).toDouble()

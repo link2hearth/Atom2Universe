@@ -87,16 +87,16 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
   dernier ramassé au plus ancien.
 - Bonus liés au gameplay (fenêtre de parade, parade parfaite qui soigne…) : **plus
   tard**, quand le gameplay tactile sera enrichi.
-
-### Gameplay de combat : la suite (vision)
-- Enrichir les gestes à la **Undertale** : de petits gameplays tactiles variés pour
-  attaquer, parer et d'autres actions à définir. La touche au bon moment et le swipe
-  actuels sont les premiers.
 - Farmer une zone est voulu quand c'est pour compléter un set. Exemple : le **set du rat
   des égouts** (étages 1–20) empoisonne, et les petits monstres fuient « parce qu'on sent
   mauvais ». À affiner.
 - Les monstres se règlent sur **l'étage**, jamais sur le joueur : l'équipement doit
   compter.
+
+### Gameplay de combat : la suite (vision)
+- Enrichir les gestes à la **Undertale** : de petits gameplays tactiles variés pour
+  attaquer, parer et d'autres actions à définir. La touche au bon moment et le swipe
+  actuels sont les premiers.
 
 ### Les reliques = les sorts
 - On équipe des reliques, chacune donne un sort (boule de feu, boule de glace…).
@@ -170,6 +170,10 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
   embuscade : devoir enchaîner est déjà la pénalité.
 - Groupes : cadence d'un ennemi = sa cadence + (taille du groupe − 1), attaques décalées.
 - Repos : +15 % des PV max par tour de repos, impossible si poursuivi.
+- **Le repos attire les monstres** : à chaque tour de repos, 8 % de chance qu'un monstre
+  errant surgisse hors de vue, à 5–10 pas, et vienne droit sur nous (on est alors
+  poursuivi, donc plus de repos). S'il arrive sans qu'on l'ait vu : embuscade. Sans ça,
+  le repos gratuit supprimait toute usure sur un étage.
 - Mort : −30 % de l'or.
 - Marchand sur l'escalier : potion à 15 or (5 maximum sur soi, soigne 40 % des PV).
 
@@ -192,6 +196,24 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
   comparer (▲ / ▼) avec l'objet porté.
 - Vente : (3 + 2 × puissance) × 1 / 2 / 4 selon la rareté.
 - Le héros commence avec une Épée de bois 1 normale.
+
+## Mesures : la boucle « mieux équipé → plus profond » (avec le repos bruyant)
+
+Simulation jusqu'à l'étage 40 (30 profils par niveau de skill, les bots équipent ce qui a
+une meilleure note, la mort ramène à l'étage 1 avec tout l'équipement) :
+
+| Arrivée à l'étage | Novice : morts / note d'équipement | Correct | Expert |
+|---|---|---|---|
+| 10 | 11 / 290 | 5 / 254 | 1 / 231 |
+| 20 | 37 / 565 | 11 / 508 | 2 / 473 |
+| 30 | 44 / 815 (3 profils sur 30) | 17 / 729 | 3 / 751 |
+| 40 | — | 16 / 1023 (9 sur 30) | 4 / 974 |
+
+- La boucle marche : un joueur moins adroit meurt plus, s'équipe mieux, et passe quand
+  même. Au même étage, le novice porte un équipement mieux noté que l'expert.
+- Les morts viennent pour un tiers de combats commencés en pleine forme, pour le reste
+  d'embuscades et d'enchaînements.
+- L'expert meurt très peu (4 fois avant l'étage 40) : les boss devront le tester.
 
 ## Mesures (simulation, étape 1)
 
