@@ -29,6 +29,7 @@
     <string name="cloud_sync_not_signed_in">Connectez-vous d\'abord</string>
     <string name="cloud_last_sync">Dernière sync : %1$s</string>
     <string name="cloud_last_sync_never">Jamais synchronisé</string>
+    <string name="cloud_games_title">Clicker</string>
 
     <!-- Occupation -->
     <string name="cloud_section_usage">Occupation du cloud</string>

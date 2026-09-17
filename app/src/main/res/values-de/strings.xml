@@ -51,8 +51,6 @@
     <string name="games_sync_button">Jetzt synchronisieren</string>
     <string name="games_sync_error">Fehler: %1$s</string>
     <string name="games_sync_in_progress">Wird synchronisiert…</string>
-    <string name="games_sync_section_hint">Synchronisiert den Clicker und die Gacha-Sammlung auf allen deinen Geräten.</string>
-    <string name="games_sync_section_title">Google Drive-Synchronisierung</string>
     <string name="games_sync_success">Synchronisierung erfolgreich</string>
     <string name="games_title">Spiele</string>
     <string name="navidrome">Navidrome</string>
@@ -62,7 +60,6 @@
     <string name="particules_title">Partikel</string>
     <string name="reset_option_clicker">Clicker-Fortschritt (Atome, Käufe)</string>
     <string name="reset_option_periodic">Periodensystem-Sammlung</string>
-    <string name="reset_option_records">Spielrekorde (Highscores)</string>
     <string name="reset_option_stats">Clicker-Statistiken</string>
     <string name="stat_apc_frenzies">APC-Frenzies</string>
     <string name="stat_aps_frenzies">APS-Frenzies</string>

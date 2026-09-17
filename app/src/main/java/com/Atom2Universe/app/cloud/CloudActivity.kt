@@ -20,11 +20,15 @@ import androidx.core.widget.doAfterTextChanged
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.crypto.sync.GamesSyncFile
+import com.Atom2Universe.app.crypto.sync.GamesSyncManager
+import com.Atom2Universe.app.crypto.sync.LayeredNumberData
 import com.Atom2Universe.app.music.sync.BackupManager
 import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.music.sync.SyncResult
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.CoroutineScope
@@ -60,6 +64,8 @@ class CloudActivity : ThemedActivity() {
     private lateinit var switchSync: SwitchMaterial
     private lateinit var lastSyncText: TextView
     private lateinit var btnSyncNow: MaterialButton
+    private lateinit var gamesStatus: TextView
+    private lateinit var btnSyncGames: MaterialButton
 
     private lateinit var backupSection: View
     private lateinit var optionPrimaryDevice: View
@@ -142,6 +148,8 @@ class CloudActivity : ThemedActivity() {
         switchSync = findViewById(R.id.cloud_switch_sync)
         lastSyncText = findViewById(R.id.cloud_last_sync)
         btnSyncNow = findViewById(R.id.cloud_btn_sync_now)
+        gamesStatus = findViewById(R.id.cloud_games_status)
+        btnSyncGames = findViewById(R.id.cloud_btn_sync_games)
 
         backupSection = findViewById(R.id.cloud_backup_section)
         optionPrimaryDevice = findViewById(R.id.cloud_option_primary_device)
@@ -175,6 +183,7 @@ class CloudActivity : ThemedActivity() {
         }
 
         btnSyncNow.setOnClickListener { syncNow() }
+        btnSyncGames.setOnClickListener { syncGames() }
 
         optionPrimaryDevice.setOnClickListener { switchPrimaryDevice.toggle() }
         switchPrimaryDevice.setOnCheckedChangeListener { _, checked ->
@@ -271,6 +280,122 @@ class CloudActivity : ThemedActivity() {
 
             refreshAccountUi()
             loadInventory()
+        }
+    }
+
+    // ==================== Jeux ====================
+
+    /**
+     * La sync des jeux a son propre bouton : elle peut s'arrêter sur une question
+     * (quelle partie du clicker garder ?), ce que la sync automatique de la nuit
+     * ne saurait pas poser. Les records, eux, sont déjà fusionnés quand la question arrive.
+     */
+    private fun syncGames() {
+        if (isBusy) return
+        if (!signInManager.isSignedIn()) {
+            toast(getString(R.string.cloud_sync_not_signed_in))
+            return
+        }
+        scope.launch {
+            isBusy = true
+            btnSyncGames.isEnabled = false
+            gamesStatus.visibility = View.VISIBLE
+            gamesStatus.setText(R.string.games_sync_in_progress)
+
+            val result = GamesSyncManager.syncGames()
+
+            isBusy = false
+            btnSyncGames.isEnabled = true
+            when (result) {
+                is GamesSyncManager.SyncResult.Success ->
+                    gamesStatus.setText(R.string.games_sync_success)
+                is GamesSyncManager.SyncResult.Error ->
+                    gamesStatus.text = getString(R.string.games_sync_error, result.message)
+                is GamesSyncManager.SyncResult.Conflict -> {
+                    gamesStatus.visibility = View.GONE
+                    showGamesConflictDialog(result.local, result.remote)
+                }
+            }
+            loadInventory()
+        }
+    }
+
+    private fun showGamesConflictDialog(local: GamesSyncFile, remote: GamesSyncFile) {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.dialog_games_sync_conflict, null)
+
+        fun fillCard(dateId: Int, atomsId: Int, godId: Int, starId: Int, gachaId: Int, file: GamesSyncFile) {
+            view.findViewById<TextView>(dateId).text = formatDate(file.lastModified)
+
+            val clicker = file.clicker
+            view.findViewById<TextView>(atomsId).text =
+                clicker?.let { formatLayeredNumber(it.atoms) } ?: "—"
+            view.findViewById<TextView>(godId).text = clicker?.godFingerLevel?.toString() ?: "—"
+            view.findViewById<TextView>(starId).text = clicker?.starCoreLevel?.toString() ?: "—"
+
+            val elementCount = file.gacha?.copies?.count { it.value > 0 } ?: 0
+            view.findViewById<TextView>(gachaId).text =
+                getString(R.string.sync_conflict_gacha_count, elementCount)
+        }
+
+        fillCard(
+            R.id.conflict_local_date, R.id.conflict_local_atoms,
+            R.id.conflict_local_god_finger, R.id.conflict_local_star_core, R.id.conflict_local_gacha,
+            local
+        )
+        fillCard(
+            R.id.conflict_remote_date, R.id.conflict_remote_atoms,
+            R.id.conflict_remote_god_finger, R.id.conflict_remote_star_core, R.id.conflict_remote_gacha,
+            remote
+        )
+
+        fun resolve(chosen: GamesSyncFile) {
+            dialog.dismiss()
+            if (isBusy) return
+            scope.launch {
+                isBusy = true
+                btnSyncGames.isEnabled = false
+                gamesStatus.visibility = View.VISIBLE
+                gamesStatus.setText(R.string.games_sync_in_progress)
+
+                // Le clicker n'est pas au premier plan : sa boucle est arrêtée et sa partie
+                // déjà sauvegardée. S'il est resté ouvert derrière, il relira le disque
+                // en revenant (voir GamesSyncManager.restoreGeneration).
+                val result = GamesSyncManager.resolveConflict(chosen)
+
+                isBusy = false
+                btnSyncGames.isEnabled = true
+                gamesStatus.text = when (result) {
+                    is GamesSyncManager.SyncResult.Error -> getString(R.string.games_sync_error, result.message)
+                    else -> getString(R.string.games_sync_success)
+                }
+                loadInventory()
+            }
+        }
+
+        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_local).setOnClickListener { resolve(local) }
+        view.findViewById<MaterialButton>(R.id.conflict_btn_choose_remote).setOnClickListener { resolve(remote) }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    /** Notation courte des grands nombres du clicker (k, M, G, puis exposant). */
+    private fun formatLayeredNumber(n: LayeredNumberData): String {
+        if (n.sign == 0) return "0"
+        val prefix = if (n.sign < 0) "-" else ""
+        return when (n.layer) {
+            0 -> {
+                val exp = n.exponent.toLong()
+                when {
+                    exp < 3  -> String.format("%.0f", n.mantissa * Math.pow(10.0, n.exponent))
+                    exp < 6  -> String.format("%.2fk", n.mantissa * Math.pow(10.0, n.exponent - 3))
+                    exp < 9  -> String.format("%.2fM", n.mantissa * Math.pow(10.0, n.exponent - 6))
+                    exp < 12 -> String.format("%.2fG", n.mantissa * Math.pow(10.0, n.exponent - 9))
+                    else     -> String.format("%.3fe%d", n.mantissa, exp)
+                }.let { prefix + it }
+            }
+            else -> "${prefix}e(e${String.format("%.1f", n.value)})"
         }
     }
 
@@ -692,6 +817,7 @@ class CloudActivity : ThemedActivity() {
         isBusy = busy
         progress.visibility = if (busy) View.VISIBLE else View.GONE
         btnSyncNow.isEnabled = !busy
+        btnSyncGames.isEnabled = !busy
         btnRefresh.isEnabled = !busy
         btnDeleteAll.isEnabled = !busy
         if (busy && labelRes != null) usageTotal.setText(labelRes)

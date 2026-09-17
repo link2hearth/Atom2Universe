@@ -149,6 +149,9 @@ class MainClickerActivity : ThemedActivity() {
         ViewModelProvider(this)[ClickerViewModel::class.java]
     }
 
+    /** La génération de restauration cloud que la partie en mémoire connaît déjà. */
+    private var seenRestoreGeneration = 0L
+
     private lateinit var bannerViewCache: Map<String, Pair<View, View>>
 
     private val widgetLabelRes = mapOf(
@@ -415,6 +418,7 @@ class MainClickerActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        seenRestoreGeneration = com.Atom2Universe.app.crypto.sync.GamesSyncManager.restoreGeneration(this)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (floatingWebWidget.isVisible) {
@@ -661,7 +665,20 @@ class MainClickerActivity : ThemedActivity() {
     override fun onStart() {
         super.onStart()
         applyKeepScreenOnPreference()
-        if (clickerToggle.isChecked) clickerViewModel.startGameLoop()
+        val restoreGeneration = com.Atom2Universe.app.crypto.sync.GamesSyncManager.restoreGeneration(this)
+        if (restoreGeneration != seenRestoreGeneration) {
+            // Une partie a été restaurée depuis l'écran Cloud pendant que le clicker était
+            // en arrière-plan. onStop() a déjà sauvegardé l'ancienne partie AVANT la
+            // restauration : on relit donc le disque, et seulement ensuite on relance la
+            // boucle — sinon sa sauvegarde automatique écraserait la partie restaurée.
+            seenRestoreGeneration = restoreGeneration
+            lifecycleScope.launch {
+                clickerViewModel.reloadFromDisk()
+                if (clickerToggle.isChecked) clickerViewModel.startGameLoop()
+            }
+        } else if (clickerToggle.isChecked) {
+            clickerViewModel.startGameLoop()
+        }
         startRefreshLoop()
         startAstronomyLoop()
         if (MainClickerPreferences.isCryptoEurUsdEnabled(this)) startEurUsdLoop()
@@ -3041,127 +3058,9 @@ class MainClickerActivity : ThemedActivity() {
         bannerList.adapter = bannerAdapter
         touchHelper.attachToRecyclerView(bannerList)
 
-        // ─── Sync Google Drive ───────────────────────────────────────────────
-        val syncBtn    = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.settings_sync_games_btn)
-        val syncStatus = view.findViewById<TextView>(R.id.settings_sync_status)
-        syncBtn.setOnClickListener {
-            syncBtn.isEnabled = false
-            syncStatus.visibility = View.VISIBLE
-            syncStatus.text = getString(R.string.games_sync_in_progress)
-            lifecycleScope.launch {
-                when (val result = com.Atom2Universe.app.crypto.sync.GamesSyncManager.syncGames()) {
-                    is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Success -> {
-                        syncBtn.isEnabled = true
-                        syncStatus.text = getString(R.string.games_sync_success)
-                    }
-                    is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Error -> {
-                        syncBtn.isEnabled = true
-                        syncStatus.text = getString(R.string.games_sync_error, result.message)
-                    }
-                    is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Conflict -> {
-                        syncBtn.isEnabled = true
-                        syncStatus.text = ""
-                        dialog.dismiss()
-                        showSyncConflictDialog(result.local, result.remote)
-                    }
-                }
-            }
-        }
-
         dialog.setOnDismissListener { settingsDialogFolderView = null }
         dialog.setContentView(view)
         dialog.show()
-    }
-
-    // ─── Dialog de conflit de synchronisation ────────────────────────────────
-
-    private fun showSyncConflictDialog(
-        local: com.Atom2Universe.app.crypto.sync.GamesSyncFile,
-        remote: com.Atom2Universe.app.crypto.sync.GamesSyncFile
-    ) {
-        val conflictDialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.dialog_games_sync_conflict, null)
-
-        fun fillCard(
-            dateId: Int, atomsId: Int, godId: Int, starId: Int, gachaId: Int,
-            file: com.Atom2Universe.app.crypto.sync.GamesSyncFile
-        ) {
-            view.findViewById<TextView>(dateId).text =
-                java.text.SimpleDateFormat("d MMM yyyy · HH:mm", java.util.Locale.getDefault())
-                    .format(java.util.Date(file.lastModified))
-
-            val clicker = file.clicker
-            view.findViewById<TextView>(atomsId).text = if (clicker != null)
-                formatLayeredNumber(clicker.atoms) else "—"
-            view.findViewById<TextView>(godId).text  = clicker?.godFingerLevel?.toString() ?: "—"
-            view.findViewById<TextView>(starId).text = clicker?.starCoreLevel?.toString()  ?: "—"
-
-            val elementCount = file.gacha?.copies?.count { it.value > 0 } ?: 0
-            view.findViewById<TextView>(gachaId).text = "$elementCount / 118"
-        }
-
-        fillCard(
-            R.id.conflict_local_date, R.id.conflict_local_atoms,
-            R.id.conflict_local_god_finger, R.id.conflict_local_star_core, R.id.conflict_local_gacha,
-            local
-        )
-        fillCard(
-            R.id.conflict_remote_date, R.id.conflict_remote_atoms,
-            R.id.conflict_remote_god_finger, R.id.conflict_remote_star_core, R.id.conflict_remote_gacha,
-            remote
-        )
-
-        fun resolve(chosen: com.Atom2Universe.app.crypto.sync.GamesSyncFile) {
-            conflictDialog.dismiss()
-            lifecycleScope.launch {
-                // L'ordre est critique. stopGameLoop() se termine par une sauvegarde de
-                // l'état encore en RAM : elle doit partir AVANT que la save choisie ne
-                // soit appliquée, sinon elle l'écraserait aussitôt. Et sans le rechargement
-                // qui suit, l'autosave (toutes les 5 s) réécrirait l'ancienne partie
-                // par-dessus la sauvegarde restaurée.
-                val loopWasRunning = clickerToggle.isChecked
-                clickerViewModel.stopGameLoop()
-
-                val result = com.Atom2Universe.app.crypto.sync.GamesSyncManager.resolveConflict(chosen)
-                if (result is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Success) {
-                    clickerViewModel.reloadFromDisk()
-                }
-                if (loopWasRunning) clickerViewModel.startGameLoop()
-
-                val msg = if (result is com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Success)
-                    getString(R.string.games_sync_success)
-                else
-                    getString(R.string.games_sync_error,
-                        (result as com.Atom2Universe.app.crypto.sync.GamesSyncManager.SyncResult.Error).message)
-                showToast(msg)
-            }
-        }
-
-        view.findViewById<com.google.android.material.button.MaterialButton>(R.id.conflict_btn_choose_local)
-            .setOnClickListener { resolve(local) }
-        view.findViewById<com.google.android.material.button.MaterialButton>(R.id.conflict_btn_choose_remote)
-            .setOnClickListener { resolve(remote) }
-
-        conflictDialog.setContentView(view)
-        conflictDialog.show()
-    }
-
-    private fun formatLayeredNumber(n: com.Atom2Universe.app.crypto.sync.LayeredNumberData): String {
-        if (n.sign == 0) return "0"
-        val prefix = if (n.sign < 0) "-" else ""
-        return when (n.layer) {
-            0 -> {
-                val exp = n.exponent.toLong()
-                when {
-                    exp < 3  -> String.format("%.0f", n.mantissa * Math.pow(10.0, n.exponent))
-                    exp < 6  -> String.format("%.2fk", n.mantissa * Math.pow(10.0, n.exponent - 3))
-                    exp < 9  -> String.format("%.2fM", n.mantissa * Math.pow(10.0, n.exponent - 6))
-                    exp < 12 -> String.format("%.2fG", n.mantissa * Math.pow(10.0, n.exponent - 9))
-                    else     -> String.format("%.3fe%d", n.mantissa, exp)
-                }.let { prefix + it }
-            }
-            else -> "${prefix}e(e${String.format("%.1f", n.value)})"
-        }
     }
 
     // ── Popup durée de défilement (long-press roue crantée) ───────────────────

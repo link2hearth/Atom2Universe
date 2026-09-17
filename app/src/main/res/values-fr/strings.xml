@@ -44,8 +44,6 @@
     <string name="games_coming_soon">À venir</string>
     <string name="games_quiz_title">Quiz</string>
     <string name="games_quiz_desc">Testez vos connaissances</string>
-    <string name="games_sync_section_title">Synchronisation Google Drive</string>
-    <string name="games_sync_section_hint">Synchronise le clicker et la collection gacha sur vos appareils.</string>
     <string name="games_sync_button">Synchroniser maintenant</string>
     <string name="games_sync_success">Synchronisation réussie</string>
     <string name="games_sync_in_progress">Synchronisation…</string>
@@ -58,6 +56,7 @@
     <string name="sync_conflict_god_finger_label">Niveau God Finger</string>
     <string name="sync_conflict_star_core_label">Niveau Star Core</string>
     <string name="sync_conflict_gacha_label">Éléments Gacha</string>
+    <string name="sync_conflict_gacha_count">%1$d / 118</string>
     <string name="sync_conflict_choose_local">Garder cet appareil</string>
     <string name="sync_conflict_choose_remote">Garder Google Drive</string>
     <string name="particules_title">Particules</string>
@@ -138,6 +137,5 @@
     <string name="reset_option_stats">Statistiques Clicker</string>
     <string name="reset_option_periodic">Collection du tableau périodique</string>
     <string name="reset_option_clicker">Progression du clicker (atomes, achats)</string>
-    <string name="reset_option_records">Records des jeux (meilleurs scores)</string>
     <string name="stats_reset_word_hint">Écrivez « reset » pour confirmer</string>
 </resources>

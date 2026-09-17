@@ -51,8 +51,6 @@
     <string name="games_sync_button">Şimdi eşitle</string>
     <string name="games_sync_error">Hata: %1$s</string>
     <string name="games_sync_in_progress">Eşitleniyor…</string>
-    <string name="games_sync_section_hint">Tüm cihazlarında clicker ve gacha koleksiyonunu eşitler.</string>
-    <string name="games_sync_section_title">Google Drive eşitleme</string>
     <string name="games_sync_success">Eşitleme başarılı</string>
     <string name="games_title">Oyunlar</string>
     <string name="navidrome">Navidrome</string>
@@ -62,7 +60,6 @@
     <string name="particules_title">Parçacıklar</string>
     <string name="reset_option_clicker">Clicker ilerlemesi (atomlar, satın almalar)</string>
     <string name="reset_option_periodic">Periyodik tablo koleksiyonu</string>
-    <string name="reset_option_records">Oyun rekorları</string>
     <string name="reset_option_stats">Clicker İstatistikleri</string>
     <string name="stat_apc_frenzies">APC çılgınlıkları</string>
     <string name="stat_aps_frenzies">APS çılgınlıkları</string>

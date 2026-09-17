@@ -16,6 +16,7 @@ import com.Atom2Universe.app.music.MusicFavoritesManager
 import com.Atom2Universe.app.music.MusicPlaylistManager
 import com.Atom2Universe.app.readingprogress.sync.ReadingProgressSyncManager
 import com.Atom2Universe.app.stats.sync.StatsSyncManager
+import com.Atom2Universe.app.crypto.sync.GamesSyncManager
 import com.Atom2Universe.app.music.data.MusicDatabase
 import com.Atom2Universe.app.music.sync.algorithm.AlbumFavoritesMerger
 import com.Atom2Universe.app.music.sync.algorithm.ArtistFavoritesMerger
@@ -437,6 +438,15 @@ object CloudSyncManager {
             } catch (e: Exception) {
                 Log.e(TAG, "Reading progress sync failed (non-critical)", e)
                 // Continue sync even if progress sync fails
+            }
+
+            // Phase 3.7 : records, compteurs et suppressions des jeux. Jamais la partie du
+            // clicker : elle peut demander un choix, qu'une sync de nuit ne saurait pas poser.
+            try {
+                val gamesResult = GamesSyncManager.syncSharedStats()
+                Log.d(TAG, "Games shared stats sync: $gamesResult")
+            } catch (e: Exception) {
+                Log.e(TAG, "Games shared stats sync failed (non-critical)", e)
             }
 
             // Phase 4: Backup (if primary device)

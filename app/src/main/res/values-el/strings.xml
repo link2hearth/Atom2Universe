@@ -44,8 +44,6 @@
     <string name="games_coming_soon">Σύντομα</string>
     <string name="games_quiz_title">Quiz</string>
     <string name="games_quiz_desc">Δοκιμάστε τις γνώσεις σας</string>
-    <string name="games_sync_section_title">Συγχρονισμός Google Drive</string>
-    <string name="games_sync_section_hint">Συγχρονίζει το clicker και τη συλλογή gacha σε όλες τις συσκευές σας.</string>
     <string name="games_sync_button">Συγχρονισμός τώρα</string>
     <string name="games_sync_success">Ο συγχρονισμός ολοκληρώθηκε</string>
     <string name="games_sync_in_progress">Συγχρονισμός…</string>
@@ -137,7 +135,6 @@
     <string name="reset_option_stats">Στατιστικά Clicker</string>
     <string name="reset_option_periodic">Συλλογή περιοδικού πίνακα</string>
     <string name="reset_option_clicker">Εξέλιξη clicker (άτομα, αγορές)</string>
-    <string name="reset_option_records">Ρεκόρ παιχνιδιού (υψηλές βαθμολογίες)</string>
     <string name="stats_reset_word_hint">Πληκτρολογήστε «reset» για επιβεβαίωση</string>
     <string name="quiz_search_google">Αναζήτηση στο Google</string>
 </resources>

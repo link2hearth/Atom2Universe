@@ -51,8 +51,6 @@
     <string name="games_sync_button">Sincronizza ora</string>
     <string name="games_sync_error">Errore: %1$s</string>
     <string name="games_sync_in_progress">Sincronizzazione…</string>
-    <string name="games_sync_section_hint">Sincronizza il clicker e la collezione gacha su tutti i tuoi dispositivi.</string>
-    <string name="games_sync_section_title">Sincronizzazione Google Drive</string>
     <string name="games_sync_success">Sincronizzazione riuscita</string>
     <string name="games_title">Giochi</string>
     <string name="navidrome">Navidrome</string>
@@ -62,7 +60,6 @@
     <string name="particules_title">Particelle</string>
     <string name="reset_option_clicker">Progressi clicker (atomi, acquisti)</string>
     <string name="reset_option_periodic">Collezione tavola periodica</string>
-    <string name="reset_option_records">Record di gioco</string>
     <string name="reset_option_stats">Statistiche Clicker</string>
     <string name="stat_apc_frenzies">Frenzies APC</string>
     <string name="stat_aps_frenzies">Frenzies APS</string>

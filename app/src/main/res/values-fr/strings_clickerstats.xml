@@ -49,4 +49,12 @@
     <string name="stat_circles_diff">Circles – %1$s</string>
     <string name="stat_moves_format">%1$d coups</string>
     <string name="stat_solved_format">%1$d résolus</string>
+    <string name="stat_delete_record">Supprimer ce record</string>
+    <string name="stat_reset_counter">Remettre à zéro</string>
+    <string name="stat_device_this">Cet appareil</string>
+    <string name="stat_device_line">%1$s : %2$s</string>
+    <string name="stat_delete_confirm_title">Supprimer ?</string>
+    <string name="stat_delete_confirm_message">Supprimé tout de suite sur cet appareil, puis du cloud et de vos autres appareils à leur prochaine synchronisation des jeux.</string>
+    <string name="stat_delete_confirm_ok">Supprimer</string>
+    <string name="stat_delete_cancel">Annuler</string>
 </resources>

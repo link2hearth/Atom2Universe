@@ -51,8 +51,6 @@
     <string name="games_sync_button">Sinkronkan sekarang</string>
     <string name="games_sync_error">Galat: %1$s</string>
     <string name="games_sync_in_progress">Menyinkronkan…</string>
-    <string name="games_sync_section_hint">Menyinkronkan clicker dan koleksi gacha di semua perangkat Anda.</string>
-    <string name="games_sync_section_title">Sinkronisasi Google Drive</string>
     <string name="games_sync_success">Sinkronisasi berhasil</string>
     <string name="games_title">Permainan</string>
     <string name="navidrome">Navidrome</string>
@@ -62,7 +60,6 @@
     <string name="particules_title">Partikel</string>
     <string name="reset_option_clicker">Progres clicker (atom, pembelian)</string>
     <string name="reset_option_periodic">Koleksi tabel periodik</string>
-    <string name="reset_option_records">Rekor permainan</string>
     <string name="reset_option_stats">Statistik Clicker</string>
     <string name="stat_apc_frenzies">Frenzy APC</string>
     <string name="stat_aps_frenzies">Frenzy APS</string>

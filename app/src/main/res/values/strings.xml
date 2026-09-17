@@ -44,8 +44,6 @@
     <string name="games_coming_soon">Coming soon</string>
     <string name="games_quiz_title">Quiz</string>
     <string name="games_quiz_desc">Test your knowledge</string>
-    <string name="games_sync_section_title">Google Drive sync</string>
-    <string name="games_sync_section_hint">Syncs the clicker and gacha collection across your devices.</string>
     <string name="games_sync_button">Sync now</string>
     <string name="games_sync_success">Sync successful</string>
     <string name="games_sync_in_progress">Syncing…</string>
@@ -58,6 +56,7 @@
     <string name="sync_conflict_god_finger_label">God Finger lvl.</string>
     <string name="sync_conflict_star_core_label">Star Core lvl.</string>
     <string name="sync_conflict_gacha_label">Gacha elements</string>
+    <string name="sync_conflict_gacha_count">%1$d / 118</string>
     <string name="sync_conflict_choose_local">Keep this device</string>
     <string name="sync_conflict_choose_remote">Keep Google Drive</string>
     <string name="particules_title">Particles</string>
@@ -138,6 +137,5 @@
     <string name="reset_option_stats">Clicker Statistics</string>
     <string name="reset_option_periodic">Periodic table collection</string>
     <string name="reset_option_clicker">Clicker progression (atoms, purchases)</string>
-    <string name="reset_option_records">Game records (high scores)</string>
     <string name="stats_reset_word_hint">Type "reset" to confirm</string>
 </resources>

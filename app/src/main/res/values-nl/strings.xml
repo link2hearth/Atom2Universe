@@ -51,8 +51,6 @@
     <string name="games_sync_button">Nu synchroniseren</string>
     <string name="games_sync_error">Fout: %1$s</string>
     <string name="games_sync_in_progress">Synchroniseren…</string>
-    <string name="games_sync_section_hint">Synchroniseert de clicker en gachacollectie op al je apparaten.</string>
-    <string name="games_sync_section_title">Google Drive-synchronisatie</string>
     <string name="games_sync_success">Synchronisatie geslaagd</string>
     <string name="games_title">Spellen</string>
     <string name="navidrome">Navidrome</string>
@@ -62,7 +60,6 @@
     <string name="particules_title">Deeltjes</string>
     <string name="reset_option_clicker">Clickervoortgang (atomen, aankopen)</string>
     <string name="reset_option_periodic">Periodiek systeemcollectie</string>
-    <string name="reset_option_records">Spelrecords</string>
     <string name="reset_option_stats">Clicker-statistieken</string>
     <string name="stat_apc_frenzies">APC-frenzies</string>
     <string name="stat_aps_frenzies">APS-frenzies</string>

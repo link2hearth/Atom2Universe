@@ -13,21 +13,24 @@ import com.Atom2Universe.app.crypto.clicker.ElementTokenRepository
 import com.Atom2Universe.app.crypto.clicker.FactoryRepository
 import com.Atom2Universe.app.crypto.clicker.FactoryType
 import com.Atom2Universe.app.crypto.clicker.GachaTicketStateEntity
-import com.Atom2Universe.app.crypto.clicker.GameStats
-import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.fusion.FusionRecipe
 import com.Atom2Universe.app.crypto.fusion.FusionStore
+import com.Atom2Universe.app.music.sync.DeviceIdentity
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 object GamesSyncManager {
 
     private const val TAG = "GamesSyncManager"
     private const val SYNC_FILE = "games_state.json"
+    private const val RESTORE_PREFS = "games_sync_state"
+    private const val KEY_RESTORE_GENERATION = "restore_generation"
 
     private lateinit var appContext: Context
     private var isInitialized = false
@@ -48,8 +51,45 @@ object GamesSyncManager {
         data class Error(val message: String) : SyncResult()
     }
 
+    /**
+     * Augmente à chaque partie restaurée depuis le cloud. Le clicker note la valeur
+     * à son ouverture ; s'il la retrouve changée en revenant au premier plan, il
+     * relit le disque au lieu de continuer avec la partie qu'il avait en mémoire.
+     */
+    fun restoreGeneration(context: Context): Long =
+        context.getSharedPreferences(RESTORE_PREFS, Context.MODE_PRIVATE)
+            .getLong(KEY_RESTORE_GENERATION, 0L)
+
     // ─── Point d'entrée : sync initial ───────────────────────────────────────
 
+    /**
+     * Records, compteurs et suppressions ne demandent jamais rien à personne : la sync
+     * manuelle et la sync automatique passent toutes deux par ici. Le mutex empêche
+     * les deux de se croiser (la nuit, ou pendant qu'on appuie sur le bouton).
+     */
+    private val mutex = Mutex()
+
+    /** Les parts partagées, fusionnées, prêtes à être posées sur n'importe quel fichier. */
+    private data class SharedParts(
+        val highScores: HighScoresSyncData,
+        val devices: Map<String, DeviceCountersData>,
+        val resets: Map<String, Long>
+    )
+
+    private fun GamesSyncFile.withShared(parts: SharedParts) =
+        copy(highScores = parts.highScores, devices = parts.devices, resets = parts.resets)
+
+    /**
+     * Deux règles pour deux sortes de données.
+     *
+     * - La partie du clicker (atomes, usines, gacha, neutrinos…) forme un tout : mélanger
+     *   deux parties donnerait une partie qui n'a jamais existé. Si elles diffèrent,
+     *   l'utilisateur choisit laquelle garder.
+     * - Les records et les compteurs, eux, se fusionnent sans question (voir [mergeShared]).
+     *
+     * Records et compteurs sont réglés AVANT la question du clicker, pour que refuser
+     * de choisir ne prive de rien.
+     */
     suspend fun syncGames(): SyncResult = withContext(Dispatchers.IO) {
         if (!isInitialized) return@withContext SyncResult.Error("Not initialized")
 
@@ -57,37 +97,123 @@ object GamesSyncManager {
             val driveClient = getDriveClient()
                 ?: return@withContext SyncResult.Error("Non connecté à Google")
 
-            val localFile = buildLocalSyncFile()
+            mutex.withLock {
+                val remoteRaw = readRemote(driveClient)
+                val shared = mergeShared(remoteRaw)
+                val localFile = buildLocalSyncFile().withShared(shared)
 
-            // Télécharger l'état Drive
-            Log.d(TAG, "Téléchargement depuis Drive…")
-            val remoteFile = driveClient.readJsonFile(SYNC_FILE)?.let {
-                try { GamesSyncFile.fromJson(it) } catch (e: Exception) {
-                    Log.e(TAG, "Erreur parsing remote", e); null
+                // Pas de partie dans le cloud (jamais synchronisé, ou seule la sync
+                // automatique est passée) → on publie la nôtre, sans question.
+                if (remoteRaw?.clicker == null) {
+                    driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())
+                    Log.d(TAG, "Aucune partie dans le cloud — partie locale publiée")
+                    return@withLock SyncResult.Success("Sauvegarde initiale envoyée sur Drive")
                 }
+
+                // Les parties sont identiques → on publie records et compteurs à jour
+                if (!conflictExists(localFile, remoteRaw)) {
+                    driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())
+                    Log.d(TAG, "Parties identiques, records et compteurs publiés")
+                    return@withLock SyncResult.Success("Déjà à jour")
+                }
+
+                // Les parts partagées du cloud sont publiées tout de suite, sans toucher à sa
+                // partie : si l'utilisateur ferme la question sans choisir, rien n'est perdu.
+                val remoteFile = remoteRaw.withShared(shared)
+                driveClient.writeJsonFile(SYNC_FILE, remoteFile.toJson())
+
+                Log.d(TAG, "Conflit détecté — demande utilisateur")
+                SyncResult.Conflict(local = localFile, remote = remoteFile)
             }
-
-            // Pas de save distante → premier sync, on uploade silencieusement
-            if (remoteFile == null) {
-                driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())
-                Log.d(TAG, "Premier sync — sauvegarde locale uploadée")
-                return@withContext SyncResult.Success("Sauvegarde initiale envoyée sur Drive")
-            }
-
-            // Les deux saves sont identiques → rien à faire
-            if (!conflictExists(localFile, remoteFile)) {
-                Log.d(TAG, "Saves identiques, aucune action")
-                return@withContext SyncResult.Success("Déjà à jour")
-            }
-
-            // Conflit détecté → l'utilisateur doit choisir
-            Log.d(TAG, "Conflit détecté — demande utilisateur")
-            SyncResult.Conflict(local = localFile, remote = remoteFile)
-
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sync", e)
             SyncResult.Error("Erreur : ${e.message}")
         }
+    }
+
+    /**
+     * La part automatique : records, compteurs et suppressions, jamais la partie du
+     * clicker. Appelée par la sync de la nuit et celle qui suit une écoute.
+     *
+     * Si le cloud n'a encore aucun fichier, on n'y publie que les parts partagées :
+     * la partie du clicker attend que l'utilisateur la synchronise lui-même.
+     */
+    suspend fun syncSharedStats(): SyncResult = withContext(Dispatchers.IO) {
+        if (!isInitialized) return@withContext SyncResult.Error("Not initialized")
+
+        try {
+            val driveClient = getDriveClient()
+                ?: return@withContext SyncResult.Error("Non connecté à Google")
+
+            mutex.withLock {
+                val remoteRaw = readRemote(driveClient)
+                val shared = mergeShared(remoteRaw)
+                val base = remoteRaw ?: GamesSyncFile(lastModified = System.currentTimeMillis())
+                driveClient.writeJsonFile(SYNC_FILE, base.withShared(shared).toJson())
+                Log.d(TAG, "Records et compteurs synchronisés (auto)")
+                SyncResult.Success("Records et compteurs synchronisés")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Erreur sync auto", e)
+            SyncResult.Error("Erreur : ${e.message}")
+        }
+    }
+
+    private suspend fun readRemote(driveClient: GoogleDriveAppDataClient): GamesSyncFile? {
+        Log.d(TAG, "Téléchargement depuis Drive…")
+        return driveClient.readJsonFile(SYNC_FILE)?.let {
+            try { GamesSyncFile.fromJson(it) } catch (e: Exception) {
+                Log.e(TAG, "Erreur parsing remote", e); null
+            }
+        }
+    }
+
+    /**
+     * Fusionne les parts partagées du cloud avec celles d'ici, applique le résultat
+     * localement, et le renvoie pour publication.
+     */
+    private suspend fun mergeShared(remoteRaw: GamesSyncFile?): SharedParts {
+        // 1. Suppressions. Une suppression faite ailleurs et inconnue ici efface la
+        //    valeur locale ; une suppression faite ici et inconnue du cloud écarte la
+        //    valeur du cloud. On compare motif par motif, la date la plus récente gagne.
+        val localResets = SharedGameStats.resets(appContext)
+        val remoteResets = remoteRaw?.resets ?: emptyMap()
+        val newerHere = localResets.filter { (p, at) -> at > (remoteResets[p] ?: 0L) }.keys
+        remoteResets.forEach { (pattern, at) ->
+            if (at > (localResets[pattern] ?: 0L)) SharedGameStats.eraseLocal(appContext, pattern)
+        }
+        val mergedResets = (localResets.keys + remoteResets.keys).associateWith {
+            maxOf(localResets[it] ?: 0L, remoteResets[it] ?: 0L)
+        }
+        SharedGameStats.saveResets(appContext, mergedResets)
+
+        // 2. Tableau général : le meilleur des deux côtés, appliqué tout de suite ici.
+        val remoteScores = remoteRaw?.highScores?.let { scores ->
+            HighScoresSyncData(scores.values.filterKeys { id ->
+                newerHere.none { SharedGameStats.patternMatches(it, id) }
+            })
+        }
+        val bestScores = HighScoresSyncData.merge(readHighScores(), remoteScores)
+        writeHighScores(bestScores)
+
+        // 3. Compteurs : les autres appareils tels que le cloud les connaît, sans ce
+        //    qu'une suppression plus récente que leur dernière publication a effacé.
+        val myId = DeviceIdentity.getDeviceId(appContext)
+        val others = (remoteRaw?.devices ?: emptyMap())
+            .filterKeys { it != myId }
+            .mapValues { (_, device) ->
+                device.copy(counters = device.counters.filter { (id, _) ->
+                    SharedGameStats.resetTimeFor(mergedResets, id) <= device.updatedAt
+                })
+            }
+        SharedGameStats.saveOtherDevices(appContext, others)
+        val devices = others + (myId to DeviceCountersData(
+            name      = SharedGameStats.deviceName(appContext),
+            updatedAt = System.currentTimeMillis(),
+            counters  = SharedGameStats.readLocalCounters(appContext)
+        ))
+
+        return SharedParts(bestScores, devices, mergedResets)
     }
 
     // ─── Résolution du conflit par l'utilisateur ──────────────────────────────
@@ -97,16 +223,28 @@ object GamesSyncManager {
             val driveClient = getDriveClient()
                 ?: return@withContext SyncResult.Error("Non connecté à Google")
 
-            // Uploader la save choisie
-            val uploaded = driveClient.writeJsonFile(SYNC_FILE, chosen.toJson())
-            if (!uploaded) return@withContext SyncResult.Error("Échec de l'upload")
+            mutex.withLock {
+                // La question a pu rester ouverte longtemps, et la sync automatique passer
+                // entre-temps : on refusionne les parts partagées plutôt que de publier
+                // celles, périmées, que portait le fichier choisi.
+                val shared = mergeShared(readRemote(driveClient))
+                val finalFile = chosen.withShared(shared)
 
-            // Appliquer localement
-            applyLocally(chosen)
+                // Uploader la save choisie
+                val uploaded = driveClient.writeJsonFile(SYNC_FILE, finalFile.toJson())
+                if (!uploaded) return@withLock SyncResult.Error("Échec de l'upload")
 
-            Log.d(TAG, "Conflit résolu, save appliquée")
-            SyncResult.Success("Synchronisation réussie")
+                // Appliquer localement
+                applyLocally(finalFile)
+                // Un clicker resté ouvert en arrière-plan tient encore l'ancienne partie en
+                // mémoire : sans ce signal, sa sauvegarde automatique l'écrirait par-dessus.
+                appContext.getSharedPreferences(RESTORE_PREFS, Context.MODE_PRIVATE).edit {
+                    putLong(KEY_RESTORE_GENERATION, restoreGeneration(appContext) + 1)
+                }
 
+                Log.d(TAG, "Conflit résolu, save appliquée")
+                SyncResult.Success("Synchronisation réussie")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur résolution conflit", e)
             SyncResult.Error("Erreur : ${e.message}")
@@ -155,8 +293,7 @@ object GamesSyncManager {
         if ((local.achievements ?: emptyList()).toSet() !=
             (remote.achievements ?: emptyList()).toSet()) return true
 
-        if ((local.highScores?.values ?: emptyMap<String, Double>()) !=
-            (remote.highScores?.values ?: emptyMap<String, Double>())) return true
+        // Les records ne sont pas comparés ici : ils se fusionnent, sans conflit possible.
 
         val lf = local.fusion
         val rf = remote.fusion
@@ -183,8 +320,7 @@ object GamesSyncManager {
         // Conflit tickets gacha
         if (local.gachaTickets?.totalTickets != remote.gachaTickets?.totalTickets) return true
 
-        // Conflit stats de jeux
-        if (local.gameStats != remote.gameStats) return true
+        // Les stats de parties ne sont plus comparées : elles s'additionnent par appareil.
 
         return false
     }
@@ -222,27 +358,6 @@ object GamesSyncManager {
         val gachaTickets = ticketEntity?.let {
             GachaTicketSyncData(totalTickets = it.totalTickets, lastTicketAwardMs = it.lastTicketAwardMs)
         }
-
-        val rawStats = GameStatsRepository(appContext).load()
-        val gameStats = GameStatsSyncData(
-            solitairePlayed      = rawStats.solitairePlayed,
-            solitaireWon         = rawStats.solitaireWon,
-            colorStackHardPlayed = rawStats.colorStackHardPlayed,
-            colorStackHardWon    = rawStats.colorStackHardWon,
-            colorStackHardBestMs = rawStats.colorStackHardBestMs,
-            sudokuPlayed         = rawStats.sudokuPlayed,
-            sudokuWon            = rawStats.sudokuWon,
-            chessPlayed          = rawStats.chessPlayed,
-            chessWon             = rawStats.chessWon,
-            draughtsPlayed       = rawStats.draughtsPlayed,
-            draughtsWon          = rawStats.draughtsWon,
-            game2048Played       = rawStats.game2048Played,
-            game2048Won          = rawStats.game2048Won,
-            blackjackPlayed      = rawStats.blackjackPlayed,
-            blackjackWon         = rawStats.blackjackWon,
-            pipeTapHardWon       = rawStats.pipeTapHardWon,
-            hexRunnerBestMs      = rawStats.hexRunnerBestMs
-        )
 
         // Usines et Big Bang : on ne stocke que les entrées non nulles pour garder le
         // fichier compact. La restauration remet explicitement à 0 les absentes.
@@ -288,7 +403,6 @@ object GamesSyncManager {
             gacha         = GachaSyncData(copies, totalEver, fusionCopies),
             elementTokens = elementTokens,
             gachaTickets  = gachaTickets,
-            gameStats     = gameStats,
             neutrinos         = neutrinoRepo.getBalance(),
             lifetimeNeutrinos = neutrinoRepo.getLifetimeNeutrinos(),
             factories     = factories,
@@ -355,11 +469,6 @@ object GamesSyncManager {
             }
         }
 
-        file.highScores?.let { data ->
-            writeHighScores(data)
-            Log.d(TAG, "Records appliqués (${data.values.size})")
-        }
-
         // Comme pour les usines : les recettes absentes du fichier sont remises à 0,
         // sinon les compteurs locaux survivraient à la restauration.
         file.fusion?.let { data ->
@@ -407,29 +516,11 @@ object GamesSyncManager {
             Log.d(TAG, "Tickets gacha appliqués (${t.totalTickets})")
         }
 
-        file.gameStats?.let { s ->
-            GameStatsRepository(appContext).save(
-                GameStats(
-                    solitairePlayed      = s.solitairePlayed,
-                    solitaireWon         = s.solitaireWon,
-                    colorStackHardPlayed = s.colorStackHardPlayed,
-                    colorStackHardWon    = s.colorStackHardWon,
-                    colorStackHardBestMs = s.colorStackHardBestMs,
-                    sudokuPlayed         = s.sudokuPlayed,
-                    sudokuWon            = s.sudokuWon,
-                    chessPlayed          = s.chessPlayed,
-                    chessWon             = s.chessWon,
-                    draughtsPlayed       = s.draughtsPlayed,
-                    draughtsWon          = s.draughtsWon,
-                    game2048Played       = s.game2048Played,
-                    game2048Won          = s.game2048Won,
-                    blackjackPlayed      = s.blackjackPlayed,
-                    blackjackWon         = s.blackjackWon,
-                    pipeTapHardWon       = s.pipeTapHardWon,
-                    hexRunnerBestMs      = s.hexRunnerBestMs
-                )
-            )
-            Log.d(TAG, "Stats de jeux appliquées")
+        // Records : déjà fusionnés dans les deux fichiers proposés, writeHighScores
+        // n'écrit que ce qui améliore l'existant.
+        file.highScores?.let { data ->
+            writeHighScores(data)
+            Log.d(TAG, "Records appliqués (${data.values.size})")
         }
     }
 
@@ -482,30 +573,53 @@ object GamesSyncManager {
 
     // ─── High scores : lecture/écriture des SharedPreferences des jeux ────────
 
-    private fun readHighScores(): HighScoresSyncData {
+    private suspend fun readHighScores(): HighScoresSyncData {
         val values = mutableMapOf<String, Double>()
+        // Particules : ses records sont dans sa base Room, pas dans des préférences.
+        ParticulesRecords.read(appContext).forEach { (key, v) ->
+            if (HIGH_SCORE_KEYS.any { it.matches(ParticulesRecords.SOURCE, key) }) {
+                values[highScoreId(ParticulesRecords.SOURCE, key)] = v
+            }
+        }
         HIGH_SCORE_KEYS.forEach { k ->
+            if (k.prefsName == ParticulesRecords.SOURCE) return@forEach
             val p = appContext.getSharedPreferences(k.prefsName, Context.MODE_PRIVATE)
-            // Jamais joué : on n'invente pas un score de 0, on laisse la clé absente.
-            if (!p.contains(k.key)) return@forEach
-            values[k.id] = when (k.type) {
-                HighScoreType.INT   -> p.getInt(k.key, 0).toDouble()
-                HighScoreType.LONG  -> p.getLong(k.key, 0L).toDouble()
-                HighScoreType.FLOAT -> p.getFloat(k.key, 0f).toDouble()
+            // Jamais joué : la clé est absente (ou vaut 0), on n'invente pas de score.
+            p.all.forEach { (key, raw) ->
+                if (!k.matches(k.prefsName, key)) return@forEach
+                val v = (raw as? Number)?.toDouble() ?: return@forEach
+                if (v > 0.0) values[highScoreId(k.prefsName, key)] = v
             }
         }
         return HighScoresSyncData(values)
     }
 
-    private fun writeHighScores(data: HighScoresSyncData) {
-        HIGH_SCORE_KEYS.forEach { k ->
-            // Absent de la sauvegarde choisie : on ne touche pas au record local.
-            val v = data.values[k.id] ?: return@forEach
-            appContext.getSharedPreferences(k.prefsName, Context.MODE_PRIVATE).edit {
+    /** N'écrit que ce qui améliore le record local : relancer la sync ne dégrade jamais rien. */
+    private suspend fun writeHighScores(data: HighScoresSyncData) {
+        val particules = ParticulesRecords.read(appContext)
+        data.values.forEach { (id, v) ->
+            // Inconnu de cette version : on ne sait ni où ni sous quel type l'écrire.
+            val (k, key) = findHighScoreKey(id) ?: return@forEach
+            if (v <= 0.0) return@forEach
+            val isParticules = k.prefsName == ParticulesRecords.SOURCE
+            val p = appContext.getSharedPreferences(k.prefsName, Context.MODE_PRIVATE)
+            val current = if (isParticules) {
+                particules[key]
+            } else {
+                (p.all[key] as? Number)?.toDouble()?.takeIf { it > 0.0 }
+            }
+            val improves = current == null ||
+                if (k.better == RecordDirection.LOWER) v < current else v > current
+            if (!improves) return@forEach
+            if (isParticules) {
+                ParticulesRecords.write(appContext, key, v)
+                return@forEach
+            }
+            p.edit {
                 when (k.type) {
-                    HighScoreType.INT   -> putInt(k.key, v.toInt())
-                    HighScoreType.LONG  -> putLong(k.key, v.toLong())
-                    HighScoreType.FLOAT -> putFloat(k.key, v.toFloat())
+                    HighScoreType.INT   -> putInt(key, v.toInt())
+                    HighScoreType.LONG  -> putLong(key, v.toLong())
+                    HighScoreType.FLOAT -> putFloat(key, v.toFloat())
                 }
             }
         }

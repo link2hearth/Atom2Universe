@@ -185,6 +185,43 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Jeux : le choix de partie pour le clicker, la fusion pour les records -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CloudCard">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cloud_games_title"
+                            android:textColor="@color/startup_text_primary"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/cloud_games_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:textColor="@color/startup_text_secondary"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/cloud_btn_sync_games"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/games_sync_button" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
             </LinearLayout>
 
             <!-- ==================== SAUVEGARDE ==================== -->

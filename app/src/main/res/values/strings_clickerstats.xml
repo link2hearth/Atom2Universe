@@ -29,6 +29,14 @@
     <string name="stat_circles_diff">Circles – %1$s</string>
     <string name="stat_moves_format">%1$d moves</string>
     <string name="stat_solved_format">%1$d solved</string>
+    <string name="stat_delete_record">Delete this record</string>
+    <string name="stat_reset_counter">Reset to zero</string>
+    <string name="stat_device_this">This device</string>
+    <string name="stat_device_line">%1$s: %2$s</string>
+    <string name="stat_delete_confirm_title">Delete?</string>
+    <string name="stat_delete_confirm_message">Deleted on this device now, then from the cloud and your other devices at their next games sync.</string>
+    <string name="stat_delete_confirm_ok">Delete</string>
+    <string name="stat_delete_cancel">Cancel</string>
     <string name="clicker_stats_title">Game Stats</string>
     <string name="stat_section_wins">Victories</string>
     <string name="stat_section_records">Records</string>
