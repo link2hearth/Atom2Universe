@@ -410,7 +410,7 @@ object CloudSyncManager {
             // Phase 3: Upload
             uploadListenEvents(client)
             uploadFavorites(client)
-            uploadLyrics(client)
+            uploadLyrics(client, cloudLyrics)
             uploadEqPresets(client)
             uploadPlaylists(client)
             uploadAlbumFavorites(client)
@@ -536,19 +536,20 @@ object CloudSyncManager {
     }
 
     /**
-     * Downloads lyrics file if newer than local.
+     * Télécharge le fichier des paroles, une seule fois par sync : la fusion et l'envoi
+     * s'en servent tous les deux.
+     *
+     * @return le fichier (vide s'il n'existe pas encore), ou null s'il est illisible.
+     *   Dans ce dernier cas l'envoi est sauté : renvoyer nos seules paroles écraserait
+     *   celles des autres appareils.
      */
-    private suspend fun downloadLyrics(client: GoogleDriveAppDataClient): LyricsSyncFile {
-        val json = client.readJsonFile(LyricsSyncFile.FILENAME)
-        return if (json != null) {
-            try {
-                LyricsSyncFile.fromJson(JSONObject(json))
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing lyrics", e)
-                LyricsSyncFile.empty()
-            }
-        } else {
-            LyricsSyncFile.empty()
+    private suspend fun downloadLyrics(client: GoogleDriveAppDataClient): LyricsSyncFile? {
+        val json = client.readJsonFile(LyricsSyncFile.FILENAME) ?: return LyricsSyncFile.empty()
+        return try {
+            LyricsSyncFile.fromJson(JSONObject(json))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error parsing lyrics", e)
+            null
         }
     }
 
@@ -563,8 +564,8 @@ object CloudSyncManager {
     /**
      * Merges cloud lyrics with local data.
      */
-    private suspend fun mergeLyrics(cloudLyrics: LyricsSyncFile) {
-        if (cloudLyrics.lyrics.isEmpty()) return
+    private suspend fun mergeLyrics(cloudLyrics: LyricsSyncFile?) {
+        if (cloudLyrics == null || cloudLyrics.lyrics.isEmpty()) return
         LyricsMerger.merge(appContext, cloudLyrics)
     }
 
@@ -932,32 +933,42 @@ object CloudSyncManager {
     /**
      * Uploads lyrics to Google Drive.
      * Merges local lyrics (including deletions) with cloud data for proper sync.
+     *
+     * Le cloud ne porte que les paroles trouvées en ligne ou saisies à la main. Celles
+     * lues dans le tag d'un MP3 y étaient envoyées autrefois : elles sont retirées ici,
+     * à chaque envoi, et le fichier maigrit tout seul.
+     *
+     * Chaque entrée n'y reste que 90 jours après son ajout, sa modification ou sa
+     * suppression ([LyricsMerger.CLOUD_RETENTION_MS]) : le temps que tous les appareils
+     * la reçoivent. Les appareils qui l'ont reçue la gardent ; le cloud, non.
      */
-    private suspend fun uploadLyrics(client: GoogleDriveAppDataClient) {
-        val localLyrics = LyricsMerger.getLocalLyrics(appContext)
-
-        // Download existing cloud lyrics to merge
-        val cloudJson = client.readJsonFile(LyricsSyncFile.FILENAME)
-        val cloudLyrics = if (cloudJson != null) {
-            try {
-                LyricsSyncFile.fromJson(JSONObject(cloudJson)).lyrics
-            } catch (_: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
+    private suspend fun uploadLyrics(client: GoogleDriveAppDataClient, cloudFile: LyricsSyncFile?) {
+        if (cloudFile == null) {
+            Log.w(TAG, "Cloud lyrics unreadable, upload skipped")
+            return
         }
+        val localLyrics = LyricsMerger.getLocalLyrics(appContext)
+        val cloudLyrics = cloudFile.lyrics
 
         // Merge: local takes precedence, but preserve cloud entries not in local
         val mergedMap = mutableMapOf<String, SyncLyricsEntry>()
 
+        val cutoff = System.currentTimeMillis() - LyricsMerger.CLOUD_RETENTION_MS
+
         // Start with cloud lyrics
         for (cloudEntry in cloudLyrics) {
+            // Lues dans un fichier : chaque appareil les a déjà dans son propre MP3.
+            if (cloudEntry.source == LyricsMerger.SOURCE_FILE) continue
+            // Plus de 90 jours : tous les appareils ont eu le temps de la recevoir.
+            if (cloudEntry.getLastModifiedTimestamp() < cutoff) continue
             mergedMap[cloudEntry.key] = cloudEntry
         }
 
         // Override/add with local lyrics (including soft-deleted ones)
         for (localEntry in localLyrics) {
+            // Même règle côté appareil : sans elle, l'appareil qui a trouvé ces paroles
+            // les renverrait à chaque sync et elles ne quitteraient jamais le cloud.
+            if (localEntry.getLastModifiedTimestamp() < cutoff) continue
             val existing = mergedMap[localEntry.key]
             if (existing == null) {
                 mergedMap[localEntry.key] = localEntry
@@ -972,9 +983,13 @@ object CloudSyncManager {
             }
         }
 
-        val mergedLyrics = mergedMap.values.toList()
+        // Une marque de suppression n'a besoin que de sa clé et de sa date : le texte
+        // des paroles effacées n'a plus rien à faire dans le cloud.
+        val mergedLyrics = mergedMap.values.map { if (it.isActive()) it else it.copy(lyrics = "") }
 
-        if (mergedLyrics.isEmpty()) {
+        // Rien à garder : on n'écrit un fichier vide que s'il reste quelque chose à
+        // nettoyer, sinon on n'en crée pas pour rien.
+        if (mergedLyrics.isEmpty() && cloudLyrics.isEmpty()) {
             Log.d(TAG, "No lyrics to upload")
             return
         }

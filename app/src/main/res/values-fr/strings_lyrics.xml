@@ -53,6 +53,8 @@
     <string name="lyrics_api_status_unknown_host">Hôte introuvable</string>
     <string name="lyrics_api_status_timeout">Délai de connexion dépassé</string>
     <string name="lyrics_alt_counter">Résultat %1$d / %2$d</string>
+    <string name="lyrics_source_this_device">cet appareil</string>
+    <string name="lyrics_source_cloud">le cloud (un autre appareil)</string>
     <string name="lyrics_prev_alt">Résultat précédent</string>
     <string name="lyrics_next_alt">Résultat suivant</string>
 </resources>

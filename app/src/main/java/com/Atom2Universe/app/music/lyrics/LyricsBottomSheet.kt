@@ -1,7 +1,6 @@
 package com.Atom2Universe.app.music.lyrics
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -26,7 +25,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -55,9 +53,6 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
 
     private var alternativesList: List<AlternativeLyrics> = emptyList()
     private var currentAltIndex = 0
-    private var isAlternativesMode = false
-    private var savedByButton = false
-    private var hasNavigated = false
 
     companion object {
         private const val TAG = "LyricsBottomSheet"
@@ -175,12 +170,11 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
                     statusText.text = getString(R.string.lyrics_found_from, result.source)
 
                     // Si plusieurs résultats disponibles, activer la navigation entre alternatives
-                    if (result.alternatives.isNotEmpty()) {
-                        val allResults = mutableListOf<AlternativeLyrics>()
-                        allResults.add(AlternativeLyrics(result.lyrics, result.source, result.isSynced))
-                        allResults.addAll(result.alternatives)
-                        setupAlternativesNav(allResults)
-                    }
+                    val allResults = mutableListOf<AlternativeLyrics>()
+                    allResults.add(AlternativeLyrics(result.lyrics, result.source, result.isSynced))
+                    allResults.addAll(result.alternatives)
+                    withCloudProposal(allResults)
+                    if (allResults.size > 1) setupAlternativesNav(allResults)
 
                     Snackbar.make(
                         requireView(),
@@ -248,12 +242,15 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
                 lyricsText.setText(lyrics)
                 statusText.text = getString(R.string.lyrics_loaded_from_cache)
 
-                // Restaurer la navigation si des alternatives sont encore en cache (10 min TTL)
-                val cachedAlternatives = LyricsAlternativesCache.get(track.id)
-                if (!cachedAlternatives.isNullOrEmpty()) {
-                    setupAlternativesNav(cachedAlternatives)
+                // Restaurer la navigation si des alternatives sont encore en cache (10 min TTL),
+                // sinon partir des seules paroles affichées.
+                val results = LyricsAlternativesCache.get(track.id)?.toMutableList()
+                    ?: mutableListOf(AlternativeLyrics(lyrics, getString(R.string.lyrics_source_this_device)))
+                withCloudProposal(results)
+                if (results.size > 1) {
+                    setupAlternativesNav(results)
                     // Retrouver l'index correspondant aux lyrics actuellement affichées
-                    val matchIndex = cachedAlternatives.indexOfFirst { it.lyrics.trim() == lyrics.trim() }
+                    val matchIndex = results.indexOfFirst { it.lyrics.trim() == lyrics.trim() }
                     if (matchIndex > 0) {
                         currentAltIndex = matchIndex
                         updateAltCounter()
@@ -301,8 +298,6 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
                         RESULT_LYRICS to lyrics
                     )
                 )
-                // Marquer comme sauvegardé pour éviter le double-save dans onDismiss
-                savedByButton = true
                 // Fermer la bottom sheet après sauvegarde réussie
                 dismiss()
             } else {
@@ -364,13 +359,22 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
     }
 
     /**
+     * Ajoute en fin de liste les paroles venues du cloud que le fichier de cet appareil
+     * a écartées, si elles ne figurent pas déjà parmi les résultats.
+     */
+    private fun withCloudProposal(results: MutableList<AlternativeLyrics>) {
+        val proposal = LyricsManager.getCloudProposal(track) ?: return
+        if (results.any { it.lyrics.trim() == proposal.lyrics.trim() }) return
+        results.add(AlternativeLyrics(proposal.lyrics, getString(R.string.lyrics_source_cloud), proposal.isSynced))
+    }
+
+    /**
      * Active la navigation entre alternatives et affiche la barre de navigation.
      * @param results Liste complète : [meilleur résultat] + [alternatives]
      */
     private fun setupAlternativesNav(results: List<AlternativeLyrics>) {
         alternativesList = results
         currentAltIndex = 0
-        isAlternativesMode = true
         alternativesNavLayout.visibility = View.VISIBLE
         updateAltCounter()
         updateAltNavButtons()
@@ -384,7 +388,6 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
         val newIndex = (currentAltIndex + delta).coerceIn(0, alternativesList.size - 1)
         if (newIndex == currentAltIndex) return
         currentAltIndex = newIndex
-        hasNavigated = true
         val alt = alternativesList[currentAltIndex]
         lyricsText.setText(alt.lyrics)
         statusText.text = getString(R.string.lyrics_found_from, alt.source)
@@ -405,21 +408,5 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
         btnNextAlt.isEnabled = currentAltIndex < alternativesList.size - 1
         btnPrevAlt.alpha = if (btnPrevAlt.isEnabled) 1f else 0.3f
         btnNextAlt.alpha = if (btnNextAlt.isEnabled) 1f else 0.3f
-    }
-
-    /**
-     * Si la navigation entre alternatives était active et que l'utilisateur n'a pas
-     * cliqué sur "Save", sauvegarde automatiquement les paroles actuellement affichées.
-     */
-    override fun onDismiss(dialog: DialogInterface) {
-        if (isAlternativesMode && !savedByButton && hasNavigated) {
-            val lyrics = lyricsText.text.toString().trim()
-            if (lyrics.isNotEmpty()) {
-                activity?.lifecycleScope?.launch(Dispatchers.IO) {
-                    LyricsManager.saveLyrics(track, lyrics, "api")
-                }
-            }
-        }
-        super.onDismiss(dialog)
     }
 }

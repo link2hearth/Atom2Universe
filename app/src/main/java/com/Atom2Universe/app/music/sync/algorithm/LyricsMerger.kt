@@ -3,6 +3,7 @@ package com.Atom2Universe.app.music.sync.algorithm
 import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.music.data.MusicDatabase
+import com.Atom2Universe.app.music.lyrics.CloudLyricsProposals
 import com.Atom2Universe.app.music.lyrics.data.LyricsEntity
 import com.Atom2Universe.app.music.sync.model.LyricsSyncFile
 import com.Atom2Universe.app.music.sync.model.SyncLyricsEntry
@@ -23,6 +24,20 @@ object LyricsMerger {
 
     private const val TAG = "LyricsMerger"
     private const val DELETED_LYRICS_FILENAME = "deleted_lyrics.json"
+
+    /** Paroles lues dans le tag du MP3 de cet appareil. Jamais envoyées, jamais écrasées. */
+    const val SOURCE_FILE = "file"
+
+    /** Paroles reçues du cloud. Déjà dans le cloud : inutile de les renvoyer. */
+    const val SOURCE_CLOUD = "cloud_sync"
+
+    /**
+     * Durée de vie d'une entrée dans le cloud (90 jours) depuis son ajout, sa dernière
+     * modification ou sa suppression. C'est le délai laissé aux appareils pour se
+     * synchroniser : passé ce cap, l'entrée quitte le cloud (les appareils qui l'ont
+     * reçue la gardent) et un nouvel appareil devra chercher ces paroles lui-même.
+     */
+    const val CLOUD_RETENTION_MS = 90L * 24 * 60 * 60 * 1000
 
     // Cache des paroles supprimées (en attente de sync)
     private val deletedLyricsCache = mutableMapOf<String, DeletedLyricsEntry>()
@@ -60,8 +75,28 @@ object LyricsMerger {
         var removedCount = 0
 
         for (cloudEntry in cloudLyrics.lyrics) {
+            // Anciennes paroles « lues dans un fichier » encore présentes dans le cloud :
+            // elles appartiennent au MP3 d'un autre appareil, on ne les importe pas.
+            if (cloudEntry.source == SOURCE_FILE) continue
+
             val localEntry = lyricsDao.getByKey(cloudEntry.key)
             val localDeletedEntry = deletedLyricsCache[cloudEntry.key]
+
+            // Le fichier gagne : des paroles lues dans le MP3 de cet appareil ne sont
+            // jamais remplacées, ni effacées, par celles d'un autre appareil. Sans cette
+            // règle, des paroles plus récentes (mais pas forcément meilleures) trouvées
+            // ailleurs masqueraient celles du fichier.
+            // Les paroles du cloud ne sont pas perdues pour autant : elles restent
+            // proposées dans l'édition des paroles, à côté des résultats de recherche.
+            if (localEntry?.source == SOURCE_FILE) {
+                if (cloudEntry.isActive()) {
+                    CloudLyricsProposals.offer(
+                        context, cloudEntry.key, cloudEntry.lyrics, cloudEntry.isSynced,
+                        cloudEntry.modifiedAt, fileLyrics = localEntry.lyrics
+                    )
+                }
+                continue
+            }
 
             // Determine local timestamp (either from active entry or deleted entry)
             val localTimestamp = when {
@@ -82,7 +117,7 @@ object LyricsMerger {
                                 metadataKey = cloudEntry.key,
                                 trackId = 0,
                                 lyrics = cloudEntry.lyrics,
-                                source = "cloud_sync",
+                                source = SOURCE_CLOUD,
                                 language = null,
                                 isSynced = cloudEntry.isSynced,
                                 fetchedAt = cloudEntry.modifiedAt,
@@ -97,7 +132,7 @@ object LyricsMerger {
                         lyricsDao.insert(
                             localEntry.copy(
                                 lyrics = cloudEntry.lyrics,
-                                source = "cloud_sync",
+                                source = SOURCE_CLOUD,
                                 isSynced = cloudEntry.isSynced,
                                 lastModified = cloudEntry.modifiedAt,
                                 isSyncedToFile = false
@@ -133,7 +168,13 @@ object LyricsMerger {
             // Add active lyrics (exclude "no lyrics found" markers — purement internes à l'appareil)
             val db = MusicDatabase.getInstance(context)
             val lyricsDao = db.lyricsDao()
-            val allLyrics = lyricsDao.getAll().filter { !it.noLyricsFound && it.lyrics.isNotEmpty() }
+            // Ni les paroles lues dans un MP3 (chaque appareil a les siennes dans son fichier),
+            // ni celles reçues du cloud (elles y sont déjà) : seules partent celles trouvées
+            // en ligne ou saisies sur cet appareil.
+            val allLyrics = lyricsDao.getAll().filter {
+                !it.noLyricsFound && it.lyrics.isNotEmpty() &&
+                    it.source != SOURCE_FILE && it.source != SOURCE_CLOUD
+            }
 
             for (entity in allLyrics) {
                 // La clé est au format "title-artist-album". On la découpe avec limit=3

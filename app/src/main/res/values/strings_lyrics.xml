@@ -53,6 +53,8 @@
     <string name="lyrics_api_status_unknown_host">Host not found</string>
     <string name="lyrics_api_status_timeout">Connection timeout</string>
     <string name="lyrics_alt_counter">Result %1$d / %2$d</string>
+    <string name="lyrics_source_this_device">this device</string>
+    <string name="lyrics_source_cloud">the cloud (another device)</string>
     <string name="lyrics_prev_alt">Previous result</string>
     <string name="lyrics_next_alt">Next result</string>
 </resources>

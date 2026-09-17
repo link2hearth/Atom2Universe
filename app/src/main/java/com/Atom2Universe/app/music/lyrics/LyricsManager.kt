@@ -12,6 +12,7 @@ import com.Atom2Universe.app.music.lyrics.api.LyricsResult
 import com.Atom2Universe.app.music.lyrics.data.LyricsEntity
 import com.Atom2Universe.app.music.model.MusicTrack
 import com.Atom2Universe.app.music.sync.CloudSyncManager
+import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -99,6 +100,28 @@ object LyricsManager {
         // Vérifier d'abord le cache
         val key = generateMetadataKey(track)
         val cached = dao.getByKey(key)
+
+        // Paroles venues d'un autre appareil : le MP3 d'ici passe avant. S'il a ses
+        // propres paroles, ce sont elles qu'on affiche et qu'on garde.
+        if (cached != null && cached.source == LyricsMerger.SOURCE_CLOUD) {
+            val fromFile = MusicTagEditor.readLyrics(track)
+            if (fromFile != null) {
+                // Les paroles du cloud restent proposées dans l'édition des paroles.
+                CloudLyricsProposals.offer(
+                    appContext, key, cached.lyrics, cached.isSynced, cached.lastModified, fileLyrics = fromFile
+                )
+                dao.insert(LyricsEntity(
+                    metadataKey = key,
+                    trackId = track.id,
+                    lyrics = fromFile,
+                    source = LyricsMerger.SOURCE_FILE,
+                    isSynced = false,
+                    isSyncedToFile = true
+                ))
+                return@withContext fromFile
+            }
+        }
+
         if (cached != null && !cached.noLyricsFound) {
             val lyricsContent = cached.lyrics
             val isHtml = lyricsContent.trimStart().startsWith("<!DOCTYPE", ignoreCase = true) ||
@@ -124,7 +147,7 @@ object LyricsManager {
                 metadataKey = key,
                 trackId = track.id,
                 lyrics = fromFile,
-                source = "file",
+                source = LyricsMerger.SOURCE_FILE,
                 isSynced = false,
                 isSyncedToFile = true
             ))
@@ -262,6 +285,8 @@ object LyricsManager {
                 isSyncedToFile = false
             )
             dao.insert(entity)
+            // L'utilisateur a tranché : la proposition du cloud n'a plus à s'afficher.
+            CloudLyricsProposals.remove(appContext, entity.metadataKey)
 
             // Mettre en queue pour écriture asynchrone dans le tag
             LyricsSyncManager.queueLyricsUpdate(track, lyrics)
@@ -285,6 +310,15 @@ object LyricsManager {
         if (isInitialized) {
             LyricsSyncManager.setCurrentlyPlayingFile(filePath)
         }
+    }
+
+    /**
+     * Les paroles du cloud mises de côté pour ce titre (voir [CloudLyricsProposals]),
+     * ou null s'il n'y en a pas.
+     */
+    fun getCloudProposal(track: MusicTrack): CloudLyricsProposals.Proposal? {
+        if (!isInitialized) return null
+        return CloudLyricsProposals.get(appContext, generateMetadataKey(track))
     }
 
     /**

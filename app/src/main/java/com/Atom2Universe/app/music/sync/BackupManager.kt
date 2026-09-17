@@ -838,6 +838,8 @@ object BackupManager {
         var restoredCount = 0
 
         for (entry in data.lyrics) {
+            // Marques de suppression et paroles d'un MP3 d'un autre appareil : rien à restaurer.
+            if (!entry.isActive() || entry.source == LyricsMerger.SOURCE_FILE) continue
             try {
                 val existing = lyricsDao.getByKey(entry.key)
                 if (existing == null) {
@@ -847,7 +849,8 @@ object BackupManager {
                             metadataKey = entry.key,
                             trackId = 0, // Will be matched by metadata key
                             lyrics = entry.lyrics,
-                            source = entry.source,
+                            // Venues du cloud : le MP3 local passe avant, et on ne les renvoie pas.
+                            source = LyricsMerger.SOURCE_CLOUD,
                             language = null, // SyncLyricsEntry doesn't have language
                             isSynced = entry.isSynced,
                             fetchedAt = System.currentTimeMillis(),
