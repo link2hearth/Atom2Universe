@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="roguelike_title">Donjon</string>
-    <string name="roguelike_description">Explorez des donjons procéduraux et survivez 5 niveaux</string>
+    <string name="roguelike_description">Explorez le donjon, combattez au tour par tour et lootez votre équipement</string>
 
     <string name="roguelike_gold">Or</string>
     <string name="roguelike_stat_hp">HP</string>
@@ -68,7 +68,7 @@
     <string name="roguelike_log_inventory_full">Inventaire plein !</string>
     <string name="roguelike_log_resume">Aventure reprise — Étage %1$d.</string>
 
-    <string name="roguelike_descend_hint">[ &gt; ] Appuyez pour descendre</string>
+    <string name="roguelike_descend_hint">Touche ↓ pour voir le marchand</string>
     <string name="roguelike_death_title">TU ES MORT</string>
     <string name="roguelike_floor_gold_summary">Étage %1$d  —  %2$d or</string>
     <string name="roguelike_tap_replay">Touchez pour recommencer</string>
@@ -76,7 +76,7 @@
     <string name="roguelike_stats_title">STATISTIQUES</string>
     <string name="roguelike_select_slot_hint">← Sélectionne un emplacement</string>
     <string name="roguelike_empty_slot">— Emplacement vide —</string>
-    <string name="roguelike_shop_title">BOUTIQUE</string>
+    <string name="roguelike_shop_title">MARCHAND</string>
     <string name="roguelike_shop_gold_available">%1$d or disponibles</string>
     <string name="roguelike_shop_potion_name">♥  Vie max +10</string>
     <string name="roguelike_shop_potion_desc">HP max +10 + soins complets</string>
@@ -84,7 +84,7 @@
     <string name="roguelike_shop_atk_desc">ATK +1 permanent</string>
     <string name="roguelike_shop_barrier_name">◈  Barrière</string>
     <string name="roguelike_shop_barrier_desc">Débloque la régénération de barrière</string>
-    <string name="roguelike_shop_price">%1$dor</string>
+    <string name="roguelike_shop_price">%1$d or</string>
     <string name="roguelike_shop_descend">↓  Descendre</string>
     <string name="roguelike_loot_found_title">— %1$s trouvé —</string>
     <string name="roguelike_loot_nothing_equipped">(rien d\'équipé)</string>
@@ -97,4 +97,66 @@
     <string name="roguelike_resume_dialog_message">Une aventure est en cours :\n%1$s\n\nQue veux-tu faire ?</string>
     <string name="roguelike_resume_dialog_continue">Continuer</string>
     <string name="roguelike_resume_dialog_new_game">Nouvelle partie</string>
+
+    <!-- Refonte : combats, caractéristiques D&amp;D, marchand -->
+    <string name="roguelike_attr_str">FOR</string>
+    <string name="roguelike_attr_dex">DEX</string>
+    <string name="roguelike_attr_con">CON</string>
+    <string name="roguelike_attr_int">INT</string>
+    <string name="roguelike_attr_wis">SAG</string>
+    <string name="roguelike_attr_cha">CHA</string>
+    <string name="roguelike_stattype_armor">Armure</string>
+    <string name="roguelike_stattype_weapon_dmg">Dégâts d\'arme</string>
+    <string name="roguelike_stattype_spell_dmg">Dégâts des sorts</string>
+    <string name="roguelike_stat_roll_flat">+%1$d %2$s</string>
+    <string name="roguelike_stat_roll_percent">+%1$d %% %2$s</string>
+    <string name="roguelike_relic_fireball">Boule de feu</string>
+    <string name="roguelike_log_rest">Tu reprends ton souffle. PV %1$d/%2$d</string>
+    <string name="roguelike_log_victory">Victoire ! +%1$d or.</string>
+    <string name="roguelike_log_chain">Un autre ennemi te saute dessus !</string>
+    <string name="roguelike_log_spotted">%1$s t\'a repéré !</string>
+    <string name="roguelike_log_lost_track">%1$s a perdu ta trace.</string>
+    <string name="roguelike_log_potion_pickup">Potion ramassée.</string>
+    <string name="roguelike_log_potions_full">Tu ne peux pas porter plus de potions.</string>
+    <string name="roguelike_pack_size">×%1$d</string>
+    <string name="roguelike_hint_chased">Poursuivi : impossible de se reposer</string>
+    <string name="roguelike_death_summary">Tombé à l\'étage %1$d, %2$d or perdus</string>
+    <string name="roguelike_death_checkpoint">Retour à l\'étage %1$d avec tout ton équipement</string>
+    <string name="roguelike_stat_crit">Crit</string>
+    <string name="roguelike_stat_sword">Épée</string>
+    <string name="roguelike_percent">%1$d %%</string>
+    <string name="roguelike_range">%1$d–%2$d</string>
+    <string name="roguelike_item_subtitle">%1$s · %2$s</string>
+    <string name="roguelike_shop_potion_owned">%1$d / %2$d sur toi</string>
+    <string name="roguelike_shop_stay">Rester</string>
+    <string name="roguelike_hud_gold">%1$d or</string>
+    <string name="roguelike_hud_floor">Étage %1$d</string>
+    <string name="roguelike_combat_attack">Attaque</string>
+    <string name="roguelike_combat_potion">Potion</string>
+    <string name="roguelike_combat_potion_count">×%1$d</string>
+    <string name="roguelike_combat_cooldown">prêt dans %1$d</string>
+    <string name="roguelike_combat_hp">%1$d / %2$d</string>
+    <string name="roguelike_combat_countdown">⚔ %1$d</string>
+    <string name="roguelike_combat_burning">brûle %1$d</string>
+    <string name="roguelike_combat_damage">−%1$d</string>
+    <string name="roguelike_combat_crit_damage">−%1$d !</string>
+    <string name="roguelike_combat_heal">+%1$d</string>
+    <string name="roguelike_combat_perfect">PARFAIT !</string>
+    <string name="roguelike_combat_good">BIEN !</string>
+    <string name="roguelike_combat_parry_perfect">PARADE PARFAITE !</string>
+    <string name="roguelike_combat_parry_good">PARADE !</string>
+    <string name="roguelike_combat_too_early">Trop tôt !</string>
+    <string name="roguelike_combat_hint_choose">Touche un ennemi pour le cibler, puis choisis</string>
+    <string name="roguelike_combat_hint_strike">Swipe quand le curseur traverse la zone dorée !</string>
+    <string name="roguelike_combat_hint_parry">Touche quand l\'anneau se referme pour parer !</string>
+    <string name="roguelike_combat_start">COMBAT !</string>
+    <string name="roguelike_combat_ambush">EMBUSCADE !</string>
+    <string name="roguelike_combat_victory">VICTOIRE</string>
+    <string name="roguelike_combat_reward_gold">+%1$d or</string>
+    <string name="roguelike_combat_reward_potions">+%1$d potion(s)</string>
+    <string name="roguelike_combat_tap_continue">Touche pour continuer</string>
+    <plurals name="roguelike_combat_reward_items">
+        <item quantity="one">%1$d objet trouvé</item>
+        <item quantity="other">%1$d objets trouvés</item>
+    </plurals>
 </resources>

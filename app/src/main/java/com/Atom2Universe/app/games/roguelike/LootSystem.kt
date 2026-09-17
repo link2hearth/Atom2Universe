@@ -21,14 +21,18 @@ enum class Rarity(@StringRes override val labelRes: Int, val colorArgb: Int, val
 }
 
 // ─── Stats ──────────────────────────────────────────────────────────────────────
+/** Les six caractéristiques D&D, plus les bonus d'équipement. */
 enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolean) : Labeled {
-    ATK          (R.string.roguelike_stattype_atk,      false),
-    DEF          (R.string.roguelike_stattype_def,      false),
-    MAX_HP       (R.string.roguelike_stattype_maxhp,    false),
-    CRIT_CHANCE  (R.string.roguelike_stattype_crit,     true),
-    CRIT_DMG     (R.string.roguelike_stattype_critdmg,  true),
-    EVASION      (R.string.roguelike_stattype_evasion,  true),
-    BLOCK        (R.string.roguelike_stattype_block,    true),
+    STR          (R.string.roguelike_attr_str,        false),
+    DEX          (R.string.roguelike_attr_dex,        false),
+    CON          (R.string.roguelike_attr_con,        false),
+    INT          (R.string.roguelike_attr_int,        false),
+    WIS          (R.string.roguelike_attr_wis,        false),
+    CHA          (R.string.roguelike_attr_cha,        false),
+    ARMOR        (R.string.roguelike_stattype_armor,  false),
+    MAX_HP       (R.string.roguelike_stattype_maxhp,  false),
+    WEAPON_DMG   (R.string.roguelike_stattype_weapon_dmg, false),
+    SPELL_DMG    (R.string.roguelike_stattype_spell_dmg,  true),
 }
 
 // ─── Matière ────────────────────────────────────────────────────────────────────
@@ -50,9 +54,9 @@ data class StatRoll(val type: StatType, val value: Float) {
     fun display(context: Context): String {
         val label = context.getString(type.labelRes)
         return if (type.isPercent)
-            "+${(value * 100).roundToInt()}% $label"
+            context.getString(R.string.roguelike_stat_roll_percent, (value * 100).roundToInt(), label)
         else
-            "+${value.roundToInt()} $label"
+            context.getString(R.string.roguelike_stat_roll_flat, value.roundToInt(), label)
     }
 }
 
@@ -68,25 +72,32 @@ data class Equipment(
 // ─── Système de loot ────────────────────────────────────────────────────────────
 object LootSystem {
 
+    // Le premier élément de chaque liste est la stat « de base » de l'emplacement :
+    // une arme a toujours des dégâts, une armure toujours de l'armure.
+    private val attributes = listOf(StatType.STR, StatType.DEX, StatType.CON, StatType.INT, StatType.WIS, StatType.CHA)
+
     private val slotStats = mapOf(
-        EquipSlot.WEAPON  to listOf(StatType.ATK, StatType.CRIT_CHANCE, StatType.CRIT_DMG),
-        EquipSlot.CHEST   to listOf(StatType.MAX_HP, StatType.DEF, StatType.BLOCK),
-        EquipSlot.HELMET  to listOf(StatType.MAX_HP, StatType.DEF, StatType.EVASION),
-        EquipSlot.BOOTS   to listOf(StatType.EVASION, StatType.DEF, StatType.MAX_HP),
-        EquipSlot.OFFHAND to listOf(StatType.DEF, StatType.BLOCK, StatType.MAX_HP),
-        EquipSlot.AMULET  to StatType.values().toList(),
-        EquipSlot.RING    to StatType.values().toList(),
+        EquipSlot.WEAPON  to listOf(StatType.WEAPON_DMG, StatType.STR, StatType.DEX, StatType.SPELL_DMG),
+        EquipSlot.CHEST   to listOf(StatType.ARMOR, StatType.MAX_HP, StatType.CON),
+        EquipSlot.HELMET  to listOf(StatType.ARMOR, StatType.INT, StatType.WIS),
+        EquipSlot.BOOTS   to listOf(StatType.ARMOR, StatType.DEX, StatType.CON),
+        EquipSlot.OFFHAND to listOf(StatType.ARMOR, StatType.CON, StatType.STR),
+        EquipSlot.AMULET  to listOf(StatType.SPELL_DMG) + attributes + StatType.MAX_HP,
+        EquipSlot.RING    to attributes + listOf(StatType.MAX_HP, StatType.SPELL_DMG),
     )
 
-    // Stats de base réduites — la progression est lente par design
+    // Valeurs à l'étage 1 ; le niveau d'objet (= étage) les fait grimper
     private val statBase = mapOf(
-        StatType.ATK         to (1f to 3f),
-        StatType.DEF         to (1f to 2f),
+        StatType.STR         to (1f to 3f),
+        StatType.DEX         to (1f to 3f),
+        StatType.CON         to (1f to 3f),
+        StatType.INT         to (1f to 3f),
+        StatType.WIS         to (1f to 3f),
+        StatType.CHA         to (1f to 3f),
+        StatType.ARMOR       to (2f to 5f),
         StatType.MAX_HP      to (4f to 10f),
-        StatType.CRIT_CHANCE to (0.02f to 0.06f),
-        StatType.CRIT_DMG    to (0.08f to 0.20f),
-        StatType.EVASION     to (0.02f to 0.06f),
-        StatType.BLOCK       to (0.03f to 0.10f),
+        StatType.WEAPON_DMG  to (1f to 3f),
+        StatType.SPELL_DMG   to (0.05f to 0.12f),
     )
 
     private val spritePools: Map<Pair<EquipSlot, EquipMaterial>, List<Pair<Int, Int>>> = buildMap {
@@ -123,9 +134,11 @@ object LootSystem {
 
     // ── API publique ────────────────────────────────────────────────────────────
 
+    /** Chance qu'un ennemi vaincu lâche un équipement. */
+    const val DROP_CHANCE = 0.20f
+
     fun tryDrop(floor: Int, rng: Random = Random): Equipment? {
-        val chance = (0.18f + floor * 0.004f).coerceAtMost(0.38f)
-        if (rng.nextFloat() > chance) return null
+        if (rng.nextFloat() > DROP_CHANCE) return null
         return generate(floor, rng)
     }
 
@@ -144,19 +157,20 @@ object LootSystem {
 
     // ── Sélecteurs ──────────────────────────────────────────────────────────────
 
+    // Paliers pensés pour 100 étages
     private fun pickMaterial(floor: Int, rng: Random): EquipMaterial = weighted(listOf(
-        EquipMaterial.IRON   to maxOf(0f, 65f - floor * 1.8f),
-        EquipMaterial.GOLD   to if (floor >= 5)  minOf(50f, (floor - 4) * 4f)  else 0f,
-        EquipMaterial.ICE    to if (floor >= 15) minOf(40f, (floor - 14) * 3f) else 0f,
-        EquipMaterial.UNIQUE to if (floor >= 25) minOf(30f, (floor - 24) * 2f) else 0f,
+        EquipMaterial.IRON   to maxOf(5f, 65f - floor * 0.8f),
+        EquipMaterial.GOLD   to if (floor >= 10) minOf(50f, (floor - 9) * 3f)   else 0f,
+        EquipMaterial.ICE    to if (floor >= 30) minOf(40f, (floor - 29) * 2f)  else 0f,
+        EquipMaterial.UNIQUE to if (floor >= 60) minOf(30f, (floor - 59) * 1.5f) else 0f,
     ), rng)
 
     private fun pickRarity(floor: Int, rng: Random): Rarity = weighted(listOf(
-        Rarity.COMMON    to maxOf(0f, 55f - floor * 1.3f),
-        Rarity.UNCOMMON  to 25f,
-        Rarity.RARE      to minOf(28f, 4f + floor * 0.8f),
-        Rarity.EPIC      to minOf(18f, maxOf(0f, floor * 0.4f - 3f)),
-        Rarity.LEGENDARY to minOf(7f,  maxOf(0f, floor * 0.18f - 4f)),
+        Rarity.COMMON    to maxOf(10f, 60f - floor * 0.8f),
+        Rarity.UNCOMMON  to 28f,
+        Rarity.RARE      to minOf(25f, 6f + floor * 0.4f),
+        Rarity.EPIC      to minOf(15f, maxOf(0f, (floor - 5) * 0.3f)),
+        Rarity.LEGENDARY to minOf(6f,  maxOf(0f, (floor - 15) * 0.1f)),
     ), rng)
 
     private fun pickSlot(rng: Random): EquipSlot = weighted(listOf(
@@ -177,15 +191,16 @@ object LootSystem {
     private fun rollStats(
         slot: EquipSlot, mat: EquipMaterial, rar: Rarity, floor: Int, rng: Random
     ): List<StatRoll> {
-        val pool      = slotStats[slot] ?: StatType.values().toList()
-        // +1.5% par étage au lieu de +7% — progression lente et satisfaisante
-        val floorMult = 1f + floor * 0.015f
-        return pool.shuffled(rng).take(rar.statCount).map { stat ->
+        val pool      = slotStats[slot] ?: StatType.entries
+        // Niveau d'objet : +10 % par étage
+        val floorMult = 1f + floor * 0.10f
+        val picked    = (listOf(pool.first()) + pool.drop(1).shuffled(rng)).take(rar.statCount)
+        return picked.map { stat ->
             val (lo, hi) = statBase[stat] ?: (1f to 2f)
             val raw      = lo + rng.nextFloat() * (hi - lo)
             val value    = raw * mat.tierMult * rar.mult * floorMult
             val rounded  = if (stat.isPercent)
-                value.coerceAtMost(0.75f)
+                value
             else
                 value.roundToInt().toFloat().coerceAtLeast(1f)
             StatRoll(stat, rounded)

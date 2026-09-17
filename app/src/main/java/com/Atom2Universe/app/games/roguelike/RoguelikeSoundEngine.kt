@@ -59,6 +59,12 @@ internal class RoguelikeSoundEngine(private val scope: CoroutineScope) {
         scope.launch { delay(55); note(35, 90) }
     }
 
+    /** Bloc de bois clair : parade réussie (deux coups si parfaite). */
+    fun onParry(perfect: Boolean) {
+        note(76, 110)   // Hi Wood Block
+        if (perfect) scope.launch { delay(70); note(76, 90) }
+    }
+
     /** Stab descendant : joueur descend un étage. */
     fun onDescend() {
         Log.d(TAG, "onDescend")

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -33,7 +34,7 @@
             android:gravity="center"
             android:fontFamily="monospace"
             android:textStyle="bold"
-            android:text="Floor 1/5  Lv 1" />
+            tools:text="Floor 1" />
 
         <TextView
             android:id="@+id/roguelike_tv_gold"
@@ -43,16 +44,27 @@
             android:textColor="#FFD600"
             android:fontFamily="monospace"
             android:textStyle="bold"
-            android:text="0 g" />
+            tools:text="0 gold" />
 
     </LinearLayout>
 
-    <!-- Game canvas -->
-    <com.Atom2Universe.app.games.roguelike.RoguelikeView
-        android:id="@+id/roguelike_view"
+    <!-- Carte + écran de combat par-dessus -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
 
+        <com.Atom2Universe.app.games.roguelike.RoguelikeView
+            android:id="@+id/roguelike_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.Atom2Universe.app.games.roguelike.CombatView
+            android:id="@+id/roguelike_combat_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>

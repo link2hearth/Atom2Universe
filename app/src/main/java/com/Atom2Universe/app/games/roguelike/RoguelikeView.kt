@@ -20,18 +20,24 @@ private fun LogEntry.resolve(context: Context): String {
     return context.getString(keyRes, *resolvedArgs.toTypedArray())
 }
 
+/**
+ * La carte : exploration au swipe, monstres visibles, repos, marchand sur l'escalier,
+ * inventaire et popups de butin. Le combat, lui, a son propre écran ([CombatView]).
+ */
 class RoguelikeView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
 ) : View(ctx, attrs) {
 
     var game: RoguelikeGame? = null
     var onMove:           ((Int, Int) -> Unit)? = null
-    var onUseItem:        (() -> Unit)? = null
+    var onRest:           (() -> Unit)? = null
+    var onOpenMerchant:   (() -> Unit)? = null
+    var onBuyPotion:      (() -> Unit)? = null
     var onDescend:        (() -> Unit)? = null
-    var onBuyShopItem:    ((ShopItem) -> Unit)? = null
-    var onConfirmDescend: (() -> Unit)? = null
+    var onCloseMerchant:  (() -> Unit)? = null
     var onEquipItem:      (() -> Unit)? = null
     var onIgnoreDrop:     (() -> Unit)? = null
+    var onDismissDeath:   (() -> Unit)? = null
 
     private var tileSize = 40f
     private val hpBarW get() = context.resources.displayMetrics.density * 6f
@@ -39,7 +45,7 @@ class RoguelikeView @JvmOverloads constructor(
     private var camX = 0f
     private var camY = 0f
 
-    // Sprite sheet 64x64.png pour les équipements
+    // Sprite sheet 64x64.png pour les équipements et objets
     private var equipSheet: Bitmap? = null
 
     // ── Paints ──────────────────────────────────────────────────────────────────
@@ -49,12 +55,12 @@ class RoguelikeView @JvmOverloads constructor(
     private val pSprite    = Paint(Paint.FILTER_BITMAP_FLAG)
     private val pSpriteDim = Paint(Paint.FILTER_BITMAP_FLAG).apply { alpha = 70 }
     private val pFog       = Paint().apply { color = 0xCC000000.toInt(); isAntiAlias = false }
+    private val pStairs    = Paint().apply { color = 0x664A3800 }
 
     private val pText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         typeface = Typeface.MONOSPACE; textAlign = Paint.Align.CENTER
     }
     private val pHpBar    = Paint().apply { isAntiAlias = false }
-    private val pBarrier  = Paint().apply { color = 0xFF1E88E5.toInt(); isAntiAlias = false }
     private val pHpBg     = Paint().apply { color = 0xFF111111.toInt(); isAntiAlias = false }
     private val pHpSep    = Paint().apply { color = 0xFF555555.toInt(); style = Paint.Style.STROKE; strokeWidth = 1f }
     private val pShopBg   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xF0101820.toInt() }
@@ -63,9 +69,9 @@ class RoguelikeView @JvmOverloads constructor(
     private val pShopSold = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF333333.toInt() }
     private val pShopDescend = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF2E7D32.toInt() }
     private val pOverlay  = Paint().apply { color = 0xCC000000.toInt() }
-    private val pMobHpBg  = Paint().apply { color = 0xFF2E2E2E.toInt() }
-    private val pMobHp    = Paint().apply { color = 0xFF4CAF50.toInt() }
     private val pIconBg   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xAA000000.toInt() }
+    private val pIconOn   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xCC2E7D32.toInt() }
+    private val pChase    = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFE53935.toInt() }
     private val pSwipeDot = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0x66FFFFFF.toInt() }
     private val pSwipeLine = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = 0x99FFFFFF.toInt(); style = Paint.Style.STROKE; strokeWidth = 3f; strokeCap = Paint.Cap.ROUND
@@ -85,8 +91,6 @@ class RoguelikeView @JvmOverloads constructor(
     private val pInvSlotSel  = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF1A3A5C.toInt() }
     private val pInvBorder   = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 1.5f; color = 0xFF2A3E52.toInt() }
     private val pInvBorderSel= Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE; strokeWidth = 2f;   color = 0xFF42A5F5.toInt() }
-    private val pStatGood    = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF66FF88.toInt() }
-    private val pStatNeutral = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFCCCCCC.toInt() }
 
     // ── Swipe ───────────────────────────────────────────────────────────────────
     private val swipeMinPx get() = 16f * context.resources.displayMetrics.density
@@ -106,11 +110,14 @@ class RoguelikeView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        stopHold()
         SpriteLoader.clear()
         equipSheet?.recycle(); equipSheet = null
     }
 
-    // ── Sprite sheet équipements ─────────────────────────────────────────────────
+    private val sd get() = context.resources.displayMetrics.density * context.resources.configuration.fontScale
+
+    // ── Sprite sheet ─────────────────────────────────────────────────────────────
 
     private fun equipSheet(): Bitmap? {
         if (equipSheet != null) return equipSheet
@@ -119,16 +126,17 @@ class RoguelikeView @JvmOverloads constructor(
         } catch (_: Exception) { null }
     }
 
+    private fun drawSheetCell(canvas: Canvas, row: Int, col: Int, rect: RectF): Boolean {
+        val sheet = equipSheet() ?: return false
+        canvas.drawBitmap(sheet, Rect(col * 64, row * 64, (col + 1) * 64, (row + 1) * 64), rect, pSprite)
+        return true
+    }
+
     private fun drawEquipIcon(canvas: Canvas, equip: Equipment, rect: RectF) {
-        val sheet = equipSheet() ?: run {
-            // fallback : cercle coloré rareté
+        if (!drawSheetCell(canvas, equip.spriteRow, equip.spriteCol, rect)) {
             val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = equip.rarity.colorArgb }
             canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2.5f, p)
-            return
         }
-        val src = Rect(equip.spriteCol * 64, equip.spriteRow * 64,
-                       (equip.spriteCol + 1) * 64, (equip.spriteRow + 1) * 64)
-        canvas.drawBitmap(sheet, src, rect, pSprite)
     }
 
     // ── Draw ────────────────────────────────────────────────────────────────────
@@ -139,19 +147,17 @@ class RoguelikeView @JvmOverloads constructor(
         updateCamera(g)
         drawMap(canvas, g)
         drawItems(canvas, g)
-        drawEquipDrops(canvas, g)
-        drawMonsters(canvas, g)
+        drawPacks(canvas, g)
         drawPlayer(canvas, g)
         drawHpBar(canvas, g)
-        drawBarrierBar(canvas, g)
         drawHud(canvas, g)
         drawHudIcons(canvas, g)
-        if (g.shopOpen)                 drawShop(canvas, g)
+        val overlay = g.merchantOpen || g.pendingEquipDrop != null || g.deathReport != null
+        if (g.merchantOpen)             drawShop(canvas, g)
         if (g.pendingEquipDrop != null) drawLootPopup(canvas, g)
-        if (inventoryOpen && !g.shopOpen && g.pendingEquipDrop == null) drawInventory(canvas, g)
-        if (g.phase != GamePhase.PLAYING && !g.shopOpen && g.pendingEquipDrop == null && !inventoryOpen)
-            drawEndScreen(canvas, g)
-        if (!g.shopOpen && g.pendingEquipDrop == null && !inventoryOpen) drawSwipeZone(canvas)
+        if (inventoryOpen && !overlay)  drawInventory(canvas, g)
+        if (g.deathReport != null)      drawDeathPanel(canvas, g)
+        if (!overlay && !inventoryOpen) drawSwipeZone(canvas)
     }
 
     // ── Caméra ──────────────────────────────────────────────────────────────────
@@ -159,7 +165,7 @@ class RoguelikeView @JvmOverloads constructor(
     private fun updateCamera(g: RoguelikeGame) {
         val barW   = hpBarW
         val availW = width - barW
-        val px = g.player.pos.x * tileSize; val py = g.player.pos.y * tileSize
+        val px = g.playerPos.x * tileSize; val py = g.playerPos.y * tileSize
         val targetCx = px - (barW + availW / 2f) + tileSize / 2f
         val targetCy = py - height / 2f + tileSize / 2f
         camX = targetCx.coerceIn(0f, maxOf(0f, g.level.w * tileSize - width.toFloat()))
@@ -182,14 +188,6 @@ class RoguelikeView @JvmOverloads constructor(
     private fun drawSprite(canvas: Canvas, path: String, rect: RectF, dim: Boolean) {
         val bmp = SpriteLoader.load(context.assets, path) ?: return
         canvas.drawBitmap(bmp, null, rect, if (dim) pSpriteDim else pSprite)
-    }
-
-    private fun monsterSpritePath(type: MonsterType): String = when (type) {
-        MonsterType.RAT      -> "Assets/sprites/Dungeon/Monsters/misc/fire_bat.png"
-        MonsterType.GOBLIN   -> "Assets/sprites/Dungeon/Monsters/misc/quasit.png"
-        MonsterType.SKELETON -> "Assets/sprites/Dungeon/Monsters/skeleton/skeleton_humanoid.png"
-        MonsterType.ORC      -> "Assets/sprites/Dungeon/Monsters/deepdwarf/deepdwarf_berzerker.png"
-        MonsterType.DEMON    -> "Assets/sprites/Dungeon/Monsters/pandemon/examples/monsters_pandemon_examples_a.png"
     }
 
     // ── Map ─────────────────────────────────────────────────────────────────────
@@ -215,7 +213,7 @@ class RoguelikeView @JvmOverloads constructor(
                     if (floorSprites.isNotEmpty()) drawSprite(canvas, floorSprites[variantIndex(tx, ty, floorSprites.size)], rect, !vis)
                     else canvas.drawRect(rect, if (vis) pFloorFallback else pWallFallback)
                     if (tile == TileType.STAIRS_DOWN) {
-                        canvas.drawRect(rect, Paint().apply { color = 0x664A3800.toInt() })
+                        canvas.drawRect(rect, pStairs)
                         pText.color = if (vis) 0xFFFFD600.toInt() else 0xFF665500.toInt()
                         pText.textSize = tileSize * 0.7f
                         canvas.drawText(">", l + tileSize / 2f, t + tileSize * 0.75f, pText)
@@ -226,23 +224,7 @@ class RoguelikeView @JvmOverloads constructor(
         }
     }
 
-    // ── Items consommables ───────────────────────────────────────────────────────
-
-    private fun drawFoodSprite(canvas: Canvas, type: ItemType, rect: RectF) {
-        if (type.spriteRow < 0) {
-            pText.color = type.colorArgb; pText.textSize = rect.height() * 0.65f
-            canvas.drawText(type.symbol.toString(), rect.centerX(), rect.centerY() + rect.height() * 0.2f, pText)
-            return
-        }
-        val sheet = equipSheet() ?: run {
-            pText.color = type.colorArgb; pText.textSize = rect.height() * 0.65f
-            canvas.drawText(type.symbol.toString(), rect.centerX(), rect.centerY() + rect.height() * 0.2f, pText)
-            return
-        }
-        val src = Rect(type.spriteCol * 64, type.spriteRow * 64,
-                       (type.spriteCol + 1) * 64, (type.spriteRow + 1) * 64)
-        canvas.drawBitmap(sheet, src, rect, pSprite)
-    }
+    // ── Objets au sol ────────────────────────────────────────────────────────────
 
     private fun drawItems(canvas: Canvas, g: RoguelikeGame) {
         for (item in g.level.items) {
@@ -250,92 +232,61 @@ class RoguelikeView @JvmOverloads constructor(
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val pad = tileSize * 0.15f
-            drawFoodSprite(canvas, item.type, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
-        }
-    }
-
-    // ── Drops d'équipement sur la carte ─────────────────────────────────────────
-
-    private fun drawEquipDrops(canvas: Canvas, g: RoguelikeGame) {
-        for ((equip, pos) in g.level.equipDrops) {
-            val tx = pos.x; val ty = pos.y
-            if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
-            val l = tileLeft(tx); val t = tileTop(ty)
-            val pad = tileSize * 0.1f
-            val rect = RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad)
-            // Halo couleur rareté
-            val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = equip.rarity.colorArgb and 0x66FFFFFF.toInt()
-            }
-            canvas.drawCircle(rect.centerX(), rect.centerY(), rect.width() / 2f + 2f, glowPaint)
-            drawEquipIcon(canvas, equip, rect)
+            drawSheetCell(canvas, item.type.spriteRow, item.type.spriteCol, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
         }
     }
 
     // ── Monstres ────────────────────────────────────────────────────────────────
 
-    private fun drawMonsters(canvas: Canvas, g: RoguelikeGame) {
-        val lv = g.level; val barH = tileSize * 0.15f
-        for (m in lv.monsters) {
-            if (!m.isAlive) continue
-            val tx = m.pos.x; val ty = m.pos.y
+    private fun drawPacks(canvas: Canvas, g: RoguelikeGame) {
+        val lv = g.level
+        for (pack in lv.packs) {
+            if (!pack.alive) continue
+            val tx = pack.pos.x; val ty = pack.pos.y
             if (!isOnScreen(tx, ty) || !lv.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val rect = RectF(l, t, l + tileSize, t + tileSize)
-            val bmp  = SpriteLoader.load(context.assets, monsterSpritePath(m.type))
-            if (bmp != null) canvas.drawBitmap(bmp, null, rect, pSprite)
-            else {
-                pText.color = m.type.colorArgb; pText.textSize = tileSize * 0.7f
-                canvas.drawText(m.type.symbol.toString(), l + tileSize / 2f, t + tileSize * 0.82f, pText)
+            SpriteLoader.load(context.assets, SpriteLoader.monsterPath(pack.types.first()))
+                ?.let { canvas.drawBitmap(it, null, rect, pSprite) }
+
+            // Groupe : nombre d'ennemis dans le coin
+            if (pack.types.size > 1) {
+                pText.textAlign = Paint.Align.RIGHT; pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 11f
+                canvas.drawText(context.getString(R.string.roguelike_pack_size, pack.types.size), rect.right - 2f, rect.bottom - 3f, pText)
+                pText.textAlign = Paint.Align.CENTER
             }
-            val barW = tileSize - 2f
-            canvas.drawRect(RectF(l + 1f, t, l + 1f + barW, t + barH), pMobHpBg)
-            canvas.drawRect(RectF(l + 1f, t, l + 1f + barW * m.hp / m.maxHp, t + barH), pMobHp)
+            // Poursuite : pastille rouge au-dessus
+            if (pack.state == PackState.CHASING) {
+                val r = tileSize * 0.16f
+                canvas.drawCircle(rect.centerX(), rect.top + r * 0.2f, r, pChase)
+                pText.color = 0xFFFFFFFF.toInt(); pText.textSize = r * 1.6f
+                canvas.drawText("!", rect.centerX(), rect.top + r * 0.75f, pText)
+            }
         }
     }
 
     // ── Joueur ──────────────────────────────────────────────────────────────────
 
     private fun drawPlayer(canvas: Canvas, g: RoguelikeGame) {
-        val tx = g.player.pos.x; val ty = g.player.pos.y
-        val l = tileLeft(tx); val t = tileTop(ty)
-        val rect = RectF(l, t, l + tileSize, t + tileSize)
-        val bmp  = SpriteLoader.load(context.assets, g.heroSpritePath)
-        if (bmp != null) canvas.drawBitmap(bmp, null, rect, pSprite)
-        else {
-            pText.color = 0xFF00E5FF.toInt(); pText.textSize = tileSize * 0.8f
-            canvas.drawText("@", l + tileSize / 2f, t + tileSize * 0.82f, pText)
-        }
+        val l = tileLeft(g.playerPos.x); val t = tileTop(g.playerPos.y)
+        SpriteLoader.load(context.assets, g.heroSpritePath)
+            ?.let { canvas.drawBitmap(it, null, RectF(l, t, l + tileSize, t + tileSize), pSprite) }
     }
 
     // ── Barre HP ────────────────────────────────────────────────────────────────
 
     private fun drawHpBar(canvas: Canvas, g: RoguelikeGame) {
-        val p = g.player; val barW = hpBarW; val barH = height.toFloat()
+        val p = g.hero; val barW = hpBarW; val barH = height.toFloat()
         canvas.drawRect(RectF(0f, 0f, barW, barH), pHpBg)
-        val fillH = barH * p.hp.toFloat() / p.totalMaxHp
-        pHpBar.color = hpColor(p.hp, p.totalMaxHp)
+        val fillH = barH * p.hp.toFloat() / p.maxHp
+        pHpBar.color = hpColor(p.hp, p.maxHp)
         canvas.drawRect(RectF(0f, barH - fillH, barW, barH), pHpBar)
         canvas.drawLine(barW, 0f, barW, barH, pHpSep)
-    }
-
-    // ── Barre barrière ───────────────────────────────────────────────────────────
-
-    private fun drawBarrierBar(canvas: Canvas, g: RoguelikeGame) {
-        val p = g.player; if (!p.barrierUnlocked) return
-        val barW = hpBarW; val barH = height.toFloat(); val x0 = width - barW
-        canvas.drawRect(RectF(x0, 0f, width.toFloat(), barH), pHpBg)
-        if (p.maxBarrier > 0 && p.barrier > 0) {
-            val fillH = barH * p.barrier.toFloat() / p.maxBarrier
-            canvas.drawRect(RectF(x0, barH - fillH, width.toFloat(), barH), pBarrier)
-        }
-        canvas.drawLine(x0, 0f, x0, barH, pHpSep)
     }
 
     // ── HUD ─────────────────────────────────────────────────────────────────────
 
     private fun drawHud(canvas: Canvas, g: RoguelikeGame) {
-        val sd       = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         val logSize  = sd * 17f; val hintSize = sd * 15f
         val lineH    = logSize * 1.4f
         val lines    = g.log.takeLast(3)
@@ -348,9 +299,16 @@ class RoguelikeView @JvmOverloads constructor(
             canvas.drawText(entry.resolve(context), hpBarW + 10f, hudY + 10f + (i + 1) * lineH - 4f, pText)
         pText.textAlign = Paint.Align.CENTER
 
-        if (g.onStairsTile()) {
-            pText.color = 0xFFFFD600.toInt(); pText.textSize = hintSize
-            canvas.drawText(context.getString(R.string.roguelike_descend_hint), (hpBarW + width) / 2f, hudY - 8f, pText)
+        val hint = when {
+            !g.isExploring   -> null
+            g.isChased       -> R.string.roguelike_hint_chased
+            g.onStairsTile() -> R.string.roguelike_descend_hint
+            else             -> null
+        }
+        if (hint != null) {
+            pText.color = if (hint == R.string.roguelike_hint_chased) 0xFFEF5350.toInt() else 0xFFFFD600.toInt()
+            pText.textSize = hintSize
+            canvas.drawText(context.getString(hint), (hpBarW + width) / 2f, hudY - 8f, pText)
         }
     }
 
@@ -359,30 +317,26 @@ class RoguelikeView @JvmOverloads constructor(
         return when { r > 0.5f -> 0xFF2E7D32.toInt(); r > 0.25f -> 0xFFE65100.toInt(); else -> 0xFFC62828.toInt() }
     }
 
-    // ── Fin de partie ────────────────────────────────────────────────────────────
+    // ── Mort ────────────────────────────────────────────────────────────────────
 
-    private fun drawEndScreen(canvas: Canvas, g: RoguelikeGame) {
-        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
+    private fun drawDeathPanel(canvas: Canvas, g: RoguelikeGame) {
+        val report = g.deathReport ?: return
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         val cx = width / 2f; val cy = height / 2f
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFEF5350.toInt(); pText.textSize = sd * 28f
-        canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 50f, pText)
-        pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 16f
-        canvas.drawText(context.getString(R.string.roguelike_floor_gold_summary, g.player.floor, g.player.gold), cx, cy, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 60f * sd, pText)
+        pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 15f
+        canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, report.goldLost), cx, cy - 20f * sd, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_checkpoint, RoguelikeGame.CHECKPOINT), cx, cy + 8f * sd, pText)
         pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 14f
-        canvas.drawText(context.getString(R.string.roguelike_tap_replay), cx, cy + 50f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_combat_tap_continue), cx, cy + 60f * sd, pText)
     }
 
     // ── Icônes HUD ───────────────────────────────────────────────────────────────
 
     private val iconSizePx   get() = 44f * context.resources.displayMetrics.density
     private val iconMarginPx get() = 8f  * context.resources.displayMetrics.density
-
-    private fun heartRect(): RectF {
-        val m = iconMarginPx; val s = iconSizePx
-        return RectF(hpBarW + m, m, hpBarW + m + s, m + s)
-    }
 
     private fun stairsIconRect(): RectF {
         val m = iconMarginPx; val s = iconSizePx
@@ -395,25 +349,15 @@ class RoguelikeView @JvmOverloads constructor(
         return RectF(hpBarW + m, height - m * 2 - s * 2.3f, hpBarW + m + s, height - m * 2 - s * 1.3f)
     }
 
-    private fun drawHudIcons(canvas: Canvas, g: RoguelikeGame) {
-        if (g.phase != GamePhase.PLAYING) return
-        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
-        pText.textAlign = Paint.Align.CENTER
+    private fun restBtnRect(): RectF {
+        val inv = inventoryBtnRect()
+        val m = iconMarginPx
+        return RectF(inv.left, inv.top - m - inv.height(), inv.right, inv.top - m)
+    }
 
-        if (g.player.inventory.isNotEmpty()) {
-            val r = heartRect()
-            canvas.drawCircle(r.centerX(), r.centerY(), r.width() / 2f, pIconBg)
-            val firstFood = g.player.inventory.firstOrNull { it.type.healAmount > 0 }
-            if (firstFood != null) {
-                drawFoodSprite(canvas, firstFood.type, r.inset(r.width() * 0.18f))
-            } else {
-                pText.color = 0xFFEF5350.toInt(); pText.textSize = r.height() * 0.55f
-                canvas.drawText("♥", r.centerX(), r.centerY() + r.height() * 0.2f, pText)
-            }
-            pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 11f; pText.textAlign = Paint.Align.RIGHT
-            canvas.drawText("${g.player.inventory.size}", r.right, r.top + sd * 13f, pText)
-            pText.textAlign = Paint.Align.CENTER
-        }
+    private fun drawHudIcons(canvas: Canvas, g: RoguelikeGame) {
+        if (!g.isExploring) return
+        pText.textAlign = Paint.Align.CENTER
 
         if (g.onStairsTile()) {
             val r = stairsIconRect()
@@ -422,12 +366,16 @@ class RoguelikeView @JvmOverloads constructor(
             canvas.drawText("↓", r.centerX(), r.centerY() + r.height() * 0.22f, pText)
         }
 
+        // Repos : grisé si poursuivi ou déjà en pleine forme
+        val rest = restBtnRect()
+        val canRest = g.canRest()
+        canvas.drawCircle(rest.centerX(), rest.centerY(), rest.width() / 2f, if (canRest) pIconOn else pIconBg)
+        pText.color = if (canRest) 0xFFFFFFFF.toInt() else 0xFF555555.toInt(); pText.textSize = rest.height() * 0.5f
+        canvas.drawText("☾", rest.centerX(), rest.centerY() + rest.height() * 0.18f, pText)
+
         // Bouton inventaire (sac ⚔)
         val r = inventoryBtnRect()
-        val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = if (inventoryOpen) 0xCC1565C0.toInt() else 0xAA000000.toInt()
-        }
-        canvas.drawCircle(r.centerX(), r.centerY(), r.width() / 2f, bgPaint)
+        canvas.drawCircle(r.centerX(), r.centerY(), r.width() / 2f, if (inventoryOpen) pShopBuy else pIconBg)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = r.height() * 0.52f
         canvas.drawText("⚔", r.centerX(), r.centerY() + r.height() * 0.19f, pText)
     }
@@ -449,12 +397,8 @@ class RoguelikeView @JvmOverloads constructor(
      *   [BOOTS]  gap  [RING]
      */
     private fun paperdollSlotRects(paperdoll: RectF): Pair<RectF, Map<EquipSlot, RectF>> {
-        // Chaque "ligne" occupe cell + labelH en vertical.
-        // Layout 3 cols × 4 lignes + héros centré.
-        // On réserve labelH = cell * 0.25f sous chaque slot pour le texte.
         val labelFrac = 0.25f
         val gap       = paperdoll.width() * 0.03f
-        // cell limité par largeur (3 cols + 2 gaps) et hauteur (4 lignes avec labels + gaps)
         val cellByW   = (paperdoll.width() - gap * 4f) / 3f
         val cellByH   = (paperdoll.height() - gap * 6f) / (4f * (1f + labelFrac))
         val cell      = minOf(cellByW, cellByH)
@@ -469,13 +413,12 @@ class RoguelikeView @JvmOverloads constructor(
             val y = top + row * rowStep
             return RectF(x, y, x + cell, y + cell)
         }
-        fun center(row: Float): RectF {        // helmet centré
+        fun center(row: Float): RectF {
             val x = cx - cell / 2f
             val y = top + row * rowStep
             return RectF(x, y, x + cell, y + cell)
         }
 
-        // Le héros occupe tout l'espace entre les colonnes gauche et droite
         val heroX1 = leftX + cell + gap
         val heroX2 = rightX - gap
         val heroH  = rowStep * 2f + cell * 0.1f
@@ -494,21 +437,17 @@ class RoguelikeView @JvmOverloads constructor(
     }
 
     private fun drawInventory(canvas: Canvas, g: RoguelikeGame) {
-        val sd    = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         val cr    = 12f * context.resources.displayMetrics.density
         val panel = invPanelRect()
         val gap   = panel.height() * 0.015f
 
-        // Fond
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         canvas.drawRoundRect(panel, cr, cr, pInvBg)
         canvas.drawRoundRect(panel, cr, cr, pInvBorder)
 
-        // Titre
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 14f
         canvas.drawText(context.getString(R.string.roguelike_equipment_title), panel.centerX(), panel.top + gap + sd * 14f, pText)
 
-        // Bouton fermer ✕
         val closeR = invCloseBtnRect(panel)
         canvas.drawRoundRect(closeR, cr * 0.4f, cr * 0.4f, pIgnoreBtn)
         pText.color = 0xFFAAAAAA.toInt(); pText.textSize = closeR.height() * 0.6f
@@ -516,9 +455,9 @@ class RoguelikeView @JvmOverloads constructor(
 
         val titleBottom = panel.top + gap * 2 + sd * 14f
 
-        // Divise le panel : haut=paperdoll, milieu=stats globales, bas=détail item
-        val paperdollH = panel.height() * 0.48f
-        val statsH     = panel.height() * 0.22f
+        // Haut = paperdoll, milieu = caractéristiques, bas = détail de l'objet
+        val paperdollH = panel.height() * 0.46f
+        val statsH     = panel.height() * 0.24f
         val detailH    = panel.height() - paperdollH - statsH - gap * 4 - (titleBottom - panel.top)
 
         val paperdollRect = RectF(panel.left + gap, titleBottom + gap,
@@ -528,17 +467,16 @@ class RoguelikeView @JvmOverloads constructor(
         val detailRect    = RectF(panel.left + gap, statsRect.bottom + gap,
                                   panel.right - gap, statsRect.bottom + gap + detailH)
 
-        drawPaperdoll(canvas, g, paperdollRect, sd, cr)
-        drawStatsPanel(canvas, g, statsRect, sd, cr, gap)
-        drawDetailPanel(canvas, g, detailRect, sd, cr, gap)
+        drawPaperdoll(canvas, g, paperdollRect, cr)
+        drawStatsPanel(canvas, g, statsRect, cr, gap)
+        drawDetailPanel(canvas, g, detailRect, cr, gap)
     }
 
-    private fun drawPaperdoll(canvas: Canvas, g: RoguelikeGame, rect: RectF, sd: Float, cr: Float) {
+    private fun drawPaperdoll(canvas: Canvas, g: RoguelikeGame, rect: RectF, cr: Float) {
         canvas.drawRoundRect(rect, cr, cr, pInvCard)
         val (heroR, slots) = paperdollSlotRects(rect)
-        cachedSlotRects = slots  // mis en cache pour le touch handler
+        cachedSlotRects = slots
 
-        // Sprite héros — centerInside pour conserver le ratio du bitmap
         val heroBmp = SpriteLoader.load(context.assets, g.heroSpritePath)
         if (heroBmp != null) {
             val bRatio = heroBmp.width.toFloat() / heroBmp.height
@@ -548,29 +486,22 @@ class RoguelikeView @JvmOverloads constructor(
             val dx = heroR.left + (heroR.width() - dw) / 2f
             val dy = heroR.top  + (heroR.height() - dh) / 2f
             canvas.drawBitmap(heroBmp, null, RectF(dx, dy, dx + dw, dy + dh), pSprite)
-        } else {
-            pText.color = 0xFF00E5FF.toInt(); pText.textSize = heroR.height() * 0.6f
-            canvas.drawText("@", heroR.centerX(), heroR.centerY() + heroR.height() * 0.22f, pText)
         }
 
-        // Slots d'équipement
         for ((slot, slotR) in slots) {
             val isSelected = selectedEquipSlot == slot
-            val equip = g.player.equipped[slot]
+            val equip = g.hero.equipped[slot]
 
-            // Fond slot
             canvas.drawRoundRect(slotR, cr * 0.5f, cr * 0.5f, if (isSelected) pInvSlotSel else pInvSlotBg)
             canvas.drawRoundRect(slotR, cr * 0.5f, cr * 0.5f, if (isSelected) pInvBorderSel else pInvBorder)
 
             if (equip != null) {
-                // Halo rareté subtil
                 val haloPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = equip.rarity.colorArgb and 0x33FFFFFF.toInt()
+                    color = equip.rarity.colorArgb and 0x33FFFFFF
                 }
                 canvas.drawRoundRect(slotR, cr * 0.5f, cr * 0.5f, haloPaint)
                 drawEquipIcon(canvas, equip, slotR.inset(slotR.width() * 0.08f))
             } else {
-                // Slot vide : icône de slot
                 pText.textAlign = Paint.Align.CENTER
                 pText.color = 0xFF2A3E52.toInt(); pText.textSize = slotR.height() * 0.4f
                 val slotIcon = when (slot) {
@@ -581,7 +512,6 @@ class RoguelikeView @JvmOverloads constructor(
                 canvas.drawText(slotIcon, slotR.centerX(), slotR.centerY() + slotR.height() * 0.15f, pText)
             }
 
-            // Label slot (en dessous)
             pText.textAlign = Paint.Align.CENTER
             pText.color = if (isSelected) 0xFF42A5F5.toInt() else 0xFF445566.toInt()
             pText.textSize = slotR.height() * 0.20f
@@ -589,41 +519,43 @@ class RoguelikeView @JvmOverloads constructor(
         }
     }
 
-    private fun drawStatsPanel(canvas: Canvas, g: RoguelikeGame, rect: RectF, sd: Float, cr: Float, gap: Float) {
+    private fun drawStatsPanel(canvas: Canvas, g: RoguelikeGame, rect: RectF, cr: Float, gap: Float) {
         canvas.drawRoundRect(rect, cr, cr, pInvCard)
-        val p = g.player
+        val p = g.hero
 
         pText.textAlign = Paint.Align.LEFT
         pText.color = 0xFF888888.toInt(); pText.textSize = sd * 11f
         canvas.drawText(context.getString(R.string.roguelike_stats_title), rect.left + gap * 2, rect.top + gap + sd * 11f, pText)
 
-        val col1 = rect.left + gap * 2
-        val col2 = rect.left + rect.width() * 0.5f
+        val colW  = (rect.width() - gap * 4) / 3f
         val lineH = (rect.height() - gap * 3 - sd * 11f) / 4f
-        val y0 = rect.top + gap * 2 + sd * 11f
+        val y0    = rect.top + gap * 2 + sd * 11f
 
-        fun stat(label: String, value: String, col: Float, row: Int) {
+        fun stat(label: String, value: String, col: Int, row: Int) {
+            val x = rect.left + gap * 2 + col * colW
             val y = y0 + row * lineH + lineH * 0.7f
             pText.color = 0xFF556677.toInt(); pText.textSize = sd * 11f
-            canvas.drawText(label, col, y, pText)
+            canvas.drawText(label, x, y, pText)
             pText.color = 0xFFDDEEFF.toInt(); pText.textSize = sd * 13f
-            canvas.drawText(value, col + rect.width() * 0.2f, y, pText)
+            canvas.drawText(value, x + colW * 0.45f, y, pText)
         }
 
-        stat(context.getString(R.string.roguelike_stat_hp),               "${p.hp} / ${p.totalMaxHp}",           col1, 0)
-        stat(context.getString(StatType.ATK.labelRes),                    "${p.atk}",                             col2, 0)
-        stat(context.getString(StatType.DEF.labelRes),                    "${p.def}",                             col1, 1)
-        stat(context.getString(StatType.CRIT_CHANCE.labelRes),            "${(p.critChance * 100).toInt()}%",     col2, 1)
-        stat(context.getString(StatType.CRIT_DMG.labelRes),                "×${"%.1f".format(p.critDmgMult)}",    col1, 2)
-        stat(context.getString(StatType.EVASION.labelRes),                "${(p.evasionChance * 100).toInt()}%",  col2, 2)
-        stat(context.getString(StatType.BLOCK.labelRes),                  "${(p.blockChance * 100).toInt()}%",    col1, 3)
-        stat(context.getString(R.string.roguelike_gold),                  "${p.gold}",                            col2, 3)
+        // Les six caractéristiques D&D
+        val attrs = listOf(StatType.STR, StatType.DEX, StatType.CON, StatType.INT, StatType.WIS, StatType.CHA)
+        attrs.forEachIndexed { i, a -> stat(context.getString(a.labelRes), "${p.attribute(a)}", i % 3, i / 3) }
+
+        stat(context.getString(R.string.roguelike_stat_hp), context.getString(R.string.roguelike_combat_hp, p.hp, p.maxHp), 0, 2)
+        stat(context.getString(StatType.ARMOR.labelRes), "${p.armor}", 1, 2)
+        stat(context.getString(R.string.roguelike_stat_crit), context.getString(R.string.roguelike_percent, (p.critChance * 100).roundToInt()), 2, 2)
+        stat(context.getString(R.string.roguelike_stat_sword), context.getString(R.string.roguelike_range, p.swordMin, p.swordMax), 0, 3)
+        stat(context.getString(R.string.roguelike_combat_potion), "${p.potions}", 1, 3)
+        stat(context.getString(R.string.roguelike_gold), "${p.gold}", 2, 3)
     }
 
-    private fun drawDetailPanel(canvas: Canvas, g: RoguelikeGame, rect: RectF, sd: Float, cr: Float, gap: Float) {
+    private fun drawDetailPanel(canvas: Canvas, g: RoguelikeGame, rect: RectF, cr: Float, gap: Float) {
         canvas.drawRoundRect(rect, cr, cr, pInvCard)
         val slot  = selectedEquipSlot
-        val equip = if (slot != null) g.player.equipped[slot] else null
+        val equip = if (slot != null) g.hero.equipped[slot] else null
 
         pText.textAlign = Paint.Align.CENTER
         if (equip == null) {
@@ -636,7 +568,6 @@ class RoguelikeView @JvmOverloads constructor(
             return
         }
 
-        // Icône item (petit, à gauche)
         val iconSize = rect.height() * 0.55f
         val iconR = RectF(rect.left + gap * 2, rect.centerY() - iconSize / 2,
                           rect.left + gap * 2 + iconSize, rect.centerY() + iconSize / 2)
@@ -645,16 +576,14 @@ class RoguelikeView @JvmOverloads constructor(
 
         val textX = iconR.right + gap * 2
 
-        // Nom + rareté
         pText.textAlign = Paint.Align.LEFT
         pText.color = equip.rarity.colorArgb; pText.textSize = sd * 13f
         canvas.drawText(LootSystem.displayName(context, equip), textX, rect.top + gap + sd * 13f, pText)
 
-        // Matière
         pText.color = 0xFF556677.toInt(); pText.textSize = sd * 11f
-        canvas.drawText("${context.getString(equip.material.labelRes)} · ${context.getString(equip.slot.labelRes)}", textX, rect.top + gap * 2 + sd * 24f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_item_subtitle, context.getString(equip.material.labelRes), context.getString(equip.slot.labelRes)),
+            textX, rect.top + gap * 2 + sd * 24f, pText)
 
-        // Stats
         var statY = rect.top + gap * 3 + sd * 35f
         val statLineH = sd * 13f + gap * 0.4f
         for (stat in equip.stats) {
@@ -666,58 +595,61 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun RectF.inset(amount: Float) = RectF(left + amount, top + amount, right - amount, bottom - amount)
 
-    // ── Shop ────────────────────────────────────────────────────────────────────
+    // ── Marchand (sur l'escalier) ────────────────────────────────────────────────
 
-    private fun shopPanelRect() = RectF(width * 0.06f, height * 0.08f, width * 0.94f, height * 0.92f)
+    private fun shopPanelRect() = RectF(width * 0.06f, height * 0.18f, width * 0.94f, height * 0.82f)
 
-    private fun shopItemRect(index: Int, panel: RectF): RectF {
-        val topPad = panel.height() * 0.12f; val btnH = panel.height() * 0.10f
-        val gap    = panel.height() * 0.02f; val cardH = (panel.height() - topPad - btnH - gap * 4) / 3f
-        val top    = panel.top + topPad + index * (cardH + gap)
-        return RectF(panel.left + gap, top, panel.right - gap, top + cardH)
+    private fun shopPotionRect(panel: RectF): RectF {
+        val gap = panel.height() * 0.04f
+        val top = panel.top + panel.height() * 0.24f
+        return RectF(panel.left + gap, top, panel.right - gap, top + panel.height() * 0.24f)
     }
 
     private fun shopDescendRect(panel: RectF): RectF {
-        val btnH = panel.height() * 0.10f; val gap = panel.height() * 0.02f
-        return RectF(panel.left + gap * 4, panel.bottom - btnH - gap, panel.right - gap * 4, panel.bottom - gap)
+        val btnH = panel.height() * 0.14f; val gap = panel.height() * 0.04f
+        return RectF(panel.left + gap, panel.bottom - btnH - gap, panel.centerX() - gap / 2, panel.bottom - gap)
+    }
+
+    private fun shopStayRect(panel: RectF): RectF {
+        val btnH = panel.height() * 0.14f; val gap = panel.height() * 0.04f
+        return RectF(panel.centerX() + gap / 2, panel.bottom - btnH - gap, panel.right - gap, panel.bottom - gap)
     }
 
     private fun drawShop(canvas: Canvas, g: RoguelikeGame) {
-        val sd = context.resources.displayMetrics.density * context.resources.configuration.fontScale
         val panel = shopPanelRect(); val cr = 16f * context.resources.displayMetrics.density
+        canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         canvas.drawRoundRect(panel, cr, cr, pShopBg)
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFFFD600.toInt(); pText.textSize = sd * 20f
-        canvas.drawText(context.getString(R.string.roguelike_shop_title), panel.centerX(), panel.top + panel.height() * 0.08f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_shop_title), panel.centerX(), panel.top + panel.height() * 0.10f, pText)
         pText.color = 0xFFAAAAAA.toInt(); pText.textSize = sd * 13f
-        canvas.drawText(context.getString(R.string.roguelike_shop_gold_available, g.player.gold), panel.centerX(), panel.top + panel.height() * 0.13f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_shop_gold_available, g.hero.gold), panel.centerX(), panel.top + panel.height() * 0.18f, pText)
 
-        val items = listOf(
-            Triple(ShopItem.POTION,  context.getString(R.string.roguelike_shop_potion_name),  context.getString(R.string.roguelike_shop_potion_desc)),
-            Triple(ShopItem.ATK_UP,  context.getString(R.string.roguelike_shop_atk_name),      context.getString(R.string.roguelike_shop_atk_desc)),
-            Triple(ShopItem.BARRIER, context.getString(R.string.roguelike_shop_barrier_name),  context.getString(R.string.roguelike_shop_barrier_desc))
-        )
-        items.forEachIndexed { i, (item, name, desc) ->
-            val r      = shopItemRect(i, panel)
-            val bought = item in g.shopBought; val canBuy = !bought && g.player.gold >= item.cost
-            canvas.drawRoundRect(r, cr * 0.6f, cr * 0.6f, if (bought) pShopSold else pShopCard)
-            pText.textAlign = Paint.Align.LEFT
-            pText.color = if (bought) 0xFF666666.toInt() else 0xFFEEEEEE.toInt(); pText.textSize = sd * 15f
-            canvas.drawText(name, r.left + r.height() * 0.2f, r.centerY() - sd * 4f, pText)
-            pText.color = if (bought) 0xFF444444.toInt() else 0xFF888888.toInt(); pText.textSize = sd * 12f
-            canvas.drawText(desc, r.left + r.height() * 0.2f, r.centerY() + sd * 12f, pText)
-            val badgeW = r.height() * 1.1f
-            val badgeR = RectF(r.right - badgeW - r.height() * 0.1f, r.top + r.height() * 0.2f, r.right - r.height() * 0.1f, r.bottom - r.height() * 0.2f)
-            canvas.drawRoundRect(badgeR, cr * 0.4f, cr * 0.4f, when { bought -> pShopSold; canBuy -> pShopBuy; else -> pShopSold })
-            pText.textAlign = Paint.Align.CENTER
-            pText.color = if (bought) 0xFF555555.toInt() else 0xFFFFFFFF.toInt(); pText.textSize = sd * 13f
-            canvas.drawText(if (bought) "✓" else context.getString(R.string.roguelike_shop_price, item.cost), badgeR.centerX(), badgeR.centerY() + sd * 5f, pText)
-        }
+        val r = shopPotionRect(panel)
+        val price = RoguelikeGame.POTION_PRICE
+        val canBuy = g.hero.gold >= price && g.hero.potions < Hero.MAX_POTIONS
+        canvas.drawRoundRect(r, cr * 0.6f, cr * 0.6f, pShopCard)
+        val icon = RectF(r.left + r.height() * 0.15f, r.top + r.height() * 0.15f, r.left + r.height() * 0.85f, r.bottom - r.height() * 0.15f)
+        drawSheetCell(canvas, ItemType.POTION.spriteRow, ItemType.POTION.spriteCol, icon)
+        pText.textAlign = Paint.Align.LEFT
+        pText.color = 0xFFEEEEEE.toInt(); pText.textSize = sd * 15f
+        canvas.drawText(context.getString(R.string.roguelike_combat_potion), icon.right + r.height() * 0.2f, r.centerY() - sd * 4f, pText)
+        pText.color = 0xFF888888.toInt(); pText.textSize = sd * 12f
+        canvas.drawText(context.getString(R.string.roguelike_shop_potion_owned, g.hero.potions, Hero.MAX_POTIONS), icon.right + r.height() * 0.2f, r.centerY() + sd * 12f, pText)
+        val badgeW = r.height() * 1.1f
+        val badgeR = RectF(r.right - badgeW - r.height() * 0.1f, r.top + r.height() * 0.2f, r.right - r.height() * 0.1f, r.bottom - r.height() * 0.2f)
+        canvas.drawRoundRect(badgeR, cr * 0.4f, cr * 0.4f, if (canBuy) pShopBuy else pShopSold)
+        pText.textAlign = Paint.Align.CENTER
+        pText.color = if (canBuy) 0xFFFFFFFF.toInt() else 0xFF777777.toInt(); pText.textSize = sd * 13f
+        canvas.drawText(context.getString(R.string.roguelike_shop_price, price), badgeR.centerX(), badgeR.centerY() + sd * 5f, pText)
 
         val dRect = shopDescendRect(panel)
         canvas.drawRoundRect(dRect, cr * 0.6f, cr * 0.6f, pShopDescend)
-        pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 16f
+        pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 16f
         canvas.drawText(context.getString(R.string.roguelike_shop_descend), dRect.centerX(), dRect.centerY() + sd * 6f, pText)
+        val sRect = shopStayRect(panel)
+        canvas.drawRoundRect(sRect, cr * 0.6f, cr * 0.6f, pShopSold)
+        canvas.drawText(context.getString(R.string.roguelike_shop_stay), sRect.centerX(), sRect.centerY() + sd * 6f, pText)
     }
 
     // ── Popup de loot ────────────────────────────────────────────────────────────
@@ -738,48 +670,40 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun drawLootPopup(canvas: Canvas, g: RoguelikeGame) {
         val equip   = g.pendingEquipDrop ?: return
-        val current = g.player.equipped[equip.slot]
-        val sd      = context.resources.displayMetrics.density * context.resources.configuration.fontScale
+        val current = g.hero.equipped[equip.slot]
         val cr      = 14f * context.resources.displayMetrics.density
         val panel   = lootPanelRect()
         val gap     = panel.height() * 0.025f
 
-        // Assombrir le fond
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
-
-        // Panneau principal
         canvas.drawRoundRect(panel, cr, cr, pLootBg)
         pLootBorder.color = equip.rarity.colorArgb
         canvas.drawRoundRect(panel, cr, cr, pLootBorder)
 
-        // ── Titre ──────────────────────────────────────────────────────────────
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 13f
         canvas.drawText(context.getString(R.string.roguelike_loot_found_title, context.getString(equip.slot.labelRes)), panel.centerX(), panel.top + gap + sd * 13f, pText)
 
         val titleBottom = panel.top + gap * 2 + sd * 13f
 
-        // ── Séparateur vertical central ────────────────────────────────────────
         val sepX    = panel.centerX()
         val btnTop  = lootEquipBtnRect(panel).top - gap
         val dividerPaint = Paint().apply { color = 0xFF333344.toInt(); strokeWidth = 1f }
         canvas.drawLine(sepX, titleBottom, sepX, btnTop, dividerPaint)
 
-        // ── Colonnes : NOUVEAU (gauche) | ÉQUIPÉ (current, droite) ─────────────
+        // Colonnes : NOUVEAU (gauche) | ÉQUIPÉ (droite)
         val colL = RectF(panel.left,  titleBottom, sepX - gap * 0.5f, btnTop)
         val colR = RectF(sepX + gap * 0.5f, titleBottom, panel.right, btnTop)
 
-        drawItemColumn(canvas, equip,   colL, isNew = true,  sd, cr, gap)
+        drawItemColumn(canvas, equip, colL, isNew = true, cr, gap)
         if (current != null)
-            drawItemColumn(canvas, current, colR, isNew = false, sd, cr, gap)
+            drawItemColumn(canvas, current, colR, isNew = false, cr, gap)
         else {
             pText.textAlign = Paint.Align.CENTER; pText.color = 0xFF555555.toInt(); pText.textSize = sd * 13f
             canvas.drawText(context.getString(R.string.roguelike_loot_nothing_equipped), colR.centerX(), colR.centerY(), pText)
         }
 
-        // ── Indicateurs de delta par stat (sur la colonne gauche) ──────────────
-        if (current != null) drawStatDeltas(canvas, equip, current, colL, colR, sd, gap)
+        if (current != null) drawStatDeltas(canvas, equip, current, colL, colR, gap)
 
-        // ── Boutons ────────────────────────────────────────────────────────────
         val equipR  = lootEquipBtnRect(panel)
         val ignoreR = lootIgnoreBtnRect(panel)
         canvas.drawRoundRect(equipR,  cr * 0.6f, cr * 0.6f, pEquipBtn)
@@ -790,35 +714,28 @@ class RoguelikeView @JvmOverloads constructor(
     }
 
     /** Dessine une colonne item (icône + nom rareté + stats). */
-    private fun drawItemColumn(
-        canvas: Canvas, equip: Equipment, col: RectF,
-        isNew: Boolean, sd: Float, cr: Float, gap: Float
-    ) {
+    private fun drawItemColumn(canvas: Canvas, equip: Equipment, col: RectF, isNew: Boolean, cr: Float, gap: Float) {
         val iconSize = minOf(col.width() * 0.45f, col.height() * 0.25f)
         val iconRect = RectF(col.centerX() - iconSize / 2, col.top + gap,
                              col.centerX() + iconSize / 2, col.top + gap + iconSize)
 
-        // Fond icône + halo rareté
-        val haloPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = equip.rarity.colorArgb and 0x44FFFFFF.toInt() }
+        val haloPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = equip.rarity.colorArgb and 0x44FFFFFF }
         canvas.drawCircle(iconRect.centerX(), iconRect.centerY(), iconSize * 0.6f, haloPaint)
         canvas.drawRoundRect(iconRect, cr * 0.4f, cr * 0.4f, pLootCardBg)
         drawEquipIcon(canvas, equip, iconRect)
 
         var y = iconRect.bottom + gap
 
-        // Étiquette NOUVEAU / ÉQUIPÉ
         pText.textAlign = Paint.Align.CENTER
         pText.color = if (isNew) 0xFFFFD600.toInt() else 0xFF888888.toInt()
         pText.textSize = sd * 11f
         canvas.drawText(if (isNew) context.getString(R.string.roguelike_loot_new_badge) else context.getString(R.string.roguelike_loot_equipped_badge), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.5f
 
-        // Nom avec couleur rareté
         pText.color = equip.rarity.colorArgb; pText.textSize = sd * 13f
         canvas.drawText(LootSystem.displayName(context, equip), col.centerX(), y + sd * 13f, pText)
         y += sd * 13f + gap * 0.6f
 
-        // Stats
         for (stat in equip.stats) {
             pText.color = if (isNew) 0xFFDDFFDD.toInt() else 0xFFAAAAAA.toInt()
             pText.textSize = sd * 12f
@@ -827,39 +744,28 @@ class RoguelikeView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Sur chaque stat du nouvel item, affiche un delta (+X ou -X) centré
-     * sur le séparateur vertical entre les deux colonnes.
-     */
-    private fun drawStatDeltas(
-        canvas: Canvas, newItem: Equipment, current: Equipment,
-        colL: RectF, colR: RectF, sd: Float, gap: Float
-    ) {
-        // Calcule la somme par StatType pour chaque item
+    /** Sur chaque stat du nouvel objet, affiche l'écart (▲/▼) avec l'objet porté. */
+    private fun drawStatDeltas(canvas: Canvas, newItem: Equipment, current: Equipment, colL: RectF, colR: RectF, gap: Float) {
         fun sumStat(eq: Equipment, type: StatType) =
             eq.stats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
 
         val sepX  = (colL.right + colR.left) / 2f
-        // Position Y de départ des stats dans la colonne gauche
-        // (approximatif : on aligne avec la zone stats du nouveau)
         val iconSize = minOf(colL.width() * 0.45f, colL.height() * 0.25f)
         var y = colL.top + gap + iconSize + gap + sd * 11f + gap * 0.5f + sd * 13f + gap * 0.6f
 
         val deltaPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = Typeface.MONOSPACE; textAlign = Paint.Align.CENTER }
 
         for (stat in newItem.stats) {
-            val newVal  = sumStat(newItem, stat.type)
-            val curVal  = sumStat(current, stat.type)
-            val delta   = newVal - curVal
+            val delta = sumStat(newItem, stat.type) - sumStat(current, stat.type)
             if (delta != 0f) {
-                val sign   = if (delta > 0f) "▲" else "▼"
-                val color  = if (delta > 0f) 0xFF66FF66.toInt() else 0xFFFF6666.toInt()
-                val dispVal = if (stat.type.isPercent)
-                    "${(kotlin.math.abs(delta) * 100).toInt()}%"
+                val sign  = if (delta > 0f) "▲" else "▼"
+                val value = if (stat.type.isPercent)
+                    context.getString(R.string.roguelike_percent, (abs(delta) * 100).roundToInt())
                 else
-                    "${kotlin.math.abs(delta).toInt()}"
-                deltaPaint.color = color; deltaPaint.textSize = sd * 11f
-                canvas.drawText("$sign$dispVal", sepX, y + sd * 12f, deltaPaint)
+                    "${abs(delta).roundToInt()}"
+                deltaPaint.color = if (delta > 0f) 0xFF66FF66.toInt() else 0xFFFF6666.toInt()
+                deltaPaint.textSize = sd * 11f
+                canvas.drawText("$sign$value", sepX, y + sd * 12f, deltaPaint)
             }
             y += sd * 12f + gap * 0.4f
         }
@@ -874,7 +780,9 @@ class RoguelikeView @JvmOverloads constructor(
         canvas.drawCircle(touchDownX, touchDownY, 18f, pSwipeDot)
         if (dist >= swipeMinPx * 0.5f) {
             canvas.drawLine(touchDownX, touchDownY, touchCurrX, touchCurrY, pSwipeLine)
-            val angle = atan2(dy, dx)
+            // La flèche montre la direction réellement jouée (8 secteurs), pas le doigt exact
+            val (sx, sy) = sectorDir(dx, dy)
+            val angle = atan2(sy.toFloat(), sx.toFloat())
             val tipX = touchDownX + cos(angle) * (dist + 16f); val tipY = touchDownY + sin(angle) * (dist + 16f)
             val path = Path().apply {
                 moveTo(tipX, tipY)
@@ -889,7 +797,7 @@ class RoguelikeView @JvmOverloads constructor(
     // ── Touch ────────────────────────────────────────────────────────────────────
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        game ?: return false
+        val g = game ?: return false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 touchDownX = event.x; touchDownY = event.y
@@ -897,64 +805,137 @@ class RoguelikeView @JvmOverloads constructor(
                 touching = true; invalidate()
             }
             MotionEvent.ACTION_MOVE -> {
-                touchCurrX = event.x; touchCurrY = event.y; invalidate()
+                touchCurrX = event.x; touchCurrY = event.y
+                val dx = touchCurrX - touchDownX; val dy = touchCurrY - touchDownY
+                if (sqrt(dx * dx + dy * dy) >= swipeMinPx && canWalk(g)) {
+                    val dir = sectorDir(dx, dy)
+                    if (dir != holdDir) {
+                        // Nouvelle direction : un pas tout de suite, puis la répétition
+                        holdDir = dir
+                        holdSuspended = false
+                        removeCallbacks(holdRepeat)
+                        stepHeld()
+                        postDelayed(holdRepeat, FIRST_REPEAT_MS)
+                    }
+                }
+                invalidate()
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val dx = event.x - touchDownX; val dy = event.y - touchDownY
                 val dist = sqrt(dx * dx + dy * dy)
-                val g = game
+                val tap = dist < swipeMinPx && !movedThisTouch
+                val walked = movedThisTouch
+                stopHold()
+                movedThisTouch = false
 
-                if (g != null && g.pendingEquipDrop != null && dist < swipeMinPx) {
-                    // ── Popup loot ──────────────────────────────────────────────
-                    val panel = lootPanelRect()
-                    when {
-                        lootEquipBtnRect(panel).contains(touchDownX, touchDownY)  -> onEquipItem?.invoke()
-                        lootIgnoreBtnRect(panel).contains(touchDownX, touchDownY) -> onIgnoreDrop?.invoke()
-                    }
-                } else if (g != null && g.shopOpen && dist < swipeMinPx) {
-                    // ── Shop ────────────────────────────────────────────────────
-                    val panel = shopPanelRect()
-                    listOf(ShopItem.POTION, ShopItem.ATK_UP, ShopItem.BARRIER).forEachIndexed { i, item ->
-                        if (shopItemRect(i, panel).contains(touchDownX, touchDownY)) onBuyShopItem?.invoke(item)
-                    }
-                    if (shopDescendRect(panel).contains(touchDownX, touchDownY)) onConfirmDescend?.invoke()
-                } else if (inventoryOpen && dist < swipeMinPx) {
-                    // ── Inventaire ──────────────────────────────────────────────
-                    val panel = invPanelRect()
-                    when {
-                        invCloseBtnRect(panel).contains(touchDownX, touchDownY) -> {
-                            inventoryOpen = false; selectedEquipSlot = null
+                when {
+                    g.deathReport != null -> if (tap) onDismissDeath?.invoke()
+
+                    g.pendingEquipDrop != null -> if (tap) {
+                        val panel = lootPanelRect()
+                        when {
+                            lootEquipBtnRect(panel).contains(touchDownX, touchDownY)  -> onEquipItem?.invoke()
+                            lootIgnoreBtnRect(panel).contains(touchDownX, touchDownY) -> onIgnoreDrop?.invoke()
                         }
-                        else -> {
-                            // Tap sur un slot ? (utilise les rects calculés au dernier draw)
-                            val tapped = cachedSlotRects.entries
-                                .firstOrNull { (_, r) -> r.contains(touchDownX, touchDownY) }
+                    }
+
+                    g.merchantOpen -> if (tap) {
+                        val panel = shopPanelRect()
+                        when {
+                            shopPotionRect(panel).contains(touchDownX, touchDownY)  -> onBuyPotion?.invoke()
+                            shopDescendRect(panel).contains(touchDownX, touchDownY) -> onDescend?.invoke()
+                            shopStayRect(panel).contains(touchDownX, touchDownY)    -> onCloseMerchant?.invoke()
+                        }
+                    }
+
+                    inventoryOpen -> if (tap) {
+                        val panel = invPanelRect()
+                        if (invCloseBtnRect(panel).contains(touchDownX, touchDownY)) {
+                            inventoryOpen = false; selectedEquipSlot = null
+                        } else {
+                            val tapped = cachedSlotRects.entries.firstOrNull { (_, r) -> r.contains(touchDownX, touchDownY) }
                             selectedEquipSlot = if (tapped?.key == selectedEquipSlot) null else tapped?.key
                         }
                     }
-                } else if (dist < swipeMinPx) {
-                    // ── Taps HUD normaux ────────────────────────────────────────
-                    if (g != null && g.phase == GamePhase.PLAYING) {
-                        when {
-                            inventoryBtnRect().contains(touchDownX, touchDownY) -> {
-                                inventoryOpen = !inventoryOpen
-                                if (!inventoryOpen) selectedEquipSlot = null
-                            }
-                            heartRect().contains(touchDownX, touchDownY)
-                                    && g.player.inventory.isNotEmpty() -> onUseItem?.invoke()
-                            stairsIconRect().contains(touchDownX, touchDownY)
-                                    && g.onStairsTile() -> onDescend?.invoke()
+
+                    !g.isExploring -> {}
+
+                    tap -> when {
+                        inventoryBtnRect().contains(touchDownX, touchDownY) -> {
+                            inventoryOpen = true; selectedEquipSlot = null
                         }
+                        restBtnRect().contains(touchDownX, touchDownY) -> onRest?.invoke()
+                        stairsIconRect().contains(touchDownX, touchDownY) && g.onStairsTile() -> onOpenMerchant?.invoke()
                     }
-                } else if (g?.phase == GamePhase.PLAYING && g.pendingEquipDrop == null && !inventoryOpen) {
-                    // ── Swipe déplacement ───────────────────────────────────────
-                    val mx = if (abs(dx) > dist * 0.38f) dx.sign.toInt() else 0
-                    val my = if (abs(dy) > dist * 0.38f) dy.sign.toInt() else 0
-                    if (mx != 0 || my != 0) onMove?.invoke(mx, my)
+
+                    // Swipe trop rapide pour que ACTION_MOVE ait déclenché un pas
+                    !walked && dist >= swipeMinPx ->
+                        slide(g, sectorDir(dx, dy), dx, dy)?.let { (mx, my) -> onMove?.invoke(mx, my) }
                 }
                 touching = false; invalidate()
             }
         }
         return true
+    }
+
+    // ── Déplacement maintenu ─────────────────────────────────────────────────────
+
+    private companion object {
+        const val FIRST_REPEAT_MS = 220L
+        const val REPEAT_MS       = 140L
+        /** Les 8 directions, dans l'ordre des secteurs de 45° (0 = droite, y vers le bas). */
+        val DIRS8 = listOf(1 to 0, 1 to 1, 0 to 1, -1 to 1, -1 to 0, -1 to -1, 0 to -1, 1 to -1)
+    }
+
+    private var holdDir: Pair<Int, Int>? = null
+    private var movedThisTouch = false
+    /** Mis en pause quand un nouveau monstre nous repère : on ne fonce pas dedans sans le vouloir. */
+    private var holdSuspended = false
+
+    private val holdRepeat = object : Runnable {
+        override fun run() {
+            if (holdDir == null) return
+            stepHeld()
+            postDelayed(this, REPEAT_MS)
+        }
+    }
+
+    private fun canWalk(g: RoguelikeGame) =
+        g.isExploring && !inventoryOpen
+
+    private fun sectorDir(dx: Float, dy: Float): Pair<Int, Int> {
+        val sector = ((atan2(dy, dx) / (PI / 4)).roundToInt() + 8) % 8
+        return DIRS8[sector]
+    }
+
+    /**
+     * Pas voulu, ou glissement le long du mur : une diagonale bloquée devient le pas droit
+     * possible (celui que le doigt indique le plus), pratique dans les virages de couloir.
+     */
+    private fun slide(g: RoguelikeGame, dir: Pair<Int, Int>, dx: Float, dy: Float): Pair<Int, Int>? {
+        val lv = g.level; val p = g.playerPos
+        val (mx, my) = dir
+        if (lv.canStep(p, mx, my)) return dir
+        if (mx == 0 || my == 0) return null
+        val axes = if (abs(dx) >= abs(dy)) listOf(mx to 0, 0 to my) else listOf(0 to my, mx to 0)
+        return axes.firstOrNull { (ax, ay) -> lv.canStep(p, ax, ay) }
+    }
+
+    private fun stepHeld() {
+        val g = game ?: return
+        val dir = holdDir ?: return
+        if (!canWalk(g) || holdSuspended) return
+        val step = slide(g, dir, touchCurrX - touchDownX, touchCurrY - touchDownY) ?: return
+        val chasingBefore = g.level.packs.count { it.alive && it.state == PackState.CHASING }
+        onMove?.invoke(step.first, step.second)
+        movedThisTouch = true
+        val chasingAfter = g.level.packs.count { it.alive && it.state == PackState.CHASING }
+        if (chasingAfter > chasingBefore || !g.isExploring) holdSuspended = true
+    }
+
+    private fun stopHold() {
+        holdDir = null
+        holdSuspended = false
+        removeCallbacks(holdRepeat)
     }
 }

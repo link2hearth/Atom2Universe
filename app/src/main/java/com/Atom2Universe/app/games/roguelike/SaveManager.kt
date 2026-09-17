@@ -11,7 +11,7 @@ import org.json.JSONObject
 object SaveManager {
 
     private const val PREFS = "roguelike_save"
-    private const val KEY   = "save_v3"
+    private const val KEY   = "save_v4"  // v4 : refonte (combats séparés, stats D&D)
 
     // ── API publique ─────────────────────────────────────────────────────────────
 

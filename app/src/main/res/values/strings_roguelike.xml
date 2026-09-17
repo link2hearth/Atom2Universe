@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="roguelike_title">Dungeon</string>
-    <string name="roguelike_description">Explore procedural dungeons and survive 5 floors</string>
+    <string name="roguelike_description">Explore the dungeon, fight turn by turn and loot your gear</string>
 
     <string name="roguelike_gold">Gold</string>
     <string name="roguelike_stat_hp">HP</string>
@@ -68,7 +68,7 @@
     <string name="roguelike_log_inventory_full">Inventory full!</string>
     <string name="roguelike_log_resume">Adventure resumed — Floor %1$d.</string>
 
-    <string name="roguelike_descend_hint">[ &gt; ] Tap Descend</string>
+    <string name="roguelike_descend_hint">Tap ↓ to meet the merchant</string>
     <string name="roguelike_death_title">YOU DIED</string>
     <string name="roguelike_floor_gold_summary">Floor %1$d  —  %2$d gold</string>
     <string name="roguelike_tap_replay">Tap to play again</string>
@@ -76,7 +76,7 @@
     <string name="roguelike_stats_title">STATISTICS</string>
     <string name="roguelike_select_slot_hint">← Select a slot</string>
     <string name="roguelike_empty_slot">— Empty slot —</string>
-    <string name="roguelike_shop_title">SHOP</string>
+    <string name="roguelike_shop_title">MERCHANT</string>
     <string name="roguelike_shop_gold_available">%1$d gold available</string>
     <string name="roguelike_shop_potion_name">♥  Max HP +10</string>
     <string name="roguelike_shop_potion_desc">Max HP +10 + full heal</string>
@@ -84,7 +84,7 @@
     <string name="roguelike_shop_atk_desc">Permanent ATK +1</string>
     <string name="roguelike_shop_barrier_name">◈  Barrier</string>
     <string name="roguelike_shop_barrier_desc">Unlocks barrier regeneration</string>
-    <string name="roguelike_shop_price">%1$dgold</string>
+    <string name="roguelike_shop_price">%1$d gold</string>
     <string name="roguelike_shop_descend">↓  Descend</string>
     <string name="roguelike_loot_found_title">— %1$s found —</string>
     <string name="roguelike_loot_nothing_equipped">(nothing equipped)</string>
@@ -97,4 +97,66 @@
     <string name="roguelike_resume_dialog_message">An adventure is in progress:\n%1$s\n\nWhat do you want to do?</string>
     <string name="roguelike_resume_dialog_continue">Continue</string>
     <string name="roguelike_resume_dialog_new_game">New game</string>
+
+    <!-- Refonte : combats, caractéristiques D&amp;D, marchand -->
+    <string name="roguelike_attr_str">STR</string>
+    <string name="roguelike_attr_dex">DEX</string>
+    <string name="roguelike_attr_con">CON</string>
+    <string name="roguelike_attr_int">INT</string>
+    <string name="roguelike_attr_wis">WIS</string>
+    <string name="roguelike_attr_cha">CHA</string>
+    <string name="roguelike_stattype_armor">Armor</string>
+    <string name="roguelike_stattype_weapon_dmg">Weapon damage</string>
+    <string name="roguelike_stattype_spell_dmg">Spell damage</string>
+    <string name="roguelike_stat_roll_flat">+%1$d %2$s</string>
+    <string name="roguelike_stat_roll_percent">+%1$d%% %2$s</string>
+    <string name="roguelike_relic_fireball">Fireball</string>
+    <string name="roguelike_log_rest">You catch your breath. HP %1$d/%2$d</string>
+    <string name="roguelike_log_victory">Victory! +%1$d gold.</string>
+    <string name="roguelike_log_chain">Another enemy jumps on you!</string>
+    <string name="roguelike_log_spotted">%1$s has spotted you!</string>
+    <string name="roguelike_log_lost_track">%1$s lost your trail.</string>
+    <string name="roguelike_log_potion_pickup">Potion picked up.</string>
+    <string name="roguelike_log_potions_full">You can\'t carry more potions.</string>
+    <string name="roguelike_pack_size">×%1$d</string>
+    <string name="roguelike_hint_chased">Chased: you can\'t rest</string>
+    <string name="roguelike_death_summary">Fell on floor %1$d, lost %2$d gold</string>
+    <string name="roguelike_death_checkpoint">Back to floor %1$d with all your gear</string>
+    <string name="roguelike_stat_crit">Crit</string>
+    <string name="roguelike_stat_sword">Sword</string>
+    <string name="roguelike_percent">%1$d%%</string>
+    <string name="roguelike_range">%1$d–%2$d</string>
+    <string name="roguelike_item_subtitle">%1$s · %2$s</string>
+    <string name="roguelike_shop_potion_owned">%1$d / %2$d carried</string>
+    <string name="roguelike_shop_stay">Stay</string>
+    <string name="roguelike_hud_gold">%1$d gold</string>
+    <string name="roguelike_hud_floor">Floor %1$d</string>
+    <string name="roguelike_combat_attack">Attack</string>
+    <string name="roguelike_combat_potion">Potion</string>
+    <string name="roguelike_combat_potion_count">×%1$d</string>
+    <string name="roguelike_combat_cooldown">ready in %1$d</string>
+    <string name="roguelike_combat_hp">%1$d / %2$d</string>
+    <string name="roguelike_combat_countdown">⚔ %1$d</string>
+    <string name="roguelike_combat_burning">burning %1$d</string>
+    <string name="roguelike_combat_damage">−%1$d</string>
+    <string name="roguelike_combat_crit_damage">−%1$d!</string>
+    <string name="roguelike_combat_heal">+%1$d</string>
+    <string name="roguelike_combat_perfect">PERFECT!</string>
+    <string name="roguelike_combat_good">GOOD!</string>
+    <string name="roguelike_combat_parry_perfect">PERFECT PARRY!</string>
+    <string name="roguelike_combat_parry_good">PARRY!</string>
+    <string name="roguelike_combat_too_early">Too early!</string>
+    <string name="roguelike_combat_hint_choose">Tap an enemy to target it, then choose</string>
+    <string name="roguelike_combat_hint_strike">Swipe when the cursor crosses the gold zone!</string>
+    <string name="roguelike_combat_hint_parry">Tap when the ring closes to parry!</string>
+    <string name="roguelike_combat_start">FIGHT!</string>
+    <string name="roguelike_combat_ambush">AMBUSH!</string>
+    <string name="roguelike_combat_victory">VICTORY</string>
+    <string name="roguelike_combat_reward_gold">+%1$d gold</string>
+    <string name="roguelike_combat_reward_potions">+%1$d potion(s)</string>
+    <string name="roguelike_combat_tap_continue">Tap to continue</string>
+    <plurals name="roguelike_combat_reward_items">
+        <item quantity="one">%1$d item found</item>
+        <item quantity="other">%1$d items found</item>
+    </plurals>
 </resources>

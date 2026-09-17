@@ -21,6 +21,15 @@ object SpriteLoader {
             runCatching { assets.open(path).use { BitmapFactory.decodeStream(it) } }.getOrNull()
         }
 
+    /** Sprites provisoires : toute la partie graphique sera refaite. */
+    fun monsterPath(type: MonsterType): String = when (type) {
+        MonsterType.RAT      -> "Assets/sprites/Dungeon/Monsters/misc/fire_bat.png"
+        MonsterType.GOBLIN   -> "Assets/sprites/Dungeon/Monsters/misc/quasit.png"
+        MonsterType.SKELETON -> "Assets/sprites/Dungeon/Monsters/skeleton/skeleton_humanoid.png"
+        MonsterType.ORC      -> "Assets/sprites/Dungeon/Monsters/deepdwarf/deepdwarf_berzerker.png"
+        MonsterType.DEMON    -> "Assets/sprites/Dungeon/Monsters/pandemon/examples/monsters_pandemon_examples_a.png"
+    }
+
     fun clear() {
         bitmapCache.values.forEach { it?.recycle() }
         bitmapCache.clear()
