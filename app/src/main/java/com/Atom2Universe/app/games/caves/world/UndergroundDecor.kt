@@ -181,6 +181,7 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
     private class Buffers {
         val field = DoubleArray(13 * 13 * 13)
         val heights = IntArray(48 * 48)
+        val waterLevels = IntArray(48 * 48)
         val air = ByteArray(48 * 48 * 48)
         val humidity = DoubleArray(48 * 48)
         val temperature = DoubleArray(48 * 48)
@@ -188,7 +189,7 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
     private class Samples(val c: Chunk, val t: NaturalTerrain, val b: Buffers,
         heights: IntArray, field: DoubleArray) {
         init {
-            b.field.fill(Double.NaN); b.heights.fill(Int.MIN_VALUE); b.air.fill(0)
+            b.field.fill(Double.NaN); b.heights.fill(Int.MIN_VALUE); b.waterLevels.fill(Int.MIN_VALUE); b.air.fill(0)
             b.humidity.fill(Double.NaN); b.temperature.fill(Double.NaN)
             // The terrain was just generated: seed the interior instead of computing it twice.
             for (z in 0..15) for (x in 0..15) {
@@ -214,6 +215,11 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
             if (b.heights[i] == Int.MIN_VALUE) b.heights[i] = t.height((c.worldX + x).toDouble(), (c.worldZ + z).toDouble()).toInt()
             return b.heights[i]
         }
+        fun waterLevel(x: Int, z: Int): Int {
+            val i = x + 12 + (z + 12) * 48
+            if (b.waterLevels[i] == Int.MIN_VALUE) b.waterLevels[i] = t.waterLevelAt((c.worldX + x).toDouble(), (c.worldZ + z).toDouble())
+            return b.waterLevels[i]
+        }
         private fun field(x: Int, y: Int, z: Int): Double {
             val i = x + 13 * (y + 13 * z)
             if (b.field[i].isNaN()) b.field[i] = t.caveField((c.worldX - 12 + x * 4).toDouble(),
@@ -224,16 +230,17 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
             val ax = x + 12; val ay = y + 12; val az = z + 12
             val i = ax + 48 * (ay + 48 * az)
             if (b.air[i].toInt() != 0) return b.air[i].toInt() == 1
-            val h = height(x, z); val wy = c.worldY + y
-            val result = if (wy > h) wy > NaturalTerrain.SEA_LEVEL
-                else if (h <= NaturalTerrain.SEA_LEVEL && h - wy < 8) false
+            val h = height(x, z); val wy = c.worldY + y; val waterLevel = waterLevel(x, z)
+            val result = if (wy > h) wy > waterLevel
+                else if (h <= waterLevel && h - wy < 8) false
                 else {
                     val gx = ax / 4; val gy = ay / 4; val gz = az / 4
                     val tx = ax % 4 / 4.0; val ty = ay % 4 / 4.0; val tz = az % 4 / 4.0
                     fun mix(a: Double, v: Double, f: Double) = a + (v - a) * f
                     fun plane(dz: Int) = mix(mix(field(gx, gy, gz + dz), field(gx + 1, gy, gz + dz), tx),
                         mix(field(gx, gy + 1, gz + dz), field(gx + 1, gy + 1, gz + dz), tx), ty)
-                    mix(plane(0), plane(1), tz) > 0
+                    mix(plane(0), plane(1), tz) > 0 &&
+                        !t.isFlooded(c.worldX + x, wy, c.worldZ + z, h, waterLevel)
                 }
             b.air[i] = if (result) 1 else 2
             return result

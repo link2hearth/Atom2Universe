@@ -263,6 +263,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         // disponible, on réveille uniquement les écoulements qui attendaient précisément
         // cette frontière, sans scanner tout son volume (important pour les océans).
         resumeDeferredWaterActivations(key)
+        wakeExposedWater(chunk)
         val neighbors = arrayOf(
             intArrayOf(chunk.cx-1,chunk.cy,chunk.cz), intArrayOf(chunk.cx+1,chunk.cy,chunk.cz),
             intArrayOf(chunk.cx,chunk.cy-1,chunk.cz), intArrayOf(chunk.cx,chunk.cy+1,chunk.cz),
@@ -290,6 +291,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         rebuildQueue.add(key)
         enqueueLight(key)
         resumeDeferredWaterActivations(key)
+        wakeExposedWater(chunk)
         return chunk
     }
 
@@ -2031,6 +2033,46 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
     }
 
+    /**
+     * Le générateur pose l'eau immobile : un bord de lac qui touche un trou ou une grotte resterait
+     * suspendu dans le vide jusqu'à ce que le joueur modifie un bloc à côté. Dès qu'un chunk est
+     * prêt, on réveille donc chaque source posée contre de l'air (en dessous ou sur le côté).
+     *
+     * Deux sens à couvrir, car les chunks arrivent dans n'importe quel ordre :
+     *  - l'eau de CE chunk contre l'air d'un voisin déjà prêt (ou de ce chunk) ;
+     *  - l'eau des voisins déjà prêts contre l'air de CE chunk, qui vient d'apparaître.
+     * Un voisin pas encore généré sera traité à son tour, quand il arrivera.
+     * Seules les sources touchant l'air sont réveillées : l'océan, bordé de sol, ne coûte presque rien.
+     */
+    private fun wakeExposedWater(chunk: Chunk) {
+        // Les cartes dessinées à la main (Assaut…) gardent leur eau telle qu'elle a été posée.
+        if (source != null) return
+        val s = CHUNK_SIZE
+        fun airAt(wx: Int, wy: Int, wz: Int): Boolean {
+            val n = getChunk(Math.floorDiv(wx, s), Math.floorDiv(wy, s), Math.floorDiv(wz, s))
+            return n != null && n.generated &&
+                n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s)) == AIR
+        }
+        fun exposed(wx: Int, wy: Int, wz: Int) = airAt(wx, wy - 1, wz) ||
+            horizontalWaterDirs.any { airAt(wx + it[0], wy, wz + it[2]) }
+        val bx = chunk.worldX; val by = chunk.worldY; val bz = chunk.worldZ
+        for (ly in 0 until s) for (lz in 0 until s) for (lx in 0 until s) {
+            if (chunk.blocks[lx + ly * s + lz * s * s] != WATER) continue
+            if (exposed(bx + lx, by + ly, bz + lz)) queueWaterUpdate(bx + lx, by + ly, bz + lz)
+        }
+        // Sources des voisins posées juste contre une face de ce chunk (dessus : eau qui tombe).
+        fun wakeNeighbour(wx: Int, wy: Int, wz: Int) {
+            val n = getChunk(Math.floorDiv(wx, s), Math.floorDiv(wy, s), Math.floorDiv(wz, s)) ?: return
+            if (!n.generated || n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s)) != WATER) return
+            if (exposed(wx, wy, wz)) queueWaterUpdate(wx, wy, wz)
+        }
+        for (a in 0 until s) for (b in 0 until s) {
+            wakeNeighbour(bx - 1, by + a, bz + b); wakeNeighbour(bx + s, by + a, bz + b)
+            wakeNeighbour(bx + a, by + b, bz - 1); wakeNeighbour(bx + a, by + b, bz + s)
+            wakeNeighbour(bx + a, by + s, bz + b)
+        }
+    }
+
     private fun setFlowWater(wx: Int, wy: Int, wz: Int, level: Int): Boolean {
         if (!isGeneratedBlock(wx, wy, wz)) return false
         val current = blockAt(wx, wy, wz)
@@ -2283,7 +2325,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val cache = surfaceTopCache.get()!!
         val cached = cache.get(key)
         if (cached != Int.MIN_VALUE) return cached
-        val v = if (terrainVersion >= 3) max(SEA_LEVEL, natural.height(wx.toDouble(), wz.toDouble()).toInt()) + 1
+        val v = if (terrainVersion >= 3) max(natural.waterLevelAt(wx.toDouble(), wz.toDouble()), natural.height(wx.toDouble(), wz.toDouble()).toInt()) + 1
             else surfaceHeight(wx + 0.5, wz + 0.5).toInt()
         cache.put(key, v)
         return v

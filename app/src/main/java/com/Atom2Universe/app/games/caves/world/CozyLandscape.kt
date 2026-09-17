@@ -177,7 +177,10 @@ internal class CozyLandscape(private val seed: Long,
                 if (s.kind >= 0 && x in s.x - TreeShape.REACH..s.x + 12 + TreeShape.REACH && z in s.z - TreeShape.REACH..s.z + 12 + TreeShape.REACH) continue
                 val y = height(x.toDouble(), z.toDouble()).toInt()
                 val soil = topBlock(biome, x.toDouble(), z.toDouble(), y)
-                if (y <= 75 || (soil !in shortArrayOf(GRASS, DIRT_SNOW, SNOW, FOREST_FLOOR, MOSS) &&
+                // Un lac ou étang surélevé garde h > 75 : vérifier aussi son niveau d'eau local,
+                // sinon un arbre pourrait pousser au fond, sous la surface.
+                if (y <= 75 || (natural != null && natural.waterLevelAt(x.toDouble(), z.toDouble()) > y) ||
+                    (soil !in shortArrayOf(GRASS, DIRT_SNOW, SNOW, FOREST_FLOOR, MOSS) &&
                         !(treeType in setOf("baobab", "acacia") && soil in shortArrayOf(SAND, REDSAND)))) continue
                 // Wide trunks need a stable footprint, not a cliff edge or a cave mouth.
                 val footprint = when (treeType) {
