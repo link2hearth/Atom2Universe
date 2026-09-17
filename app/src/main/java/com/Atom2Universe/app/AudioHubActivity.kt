@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.audio.AudioSubHubActivity
 import com.Atom2Universe.app.games.GamesActivity
+import com.Atom2Universe.app.games.farm.FarmState
 import com.Atom2Universe.app.creative.CreativeHubActivity
 import com.Atom2Universe.app.reading.ReadingHubActivity
 import com.Atom2Universe.app.science.ScienceHubActivity
@@ -381,6 +382,9 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         // Reload tiles to pick up any new quick-access shortcuts set from sub-hubs
         if (::tilesAdapter.isInitialized) {
             loadTiles()
+            // Meme pastille que sur la tuile de la ferme : le raccourci Jeux doit aussi signaler
+            // les cultures pretes, sans quoi il faut ouvrir Jeux pour le decouvrir.
+            tilesAdapter.setNotificationCount(TILE_GAMES, FarmState.readyToHarvest(this))
         }
     }
 
