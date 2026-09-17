@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.roguelike
 
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 data class Room(val x: Int, val y: Int, val w: Int, val h: Int) {
@@ -47,7 +48,8 @@ object DungeonGenerator {
         var regionCount = 0
 
         // Style de l'étage
-        val roomAttempts   = rng.nextInt(6, 60)         // peu → labyrinthe, beaucoup → salles
+        // Peu d'essais → labyrinthe, beaucoup → salles ; proportionnel à la surface de la carte
+        val roomAttempts   = (rng.nextInt(6, 60) * (w * h) / 1107f).roundToInt().coerceAtLeast(8)
         val windiness      = 0.25f + rng.nextFloat() * 0.5f
         val loopChance     = 0.04f + rng.nextFloat() * 0.08f
         val deadEndPasses  = rng.nextInt(1, 8)

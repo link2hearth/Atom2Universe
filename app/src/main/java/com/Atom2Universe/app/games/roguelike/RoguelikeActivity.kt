@@ -17,6 +17,7 @@ class RoguelikeActivity : ThemedActivity() {
     private lateinit var btnBack:      ImageButton
     private lateinit var tvGold:       TextView
     private lateinit var tvFloorLevel: TextView
+    private lateinit var inventory:    InventoryPanel
 
     private var game = RoguelikeGame()
 
@@ -34,7 +35,15 @@ class RoguelikeActivity : ThemedActivity() {
         tvGold       = findViewById(R.id.roguelike_tv_gold)
         tvFloorLevel = findViewById(R.id.roguelike_tv_floorlevel)
 
+        inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory)) { refresh() }
+
         btnBack.setOnClickListener { finish() }
+        // Retour : ferme d'abord l'inventaire s'il est ouvert
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (inventory.isOpen) inventory.hide() else finish()
+            }
+        })
 
         // sfx et music démarrés dans onResume uniquement (évite le double init EAS)
         if (SaveManager.hasSave(this)) {
@@ -110,7 +119,8 @@ class RoguelikeActivity : ThemedActivity() {
         gameView.onCloseMerchant = { g.closeMerchant(); refresh() }
         gameView.onDescend       = { sfx.onDescend(); g.descend(); refresh() }
         gameView.onEquipItem     = { g.equipPendingDrop(); refresh() }
-        gameView.onIgnoreDrop    = { g.ignorePendingDrop(); refresh() }
+        gameView.onStashDrop     = { g.stashPendingDrop(); refresh() }
+        gameView.onOpenInventory = { inventory.show(g) }
         gameView.onDismissDeath  = { g.dismissDeath(); refresh() }
 
         combatView.onStrike    = { crit -> sfx.onPlayerAttack(crit) }
@@ -125,6 +135,7 @@ class RoguelikeActivity : ThemedActivity() {
         }
 
         combatView.visibility = View.GONE
+        inventory.hide()
         refresh()
     }
 

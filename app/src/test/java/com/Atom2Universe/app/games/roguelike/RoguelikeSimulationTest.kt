@@ -30,7 +30,7 @@ class RoguelikeSimulationTest {
     class FloorStat {
         var entries = 0; var deaths = 0; var fights = 0; var chains = 0; var ambushes = 0
         var dmgPct = 0.0; var potionsUsed = 0; var turnsInFight = 0
-        var groupSizes = 0
+        var groupSizes = 0; var mapTurns = 0
     }
 
     class Report(val skill: Skill) {
@@ -83,9 +83,9 @@ class RoguelikeSimulationTest {
     }
 
     private fun geared(floor: Int, rng: Random): Hero {
-        val hero = Hero()
+        val hero = Hero.starter()
         repeat(15) {
-            val e = LootSystem.generate(floor, rng)
+            val e = LootSystem.generate(floor, 0, rng)
             val cur = hero.equipped[e.slot]
             if (cur == null || score(e) > score(cur)) hero.equipped[e.slot] = e
         }
@@ -124,13 +124,13 @@ class RoguelikeSimulationTest {
                 g.pendingEquipDrop != null -> {
                     val e = g.pendingEquipDrop!!
                     val cur = g.hero.equipped[e.slot]
-                    if (cur == null || score(e) > score(cur)) g.equipPendingDrop() else g.ignorePendingDrop()
+                    if (cur == null || score(e) > score(cur)) g.equipPendingDrop() else g.stashPendingDrop()
                 }
                 g.merchantOpen -> {
                     while (g.hero.potions < 3 && g.buyPotion()) {}
                     g.descend()
                 }
-                else -> mapStep(g)
+                else -> { mapStep(g); r.f(g.floor).mapTurns++ }
             }
         }
         if (turns >= maxMapTurns) r.timeouts++
@@ -263,14 +263,7 @@ class RoguelikeSimulationTest {
         return false
     }
 
-    private fun score(e: Equipment) = e.stats.sumOf {
-        when (it.type) {
-            StatType.WEAPON_DMG -> 3.0 * it.value; StatType.ARMOR -> 1.5 * it.value; StatType.MAX_HP -> 0.5 * it.value
-            StatType.STR -> 1.5 * it.value; StatType.CON -> 2.0 * it.value; StatType.DEX -> 1.2 * it.value
-            StatType.INT -> 0.8 * it.value; StatType.WIS -> 0.3 * it.value; StatType.CHA -> 0.2 * it.value
-            StatType.SPELL_DMG -> 8.0 * it.value
-        }
-    }
+    private fun score(e: Equipment) = LootSystem.rating(e)
 
     // ── Rapport ─────────────────────────────────────────────────────────────────
 
@@ -280,11 +273,11 @@ class RoguelikeSimulationTest {
         appendLine("Meilleur étage : médiane ${b[b.size / 2]}, min ${b.first()}, max ${b.last()}   blocages : ${r.timeouts}")
         appendLine("Morts avant d'atteindre l'étage (médiane, profils arrivés) : " +
             r.deathsBeforeFloor.toSortedMap().entries.joinToString { (fl, l) -> val s = l.sorted(); "$fl:${s[s.size / 2]} (${s.size})" })
-        appendLine("Ét. | passages | combats | ennemis/combat | embuscades | enchaînés | dégâts/combat (% PV max) | tours/combat | potions/combat | morts")
+        appendLine("Ét. | passages | tours de carte/passage | combats/passage | combats | ennemis/combat | embuscades | enchaînés | dégâts/combat (% PV max) | tours/combat | potions/combat | morts")
         for ((fl, f) in r.floors) {
             val n = f.fights.coerceAtLeast(1).toDouble()
-            appendLine(String.format("%3d | %5d | %6d | %4.2f | %4.0f%% | %4.0f%% | %5.1f%% | %4.1f | %5.2f | %d",
-                fl, f.entries, f.fights, f.groupSizes / n, 100 * f.ambushes / n, 100 * f.chains / n,
+            appendLine(String.format("%3d | %5d | %5.0f | %4.1f | %6d | %4.2f | %4.0f%% | %4.0f%% | %5.1f%% | %4.1f | %5.2f | %d",
+                fl, f.entries, f.mapTurns / f.entries.coerceAtLeast(1).toDouble(), f.fights / f.entries.coerceAtLeast(1).toDouble(), f.fights, f.groupSizes / n, 100 * f.ambushes / n, 100 * f.chains / n,
                 100 * f.dmgPct / n, f.turnsInFight / n, f.potionsUsed / n, f.deaths))
         }
         appendLine()

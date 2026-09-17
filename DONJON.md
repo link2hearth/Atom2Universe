@@ -42,7 +42,10 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
   **reste appuyé pour continuer d'avancer**. Le pas part dès que le doigt a assez glissé,
   puis se répète. Une diagonale bloquée glisse le long du mur. Le déplacement s'arrête
   quand un nouveau monstre nous repère ou qu'un combat commence.
-- Carte de 41 × 27 cases ; escalier dans la salle la plus lointaine (~80 pas).
+- **La taille de la carte suit le nombre de monstres** : on vient pour se battre, pas
+  pour tourner en rond. ~100 cases de carte (~50 cases de sol) par monstre, format 3:2.
+  Monstres : 3 + étage, plafonnés à 12. Étage 1 : 4 monstres sur 25 × 17 (escalier à ~40
+  pas) ; étage 5 : 8 monstres sur 35 × 23 ; dès l'étage 9 : 12 monstres sur 41 × 27.
 
 ### Le combat
 - Écran séparé, tour par tour classique : on attaque, on se fait attaquer.
@@ -66,6 +69,29 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 
 ### Le butin (inspiration Diablo)
 - Stats aléatoires, raretés, objets uniques, **sets de zone**.
+- **Chaque objet a une base** qui dépend de son type, en plus de ses affixes :
+  - une **arme donne toujours la caractéristique de son type** (bâton ou orbe → INT,
+    épée → FOR, dague → DEX…) plus ses dégâts ;
+  - une **armure donne son armure plus des caractéristiques de base** (INT, DEX…).
+- **Matières par palier, avec des tiers qui se chevauchent** : une seule échelle
+  (Cuir, Cuivre, Bronze, Fer, Acier, Mithril, Obsidienne…), 5 tiers par matière. Le
+  **Cuir 5 se trouve aux mêmes étages que le Cuivre 1** : même puissance, noms variés.
+  Les noms sont provisoires, « la limite c'est l'imagination ».
+- Raretés pour l'instant : Normal (base seule), Magique (1–2 affixes), Rare (3–4).
+  **Légendaires et sets : plus tard.**
+- **Sac infini, aucune pression de gestion** : tout est disponible, on peut vendre (ça
+  rapporte, donc on le fera naturellement), on ajoutera plein de confort plus tard.
+- **L'écran de choix en fin de combat reste** (Équiper / Au sac) : ça doit être rapide
+  en jeu. Rien n'est jamais perdu.
+- **L'inventaire doit surtout être clair** : trié du meilleur au moins bon, ou du
+  dernier ramassé au plus ancien.
+- Bonus liés au gameplay (fenêtre de parade, parade parfaite qui soigne…) : **plus
+  tard**, quand le gameplay tactile sera enrichi.
+
+### Gameplay de combat : la suite (vision)
+- Enrichir les gestes à la **Undertale** : de petits gameplays tactiles variés pour
+  attaquer, parer et d'autres actions à définir. La touche au bon moment et le swipe
+  actuels sont les premiers.
 - Farmer une zone est voulu quand c'est pour compléter un set. Exemple : le **set du rat
   des égouts** (étages 1–20) empoisonne, et les petits monstres fuient « parce qu'on sent
   mauvais ». À affiner.
@@ -104,9 +130,10 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 | 81–100 | Abysses | Abyssal | Le Dévoreur |
 
 ## Questions ouvertes
-- **À quoi sert l'argent ?** Pistes : relancer une stat d'un équipement, booster une
-  stat, changer un type / élément, acheter des consommables de combat (pansements, soins
-  instantanés) — limités car très puissants.
+- **À quoi sert l'argent ?** On le gagne aussi en vendant. Pistes : relancer un affixe
+  d'un équipement (piste retenue en principe), booster une stat, changer un type /
+  élément, acheter des consommables de combat (pansements, soins instantanés) — limités
+  car très puissants.
 - **Niveaux et expérience ?** Pour l'instant les caractéristiques viennent de la base
   (10 partout) et de l'équipement. Faut-il des niveaux façon D&D ?
 - **Fuir un combat ?** Pas prévu pour l'instant.
@@ -114,12 +141,14 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 
 ## Plan par étapes
 
-1. **La base** *(en cours)* — carte avec monstres qui patrouillent et poursuivent, écran
+1. **La base** *(faite)* — carte avec monstres qui patrouillent et poursuivent, écran
    de combat (Attaque, une relique Boule de feu, potions, parade et swipe critique),
    repos uniquement sans poursuivant, les 6 caractéristiques D&D, monstres réglés sur
    l'étage, butin simple adapté aux nouvelles stats, mort = retour étage 1 avec le stuff
    et perte d'or. Étages 1 à 5, visuels actuels.
-2. **Le butin à la Diablo** — affixes riches, raretés revues, uniques, usages de l'argent.
+2. **Le squelette du butin** *(en cours)* — bases d'objets (types d'armes et d'armures),
+   matières et tiers qui se chevauchent, raretés Normal / Magique / Rare, affixes, sac
+   infini, vente, inventaire clair et trié. Pas encore : légendaires, sets, relance.
 3. **Sets, reliques et zones** — set du rat des égouts, plusieurs reliques, étages 1–20.
 4. **Boss et checkpoints** — Roi des Rats à l'étage 20, puis zones suivantes.
 
@@ -143,6 +172,26 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 - Repos : +15 % des PV max par tour de repos, impossible si poursuivi.
 - Mort : −30 % de l'or.
 - Marchand sur l'escalier : potion à 15 or (5 maximum sur soi, soigne 40 % des PV).
+
+## Réglages du butin (étape 2, squelette)
+
+- **Puissance** d'un objet = rang de la matière × 4 + tier (Cuir 5 = Cuivre 1 = 5). Un
+  étage tire une puissance autour de 1 + 0,4 × (étage − 1) : Cuir jusqu'à l'étage ~10,
+  Cuivre vers 20, Fer vers 40, Mithril vers 60, Astralite vers 100.
+- Matières (noms provisoires) : Cuir, Cuivre, Bronze, Fer, Acier, Mithril, Obsidienne,
+  Adamantium, Orichalque, Astralite. Les armes et bijoux du premier palier sont « de bois ».
+- **Bases** : Épée (FOR), Hache (FOR, +25 % dégâts), Dague (DEX, −20 %), Masse (CON),
+  Bâton (INT, dégâts des sorts), Sceptre (SAG, dégâts des sorts), Bouclier (armure, CON),
+  Orbe (INT, dégâts des sorts), Casque / Armure / Bottes (armure + une caractéristique au
+  hasard), Amulette / Anneau (une caractéristique au hasard).
+- Tout grimpe de +45 % par cran de puissance ; l'armure se mesure à l'étage (la même
+  armure protège moins plus bas).
+- Affixes : les 6 caractéristiques, armure, PV, dégâts d'arme, dégâts des sorts, chance
+  et dégâts critiques, vol de vie. Jamais deux fois le même sur un objet.
+- **Note** d'un objet : somme pondérée affichée partout, sert à trier le sac et à
+  comparer (▲ / ▼) avec l'objet porté.
+- Vente : (3 + 2 × puissance) × 1 / 2 / 4 selon la rareté.
+- Le héros commence avec une Épée de bois 1 normale.
 
 ## Mesures (simulation, étape 1)
 

@@ -8,6 +8,10 @@ object SpriteLoader {
     private val bitmapCache = HashMap<String, Bitmap?>()
     private val dirCache    = HashMap<String, List<String>>()
 
+    /** Planche d'objets 64x64.png (16 colonnes de cases 64 px), chargée une seule fois. */
+    private var sheet: Bitmap? = null
+    private val cellCache = HashMap<Int, Bitmap>()
+
     fun listDir(assets: AssetManager, dir: String): List<String> =
         dirCache.getOrPut(dir) {
             (assets.list(dir) ?: emptyArray())
@@ -20,6 +24,20 @@ object SpriteLoader {
         bitmapCache.getOrPut(path) {
             runCatching { assets.open(path).use { BitmapFactory.decodeStream(it) } }.getOrNull()
         }
+
+    fun sheet(assets: AssetManager): Bitmap? {
+        if (sheet == null) sheet = runCatching { assets.open("64x64.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
+        return sheet
+    }
+
+    /** Une case de la planche, découpée et gardée en cache (pour les listes de l'inventaire). */
+    fun sheetCell(assets: AssetManager, row: Int, col: Int): Bitmap? {
+        val key = row * 16 + col
+        cellCache[key]?.let { return it }
+        val s = sheet(assets) ?: return null
+        if ((row + 1) * 64 > s.height || (col + 1) * 64 > s.width) return null
+        return Bitmap.createBitmap(s, col * 64, row * 64, 64, 64).also { cellCache[key] = it }
+    }
 
     /** Sprites provisoires : toute la partie graphique sera refaite. */
     fun monsterPath(type: MonsterType): String = when (type) {
@@ -34,5 +52,8 @@ object SpriteLoader {
         bitmapCache.values.forEach { it?.recycle() }
         bitmapCache.clear()
         dirCache.clear()
+        cellCache.values.forEach { it.recycle() }
+        cellCache.clear()
+        sheet?.recycle(); sheet = null
     }
 }

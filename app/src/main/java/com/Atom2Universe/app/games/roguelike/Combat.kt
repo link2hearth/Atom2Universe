@@ -115,7 +115,6 @@ class Combat(
     private val rng: Random = Random,
 ) {
     companion object {
-        const val CRIT_MULT        = 2f
         const val STRIKE_GOOD      = 0.25f
         const val STRIKE_PERFECT   = 0.60f
         const val PARRY_GOOD_MULT  = 0.5f
@@ -139,8 +138,12 @@ class Combat(
 
     fun attack(target: Int, timing: Timing): HitResult {
         check(phase == CombatPhase.PLAYER_TURN)
-        val raw = rng.nextInt(hero.swordMin, hero.swordMax + 1).toFloat()
-        return hit(target, raw, timing).also { afterPlayerAction() }
+        val raw = rng.nextInt(hero.weaponMin, hero.weaponMax.coerceAtLeast(hero.weaponMin) + 1).toFloat()
+        val result = hit(target, raw, timing)
+        // Vol de vie : seulement à l'arme
+        if (hero.lifeSteal > 0f) hero.heal((result.damage * hero.lifeSteal).roundToInt())
+        afterPlayerAction()
+        return result
     }
 
     fun castRelic(relic: Relic, target: Int, timing: Timing): HitResult {
@@ -171,7 +174,7 @@ class Combat(
         require(e.alive)
         val bonus = when (timing) { Timing.MISS -> 0f; Timing.GOOD -> STRIKE_GOOD; Timing.PERFECT -> STRIKE_PERFECT }
         val crit  = rng.nextFloat() < (hero.critChance + bonus).coerceAtMost(0.95f)
-        val dmg   = (if (crit) raw * CRIT_MULT else raw).roundToInt().coerceAtLeast(1)
+        val dmg   = (if (crit) raw * hero.critMult else raw).roundToInt().coerceAtLeast(1)
         e.hp = (e.hp - dmg).coerceAtLeast(0)
         return HitResult(target, dmg, crit, !e.alive)
     }
@@ -209,7 +212,7 @@ class Combat(
         val e = enemies[enemyIndex]
         val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val spread = 0.85f + rng.nextFloat() * 0.30f
-        val dmg = hero.mitigate(e.damage * spread * parryMult).roundToInt().coerceAtLeast(1)
+        val dmg = hero.mitigate(e.damage * spread * parryMult, floor).roundToInt().coerceAtLeast(1)
         hero.hp = (hero.hp - dmg).coerceAtLeast(0)
         if (hero.hp == 0) phase = CombatPhase.DEFEAT
         return EnemyStrike(enemyIndex, dmg, parry)
@@ -230,7 +233,7 @@ class Combat(
         for (e in enemies) {
             gold += (rng.nextInt(e.type.goldMin, e.type.goldMax + 1) * floorGold * hero.goldMult).roundToInt()
             if (rng.nextFloat() < POTION_DROP) potions++
-            LootSystem.tryDrop(floor, rng)?.let { loot += it }
+            LootSystem.tryDrop(floor, hero.nextLootId, rng)?.let { loot += it; hero.nextLootId++ }
         }
         rewards = CombatRewards(gold, potions, loot)
         return CombatPhase.VICTORY

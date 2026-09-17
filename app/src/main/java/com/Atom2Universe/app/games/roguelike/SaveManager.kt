@@ -11,7 +11,7 @@ import org.json.JSONObject
 object SaveManager {
 
     private const val PREFS = "roguelike_save"
-    private const val KEY   = "save_v4"  // v4 : refonte (combats séparés, stats D&D)
+    private const val KEY   = "save_v5"  // v5 : objets à base, matière et tier, sac
 
     // ── API publique ─────────────────────────────────────────────────────────────
 
@@ -46,33 +46,45 @@ object SaveManager {
 
     // ── Sérialisation Equipment ──────────────────────────────────────────────────
 
-    fun equipToJson(e: Equipment): JSONObject = JSONObject().apply {
-        put("slot",      e.slot.name)
-        put("material",  e.material.name)
-        put("rarity",    e.rarity.name)
-        put("spriteRow", e.spriteRow)
-        put("spriteCol", e.spriteCol)
-        put("stats", JSONArray().also { arr ->
-            for (s in e.stats) arr.put(JSONObject().apply {
-                put("type",  s.type.name)
-                put("value", s.value.toDouble())
-            })
+    private fun statsToJson(stats: List<StatRoll>) = JSONArray().also { arr ->
+        for (st in stats) arr.put(JSONObject().apply {
+            put("type",  st.type.name)
+            put("value", st.value.toDouble())
         })
     }
 
-    fun equipFromJson(j: JSONObject): Equipment {
-        val statsArr = j.getJSONArray("stats")
-        val stats = (0 until statsArr.length()).map { i ->
-            val s = statsArr.getJSONObject(i)
-            StatRoll(StatType.valueOf(s.getString("type")), s.getDouble("value").toFloat())
-        }
-        return Equipment(
-            slot      = EquipSlot.valueOf(j.getString("slot")),
-            material  = EquipMaterial.valueOf(j.getString("material")),
-            rarity    = Rarity.valueOf(j.getString("rarity")),
-            stats     = stats,
-            spriteRow = j.getInt("spriteRow"),
-            spriteCol = j.getInt("spriteCol"),
-        )
+    private fun statsFromJson(arr: JSONArray) = (0 until arr.length()).map { i ->
+        val st = arr.getJSONObject(i)
+        StatRoll(StatType.valueOf(st.getString("type")), st.getDouble("value").toFloat())
     }
+
+    fun equipToJson(e: Equipment): JSONObject = JSONObject().apply {
+        put("base",      e.base.name)
+        put("material",  e.material.name)
+        put("tier",      e.tier)
+        put("rarity",    e.rarity.name)
+        put("dmgMin",    e.damageMin)
+        put("dmgMax",    e.damageMax)
+        put("armor",     e.armor)
+        put("implicits", statsToJson(e.implicits))
+        put("affixes",   statsToJson(e.affixes))
+        put("spriteRow", e.spriteRow)
+        put("spriteCol", e.spriteCol)
+        put("lootId",    e.lootId)
+    }
+
+    fun equipFromJson(j: JSONObject) = Equipment(
+        base      = ItemBase.valueOf(j.getString("base")),
+        material  = Material.valueOf(j.getString("material")),
+        tier      = j.getInt("tier"),
+        rarity    = Rarity.valueOf(j.getString("rarity")),
+        damageMin = j.getInt("dmgMin"),
+        damageMax = j.getInt("dmgMax"),
+        armor     = j.getInt("armor"),
+        implicits = statsFromJson(j.getJSONArray("implicits")),
+        affixes   = statsFromJson(j.getJSONArray("affixes")),
+        spriteRow = j.getInt("spriteRow"),
+        spriteCol = j.getInt("spriteCol"),
+        lootId    = j.getLong("lootId"),
+    )
 }

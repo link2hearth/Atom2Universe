@@ -32,7 +32,7 @@
     <string name="roguelike_slot_chest">Chestplate</string>
     <string name="roguelike_slot_helmet">Helmet</string>
     <string name="roguelike_slot_boots">Boots</string>
-    <string name="roguelike_slot_offhand">Shield</string>
+    <string name="roguelike_slot_offhand">Off-hand</string>
     <string name="roguelike_slot_amulet">Amulet</string>
     <string name="roguelike_slot_ring">Ring</string>
 
@@ -158,5 +158,58 @@
     <plurals name="roguelike_combat_reward_items">
         <item quantity="one">%1$d item found</item>
         <item quantity="other">%1$d items found</item>
+    </plurals>
+
+    <!-- Butin : bases, matières, sac et inventaire -->
+    <string name="roguelike_stattype_crit_chance">Crit chance</string>
+    <string name="roguelike_stattype_crit_damage">Crit damage</string>
+    <string name="roguelike_stattype_life_steal">Life steal</string>
+    <string name="roguelike_rarity_normal">Normal</string>
+    <string name="roguelike_rarity_magic">Magic</string>
+    <string name="roguelike_mat_wood">Wooden</string>
+    <string name="roguelike_mat_leather">Leather</string>
+    <string name="roguelike_mat_copper">Copper</string>
+    <string name="roguelike_mat_bronze">Bronze</string>
+    <string name="roguelike_mat_iron">Iron</string>
+    <string name="roguelike_mat_steel">Steel</string>
+    <string name="roguelike_mat_mithril">Mithril</string>
+    <string name="roguelike_mat_obsidian">Obsidian</string>
+    <string name="roguelike_mat_adamantium">Adamantium</string>
+    <string name="roguelike_mat_orichalcum">Orichalcum</string>
+    <string name="roguelike_mat_astralite">Astralite</string>
+    <string name="roguelike_base_sword">Sword</string>
+    <string name="roguelike_base_axe">Axe</string>
+    <string name="roguelike_base_dagger">Dagger</string>
+    <string name="roguelike_base_mace">Mace</string>
+    <string name="roguelike_base_staff">Staff</string>
+    <string name="roguelike_base_scepter">Scepter</string>
+    <string name="roguelike_base_shield">Shield</string>
+    <string name="roguelike_base_orb">Orb</string>
+    <string name="roguelike_base_helmet">Helmet</string>
+    <string name="roguelike_base_armor">Armor</string>
+    <string name="roguelike_base_boots">Boots</string>
+    <string name="roguelike_base_amulet">Amulet</string>
+    <string name="roguelike_base_ring">Ring</string>
+    <string name="roguelike_item_name">%2$s %1$s %3$d</string>
+    <string name="roguelike_item_damage">%1$d–%2$d damage</string>
+    <string name="roguelike_item_armor">%1$d armor</string>
+    <string name="roguelike_rating">rating %1$d</string>
+    <string name="roguelike_log_sold">%1$s sold: +%2$d gold.</string>
+    <string name="roguelike_loot_stash_btn">To bag</string>
+    <string name="roguelike_inventory_close">Close</string>
+    <string name="roguelike_inventory_sort_best">Best</string>
+    <string name="roguelike_inventory_sort_recent">Recent</string>
+    <string name="roguelike_inventory_empty">Your bag is empty</string>
+    <string name="roguelike_inventory_attr">%1$s %2$d</string>
+    <string name="roguelike_inventory_stats_line">HP %1$d/%2$d   Armor %3$d   Weapon %4$d–%5$d   Crit %6$d%%</string>
+    <string name="roguelike_inventory_subtitle">%1$s · %2$s · rating %3$d</string>
+    <string name="roguelike_inventory_worn">Worn: %1$s (rating %2$d)</string>
+    <string name="roguelike_inventory_sell">Sell · %1$d gold</string>
+    <string name="roguelike_delta_up">▲ %1$d</string>
+    <string name="roguelike_delta_down">▼ %1$d</string>
+    <string name="roguelike_delta_equal">=</string>
+    <plurals name="roguelike_inventory_count">
+        <item quantity="one">%1$d item in the bag</item>
+        <item quantity="other">%1$d items in the bag</item>
     </plurals>
 </resources>

@@ -72,7 +72,7 @@ data class DeathReport(val floor: Int, val goldLost: Int)
  * nous poursuit. Voir DONJON.md.
  */
 class RoguelikeGame(
-    val hero: Hero = Hero(),
+    val hero: Hero = Hero.starter(),
     startFloor: Int = 1,
     private val rng: Random = Random,
 ) {
@@ -80,11 +80,31 @@ class RoguelikeGame(
     var onFloorChanged: ((floor: Int) -> Unit)?   = null
 
     companion object {
-        // Impairs : le labyrinthe se creuse sur les cases impaires
-        const val MAP_W          = 41
-        const val MAP_H          = 27
-        /** Aucun monstre à moins de ce nombre de pas du départ. */
+        // Dimensions extrêmes de la carte, impaires : le labyrinthe se creuse sur les cases impaires
+        const val MIN_MAP_W      = 21
+        const val MIN_MAP_H      = 15
+        const val MAX_MAP_W      = 41
+        const val MAX_MAP_H      = 27
+        /** Cases de carte par monstre : la carte grandit avec le nombre de monstres. */
+        const val MAP_CELLS_PER_PACK = 100
+        const val MAX_PACKS      = 12
+        /** Aucun monstre à moins de ce nombre de pas du départ (réduit sur les petites cartes). */
         const val MIN_PACK_DISTANCE = 12
+
+        fun packCount(floor: Int) = minOf(3 + floor, MAX_PACKS)
+
+        /**
+         * Moins il y a de monstres, plus la carte est petite : on vient pour se battre, pas
+         * pour tourner en rond. Environ la moitié de la carte est du sol, soit ~50 cases de
+         * sol par monstre. Format 3:2, dimensions impaires, bornées.
+         */
+        fun mapSize(packs: Int): Pair<Int, Int> {
+            val area = packs * MAP_CELLS_PER_PACK
+            fun odd(v: Int) = if (v % 2 == 0) v + 1 else v
+            val w = odd(kotlin.math.sqrt(area * 1.5).roundToInt()).coerceIn(MIN_MAP_W, MAX_MAP_W)
+            val h = odd((area / w.toFloat()).roundToInt()).coerceIn(MIN_MAP_H, MAX_MAP_H)
+            return w to h
+        }
         const val FOV_RADIUS     = 8
         /** Distance à laquelle un monstre nous repère (en vue directe). */
         const val SIGHT          = 6
@@ -104,6 +124,9 @@ class RoguelikeGame(
                 val eq  = j.getJSONObject("equipped")
                 for (slotName in eq.keys())
                     equipped[EquipSlot.valueOf(slotName)] = SaveManager.equipFromJson(eq.getJSONObject(slotName))
+                val bagJson = j.getJSONArray("bag")
+                for (i in 0 until bagJson.length()) bag += SaveManager.equipFromJson(bagJson.getJSONObject(i))
+                nextLootId = j.getLong("nextLootId")
                 hp = j.getInt("hp").coerceIn(1, maxHp)
             }
             return RoguelikeGame(hero, j.getInt("floor")).apply {
@@ -196,17 +219,34 @@ class RoguelikeGame(
         addLog(R.string.roguelike_log_floor_descend, floor)
     }
 
+    /** Fin de combat : on équipe l'objet proposé, l'ancien part au sac. */
     fun equipPendingDrop() {
         val equip = pendingLoot.removeFirstOrNull() ?: return
-        hero.equipped[equip.slot] = equip
-        hero.hp = hero.hp.coerceAtMost(hero.maxHp)
+        hero.equip(equip)
         addLog(R.string.roguelike_log_equip, equip.slot, equip)
         if (pendingLoot.isEmpty()) chainIfChased()
     }
 
-    fun ignorePendingDrop() {
-        pendingLoot.removeFirstOrNull() ?: return
+    /** Fin de combat : l'objet va au sac. Rien ne se perd. */
+    fun stashPendingDrop() {
+        val equip = pendingLoot.removeFirstOrNull() ?: return
+        hero.bag += equip
         if (pendingLoot.isEmpty()) chainIfChased()
+    }
+
+    // ── Sac ─────────────────────────────────────────────────────────────────────
+
+    fun equipFromBag(item: Equipment) {
+        if (!isExploring || !hero.bag.remove(item)) return
+        hero.equip(item)
+        addLog(R.string.roguelike_log_equip, item.slot, item)
+    }
+
+    fun sell(item: Equipment) {
+        if (!isExploring || !hero.bag.remove(item)) return
+        val price = LootSystem.sellPrice(item)
+        hero.gold += price
+        addLog(R.string.roguelike_log_sold, item, price)
     }
 
     fun dismissDeath() { deathReport = null }
@@ -377,19 +417,23 @@ class RoguelikeGame(
     // ── Génération ──────────────────────────────────────────────────────────────
 
     private fun generateLevel(floor: Int): DungeonLevel {
-        val lv     = DungeonLevel(MAP_W, MAP_H, floor)
-        val layout = DungeonGenerator.generate(MAP_W, MAP_H, rng)
-        for (y in 0 until MAP_H) for (x in 0 until MAP_W) lv.tiles[y][x] = layout.tiles[y][x]
+        val packCount = packCount(floor)
+        val (w, h) = mapSize(packCount)
+        val lv     = DungeonLevel(w, h, floor)
+        val layout = DungeonGenerator.generate(w, h, rng)
+        for (y in 0 until h) for (x in 0 until w) lv.tiles[y][x] = layout.tiles[y][x]
         lv.start = layout.start
 
-        // Monstres : loin du départ (en pas réels), surtout dans les salles, parfois en plein couloir
+        // Monstres : loin du départ (en pas réels), surtout dans les salles, parfois en plein couloir.
+        // Sur une petite carte, « loin » se raccourcit pour qu'ils trouvent tous leur place.
         val dist = DungeonGenerator.distances(lv.tiles, lv.start)
+        val maxDist = dist.maxOf { row -> row.max() }
+        val minDist = minOf(MIN_PACK_DISTANCE, maxDist / 3)
         val farCells = mutableListOf<Pos>()
-        for (y in 0 until MAP_H) for (x in 0 until MAP_W)
-            if (lv.tiles[y][x] == TileType.FLOOR && dist[y][x] >= MIN_PACK_DISTANCE) farCells += Pos(x, y)
+        for (y in 0 until h) for (x in 0 until w)
+            if (lv.tiles[y][x] == TileType.FLOOR && dist[y][x] >= minDist) farCells += Pos(x, y)
         val farRoomCells = farCells.filter { p -> layout.rooms.any { it.contains(p) } }
 
-        val packCount = 3 + floor
         var attempts = 0
         while (lv.packs.size < packCount && attempts++ < packCount * 20) {
             val pool = if (farRoomCells.isNotEmpty() && rng.nextFloat() < 0.65f) farRoomCells else farCells
@@ -426,5 +470,7 @@ class RoguelikeGame(
         put("equipped", JSONObject().also { eq ->
             for ((slot, equip) in hero.equipped) eq.put(slot.name, SaveManager.equipToJson(equip))
         })
+        put("bag", org.json.JSONArray().also { arr -> hero.bag.forEach { arr.put(SaveManager.equipToJson(it)) } })
+        put("nextLootId", hero.nextLootId)
     }
 }
