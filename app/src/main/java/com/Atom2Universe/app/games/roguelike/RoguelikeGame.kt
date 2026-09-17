@@ -288,10 +288,17 @@ class RoguelikeGame(
     /** Appelé par l'écran de combat une fois la victoire ou la défaite affichée. */
     fun finishCombat() {
         val c = combat ?: return
+        // On range l'état du combat qui s'achève AVANT de regarder s'il en démarre un autre :
+        // sinon, l'enchaînement pose le nouveau groupe dans combatPack et la remise à zéro
+        // qui suivait l'effaçait aussitôt. Le groupe enchaîné n'était alors jamais marqué
+        // mort en fin de combat — il restait sur la carte, collé au joueur et toujours en
+        // chasse, donc il réenchaînait sans fin.
+        val beaten = combatPack
         combat = null
+        combatPack = null
         when (c.phase) {
             CombatPhase.VICTORY -> {
-                combatPack?.alive = false
+                beaten?.alive = false
                 val r = c.rewards!!
                 hero.gold += r.gold
                 hero.potions = (hero.potions + r.potions).coerceAtMost(Hero.MAX_POTIONS)
@@ -302,7 +309,6 @@ class RoguelikeGame(
             CombatPhase.DEFEAT -> die()
             else -> {}
         }
-        combatPack = null
     }
 
     /** Un poursuivant tout proche nous saute dessus sans nous laisser souffler. */

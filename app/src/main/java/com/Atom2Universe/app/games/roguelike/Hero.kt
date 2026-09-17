@@ -12,7 +12,14 @@ class Hero {
 
     companion object {
         const val BASE_ATTRIBUTE = 10
-        const val BASE_HP        = 40
+        /**
+         * Les PV de base du héros nu. Ils sont volontairement bas : l'essentiel du sac de
+         * PV vient des pièces défensives, qui en donnent proportionnellement à leur armure
+         * (voir [LootSystem.HP_PER_ARMOR_BASE]). Sans ça, les PV grandissaient bien moins
+         * vite que les dégâts des monstres et on finissait par mourir en deux coups à
+         * l'étage 100 — voir DONJON.md, « Ce que les PV devaient rattraper ».
+         */
+        const val BASE_HP        = 28
         const val HP_PER_CON     = 4
         /** Sans arme, on se bat à mains nues. */
         const val FIST_MIN       = 2

@@ -50,12 +50,13 @@ object SaveManager {
         for (st in stats) arr.put(JSONObject().apply {
             put("type",  st.type.name)
             put("value", st.value.toDouble())
+            put("tier",  st.tier)
         })
     }
 
     private fun statsFromJson(arr: JSONArray) = (0 until arr.length()).map { i ->
         val st = arr.getJSONObject(i)
-        StatRoll(StatType.valueOf(st.getString("type")), st.getDouble("value").toFloat())
+        StatRoll(StatType.valueOf(st.getString("type")), st.getDouble("value").toFloat(), st.optInt("tier"))
     }
 
     fun equipToJson(e: Equipment): JSONObject = JSONObject().apply {

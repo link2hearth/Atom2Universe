@@ -34,13 +34,18 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
     }
 }
 
-data class StatRoll(val type: StatType, val value: Float) {
+/**
+ * Une ligne de stat sur un objet. [tier] vaut 0 pour les stats de base (implicites) et
+ * 1 à 8 pour un affixe : c'est son palier de puissance, voir [AffixBudget].
+ */
+data class StatRoll(val type: StatType, val value: Float, val tier: Int = 0) {
     fun display(context: Context): String {
         val label = context.getString(type.labelRes)
-        return if (type.isPercent)
+        val line = if (type.isPercent)
             context.getString(R.string.roguelike_stat_roll_percent, (value * 100).roundToInt(), label)
         else
             context.getString(R.string.roguelike_stat_roll_flat, value.roundToInt(), label)
+        return if (tier > 0) context.getString(R.string.roguelike_stat_roll_tier, line, tier) else line
     }
 }
 
@@ -149,6 +154,206 @@ data class Equipment(
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
 }
 
+// ─── Le budget des affixes ─────────────────────────────────────────────────────
+
+/**
+ * Combien vaut un affixe, et **pourquoi** cette valeur-là. Tout part d'une seule règle :
+ *
+ * > Un affixe tiré au maximum de son palier vaut **12 % de son axe** (dégâts à l'arme,
+ * > PV, PV effectifs, dégâts des sorts, or) chez le *héros de référence*.
+ *
+ * Le héros de référence, c'est celui qui porte sept objets **Normaux** (donc sans aucun
+ * affixe) de la même puissance : épée, bouclier, casque, armure, bottes, amulette, anneau.
+ * Il sert d'étalon, rien de plus. On le modélise ici pour que les fourchettes soient
+ * **calculées** et pas inventées : si un jour on change les dégâts de base d'une épée ou
+ * les PV par point de CON, les affixes suivent tout seuls. `AffixBudgetTest` le vérifie.
+ *
+ * Pourquoi c'est nécessaire : les stats ne se comparent pas naïvement. À la puissance 1,
+ * +1 point de CON vaut 7,8 % des PV alors que +1 % de dégâts critiques vaut 0,06 % des
+ * dégâts — 130 fois moins. Sans étalon commun, une table d'affixes écrite à la main donne
+ * forcément des lignes mortes et des lignes obligatoires.
+ *
+ * ### Les huit paliers
+ * Un affixe n'existe qu'à partir d'une certaine puissance d'objet, comme l'*item level*
+ * de Diablo ou Path of Exile. [TIER_POWER] donne la puissance minimale de chaque palier,
+ * choisie pour tomber sur les zones du donjon : étages 1, 6, 11, 21, 31, 41, 61, 81.
+ *
+ * ### Deux familles d'affixes
+ * - **Les affixes à budget** (caractéristiques, armure, PV, dégâts d'arme) : leur valeur
+ *   est *déduite* de la règle des 12 %. Ils grandissent parce que leur axe grandit —
+ *   l'armure ×19 sur la partie, la FOR seulement ×2,3 (elle se dilue dans un
+ *   multiplicateur qui monte).
+ * - **Les affixes à plafond** ([CAPPED]) : chance de critique, dégâts critiques, dégâts
+ *   des sorts, vol de vie. Ce sont des taux, leur effet ne dépend pas de la puissance. Les
+ *   régler à 12 % les rendrait démesurés dès l'étage 1 (il faudrait +13 % de critique). On
+ *   fixe donc à la main **ce qu'un équipement complet peut en porter**, et on répartit sur
+ *   les huit paliers. La chance de critique est plafonnée à 60 % chez le héros : les
+ *   affixes ne doivent pas y suffire à eux seuls.
+ */
+object AffixBudget {
+
+    const val TIERS = 8
+
+    /** Puissance minimale des paliers T1 à T8 — soit les étages 1, 6, 11, 21, 31, 41, 61, 81. */
+    val TIER_POWER = intArrayOf(1, 3, 5, 9, 13, 17, 25, 33)
+
+    /** Un tirage va de 55 % à 100 % de la valeur du palier : il reste une marge à chasser. */
+    const val ROLL_MIN = 0.55f
+
+    /** La règle : un affixe plein vaut 12 % de son axe. */
+    const val SHARE = 0.12f
+
+    /**
+     * La DEX ne fait pas qu'ajouter du critique : elle élargit aussi la fenêtre de parade
+     * (+4 ms par point sur 160). On compte donc ses points 1,8 fois quand on mesure ce
+     * qu'elle vaut, sinon son axe paraîtrait deux fois trop étroit.
+     */
+    private const val DEX_PARRY_FACTOR = 1.8f
+
+    /** Coups d'épée donnés dans un combat type — sert à mesurer ce que vaut le vol de vie. */
+    private const val HITS_PER_FIGHT = 5f
+
+    /**
+     * Les affixes à plafond. Ce qu'un équipement complet peut en porter, réparti sur les
+     * huit paliers. Deux raisons d'y être :
+     *
+     * - **Ce sont des taux** (critique, dégâts critiques, dégâts des sorts, vol de vie) :
+     *   leur effet ne dépend pas de la puissance de l'objet. Les régler à 12 % donnerait
+     *   +13 % de critique dès l'étage 1, et plus rien à chasser ensuite.
+     * - **Leur axe ne grandit pas** : la CHA donne 3 % d'or par point, à l'étage 1 comme à
+     *   l'étage 100, et la DEX un point de critique. La règle des 12 % leur donnerait la
+     *   même valeur aux huit paliers — un palier qui n'apporte rien n'est pas un palier.
+     *
+     * La chance de critique du héros est bornée à 60 % : les affixes et la DEX réunis ne
+     * doivent y arriver que pour une panoplie qui ne cherche que ça.
+     */
+    private val CAPPED: Map<StatType, FloatArray> = mapOf(
+        StatType.CRIT_CHANCE to floatArrayOf(.020f, .026f, .032f, .040f, .048f, .056f, .068f, .080f),
+        StatType.CRIT_DAMAGE to floatArrayOf(.12f, .16f, .20f, .25f, .30f, .36f, .43f, .50f),
+        StatType.SPELL_DMG   to floatArrayOf(.08f, .11f, .14f, .18f, .22f, .26f, .30f, .35f),
+        StatType.LIFE_STEAL  to floatArrayOf(.004f, .006f, .008f, .010f, .013f, .016f, .019f, .023f),
+        StatType.DEX         to floatArrayOf(3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f),
+        StatType.CHA         to floatArrayOf(2f, 3f, 4f, 5f, 6f, 8f, 10f, 12f),
+    )
+
+    /** Vrai si [type] se règle par un plafond posé à la main plutôt que par la règle des 12 %. */
+    fun isCapped(type: StatType) = type in CAPPED
+
+    /**
+     * Certains affixes n'apparaissent pas avant un certain palier, comme les gros
+     * modificateurs de Diablo ou Path of Exile réservés aux objets de haut niveau. Ce n'est
+     * pas de la difficulté artificielle : au palier 1, +1 % de vol de vie rend 0,1 % du sac
+     * de PV par coup. Une ligne qui ne fait rien occupe une place et déçoit — mieux vaut
+     * qu'elle n'existe pas encore.
+     */
+    private val MIN_TIER: Map<StatType, Int> = mapOf(
+        StatType.LIFE_STEAL  to 4,
+        StatType.CRIT_DAMAGE to 3,
+    )
+
+    fun minTier(type: StatType) = MIN_TIER[type] ?: 1
+
+    /** Vrai si un objet de cette puissance peut porter [type]. */
+    fun allows(type: StatType, power: Int) = maxTier(power) >= minTier(type)
+
+    // ── Le héros de référence ───────────────────────────────────────────────────
+    // Sept objets Normaux à la puissance p, tels que LootSystem.create les fabrique.
+
+    /** Une caractéristique donnée par l'arme ou la main gauche (leur type la garantit). */
+    private fun mainImplicit(p: Int) = 2f + 0.6f * (p - 1)
+    /** Une caractéristique donnée par une des cinq autres pièces, au hasard. */
+    private fun sideImplicit(p: Int) = 1f + 0.4f * (p - 1)
+    /** Ces cinq tirages au hasard se répartissent sur les six caractéristiques. */
+    private fun spread(p: Int) = 5f * sideImplicit(p) / 6f
+
+    /** L'épée donne la FOR, le bouclier la CON : ces deux-là sont mieux servies. */
+    fun refStr(p: Int) = Hero.BASE_ATTRIBUTE + mainImplicit(p) + spread(p)
+    fun refCon(p: Int) = refStr(p)
+    /** DEX, INT, SAG, CHA : seulement ce qui tombe au hasard. */
+    fun refOther(p: Int) = Hero.BASE_ATTRIBUTE + spread(p)
+
+    /** Dégâts moyens d'une épée de puissance p, avant caractéristiques (base 4–7). */
+    fun refWeaponDamage(p: Int) = 5.5f * LootSystem.scale(p)
+    /** Casque 3 + armure 6 + bottes 3 + bouclier 4. */
+    fun refArmor(p: Int) = 16f * LootSystem.scale(p)
+    /** La constante de l'armure à cette puissance : dégâts reçus × k / (k + armure). */
+    fun refK(p: Int) = 50f * LootSystem.scale(p)
+    /** PV de base, PV de la CON, et les PV implicites des quatre pièces défensives. */
+    fun refHp(p: Int) = Hero.BASE_HP + Hero.HP_PER_CON * (refCon(p) - Hero.BASE_ATTRIBUTE) +
+        16f * LootSystem.HP_PER_ARMOR_BASE * LootSystem.scale(p)
+    fun refCritChance(p: Int) = 0.05f + 0.01f * (refOther(p) - Hero.BASE_ATTRIBUTE)
+    /** Ce que le critique ajoute déjà aux dégâts : un point de plus en vaut d'autant moins. */
+    private fun critFactor(p: Int) = 1f + refCritChance(p) * (Hero.BASE_CRIT_MULT - 1f)
+
+    /**
+     * Ce que vaut **+1 unité** de [type] sur son axe, chez le héros de référence à la
+     * puissance [p]. Pour les stats en pourcentage, l'unité est 1,0 (soit +100 %).
+     */
+    fun perPoint(type: StatType, p: Int): Float = when (type) {
+        // Axe : dégâts à l'arme
+        StatType.STR         -> 0.04f / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE))
+        StatType.DEX         -> DEX_PARRY_FACTOR * 0.01f * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
+        StatType.WEAPON_DMG  -> 1f / refWeaponDamage(p)
+        StatType.CRIT_CHANCE -> (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
+        StatType.CRIT_DAMAGE -> refCritChance(p) / critFactor(p)
+        // Axe : survie
+        StatType.CON         -> Hero.HP_PER_CON / refHp(p)
+        StatType.MAX_HP      -> 1f / refHp(p)
+        StatType.ARMOR       -> (1f / refK(p)) / (1f + refArmor(p) / refK(p))
+        // Axe : sorts
+        StatType.INT         -> 0.05f / (1f + 0.05f * (refOther(p) - Hero.BASE_ATTRIBUTE))
+        StatType.SPELL_DMG   -> 1f
+        // La SAG est une stat à paliers (6 points = un tour de recharge en moins) : on la
+        // cale sur la FOR pour qu'elle roule les mêmes nombres qu'une caractéristique.
+        StatType.WIS         -> 0.04f / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE))
+        // Axe : l'or
+        StatType.CHA         -> 0.03f
+        // Axe : la part du sac de PV rendue sur un combat entier. Compter un seul coup
+        // sous-estime le vol de vie — il se cumule, c'est tout son intérêt.
+        StatType.LIFE_STEAL  -> HITS_PER_FIGHT * refWeaponDamage(p) *
+                                (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE)) / refHp(p)
+    }
+
+    /** Le palier le plus haut qu'un objet de cette puissance peut porter. */
+    fun maxTier(power: Int) = TIER_POWER.count { it <= power }.coerceIn(1, TIERS)
+
+    /**
+     * Valeur d'un affixe [type] au palier [tier], tirage plein (100 %). Pour les stats à
+     * plafond c'est une valeur posée ; pour les autres elle tombe de la règle des 12 %.
+     */
+    fun nominal(type: StatType, tier: Int): Float {
+        CAPPED[type]?.let { return it[tier - 1] }
+        return SHARE / perPoint(type, TIER_POWER[tier - 1])
+    }
+
+    /**
+     * Le palier tiré : le plus haut disponible six fois sur dix, sinon un ou deux crans en
+     * dessous. C'est ça qui fait qu'on continue de ramasser au même étage — un objet de la
+     * bonne puissance peut encore cacher un meilleur palier.
+     */
+    /**
+     * Le plus petit tirage d'un affixe, déjà arrondi. Sans ce plancher, une stat « épaisse »
+     * — un point de CON vaut 8 % des PV — verrait ses 55 % s'écraser sur +1 et tomber bien
+     * en dessous de sa part. On arrondit donc le minimum vers le haut, pas au plus proche.
+     */
+    fun minRoll(type: StatType, tier: Int): Float {
+        val low = nominal(type, tier) * ROLL_MIN
+        return if (type.isPercent) low else kotlin.math.ceil(low).coerceAtLeast(1f)
+    }
+
+    fun pickTier(type: StatType, power: Int, rng: Random): Int {
+        val top = maxTier(power)
+        val floorTier = minTier(type)
+        val r = rng.nextFloat()
+        val picked = when {
+            r < 0.60f -> top
+            r < 0.90f -> top - 1
+            else      -> top - 2
+        }
+        return picked.coerceIn(floorTier, top)
+    }
+}
+
 // ─── Génération ────────────────────────────────────────────────────────────────
 
 object LootSystem {
@@ -156,24 +361,61 @@ object LootSystem {
     /** Chance qu'un ennemi vaincu lâche un équipement. */
     const val DROP_CHANCE = 0.20f
 
+    /**
+     * PV donnés par une pièce défensive, par point de son armure de base. Casque, armure,
+     * bottes et bouclier totalisent 16 d'armure de base, soit 12 × la puissance en PV.
+     * C'est ce qui fait tenir le sac de PV au rythme des dégâts des monstres.
+     */
+    const val HP_PER_ARMOR_BASE = 0.75f
+
     /** Multiplicateur de base d'une puissance donnée : +45 % par cran. */
     fun scale(power: Int) = 1f + 0.45f * (power - 1)
 
     /** Puissance typique d'un étage : 1 à l'étage 1, ~41 à l'étage 100. */
     fun powerCenter(floor: Int) = 1f + (floor - 1) * 0.4f
 
+    /**
+     * Fréquence d'apparition d'un affixe, à la façon des colonnes « frequency » de Diablo 2 :
+     * tous les affixes d'un emplacement ne sortent pas autant. Les stats de confort sont
+     * communes, celles qui font les gros écarts (dégâts d'arme, critique, vol de vie) sont
+     * rares — c'est ce qui rend un objet mémorable, pas la taille du tirage.
+     */
+    private val affixWeights: Map<StatType, Float> = mapOf(
+        StatType.STR to 10f, StatType.DEX to 10f, StatType.CON to 10f, StatType.INT to 10f,
+        StatType.WIS to 8f,  StatType.CHA to 6f,
+        StatType.ARMOR to 10f, StatType.MAX_HP to 10f,
+        StatType.WEAPON_DMG to 6f, StatType.SPELL_DMG to 6f,
+        StatType.CRIT_CHANCE to 5f, StatType.CRIT_DAMAGE to 5f,
+        StatType.LIFE_STEAL to 3f,
+    )
+
+    /**
+     * Ce que chaque emplacement peut porter. Un affixe ne sort jamais deux fois sur le même
+     * objet : on ne veut pas d'un anneau qui empile trois fois la même ligne.
+     */
     private val affixPools: Map<EquipSlot, List<StatType>> = run {
         val attrs = StatType.ATTRIBUTES
         val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP)
+        val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL)
         mapOf(
             EquipSlot.WEAPON  to attrs + listOf(StatType.WEAPON_DMG, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL),
             EquipSlot.OFFHAND to attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE),
             EquipSlot.HELMET  to armorPiece,
             EquipSlot.CHEST   to armorPiece,
             EquipSlot.BOOTS   to armorPiece,
-            EquipSlot.AMULET  to attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL),
-            EquipSlot.RING    to attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL),
+            EquipSlot.AMULET  to jewel,
+            EquipSlot.RING    to jewel,
         )
+    }
+
+    /** Tire [count] affixes différents dans [pool], chacun selon sa fréquence. */
+    private fun pickAffixes(pool: List<StatType>, count: Int, rng: Random): List<StatType> {
+        val left = pool.toMutableList()
+        return List(count.coerceAtMost(left.size)) {
+            val picked = weighted(left.map { t -> t to affixWeights.getValue(t) }, rng)
+            left -= picked
+            picked
+        }
     }
 
     fun tryDrop(floor: Int, lootId: Long, rng: Random = Random): Equipment? {
@@ -210,31 +452,30 @@ object LootSystem {
         val attr = base.attribute ?: StatType.ATTRIBUTES.random(rng)
         val attrValue = if (base.attribute != null) 2f + 0.6f * (power - 1) else 1f + 0.4f * (power - 1)
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
+        if (base.armorBase > 0f)
+            implicits += StatRoll(StatType.MAX_HP, (base.armorBase * HP_PER_ARMOR_BASE * s).roundToInt().toFloat())
         if (base.spellBonus > 0f) implicits += StatRoll(StatType.SPELL_DMG, base.spellBonus * (1f + 0.1f * (power - 1)))
 
         val count = rng.nextInt(rarity.minAffixes, rarity.maxAffixes + 1)
-        val affixes = affixPools.getValue(base.slot).shuffled(rng).take(count).map { rollAffix(it, power, rng) }
+        val pool = affixPools.getValue(base.slot).filter { AffixBudget.allows(it, power) }
+        val affixes = pickAffixes(pool, count, rng).map { rollAffix(it, power, rng) }
 
         val (row, col) = pickSprite(base, material, rng)
         return Equipment(base, material, tier, rarity, dmgMin, dmgMax, armor, implicits, affixes, row, col, lootId)
     }
 
+    /**
+     * Un affixe : d'abord son palier (ce que la puissance de l'objet autorise), puis un
+     * tirage entre 55 % et 100 % de la valeur de ce palier. Les fourchettes ne sont écrites
+     * nulle part — elles se déduisent du budget, voir [AffixBudget].
+     */
     private fun rollAffix(type: StatType, power: Int, rng: Random): StatRoll {
-        fun between(lo: Float, hi: Float) = lo + rng.nextFloat() * (hi - lo)
-        val s = scale(power)
-        val pct = 1f + 0.05f * (power - 1)
-        val value = when (type) {
-            StatType.STR, StatType.DEX, StatType.CON,
-            StatType.INT, StatType.WIS, StatType.CHA -> between(1f, 3f) * (1f + 0.5f * (power - 1))
-            StatType.ARMOR       -> between(1f, 4f) * s
-            StatType.MAX_HP      -> between(3f, 8f) * s
-            StatType.WEAPON_DMG  -> between(1f, 2f) * s
-            StatType.SPELL_DMG   -> between(0.04f, 0.10f) * pct
-            StatType.CRIT_CHANCE -> between(0.01f, 0.04f)
-            StatType.CRIT_DAMAGE -> between(0.05f, 0.20f) * pct
-            StatType.LIFE_STEAL  -> between(0.01f, 0.03f)
-        }
-        return StatRoll(type, if (type.isPercent) value else value.roundToInt().coerceAtLeast(1).toFloat())
+        val tier = AffixBudget.pickTier(type, power, rng)
+        val full = AffixBudget.nominal(type, tier)
+        val value = full * (AffixBudget.ROLL_MIN + rng.nextFloat() * (1f - AffixBudget.ROLL_MIN))
+        val rolled = if (type.isPercent) value
+                     else value.roundToInt().toFloat().coerceAtLeast(AffixBudget.minRoll(type, tier))
+        return StatRoll(type, rolled, tier)
     }
 
     private fun pickBase(rng: Random): ItemBase = weighted(listOf(
@@ -278,23 +519,24 @@ object LootSystem {
     fun sellPrice(e: Equipment): Int = ((3 + 2 * e.power) * e.rarity.sellMult).roundToInt()
 
     /**
-     * Note d'un objet, pour trier du meilleur au moins bon et comparer avec ce qu'on
-     * porte. Une somme pondérée simple, affichée au joueur : pas de magie cachée.
+     * Note d'un objet, pour trier le sac et comparer avec ce qu'on porte.
+     *
+     * Elle se compte dans la **monnaie du budget des affixes** ([AffixBudget]) : chaque
+     * ligne vaut ce qu'elle apporte en % de son axe, donc un affixe plein vaut 12 points.
+     * Plus de pondérations écrites à la main qui vieillissent mal, et plus de ligne qui
+     * paraît énorme juste parce qu'elle s'affiche en pourcentage.
+     *
+     * Le tout est multiplié par l'échelle de la puissance, sinon la note ne dirait que
+     * « bon *pour sa puissance* » : une épée de Cuir 1 parfaite noterait autant qu'une épée
+     * d'Astralite 5, et on ne verrait jamais l'objet plus profond comme une amélioration.
      */
     fun rating(e: Equipment): Int {
-        var r = (e.damageMin + e.damageMax) * 1.5f + e.armor * 1.5f
-        for (s in e.allStats) r += when (s.type) {
-            StatType.STR, StatType.DEX, StatType.CON, StatType.INT, StatType.WIS -> 2f * s.value
-            StatType.CHA         -> 1f * s.value
-            StatType.ARMOR       -> 1.5f * s.value
-            StatType.MAX_HP      -> 0.5f * s.value
-            StatType.WEAPON_DMG  -> 3f * s.value
-            StatType.SPELL_DMG   -> 100f * s.value
-            StatType.CRIT_CHANCE -> 200f * s.value
-            StatType.CRIT_DAMAGE -> 60f * s.value
-            StatType.LIFE_STEAL  -> 300f * s.value
-        }
-        return r.roundToInt()
+        val p = e.power
+        var r = 0f
+        if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f
+        if (e.armor > 0)     r += e.armor * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
+        for (s in e.allStats) r += s.value * AffixBudget.perPoint(s.type, p) * 100f
+        return (r * scale(p)).roundToInt()
     }
 
     // ── Affichage ───────────────────────────────────────────────────────────────

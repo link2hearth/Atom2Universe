@@ -213,4 +213,5 @@
         <item quantity="one">%1$d objet dans le sac</item>
         <item quantity="other">%1$d objets dans le sac</item>
     </plurals>
+    <string name="roguelike_stat_roll_tier">%1$s  (P%2$d)</string>
 </resources>
