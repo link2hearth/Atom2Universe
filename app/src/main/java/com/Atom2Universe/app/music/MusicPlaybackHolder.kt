@@ -807,11 +807,10 @@ object MusicPlaybackHolder {
                 skipToNext(context)
             }
             RepeatMode.OFF -> {
-                if (currentIndex < playlist.size - 1) {
-                    skipToNext(context)
-                } else {
-                    stop(context)
-                }
+                // skipToNext() sait déjà s'arrêter au bon moment (fin de playlist,
+                // ou fin de la file mélangée en shuffle) : ne pas refaire ce test ici
+                // avec currentIndex, qui est la position réelle et pas celle du shuffle.
+                skipToNext(context)
             }
         }
     }

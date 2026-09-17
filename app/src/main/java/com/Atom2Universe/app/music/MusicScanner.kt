@@ -2,15 +2,20 @@ package com.Atom2Universe.app.music
 
 import android.content.ContentUris
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.model.MusicTrack
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import kotlin.coroutines.resume
 
 object MusicScanner {
 
@@ -42,6 +47,43 @@ object MusicScanner {
         // Trie par titre
         allTracks.sortBy { it.title.lowercase() }
         allTracks
+    }
+
+    private val AUDIO_EXTENSIONS = setOf(
+        "mp3", "flac", "m4a", "aac", "ogg", "opus", "wav", "wma"
+    )
+
+    /**
+     * Force le MediaStore à indexer un dossier fraîchement ajouté, puis retourne ses pistes.
+     * Un dossier tout juste copié sur l'appareil (via SAF, câble USB, etc.) peut ne pas encore
+     * être connu du MediaStore : scanMusicFolder() renverrait alors une liste vide ou incomplète
+     * en attendant que le scan automatique d'Android passe par là (parfois très long).
+     */
+    suspend fun scanFolderFast(context: Context, folderPath: String): List<MusicTrack> = withContext(Dispatchers.IO) {
+        val audioFiles = try {
+            File(folderPath).walkTopDown()
+                .filter { it.isFile && it.extension.lowercase() in AUDIO_EXTENSIONS }
+                .map { it.absolutePath }
+                .toList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        if (audioFiles.isNotEmpty()) {
+            withTimeoutOrNull(15_000L) {
+                suspendCancellableCoroutine<Unit> { continuation ->
+                    var scannedCount = 0
+                    MediaScannerConnection.scanFile(context, audioFiles.toTypedArray(), null) { _, _ ->
+                        scannedCount++
+                        if (scannedCount >= audioFiles.size && continuation.isActive) {
+                            continuation.resume(Unit)
+                        }
+                    }
+                }
+            }
+        }
+
+        scanMusicFolder(context, folderPath)
     }
 
     /**

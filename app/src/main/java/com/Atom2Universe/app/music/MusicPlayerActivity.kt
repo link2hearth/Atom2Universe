@@ -201,8 +201,22 @@ class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener
             val folderName = MusicFoldersManager.getFolderDisplayName(this, uri.toString())
             Snackbar.make(contentList, getString(R.string.music_folder_added, folderName), Snackbar.LENGTH_LONG).show()
 
-            // Reload library
-            loadMusicLibrary()
+            // Le dossier vient d'être ajouté : ses fichiers ne sont pas forcément déjà
+            // connus du MediaStore. On force un scan direct de ce dossier avant de
+            // recharger la bibliothèque, pour que les pistes apparaissent immédiatement
+            // au lieu d'attendre le scan automatique d'Android (ou le prochain rafraîchissement).
+            val folderPath = MusicFoldersManager.getPathFromUri(this, uri.toString())
+            if (folderPath != null) {
+                showLoading(true)
+                lifecycleScope.launch {
+                    MusicScanner.scanFolderFast(this@MusicPlayerActivity, folderPath)
+                    loadMusicLibrary(forceRescan = true)
+                }
+            } else {
+                // Impossible de résoudre un chemin absolu (ex: carte SD sur certains appareils) :
+                // on se rabat sur le rechargement classique.
+                loadMusicLibrary(forceRescan = true)
+            }
         }
     }
 
