@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Συγχρονισμός τώρα</string>
     <string name="music_settings_sync_in_progress">Συγχρονισμός…</string>
     <string name="music_settings_sync_success">Ο συγχρονισμός ολοκληρώθηκε επιτυχώς</string>
-    <string name="music_settings_sync_error">Ο συγχρονισμός απέτυχε: %1$s</string>
     <string name="music_settings_reset_play_counts">Επαναφορά αριθμών αναπαραγωγών</string>
     <string name="music_settings_reset_play_counts_title">Επαναφορά αριθμών αναπαραγωγών;</string>
     <string name="music_settings_reset_play_counts_message">Αυτό θα:\n\n• Διαγράψει όλα τα αρχεία delta από το νέφος\n• Επαναφέρει τους αριθμούς αναπαραγωγών μόνο σε τοπικές αναπαραγωγές\n• Αφαιρέσει συγχρονισμένες αναπαραγωγές από άλλες συσκευές\n\nΕκτελέστε αυτό σε ΟΛΕΣ τις επηρεαζόμενες συσκευές, ξεκινώντας από την κύρια συσκευή.\n\nΑυτή η ενέργεια δεν μπορεί να αναιρεθεί.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Διαγραφή…</string>
     <string name="music_settings_delete_cloud_data_success">Διαγράφηκαν %1$d αρχεία από το νέφος</string>
     <string name="music_settings_delete_cloud_data_error">Σφάλμα: %1$s</string>
-    <string name="music_settings_section_backup">Αντίγραφο ασφαλείας</string>
-    <string name="music_settings_primary_device">Κύρια συσκευή</string>
-    <string name="music_settings_primary_device_desc">Ανέβασμα πλήρους αντιγράφου ασφαλείας κατά τον ημερήσιο συγχρονισμό</string>
-    <string name="music_settings_last_backup_never">Δεν βρέθηκε αντίγραφο ασφαλείας</string>
-    <string name="music_settings_last_backup_format">Αντίγραφο ασφαλείας: %1$s από %2$s</string>
-    <string name="music_settings_restore_backup">Επαναφορά από νέφος</string>
-    <string name="music_settings_restore_in_progress">Επαναφορά…</string>
-    <string name="music_settings_restore_error">Η επαναφορά απέτυχε: %1$s</string>
-    <string name="music_settings_backup_now">Αντίγραφο ασφαλείας στο νέφος</string>
-    <string name="music_settings_backup_in_progress">Δημιουργία αντιγράφου…</string>
-    <string name="music_settings_backup_success">Το αντίγραφο ασφαλείας ολοκληρώθηκε</string>
-    <string name="music_settings_backup_error">Το αντίγραφο ασφαλείας απέτυχε: %1$s</string>
-    <string name="music_settings_no_backup_found">Δεν βρέθηκε αντίγραφο ασφαλείας στο νέφος</string>
-    <string name="music_settings_primary_device_set">Αυτή η συσκευή είναι πλέον η κύρια συσκευή</string>
-    <string name="music_settings_primary_device_unset">Η κατάσταση κύριας συσκευής αφαιρέθηκε</string>
-    <string name="music_backup_found_title">Βρέθηκε αντίγραφο ασφαλείας!</string>
-    <string name="music_backup_found_message">Βρέθηκε αντίγραφο ασφαλείας στον λογαριασμό Google σας:\n\n• %1$d αριθμοί αναπαραγωγών\n• %2$d αγαπημένα (κομμάτια + άλμπουμ)\n• %3$d λίστες αναπαραγωγής\n• %4$d εικόνες καλλιτεχνών\n• %5$d στίχοι\n\nΔημιουργήθηκε %6$s\nαπό «%7$s»\n\nΘέλετε να το επαναφέρετε;</string>
-    <string name="music_backup_restore">Επαναφορά</string>
-    <string name="music_backup_ignore">Παράβλεψη</string>
-    <string name="music_restore_summary_title">Επαναφορά ολοκληρώθηκε</string>
-    <string name="music_restore_summary_message">Επαναφέρθηκαν:\n• %1$d αριθμοί αναπαραγωγών\n• %2$d αγαπημένα κομμάτια\n• %3$d αγαπημένα άλμπουμ\n• %4$d προσαρμογές καλλιτεχνών\n• %5$d λίστες αναπαραγωγής\n• %6$d εικόνες καλλιτεχνών\n• %7$d στίχοι
-• %8$d ακροάσεις</string>
     <string name="music_artist_display_mode">Λειτουργία εμφάνισης</string>
     <string name="music_display_mode_list">Λειτουργία λίστας</string>
     <string name="music_display_mode_compact">Συμπαγής λειτουργία</string>

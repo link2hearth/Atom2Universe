@@ -179,7 +179,6 @@
     <string name="music_settings_sync_now">Синхронизировать сейчас</string>
     <string name="music_settings_sync_in_progress">Синхронизация…</string>
     <string name="music_settings_sync_success">Синхронизация успешно завершена</string>
-    <string name="music_settings_sync_error">Ошибка синхронизации: %1$s</string>
     <string name="music_settings_reset_play_counts">Сбросить счётчики воспроизведений</string>
     <string name="music_settings_reset_play_counts_title">Сбросить счётчики воспроизведений?</string>
     <string name="music_settings_reset_play_counts_message">Это действие:\n\n• Удалит все дельта-файлы из облака\n• Сбросит счётчики воспроизведений только до локальных прослушиваний\n• Удалит синхронизированные прослушивания с других устройств\n\nВыполните это на ВСЕХ затронутых устройствах, начиная с основного.\n\nЭто действие нельзя отменить.</string>
@@ -199,28 +198,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Удаление…</string>
     <string name="music_settings_delete_cloud_data_success">Удалено %1$d файлов из облака</string>
     <string name="music_settings_delete_cloud_data_error">Ошибка: %1$s</string>
-    <string name="music_settings_section_backup">Резервное копирование</string>
-    <string name="music_settings_primary_device">Основное устройство</string>
-    <string name="music_settings_primary_device_desc">Загружать полную резервную копию при ежедневной синхронизации</string>
-    <string name="music_settings_last_backup_never">Резервная копия не найдена</string>
-    <string name="music_settings_last_backup_format">Резервная копия: %1$s от %2$s</string>
-    <string name="music_settings_restore_backup">Восстановить из облака</string>
-    <string name="music_settings_restore_in_progress">Восстановление…</string>
-    <string name="music_settings_restore_error">Ошибка восстановления: %1$s</string>
-    <string name="music_settings_backup_now">Создать резервную копию</string>
-    <string name="music_settings_backup_in_progress">Создание резервной копии…</string>
-    <string name="music_settings_backup_success">Резервная копия создана</string>
-    <string name="music_settings_backup_error">Ошибка резервного копирования: %1$s</string>
-    <string name="music_settings_no_backup_found">Резервная копия в облаке не найдена</string>
-    <string name="music_settings_primary_device_set">Это устройство теперь является основным</string>
-    <string name="music_settings_primary_device_unset">Статус основного устройства снят</string>
-    <string name="music_backup_found_title">Найдена резервная копия!</string>
-    <string name="music_backup_found_message">В вашем аккаунте Google найдена резервная копия:\n\n• %1$d счётчиков воспроизведений\n• %2$d избранных (треки + альбомы)\n• %3$d плейлистов\n• %4$d изображений исполнителей\n• %5$d текстов песен\n\nСоздана %6$s\nна устройстве «%7$s»\n\nХотите восстановить её?</string>
-    <string name="music_backup_restore">Восстановить</string>
-    <string name="music_backup_ignore">Пропустить</string>
-    <string name="music_restore_summary_title">Восстановление завершено</string>
-    <string name="music_restore_summary_message">Восстановлено:\n• %1$d счётчиков воспроизведений\n• %2$d избранных треков\n• %3$d избранных альбомов\n• %4$d настроек исполнителей\n• %5$d плейлистов\n• %6$d изображений исполнителей\n• %7$d текстов песен
-• %8$d прослушиваний</string>
     <string name="music_artist_display_mode">Режим отображения</string>
     <string name="music_display_mode_list">Список</string>
     <string name="music_display_mode_compact">Компактный</string>

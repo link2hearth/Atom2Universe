@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Jetzt synchronisieren</string>
     <string name="music_settings_sync_in_progress">Synchronisierung läuft…</string>
     <string name="music_settings_sync_success">Synchronisierung erfolgreich abgeschlossen</string>
-    <string name="music_settings_sync_error">Synchronisierung fehlgeschlagen: %1$s</string>
     <string name="music_settings_reset_play_counts">Wiedergabezähler zurücksetzen</string>
     <string name="music_settings_reset_play_counts_title">Wiedergabezähler zurücksetzen?</string>
     <string name="music_settings_reset_play_counts_message">Dies wird:\n\n• Alle Delta-Dateien aus der Cloud löschen\n• Wiedergabezähler auf lokale Wiedergaben zurücksetzen\n• Synchronisierte Wiedergaben von anderen Geräten entfernen\n\nFühren Sie dies auf ALLEN betroffenen Geräten aus, beginnend mit dem Hauptgerät.\n\nDiese Aktion kann nicht rückgängig gemacht werden.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Löschung läuft…</string>
     <string name="music_settings_delete_cloud_data_success">%1$d Dateien aus der Cloud gelöscht</string>
     <string name="music_settings_delete_cloud_data_error">Fehler: %1$s</string>
-    <string name="music_settings_section_backup">Sicherung</string>
-    <string name="music_settings_primary_device">Hauptgerät</string>
-    <string name="music_settings_primary_device_desc">Vollständige Sicherung während täglicher Synchronisierung hochladen</string>
-    <string name="music_settings_last_backup_never">Keine Sicherung gefunden</string>
-    <string name="music_settings_last_backup_format">Sicherung: %1$s von %2$s</string>
-    <string name="music_settings_restore_backup">Aus Cloud wiederherstellen</string>
-    <string name="music_settings_restore_in_progress">Wiederherstellung läuft…</string>
-    <string name="music_settings_restore_error">Wiederherstellung fehlgeschlagen: %1$s</string>
-    <string name="music_settings_backup_now">In Cloud sichern</string>
-    <string name="music_settings_backup_in_progress">Sicherung läuft…</string>
-    <string name="music_settings_backup_success">Sicherung abgeschlossen</string>
-    <string name="music_settings_backup_error">Sicherung fehlgeschlagen: %1$s</string>
-    <string name="music_settings_no_backup_found">Keine Sicherung in der Cloud gefunden</string>
-    <string name="music_settings_primary_device_set">Dieses Gerät ist jetzt das Hauptgerät</string>
-    <string name="music_settings_primary_device_unset">Hauptgerät-Status entfernt</string>
-    <string name="music_backup_found_title">Sicherung gefunden!</string>
-    <string name="music_backup_found_message">Eine Sicherung wurde in Ihrem Google-Konto gefunden:\n\n• %1$d Wiedergabezähler\n• %2$d Favoriten (Titel + Alben)\n• %3$d Wiedergabelisten\n• %4$d Interpretenbilder\n• %5$d Liedtexte\n\nErstellt am %6$s\nvon \"%7$s\"\n\nMöchten Sie sie wiederherstellen?</string>
-    <string name="music_backup_restore">Wiederherstellen</string>
-    <string name="music_backup_ignore">Ignorieren</string>
-    <string name="music_restore_summary_title">Wiederherstellung abgeschlossen</string>
-    <string name="music_restore_summary_message">Wiederhergestellt:\n• %1$d Wiedergabezähler\n• %2$d Titel-Favoriten\n• %3$d Album-Favoriten\n• %4$d Interpreten-Anpassungen\n• %5$d Wiedergabelisten\n• %6$d Interpretenbilder\n• %7$d Liedtexte
-• %8$d Wiedergaben</string>
     <string name="music_artist_display_mode">Anzeigemodus</string>
     <string name="music_display_mode_list">Listenmodus</string>
     <string name="music_display_mode_compact">Kompaktmodus</string>

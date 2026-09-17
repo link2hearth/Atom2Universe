@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.stats.sync
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.Log
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
@@ -23,6 +24,18 @@ object StatsSyncManager {
 
     private lateinit var appContext: Context
     private var isInitialized = false
+
+    /** Même étiquette que les mesures de CloudSyncManager : un seul filtre logcat pour tout. */
+    private const val TIMING_TAG = "SyncTiming"
+
+    private inline fun <T> timed(label: String, block: () -> T): T {
+        val start = SystemClock.elapsedRealtime()
+        try {
+            return block()
+        } finally {
+            Log.i(TIMING_TAG, "$label : ${SystemClock.elapsedRealtime() - start} ms")
+        }
+    }
 
     /**
      * Initialise le gestionnaire de sync.
@@ -68,7 +81,8 @@ object StatsSyncManager {
 
             // 1. Télécharger les sessions existantes depuis le Drive
             Log.d(TAG, "Downloading stats from Drive...")
-            val existingJson = driveClient.readJsonFile(STATS_SYNC_FILE)
+            val existingJson = timed("stats : download") { driveClient.readJsonFile(STATS_SYNC_FILE) }
+            Log.i(TIMING_TAG, "stats : fichier cloud ${(existingJson?.length ?: 0) / 1024} Ko")
             val existingSessions = if (existingJson != null) {
                 try {
                     UsageSessionsSyncFile.fromJson(existingJson).sessions
@@ -122,21 +136,24 @@ object StatsSyncManager {
                 sessions = mergedSessions
             )
 
-            val uploaded = driveClient.writeJsonFile(STATS_SYNC_FILE, syncFile.toJson())
+            Log.i(TIMING_TAG, "stats : ${mergedSessions.size} sessions au total")
+            val uploaded = timed("stats : upload") { driveClient.writeJsonFile(STATS_SYNC_FILE, syncFile.toJson()) }
 
             if (!uploaded) {
                 return@withContext SyncResult(false, "Failed to upload to Drive")
             }
 
             // 6. Importer les nouvelles sessions des autres appareils dans la base locale
-            val importedCount = importRemoteSessions(mergedSessions, deviceId)
+            val importedCount = timed("stats : import des autres appareils") {
+                importRemoteSessions(mergedSessions, deviceId)
+            }
 
             // 7. Recalculer les résumés journaliers si des sessions ont été importées
             if (importedCount > 0) {
                 Log.d(TAG, "Rebuilding daily summaries after importing $importedCount sessions...")
                 val dailySummaryDao = statsDb.dailySummaryDao()
                 val builder = DailySummaryBuilder(usageSessionDao, dailySummaryDao)
-                builder.backfillAllSummaries()
+                timed("stats : recalcul des résumés journaliers") { builder.backfillAllSummaries() }
             }
 
             Log.d(TAG, "Stats sync complete: imported $importedCount remote sessions")

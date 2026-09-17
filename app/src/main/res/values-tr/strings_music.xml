@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Şimdi senkronize et</string>
     <string name="music_settings_sync_in_progress">Senkronize ediliyor…</string>
     <string name="music_settings_sync_success">Senkronizasyon başarıyla tamamlandı</string>
-    <string name="music_settings_sync_error">Senkronizasyon başarısız: %1$s</string>
     <string name="music_settings_reset_play_counts">Çalma sayılarını sıfırla</string>
     <string name="music_settings_reset_play_counts_title">Çalma sayıları sıfırlansın mı?</string>
     <string name="music_settings_reset_play_counts_message">Bu işlem:\n\n• Buluttaki tüm delta dosyalarını silecek\n• Çalma sayılarını yalnızca yerel çalmalara sıfırlayacak\n• Diğer cihazlardan senkronize edilen çalmaları kaldıracak\n\nBu işlemi tüm etkilenen cihazlarda, birincil cihazdan başlayarak çalıştırın.\n\nBu işlem geri alınamaz.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Siliniyor…</string>
     <string name="music_settings_delete_cloud_data_success">Buluttan %1$d dosya silindi</string>
     <string name="music_settings_delete_cloud_data_error">Hata: %1$s</string>
-    <string name="music_settings_section_backup">Yedekleme</string>
-    <string name="music_settings_primary_device">Birincil cihaz</string>
-    <string name="music_settings_primary_device_desc">Günlük senkronizasyon sırasında tam yedekleme yükle</string>
-    <string name="music_settings_last_backup_never">Yedekleme bulunamadı</string>
-    <string name="music_settings_last_backup_format">Yedekleme: %1$s - %2$s</string>
-    <string name="music_settings_restore_backup">Buluttan geri yükle</string>
-    <string name="music_settings_restore_in_progress">Geri yükleniyor…</string>
-    <string name="music_settings_restore_error">Geri yükleme başarısız: %1$s</string>
-    <string name="music_settings_backup_now">Buluta yedekle</string>
-    <string name="music_settings_backup_in_progress">Yedekleniyor…</string>
-    <string name="music_settings_backup_success">Yedekleme tamamlandı</string>
-    <string name="music_settings_backup_error">Yedekleme başarısız: %1$s</string>
-    <string name="music_settings_no_backup_found">Bulutta yedekleme bulunamadı</string>
-    <string name="music_settings_primary_device_set">Bu cihaz artık birincil cihaz</string>
-    <string name="music_settings_primary_device_unset">Birincil cihaz durumu kaldırıldı</string>
-    <string name="music_backup_found_title">Yedekleme bulundu!</string>
-    <string name="music_backup_found_message">Google hesabınızda bir yedekleme bulundu:\n\n• %1$d çalma sayısı\n• %2$d favori (parçalar + albümler)\n• %3$d çalma listesi\n• %4$d sanatçı görseli\n• %5$d şarkı sözü\n\nOluşturulma: %6$s\nKaynak: \"%7$s\"\n\nGeri yüklemek ister misiniz?</string>
-    <string name="music_backup_restore">Geri yükle</string>
-    <string name="music_backup_ignore">Yoksay</string>
-    <string name="music_restore_summary_title">Geri yükleme tamamlandı</string>
-    <string name="music_restore_summary_message">Geri yüklendi:\n• %1$d çalma sayısı\n• %2$d favori parça\n• %3$d favori albüm\n• %4$d sanatçı özelleştirmesi\n• %5$d çalma listesi\n• %6$d sanatçı görseli\n• %7$d şarkı sözü
-• %8$d dinleme</string>
     <string name="music_artist_display_mode">Görüntüleme modu</string>
     <string name="music_display_mode_list">Liste modu</string>
     <string name="music_display_mode_compact">Kompakt mod</string>

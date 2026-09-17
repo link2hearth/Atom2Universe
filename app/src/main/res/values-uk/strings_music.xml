@@ -179,7 +179,6 @@
     <string name="music_settings_sync_now">Синхронізувати зараз</string>
     <string name="music_settings_sync_in_progress">Синхронізація…</string>
     <string name="music_settings_sync_success">Синхронізацію завершено успішно</string>
-    <string name="music_settings_sync_error">Помилка синхронізації: %1$s</string>
     <string name="music_settings_reset_play_counts">Скинути кількість відтворень</string>
     <string name="music_settings_reset_play_counts_title">Скинути кількість відтворень?</string>
     <string name="music_settings_reset_play_counts_message">Це:\n\n• Видалить усі дельта-файли з хмари\n• Скине кількість відтворень до локальних\n• Видалить синхронізовані відтворення з інших пристроїв\n\nВиконайте це на ВСІХ пристроях, починаючи з основного.\n\nЦю дію неможливо скасувати.</string>
@@ -199,28 +198,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Видалення…</string>
     <string name="music_settings_delete_cloud_data_success">Видалено %1$d файлів з хмари</string>
     <string name="music_settings_delete_cloud_data_error">Помилка: %1$s</string>
-    <string name="music_settings_section_backup">Резервне копіювання</string>
-    <string name="music_settings_primary_device">Основний пристрій</string>
-    <string name="music_settings_primary_device_desc">Завантажувати повну резервну копію під час щоденної синхронізації</string>
-    <string name="music_settings_last_backup_never">Резервну копію не знайдено</string>
-    <string name="music_settings_last_backup_format">Копія: %1$s з %2$s</string>
-    <string name="music_settings_restore_backup">Відновити з хмари</string>
-    <string name="music_settings_restore_in_progress">Відновлення…</string>
-    <string name="music_settings_restore_error">Помилка відновлення: %1$s</string>
-    <string name="music_settings_backup_now">Зберегти в хмару</string>
-    <string name="music_settings_backup_in_progress">Резервне копіювання…</string>
-    <string name="music_settings_backup_success">Резервне копіювання завершено</string>
-    <string name="music_settings_backup_error">Помилка резервного копіювання: %1$s</string>
-    <string name="music_settings_no_backup_found">Резервну копію в хмарі не знайдено</string>
-    <string name="music_settings_primary_device_set">Цей пристрій тепер є основним</string>
-    <string name="music_settings_primary_device_unset">Статус основного пристрою знято</string>
-    <string name="music_backup_found_title">Знайдено резервну копію!</string>
-    <string name="music_backup_found_message">У вашому обліковому записі Google знайдено резервну копію:\n\n• %1$d кількостей відтворень\n• %2$d обраних (треки + альбоми)\n• %3$d плейлистів\n• %4$d зображень виконавців\n• %5$d текстів пісень\n\nСтворено %6$s\nз \"%7$s\"\n\nБажаєте відновити?</string>
-    <string name="music_backup_restore">Відновити</string>
-    <string name="music_backup_ignore">Ігнорувати</string>
-    <string name="music_restore_summary_title">Відновлення завершено</string>
-    <string name="music_restore_summary_message">Відновлено:\n• %1$d кількостей відтворень\n• %2$d обраних треків\n• %3$d обраних альбомів\n• %4$d налаштувань виконавців\n• %5$d плейлистів\n• %6$d зображень виконавців\n• %7$d текстів пісень
-• %8$d прослуховувань</string>
     <string name="music_artist_display_mode">Режим відображення</string>
     <string name="music_display_mode_list">Список</string>
     <string name="music_display_mode_compact">Компактний</string>

@@ -2,6 +2,7 @@
 
 import android.content.Context
 import android.os.Build
+import android.os.SystemClock
 import android.util.Log
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -356,10 +357,34 @@ object CloudSyncManager {
 
     // ==================== End Instant Sync Methods ====================
 
+    /** Les grandes étapes d'une sync, pour dire à l'écran où on en est. */
+    enum class SyncStep { MUSIC_DOWNLOAD, LISTENS, MUSIC_UPLOAD, STATS, READING, GAMES }
+
+    /** Étiquette des mesures de durée : `adb logcat -s SyncTiming` suffit à les lire. */
+    private const val TIMING_TAG = "SyncTiming"
+
+    /**
+     * Chronomètre un morceau de la sync et écrit sa durée dans le journal.
+     *
+     * `inline` pour que le bloc puisse appeler des fonctions suspendues. Le temps est
+     * noté même si le bloc échoue : c'est souvent là qu'il est le plus instructif.
+     */
+    private inline fun <T> timed(label: String, block: () -> T): T {
+        val start = SystemClock.elapsedRealtime()
+        try {
+            return block()
+        } finally {
+            Log.i(TIMING_TAG, "$label : ${SystemClock.elapsedRealtime() - start} ms")
+        }
+    }
+
     /**
      * Performs immediate sync.
+     *
+     * @param onStep appelé au début de chaque grande étape, depuis un fil d'arrière-plan :
+     *   l'écran qui s'en sert doit repasser sur le fil principal.
      */
-    suspend fun syncNow(): SyncResult = withContext(Dispatchers.IO) {
+    suspend fun syncNow(onStep: (SyncStep) -> Unit = {}): SyncResult = withContext(Dispatchers.IO) {
         Log.d(TAG, "Starting sync...")
 
         if (!isInitialized) {
@@ -381,50 +406,49 @@ object CloudSyncManager {
             ?: return@withContext SyncResult.NotSignedIn
 
         isSyncInProgress = true
+        val syncStart = SystemClock.elapsedRealtime()
         try {
             val client = GoogleDriveAppDataClient(appContext, account)
 
             // Phase 1: Download
-            downloadManifest(client)
-            val cloudFavorites = downloadFavorites(client)
-            val cloudLyrics = downloadLyrics(client)
-            val cloudEqPresets = downloadEqPresets(client)
-            val cloudPlaylists = downloadPlaylists(client)
-            val cloudAlbumFavorites = downloadAlbumFavorites(client)
-            val cloudArtistFavorites = downloadArtistFavorites(client)
+            onStep(SyncStep.MUSIC_DOWNLOAD)
+            timed("download manifest") { downloadManifest(client) }
+            val cloudFavorites = timed("download favoris") { downloadFavorites(client) }
+            val cloudLyrics = timed("download paroles") { downloadLyrics(client) }
+            val cloudEqPresets = timed("download égaliseur") { downloadEqPresets(client) }
+            val cloudPlaylists = timed("download playlists") { downloadPlaylists(client) }
+            val cloudAlbumFavorites = timed("download albums favoris") { downloadAlbumFavorites(client) }
+            val cloudArtistFavorites = timed("download artistes favoris") { downloadArtistFavorites(client) }
 
             // Phase 2: Merge
-            val importedEvents = downloadAndMergeListenEvents(client)
+            onStep(SyncStep.LISTENS)
+            val importedEvents = timed("écoutes (download + fusion)") { downloadAndMergeListenEvents(client) }
             Log.d(TAG, "Listen events imported: $importedEvents")
-            mergeFavorites(cloudFavorites)
-            mergeLyrics(cloudLyrics)
-            mergeEqPresets(cloudEqPresets)
-            mergePlaylists(cloudPlaylists)
-            mergeAlbumFavorites(cloudAlbumFavorites)
-            mergeArtistFavorites(cloudArtistFavorites)
-
-            // Phase 2.5: Download and merge artist images
-            val artistImagesDownloaded = downloadAndMergeArtistImages(client)
-            Log.d(TAG, "Artist images downloaded: $artistImagesDownloaded")
+            timed("fusion locale (favoris, paroles, égaliseur, playlists)") {
+                mergeFavorites(cloudFavorites)
+                mergeLyrics(cloudLyrics)
+                mergeEqPresets(cloudEqPresets)
+                mergePlaylists(cloudPlaylists)
+                mergeAlbumFavorites(cloudAlbumFavorites)
+                mergeArtistFavorites(cloudArtistFavorites)
+            }
 
             // Phase 3: Upload
-            uploadListenEvents(client)
-            uploadFavorites(client)
-            uploadLyrics(client, cloudLyrics)
-            uploadEqPresets(client)
-            uploadPlaylists(client)
-            uploadAlbumFavorites(client)
-            uploadArtistFavorites(client)
+            onStep(SyncStep.MUSIC_UPLOAD)
+            timed("upload écoutes") { uploadListenEvents(client) }
+            timed("upload favoris") { uploadFavorites(client) }
+            timed("upload paroles") { uploadLyrics(client, cloudLyrics) }
+            timed("upload égaliseur") { uploadEqPresets(client) }
+            timed("upload playlists") { uploadPlaylists(client) }
+            timed("upload albums favoris") { uploadAlbumFavorites(client) }
+            timed("upload artistes favoris") { uploadArtistFavorites(client) }
 
-            // Upload artist images (for favorite artists with icons)
-            val artistImagesUploaded = uploadArtistImages(client)
-            Log.d(TAG, "Artist images uploaded: $artistImagesUploaded")
-
-            updateManifest(client)
+            timed("upload manifest") { updateManifest(client) }
 
             // Phase 3.5: Sync stats (usage sessions)
+            onStep(SyncStep.STATS)
             try {
-                val statsResult = StatsSyncManager.syncStats()
+                val statsResult = timed("statistiques d'usage") { StatsSyncManager.syncStats() }
                 Log.d(TAG, "Stats sync: ${statsResult.message}")
             } catch (e: Exception) {
                 Log.e(TAG, "Stats sync failed (non-critical)", e)
@@ -432,8 +456,9 @@ object CloudSyncManager {
             }
 
             // Phase 3.6: Sync reading progress (books/comics)
+            onStep(SyncStep.READING)
             try {
-                val progressResult = ReadingProgressSyncManager.syncProgress()
+                val progressResult = timed("progression de lecture") { ReadingProgressSyncManager.syncProgress() }
                 Log.d(TAG, "Reading progress sync: ${progressResult.message}")
             } catch (e: Exception) {
                 Log.e(TAG, "Reading progress sync failed (non-critical)", e)
@@ -442,15 +467,13 @@ object CloudSyncManager {
 
             // Phase 3.7 : records, compteurs et suppressions des jeux. Jamais la partie du
             // clicker : elle peut demander un choix, qu'une sync de nuit ne saurait pas poser.
+            onStep(SyncStep.GAMES)
             try {
-                val gamesResult = GamesSyncManager.syncSharedStats()
+                val gamesResult = timed("jeux (records et compteurs)") { GamesSyncManager.syncSharedStats() }
                 Log.d(TAG, "Games shared stats sync: $gamesResult")
             } catch (e: Exception) {
                 Log.e(TAG, "Games shared stats sync failed (non-critical)", e)
             }
-
-            // Phase 4: Backup (if primary device)
-            performBackupIfPrimary()
 
             // Update sync timestamp
             syncMetadataDao.updateLastSyncTimestamp(System.currentTimeMillis())
@@ -462,6 +485,7 @@ object CloudSyncManager {
             Log.e(TAG, "Sync failed", e)
             SyncResult.Error(e.message ?: "Unknown error")
         } finally {
+            Log.i(TIMING_TAG, "TOTAL : ${SystemClock.elapsedRealtime() - syncStart} ms")
             isSyncInProgress = false
         }
     }
@@ -1297,225 +1321,6 @@ object CloudSyncManager {
         }
     }
 
-    // ==================== ARTIST IMAGES SYNC ====================
-
-    private const val ARTIST_IMAGE_PREFIX = "artist_img_"
-
-    /**
-     * Downloads and merges artist images from Google Drive.
-     * Downloads images that exist on Drive but not locally.
-     */
-    private suspend fun downloadAndMergeArtistImages(client: GoogleDriveAppDataClient): Int {
-        var downloadedCount = 0
-
-        try {
-            // List all artist image files on Drive
-            val driveImageFiles = client.listFilesWithPrefix(ARTIST_IMAGE_PREFIX)
-            if (driveImageFiles.isEmpty()) {
-                Log.d(TAG, "No artist images on Drive")
-                return 0
-            }
-
-            // Get the local images directory
-            val musicDir = android.os.Environment.getExternalStoragePublicDirectory(
-                android.os.Environment.DIRECTORY_MUSIC
-            )
-            val imagesDir = java.io.File(musicDir, ".a2u_artist_images")
-            if (!imagesDir.exists()) {
-                imagesDir.mkdirs()
-            }
-
-            // Download images we don't have locally
-            for (filename in driveImageFiles) {
-                try {
-                    val key = filename
-                        .removePrefix(ARTIST_IMAGE_PREFIX)
-                        .removeSuffix(".jpg")
-
-                    val localFile = java.io.File(imagesDir, "$key.jpg")
-
-                    // Skip if we already have this image locally
-                    if (localFile.exists()) continue
-
-                    // Download from Drive
-                    val bytes = client.readBinaryFile(filename)
-                    if (bytes != null && bytes.isNotEmpty()) {
-                        localFile.writeBytes(bytes)
-                        downloadedCount++
-                        Log.d(TAG, "Downloaded artist image: $filename")
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error downloading artist image: $filename", e)
-                }
-            }
-
-            // Now link the downloaded images to artists via customizations
-            linkDownloadedImagesToArtists(client, imagesDir)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error downloading artist images", e)
-        }
-
-        Log.d(TAG, "Downloaded $downloadedCount artist images")
-        return downloadedCount
-    }
-
-    /**
-     * Links downloaded artist images to their corresponding artists.
-     * Uses the artist_customizations.json backup file to find the mapping.
-     */
-    private suspend fun linkDownloadedImagesToArtists(
-        client: GoogleDriveAppDataClient,
-        imagesDir: java.io.File
-    ) {
-        try {
-            // Read artist customizations backup to get the imageKey -> artistName mapping
-            val customizationsJson = client.readJsonFile(
-                com.Atom2Universe.app.music.sync.model.ArtistCustomizationsBackupFile.FILENAME
-            ) ?: return
-
-            val customizationsFile = com.Atom2Universe.app.music.sync.model.ArtistCustomizationsBackupFile
-                .fromJson(JSONObject(customizationsJson))
-
-            // Load local customizations
-            ArtistCustomizationManager.loadCustomizations(appContext)
-
-            for (entry in customizationsFile.customizations) {
-                if (entry.imageKey != null) {
-                    val existing = ArtistCustomizationManager.getCustomization(entry.artistName)
-
-                    // Only set if local doesn't have an image yet
-                    if (existing?.iconPath == null) {
-                        val imageFile = java.io.File(imagesDir, "${entry.imageKey}.jpg")
-                        if (imageFile.exists()) {
-                            ArtistCustomizationManager.setArtistIcon(
-                                entry.artistName,
-                                imageFile.absolutePath
-                            )
-                            Log.d(TAG, "Linked artist image: ${entry.artistName} -> ${imageFile.absolutePath}")
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error linking artist images", e)
-        }
-    }
-
-    /**
-     * Uploads local artist images to Google Drive.
-     * Only uploads images for favorite artists that aren't already on Drive.
-     */
-    private suspend fun uploadArtistImages(client: GoogleDriveAppDataClient): Int {
-        var uploadedCount = 0
-
-        try {
-            // Load customizations
-            ArtistCustomizationManager.loadCustomizations(appContext)
-
-            // Get all artists with custom icons (not just favorites, but any with icons)
-            val artistsWithIcons = mutableListOf<Pair<String, String>>() // artistName, iconPath
-
-            // Check favorites first
-            val favoriteArtists = ArtistCustomizationManager.getFavoriteArtistNames()
-            for (artistName in favoriteArtists) {
-                val iconPath = ArtistCustomizationManager.getArtistIcon(artistName)
-                if (iconPath != null) {
-                    artistsWithIcons.add(artistName to iconPath)
-                }
-            }
-
-            if (artistsWithIcons.isEmpty()) {
-                Log.d(TAG, "No artist images to upload")
-                return 0
-            }
-
-            // Get list of images already on Drive
-            val existingDriveImages = client.listFilesWithPrefix(ARTIST_IMAGE_PREFIX).toSet()
-
-            for ((artistName, iconPath) in artistsWithIcons) {
-                try {
-                    val key = generateArtistImageKey(artistName)
-                    val filename = "$ARTIST_IMAGE_PREFIX$key.jpg"
-
-                    // Skip if already on Drive
-                    if (existingDriveImages.contains(filename)) continue
-
-                    // Read local file
-                    val file = java.io.File(iconPath)
-                    if (!file.exists()) continue
-
-                    val bytes = file.readBytes()
-                    if (client.writeBinaryFile(filename, bytes)) {
-                        uploadedCount++
-                        Log.d(TAG, "Uploaded artist image for: $artistName")
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error uploading artist image for: $artistName", e)
-                }
-            }
-
-            // Also update artist_customizations.json with imageKeys
-            updateArtistCustomizationsBackup(client)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error uploading artist images", e)
-        }
-
-        Log.d(TAG, "Uploaded $uploadedCount artist images")
-        return uploadedCount
-    }
-
-    /**
-     * Generates a unique key for an artist image based on the artist name.
-     */
-    private fun generateArtistImageKey(artistName: String): String {
-        val normalized = artistName.lowercase().trim()
-        val md5 = java.security.MessageDigest.getInstance("MD5")
-        val digest = md5.digest(normalized.toByteArray())
-        return digest.joinToString("") { "%02x".format(it) }.take(16)
-    }
-
-    /**
-     * Updates the artist_customizations.json backup file with imageKeys for uploaded images.
-     */
-    private suspend fun updateArtistCustomizationsBackup(client: GoogleDriveAppDataClient) {
-        try {
-            val customizations = mutableListOf<com.Atom2Universe.app.music.sync.model.ArtistCustomizationBackupEntry>()
-
-            val favoriteArtists = ArtistCustomizationManager.getFavoriteArtistNames()
-            for (artistName in favoriteArtists) {
-                val custom = ArtistCustomizationManager.getCustomization(artistName) ?: continue
-
-                customizations.add(
-                    com.Atom2Universe.app.music.sync.model.ArtistCustomizationBackupEntry(
-                        artistName = custom.artistName,
-                        isFavorite = custom.isFavorite,
-                        addedToFavoritesAt = if (custom.addedToFavoritesAt > 0) {
-                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-                                .format(Date(custom.addedToFavoritesAt))
-                        } else null,
-                        color = custom.color,
-                        imageKey = custom.iconPath?.let { generateArtistImageKey(artistName) }
-                    )
-                )
-            }
-
-            val backupFile = com.Atom2Universe.app.music.sync.model.ArtistCustomizationsBackupFile(
-                customizations = customizations
-            )
-
-            client.writeJsonFile(
-                com.Atom2Universe.app.music.sync.model.ArtistCustomizationsBackupFile.FILENAME,
-                backupFile.toJson().toString()
-            )
-            Log.d(TAG, "Updated artist customizations backup with ${customizations.size} entries")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating artist customizations backup", e)
-        }
-    }
-
     /**
      * Updates the sync manifest on Google Drive.
      */
@@ -1548,42 +1353,6 @@ object CloudSyncManager {
 
         client.writeJsonFile("sync_manifest.json", updatedManifest.toJson().toString())
         Log.d(TAG, "Updated manifest")
-    }
-
-    /**
-     * Performs a full backup if this device is the primary device.
-     * Called during daily sync.
-     */
-    private suspend fun performBackupIfPrimary() {
-        try {
-            val isPrimary = BackupManager.isPrimaryDevice(appContext)
-            if (isPrimary) {
-                Log.d(TAG, "This device is primary, performing backup...")
-                when (val result = BackupManager.performBackup(appContext)) {
-                    is BackupManager.BackupResult.Success -> {
-                        Log.d(TAG, "Backup completed successfully")
-                    }
-                    is BackupManager.BackupResult.Error -> {
-                        Log.e(TAG, "Backup failed: ${result.message}")
-                    }
-                    else -> {
-                        Log.d(TAG, "Backup skipped: $result")
-                    }
-                }
-            } else {
-                Log.d(TAG, "Not primary device, skipping backup")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during backup check", e)
-        }
-    }
-
-    /**
-     * Checks if this device is set as the primary device for backups.
-     */
-    suspend fun isPrimaryDevice(): Boolean {
-        if (!isInitialized) return false
-        return BackupManager.isPrimaryDevice(appContext)
     }
 
     /**
@@ -1661,14 +1430,6 @@ object CloudSyncManager {
                 errorMessage = e.message ?: "Unknown error"
             )
         }
-    }
-
-    /**
-     * Sets this device as the primary device for backups.
-     */
-    suspend fun setPrimaryDevice(isPrimary: Boolean): Boolean {
-        if (!isInitialized) return false
-        return BackupManager.setPrimaryDevice(appContext, isPrimary)
     }
 
     /**

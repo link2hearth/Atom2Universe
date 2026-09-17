@@ -9,11 +9,9 @@
     -->
     <color name="cloud_cat_listens_color">#4DB6E2</color>
     <color name="cloud_cat_music_color">#7BD88F</color>
-    <color name="cloud_cat_artist_images_color">#E8A33D</color>
     <color name="cloud_cat_games_color">#C792EA</color>
     <color name="cloud_cat_reading_color">#F2836B</color>
     <color name="cloud_cat_stats_color">#56C8C8</color>
-    <color name="cloud_cat_backup_color">#9AA3B0</color>
     <color name="cloud_cat_obsolete_color">#6E7681</color>
     <color name="cloud_cat_unknown_color">#D96C8F</color>
 

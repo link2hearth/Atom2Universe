@@ -191,7 +191,6 @@ Nessuna migrazione necessaria.</string>
     <string name="music_settings_sync_now">Sincronizza ora</string>
     <string name="music_settings_sync_in_progress">Sincronizzazione…</string>
     <string name="music_settings_sync_success">Sincronizzazione completata con successo</string>
-    <string name="music_settings_sync_error">Sincronizzazione fallita: %1$s</string>
     <string name="music_settings_reset_play_counts">Reimposta conteggi di riproduzione</string>
     <string name="music_settings_reset_play_counts_title">Reimpostare i conteggi di riproduzione?</string>
     <string name="music_settings_reset_play_counts_message">Questo farà:
@@ -230,46 +229,6 @@ Questa azione non può essere annullata.</string>
     <string name="music_settings_delete_cloud_data_in_progress">Eliminazione…</string>
     <string name="music_settings_delete_cloud_data_success">Eliminati %1$d file dal cloud</string>
     <string name="music_settings_delete_cloud_data_error">Errore: %1$s</string>
-    <string name="music_settings_section_backup">Backup</string>
-    <string name="music_settings_primary_device">Dispositivo principale</string>
-    <string name="music_settings_primary_device_desc">Carica backup completo durante la sincronizzazione giornaliera</string>
-    <string name="music_settings_last_backup_never">Nessun backup trovato</string>
-    <string name="music_settings_last_backup_format">Backup: %1$s del %2$s</string>
-    <string name="music_settings_restore_backup">Ripristina dal cloud</string>
-    <string name="music_settings_restore_in_progress">Ripristino…</string>
-    <string name="music_settings_restore_error">Ripristino fallito: %1$s</string>
-    <string name="music_settings_backup_now">Backup nel cloud</string>
-    <string name="music_settings_backup_in_progress">Backup in corso…</string>
-    <string name="music_settings_backup_success">Backup completato</string>
-    <string name="music_settings_backup_error">Backup fallito: %1$s</string>
-    <string name="music_settings_no_backup_found">Nessun backup trovato nel cloud</string>
-    <string name="music_settings_primary_device_set">Questo dispositivo è ora quello principale</string>
-    <string name="music_settings_primary_device_unset">Stato dispositivo principale rimosso</string>
-    <string name="music_backup_found_title">Backup trovato!</string>
-    <string name="music_backup_found_message">È stato trovato un backup sul tuo account Google:
-
-• %1$d conteggi di riproduzione
-• %2$d preferiti (brani + album)
-• %3$d playlist
-• %4$d immagini artisti
-• %5$d testi
-
-Creato %6$s
-da "%7$s"
-
-Vuoi ripristinarlo?</string>
-    <string name="music_backup_restore">Ripristina</string>
-    <string name="music_backup_ignore">Ignora</string>
-    <string name="music_restore_summary_title">Ripristino completato</string>
-    <string name="music_restore_summary_message">Ripristinati:
-• %1$d conteggi di riproduzione
-• %2$d preferiti brani
-• %3$d preferiti album
-• %4$d personalizzazioni artisti
-• %5$d playlist
-• %6$d immagini artisti
-• %7$d testi
-• %8$d ascolti</string>
     <string name="music_artist_display_mode">Modalità di visualizzazione</string>
     <string name="music_display_mode_list">Modalità elenco</string>
     <string name="music_display_mode_compact">Modalità compatta</string>

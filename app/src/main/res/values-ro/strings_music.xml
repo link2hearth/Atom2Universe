@@ -174,7 +174,6 @@
     <string name="music_settings_sync_now">Sincronizare acum</string>
     <string name="music_settings_sync_in_progress">Se sincronizează…</string>
     <string name="music_settings_sync_success">Sincronizare completă cu succes</string>
-    <string name="music_settings_sync_error">Sincronizare eșuată: %1$s</string>
     <string name="music_settings_reset_play_counts">Resetare numărători de redări</string>
     <string name="music_settings_reset_play_counts_title">Resetare numărători de redări?</string>
     <string name="music_settings_reset_play_counts_message">Aceasta va:\n\n• Șterge toate fișierele delta din cloud\n• Reseta numărătorii la redările locale\n• Elimina redările sincronizate de pe alte dispozitive\n\nRulați pe TOATE dispozitivele afectate, începând cu dispozitivul principal.\n\nAceastă acțiune nu poate fi anulată.</string>
@@ -194,28 +193,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Se șterge…</string>
     <string name="music_settings_delete_cloud_data_success">%1$d fișiere șterse din cloud</string>
     <string name="music_settings_delete_cloud_data_error">Eroare: %1$s</string>
-    <string name="music_settings_section_backup">Backup</string>
-    <string name="music_settings_primary_device">Dispozitiv principal</string>
-    <string name="music_settings_primary_device_desc">Încărcare backup complet în timpul sincronizării zilnice</string>
-    <string name="music_settings_last_backup_never">Niciun backup găsit</string>
-    <string name="music_settings_last_backup_format">Backup: %1$s din %2$s</string>
-    <string name="music_settings_restore_backup">Restaurare din cloud</string>
-    <string name="music_settings_restore_in_progress">Se restaurează…</string>
-    <string name="music_settings_restore_error">Restaurare eșuată: %1$s</string>
-    <string name="music_settings_backup_now">Backup în cloud</string>
-    <string name="music_settings_backup_in_progress">Se face backup…</string>
-    <string name="music_settings_backup_success">Backup completat</string>
-    <string name="music_settings_backup_error">Backup eșuat: %1$s</string>
-    <string name="music_settings_no_backup_found">Niciun backup găsit în cloud</string>
-    <string name="music_settings_primary_device_set">Acesta este acum dispozitivul principal</string>
-    <string name="music_settings_primary_device_unset">Statut de dispozitiv principal eliminat</string>
-    <string name="music_backup_found_title">Backup găsit!</string>
-    <string name="music_backup_found_message">Un backup a fost găsit pe contul dvs. Google:\n\n• %1$d numărători de redări\n• %2$d favorite (piese + albume)\n• %3$d liste de redare\n• %4$d imagini artiști\n• %5$d versuri\n\nCreat pe %6$s\nde pe \"%7$s\"\n\nDoriți să îl restaurați?</string>
-    <string name="music_backup_restore">Restaurare</string>
-    <string name="music_backup_ignore">Ignorare</string>
-    <string name="music_restore_summary_title">Restaurare completă</string>
-    <string name="music_restore_summary_message">Restaurat:\n• %1$d numărători de redări\n• %2$d piese favorite\n• %3$d albume favorite\n• %4$d personalizări artiști\n• %5$d liste de redare\n• %6$d imagini artiști\n• %7$d versuri
-• %8$d ascultări</string>
     <string name="music_artist_display_mode">Mod afișare</string>
     <string name="music_display_mode_list">Mod listă</string>
     <string name="music_display_mode_compact">Mod compact</string>

@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Nu synchroniseren</string>
     <string name="music_settings_sync_in_progress">Synchroniseren…</string>
     <string name="music_settings_sync_success">Synchronisatie voltooid</string>
-    <string name="music_settings_sync_error">Synchronisatie mislukt: %1$s</string>
     <string name="music_settings_reset_play_counts">Afspeeltellingen resetten</string>
     <string name="music_settings_reset_play_counts_title">Afspeeltellingen resetten?</string>
     <string name="music_settings_reset_play_counts_message">Dit zal:\n\n• Alle deltabestanden uit de cloud verwijderen\n• Afspeeltellingen resetten naar alleen lokale afspelingen\n• Gesynchroniseerde afspelingen van andere apparaten verwijderen\n\nVoer dit uit op ALLE betrokken apparaten, beginnend met het primaire apparaat.\n\nDeze actie kan niet ongedaan worden gemaakt.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Verwijderen…</string>
     <string name="music_settings_delete_cloud_data_success">%1$d bestanden verwijderd uit de cloud</string>
     <string name="music_settings_delete_cloud_data_error">Fout: %1$s</string>
-    <string name="music_settings_section_backup">Back-up</string>
-    <string name="music_settings_primary_device">Primair apparaat</string>
-    <string name="music_settings_primary_device_desc">Volledige back-up uploaden tijdens dagelijkse synchronisatie</string>
-    <string name="music_settings_last_backup_never">Geen back-up gevonden</string>
-    <string name="music_settings_last_backup_format">Back-up: %1$s van %2$s</string>
-    <string name="music_settings_restore_backup">Herstellen vanuit cloud</string>
-    <string name="music_settings_restore_in_progress">Herstellen…</string>
-    <string name="music_settings_restore_error">Herstel mislukt: %1$s</string>
-    <string name="music_settings_backup_now">Back-up naar cloud</string>
-    <string name="music_settings_backup_in_progress">Back-up maken…</string>
-    <string name="music_settings_backup_success">Back-up voltooid</string>
-    <string name="music_settings_backup_error">Back-up mislukt: %1$s</string>
-    <string name="music_settings_no_backup_found">Geen back-up gevonden in de cloud</string>
-    <string name="music_settings_primary_device_set">Dit apparaat is nu het primaire apparaat</string>
-    <string name="music_settings_primary_device_unset">Primaire apparaatstatus verwijderd</string>
-    <string name="music_backup_found_title">Back-up gevonden!</string>
-    <string name="music_backup_found_message">Er is een back-up gevonden in uw Google-account:\n\n• %1$d afspeeltellingen\n• %2$d favorieten (nummers + albums)\n• %3$d afspeellijsten\n• %4$d artiestafbeeldingen\n• %5$d songteksten\n\nAangemaakt %6$s\nvanaf \"%7$s\"\n\nWilt u deze herstellen?</string>
-    <string name="music_backup_restore">Herstellen</string>
-    <string name="music_backup_ignore">Negeren</string>
-    <string name="music_restore_summary_title">Herstel voltooid</string>
-    <string name="music_restore_summary_message">Hersteld:\n• %1$d afspeeltellingen\n• %2$d favoriete nummers\n• %3$d favoriete albums\n• %4$d artiestinstellingen\n• %5$d afspeellijsten\n• %6$d artiestafbeeldingen\n• %7$d songteksten
-• %8$d beluisteringen</string>
     <string name="music_artist_display_mode">Weergavemodus</string>
     <string name="music_display_mode_list">Lijstmodus</string>
     <string name="music_display_mode_compact">Compacte modus</string>

@@ -30,8 +30,11 @@ object CloudInventory {
     /** Ancien système de deltas, remplacé par les journaux par appareil. */
     private const val LEGACY_DELTA_PREFIX = "playcounts_device_"
 
-    /** Images d'artistes, un fichier binaire par artiste favori. */
-    private const val ARTIST_IMAGE_PREFIX = "artist_img_"
+    /**
+     * Images d'artistes, un fichier binaire par artiste favori. Plus synchronisées :
+     * trop lourdes pour ce qu'elles apportent. Chaque appareil garde les siennes.
+     */
+    private const val LEGACY_ARTIST_IMAGE_PREFIX = "artist_img_"
 
     /** Fichiers de synchronisation musicale, hors journaux et images. */
     private val MUSIC_SYNC_FILES = setOf(
@@ -44,12 +47,16 @@ object CloudInventory {
         "artist_favorites_sync.json"
     )
 
-    /** Instantané complet publié par l'appareil principal, pour restauration. */
-    private val BACKUP_FILES = setOf(
+    /**
+     * L'ancienne sauvegarde complète de l'« appareil principal ». Retirée : la sync
+     * transporte déjà tout ce qui comptait. Ces fichiers ne sont plus lus ni écrits.
+     */
+    private val LEGACY_BACKUP_FILES = setOf(
         "backup_manifest.json",
         "playcounts.json",
         "listen_events.json",
         "album_favorites.json",
+        // Index des images d'artistes : parti avec elles.
         "artist_customizations.json",
         "playlists.json",
         "preferences.json",
@@ -88,12 +95,6 @@ object CloudInventory {
             R.string.cloud_cat_music_warning,
             colorRes = R.color.cloud_cat_music_color
         ),
-        ARTIST_IMAGES(
-            R.string.cloud_cat_artist_images,
-            R.string.cloud_cat_artist_images_desc,
-            R.string.cloud_cat_artist_images_warning,
-            colorRes = R.color.cloud_cat_artist_images_color
-        ),
         GAMES(
             R.string.cloud_cat_games,
             R.string.cloud_cat_games_desc,
@@ -111,12 +112,6 @@ object CloudInventory {
             R.string.cloud_cat_stats_desc,
             R.string.cloud_cat_stats_warning,
             colorRes = R.color.cloud_cat_stats_color
-        ),
-        BACKUP(
-            R.string.cloud_cat_backup,
-            R.string.cloud_cat_backup_desc,
-            R.string.cloud_cat_backup_warning,
-            colorRes = R.color.cloud_cat_backup_color
         ),
         OBSOLETE(
             R.string.cloud_cat_obsolete,
@@ -220,18 +215,17 @@ object CloudInventory {
     /**
      * À quel domaine appartient ce nom de fichier.
      *
-     * Les préfixes passent avant les noms exacts : `playcounts_device_x.json` est
-     * obsolète alors que `playcounts.json` est une sauvegarde, et seul l'ordre
-     * des tests évite de confondre les deux.
+     * Les préfixes passent avant les noms exacts : un nom exact ne doit jamais
+     * capturer un fichier qu'un préfixe range ailleurs.
      */
     fun categorize(name: String): CloudCategory = when {
         name.startsWith(ListenEventsSyncFile.FILE_PREFIX) -> CloudCategory.LISTENS
         name.startsWith(LEGACY_DELTA_PREFIX) -> CloudCategory.OBSOLETE
-        name.startsWith(ARTIST_IMAGE_PREFIX) -> CloudCategory.ARTIST_IMAGES
+        name.startsWith(LEGACY_ARTIST_IMAGE_PREFIX) -> CloudCategory.OBSOLETE
         name == "games_state.json" -> CloudCategory.GAMES
         name == "reading_progress.json" -> CloudCategory.READING
         name == "usage_sessions.json" -> CloudCategory.STATS
-        name in BACKUP_FILES -> CloudCategory.BACKUP
+        name in LEGACY_BACKUP_FILES -> CloudCategory.OBSOLETE
         name in MUSIC_SYNC_FILES -> CloudCategory.MUSIC
         else -> CloudCategory.UNKNOWN
     }

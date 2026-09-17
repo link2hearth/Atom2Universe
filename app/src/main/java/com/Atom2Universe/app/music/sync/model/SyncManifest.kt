@@ -15,9 +15,7 @@ data class SyncManifest(
     val devices: Map<String, DeviceInfo> = emptyMap(),
     val playCountsBaseline: PlayCountsBaseline? = null,
     val favoritesLastModified: Long = 0,
-    val lyricsLastModified: Long = 0,
-    val primaryDeviceId: String? = null,        // Device that uploads full backup
-    val backupLastModified: Long = 0            // Timestamp of last backup
+    val lyricsLastModified: Long = 0
 ) {
     fun toJson(): JSONObject {
         return JSONObject().apply {
@@ -45,11 +43,6 @@ data class SyncManifest(
             put("lyrics", JSONObject().apply {
                 put("lastModified", lyricsLastModified)
             })
-
-            put("backup", JSONObject().apply {
-                primaryDeviceId?.let { put("primaryDeviceId", it) }
-                put("lastModified", backupLastModified)
-            })
         }
     }
 
@@ -71,7 +64,6 @@ data class SyncManifest(
 
             val favoritesJson = json.optJSONObject("favorites")
             val lyricsJson = json.optJSONObject("lyrics")
-            val backupJson = json.optJSONObject("backup")
 
             return SyncManifest(
                 version = json.optInt("version", 1),
@@ -80,9 +72,7 @@ data class SyncManifest(
                 devices = devices,
                 playCountsBaseline = playCountsBaseline,
                 favoritesLastModified = favoritesJson?.optLong("lastModified", 0) ?: 0,
-                lyricsLastModified = lyricsJson?.optLong("lastModified", 0) ?: 0,
-                primaryDeviceId = backupJson?.optString("primaryDeviceId")?.takeIf { it.isNotBlank() },
-                backupLastModified = backupJson?.optLong("lastModified", 0) ?: 0
+                lyricsLastModified = lyricsJson?.optLong("lastModified", 0) ?: 0
             )
         }
     }

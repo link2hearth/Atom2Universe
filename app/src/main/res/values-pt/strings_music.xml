@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Sincronizar agora</string>
     <string name="music_settings_sync_in_progress">Sincronizando…</string>
     <string name="music_settings_sync_success">Sincronização concluída com sucesso</string>
-    <string name="music_settings_sync_error">Falha na sincronização: %1$s</string>
     <string name="music_settings_reset_play_counts">Redefinir contagens de reprodução</string>
     <string name="music_settings_reset_play_counts_title">Redefinir contagens de reprodução?</string>
     <string name="music_settings_reset_play_counts_message">Isso irá:\n\n• Excluir todos os arquivos delta da nuvem\n• Redefinir contagens para reproduções locais apenas\n• Remover reproduções sincronizadas de outros dispositivos\n\nExecute isso em TODOS os dispositivos afetados, começando pelo dispositivo principal.\n\nEsta ação não pode ser desfeita.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Excluindo…</string>
     <string name="music_settings_delete_cloud_data_success">%1$d arquivos excluídos da nuvem</string>
     <string name="music_settings_delete_cloud_data_error">Erro: %1$s</string>
-    <string name="music_settings_section_backup">Backup</string>
-    <string name="music_settings_primary_device">Dispositivo principal</string>
-    <string name="music_settings_primary_device_desc">Enviar backup completo durante a sincronização diária</string>
-    <string name="music_settings_last_backup_never">Nenhum backup encontrado</string>
-    <string name="music_settings_last_backup_format">Backup: %1$s de %2$s</string>
-    <string name="music_settings_restore_backup">Restaurar da nuvem</string>
-    <string name="music_settings_restore_in_progress">Restaurando…</string>
-    <string name="music_settings_restore_error">Falha na restauração: %1$s</string>
-    <string name="music_settings_backup_now">Fazer backup na nuvem</string>
-    <string name="music_settings_backup_in_progress">Fazendo backup…</string>
-    <string name="music_settings_backup_success">Backup concluído</string>
-    <string name="music_settings_backup_error">Falha no backup: %1$s</string>
-    <string name="music_settings_no_backup_found">Nenhum backup encontrado na nuvem</string>
-    <string name="music_settings_primary_device_set">Este dispositivo agora é o dispositivo principal</string>
-    <string name="music_settings_primary_device_unset">Status de dispositivo principal removido</string>
-    <string name="music_backup_found_title">Backup encontrado!</string>
-    <string name="music_backup_found_message">Um backup foi encontrado na sua conta Google:\n\n• %1$d contagens de reprodução\n• %2$d favoritos (faixas + álbuns)\n• %3$d playlists\n• %4$d imagens de artistas\n• %5$d letras\n\nCriado em %6$s\nde \"%7$s\"\n\nDeseja restaurá-lo?</string>
-    <string name="music_backup_restore">Restaurar</string>
-    <string name="music_backup_ignore">Ignorar</string>
-    <string name="music_restore_summary_title">Restauração concluída</string>
-    <string name="music_restore_summary_message">Restaurado:\n• %1$d contagens de reprodução\n• %2$d faixas favoritas\n• %3$d álbuns favoritos\n• %4$d personalizações de artistas\n• %5$d playlists\n• %6$d imagens de artistas\n• %7$d letras
-• %8$d audições</string>
     <string name="music_artist_display_mode">Modo de exibição</string>
     <string name="music_display_mode_list">Modo lista</string>
     <string name="music_display_mode_compact">Modo compacto</string>

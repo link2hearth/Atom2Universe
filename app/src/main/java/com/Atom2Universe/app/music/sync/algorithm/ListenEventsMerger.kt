@@ -89,37 +89,6 @@ object ListenEventsMerger {
         )
     }
 
-    /**
-     * Journal complet d'un appareil : toutes ses écoutes en détail, sans fenêtre
-     * ni résumé. Réservé à la sauvegarde, où l'on veut restituer les dates réelles
-     * plutôt que des dates interpolées.
-     */
-    suspend fun buildFullPayload(
-        context: Context,
-        deviceId: String
-    ): ListenEventsSyncFile.Payload = withContext(Dispatchers.IO) {
-        val dao = MusicDatabase.getInstance(context).listenEventDao()
-        val events = dao.getAllForDevice(deviceId)
-
-        val tracks = LinkedHashMap<String, ListenEventsSyncFile.TrackMeta>()
-        for (e in events) {
-            tracks[e.trackKey] = ListenEventsSyncFile.TrackMeta(
-                key = e.trackKey,
-                title = e.title,
-                artist = e.artist,
-                album = e.album
-            )
-        }
-
-        ListenEventsSyncFile.Payload(
-            deviceId = deviceId,
-            windowStart = 0,
-            tracks = tracks.values.toList(),
-            events = events,
-            archive = emptyList()
-        )
-    }
-
     // ==================== Import ====================
 
     /**

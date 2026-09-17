@@ -23,7 +23,6 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.sync.GamesSyncFile
 import com.Atom2Universe.app.crypto.sync.GamesSyncManager
 import com.Atom2Universe.app.crypto.sync.LayeredNumberData
-import com.Atom2Universe.app.music.sync.BackupManager
 import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.music.sync.SyncResult
@@ -67,12 +66,6 @@ class CloudActivity : ThemedActivity() {
     private lateinit var gamesStatus: TextView
     private lateinit var btnSyncGames: MaterialButton
 
-    private lateinit var backupSection: View
-    private lateinit var optionPrimaryDevice: View
-    private lateinit var switchPrimaryDevice: SwitchMaterial
-    private lateinit var lastBackupText: TextView
-    private lateinit var btnBackupRestore: MaterialButton
-
     private lateinit var usageSection: View
     private lateinit var btnRefresh: ImageButton
     private lateinit var usageTotal: TextView
@@ -87,14 +80,6 @@ class CloudActivity : ThemedActivity() {
     /** Empêche deux opérations Drive de se chevaucher sur un double appui. */
     private var isBusy = false
 
-    /**
-     * Vrai pendant qu'on repose l'état de l'interrupteur « appareil principal ».
-     *
-     * Sans ce drapeau, régler la position de départ déclencherait l'écouteur et
-     * réécrirait dans le cloud un choix que personne n'a fait.
-     */
-    private var isUpdatingPrimarySwitch = false
-
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -108,7 +93,6 @@ class CloudActivity : ThemedActivity() {
             CloudSyncManager.init(this@CloudActivity)
             CloudSyncManager.scheduleNightlySync()
             refreshAccountUi()
-            offerRestoreIfBackupExists()
             loadInventory()
         }
     }
@@ -151,12 +135,6 @@ class CloudActivity : ThemedActivity() {
         gamesStatus = findViewById(R.id.cloud_games_status)
         btnSyncGames = findViewById(R.id.cloud_btn_sync_games)
 
-        backupSection = findViewById(R.id.cloud_backup_section)
-        optionPrimaryDevice = findViewById(R.id.cloud_option_primary_device)
-        switchPrimaryDevice = findViewById(R.id.cloud_switch_primary_device)
-        lastBackupText = findViewById(R.id.cloud_last_backup)
-        btnBackupRestore = findViewById(R.id.cloud_btn_backup_restore)
-
         usageSection = findViewById(R.id.cloud_usage_section)
         btnRefresh = findViewById(R.id.cloud_btn_refresh)
         usageTotal = findViewById(R.id.cloud_usage_total)
@@ -174,7 +152,14 @@ class CloudActivity : ThemedActivity() {
 
         btnSignInOut.setOnClickListener {
             if (signInManager.isSignedIn()) confirmSignOut()
-            else signInLauncher.launch(signInManager.getSignInIntent())
+            else scope.launch {
+                // Google Play Services retient le compte choisi la dernière fois pour cette
+                // appli et le reprend sans rien demander. Chaque compte a son propre dossier
+                // dans Drive : se tromper de compte, c'est voir un cloud vide. On efface ce
+                // souvenir pour que la liste des comptes s'affiche à chaque connexion.
+                signInManager.signOut()
+                signInLauncher.launch(signInManager.getSignInIntent())
+            }
         }
 
         switchSync.setOnCheckedChangeListener { _, checked ->
@@ -184,15 +169,6 @@ class CloudActivity : ThemedActivity() {
 
         btnSyncNow.setOnClickListener { syncNow() }
         btnSyncGames.setOnClickListener { syncGames() }
-
-        optionPrimaryDevice.setOnClickListener { switchPrimaryDevice.toggle() }
-        switchPrimaryDevice.setOnCheckedChangeListener { _, checked ->
-            if (isUpdatingPrimarySwitch) return@setOnCheckedChangeListener
-            onPrimaryDeviceToggled(checked)
-        }
-        btnBackupRestore.setOnClickListener {
-            if (switchPrimaryDevice.isChecked) performBackup() else performRestore()
-        }
 
         btnRefresh.setOnClickListener { loadInventory() }
         btnDeleteAll.setOnClickListener { confirmDeleteAll() }
@@ -217,7 +193,6 @@ class CloudActivity : ThemedActivity() {
         signInHint.visibility = if (signedIn) View.GONE else View.VISIBLE
 
         syncSection.visibility = if (signedIn) View.VISIBLE else View.GONE
-        backupSection.visibility = if (signedIn) View.VISIBLE else View.GONE
         usageSection.visibility = if (signedIn) View.VISIBLE else View.GONE
 
         if (!signedIn) return
@@ -229,8 +204,6 @@ class CloudActivity : ThemedActivity() {
         switchSync.setOnCheckedChangeListener { _, checked ->
             scope.launch { CloudSyncManager.setSyncEnabled(checked) }
         }
-
-        updateBackupUi()
 
         val last = CloudSyncManager.getLastSyncTimestamp()
         lastSyncText.text = if (last <= 0L) {
@@ -266,7 +239,12 @@ class CloudActivity : ThemedActivity() {
         }
         scope.launch {
             setBusy(true, R.string.cloud_syncing)
-            val result = CloudSyncManager.syncNow()
+            lastSyncText.setText(R.string.cloud_syncing)
+            // Une sync complète prend facilement une demi-minute : sans l'étape en cours,
+            // l'écran semble figé et l'on croit à un plantage.
+            val result = CloudSyncManager.syncNow { step ->
+                runOnUiThread { lastSyncText.setText(stepLabel(step)) }
+            }
             setBusy(false, null)
 
             when (result) {
@@ -281,6 +259,15 @@ class CloudActivity : ThemedActivity() {
             refreshAccountUi()
             loadInventory()
         }
+    }
+
+    private fun stepLabel(step: CloudSyncManager.SyncStep): Int = when (step) {
+        CloudSyncManager.SyncStep.MUSIC_DOWNLOAD -> R.string.cloud_step_music_download
+        CloudSyncManager.SyncStep.LISTENS -> R.string.cloud_step_listens
+        CloudSyncManager.SyncStep.MUSIC_UPLOAD -> R.string.cloud_step_music_upload
+        CloudSyncManager.SyncStep.STATS -> R.string.cloud_step_stats
+        CloudSyncManager.SyncStep.READING -> R.string.cloud_step_reading
+        CloudSyncManager.SyncStep.GAMES -> R.string.cloud_step_games
     }
 
     // ==================== Jeux ====================
@@ -396,164 +383,6 @@ class CloudActivity : ThemedActivity() {
                 }.let { prefix + it }
             }
             else -> "${prefix}e(e${String.format("%.1f", n.value)})"
-        }
-    }
-
-    // ==================== Sauvegarde ====================
-
-    /**
-     * L'instantané complet du cloud, publié par un seul appareil.
-     *
-     * Le même bouton sert à sauvegarder ou à restaurer selon le rôle : un
-     * appareil principal publie, les autres relisent. Deux boutons côte à côte
-     * inviteraient à restaurer par-dessus une sauvegarde plus fraîche.
-     */
-    private suspend fun updateBackupUi() {
-        val isPrimary = CloudSyncManager.isPrimaryDevice()
-        isUpdatingPrimarySwitch = true
-        switchPrimaryDevice.isChecked = isPrimary
-        isUpdatingPrimarySwitch = false
-        updateBackupButtonLabel(isPrimary)
-
-        val manifest = BackupManager.checkBackupExists(this)
-        lastBackupText.text = if (manifest != null) {
-            getString(
-                R.string.music_settings_last_backup_format,
-                formatDate(manifest.createdAt),
-                manifest.deviceName
-            )
-        } else {
-            getString(R.string.music_settings_last_backup_never)
-        }
-    }
-
-    private fun updateBackupButtonLabel(isPrimary: Boolean) {
-        btnBackupRestore.setText(
-            if (isPrimary) R.string.music_settings_backup_now
-            else R.string.music_settings_restore_backup
-        )
-    }
-
-    private fun onPrimaryDeviceToggled(checked: Boolean) {
-        scope.launch {
-            val success = CloudSyncManager.setPrimaryDevice(checked)
-            if (success) {
-                toast(
-                    getString(
-                        if (checked) R.string.music_settings_primary_device_set
-                        else R.string.music_settings_primary_device_unset
-                    )
-                )
-                updateBackupButtonLabel(checked)
-            } else {
-                // Remettre l'interrupteur là où il était, sans rejouer l'écouteur.
-                isUpdatingPrimarySwitch = true
-                switchPrimaryDevice.isChecked = !checked
-                isUpdatingPrimarySwitch = false
-                toast(getString(R.string.music_settings_sync_error))
-            }
-        }
-    }
-
-    /**
-     * Au moment ou l'on vient de lier un compte, proposer la restauration si le
-     * cloud contient deja une sauvegarde.
-     *
-     * C'est le seul instant ou la question a du sens : plus tard, l'appareil a
-     * ses propres donnees et restaurer par-dessus serait un piege.
-     */
-    private suspend fun offerRestoreIfBackupExists() {
-        val manifest = BackupManager.checkBackupExists(this) ?: return
-        if (manifest.contents.playCountsCount <= 0) return
-
-        val totalFavorites =
-            manifest.contents.trackFavoritesCount + manifest.contents.albumFavoritesCount
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.music_backup_found_title)
-            .setMessage(
-                getString(
-                    R.string.music_backup_found_message,
-                    manifest.contents.playCountsCount,
-                    totalFavorites,
-                    manifest.contents.playlistsCount,
-                    manifest.contents.artistImagesCount,
-                    manifest.contents.lyricsCount,
-                    formatDate(manifest.createdAt),
-                    manifest.deviceName
-                )
-            )
-            .setPositiveButton(R.string.music_backup_restore) { _, _ -> performRestore() }
-            .setNegativeButton(R.string.music_backup_ignore, null)
-            .show()
-    }
-
-    private fun performBackup() {
-        if (isBusy) return
-        scope.launch {
-            btnBackupRestore.isEnabled = false
-            btnBackupRestore.setText(R.string.music_settings_backup_in_progress)
-
-            val result = BackupManager.performBackup(this@CloudActivity)
-
-            btnBackupRestore.isEnabled = true
-            updateBackupButtonLabel(switchPrimaryDevice.isChecked)
-
-            when (result) {
-                is BackupManager.BackupResult.Success ->
-                    toast(getString(R.string.music_settings_backup_success))
-                is BackupManager.BackupResult.Error ->
-                    toast(getString(R.string.music_settings_backup_error, result.message))
-                is BackupManager.BackupResult.NotSignedIn ->
-                    toast(getString(R.string.cloud_sync_not_signed_in))
-                is BackupManager.BackupResult.NotPrimaryDevice ->
-                    toast(getString(R.string.music_settings_primary_device_unset))
-            }
-
-            updateBackupUi()
-            loadInventory()
-        }
-    }
-
-    private fun performRestore() {
-        if (isBusy) return
-        scope.launch {
-            btnBackupRestore.isEnabled = false
-            btnBackupRestore.setText(R.string.music_settings_restore_in_progress)
-
-            val result = BackupManager.performRestore(this@CloudActivity)
-
-            btnBackupRestore.isEnabled = true
-            updateBackupButtonLabel(switchPrimaryDevice.isChecked)
-
-            when (result) {
-                is BackupManager.RestoreResult.Success -> {
-                    val summary = result.summary
-                    AlertDialog.Builder(this@CloudActivity)
-                        .setTitle(R.string.music_restore_summary_title)
-                        .setMessage(
-                            getString(
-                                R.string.music_restore_summary_message,
-                                summary.playCountsRestored,
-                                summary.trackFavoritesRestored,
-                                summary.albumFavoritesRestored,
-                                summary.artistCustomizationsRestored,
-                                summary.playlistsRestored,
-                                summary.artistImagesRestored,
-                                summary.lyricsRestored,
-                                summary.listenEventsRestored
-                            )
-                        )
-                        .setPositiveButton(R.string.common_ok, null)
-                        .show()
-                }
-                is BackupManager.RestoreResult.NoBackupFound ->
-                    toast(getString(R.string.music_settings_no_backup_found))
-                is BackupManager.RestoreResult.Error ->
-                    toast(getString(R.string.music_settings_restore_error, result.message))
-                is BackupManager.RestoreResult.NotSignedIn ->
-                    toast(getString(R.string.cloud_sync_not_signed_in))
-            }
         }
     }
 

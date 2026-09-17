@@ -31,6 +31,14 @@
     <string name="cloud_last_sync_never">Never synced</string>
     <string name="cloud_games_title">Clicker</string>
 
+    <!-- Étapes affichées pendant la synchronisation -->
+    <string name="cloud_step_music_download">Syncing: fetching your music library…</string>
+    <string name="cloud_step_listens">Syncing: listen history…</string>
+    <string name="cloud_step_music_upload">Syncing: sending your music library…</string>
+    <string name="cloud_step_stats">Syncing: usage stats…</string>
+    <string name="cloud_step_reading">Syncing: reading progress…</string>
+    <string name="cloud_step_games">Syncing: games…</string>
+
     <!-- Occupation -->
     <string name="cloud_section_usage">Cloud storage</string>
     <string name="cloud_usage_total">%1$s across %2$d files</string>
@@ -54,10 +62,6 @@
     <string name="cloud_cat_music_desc">Favourites, lyrics, playlists, equaliser presets</string>
     <string name="cloud_cat_music_warning">Your devices keep their local copies and will republish them. A device that is retired loses what only it held.</string>
 
-    <string name="cloud_cat_artist_images">Artist artwork</string>
-    <string name="cloud_cat_artist_images_desc">Custom images for your favourite artists</string>
-    <string name="cloud_cat_artist_images_warning">Usually the heaviest item. Images still on a device are re-uploaded; the others are lost.</string>
-
     <string name="cloud_cat_games">Game saves</string>
     <string name="cloud_cat_games_desc">Clicker, neutrinos, achievements, game progress</string>
     <string name="cloud_cat_games_warning">Your progress on this device is untouched and will be republished. Progress that exists only in the cloud is lost.</string>
@@ -69,10 +73,6 @@
     <string name="cloud_cat_stats">Usage stats</string>
     <string name="cloud_cat_stats_desc">Time spent per module, across devices</string>
     <string name="cloud_cat_stats_warning">History gathered from your other devices is lost. This device republishes its own.</string>
-
-    <string name="cloud_cat_backup">Backup</string>
-    <string name="cloud_cat_backup_desc">Full snapshot published by the primary device</string>
-    <string name="cloud_cat_backup_warning">You lose the ability to restore a fresh install from the cloud. Day-to-day syncing is unaffected.</string>
 
     <string name="cloud_cat_obsolete">Obsolete files</string>
     <string name="cloud_cat_obsolete_desc">Left over from an older sync format</string>

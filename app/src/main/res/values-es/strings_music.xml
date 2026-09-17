@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Sincronizar ahora</string>
     <string name="music_settings_sync_in_progress">Sincronizando…</string>
     <string name="music_settings_sync_success">Sincronizacion completada correctamente</string>
-    <string name="music_settings_sync_error">Error en la sincronizacion: %1$s</string>
     <string name="music_settings_reset_play_counts">Restablecer contadores de reproduccion</string>
     <string name="music_settings_reset_play_counts_title">Restablecer contadores?</string>
     <string name="music_settings_reset_play_counts_message">Esto:\n\n• Eliminara todos los archivos delta de la nube\n• Restablecera los contadores solo a reproducciones locales\n• Eliminara las reproducciones sincronizadas de otros dispositivos\n\nEjecuta esto en TODOS los dispositivos afectados, comenzando por el dispositivo principal.\n\nEsta acción no se puede deshacer.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Eliminando…</string>
     <string name="music_settings_delete_cloud_data_success">%1$d archivos eliminados de la nube</string>
     <string name="music_settings_delete_cloud_data_error">Error: %1$s</string>
-    <string name="music_settings_section_backup">Respaldo</string>
-    <string name="music_settings_primary_device">Dispositivo principal</string>
-    <string name="music_settings_primary_device_desc">Subir respaldo completo durante la sincronizacion diaria</string>
-    <string name="music_settings_last_backup_never">No se encontro respaldo</string>
-    <string name="music_settings_last_backup_format">Respaldo: %1$s desde %2$s</string>
-    <string name="music_settings_restore_backup">Restaurar desde la nube</string>
-    <string name="music_settings_restore_in_progress">Restaurando…</string>
-    <string name="music_settings_restore_error">Error en la restauracion: %1$s</string>
-    <string name="music_settings_backup_now">Respaldar en la nube</string>
-    <string name="music_settings_backup_in_progress">Respaldando…</string>
-    <string name="music_settings_backup_success">Respaldo completado</string>
-    <string name="music_settings_backup_error">Error en el respaldo: %1$s</string>
-    <string name="music_settings_no_backup_found">No se encontro respaldo en la nube</string>
-    <string name="music_settings_primary_device_set">Este dispositivo es ahora el dispositivo principal</string>
-    <string name="music_settings_primary_device_unset">Estado de dispositivo principal eliminado</string>
-    <string name="music_backup_found_title">Respaldo encontrado!</string>
-    <string name="music_backup_found_message">Se encontro un respaldo en tu cuenta de Google:\n\n• %1$d contadores de reproduccion\n• %2$d favoritos (pistas + albums)\n• %3$d listas de reproduccion\n• %4$d imágenes de artistas\n• %5$d letras\n\nCreado %6$s\ndesde \"%7$s\"\n\nDeseas restaurarlo?</string>
-    <string name="music_backup_restore">Restaurar</string>
-    <string name="music_backup_ignore">Ignorar</string>
-    <string name="music_restore_summary_title">Restauracion completa</string>
-    <string name="music_restore_summary_message">Restaurados:\n• %1$d contadores de reproduccion\n• %2$d favoritos de pistas\n• %3$d favoritos de albums\n• %4$d personalizaciones de artistas\n• %5$d listas de reproduccion\n• %6$d imágenes de artistas\n• %7$d letras
-• %8$d escuchas</string>
     <string name="music_artist_display_mode">Modo de visualizacion</string>
     <string name="music_display_mode_list">Modo lista</string>
     <string name="music_display_mode_compact">Modo compacto</string>

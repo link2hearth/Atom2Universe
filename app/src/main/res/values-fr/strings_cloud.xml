@@ -31,6 +31,14 @@
     <string name="cloud_last_sync_never">Jamais synchronisé</string>
     <string name="cloud_games_title">Clicker</string>
 
+    <!-- Étapes affichées pendant la synchronisation -->
+    <string name="cloud_step_music_download">Synchronisation : récupération de la bibliothèque musicale…</string>
+    <string name="cloud_step_listens">Synchronisation : historique d\'écoutes…</string>
+    <string name="cloud_step_music_upload">Synchronisation : envoi de la bibliothèque musicale…</string>
+    <string name="cloud_step_stats">Synchronisation : statistiques d\'usage…</string>
+    <string name="cloud_step_reading">Synchronisation : progression de lecture…</string>
+    <string name="cloud_step_games">Synchronisation : jeux…</string>
+
     <!-- Occupation -->
     <string name="cloud_section_usage">Occupation du cloud</string>
     <string name="cloud_usage_total">%1$s répartis sur %2$d fichiers</string>
@@ -54,10 +62,6 @@
     <string name="cloud_cat_music_desc">Favoris, paroles, listes de lecture, préréglages d\'égaliseur</string>
     <string name="cloud_cat_music_warning">Vos appareils gardent leur copie locale et la republieront. Un appareil mis de côté perd ce que lui seul détenait.</string>
 
-    <string name="cloud_cat_artist_images">Images d\'artistes</string>
-    <string name="cloud_cat_artist_images_desc">Visuels personnalisés de vos artistes favoris</string>
-    <string name="cloud_cat_artist_images_warning">C\'est le poste le plus lourd en général. Les images encore présentes sur un appareil sont renvoyées ; les autres sont perdues.</string>
-
     <string name="cloud_cat_games">Sauvegardes de jeux</string>
     <string name="cloud_cat_games_desc">Clicker, neutrinos, succès, progression des jeux</string>
     <string name="cloud_cat_games_warning">Votre progression sur cet appareil n\'est pas touchée et sera republiée. Ce qui n\'existait que dans le cloud est perdu.</string>
@@ -69,10 +73,6 @@
     <string name="cloud_cat_stats">Statistiques d\'usage</string>
     <string name="cloud_cat_stats_desc">Temps passé par module, tous appareils confondus</string>
     <string name="cloud_cat_stats_warning">L\'historique venu de vos autres appareils est perdu. Cet appareil republie le sien.</string>
-
-    <string name="cloud_cat_backup">Sauvegarde complète</string>
-    <string name="cloud_cat_backup_desc">Instantané publié par l\'appareil principal</string>
-    <string name="cloud_cat_backup_warning">Vous perdez la possibilité de restaurer une installation neuve depuis le cloud. La synchronisation courante n\'est pas affectée.</string>
 
     <string name="cloud_cat_obsolete">Fichiers obsolètes</string>
     <string name="cloud_cat_obsolete_desc">Restes d\'un ancien format de synchronisation</string>

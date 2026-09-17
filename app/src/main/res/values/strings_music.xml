@@ -169,7 +169,6 @@
     <string name="music_settings_sync_now">Sync now</string>
     <string name="music_settings_sync_in_progress">Syncing…</string>
     <string name="music_settings_sync_success">Sync completed successfully</string>
-    <string name="music_settings_sync_error">Sync failed: %1$s</string>
     <string name="music_settings_reset_play_counts">Reset play counts</string>
     <string name="music_settings_reset_play_counts_title">Reset play counts?</string>
     <string name="music_settings_reset_play_counts_message">This will:\n\n• Delete all delta files from cloud\n• Reset play counts to local plays only\n• Remove synced plays from other devices\n\nRun this on ALL affected devices, starting with the primary device.\n\nThis action cannot be undone.</string>
@@ -189,28 +188,6 @@
     <string name="music_settings_delete_cloud_data_in_progress">Deleting…</string>
     <string name="music_settings_delete_cloud_data_success">Deleted %1$d files from cloud</string>
     <string name="music_settings_delete_cloud_data_error">Error: %1$s</string>
-    <string name="music_settings_section_backup">Backup</string>
-    <string name="music_settings_primary_device">Primary device</string>
-    <string name="music_settings_primary_device_desc">Upload full backup during daily sync</string>
-    <string name="music_settings_last_backup_never">No backup found</string>
-    <string name="music_settings_last_backup_format">Backup: %1$s from %2$s</string>
-    <string name="music_settings_restore_backup">Restore from cloud</string>
-    <string name="music_settings_restore_in_progress">Restoring…</string>
-    <string name="music_settings_restore_error">Restore failed: %1$s</string>
-    <string name="music_settings_backup_now">Backup to cloud</string>
-    <string name="music_settings_backup_in_progress">Backing up…</string>
-    <string name="music_settings_backup_success">Backup completed</string>
-    <string name="music_settings_backup_error">Backup failed: %1$s</string>
-    <string name="music_settings_no_backup_found">No backup found on cloud</string>
-    <string name="music_settings_primary_device_set">This device is now the primary device</string>
-    <string name="music_settings_primary_device_unset">Primary device status removed</string>
-    <string name="music_backup_found_title">Backup found!</string>
-    <string name="music_backup_found_message">A backup was found on your Google account:\n\n• %1$d play counts\n• %2$d favorites (tracks + albums)\n• %3$d playlists\n• %4$d artist images\n• %5$d lyrics\n\nCreated %6$s\nfrom \"%7$s\"\n\nWould you like to restore it?</string>
-    <string name="music_backup_restore">Restore</string>
-    <string name="music_backup_ignore">Ignore</string>
-    <string name="music_restore_summary_title">Restore complete</string>
-    <string name="music_restore_summary_message">Restored:\n• %1$d play counts\n• %2$d track favorites\n• %3$d album favorites\n• %4$d artist customizations\n• %5$d playlists\n• %6$d artist images\n• %7$d lyrics
-• %8$d listens</string>
     <string name="music_artist_display_mode">Display mode</string>
     <string name="music_display_mode_list">List mode</string>
     <string name="music_display_mode_compact">Compact mode</string>
