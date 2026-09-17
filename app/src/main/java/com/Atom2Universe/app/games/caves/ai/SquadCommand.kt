@@ -42,6 +42,24 @@ internal data class SquadTuning(
     val radioBlur: Double = 3.0,
     /** Rayon du secteur tenu par une escouade en réserve. */
     val holdRadius: Double = 14.0,
+    /**
+     * Vitesse à laquelle le secteur d'une réserve glisse vers ce que la radio annonce (blocs par
+     * seconde) : elle ne reste pas plantée à son point de débarquement toute la manche, elle se
+     * rapproche du front sans jamais s'y jeter — c'est l'activation qui décide du moment où elle
+     * s'engage, pas la dérive.
+     */
+    val holdDriftSpeed: Float = 0.6f,
+    /** Distance minimale gardée entre le centre d'une réserve et le joueur : au-delà de la
+     * dérive, elle tient sa position, elle ne fond pas dessus. Au-dessus de [rallyDistance] pour
+     * ne jamais chevaucher le regroupement de l'escouade déjà engagée. */
+    val holdStandoff: Double = 30.0,
+    /** Vitesse de dérive vers un allié en détresse : bien plus rapide qu'une dérive de routine —
+     * ici on se précipite, on ne se rapproche pas prudemment du front. */
+    val reinforceDriftSpeed: Float = 3.0f,
+    /** Combien de temps un combat récent reste connu après le dernier coup encaissé : assez pour
+     * qu'une réserve ait le temps de s'y rendre même si l'escouade attaquée est anéantie en
+     * quelques secondes. */
+    val distressMemorySeconds: Float = 10f,
     /** Distance à laquelle l'escouade activée se regroupe, hors de vue du joueur. */
     val rallyDistance: Double = 22.0,
     /** Un homme à moins de ça de son poste de regroupement est considéré en place. */
@@ -185,6 +203,16 @@ internal class SquadCommand(
     var reportedY = 0.0; private set
     var reportedZ = 0.0; private set
 
+    /**
+     * Dernier endroit où un allié — n'importe lequel, de n'importe quelle escouade — s'est fait
+     * tirer dessus, et depuis combien de temps. Une mémoire, pas un capteur : un homme tué en une
+     * seconde ne laisse pas le temps à personne de réagir si la détresse disparaît avec lui. Tant
+     * que [distressLeft] est positif, les réserves y répondent comme si le combat durait encore.
+     */
+    private var distressX = 0.0
+    private var distressZ = 0.0
+    private var distressLeft = 0f
+
     private var sinceTick = 0f
     private var radioLeft = 0f
     private var reliefLeft = 0f
@@ -239,6 +267,15 @@ internal class SquadCommand(
     }
 
     private fun decide(dt: Float, playerX: Double, playerY: Double, playerZ: Double) {
+        distressLeft = (distressLeft - dt).coerceAtLeast(0f)
+        for (i in squads.indices) {
+            val sq = squads[i]
+            for (j in sq.members.indices) {
+                val m = sq.members[j]
+                if (m.alive && m.shaken) { distressX = m.x; distressZ = m.z; distressLeft = tuning.distressMemorySeconds }
+            }
+        }
+
         radioLeft -= dt
         if (radioLeft <= 0f) {
             radioLeft = tuning.radioIntervalSeconds
@@ -272,7 +309,7 @@ internal class SquadCommand(
             if (s.living == 0) continue
             s.stanceTime += dt
             when (s.stance) {
-                Squad.Stance.HOLD -> Unit
+                Squad.Stance.HOLD -> driftTowardContact(s, dt)
                 Squad.Stance.RALLY -> if (rallyReady(s)) beginAssault(s)
                 Squad.Stance.ASSAULT -> {
                     advanceDetours(s)
@@ -355,6 +392,42 @@ internal class SquadCommand(
             val m = s.members[i]
             m.leashTo(s.anchorX, s.anchorZ, tuning.holdRadius)
             m.order(-1, strict = false)
+        }
+    }
+
+    /**
+     * Une réserve ne reste pas plantée à son point de débarquement toute la manche : son secteur
+     * glisse vers ce que la radio annonce, jusqu'à [SquadTuning.holdStandoff] du joueur — assez
+     * loin pour ne jamais empiéter sur le regroupement de l'escouade déjà engagée. La laisse de
+     * chaque homme suit : c'est le même secteur tenu, juste recentré, pas un ordre qui les tire
+     * dessus.
+     *
+     * Un combat récent ailleurs sur la carte ([distressLeft], mis à jour dans [decide]) change la
+     * donne : toutes les réserves foncent vers son dernier endroit connu, sans laisse minimale —
+     * un renfort qui s'arrête à distance n'en est pas un. La mémoire, pas un capteur en direct :
+     * une escouade tuée en une seconde n'a pas le temps de rester « en train de se faire tirer
+     * dessus » assez longtemps pour que quiconque réagisse sinon. Elle ne devient pas pour autant
+     * l'escouade active : elle se rapproche, et c'est l'engagement normal de réserve (portée
+     * courte, activation suivante) qui prend le relais une fois sur place.
+     */
+    private fun driftTowardContact(s: Squad, dt: Float) {
+        val targetX: Double; val targetZ: Double; val standoff: Double; val speed: Float
+        if (distressLeft > 0f) {
+            targetX = distressX; targetZ = distressZ; standoff = 0.0
+            speed = tuning.reinforceDriftSpeed
+        } else {
+            targetX = reportedX; targetZ = reportedZ; standoff = tuning.holdStandoff
+            speed = tuning.holdDriftSpeed
+        }
+        val dx = targetX - s.anchorX; val dz = targetZ - s.anchorZ
+        val dist = sqrt(dx * dx + dz * dz)
+        if (dist <= standoff) return
+        val move = (speed * dt).toDouble().coerceAtMost(dist - standoff)
+        s.anchorX += dx / dist * move
+        s.anchorZ += dz / dist * move
+        for (i in s.members.indices) {
+            val m = s.members[i]
+            if (m.alive) m.leashTo(s.anchorX, s.anchorZ, tuning.holdRadius)
         }
     }
 
@@ -455,17 +528,27 @@ internal class SquadCommand(
         s.pendingPosts.fill(-1)
         s.roles.fill(null)
         clearTaken()
+        // Décalage tiré à chaque plan, pas une fois pour toute la partie : le joueur qui a vu un
+        // contournement une fois ne doit pas pouvoir compter dessus la fois suivante. La rotation
+        // de tout le dispositif ne coûte rien aux écarts entre postes (elle les tourne en bloc) ;
+        // le tremblement individuel, lui, reste petit pour ne jamais faire chevaucher deux postes
+        // (voir le test qui vérifie l'encerclement, pas la file indienne).
+        val planRotation = (rng.nextFloat() * 2f - 1f) * PLAN_ROTATION_JITTER_DEG
         var rank = 0
         for ((index, m) in s.members.withIndex()) {
             if (!m.alive) continue
             val slot = rank % ROLES.size
             rank++
             s.roles[index] = ROLES[slot]
-            val post = take(postNear(reportedX, reportedY, reportedZ, approach + POST_DEG[slot],
-                tuning.engageRadius * POST_RADIUS[slot], Sight.REQUIRED, taken))
+            val wobble = (rng.nextFloat() * 2f - 1f) * POST_ANGLE_WOBBLE_DEG
+            val radiusJitter = RADIUS_JITTER_MIN + rng.nextFloat() * (RADIUS_JITTER_MAX - RADIUS_JITTER_MIN)
+            val post = take(postNear(reportedX, reportedY, reportedZ,
+                approach + planRotation + POST_DEG[slot] + wobble,
+                tuning.engageRadius * POST_RADIUS[slot] * radiusJitter, Sight.REQUIRED, taken))
             val detour = if (sneak && DETOUR_RADIUS[slot] > 0f)
-                take(postNear(reportedX, reportedY, reportedZ, approach + DETOUR_DEG[slot],
-                    tuning.engageRadius * DETOUR_RADIUS[slot], Sight.AVOID, taken)) else -1
+                take(postNear(reportedX, reportedY, reportedZ,
+                    approach + planRotation + DETOUR_DEG[slot] + wobble,
+                    tuning.engageRadius * DETOUR_RADIUS[slot] * radiusJitter, Sight.AVOID, taken)) else -1
             if (detour >= 0 && detour != post) {
                 s.slots[index] = detour
                 s.pendingPosts[index] = post
@@ -502,6 +585,21 @@ internal class SquadCommand(
         return node
     }
 
+    /**
+     * Un carreau déjà pris repousse ses voisins immédiats, pas seulement lui-même : un angle de
+     * mur n'offre souvent qu'un seul bon poste de tir, et sans cette marge deux hommes s'y
+     * empilaient côte à côte au lieu de se répartir sur les postes suivants (moins bons, mais
+     * séparés).
+     */
+    private fun tooCloseToTaken(n: Int, used: IntArray): Boolean {
+        for (t in used) {
+            if (t < 0) continue
+            if (distSq(grid.nodeX[t] + .5, grid.nodeZ[t] + .5,
+                    grid.nodeX[n] + .5, grid.nodeZ[n] + .5) < MIN_POST_SEPARATION_SQ) return true
+        }
+        return false
+    }
+
     // ── Géométrie ─────────────────────────────────────────────────────────────
 
     private enum class Sight {
@@ -527,7 +625,10 @@ internal class SquadCommand(
                 val z = cz + cos(a) * radius * scale
                 for (dy in LEVEL_OFFSETS) {
                     val n = grid.nodeAt(floor(x).toInt(), floor(cy).toInt() + dy, floor(z).toInt())
-                    if (n < 0 || used.contains(n)) continue
+                    // Un carreau déjà pris, mais aussi tout ce qui est collé à un carreau pris :
+                    // un angle de mur n'offre souvent qu'un seul bon poste, et sans cette marge
+                    // deux hommes s'y empilaient côte à côte au lieu de se répartir.
+                    if (n < 0 || tooCloseToTaken(n, used)) continue
                     if (sight == Sight.ANY) return n
                     val clear = LineOfSight.isClear(
                         grid.nodeX[n] + .5, grid.nodeY[n] + EYE_HEIGHT, grid.nodeZ[n] + .5,
@@ -555,6 +656,17 @@ internal class SquadCommand(
         /** Point de passage du contournement : large, derrière, et hors de vue. 0 = pas de détour. */
         val DETOUR_DEG = floatArrayOf(0f, 0f, -162f, 160f, 0f, 178f)
         val DETOUR_RADIUS = floatArrayOf(0f, 0f, 1.75f, 1.75f, 0f, 1.6f)
+        /** Rotation de tout le dispositif, tirée une fois par plan : mêmes écarts entre postes,
+         * jamais le même azimut de départ. */
+        const val PLAN_ROTATION_JITTER_DEG = 20f
+        /** Tremblement individuel, en plus de la rotation : reste petit pour ne jamais faire
+         * chevaucher deux postes voisins (le plus proche écart de la table est de 40°). */
+        const val POST_ANGLE_WOBBLE_DEG = 4f
+        const val RADIUS_JITTER_MIN = 0.85f
+        const val RADIUS_JITTER_MAX = 1.15f
+        /** Écart minimal entre deux postes attribués dans le même plan : un angle de mur reste un
+         * poste, pas un point de rassemblement pour toute l'escouade. */
+        const val MIN_POST_SEPARATION_SQ = 2.0 * 2.0
         /** Distance à laquelle un point de passage est considéré atteint. */
         const val DETOUR_REACHED = 3.5
         /** Délai minimal entre deux plans déclenchés par un contact visuel. */

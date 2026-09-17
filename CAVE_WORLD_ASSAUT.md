@@ -628,3 +628,313 @@ coût venait des réserves des autres étages. Sont désormais dessinés à chaq
 qui connaissent ou voient le joueur, ceux d'une escouade en regroupement ou à l'assaut, et tout
 soldat à moins de 12 blocs (au lieu de 6). Pour les autres, deux rayons de flanc (±0,55 bloc) sont
 tirés si la tête et le torse sont cachés.
+
+### Casser l'uniformité, pas retoucher les seuils — 17/09/2026
+
+Retour de l'utilisateur : les soldats sont « trop statiques, groupés, prévisibles ». Même mot que le
+16/09 (« statiques en groupe »), mais cette fois ce n'est plus un bug : ce jour-là c'était un vrai
+défaut (tirage de patrouille hors secteur, file de chemins engorgée), corrigé par des seuils. À la
+relecture complète de `Soldier.kt`, `SquadCommand.kt` et `SquadSpawn.kt`, le système est déjà riche
+(perception sans triche, mémoire, rafales, repli, rôles avec relève et détours) — mais **toute la
+garnison utilise exactement les mêmes réglages et exactement la même géométrie d'assaut**. `AssaultMode.update`
+pèse 0,4 % du CPU appli (mesure du 16/09 au soir) : la marge est là, ce n'était pas un problème de
+budget. Trois ajouts, aucun retouché seuil de performance déjà réglé (rondes lointaines, cadence de
+l'état-major, file de chemins) :
+
+- **`ai/SoldierPersonality.kt`** (nouveau) : `SoldierTuning.withPersonality(rng)` tire deux facteurs
+  par soldat, `skill` et `aggression`, appliqués ensemble à des groupes de champs cohérents plutôt
+  qu'un bruit indépendant par champ (sinon `aimErrorMin` pourrait dépasser `aimErrorMax`). Un
+  soldat plus adroit réagit plus vite et vise mieux ; un soldat plus agressif se déplace plus
+  souvent en combat et tient des rafales plus longues. Branché dans `AssaultMode.enlistSoldier`,
+  juste après la copie des stats d'arme.
+- **`SquadCommand.planAssault`** : la géométrie d'assaut (`POST_DEG`/`POST_RADIUS`/`DETOUR_DEG`/
+  `DETOUR_RADIUS`) reste une table fixe, mais chaque plan tire une **rotation d'ensemble** (±20°,
+  ne change aucun écart entre postes, donc aucun risque pour l'encerclement) et un **tremblement
+  individuel** (±4° par poste, volontairement petit : le plus proche écart de la table est de 40°,
+  et le test d'encerclement existant vérifie un écart minimal de 30°). Le rayon de chaque poste
+  varie aussi de ±15 %. `postNear` tolérait déjà l'imprécision (il élargit angle puis rayon si le
+  poste idéal n'existe pas) : le décalage ne casse rien, il change le point de départ de la
+  recherche.
+- **`Soldier.reposition()`** : le saut latéral en combat tirait toujours 2 blocs ; tire maintenant
+  entre 1,5 et 3 (`REPOSITION_HOP_MIN`/`MAX`). Combiné à `repositionSeconds` par personnalité, les
+  soldats engagés ne sautent plus au même rythme ni à la même distance.
+
+**Ce qui n'a pas bougé, volontairement** : le regroupement au spawn (`SquadSpawn`, décision
+délibérée documentée le 16/09 : une escouade doit démarrer au même endroit pour avoir un secteur
+cohérent), les seuils de patrouille lointaine, la cadence de décision de l'état-major (6/s), le
+budget de la file de chemins.
+
+**Tests** : `SoldierTest` gagne deux cas (la personnalité reste dans des bornes saines sur 200
+graines, deux soldats de la même garnison diffèrent) ; `SquadCommandTest` gagne un cas qui rejoue
+l'assaut sur 30 graines et vérifie que le tremblement ne fait jamais chevaucher deux postes (seuil
+relâché à 20°, contre 30° sans tremblement — c'est la garantie qui change avec le bruit ajouté, pas
+un doublon du test existant). `compileDebugKotlin` et `compileDebugUnitTestKotlin` réussis ; non
+exécutés (politique du dépôt).
+
+**À valider en jeu** : que la garnison se sente moins uniforme sans perte de lisibilité (certains
+soldats plus précis, d'autres plus mobiles), que les postes d'assaut varient d'une manche à l'autre
+sur une même carte, et qu'aucune régression de performance n'apparaît (le tremblement ne change ni
+la cadence ni le nombre d'appels à `postNear`).
+
+### L'horloge interne des réservistes tournait au ralenti — 17/09/2026
+
+Retour de l'utilisateur après essai en jeu, sur les correctifs ci-dessus : toujours « statiques,
+groupés », et en plus « même si je tue un soldat à 50 mètres, les soldats à 80 mètres derrière ne
+réagissent pas du tout, sur un toit bien dégagé ». Deux vrais bugs, distincts de la variété ajoutée
+la veille (qui restait cosmétique et ne pouvait pas les corriger) :
+
+**1. Le pas de simulation d'un soldat lointain était bridé, pas seulement son mouvement.**
+`AssaultMode.updateSoldiers` classe chaque soldat par distance/étage en trois cadences de réflexion
+(0,05 s près et engagés, 0,2 s à moins de 80 blocs, **1 s au-delà ou à un autre étage**) — un choix
+juste, pensé pour le budget. Mais quel que soit le palier, le pas transmis au cerveau était plafonné
+à `u.elapsed.coerceAtMost(.15f)`, y compris pour le palier à 1 s. Un réserviste au-delà de 80 blocs
+recevait donc une seconde de jeu écoulée, mais son cerveau n'en recevait que 0,15 — **son horloge
+interne tournait à 15 % du temps réel**. `patrolWait`, le balayage du regard, tout : une ronde censée
+durer six à douze secondes en prenait quarante à quatre-vingts. Un réserviste malchanceux, dont
+plusieurs tirages de destination échouaient (secteur encombré), pouvait ainsi paraître **ne plus
+bouger du tout** pendant l'essentiel d'une manche.
+
+*Correctif* : le plafond de 0,15 s ne s'applique plus qu'aux paliers rapprochés, où un bond de
+position serait visible. Au palier à 1 s, on ne revoit ce soldat qu'une fois par seconde et il n'est
+d'évidence pas fixé de près : son pas suit l'écoulement réel, sans plafond arbitraire.
+
+**2. Rien ne portait une information au-delà de la portée d'ouïe, même à ciel ouvert.**
+`onPlayerFired` alerte déjà tout soldat à portée d'ouïe (`hearingRange`, 80 blocs ou 48 dans la
+tour) — mais un homme à 80 mètres, par définition, est pile à la limite ou au-delà. Sur un toit
+« bien dégagé », rien ne remplaçait ce que l'œil aurait dû porter bien plus loin qu'une portée
+d'ouïe calibrée pour ne pas trop alerter en intérieur (portée déjà réduite de 160 à 80 le 16/09 pour
+cette raison précise — la remonter aurait défait ce réglage).
+
+*Correctif* : `AssaultMode.alertWitnesses`, appelé à la mort d'un soldat (`collectFallenSoldiers`).
+Tout soldat encore ignorant qui a une **ligne de vue dégagée** jusqu'au corps est alerté avec la
+portée d'un homme déjà alerté (`alertedSightRange`, 160 blocs) au lieu de la portée d'ouïe normale ;
+sans ligne de vue, la portée d'ouïe habituelle s'applique, inchangée. Ce n'est pas de la triche :
+voir un camarade tomber à découvert porte l'information bien plus loin qu'un mur ne laisse passer un
+bruit — et à l'inverse, dans un couloir fermé, la ligne de vue s'arrête de toute façon à quelques
+pas, donc ça n'ouvre pas nu à travers les cloisons ce que la portée d'ouïe a justement fermé.
+
+**Ce qui n'a pas bougé** : `hearingRange` lui-même, les trois paliers de cadence (0,05/0,2/1 s), le
+budget de cerveaux par image. Le second correctif ajoute une ligne de vue par soldat non-alerté à
+chaque mort — rare comparé aux 160 sondages déjà faits pour une seule recherche d'abri.
+
+`compileDebugKotlin` et `compileDebugUnitTestKotlin` réussis. Pas de test ajouté : `AssaultMode.kt`
+n'a pas de suite unitaire existante (couplé au renderer/caméra), contrairement au dossier `ai/`.
+
+**À valider en jeu** : que les réservistes lointains patrouillent à un rythme normal (plus plaqués
+au sol pendant l'essentiel d'une manche), et qu'un tir bien visible depuis loin (toit, cour ouverte)
+fasse réagir les soldats qui le voient, même hors de portée d'ouïe.
+
+### Le commandement : réserves qui dérivent, repli qui contourne — 17/09/2026
+
+Retour de l'utilisateur, toujours sur le commandement : « il faut plus aiguiller les escouades vers
+le joueur, faire bouger les escouades beaucoup plus », et « un système plus fort de contournement
+(après le souci c'est peut-être juste le pathfinding) que 1 ou 2 soldats "fuient" quand je commence
+à les canarder, pour mieux me prendre à revers ».
+
+**Le repli sous le feu existait déjà** (`SoldierDecision` bascule en `COVER` après un coup encaissé)
+— ce n'est pas un bug de pathfinding, mais `routeToCover` choisissait le recoin caché le plus
+**proche**, sans se soucier de sa direction. Un soldat qui plonge derrière la caisse d'à côté a
+l'air de se planquer, pas de manœuvrer : le contournement était déjà là dans son intention, pas
+dans son résultat.
+
+- **`Soldier.routeToCover`** compare maintenant chaque abri cacheé à son **écart d'angle** vu du
+  joueur par rapport à la position actuelle du soldat, en plus de la distance : à candidats
+  comparables, celui qui déplace vraiment de flanc l'emporte sur celui qui est à peine plus proche.
+  `COVER_SWING_BONUS = 40.0` (un demi-tour complet vaut jusqu'à 40 blocs-carrés de moins, à
+  comparer aux 100 blocs-carrés du rayon d'abri) : assez pour trancher entre deux recoins voisins,
+  pas assez pour envoyer un soldat traverser la carte pour un abri à peine mieux placé. Reste dans
+  le même budget de sondages (`COVER_PROBE_BUDGET`), un `atan2` de plus par candidat déjà retenu.
+
+**Les réserves ne bougeaient jamais** avant d'être activées : leur secteur (`anchorX/Z`) restait
+figé à leur point de débarquement toute la manche, aussi longtemps que l'escouade active tenait le
+coup. Rien ne les rapprochait du combat.
+
+- **`SquadCommand.driftTowardContact`**, appelée à chaque décision (6/s) pour toute escouade en
+  réserve : son secteur glisse vers la position annoncée par la radio, à `holdDriftSpeed` (0,6
+  bloc/s) blocs par seconde, jusqu'à `holdStandoff` (30 blocs, au-dessus de `rallyDistance` pour ne
+  jamais empiéter sur le regroupement de l'escouade déjà engagée). La laisse de chaque homme suit :
+  c'est le même secteur tenu, recentré, pas un ordre qui les précipite dessus — l'activation reste
+  le seul déclencheur de l'engagement réel. Effet de bord utile : `activateNext()` choisit déjà la
+  réserve la plus proche de la position annoncée ; comme les secteurs se rapprochent avec le temps,
+  ce choix devient plus pertinent au fil de la manche.
+
+**Ce qui n'a pas été touché, une décision consciente pour cette passe** : le nombre d'escouades
+actives à la fois reste à une seule (`SquadCommand.active`). L'utilisateur demande aussi « plus
+aiguiller vers le joueur » au sens fort — plusieurs escouades engagées ensemble — mais c'est un
+changement d'équilibrage plus lourd (submerger vs file indienne, tout le sujet du 16/09) : à tester
+d'abord avec la dérive des réserves et le contournement plus mordant, avant d'y toucher si ce n'est
+toujours pas assez.
+
+**Tests** : `SquadCommandTest` gagne un cas (le secteur d'une réserve se rapproche et respecte le
+seuil, la laisse suit). Pas de nouveau cas géométrique pour le biais de `routeToCover` : construire
+à la main deux abris à distance comparable mais d'angles différents avec le seul outil de test
+disponible (des murs rectangulaires) aurait demandé une géométrie fragile ; le test existant
+(`blesse il gagne un abri...`) confirme qu'un abri est toujours trouvé, le biais lui-même se juge en
+jeu. `compileDebugKotlin` et `compileDebugUnitTestKotlin` réussis ; non exécutés (politique du
+dépôt).
+
+**À valider en jeu** : que les soldats sous le feu s'écartent visiblement plutôt que de plonger sur
+place, que les réserves se rapprochent visiblement du combat sur une manche longue, et si la
+pression reste insuffisante malgré ça — c'est le signal pour rouvrir la question de plusieurs
+escouades actives à la fois.
+
+### Observé en direct sur tablette : des soldats vraiment figés — 17/09/2026
+
+Demande de l'utilisateur : ajouter des logs et observer `adb logcat` pendant une partie sur la tour
+(5 étages + toit), pour voir si quelque chose bloque les soldats. Deux ajouts de diagnostic dans
+`AssaultMode.kt`, tous deux sous `BuildConfig.DEBUG` :
+- `CaveAI` (avertissement) : un soldat qui n'a ni avancé ni fini son trajet depuis plus de
+  `STUCK_LOG_SECONDS` (2 s) est signalé une fois, avec son état, sa position, son escouade, et s'il
+  attend un trajet ou connaît/voit le joueur.
+- `CavePerf` (déjà existant, toutes les 5 s) gagne la répartition par état (`etats=[PAT41 SEA5...]`)
+  et le nombre de bloqués (`bloques=`).
+
+**Ce qu'on a vu, en observant en direct pendant ~6 minutes de partie** : le nombre de bloqués n'a
+jamais été nul, est monté jusqu'à 10 (sur 46 soldats, soit près d'un quart de la garnison), et s'est
+stabilisé à 4 sur 12 pendant les dernières minutes — sans jamais redescendre à zéro. Le phénomène a
+touché au moins 8 escouades différentes sur 10-12, dans tous les états (`PATROL`, `SEARCH`, `ENGAGE`,
+`COVER`, en réserve comme à l'assaut) : ni une pièce particulière, ni un état particulier. Un même
+soldat pouvait se bloquer deux fois de suite, dans deux situations différentes. Un pic isolé
+(`routesWaiting=25 routeStalled=24`) est apparu au moment d'une activation d'escouade puis a résorbé
+tout seul 15 s plus tard — un engorgement transitoire de la file, pas la cause de fond.
+
+**Diagnostic** : `routeStalled` restait à 0 la plupart du temps pendant qu'il y avait des bloqués —
+donc ce n'est **pas** un problème de calcul de chemin (l'A* trouve un chemin), c'est le **suivi** du
+chemin qui cale : `PathFollower.advanceWithCollisions` refuse d'avancer parce qu'un autre corps
+occupe la case suivante. Le mécanisme de déblocage existant (`pathTo(goal, avoidBodies = true)`,
+avec un recul de 0,7 s à 4 s) redemande un chemin **vers le même but**, contournant la position
+*actuelle* de l'obstacle — mais si l'obstacle est un autre soldat qui fait exactement la même chose
+au même moment, les deux contournements peuvent se reproduire le même blocage indéfiniment sans
+jamais casser la symétrie. Vraisemblablement aggravé par les correctifs des passes précédentes
+aujourd'hui : les réservistes bougent maintenant à vitesse réelle (au lieu de 15 % avant le
+correctif de l'horloge) et dérivent vers le front, donc davantage d'hommes de la même escouade se
+croisent dans les mêmes couloirs et pièces étroites qu'avant.
+
+**Correctif** : `Soldier.sidestep()`, dans `Soldier.kt`. Une fois l'escalade du recul épuisée
+(`unblockDelay` au plafond de 4 s, donc au moins trois tentatives de contournement complet déjà
+essayées), au lieu de redemander un chemin vers le même but, il tente un pas vers **n'importe
+laquelle** des cases voisines déjà connues de la grille (les liaisons de `NavGrid`, pas un nouvel
+A*) qui n'est pas occupée. Aucune recherche de chemin, aucun passage par la file partagée : juste
+les arêtes déjà calculées au chargement, un test de collision par voisin (huit au plus). Casse la
+symétrie entre deux soldats qui se redirigent l'un vers l'autre en boucle, sans faire retomber tout
+le monde dans la même file. `searchNode` est réinitialisé au passage : l'état qui suit (le plus
+souvent `SEARCH`) redemandera un vrai chemin vers son but en arrivant, comme à toute fin de trajet
+normale — c'était le piège à éviter, sans quoi le soldat se retrouve à regarder autour de lui
+indéfiniment après le petit pas de côté au lieu de reprendre sa route.
+
+**Tests** : un cas ajouté (`SoldierTest`) avec un mur de collision qui n'existe pas pour la
+navigation (donc un chemin est bien calculé à travers) mais qu'aucun corps ne franchit jamais :
+vérifie que le soldat finit par bouger de nouveau après l'escalade complète, sans jamais franchir ce
+que son corps lui refuse. `compileDebugKotlin` et `compileDebugUnitTestKotlin` réussis ; non
+exécutés (politique du dépôt).
+
+**À valider en jeu** — c'est le but de cette instrumentation, à laisser en place pour la prochaine
+séance : `bloques=` doit revenir à 0 ou proche entre deux pics, pas se stabiliser durablement à
+20-30 % de la garnison comme observé avant ce correctif.
+
+**Correctif validé en direct sur tablette** (build recompilé et réinstallé pendant la séance) :
+`bloques` oscille désormais dans une bande de 4 à 20 % environ, avec des pics ponctuels autour de
+30-44 % lors des activations d'escouade (transitoires, la file se vide en 5-10 s), contre 30-38 %
+**qui ne redescendait jamais** avant le correctif. Reste un noyau résiduel plus petit qui ne se
+débloque pas : probablement des soldats entourés de tous côtés (pièce de réserve trop petite pour
+le nombre de soldats qui y patrouillent en même temps) — lié au regroupement serré au spawn
+(`SquadSpawn`), volontairement laissé de côté cette passe.
+
+### Trois retours après une vraie partie : escaliers, renfort, espacement — 17/09/2026
+
+Retour de l'utilisateur après avoir rejoué normalement (pas en observation de bug) : dans
+l'ensemble ça va, trois points à affiner.
+
+**1. Les soldats restent bêtes face à un escalier** — ils voient le joueur (la tête dépasse d'une
+marche) mais ne finissent jamais de monter pour tirer, et ne redescendent pas non plus se mettre à
+couvert. Diagnostic précis (voir aussi la ligne de vue à travers les marches, notée plus haut dans
+ce journal) : `Soldier.reposition()` ne cherchait que deux cases **au même niveau** que la case de
+départ (`grid.nodeAt(nx, grid.nodeY[from], nz)`) — jamais une marche au-dessus ou en dessous, alors
+que `NavGrid` connaît déjà ces liaisons verticales. Et une fois à portée d'arme
+(`dist ≤ bulletRange × 0,9`), le seul autre chemin de déplacement (la poursuite par A* complet,
+`actEngage`, ligne ~415) ne se déclenche plus — zone morte où rien ne peut jamais faire franchir la
+marche. Correctif : `reposition()` retombe maintenant sur les **liaisons réelles de la grille**
+(`grid.edgeStart`/`edgeTarget`, celles que `NavGrid` construit déjà pour les marches) quand aucun
+des deux pas latéraux ne dégage la ligne de tir — la même logique que `sidestep()` (le correctif
+du blocage physique, plus haut), réutilisée pour une raison différente. Non retenu cette passe : le
+repli volontaire vers le bas (descendre pour se mettre à couvert) reste conditionné à une blessure
+récente (`recentHit`), pas encore à un tir bloqué de façon chronique — une extension possible, pas
+faite ici.
+
+**2. Les escouades doivent se porter au secours d'un allié attaqué** — pas seulement dériver vers
+le joueur annoncé (ce qui existait déjà), mais foncer vers une escouade, ou même **un seul soldat**,
+en train de se faire tirer dessus. `SquadCommand.driftTowardContact` cherche à chaque décision
+l'allié le plus proche d'une **autre** escouade actuellement `shaken` (`nearestDistress`) et fonce
+droit dessus, sans laisse minimale — un renfort qui s'arrête à distance n'en est pas un.
+
+*Premier jet erroné, corrigé dans la foulée* : une limite de 30 blocs avait été ajoutée pour décider
+si la détresse était « assez proche ». Retour de l'utilisateur : le principe du commandement est une
+radio, comme celle qui diffuse déjà la position du joueur sans coupure de distance
+(`reportedX`/`reportedZ`) — il n'y a pas de portée physique à respecter pour *savoir* qu'un allié se
+fait tirer dessus, où qu'il soit sur la carte. La limite a été retirée ; la distance (étage pesé
+plus lourd qu'un couloir plat) ne sert plus qu'à choisir **laquelle** des réserves répond quand
+plusieurs alliés sont en détresse à la fois, jamais à décider si l'appel arrive. Elle ne devient pas
+l'escouade active pour autant : c'est l'engagement normal de réserve (portée courte, activation
+suivante) qui prend le relais une fois sur place. Sans détresse en cours, le comportement est
+inchangé (dérive prudente vers le joueur annoncé, `holdStandoff`).
+
+**3. Les soldats se collent trop les uns aux autres, surtout à un angle de mur** —
+`SquadCommand.postNear` ne refusait qu'un carreau **déjà pris exactement** ; un angle de mur n'offre
+souvent qu'un seul bon poste de tir, et sans marge deux hommes s'y empilaient côte à côte plutôt que
+de se répartir sur des postes voisins moins bons mais séparés. `tooCloseToTaken` refuse maintenant
+tout candidat à moins de deux blocs d'un poste déjà attribué dans le même plan — un carreau pris
+repousse ses voisins, pas seulement lui-même.
+
+**Tests** : `SquadCommandTest` gagne un cas (une réserve fonce vers un allié en détresse plutôt que
+vers le joueur, sans devenir l'escouade active) et une assertion ajoutée au test d'encerclement
+existant (les postes d'assaut restent à au moins deux blocs les uns des autres). Pas de nouveau cas
+géométrique pour le correctif d'escalier : construire une vraie cage d'escalier à la main dans le
+harnais de test existant (murs rectangulaires seulement) aurait été fragile pour la valeur ajoutée —
+le mécanisme réutilise exactement les liaisons de grille déjà couvertes par `NavigationTest` et le
+même schéma que `sidestep()` (déjà testé). `compileDebugKotlin` et `compileDebugUnitTestKotlin`
+réussis ; non exécutés (politique du dépôt).
+
+**À valider en jeu** : qu'un soldat sur un escalier finisse par monter (ou redescendre) au lieu de
+rester la tête à la même hauteur indéfiniment ; qu'une réserve visiblement éloignée se mette en
+mouvement dès qu'un tir éclate près d'elle, même sur un seul homme isolé ; et que les postes de tir
+groupés à un coin de mur se voient désormais nettement espacés plutôt qu'entassés.
+
+### Le renfort avait une portée, et une mémoire trop courte — 17/09/2026
+
+Deux retours après une partie normale sur le toit puis dans l'immeuble.
+
+**1. Une limite de portée de 30 blocs avait été ajoutée par erreur** au renfort du point précédent :
+« pourquoi si je tue une escouade sur le toit, l'autre escouade de l'autre côté ne réagit pas du
+tout ? ». Rappel de l'utilisateur : le principe du commandement est une **radio**, exactement comme
+celle qui diffuse déjà la position du joueur sans coupure de distance (`reportedX`/`reportedZ`) — il
+n'y a pas de portée physique à respecter pour qu'une escouade *sache* qu'un allié se fait tirer
+dessus, où qu'il soit sur la carte. Limite retirée.
+
+**2. Même sans limite de portée, le signal ne durait pas assez longtemps.** `nearestDistress`
+cherchait un allié **actuellement** `shaken` — si toute l'escouade attaquée meurt en une ou deux
+secondes (largement possible avec certaines armes), le signal disparaît avant que la réserve la
+plus proche ait eu le temps de faire quoi que ce soit. Remplacé par une **mémoire de détresse**
+(`distressX`/`distressZ`/`distressLeft`, tenue au niveau de l'état-major, pas par escouade) : dès
+qu'un allié encaisse un coup n'importe où sur la carte, sa position est retenue dix secondes
+(`distressMemorySeconds`), et toutes les réserves foncent vers ce dernier endroit connu tant que la
+mémoire tient — même si l'escouade qui s'y trouvait n'existe déjà plus. Simplification au passage :
+plus besoin de chercher « le plus proche » par escouade, une seule mémoire partagée suffit, sur le
+même principe que la position du joueur.
+
+**3. Deuxième observation, dans l'immeuble (globalement correct cette fois)** : des soldats vus en
+train de s'éloigner, puis plus aucun signe d'eux — il a fallu marcher jusqu'à eux pour qu'ils
+réagissent, alors qu'ils étaient « un peu plus loin, groupés et fixes ». Pas encore de diagnostic
+ferme : ça peut être le noyau résiduel de blocage physique déjà noté plus haut (et le renfort
+pourrait l'aggraver, en poussant plusieurs escouades vers le même point resserré), ou simplement une
+ronde de réserve légitimement lente parce que loin de la position annoncée
+(`FAR_PATROL_WAIT`, 6-12 s). Les deux correctifs ci-dessus (mémoire de détresse, espacement des
+postes) touchent indirectement ce cas sans le cibler ; à réobserver avec `adb logcat -s CaveAI` pour
+trancher.
+
+**Tests** : `SquadCommandTest` gagne un cas (le souvenir d'un combat tient après la mort de
+l'escouade attaquée, sur le même principe que le test de portée illimitée du point précédent).
+`compileDebugKotlin` et `compileDebugUnitTestKotlin` réussis ; non exécutés (politique du dépôt).
+
+**À valider en jeu** : qu'une escouade tuée rapidement fasse quand même venir du renfort, et
+surveiller si des groupes de réserve restent visiblement figés malgré tout — c'est le signal pour
+rouvrir le sujet du noyau de blocage résiduel plutôt que d'ajouter un nouveau correctif à l'aveugle.

@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.caves.ai.ShotSink
 import com.Atom2Universe.app.games.caves.ai.SolidGrid
 import com.Atom2Universe.app.games.caves.ai.Soldier
 import com.Atom2Universe.app.games.caves.ai.SoldierTuning
+import com.Atom2Universe.app.games.caves.ai.withPersonality
 import com.Atom2Universe.app.games.caves.ai.BodyClearance
 import com.Atom2Universe.app.games.caves.ai.SoldierCollision
 import com.Atom2Universe.app.games.caves.ai.RouteQueue
@@ -102,6 +103,9 @@ internal class AssaultMode(
         var squad: Squad? = null
         /** Dernier instant (horloge d'occlusion) où la caméra l'a vu. */
         var lastSeenAt = Float.NEGATIVE_INFINITY
+        /** Depuis combien de temps il n'a ni bougé ni fini son trajet (diagnostic, debug only). */
+        var stuckSeconds = 0f
+        var stuckLogged = false
 
         override val alive: Boolean get() = body.hp > 0
         override val x: Double get() = brain.x
@@ -395,9 +399,13 @@ internal class AssaultMode(
                 else -> 1f
             }
             if (u.elapsed < interval) continue
-            // Pas de rattrapage massif après un gel : les gardes lointains restent présents,
-            // avec une patrouille lente, sans téléportation ni apparition à l'approche.
-            val step = u.elapsed.coerceAtMost(.15f)
+            // Le pas ne doit être borné que pour éviter un bond visible chez un soldat qu'on
+            // regarde de près : le brider au même 0,15 s pour la case « loin/réserve » (revu une
+            // fois par seconde) revenait à figer son horloge interne à 15 % du temps réel — sa
+            // patrouille et son balayage du regard s'étiraient alors sur des dizaines de secondes
+            // au lieu de quelques-unes, et un homme malchanceux paraissait ne plus bouger du tout.
+            // À cette distance, un homme qui avance d'un coup ne se voit de toute façon pas.
+            val step = u.elapsed.coerceAtMost(if (interval >= 1f) interval else .15f)
             u.elapsed = 0f
             updated++
             brain.healthFraction = u.body.hp.toFloat() / u.body.maxHp.coerceAtLeast(1)
@@ -409,6 +417,18 @@ internal class AssaultMode(
             firingUnit = null
             crowd.move(u.body.id, brain.x, brain.y, brain.z)
             if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
+
+            if (com.Atom2Universe.app.BuildConfig.DEBUG) {
+                if (!brain.follower.arrived && !brain.isMoving) u.stuckSeconds += step
+                else { u.stuckSeconds = 0f; u.stuckLogged = false }
+                if (u.stuckSeconds > STUCK_LOG_SECONDS && !u.stuckLogged) {
+                    u.stuckLogged = true
+                    android.util.Log.w("CaveAI", "bloqué id=${u.body.id} etat=${brain.state} " +
+                        "pos=(${"%.1f".format(brain.x)},${"%.1f".format(brain.y)},${"%.1f".format(brain.z)}) " +
+                        "escouade=${u.squad?.id}/${u.squad?.stance} attendTrajet=${brain.waitingForRoute} " +
+                        "connaitJoueur=${brain.knowsPlayer} voitJoueur=${brain.seesPlayer}")
+                }
+            }
 
             val body = u.body
             body.weaponReload = brain.reloadProgress
@@ -434,13 +454,20 @@ internal class AssaultMode(
                 val roster = command?.all.orEmpty()
                     .filter { it.living > 0 }
                     .joinToString(" ") { "${it.stance.name.take(1)}${it.living}" }
+                // Répartition par état : « ENG2 » = deux soldats en train de tirer. Un nombre qui
+                // ne bouge plus d'un log à l'autre pendant qu'on regarde l'écran est le signal
+                // qu'on cherche : quelque chose garde tout le monde dans cet état-là.
+                val states = units.filter { it.body.hp > 0 }.groupingBy { it.brain.state }.eachCount()
+                    .entries.joinToString(" ") { "${it.key.name.take(3)}${it.value}" }
+                val stuck = units.count { it.stuckSeconds > STUCK_LOG_SECONDS }
                 // aiPerSecUs est le chiffre qui compte pour la chauffe : combien de microsecondes
                 // d'IA sont dépensées par seconde de jeu. 1 000 000 = un cœur saturé. En dessous
                 // de ~50 000 (5 %), une baisse d'images ne vient pas d'ici.
                 android.util.Log.i("CavePerf", "assaultSoldiers=${units.size} " +
                     "aiPerSecUs=${(aiTotalNs / 1000 / aiLogSeconds).toLong()} " +
                     "aiPeakUs=${aiPeakNs / 1000} routesWaiting=${routes?.waitingCount ?: 0} " +
-                    "routeStalled=${units.count { it.brain.waitingForRoute }} squads=[$roster]")
+                    "routeStalled=${units.count { it.brain.waitingForRoute }} bloques=$stuck " +
+                    "etats=[$states] squads=[$roster]")
                 aiPeakNs = 0L
                 aiTotalNs = 0L
                 aiLogSeconds = 0f
@@ -560,6 +587,27 @@ internal class AssaultMode(
         }
     }
 
+    /**
+     * Un des leurs vient de tomber en (x, eyeY, z) [coordonnées locales à la carte] : ceux qui ont
+     * une ligne de vue dégagée jusque-là le savent, même bien au-delà de la portée d'ouïe normale.
+     *
+     * Ce n'est pas de la triche : voir un camarade s'effondrer à ciel ouvert porte l'information
+     * bien plus loin qu'un mur ne laisse passer un bruit, exactement l'inverse d'un couloir fermé,
+     * où la ligne de vue s'arrête de toute façon à quelques pas. La portée d'ouïe elle-même
+     * (`hearingRange`) reste inchangée : ceci ne s'ajoute que là où l'œil porte, jamais à travers
+     * une cloison.
+     */
+    private fun alertWitnesses(x: Double, eyeY: Double, z: Double) {
+        for (u in units) {
+            val brain = u.brain
+            if (brain.knowsPlayer) continue
+            if (isTower && kotlin.math.abs(brain.y + EYE_HEIGHT - eyeY) >= 4.0) continue
+            val range = if (LineOfSight.isClear(brain.x, brain.y + EYE_HEIGHT, brain.z, x, eyeY, z, solid))
+                brain.tuning.alertedSightRange else brain.tuning.hearingRange
+            brain.hearNoise(x, eyeY, z, range)
+        }
+    }
+
     /** Retire les soldats abattus. Renvoie vrai si l'affichage de la partie doit être rafraîchi. */
     private fun collectFallenSoldiers(): Boolean {
         var changed = false
@@ -576,6 +624,8 @@ internal class AssaultMode(
                 changed = true
                 val headshot = lastHitWasHead.remove(body.id) == true
                 if (headshot) onHeadshotKill?.invoke()
+                alertWitnesses(body.x - source.originX, body.y - source.originY + EYE_HEIGHT,
+                    body.z - source.originZ)
                 // Pas MobDied : lui déclenche le butin de la survie, qui ne connaît pas les soldats.
                 r.eventBus.publish(GameEvent.SoldierDown)
                 if (match.onTargetDown(headshot) == AssaultMatch.Event.ROUND_ENDED) {
@@ -699,7 +749,7 @@ internal class AssaultMode(
         val profile = RangedProfile.all.getValue(weaponType)
         val tuning = soldierTuning.copy(bulletSpeed = profile.speed, bulletRange = profile.range,
             fireInterval = profile.interval, magazineSize = profile.magazine,
-            reloadSeconds = profile.reload)
+            reloadSeconds = profile.reload).withPersonality(rng)
         val id = nextSoldierId++
         val clearance = BodyClearance { bx, by, bz ->
             SoldierCollision.clearsWorld(solid, bx, by, bz) &&
@@ -778,6 +828,9 @@ internal class AssaultMode(
 
         /** Hauteur des yeux d'un personnage debout, joueur comme soldat. */
         const val EYE_HEIGHT = 1.62
+
+        /** Temps sans avancer avant qu'un soldat soit signalé « bloqué » dans les logs (debug). */
+        const val STUCK_LOG_SECONDS = 2f
 
         // Effectifs : une seule escouade attaque à la fois, la garnison entière sert de réserve.
         const val TOWER_SQUAD_SIZE = 5

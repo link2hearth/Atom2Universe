@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.caves
 
+import com.Atom2Universe.app.games.caves.ai.BodyClearance
 import com.Atom2Universe.app.games.caves.ai.LineOfSight
 import com.Atom2Universe.app.games.caves.ai.NavGrid
 import com.Atom2Universe.app.games.caves.ai.PathFinder
@@ -9,6 +10,7 @@ import com.Atom2Universe.app.games.caves.ai.SolidGrid
 import com.Atom2Universe.app.games.caves.ai.Soldier
 import com.Atom2Universe.app.games.caves.ai.SoldierTuning
 import com.Atom2Universe.app.games.caves.ai.SoldierDecision
+import com.Atom2Universe.app.games.caves.ai.withPersonality
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -353,6 +355,26 @@ class SoldierTest {
     }
 
     @Test
+    fun `un blocage qui persiste finit par un pas de cote plutot que de rester fige`() {
+        val world = TestWorld(30, 6, 20)
+        // Une frontière que la grille de navigation ignore (le monde y est vide, un chemin est
+        // donc bien calculé à travers) mais qu'aucun corps ne franchit jamais : impossible à
+        // résoudre par un contournement complet, quel que soit le chemin recalculé.
+        val clearance = BodyClearance { x, _, _ -> kotlin.math.floor(x).toInt() != 10 }
+        val grid = NavGrid.build(world.sizeX, world.sizeY, world.sizeZ, world)
+        val s = Soldier(grid, world, PathFinder(grid), Random(3),
+            SoldierTuning(bulletRange = 15f), clearance)
+        s.place(9.5, 1.0, 5.5)
+        val p = player(25.5, 5.5)   // hors de portée derrière le mur : le soldat doit s'en approcher
+        repeat(40) { s.update(0.05f, p, Shots()) }   // ~2 s : le temps d'aller buter dessus
+        assertTrue("le mur doit bien l'arrêter", s.x < 10.0)
+        var movedAgain = false
+        repeat(250) { s.update(0.05f, p, Shots()); if (s.isMoving) movedAgain = true }   // ~12,5 s
+        assertTrue("il doit finir par bouger de nouveau plutôt que rester figé", movedAgain)
+        assertTrue("mais jamais traverser ce que son corps lui refuse", s.x < 10.0)
+    }
+
+    @Test
     fun `un tir s entend bien plus loin que des pas`() {
         val world = TestWorld(200, 6, 200)
         val pas = soldier(world, 100.5, 100.5)
@@ -362,5 +384,26 @@ class SoldierTest {
         val tir = soldier(world, 100.5, 100.5)
         tir.hearShot(100.5, 2.62, 60.5)                           // même distance, mais un tir
         assertTrue(tir.knowsPlayer)
+    }
+
+    @Test
+    fun `la personnalite varie sans jamais casser les bornes de la visee`() {
+        val base = SoldierTuning()
+        repeat(200) { seed ->
+            val t = base.withPersonality(Random(seed.toLong()))
+            assertTrue("min <= max", t.aimErrorMinDeg <= t.aimErrorMaxDeg)
+            assertTrue("depart >= min", t.aimErrorStartDeg >= t.aimErrorMinDeg)
+            assertTrue("reaction positive", t.reactionMin > 0f && t.reactionMax >= t.reactionMin)
+            assertTrue("repositionnement positif", t.repositionSeconds > 0f)
+            assertTrue("rafale non vide", t.burstMin >= 1 && t.burstMax > t.burstMin)
+        }
+    }
+
+    @Test
+    fun `deux soldats de la meme garnison different l un de l autre`() {
+        val base = SoldierTuning()
+        val a = base.withPersonality(Random(1))
+        val b = base.withPersonality(Random(2))
+        assertTrue(a.reactionMin != b.reactionMin || a.repositionSeconds != b.repositionSeconds)
     }
 }

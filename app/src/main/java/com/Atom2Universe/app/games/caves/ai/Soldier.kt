@@ -289,11 +289,21 @@ internal class Soldier(
             if (isMoving) { blockedFor = 0f; unblockDelay = UNBLOCK_FIRST_DELAY }
             else blockedFor += dt
             if (blockedFor > unblockDelay) {
-                val goal = follower.path[follower.path.size - 1]
-                pathTo(goal, avoidBodies = true)
                 blockedFor = 0f
                 // Recul progressif : deux soldats bloqués l'un contre l'autre relançaient chacun
-                // un contournement toutes les 0,7 s, et noyaient la file pour tout le monde.
+                // un contournement toutes les 0,7 s, et noyaient la file pour tout le monde. Mais
+                // un contournement complet vers le MÊME but, redemandé par les DEUX soldats qui se
+                // gênent, peut reproduire le même blocage indéfiniment (chacun route autour de la
+                // position actuelle de l'autre, qui a déjà bougé le temps que le chemin arrive) :
+                // une fois l'escalade épuisée, on tente un simple pas de côté, sans se soucier du
+                // but, pour casser la symétrie au lieu de la reproduire.
+                if (unblockDelay >= UNBLOCK_MAX_DELAY && sidestep()) {
+                    // Le pas de côté a pris la main ; l'état qui suit redemandera un vrai chemin
+                    // vers son but une fois arrivé, comme à toute fin de trajet.
+                } else {
+                    val goal = follower.path[follower.path.size - 1]
+                    pathTo(goal, avoidBodies = true)
+                }
                 unblockDelay = (unblockDelay * 2f).coerceAtMost(UNBLOCK_MAX_DELAY)
             }
         }
@@ -513,6 +523,28 @@ internal class Soldier(
         if (coverHoldLeft <= 0f) coverCooldown = tuning.coverCooldownSeconds
     }
 
+    /**
+     * Dernier recours contre un blocage qui persiste malgré l'escalade normale : un pas vers
+     * n'importe quelle case voisine libre, sans se soucier du but. Casse la symétrie entre deux
+     * soldats qui se redirigent l'un vers l'autre en boucle, sans repasser par un A* complet ni
+     * par la file partagée — juste les liaisons déjà connues de la case courante.
+     */
+    private fun sidestep(): Boolean {
+        val bodyClearance = clearance ?: return false
+        val from = grid.nodeUnder(x, y, z)
+        if (from < 0) return false
+        for (e in grid.edgeStart[from] until grid.edgeStart[from + 1]) {
+            val n = grid.edgeTarget[e]
+            val nx = grid.nodeX[n] + 0.5; val ny = grid.nodeY[n].toDouble(); val nz = grid.nodeZ[n] + 0.5
+            if (!bodyClearance.isFree(nx, ny, nz)) continue
+            path.clear(); path.add(from); path.add(n)
+            follower.follow(path)
+            searchNode = -1   // l'état qui suit redemandera un vrai chemin en arrivant
+            return true
+        }
+        return false
+    }
+
     /** Petit déplacement latéral, sur le même sol, en conservant une ligne de tir. */
     private fun reposition() {
         cancelRoute()
@@ -520,18 +552,38 @@ internal class Soldier(
         if (from < 0) return
         val angle = Math.toRadians(yawDeg.toDouble())
         val side = if (rng.nextBoolean()) 1 else -1
+        // Distance tirée à chaque saut : un rythme et une portée toujours identiques se
+        // synchronisaient visiblement entre soldats voisins.
+        val hop = REPOSITION_HOP_MIN + rng.nextDouble() * (REPOSITION_HOP_MAX - REPOSITION_HOP_MIN)
         for (sign in intArrayOf(side, -side)) {
-            val nx = floor(x + cos(angle) * sign * 2).toInt()
-            val nz = floor(z - sin(angle) * sign * 2).toInt()
+            val nx = floor(x + cos(angle) * sign * hop).toInt()
+            val nz = floor(z - sin(angle) * sign * hop).toInt()
             val n = grid.nodeAt(nx, grid.nodeY[from], nz)
-            if (n < 0 || !LineOfSight.isClear(nx + 0.5, y + EYE_HEIGHT - 0.15, nz + 0.5,
-                    lastKnownX, lastKnownEyeY - AIM_BELOW_EYE, lastKnownZ, world)) continue
-            if (finder.findPath(from, n, path, clearance, maxCost = 4.5f) && path.size in 2..4) {
+            if (n < 0 || !clearsToLastKnown(n)) continue
+            if (finder.findPath(from, n, path, clearance, maxCost = 4.5f) && path.size in 2..5) {
                 follower.follow(path)
                 return
             }
         }
+        // Aucun des deux pas latéraux, au même niveau, ne dégage la ligne de tir : sur un
+        // escalier, c'est la marche du dessus ou du dessous qui la dégage, jamais essayée
+        // jusque-là puisque les deux candidats ci-dessus restent au Y de départ (`grid.nodeY
+        // [from]`). Les liaisons réelles de la grille connaissent déjà les marches (`NavGrid`) :
+        // on les prend telles quelles au lieu de recalculer des coordonnées qui ratent
+        // systématiquement le changement de niveau — la tête qui dépasse sans jamais finir de
+        // monter, ou sans redescendre se mettre à couvert.
+        for (e in grid.edgeStart[from] until grid.edgeStart[from + 1]) {
+            val n = grid.edgeTarget[e]
+            if (grid.nodeY[n] == grid.nodeY[from] || !clearsToLastKnown(n)) continue
+            path.clear(); path.add(from); path.add(n)
+            follower.follow(path)
+            return
+        }
     }
+
+    private fun clearsToLastKnown(n: Int): Boolean = LineOfSight.isClear(
+        grid.nodeX[n] + 0.5, grid.nodeY[n] + EYE_HEIGHT - 0.15, grid.nodeZ[n] + 0.5,
+        lastKnownX, lastKnownEyeY - AIM_BELOW_EYE, lastKnownZ, world)
 
     private fun actSearch(dt: Float) {
         // Ce qu'il a perçu lui-même l'emporte sur son poste, sauf sous un ordre strict : on ne
@@ -696,6 +748,11 @@ internal class Soldier(
     /**
      * Rejoint un des abris proches accessibles, caché depuis la dernière position connue.
      * Renvoie faux si aucun des candidats retenus n'a de chemin raisonnablement court.
+     *
+     * Entre deux abris à distance égale, celui qui l'écarte le plus de sa position actuelle **vu
+     * du joueur** l'emporte : sans ce biais, il file toujours vers le recoin le plus proche, quitte
+     * à rester quasiment sur place — on dirait qu'il se planque, pas qu'il change d'angle. Avec, le
+     * même réflexe de repli devient un vrai déplacement de flanc.
      */
     private fun routeToCover(): Boolean {
         cancelRoute()
@@ -708,6 +765,7 @@ internal class Soldier(
         coverDistances.fill(Double.POSITIVE_INFINITY)
         val cx = floor(follower.x).toInt(); val cz = floor(follower.z).toInt()
         val r = tuning.coverRadius
+        val bearingHere = atan2(x - lastKnownX, z - lastKnownZ)
         // Chaque candidat coûte une ligne de vue, soit une vingtaine de pas de voxels — et dans
         // un bâtiment, chaque pas sur un escalier ou une dalle déclenche un test de volume. Le
         // balayage complet, c'est deux mille lignes de vue pour un seul soldat qui recharge.
@@ -722,7 +780,9 @@ internal class Soldier(
                 val hidden = !LineOfSight.isClear(lastKnownX, lastKnownEyeY, lastKnownZ,
                     nx + 0.5, ny + EYE_HEIGHT, nz + 0.5, world)
                 if (hidden) {
-                    val distance = distSq.toDouble() + abs(ny - y) * 2.0
+                    val bearingThere = atan2(nx + 0.5 - lastKnownX, nz + 0.5 - lastKnownZ)
+                    val swing = abs(angleDiffRad(bearingThere, bearingHere)) / Math.PI
+                    val distance = distSq.toDouble() + abs(ny - y) * 2.0 - swing * COVER_SWING_BONUS
                     var slot = coverCandidates.lastIndex
                     if (distance >= coverDistances[slot]) continue
                     while (slot > 0 && distance < coverDistances[slot - 1]) {
@@ -763,6 +823,9 @@ internal class Soldier(
         const val LOOK_SWEEP_DEG = 55f
         /** Temps passé à voir le joueur sans ligne de tir avant de changer de place. */
         const val BLOCKED_LINE_SECONDS = .45f
+        /** Portée d'un saut latéral en combat : jamais deux fois la même distance. */
+        const val REPOSITION_HOP_MIN = 1.5
+        const val REPOSITION_HOP_MAX = 3.0
         /** Temps de planque supplémentaire, en proportion, quand il est au plus bas. */
         const val LOW_HEALTH_COVER_EXTRA = 1.5f
         const val PATROL_PICK_ATTEMPTS = 20
@@ -781,6 +844,18 @@ internal class Soldier(
         const val FAR_PATROL_WAIT = 6f
         /** Lignes de vue au plus pour trouver un abri : au-delà, on prend ce qu'on a trouvé. */
         const val COVER_PROBE_BUDGET = 160
+        /** Poids du changement d'angle dans le choix d'un abri : un plein demi-tour (180°) vaut
+         * ce nombre de blocs-carrés de distance en moins, assez pour préférer un abri qui déplace
+         * vraiment sans faire ignorer un recoin bien plus proche du même côté. */
+        const val COVER_SWING_BONUS = 40.0
+
+        /** Écart entre deux angles en radians, ramené à [-π, π]. */
+        fun angleDiffRad(a: Double, b: Double): Double {
+            var d = (a - b) % (2 * Math.PI)
+            if (d > Math.PI) d -= 2 * Math.PI
+            if (d < -Math.PI) d += 2 * Math.PI
+            return d
+        }
 
         fun normalizeDeg(a: Float): Float {
             var v = a % 360f

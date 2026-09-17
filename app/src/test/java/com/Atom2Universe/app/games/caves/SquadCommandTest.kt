@@ -112,6 +112,59 @@ class SquadCommandTest {
     }
 
     @Test
+    fun `une reserve derive vers le joueur sans jamais s'en approcher trop`() {
+        val cmd = command(SquadTuning(holdDriftSpeed = 5f, holdStandoff = 10.0))
+        val squad = enlist(cmd, 70.0, 70.0)
+        cmd.start(MID, 1.0, MID)
+        val startDist = hypot(squad.anchorX - MID, squad.anchorZ - MID)
+        run(cmd, 4f)   // largement sous le délai d'activation (5 s par défaut) : reste en réserve
+        assertEquals(Squad.Stance.HOLD, squad.stance)
+        val laterDist = hypot(squad.anchorX - MID, squad.anchorZ - MID)
+        assertTrue("le secteur doit se rapprocher ($startDist -> $laterDist)", laterDist < startDist)
+        assertTrue("jamais plus près que le seuil", laterDist >= cmd.tuning.holdStandoff - 1e-6)
+        // La laisse de chaque homme suit le secteur déplacé, pas seulement son rayon.
+        val p = puppets(squad).first()
+        assertEquals(squad.anchorX, p.leashX, 1e-6)
+        assertEquals(squad.anchorZ, p.leashZ, 1e-6)
+    }
+
+    @Test
+    fun `une reserve fonce vers un allie en detresse plutot que vers le joueur annonce`() {
+        val cmd = command(SquadTuning(reinforceDriftSpeed = 40f, holdStandoff = 10.0))
+        // 50 blocs entre les deux : la détresse passe par radio, comme la position du joueur,
+        // jamais par une portée d'ouïe ou de vue limitée. Aucune distance ne doit l'arrêter.
+        val reserve = enlist(cmd, 70.0, 10.0)
+        val distressed = enlist(cmd, 20.0, 10.0)
+        cmd.start(MID, 1.0, MID)
+        val target = puppets(distressed).first()
+        target.shaken = true
+        run(cmd, 2f)
+        val distToTarget = hypot(reserve.anchorX - target.px, reserve.anchorZ - target.pz)
+        assertTrue("doit foncer vers l'allié en détresse, pas s'arrêter à distance ($distToTarget)",
+            distToTarget < 5.0)
+        assertEquals("un renfort ne devient pas l'escouade active pour autant",
+            Squad.Stance.HOLD, reserve.stance)
+    }
+
+    @Test
+    fun `le souvenir d'un combat survit a la mort de l'escouade attaquee`() {
+        val cmd = command(SquadTuning(reinforceDriftSpeed = 40f, holdStandoff = 10.0,
+            distressMemorySeconds = 5f))
+        val reserve = enlist(cmd, 70.0, 10.0)
+        val attacked = enlist(cmd, 20.0, 10.0)
+        cmd.start(MID, 1.0, MID)
+        val target = puppets(attacked).first()
+        target.shaken = true
+        run(cmd, 0.2f)   // une décision suffit à enregistrer la détresse
+        // L'escouade attaquée est anéantie très vite : le signal en direct disparaît...
+        for (p in puppets(attacked)) { p.shaken = false; p.alive = false }
+        run(cmd, 2f)     // ...mais le souvenir, lui, doit tenir (distressMemorySeconds = 5 s)
+        val distToTarget = hypot(reserve.anchorX - target.px, reserve.anchorZ - target.pz)
+        assertTrue("doit continuer vers le combat même après coup, pas revenir vers le joueur " +
+            "($distToTarget)", distToTarget < 5.0)
+    }
+
+    @Test
     fun `l'escouade se regroupe a couvert avant de se montrer`() {
         val cmd = command()
         val squad = enlist(cmd, 62.0, 62.0)
@@ -175,18 +228,50 @@ class SquadCommandTest {
         run(cmd, .2f)
         march(squad)
 
-        val bearings = puppets(squad).map { p ->
+        val nodes = puppets(squad).map { p ->
             val n = p.orderedNode
             assertTrue("poste d'assaut manquant", n >= 0)
             val d = distanceToPlayer(n)
             assertTrue("poste de tir à $d blocs", d in 6.0..20.0)
             assertFalse("un ordre d'assaut laisse réagir à ce qu'on entend", p.strict)
-            bearingOfNode(n)
+            n
         }
+        val bearings = nodes.map { bearingOfNode(it) }
         // Une file indienne, ce sont quatre hommes dans le même azimut. On veut l'inverse.
         for (i in bearings.indices) for (j in i + 1 until bearings.size) {
             val gap = abs(normalize(bearings[i] - bearings[j]))
             assertTrue("postes à $gap° l'un de l'autre", gap > 30.0)
+        }
+        // Et un angle de mur ne doit pas devenir un point de rassemblement pour deux hommes.
+        for (i in nodes.indices) for (j in i + 1 until nodes.size) {
+            val sep = hypot(grid.nodeX[nodes[i]] - grid.nodeX[nodes[j]].toDouble(),
+                grid.nodeZ[nodes[i]] - grid.nodeZ[nodes[j]].toDouble())
+            assertTrue("postes à $sep blocs l'un de l'autre", sep >= 2.0)
+        }
+    }
+
+    @Test
+    fun `le tremblement de la geometrie d'assaut ne fait jamais chevaucher deux postes`() {
+        // Le plan ajoute une rotation d'ensemble et un petit tremblement par poste (voir
+        // planAssault) : sur beaucoup de graines, l'encerclement doit tenir quand même — c'est
+        // justement ce que le test voisin vérifie sans tremblement, avec une marge de 30°.
+        repeat(30) { seed ->
+            val cmd = SquadCommand(grid, world, Random(seed.toLong() + 1000), SquadTuning())
+            val squad = enlist(cmd, 62.0, 62.0)
+            cmd.start(MID, 1.0, MID)
+            run(cmd, 6f)
+            march(squad)
+            run(cmd, .2f)
+            march(squad)
+            val bearings = puppets(squad).map { p ->
+                val n = p.orderedNode
+                assertTrue("poste d'assaut manquant (graine $seed)", n >= 0)
+                bearingOfNode(n)
+            }
+            for (i in bearings.indices) for (j in i + 1 until bearings.size) {
+                val gap = abs(normalize(bearings[i] - bearings[j]))
+                assertTrue("postes à $gap° l'un de l'autre (graine $seed)", gap > 20.0)
+            }
         }
     }
 
