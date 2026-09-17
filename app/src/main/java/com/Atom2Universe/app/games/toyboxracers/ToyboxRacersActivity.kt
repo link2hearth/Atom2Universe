@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.toyboxracers
 
 import android.annotation.SuppressLint
+import androidx.annotation.StringRes
 import android.app.AlertDialog
 import android.graphics.Canvas
 import android.graphics.Color
@@ -542,7 +543,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         pushEditorPreview()
         updateRaceControlsVisibility()
         resumeGame()
-        Toast.makeText(this, "Copie creee : $name", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toybox_editor_copy_created, name), Toast.LENGTH_SHORT).show()
     }
 
     private fun legacyCopyName(scene: SceneChoice): String {
@@ -698,7 +699,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             topMargin = dp(12)
         })
 
-        val reset = makeButton("DÉPART", 92, 0xAA735D91.toInt()).apply {
+        val reset = makeButton(getString(R.string.toybox_start_button), 92, 0xAA735D91.toInt()).apply {
             textSize = 11f
             setOnClickListener {
                 releaseControls.forEach { it() }
@@ -713,11 +714,11 @@ class ToyboxRacersActivity : ThemedActivity() {
         })
         raceHudViews += reset
 
-        difficultyButton = makeButton(currentDifficulty.label, 92, 0xAA4B617A.toInt()).apply {
+        difficultyButton = makeButton(getString(currentDifficulty.label), 92, 0xAA4B617A.toInt()).apply {
             textSize = 11f
             setOnClickListener {
                 currentDifficulty = RaceDifficulty.entries[(currentDifficulty.ordinal + 1) % RaceDifficulty.entries.size]
-                text = currentDifficulty.label
+                text = getString(currentDifficulty.label)
                 getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit()
                     .putInt(KEY_DIFFICULTY, currentDifficulty.ordinal)
                     .apply()
@@ -814,7 +815,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             textSize = 21f
             typeface = Typeface.DEFAULT_BOLD
         }
-        val replay = makeButton("REJOUER", 118, 0xCCE26F82.toInt()).apply {
+        val replay = makeButton(getString(R.string.toybox_replay), 118, 0xCCE26F82.toInt()).apply {
             textSize = 14f
             setOnClickListener {
                 resultPanel.visibility = View.GONE
@@ -846,7 +847,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             // seulement de le pousser vers l'intérieur de l'écran.
             inset = dp(30).toFloat()
         ).apply {
-            contentDescription = "Direction"
+            contentDescription = getString(R.string.toybox_steering)
             isSteeringEnabled = { drivingActive() }
             // Le manche parle en repère écran (+1 = droite) ; le jeu compte
             // l'inverse depuis les anciens boutons, où « ◀ » envoyait +1.
@@ -860,7 +861,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         raceControlViews += steeringStick
         releaseControls += { steeringStick.reset() }
 
-        val brake = makeButton("FREIN\nRECUL", controls.brake, 0xB8735D91.toInt()).apply {
+        val brake = makeButton(getString(R.string.toybox_brake), controls.brake, 0xB8735D91.toInt()).apply {
             textSize = 12f
         }
         root.addView(brake, FrameLayout.LayoutParams(dp(controls.brake), dp(controls.brake)).apply {
@@ -870,7 +871,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         })
         raceControlViews += brake
 
-        val accelerator = makeButton("GAZ", controls.accelerator, 0xB8E26F82.toInt()).apply {
+        val accelerator = makeButton(getString(R.string.toybox_gas), controls.accelerator, 0xB8E26F82.toInt()).apply {
             textSize = 13f
         }
         root.addView(accelerator, FrameLayout.LayoutParams(dp(controls.accelerator), dp(controls.accelerator)).apply {
@@ -1046,14 +1047,14 @@ class ToyboxRacersActivity : ThemedActivity() {
                 pushEditorPreview()
             }
         }
-        editorGroupButton = makeEditorButton("Groupe", 0xAA4B617A.toInt()).apply {
+        editorGroupButton = makeEditorButton(getString(R.string.toybox_editor_group), 0xAA4B617A.toInt()).apply {
             setOnClickListener {
                 editorGroupMode = editorGroupMode.next()
                 if (editorGroupMode == EditorGroupMode.OFF) selectedGroupIds = emptySet()
                 pushEditorPreview()
             }
         }
-        editorUndoButton = makeEditorButton("Annuler", 0xAA4B617A.toInt()).apply {
+        editorUndoButton = makeEditorButton(getString(R.string.toybox_editor_undo), 0xAA4B617A.toInt()).apply {
             setOnClickListener { undoEditorAction() }
         }
         val toolButtons = listOf(editorKindButton, editorGridButton, editorGroupButton, editorUndoButton)
@@ -1063,7 +1064,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             })
         }
         editorToolsPanel.orientation = LinearLayout.VERTICAL
-        editorToolsPanel.addView(grab("Outils", editorToolsPanel), LinearLayout.LayoutParams(-1, dp(28)))
+        editorToolsPanel.addView(grab(getString(R.string.toybox_editor_tools), editorToolsPanel), LinearLayout.LayoutParams(-1, dp(28)))
         editorToolsPanel.addView(toolsContent, LinearLayout.LayoutParams(-1, dp(42)))
         editorMagnetButton = action(getString(if (editorMagnetEnabled) R.string.toybox_magnet_on else R.string.toybox_magnet_off)) {
             editorMagnetEnabled = !editorMagnetEnabled
@@ -1085,8 +1086,8 @@ class ToyboxRacersActivity : ThemedActivity() {
             background = roundedBackground(0xD83B4055.toInt(), 18f)
             visibility = View.GONE
         }
-        val cameraUp = action("Cam +") { renderer.moveEditorCameraHeight(gridSize()) }
-        val cameraDown = action("Cam -") { renderer.moveEditorCameraHeight(-gridSize()) }
+        val cameraUp = action(getString(R.string.toybox_editor_camera_up)) { renderer.moveEditorCameraHeight(gridSize()) }
+        val cameraDown = action(getString(R.string.toybox_editor_camera_down)) { renderer.moveEditorCameraHeight(-gridSize()) }
         bindRepeatingEditorAction(cameraUp) { renderer.moveEditorCameraHeight(gridSize()) }
         bindRepeatingEditorAction(cameraDown) { renderer.moveEditorCameraHeight(-gridSize()) }
         editorCameraPanel.addView(cameraUp, LinearLayout.LayoutParams(dp(78), dp(42)).apply { bottomMargin = dp(6) })
@@ -1182,20 +1183,20 @@ class ToyboxRacersActivity : ThemedActivity() {
             dimensions.addView(box, LinearLayout.LayoutParams(0, -1, 1f))
             return picker
         }
-        editorWidthPicker = dimensionPicker("Largeur", editorWidth) { setEditorDimension(width = it) }
-        editorHeightPicker = dimensionPicker("Hauteur", editorHeight) { setEditorDimension(height = it) }
-        editorDepthPicker = dimensionPicker("Profondeur", editorDepth) { setEditorDimension(depth = it) }
-        editorPlaceButton = makeEditorButton("Poser", 0xAA4B8F6E.toInt()).apply {
+        editorWidthPicker = dimensionPicker(getString(R.string.toybox_editor_width), editorWidth) { setEditorDimension(width = it) }
+        editorHeightPicker = dimensionPicker(getString(R.string.toybox_editor_height), editorHeight) { setEditorDimension(height = it) }
+        editorDepthPicker = dimensionPicker(getString(R.string.toybox_editor_depth), editorDepth) { setEditorDimension(depth = it) }
+        editorPlaceButton = makeEditorButton(getString(R.string.toybox_editor_place), 0xAA4B8F6E.toInt()).apply {
             setOnClickListener { placeEditorVolume() }
         }
-        editorDuplicateButton = makeEditorButton("Dupliquer", 0xAA4B617A.toInt()).apply {
+        editorDuplicateButton = makeEditorButton(getString(R.string.toybox_editor_duplicate), 0xAA4B617A.toInt()).apply {
             setOnClickListener { duplicateEditorSelection() }
         }
         row(
             editorPanel,
             editorPlaceButton,
             editorDuplicateButton,
-            action("Effacer", 0xAA9A4B4B.toInt()) { deleteEditorVolume() }
+            action(getString(R.string.toybox_editor_delete), 0xAA9A4B4B.toInt()) { deleteEditorVolume() }
         )
 
         root.addView(editorPanel, FrameLayout.LayoutParams(dp(286), -2).apply {
@@ -1205,7 +1206,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         })
 
         editorPositionPanel = makeBubble()
-        editorPositionPanel.addView(grab("Position", editorPositionPanel), LinearLayout.LayoutParams(-1, dp(28)).apply {
+        editorPositionPanel.addView(grab(getString(R.string.toybox_editor_position), editorPositionPanel), LinearLayout.LayoutParams(-1, dp(28)).apply {
             bottomMargin = dp(8)
         })
         val moveUp = action("↑") { moveEditorObject(0f, 1f) }
@@ -1285,7 +1286,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         pushEditorPreview()
         pauseButton.bringToFront()
         if (editorActive) {
-            status.text = "Mode construction : déplace la caméra, règle le bloc, puis POSER"
+            status.text = getString(R.string.toybox_editor_mode_status)
         }
     }
 
@@ -1392,7 +1393,7 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun showAddItemFamilies() {
         val families = EDITOR_ITEM_FAMILIES
-        val labels = families.map { it.name } + listOf(getString(R.string.toybox_track_family), getString(R.string.toybox_models_title))
+        val labels = families.map { getString(it.name) } + listOf(getString(R.string.toybox_track_family), getString(R.string.toybox_models_title))
         dialogBuilder()
             .setTitle(R.string.toybox_add_object)
             .setItems(labels.toTypedArray()) { _, which ->
@@ -1408,7 +1409,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     private fun showAddItems(family: EditorItemFamily) {
         dialogBuilder()
             .setTitle(family.name)
-            .setItems(family.items.map { it.name }.toTypedArray()) { _, which ->
+            .setItems(family.items.map { getString(it.name) }.toTypedArray()) { _, which ->
                 applyEditorItemPreset(family.items[which])
             }
             .setNegativeButton(R.string.toybox_back) { _, _ -> showAddItemFamilies() }
@@ -1797,7 +1798,7 @@ class ToyboxRacersActivity : ThemedActivity() {
             saveEditorUndoHistory()
             updateEditorUndoButton()
             pushEditorPreview()
-            Toast.makeText(this, "Action annulee", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toybox_editor_undone), Toast.LENGTH_SHORT).show()
         } finally {
             suppressEditorUndo = false
         }
@@ -1912,46 +1913,42 @@ class ToyboxRacersActivity : ThemedActivity() {
         editorToolsPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorCameraPanel.visibility = if (editorActive) View.VISIBLE else View.GONE
         editorKindButton.text = "+"
-        editorGridButton.text = "Grille ${gridLabel()}"
+        editorGridButton.text = getString(R.string.toybox_editor_grid, gridLabel())
         updateEditorUndoButton()
         editorGroupButton.text = when {
-            hasGroup -> "Groupe ${selectedGroupIds.size}"
-            editorGroupMode == EditorGroupMode.SAME_KIND -> "Groupe type"
-            editorGroupMode == EditorGroupMode.CONNECTED -> "Prefab"
-            else -> "Groupe"
+            hasGroup -> getString(R.string.toybox_editor_group_count, selectedGroupIds.size)
+            editorGroupMode == EditorGroupMode.SAME_KIND -> getString(R.string.toybox_editor_group_same_kind)
+            editorGroupMode == EditorGroupMode.CONNECTED -> getString(R.string.toybox_editor_group_prefab)
+            else -> getString(R.string.toybox_editor_group)
         }
         if (::editorRotationAxisButton.isInitialized) {
-            editorRotationAxisButton.text = editorRotationAxis.label
+            editorRotationAxisButton.text = getString(editorRotationAxis.label)
             editorRotationAxisButton.isEnabled = !canEditDecor
             editorRotationAxisButton.visibility = if (canEditDecor) View.GONE else View.VISIBLE
             editorRotationAxisButton.alpha = if (canEditDecor) 0.38f else 0.82f
         }
         if (::editorRotationStepButton.isInitialized) {
-            editorRotationStepButton.text = "Rotation ${formatEditorNumber(rotationStep())} deg"
+            editorRotationStepButton.text = getString(R.string.toybox_editor_rotation_step, formatEditorNumber(rotationStep()))
             editorRotateLeftButton.text = "↺ ${formatEditorNumber(rotationStep())}"
             editorRotateRightButton.text = "↻ ${formatEditorNumber(rotationStep())}"
         }
         if (::editorTrackBankEdgeButton.isInitialized) {
-            editorTrackBankEdgeButton.text = editorTrackBankEdge.label
+            editorTrackBankEdgeButton.text = getString(editorTrackBankEdge.label)
             val showBankEdge = canEditTrack && editorRotationAxis == ToyboxRotationAxis.ROLL
             editorTrackBankEdgeRow.visibility = if (showBankEdge) View.VISIBLE else View.GONE
         }
         editorGroupButton.alpha = if (editorGroupMode == EditorGroupMode.OFF) 0.82f else 1f
         val selectedFloor = selected?.kind == ToyboxVolumeKind.FLOOR
         editorSolidButton.text = when {
-            selectedFloor -> "Sol"
-            editorSolid -> "Solide"
-            else -> "Décor"
+            selectedFloor -> getString(R.string.toybox_title_floor)
+            editorSolid -> getString(R.string.toybox_editor_solid)
+            else -> getString(R.string.toybox_editor_decor)
         }
         editorPlaceButton.text = when {
-            selected != null -> "Valider"
-            selectedTrack != null -> "Valider"
-            selectedDecor != null -> "Valider"
-            hasGroup -> "Valider"
-            hasTrackDraft -> "Poser"
-            hasDecorDraft -> "Poser"
-            hasDraft -> "Poser"
-            else -> "Rien"
+            selected != null || selectedTrack != null || selectedDecor != null || hasGroup ->
+                getString(R.string.toybox_editor_confirm)
+            hasTrackDraft || hasDecorDraft || hasDraft -> getString(R.string.toybox_editor_place)
+            else -> getString(R.string.toybox_editor_nothing)
         }
         val canDuplicate = selected != null || selectedTrack != null || selectedDecor != null || hasGroup
         editorSolidButton.visibility = if (canEditTrack || selectedFloor) View.GONE else View.VISIBLE
@@ -1991,39 +1988,31 @@ class ToyboxRacersActivity : ThemedActivity() {
                     append(" / ").append(selectedTrack.editFractions.size)
                     append(" · Y ").append(formatEditorNumber(selectedTrack.centerAt(trackTapFraction).y)).append("\n")
                 }
-                append("Type: piste  ").append(gridLabel())
-                append("  Largeur ").append(formatEditorNumber(editorWidth))
-                append("  Longueur ").append(formatEditorNumber(editorDepth))
-                append("  Deniv ").append(formatEditorNumber(editorHeight))
-                append("  Banking G ").append(formatEditorNumber(editorTrackLeftBankDegrees))
-                append(" D ").append(formatEditorNumber(editorTrackRightBankDegrees)).append(" deg")
+                append(getString(R.string.toybox_editor_info_track, gridLabel(),
+                    formatEditorNumber(editorWidth), formatEditorNumber(editorDepth), formatEditorNumber(editorHeight),
+                    formatEditorNumber(editorTrackLeftBankDegrees), formatEditorNumber(editorTrackRightBankDegrees)))
             } else if (canEditDecor) {
                 val yaw = selectedDecor?.yawDegrees ?: editorDecorYawDegrees
                 val scale = selectedDecor?.scale ?: editorDecorScale
-                append(gridLabel())
-                append("  Angle ").append(formatEditorNumber(yaw)).append(" deg")
+                append(getString(R.string.toybox_editor_info_decor, gridLabel(), formatEditorNumber(yaw)))
                 append("  ").append(getString(R.string.toybox_model_scale)).append(" ×").append(formatEditorNumber(scale))
             } else {
-                append("Type: ").append(editorKind.label).append("  ").append(gridLabel())
-                append("  L ").append(formatEditorNumber(editorWidth))
-                append("  P ").append(formatEditorNumber(editorDepth))
-                append("  H ").append(formatEditorNumber(editorHeight))
-                append("  Angle ").append(formatEditorNumber(editorYawDegrees)).append(" deg")
-                append("  Incl ").append(formatEditorNumber(editorPitchDegrees)).append("/")
-                    .append(formatEditorNumber(editorRollDegrees)).append(" deg")
+                append(getString(R.string.toybox_editor_info_block, volumeTitle(editorKind), gridLabel(),
+                    formatEditorNumber(editorWidth), formatEditorNumber(editorDepth), formatEditorNumber(editorHeight),
+                    formatEditorNumber(editorYawDegrees), formatEditorNumber(editorPitchDegrees), formatEditorNumber(editorRollDegrees)))
             }
             append("  Y ").append(formatEditorNumber(editorFloorY))
             append("\n")
-            append(when {
-                canEditTrack -> "surface conduite"
-                canEditDecor -> if (editorSolid) "solide" else "decor seulement"
-                editorSolid -> "solide"
-                else -> "decor seulement"
-            })
+            append(getString(when {
+                canEditTrack -> R.string.toybox_editor_surface_drive
+                editorSolid -> R.string.toybox_editor_surface_solid
+                else -> R.string.toybox_editor_surface_decor
+            }))
 
 
             if (selected == null && selectedTrack == null && selectedDecor == null) {
-                append(if (hasDraft || hasTrackDraft || hasDecorDraft) "  |  Poser pour creer" else "  |  + pour ajouter")
+                append("  |  ").append(getString(if (hasDraft || hasTrackDraft || hasDecorDraft)
+                    R.string.toybox_editor_hint_place else R.string.toybox_editor_hint_add))
             }
         }
         renderer.setEditorSelection(selected)
@@ -2752,7 +2741,7 @@ class ToyboxRacersActivity : ThemedActivity() {
 
     private fun gridSize() = EDITOR_GRIDS[editorGridIndex].first
 
-    private fun gridLabel() = EDITOR_GRIDS[editorGridIndex].second
+    private fun gridLabel() = getString(EDITOR_GRIDS[editorGridIndex].second)
 
     private fun dimensionStep() = maxOf(gridSize(), 0.25f)
 
@@ -2788,7 +2777,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private fun decorName(modelId: String): String =
-        DecorKawaiiCollection.names[modelId]?.let { getString(it) } ?:
+        (DecorKawaiiCollection.names[modelId] ?: DecorCatalog.names[modelId])?.let { getString(it) } ?:
         modelId.substringAfter('.')
             .replace('_', ' ')
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
@@ -2889,18 +2878,8 @@ class ToyboxRacersActivity : ThemedActivity() {
         if (state.turboReleaseSerial != lastTurboReleaseSerial) vibrate(42L, 105)
         lastTurboLevel = state.turboLevel
         lastTurboReleaseSerial = state.turboReleaseSerial
-        val minutes = state.elapsedSeconds.toInt() / 60
-        val seconds = state.elapsedSeconds % 60f
-        hud.text = if (state.mode == PlayMode.EXPLORATION) getString(R.string.toybox_free_hud, state.speedKmh, formatTime(state.elapsedSeconds)) else String.format(
-            Locale.ROOT,
-            "%3d km/h   ·   %d/6   ·   Tour %d/%d   ·   %02d:%04.1f",
-            state.speedKmh,
-            state.position,
-            state.lap,
-            RaceSession.TOTAL_LAPS,
-            minutes,
-            seconds
-        )
+        hud.text = if (state.mode == PlayMode.EXPLORATION) getString(R.string.toybox_free_hud, state.speedKmh, formatTime(state.elapsedSeconds))
+        else getString(R.string.toybox_race_hud, state.speedKmh, state.position, state.lap, RaceSession.TOTAL_LAPS, formatTime(state.elapsedSeconds))
         val racing = state.mode == PlayMode.RACE
         difficultyButton.isEnabled = !racing || state.racePhase == RacePhase.FINISHED
         difficultyButton.alpha = if (difficultyButton.isEnabled) 0.82f else 0.4f
@@ -2914,19 +2893,21 @@ class ToyboxRacersActivity : ThemedActivity() {
             showResult(state)
         }
         status.text = when {
-            racing && state.racePhase == RacePhase.COUNTDOWN -> "Prépare-toi — le départ est verrouillé"
-            racing && state.racePhase == RacePhase.FINISHED -> "Course terminée"
-            racing && state.wrongWay -> "MAUVAIS SENS — fais demi-tour"
+            racing && state.racePhase == RacePhase.COUNTDOWN -> getString(R.string.toybox_status_countdown)
+            racing && state.racePhase == RacePhase.FINISHED -> getString(R.string.toybox_status_finished)
+            racing && state.wrongWay -> getString(R.string.toybox_status_wrong_way)
             // La glisse passe avant tout le reste : ni un petit saut de dérapage
             // ni la relance en cours ne doivent remplacer la jauge de charge.
             // Charger pendant un turbo est justement le geste à encourager.
-            state.drifting -> "Ruban ${"●".repeat(state.turboLevel.coerceAtLeast(1))}${"○".repeat((3 - state.turboLevel).coerceAtLeast(0))}  ${(state.turboCharge * 100).toInt()} %  ·  relâche SAUT pour relancer"
-            state.turboBoosting -> "RUBAN TURBO !  Relance pastel"
-            state.airborne && !state.hopping -> "SAUT !  Prépare la réception"
-            state.reversing -> "MARCHE ARRIÈRE — relâche FREIN pour repartir"
+            state.drifting -> getString(R.string.toybox_status_drift,
+                "●".repeat(state.turboLevel.coerceAtLeast(1)) + "○".repeat((3 - state.turboLevel).coerceAtLeast(0)),
+                (state.turboCharge * 100).toInt())
+            state.turboBoosting -> getString(R.string.toybox_status_boost)
+            state.airborne && !state.hopping -> getString(R.string.toybox_status_airborne)
+            state.reversing -> getString(R.string.toybox_status_reversing)
             state.offRoad -> getString(if (racing) R.string.toybox_return_track else R.string.toybox_explore_hint)
             state.scene.circuit == CircuitKind.SLALOM -> getString(R.string.toybox_slalom_hint)
-            else -> "Maintiens GAZ — tiens SAUT en virage pour glisser"
+            else -> getString(R.string.toybox_status_default)
         }
     }
 
@@ -2939,20 +2920,26 @@ class ToyboxRacersActivity : ThemedActivity() {
         val best = if (newBest) state.elapsedSeconds else previousBest
         if (newBest) prefs.edit().putFloat(key, state.elapsedSeconds).apply()
         resultText.text = buildString {
-            append(positionLabel(state.finishPosition)).append(" place\n")
-            append(formatTime(state.elapsedSeconds)).append(" · ").append(state.difficulty.label)
+            append(positionLabel(state.finishPosition)).append("\n")
+            append(formatTime(state.elapsedSeconds)).append(" · ").append(getString(state.difficulty.label))
             append("\n").append(roomLabel()).append(" · ").append(circuitLabel())
-            append("\nMeilleur : ").append(formatTime(best))
-            if (newBest) append("  ★ NOUVEAU RECORD")
+            append("\n").append(getString(R.string.toybox_result_best, formatTime(best)))
+            if (newBest) append("  ").append(getString(R.string.toybox_result_new_record))
         }
         resultPanel.visibility = View.VISIBLE
     }
 
-    private fun positionLabel(position: Int) = if (position == 1) "1re" else "${position}e"
+    private fun positionLabel(position: Int) = when (position) {
+        1 -> getString(R.string.toybox_finish_first)
+        2 -> getString(R.string.toybox_finish_second)
+        3 -> getString(R.string.toybox_finish_third)
+        else -> getString(R.string.toybox_finish_other, position)
+    }
 
+    // Locale.ROOT garde le point décimal du chrono, quelle que soit la langue.
     private fun formatTime(seconds: Float): String = String.format(
         Locale.ROOT,
-        "%02d:%04.1f",
+        getString(R.string.toybox_time_format),
         seconds.toInt() / 60,
         seconds % 60f
     )
@@ -3008,7 +2995,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     }
 
     private data class EditorItemFamily(
-        val name: String,
+        @StringRes val name: Int,
         val items: List<EditorItemPreset>
     )
 
@@ -3018,7 +3005,7 @@ class ToyboxRacersActivity : ThemedActivity() {
     )
 
     private data class EditorItemPreset(
-        val name: String,
+        @StringRes val name: Int,
         val kind: ToyboxVolumeKind,
         val width: Float,
         val height: Float,
@@ -3048,9 +3035,9 @@ class ToyboxRacersActivity : ThemedActivity() {
         private const val KEY_ROOM_CIRCUIT = "house_circuit_v1_"
         private const val KEY_CURRENT_CREATION_FILE = "current_creation_file"
         private val EDITOR_GRIDS = arrayOf(
-            1f to "10cm",
-            0.1f to "1cm",
-            0.01f to "0.1cm"
+            1f to R.string.toybox_editor_grid_10cm,
+            0.1f to R.string.toybox_editor_grid_1cm,
+            0.01f to R.string.toybox_editor_grid_1mm
         )
         private const val EDITOR_DIMENSION_MIN_TICKS = 1
         private const val EDITOR_DIMENSION_MAX_SIZE = 100f
@@ -3082,28 +3069,28 @@ class ToyboxRacersActivity : ThemedActivity() {
         )
         private val EDITOR_ITEM_FAMILIES = listOf(
             EditorItemFamily(
-                "Construction",
+                R.string.toybox_family_building,
                 listOf(
-                    EditorItemPreset("Sol", ToyboxVolumeKind.FLOOR, 24f, 0.6f, 24f),
-                    EditorItemPreset("Mur", ToyboxVolumeKind.WALL, 18f, 8f, 1f),
-                    EditorItemPreset("Plafond", ToyboxVolumeKind.FLOOR, 24f, 0.5f, 24f, minimumFloorY = 8f),
-                    EditorItemPreset("Pan de toit", ToyboxVolumeKind.WALL, 28f, 0.55f, 12f, minimumFloorY = 6f, pitchDegrees = -35f),
-                    EditorItemPreset("Rambarde", ToyboxVolumeKind.RAIL, 14f, 3.2f, 0.8f)
+                    EditorItemPreset(R.string.toybox_preset_floor, ToyboxVolumeKind.FLOOR, 24f, 0.6f, 24f),
+                    EditorItemPreset(R.string.toybox_preset_wall, ToyboxVolumeKind.WALL, 18f, 8f, 1f),
+                    EditorItemPreset(R.string.toybox_preset_ceiling, ToyboxVolumeKind.FLOOR, 24f, 0.5f, 24f, minimumFloorY = 8f),
+                    EditorItemPreset(R.string.toybox_preset_roof, ToyboxVolumeKind.WALL, 28f, 0.55f, 12f, minimumFloorY = 6f, pitchDegrees = -35f),
+                    EditorItemPreset(R.string.toybox_preset_rail, ToyboxVolumeKind.RAIL, 14f, 3.2f, 0.8f)
                 )
             ),
             EditorItemFamily(
-                "Ouvertures",
+                R.string.toybox_family_openings,
                 listOf(
-                    EditorItemPreset("Porte", ToyboxVolumeKind.DOOR, 5f, 7f, 0.8f),
-                    EditorItemPreset("Fenetre", ToyboxVolumeKind.WINDOW, 6f, 4f, 0.5f, minimumFloorY = 3f)
+                    EditorItemPreset(R.string.toybox_preset_door, ToyboxVolumeKind.DOOR, 5f, 7f, 0.8f),
+                    EditorItemPreset(R.string.toybox_preset_window, ToyboxVolumeKind.WINDOW, 6f, 4f, 0.5f, minimumFloorY = 3f)
                 )
             ),
             EditorItemFamily(
-                "Circulation",
+                R.string.toybox_family_paths,
                 listOf(
-                    EditorItemPreset("Planche / rampe", ToyboxVolumeKind.RAMP, 8f, 4f, 18f),
-                    EditorItemPreset("Escalier", ToyboxVolumeKind.STAIR, 8f, 4f, 14f),
-                    EditorItemPreset("Conduit large", ToyboxVolumeKind.DUCT, 12f, 5f, 22f)
+                    EditorItemPreset(R.string.toybox_preset_ramp, ToyboxVolumeKind.RAMP, 8f, 4f, 18f),
+                    EditorItemPreset(R.string.toybox_preset_stairs, ToyboxVolumeKind.STAIR, 8f, 4f, 14f),
+                    EditorItemPreset(R.string.toybox_preset_duct, ToyboxVolumeKind.DUCT, 12f, 5f, 22f)
                 )
             )
         )

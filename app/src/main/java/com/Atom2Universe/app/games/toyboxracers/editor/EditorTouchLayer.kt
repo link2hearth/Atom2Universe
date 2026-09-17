@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.view.MotionEvent
 import android.view.View
+import com.Atom2Universe.app.R
 import kotlin.math.hypot
 
 internal class EditorTouchLayer(context: Context) : View(context) {
@@ -61,6 +62,10 @@ internal class EditorTouchLayer(context: Context) : View(context) {
         }
     }
 
+    // Lus une fois : onDraw tourne à chaque image.
+    private val moveLabel = context.getString(R.string.toybox_editor_joystick_move)
+    private val lookLabel = context.getString(R.string.toybox_editor_joystick_look)
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         handles?.invoke()?.forEachIndexed { index, point ->
@@ -69,8 +74,8 @@ internal class EditorTouchLayer(context: Context) : View(context) {
             canvas.drawCircle(point.first, point.second, resources.displayMetrics.density * 8f, knobPaint)
         }
         if (visibility == VISIBLE) postInvalidateOnAnimation()
-        if (movePointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, moveBaseX, moveBaseY, moveX, moveY, "MOVE")
-        if (lookPointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, lookBaseX, lookBaseY, lookX, lookY, "VIEW")
+        if (movePointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, moveBaseX, moveBaseY, moveX, moveY, moveLabel)
+        if (lookPointer != MotionEvent.INVALID_POINTER_ID) drawJoystick(canvas, lookBaseX, lookBaseY, lookX, lookY, lookLabel)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

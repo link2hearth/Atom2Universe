@@ -1,13 +1,15 @@
 package com.Atom2Universe.app.games.toyboxracers.game
 
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
 import kotlin.math.abs
 
-internal enum class RaceDifficulty(val label: String) {
-    RELAX("Détente"),
-    ARCADE("Arcade"),
-    CHAMPION("Champion")
+internal enum class RaceDifficulty(@StringRes val label: Int) {
+    RELAX(R.string.toybox_difficulty_relax),
+    ARCADE(R.string.toybox_difficulty_arcade),
+    CHAMPION(R.string.toybox_difficulty_champion)
 }
 
 internal enum class RacePhase { COUNTDOWN, RACING, FINISHED }

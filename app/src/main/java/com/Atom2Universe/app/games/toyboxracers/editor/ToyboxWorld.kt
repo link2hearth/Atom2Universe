@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.games.toyboxracers.editor
 
-import com.Atom2Universe.app.games.toyboxracers.track.HouseGeometry
-import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import org.json.JSONArray
@@ -10,17 +10,17 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
 
-internal enum class ToyboxVolumeKind(val label: String, val color: Int, val solidByDefault: Boolean) {
-    FLOOR("Sol", 0xFFD7E6E4.toInt(), true),
-    WALL("Mur", 0xFFD2DDED.toInt(), true),
-    DOOR("Porte", 0xFFA8D1B7.toInt(), false),
-    WINDOW("Fenetre", 0xFF9FD2E3.toInt(), false),
-    RAIL("Rambarde", 0xFFF7E7C8.toInt(), true),
-    RAMP("Rampe", 0xFFC08A55.toInt(), true),
-    STAIR("Marche", 0xFFF3E9D7.toInt(), true),
-    DUCT("Conduit", 0xFF8DA7B3.toInt(), true),
-    FURNITURE("Meuble", 0xFFDDB4C3.toInt(), true),
-    DECOR("Decor", 0xFFE8C36E.toInt(), false)
+internal enum class ToyboxVolumeKind(val color: Int, val solidByDefault: Boolean) {
+    FLOOR(0xFFD7E6E4.toInt(), true),
+    WALL(0xFFD2DDED.toInt(), true),
+    DOOR(0xFFA8D1B7.toInt(), false),
+    WINDOW(0xFF9FD2E3.toInt(), false),
+    RAIL(0xFFF7E7C8.toInt(), true),
+    RAMP(0xFFC08A55.toInt(), true),
+    STAIR(0xFFF3E9D7.toInt(), true),
+    DUCT(0xFF8DA7B3.toInt(), true),
+    FURNITURE(0xFFDDB4C3.toInt(), true),
+    DECOR(0xFFE8C36E.toInt(), false)
 }
 
 internal data class ToyboxVolume(
@@ -172,10 +172,10 @@ internal data class VolumePoint(val x: Float, val y: Float, val z: Float)
 internal data class TrackBend(val t: Float, val side: Float, val height: Float, val along: Float = 0f)
 
 /** Which edge of the ribbon a banking edit applies to: the two edges tilt independently. */
-internal enum class TrackEdge(val label: String) {
-    LEFT("Bord G"),
-    BOTH("Bords G+D"),
-    RIGHT("Bord D");
+internal enum class TrackEdge(@StringRes val label: Int) {
+    LEFT(R.string.toybox_bank_edge_left),
+    BOTH(R.string.toybox_bank_edge_both),
+    RIGHT(R.string.toybox_bank_edge_right);
 
     fun next() = when (this) {
         LEFT -> BOTH
@@ -608,10 +608,10 @@ internal data class ToyboxTrackSection(
     }
 }
 
-internal enum class ToyboxRotationAxis(val label: String) {
-    YAW("Plan"),
-    PITCH("Incl. av/ar"),
-    ROLL("Incl. g/d");
+internal enum class ToyboxRotationAxis(@StringRes val label: Int) {
+    YAW(R.string.toybox_axis_yaw),
+    PITCH(R.string.toybox_axis_pitch),
+    ROLL(R.string.toybox_axis_roll);
 
     fun next() = when (this) {
         YAW -> PITCH
@@ -723,7 +723,8 @@ internal data class ToyboxCheckpoint(
 
 internal data class ToyboxWorld(
     val version: Int = VERSION,
-    val name: String = "Circuit libre",
+    /** Nom choisi par le joueur ; vide = « circuit libre », traduit à l'affichage. */
+    val name: String = "",
     val volumes: List<ToyboxVolume> = starterVolumes(),
     val trackSections: List<ToyboxTrackSection> = starterTrackSections(),
     val checkpoints: List<ToyboxCheckpoint> = emptyList(),
@@ -748,7 +749,7 @@ internal data class ToyboxWorld(
             val decorationsJson = json.optJSONArray("decorations") ?: JSONArray()
             return ToyboxWorld(
                 version = json.optInt("version", VERSION),
-                name = json.optString("name", "Circuit libre"),
+                name = json.optString("name", ""),
                 volumes = List(volumesJson.length()) { ToyboxVolume.fromJson(volumesJson.getJSONObject(it)) },
                 trackSections = List(trackJson.length()) { ToyboxTrackSection.fromJson(trackJson.getJSONObject(it)) },
                 checkpoints = List(checkpointJson.length()) { ToyboxCheckpoint.fromJson(checkpointJson.getJSONObject(it)) },
@@ -766,72 +767,5 @@ internal data class ToyboxWorld(
             ToyboxTrackSection(103, 0f, 6f, 32f, 270f, 58f, 9f),
             ToyboxTrackSection(104, -32f, 6f, 0f, 180f, 58f, 9f, endY = 0.05f)
         )
-
-        fun builtInWorlds(): List<ToyboxWorld> = listOf(
-            ToyboxWorld(
-                name = "Maison complete 3 etages",
-                volumes = completeHouseVolumes(),
-                trackSections = emptyList(),
-                decorations = completeHouseDecorations()
-            ),
-            ToyboxWorld(name = "Maison tablette", volumes = starterVolumes(), trackSections = starterTrackSections())
-        )
-
-        private fun completeHouseVolumes(): List<ToyboxVolume> {
-            var nextId = 10_000L
-            fun RoomBox.toVolume(kind: ToyboxVolumeKind) = ToyboxVolume(
-                id = nextId++,
-                kind = kind,
-                x = x,
-                y = y,
-                z = z,
-                width = width,
-                height = height,
-                depth = depth,
-                solid = kind.solidByDefault,
-                color = 0xFF000000.toInt() or (color and 0x00FFFFFF)
-            )
-            val floors = HouseGeometry.floorBoxes().map { it.toVolume(ToyboxVolumeKind.FLOOR) }
-            val walls = HouseGeometry.wallBoxes().map { box ->
-                box.toVolume(if (box.height <= 5f) ToyboxVolumeKind.RAIL else ToyboxVolumeKind.WALL)
-            }
-            val furniture = HouseGeometry.furnitureBoxes().map { box ->
-                box.toVolume(classifyHouseBox(box))
-            }
-            return floors + walls + furniture
-        }
-
-        private fun classifyHouseBox(box: RoomBox): ToyboxVolumeKind {
-            val color = box.color and 0x00FFFFFF
-            val thin = box.width <= 1.2f || box.depth <= 1.2f
-            return when {
-                box.height <= 1.2f -> ToyboxVolumeKind.FLOOR
-                color == 0x9FD2E3 -> ToyboxVolumeKind.WINDOW
-                color == 0xA8D1B7 && thin && box.height >= 12f -> ToyboxVolumeKind.DOOR
-                color == 0x8DA7B3 || color == 0xE6EEF2 -> ToyboxVolumeKind.DUCT
-                color == 0xC08A55 || color == 0xD6A46E || color == 0xA7B9C6 -> ToyboxVolumeKind.RAMP
-                color == 0xF3E9D7 && box.height <= 1.2f && box.depth <= 4f -> ToyboxVolumeKind.STAIR
-                color == 0xF7E7C8 || color == 0xC79A5A || color == 0xB57F4A -> ToyboxVolumeKind.RAIL
-                !box.isSolidDecor() -> ToyboxVolumeKind.DECOR
-                else -> ToyboxVolumeKind.FURNITURE
-            }
-        }
-
-        private fun RoomBox.isSolidDecor(): Boolean =
-            width >= 1f && height >= 0.5f && depth >= 1f
-
-        private fun completeHouseDecorations(): List<ToyboxDecor> =
-            HouseGeometry.furnitureDecorations().mapIndexed { index, placement ->
-                ToyboxDecor(
-                    id = 20_000L + index,
-                    modelId = placement.model.id,
-                    x = placement.x,
-                    y = placement.y,
-                    z = placement.z,
-                    quarterTurns = placement.quarterTurns,
-                    scale = placement.scale,
-                    yawDegrees = placement.yawDegrees
-                )
-            }
     }
 }

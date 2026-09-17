@@ -105,9 +105,11 @@ internal class ToyboxWorldStore(private val context: Context) {
         return true
     }
 
-    fun duplicateCreation(file: File): File? {
+    /** [copyName] reçoit le nom d'origine et rend celui de la copie, traduit par l'appelant. */
+    fun duplicateCreation(file: File, copyName: (String) -> String): File? {
         val world = loadCreation(file) ?: return null
-        return saveCreation(world, "${world.name}_copie")
+        val name = copyName(world.name)
+        return saveCreation(world.copy(name = name), name)
     }
 
     fun renameCreation(file: File, name: String): File? {

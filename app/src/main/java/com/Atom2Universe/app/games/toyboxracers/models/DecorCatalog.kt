@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.toyboxracers.models
 
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPalette.BLUE
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPalette.CREAM
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPalette.DARK
@@ -273,5 +274,62 @@ internal object DecorCatalog {
     }
     private val byId by lazy { all.associateBy { it.id } }
     fun forRoom(room: DecorRoom): List<DecorModel> = all.filter { it.room == room }
+    /** Noms affichés des meubles de base ; les jouets kawaii ont leur propre table. */
+    val names = mapOf(
+        "bathroom.bathtub" to R.string.toybox_decor_bathroom_bathtub,
+        "bathroom.laundry_basket" to R.string.toybox_decor_bathroom_laundry_basket,
+        "bathroom.mirror" to R.string.toybox_decor_bathroom_mirror,
+        "bathroom.shower" to R.string.toybox_decor_bathroom_shower,
+        "bathroom.toilet" to R.string.toybox_decor_bathroom_toilet,
+        "bathroom.toilet_paper" to R.string.toybox_decor_bathroom_toilet_paper,
+        "bathroom.towel_rack" to R.string.toybox_decor_bathroom_towel_rack,
+        "bathroom.vanity" to R.string.toybox_decor_bathroom_vanity,
+        "bathroom.washer" to R.string.toybox_decor_bathroom_washer,
+        "bedroom.double_bed" to R.string.toybox_decor_bedroom_double_bed,
+        "bedroom.nightstand" to R.string.toybox_decor_bedroom_nightstand,
+        "bedroom.table_lamp" to R.string.toybox_decor_bedroom_table_lamp,
+        "bedroom.wardrobe" to R.string.toybox_decor_bedroom_wardrobe,
+        "garage.barrier" to R.string.toybox_decor_garage_barrier,
+        "garage.cone" to R.string.toybox_decor_garage_cone,
+        "garage.crate" to R.string.toybox_decor_garage_crate,
+        "garage.storage_rack" to R.string.toybox_decor_garage_storage_rack,
+        "garage.tires" to R.string.toybox_decor_garage_tires,
+        "garage.tool_chest" to R.string.toybox_decor_garage_tool_chest,
+        "garage.toolbox" to R.string.toybox_decor_garage_toolbox,
+        "garage.workbench" to R.string.toybox_decor_garage_workbench,
+        "kitchen.counter" to R.string.toybox_decor_kitchen_counter,
+        "kitchen.fridge" to R.string.toybox_decor_kitchen_fridge,
+        "kitchen.fruit_bowl" to R.string.toybox_decor_kitchen_fruit_bowl,
+        "kitchen.island" to R.string.toybox_decor_kitchen_island,
+        "kitchen.kettle" to R.string.toybox_decor_kitchen_kettle,
+        "kitchen.microwave" to R.string.toybox_decor_kitchen_microwave,
+        "kitchen.oven" to R.string.toybox_decor_kitchen_oven,
+        "kitchen.sink" to R.string.toybox_decor_kitchen_sink,
+        "kitchen.toaster" to R.string.toybox_decor_kitchen_toaster,
+        "living.armchair" to R.string.toybox_decor_living_armchair,
+        "living.books" to R.string.toybox_decor_living_books,
+        "living.coffee_table" to R.string.toybox_decor_living_coffee_table,
+        "living.dining_chair" to R.string.toybox_decor_living_dining_chair,
+        "living.dining_table" to R.string.toybox_decor_living_dining_table,
+        "living.floor_lamp" to R.string.toybox_decor_living_floor_lamp,
+        "living.plant" to R.string.toybox_decor_living_plant,
+        "living.sofa" to R.string.toybox_decor_living_sofa,
+        "living.tv_cabinet" to R.string.toybox_decor_living_tv_cabinet,
+        "office.computer" to R.string.toybox_decor_office_computer,
+        "office.dresser" to R.string.toybox_decor_office_dresser,
+        "office.exercise_bike" to R.string.toybox_decor_office_exercise_bike,
+        "office.pc_tower" to R.string.toybox_decor_office_pc_tower,
+        "office.shelf_ladder" to R.string.toybox_decor_office_shelf_ladder,
+        "outdoor.bench" to R.string.toybox_decor_outdoor_bench,
+        "outdoor.family_car" to R.string.toybox_decor_outdoor_family_car,
+        "outdoor.fence" to R.string.toybox_decor_outdoor_fence,
+        "outdoor.garage_door" to R.string.toybox_decor_outdoor_garage_door,
+        "outdoor.hedge" to R.string.toybox_decor_outdoor_hedge,
+        "outdoor.house" to R.string.toybox_decor_outdoor_house,
+        "outdoor.mailbox" to R.string.toybox_decor_outdoor_mailbox,
+        "outdoor.planter" to R.string.toybox_decor_outdoor_planter,
+        "outdoor.porch" to R.string.toybox_decor_outdoor_porch,
+        "outdoor.tree" to R.string.toybox_decor_outdoor_tree
+    )
     operator fun get(id: String): DecorModel = requireNotNull(byId[id]) { "Unknown decor: $id" }
 }

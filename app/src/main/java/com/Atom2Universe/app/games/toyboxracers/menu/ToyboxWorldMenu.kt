@@ -23,8 +23,7 @@ import com.Atom2Universe.app.games.toyboxracers.track.HousePlan
 import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
 import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.text.DateFormat
 
 /** Ce que le menu unifié a besoin de lire et de déclencher sur l'activité de
  * jeu, sans connaître ses champs privés. L'activité implémente cette
@@ -70,6 +69,8 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
 
     private fun str(resId: Int) = activity.getString(resId)
     private fun str(resId: Int, vararg args: Any) = activity.getString(resId, *args)
+    /** Un monde sans nom est un circuit libre : son nom se traduit à l'affichage. */
+    private fun worldName(name: String) = name.ifBlank { str(R.string.toybox_menu_free_world_name) }
     private fun dp(value: Int) = (value * activity.resources.displayMetrics.density).toInt()
 
     private fun rowBackground() = GradientDrawable().apply {
@@ -141,7 +142,7 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
     private fun showNamePrompt() {
         val builder = host.dialogBuilder()
         val input = EditText(builder.context).apply {
-            setText(host.currentEditorWorldName())
+            setText(worldName(host.currentEditorWorldName()))
             selectAll()
         }
         val dialog = builder
@@ -179,8 +180,8 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             .create()
         activeDialog = dialog
 
-        list.addView(sectionHeader("Nouveau"))
-        list.addView(loadRow("Nouveau circuit libre", "Piste editable propre") {
+        list.addView(sectionHeader(str(R.string.toybox_menu_new_section)))
+        list.addView(loadRow(str(R.string.toybox_menu_new_free), str(R.string.toybox_menu_new_free_sub)) {
             dialog.dismiss()
             host.loadCustomWorld(ToyboxWorld(), null)
         })
@@ -204,11 +205,11 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
                 setPadding(dp(4), dp(4), dp(4), dp(8))
             })
         } else {
-            val stamp = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+            val stamp = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
             creations.forEach { file ->
                 val world = host.worldStore.loadCreation(file)
-                val label = world?.name ?: file.nameWithoutExtension
-                val details = "${stamp.format(file.lastModified())}  |  ${world?.trackSections?.size ?: 0} sections"
+                val label = world?.name?.let(::worldName) ?: file.nameWithoutExtension
+                val details = str(R.string.toybox_menu_creation_details, stamp.format(file.lastModified()), world?.trackSections?.size ?: 0)
                 list.addView(loadRow(label, details, onLongClick = {
                     showCreationActions(file)
                     true
@@ -266,14 +267,14 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
 
     private fun showCreationActions(file: File) {
         val world = host.worldStore.loadCreation(file)
-        val title = world?.name ?: file.nameWithoutExtension
+        val title = world?.name?.let(::worldName) ?: file.nameWithoutExtension
         host.dialogBuilder()
             .setTitle(title)
-            .setItems(arrayOf("Dupliquer", "Renommer", "Supprimer")) { _, which ->
+            .setItems(arrayOf(str(R.string.toybox_menu_duplicate), str(R.string.toybox_menu_rename), str(R.string.toybox_menu_delete))) { _, which ->
                 when (which) {
                     0 -> {
-                        host.worldStore.duplicateCreation(file)
-                        Toast.makeText(activity, "Creation dupliquee", Toast.LENGTH_SHORT).show()
+                        host.worldStore.duplicateCreation(file) { str(R.string.toybox_menu_copy_name, worldName(it)) }
+                        Toast.makeText(activity, str(R.string.toybox_menu_duplicated), Toast.LENGTH_SHORT).show()
                         showLoad()
                     }
                     1 -> showRenameCreation(file, title)
@@ -293,7 +294,7 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             selectAll()
         }
         val dialog = builder
-            .setTitle("Renommer")
+            .setTitle(R.string.toybox_menu_rename)
             .setView(input)
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel) { _, _ -> showLoad() }
@@ -304,7 +305,7 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val name = input.text.toString().trim().ifBlank { currentName }
                 host.worldStore.renameCreation(file, name)
-                Toast.makeText(activity, "Creation renommee", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, str(R.string.toybox_menu_renamed), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
                 showLoad()
             }
@@ -314,11 +315,11 @@ internal class ToyboxWorldMenu(private val activity: Activity, private val host:
 
     private fun confirmDeleteCreation(file: File, name: String) {
         host.dialogBuilder()
-            .setTitle("Supprimer")
-            .setMessage("Supprimer \"$name\" ?")
-            .setPositiveButton("Supprimer") { _, _ ->
+            .setTitle(R.string.toybox_menu_delete)
+            .setMessage(str(R.string.toybox_menu_delete_confirm, name))
+            .setPositiveButton(R.string.toybox_menu_delete) { _, _ ->
                 host.worldStore.deleteCreation(file)
-                Toast.makeText(activity, "Creation supprimee", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, str(R.string.toybox_menu_deleted), Toast.LENGTH_SHORT).show()
                 showLoad()
             }
             .setNegativeButton(android.R.string.cancel) { _, _ -> showLoad() }
