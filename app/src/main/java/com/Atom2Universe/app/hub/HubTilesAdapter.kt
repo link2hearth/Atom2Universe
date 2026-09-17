@@ -131,6 +131,20 @@ class HubTilesAdapter(
         }
     }
 
+    /**
+     * Pastille posee sur un raccourci de la tuile plutot que sur la tuile : elle ne se voit que si
+     * ce raccourci y est epingle.
+     */
+    fun setQuickAccessNotificationCount(tileId: String, activityClassName: String, count: Int) {
+        val index = tiles.indexOfFirst { it.id == tileId }
+        if (index == -1) return
+        val current = tiles[index].quickAccessNotifications
+        if ((current[activityClassName] ?: 0) == count) return
+        tiles[index].quickAccessNotifications =
+            if (count > 0) current + (activityClassName to count) else current - activityClassName
+        notifyItemChanged(index)
+    }
+
     fun updateQuickAccess(tileId: String, items: List<QuickAccessItem>) {
         val index = tiles.indexOfFirst { it.id == tileId }
         if (index != -1) {
@@ -364,15 +378,36 @@ class HubTilesAdapter(
                             badge.text = HubTileArtworks.titleCase(
                                 badgeLabel, context.resources.configuration.locales[0])
                         }
+                        bindQuickAccessNotification(badge, tile.quickAccessNotifications[item.activityClassName] ?: 0)
                     } else {
                         badge.visibility = View.GONE
                         badge.setOnClickListener(null)
+                        bindQuickAccessNotification(badge, 0)
                     }
                 }
             } else {
                 quickAccessContainer?.visibility = View.GONE
-                badges.forEach { it?.visibility = View.GONE }
+                badges.filterNotNull().forEach {
+                    it.visibility = View.GONE
+                    bindQuickAccessNotification(it, 0)
+                }
             }
+        }
+
+        /**
+         * La pastille d'un raccourci est dessinee par-dessus lui (foreground) : pas de vue en plus
+         * dans les deux mises en page, et elle suit le raccourci quelle que soit sa taille. Comme
+         * celle de la tuile, elle se cache en mode edition.
+         */
+        private fun bindQuickAccessNotification(badge: TextView, count: Int) {
+            if (count <= 0 || isEditMode) {
+                badge.foreground = null
+                badge.contentDescription = null
+                return
+            }
+            badge.foreground = CountBadgeDrawable(if (count > 99) "99+" else count.toString(),
+                context.resources.displayMetrics.density)
+            badge.contentDescription = "${badge.text}, " + context.getString(R.string.hub_tile_ready_badge, count)
         }
 
         /** Meme arrondi que quick_access_badge_bg : le dessin est rogne a la forme du badge. */
@@ -507,4 +542,36 @@ class HubTileTouchCallback(
             viewHolder?.itemView?.alpha = 0.8f
         }
     }
+}
+
+/**
+ * La pastille rouge des tuiles (hub_notification_badge_bg), dessinee dans le coin haut-droit d'un
+ * raccourci : rouge cercle de blanc, avec le compte en blanc.
+ */
+private class CountBadgeDrawable(private val label: String, private val density: Float) : Drawable() {
+    private val fill = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFE53935.toInt() }
+    private val stroke = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE; style = android.graphics.Paint.Style.STROKE; strokeWidth = 1.5f * density
+    }
+    private val text = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE; textSize = 10f * density; textAlign = android.graphics.Paint.Align.CENTER
+        typeface = android.graphics.Typeface.DEFAULT_BOLD
+    }
+    private val rect = android.graphics.RectF()
+
+    override fun draw(canvas: android.graphics.Canvas) {
+        val height = 16f * density
+        val width = maxOf(height, text.measureText(label) + 8f * density)
+        val inset = 2f * density
+        rect.set(bounds.right - inset - width, bounds.top + inset, bounds.right - inset, bounds.top + inset + height)
+        val radius = height / 2f
+        canvas.drawRoundRect(rect, radius, radius, fill)
+        canvas.drawRoundRect(rect, radius, radius, stroke)
+        canvas.drawText(label, rect.centerX(), rect.centerY() - (text.ascent() + text.descent()) / 2f, text)
+    }
+
+    override fun setAlpha(alpha: Int) {}
+    override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {}
+    @Deprecated("Deprecated in Java")
+    override fun getOpacity() = android.graphics.PixelFormat.TRANSLUCENT
 }

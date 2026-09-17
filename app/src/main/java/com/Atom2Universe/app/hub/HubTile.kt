@@ -31,5 +31,10 @@ data class HubTile(
      * Pastille de notification : 0 = rien a signaler. C'est le hub qui la remplit, la tuile ne
      * sait pas ce qu'elle compte (recoltes pretes, etc.), et rien n'en est sauvegarde.
      */
-    var notificationCount: Int = 0
+    var notificationCount: Int = 0,
+    /**
+     * Meme pastille, mais pour un raccourci pose sur la tuile, range par nom de classe de l'activite
+     * visee : c'est le raccourci qui la porte, pas la tuile entiere.
+     */
+    var quickAccessNotifications: Map<String, Int> = emptyMap()
 )

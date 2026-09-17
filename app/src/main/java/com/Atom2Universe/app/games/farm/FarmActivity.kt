@@ -628,27 +628,24 @@ class FarmActivity : ThemedActivity() {
                     purchases.add(buy to cost)
                     body.addView(buy, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(16) })
                 }
-            } else FarmCrop.ladder.forEach { crop ->
+            } else FarmCrop.ladder.filter { state.cropUnlocked(it) }.sortedWith(dearestFirst).forEach { crop ->
                 body.addView(seedRow(crop), LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
             }
         }
     }
-    /** One shop line. Locked rungs stay visible: seeing the next seed is what a parcel really sells. */
+    /** The shop and the seed bag both list the dearest seed first, so the newest crop sits on top. */
+    private val dearestFirst = compareByDescending<FarmCrop> { it.cost }.thenByDescending { it.rank }
+
+    /** One shop line. Only unlocked seeds reach the shop; the next one is announced on its parcel sign. */
     private fun seedRow(crop: FarmCrop): LinearLayout {
-        val open = state.cropUnlocked(crop)
         val row = LinearLayout(this).apply {
             gravity = Gravity.CENTER_VERTICAL; background = rounded(Color.rgb(247, 238, 211), 16)
-            setPadding(dp(6), dp(8), dp(8), dp(8)); alpha = if (open) 1f else .55f
+            setPadding(dp(6), dp(8), dp(8), dp(8))
         }
         row.addView(preview(crop), LinearLayout.LayoutParams(dp(66), dp(80)))
         val details = column().apply { setPadding(dp(10), 0, 0, 0) }
         details.addView(text(getString(crop.label), 16, true))
         details.addView(text(getString(R.string.farm_shop_details, duration(crop.seconds), money(crop.sale), perHour(crop)), 12))
-        if (!open) {
-            details.addView(text(getString(R.string.farm_crop_locked, crop.rank), 13, true))
-            row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
-            return row
-        }
         val count = text("", 12)
         stockLabels.add(count to crop); details.addView(count)
         val buy = LinearLayout(this)
@@ -674,7 +671,7 @@ class FarmActivity : ThemedActivity() {
     private fun inventory() {
         if (world.region == FarmRegion.LIVESTOCK) { livestockShop(); return }
         showBubble(getString(R.string.farm_inventory)) { body ->
-            val available = FarmCrop.entries.filter { state.seeds[it.ordinal] > 0 }
+            val available = FarmCrop.entries.filter { state.seeds[it.ordinal] > 0 }.sortedWith(dearestFirst)
             if (available.isEmpty()) body.addView(text(getString(R.string.farm_inventory_empty)).apply { setPadding(dp(8), dp(12), dp(8), dp(12)) })
             available.forEach { crop ->
                 val current = crop == state.selected
