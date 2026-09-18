@@ -12,9 +12,10 @@ import org.json.JSONObject
  * avoids by going through [FarmState] rather than re-reading the save.
  *
  * Around that opaque blob sits only what sharing needs:
- * - [seq] is the cloud version number, raised by one at every upload. Comparing it with the
- *   number a device last saw is what tells "nobody played elsewhere" from "someone did". A
- *   date could not do that job: two devices whose clocks disagree would order themselves wrong.
+ * - [seq] is the cloud version number, a new one at every upload. Comparing it with the number
+ *   a device last saw is what tells "nobody played elsewhere" from "someone did". It is only
+ *   ever compared for equality, never used to order two farms: two devices whose clocks
+ *   disagree would order themselves wrong.
  * - [format] is the save version inside [state], checked before anything is applied.
  * - [savedAt] and [deviceName] are shown when the player has to choose between two farms.
  *   They describe, they never decide.

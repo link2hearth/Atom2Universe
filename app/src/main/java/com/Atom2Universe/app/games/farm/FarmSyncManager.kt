@@ -3,23 +3,34 @@ package com.Atom2Universe.app.games.farm
 import android.content.Context
 import android.util.Log
 import androidx.core.content.edit
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.Atom2Universe.app.crypto.sync.SharedGameStats
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
+import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient.ReadResult
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
 
 /**
- * The farm on Drive: downloaded when the game opens, published when it closes.
+ * The farm on Drive: downloaded when the game opens, published once it closes.
  *
  * Nothing pushes. `appDataFolder` is a drawer, not a server: it never wakes another device and
  * never announces a change. A device learns that another one played only by going to look, and
  * the moment to look is the opening of the game - right when the answer matters.
+ *
+ * Publishing, on the other hand, does not have to happen on the spot. Closing the game hands the
+ * job to WorkManager ([FarmUploadWorker]), which waits for a network, survives the app being
+ * killed, and tries again after a failure. The farm is safe on disk the whole time; only the cloud
+ * lags behind.
  *
  * That is also why the farm gets its own file rather than a slot inside `games_state.json`: the
  * clicker changes every second and is synced on demand, the farm changes in bursts and is synced
@@ -45,10 +56,16 @@ object FarmSyncManager {
     private const val KEY_BASE_SEQ = "base_seq"
     private const val KEY_SENT_HASH = "sent_hash"
 
-    /** The upload outlives the activity that asked for it, so it cannot hang on its scope. */
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    /** One pending upload at most: it reads the disk when it runs, so it always sends the latest farm. */
+    private const val UPLOAD_WORK = "farm_upload"
 
-    /** Opening and closing must never overlap - two farms would race for the same file. */
+    /**
+     * Rounds of sending in one job. A second round only happens when the farm was saved again
+     * while the first was on its way; the cap is there so a job can never keep the lock forever.
+     */
+    private const val MAX_ROUNDS = 3
+
+    /** Opening, choosing and publishing must never overlap - two farms would race for one file. */
     private val lock = Mutex()
 
     sealed class OpenResult {
@@ -60,6 +77,17 @@ object FarmSyncManager {
 
         /** Both sides moved on. Only the player can say which farm is the real one. */
         data class Conflict(val local: FarmSyncFile, val remote: FarmSyncFile) : OpenResult()
+    }
+
+    /** What one upload attempt came to. Only [FAILED] is worth trying again. */
+    enum class UploadOutcome {
+        /** The cloud already has this farm, or there is no farm here, or nobody is signed in. */
+        NOTHING_NEW,
+        SENT,
+        /** The cloud moved on while we played. Settled by the player at the next opening. */
+        DEFERRED,
+        /** Drive did not answer, or refused the write. */
+        FAILED
     }
 
     // ─── Ouverture du jeu ─────────────────────────────────────────────────────
@@ -76,12 +104,17 @@ object FarmSyncManager {
             lock.withLock {
                 val app = context.applicationContext
                 val client = driveClient(app) ?: return@withLock OpenResult.Idle
-                val remote = client.readJsonFile(SYNC_FILE)?.let { FarmSyncFile.fromJson(it) }
+                val remote = when (val read = client.readJsonFileChecked(SYNC_FILE)) {
+                    // No answer is not an empty cloud. Play on the farm we have; nothing is decided.
+                    ReadResult.Failed -> return@withLock OpenResult.Idle
+                    ReadResult.NotFound -> null
+                    is ReadResult.Found -> FarmSyncFile.fromJson(read.content)
+                }
                 if (remote == null) {
-                    // Drive answers null both for "no such file" and for a request that failed.
-                    // Publishing over a farm we merely failed to read would erase it, so we only
-                    // seed the cloud when this device has never exchanged anything at all.
-                    if (prefs(app).getLong(KEY_BASE_SEQ, 0L) == 0L) upload(app, client)
+                    // Nothing usable up there: never published, or wiped from the cloud screen,
+                    // whose warning promises that this device republishes what it holds. Ours is
+                    // then the only copy, so it goes up - through the job, which retries if needed.
+                    scheduleUpload(app)
                     return@withLock OpenResult.Idle
                 }
                 if (remote.format > FarmState.MAX_SAVE_VERSION) {
@@ -126,55 +159,105 @@ object FarmSyncManager {
 
     // ─── Fermeture du jeu ─────────────────────────────────────────────────────
 
-    /** Called as the farm leaves the screen. Fire and forget: it must survive the activity. */
-    fun onFarmClosed(context: Context) {
-        val app = context.applicationContext
-        scope.launch {
-            lock.withLock {
-                val client = driveClient(app) ?: return@withLock
-                upload(app, client)
+    /** Called as the farm leaves the screen. The work itself happens in [FarmUploadWorker]. */
+    fun onFarmClosed(context: Context) = scheduleUpload(context.applicationContext)
+
+    /**
+     * Queues the upload for whenever a network is there.
+     *
+     * KEEP, not REPLACE. A job already waiting reads the disk when it finally runs, so it will send
+     * this session too - replacing it would gain nothing. And replacing a job that is running
+     * cancels it, possibly between the moment Drive took the file and the moment we wrote down
+     * that it did.
+     */
+    private fun scheduleUpload(context: Context) {
+        val request = OneTimeWorkRequestBuilder<FarmUploadWorker>()
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .build()
+        WorkManager.getInstance(context).enqueueUniqueWork(UPLOAD_WORK, ExistingWorkPolicy.KEEP, request)
+    }
+
+    /**
+     * The job's entry point.
+     *
+     * It goes round again after a successful send: a farm saved while the first round was on its
+     * way would otherwise wait for the next closing, because a job that is running does not take
+     * a second one queued behind it.
+     */
+    suspend fun uploadPending(context: Context): UploadOutcome = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val app = context.applicationContext
+            val client = driveClient(app) ?: return@withLock UploadOutcome.NOTHING_NEW
+            var outcome = upload(app, client)
+            var rounds = 1
+            while (outcome == UploadOutcome.SENT && rounds < MAX_ROUNDS) {
+                val again = upload(app, client)
+                if (again == UploadOutcome.NOTHING_NEW) break
+                outcome = again
+                rounds++
             }
+            outcome
         }
     }
 
     /** Publishes the local farm, unless there is nothing new or someone got there first. */
-    private suspend fun upload(context: Context, client: GoogleDriveAppDataClient) {
-        val local = localState(context) ?: return
+    private suspend fun upload(context: Context, client: GoogleDriveAppDataClient): UploadOutcome {
+        val local = localState(context) ?: return UploadOutcome.NOTHING_NEW
         val prefs = prefs(context)
         val fingerprint = local.fingerprint()
-        if (fingerprint == prefs.getString(KEY_SENT_HASH, null)) return
+        if (fingerprint == prefs.getString(KEY_SENT_HASH, null)) return UploadOutcome.NOTHING_NEW
 
         val base = prefs.getLong(KEY_BASE_SEQ, 0L)
-        val remote = client.readJsonFile(SYNC_FILE)?.let { FarmSyncFile.fromJson(it) }
-        // Two reasons not to write, and the same answer to both: say nothing. The local farm stays
-        // unsent, so the next opening turns the situation into a question the player can settle.
-        //  - the cloud moved on while we played: ours is no longer a continuation of it, and
-        //    overwriting would erase a whole session;
-        //  - we have a version behind us but cannot read the file: null means "not found" and
-        //    "request failed" alike, and only one of those makes overwriting safe.
-        if (remote == null && base != 0L) {
-            Log.d(TAG, "Cloud farm unreadable while we held version $base - upload deferred")
-            return
-        }
-        if (remote != null && remote.seq != base) {
-            Log.d(TAG, "Cloud moved to ${remote.seq} while we played on $base - upload deferred")
-            return
+        when (val read = client.readJsonFileChecked(SYNC_FILE)) {
+            // We cannot know what is up there, so we write nothing. The job tries again later.
+            ReadResult.Failed -> return UploadOutcome.FAILED
+            // An empty cloud, or one wiped from the cloud screen: ours is the only copy.
+            ReadResult.NotFound -> Unit
+            is ReadResult.Found -> {
+                val remote = FarmSyncFile.fromJson(read.content)
+                if (remote != null && remote.seq != base) {
+                    // Someone published while we were playing. Ours is no longer a continuation of
+                    // the cloud farm, and writing over it would erase a whole session. We stay
+                    // quiet: the local farm remains unsent, and the next opening turns the mess
+                    // into a question the player can settle.
+                    Log.d(TAG, "Cloud moved to ${remote.seq} while we played on $base - upload deferred")
+                    return UploadOutcome.DEFERRED
+                }
+            }
         }
         val next = FarmSyncFile(
-            seq        = base + 1,
+            seq        = nextSeq(base),
             format     = FarmSyncFile.formatOf(local),
             savedAt    = System.currentTimeMillis(),
             deviceName = SharedGameStats.deviceName(context),
             state      = local
         )
-        if (client.writeJsonFile(SYNC_FILE, next.toJson())) {
+        // Sending and writing down that we sent are one act. If WorkManager stops the job in
+        // between - the network drops, the constraint fails - Drive would hold our farm under a
+        // number this device never recorded, and the next opening would ask the player to choose
+        // between their farm and itself.
+        return withContext(NonCancellable) {
+            if (!client.writeJsonFile(SYNC_FILE, next.toJson())) return@withContext UploadOutcome.FAILED
             prefs.edit {
                 putLong(KEY_BASE_SEQ, next.seq)
                 putString(KEY_SENT_HASH, fingerprint)
             }
             Log.d(TAG, "Farm published as version ${next.seq} (${local.length / 1024} kB)")
+            UploadOutcome.SENT
         }
     }
+
+    /**
+     * A number no device has used before.
+     *
+     * Versions are only ever compared for equality, never ordered, so what matters is that one
+     * never comes back. A plain +1 would restart at 1 after the cloud is wiped, and could land on a
+     * number another device still holds as its base - that device would then take a new farm for
+     * the one it already has. A clock value cannot collide that way; the max keeps it moving
+     * forward on a device whose clock was set back.
+     */
+    private fun nextSeq(base: Long): Long = maxOf(base + 1, System.currentTimeMillis())
 
     // ─── Outils ───────────────────────────────────────────────────────────────
 
@@ -205,8 +288,8 @@ object FarmSyncManager {
             .getString(FarmState.KEY_STATE, null)
 
     /**
-     * Enough to tell two farms apart without keeping a second copy of a sixty-kilobyte save in the
-     * preferences. Length and hash together: a hash alone collides once in four billion, and a
+     * Enough to tell two farms apart without keeping a second copy of a hundred-kilobyte save in
+     * the preferences. Length and hash together: a hash alone collides once in four billion, and a
      * collision here would silently skip one upload.
      */
     private fun String.fingerprint(): String = "$length:${hashCode()}"

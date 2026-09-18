@@ -12,6 +12,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -83,6 +84,40 @@ class GoogleDriveAppDataClient(
         } catch (e: Exception) {
             Log.e(TAG, "Error reading $filename", e)
             null
+        }
+    }
+
+    /** What a checked read found: the file, no file at all, or no answer from Drive. */
+    sealed class ReadResult {
+        data class Found(val content: String) : ReadResult()
+        data object NotFound : ReadResult()
+        data object Failed : ReadResult()
+    }
+
+    /**
+     * Like [readJsonFile], but tells "this file does not exist" from "Drive did not answer".
+     *
+     * [readJsonFile] folds both into null, which is harmless for a module that only reads. It is
+     * not for one that writes afterwards: taking a failed read for an empty cloud means publishing
+     * over a file nobody looked at.
+     */
+    suspend fun readJsonFileChecked(filename: String): ReadResult = withContext(Dispatchers.IO) {
+        try {
+            val file = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id, name)")
+                .execute()
+                .files.firstOrNull()
+                ?: return@withContext ReadResult.NotFound
+            val outputStream = ByteArrayOutputStream()
+            driveService.files().get(file.id).executeMediaAndDownloadTo(outputStream)
+            ReadResult.Found(outputStream.toString("UTF-8"))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading $filename", e)
+            ReadResult.Failed
         }
     }
 
