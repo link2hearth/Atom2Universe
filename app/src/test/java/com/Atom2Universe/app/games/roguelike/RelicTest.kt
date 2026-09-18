@@ -41,7 +41,7 @@ class RelicTest {
     @Test
     fun laGlaceFigeSiLeJetEstRate() {
         val c = fightWith(Relic.ICE_SHARD, d20 = 1)
-        val hit = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
+        val hit = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
         assertFalse(hit.save!!.saved)
         val turn = enemyTurn(c)
         assertTrue(turn.attackers.isEmpty())
@@ -54,7 +54,7 @@ class RelicTest {
     @Test
     fun laGlaceNeFigePasSiLeJetEstReussi() {
         val c = fightWith(Relic.ICE_SHARD, d20 = 20)
-        assertTrue(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).save!!.saved)
+        assertTrue(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save!!.saved)
         assertEquals(listOf(0), c.startEnemyTurn().attackers)
     }
 
@@ -65,7 +65,7 @@ class RelicTest {
         val hero = Hero.starter().apply { addRelic(Relic.ICE_SHARD) }
         val c = Combat(hero, 1, listOf(Enemy(MonsterType.RAT, 1000, 3, 1, 1)), ambush = false,
             rng = Random(1), d20 = { dice.removeFirst() })
-        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.PERFECT).save!!
+        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.PERFECT).main!!.save!!
         assertTrue(save.disadvantage)
         assertEquals(1, save.roll)
         assertFalse(save.saved)
@@ -73,8 +73,8 @@ class RelicTest {
 
     @Test
     fun unSwipeBienMonteLeDD() {
-        val normal = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.MISS).save!!
-        val good = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.GOOD).save!!
+        val normal = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save!!
+        val good = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.GOOD).main!!.save!!
         assertEquals(normal.dc + SpellSave.GOOD_STRIKE_DC, good.dc)
         assertFalse(good.disadvantage)
     }
@@ -136,11 +136,11 @@ class RelicTest {
         c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
         enemyTurn(c)
         c.relicCooldowns.clear()                               // comme si la SAG avait tout rechargé
-        val second = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
+        val second = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
         assertTrue("2e gel d'affilée : il enrage", second.enraged)
         enemyTurn(c)
         c.relicCooldowns.clear()
-        val third = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
+        val third = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
         assertEquals(SaveReason.RAGE, third.save!!.reason)
         assertTrue(third.save!!.saved)
     }
@@ -154,7 +154,7 @@ class RelicTest {
         enemyTurn(c)                                           // il frappe : la série repart de zéro
         assertEquals(0, c.enemies[0].controlStreak)
         c.relicCooldowns.clear()
-        assertFalse(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).enraged)
+        assertFalse(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.enraged)
     }
 
     @Test
@@ -172,7 +172,7 @@ class RelicTest {
     @Test
     fun unImmuniseNePrendNiDegatsNiEffet() {
         val c = fightWith(Relic.FIREBALL, type = MonsterType.DEMON)
-        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS)
+        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
         assertEquals(Affinity.IMMUNE, hit.affinity)
         assertEquals(0, hit.damage)
         assertEquals(0, c.enemies[0].burnTurns)
@@ -182,7 +182,7 @@ class RelicTest {
     fun unVulnerablePrendDouble() {
         val c = fightWith(Relic.FIREBALL, type = MonsterType.RAT)
         val (lo, _) = c.hero.relicDamage(Relic.FIREBALL)
-        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS)
+        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
         assertEquals(Affinity.VULNERABLE, hit.affinity)
         assertTrue(hit.damage >= 2 * lo)
     }
@@ -326,15 +326,38 @@ class RelicTest {
     fun chaqueSortVautSonBudget() {
         for (r in Relic.entries) {
             val hit = RelicBudget.hitCoef(r)
-            val effect = when (r.element) {
-                Element.FIRE      -> hit * Relic.BURN_SHARE * r.effectTurns
-                Element.ICE       -> RelicBudget.FREEZE_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
-                Element.LIGHTNING -> RelicBudget.PARALYSIS_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
-                Element.POISON    -> r.doseCoef * r.effectTurns
+            val targets = RelicBudget.targets(r)
+            // Ce que vaut l'effet sur une cible, recompté ici à partir de ce que le combat fait vraiment
+            val effect = when (r.effect) {
+                RelicEffect.NONE      -> 0f
+                RelicEffect.BURN      -> hit * Relic.BURN_SHARE * r.effectTurns
+                RelicEffect.FREEZE    -> RelicBudget.FREEZE_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
+                RelicEffect.PARALYZE  -> RelicBudget.PARALYSIS_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
+                RelicEffect.POISON    -> r.doseCoef * r.effectTurns
+                RelicEffect.SOAK      -> RelicBudget.SOAK_TURN_VALUE * r.effectTurns
+                RelicEffect.FRACTURE  -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns
+                RelicEffect.MARK      -> RelicBudget.MARK_VALUE
+                // L'affaiblissement de chaque ennemi, plus les coups renforcés du héros, partagés
+                RelicEffect.WARCRY    -> RelicBudget.WEAKEN_TURN_VALUE * r.effectTurns +
+                    RelicBudget.empowerBonus(r) * Relic.WARCRY_ATTACKS / targets
+                RelicEffect.ENCHANT_POISON -> r.doseCoef * RelicBudget.enchantDoseTicks(r)
+                RelicEffect.BLEED     -> RelicBudget.bleedCoef(r) * r.effectTurns * RelicBudget.REF_ATTACKS_PER_TURN
+                RelicEffect.BLEED_ON_CRIT -> RelicBudget.REF_CRIT_CHANCE *
+                    RelicBudget.bleedCoef(r) * Relic.FAN_BLEED_TURNS * RelicBudget.REF_ATTACKS_PER_TURN
+                RelicEffect.ACID      -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns + r.doseCoef * Relic.ENCHANT_DOSE_TURNS
+                // Le surplus du coup contre un figé, à la fréquence où on en trouve un
+                RelicEffect.CRYSTALLIZE -> RelicBudget.share(r) - hit
+                // Des prix payés : le coup en vaut plus que la part
+                RelicEffect.DELAYED   -> -hit * RelicBudget.DELAY_PREMIUM / (1f + RelicBudget.DELAY_PREMIUM)
+                RelicEffect.BLIND     -> RelicBudget.BLIND_TURN_VALUE * r.effectTurns
+                // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
+                RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN,
+                RelicEffect.STONESKIN, RelicEffect.CHARM -> RelicBudget.share(r)
             }
-            assertEquals("$r : coup + effet = 1 épée + la prime", 1f + RelicBudget.SHARE_PER_TURN * r.cooldown, hit + effect, 1e-4f)
+            assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
+                1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)
             // Un sort qui ne frappe presque plus n'est pas un sort : l'effet coûte trop cher
-            assertTrue("$r frappe encore ($hit)", hit >= 0.3f)
+            if (r.hits) assertTrue("$r frappe encore ($hit)", hit >= 0.3f) else assertEquals(0f, hit)
         }
     }
 
@@ -342,7 +365,7 @@ class RelicTest {
     fun leJetEstBienUnD20() {
         val hero = Hero.starter().apply { addRelic(Relic.ICE_SHARD) }
         val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 3, 1, 1)), ambush = false, rng = Random(9))
-        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).save
+        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save
         assertNotNull(save)
         assertTrue(save!!.roll in 1..20)
         assertEquals(save.roll + SpellSave.monsterProficiency(1) + MonsterType.GOBLIN.affinity(Element.ICE).saveBonus, save.total)

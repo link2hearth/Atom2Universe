@@ -57,6 +57,37 @@ class ArchetypeTest {
     }
 
     @Test
+    fun leBlocageRenvoieUnCoupDeBouclier() {
+        val c = fight(heroOf(Archetype.WARRIOR, shield = true))
+        c.startEnemyTurn()
+        val s = c.resolveStrike(0, Timing.PERFECT)
+        assertTrue(s.thorns > 0)
+        assertEquals(1000 - s.thorns, c.enemies[0].hp)
+    }
+
+    @Test
+    fun enGardeChaqueCoupRecuEstRenvoye() {
+        // Même coup reçu (mêmes dés), avec et sans Garde : seule la Garde renvoie
+        fun strike(guard: Boolean): EnemyStrike {
+            val c = Combat(heroOf(Archetype.WARRIOR), 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 10, 1, 1)), ambush = false,
+                rng = Random(1), attackDie = { 20 })
+            if (guard) c.guard() else c.drinkPotionOrWait()
+            c.startEnemyTurn()
+            return c.resolveStrike(0, Timing.MISS)
+        }
+        assertEquals(0, strike(guard = false).thorns)
+        val guarded = strike(guard = true)
+        assertTrue(guarded.damage > 0)
+        assertTrue("la moitié du coup brut (${guarded.thorns})", guarded.thorns >= guarded.damage / 2)
+    }
+
+    /** Passer son tour sans lancer de dé : boire une potion (il faut avoir perdu un PV). */
+    private fun Combat.drinkPotionOrWait() {
+        hero.hp -= 1
+        drinkPotion()
+    }
+
+    @Test
     fun sansBouclierLeGuerrierNeBloquePas() {
         val c = fight(heroOf(Archetype.WARRIOR))
         c.startEnemyTurn()

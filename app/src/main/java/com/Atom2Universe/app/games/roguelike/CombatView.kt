@@ -15,7 +15,7 @@ import kotlin.math.sin
 /**
  * L'écran de combat façon FF / Pokémon : les ennemis en haut, le héros en bas, les
  * actions en dessous — quatre boutons comme les quatre attaques d'un Pokémon (l'attaque
- * à l'arme, deux reliques, un sort spécial encore verrouillé), la potion à part. Il mesure les deux gestes en rythme et les transmet au [Combat] :
+ * à l'arme, deux reliques, le Spécial de l'archétype), la potion à part. Il mesure les deux gestes en rythme et les transmet au [Combat] :
  *  - pendant sa propre attaque, un swipe quand le curseur traverse la zone dorée ;
  *  - pendant l'attaque d'un ennemi, une touche au moment où l'anneau se referme.
  */
@@ -50,6 +50,20 @@ class CombatView @JvmOverloads constructor(
         // Fenêtre de parade autour de l'impact
         private const val PARRY_PERFECT_MS = 70
         private const val PARRY_GOOD_MS    = 160
+
+        // Couleurs des états du grimoire (celles des éléments sont dans elementColor)
+        private const val SOAKED_COLOR    = 0xFF4DD0E1.toInt()
+        private const val FRACTURED_COLOR = 0xFFBCAAA4.toInt()
+        private const val WEAKENED_COLOR  = 0xFFB0BEC5.toInt()
+        private const val BLINDED_COLOR   = 0xFF9E9E9E.toInt()
+        private const val MARKED_COLOR    = 0xFFFFD54F.toInt()
+        private const val RAGE_COLOR      = 0xFFFF5252.toInt()
+        private const val EMPOWERED_COLOR = 0xFFFF8A65.toInt()
+        private const val BLEED_COLOR     = 0xFFE53935.toInt()
+        private const val CHARMED_COLOR   = 0xFFF48FB1.toInt()
+        private const val BARRIER_COLOR   = 0xFF90CAF9.toInt()
+        private const val STONESKIN_COLOR = 0xFFBDBDBD.toInt()
+        private const val REGEN_COLOR     = 0xFF81C784.toInt()
     }
 
     private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_HIT, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
@@ -62,7 +76,8 @@ class CombatView @JvmOverloads constructor(
     private val attackers = ArrayDeque<Int>()
     private var attacker = -1
     private var parry: Timing? = null
-    private var lastHitTarget = -1
+    /** Les ennemis touchés par la dernière action : ils tremblent, et ceux qui meurent s'effacent. */
+    private var hitTargets = emptySet<Int>()
 
     private data class Floater(val text: String, val x: Float, val y: Float, val color: Int, val big: Boolean, val start: Long)
     private val floaters = mutableListOf<Floater>()
@@ -96,7 +111,7 @@ class CombatView @JvmOverloads constructor(
         combat = c
         heroSpritePath = heroSprite
         target = c.aliveIndices().firstOrNull() ?: 0
-        attackers.clear(); attacker = -1; parry = null; pendingAction = null; lastHitTarget = -1
+        attackers.clear(); attacker = -1; parry = null; pendingAction = null; hitTargets = emptySet()
         floaters.clear(); banner = null
         layoutRects()
         enter(Stage.INTRO)
@@ -196,32 +211,65 @@ class CombatView @JvmOverloads constructor(
     private fun resolveStrike(timing: Timing) {
         val c = combat ?: return
         if (!c.enemies[target].alive) target = c.aliveIndices().first()
-        val result = when (val a = pendingAction) {
-            is Action.Cast -> c.castRelic(a.relic, target, timing)
-            Action.Deadly  -> c.deadlyStrike(target, timing)
-            else           -> c.attack(target, timing)
+        val hits = when (val a = pendingAction) {
+            is Action.Cast -> c.castRelic(a.relic, target, timing).hits
+            Action.Deadly  -> listOf(c.deadlyStrike(target, timing))
+            else           -> listOf(c.attack(target, timing))
         }
         pendingAction = null
-        lastHitTarget = target
         when (timing) {
             Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_perfect), 0xFFFFD54F.toInt())
             Timing.GOOD    -> showBanner(context.getString(R.string.roguelike_combat_good), 0xFFAED581.toInt())
             Timing.MISS    -> {}
         }
-        val r = enemyRects[result.target]
-        floatText(
-            if (result.crit) context.getString(R.string.roguelike_combat_crit_damage, result.damage)
-            else context.getString(R.string.roguelike_combat_damage, result.damage),
-            r.centerX(), r.top, if (result.crit) 0xFFFFEB3B.toInt() else Color.WHITE, result.crit,
-        )
-        affinityRes(result.affinity)?.let { (res, color) ->
-            floatText(context.getString(res), r.centerX(), r.top + 26f * sp, color, false)
-        }
-        result.save?.let { floatSave(it, r) }
-        if (result.enraged) floatText(context.getString(R.string.roguelike_combat_enraged), r.centerX(), r.bottom, 0xFFFF5252.toInt(), true)
-        onStrike?.invoke(result.crit)
-        if (result.killed) onEnemyDied?.invoke()
+        showHits(hits)
+    }
+
+    /** Ce que la dernière action a fait à chaque ennemi touché, puis on passe au tour ennemi. */
+    private fun showHits(hits: List<HitResult>) {
+        hitTargets = hits.filter { !it.noDamage }.map { it.target }.toSet()
+        floatHits(hits)
+        if (hits.any { !it.noDamage }) onStrike?.invoke(hits.any { it.crit })
+        if (hits.any { it.killed }) onEnemyDied?.invoke()
         enter(Stage.PLAYER_HIT)
+    }
+
+    /** Les textes d'une touche sur chaque ennemi : dégâts, affinité, réactions, jets. */
+    private fun floatHits(hits: List<HitResult>) {
+        for (result in hits) {
+            val r = enemyRects[result.target]
+            if (!result.noDamage) floatText(
+                if (result.crit) context.getString(R.string.roguelike_combat_crit_damage, result.damage)
+                else context.getString(R.string.roguelike_combat_damage, result.damage),
+                r.centerX(), r.top, if (result.crit) 0xFFFFEB3B.toInt() else Color.WHITE, result.crit,
+            )
+            var y = r.top + 26f * sp
+            affinityRes(result.affinity)?.let { (res, color) ->
+                floatText(context.getString(res), r.centerX(), y, color, false)
+                y += 22f * sp
+            }
+            // Les réactions : c'est comme ça qu'on les découvre
+            for (reaction in result.reactions) {
+                floatText(context.getString(reaction.labelRes), r.centerX(), y, reaction.color, true)
+                y += 26f * sp
+            }
+            if (result.explosion > 0)
+                floatText(context.getString(R.string.roguelike_combat_damage, result.explosion), r.centerX(), r.centerY(),
+                    Reaction.EXPLOSION.color, true)
+            result.save?.let { floatSave(it, r) }
+            if (result.enraged) floatText(context.getString(R.string.roguelike_combat_enraged), r.centerX(), r.bottom, 0xFFFF5252.toInt(), true)
+        }
+    }
+
+    /**
+     * Un sort qui ne frappe pas (Cri de guerre, Lames empoisonnées) : pas de geste à réussir,
+     * il part tout de suite, et son nom s'affiche.
+     */
+    private fun castWithoutStrike(c: Combat, relic: Relic) {
+        if (!c.enemies[target].alive) target = c.aliveIndices().first()
+        val cast = c.castRelic(relic, target, Timing.MISS)
+        showBanner(context.getString(relic.labelRes), 0xFFFFE0B2.toInt())
+        showHits(cast.hits)
     }
 
     /** Garde et Image miroir : pas de geste, le tour part tout de suite. */
@@ -231,7 +279,7 @@ class CombatView @JvmOverloads constructor(
             Archetype.MAGE    -> { c.mirrorImage(); showBanner(context.getString(R.string.roguelike_combat_mirror_cast), 0xFFB39DDB.toInt()) }
             else -> return
         }
-        lastHitTarget = -1
+        hitTargets = emptySet()
         enter(Stage.PLAYER_HIT)
     }
 
@@ -239,7 +287,7 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val healed = c.drinkPotion()
         floatText(context.getString(R.string.roguelike_combat_heal, healed), heroRect.centerX(), heroRect.top, 0xFF81C784.toInt(), false)
-        lastHitTarget = -1
+        hitTargets = emptySet()
         enter(Stage.PLAYER_HIT)
     }
 
@@ -258,6 +306,13 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val turn = c.startEnemyTurn()
         attackers.clear(); attackers.addAll(turn.attackers)
+        if (turn.meteor.isNotEmpty()) {
+            showBanner(context.getString(R.string.roguelike_combat_meteor_impact), Relic.METEOR.color or 0xFF303030.toInt())
+            floatHits(turn.meteor)
+            if (turn.meteor.any { it.killed }) onEnemyDied?.invoke()
+        }
+        if (turn.healed > 0)
+            floatText(context.getString(R.string.roguelike_combat_heal, turn.healed), heroRect.centerX(), heroRect.top, 0xFF81C784.toInt(), false)
         for (tick in turn.ticks) {
             val r = enemyRects[tick.enemy]
             floatText(context.getString(R.string.roguelike_combat_damage, tick.damage), r.centerX(), r.top, elementColor(tick.element), false)
@@ -272,7 +327,8 @@ class CombatView @JvmOverloads constructor(
         for (i in turn.enraged)
             floatText(context.getString(R.string.roguelike_combat_enraged), enemyRects[i].centerX(), enemyRects[i].bottom, 0xFFFF5252.toInt(), true)
         when {
-            turn.ticks.isNotEmpty() || turn.stopped.isNotEmpty() || turn.saves.isNotEmpty() -> enter(Stage.ENEMY_STATUS)
+            turn.ticks.isNotEmpty() || turn.stopped.isNotEmpty() || turn.saves.isNotEmpty() ||
+                turn.meteor.isNotEmpty() || turn.healed > 0 -> enter(Stage.ENEMY_STATUS)
             turn.attackers.isEmpty() -> enter(Stage.ENEMY_PAUSE)
             else                     -> nextAttacker()
         }
@@ -303,6 +359,9 @@ class CombatView @JvmOverloads constructor(
         Element.ICE       -> 0xFF81D4FA.toInt()
         Element.LIGHTNING -> 0xFFFFEE58.toInt()
         Element.POISON    -> 0xFF9CCC65.toInt()
+        Element.PHYSICAL  -> 0xFFE0E0E0.toInt()
+        Element.HOLY      -> 0xFFFFF59D.toInt()
+        Element.ARCANE    -> 0xFFCE93D8.toInt()
     }
 
     private fun nextAttacker() {
@@ -324,6 +383,27 @@ class CombatView @JvmOverloads constructor(
     private fun resolveEnemyStrike(timing: Timing) {
         val c = combat ?: return
         val strike = c.resolveStrike(attacker, timing)
+        val ar = enemyRects[attacker]
+        if (strike.bleed > 0) {
+            floatText(context.getString(R.string.roguelike_combat_damage, strike.bleed), ar.centerX(), ar.top, BLEED_COLOR, false)
+            if (strike.bledOut) { onEnemyDied?.invoke(); enter(Stage.ENEMY_IMPACT); return }
+        }
+        if (strike.charmed) {
+            floatText(context.getString(R.string.roguelike_combat_charmed_strike), ar.centerX(), ar.bottom, CHARMED_COLOR, true)
+            strike.charmHit?.let { hit ->
+                val r = enemyRects[hit.target]
+                floatText(context.getString(R.string.roguelike_combat_damage, hit.damage), r.centerX(), r.top, CHARMED_COLOR, true)
+                if (hit.killed) onEnemyDied?.invoke()
+            }
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.thorns > 0) {
+            floatText(context.getString(R.string.roguelike_combat_thorns, strike.thorns), ar.centerX(), ar.bottom, STONESKIN_COLOR, false)
+            if (strike.thornsKilled) onEnemyDied?.invoke()
+        }
+        if (strike.absorbed > 0)
+            floatText(context.getString(R.string.roguelike_combat_absorbed, strike.absorbed), heroRect.centerX(), heroRect.bottom, BARRIER_COLOR, false)
         if (strike.missed) {
             // Le texte dit ce que fait le héros, pas ce que rate le monstre : avec un bouclier
             // ou en guerrier il encaisse sur son armure, sinon il s'écarte
@@ -393,7 +473,7 @@ class CombatView @JvmOverloads constructor(
         val now = SystemClock.uptimeMillis()
         for ((i, e) in c.enemies.withIndex()) {
             val base = enemyRects.getOrNull(i) ?: continue
-            if (!e.alive && !(stage == Stage.PLAYER_HIT && lastHitTarget == i)) continue
+            if (!e.alive && !(stage == Stage.PLAYER_HIT && i in hitTargets)) continue
             val r = RectF(base)
 
             // L'attaquant s'avance pendant son élan
@@ -402,7 +482,7 @@ class CombatView @JvmOverloads constructor(
                 r.offset(0f, base.height() * 0.25f * p * p)
             }
             // Recul quand on le touche
-            val hitNow = stage == Stage.PLAYER_HIT && lastHitTarget == i
+            val hitNow = stage == Stage.PLAYER_HIT && i in hitTargets
             if (hitNow) r.offset(sin(elapsed() / 30.0).toFloat() * 6f * density, 0f)
 
             // Cible choisie
@@ -442,14 +522,21 @@ class CombatView @JvmOverloads constructor(
         }
     }
 
-    /** Les effets en cours sous la barre de vie, chacun à la couleur de son élément. */
+    /** Les effets en cours sous la barre de vie, chacun à sa couleur. */
     private fun drawStatuses(canvas: Canvas, e: Enemy, cx: Float, y: Float) {
-        val parts = buildList<Pair<String, Element?>> {
-            if (e.burnTurns > 0) add(context.getString(R.string.roguelike_combat_burning, e.burnTurns) to Element.FIRE)
-            if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonDoses, e.poisonTurns) to Element.POISON)
-            if (e.frozenTurns > 0) add(context.getString(R.string.roguelike_combat_frozen) to Element.ICE)
-            if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to Element.LIGHTNING)
-            if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to null)
+        val parts = buildList<Pair<String, Int>> {
+            if (e.burnTurns > 0) add(context.getString(R.string.roguelike_combat_burning, e.burnTurns) to elementColor(Element.FIRE))
+            if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonDoses, e.poisonTurns) to elementColor(Element.POISON))
+            if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
+            if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to elementColor(Element.LIGHTNING))
+            if (e.soakedTurns > 0) add(context.getString(R.string.roguelike_combat_soaked, e.soakedTurns) to SOAKED_COLOR)
+            if (e.fracturedTurns > 0) add(context.getString(R.string.roguelike_combat_fractured, e.fracturedTurns) to FRACTURED_COLOR)
+            if (e.weakenedTurns > 0) add(context.getString(R.string.roguelike_combat_weakened, e.weakenedTurns) to WEAKENED_COLOR)
+            if (e.blindedTurns > 0) add(context.getString(R.string.roguelike_combat_blinded, e.blindedTurns) to BLINDED_COLOR)
+            if (e.marked) add(context.getString(R.string.roguelike_combat_marked) to MARKED_COLOR)
+            if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
+            if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
+            if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
         }
         pText.textSize = 11f * sp
         pText.textAlign = Paint.Align.LEFT
@@ -459,7 +546,7 @@ class CombatView @JvmOverloads constructor(
             val widths = pair.map { pText.measureText(it.first) }
             var x = cx - (widths.sum() + gap * (pair.size - 1)) / 2f
             for ((i, part) in pair.withIndex()) {
-                pText.color = part.second?.let { elementColor(it) } ?: 0xFFFF5252.toInt()
+                pText.color = part.second
                 canvas.drawText(part.first, x, y + line * 13f * sp, pText)
                 x += widths[i] + gap
             }
@@ -469,7 +556,7 @@ class CombatView @JvmOverloads constructor(
 
     private fun drawHero(canvas: Canvas, c: Combat) {
         val r = RectF(heroRect)
-        if (stage == Stage.PLAYER_HIT && lastHitTarget >= 0) {
+        if (stage == Stage.PLAYER_HIT && hitTargets.isNotEmpty()) {
             val p = (elapsed().toFloat() / HIT_MS)
             r.offset(0f, -heroRect.height() * 0.3f * sin(p * Math.PI).toFloat())
         }
@@ -498,6 +585,25 @@ class CombatView @JvmOverloads constructor(
         if (c.mirrorImages > 0) {
             pText.color = 0xFFB39DDB.toInt()
             canvas.drawText(context.getString(R.string.roguelike_combat_images, c.mirrorImages), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.empoweredAttacks > 0) {
+            pText.color = EMPOWERED_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_empowered, c.empoweredAttacks), left, y, pText)
+            y += 15f * sp
+        }
+        val buffs = buildList<Pair<String, Int>> {
+            if (c.poisonedBlades > 0) add(context.getString(R.string.roguelike_combat_poisoned_blades, c.poisonedBlades) to elementColor(Element.POISON))
+            if (c.ambushReady) add(context.getString(R.string.roguelike_combat_ambush_ready) to MARKED_COLOR)
+            if (c.barrier > 0) add(context.getString(R.string.roguelike_combat_barrier, c.barrier) to BARRIER_COLOR)
+            if (c.regenTurns > 0) add(context.getString(R.string.roguelike_combat_regen, c.regenTurns) to REGEN_COLOR)
+            if (c.stoneskinTurns > 0) add(context.getString(R.string.roguelike_combat_stoneskin, c.stoneskinTurns) to STONESKIN_COLOR)
+            if (c.meteorTurns > 0) add(context.getString(R.string.roguelike_combat_meteor_incoming, c.meteorTurns) to elementColor(Element.FIRE))
+        }
+        for ((text, color) in buffs) {
+            pText.color = color
+            canvas.drawText(text, left, y, pText)
+            y += 15f * sp
         }
         pText.textAlign = Paint.Align.CENTER
     }
@@ -707,7 +813,9 @@ class CombatView @JvmOverloads constructor(
             else -> {
                 val slot = relicBtns.indexOfFirst { it.contains(x, y) }
                 val relic = if (slot >= 0) c.hero.relicSlots[slot] else null
-                if (relic != null && c.canCast(relic)) choose(Action.Cast(relic))
+                if (relic != null && c.canCast(relic)) {
+                    if (relic.hits) choose(Action.Cast(relic)) else castWithoutStrike(c, relic)
+                }
             }
         }
     }

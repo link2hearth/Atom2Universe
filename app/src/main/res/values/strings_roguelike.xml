@@ -124,6 +124,111 @@
     <string name="roguelike_relic_ice_shard_desc">Deals %1$d–%2$d damage and can freeze the target for %3$d turn: its attack is delayed. It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_lightning_desc">Deals %1$d–%2$d damage and paralyzes the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_venom_desc">Deals %1$d–%2$d damage and adds a dose of poison (3 at most): each dose eats %5$d HP per turn for %3$d turns. Recharge: %4$d turns.</string>
+    <!-- Le grimoire : reliques du 18/09/2026 (voir DONJON.md, « Le grimoire ») -->
+    <string name="roguelike_relic_sunder">Sunder</string>
+    <string name="roguelike_relic_war_cry">War Cry</string>
+    <string name="roguelike_relic_earthquake">Earthquake</string>
+    <string name="roguelike_relic_hunters_mark">Hunter\'s Mark</string>
+    <string name="roguelike_relic_poisoned_blades">Poisoned Blades</string>
+    <string name="roguelike_relic_freezing_rain">Freezing Rain</string>
+    <string name="roguelike_relic_chain_lightning">Chain Lightning</string>
+    <string name="roguelike_relic_sunder_desc">Deals %1$d–%2$d damage (no element) and fractures the target for %3$d turns: it takes 25%% more damage from everything. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_war_cry_desc">Weakens every enemy for %3$d turns (their blows hit 30%% softer), and your next 2 weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_earthquake_desc">Deals %1$d–%2$d damage (no element) to every enemy. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_hunters_mark_desc">Deals %1$d–%2$d damage (no element) and marks the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of poison (3 at most), eating %5$d HP per turn. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_freezing_rain_desc">Deals %1$d–%2$d damage to every enemy and soaks them for %3$d turns: they resist control less, and water reacts with other elements. It puts out fires. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_chain_lightning_desc">Deals %1$d–%2$d damage to the target, then leaps to every other enemy, losing 30%% at each leap. Recharge: %4$d turns.</string>
+
+    <!-- Réactions : un sort sur une cible déjà dans un certain état -->
+    <string name="roguelike_reaction_explosion">Explosion!</string>
+    <string name="roguelike_reaction_melt">Melt!</string>
+    <string name="roguelike_reaction_steam">Steam!</string>
+    <string name="roguelike_reaction_electrocution">Electrocuted!</string>
+    <string name="roguelike_reaction_frost">Deep freeze!</string>
+    <string name="roguelike_reaction_shatter">Shatter!</string>
+
+    <!-- Résonances : deux reliques portées ensemble -->
+    <string name="roguelike_resonance_alchemy">Alchemy</string>
+    <string name="roguelike_resonance_firestorm">Firestorm</string>
+    <string name="roguelike_resonance_storm">Storm</string>
+    <string name="roguelike_resonance_avalanche">Avalanche</string>
+    <string name="roguelike_resonance_battering_ram">Battering Ram</string>
+    <string name="roguelike_resonance_alchemy_desc">when poison explodes, every other enemy gets a dose of Venom</string>
+    <string name="roguelike_resonance_firestorm_desc">steam blinds for one more turn</string>
+    <string name="roguelike_resonance_storm_desc">Chain Lightning paralyzes the soaked enemies it electrocutes</string>
+    <string name="roguelike_resonance_avalanche_desc">Earthquake can freeze the enemies it doesn\'t shatter</string>
+    <string name="roguelike_resonance_battering_ram_desc">Sunder also strikes every weakened enemy</string>
+    <string name="roguelike_log_resonance_found">Resonance discovered: %1$s! +%2$d %3$s while you wear this pair.</string>
+    <string name="roguelike_inventory_resonance_active">✦ Resonance %1$s: +%2$d %3$s — %4$s</string>
+    <string name="roguelike_inventory_resonance_pair">%1$s (%2$s + %3$s)</string>
+    <string name="roguelike_inventory_resonance_book">Resonances found: %1$d/%2$d — %3$s</string>
+
+    <!-- États du grimoire, sous la barre de vie ; renforcements du héros -->
+    <string name="roguelike_combat_soaked">soaked %1$d</string>
+    <string name="roguelike_combat_fractured">fractured %1$d</string>
+    <string name="roguelike_combat_weakened">weakened %1$d</string>
+    <string name="roguelike_combat_blinded">blinded %1$d</string>
+    <string name="roguelike_combat_marked">marked</string>
+    <string name="roguelike_combat_empowered">empowered ×%1$d</string>
+    <string name="roguelike_combat_poisoned_blades">poisoned blades ×%1$d</string>
+    <!-- Le grimoire, lot 2 -->
+    <string name="roguelike_relic_rend">Rend</string>
+    <string name="roguelike_relic_whirlwind">Whirlwind</string>
+    <string name="roguelike_relic_fan_of_knives">Fan of Knives</string>
+    <string name="roguelike_relic_smoke_bomb">Smoke Bomb</string>
+    <string name="roguelike_relic_acid_flask">Acid Flask</string>
+    <string name="roguelike_relic_crystallize">Crystallize</string>
+    <string name="roguelike_relic_meteor">Meteor</string>
+    <string name="roguelike_relic_magic_missile">Magic Missile</string>
+    <string name="roguelike_relic_arcane_shield">Arcane Shield</string>
+    <string name="roguelike_relic_holy_light">Holy Light</string>
+    <string name="roguelike_relic_regeneration">Regeneration</string>
+    <string name="roguelike_relic_stoneskin">Stoneskin</string>
+    <string name="roguelike_relic_charm">Charm</string>
+    <string name="roguelike_relic_rend_desc">Deals %1$d–%2$d damage (no element) and opens a wound for %3$d turns: the target loses %8$d HP every time it attacks. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_whirlwind_desc">A weapon strike on every enemy: %1$d–%2$d damage each (no element). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$d–%2$d damage each (no element). A critical dagger opens a wound (%8$d HP each time the target attacks). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_smoke_bomb_desc">Blinds every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_acid_flask_desc">Deals %1$d–%2$d damage, adds a dose of poison (%5$d HP per turn) and fractures the target for %3$d turns: it takes 25%% more damage from everything. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_crystallize_desc">Deals %1$d–%2$d damage — three times as much to a frozen target, whose ice then shatters. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_meteor_desc">Calls a meteor that falls %3$d turns later on every enemy: %1$d–%2$d fire damage each. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_magic_missile_desc">Three arcane bolts, each on a random enemy, sharing %1$d–%2$d damage. Never resisted. Recharge: %4$d turn.</string>
+    <string name="roguelike_relic_arcane_shield_desc">A barrier absorbs the next %8$d damage. If it still holds when your turn comes back, your relics recharge one turn faster. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_holy_light_desc">Deals %1$d–%2$d holy damage and blinds the target for %3$d turn. The undead fear it. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_regeneration_desc">Heals %8$d HP at each of your next %3$d turns. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is doubled, and every blow you take sends %8$d%% back to its author. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_charm_desc">The target\'s next attack hits one of its allies instead (alone, it loses it). It sometimes resists. Recharge: %4$d turns.</string>
+
+    <string name="roguelike_reaction_cauterize">Cauterized!</string>
+    <string name="roguelike_reaction_purify">Purified!</string>
+
+    <string name="roguelike_resonance_absolute_zero">Absolute Zero</string>
+    <string name="roguelike_resonance_corrosion">Corrosion</string>
+    <string name="roguelike_resonance_pack">Pack</string>
+    <string name="roguelike_resonance_hemorrhage">Hemorrhage</string>
+    <string name="roguelike_resonance_dawn">Dawn</string>
+    <string name="roguelike_resonance_discord">Discord</string>
+    <string name="roguelike_resonance_rampart">Rampart</string>
+    <string name="roguelike_resonance_absolute_zero_desc">Crystallize no longer shatters the ice</string>
+    <string name="roguelike_resonance_corrosion_desc">poison stacks up to 5 doses instead of 3</string>
+    <string name="roguelike_resonance_pack_desc">every dagger that hits the marked target is a critical</string>
+    <string name="roguelike_resonance_hemorrhage_desc">Whirlwind makes every enemy bleed</string>
+    <string name="roguelike_resonance_dawn_desc">every turn of Regeneration also burns the undead</string>
+    <string name="roguelike_resonance_discord_desc">a blinded enemy can\'t resist your Charm</string>
+    <string name="roguelike_resonance_rampart_desc">Stoneskin sends twice as much back</string>
+
+    <string name="roguelike_combat_bleeding">bleeding %1$d</string>
+    <string name="roguelike_combat_charmed">charmed</string>
+    <string name="roguelike_combat_charmed_strike">Charmed!</string>
+    <string name="roguelike_combat_thorns">thorns %1$d</string>
+    <string name="roguelike_combat_absorbed">shield −%1$d</string>
+    <string name="roguelike_combat_meteor_impact">Meteor!</string>
+    <string name="roguelike_combat_ambush_ready">sneak attack ready</string>
+    <string name="roguelike_combat_barrier">shield %1$d</string>
+    <string name="roguelike_combat_regen">regeneration %1$d</string>
+    <string name="roguelike_combat_stoneskin">stoneskin %1$d</string>
+    <string name="roguelike_combat_meteor_incoming">meteor in %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relic found: %1$s! It\'s ready for your next fight.</string>
     <string name="roguelike_log_relic_found_bag">Relic found: %1$s! Wear it from the inventory.</string>
     <string name="roguelike_log_rest_noise">Your rest made noise… something is coming!</string>
@@ -271,7 +376,7 @@
     <string name="roguelike_inventory_worn">Worn: %1$s (rating %2$d)</string>
     <string name="roguelike_inventory_sell">Sell · %1$d gold</string>
     <string name="roguelike_inventory_relics_title">Relics · %1$d/%2$d worn — tap to wear or put away</string>
-    <string name="roguelike_inventory_relics_none">Relics: none yet. They wait at the end of dead ends, on certain floors.</string>
+    <string name="roguelike_inventory_relics_none">Relics: none yet. They are rare: search the far end of dead ends.</string>
     <string name="roguelike_inventory_relic_attribute">Scales with %1$s</string>
     <string name="roguelike_inventory_relics_full">Both slots are taken: put a worn relic away first.</string>
     <string name="roguelike_delta_up">▲ %1$d</string>

@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
+import kotlin.math.roundToInt
 
 /**
  * L'inventaire : ce qu'on porte, ses caractéristiques, les reliques trouvées (toucher
@@ -33,6 +34,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private val tvRelics    = root.findViewById<TextView>(R.id.inv_relics_title)
     private val relicsRow   = root.findViewById<LinearLayout>(R.id.inv_relics)
     private val tvRelicDesc = root.findViewById<TextView>(R.id.inv_relic_desc)
+    private val tvResonance = root.findViewById<TextView>(R.id.inv_resonance)
     private val tvBagCount  = root.findViewById<TextView>(R.id.inv_bag_count)
     private val btnBest     = root.findViewById<TextView>(R.id.inv_sort_best)
     private val btnRecent   = root.findViewById<TextView>(R.id.inv_sort_recent)
@@ -223,13 +225,39 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
             relicsRow.addView(chip)
         }
 
+        bindResonances(hero)
+
         val relic = selectedRelic
         if (relic == null) { tvRelicDesc.visibility = View.GONE; return }
         tvRelicDesc.visibility = View.VISIBLE
         val (lo, hi) = hero.relicDamage(relic)
-        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown), hero.poisonDose(relic), hero.spellDc(relic)) +
+        // Toutes les descriptions reçoivent les mêmes nombres, chacune prend ceux qui la concernent
+        val empowerPct = (RelicBudget.empowerBonus(relic) * hero.relicMult(relic) * 100).roundToInt()
+        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown),
+            hero.poisonDose(relic), hero.spellDc(relic), empowerPct, hero.relicAmount(relic)) +
             "\n" + ctx.getString(R.string.roguelike_inventory_relic_attribute, ctx.getString(relic.attribute.labelRes))
         tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
+    }
+
+    /**
+     * La résonance portée (son bonus et son effet), puis le carnet : les paires déjà
+     * découvertes. Celles qu'on n'a jamais portées restent cachées, on n'en montre que le compte.
+     */
+    private fun bindResonances(hero: Hero) {
+        val lines = hero.resonances.map { r ->
+            ctx.getString(R.string.roguelike_inventory_resonance_active, ctx.getString(r.labelRes),
+                Resonance.BONUS, ctx.getString(r.attribute.labelRes), ctx.getString(r.descRes))
+        }.toMutableList()
+        if (hero.knownResonances.isNotEmpty()) {
+            val known = Resonance.entries.filter { it in hero.knownResonances }.joinToString(", ") { r ->
+                ctx.getString(R.string.roguelike_inventory_resonance_pair, ctx.getString(r.labelRes),
+                    ctx.getString(r.a.labelRes), ctx.getString(r.b.labelRes))
+            }
+            lines += ctx.getString(R.string.roguelike_inventory_resonance_book,
+                hero.knownResonances.size, Resonance.entries.size, known)
+        }
+        tvResonance.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
+        tvResonance.text = lines.joinToString("\n")
     }
 
     /** Toucher une relique la décrit, et la porte ou la range. */

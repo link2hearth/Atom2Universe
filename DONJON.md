@@ -170,10 +170,10 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
    budget mesuré, huit paliers, table complète et test de garde (voir « Les affixes »).
    Pas encore : légendaires, sets, relance.
 3. **Sets, reliques et zones** — set du rat des égouts, plusieurs reliques, étages 1–20.
-   *En cours* : les quatre reliques classiques (feu, glace, foudre, poison), le combat à
-   quatre boutons, les reliques à trouver et les recharges gardées d'un combat à l'autre
-   sont faits (voir « Les reliques »). Ensuite : résistances, jets de contrôle et rage ;
-   puis le sort spécial, le set et la zone.
+   *En cours* : les quatre reliques classiques, le combat à quatre boutons, les recharges
+   gardées, les jets et la rage, les archétypes et leur Spécial sont faits (voir « Les
+   reliques », « Les archétypes »). Le grimoire (états, réactions, résonances, lot 1) est
+   fait le 18/09 ; son reste passe **avant** les sets.
 4. **Boss et checkpoints** — Roi des Rats à l'étage 20, puis zones suivantes.
 
 ## Réglages de l'étape 1 (valeurs de départ, à ajuster en jouant)
@@ -500,10 +500,10 @@ l'expert de 57 à 100.
 
 ### Où on les trouve
 
-Provisoire : une relique attend aux étages **2, 5, 9 et 14**, au bout du cul-de-sac le plus
-éloigné du départ. Elle est tirée au hasard parmi celles qu'on n'a pas. Une relique trouvée
-ne revient pas après une mort. Elle se porte d'office s'il reste un emplacement libre, sinon
-elle attend dans l'inventaire (section « Reliques » : toucher pour porter ou ranger).
+Remplacé le 18/09/2026 : voir « Le grimoire », « Où les trouver ». (Avant : une relique
+aux étages 2, 5, 9 et 14.) Une relique trouvée ne revient pas après une mort. Elle se porte
+d'office s'il reste un emplacement libre, sinon elle attend dans l'inventaire (section
+« Reliques » : toucher pour porter ou ranger).
 
 Les anciennes sauvegardes gardent leur Boule de feu.
 
@@ -600,6 +600,384 @@ L'ordre de travail :
 4. Affixes de sorts généraux.
 5. Affixes propres à une relique, probablement avec les légendaires.
 
+## Le grimoire : les reliques *(tout le catalogue codé le 18/09/2026)*
+
+Discuté le 18/09/2026. Les quatre reliques actuelles suivent toutes le même moule (des
+dégâts + un statut) : seul l'élément les distingue. Le grimoire ajoute des **familles**
+(renforcement, affaiblissement, arme enchantée, préparation / coup final, protection…) et
+surtout des **combos**. Le principe posé par le propriétaire :
+
+> **N'importe quel archétype peut jouer n'importe quelle relique.** La caractéristique
+> d'une relique l'oriente vers un archétype, mais les meilleurs builds se trouvent en
+> croisant, et on ne les découvre qu'en connaissant le jeu.
+
+L'équilibrage vient après, en jouant et en mesurant (`RelicBudget`, `relicsAtFixedGear`).
+Les recharges écrites ici sont des ordres de grandeur.
+
+Tranché par le propriétaire le 18/09/2026 : **tout le catalogue est retenu, sauf la Pluie
+d'or** (et donc la résonance Pot-de-vin). **Les soins en combat sont permis** : une relique
+de soin prend un des deux emplacements, c'est un choix du joueur — forte, mais limitée par
+là. Les reliques se trouvent **uniquement en explorant** (voir « Où les trouver »). Et il
+faut que la base tienne debout : **on en ajoutera d'autres**.
+
+Dans le code (`Combat.kt`) : une relique = un **élément** (affinités, réactions), une
+**caractéristique**, une **cible** (une, toutes, en chaîne, soi-même) et **un effet**
+(`RelicEffect`). Les réactions sont dans `Reaction`, les paires dans `Resonance`. Tous les
+dégâts infligés à un ennemi passent par `Combat.wound` (la fracture et la marque y sont
+réglées une fois pour toutes). Garde : `GrimoireTest`.
+
+Inspirations : les réactions élémentaires de *Genshin Impact* et les surfaces de
+*Divinity: Original Sin 2* (eau + foudre, feu + poison), les duos de dieux de *Hades*
+(deux bénédictions qui s'associent), la Vulnérabilité et la Faiblesse de *Slay the Spire*,
+les cris du barbare et les épines du paladin de *Diablo II*, la Marque du chasseur de D&D,
+le Stop / Lenteur / Zeni-nage de *Final Fantasy*.
+
+### Trois couches de combos
+
+1. **Les états** : un sort pose un état sur la cible (ou sur le héros). Les quatre d'aujourd'hui
+   (brûlé, figé, paralysé, empoisonné) plus quelques nouveaux, partagés par tout le grimoire.
+2. **Les réactions** : un sort qui touche une cible **déjà** dans un certain état fait quelque
+   chose en plus. Toujours actives, pour tout le monde : c'est le savoir du joueur, pas son
+   équipement. Rien ne les annonce à l'avance, on les découvre (comme les affinités).
+3. **Les résonances** : porter **deux reliques précises ensemble** donne un bonus nommé, un
+   effet en plus **et** une caractéristique (+2). C'est le « set de reliques ». Cachées
+   jusqu'à ce qu'on porte la paire une première fois ; ensuite, un carnet les liste.
+
+Et par-dessus, le **Spécial de l'archétype** : le Coup mortel du voleur aime les cibles
+figées ou empoisonnées, la Garde du guerrier aime les Épines, l'Image miroir du mage aime
+tout ce qui fait durer le combat. Un guerrier qui porte Éclat de glace + Séisme, c'est un
+build ; ce n'est écrit nulle part.
+
+### Les nouveaux états
+
+| État | Sur | Effet |
+|---|---|---|
+| **Trempé** | ennemi | la foudre et la glace prennent plus facilement (−3 au jet de sauvegarde) ; le feu l'efface (voir Vapeur) |
+| **Fracturé** | ennemi | encaisse +25 % de **tous** les dégâts (la Vulnérabilité de *Slay the Spire*) |
+| **Affaibli** | ennemi | ses coups font −30 % |
+| **Saignement** | ennemi | perd des PV **chaque fois qu'il attaque** (pas à chaque tour) : le geler ou le paralyser le fait moins saigner, le laisser frapper le tue |
+| **Marqué** | ennemi | compte comme **exposé** pour le Coup mortel ; les critiques contre lui font plus mal |
+| **Aveuglé** | ennemi | attaque avec désavantage (deux d20, le pire gardé), comme la rage mais sans la vitesse |
+| **Barrière** | héros | absorbe les prochains dégâts, jusqu'à un plafond |
+| **Épines** | héros | renvoie une part de chaque coup reçu |
+| **Arme enchantée** | héros | ses coups d'arme portent un effet pendant quelques tours |
+
+Tous codés, plus le **charmé** (sa prochaine attaque frappe un allié) venu avec le Charme.
+Le saignement ronge au moment où l'ennemi attaque : s'il en meurt, le coup ne part pas.
+Les états qui durent perdent un tour **en fin de tour ennemi** : « affaibli 2 tours » couvre
+les deux prochaines attaques ennemies. La marque, elle, dure jusqu'à la mort, et une seule
+cible est marquée à la fois.
+
+**Le gel a dû changer pour que les combos existent.** Un gel d'un tour se consumait pendant
+le tour ennemi : le héros ne voyait jamais une cible figée, donc ni Bris, ni Fonte, ni Coup
+mortel sur un figé. Désormais la glace **reste sur la cible jusqu'à son tour suivant**
+(`Enemy.thawing`) : elle agit normalement, mais pendant le tour du héros elle compte comme
+figée.
+
+### Les réactions
+
+| Réaction | Quand | Effet |
+|---|---|---|
+| **Explosion** | feu sur un **empoisonné** | consomme toutes les doses : leurs dégâts restants tombent d'un coup (le Catalyseur de *Slay the Spire*) |
+| **Fonte** | feu sur un **figé** | le gel se brise, dégâts ×1,5 : on échange le contrôle contre un gros coup |
+| **Vapeur** | feu sur un **trempé** | pas de brûlure, mais un brouillard : **tous** les ennemis aveuglés 1 tour (*Divinity*) |
+| **Électrocution** | foudre sur un **trempé** | dégâts ×1,5, et le jet de paralysie se fait au désavantage |
+| **Givre** | glace sur un **trempé** | le gel dure 2 tours au lieu d'un |
+| **Bris** | **sort** physique (Séisme, Brise-armure…) sur un **figé** | dégâts ×2, le gel se brise |
+| **Cautérisation** | feu sur un **saignant** | la plaie se ferme (plus de saignement), mais le coup fait ×1,5 |
+| **Purification** | sacré sur un **empoisonné** | le poison devient lumière : ses doses restantes tombent d'un coup, en dégâts **sacrés** |
+
+Toutes codées (les deux dernières ajoutées avec le lot 2). Une réaction se lit sur l'état **d'avant** le sort, et un monstre
+immunisé à l'élément ne réagit pas. Précisions apparues en codant :
+- **Le Bris ne vient pas de l'attaque de base.** Sinon « glace puis épée » doublait la valeur
+  de l'Éclat de glace à chaque lancer, gratuitement.
+- La **Pluie glacée** est de la glace (les gobelins y résistent) mais elle trempe au lieu de
+  figer : l'élément décide des réactions et des affinités, l'effet est à part.
+- L'**eau éteint le feu** : tremper une cible qui brûle éteint la brûlure.
+- L'**électrocution** laisse l'eau (on peut électrocuter plusieurs fois) ; le **givre** la
+  consomme (l'eau a gelé) ; la **vapeur** aussi (elle s'est évaporée).
+- Les réactions et les résonances **ne sont pas au budget** : elles récompensent le savoir.
+
+Garde-fou : la rage continue de s'appliquer. Figer, électrocuter, re-figer reste impossible
+à l'infini.
+
+### Le catalogue
+
+Deux nouvelles « couleurs » de sorts, en plus des quatre éléments :
+- **Sans élément** (physique, arcane) : jamais résisté, jamais efficace. La valeur sûre
+  contre un monstre qu'on ne connaît pas encore.
+- **Sacré** : un cinquième élément, pensé pour les **Cryptes** (étages 21–40). Le squelette
+  **et le démon** y sont vulnérables (comme le radiant de D&D contre les fiélons ; d'abord
+  écrit « démons résistants », changé pour la Purification, voir plus bas).
+
+**Le poison, décidé le 18/09 par le propriétaire** : il empoisonne et ça suffit en début de
+partie ; il devient surtout un **déclencheur de combos** plus tard (après l'étage 40). C'est
+la Purification qui le rend précieux contre les démons : ils résistent au poison mais craignent
+le sacré, donc empoisonner puis purifier fait quatre fois les dégâts restants. On ne refait
+pas les Lames empoisonnées.
+
+**FOR, la force (le guerrier en premier)**
+
+| Relique | Rech. | Effet | Combos |
+|---|---|---|---|
+| **Brise-armure** ✅ | 3 | coup sans élément, la cible est **fracturée** 3 tours | profite à tout le monde : le démarreur universel |
+| **Cri de guerre** ✅ | 5 | tous les ennemis **affaiblis** 2 tours ; les 2 prochains coups d'arme renforcés (+55 % au départ, le reste du budget) | Garde, Épines |
+| **Séisme** ✅ | 4 | frappe **tous** les ennemis, dégâts modestes, sans élément | **Bris** sur chaque figé ; résonance Avalanche |
+| **Saignée** ✅ | 3 | coup d'arme + **saignement** | punit les ennemis rapides et les enragés (ils frappent plus, ils saignent plus) |
+| **Tourbillon** ✅ | 4 | un coup d'arme sur tous les ennemis (le budget de zone le met à ~55 % d'un coup) | les Lames empoisonnées touchent tout le monde, pour une seule charge (le Brise-armure aussi les porte) |
+
+**DEX, la dextérité (le voleur en premier)**
+
+| Relique | Rech. | Effet | Combos |
+|---|---|---|---|
+| **Lames empoisonnées** ✅ | 5 | les 3 prochains coups d'arme (riposte comprise) ajoutent chacun une dose ; se lance sans geste | Venin, Explosion, Coup mortel |
+| **Marque du chasseur** ✅ | 3 | petit coup sans élément, cible **marquée** jusqu'à sa mort ; si elle meurt, la marque saute sur un autre | Coup mortel à chaque recharge |
+| **Dagues en éventail** ✅ | 3 | petites dagues sur tous les ennemis ; chaque critique fait **saigner** | la DEX (critique) et Saignée |
+| **Bombe fumigène** ✅ | 5 | tous les ennemis **aveuglés** 2 tours ; le prochain coup d'arme est une attaque sournoise (la cible compte comme exposée) | le voleur esquive déjà : il ne se fait plus toucher |
+| **Fiole d'acide** ✅ | 3 | une dose de poison + **fracturé** 2 tours | le pont entre le poison et le guerrier |
+
+**INT, l'intelligence (le mage en premier)**
+
+| Relique | Rech. | Effet | Combos |
+|---|---|---|---|
+| **Pluie glacée** ✅ | 4 | tous les ennemis **trempés** 3 tours, dégâts faibles | pose Vapeur, Électrocution, Givre : le démarreur du mage |
+| **Chaîne d'éclairs** ✅ | 4 | frappe la cible puis **rebondit** sur les autres (−30 % par rebond) ; sur un trempé, le rebond ne perd rien | Pluie glacée (résonance Orage) |
+| **Cristallisation** ✅ | 3 | dégâts modestes ; contre un **figé**, énormes (et le gel se brise) | Éclat de glace, et le Coup mortel juste avant |
+| **Météore** ✅ | 7 | tombe **2 tours plus tard** sur tous les ennemis, très fort | glace et foudre pour retenir les ennemis jusqu'à l'impact |
+| **Projectile magique** ✅ | 1 | trois traits sans élément, répartis au hasard | le sort de secours : jamais résisté, recharge presque nulle |
+| **Bouclier arcanique** ✅ | 4 | **barrière** ; si elle tient jusqu'à ton prochain tour, tes reliques gagnent un tour de recharge | le contresort du mage, Image miroir |
+
+**SAG, la sagesse (aucun archétype : c'est la carac. des recharges)** — le Sablier a été retiré (voir plus bas)
+
+| Relique | Rech. | Effet | Combos |
+|---|---|---|---|
+| **Lumière sacrée** ✅ | 3 | sacré, la cible est **aveuglée** 1 tour | les Cryptes ; **Purification** sur un empoisonné ; Aube |
+| **Régénération** ✅ | 5 | soigne un peu à chacun de tes 3 prochains tours | permis (18/09) : elle prend un emplacement de relique, c'est le prix |
+
+**CON et CHA (les caractéristiques qui n'ont pas encore de sort)** — le Pacte de sang a été retiré (voir plus bas)
+
+| Relique | Carac. | Rech. | Effet | Combos |
+|---|---|---|---|---|
+| **Peau de pierre** ✅ | CON | 5 | armure ×2 pendant 2 tours + **épines** | Garde, Cri de guerre |
+| **Charme** ✅ | CHA | 5 | jet ; raté, sa prochaine attaque frappe un autre ennemi (seul, il la perd) | les groupes de 3 |
+
+### Les résonances (paires de reliques)
+
+Toutes donnent **+2** à une caractéristique, en plus de leur effet. ✅ = codée.
+
+| Résonance | Paire | Bonus | Effet |
+|---|---|---|---|
+| **Alchimie** ✅ | Boule de feu + Venin | +2 INT | l'Explosion éclabousse les autres ennemis (une dose chacun) |
+| **Orage** ✅ | Pluie glacée + Chaîne d'éclairs | +2 INT | la Chaîne paralyse 1 tour chaque trempé qu'elle électrocute. *(L'idée d'abord écrite, « les rebonds continuent », ne faisait rien : avec 3 ennemis au plus, la chaîne les touche déjà tous.)* |
+| **Avalanche** ✅ | Éclat de glace + Séisme | +2 FOR | le Séisme peut figer 1 tour (jet de sauvegarde) ceux qu'il ne brise pas. *(« Le Bris frappe les voisins » est tombé : le Séisme les frappe déjà.)* |
+| **Zéro absolu** ✅ | Éclat de glace + Cristallisation | +2 INT | la Cristallisation ne brise plus le gel |
+| **Corrosion** ✅ | Lames empoisonnées + Fiole d'acide | +2 DEX | 5 doses au plus au lieu de 3 |
+| **Meute** ✅ | Marque du chasseur + Dagues en éventail | +2 DEX | chaque dague qui touche la cible marquée est un critique |
+| **Charge du bélier** ✅ | Cri de guerre + Brise-armure | +2 FOR | le Brise-armure frappe aussi tous les ennemis affaiblis |
+| **Hémorragie** ✅ | Saignée + Tourbillon | +2 CON | le Tourbillon fait saigner tout le monde |
+| **Aube** ✅ | Lumière sacrée + Régénération | +2 SAG | chaque soin brûle aussi les morts-vivants |
+| **Tempête de feu** ✅ | Boule de feu + Pluie glacée | +2 INT | la Vapeur aveugle 2 tours au lieu d'un |
+| **Discorde** ✅ | Charme + Bombe fumigène | +2 CHA | un ennemi aveuglé ne résiste pas au Charme *(ajoutée : le Charme n'avait plus de paire sans la Pluie d'or)* |
+| **Rempart** ✅ | Peau de pierre + Cri de guerre | +2 CON | les épines renvoient le double *(ajoutée)* |
+
+On a volontairement des paires qui croisent les archétypes (Avalanche : une relique de
+mage, une de guerrier). Les résonances pourront plus tard devenir des affixes de légendaire
+(« compte comme portant Séisme »), ce qui ouvre des builds à trois reliques.
+
+La découverte : la première fois qu'une paire est portée, le journal l'annonce et elle entre
+au **carnet** (sauvegardé). L'inventaire affiche la résonance active (bonus + effet) et le
+carnet ; celles qu'on n'a jamais portées ne montrent que leur nombre. Le bonus de +2 entre
+dans la caractéristique comme l'équipement : il pèse sur les dégâts, les DD, la CA…
+
+### Où les trouver
+
+**Décidé le 18/09/2026 : par l'exploration uniquement**, jamais sur un monstre. C'est rare,
+et c'est ce qui donne de l'intérêt à la carte ; comme on garde tout en mourant et que les
+étages se refont, on finit par tout trouver.
+
+Codé (`RoguelikeGame.RELIC_CHANCE`, `FIRST_RELIC_FLOOR`) : la première relique est garantie à
+l'étage 2 (pour découvrir les sorts) ; ensuite, **15 %** des étages cachent une relique au
+bout du cul-de-sac le plus éloigné du départ, tirée parmi celles qu'on n'a pas. Un tirage par
+zone (le Sacré dans les Cryptes…) reste possible plus tard.
+
+### Dans quel ordre les coder
+
+1. **Les fondations** — **faites** : les nouveaux états, les réactions, le mécanisme des
+   résonances, leur carnet dans l'inventaire.
+2. **Le lot 1** — **fait** : Brise-armure, Cri de guerre, Séisme ; Marque du chasseur, Lames
+   empoisonnées ; Pluie glacée, Chaîne d'éclairs ; et cinq résonances (Alchimie, Tempête de
+   feu, Orage, Avalanche, Charge du bélier).
+3. **Le lot 2** — **fait** le 18/09 : les 15 autres reliques, le saignement, la barrière,
+   les épines, le charme, le Sacré et l'Arcane, deux réactions (Cautérisation, Purification)
+   et neuf résonances. Puis le **Pacte de sang** et le **Sablier** ont été retirés (pièges
+   mesurés, décision du propriétaire), avec leurs résonances Pacte et Fin des temps :
+   **24 reliques, 12 résonances**. Ajouter une relique :
+   une ligne dans `Relic`, ses textes, et si besoin un nouvel `RelicEffect` (son prix dans
+   `RelicBudget.effectValue`, qu'un test oblige à écrire). Un nouvel état se pense **avec
+   ses réactions**.
+4. Puis l'étape D, les sets d'équipement : leurs bonus auront enfin des sorts à modifier.
+
+### Lot 1 : la mesure
+
+`relicsAtFixedGear` (chaque relique **seule**, à équipement égal, joueur « correct »,
+victoires sur 3 combats enchaînés). Le bot lance une relique dès qu'elle est prête : il ne
+joue **aucun combo** ni aucune résonance. Ces chiffres sont donc un plancher.
+
+| Étage | Aucun sort | Feu | Glace | Foudre | Venin | Brise-armure | Cri | Séisme | Marque | Lames | Pluie | Chaîne |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 8 | 78 % | 81 % | 86 % | 85 % | 76 % | 78 % | 85 % | 84 % | 81 % | 80 % | 82 % | 82 % |
+| 15 | 74 % | 80 % | 80 % | 81 % | 70 % | 72 % | 80 % | 81 % | 75 % | 73 % | 76 % | 79 % |
+| 30 | 69 % | 75 % | 79 % | 78 % | 63 % | 68 % | 77 % | 77 % | 72 % | 67 % | 74 % | 75 % |
+| 60 | 62 % | 72 % | 82 % | 79 % | 62 % | 68 % | 64 % | 77 % | 70 % | 54 % | 79 % | 79 % |
+
+- Les sorts de zone (Séisme, Cri, Pluie, Chaîne) tiennent : partager la valeur sur le groupe
+  moyen (1,65 ennemi) marche.
+- **Brise-armure et Marque** sont au niveau d'« aucun sort » : leur valeur est dans les
+  combos (préparer ses propres coups, le Coup mortel), que ce bot ne joue pas. Au premier
+  essai ils faisaient moins bien : le bot fracturait le plus solide et frappait un autre. Il
+  vise désormais sa propre cible avec eux.
+- **Les Lames empoisonnées** restent en dessous en profondeur : squelettes immunisés, démons
+  résistants, et le tour perdu à les lancer. Un réglage fait (on ne paie plus que les doses
+  tombées **pendant** l'enchantement, 6 au lieu de 15) ; pas de second réglage des chiffres.
+  Si ça ne suffit pas en jouant, **changer le mécanisme** : en faire une action gratuite (l'
+  « action bonus » de D&D), avec un prix à la hauteur.
+- Le Venin reste le sort des longs combats, comme avant.
+
+### Lot 2 : la mesure, et deux règles corrigées
+
+**Le banc a d'abord tourné 30 minutes sans finir.** Ce n'était pas la mesure, c'étaient des
+combats **éternels** : avec l'équipement de l'étage 60, la SAG ramène les recharges à 1 tour ;
+le bot relançait alors Bouclier, Régénération ou Charme **à chaque tour** et ne frappait plus
+jamais, et le monstre ne le blessait plus non plus. Derrière le bot, deux vraies failles :
+- **Le Charme ne déclenchait jamais la rage** : l'attaque détournée remettait la série de
+  contrôles à zéro. Un monstre seul pouvait être bloqué sans fin. Corrigé : l'attaque charmée
+  compte comme un contrôle, deux charmes d'affilée le font enrager.
+- **Le Bouclier arcanique se rechargeait lui-même** avec son propre bonus. Corrigé : il ne
+  recharge que les **autres** reliques.
+
+Le banc (`relicsAtFixedGear`) est refait pour ne plus jamais attendre : un combat qui dépasse
+300 tours est arrêté et **signalé** (« ⚠ combats bloqués » : c'est un bug à chercher), les
+reliques tournent en parallèle, 1 000 séries par défaut (±1,5 point), une ligne par relique.
+**3 secondes** au lieu de 30 minutes. `SIM_RELICS=METEOR,CHARM` ne mesure que celles-là,
+`SIM_SERIES` et `SIM_FLOORS` règlent la précision et les étages. Le bot ne lance plus deux
+tours de suite une action qui ne frappe pas (sort de soutien, Garde, doubles).
+
+Victoires sur 3 combats enchaînés, joueur « correct », chaque relique seule, sans combo :
+
+| Relique | Ét. 8 | 15 | 30 | 60 |
+|---|---|---|---|---|
+| *aucun sort* | *79* | *72* | *70* | *62* |
+| Bouclier arcanique | 94 | 92 | 89 | 93 |
+| Régénération | 92 | 89 | 86 | 79 |
+| Lumière sacrée | 88 | 87 | 83 | 81 |
+| Éclat de glace | 86 | 80 | 79 | 84 |
+| Foudre | 84 | 81 | 79 | 79 |
+| Cristallisation | 82 | 78 | 76 | 81 |
+| Projectile magique | 82 | 76 | 75 | 83 |
+| Pluie glacée | 82 | 77 | 75 | 78 |
+| Chaîne d'éclairs | 83 | 79 | 75 | 77 |
+| Séisme, Tourbillon | 85 | 81 | 77 | 76 |
+| Cri de guerre | 84 | 79 | 79 | 75 |
+| Dagues en éventail | 82 | 80 | 74 | 75 |
+| Météore | 82 | 80 | 76 | 74 |
+| Boule de feu | 82 | 80 | 76 | 73 |
+| Marque du chasseur | 81 | 75 | 73 | 71 |
+| Brise-armure | 78 | 71 | 68 | 67 |
+| Saignée | 76 | 69 | 66 | 67 |
+| Venin | 74 | 70 | 66 | 63 |
+| Lames empoisonnées | 81 | 74 | 69 | 61 |
+| Charme | 80 | 76 | 70 | 62 |
+| Fiole d'acide | 74 | 72 | 64 | 59 |
+| Bombe fumigène | 77 | 73 | 71 | 59 |
+| Peau de pierre | 74 | 66 | 61 | 51 |
+
+À lire, pas encore à régler (l'équilibrage vient en jouant) :
+- **Trop forts seuls** : Bouclier arcanique et Régénération (la survie compte double dans
+  cette mesure), Lumière sacrée (squelette et démon y sont vulnérables).
+- **Pièges** (sous « aucun sort ») : le **Pacte de sang** (les PV payés restent perdus pour
+  les combats suivants) et le **Sablier** (seul, son bonus de recharge ne sert à rien) sont
+  **retirés du jeu** (décision du 18/09). La **Peau de pierre** est gardée : ses épines vont
+  avec la Représaille du guerrier (Garde, blocage), à remesurer avec un guerrier.
+- Les sorts de préparation (Brise-armure, Marque, Charme, Bombe, Fiole, poison) sont au niveau
+  d'« aucun sort » : leur valeur est dans les combos, que ce bot ne joue pas.
+
+### Les combos rendent-ils le jeu trop facile ?
+
+Question du propriétaire (18/09). Le bot de base ne fait **aucun** combo : il lance la
+première relique prête, sans regarder l'état des monstres. On lui a ajouté un **joueur de
+combos** (`comboChoice`) qui connaît les règles, pas des scripts par paire : il **déclenche**
+une réaction dès qu'une relique prête en a une à déclencher, sinon il **prépare** l'état
+dont son autre relique a besoin si elle sera prête au tour suivant. Le banc
+`combosAtFixedGear` joue chaque paire qui combine deux fois, au hasard puis en combo
+(5 secondes). Extraits (victoires sur 3 combats, « aucun sort » : 74 / 69 / 63) :
+
+| Paire | Ét. 15 | 30 | 60 |
+|---|---|---|---|
+| Éclat de glace + Brise-armure | 83 → 84 | 80 → 85 | 83 → **90** |
+| Éclat de glace + Saignée | 80 → 86 | 79 → 84 | 83 → 88 |
+| Éclat de glace + Cristallisation (Zéro absolu) | 91 → 93 | 88 → 93 | 90 → 93 |
+| Éclat de glace + Séisme (Avalanche) | 88 → 90 | 86 → 89 | 89 → 92 |
+| Venin + Lumière sacrée (Purification) | 81 → 79 | 73 → 77 | 71 → 76 |
+| Pluie + Chaîne (Orage) | 92 → 91 | 90 → 90 | 89 → 92 |
+| Lames empoisonnées + Boule de feu | 78 → 79 | 73 → 73 | 70 → **58** |
+| Cri de guerre + Brise-armure (Charge du bélier) | 82 → 82 | 75 → 72 | 70 → **62** |
+
+Réponse : **non, pas trop facile.** Jouer les combos rapporte de 0 à 7 points, jamais un
+écart qui casse le jeu. Ce qui est fort, ce sont certaines **paires** en soi (la glace avec
+presque tout, autour de 90 %), qu'on les joue bien ou pas. Deux enseignements :
+- Préparer avec un sort **qui ne frappe pas** coûte un tour ; en profondeur, où les combats
+  sont durs, ce tour se paie (Lames + feu, Cri + Brise-armure perdent en combo).
+- Les résonances sans réaction (Meute, Hémorragie, Aube, Rempart, Corrosion) ne changent
+  rien au jeu du bot : leur effet est passif, ou demande un ordre que ce bot ne cherche pas.
+
+Partie entière jusqu'à l'étage 100 (`simulate`, 30 profils par niveau, les bots portent les
+deux premières reliques trouvées, sans combo) : médianes novice / correct / expert
+**31 / 71 / 89**, contre 31 / 57 / 100 après l'étape C. Dans le bruit de 30 profils ; l'expert
+perd des profils qui plafonnent au nombre de tours de carte de la simulation (16 blocages),
+pas des morts. Les reliques sont désormais plus rares (15 % des étages au lieu de 4 étages
+fixes) : à surveiller en jouant.
+
+Après le lot 2 (26 reliques, sans la Représaille du guerrier) : **37 / 70 / 100**, l'expert
+retrouve l'étage 100 ; les blocages de l'expert passent de 16 à 9.
+
+
+## La jauge : des tours calculés, pas des tours fixes *(décidé le 18/09/2026, à coder)*
+
+Idée du propriétaire, née d'une question sur les sorts qui ne frappent pas (« pas
+complètement gratuits ») : au lieu de tours fixes (le héros, puis tous les monstres),
+**chacun a une jauge** qui se remplit à sa **vitesse** ; quand elle est pleine, c'est son
+tour. C'est le **CTB de FFX**, pas l'ATB de FF7 :
+
+> **Le temps ne s'écoule pas en continu.** Il est **figé pendant les actions** et pendant que
+> le joueur choisit : rien ne presse. Entre deux actions, le moteur fait avancer toutes les
+> jauges jusqu'à la prochaine pleine. (Le propriétaire déteste devoir choisir vite.)
+
+- **Chaque action vide la jauge plus ou moins** : l'attaque la vide entièrement, un sort qui
+  ne frappe pas seulement en partie (on rejoue plus vite), un sort lourd (Météore) peut
+  coûter plus. Le coût dépend de la **classe** et du **stuff** (le mage lance moins cher,
+  des affixes du type « incantation rapide »).
+- **La Vitesse**, une nouvelle caractéristique d'équipement, donc **un affixe de plus**.
+  L'armure lourde ralentit, la légère accélère. Les monstres ont leur vitesse (par type, et
+  qui **monte avec les étages** : c'est l'idée de « vitesse de jeu » notée plus haut).
+- **Une barre d'ordre des tours** à l'écran, comme FFX ; toucher une action montre où
+  tomberait son prochain tour. Elle remplace les « ⚔ 2 » au-dessus des monstres.
+- **Les durées** (poison, brûlure, gel, rage…) se comptent **aux tours de la victime**,
+  comme FFX : le poison ronge quand c'est son tour. **Les recharges** des reliques se
+  comptent **aux tours du héros** : un héros rapide recharge aussi plus vite.
+- **Le contrôle joue sur les jauges** : le gel arrête la jauge, on peut la **repousser**,
+  Hâte et Lenteur changent la vitesse, la rage la double. Le Sablier retrouverait un sens.
+- Le « demi-tour » essayé juste avant (un sort qui ne frappe pas ne fait avancer les
+  monstres que d'un demi-cran) est **abandonné** : c'est un cas particulier de la jauge.
+
+Par étapes :
+1. **Le moteur de jauges**, à vitesse normale et coûts pleins : les combats doivent se
+   dérouler comme aujourd'hui (tests et simulation comme témoins — seules les durées « aux
+   tours de la victime » changent un peu les chiffres).
+2. **La barre d'ordre** à l'écran.
+3. **Les coûts différents** (sorts de soutien moins chers, modulés par la classe).
+4. **La Vitesse** et son affixe ; la vitesse des monstres par type et par étage.
+5. **Les effets sur les jauges** : gel, repousser, Hâte, Lenteur.
+
 ## Les archétypes : le stuff fait la classe
 
 Décidé le 18/09/2026. Trois archétypes pour commencer, **aucune classe choisie** : comme
@@ -671,13 +1049,20 @@ multiclasse de D&D).
   - **L'archétype** vient de l'armure, en attendant les sets : 2 pièces du même poids sur
     3 (casque, armure, bottes). Lourd = guerrier, léger = voleur, tissu = mage. Sans
     majorité, le « Spécial » reste verrouillé. L'inventaire affiche l'archétype.
+  - **Le renvoi du guerrier** (idée du propriétaire, 18/09) : le guerrier qui se protège
+    beaucoup ne tuait rien. Il fait donc mal **en encaissant** : le blocage parfait au
+    bouclier renvoie **30 %** du coup (le coup de bouclier), la Garde **50 %** ; la Peau de
+    pierre s'y ajoute (30 %, doublée par Rempart). Tout se calcule sur le coup **brut**,
+    avant parade et armure : plus le monstre frappe fort, plus il se fait mal, et la grosse
+    armure du guerrier n'affaiblit pas ce qu'il renvoie (`Combat.retaliate`).
   - **Parade parfaite** : le guerrier **bloque** (aucun dégât) s'il porte un bouclier ; le
     voleur **esquive** (aucun dégât) et **riposte** d'un coup d'arme gratuit ; le mage
     fait un **contresort** : ses reliques gagnent un tour de recharge (pas le Spécial).
   - **Le bouton « Spécial »**, recharge 5 tours (la SAG la raccourcit), gardée d'un combat à
     l'autre comme les reliques, et que le repos recharge :
     - Guerrier, **Garde** : il passe son tour, ses fenêtres de parade doublent jusqu'à son
-      prochain tour ;
+      prochain tour, et chaque coup reçu (bloqué ou encaissé) renvoie **50 %** du coup brut
+      à l'attaquant — la **Représaille** ;
     - Voleur, **Coup mortel** : un coup d'arme (avec le swipe) ; sur une cible **exposée**
       (empoisonnée, figée, paralysée ou sous 30 % de ses PV), critique garanti et
       multiplicateur +1 — l'attaque sournoise de D&D, et de quoi achever un petit monstre ;
@@ -691,6 +1076,8 @@ multiclasse de D&D).
     pour le novice et le correct. Un coup de pouce, pas un bouleversement.
 - **D.** Les sets par zone et par archétype, qui tombent tous partout.
 - **E.** Les affixes de sorts, puis ceux propres à une relique (voir plus haut).
+- **Avant D** (décidé le 18/09) : le grimoire, voir « Le grimoire ».
+  Les sets viendront quand leurs bonus auront des sorts à modifier.
 
 ## Mesures : la boucle « mieux équipé → plus profond » (**avant** la refonte des affixes)
 

@@ -117,6 +117,16 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
+    <!-- Résonances : la paire portée, et le carnet de celles déjà découvertes -->
+    <TextView
+        android:id="@+id/inv_resonance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#FFD54F"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Sac : nombre d'objets + tri -->
     <LinearLayout
         android:layout_width="match_parent"

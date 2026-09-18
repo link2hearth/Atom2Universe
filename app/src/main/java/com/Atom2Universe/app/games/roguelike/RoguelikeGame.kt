@@ -123,11 +123,17 @@ class RoguelikeGame(
         const val POTION_PRICE   = 15
         const val CHECKPOINT     = 1
         /**
-         * Les étages où une relique attend, au bout du cul-de-sac le plus éloigné. Chacune
-         * est tirée au hasard parmi celles qu'on n'a pas encore : la Boule de feu n'est pas
-         * forcément la première. Une relique déjà trouvée ne revient pas après une mort.
+         * Les reliques ne se trouvent **qu'en explorant** (décidé le 18/09/2026) : jamais sur
+         * un monstre. Une relique attend au bout du cul-de-sac le plus éloigné du départ, sur
+         * [RELIC_CHANCE] des étages — c'est ce qui donne envie de fouiller la carte. Elle est
+         * tirée parmi celles qu'on n'a pas encore : la Boule de feu n'est pas forcément la
+         * première. Rare, mais on garde tout en mourant et les étages se refont : on finit par
+         * tout trouver.
+         *
+         * La toute première est garantie à l'étage [FIRST_RELIC_FLOOR], pour découvrir les sorts.
          */
-        val RELIC_FLOORS = intArrayOf(2, 5, 9, 14)
+        const val RELIC_CHANCE = 0.15f
+        const val FIRST_RELIC_FLOOR = 2
 
         fun fromJson(j: JSONObject): RoguelikeGame {
             val hero = Hero().apply {
@@ -156,6 +162,12 @@ class RoguelikeGame(
                         val name = slotsJson!!.optString(i, "")
                         relicSlots[i] = relics.firstOrNull { it.name == name }
                     }
+                    j.optJSONArray("resonances")?.let { arr ->
+                        for (i in 0 until arr.length())
+                            runCatching { Resonance.valueOf(arr.getString(i)) }.getOrNull()?.let { knownResonances += it }
+                    }
+                    // Une paire portée avant que les résonances existent : on la connaît déjà
+                    discoverResonances()
                 }
             }
             return RoguelikeGame(hero, j.getInt("floor")).apply {
@@ -308,7 +320,12 @@ class RoguelikeGame(
     /** Porter ou ranger une relique, seulement hors combat. */
     fun toggleRelic(relic: Relic): Hero.RelicToggle? {
         if (!isExploring) return null
-        return hero.toggleRelic(relic)
+        return hero.toggleRelic(relic).also { logDiscoveredResonances() }
+    }
+
+    /** Une paire portée pour la première fois : on l'annonce, elle rejoint le carnet. */
+    private fun logDiscoveredResonances() {
+        for (r in hero.discoverResonances()) addLog(R.string.roguelike_log_resonance_found, r, Resonance.BONUS, r.attribute)
     }
 
     fun dismissDeath() { deathReport = null }
@@ -454,6 +471,7 @@ class RoguelikeGame(
                 level.items.remove(item)
                 val worn = hero.addRelic(relic)
                 addLog(if (worn) R.string.roguelike_log_relic_found_equipped else R.string.roguelike_log_relic_found_bag, relic)
+                logDiscoveredResonances()
             }
         }
     }
@@ -518,9 +536,9 @@ class RoguelikeGame(
             lv.packs += MonsterPack(Encounters.roll(floor, rng), pos)
         }
 
-        // Une relique sur certains étages, au bout du cul-de-sac le plus éloigné du départ
-        val relicIndex = RELIC_FLOORS.indexOf(floor)
-        if (relicIndex >= 0 && hero.relics.size <= relicIndex) {
+        // Parfois une relique, au bout du cul-de-sac le plus éloigné du départ
+        val firstRelic = hero.relics.isEmpty() && floor >= FIRST_RELIC_FLOOR
+        if (firstRelic || (floor >= FIRST_RELIC_FLOOR && rng.nextFloat() < RELIC_CHANCE)) {
             val relic = Relic.entries.filter { it !in hero.relics }.randomOrNull(rng)
             val spot = layout.deadEnds.filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
                 .maxByOrNull { dist[it.y][it.x] }
@@ -563,5 +581,6 @@ class RoguelikeGame(
         put("relics", org.json.JSONArray().also { arr -> hero.relics.forEach { arr.put(it.name) } })
         put("relicSlots", org.json.JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
         put("relicCooldowns", JSONObject().also { o -> hero.relicCooldowns.forEach { (r, cd) -> o.put(r.name, cd) } })
+        put("resonances", org.json.JSONArray().also { arr -> hero.knownResonances.forEach { arr.put(it.name) } })
     }
 }

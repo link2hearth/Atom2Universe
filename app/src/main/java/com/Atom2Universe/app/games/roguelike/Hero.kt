@@ -98,6 +98,11 @@ class Hero {
     private var walkSteps = 0
     /** Tours avant que le « Spécial » soit prêt. */
     var specialCooldown = 0
+    /** Les résonances déjà portées une fois : l'inventaire les liste, les autres restent cachées. */
+    val knownResonances = mutableSetOf<Resonance>()
+
+    /** Les résonances des reliques portées (voir [Resonance]). */
+    val resonances: List<Resonance> get() = Resonance.active(relicSlots.filterNotNull())
 
     /** L'archétype que donne l'armure portée, ou null sans majorité. */
     val archetype: Archetype? get() {
@@ -111,7 +116,9 @@ class Hero {
 
     // ── Caractéristiques D&D ────────────────────────────────────────────────────
 
-    fun attribute(type: StatType): Int = BASE_ATTRIBUTE + equipSum(type).roundToInt()
+    /** La caractéristique : la base, l'équipement, et les résonances des reliques portées. */
+    fun attribute(type: StatType): Int = BASE_ATTRIBUTE + equipSum(type).roundToInt() +
+        Resonance.BONUS * resonances.count { it.attribute == type }
 
     /** Points au-dessus de 10. */
     private fun bonus(type: StatType) = attribute(type) - BASE_ATTRIBUTE
@@ -158,6 +165,22 @@ class Hero {
     /** Ce qu'une dose de poison de cette relique ronge par tour. */
     fun poisonDose(relic: Relic) = (relic.doseCoef * relicPower(relic)).roundToInt().coerceAtLeast(1)
 
+    /** Ce que le saignement de cette relique ronge à chaque attaque de la cible. */
+    fun bleedDamage(relic: Relic) = (RelicBudget.bleedCoef(relic) * relicPower(relic)).roundToInt().coerceAtLeast(1)
+
+    /**
+     * La quantité propre à une relique, celle qu'affiche sa description : la barrière du
+     * Bouclier arcanique et le soin par tour de la Régénération (en part des PV max, relevés
+     * par la caractéristique), le saignement, les épines en %.
+     */
+    fun relicAmount(relic: Relic): Int = when (relic.effect) {
+        RelicEffect.BARRIER -> (maxHp * Relic.BARRIER_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
+        RelicEffect.REGEN   -> (maxHp * Relic.REGEN_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
+        RelicEffect.BLEED, RelicEffect.BLEED_ON_CRIT -> bleedDamage(relic)
+        RelicEffect.STONESKIN -> (Relic.THORNS_SHARE * 100).roundToInt()
+        else -> 0
+    }
+
     /** Chance de critique : 5 % + 1 % par point de DEX + bonus des objets. */
     val critChance get() = (0.05f + 0.01f * bonus(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)).coerceIn(0f, 0.6f)
     val critMult get() = BASE_CRIT_MULT + equipSum(StatType.CRIT_DAMAGE)
@@ -195,11 +218,11 @@ class Hero {
 
     /**
      * Dégâts réellement subis après armure. L'armure se mesure à l'étage : la même armure
-     * protège moins face à des monstres plus profonds.
+     * protège moins face à des monstres plus profonds. [armorMult] : la Peau de pierre la double.
      */
-    fun mitigate(raw: Float, floor: Int): Float {
+    fun mitigate(raw: Float, floor: Int, armorMult: Float = 1f): Float {
         val k = 50f * LootSystem.scale(LootSystem.powerCenter(floor).roundToInt())
-        return raw * k / (k + armor)
+        return raw * k / (k + armor * armorMult)
     }
 
     fun healFull() { hp = maxHp }
@@ -217,17 +240,25 @@ class Hero {
         return true
     }
 
+    /**
+     * Les résonances portées pour la première fois : elles rejoignent le carnet. À appeler
+     * après chaque changement de reliques portées ; renvoie celles qu'on vient de découvrir.
+     */
+    fun discoverResonances(): List<Resonance> = resonances.filter { knownResonances.add(it) }
+
     fun relicCooldown(relic: Relic) = relicCooldowns[relic] ?: 0
 
     /**
      * Toutes les recharges avancent de [turns] tours, « Spécial » compris sauf si
-     * [includeSpecial] est faux (le contresort du mage ne recharge que les reliques).
+     * [includeSpecial] est faux (le contresort du mage ne recharge que les reliques), et
+     * sauf [except] (le Bouclier arcanique ne se recharge pas lui-même).
      */
-    fun tickRelics(turns: Int = 1, includeSpecial: Boolean = true) {
+    fun tickRelics(turns: Int = 1, includeSpecial: Boolean = true, except: Relic? = null) {
         if (includeSpecial) specialCooldown = (specialCooldown - turns).coerceAtLeast(0)
         val it = relicCooldowns.entries.iterator()
         while (it.hasNext()) {
             val e = it.next()
+            if (e.key == except) continue
             e.setValue(e.value - turns)
             if (e.value <= 0) it.remove()
         }
@@ -246,7 +277,12 @@ class Hero {
     /** Porter ou ranger une relique. Pleins, les emplacements refusent : on range d'abord. */
     fun toggleRelic(relic: Relic): RelicToggle {
         val at = relicSlots.indexOf(relic)
-        if (at >= 0) { relicSlots[at] = null; return RelicToggle.REMOVED }
+        if (at >= 0) {
+            relicSlots[at] = null
+            // Une résonance peut donner de la CON : sans elle, les PV max baissent
+            hp = hp.coerceAtMost(maxHp)
+            return RelicToggle.REMOVED
+        }
         if (relic !in relics) return RelicToggle.SLOTS_FULL
         val free = relicSlots.indexOfFirst { it == null }
         if (free < 0) return RelicToggle.SLOTS_FULL
