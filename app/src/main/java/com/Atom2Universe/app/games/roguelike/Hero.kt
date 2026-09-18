@@ -43,6 +43,11 @@ class Hero {
          */
         const val BASE_HP        = 28
         const val HP_PER_CON     = 4
+        /** Ce que rapporte un point au-dessus de 10 (l'inventaire affiche ces mêmes chiffres). */
+        const val STR_DAMAGE_PER_POINT = 0.04f
+        const val RELIC_DAMAGE_PER_POINT = 0.05f
+        const val WIS_POINTS_PER_TURN = 6
+        const val GOLD_PER_CHA = 0.03f
         /** Sans arme, on se bat à mains nues. */
         const val FIST_MIN       = 2
         const val FIST_MAX       = 4
@@ -119,14 +124,14 @@ class Hero {
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis FOR : +4 % par point. */
     val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * strMult).roundToInt()
     val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult).roundToInt()
-    private val strMult get() = 1f + 0.04f * bonus(StatType.STR)
+    private val strMult get() = 1f + STR_DAMAGE_PER_POINT * bonus(StatType.STR)
 
     /**
      * Le multiplicateur d'une relique : **sa** caractéristique ([Relic.attribute] — INT
      * pour le mage, DEX pour le Venin du voleur) ajoute 5 % par point, puis les bonus
      * « dégâts des sorts » des objets.
      */
-    fun relicMult(relic: Relic) = (1f + 0.05f * bonus(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
+    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * bonus(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
 
     /**
      * La puissance d'une relique : l'épée de référence de la puissance de l'arme portée,
@@ -161,7 +166,7 @@ class Hero {
     val lifeSteal get() = equipSum(StatType.LIFE_STEAL)
 
     /** Recharge des sorts : SAG retire un tour tous les 6 points. */
-    fun spellCooldown(base: Int) = (base - bonus(StatType.WIS) / 6).coerceAtLeast(1)
+    fun spellCooldown(base: Int) = (base - bonus(StatType.WIS) / WIS_POINTS_PER_TURN).coerceAtLeast(1)
 
     /**
      * La classe d'armure, façon D&D : 10 + maîtrise (celle des pièces d'armure portées) +
@@ -176,11 +181,17 @@ class Hero {
         return ArmorClass.BASE + SpellSave.proficiency(power) + equipped.values.sumOf { it.acBonus } + dex
     }
 
+    /**
+     * Ce que le joueur lit à la place de la CA (jargon de D&D) : la chance que les monstres
+     * de cet étage le ratent. Un point de CA vaut 5 points d'esquive.
+     */
+    fun dodgeChance(floor: Int) = 1f - ArmorClass.hitChance(armorClass, ArmorClass.monsterAttack(floor))
+
     /** La parade s'élargit de 4 ms par point de DEX. */
     val parryBonusMs get() = 4 * bonus(StatType.DEX)
 
     /** Or gagné : +3 % par point de CHA. */
-    val goldMult get() = 1f + 0.03f * bonus(StatType.CHA)
+    val goldMult get() = 1f + GOLD_PER_CHA * bonus(StatType.CHA)
 
     /**
      * Dégâts réellement subis après armure. L'armure se mesure à l'étage : la même armure

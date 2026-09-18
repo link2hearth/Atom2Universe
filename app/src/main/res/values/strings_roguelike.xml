@@ -105,6 +105,12 @@
     <string name="roguelike_attr_int">INT</string>
     <string name="roguelike_attr_wis">WIS</string>
     <string name="roguelike_attr_cha">CHA</string>
+    <string name="roguelike_attr_desc_str">Strength — weapon damage: +%1$d%% per point above 10.</string>
+    <string name="roguelike_attr_desc_dex">Dexterity — critical chance, a wider parry window, dodge (except in heavy armor), and the power of Venom.</string>
+    <string name="roguelike_attr_desc_con">Constitution — hit points: +%1$d per point above 10.</string>
+    <string name="roguelike_attr_desc_int">Intelligence — fire, ice and lightning spells: +%1$d%% damage per point above 10, and they freeze or paralyze more often.</string>
+    <string name="roguelike_attr_desc_wis">Wisdom — relics and the Special recharge faster: one turn less every %1$d points above 10.</string>
+    <string name="roguelike_attr_desc_cha">Charisma — gold found: +%1$d%% per point above 10.</string>
     <string name="roguelike_stattype_armor">Armor</string>
     <string name="roguelike_stattype_weapon_dmg">Weapon damage</string>
     <string name="roguelike_stattype_spell_dmg">Spell damage</string>
@@ -115,8 +121,8 @@
     <string name="roguelike_relic_lightning">Lightning</string>
     <string name="roguelike_relic_venom">Venom</string>
     <string name="roguelike_relic_fireball_desc">Deals %1$d–%2$d damage, then burns the target for %3$d turns (a quarter of the hit each turn). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_ice_shard_desc">Deals %1$d–%2$d damage. The target makes a saving throw against DC %6$d: if it fails, it is frozen for %3$d turn (its counter stops, its attack is delayed). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_lightning_desc">Deals %1$d–%2$d damage and paralyzes the target for %3$d turns: each attack that falls due needs a saving throw against DC %6$d, and is lost if it fails (magic still gets through). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_ice_shard_desc">Deals %1$d–%2$d damage and can freeze the target for %3$d turn: its attack is delayed. It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_lightning_desc">Deals %1$d–%2$d damage and paralyzes the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_venom_desc">Deals %1$d–%2$d damage and adds a dose of poison (3 at most): each dose eats %5$d HP per turn for %3$d turns. Recharge: %4$d turns.</string>
     <string name="roguelike_log_relic_found_equipped">Relic found: %1$s! It\'s ready for your next fight.</string>
     <string name="roguelike_log_relic_found_bag">Relic found: %1$s! Wear it from the inventory.</string>
@@ -160,7 +166,6 @@
     <string name="roguelike_combat_save_rage">Too angry!</string>
     <string name="roguelike_combat_enraged">ENRAGED!</string>
     <string name="roguelike_combat_rage_status">rage %1$d</string>
-    <string name="roguelike_combat_enemy_missed">Missed!</string>
     <string name="roguelike_combat_resisted">Resists!</string>
     <string name="roguelike_hud_relic_cooldown">%1$d</string>
     <string name="roguelike_archetype_warrior">Warrior</string>
@@ -245,9 +250,9 @@
     <string name="roguelike_weight_light">Light</string>
     <string name="roguelike_weight_heavy">Heavy</string>
     <string name="roguelike_item_weight_cloth">Cloth: little armor</string>
-    <string name="roguelike_item_weight_light">Light: +%1$d AC, DEX counts in AC</string>
-    <string name="roguelike_item_weight_heavy">Heavy: DEX no longer counts in AC</string>
-    <string name="roguelike_item_shield_ac">+%1$d AC</string>
+    <string name="roguelike_item_weight_light">Light: +%1$d%% dodge, DEX helps you dodge</string>
+    <string name="roguelike_item_weight_heavy">Heavy: DEX no longer helps you dodge</string>
+    <string name="roguelike_item_shield_ac">+%1$d%% dodge</string>
     <string name="roguelike_base_amulet">Amulet</string>
     <string name="roguelike_base_ring">Ring</string>
     <string name="roguelike_item_name">%2$s %1$s %3$d</string>
@@ -261,7 +266,7 @@
     <string name="roguelike_inventory_sort_recent">Recent</string>
     <string name="roguelike_inventory_empty">Your bag is empty</string>
     <string name="roguelike_inventory_attr">%1$s %2$d</string>
-    <string name="roguelike_inventory_stats_line">HP %1$d/%2$d   Armor %3$d   AC %7$d   Weapon %4$d–%5$d   Crit %6$d%%</string>
+    <string name="roguelike_inventory_stats_line">HP %1$d/%2$d   Armor %3$d   Dodge %7$d%%   Weapon %4$d–%5$d   Crit %6$d%%</string>
     <string name="roguelike_inventory_subtitle">%1$s · %2$s · rating %3$d</string>
     <string name="roguelike_inventory_worn">Worn: %1$s (rating %2$d)</string>
     <string name="roguelike_inventory_sell">Sell · %1$d gold</string>

@@ -105,6 +105,12 @@
     <string name="roguelike_attr_int">INT</string>
     <string name="roguelike_attr_wis">SAG</string>
     <string name="roguelike_attr_cha">CHA</string>
+    <string name="roguelike_attr_desc_str">Force — dégâts de l\'arme : +%1$d %% par point au-dessus de 10.</string>
+    <string name="roguelike_attr_desc_dex">Dextérité — chance de critique, parade plus large, esquive (sauf en armure lourde), et puissance du Venin.</string>
+    <string name="roguelike_attr_desc_con">Constitution — points de vie : +%1$d par point au-dessus de 10.</string>
+    <string name="roguelike_attr_desc_int">Intelligence — sorts de feu, de glace et de foudre : +%1$d %% de dégâts par point au-dessus de 10, et ils figent ou paralysent plus souvent.</string>
+    <string name="roguelike_attr_desc_wis">Sagesse — les reliques et le Spécial se rechargent plus vite : un tour de moins tous les %1$d points au-dessus de 10.</string>
+    <string name="roguelike_attr_desc_cha">Charisme — or trouvé : +%1$d %% par point au-dessus de 10.</string>
     <string name="roguelike_stattype_armor">Armure</string>
     <string name="roguelike_stattype_weapon_dmg">Dégâts d\'arme</string>
     <string name="roguelike_stattype_spell_dmg">Dégâts des sorts</string>
@@ -115,8 +121,8 @@
     <string name="roguelike_relic_lightning">Foudre</string>
     <string name="roguelike_relic_venom">Venin</string>
     <string name="roguelike_relic_fireball_desc">Inflige %1$d–%2$d dégâts, puis la cible brûle pendant %3$d tours (un quart du coup à chaque tour). Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_ice_shard_desc">Inflige %1$d–%2$d dégâts. La cible fait un jet de sauvegarde contre DD %6$d : raté, elle est figée pendant %3$d tour (son compteur s\'arrête, son attaque est repoussée). Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_lightning_desc">Inflige %1$d–%2$d dégâts et paralyse la cible pendant %3$d tours : chaque attaque qui tombe demande un jet de sauvegarde contre DD %6$d, et elle est perdue s\'il est raté (la magie passe quand même). Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_ice_shard_desc">Inflige %1$d–%2$d dégâts et peut figer la cible pendant %3$d tour : son attaque est repoussée. Elle résiste parfois — une bonne INT et un swipe réussi l\'en empêchent plus souvent. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_lightning_desc">Inflige %1$d–%2$d dégâts et paralyse la cible pendant %3$d tours : chacune de ses attaques peut tomber à plat (la magie passe quand même). Une bonne INT et un swipe réussi le rendent plus probable. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_venom_desc">Inflige %1$d–%2$d dégâts et ajoute une dose de poison (3 au plus) : chaque dose ronge %5$d PV par tour pendant %3$d tours. Recharge : %4$d tours.</string>
     <string name="roguelike_log_relic_found_equipped">Relique trouvée : %1$s ! Elle est prête pour le prochain combat.</string>
     <string name="roguelike_log_relic_found_bag">Relique trouvée : %1$s ! Porte-la depuis l\'inventaire.</string>
@@ -160,7 +166,6 @@
     <string name="roguelike_combat_save_rage">Trop enragé !</string>
     <string name="roguelike_combat_enraged">ENRAGÉ !</string>
     <string name="roguelike_combat_rage_status">rage %1$d</string>
-    <string name="roguelike_combat_enemy_missed">Raté !</string>
     <string name="roguelike_combat_resisted">Résiste !</string>
     <string name="roguelike_hud_relic_cooldown">%1$d</string>
     <string name="roguelike_archetype_warrior">Guerrier</string>
@@ -245,9 +250,9 @@
     <string name="roguelike_weight_light">Léger</string>
     <string name="roguelike_weight_heavy">Lourd</string>
     <string name="roguelike_item_weight_cloth">Tissu : peu d\'armure</string>
-    <string name="roguelike_item_weight_light">Léger : +%1$d CA, la DEX compte dans la CA</string>
-    <string name="roguelike_item_weight_heavy">Lourd : la DEX ne compte plus dans la CA</string>
-    <string name="roguelike_item_shield_ac">+%1$d CA</string>
+    <string name="roguelike_item_weight_light">Léger : +%1$d %% d\'esquive, la DEX aide à esquiver</string>
+    <string name="roguelike_item_weight_heavy">Lourd : la DEX n\'aide plus à esquiver</string>
+    <string name="roguelike_item_shield_ac">+%1$d %% d\'esquive</string>
     <string name="roguelike_base_amulet">Amulette</string>
     <string name="roguelike_base_ring">Anneau</string>
     <string name="roguelike_item_name">%1$s %2$s %3$d</string>
@@ -261,7 +266,7 @@
     <string name="roguelike_inventory_sort_recent">Récent</string>
     <string name="roguelike_inventory_empty">Ton sac est vide</string>
     <string name="roguelike_inventory_attr">%1$s %2$d</string>
-    <string name="roguelike_inventory_stats_line">PV %1$d/%2$d   Armure %3$d   CA %7$d   Arme %4$d–%5$d   Crit %6$d %%</string>
+    <string name="roguelike_inventory_stats_line">PV %1$d/%2$d   Armure %3$d   Esquive %7$d %%   Arme %4$d–%5$d   Crit %6$d %%</string>
     <string name="roguelike_inventory_subtitle">%1$s · %2$s · note %3$d</string>
     <string name="roguelike_inventory_worn">Porté : %1$s (note %2$d)</string>
     <string name="roguelike_inventory_sell">Vendre · %1$d or</string>

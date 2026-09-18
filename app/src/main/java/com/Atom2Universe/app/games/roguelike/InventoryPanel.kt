@@ -28,6 +28,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private val tvGold      = root.findViewById<TextView>(R.id.inv_gold)
     private val equippedRow = root.findViewById<LinearLayout>(R.id.inv_equipped)
     private val tvStats     = root.findViewById<TextView>(R.id.inv_stats)
+    private val attrsRow    = root.findViewById<LinearLayout>(R.id.inv_attrs)
+    private val tvAttrDesc  = root.findViewById<TextView>(R.id.inv_attr_desc)
     private val tvRelics    = root.findViewById<TextView>(R.id.inv_relics_title)
     private val relicsRow   = root.findViewById<LinearLayout>(R.id.inv_relics)
     private val tvRelicDesc = root.findViewById<TextView>(R.id.inv_relic_desc)
@@ -53,6 +55,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private var sorted: List<Equipment> = emptyList()
     private val slotViews = mutableMapOf<EquipSlot, ImageView>()
     private var selectedRelic: Relic? = null
+    private var selectedAttr: StatType? = null
     private var relicRefused = false
 
     val isOpen get() = root.visibility == View.VISIBLE
@@ -134,6 +137,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         game = g
         selected = null
         selectedRelic = null
+        selectedAttr = null
         relicRefused = false
         root.visibility = View.VISIBLE
         refresh()
@@ -161,6 +165,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
             iv.setImageBitmap(e?.let { SpriteLoader.sheetCell(ctx.assets, it.spriteRow, it.spriteCol) })
         }
 
+        bindAttributes(hero)
         tvStats.text = statsText(hero)
         bindRelics(hero)
 
@@ -236,17 +241,60 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         onChanged()
     }
 
-    private fun statsText(hero: Hero): String {
-        val attrs = StatType.ATTRIBUTES.joinToString("   ") {
-            ctx.getString(R.string.roguelike_inventory_attr, ctx.getString(it.labelRes), hero.attribute(it))
+    // ── Caractéristiques ────────────────────────────────────────────────────────
+
+    /**
+     * Les six sigles (FOR, DEX…) gardent les lignes courtes. Toucher l'un d'eux affiche
+     * dessous son nom complet et ce qu'il fait ; le retoucher le referme.
+     */
+    private fun bindAttributes(hero: Hero) {
+        attrsRow.removeAllViews()
+        for (attr in StatType.ATTRIBUTES) {
+            val on = attr == selectedAttr
+            attrsRow.addView(TextView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams(0, (34 * density).toInt(), 1f).apply {
+                    marginEnd = (4 * density).toInt()
+                }
+                gravity = android.view.Gravity.CENTER
+                text = ctx.getString(R.string.roguelike_inventory_attr, ctx.getString(attr.labelRes), hero.attribute(attr))
+                textSize = 12f
+                setTextColor(if (on) 0xFFFFFFFF.toInt() else 0xFFCFD8DC.toInt())
+                background = GradientDrawable().apply {
+                    cornerRadius = 6 * density
+                    setColor(if (on) 0xFF1565C0.toInt() else 0xFF141E2A.toInt())
+                }
+                setOnClickListener {
+                    selectedAttr = if (selectedAttr == attr) null else attr
+                    refresh()
+                }
+            })
         }
+        val attr = selectedAttr
+        tvAttrDesc.visibility = if (attr == null) View.GONE else View.VISIBLE
+        if (attr != null) tvAttrDesc.text = attributeDescription(attr)
+    }
+
+    /** Le nom complet et le rôle, avec les vrais chiffres des formules du héros. */
+    private fun attributeDescription(attr: StatType): String = when (attr) {
+        StatType.STR -> ctx.getString(R.string.roguelike_attr_desc_str, percent(Hero.STR_DAMAGE_PER_POINT))
+        StatType.DEX -> ctx.getString(R.string.roguelike_attr_desc_dex)
+        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, Hero.HP_PER_CON)
+        StatType.INT -> ctx.getString(R.string.roguelike_attr_desc_int, percent(Hero.RELIC_DAMAGE_PER_POINT))
+        StatType.WIS -> ctx.getString(R.string.roguelike_attr_desc_wis, Hero.WIS_POINTS_PER_TURN)
+        StatType.CHA -> ctx.getString(R.string.roguelike_attr_desc_cha, percent(Hero.GOLD_PER_CHA))
+        else -> ""
+    }
+
+    private fun percent(f: Float) = Math.round(f * 100)
+
+    private fun statsText(hero: Hero): String {
         val archetype = hero.archetype?.let { ctx.getString(R.string.roguelike_inventory_archetype, ctx.getString(it.labelRes)) }
             ?: ctx.getString(R.string.roguelike_inventory_archetype_none, Hero.ARCHETYPE_PIECES)
         return listOf(
             archetype,
-            attrs,
             ctx.getString(R.string.roguelike_inventory_stats_line,
-                hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100), hero.armorClass),
+                hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100),
+                Math.round(hero.dodgeChance(game?.floor ?: 1) * 100)),
         ).joinToString("\n")
     }
 

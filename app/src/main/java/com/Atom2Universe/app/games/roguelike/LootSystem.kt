@@ -603,17 +603,20 @@ object LootSystem {
         return context.getString(R.string.roguelike_item_name, context.getString(noun), mat, e.tier)
     }
 
+    /** Des points de CA en points d'esquive, pour le joueur qui ne connaît pas D&D. */
+    private fun dodgePercent(ac: Int) = Math.round(ac * ArmorClass.AC_STEP * 100)
+
     /** Lignes de description : dégâts, armure, puis toutes les stats. */
     fun describe(context: Context, e: Equipment): List<String> = buildList {
         if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage, e.damageMin, e.damageMax))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, e.armor))
         when (e.weight) {
             ArmorWeight.CLOTH -> add(context.getString(R.string.roguelike_item_weight_cloth))
-            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, ArmorWeight.LIGHT.acPerPiece))
+            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, dodgePercent(ArmorWeight.LIGHT.acPerPiece)))
             ArmorWeight.HEAVY -> add(context.getString(R.string.roguelike_item_weight_heavy))
             null -> {}
         }
-        if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, ArmorClass.SHIELD))
+        if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))
         e.implicits.forEach { add(it.display(context)) }
         e.affixes.forEach { add(it.display(context)) }
     }

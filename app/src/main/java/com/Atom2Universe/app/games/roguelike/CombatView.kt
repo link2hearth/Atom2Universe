@@ -325,7 +325,12 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val strike = c.resolveStrike(attacker, timing)
         if (strike.missed) {
-            floatText(context.getString(R.string.roguelike_combat_enemy_missed), heroRect.centerX(), heroRect.top, 0xFFB0BEC5.toInt(), true)
+            // Le texte dit ce que fait le héros, pas ce que rate le monstre : avec un bouclier
+            // ou en guerrier il encaisse sur son armure, sinon il s'écarte
+            val hero = c.hero
+            val res = if (hero.hasShield || hero.archetype == Archetype.WARRIOR) R.string.roguelike_combat_blocked
+                else R.string.roguelike_combat_dodged
+            floatText(context.getString(res), heroRect.centerX(), heroRect.top, 0xFFB0BEC5.toInt(), true)
             enter(Stage.ENEMY_IMPACT)
             return
         }

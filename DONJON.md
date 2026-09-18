@@ -629,6 +629,11 @@ multiclasse de D&D).
 
 ### Étape A : la CA et le jet d'attaque *(faite)*
 
+> **Pour le joueur, pas de jargon de D&D** (décidé le 18/09) : la CA s'affiche en **esquive**,
+> un pourcentage (la chance que les monstres de l'étage ratent ; 1 point de CA = 5 %).
+> Les descriptions des reliques ne parlent plus de DD ni de jet de sauvegarde, mais de
+> cible qui « résiste parfois ». Le code et ce document gardent les noms de D&D.
+
 - **Trois poids** sur le casque, l'armure et les bottes, avec chacun ses noms de pièces (pas
   d'adjectif à accorder) : tissu (Capuche, Robe, Sandales ; armure ×0,6), léger (Coiffe,
   Brigandine, Bottes ; armure ×0,9, +1 CA par pièce, la DEX compte), lourd (Heaume,
