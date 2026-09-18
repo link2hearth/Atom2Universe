@@ -71,6 +71,8 @@ class Hero {
         const val ARCHETYPE_PIECES = 2
         /** Recharge du bouton « Spécial », gardée d'un combat à l'autre comme les reliques. */
         const val SPECIAL_COOLDOWN = 5
+        /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
+        const val MIN_SPEED = 0.5f
 
         /** Un héros neuf : une épée de bois toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
@@ -212,6 +214,14 @@ class Hero {
 
     /** La parade s'élargit de 4 ms par point de DEX. */
     val parryBonusMs get() = 4 * bonus(StatType.DEX)
+
+    /**
+     * La vitesse du héros : ce que sa jauge gagne par unité de temps (1 : normale). Les
+     * affixes « Vitesse » s'ajoutent, l'armure lourde retire 5 % par pièce, la légère en
+     * ajoute 5. Bornée pour qu'aucun empilement ne fige le jeu (voir [MIN_SPEED]).
+     */
+    val speed get() = (1f + equipSum(StatType.SPEED) + equipped.values.sumOf { it.weightSpeed.toDouble() }.toFloat())
+        .coerceAtLeast(MIN_SPEED)
 
     /** Or gagné : +3 % par point de CHA. */
     val goldMult get() = 1f + GOLD_PER_CHA * bonus(StatType.CHA)

@@ -27,7 +27,9 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
     SPELL_DMG    (R.string.roguelike_stattype_spell_dmg,   true),
     CRIT_CHANCE  (R.string.roguelike_stattype_crit_chance, true),
     CRIT_DAMAGE  (R.string.roguelike_stattype_crit_damage, true),
-    LIFE_STEAL   (R.string.roguelike_stattype_life_steal,  true);
+    LIFE_STEAL   (R.string.roguelike_stattype_life_steal,  true),
+    /** Vitesse : la jauge du héros se remplit plus vite (+10 % = un tour de plus tous les dix). */
+    SPEED        (R.string.roguelike_stattype_speed,       true);
 
     companion object {
         val ATTRIBUTES = listOf(STR, DEX, CON, INT, WIS, CHA)
@@ -140,18 +142,20 @@ enum class ItemBase(
  *    **encaisse**.
  * L'armure réduit les dégâts d'un coup ; la CA ([ArmorClass]) décide s'il touche. La
  * moyenne des trois multiplicateurs vaut 1 : le héros de référence ne change pas.
+ * [speedPerPiece] : l'armure lourde ralentit, la légère accélère, le tissu ne change rien —
+ * la moyenne vaut 0, là aussi (voir DONJON.md, « La jauge »).
  * Chaque poids a ses noms de pièces (pas d'adjectif à accorder).
  */
 enum class ArmorWeight(
     @StringRes override val labelRes: Int,
-    val armorMult: Float, val acPerPiece: Int, val dexCounts: Boolean,
+    val armorMult: Float, val acPerPiece: Int, val dexCounts: Boolean, val speedPerPiece: Float,
     @StringRes val helmetRes: Int, @StringRes val chestRes: Int, @StringRes val bootsRes: Int,
 ) : Labeled {
-    CLOTH(R.string.roguelike_weight_cloth, 0.6f, 0, true,
+    CLOTH(R.string.roguelike_weight_cloth, 0.6f, 0, true, 0f,
         R.string.roguelike_base_hood, R.string.roguelike_base_robe, R.string.roguelike_base_sandals),
-    LIGHT(R.string.roguelike_weight_light, 0.9f, 1, true,
+    LIGHT(R.string.roguelike_weight_light, 0.9f, 1, true, 0.05f,
         R.string.roguelike_base_coif, R.string.roguelike_base_jerkin, R.string.roguelike_base_boots),
-    HEAVY(R.string.roguelike_weight_heavy, 1.5f, 0, false,
+    HEAVY(R.string.roguelike_weight_heavy, 1.5f, 0, false, -0.05f,
         R.string.roguelike_base_helm, R.string.roguelike_base_plate, R.string.roguelike_base_sabatons);
 
     fun nounRes(base: ItemBase) = when (base) {
@@ -192,6 +196,8 @@ data class Equipment(
     val slot get() = base.slot
     /** Ce que la pièce ajoute à la CA : son poids, ou le bouclier. */
     val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
+    /** Ce que la pièce change à la vitesse par son poids (les affixes de vitesse sont à part). */
+    val weightSpeed get() = weight?.speedPerPiece ?: 0f
     val power get() = material.ordinal * Material.STEP + tier
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
@@ -276,6 +282,8 @@ object AffixBudget {
         StatType.SPELL_DMG   to floatArrayOf(.08f, .11f, .14f, .18f, .22f, .26f, .30f, .35f),
         StatType.LIFE_STEAL  to floatArrayOf(.004f, .006f, .008f, .010f, .013f, .016f, .019f, .023f),
         StatType.DEX         to floatArrayOf(3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f),
+        // La vitesse : +2 % au premier palier, +8 % au dernier. Un taux, qui vaut double (voir perPoint)
+        StatType.SPEED       to floatArrayOf(.020f, .025f, .030f, .040f, .050f, .060f, .070f, .080f),
         StatType.CHA         to floatArrayOf(2f, 3f, 4f, 5f, 6f, 8f, 10f, 12f),
     )
 
@@ -355,7 +363,13 @@ object AffixBudget {
         // sous-estime le vol de vie — il se cumule, c'est tout son intérêt.
         StatType.LIFE_STEAL  -> HITS_PER_FIGHT * refWeaponDamage(p) *
                                 (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE)) / refHp(p)
+        // Deux axes à la fois : +10 % de vitesse, c'est 10 % de coups en plus par coup reçu,
+        // donc autant de dégâts infligés que de dégâts évités sur un combat
+        StatType.SPEED       -> SPEED_AXES
     }
+
+    /** La vitesse compte sur les dégâts **et** sur la survie. */
+    private const val SPEED_AXES = 2f
 
     /**
      * Ce que vaut +1 CA sur l'axe de la survie : il retire 5 points de chance d'être touché
@@ -435,7 +449,7 @@ object LootSystem {
         StatType.ARMOR to 10f, StatType.MAX_HP to 10f,
         StatType.WEAPON_DMG to 6f, StatType.SPELL_DMG to 6f,
         StatType.CRIT_CHANCE to 5f, StatType.CRIT_DAMAGE to 5f,
-        StatType.LIFE_STEAL to 3f,
+        StatType.LIFE_STEAL to 3f, StatType.SPEED to 5f,
     )
 
     /**
@@ -445,13 +459,15 @@ object LootSystem {
     private val affixPools: Map<EquipSlot, List<StatType>> = run {
         val attrs = StatType.ATTRIBUTES
         val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP)
-        val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL)
+        val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED)
+        // La vitesse : sur l'arme, les bottes et les bijoux (comme la vitesse d'attaque et de
+        // course de Diablo), pas sur le casque, l'armure ni la main gauche
         mapOf(
-            EquipSlot.WEAPON  to attrs + listOf(StatType.WEAPON_DMG, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL),
+            EquipSlot.WEAPON  to attrs + listOf(StatType.WEAPON_DMG, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED),
             EquipSlot.OFFHAND to attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE),
             EquipSlot.HELMET  to armorPiece,
             EquipSlot.CHEST   to armorPiece,
-            EquipSlot.BOOTS   to armorPiece,
+            EquipSlot.BOOTS   to armorPiece + StatType.SPEED,
             EquipSlot.AMULET  to jewel,
             EquipSlot.RING    to jewel,
         )
@@ -590,6 +606,7 @@ object LootSystem {
         if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f
         if (e.armor > 0)     r += e.armor * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
         r += e.acBonus * AffixBudget.perAcPoint() * 100f
+        r += e.weightSpeed * AffixBudget.perPoint(StatType.SPEED, p) * 100f
         for (s in e.allStats) r += s.value * AffixBudget.perPoint(s.type, p) * 100f
         return (r * scale(p)).roundToInt()
     }
@@ -612,8 +629,9 @@ object LootSystem {
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, e.armor))
         when (e.weight) {
             ArmorWeight.CLOTH -> add(context.getString(R.string.roguelike_item_weight_cloth))
-            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, dodgePercent(ArmorWeight.LIGHT.acPerPiece)))
-            ArmorWeight.HEAVY -> add(context.getString(R.string.roguelike_item_weight_heavy))
+            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, dodgePercent(ArmorWeight.LIGHT.acPerPiece),
+                Math.round(ArmorWeight.LIGHT.speedPerPiece * 100)))
+            ArmorWeight.HEAVY -> add(context.getString(R.string.roguelike_item_weight_heavy, Math.round(-ArmorWeight.HEAVY.speedPerPiece * 100)))
             null -> {}
         }
         if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))

@@ -77,6 +77,12 @@ class RoguelikeGame(
     val hero: Hero = Hero.starter(),
     startFloor: Int = 1,
     private val rng: Random = Random,
+    /**
+     * Un checkpoint automatique tous les N étages (11, 21, 31… pour N = 10) : la mort ramène au
+     * dernier atteint. 0 : toujours l'étage [CHECKPOINT], comme dans le jeu aujourd'hui. Sert
+     * aux simulations en attendant les vrais checkpoints de boss (voir DONJON.md).
+     */
+    private val checkpointEvery: Int = 0,
 ) {
     var onCombatStart:  (() -> Unit)?             = null
     var onFloorChanged: ((floor: Int) -> Unit)?   = null
@@ -179,6 +185,9 @@ class RoguelikeGame(
     }
 
     var floor = startFloor
+        private set
+    /** L'étage où la mort ramène. */
+    var checkpoint = CHECKPOINT
         private set
     var level: DungeonLevel = generateLevel(floor)
         private set
@@ -380,7 +389,7 @@ class RoguelikeGame(
         hero.healFull()
         hero.relicCooldowns.clear()
         hero.specialCooldown = 0
-        changeFloor(CHECKPOINT)
+        changeFloor(checkpoint)
         log.clear()
         addLog(R.string.roguelike_log_player_death)
     }
@@ -478,6 +487,7 @@ class RoguelikeGame(
 
     private fun changeFloor(newFloor: Int) {
         floor = newFloor
+        if (checkpointEvery > 0 && (floor - 1) % checkpointEvery == 0) checkpoint = maxOf(checkpoint, floor)
         level = generateLevel(floor)
         playerPos = level.start
         computeFov()

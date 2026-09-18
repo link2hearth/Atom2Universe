@@ -121,7 +121,7 @@
     <string name="roguelike_relic_lightning">Foudre</string>
     <string name="roguelike_relic_venom">Venin</string>
     <string name="roguelike_relic_fireball_desc">Inflige %1$d–%2$d dégâts, puis la cible brûle pendant %3$d tours (un quart du coup à chaque tour). Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_ice_shard_desc">Inflige %1$d–%2$d dégâts et peut figer la cible pendant %3$d tour : son attaque est repoussée. Elle résiste parfois — une bonne INT et un swipe réussi l\'en empêchent plus souvent. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_ice_shard_desc">Inflige %1$d–%2$d dégâts et peut geler la cible : elle ralentit très fort pendant un tour et demi, et ses coups sont engourdis (plus faibles). Elle résiste parfois — une bonne INT et un swipe réussi l\'en empêchent plus souvent. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_lightning_desc">Inflige %1$d–%2$d dégâts et paralyse la cible pendant %3$d tours : chacune de ses attaques peut tomber à plat (la magie passe quand même). Une bonne INT et un swipe réussi le rendent plus probable. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_venom_desc">Inflige %1$d–%2$d dégâts et ajoute une dose de poison (3 au plus) : chaque dose ronge %5$d PV par tour pendant %3$d tours. Recharge : %4$d tours.</string>
     <!-- Le grimoire : reliques du 18/09/2026 (voir DONJON.md, « Le grimoire ») -->
@@ -134,7 +134,7 @@
     <string name="roguelike_relic_chain_lightning">Chaîne d\'éclairs</string>
     <string name="roguelike_relic_sunder_desc">Inflige %1$d–%2$d dégâts (sans élément) et fracture la cible pendant %3$d tours : elle prend 25 %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_war_cry_desc">Affaiblit tous les ennemis pendant %3$d tours (leurs coups font 30 %% de moins), et tes 2 prochains coups d\'arme font +%7$d %%. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_earthquake_desc">Inflige %1$d–%2$d dégâts (sans élément) à tous les ennemis. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_earthquake_desc">Inflige %1$d–%2$d dégâts (sans élément) à tous les ennemis, qui chancellent : leur prochain tour recule. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_hunters_mark_desc">Inflige %1$d–%2$d dégâts (sans élément) et marque la cible jusqu\'à sa mort : tes critiques la frappent plus fort, et ton Coup mortel trouve la faille. Quand elle meurt, la marque saute sur un autre ennemi. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Enduit ton arme : chacun de tes %3$d prochains coups d\'arme ajoute une dose de poison (3 au plus), qui ronge %5$d PV par tour. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_freezing_rain_desc">Inflige %1$d–%2$d dégâts à tous les ennemis et les trempe pendant %3$d tours : ils résistent moins au contrôle, et l\'eau réagit avec d\'autres éléments. Elle éteint le feu. Recharge : %4$d tours.</string>
@@ -186,6 +186,9 @@
     <string name="roguelike_relic_regeneration">Régénération</string>
     <string name="roguelike_relic_stoneskin">Peau de pierre</string>
     <string name="roguelike_relic_charm">Charme</string>
+    <string name="roguelike_relic_haste">Hâte</string>
+    <string name="roguelike_relic_slow">Lenteur</string>
+    <string name="roguelike_relic_hourglass">Sablier</string>
     <string name="roguelike_relic_rend_desc">Inflige %1$d–%2$d dégâts (sans élément) et ouvre une plaie pendant %3$d tours : la cible perd %8$d PV chaque fois qu\'elle attaque. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_whirlwind_desc">Un coup d\'arme sur tous les ennemis : %1$d–%2$d dégâts chacun (sans élément). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Lance des dagues sur tous les ennemis : %1$d–%2$d dégâts chacun (sans élément). Une dague critique ouvre une plaie (%8$d PV chaque fois que la cible attaque). Recharge : %4$d tours.</string>
@@ -198,6 +201,9 @@
     <string name="roguelike_relic_holy_light_desc">Inflige %1$d–%2$d dégâts sacrés et aveugle la cible pendant %3$d tour. Les morts-vivants la craignent. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_regeneration_desc">Rend %8$d PV à chacun de tes %3$d prochains tours. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_stoneskin_desc">Pendant %3$d tours ton armure double, et chaque coup reçu renvoie %8$d %% à son auteur. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_haste_desc">Ta vitesse augmente de moitié pendant tes %3$d prochains tours : tu joues plus souvent. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_slow_desc">La cible est deux fois plus lente pendant ses %3$d prochains tours : elle joue moins souvent. Elle résiste parfois. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_hourglass_desc">Retourne le temps : les %3$d prochaines attaques ennemies arrivent plus lentement, et ta fenêtre de parade s\'élargit. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_charm_desc">La prochaine attaque de la cible frappe un de ses alliés à la place (seule, elle la perd). Elle résiste parfois. Recharge : %4$d tours.</string>
 
     <string name="roguelike_reaction_cauterize">Cautérisé !</string>
@@ -227,6 +233,9 @@
     <string name="roguelike_combat_ambush_ready">attaque sournoise prête</string>
     <string name="roguelike_combat_barrier">bouclier %1$d</string>
     <string name="roguelike_combat_regen">régénération %1$d</string>
+    <string name="roguelike_combat_haste">hâte %1$d</string>
+    <string name="roguelike_combat_hourglass">sablier %1$d</string>
+    <string name="roguelike_combat_slowed">ralenti %1$d</string>
     <string name="roguelike_combat_stoneskin">peau de pierre %1$d</string>
     <string name="roguelike_combat_meteor_incoming">météore dans %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relique trouvée : %1$s ! Elle est prête pour le prochain combat.</string>
@@ -257,7 +266,6 @@
     <string name="roguelike_combat_potion_count">×%1$d</string>
     <string name="roguelike_combat_cooldown">prêt dans %1$d</string>
     <string name="roguelike_combat_hp">%1$d / %2$d</string>
-    <string name="roguelike_combat_countdown">⚔ %1$d</string>
     <string name="roguelike_combat_burning">brûle %1$d</string>
     <string name="roguelike_combat_poisoned">poison ×%1$d (%2$d)</string>
     <string name="roguelike_combat_frozen">figé</string>
@@ -319,6 +327,7 @@
     <string name="roguelike_stattype_crit_chance">Chance de critique</string>
     <string name="roguelike_stattype_crit_damage">Dégâts critiques</string>
     <string name="roguelike_stattype_life_steal">Vol de vie</string>
+    <string name="roguelike_stattype_speed">Vitesse</string>
     <string name="roguelike_rarity_normal">Normal</string>
     <string name="roguelike_rarity_magic">Magique</string>
     <string name="roguelike_mat_wood">de bois</string>
@@ -355,8 +364,8 @@
     <string name="roguelike_weight_light">Léger</string>
     <string name="roguelike_weight_heavy">Lourd</string>
     <string name="roguelike_item_weight_cloth">Tissu : peu d\'armure</string>
-    <string name="roguelike_item_weight_light">Léger : +%1$d %% d\'esquive, la DEX aide à esquiver</string>
-    <string name="roguelike_item_weight_heavy">Lourd : la DEX n\'aide plus à esquiver</string>
+    <string name="roguelike_item_weight_light">Léger : +%1$d %% d\'esquive, +%2$d %% de vitesse, la DEX aide à esquiver</string>
+    <string name="roguelike_item_weight_heavy">Lourd : −%1$d %% de vitesse, la DEX n\'aide plus à esquiver</string>
     <string name="roguelike_item_shield_ac">+%1$d %% d\'esquive</string>
     <string name="roguelike_base_amulet">Amulette</string>
     <string name="roguelike_base_ring">Anneau</string>
@@ -371,7 +380,7 @@
     <string name="roguelike_inventory_sort_recent">Récent</string>
     <string name="roguelike_inventory_empty">Ton sac est vide</string>
     <string name="roguelike_inventory_attr">%1$s %2$d</string>
-    <string name="roguelike_inventory_stats_line">PV %1$d/%2$d   Armure %3$d   Esquive %7$d %%   Arme %4$d–%5$d   Crit %6$d %%</string>
+    <string name="roguelike_inventory_stats_line">PV %1$d/%2$d   Armure %3$d   Esquive %7$d %%   Vitesse %8$d %%   Arme %4$d–%5$d   Crit %6$d %%</string>
     <string name="roguelike_inventory_subtitle">%1$s · %2$s · note %3$d</string>
     <string name="roguelike_inventory_worn">Porté : %1$s (note %2$d)</string>
     <string name="roguelike_inventory_sell">Vendre · %1$d or</string>

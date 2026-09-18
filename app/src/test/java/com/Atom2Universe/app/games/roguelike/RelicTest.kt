@@ -22,12 +22,7 @@ class RelicTest {
     }
 
     /** Un tour ennemi complet : les attaquants frappent (parade parfaite), puis on revient au joueur. */
-    private fun enemyTurn(c: Combat): EnemyTurnStart {
-        val t = c.startEnemyTurn()
-        t.attackers.forEach { c.resolveStrike(it, Timing.PERFECT) }
-        c.endEnemyTurn()
-        return t
-    }
+    private fun enemyTurn(c: Combat): EnemyTurnStart = c.passEnemyTurns(Timing.PERFECT)
 
     @Test
     fun leHerosNeufNaPasDeRelique() {
@@ -43,10 +38,9 @@ class RelicTest {
         val c = fightWith(Relic.ICE_SHARD, d20 = 1)
         val hit = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
         assertFalse(hit.save!!.saved)
-        val turn = enemyTurn(c)
-        assertTrue(turn.attackers.isEmpty())
-        assertEquals(Element.ICE, turn.stopped.single().element)
-        assertEquals("un délai : le compteur n'a pas bougé", 1, c.enemies[0].countdown)
+        // Sa jauge est arrêtée un tour du héros : il ne joue pas avant le prochain tour du héros
+        assertTrue("un délai : il n'a pas frappé", enemyTurn(c).attackers.isEmpty())
+        assertEquals(CombatPhase.PLAYER_TURN, c.phase)
         c.attack(0, Timing.MISS)
         assertEquals("dégelé, il frappe au tour suivant", listOf(0), c.startEnemyTurn().attackers)
     }
@@ -158,13 +152,20 @@ class RelicTest {
     }
 
     @Test
-    fun enrageIlCompteDeuxFoisPlusVite() {
-        val hero = Hero.starter()
-        val brute = Enemy(MonsterType.ORC, 1000, 3, cadence = 4, countdown = 4).apply { rageTurns = 3 }
-        val c = Combat(hero, 1, listOf(brute), ambush = false, rng = Random(1), d20 = { 1 })
+    fun enrageSaJaugeSeRemplitDeuxFoisPlusVite() {
+        fun brute(rage: Int) = Enemy(MonsterType.ORC, 1000, 3, cadence = 4, countdown = 4).apply { rageTurns = rage }
+        val calm = Combat(Hero.starter(), 1, listOf(brute(0)), ambush = false, rng = Random(1), d20 = { 1 })
+        val angry = Combat(Hero.starter(), 1, listOf(brute(3)), ambush = false, rng = Random(1), d20 = { 1 })
+        assertEquals(3.5, calm.timeUntilTurn(0), 1e-9)
+        assertEquals(1.75, angry.timeUntilTurn(0), 1e-9)
+    }
+
+    @Test
+    fun unRatEnrageFrappeDeuxFoisEntreDeuxToursDuHeros() {
+        val rat = Enemy(MonsterType.RAT, 1000, 3, cadence = 1, countdown = 1).apply { rageTurns = 3 }
+        val c = Combat(Hero.starter(), 1, listOf(rat), ambush = false, rng = Random(1), d20 = { 1 }, attackDie = { 1 })
         c.attack(0, Timing.MISS)
-        c.startEnemyTurn()
-        assertEquals(2, brute.countdown)
+        assertEquals(listOf(0, 0), c.passEnemyTurns().attackers)
     }
 
     // ── Affinités ───────────────────────────────────────────────────────────────
@@ -352,7 +353,8 @@ class RelicTest {
                 RelicEffect.BLIND     -> RelicBudget.BLIND_TURN_VALUE * r.effectTurns
                 // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
                 RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN,
-                RelicEffect.STONESKIN, RelicEffect.CHARM -> RelicBudget.share(r)
+                RelicEffect.STONESKIN, RelicEffect.CHARM,
+                RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> RelicBudget.share(r)
             }
             assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
                 1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)

@@ -64,9 +64,18 @@ class CombatView @JvmOverloads constructor(
         private const val BARRIER_COLOR   = 0xFF90CAF9.toInt()
         private const val STONESKIN_COLOR = 0xFFBDBDBD.toInt()
         private const val REGEN_COLOR     = 0xFF81C784.toInt()
+        private const val SLOWED_COLOR    = 0xFF9FA8DA.toInt()
+        private const val HASTE_COLOR     = 0xFF80CBC4.toInt()
+        private const val HOURGLASS_COLOR = 0xFFE6C75A.toInt()
+
+        // La barre d'ordre des tours : chaque ennemi a sa couleur, reprise au-dessus de lui
+        private val ENEMY_MARKS = intArrayOf(0xFFFFB74D.toInt(), 0xFFBA68C8.toInt(), 0xFF4DB6AC.toInt())
+        private const val HERO_MARK    = 0xFFE0E0E0.toInt()
+        private const val CURRENT_MARK = 0xFFFFD54F.toInt()
+        private const val FROZEN_VEIL  = 0x6681D4FA
     }
 
-    private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_HIT, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
+    private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_HIT, HERO_STATUS, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
     private sealed class Action { object Attack : Action(); object Deadly : Action(); data class Cast(val relic: Relic) : Action() }
 
     private var stage = Stage.INTRO
@@ -76,6 +85,9 @@ class CombatView @JvmOverloads constructor(
     private val attackers = ArrayDeque<Int>()
     private var attacker = -1
     private var parry: Timing? = null
+    /** Le Sablier : l'élan de cette attaque est plus lent, et les fenêtres de parade plus larges. */
+    private var windupScale = 1f
+    private fun windupMs() = (WINDUP_MS * windupScale).toLong()
     /** Les ennemis touchés par la dernière action : ils tremblent, et ceux qui meurent s'effacent. */
     private var hitTargets = emptySet<Int>()
 
@@ -96,6 +108,12 @@ class CombatView @JvmOverloads constructor(
     private var specialBtn = RectF()
     private var potionBtn = RectF()
     private var strikeBar = RectF()
+    private var orderBar = RectF()
+    /**
+     * Le coût de l'action que le doigt touche (ou qu'on est en train de jouer) : la barre
+     * d'ordre montre alors où tomberait le prochain tour du héros. Null : aucune action visée.
+     */
+    private var previewCost: Double? = null
 
     // ── Peintures ───────────────────────────────────────────────────────────────
     private val pBg      = Paint()
@@ -111,7 +129,7 @@ class CombatView @JvmOverloads constructor(
         combat = c
         heroSpritePath = heroSprite
         target = c.aliveIndices().firstOrNull() ?: 0
-        attackers.clear(); attacker = -1; parry = null; pendingAction = null; hitTargets = emptySet()
+        attackers.clear(); attacker = -1; parry = null; pendingAction = null; hitTargets = emptySet(); previewCost = null
         floaters.clear(); banner = null
         layoutRects()
         enter(Stage.INTRO)
@@ -140,13 +158,17 @@ class CombatView @JvmOverloads constructor(
         if (width == 0) return
         val w = width.toFloat(); val h = height.toFloat()
         val n = c.enemies.size
+        val m0 = 10f * density
+        orderBar = RectF(m0, 6f * density, w - m0, 6f * density + 36f * density)
         val size = min(w / (n + 0.8f), h * 0.22f)
         val gap = (w - size * n) / (n + 1)
+        // Sous la barre d'ordre, avec la place du repère de couleur et de l'arc
+        val enemiesTop = maxOf(h * 0.12f, orderBar.bottom + 20f * density + size * 0.12f)
         enemyRects.clear()
         for (i in 0 until n) {
             val left = gap + i * (size + gap)
             // Le groupe forme un léger arc : celui du milieu recule un peu
-            val top = h * 0.12f + if (n == 3 && i == 1) -size * 0.12f else 0f
+            val top = enemiesTop + if (n == 3 && i == 1) -size * 0.12f else 0f
             enemyRects += RectF(left, top, left + size, top + size)
         }
         val heroSize = min(w * 0.34f, h * 0.20f)
@@ -175,19 +197,18 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val t = elapsed()
         when (stage) {
-            Stage.INTRO -> if (t >= INTRO_MS) {
-                if (c.phase == CombatPhase.ENEMY_TURN) beginEnemyTurn() else enter(Stage.CHOOSE)
-            }
+            Stage.INTRO -> if (t >= INTRO_MS) proceed()
             Stage.STRIKE_TIMING -> if (t >= STRIKE_MS) resolveStrike(Timing.MISS)
             Stage.PLAYER_HIT -> if (t >= HIT_MS) afterPlayerAction()
+            Stage.HERO_STATUS -> if (t >= STATUS_MS) proceed()
             Stage.ENEMY_STATUS -> if (t >= STATUS_MS) {
                 if (c.phase == CombatPhase.VICTORY) enter(Stage.END_PANEL) else nextAttacker()
             }
             Stage.ENEMY_PAUSE -> if (t >= PAUSE_MS) nextAttacker()
             Stage.ENEMY_WINDUP -> {
-                val lateLimit = WINDUP_MS + goodWindow()
+                val lateLimit = windupMs() + goodWindow()
                 val tapped = parry
-                if (t >= lateLimit || (tapped != null && t >= WINDUP_MS)) resolveEnemyStrike(tapped ?: Timing.MISS)
+                if (t >= lateLimit || (tapped != null && t >= windupMs())) resolveEnemyStrike(tapped ?: Timing.MISS)
             }
             Stage.ENEMY_IMPACT -> if (t >= IMPACT_MS) {
                 if (c.phase == CombatPhase.DEFEAT) enter(Stage.END_PANEL) else nextAttacker()
@@ -198,13 +219,20 @@ class CombatView @JvmOverloads constructor(
 
     /** En garde (guerrier), les deux fenêtres de parade doublent. */
     private fun guardMult() = if (combat?.guarding == true) 2 else 1
-    private fun goodWindow() = (PARRY_GOOD_MS + (combat?.hero?.parryBonusMs ?: 0)) * guardMult()
-    private fun perfectWindow() = (PARRY_PERFECT_MS + (combat?.hero?.parryBonusMs ?: 0) / 2) * guardMult()
+    private fun goodWindow() = ((PARRY_GOOD_MS + (combat?.hero?.parryBonusMs ?: 0)) * guardMult() * windupScale).toInt()
+    private fun perfectWindow() = ((PARRY_PERFECT_MS + (combat?.hero?.parryBonusMs ?: 0) / 2) * guardMult() * windupScale).toInt()
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
 
     private fun choose(action: Action) {
+        val c = combat ?: return
         pendingAction = action
+        // La barre d'ordre garde l'aperçu pendant le geste
+        previewCost = when (action) {
+            is Action.Cast -> c.relicCost(action.relic)
+            Action.Deadly  -> c.specialCost()
+            Action.Attack  -> c.attackCost()
+        }
         enter(Stage.STRIKE_TIMING)
     }
 
@@ -217,6 +245,7 @@ class CombatView @JvmOverloads constructor(
             else           -> listOf(c.attack(target, timing))
         }
         pendingAction = null
+        previewCost = null
         when (timing) {
             Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_perfect), 0xFFFFD54F.toInt())
             Timing.GOOD    -> showBanner(context.getString(R.string.roguelike_combat_good), 0xFFAED581.toInt())
@@ -291,12 +320,33 @@ class CombatView @JvmOverloads constructor(
         enter(Stage.PLAYER_HIT)
     }
 
+    /** La fin du tour du héros (Météore, Régénération) s'affiche, puis la main passe. */
     private fun afterPlayerAction() {
         val c = combat ?: return
+        val end = c.lastHeroTurnEnd
+        if (end.isEmpty) { proceed(); return }
+        if (end.meteor.isNotEmpty()) {
+            showBanner(context.getString(R.string.roguelike_combat_meteor_impact), Relic.METEOR.color or 0xFF303030.toInt())
+            floatHits(end.meteor)
+            if (end.meteor.any { it.killed }) onEnemyDied?.invoke()
+        }
+        if (end.healed > 0)
+            floatText(context.getString(R.string.roguelike_combat_heal, end.healed), heroRect.centerX(), heroRect.top, 0xFF81C784.toInt(), false)
+        floatTicks(end.ticks)
+        enter(Stage.HERO_STATUS)
+    }
+
+    /** La main passe à qui la jauge désigne : un ennemi, le héros, ou la fin du combat. */
+    private fun proceed() {
+        val c = combat ?: return
         when (c.phase) {
-            CombatPhase.VICTORY -> enter(Stage.END_PANEL)
+            CombatPhase.VICTORY, CombatPhase.DEFEAT -> enter(Stage.END_PANEL)
             CombatPhase.ENEMY_TURN -> beginEnemyTurn()
-            else -> enter(Stage.CHOOSE)
+            CombatPhase.PLAYER_TURN -> {
+                attacker = -1
+                if (!c.enemies[target].alive) target = c.aliveIndices().firstOrNull() ?: 0
+                enter(Stage.CHOOSE)
+            }
         }
     }
 
@@ -306,18 +356,7 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val turn = c.startEnemyTurn()
         attackers.clear(); attackers.addAll(turn.attackers)
-        if (turn.meteor.isNotEmpty()) {
-            showBanner(context.getString(R.string.roguelike_combat_meteor_impact), Relic.METEOR.color or 0xFF303030.toInt())
-            floatHits(turn.meteor)
-            if (turn.meteor.any { it.killed }) onEnemyDied?.invoke()
-        }
-        if (turn.healed > 0)
-            floatText(context.getString(R.string.roguelike_combat_heal, turn.healed), heroRect.centerX(), heroRect.top, 0xFF81C784.toInt(), false)
-        for (tick in turn.ticks) {
-            val r = enemyRects[tick.enemy]
-            floatText(context.getString(R.string.roguelike_combat_damage, tick.damage), r.centerX(), r.top, elementColor(tick.element), false)
-            if (tick.killed) onEnemyDied?.invoke()
-        }
+        floatTicks(turn.ticks)
         for (stop in turn.stopped) {
             val r = enemyRects[stop.enemy]
             val res = if (stop.element == Element.ICE) R.string.roguelike_combat_frozen_skip else R.string.roguelike_combat_paralyzed_skip
@@ -327,10 +366,18 @@ class CombatView @JvmOverloads constructor(
         for (i in turn.enraged)
             floatText(context.getString(R.string.roguelike_combat_enraged), enemyRects[i].centerX(), enemyRects[i].bottom, 0xFFFF5252.toInt(), true)
         when {
-            turn.ticks.isNotEmpty() || turn.stopped.isNotEmpty() || turn.saves.isNotEmpty() ||
-                turn.meteor.isNotEmpty() || turn.healed > 0 -> enter(Stage.ENEMY_STATUS)
+            turn.ticks.isNotEmpty() || turn.stopped.isNotEmpty() || turn.saves.isNotEmpty() -> enter(Stage.ENEMY_STATUS)
             turn.attackers.isEmpty() -> enter(Stage.ENEMY_PAUSE)
             else                     -> nextAttacker()
+        }
+    }
+
+    /** Ce que rongent la brûlure, le poison, l'Aube. */
+    private fun floatTicks(ticks: List<DotTick>) {
+        for (tick in ticks) {
+            val r = enemyRects[tick.enemy]
+            floatText(context.getString(R.string.roguelike_combat_damage, tick.damage), r.centerX(), r.top, elementColor(tick.element), false)
+            if (tick.killed) onEnemyDied?.invoke()
         }
     }
 
@@ -369,14 +416,15 @@ class CombatView @JvmOverloads constructor(
         if (c.phase == CombatPhase.VICTORY) { enter(Stage.END_PANEL); return }
         val next = attackers.removeFirstOrNull()
         if (next == null) {
+            // Le tour de cet ennemi est fini : la jauge dit qui joue ensuite
             c.endEnemyTurn()
             attacker = -1
-            if (!c.enemies[target].alive) target = c.aliveIndices().firstOrNull() ?: 0
-            enter(Stage.CHOOSE)
+            proceed()
             return
         }
         attacker = next
         parry = null
+        windupScale = if (c.hourglassStrikes > 0) Relic.HOURGLASS_SLOW else 1f
         enter(Stage.ENEMY_WINDUP)
     }
 
@@ -454,6 +502,7 @@ class CombatView @JvmOverloads constructor(
         if (combat == null) return
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pBg)
 
+        drawOrderBar(canvas, c)
         drawEnemies(canvas, c)
         drawHero(canvas, c)
         drawButtons(canvas, c)
@@ -465,7 +514,7 @@ class CombatView @JvmOverloads constructor(
         if (stage == Stage.INTRO) drawIntro(canvas)
         if (stage == Stage.END_PANEL) drawEndPanel(canvas, c)
 
-        if (stage != Stage.CHOOSE && stage != Stage.END_PANEL || floaters.isNotEmpty() || banner != null)
+        if (stage != Stage.CHOOSE && stage != Stage.END_PANEL || floaters.isNotEmpty() || banner != null || previewCost != null)
             postInvalidateOnAnimation()
     }
 
@@ -478,7 +527,7 @@ class CombatView @JvmOverloads constructor(
 
             // L'attaquant s'avance pendant son élan
             if (stage == Stage.ENEMY_WINDUP && attacker == i) {
-                val p = (elapsed().toFloat() / WINDUP_MS).coerceIn(0f, 1f)
+                val p = (elapsed().toFloat() / windupMs()).coerceIn(0f, 1f)
                 r.offset(0f, base.height() * 0.25f * p * p)
             }
             // Recul quand on le touche
@@ -509,17 +558,84 @@ class CombatView @JvmOverloads constructor(
             canvas.drawText(context.getString(R.string.roguelike_combat_hp, e.hp, e.maxHp), base.centerX(), bar.bottom + 13f * sp, pText)
 
             if (e.alive) {
-                val ready = e.countdown <= 1
-                pText.textSize = 13f * sp
-                pText.color = when {
-                    e.frozenTurns > 0 -> elementColor(Element.ICE)
-                    ready             -> 0xFFFF7043.toInt()
-                    else              -> 0xFF90A4AE.toInt()
+                // Sa couleur, celle de ses cases dans la barre d'ordre
+                val my = base.top - 11f * density
+                pFill.color = ENEMY_MARKS[i % ENEMY_MARKS.size]
+                canvas.drawCircle(base.centerX(), my, 5f * density, pFill)
+                if (c.actingEnemy == i) {
+                    pStroke.color = CURRENT_MARK; pStroke.strokeWidth = 2f * density
+                    canvas.drawCircle(base.centerX(), my, 8f * density, pStroke)
                 }
-                canvas.drawText(context.getString(R.string.roguelike_combat_countdown, e.countdown), base.centerX(), base.top - 8f * density, pText)
                 drawStatuses(canvas, e, base.centerX(), bar.bottom + 27f * sp)
             }
         }
+    }
+
+    /**
+     * La barre d'ordre des tours, façon FFX : à gauche celui qui a la main (cadre doré), puis
+     * les tours à venir tels que la jauge les prévoit ([Combat.forecast]). Chaque ennemi garde
+     * sa couleur, reprise au-dessus de lui ; un ennemi gelé est voilé de glace (il perdra ce
+     * tour) ; le Météore a sa case là où il tombe. Quand le doigt vise une action, la case du
+     * prochain tour du héros s'allume : c'est là qu'il tomberait.
+     */
+    private fun drawOrderBar(canvas: Canvas, c: Combat) {
+        val current = when (c.phase) {
+            CombatPhase.PLAYER_TURN -> Combat.HERO
+            CombatPhase.ENEMY_TURN  -> c.actingEnemy
+            else -> return
+        }
+        val b = orderBar
+        val cell = b.height()
+        val gap = 5f * density
+        val afterCurrent = 8f * density
+        val count = ((b.width() - afterCurrent + gap) / (cell + gap)).toInt()
+        if (count < 2) return
+        val slots = listOf(TurnSlot(current, frozen = current >= 0 && c.enemies[current].frozen)) +
+            c.forecast(count - 1, previewCost ?: c.attackCost())
+        val preview = previewCost != null
+        var previewDone = false
+        var x = b.left
+        for ((k, slot) in slots.withIndex()) {
+            val r = RectF(x, b.top, x + cell, b.bottom)
+            val lit = preview && k > 0 && slot.actor == Combat.HERO && !previewDone
+            if (lit) {
+                previewDone = true
+                // Le prochain tour du héros, si l'action visée part : il pulse
+                r.offset(0f, -2f * density * (1f + sin(SystemClock.uptimeMillis() / 120.0).toFloat()))
+            }
+            drawOrderCell(canvas, c, slot, r, current = k == 0, lit = lit)
+            x += cell + gap + if (k == 0) afterCurrent else 0f
+        }
+    }
+
+    private fun drawOrderCell(canvas: Canvas, c: Combat, slot: TurnSlot, r: RectF, current: Boolean, lit: Boolean) {
+        val corner = 6f * density
+        pFill.color = 0xFF263238.toInt()
+        canvas.drawRoundRect(r, corner, corner, pFill)
+        val inner = RectF(r).apply { inset(3f * density, 3f * density) }
+        val mark = when (slot.actor) {
+            Combat.METEOR -> {
+                // Le Météore : une boule de feu, pas un portrait
+                pFill.color = Relic.METEOR.color
+                canvas.drawCircle(inner.centerX(), inner.centerY(), inner.width() * 0.42f, pFill)
+                pFill.color = elementColor(Element.FIRE)
+                canvas.drawCircle(inner.centerX() - inner.width() * 0.1f, inner.centerY() - inner.width() * 0.1f, inner.width() * 0.2f, pFill)
+                Relic.METEOR.color
+            }
+            Combat.HERO -> {
+                heroSpritePath?.let { path -> SpriteLoader.load(context.assets, path)?.let { canvas.drawBitmap(it, null, inner, pSprite) } }
+                HERO_MARK
+            }
+            else -> {
+                SpriteLoader.load(context.assets, SpriteLoader.monsterPath(c.enemies[slot.actor].type))
+                    ?.let { canvas.drawBitmap(it, null, inner, pSprite) }
+                ENEMY_MARKS[slot.actor % ENEMY_MARKS.size]
+            }
+        }
+        if (slot.frozen) { pFill.color = FROZEN_VEIL; canvas.drawRoundRect(r, corner, corner, pFill) }
+        pStroke.color = if (current || lit) CURRENT_MARK else mark
+        pStroke.strokeWidth = (if (current || lit) 3f else 2f) * density
+        canvas.drawRoundRect(r, corner, corner, pStroke)
     }
 
     /** Les effets en cours sous la barre de vie, chacun à sa couleur. */
@@ -537,6 +653,7 @@ class CombatView @JvmOverloads constructor(
             if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
             if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
             if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
+            if (e.slowTurns > 0) add(context.getString(R.string.roguelike_combat_slowed, e.slowTurns) to SLOWED_COLOR)
         }
         pText.textSize = 11f * sp
         pText.textAlign = Paint.Align.LEFT
@@ -598,6 +715,8 @@ class CombatView @JvmOverloads constructor(
             if (c.barrier > 0) add(context.getString(R.string.roguelike_combat_barrier, c.barrier) to BARRIER_COLOR)
             if (c.regenTurns > 0) add(context.getString(R.string.roguelike_combat_regen, c.regenTurns) to REGEN_COLOR)
             if (c.stoneskinTurns > 0) add(context.getString(R.string.roguelike_combat_stoneskin, c.stoneskinTurns) to STONESKIN_COLOR)
+            if (c.hasteTurns > 0) add(context.getString(R.string.roguelike_combat_haste, c.hasteTurns) to HASTE_COLOR)
+            if (c.hourglassStrikes > 0) add(context.getString(R.string.roguelike_combat_hourglass, c.hourglassStrikes) to HOURGLASS_COLOR)
             if (c.meteorTurns > 0) add(context.getString(R.string.roguelike_combat_meteor_incoming, c.meteorTurns) to elementColor(Element.FIRE))
         }
         for ((text, color) in buffs) {
@@ -684,7 +803,7 @@ class CombatView @JvmOverloads constructor(
     private fun drawParryRing(canvas: Canvas) {
         val cx = heroRect.centerX(); val cy = heroRect.centerY()
         val inner = heroRect.width() * 0.62f
-        val p = (elapsed().toFloat() / WINDUP_MS).coerceAtMost(1.3f)
+        val p = (elapsed().toFloat() / windupMs()).coerceAtMost(1.3f)
         val radius = inner * (1f + 2.2f * (1f - p).coerceAtLeast(0f))
         pStroke.strokeWidth = 3f * density
         pStroke.color = 0x88FFFFFF.toInt()
@@ -728,7 +847,7 @@ class CombatView @JvmOverloads constructor(
         pOverlay.alpha = 204
         pText.textSize = 32f * sp; pText.color = 0xFFFF7043.toInt()
         val c = combat
-        val res = if (c != null && c.phase == CombatPhase.ENEMY_TURN) R.string.roguelike_combat_ambush else R.string.roguelike_combat_start
+        val res = if (c != null && c.ambush) R.string.roguelike_combat_ambush else R.string.roguelike_combat_start
         canvas.drawText(context.getString(res), width / 2f, height * 0.40f, pText)
     }
 
@@ -766,9 +885,10 @@ class CombatView @JvmOverloads constructor(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x; downY = event.y
+                if (stage == Stage.CHOOSE) setPreview(previewAt(c, event.x, event.y))
                 // La parade se joue à l'appui : c'est le geste le plus précis
                 if (stage == Stage.ENEMY_WINDUP && parry == null) {
-                    val delta = abs(elapsed() - WINDUP_MS)
+                    val delta = abs(elapsed() - windupMs())
                     parry = when {
                         delta <= perfectWindow() -> Timing.PERFECT
                         delta <= goodWindow()    -> Timing.GOOD
@@ -777,7 +897,10 @@ class CombatView @JvmOverloads constructor(
                     postInvalidateOnAnimation()
                 }
             }
+            MotionEvent.ACTION_MOVE -> if (stage == Stage.CHOOSE) setPreview(previewAt(c, event.x, event.y))
+            MotionEvent.ACTION_CANCEL -> if (stage == Stage.CHOOSE) setPreview(null)
             MotionEvent.ACTION_UP -> {
+                if (stage == Stage.CHOOSE) setPreview(null)
                 val dist = hypot(event.x - downX, event.y - downY)
                 val swipe = dist > 24f * density
                 when (stage) {
@@ -800,6 +923,25 @@ class CombatView @JvmOverloads constructor(
             }
         }
         return true
+    }
+
+    /** Le coût de l'action sous le doigt, si elle est jouable : c'est l'aperçu de la barre d'ordre. */
+    private fun previewAt(c: Combat, x: Float, y: Float): Double? {
+        val slot = relicBtns.indexOfFirst { it.contains(x, y) }
+        val relic = if (slot >= 0) c.hero.relicSlots[slot] else null
+        return when {
+            attackBtn.contains(x, y) -> c.attackCost()
+            potionBtn.contains(x, y) && c.canDrinkPotion() -> c.potionCost()
+            specialBtn.contains(x, y) && c.canUseSpecial() -> c.specialCost()
+            relic != null && c.canCast(relic) -> c.relicCost(relic)
+            else -> null
+        }
+    }
+
+    private fun setPreview(cost: Double?) {
+        if (cost == previewCost) return
+        previewCost = cost
+        postInvalidateOnAnimation()
     }
 
     private fun handleChooseTap(c: Combat, x: Float, y: Float) {

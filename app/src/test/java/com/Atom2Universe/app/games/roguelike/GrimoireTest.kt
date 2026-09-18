@@ -26,12 +26,7 @@ class GrimoireTest {
     }
 
     /** Un tour ennemi complet (parade ratée), puis la main revient au joueur. */
-    private fun enemyTurn(c: Combat): EnemyTurnStart {
-        val t = c.startEnemyTurn()
-        t.attackers.forEach { c.resolveStrike(it, Timing.MISS) }
-        c.endEnemyTurn()
-        return t
-    }
+    private fun enemyTurn(c: Combat): EnemyTurnStart = c.passEnemyTurns(Timing.MISS)
 
     /** Lance [relic] puis laisse passer le tour ennemi, recharges remises à zéro. */
     private fun castAndPass(c: Combat, relic: Relic, target: Int = 0): CastResult {
@@ -48,12 +43,14 @@ class GrimoireTest {
         val c = fight(Relic.ICE_SHARD)
         castAndPass(c, Relic.ICE_SHARD)
         val e = c.enemies[0]
-        assertEquals("le gel est consommé", 0, e.frozenTurns)
+        assertEquals("un tour et demi de gel, un tour du héros est passé", 0.5, e.frozenTime, 1e-9)
         assertTrue("mais la glace est encore là pendant le tour du héros", e.frozen)
         assertTrue("exposée au Coup mortel", c.isExposed(e))
         c.attack(0, Timing.MISS)
-        assertEquals("elle dégèle et frappe à son tour", listOf(0), c.startEnemyTurn().attackers)
-        assertFalse(e.frozen)
+        assertEquals("elle frappe à son tour", listOf(0), c.startEnemyTurn().attackers)
+        assertTrue("encore engourdie pendant ce coup", e.frozen)
+        c.endEnemyTurn()
+        assertFalse("la glace fond à la fin de son tour", e.frozen)
     }
 
     @Test
@@ -69,7 +66,7 @@ class GrimoireTest {
     @Test
     fun unSortPhysiqueBriseLeGel() {
         val c = fight(Relic.ICE_SHARD, Relic.EARTHQUAKE, d20 = 20)   // 20 : l'Avalanche ne refige pas
-        c.enemies[0].frozenTurns = 1
+        c.enemies[0].frozenTime = 1.0
         val hit = c.castRelic(Relic.EARTHQUAKE, 0, Timing.MISS).main!!
         assertEquals(listOf(Reaction.SHATTER), hit.reactions)
         val (lo, _) = c.hero.relicDamage(Relic.EARTHQUAKE)
@@ -80,7 +77,7 @@ class GrimoireTest {
     @Test
     fun leFeuFaitFondreLeGelEtBruleQuandMeme() {
         val c = fight(Relic.FIREBALL)
-        c.enemies[0].frozenTurns = 1
+        c.enemies[0].frozenTime = 1.0
         val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
         assertEquals(listOf(Reaction.MELT), hit.reactions)
         assertFalse(c.enemies[0].frozen)
@@ -127,7 +124,8 @@ class GrimoireTest {
         castAndPass(c, Relic.FREEZING_RAIN)
         val hit = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
         assertEquals(listOf(Reaction.FROST), hit.reactions)
-        assertEquals(Relic.ICE_SHARD.effectTurns + Reaction.FROST_EXTRA_TURNS, c.enemies[0].frozenTurns)
+        // Deux tours de gel ; le premier tour du héros est déjà passé depuis le lancer
+        assertEquals((Relic.ICE_SHARD.effectTurns + Reaction.FROST_EXTRA_TURNS) * Relic.FREEZE_TURN_LENGTH - 1, c.enemies[0].frozenTime, 1e-9)
         assertEquals("l'eau a gelé", 0, c.enemies[0].soakedTurns)
     }
 
@@ -167,7 +165,7 @@ class GrimoireTest {
     fun unImmuniseNeReagitPas() {
         // Le démon est immunisé au feu : pas de Fonte, le gel tient
         val c = fight(Relic.FIREBALL, type = MonsterType.DEMON)
-        c.enemies[0].frozenTurns = 1
+        c.enemies[0].frozenTime = 1.0
         assertTrue(c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!.reactions.isEmpty())
         assertTrue(c.enemies[0].frozen)
     }
@@ -335,7 +333,7 @@ class GrimoireTest {
     fun avalancheLeSeismeFige() {
         val c = fight(Relic.ICE_SHARD, Relic.EARTHQUAKE, enemies = 2)
         c.castRelic(Relic.EARTHQUAKE, 0, Timing.MISS)
-        assertTrue(c.enemies.all { it.frozenTurns == 1 })
+        assertTrue(c.enemies.all { it.frozen })
     }
 
     @Test
@@ -508,7 +506,7 @@ class GrimoireTest {
     @Test
     fun laCristallisationFrappeTriplePuisBrise() {
         val c = fight(Relic.CRYSTALLIZE)
-        c.enemies[0].frozenTurns = 1
+        c.enemies[0].frozenTime = 1.0
         val (lo, _) = c.hero.relicDamage(Relic.CRYSTALLIZE)
         // Le gobelin résiste à la glace : ×0,5, puis ×3
         val hit = c.castRelic(Relic.CRYSTALLIZE, 0, Timing.MISS).main!!
@@ -519,7 +517,7 @@ class GrimoireTest {
     @Test
     fun zeroAbsoluLaCristallisationGardeLeGel() {
         val c = fight(Relic.ICE_SHARD, Relic.CRYSTALLIZE)
-        c.enemies[0].frozenTurns = 1
+        c.enemies[0].frozenTime = 1.0
         c.castRelic(Relic.CRYSTALLIZE, 0, Timing.MISS)
         assertTrue(c.enemies[0].frozen)
     }
@@ -528,10 +526,22 @@ class GrimoireTest {
     fun leMeteoreTombeDeuxToursPlusTard() {
         val c = fight(Relic.METEOR, enemies = 2)
         assertTrue(c.castRelic(Relic.METEOR, 0, Timing.MISS).hits.isEmpty())
-        assertTrue(enemyTurn(c).meteor.isEmpty())
+        assertTrue(c.lastHeroTurnEnd.meteor.isEmpty())
+        enemyTurn(c)
         c.attack(0, Timing.MISS)
-        assertEquals(2, c.startEnemyTurn().meteor.size)
+        assertEquals("il tombe à la fin du 2e tour du héros", 2, c.lastHeroTurnEnd.meteor.size)
         assertEquals(0, c.meteorTurns)
+    }
+
+    @Test
+    fun onNeRelancePasUnMeteoreEnLAir() {
+        val c = fight(Relic.METEOR)
+        c.castRelic(Relic.METEOR, 0, Timing.MISS)
+        enemyTurn(c)
+        c.relicCooldowns.clear()                               // comme si la SAG avait tout rechargé
+        assertFalse("sinon il ne tomberait jamais", c.canCast(Relic.METEOR))
+        c.attack(0, Timing.MISS)
+        assertEquals(1, c.lastHeroTurnEnd.meteor.size)
     }
 
     @Test
@@ -585,7 +595,7 @@ class GrimoireTest {
         val c = fight(Relic.REGENERATION)
         c.hero.hp = 5
         c.castRelic(Relic.REGENERATION, 0, Timing.MISS)
-        assertEquals(c.hero.relicAmount(Relic.REGENERATION), c.startEnemyTurn().healed)
+        assertEquals(c.hero.relicAmount(Relic.REGENERATION), c.lastHeroTurnEnd.healed)
         assertEquals(Relic.REGENERATION.effectTurns - 1, c.regenTurns)
     }
 
@@ -593,7 +603,7 @@ class GrimoireTest {
     fun aubeLeSoinBruleLesMortsVivants() {
         val c = fight(Relic.HOLY_LIGHT, Relic.REGENERATION, type = MonsterType.SKELETON)
         c.castRelic(Relic.REGENERATION, 0, Timing.MISS)
-        val tick = c.startEnemyTurn().ticks.single()
+        val tick = c.lastHeroTurnEnd.ticks.single()
         assertEquals(Element.HOLY, tick.element)
     }
 

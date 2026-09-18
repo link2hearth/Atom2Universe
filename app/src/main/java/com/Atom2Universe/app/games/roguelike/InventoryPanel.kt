@@ -322,7 +322,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
             archetype,
             ctx.getString(R.string.roguelike_inventory_stats_line,
                 hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100),
-                Math.round(hero.dodgeChance(game?.floor ?: 1) * 100)),
+                Math.round(hero.dodgeChance(game?.floor ?: 1) * 100), Math.round(hero.speed * 100)),
         ).joinToString("\n")
     }
 

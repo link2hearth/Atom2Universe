@@ -10,17 +10,23 @@ import kotlin.random.Random
  *
  * Les bots ne trichent pas : ils ne connaissent que les cases explorées et les monstres
  * visibles. Ils jouent tous pareil sur la carte (explorer, se reposer hors poursuite,
- * acheter des potions) ; seule leur précision au timing change :
- *  - NOVICE  : rate presque toutes ses parades et ses frappes ;
- *  - CORRECT : réussit environ une parade sur deux ;
- *  - EXPERT  : pare presque tout, souvent parfaitement.
+ * acheter des potions) ; seule leur précision au timing change. Recalibrés le 18/09/2026 par
+ * le propriétaire (les anciens niveaux étaient bien trop maladroits : l'ancien « expert »,
+ * c'était sa mère de 70 ans) :
+ *  - NOVICE  : parfait 45 %, bon 45 %, raté 10 % (l'ancien expert) ;
+ *  - CORRECT : parfait 70 %, bon 28 %, raté 2 % ;
+ *  - EXPERT  : parfait 95 %, bon 5 %, jamais raté.
+ *
+ * Ils connaissent aussi le grimoire (voir [chooseRelics] et [comboChoice]) : ils changent de
+ * reliques selon l'étage et jouent les combos, comme le fera un vrai joueur. SIM_SMART=0 pour
+ * revenir au bot d'avant (les deux premières reliques trouvées, lancées dès qu'elles sont prêtes).
  */
 class RoguelikeSimulationTest {
 
     enum class Skill(val parryGood: Float, val parryPerfect: Float, val strikeGood: Float, val strikePerfect: Float) {
-        NOVICE (0.15f, 0.03f, 0.20f, 0.05f),
-        CORRECT(0.40f, 0.15f, 0.40f, 0.15f),
-        EXPERT (0.45f, 0.45f, 0.45f, 0.40f),
+        NOVICE (0.45f, 0.45f, 0.45f, 0.45f),
+        CORRECT(0.28f, 0.70f, 0.28f, 0.70f),
+        EXPERT (0.05f, 0.95f, 0.05f, 0.95f),
     }
 
     private val profiles = 30
@@ -32,6 +38,12 @@ class RoguelikeSimulationTest {
      */
     private val simRelics = System.getenv("SIM_RELICS")?.split(",")
     private val maxFloor = System.getenv("SIM_MAX_FLOOR")?.toInt() ?: 40
+    /** SIM_CHECKPOINT=10 : un checkpoint automatique tous les 10 étages (0 : toujours l'étage 1, comme le jeu). */
+    private val checkpointEvery = System.getenv("SIM_CHECKPOINT")?.toInt() ?: 0
+    /** Le bot qui connaît le grimoire (reliques choisies, combos). SIM_SMART=0 : l'ancien bot. */
+    private val smart = System.getenv("SIM_SMART") != "0"
+    /** Séries de 3 combats d'essai par paire de reliques, quand le bot choisit les siennes. */
+    private val trialSeries = 12
     private val maxMapTurns = 250_000
 
     class FloorStat {
@@ -45,6 +57,12 @@ class RoguelikeSimulationTest {
     companion object {
         /** Un vrai combat dure une dizaine de tours ; au-delà de ça, quelque chose tourne en rond. */
         const val MAX_FIGHT_TURNS = 300
+        /**
+         * Combats enchaînés sans repos dans le banc des reliques. 3 au début ; 5 depuis que les
+         * bots sont adroits (18/09/2026) : à 3, « aucun sort » gagnait 99 % et le banc ne
+         * départageait plus rien. Les PV perdus par combat, eux, ne saturent pas.
+         */
+        const val CHAIN = 5
     }
 
     class Report(val skill: Skill) {
@@ -58,6 +76,8 @@ class RoguelikeSimulationTest {
         var deathsFullHp = 0; var deathsAmbush = 0; var deathsChained = 0
         val deathsByGroup = IntArray(4)
         var nextFightChained = false
+        /** Les reliques portées à la fin de chaque profil, pour voir ce que le bot a choisi. */
+        val finalRelics = mutableListOf<String>()
         fun f(n: Int) = floors.getOrPut(n) { FloorStat() }
     }
 
@@ -120,29 +140,37 @@ class RoguelikeSimulationTest {
     fun relicsAtFixedGear() {
         val series = System.getenv("SIM_SERIES")?.toInt() ?: 1000
         val floors = System.getenv("SIM_FLOORS")?.split(",")?.map { it.trim().toInt() } ?: listOf(8, 15, 30, 60)
+        val chain = System.getenv("SIM_CHAIN")?.toInt() ?: CHAIN
         val configs = listOf<Relic?>(null) + Relic.entries.filter { simRelics == null || it.name in simRelics }
         val start = System.currentTimeMillis()
         val rows = configs.parallelStream().map { relic ->
             val stuck = FloorStat()
             val cells = floors.map { floor ->
                 val rng = Random(floor * 131L)
-                var win3 = 0
+                var wins = 0
+                var lost = 0.0; var fights = 0
                 repeat(series) {
                     val hero = geared(floor, rng)
                     relic?.let { hero.addRelic(it) }
                     var ok = true
-                    repeat(3) { if (ok) ok = soloFight(hero, floor, Skill.CORRECT, rng, stuck) }
-                    if (ok) win3++
+                    repeat(chain) {
+                        if (!ok) return@repeat
+                        val before = hero.hp
+                        ok = soloFight(hero, floor, Skill.CORRECT, rng, stuck)
+                        lost += (before - if (ok) hero.hp else 0).coerceAtLeast(0).toDouble() / hero.maxHp
+                        fights++
+                    }
+                    if (ok) wins++
                 }
-                String.format("%5.1f %%", 100.0 * win3 / series)
+                String.format("%5.1f %% · %4.1f %%", 100.0 * wins / series, 100.0 * lost / fights.coerceAtLeast(1))
             }
-            String.format("%-17s", relic?.name ?: "aucun sort") + cells.joinToString("") { String.format("%10s", it) } +
+            String.format("%-17s", relic?.name ?: "aucun sort") + cells.joinToString("") { String.format("%18s", it) } +
                 if (stuck.stuck > 0) "   ⚠ ${stuck.stuck} combats bloqués" else ""
         }.collect(java.util.stream.Collectors.toList())
-        val out = StringBuilder("══════ Reliques seules à équipement égal ($series séries de 3 combats par case, joueur correct) ══════\n")
-        out.appendLine(String.format("%-17s", "Étage") + floors.joinToString("") { String.format("%10d", it) })
+        val out = StringBuilder("══════ Reliques seules à équipement égal ($series séries de $chain combats par case, joueur correct) ══════\n")
+        out.appendLine(String.format("%-17s", "Étage") + floors.joinToString("") { String.format("%18d", it) })
         rows.forEach { out.appendLine(it) }
-        out.appendLine("(victoires sur 3 combats enchaînés ; ${(System.currentTimeMillis() - start) / 1000} s)")
+        out.appendLine("(victoires sur $chain combats enchaînés · PV perdus par combat, en % des PV max ; ${(System.currentTimeMillis() - start) / 1000} s)")
         File("build/roguelike-relics.txt").writeText(out.toString())
         println(out)
     }
@@ -249,12 +277,61 @@ class RoguelikeSimulationTest {
         return if (waiting != null) null to target else null
     }
 
+    /**
+     * Le bot choisit ses deux reliques comme un joueur qui connaît le jeu : il essaie chaque
+     * paire possible parmi celles qu'il a trouvées sur quelques combats d'essai (à son étage,
+     * avec son équipement, en jouant les combos), et garde celle qui gagne le plus. Les mêmes
+     * dés pour toutes les paires, pour que seules les reliques les départagent. Au-delà de 8
+     * reliques, il ne garde que les 8 meilleures seules, pour ne pas essayer 300 paires.
+     */
+    private fun chooseRelics(hero: Hero, floor: Int, skill: Skill) {
+        val owned = hero.relics.toList()
+        if (owned.size <= Hero.RELIC_SLOTS) {
+            owned.forEachIndexed { i, r -> hero.relicSlots[i] = r }
+            hero.hp = hero.hp.coerceAtMost(hero.maxHp)
+            return
+        }
+        fun trial(relics: List<Relic>): Int {
+            val rng = Random(floor * 977L)
+            var wins = 0
+            repeat(trialSeries) {
+                val h = trialCopy(hero, relics)
+                var ok = true
+                repeat(3) { if (ok) ok = soloFight(h, floor, skill, rng, combos = true) }
+                if (ok) wins++
+            }
+            return wins
+        }
+        val shortlist = if (owned.size <= 8) owned else owned.sortedByDescending { trial(listOf(it)) }.take(8)
+        val best = shortlist.flatMapIndexed { i, a -> shortlist.drop(i + 1).map { b -> listOf(a, b) } }
+            .maxBy { trial(it) }
+        hero.relicSlots.fill(null)
+        best.forEachIndexed { i, r -> hero.relicSlots[i] = r }
+        hero.knownResonances += hero.resonances
+        hero.hp = hero.hp.coerceAtMost(hero.maxHp)
+    }
+
+    /** Un héros d'essai : même équipement, les reliques [relics], PV pleins, recharges prêtes. */
+    private fun trialCopy(src: Hero, relics: List<Relic>): Hero = Hero().apply {
+        equipped.putAll(src.equipped)
+        relics.forEach { addRelic(it) }
+        potions = src.potions
+        healFull()
+    }
+
     private fun geared(floor: Int, rng: Random): Hero {
         val hero = Hero.starter()
-        repeat(15) {
-            val e = LootSystem.generate(floor, 0, rng)
+        fun offer(e: Equipment) {
             val cur = hero.equipped[e.slot]
             if (cur == null || score(e) > score(cur)) hero.equipped[e.slot] = e
+        }
+        repeat(15) { offer(LootSystem.generate(floor, 0, rng)) }
+        // Toujours une arme de l'étage : sans elle, le héros d'essai se battait à l'épée de bois
+        // (15 tirages sans arme arrivent), et le banc mesurait des combats de 300 tours
+        if (hero.equipped[EquipSlot.WEAPON]?.power == 1 && floor > 1) {
+            var weapon = LootSystem.generate(floor, 0, rng)
+            while (weapon.slot != EquipSlot.WEAPON) weapon = LootSystem.generate(floor, 0, rng)
+            offer(weapon)
         }
         hero.potions = 2
         hero.healFull()
@@ -270,14 +347,23 @@ class RoguelikeSimulationTest {
     // ── Un profil de joueur : il rejoue après chaque mort, avec son équipement ──
 
     private fun playProfile(skill: Skill, r: Report, rng: Random) {
-        val g = RoguelikeGame(rng = rng)
+        val g = RoguelikeGame(rng = rng, checkpointEvery = checkpointEvery)
         var best = 1
         var deaths = 0
         var turns = 0
         var lastFloor = 0
         val reached = mutableSetOf<Int>()
+        var relicsSeen = 0
+        var zoneSeen = 0
 
         while (g.floor <= maxFloor && turns++ < maxMapTurns) {
+            // Une relique trouvée, ou une nouvelle zone de 10 étages : le bot revoit ses deux reliques
+            val zone = (g.floor - 1) / 10
+            if (smart && g.combat == null && (g.hero.relics.size != relicsSeen || zone != zoneSeen)) {
+                relicsSeen = g.hero.relics.size
+                zoneSeen = zone
+                chooseRelics(g.hero, g.floor, skill)
+            }
             if (g.floor != lastFloor) {
                 lastFloor = g.floor
                 r.f(g.floor).entries++
@@ -304,6 +390,7 @@ class RoguelikeSimulationTest {
         }
         if (turns >= maxMapTurns) r.timeouts++
         r.bestFloors += best
+        r.finalRelics += g.hero.relicSlots.filterNotNull().sortedBy { it.ordinal }.joinToString(" + ") { it.name }
     }
 
     /** Joue un combat entier. Renvoie true si le héros est mort. */
@@ -312,11 +399,11 @@ class RoguelikeSimulationTest {
         val fs = r.f(g.floor)
         fs.fights++
         fs.groupSizes += c.enemies.size
-        if (c.phase == CombatPhase.ENEMY_TURN) fs.ambushes++
+        if (c.ambush) fs.ambushes++
         val hpStart = c.hero.hp
-        val ambush = c.phase == CombatPhase.ENEMY_TURN
+        val ambush = c.ambush
         val chained = r.nextFightChained
-        playCombat(c, skill, fs, rng)
+        playCombat(c, skill, fs, rng, combos = smart)
         val died = c.phase == CombatPhase.DEFEAT
         if (died) {
             if (hpStart >= c.hero.maxHp * 0.9f) r.deathsFullHp++
@@ -344,8 +431,8 @@ class RoguelikeSimulationTest {
                 turns++
                 val alive = c.aliveIndices()
                 // Cible : le plus proche d'attaquer, puis le plus faible
-                val target = alive.minWith(compareBy<Int>({ c.enemies[it].countdown }, { c.enemies[it].hp }))
-                val incoming = alive.filter { c.enemies[it].countdown <= 1 }.sumOf { c.enemies[it].damage }
+                val target = alive.minWith(compareBy<Int>({ c.roundsUntilTurn(it) }, { c.enemies[it].hp }))
+                val incoming = alive.filter { c.roundsUntilTurn(it) <= 1 }.sumOf { c.enemies[it].damage }
                 // Glace et foudre visent celui qui va frapper, comme la fracture, la marque, le charme
                 // et l'aveuglement
                 // (elles préparent ses propres coups) ; feu et poison, le plus solide.
@@ -353,13 +440,13 @@ class RoguelikeSimulationTest {
                 // jamais un sort sur un monstre qui y est immunisé ou déjà enragé.
                 fun aimAt(r: Relic) =
                     if (r.element == Element.ICE || r.element == Element.LIGHTNING ||
-                        r.effect in setOf(RelicEffect.FRACTURE, RelicEffect.MARK, RelicEffect.CHARM, RelicEffect.BLIND)) target
+                        r.effect in setOf(RelicEffect.FRACTURE, RelicEffect.MARK, RelicEffect.CHARM, RelicEffect.BLIND, RelicEffect.SLOW)) target
                     else alive.maxBy { c.enemies[it].hp }
                 val ready = c.hero.relicSlots.filterNotNull().firstOrNull {
                     val e = c.enemies[aimAt(it)]
                     c.canCast(it) && (simRelics == null || it.name in simRelics) && !(lastWasSupport && !it.hits) &&
                         e.type.affinity(it.element) != Affinity.IMMUNE &&
-                        !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING))
+                        !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING || it.effect == RelicEffect.SLOW))
                 }
                 // Le « Spécial » : le voleur achève une cible exposée, le guerrier se met en garde
                 // devant un gros coup, le mage lève ses doubles dès qu'il n'en a plus
@@ -388,7 +475,7 @@ class RoguelikeSimulationTest {
                 val (_, attackers) = c.startEnemyTurn()
                 for (a in attackers) {
                     if (c.phase != CombatPhase.ENEMY_TURN) break
-                    c.resolveStrike(a, parry(skill, rng, guarding = c.guarding))
+                    c.resolveStrike(a, parry(skill, rng, guarding = c.guarding, slowed = c.hourglassStrikes > 0))
                 }
                 c.endEnemyTurn()
             }
@@ -401,11 +488,15 @@ class RoguelikeSimulationTest {
         return when { x < s.strikePerfect -> Timing.PERFECT; x < s.strikePerfect + s.strikeGood -> Timing.GOOD; else -> Timing.MISS }
     }
 
-    /** En garde, la fenêtre de parade double : on compte les chances de réussite ×1,6 (bornées). */
-    private fun parry(s: Skill, rng: Random, guarding: Boolean = false): Timing {
-        val k = if (guarding) 1.6f else 1f
-        val perfect = (s.parryPerfect * k).coerceAtMost(0.9f)
-        val good = (s.parryGood * k).coerceAtMost(0.95f - perfect)
+    /**
+     * En garde, la fenêtre de parade double : les ratés sont divisés par 1,6, les parfaits
+     * multipliés d'autant. Sous le Sablier (fenêtre ×1,5, élan plus lent) : encore ×1,4.
+     */
+    private fun parry(s: Skill, rng: Random, guarding: Boolean = false, slowed: Boolean = false): Timing {
+        val k = (if (guarding) 1.6f else 1f) * (if (slowed) 1.4f else 1f)
+        val miss = (1f - s.parryPerfect - s.parryGood) / k
+        val perfect = (s.parryPerfect * k).coerceAtMost(1f - miss)
+        val good = 1f - miss - perfect
         val x = rng.nextFloat()
         return when { x < perfect -> Timing.PERFECT; x < perfect + good -> Timing.GOOD; else -> Timing.MISS }
     }
@@ -494,14 +585,21 @@ class RoguelikeSimulationTest {
     // ── Rapport ─────────────────────────────────────────────────────────────────
 
     private fun format(r: Report): String = buildString {
-        appendLine("══════ ${r.skill} ($profiles profils, max étage $maxFloor, $maxMapTurns tours de carte) ══════")
+        val cp = if (checkpointEvery > 0) ", checkpoint tous les $checkpointEvery étages" else ""
+        appendLine("══════ ${r.skill} ($profiles profils, max étage $maxFloor, $maxMapTurns tours de carte$cp) ══════")
         val b = r.bestFloors.sorted()
         appendLine("Meilleur étage : médiane ${b[b.size / 2]}, min ${b.first()}, max ${b.last()}   blocages : ${r.timeouts}")
+        // Combien de morts pour aller au bout, chez ceux qui y sont arrivés
+        r.deathsBeforeFloor[maxFloor]?.sorted()?.let { d ->
+            appendLine("Arrivés à l'étage $maxFloor : ${d.size} profils sur $profiles ; morts pour y arriver : médiane ${d[d.size / 2]}, min ${d.first()}, max ${d.last()}")
+        } ?: appendLine("Arrivés à l'étage $maxFloor : aucun")
         val totalDeaths = r.floors.values.sumOf { it.deaths }.coerceAtLeast(1)
         appendLine("Morts : $totalDeaths dont ${100 * r.deathsFullHp / totalDeaths} % en commençant le combat à plus de 90 % des PV, " +
             "${100 * r.deathsAmbush / totalDeaths} % en embuscade, ${100 * r.deathsChained / totalDeaths} % en combat enchaîné ; " +
             "par taille de groupe : 1 → ${100 * r.deathsByGroup[1] / totalDeaths} %, 2 → ${100 * r.deathsByGroup[2] / totalDeaths} %, 3 → ${100 * r.deathsByGroup[3] / totalDeaths} %")
         appendLine("Monstres attirés par le repos : ${r.restNoises}")
+        if (smart) appendLine("Reliques portées en fin de partie : " +
+            r.finalRelics.groupingBy { it }.eachCount().entries.sortedByDescending { it.value }.take(6).joinToString("  ") { "${it.key} ×${it.value}" })
         appendLine("Arrivée à l'étage : profils arrivés | morts cumulées (médiane) | note totale de l'équipement porté (médiane)")
         for ((fl, l) in r.deathsBeforeFloor.toSortedMap()) {
             if (fl % 5 != 0 && fl != 1) continue

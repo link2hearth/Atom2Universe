@@ -121,7 +121,7 @@
     <string name="roguelike_relic_lightning">Lightning</string>
     <string name="roguelike_relic_venom">Venom</string>
     <string name="roguelike_relic_fireball_desc">Deals %1$d–%2$d damage, then burns the target for %3$d turns (a quarter of the hit each turn). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_ice_shard_desc">Deals %1$d–%2$d damage and can freeze the target for %3$d turn: its attack is delayed. It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_ice_shard_desc">Deals %1$d–%2$d damage and can freeze the target: it slows down sharply for a turn and a half, and its blows are numbed (weaker). It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_lightning_desc">Deals %1$d–%2$d damage and paralyzes the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_venom_desc">Deals %1$d–%2$d damage and adds a dose of poison (3 at most): each dose eats %5$d HP per turn for %3$d turns. Recharge: %4$d turns.</string>
     <!-- Le grimoire : reliques du 18/09/2026 (voir DONJON.md, « Le grimoire ») -->
@@ -134,7 +134,7 @@
     <string name="roguelike_relic_chain_lightning">Chain Lightning</string>
     <string name="roguelike_relic_sunder_desc">Deals %1$d–%2$d damage (no element) and fractures the target for %3$d turns: it takes 25%% more damage from everything. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_war_cry_desc">Weakens every enemy for %3$d turns (their blows hit 30%% softer), and your next 2 weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_earthquake_desc">Deals %1$d–%2$d damage (no element) to every enemy. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_earthquake_desc">Deals %1$d–%2$d damage (no element) to every enemy, and they stagger: their next turn comes later. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_hunters_mark_desc">Deals %1$d–%2$d damage (no element) and marks the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of poison (3 at most), eating %5$d HP per turn. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_freezing_rain_desc">Deals %1$d–%2$d damage to every enemy and soaks them for %3$d turns: they resist control less, and water reacts with other elements. It puts out fires. Recharge: %4$d turns.</string>
@@ -186,6 +186,9 @@
     <string name="roguelike_relic_regeneration">Regeneration</string>
     <string name="roguelike_relic_stoneskin">Stoneskin</string>
     <string name="roguelike_relic_charm">Charm</string>
+    <string name="roguelike_relic_haste">Haste</string>
+    <string name="roguelike_relic_slow">Slow</string>
+    <string name="roguelike_relic_hourglass">Hourglass</string>
     <string name="roguelike_relic_rend_desc">Deals %1$d–%2$d damage (no element) and opens a wound for %3$d turns: the target loses %8$d HP every time it attacks. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_whirlwind_desc">A weapon strike on every enemy: %1$d–%2$d damage each (no element). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$d–%2$d damage each (no element). A critical dagger opens a wound (%8$d HP each time the target attacks). Recharge: %4$d turns.</string>
@@ -198,6 +201,9 @@
     <string name="roguelike_relic_holy_light_desc">Deals %1$d–%2$d holy damage and blinds the target for %3$d turn. The undead fear it. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_regeneration_desc">Heals %8$d HP at each of your next %3$d turns. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is doubled, and every blow you take sends %8$d%% back to its author. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_haste_desc">Your speed rises by half for your next %3$d turns: you act more often. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_slow_desc">The target is twice as slow for its next %3$d turns: it acts less often. It sometimes resists. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_hourglass_desc">Turns back time: the next %3$d enemy attacks come more slowly, and your parry window is wider. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_charm_desc">The target\'s next attack hits one of its allies instead (alone, it loses it). It sometimes resists. Recharge: %4$d turns.</string>
 
     <string name="roguelike_reaction_cauterize">Cauterized!</string>
@@ -227,6 +233,9 @@
     <string name="roguelike_combat_ambush_ready">sneak attack ready</string>
     <string name="roguelike_combat_barrier">shield %1$d</string>
     <string name="roguelike_combat_regen">regeneration %1$d</string>
+    <string name="roguelike_combat_haste">haste %1$d</string>
+    <string name="roguelike_combat_hourglass">hourglass %1$d</string>
+    <string name="roguelike_combat_slowed">slowed %1$d</string>
     <string name="roguelike_combat_stoneskin">stoneskin %1$d</string>
     <string name="roguelike_combat_meteor_incoming">meteor in %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relic found: %1$s! It\'s ready for your next fight.</string>
@@ -257,7 +266,6 @@
     <string name="roguelike_combat_potion_count">×%1$d</string>
     <string name="roguelike_combat_cooldown">ready in %1$d</string>
     <string name="roguelike_combat_hp">%1$d / %2$d</string>
-    <string name="roguelike_combat_countdown">⚔ %1$d</string>
     <string name="roguelike_combat_burning">burning %1$d</string>
     <string name="roguelike_combat_poisoned">poison ×%1$d (%2$d)</string>
     <string name="roguelike_combat_frozen">frozen</string>
@@ -319,6 +327,7 @@
     <string name="roguelike_stattype_crit_chance">Crit chance</string>
     <string name="roguelike_stattype_crit_damage">Crit damage</string>
     <string name="roguelike_stattype_life_steal">Life steal</string>
+    <string name="roguelike_stattype_speed">Speed</string>
     <string name="roguelike_rarity_normal">Normal</string>
     <string name="roguelike_rarity_magic">Magic</string>
     <string name="roguelike_mat_wood">Wooden</string>
@@ -355,8 +364,8 @@
     <string name="roguelike_weight_light">Light</string>
     <string name="roguelike_weight_heavy">Heavy</string>
     <string name="roguelike_item_weight_cloth">Cloth: little armor</string>
-    <string name="roguelike_item_weight_light">Light: +%1$d%% dodge, DEX helps you dodge</string>
-    <string name="roguelike_item_weight_heavy">Heavy: DEX no longer helps you dodge</string>
+    <string name="roguelike_item_weight_light">Light: +%1$d%% dodge, +%2$d%% speed, DEX helps you dodge</string>
+    <string name="roguelike_item_weight_heavy">Heavy: −%1$d%% speed, DEX no longer helps you dodge</string>
     <string name="roguelike_item_shield_ac">+%1$d%% dodge</string>
     <string name="roguelike_base_amulet">Amulet</string>
     <string name="roguelike_base_ring">Ring</string>
@@ -371,7 +380,7 @@
     <string name="roguelike_inventory_sort_recent">Recent</string>
     <string name="roguelike_inventory_empty">Your bag is empty</string>
     <string name="roguelike_inventory_attr">%1$s %2$d</string>
-    <string name="roguelike_inventory_stats_line">HP %1$d/%2$d   Armor %3$d   Dodge %7$d%%   Weapon %4$d–%5$d   Crit %6$d%%</string>
+    <string name="roguelike_inventory_stats_line">HP %1$d/%2$d   Armor %3$d   Dodge %7$d%%   Speed %8$d%%   Weapon %4$d–%5$d   Crit %6$d%%</string>
     <string name="roguelike_inventory_subtitle">%1$s · %2$s · rating %3$d</string>
     <string name="roguelike_inventory_worn">Worn: %1$s (rating %2$d)</string>
     <string name="roguelike_inventory_sell">Sell · %1$d gold</string>

@@ -114,16 +114,41 @@ data class SaveRoll(
 /** Pourquoi le jet a été réussi d'office : immunité, ou rage. */
 enum class SaveReason { ROLLED, IMMUNE, RAGE }
 
+/**
+ * Un ennemi en combat. Il a sa **jauge** (voir [Combat]) : elle se remplit de [rate] par tour
+ * du héros ; pleine, c'est son tour.
+ *
+ * Ses états se comptent **à ses tours à lui**, comme dans FFX : la brûlure et le poison
+ * rongent au début de son tour, le gel lui fait perdre ses prochains tours, et les autres
+ * états (trempé, fracturé, affaibli…) perdent un tour à la fin de chacun de ses tours.
+ */
 class Enemy(
     val type: MonsterType,
     val maxHp: Int,
     val damage: Int,
+    /** Il agit tous les N tours du héros (à vitesse égale) : sa jauge se remplit en N tours. */
     val cadence: Int,
-    /** Tours restants avant sa prochaine attaque (affiché au-dessus de lui). */
-    var countdown: Int,
+    /** Tours du héros avant sa première action : c'est ce qui place sa jauge au début du combat. */
+    countdown: Int,
+    /** Sa vitesse : 1 à l'étage 1, elle monte avec l'étage (voir [Encounters.speedMult]). */
+    val speed: Double = 1.0,
 ) {
     var hp = maxHp
     val alive get() = hp > 0
+
+    /**
+     * Sa jauge : 1, c'est son tour. Au départ, il agit juste après le [countdown]ᵉ tour du
+     * héros (le « − 0,5 » : entre deux tours du héros, jamais en même temps que lui).
+     */
+    var gauge = 1.0 - (countdown - 0.5) / cadence
+    /**
+     * Ce que sa jauge gagne par tour du héros : sa vitesse sur sa cadence. Enragé, deux fois
+     * plus vite (un rat enragé peut frapper deux fois entre deux tours du héros) ; ralenti par
+     * la Lenteur, deux fois moins. Le gel, lui, la ralentit très fort (voir [frozenTime]).
+     */
+    val rate: Double get() = rateWith(rageTurns > 0, slowTurns > 0)
+    fun rateWith(enraged: Boolean, slowed: Boolean) = speed / cadence *
+        (if (enraged) Relic.RAGE_SPEED else 1.0) * (if (slowed) Relic.SLOW_SPEED else 1.0)
 
     // ── Effets des reliques (voir [Relic]) ──
     var burnTurns  = 0
@@ -131,8 +156,14 @@ class Enemy(
     var poisonTurns = 0
     var poisonDoses = 0
     var poisonDoseDamage = 0
-    /** Gelé : son compteur ne bouge plus, il ne fait rien du tout. */
-    var frozenTurns = 0
+    /**
+     * Gelé : pendant ce temps (en tours du héros, [Relic.FREEZE_TURN_LENGTH] par tour de gel), sa
+     * jauge se remplit à ×[Relic.CHILL_SPEED], et il est **engourdi** : ses coups font
+     * ×[Combat.NUMB_MULT]. La glace retarde son attaque et adoucit celle qui finit par tomber.
+     */
+    var frozenTime = 0.0
+    /** Ralenti par la Lenteur : sa jauge se remplit deux fois moins vite, pendant ses prochains tours. */
+    var slowTurns = 0
     /** Paralysé : chaque attaque qui tombe demande un jet ; raté, elle est perdue. */
     var paralyzedTurns = 0
     /** Le geste du lancer de la paralysie : il pèse sur tous ses jets suivants. */
@@ -145,14 +176,14 @@ class Enemy(
     var rageTurns = 0
     val enraged get() = rageTurns > 0
     /**
-     * Le gel est fini, mais la glace est encore sur lui jusqu'à son prochain tour : il compte
-     * comme figé pour le héros (Bris, Fonte, Coup mortel). Sans ça, un gel d'un tour se
-     * consumait pendant le tour ennemi et le héros ne voyait jamais une cible figée.
+     * Le gel est fini (sa jauge repart à pleine vitesse), mais la glace est encore sur lui
+     * jusqu'à la fin de son tour suivant : il compte comme figé (Bris, Fonte, Coup mortel, et
+     * son coup reste engourdi).
      */
     var thawing = false
-    val frozen get() = frozenTurns > 0 || thawing
+    val frozen get() = frozenTime > 0 || thawing
 
-    // ── États partagés du grimoire (voir [RelicEffect]) : ils perdent un tour en fin de tour ennemi ──
+    // ── États partagés du grimoire (voir [RelicEffect]) : ils perdent un tour à la fin de chacun de ses tours ──
     var soakedTurns = 0
     var fracturedTurns = 0
     var weakenedTurns = 0
@@ -169,8 +200,20 @@ class Enemy(
 
 object Encounters {
 
-    fun hpMult(floor: Int)     = 1f + 0.22f * (floor - 1)
-    fun damageMult(floor: Int) = 1f + 0.15f * (floor - 1)
+    /**
+     * Tous les monstres, à tous les étages : relevés quand les bots ont été recalibrés sur un
+     * vrai joueur (18/09/2026) — le donjon s'était révélé bien trop facile.
+     */
+    const val HP_SCALE     = 1.25f
+    const val DAMAGE_SCALE = 1.25f
+    fun hpMult(floor: Int)     = HP_SCALE * (1f + 0.22f * (floor - 1))
+    fun damageMult(floor: Int) = DAMAGE_SCALE * (1f + 0.15f * (floor - 1))
+    /**
+     * La vitesse des monstres monte avec l'étage : +0,4 % par étage, ×1,4 à l'étage 100. Leur
+     * vitesse par type, c'est leur cadence (le rat joue à chaque tour, le démon un sur trois).
+     */
+    const val SPEED_PER_FLOOR = 0.004
+    fun speedMult(floor: Int)  = 1.0 + SPEED_PER_FLOOR * (floor - 1)
 
     /** Taille du groupe : seul au début, jusqu'à 3 à partir de l'étage 5. */
     fun groupSize(floor: Int, rng: Random): Int {
@@ -199,6 +242,7 @@ object Encounters {
             damage    = (t.baseDamage * damageMult(floor)).roundToInt(),
             cadence   = cadence,
             countdown = cadence - (i % cadence),
+            speed     = speedMult(floor),
         )
     }
 }
@@ -274,6 +318,12 @@ enum class RelicEffect(val hits: Boolean = true) {
     STONESKIN(hits = false),
     /** Charme : jet ; raté, sa prochaine attaque frappe un autre ennemi (seul, il la perd). */
     CHARM(hits = false),
+    /** Hâte : la jauge du héros se remplit plus vite pendant ses prochains tours. */
+    HASTE(hits = false),
+    /** Lenteur : jet ; raté, la jauge de la cible se remplit deux fois moins vite pendant ses prochains tours. Un contrôle. */
+    SLOW(hits = false),
+    /** Sablier : les prochaines attaques ennemies arrivent plus lentement, la fenêtre de parade s'élargit. */
+    HOURGLASS(hits = false),
 }
 
 /**
@@ -332,7 +382,11 @@ enum class Relic(
     REGENERATION(R.string.roguelike_relic_regeneration, R.string.roguelike_relic_regeneration_desc, Element.HOLY,   StatType.WIS, RelicTarget.SELF, RelicEffect.REGEN, 5, 3, 0xFF3F8F4F.toInt(), 133, 3),
     // Constitution, charisme
     STONESKIN (R.string.roguelike_relic_stoneskin,  R.string.roguelike_relic_stoneskin_desc,  Element.PHYSICAL, StatType.CON, RelicTarget.SELF, RelicEffect.STONESKIN,  5, 2, 0xFF6E6E6E.toInt(), 132, 2),
-    CHARM     (R.string.roguelike_relic_charm,      R.string.roguelike_relic_charm_desc,      Element.ARCANE,   StatType.CHA, RelicTarget.ONE,  RelicEffect.CHARM,      5, 0, 0xFFB0527A.toInt(), 132, 15);
+    CHARM     (R.string.roguelike_relic_charm,      R.string.roguelike_relic_charm_desc,      Element.ARCANE,   StatType.CHA, RelicTarget.ONE,  RelicEffect.CHARM,      5, 0, 0xFFB0527A.toInt(), 132, 15),
+    // Le temps (étape 5 de la jauge) — icônes provisoires
+    HASTE     (R.string.roguelike_relic_haste,      R.string.roguelike_relic_haste_desc,      Element.ARCANE,   StatType.DEX, RelicTarget.SELF, RelicEffect.HASTE,      5, 3, 0xFF26A69A.toInt(), 132, 7),
+    SLOW      (R.string.roguelike_relic_slow,       R.string.roguelike_relic_slow_desc,       Element.ARCANE,   StatType.INT, RelicTarget.ONE,  RelicEffect.SLOW,       4, 3, 0xFF5C6BC0.toInt(), 132, 13),
+    HOURGLASS (R.string.roguelike_relic_hourglass,  R.string.roguelike_relic_hourglass_desc,  Element.ARCANE,   StatType.WIS, RelicTarget.SELF, RelicEffect.HOURGLASS,  5, 3, 0xFFC9A227.toInt(), 132, 14);
 
     /** Un sort qui ne frappe pas : il ne fait que poser son effet. */
     val hits get() = effect.hits
@@ -380,6 +434,24 @@ enum class Relic(
          */
         const val RAGE_AFTER = 2
         const val RAGE_TURNS = 3
+        /** Enragé : sa jauge se remplit deux fois plus vite. */
+        const val RAGE_SPEED = 2.0
+        /** Hâte : la vitesse du héros est multipliée par ça. */
+        const val HASTE_SPEED = 1.5
+        /** Lenteur : la vitesse de la cible est multipliée par ça. */
+        const val SLOW_SPEED = 0.5
+        /** Sablier : l'élan des attaques ennemies dure ça fois plus longtemps, et les fenêtres de parade s'élargissent d'autant. */
+        const val HOURGLASS_SLOW = 1.5f
+        /**
+         * Le gel (retravaillé le 18/09/2026, le propriétaire : « la glace ne sert à rien, elle
+         * décale juste le tour ») : chaque tour de gel ralentit la jauge à ×[CHILL_SPEED] pendant
+         * [FREEZE_TURN_LENGTH] tours du héros (≈ 1,1 tour de retard), et la cible est engourdie
+         * tout ce temps (voir [Combat.NUMB_MULT]).
+         */
+        const val FREEZE_TURN_LENGTH = 1.5
+        const val CHILL_SPEED = 0.25
+        /** Séisme : chaque ennemi recule de ça dans sa jauge (son prochain tour est repoussé). */
+        const val EARTHQUAKE_PUSH = 0.25
     }
 }
 
@@ -568,7 +640,8 @@ object RelicBudget {
         RelicEffect.DELAYED   -> -share(r) * DELAY_PREMIUM
         RelicEffect.BLIND     -> BLIND_TURN_VALUE * r.effectTurns
         RelicEffect.ENCHANT_POISON, RelicEffect.SMOKE, RelicEffect.BARRIER,
-        RelicEffect.REGEN, RelicEffect.STONESKIN, RelicEffect.CHARM -> share(r)
+        RelicEffect.REGEN, RelicEffect.STONESKIN, RelicEffect.CHARM,
+        RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> share(r)
     }
 
     /** Coup direct moyen sur chaque cible, en coups d'épée. */
@@ -634,21 +707,34 @@ data class HitResult(
 data class CastResult(val relic: Relic, val hits: List<HitResult>) {
     val main get() = hits.firstOrNull()
 }
-/** Dégâts d'un effet qui dure (brûlure, poison, l'Aube) au début du tour ennemi. */
+/** Dégâts d'un effet qui dure (brûlure, poison au tour de la victime ; l'Aube à la fin du tour du héros). */
 data class DotTick(val enemy: Int, val damage: Int, val killed: Boolean, val element: Element)
 /** Un ennemi arrêté par un effet ce tour-ci : figé par la glace, ou attaque perdue par la foudre. */
 data class StatusStop(val enemy: Int, val element: Element)
 /** Un jet de sauvegarde lancé pendant le tour ennemi (paralysie). */
 data class EnemySave(val enemy: Int, val save: SaveRoll)
 /**
- * Le début du tour ennemi : le Météore qui tombe, les dégâts des effets, les PV rendus par la
- * Régénération, qui est arrêté, les jets de paralysie, ceux qui enragent, puis qui frappe.
+ * Le début du tour d'**un** ennemi : ce que ses effets lui rongent, s'il est arrêté (gel,
+ * paralysie), son jet de paralysie, s'il enrage, puis s'il frappe ([attackers] : lui, ou
+ * personne).
  */
 data class EnemyTurnStart(
     val ticks: List<DotTick>, val attackers: List<Int>, val stopped: List<StatusStop>,
     val saves: List<EnemySave> = emptyList(), val enraged: List<Int> = emptyList(),
-    val meteor: List<HitResult> = emptyList(), val healed: Int = 0,
 )
+/**
+ * La fin du tour du héros, juste après son action : le Météore qui tombe, les PV rendus par
+ * la Régénération, et ce que l'Aube brûle. Ce sont des durées **du héros** : elles se
+ * comptent à ses tours.
+ */
+data class HeroTurnEnd(val meteor: List<HitResult> = emptyList(), val healed: Int = 0, val ticks: List<DotTick> = emptyList()) {
+    val isEmpty get() = meteor.isEmpty() && healed == 0 && ticks.isEmpty()
+}
+/**
+ * Un tour à venir, dans la barre d'ordre : [actor] vaut [Combat.HERO], [Combat.METEOR] ou
+ * l'indice d'un ennemi. [frozen] : un ennemi qui perdra ce tour-là (gelé).
+ */
+data class TurnSlot(val actor: Int, val frozen: Boolean = false)
 /**
  * [missed] : le jet d'attaque n'a pas atteint la CA du héros. [imageHit] : il a frappé un
  * double de l'Image miroir. [blocked] (guerrier, bouclier), [dodged] + [counter] (voleur),
@@ -671,14 +757,25 @@ data class EnemyStrike(
 data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Equipment>)
 
 /**
- * Un combat au tour par tour. Le moteur ne connaît pas le temps : l'écran mesure le
- * geste du joueur (parade, swipe) et le lui transmet sous forme de [Timing].
+ * Un combat au tour par tour, façon **CTB de FFX** (voir DONJON.md, « La jauge ») : le héros
+ * et chaque ennemi ont une **jauge** qui se remplit à leur vitesse ; pleine, c'est leur tour.
+ * Le temps ne s'écoule **pas** en continu : il est figé pendant les actions et pendant que le
+ * joueur choisit. Entre deux actions, [advance] fait avancer toutes les jauges jusqu'à la
+ * prochaine pleine, et donne la main à son propriétaire. Une action vide la jauge de celui
+ * qui la fait (une action pleine : de 1).
  *
- * Déroulé d'un tour :
- *   tour du joueur : [attack], [castRelic], le Spécial ou [drinkPotion]
- *   tour ennemi    : [startEnemyTurn] (météore, brûlure, poison, régénération, gel,
- *                    paralysie, attaquants), puis [resolveStrike] pour chacun, puis
- *                    [endEnemyTurn] (les états qui durent perdent un tour)
+ * L'unité de temps est le **tour du héros à vitesse normale** : sa jauge gagne 1 par unité.
+ * Un ennemi de cadence N gagne 1/N : il agit tous les N tours du héros.
+ *
+ * Déroulé :
+ *   tour du héros   : [attack], [castRelic], le Spécial ou [drinkPotion] ; à la fin, le
+ *                     Météore et la Régénération ([lastHeroTurnEnd])
+ *   tour d'un ennemi ([actingEnemy]) : [startEnemyTurn] (brûlure, poison, gel, paralysie),
+ *                     [resolveStrike] s'il frappe, puis [endEnemyTurn] (ses états perdent
+ *                     un tour)
+ *
+ * Le moteur ne connaît pas le temps réel : l'écran mesure le geste du joueur (parade, swipe)
+ * et le lui transmet sous forme de [Timing].
  *
  * Tous les dégâts infligés à un ennemi passent par [wound] : la fracture et la marque qui
  * saute y sont réglées une fois pour toutes.
@@ -687,7 +784,8 @@ class Combat(
     val hero: Hero,
     val floor: Int,
     val enemies: List<Enemy>,
-    ambush: Boolean,
+    /** Pris en embuscade : la jauge du héros part vide, les monstres frappent avant qu'il agisse. */
+    val ambush: Boolean,
     private val rng: Random = Random,
     /** Le d20 des jets de sauvegarde (les tests le truquent). */
     private val d20: () -> Int = { rng.nextInt(1, 21) },
@@ -714,6 +812,8 @@ class Combat(
         const val FRACTURE_MULT = 1.25f
         /** Affaibli : ses coups font ce multiple. */
         const val WEAKEN_MULT = 0.7f
+        /** Gelé : engourdi, ses coups font ce multiple (cumulé avec l'affaiblissement). */
+        const val NUMB_MULT = 0.7f
         /** Marqué : les critiques contre lui gagnent ce bonus au multiplicateur. */
         const val MARK_CRIT_BONUS = 0.5f
         /** Corrosion : doses de poison au plus. */
@@ -722,6 +822,17 @@ class Combat(
         const val GUARD_THORNS_SHARE = 0.5f
         /** Guerrier, blocage parfait au bouclier : le coup de bouclier renvoie cette part. */
         const val BLOCK_THORNS_SHARE = 0.3f
+
+        // La jauge
+        /** Dans la barre d'ordre et [actingEnemy] : le héros, et le Météore qui tombe. */
+        const val HERO = -1
+        const val METEOR = -2
+        /** Ce que coûte une action pleine : toute la jauge. */
+        const val FULL_ACTION = 1.0
+        /** Ce que coûte une action qui ne frappe pas (sort de soutien, Garde, Image miroir, potion). */
+        const val SUPPORT_ACTION = 0.5
+        /** Deux jauges pleines à moins de ça l'une de l'autre sont pleines en même temps. */
+        private const val TIME_EPSILON = 1e-9
     }
 
     /** Guerrier : en garde jusqu'à son prochain tour (l'écran double la fenêtre de parade). */
@@ -754,13 +865,19 @@ class Combat(
     /** Peau de pierre : armure doublée et épines. */
     var stoneskinTurns = 0
         private set
+    /** Hâte : tours du héros qui restent à vitesse ×[Relic.HASTE_SPEED]. */
+    var hasteTurns = 0
+        private set
+    /** Sablier : attaques ennemies qui arriveront encore au ralenti. */
+    var hourglassStrikes = 0
+        private set
     /** Météore : tours avant l'impact (0 : rien en l'air), et le geste du lancer. */
     var meteorTurns = 0
         private set
     private var meteorTiming = Timing.MISS
 
-    /** Pris en embuscade : les monstres frappent avant qu'on puisse agir. */
-    var phase = if (ambush) CombatPhase.ENEMY_TURN else CombatPhase.PLAYER_TURN
+    /** À qui la main : fixé par [advance], dès la construction. */
+    var phase = CombatPhase.PLAYER_TURN
         private set
 
     /** Les recharges vivent sur le héros : elles continuent d'un combat à l'autre. */
@@ -768,10 +885,45 @@ class Combat(
     var rewards: CombatRewards? = null
         private set
 
+    // ── La jauge ──
+    /** La jauge du héros : pleine au départ, vide s'il est pris en embuscade. */
+    var heroGauge = if (ambush) 0.0 else 1.0
+        private set
+    /** Ce que la jauge du héros gagne par unité de temps : 1, c'est la vitesse normale (voir [Hero.speed]), et la Hâte. */
+    val heroRate get() = heroRateWith(hasteTurns > 0)
+    private fun heroRateWith(haste: Boolean) = hero.speed.toDouble() * if (haste) Relic.HASTE_SPEED else 1.0
+    /** L'ennemi dont c'est le tour ([HERO] pendant le tour du héros). */
+    var actingEnemy = HERO
+        private set
+    /** Ce que la dernière action du héros a déclenché en fin de tour (Météore, Régénération). */
+    var lastHeroTurnEnd = HeroTurnEnd()
+        private set
+    /**
+     * Le premier tour du héros, s'il n'est pas pris en embuscade, ne fait pas passer de temps :
+     * les recharges n'avancent pas. En embuscade, son tour « manqué » compte, comme avant.
+     */
+    private var upkeepDue = ambush
+
+    init { advance() }
+
     fun aliveIndices() = enemies.indices.filter { enemies[it].alive }
-    fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0
+    /**
+     * Le Météore ne se relance pas tant qu'il est en l'air : chaque lancer remettait son compte
+     * à zéro, et avec une recharge d'un tour (beaucoup de SAG) il ne tombait jamais.
+     */
+    fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0 &&
+        !(relic.effect == RelicEffect.DELAYED && meteorTurns > 0)
     fun canDrinkPotion() = phase == CombatPhase.PLAYER_TURN && hero.potions > 0 && hero.hp < hero.maxHp
     fun canUseSpecial() = phase == CombatPhase.PLAYER_TURN && hero.archetype != null && hero.specialCooldown == 0
+
+    // ── Ce que coûte chaque action, en jauge (1 : toute la jauge) ──
+    // Une action qui ne frappe pas coûte une demi-jauge : on rejoue plus vite (voir DONJON.md,
+    // « Étape 3 »). Les effets n'ont pas été réduits pour autant : c'est un bonus, mesuré.
+    fun attackCost() = FULL_ACTION
+    fun relicCost(relic: Relic) = if (relic.hits) FULL_ACTION else SUPPORT_ACTION
+    /** La Garde et l'Image miroir ne frappent pas ; le Coup mortel, si. */
+    fun specialCost() = if (hero.archetype == Archetype.ROGUE) FULL_ACTION else SUPPORT_ACTION
+    fun potionCost() = SUPPORT_ACTION
 
     /**
      * Empoisonnée, figée, paralysée, aveuglée, charmée, marquée ou bien entamée : le voleur y
@@ -787,7 +939,7 @@ class Combat(
     fun attack(target: Int, timing: Timing): HitResult {
         check(phase == CombatPhase.PLAYER_TURN)
         val result = weaponHit(target, timing)
-        afterPlayerAction()
+        afterPlayerAction(attackCost())
         return result
     }
 
@@ -848,9 +1000,11 @@ class Combat(
         }
         // Un sort qui est un coup d'arme ne consomme qu'une charge des Lames, quel que soit le nombre de cibles
         if (relic.weaponStrike && poisonedBlades > 0) poisonedBlades--
+        // Le Séisme secoue le sol : tous chancellent, leur prochain tour recule
+        if (relic == Relic.EARTHQUAKE) for (j in aliveIndices()) enemies[j].gauge -= Relic.EARTHQUAKE_PUSH
         applySelfEffect(relic, timing)
         relicCooldowns[relic] = hero.spellCooldown(relic.cooldown)
-        afterPlayerAction()
+        afterPlayerAction(relicCost(relic))
         return CastResult(relic, hits)
     }
 
@@ -878,6 +1032,8 @@ class Combat(
                 regenAmount = hero.relicAmount(relic)
             }
             RelicEffect.STONESKIN -> stoneskinTurns = relic.effectTurns
+            RelicEffect.HASTE -> hasteTurns = relic.effectTurns
+            RelicEffect.HOURGLASS -> hourglassStrikes = relic.effectTurns
             RelicEffect.DELAYED -> {
                 meteorTurns = relic.effectTurns
                 meteorTiming = timing
@@ -953,10 +1109,11 @@ class Combat(
         thaw(e)
         e.paralyzedTurns = 0
         e.charmed = false
+        e.slowTurns = 0
         return true
     }
 
-    private fun thaw(e: Enemy) { e.frozenTurns = 0; e.thawing = false }
+    private fun thaw(e: Enemy) { e.frozenTime = 0.0; e.thawing = false }
 
     /** Pose l'effet du sort ([result] : le coup, dont la brûlure prend sa part). Renvoie le jet de sauvegarde (s'il y en a un) et la rage. */
     private fun applyEffect(relic: Relic, e: Enemy, result: HitResult, timing: Timing, reactions: MutableList<Reaction>): Pair<SaveRoll?, Boolean> {
@@ -985,6 +1142,12 @@ class Combat(
                 e.fracturedTurns = maxOf(e.fracturedTurns, relic.effectTurns)
             }
             RelicEffect.BLIND -> e.blindedTurns = maxOf(e.blindedTurns, relic.effectTurns)
+            RelicEffect.SLOW -> {
+                val save = rollSave(e, relic.element, dc, timing)
+                if (save.saved) return save to false
+                e.slowTurns = maxOf(e.slowTurns, relic.effectTurns)
+                return save to controlled(e)
+            }
             RelicEffect.CHARM -> {
                 // Discorde : un aveuglé ne voit pas venir le charme
                 val save = if (e.blindedTurns > 0 && Resonance.DISCORD in hero.resonances && !e.enraged) null
@@ -1012,7 +1175,7 @@ class Combat(
         if (save.saved) return save to false
         var t = turns
         if (e.soakedTurns > 0) { e.soakedTurns = 0; t += Reaction.FROST_EXTRA_TURNS; reactions += Reaction.FROST }
-        e.frozenTurns = maxOf(e.frozenTurns, t)
+        e.frozenTime = maxOf(e.frozenTime, t * Relic.FREEZE_TURN_LENGTH)
         e.thawing = false
         return save to controlled(e)
     }
@@ -1084,7 +1247,7 @@ class Combat(
         check(canUseSpecial() && hero.archetype == Archetype.WARRIOR)
         guarding = true
         spendSpecial()
-        afterPlayerAction()
+        afterPlayerAction(specialCost())
     }
 
     /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
@@ -1092,7 +1255,7 @@ class Combat(
         check(canUseSpecial() && hero.archetype == Archetype.MAGE)
         mirrorImages = MIRROR_IMAGES
         spendSpecial()
-        afterPlayerAction()
+        afterPlayerAction(specialCost())
     }
 
     /**
@@ -1105,7 +1268,7 @@ class Combat(
         val exposed = isExposed(enemies[target]) || ambushReady
         val result = weaponHit(target, timing, forceCrit = exposed, critBonus = if (exposed) DEADLY_CRIT_BONUS else 0f)
         spendSpecial()
-        afterPlayerAction()
+        afterPlayerAction(specialCost())
         return result
     }
 
@@ -1114,7 +1277,7 @@ class Combat(
         val before = hero.hp
         hero.potions--
         hero.heal((hero.maxHp * Hero.POTION_HEAL).roundToInt())
-        afterPlayerAction()
+        afterPlayerAction(potionCost())
         return hero.hp - before
     }
 
@@ -1148,42 +1311,29 @@ class Combat(
         return dmg
     }
 
-    private fun afterPlayerAction() {
-        phase = if (aliveIndices().isEmpty()) win() else CombatPhase.ENEMY_TURN
+    /**
+     * L'action du héros est faite : la fin de son tour (Météore, Régénération), puis sa jauge
+     * se vide de [cost] et le temps avance jusqu'au prochain tour.
+     */
+    private fun afterPlayerAction(cost: Double) {
+        lastHeroTurnEnd = HeroTurnEnd()
+        if (aliveIndices().isEmpty()) { phase = win(); return }
+        lastHeroTurnEnd = endHeroTurn()
+        if (aliveIndices().isEmpty()) { phase = win(); return }
+        heroGauge -= cost
+        advance()
     }
 
-    // ── Tour des ennemis ────────────────────────────────────────────────────────
-
     /**
-     * Début du tour ennemi : le Météore tombe s'il est l'heure, les effets qui durent rongent
-     * (brûlure, poison), la Régénération soigne, puis chaque ennemi avance son compteur. Un
-     * ennemi **figé** ne fait rien, pas même avancer son compteur : son attaque est repoussée.
-     * Au dernier tour de gel, la glace reste sur lui jusqu'à son tour suivant
-     * ([Enemy.thawing]) : c'est ce qui laisse au héros un tour pour la briser (Bris, Fonte,
-     * Coup mortel). Un ennemi **paralysé** avance normalement, mais l'attaque qui tombe demande
-     * un jet de sauvegarde : raté, elle est perdue. Un ennemi **enragé** avance de 2.
+     * La fin du tour du héros : le Météore tombe s'il est l'heure, la Régénération soigne (et
+     * l'Aube brûle les morts-vivants). Ce sont des durées du héros, comptées à ses tours.
      */
-    fun startEnemyTurn(): EnemyTurnStart {
-        check(phase == CombatPhase.ENEMY_TURN)
+    private fun endHeroTurn(): HeroTurnEnd {
         val meteor = mutableListOf<HitResult>()
         if (meteorTurns > 0 && --meteorTurns == 0)
             for (i in aliveIndices()) meteor += relicHit(Relic.METEOR, i, meteorTiming, 1f)
-
-        val ticks = mutableListOf<DotTick>()
-        for (i in aliveIndices()) {
-            val e = enemies[i]
-            if (e.burnTurns > 0) {
-                val dmg = wound(i, e.burnDamage.toFloat())
-                e.burnTurns--
-                ticks += DotTick(i, dmg, !e.alive, Element.FIRE)
-            }
-            if (e.alive && e.poisonTurns > 0) {
-                val dmg = wound(i, (e.poisonDoses * e.poisonDoseDamage).toFloat())
-                if (--e.poisonTurns == 0) { e.poisonDoses = 0; e.poisonDoseDamage = 0 }
-                ticks += DotTick(i, dmg, !e.alive, Element.POISON)
-            }
-        }
         var healed = 0
+        val ticks = mutableListOf<DotTick>()
         if (regenTurns > 0) {
             regenTurns--
             val before = hero.hp
@@ -1197,49 +1347,194 @@ class Combat(
                 ticks += DotTick(i, dmg, !e.alive, Element.HOLY)
             }
         }
-        if (aliveIndices().isEmpty()) {
-            phase = win()
-            return EnemyTurnStart(ticks, emptyList(), emptyList(), meteor = meteor, healed = healed)
-        }
+        return HeroTurnEnd(meteor, healed, ticks)
+    }
 
-        val attackers = mutableListOf<Int>()
-        val stopped = mutableListOf<StatusStop>()
-        val saves = mutableListOf<EnemySave>()
-        val enragedNow = mutableListOf<Int>()
+    /**
+     * Le début du tour du héros : ce qui dure jusqu'à son prochain tour s'arrête (Garde, Peau
+     * de pierre), le Bouclier arcanique qui a tenu rend une recharge, et les recharges
+     * avancent d'un tour — elles se comptent **aux tours du héros**.
+     */
+    private fun beginHeroTurn() {
+        if (!upkeepDue) { upkeepDue = true; return }
+        if (stoneskinTurns > 0) stoneskinTurns--
+        if (hasteTurns > 0) hasteTurns--
+        // Le Bouclier arcanique a tenu jusqu'ici : les **autres** reliques gagnent un tour
+        // (lui-même, non : avec une SAG haute, il se relançait à chaque tour, sans fin)
+        if (barrierFresh && barrier > 0) hero.tickRelics(1, includeSpecial = false, except = Relic.ARCANE_SHIELD)
+        barrierFresh = false
+        hero.tickRelics()
+        guarding = false
+    }
+
+    // ── La jauge ────────────────────────────────────────────────────────────────
+
+    /** Le temps qu'il faut à la jauge d'un ennemi pour être pleine, en tours du héros (le gel la ralentit d'abord). */
+    fun timeUntilTurn(i: Int): Double = fillTime(enemies[i].gauge, enemies[i].rate, enemies[i].frozenTime)
+
+    /**
+     * Le temps pour remplir une jauge à [gauge] qui gagne [rate] par unité de temps, ralentie à
+     * ×[Relic.CHILL_SPEED] pendant les [chill] premières unités (le gel).
+     */
+    private fun fillTime(gauge: Double, rate: Double, chill: Double): Double {
+        val need = 1.0 - gauge
+        if (need <= 0.0) return 0.0
+        val chilledGain = rate * Relic.CHILL_SPEED * chill
+        return if (need <= chilledGain) need / (rate * Relic.CHILL_SPEED) else chill + (need - chilledGain) / rate
+    }
+
+    /** Ce que gagne en [dt] une jauge de vitesse [rate], dont les [chill] premières unités sont gelées. */
+    private fun gainOver(rate: Double, chill: Double, dt: Double): Double {
+        val chilled = minOf(chill, dt)
+        return rate * (Relic.CHILL_SPEED * chilled + (dt - chilled))
+    }
+
+    /**
+     * Le nombre de tours du héros (à sa vitesse) avant que l'ennemi [i] agisse (1 : juste après
+     * le prochain tour du héros). C'est l'ancien compte à rebours, que le bot de simulation lit encore.
+     */
+    fun roundsUntilTurn(i: Int): Int = kotlin.math.ceil(timeUntilTurn(i) * heroRate - TIME_EPSILON).toInt().coerceAtLeast(0)
+
+    /**
+     * Le temps avance jusqu'à la prochaine jauge pleine, et la main passe à son propriétaire.
+     * À égalité, les ennemis passent avant le héros (ils attendaient, lui vient d'agir ; sans
+     * ça, une action à demi-jauge le faisait rejouer avant même qu'un rat ait frappé), et entre
+     * eux dans l'ordre.
+     */
+    private fun advance() {
+        var next = HERO
+        var dt = ((1.0 - heroGauge) / heroRate).coerceAtLeast(0.0)
+        for (i in aliveIndices()) {
+            val t = timeUntilTurn(i)
+            if (t < dt - TIME_EPSILON || (next == HERO && t <= dt + TIME_EPSILON)) { next = i; dt = t }
+        }
+        heroGauge += heroRate * dt
         for (i in aliveIndices()) {
             val e = enemies[i]
-            val wasEnraged = e.enraged
-            if (e.enraged) e.rageTurns--
-            if (e.frozenTurns > 0) {
-                if (--e.frozenTurns == 0) e.thawing = true
-                stopped += StatusStop(i, Element.ICE)
-                continue
+            // Gelé, sa jauge avance au ralenti ; quand le gel finit, la glace reste jusqu'à son tour
+            e.gauge += gainOver(e.rate, e.frozenTime, dt)
+            if (e.frozenTime > 0) {
+                e.frozenTime -= minOf(e.frozenTime, dt)
+                if (e.frozenTime <= TIME_EPSILON) { e.frozenTime = 0.0; e.thawing = true }
             }
-            e.thawing = false
-            e.countdown -= if (wasEnraged) 2 else 1
-            val due = e.countdown <= 0
-            if (due) e.countdown = e.cadence
-            if (e.paralyzedTurns > 0) {
-                e.paralyzedTurns--
-                if (due) {
-                    val save = rollSave(e, Element.LIGHTNING, e.paralysisDc, e.paralysisTiming)
-                    saves += EnemySave(i, save)
-                    if (!save.saved) {
-                        stopped += StatusStop(i, Element.LIGHTNING)
-                        if (controlled(e)) enragedNow += i
-                        continue
-                    }
-                }
-            }
-            if (due) attackers += i
         }
-        return EnemyTurnStart(ticks, attackers, stopped, saves, enragedNow, meteor, healed)
+        if (next == HERO) {
+            heroGauge = 1.0
+            actingEnemy = HERO
+            phase = CombatPhase.PLAYER_TURN
+            beginHeroTurn()
+        } else {
+            enemies[next].gauge = 1.0
+            actingEnemy = next
+            phase = CombatPhase.ENEMY_TURN
+        }
+    }
+
+    /**
+     * Les [count] prochains tours, dans l'ordre : ce qu'affiche la barre d'ordre. Le tour en
+     * cours n'y est pas. [heroCost] : ce que coûtera l'action que le héros choisit (s'il a la
+     * main) — c'est ce qui montre où tomberait son prochain tour. Ensuite, on suppose des
+     * actions pleines. Le gel, la fin de la rage, de la Lenteur et de la Hâte sont suivis ; le
+     * prochain tour d'un ennemi encore pris dans la glace est marqué [TurnSlot.frozen] ; le
+     * Météore apparaît à la fin du tour du héros où il tombe.
+     */
+    fun forecast(count: Int, heroCost: Double = FULL_ACTION): List<TurnSlot> {
+        val alive = aliveIndices()
+        val gauge = DoubleArray(enemies.size) { enemies[it].gauge }
+        val rage = IntArray(enemies.size) { enemies[it].rageTurns }
+        val slow = IntArray(enemies.size) { enemies[it].slowTurns }
+        val frozenTime = DoubleArray(enemies.size) { enemies[it].frozenTime }
+        val icy = BooleanArray(enemies.size) { enemies[it].frozen && it != actingEnemy }
+        fun rate(i: Int) = enemies[i].rateWith(rage[i] > 0, slow[i] > 0)
+        var haste = hasteTurns
+        fun heroRate() = heroRateWith(haste > 0)
+        var hg = heroGauge
+        var meteor = meteorTurns
+        val slots = mutableListOf<TurnSlot>()
+        // Le tour en cours se termine
+        if (phase == CombatPhase.PLAYER_TURN) {
+            hg -= heroCost
+            if (meteor > 0 && --meteor == 0) slots += TurnSlot(METEOR)
+        } else if (actingEnemy >= 0) {
+            gauge[actingEnemy] -= FULL_ACTION
+            if (slow[actingEnemy] > 0) slow[actingEnemy]--
+        }
+        while (slots.size < count && alive.isNotEmpty()) {
+            var next = HERO
+            var dt = ((1.0 - hg) / heroRate()).coerceAtLeast(0.0)
+            for (i in alive) {
+                val t = fillTime(gauge[i], rate(i), frozenTime[i])
+                if (t < dt - TIME_EPSILON || (next == HERO && t <= dt + TIME_EPSILON)) { next = i; dt = t }
+            }
+            hg += heroRate() * dt
+            for (i in alive) {
+                gauge[i] += gainOver(rate(i), frozenTime[i], dt)
+                frozenTime[i] -= minOf(frozenTime[i], dt)
+            }
+            if (next == HERO) {
+                slots += TurnSlot(HERO)
+                hg = 1.0 - FULL_ACTION
+                if (haste > 0) haste--
+                if (meteor > 0 && --meteor == 0) slots += TurnSlot(METEOR)
+            } else {
+                slots += TurnSlot(next, frozen = icy[next])
+                icy[next] = false
+                if (rage[next] > 0) rage[next]--
+                if (slow[next] > 0) slow[next]--
+                gauge[next] = 1.0 - FULL_ACTION
+            }
+        }
+        return slots.take(count)
+    }
+
+    // ── Tour des ennemis ────────────────────────────────────────────────────────
+
+    /**
+     * Début du tour de [actingEnemy], et tout se compte **à son tour à lui** : la brûlure et le
+     * poison rongent, la rage perd un tour. Le gel a ralenti sa jauge (voir [advance]) ; s'il
+     * est encore pris dans la glace, son coup est engourdi, et la glace qui restait sur lui
+     * ([Enemy.thawing]) fond à la fin de ce tour.
+     * **Paralysé**, son attaque demande un jet de sauvegarde : raté, elle est perdue.
+     */
+    fun startEnemyTurn(): EnemyTurnStart {
+        check(phase == CombatPhase.ENEMY_TURN)
+        val i = actingEnemy
+        val e = enemies[i]
+        val ticks = mutableListOf<DotTick>()
+        if (e.burnTurns > 0) {
+            val dmg = wound(i, e.burnDamage.toFloat())
+            e.burnTurns--
+            ticks += DotTick(i, dmg, !e.alive, Element.FIRE)
+        }
+        if (e.alive && e.poisonTurns > 0) {
+            val dmg = wound(i, (e.poisonDoses * e.poisonDoseDamage).toFloat())
+            if (--e.poisonTurns == 0) { e.poisonDoses = 0; e.poisonDoseDamage = 0 }
+            ticks += DotTick(i, dmg, !e.alive, Element.POISON)
+        }
+        if (!e.alive) {
+            if (aliveIndices().isEmpty()) phase = win()
+            return EnemyTurnStart(ticks, emptyList(), emptyList())
+        }
+
+        if (e.enraged) e.rageTurns--
+        if (e.paralyzedTurns > 0) {
+            e.paralyzedTurns--
+            val save = rollSave(e, Element.LIGHTNING, e.paralysisDc, e.paralysisTiming)
+            if (!save.saved) {
+                val enraged = if (controlled(e)) listOf(i) else emptyList()
+                return EnemyTurnStart(ticks, emptyList(), listOf(StatusStop(i, Element.LIGHTNING)), listOf(EnemySave(i, save)), enraged)
+            }
+            return EnemyTurnStart(ticks, listOf(i), emptyList(), listOf(EnemySave(i, save)))
+        }
+        return EnemyTurnStart(ticks, listOf(i), emptyList())
     }
 
     fun resolveStrike(enemyIndex: Int, parry: Timing): EnemyStrike {
         check(phase == CombatPhase.ENEMY_TURN)
         val e = enemies[enemyIndex]
         if (!e.alive) return EnemyStrike(enemyIndex, 0, parry, missed = true)
+        // Le Sablier : cette attaque est arrivée au ralenti (l'écran a élargi la parade)
+        if (hourglassStrikes > 0) hourglassStrikes--
         // Saignement : chaque attaque rouvre la plaie. S'il en meurt, le coup ne part pas
         val bled = if (e.bleedTurns > 0) wound(enemyIndex, e.bleedDamage.toFloat()) else 0
         if (!e.alive) {
@@ -1272,7 +1567,8 @@ class Combat(
         if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true, bleed = bled)
 
         // Le coup brut, avant parade et armure : c'est sur lui que se calcule ce qu'on renvoie
-        val weakened = if (e.weakenedTurns > 0) WEAKEN_MULT else 1f
+        // Affaibli, et engourdi par la glace : ses coups font moins mal
+        val weakened = (if (e.weakenedTurns > 0) WEAKEN_MULT else 1f) * (if (e.frozen) NUMB_MULT else 1f)
         val spread = 0.85f + rng.nextFloat() * 0.30f
         val blow = e.damage * spread * weakened * ArmorClass.DAMAGE_COMPENSATION
 
@@ -1329,24 +1625,22 @@ class Combat(
         return dmg
     }
 
-    /** Fin du tour ennemi : les états qui durent perdent un tour, puis la main revient au héros. */
+    /**
+     * Fin du tour de [actingEnemy] : ses états qui durent perdent un tour (les siens seulement),
+     * sa jauge se vide, et le temps avance jusqu'au prochain tour.
+     */
     fun endEnemyTurn() {
         if (phase != CombatPhase.ENEMY_TURN) return
-        for (e in enemies) {
-            if (e.soakedTurns > 0) e.soakedTurns--
-            if (e.fracturedTurns > 0) e.fracturedTurns--
-            if (e.weakenedTurns > 0) e.weakenedTurns--
-            if (e.blindedTurns > 0) e.blindedTurns--
-            if (e.bleedTurns > 0 && --e.bleedTurns == 0) e.bleedDamage = 0
-        }
-        if (stoneskinTurns > 0) stoneskinTurns--
-        // Le Bouclier arcanique a tenu tout le tour ennemi : les **autres** reliques gagnent un
-        // tour (lui-même, non : avec une SAG haute, il se relançait à chaque tour, sans fin)
-        if (barrierFresh && barrier > 0) hero.tickRelics(1, includeSpecial = false, except = Relic.ARCANE_SHIELD)
-        barrierFresh = false
-        hero.tickRelics()
-        guarding = false
-        phase = CombatPhase.PLAYER_TURN
+        val e = enemies[actingEnemy]
+        if (e.soakedTurns > 0) e.soakedTurns--
+        if (e.fracturedTurns > 0) e.fracturedTurns--
+        if (e.weakenedTurns > 0) e.weakenedTurns--
+        if (e.blindedTurns > 0) e.blindedTurns--
+        if (e.bleedTurns > 0 && --e.bleedTurns == 0) e.bleedDamage = 0
+        if (e.slowTurns > 0) e.slowTurns--
+        e.thawing = false
+        e.gauge -= FULL_ACTION
+        advance()
     }
 
     // ── Victoire ────────────────────────────────────────────────────────────────
