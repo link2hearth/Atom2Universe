@@ -297,7 +297,7 @@ class CloudActivity : ThemedActivity() {
                 is GamesSyncManager.SyncResult.Success ->
                     gamesStatus.setText(R.string.games_sync_success)
                 is GamesSyncManager.SyncResult.Error ->
-                    gamesStatus.text = getString(R.string.games_sync_error, result.message)
+                    gamesStatus.text = getString(R.string.games_sync_error, result.message(this@CloudActivity))
                 is GamesSyncManager.SyncResult.Conflict -> {
                     gamesStatus.visibility = View.GONE
                     showGamesConflictDialog(result.local, result.remote)
@@ -353,7 +353,7 @@ class CloudActivity : ThemedActivity() {
                 isBusy = false
                 btnSyncGames.isEnabled = true
                 gamesStatus.text = when (result) {
-                    is GamesSyncManager.SyncResult.Error -> getString(R.string.games_sync_error, result.message)
+                    is GamesSyncManager.SyncResult.Error -> getString(R.string.games_sync_error, result.message(this@CloudActivity))
                     else -> getString(R.string.games_sync_success)
                 }
                 loadInventory()

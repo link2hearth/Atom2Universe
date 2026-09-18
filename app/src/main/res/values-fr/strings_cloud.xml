@@ -107,4 +107,11 @@
     <string name="cloud_delete_all">Tout effacer dans le cloud</string>
     <string name="cloud_delete_all_desc">En dernier recours. Vos appareils gardent leurs données et les republieront.</string>
 
+    <!-- Sync des jeux : affiché après « Erreur : », d'où la minuscule -->
+    <string name="games_sync_drive_unreachable">Google Drive n\'a pas répondu, rien n\'a été envoyé. Réessayez quand la connexion sera stable.</string>
+    <string name="games_sync_not_ready">la synchronisation n\'est pas encore prête. Relancez l\'application et réessayez.</string>
+    <string name="games_sync_not_signed_in">vous n\'êtes pas connecté à Google.</string>
+    <string name="games_sync_upload_failed">la sauvegarde n\'a pas pu être envoyée sur Google Drive. Réessayez.</string>
+    <string name="games_sync_unexpected">problème inattendu (%1$s).</string>
+
 </resources>

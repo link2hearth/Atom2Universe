@@ -107,4 +107,11 @@
     <string name="cloud_delete_all">Erase everything in the cloud</string>
     <string name="cloud_delete_all_desc">Last resort. Your devices keep their data and will republish it.</string>
 
+    <!-- Games sync: shown after "Error: ", hence the lowercase start -->
+    <string name="games_sync_drive_unreachable">Google Drive did not answer, so nothing was sent. Try again once the connection is stable.</string>
+    <string name="games_sync_not_ready">the sync is not ready yet. Restart the app and try again.</string>
+    <string name="games_sync_not_signed_in">you are not signed in to Google.</string>
+    <string name="games_sync_upload_failed">the save could not be sent to Google Drive. Try again.</string>
+    <string name="games_sync_unexpected">unexpected problem (%1$s).</string>
+
 </resources>

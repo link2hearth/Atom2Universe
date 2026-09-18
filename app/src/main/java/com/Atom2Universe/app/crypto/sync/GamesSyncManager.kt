@@ -2,7 +2,9 @@ package com.Atom2Universe.app.crypto.sync
 
 import android.content.Context
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.core.content.edit
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.BigBangBonus
 import com.Atom2Universe.app.crypto.clicker.BigBangRepository
 import com.Atom2Universe.app.crypto.clicker.ClickerAchievementRepository
@@ -18,6 +20,7 @@ import com.Atom2Universe.app.crypto.fusion.FusionRecipe
 import com.Atom2Universe.app.crypto.fusion.FusionStore
 import com.Atom2Universe.app.music.sync.DeviceIdentity
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
+import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient.ReadResult
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import kotlinx.coroutines.Dispatchers
@@ -45,10 +48,17 @@ object GamesSyncManager {
     // ─── Résultat de sync ─────────────────────────────────────────────────────
 
     sealed class SyncResult {
-        data class Success(val message: String) : SyncResult()
+        data object Success : SyncResult()
         /** Les deux saves existent et diffèrent — l'utilisateur doit choisir. */
         data class Conflict(val local: GamesSyncFile, val remote: GamesSyncFile) : SyncResult()
-        data class Error(val message: String) : SyncResult()
+        /**
+         * Le texte vit dans les ressources : le gestionnaire ne le traduit pas, l'écran
+         * qui l'affiche s'en charge avec [message]. [detail] complète un texte à trou.
+         */
+        data class Error(@StringRes val messageRes: Int, val detail: String? = null) : SyncResult() {
+            fun message(context: Context): String =
+                if (detail == null) context.getString(messageRes) else context.getString(messageRes, detail)
+        }
     }
 
     /**
@@ -91,30 +101,37 @@ object GamesSyncManager {
      * de choisir ne prive de rien.
      */
     suspend fun syncGames(): SyncResult = withContext(Dispatchers.IO) {
-        if (!isInitialized) return@withContext SyncResult.Error("Not initialized")
+        if (!isInitialized) return@withContext SyncResult.Error(R.string.games_sync_not_ready)
 
         try {
             val driveClient = getDriveClient()
-                ?: return@withContext SyncResult.Error("Non connecté à Google")
+                ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
 
             mutex.withLock {
-                val remoteRaw = readRemote(driveClient)
+                val remoteRaw = when (val read = readRemote(driveClient)) {
+                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
+                    is RemoteRead.Answered -> read.file
+                }
                 val shared = mergeShared(remoteRaw)
                 val localFile = buildLocalSyncFile().withShared(shared)
 
                 // Pas de partie dans le cloud (jamais synchronisé, ou seule la sync
                 // automatique est passée) → on publie la nôtre, sans question.
                 if (remoteRaw?.clicker == null) {
-                    driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())
+                    if (!driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())) {
+                        return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
+                    }
                     Log.d(TAG, "Aucune partie dans le cloud — partie locale publiée")
-                    return@withLock SyncResult.Success("Sauvegarde initiale envoyée sur Drive")
+                    return@withLock SyncResult.Success
                 }
 
                 // Les parties sont identiques → on publie records et compteurs à jour
                 if (!conflictExists(localFile, remoteRaw)) {
-                    driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())
+                    if (!driveClient.writeJsonFile(SYNC_FILE, localFile.toJson())) {
+                        return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
+                    }
                     Log.d(TAG, "Parties identiques, records et compteurs publiés")
-                    return@withLock SyncResult.Success("Déjà à jour")
+                    return@withLock SyncResult.Success
                 }
 
                 // Les parts partagées du cloud sont publiées tout de suite, sans toucher à sa
@@ -127,7 +144,7 @@ object GamesSyncManager {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sync", e)
-            SyncResult.Error("Erreur : ${e.message}")
+            unexpected(e)
         }
     }
 
@@ -139,34 +156,67 @@ object GamesSyncManager {
      * la partie du clicker attend que l'utilisateur la synchronise lui-même.
      */
     suspend fun syncSharedStats(): SyncResult = withContext(Dispatchers.IO) {
-        if (!isInitialized) return@withContext SyncResult.Error("Not initialized")
+        if (!isInitialized) return@withContext SyncResult.Error(R.string.games_sync_not_ready)
 
         try {
             val driveClient = getDriveClient()
-                ?: return@withContext SyncResult.Error("Non connecté à Google")
+                ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
 
             mutex.withLock {
-                val remoteRaw = readRemote(driveClient)
+                // Sans réponse, le fichier vide de secours ci-dessous effacerait la partie
+                // du clicker que le cloud garde peut-être.
+                val remoteRaw = when (val read = readRemote(driveClient)) {
+                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
+                    is RemoteRead.Answered -> read.file
+                }
                 val shared = mergeShared(remoteRaw)
                 val base = remoteRaw ?: GamesSyncFile(lastModified = System.currentTimeMillis())
-                driveClient.writeJsonFile(SYNC_FILE, base.withShared(shared).toJson())
+                if (!driveClient.writeJsonFile(SYNC_FILE, base.withShared(shared).toJson())) {
+                    return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
+                }
                 Log.d(TAG, "Records et compteurs synchronisés (auto)")
-                SyncResult.Success("Records et compteurs synchronisés")
+                SyncResult.Success
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur sync auto", e)
-            SyncResult.Error("Erreur : ${e.message}")
+            unexpected(e)
         }
     }
 
-    private suspend fun readRemote(driveClient: GoogleDriveAppDataClient): GamesSyncFile? {
+    /** Ce que la lecture du cloud a donné. */
+    private sealed class RemoteRead {
+        /** Drive a répondu. [file] est null s'il n'y a pas de fichier, ou s'il est illisible. */
+        data class Answered(val file: GamesSyncFile?) : RemoteRead()
+        /** Drive n'a pas répondu : on ne sait pas ce qu'il y a là-haut. */
+        data object Unreachable : RemoteRead()
+    }
+
+    /**
+     * Une lecture ratée n'est pas un cloud vide : la prendre pour tel, c'est publier
+     * par-dessus un fichier que personne n'a regardé. Sur [RemoteRead.Unreachable],
+     * les appelants n'écrivent donc rien.
+     */
+    private suspend fun readRemote(driveClient: GoogleDriveAppDataClient): RemoteRead {
         Log.d(TAG, "Téléchargement depuis Drive…")
-        return driveClient.readJsonFile(SYNC_FILE)?.let {
-            try { GamesSyncFile.fromJson(it) } catch (e: Exception) {
-                Log.e(TAG, "Erreur parsing remote", e); null
-            }
+        return when (val read = driveClient.readJsonFileChecked(SYNC_FILE)) {
+            ReadResult.Failed -> RemoteRead.Unreachable
+            ReadResult.NotFound -> RemoteRead.Answered(null)
+            is ReadResult.Found -> RemoteRead.Answered(
+                try { GamesSyncFile.fromJson(read.content) } catch (e: Exception) {
+                    Log.e(TAG, "Erreur parsing remote", e); null
+                }
+            )
         }
     }
+
+    private fun driveUnreachable(): SyncResult {
+        Log.w(TAG, "Drive injoignable — rien n'est écrit")
+        return SyncResult.Error(R.string.games_sync_drive_unreachable)
+    }
+
+    /** Le message technique de l'exception, ou à défaut son nom : de quoi le signaler. */
+    private fun unexpected(e: Exception): SyncResult =
+        SyncResult.Error(R.string.games_sync_unexpected, e.message ?: e.javaClass.simpleName)
 
     /**
      * Fusionne les parts partagées du cloud avec celles d'ici, applique le résultat
@@ -221,18 +271,24 @@ object GamesSyncManager {
     suspend fun resolveConflict(chosen: GamesSyncFile): SyncResult = withContext(Dispatchers.IO) {
         try {
             val driveClient = getDriveClient()
-                ?: return@withContext SyncResult.Error("Non connecté à Google")
+                ?: return@withContext SyncResult.Error(R.string.games_sync_not_signed_in)
 
             mutex.withLock {
                 // La question a pu rester ouverte longtemps, et la sync automatique passer
                 // entre-temps : on refusionne les parts partagées plutôt que de publier
                 // celles, périmées, que portait le fichier choisi.
-                val shared = mergeShared(readRemote(driveClient))
+                // Sans réponse, on publierait sans les records et compteurs des autres
+                // appareils, qui disparaîtraient du cloud.
+                val remoteRaw = when (val read = readRemote(driveClient)) {
+                    RemoteRead.Unreachable -> return@withLock driveUnreachable()
+                    is RemoteRead.Answered -> read.file
+                }
+                val shared = mergeShared(remoteRaw)
                 val finalFile = chosen.withShared(shared)
 
                 // Uploader la save choisie
                 val uploaded = driveClient.writeJsonFile(SYNC_FILE, finalFile.toJson())
-                if (!uploaded) return@withLock SyncResult.Error("Échec de l'upload")
+                if (!uploaded) return@withLock SyncResult.Error(R.string.games_sync_upload_failed)
 
                 // Appliquer localement
                 applyLocally(finalFile)
@@ -243,11 +299,11 @@ object GamesSyncManager {
                 }
 
                 Log.d(TAG, "Conflit résolu, save appliquée")
-                SyncResult.Success("Synchronisation réussie")
+                SyncResult.Success
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur résolution conflit", e)
-            SyncResult.Error("Erreur : ${e.message}")
+            unexpected(e)
         }
     }
 
