@@ -69,6 +69,37 @@
         android:textColor="#CFD8DC"
         android:textSize="12sp" />
 
+    <!-- Reliques trouvées : toucher pour porter / ranger (remplies dans le code) -->
+    <TextView
+        android:id="@+id/inv_relics_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="#90A4AE"
+        android:textSize="13sp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/inv_relics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/inv_relic_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#CFD8DC"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Sac : nombre d'objets + tri -->
     <LinearLayout
         android:layout_width="match_parent"

@@ -97,13 +97,31 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 - Enrichir les gestes à la **Undertale** : de petits gameplays tactiles variés pour
   attaquer, parer et d'autres actions à définir. La touche au bon moment et le swipe
   actuels sont les premiers.
+- **Idée à approfondir : la vitesse de jeu** (18/09/2026). Le combat repose sur des
+  timings (frappe, parade) : une stat « vitesse » qui **accélère avec les étages** rendrait
+  les gestes plus durs en descendant. Des équipements rares (pas des reliques) la
+  **ralentiraient**. Bornes dans les deux sens : même à ×2, ça doit rester jouable ; et on
+  ne doit pas pouvoir empiler assez de bonus pour que l'étage 100 soit, disons, 3 fois plus
+  lent que prévu. Pas encore tranché ni codé.
 
 ### Les reliques = les sorts
 - On équipe des reliques, chacune donne un sort (boule de feu, boule de glace…).
 - Les dégâts d'un sort dépendent de la relique **et** des stats du joueur et de son
   équipement.
 - Certains boss demandent telle ou telle relique (immunités : un boss insensible au feu
-  mais pas au poison, etc.).
+  mais pas au poison, etc.). **Clé souple** : un boss reste battable sans la bonne relique,
+  mais bien plus dur. Jamais de verrou.
+- **Quatre boutons de combat, façon Pokémon** : l'**attaque** à l'arme (fixe), **deux
+  reliques**, et un **sort spécial** (obtention et fonctionnement à définir ; bouton
+  verrouillé pour l'instant). La potion reste à part. On ne porte donc que deux reliques
+  à la fois : le choix avant un boss, c'est le cœur du *die and retry*.
+- **Les reliques se trouvent**, on n'en a aucune au départ — la Boule de feu aussi est à
+  trouver, et ce n'est pas forcément la première.
+- Il en faudra beaucoup. On commence par les **classiques des RPG**, un élément chacune :
+  le feu brûle, la glace fige, la foudre paralyse (mais n'empêche pas la magie), le poison
+  ronge. Un sort n'a pas l'obligation d'avoir un geste tactile à lui, même si c'est préféré.
+- Pouvoirs sur la carte (semer un poursuivant, attirer un monstre…) : **oui, mais plus
+  tard, et pas sur les reliques** — ça viendra avec le travail sur l'exploration.
 
 ### Les caractéristiques : copiées sur D&D
 | Carac. | Rôle |
@@ -111,7 +129,7 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 | FOR | dégâts de l'épée |
 | DEX | chance de critique, fenêtre de parade plus large |
 | CON | points de vie |
-| INT | dégâts des sorts |
+| INT | dégâts des sorts, DD des sorts de contrôle (jets de sauvegarde) |
 | SAG | recharge des sorts (plus tard : résistances) |
 | CHA | or gagné (plus tard : prix chez le marchand, qualité du butin) |
 
@@ -152,6 +170,10 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
    budget mesuré, huit paliers, table complète et test de garde (voir « Les affixes »).
    Pas encore : légendaires, sets, relance.
 3. **Sets, reliques et zones** — set du rat des égouts, plusieurs reliques, étages 1–20.
+   *En cours* : les quatre reliques classiques (feu, glace, foudre, poison), le combat à
+   quatre boutons, les reliques à trouver et les recharges gardées d'un combat à l'autre
+   sont faits (voir « Les reliques »). Ensuite : résistances, jets de contrôle et rage ;
+   puis le sort spécial, le set et la zone.
 4. **Boss et checkpoints** — Roi des Rats à l'étage 20, puis zones suivantes.
 
 ## Réglages de l'étape 1 (valeurs de départ, à ajuster en jouant)
@@ -162,7 +184,8 @@ Un dungeon crawler de 100 étages : on explore une carte, les rencontres ouvrent
 - Frapper juste : bien = +25 points de critique, parfait = +60.
 - Parade : bien = dégâts ÷ 2, parfaite = dégâts × 0,2. Fenêtre élargie par la DEX.
 - Boule de feu : 6–9 dégâts, +5 % par INT, brûlure 2 tours ; recharge 3 tours (SAG la
-  réduit).
+  réduit). *Remplacée depuis par « Les reliques » : ces 6–9 ne suivaient pas la
+  profondeur.*
 - Monstres à l'étage 1 (PV / dégâts / frappe tous les N tours / dès l'étage) :
   Rat 16/3/1/1, Gobelin 24/4/1/1, Squelette 34/6/2/2, Orc 50/10/2/3, Démon 70/14/3/5.
   Puis PV × (1 + 0,22 × (étage − 1)), dégâts × (1 + 0,15 × (étage − 1)).
@@ -386,6 +409,258 @@ reliques multiples, consommables.
 **Question ouverte** : viser à nouveau l'étage 40 pour un expert en adoucissant la courbe
 des monstres ? Ou accepter un donjon plus serré, en comptant sur les sets et les reliques
 de l'étape 3 pour rouvrir la progression ?
+
+## Les reliques
+
+Tout est dans `Relic` et `RelicBudget` (`Combat.kt`), gardé par `RelicTest`. L'outil de
+mesure est `RoguelikeSimulationTest.relicsAtFixedGear` : chaque relique seule, à équipement
+égal, contre « aucun sort ».
+
+### Les dégâts suivent l'arme portée
+
+Un sort se compte en **coups d'épée de référence** : un coefficient de 1 frappe comme l'épée
+*normale* de la puissance de l'arme qu'on porte (quel que soit son type : un bâton compte
+comme une épée de même puissance). Puis INT (+5 % par point) et les bonus « dégâts des
+sorts » multiplient.
+
+Pourquoi : l'ancienne Boule de feu faisait 6–9 à vie. Plus bas elle devenait plus faible
+que l'épée et **la lancer faisait perdre un tour** — les bots allaient plus loin sans aucun
+sort (médiane novice 25) qu'avec elle (16).
+
+### Les quatre premières
+
+| Relique | Recharge | Effet |
+|---|---|---|
+| Boule de feu | 3 | brûle 2 tours, un quart du coup par tour |
+| Éclat de glace | 3 | jet de sauvegarde ; raté, la cible est **figée** 1 tour (délai) |
+| Foudre | 5 | **paralyse** 3 tours : chaque attaque qui tombe demande un jet ; ratée, elle est perdue |
+| Venin | 3 | une **dose** de poison (3 au plus) pendant 4 tours ; relancer renouvelle la durée |
+
+Les dégâts ne sont écrits nulle part : `RelicBudget` les calcule (voir plus bas).
+
+- Glace et foudre se distinguent : la glace **repousse** une attaque (le compteur est
+  gelé, jamais une annulation), la foudre en **supprime** (le coup tombe à plat). La glace
+  arrête tout, la foudre n'arrêtera pas les lanceurs de sorts quand il y en aura.
+- Le venin frappe peu mais s'empile : c'est le sort des gros sacs de PV (boss).
+
+### Les jets de dés, façon D&D
+
+- **Affinités** : chaque monstre est *vulnérable* (dégâts ×2, −5 à ses jets), *normal*,
+  *résistant* (dégâts ×0,5, +5 à ses jets) ou *immunisé* (ni dégâts, ni effet) à chaque
+  élément. Rien ne les affiche : on les apprend en frappant (« Efficace ! », « Peu
+  efficace… », « Immunisé ! »). C'est ce qui fait choisir ses deux reliques.
+
+  | Monstre (provisoire) | Feu | Glace | Foudre | Poison |
+  |---|---|---|---|---|
+  | Rat | vulnérable | | | résistant |
+  | Gobelin | | résistant | | vulnérable |
+  | Squelette | résistant | | vulnérable | immunisé |
+  | Orc | vulnérable | | résistant | |
+  | Démon | immunisé | vulnérable | | résistant |
+
+- **Jet de sauvegarde** contre le contrôle : le monstre lance **d20 + maîtrise + affinité**
+  contre le **DD** du héros = 11 + modificateur d'INT ((INT − 10) / 2) + maîtrise. S'il
+  n'atteint pas le DD, l'effet prend. **Le dé reste caché** (décision du 18/09) : on ne
+  voit que « Résiste ! ». Le texte « 🎲 14 contre DD 13 » existe pour plus tard.
+- **Les gestes pèsent sur les dés.** Jusque-là les deux couches étaient séparées : les
+  gestes décidaient *combien* (critique, parade), les dés décidaient *si* (l'effet prend).
+  Maintenant, le swipe au lancer d'un sort de contrôle compte aussi : « bien » ajoute +2
+  au DD, « parfait » impose au monstre le **désavantage** de D&D (deux d20, il garde le
+  pire) — le gel prend alors ~3 fois sur 4 au lieu d'une sur 2. Pour la foudre, le geste du
+  lancer vaut pour tous les jets de la paralysie. Mesuré pour un joueur « correct » :
+  glace 74 % → 76 %, foudre 72 % → 74 %. L'adresse compte, sans écraser l'équipement.
+- **Maîtrise** : +2, puis +1 tous les 8 crans de puissance, comme les niveaux de D&D. Celle
+  du héros suit son arme, celle du monstre l'étage. Avec l'équipement de l'étage et 10
+  d'INT, le contrôle prend **une fois sur deux** ; ¾ contre un vulnérable, ¼ contre un
+  résistant. L'INT devient la stat du contrôle, plus seulement des dégâts.
+- **La rage** : un ennemi contrôlé **2 fois d'affilée** (sans avoir pu frapper entre-temps)
+  enrage pendant 3 tours. Il réussit alors tous ses jets, son compteur descend de 2 par tour,
+  mais il rate 35 % de ses coups. Elle remplace l'ancienne résistance de 2 tours après un
+  contrôle.
+
+Mesure (`relicsAtFixedGear`, étage 15, joueur correct, 3 combats enchaînés gagnés) :
+
+| Aucun sort | Boule de feu | Éclat de glace | Foudre | Venin |
+|---|---|---|---|---|
+| 64 % | 71 % | 74 % | 72 % | 58 % |
+
+Feu, glace et foudre se tiennent enfin. Il a fallu **un** réglage : au premier tableau
+d'affinités, la glace était efficace contre l'orc et le démon (les deux qui frappent le plus
+fort) et montait à 87 %. Leçon : **le tableau d'affinités pèse autant que les chiffres des
+sorts**, il faut le répartir pour qu'aucun élément ne gagne partout. Le prix du contrôle a
+été relevé d'après la mesure (gel 1 épée par tour, paralysie 0,8, fois la chance de prendre).
+
+Le **venin** fait moins bien que rien : le squelette y est immunisé et le démon y résiste,
+et les combats ordinaires sont trop courts pour que les doses s'empilent. C'est attendu
+(c'est le sort des boss), mais ce sera à revoir quand les boss existeront.
+
+Sur la partie entière (jusqu'à l'étage 100), les reliques profitent surtout aux joueurs
+adroits : le novice fait comme sans sort (26 contre 25), le correct passe de 36 à 62,
+l'expert de 57 à 100.
+
+### Où on les trouve
+
+Provisoire : une relique attend aux étages **2, 5, 9 et 14**, au bout du cul-de-sac le plus
+éloigné du départ. Elle est tirée au hasard parmi celles qu'on n'a pas. Une relique trouvée
+ne revient pas après une mort. Elle se porte d'office s'il reste un emplacement libre, sinon
+elle attend dans l'inventaire (section « Reliques » : toucher pour porter ou ranger).
+
+Les anciennes sauvegardes gardent leur Boule de feu.
+
+### Premier essai : aucun prix
+
+Simulation jusqu'à l'étage 100 (`SIM_MAX_FLOOR=100`), 30 profils par niveau d'adresse,
+250 000 tours de carte chacun. Les bots portent les deux premières reliques trouvées et en
+lancent une dès qu'elle est prête.
+
+| Meilleur étage (médiane) | Novice | Correct | Expert |
+|---|---|---|---|
+| Version d'avant (Boule de feu 6–9 à vie, étage 40 max) | 16 | 19 | 29 |
+| Aucun sort | 25 | 36 | 57 |
+| Reliques sans budget | 72 | 100 | 100 |
+| Reliques, premier budget (glace à 0,36 épée) | 21 | 68 | 100 |
+| Budget actuel + recharges gardées entre combats | 43 | 100 | 100 |
+| **Jets de dés, affinités et rage** *(l'état actuel)* | **26** | **62** | **100** |
+
+Sans budget, la glace frappait presque comme l'épée *et* figeait : un sort ne coûtait jamais
+le coup d'épée qu'il remplaçait. L'expert arrivait à l'étage 100 en mourant une fois.
+
+### Le budget : ce qui tient, ce qui ne tient pas
+
+La règle posée (`RelicBudget`) : **un sort vaut le coup d'épée qu'il remplace plus une prime
+de 0,12 épée par tour de recharge** — une relique vaut un affixe plein. L'effet se paie sur
+les dégâts directs. Pour le feu et le poison, ça tient. **Pour le contrôle, non** :
+
+| Étage 15, joueur correct | PV perdus par combat gagné | 3 combats enchaînés gagnés |
+|---|---|---|
+| Aucun sort | 21,3 % | 63,6 % |
+| Boule de feu | 20,0 % | 69,9 % |
+| Venin | 21,1 % | 66,3 % |
+| Glace, 1 tour, coup 0,36 épée | 21,9 % | 58,3 % |
+| Glace, 2 tours, coup 0,76 épée | 15,7 % | 83,8 % |
+| Glace, 1 tour, coup 1,06 épée *(l'état actuel)* | 16,6 % | 82,4 % |
+| Foudre, 1 tour sur ⚔ 1, coup 0,48 épée | 15,0 % | 88,4 % |
+
+Deux raisons, qui tiennent au mécanisme et pas aux chiffres :
+
+1. **Les recharges repartent à zéro à chaque combat.** Un combat dure ~4 tours, donc chaque
+   relique s'y lance au moins une fois, quelle que soit sa recharge. Une « prime par tour
+   de recharge » ne veut presque rien dire.
+2. **Le contrôle ne vaut pas des tours, il vaut des attaques**, et pas de façon linéaire.
+   Sur ~4 tours, retirer 1 ou 2 tours à un ennemi lui retire une grosse part de ses coups.
+   La foudre sur ⚔ 1 supprime une attaque entière, qui vaut autant de coups d'épée que la
+   cadence de l'ennemi (jusqu'à 5 dans un groupe de 3).
+
+Deux réglages ratés d'affilée : on ne continue pas à tourner les boutons, on change le
+mécanisme. Voir « Le contrôle : des jets, des résistances et la rage » juste en dessous.
+
+Les boss n'existent pas encore : aucune de ces mesures ne les compte.
+
+### Le contrôle : des jets, des résistances et la rage
+
+Décidé après les mesures ci-dessus (18/09/2026). Le fil rouge : **plus il y a d'affixes, plus
+c'est de l'optimisation d'équipement, et c'est voulu.** Les résistances des monstres doivent
+obliger à jouer telle ou telle relique.
+
+- **Les recharges se gardent d'un combat à l'autre** *(fait)*. Elles avancent d'un tour par
+  tour de combat, par tour de repos, et tous les 8 pas sur la carte. Le repos recharge donc
+  les sorts (on peut se reposer PV pleins si une relique se recharge), et il reste risqué.
+  Les reliques portées s'affichent en haut à gauche de la carte, avec leurs tours restants.
+  *Mesuré* : ça ne suffit pas à calmer le contrôle (glace 82 % → 81 %). Un combat dure assez
+  longtemps pour que chaque relique ressorte. Ce sont les jets qui feront le travail.
+- **Les monstres ont des résistances par élément** (feu, glace, foudre, poison), selon leur
+  type et leur zone : un squelette ne craint pas le poison, un démon résiste au feu… La
+  résistance réduit les dégâts de l'élément **et** la chance que son effet prenne.
+- **Le contrôle devient un jet** : chance = chance de base de la relique × (1 − résistance)
+  + bonus des affixes.
+  - Glace : un jet au lancer. Réussi, la cible est figée — c'est un **délai** (son compteur
+    s'arrête), jamais une annulation.
+  - Foudre, façon Pokémon : paralysie de plusieurs tours, et **un jet à chaque attaque qui
+    tombe** pour savoir si elle est perdue.
+- **La rage remplace la résistance fixe de 2 tours** : un ennemi contrôlé 2 ou 3 fois de
+  suite s'énerve. Pendant sa rage, on ne peut plus le contrôler, il frappe **plus vite**
+  mais **moins précis**.
+- **La précision** n'existe pas encore : aujourd'hui toute attaque ennemie touche (la parade
+  ne fait que réduire). Il faut une chance de toucher aux monstres, que la rage abaisse.
+- **Des affixes de sorts**, sur la même règle que les autres (budget + mesure) : chance
+  d'effet (gel, paralysie…), pénétration des résistances, durée des effets (+1 tour de
+  poison), critique des sorts, **exécution** (une chance d'achever un petit monstre déjà
+  bien entamé).
+- **Des affixes propres à une relique**, qui forcent des choix d'équipement : « Boule de feu :
+  +X % de critique », « Venin : +1 dose au maximum », « Éclat de glace : fige tous les
+  ennemis » (celui-là est assez fort pour être un légendaire).
+
+L'ordre de travail :
+
+1. Recharges gardées d'un combat à l'autre — **fait**.
+2. Résistances des monstres, jets de contrôle (glace au lancer, foudre par attaque) et
+   rage — **fait** (voir « Les jets de dés, façon D&D »).
+3. Précision des monstres (la rage la fait baisser) — devenue l'étape A des archétypes,
+   ci-dessous : la CA et le jet d'attaque.
+4. Affixes de sorts généraux.
+5. Affixes propres à une relique, probablement avec les légendaires.
+
+## Les archétypes : le stuff fait la classe
+
+Décidé le 18/09/2026. Trois archétypes pour commencer, **aucune classe choisie** : comme
+dans Diablo, c'est ce qu'on porte qui fait la classe, et un hybride reste possible (le
+multiclasse de D&D).
+
+| | Guerrier | Voleur | Mage |
+|---|---|---|---|
+| Caractéristique | FOR | DEX | INT |
+| Armure | lourde : il **encaisse** (beaucoup d'armure, la DEX ne compte plus dans la CA) | légère : il **évite** (CA + DEX) | tissu : peu de défense, compensée par les sorts |
+| Défense (gestes) | parade + **blocage** au bouclier | **esquive**, et une esquive parfaite déclenche une **contre-attaque** | **illusions** (image miroir), sort *Bouclier* |
+| Attaque | gros coups, charge | **coups mortels** sur une cible empoisonnée, figée ou entamée | contrôle et éléments |
+| Reliques | cris, frappes (à inventer) | **Venin**, lames empoisonnées | feu, glace, foudre |
+
+- **Deux défenses** (écart assumé avec D&D, où l'armure ne fait que rater) : la **CA**
+  décide si un coup touche, l'**armure** réduit les dégâts du coup qui touche. C'est ce qui
+  sépare le guerrier (il encaisse) du voleur (il évite) ; en pur D&D, les plaques donnent la
+  meilleure CA et les deux se ressembleraient.
+- **Chaque relique a sa caractéristique** : ses dégâts et son DD la suivent (le Venin
+  suivra la DEX, pas l'INT) — comme le DD de D&D, 8 + maîtrise + la caractéristique de la
+  classe.
+- **Le bouton « Spécial » devient la capacité d'archétype**, donnée par le set porté
+  (blocage, contre-attaque, image miroir…).
+- **Les sets** : chaque zone a un set par archétype (rat-guerrier, rat-voleur, rat-mage…),
+  bonus à 2 / 4 / 6 pièces. **Tous tombent partout, tout le temps.** La zone en recommande
+  un par les faiblesses de ses monstres, sans jamais l'imposer — la clé souple.
+
+### Étape A : la CA et le jet d'attaque *(faite)*
+
+- **Trois poids** sur le casque, l'armure et les bottes, avec chacun ses noms de pièces (pas
+  d'adjectif à accorder) : tissu (Capuche, Robe, Sandales ; armure ×0,6), léger (Coiffe,
+  Brigandine, Bottes ; armure ×0,9, +1 CA par pièce, la DEX compte), lourd (Heaume,
+  Cuirasse, Solerets ; armure ×1,5, la DEX ne compte plus). La moyenne vaut 1 : le héros de
+  référence des affixes ne bouge pas. Le poids ne change pas les PV de la pièce.
+- **CA** = 10 + maîtrise (celle des pièces d'armure portées) + bonus des pièces (léger +1,
+  bouclier +2) + modificateur de DEX (sauf avec une pièce lourde).
+- **Jet d'attaque** : d20 + bonus d'attaque (maîtrise de l'étage + 6) ≥ CA → touché ; un 20
+  touche toujours, un 1 rate toujours. Raté : aucun dégât (« Raté ! »). Touché : l'armure et
+  la parade jouent comme avant.
+- **Même moyenne de dégâts** : le héros de référence (bouclier, DEX 10) est touché 3 fois
+  sur 4 ; les coups qui touchent sont relevés de ×4/3. L'équilibre PV / dégâts réglé avec
+  les affixes tient, et c'est l'écart à la référence qui paie.
+- **La rage** donne le **désavantage** à l'attaque (deux d20, le pire gardé) au lieu des
+  35 % de ratés fixes.
+- La **note** d'un objet compte sa CA : 1 CA = 1/15 des dégâts reçus chez le héros de
+  référence, sur l'axe de la survie. Ce que la DEX apporte à la CA n'y est pas encore
+  compté (la note de la DEX ne voit que le critique et la parade).
+- Les pièces d'avant les poids n'en ont pas : ni bonus de CA, ni blocage de la DEX.
+- *Mesuré* : même ordre de difficulté qu'avant la CA. Partie entière jusqu'à l'étage 100,
+  médianes novice / correct / expert : 26 / 62 / 100 avant, **31 / 51 / 100** après — dans
+  le bruit de 30 profils (le correct va de 15 à 100). À équipement égal, l'étage 15 sans
+  sort passe de 64 % à 70 % de victoires sur 3 combats : le bot, qui prend la meilleure
+  note, se trouve souvent une CA au-dessus de la référence.
+
+### La suite
+
+- **B.** Chaque relique suit sa caractéristique (Venin → DEX).
+- **C.** Le bouton « Spécial » : une capacité par archétype, liée aux gestes (blocage,
+  contre-attaque, image miroir), donnée par l'équipement.
+- **D.** Les sets par zone et par archétype, qui tombent tous partout.
+- **E.** Les affixes de sorts, puis ceux propres à une relique (voir plus haut).
 
 ## Mesures : la boucle « mieux équipé → plus profond » (**avant** la refonte des affixes)
 

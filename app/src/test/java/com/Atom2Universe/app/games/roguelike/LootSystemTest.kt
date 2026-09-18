@@ -24,8 +24,8 @@ class LootSystemTest {
     fun tierFiveOverlapsNextMaterialTierOne() {
         val rng = Random(2)
         for (m in Material.entries.dropLast(1)) {
-            val five = LootSystem.create(ItemBase.ARMOR, m, 5, Rarity.NORMAL, 0, rng)
-            val nextOne = LootSystem.create(ItemBase.ARMOR, Material.entries[m.ordinal + 1], 1, Rarity.NORMAL, 0, rng)
+            val five = LootSystem.create(ItemBase.ARMOR, m, 5, Rarity.NORMAL, 0, rng, forcedWeight = ArmorWeight.HEAVY)
+            val nextOne = LootSystem.create(ItemBase.ARMOR, Material.entries[m.ordinal + 1], 1, Rarity.NORMAL, 0, rng, forcedWeight = ArmorWeight.HEAVY)
             assertEquals(five.power, nextOne.power)
             assertEquals(five.armor, nextOne.armor)
         }

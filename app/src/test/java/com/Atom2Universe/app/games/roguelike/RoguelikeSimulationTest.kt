@@ -24,7 +24,14 @@ class RoguelikeSimulationTest {
     }
 
     private val profiles = 30
-    private val maxFloor = 40
+    /**
+     * Réglages de mesure par variables d'environnement, sans toucher au code :
+     * SIM_MAX_FLOOR=100 pour aller au bout, SIM_RELICS=NONE (aucun sort) ou
+     * SIM_RELICS=FIREBALL,VENOM pour n'autoriser que certaines reliques.
+     * Gradle ne relance pas un test déjà passé : ajouter cleanTestDebugUnitTest.
+     */
+    private val simRelics = System.getenv("SIM_RELICS")?.split(",")
+    private val maxFloor = System.getenv("SIM_MAX_FLOOR")?.toInt() ?: 40
     private val maxMapTurns = 250_000
 
     class FloorStat {
@@ -87,6 +94,41 @@ class RoguelikeSimulationTest {
             }
         }
         File("build/roguelike-skill.txt").writeText(out.toString())
+        println(out)
+    }
+
+    /**
+     * Chaque relique seule, à équipement égal, contre « aucun sort » : c'est ce qui dit si
+     * le budget tient (toutes devraient aider à peu près autant). Joueur « correct ».
+     * On compte les PV perdus par combat gagné et les victoires sur trois combats enchaînés.
+     */
+    @Test
+    fun relicsAtFixedGear() {
+        val out = StringBuilder("══════ Reliques seules à équipement égal (3000 séries de 3 combats par case, joueur correct) ══════\n")
+        val configs = listOf<Relic?>(null) + Relic.entries
+        out.appendLine("Ét. | " + configs.joinToString(" | ") { String.format("%-17s", it?.name ?: "aucun sort") })
+        for (floor in listOf(3, 8, 15, 30, 60)) {
+            val cells = configs.map { relic ->
+                val rng = Random(floor * 131L)
+                var fights = 0; var dmg = 0.0; var win3 = 0
+                repeat(3000) {
+                    val hero = geared(floor, rng)
+                    relic?.let { hero.addRelic(it) }
+                    var ok = true
+                    repeat(3) {
+                        if (!ok) return@repeat
+                        val hp0 = hero.hp
+                        ok = soloFight(hero, floor, Skill.CORRECT, rng)
+                        if (ok) { fights++; dmg += (hp0 - hero.hp).toDouble() / hero.maxHp }
+                    }
+                    if (ok) win3++
+                }
+                String.format("%4.1f%% PV  %4.1f%%", 100 * dmg / fights.coerceAtLeast(1), win3 / 30.0)
+            }
+            out.appendLine(String.format("%3d | ", floor) + cells.joinToString(" | ") { String.format("%-17s", it) })
+        }
+        out.appendLine("(par case : PV perdus par combat gagné, puis victoires sur 3 combats enchaînés)")
+        File("build/roguelike-relics.txt").writeText(out.toString())
         println(out)
     }
 
@@ -184,9 +226,20 @@ class RoguelikeSimulationTest {
                 // Cible : le plus proche d'attaquer, puis le plus faible
                 val target = alive.minWith(compareBy<Int>({ c.enemies[it].countdown }, { c.enemies[it].hp }))
                 val incoming = alive.filter { c.enemies[it].countdown <= 1 }.sumOf { c.enemies[it].damage }
+                // Glace et foudre visent celui qui va frapper ; feu et poison, le plus solide.
+                // Le bot connaît les affinités (un joueur les apprend en mourant) : il ne lance
+                // jamais un sort sur un monstre qui y est immunisé ou déjà enragé.
+                fun aimAt(r: Relic) =
+                    if (r.element == Element.ICE || r.element == Element.LIGHTNING) target else alive.maxBy { c.enemies[it].hp }
+                val ready = c.hero.relicSlots.filterNotNull().firstOrNull {
+                    val e = c.enemies[aimAt(it)]
+                    c.canCast(it) && (simRelics == null || it.name in simRelics) &&
+                        e.type.affinity(it.element) != Affinity.IMMUNE &&
+                        !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING))
+                }
                 when {
                     c.canDrinkPotion() && c.hero.hp <= incoming * 1.3f + c.hero.maxHp * 0.1f -> { c.drinkPotion(); fs.potionsUsed++ }
-                    c.canCast(Relic.FIREBALL) -> c.castRelic(Relic.FIREBALL, alive.maxBy { c.enemies[it].hp }, strike(skill, rng))
+                    ready != null -> c.castRelic(ready, aimAt(ready), strike(skill, rng))
                     else -> c.attack(target, strike(skill, rng))
                 }
             } else {

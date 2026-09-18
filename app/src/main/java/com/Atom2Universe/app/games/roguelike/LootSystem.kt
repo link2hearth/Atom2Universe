@@ -128,6 +128,45 @@ enum class ItemBase(
     RING   (R.string.roguelike_base_ring,    EquipSlot.RING,    null,         0f,    0f, 0f,     true),
 }
 
+// ─── Poids d'armure ────────────────────────────────────────────────────────────
+
+/**
+ * Le poids d'une pièce d'armure (casque, armure, bottes). **C'est le stuff qui fait la
+ * classe**, comme dans Diablo : on ne choisit pas d'archétype, on le porte.
+ *  - Tissu : peu d'armure — le mage, qui compte sur ses sorts.
+ *  - Léger : un peu moins d'armure, +1 CA par pièce, et la DEX compte dans la CA — le
+ *    voleur, qui **évite**.
+ *  - Lourd : beaucoup d'armure, mais la DEX ne compte plus dans la CA — le guerrier, qui
+ *    **encaisse**.
+ * L'armure réduit les dégâts d'un coup ; la CA ([ArmorClass]) décide s'il touche. La
+ * moyenne des trois multiplicateurs vaut 1 : le héros de référence ne change pas.
+ * Chaque poids a ses noms de pièces (pas d'adjectif à accorder).
+ */
+enum class ArmorWeight(
+    @StringRes override val labelRes: Int,
+    val armorMult: Float, val acPerPiece: Int, val dexCounts: Boolean,
+    @StringRes val helmetRes: Int, @StringRes val chestRes: Int, @StringRes val bootsRes: Int,
+) : Labeled {
+    CLOTH(R.string.roguelike_weight_cloth, 0.6f, 0, true,
+        R.string.roguelike_base_hood, R.string.roguelike_base_robe, R.string.roguelike_base_sandals),
+    LIGHT(R.string.roguelike_weight_light, 0.9f, 1, true,
+        R.string.roguelike_base_coif, R.string.roguelike_base_jerkin, R.string.roguelike_base_boots),
+    HEAVY(R.string.roguelike_weight_heavy, 1.5f, 0, false,
+        R.string.roguelike_base_helm, R.string.roguelike_base_plate, R.string.roguelike_base_sabatons);
+
+    fun nounRes(base: ItemBase) = when (base) {
+        ItemBase.HELMET -> helmetRes
+        ItemBase.ARMOR  -> chestRes
+        ItemBase.BOOTS  -> bootsRes
+        else            -> base.nounRes
+    }
+
+    companion object {
+        /** Les bases qui ont un poids. */
+        val WEIGHTED = setOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)
+    }
+}
+
 // ─── Objet ─────────────────────────────────────────────────────────────────────
 
 data class Equipment(
@@ -147,8 +186,12 @@ data class Equipment(
     val spriteCol: Int,
     /** Ordre de ramassage, pour trier « dernier looté en premier ». */
     val lootId: Long,
+    /** Tissu, léger ou lourd (casque, armure, bottes). Null ailleurs, et sur les pièces d'avant les poids. */
+    val weight: ArmorWeight? = null,
 ) {
     val slot get() = base.slot
+    /** Ce que la pièce ajoute à la CA : son poids, ou le bouclier. */
+    val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
     val power get() = material.ordinal * Material.STEP + tier
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
@@ -314,6 +357,12 @@ object AffixBudget {
                                 (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE)) / refHp(p)
     }
 
+    /**
+     * Ce que vaut +1 CA sur l'axe de la survie : il retire 5 points de chance d'être touché
+     * au héros de référence, qui l'est 3 fois sur 4 — soit 1/15 des dégâts reçus.
+     */
+    fun perAcPoint() = ArmorClass.AC_STEP / ArmorClass.REF_HIT
+
     /** Le palier le plus haut qu'un objet de cette puissance peut porter. */
     fun maxTier(power: Int) = TIER_POWER.count { it <= power }.coerceIn(1, TIERS)
 
@@ -439,14 +488,19 @@ object LootSystem {
         return options.random(rng)
     }
 
-    fun create(base: ItemBase, material: Material, tier: Int, rarity: Rarity, lootId: Long, rng: Random): Equipment {
+    fun create(
+        base: ItemBase, material: Material, tier: Int, rarity: Rarity, lootId: Long, rng: Random,
+        forcedWeight: ArmorWeight? = null,
+    ): Equipment {
         val power = material.ordinal * Material.STEP + tier
         val s = scale(power)
 
+        val weight = if (base in ArmorWeight.WEIGHTED) forcedWeight ?: ArmorWeight.entries.random(rng) else null
         val isWeapon = base.damageMult > 0f
         val dmgMin = if (isWeapon) (4f * s * base.damageMult).roundToInt().coerceAtLeast(1) else 0
         val dmgMax = if (isWeapon) (7f * s * base.damageMult).roundToInt().coerceAtLeast(dmgMin + 1) else 0
-        val armor  = (base.armorBase * s).roundToInt()
+        // Le poids change l'armure, pas les PV : ceux-là suivent la base de la pièce
+        val armor  = (base.armorBase * (weight?.armorMult ?: 1f) * s).roundToInt()
 
         val implicits = mutableListOf<StatRoll>()
         val attr = base.attribute ?: StatType.ATTRIBUTES.random(rng)
@@ -461,7 +515,7 @@ object LootSystem {
         val affixes = pickAffixes(pool, count, rng).map { rollAffix(it, power, rng) }
 
         val (row, col) = pickSprite(base, material, rng)
-        return Equipment(base, material, tier, rarity, dmgMin, dmgMax, armor, implicits, affixes, row, col, lootId)
+        return Equipment(base, material, tier, rarity, dmgMin, dmgMax, armor, implicits, affixes, row, col, lootId, weight)
     }
 
     /**
@@ -535,6 +589,7 @@ object LootSystem {
         var r = 0f
         if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f
         if (e.armor > 0)     r += e.armor * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
+        r += e.acBonus * AffixBudget.perAcPoint() * 100f
         for (s in e.allStats) r += s.value * AffixBudget.perPoint(s.type, p) * 100f
         return (r * scale(p)).roundToInt()
     }
@@ -544,13 +599,21 @@ object LootSystem {
     /** « Épée de fer 3 » / « Iron Sword 3 ». */
     fun displayName(context: Context, e: Equipment): String {
         val mat = context.getString(if (e.base.usesWeaponMaterial) e.material.weaponRes else e.material.armorRes)
-        return context.getString(R.string.roguelike_item_name, context.getString(e.base.nounRes), mat, e.tier)
+        val noun = e.weight?.nounRes(e.base) ?: e.base.nounRes
+        return context.getString(R.string.roguelike_item_name, context.getString(noun), mat, e.tier)
     }
 
     /** Lignes de description : dégâts, armure, puis toutes les stats. */
     fun describe(context: Context, e: Equipment): List<String> = buildList {
         if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage, e.damageMin, e.damageMax))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, e.armor))
+        when (e.weight) {
+            ArmorWeight.CLOTH -> add(context.getString(R.string.roguelike_item_weight_cloth))
+            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, ArmorWeight.LIGHT.acPerPiece))
+            ArmorWeight.HEAVY -> add(context.getString(R.string.roguelike_item_weight_heavy))
+            null -> {}
+        }
+        if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, ArmorClass.SHIELD))
         e.implicits.forEach { add(it.display(context)) }
         e.affixes.forEach { add(it.display(context)) }
     }

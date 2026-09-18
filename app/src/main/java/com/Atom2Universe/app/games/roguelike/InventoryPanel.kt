@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 
 /**
- * L'inventaire : ce qu'on porte, ses caractéristiques, et le sac (infini) trié du
+ * L'inventaire : ce qu'on porte, ses caractéristiques, les reliques trouvées (toucher
+ * pour porter / ranger), et le sac (infini) trié du
  * meilleur au moins bon ou du plus récent au plus ancien. Toucher un objet affiche son
  * détail, avec Équiper et Vendre. Rien n'oblige à gérer quoi que ce soit.
  */
@@ -27,6 +28,9 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private val tvGold      = root.findViewById<TextView>(R.id.inv_gold)
     private val equippedRow = root.findViewById<LinearLayout>(R.id.inv_equipped)
     private val tvStats     = root.findViewById<TextView>(R.id.inv_stats)
+    private val tvRelics    = root.findViewById<TextView>(R.id.inv_relics_title)
+    private val relicsRow   = root.findViewById<LinearLayout>(R.id.inv_relics)
+    private val tvRelicDesc = root.findViewById<TextView>(R.id.inv_relic_desc)
     private val tvBagCount  = root.findViewById<TextView>(R.id.inv_bag_count)
     private val btnBest     = root.findViewById<TextView>(R.id.inv_sort_best)
     private val btnRecent   = root.findViewById<TextView>(R.id.inv_sort_recent)
@@ -48,6 +52,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private var selectedIsEquipped = false
     private var sorted: List<Equipment> = emptyList()
     private val slotViews = mutableMapOf<EquipSlot, ImageView>()
+    private var selectedRelic: Relic? = null
+    private var relicRefused = false
 
     val isOpen get() = root.visibility == View.VISIBLE
 
@@ -127,6 +133,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     fun show(g: RoguelikeGame) {
         game = g
         selected = null
+        selectedRelic = null
+        relicRefused = false
         root.visibility = View.VISIBLE
         refresh()
         list.scrollToPosition(0)
@@ -154,6 +162,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         }
 
         tvStats.text = statsText(hero)
+        bindRelics(hero)
 
         sorted = when (sort) {
             Sort.BEST   -> hero.bag.sortedByDescending { LootSystem.rating(it) }
@@ -169,6 +178,63 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         bindDetail(hero)
     }
 
+    // ── Reliques ────────────────────────────────────────────────────────────────
+
+    private fun bindRelics(hero: Hero) {
+        val worn = hero.relicSlots.count { it != null }
+        tvRelics.text = if (hero.relics.isEmpty()) ctx.getString(R.string.roguelike_inventory_relics_none)
+            else ctx.getString(R.string.roguelike_inventory_relics_title, worn, Hero.RELIC_SLOTS)
+
+        relicsRow.removeAllViews()
+        for (relic in hero.relics) {
+            val on = relic in hero.relicSlots
+            val chip = LinearLayout(ctx).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                val pad = (6 * density).toInt()
+                setPadding(pad, pad / 2, pad * 2, pad / 2)
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (40 * density).toInt()).apply {
+                    marginEnd = (6 * density).toInt()
+                }
+                background = GradientDrawable().apply {
+                    cornerRadius = 20 * density
+                    setColor(if (on) relic.color else 0xFF1C2A38.toInt())
+                    setStroke(((if (relic == selectedRelic) 2.5f else 1f) * density).toInt(),
+                        if (relic == selectedRelic) 0xFFFFFFFF.toInt() else 0xFF455A64.toInt())
+                }
+                setOnClickListener { onRelicTapped(relic) }
+            }
+            chip.addView(ImageView(ctx).apply {
+                layoutParams = LinearLayout.LayoutParams((28 * density).toInt(), (28 * density).toInt())
+                setImageBitmap(SpriteLoader.sheetCell(ctx.assets, relic.iconRow, relic.iconCol))
+                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            })
+            chip.addView(TextView(ctx).apply {
+                text = ctx.getString(relic.labelRes)
+                setTextColor(if (on) 0xFFFFFFFF.toInt() else 0xFF90A4AE.toInt())
+                textSize = 13f
+                setPadding((4 * density).toInt(), 0, 0, 0)
+            })
+            relicsRow.addView(chip)
+        }
+
+        val relic = selectedRelic
+        if (relic == null) { tvRelicDesc.visibility = View.GONE; return }
+        tvRelicDesc.visibility = View.VISIBLE
+        val (lo, hi) = hero.relicDamage(relic)
+        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown), hero.poisonDose(relic), hero.spellDc)
+        tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
+    }
+
+    /** Toucher une relique la décrit, et la porte ou la range. */
+    private fun onRelicTapped(relic: Relic) {
+        val result = game?.toggleRelic(relic) ?: return
+        selectedRelic = relic
+        relicRefused = result == Hero.RelicToggle.SLOTS_FULL
+        refresh()
+        onChanged()
+    }
+
     private fun statsText(hero: Hero): String {
         val attrs = StatType.ATTRIBUTES.joinToString("   ") {
             ctx.getString(R.string.roguelike_inventory_attr, ctx.getString(it.labelRes), hero.attribute(it))
@@ -176,7 +242,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         return listOf(
             attrs,
             ctx.getString(R.string.roguelike_inventory_stats_line,
-                hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100)),
+                hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100), hero.armorClass),
         ).joinToString("\n")
     }
 

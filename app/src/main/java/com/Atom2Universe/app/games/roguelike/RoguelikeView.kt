@@ -202,7 +202,9 @@ class RoguelikeView @JvmOverloads constructor(
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val pad = tileSize * 0.15f
-            drawSheetCell(canvas, item.type.spriteRow, item.type.spriteCol, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
+            val row = item.relic?.iconRow ?: item.type.spriteRow
+            val col = item.relic?.iconCol ?: item.type.spriteCol
+            drawSheetCell(canvas, row, col, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
         }
     }
 
@@ -343,11 +345,35 @@ class RoguelikeView @JvmOverloads constructor(
         pText.color = if (canRest) 0xFFFFFFFF.toInt() else 0xFF555555.toInt(); pText.textSize = rest.height() * 0.5f
         canvas.drawText("☾", rest.centerX(), rest.centerY() + rest.height() * 0.18f, pText)
 
+        drawRelicStatus(canvas, g)
+
         // Bouton inventaire (sac ⚔)
         val r = inventoryBtnRect()
         canvas.drawCircle(r.centerX(), r.centerY(), r.width() / 2f, pIconBg)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = r.height() * 0.52f
         canvas.drawText("⚔", r.centerX(), r.centerY() + r.height() * 0.19f, pText)
+    }
+
+    /**
+     * Les reliques portées, en haut à gauche : on voit avant d'engager un combat si ses
+     * sorts sont prêts. Assombrie avec le nombre de tours restants si elle se recharge.
+     */
+    private fun drawRelicStatus(canvas: Canvas, g: RoguelikeGame) {
+        val s = iconSizePx * 0.8f; val m = iconMarginPx
+        var x = hpBarW + m
+        for (relic in g.hero.relicSlots) {
+            if (relic == null) continue
+            val r = RectF(x, m, x + s, m + s)
+            canvas.drawRoundRect(r, s * 0.2f, s * 0.2f, pIconBg)
+            drawSheetCell(canvas, relic.iconRow, relic.iconCol, RectF(r.left + s * 0.1f, r.top + s * 0.1f, r.right - s * 0.1f, r.bottom - s * 0.1f))
+            val cd = g.hero.relicCooldown(relic)
+            if (cd > 0) {
+                canvas.drawRoundRect(r, s * 0.2f, s * 0.2f, pOverlay)
+                pText.color = 0xFFFFFFFF.toInt(); pText.textSize = s * 0.5f
+                canvas.drawText(context.getString(R.string.roguelike_hud_relic_cooldown, cd), r.centerX(), r.centerY() + s * 0.18f, pText)
+            }
+            x += s + m
+        }
     }
 
     // ── Marchand (sur l'escalier) ────────────────────────────────────────────────

@@ -18,9 +18,11 @@ data class Pos(val x: Int, val y: Int) {
 enum class ItemType(val spriteRow: Int, val spriteCol: Int) {
     GOLD  (9, 15),
     POTION(17, 0),
+    /** L'icône réelle est celle de la relique posée ([Item.relic]). */
+    RELIC (113, 6),
 }
 
-data class Item(val type: ItemType, val pos: Pos)
+data class Item(val type: ItemType, val pos: Pos, val relic: Relic? = null)
 
 // ─── Monstres sur la carte ─────────────────────────────────────────────────────
 enum class PackState { IDLE, CHASING }
@@ -120,6 +122,12 @@ class RoguelikeGame(
         const val DEATH_GOLD_LOSS = 0.30f
         const val POTION_PRICE   = 15
         const val CHECKPOINT     = 1
+        /**
+         * Les étages où une relique attend, au bout du cul-de-sac le plus éloigné. Chacune
+         * est tirée au hasard parmi celles qu'on n'a pas encore : la Boule de feu n'est pas
+         * forcément la première. Une relique déjà trouvée ne revient pas après une mort.
+         */
+        val RELIC_FLOORS = intArrayOf(2, 5, 9, 14)
 
         fun fromJson(j: JSONObject): RoguelikeGame {
             val hero = Hero().apply {
@@ -132,6 +140,22 @@ class RoguelikeGame(
                 for (i in 0 until bagJson.length()) bag += SaveManager.equipFromJson(bagJson.getJSONObject(i))
                 nextLootId = j.getLong("nextLootId")
                 hp = j.getInt("hp").coerceIn(1, maxHp)
+                val relicsJson = j.optJSONArray("relics")
+                if (relicsJson == null) {
+                    // Sauvegarde d'avant les reliques : on y avait toujours la Boule de feu
+                    addRelic(Relic.FIREBALL)
+                } else {
+                    for (i in 0 until relicsJson.length())
+                        runCatching { Relic.valueOf(relicsJson.getString(i)) }.getOrNull()?.let { relics += it }
+                    j.optJSONObject("relicCooldowns")?.let { cds ->
+                        for (name in cds.keys()) relics.firstOrNull { it.name == name }?.let { relicCooldowns[it] = cds.getInt(name) }
+                    }
+                    val slotsJson = j.optJSONArray("relicSlots")
+                    for (i in 0 until minOf(slotsJson?.length() ?: 0, Hero.RELIC_SLOTS)) {
+                        val name = slotsJson!!.optString(i, "")
+                        relicSlots[i] = relics.firstOrNull { it.name == name }
+                    }
+                }
             }
             return RoguelikeGame(hero, j.getInt("floor")).apply {
                 heroSpritePath = j.getString("heroSprite")
@@ -177,7 +201,8 @@ class RoguelikeGame(
 
     val isChased get() = level.packs.any { it.alive && it.state == PackState.CHASING }
 
-    fun canRest() = isExploring && !isChased && hero.hp < hero.maxHp
+    /** Le repos soigne et recharge les reliques : utile tant que l'un des deux n'est pas plein. */
+    fun canRest() = isExploring && !isChased && (hero.hp < hero.maxHp || hero.relicsRecharging)
 
     fun onStairsTile() = level.tiles[playerPos.y][playerPos.x] == TileType.STAIRS_DOWN
 
@@ -190,6 +215,7 @@ class RoguelikeGame(
         if (pack != null) { startCombat(pack, ambush = false); return }
         if (!level.canStep(playerPos, dx, dy)) return
         playerPos = Pos(nx, ny)
+        hero.walkRelics()
         pickup()
         endMapTurn()
     }
@@ -198,6 +224,7 @@ class RoguelikeGame(
     fun rest(): Boolean {
         if (!canRest()) return false
         hero.heal(ceil(hero.maxHp * REST_HEAL).toInt())
+        hero.tickRelics()
         addLog(R.string.roguelike_log_rest, hero.hp, hero.maxHp)
         if (rng.nextFloat() < REST_NOISE_CHANCE) spawnWanderer()
         endMapTurn(resting = true)
@@ -275,6 +302,14 @@ class RoguelikeGame(
         addLog(R.string.roguelike_log_sold, item, price)
     }
 
+    // ── Reliques ────────────────────────────────────────────────────────────────
+
+    /** Porter ou ranger une relique, seulement hors combat. */
+    fun toggleRelic(relic: Relic): Hero.RelicToggle? {
+        if (!isExploring) return null
+        return hero.toggleRelic(relic)
+    }
+
     fun dismissDeath() { deathReport = null }
 
     // ── Combat ──────────────────────────────────────────────────────────────────
@@ -325,6 +360,7 @@ class RoguelikeGame(
         hero.gold -= lost
         deathReport = DeathReport(floor, lost)
         hero.healFull()
+        hero.relicCooldowns.clear()
         changeFloor(CHECKPOINT)
         log.clear()
         addLog(R.string.roguelike_log_player_death)
@@ -411,6 +447,12 @@ class RoguelikeGame(
                     addLog(R.string.roguelike_log_potion_pickup)
                 } else addLog(R.string.roguelike_log_potions_full)
             }
+            ItemType.RELIC -> {
+                val relic = item.relic ?: continue
+                level.items.remove(item)
+                val worn = hero.addRelic(relic)
+                addLog(if (worn) R.string.roguelike_log_relic_found_equipped else R.string.roguelike_log_relic_found_bag, relic)
+            }
         }
     }
 
@@ -474,9 +516,20 @@ class RoguelikeGame(
             lv.packs += MonsterPack(Encounters.roll(floor, rng), pos)
         }
 
+        // Une relique sur certains étages, au bout du cul-de-sac le plus éloigné du départ
+        val relicIndex = RELIC_FLOORS.indexOf(floor)
+        if (relicIndex >= 0 && hero.relics.size <= relicIndex) {
+            val relic = Relic.entries.filter { it !in hero.relics }.randomOrNull(rng)
+            val spot = layout.deadEnds.filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
+                .maxByOrNull { dist[it.y][it.x] }
+                ?: farCells.maxByOrNull { dist[it.y][it.x] }
+            if (relic != null && spot != null) lv.items += Item(ItemType.RELIC, spot, relic)
+        }
+
         // L'or récompense l'exploration : d'abord au bout des culs-de-sac
+        val relicSpots = lv.items.map { it.pos }.toSet()
         val spots = (layout.deadEnds.shuffled(rng) + layout.rooms.shuffled(rng).map { it.randomInner(rng) })
-            .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
+            .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start && it !in relicSpots }
             .distinct()
         val goldCount = 3 + rng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
@@ -504,5 +557,8 @@ class RoguelikeGame(
         })
         put("bag", org.json.JSONArray().also { arr -> hero.bag.forEach { arr.put(SaveManager.equipToJson(it)) } })
         put("nextLootId", hero.nextLootId)
+        put("relics", org.json.JSONArray().also { arr -> hero.relics.forEach { arr.put(it.name) } })
+        put("relicSlots", org.json.JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
+        put("relicCooldowns", JSONObject().also { o -> hero.relicCooldowns.forEach { (r, cd) -> o.put(r.name, cd) } })
     }
 }

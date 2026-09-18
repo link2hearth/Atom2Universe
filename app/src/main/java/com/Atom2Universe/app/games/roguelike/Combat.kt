@@ -8,23 +8,109 @@ import kotlin.random.Random
 // ─── Monstres ───────────────────────────────────────────────────────────────────
 
 /**
+ * Ce qu'un monstre pense d'un élément, comme dans D&D (et les types de Pokémon) : les
+ * dégâts de l'élément sont multipliés par [damageMult], et [saveBonus] s'ajoute à son jet
+ * de sauvegarde contre l'effet (gel, paralysie). Immunisé : ni dégâts, ni effet.
+ */
+enum class Affinity(val damageMult: Float, val saveBonus: Int) {
+    VULNERABLE(2f, -5), NORMAL(1f, 0), RESISTANT(0.5f, 5), IMMUNE(0f, 0)
+}
+
+/**
  * Stats de base à l'étage 1. Elles grimpent avec l'étage, jamais avec le joueur :
  * c'est ce qui permet à l'équipement de compter.
  *
  * [cadence] : le monstre frappe tous les N tours. Un rat frappe à chaque tour,
  * une grosse brute prend son élan.
+ *
+ * [affinities] : ses faiblesses et résistances par élément — provisoires, comme ces monstres,
+ * mais réparties pour qu'aucun élément ne l'emporte partout. C'est ce qui oblige à choisir
+ * ses deux reliques selon ce qu'on va affronter. Rien ne les affiche : on les découvre en
+ * frappant (« Efficace ! », « Peu efficace… », « Immunisé ! »).
  */
 enum class MonsterType(
     @StringRes override val labelRes: Int,
     val baseHp: Int, val baseDamage: Int, val cadence: Int,
     val minFloor: Int, val goldMin: Int, val goldMax: Int,
+    val affinities: Map<Element, Affinity>,
 ) : Labeled {
-    RAT     (R.string.roguelike_monster_rat,      16,  3, 1, 1, 1,  3),
-    GOBLIN  (R.string.roguelike_monster_goblin,   24,  4, 1, 1, 2,  5),
-    SKELETON(R.string.roguelike_monster_skeleton, 34,  6, 2, 2, 3,  7),
-    ORC     (R.string.roguelike_monster_orc,      50, 10, 2, 3, 5, 10),
-    DEMON   (R.string.roguelike_monster_demon,    70, 14, 3, 5, 8, 15),
+    RAT     (R.string.roguelike_monster_rat,      16,  3, 1, 1, 1,  3,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    GOBLIN  (R.string.roguelike_monster_goblin,   24,  4, 1, 1, 2,  5,
+        mapOf(Element.POISON to Affinity.VULNERABLE, Element.ICE to Affinity.RESISTANT)),
+    SKELETON(R.string.roguelike_monster_skeleton, 34,  6, 2, 2, 3,  7,
+        mapOf(Element.POISON to Affinity.IMMUNE, Element.LIGHTNING to Affinity.VULNERABLE, Element.FIRE to Affinity.RESISTANT)),
+    ORC     (R.string.roguelike_monster_orc,      50, 10, 2, 3, 5, 10,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.LIGHTNING to Affinity.RESISTANT)),
+    DEMON   (R.string.roguelike_monster_demon,    70, 14, 3, 5, 8, 15,
+        mapOf(Element.FIRE to Affinity.IMMUNE, Element.ICE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT));
+
+    fun affinity(e: Element) = affinities[e] ?: Affinity.NORMAL
 }
+
+/**
+ * Les jets de sauvegarde, façon D&D. Contre un sort de contrôle, le monstre lance
+ * **d20 + sa maîtrise + son affinité** ; s'il n'atteint pas le **DD** du héros
+ * (voir [Hero.spellDc]), l'effet prend.
+ *
+ * La maîtrise grandit avec la puissance : celle du héros suit son arme, celle du monstre
+ * l'étage (la puissance d'arme qu'on y trouve). Avec l'équipement de l'étage et 10 d'INT,
+ * elles s'annulent et le gel prend **une fois sur deux** ; INT et l'arme font pencher la
+ * balance, les affinités la déplacent de 25 points (±5 sur un d20).
+ */
+object SpellSave {
+    const val DC_BASE = 11
+    /**
+     * Le geste compte aussi pour le contrôle : un swipe « bien » sur le sort ajoute
+     * [GOOD_STRIKE_DC] au DD, un swipe parfait impose au monstre le **désavantage** de
+     * D&D (deux d20, il garde le pire) — le gel prend alors ~3 fois sur 4 au lieu d'une
+     * sur 2. Les gestes décident *combien* (critique, parade) ; ici ils pèsent aussi sur *si*.
+     */
+    const val GOOD_STRIKE_DC = 2
+    /** +2 au départ, +1 tous les 8 crans de puissance (+7 à la puissance 41), comme les niveaux de D&D. */
+    fun proficiency(power: Int) = 2 + (power - 1).coerceAtLeast(0) / 8
+    fun monsterProficiency(floor: Int) = proficiency(LootSystem.powerCenter(floor).roundToInt())
+    /** Chance que l'effet prenne pour un d20 : total < DD. */
+    fun landChance(dc: Int, saveBonus: Int) = ((dc - 1 - saveBonus).coerceIn(0, 20)) / 20f
+}
+
+/**
+ * La classe d'armure et le jet d'attaque des monstres, façon D&D : le monstre lance
+ * **d20 + son bonus d'attaque** ; s'il atteint la CA du héros ([Hero.armorClass]), il
+ * touche, et **alors seulement** l'armure réduit ses dégâts et la parade joue. Un 20
+ * touche toujours, un 1 rate toujours.
+ *
+ * Le bonus d'attaque suit l'étage comme la maîtrise du héros suit ses pièces : ils
+ * s'annulent, et le héros de référence (bouclier, pièces sans bonus, DEX 10) est touché
+ * [REF_HIT] = 3 fois sur 4. Pour que ce héros prenne en moyenne autant qu'avant la CA,
+ * les coups qui touchent sont relevés de [DAMAGE_COMPENSATION] : l'équilibre PV / dégâts
+ * réglé avec les affixes tient, et c'est l'écart à la référence qui paie — le voleur léger
+ * esquive plus, le mage en tissu prend plus souvent.
+ */
+object ArmorClass {
+    const val BASE = 10
+    const val SHIELD = 2
+    const val MONSTER_ATTACK_BASE = 6
+    /** Un point de CA, c'est une face du d20 : 5 points de chance d'être touché. */
+    const val AC_STEP = 0.05f
+    const val REF_HIT = 0.75f
+    const val DAMAGE_COMPENSATION = 1f / REF_HIT
+
+    fun monsterAttack(floor: Int) = SpellSave.monsterProficiency(floor) + MONSTER_ATTACK_BASE
+    /** Chance de toucher, avec le 1 qui rate et le 20 qui touche toujours. */
+    fun hitChance(ac: Int, attack: Int) = ((21 - (ac - attack)) / 20f).coerceIn(0.05f, 0.95f)
+}
+
+/**
+ * Un jet de sauvegarde lancé : [roll] le d20 gardé, [total] avec les bonus, contre [dc].
+ * [disadvantage] : le monstre a lancé deux dés et gardé le pire (swipe parfait).
+ */
+data class SaveRoll(
+    val roll: Int, val total: Int, val dc: Int, val saved: Boolean,
+    val reason: SaveReason = SaveReason.ROLLED, val disadvantage: Boolean = false,
+)
+/** Pourquoi le jet a été réussi d'office : immunité, ou rage. */
+enum class SaveReason { ROLLED, IMMUNE, RAGE }
 
 class Enemy(
     val type: MonsterType,
@@ -35,9 +121,25 @@ class Enemy(
     var countdown: Int,
 ) {
     var hp = maxHp
+    val alive get() = hp > 0
+
+    // ── Effets des reliques (voir [Relic]) ──
     var burnTurns  = 0
     var burnDamage = 0
-    val alive get() = hp > 0
+    var poisonTurns = 0
+    var poisonDoses = 0
+    var poisonDoseDamage = 0
+    /** Gelé : son compteur ne bouge plus, il ne fait rien du tout. */
+    var frozenTurns = 0
+    /** Paralysé : chaque attaque qui tombe demande un jet ; raté, elle est perdue. */
+    var paralyzedTurns = 0
+    /** Le geste du lancer de la paralysie : il pèse sur tous ses jets suivants. */
+    var paralysisTiming = Timing.MISS
+    /** Contrôles réussis depuis sa dernière attaque : à [Relic.RAGE_AFTER], il enrage. */
+    var controlStreak = 0
+    /** Enragé : incontrôlable, frappe deux fois plus vite, mais attaque avec désavantage. */
+    var rageTurns = 0
+    val enraged get() = rageTurns > 0
 }
 
 object Encounters {
@@ -78,12 +180,107 @@ object Encounters {
 
 // ─── Reliques ───────────────────────────────────────────────────────────────────
 
+/** L'élément d'un sort : il décide de l'effet qui s'ajoute aux dégâts. */
+enum class Element { FIRE, ICE, LIGHTNING, POISON }
+
+/**
+ * Une relique donne un sort. On les **trouve** dans le donjon (voir
+ * [RoguelikeGame.RELIC_FLOORS]), on n'en porte que [Hero.RELIC_SLOTS] à la fois.
+ *
+ * Une relique ne décrit que sa **forme** : son élément, sa recharge, la durée de son effet.
+ * Ses dégâts, eux, sont **calculés** par [RelicBudget] : aucun nombre de dégâts n'est écrit
+ * ici. Ils se comptent en coups d'épée de référence, puis suivent l'arme portée, INT et
+ * les bonus « dégâts des sorts » (voir [Hero.relicDamage]).
+ *
+ * [effectTurns] : la durée de l'effet de l'élément —
+ *  - Feu : brûlure, [BURN_SHARE] du coup à chaque tour ;
+ *  - Glace : un jet de sauvegarde au lancer ; raté, la cible est **figée** (son compteur
+ *    s'arrête : son attaque est **repoussée**, jamais annulée) ;
+ *  - Foudre : la cible est **paralysée**, façon Pokémon : chaque attaque qui tombe pendant
+ *    la paralysie demande un jet ; raté, elle est **perdue** (la magie, plus tard, passera) ;
+ *  - Poison : une **dose** de plus (jusqu'à [POISON_MAX_DOSES]) ; relancer renouvelle la
+ *    durée de toutes les doses.
+ */
 enum class Relic(
     @StringRes override val labelRes: Int,
-    val minDamage: Int, val maxDamage: Int, val cooldown: Int,
-    val burnTurns: Int, val burnShare: Float,
+    @StringRes val descRes: Int,
+    val element: Element,
+    val cooldown: Int,
+    val effectTurns: Int,
+    val color: Int,
+    val iconRow: Int, val iconCol: Int,
 ) : Labeled {
-    FIREBALL(R.string.roguelike_relic_fireball, 6, 9, 3, 2, 0.25f),
+    FIREBALL (R.string.roguelike_relic_fireball,  R.string.roguelike_relic_fireball_desc,  Element.FIRE,      3, 2, 0xFFB5451B.toInt(), 113, 6),
+    ICE_SHARD(R.string.roguelike_relic_ice_shard, R.string.roguelike_relic_ice_shard_desc, Element.ICE,       3, 1, 0xFF2F7FB5.toInt(), 113, 8),
+    LIGHTNING(R.string.roguelike_relic_lightning, R.string.roguelike_relic_lightning_desc, Element.LIGHTNING, 5, 3, 0xFF9C7A12.toInt(), 132, 5),
+    VENOM    (R.string.roguelike_relic_venom,     R.string.roguelike_relic_venom_desc,     Element.POISON,    3, 4, 0xFF3E8E3A.toInt(), 133, 3);
+
+    /** Dégâts directs, en coups d'épée de référence (voir [RelicBudget]). */
+    val minCoef get() = RelicBudget.hitCoef(this) * RelicBudget.SPREAD_MIN
+    val maxCoef get() = RelicBudget.hitCoef(this) * RelicBudget.SPREAD_MAX
+    /** Poison : ce qu'une dose ronge par tour, en coups d'épée. 0 pour les autres. */
+    val doseCoef get() = RelicBudget.doseCoef(this)
+
+    companion object {
+        const val BURN_SHARE       = 0.25f
+        const val POISON_MAX_DOSES = 3
+        /**
+         * La rage : après ce nombre de contrôles réussis d'affilée (sans qu'il ait pu frapper
+         * entre-temps), l'ennemi s'énerve pendant [RAGE_TURNS] tours. Il est alors
+         * incontrôlable, son compteur descend de 2 par tour, mais il attaque avec
+         * **désavantage** (deux d20, il garde le pire). Sans ça, deux reliques de contrôle
+         * bloquaient un ennemi pour toujours.
+         */
+        const val RAGE_AFTER = 2
+        const val RAGE_TURNS = 3
+    }
+}
+
+/**
+ * Ce que vaut un sort, et **pourquoi** : même démarche que [AffixBudget].
+ *
+ * > L'unité, c'est le **tour** : un coup d'épée de référence vaut 1. Un sort remplace un
+ * > coup d'épée, il doit donc valoir ce coup **plus une prime** de [SHARE_PER_TURN] par
+ * > tour de recharge — soit, en moyenne sur le combat, +12 % de ce que fait le héros pour
+ * > chaque relique portée : **une relique vaut un affixe plein**.
+ *
+ * L'effet se paie sur les dégâts directs :
+ *  - **Feu** : la brûlure ajoute [Relic.BURN_SHARE] du coup par tour ; le coup est réduit
+ *    d'autant pour que coup + brûlure fassent la valeur.
+ *  - **Glace, foudre** : [FREEZE_TURN_VALUE] et [PARALYSIS_TURN_VALUE] par tour d'effet,
+ *    multipliés par [REF_LAND_CHANCE], la chance qu'a l'effet de prendre à équipement de
+ *    l'étage. Ces valeurs sont **mesurées** (`relicsAtFixedGear`), pas déduites : le
+ *    contrôle ne se laisse pas mettre en formule (voir DONJON.md, « Les reliques »).
+ *  - **Poison** : [POISON_DOT_SHARE] de la valeur part dans la première dose (sur toute sa
+ *    durée), le reste dans le coup. **Voulu** : les doses qui s'empilent dépassent le budget
+ *    dans un long combat — c'est le sort des gros sacs de PV, donc des boss.
+ */
+object RelicBudget {
+
+    /** La prime d'un sort, par tour de recharge, en coups d'épée : l'équivalent d'un affixe plein. */
+    const val SHARE_PER_TURN = 0.12f
+    const val FREEZE_TURN_VALUE = 1.0f
+    const val PARALYSIS_TURN_VALUE = 0.8f
+    /** Un gel prend une fois sur deux contre un monstre normal, à équipement de l'étage. */
+    const val REF_LAND_CHANCE = 0.5f
+    const val POISON_DOT_SHARE = 2f / 3f
+    /** L'écart des dégâts autour de la moyenne, comme l'épée (4–7 autour de 5,5). */
+    const val SPREAD_MIN = 0.75f
+    const val SPREAD_MAX = 1.25f
+
+    /** Ce que vaut un lancer, en coups d'épée. */
+    fun value(r: Relic) = 1f + SHARE_PER_TURN * r.cooldown
+
+    /** Coup direct moyen, en coups d'épée. */
+    fun hitCoef(r: Relic): Float = when (r.element) {
+        Element.FIRE      -> value(r) / (1f + Relic.BURN_SHARE * r.effectTurns)
+        Element.ICE       -> value(r) - FREEZE_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
+        Element.LIGHTNING -> value(r) - PARALYSIS_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
+        Element.POISON    -> value(r) * (1f - POISON_DOT_SHARE)
+    }
+
+    fun doseCoef(r: Relic): Float =
+        if (r.element == Element.POISON) value(r) * POISON_DOT_SHARE / r.effectTurns else 0f
 }
 
 // ─── Combat ─────────────────────────────────────────────────────────────────────
@@ -93,9 +290,31 @@ enum class Timing { MISS, GOOD, PERFECT }
 
 enum class CombatPhase { PLAYER_TURN, ENEMY_TURN, VICTORY, DEFEAT }
 
-data class HitResult(val target: Int, val damage: Int, val crit: Boolean, val killed: Boolean)
-data class BurnTick(val enemy: Int, val damage: Int, val killed: Boolean)
-data class EnemyStrike(val enemy: Int, val damage: Int, val parry: Timing)
+/**
+ * [affinity] : ce que la cible pense de l'élément du sort (NORMAL pour l'épée).
+ * [save] : le jet de sauvegarde contre l'effet, s'il y en a eu un. [enraged] : ce sort l'a
+ * fait enrager.
+ */
+data class HitResult(
+    val target: Int, val damage: Int, val crit: Boolean, val killed: Boolean,
+    val affinity: Affinity = Affinity.NORMAL, val save: SaveRoll? = null, val enraged: Boolean = false,
+)
+/** Dégâts d'un effet qui dure (brûlure, poison) au début du tour ennemi. */
+data class DotTick(val enemy: Int, val damage: Int, val killed: Boolean, val element: Element)
+/** Un ennemi arrêté par un effet ce tour-ci : figé par la glace, ou attaque perdue par la foudre. */
+data class StatusStop(val enemy: Int, val element: Element)
+/** Un jet de sauvegarde lancé pendant le tour ennemi (paralysie). */
+data class EnemySave(val enemy: Int, val save: SaveRoll)
+/**
+ * Le début du tour ennemi : les dégâts des effets, qui est arrêté, les jets de paralysie,
+ * ceux qui enragent, puis qui frappe.
+ */
+data class EnemyTurnStart(
+    val ticks: List<DotTick>, val attackers: List<Int>, val stopped: List<StatusStop>,
+    val saves: List<EnemySave> = emptyList(), val enraged: List<Int> = emptyList(),
+)
+/** [missed] : le jet d'attaque n'a pas atteint la CA du héros. */
+data class EnemyStrike(val enemy: Int, val damage: Int, val parry: Timing, val missed: Boolean = false)
 data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Equipment>)
 
 /**
@@ -104,7 +323,7 @@ data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Eq
  *
  * Déroulé d'un tour :
  *   tour du joueur : [attack], [castRelic] ou [drinkPotion]
- *   tour ennemi    : [startEnemyTurn] (brûlures, liste des attaquants),
+ *   tour ennemi    : [startEnemyTurn] (brûlure, poison, gel, paralysie, attaquants),
  *                    puis [resolveStrike] pour chacun, puis [endEnemyTurn]
  */
 class Combat(
@@ -113,6 +332,10 @@ class Combat(
     val enemies: List<Enemy>,
     ambush: Boolean,
     private val rng: Random = Random,
+    /** Le d20 des jets de sauvegarde (les tests le truquent). */
+    private val d20: () -> Int = { rng.nextInt(1, 21) },
+    /** Le d20 des jets d'attaque des monstres. */
+    private val attackDie: () -> Int = { rng.nextInt(1, 21) },
 ) {
     companion object {
         const val STRIKE_GOOD      = 0.25f
@@ -126,12 +349,13 @@ class Combat(
     var phase = if (ambush) CombatPhase.ENEMY_TURN else CombatPhase.PLAYER_TURN
         private set
 
-    val relicCooldowns = mutableMapOf<Relic, Int>()
+    /** Les recharges vivent sur le héros : elles continuent d'un combat à l'autre. */
+    val relicCooldowns get() = hero.relicCooldowns
     var rewards: CombatRewards? = null
         private set
 
     fun aliveIndices() = enemies.indices.filter { enemies[it].alive }
-    fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && (relicCooldowns[relic] ?: 0) == 0
+    fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0
     fun canDrinkPotion() = phase == CombatPhase.PLAYER_TURN && hero.potions > 0 && hero.hp < hero.maxHp
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
@@ -148,16 +372,69 @@ class Combat(
 
     fun castRelic(relic: Relic, target: Int, timing: Timing): HitResult {
         check(canCast(relic))
-        val raw = rng.nextInt(relic.minDamage, relic.maxDamage + 1) * hero.spellMult
-        val result = hit(target, raw, timing)
         val e = enemies[target]
-        if (e.alive && relic.burnTurns > 0) {
-            e.burnTurns  = relic.burnTurns
-            e.burnDamage = (result.damage * relic.burnShare).roundToInt().coerceAtLeast(1)
-        }
+        val affinity = e.type.affinity(relic.element)
+        val (lo, hi) = hero.relicDamage(relic)
+        val raw = rng.nextInt(lo, hi + 1) * affinity.damageMult
+        val result = hit(target, raw, timing, allowZero = affinity == Affinity.IMMUNE).copy(affinity = affinity)
+        val (save, enraged) = if (e.alive) applyEffect(relic, e, result.damage, affinity, timing) else null to false
         relicCooldowns[relic] = hero.spellCooldown(relic.cooldown)
         afterPlayerAction()
-        return result
+        return result.copy(save = save, enraged = enraged)
+    }
+
+    /**
+     * Le jet de sauvegarde de [e] contre un contrôle. Immunisé ou enragé, il le réussit
+     * d'office. [timing] : le geste du joueur au lancer (voir [SpellSave.GOOD_STRIKE_DC]).
+     */
+    private fun rollSave(e: Enemy, element: Element, timing: Timing): SaveRoll {
+        val dc = hero.spellDc + if (timing == Timing.GOOD) SpellSave.GOOD_STRIKE_DC else 0
+        val affinity = e.type.affinity(element)
+        if (affinity == Affinity.IMMUNE) return SaveRoll(0, 0, dc, saved = true, reason = SaveReason.IMMUNE)
+        if (e.enraged) return SaveRoll(0, 0, dc, saved = true, reason = SaveReason.RAGE)
+        val disadvantage = timing == Timing.PERFECT
+        val roll = if (disadvantage) minOf(d20(), d20()) else d20()
+        val total = roll + SpellSave.monsterProficiency(floor) + affinity.saveBonus
+        return SaveRoll(roll, total, dc, saved = total >= dc, disadvantage = disadvantage)
+    }
+
+    /** Un contrôle a pris : au [Relic.RAGE_AFTER]ᵉ d'affilée, l'ennemi enrage. Vrai s'il enrage. */
+    private fun controlled(e: Enemy): Boolean {
+        if (++e.controlStreak < Relic.RAGE_AFTER) return false
+        e.controlStreak = 0
+        e.rageTurns = Relic.RAGE_TURNS
+        e.frozenTurns = 0
+        e.paralyzedTurns = 0
+        return true
+    }
+
+    /** Pose l'effet de l'élément. Renvoie le jet de sauvegarde (s'il y en a un) et la rage. */
+    private fun applyEffect(relic: Relic, e: Enemy, damage: Int, affinity: Affinity, timing: Timing): Pair<SaveRoll?, Boolean> {
+        if (affinity == Affinity.IMMUNE) return null to false
+        when (relic.element) {
+            Element.FIRE -> {
+                e.burnTurns  = relic.effectTurns
+                e.burnDamage = (damage * Relic.BURN_SHARE).roundToInt().coerceAtLeast(1)
+            }
+            Element.ICE -> {
+                val save = rollSave(e, Element.ICE, timing)
+                if (save.saved) return save to false
+                e.frozenTurns = maxOf(e.frozenTurns, relic.effectTurns)
+                return save to controlled(e)
+            }
+            // Pas de jet au lancer : chaque attaque qui tombe pendant la paralysie en demandera un
+            Element.LIGHTNING -> if (!e.enraged) {
+                e.paralyzedTurns = maxOf(e.paralyzedTurns, relic.effectTurns)
+                e.paralysisTiming = timing
+            }
+            Element.POISON -> {
+                e.poisonDoses = (e.poisonDoses + 1).coerceAtMost(Relic.POISON_MAX_DOSES)
+                e.poisonTurns = relic.effectTurns
+                val dose = (hero.poisonDose(relic) * affinity.damageMult).roundToInt().coerceAtLeast(1)
+                e.poisonDoseDamage = maxOf(e.poisonDoseDamage, dose)
+            }
+        }
+        return null to false
     }
 
     fun drinkPotion(): Int {
@@ -169,12 +446,12 @@ class Combat(
         return hero.hp - before
     }
 
-    private fun hit(target: Int, raw: Float, timing: Timing): HitResult {
+    private fun hit(target: Int, raw: Float, timing: Timing, allowZero: Boolean = false): HitResult {
         val e = enemies[target]
         require(e.alive)
         val bonus = when (timing) { Timing.MISS -> 0f; Timing.GOOD -> STRIKE_GOOD; Timing.PERFECT -> STRIKE_PERFECT }
         val crit  = rng.nextFloat() < (hero.critChance + bonus).coerceAtMost(0.95f)
-        val dmg   = (if (crit) raw * hero.critMult else raw).roundToInt().coerceAtLeast(1)
+        val dmg   = (if (crit) raw * hero.critMult else raw).roundToInt().coerceAtLeast(if (allowZero) 0 else 1)
         e.hp = (e.hp - dmg).coerceAtLeast(0)
         return HitResult(target, dmg, crit, !e.alive)
     }
@@ -185,34 +462,76 @@ class Combat(
 
     // ── Tour des ennemis ────────────────────────────────────────────────────────
 
-    /** Applique les brûlures et renvoie la liste des ennemis qui frappent ce tour. */
-    fun startEnemyTurn(): Pair<List<BurnTick>, List<Int>> {
+    /**
+     * Début du tour ennemi : les effets qui durent rongent (brûlure, poison), puis chaque
+     * ennemi avance son compteur. Un ennemi **figé** ne fait rien, pas même avancer son
+     * compteur : son attaque est repoussée. Un ennemi **paralysé** avance normalement, mais
+     * l'attaque qui tombe demande un jet de sauvegarde : raté, elle est perdue. Un ennemi
+     * **enragé** avance de 2.
+     */
+    fun startEnemyTurn(): EnemyTurnStart {
         check(phase == CombatPhase.ENEMY_TURN)
-        val burns = mutableListOf<BurnTick>()
+        val ticks = mutableListOf<DotTick>()
         for (i in aliveIndices()) {
             val e = enemies[i]
             if (e.burnTurns > 0) {
                 e.hp = (e.hp - e.burnDamage).coerceAtLeast(0)
                 e.burnTurns--
-                burns += BurnTick(i, e.burnDamage, !e.alive)
+                ticks += DotTick(i, e.burnDamage, !e.alive, Element.FIRE)
+            }
+            if (e.alive && e.poisonTurns > 0) {
+                val dmg = e.poisonDoses * e.poisonDoseDamage
+                e.hp = (e.hp - dmg).coerceAtLeast(0)
+                if (--e.poisonTurns == 0) { e.poisonDoses = 0; e.poisonDoseDamage = 0 }
+                ticks += DotTick(i, dmg, !e.alive, Element.POISON)
             }
         }
-        if (aliveIndices().isEmpty()) { phase = win(); return burns to emptyList() }
+        if (aliveIndices().isEmpty()) { phase = win(); return EnemyTurnStart(ticks, emptyList(), emptyList()) }
 
-        val attackers = aliveIndices().filter { i ->
+        val attackers = mutableListOf<Int>()
+        val stopped = mutableListOf<StatusStop>()
+        val saves = mutableListOf<EnemySave>()
+        val enragedNow = mutableListOf<Int>()
+        for (i in aliveIndices()) {
             val e = enemies[i]
-            e.countdown--
-            if (e.countdown <= 0) { e.countdown = e.cadence; true } else false
+            val wasEnraged = e.enraged
+            if (e.enraged) e.rageTurns--
+            if (e.frozenTurns > 0) {
+                e.frozenTurns--
+                stopped += StatusStop(i, Element.ICE)
+                continue
+            }
+            e.countdown -= if (wasEnraged) 2 else 1
+            val due = e.countdown <= 0
+            if (due) e.countdown = e.cadence
+            if (e.paralyzedTurns > 0) {
+                e.paralyzedTurns--
+                if (due) {
+                    val save = rollSave(e, Element.LIGHTNING, e.paralysisTiming)
+                    saves += EnemySave(i, save)
+                    if (!save.saved) {
+                        stopped += StatusStop(i, Element.LIGHTNING)
+                        if (controlled(e)) enragedNow += i
+                        continue
+                    }
+                }
+            }
+            if (due) attackers += i
         }
-        return burns to attackers
+        return EnemyTurnStart(ticks, attackers, stopped, saves, enragedNow)
     }
 
     fun resolveStrike(enemyIndex: Int, parry: Timing): EnemyStrike {
         check(phase == CombatPhase.ENEMY_TURN)
         val e = enemies[enemyIndex]
+        // Il a pu frapper : la série de contrôles qui mène à la rage repart de zéro
+        e.controlStreak = 0
+        val roll = if (e.enraged) minOf(attackDie(), attackDie()) else attackDie()
+        val hits = roll == 20 || (roll != 1 && roll + ArmorClass.monsterAttack(floor) >= hero.armorClass)
+        if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true)
         val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val spread = 0.85f + rng.nextFloat() * 0.30f
-        val dmg = hero.mitigate(e.damage * spread * parryMult, floor).roundToInt().coerceAtLeast(1)
+        val dmg = hero.mitigate(e.damage * spread * parryMult * ArmorClass.DAMAGE_COMPENSATION, floor).roundToInt().coerceAtLeast(1)
         hero.hp = (hero.hp - dmg).coerceAtLeast(0)
         if (hero.hp == 0) phase = CombatPhase.DEFEAT
         return EnemyStrike(enemyIndex, dmg, parry)
@@ -220,7 +539,7 @@ class Combat(
 
     fun endEnemyTurn() {
         if (phase != CombatPhase.ENEMY_TURN) return
-        for (r in relicCooldowns.keys) relicCooldowns[r] = (relicCooldowns[r]!! - 1).coerceAtLeast(0)
+        hero.tickRelics()
         phase = CombatPhase.PLAYER_TURN
     }
 
