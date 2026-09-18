@@ -53,7 +53,7 @@ class CombatView @JvmOverloads constructor(
     }
 
     private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_HIT, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
-    private sealed class Action { object Attack : Action(); data class Cast(val relic: Relic) : Action() }
+    private sealed class Action { object Attack : Action(); object Deadly : Action(); data class Cast(val relic: Relic) : Action() }
 
     private var stage = Stage.INTRO
     private var stageStart = 0L
@@ -181,8 +181,10 @@ class CombatView @JvmOverloads constructor(
         }
     }
 
-    private fun goodWindow() = PARRY_GOOD_MS + (combat?.hero?.parryBonusMs ?: 0)
-    private fun perfectWindow() = PARRY_PERFECT_MS + (combat?.hero?.parryBonusMs ?: 0) / 2
+    /** En garde (guerrier), les deux fenêtres de parade doublent. */
+    private fun guardMult() = if (combat?.guarding == true) 2 else 1
+    private fun goodWindow() = (PARRY_GOOD_MS + (combat?.hero?.parryBonusMs ?: 0)) * guardMult()
+    private fun perfectWindow() = (PARRY_PERFECT_MS + (combat?.hero?.parryBonusMs ?: 0) / 2) * guardMult()
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
 
@@ -196,6 +198,7 @@ class CombatView @JvmOverloads constructor(
         if (!c.enemies[target].alive) target = c.aliveIndices().first()
         val result = when (val a = pendingAction) {
             is Action.Cast -> c.castRelic(a.relic, target, timing)
+            Action.Deadly  -> c.deadlyStrike(target, timing)
             else           -> c.attack(target, timing)
         }
         pendingAction = null
@@ -218,6 +221,17 @@ class CombatView @JvmOverloads constructor(
         if (result.enraged) floatText(context.getString(R.string.roguelike_combat_enraged), r.centerX(), r.bottom, 0xFFFF5252.toInt(), true)
         onStrike?.invoke(result.crit)
         if (result.killed) onEnemyDied?.invoke()
+        enter(Stage.PLAYER_HIT)
+    }
+
+    /** Garde et Image miroir : pas de geste, le tour part tout de suite. */
+    private fun useInstantSpecial(c: Combat) {
+        when (c.hero.archetype) {
+            Archetype.WARRIOR -> { c.guard(); showBanner(context.getString(R.string.roguelike_combat_guard), 0xFFBCAAA4.toInt()) }
+            Archetype.MAGE    -> { c.mirrorImage(); showBanner(context.getString(R.string.roguelike_combat_mirror_cast), 0xFFB39DDB.toInt()) }
+            else -> return
+        }
+        lastHitTarget = -1
         enter(Stage.PLAYER_HIT)
     }
 
@@ -315,6 +329,24 @@ class CombatView @JvmOverloads constructor(
             enter(Stage.ENEMY_IMPACT)
             return
         }
+        if (strike.imageHit) {
+            floatText(context.getString(R.string.roguelike_combat_image_hit), heroRect.centerX(), heroRect.top, 0xFFB39DDB.toInt(), true)
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.blocked || strike.dodged) {
+            showBanner(context.getString(if (strike.blocked) R.string.roguelike_combat_blocked else R.string.roguelike_combat_dodged), 0xFFFFD54F.toInt())
+            onParry?.invoke(true)
+            strike.counter?.let { hit ->
+                val r = enemyRects[hit.target]
+                floatText(context.getString(R.string.roguelike_combat_counter, hit.damage), r.centerX(), r.top, Color.WHITE, true)
+                if (hit.killed) onEnemyDied?.invoke()
+            }
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.recovered)
+            floatText(context.getString(R.string.roguelike_combat_counterspell), heroRect.centerX(), heroRect.bottom, 0xFFB39DDB.toInt(), false)
         when (timing) {
             Timing.PERFECT -> { showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt()); onParry?.invoke(true) }
             Timing.GOOD    -> { showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt()); onParry?.invoke(false) }
@@ -450,6 +482,18 @@ class CombatView @JvmOverloads constructor(
         val ratio = hero.hp.toFloat() / hero.maxHp
         pFill.color = when { ratio > 0.5f -> 0xFF43A047.toInt(); ratio > 0.25f -> 0xFFFB8C00.toInt(); else -> 0xFFE53935.toInt() }
         canvas.drawRect(bar.left, bar.top, bar.left + bar.width() * ratio, bar.bottom, pFill)
+        // Garde et doubles sous la barre de vie
+        pText.textSize = 12f * sp
+        var y = bar.bottom + 16f * sp
+        if (c.guarding) {
+            pText.color = 0xFFBCAAA4.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_combat_guarding), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.mirrorImages > 0) {
+            pText.color = 0xFFB39DDB.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_combat_images, c.mirrorImages), left, y, pText)
+        }
         pText.textAlign = Paint.Align.CENTER
     }
 
@@ -467,8 +511,16 @@ class CombatView @JvmOverloads constructor(
                 if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else null,
                 active && c.canCast(relic), relic.color)
         }
-        drawButton(canvas, specialBtn, context.getString(R.string.roguelike_combat_special),
-            context.getString(R.string.roguelike_combat_special_locked), false, 0)
+        val archetype = c.hero.archetype
+        if (archetype == null) {
+            drawButton(canvas, specialBtn, context.getString(R.string.roguelike_combat_special),
+                context.getString(R.string.roguelike_combat_special_locked), false, 0)
+        } else {
+            val cd = c.hero.specialCooldown
+            drawButton(canvas, specialBtn, context.getString(archetype.specialRes),
+                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else context.getString(archetype.labelRes),
+                active && c.canUseSpecial(), archetype.color)
+        }
         drawButton(canvas, potionBtn, context.getString(R.string.roguelike_combat_potion),
             context.getString(R.string.roguelike_combat_potion_count, c.hero.potions),
             active && c.canDrinkPotion(), 0xFF2E6B3A.toInt())
@@ -645,6 +697,8 @@ class CombatView @JvmOverloads constructor(
             tappedEnemy >= 0 && c.enemies[tappedEnemy].alive -> { target = tappedEnemy; invalidate() }
             attackBtn.contains(x, y) -> choose(Action.Attack)
             potionBtn.contains(x, y) && c.canDrinkPotion() -> drinkPotion()
+            specialBtn.contains(x, y) && c.canUseSpecial() ->
+                if (c.hero.archetype == Archetype.ROGUE) choose(Action.Deadly) else useInstantSpecial(c)
             else -> {
                 val slot = relicBtns.indexOfFirst { it.contains(x, y) }
                 val relic = if (slot >= 0) c.hero.relicSlots[slot] else null

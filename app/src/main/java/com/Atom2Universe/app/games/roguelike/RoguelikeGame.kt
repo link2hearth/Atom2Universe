@@ -140,6 +140,7 @@ class RoguelikeGame(
                 for (i in 0 until bagJson.length()) bag += SaveManager.equipFromJson(bagJson.getJSONObject(i))
                 nextLootId = j.getLong("nextLootId")
                 hp = j.getInt("hp").coerceIn(1, maxHp)
+                specialCooldown = j.optInt("specialCooldown", 0)
                 val relicsJson = j.optJSONArray("relics")
                 if (relicsJson == null) {
                     // Sauvegarde d'avant les reliques : on y avait toujours la Boule de feu
@@ -361,6 +362,7 @@ class RoguelikeGame(
         deathReport = DeathReport(floor, lost)
         hero.healFull()
         hero.relicCooldowns.clear()
+        hero.specialCooldown = 0
         changeFloor(CHECKPOINT)
         log.clear()
         addLog(R.string.roguelike_log_player_death)
@@ -557,6 +559,7 @@ class RoguelikeGame(
         })
         put("bag", org.json.JSONArray().also { arr -> hero.bag.forEach { arr.put(SaveManager.equipToJson(it)) } })
         put("nextLootId", hero.nextLootId)
+        put("specialCooldown", hero.specialCooldown)
         put("relics", org.json.JSONArray().also { arr -> hero.relics.forEach { arr.put(it.name) } })
         put("relicSlots", org.json.JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
         put("relicCooldowns", JSONObject().also { o -> hero.relicCooldowns.forEach { (r, cd) -> o.put(r.name, cd) } })

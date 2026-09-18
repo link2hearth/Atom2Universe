@@ -237,8 +237,18 @@ class RoguelikeSimulationTest {
                         e.type.affinity(it.element) != Affinity.IMMUNE &&
                         !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING))
                 }
+                // Le « Spécial » : le voleur achève une cible exposée, le guerrier se met en garde
+                // devant un gros coup, le mage lève ses doubles dès qu'il n'en a plus
+                val exposed = alive.filter { c.isExposed(c.enemies[it]) }.minByOrNull { c.enemies[it].hp }
+                val special = if (!c.canUseSpecial()) null else when (c.hero.archetype) {
+                    Archetype.ROGUE   -> exposed?.let { { c.deadlyStrike(it, strike(skill, rng)); Unit } }
+                    Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.2f) ({ c.guard() }) else null
+                    Archetype.MAGE    -> if (c.mirrorImages == 0) ({ c.mirrorImage() }) else null
+                    null -> null
+                }
                 when {
                     c.canDrinkPotion() && c.hero.hp <= incoming * 1.3f + c.hero.maxHp * 0.1f -> { c.drinkPotion(); fs.potionsUsed++ }
+                    special != null -> special()
                     ready != null -> c.castRelic(ready, aimAt(ready), strike(skill, rng))
                     else -> c.attack(target, strike(skill, rng))
                 }
@@ -246,7 +256,7 @@ class RoguelikeSimulationTest {
                 val (_, attackers) = c.startEnemyTurn()
                 for (a in attackers) {
                     if (c.phase != CombatPhase.ENEMY_TURN) break
-                    c.resolveStrike(a, parry(skill, rng))
+                    c.resolveStrike(a, parry(skill, rng, guarding = c.guarding))
                 }
                 c.endEnemyTurn()
             }
@@ -259,9 +269,13 @@ class RoguelikeSimulationTest {
         return when { x < s.strikePerfect -> Timing.PERFECT; x < s.strikePerfect + s.strikeGood -> Timing.GOOD; else -> Timing.MISS }
     }
 
-    private fun parry(s: Skill, rng: Random): Timing {
+    /** En garde, la fenêtre de parade double : on compte les chances de réussite ×1,6 (bornées). */
+    private fun parry(s: Skill, rng: Random, guarding: Boolean = false): Timing {
+        val k = if (guarding) 1.6f else 1f
+        val perfect = (s.parryPerfect * k).coerceAtMost(0.9f)
+        val good = (s.parryGood * k).coerceAtMost(0.95f - perfect)
         val x = rng.nextFloat()
-        return when { x < s.parryPerfect -> Timing.PERFECT; x < s.parryPerfect + s.parryGood -> Timing.GOOD; else -> Timing.MISS }
+        return when { x < perfect -> Timing.PERFECT; x < perfect + good -> Timing.GOOD; else -> Timing.MISS }
     }
 
     // ── Carte : ce qu'un joueur raisonnable ferait avec ce qu'il voit ───────────

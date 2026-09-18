@@ -656,9 +656,34 @@ multiclasse de D&D).
 
 ### La suite
 
-- **B.** Chaque relique suit sa caractéristique (Venin → DEX).
-- **C.** Le bouton « Spécial » : une capacité par archétype, liée aux gestes (blocage,
-  contre-attaque, image miroir), donnée par l'équipement.
+- **B.** Chaque relique suit sa caractéristique — **faite**. Chaque relique porte sa
+  caractéristique (feu, glace, foudre : INT ; Venin : DEX). Elle fait ses dégâts (+5 % par
+  point au-dessus de 10) et son DD (11 + son modificateur + maîtrise). Les bonus « dégâts des
+  sorts » des objets comptent pour toutes. La description d'une relique affiche sa
+  caractéristique. *Défaut connu* : la note de la DEX ne voit toujours que le critique et la
+  parade, ni la CA ni le Venin — à revoir quand les archétypes auront leurs sets.
+- **C.** Le bouton « Spécial » et la parade parfaite de chaque archétype — **faite**.
+  - **L'archétype** vient de l'armure, en attendant les sets : 2 pièces du même poids sur
+    3 (casque, armure, bottes). Lourd = guerrier, léger = voleur, tissu = mage. Sans
+    majorité, le « Spécial » reste verrouillé. L'inventaire affiche l'archétype.
+  - **Parade parfaite** : le guerrier **bloque** (aucun dégât) s'il porte un bouclier ; le
+    voleur **esquive** (aucun dégât) et **riposte** d'un coup d'arme gratuit ; le mage
+    fait un **contresort** : ses reliques gagnent un tour de recharge (pas le Spécial).
+  - **Le bouton « Spécial »**, recharge 5 tours (la SAG la raccourcit), gardée d'un combat à
+    l'autre comme les reliques, et que le repos recharge :
+    - Guerrier, **Garde** : il passe son tour, ses fenêtres de parade doublent jusqu'à son
+      prochain tour ;
+    - Voleur, **Coup mortel** : un coup d'arme (avec le swipe) ; sur une cible **exposée**
+      (empoisonnée, figée, paralysée ou sous 30 % de ses PV), critique garanti et
+      multiplicateur +1 — l'attaque sournoise de D&D, et de quoi achever un petit monstre ;
+    - Mage, **Image miroir** : trois doubles. Avant chaque jet d'attaque, un d20 dit si le
+      coup vise un double (6+ avec trois, 8+ avec deux, 11+ avec le dernier), comme dans
+      D&D. Ils durent jusqu'à la fin du combat.
+  - Les gestes restent le swipe et la touche ; des gestes propres à chaque archétype, à la
+    Undertale, viendront plus tard.
+  - *Mesuré* (partie entière jusqu'à l'étage 100, médianes novice / correct / expert) :
+    31 / 51 / 100 avant, **31 / 57 / 100** après ; les morts baissent d'environ 10 à 15 %
+    pour le novice et le correct. Un coup de pouce, pas un bouleversement.
 - **D.** Les sets par zone et par archétype, qui tombent tous partout.
 - **E.** Les affixes de sorts, puis ceux propres à une relique (voir plus haut).
 

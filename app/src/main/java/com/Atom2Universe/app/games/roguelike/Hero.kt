@@ -1,7 +1,29 @@
 package com.Atom2Universe.app.games.roguelike
 
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
 import kotlin.math.roundToInt
 import kotlin.random.Random
+
+/**
+ * L'archétype, façon Diablo : **le stuff fait la classe**. Il vient de l'armure portée —
+ * [Hero.ARCHETYPE_PIECES] pièces du même poids sur trois (casque, armure, bottes) — en
+ * attendant les sets. Il donne un bonus sur la parade parfaite et le bouton « Spécial »
+ * du combat (voir [Combat]) :
+ *  - Guerrier (lourd) : **blocage** au bouclier, et **Garde** (fenêtre de parade doublée) ;
+ *  - Voleur (léger) : **esquive + riposte**, et **Coup mortel** sur une cible exposée ;
+ *  - Mage (tissu) : **contresort** (une recharge de relique gagnée), et **Image miroir**.
+ */
+enum class Archetype(
+    @StringRes override val labelRes: Int,
+    @StringRes val specialRes: Int,
+    val weight: ArmorWeight,
+    val color: Int,
+) : Labeled {
+    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt()),
+    ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt()),
+    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt()),
+}
 
 /**
  * Le héros : ce qui survit d'une partie à l'autre (équipement, sac, or, potions) et ses
@@ -40,6 +62,10 @@ class Hero {
          * recharger ses sorts — et il reste risqué.
          */
         const val RELIC_WALK_STEPS = 8
+        /** Pièces d'armure du même poids qu'il faut porter pour avoir un archétype. */
+        const val ARCHETYPE_PIECES = 2
+        /** Recharge du bouton « Spécial », gardée d'un combat à l'autre comme les reliques. */
+        const val SPECIAL_COOLDOWN = 5
 
         /** Un héros neuf : une épée de bois toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
@@ -65,6 +91,16 @@ class Hero {
     /** Tours de recharge restants, gardés d'un combat à l'autre. Absent = prête. */
     val relicCooldowns = mutableMapOf<Relic, Int>()
     private var walkSteps = 0
+    /** Tours avant que le « Spécial » soit prêt. */
+    var specialCooldown = 0
+
+    /** L'archétype que donne l'armure portée, ou null sans majorité. */
+    val archetype: Archetype? get() {
+        val weights = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it]?.weight }
+        return Archetype.entries.firstOrNull { a -> weights.count { it == a.weight } >= ARCHETYPE_PIECES }
+    }
+
+    val hasShield get() = equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD
 
     private fun equipSum(type: StatType): Float = equipped.values.sumOf { it.sum(type).toDouble() }.toFloat()
 
@@ -85,32 +121,37 @@ class Hero {
     val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult).roundToInt()
     private val strMult get() = 1f + 0.04f * bonus(StatType.STR)
 
-    /** Sorts : INT ajoute 5 % par point, plus les bonus « dégâts des sorts » des objets. */
-    val spellMult get() = (1f + 0.05f * bonus(StatType.INT)) * (1f + equipSum(StatType.SPELL_DMG))
+    /**
+     * Le multiplicateur d'une relique : **sa** caractéristique ([Relic.attribute] — INT
+     * pour le mage, DEX pour le Venin du voleur) ajoute 5 % par point, puis les bonus
+     * « dégâts des sorts » des objets.
+     */
+    fun relicMult(relic: Relic) = (1f + 0.05f * bonus(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
 
     /**
-     * La puissance d'un sort : l'épée de référence de la puissance de l'arme portée,
-     * multipliée par INT et les bonus des objets. Un coefficient de relique de 1 frappe
-     * donc comme une épée normale : le sort suit l'équipement sans table à part.
+     * La puissance d'une relique : l'épée de référence de la puissance de l'arme portée,
+     * multipliée par [relicMult]. Un coefficient de relique de 1 frappe donc comme une épée
+     * normale : le sort suit l'équipement sans table à part.
      */
-    val spellPower get() = AffixBudget.refWeaponDamage(equipped[EquipSlot.WEAPON]?.power ?: 1) * spellMult
+    fun relicPower(relic: Relic) = AffixBudget.refWeaponDamage(equipped[EquipSlot.WEAPON]?.power ?: 1) * relicMult(relic)
 
     /**
-     * Le DD des sorts de contrôle, façon D&D : 11 + modificateur d'INT ((INT − 10) / 2) +
-     * maîtrise (qui suit la puissance de l'arme portée). Voir [SpellSave].
+     * Le DD d'une relique, façon D&D : 11 + modificateur de **sa** caractéristique
+     * ((carac − 10) / 2) + maîtrise (qui suit la puissance de l'arme portée). Voir [SpellSave].
      */
-    val spellDc get() = SpellSave.DC_BASE + Math.floorDiv(attribute(StatType.INT) - BASE_ATTRIBUTE, 2) +
+    fun spellDc(relic: Relic) = SpellSave.DC_BASE + Math.floorDiv(attribute(relic.attribute) - BASE_ATTRIBUTE, 2) +
         SpellSave.proficiency(equipped[EquipSlot.WEAPON]?.power ?: 1)
 
     /** Fourchette de dégâts d'une relique, avant critique. */
     fun relicDamage(relic: Relic): Pair<Int, Int> {
-        val lo = (relic.minCoef * spellPower).roundToInt().coerceAtLeast(1)
-        val hi = (relic.maxCoef * spellPower).roundToInt().coerceAtLeast(lo)
+        val power = relicPower(relic)
+        val lo = (relic.minCoef * power).roundToInt().coerceAtLeast(1)
+        val hi = (relic.maxCoef * power).roundToInt().coerceAtLeast(lo)
         return lo to hi
     }
 
     /** Ce qu'une dose de poison de cette relique ronge par tour. */
-    fun poisonDose(relic: Relic) = (relic.doseCoef * spellPower).roundToInt().coerceAtLeast(1)
+    fun poisonDose(relic: Relic) = (relic.doseCoef * relicPower(relic)).roundToInt().coerceAtLeast(1)
 
     /** Chance de critique : 5 % + 1 % par point de DEX + bonus des objets. */
     val critChance get() = (0.05f + 0.01f * bonus(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)).coerceIn(0f, 0.6f)
@@ -167,8 +208,12 @@ class Hero {
 
     fun relicCooldown(relic: Relic) = relicCooldowns[relic] ?: 0
 
-    /** Toutes les recharges avancent de [turns] tours. */
-    fun tickRelics(turns: Int = 1) {
+    /**
+     * Toutes les recharges avancent de [turns] tours, « Spécial » compris sauf si
+     * [includeSpecial] est faux (le contresort du mage ne recharge que les reliques).
+     */
+    fun tickRelics(turns: Int = 1, includeSpecial: Boolean = true) {
+        if (includeSpecial) specialCooldown = (specialCooldown - turns).coerceAtLeast(0)
         val it = relicCooldowns.entries.iterator()
         while (it.hasNext()) {
             val e = it.next()
@@ -182,7 +227,8 @@ class Hero {
         if (++walkSteps >= RELIC_WALK_STEPS) { walkSteps = 0; tickRelics() }
     }
 
-    val relicsRecharging get() = relicSlots.any { it != null && relicCooldown(it) > 0 }
+    /** Une relique portée ou le « Spécial » se recharge : le repos a une utilité. */
+    val relicsRecharging get() = specialCooldown > 0 || relicSlots.any { it != null && relicCooldown(it) > 0 }
 
     enum class RelicToggle { EQUIPPED, REMOVED, SLOTS_FULL }
 

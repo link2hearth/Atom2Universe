@@ -51,7 +51,7 @@ enum class MonsterType(
 /**
  * Les jets de sauvegarde, façon D&D. Contre un sort de contrôle, le monstre lance
  * **d20 + sa maîtrise + son affinité** ; s'il n'atteint pas le **DD** du héros
- * (voir [Hero.spellDc]), l'effet prend.
+ * de la relique (voir [Hero.spellDc]), l'effet prend.
  *
  * La maîtrise grandit avec la puissance : celle du héros suit son arme, celle du monstre
  * l'étage (la puissance d'arme qu'on y trouve). Avec l'équipement de l'étage et 10 d'INT,
@@ -135,6 +135,8 @@ class Enemy(
     var paralyzedTurns = 0
     /** Le geste du lancer de la paralysie : il pèse sur tous ses jets suivants. */
     var paralysisTiming = Timing.MISS
+    /** Le DD de la relique qui l'a paralysé, figé au lancer. */
+    var paralysisDc = 0
     /** Contrôles réussis depuis sa dernière attaque : à [Relic.RAGE_AFTER], il enrage. */
     var controlStreak = 0
     /** Enragé : incontrôlable, frappe deux fois plus vite, mais attaque avec désavantage. */
@@ -205,15 +207,17 @@ enum class Relic(
     @StringRes override val labelRes: Int,
     @StringRes val descRes: Int,
     val element: Element,
+    /** La caractéristique qui fait ses dégâts et son DD : c'est elle qui dit à quel archétype elle va. */
+    val attribute: StatType,
     val cooldown: Int,
     val effectTurns: Int,
     val color: Int,
     val iconRow: Int, val iconCol: Int,
 ) : Labeled {
-    FIREBALL (R.string.roguelike_relic_fireball,  R.string.roguelike_relic_fireball_desc,  Element.FIRE,      3, 2, 0xFFB5451B.toInt(), 113, 6),
-    ICE_SHARD(R.string.roguelike_relic_ice_shard, R.string.roguelike_relic_ice_shard_desc, Element.ICE,       3, 1, 0xFF2F7FB5.toInt(), 113, 8),
-    LIGHTNING(R.string.roguelike_relic_lightning, R.string.roguelike_relic_lightning_desc, Element.LIGHTNING, 5, 3, 0xFF9C7A12.toInt(), 132, 5),
-    VENOM    (R.string.roguelike_relic_venom,     R.string.roguelike_relic_venom_desc,     Element.POISON,    3, 4, 0xFF3E8E3A.toInt(), 133, 3);
+    FIREBALL (R.string.roguelike_relic_fireball,  R.string.roguelike_relic_fireball_desc,  Element.FIRE,      StatType.INT, 3, 2, 0xFFB5451B.toInt(), 113, 6),
+    ICE_SHARD(R.string.roguelike_relic_ice_shard, R.string.roguelike_relic_ice_shard_desc, Element.ICE,       StatType.INT, 3, 1, 0xFF2F7FB5.toInt(), 113, 8),
+    LIGHTNING(R.string.roguelike_relic_lightning, R.string.roguelike_relic_lightning_desc, Element.LIGHTNING, StatType.INT, 5, 3, 0xFF9C7A12.toInt(), 132, 5),
+    VENOM    (R.string.roguelike_relic_venom,     R.string.roguelike_relic_venom_desc,     Element.POISON,    StatType.DEX, 3, 4, 0xFF3E8E3A.toInt(), 133, 3);
 
     /** Dégâts directs, en coups d'épée de référence (voir [RelicBudget]). */
     val minCoef get() = RelicBudget.hitCoef(this) * RelicBudget.SPREAD_MIN
@@ -313,8 +317,17 @@ data class EnemyTurnStart(
     val ticks: List<DotTick>, val attackers: List<Int>, val stopped: List<StatusStop>,
     val saves: List<EnemySave> = emptyList(), val enraged: List<Int> = emptyList(),
 )
-/** [missed] : le jet d'attaque n'a pas atteint la CA du héros. */
-data class EnemyStrike(val enemy: Int, val damage: Int, val parry: Timing, val missed: Boolean = false)
+/**
+ * [missed] : le jet d'attaque n'a pas atteint la CA du héros. [imageHit] : il a frappé un
+ * double de l'Image miroir. [blocked] (guerrier, bouclier), [dodged] + [counter] (voleur),
+ * [recovered] (mage) : ce que la parade parfaite a donné selon l'archétype.
+ */
+data class EnemyStrike(
+    val enemy: Int, val damage: Int, val parry: Timing,
+    val missed: Boolean = false, val imageHit: Boolean = false,
+    val blocked: Boolean = false, val dodged: Boolean = false, val counter: HitResult? = null,
+    val recovered: Boolean = false,
+)
 data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Equipment>)
 
 /**
@@ -343,7 +356,20 @@ class Combat(
         const val PARRY_GOOD_MULT  = 0.5f
         const val PARRY_PERFECT_MULT = 0.2f
         const val POTION_DROP      = 0.08f
+
+        /** Coup mortel : une cible sous ce seuil de PV est exposée. */
+        const val DEADLY_HP_THRESHOLD = 0.30f
+        /** Coup mortel sur une cible exposée : critique garanti, et ce bonus au multiplicateur. */
+        const val DEADLY_CRIT_BONUS = 1f
+        const val MIRROR_IMAGES = 3
     }
+
+    /** Guerrier : en garde jusqu'à son prochain tour (l'écran double la fenêtre de parade). */
+    var guarding = false
+        private set
+    /** Mage : doubles de l'Image miroir encore debout. */
+    var mirrorImages = 0
+        private set
 
     /** Pris en embuscade : les monstres frappent avant qu'on puisse agir. */
     var phase = if (ambush) CombatPhase.ENEMY_TURN else CombatPhase.PLAYER_TURN
@@ -357,13 +383,19 @@ class Combat(
     fun aliveIndices() = enemies.indices.filter { enemies[it].alive }
     fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0
     fun canDrinkPotion() = phase == CombatPhase.PLAYER_TURN && hero.potions > 0 && hero.hp < hero.maxHp
+    fun canUseSpecial() = phase == CombatPhase.PLAYER_TURN && hero.archetype != null && hero.specialCooldown == 0
+
+    /** Empoisonnée, figée, paralysée ou bien entamée : le voleur y plante son coup mortel. */
+    fun isExposed(e: Enemy) = e.alive && (e.poisonTurns > 0 || e.frozenTurns > 0 || e.paralyzedTurns > 0 ||
+        e.hp < e.maxHp * DEADLY_HP_THRESHOLD)
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
 
+    private fun weaponRoll() = rng.nextInt(hero.weaponMin, hero.weaponMax.coerceAtLeast(hero.weaponMin) + 1).toFloat()
+
     fun attack(target: Int, timing: Timing): HitResult {
         check(phase == CombatPhase.PLAYER_TURN)
-        val raw = rng.nextInt(hero.weaponMin, hero.weaponMax.coerceAtLeast(hero.weaponMin) + 1).toFloat()
-        val result = hit(target, raw, timing)
+        val result = hit(target, weaponRoll(), timing)
         // Vol de vie : seulement à l'arme
         if (hero.lifeSteal > 0f) hero.heal((result.damage * hero.lifeSteal).roundToInt())
         afterPlayerAction()
@@ -387,8 +419,8 @@ class Combat(
      * Le jet de sauvegarde de [e] contre un contrôle. Immunisé ou enragé, il le réussit
      * d'office. [timing] : le geste du joueur au lancer (voir [SpellSave.GOOD_STRIKE_DC]).
      */
-    private fun rollSave(e: Enemy, element: Element, timing: Timing): SaveRoll {
-        val dc = hero.spellDc + if (timing == Timing.GOOD) SpellSave.GOOD_STRIKE_DC else 0
+    private fun rollSave(e: Enemy, element: Element, baseDc: Int, timing: Timing): SaveRoll {
+        val dc = baseDc + if (timing == Timing.GOOD) SpellSave.GOOD_STRIKE_DC else 0
         val affinity = e.type.affinity(element)
         if (affinity == Affinity.IMMUNE) return SaveRoll(0, 0, dc, saved = true, reason = SaveReason.IMMUNE)
         if (e.enraged) return SaveRoll(0, 0, dc, saved = true, reason = SaveReason.RAGE)
@@ -417,7 +449,7 @@ class Combat(
                 e.burnDamage = (damage * Relic.BURN_SHARE).roundToInt().coerceAtLeast(1)
             }
             Element.ICE -> {
-                val save = rollSave(e, Element.ICE, timing)
+                val save = rollSave(e, Element.ICE, hero.spellDc(relic), timing)
                 if (save.saved) return save to false
                 e.frozenTurns = maxOf(e.frozenTurns, relic.effectTurns)
                 return save to controlled(e)
@@ -426,6 +458,7 @@ class Combat(
             Element.LIGHTNING -> if (!e.enraged) {
                 e.paralyzedTurns = maxOf(e.paralyzedTurns, relic.effectTurns)
                 e.paralysisTiming = timing
+                e.paralysisDc = hero.spellDc(relic)
             }
             Element.POISON -> {
                 e.poisonDoses = (e.poisonDoses + 1).coerceAtMost(Relic.POISON_MAX_DOSES)
@@ -437,6 +470,41 @@ class Combat(
         return null to false
     }
 
+    // ── Le « Spécial » de l'archétype ───────────────────────────────────────────
+
+    private fun spendSpecial() { hero.specialCooldown = hero.spellCooldown(Hero.SPECIAL_COOLDOWN) }
+
+    /** Guerrier : on passe son tour en garde. */
+    fun guard() {
+        check(canUseSpecial() && hero.archetype == Archetype.WARRIOR)
+        guarding = true
+        spendSpecial()
+        afterPlayerAction()
+    }
+
+    /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
+    fun mirrorImage() {
+        check(canUseSpecial() && hero.archetype == Archetype.MAGE)
+        mirrorImages = MIRROR_IMAGES
+        spendSpecial()
+        afterPlayerAction()
+    }
+
+    /**
+     * Voleur : un coup d'arme. Sur une cible exposée ([isExposed]), critique garanti et
+     * multiplicateur relevé de [DEADLY_CRIT_BONUS] — l'attaque sournoise de D&D, et de quoi
+     * achever un petit monstre déjà entamé. Sinon, un coup normal.
+     */
+    fun deadlyStrike(target: Int, timing: Timing): HitResult {
+        check(canUseSpecial() && hero.archetype == Archetype.ROGUE)
+        val exposed = isExposed(enemies[target])
+        val result = hit(target, weaponRoll(), timing, forceCrit = exposed, critBonus = if (exposed) DEADLY_CRIT_BONUS else 0f)
+        if (hero.lifeSteal > 0f) hero.heal((result.damage * hero.lifeSteal).roundToInt())
+        spendSpecial()
+        afterPlayerAction()
+        return result
+    }
+
     fun drinkPotion(): Int {
         check(canDrinkPotion())
         val before = hero.hp
@@ -446,12 +514,15 @@ class Combat(
         return hero.hp - before
     }
 
-    private fun hit(target: Int, raw: Float, timing: Timing, allowZero: Boolean = false): HitResult {
+    private fun hit(
+        target: Int, raw: Float, timing: Timing, allowZero: Boolean = false,
+        forceCrit: Boolean = false, critBonus: Float = 0f,
+    ): HitResult {
         val e = enemies[target]
         require(e.alive)
         val bonus = when (timing) { Timing.MISS -> 0f; Timing.GOOD -> STRIKE_GOOD; Timing.PERFECT -> STRIKE_PERFECT }
-        val crit  = rng.nextFloat() < (hero.critChance + bonus).coerceAtMost(0.95f)
-        val dmg   = (if (crit) raw * hero.critMult else raw).roundToInt().coerceAtLeast(if (allowZero) 0 else 1)
+        val crit  = forceCrit || rng.nextFloat() < (hero.critChance + bonus).coerceAtMost(0.95f)
+        val dmg   = (if (crit) raw * (hero.critMult + critBonus) else raw).roundToInt().coerceAtLeast(if (allowZero) 0 else 1)
         e.hp = (e.hp - dmg).coerceAtLeast(0)
         return HitResult(target, dmg, crit, !e.alive)
     }
@@ -507,7 +578,7 @@ class Combat(
             if (e.paralyzedTurns > 0) {
                 e.paralyzedTurns--
                 if (due) {
-                    val save = rollSave(e, Element.LIGHTNING, e.paralysisTiming)
+                    val save = rollSave(e, Element.LIGHTNING, e.paralysisDc, e.paralysisTiming)
                     saves += EnemySave(i, save)
                     if (!save.saved) {
                         stopped += StatusStop(i, Element.LIGHTNING)
@@ -524,22 +595,44 @@ class Combat(
     fun resolveStrike(enemyIndex: Int, parry: Timing): EnemyStrike {
         check(phase == CombatPhase.ENEMY_TURN)
         val e = enemies[enemyIndex]
+        if (!e.alive) return EnemyStrike(enemyIndex, 0, parry, missed = true)
         // Il a pu frapper : la série de contrôles qui mène à la rage repart de zéro
         e.controlStreak = 0
+        // Image miroir, comme dans D&D : avant son jet d'attaque, un d20 dit s'il vise un
+        // double — 6+ avec trois doubles, 8+ avec deux, 11+ avec le dernier
+        if (mirrorImages > 0) {
+            val need = when (mirrorImages) { 3 -> 6; 2 -> 8; else -> 11 }
+            if (attackDie() >= need) { mirrorImages--; return EnemyStrike(enemyIndex, 0, parry, imageHit = true) }
+        }
         val roll = if (e.enraged) minOf(attackDie(), attackDie()) else attackDie()
         val hits = roll == 20 || (roll != 1 && roll + ArmorClass.monsterAttack(floor) >= hero.armorClass)
         if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true)
+
+        // La parade parfaite, selon l'archétype
+        var recovered = false
+        if (parry == Timing.PERFECT) when (hero.archetype) {
+            Archetype.WARRIOR -> if (hero.hasShield) return EnemyStrike(enemyIndex, 0, parry, blocked = true)
+            Archetype.ROGUE -> {
+                val counter = hit(enemyIndex, weaponRoll(), Timing.MISS)
+                if (aliveIndices().isEmpty()) phase = win()
+                return EnemyStrike(enemyIndex, 0, parry, dodged = true, counter = counter)
+            }
+            Archetype.MAGE -> { hero.tickRelics(1, includeSpecial = false); recovered = true }
+            null -> {}
+        }
+
         val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val spread = 0.85f + rng.nextFloat() * 0.30f
         val dmg = hero.mitigate(e.damage * spread * parryMult * ArmorClass.DAMAGE_COMPENSATION, floor).roundToInt().coerceAtLeast(1)
         hero.hp = (hero.hp - dmg).coerceAtLeast(0)
         if (hero.hp == 0) phase = CombatPhase.DEFEAT
-        return EnemyStrike(enemyIndex, dmg, parry)
+        return EnemyStrike(enemyIndex, dmg, parry, recovered = recovered)
     }
 
     fun endEnemyTurn() {
         if (phase != CombatPhase.ENEMY_TURN) return
         hero.tickRelics()
+        guarding = false
         phase = CombatPhase.PLAYER_TURN
     }
 

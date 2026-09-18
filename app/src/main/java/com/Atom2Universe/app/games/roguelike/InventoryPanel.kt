@@ -222,7 +222,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         if (relic == null) { tvRelicDesc.visibility = View.GONE; return }
         tvRelicDesc.visibility = View.VISIBLE
         val (lo, hi) = hero.relicDamage(relic)
-        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown), hero.poisonDose(relic), hero.spellDc)
+        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown), hero.poisonDose(relic), hero.spellDc(relic)) +
+            "\n" + ctx.getString(R.string.roguelike_inventory_relic_attribute, ctx.getString(relic.attribute.labelRes))
         tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
     }
 
@@ -239,7 +240,10 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         val attrs = StatType.ATTRIBUTES.joinToString("   ") {
             ctx.getString(R.string.roguelike_inventory_attr, ctx.getString(it.labelRes), hero.attribute(it))
         }
+        val archetype = hero.archetype?.let { ctx.getString(R.string.roguelike_inventory_archetype, ctx.getString(it.labelRes)) }
+            ?: ctx.getString(R.string.roguelike_inventory_archetype_none, Hero.ARCHETYPE_PIECES)
         return listOf(
+            archetype,
             attrs,
             ctx.getString(R.string.roguelike_inventory_stats_line,
                 hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100), hero.armorClass),

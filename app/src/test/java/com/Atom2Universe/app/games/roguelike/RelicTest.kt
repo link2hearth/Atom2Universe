@@ -189,7 +189,7 @@ class RelicTest {
 
     @Test
     fun lesAffinitesDeplacentLeJet() {
-        val dc = Hero.starter().spellDc
+        val dc = Hero.starter().spellDc(Relic.ICE_SHARD)
         val normal = SpellSave.landChance(dc, SpellSave.monsterProficiency(1))
         assertEquals("équipement de départ contre l'étage 1 : une fois sur deux", 0.5f, normal, 1e-4f)
         assertEquals(0.75f, SpellSave.landChance(dc, SpellSave.monsterProficiency(1) + Affinity.VULNERABLE.saveBonus), 1e-4f)
@@ -261,10 +261,36 @@ class RelicTest {
         val hero = Hero.starter()
         val (lo1, hi1) = hero.relicDamage(Relic.FIREBALL)
         assertTrue(lo1 < hi1)
-        val dc1 = hero.spellDc
+        val dc1 = hero.spellDc(Relic.ICE_SHARD)
         hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, Material.IRON, 1, Rarity.NORMAL, 0, Random(0))
         assertTrue(hero.relicDamage(Relic.FIREBALL).first > hi1)
-        assertTrue("la maîtrise suit l'arme", hero.spellDc > dc1)
+        assertTrue("la maîtrise suit l'arme", hero.spellDc(Relic.ICE_SHARD) > dc1)
+    }
+
+    /** Un héros avec un anneau qui donne [points] dans [attr]. */
+    private fun heroWith(attr: StatType, points: Int) = Hero.starter().apply {
+        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(0))
+            .copy(implicits = listOf(StatRoll(attr, points.toFloat())), affixes = emptyList())
+    }
+
+    @Test
+    fun leVeninSuitLaDexLesElementsLInt() {
+        val base = Hero.starter()
+        val dex = heroWith(StatType.DEX, 10)
+        val int = heroWith(StatType.INT, 10)
+        assertTrue(dex.relicPower(Relic.VENOM) > base.relicPower(Relic.VENOM))
+        assertEquals(base.relicPower(Relic.VENOM), int.relicPower(Relic.VENOM), 1e-4f)
+        assertTrue(int.relicPower(Relic.FIREBALL) > base.relicPower(Relic.FIREBALL))
+        assertEquals(base.relicPower(Relic.FIREBALL), dex.relicPower(Relic.FIREBALL), 1e-4f)
+    }
+
+    @Test
+    fun leDdSuitLaCaracDeLaRelique() {
+        val int = heroWith(StatType.INT, 6)
+        val dex = heroWith(StatType.DEX, 6)
+        assertEquals(Hero.starter().spellDc(Relic.ICE_SHARD) + 3, int.spellDc(Relic.ICE_SHARD))
+        assertEquals(Hero.starter().spellDc(Relic.ICE_SHARD), dex.spellDc(Relic.ICE_SHARD))
+        assertEquals(Hero.starter().spellDc(Relic.VENOM) + 3, dex.spellDc(Relic.VENOM))
     }
 
     @Test
