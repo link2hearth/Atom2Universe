@@ -149,10 +149,10 @@ class FarmState(private val prefs: SharedPreferences) {
     init {
         // Parse into temporary objects: invalid saves must never partially overwrite the farm.
         runCatching {
-            val raw = prefs.getString("state", null) ?: return@runCatching
+            val raw = prefs.getString(KEY_STATE, null) ?: return@runCatching
             val json = JSONObject(raw)
             val version = json.getInt("version")
-            require(version in 1..7)
+            require(version in 1..MAX_SAVE_VERSION)
             val savedLandCount = if (version >= 2) json.getJSONArray("parcels").length() else 6
             require(savedLandCount in 1..parcels.size)
             val saved = json.getJSONArray("plots")
@@ -669,7 +669,7 @@ class FarmState(private val prefs: SharedPreferences) {
             FarmCropQuality.entries.forEach { quality -> cropJson.put(quality.name, produce[crop.ordinal][quality.ordinal]) }
             produceJson.put(crop.name, cropJson)
         }
-        prefs.edit().putString("state", JSONObject().put("version", 7).put("coins", coins)
+        prefs.edit().putString(KEY_STATE, JSONObject().put("version", MAX_SAVE_VERSION).put("coins", coins)
             .put("harvests", harvests).put("selected", selected.name).put("plots", array)
             .put("parcels", lands).put("seeds", inventory).put("wateringLevel", wateringLevel)
             .put("produce", produceJson)
@@ -691,6 +691,16 @@ class FarmState(private val prefs: SharedPreferences) {
     companion object {
         /** Save file. Shared with whoever only wants to peek at the farm, like the games hub. */
         const val PREFS = "farm_v1"
+        /** The single preference holding the whole farm, as one JSON object. */
+        const val KEY_STATE = "state"
+        /**
+         * The newest save format this build writes - and the newest it can read.
+         *
+         * It is public because the cloud has to know it: a farm coming down from Drive in a
+         * format from a later build must be refused before it reaches the parser above, which
+         * would reject it and hand the player a brand new farm instead of their own.
+         */
+        const val MAX_SAVE_VERSION = 7
         /**
          * Reads the save and counts the ready harvests without opening the game. It goes through
          * [FarmState] on purpose: a second, lighter reader of the same JSON would have to know about

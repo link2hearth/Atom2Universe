@@ -3,6 +3,7 @@ package com.Atom2Universe.app.cloud
 import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.farm.FarmSyncManager
 import com.Atom2Universe.app.music.sync.DeviceIdentity
 import com.Atom2Universe.app.music.sync.DriveFileInfo
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
@@ -223,6 +224,7 @@ object CloudInventory {
         name.startsWith(LEGACY_DELTA_PREFIX) -> CloudCategory.OBSOLETE
         name.startsWith(LEGACY_ARTIST_IMAGE_PREFIX) -> CloudCategory.OBSOLETE
         name == "games_state.json" -> CloudCategory.GAMES
+        name == FarmSyncManager.SYNC_FILE -> CloudCategory.GAMES
         name == "reading_progress.json" -> CloudCategory.READING
         name == "usage_sessions.json" -> CloudCategory.STATS
         name in LEGACY_BACKUP_FILES -> CloudCategory.OBSOLETE

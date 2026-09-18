@@ -63,7 +63,7 @@
     <string name="cloud_cat_music_warning">Your devices keep their local copies and will republish them. A device that is retired loses what only it held.</string>
 
     <string name="cloud_cat_games">Game saves</string>
-    <string name="cloud_cat_games_desc">Clicker, neutrinos, achievements, game progress</string>
+    <string name="cloud_cat_games_desc">Clicker, neutrinos, achievements, My Farm, game progress</string>
     <string name="cloud_cat_games_warning">Your progress on this device is untouched and will be republished. Progress that exists only in the cloud is lost.</string>
 
     <string name="cloud_cat_reading">Reading progress</string>

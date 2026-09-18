@@ -63,7 +63,7 @@
     <string name="cloud_cat_music_warning">Vos appareils gardent leur copie locale et la republieront. Un appareil mis de côté perd ce que lui seul détenait.</string>
 
     <string name="cloud_cat_games">Sauvegardes de jeux</string>
-    <string name="cloud_cat_games_desc">Clicker, neutrinos, succès, progression des jeux</string>
+    <string name="cloud_cat_games_desc">Clicker, neutrinos, succès, Ma Ferme, progression des jeux</string>
     <string name="cloud_cat_games_warning">Votre progression sur cet appareil n\'est pas touchée et sera republiée. Ce qui n\'existait que dans le cloud est perdu.</string>
 
     <string name="cloud_cat_reading">Progression de lecture</string>

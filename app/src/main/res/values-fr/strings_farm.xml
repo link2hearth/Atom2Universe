@@ -239,4 +239,12 @@
     <string name="farm_manure_body">Les bêtes adultes remplissent la fosse toutes seules, même application fermée. Chaque graine semée y prend ce qu’il lui faut : autant que son rang dans l’échelle, donc douze pour une citrouille et un pour un radis. Une plantation sur fumier pousse en terre riche et se vend le double, et ce doublement se cumule avec une récolte chanceuse. Rien à régler : la fosse se vide toute seule dans la terre.</string>
     <string name="farm_planted_rich">%1$s en terre riche — récolte double. Touchez à nouveau pour arroser.</string>
     <string name="farm_manure_plantings">Encore %1$d plantations de %2$s (%3$d points pièce)</string>
+
+    <string name="farm_sync_title">Quelle ferme ?</string>
+    <string name="farm_sync_body">Cet appareil et un autre ont tous les deux joué depuis leur dernier échange. Les deux fermes ne peuvent pas être fusionnées : choisissez celle à garder — l’autre est remplacée.</string>
+    <string name="farm_sync_this_device">Cet appareil</string>
+    <string name="farm_sync_other_device">Un autre appareil</string>
+    <string name="farm_sync_summary">%1$s pièces · %2$d récoltes</string>
+    <string name="farm_sync_kept_local">Ferme de cet appareil gardée. Elle partira dans le cloud en quittant.</string>
+    <string name="farm_sync_restored">Ferme de votre autre appareil restaurée.</string>
 </resources>

@@ -16,9 +16,11 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.applySystemBarsVisibility
+import kotlinx.coroutines.launch
 
 class FarmActivity : ThemedActivity() {
     private lateinit var state: FarmState
@@ -52,6 +54,8 @@ class FarmActivity : ThemedActivity() {
     private val purchases = mutableListOf<Pair<Button, Long>>()
     private val stockLabels = mutableListOf<Pair<TextView, FarmCrop>>()
     private val produceSellSelection = mutableMapOf<Pair<FarmCrop, FarmCropQuality>, Int>()
+    /** True once the cloud farm has replaced this one on disk - see [rebuildOnCloudFarm]. */
+    private var farmSuperseded = false
     private var stepRepeat: Runnable? = null
     private var stepRepeatDelay = 260L
     private var stepRepeatStarted = false
@@ -190,6 +194,84 @@ class FarmActivity : ThemedActivity() {
         FarmRegion.entries.firstOrNull { it.name == regionName && state.regionUnlocked(it) }?.let { region ->
             world.post { world.switchRegion(region); refresh() }
         }
+        if (pendingRestoreNotice) { pendingRestoreNotice = false; message(getString(R.string.farm_sync_restored)) }
+        syncOnOpen()
+    }
+
+    /**
+     * Asks the cloud whether another device has played. Drive never announces anything on its own,
+     * so opening the game is the moment we go and look - and the only moment the answer matters.
+     *
+     * The save is read here, synchronously, before the download starts: it is the farm the player
+     * is about to see. Handing it to the sync tells apart a farm nobody touched from one played on
+     * while the answer was travelling.
+     */
+    private fun syncOnOpen() {
+        val openedWith = getSharedPreferences(FarmState.PREFS, MODE_PRIVATE)
+            .getString(FarmState.KEY_STATE, null)
+        lifecycleScope.launch {
+            when (val result = FarmSyncManager.onFarmOpened(this@FarmActivity, openedWith)) {
+                FarmSyncManager.OpenResult.Idle -> Unit
+                // The farm on disk is no longer the one the views were built from: rebuild rather
+                // than patch, since the world, the fields and the pens all hold the old state.
+                FarmSyncManager.OpenResult.Applied -> rebuildOnCloudFarm()
+                is FarmSyncManager.OpenResult.Conflict -> chooseFarm(result)
+            }
+        }
+    }
+
+    /**
+     * Two farms, both real. No rule can merge them - coins spent here and animals bought there do
+     * not add up - so the player picks, with the numbers that tell the two apart in front of them.
+     *
+     * Closing the card without choosing keeps this device farm: nothing is lost, and the question
+     * comes back at the next opening, since neither side has moved on.
+     */
+    private fun chooseFarm(conflict: FarmSyncManager.OpenResult.Conflict) {
+        showBubble(getString(R.string.farm_sync_title)) { body ->
+            body.addView(text(getString(R.string.farm_sync_body), 13).apply { setPadding(0, 0, 0, dp(10)) })
+            body.addView(farmCard(getString(R.string.farm_sync_this_device), conflict.local) {
+                FarmSyncManager.keepLocal(this, conflict.remote)
+                closeBubble(); message(getString(R.string.farm_sync_kept_local))
+            })
+            val other = conflict.remote.deviceName.ifBlank { getString(R.string.farm_sync_other_device) }
+            body.addView(farmCard(other, conflict.remote) {
+                closeBubble()
+                lifecycleScope.launch {
+                    FarmSyncManager.keepRemote(this@FarmActivity, conflict.remote)
+                    rebuildOnCloudFarm()
+                }
+            })
+        }
+    }
+
+    /**
+     * The cloud farm is on disk: rebuild the screen on top of it.
+     *
+     * Everything this instance still holds describes the farm that was just discarded, and saving
+     * any of it would undo the choice - then publish the discarded farm at the next closing and
+     * carry the mistake to the other device. So the object in memory is declared superseded, and
+     * from here on this instance writes nothing, neither to disk nor to the cloud.
+     */
+    private fun rebuildOnCloudFarm() {
+        farmSuperseded = true
+        pendingRestoreNotice = true
+        recreate()
+    }
+
+    /** One farm to choose from: whose it is, what it holds, and when it was left. */
+    private fun farmCard(title: String, farm: FarmSyncFile, choose: () -> Unit): View {
+        val card = column().apply {
+            setPadding(dp(12), dp(10), dp(12), dp(10))
+            background = rounded(cream, 14, border)
+            isFocusable = true
+            setOnClickListener { choose() }
+        }
+        card.addView(text(title, 17, true))
+        card.addView(text(getString(R.string.farm_sync_summary, money(farm.coins), farm.harvests), 14))
+        if (farm.savedAt > 0) card.addView(text(android.text.format.DateUtils.getRelativeTimeSpanString(
+            farm.savedAt, System.currentTimeMillis(), android.text.format.DateUtils.MINUTE_IN_MILLIS).toString(), 12))
+        return card.also { it.layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) } }
     }
 
     /** The milestone still to reach, or null when the region is open. */
@@ -1075,11 +1157,23 @@ class FarmActivity : ThemedActivity() {
     override fun onResume() { super.onResume(); applySystemBarsVisibility(false, false); handler.post(tick) }
     override fun onPause() {
         handler.removeCallbacks(tick); handler.removeCallbacks(hideStatus)
-        fieldView.stop(); closeBubble(); state.save(); super.onPause()
+        fieldView.stop(); closeBubble()
+        if (!farmSuperseded) state.save()
+        super.onPause()
+    }
+    /** The session is over: onPause has already saved, so what is on disk is what goes up. */
+    override fun onStop() {
+        if (!farmSuperseded) FarmSyncManager.onFarmClosed(this)
+        super.onStop()
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
     /** Six-digit prices are unreadable run together; the grouping follows the app language. */
     private fun money(value: Long): String = java.text.NumberFormat.getIntegerInstance().format(value)
     private fun money(value: Int): String = money(value.toLong())
     private fun perHour(crop: FarmCrop): String = String.format("%.1f", crop.coinsPerHour)
+
+    companion object {
+        /** Survives the [recreate] that installing a cloud farm forces, so the notice is not lost. */
+        private var pendingRestoreNotice = false
+    }
 }

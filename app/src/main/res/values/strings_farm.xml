@@ -239,4 +239,12 @@
     <string name="farm_manure_body">Grown animals fill the pit on their own, even while the app is closed. Every seed you sow takes what it needs from it — as much as its rung on the ladder, so a pumpkin costs twelve and a radish one. A planting on manure grows in rich soil and sells for double, and that doubling stacks with a lucky harvest. Nothing to set: the pit empties itself into the ground.</string>
     <string name="farm_planted_rich">%1$s planted in rich soil — double harvest. Tap again to water.</string>
     <string name="farm_manure_plantings">%1$d more plantings of %2$s (%3$d points each)</string>
+
+    <string name="farm_sync_title">Which farm?</string>
+    <string name="farm_sync_body">This device and another one have both been played since their last exchange. The two farms cannot be merged, so pick the one to keep — the other is replaced.</string>
+    <string name="farm_sync_this_device">This device</string>
+    <string name="farm_sync_other_device">Another device</string>
+    <string name="farm_sync_summary">%1$s coins · %2$d harvests</string>
+    <string name="farm_sync_kept_local">Farm from this device kept. It goes up to the cloud when you leave.</string>
+    <string name="farm_sync_restored">Farm from your other device restored.</string>
 </resources>
