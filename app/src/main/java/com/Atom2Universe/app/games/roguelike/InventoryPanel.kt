@@ -233,7 +233,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         val (lo, hi) = hero.relicDamage(relic)
         // Toutes les descriptions reçoivent les mêmes nombres, chacune prend ceux qui la concernent
         val empowerPct = (RelicBudget.empowerBonus(relic) * hero.relicMult(relic) * 100).roundToInt()
-        val desc = ctx.getString(relic.descRes, num(lo), num(hi), relic.effectTurns, hero.spellCooldown(relic.cooldown),
+        val desc = ctx.getString(relic.descRes, num(lo), num(hi), relic.effectTurns, hero.castCooldown(relic),
             num(hero.poisonDose(relic)), hero.spellDc(relic), empowerPct, num(hero.relicAmount(relic))) +
             "\n" + ctx.getString(R.string.roguelike_inventory_relic_attribute, ctx.getString(relic.attribute.labelRes))
         tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
@@ -306,7 +306,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private fun attributeDescription(attr: StatType): String = when (attr) {
         StatType.STR -> ctx.getString(R.string.roguelike_attr_desc_str, percent(Hero.STR_DAMAGE_PER_POINT))
         StatType.DEX -> ctx.getString(R.string.roguelike_attr_desc_dex)
-        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, num(game?.hero?.hpPerConPoint ?: Hero.HP_PER_CON))
+        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, num(Hero.HP_PER_CON))
         StatType.INT -> ctx.getString(R.string.roguelike_attr_desc_int, percent(Hero.RELIC_DAMAGE_PER_POINT))
         StatType.WIS -> ctx.getString(R.string.roguelike_attr_desc_wis, Hero.WIS_POINTS_PER_TURN)
         StatType.CHA -> ctx.getString(R.string.roguelike_attr_desc_cha, percent(Hero.GOLD_PER_CHA))

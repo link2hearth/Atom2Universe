@@ -433,6 +433,9 @@ enum class Relic(
     /** Poison : ce qu'une dose ronge par tour, en coups d'épée. 0 pour les autres. */
     val doseCoef get() = RelicBudget.doseCoef(this)
 
+    /** La recharge la plus courte possible, quelle que soit la SAG (voir [Hero.castCooldown]). */
+    val minCooldown get() = if (effect == RelicEffect.HEAL) HEAL_MIN_COOLDOWN else 1
+
     companion object {
         const val BURN_SHARE       = 0.25f
         const val POISON_MAX_DOSES = 3
@@ -455,6 +458,8 @@ enum class Relic(
          * sa recharge.
          */
         const val HEAL_SHARE = 0.35f
+        /** Le Soin ne se recharge jamais en moins de 3 tours, quelle que soit la SAG. */
+        const val HEAL_MIN_COOLDOWN = 3
         /** Peau de pierre : l'armure est multipliée par ça, et les épines renvoient cette part des coups. */
         const val STONESKIN_ARMOR = 2f
         const val THORNS_SHARE = 0.30f
@@ -939,7 +944,10 @@ class Combat(
      */
     private var upkeepDue = ambush
 
-    init { advance() }
+    init {
+        hero.floor = floor
+        advance()
+    }
 
     fun aliveIndices() = enemies.indices.filter { enemies[it].alive }
     /**
@@ -1036,7 +1044,7 @@ class Combat(
         // Le Séisme secoue le sol : tous chancellent, leur prochain tour recule
         if (relic == Relic.EARTHQUAKE) for (j in aliveIndices()) enemies[j].gauge -= Relic.EARTHQUAKE_PUSH
         applySelfEffect(relic, timing)
-        relicCooldowns[relic] = hero.spellCooldown(relic.cooldown)
+        relicCooldowns[relic] = hero.castCooldown(relic)
         afterPlayerAction(relicCost(relic))
         return CastResult(relic, hits)
     }

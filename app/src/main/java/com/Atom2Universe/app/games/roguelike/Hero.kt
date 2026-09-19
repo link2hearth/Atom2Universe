@@ -78,14 +78,6 @@ class Hero {
         /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
         const val MAX_CRIT = 0.6f
 
-        /**
-         * Les PV d'un point de CON, à la puissance [power] de l'armure portée : [HP_PER_CON]
-         * jusqu'à l'étage 100, puis au rythme de la puissance, comme les PV par niveau de D&D.
-         * La CON ne grandit plus au-delà (voir [LootSystem.DEEP_POWER]) : sans ça, son poids
-         * dans le sac de PV fondrait.
-         */
-        fun hpPerCon(power: Int) = HP_PER_CON * LootSystem.depthFactor(power)
-
         /** Un héros neuf : une épée d'Hydrogène toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
             val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.NORMAL, nextLootId++, Random(0))
@@ -145,12 +137,25 @@ class Hero {
     /** Points au-dessus de 10. */
     private fun bonus(type: StatType) = attribute(type) - BASE_ATTRIBUTE
 
+    /**
+     * L'étage où se trouve le héros (le combat le règle aussi) : ses monstres résistent à ses
+     * caractéristiques, voir [LootSystem.attributeWeight].
+     */
+    var floor = 1
+
+    /** Ce que vaut un point de caractéristique à cet étage : 1 jusqu'à l'étage 100, moins au-delà. */
+    val attributeWeight get() = LootSystem.attributeWeightAt(floor)
+
+    /**
+     * Les points au-dessus de 10 **qui comptent à cet étage** : pour tous les effets d'une
+     * caractéristique (dégâts, jets, critique, parade, recharges, or), sauf les PV de la CON,
+     * qui sont des PV comme les autres.
+     */
+    private fun effective(type: StatType) = bonus(type) * attributeWeight
+
     // ── Stats dérivées ──────────────────────────────────────────────────────────
 
-    val maxHp get() = BASE_HP + (hpPerCon(armorPower) * bonus(StatType.CON)).roundToInt() + equipSum(StatType.MAX_HP).roundToInt()
-
-    /** Les PV d'un point de CON pour l'armure portée : 4 jusqu'à l'étage 100, plus au-delà. */
-    val hpPerConPoint: Int get() = hpPerCon(armorPower).roundToInt()
+    val maxHp get() = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
 
     /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
     private val armorPower: Int get() {
@@ -163,14 +168,14 @@ class Hero {
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis FOR : +4 % par point. */
     val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * strMult).roundToInt()
     val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult).roundToInt()
-    private val strMult get() = 1f + STR_DAMAGE_PER_POINT * bonus(StatType.STR)
+    private val strMult get() = 1f + STR_DAMAGE_PER_POINT * effective(StatType.STR)
 
     /**
      * Le multiplicateur d'une relique : **sa** caractéristique ([Relic.attribute] — INT
      * pour le mage, DEX pour le Venin du voleur) ajoute 5 % par point, puis les bonus
      * « dégâts des sorts » des objets.
      */
-    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * bonus(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
+    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * effective(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
 
     /**
      * La puissance d'une relique : l'épée de référence de la puissance de l'arme portée,
@@ -183,7 +188,7 @@ class Hero {
      * Le DD d'une relique, façon D&D : 11 + modificateur de **sa** caractéristique
      * ((carac − 10) / 2) + maîtrise (qui suit la puissance de l'arme portée). Voir [SpellSave].
      */
-    fun spellDc(relic: Relic) = SpellSave.DC_BASE + Math.floorDiv(attribute(relic.attribute) - BASE_ATTRIBUTE, 2) +
+    fun spellDc(relic: Relic) = SpellSave.DC_BASE + modifier(relic.attribute) +
         SpellSave.proficiency(equipped[EquipSlot.WEAPON]?.power ?: 1)
 
     /** Fourchette de dégâts d'une relique, avant critique. */
@@ -218,7 +223,7 @@ class Hero {
      * Le critique du héros, sans plafond : 5 % + 1 % par point de DEX + bonus des objets. En
      * profondeur, il peut dépasser 100 % : les monstres y résistent (voir [critChance]).
      */
-    val critRating get() = 0.05f + 0.01f * bonus(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)
+    val critRating get() = 0.05f + 0.01f * effective(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)
 
     /**
      * La vraie chance de critique à l'étage [floor] : le critique du héros moins la résistance
@@ -232,7 +237,17 @@ class Hero {
     val lifeSteal get() = equipSum(StatType.LIFE_STEAL)
 
     /** Recharge des sorts : SAG retire un tour tous les 6 points. */
-    fun spellCooldown(base: Int) = (base - bonus(StatType.WIS) / WIS_POINTS_PER_TURN).coerceAtLeast(1)
+    fun spellCooldown(base: Int) = (base - (effective(StatType.WIS) / WIS_POINTS_PER_TURN).toInt()).coerceAtLeast(1)
+
+    /**
+     * La recharge d'une relique après son lancer : la SAG la raccourcit, jamais sous
+     * [Relic.minCooldown] (le Soin garde au moins 3 tours, sinon une grosse SAG le relancerait à
+     * chaque tour et le héros ne mourrait plus).
+     */
+    fun castCooldown(relic: Relic) = spellCooldown(relic.cooldown).coerceAtLeast(relic.minCooldown)
+
+    /** Le modificateur de D&D, (carac − 10) / 2 arrondi vers le bas, sur les points qui comptent à cet étage. */
+    private fun modifier(type: StatType) = kotlin.math.floor(effective(type) / 2f).toInt()
 
     /**
      * La classe d'armure, façon D&D : 10 + maîtrise (celle des pièces d'armure portées) +
@@ -242,7 +257,7 @@ class Hero {
     val armorClass: Int get() {
         val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
         val dexCounts = pieces.none { it.weight?.dexCounts == false }
-        val dex = if (dexCounts) Math.floorDiv(attribute(StatType.DEX) - BASE_ATTRIBUTE, 2) else 0
+        val dex = if (dexCounts) modifier(StatType.DEX) else 0
         return ArmorClass.BASE + SpellSave.proficiency(armorPower) + equipped.values.sumOf { it.acBonus } + dex
     }
 
@@ -253,7 +268,7 @@ class Hero {
     fun dodgeChance(floor: Int) = 1f - ArmorClass.hitChance(armorClass, ArmorClass.monsterAttack(floor))
 
     /** La parade s'élargit de 4 ms par point de DEX. */
-    val parryBonusMs get() = 4 * bonus(StatType.DEX)
+    val parryBonusMs get() = (4 * effective(StatType.DEX)).roundToInt()
 
     /**
      * La vitesse du héros : ce que sa jauge gagne par unité de temps (1 : normale). Les
@@ -264,7 +279,7 @@ class Hero {
         .coerceAtLeast(MIN_SPEED)
 
     /** Or gagné : +3 % par point de CHA. */
-    val goldMult get() = 1f + GOLD_PER_CHA * bonus(StatType.CHA)
+    val goldMult get() = 1f + GOLD_PER_CHA * effective(StatType.CHA)
 
     /**
      * Dégâts réellement subis après armure. L'armure se mesure à l'étage : la même armure

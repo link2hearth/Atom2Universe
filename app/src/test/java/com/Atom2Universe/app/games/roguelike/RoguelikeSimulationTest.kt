@@ -448,6 +448,7 @@ class RoguelikeSimulationTest {
                 // Le Soin se garde pour quand il le faut : la même règle que l'ancienne potion
                 val healNow = Relic.HEAL in c.hero.relicSlots && c.canCast(Relic.HEAL) &&
                     (simRelics == null || Relic.HEAL.name in simRelics) &&
+                    c.hero.hp < c.hero.maxHp && !lastWasSupport &&
                     c.hero.hp <= incoming * 1.3f + c.hero.maxHp * 0.1f
                 val ready = c.hero.relicSlots.filterNotNull().firstOrNull {
                     val e = c.enemies[aimAt(it)]

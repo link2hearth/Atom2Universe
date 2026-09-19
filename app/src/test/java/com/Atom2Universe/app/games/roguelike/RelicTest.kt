@@ -275,6 +275,14 @@ class RelicTest {
         assertEquals(4, hero.unlockedRelicSlots)
     }
 
+    /** Une énorme SAG raccourcit les recharges, mais le Soin garde au moins 3 tours. */
+    @Test
+    fun leSoinGardeTroisToursDeRecharge() {
+        val sage = heroWith(StatType.WIS, 200)
+        assertEquals(1, sage.castCooldown(Relic.FIREBALL))
+        assertEquals(Relic.HEAL_MIN_COOLDOWN, sage.castCooldown(Relic.HEAL))
+    }
+
     /** Le Soin rend 35 % des PV max d'un coup, pour une demi-jauge. */
     @Test
     fun leSoinRendUnTiersDesPv() {

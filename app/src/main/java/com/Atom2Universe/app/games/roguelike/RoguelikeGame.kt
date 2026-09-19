@@ -184,6 +184,8 @@ class RoguelikeGame(
 
     var floor = startFloor
         private set
+
+    init { hero.floor = floor }
     /** L'étage où la mort ramène. */
     var checkpoint = CHECKPOINT
         private set
@@ -472,6 +474,7 @@ class RoguelikeGame(
     private fun changeFloor(newFloor: Int) {
         floor = newFloor
         if (checkpointEvery > 0 && (floor - 1) % checkpointEvery == 0) checkpoint = maxOf(checkpoint, floor)
+        hero.floor = floor
         level = generateLevel(floor)
         playerPos = level.start
         computeFov()

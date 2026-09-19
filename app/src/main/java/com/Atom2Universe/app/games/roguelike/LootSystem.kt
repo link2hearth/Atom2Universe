@@ -231,9 +231,8 @@ data class Equipment(
  * paliers, choisie pour tomber sur les zones du donjon : étages 1, 6, 11, 21, 31, 41, 61, 81.
  * Le donjon est sans fin, les paliers aussi : au-delà du 8ᵉ, chacun s'ouvre à une puissance
  * 1,3 fois plus haute que le précédent ([tierPower]) — le palier 26 vers l'étage 10 000.
- * Seules les stats qui grandissent avec la profondeur y ont droit (dégâts d'arme, armure,
- * PV, et la chance de critique face à la résistance des monstres) : les caractéristiques et
- * les autres taux s'arrêtent au palier 8 ([maxTierOf]).
+ * Les taux (dégâts des sorts, dégâts critiques, vol de vie, vitesse) s'arrêtent au palier 8 ;
+ * tout le reste continue, caractéristiques comprises ([maxTierOf]).
  *
  * ### Deux familles d'affixes
  * - **Les affixes à budget** (caractéristiques, armure, PV, dégâts d'arme) : leur valeur
@@ -278,13 +277,14 @@ object AffixBudget {
         else Math.round(TIER_POWER[TIERS - 1] * Math.pow(DEEP_TIER_GROWTH, (tier - TIERS).toDouble())).toInt()
 
     /**
-     * Le dernier palier d'une stat. Les caractéristiques et les taux s'arrêtent au 8ᵉ : leur
-     * effet ne grandit pas avec la profondeur, un palier de plus n'y apporterait rien (voir
-     * [LootSystem.DEEP_POWER]). Les dégâts d'arme, l'armure, les PV et le critique continuent.
+     * Le dernier palier d'une stat. Les **taux** (dégâts des sorts, dégâts critiques, vol de
+     * vie, vitesse) s'arrêtent au 8ᵉ : leur effet ne dépend pas de la profondeur, un palier de
+     * plus n'y apporterait rien. Tout le reste continue : dégâts d'arme, armure, PV, critique,
+     * et les caractéristiques (voir [LootSystem.attributeWeight]).
      */
     fun maxTierOf(type: StatType): Int = when (type) {
-        StatType.WEAPON_DMG, StatType.ARMOR, StatType.MAX_HP, StatType.CRIT_CHANCE -> Int.MAX_VALUE
-        else -> TIERS
+        StatType.SPELL_DMG, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED -> TIERS
+        else -> Int.MAX_VALUE
     }
 
     /**
@@ -378,9 +378,15 @@ object AffixBudget {
     /** La constante de l'armure à cette puissance : dégâts reçus × k / (k + armure). */
     fun refK(p: Int) = 50f * LootSystem.scale(p)
     /** PV de base, PV de la CON, et les PV implicites des quatre pièces défensives. */
-    fun refHp(p: Int) = Hero.BASE_HP + Hero.hpPerCon(p) * (refCon(p) - Hero.BASE_ATTRIBUTE) +
+    fun refHp(p: Int) = Hero.BASE_HP + Hero.HP_PER_CON * (refCon(p) - Hero.BASE_ATTRIBUTE) +
         16f * LootSystem.HP_PER_ARMOR_BASE * LootSystem.scale(p)
-    fun refCritChance(p: Int) = 0.05f + 0.01f * (refOther(p) - Hero.BASE_ATTRIBUTE)
+    fun refCritChance(p: Int) = 0.05f + 0.01f * (refOther(p) - Hero.BASE_ATTRIBUTE) * w(p)
+
+    /**
+     * Le poids d'un point de caractéristique à cette puissance (voir [LootSystem.attributeWeight]) :
+     * au-delà de l'étage 100, un point vaut moins, et un affixe en porte d'autant plus.
+     */
+    private fun w(p: Int) = LootSystem.attributeWeight(p.toFloat())
     /** Ce que le critique ajoute déjà aux dégâts : un point de plus en vaut d'autant moins. */
     private fun critFactor(p: Int) = 1f + refCritChance(p) * (Hero.BASE_CRIT_MULT - 1f)
 
@@ -390,27 +396,27 @@ object AffixBudget {
      */
     fun perPoint(type: StatType, p: Int): Float = when (type) {
         // Axe : dégâts à l'arme
-        StatType.STR         -> 0.04f / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE))
-        StatType.DEX         -> DEX_PARRY_FACTOR * 0.01f * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
+        StatType.STR         -> 0.04f * w(p) / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p))
+        StatType.DEX         -> DEX_PARRY_FACTOR * 0.01f * w(p) * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.WEAPON_DMG  -> 1f / refWeaponDamage(p)
         StatType.CRIT_CHANCE -> (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.CRIT_DAMAGE -> refCritChance(p) / critFactor(p)
         // Axe : survie
-        StatType.CON         -> Hero.hpPerCon(p) / refHp(p)
+        StatType.CON         -> Hero.HP_PER_CON / refHp(p)
         StatType.MAX_HP      -> 1f / refHp(p)
         StatType.ARMOR       -> (1f / refK(p)) / (1f + refArmor(p) / refK(p))
         // Axe : sorts
-        StatType.INT         -> 0.05f / (1f + 0.05f * (refOther(p) - Hero.BASE_ATTRIBUTE))
+        StatType.INT         -> 0.05f * w(p) / (1f + 0.05f * (refOther(p) - Hero.BASE_ATTRIBUTE) * w(p))
         StatType.SPELL_DMG   -> 1f
         // La SAG est une stat à paliers (6 points = un tour de recharge en moins) : on la
         // cale sur la FOR pour qu'elle roule les mêmes nombres qu'une caractéristique.
-        StatType.WIS         -> 0.04f / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE))
+        StatType.WIS         -> 0.04f * w(p) / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p))
         // Axe : l'or
-        StatType.CHA         -> 0.03f
+        StatType.CHA         -> 0.03f * w(p)
         // Axe : la part du sac de PV rendue sur un combat entier. Compter un seul coup
         // sous-estime le vol de vie — il se cumule, c'est tout son intérêt.
         StatType.LIFE_STEAL  -> HITS_PER_FIGHT * refWeaponDamage(p) *
-                                (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE)) / refHp(p)
+                                (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p)) / refHp(p)
         // Deux axes à la fois : +10 % de vitesse, c'est 10 % de coups en plus par coup reçu,
         // donc autant de dégâts infligés que de dégâts évités sur un combat
         StatType.SPEED       -> SPEED_AXES
@@ -440,7 +446,13 @@ object AffixBudget {
     fun nominal(type: StatType, tier: Int): Float {
         CAPPED[type]?.let {
             if (tier <= TIERS) return it[tier - 1]
-            return it[TIERS - 1] + if (type == StatType.CRIT_CHANCE) CRIT_DEEP_STEP * (tier - TIERS) else 0f
+            return when (type) {
+                StatType.CRIT_CHANCE -> it[TIERS - 1] + CRIT_DEEP_STEP * (tier - TIERS)
+                // DEX et CHA grandissent exactement comme leur poids baisse (voir LootSystem.attributeWeight) :
+                // un affixe garde ce qu'il valait au palier 8
+                StatType.DEX, StatType.CHA -> it[TIERS - 1] / LootSystem.attributeWeight(tierPower(tier).toFloat())
+                else -> it[TIERS - 1]
+            }
         }
         return SHARE / perPoint(type, tierPower(tier))
     }
@@ -494,28 +506,37 @@ object LootSystem {
     fun powerCenter(floor: Int) = 1f + (floor - 1) * 0.4f
 
     /**
-     * La puissance de l'étage 100. Au-delà, **les caractéristiques ne grandissent plus** : un
-     * objet plus profond a plus de dégâts, d'armure et de PV, mais la même FOR qu'à l'étage 100.
-     *
-     * Pourquoi : les caractéristiques sont des modificateurs façon D&D (jets de d20, critique,
-     * fenêtre de parade, recharges). Si elles suivaient la puissance jusqu'à l'étage 10 000, un
-     * modificateur de +600 rendrait chaque jet automatique, et la FOR multipliée par l'arme
-     * ferait grandir les dégâts comme un carré (tout mourrait en un coup). Comme dans D&D, les
-     * caractéristiques plafonnent ; la puissance, elle, continue dans les stats à plat.
+     * La puissance de l'étage 100. Les **taux** que les objets donnent d'office (le bonus
+     * « dégâts des sorts » du bâton et de l'orbe) s'y arrêtent : un taux ne se dilue pas.
      */
     const val DEEP_POWER = 41
 
-    /** La caractéristique qu'une arme ou une main gauche donne par son type. */
-    fun mainAttribute(power: Int) = 2f + 0.6f * (power.coerceAtMost(DEEP_POWER) - 1)
-    /** La caractéristique au hasard d'une autre pièce. */
-    fun sideAttribute(power: Int) = 1f + 0.4f * (power.coerceAtMost(DEEP_POWER) - 1)
+    /** La caractéristique qu'une arme ou une main gauche donne par son type. Sans plafond. */
+    fun mainAttribute(power: Int) = 2f + 0.6f * (power - 1)
+    /** La caractéristique au hasard d'une autre pièce. Sans plafond. */
+    fun sideAttribute(power: Int) = 1f + 0.4f * (power - 1)
 
     /**
-     * Ce que la profondeur ajoute aux stats qui se comptent **par point de caractéristique**
-     * et doivent pourtant suivre la puissance — les PV de la CON : 1 jusqu'à l'étage 100, puis
-     * au rythme de [scale]. Sans ça, la CON figée pèserait de moins en moins dans le sac de PV.
+     * **Ce que vaut un point de caractéristique face aux monstres d'une puissance d'étage** : 1
+     * jusqu'à l'étage 100, puis de moins en moins, exactement au rythme où les caractéristiques
+     * des objets grandissent. Les caractéristiques montent sans fin (FOR 50 à l'étage 100, 500 à
+     * l'étage 1 000…), mais les monstres profonds y résistent d'autant, comme l'armure protège
+     * moins face à eux : c'est **l'avance sur l'équipement moyen de l'étage** qui compte.
+     *
+     * Pourquoi : les caractéristiques sont des modificateurs façon D&D (jets de d20, critique,
+     * fenêtre de parade, recharges). Comptées telles quelles, un +600 à l'étage 10 000 rendrait
+     * chaque jet automatique, et la FOR multipliée par l'arme ferait grandir les dégâts comme un
+     * carré. Avec ce poids, le héros moyen de l'étage 10 000 a les mêmes modificateurs que celui
+     * de l'étage 100 ; celui qui a farmé plus de FOR que prévu garde son avance.
      */
-    fun depthFactor(power: Int) = (scale(power) / scale(DEEP_POWER)).coerceAtLeast(1f)
+    fun attributeWeight(power: Float): Float {
+        val at100 = powerCenter(Encounters.DEEP_FLOOR)
+        if (power <= at100) return 1f
+        return (1f + 0.4f * (at100 - 1)) / (1f + 0.4f * (power - 1))
+    }
+
+    /** Le poids d'un point de caractéristique à l'étage [floor]. */
+    fun attributeWeightAt(floor: Int) = attributeWeight(powerCenter(floor))
 
     /**
      * Fréquence d'apparition d'un affixe, à la façon des colonnes « frequency » de Diablo 2 :
@@ -593,7 +614,7 @@ object LootSystem {
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
         if (base.armorBase > 0f)
             implicits += StatRoll(StatType.MAX_HP, (base.armorBase * HP_PER_ARMOR_BASE * s).roundToInt().toFloat())
-        // Un taux, figé comme les caractéristiques au-delà de l'étage 100 (voir DEEP_POWER)
+        // Un taux : il s'arrête à l'étage 100 (voir DEEP_POWER)
         if (base.spellBonus > 0f)
             implicits += StatRoll(StatType.SPELL_DMG, base.spellBonus * (1f + 0.1f * (power.coerceAtMost(DEEP_POWER) - 1)))
 
