@@ -343,4 +343,5 @@
     <string name="lex_base_bow">Rogue: [[special_deadly|Deadly strike]] works on targets under %1$d%% of their HP (instead of %2$d%%).</string>
     <string name="lex_base_grimoire">Necromancer: %1$d more puppet at the start of each fight, and every echo hits %2$d%% harder.</string>
     <string name="lex_base_lantern">Wanderer: the second blow of the [[special_combo|Combo]] hits %1$d%% harder.</string>
+    <string name="lex_archetype_weapons">Weapons that suit it: %1$s. Any other weapon hits %2$d%% weaker.</string>
 </resources>

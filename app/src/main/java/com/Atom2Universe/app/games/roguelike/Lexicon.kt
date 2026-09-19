@@ -491,6 +491,8 @@ object Lexicon {
                     }
                 }
                 add(R.string.lex_archetype_special, env.link(specialId(a), env.s(a.specialRes)))
+                val weapons = (listOf(ItemBase.SWORD) + a.weapons).joinToString(", ") { env.link(idOf(it), env.s(it.nounRes)) }
+                add(R.string.lex_archetype_weapons, weapons, env.pct(Hero.WRONG_WEAPON_MALUS))
             }
         }
         val specials = listOf(

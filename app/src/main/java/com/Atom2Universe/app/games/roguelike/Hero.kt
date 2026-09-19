@@ -23,14 +23,20 @@ enum class Archetype(
     val color: Int,
     /** Sa main gauche : celle qui renforce son Spécial (le Spécial marche sans elle, moins bien). */
     val offhand: ItemBase,
+    /** Les armes qui lui vont, en plus de l'épée, qui va à tout le monde. Une autre arme frappe moins fort. */
+    val weapons: Set<ItemBase>,
 ) : Labeled {
-    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt(), ItemBase.SHIELD),
-    ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt(), ItemBase.BOW),
-    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt(), ItemBase.ORB),
+
+    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt(), ItemBase.SHIELD, setOf(ItemBase.AXE, ItemBase.MACE)),
+    ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt(), ItemBase.BOW, setOf(ItemBase.DAGGER)),
+    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt(), ItemBase.ORB, setOf(ItemBase.STAFF, ItemBase.SCEPTER)),
     /** Entre le voleur et le guerrier : deux coups d'arme d'affilée, et la roulade. */
-    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt(), ItemBase.LANTERN),
+    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt(), ItemBase.LANTERN, setOf(ItemBase.AXE, ItemBase.DAGGER)),
     /** Sous le mage : des pantins gratuits qui encaissent à sa place et frappent en écho. */
-    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt(), ItemBase.GRIMOIRE),
+    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt(), ItemBase.GRIMOIRE, setOf(ItemBase.STAFF, ItemBase.SCEPTER, ItemBase.DAGGER)),
+    ;
+
+    fun accepts(weapon: ItemBase) = weapon == ItemBase.SWORD || weapon in weapons
 }
 
 /**
@@ -86,6 +92,8 @@ class Hero {
         const val ARCHETYPE_PIECES = 2
         /** Recharge du bouton « Spécial », gardée d'un combat à l'autre comme les reliques. */
         const val SPECIAL_COOLDOWN = 5
+        /** Une arme qui ne va pas à l'archétype porté frappe de cette part en moins (les sorts n'en souffrent pas). */
+        const val WRONG_WEAPON_MALUS = 0.15f
         /** L'orbe est la main gauche de celui qui tue vite : tous les dégâts qu'il inflige, arme et sorts, montent de cette part. */
         const val ORB_DAMAGE_SHARE = 0.20f
         /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
@@ -218,8 +226,14 @@ class Hero {
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
 
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis FOR : +4 % par point. */
-    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult).roundToInt()
-    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult).roundToInt()
+    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult * weaponTypeMult).roundToInt()
+    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult * weaponTypeMult).roundToInt()
+    /** 1, ou moins si l'arme portée ne va pas à l'archétype (sans archétype, jamais de malus). */
+    val weaponTypeMult: Float get() {
+        val a = archetype ?: return 1f
+        val w = equipped[EquipSlot.WEAPON]?.base ?: return 1f
+        return if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS
+    }
     private val orbMult get() = if (equipped[EquipSlot.OFFHAND]?.base == ItemBase.ORB) 1f + ORB_DAMAGE_SHARE else 1f
     private val strMult get() = 1f + STR_DAMAGE_PER_POINT * effective(StatType.STR)
 

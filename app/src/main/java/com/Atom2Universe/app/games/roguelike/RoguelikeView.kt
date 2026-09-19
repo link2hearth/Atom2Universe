@@ -461,7 +461,8 @@ class RoguelikeView @JvmOverloads constructor(
         val colL = RectF(panel.left,  titleBottom, sepX - gap * 0.5f, btnTop)
         val colR = RectF(sepX + gap * 0.5f, titleBottom, panel.right, btnTop)
 
-        val delta = LootSystem.rating(equip) - (current?.let { LootSystem.rating(it) } ?: 0)
+        val archetype = g.hero.archetype
+        val delta = LootSystem.rating(equip, archetype) - (current?.let { LootSystem.rating(it, archetype) } ?: 0)
         drawItemColumn(canvas, equip, colL, isNew = true, cr, gap, delta)
         if (current != null)
             drawItemColumn(canvas, current, colR, isNew = false, cr, gap, null)
@@ -504,7 +505,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         pText.color = 0xFF78909C.toInt(); pText.textSize = sd * 11f
         canvas.drawText(context.getString(R.string.roguelike_item_subtitle, context.getString(equip.rarity.labelRes),
-            context.getString(R.string.roguelike_rating, DungeonNumbers.format(context, LootSystem.rating(equip)))), col.centerX(), y + sd * 11f, pText)
+            context.getString(R.string.roguelike_rating, DungeonNumbers.format(context, LootSystem.rating(equip, game?.hero?.archetype)))), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.3f
 
         if (delta != null) {
@@ -520,7 +521,7 @@ class RoguelikeView @JvmOverloads constructor(
         }
         y += gap * 0.6f
 
-        for (line in LootSystem.describe(context, equip)) {
+        for (line in LootSystem.describe(context, equip, archetype = game?.hero?.archetype)) {
             pText.color = if (isNew) 0xFFDDFFDD.toInt() else 0xFFAAAAAA.toInt()
             pText.textSize = sd * 12f
             canvas.drawText(line, col.centerX(), y + sd * 12f, pText)

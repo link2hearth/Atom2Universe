@@ -126,11 +126,11 @@ enum class ItemBase(
     val spellBonus: Float,
 ) {
     SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  StatType.STR, 1.00f, 0f, 0f),
-    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.25f, 0f, 0f),
-    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 0.80f, 0f, 0f),
-    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.00f, 0f, 0f),
-    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 0.60f, 0f, 0.10f),
-    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 0.70f, 0f, 0.05f),
+    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.10f, 0f, 0f),
+    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 1.10f, 0f, 0f),
+    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.05f, 0f, 0f),
+    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 1.10f, 0f, 0.10f),
+    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 1.10f, 0f, 0.05f),
     SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f),
     ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f),
     // Une main gauche par archétype (voir DONJON.md) : le bouclier du guerrier, l'orbe du mage, l'arc
@@ -735,10 +735,13 @@ object LootSystem {
      * « bon *pour sa puissance* » : une épée d'Hydrogène I parfaite noterait autant qu'une épée
      * de Fer V, et on ne verrait jamais l'objet plus profond comme une amélioration.
      */
-    fun rating(e: Equipment): Int {
+    fun rating(e: Equipment, archetype: Archetype? = null): Int {
         val p = e.power
         var r = 0f
-        if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f
+        // Une arme qui ne va pas à l'archétype frappe moins fort : sa note le dit, sinon les flèches mentent
+        val fits = archetype == null || archetype.accepts(e.base)
+        if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f *
+            if (fits) 1f else 1f - Hero.WRONG_WEAPON_MALUS
         if (e.armor > 0)     r += e.armor * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
         r += e.acBonus * AffixBudget.perAcPoint() * 100f
         r += e.weightSpeed * AffixBudget.perPoint(StatType.SPEED, p) * 100f
@@ -803,11 +806,13 @@ object LootSystem {
      * chiffres : ce que veut dire « Léger » ou « P4 » est dans le lexique. [linked] : les mots
      * deviennent des liens (voir [LexiconText]) ; sinon les lignes sont nues (canvas).
      */
-    fun describe(context: Context, e: Equipment, linked: Boolean = false): List<String> = buildList {
+    fun describe(context: Context, e: Equipment, linked: Boolean = false, archetype: Archetype? = null): List<String> = buildList {
         if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage,
             DungeonNumbers.format(context, e.damageMin), DungeonNumbers.format(context, e.damageMax)))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, DungeonNumbers.format(context, e.armor)))
         e.weight?.let { add(LexiconText.link(Lexicon.idOf(it), context.getString(it.labelRes))) }
+        if (e.damageMax > 0 && archetype != null && !archetype.accepts(e.base))
+            add(LexiconText.link(Lexicon.idOf(archetype), context.getString(R.string.roguelike_item_wrong_weapon)))
         e.isotopeSet?.let { add(context.getString(R.string.roguelike_item_set_line, LexiconText.link(it.lexiconId, it.label(context)))) }
         if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))
         e.implicits.forEach { add(it.display(context, linked = true)) }

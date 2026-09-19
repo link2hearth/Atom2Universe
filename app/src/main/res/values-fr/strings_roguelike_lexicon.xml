@@ -343,4 +343,5 @@
     <string name="lex_base_bow">Voleur : le [[special_deadly|Coup mortel]] agit sur les cibles sous %1$d %% de leurs PV (au lieu de %2$d %%).</string>
     <string name="lex_base_grimoire">Nécromancien : %1$d pantin de plus au début de chaque combat, et chaque écho frappe %2$d %% plus fort.</string>
     <string name="lex_base_lantern">Vagabond : le second coup de l\'[[special_combo|Enchaînement]] frappe %1$d %% plus fort.</string>
+    <string name="lex_archetype_weapons">Armes qui lui vont : %1$s. Toute autre arme frappe %2$d %% moins fort.</string>
 </resources>

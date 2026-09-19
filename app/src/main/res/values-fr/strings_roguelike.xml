@@ -420,4 +420,5 @@
     <string name="roguelike_base_veil">Voile</string>
     <string name="roguelike_base_shroud">Suaire</string>
     <string name="roguelike_base_wraps">Bandelettes</string>
+    <string name="roguelike_item_wrong_weapon">Pas ta classe</string>
 </resources>

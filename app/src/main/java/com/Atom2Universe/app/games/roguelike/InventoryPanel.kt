@@ -91,9 +91,9 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
             h.name.setTextColor(item.rarity.colorArgb)
             h.subtitle.text = ctx.getString(R.string.roguelike_item_subtitle, ctx.getString(item.slot.labelRes), ctx.getString(item.rarity.labelRes))
 
-            val rating = LootSystem.rating(item)
+            val rating = LootSystem.rating(item, hero.archetype)
             h.rating.text = num(rating)
-            val diff = rating - (hero.equipped[item.slot]?.let { LootSystem.rating(it) } ?: 0)
+            val diff = rating - (hero.equipped[item.slot]?.let { LootSystem.rating(it, hero.archetype) } ?: 0)
             h.delta.text = when {
                 diff > 0 -> ctx.getString(R.string.roguelike_delta_up, num(diff))
                 diff < 0 -> ctx.getString(R.string.roguelike_delta_down, num(-diff))
@@ -176,7 +176,7 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         bindRelics(hero)
 
         sorted = when (sort) {
-            Sort.BEST   -> hero.bag.sortedByDescending { LootSystem.rating(it) }
+            Sort.BEST   -> hero.bag.sortedByDescending { LootSystem.rating(it, hero.archetype) }
             Sort.RECENT -> hero.bag.sortedByDescending { it.lootId }
         }
         tvBagCount.text = ctx.resources.getQuantityString(R.plurals.roguelike_inventory_count, sorted.size, sorted.size)
@@ -325,8 +325,8 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         detailName.setTextColor(item.rarity.colorArgb)
         detailName.setLex(LootSystem.displayName(ctx, item, linked = true))
         detailSub.setLex(ctx.getString(R.string.roguelike_inventory_subtitle, ctx.getString(item.slot.labelRes),
-            LexiconText.link(Lexicon.idOf(item.rarity), ctx.getString(item.rarity.labelRes)), num(LootSystem.rating(item))))
-        detailStats.setLex(LootSystem.describe(ctx, item, linked = true).joinToString("\n"))
+            LexiconText.link(Lexicon.idOf(item.rarity), ctx.getString(item.rarity.labelRes)), num(LootSystem.rating(item, hero.archetype))))
+        detailStats.setLex(LootSystem.describe(ctx, item, linked = true, archetype = hero.archetype).joinToString("\n"))
 
         if (selectedIsEquipped) {
             detailCmp.text = ctx.getString(R.string.roguelike_loot_equipped_badge)
@@ -334,7 +334,7 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         } else {
             val worn = hero.equipped[item.slot]
             detailCmp.text = if (worn == null) ctx.getString(R.string.roguelike_loot_nothing_equipped)
-                else ctx.getString(R.string.roguelike_inventory_worn, LootSystem.displayName(ctx, worn), num(LootSystem.rating(worn)))
+                else ctx.getString(R.string.roguelike_inventory_worn, LootSystem.displayName(ctx, worn), num(LootSystem.rating(worn, hero.archetype)))
             detailActs.visibility = View.VISIBLE
             btnSell.text = ctx.getString(R.string.roguelike_inventory_sell, num(LootSystem.sellPrice(item)))
         }
