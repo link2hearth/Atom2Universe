@@ -67,7 +67,7 @@
     <string name="roguelike_log_inventory_full">Inventory full!</string>
     <string name="roguelike_log_resume">Adventure resumed — Floor %1$d.</string>
 
-    <string name="roguelike_descend_hint">Tap ↓ to meet the merchant</string>
+    <string name="roguelike_descend_hint">Tap ↓</string>
     <string name="roguelike_death_title">YOU DIED</string>
     <string name="roguelike_floor_gold_summary">Floor %1$d  —  %2$s gold</string>
     <string name="roguelike_tap_replay">Tap to play again</string>
@@ -109,10 +109,10 @@
     <string name="roguelike_relic_ice_shard">Ice Shard</string>
     <string name="roguelike_relic_lightning">Lightning</string>
     <string name="roguelike_relic_venom">Venom</string>
-    <string name="roguelike_relic_fireball_desc">Deals %1$s–%2$s damage, then burns the target for %3$d turns (a quarter of the hit each turn). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_ice_shard_desc">Deals %1$s–%2$s damage and can freeze the target: it slows down sharply for a turn and a half, and its blows are numbed (weaker). It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_lightning_desc">Deals %1$s–%2$s damage and paralyzes the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_venom_desc">Deals %1$s–%2$s damage and adds a dose of poison (3 at most): each dose eats %5$s HP per turn for %3$d turns. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_fireball_desc">Deals %1$s–%2$s damage, then [[state_burn|burns]] the target for %3$d turns (%19$d%% of the hit each turn). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_ice_shard_desc">Deals %1$s–%2$s damage and can [[state_frozen|freeze]] the target: it slows down sharply for %18$s turns, and its blows are numbed (weaker). It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_lightning_desc">Deals %1$s–%2$s damage and [[state_paralyzed|paralyzes]] the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_venom_desc">Deals %1$s–%2$s damage and adds a dose of [[state_poison|poison]] (%17$d at most): each dose eats %5$s HP per turn for %3$d turns. Recharge: %4$d turns.</string>
     <!-- Le grimoire : reliques du 18/09/2026 (voir DONJON.md, « Le grimoire ») -->
     <string name="roguelike_relic_sunder">Sunder</string>
     <string name="roguelike_relic_war_cry">War Cry</string>
@@ -121,13 +121,13 @@
     <string name="roguelike_relic_poisoned_blades">Poisoned Blades</string>
     <string name="roguelike_relic_freezing_rain">Freezing Rain</string>
     <string name="roguelike_relic_chain_lightning">Chain Lightning</string>
-    <string name="roguelike_relic_sunder_desc">Deals %1$s–%2$s damage (no element) and fractures the target for %3$d turns: it takes 25%% more damage from everything. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_war_cry_desc">Weakens every enemy for %3$d turns (their blows hit 30%% softer), and your next 2 weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_sunder_desc">Deals %1$s–%2$s damage (no element) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_war_cry_desc">[[state_weakened|Weakens]] every enemy for %3$d turns (their blows hit %10$d%% softer), and your next %16$d weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_earthquake_desc">Deals %1$s–%2$s damage (no element) to every enemy, and they stagger: their next turn comes later. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_hunters_mark_desc">Deals %1$s–%2$s damage (no element) and marks the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of poison (3 at most), eating %5$s HP per turn. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s damage to every enemy and soaks them for %3$d turns: they resist control less, and water reacts with other elements. It puts out fires. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_chain_lightning_desc">Deals %1$s–%2$s damage to the target, then leaps to every other enemy, losing 30%% at each leap. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_hunters_mark_desc">Deals %1$s–%2$s damage (no element) and [[state_marked|marks]] the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of [[state_poison|poison]] (%17$d at most), eating %5$s HP per turn. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s damage to every enemy and [[state_soaked|soaks]] them for %3$d turns: they resist control less, and water reacts with other elements. It puts out fires. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_chain_lightning_desc">Deals %1$s–%2$s damage to the target, then leaps to every other enemy, losing %11$d%% at each leap. Recharge: %4$d turns.</string>
 
     <!-- Réactions : un sort sur une cible déjà dans un certain état -->
     <string name="roguelike_reaction_explosion">Explosion!</string>
@@ -149,9 +149,9 @@
     <string name="roguelike_resonance_avalanche_desc">Earthquake can freeze the enemies it doesn\'t shatter</string>
     <string name="roguelike_resonance_battering_ram_desc">Sunder also strikes every weakened enemy</string>
     <string name="roguelike_log_resonance_found">Resonance discovered: %1$s! +%2$d %3$s while you wear this pair.</string>
-    <string name="roguelike_inventory_resonance_active">✦ Resonance %1$s: +%2$d %3$s — %4$s</string>
+    <string name="roguelike_inventory_resonance_active">✦ %1$s +%2$d %3$s</string>
     <string name="roguelike_inventory_resonance_pair">%1$s (%2$s + %3$s)</string>
-    <string name="roguelike_inventory_resonance_book">Resonances found: %1$d/%2$d — %3$s</string>
+    <string name="roguelike_inventory_resonance_book">[[resonances|Resonances]] %1$d/%2$d</string>
 
     <!-- États du grimoire, sous la barre de vie ; renforcements du héros -->
     <string name="roguelike_combat_soaked">soaked %1$d</string>
@@ -179,19 +179,19 @@
     <string name="roguelike_relic_haste">Haste</string>
     <string name="roguelike_relic_slow">Slow</string>
     <string name="roguelike_relic_hourglass">Hourglass</string>
-    <string name="roguelike_relic_rend_desc">Deals %1$s–%2$s damage (no element) and opens a wound for %3$d turns: the target loses %8$s HP every time it attacks. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_rend_desc">Deals %1$s–%2$s damage (no element) and opens a [[state_bleeding|wound]] for %3$d turns: the target loses %8$s HP every time it attacks. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_whirlwind_desc">A weapon strike on every enemy: %1$s–%2$s damage each (no element). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$s–%2$s damage each (no element). A critical dagger opens a wound (%8$s HP each time the target attacks). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_smoke_bomb_desc">Blinds every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, adds a dose of poison (%5$s HP per turn) and fractures the target for %3$d turns: it takes 25%% more damage from everything. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage — three times as much to a frozen target, whose ice then shatters. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, adds a dose of [[state_poison|poison]] (%5$s HP per turn) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage — %12$d times as much to a [[state_frozen|frozen]] target, whose ice then shatters. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_meteor_desc">Calls a meteor that falls %3$d turns later on every enemy: %1$s–%2$s fire damage each. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_magic_missile_desc">Three arcane bolts, each on a random enemy, sharing %1$s–%2$s damage. Never resisted. Recharge: %4$d turn.</string>
+    <string name="roguelike_relic_magic_missile_desc">%15$d arcane bolts, each on a random enemy, sharing %1$s–%2$s damage. Never resisted. Recharge: %4$d turn.</string>
     <string name="roguelike_relic_arcane_shield_desc">A barrier absorbs the next %8$s damage. If it still holds when your turn comes back, your relics recharge one turn faster. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_holy_light_desc">Deals %1$s–%2$s holy damage and blinds the target for %3$d turn. The undead fear it. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_holy_light_desc">Deals %1$s–%2$s holy damage and [[state_blinded|blinds]] the target for %3$d turn. The undead fear it. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_regeneration_desc">Heals %8$s HP at each of your next %3$d turns. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_heal_desc">Heals %8$s HP at once (35%% of your max HP). Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is doubled, and every blow you take sends %8$s%% back to its author. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_heal_desc">Heals %8$s HP at once (%13$d%% of your max HP). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is multiplied by %14$d, and every blow you take sends %8$s%% back to its author. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_haste_desc">Your speed rises by half for your next %3$d turns: you act more often. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_slow_desc">The target is twice as slow for its next %3$d turns: it acts less often. It sometimes resists. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_hourglass_desc">Turns back time: the next %3$d enemy attacks come more slowly, and your parry window is wider. Recharge: %4$d turns.</string>
@@ -230,7 +230,7 @@
     <string name="roguelike_combat_stoneskin">stoneskin %1$d</string>
     <string name="roguelike_combat_meteor_incoming">meteor in %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relic found: %1$s! It\'s ready for your next fight.</string>
-    <string name="roguelike_log_relic_found_bag">Relic found: %1$s! Wear it from the inventory.</string>
+    <string name="roguelike_log_relic_found_bag">Relic found: %1$s! (in the inventory)</string>
     <string name="roguelike_log_rest_noise">Your rest made noise… something is coming!</string>
     <string name="roguelike_log_rest">You catch your breath. HP %1$s/%2$s</string>
     <string name="roguelike_log_victory">Victory! +%1$s gold.</string>
@@ -238,7 +238,7 @@
     <string name="roguelike_log_spotted">%1$s has spotted you!</string>
     <string name="roguelike_log_lost_track">%1$s lost your trail.</string>
     <string name="roguelike_pack_size">×%1$d</string>
-    <string name="roguelike_hint_chased">Chased: you can\'t rest</string>
+    <string name="roguelike_hint_chased">Chased!</string>
     <string name="roguelike_death_summary">Fell on floor %1$d, lost %2$s gold</string>
     <string name="roguelike_death_checkpoint">Back to floor %1$d with all your gear</string>
     <string name="roguelike_stat_crit">Crit</string>
@@ -282,7 +282,7 @@
     <string name="roguelike_combat_guarding">on guard</string>
     <string name="roguelike_combat_images">doubles ×%1$d</string>
     <string name="roguelike_inventory_archetype">Archetype: %1$s</string>
-    <string name="roguelike_inventory_archetype_none">Archetype: none (wear %1$d armor pieces of the same weight)</string>
+    <string name="roguelike_inventory_archetype_none">Archetype: [[archetype|none]]</string>
     <string name="roguelike_combat_relic_empty">No relic</string>
     <string name="roguelike_combat_special">Special</string>
     <string name="roguelike_combat_special_locked">locked</string>
@@ -353,11 +353,11 @@
     <string name="roguelike_item_weight_cloth">Cloth: little armor</string>
     <string name="roguelike_item_weight_light">Light: +%1$d%% dodge, +%2$d%% speed, DEX helps you dodge</string>
     <string name="roguelike_item_weight_heavy">Heavy: −%1$d%% speed, DEX no longer helps you dodge</string>
-    <string name="roguelike_item_shield_ac">+%1$d%% dodge</string>
+    <string name="roguelike_item_shield_ac">+%1$d%% [[stat_dodge|dodge]]</string>
     <string name="roguelike_base_amulet">Amulet</string>
     <string name="roguelike_base_ring">Ring</string>
     <string name="roguelike_item_damage">%1$s–%2$s damage</string>
-    <string name="roguelike_item_armor">%1$s armor</string>
+    <string name="roguelike_item_armor">%1$s [[stat_armor|armor]]</string>
     <string name="roguelike_rating">rating %1$s</string>
     <string name="roguelike_log_sold">%1$s sold: +%2$s gold.</string>
     <string name="roguelike_loot_stash_btn">To bag</string>
@@ -366,14 +366,14 @@
     <string name="roguelike_inventory_sort_recent">Recent</string>
     <string name="roguelike_inventory_empty">Your bag is empty</string>
     <string name="roguelike_inventory_attr">%1$s %2$d</string>
-    <string name="roguelike_inventory_stats_line">HP %1$s/%2$s   Armor %3$s   Dodge %7$d%%   Speed %8$d%%   Weapon %4$s–%5$s   Crit %6$d%%</string>
-    <string name="roguelike_inventory_subtitle">%1$s · %2$s · rating %3$s</string>
+    <string name="roguelike_inventory_stats_line">[[stat_max_hp|HP]] %1$s/%2$s   [[stat_armor|Armor]] %3$s   [[stat_dodge|Dodge]] %7$d%%   [[stat_speed|Speed]] %8$d%%   [[stat_weapon_dmg|Weapon]] %4$s–%5$s   [[stat_crit_chance|Crit]] %6$d%%</string>
+    <string name="roguelike_inventory_subtitle">%1$s · %2$s · [[stat_rating|rating]] %3$s</string>
     <string name="roguelike_inventory_worn">Worn: %1$s (rating %2$s)</string>
     <string name="roguelike_inventory_sell">Sell · %1$s gold</string>
-    <string name="roguelike_inventory_relics_title">Relics · %1$d/%2$d worn — tap to wear or put away</string>
-    <string name="roguelike_inventory_relics_none">Relics: none yet. They are rare: search the far end of dead ends.</string>
+    <string name="roguelike_inventory_relics_title">[[relics|Relics]] · %1$d/%2$d</string>
+    <string name="roguelike_inventory_relics_none">[[relics|Relics]]: none</string>
     <string name="roguelike_inventory_relic_attribute">Scales with %1$s</string>
-    <string name="roguelike_inventory_relics_full">Both slots are taken: put a worn relic away first.</string>
+    <string name="roguelike_inventory_relics_full">Slots full</string>
     <string name="roguelike_delta_up">▲ %1$s</string>
     <string name="roguelike_delta_down">▼ %1$s</string>
     <string name="roguelike_delta_equal">=</string>
@@ -381,7 +381,7 @@
         <item quantity="one">%1$d item in the bag</item>
         <item quantity="other">%1$d items in the bag</item>
     </plurals>
-    <string name="roguelike_stat_roll_tier">%1$s  (T%2$d)</string>
+    <string name="roguelike_stat_roll_tier">%1$s  ([[tier:%3$s:%2$d|T%2$d]])</string>
     <!-- L'escalier : descendre ou rester -->
     <string name="roguelike_stairs_title">STAIRS</string>
     <string name="roguelike_stairs_next">Floor %1$d awaits below</string>
@@ -399,4 +399,6 @@
     <string name="roguelike_combat_relic_locked">Locked</string>
     <string name="roguelike_combat_relic_unlock_floor">Floor %1$d</string>
     <string name="roguelike_log_relic_slot">A new relic slot opens! (%1$d / %2$d)</string>
+    <string name="roguelike_inventory_relic_line_hit">%1$s · %2$s · %3$s · %4$s–%5$s · [[cooldown|recharge]] %6$d</string>
+    <string name="roguelike_inventory_relic_line">%1$s · %2$s · %3$s · [[cooldown|recharge]] %4$d</string>
 </resources>

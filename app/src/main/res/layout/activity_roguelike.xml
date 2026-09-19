@@ -67,6 +67,8 @@
 
         <include layout="@layout/roguelike_inventory_panel" />
 
+        <include layout="@layout/roguelike_lexicon_panel" />
+
     </FrameLayout>
 
 </LinearLayout>

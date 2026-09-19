@@ -18,6 +18,7 @@ class RoguelikeActivity : ThemedActivity() {
     private lateinit var tvGold:       TextView
     private lateinit var tvFloorLevel: TextView
     private lateinit var inventory:    InventoryPanel
+    private lateinit var lexicon:      LexiconPanel
 
     private var game = RoguelikeGame()
 
@@ -35,13 +36,18 @@ class RoguelikeActivity : ThemedActivity() {
         tvGold       = findViewById(R.id.roguelike_tv_gold)
         tvFloorLevel = findViewById(R.id.roguelike_tv_floorlevel)
 
-        inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory)) { refresh() }
+        lexicon      = LexiconPanel(findViewById(R.id.roguelike_lexicon)) { game }
+        inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory), lexicon) { refresh() }
 
         btnBack.setOnClickListener { finish() }
-        // Retour : ferme d'abord l'inventaire s'il est ouvert
+        // Retour : ferme d'abord le lexique, puis l'inventaire, s'ils sont ouverts
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (inventory.isOpen) inventory.hide() else finish()
+                when {
+                    lexicon.isOpen   -> lexicon.back()
+                    inventory.isOpen -> inventory.hide()
+                    else             -> finish()
+                }
             }
         })
 
@@ -135,6 +141,7 @@ class RoguelikeActivity : ThemedActivity() {
 
         combatView.visibility = View.GONE
         inventory.hide()
+        lexicon.hide()
         refresh()
     }
 

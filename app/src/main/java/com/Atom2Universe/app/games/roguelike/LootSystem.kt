@@ -44,13 +44,19 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
  * 1 ou plus pour un affixe : c'est son palier de puissance, voir [AffixBudget].
  */
 data class StatRoll(val type: StatType, val value: Float, val tier: Int = 0) {
-    fun display(context: Context): String {
-        val label = context.getString(type.labelRes)
+    /**
+     * La ligne de stat. [linked] : le nom de la stat et le palier deviennent des liens du lexique
+     * (voir [LexiconText]) ; sinon le texte est nu, pour les vues qui dessinent au canvas.
+     */
+    fun display(context: Context, linked: Boolean = false): String {
+        val name = context.getString(type.labelRes)
+        val label = if (linked) LexiconText.link(Lexicon.idOf(type), name) else name
         val line = if (type.isPercent)
             context.getString(R.string.roguelike_stat_roll_percent, (value * 100).roundToInt(), label)
         else
             context.getString(R.string.roguelike_stat_roll_flat, DungeonNumbers.format(context, value.roundToInt()), label)
-        return if (tier > 0) context.getString(R.string.roguelike_stat_roll_tier, line, tier) else line
+        val out = if (tier > 0) context.getString(R.string.roguelike_stat_roll_tier, line, tier, type.name) else line
+        return if (linked) out else LexiconText.strip(out)
     }
 }
 
@@ -255,7 +261,7 @@ object AffixBudget {
     val TIER_POWER = intArrayOf(1, 3, 5, 9, 13, 17, 25, 33)
 
     /** Au-delà du 8ᵉ, chaque palier s'ouvre à une puissance 1,3 fois plus haute. */
-    private const val DEEP_TIER_GROWTH = 1.3
+    const val DEEP_TIER_GROWTH = 1.3
 
     /**
      * Ce que chaque palier de critique ajoute au-delà du 8ᵉ : +0,5 point. Les monstres
@@ -708,11 +714,18 @@ object LootSystem {
 
     // ── Affichage ───────────────────────────────────────────────────────────────
 
-    /** « Épée de Fer III », « Épée d'Hydrogène stellaire II » / « Iron Sword III », « Stellar Hydrogen Sword II ». */
-    fun displayName(context: Context, e: Equipment): String {
-        val noun = e.weight?.nounRes(e.base) ?: e.base.nounRes
+    /**
+     * « Épée d'Hydrogène II » / « Hydrogen Sword II ». [linked] : la base et la matière deviennent
+     * des liens du lexique (l'inventaire) ; sinon le nom est nu.
+     */
+    fun displayName(context: Context, e: Equipment, linked: Boolean = false): String {
+        val noun = context.getString(e.weight?.nounRes(e.base) ?: e.base.nounRes)
         val tier = context.resources.getStringArray(R.array.roguelike_grade_tiers)[Grade.tier(e.power) - 1]
-        return context.getString(R.string.roguelike_item_grade_name, context.getString(noun), materialName(context, e.power), tier)
+        val material = materialName(context, e.power)
+        return context.getString(R.string.roguelike_item_grade_name,
+            if (linked) LexiconText.link(Lexicon.idOf(e.base), noun) else noun,
+            if (linked) LexiconText.link(Lexicon.materialId(Grade.element(e.power)), material) else material,
+            tier)
     }
 
     /**
@@ -746,22 +759,20 @@ object LootSystem {
     /** Des points de CA en points d'esquive, pour le joueur qui ne connaît pas D&D. */
     private fun dodgePercent(ac: Int) = Math.round(ac * ArmorClass.AC_STEP * 100)
 
-    /** Lignes de description : dégâts, armure, puis toutes les stats. */
-    fun describe(context: Context, e: Equipment): List<String> = buildList {
+    /**
+     * Lignes de description : dégâts, armure, poids, puis toutes les stats. Rien que des noms et des
+     * chiffres : ce que veut dire « Léger » ou « P4 » est dans le lexique. [linked] : les mots
+     * deviennent des liens (voir [LexiconText]) ; sinon les lignes sont nues (canvas).
+     */
+    fun describe(context: Context, e: Equipment, linked: Boolean = false): List<String> = buildList {
         if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage,
             DungeonNumbers.format(context, e.damageMin), DungeonNumbers.format(context, e.damageMax)))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, DungeonNumbers.format(context, e.armor)))
-        when (e.weight) {
-            ArmorWeight.CLOTH -> add(context.getString(R.string.roguelike_item_weight_cloth))
-            ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, dodgePercent(ArmorWeight.LIGHT.acPerPiece),
-                Math.round(ArmorWeight.LIGHT.speedPerPiece * 100)))
-            ArmorWeight.HEAVY -> add(context.getString(R.string.roguelike_item_weight_heavy, Math.round(-ArmorWeight.HEAVY.speedPerPiece * 100)))
-            null -> {}
-        }
+        e.weight?.let { add(LexiconText.link(Lexicon.idOf(it), context.getString(it.labelRes))) }
         if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))
-        e.implicits.forEach { add(it.display(context)) }
-        e.affixes.forEach { add(it.display(context)) }
-    }
+        e.implicits.forEach { add(it.display(context, linked = true)) }
+        e.affixes.forEach { add(it.display(context, linked = true)) }
+    }.map { if (linked) it else LexiconText.strip(it) }
 
     private fun <T> weighted(list: List<Pair<T, Float>>, rng: Random): T {
         val total = list.sumOf { it.second.toDouble() }.toFloat().coerceAtLeast(0.001f)

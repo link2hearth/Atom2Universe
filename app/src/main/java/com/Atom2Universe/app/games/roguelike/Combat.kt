@@ -1122,6 +1122,8 @@ class Combat(
         }
         if (relic.weaponStrike && poisonedBlades > 0) bladePoison(e)
         val (save, enraged) = if (e.alive && !immune) applyEffect(relic, e, result, timing, reactions) else null to false
+        // Après l'effet : le Givre et les réactions du contrôle s'ajoutent à la liste pendant applyEffect
+        hero.discover(e.type, relic.element, reactions)
         return result.copy(killed = !e.alive, affinity = affinity, save = save, enraged = enraged,
             reactions = reactions, explosion = explosion)
     }

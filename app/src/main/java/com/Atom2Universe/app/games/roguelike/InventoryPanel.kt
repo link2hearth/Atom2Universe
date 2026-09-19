@@ -11,15 +11,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
-import kotlin.math.roundToInt
+import com.Atom2Universe.app.games.roguelike.LexiconText.setLexiconText
 
 /**
  * L'inventaire : ce qu'on porte, ses caractéristiques, les reliques trouvées (toucher
  * pour porter / ranger), et le sac (infini) trié du
  * meilleur au moins bon ou du plus récent au plus ancien. Toucher un objet affiche son
  * détail, avec Équiper et Vendre. Rien n'oblige à gérer quoi que ce soit.
+ *
+ * Rien ne s'y explique en phrases : des noms et des chiffres, et des mots qui sont des liens vers
+ * le lexique ([LexiconPanel]), dont un bouton ouvre la liste.
  */
-class InventoryPanel(private val root: View, private val onChanged: () -> Unit) {
+class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, private val onChanged: () -> Unit) {
 
     private enum class Sort { BEST, RECENT }
 
@@ -30,7 +33,6 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private val equippedRow = root.findViewById<LinearLayout>(R.id.inv_equipped)
     private val tvStats     = root.findViewById<TextView>(R.id.inv_stats)
     private val attrsRow    = root.findViewById<LinearLayout>(R.id.inv_attrs)
-    private val tvAttrDesc  = root.findViewById<TextView>(R.id.inv_attr_desc)
     private val tvRelics    = root.findViewById<TextView>(R.id.inv_relics_title)
     private val relicsRow   = root.findViewById<LinearLayout>(R.id.inv_relics)
     private val tvRelicDesc = root.findViewById<TextView>(R.id.inv_relic_desc)
@@ -57,8 +59,10 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private var sorted: List<Equipment> = emptyList()
     private val slotViews = mutableMapOf<EquipSlot, ImageView>()
     private var selectedRelic: Relic? = null
-    private var selectedAttr: StatType? = null
     private var relicRefused = false
+
+    /** Un texte dont les mots marqués (voir [LexiconText]) ouvrent le lexique. */
+    private fun TextView.setLex(markup: String) = setLexiconText(markup) { lexicon.open(it) }
 
     val isOpen get() = root.visibility == View.VISIBLE
 
@@ -102,6 +106,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
 
     init {
         root.findViewById<View>(R.id.inv_close).setOnClickListener { hide() }
+        root.findViewById<View>(R.id.inv_lexicon).setOnClickListener { lexicon.open() }
         btnBest.setOnClickListener { sort = Sort.BEST; refresh() }
         btnRecent.setOnClickListener { sort = Sort.RECENT; refresh() }
         list.layoutManager = LinearLayoutManager(ctx)
@@ -139,7 +144,6 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         game = g
         selected = null
         selectedRelic = null
-        selectedAttr = null
         relicRefused = false
         root.visibility = View.VISIBLE
         refresh()
@@ -168,7 +172,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         }
 
         bindAttributes(hero)
-        tvStats.text = statsText(hero)
+        tvStats.setLex(statsText(hero))
         bindRelics(hero)
 
         sorted = when (sort) {
@@ -189,8 +193,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
 
     private fun bindRelics(hero: Hero) {
         val worn = hero.relicSlots.count { it != null }
-        tvRelics.text = if (hero.relics.isEmpty()) ctx.getString(R.string.roguelike_inventory_relics_none)
-            else ctx.getString(R.string.roguelike_inventory_relics_title, worn, hero.unlockedRelicSlots)
+        tvRelics.setLex(if (hero.relics.isEmpty()) ctx.getString(R.string.roguelike_inventory_relics_none)
+            else ctx.getString(R.string.roguelike_inventory_relics_title, worn, hero.unlockedRelicSlots))
 
         relicsRow.removeAllViews()
         for (relic in hero.relics) {
@@ -230,13 +234,21 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         val relic = selectedRelic
         if (relic == null) { tvRelicDesc.visibility = View.GONE; return }
         tvRelicDesc.visibility = View.VISIBLE
+        tvRelicDesc.setLex(relicLine(hero, relic) + if (relicRefused) "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else "")
+    }
+
+    /**
+     * Une relique en une ligne : son nom, sa caractéristique, son élément, ses dégâts, sa recharge.
+     * Chacun est un lien ; la description complète est dans sa fiche du lexique.
+     */
+    private fun relicLine(hero: Hero, relic: Relic): String {
+        val name = LexiconText.link(Lexicon.idOf(relic), ctx.getString(relic.labelRes))
+        val attr = LexiconText.link(Lexicon.idOf(relic.attribute), ctx.getString(relic.attribute.labelRes))
+        val element = LexiconText.link(Lexicon.idOf(relic.element), ctx.getString(Lexicon.elementRes(relic.element)))
+        val cooldown = hero.castCooldown(relic)
+        if (!relic.hits) return ctx.getString(R.string.roguelike_inventory_relic_line, name, attr, element, cooldown)
         val (lo, hi) = hero.relicDamage(relic)
-        // Toutes les descriptions reçoivent les mêmes nombres, chacune prend ceux qui la concernent
-        val empowerPct = (RelicBudget.empowerBonus(relic) * hero.relicMult(relic) * 100).roundToInt()
-        val desc = ctx.getString(relic.descRes, num(lo), num(hi), relic.effectTurns, hero.castCooldown(relic),
-            num(hero.poisonDose(relic)), hero.spellDc(relic), empowerPct, num(hero.relicAmount(relic))) +
-            "\n" + ctx.getString(R.string.roguelike_inventory_relic_attribute, ctx.getString(relic.attribute.labelRes))
-        tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
+        return ctx.getString(R.string.roguelike_inventory_relic_line_hit, name, attr, element, num(lo), num(hi), cooldown)
     }
 
     /**
@@ -245,19 +257,13 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
      */
     private fun bindResonances(hero: Hero) {
         val lines = hero.resonances.map { r ->
-            ctx.getString(R.string.roguelike_inventory_resonance_active, ctx.getString(r.labelRes),
-                Resonance.BONUS, ctx.getString(r.attribute.labelRes), ctx.getString(r.descRes))
+            ctx.getString(R.string.roguelike_inventory_resonance_active, LexiconText.link(Lexicon.idOf(r), ctx.getString(r.labelRes)),
+                Resonance.BONUS, LexiconText.link(Lexicon.idOf(r.attribute), ctx.getString(r.attribute.labelRes)))
         }.toMutableList()
-        if (hero.knownResonances.isNotEmpty()) {
-            val known = Resonance.entries.filter { it in hero.knownResonances }.joinToString(", ") { r ->
-                ctx.getString(R.string.roguelike_inventory_resonance_pair, ctx.getString(r.labelRes),
-                    ctx.getString(r.a.labelRes), ctx.getString(r.b.labelRes))
-            }
-            lines += ctx.getString(R.string.roguelike_inventory_resonance_book,
-                hero.knownResonances.size, Resonance.entries.size, known)
-        }
+        if (hero.knownResonances.isNotEmpty())
+            lines += ctx.getString(R.string.roguelike_inventory_resonance_book, hero.knownResonances.size, Resonance.entries.size)
         tvResonance.visibility = if (lines.isEmpty()) View.GONE else View.VISIBLE
-        tvResonance.text = lines.joinToString("\n")
+        tvResonance.setLex(lines.joinToString("\n"))
     }
 
     /** Toucher une relique la décrit, et la porte ou la range. */
@@ -272,13 +278,12 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     // ── Caractéristiques ────────────────────────────────────────────────────────
 
     /**
-     * Les six sigles (FOR, DEX…) gardent les lignes courtes. Toucher l'un d'eux affiche
-     * dessous son nom complet et ce qu'il fait ; le retoucher le referme.
+     * Les six sigles (FOR, DEX…) gardent les lignes courtes. Toucher l'un d'eux ouvre sa fiche du
+     * lexique : son nom complet, son rôle, et les vrais chiffres.
      */
     private fun bindAttributes(hero: Hero) {
         attrsRow.removeAllViews()
         for (attr in StatType.ATTRIBUTES) {
-            val on = attr == selectedAttr
             attrsRow.addView(TextView(ctx).apply {
                 layoutParams = LinearLayout.LayoutParams(0, (34 * density).toInt(), 1f).apply {
                     marginEnd = (4 * density).toInt()
@@ -286,41 +291,23 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
                 gravity = android.view.Gravity.CENTER
                 text = ctx.getString(R.string.roguelike_inventory_attr, ctx.getString(attr.labelRes), hero.attribute(attr))
                 textSize = 12f
-                setTextColor(if (on) 0xFFFFFFFF.toInt() else 0xFFCFD8DC.toInt())
+                setTextColor(LexiconText.LINK_COLOR)
                 background = GradientDrawable().apply {
                     cornerRadius = 6 * density
-                    setColor(if (on) 0xFF1565C0.toInt() else 0xFF141E2A.toInt())
+                    setColor(0xFF141E2A.toInt())
                 }
-                setOnClickListener {
-                    selectedAttr = if (selectedAttr == attr) null else attr
-                    refresh()
-                }
+                setOnClickListener { lexicon.open(Lexicon.idOf(attr)) }
             })
         }
-        val attr = selectedAttr
-        tvAttrDesc.visibility = if (attr == null) View.GONE else View.VISIBLE
-        if (attr != null) tvAttrDesc.text = attributeDescription(attr)
     }
-
-    /** Le nom complet et le rôle, avec les vrais chiffres des formules du héros. */
-    private fun attributeDescription(attr: StatType): String = when (attr) {
-        StatType.STR -> ctx.getString(R.string.roguelike_attr_desc_str, percent(Hero.STR_DAMAGE_PER_POINT))
-        StatType.DEX -> ctx.getString(R.string.roguelike_attr_desc_dex)
-        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, num(Hero.HP_PER_CON))
-        StatType.INT -> ctx.getString(R.string.roguelike_attr_desc_int, percent(Hero.RELIC_DAMAGE_PER_POINT))
-        StatType.WIS -> ctx.getString(R.string.roguelike_attr_desc_wis, Hero.WIS_POINTS_PER_TURN)
-        StatType.CHA -> ctx.getString(R.string.roguelike_attr_desc_cha, percent(Hero.GOLD_PER_CHA))
-        else -> ""
-    }
-
-    private fun percent(f: Float) = Math.round(f * 100)
 
     /** Grands nombres (PV, or, note, dégâts) : abrégés au-delà de 100 000. */
     private fun num(v: Int) = DungeonNumbers.format(ctx, v)
 
     private fun statsText(hero: Hero): String {
-        val archetype = hero.archetype?.let { ctx.getString(R.string.roguelike_inventory_archetype, ctx.getString(it.labelRes)) }
-            ?: ctx.getString(R.string.roguelike_inventory_archetype_none, Hero.ARCHETYPE_PIECES)
+        val archetype = hero.archetype?.let {
+            ctx.getString(R.string.roguelike_inventory_archetype, LexiconText.link(Lexicon.idOf(it), ctx.getString(it.labelRes)))
+        } ?: ctx.getString(R.string.roguelike_inventory_archetype_none)
         return listOf(
             archetype,
             ctx.getString(R.string.roguelike_inventory_stats_line,
@@ -335,11 +322,11 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         detail.visibility = View.VISIBLE
         detailIcon.background = frame(item.rarity.colorArgb, false)
         detailIcon.setImageBitmap(SpriteLoader.sheetCell(ctx.assets, item.spriteRow, item.spriteCol))
-        detailName.text = LootSystem.displayName(ctx, item)
         detailName.setTextColor(item.rarity.colorArgb)
-        detailSub.text = ctx.getString(R.string.roguelike_inventory_subtitle,
-            ctx.getString(item.slot.labelRes), ctx.getString(item.rarity.labelRes), num(LootSystem.rating(item)))
-        detailStats.text = LootSystem.describe(ctx, item).joinToString("\n")
+        detailName.setLex(LootSystem.displayName(ctx, item, linked = true))
+        detailSub.setLex(ctx.getString(R.string.roguelike_inventory_subtitle, ctx.getString(item.slot.labelRes),
+            LexiconText.link(Lexicon.idOf(item.rarity), ctx.getString(item.rarity.labelRes)), num(LootSystem.rating(item))))
+        detailStats.setLex(LootSystem.describe(ctx, item, linked = true).joinToString("\n"))
 
         if (selectedIsEquipped) {
             detailCmp.text = ctx.getString(R.string.roguelike_loot_equipped_badge)

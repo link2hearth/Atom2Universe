@@ -170,6 +170,11 @@ class RoguelikeGame(
                         for (i in 0 until arr.length())
                             runCatching { Resonance.valueOf(arr.getString(i)) }.getOrNull()?.let { knownResonances += it }
                     }
+                    j.optJSONArray("reactions")?.let { arr ->
+                        for (i in 0 until arr.length())
+                            runCatching { Reaction.valueOf(arr.getString(i)) }.getOrNull()?.let { knownReactions += it }
+                    }
+                    j.optJSONArray("affinities")?.let { arr -> for (i in 0 until arr.length()) knownAffinities += arr.getString(i) }
                     // Une paire portée avant que les résonances existent : on la connaît déjà
                     discoverResonances()
                 }
@@ -579,5 +584,7 @@ class RoguelikeGame(
         put("relicSlots", org.json.JSONArray().also { arr -> hero.relicSlots.forEach { arr.put(it?.name ?: "") } })
         put("relicCooldowns", JSONObject().also { o -> hero.relicCooldowns.forEach { (r, cd) -> o.put(r.name, cd) } })
         put("resonances", org.json.JSONArray().also { arr -> hero.knownResonances.forEach { arr.put(it.name) } })
+        put("reactions", org.json.JSONArray().also { arr -> hero.knownReactions.forEach { arr.put(it.name) } })
+        put("affinities", org.json.JSONArray().also { arr -> hero.knownAffinities.forEach { arr.put(it) } })
     }
 }

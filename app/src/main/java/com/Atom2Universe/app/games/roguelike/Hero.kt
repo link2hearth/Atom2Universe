@@ -48,6 +48,11 @@ class Hero {
         const val RELIC_DAMAGE_PER_POINT = 0.05f
         const val WIS_POINTS_PER_TURN = 6
         const val GOLD_PER_CHA = 0.03f
+        /** Le critique de départ, et ce que rapporte un point de DEX. */
+        const val BASE_CRIT = 0.05f
+        const val CRIT_PER_DEX = 0.01f
+        /** Ce qu'un point de DEX ajoute à la fenêtre de parade, en millisecondes. */
+        const val PARRY_MS_PER_DEX = 4
         /** Sans arme, on se bat à mains nues. */
         const val FIST_MIN       = 2
         const val FIST_MAX       = 4
@@ -78,6 +83,8 @@ class Hero {
         /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
         const val MAX_CRIT = 0.6f
 
+        fun affinityKey(type: MonsterType, element: Element) = "${type.name}:${element.name}"
+
         /** Un héros neuf : une épée d'Hydrogène toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
             val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.NORMAL, nextLootId++, Random(0))
@@ -105,6 +112,19 @@ class Hero {
     var specialCooldown = 0
     /** Les résonances déjà portées une fois : l'inventaire les liste, les autres restent cachées. */
     val knownResonances = mutableSetOf<Resonance>()
+    /**
+     * Ce que le lexique ne montre qu'une fois vu : les réactions déclenchées, et les affinités
+     * des monstres (« TYPE:ELEMENT ») testées d'un sort. Rien ne les annonce en jeu, le lexique
+     * ne doit pas les révéler d'avance.
+     */
+    val knownReactions = mutableSetOf<Reaction>()
+    val knownAffinities = mutableSetOf<String>()
+
+    /** Un sort vient de frapper [type] : on retient l'affinité testée et les réactions vues. */
+    fun discover(type: MonsterType, element: Element, reactions: Collection<Reaction>) {
+        knownAffinities += affinityKey(type, element)
+        knownReactions += reactions
+    }
 
     /** L'étage le plus profond jamais atteint : il ouvre les emplacements de relique. On ne le perd pas en mourant. */
     var deepestFloor = 1
@@ -223,7 +243,7 @@ class Hero {
      * Le critique du héros, sans plafond : 5 % + 1 % par point de DEX + bonus des objets. En
      * profondeur, il peut dépasser 100 % : les monstres y résistent (voir [critChance]).
      */
-    val critRating get() = 0.05f + 0.01f * effective(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)
+    val critRating get() = BASE_CRIT + CRIT_PER_DEX * effective(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)
 
     /**
      * La vraie chance de critique à l'étage [floor] : le critique du héros moins la résistance
@@ -268,7 +288,7 @@ class Hero {
     fun dodgeChance(floor: Int) = 1f - ArmorClass.hitChance(armorClass, ArmorClass.monsterAttack(floor))
 
     /** La parade s'élargit de 4 ms par point de DEX. */
-    val parryBonusMs get() = (4 * effective(StatType.DEX)).roundToInt()
+    val parryBonusMs get() = (PARRY_MS_PER_DEX * effective(StatType.DEX)).roundToInt()
 
     /**
      * La vitesse du héros : ce que sa jauge gagne par unité de temps (1 : normale). Les
