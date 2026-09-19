@@ -21,14 +21,16 @@ enum class Archetype(
     @StringRes val specialRes: Int,
     val weight: ArmorWeight,
     val color: Int,
+    /** Sa main gauche : celle qui renforce son Spécial (le Spécial marche sans elle, moins bien). */
+    val offhand: ItemBase,
 ) : Labeled {
-    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt()),
-    ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt()),
-    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt()),
+    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt(), ItemBase.SHIELD),
+    ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt(), ItemBase.BOW),
+    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt(), ItemBase.ORB),
     /** Entre le voleur et le guerrier : deux coups d'arme d'affilée, et la roulade. */
-    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt()),
+    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt(), ItemBase.LANTERN),
     /** Sous le mage : des pantins gratuits qui encaissent à sa place et frappent en écho. */
-    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt()),
+    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt(), ItemBase.GRIMOIRE),
 }
 
 /**
@@ -167,6 +169,9 @@ class Hero {
 
     /** Le Spécial de cet archétype est-il amélioré par le set porté ? */
     fun specialBoosted(a: Archetype) = setArchetype == a
+
+    /** Le héros est de cet archétype et porte sa main gauche : elle renforce son Spécial. */
+    fun classOffhand(a: Archetype) = archetype == a && equipped[EquipSlot.OFFHAND]?.base == a.offhand
 
     val hasShield get() = equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD
 

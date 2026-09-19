@@ -164,4 +164,47 @@ class NewArchetypesTest {
         for (slot in IsotopeSets.SLOTS) hero.equipped[slot] = hero.equipped.getValue(slot).copy(isotopeZ = null)
         assertEquals(hero.spellCooldown(6) - IsotopeSets.RECHARGE_CUT, withSet)
     }
+
+    // ── Les mains gauches de classe ─────────────────────────────────────────────
+
+    /** Une main gauche sans aucune stat : seul son effet de classe joue. */
+    private fun bareOffhand(base: ItemBase) = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0)).copy(implicits = emptyList())
+
+    private fun withOffhand(a: Archetype, base: ItemBase?) = heroOf(a).also { h -> base?.let { h.equipped[EquipSlot.OFFHAND] = bareOffhand(it) } }
+
+    @Test
+    fun chaqueArchetypeAUneMainGaucheEtElleNeCompteQueChezLui() {
+        assertEquals(setOf(ItemBase.SHIELD, ItemBase.BOW, ItemBase.ORB, ItemBase.LANTERN, ItemBase.GRIMOIRE), Archetype.entries.map { it.offhand }.toSet())
+        assertTrue(withOffhand(Archetype.ROGUE, ItemBase.BOW).classOffhand(Archetype.ROGUE))
+        assertTrue("l'arc ne sert pas au mage", !withOffhand(Archetype.MAGE, ItemBase.BOW).classOffhand(Archetype.MAGE))
+        assertTrue("sans archétype, rien", !Hero.starter().also { it.equipped[EquipSlot.OFFHAND] = bareOffhand(ItemBase.BOW) }.classOffhand(Archetype.ROGUE))
+    }
+
+    @Test
+    fun avecSonArcLeVoleurExposeDesCiblesPlusSaines() {
+        fun exposed(hero: Hero): Boolean {
+            val c = fight(hero, hp = 1000)
+            c.enemies[0].hp = 500   // à la moitié de ses PV
+            return c.isExposed(c.enemies[0])
+        }
+        assertTrue(!exposed(withOffhand(Archetype.ROGUE, null)))
+        assertTrue(exposed(withOffhand(Archetype.ROGUE, ItemBase.BOW)))
+    }
+
+    @Test
+    fun leGrimoireDonneUnPantinEtUnEchoPlusFort() {
+        val plain = fight(withOffhand(Archetype.NECROMANCER, null))
+        val book = fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))
+        assertEquals(plain.puppetHp.size + Combat.GRIMOIRE_PUPPETS, book.puppetHp.size)
+        fun echo(c: Combat): Int { val before = c.enemies[0].hp; val hit = c.attack(0, Timing.PERFECT); return before - c.enemies[0].hp - hit.damage }
+        assertTrue(echo(fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))) > echo(fight(withOffhand(Archetype.NECROMANCER, null))))
+    }
+
+    @Test
+    fun laLanternePorteLeSecondCoupDeLEnchainement() {
+        val without = fight(withOffhand(Archetype.VAGABOND, null)).chain(0, Timing.MISS, Timing.MISS)
+        val with = fight(withOffhand(Archetype.VAGABOND, ItemBase.LANTERN)).chain(0, Timing.MISS, Timing.MISS)
+        assertEquals("le premier coup ne change pas", without[0].damage, with[0].damage)
+        assertTrue("le second frappe plus fort : ${with[1].damage} contre ${without[1].damage}", with[1].damage > without[1].damage)
+    }
 }

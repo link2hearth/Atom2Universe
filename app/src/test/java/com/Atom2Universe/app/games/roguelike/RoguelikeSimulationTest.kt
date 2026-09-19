@@ -276,7 +276,7 @@ class RoguelikeSimulationTest {
             val out = StringBuilder("══════ Archétypes et main gauche (victoires · tours par combat ; ${series} séries de 3 combats, joueur $skill, relique ${relic ?: "aucune"}) ══════\n")
             for (a in Archetype.entries) {
                 out.appendLine("── ${a.name} ──")
-                out.appendLine(String.format("%5s%22s%22s%22s%22s%14s", "Étage", "tirée", "meilleur bouclier", "meilleure orbe", "sans", "% boucliers"))
+                out.appendLine(String.format("%5s%22s%22s%22s%22s%22s%14s", "Étage", "tirée", "meilleur bouclier", "meilleure orbe", "SA main gauche", "sans", "% boucliers"))
                 for (floor in listOf(5, 13, 25, 50)) {
                     fun run(mode: Int): Triple<Double, Double, Double> {
                         val stuck = FloorStat()
@@ -287,8 +287,8 @@ class RoguelikeSimulationTest {
                             for (slot in IsotopeSets.SLOTS) hero.equipped[slot] = classicPiece(floor, slot, a.weight, rng)
                             if (hero.equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD) shields++
                             when (mode) {
-                                1, 3 -> {
-                                    val wanted = if (mode == 1) ItemBase.SHIELD else ItemBase.ORB
+                                1, 3, 4 -> {
+                                    val wanted = when (mode) { 1 -> ItemBase.SHIELD; 3 -> ItemBase.ORB; else -> a.offhand }
                                     var best: Equipment? = null
                                     repeat(3) {
                                         var e: Equipment
@@ -314,8 +314,8 @@ class RoguelikeSimulationTest {
                         }
                         return Triple(100.0 * wins / series, 100.0 * shields / series, stuck.turnsInFight.toDouble() / fights.coerceAtLeast(1))
                     }
-                    val tirée = run(0); val bouclier = run(1); val orbe = run(3); val sans = run(2)
-                    out.appendLine(String.format("%5d", floor) + listOf(tirée, bouclier, orbe, sans).joinToString("") { String.format("%22s", String.format("%5.1f%% · %4.1f t", it.first, it.third)) } + String.format("%13.0f%%", tirée.second))
+                    val tirée = run(0); val bouclier = run(1); val orbe = run(3); val sienne = run(4); val sans = run(2)
+                    out.appendLine(String.format("%5d", floor) + listOf(tirée, bouclier, orbe, sienne, sans).joinToString("") { String.format("%22s", String.format("%5.1f%% · %4.1f t", it.first, it.third)) } + String.format("%13.0f%%", tirée.second))
                 }
                 out.appendLine()
             }

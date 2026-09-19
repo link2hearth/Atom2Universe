@@ -340,4 +340,7 @@
     <string name="lex_set_special_puppets">%1$d puppets instead of %2$d, and the recharge is %3$d turns instead of %4$d.</string>
     <string name="lex_set_crit_damage">Also gives +%1$s to critical damage.</string>
     <string name="lex_set_recharge">Also shortens the recharge of your relics by %1$d turn.</string>
+    <string name="lex_base_bow">Rogue: [[special_deadly|Deadly strike]] works on targets under %1$d%% of their HP (instead of %2$d%%).</string>
+    <string name="lex_base_grimoire">Necromancer: %1$d more puppet at the start of each fight, and every echo hits %2$d%% harder.</string>
+    <string name="lex_base_lantern">Wanderer: the second blow of the [[special_combo|Combo]] hits %1$d%% harder.</string>
 </resources>

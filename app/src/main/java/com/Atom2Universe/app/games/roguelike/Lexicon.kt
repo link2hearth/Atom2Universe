@@ -555,6 +555,9 @@ object Lexicon {
                 if (b.spellBonus > 0f) add(R.string.lex_base_spell, env.pct(b.spellBonus))
                 if (b == ItemBase.SHIELD) add(R.string.lex_base_shield, dodgePct(ArmorClass.SHIELD))
                 if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
+                if (b == ItemBase.BOW) add(R.string.lex_base_bow, env.pct(Combat.BOW_EXPOSE_THRESHOLD), env.pct(Combat.DEADLY_HP_THRESHOLD))
+                if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, Combat.GRIMOIRE_PUPPETS, env.pct(Combat.GRIMOIRE_ECHO_BONUS))
+                if (b == ItemBase.LANTERN) add(R.string.lex_base_lantern, env.pct(Combat.LANTERN_CHAIN_BONUS))
                 if (b in ArmorWeight.WEIGHTED) add(R.string.lex_base_weights)
             }
         }

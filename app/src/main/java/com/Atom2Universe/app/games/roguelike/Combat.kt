@@ -853,6 +853,14 @@ class Combat(
         const val PUPPET_SELF_SHARE = 0.60f
         const val ECHO_SHARE = 0.25f
         const val ECHO_GOOD_FACTOR = 0.5f
+        /** L'arc du voleur : une cible sous cette part de ses PV est exposée (au lieu de [DEADLY_HP_THRESHOLD]). */
+        const val BOW_EXPOSE_THRESHOLD = 0.60f
+        /** Le grimoire du nécromancien : un pantin de plus. */
+        const val GRIMOIRE_PUPPETS = 1
+        /** Le grimoire relève aussi l'écho de chaque pantin de cette part. */
+        const val GRIMOIRE_ECHO_BONUS = 1.0f
+        /** La lanterne du vagabond : le second coup de l'Enchaînement frappe de cette part en plus. */
+        const val LANTERN_CHAIN_BONUS = 1.0f
         /** Sa parade parfaite soigne les pantins de cette part de leurs PV. */
         const val PUPPET_PARRY_HEAL = 0.5f
 
@@ -967,7 +975,8 @@ class Combat(
     init {
         hero.floor = floor
         if (hero.archetype == Archetype.NECROMANCER) {
-            val count = if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS
+            val count = (if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS) +
+                if (hero.classOffhand(Archetype.NECROMANCER)) GRIMOIRE_PUPPETS else 0
             repeat(count) { puppetHpList += puppetMaxHp }
         }
         advance()
@@ -995,7 +1004,8 @@ class Combat(
      * plante son coup mortel.
      */
     fun isExposed(e: Enemy) = e.alive && (e.poisonTurns > 0 || e.frozen || e.paralyzedTurns > 0 || e.marked ||
-        e.blindedTurns > 0 || e.charmed || e.hp < e.maxHp * DEADLY_HP_THRESHOLD)
+        e.blindedTurns > 0 || e.charmed ||
+        e.hp < e.maxHp * (if (hero.classOffhand(Archetype.ROGUE)) BOW_EXPOSE_THRESHOLD else DEADLY_HP_THRESHOLD))
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
 
@@ -1343,9 +1353,10 @@ class Combat(
         check(canUseSpecial() && hero.archetype == Archetype.VAGABOND)
         val bonus = if (hero.specialBoosted(Archetype.VAGABOND)) 1f + IsotopeSets.CHAIN_DAMAGE_BONUS else 1f
         val hits = mutableListOf<HitResult>()
-        for (timing in listOf(first, second).take(CHAIN_HITS)) {
+        val lantern = hero.classOffhand(Archetype.VAGABOND)
+        for ((i, timing) in listOf(first, second).take(CHAIN_HITS).withIndex()) {
             val at = if (enemies[target].alive) target else aliveIndices().firstOrNull() ?: break
-            hits += weaponHit(at, timing, damageMult = bonus)
+            hits += weaponHit(at, timing, damageMult = bonus * if (lantern && i > 0) 1f + LANTERN_CHAIN_BONUS else 1f)
         }
         spendSpecial()
         afterPlayerAction(specialCost())
@@ -1373,10 +1384,11 @@ class Combat(
         val factor = when (timing) { Timing.PERFECT -> 1f; Timing.GOOD -> ECHO_GOOD_FACTOR; Timing.MISS -> 0f }
         if (factor <= 0f || puppetHpList.none { it > 0 }) return
         val avg = (hero.weaponMin + hero.weaponMax) / 2f
+        val echoMult = if (hero.classOffhand(Archetype.NECROMANCER)) 1f + GRIMOIRE_ECHO_BONUS else 1f
         for (hp in puppetHpList) {
             if (hp <= 0) continue
             val at = if (enemies[target].alive) target else aliveIndices().firstOrNull() ?: return
-            wound(at, avg * ECHO_SHARE * factor)
+            wound(at, avg * ECHO_SHARE * factor * echoMult)
         }
     }
 
