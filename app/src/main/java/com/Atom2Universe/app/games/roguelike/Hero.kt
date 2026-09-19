@@ -12,7 +12,9 @@ import kotlin.random.Random
  * du combat (voir [Combat]) :
  *  - Guerrier (lourd) : **blocage** au bouclier, et **Garde** (fenêtre de parade doublée) ;
  *  - Voleur (léger) : **esquive + riposte**, et **Coup mortel** sur une cible exposée ;
- *  - Mage (tissu) : **contresort** (une recharge de relique gagnée), et **Image miroir**.
+ *  - Mage (tissu) : **contresort** (une recharge de relique gagnée), et **Image miroir** ;
+ *  - Vagabond (intermédiaire) : **roulade** (esquive, et son prochain coup frappe plus fort), et **Enchaînement** ;
+ *  - Nécromancien (super léger) : des **pantins** qui encaissent et frappent en écho, et le **Rappel** des pantins.
  */
 enum class Archetype(
     @StringRes override val labelRes: Int,
@@ -23,6 +25,10 @@ enum class Archetype(
     WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt()),
     ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt()),
     MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt()),
+    /** Entre le voleur et le guerrier : deux coups d'arme d'affilée, et la roulade. */
+    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt()),
+    /** Sous le mage : des pantins gratuits qui encaissent à sa place et frappent en écho. */
+    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt()),
 }
 
 /**
@@ -273,13 +279,14 @@ class Hero {
      */
     fun critChance(floor: Int) = (critRating -
         AffixBudget.critResistance(LootSystem.powerCenter(floor).roundToInt())).coerceIn(0f, MAX_CRIT)
-    val critMult get() = BASE_CRIT_MULT + equipSum(StatType.CRIT_DAMAGE)
+    val critMult get() = BASE_CRIT_MULT + equipSum(StatType.CRIT_DAMAGE) + if (specialBoosted(Archetype.VAGABOND)) IsotopeSets.CRIT_DAMAGE_BONUS else 0f
 
     /** Part des dégâts infligés à l'épée rendue en PV. */
     val lifeSteal get() = equipSum(StatType.LIFE_STEAL)
 
     /** Recharge des sorts : SAG retire un tour tous les 6 points. */
-    fun spellCooldown(base: Int) = (base - (effective(StatType.WIS) / WIS_POINTS_PER_TURN).toInt()).coerceAtLeast(1)
+    fun spellCooldown(base: Int) = (base - (effective(StatType.WIS) / WIS_POINTS_PER_TURN).toInt() -
+        if (specialBoosted(Archetype.NECROMANCER)) IsotopeSets.RECHARGE_CUT else 0).coerceAtLeast(1)
 
     /**
      * La recharge d'une relique après son lancer : la SAG la raccourcit, jamais sous
@@ -299,7 +306,8 @@ class Hero {
     val armorClass: Int get() {
         val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
         val dexCounts = pieces.none { it.weight?.dexCounts == false }
-        val dex = if (dexCounts) modifier(StatType.DEX) else 0
+        val dexCap = pieces.minOfOrNull { it.weight?.dexCap ?: Int.MAX_VALUE } ?: Int.MAX_VALUE
+        val dex = if (dexCounts) modifier(StatType.DEX).coerceAtMost(dexCap) else 0
         return ArmorClass.BASE + SpellSave.proficiency(armorPower) + equipped.values.sumOf { it.acBonus } + dex
     }
 

@@ -52,7 +52,7 @@
     <string name="lex_stat_armor">Armure</string>
     <string name="lex_stat_armor_1">Réduit les dégâts de chaque coup qui te touche.</string>
     <string name="lex_stat_armor_2">Elle protège moins face à des monstres plus profonds.</string>
-    <string name="lex_stat_armor_3">Selon le poids : [[weight_cloth|tissu]] ×%1$s, [[weight_light|léger]] ×%2$s, [[weight_heavy|lourd]] ×%3$s</string>
+    <string name="lex_stat_armor_3">Selon le poids : [[weight_ultralight|super léger]] ×%1$s, [[weight_cloth|tissu]] ×%2$s, [[weight_light|léger]] ×%3$s, [[weight_medium|intermédiaire]] ×%4$s, [[weight_heavy|lourd]] ×%5$s</string>
     <string name="lex_you_armor">Toi : %1$s, soit %2$d %% de dégâts en moins à l\'étage %3$d</string>
     <string name="lex_stat_dodge">Esquive</string>
     <string name="lex_stat_dodge_1">La chance que les monstres de l\'étage te ratent.</string>
@@ -256,7 +256,7 @@
     <string name="lex_target_self">toi</string>
     <string name="lex_archetype">Archétype</string>
     <string name="lex_archetype_1">Ce que tu portes fait ta classe : rien n\'est à choisir.</string>
-    <string name="lex_archetype_2">Il vient de %1$d pièces sur 3 (casque, armure, bottes) du même poids : [[weight_heavy|lourd]] pour le [[archetype_warrior|Guerrier]], [[weight_light|léger]] pour le [[archetype_rogue|Voleur]], [[weight_cloth|tissu]] pour le [[archetype_mage|Mage]].</string>
+    <string name="lex_archetype_2">Il vient de %1$d pièces sur 3 (casque, armure, bottes) du même poids : [[weight_heavy|lourd]] pour le [[archetype_warrior|Guerrier]], [[weight_medium|intermédiaire]] pour le [[archetype_vagabond|Vagabond]], [[weight_light|léger]] pour le [[archetype_rogue|Voleur]], [[weight_cloth|tissu]] pour le [[archetype_mage|Mage]], [[weight_ultralight|super léger]] pour le [[archetype_necromancer|Nécromancien]].</string>
     <string name="lex_archetype_3">Sans majorité, pas d\'archétype : le [[special|Spécial]] reste verrouillé.</string>
     <string name="lex_archetype_4">N\'importe quelle relique peut être portée par n\'importe quel archétype.</string>
     <string name="lex_archetype_warrior_1">Il encaisse et renvoie les coups.</string>
@@ -326,4 +326,18 @@
     <string name="lex_set_speed">Donne aussi %1$d %% de vitesse en plus.</string>
     <string name="lex_set_spell">Donne aussi %1$d %% de dégâts des sorts en plus.</string>
     <string name="lex_base_orb_damage">+%1$d %% à tous les dégâts que tu infliges, arme et sorts.</string>
+    <string name="lex_archetype_vagabond_1">Il se bat un peu à tout : un peu de défense, un peu de mobilité.</string>
+    <string name="lex_archetype_vagabond_2">Parade parfaite : une roulade. Il évite le coup, et son prochain coup d\'arme frappe %1$d %% plus fort.</string>
+    <string name="lex_archetype_necromancer_1">Ses pantins encaissent les coups et frappent en retour.</string>
+    <string name="lex_archetype_necromancer_2">Parade parfaite : ses pantins récupèrent %1$d %% de leurs PV.</string>
+    <string name="lex_archetype_necromancer_3">Tu commences chaque combat avec %1$d pantins, qui ont chacun %2$d %% de tes PV max. Ils prennent %3$d %% de chaque coup que tu aurais reçu, tu gardes le reste. Chaque coup d\'arme est répété par chaque pantin à hauteur de %4$d %% de ses dégâts : en entier avec un geste parfait, la moitié avec un bon geste, rien avec un raté.</string>
+    <string name="lex_special_combo_1">%1$d coups d\'arme d\'affilée, un geste par coup, pour une seule action.</string>
+    <string name="lex_special_puppets_1">Les pantins tombés se relèvent avec tous leurs PV, et chaque pantin frappe une salve d\'écho pleine, chacun un ennemi différent.</string>
+    <string name="lex_weight_ultralight_1">Presque pas d\'armure : il compte sur ses pantins.</string>
+    <string name="lex_weight_medium_1">Un peu de tout : une bonne armure et un peu d\'esquive.</string>
+    <string name="lex_weight_dex_cap">La [[attr_dex|DEX]] compte dans l\'esquive, jusqu\'à +%1$d.</string>
+    <string name="lex_set_special_combo">Chaque coup de l\'enchaînement frappe %1$d %% plus fort, et la recharge passe à %2$d tours au lieu de %3$d.</string>
+    <string name="lex_set_special_puppets">%1$d pantins au lieu de %2$d, et la recharge passe à %3$d tours au lieu de %4$d.</string>
+    <string name="lex_set_crit_damage">Donne aussi +%1$s aux dégâts critiques.</string>
+    <string name="lex_set_recharge">Raccourcit aussi de %1$d tour la recharge de tes reliques.</string>
 </resources>

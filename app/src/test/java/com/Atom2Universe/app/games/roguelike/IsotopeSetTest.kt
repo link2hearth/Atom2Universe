@@ -30,7 +30,7 @@ class IsotopeSetTest {
 
     @Test
     fun lArchetypeTourneAvecLeNumeroAtomique() {
-        val wanted = listOf(Archetype.WARRIOR, Archetype.ROGUE, Archetype.MAGE, Archetype.WARRIOR)
+        val wanted = listOf(Archetype.WARRIOR, Archetype.ROGUE, Archetype.MAGE, Archetype.VAGABOND, Archetype.NECROMANCER, Archetype.WARRIOR)
         for ((i, a) in wanted.withIndex()) assertEquals(a, IsotopeSet(i + 1, 1).archetype)
         assertEquals(Archetype.WARRIOR, deuterium.archetype)
         assertEquals(Archetype.ROGUE, helium3.archetype)
@@ -44,9 +44,9 @@ class IsotopeSetTest {
             for (floor in s.firstFloor..s.lastFloor) assertEquals(s, IsotopeSets.forFloor(floor))
             assertTrue(IsotopeSets.forFloor(s.firstFloor - 1) != s)
         }
-        assertNull(IsotopeSets.forFloor(76))
+        assertNull(IsotopeSets.forFloor(126))
         repeat(3000) {
-            val outside = LootSystem.generate(rng.nextInt(76, 300), 0, rng)
+            val outside = LootSystem.generate(rng.nextInt(126, 400), 0, rng)
             assertNull("aucune pièce de set hors des tranches", outside.isotopeZ)
         }
     }

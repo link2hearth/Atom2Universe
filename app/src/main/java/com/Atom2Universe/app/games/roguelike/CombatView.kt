@@ -243,7 +243,7 @@ class CombatView @JvmOverloads constructor(
         if (!c.enemies[target].alive) target = c.aliveIndices().first()
         val hits = when (val a = pendingAction) {
             is Action.Cast -> c.castRelic(a.relic, target, timing).hits
-            Action.Deadly  -> listOf(c.deadlyStrike(target, timing))
+            Action.Deadly  -> if (c.hero.archetype == Archetype.VAGABOND) c.chain(target, timing, timing) else listOf(c.deadlyStrike(target, timing))
             else           -> listOf(c.attack(target, timing))
         }
         pendingAction = null
@@ -311,6 +311,7 @@ class CombatView @JvmOverloads constructor(
         when (c.hero.archetype) {
             Archetype.WARRIOR -> { c.guard(); showBanner(context.getString(R.string.roguelike_combat_guard), 0xFFBCAAA4.toInt()) }
             Archetype.MAGE    -> { c.mirrorImage(); showBanner(context.getString(R.string.roguelike_combat_mirror_cast), 0xFFB39DDB.toInt()) }
+            Archetype.NECROMANCER -> { c.recallPuppets(); showBanner(context.getString(R.string.roguelike_combat_puppets), 0xFF80CBC4.toInt()) }
             else -> return
         }
         hitTargets = emptySet()
@@ -948,7 +949,7 @@ class CombatView @JvmOverloads constructor(
             tappedEnemy >= 0 && c.enemies[tappedEnemy].alive -> { target = tappedEnemy; invalidate() }
             attackBtn.contains(x, y) -> choose(Action.Attack)
             specialBtn.contains(x, y) && c.canUseSpecial() ->
-                if (c.hero.archetype == Archetype.ROGUE) choose(Action.Deadly) else useInstantSpecial(c)
+                if (c.hero.archetype == Archetype.ROGUE || c.hero.archetype == Archetype.VAGABOND) choose(Action.Deadly) else useInstantSpecial(c)
             else -> {
                 val slot = relicBtns.indexOfFirst { it.contains(x, y) }
                 val relic = if (slot >= 0) c.hero.relicSlots[slot] else null

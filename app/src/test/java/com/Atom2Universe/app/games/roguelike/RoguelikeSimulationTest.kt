@@ -742,6 +742,9 @@ class RoguelikeSimulationTest {
                     // Garde et doubles ne frappent pas : jamais juste après un autre tour sans frapper
                     Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.2f && !lastWasSupport) ({ c.guard(); lastWasSupport = true }) else null
                     Archetype.MAGE    -> if (c.mirrorImages == 0 && !lastWasSupport) ({ c.mirrorImage(); lastWasSupport = true }) else null
+                    // Deux coups d'arme : il enchaîne dès qu'il peut. Les pantins tombés, on les rappelle
+                    Archetype.VAGABOND -> ({ c.chain(target, strike(skill, rng), strike(skill, rng)); Unit })
+                    Archetype.NECROMANCER -> if (c.puppetHp.any { it <= 0 } && !lastWasSupport) ({ c.recallPuppets(); lastWasSupport = true }) else null
                     null -> null
                 }
                 lastWasSupport = false

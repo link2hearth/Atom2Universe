@@ -80,6 +80,7 @@ object Lexicon {
     /** Le Spécial d'un archétype : Garde, Coup mortel, Image miroir. */
     fun specialId(a: Archetype) = when (a) {
         Archetype.WARRIOR -> "special_guard"; Archetype.ROGUE -> "special_deadly"; Archetype.MAGE -> "special_mirror"
+        Archetype.VAGABOND -> "special_combo"; Archetype.NECROMANCER -> "special_puppets"
     }
 
     @StringRes fun elementRes(e: Element) = when (e) {
@@ -203,7 +204,8 @@ object Lexicon {
             },
             entry(idOf(StatType.ARMOR), c, R.string.lex_stat_armor) {
                 add(R.string.lex_stat_armor_1); add(R.string.lex_stat_armor_2)
-                add(R.string.lex_stat_armor_3, env.dec(ArmorWeight.CLOTH.armorMult), env.dec(ArmorWeight.LIGHT.armorMult), env.dec(ArmorWeight.HEAVY.armorMult))
+                add(R.string.lex_stat_armor_3, env.dec(ArmorWeight.ULTRALIGHT.armorMult), env.dec(ArmorWeight.CLOTH.armorMult), env.dec(ArmorWeight.LIGHT.armorMult),
+                    env.dec(ArmorWeight.MEDIUM.armorMult), env.dec(ArmorWeight.HEAVY.armorMult))
                 env.hero?.let { you(R.string.lex_you_armor, env.num(it.armor), 100 - Math.round(it.mitigate(100f, env.floor)), env.floor) }
             },
             entry("stat_dodge", c, R.string.lex_stat_dodge) {
@@ -480,6 +482,13 @@ object Lexicon {
                     Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
                     Archetype.ROGUE -> { add(R.string.lex_archetype_rogue_1); add(R.string.lex_archetype_rogue_2) }
                     Archetype.MAGE -> { add(R.string.lex_archetype_mage_1); add(R.string.lex_archetype_mage_2) }
+                    Archetype.VAGABOND -> { add(R.string.lex_archetype_vagabond_1); add(R.string.lex_archetype_vagabond_2, env.pct(Combat.ROLL_BONUS)) }
+                    Archetype.NECROMANCER -> {
+                        add(R.string.lex_archetype_necromancer_1)
+                        add(R.string.lex_archetype_necromancer_2, env.pct(Combat.PUPPET_PARRY_HEAL))
+                        add(R.string.lex_archetype_necromancer_3, Combat.PUPPETS, env.pct(Combat.PUPPET_HP_SHARE),
+                            env.pct(1f - Combat.PUPPET_SELF_SHARE), env.pct(Combat.ECHO_SHARE))
+                    }
                 }
                 add(R.string.lex_archetype_special, env.link(specialId(a), env.s(a.specialRes)))
             }
@@ -495,6 +504,12 @@ object Lexicon {
             entry(specialId(Archetype.MAGE), c, Archetype.MAGE.specialRes) {
                 add(R.string.lex_special_mirror_1, Combat.MIRROR_IMAGES); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
+            entry(specialId(Archetype.VAGABOND), c, Archetype.VAGABOND.specialRes) {
+                add(R.string.lex_special_combo_1, Combat.CHAIN_HITS); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+            },
+            entry(specialId(Archetype.NECROMANCER), c, Archetype.NECROMANCER.specialRes) {
+                add(R.string.lex_special_puppets_1); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+            },
         )
         return listOf(general) + each + specials
     }
@@ -509,11 +524,14 @@ object Lexicon {
                     ArmorWeight.CLOTH -> R.string.lex_weight_cloth_1
                     ArmorWeight.LIGHT -> R.string.lex_weight_light_1
                     ArmorWeight.HEAVY -> R.string.lex_weight_heavy_1
+                    ArmorWeight.MEDIUM -> R.string.lex_weight_medium_1
+                    ArmorWeight.ULTRALIGHT -> R.string.lex_weight_ultralight_1
                 })
                 add(R.string.lex_weight_armor, env.dec(w.armorMult))
                 if (w.acPerPiece > 0) add(R.string.lex_weight_dodge, dodgePct(w.acPerPiece))
                 if (w.speedPerPiece != 0f) add(R.string.lex_weight_speed, env.signed(Math.round(w.speedPerPiece * 100)))
-                add(if (w.dexCounts) R.string.lex_weight_dex_yes else R.string.lex_weight_dex_no)
+                if (w.dexCounts && w.dexCap != Int.MAX_VALUE) add(R.string.lex_weight_dex_cap, w.dexCap)
+                else add(if (w.dexCounts) R.string.lex_weight_dex_yes else R.string.lex_weight_dex_no)
                 Archetype.entries.firstOrNull { it.weight == w }?.let {
                     add(R.string.lex_weight_archetype, env.link(idOf(it), env.s(it.labelRes)))
                 }
@@ -572,6 +590,16 @@ object Lexicon {
                     add(R.string.lex_set_special_mirror, IsotopeSets.MIRROR_IMAGES, Combat.MIRROR_IMAGES,
                         IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
                     add(R.string.lex_set_spell, env.pct(IsotopeSets.SPELL_SHARE))
+                }
+                Archetype.VAGABOND -> {
+                    add(R.string.lex_set_special_combo, env.pct(IsotopeSets.CHAIN_DAMAGE_BONUS),
+                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                    add(R.string.lex_set_crit_damage, env.dec(IsotopeSets.CRIT_DAMAGE_BONUS))
+                }
+                Archetype.NECROMANCER -> {
+                    add(R.string.lex_set_special_puppets, IsotopeSets.PUPPETS, Combat.PUPPETS,
+                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                    add(R.string.lex_set_recharge, IsotopeSets.RECHARGE_CUT)
                 }
             }
             add(R.string.lex_set_drop, env.pct(IsotopeSets.DROP_SHARE))

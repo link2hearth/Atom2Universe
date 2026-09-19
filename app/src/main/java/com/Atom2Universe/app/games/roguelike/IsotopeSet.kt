@@ -93,12 +93,20 @@ object IsotopeSets {
     /** Mage : plus de doubles à l'Image miroir, et les dégâts des sorts montent. */
     const val MIRROR_IMAGES = 4
     const val SPELL_SHARE = 0.25f
+    /** Vagabond : chaque coup de l'Enchaînement frappe plus fort, et les dégâts critiques montent. */
+    const val CHAIN_DAMAGE_BONUS = 0.25f
+    const val CRIT_DAMAGE_BONUS = 0.5f
+    /** Nécromancien : un pantin de plus, et les recharges de ses sorts raccourcissent d'un tour (la SAG). */
+    const val PUPPETS = 3
+    const val RECHARGE_CUT = 1
 
     /** Les sets qui existent. Un par élément au plus, et aucun pour un élément sans autre isotope. */
     val ALL = listOf(
         IsotopeSet(1, 2, R.string.roguelike_isotope_deuterium),   // lourd
         IsotopeSet(2, 3),                                          // léger
         IsotopeSet(3, 6),                                          // mage
+        IsotopeSet(4, 9),                                          // vagabond
+        IsotopeSet(5, 10),                                         // nécromancien
     )
 
     fun of(z: Int) = ALL.firstOrNull { it.z == z }

@@ -407,4 +407,17 @@
     <string name="roguelike_isotope_deuterium">Deuterium</string>
     <string name="roguelike_item_set_name">%2$s %1$s</string>
     <string name="roguelike_item_set_line">Set %1$s</string>
+    <string name="roguelike_archetype_vagabond">Wanderer</string>
+    <string name="roguelike_archetype_necromancer">Necromancer</string>
+    <string name="roguelike_special_combo">Combo</string>
+    <string name="roguelike_special_puppets">Puppets</string>
+    <string name="roguelike_combat_puppets">PUPPETS!</string>
+    <string name="roguelike_weight_medium">Medium</string>
+    <string name="roguelike_weight_ultralight">Featherlight</string>
+    <string name="roguelike_base_cap">Cap</string>
+    <string name="roguelike_base_hauberk">Hauberk</string>
+    <string name="roguelike_base_greaves">Greaves</string>
+    <string name="roguelike_base_veil">Veil</string>
+    <string name="roguelike_base_shroud">Shroud</string>
+    <string name="roguelike_base_wraps">Wraps</string>
 </resources>

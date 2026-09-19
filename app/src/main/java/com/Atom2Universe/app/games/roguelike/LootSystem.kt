@@ -157,7 +157,7 @@ enum class ItemBase(
  *  - Lourd : beaucoup d'armure, mais la DEX ne compte plus dans la CA — le guerrier, qui
  *    **encaisse**.
  * L'armure réduit les dégâts d'un coup ; la CA ([ArmorClass]) décide s'il touche. La
- * moyenne des trois multiplicateurs vaut 1 : le héros de référence ne change pas.
+ * moyenne des cinq multiplicateurs vaut 1 (0,5 / 0,7 / 0,95 / 1,25 / 1,6) : le héros de référence ne change pas.
  * [speedPerPiece] : l'armure lourde ralentit, la légère accélère, le tissu ne change rien —
  * la moyenne vaut 0, là aussi (voir DONJON.md, « La jauge »).
  * Chaque poids a ses noms de pièces (pas d'adjectif à accorder).
@@ -166,13 +166,21 @@ enum class ArmorWeight(
     @StringRes override val labelRes: Int,
     val armorMult: Float, val acPerPiece: Int, val dexCounts: Boolean, val speedPerPiece: Float,
     @StringRes val helmetRes: Int, @StringRes val chestRes: Int, @StringRes val bootsRes: Int,
+    /** Ce que la DEX peut ajouter à la CA au plus (l'armure intermédiaire de D&D : +2). */
+    val dexCap: Int = Int.MAX_VALUE,
 ) : Labeled {
-    CLOTH(R.string.roguelike_weight_cloth, 0.6f, 0, true, 0f,
+    CLOTH(R.string.roguelike_weight_cloth, 0.7f, 0, true, 0f,
         R.string.roguelike_base_hood, R.string.roguelike_base_robe, R.string.roguelike_base_sandals),
-    LIGHT(R.string.roguelike_weight_light, 0.9f, 1, true, 0.05f,
+    LIGHT(R.string.roguelike_weight_light, 0.95f, 1, true, 0.05f,
         R.string.roguelike_base_coif, R.string.roguelike_base_jerkin, R.string.roguelike_base_boots),
-    HEAVY(R.string.roguelike_weight_heavy, 1.5f, 0, false, -0.05f,
-        R.string.roguelike_base_helm, R.string.roguelike_base_plate, R.string.roguelike_base_sabatons);
+    HEAVY(R.string.roguelike_weight_heavy, 1.6f, 0, false, -0.05f,
+        R.string.roguelike_base_helm, R.string.roguelike_base_plate, R.string.roguelike_base_sabatons),
+    /** Entre le léger et le lourd : le vagabond. La DEX compte dans la CA, jusqu'à +2. */
+    MEDIUM(R.string.roguelike_weight_medium, 1.25f, 0, true, -0.025f,
+        R.string.roguelike_base_cap, R.string.roguelike_base_hauberk, R.string.roguelike_base_greaves, dexCap = 2),
+    /** Sous le tissu : le nécromancien, qui compte sur ses pantins. */
+    ULTRALIGHT(R.string.roguelike_weight_ultralight, 0.5f, 0, true, 0.025f,
+        R.string.roguelike_base_veil, R.string.roguelike_base_shroud, R.string.roguelike_base_wraps);
 
     fun nounRes(base: ItemBase) = when (base) {
         ItemBase.HELMET -> helmetRes
