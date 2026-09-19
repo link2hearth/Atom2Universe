@@ -316,9 +316,13 @@
     <string name="lex_you_depth">You, on floor %1$d: a point is worth %2$s</string>
     <string name="lex_set_title">Set %1$s</string>
     <string name="lex_set_1">An isotope set for the %1$s: three pieces (helmet, armor, boots) of %2$s weight. Its pieces only drop on floors %3$d to %4$d, and are stronger than anything else found there.</string>
-    <string name="lex_set_2">Wear all %1$d pieces to improve your special: %2$s.</string>
+    <string name="lex_set_2">Wear %1$d pieces from isotope sets of this kind (they can come from different sets) to improve your special: %2$s.</string>
     <string name="lex_set_special_guard">Blows are sent back at %1$d%% instead of %2$d%%, and the recharge is %3$d turns instead of %4$d.</string>
     <string name="lex_set_hp">Also gives %1$d%% more max HP.</string>
     <string name="lex_set_drop">%1$d%% of the items found on its floors are a piece of this set.</string>
     <string name="lex_you_set">You: %1$d of %2$d pieces</string>
+    <string name="lex_set_special_deadly">Guaranteed crits gain +%1$s to the multiplier instead of +%2$s, and the recharge is %3$d turns instead of %4$d.</string>
+    <string name="lex_set_special_mirror">%1$d doubles instead of %2$d, and the recharge is %3$d turns instead of %4$d.</string>
+    <string name="lex_set_speed">Also gives %1$d%% more speed.</string>
+    <string name="lex_set_spell">Also gives %1$d%% more spell damage.</string>
 </resources>

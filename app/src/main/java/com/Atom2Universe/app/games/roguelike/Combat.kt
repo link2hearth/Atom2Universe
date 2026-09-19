@@ -1284,8 +1284,11 @@ class Combat(
 
     // ── Le « Spécial » de l'archétype ───────────────────────────────────────────
 
+    /** Le bonus du Coup mortel au multiplicateur de critique : relevé par le set d'isotope léger. */
+    private fun deadlyCritBonus() = if (hero.specialBoosted(Archetype.ROGUE)) IsotopeSets.DEADLY_CRIT_BONUS else DEADLY_CRIT_BONUS
+
     private fun spendSpecial() {
-        val base = if (hero.activeSet != null) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN
+        val base = if (hero.setArchetype != null) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN
         hero.specialCooldown = hero.spellCooldown(base)
     }
 
@@ -1300,7 +1303,7 @@ class Combat(
     /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
     fun mirrorImage() {
         check(canUseSpecial() && hero.archetype == Archetype.MAGE)
-        mirrorImages = MIRROR_IMAGES
+        mirrorImages = if (hero.specialBoosted(Archetype.MAGE)) IsotopeSets.MIRROR_IMAGES else MIRROR_IMAGES
         spendSpecial()
         afterPlayerAction(specialCost())
     }
@@ -1313,7 +1316,7 @@ class Combat(
     fun deadlyStrike(target: Int, timing: Timing): HitResult {
         check(canUseSpecial() && hero.archetype == Archetype.ROGUE)
         val exposed = isExposed(enemies[target]) || ambushReady
-        val result = weaponHit(target, timing, forceCrit = exposed, critBonus = if (exposed) DEADLY_CRIT_BONUS else 0f)
+        val result = weaponHit(target, timing, forceCrit = exposed, critBonus = if (exposed) deadlyCritBonus() else 0f)
         spendSpecial()
         afterPlayerAction(specialCost())
         return result
@@ -1596,7 +1599,7 @@ class Combat(
         // Image miroir, comme dans D&D : avant son jet d'attaque, un d20 dit s'il vise un
         // double — 6+ avec trois doubles, 8+ avec deux, 11+ avec le dernier
         if (mirrorImages > 0) {
-            val need = when (mirrorImages) { 3 -> 6; 2 -> 8; else -> 11 }
+            val need = when (mirrorImages) { 4 -> 5; 3 -> 6; 2 -> 8; else -> 11 }
             if (attackDie() >= need) { mirrorImages--; return EnemyStrike(enemyIndex, 0, parry, imageHit = true, bleed = bled) }
         }
         // Enragé ou aveuglé : il attaque avec désavantage (deux d20, le pire gardé)

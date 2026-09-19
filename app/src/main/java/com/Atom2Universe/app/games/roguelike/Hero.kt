@@ -147,17 +147,18 @@ class Hero {
     }
 
     /**
-     * Le set d'isotope dont les trois pièces (casque, armure, bottes) sont portées, ou null. Il améliore
-     * le Spécial de son archétype ([specialBoosted]) et peut donner des PV en plus.
+     * L'archétype du set d'isotope porté : les trois pièces (casque, armure, bottes) sont des pièces de
+     * sets du **même archétype**, même de sets différents. Null sinon. Il améliore le Spécial
+     * ([specialBoosted]) et donne la stat de base de l'archétype (voir [IsotopeSets]).
      */
-    val activeSet: IsotopeSet? get() {
-        val z = equipped[EquipSlot.HELMET]?.isotopeZ ?: return null
-        val all = IsotopeSets.SLOTS.all { equipped[it]?.isotopeZ == z }
-        return if (all) IsotopeSets.of(z) else null
+    val setArchetype: Archetype? get() {
+        val sets = IsotopeSets.SLOTS.map { equipped[it]?.isotopeSet ?: return null }
+        val a = sets.first().archetype
+        return if (sets.all { it.archetype == a }) a else null
     }
 
     /** Le Spécial de cet archétype est-il amélioré par le set porté ? */
-    fun specialBoosted(a: Archetype) = activeSet?.archetype == a
+    fun specialBoosted(a: Archetype) = setArchetype == a
 
     val hasShield get() = equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD
 
@@ -192,7 +193,7 @@ class Hero {
 
     val maxHp: Int get() {
         val plain = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
-        return (plain * (1f + (activeSet?.hpShare ?: 0f))).roundToInt()
+        return (plain * (1f + if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f)).roundToInt()
     }
 
     /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
@@ -213,7 +214,7 @@ class Hero {
      * pour le mage, DEX pour le Venin du voleur) ajoute 5 % par point, puis les bonus
      * « dégâts des sorts » des objets.
      */
-    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * effective(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG))
+    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * effective(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG) + if (specialBoosted(Archetype.MAGE)) IsotopeSets.SPELL_SHARE else 0f)
 
     /**
      * La puissance d'une relique : l'épée de référence de la puissance de l'arme portée,
@@ -313,7 +314,8 @@ class Hero {
      * affixes « Vitesse » s'ajoutent, l'armure lourde retire 5 % par pièce, la légère en
      * ajoute 5. Bornée pour qu'aucun empilement ne fige le jeu (voir [MIN_SPEED]).
      */
-    val speed get() = (1f + equipSum(StatType.SPEED) + equipped.values.sumOf { it.weightSpeed.toDouble() }.toFloat())
+    val speed get() = (1f + equipSum(StatType.SPEED) + equipped.values.sumOf { it.weightSpeed.toDouble() }.toFloat() +
+        if (specialBoosted(Archetype.ROGUE)) IsotopeSets.SPEED_BONUS else 0f)
         .coerceAtLeast(MIN_SPEED)
 
     /** Or gagné : +3 % par point de CHA. */

@@ -15,8 +15,10 @@ import java.text.Normalizer
  * tournent avec le numéro atomique — lourd, léger, tissu, en boucle — et l'archétype suit
  * ([archetype]).
  *
- * Porter les trois pièces ([Hero.activeSet]) améliore le Spécial de l'archétype et, pour ce set,
- * ajoute [hpShare] de PV max. Il n'y a rien à deux pièces.
+ * Le bonus ne dépend **que de l'archétype**, pas de l'isotope : trois pièces de sets du même
+ * archétype (deux de deutérium et une de béryllium, par exemple) l'activent, voir
+ * [Hero.setArchetype]. Il améliore le Spécial de l'archétype et donne une stat de base qui le sert
+ * (PV du lourd, vitesse du léger, dégâts des sorts du mage). Rien à deux pièces.
  */
 class IsotopeSet(
     /** Le numéro atomique de l'élément. */
@@ -25,8 +27,6 @@ class IsotopeSet(
     val mass: Int,
     /** Un nom propre, quand l'isotope en a un (le deutérium) ; sinon on écrit « Li-6 ». */
     @StringRes val nameRes: Int? = null,
-    /** Part de PV max en plus quand les trois pièces sont portées. */
-    val hpShare: Float = 0f,
 ) {
     /** L'archétype tourne avec l'élément : lourd, léger, tissu, en boucle. */
     val archetype: Archetype get() = Archetype.entries[(z - 1) % Archetype.entries.size]
@@ -77,13 +77,25 @@ object IsotopeSets {
     val SLOTS = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS)
     val BASES = listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)
 
-    /** Le Garde du guerrier renvoie plus quand il porte le set, et revient plus vite. */
-    const val GUARD_THORNS_SHARE = 0.75f
+    // ── Le bonus des trois pièces, par archétype ────────────────────────────────
+
+    /** Le Spécial revient plus vite, quel que soit l'archétype. */
     const val SPECIAL_COOLDOWN = 4
+    /** Lourd : la Garde renvoie plus, et les PV max montent. */
+    const val GUARD_THORNS_SHARE = 0.75f
+    const val HP_SHARE = 0.25f
+    /** Léger : le Coup mortel frappe plus fort, et la vitesse monte. */
+    const val DEADLY_CRIT_BONUS = 2f
+    const val SPEED_BONUS = 0.15f
+    /** Mage : plus de doubles à l'Image miroir, et les dégâts des sorts montent. */
+    const val MIRROR_IMAGES = 4
+    const val SPELL_SHARE = 0.25f
 
     /** Les sets qui existent. Un par élément au plus, et aucun pour un élément sans autre isotope. */
     val ALL = listOf(
-        IsotopeSet(1, 2, R.string.roguelike_isotope_deuterium, hpShare = 0.25f),
+        IsotopeSet(1, 2, R.string.roguelike_isotope_deuterium),   // lourd
+        IsotopeSet(2, 3),                                          // léger
+        IsotopeSet(3, 6),                                          // mage
     )
 
     fun of(z: Int) = ALL.firstOrNull { it.z == z }

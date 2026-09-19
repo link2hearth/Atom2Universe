@@ -556,13 +556,26 @@ object Lexicon {
             add(R.string.lex_set_1, env.link(idOf(a), env.s(a.labelRes)), env.link(idOf(a.weight), env.s(a.weight.labelRes)),
                 set.firstFloor, set.lastFloor)
             add(R.string.lex_set_2, IsotopeSets.SLOTS.size, env.link(specialId(a), env.s(a.specialRes)))
-            if (a == Archetype.WARRIOR)
-                add(R.string.lex_set_special_guard, env.pct(IsotopeSets.GUARD_THORNS_SHARE), env.pct(Combat.GUARD_THORNS_SHARE),
-                    IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
-            if (set.hpShare > 0f) add(R.string.lex_set_hp, env.pct(set.hpShare))
+            when (a) {
+                Archetype.WARRIOR -> {
+                    add(R.string.lex_set_special_guard, env.pct(IsotopeSets.GUARD_THORNS_SHARE), env.pct(Combat.GUARD_THORNS_SHARE),
+                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                    add(R.string.lex_set_hp, env.pct(IsotopeSets.HP_SHARE))
+                }
+                Archetype.ROGUE -> {
+                    add(R.string.lex_set_special_deadly, env.dec(IsotopeSets.DEADLY_CRIT_BONUS), env.dec(Combat.DEADLY_CRIT_BONUS),
+                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                    add(R.string.lex_set_speed, env.pct(IsotopeSets.SPEED_BONUS))
+                }
+                Archetype.MAGE -> {
+                    add(R.string.lex_set_special_mirror, IsotopeSets.MIRROR_IMAGES, Combat.MIRROR_IMAGES,
+                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                    add(R.string.lex_set_spell, env.pct(IsotopeSets.SPELL_SHARE))
+                }
+            }
             add(R.string.lex_set_drop, env.pct(IsotopeSets.DROP_SHARE))
             env.hero?.let { h ->
-                you(R.string.lex_you_set, IsotopeSets.SLOTS.count { h.equipped[it]?.isotopeZ == set.z }, IsotopeSets.SLOTS.size)
+                you(R.string.lex_you_set, IsotopeSets.SLOTS.count { h.equipped[it]?.isotopeSet?.archetype == a }, IsotopeSets.SLOTS.size)
             }
         }
     }
