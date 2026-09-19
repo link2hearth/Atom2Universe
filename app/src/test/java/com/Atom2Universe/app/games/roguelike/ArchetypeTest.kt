@@ -91,12 +91,17 @@ class ArchetypeTest {
     }
 
     @Test
-    fun sansBouclierLeGuerrierNeBloquePas() {
-        val c = fight(heroOf(Archetype.WARRIOR))
-        c.startEnemyTurn()
-        val s = c.resolveStrike(0, Timing.PERFECT)
-        assertFalse(s.blocked)
-        assertTrue(s.damage > 0)
+    fun sansBouclierLeGuerrierBloqueMaisRenvoieMoins() {
+        fun perfect(shield: Boolean): EnemyStrike {
+            val c = fight(heroOf(Archetype.WARRIOR, shield = shield))
+            c.startEnemyTurn()
+            return c.resolveStrike(0, Timing.PERFECT)
+        }
+        val bare = perfect(shield = false)
+        assertTrue("il bloque aussi sans bouclier", bare.blocked)
+        assertEquals(0, bare.damage)
+        assertTrue(bare.thorns > 0)
+        assertTrue("mais il renvoie moins", bare.thorns < perfect(shield = true).thorns)
     }
 
     @Test

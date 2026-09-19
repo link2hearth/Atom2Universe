@@ -269,13 +269,14 @@ class RoguelikeSimulationTest {
     fun archetypesAndShield() {
         val series = System.getenv("SIM_SERIES")?.toInt() ?: 600
         val skill = System.getenv("SIM_SKILL")?.let { Skill.valueOf(it) } ?: Skill.CORRECT
+        val relic = System.getenv("SIM_RELIC")?.let { Relic.valueOf(it) }   // sans relique, l'orbe ne sert à rien
         val saved = IsotopeSets.dropShare
         IsotopeSets.dropShare = 0f
         try {
-            val out = StringBuilder("══════ Archétypes et main gauche (${series} séries de 3 combats, joueur $skill) ══════\n")
+            val out = StringBuilder("══════ Archétypes et main gauche (${series} séries de 3 combats, joueur $skill, relique ${relic ?: "aucune"}) ══════\n")
             for (a in Archetype.entries) {
                 out.appendLine("── ${a.name} ──")
-                out.appendLine(String.format("%5s%22s%22s%22s%14s", "Étage", "main gauche tirée", "meilleur bouclier", "sans main gauche", "% boucliers"))
+                out.appendLine(String.format("%5s%22s%22s%22s%22s%14s", "Étage", "main gauche tirée", "meilleur bouclier", "meilleure orbe", "sans main gauche", "% boucliers"))
                 for (floor in listOf(5, 13, 25, 50)) {
                     fun run(mode: Int): Pair<Double, Double> {
                         val stuck = FloorStat()
@@ -286,17 +287,19 @@ class RoguelikeSimulationTest {
                             for (slot in IsotopeSets.SLOTS) hero.equipped[slot] = classicPiece(floor, slot, a.weight, rng)
                             if (hero.equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD) shields++
                             when (mode) {
-                                1 -> {
+                                1, 3 -> {
+                                    val wanted = if (mode == 1) ItemBase.SHIELD else ItemBase.ORB
                                     var best: Equipment? = null
                                     repeat(3) {
                                         var e: Equipment
-                                        do e = LootSystem.generate(floor, 0, rng) while (e.base != ItemBase.SHIELD || e.isotopeZ != null)
+                                        do e = LootSystem.generate(floor, 0, rng) while (e.base != wanted || e.isotopeZ != null)
                                         if (best == null || score(e) > score(best!!)) best = e
                                     }
                                     hero.equipped[EquipSlot.OFFHAND] = best!!
                                 }
                                 2 -> hero.equipped.remove(EquipSlot.OFFHAND)
                             }
+                            relic?.let { hero.addRelic(it) }
                             hero.healFull()
                             val fightRng = Random(floor * 31L + i)
                             var ok = true
@@ -311,8 +314,8 @@ class RoguelikeSimulationTest {
                         }
                         return 100.0 * wins / series to 100.0 * shields / series
                     }
-                    val tirée = run(0); val bouclier = run(1); val sans = run(2)
-                    out.appendLine(String.format("%5d%21.1f%%%21.1f%%%21.1f%%%13.0f%%", floor, tirée.first, bouclier.first, sans.first, tirée.second))
+                    val tirée = run(0); val bouclier = run(1); val orbe = run(3); val sans = run(2)
+                    out.appendLine(String.format("%5d%21.1f%%%21.1f%%%21.1f%%%21.1f%%%13.0f%%", floor, tirée.first, bouclier.first, orbe.first, sans.first, tirée.second))
                 }
                 out.appendLine()
             }

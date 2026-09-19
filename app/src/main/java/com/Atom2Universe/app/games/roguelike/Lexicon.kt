@@ -477,7 +477,7 @@ object Lexicon {
         val each = Archetype.entries.map { a ->
             entry(idOf(a), c, a.labelRes) {
                 when (a) {
-                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE)) }
+                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
                     Archetype.ROGUE -> { add(R.string.lex_archetype_rogue_1); add(R.string.lex_archetype_rogue_2) }
                     Archetype.MAGE -> { add(R.string.lex_archetype_mage_1); add(R.string.lex_archetype_mage_2) }
                 }

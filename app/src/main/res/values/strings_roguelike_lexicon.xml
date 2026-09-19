@@ -260,7 +260,7 @@
     <string name="lex_archetype_3">Without a majority, no archetype: the [[special|Special]] stays locked.</string>
     <string name="lex_archetype_4">Any relic can be worn by any archetype.</string>
     <string name="lex_archetype_warrior_1">It takes blows and sends them back.</string>
-    <string name="lex_archetype_warrior_2">Perfect parry: it blocks the blow if it wears a shield, and sends back %1$d%% of it.</string>
+    <string name="lex_archetype_warrior_2">Perfect parry: it blocks the blow and sends back %1$d%% of it with a shield, %2$d%% without.</string>
     <string name="lex_archetype_rogue_1">It avoids blows and strikes exposed targets.</string>
     <string name="lex_archetype_rogue_2">Perfect parry: it dodges and counters with a free weapon hit.</string>
     <string name="lex_archetype_mage_1">It counts on its spells.</string>

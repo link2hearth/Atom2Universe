@@ -862,6 +862,8 @@ class Combat(
         const val GUARD_THORNS_SHARE = 0.5f
         /** Guerrier, blocage parfait au bouclier : le coup de bouclier renvoie cette part. */
         const val BLOCK_THORNS_SHARE = 0.3f
+        /** Le même blocage sans bouclier : il marche, mais renvoie moins. */
+        const val BARE_BLOCK_THORNS_SHARE = 0.2f
 
         // La jauge
         /** Dans la barre d'ordre et [actingEnemy] : le héros, et le Météore qui tombe. */
@@ -1616,8 +1618,8 @@ class Combat(
         // La parade parfaite, selon l'archétype
         var recovered = false
         if (parry == Timing.PERFECT) when (hero.archetype) {
-            // Le guerrier bloque au bouclier : rien ne passe, et le coup de bouclier renvoie
-            Archetype.WARRIOR -> if (hero.hasShield) {
+            // Le guerrier bloque : rien ne passe, et le coup renvoie. Sans bouclier, ça marche, mais il renvoie moins
+            Archetype.WARRIOR -> {
                 val thorns = retaliate(enemyIndex, blow, blocked = true)
                 return EnemyStrike(enemyIndex, 0, parry, blocked = true, bleed = bled,
                     thorns = thorns, thornsKilled = thorns > 0 && !e.alive)
@@ -1659,7 +1661,7 @@ class Combat(
         var share = 0f
         if (stoneskinTurns > 0) share += Relic.THORNS_SHARE * if (Resonance.RAMPART in hero.resonances) 2f else 1f
         if (guarding) share += if (hero.specialBoosted(Archetype.WARRIOR)) IsotopeSets.GUARD_THORNS_SHARE else GUARD_THORNS_SHARE
-        if (blocked) share += BLOCK_THORNS_SHARE
+        if (blocked) share += if (hero.hasShield) BLOCK_THORNS_SHARE else BARE_BLOCK_THORNS_SHARE
         if (share <= 0f) return 0
         val dmg = wound(enemyIndex, blow * share)
         if (hero.hp > 0 && aliveIndices().isEmpty()) phase = win()

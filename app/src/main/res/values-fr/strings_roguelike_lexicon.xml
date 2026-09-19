@@ -260,7 +260,7 @@
     <string name="lex_archetype_3">Sans majorité, pas d\'archétype : le [[special|Spécial]] reste verrouillé.</string>
     <string name="lex_archetype_4">N\'importe quelle relique peut être portée par n\'importe quel archétype.</string>
     <string name="lex_archetype_warrior_1">Il encaisse et renvoie les coups.</string>
-    <string name="lex_archetype_warrior_2">Parade parfaite : il bloque le coup s\'il porte un bouclier, et en renvoie %1$d %%.</string>
+    <string name="lex_archetype_warrior_2">Parade parfaite : il bloque le coup et en renvoie %1$d %% avec un bouclier, %2$d %% sans.</string>
     <string name="lex_archetype_rogue_1">Il évite les coups et frappe les cibles exposées.</string>
     <string name="lex_archetype_rogue_2">Parade parfaite : il esquive et riposte d\'un coup d\'arme gratuit.</string>
     <string name="lex_archetype_mage_1">Il compte sur ses sorts.</string>
