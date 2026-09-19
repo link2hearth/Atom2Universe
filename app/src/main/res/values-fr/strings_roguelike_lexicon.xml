@@ -325,4 +325,5 @@
     <string name="lex_set_special_mirror">%1$d doubles au lieu de %2$d, et la recharge passe à %3$d tours au lieu de %4$d.</string>
     <string name="lex_set_speed">Donne aussi %1$d %% de vitesse en plus.</string>
     <string name="lex_set_spell">Donne aussi %1$d %% de dégâts des sorts en plus.</string>
+    <string name="lex_base_orb_damage">+%1$d %% à tous les dégâts que tu infliges, arme et sorts.</string>
 </resources>

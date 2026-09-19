@@ -273,12 +273,12 @@ class RoguelikeSimulationTest {
         val saved = IsotopeSets.dropShare
         IsotopeSets.dropShare = 0f
         try {
-            val out = StringBuilder("══════ Archétypes et main gauche (${series} séries de 3 combats, joueur $skill, relique ${relic ?: "aucune"}) ══════\n")
+            val out = StringBuilder("══════ Archétypes et main gauche (victoires · tours par combat ; ${series} séries de 3 combats, joueur $skill, relique ${relic ?: "aucune"}) ══════\n")
             for (a in Archetype.entries) {
                 out.appendLine("── ${a.name} ──")
-                out.appendLine(String.format("%5s%22s%22s%22s%22s%14s", "Étage", "main gauche tirée", "meilleur bouclier", "meilleure orbe", "sans main gauche", "% boucliers"))
+                out.appendLine(String.format("%5s%22s%22s%22s%22s%14s", "Étage", "tirée", "meilleur bouclier", "meilleure orbe", "sans", "% boucliers"))
                 for (floor in listOf(5, 13, 25, 50)) {
-                    fun run(mode: Int): Pair<Double, Double> {
+                    fun run(mode: Int): Triple<Double, Double, Double> {
                         val stuck = FloorStat()
                         var wins = 0; var lost = 0.0; var fights = 0; var shields = 0
                         repeat(series) { i ->
@@ -312,10 +312,10 @@ class RoguelikeSimulationTest {
                             }
                             if (ok) wins++
                         }
-                        return 100.0 * wins / series to 100.0 * shields / series
+                        return Triple(100.0 * wins / series, 100.0 * shields / series, stuck.turnsInFight.toDouble() / fights.coerceAtLeast(1))
                     }
                     val tirée = run(0); val bouclier = run(1); val orbe = run(3); val sans = run(2)
-                    out.appendLine(String.format("%5d%21.1f%%%21.1f%%%21.1f%%%21.1f%%%13.0f%%", floor, tirée.first, bouclier.first, orbe.first, sans.first, tirée.second))
+                    out.appendLine(String.format("%5d", floor) + listOf(tirée, bouclier, orbe, sans).joinToString("") { String.format("%22s", String.format("%5.1f%% · %4.1f t", it.first, it.third)) } + String.format("%13.0f%%", tirée.second))
                 }
                 out.appendLine()
             }

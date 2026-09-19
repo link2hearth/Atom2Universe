@@ -536,6 +536,7 @@ object Lexicon {
                 if (b.armorBase > 0f) add(R.string.lex_base_armor, env.num(b.armorBase.roundToInt()))
                 if (b.spellBonus > 0f) add(R.string.lex_base_spell, env.pct(b.spellBonus))
                 if (b == ItemBase.SHIELD) add(R.string.lex_base_shield, dodgePct(ArmorClass.SHIELD))
+                if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
                 if (b in ArmorWeight.WEIGHTED) add(R.string.lex_base_weights)
             }
         }
