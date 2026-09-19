@@ -3,6 +3,9 @@ package com.Atom2Universe.app.games.roguelike
 import android.content.Context
 import androidx.annotation.StringRes
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.periodic.getPeriodicElements
+import com.Atom2Universe.app.periodic.localizedName
+import java.text.Normalizer
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -38,7 +41,7 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
 
 /**
  * Une ligne de stat sur un objet. [tier] vaut 0 pour les stats de base (implicites) et
- * 1 à 8 pour un affixe : c'est son palier de puissance, voir [AffixBudget].
+ * 1 ou plus pour un affixe : c'est son palier de puissance, voir [AffixBudget].
  */
 data class StatRoll(val type: StatType, val value: Float, val tier: Int = 0) {
     fun display(context: Context): String {
@@ -46,7 +49,7 @@ data class StatRoll(val type: StatType, val value: Float, val tier: Int = 0) {
         val line = if (type.isPercent)
             context.getString(R.string.roguelike_stat_roll_percent, (value * 100).roundToInt(), label)
         else
-            context.getString(R.string.roguelike_stat_roll_flat, value.roundToInt(), label)
+            context.getString(R.string.roguelike_stat_roll_flat, DungeonNumbers.format(context, value.roundToInt()), label)
         return if (tier > 0) context.getString(R.string.roguelike_stat_roll_tier, line, tier) else line
     }
 }
@@ -71,32 +74,34 @@ enum class EquipSlot(@StringRes override val labelRes: Int) : Labeled {
     AMULET(R.string.roguelike_slot_amulet), RING(R.string.roguelike_slot_ring)
 }
 
-// ─── Matières ──────────────────────────────────────────────────────────────────
+// ─── Matières : le tableau périodique ──────────────────────────────────────────
 
 /**
- * Une seule échelle de matières, 5 tiers chacune. Le tier 5 d'une matière a la même
- * puissance que le tier 1 de la suivante : on trouve du Cuir 5 aux mêmes étages que du
- * Cuivre 1. Noms provisoires. [weaponRes] : le nom pour les armes et bijoux (une épée
- * « de cuir » n'existe pas, le premier palier est en bois).
+ * Le nom d'une puissance d'objet. Les matières sont **les 118 éléments**, dans l'ordre du
+ * numéro atomique : Épée d'Hydrogène au premier étage, Cuirasse de Fer vers l'étage 650,
+ * Oganesson tout au fond. Chaque élément a cinq tiers (I à V), un tier tous les 5 étages,
+ * soit 25 étages par élément. Après l'Oganesson on repart à l'Hydrogène avec un mot de
+ * cycle, de l'atome à l'univers : stellaire, galactique, cosmique… (voir DONJON.md, « Le
+ * donjon sans fin »).
+ *
+ * Seul le **nom** suit cette échelle : les stats d'un objet sont une formule continue de sa
+ * puissance ([LootSystem.scale]), et la puissance n'a pas de plafond.
  */
-enum class Material(@StringRes val armorRes: Int, @StringRes val weaponRes: Int) {
-    LEATHER   (R.string.roguelike_mat_leather,    R.string.roguelike_mat_wood),
-    COPPER    (R.string.roguelike_mat_copper,     R.string.roguelike_mat_copper),
-    BRONZE    (R.string.roguelike_mat_bronze,     R.string.roguelike_mat_bronze),
-    IRON      (R.string.roguelike_mat_iron,       R.string.roguelike_mat_iron),
-    STEEL     (R.string.roguelike_mat_steel,      R.string.roguelike_mat_steel),
-    MITHRIL   (R.string.roguelike_mat_mithril,    R.string.roguelike_mat_mithril),
-    OBSIDIAN  (R.string.roguelike_mat_obsidian,   R.string.roguelike_mat_obsidian),
-    ADAMANTIUM(R.string.roguelike_mat_adamantium, R.string.roguelike_mat_adamantium),
-    ORICHALCUM(R.string.roguelike_mat_orichalcum, R.string.roguelike_mat_orichalcum),
-    ASTRALITE (R.string.roguelike_mat_astralite,  R.string.roguelike_mat_astralite);
+object Grade {
+    const val TIERS = 5
+    /** Deux crans de puissance par tier : 5 étages à 0,4 cran par étage. */
+    const val POWER_PER_TIER = 2
+    const val ELEMENTS = 118
+    /** Tiers dans un cycle complet de l'Hydrogène à l'Oganesson. */
+    const val TIERS_PER_CYCLE = TIERS * ELEMENTS
 
-    companion object {
-        const val TIERS = 5
-        /** Puissance gagnée d'une matière à la suivante (4 : le tier 5 chevauche le tier 1 suivant). */
-        const val STEP = 4
-        val MAX_POWER = (entries.size - 1) * STEP + TIERS
-    }
+    private fun index(power: Int) = (power.coerceAtLeast(1) - 1) / POWER_PER_TIER
+    /** Le tier dans l'élément, de 1 à 5. */
+    fun tier(power: Int) = index(power) % TIERS + 1
+    /** L'élément, de 0 (Hydrogène) à 117 (Oganesson). */
+    fun element(power: Int) = index(power) / TIERS % ELEMENTS
+    /** Le cycle : 0 pour le premier passage, 1 pour le stellaire… */
+    fun cycle(power: Int) = index(power) / TIERS_PER_CYCLE
 }
 
 // ─── Bases d'objets ────────────────────────────────────────────────────────────
@@ -113,21 +118,20 @@ enum class ItemBase(
     val damageMult: Float,
     val armorBase: Float,
     val spellBonus: Float,
-    val usesWeaponMaterial: Boolean,
 ) {
-    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  StatType.STR, 1.00f, 0f, 0f,     true),
-    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.25f, 0f, 0f,     true),
-    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 0.80f, 0f, 0f,     true),
-    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.00f, 0f, 0f,     true),
-    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 0.60f, 0f, 0.10f,  true),
-    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 0.70f, 0f, 0.05f,  true),
-    SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f,     true),
-    ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f,  true),
-    HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f, 0f,     false),
-    ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f, 0f,     false),
-    BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f, 0f,     false),
-    AMULET (R.string.roguelike_base_amulet,  EquipSlot.AMULET,  null,         0f,    0f, 0f,     true),
-    RING   (R.string.roguelike_base_ring,    EquipSlot.RING,    null,         0f,    0f, 0f,     true),
+    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  StatType.STR, 1.00f, 0f, 0f),
+    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.25f, 0f, 0f),
+    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 0.80f, 0f, 0f),
+    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.00f, 0f, 0f),
+    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 0.60f, 0f, 0.10f),
+    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 0.70f, 0f, 0.05f),
+    SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f),
+    ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f),
+    HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f, 0f),
+    ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f, 0f),
+    BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f, 0f),
+    AMULET (R.string.roguelike_base_amulet,  EquipSlot.AMULET,  null,         0f,    0f, 0f),
+    RING   (R.string.roguelike_base_ring,    EquipSlot.RING,    null,         0f,    0f, 0f),
 }
 
 // ─── Poids d'armure ────────────────────────────────────────────────────────────
@@ -175,8 +179,8 @@ enum class ArmorWeight(
 
 data class Equipment(
     val base: ItemBase,
-    val material: Material,
-    val tier: Int,
+    /** Sa puissance : elle fait ses stats et son nom (voir [Grade]). Sans plafond. */
+    val power: Int,
     val rarity: Rarity,
     /** Dégâts de l'arme (0 pour ce qui n'en est pas une). */
     val damageMin: Int,
@@ -198,7 +202,6 @@ data class Equipment(
     val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
     /** Ce que la pièce change à la vitesse par son poids (les affixes de vitesse sont à part). */
     val weightSpeed get() = weight?.speedPerPiece ?: 0f
-    val power get() = material.ordinal * Material.STEP + tier
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
 }
@@ -222,10 +225,15 @@ data class Equipment(
  * dégâts — 130 fois moins. Sans étalon commun, une table d'affixes écrite à la main donne
  * forcément des lignes mortes et des lignes obligatoires.
  *
- * ### Les huit paliers
+ * ### Les paliers
  * Un affixe n'existe qu'à partir d'une certaine puissance d'objet, comme l'*item level*
- * de Diablo ou Path of Exile. [TIER_POWER] donne la puissance minimale de chaque palier,
- * choisie pour tomber sur les zones du donjon : étages 1, 6, 11, 21, 31, 41, 61, 81.
+ * de Diablo ou Path of Exile. [TIER_POWER] donne la puissance minimale des huit premiers
+ * paliers, choisie pour tomber sur les zones du donjon : étages 1, 6, 11, 21, 31, 41, 61, 81.
+ * Le donjon est sans fin, les paliers aussi : au-delà du 8ᵉ, chacun s'ouvre à une puissance
+ * 1,3 fois plus haute que le précédent ([tierPower]) — le palier 26 vers l'étage 10 000.
+ * Seules les stats qui grandissent avec la profondeur y ont droit (dégâts d'arme, armure,
+ * PV, et la chance de critique face à la résistance des monstres) : les caractéristiques et
+ * les autres taux s'arrêtent au palier 8 ([maxTierOf]).
  *
  * ### Deux familles d'affixes
  * - **Les affixes à budget** (caractéristiques, armure, PV, dégâts d'arme) : leur valeur
@@ -241,10 +249,50 @@ data class Equipment(
  */
 object AffixBudget {
 
+    /** Les paliers posés à la main. Les suivants se calculent ([tierPower]). */
     const val TIERS = 8
 
     /** Puissance minimale des paliers T1 à T8 — soit les étages 1, 6, 11, 21, 31, 41, 61, 81. */
     val TIER_POWER = intArrayOf(1, 3, 5, 9, 13, 17, 25, 33)
+
+    /** Au-delà du 8ᵉ, chaque palier s'ouvre à une puissance 1,3 fois plus haute. */
+    private const val DEEP_TIER_GROWTH = 1.3
+
+    /**
+     * Ce que chaque palier de critique ajoute au-delà du 8ᵉ : +0,5 point. Les monstres
+     * profonds résistent au critique d'autant ([critResistance]) : le critique ne s'envole
+     * pas, il faut le chasser pour le garder.
+     */
+    const val CRIT_DEEP_STEP = 0.005f
+
+    /**
+     * Combien d'affixes de critique la résistance des monstres suppose : deux. Un héros qui en
+     * porte moins critique de moins en moins en profondeur, un héros qui en empile plus garde
+     * de la marge — même 100 % de critique affiché ne suffit plus tout au fond.
+     */
+    private const val CRIT_RESIST_AFFIXES = 2
+
+    /** Puissance minimale du palier [tier], sans limite. */
+    fun tierPower(tier: Int): Int =
+        if (tier <= TIERS) TIER_POWER[tier - 1]
+        else Math.round(TIER_POWER[TIERS - 1] * Math.pow(DEEP_TIER_GROWTH, (tier - TIERS).toDouble())).toInt()
+
+    /**
+     * Le dernier palier d'une stat. Les caractéristiques et les taux s'arrêtent au 8ᵉ : leur
+     * effet ne grandit pas avec la profondeur, un palier de plus n'y apporterait rien (voir
+     * [LootSystem.DEEP_POWER]). Les dégâts d'arme, l'armure, les PV et le critique continuent.
+     */
+    fun maxTierOf(type: StatType): Int = when (type) {
+        StatType.WEAPON_DMG, StatType.ARMOR, StatType.MAX_HP, StatType.CRIT_CHANCE -> Int.MAX_VALUE
+        else -> TIERS
+    }
+
+    /**
+     * La résistance des monstres au critique, à la puissance de leur étage : ce que
+     * [CRIT_RESIST_AFFIXES] affixes de critique ont gagné au-delà du palier 8. Nulle jusqu'à
+     * l'étage 100 environ.
+     */
+    fun critResistance(power: Int) = CRIT_RESIST_AFFIXES * CRIT_DEEP_STEP * (maxTier(power) - TIERS).coerceAtLeast(0)
 
     /** Un tirage va de 55 % à 100 % de la valeur du palier : il reste une marge à chasser. */
     const val ROLL_MIN = 0.55f
@@ -311,9 +359,9 @@ object AffixBudget {
     // Sept objets Normaux à la puissance p, tels que LootSystem.create les fabrique.
 
     /** Une caractéristique donnée par l'arme ou la main gauche (leur type la garantit). */
-    private fun mainImplicit(p: Int) = 2f + 0.6f * (p - 1)
+    private fun mainImplicit(p: Int) = LootSystem.mainAttribute(p)
     /** Une caractéristique donnée par une des cinq autres pièces, au hasard. */
-    private fun sideImplicit(p: Int) = 1f + 0.4f * (p - 1)
+    private fun sideImplicit(p: Int) = LootSystem.sideAttribute(p)
     /** Ces cinq tirages au hasard se répartissent sur les six caractéristiques. */
     private fun spread(p: Int) = 5f * sideImplicit(p) / 6f
 
@@ -330,7 +378,7 @@ object AffixBudget {
     /** La constante de l'armure à cette puissance : dégâts reçus × k / (k + armure). */
     fun refK(p: Int) = 50f * LootSystem.scale(p)
     /** PV de base, PV de la CON, et les PV implicites des quatre pièces défensives. */
-    fun refHp(p: Int) = Hero.BASE_HP + Hero.HP_PER_CON * (refCon(p) - Hero.BASE_ATTRIBUTE) +
+    fun refHp(p: Int) = Hero.BASE_HP + Hero.hpPerCon(p) * (refCon(p) - Hero.BASE_ATTRIBUTE) +
         16f * LootSystem.HP_PER_ARMOR_BASE * LootSystem.scale(p)
     fun refCritChance(p: Int) = 0.05f + 0.01f * (refOther(p) - Hero.BASE_ATTRIBUTE)
     /** Ce que le critique ajoute déjà aux dégâts : un point de plus en vaut d'autant moins. */
@@ -348,7 +396,7 @@ object AffixBudget {
         StatType.CRIT_CHANCE -> (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.CRIT_DAMAGE -> refCritChance(p) / critFactor(p)
         // Axe : survie
-        StatType.CON         -> Hero.HP_PER_CON / refHp(p)
+        StatType.CON         -> Hero.hpPerCon(p) / refHp(p)
         StatType.MAX_HP      -> 1f / refHp(p)
         StatType.ARMOR       -> (1f / refK(p)) / (1f + refArmor(p) / refK(p))
         // Axe : sorts
@@ -377,16 +425,24 @@ object AffixBudget {
      */
     fun perAcPoint() = ArmorClass.AC_STEP / ArmorClass.REF_HIT
 
-    /** Le palier le plus haut qu'un objet de cette puissance peut porter. */
-    fun maxTier(power: Int) = TIER_POWER.count { it <= power }.coerceIn(1, TIERS)
+    /** Le palier le plus haut qu'un objet de cette puissance peut porter, toutes stats confondues. */
+    fun maxTier(power: Int): Int {
+        var t = 1
+        while (tierPower(t + 1) <= power) t++
+        return t
+    }
 
     /**
      * Valeur d'un affixe [type] au palier [tier], tirage plein (100 %). Pour les stats à
      * plafond c'est une valeur posée ; pour les autres elle tombe de la règle des 12 %.
+     * Au-delà du 8ᵉ palier, le critique gagne [CRIT_DEEP_STEP] par palier.
      */
     fun nominal(type: StatType, tier: Int): Float {
-        CAPPED[type]?.let { return it[tier - 1] }
-        return SHARE / perPoint(type, TIER_POWER[tier - 1])
+        CAPPED[type]?.let {
+            if (tier <= TIERS) return it[tier - 1]
+            return it[TIERS - 1] + if (type == StatType.CRIT_CHANCE) CRIT_DEEP_STEP * (tier - TIERS) else 0f
+        }
+        return SHARE / perPoint(type, tierPower(tier))
     }
 
     /**
@@ -405,7 +461,7 @@ object AffixBudget {
     }
 
     fun pickTier(type: StatType, power: Int, rng: Random): Int {
-        val top = maxTier(power)
+        val top = minOf(maxTier(power), maxTierOf(type))
         val floorTier = minTier(type)
         val r = rng.nextFloat()
         val picked = when {
@@ -431,11 +487,35 @@ object LootSystem {
      */
     const val HP_PER_ARMOR_BASE = 0.75f
 
-    /** Multiplicateur de base d'une puissance donnée : +45 % par cran. */
+    /** Multiplicateur de base d'une puissance donnée : +45 % par cran. Sans plafond. */
     fun scale(power: Int) = 1f + 0.45f * (power - 1)
 
-    /** Puissance typique d'un étage : 1 à l'étage 1, ~41 à l'étage 100. */
+    /** Puissance typique d'un étage : 1 à l'étage 1, ~41 à l'étage 100, ~4 000 à l'étage 10 000. */
     fun powerCenter(floor: Int) = 1f + (floor - 1) * 0.4f
+
+    /**
+     * La puissance de l'étage 100. Au-delà, **les caractéristiques ne grandissent plus** : un
+     * objet plus profond a plus de dégâts, d'armure et de PV, mais la même FOR qu'à l'étage 100.
+     *
+     * Pourquoi : les caractéristiques sont des modificateurs façon D&D (jets de d20, critique,
+     * fenêtre de parade, recharges). Si elles suivaient la puissance jusqu'à l'étage 10 000, un
+     * modificateur de +600 rendrait chaque jet automatique, et la FOR multipliée par l'arme
+     * ferait grandir les dégâts comme un carré (tout mourrait en un coup). Comme dans D&D, les
+     * caractéristiques plafonnent ; la puissance, elle, continue dans les stats à plat.
+     */
+    const val DEEP_POWER = 41
+
+    /** La caractéristique qu'une arme ou une main gauche donne par son type. */
+    fun mainAttribute(power: Int) = 2f + 0.6f * (power.coerceAtMost(DEEP_POWER) - 1)
+    /** La caractéristique au hasard d'une autre pièce. */
+    fun sideAttribute(power: Int) = 1f + 0.4f * (power.coerceAtMost(DEEP_POWER) - 1)
+
+    /**
+     * Ce que la profondeur ajoute aux stats qui se comptent **par point de caractéristique**
+     * et doivent pourtant suivre la puissance — les PV de la CON : 1 jusqu'à l'étage 100, puis
+     * au rythme de [scale]. Sans ça, la CON figée pèserait de moins en moins dans le sac de PV.
+     */
+    fun depthFactor(power: Int) = (scale(power) / scale(DEEP_POWER)).coerceAtLeast(1f)
 
     /**
      * Fréquence d'apparition d'un affixe, à la façon des colonnes « frequency » de Diablo 2 :
@@ -490,25 +570,14 @@ object LootSystem {
 
     fun generate(floor: Int, lootId: Long = 0, rng: Random = Random): Equipment {
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
-        val power = (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceIn(1, Material.MAX_POWER)
-        val (material, tier) = pickGrade(power, rng)
-        return create(pickBase(rng), material, tier, pickRarity(floor, rng), lootId, rng)
-    }
-
-    /** Toutes les façons d'écrire une puissance : Cuir 5 ou Cuivre 1, au hasard. */
-    private fun pickGrade(power: Int, rng: Random): Pair<Material, Int> {
-        val options = Material.entries.mapNotNull { m ->
-            val tier = power - m.ordinal * Material.STEP
-            if (tier in 1..Material.TIERS) m to tier else null
-        }
-        return options.random(rng)
+        val power = (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceAtLeast(1)
+        return create(pickBase(rng), power, pickRarity(floor, rng), lootId, rng)
     }
 
     fun create(
-        base: ItemBase, material: Material, tier: Int, rarity: Rarity, lootId: Long, rng: Random,
+        base: ItemBase, power: Int, rarity: Rarity, lootId: Long, rng: Random,
         forcedWeight: ArmorWeight? = null,
     ): Equipment {
-        val power = material.ordinal * Material.STEP + tier
         val s = scale(power)
 
         val weight = if (base in ArmorWeight.WEIGHTED) forcedWeight ?: ArmorWeight.entries.random(rng) else null
@@ -520,18 +589,20 @@ object LootSystem {
 
         val implicits = mutableListOf<StatRoll>()
         val attr = base.attribute ?: StatType.ATTRIBUTES.random(rng)
-        val attrValue = if (base.attribute != null) 2f + 0.6f * (power - 1) else 1f + 0.4f * (power - 1)
+        val attrValue = if (base.attribute != null) mainAttribute(power) else sideAttribute(power)
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
         if (base.armorBase > 0f)
             implicits += StatRoll(StatType.MAX_HP, (base.armorBase * HP_PER_ARMOR_BASE * s).roundToInt().toFloat())
-        if (base.spellBonus > 0f) implicits += StatRoll(StatType.SPELL_DMG, base.spellBonus * (1f + 0.1f * (power - 1)))
+        // Un taux, figé comme les caractéristiques au-delà de l'étage 100 (voir DEEP_POWER)
+        if (base.spellBonus > 0f)
+            implicits += StatRoll(StatType.SPELL_DMG, base.spellBonus * (1f + 0.1f * (power.coerceAtMost(DEEP_POWER) - 1)))
 
         val count = rng.nextInt(rarity.minAffixes, rarity.maxAffixes + 1)
         val pool = affixPools.getValue(base.slot).filter { AffixBudget.allows(it, power) }
         val affixes = pickAffixes(pool, count, rng).map { rollAffix(it, power, rng) }
 
-        val (row, col) = pickSprite(base, material, rng)
-        return Equipment(base, material, tier, rarity, dmgMin, dmgMax, armor, implicits, affixes, row, col, lootId, weight)
+        val (row, col) = pickSprite(base, power, rng)
+        return Equipment(base, power, rarity, dmgMin, dmgMax, armor, implicits, affixes, row, col, lootId, weight)
     }
 
     /**
@@ -562,9 +633,12 @@ object LootSystem {
         Rarity.RARE   to minOf(35f, 10f + floor * 0.25f),
     ), rng)
 
-    /** Icônes provisoires dans 64x64.png : la couleur suit la matière (brun, or, bleu). */
-    private fun pickSprite(base: ItemBase, material: Material, rng: Random): Pair<Int, Int> {
-        val shade = (material.ordinal * 3) / Material.entries.size   // 0, 1, 2
+    /**
+     * Icônes provisoires dans 64x64.png : la couleur suit l'élément dans son cycle (brun, or,
+     * bleu), le premier tiers du tableau périodique en brun.
+     */
+    private fun pickSprite(base: ItemBase, power: Int, rng: Random): Pair<Int, Int> {
+        val shade = (Grade.element(power) * 3) / Grade.ELEMENTS      // 0, 1, 2
         val wo = shade * 5                                            // lignes des armes : +5 or, +10 glace
         fun pick(row: Int, cols: IntRange) = row to cols.random(rng)
         return when (base) {
@@ -597,8 +671,8 @@ object LootSystem {
      * paraît énorme juste parce qu'elle s'affiche en pourcentage.
      *
      * Le tout est multiplié par l'échelle de la puissance, sinon la note ne dirait que
-     * « bon *pour sa puissance* » : une épée de Cuir 1 parfaite noterait autant qu'une épée
-     * d'Astralite 5, et on ne verrait jamais l'objet plus profond comme une amélioration.
+     * « bon *pour sa puissance* » : une épée d'Hydrogène I parfaite noterait autant qu'une épée
+     * de Fer V, et on ne verrait jamais l'objet plus profond comme une amélioration.
      */
     fun rating(e: Equipment): Int {
         val p = e.power
@@ -613,20 +687,49 @@ object LootSystem {
 
     // ── Affichage ───────────────────────────────────────────────────────────────
 
-    /** « Épée de fer 3 » / « Iron Sword 3 ». */
+    /** « Épée de Fer III », « Épée d'Hydrogène stellaire II » / « Iron Sword III », « Stellar Hydrogen Sword II ». */
     fun displayName(context: Context, e: Equipment): String {
-        val mat = context.getString(if (e.base.usesWeaponMaterial) e.material.weaponRes else e.material.armorRes)
         val noun = e.weight?.nounRes(e.base) ?: e.base.nounRes
-        return context.getString(R.string.roguelike_item_name, context.getString(noun), mat, e.tier)
+        val tier = context.resources.getStringArray(R.array.roguelike_grade_tiers)[Grade.tier(e.power) - 1]
+        return context.getString(R.string.roguelike_item_grade_name, context.getString(noun), materialName(context, e.power), tier)
     }
+
+    /**
+     * Le nom de la matière d'une puissance : l'élément, et au-delà du premier cycle son mot
+     * (stellaire, galactique…). En français, « de » s'élide devant une voyelle ou un h
+     * (« d'Hydrogène ») ; en anglais les deux formats sont les mêmes.
+     */
+    fun materialName(context: Context, power: Int): String {
+        val element = periodic[Grade.element(power)].localizedName(context)
+        val cycle = Grade.cycle(power)
+        val words = context.resources.getStringArray(R.array.roguelike_grade_cycles)
+        val cycleWord = when {
+            cycle == 0 -> null
+            cycle < words.size -> words[cycle]
+            // Au-delà du dernier mot, on le numérote : « primordial 2 », « primordial 3 »…
+            else -> context.getString(R.string.roguelike_grade_cycle_numbered, words.last(), cycle - words.size + 2)
+        }
+        val elided = Normalizer.normalize(element.take(1), Normalizer.Form.NFD).lowercase().firstOrNull() in ELIDING
+        val res = when {
+            cycleWord == null -> if (elided) R.string.roguelike_item_material_elided else R.string.roguelike_item_material
+            else -> if (elided) R.string.roguelike_item_material_cycle_elided else R.string.roguelike_item_material_cycle
+        }
+        return if (cycleWord == null) context.getString(res, element) else context.getString(res, element, cycleWord)
+    }
+
+    private val periodic by lazy { getPeriodicElements() }
+
+    /** Les lettres devant lesquelles le français élide « de » (Hydrogène, Or, Argon…). */
+    private val ELIDING = setOf('a', 'e', 'i', 'o', 'u', 'y', 'h')
 
     /** Des points de CA en points d'esquive, pour le joueur qui ne connaît pas D&D. */
     private fun dodgePercent(ac: Int) = Math.round(ac * ArmorClass.AC_STEP * 100)
 
     /** Lignes de description : dégâts, armure, puis toutes les stats. */
     fun describe(context: Context, e: Equipment): List<String> = buildList {
-        if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage, e.damageMin, e.damageMax))
-        if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, e.armor))
+        if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage,
+            DungeonNumbers.format(context, e.damageMin), DungeonNumbers.format(context, e.damageMax)))
+        if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, DungeonNumbers.format(context, e.armor)))
         when (e.weight) {
             ArmorWeight.CLOTH -> add(context.getString(R.string.roguelike_item_weight_cloth))
             ArmorWeight.LIGHT -> add(context.getString(R.string.roguelike_item_weight_light, dodgePercent(ArmorWeight.LIGHT.acPerPiece),

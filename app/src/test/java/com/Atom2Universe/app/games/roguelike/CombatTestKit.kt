@@ -18,3 +18,6 @@ fun Combat.passEnemyTurns(parry: Timing = Timing.MISS): EnemyTurnStart {
         turns.flatMap { it.saves }, turns.flatMap { it.enraged },
     )
 }
+
+/** Un héros neuf dont les quatre emplacements de relique sont ouverts (comme après l'étage 500). */
+fun heroWithAllSlots(): Hero = Hero.starter().apply { deepestFloor = Hero.RELIC_SLOT_FLOORS.last() }

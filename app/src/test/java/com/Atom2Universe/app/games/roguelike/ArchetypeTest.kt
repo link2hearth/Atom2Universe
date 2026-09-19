@@ -12,7 +12,7 @@ import kotlin.random.Random
 class ArchetypeTest {
 
     private fun piece(base: ItemBase, weight: ArmorWeight?) =
-        LootSystem.create(base, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
+        LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
 
     private fun heroWearing(helmet: ArmorWeight, chest: ArmorWeight, boots: ArmorWeight, shield: Boolean = false) =
         Hero.starter().apply {
@@ -71,7 +71,7 @@ class ArchetypeTest {
         fun strike(guard: Boolean): EnemyStrike {
             val c = Combat(heroOf(Archetype.WARRIOR), 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 10, 1, 1)), ambush = false,
                 rng = Random(1), attackDie = { 20 })
-            if (guard) c.guard() else c.drinkPotionOrWait()
+            if (guard) c.guard() else c.waitWithoutDice()
             c.startEnemyTurn()
             return c.resolveStrike(0, Timing.MISS)
         }
@@ -81,10 +81,13 @@ class ArchetypeTest {
         assertTrue("la moitié du coup brut (${guarded.thorns})", guarded.thorns >= guarded.damage / 2)
     }
 
-    /** Passer son tour sans lancer de dé : boire une potion (il faut avoir perdu un PV). */
-    private fun Combat.drinkPotionOrWait() {
-        hero.hp -= 1
-        drinkPotion()
+    /**
+     * Passer son tour sans lancer de dé, au même coût que la Garde (une demi-jauge) : un sort
+     * de soutien qui ne fait que soigner, la Régénération.
+     */
+    private fun Combat.waitWithoutDice() {
+        hero.addRelic(Relic.REGENERATION)
+        castRelic(Relic.REGENERATION, 0, Timing.MISS)
     }
 
     @Test

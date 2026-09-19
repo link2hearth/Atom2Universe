@@ -11,7 +11,9 @@ import org.json.JSONObject
 object SaveManager {
 
     private const val PREFS = "roguelike_save"
-    private const val KEY   = "save_v5"  // v5 : objets à base, matière et tier, sac
+    /** v6 : le donjon sans fin, une puissance par objet (les éléments). Les parties d'avant sont abandonnées. */
+    private const val KEY   = "save_v6"
+    private val OLD_KEYS = listOf("save_v5")
 
     // ── API publique ─────────────────────────────────────────────────────────────
 
@@ -20,8 +22,10 @@ object SaveManager {
 
     fun save(ctx: Context, game: RoguelikeGame) {
         val json = game.toJson().toString()
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .edit().putString(KEY, json).apply()
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
+            OLD_KEYS.forEach { remove(it) }
+            putString(KEY, json)
+        }.apply()
     }
 
     fun load(ctx: Context): RoguelikeGame? {
@@ -40,7 +44,8 @@ object SaveManager {
             .getString(KEY, null) ?: return null
         return try {
             val j = JSONObject(str)
-            ctx.getString(com.Atom2Universe.app.R.string.roguelike_floor_gold_summary, j.getInt("floor"), j.getInt("gold"))
+            ctx.getString(com.Atom2Universe.app.R.string.roguelike_floor_gold_summary, j.getInt("floor"),
+                DungeonNumbers.format(ctx, j.getInt("gold")))
         } catch (_: Exception) { null }
     }
 
@@ -61,8 +66,7 @@ object SaveManager {
 
     fun equipToJson(e: Equipment): JSONObject = JSONObject().apply {
         put("base",      e.base.name)
-        put("material",  e.material.name)
-        put("tier",      e.tier)
+        put("power",     e.power)
         put("rarity",    e.rarity.name)
         put("dmgMin",    e.damageMin)
         put("dmgMax",    e.damageMax)
@@ -77,8 +81,7 @@ object SaveManager {
 
     fun equipFromJson(j: JSONObject) = Equipment(
         base      = ItemBase.valueOf(j.getString("base")),
-        material  = Material.valueOf(j.getString("material")),
-        tier      = j.getInt("tier"),
+        power     = j.getInt("power"),
         rarity    = Rarity.valueOf(j.getString("rarity")),
         damageMin = j.getInt("dmgMin"),
         damageMax = j.getInt("dmgMax"),

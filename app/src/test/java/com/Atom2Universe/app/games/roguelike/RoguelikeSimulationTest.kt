@@ -10,7 +10,7 @@ import kotlin.random.Random
  *
  * Les bots ne trichent pas : ils ne connaissent que les cases explorées et les monstres
  * visibles. Ils jouent tous pareil sur la carte (explorer, se reposer hors poursuite,
- * acheter des potions) ; seule leur précision au timing change. Recalibrés le 18/09/2026 par
+ * descendre) ; seule leur précision au timing change. Recalibrés le 18/09/2026 par
  * le propriétaire (les anciens niveaux étaient bien trop maladroits : l'ancien « expert »,
  * c'était sa mère de 70 ans) :
  *  - NOVICE  : parfait 45 %, bon 45 %, raté 10 % (l'ancien expert) ;
@@ -48,7 +48,7 @@ class RoguelikeSimulationTest {
 
     class FloorStat {
         var entries = 0; var deaths = 0; var fights = 0; var chains = 0; var ambushes = 0
-        var dmgPct = 0.0; var potionsUsed = 0; var turnsInFight = 0
+        var dmgPct = 0.0; var turnsInFight = 0
         var groupSizes = 0; var mapTurns = 0
         /** Combats arrêtés à [MAX_FIGHT_TURNS] tours : un combat qui ne finit pas est un bug. */
         var stuck = 0
@@ -227,6 +227,8 @@ class RoguelikeSimulationTest {
     /** [r] lancé sur [e] déclencherait une réaction (ou son bonus contre un figé). */
     private fun triggers(r: Relic, e: Enemy): Boolean {
         if (e.type.affinity(r.element) == Affinity.IMMUNE) return false
+        // Un sort sur soi (Régénération, Soin) ne touche pas l'ennemi : il ne déclenche rien
+        if (r.target == RelicTarget.SELF) return false
         if (r.effect == RelicEffect.CRYSTALLIZE && e.frozen) return true
         return when (r.element) {
             Element.FIRE      -> e.poisonTurns > 0 || e.frozen || e.soakedTurns > 0 || e.bleedTurns > 0
@@ -278,15 +280,17 @@ class RoguelikeSimulationTest {
     }
 
     /**
-     * Le bot choisit ses deux reliques comme un joueur qui connaît le jeu : il essaie chaque
-     * paire possible parmi celles qu'il a trouvées sur quelques combats d'essai (à son étage,
-     * avec son équipement, en jouant les combos), et garde celle qui gagne le plus. Les mêmes
-     * dés pour toutes les paires, pour que seules les reliques les départagent. Au-delà de 8
-     * reliques, il ne garde que les 8 meilleures seules, pour ne pas essayer 300 paires.
+     * Le bot choisit ses reliques comme un joueur qui connaît le jeu : il essaie chaque
+     * combinaison possible (autant de reliques que d'emplacements ouverts) parmi celles qu'il
+     * a trouvées, sur quelques combats d'essai (à son étage, avec son équipement, en jouant les
+     * combos), et garde celle qui gagne le plus. Les mêmes dés pour toutes, pour que seules les
+     * reliques les départagent. Au-delà de 8 reliques, il ne garde que les 8 meilleures seules,
+     * pour ne pas essayer des centaines de combinaisons (70 au plus, pour 4 emplacements).
      */
     private fun chooseRelics(hero: Hero, floor: Int, skill: Skill) {
         val owned = hero.relics.toList()
-        if (owned.size <= Hero.RELIC_SLOTS) {
+        val slots = hero.unlockedRelicSlots
+        if (owned.size <= slots) {
             owned.forEachIndexed { i, r -> hero.relicSlots[i] = r }
             hero.hp = hero.hp.coerceAtMost(hero.maxHp)
             return
@@ -303,8 +307,10 @@ class RoguelikeSimulationTest {
             return wins
         }
         val shortlist = if (owned.size <= 8) owned else owned.sortedByDescending { trial(listOf(it)) }.take(8)
-        val best = shortlist.flatMapIndexed { i, a -> shortlist.drop(i + 1).map { b -> listOf(a, b) } }
-            .maxBy { trial(it) }
+        fun combinations(from: List<Relic>, k: Int): List<List<Relic>> =
+            if (k == 0) listOf(emptyList())
+            else from.indices.flatMap { i -> combinations(from.drop(i + 1), k - 1).map { listOf(from[i]) + it } }
+        val best = combinations(shortlist, slots).maxBy { trial(it) }
         hero.relicSlots.fill(null)
         best.forEachIndexed { i, r -> hero.relicSlots[i] = r }
         hero.knownResonances += hero.resonances
@@ -313,14 +319,15 @@ class RoguelikeSimulationTest {
 
     /** Un héros d'essai : même équipement, les reliques [relics], PV pleins, recharges prêtes. */
     private fun trialCopy(src: Hero, relics: List<Relic>): Hero = Hero().apply {
+        deepestFloor = src.deepestFloor
         equipped.putAll(src.equipped)
         relics.forEach { addRelic(it) }
-        potions = src.potions
         healFull()
     }
 
     private fun geared(floor: Int, rng: Random): Hero {
-        val hero = Hero.starter()
+        // Les bancs essaient des paires de reliques : tous les emplacements ouverts
+        val hero = heroWithAllSlots()
         fun offer(e: Equipment) {
             val cur = hero.equipped[e.slot]
             if (cur == null || score(e) > score(cur)) hero.equipped[e.slot] = e
@@ -333,7 +340,6 @@ class RoguelikeSimulationTest {
             while (weapon.slot != EquipSlot.WEAPON) weapon = LootSystem.generate(floor, 0, rng)
             offer(weapon)
         }
-        hero.potions = 2
         hero.healFull()
         return hero
     }
@@ -381,10 +387,7 @@ class RoguelikeSimulationTest {
                     val cur = g.hero.equipped[e.slot]
                     if (cur == null || score(e) > score(cur)) g.equipPendingDrop() else g.stashPendingDrop()
                 }
-                g.merchantOpen -> {
-                    while (g.hero.potions < 3 && g.buyPotion()) {}
-                    g.descend()
-                }
+                g.stairsOpen -> g.descend()
                 else -> { mapStep(g); r.f(g.floor).mapTurns++ }
             }
         }
@@ -442,9 +445,13 @@ class RoguelikeSimulationTest {
                     if (r.element == Element.ICE || r.element == Element.LIGHTNING ||
                         r.effect in setOf(RelicEffect.FRACTURE, RelicEffect.MARK, RelicEffect.CHARM, RelicEffect.BLIND, RelicEffect.SLOW)) target
                     else alive.maxBy { c.enemies[it].hp }
+                // Le Soin se garde pour quand il le faut : la même règle que l'ancienne potion
+                val healNow = Relic.HEAL in c.hero.relicSlots && c.canCast(Relic.HEAL) &&
+                    (simRelics == null || Relic.HEAL.name in simRelics) &&
+                    c.hero.hp <= incoming * 1.3f + c.hero.maxHp * 0.1f
                 val ready = c.hero.relicSlots.filterNotNull().firstOrNull {
                     val e = c.enemies[aimAt(it)]
-                    c.canCast(it) && (simRelics == null || it.name in simRelics) && !(lastWasSupport && !it.hits) &&
+                    it != Relic.HEAL && c.canCast(it) && (simRelics == null || it.name in simRelics) && !(lastWasSupport && !it.hits) &&
                         e.type.affinity(it.element) != Affinity.IMMUNE &&
                         !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING || it.effect == RelicEffect.SLOW))
                 }
@@ -461,7 +468,7 @@ class RoguelikeSimulationTest {
                 lastWasSupport = false
                 val combo = if (combos) comboChoice(c, target) else null
                 when {
-                    c.canDrinkPotion() && c.hero.hp <= incoming * 1.3f + c.hero.maxHp * 0.1f -> { c.drinkPotion(); fs.potionsUsed++ }
+                    healNow -> { c.castRelic(Relic.HEAL, target, Timing.MISS); lastWasSupport = true }
                     special != null -> special()
                     combo != null -> {
                         val r = combo.first
@@ -523,13 +530,13 @@ class RoguelikeSimulationTest {
 
         // Explorer ce qui ne l'est pas, puis l'escalier
         val front = frontier(g)
-        if (g.onStairsTile() && front.isEmpty()) { g.openMerchant(); return }
+        if (g.onStairsTile() && front.isEmpty()) { g.openStairs(); return }
         val goals = front.ifEmpty { stairsKnown(g) }
-        if (goals.isEmpty()) { g.openMerchant(); return }
+        if (goals.isEmpty()) { g.openStairs(); return }
         if (!moveToward(g, goals, avoidPacks = true) && !moveToward(g, goals, avoidPacks = false)) {
             // Rien d'atteignable : on file à l'escalier s'il est connu
             val stairs = stairsKnown(g)
-            if (g.onStairsTile()) g.openMerchant() else if (stairs.isNotEmpty()) moveToward(g, stairs, avoidPacks = false)
+            if (g.onStairsTile()) g.openStairs() else if (stairs.isNotEmpty()) moveToward(g, stairs, avoidPacks = false)
         }
     }
 
@@ -606,12 +613,12 @@ class RoguelikeSimulationTest {
             val d = l.sorted(); val gear = r.gearOnArrival.getValue(fl).sorted()
             appendLine(String.format("  %2d | %2d | %4d | %5d", fl, d.size, d[d.size / 2], gear[gear.size / 2]))
         }
-        appendLine("Ét. | passages | tours de carte/passage | combats/passage | combats | ennemis/combat | embuscades | enchaînés | dégâts/combat (% PV max) | tours/combat | potions/combat | morts")
+        appendLine("Ét. | passages | tours de carte/passage | combats/passage | combats | ennemis/combat | embuscades | enchaînés | dégâts/combat (% PV max) | tours/combat | morts")
         for ((fl, f) in r.floors) {
             val n = f.fights.coerceAtLeast(1).toDouble()
-            appendLine(String.format("%3d | %5d | %5.0f | %4.1f | %6d | %4.2f | %4.0f%% | %4.0f%% | %5.1f%% | %4.1f | %5.2f | %d",
+            appendLine(String.format("%3d | %5d | %5.0f | %4.1f | %6d | %4.2f | %4.0f%% | %4.0f%% | %5.1f%% | %4.1f | %d",
                 fl, f.entries, f.mapTurns / f.entries.coerceAtLeast(1).toDouble(), f.fights / f.entries.coerceAtLeast(1).toDouble(), f.fights, f.groupSizes / n, 100 * f.ambushes / n, 100 * f.chains / n,
-                100 * f.dmgPct / n, f.turnsInFight / n, f.potionsUsed / n, f.deaths))
+                100 * f.dmgPct / n, f.turnsInFight / n, f.deaths))
         }
         appendLine()
     }

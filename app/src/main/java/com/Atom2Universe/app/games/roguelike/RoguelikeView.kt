@@ -8,13 +8,26 @@ import android.view.View
 import com.Atom2Universe.app.R
 import kotlin.math.*
 
+/**
+ * Les lignes du journal dont certains arguments sont des montants (PV, or) : ceux-là sont abrégés
+ * au-delà de 100 000 et leur chaîne attend `%s`. Les autres nombres (étage…) restent tels quels.
+ */
+private val LOG_AMOUNT_ARGS: Map<Int, Set<Int>> = mapOf(
+    R.string.roguelike_log_rest to setOf(0, 1),
+    R.string.roguelike_log_victory to setOf(0),
+    R.string.roguelike_log_gold_pickup to setOf(0),
+    R.string.roguelike_log_sold to setOf(1),
+)
+
 /** Résout une entrée de journal : les arguments Labeled/Equipment sont d'abord traduits en texte. */
 private fun LogEntry.resolve(context: Context): String {
-    val resolvedArgs = args.map { a ->
-        when (a) {
-            is Equipment -> LootSystem.displayName(context, a)
-            is Labeled   -> context.getString(a.labelRes)
-            else         -> a
+    val amounts = LOG_AMOUNT_ARGS[keyRes].orEmpty()
+    val resolvedArgs = args.mapIndexed { i, a ->
+        when {
+            a is Equipment -> LootSystem.displayName(context, a)
+            a is Labeled   -> context.getString(a.labelRes)
+            i in amounts && a is Int -> DungeonNumbers.format(context, a)
+            else           -> a
         }
     }
     return context.getString(keyRes, *resolvedArgs.toTypedArray())
@@ -31,10 +44,9 @@ class RoguelikeView @JvmOverloads constructor(
     var game: RoguelikeGame? = null
     var onMove:           ((Int, Int) -> Unit)? = null
     var onRest:           (() -> Unit)? = null
-    var onOpenMerchant:   (() -> Unit)? = null
-    var onBuyPotion:      (() -> Unit)? = null
+    var onOpenStairs:     (() -> Unit)? = null
     var onDescend:        (() -> Unit)? = null
-    var onCloseMerchant:  (() -> Unit)? = null
+    var onCloseStairs:    (() -> Unit)? = null
     var onEquipItem:      (() -> Unit)? = null
     var onStashDrop:      (() -> Unit)? = null
     var onOpenInventory:  (() -> Unit)? = null
@@ -63,8 +75,6 @@ class RoguelikeView @JvmOverloads constructor(
     private val pHpBg     = Paint().apply { color = 0xFF111111.toInt(); isAntiAlias = false }
     private val pHpSep    = Paint().apply { color = 0xFF555555.toInt(); style = Paint.Style.STROKE; strokeWidth = 1f }
     private val pShopBg   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xF0101820.toInt() }
-    private val pShopCard = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF1C2A38.toInt() }
-    private val pShopBuy  = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF1565C0.toInt() }
     private val pShopSold = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF333333.toInt() }
     private val pShopDescend = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF2E7D32.toInt() }
     private val pOverlay  = Paint().apply { color = 0xCC000000.toInt() }
@@ -123,8 +133,8 @@ class RoguelikeView @JvmOverloads constructor(
         drawHpBar(canvas, g)
         drawHud(canvas, g)
         drawHudIcons(canvas, g)
-        val overlay = g.merchantOpen || g.pendingEquipDrop != null || g.deathReport != null
-        if (g.merchantOpen)             drawShop(canvas, g)
+        val overlay = g.stairsOpen || g.pendingEquipDrop != null || g.deathReport != null
+        if (g.stairsOpen)               drawStairs(canvas, g)
         if (g.pendingEquipDrop != null) drawLootPopup(canvas, g)
         if (g.deathReport != null)      drawDeathPanel(canvas, g)
         if (!overlay) drawSwipeZone(canvas)
@@ -299,7 +309,7 @@ class RoguelikeView @JvmOverloads constructor(
         pText.color = 0xFFEF5350.toInt(); pText.textSize = sd * 28f
         canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 60f * sd, pText)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 15f
-        canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, report.goldLost), cx, cy - 20f * sd, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, DungeonNumbers.format(context, report.goldLost)), cx, cy - 20f * sd, pText)
         canvas.drawText(context.getString(R.string.roguelike_death_checkpoint, RoguelikeGame.CHECKPOINT), cx, cy + 8f * sd, pText)
         pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 14f
         canvas.drawText(context.getString(R.string.roguelike_combat_tap_continue), cx, cy + 60f * sd, pText)
@@ -376,61 +386,37 @@ class RoguelikeView @JvmOverloads constructor(
         }
     }
 
-    // ── Marchand (sur l'escalier) ────────────────────────────────────────────────
+    // ── L'escalier : descendre ou rester ─────────────────────────────────────────
 
-    private fun shopPanelRect() = RectF(width * 0.06f, height * 0.18f, width * 0.94f, height * 0.82f)
+    private fun stairsPanelRect() = RectF(width * 0.06f, height * 0.32f, width * 0.94f, height * 0.68f)
 
-    private fun shopPotionRect(panel: RectF): RectF {
-        val gap = panel.height() * 0.04f
-        val top = panel.top + panel.height() * 0.24f
-        return RectF(panel.left + gap, top, panel.right - gap, top + panel.height() * 0.24f)
-    }
-
-    private fun shopDescendRect(panel: RectF): RectF {
-        val btnH = panel.height() * 0.14f; val gap = panel.height() * 0.04f
+    private fun stairsDescendRect(panel: RectF): RectF {
+        val btnH = panel.height() * 0.28f; val gap = panel.height() * 0.08f
         return RectF(panel.left + gap, panel.bottom - btnH - gap, panel.centerX() - gap / 2, panel.bottom - gap)
     }
 
-    private fun shopStayRect(panel: RectF): RectF {
-        val btnH = panel.height() * 0.14f; val gap = panel.height() * 0.04f
+    private fun stairsStayRect(panel: RectF): RectF {
+        val btnH = panel.height() * 0.28f; val gap = panel.height() * 0.08f
         return RectF(panel.centerX() + gap / 2, panel.bottom - btnH - gap, panel.right - gap, panel.bottom - gap)
     }
 
-    private fun drawShop(canvas: Canvas, g: RoguelikeGame) {
-        val panel = shopPanelRect(); val cr = 16f * context.resources.displayMetrics.density
+    private fun drawStairs(canvas: Canvas, g: RoguelikeGame) {
+        val panel = stairsPanelRect(); val cr = 16f * context.resources.displayMetrics.density
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         canvas.drawRoundRect(panel, cr, cr, pShopBg)
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFFFD600.toInt(); pText.textSize = sd * 20f
-        canvas.drawText(context.getString(R.string.roguelike_shop_title), panel.centerX(), panel.top + panel.height() * 0.10f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_stairs_title), panel.centerX(), panel.top + panel.height() * 0.22f, pText)
         pText.color = 0xFFAAAAAA.toInt(); pText.textSize = sd * 13f
-        canvas.drawText(context.getString(R.string.roguelike_shop_gold_available, g.hero.gold), panel.centerX(), panel.top + panel.height() * 0.18f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_stairs_next, g.floor + 1), panel.centerX(), panel.top + panel.height() * 0.38f, pText)
 
-        val r = shopPotionRect(panel)
-        val price = RoguelikeGame.POTION_PRICE
-        val canBuy = g.hero.gold >= price && g.hero.potions < Hero.MAX_POTIONS
-        canvas.drawRoundRect(r, cr * 0.6f, cr * 0.6f, pShopCard)
-        val icon = RectF(r.left + r.height() * 0.15f, r.top + r.height() * 0.15f, r.left + r.height() * 0.85f, r.bottom - r.height() * 0.15f)
-        drawSheetCell(canvas, ItemType.POTION.spriteRow, ItemType.POTION.spriteCol, icon)
-        pText.textAlign = Paint.Align.LEFT
-        pText.color = 0xFFEEEEEE.toInt(); pText.textSize = sd * 15f
-        canvas.drawText(context.getString(R.string.roguelike_combat_potion), icon.right + r.height() * 0.2f, r.centerY() - sd * 4f, pText)
-        pText.color = 0xFF888888.toInt(); pText.textSize = sd * 12f
-        canvas.drawText(context.getString(R.string.roguelike_shop_potion_owned, g.hero.potions, Hero.MAX_POTIONS), icon.right + r.height() * 0.2f, r.centerY() + sd * 12f, pText)
-        val badgeW = r.height() * 1.1f
-        val badgeR = RectF(r.right - badgeW - r.height() * 0.1f, r.top + r.height() * 0.2f, r.right - r.height() * 0.1f, r.bottom - r.height() * 0.2f)
-        canvas.drawRoundRect(badgeR, cr * 0.4f, cr * 0.4f, if (canBuy) pShopBuy else pShopSold)
-        pText.textAlign = Paint.Align.CENTER
-        pText.color = if (canBuy) 0xFFFFFFFF.toInt() else 0xFF777777.toInt(); pText.textSize = sd * 13f
-        canvas.drawText(context.getString(R.string.roguelike_shop_price, price), badgeR.centerX(), badgeR.centerY() + sd * 5f, pText)
-
-        val dRect = shopDescendRect(panel)
+        val dRect = stairsDescendRect(panel)
         canvas.drawRoundRect(dRect, cr * 0.6f, cr * 0.6f, pShopDescend)
         pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 16f
-        canvas.drawText(context.getString(R.string.roguelike_shop_descend), dRect.centerX(), dRect.centerY() + sd * 6f, pText)
-        val sRect = shopStayRect(panel)
+        canvas.drawText(context.getString(R.string.roguelike_stairs_descend), dRect.centerX(), dRect.centerY() + sd * 6f, pText)
+        val sRect = stairsStayRect(panel)
         canvas.drawRoundRect(sRect, cr * 0.6f, cr * 0.6f, pShopSold)
-        canvas.drawText(context.getString(R.string.roguelike_shop_stay), sRect.centerX(), sRect.centerY() + sd * 6f, pText)
+        canvas.drawText(context.getString(R.string.roguelike_stairs_stay), sRect.centerX(), sRect.centerY() + sd * 6f, pText)
     }
 
     // ── Popup de loot ────────────────────────────────────────────────────────────
@@ -518,15 +504,15 @@ class RoguelikeView @JvmOverloads constructor(
 
         pText.color = 0xFF78909C.toInt(); pText.textSize = sd * 11f
         canvas.drawText(context.getString(R.string.roguelike_item_subtitle, context.getString(equip.rarity.labelRes),
-            context.getString(R.string.roguelike_rating, LootSystem.rating(equip))), col.centerX(), y + sd * 11f, pText)
+            context.getString(R.string.roguelike_rating, DungeonNumbers.format(context, LootSystem.rating(equip)))), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.3f
 
         if (delta != null) {
             pText.textSize = sd * 13f
             pText.color = when { delta > 0 -> 0xFF66BB6A.toInt(); delta < 0 -> 0xFFEF5350.toInt(); else -> 0xFF90A4AE.toInt() }
             val text = when {
-                delta > 0 -> context.getString(R.string.roguelike_delta_up, delta)
-                delta < 0 -> context.getString(R.string.roguelike_delta_down, -delta)
+                delta > 0 -> context.getString(R.string.roguelike_delta_up, DungeonNumbers.format(context, delta))
+                delta < 0 -> context.getString(R.string.roguelike_delta_down, DungeonNumbers.format(context, -delta))
                 else      -> context.getString(R.string.roguelike_delta_equal)
             }
             canvas.drawText(text, col.centerX(), y + sd * 13f, pText)
@@ -610,12 +596,11 @@ class RoguelikeView @JvmOverloads constructor(
                         }
                     }
 
-                    g.merchantOpen -> if (tap) {
-                        val panel = shopPanelRect()
+                    g.stairsOpen -> if (tap) {
+                        val panel = stairsPanelRect()
                         when {
-                            shopPotionRect(panel).contains(touchDownX, touchDownY)  -> onBuyPotion?.invoke()
-                            shopDescendRect(panel).contains(touchDownX, touchDownY) -> onDescend?.invoke()
-                            shopStayRect(panel).contains(touchDownX, touchDownY)    -> onCloseMerchant?.invoke()
+                            stairsDescendRect(panel).contains(touchDownX, touchDownY) -> onDescend?.invoke()
+                            stairsStayRect(panel).contains(touchDownX, touchDownY)    -> onCloseStairs?.invoke()
                         }
                     }
 
@@ -624,7 +609,7 @@ class RoguelikeView @JvmOverloads constructor(
                     tap -> when {
                         inventoryBtnRect().contains(touchDownX, touchDownY) -> onOpenInventory?.invoke()
                         restBtnRect().contains(touchDownX, touchDownY) -> onRest?.invoke()
-                        stairsIconRect().contains(touchDownX, touchDownY) && g.onStairsTile() -> onOpenMerchant?.invoke()
+                        stairsIconRect().contains(touchDownX, touchDownY) && g.onStairsTile() -> onOpenStairs?.invoke()
                     }
 
                     // Swipe trop rapide pour que ACTION_MOVE ait déclenché un pas

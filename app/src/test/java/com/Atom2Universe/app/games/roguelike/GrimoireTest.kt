@@ -20,7 +20,7 @@ class GrimoireTest {
         vararg relics: Relic, enemies: Int = 1, type: MonsterType = MonsterType.GOBLIN, d20: Int = 1,
         attackDie: () -> Int = { 15 },
     ): Combat {
-        val hero = Hero.starter().apply { relics.forEach { addRelic(it) } }
+        val hero = heroWithAllSlots().apply { relics.forEach { addRelic(it) } }
         val foes = List(enemies) { Enemy(type, maxHp = 1000, damage = 3, cadence = 1, countdown = 1) }
         return Combat(hero, 1, foes, ambush = false, rng = Random(1), d20 = { d20 }, attackDie = attackDie)
     }
@@ -210,7 +210,7 @@ class GrimoireTest {
         fun strikeFrom(weakened: Boolean): Int {
             // Un gros cogneur : avec 3 de dégâts, l'arrondi mangerait la différence
             val brute = Enemy(MonsterType.GOBLIN, maxHp = 1000, damage = 100, cadence = 1, countdown = 1)
-            val c = Combat(Hero.starter(), 1, listOf(brute), ambush = false, rng = Random(1), attackDie = { 15 })
+            val c = Combat(heroWithAllSlots(), 1, listOf(brute), ambush = false, rng = Random(1), attackDie = { 15 })
             if (weakened) brute.weakenedTurns = 2
             c.attack(0, Timing.MISS)
             val t = c.startEnemyTurn()
@@ -279,7 +279,7 @@ class GrimoireTest {
 
     @Test
     fun uneResonanceDonneSaCaracEtSeDecouvreUneFois() {
-        val hero = Hero.starter()
+        val hero = heroWithAllSlots()
         val int = hero.attribute(StatType.INT)
         hero.addRelic(Relic.FIREBALL)
         assertTrue(hero.resonances.isEmpty())
@@ -613,9 +613,9 @@ class GrimoireTest {
         // Chacun lance un sort sur soi en premier : les dés du monstre sortent pareil.
         fun strike(vararg relics: Relic): EnemyStrike {
             val brute = Enemy(MonsterType.GOBLIN, maxHp = 1000, damage = 100, cadence = 1, countdown = 1)
-            val hero = Hero.starter().apply {
+            val hero = heroWithAllSlots().apply {
                 relics.forEach { addRelic(it) }
-                equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(0))
+                equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
                     .copy(implicits = listOf(StatRoll(StatType.ARMOR, 40f)), affixes = emptyList())
             }
             val c = Combat(hero, 1, listOf(brute), ambush = false, rng = Random(1), attackDie = { 15 })

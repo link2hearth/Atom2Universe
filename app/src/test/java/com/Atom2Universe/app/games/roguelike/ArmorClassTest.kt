@@ -10,7 +10,7 @@ import kotlin.random.Random
 class ArmorClassTest {
 
     private fun piece(base: ItemBase, weight: ArmorWeight?, tier: Int = 1) =
-        LootSystem.create(base, Material.LEATHER, tier, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
+        LootSystem.create(base, tier, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
 
     /** Un héros avec trois pièces du même poids et une DEX donnée (par un anneau). */
     private fun heroIn(weight: ArmorWeight, dexBonus: Int = 0) = Hero.starter().apply {

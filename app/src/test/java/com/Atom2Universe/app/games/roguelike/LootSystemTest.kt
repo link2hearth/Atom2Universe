@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /** Règles du butin décidées dans DONJON.md, vérifiées sur beaucoup de tirages. */
@@ -20,16 +21,27 @@ class LootSystemTest {
         }
     }
 
+    /**
+     * Les noms suivent le tableau périodique : un tier tous les deux crans de puissance (5
+     * étages), cinq tiers par élément (25 étages), 118 éléments, puis un nouveau cycle.
+     */
     @Test
-    fun tierFiveOverlapsNextMaterialTierOne() {
-        val rng = Random(2)
-        for (m in Material.entries.dropLast(1)) {
-            val five = LootSystem.create(ItemBase.ARMOR, m, 5, Rarity.NORMAL, 0, rng, forcedWeight = ArmorWeight.HEAVY)
-            val nextOne = LootSystem.create(ItemBase.ARMOR, Material.entries[m.ordinal + 1], 1, Rarity.NORMAL, 0, rng, forcedWeight = ArmorWeight.HEAVY)
-            assertEquals(five.power, nextOne.power)
-            assertEquals(five.armor, nextOne.armor)
-        }
+    fun lesNomsSuiventLeTableauPeriodique() {
+        assertEquals(Triple(0, 1, 0), grade(1))            // Hydrogène I
+        assertEquals(Triple(0, 1, 0), grade(2))
+        assertEquals(Triple(0, 2, 0), grade(3))            // Hydrogène II
+        assertEquals(Triple(0, 5, 0), grade(10))           // Hydrogène V
+        assertEquals(Triple(1, 1, 0), grade(11))           // Hélium I
+        assertEquals(Triple(117, 5, 0), grade(1180))       // Oganesson V
+        assertEquals(Triple(0, 1, 1), grade(1181))         // Hydrogène stellaire I
+        // Le Fer (26) vers l'étage 650, comme décidé
+        val iron = (1..100_000).first { Grade.element(LootSystem.powerCenter(it).roundToInt()) == 25 }
+        assertTrue("le Fer arrive à l'étage $iron", iron in 620..660)
+        // L'étage 10 000 est dans le 4e cycle (cosmique)
+        assertEquals(3, Grade.cycle(LootSystem.powerCenter(10_000).roundToInt()))
     }
+
+    private fun grade(power: Int) = Triple(Grade.element(power), Grade.tier(power), Grade.cycle(power))
 
     @Test
     fun raritiesRespectAffixCounts() {
@@ -46,9 +58,9 @@ class LootSystemTest {
     fun dropReport() {
         val rng = Random(4)
         val out = StringBuilder("Matière × tier trouvés par étage (1000 objets chacun)\n")
-        for (floor in listOf(1, 5, 10, 20, 40, 60, 80, 100)) {
+        for (floor in listOf(1, 5, 10, 20, 40, 60, 80, 100, 300, 1000, 3000, 10_000)) {
             val items = List(1000) { LootSystem.generate(floor, 0, rng) }
-            val grades = items.groupingBy { "${it.material} ${it.tier}" }.eachCount().entries.sortedByDescending { it.value }.take(6)
+            val grades = items.groupingBy { "élément ${Grade.element(it.power) + 1} tier ${Grade.tier(it.power)}" }.eachCount().entries.sortedByDescending { it.value }.take(6)
             val rar = Rarity.entries.joinToString { r -> "$r ${items.count { it.rarity == r } / 10}%" }
             val rating = items.map { LootSystem.rating(it) }.average().toInt()
             out.appendLine("Étage $floor : ${grades.joinToString { "${it.key} (${it.value / 10}%)" }}  |  $rar  |  note moyenne $rating")

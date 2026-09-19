@@ -114,9 +114,8 @@ class RoguelikeActivity : ThemedActivity() {
 
         gameView.onMove          = { dx, dy -> g.tryMove(dx, dy); refresh() }
         gameView.onRest          = { g.rest(); refresh() }
-        gameView.onOpenMerchant  = { g.openMerchant(); refresh() }
-        gameView.onBuyPotion     = { g.buyPotion(); refresh() }
-        gameView.onCloseMerchant = { g.closeMerchant(); refresh() }
+        gameView.onOpenStairs    = { g.openStairs(); refresh() }
+        gameView.onCloseStairs   = { g.closeStairs(); refresh() }
         gameView.onDescend       = { sfx.onDescend(); g.descend(); refresh() }
         gameView.onEquipItem     = { g.equipPendingDrop(); refresh() }
         gameView.onStashDrop     = { g.stashPendingDrop(); refresh() }
@@ -148,7 +147,7 @@ class RoguelikeActivity : ThemedActivity() {
     private fun refresh() {
         gameView.invalidate()
         val h = game.hero
-        tvGold.text       = getString(R.string.roguelike_hud_gold, h.gold)
+        tvGold.text       = getString(R.string.roguelike_hud_gold, DungeonNumbers.format(this, h.gold))
         tvFloorLevel.text = getString(R.string.roguelike_hud_floor, game.floor)
     }
 }

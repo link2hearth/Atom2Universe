@@ -249,12 +249,41 @@ class RelicTest {
     @Test
     fun lesEmplacementsPleinsRefusent() {
         val hero = Hero.starter()
+        assertEquals("un seul emplacement au départ", 1, hero.unlockedRelicSlots)
         assertTrue(hero.addRelic(Relic.FIREBALL))
-        assertTrue(hero.addRelic(Relic.ICE_SHARD))
-        assertFalse("troisième relique : trouvée mais pas portée", hero.addRelic(Relic.VENOM))
-        assertEquals(Hero.RelicToggle.SLOTS_FULL, hero.toggleRelic(Relic.VENOM))
+        assertFalse("deuxième relique : trouvée mais pas portée", hero.addRelic(Relic.ICE_SHARD))
+        assertEquals(Hero.RelicToggle.SLOTS_FULL, hero.toggleRelic(Relic.ICE_SHARD))
         assertEquals(Hero.RelicToggle.REMOVED, hero.toggleRelic(Relic.FIREBALL))
-        assertEquals(Hero.RelicToggle.EQUIPPED, hero.toggleRelic(Relic.VENOM))
+        assertEquals(Hero.RelicToggle.EQUIPPED, hero.toggleRelic(Relic.ICE_SHARD))
+    }
+
+    /** Les emplacements s'ouvrent aux étages 50, 100 et 500, et se remplissent tout seuls. */
+    @Test
+    fun lesEmplacementsSOuvrentEnDescendant() {
+        val hero = Hero.starter()
+        hero.addRelic(Relic.FIREBALL); hero.addRelic(Relic.ICE_SHARD); hero.addRelic(Relic.VENOM)
+        assertFalse(hero.reachFloor(49))
+        assertEquals(1, hero.unlockedRelicSlots)
+        assertTrue("l'étage 50 ouvre le 2e", hero.reachFloor(50))
+        assertEquals(Relic.ICE_SHARD, hero.relicSlots[1])
+        assertTrue(hero.reachFloor(100))
+        assertEquals(Relic.VENOM, hero.relicSlots[2])
+        assertFalse("rien de neuf entre 100 et 500", hero.reachFloor(499))
+        assertTrue(hero.reachFloor(500))
+        assertEquals(4, hero.unlockedRelicSlots)
+        assertFalse("remonter ne referme rien", hero.reachFloor(1))
+        assertEquals(4, hero.unlockedRelicSlots)
+    }
+
+    /** Le Soin rend 35 % des PV max d'un coup, pour une demi-jauge. */
+    @Test
+    fun leSoinRendUnTiersDesPv() {
+        val hero = Hero.starter().apply { addRelic(Relic.HEAL) }
+        hero.hp = 1
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.RAT, 1000, 1, 1, 1)), ambush = false, rng = Random(1))
+        c.castRelic(Relic.HEAL, 0, Timing.MISS)
+        assertEquals(1 + Math.round(hero.maxHp * Relic.HEAL_SHARE), hero.hp)
+        assertEquals(Combat.SUPPORT_ACTION, c.relicCost(Relic.HEAL), 1e-9)
     }
 
     @Test
@@ -263,14 +292,14 @@ class RelicTest {
         val (lo1, hi1) = hero.relicDamage(Relic.FIREBALL)
         assertTrue(lo1 < hi1)
         val dc1 = hero.spellDc(Relic.ICE_SHARD)
-        hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, Material.IRON, 1, Rarity.NORMAL, 0, Random(0))
+        hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 13, Rarity.NORMAL, 0, Random(0))
         assertTrue(hero.relicDamage(Relic.FIREBALL).first > hi1)
         assertTrue("la maîtrise suit l'arme", hero.spellDc(Relic.ICE_SHARD) > dc1)
     }
 
     /** Un héros avec un anneau qui donne [points] dans [attr]. */
     private fun heroWith(attr: StatType, points: Int) = Hero.starter().apply {
-        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(0))
+        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
             .copy(implicits = listOf(StatRoll(attr, points.toFloat())), affixes = emptyList())
     }
 
@@ -352,7 +381,7 @@ class RelicTest {
                 RelicEffect.DELAYED   -> -hit * RelicBudget.DELAY_PREMIUM / (1f + RelicBudget.DELAY_PREMIUM)
                 RelicEffect.BLIND     -> RelicBudget.BLIND_TURN_VALUE * r.effectTurns
                 // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
-                RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN,
+                RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN, RelicEffect.HEAL,
                 RelicEffect.STONESKIN, RelicEffect.CHARM,
                 RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> RelicBudget.share(r)
             }

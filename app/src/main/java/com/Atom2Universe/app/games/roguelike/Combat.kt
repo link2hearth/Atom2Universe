@@ -206,14 +206,41 @@ object Encounters {
      */
     const val HP_SCALE     = 1.25f
     const val DAMAGE_SCALE = 1.25f
-    fun hpMult(floor: Int)     = HP_SCALE * (1f + 0.22f * (floor - 1))
-    fun damageMult(floor: Int) = DAMAGE_SCALE * (1f + 0.15f * (floor - 1))
+
     /**
-     * La vitesse des monstres monte avec l'étage : +0,4 % par étage, ×1,4 à l'étage 100. Leur
-     * vitesse par type, c'est leur cadence (le rat joue à chaque tour, le démon un sur trois).
+     * L'étage où les courbes changent de régime. Jusque-là, PV et dégâts montent en ligne
+     * droite (réglés au banc sur les 100 premiers étages). Au-delà, les caractéristiques du
+     * héros ne grandissent plus (voir [LootSystem.DEEP_POWER]) : les monstres grandissent
+     * alors **exactement comme l'équipement**, au rythme de la puissance, et le rapport de
+     * force reste celui de l'étage 100 — plus la rampe [DEPTH_RAMP].
+     */
+    const val DEEP_FLOOR = 100
+
+    /**
+     * Ce qui rend la profondeur plus dure que l'étage 100 à équipement moyen : PV et dégâts
+     * ×1,25 à l'étage 1 000, ×1,5 à l'étage 10 000. C'est ce que le farm des affixes doit
+     * rattraper : un équipement moyen ne suffit plus, il faut les bons tirages.
+     */
+    const val DEPTH_RAMP = 0.1086f
+
+    /** Au-delà de l'étage 100 : la croissance de l'équipement, et la rampe. 1 avant. */
+    fun depthMult(floor: Int): Float {
+        if (floor <= DEEP_FLOOR) return 1f
+        val power = LootSystem.powerCenter(floor)
+        val powerAt100 = LootSystem.powerCenter(DEEP_FLOOR)
+        val gear = (1f + 0.45f * (power - 1)) / (1f + 0.45f * (powerAt100 - 1))
+        return gear * (1f + DEPTH_RAMP * kotlin.math.ln(floor.toFloat() / DEEP_FLOOR))
+    }
+
+    fun hpMult(floor: Int)     = HP_SCALE * (1f + 0.22f * (floor.coerceAtMost(DEEP_FLOOR) - 1)) * depthMult(floor)
+    fun damageMult(floor: Int) = DAMAGE_SCALE * (1f + 0.15f * (floor.coerceAtMost(DEEP_FLOOR) - 1)) * depthMult(floor)
+    /**
+     * La vitesse des monstres monte avec l'étage : +0,4 % par étage, ×1,4 à l'étage 100, puis
+     * plus rien — sinon ils seraient 41 fois plus rapides à l'étage 10 000. Leur vitesse par
+     * type, c'est leur cadence (le rat joue à chaque tour, le démon un sur trois).
      */
     const val SPEED_PER_FLOOR = 0.004
-    fun speedMult(floor: Int)  = 1.0 + SPEED_PER_FLOOR * (floor - 1)
+    fun speedMult(floor: Int)  = 1.0 + SPEED_PER_FLOOR * (floor.coerceAtMost(DEEP_FLOOR) - 1)
 
     /** Taille du groupe : seul au début, jusqu'à 3 à partir de l'étage 5. */
     fun groupSize(floor: Int, rng: Random): Int {
@@ -314,6 +341,8 @@ enum class RelicEffect(val hits: Boolean = true) {
     BLIND,
     /** Régénération : un peu de PV à chacun des [Relic.effectTurns] prochains tours. */
     REGEN(hits = false),
+    /** Soin : [Relic.HEAL_SHARE] des PV max, tout de suite. Le soin classique, qui remplace la potion. */
+    HEAL(hits = false),
     /** Peau de pierre : l'armure double, et on renvoie une part des coups reçus (épines). */
     STONESKIN(hits = false),
     /** Charme : jet ; raté, sa prochaine attaque frappe un autre ennemi (seul, il la perd). */
@@ -328,7 +357,7 @@ enum class RelicEffect(val hits: Boolean = true) {
 
 /**
  * Une relique donne un sort. On les **trouve** en explorant (voir
- * [RoguelikeGame.RELIC_CHANCE]), on n'en porte que [Hero.RELIC_SLOTS] à la fois.
+ * [RoguelikeGame.RELIC_CHANCE]), on en porte jusqu'à [Hero.RELIC_SLOTS] à la fois (voir [Hero.unlockedRelicSlots]).
  *
  * Une relique ne décrit que sa **forme** : son élément, sa caractéristique, qui elle touche,
  * son effet, sa recharge. Ses dégâts ne sont écrits nulle part : [RelicBudget] les calcule.
@@ -380,6 +409,7 @@ enum class Relic(
     // Sagesse
     HOLY_LIGHT  (R.string.roguelike_relic_holy_light,   R.string.roguelike_relic_holy_light_desc,   Element.HOLY,   StatType.WIS, RelicTarget.ONE,  RelicEffect.BLIND, 3, 1, 0xFFB09A3A.toInt(), 113, 2),
     REGENERATION(R.string.roguelike_relic_regeneration, R.string.roguelike_relic_regeneration_desc, Element.HOLY,   StatType.WIS, RelicTarget.SELF, RelicEffect.REGEN, 5, 3, 0xFF3F8F4F.toInt(), 133, 3),
+    HEAL        (R.string.roguelike_relic_heal,         R.string.roguelike_relic_heal_desc,         Element.HOLY,   StatType.WIS, RelicTarget.SELF, RelicEffect.HEAL,  6, 0, 0xFF43A047.toInt(), 17, 0),
     // Constitution, charisme
     STONESKIN (R.string.roguelike_relic_stoneskin,  R.string.roguelike_relic_stoneskin_desc,  Element.PHYSICAL, StatType.CON, RelicTarget.SELF, RelicEffect.STONESKIN,  5, 2, 0xFF6E6E6E.toInt(), 132, 2),
     CHARM     (R.string.roguelike_relic_charm,      R.string.roguelike_relic_charm_desc,      Element.ARCANE,   StatType.CHA, RelicTarget.ONE,  RelicEffect.CHARM,      5, 0, 0xFFB0527A.toInt(), 132, 15),
@@ -419,6 +449,12 @@ enum class Relic(
         const val BARRIER_SHARE = 0.20f
         /** Régénération : les PV rendus à chaque tour, en part des PV max (avant la caractéristique). */
         const val REGEN_SHARE = 0.07f
+        /**
+         * Soin : la part des PV max rendue d'un coup, 35 % (décidé par le propriétaire, 19/09/2026,
+         * quand la potion a disparu). Un chiffre fixe : la SAG ne le grossit pas, elle raccourcit
+         * sa recharge.
+         */
+        const val HEAL_SHARE = 0.35f
         /** Peau de pierre : l'armure est multipliée par ça, et les épines renvoient cette part des coups. */
         const val STONESKIN_ARMOR = 2f
         const val THORNS_SHARE = 0.30f
@@ -640,7 +676,7 @@ object RelicBudget {
         RelicEffect.DELAYED   -> -share(r) * DELAY_PREMIUM
         RelicEffect.BLIND     -> BLIND_TURN_VALUE * r.effectTurns
         RelicEffect.ENCHANT_POISON, RelicEffect.SMOKE, RelicEffect.BARRIER,
-        RelicEffect.REGEN, RelicEffect.STONESKIN, RelicEffect.CHARM,
+        RelicEffect.REGEN, RelicEffect.HEAL, RelicEffect.STONESKIN, RelicEffect.CHARM,
         RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> share(r)
     }
 
@@ -754,7 +790,7 @@ data class EnemyStrike(
     val charmed: Boolean = false, val charmHit: HitResult? = null,
     val absorbed: Int = 0, val thorns: Int = 0, val thornsKilled: Boolean = false,
 )
-data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Equipment>)
+data class CombatRewards(val gold: Int, val equipment: List<Equipment>)
 
 /**
  * Un combat au tour par tour, façon **CTB de FFX** (voir DONJON.md, « La jauge ») : le héros
@@ -768,7 +804,7 @@ data class CombatRewards(val gold: Int, val potions: Int, val equipment: List<Eq
  * Un ennemi de cadence N gagne 1/N : il agit tous les N tours du héros.
  *
  * Déroulé :
- *   tour du héros   : [attack], [castRelic], le Spécial ou [drinkPotion] ; à la fin, le
+ *   tour du héros   : [attack], [castRelic] ou le Spécial ; à la fin, le
  *                     Météore et la Régénération ([lastHeroTurnEnd])
  *   tour d'un ennemi ([actingEnemy]) : [startEnemyTurn] (brûlure, poison, gel, paralysie),
  *                     [resolveStrike] s'il frappe, puis [endEnemyTurn] (ses états perdent
@@ -797,7 +833,6 @@ class Combat(
         const val STRIKE_PERFECT   = 0.60f
         const val PARRY_GOOD_MULT  = 0.5f
         const val PARRY_PERFECT_MULT = 0.2f
-        const val POTION_DROP      = 0.08f
 
         /** Coup mortel : une cible sous ce seuil de PV est exposée. */
         const val DEADLY_HP_THRESHOLD = 0.30f
@@ -829,7 +864,7 @@ class Combat(
         const val METEOR = -2
         /** Ce que coûte une action pleine : toute la jauge. */
         const val FULL_ACTION = 1.0
-        /** Ce que coûte une action qui ne frappe pas (sort de soutien, Garde, Image miroir, potion). */
+        /** Ce que coûte une action qui ne frappe pas (sort de soutien, Garde, Image miroir). */
         const val SUPPORT_ACTION = 0.5
         /** Deux jauges pleines à moins de ça l'une de l'autre sont pleines en même temps. */
         private const val TIME_EPSILON = 1e-9
@@ -913,7 +948,6 @@ class Combat(
      */
     fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0 &&
         !(relic.effect == RelicEffect.DELAYED && meteorTurns > 0)
-    fun canDrinkPotion() = phase == CombatPhase.PLAYER_TURN && hero.potions > 0 && hero.hp < hero.maxHp
     fun canUseSpecial() = phase == CombatPhase.PLAYER_TURN && hero.archetype != null && hero.specialCooldown == 0
 
     // ── Ce que coûte chaque action, en jauge (1 : toute la jauge) ──
@@ -923,7 +957,6 @@ class Combat(
     fun relicCost(relic: Relic) = if (relic.hits) FULL_ACTION else SUPPORT_ACTION
     /** La Garde et l'Image miroir ne frappent pas ; le Coup mortel, si. */
     fun specialCost() = if (hero.archetype == Archetype.ROGUE) FULL_ACTION else SUPPORT_ACTION
-    fun potionCost() = SUPPORT_ACTION
 
     /**
      * Empoisonnée, figée, paralysée, aveuglée, charmée, marquée ou bien entamée : le voleur y
@@ -1031,6 +1064,7 @@ class Combat(
                 regenTurns = relic.effectTurns
                 regenAmount = hero.relicAmount(relic)
             }
+            RelicEffect.HEAL -> hero.heal(hero.relicAmount(relic))
             RelicEffect.STONESKIN -> stoneskinTurns = relic.effectTurns
             RelicEffect.HASTE -> hasteTurns = relic.effectTurns
             RelicEffect.HOURGLASS -> hourglassStrikes = relic.effectTurns
@@ -1272,15 +1306,6 @@ class Combat(
         return result
     }
 
-    fun drinkPotion(): Int {
-        check(canDrinkPotion())
-        val before = hero.hp
-        hero.potions--
-        hero.heal((hero.maxHp * Hero.POTION_HEAL).roundToInt())
-        afterPlayerAction(potionCost())
-        return hero.hp - before
-    }
-
     private fun hit(
         target: Int, raw: Float, timing: Timing, allowZero: Boolean = false,
         forceCrit: Boolean = false, critBonus: Float = 0f,
@@ -1288,7 +1313,7 @@ class Combat(
         val e = enemies[target]
         require(e.alive)
         val bonus = when (timing) { Timing.MISS -> 0f; Timing.GOOD -> STRIKE_GOOD; Timing.PERFECT -> STRIKE_PERFECT }
-        val crit  = forceCrit || rng.nextFloat() < (hero.critChance + bonus).coerceAtMost(0.95f)
+        val crit  = forceCrit || rng.nextFloat() < (hero.critChance(floor) + bonus).coerceAtMost(0.95f)
         val critMult = hero.critMult + critBonus + if (e.marked) MARK_CRIT_BONUS else 0f
         val dmg = wound(target, if (crit) raw * critMult else raw, allowZero)
         return HitResult(target, dmg, crit, !e.alive)
@@ -1646,15 +1671,14 @@ class Combat(
     // ── Victoire ────────────────────────────────────────────────────────────────
 
     private fun win(): CombatPhase {
-        var gold = 0; var potions = 0
+        var gold = 0
         val loot = mutableListOf<Equipment>()
         val floorGold = 1f + 0.10f * (floor - 1)
         for (e in enemies) {
             gold += (rng.nextInt(e.type.goldMin, e.type.goldMax + 1) * floorGold * hero.goldMult).roundToInt()
-            if (rng.nextFloat() < POTION_DROP) potions++
             LootSystem.tryDrop(floor, hero.nextLootId, rng)?.let { loot += it; hero.nextLootId++ }
         }
-        rewards = CombatRewards(gold, potions, loot)
+        rewards = CombatRewards(gold, loot)
         return CombatPhase.VICTORY
     }
 }

@@ -20,6 +20,9 @@ import kotlin.random.Random
  */
 class AffixBudgetTest {
 
+    /** Les paliers qu'on vérifie : jusqu'au 26ᵉ, celui de l'étage 10 000. */
+    private val DEEP_TIERS = 26
+
     /** Les affixes réglés par la règle des 12 % ; les autres ont un plafond posé à la main. */
     private val budgetStats = StatType.entries.filter { !AffixBudget.isCapped(it) }
 
@@ -31,8 +34,8 @@ class AffixBudgetTest {
 
     @Test
     fun unAffixePleinVautDouzePourCentDeSonAxe() {
-        for (type in budgetStats) for (tier in 1..AffixBudget.TIERS) {
-            val p = AffixBudget.TIER_POWER[tier - 1]
+        for (type in budgetStats) for (tier in 1..minOf(AffixBudget.maxTierOf(type), DEEP_TIERS)) {
+            val p = AffixBudget.tierPower(tier)
             val w = worth(type, AffixBudget.nominal(type, tier), p)
             assertTrue("$type P$tier vaut $w %, on veut 12 %", kotlin.math.abs(w - 12f) < 0.1f)
         }
@@ -46,8 +49,8 @@ class AffixBudgetTest {
      */
     @Test
     fun apresArrondiAucunAffixeNeSEmballe() {
-        for (type in budgetStats) for (tier in 1..AffixBudget.TIERS) {
-            val p = AffixBudget.TIER_POWER[tier - 1]
+        for (type in budgetStats) for (tier in 1..minOf(AffixBudget.maxTierOf(type), DEEP_TIERS)) {
+            val p = AffixBudget.tierPower(tier)
             val nominal = AffixBudget.nominal(type, tier)
             val hi = if (type.isPercent) nominal else nominal.roundToInt().coerceAtLeast(1).toFloat()
             val lo = AffixBudget.minRoll(type, tier)
@@ -59,24 +62,27 @@ class AffixBudgetTest {
 
     @Test
     fun chaquePalierEstMeilleurQueLePrecedent() {
-        for (type in StatType.entries) for (tier in 2..AffixBudget.TIERS) {
+        for (type in StatType.entries) for (tier in 2..minOf(AffixBudget.maxTierOf(type), DEEP_TIERS)) {
             val below = AffixBudget.nominal(type, tier - 1)
             val here  = AffixBudget.nominal(type, tier)
             assertTrue("$type : P$tier ($here) ne dépasse pas P${tier - 1} ($below)", here > below)
         }
     }
 
-    /** Un objet ne peut pas porter un palier que sa puissance n'autorise pas. */
+    /**
+     * Un objet ne peut pas porter un palier que sa puissance n'autorise pas, ni un palier
+     * au-delà du dernier de sa stat. Jusqu'à l'étage 10 000.
+     */
     @Test
     fun unPalierNeSortJamaisTropTot() {
         val rng = Random(11)
         repeat(20000) {
-            val floor = rng.nextInt(1, 101)
+            val floor = if (rng.nextBoolean()) rng.nextInt(1, 101) else rng.nextInt(101, 10_001)
             val e = LootSystem.generate(floor, 0, rng)
             for (a in e.affixes) {
                 assertTrue("affixe P${a.tier} sur un objet de puissance ${e.power}",
-                    AffixBudget.TIER_POWER[a.tier - 1] <= e.power)
-                assertTrue("affixe de palier ${a.tier}", a.tier in 1..AffixBudget.TIERS)
+                    AffixBudget.tierPower(a.tier) <= e.power)
+                assertTrue("affixe ${a.type} de palier ${a.tier}", a.tier in 1..AffixBudget.maxTierOf(a.type))
             }
             for (i in e.implicits) assertTrue("une stat de base n'a pas de palier", i.tier == 0)
         }
@@ -97,7 +103,7 @@ class AffixBudgetTest {
         repeat(2000) {
             val hero = Hero()
             for (base in ItemBase.entries) {
-                val e = LootSystem.create(base, Material.ASTRALITE, 5, Rarity.RARE, 0, rng)
+                val e = LootSystem.create(base, LootSystem.DEEP_POWER, Rarity.RARE, 0, rng)
                 if (hero.equipped[e.slot] == null) hero.equipped[e.slot] = e
             }
             for (t in listOf(StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.SPELL_DMG, StatType.LIFE_STEAL)) {
@@ -142,27 +148,25 @@ class AffixBudgetTest {
     @Test
     fun laNoteMonteAvecLaPuissance() {
         val rng = Random(14)
-        // Une écriture par puissance : le Cuir 5 et le Cuivre 1 sont le même objet.
-        val grades = (1..Material.MAX_POWER).associateWith { power ->
-            Material.entries.firstNotNullOf { m ->
-                val tier = power - m.ordinal * Material.STEP
-                if (tier in 1..Material.TIERS) m to tier else null
-            }
-        }
+        // Les 60 premiers crans (au-delà de l'étage 100), puis de loin en loin jusqu'à l'étage 10 000
+        val powers = (1..60) + (80..4000 step 97)
         for (base in ItemBase.entries) for (rarity in Rarity.entries) {
             // La moyenne de beaucoup de tirages. Pas la médiane : un objet Magique porte
             // 1 ou 2 affixes, ce qui fait deux paquets distincts, et la médiane saute de
             // l'un à l'autre sans que rien n'ait bougé.
-            val notes = grades.mapValues { (_, g) ->
-                List(200) { LootSystem.rating(LootSystem.create(base, g.first, g.second, rarity, 0, rng)) }.average()
+            // Trois crans au début ; en profondeur, trois crans ne font plus que +0,5 % : on
+            // compare alors d'un palier au suivant (×1,3).
+            fun deeper(power: Int) = maxOf(power + 3, Math.round(power * 1.3f))
+            val notes = (powers + powers.map { deeper(it) }).toSet().associateWith { power ->
+                List(200) { LootSystem.rating(LootSystem.create(base, power, rarity, 0, rng)) }.average()
             }
             // D'un cran à l'autre, le hasard des affixes pèse plus que la puissance ; c'est
             // sur quelques crans que l'objet plus profond doit se voir.
-            for (power in 1..Material.MAX_POWER - 3) {
+            for (power in powers) {
                 val here = notes.getValue(power)
-                val deeper = notes.getValue(power + 3)
-                assertTrue("$base $rarity : puissance ${power + 3} note $deeper, pas mieux que $here à $power",
-                    deeper > here)
+                val deep = notes.getValue(deeper(power))
+                assertTrue("$base $rarity : puissance ${deeper(power)} note $deep, pas mieux que $here à $power",
+                    deep > here)
             }
         }
     }
@@ -174,20 +178,21 @@ class AffixBudgetTest {
         val out = StringBuilder()
         out.appendLine("Table des affixes — fourchettes par palier (générée par AffixBudgetTest)")
         out.appendLine("Un palier s'ouvre à une puissance d'objet, c'est-à-dire vers un étage :")
+        val tiers = (1..AffixBudget.TIERS) + listOf(9, 10, 12, 15, 20, DEEP_TIERS)
         out.append(String.format("%-14s", "palier"))
-        for (t in 1..AffixBudget.TIERS) out.append(String.format("%-14s", "P$t"))
+        for (t in tiers) out.append(String.format("%-14s", "P$t"))
         out.appendLine()
         out.append(String.format("%-14s", "étage >="))
-        for (t in 1..AffixBudget.TIERS) {
-            val p = AffixBudget.TIER_POWER[t - 1]
+        for (t in tiers) {
+            val p = AffixBudget.tierPower(t)
             out.append(String.format("%-14s", (1 + (p - 1) / 0.4f).roundToInt()))
         }
-        out.appendLine(); out.appendLine("-".repeat(126))
+        out.appendLine(); out.appendLine("-".repeat(14 * (tiers.size + 1)))
 
         for (type in StatType.entries) {
             out.append(String.format("%-14s", type.name))
-            for (t in 1..AffixBudget.TIERS) {
-                if (t < AffixBudget.minTier(type)) { out.append(String.format("%-14s", "—")); continue }
+            for (t in tiers) {
+                if (t < AffixBudget.minTier(type) || t > AffixBudget.maxTierOf(type)) { out.append(String.format("%-14s", "—")); continue }
                 val nominal = AffixBudget.nominal(type, t)
                 val cell = if (type.isPercent)
                     "%.1f-%.1f%%".format(nominal * AffixBudget.ROLL_MIN * 100, nominal * 100)
@@ -198,9 +203,9 @@ class AffixBudgetTest {
             }
             out.appendLine()
             out.append(String.format("%-14s", "  vaut"))
-            for (t in 1..AffixBudget.TIERS) {
-                if (t < AffixBudget.minTier(type)) { out.append(String.format("%-14s", "—")); continue }
-                val p = AffixBudget.TIER_POWER[t - 1]
+            for (t in tiers) {
+                if (t < AffixBudget.minTier(type) || t > AffixBudget.maxTierOf(type)) { out.append(String.format("%-14s", "—")); continue }
+                val p = AffixBudget.tierPower(t)
                 out.append(String.format("%-14s", "%.0f %%".format(worth(type, AffixBudget.nominal(type, t), p))))
             }
             out.appendLine()

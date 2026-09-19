@@ -26,7 +26,7 @@ enum class Archetype(
 }
 
 /**
- * Le héros : ce qui survit d'une partie à l'autre (équipement, sac, or, potions) et ses
+ * Le héros : ce qui survit d'une partie à l'autre (équipement, sac, or, reliques) et ses
  * caractéristiques façon D&D. Toutes les formules de combat côté joueur vivent ici,
  * pour qu'on les retrouve et les règle au même endroit (voir DONJON.md).
  */
@@ -51,14 +51,16 @@ class Hero {
         /** Sans arme, on se bat à mains nues. */
         const val FIST_MIN       = 2
         const val FIST_MAX       = 4
-        const val MAX_POTIONS    = 5
-        const val POTION_HEAL    = 0.40f   // part des PV max rendue par une potion
         const val BASE_CRIT_MULT = 2f
         /**
-         * Reliques portées en même temps. Le combat a quatre boutons, façon Pokémon :
-         * l'attaque (fixe), deux reliques, et un sort spécial (à venir).
+         * Reliques portées en même temps, au plus. Le combat a six boutons : l'attaque et le
+         * Spécial (fixes), et quatre reliques. Le premier emplacement est là dès le départ (il
+         * se remplit avec la première relique trouvée), les autres s'ouvrent en descendant :
+         * voir [RELIC_SLOT_FLOORS] et DONJON.md, « Plus de potion ».
          */
-        const val RELIC_SLOTS    = 2
+        const val RELIC_SLOTS    = 4
+        /** L'étage qu'il faut avoir atteint une fois pour ouvrir le 2ᵉ, le 3ᵉ et le 4ᵉ emplacement. */
+        val RELIC_SLOT_FLOORS = intArrayOf(50, 100, 500)
         /**
          * La recharge des reliques ne repart pas à zéro à chaque combat : elle avance d'un
          * tour par tour de combat, par tour de repos, et tous les [RELIC_WALK_STEPS] pas.
@@ -73,10 +75,20 @@ class Hero {
         const val SPECIAL_COOLDOWN = 5
         /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
         const val MIN_SPEED = 0.5f
+        /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
+        const val MAX_CRIT = 0.6f
 
-        /** Un héros neuf : une épée de bois toute simple, et aucune relique — elles se trouvent. */
+        /**
+         * Les PV d'un point de CON, à la puissance [power] de l'armure portée : [HP_PER_CON]
+         * jusqu'à l'étage 100, puis au rythme de la puissance, comme les PV par niveau de D&D.
+         * La CON ne grandit plus au-delà (voir [LootSystem.DEEP_POWER]) : sans ça, son poids
+         * dans le sac de PV fondrait.
+         */
+        fun hpPerCon(power: Int) = HP_PER_CON * LootSystem.depthFactor(power)
+
+        /** Un héros neuf : une épée d'Hydrogène toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
-            val sword = LootSystem.create(ItemBase.SWORD, Material.LEATHER, 1, Rarity.NORMAL, nextLootId++, Random(0))
+            val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.NORMAL, nextLootId++, Random(0))
             equipped[EquipSlot.WEAPON] = sword
             healFull()
         }
@@ -84,7 +96,6 @@ class Hero {
 
     var hp      = BASE_HP
     var gold    = 0
-    var potions = 2
     val equipped = mutableMapOf<EquipSlot, Equipment>()
     /** Le sac est infini : rien ne se perd, aucune gestion imposée. */
     val bag = mutableListOf<Equipment>()
@@ -102,6 +113,15 @@ class Hero {
     var specialCooldown = 0
     /** Les résonances déjà portées une fois : l'inventaire les liste, les autres restent cachées. */
     val knownResonances = mutableSetOf<Resonance>()
+
+    /** L'étage le plus profond jamais atteint : il ouvre les emplacements de relique. On ne le perd pas en mourant. */
+    var deepestFloor = 1
+
+    /** Les emplacements de relique ouverts : un au départ, puis aux étages [RELIC_SLOT_FLOORS]. */
+    val unlockedRelicSlots: Int get() = 1 + RELIC_SLOT_FLOORS.count { deepestFloor >= it }
+
+    /** Le premier emplacement ouvert et vide, ou -1. */
+    private fun freeRelicSlot() = (0 until unlockedRelicSlots).firstOrNull { relicSlots[it] == null } ?: -1
 
     /** Les résonances des reliques portées (voir [Resonance]). */
     val resonances: List<Resonance> get() = Resonance.active(relicSlots.filterNotNull())
@@ -127,7 +147,17 @@ class Hero {
 
     // ── Stats dérivées ──────────────────────────────────────────────────────────
 
-    val maxHp get() = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
+    val maxHp get() = BASE_HP + (hpPerCon(armorPower) * bonus(StatType.CON)).roundToInt() + equipSum(StatType.MAX_HP).roundToInt()
+
+    /** Les PV d'un point de CON pour l'armure portée : 4 jusqu'à l'étage 100, plus au-delà. */
+    val hpPerConPoint: Int get() = hpPerCon(armorPower).roundToInt()
+
+    /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
+    private val armorPower: Int get() {
+        val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
+        return if (pieces.isEmpty()) 1 else Math.round(pieces.map { it.power }.average()).toInt()
+    }
+
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
 
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis FOR : +4 % par point. */
@@ -178,13 +208,24 @@ class Hero {
     fun relicAmount(relic: Relic): Int = when (relic.effect) {
         RelicEffect.BARRIER -> (maxHp * Relic.BARRIER_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
         RelicEffect.REGEN   -> (maxHp * Relic.REGEN_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
+        RelicEffect.HEAL    -> (maxHp * Relic.HEAL_SHARE).roundToInt().coerceAtLeast(1)
         RelicEffect.BLEED, RelicEffect.BLEED_ON_CRIT -> bleedDamage(relic)
         RelicEffect.STONESKIN -> (Relic.THORNS_SHARE * 100).roundToInt()
         else -> 0
     }
 
-    /** Chance de critique : 5 % + 1 % par point de DEX + bonus des objets. */
-    val critChance get() = (0.05f + 0.01f * bonus(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)).coerceIn(0f, 0.6f)
+    /**
+     * Le critique du héros, sans plafond : 5 % + 1 % par point de DEX + bonus des objets. En
+     * profondeur, il peut dépasser 100 % : les monstres y résistent (voir [critChance]).
+     */
+    val critRating get() = 0.05f + 0.01f * bonus(StatType.DEX) + equipSum(StatType.CRIT_CHANCE)
+
+    /**
+     * La vraie chance de critique à l'étage [floor] : le critique du héros moins la résistance
+     * des monstres de l'étage (nulle jusqu'à l'étage 100 environ), bornée à [MAX_CRIT].
+     */
+    fun critChance(floor: Int) = (critRating -
+        AffixBudget.critResistance(LootSystem.powerCenter(floor).roundToInt())).coerceIn(0f, MAX_CRIT)
     val critMult get() = BASE_CRIT_MULT + equipSum(StatType.CRIT_DAMAGE)
 
     /** Part des dégâts infligés à l'épée rendue en PV. */
@@ -200,10 +241,9 @@ class Hero {
      */
     val armorClass: Int get() {
         val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
-        val power = if (pieces.isEmpty()) 1 else Math.round(pieces.map { it.power }.average()).toInt()
         val dexCounts = pieces.none { it.weight?.dexCounts == false }
         val dex = if (dexCounts) Math.floorDiv(attribute(StatType.DEX) - BASE_ATTRIBUTE, 2) else 0
-        return ArmorClass.BASE + SpellSave.proficiency(power) + equipped.values.sumOf { it.acBonus } + dex
+        return ArmorClass.BASE + SpellSave.proficiency(armorPower) + equipped.values.sumOf { it.acBonus } + dex
     }
 
     /**
@@ -244,7 +284,7 @@ class Hero {
     fun addRelic(relic: Relic): Boolean {
         if (relic !in relics) relics += relic
         if (relic in relicSlots) return true
-        val free = relicSlots.indexOfFirst { it == null }
+        val free = freeRelicSlot()
         if (free < 0) return false
         relicSlots[free] = relic
         return true
@@ -294,10 +334,24 @@ class Hero {
             return RelicToggle.REMOVED
         }
         if (relic !in relics) return RelicToggle.SLOTS_FULL
-        val free = relicSlots.indexOfFirst { it == null }
+        val free = freeRelicSlot()
         if (free < 0) return RelicToggle.SLOTS_FULL
         relicSlots[free] = relic
         return RelicToggle.EQUIPPED
+    }
+
+    /**
+     * Un nouvel étage atteint. S'il ouvre un emplacement de relique, les reliques trouvées et
+     * pas encore portées le remplissent (dans l'ordre de découverte). Vrai si un emplacement s'ouvre.
+     */
+    fun reachFloor(floor: Int): Boolean {
+        if (floor <= deepestFloor) return false
+        val before = unlockedRelicSlots
+        deepestFloor = floor
+        if (unlockedRelicSlots == before) return false
+        for (relic in relics) if (relic !in relicSlots) addRelic(relic)
+        discoverResonances()
+        return true
     }
 
     // ── Équipement ──────────────────────────────────────────────────────────────

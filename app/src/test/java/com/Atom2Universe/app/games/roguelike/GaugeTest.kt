@@ -19,7 +19,7 @@ class GaugeTest {
      */
     private fun sturdyGroup(vararg types: MonsterType = arrayOf(MonsterType.RAT, MonsterType.SKELETON, MonsterType.DEMON), ambush: Boolean = false): Combat {
         val enemies = Encounters.build(types.toList(), 1).onEach { it.hp = 1_000_000 }
-        val hero = Hero.starter().apply { hp = 1_000_000 }
+        val hero = heroWithAllSlots().apply { hp = 1_000_000 }
         return Combat(hero, 5, enemies, ambush, rng = Random(3), d20 = { 10 }, attackDie = { 1 })
     }
 
@@ -72,7 +72,7 @@ class GaugeTest {
 
     /** Un gobelin lent (cadence 2) : il agit un tour du héros sur deux. */
     private fun slowFoe(vararg relics: Relic, d20: Int = 1): Combat {
-        val hero = Hero.starter().apply { relics.forEach { addRelic(it) }; hp = 1_000_000 }
+        val hero = heroWithAllSlots().apply { relics.forEach { addRelic(it) }; hp = 1_000_000 }
         val foe = Enemy(MonsterType.GOBLIN, maxHp = 1_000_000, damage = 3, cadence = 2, countdown = 1)
         return Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), d20 = { d20 }, attackDie = { 1 })
     }
@@ -108,7 +108,7 @@ class GaugeTest {
     fun gelIlFrappeEngourdi() {
         fun blow(frozen: Boolean): Int {
             val brute = Enemy(MonsterType.GOBLIN, maxHp = 1_000_000, damage = 100, cadence = 1, countdown = 1)
-            val hero = Hero.starter().apply { hp = 1_000_000 }
+            val hero = heroWithAllSlots().apply { hp = 1_000_000 }
             val c = Combat(hero, 1, listOf(brute), ambush = false, rng = Random(1), attackDie = { 15 })
             c.attack(0, Timing.MISS)
             if (frozen) brute.frozenTime = 1.0
@@ -150,7 +150,7 @@ class GaugeTest {
     @Test
     fun deuxSortsDeSoutienValentUnTour() {
         // Un rat qui joue à chaque tour : deux sorts à demi-jauge, et il n'a frappé qu'une fois
-        val hero = Hero.starter().apply { addRelic(Relic.WAR_CRY); addRelic(Relic.SMOKE_BOMB); hp = 1_000_000 }
+        val hero = heroWithAllSlots().apply { addRelic(Relic.WAR_CRY); addRelic(Relic.SMOKE_BOMB); hp = 1_000_000 }
         val rat = Enemy(MonsterType.RAT, maxHp = 1_000_000, damage = 3, cadence = 1, countdown = 1)
         val c = Combat(hero, 1, listOf(rat), ambush = false, rng = Random(1), attackDie = { 1 })
         assertEquals(Combat.SUPPORT_ACTION, c.relicCost(Relic.WAR_CRY), 0.0)
@@ -182,9 +182,9 @@ class GaugeTest {
 
     @Test
     fun lArmureLegereAccelereLaLourdeRalentit() {
-        fun hero(weight: ArmorWeight) = Hero.starter().apply {
+        fun hero(weight: ArmorWeight) = heroWithAllSlots().apply {
             for (b in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS))
-                equipped[b.slot] = LootSystem.create(b, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(1), forcedWeight = weight)
+                equipped[b.slot] = LootSystem.create(b, 1, Rarity.NORMAL, 0, Random(1), forcedWeight = weight)
         }
         assertEquals(1.15f, hero(ArmorWeight.LIGHT).speed, 1e-5f)
         assertEquals(1.00f, hero(ArmorWeight.CLOTH).speed, 1e-5f)
@@ -194,8 +194,8 @@ class GaugeTest {
     @Test
     fun unHerosRapideRejoueAvantUnMonstreLent() {
         // Deux fois plus rapide qu'un gobelin de cadence 2 : quatre tours du héros pour un du gobelin
-        val hero = Hero.starter().apply {
-            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, Material.LEATHER, 1, Rarity.NORMAL, 0, Random(1))
+        val hero = heroWithAllSlots().apply {
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(1))
                 .let { it.copy(affixes = listOf(StatRoll(StatType.SPEED, 1f, 8))) }
             hp = 1_000_000
         }
@@ -221,7 +221,7 @@ class GaugeTest {
     fun laHateFaitJouerPlusSouvent() {
         // Un gobelin lent (cadence 2) qui jouera à 1,5
         fun fight(relic: Relic): Combat {
-            val hero = Hero.starter().apply { addRelic(relic); hp = 1_000_000 }
+            val hero = heroWithAllSlots().apply { addRelic(relic); hp = 1_000_000 }
             val foe = Enemy(MonsterType.GOBLIN, maxHp = 1_000_000, damage = 3, cadence = 2, countdown = 2)
             return Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), attackDie = { 1 })
                 .also { it.castRelic(relic, 0, Timing.MISS) }
@@ -235,7 +235,7 @@ class GaugeTest {
 
     @Test
     fun laLenteurRalentitEtCompteCommeUnControle() {
-        val hero = Hero.starter().apply { addRelic(Relic.SLOW) }
+        val hero = heroWithAllSlots().apply { addRelic(Relic.SLOW) }
         val rat = Enemy(MonsterType.RAT, maxHp = 1_000_000, damage = 3, cadence = 1, countdown = 1)
         val c = Combat(hero, 1, listOf(rat), ambush = false, rng = Random(1), d20 = { 1 }, attackDie = { 1 })
         val hit = c.castRelic(Relic.SLOW, 0, Timing.MISS).main!!
@@ -247,7 +247,7 @@ class GaugeTest {
 
     @Test
     fun leSablierRalentitLesProchainesAttaques() {
-        val hero = Hero.starter().apply { addRelic(Relic.HOURGLASS); hp = 1_000_000 }
+        val hero = heroWithAllSlots().apply { addRelic(Relic.HOURGLASS); hp = 1_000_000 }
         val rat = Enemy(MonsterType.RAT, maxHp = 1_000_000, damage = 3, cadence = 1, countdown = 1)
         val c = Combat(hero, 1, listOf(rat), ambush = false, rng = Random(1), attackDie = { 1 })
         c.castRelic(Relic.HOURGLASS, 0, Timing.MISS)

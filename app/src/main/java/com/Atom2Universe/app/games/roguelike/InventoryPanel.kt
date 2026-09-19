@@ -88,11 +88,11 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
             h.subtitle.text = ctx.getString(R.string.roguelike_item_subtitle, ctx.getString(item.slot.labelRes), ctx.getString(item.rarity.labelRes))
 
             val rating = LootSystem.rating(item)
-            h.rating.text = rating.toString()
+            h.rating.text = num(rating)
             val diff = rating - (hero.equipped[item.slot]?.let { LootSystem.rating(it) } ?: 0)
             h.delta.text = when {
-                diff > 0 -> ctx.getString(R.string.roguelike_delta_up, diff)
-                diff < 0 -> ctx.getString(R.string.roguelike_delta_down, -diff)
+                diff > 0 -> ctx.getString(R.string.roguelike_delta_up, num(diff))
+                diff < 0 -> ctx.getString(R.string.roguelike_delta_down, num(-diff))
                 else     -> ctx.getString(R.string.roguelike_delta_equal)
             }
             h.delta.setTextColor(when { diff > 0 -> 0xFF66BB6A.toInt(); diff < 0 -> 0xFFEF5350.toInt(); else -> 0xFF90A4AE.toInt() })
@@ -159,7 +159,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     fun refresh() {
         val g = game ?: return
         val hero = g.hero
-        tvGold.text = ctx.getString(R.string.roguelike_hud_gold, hero.gold)
+        tvGold.text = ctx.getString(R.string.roguelike_hud_gold, num(hero.gold))
 
         for ((slot, iv) in slotViews) {
             val e = hero.equipped[slot]
@@ -190,7 +190,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private fun bindRelics(hero: Hero) {
         val worn = hero.relicSlots.count { it != null }
         tvRelics.text = if (hero.relics.isEmpty()) ctx.getString(R.string.roguelike_inventory_relics_none)
-            else ctx.getString(R.string.roguelike_inventory_relics_title, worn, Hero.RELIC_SLOTS)
+            else ctx.getString(R.string.roguelike_inventory_relics_title, worn, hero.unlockedRelicSlots)
 
         relicsRow.removeAllViews()
         for (relic in hero.relics) {
@@ -233,8 +233,8 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         val (lo, hi) = hero.relicDamage(relic)
         // Toutes les descriptions reçoivent les mêmes nombres, chacune prend ceux qui la concernent
         val empowerPct = (RelicBudget.empowerBonus(relic) * hero.relicMult(relic) * 100).roundToInt()
-        val desc = ctx.getString(relic.descRes, lo, hi, relic.effectTurns, hero.spellCooldown(relic.cooldown),
-            hero.poisonDose(relic), hero.spellDc(relic), empowerPct, hero.relicAmount(relic)) +
+        val desc = ctx.getString(relic.descRes, num(lo), num(hi), relic.effectTurns, hero.spellCooldown(relic.cooldown),
+            num(hero.poisonDose(relic)), hero.spellDc(relic), empowerPct, num(hero.relicAmount(relic))) +
             "\n" + ctx.getString(R.string.roguelike_inventory_relic_attribute, ctx.getString(relic.attribute.labelRes))
         tvRelicDesc.text = if (relicRefused) desc + "\n" + ctx.getString(R.string.roguelike_inventory_relics_full) else desc
     }
@@ -306,7 +306,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
     private fun attributeDescription(attr: StatType): String = when (attr) {
         StatType.STR -> ctx.getString(R.string.roguelike_attr_desc_str, percent(Hero.STR_DAMAGE_PER_POINT))
         StatType.DEX -> ctx.getString(R.string.roguelike_attr_desc_dex)
-        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, Hero.HP_PER_CON)
+        StatType.CON -> ctx.getString(R.string.roguelike_attr_desc_con, num(game?.hero?.hpPerConPoint ?: Hero.HP_PER_CON))
         StatType.INT -> ctx.getString(R.string.roguelike_attr_desc_int, percent(Hero.RELIC_DAMAGE_PER_POINT))
         StatType.WIS -> ctx.getString(R.string.roguelike_attr_desc_wis, Hero.WIS_POINTS_PER_TURN)
         StatType.CHA -> ctx.getString(R.string.roguelike_attr_desc_cha, percent(Hero.GOLD_PER_CHA))
@@ -315,13 +315,16 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
 
     private fun percent(f: Float) = Math.round(f * 100)
 
+    /** Grands nombres (PV, or, note, dégâts) : abrégés au-delà de 100 000. */
+    private fun num(v: Int) = DungeonNumbers.format(ctx, v)
+
     private fun statsText(hero: Hero): String {
         val archetype = hero.archetype?.let { ctx.getString(R.string.roguelike_inventory_archetype, ctx.getString(it.labelRes)) }
             ?: ctx.getString(R.string.roguelike_inventory_archetype_none, Hero.ARCHETYPE_PIECES)
         return listOf(
             archetype,
             ctx.getString(R.string.roguelike_inventory_stats_line,
-                hero.hp, hero.maxHp, hero.armor, hero.weaponMin, hero.weaponMax, Math.round(hero.critChance * 100),
+                num(hero.hp), num(hero.maxHp), num(hero.armor), num(hero.weaponMin), num(hero.weaponMax), Math.round(hero.critChance(game?.floor ?: 1) * 100),
                 Math.round(hero.dodgeChance(game?.floor ?: 1) * 100), Math.round(hero.speed * 100)),
         ).joinToString("\n")
     }
@@ -335,7 +338,7 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         detailName.text = LootSystem.displayName(ctx, item)
         detailName.setTextColor(item.rarity.colorArgb)
         detailSub.text = ctx.getString(R.string.roguelike_inventory_subtitle,
-            ctx.getString(item.slot.labelRes), ctx.getString(item.rarity.labelRes), LootSystem.rating(item))
+            ctx.getString(item.slot.labelRes), ctx.getString(item.rarity.labelRes), num(LootSystem.rating(item)))
         detailStats.text = LootSystem.describe(ctx, item).joinToString("\n")
 
         if (selectedIsEquipped) {
@@ -344,9 +347,9 @@ class InventoryPanel(private val root: View, private val onChanged: () -> Unit) 
         } else {
             val worn = hero.equipped[item.slot]
             detailCmp.text = if (worn == null) ctx.getString(R.string.roguelike_loot_nothing_equipped)
-                else ctx.getString(R.string.roguelike_inventory_worn, LootSystem.displayName(ctx, worn), LootSystem.rating(worn))
+                else ctx.getString(R.string.roguelike_inventory_worn, LootSystem.displayName(ctx, worn), num(LootSystem.rating(worn)))
             detailActs.visibility = View.VISIBLE
-            btnSell.text = ctx.getString(R.string.roguelike_inventory_sell, LootSystem.sellPrice(item))
+            btnSell.text = ctx.getString(R.string.roguelike_inventory_sell, num(LootSystem.sellPrice(item)))
         }
     }
 

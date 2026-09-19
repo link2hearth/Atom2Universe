@@ -17,7 +17,6 @@ data class Pos(val x: Int, val y: Int) {
 // ─── Objets au sol ─────────────────────────────────────────────────────────────
 enum class ItemType(val spriteRow: Int, val spriteCol: Int) {
     GOLD  (9, 15),
-    POTION(17, 0),
     /** L'icône réelle est celle de la relique posée ([Item.relic]). */
     RELIC (113, 6),
 }
@@ -126,7 +125,6 @@ class RoguelikeGame(
         const val WANDERER_MIN_STEPS = 5
         const val WANDERER_MAX_STEPS = 10
         const val DEATH_GOLD_LOSS = 0.30f
-        const val POTION_PRICE   = 15
         const val CHECKPOINT     = 1
         /**
          * Les reliques ne se trouvent **qu'en explorant** (décidé le 18/09/2026) : jamais sur
@@ -144,7 +142,7 @@ class RoguelikeGame(
         fun fromJson(j: JSONObject): RoguelikeGame {
             val hero = Hero().apply {
                 gold    = j.getInt("gold")
-                potions = j.getInt("potions")
+                deepestFloor = j.optInt("deepestFloor", j.getInt("floor"))
                 val eq  = j.getJSONObject("equipped")
                 for (slotName in eq.keys())
                     equipped[EquipSlot.valueOf(slotName)] = SaveManager.equipFromJson(eq.getJSONObject(slotName))
@@ -206,7 +204,7 @@ class RoguelikeGame(
     val pendingLoot = ArrayDeque<Equipment>()
     val pendingEquipDrop get() = pendingLoot.firstOrNull()
 
-    var merchantOpen = false
+    var stairsOpen = false
         private set
     var deathReport: DeathReport? = null
         private set
@@ -219,7 +217,7 @@ class RoguelikeGame(
     // ── État ────────────────────────────────────────────────────────────────────
 
     /** Rien d'ouvert par-dessus la carte : on peut bouger. */
-    val isExploring get() = combat == null && pendingLoot.isEmpty() && !merchantOpen && deathReport == null
+    val isExploring get() = combat == null && pendingLoot.isEmpty() && !stairsOpen && deathReport == null
 
     val isChased get() = level.packs.any { it.alive && it.state == PackState.CHASING }
 
@@ -274,22 +272,16 @@ class RoguelikeGame(
         addLog(R.string.roguelike_log_rest_noise)
     }
 
-    fun openMerchant() {
-        if (isExploring && onStairsTile()) merchantOpen = true
+    /** Sur l'escalier : on demande avant de descendre (on peut vouloir finir l'étage). */
+    fun openStairs() {
+        if (isExploring && onStairsTile()) stairsOpen = true
     }
 
-    fun buyPotion(): Boolean {
-        if (!merchantOpen || hero.gold < POTION_PRICE || hero.potions >= Hero.MAX_POTIONS) return false
-        hero.gold -= POTION_PRICE
-        hero.potions++
-        return true
-    }
-
-    fun closeMerchant() { merchantOpen = false }
+    fun closeStairs() { stairsOpen = false }
 
     fun descend() {
-        if (!merchantOpen) return
-        merchantOpen = false
+        if (!stairsOpen) return
+        stairsOpen = false
         changeFloor(floor + 1)
         addLog(R.string.roguelike_log_floor_descend, floor)
     }
@@ -363,7 +355,6 @@ class RoguelikeGame(
                 beaten?.alive = false
                 val r = c.rewards!!
                 hero.gold += r.gold
-                hero.potions = (hero.potions + r.potions).coerceAtMost(Hero.MAX_POTIONS)
                 pendingLoot.addAll(r.equipment)
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
@@ -468,13 +459,6 @@ class RoguelikeGame(
                 level.items.remove(item)
                 addLog(R.string.roguelike_log_gold_pickup, gain)
             }
-            ItemType.POTION -> {
-                if (hero.potions < Hero.MAX_POTIONS) {
-                    hero.potions++
-                    level.items.remove(item)
-                    addLog(R.string.roguelike_log_potion_pickup)
-                } else addLog(R.string.roguelike_log_potions_full)
-            }
             ItemType.RELIC -> {
                 val relic = item.relic ?: continue
                 level.items.remove(item)
@@ -491,6 +475,7 @@ class RoguelikeGame(
         level = generateLevel(floor)
         playerPos = level.start
         computeFov()
+        if (hero.reachFloor(floor)) addLog(R.string.roguelike_log_relic_slot, hero.unlockedRelicSlots, Hero.RELIC_SLOTS)
         onFloorChanged?.invoke(floor)
     }
 
@@ -563,7 +548,6 @@ class RoguelikeGame(
             .distinct()
         val goldCount = 3 + rng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
-        if (rng.nextFloat() < 0.4f) spots.getOrNull(goldCount)?.let { lv.items += Item(ItemType.POTION, it) }
 
         return lv
     }
@@ -580,7 +564,7 @@ class RoguelikeGame(
         put("floor",      floor)
         put("hp",         hero.hp)
         put("gold",       hero.gold)
-        put("potions",    hero.potions)
+        put("deepestFloor", hero.deepestFloor)
         put("heroSprite", heroSpritePath)
         put("equipped", JSONObject().also { eq ->
             for ((slot, equip) in hero.equipped) eq.put(slot.name, SaveManager.equipToJson(equip))
