@@ -67,6 +67,8 @@ class CombatView @JvmOverloads constructor(
         private const val SLOWED_COLOR    = 0xFF9FA8DA.toInt()
         private const val HASTE_COLOR     = 0xFF80CBC4.toInt()
         private const val HOURGLASS_COLOR = 0xFFE6C75A.toInt()
+        private const val PUPPET_COLOR    = 0xFF80CBC4.toInt()
+        private const val ROLL_COLOR      = 0xFFAED581.toInt()
 
         // La barre d'ordre des tours : chaque ennemi a sa couleur, reprise au-dessus de lui
         private val ENEMY_MARKS = intArrayOf(0xFFFFB74D.toInt(), 0xFFBA68C8.toInt(), 0xFF4DB6AC.toInt())
@@ -82,6 +84,8 @@ class CombatView @JvmOverloads constructor(
     private var stageStart = 0L
     private var target = 0
     private var pendingAction: Action? = null
+    /** Vagabond : le geste du premier coup de l'Enchaînement, en attendant celui du second. */
+    private var chainFirst: Timing? = null
     private val attackers = ArrayDeque<Int>()
     private var attacker = -1
     private var parry: Timing? = null
@@ -131,7 +135,7 @@ class CombatView @JvmOverloads constructor(
         combat = c
         heroSpritePath = heroSprite
         target = c.aliveIndices().firstOrNull() ?: 0
-        attackers.clear(); attacker = -1; parry = null; pendingAction = null; hitTargets = emptySet(); previewCost = null
+        attackers.clear(); attacker = -1; parry = null; pendingAction = null; chainFirst = null; hitTargets = emptySet(); previewCost = null
         floaters.clear(); banner = null
         layoutRects()
         enter(Stage.INTRO)
@@ -229,6 +233,7 @@ class CombatView @JvmOverloads constructor(
     private fun choose(action: Action) {
         val c = combat ?: return
         pendingAction = action
+        chainFirst = null
         // La barre d'ordre garde l'aperçu pendant le geste
         previewCost = when (action) {
             is Action.Cast -> c.relicCost(action.relic)
@@ -241,11 +246,23 @@ class CombatView @JvmOverloads constructor(
     private fun resolveStrike(timing: Timing) {
         val c = combat ?: return
         if (!c.enemies[target].alive) target = c.aliveIndices().first()
+        // L'Enchaînement : un geste par coup. Le premier est noté, la barre repart pour le second
+        if (pendingAction == Action.Deadly && c.hero.archetype == Archetype.VAGABOND && chainFirst == null) {
+            chainFirst = timing
+            when (timing) {
+                Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_perfect), 0xFFFFD54F.toInt())
+                Timing.GOOD    -> showBanner(context.getString(R.string.roguelike_combat_good), 0xFFAED581.toInt())
+                Timing.MISS    -> {}
+            }
+            enter(Stage.STRIKE_TIMING)
+            return
+        }
         val hits = when (val a = pendingAction) {
             is Action.Cast -> c.castRelic(a.relic, target, timing).hits
-            Action.Deadly  -> if (c.hero.archetype == Archetype.VAGABOND) c.chain(target, timing, timing) else listOf(c.deadlyStrike(target, timing))
+            Action.Deadly  -> if (c.hero.archetype == Archetype.VAGABOND) c.chain(target, chainFirst ?: timing, timing) else listOf(c.deadlyStrike(target, timing))
             else           -> listOf(c.attack(target, timing))
         }
+        chainFirst = null
         pendingAction = null
         previewCost = null
         when (timing) {
@@ -275,6 +292,10 @@ class CombatView @JvmOverloads constructor(
                 r.centerX(), r.top, if (result.crit) 0xFFFFEB3B.toInt() else Color.WHITE, result.crit,
             )
             var y = r.top + 26f * sp
+            if (result.echo > 0) {
+                floatText(context.getString(R.string.roguelike_combat_echo, num(result.echo)), r.centerX(), y, PUPPET_COLOR, false)
+                y += 22f * sp
+            }
             affinityRes(result.affinity)?.let { (res, color) ->
                 floatText(context.getString(res), r.centerX(), y, color, false)
                 y += 22f * sp
@@ -450,6 +471,8 @@ class CombatView @JvmOverloads constructor(
         }
         if (strike.absorbed > 0)
             floatText(context.getString(R.string.roguelike_combat_absorbed, num(strike.absorbed)), heroRect.centerX(), heroRect.bottom, BARRIER_COLOR, false)
+        if (strike.puppetAbsorbed > 0)
+            floatText(context.getString(R.string.roguelike_combat_puppet_absorbed, num(strike.puppetAbsorbed)), heroRect.centerX(), heroRect.bottom + 18f * sp, PUPPET_COLOR, false)
         if (strike.missed) {
             // Le texte dit ce que fait le héros, pas ce que rate le monstre : avec un bouclier
             // ou en guerrier il encaisse sur son armure, sinon il s'écarte
@@ -466,7 +489,9 @@ class CombatView @JvmOverloads constructor(
             return
         }
         if (strike.blocked || strike.dodged) {
-            showBanner(context.getString(if (strike.blocked) R.string.roguelike_combat_blocked else R.string.roguelike_combat_dodged), 0xFFFFD54F.toInt())
+            val roll = strike.dodged && c.hero.archetype == Archetype.VAGABOND
+            showBanner(context.getString(when { roll -> R.string.roguelike_combat_roll; strike.blocked -> R.string.roguelike_combat_blocked
+                else -> R.string.roguelike_combat_dodged }), if (roll) ROLL_COLOR else 0xFFFFD54F.toInt())
             onParry?.invoke(true)
             strike.counter?.let { hit ->
                 val r = enemyRects[hit.target]
@@ -701,6 +726,27 @@ class CombatView @JvmOverloads constructor(
             pText.color = 0xFFB39DDB.toInt()
             canvas.drawText(context.getString(R.string.roguelike_combat_images, c.mirrorImages), left, y, pText)
             y += 15f * sp
+        }
+        if (c.rollReady) {
+            pText.color = ROLL_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_roll_ready), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.puppetHp.isNotEmpty()) {
+            pText.color = PUPPET_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_puppets_line, c.puppetHp.count { it > 0 }, c.puppetHp.size), left, y, pText)
+            y += 6f * sp
+            val n = c.puppetHp.size
+            val gap = 6f * density
+            val barW = ((right - left) - gap * (n - 1)) / n
+            val barH = 9f * density
+            for ((i, hp) in c.puppetHp.withIndex()) {
+                val x0 = left + i * (barW + gap)
+                pFill.color = 0xFF263238.toInt(); canvas.drawRect(x0, y, x0 + barW, y + barH, pFill)
+                pFill.color = PUPPET_COLOR
+                canvas.drawRect(x0, y, x0 + barW * (hp.toFloat() / c.puppetMaxHp).coerceIn(0f, 1f), y + barH, pFill)
+            }
+            y += barH + 10f * sp
         }
         if (c.empoweredAttacks > 0) {
             pText.color = EMPOWERED_COLOR

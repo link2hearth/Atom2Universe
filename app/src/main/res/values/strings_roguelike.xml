@@ -421,4 +421,9 @@
     <string name="roguelike_base_shroud">Shroud</string>
     <string name="roguelike_base_wraps">Wraps</string>
     <string name="roguelike_item_wrong_weapon">Not your class</string>
+    <string name="roguelike_combat_echo">echo +%1$s</string>
+    <string name="roguelike_combat_puppet_absorbed">puppets −%1$s</string>
+    <string name="roguelike_combat_puppets_line">puppets %1$d/%2$d</string>
+    <string name="roguelike_combat_roll">ROLL!</string>
+    <string name="roguelike_combat_roll_ready">roll ready</string>
 </resources>

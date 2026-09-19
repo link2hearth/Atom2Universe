@@ -207,4 +207,30 @@ class NewArchetypesTest {
         assertEquals("le premier coup ne change pas", without[0].damage, with[0].damage)
         assertTrue("le second frappe plus fort : ${with[1].damage} contre ${without[1].damage}", with[1].damage > without[1].damage)
     }
+
+    // ── Ce que l'écran affiche ──────────────────────────────────────────────────
+
+    @Test
+    fun lesResultatsDisentCeQueLesPantinsOntFait() {
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8, ambush = true)
+        c.startEnemyTurn()
+        val s = c.resolveStrike(0, Timing.MISS)
+        assertTrue("les pantins ont pris une part du coup", s.puppetAbsorbed > 0)
+        c.endEnemyTurn()
+        val hit = c.attack(0, Timing.PERFECT)
+        assertTrue("l'écho est dans le résultat du coup", hit.echo > 0)
+        assertEquals("un raté : pas d'écho", 0, fight(heroOf(Archetype.NECROMANCER)).attack(0, Timing.MISS).echo)
+    }
+
+    @Test
+    fun laRouladePreparelProchainCoupEtSeVoit() {
+        val c = fight(heroOf(Archetype.VAGABOND), ambush = true)
+        assertTrue(!c.rollReady)
+        c.startEnemyTurn()
+        c.resolveStrike(0, Timing.PERFECT)
+        assertTrue("la roulade est prête, l'écran l'affiche", c.rollReady)
+        c.endEnemyTurn()
+        c.attack(0, Timing.MISS)
+        assertTrue("le coup l'a utilisée", !c.rollReady)
+    }
 }

@@ -743,6 +743,8 @@ data class HitResult(
     val target: Int, val damage: Int, val crit: Boolean, val killed: Boolean,
     val affinity: Affinity = Affinity.NORMAL, val save: SaveRoll? = null, val enraged: Boolean = false,
     val reactions: List<Reaction> = emptyList(), val explosion: Int = 0, val noDamage: Boolean = false,
+    /** Nécromancien : ce que les pantins ont ajouté à ce coup, en écho. */
+    val echo: Int = 0,
 )
 /** Un sort lancé : une touche par ennemi atteint, la cible visée en premier. Vide pour un sort sur soi. */
 data class CastResult(val relic: Relic, val hits: List<HitResult>) {
@@ -794,6 +796,8 @@ data class EnemyStrike(
     val bleed: Int = 0, val bledOut: Boolean = false,
     val charmed: Boolean = false, val charmHit: HitResult? = null,
     val absorbed: Int = 0, val thorns: Int = 0, val thornsKilled: Boolean = false,
+    /** Nécromancien : ce que ses pantins ont pris à sa place. */
+    val puppetAbsorbed: Int = 0,
 )
 data class CombatRewards(val gold: Int, val equipment: List<Equipment>)
 
@@ -903,7 +907,8 @@ class Combat(
     var mirrorImages = 0
         private set
     /** Vagabond : sa roulade parfaite relève son prochain coup d'arme. */
-    private var rollReady = false
+    var rollReady = false
+        private set
     /** Nécromancien : les PV de chaque pantin (0 : tombé). Vide pour les autres archétypes. */
     private val puppetHpList = mutableListOf<Int>()
     val puppetHp: List<Int> get() = puppetHpList
@@ -1014,9 +1019,9 @@ class Combat(
     fun attack(target: Int, timing: Timing): HitResult {
         check(phase == CombatPhase.PLAYER_TURN)
         val result = weaponHit(target, timing)
-        echo(target, timing)
+        val echo = echo(target, timing)
         afterPlayerAction(attackCost())
-        return result
+        return result.copy(echo = echo)
     }
 
     /**
@@ -1380,16 +1385,18 @@ class Combat(
      * L'écho des pantins : à chaque coup d'arme du nécromancien, chaque pantin debout frappe la même cible d'une part
      * de ses dégâts d'arme. La qualité du geste décide : parfait = tout, bon = la moitié, raté = rien.
      */
-    private fun echo(target: Int, timing: Timing) {
+    private fun echo(target: Int, timing: Timing): Int {
         val factor = when (timing) { Timing.PERFECT -> 1f; Timing.GOOD -> ECHO_GOOD_FACTOR; Timing.MISS -> 0f }
-        if (factor <= 0f || puppetHpList.none { it > 0 }) return
+        if (factor <= 0f || puppetHpList.none { it > 0 }) return 0
         val avg = (hero.weaponMin + hero.weaponMax) / 2f
         val echoMult = if (hero.classOffhand(Archetype.NECROMANCER)) 1f + GRIMOIRE_ECHO_BONUS else 1f
+        var total = 0
         for (hp in puppetHpList) {
             if (hp <= 0) continue
-            val at = if (enemies[target].alive) target else aliveIndices().firstOrNull() ?: return
-            wound(at, avg * ECHO_SHARE * factor * echoMult)
+            val at = if (enemies[target].alive) target else aliveIndices().firstOrNull() ?: return total
+            total += wound(at, avg * ECHO_SHARE * factor * echoMult)
         }
+        return total
     }
 
     /**
@@ -1742,7 +1749,9 @@ class Combat(
 
         val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val armorMult = if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f
+        val puppetsBefore = puppetHpList.sum()
         var dmg = throughPuppets(hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1))
+        val puppetTaken = puppetsBefore - puppetHpList.sum()
         // Le Bouclier arcanique prend d'abord
         val absorbed = minOf(barrier, dmg)
         barrier -= absorbed
@@ -1751,7 +1760,7 @@ class Combat(
         val thorns = retaliate(enemyIndex, blow, blocked = false)   // s'il en meurt, retaliate a déjà donné la victoire
         if (hero.hp == 0) phase = CombatPhase.DEFEAT
         return EnemyStrike(enemyIndex, dmg, parry, recovered = recovered, bleed = bled,
-            absorbed = absorbed, thorns = thorns, thornsKilled = thorns > 0 && !e.alive)
+            absorbed = absorbed, thorns = thorns, thornsKilled = thorns > 0 && !e.alive, puppetAbsorbed = puppetTaken)
     }
 
     /**

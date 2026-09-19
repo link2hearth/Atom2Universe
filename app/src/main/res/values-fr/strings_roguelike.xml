@@ -421,4 +421,9 @@
     <string name="roguelike_base_shroud">Suaire</string>
     <string name="roguelike_base_wraps">Bandelettes</string>
     <string name="roguelike_item_wrong_weapon">Pas ta classe</string>
+    <string name="roguelike_combat_echo">écho +%1$s</string>
+    <string name="roguelike_combat_puppet_absorbed">pantins −%1$s</string>
+    <string name="roguelike_combat_puppets_line">pantins %1$d/%2$d</string>
+    <string name="roguelike_combat_roll">ROULADE !</string>
+    <string name="roguelike_combat_roll_ready">roulade prête</string>
 </resources>
