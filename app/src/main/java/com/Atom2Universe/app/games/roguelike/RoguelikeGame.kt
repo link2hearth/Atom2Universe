@@ -82,6 +82,12 @@ class RoguelikeGame(
      * aux simulations en attendant les vrais checkpoints de boss (voir DONJON.md).
      */
     private val checkpointEvery: Int = 0,
+    /**
+     * La mort ramène à ce nombre d'étages **avant** le checkpoint (sans descendre sous l'étage [CHECKPOINT]) : on refait
+     * un peu de chemin, donc on farme un peu. 0 : au checkpoint même. Sert aux simulations, en attendant que le jeu laisse
+     * farmer n'importe quelle tranche de 25 étages déjà terminée (voir DONJON.md).
+     */
+    private val deathRetreat: Int = 0,
 ) {
     var onCombatStart:  (() -> Unit)?             = null
     var onFloorChanged: ((floor: Int) -> Unit)?   = null
@@ -364,7 +370,7 @@ class RoguelikeGame(
                 val r = c.rewards!!
                 hero.gold += r.gold
                 pendingLoot.addAll(r.equipment)
-                r.equipment.forEach { e -> e.isotopeZ?.let { hero.knownSets += it } }
+                r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
             }
@@ -389,7 +395,7 @@ class RoguelikeGame(
         hero.healFull()
         hero.relicCooldowns.clear()
         hero.specialCooldown = 0
-        changeFloor(checkpoint)
+        changeFloor((checkpoint - deathRetreat).coerceAtLeast(CHECKPOINT))
         log.clear()
         addLog(R.string.roguelike_log_player_death)
     }

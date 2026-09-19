@@ -226,11 +226,12 @@ class GaugeTest {
             return Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), attackDie = { 1 })
                 .also { it.castRelic(relic, 0, Timing.MISS) }
         }
-        // Deux sorts à demi-jauge : sans Hâte, le gobelin passe avant le prochain tour du héros ; avec, non
+        // Deux sorts à demi-jauge : sans Hâte, le gobelin passe avant le prochain tour du héros ; avec (vitesse ×2), le héros joue
+        // deux fois de suite avant lui
         assertEquals(listOf(0, Combat.HERO), fight(Relic.WAR_CRY).forecast(2).map { it.actor })
         val c = fight(Relic.HASTE)
         assertEquals(Relic.HASTE_SPEED, c.heroRate, 1e-9)
-        assertEquals(listOf(Combat.HERO, 0), c.forecast(2).map { it.actor })
+        assertEquals(listOf(Combat.HERO, Combat.HERO), c.forecast(2).map { it.actor })
     }
 
     @Test

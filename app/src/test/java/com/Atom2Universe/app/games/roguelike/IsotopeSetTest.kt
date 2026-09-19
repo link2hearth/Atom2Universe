@@ -9,7 +9,7 @@ import kotlin.random.Random
 /** Les sets d'isotope (voir DONJON.md, « Les sets d'isotopes ») : chute, force, trois pièces, bonus par archétype. */
 class IsotopeSetTest {
 
-    private fun set(z: Int) = IsotopeSets.of(z)!!
+    private fun set(z: Int) = IsotopeSets.ofElement(z)!!
     private val deuterium get() = set(1)
     private val helium3 get() = set(2)
     private val lithium6 get() = set(3)
@@ -38,15 +38,39 @@ class IsotopeSetTest {
     }
 
     @Test
+    fun apresLOganessonOnRepartDuDeuterium() {
+        val lap = 118 * IsotopeSets.BAND_FLOORS
+        val again = IsotopeSets.forFloor(lap + 1)!!
+        assertEquals(1, again.z)
+        assertEquals(1, again.cycle)
+        assertEquals(119, again.index)
+        assertEquals(deuterium.archetype, again.archetype)
+        assertEquals(lap + 1, again.firstFloor)
+        assertEquals(deuterium, IsotopeSets.of(1))
+        assertEquals(again, IsotopeSets.of(again.index))
+        // Sa puissance suit le même nom d'objet que le butin : le deuxième tour de l'hydrogène
+        val power = IsotopeSets.basePower(again.index)
+        assertEquals(0, Grade.element(power))
+        assertEquals(1, Grade.cycle(power))
+        // La pièce se souvient du tour, et deux tours d'un même archétype se combinent
+        val e = LootSystem.createSetPiece(again, ItemBase.HELMET, 0, Random(1))
+        assertEquals(119, e.isotopeZ)
+        assertEquals(again, e.isotopeSet)
+        assertEquals(Archetype.WARRIOR, heroWearing(again, deuterium, again).setArchetype)
+        assertEquals(Archetype.WARRIOR, IsotopeSets.forFloor(lap * 3 + 1)!!.archetype)
+    }
+
+    @Test
     fun chaqueSetNeTombeQueDansSaTranche() {
         val rng = Random(1)
         for (s in IsotopeSets.ALL) {
             for (floor in s.firstFloor..s.lastFloor) assertEquals(s, IsotopeSets.forFloor(floor))
             assertTrue(IsotopeSets.forFloor(s.firstFloor - 1) != s)
         }
-        assertNull(IsotopeSets.forFloor(126))
+        // Le scandium (21) n'a pas de set : sa tranche reste vide
+        assertNull(IsotopeSets.forFloor(21 * 25))
         repeat(3000) {
-            val outside = LootSystem.generate(rng.nextInt(126, 400), 0, rng)
+            val outside = LootSystem.generate(rng.nextInt(20 * 25 + 1, 21 * 25 + 1), 0, rng)
             assertNull("aucune pièce de set hors des tranches", outside.isotopeZ)
         }
     }

@@ -274,12 +274,13 @@ class Hero {
 
     /**
      * La quantité propre à une relique, celle qu'affiche sa description : la barrière du
-     * Bouclier arcanique et le soin par tour de la Régénération (en part des PV max, relevés
-     * par la caractéristique), le saignement, les épines en %.
+     * Bouclier arcanique et le soin par tour de la Régénération (en part des PV max, **fixes** comme le
+     * Soin : les relever par la caractéristique les rendait deux fois plus fortes que toute autre relique,
+     * voir DONJON.md, « Reliques »), le saignement, les épines en %.
      */
     fun relicAmount(relic: Relic): Int = when (relic.effect) {
-        RelicEffect.BARRIER -> (maxHp * Relic.BARRIER_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
-        RelicEffect.REGEN   -> (maxHp * Relic.REGEN_SHARE * relicMult(relic)).roundToInt().coerceAtLeast(1)
+        RelicEffect.BARRIER -> (maxHp * Relic.BARRIER_SHARE).roundToInt().coerceAtLeast(1)
+        RelicEffect.REGEN   -> (maxHp * Relic.REGEN_SHARE).roundToInt().coerceAtLeast(1)
         RelicEffect.HEAL    -> (maxHp * Relic.HEAL_SHARE).roundToInt().coerceAtLeast(1)
         RelicEffect.BLEED, RelicEffect.BLEED_ON_CRIT -> bleedDamage(relic)
         RelicEffect.STONESKIN -> (Relic.THORNS_SHARE * 100).roundToInt()

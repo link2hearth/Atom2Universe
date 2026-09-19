@@ -99,8 +99,17 @@ object ArmorClass {
     const val DAMAGE_COMPENSATION = 1f / REF_HIT
 
     fun monsterAttack(floor: Int) = SpellSave.monsterProficiency(floor) + MONSTER_ATTACK_BASE
-    /** Chance de toucher, avec le 1 qui rate et le 20 qui touche toujours. */
-    fun hitChance(ac: Int, attack: Int) = ((21 - (ac - attack)) / 20f).coerceIn(0.05f, 0.95f)
+    /**
+     * Le plancher de la chance d'être touché : quelle que soit la CA, un monstre touche au moins 30 % du temps (les faces
+     * [ALWAYS_HIT_FROM] à 20 du d20). Sans lui, un voleur qui empile la DEX (dague, arc, armure légère) n'était touché que
+     * par les 20 naturels et n'encaissait presque rien (voir DONJON.md, « Voleur : la chance d'être touché plancher »).
+     * Comme le plafond du critique, il empêche une caractéristique de ne plus rien coûter à l'adversaire.
+     */
+    const val MIN_HIT = 0.30f
+    val ALWAYS_HIT_FROM = 21 - Math.round(MIN_HIT * 20)
+
+    /** Chance de toucher : le 1 rate toujours, et les faces [ALWAYS_HIT_FROM] à 20 touchent toujours ([MIN_HIT]). */
+    fun hitChance(ac: Int, attack: Int) = ((21 - (ac - attack)) / 20f).coerceIn(MIN_HIT, 0.95f)
 }
 
 /**
@@ -448,9 +457,9 @@ enum class Relic(
         const val MISSILE_COUNT = 3
         /** Cristallisation contre un figé. */
         const val CRYSTAL_MULT = 3f
-        /** Bouclier arcanique : la barrière, en part des PV max (avant la caractéristique). */
+        /** Bouclier arcanique : la barrière, en part des PV max (fixe, la caractéristique ne la grossit pas). */
         const val BARRIER_SHARE = 0.20f
-        /** Régénération : les PV rendus à chaque tour, en part des PV max (avant la caractéristique). */
+        /** Régénération : les PV rendus à chaque tour, en part des PV max (fixe, la caractéristique ne la grossit pas). */
         const val REGEN_SHARE = 0.07f
         /**
          * Soin : la part des PV max rendue d'un coup, 35 % (décidé par le propriétaire, 19/09/2026,
@@ -461,8 +470,8 @@ enum class Relic(
         /** Le Soin ne se recharge jamais en moins de 3 tours, quelle que soit la SAG. */
         const val HEAL_MIN_COOLDOWN = 3
         /** Peau de pierre : l'armure est multipliée par ça, et les épines renvoient cette part des coups. */
-        const val STONESKIN_ARMOR = 2f
-        const val THORNS_SHARE = 0.30f
+        const val STONESKIN_ARMOR = 4f
+        const val THORNS_SHARE = 0.80f
         /** Dagues en éventail : durée du saignement posé par un critique. */
         const val FAN_BLEED_TURNS = 3
         /**
@@ -478,11 +487,11 @@ enum class Relic(
         /** Enragé : sa jauge se remplit deux fois plus vite. */
         const val RAGE_SPEED = 2.0
         /** Hâte : la vitesse du héros est multipliée par ça. */
-        const val HASTE_SPEED = 1.5
+        const val HASTE_SPEED = 2.0
         /** Lenteur : la vitesse de la cible est multipliée par ça. */
-        const val SLOW_SPEED = 0.5
+        const val SLOW_SPEED = 0.2
         /** Sablier : l'élan des attaques ennemies dure ça fois plus longtemps, et les fenêtres de parade s'élargissent d'autant. */
-        const val HOURGLASS_SLOW = 1.5f
+        const val HOURGLASS_SLOW = 2.0f
         /**
          * Le gel (retravaillé le 18/09/2026, le propriétaire : « la glace ne sert à rien, elle
          * décale juste le tour ») : chaque tour de gel ralentit la jauge à ×[CHILL_SPEED] pendant
@@ -621,21 +630,21 @@ object RelicBudget {
     const val PARALYSIS_TURN_VALUE = 0.8f
     /** Un gel prend une fois sur deux contre un monstre normal, à équipement de l'étage. */
     const val REF_LAND_CHANCE = 0.5f
-    const val POISON_DOT_SHARE = 2f / 3f
+    const val POISON_DOT_SHARE = 0.2f
     const val SOAK_TURN_VALUE = 0.10f
-    const val FRACTURE_TURN_VALUE = 0.25f
+    const val FRACTURE_TURN_VALUE = 0.06f
     const val MARK_VALUE = 0.5f
     const val WEAKEN_TURN_VALUE = 0.15f
     const val BLIND_TURN_VALUE = 0.3f
     /** Saignée : la part de la valeur qui part dans le saignement. */
-    const val BLEED_SHARE = 0.5f
+    const val BLEED_SHARE = 0.12f
     /** Attaques ennemies par tour, en moyenne : c'est à chacune que le saignement ronge. */
     const val REF_ATTACKS_PER_TURN = 0.6f
     /** Ce que vaut un saignement posé par un critique des Dagues, et la chance de critique de référence. */
     const val CRIT_BLEED_VALUE = 0.5f
     const val REF_CRIT_CHANCE = 0.15f
     /** Fiole d'acide : la part de la valeur dans la dose. */
-    const val ACID_DOSE_SHARE = 0.2f
+    const val ACID_DOSE_SHARE = 0.1f
     /** Cristallisation : la part du coup normal ; le reste paie le ×[Relic.CRYSTAL_MULT] contre un figé. */
     const val CRYSTAL_HIT_SHARE = 0.7f
     /** Météore : ce qu'on gagne à attendre (il peut tomber sur un combat déjà fini). */
@@ -1712,7 +1721,7 @@ class Combat(
         }
         // Enragé ou aveuglé : il attaque avec désavantage (deux d20, le pire gardé)
         val roll = if (e.enraged || e.blindedTurns > 0) minOf(attackDie(), attackDie()) else attackDie()
-        val hits = roll == 20 || (roll != 1 && roll + ArmorClass.monsterAttack(floor) >= hero.armorClass)
+        val hits = roll >= ArmorClass.ALWAYS_HIT_FROM || (roll != 1 &&roll + ArmorClass.monsterAttack(floor) >= hero.armorClass)
         if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true, bleed = bled)
 
         // Le coup brut, avant parade et armure : c'est sur lui que se calcule ce qu'on renvoie

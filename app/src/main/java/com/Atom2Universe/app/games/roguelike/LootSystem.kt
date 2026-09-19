@@ -192,6 +192,9 @@ enum class ArmorWeight(
     companion object {
         /** Les bases qui ont un poids. */
         val WEIGHTED = setOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)
+
+        /** La CA moyenne d'une pièce, tous poids confondus : ce que la note d'objet compte pour le poids. */
+        val AVERAGE_AC = entries.map { it.acPerPiece }.average().toFloat()
     }
 }
 
@@ -216,7 +219,7 @@ data class Equipment(
     val lootId: Long,
     /** Tissu, léger ou lourd (casque, armure, bottes). Null ailleurs, et sur les pièces d'avant les poids. */
     val weight: ArmorWeight? = null,
-    /** Le numéro atomique du set d'isotope dont la pièce fait partie (voir [IsotopeSet]), ou null. */
+    /** Le numéro du set d'isotope dont la pièce fait partie, ou null : [IsotopeSet.index], le numéro atomique plus 118 par tour de table. Le nom est historique. */
     val isotopeZ: Int? = null,
 ) {
     val isotopeSet get() = isotopeZ?.let(IsotopeSets::of)
@@ -629,7 +632,7 @@ object LootSystem {
      */
     fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random): Equipment {
         val power = IsotopeSets.basePower(set.z) + rng.nextInt(IsotopeSets.POWER_SPREAD)
-        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.z)
+        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.index)
     }
 
     fun create(
@@ -742,9 +745,13 @@ object LootSystem {
         val fits = archetype == null || archetype.accepts(e.base)
         if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f *
             if (fits) 1f else 1f - Hero.WRONG_WEAPON_MALUS
-        if (e.armor > 0)     r += e.armor * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
-        r += e.acBonus * AffixBudget.perAcPoint() * 100f
-        r += e.weightSpeed * AffixBudget.perPoint(StatType.SPEED, p) * 100f
+        // Le poids ne compte pas dans la note : choisir léger ou lourd, c'est choisir son archétype, et ce choix est au joueur, pas à la flèche
+        // du sac. Sans ça, le léger (+1 CA, +5 % de vitesse par pièce) notait 20 à 30 % plus haut que les autres à puissance égale, et
+        // qui équipait « le mieux noté » finissait voleur (voir DONJON.md, « Plancher de 30 % »). On compte donc l'armure nue (avant le
+        // multiplicateur du poids), la CA du poids moyenne des cinq poids, et aucune vitesse de poids (leur moyenne est nulle).
+        val weight = e.weight
+        if (e.armor > 0)     r += e.armor / (weight?.armorMult ?: 1f) * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
+        r += (e.acBonus - (weight?.acPerPiece ?: 0) + if (weight != null) ArmorWeight.AVERAGE_AC else 0f) * AffixBudget.perAcPoint() * 100f
         for (s in e.allStats) r += s.value * AffixBudget.perPoint(s.type, p) * 100f
         return (r * scale(p)).roundToInt()
     }
@@ -777,20 +784,24 @@ object LootSystem {
      */
     fun materialName(context: Context, power: Int): String {
         val element = periodic[Grade.element(power)].localizedName(context)
-        val cycle = Grade.cycle(power)
-        val words = context.resources.getStringArray(R.array.roguelike_grade_cycles)
-        val cycleWord = when {
-            cycle == 0 -> null
-            cycle < words.size -> words[cycle]
-            // Au-delà du dernier mot, on le numérote : « primordial 2 », « primordial 3 »…
-            else -> context.getString(R.string.roguelike_grade_cycle_numbered, words.last(), cycle - words.size + 2)
-        }
+        val cycleWord = cycleWord(context, Grade.cycle(power))
         val elided = Normalizer.normalize(element.take(1), Normalizer.Form.NFD).lowercase().firstOrNull() in ELIDING
         val res = when {
             cycleWord == null -> if (elided) R.string.roguelike_item_material_elided else R.string.roguelike_item_material
             else -> if (elided) R.string.roguelike_item_material_cycle_elided else R.string.roguelike_item_material_cycle
         }
         return if (cycleWord == null) context.getString(res, element) else context.getString(res, element, cycleWord)
+    }
+
+    /** Le mot d'un cycle (stellaire, galactique…), ou null pour le premier. Au-delà du dernier mot, on le numérote. */
+    fun cycleWord(context: Context, cycle: Int): String? {
+        val words = context.resources.getStringArray(R.array.roguelike_grade_cycles)
+        return when {
+            cycle == 0 -> null
+            cycle < words.size -> words[cycle]
+            // « primordial 2 », « primordial 3 »…
+            else -> context.getString(R.string.roguelike_grade_cycle_numbered, words.last(), cycle - words.size + 2)
+        }
     }
 
     private val periodic by lazy { getPeriodicElements() }

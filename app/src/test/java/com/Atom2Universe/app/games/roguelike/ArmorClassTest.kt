@@ -68,13 +68,12 @@ class ArmorClassTest {
     }
 
     @Test
-    fun laCaCompteDansLaNote() {
-        // Même base, même matière : la note ne doit pas enterrer le léger sous le lourd
-        val light = LootSystem.rating(piece(ItemBase.ARMOR, ArmorWeight.LIGHT, tier = 5))
-        val heavy = LootSystem.rating(piece(ItemBase.ARMOR, ArmorWeight.HEAVY, tier = 5))
-        val cloth = LootSystem.rating(piece(ItemBase.ARMOR, ArmorWeight.CLOTH, tier = 5))
-        assertTrue(cloth < light)
-        assertTrue("écart léger / lourd raisonnable : $light contre $heavy", light * 1.5f > heavy)
+    fun lePoidsNeChangePasLaNote() {
+        // Même base, même matière : léger ou lourd, c'est le choix d'un archétype, pas d'une flèche du sac.
+        // Avant, le léger (+1 CA, +5 % de vitesse) notait 20 à 30 % plus haut et les bots finissaient tous voleurs.
+        val ratings = ArmorWeight.entries.associateWith { LootSystem.rating(piece(ItemBase.ARMOR, it, tier = 5)) }
+        val low = ratings.values.min(); val high = ratings.values.max()
+        assertTrue("les cinq poids notent pareil : $ratings", high <= low * 1.03f)
     }
 
     // ── Jet d'attaque ───────────────────────────────────────────────────────────

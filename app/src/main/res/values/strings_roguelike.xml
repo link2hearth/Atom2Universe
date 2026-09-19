@@ -405,6 +405,8 @@
     <string name="roguelike_inventory_relic_line_hit">%1$s · %2$s · %3$s · %4$s–%5$s · [[cooldown|recharge]] %6$d</string>
     <string name="roguelike_inventory_relic_line">%1$s · %2$s · %3$s · [[cooldown|recharge]] %4$d</string>
     <string name="roguelike_isotope_deuterium">Deuterium</string>
+    <!-- A set name on later laps: "Stellar Deuterium" -->
+    <string name="roguelike_isotope_cycle">%2$s %1$s</string>
     <string name="roguelike_item_set_name">%2$s %1$s</string>
     <string name="roguelike_item_set_line">Set %1$s</string>
     <string name="roguelike_archetype_vagabond">Wanderer</string>
