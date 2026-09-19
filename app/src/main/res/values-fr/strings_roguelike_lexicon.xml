@@ -314,4 +314,11 @@
     <string name="lex_depth_4">Le critique aussi : les monstres profonds en retranchent %1$s points à l\'étage 1 000 et %2$s à l\'étage 10 000.</string>
     <string name="lex_you_depth_point">À l\'étage %1$d, un point compte pour %2$s %% de sa valeur : [[depth|résistance en profondeur]]</string>
     <string name="lex_you_depth">Toi, à l\'étage %1$d : un point vaut %2$s</string>
+    <string name="lex_set_title">Set %1$s</string>
+    <string name="lex_set_1">Un set d\'isotope pour le %1$s : trois pièces (casque, armure, bottes) de poids %2$s. Ses pièces ne tombent qu\'aux étages %3$d à %4$d, et surpassent tout ce qu\'on y trouve d\'autre.</string>
+    <string name="lex_set_2">Porte les %1$d pièces pour améliorer ton Spécial : %2$s.</string>
+    <string name="lex_set_special_guard">Les coups sont renvoyés à hauteur de %1$d %% au lieu de %2$d %%, et la recharge passe à %3$d tours au lieu de %4$d.</string>
+    <string name="lex_set_hp">Donne aussi %1$d %% de PV max en plus.</string>
+    <string name="lex_set_drop">%1$d %% des objets trouvés à ces étages sont une pièce de ce set.</string>
+    <string name="lex_you_set">Toi : %1$d pièces sur %2$d</string>
 </resources>

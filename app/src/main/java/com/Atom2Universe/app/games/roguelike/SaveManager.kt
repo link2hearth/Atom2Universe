@@ -77,6 +77,7 @@ object SaveManager {
         put("spriteCol", e.spriteCol)
         put("lootId",    e.lootId)
         e.weight?.let { put("weight", it.name) }
+        e.isotopeZ?.let { put("isotope", it) }
     }
 
     fun equipFromJson(j: JSONObject) = Equipment(
@@ -93,5 +94,6 @@ object SaveManager {
         lootId    = j.getLong("lootId"),
         weight    = j.optString("weight", "").takeIf { it.isNotEmpty() }
             ?.let { runCatching { ArmorWeight.valueOf(it) }.getOrNull() },
+        isotopeZ  = if (j.has("isotope")) j.getInt("isotope") else null,
     )
 }

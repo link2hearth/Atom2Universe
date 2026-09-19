@@ -314,4 +314,11 @@
     <string name="lex_depth_4">Crits too: deep monsters take %1$s points off on floor 1,000 and %2$s on floor 10,000.</string>
     <string name="lex_you_depth_point">On floor %1$d, a point counts for %2$s%% of its value: [[depth|resistance in depth]]</string>
     <string name="lex_you_depth">You, on floor %1$d: a point is worth %2$s</string>
+    <string name="lex_set_title">Set %1$s</string>
+    <string name="lex_set_1">An isotope set for the %1$s: three pieces (helmet, armor, boots) of %2$s weight. Its pieces only drop on floors %3$d to %4$d, and are stronger than anything else found there.</string>
+    <string name="lex_set_2">Wear all %1$d pieces to improve your special: %2$s.</string>
+    <string name="lex_set_special_guard">Blows are sent back at %1$d%% instead of %2$d%%, and the recharge is %3$d turns instead of %4$d.</string>
+    <string name="lex_set_hp">Also gives %1$d%% more max HP.</string>
+    <string name="lex_set_drop">%1$d%% of the items found on its floors are a piece of this set.</string>
+    <string name="lex_you_set">You: %1$d of %2$d pieces</string>
 </resources>

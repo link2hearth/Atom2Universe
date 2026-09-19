@@ -401,4 +401,7 @@
     <string name="roguelike_log_relic_slot">Un nouvel emplacement de relique s\'ouvre ! (%1$d / %2$d)</string>
     <string name="roguelike_inventory_relic_line_hit">%1$s · %2$s · %3$s · %4$s–%5$s · [[cooldown|recharge]] %6$d</string>
     <string name="roguelike_inventory_relic_line">%1$s · %2$s · %3$s · [[cooldown|recharge]] %4$d</string>
+    <string name="roguelike_isotope_deuterium">Deutérium</string>
+    <string name="roguelike_item_set_name">%1$s %2$s</string>
+    <string name="roguelike_item_set_line">Set %1$s</string>
 </resources>

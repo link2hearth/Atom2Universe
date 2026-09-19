@@ -544,7 +544,27 @@ object Lexicon {
             for (t in 1..AffixBudget.TIERS) add(R.string.lex_tiers_3, t, floorOfPower(AffixBudget.tierPower(t)))
             add(R.string.lex_tiers_4, env.dec(AffixBudget.DEEP_TIER_GROWTH))
         }
-        return weights + rarities + bases + tiers
+        return weights + rarities + bases + tiers + isotopeSets()
+    }
+
+    // ── Sets d'isotope : cachés tant qu'aucune pièce n'est tombée ───────────────
+
+    private fun isotopeSets() = IsotopeSets.ALL.map { set ->
+        entryT(set.lexiconId, LexiconCategory.ITEMS, { env -> env.s(R.string.lex_set_title, set.label(env.ctx)) },
+            secret = true, known = { h -> h != null && set.z in h.knownSets }) {
+            val a = set.archetype
+            add(R.string.lex_set_1, env.link(idOf(a), env.s(a.labelRes)), env.link(idOf(a.weight), env.s(a.weight.labelRes)),
+                set.firstFloor, set.lastFloor)
+            add(R.string.lex_set_2, IsotopeSets.SLOTS.size, env.link(specialId(a), env.s(a.specialRes)))
+            if (a == Archetype.WARRIOR)
+                add(R.string.lex_set_special_guard, env.pct(IsotopeSets.GUARD_THORNS_SHARE), env.pct(Combat.GUARD_THORNS_SHARE),
+                    IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+            if (set.hpShare > 0f) add(R.string.lex_set_hp, env.pct(set.hpShare))
+            add(R.string.lex_set_drop, env.pct(IsotopeSets.DROP_SHARE))
+            env.hero?.let { h ->
+                you(R.string.lex_you_set, IsotopeSets.SLOTS.count { h.equipped[it]?.isotopeZ == set.z }, IsotopeSets.SLOTS.size)
+            }
+        }
     }
 
     /** Un palier précis d'une stat (« +3 CON (P4) ») : sa fourchette, et l'étage où il s'ouvre. */

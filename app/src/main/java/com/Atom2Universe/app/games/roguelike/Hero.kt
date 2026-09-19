@@ -119,6 +119,8 @@ class Hero {
      */
     val knownReactions = mutableSetOf<Reaction>()
     val knownAffinities = mutableSetOf<String>()
+    /** Les sets d'isotope dont une pièce est déjà tombée (leur numéro atomique) : le lexique ne les montre qu'alors. */
+    val knownSets = mutableSetOf<Int>()
 
     /** Un sort vient de frapper [type] : on retient l'affinité testée et les réactions vues. */
     fun discover(type: MonsterType, element: Element, reactions: Collection<Reaction>) {
@@ -143,6 +145,19 @@ class Hero {
         val weights = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it]?.weight }
         return Archetype.entries.firstOrNull { a -> weights.count { it == a.weight } >= ARCHETYPE_PIECES }
     }
+
+    /**
+     * Le set d'isotope dont les trois pièces (casque, armure, bottes) sont portées, ou null. Il améliore
+     * le Spécial de son archétype ([specialBoosted]) et peut donner des PV en plus.
+     */
+    val activeSet: IsotopeSet? get() {
+        val z = equipped[EquipSlot.HELMET]?.isotopeZ ?: return null
+        val all = IsotopeSets.SLOTS.all { equipped[it]?.isotopeZ == z }
+        return if (all) IsotopeSets.of(z) else null
+    }
+
+    /** Le Spécial de cet archétype est-il amélioré par le set porté ? */
+    fun specialBoosted(a: Archetype) = activeSet?.archetype == a
 
     val hasShield get() = equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD
 
@@ -175,7 +190,10 @@ class Hero {
 
     // ── Stats dérivées ──────────────────────────────────────────────────────────
 
-    val maxHp get() = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
+    val maxHp: Int get() {
+        val plain = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
+        return (plain * (1f + (activeSet?.hpShare ?: 0f))).roundToInt()
+    }
 
     /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
     private val armorPower: Int get() {

@@ -175,6 +175,7 @@ class RoguelikeGame(
                             runCatching { Reaction.valueOf(arr.getString(i)) }.getOrNull()?.let { knownReactions += it }
                     }
                     j.optJSONArray("affinities")?.let { arr -> for (i in 0 until arr.length()) knownAffinities += arr.getString(i) }
+                    j.optJSONArray("sets")?.let { arr -> for (i in 0 until arr.length()) knownSets += arr.getInt(i) }
                     // Une paire portée avant que les résonances existent : on la connaît déjà
                     discoverResonances()
                 }
@@ -363,6 +364,7 @@ class RoguelikeGame(
                 val r = c.rewards!!
                 hero.gold += r.gold
                 pendingLoot.addAll(r.equipment)
+                r.equipment.forEach { e -> e.isotopeZ?.let { hero.knownSets += it } }
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
             }
@@ -586,5 +588,6 @@ class RoguelikeGame(
         put("resonances", org.json.JSONArray().also { arr -> hero.knownResonances.forEach { arr.put(it.name) } })
         put("reactions", org.json.JSONArray().also { arr -> hero.knownReactions.forEach { arr.put(it.name) } })
         put("affinities", org.json.JSONArray().also { arr -> hero.knownAffinities.forEach { arr.put(it) } })
+        put("sets", org.json.JSONArray().also { arr -> hero.knownSets.forEach { arr.put(it) } })
     }
 }

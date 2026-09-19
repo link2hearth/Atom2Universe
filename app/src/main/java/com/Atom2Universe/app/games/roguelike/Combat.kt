@@ -1284,7 +1284,10 @@ class Combat(
 
     // ── Le « Spécial » de l'archétype ───────────────────────────────────────────
 
-    private fun spendSpecial() { hero.specialCooldown = hero.spellCooldown(Hero.SPECIAL_COOLDOWN) }
+    private fun spendSpecial() {
+        val base = if (hero.activeSet != null) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN
+        hero.specialCooldown = hero.spellCooldown(base)
+    }
 
     /** Guerrier : on passe son tour en garde (parade plus large, et chaque coup reçu est renvoyé en partie, voir [retaliate]). */
     fun guard() {
@@ -1652,7 +1655,7 @@ class Combat(
     private fun retaliate(enemyIndex: Int, blow: Float, blocked: Boolean): Int {
         var share = 0f
         if (stoneskinTurns > 0) share += Relic.THORNS_SHARE * if (Resonance.RAMPART in hero.resonances) 2f else 1f
-        if (guarding) share += GUARD_THORNS_SHARE
+        if (guarding) share += if (hero.specialBoosted(Archetype.WARRIOR)) IsotopeSets.GUARD_THORNS_SHARE else GUARD_THORNS_SHARE
         if (blocked) share += BLOCK_THORNS_SHARE
         if (share <= 0f) return 0
         val dmg = wound(enemyIndex, blow * share)

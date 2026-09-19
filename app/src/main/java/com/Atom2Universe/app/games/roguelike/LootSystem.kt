@@ -202,7 +202,10 @@ data class Equipment(
     val lootId: Long,
     /** Tissu, léger ou lourd (casque, armure, bottes). Null ailleurs, et sur les pièces d'avant les poids. */
     val weight: ArmorWeight? = null,
+    /** Le numéro atomique du set d'isotope dont la pièce fait partie (voir [IsotopeSet]), ou null. */
+    val isotopeZ: Int? = null,
 ) {
+    val isotopeSet get() = isotopeZ?.let(IsotopeSets::of)
     val slot get() = base.slot
     /** Ce que la pièce ajoute à la CA : son poids, ou le bouclier. */
     val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
@@ -596,9 +599,23 @@ object LootSystem {
     }
 
     fun generate(floor: Int, lootId: Long = 0, rng: Random = Random): Equipment {
+        // Dans la tranche d'un set d'isotope, une part des objets en est une pièce. Le tirage n'a lieu
+        // que là : partout ailleurs, les dés tombent comme avant.
+        IsotopeSets.forFloor(floor)?.let { set ->
+            if (rng.nextFloat() < IsotopeSets.DROP_SHARE) return createSetPiece(set, IsotopeSets.BASES.random(rng), lootId, rng)
+        }
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
         val power = (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceAtLeast(1)
         return create(pickBase(rng), power, pickRarity(floor, rng), lootId, rng)
+    }
+
+    /**
+     * Une pièce d'un set d'isotope : rare, du poids de l'archétype du set, et d'une puissance qui
+     * varie un peu d'une pièce à l'autre ([IsotopeSets.basePower]).
+     */
+    fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random): Equipment {
+        val power = IsotopeSets.basePower(set.z) + rng.nextInt(IsotopeSets.POWER_SPREAD)
+        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.z)
     }
 
     fun create(
@@ -720,6 +737,11 @@ object LootSystem {
      */
     fun displayName(context: Context, e: Equipment, linked: Boolean = false): String {
         val noun = context.getString(e.weight?.nounRes(e.base) ?: e.base.nounRes)
+        e.isotopeSet?.let { set ->
+            return context.getString(R.string.roguelike_item_set_name,
+                if (linked) LexiconText.link(Lexicon.idOf(e.base), noun) else noun,
+                if (linked) LexiconText.link(set.lexiconId, set.materialLabel(context)) else set.materialLabel(context))
+        }
         val tier = context.resources.getStringArray(R.array.roguelike_grade_tiers)[Grade.tier(e.power) - 1]
         val material = materialName(context, e.power)
         return context.getString(R.string.roguelike_item_grade_name,
@@ -769,6 +791,7 @@ object LootSystem {
             DungeonNumbers.format(context, e.damageMin), DungeonNumbers.format(context, e.damageMax)))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, DungeonNumbers.format(context, e.armor)))
         e.weight?.let { add(LexiconText.link(Lexicon.idOf(it), context.getString(it.labelRes))) }
+        e.isotopeSet?.let { add(context.getString(R.string.roguelike_item_set_line, LexiconText.link(it.lexiconId, it.label(context)))) }
         if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))
         e.implicits.forEach { add(it.display(context, linked = true)) }
         e.affixes.forEach { add(it.display(context, linked = true)) }
