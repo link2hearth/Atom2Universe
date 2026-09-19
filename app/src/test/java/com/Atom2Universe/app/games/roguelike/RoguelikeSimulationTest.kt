@@ -260,6 +260,67 @@ class RoguelikeSimulationTest {
         } finally { IsotopeSets.dropShare = saved }
     }
 
+    /**
+     * Le guerrier paraît plus faible que le voleur et le mage à butin égal : est-ce le bouclier ? Pour chaque
+     * archétype, l'armure du même poids, avec la main gauche telle que tirée, puis avec le meilleur bouclier de
+     * 3 tirages, puis sans bouclier ni orbe. Sans set. SIM_SERIES=600, SIM_SKILL=CORRECT.
+     */
+    @Test
+    fun archetypesAndShield() {
+        val series = System.getenv("SIM_SERIES")?.toInt() ?: 600
+        val skill = System.getenv("SIM_SKILL")?.let { Skill.valueOf(it) } ?: Skill.CORRECT
+        val saved = IsotopeSets.dropShare
+        IsotopeSets.dropShare = 0f
+        try {
+            val out = StringBuilder("══════ Archétypes et main gauche (${series} séries de 3 combats, joueur $skill) ══════\n")
+            for (a in Archetype.entries) {
+                out.appendLine("── ${a.name} ──")
+                out.appendLine(String.format("%5s%22s%22s%22s%14s", "Étage", "main gauche tirée", "meilleur bouclier", "sans main gauche", "% boucliers"))
+                for (floor in listOf(5, 13, 25, 50)) {
+                    fun run(mode: Int): Pair<Double, Double> {
+                        val stuck = FloorStat()
+                        var wins = 0; var lost = 0.0; var fights = 0; var shields = 0
+                        repeat(series) { i ->
+                            val hero = geared(floor, Random(floor * 7919L + i))
+                            val rng = Random(floor * 104729L + i)
+                            for (slot in IsotopeSets.SLOTS) hero.equipped[slot] = classicPiece(floor, slot, a.weight, rng)
+                            if (hero.equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD) shields++
+                            when (mode) {
+                                1 -> {
+                                    var best: Equipment? = null
+                                    repeat(3) {
+                                        var e: Equipment
+                                        do e = LootSystem.generate(floor, 0, rng) while (e.base != ItemBase.SHIELD || e.isotopeZ != null)
+                                        if (best == null || score(e) > score(best!!)) best = e
+                                    }
+                                    hero.equipped[EquipSlot.OFFHAND] = best!!
+                                }
+                                2 -> hero.equipped.remove(EquipSlot.OFFHAND)
+                            }
+                            hero.healFull()
+                            val fightRng = Random(floor * 31L + i)
+                            var ok = true
+                            repeat(3) {
+                                if (!ok) return@repeat
+                                val before = hero.hp
+                                ok = soloFight(hero, floor, skill, fightRng, stuck)
+                                lost += (before - if (ok) hero.hp else 0).coerceAtLeast(0).toDouble() / hero.maxHp
+                                fights++
+                            }
+                            if (ok) wins++
+                        }
+                        return 100.0 * wins / series to 100.0 * shields / series
+                    }
+                    val tirée = run(0); val bouclier = run(1); val sans = run(2)
+                    out.appendLine(String.format("%5d%21.1f%%%21.1f%%%21.1f%%%13.0f%%", floor, tirée.first, bouclier.first, sans.first, tirée.second))
+                }
+                out.appendLine()
+            }
+            File("build/roguelike-archetypes.txt").writeText(out.toString())
+            println(out)
+        } finally { IsotopeSets.dropShare = saved }
+    }
+
     /** Les étages qu'on regarde pour un set : sa tranche (début, milieu, fin), puis ce qui suit, quand ses pièces vieillissent. */
     private fun setFloors(set: IsotopeSet) = listOf(set.firstFloor, (set.firstFloor + set.lastFloor) / 2, set.lastFloor,
         set.lastFloor + 10, set.lastFloor + 25)
