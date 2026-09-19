@@ -336,6 +336,9 @@
     <string name="roguelike_base_scepter">Sceptre</string>
     <string name="roguelike_base_shield">Bouclier</string>
     <string name="roguelike_base_orb">Orbe</string>
+    <string name="roguelike_base_bow">Arc</string>
+    <string name="roguelike_base_grimoire">Grimoire</string>
+    <string name="roguelike_base_lantern">Lanterne</string>
     <string name="roguelike_base_helmet">Casque</string>
     <string name="roguelike_base_armor">Armure</string>
     <string name="roguelike_base_boots">Bottes</string>

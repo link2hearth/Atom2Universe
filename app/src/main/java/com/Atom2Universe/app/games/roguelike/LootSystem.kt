@@ -133,6 +133,12 @@ enum class ItemBase(
     SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 0.70f, 0f, 0.05f),
     SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f),
     ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f),
+    // Une main gauche par archétype (voir DONJON.md) : le bouclier du guerrier, l'orbe du mage, l'arc
+    // du voleur, le grimoire du nécromancien, la lanterne du vagabond. Leur effet sur le Spécial viendra
+    // avec les archétypes ; leur part de défense, avec l'équilibrage des mains gauches.
+    BOW     (R.string.roguelike_base_bow,      EquipSlot.OFFHAND, StatType.DEX, 0f,    0f, 0f),
+    GRIMOIRE(R.string.roguelike_base_grimoire, EquipSlot.OFFHAND, StatType.WIS, 0f,    0f, 0f),
+    LANTERN (R.string.roguelike_base_lantern,  EquipSlot.OFFHAND, StatType.STR, 0f,    0f, 0f),
     HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f, 0f),
     ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f, 0f),
     BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f, 0f),
@@ -667,6 +673,7 @@ object LootSystem {
         ItemBase.SWORD to 6f, ItemBase.AXE to 5f, ItemBase.DAGGER to 5f, ItemBase.MACE to 4f,
         ItemBase.STAFF to 5f, ItemBase.SCEPTER to 4f,
         ItemBase.SHIELD to 6f, ItemBase.ORB to 5f,
+        ItemBase.BOW to 4f, ItemBase.GRIMOIRE to 4f, ItemBase.LANTERN to 4f,
         ItemBase.HELMET to 10f, ItemBase.ARMOR to 12f, ItemBase.BOOTS to 10f,
         ItemBase.AMULET to 7f, ItemBase.RING to 8f,
     ), rng)
@@ -694,6 +701,8 @@ object LootSystem {
             ItemBase.SCEPTER -> pick(93 + wo, 4..7)
             ItemBase.SHIELD  -> pick(134, 2..4)
             ItemBase.ORB     -> pick(133, 0..5)
+            // Icônes provisoires : celles de l'orbe, en attendant les vraies
+            ItemBase.BOW, ItemBase.GRIMOIRE, ItemBase.LANTERN -> pick(133, 0..5)
             ItemBase.HELMET  -> pick(listOf(122, 119, 125)[shade], 0..15)
             ItemBase.ARMOR   -> pick(listOf(123, 120, 126)[shade], 0..15)
             ItemBase.BOOTS   -> pick(listOf(124, 121, 127)[shade], 0..15)
