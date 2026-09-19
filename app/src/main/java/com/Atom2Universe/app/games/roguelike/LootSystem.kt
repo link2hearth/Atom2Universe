@@ -602,7 +602,7 @@ object LootSystem {
         // Dans la tranche d'un set d'isotope, une part des objets en est une pièce. Le tirage n'a lieu
         // que là : partout ailleurs, les dés tombent comme avant.
         IsotopeSets.forFloor(floor)?.let { set ->
-            if (rng.nextFloat() < IsotopeSets.DROP_SHARE) return createSetPiece(set, IsotopeSets.BASES.random(rng), lootId, rng)
+            if (rng.nextFloat() < IsotopeSets.dropShare) return createSetPiece(set, IsotopeSets.BASES.random(rng), lootId, rng)
         }
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
         val power = (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceAtLeast(1)

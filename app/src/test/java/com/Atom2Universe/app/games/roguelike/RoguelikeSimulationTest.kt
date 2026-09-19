@@ -83,6 +83,14 @@ class RoguelikeSimulationTest {
 
     @Test
     fun simulate() {
+        // SIM_SETS=0 : les sets d'isotope ne tombent pas (la mesure « d'avant les sets »)
+        val noSets = System.getenv("SIM_SETS") == "0"
+        val savedShare = IsotopeSets.dropShare
+        if (noSets) IsotopeSets.dropShare = 0f
+        try { simulateAll() } finally { IsotopeSets.dropShare = savedShare }
+    }
+
+    private fun simulateAll() {
         val out = StringBuilder()
         for (skill in Skill.entries) {
             val r = Report(skill)
@@ -124,8 +132,214 @@ class RoguelikeSimulationTest {
         println(out)
     }
 
+
+    // ── Les sets d'isotope, à équipement égal ───────────────────────────────────
+
+    /** Ce que porte le héros d'essai sur le casque, l'armure et les bottes. */
+    private enum class SetGear(val label: String) {
+        /** L'armure du butin comme le bot la trouve : des poids mélangés, aucune pièce de set. */
+        CLASSIC("classique"),
+        /** Le butin ordinaire, mais du poids de l'archétype du set : la comparaison juste. */
+        SAME_ARCHETYPE("même poids"),
+        /** Les pièces du set, sans leur bonus : ce que valent leurs seules stats. */
+        SET_NO_BONUS("set sans bonus"),
+        /** Les pièces du set, avec le bonus des trois pièces. */
+        SET("set"),
+    }
+
+    /** Le meilleur de [tries] tirages de butin ordinaire pour cet emplacement (et ce poids, s'il est donné). */
+    private fun classicPiece(floor: Int, slot: EquipSlot, weight: ArmorWeight?, rng: Random, tries: Int = 3): Equipment =
+        (1..tries).map {
+            var e: Equipment
+            do e = LootSystem.generate(floor, 0, rng) while (e.slot != slot || e.isotopeZ != null || (weight != null && e.weight != weight))
+            e
+        }.maxBy { score(it) }
+
     /**
-     * Chaque relique seule, à équipement égal, contre « aucun sort » : c'est ce qui dit si
+     * Le héros d'essai n° [i] : mêmes dés d'équipement pour toutes les configurations (arme, main
+     * gauche, bijoux), seule l'armure change. Un joueur qui farme une tranche a le temps d'attendre
+     * de bonnes pièces : on prend la meilleure de 3 par emplacement, pour le set comme pour le butin.
+     */
+    private fun setGearedHero(floor: Int, i: Int, gear: SetGear, set: IsotopeSet): Hero {
+        val hero = geared(floor, Random(floor * 7919L + i))
+        val rng = Random(floor * 104729L + i)
+        val armor: Map<EquipSlot, Equipment> = when (gear) {
+            SetGear.CLASSIC -> emptyMap()
+            SetGear.SAME_ARCHETYPE -> IsotopeSets.SLOTS.associateWith { classicPiece(floor, it, set.archetype.weight, rng) }
+            SetGear.SET_NO_BONUS, SetGear.SET -> IsotopeSets.BASES.associate { base ->
+                val best = (1..3).map { LootSystem.createSetPiece(set, base, 0, rng) }.maxBy { score(it) }
+                best.slot to if (gear == SetGear.SET) best else best.copy(isotopeZ = null)
+            }
+        }
+        hero.equipped.putAll(armor)
+        hero.healFull()
+        return hero
+    }
+
+    private fun armorRating(hero: Hero) = IsotopeSets.SLOTS.sumOf { slot -> hero.equipped[slot]?.let { LootSystem.rating(it) } ?: 0 }
+
+    /** Victoires sur [chain] combats enchaînés, PV perdus par combat (en %), note de l'armure. */
+    private class SetCell(val wins: Double, val lost: Double, val rating: Double)
+
+    private fun measureSetCell(floor: Int, gear: SetGear, set: IsotopeSet, series: Int, chain: Int, relic: Relic?, skill: Skill): SetCell {
+        val stuck = FloorStat()
+        var wins = 0; var lost = 0.0; var fights = 0; var rating = 0.0
+        repeat(series) { i ->
+            val hero = setGearedHero(floor, i, gear, set)
+            relic?.let { hero.addRelic(it) }
+            rating += armorRating(hero)
+            val rng = Random(floor * 31L + i)
+            var ok = true
+            repeat(chain) {
+                if (!ok) return@repeat
+                val before = hero.hp
+                ok = soloFight(hero, floor, skill, rng, stuck)
+                lost += (before - if (ok) hero.hp else 0).coerceAtLeast(0).toDouble() / hero.maxHp
+                fights++
+            }
+            if (ok) wins++
+        }
+        return SetCell(100.0 * wins / series, 100.0 * lost / fights.coerceAtLeast(1), rating / series)
+    }
+
+    /**
+     * Une, deux ou trois pièces du set, le reste de l'armure étant du butin du même poids : que vaut
+     * une pièce seule ? Le bonus n'existe qu'à trois. Colonnes : 0, 1, 2, 3 pièces (0 = même poids).
+     * L'emplacement des pièces de set tourne d'un essai à l'autre pour ne favoriser aucune case.
+     * SIM_SERIES=600, SIM_SKILL=NOVICE.
+     */
+    @Test
+    fun isotopeSetsByPieceCount() {
+        val series = System.getenv("SIM_SERIES")?.toInt() ?: 600
+        val chain = System.getenv("SIM_CHAIN")?.toInt() ?: 3
+        val skill = System.getenv("SIM_SKILL")?.let { Skill.valueOf(it) } ?: Skill.CORRECT
+        val saved = IsotopeSets.dropShare
+        IsotopeSets.dropShare = 0f
+        try {
+            val out = StringBuilder("══════ Sets d'isotope : 0 à 3 pièces ($series séries de $chain combats, joueur $skill) ══════\n")
+            out.appendLine("victoires · PV perdus par combat, le reste de l'armure étant du butin du même poids\n")
+            for (set in IsotopeSets.ALL) {
+                out.appendLine("── ${set.symbol()}-${set.mass} (${set.archetype}) ──")
+                out.appendLine(String.format("%5s", "Étage") + (0..3).joinToString("") { String.format("%20s", "$it pièce(s)") })
+                val rows = setFloors(set).parallelStream().map { floor ->
+                    val cells = (0..3).map { pieces ->
+                        val stuck = FloorStat()
+                        var wins = 0; var lost = 0.0; var fights = 0
+                        repeat(series) { i ->
+                            val hero = geared(floor, Random(floor * 7919L + i))
+                            val rng = Random(floor * 104729L + i)
+                            val slots = IsotopeSets.SLOTS
+                            val chosen = (0 until pieces).map { slots[(it + i) % slots.size] }.toSet()
+                            for (slot in slots) {
+                                hero.equipped[slot] = if (slot in chosen) {
+                                    val base = IsotopeSets.BASES[slots.indexOf(slot)]
+                                    (1..3).map { LootSystem.createSetPiece(set, base, 0, rng) }.maxBy { score(it) }
+                                } else classicPiece(floor, slot, set.archetype.weight, rng)
+                            }
+                            hero.healFull()
+                            val fightRng = Random(floor * 31L + i)
+                            var ok = true
+                            repeat(chain) {
+                                if (!ok) return@repeat
+                                val before = hero.hp
+                                ok = soloFight(hero, floor, skill, fightRng, stuck)
+                                lost += (before - if (ok) hero.hp else 0).coerceAtLeast(0).toDouble() / hero.maxHp
+                                fights++
+                            }
+                            if (ok) wins++
+                        }
+                        String.format("%5.1f%% · %4.1f%%", 100.0 * wins / series, 100.0 * lost / fights.coerceAtLeast(1))
+                    }
+                    String.format("%5d", floor) + cells.joinToString("") { String.format("%20s", it) }
+                }.collect(java.util.stream.Collectors.toList())
+                rows.forEach { out.appendLine(it) }
+                out.appendLine()
+            }
+            File("build/roguelike-sets-pieces.txt").writeText(out.toString())
+            println(out)
+        } finally { IsotopeSets.dropShare = saved }
+    }
+
+    /** Les étages qu'on regarde pour un set : sa tranche (début, milieu, fin), puis ce qui suit, quand ses pièces vieillissent. */
+    private fun setFloors(set: IsotopeSet) = listOf(set.firstFloor, (set.firstFloor + set.lastFloor) / 2, set.lastFloor,
+        set.lastFloor + 10, set.lastFloor + 25)
+
+    /**
+     * Ce que valent les sets : pour chacun, aux étages de sa tranche puis au-delà, le même héros
+     * avec l'armure du butin classique, du butin du même poids, les pièces du set sans bonus, puis
+     * avec le bonus. Sans relique (le bot joue son Spécial, le bonus s'y applique), joueur « correct ».
+     * SIM_SERIES=600, SIM_SKILL=EXPERT, SIM_CHAIN=3.
+     */
+    @Test
+    fun isotopeSetsAtFixedGear() {
+        val series = System.getenv("SIM_SERIES")?.toInt() ?: 600
+        val chain = System.getenv("SIM_CHAIN")?.toInt() ?: 3
+        val skill = System.getenv("SIM_SKILL")?.let { Skill.valueOf(it) } ?: Skill.CORRECT
+        val start = System.currentTimeMillis()
+        val saved = IsotopeSets.dropShare
+        IsotopeSets.dropShare = 0f   // le butin « ordinaire » ne doit contenir aucune pièce de set
+        try {
+            val out = StringBuilder("══════ Sets d'isotope à équipement égal ($series séries de $chain combats, joueur $skill) ══════\n")
+            out.appendLine("victoires · PV perdus par combat · note de l'armure ; la comparaison juste est « même poids » contre « set »\n")
+            for (set in IsotopeSets.ALL) {
+                out.appendLine("── ${set.symbol()}-${set.mass} (${set.archetype}, étages ${set.firstFloor}–${set.lastFloor}) ──")
+                out.appendLine(String.format("%5s", "Étage") + SetGear.entries.joinToString("") { String.format("%26s", it.label) })
+                val floors = setFloors(set)
+                val rows = floors.parallelStream().map { floor ->
+                    val cells = SetGear.entries.map { measureSetCell(floor, it, set, series, chain, null, skill) }
+                    String.format("%5d", floor) + cells.joinToString("") {
+                        String.format("%26s", String.format("%5.1f%% · %4.1f%% · %5.0f", it.wins, it.lost, it.rating))
+                    }
+                }.collect(java.util.stream.Collectors.toList())
+                rows.forEach { out.appendLine(it) }
+                out.appendLine()
+            }
+            out.appendLine("(${(System.currentTimeMillis() - start) / 1000} s)")
+            File("build/roguelike-sets.txt").writeText(out.toString())
+            println(out)
+        } finally { IsotopeSets.dropShare = saved }
+    }
+
+    /**
+     * Les sets avec toutes sortes de reliques : chaque relique seule (et « aucun sort »), à trois étages de
+     * la tranche du set, l'armure du même poids contre le set. Une cellule : victoires de l'un → de l'autre.
+     * SIM_SERIES=300, SIM_SETS_ONLY=1,2,3 (les numéros atomiques des sets à mesurer).
+     */
+    @Test
+    fun isotopeSetsWithRelics() {
+        val series = System.getenv("SIM_SERIES")?.toInt() ?: 300
+        val chain = System.getenv("SIM_CHAIN")?.toInt() ?: 3
+        val only = System.getenv("SIM_SETS_ONLY")?.split(",")?.map { it.trim().toInt() }
+        val configs = listOf<Relic?>(null) + Relic.entries.filter { simRelics == null || it.name in simRelics }
+        val start = System.currentTimeMillis()
+        val saved = IsotopeSets.dropShare
+        IsotopeSets.dropShare = 0f
+        try {
+            val out = StringBuilder("══════ Sets d'isotope avec une relique ($series séries de $chain combats, joueur correct) ══════\n")
+            out.appendLine("cellule : victoires « même poids » → « set », en %\n")
+            for (set in IsotopeSets.ALL.filter { only == null || it.z in only }) {
+                val floors = listOf(set.firstFloor, (set.firstFloor + set.lastFloor) / 2, set.lastFloor)
+                out.appendLine("── ${set.symbol()}-${set.mass} (${set.archetype}) ──")
+                out.appendLine(String.format("%-17s", "Étage") + floors.joinToString("") { String.format("%18d", it) })
+                val rows = configs.parallelStream().map { relic ->
+                    val cells = floors.map { floor ->
+                        val base = measureSetCell(floor, SetGear.SAME_ARCHETYPE, set, series, chain, relic, Skill.CORRECT)
+                        val with = measureSetCell(floor, SetGear.SET, set, series, chain, relic, Skill.CORRECT)
+                        String.format("%5.1f → %5.1f", base.wins, with.wins)
+                    }
+                    String.format("%-17s", relic?.name ?: "aucun sort") + cells.joinToString("") { String.format("%18s", it) }
+                }.collect(java.util.stream.Collectors.toList())
+                rows.forEach { out.appendLine(it) }
+                out.appendLine()
+            }
+            out.appendLine("(${(System.currentTimeMillis() - start) / 1000} s)")
+            File("build/roguelike-sets-relics.txt").writeText(out.toString())
+            println(out)
+        } finally { IsotopeSets.dropShare = saved }
+    }
+
+    /**
+     * Chaque relique seule, à équipement égal, contre « aucun sort : c'est ce qui dit si
      * le budget tient (toutes devraient aider à peu près autant). Joueur « correct ».
      * On compte les victoires sur trois combats enchaînés.
      *

@@ -64,6 +64,9 @@ object IsotopeSets {
     /** Part des objets tombés dans la tranche qui sont une pièce du set. */
     const val DROP_SHARE = 0.08f
 
+    /** La part réellement utilisée : les bancs de mesure la mettent à 0 pour mesurer « sans sets ». */
+    @Volatile var dropShare = DROP_SHARE
+
     /**
      * La puissance d'une pièce : de 10 à 12 pour le premier élément, puis 10 de plus par élément.
      * C'est la puissance du dernier étage de la tranche, un peu au-dessus (voir [LootSystem.powerCenter]) :
