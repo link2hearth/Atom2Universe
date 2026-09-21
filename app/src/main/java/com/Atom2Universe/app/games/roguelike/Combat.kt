@@ -38,14 +38,52 @@ enum class MonsterType(
         mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
     GOBLIN  (R.string.roguelike_monster_goblin,   24,  4, 1, 1, 2,  5,
         mapOf(Element.POISON to Affinity.VULNERABLE, Element.ICE to Affinity.RESISTANT)),
-    SKELETON(R.string.roguelike_monster_skeleton, 34,  6, 2, 2, 3,  7,
+    SKELETON(R.string.roguelike_monster_skeleton, 34,  6, 2, 1, 3,  7,
         mapOf(Element.POISON to Affinity.IMMUNE, Element.LIGHTNING to Affinity.VULNERABLE, Element.FIRE to Affinity.RESISTANT,
             Element.HOLY to Affinity.VULNERABLE)),
     ORC     (R.string.roguelike_monster_orc,      50, 10, 2, 3, 5, 10,
         mapOf(Element.FIRE to Affinity.VULNERABLE, Element.LIGHTNING to Affinity.RESISTANT)),
-    DEMON   (R.string.roguelike_monster_demon,    70, 14, 3, 5, 8, 15,
+    DEMON   (R.string.roguelike_monster_demon,    38,  9, 3, 1, 4,  8,
         mapOf(Element.FIRE to Affinity.IMMUNE, Element.ICE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT,
-            Element.HOLY to Affinity.VULNERABLE));
+            Element.HOLY to Affinity.VULNERABLE)),
+    ALIEN_SCOUT(R.string.roguelike_monster_alien_scout, 20, 4, 1, 1, 2, 5,
+        mapOf(Element.ICE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    ALIEN_CRAWLER(R.string.roguelike_monster_alien_crawler, 34, 6, 2, 1, 3, 7,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    ALIEN_FLOATER(R.string.roguelike_monster_alien_floater, 30, 6, 2, 1, 3, 7,
+        mapOf(Element.LIGHTNING to Affinity.VULNERABLE, Element.ICE to Affinity.RESISTANT)),
+    ZOMBIE(R.string.roguelike_monster_zombie, 28, 5, 2, 1, 2, 5,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.HOLY to Affinity.VULNERABLE,
+            Element.POISON to Affinity.IMMUNE)),
+    VAMPIRE(R.string.roguelike_monster_vampire, 32, 6, 2, 1, 3, 7,
+        mapOf(Element.HOLY to Affinity.VULNERABLE, Element.FIRE to Affinity.VULNERABLE,
+            Element.POISON to Affinity.RESISTANT)),
+    VAMPIRE_BAT(R.string.roguelike_monster_vampire_bat, 18, 3, 1, 1, 1, 4,
+        mapOf(Element.HOLY to Affinity.VULNERABLE, Element.ICE to Affinity.VULNERABLE)),
+    PIRATE(R.string.roguelike_monster_pirate, 24, 4, 1, 1, 2, 5,
+        mapOf(Element.LIGHTNING to Affinity.VULNERABLE)),
+    PIRATE_BRUTE(R.string.roguelike_monster_pirate_brute, 36, 6, 2, 1, 3, 7,
+        mapOf(Element.ICE to Affinity.VULNERABLE)),
+    PIRATE_CAPTAIN(R.string.roguelike_monster_pirate_captain, 32, 6, 2, 1, 6, 12,
+        mapOf(Element.LIGHTNING to Affinity.VULNERABLE, Element.ICE to Affinity.RESISTANT)),
+    SPIDER(R.string.roguelike_monster_spider, 22, 4, 1, 1, 2, 5,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    SCORPION(R.string.roguelike_monster_scorpion, 30, 6, 2, 1, 2, 6,
+        mapOf(Element.ICE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    CARNIVOROUS_PLANT(R.string.roguelike_monster_plant, 32, 6, 2, 1, 2, 6,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.IMMUNE)),
+    FELINE(R.string.roguelike_monster_feline, 26, 4, 1, 1, 2, 6,
+        mapOf(Element.ICE to Affinity.VULNERABLE)),
+    WOLF(R.string.roguelike_monster_wolf, 24, 4, 1, 1, 2, 5,
+        mapOf(Element.FIRE to Affinity.VULNERABLE)),
+    BEAR(R.string.roguelike_monster_bear, 42, 7, 2, 1, 3, 7,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.ICE to Affinity.RESISTANT)),
+    TROLL(R.string.roguelike_monster_troll, 46, 9, 3, 1, 4, 8,
+        mapOf(Element.FIRE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT)),
+    SNAKE(R.string.roguelike_monster_snake, 18, 4, 1, 1, 1, 5,
+        mapOf(Element.ICE to Affinity.VULNERABLE, Element.POISON to Affinity.RESISTANT));
+
+    val isAlien get() = this == ALIEN_SCOUT || this == ALIEN_CRAWLER || this == ALIEN_FLOATER
 
     fun affinity(e: Element) = affinities[e] ?: Affinity.NORMAL
 }
@@ -264,16 +302,20 @@ object Encounters {
         }
     }
 
-    fun roll(floor: Int, rng: Random): List<MonsterType> {
-        val eligible = MonsterType.entries.filter { it.minFloor <= floor }
+    fun roll(floor: Int, rng: Random, theme: DungeonTheme = DungeonTheme.DUNGEON,
+        backdrop: DungeonBackdrop = theme.backdrop(0)): List<MonsterType> {
         val count = groupSize(floor, rng)
-        if (count == 3) {
-            // Un chef et deux classiques de sa famille ; les petits groupes restent variés.
-            val family = eligible.random(rng)
-            return List(3) { family }
-        }
-        return List(count) { eligible.random(rng) }
+        // Le décor choisit les espèces ; la profondeur ne verrouille plus le bestiaire.
+        val family = DungeonBestiary.roll(theme, rng, backdrop)
+        // Des groupes cohérents : pas de rat accompagnant un équipage ou un vampire.
+        return List(count) { family }
     }
+
+    fun captain(floor: Int): List<MonsterType> = listOf(MonsterType.PIRATE_CAPTAIN) +
+        List(when { floor <= 2 -> 0; floor <= 4 -> 1; else -> 2 }) { MonsterType.PIRATE }
+
+    fun isBoss(types: List<MonsterType>, index: Int) =
+        types[index] == MonsterType.PIRATE_CAPTAIN || (types.size == 3 && index == 0)
 
     /**
      * En groupe, chacun frappe moins souvent (cadence + taille − 1) et les attaques sont
@@ -281,7 +323,7 @@ object Encounters {
      */
     fun build(types: List<MonsterType>, floor: Int): List<Enemy> = types.mapIndexed { i, t ->
         val cadence = t.cadence + types.size - 1
-        val boss = types.size == 3 && i == 0
+        val boss = isBoss(types, i)
         // Les anciens groupes déjà générés peuvent être mixtes : leur chef reste le plus fort.
         val baseHp = if (boss) types.maxOf { it.baseHp } else t.baseHp
         val baseDamage = if (boss) types.maxOf { it.baseDamage } else t.baseDamage

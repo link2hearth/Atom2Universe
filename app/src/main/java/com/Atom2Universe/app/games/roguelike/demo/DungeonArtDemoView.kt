@@ -209,7 +209,9 @@ class DungeonArtDemoView(context: Context) : View(context) {
                     x >= ratXs[it] - 11 && x < ratXs[it] + 53 &&
                         y >= ratYs[it] - (if (monsterStyles[it] == DungeonDemoSprites.MonsterStyle.SKELETON_BOSS) 26
                             else if (monsterStyles[it] == DungeonDemoSprites.MonsterStyle.ZOMBIE_BOSS) 24
-                            else if (monsterStyles[it].isHumanoid || monsterStyles[it].isVampire) 20 else 8) && y < ratYs[it] + 32
+                            else if (monsterStyles[it].isHumanoid || monsterStyles[it].isVampire ||
+                                monsterStyles[it].isPirate || monsterStyles[it].isAlien || monsterStyles[it].isSpider ||
+                                monsterStyles[it].creature != null) 26 else 8) && y < ratYs[it] + 32
                 }
                 if (index != null) { selectedRat = index; invalidate() }
             }

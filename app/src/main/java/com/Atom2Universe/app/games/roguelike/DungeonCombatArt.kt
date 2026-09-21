@@ -55,12 +55,24 @@ internal class DungeonCombatArt {
         return types.mapIndexed { index, type ->
             val variants = DungeonDemoSprites.MonsterStyle.entries.filter { style ->
                 val sameFamily = when (type) {
-                    MonsterType.RAT -> !style.isHumanoid && !style.isVampire
+                    MonsterType.RAT -> style.creature == null && !style.isHumanoid && !style.isVampire && !style.isAlien && !style.isPirate && !style.isSpider
+                    MonsterType.SPIDER -> style.isSpider
                     MonsterType.SKELETON -> style.isSkeleton
-                    MonsterType.GOBLIN, MonsterType.ORC -> style.isZombie
-                    MonsterType.DEMON -> style.isVampire
+                    MonsterType.ORC, MonsterType.ZOMBIE -> style.isZombie
+                    MonsterType.GOBLIN, MonsterType.DEMON, MonsterType.SCORPION,
+                    MonsterType.CARNIVOROUS_PLANT, MonsterType.FELINE, MonsterType.WOLF,
+                    MonsterType.BEAR, MonsterType.TROLL, MonsterType.SNAKE -> style.creature == type
+                    MonsterType.VAMPIRE -> style.isVampire && !style.isBat
+                    MonsterType.VAMPIRE_BAT -> style.isBat
+                    MonsterType.PIRATE -> style == DungeonDemoSprites.MonsterStyle.PIRATE
+                    MonsterType.PIRATE_BRUTE -> style == DungeonDemoSprites.MonsterStyle.PIRATE_BRUTE
+                    MonsterType.PIRATE_CAPTAIN -> style == DungeonDemoSprites.MonsterStyle.PIRATE_CAPTAIN
+                    MonsterType.ALIEN_SCOUT -> style == DungeonDemoSprites.MonsterStyle.ALIEN_SCOUT
+                    MonsterType.ALIEN_CRAWLER -> style == DungeonDemoSprites.MonsterStyle.ALIEN_CRAWLER
+                    MonsterType.ALIEN_FLOATER -> style == DungeonDemoSprites.MonsterStyle.ALIEN_FLOATER
                 }
-                sameFamily && style.isBossAppearance == (types.size == 3 && index == 0)
+                sameFamily && (style.isAlien || style.isPirate || type == MonsterType.VAMPIRE ||
+                    type == MonsterType.VAMPIRE_BAT || style.isBossAppearance == Encounters.isBoss(types, index))
             }
             // Évite les doublons visuels dans un même groupe de combattants.
             val available = variants.filterNot { it in used }.ifEmpty { variants }
@@ -217,10 +229,27 @@ internal class DungeonCombatArt {
     }
 
     private fun style(type: MonsterType): DungeonDemoSprites.MonsterStyle = when (type) {
+        MonsterType.SPIDER -> DungeonDemoSprites.MonsterStyle.SPIDER
         MonsterType.RAT -> DungeonDemoSprites.MonsterStyle.COMMON
-        MonsterType.GOBLIN -> DungeonDemoSprites.MonsterStyle.ZOMBIE
+        MonsterType.GOBLIN -> DungeonDemoSprites.MonsterStyle.GOBLIN_GREEN
         MonsterType.SKELETON -> DungeonDemoSprites.MonsterStyle.SKELETON
         MonsterType.ORC -> DungeonDemoSprites.MonsterStyle.ZOMBIE_SWAMP
-        MonsterType.DEMON -> DungeonDemoSprites.MonsterStyle.VAMPIRE_BAT
+        MonsterType.DEMON -> DungeonDemoSprites.MonsterStyle.DEMON_EMBER
+        MonsterType.SCORPION -> DungeonDemoSprites.MonsterStyle.SCORPION_SAND
+        MonsterType.CARNIVOROUS_PLANT -> DungeonDemoSprites.MonsterStyle.PLANT_JADE
+        MonsterType.FELINE -> DungeonDemoSprites.MonsterStyle.FELINE_TAWNY
+        MonsterType.WOLF -> DungeonDemoSprites.MonsterStyle.WOLF_GREY
+        MonsterType.BEAR -> DungeonDemoSprites.MonsterStyle.BEAR_BROWN
+        MonsterType.TROLL -> DungeonDemoSprites.MonsterStyle.TROLL_MOSS
+        MonsterType.SNAKE -> DungeonDemoSprites.MonsterStyle.SNAKE_EMERALD
+        MonsterType.ZOMBIE -> DungeonDemoSprites.MonsterStyle.ZOMBIE
+        MonsterType.VAMPIRE -> DungeonDemoSprites.MonsterStyle.VAMPIRE
+        MonsterType.VAMPIRE_BAT -> DungeonDemoSprites.MonsterStyle.VAMPIRE_BAT
+        MonsterType.PIRATE -> DungeonDemoSprites.MonsterStyle.PIRATE
+        MonsterType.PIRATE_BRUTE -> DungeonDemoSprites.MonsterStyle.PIRATE_BRUTE
+        MonsterType.PIRATE_CAPTAIN -> DungeonDemoSprites.MonsterStyle.PIRATE_CAPTAIN
+        MonsterType.ALIEN_SCOUT -> DungeonDemoSprites.MonsterStyle.ALIEN_SCOUT
+        MonsterType.ALIEN_CRAWLER -> DungeonDemoSprites.MonsterStyle.ALIEN_CRAWLER
+        MonsterType.ALIEN_FLOATER -> DungeonDemoSprites.MonsterStyle.ALIEN_FLOATER
     }
 }

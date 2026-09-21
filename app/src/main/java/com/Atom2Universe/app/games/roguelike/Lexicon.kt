@@ -276,7 +276,7 @@ object Lexicon {
                 add(R.string.lex_gauge_5, env.pct(Combat.SUPPORT_ACTION.toFloat()))
             },
             entry("cadence", c, R.string.lex_cadence) {
-                add(R.string.lex_cadence_1, env.s(MonsterType.RAT.labelRes), MonsterType.RAT.cadence, env.s(MonsterType.DEMON.labelRes), MonsterType.DEMON.cadence)
+                add(R.string.lex_cadence_1, env.s(MonsterType.RAT.labelRes), MonsterType.RAT.cadence, env.s(MonsterType.VAMPIRE.labelRes), MonsterType.VAMPIRE.cadence)
                 add(R.string.lex_cadence_2)
                 add(R.string.lex_cadence_3, env.dec(Encounters.SPEED_PER_FLOOR * 100), Encounters.DEEP_FLOOR)
             },
@@ -663,9 +663,12 @@ object Lexicon {
     private fun monsters(): List<LexiconEntry> {
         val c = LexiconCategory.MONSTERS
         val elements = listOf(Element.FIRE, Element.ICE, Element.LIGHTNING, Element.POISON, Element.HOLY)
-        return MonsterType.entries.map { m ->
+        return MonsterType.entries.filter { DungeonBestiary.habitats(it).isNotEmpty() }.map { m ->
             entry(idOf(m), c, m.labelRes) {
-                add(R.string.lex_monster_floor, m.minFloor)
+                add(R.string.roguelike_monster_habitats,
+                    DungeonBestiary.habitats(m).joinToString(", ") { env.s(it.label) })
+                if (m == MonsterType.PIRATE_CAPTAIN) add(R.string.roguelike_monster_captain_hint)
+                if (m == MonsterType.SPIDER) add(R.string.roguelike_monster_spider_hint)
                 for (e in elements) {
                     val known = env.hero?.knownAffinities?.contains(Hero.affinityKey(m, e)) == true
                     val label = if (!known) R.string.lex_affinity_unknown else when (m.affinity(e)) {

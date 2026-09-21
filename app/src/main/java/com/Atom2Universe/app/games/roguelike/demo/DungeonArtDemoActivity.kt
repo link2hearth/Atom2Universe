@@ -185,7 +185,12 @@ class DungeonArtDemoActivity : ThemedActivity() {
                     R.string.dungeon_demo_zombie_swamp, R.string.dungeon_demo_zombie_pale,
                     R.string.dungeon_demo_zombie_boss, R.string.dungeon_demo_vampire,
                     R.string.dungeon_demo_vampire_night, R.string.dungeon_demo_vampire_bat,
-                    R.string.dungeon_demo_vampire_bat_ash)
+                    R.string.dungeon_demo_vampire_bat_ash, R.string.roguelike_monster_alien_scout,
+                    R.string.roguelike_monster_alien_crawler, R.string.roguelike_monster_alien_floater,
+                    R.string.roguelike_monster_pirate, R.string.roguelike_monster_pirate_brute,
+                    R.string.roguelike_monster_pirate_captain, R.string.roguelike_monster_spider,
+                    R.string.dungeon_demo_spider_moss, R.string.dungeon_demo_spider_boss) +
+                    styles.filter { it.creature != null }.map { it.creatureLabel }.toIntArray()
                 AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
                     .setTitle(R.string.dungeon_demo_rat_appearance)
                     .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), styles.indexOf(scene.selectedMonsterStyle)) { dialog, index ->

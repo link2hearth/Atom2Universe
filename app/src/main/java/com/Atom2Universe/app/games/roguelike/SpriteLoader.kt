@@ -40,12 +40,17 @@ object SpriteLoader {
     }
 
     /** Sprites provisoires : toute la partie graphique sera refaite. */
-    fun monsterPath(type: MonsterType): String = when (type) {
+    fun monsterPath(type: MonsterType): String? = when (type) {
+        MonsterType.SPIDER, MonsterType.SCORPION, MonsterType.CARNIVOROUS_PLANT,
+        MonsterType.FELINE, MonsterType.WOLF, MonsterType.BEAR, MonsterType.TROLL, MonsterType.SNAKE -> null
+        MonsterType.ZOMBIE, MonsterType.VAMPIRE, MonsterType.VAMPIRE_BAT,
+        MonsterType.PIRATE, MonsterType.PIRATE_BRUTE, MonsterType.PIRATE_CAPTAIN -> null
+        MonsterType.ALIEN_SCOUT, MonsterType.ALIEN_CRAWLER, MonsterType.ALIEN_FLOATER -> null // Sprites procéduraux.
         MonsterType.RAT      -> "Assets/sprites/Dungeon/Monsters/misc/fire_bat.png"
-        MonsterType.GOBLIN   -> "Assets/sprites/Dungeon/Monsters/misc/quasit.png"
+        MonsterType.GOBLIN   -> null
         MonsterType.SKELETON -> "Assets/sprites/Dungeon/Monsters/skeleton/skeleton_humanoid.png"
         MonsterType.ORC      -> "Assets/sprites/Dungeon/Monsters/deepdwarf/deepdwarf_berzerker.png"
-        MonsterType.DEMON    -> "Assets/sprites/Dungeon/Monsters/pandemon/examples/monsters_pandemon_examples_a.png"
+        MonsterType.DEMON    -> null
     }
 
     fun clear() {

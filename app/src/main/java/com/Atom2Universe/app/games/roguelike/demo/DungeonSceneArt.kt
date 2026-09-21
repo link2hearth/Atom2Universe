@@ -193,9 +193,15 @@ internal class DungeonSceneArt {
     fun monsterPoses(style: DungeonDemoSprites.MonsterStyle, index: Int): Array<Bitmap> = visualFor(style, index).poses
     private fun visualFor(style: DungeonDemoSprites.MonsterStyle, index: Int, seed: Int? = null): MonsterVisual {
         monsterVisuals[index]?.takeIf { it.first == style && it.second.seed == seed }?.let { return it.second }
-        val clothes = if (style == DungeonDemoSprites.MonsterStyle.ZOMBIE)
+        val clothes = if (style == DungeonDemoSprites.MonsterStyle.ZOMBIE ||
+            style.creature == com.Atom2Universe.app.games.roguelike.MonsterType.GOBLIN ||
+            style.creature == com.Atom2Universe.app.games.roguelike.MonsterType.TROLL)
             DungeonZombieSprites.randomClothes(seed?.let { kotlin.random.Random(it) } ?: kotlin.random.Random) else null
-        return MonsterVisual(if (style.isVampire) Array(8) { DungeonVampireSprites.create(style, it) }
+        return MonsterVisual(if (style.creature != null) Array(8) { DungeonCreatureSprites.create(style, it, clothes) }
+        else if (style.isSpider) Array(8) { DungeonSpiderSprites.create(style, it) }
+        else if (style.isPirate) Array(8) { DungeonPirateSprites.create(style, it) }
+        else if (style.isAlien) Array(8) { DungeonAlienSprites.create(style, it) }
+        else if (style.isVampire) Array(8) { DungeonVampireSprites.create(style, it) }
         else if (style.isHumanoid) Array(24) {
             if (style.isZombie) DungeonZombieSprites.create(style, it % 8, it / 8, clothes)
             else DungeonSkeletonSprites.create(style, it % 8, it / 8)
@@ -205,6 +211,45 @@ internal class DungeonSceneArt {
         index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float, appearanceSeed: Int? = null) {
 
         val visual = visualFor(style, index, appearanceSeed)
+        if (style.creature != null) {
+            val pose = if (icy) 0 else ((clock + index * 317) / 150).toInt() % 8
+            val bitmap = visual.poses[pose]
+            sprite(c, bitmap, x - 6, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 12, y - 6, x + 16, y - 2, white)
+                line(c, x + 16, y - 6, x + 12, y - 2, white)
+            }
+            return
+        }
+        if (style.isSpider) {
+            val pose = if (icy) 0 else ((clock + index * 317) / 120).toInt() % 8
+            val bitmap = visual.poses[pose]
+            sprite(c, bitmap, x - 5, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 13, y + 2, x + 17, y + 6, white)
+                line(c, x + 17, y + 2, x + 13, y + 6, white)
+            }
+            return
+        }
+        if (style.isPirate) {
+            val pose = if (icy) 0 else ((clock + index * 317) / 180).toInt() % 8
+            val bitmap = visual.poses[pose]
+            sprite(c, bitmap, x - 4, y + 19 - bitmap.height, 1f)
+            if (hurt) {
+                line(c, x + 11, y - 10, x + 15, y - 6, white)
+                line(c, x + 15, y - 10, x + 11, y - 6, white)
+            }
+            return
+        }
+        if (style.isAlien) {
+            val pose = if (icy) 0 else ((clock + index * 317) / 160).toInt() % 8
+            sprite(c, visual.poses[pose], x - 4, y - 17, 1f)
+            if (hurt) {
+                line(c, x + 12, y - 6, x + 16, y - 2, white)
+                line(c, x + 16, y - 6, x + 12, y - 2, white)
+            }
+            return
+        }
         if (style.isVampire) {
             val phase = clock + index * 317
             val pose = if (icy) 0 else (phase / if (style.isBat) 95 else 180).toInt() % 8

@@ -438,21 +438,25 @@ class RoguelikeGame(
     }
 
     private fun wander(pack: MonsterPack) {
+        if (MonsterType.PIRATE_CAPTAIN in pack.types) return
         if (rng.nextFloat() > 0.3f) return
         fun calm(p: Pos) = p in level.quietCells || level.campDistances[p.y][p.x] in 0..7
         if (pack.patrol.size > 1) {
             if (pack.pos == pack.patrol[pack.patrolIndex]) pack.patrolIndex = (pack.patrolIndex + 1) % pack.patrol.size
-            val next = bfsFirstStep(pack.pos, pack.patrol[pack.patrolIndex], avoidQuiet = true) ?: return
+            val next = bfsFirstStep(pack.pos, pack.patrol[pack.patrolIndex], avoidQuiet = true,
+                roamingTypes = pack.types) ?: return
             if (!calm(next) && level.packAt(next.x,next.y) == null && next != playerPos) pack.pos = next
             return
         }
         val dx = rng.nextInt(-1, 2); val dy = rng.nextInt(-1, 2)
         val n = Pos(pack.pos.x + dx, pack.pos.y + dy)
-        if (level.canStep(pack.pos, dx, dy) && !calm(n) && level.packAt(n.x, n.y) == null && n != playerPos && n.chebyshev(pack.home) <= 4)
+        if (level.canStep(pack.pos, dx, dy) && !calm(n) && level.packAt(n.x, n.y) == null && n != playerPos &&
+            n.chebyshev(pack.home) <= 4 && DungeonBestiary.canWander(pack.types, level.themeAt(n.x, n.y), level.backdropAt(n)))
             pack.pos = n
     }
     /** Premier pas du plus court chemin (8 directions), limité pour rester léger. */
-    private fun bfsFirstStep(from: Pos, to: Pos, avoidQuiet: Boolean = false): Pos? {
+    private fun bfsFirstStep(from: Pos, to: Pos, avoidQuiet: Boolean = false,
+        roamingTypes: List<MonsterType>? = null): Pos? {
         val prev = HashMap<Pos, Pos>()
         val queue = ArrayDeque<Pos>()
         queue.add(from); prev[from] = from
@@ -467,6 +471,7 @@ class RoguelikeGame(
                 if (dx == 0 && dy == 0) continue
                 val n = Pos(c.x + dx, c.y + dy)
                 if (n in prev || !level.canStep(c, dx, dy)) continue
+                if (roamingTypes != null && !DungeonBestiary.canWander(roamingTypes, level.themeAt(n.x, n.y), level.backdropAt(n))) continue
                 if (avoidQuiet && (n in level.quietCells || level.campDistances[n.y][n.x] in 0..7)) continue
                 prev[n] = c; queue.add(n)
             }
@@ -538,8 +543,15 @@ class RoguelikeGame(
         val dist = DungeonPaths.distances(lv, lv.start)
         val farCells = (0 until h).flatMap { y -> (0 until w).map { x -> Pos(x,y) } }
             .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && dist[it.y][it.x] >= 8 }
+        val captainSite = DungeonBestiary.captainSite(lv, prepared.population.spawns)
         for (spawn in prepared.population.spawns) {
-            lv.packs += MonsterPack(Encounters.roll(floor, rng), spawn.pos).apply { patrol = spawn.patrol }
+            val types = if (spawn.pos == captainSite) Encounters.captain(floor)
+                else Encounters.roll(floor, rng, lv.themeAt(spawn.pos.x, spawn.pos.y), lv.backdropAt(spawn.pos))
+            lv.packs += MonsterPack(types, spawn.pos).apply {
+                patrol = spawn.patrol.takeIf { route -> route.all {
+                    DungeonBestiary.canWander(types, lv.themeAt(it.x, it.y), lv.backdropAt(it))
+                } } ?: emptyList()
+            }
         }
         val quietLoot = prepared.population.sites.filter { it.kind == MapSiteKind.QUIET }.map { it.pos }
         // Parfois une relique, au bout du cul-de-sac le plus éloigné du départ

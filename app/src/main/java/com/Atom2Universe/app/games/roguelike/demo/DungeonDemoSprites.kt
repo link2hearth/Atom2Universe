@@ -2,6 +2,8 @@ package com.Atom2Universe.app.games.roguelike.demo
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.roguelike.MonsterType
 import com.Atom2Universe.app.games.roguelike.EquipSlot
 import com.Atom2Universe.app.games.roguelike.Archetype
 
@@ -263,7 +265,8 @@ internal object DungeonDemoSprites {
         .........###........###..........
     """
     internal enum class MonsterStyle(val shadow: Long, val fur: Long, val light: Long,
-        val skin: Long, val eye: Long) {
+        val skin: Long, val eye: Long, val creature: MonsterType? = null,
+        val creatureLabel: Int = 0, val creatureBoss: Boolean = false) {
         COMMON(0xFF51454F, 0xFF86746F, 0xFFB8A48D, 0xFFCF8C8B, 0xFFF2DAA8),
         GREY(0xFF343E50, 0xFF68788B, 0xFFA4B2BD, 0xFFA77F92, 0xFFEDD98A),
         BROWN(0xFF50352F, 0xFF956044, 0xFFD09A66, 0xFFC88A78, 0xFFFFD575),
@@ -280,18 +283,62 @@ internal object DungeonDemoSprites {
         VAMPIRE(0xFF392D45, 0xFFB6A4AC, 0xFFE3D2CB, 0xFF984C65, 0xFFFF6757),
         VAMPIRE_NIGHT(0xFF292D47, 0xFFA5A6C1, 0xFFDDD8EA, 0xFF71619E, 0xFFFF9676),
         VAMPIRE_BAT(0xFF3D2C43, 0xFF826171, 0xFFBB9195, 0xFF925369, 0xFFFF6A4E),
-        VAMPIRE_BAT_ASH(0xFF34344F, 0xFF767D9E, 0xFFB7BCD4, 0xFF75699A, 0xFFFFAB69);
+        VAMPIRE_BAT_ASH(0xFF34344F, 0xFF767D9E, 0xFFB7BCD4, 0xFF75699A, 0xFFFFAB69),
+        ALIEN_SCOUT(0xFF28534D, 0xFF59AA86, 0xFFA6E6AD, 0xFF374D70, 0xFFE2FF8C),
+        ALIEN_CRAWLER(0xFF343457, 0xFF7067AC, 0xFFB9A0E4, 0xFF537E91, 0xFFFFC16F),
+        ALIEN_FLOATER(0xFF235274, 0xFF488CAB, 0xFF8FE8EC, 0xFFB37AC7, 0xFFFF95D6),
+        PIRATE(0xFF343C55, 0xFF647998, 0xFFE9D8B2, 0xFFBE8762, 0xFFE0B856),
+        PIRATE_BRUTE(0xFF443C43, 0xFF917658, 0xFFE1C99A, 0xFFC6926E, 0xFFE0B856),
+        PIRATE_CAPTAIN(0xFF452D43, 0xFF994559, 0xFFE4BD65, 0xFFCF9B77, 0xFFFFDB79),
+        SPIDER(0xFF392F39, 0xFF796052, 0xFFC29A71, 0xFFAA755A, 0xFFFFBA64),
+        SPIDER_MOSS(0xFF283D39, 0xFF52785C, 0xFFA5B97B, 0xFF83945A, 0xFFF2D879),
+        SPIDER_BOSS(0xFF392640, 0xFF75516F, 0xFFC98CA0, 0xFFAD516A, 0xFFFF7465),
+        SCORPION_SAND(0xFF654834, 0xFFB28A51, 0xFFE5C889, 0xFF97704B, 0xFFFFD56D, MonsterType.SCORPION, R.string.mob_scorpion_sand),
+        SCORPION_OBSIDIAN(0xFF252A40, 0xFF4A5369, 0xFF8C9BAC, 0xFF6C627B, 0xFFFF9B5F, MonsterType.SCORPION, R.string.mob_scorpion_obsidian),
+        SCORPION_BOSS(0xFF392C42, 0xFF785064, 0xFFC09084, 0xFFAA654B, 0xFFFF754F, MonsterType.SCORPION, R.string.mob_scorpion_boss, true),
+        DEMON_EMBER(0xFF532E3D, 0xFFAD4F49, 0xFFF3946A, 0xFF693752, 0xFFFFDF7B, MonsterType.DEMON, R.string.mob_demon_ember),
+        DEMON_ASH(0xFF303447, 0xFF686B80, 0xFFADAAC0, 0xFF554869, 0xFFFFA066, MonsterType.DEMON, R.string.mob_demon_ash),
+        DEMON_BOSS(0xFF40273E, 0xFF913C58, 0xFFDA7882, 0xFF59304A, 0xFFFFD26A, MonsterType.DEMON, R.string.mob_demon_boss, true),
+        PLANT_JADE(0xFF284A3C, 0xFF518C54, 0xFFA9D67E, 0xFFBC586B, 0xFFFFD37C, MonsterType.CARNIVOROUS_PLANT, R.string.mob_plant_jade),
+        PLANT_VIOLET(0xFF3E3558, 0xFF8669A0, 0xFFD4A5CD, 0xFFAF5B7B, 0xFFF3DE8C, MonsterType.CARNIVOROUS_PLANT, R.string.mob_plant_violet),
+        PLANT_BOSS(0xFF284439, 0xFF47784F, 0xFFA4C178, 0xFFE17566, 0xFFFFED9D, MonsterType.CARNIVOROUS_PLANT, R.string.mob_plant_boss, true),
+        FELINE_TAWNY(0xFF604638, 0xFFC29155, 0xFFF1D098, 0xFF9D724B, 0xFFEEDE7B, MonsterType.FELINE, R.string.mob_feline_tawny),
+        FELINE_BLACK(0xFF202536, 0xFF424658, 0xFF7E8497, 0xFF55536C, 0xFFB8E77E, MonsterType.FELINE, R.string.mob_feline_black),
+        FELINE_STRIPED(0xFF503A32, 0xFFD18D4E, 0xFFF1D19A, 0xFF80503C, 0xFFB7DE8A, MonsterType.FELINE, R.string.mob_feline_striped),
+        FELINE_BOSS(0xFF583C35, 0xFFB1804C, 0xFFF3D7A1, 0xFF8F5A3D, 0xFFFFDF79, MonsterType.FELINE, R.string.mob_feline_boss, true),
+        WOLF_GREY(0xFF394453, 0xFF7C8897, 0xFFCDD2CA, 0xFF64727E, 0xFFF4D68B, MonsterType.WOLF, R.string.mob_wolf_grey),
+        WOLF_WHITE(0xFF697483, 0xFFB8C2C7, 0xFFF4EEDB, 0xFF929FAE, 0xFFA4D9E6, MonsterType.WOLF, R.string.mob_wolf_white),
+        WOLF_BOSS(0xFF293441, 0xFF526677, 0xFFA4B7C0, 0xFF798995, 0xFFFFC971, MonsterType.WOLF, R.string.mob_wolf_boss, true),
+        BEAR_BROWN(0xFF49372F, 0xFF8A6547, 0xFFC59D6B, 0xFF6B4D38, 0xFFF5CB84, MonsterType.BEAR, R.string.mob_bear_brown),
+        BEAR_BLACK(0xFF242B32, 0xFF454D54, 0xFF89908C, 0xFF646966, 0xFFE6C283, MonsterType.BEAR, R.string.mob_bear_black),
+        BEAR_BOSS(0xFF493732, 0xFF785B4A, 0xFFBBA082, 0xFF987861, 0xFFFFCF83, MonsterType.BEAR, R.string.mob_bear_boss, true),
+        GOBLIN_GREEN(0xFF334B38, 0xFF72964E, 0xFFBFCC82, 0xFF8EAD5E, 0xFFFFCE6E, MonsterType.GOBLIN, R.string.mob_goblin_green),
+        GOBLIN_OCHRE(0xFF594735, 0xFFA3914D, 0xFFDECB82, 0xFFBEA361, 0xFFFFAA65, MonsterType.GOBLIN, R.string.mob_goblin_ochre),
+        GOBLIN_BOSS(0xFF344637, 0xFF5D8450, 0xFFA9BB7A, 0xFF86A464, 0xFFFFD576, MonsterType.GOBLIN, R.string.mob_goblin_boss, true),
+        TROLL_MOSS(0xFF3A4D40, 0xFF708568, 0xFFB4BF8A, 0xFF8FA17B, 0xFFFFC879, MonsterType.TROLL, R.string.mob_troll_moss),
+        TROLL_STONE(0xFF414650, 0xFF858991, 0xFFBFC0BA, 0xFF9FA1A3, 0xFFFFB67B, MonsterType.TROLL, R.string.mob_troll_stone),
+        TROLL_BOSS(0xFF344340, 0xFF5C7770, 0xFFA5B69B, 0xFF82988C, 0xFFFFD078, MonsterType.TROLL, R.string.mob_troll_boss, true),
+        SNAKE_EMERALD(0xFF29473E, 0xFF528A60, 0xFFB2CB87, 0xFF8BAC6B, 0xFFFFD972, MonsterType.SNAKE, R.string.mob_snake_emerald),
+        SNAKE_COPPER(0xFF584039, 0xFFAC744E, 0xFFE2B47B, 0xFFCF915D, 0xFFFFC56C, MonsterType.SNAKE, R.string.mob_snake_copper),
+        SNAKE_BOSS(0xFF393B47, 0xFF6B7580, 0xFFC4BC97, 0xFFAC8D59, 0xFFFFBA65, MonsterType.SNAKE, R.string.mob_snake_boss, true);
 
         val isSkeleton get() = this == SKELETON || this == SKELETON_MOSS || this == SKELETON_ASH || this == SKELETON_BOSS
         val isZombie get() = this == ZOMBIE || this == ZOMBIE_SWAMP || this == ZOMBIE_PALE || this == ZOMBIE_BOSS
         val isHumanoid get() = isSkeleton || isZombie
+        val isAlien get() = this == ALIEN_SCOUT || this == ALIEN_CRAWLER || this == ALIEN_FLOATER
+        val isPirate get() = this == PIRATE || this == PIRATE_BRUTE || this == PIRATE_CAPTAIN
+        val isSpider get() = this == SPIDER || this == SPIDER_MOSS || this == SPIDER_BOSS
         val isBat get() = this == VAMPIRE_BAT || this == VAMPIRE_BAT_ASH
         val isVampire get() = this == VAMPIRE || this == VAMPIRE_NIGHT || isBat
-        val isBossAppearance get() = this == BOSS || this == SKELETON_BOSS || this == ZOMBIE_BOSS ||
-            this == VAMPIRE || this == VAMPIRE_NIGHT
+        val isBossAppearance get() = creatureBoss || this == BOSS || this == SKELETON_BOSS || this == ZOMBIE_BOSS ||
+            this == VAMPIRE || this == VAMPIRE_NIGHT || this == PIRATE_CAPTAIN || this == SPIDER_BOSS
     }
 
     fun rat(style: MonsterStyle = MonsterStyle.COMMON): Bitmap {
+        if (style.creature != null) return DungeonCreatureSprites.create(style)
+        if (style.isSpider) return DungeonSpiderSprites.create(style)
+        if (style.isPirate) return DungeonPirateSprites.create(style)
+        if (style.isAlien) return DungeonAlienSprites.create(style)
         if (style.isSkeleton) return DungeonSkeletonSprites.create(style)
         if (style.isZombie) return DungeonZombieSprites.create(style)
         if (style.isVampire) return DungeonVampireSprites.create(style)
