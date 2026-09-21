@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.RectF
 import android.graphics.Typeface
-import android.graphics.drawable.BitmapDrawable
+
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
@@ -339,7 +339,8 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
             layoutParams = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(6) }
             val line = row()
             line.addView(if (item != null) icon(item) else ImageView(ctx).apply {
-                setImageDrawable(BitmapDrawable(ctx.resources, EquipmentArt.empty(slot)).apply { isFilterBitmap = false })
+                setImageDrawable(PixelArtIcon(EquipmentArt.empty(slot)))
+                scaleType = ImageView.ScaleType.FIT_XY
                 alpha = .4f
             }, LinearLayout.LayoutParams(dp(32), dp(36)))
             line.addView(text(ctx.getString(slot.labelRes), 11f, muted), LinearLayout.LayoutParams(0, -2, 1f))
@@ -457,7 +458,8 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         ctx.getString(Lexicon.elementRes(relic.element)), ctx.getString(relic.attribute.labelRes))
 
     private fun relicIcon(relic: Relic) = ImageView(ctx).apply {
-        setImageBitmap(SpriteLoader.sheetCell(ctx.assets, relic.iconRow, relic.iconCol))
+        setImageDrawable(SpriteLoader.sheetCell(ctx.assets, relic.iconRow, relic.iconCol)?.let { PixelArtIcon(it) })
+        scaleType = ImageView.ScaleType.FIT_XY
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
 
@@ -679,8 +681,8 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
     private fun subtitle(item: Equipment) = listOfNotNull(ctx.getString(item.slot.labelRes),
         item.weight?.let { ctx.getString(it.labelRes) }, ctx.getString(if (item.isotopeZ != null) R.string.inv_legendary else item.rarity.labelRes)).joinToString(ctx.getString(R.string.inv_separator))
     private fun icon(item: Equipment) = ImageView(ctx).apply {
-        setImageDrawable(BitmapDrawable(ctx.resources, EquipmentArt.icon(item)).apply { isFilterBitmap = false })
-        scaleType = ImageView.ScaleType.FIT_CENTER
+        setImageDrawable(PixelArtIcon(EquipmentArt.icon(item)))
+        scaleType = ImageView.ScaleType.FIT_XY
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
     private fun dp(n: Int) = (n * density).toInt()

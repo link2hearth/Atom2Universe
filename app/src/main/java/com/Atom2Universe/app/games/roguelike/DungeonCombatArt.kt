@@ -36,6 +36,7 @@ internal class DungeonCombatArt {
     private var backdrop = DungeonBackdrop.DUNGEON
     private var cachedBackdrop: DungeonBackdrop? = null
     private var visualCombat: Combat? = null
+    private var appearanceSeed = 0
     private var monsterStyles = emptyList<DungeonDemoSprites.MonsterStyle>()
 
     /** Apparences attribuées une fois, communes aux portraits et aux acteurs de la scène. */
@@ -43,22 +44,42 @@ internal class DungeonCombatArt {
         if (visualCombat === combat) return
         visualCombat = combat
         // Stable pendant tout l'étage, y compris après reprise d'une sauvegarde.
-        backdrop = DungeonBackdrop.entries[(combat.floor.coerceAtLeast(1) - 1) % DungeonBackdrop.entries.size]
+        backdrop = combat.backdrop
+        appearanceSeed = combat.visualSeed
+        monsterStyles = styles(combat.enemies.map { it.type }, combat.visualSeed)
+    }
+
+    private fun styles(types: List<MonsterType>, seed: Int): List<DungeonDemoSprites.MonsterStyle> {
+        val rng = kotlin.random.Random(seed)
         val used = mutableSetOf<DungeonDemoSprites.MonsterStyle>()
-        monsterStyles = combat.enemies.map { enemy ->
+        return types.mapIndexed { index, type ->
             val variants = DungeonDemoSprites.MonsterStyle.entries.filter { style ->
-                val sameFamily = when (enemy.type) {
+                val sameFamily = when (type) {
                     MonsterType.RAT -> !style.isHumanoid && !style.isVampire
                     MonsterType.SKELETON -> style.isSkeleton
                     MonsterType.GOBLIN, MonsterType.ORC -> style.isZombie
                     MonsterType.DEMON -> style.isVampire
                 }
-                sameFamily && style.isBossAppearance == enemy.isBoss
+                sameFamily && style.isBossAppearance == (types.size == 3 && index == 0)
             }
             // Évite les doublons visuels dans un même groupe de combattants.
             val available = variants.filterNot { it in used }.ifEmpty { variants }
-            available.random().also { used += it }
+            available.random(rng).also { used += it }
         }
+    }
+
+    private val mapStyles = mutableMapOf<Pair<List<MonsterType>, Int>, List<DungeonDemoSprites.MonsterStyle>>()
+
+    fun prepareMapPack(pack: MonsterPack) {
+        val seed = pack.home.x * 73856093 xor pack.home.y * 19349663
+        appearanceSeed = seed
+        monsterStyles = mapStyles.getOrPut(pack.types to seed) { styles(pack.types, seed) }
+    }
+
+    fun clearMapPacks() { mapStyles.clear() }
+
+    fun tick() {
+        clock = (android.os.SystemClock.uptimeMillis() - clockOrigin).toFloat()
     }
 
     fun drawBackdrop(canvas: Canvas, bounds: RectF) {
@@ -127,10 +148,10 @@ internal class DungeonCombatArt {
     }
 
     fun drawMonster(canvas: Canvas, bounds: RectF, type: MonsterType, alpha: Int = 255,
-        icy: Boolean = false, hurt: Boolean = false, index: Int = 0, portrait: Boolean = false) {
-        val (actorFrame, actorCanvas) = actorBuffer("monster:$index:$portrait")
-        sceneArt.drawMonster(actorCanvas, 10f, 30f, icy, hurt, index,
-            monsterStyles.getOrElse(index) { style(type) }, clock)
+        icy: Boolean = false, hurt: Boolean = false, index: Int = 0, portrait: Boolean = false, actorIndex: Int = index) {
+        val (actorFrame, actorCanvas) = actorBuffer("monster:$actorIndex:$portrait")
+        sceneArt.drawMonster(actorCanvas, 10f, 30f, icy, hurt, actorIndex,
+            monsterStyles.getOrElse(index) { style(type) }, clock, appearanceSeed + index)
         if (icy) sceneArt.drawIce(actorCanvas, 22f, 39f)
         paint.alpha = alpha
         canvas.save()

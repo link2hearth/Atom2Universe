@@ -52,6 +52,11 @@ class RoguelikeView @JvmOverloads constructor(
     var onOpenInventory:  (() -> Unit)? = null
     var onRestartAfterDeath: ((atCheckpoint: Boolean) -> Unit)? = null
 
+    private val mapArt = DungeonMapArt()
+    private val actors = DungeonCombatArt()
+    private var drawnLevel: DungeonLevel? = null
+    private var lastPlayerPos: Pos? = null
+    private var facingLeft = false
     private var tileSize = 40f
     private val hpBarW get() = context.resources.displayMetrics.density * 6f
 
@@ -60,13 +65,9 @@ class RoguelikeView @JvmOverloads constructor(
 
 
     // ── Paints ──────────────────────────────────────────────────────────────────
-    private val pWallFallback  = Paint().apply { color = 0xFF1A1A1A.toInt(); isAntiAlias = false }
-    private val pFloorFallback = Paint().apply { color = 0xFF3A2E24.toInt(); isAntiAlias = false }
 
-    private val pSprite    = Paint(Paint.FILTER_BITMAP_FLAG)
-    private val pSpriteDim = Paint(Paint.FILTER_BITMAP_FLAG).apply { alpha = 70 }
+    private val pSprite    = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
     private val pFog       = Paint().apply { color = 0xCC000000.toInt(); isAntiAlias = false }
-    private val pStairs    = Paint().apply { color = 0x664A3800 }
 
     private val pText = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         typeface = Typeface.MONOSPACE; textAlign = Paint.Align.CENTER
@@ -108,24 +109,26 @@ class RoguelikeView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         stopHold()
-        SpriteLoader.clear()
+        actors.clearMapPacks()
     }
 
     private val sd get() = context.resources.displayMetrics.density * context.resources.configuration.fontScale
 
     // ── Sprite sheet ─────────────────────────────────────────────────────────────
 
-    private fun drawSheetCell(canvas: Canvas, row: Int, col: Int, rect: RectF): Boolean {
-        val sheet = SpriteLoader.sheet(context.assets) ?: return false
-        canvas.drawBitmap(sheet, Rect(col * 64, row * 64, (col + 1) * 64, (row + 1) * 64), rect, pSprite)
-        return true
-    }
-
     // ── Draw ────────────────────────────────────────────────────────────────────
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val g = game ?: return
+        if (drawnLevel !== g.level) {
+            drawnLevel = g.level
+            actors.clearMapPacks()
+            lastPlayerPos = null
+        }
+        lastPlayerPos?.let { if (it.x != g.playerPos.x) facingLeft = g.playerPos.x < it.x }
+        lastPlayerPos = g.playerPos
+        actors.tick()
         updateCamera(g)
         drawMap(canvas, g)
         drawItems(canvas, g)
@@ -139,6 +142,7 @@ class RoguelikeView @JvmOverloads constructor(
         if (g.pendingEquipDrop != null) drawLootPopup(canvas, g)
         if (g.deathReport != null)      drawDeathPanel(canvas, g)
         if (!overlay) drawSwipeZone(canvas)
+        if (g.isExploring && isShown) postInvalidateDelayed(80L)
     }
 
     // ── Caméra ──────────────────────────────────────────────────────────────────
@@ -161,50 +165,24 @@ class RoguelikeView @JvmOverloads constructor(
         return l + tileSize > hpBarW && l < width && t + tileSize > 0 && t < height
     }
 
-    private fun variantIndex(tx: Int, ty: Int, size: Int): Int {
-        val h = tx * 73856093 xor ty * 19349663
-        return (h and Int.MAX_VALUE) % size
-    }
-
-    private fun drawSprite(canvas: Canvas, path: String, rect: RectF, dim: Boolean) {
-        val bmp = SpriteLoader.load(context.assets, path) ?: return
-        canvas.drawBitmap(bmp, null, rect, if (dim) pSpriteDim else pSprite)
-    }
-
-    // ── Map ─────────────────────────────────────────────────────────────────────
-
     private fun drawMap(canvas: Canvas, g: RoguelikeGame) {
-        val lv = g.level; val theme = lv.theme
-        val floorSprites = SpriteLoader.listDir(context.assets, theme.floorDir)
-        val wallSprites  = SpriteLoader.listDir(context.assets, theme.wallDir)
-
-        for (ty in 0 until lv.h) for (tx in 0 until lv.w) {
-            if (!isOnScreen(tx, ty)) continue
-            val vis = lv.visible[ty][tx]; val exp = lv.explored[ty][tx]
-            if (!exp) continue
+        canvas.drawColor(0xFF101820.toInt())
+        val lv = g.level
+        val minX = maxOf(0, (camX / tileSize).toInt())
+        val minY = maxOf(0, (camY / tileSize).toInt())
+        val maxX = minOf(lv.w - 1, ((camX + width) / tileSize).toInt())
+        val maxY = minOf(lv.h - 1, ((camY + height) / tileSize).toInt())
+        for (ty in minY..maxY) for (tx in minX..maxX) {
+            if (!lv.explored[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val rect = RectF(l, t, l + tileSize, t + tileSize)
-
-            when (val tile = lv.tiles[ty][tx]) {
-                TileType.WALL -> {
-                    if (wallSprites.isNotEmpty()) drawSprite(canvas, wallSprites[variantIndex(tx, ty, wallSprites.size)], rect, !vis)
-                    else canvas.drawRect(rect, pWallFallback)
-                }
-                TileType.FLOOR, TileType.STAIRS_DOWN -> {
-                    if (floorSprites.isNotEmpty()) drawSprite(canvas, floorSprites[variantIndex(tx, ty, floorSprites.size)], rect, !vis)
-                    else canvas.drawRect(rect, if (vis) pFloorFallback else pWallFallback)
-                    if (tile == TileType.STAIRS_DOWN) {
-                        canvas.drawRect(rect, pStairs)
-                        pText.color = if (vis) 0xFFFFD600.toInt() else 0xFF665500.toInt()
-                        pText.textSize = tileSize * 0.7f
-                        canvas.drawText(">", l + tileSize / 2f, t + tileSize * 0.75f, pText)
-                    }
-                }
+            mapArt.tile(canvas, rect, lv.theme, lv.tiles[ty][tx], tx, ty)
+            if (!lv.visible[ty][tx]) {
+                pFog.alpha = 170
+                canvas.drawRect(rect, pFog)
             }
-            if (!vis) { pFog.alpha = 100; canvas.drawRect(rect, pFog) }
         }
     }
-
     // ── Objets au sol ────────────────────────────────────────────────────────────
 
     private fun drawItems(canvas: Canvas, g: RoguelikeGame) {
@@ -213,9 +191,7 @@ class RoguelikeView @JvmOverloads constructor(
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val pad = tileSize * 0.15f
-            val row = item.relic?.iconRow ?: item.type.spriteRow
-            val col = item.relic?.iconCol ?: item.type.spriteCol
-            drawSheetCell(canvas, row, col, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad))
+            mapArt.pickup(canvas, RectF(l + pad, t + pad, l + tileSize - pad, t + tileSize - pad), item.type == ItemType.GOLD, item.relic?.ordinal ?: 0)
         }
     }
 
@@ -223,14 +199,15 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun drawPacks(canvas: Canvas, g: RoguelikeGame) {
         val lv = g.level
-        for (pack in lv.packs) {
+        for ((packIndex, pack) in lv.packs.withIndex()) {
             if (!pack.alive) continue
             val tx = pack.pos.x; val ty = pack.pos.y
             if (!isOnScreen(tx, ty) || !lv.visible[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val rect = RectF(l, t, l + tileSize, t + tileSize)
-            SpriteLoader.load(context.assets, SpriteLoader.monsterPath(pack.types.first()))
-                ?.let { canvas.drawBitmap(it, null, rect, pSprite) }
+            actors.prepareMapPack(pack)
+            actors.drawShadow(canvas, rect)
+            actors.drawMonster(canvas, rect, pack.types.first(), actorIndex = packIndex)
 
             // Groupe : nombre d'ennemis dans le coin
             if (pack.types.size > 1) {
@@ -252,8 +229,14 @@ class RoguelikeView @JvmOverloads constructor(
 
     private fun drawPlayer(canvas: Canvas, g: RoguelikeGame) {
         val l = tileLeft(g.playerPos.x); val t = tileTop(g.playerPos.y)
-        SpriteLoader.load(context.assets, g.heroSpritePath)
-            ?.let { canvas.drawBitmap(it, null, RectF(l, t, l + tileSize, t + tileSize), pSprite) }
+        val rect = RectF(l, t, l + tileSize, t + tileSize)
+        pFill.color = 0x775ECAC7
+        canvas.drawOval(l + tileSize * .2f, t + tileSize * .76f, l + tileSize * .8f, t + tileSize * .94f, pFill)
+        canvas.save()
+        if (facingLeft) canvas.scale(-1f, 1f, rect.centerX(), rect.centerY())
+        actors.drawShadow(canvas, rect, hero = true)
+        actors.drawHero(canvas, rect, g.hero)
+        canvas.restore()
     }
 
     // ── Barre HP ────────────────────────────────────────────────────────────────
@@ -270,6 +253,13 @@ class RoguelikeView @JvmOverloads constructor(
     // ── HUD ─────────────────────────────────────────────────────────────────────
 
     private fun drawHud(canvas: Canvas, g: RoguelikeGame) {
+        pText.textAlign = Paint.Align.RIGHT
+        pText.textSize = sd * 12f
+        val region = context.getString(R.string.roguelike_region_floor, g.floor, context.getString(g.level.theme.label))
+        val badge = RectF(width - pText.measureText(region) - 24f, 8f, width - 8f, 16f + sd * 18f)
+        canvas.drawRoundRect(badge, 6f, 6f, pIconBg)
+        pText.color = 0xFFE3D7B3.toInt()
+        canvas.drawText(region, badge.right - 8f, badge.bottom - 8f, pText)
         val logSize  = sd * 17f; val hintSize = sd * 15f
         val lineH    = logSize * 1.4f
         val lines    = g.log.takeLast(3)
@@ -390,7 +380,7 @@ class RoguelikeView @JvmOverloads constructor(
             if (relic == null) continue
             val r = RectF(x, m, x + s, m + s)
             canvas.drawRoundRect(r, s * 0.2f, s * 0.2f, pIconBg)
-            drawSheetCell(canvas, relic.iconRow, relic.iconCol, RectF(r.left + s * 0.1f, r.top + s * 0.1f, r.right - s * 0.1f, r.bottom - s * 0.1f))
+            mapArt.pickup(canvas, RectF(r.left + s * 0.1f, r.top + s * 0.1f, r.right - s * 0.1f, r.bottom - s * 0.1f), false, relic.ordinal)
             val cd = g.hero.relicCooldown(relic)
             if (cd > 0) {
                 canvas.drawRoundRect(r, s * 0.2f, s * 0.2f, pOverlay)
@@ -505,7 +495,7 @@ class RoguelikeView @JvmOverloads constructor(
         pLootBorder.color = equip.rarity.colorArgb
         canvas.drawRoundRect(iconRect, cr * 0.4f, cr * 0.4f, pLootCardBg)
         canvas.drawRoundRect(iconRect, cr * 0.4f, cr * 0.4f, pLootBorder)
-        drawSheetCell(canvas, equip.spriteRow, equip.spriteCol, RectF(iconRect.left + 4f, iconRect.top + 4f, iconRect.right - 4f, iconRect.bottom - 4f))
+        PixelArtIcon.draw(canvas, EquipmentArt.icon(equip), RectF(iconRect.left + 4f, iconRect.top + 4f, iconRect.right - 4f, iconRect.bottom - 4f), pSprite)
 
         var y = iconRect.bottom + gap
         pText.textAlign = Paint.Align.CENTER

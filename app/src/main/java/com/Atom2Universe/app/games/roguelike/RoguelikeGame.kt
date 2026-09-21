@@ -41,7 +41,7 @@ class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
     val items    = mutableListOf<Item>()
     val visible  = Array(h) { BooleanArray(w) }
     val explored = Array(h) { BooleanArray(w) }
-    val theme    = DungeonTheme.ALL.random()
+    val theme    = DungeonTheme.forFloor(floor)
     var start    = Pos(1, 1)
 
     fun inBounds(x: Int, y: Int)  = x in 0 until w && y in 0 until h
@@ -384,7 +384,7 @@ class RoguelikeGame(
 
     private fun startCombat(pack: MonsterPack, ambush: Boolean) {
         combatPack = pack
-        combat = Combat(hero, floor, Encounters.build(pack.types, floor), ambush, rng)
+        combat = Combat(hero, floor, Encounters.build(pack.types, floor), ambush, rng, visualSeed = pack.home.x * 73856093 xor pack.home.y * 19349663, backdrop = level.theme.backdrop(pack.home.x + pack.home.y))
         onCombatStart?.invoke()
     }
 
@@ -568,7 +568,7 @@ class RoguelikeGame(
         val packCount = packCount(floor)
         val (w, h) = mapSize(packCount)
         val lv     = DungeonLevel(w, h, floor)
-        val layout = DungeonGenerator.generate(w, h, rng)
+        val layout = DungeonGenerator.generate(w, h, rng, lv.theme.outdoor)
         for (y in 0 until h) for (x in 0 until w) lv.tiles[y][x] = layout.tiles[y][x]
         lv.start = layout.start
 

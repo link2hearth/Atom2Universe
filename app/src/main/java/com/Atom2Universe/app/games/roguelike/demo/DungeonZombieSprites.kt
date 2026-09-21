@@ -47,8 +47,8 @@ internal object DungeonZombieSprites {
     // Une palette par apparition, réutilisée pour toutes les poses et le portrait.
     data class Clothes(val shirt: Int, val trousers: Int)
 
-    fun randomClothes(): Clothes {
-        val hue = Random.nextFloat() * 360f
+    fun randomClothes(rng: Random = Random): Clothes {
+        val hue = rng.nextFloat() * 360f
         return Clothes(Color.HSVToColor(floatArrayOf(hue, .28f, .64f)),
             Color.HSVToColor(floatArrayOf((hue + 35f) % 360f, .24f, .40f)))
     }

@@ -35,14 +35,14 @@ object DungeonGenerator {
 
     private val DIRS = listOf(Pos(1, 0), Pos(-1, 0), Pos(0, 1), Pos(0, -1))
 
-    fun generate(w: Int, h: Int, rng: Random): DungeonLayout {
+    fun generate(w: Int, h: Int, rng: Random, outdoor: Boolean = false): DungeonLayout {
         require(w % 2 == 1 && h % 2 == 1) { "dimensions impaires attendues" }
         while (true) {
-            tryGenerate(w, h, rng)?.let { return it }
+            tryGenerate(w, h, rng, outdoor)?.let { return it }
         }
     }
 
-    private fun tryGenerate(w: Int, h: Int, rng: Random): DungeonLayout? {
+    private fun tryGenerate(w: Int, h: Int, rng: Random, outdoor: Boolean): DungeonLayout? {
         val tiles  = Array(h) { Array(w) { TileType.WALL } }
         val region = Array(h) { IntArray(w) { -1 } }
         var regionCount = 0
@@ -127,6 +127,14 @@ object DungeonGenerator {
                 if (tiles[y][x] == TileType.FLOOR && floorNeighbours(x, y) <= 1 && !inRoom(Pos(x, y))) ends += Pos(x, y)
             if (ends.isEmpty()) return@repeat
             for (p in ends) tiles[p.y][p.x] = TileType.WALL
+        }
+        // Widen outdoor paths without disconnecting the network or opening its border.
+        if (outdoor) {
+            val edges = mutableListOf<Pos>()
+            for (y in 1 until h - 1) for (x in 1 until w - 1)
+                if (tiles[y][x] == TileType.WALL && floorNeighbours(x, y) > 0 && rng.nextFloat() < .48f)
+                    edges += Pos(x, y)
+            for (p in edges) tiles[p.y][p.x] = TileType.FLOOR
         }
         val deadEnds = mutableListOf<Pos>()
         for (y in 1 until h - 1) for (x in 1 until w - 1)

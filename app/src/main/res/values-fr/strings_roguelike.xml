@@ -555,4 +555,17 @@
     <string name="roguelike_combat_no_damage">Aucun dégât</string>
     <string name="roguelike_death_restart_floor">Rejouer l\'étage %1$d</string>
     <string name="roguelike_death_restart_checkpoint">Checkpoint · étage %1$d</string>
+
+    <string name="roguelike_region_cemetery">Cimetière</string>
+    <string name="roguelike_region_dungeon">Donjon</string>
+    <string name="roguelike_region_forest">Forêt</string>
+    <string name="roguelike_region_fields">Champs de blé</string>
+    <string name="roguelike_region_battlefield">Champ de bataille</string>
+    <string name="roguelike_region_mine">Mine</string>
+    <string name="roguelike_region_library">Bibliothèque</string>
+    <string name="roguelike_region_monastery">Monastère</string>
+    <string name="roguelike_region_pirate">Navire pirate</string>
+    <string name="roguelike_region_inn">Auberge</string>
+    <string name="roguelike_region_spaceship">Vaisseau spatial</string>
+    <string name="roguelike_region_floor">%1$d · %2$s</string>
 </resources>

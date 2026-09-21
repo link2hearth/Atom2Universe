@@ -882,6 +882,8 @@ class Combat(
     private val d20: () -> Int = { rng.nextInt(1, 21) },
     /** Le d20 des jets d'attaque des monstres. */
     private val attackDie: () -> Int = { rng.nextInt(1, 21) },
+    val visualSeed: Int = floor,
+    val backdrop: DungeonBackdrop = DungeonTheme.forFloor(floor).backdrop(floor),
 ) {
     companion object {
         const val PARRY_GOOD_MULT  = 0.5f

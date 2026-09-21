@@ -188,23 +188,23 @@ internal class DungeonSceneArt {
     }
     private val white = 0xFFE8EAD5.toInt()
     private val iceBlue = 0xFFA6E7EF.toInt()
-    private class MonsterVisual(val poses: Array<Bitmap>) { val portrait get() = poses[0] }
+    private class MonsterVisual(val poses: Array<Bitmap>, val seed: Int?) { val portrait get() = poses[0] }
     private val monsterVisuals = mutableMapOf<Int, Pair<DungeonDemoSprites.MonsterStyle, MonsterVisual>>()
     fun monsterPoses(style: DungeonDemoSprites.MonsterStyle, index: Int): Array<Bitmap> = visualFor(style, index).poses
-    private fun visualFor(style: DungeonDemoSprites.MonsterStyle, index: Int): MonsterVisual {
-        monsterVisuals[index]?.takeIf { it.first == style }?.let { return it.second }
+    private fun visualFor(style: DungeonDemoSprites.MonsterStyle, index: Int, seed: Int? = null): MonsterVisual {
+        monsterVisuals[index]?.takeIf { it.first == style && it.second.seed == seed }?.let { return it.second }
         val clothes = if (style == DungeonDemoSprites.MonsterStyle.ZOMBIE)
-            DungeonZombieSprites.randomClothes() else null
+            DungeonZombieSprites.randomClothes(seed?.let { kotlin.random.Random(it) } ?: kotlin.random.Random) else null
         return MonsterVisual(if (style.isVampire) Array(8) { DungeonVampireSprites.create(style, it) }
         else if (style.isHumanoid) Array(24) {
             if (style.isZombie) DungeonZombieSprites.create(style, it % 8, it / 8, clothes)
             else DungeonSkeletonSprites.create(style, it % 8, it / 8)
-        } else arrayOf(DungeonDemoSprites.rat(style))).also { monsterVisuals[index] = style to it }
+        } else arrayOf(DungeonDemoSprites.rat(style)), seed).also { monsterVisuals[index] = style to it }
     }
     fun drawMonster(c: Canvas, x: Float, y: Float, icy: Boolean, hurt: Boolean,
-        index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float) {
+        index: Int, style: DungeonDemoSprites.MonsterStyle, clock: Float, appearanceSeed: Int? = null) {
 
-        val visual = visualFor(style, index)
+        val visual = visualFor(style, index, appearanceSeed)
         if (style.isVampire) {
             val phase = clock + index * 317
             val pose = if (icy) 0 else (phase / if (style.isBat) 95 else 180).toInt() % 8

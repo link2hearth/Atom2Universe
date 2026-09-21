@@ -13,6 +13,25 @@ import kotlin.random.Random
 class DungeonGeneratorTest {
 
     @Test
+    fun outdoorPathsRemainConnectedAndEnclosed() {
+        for (packs in listOf(4, 8, RoguelikeGame.MAX_PACKS)) {
+            val (w, h) = RoguelikeGame.mapSize(packs)
+            repeat(100) { seed ->
+                val layout = DungeonGenerator.generate(w, h, Random(seed), outdoor = true)
+                val distance = DungeonGenerator.distances(layout.tiles, layout.start)
+                for (y in 0 until h) for (x in 0 until w) {
+                    if (x == 0 || y == 0 || x == w - 1 || y == h - 1)
+                        assertEquals(TileType.WALL, layout.tiles[y][x])
+                    else if (layout.tiles[y][x] != TileType.WALL)
+                        assertTrue("seed=$seed, unreachable ($x,$y)", distance[y][x] >= 0)
+                }
+                assertTrue(distance[layout.stairs.y][layout.stairs.x] > 0)
+                assertEquals(1, layout.tiles.sumOf { row -> row.count { it == TileType.STAIRS_DOWN } })
+            }
+        }
+    }
+
+    @Test
     fun everyFloorIsConnected() {
         val stats = StringBuilder()
         for (packs in listOf(4, 8, RoguelikeGame.MAX_PACKS)) {
