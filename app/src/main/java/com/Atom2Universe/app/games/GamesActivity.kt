@@ -136,6 +136,15 @@ class GamesActivity : BaseHubActivity() {
             artworkClass = com.Atom2Universe.app.games.roguelike.DungeonHubTileDrawable::class,
             showDescription = false
         ),
+        // Démonstration graphique temporaire, indépendante de la sauvegarde Donjon.
+        HubTile(
+            id = "roguelike_art_demo",
+            titleRes = R.string.dungeon_demo_title,
+            descriptionRes = R.string.dungeon_demo_description,
+            iconRes = android.R.drawable.ic_menu_gallery,
+            defaultColorRes = R.color.game_tile_roguelike,
+            activityClass = com.Atom2Universe.app.games.roguelike.demo.DungeonArtDemoActivity::class.java
+        ),
         // Arcade : casse-briques + shmup
         HubTile(
             id = "particules",

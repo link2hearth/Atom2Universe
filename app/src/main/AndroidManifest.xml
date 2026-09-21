@@ -335,6 +335,10 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".games.roguelike.demo.DungeonArtDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".games.roguelike.RoguelikeActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
