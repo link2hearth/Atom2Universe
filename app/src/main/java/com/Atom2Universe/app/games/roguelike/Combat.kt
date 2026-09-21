@@ -193,7 +193,6 @@ class Enemy(
     val frozen get() = frozenTime > 0 || thawing
 
     // ── États partagés du grimoire (voir [RelicEffect]) : ils perdent un tour à la fin de chacun de ses tours ──
-    var soakedTurns = 0
     var fracturedTurns = 0
     var weakenedTurns = 0
     /** Aveuglé : il attaque avec désavantage, comme la rage, mais sans la vitesse. */
@@ -213,8 +212,8 @@ object Encounters {
      * Tous les monstres, à tous les étages : relevés quand les bots ont été recalibrés sur un
      * vrai joueur (18/09/2026) — le donjon s'était révélé bien trop facile.
      */
-    const val HP_SCALE     = 1.25f
-    const val DAMAGE_SCALE = 1.25f
+    const val HP_SCALE     = 1.3f
+    const val DAMAGE_SCALE = 1.5f
 
     /**
      * L'étage où les courbes changent de régime. Jusque-là, PV et dégâts montent en ligne
@@ -290,12 +289,12 @@ object Encounters {
  * des **réactions** (voir [Reaction]) — pas de l'effet : une Pluie glacée est de la glace,
  * mais elle trempe au lieu de figer (voir [RelicEffect]).
  *
- * [PHYSICAL] et [ARCANE] sont « sans élément » : aucun monstre n'y est vulnérable ni
+ * [PHYSICAL] est « sans élément » : aucun monstre n'y est vulnérable ni
  * résistant, la valeur sûre contre un monstre qu'on ne connaît pas encore. Le physique brise
  * la glace (Bris), l'arcane ne réagit à rien. [HOLY], le sacré, est fait pour les
  * morts-vivants des Cryptes.
  */
-enum class Element { FIRE, ICE, LIGHTNING, POISON, HOLY, PHYSICAL, ARCANE }
+enum class Element { FIRE, ICE, LIGHTNING, POISON, HOLY, PHYSICAL }
 
 /**
  * Qui un sort touche. [CHAIN] : la cible, puis les autres, un peu moins fort à chaque rebond.
@@ -322,8 +321,6 @@ enum class RelicEffect(val hits: Boolean = true) {
     PARALYZE,
     /** Une dose de poison de plus (jusqu'à [Relic.POISON_MAX_DOSES]) ; relancer renouvelle la durée. */
     POISON,
-    /** Trempé : −[Combat.SOAKED_SAVE_MALUS] aux jets contre le contrôle, et l'eau réagit au feu, à la foudre, au gel. Éteint la brûlure. */
-    SOAK,
     /** Fracturé : la cible prend [Combat.FRACTURE_MULT] fois **tous** les dégâts (la Vulnérabilité de *Slay the Spire*). */
     FRACTURE,
     /** Marqué jusqu'à sa mort : exposé au Coup mortel, critiques plus lourds. Mort, la marque saute sur un autre. Une seule à la fois. */
@@ -359,7 +356,9 @@ enum class RelicEffect(val hits: Boolean = true) {
     /** Hâte : la jauge du héros se remplit plus vite pendant ses prochains tours. */
     HASTE(hits = false),
     /** Lenteur : jet ; raté, la jauge de la cible se remplit deux fois moins vite pendant ses prochains tours. Un contrôle. */
-    SLOW(hits = false),
+    SLOW,
+    /** Ponction vitale : dégâts, et le héros récupère [Relic.DRAIN_SHARE] de ce qu'il a infligé. */
+    DRAIN,
     /** Sablier : les prochaines attaques ennemies arrivent plus lentement, la fenêtre de parade s'élargit. */
     HOURGLASS(hits = false),
 }
@@ -391,41 +390,40 @@ enum class Relic(
     val color: Int,
     val iconRow: Int, val iconCol: Int,
 ) : Labeled {
-    // Les quatre classiques
-    FIREBALL (R.string.roguelike_relic_fireball,  R.string.roguelike_relic_fireball_desc,  Element.FIRE,      StatType.INT, RelicTarget.ONE, RelicEffect.BURN,     3, 2, 0xFFB5451B.toInt(), 113, 6),
-    ICE_SHARD(R.string.roguelike_relic_ice_shard, R.string.roguelike_relic_ice_shard_desc, Element.ICE,       StatType.INT, RelicTarget.ONE, RelicEffect.FREEZE,   3, 1, 0xFF2F7FB5.toInt(), 113, 8),
-    LIGHTNING(R.string.roguelike_relic_lightning, R.string.roguelike_relic_lightning_desc, Element.LIGHTNING, StatType.INT, RelicTarget.ONE, RelicEffect.PARALYZE, 5, 3, 0xFF9C7A12.toInt(), 132, 5),
-    VENOM    (R.string.roguelike_relic_venom,     R.string.roguelike_relic_venom_desc,     Element.POISON,    StatType.DEX, RelicTarget.ONE, RelicEffect.POISON,   3, 4, 0xFF3E8E3A.toInt(), 133, 3),
-    // Force
-    SUNDER    (R.string.roguelike_relic_sunder,     R.string.roguelike_relic_sunder_desc,     Element.PHYSICAL, StatType.STR, RelicTarget.ONE, RelicEffect.FRACTURE, 3, 3, 0xFF6D4C41.toInt(), 132, 9),
-    WAR_CRY   (R.string.roguelike_relic_war_cry,    R.string.roguelike_relic_war_cry_desc,    Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.WARCRY,   5, 2, 0xFF8E2424.toInt(), 132, 0),
-    EARTHQUAKE(R.string.roguelike_relic_earthquake, R.string.roguelike_relic_earthquake_desc, Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.NONE,     4, 0, 0xFF8D6E3F.toInt(), 133, 0),
-    REND      (R.string.roguelike_relic_rend,       R.string.roguelike_relic_rend_desc,       Element.PHYSICAL, StatType.STR, RelicTarget.ONE, RelicEffect.BLEED,    3, 4, 0xFFA12A2A.toInt(), 132, 4),
-    WHIRLWIND (R.string.roguelike_relic_whirlwind,  R.string.roguelike_relic_whirlwind_desc,  Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.NONE,     4, 0, 0xFF9A6A2E.toInt(), 133, 9),
-    // Dextérité
-    HUNTERS_MARK   (R.string.roguelike_relic_hunters_mark,    R.string.roguelike_relic_hunters_mark_desc,    Element.PHYSICAL, StatType.DEX, RelicTarget.ONE,  RelicEffect.MARK,           3, 0, 0xFF9E3B3B.toInt(), 132, 11),
-    POISONED_BLADES(R.string.roguelike_relic_poisoned_blades, R.string.roguelike_relic_poisoned_blades_desc, Element.POISON,   StatType.DEX, RelicTarget.SELF, RelicEffect.ENCHANT_POISON, 5, 3, 0xFF2E7D32.toInt(), 133, 5),
-    FAN_OF_KNIVES  (R.string.roguelike_relic_fan_of_knives,   R.string.roguelike_relic_fan_of_knives_desc,   Element.PHYSICAL, StatType.DEX, RelicTarget.ALL,  RelicEffect.BLEED_ON_CRIT,  3, 3, 0xFF37627A.toInt(), 134, 10),
-    SMOKE_BOMB     (R.string.roguelike_relic_smoke_bomb,      R.string.roguelike_relic_smoke_bomb_desc,      Element.ARCANE,   StatType.DEX, RelicTarget.ALL,  RelicEffect.SMOKE,          5, 2, 0xFF5B5B66.toInt(), 132, 3),
-    ACID_FLASK     (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,   StatType.DEX, RelicTarget.ONE,  RelicEffect.ACID,           3, 2, 0xFF5E8C1E.toInt(), 133, 14),
-    // Intelligence
-    FREEZING_RAIN  (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.INT, RelicTarget.ALL,      RelicEffect.SOAK,        4, 3, 0xFF1E6F8C.toInt(), 132, 6),
-    CHAIN_LIGHTNING(R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.INT, RelicTarget.CHAIN,    RelicEffect.NONE,        4, 0, 0xFF7B6A12.toInt(), 132, 12),
-    CRYSTALLIZE    (R.string.roguelike_relic_crystallize,     R.string.roguelike_relic_crystallize_desc,     Element.ICE,       StatType.INT, RelicTarget.ONE,      RelicEffect.CRYSTALLIZE, 3, 0, 0xFF4A8FC0.toInt(), 134, 1),
-    METEOR         (R.string.roguelike_relic_meteor,          R.string.roguelike_relic_meteor_desc,          Element.FIRE,      StatType.INT, RelicTarget.ALL,      RelicEffect.DELAYED,     7, 2, 0xFFC0501E.toInt(), 113, 0),
-    MAGIC_MISSILE  (R.string.roguelike_relic_magic_missile,   R.string.roguelike_relic_magic_missile_desc,   Element.ARCANE,    StatType.INT, RelicTarget.MISSILES, RelicEffect.NONE,        1, 0, 0xFF7A4FA8.toInt(), 132, 8),
-    ARCANE_SHIELD  (R.string.roguelike_relic_arcane_shield,   R.string.roguelike_relic_arcane_shield_desc,   Element.ARCANE,    StatType.INT, RelicTarget.SELF,     RelicEffect.BARRIER,     4, 0, 0xFF3F5FA8.toInt(), 134, 3),
-    // Sagesse
-    HOLY_LIGHT  (R.string.roguelike_relic_holy_light,   R.string.roguelike_relic_holy_light_desc,   Element.HOLY,   StatType.WIS, RelicTarget.ONE,  RelicEffect.BLIND, 3, 1, 0xFFB09A3A.toInt(), 113, 2),
-    REGENERATION(R.string.roguelike_relic_regeneration, R.string.roguelike_relic_regeneration_desc, Element.HOLY,   StatType.WIS, RelicTarget.SELF, RelicEffect.REGEN, 5, 3, 0xFF3F8F4F.toInt(), 133, 3),
-    HEAL        (R.string.roguelike_relic_heal,         R.string.roguelike_relic_heal_desc,         Element.HOLY,   StatType.WIS, RelicTarget.SELF, RelicEffect.HEAL,  6, 0, 0xFF43A047.toInt(), 17, 0),
-    // Constitution, charisme
-    STONESKIN (R.string.roguelike_relic_stoneskin,  R.string.roguelike_relic_stoneskin_desc,  Element.PHYSICAL, StatType.CON, RelicTarget.SELF, RelicEffect.STONESKIN,  5, 2, 0xFF6E6E6E.toInt(), 132, 2),
-    CHARM     (R.string.roguelike_relic_charm,      R.string.roguelike_relic_charm_desc,      Element.ARCANE,   StatType.CHA, RelicTarget.ONE,  RelicEffect.CHARM,      5, 0, 0xFFB0527A.toInt(), 132, 15),
-    // Le temps (étape 5 de la jauge) — icônes provisoires
-    HASTE     (R.string.roguelike_relic_haste,      R.string.roguelike_relic_haste_desc,      Element.ARCANE,   StatType.DEX, RelicTarget.SELF, RelicEffect.HASTE,      5, 3, 0xFF26A69A.toInt(), 132, 7),
-    SLOW      (R.string.roguelike_relic_slow,       R.string.roguelike_relic_slow_desc,       Element.ARCANE,   StatType.INT, RelicTarget.ONE,  RelicEffect.SLOW,       4, 3, 0xFF5C6BC0.toInt(), 132, 13),
-    HOURGLASS (R.string.roguelike_relic_hourglass,  R.string.roguelike_relic_hourglass_desc,  Element.ARCANE,   StatType.WIS, RelicTarget.SELF, RelicEffect.HOURGLASS,  5, 3, 0xFFC9A227.toInt(), 132, 14);
+    // Une relique par élément et par archétype (refonte du 20/09/2026, voir DONJON.md, « Refonte du grimoire »).
+    // Guerrier (CON)
+    FER_ROUGE       (R.string.roguelike_relic_fer_rouge,       R.string.roguelike_relic_fer_rouge_desc,       Element.FIRE,      StatType.CON, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
+    STONESKIN       (R.string.roguelike_relic_stoneskin,       R.string.roguelike_relic_stoneskin_desc,       Element.ICE,       StatType.CON, RelicTarget.SELF,     RelicEffect.STONESKIN,      3, 2, 0xFF5F8FA8.toInt(), 132, 2),
+    MARTEAU_FOUDRE  (R.string.roguelike_relic_marteau_foudre,  R.string.roguelike_relic_marteau_foudre_desc,  Element.LIGHTNING, StatType.CON, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
+    POISONED_BLADES (R.string.roguelike_relic_poisoned_blades, R.string.roguelike_relic_poisoned_blades_desc, Element.POISON,    StatType.CON, RelicTarget.SELF,     RelicEffect.ENCHANT_POISON, 3, 3, 0xFF2E7D32.toInt(), 133, 5),
+    WAR_CRY         (R.string.roguelike_relic_war_cry,         R.string.roguelike_relic_war_cry_desc,         Element.PHYSICAL,  StatType.CON, RelicTarget.ALL,      RelicEffect.WARCRY,         3, 2, 0xFF8E2424.toInt(), 132, 0),
+    // Voleur (DEX)
+    COCKTAIL        (R.string.roguelike_relic_cocktail,        R.string.roguelike_relic_cocktail_desc,        Element.FIRE,      StatType.DEX, RelicTarget.ALL,      RelicEffect.BURN,           3, 2, 0xFFC0501E.toInt(), 113, 0),
+    CRYSTALLIZE     (R.string.roguelike_relic_crystallize,     R.string.roguelike_relic_crystallize_desc,     Element.ICE,       StatType.DEX, RelicTarget.ONE,      RelicEffect.CRYSTALLIZE,    3, 0, 0xFF4A8FC0.toInt(), 134, 1),
+    HASTE           (R.string.roguelike_relic_haste,           R.string.roguelike_relic_haste_desc,           Element.LIGHTNING, StatType.DEX, RelicTarget.SELF,     RelicEffect.HASTE,          3, 3, 0xFF26A69A.toInt(), 132, 7),
+    VENOM           (R.string.roguelike_relic_venom,           R.string.roguelike_relic_venom_desc,           Element.POISON,    StatType.DEX, RelicTarget.ONE,      RelicEffect.POISON,         3, 4, 0xFF3E8E3A.toInt(), 133, 3),
+    HUNTERS_MARK    (R.string.roguelike_relic_hunters_mark,    R.string.roguelike_relic_hunters_mark_desc,    Element.PHYSICAL,  StatType.DEX, RelicTarget.ONE,      RelicEffect.MARK,           3, 0, 0xFF9E3B3B.toInt(), 132, 11),
+    // Vagabond (FOR)
+    LANTERNE        (R.string.roguelike_relic_lanterne,        R.string.roguelike_relic_lanterne_desc,        Element.FIRE,      StatType.STR, RelicTarget.ONE,      RelicEffect.BURN,           3, 4, 0xFFD9822B.toInt(), 113, 6),
+    SLOW            (R.string.roguelike_relic_slow,            R.string.roguelike_relic_slow_desc,            Element.ICE,       StatType.STR, RelicTarget.ONE,      RelicEffect.SLOW,           3, 3, 0xFF5C6BC0.toInt(), 132, 13),
+    CHAIN_LIGHTNING (R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.STR, RelicTarget.CHAIN,     RelicEffect.NONE,           3, 0, 0xFF7B6A12.toInt(), 132, 12),
+    CHAMPIGNON      (R.string.roguelike_relic_champignon,      R.string.roguelike_relic_champignon_desc,      Element.POISON,    StatType.STR, RelicTarget.ONE,      RelicEffect.POISON,         3, 6, 0xFF6B8E23.toInt(), 133, 14),
+    WHIRLWIND       (R.string.roguelike_relic_whirlwind,       R.string.roguelike_relic_whirlwind_desc,       Element.PHYSICAL,  StatType.STR, RelicTarget.ALL,      RelicEffect.NONE,           3, 0, 0xFF9A6A2E.toInt(), 133, 9),
+    // Mage (SAG)
+    FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.WIS, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
+    FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.WIS, RelicTarget.ALL,      RelicEffect.FREEZE,         3, 1, 0xFF1E6F8C.toInt(), 132, 6),
+    LIGHTNING       (R.string.roguelike_relic_lightning,       R.string.roguelike_relic_lightning_desc,       Element.LIGHTNING, StatType.WIS, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
+    ACID_FLASK      (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,    StatType.WIS, RelicTarget.ONE,      RelicEffect.ACID,           3, 2, 0xFF5E8C1E.toInt(), 133, 14),
+    HOLY_LIGHT      (R.string.roguelike_relic_holy_light,      R.string.roguelike_relic_holy_light_desc,      Element.HOLY,      StatType.WIS, RelicTarget.ONE,      RelicEffect.BLIND,          3, 1, 0xFFB09A3A.toInt(), 113, 2),
+    // Nécromancien (INT)
+    METEOR          (R.string.roguelike_relic_meteor,          R.string.roguelike_relic_meteor_desc,          Element.FIRE,      StatType.INT, RelicTarget.ALL,      RelicEffect.DELAYED,        3, 2, 0xFFC0501E.toInt(), 113, 0),
+    ICE_SHARD       (R.string.roguelike_relic_ice_shard,       R.string.roguelike_relic_ice_shard_desc,       Element.ICE,       StatType.INT, RelicTarget.ONE,      RelicEffect.FREEZE,         3, 1, 0xFF2F7FB5.toInt(), 113, 8),
+    MAGIC_MISSILE   (R.string.roguelike_relic_magic_missile,   R.string.roguelike_relic_magic_missile_desc,   Element.LIGHTNING, StatType.INT, RelicTarget.MISSILES, RelicEffect.NONE,           3, 0, 0xFFB39A1E.toInt(), 132, 8),
+    PESTE           (R.string.roguelike_relic_peste,           R.string.roguelike_relic_peste_desc,           Element.POISON,    StatType.INT, RelicTarget.ALL,      RelicEffect.POISON,         3, 3, 0xFF3E8E3A.toInt(), 133, 3),
+    PONCTION        (R.string.roguelike_relic_ponction,        R.string.roguelike_relic_ponction_desc,        Element.PHYSICAL,  StatType.INT, RelicTarget.ONE,      RelicEffect.DRAIN,          3, 0, 0xFF7E2F4F.toInt(), 132, 4),
+    // Neutres (hors de la grille : le Soin remplace la potion, le Sablier aide au timing)
+    HEAL            (R.string.roguelike_relic_heal,            R.string.roguelike_relic_heal_desc,            Element.HOLY,      StatType.WIS, RelicTarget.SELF,     RelicEffect.HEAL,           3, 0, 0xFF43A047.toInt(), 17, 0),
+    HOURGLASS       (R.string.roguelike_relic_hourglass,       R.string.roguelike_relic_hourglass_desc,       Element.PHYSICAL,  StatType.WIS, RelicTarget.SELF,     RelicEffect.HOURGLASS,      3, 3, 0xFFC9A227.toInt(), 132, 14);
 
     /** Un sort qui ne frappe pas : il ne fait que poser son effet. */
     val hits get() = effect.hits
@@ -434,7 +432,7 @@ enum class Relic(
      * Un sort qui est un **coup d'arme** (Brise-armure, Tourbillon) : il porte le poison des
      * Lames empoisonnées, sur chaque cible, pour une seule charge.
      */
-    val weaponStrike get() = this == SUNDER || this == WHIRLWIND
+    val weaponStrike get() = this == WHIRLWIND
 
     /** Dégâts directs par cible, en coups d'épée de référence (voir [RelicBudget]). */
     val minCoef get() = RelicBudget.hitCoef(this) * RelicBudget.SPREAD_MIN
@@ -452,9 +450,11 @@ enum class Relic(
         const val ENCHANT_DOSE_TURNS = 4
         /** Coups d'arme renforcés par le Cri de guerre. */
         const val WARCRY_ATTACKS = 2
-        /** Chaîne d'éclairs : chaque rebond perd 30 %… sauf en partant d'une cible trempée. */
+        /** Chaîne d'éclairs : chaque rebond perd 30 %. */
         const val CHAIN_FALLOFF = 0.7f
         const val MISSILE_COUNT = 3
+        /** Ponction vitale : la part des dégâts infligés que le héros récupère. */
+        const val DRAIN_SHARE = 0.5f
         /** Cristallisation contre un figé. */
         const val CRYSTAL_MULT = 3f
         /** Bouclier arcanique : la barrière, en part des PV max (fixe, la caractéristique ne la grossit pas). */
@@ -506,45 +506,79 @@ enum class Relic(
 }
 
 /**
- * Les **réactions** : un sort qui touche une cible **déjà** dans un certain état fait quelque
- * chose en plus. Elles marchent pour tout le monde, sans équipement : c'est le savoir du
- * joueur qui paie. Rien ne les annonce, on les découvre en jouant (comme les affinités).
+ * Les **réactions** : un coup qui touche une cible **déjà** dans l'état d'un **autre** élément fait
+ * quelque chose en plus. Chaque élément laisse un état : le feu **brûle**, la glace **fige**, la
+ * foudre **paralyse**, le poison **empoisonne**, le physique/sacré **expose** (fracturé, marqué
+ * ou aveuglé). Il y a une réaction pour chaque paire d'éléments, dans un sens ou dans l'autre
+ * (voir DONJON.md, « Refonte du grimoire »).
  *
- * Une réaction se lit sur l'état **d'avant** le sort : une Boule de feu sur une cible
- * trempée fait de la vapeur, elle ne la sèche pas pour la brûler ensuite. Un monstre
- * immunisé à l'élément ne réagit pas.
+ * Elles marchent pour tout le monde : c'est le savoir du joueur qui paie. Rien ne les annonce, on les
+ * découvre en jouant. Une réaction se lit sur l'état **d'avant** le coup, et un monstre immunisé à
+ * l'élément ne réagit pas. L'attaque de base porte l'élément de l'archétype (voir
+ * [Hero.attackElement]) : elle déclenche aussi les réactions, mais avec la moitié de leur bonus.
  *
  * Inspirations : les réactions de *Genshin Impact*, les surfaces de *Divinity: Original Sin 2*.
  */
 enum class Reaction(@StringRes override val labelRes: Int, val color: Int) : Labeled {
+    /** Feu sur un figé, ou glace sur un brûlé : ×[THERMAL_MULT], et les deux états disparaissent. */
+    THERMAL_SHOCK(R.string.roguelike_reaction_thermal_shock, 0xFFFF8A65.toInt()),
     /** Feu sur un empoisonné : toutes les doses restantes tombent d'un coup, le poison est consommé. */
     EXPLOSION    (R.string.roguelike_reaction_explosion,     0xFFFFB74D.toInt()),
-    /** Feu sur un figé : le gel fond, le coup fait ×[MELT_MULT]. On échange le contrôle contre un gros coup. */
-    MELT         (R.string.roguelike_reaction_melt,          0xFFFF8A65.toInt()),
-    /** Feu sur un trempé : pas de brûlure, mais un brouillard qui aveugle **tous** les ennemis. */
-    STEAM        (R.string.roguelike_reaction_steam,         0xFFCFD8DC.toInt()),
-    /** Foudre sur un trempé : ×[ELECTRO_MULT], et la paralysie se joue au désavantage. L'eau reste. */
-    ELECTROCUTION(R.string.roguelike_reaction_electrocution, 0xFFFFF176.toInt()),
-    /** Gel sur un trempé : l'eau gèle, le gel dure [FROST_EXTRA_TURNS] tour de plus. */
-    FROST        (R.string.roguelike_reaction_frost,         0xFFB3E5FC.toInt()),
-    /**
-     * Sort physique sur un figé : ×[SHATTER_MULT], le gel se brise. Seulement les **sorts**
-     * physiques, pas l'attaque de base : sinon « glace puis épée » doublerait la valeur de
-     * l'Éclat de glace à chaque lancer, gratuitement.
-     */
+    /** Foudre sur un brûlé : ×[PLASMA_MULT], et la brûlure dure [PLASMA_BURN_TURNS] tours de plus. */
+    PLASMA       (R.string.roguelike_reaction_plasma,        0xFFFFD54F.toInt()),
+    /** Feu sur un exposé : ×[CALCINATION_MULT]. */
+    CALCINATION  (R.string.roguelike_reaction_calcination,   0xFFFF7043.toInt()),
+    /** Feu sur un paralysé : ×[SHORT_CIRCUIT_MULT], et la paralysie disparaît. */
+    SHORT_CIRCUIT(R.string.roguelike_reaction_short_circuit, 0xFFFFCA28.toInt()),
+    /** Glace sur un paralysé : il gèle aussitôt [RIGIDITY_TURNS] tour, sans jet, et la paralysie disparaît. */
+    RIGIDITY     (R.string.roguelike_reaction_rigidity,      0xFFB3E5FC.toInt()),
+    /** Glace sur un empoisonné : le poison restant devient un ralentissement de même durée. */
+    POISON_ICE   (R.string.roguelike_reaction_poison_ice,    0xFF81D4FA.toInt()),
+    /** Glace sur un exposé : il gèle aussitôt (sans jet) et son exposition dure [EXPOSED_EXTRA] tour de plus. */
+    FROZEN_ARMOR (R.string.roguelike_reaction_frozen_armor,  0xFF90CAF9.toInt()),
+    /** Foudre sur un empoisonné : paralysie garantie [CONVULSION_TURNS] tour, et les doses tombent une fois. */
+    CONVULSIONS  (R.string.roguelike_reaction_convulsions,   0xFFDCE775.toInt()),
+    /** Foudre sur un figé : le gel devient une paralysie de [ICE_SHOCK_TURNS] tours. */
+    ICE_SHOCK    (R.string.roguelike_reaction_ice_shock,     0xFFE1F5FE.toInt()),
+    /** Foudre sur un exposé : l'éclair saute sur les autres ennemis pour [ROD_SHARE] du coup. */
+    LIGHTNING_ROD(R.string.roguelike_reaction_lightning_rod, 0xFFFFF176.toInt()),
+    /** Poison sur un brûlé : la brûlure devient du poison, une dose de plus égale à celle posée. */
+    SPARK        (R.string.roguelike_reaction_spark,         0xFFAED581.toInt()),
+    /** Poison sur un figé : une dose de plus tout de suite, le gel reste. */
+    FROSTBITE    (R.string.roguelike_reaction_frostbite,     0xFF80DEEA.toInt()),
+    /** Poison sur un paralysé : la paralysie dure [NEUROTOXIN_EXTRA] tour de plus. */
+    NEUROTOXIN   (R.string.roguelike_reaction_neurotoxin,    0xFF9CCC65.toInt()),
+    /** Poison sur un exposé : une dose de plus, et l'exposition dure [EXPOSED_EXTRA] tour de plus. */
+    INFECTION    (R.string.roguelike_reaction_infection,     0xFF7CB342.toInt()),
+    /** Physique/sacré sur un figé : ×[SHATTER_MULT], le gel se brise. */
     SHATTER      (R.string.roguelike_reaction_shatter,       0xFFE1F5FE.toInt()),
-    /** Feu sur un saignant : la plaie est cautérisée (plus de saignement), mais le coup fait ×[CAUTERIZE_MULT]. */
-    CAUTERIZE    (R.string.roguelike_reaction_cauterize,     0xFFFF7043.toInt()),
-    /** Sacré sur un empoisonné : le poison est purifié en lumière, ses doses restantes font des dégâts sacrés (affinité sacrée). */
-    PURIFY       (R.string.roguelike_reaction_purify,        0xFFFFF59D.toInt());
+    /** Physique/sacré sur un paralysé : critique garanti. */
+    DEATHBLOW    (R.string.roguelike_reaction_deathblow,     0xFFEF9A9A.toInt()),
+    /** Physique/sacré sur un empoisonné : le poison est nettoyé, le héros est **purifié** (armure et régénération). */
+    PURIFY       (R.string.roguelike_reaction_purify,        0xFFFFF59D.toInt()),
+    /** Physique/sacré sur un brûlé : la brûlure s'éteint et soigne le héros de [HOLY_FIRE_SHARE] de ce qu'elle aurait fait. */
+    HOLY_FIRE    (R.string.roguelike_reaction_holy_fire,     0xFFFFE082.toInt());
 
     companion object {
-        const val MELT_MULT    = 1.5f
-        const val ELECTRO_MULT = 1.5f
+        const val THERMAL_MULT = 1.5f
+        const val PLASMA_MULT = 1.5f
+        const val CALCINATION_MULT = 1.5f
+        const val SHORT_CIRCUIT_MULT = 1.25f
         const val SHATTER_MULT = 2f
-        const val CAUTERIZE_MULT = 1.5f
-        const val STEAM_BLIND_TURNS = 1
-        const val FROST_EXTRA_TURNS = 1
+        const val PLASMA_BURN_TURNS = 2
+        const val RIGIDITY_TURNS = 1
+        const val ICE_SHOCK_TURNS = 2
+        const val CONVULSION_TURNS = 1
+        const val NEUROTOXIN_EXTRA = 1
+        const val EXPOSED_EXTRA = 1
+        const val ROD_SHARE = 0.5f
+        const val HOLY_FIRE_SHARE = 0.5f
+        /** Purifié : durée, armure, et régénération (part des PV max par tour et par dose nettoyée). */
+        const val PURIFIED_TURNS = 3
+        const val PURIFIED_ARMOR = 1.5f
+        const val PURIFIED_REGEN_SHARE = 0.03f
+        /** Ce qu'il reste d'un bonus quand la réaction vient de l'attaque de base (multiplicateurs, doses, dégâts). */
+        const val BASE_ATTACK_PART = 0.5f
     }
 }
 
@@ -564,28 +598,12 @@ enum class Resonance(
     val attribute: StatType,
 ) : Labeled {
     /** L'Explosion met une dose de Venin à tous les autres ennemis. */
-    ALCHEMY      (R.string.roguelike_resonance_alchemy,       R.string.roguelike_resonance_alchemy_desc,       Relic.FIREBALL,        Relic.VENOM,           StatType.INT),
-    /** La Vapeur aveugle un tour de plus. */
-    FIRESTORM    (R.string.roguelike_resonance_firestorm,     R.string.roguelike_resonance_firestorm_desc,     Relic.FIREBALL,        Relic.FREEZING_RAIN,   StatType.INT),
-    /** La Chaîne d'éclairs paralyse (1 tour) chaque ennemi trempé qu'elle électrocute. */
-    STORM        (R.string.roguelike_resonance_storm,         R.string.roguelike_resonance_storm_desc,         Relic.FREEZING_RAIN,   Relic.CHAIN_LIGHTNING, StatType.INT),
-    /** Le Séisme peut figer (1 tour) ceux qu'il ne brise pas. */
-    AVALANCHE    (R.string.roguelike_resonance_avalanche,     R.string.roguelike_resonance_avalanche_desc,     Relic.ICE_SHARD,       Relic.EARTHQUAKE,      StatType.STR),
-    /** Le Brise-armure frappe aussi tous les ennemis affaiblis. */
-    BATTERING_RAM(R.string.roguelike_resonance_battering_ram, R.string.roguelike_resonance_battering_ram_desc, Relic.WAR_CRY,         Relic.SUNDER,          StatType.STR),
+    ALCHEMY      (R.string.roguelike_resonance_alchemy,       R.string.roguelike_resonance_alchemy_desc,       Relic.FIREBALL,        Relic.VENOM,           StatType.WIS),
     /** La Cristallisation ne brise plus le gel. */
     ABSOLUTE_ZERO(R.string.roguelike_resonance_absolute_zero, R.string.roguelike_resonance_absolute_zero_desc, Relic.ICE_SHARD,       Relic.CRYSTALLIZE,     StatType.INT),
     /** 5 doses de poison au plus au lieu de 3. */
-    CORROSION    (R.string.roguelike_resonance_corrosion,     R.string.roguelike_resonance_corrosion_desc,     Relic.POISONED_BLADES, Relic.ACID_FLASK,      StatType.DEX),
-    /** Chaque dague qui touche la cible marquée est un critique. */
-    PACK         (R.string.roguelike_resonance_pack,          R.string.roguelike_resonance_pack_desc,          Relic.HUNTERS_MARK,    Relic.FAN_OF_KNIVES,   StatType.DEX),
-    /** Le Tourbillon fait saigner tout le monde. */
-    HEMORRHAGE   (R.string.roguelike_resonance_hemorrhage,    R.string.roguelike_resonance_hemorrhage_desc,    Relic.REND,            Relic.WHIRLWIND,       StatType.CON),
-    /** Chaque tour de Régénération brûle aussi les morts-vivants (dégâts sacrés, du montant soigné). */
-    DAWN         (R.string.roguelike_resonance_dawn,          R.string.roguelike_resonance_dawn_desc,          Relic.HOLY_LIGHT,      Relic.REGENERATION,    StatType.WIS),
-    /** Un ennemi aveuglé ne résiste pas au Charme. */
-    DISCORD      (R.string.roguelike_resonance_discord,       R.string.roguelike_resonance_discord_desc,       Relic.CHARM,           Relic.SMOKE_BOMB,      StatType.CHA),
-    /** Les épines de la Peau de pierre renvoient le double. */
+    CORROSION    (R.string.roguelike_resonance_corrosion,     R.string.roguelike_resonance_corrosion_desc,     Relic.POISONED_BLADES, Relic.ACID_FLASK,      StatType.CON),
+    /** Les épines de la Peau de givre renvoient le double. */
     RAMPART      (R.string.roguelike_resonance_rampart,       R.string.roguelike_resonance_rampart_desc,       Relic.STONESKIN,       Relic.WAR_CRY,         StatType.CON);
 
     companion object {
@@ -631,7 +649,6 @@ object RelicBudget {
     /** Un gel prend une fois sur deux contre un monstre normal, à équipement de l'étage. */
     const val REF_LAND_CHANCE = 0.5f
     const val POISON_DOT_SHARE = 0.2f
-    const val SOAK_TURN_VALUE = 0.10f
     const val FRACTURE_TURN_VALUE = 0.06f
     const val MARK_VALUE = 0.5f
     const val WEAKEN_TURN_VALUE = 0.15f
@@ -647,6 +664,10 @@ object RelicBudget {
     const val ACID_DOSE_SHARE = 0.1f
     /** Cristallisation : la part du coup normal ; le reste paie le ×[Relic.CRYSTAL_MULT] contre un figé. */
     const val CRYSTAL_HIT_SHARE = 0.7f
+    /** Verglas : la part de la valeur qui paie le ralentissement ; le reste est le coup. */
+    const val SLOW_EFFECT_SHARE = 0.5f
+    /** Ponction vitale : la part de la valeur qui paie le soin ; le reste est le coup. */
+    const val DRAIN_EFFECT_SHARE = 0.25f
     /** Météore : ce qu'on gagne à attendre (il peut tomber sur un combat déjà fini). */
     const val DELAY_PREMIUM = 0.3f
     /** Taille moyenne d'un groupe à partir de l'étage 5 (1 : 50 %, 2 : 35 %, 3 : 15 %, voir [Encounters]). */
@@ -679,7 +700,6 @@ object RelicBudget {
         RelicEffect.FREEZE    -> FREEZE_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
         RelicEffect.PARALYZE  -> PARALYSIS_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
         RelicEffect.POISON    -> share(r) * POISON_DOT_SHARE
-        RelicEffect.SOAK      -> SOAK_TURN_VALUE * r.effectTurns
         RelicEffect.FRACTURE  -> FRACTURE_TURN_VALUE * r.effectTurns
         RelicEffect.MARK      -> MARK_VALUE
         RelicEffect.WARCRY    -> WEAKEN_TURN_VALUE * r.effectTurns
@@ -689,9 +709,11 @@ object RelicBudget {
         RelicEffect.CRYSTALLIZE -> share(r) * (1f - CRYSTAL_HIT_SHARE)
         RelicEffect.DELAYED   -> -share(r) * DELAY_PREMIUM
         RelicEffect.BLIND     -> BLIND_TURN_VALUE * r.effectTurns
+        RelicEffect.SLOW      -> share(r) * SLOW_EFFECT_SHARE
+        RelicEffect.DRAIN     -> share(r) * DRAIN_EFFECT_SHARE
         RelicEffect.ENCHANT_POISON, RelicEffect.SMOKE, RelicEffect.BARRIER,
         RelicEffect.REGEN, RelicEffect.HEAL, RelicEffect.STONESKIN, RelicEffect.CHARM,
-        RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> share(r)
+        RelicEffect.HASTE, RelicEffect.HOURGLASS -> share(r)
     }
 
     /** Coup direct moyen sur chaque cible, en coups d'épée. */
@@ -857,14 +879,17 @@ class Combat(
         /** Coup mortel sur une cible exposée : critique garanti, et ce bonus au multiplicateur. */
         const val DEADLY_CRIT_BONUS = 1f
         const val MIRROR_IMAGES = 3
+        /** Soin en part des PV max à chaque tour du mage tant qu'un double est debout. */
+        const val MIRROR_REGEN_SHARE = 0.04f
         /** Vagabond : l'Enchaînement frappe deux fois ; une roulade parfaite relève le prochain coup de cette part. */
         const val CHAIN_HITS = 2
         const val ROLL_BONUS = 0.5f
-        /** Nécromancien : pantins au départ, PV d'un pantin (part des PV max du héros), part des coups qu'il garde, écho. */
+        /** Nécromancien : nombre de pantins invoqués, PV d'un pantin, part des coups gardée par le héros, écho. */
         const val PUPPETS = 2
         const val PUPPET_HP_SHARE = 0.15f
         const val PUPPET_SELF_SHARE = 0.60f
         const val ECHO_SHARE = 0.25f
+        const val PUPPET_SUMMON_HIT_SHARE = 0.40f
         const val ECHO_GOOD_FACTOR = 0.5f
         /** L'arc du voleur : une cible sous cette part de ses PV est exposée (au lieu de [DEADLY_HP_THRESHOLD]). */
         const val BOW_EXPOSE_THRESHOLD = 0.60f
@@ -878,10 +903,10 @@ class Combat(
         const val PUPPET_PARRY_HEAL = 0.5f
 
         // Les états partagés (voir [RelicEffect])
-        /** Trempé : ce malus à ses jets contre le contrôle. */
-        const val SOAKED_SAVE_MALUS = 3
         /** Fracturé : il prend ce multiple de tous les dégâts. */
         const val FRACTURE_MULT = 1.25f
+        /** Coup de grâce porté par l'attaque de base : un critique plus probable, pas garanti. */
+        const val DEATHBLOW_BASE_CRIT = 0.3f
         /** Affaibli : ses coups font ce multiple. */
         const val WEAKEN_MULT = 0.7f
         /** Gelé : engourdi, ses coups font ce multiple (cumulé avec l'affaiblissement). */
@@ -946,6 +971,8 @@ class Combat(
     private var regenAmount = 0
     /** Peau de pierre : armure doublée et épines. */
     var stoneskinTurns = 0
+    /** Purifié (réaction Purification) : tours restants, l'armure monte. */
+    var purifiedTurns = 0
         private set
     /** Hâte : tours du héros qui restent à vitesse ×[Relic.HASTE_SPEED]. */
     var hasteTurns = 0
@@ -988,11 +1015,6 @@ class Combat(
 
     init {
         hero.floor = floor
-        if (hero.archetype == Archetype.NECROMANCER) {
-            val count = (if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS) +
-                if (hero.classOffhand(Archetype.NECROMANCER)) GRIMOIRE_PUPPETS else 0
-            repeat(count) { puppetHpList += puppetMaxHp }
-        }
         advance()
     }
 
@@ -1046,7 +1068,17 @@ class Combat(
         if (empoweredAttacks > 0) { empoweredAttacks--; raw *= 1f + empowerBonus }
         val sneak = ambushReady
         ambushReady = false
-        val result = hit(target, raw, timing, forceCrit = forceCrit || sneak, critBonus = critBonus)
+        // L'élément de l'archétype (bonne arme, main gauche de classe) : l'attaque déclenche les réactions, à moitié
+        val el = hero.attackElement
+        val foe = enemies[target]
+        val rx = if (el == null || !foe.alive || foe.type.affinity(el) == Affinity.IMMUNE) null else react(el, target, Reaction.BASE_ATTACK_PART)
+        if (rx != null) raw *= rx.mult
+        var result = hit(target, raw, timing, forceCrit = forceCrit || sneak || rx?.forceCrit == true, critBonus = critBonus + (rx?.critBonus ?: 0f))
+        if (rx != null) {
+            if (foe.alive) rx.after.forEach { it(result.damage) }
+            hero.discover(foe.type, el!!, rx.reactions)
+            result = result.copy(killed = !foe.alive, reactions = rx.reactions, explosion = rx.extra)
+        }
         if (lifeSteal && hero.lifeSteal > 0f) hero.heal((result.damage * hero.lifeSteal).roundToInt())
         if (poisonedBlades > 0) {
             poisonedBlades--
@@ -1068,14 +1100,10 @@ class Combat(
      */
     fun castRelic(relic: Relic, target: Int, timing: Timing): CastResult {
         check(canCast(relic))
-        val resonances = hero.resonances
         val touched = when {
             relic.effect == RelicEffect.DELAYED -> emptyList()
             relic.target == RelicTarget.SELF -> emptyList()
-            relic.target == RelicTarget.ONE ->
-                if (relic == Relic.SUNDER && Resonance.BATTERING_RAM in resonances)
-                    listOf(target) + aliveIndices().filter { it != target && enemies[it].weakenedTurns > 0 }
-                else listOf(target)
+            relic.target == RelicTarget.ONE -> listOf(target)
             relic.target == RelicTarget.MISSILES -> List(Relic.MISSILE_COUNT) { -1 }   // tirés au fur et à mesure
             else -> listOf(target) + aliveIndices().filter { it != target }
         }
@@ -1085,15 +1113,11 @@ class Combat(
             // Un trait vise un ennemi encore debout, au hasard
             val i = if (planned >= 0) planned else aliveIndices().randomOrNull(rng) ?: break
             if (!enemies[i].alive) continue
-            // La chaîne ne perd rien en partant d'une cible trempée : l'eau conduit
-            val soaked = enemies[i].soakedTurns > 0
             hits += relicHit(relic, i, timing, mult)
-            if (relic.target == RelicTarget.CHAIN && !soaked) mult *= Relic.CHAIN_FALLOFF
+            if (relic.target == RelicTarget.CHAIN) mult *= Relic.CHAIN_FALLOFF
         }
         // Un sort qui est un coup d'arme ne consomme qu'une charge des Lames, quel que soit le nombre de cibles
         if (relic.weaponStrike && poisonedBlades > 0) poisonedBlades--
-        // Le Séisme secoue le sol : tous chancellent, leur prochain tour recule
-        if (relic == Relic.EARTHQUAKE) for (j in aliveIndices()) enemies[j].gauge -= Relic.EARTHQUAKE_PUSH
         applySelfEffect(relic, timing)
         relicCooldowns[relic] = hero.castCooldown(relic)
         afterPlayerAction(relicCost(relic))
@@ -1110,18 +1134,6 @@ class Combat(
             RelicEffect.ENCHANT_POISON -> {
                 poisonedBlades = relic.effectTurns
                 bladeDose = hero.poisonDose(relic)
-            }
-            RelicEffect.SMOKE -> {
-                ambushReady = true
-                for (j in aliveIndices()) enemies[j].blindedTurns = maxOf(enemies[j].blindedTurns, relic.effectTurns)
-            }
-            RelicEffect.BARRIER -> {
-                barrier = maxOf(barrier, hero.relicAmount(relic))
-                barrierFresh = true
-            }
-            RelicEffect.REGEN -> {
-                regenTurns = relic.effectTurns
-                regenAmount = hero.relicAmount(relic)
             }
             RelicEffect.HEAL -> hero.heal(hero.relicAmount(relic))
             RelicEffect.STONESKIN -> stoneskinTurns = relic.effectTurns
@@ -1140,20 +1152,9 @@ class Combat(
         val e = enemies[i]
         val affinity = e.type.affinity(relic.element)
         val immune = affinity == Affinity.IMMUNE
-        val reactions = mutableListOf<Reaction>()
-        var mult = affinity.damageMult * mult0
-        if (!immune) when (relic.element) {
-            Element.FIRE -> {
-                if (e.frozen) { thaw(e); mult *= Reaction.MELT_MULT; reactions += Reaction.MELT }
-                if (e.soakedTurns > 0) { e.soakedTurns = 0; reactions += Reaction.STEAM; steam() }
-                if (e.poisonTurns > 0) reactions += Reaction.EXPLOSION
-                if (e.bleedTurns > 0) { e.bleedTurns = 0; e.bleedDamage = 0; mult *= Reaction.CAUTERIZE_MULT; reactions += Reaction.CAUTERIZE }
-            }
-            Element.LIGHTNING -> if (e.soakedTurns > 0) { mult *= Reaction.ELECTRO_MULT; reactions += Reaction.ELECTROCUTION }
-            Element.PHYSICAL -> if (e.frozen) { thaw(e); mult *= Reaction.SHATTER_MULT; reactions += Reaction.SHATTER }
-            Element.HOLY -> if (e.poisonTurns > 0) reactions += Reaction.PURIFY
-            Element.ICE, Element.POISON, Element.ARCANE -> {}
-        }
+        val rx = if (immune) Reacting() else react(relic.element, i, 1f)
+        val reactions = rx.reactions
+        var mult = affinity.damageMult * mult0 * rx.mult
         // La Cristallisation : énorme contre un figé, et le gel se brise (sauf avec Zéro absolu)
         if (relic.effect == RelicEffect.CRYSTALLIZE && e.frozen) {
             mult *= Relic.CRYSTAL_MULT
@@ -1161,22 +1162,145 @@ class Combat(
         }
         val result = if (relic.hits) {
             val (lo, hi) = hero.relicDamage(relic)
-            // Meute : chaque dague qui touche la cible marquée est un critique
-            val forceCrit = relic == Relic.FAN_OF_KNIVES && e.marked && Resonance.PACK in hero.resonances
-            hit(i, rng.nextInt(lo, hi + 1) * mult, timing, allowZero = immune, forceCrit = forceCrit)
+            hit(i, rng.nextInt(lo, hi + 1) * mult, timing, allowZero = immune, forceCrit = rx.forceCrit)
         } else HitResult(i, 0, crit = false, killed = false, noDamage = true)
-        val explosion = when {
-            !e.alive -> 0
-            Reaction.EXPLOSION in reactions -> explode(i)
-            Reaction.PURIFY in reactions -> purify(i)
-            else -> 0
-        }
         if (relic.weaponStrike && poisonedBlades > 0) bladePoison(e)
         val (save, enraged) = if (e.alive && !immune) applyEffect(relic, e, result, timing, reactions) else null to false
-        // Après l'effet : le Givre et les réactions du contrôle s'ajoutent à la liste pendant applyEffect
+        // Après l'effet : les réactions qui convertissent un état (elles ont besoin de ce que le sort vient de poser)
+        if (e.alive) rx.after.forEach { it(result.damage) }
         hero.discover(e.type, relic.element, reactions)
         return result.copy(killed = !e.alive, affinity = affinity, save = save, enraged = enraged,
-            reactions = reactions, explosion = explosion)
+            reactions = reactions, explosion = rx.extra)
+    }
+
+    /** Ce que les états d'une cible font à un coup : les réactions déclenchées, le multiplicateur, et ce qui se joue après le coup. */
+    private class Reacting {
+        val reactions = mutableListOf<Reaction>()
+        var mult = 1f
+        var forceCrit = false
+        var critBonus = 0f
+        /** Les dégâts en plus des réactions qui frappent (Explosion, Convulsions, Paratonnerre). */
+        var extra = 0
+        /** Ce qui se joue après le coup et son effet, avec les dégâts du coup. */
+        val after = mutableListOf<(Int) -> Unit>()
+    }
+
+    /** Les états d'une cible, lus **avant** le coup. */
+    private class TargetStates(e: Enemy) {
+        val burning = e.burnTurns > 0
+        val frozen = e.frozen
+        val paralyzed = e.paralyzedTurns > 0
+        val poisoned = e.poisonTurns > 0
+        val exposed = e.fracturedTurns > 0 || e.blindedTurns > 0 || e.marked
+    }
+
+    /** Une dose de poison de plus : de la taille de celle qui vient d'être posée, à défaut celle du Venin. */
+    private fun extraDose(e: Enemy) {
+        val size = if (e.poisonDoseDamage > 0) e.poisonDoseDamage else hero.poisonDose(Relic.VENOM)
+        addDose(e, size, maxOf(e.poisonTurns, Relic.ENCHANT_DOSE_TURNS))
+    }
+
+    /** Son exposition dure un peu plus longtemps. */
+    private fun extendExposure(e: Enemy) {
+        if (e.fracturedTurns > 0) e.fracturedTurns += Reaction.EXPOSED_EXTRA
+        if (e.blindedTurns > 0) e.blindedTurns += Reaction.EXPOSED_EXTRA
+    }
+
+    /**
+     * Les réactions d'un coup d'élément [el] sur [i]. [part] : 1 pour un sort, [Reaction.BASE_ATTACK_PART]
+     * pour l'attaque de base (la moitié du bonus). Le physique et le sacré ne font qu'un.
+     */
+    private fun react(el: Element, i: Int, part: Float): Reacting {
+        val e = enemies[i]
+        val st = TargetStates(e)
+        val r = Reacting()
+        fun bonus(m: Float) = 1f + (m - 1f) * part
+        when (el) {
+            Element.FIRE -> {
+                if (st.frozen) { thaw(e); r.mult *= bonus(Reaction.THERMAL_MULT); r.reactions += Reaction.THERMAL_SHOCK }
+                if (st.poisoned) { r.reactions += Reaction.EXPLOSION; r.after += { r.extra += explode(i, part) } }
+                if (st.exposed) { r.mult *= bonus(Reaction.CALCINATION_MULT); r.reactions += Reaction.CALCINATION }
+                if (st.paralyzed) { e.paralyzedTurns = 0; r.mult *= bonus(Reaction.SHORT_CIRCUIT_MULT); r.reactions += Reaction.SHORT_CIRCUIT }
+            }
+            Element.ICE -> {
+                if (st.burning) {
+                    e.burnTurns = 0; e.burnDamage = 0
+                    r.mult *= bonus(Reaction.THERMAL_MULT); r.reactions += Reaction.THERMAL_SHOCK
+                }
+                if (st.paralyzed) {
+                    r.reactions += Reaction.RIGIDITY
+                    r.after += { e.paralyzedTurns = 0; freezeFor(e, Reaction.RIGIDITY_TURNS) }
+                }
+                if (st.poisoned) {
+                    r.reactions += Reaction.POISON_ICE
+                    e.slowTurns = maxOf(e.slowTurns, e.poisonTurns)
+                    consumePoison(e)
+                }
+                if (st.exposed) {
+                    r.reactions += Reaction.FROZEN_ARMOR
+                    r.after += { freezeFor(e, Reaction.RIGIDITY_TURNS); extendExposure(e) }
+                }
+            }
+            Element.LIGHTNING -> {
+                if (st.burning) {
+                    r.mult *= bonus(Reaction.PLASMA_MULT); r.reactions += Reaction.PLASMA
+                    e.burnTurns += Reaction.PLASMA_BURN_TURNS
+                }
+                if (st.poisoned) {
+                    r.reactions += Reaction.CONVULSIONS
+                    r.after += {
+                        paralyzeFor(e, Reaction.CONVULSION_TURNS)
+                        r.extra += wound(i, e.poisonDoses * e.poisonDoseDamage * part)
+                    }
+                }
+                if (st.frozen) {
+                    r.reactions += Reaction.ICE_SHOCK
+                    r.after += { thaw(e); paralyzeFor(e, Reaction.ICE_SHOCK_TURNS) }
+                }
+                if (st.exposed) {
+                    r.reactions += Reaction.LIGHTNING_ROD
+                    r.after += { dmg ->
+                        for (j in aliveIndices()) if (j != i) r.extra += wound(j, dmg * Reaction.ROD_SHARE * part)
+                    }
+                }
+            }
+            Element.POISON -> {
+                if (st.burning) {
+                    r.reactions += Reaction.SPARK
+                    r.after += { e.burnTurns = 0; e.burnDamage = 0; extraDose(e) }
+                }
+                if (st.frozen) { r.reactions += Reaction.FROSTBITE; r.after += { extraDose(e) } }
+                if (st.paralyzed) { r.reactions += Reaction.NEUROTOXIN; r.after += { e.paralyzedTurns += Reaction.NEUROTOXIN_EXTRA } }
+                if (st.exposed) { r.reactions += Reaction.INFECTION; r.after += { extraDose(e); extendExposure(e) } }
+            }
+            Element.PHYSICAL, Element.HOLY -> {
+                if (st.frozen) { thaw(e); r.mult *= bonus(Reaction.SHATTER_MULT); r.reactions += Reaction.SHATTER }
+                if (st.paralyzed) {
+                    r.reactions += Reaction.DEATHBLOW
+                    if (part >= 1f) r.forceCrit = true else r.critBonus = DEATHBLOW_BASE_CRIT
+                }
+                if (st.poisoned) {
+                    r.reactions += Reaction.PURIFY
+                    val doses = e.poisonDoses
+                    consumePoison(e)
+                    purified(doses, part)
+                }
+                if (st.burning) {
+                    r.reactions += Reaction.HOLY_FIRE
+                    val left = e.burnDamage * e.burnTurns
+                    e.burnTurns = 0; e.burnDamage = 0
+                    hero.heal((left * Reaction.HOLY_FIRE_SHARE * part).roundToInt())
+                }
+            }
+        }
+        return r
+    }
+
+    /** Purification : le héros est purifié, son armure monte et il récupère des PV chaque tour (par dose nettoyée). */
+    private fun purified(doses: Int, part: Float) {
+        purifiedTurns = Reaction.PURIFIED_TURNS
+        regenTurns = maxOf(regenTurns, Reaction.PURIFIED_TURNS)
+        regenAmount = maxOf(regenAmount, (hero.maxHp * Reaction.PURIFIED_REGEN_SHARE * doses * part).roundToInt().coerceAtLeast(1))
     }
 
     /**
@@ -1191,8 +1315,7 @@ class Combat(
         if (e.enraged) return SaveRoll(0, 0, dc, saved = true, reason = SaveReason.RAGE)
         val disadvantage = timing == Timing.PERFECT
         val roll = if (disadvantage) minOf(d20(), d20()) else d20()
-        val soaked = if (e.soakedTurns > 0) SOAKED_SAVE_MALUS else 0
-        val total = roll + SpellSave.monsterProficiency(floor) + affinity.saveBonus - soaked
+        val total = roll + SpellSave.monsterProficiency(floor) + affinity.saveBonus
         return SaveRoll(roll, total, dc, saved = total >= dc, disadvantage = disadvantage)
     }
 
@@ -1215,18 +1338,14 @@ class Combat(
         val dc = hero.spellDc(relic)
         val affinityMult = e.type.affinity(relic.element).damageMult
         when (relic.effect) {
-            RelicEffect.BURN -> if (Reaction.STEAM !in reactions) {
+            RelicEffect.BURN -> {
                 e.burnTurns  = relic.effectTurns
                 e.burnDamage = (result.damage * Relic.BURN_SHARE).roundToInt().coerceAtLeast(1)
             }
-            RelicEffect.FREEZE -> return freeze(e, dc, timing, relic.effectTurns, reactions)
+            RelicEffect.FREEZE -> return freeze(e, dc, timing, relic.effectTurns)
             // Pas de jet au lancer : chaque attaque qui tombe pendant la paralysie en demandera un
-            RelicEffect.PARALYZE -> paralyze(e, dc, timing, relic.effectTurns, reactions)
+            RelicEffect.PARALYZE -> paralyze(e, dc, timing, relic.effectTurns)
             RelicEffect.POISON -> addDose(e, (hero.poisonDose(relic) * affinityMult).roundToInt().coerceAtLeast(1), relic.effectTurns)
-            RelicEffect.SOAK -> {
-                e.soakedTurns = maxOf(e.soakedTurns, relic.effectTurns)
-                e.burnTurns = 0                                    // l'eau éteint le feu
-            }
             RelicEffect.FRACTURE -> e.fracturedTurns = maxOf(e.fracturedTurns, relic.effectTurns)
             RelicEffect.MARK -> { enemies.forEach { it.marked = false }; e.marked = true }
             RelicEffect.WARCRY -> e.weakenedTurns = maxOf(e.weakenedTurns, relic.effectTurns)
@@ -1243,44 +1362,40 @@ class Combat(
                 e.slowTurns = maxOf(e.slowTurns, relic.effectTurns)
                 return save to controlled(e)
             }
-            RelicEffect.CHARM -> {
-                // Discorde : un aveuglé ne voit pas venir le charme
-                val save = if (e.blindedTurns > 0 && Resonance.DISCORD in hero.resonances && !e.enraged) null
-                    else rollSave(e, relic.element, dc, timing)
-                if (save?.saved == true) return save to false
-                e.charmed = true
-                return save to controlled(e)
-            }
+            RelicEffect.DRAIN -> hero.heal((result.damage * Relic.DRAIN_SHARE).roundToInt())
             else -> {}
         }
-        // Les résonances qui ajoutent un effet
-        val resonances = hero.resonances
-        if (relic == Relic.CHAIN_LIGHTNING && Resonance.STORM in resonances && Reaction.ELECTROCUTION in reactions)
-            paralyze(e, dc, timing, 1, reactions)
-        if (relic == Relic.WHIRLWIND && Resonance.HEMORRHAGE in resonances)
-            bleed(e, hero.bleedDamage(Relic.REND), Relic.REND.effectTurns)
-        if (relic == Relic.EARTHQUAKE && Resonance.AVALANCHE in resonances && Reaction.SHATTER !in reactions)
-            return freeze(e, dc, timing, 1, reactions)
         return null to false
     }
 
-    /** Un gel : jet de sauvegarde, et sur une cible trempée l'eau gèle (Givre, un tour de plus). */
-    private fun freeze(e: Enemy, dc: Int, timing: Timing, turns: Int, reactions: MutableList<Reaction>): Pair<SaveRoll?, Boolean> {
+    /** Un gel : jet de sauvegarde. */
+    private fun freeze(e: Enemy, dc: Int, timing: Timing, turns: Int): Pair<SaveRoll?, Boolean> {
         val save = rollSave(e, Element.ICE, dc, timing)
         if (save.saved) return save to false
-        var t = turns
-        if (e.soakedTurns > 0) { e.soakedTurns = 0; t += Reaction.FROST_EXTRA_TURNS; reactions += Reaction.FROST }
-        e.frozenTime = maxOf(e.frozenTime, t * Relic.FREEZE_TURN_LENGTH)
-        e.thawing = false
+        freezeFor(e, turns)
         return save to controlled(e)
     }
 
-    /** Une paralysie. Électrocuté, ses jets se feront au désavantage, comme après un swipe parfait. */
-    private fun paralyze(e: Enemy, dc: Int, timing: Timing, turns: Int, reactions: List<Reaction>) {
+    /** Un gel posé d'office (les réactions n'ont pas de jet). Un enragé n'y est pas sensible. */
+    private fun freezeFor(e: Enemy, turns: Int) {
+        if (e.enraged) return
+        e.frozenTime = maxOf(e.frozenTime, turns * Relic.FREEZE_TURN_LENGTH)
+        e.thawing = false
+    }
+
+    /** Une paralysie : chaque attaque qui tombe demandera un jet. */
+    private fun paralyze(e: Enemy, dc: Int, timing: Timing, turns: Int) {
         if (e.enraged) return
         e.paralyzedTurns = maxOf(e.paralyzedTurns, turns)
-        e.paralysisTiming = if (Reaction.ELECTROCUTION in reactions) Timing.PERFECT else timing
+        e.paralysisTiming = timing
         e.paralysisDc = dc
+    }
+
+    /** Une paralysie posée d'office par une réaction. */
+    private fun paralyzeFor(e: Enemy, turns: Int) {
+        if (e.enraged) return
+        e.paralyzedTurns = maxOf(e.paralyzedTurns, turns)
+        e.paralysisTiming = Timing.MISS
     }
 
     private fun bleed(e: Enemy, damage: Int, turns: Int) {
@@ -1295,12 +1410,6 @@ class Combat(
         e.poisonDoseDamage = maxOf(e.poisonDoseDamage, doseDamage)
     }
 
-    /** Vapeur : tous les ennemis aveuglés (un tour de plus avec la Tempête de feu). */
-    private fun steam() {
-        val turns = Reaction.STEAM_BLIND_TURNS + if (Resonance.FIRESTORM in hero.resonances) 1 else 0
-        for (j in aliveIndices()) enemies[j].blindedTurns = maxOf(enemies[j].blindedTurns, turns)
-    }
-
     /** Ce que rongeraient encore les doses de [e], et le poison est consommé. */
     private fun consumePoison(e: Enemy): Int {
         val left = e.poisonDoses * e.poisonDoseDamage * e.poisonTurns
@@ -1308,9 +1417,9 @@ class Combat(
         return left
     }
 
-    /** Explosion : les doses restantes tombent d'un coup. Avec l'Alchimie, elles éclaboussent les autres. */
-    private fun explode(i: Int): Int {
-        val dmg = wound(i, consumePoison(enemies[i]).toFloat())
+    /** Explosion : les doses restantes tombent d'un coup ([part] : 1 pour un sort, moins pour l'attaque de base). Avec l'Alchimie, elles éclaboussent les autres. */
+    private fun explode(i: Int, part: Float = 1f): Int {
+        val dmg = wound(i, consumePoison(enemies[i]) * part)
         if (Resonance.ALCHEMY in hero.resonances) for (j in aliveIndices()) {
             if (j == i) continue
             val affinity = enemies[j].type.affinity(Element.POISON)
@@ -1318,19 +1427,6 @@ class Combat(
             addDose(enemies[j], (hero.poisonDose(Relic.VENOM) * affinity.damageMult).roundToInt().coerceAtLeast(1), Relic.VENOM.effectTurns)
         }
         return dmg
-    }
-
-    /**
-     * Purification : le poison devient lumière. Ses doses restantes font des dégâts **sacrés** :
-     * les doses ont été posées avec l'affinité au poison, on la retire et on met celle au sacré.
-     * C'est ce qui rend le poison utile en profondeur : le démon y résiste, mais il craint le
-     * sacré — l'empoisonner puis le purifier est le combo. Un squelette n'est jamais empoisonné.
-     */
-    private fun purify(i: Int): Int {
-        val e = enemies[i]
-        val poisonMult = e.type.affinity(Element.POISON).damageMult.coerceAtLeast(0.5f)
-        val holyMult = e.type.affinity(Element.HOLY).damageMult
-        return wound(i, consumePoison(e) / poisonMult * holyMult, allowZero = true)
     }
 
     // ── Le « Spécial » de l'archétype ───────────────────────────────────────────
@@ -1377,14 +1473,20 @@ class Combat(
         return hits
     }
 
-    /** Nécromancien : les pantins tombés se relèvent, et tous frappent une salve d'écho pleine, chacun un ennemi différent. */
+    /** Nécromancien : invoque ou relève ses pantins ; chacun frappe aussitôt à 40 % des dégâts moyens d'arme. */
     fun recallPuppets() {
         check(canUseSpecial() && hero.archetype == Archetype.NECROMANCER)
-        for (i in puppetHpList.indices) puppetHpList[i] = puppetMaxHp
+        val count = (if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS) +
+            if (hero.classOffhand(Archetype.NECROMANCER)) GRIMOIRE_PUPPETS else 0
+        puppetHpList.clear()
+        repeat(count) { puppetHpList += puppetMaxHp }
         val targets = aliveIndices()
         if (targets.isNotEmpty()) {
             val avg = (hero.weaponMin + hero.weaponMax) / 2f
-            for (i in puppetHpList.indices) wound(targets[i % targets.size], avg * ECHO_SHARE)
+            for (i in puppetHpList.indices) {
+                val at = targets[i % targets.size].takeIf { enemies[it].alive } ?: aliveIndices().firstOrNull() ?: break
+                wound(at, avg * PUPPET_SUMMON_HIT_SHARE)
+            }
         }
         spendSpecial()
         afterPlayerAction(specialCost())
@@ -1497,13 +1599,11 @@ class Combat(
             val before = hero.hp
             hero.heal(regenAmount)
             healed = hero.hp - before
-            // L'Aube : chaque soin brûle aussi les morts-vivants
-            if (Resonance.DAWN in hero.resonances) for (i in aliveIndices()) {
-                val e = enemies[i]
-                if (e.type.affinity(Element.HOLY) != Affinity.VULNERABLE) continue
-                val dmg = wound(i, regenAmount.toFloat())
-                ticks += DotTick(i, dmg, !e.alive, Element.HOLY)
-            }
+        }
+        if (hero.archetype == Archetype.MAGE && mirrorImages > 0) {
+            val before = hero.hp
+            hero.heal((hero.maxHp * MIRROR_REGEN_SHARE).roundToInt().coerceAtLeast(1))
+            healed += hero.hp - before
         }
         return HeroTurnEnd(meteor, healed, ticks)
     }
@@ -1516,11 +1616,8 @@ class Combat(
     private fun beginHeroTurn() {
         if (!upkeepDue) { upkeepDue = true; return }
         if (stoneskinTurns > 0) stoneskinTurns--
+        if (purifiedTurns > 0) purifiedTurns--
         if (hasteTurns > 0) hasteTurns--
-        // Le Bouclier arcanique a tenu jusqu'ici : les **autres** reliques gagnent un tour
-        // (lui-même, non : avec une SAG haute, il se relançait à chaque tour, sans fin)
-        if (barrierFresh && barrier > 0) hero.tickRelics(1, includeSpecial = false, except = Relic.ARCANE_SHIELD)
-        barrierFresh = false
         hero.tickRelics()
         guarding = false
     }
@@ -1757,7 +1854,7 @@ class Combat(
         }
 
         val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
-        val armorMult = if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f
+        val armorMult = maxOf(if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f, if (purifiedTurns > 0) Reaction.PURIFIED_ARMOR else 1f)
         val puppetsBefore = puppetHpList.sum()
         var dmg = throughPuppets(hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1))
         val puppetTaken = puppetsBefore - puppetHpList.sum()
@@ -1800,7 +1897,6 @@ class Combat(
     fun endEnemyTurn() {
         if (phase != CombatPhase.ENEMY_TURN) return
         val e = enemies[actingEnemy]
-        if (e.soakedTurns > 0) e.soakedTurns--
         if (e.fracturedTurns > 0) e.fracturedTurns--
         if (e.weakenedTurns > 0) e.weakenedTurns--
         if (e.blindedTurns > 0) e.blindedTurns--

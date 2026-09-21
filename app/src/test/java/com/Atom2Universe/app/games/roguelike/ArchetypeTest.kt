@@ -6,6 +6,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /** Le stuff fait la classe : l'archétype, sa parade parfaite et son bouton « Spécial ». */
@@ -43,6 +44,23 @@ class ArchetypeTest {
     fun sansArchetypeLeSpecialEstVerrouille() {
         val c = Combat(Hero.starter(), 1, listOf(Enemy(MonsterType.GOBLIN, 100, 5, 1, 1)), ambush = false, rng = Random(1))
         assertFalse(c.canUseSpecial())
+    }
+
+    @Test
+    fun leGuerrierFrappeMoinsFortAvecSonArme() {
+        val hero = heroOf(Archetype.WARRIOR)
+        hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.AXE, null)
+        assertEquals(Hero.WARRIOR_WEAPON_DAMAGE_MULT, hero.weaponTypeMult, 0.001f)
+    }
+
+    @Test
+    fun lesDoublesRegenerentLeMage() {
+        val hero = heroOf(Archetype.MAGE)
+        hero.hp = hero.maxHp / 2
+        val before = hero.hp
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 5, 1, 1)), ambush = false, rng = Random(1))
+        c.mirrorImage()
+        assertEquals((hero.maxHp * Combat.MIRROR_REGEN_SHARE).roundToInt().coerceAtLeast(1), hero.hp - before)
     }
 
     // ── Parade parfaite ─────────────────────────────────────────────────────────
@@ -86,8 +104,8 @@ class ArchetypeTest {
      * de soutien qui ne fait que soigner, la Régénération.
      */
     private fun Combat.waitWithoutDice() {
-        hero.addRelic(Relic.REGENERATION)
-        castRelic(Relic.REGENERATION, 0, Timing.MISS)
+        hero.addRelic(Relic.HEAL)
+        castRelic(Relic.HEAL, 0, Timing.MISS)
     }
 
     @Test
@@ -153,10 +171,12 @@ class ArchetypeTest {
         val hp0 = hero.hp
         c.mirrorImage()
         assertEquals(Combat.MIRROR_IMAGES, c.mirrorImages)
+        assertTrue("les doubles régénèrent le mage", hero.hp >= hp0)
+        val afterMirror = hero.hp
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
         assertTrue(s.imageHit)
-        assertEquals(hp0, hero.hp)
+        assertEquals(afterMirror, hero.hp)
         assertEquals(Combat.MIRROR_IMAGES - 1, c.mirrorImages)
     }
 

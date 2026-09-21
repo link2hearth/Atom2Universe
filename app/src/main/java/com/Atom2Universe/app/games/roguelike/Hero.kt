@@ -90,10 +90,12 @@ class Hero {
         const val RELIC_WALK_STEPS = 8
         /** Pièces d'armure du même poids qu'il faut porter pour avoir un archétype. */
         const val ARCHETYPE_PIECES = 2
-        /** Recharge du bouton « Spécial », gardée d'un combat à l'autre comme les reliques. */
+        /** Recharge du bouton « Spécial » pendant un combat ; remise à zéro à la victoire. */
         const val SPECIAL_COOLDOWN = 5
         /** Une arme qui ne va pas à l'archétype porté frappe de cette part en moins (les sorts n'en souffrent pas). */
         const val WRONG_WEAPON_MALUS = 0.15f
+        /** Le guerrier échange une part de ses dégâts d'arme contre sa robustesse. */
+        const val WARRIOR_WEAPON_DAMAGE_MULT = 0.85f
         /** L'orbe est la main gauche de celui qui tue vite : tous les dégâts qu'il inflige, arme et sorts, montent de cette part. */
         const val ORB_DAMAGE_SHARE = 0.20f
         /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
@@ -181,6 +183,23 @@ class Hero {
     /** Le héros est de cet archétype et porte sa main gauche : elle renforce son Spécial. */
     fun classOffhand(a: Archetype) = archetype == a && equipped[EquipSlot.OFFHAND]?.base == a.offhand
 
+    /**
+     * L'élément que porte l'attaque de base : celui de l'archétype, à condition d'avoir la bonne arme et la
+     * main gauche de classe. Il ne fait **aucun dégât en plus** : il déclenche les réactions (voir [Reaction]).
+     * Guerrier : physique/sacré, voleur : poison, vagabond : foudre, mage : feu, nécromancien : glace.
+     */
+    val attackElement: Element? get() {
+        val a = archetype ?: return null
+        if (equipped[EquipSlot.WEAPON]?.base !in a.weapons || !classOffhand(a)) return null
+        return when (a) {
+            Archetype.WARRIOR -> Element.HOLY
+            Archetype.ROGUE -> Element.POISON
+            Archetype.VAGABOND -> Element.LIGHTNING
+            Archetype.MAGE -> Element.FIRE
+            Archetype.NECROMANCER -> Element.ICE
+        }
+    }
+
     val hasShield get() = equipped[EquipSlot.OFFHAND]?.base == ItemBase.SHIELD
 
     private fun equipSum(type: StatType): Float = equipped.values.sumOf { it.sum(type).toDouble() }.toFloat()
@@ -232,7 +251,8 @@ class Hero {
     val weaponTypeMult: Float get() {
         val a = archetype ?: return 1f
         val w = equipped[EquipSlot.WEAPON]?.base ?: return 1f
-        return if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS
+        return (if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS) *
+            (if (a == Archetype.WARRIOR) WARRIOR_WEAPON_DAMAGE_MULT else 1f)
     }
     private val orbMult get() = if (equipped[EquipSlot.OFFHAND]?.base == ItemBase.ORB) 1f + ORB_DAMAGE_SHARE else 1f
     private val strMult get() = 1f + STR_DAMAGE_PER_POINT * effective(StatType.STR)

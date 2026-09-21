@@ -125,9 +125,9 @@ class RoguelikeGame(
         const val CHASE_MEMORY   = 5
         /** Un poursuivant à cette distance à la fin d'un combat enchaîne directement. */
         const val CHAIN_DISTANCE = 2
-        const val REST_HEAL      = 0.15f
+        const val REST_HEAL      = 0.20f
         /** Chance, à chaque tour de repos, d'attirer un monstre errant. */
-        const val REST_NOISE_CHANCE = 0.08f
+        const val REST_NOISE_CHANCE = 0.10f
         const val WANDERER_MIN_STEPS = 5
         const val WANDERER_MAX_STEPS = 10
         const val DEATH_GOLD_LOSS = 0.30f
@@ -367,12 +367,21 @@ class RoguelikeGame(
         when (c.phase) {
             CombatPhase.VICTORY -> {
                 beaten?.alive = false
+                // Reliques et Spécial sont prêts pour le combat suivant, pour tout le monde.
+                hero.relicCooldowns.clear()
+                hero.specialCooldown = 0
                 val r = c.rewards!!
                 hero.gold += r.gold
                 pendingLoot.addAll(r.equipment)
                 r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
+                // Le vagabond reprend son souffle tout seul, sans bruit : pas de repos, donc pas de monstre errant.
+                // Si un poursuivant l'a enchaîné, il n'a pas eu le temps de souffler.
+                if (combat == null && hero.archetype == Archetype.VAGABOND && hero.hp < hero.maxHp) {
+                    hero.healFull()
+                    addLog(R.string.roguelike_log_vagabond_recover)
+                }
             }
             CombatPhase.DEFEAT -> die()
             else -> {}

@@ -104,17 +104,33 @@ class NewArchetypesTest {
     // ── Le nécromancien ─────────────────────────────────────────────────────────
 
     @Test
-    fun ilCommenceAvecDeuxPantinsEtTroisAvecLeSet() {
+    fun appelDesMortsInvoqueDeuxPantinsEtTroisAvecLeSet() {
         val plain = fight(heroOf(Archetype.NECROMANCER))
+        assertTrue("aucun pantin avant l'Appel", plain.puppetHp.isEmpty())
+        plain.recallPuppets()
         assertEquals(Combat.PUPPETS, plain.puppetHp.size)
         assertTrue(plain.puppetHp.all { it == plain.puppetMaxHp })
-        assertEquals(IsotopeSets.PUPPETS, fight(setHero(5)).puppetHp.size)
+        val boosted = fight(setHero(5))
+        boosted.recallPuppets()
+        assertEquals(IsotopeSets.PUPPETS, boosted.puppetHp.size)
         assertTrue("les autres n'en ont pas", fight(heroOf(Archetype.MAGE)).puppetHp.isEmpty())
     }
 
     @Test
+    fun chaquePantinInvoqueFrappeToutDeSuite() {
+        val hero = heroOf(Archetype.NECROMANCER)
+        val c = fight(hero)
+        val before = c.enemies[0].hp
+        c.recallPuppets()
+        val oneHit = ((hero.weaponMin + hero.weaponMax) / 2f * Combat.PUPPET_SUMMON_HIT_SHARE).toInt().coerceAtLeast(1)
+        assertTrue("la salve d'invocation blesse", before - c.enemies[0].hp >= oneHit * Combat.PUPPETS)
+    }
+
+    @Test
     fun lesPantinsEncaissentLaPlusGrosseParteDuCoup() {
-        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8, ambush = true)
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8)
+        c.recallPuppets()
+        while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
         val before = c.puppetHp.sum()
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
@@ -128,6 +144,7 @@ class NewArchetypesTest {
     fun lEchoDependDuGeste() {
         fun loss(timing: Timing): Pair<Int, Int> {
             val c = fight(heroOf(Archetype.NECROMANCER))
+            c.recallPuppets()
             val before = c.enemies[0].hp
             val hit = c.attack(0, timing)
             return (before - c.enemies[0].hp) to hit.damage
@@ -144,12 +161,15 @@ class NewArchetypesTest {
 
     @Test
     fun leRappelRelevePantinsTombesEtFrappe() {
-        val c = fight(heroOf(Archetype.NECROMANCER), damage = 20, ambush = true)
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 20)
+        c.recallPuppets()
+        while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
         c.startEnemyTurn()
         c.resolveStrike(0, Timing.MISS)
         c.endEnemyTurn()
         assertTrue("des pantins sont tombés", c.puppetHp.any { it < c.puppetMaxHp })
         assertEquals(CombatPhase.PLAYER_TURN, c.phase)
+        c.hero.specialCooldown = 0
         val before = c.enemies[0].hp
         c.recallPuppets()
         assertTrue(c.puppetHp.all { it == c.puppetMaxHp })
@@ -195,8 +215,10 @@ class NewArchetypesTest {
     fun leGrimoireDonneUnPantinEtUnEchoPlusFort() {
         val plain = fight(withOffhand(Archetype.NECROMANCER, null))
         val book = fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))
+        plain.recallPuppets()
+        book.recallPuppets()
         assertEquals(plain.puppetHp.size + Combat.GRIMOIRE_PUPPETS, book.puppetHp.size)
-        fun echo(c: Combat): Int { val before = c.enemies[0].hp; val hit = c.attack(0, Timing.PERFECT); return before - c.enemies[0].hp - hit.damage }
+        fun echo(c: Combat): Int { c.recallPuppets(); val before = c.enemies[0].hp; val hit = c.attack(0, Timing.PERFECT); return before - c.enemies[0].hp - hit.damage }
         assertTrue(echo(fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))) > echo(fight(withOffhand(Archetype.NECROMANCER, null))))
     }
 
@@ -212,7 +234,9 @@ class NewArchetypesTest {
 
     @Test
     fun lesResultatsDisentCeQueLesPantinsOntFait() {
-        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8, ambush = true)
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8)
+        c.recallPuppets()
+        while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
         assertTrue("les pantins ont pris une part du coup", s.puppetAbsorbed > 0)

@@ -52,7 +52,6 @@ class CombatView @JvmOverloads constructor(
         private const val PARRY_GOOD_MS    = 160
 
         // Couleurs des états du grimoire (celles des éléments sont dans elementColor)
-        private const val SOAKED_COLOR    = 0xFF4DD0E1.toInt()
         private const val FRACTURED_COLOR = 0xFFBCAAA4.toInt()
         private const val WEAKENED_COLOR  = 0xFFB0BEC5.toInt()
         private const val BLINDED_COLOR   = 0xFF9E9E9E.toInt()
@@ -427,7 +426,6 @@ class CombatView @JvmOverloads constructor(
         Element.POISON    -> 0xFF9CCC65.toInt()
         Element.PHYSICAL  -> 0xFFE0E0E0.toInt()
         Element.HOLY      -> 0xFFFFF59D.toInt()
-        Element.ARCANE    -> 0xFFCE93D8.toInt()
     }
 
     private fun nextAttacker() {
@@ -668,7 +666,6 @@ class CombatView @JvmOverloads constructor(
             if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonDoses, e.poisonTurns) to elementColor(Element.POISON))
             if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
             if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to elementColor(Element.LIGHTNING))
-            if (e.soakedTurns > 0) add(context.getString(R.string.roguelike_combat_soaked, e.soakedTurns) to SOAKED_COLOR)
             if (e.fracturedTurns > 0) add(context.getString(R.string.roguelike_combat_fractured, e.fracturedTurns) to FRACTURED_COLOR)
             if (e.weakenedTurns > 0) add(context.getString(R.string.roguelike_combat_weakened, e.weakenedTurns) to WEAKENED_COLOR)
             if (e.blindedTurns > 0) add(context.getString(R.string.roguelike_combat_blinded, e.blindedTurns) to BLINDED_COLOR)

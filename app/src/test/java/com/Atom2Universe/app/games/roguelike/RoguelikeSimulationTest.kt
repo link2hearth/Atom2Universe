@@ -58,11 +58,15 @@ class RoguelikeSimulationTest {
     private val checkpointEvery = System.getenv("SIM_CHECKPOINT")?.toInt() ?: 0
     /** Le bot qui connaît le grimoire (reliques choisies, combos). SIM_SMART=0 : l'ancien bot. */
     private val smart = System.getenv("SIM_SMART") != "0"
+    /** Variante du banc : mesure le rôle des Spéciaux dans le choix spontané de l'équipement. */
+    private val simUseSpecial = System.getenv("SIM_USE_SPECIAL") != "0"
     /** Séries de 3 combats d'essai par paire de reliques, quand le bot choisit les siennes. */
     private val trialSeries = 12
     /** Le budget de tours de carte d'un profil : SIM_MAP_TURNS pour une partie longue. */
-    /** SIM_MAX_SECONDS : un profil s'arrête quand le temps est écoulé (les parties à 1000 étages sont longues). */
-    private val deadline = System.currentTimeMillis() + (System.getenv("SIM_MAX_SECONDS")?.toLong()?.times(1000) ?: Long.MAX_VALUE / 4)
+    /** Par défaut, SIM_MAX_SECONDS est un délai global ; SIM_TIME_PER_PROFILE=1 le démarre à l'entrée de chaque bot. */
+    private val maxSeconds = System.getenv("SIM_MAX_SECONDS")?.toLong()
+    private val deadline = System.currentTimeMillis() + (maxSeconds?.times(1000) ?: Long.MAX_VALUE / 4)
+    private val timePerProfile = System.getenv("SIM_TIME_PER_PROFILE") == "1"
     private val maxMapTurns = System.getenv("SIM_MAP_TURNS")?.toInt() ?: 250_000
 
     /** Le stock de l'optimiseur : objets possédés, équipements candidats, poids d'armure dont il a les trois pièces, pièces de set. */
@@ -153,6 +157,9 @@ class RoguelikeSimulationTest {
         val archAgg = sortedMapOf<String, Agg>()
         /** Le casual qui change de reliques au hasard après des échecs répétés. */
         var relicReshuffles = 0
+        /** L'optimiseur qui revoit ses reliques : combien de fois il les a réexaminées, et combien de fois il en a changé. */
+        var relicChecks = 0
+        var relicSwitches = 0
         /** Les reliques portées à la fin de chaque profil, pour voir ce que le bot a choisi. */
         val finalRelics = mutableListOf<String>()
         fun f(n: Int) = floors.getOrPut(n) { FloorStat() }
@@ -225,20 +232,17 @@ class RoguelikeSimulationTest {
         println(out)
     }
 
-    /**
-     * Un joueur qui veut **un** archétype, quoi qu'en disent les notes : il ne prend que l'armure de son poids, les armes que sa classe accepte
-     * et sa main gauche de classe (le reste part au sac, jamais porté). Les bijoux n'ont pas de type : la meilleure note. Sert à comparer les
-     * archétypes quand le joueur s'y tient (voir [preferredArchetypes]).
-     */
-    private fun fitsWanted(e: Equipment, wanted: Archetype): Boolean = when {
-        e.base in ArmorWeight.WEIGHTED -> e.weight == wanted.weight
-        e.slot == EquipSlot.WEAPON -> wanted.accepts(e.base)
-        e.slot == EquipSlot.OFFHAND -> e.base == wanted.offhand
-        else -> true
+    /** La spécialisation guide le bot sans lui interdire les autres reliques ni les autres sets. */
+    private fun preferredStat(wanted: Archetype): StatType = when (wanted) {
+        Archetype.WARRIOR -> StatType.CON
+        Archetype.ROGUE -> StatType.DEX
+        Archetype.VAGABOND -> StatType.STR
+        Archetype.MAGE -> StatType.WIS
+        Archetype.NECROMANCER -> StatType.INT
     }
 
     /**
-     * Le même donjon avec chaque archétype imposé : pour chacun des cinq, 4 bots × (casual, optimiseur) × (novice, correct, expert), jusqu'à
+     * Le même donjon avec chaque archétype préféré : pour chacun des cinq, 4 bots × (casual, optimiseur) × (novice, correct, expert), jusqu'à
      * l'étage 1000, checkpoint tous les 10 étages et retour de SIM_RETREAT étages. Compare les morts pour arriver au bout et la solidité de chacun.
      * SIM_PROFILES=4, SIM_MAX_FLOOR=1000, SIM_MAX_SECONDS, SIM_WANTED=WARRIOR,ROGUE,... Écrit build/roguelike-preferred.txt.
      */
@@ -263,7 +267,7 @@ class RoguelikeSimulationTest {
             t to r
         }.collect(java.util.stream.Collectors.toList())
 
-        val out = StringBuilder("══════ Un archétype imposé : ${perCell} bots par case, jusqu'à l'étage $floorCap ══════\n\n")
+        val out = StringBuilder("══════ Un archétype préféré : ${perCell} bots par case, jusqu'à l'étage $floorCap ══════\n\n")
         out.appendLine("Morts pour arriver à l'étage $floorCap (les $perCell bots de la case ; « x » : n'y est pas arrivé)")
         out.appendLine(String.format("%-12s", "") + players.joinToString("") { String.format("%-24s", "${it.first.name.take(3)} ${it.second.name.take(4)}") })
         for (w in wantedList) {
@@ -286,7 +290,7 @@ class RoguelikeSimulationTest {
             out.appendLine(String.format("  %-12s %8s · %8s", w.name, med(Style.CASUAL), med(Style.OPTIMIZER)))
         }
         out.appendLine()
-        out.appendLine("Solidité de chaque archétype imposé (tous les bots de la ligne) : combats · joué avec l'archétype actif · avec le bonus de set · morts % · PV perdus %")
+        out.appendLine("Solidité de chaque archétype préféré (tous les bots de la ligne) : combats · joué avec l'archétype actif · avec le bonus de set · morts % · PV perdus %")
         for (w in wantedList) {
             val rs = results.filter { it.first.wanted == w }.map { it.second }
             val all = rs.flatMap { it.archAgg.entries }
@@ -307,8 +311,88 @@ class RoguelikeSimulationTest {
             }
             out.appendLine(String.format("%-12s", w.name) + cells.joinToString("") { String.format("%-24s", it) })
         }
+        for (casual in listOf(true, false)) {
+            val group = results.filter { (it.first.style == Style.CASUAL) == casual }.map { it.second }
+            out.appendLine("\nReliques, ${if (casual) "casual" else "optimiseur"} (tous archétypes imposés) :")
+            out.appendLine(relicTable(group))
+            out.appendLine("  Changements de reliques : ${group.sumOf { it.relicSwitches }} sur ${group.sumOf { it.relicChecks }} révisions")
+        }
         out.appendLine("\n(${(System.currentTimeMillis() - start) / 1000} s)")
         File("build/roguelike-preferred${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
+        println(out)
+    }
+
+    /**
+     * Six profils comparables : libre, puis un par archétype. Tous testent les reliques
+     * disponibles et leurs combos. Les cinq spécialisés préfèrent leur set et leurs reliques,
+     * mais peuvent choisir autre chose si les essais en combat le justifient.
+     * SIM_MAX_FLOOR, SIM_PROFILES, SIM_SKILLS, SIM_STYLES (CASUAL,OPTIMIZER), SIM_MAX_SECONDS et SIM_OUT règlent le banc.
+     */
+    @Test
+    fun balancedProfiles() {
+        val perCell = System.getenv("SIM_PROFILES")?.toInt() ?: 2
+        val floorCap = System.getenv("SIM_MAX_FLOOR")?.toInt() ?: 500
+        val skills = System.getenv("SIM_SKILLS")?.split(",")?.map { Skill.valueOf(it) }
+            ?: listOf(Skill.CORRECT, Skill.EXPERT)
+        val styles = System.getenv("SIM_STYLES")?.split(",")?.map { Style.valueOf(it) }
+            ?: listOf(Style.OPTIMIZER)
+        val wantedList: List<Archetype?> = System.getenv("SIM_WANTED")?.split(",")?.map {
+            if (it == "LIBRE") null else Archetype.valueOf(it)
+        } ?: listOf(null) + Archetype.entries
+        data class Task(val wanted: Archetype?, val style: Style, val skill: Skill, val seed: Int)
+        val tasks = wantedList.flatMap { wanted -> styles.flatMap { style -> skills.flatMap { skill ->
+            (0 until perCell).map { Task(wanted, style, skill, it) }
+        } } }
+        val start = System.currentTimeMillis()
+        File("build/roguelike-progress.txt").writeText("")
+        val results = tasks.parallelStream().map { t ->
+            val report = Report(t.skill)
+            playProfile(t.skill, report, Random(t.seed * 7919L + t.skill.ordinal + 301),
+                t.style, floorCap, label = "${t.wanted ?: "LIBRE"} ${t.style} ${t.skill} bot ${t.seed}", wanted = t.wanted)
+            t to report
+        }.collect(java.util.stream.Collectors.toList())
+        val out = StringBuilder("══════ Profils ${wantedList.joinToString { it?.name ?: "LIBRE" }}, étage $floorCap, $perCell bots par type/style/niveau (${tasks.size} parcours) ══════\n")
+        out.appendLine("Chaque profil peut changer de classe et porter toutes les reliques (Sablier exclu). Le spécialisé préfère son set et ses reliques. Spécial : ${if (simUseSpecial) "activé" else "désactivé"}. Limite de temps : ${if (timePerProfile) "par bot dès son démarrage" else "commune au banc"}.")
+        out.appendLine("Profil / style / niveau · meilleur étage · morts pour atteindre $floorCap (x : non atteint) · combats · morts/combats · PV perdus/combats · archétype préféré actif · set préféré actif · reliques du type portées pour 100 combats")
+        for (wanted in wantedList) for (style in styles) for (skill in skills) {
+            val group = results.filter { it.first.wanted == wanted && it.first.style == style && it.first.skill == skill }.map { it.second }
+            val fights = group.sumOf { it.fightsTotal }.coerceAtLeast(1)
+            val a = group.flatMap { it.archAgg.entries }
+            val deaths = a.sumOf { it.value.deaths }
+            val lost = a.sumOf { it.value.hpLost }
+            val active = a.filter { wanted != null && it.key.startsWith(wanted.name) }.sumOf { it.value.fights }
+            val set = a.filter { wanted != null && it.key == "${wanted.name}+set" }.sumOf { it.value.fights }
+            val ownRelics = group.flatMap { it.relicAgg.entries }.filter { entry ->
+                wanted != null && Relic.valueOf(entry.key).attribute == preferredStat(wanted) && entry.key != Relic.HEAL.name
+            }.sumOf { it.value.fights }
+            val best = group.joinToString("/") { r -> if (r.fightsTotal == 0) "attente" else r.bestFloors.single().toString() }
+            val deathCells = group.joinToString("/") { r ->
+                if (r.fightsTotal == 0) "attente"
+                else if (r.bestFloors.single() >= floorCap) r.floors.values.sumOf { it.deaths }.toString() else "x"
+            }
+            out.appendLine(String.format("%-13s %-9s %-7s · %-11s · %-17s · %8d · %5.2f %% · %5.1f %% · %5.1f %% · %5.1f %% · %5.1f",
+                wanted?.name ?: "LIBRE", style, skill, best, deathCells, fights, 100.0 * deaths / fights,
+                100.0 * lost / fights, 100.0 * active / fights, 100.0 * set / fights, 100.0 * ownRelics / fights))
+        }
+        for (wanted in wantedList) for (style in styles) {
+            val group = results.filter { it.first.wanted == wanted && it.first.style == style }.map { it.second }
+            out.appendLine("\n████ ${wanted ?: "LIBRE"} $style : archétypes réellement portés ████")
+            out.appendLine(usageTable(group.map { it.archAgg }, group.sumOf { it.fightsTotal }))
+            out.appendLine("Reliques portées, lancers et résultats :")
+            out.appendLine(relicTable(group))
+            out.appendLine("Spéciaux utilisés : nombre · par combat dans cet archétype · part améliorée par le set")
+            for (a in Archetype.entries) {
+                val byKey = group.flatMap { it.specialUses.entries }.filter { it.key.startsWith("${a.name}|") }
+                val uses = byKey.sumOf { it.value }
+                val boosted = byKey.filter { it.key.endsWith("amélioré") }.sumOf { it.value }
+                val archetypeFights = group.flatMap { it.archAgg.entries }.filter { it.key.startsWith(a.name) }.sumOf { it.value.fights }
+                out.appendLine(String.format("  %-12s %7d · %5.2f · %5.1f %%", a.name, uses,
+                    uses.toDouble() / archetypeFights.coerceAtLeast(1), 100.0 * boosted / uses.coerceAtLeast(1)))
+            }
+            out.appendLine("Changements de reliques : ${group.sumOf { it.relicSwitches }} / ${group.sumOf { it.relicChecks }} révisions ; combos joués : ${group.sumOf { it.comboSteps }} ; arrêts sur temps : ${group.sumOf { it.wallClockCut }}")
+        }
+        out.appendLine("\nDurée : ${(System.currentTimeMillis() - start) / 1000} s")
+        File("build/roguelike-balanced${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
         println(out)
     }
 
@@ -345,6 +429,7 @@ class RoguelikeSimulationTest {
             val group = results.filter { (it.first == Style.CASUAL) == casual }.map { it.third }
             out.appendLine("Reliques, ${if (casual) "casual (au hasard, jamais optimisé)" else "optimiseur (choisies par essais)"} :")
             out.appendLine(relicTable(group))
+            out.appendLine("  Changements de reliques : ${group.sumOf { it.relicSwitches }} sur ${group.sumOf { it.relicChecks }} révisions (${group.sumOf { it.fightsTotal }} combats)")
         }
         out.appendLine("(${(System.currentTimeMillis() - start) / 1000} s)")
         File("build/roguelike-long${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
@@ -597,8 +682,9 @@ class RoguelikeSimulationTest {
     /**
      * Ce qui fait la force de chaque archétype, à butin égal et sans set : pour chacun, l'armure de son poids (la meilleure de 3
      * par emplacement), avec (1) une épée commune, sans main gauche et **sans Spécial** : que valent les seuls passifs du poids
-     * (CA, vitesse, armure) ; (2) la même chose **avec le Spécial** ; (3) son équipement complet : arme qui lui va, sa main gauche.
-     * Cellule : victoires sur 3 combats enchaînés · PV perdus par combat. SIM_SERIES=500, SIM_SKILL=CORRECT, SIM_RELIC=MAGIC_MISSILE
+     * (CA, vitesse, armure) ; (2) la même chose **avec le Spécial** ; (3-4) son équipement complet : arme qui lui va,
+     * sa main gauche, sans puis avec le Spécial.
+     * Cellule : victoires sur 3 combats enchaînés · PV perdus · tours par combat. SIM_SERIES=500, SIM_SKILL=CORRECT, SIM_RELIC=MAGIC_MISSILE
      * (défaut : aucune relique), SIM_FLOORS=10,50,150,400,800. Écrit build/roguelike-archetype-strength.txt.
      */
     @Test
@@ -611,14 +697,14 @@ class RoguelikeSimulationTest {
         IsotopeSets.dropShare = 0f
         try {
             val out = StringBuilder("══════ Force des archétypes à butin égal ($series séries de 3 combats, joueur $skill, relique ${relic ?: "aucune"}) ══════\n")
-            out.appendLine("cellule : victoires · PV perdus par combat ; colonnes : armure seule (sans Spécial) | + Spécial | équipement complet\n")
+            out.appendLine("cellule : victoires · PV perdus par combat · tours par combat ; colonnes : épée seule sans Spécial | + Spécial | équipement complet sans Spécial | + Spécial\n")
             fun best(floor: Int, rng: Random, tries: Int, ok: (Equipment) -> Boolean): Equipment =
                 (1..tries).map { var e: Equipment; do e = LootSystem.generate(floor, 0, rng) while (!ok(e) || e.isotopeZ != null); e }.maxBy { score(it) }
             for (floor in floors) {
                 out.appendLine("── étage $floor ──")
                 val rows = Archetype.entries.parallelStream().map { a ->
-                    val cells = (0..2).map { variant ->
-                        var wins = 0; var lost = 0.0; var fights = 0
+                    val cells = (0..3).map { variant ->
+                        var wins = 0; var lost = 0.0; var fights = 0; var turns = 0
                         repeat(series) { i ->
                             val hero = geared(floor, Random(floor * 7919L + i))
                             val rng = Random(floor * 104729L + i)
@@ -637,20 +723,23 @@ class RoguelikeSimulationTest {
                             repeat(3) {
                                 if (!ok) return@repeat
                                 val before = hero.hp
-                                ok = soloFight(hero, floor, skill, fightRng, FloorStat(), useSpecial = variant > 0)
+                                val stat = FloorStat()
+                                ok = soloFight(hero, floor, skill, fightRng, stat, useSpecial = variant % 2 == 1)
+                                turns += stat.turnsInFight
                                 lost += (before - if (ok) hero.hp else 0).coerceAtLeast(0).toDouble() / hero.maxHp
                                 fights++
                             }
                             if (ok) wins++
                         }
-                        String.format("%5.1f%% · %5.1f%%", 100.0 * wins / series, 100.0 * lost / fights.coerceAtLeast(1))
+                        String.format("%5.1f%% · %5.1f%% · %4.1ft", 100.0 * wins / series,
+                            100.0 * lost / fights.coerceAtLeast(1), turns.toDouble() / fights.coerceAtLeast(1))
                     }
-                    String.format("%-12s", a.name) + cells.joinToString(" | ") { String.format("%16s", it) }
+                    String.format("%-12s", a.name) + cells.joinToString(" | ") { String.format("%25s", it) }
                 }.collect(java.util.stream.Collectors.toList())
                 rows.forEach { out.appendLine(it) }
                 out.appendLine()
             }
-            File("build/roguelike-archetype-strength.txt").writeText(out.toString())
+            File("build/roguelike-archetype-strength${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
             println(out)
         } finally { IsotopeSets.dropShare = saved }
     }
@@ -1053,29 +1142,38 @@ class RoguelikeSimulationTest {
     /** [r] lancé sur [e] déclencherait une réaction (ou son bonus contre un figé). */
     private fun triggers(r: Relic, e: Enemy): Boolean {
         if (e.type.affinity(r.element) == Affinity.IMMUNE) return false
-        // Un sort sur soi (Régénération, Soin) ne touche pas l'ennemi : il ne déclenche rien
+        // Un sort sur soi (Soin, Sablier) ne touche pas l'ennemi : il ne déclenche rien
         if (r.target == RelicTarget.SELF) return false
         if (r.effect == RelicEffect.CRYSTALLIZE && e.frozen) return true
-        return when (r.element) {
-            Element.FIRE      -> e.poisonTurns > 0 || e.frozen || e.soakedTurns > 0 || e.bleedTurns > 0
-            Element.LIGHTNING -> e.soakedTurns > 0
-            Element.PHYSICAL  -> r.hits && e.frozen
-            Element.HOLY      -> e.poisonTurns > 0
-            else -> false
+        val states = buildSet {
+            if (e.burnTurns > 0) add("burning"); if (e.frozen) add("frozen"); if (e.paralyzedTurns > 0) add("paralyzed")
+            if (e.poisonTurns > 0) add("poisoned"); if (e.fracturedTurns > 0 || e.blindedTurns > 0 || e.marked) add("exposed")
         }
+        return states.any { reactsTo(r.element, it) }
+    }
+
+    /** Une réaction existe-t-elle entre un coup de cet élément et cet état ? (voir [Reaction]) */
+    private fun reactsTo(el: Element, state: String): Boolean = when (el) {
+        Element.FIRE -> state in setOf("frozen", "poisoned", "exposed", "paralyzed")
+        Element.ICE -> state in setOf("burning", "paralyzed", "poisoned", "exposed")
+        Element.LIGHTNING -> state in setOf("burning", "poisoned", "frozen", "exposed")
+        Element.POISON -> state in setOf("burning", "frozen", "paralyzed", "exposed")
+        Element.PHYSICAL, Element.HOLY -> state in setOf("frozen", "paralyzed", "poisoned", "burning")
     }
 
     /** [setup] pose l'état que [payoff] vient ensuite déclencher (ou une résonance les lie). */
-    private fun prepares(setup: Relic, payoff: Relic): Boolean = when (setup.effect) {
-        RelicEffect.SOAK -> payoff.element == Element.LIGHTNING || payoff.effect == RelicEffect.FREEZE
-        RelicEffect.POISON, RelicEffect.ACID, RelicEffect.ENCHANT_POISON ->
-            payoff.hits && (payoff.element == Element.FIRE || payoff.element == Element.HOLY)
-        RelicEffect.FREEZE -> (payoff.element == Element.PHYSICAL && payoff.hits) || payoff.effect == RelicEffect.CRYSTALLIZE
-        RelicEffect.BLEED, RelicEffect.BLEED_ON_CRIT -> payoff.element == Element.FIRE
-        RelicEffect.MARK -> payoff == Relic.FAN_OF_KNIVES
-        RelicEffect.WARCRY -> payoff == Relic.SUNDER
-        RelicEffect.SMOKE -> payoff == Relic.CHARM
-        else -> false
+    private fun prepares(setup: Relic, payoff: Relic): Boolean {
+        if (!payoff.hits) return false
+        val states = when (setup.effect) {
+            RelicEffect.BURN -> setOf("burning")
+            RelicEffect.FREEZE -> setOf("frozen")
+            RelicEffect.PARALYZE -> setOf("paralyzed")
+            RelicEffect.POISON, RelicEffect.ENCHANT_POISON -> setOf("poisoned")
+            RelicEffect.ACID -> setOf("poisoned", "exposed")
+            RelicEffect.FRACTURE, RelicEffect.MARK, RelicEffect.BLIND -> setOf("exposed")
+            else -> emptySet()
+        }
+        return states.any { reactsTo(payoff.element, it) } || (setup.effect == RelicEffect.FREEZE && payoff.effect == RelicEffect.CRYSTALLIZE)
     }
 
     /**
@@ -1110,13 +1208,15 @@ class RoguelikeSimulationTest {
      * combinaison possible (autant de reliques que d'emplacements ouverts) parmi celles qu'il
      * a trouvées, sur quelques combats d'essai (à son étage, avec son équipement, en jouant les
      * combos), et garde celle qui gagne le plus. Les mêmes dés pour toutes, pour que seules les
-     * reliques les départagent. Au-delà de 8 reliques, il ne garde que les 8 meilleures seules,
-     * pour ne pas essayer des centaines de combinaisons (70 au plus, pour 4 emplacements).
+     * reliques les départagent. Au-delà de 8 reliques, il garde les meilleures seules et deux
+     * partenaires de réaction, pour ne pas essayer des centaines de combinaisons.
      */
-    private fun chooseRelics(hero: Hero, floor: Int, skill: Skill) {
-        val owned = hero.relics.toList()
+    private fun chooseRelics(hero: Hero, floor: Int, skill: Skill, wanted: Archetype? = null) {
+        // Le Sablier change le gameplay (la fenêtre de parade), pas la simulation : les bots ne le portent pas
+        val owned = hero.relics.filter { it != Relic.HOURGLASS }
         val slots = hero.unlockedRelicSlots
         if (owned.size <= slots) {
+            hero.relicSlots.fill(null)
             owned.forEachIndexed { i, r -> hero.relicSlots[i] = r }
             hero.hp = hero.hp.coerceAtMost(hero.maxHp)
             return
@@ -1135,11 +1235,23 @@ class RoguelikeSimulationTest {
             }
             return wins * TRIAL_WIN_WEIGHT - stat.turnsInFight
         }
-        val shortlist = if (owned.size <= 8) owned else owned.sortedByDescending { trial(listOf(it)) }.take(8)
+        // Toutes les reliques sont essayées seules. On réserve ensuite deux places aux partenaires
+        // des six meilleures : un sort moyen seul peut être indispensable au meilleur combo.
+        val ranked = owned.sortedByDescending { trial(listOf(it)) }
+        val shortlist = if (owned.size <= 8) owned else {
+            val own = if (wanted == null) emptyList() else ranked.filter { it.attribute == preferredStat(wanted) && it != Relic.HEAL }.take(2)
+            val core = (ranked.take(if (wanted == null) 6 else 4) + own).distinct()
+            val partners = ranked.filter { candidate -> candidate !in core &&
+                core.any { prepares(it, candidate) || prepares(candidate, it) } }
+            (core + partners + ranked).distinct().take(8)
+        }
         fun combinations(from: List<Relic>, k: Int): List<List<Relic>> =
             if (k == 0) listOf(emptyList())
             else from.indices.flatMap { i -> combinations(from.drop(i + 1), k - 1).map { listOf(from[i]) + it } }
-        val best = combinations(shortlist, slots).maxBy { trial(it) }
+        val best = combinations(shortlist, slots).maxBy { relics ->
+            trial(relics) + if (wanted == null) 0 else
+                relics.count { it.attribute == preferredStat(wanted) && it != Relic.HEAL } * (TRIAL_WIN_WEIGHT / 4)
+        }
         hero.relicSlots.fill(null)
         best.forEachIndexed { i, r -> hero.relicSlots[i] = r }
         hero.knownResonances += hero.resonances
@@ -1162,12 +1274,12 @@ class RoguelikeSimulationTest {
      * la meilleure arme qui lui va, sa main gauche de classe si elle existe, et le meilleur bijou de chaque sorte.
      * Il faut au moins [Hero.ARCHETYPE_PIECES] pièces du poids pour compter comme cet archétype.
      */
-    private fun candidateLoadouts(hero: Hero, wanted: Archetype? = null): List<Loadout> {
+    private fun candidateLoadouts(hero: Hero): List<Loadout> {
         val pool = hero.equipped.values + hero.bag
         fun best(slot: EquipSlot, a: Archetype?, filter: (Equipment) -> Boolean = { true }) =
             pool.filter { it.slot == slot && filter(it) }.maxByOrNull { LootSystem.rating(it, a) }
         val out = mutableListOf<Loadout>(hero.equipped.toMap())
-        for (a in wanted?.let { listOf(it) } ?: Archetype.entries) {
+        for (a in Archetype.entries) {
             val variants = listOf<(Equipment) -> Boolean>({ true }, { it.isotopeSet?.archetype == a })
             for (armorFilter in variants) {
                 val loadout = mutableMapOf<EquipSlot, Equipment>()
@@ -1194,7 +1306,7 @@ class RoguelikeSimulationTest {
      * refait le choix des reliques : un autre archétype change ce que valent les sorts.
      */
     private fun optimizeGear(hero: Hero, floor: Int, skill: Skill, r: Report, wanted: Archetype? = null) {
-        val candidates = candidateLoadouts(hero, wanted)
+        val candidates = candidateLoadouts(hero)
         r.stock.getOrPut((floor - 1) / 25 * 25 + 1) { StockStat() }.also { st ->
             val pool = hero.equipped.values + hero.bag
             st.decisions++
@@ -1224,9 +1336,17 @@ class RoguelikeSimulationTest {
             return wins * TRIAL_WIN_WEIGHT - stat.turnsInFight
         }
         fun rating(loadout: Loadout, a: Archetype?) = loadout.values.sumOf { LootSystem.rating(it, a) }
+        fun preference(loadout: Loadout): Int {
+            if (wanted == null) return 0
+            val armor = IsotopeSets.SLOTS.mapNotNull { loadout[it] }
+            val matching = armor.count { it.weight == wanted.weight }
+            val fullSet = armor.size == IsotopeSets.SLOTS.size && armor.all { it.isotopeSet?.archetype == wanted }
+            return (if (matching >= Hero.ARCHETYPE_PIECES) TRIAL_WIN_WEIGHT / 4 else 0) +
+                (if (fullSet) TRIAL_WIN_WEIGHT / 2 else 0)
+        }
         val current = hero.archetype
         val scores = candidates.associateWith { trial(it) }
-        val best = candidates.maxWith(compareBy<Loadout>({ scores.getValue(it) }, { rating(it, current) }))
+        val best = candidates.maxWith(compareBy<Loadout>({ scores.getValue(it) + preference(it) }, { rating(it, current) }))
         // Il ne change que pour mieux : plus de victoires, ou à victoires égales des combats nettement plus courts (15 %), ou 2 victoires de plus sur 16.
         // Sans cette marge, chaque essai bruité en désignait un autre et il changeait d'archétype à chaque étage.
         val now = scores.getValue(candidates.first())
@@ -1234,7 +1354,7 @@ class RoguelikeSimulationTest {
         val turns = { score: Int -> wins(score) * TRIAL_WIN_WEIGHT - score }
         val better = wins(scores.getValue(best)) >= wins(now) + 2 ||
             (wins(scores.getValue(best)) == wins(now) && turns(scores.getValue(best)) < turns(now) * 0.85)
-        if (!better || best == hero.equipped.toMap()) return
+        if ((!better && scores.getValue(best) + preference(best) <= now + preference(candidates.first())) || best == hero.equipped.toMap()) return
         for ((slot, item) in best) {
             if (hero.equipped[slot] == item) continue
             hero.bag.remove(item)
@@ -1242,7 +1362,7 @@ class RoguelikeSimulationTest {
         }
         r.regears++
         if (hero.archetype != current) r.archetypeSwitches++
-        chooseRelics(hero, floor, skill)
+        chooseRelics(hero, floor, skill, wanted)
     }
 
     private fun geared(floor: Int, rng: Random): Hero {
@@ -1264,7 +1384,7 @@ class RoguelikeSimulationTest {
         return hero
     }
 
-    private fun soloFight(hero: Hero, floor: Int, skill: Skill, rng: Random, fs: FloorStat = FloorStat(), combos: Boolean = false, useSpecial: Boolean = true): Boolean {
+    private fun soloFight(hero: Hero, floor: Int, skill: Skill, rng: Random, fs: FloorStat = FloorStat(), combos: Boolean = false, useSpecial: Boolean = simUseSpecial): Boolean {
         val c = Combat(hero, floor, Encounters.build(Encounters.roll(floor, rng), floor), ambush = false, rng = rng)
         playCombat(c, skill, fs, rng, combos, useSpecial = useSpecial)
         return c.phase == CombatPhase.VICTORY
@@ -1286,6 +1406,7 @@ class RoguelikeSimulationTest {
         var failZone = -1; var failStreak = 0
         val mem = MapMemory()
         val started = System.currentTimeMillis()
+        val profileDeadline = if (timePerProfile) started + (maxSeconds?.times(1000) ?: Long.MAX_VALUE / 4) else deadline
         var lastProgress = started
         // Où le profil passe ses tours et où il meurt : de quoi comprendre un blocage
         val turnsByFloor = mutableMapOf<Int, Int>()
@@ -1299,7 +1420,7 @@ class RoguelikeSimulationTest {
         var zoneSeen = 0
 
         while (g.floor <= maxFloor && turns++ < maxMapTurns) {
-            if (System.currentTimeMillis() > deadline) { r.wallClockCut++; break }
+            if (System.currentTimeMillis() > profileDeadline) { r.wallClockCut++; break }
             if (label.isNotEmpty() && turns % 2000 == 0 && System.currentTimeMillis() - lastProgress > 30_000) {
                 lastProgress = System.currentTimeMillis()
                 progress("$label : ${(lastProgress - started) / 1000} s, étage ${g.floor} (meilleur $best), $deaths morts, $turns tours de carte")
@@ -1323,7 +1444,9 @@ class RoguelikeSimulationTest {
             if (smart && g.combat == null && (g.hero.relics.size != relicsSeen || zone != zoneSeen)) {
                 relicsSeen = g.hero.relics.size
                 zoneSeen = zone
-                chooseRelics(g.hero, g.floor, skill)
+                val before = g.hero.relicSlots.filterNotNull().toSet()
+                chooseRelics(g.hero, g.floor, skill, wanted)
+                if (before.isNotEmpty()) { r.relicChecks++; if (g.hero.relicSlots.filterNotNull().toSet() != before) r.relicSwitches++ }
             }
             // L'optimiseur refait son équipement complet tous les 10 étages, dès qu'une pièce de set est tombée (au moins 3 étages après le dernier essai), et après chaque mort, à l'étage où il est mort
             if (style == Style.OPTIMIZER && g.combat == null && g.pendingEquipDrop == null && g.deathReport == null &&
@@ -1361,7 +1484,7 @@ class RoguelikeSimulationTest {
                         if (failStreak >= CASUAL_FAILS) {
                             failStreak = 0
                             r.relicReshuffles++
-                            val pick = g.hero.relics.shuffled(rng).take(g.hero.unlockedRelicSlots)
+                            val pick = g.hero.relics.filter { it != Relic.HOURGLASS }.shuffled(rng).take(g.hero.unlockedRelicSlots)
                             g.hero.relicSlots.fill(null)
                             pick.forEachIndexed { i, relic -> g.hero.relicSlots[i] = relic }
                         }
@@ -1381,8 +1504,15 @@ class RoguelikeSimulationTest {
                     val cur = g.hero.equipped[e.slot]
                     // Le bot connaît sa classe : une arme qui n'est pas la sienne note moins bien
                     val archetype = wanted ?: g.hero.archetype
-                    val allowed = wanted == null || fitsWanted(e, wanted)
-                    if (allowed && (cur == null || LootSystem.rating(e, archetype) > LootSystem.rating(cur, archetype))) g.equipPendingDrop() else g.stashPendingDrop()
+                    // Une pièce étrangère peut dépanner ; une pièce du set visé reçoit un léger bonus.
+                    fun dropScore(item: Equipment): Int {
+                        val rating = LootSystem.rating(item, archetype)
+                        if (wanted == null) return rating
+                        return rating +
+                            (if (item.weight == wanted.weight) rating / 5 else 0) +
+                            (if (item.isotopeSet?.archetype == wanted) rating / 4 else 0)
+                    }
+                    if (cur == null || dropScore(e) > dropScore(cur)) g.equipPendingDrop() else g.stashPendingDrop()
                 }
                 g.stairsOpen -> g.descend()
                 else -> { mapStep(g, mem); r.f(g.floor).mapTurns++ }
@@ -1417,7 +1547,7 @@ class RoguelikeSimulationTest {
         if (setBefore) r.fightsWithSet++
         val cs = CombatStat()
         val floorFought = g.floor
-        playCombat(c, skill, fs, rng, combos = smart, cs = cs)
+        playCombat(c, skill, fs, rng, combos = smart, cs = cs, useSpecial = simUseSpecial)
         val died = c.phase == CombatPhase.DEFEAT
         if (died) {
             if (hpStart >= c.hero.maxHp * 0.9f) r.deathsFullHp++
@@ -1489,9 +1619,9 @@ class RoguelikeSimulationTest {
                     // Garde et doubles ne frappent pas : jamais juste après un autre tour sans frapper
                     Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.2f && !lastWasSupport) ({ c.guard(); lastWasSupport = true }) else null
                     Archetype.MAGE    -> if (c.mirrorImages == 0 && !lastWasSupport) ({ c.mirrorImage(); lastWasSupport = true }) else null
-                    // Deux coups d'arme : il enchaîne dès qu'il peut. Les pantins tombés, on les rappelle
+                    // Deux coups d'arme : il enchaîne dès qu'il peut. Le nécromancien invoque ses pantins, puis rappelle les tombés.
                     Archetype.VAGABOND -> ({ c.chain(target, strike(skill, rng), strike(skill, rng)); Unit })
-                    Archetype.NECROMANCER -> if (c.puppetHp.any { it <= 0 } && !lastWasSupport) ({ c.recallPuppets(); lastWasSupport = true }) else null
+                    Archetype.NECROMANCER -> if ((c.puppetHp.isEmpty() || c.puppetHp.any { it <= 0 }) && !lastWasSupport) ({ c.recallPuppets(); lastWasSupport = true }) else null
                     null -> null
                 }
                 lastWasSupport = false

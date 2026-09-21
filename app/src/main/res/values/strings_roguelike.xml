@@ -119,14 +119,14 @@
     <string name="roguelike_relic_earthquake">Earthquake</string>
     <string name="roguelike_relic_hunters_mark">Hunter\'s Mark</string>
     <string name="roguelike_relic_poisoned_blades">Poisoned Blades</string>
-    <string name="roguelike_relic_freezing_rain">Freezing Rain</string>
+    <string name="roguelike_relic_freezing_rain">Icy gust</string>
     <string name="roguelike_relic_chain_lightning">Chain Lightning</string>
     <string name="roguelike_relic_sunder_desc">Deals %1$s–%2$s damage (no element) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_war_cry_desc">[[state_weakened|Weakens]] every enemy for %3$d turns (their blows hit %10$d%% softer), and your next %16$d weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_earthquake_desc">Deals %1$s–%2$s damage (no element) to every enemy, and they stagger: their next turn comes later. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_hunters_mark_desc">Deals %1$s–%2$s damage (no element) and [[state_marked|marks]] the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of [[state_poison|poison]] (%17$d at most), eating %5$s HP per turn. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s damage to every enemy and [[state_soaked|soaks]] them for %3$d turns: they resist control less, and water reacts with other elements. It puts out fires. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s ice damage to all enemies and may [[state_frozen|freeze]] each: it slows down a lot for %18$s turns, and its blows are numbed. Each sometimes resists. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_chain_lightning_desc">Deals %1$s–%2$s damage to the target, then leaps to every other enemy, losing %11$d%% at each leap. Recharge: %4$d turns.</string>
 
     <!-- Réactions : un sort sur une cible déjà dans un certain état -->
@@ -168,16 +168,16 @@
     <string name="roguelike_relic_smoke_bomb">Smoke Bomb</string>
     <string name="roguelike_relic_acid_flask">Acid Flask</string>
     <string name="roguelike_relic_crystallize">Crystallize</string>
-    <string name="roguelike_relic_meteor">Meteor</string>
-    <string name="roguelike_relic_magic_missile">Magic Missile</string>
+    <string name="roguelike_relic_meteor">Pyre</string>
+    <string name="roguelike_relic_magic_missile">Wandering bolts</string>
     <string name="roguelike_relic_arcane_shield">Arcane Shield</string>
     <string name="roguelike_relic_holy_light">Holy Light</string>
     <string name="roguelike_relic_regeneration">Regeneration</string>
     <string name="roguelike_relic_heal">Heal</string>
-    <string name="roguelike_relic_stoneskin">Stoneskin</string>
+    <string name="roguelike_relic_stoneskin">Frost skin</string>
     <string name="roguelike_relic_charm">Charm</string>
-    <string name="roguelike_relic_haste">Haste</string>
-    <string name="roguelike_relic_slow">Slow</string>
+    <string name="roguelike_relic_haste">Adrenaline</string>
+    <string name="roguelike_relic_slow">Black ice</string>
     <string name="roguelike_relic_hourglass">Hourglass</string>
     <string name="roguelike_relic_rend_desc">Deals %1$s–%2$s damage (no element) and opens a [[state_bleeding|wound]] for %3$d turns: the target loses %8$s HP every time it attacks. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_whirlwind_desc">A weapon strike on every enemy: %1$s–%2$s damage each (no element). Recharge: %4$d turns.</string>
@@ -185,15 +185,15 @@
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, adds a dose of [[state_poison|poison]] (%5$s HP per turn) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage — %12$d times as much to a [[state_frozen|frozen]] target, whose ice then shatters. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_meteor_desc">Calls a meteor that falls %3$d turns later on every enemy: %1$s–%2$s fire damage each. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_magic_missile_desc">%15$d arcane bolts, each on a random enemy, sharing %1$s–%2$s damage. Never resisted. Recharge: %4$d turn.</string>
+    <string name="roguelike_relic_meteor_desc">Raises a pyre that ignites %3$d turns later on all enemies: %1$s–%2$s fire damage each. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_magic_missile_desc">%15$d bolts, each on a random enemy, sharing %1$s–%2$s lightning damage. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_arcane_shield_desc">A barrier absorbs the next %8$s damage. If it still holds when your turn comes back, your relics recharge one turn faster. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_holy_light_desc">Deals %1$s–%2$s holy damage and [[state_blinded|blinds]] the target for %3$d turn. The undead fear it. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_regeneration_desc">Heals %8$s HP at each of your next %3$d turns. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_heal_desc">Heals %8$s HP at once (%13$d%% of your max HP). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is multiplied by %14$d, and every blow you take sends %8$s%% back to its author. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_haste_desc">Your speed rises by half for your next %3$d turns: you act more often. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_slow_desc">The target is twice as slow for its next %3$d turns: it acts less often. It sometimes resists. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_haste_desc">Your speed doubles for your next %3$d turns: you act more often. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_slow_desc">Deals %1$s–%2$s ice damage and the target slips: it is much slower for its next %3$d turns and plays far less often. It sometimes resists. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_hourglass_desc">Turns back time: the next %3$d enemy attacks come more slowly, and your parry window is wider. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_charm_desc">The target\'s next attack hits one of its allies instead (alone, it loses it). It sometimes resists. Recharge: %4$d turns.</string>
 
@@ -213,7 +213,7 @@
     <string name="roguelike_resonance_hemorrhage_desc">Whirlwind makes every enemy bleed</string>
     <string name="roguelike_resonance_dawn_desc">every turn of Regeneration also burns the undead</string>
     <string name="roguelike_resonance_discord_desc">a blinded enemy can\'t resist your Charm</string>
-    <string name="roguelike_resonance_rampart_desc">Stoneskin sends twice as much back</string>
+    <string name="roguelike_resonance_rampart_desc">Frost skin returns twice as much</string>
 
     <string name="roguelike_combat_bleeding">bleeding %1$d</string>
     <string name="roguelike_combat_charmed">charmed</string>
@@ -235,6 +235,7 @@
     <string name="roguelike_log_rest">You catch your breath. HP %1$s/%2$s</string>
     <string name="roguelike_log_victory">Victory! +%1$s gold.</string>
     <string name="roguelike_log_chain">Another enemy jumps on you!</string>
+    <string name="roguelike_log_vagabond_recover">You catch your breath without a sound.</string>
     <string name="roguelike_log_spotted">%1$s has spotted you!</string>
     <string name="roguelike_log_lost_track">%1$s lost your trail.</string>
     <string name="roguelike_pack_size">×%1$d</string>
@@ -412,8 +413,8 @@
     <string name="roguelike_archetype_vagabond">Wanderer</string>
     <string name="roguelike_archetype_necromancer">Necromancer</string>
     <string name="roguelike_special_combo">Combo</string>
-    <string name="roguelike_special_puppets">Puppets</string>
-    <string name="roguelike_combat_puppets">PUPPETS!</string>
+    <string name="roguelike_special_puppets">Call of the dead</string>
+    <string name="roguelike_combat_puppets">CALL OF THE DEAD!</string>
     <string name="roguelike_weight_medium">Medium</string>
     <string name="roguelike_weight_ultralight">Featherlight</string>
     <string name="roguelike_base_cap">Cap</string>
@@ -428,4 +429,34 @@
     <string name="roguelike_combat_puppets_line">puppets %1$d/%2$d</string>
     <string name="roguelike_combat_roll">ROLL!</string>
     <string name="roguelike_combat_roll_ready">roll ready</string>
+    <string name="roguelike_relic_fer_rouge">Red-hot iron</string>
+    <string name="roguelike_relic_fer_rouge_desc">A blow with glowing iron: %1$s–%2$s fire damage, then the target [[state_burn|burns]] for %3$d turns (%19$d%% of the hit each turn). Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_cocktail">Firebomb</string>
+    <string name="roguelike_relic_cocktail_desc">Throws a firebomb at all enemies: %1$s–%2$s fire damage each, then they [[state_burn|burn]] for %3$d turns (%19$d%% of the hit each turn). Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_lanterne">Blazing lantern</string>
+    <string name="roguelike_relic_lanterne_desc">Spills the lantern oil: %1$s–%2$s fire damage, then the target [[state_burn|burns]] for a long time, %3$d turns (%19$d%% of the hit each turn). Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_marteau_foudre">Thunder hammer</string>
+    <string name="roguelike_relic_marteau_foudre_desc">A hammer blow charged with lightning: %1$s–%2$s damage and the target is [[state_paralyzed|paralyzed]] for %3$d turns, each of its attacks may fall flat. It sometimes resists. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_champignon">Toxic mushroom</string>
+    <string name="roguelike_relic_champignon_desc">Deals %1$s–%2$s damage and adds a dose of [[state_poison|poison]] (up to %17$d): each dose eats %5$s HP per turn for %3$d turns, a very long time. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_peste">Plague</string>
+    <string name="roguelike_relic_peste_desc">Deals %1$s–%2$s damage to all enemies and adds a dose of [[state_poison|poison]] (up to %17$d) to each: each dose eats %5$s HP per turn for %3$d turns. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_ponction">Life drain</string>
+    <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s damage (no element) and restores half of the damage dealt as HP. Cooldown: %4$d turns.</string>
+    <string name="roguelike_reaction_thermal_shock">Thermal shock!</string>
+    <string name="roguelike_reaction_plasma">Plasma!</string>
+    <string name="roguelike_reaction_calcination">Calcination!</string>
+    <string name="roguelike_reaction_short_circuit">Short circuit!</string>
+    <string name="roguelike_reaction_rigidity">Rigidity!</string>
+    <string name="roguelike_reaction_poison_ice">Poison ice!</string>
+    <string name="roguelike_reaction_frozen_armor">Frozen armor!</string>
+    <string name="roguelike_reaction_convulsions">Convulsions!</string>
+    <string name="roguelike_reaction_ice_shock">Ice shock!</string>
+    <string name="roguelike_reaction_lightning_rod">Lightning rod!</string>
+    <string name="roguelike_reaction_spark">Spark!</string>
+    <string name="roguelike_reaction_frostbite">Frostbite!</string>
+    <string name="roguelike_reaction_neurotoxin">Neurotoxin!</string>
+    <string name="roguelike_reaction_infection">Infection!</string>
+    <string name="roguelike_reaction_deathblow">Deathblow!</string>
+    <string name="roguelike_reaction_holy_fire">Holy fire!</string>
 </resources>

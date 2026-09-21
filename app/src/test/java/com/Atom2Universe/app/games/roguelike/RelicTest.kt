@@ -318,8 +318,8 @@ class RelicTest {
         val int = heroWith(StatType.INT, 10)
         assertTrue(dex.relicPower(Relic.VENOM) > base.relicPower(Relic.VENOM))
         assertEquals(base.relicPower(Relic.VENOM), int.relicPower(Relic.VENOM), 1e-4f)
-        assertTrue(int.relicPower(Relic.FIREBALL) > base.relicPower(Relic.FIREBALL))
-        assertEquals(base.relicPower(Relic.FIREBALL), dex.relicPower(Relic.FIREBALL), 1e-4f)
+        assertTrue(int.relicPower(Relic.ICE_SHARD) > base.relicPower(Relic.ICE_SHARD))
+        assertEquals(base.relicPower(Relic.ICE_SHARD), dex.relicPower(Relic.ICE_SHARD), 1e-4f)
     }
 
     @Test
@@ -372,7 +372,6 @@ class RelicTest {
                 RelicEffect.FREEZE    -> RelicBudget.FREEZE_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
                 RelicEffect.PARALYZE  -> RelicBudget.PARALYSIS_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
                 RelicEffect.POISON    -> r.doseCoef * r.effectTurns
-                RelicEffect.SOAK      -> RelicBudget.SOAK_TURN_VALUE * r.effectTurns
                 RelicEffect.FRACTURE  -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns
                 RelicEffect.MARK      -> RelicBudget.MARK_VALUE
                 // L'affaiblissement de chaque ennemi, plus les coups renforcés du héros, partagés
@@ -391,7 +390,10 @@ class RelicTest {
                 // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
                 RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN, RelicEffect.HEAL,
                 RelicEffect.STONESKIN, RelicEffect.CHARM,
-                RelicEffect.HASTE, RelicEffect.SLOW, RelicEffect.HOURGLASS -> RelicBudget.share(r)
+                RelicEffect.HASTE, RelicEffect.HOURGLASS -> RelicBudget.share(r)
+                // Ralentissement et soin : une part du coup, le reste dans l'effet
+                RelicEffect.SLOW      -> RelicBudget.share(r) * RelicBudget.SLOW_EFFECT_SHARE
+                RelicEffect.DRAIN     -> RelicBudget.share(r) * RelicBudget.DRAIN_EFFECT_SHARE
             }
             assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
                 1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)

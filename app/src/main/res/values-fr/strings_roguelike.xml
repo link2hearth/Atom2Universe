@@ -119,14 +119,14 @@
     <string name="roguelike_relic_earthquake">Séisme</string>
     <string name="roguelike_relic_hunters_mark">Marque du chasseur</string>
     <string name="roguelike_relic_poisoned_blades">Lames empoisonnées</string>
-    <string name="roguelike_relic_freezing_rain">Pluie glacée</string>
+    <string name="roguelike_relic_freezing_rain">Bourrasque glacée</string>
     <string name="roguelike_relic_chain_lightning">Chaîne d\'éclairs</string>
     <string name="roguelike_relic_sunder_desc">Inflige %1$s–%2$s dégâts (sans élément) et [[state_fractured|fracture]] la cible pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_war_cry_desc">[[state_weakened|Affaiblit]] tous les ennemis pendant %3$d tours (leurs coups font %10$d %% de moins), et tes %16$d prochains coups d\'arme font +%7$d %%. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_earthquake_desc">Inflige %1$s–%2$s dégâts (sans élément) à tous les ennemis, qui chancellent : leur prochain tour recule. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_hunters_mark_desc">Inflige %1$s–%2$s dégâts (sans élément) et [[state_marked|marque]] la cible jusqu\'à sa mort : tes critiques la frappent plus fort, et ton Coup mortel trouve la faille. Quand elle meurt, la marque saute sur un autre ennemi. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Enduit ton arme : chacun de tes %3$d prochains coups d\'arme ajoute une dose de [[state_poison|poison]] (%17$d au plus), qui ronge %5$s PV par tour. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_freezing_rain_desc">Inflige %1$s–%2$s dégâts à tous les ennemis et les [[state_soaked|trempe]] pendant %3$d tours : ils résistent moins au contrôle, et l\'eau réagit avec d\'autres éléments. Elle éteint le feu. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_freezing_rain_desc">Inflige %1$s–%2$s dégâts de glace à tous les ennemis et peut [[state_frozen|geler]] chacun : il ralentit très fort pendant %18$s tours, et ses coups sont engourdis. Chacun résiste parfois. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_chain_lightning_desc">Inflige %1$s–%2$s dégâts à la cible, puis saute sur chacun des autres ennemis en perdant %11$d %% à chaque saut. Recharge : %4$d tours.</string>
 
     <!-- Réactions : un sort sur une cible déjà dans un certain état -->
@@ -168,16 +168,16 @@
     <string name="roguelike_relic_smoke_bomb">Bombe fumigène</string>
     <string name="roguelike_relic_acid_flask">Fiole d\'acide</string>
     <string name="roguelike_relic_crystallize">Cristallisation</string>
-    <string name="roguelike_relic_meteor">Météore</string>
-    <string name="roguelike_relic_magic_missile">Projectile magique</string>
+    <string name="roguelike_relic_meteor">Bûcher</string>
+    <string name="roguelike_relic_magic_missile">Éclairs errants</string>
     <string name="roguelike_relic_arcane_shield">Bouclier arcanique</string>
     <string name="roguelike_relic_holy_light">Lumière sacrée</string>
     <string name="roguelike_relic_regeneration">Régénération</string>
     <string name="roguelike_relic_heal">Soin</string>
-    <string name="roguelike_relic_stoneskin">Peau de pierre</string>
+    <string name="roguelike_relic_stoneskin">Peau de givre</string>
     <string name="roguelike_relic_charm">Charme</string>
-    <string name="roguelike_relic_haste">Hâte</string>
-    <string name="roguelike_relic_slow">Lenteur</string>
+    <string name="roguelike_relic_haste">Adrénaline</string>
+    <string name="roguelike_relic_slow">Verglas</string>
     <string name="roguelike_relic_hourglass">Sablier</string>
     <string name="roguelike_relic_rend_desc">Inflige %1$s–%2$s dégâts (sans élément) et ouvre une [[state_bleeding|plaie]] pendant %3$d tours : la cible perd %8$s PV chaque fois qu\'elle attaque. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_whirlwind_desc">Un coup d\'arme sur tous les ennemis : %1$s–%2$s dégâts chacun (sans élément). Recharge : %4$d tours.</string>
@@ -185,15 +185,15 @@
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Aveugle]] tous les ennemis pendant %3$d tours (ils attaquent au désavantage), et ton prochain coup d\'arme est une attaque sournoise : un critique assuré. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_acid_flask_desc">Inflige %1$s–%2$s dégâts, ajoute une dose de [[state_poison|poison]] (%5$s PV par tour) et [[state_fractured|fracture]] la cible pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_crystallize_desc">Inflige %1$s–%2$s dégâts — %12$d fois plus à une cible [[state_frozen|figée]], dont la glace se brise. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_meteor_desc">Appelle un météore qui tombe %3$d tours plus tard sur tous les ennemis : %1$s–%2$s dégâts de feu chacun. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_magic_missile_desc">%15$d traits arcaniques, chacun sur un ennemi au hasard, qui se partagent %1$s–%2$s dégâts. Jamais résisté. Recharge : %4$d tour.</string>
+    <string name="roguelike_relic_meteor_desc">Dresse un bûcher qui s\'embrase %3$d tours plus tard sur tous les ennemis : %1$s–%2$s dégâts de feu chacun. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_magic_missile_desc">%15$d éclairs, chacun sur un ennemi au hasard, qui se partagent %1$s–%2$s dégâts de foudre. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_arcane_shield_desc">Une barrière absorbe les %8$s prochains dégâts. Si elle tient encore quand ton tour revient, tes reliques se rechargent d\'un tour plus vite. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_holy_light_desc">Inflige %1$s–%2$s dégâts sacrés et [[state_blinded|aveugle]] la cible pendant %3$d tour. Les morts-vivants la craignent. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_regeneration_desc">Rend %8$s PV à chacun de tes %3$d prochains tours. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_heal_desc">Rend %8$s PV d\'un coup (%13$d %% de tes PV max). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_stoneskin_desc">Pendant %3$d tours ton armure est multipliée par %14$d, et chaque coup reçu renvoie %8$s %% à son auteur. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_haste_desc">Ta vitesse augmente de moitié pendant tes %3$d prochains tours : tu joues plus souvent. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_slow_desc">La cible est deux fois plus lente pendant ses %3$d prochains tours : elle joue moins souvent. Elle résiste parfois. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_haste_desc">Ta vitesse double pendant tes %3$d prochains tours : tu joues plus souvent. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_slow_desc">Inflige %1$s–%2$s dégâts de glace et la cible glisse : elle est bien plus lente pendant ses %3$d prochains tours, elle joue beaucoup moins souvent. Elle résiste parfois. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_hourglass_desc">Retourne le temps : les %3$d prochaines attaques ennemies arrivent plus lentement, et ta fenêtre de parade s\'élargit. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_charm_desc">La prochaine attaque de la cible frappe un de ses alliés à la place (seule, elle la perd). Elle résiste parfois. Recharge : %4$d tours.</string>
 
@@ -213,7 +213,7 @@
     <string name="roguelike_resonance_hemorrhage_desc">le Tourbillon fait saigner tous les ennemis</string>
     <string name="roguelike_resonance_dawn_desc">chaque tour de Régénération brûle aussi les morts-vivants</string>
     <string name="roguelike_resonance_discord_desc">un ennemi aveuglé ne résiste pas à ton Charme</string>
-    <string name="roguelike_resonance_rampart_desc">la Peau de pierre renvoie deux fois plus</string>
+    <string name="roguelike_resonance_rampart_desc">la Peau de givre renvoie deux fois plus</string>
 
     <string name="roguelike_combat_bleeding">saigne %1$d</string>
     <string name="roguelike_combat_charmed">charmé</string>
@@ -235,6 +235,7 @@
     <string name="roguelike_log_rest">Tu reprends ton souffle. PV %1$s/%2$s</string>
     <string name="roguelike_log_victory">Victoire ! +%1$s or.</string>
     <string name="roguelike_log_chain">Un autre ennemi te saute dessus !</string>
+    <string name="roguelike_log_vagabond_recover">Tu reprends ton souffle sans un bruit.</string>
     <string name="roguelike_log_spotted">%1$s t\'a repéré !</string>
     <string name="roguelike_log_lost_track">%1$s a perdu ta trace.</string>
     <string name="roguelike_pack_size">×%1$d</string>
@@ -412,8 +413,8 @@
     <string name="roguelike_archetype_vagabond">Vagabond</string>
     <string name="roguelike_archetype_necromancer">Nécromancien</string>
     <string name="roguelike_special_combo">Enchaînement</string>
-    <string name="roguelike_special_puppets">Pantins</string>
-    <string name="roguelike_combat_puppets">PANTINS !</string>
+    <string name="roguelike_special_puppets">Appel des morts</string>
+    <string name="roguelike_combat_puppets">APPEL DES MORTS !</string>
     <string name="roguelike_weight_medium">Intermédiaire</string>
     <string name="roguelike_weight_ultralight">Super léger</string>
     <string name="roguelike_base_cap">Cervelière</string>
@@ -428,4 +429,34 @@
     <string name="roguelike_combat_puppets_line">pantins %1$d/%2$d</string>
     <string name="roguelike_combat_roll">ROULADE !</string>
     <string name="roguelike_combat_roll_ready">roulade prête</string>
+    <string name="roguelike_relic_fer_rouge">Fer rouge</string>
+    <string name="roguelike_relic_fer_rouge_desc">Un coup de fer rougi : %1$s–%2$s dégâts de feu, puis la cible [[state_burn|brûle]] pendant %3$d tours (%19$d %% du coup à chaque tour). Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_cocktail">Cocktail incendiaire</string>
+    <string name="roguelike_relic_cocktail_desc">Lance un cocktail sur tous les ennemis : %1$s–%2$s dégâts de feu chacun, puis ils [[state_burn|brûlent]] pendant %3$d tours (%19$d %% du coup à chaque tour). Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_lanterne">Lanterne ardente</string>
+    <string name="roguelike_relic_lanterne_desc">Renverse l\'huile de la lanterne : %1$s–%2$s dégâts de feu, puis la cible [[state_burn|brûle]] longtemps, pendant %3$d tours (%19$d %% du coup à chaque tour). Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_marteau_foudre">Marteau-foudre</string>
+    <string name="roguelike_relic_marteau_foudre_desc">Un coup de marteau chargé de foudre : %1$s–%2$s dégâts et la cible est [[state_paralyzed|paralysée]] pendant %3$d tours, chacune de ses attaques peut tomber à plat. Elle résiste parfois. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_champignon">Champignon toxique</string>
+    <string name="roguelike_relic_champignon_desc">Inflige %1$s–%2$s dégâts et ajoute une dose de [[state_poison|poison]] (%17$d au plus) : chaque dose ronge %5$s PV par tour pendant %3$d tours, très longtemps. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_peste">Peste</string>
+    <string name="roguelike_relic_peste_desc">Inflige %1$s–%2$s dégâts à tous les ennemis et ajoute une dose de [[state_poison|poison]] (%17$d au plus) à chacun : chaque dose ronge %5$s PV par tour pendant %3$d tours. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_ponction">Ponction vitale</string>
+    <string name="roguelike_relic_ponction_desc">Inflige %1$s–%2$s dégâts (sans élément) et te rend en PV la moitié des dégâts infligés. Recharge : %4$d tours.</string>
+    <string name="roguelike_reaction_thermal_shock">Choc thermique !</string>
+    <string name="roguelike_reaction_plasma">Plasma !</string>
+    <string name="roguelike_reaction_calcination">Calcination !</string>
+    <string name="roguelike_reaction_short_circuit">Court-circuit !</string>
+    <string name="roguelike_reaction_rigidity">Rigidité !</string>
+    <string name="roguelike_reaction_poison_ice">Poison glacé !</string>
+    <string name="roguelike_reaction_frozen_armor">Armure gelée !</string>
+    <string name="roguelike_reaction_convulsions">Convulsions !</string>
+    <string name="roguelike_reaction_ice_shock">Choc de glace !</string>
+    <string name="roguelike_reaction_lightning_rod">Paratonnerre !</string>
+    <string name="roguelike_reaction_spark">Étincelle !</string>
+    <string name="roguelike_reaction_frostbite">Engelure !</string>
+    <string name="roguelike_reaction_neurotoxin">Neurotoxine !</string>
+    <string name="roguelike_reaction_infection">Infection !</string>
+    <string name="roguelike_reaction_deathblow">Coup de grâce !</string>
+    <string name="roguelike_reaction_holy_fire">Feu sacré !</string>
 </resources>

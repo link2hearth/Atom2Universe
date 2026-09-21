@@ -87,7 +87,6 @@ object Lexicon {
         Element.FIRE -> R.string.lex_element_fire; Element.ICE -> R.string.lex_element_ice
         Element.LIGHTNING -> R.string.lex_element_lightning; Element.POISON -> R.string.lex_element_poison
         Element.HOLY -> R.string.lex_element_holy; Element.PHYSICAL -> R.string.lex_element_physical
-        Element.ARCANE -> R.string.lex_element_arcane
     }
 
     @StringRes private fun attrNameRes(t: StatType) = when (t) {
@@ -283,7 +282,7 @@ object Lexicon {
             },
             entry("cooldown", c, R.string.lex_cooldown) {
                 add(R.string.lex_cooldown_1)
-                add(R.string.lex_cooldown_2, Hero.RELIC_WALK_STEPS)
+                add(R.string.lex_cooldown_2)
                 add(R.string.lex_cooldown_3, Hero.SPECIAL_COOLDOWN)
             },
             entry("parry", c, R.string.lex_parry) {
@@ -311,7 +310,7 @@ object Lexicon {
             entry("special", c, R.string.lex_special) { add(R.string.lex_special_1); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN) },
             entry("rest", c, R.string.lex_rest) {
                 add(R.string.lex_rest_1, env.pct(RoguelikeGame.REST_HEAL)); add(R.string.lex_rest_2)
-                add(R.string.lex_rest_3, env.pct(RoguelikeGame.REST_NOISE_CHANCE)); add(R.string.lex_rest_4)
+                add(R.string.lex_rest_3, env.pct(RoguelikeGame.REST_NOISE_CHANCE))
             },
             entry("chase", c, R.string.lex_chase) {
                 add(R.string.lex_chase_1); add(R.string.lex_chase_2); add(R.string.lex_chase_3, RoguelikeGame.CHAIN_DISTANCE)
@@ -329,7 +328,7 @@ object Lexicon {
         val dc = SpellSave.DC_BASE
         return listOf(
             entry("state_burn", c, R.string.lex_state_burn) {
-                add(R.string.lex_state_burn_1); add(R.string.lex_state_burn_2, env.pct(Relic.BURN_SHARE)); add(R.string.lex_state_burn_3)
+                add(R.string.lex_state_burn_1); add(R.string.lex_state_burn_2, env.pct(Relic.BURN_SHARE))
             },
             entry("state_poison", c, R.string.lex_state_poison) {
                 add(R.string.lex_state_poison_1); add(R.string.lex_state_poison_2, Relic.POISON_MAX_DOSES)
@@ -339,9 +338,7 @@ object Lexicon {
                 add(R.string.lex_state_frozen_2)
             },
             entry("state_paralyzed", c, R.string.lex_state_paralyzed) { add(R.string.lex_state_paralyzed_1) },
-            entry("state_soaked", c, R.string.lex_state_soaked) {
-                add(R.string.lex_state_soaked_1, env.pct(SpellSave.landChance(dc, -Combat.SOAKED_SAVE_MALUS) - SpellSave.landChance(dc, 0)))
-            },
+            entry("state_exposed", c, R.string.lex_state_exposed) { add(R.string.lex_state_exposed_1) },
             entry("state_fractured", c, R.string.lex_state_fractured) { add(R.string.lex_state_fractured_1, env.pct(Combat.FRACTURE_MULT - 1f)) },
             entry("state_weakened", c, R.string.lex_state_weakened) { add(R.string.lex_state_weakened_1, env.pct(1f - Combat.WEAKEN_MULT)) },
             entry("state_bleeding", c, R.string.lex_state_bleeding) { add(R.string.lex_state_bleeding_1); add(R.string.lex_state_bleeding_2) },
@@ -379,7 +376,6 @@ object Lexicon {
             Element.FIRE to R.string.lex_element_fire_1, Element.ICE to R.string.lex_element_ice_1,
             Element.LIGHTNING to R.string.lex_element_lightning_1, Element.POISON to R.string.lex_element_poison_1,
             Element.HOLY to R.string.lex_element_holy_1, Element.PHYSICAL to R.string.lex_element_physical_1,
-            Element.ARCANE to R.string.lex_element_arcane_1,
         )
         return Element.entries.map { e ->
             entry(idOf(e), c, elementRes(e)) {
@@ -400,19 +396,30 @@ object Lexicon {
 
     private fun reactions(): List<LexiconEntry> {
         val c = LexiconCategory.REACTIONS
-        val intro = entry("reactions", c, R.string.lex_reactions) { add(R.string.lex_reactions_1); add(R.string.lex_reactions_2) }
+        val intro = entry("reactions", c, R.string.lex_reactions) { add(R.string.lex_reactions_1); add(R.string.lex_reactions_2); add(R.string.lex_reactions_3, env.pct(Reaction.BASE_ATTACK_PART)) }
         return listOf(intro) + Reaction.entries.map { r ->
             entryT(idOf(r), c, { env -> env.s(r.labelRes).trimEnd('!', ' ', ' ') },
                 secret = true, known = { h -> h != null && r in h.knownReactions }) {
                 when (r) {
+                    Reaction.THERMAL_SHOCK -> add(R.string.lex_reaction_thermal_shock_1, env.dec(Reaction.THERMAL_MULT))
                     Reaction.EXPLOSION -> add(R.string.lex_reaction_explosion_1)
-                    Reaction.MELT -> add(R.string.lex_reaction_melt_1, env.dec(Reaction.MELT_MULT))
-                    Reaction.STEAM -> add(R.string.lex_reaction_steam_1, Reaction.STEAM_BLIND_TURNS)
-                    Reaction.ELECTROCUTION -> add(R.string.lex_reaction_electrocution_1, env.dec(Reaction.ELECTRO_MULT))
-                    Reaction.FROST -> add(R.string.lex_reaction_frost_1, Reaction.FROST_EXTRA_TURNS)
+                    Reaction.PLASMA -> add(R.string.lex_reaction_plasma_1, env.dec(Reaction.PLASMA_MULT), Reaction.PLASMA_BURN_TURNS)
+                    Reaction.CALCINATION -> add(R.string.lex_reaction_calcination_1, env.dec(Reaction.CALCINATION_MULT))
+                    Reaction.SHORT_CIRCUIT -> add(R.string.lex_reaction_short_circuit_1, env.dec(Reaction.SHORT_CIRCUIT_MULT))
+                    Reaction.RIGIDITY -> add(R.string.lex_reaction_rigidity_1, Reaction.RIGIDITY_TURNS)
+                    Reaction.POISON_ICE -> add(R.string.lex_reaction_poison_ice_1)
+                    Reaction.FROZEN_ARMOR -> add(R.string.lex_reaction_frozen_armor_1, Reaction.RIGIDITY_TURNS, Reaction.EXPOSED_EXTRA)
+                    Reaction.CONVULSIONS -> add(R.string.lex_reaction_convulsions_1, Reaction.CONVULSION_TURNS)
+                    Reaction.ICE_SHOCK -> add(R.string.lex_reaction_ice_shock_1, Reaction.ICE_SHOCK_TURNS)
+                    Reaction.LIGHTNING_ROD -> add(R.string.lex_reaction_lightning_rod_1, env.pct(Reaction.ROD_SHARE))
+                    Reaction.SPARK -> add(R.string.lex_reaction_spark_1)
+                    Reaction.FROSTBITE -> add(R.string.lex_reaction_frostbite_1)
+                    Reaction.NEUROTOXIN -> add(R.string.lex_reaction_neurotoxin_1, Reaction.NEUROTOXIN_EXTRA)
+                    Reaction.INFECTION -> add(R.string.lex_reaction_infection_1, Reaction.EXPOSED_EXTRA)
                     Reaction.SHATTER -> add(R.string.lex_reaction_shatter_1, env.dec(Reaction.SHATTER_MULT))
-                    Reaction.CAUTERIZE -> add(R.string.lex_reaction_cauterize_1, env.dec(Reaction.CAUTERIZE_MULT))
-                    Reaction.PURIFY -> add(R.string.lex_reaction_purify_1)
+                    Reaction.DEATHBLOW -> add(R.string.lex_reaction_deathblow_1)
+                    Reaction.PURIFY -> add(R.string.lex_reaction_purify_1, Reaction.PURIFIED_TURNS, env.dec(Reaction.PURIFIED_ARMOR), env.pct(Reaction.PURIFIED_REGEN_SHARE))
+                    Reaction.HOLY_FIRE -> add(R.string.lex_reaction_holy_fire_1, env.pct(Reaction.HOLY_FIRE_SHARE))
                 }
             }
         }
@@ -479,10 +486,10 @@ object Lexicon {
         val each = Archetype.entries.map { a ->
             entry(idOf(a), c, a.labelRes) {
                 when (a) {
-                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
+                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1, env.pct(1f - Hero.WARRIOR_WEAPON_DAMAGE_MULT)); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
                     Archetype.ROGUE -> { add(R.string.lex_archetype_rogue_1); add(R.string.lex_archetype_rogue_2) }
                     Archetype.MAGE -> { add(R.string.lex_archetype_mage_1); add(R.string.lex_archetype_mage_2) }
-                    Archetype.VAGABOND -> { add(R.string.lex_archetype_vagabond_1); add(R.string.lex_archetype_vagabond_2, env.pct(Combat.ROLL_BONUS)) }
+                    Archetype.VAGABOND -> { add(R.string.lex_archetype_vagabond_1); add(R.string.lex_archetype_vagabond_2, env.pct(Combat.ROLL_BONUS)); add(R.string.lex_archetype_vagabond_3) }
                     Archetype.NECROMANCER -> {
                         add(R.string.lex_archetype_necromancer_1)
                         add(R.string.lex_archetype_necromancer_2, env.pct(Combat.PUPPET_PARRY_HEAL))
@@ -504,13 +511,13 @@ object Lexicon {
                 add(R.string.lex_special_deadly_2, env.pct(Combat.DEADLY_HP_THRESHOLD)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.MAGE), c, Archetype.MAGE.specialRes) {
-                add(R.string.lex_special_mirror_1, Combat.MIRROR_IMAGES); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+                add(R.string.lex_special_mirror_1, Combat.MIRROR_IMAGES, env.pct(Combat.MIRROR_REGEN_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.VAGABOND), c, Archetype.VAGABOND.specialRes) {
                 add(R.string.lex_special_combo_1, Combat.CHAIN_HITS); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.NECROMANCER), c, Archetype.NECROMANCER.specialRes) {
-                add(R.string.lex_special_puppets_1); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+                add(R.string.lex_special_puppets_1, env.pct(Combat.PUPPET_SUMMON_HIT_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
         )
         return listOf(general) + each + specials

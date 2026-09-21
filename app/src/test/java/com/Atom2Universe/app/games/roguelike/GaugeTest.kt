@@ -150,7 +150,7 @@ class GaugeTest {
     @Test
     fun deuxSortsDeSoutienValentUnTour() {
         // Un rat qui joue à chaque tour : deux sorts à demi-jauge, et il n'a frappé qu'une fois
-        val hero = heroWithAllSlots().apply { addRelic(Relic.WAR_CRY); addRelic(Relic.SMOKE_BOMB); hp = 1_000_000 }
+        val hero = heroWithAllSlots().apply { addRelic(Relic.WAR_CRY); addRelic(Relic.HOURGLASS); hp = 1_000_000 }
         val rat = Enemy(MonsterType.RAT, maxHp = 1_000_000, damage = 3, cadence = 1, countdown = 1)
         val c = Combat(hero, 1, listOf(rat), ambush = false, rng = Random(1), attackDie = { 1 })
         assertEquals(Combat.SUPPORT_ACTION, c.relicCost(Relic.WAR_CRY), 0.0)
@@ -158,7 +158,7 @@ class GaugeTest {
         c.castRelic(Relic.WAR_CRY, 0, Timing.MISS)
         // À égalité (le rat et le héros à demi-tour), le rat passe d'abord : il attendait
         assertEquals(listOf(0), c.passEnemyTurns().attackers)
-        c.castRelic(Relic.SMOKE_BOMB, 0, Timing.MISS)
+        c.castRelic(Relic.HOURGLASS, 0, Timing.MISS)
         assertEquals("le héros rejoue avant le 2e coup du rat", CombatPhase.PLAYER_TURN, c.phase)
     }
 
@@ -207,15 +207,6 @@ class GaugeTest {
     }
 
     // ── Étape 5 : le contrôle agit sur les jauges ───────────────────────────────
-
-    @Test
-    fun leSeismeRepousseTousLesEnnemis() {
-        // Un démon lent (cadence 3) : sans Séisme, il jouerait 1,5 tour après le prochain tour du héros
-        val c = sturdyGroup(MonsterType.DEMON)
-        c.hero.addRelic(Relic.EARTHQUAKE)
-        c.castRelic(Relic.EARTHQUAKE, 0, Timing.MISS)
-        assertEquals("un quart de jauge, soit 3/4 de tour de plus", 1.5 + Relic.EARTHQUAKE_PUSH * 3, c.timeUntilTurn(0), 1e-9)
-    }
 
     @Test
     fun laHateFaitJouerPlusSouvent() {

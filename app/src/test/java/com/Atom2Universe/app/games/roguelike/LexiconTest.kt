@@ -66,10 +66,10 @@ class LexiconTest {
         assertTrue(secret.isNotEmpty())
         assertTrue("Rien ne doit être connu au départ", secret.none { it.visible(hero) })
 
-        hero.discover(MonsterType.RAT, Element.FIRE, listOf(Reaction.MELT))
+        hero.discover(MonsterType.RAT, Element.FIRE, listOf(Reaction.THERMAL_SHOCK))
         hero.relics += Relic.FIREBALL
         hero.knownResonances += Resonance.ALCHEMY
-        assertTrue(Lexicon.find(Lexicon.idOf(Reaction.MELT))!!.visible(hero))
+        assertTrue(Lexicon.find(Lexicon.idOf(Reaction.THERMAL_SHOCK))!!.visible(hero))
         assertFalse(Lexicon.find(Lexicon.idOf(Reaction.SHATTER))!!.visible(hero))
         assertTrue(Lexicon.find(Lexicon.idOf(Relic.FIREBALL))!!.visible(hero))
         assertFalse(Lexicon.find(Lexicon.idOf(Relic.VENOM))!!.visible(hero))
