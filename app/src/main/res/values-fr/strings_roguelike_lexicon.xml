@@ -64,7 +64,7 @@
     <string name="lex_stat_crit_chance_1">La chance qu\'un coup soit critique : il fait alors plus mal.</string>
     <string name="lex_stat_crit_chance_2">%1$d %% de base, +%2$d %% par point de [[attr_dex|DEX]], plus les objets</string>
     <string name="lex_stat_crit_chance_3">Jamais plus de %1$d %%</string>
-    <string name="lex_stat_crit_chance_4">[[strike|Frapper juste]] : +%1$d points avec un geste réussi, +%2$d avec un geste parfait</string>
+    <string name="lex_stat_crit_chance_4">[[strike|La qualité du geste]] change les dégâts de base, jamais la chance de critique.</string>
     <string name="lex_you_crit">Toi : %1$d %% à l\'étage %2$d</string>
     <string name="lex_stat_crit_damage">Dégâts critiques</string>
     <string name="lex_stat_crit_damage_1">Le multiplicateur d\'un coup critique.</string>
@@ -116,8 +116,8 @@
     <string name="lex_parry_3">La [[attr_dex|DEX]] élargit la fenêtre : +%1$d ms par point.</string>
     <string name="lex_parry_4">Une parade parfaite déclenche l\'atout de ton [[archetype|archétype]].</string>
     <string name="lex_strike">Frapper juste</string>
-    <string name="lex_strike_1">Glisse le doigt quand le curseur traverse la zone dorée, pendant ton attaque.</string>
-    <string name="lex_strike_2">Bien : +%1$d points de [[stat_crit_chance|critique]]. Parfait : +%2$d points.</string>
+    <string name="lex_strike_1">Effectue le swipe dans le sens de la flèche quand le curseur atteint la zone verte. La petite zone rouge donne un parfait.</string>
+    <string name="lex_strike_2">Parfait : maximum de la fourchette de dégâts. Bien : milieu de la fourchette. Le critique est tiré séparément.</string>
     <string name="lex_strike_3">Sur un sort de contrôle : bien = l\'ennemi [[resist|résiste]] %1$d %% de moins ; parfait = il tire deux fois et garde le pire.</string>
     <string name="lex_ambush">Embuscade</string>
     <string name="lex_ambush_1">Les monstres frappent en premier.</string>
@@ -143,7 +143,7 @@
     <string name="lex_chase_2">Tant qu\'un monstre te poursuit, tu ne peux pas te [[rest|reposer]].</string>
     <string name="lex_chase_3">À la fin d\'un combat, un poursuivant à %1$d cases ou moins s\'enchaîne aussitôt.</string>
     <string name="lex_death">Mort</string>
-    <string name="lex_death_1">Tu reviens à l\'étage %1$d avec tout ton équipement.</string>
+    <string name="lex_death_1">Tu gardes ton équipement et choisis : rejouer l\'étage de ta mort ou revenir au dernier checkpoint. Checkpoints tous les %1$d étages : 1, 11, 21…</string>
     <string name="lex_death_2">Tu perds %1$d %% de ton or.</string>
     <string name="lex_state_burn">Brûlé</string>
     <string name="lex_state_burn_1">Il perd des PV au début de chacun de ses tours.</string>
@@ -355,4 +355,5 @@
     <string name="lex_reaction_infection_1">Le [[element_poison|poison]] sur un [[state_exposed|exposé]] : une dose de plus, et son exposition dure %1$d tour de plus.</string>
     <string name="lex_reaction_deathblow_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_paralyzed|paralysé]] : critique garanti.</string>
     <string name="lex_reaction_holy_fire_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_burn|brûlé]] : la brûlure s\'éteint et te soigne de %1$s de ce qu\'elle aurait fait.</string>
+    <string name="lex_strike_miss">Raté : minimum de la fourchette, réduit par la défense du monstre contre les coups mal exécutés. Les monstres robustes, les étages profonds et les boss défendent mieux. Ton équipement et tes caractéristiques aident à dépasser cette défense ; les dégâts peuvent tomber à zéro. Un coup entièrement bloqué ne déclenche aucun effet au contact.</string>
 </resources>

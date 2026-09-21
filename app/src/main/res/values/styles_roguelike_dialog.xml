@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Native AlertDialog reads android:buttonBar*; Material uses unprefixed attributes. -->
+    <style name="Theme_Dungeon_Dialog" parent="Theme_A2U_Dialog">
+        <item name="android:colorAccent">#E8BF78</item>
+        <item name="colorAccent">#E8BF78</item>
+        <item name="android:textColorPrimary">#E5EAF2</item>
+        <item name="android:textColorSecondary">#ADB9CD</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Widget_Dungeon_DialogButton</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget_Dungeon_MaterialDialogButton</item>
+    </style>
+
+    <style name="Widget_Dungeon_DialogButton" parent="android:style/Widget.Material.Button.Borderless">
+        <item name="android:textColor">@color/dungeon_dialog_button_text</item>
+    </style>
+
+    <style name="Widget_Dungeon_MaterialDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/dungeon_dialog_button_text</item>
+    </style>
+</resources>

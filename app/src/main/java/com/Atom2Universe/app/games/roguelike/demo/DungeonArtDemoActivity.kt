@@ -168,7 +168,7 @@ class DungeonArtDemoActivity : ThemedActivity() {
                 R.string.dungeon_demo_monastery_day, R.string.dungeon_demo_monastery_night,
                 R.string.dungeon_demo_spaceship, R.string.dungeon_demo_pirate_deck_day,
                 R.string.dungeon_demo_pirate_deck_night, R.string.dungeon_demo_captain_cabin)
-            AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+            AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
                 .setTitle(R.string.dungeon_demo_backdrop)
                 .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), choices.indexOf(scene.backdrop)) { dialog, index ->
                     scene.changeBackdrop(choices[index])
@@ -186,7 +186,7 @@ class DungeonArtDemoActivity : ThemedActivity() {
                     R.string.dungeon_demo_zombie_boss, R.string.dungeon_demo_vampire,
                     R.string.dungeon_demo_vampire_night, R.string.dungeon_demo_vampire_bat,
                     R.string.dungeon_demo_vampire_bat_ash)
-                AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+                AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
                     .setTitle(R.string.dungeon_demo_rat_appearance)
                     .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), styles.indexOf(scene.selectedMonsterStyle)) { dialog, index ->
                         scene.setMonsterStyle(styles[index])
@@ -200,7 +200,7 @@ class DungeonArtDemoActivity : ThemedActivity() {
             val names = intArrayOf(R.string.dungeon_gesture_right, R.string.dungeon_gesture_return,
                 R.string.dungeon_gesture_circle, R.string.dungeon_gesture_triangle,
                 R.string.dungeon_gesture_tap, R.string.dungeon_gesture_double)
-            AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+            AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
                 .setTitle(R.string.dungeon_gesture_select)
                 .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), kinds.indexOf(scene.spellGesture)) { dialog, index ->
                     scene.spellGesture = kinds[index]
@@ -223,7 +223,7 @@ class DungeonArtDemoActivity : ThemedActivity() {
 
     private fun chooseFamily() {
         val families = Archetype.entries
-        AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+        AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
             .setTitle(R.string.dungeon_demo_choose_family)
             .setItems((listOf(getString(R.string.dungeon_demo_civilian)) + families.map { getString(it.labelRes) }).toTypedArray()) { _, which ->
                 if (which == 0) scene.unequipAll() else scene.equipFamily(families[which - 1])
@@ -276,7 +276,7 @@ class DungeonArtDemoActivity : ThemedActivity() {
                 override fun onStopTrackingTouch(bar: SeekBar?) = Unit
             })
         }, LinearLayout.LayoutParams(-1, dp(48)))
-        AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+        AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
             .setTitle(slot.labelRes)
             .setView(panel)
             .setPositiveButton(R.string.dungeon_demo_done, null)

@@ -218,7 +218,7 @@ object Lexicon {
                 add(R.string.lex_stat_crit_chance_1)
                 add(R.string.lex_stat_crit_chance_2, env.pct(Hero.BASE_CRIT), env.pct(Hero.CRIT_PER_DEX))
                 add(R.string.lex_stat_crit_chance_3, env.pct(Hero.MAX_CRIT))
-                add(R.string.lex_stat_crit_chance_4, env.pct(Combat.STRIKE_GOOD), env.pct(Combat.STRIKE_PERFECT))
+                add(R.string.lex_stat_crit_chance_4)
                 env.hero?.let { you(R.string.lex_you_crit, env.pct(it.critChance(env.floor)), env.floor) }
             },
             entry(idOf(StatType.CRIT_DAMAGE), c, R.string.lex_stat_crit_damage) {
@@ -293,7 +293,8 @@ object Lexicon {
             },
             entry("strike", c, R.string.lex_strike) {
                 add(R.string.lex_strike_1)
-                add(R.string.lex_strike_2, env.pct(Combat.STRIKE_GOOD), env.pct(Combat.STRIKE_PERFECT))
+                add(R.string.lex_strike_2)
+                add(R.string.lex_strike_miss)
                 add(R.string.lex_strike_3, env.pct(SpellSave.landChance(dc + SpellSave.GOOD_STRIKE_DC, 0) - SpellSave.landChance(dc, 0)))
             },
             entry("ambush", c, R.string.lex_ambush) { add(R.string.lex_ambush_1); add(R.string.lex_ambush_2); add(R.string.lex_ambush_3) },
@@ -316,7 +317,7 @@ object Lexicon {
                 add(R.string.lex_chase_1); add(R.string.lex_chase_2); add(R.string.lex_chase_3, RoguelikeGame.CHAIN_DISTANCE)
             },
             entry("death", c, R.string.lex_death) {
-                add(R.string.lex_death_1, RoguelikeGame.CHECKPOINT); add(R.string.lex_death_2, env.pct(RoguelikeGame.DEATH_GOLD_LOSS))
+                add(R.string.lex_death_1, RoguelikeGame.CHECKPOINT_INTERVAL); add(R.string.lex_death_2, env.pct(RoguelikeGame.DEATH_GOLD_LOSS))
             },
         )
     }

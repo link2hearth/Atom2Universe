@@ -66,7 +66,7 @@ object SpellSave {
      * Le geste compte aussi pour le contrôle : un swipe « bien » sur le sort ajoute
      * [GOOD_STRIKE_DC] au DD, un swipe parfait impose au monstre le **désavantage** de
      * D&D (deux d20, il garde le pire) — le gel prend alors ~3 fois sur 4 au lieu d'une
-     * sur 2. Les gestes décident *combien* (critique, parade) ; ici ils pèsent aussi sur *si*.
+     * sur 2. Les gestes décident *combien* (dégâts, parade) ; ici ils pèsent aussi sur *si*.
      */
     const val GOOD_STRIKE_DC = 2
     /** +2 au départ, +1 tous les 8 crans de puissance (+7 à la puissance 41), comme les niveaux de D&D. */
@@ -884,8 +884,6 @@ class Combat(
     private val attackDie: () -> Int = { rng.nextInt(1, 21) },
 ) {
     companion object {
-        const val STRIKE_GOOD      = 0.25f
-        const val STRIKE_PERFECT   = 0.60f
         const val PARRY_GOOD_MULT  = 0.5f
         const val PARRY_PERFECT_MULT = 0.2f
 
@@ -1077,18 +1075,25 @@ class Combat(
      * sur la riposte.
      */
     private fun weaponHit(target: Int, timing: Timing, forceCrit: Boolean = false, critBonus: Float = 0f, lifeSteal: Boolean = true,
-                          damageMult: Float = 1f): HitResult {
-        var raw = weaponRoll() * damageMult
+                          damageMult: Float = 1f, timed: Boolean = true): HitResult {
+        val foe = enemies[target]
+        var raw = (if (timed) StrikeDamage.base(hero.weaponMin, hero.weaponMax, timing) else weaponRoll()) * damageMult
         if (rollReady) { rollReady = false; raw *= 1f + ROLL_BONUS }
         if (empoweredAttacks > 0) { empoweredAttacks--; raw *= 1f + empowerBonus }
         val sneak = ambushReady
         ambushReady = false
+        if (timed) raw = StrikeDamage.afterDefense(raw, timing,
+            StrikeDamage.defense(foe.type, floor, foe.isBoss) * damageMult)
+        // A blocked blow spends the action and enchantment charge, but triggers no on-hit effects.
+        if (raw.roundToInt() <= 0) {
+            if (poisonedBlades > 0) poisonedBlades--
+            return HitResult(target, 0, crit = false, killed = false)
+        }
         // L'élément de l'archétype (bonne arme, main gauche de classe) : l'attaque déclenche les réactions, à moitié
         val el = hero.attackElement
-        val foe = enemies[target]
         val rx = if (el == null || !foe.alive || foe.type.affinity(el) == Affinity.IMMUNE) null else react(el, target, Reaction.BASE_ATTACK_PART)
         if (rx != null) raw *= rx.mult
-        var result = hit(target, raw, timing, forceCrit = forceCrit || sneak || rx?.forceCrit == true, critBonus = critBonus + (rx?.critBonus ?: 0f))
+        var result = hit(target, raw, forceCrit = forceCrit || sneak || rx?.forceCrit == true, critBonus = critBonus + (rx?.critBonus ?: 0f))
         if (rx != null) {
             if (foe.alive) rx.after.forEach { it(result.damage) }
             hero.discover(foe.type, el!!, rx.reactions)
@@ -1167,6 +1172,13 @@ class Combat(
         val e = enemies[i]
         val affinity = e.type.affinity(relic.element)
         val immune = affinity == Affinity.IMMUNE
+        val (lo, hi) = hero.relicDamage(relic)
+        val raw = StrikeDamage.afterDefense(StrikeDamage.base(lo, hi, timing), timing,
+            StrikeDamage.defense(e.type, floor, e.isBoss) * RelicBudget.hitCoef(relic))
+        if (relic.hits && !immune && (raw * affinity.damageMult * mult0).roundToInt() <= 0) {
+            hero.discover(e.type, relic.element, emptyList())
+            return HitResult(i, 0, crit = false, killed = false, affinity = affinity)
+        }
         val rx = if (immune) Reacting() else react(relic.element, i, 1f)
         val reactions = rx.reactions
         var mult = affinity.damageMult * mult0 * rx.mult
@@ -1176,8 +1188,7 @@ class Combat(
             if (Resonance.ABSOLUTE_ZERO !in hero.resonances) thaw(e)
         }
         val result = if (relic.hits) {
-            val (lo, hi) = hero.relicDamage(relic)
-            hit(i, rng.nextInt(lo, hi + 1) * mult, timing, allowZero = immune, forceCrit = rx.forceCrit)
+            hit(i, raw * mult, allowZero = immune, forceCrit = rx.forceCrit)
         } else HitResult(i, 0, crit = false, killed = false, noDamage = true)
         if (relic.weaponStrike && poisonedBlades > 0) bladePoison(e)
         val (save, enraged) = if (e.alive && !immune) applyEffect(relic, e, result, timing, reactions) else null to false
@@ -1557,13 +1568,12 @@ class Combat(
     }
 
     private fun hit(
-        target: Int, raw: Float, timing: Timing, allowZero: Boolean = false,
+        target: Int, raw: Float, allowZero: Boolean = false,
         forceCrit: Boolean = false, critBonus: Float = 0f,
     ): HitResult {
         val e = enemies[target]
         require(e.alive)
-        val bonus = when (timing) { Timing.MISS -> 0f; Timing.GOOD -> STRIKE_GOOD; Timing.PERFECT -> STRIKE_PERFECT }
-        val crit  = forceCrit || rng.nextFloat() < (hero.critChance(floor) + bonus).coerceAtMost(0.95f)
+        val crit = raw > 0f && (forceCrit || rng.nextFloat() < hero.critChance(floor))
         val critMult = hero.critMult + critBonus + if (e.marked) MARK_CRIT_BONUS else 0f
         val dmg = wound(target, if (crit) raw * critMult else raw, allowZero)
         return HitResult(target, dmg, crit, !e.alive)
@@ -1852,7 +1862,8 @@ class Combat(
                     thorns = thorns, thornsKilled = thorns > 0 && !e.alive)
             }
             Archetype.ROGUE -> {
-                val counter = weaponHit(enemyIndex, Timing.MISS, lifeSteal = false)
+                // Automatic riposte has no swipe: retain its normal damage roll.
+                val counter = weaponHit(enemyIndex, Timing.MISS, lifeSteal = false, timed = false)
                 if (aliveIndices().isEmpty()) phase = win()
                 return EnemyStrike(enemyIndex, 0, parry, dodged = true, counter = counter, bleed = bled)
             }

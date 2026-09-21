@@ -180,21 +180,19 @@ internal class DungeonCombatArt {
     private fun updateEquipment(hero: Hero) {
         val pieces = DungeonDemoSprites.slots.associateWith { slot -> hero.equipped[slot] }
         val key = hero.archetype.toString() + "|" + pieces.entries.joinToString("|") { (slot, item) ->
-            "$slot:${item?.power}:${item?.weight}:${item?.isotopeZ}:${item?.rarity}"
+            "$slot:${item?.base}:${item?.power}:${item?.weight}:${item?.isotopeZ}:${item?.rarity}"
         }
         if (key == heroKey) return
         heroKey = key
         val fallback = hero.archetype ?: Archetype.WARRIOR
         equipment = pieces.mapValues { (slot, item) ->
-            val family = item?.weight?.let { weight ->
-                Archetype.entries.firstOrNull { it.weight == weight }
-            } ?: fallback
-            DemoGear(slot, isotope = item?.isotopeZ != null,
-                hue = com.Atom2Universe.app.games.roguelike.demo.DungeonClassSprites.defaultHue(family),
-                family = family, equipped = item != null)
+            EquipmentArt.gear(slot, item, fallback)
         }
         images.values.forEach { it.recycle() }
-        images = equipment.mapValues { DungeonDemoSprites.equipment(it.value) }
+        images = equipment.mapValues { (slot, gear) ->
+            pieces[slot]?.let { EquipmentArt.icon(it).copy(Bitmap.Config.ARGB_8888, false) }
+                ?: DungeonDemoSprites.equipment(gear)
+        }
     }
 
     private fun style(type: MonsterType): DungeonDemoSprites.MonsterStyle = when (type) {

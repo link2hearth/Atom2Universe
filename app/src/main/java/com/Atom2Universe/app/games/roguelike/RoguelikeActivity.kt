@@ -45,7 +45,7 @@ class RoguelikeActivity : ThemedActivity() {
             override fun handleOnBackPressed() {
                 when {
                     lexicon.isOpen   -> lexicon.back()
-                    inventory.isOpen -> inventory.hide()
+                    inventory.isOpen -> inventory.back()
                     else             -> finish()
                 }
             }
@@ -63,7 +63,7 @@ class RoguelikeActivity : ThemedActivity() {
 
     private fun showContinueDialog() {
         val summary = SaveManager.saveSummary(this) ?: getString(R.string.roguelike_save_in_progress_fallback)
-        AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+        AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
             .setTitle(R.string.roguelike_title)
             .setMessage(getString(R.string.roguelike_resume_dialog_message, summary))
             .setCancelable(false)
@@ -126,7 +126,11 @@ class RoguelikeActivity : ThemedActivity() {
         gameView.onEquipItem     = { g.equipPendingDrop(); refresh() }
         gameView.onStashDrop     = { g.stashPendingDrop(); refresh() }
         gameView.onOpenInventory = { inventory.show(g) }
-        gameView.onDismissDeath  = { g.dismissDeath(); refresh() }
+        gameView.onRestartAfterDeath = { atCheckpoint ->
+            g.restartAfterDeath(atCheckpoint)
+            SaveManager.save(this, g)
+            refresh()
+        }
 
         combatView.onStrike    = { crit -> sfx.onPlayerAttack(crit) }
         combatView.onEnemyDied = { sfx.onMonsterDied() }

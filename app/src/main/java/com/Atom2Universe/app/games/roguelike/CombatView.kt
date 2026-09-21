@@ -307,9 +307,9 @@ class CombatView @JvmOverloads constructor(
 
     /** Ce que la dernière action a fait à chaque ennemi touché, puis on passe au tour ennemi. */
     private fun showHits(hits: List<HitResult>) {
-        hitTargets = hits.filter { !it.noDamage }.map { it.target }.toSet()
+        hitTargets = hits.filter { !it.noDamage && it.damage > 0 }.map { it.target }.toSet()
         floatHits(hits)
-        if (hits.any { !it.noDamage }) onStrike?.invoke(hits.any { it.crit })
+        if (hits.any { !it.noDamage && it.damage > 0 }) onStrike?.invoke(hits.any { it.crit })
         if (hits.any { it.killed }) onEnemyDied?.invoke()
         enter(Stage.PLAYER_HIT)
     }
@@ -319,7 +319,8 @@ class CombatView @JvmOverloads constructor(
         for (result in hits) {
             val r = enemyRects[result.target]
             if (!result.noDamage) floatText(
-                if (result.crit) context.getString(R.string.roguelike_combat_crit_damage, num(result.damage))
+                if (result.damage == 0) context.getString(R.string.roguelike_combat_no_damage)
+                else if (result.crit) context.getString(R.string.roguelike_combat_crit_damage, num(result.damage))
                 else context.getString(R.string.roguelike_combat_damage, num(result.damage)),
                 r.centerX(), r.top, if (result.crit) 0xFFFFEB3B.toInt() else Color.WHITE, result.crit,
             )
@@ -898,6 +899,7 @@ class CombatView @JvmOverloads constructor(
             strikeBar.centerY() + strikeBar.width() / 2f,
         )
         val cr = min(b.width(), b.height()) / 2f
+        DungeonTimingShadow.draw(canvas, b.left, b.top, b.right, b.bottom, cr, density)
         pFill.color = 0xFF263238.toInt(); canvas.drawRoundRect(b, cr, cr, pFill)
         fun along(p: Float) = if (horizontal) b.left + b.width() * p else b.top + b.height() * p
         val goodL = along(STRIKE_CENTER - STRIKE_GOOD)
@@ -907,10 +909,14 @@ class CombatView @JvmOverloads constructor(
         else canvas.drawRoundRect(b.left, goodL, b.right, goodR, cr, cr, pFill)
         val perfL = along(STRIKE_CENTER - STRIKE_PERFECT)
         val perfR = along(STRIKE_CENTER + STRIKE_PERFECT)
+        if (horizontal) DungeonTimingShadow.draw(canvas, perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, density)
+        else DungeonTimingShadow.draw(canvas, b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, density)
         pFill.color = 0xFFE53935.toInt()
         if (horizontal) canvas.drawRoundRect(perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, cr, pFill)
         else canvas.drawRoundRect(b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, cr, pFill)
         val cursor = along((elapsed().toFloat() / STRIKE_MS).coerceIn(0f, 1f))
+        if (horizontal) DungeonTimingShadow.draw(canvas, cursor - 3f * density, b.top - 8f * density, cursor + 3f * density, b.bottom + 8f * density, 0f, density)
+        else DungeonTimingShadow.draw(canvas, b.left - 8f * density, cursor - 3f * density, b.right + 8f * density, cursor + 3f * density, 0f, density)
         pFill.color = Color.WHITE
         if (horizontal) canvas.drawRect(cursor - 3f * density, b.top - 8f * density, cursor + 3f * density, b.bottom + 8f * density, pFill)
         else canvas.drawRect(b.left - 8f * density, cursor - 3f * density, b.right + 8f * density, cursor + 3f * density, pFill)
@@ -922,11 +928,17 @@ class CombatView @JvmOverloads constructor(
         val d = 26f * density
         val head = 11f * density
         val dx = swipeDirection.dx.toFloat(); val dy = swipeDirection.dy.toFloat()
-        pStroke.color = 0xFF43C06B.toInt(); pStroke.strokeWidth = 4f * density
         pStroke.strokeCap = Paint.Cap.ROUND; pStroke.strokeJoin = Paint.Join.ROUND
-        canvas.drawLine(x - dx * d, y - dy * d, x + dx * d, y + dy * d, pStroke)
-        canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) - dy * head, y + dy * (d - head) + dx * head, pStroke)
-        canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) + dy * head, y + dy * (d - head) - dx * head, pStroke)
+        fun drawArrow() {
+            canvas.drawLine(x - dx * d, y - dy * d, x + dx * d, y + dy * d, pStroke)
+            canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) - dy * head, y + dy * (d - head) + dx * head, pStroke)
+            canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) + dy * head, y + dy * (d - head) - dx * head, pStroke)
+        }
+        // Dessiner tout le contour avant le vert évite les raccords sombres dans la pointe.
+        pStroke.color = 0xFF111729.toInt(); pStroke.strokeWidth = 8f * density
+        drawArrow()
+        pStroke.color = 0xFF43C06B.toInt(); pStroke.strokeWidth = 4f * density
+        drawArrow()
         pStroke.strokeCap = Paint.Cap.BUTT; pStroke.strokeJoin = Paint.Join.MITER
     }
 
@@ -1009,16 +1021,37 @@ class CombatView @JvmOverloads constructor(
 
     private var downX = 0f
     private var downY = 0f
+    private var gestureConsumed = false
+    private var gestureStage: Stage? = null
+
+    private fun recognizeStrike(x: Float, y: Float, time: Long) {
+        if (gestureConsumed || gestureStage != Stage.STRIKE_TIMING || stage != Stage.STRIKE_TIMING) return
+        val dx = x - downX
+        val dy = y - downY
+        val length = hypot(dx, dy)
+        if (length <= 24f * density) return
+        gestureConsumed = true
+        val d = abs((time - stageStart).toFloat() / STRIKE_MS - STRIKE_CENTER)
+        val directed = (dx * swipeDirection.dx + dy * swipeDirection.dy) / length >= .72f
+        resolveStrike(if (!directed) Timing.MISS else when {
+            d <= STRIKE_PERFECT -> Timing.PERFECT
+            d <= STRIKE_GOOD -> Timing.GOOD
+            else -> Timing.MISS
+        })
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val c = combat ?: return false
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x; downY = event.y
+                gestureConsumed = false
+                gestureStage = stage
                 if (stage == Stage.CHOOSE) setPreview(previewAt(c, event.x, event.y))
                 // La parade se joue à l'appui : c'est le geste le plus précis
                 if (stage == Stage.ENEMY_WINDUP && parry == null) {
-                    val delta = abs(elapsed() - windupMs())
+                    gestureConsumed = true
+                    val delta = abs(event.eventTime - stageStart - windupMs())
                     parry = when {
                         delta <= perfectWindow() -> Timing.PERFECT
                         delta <= goodWindow()    -> Timing.GOOD
@@ -1027,26 +1060,22 @@ class CombatView @JvmOverloads constructor(
                     postInvalidateOnAnimation()
                 }
             }
-            MotionEvent.ACTION_MOVE -> if (stage == Stage.CHOOSE) setPreview(previewAt(c, event.x, event.y))
-            MotionEvent.ACTION_CANCEL -> if (stage == Stage.CHOOSE) setPreview(null)
+            MotionEvent.ACTION_MOVE -> if (!gestureConsumed) {
+                for (i in 0 until event.historySize) recognizeStrike(event.getHistoricalX(i), event.getHistoricalY(i), event.getHistoricalEventTime(i))
+                recognizeStrike(event.x, event.y, event.eventTime)
+                if (stage == Stage.CHOOSE && gestureStage == stage) setPreview(previewAt(c, event.x, event.y))
+            }
+            MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_CANCEL -> {
+                gestureConsumed = true
+                setPreview(null)
+            }
             MotionEvent.ACTION_UP -> {
                 if (stage == Stage.CHOOSE) setPreview(null)
+                recognizeStrike(event.x, event.y, event.eventTime)
+                if (gestureConsumed || gestureStage != stage) return true
                 val dist = hypot(event.x - downX, event.y - downY)
                 val swipe = dist > 24f * density
                 when (stage) {
-                    Stage.STRIKE_TIMING -> if (swipe) {
-                        val p = elapsed().toFloat() / STRIKE_MS
-                        val d = abs(p - STRIKE_CENTER)
-                        val motionX = event.x - downX
-                        val motionY = event.y - downY
-                        val length = hypot(motionX, motionY)
-                        val directed = length > 0f && (motionX / length * swipeDirection.dx + motionY / length * swipeDirection.dy) >= .72f
-                        resolveStrike(if (!directed) Timing.MISS else when {
-                            d <= STRIKE_PERFECT -> Timing.PERFECT
-                            d <= STRIKE_GOOD    -> Timing.GOOD
-                            else                -> Timing.MISS
-                        })
-                    }
                     Stage.CHOOSE -> if (!swipe) handleChooseTap(c, downX, downY)
                     Stage.END_PANEL -> if (!swipe) {
                         combat = null

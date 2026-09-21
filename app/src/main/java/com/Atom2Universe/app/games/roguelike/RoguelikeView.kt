@@ -50,7 +50,7 @@ class RoguelikeView @JvmOverloads constructor(
     var onEquipItem:      (() -> Unit)? = null
     var onStashDrop:      (() -> Unit)? = null
     var onOpenInventory:  (() -> Unit)? = null
-    var onDismissDeath:   (() -> Unit)? = null
+    var onRestartAfterDeath: ((atCheckpoint: Boolean) -> Unit)? = null
 
     private var tileSize = 40f
     private val hpBarW get() = context.resources.displayMetrics.density * 6f
@@ -77,6 +77,7 @@ class RoguelikeView @JvmOverloads constructor(
     private val pShopBg   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xF0101820.toInt() }
     private val pShopSold = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF333333.toInt() }
     private val pShopDescend = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFF2E7D32.toInt() }
+    private val pFill = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pOverlay  = Paint().apply { color = 0xCC000000.toInt() }
     private val pIconBg   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xAA000000.toInt() }
     private val pIconOn   = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xCC2E7D32.toInt() }
@@ -307,12 +308,26 @@ class RoguelikeView @JvmOverloads constructor(
         val cx = width / 2f; val cy = height / 2f
         pText.textAlign = Paint.Align.CENTER
         pText.color = 0xFFEF5350.toInt(); pText.textSize = sd * 28f
-        canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 60f * sd, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 100f * sd, pText)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 15f
-        canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, DungeonNumbers.format(context, report.goldLost)), cx, cy - 20f * sd, pText)
-        canvas.drawText(context.getString(R.string.roguelike_death_checkpoint, RoguelikeGame.CHECKPOINT), cx, cy + 8f * sd, pText)
-        pText.color = 0xFFFFFFFF.toInt(); pText.textSize = sd * 14f
-        canvas.drawText(context.getString(R.string.roguelike_combat_tap_continue), cx, cy + 60f * sd, pText)
+        canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, DungeonNumbers.format(context, report.goldLost)), cx, cy - 60f * sd, pText)
+        for (atCheckpoint in listOf(false, true)) {
+            val bounds = deathChoiceRect(atCheckpoint)
+            pFill.color = if (atCheckpoint) 0xFF35465D.toInt() else 0xFF246241.toInt()
+            canvas.drawRoundRect(bounds, 8f * sd, 8f * sd, pFill)
+            val label = context.getString(if (atCheckpoint) R.string.roguelike_death_restart_checkpoint else R.string.roguelike_death_restart_floor,
+                if (atCheckpoint) report.checkpointFloor else report.floor)
+            pText.color = Color.WHITE; pText.textSize = sd * 16f
+            val availableWidth = bounds.width() - 20f * sd
+            if (pText.measureText(label) > availableWidth) pText.textSize *= availableWidth / pText.measureText(label)
+            canvas.drawText(label, bounds.centerX(), bounds.centerY() - (pText.ascent() + pText.descent()) / 2f, pText)
+        }
+    }
+
+    private fun deathChoiceRect(atCheckpoint: Boolean): RectF {
+        val halfWidth = minOf(width / 2f - 16f * sd, 220f * sd)
+        val top = height / 2f + (if (atCheckpoint) 42f else -22f) * sd
+        return RectF(width / 2f - halfWidth, top, width / 2f + halfWidth, top + 52f * sd)
     }
 
     // ── Icônes HUD ───────────────────────────────────────────────────────────────
@@ -587,7 +602,15 @@ class RoguelikeView @JvmOverloads constructor(
                 movedThisTouch = false
 
                 when {
-                    g.deathReport != null -> if (tap) onDismissDeath?.invoke()
+                    g.deathReport != null -> if (tap && event.action == MotionEvent.ACTION_UP) {
+                        for (atCheckpoint in listOf(false, true)) {
+                            val bounds = deathChoiceRect(atCheckpoint)
+                            if (bounds.contains(touchDownX, touchDownY) && bounds.contains(event.x, event.y)) {
+                                onRestartAfterDeath?.invoke(atCheckpoint)
+                                break
+                            }
+                        }
+                    }
 
                     g.pendingEquipDrop != null -> if (tap) {
                         val panel = lootPanelRect()

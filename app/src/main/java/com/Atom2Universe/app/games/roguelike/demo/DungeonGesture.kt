@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.roguelike.DungeonTimingShadow
 import kotlin.math.*
 
 /** Reconnaissance indépendante du lieu du toucher, avec une seule tentative par étape. */
@@ -190,6 +191,7 @@ internal class DungeonGesture(private val context: Context) {
             val bar = if (horizontal) android.graphics.RectF(width * .15f, height * .55f, width * .85f, height * .55f + 8f)
             else android.graphics.RectF(width * .5f - 4f, height * .31f, width * .5f + 4f, height * .79f)
             paint.style = Paint.Style.FILL
+            DungeonTimingShadow.draw(canvas, bar.left, bar.top, bar.right, bar.bottom, 4f, .5f)
             paint.color = 0xFF263238.toInt(); canvas.drawRoundRect(bar, 4f, 4f, paint)
             fun along(at: Float) = if (horizontal) bar.left + bar.width() * at else bar.top + bar.height() * at
             val goodL = along(.625f); val goodR = along(.815f)
@@ -197,20 +199,30 @@ internal class DungeonGesture(private val context: Context) {
             if (horizontal) canvas.drawRoundRect(goodL, bar.top, goodR, bar.bottom, 4f, 4f, paint)
             else canvas.drawRoundRect(bar.left, goodL, bar.right, goodR, 4f, 4f, paint)
             val perfectL = along(.685f); val perfectR = along(.755f)
+            if (horizontal) DungeonTimingShadow.draw(canvas, perfectL, bar.top - 1f, perfectR, bar.bottom + 1f, 4f, .5f)
+            else DungeonTimingShadow.draw(canvas, bar.left - 1f, perfectL, bar.right + 1f, perfectR, 4f, .5f)
             paint.color = bad
             if (horizontal) canvas.drawRoundRect(perfectL, bar.top - 1f, perfectR, bar.bottom + 1f, 4f, 4f, paint)
             else canvas.drawRoundRect(bar.left - 1f, perfectL, bar.right + 1f, perfectR, 4f, 4f, paint)
             val cursor = along(p)
+            if (horizontal) DungeonTimingShadow.draw(canvas, cursor - 1.5f, bar.top - 4f, cursor + 1.5f, bar.bottom + 4f, 0f, .5f)
+            else DungeonTimingShadow.draw(canvas, bar.left - 4f, cursor - 1.5f, bar.right + 4f, cursor + 1.5f, 0f, .5f)
             paint.color = white
             if (horizontal) canvas.drawRect(cursor - 1.5f, bar.top - 4f, cursor + 1.5f, bar.bottom + 4f, paint)
             else canvas.drawRect(bar.left - 4f, cursor - 1.5f, bar.right + 4f, cursor + 1.5f, paint)
             val arrowX = if (horizontal) along(.72f) else bar.centerX()
             val arrowY = if (horizontal) bar.centerY() else along(.72f)
-            paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f; paint.strokeCap = Paint.Cap.ROUND; paint.color = good
+            paint.style = Paint.Style.STROKE; paint.strokeCap = Paint.Cap.ROUND
             val dx = swipeDirection.dx.toFloat(); val dy = swipeDirection.dy.toFloat()
-            canvas.drawLine(arrowX - dx * 12f, arrowY - dy * 12f, arrowX + dx * 12f, arrowY + dy * 12f, paint)
-            canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f - dy * 6f, arrowY + dy * 5f + dx * 6f, paint)
-            canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f + dy * 6f, arrowY + dy * 5f - dx * 6f, paint)
+            fun drawArrow() {
+                canvas.drawLine(arrowX - dx * 12f, arrowY - dy * 12f, arrowX + dx * 12f, arrowY + dy * 12f, paint)
+                canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f - dy * 6f, arrowY + dy * 5f + dx * 6f, paint)
+                canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f + dy * 6f, arrowY + dy * 5f - dx * 6f, paint)
+            }
+            paint.color = 0xFF111729.toInt(); paint.strokeWidth = 4f
+            drawArrow()
+            paint.color = good; paint.strokeWidth = 2f
+            drawArrow()
             paint.strokeCap = Paint.Cap.BUTT; paint.style = Paint.Style.FILL; paint.textAlign = Paint.Align.CENTER; paint.textSize = 6f
             canvas.drawText(swipeInstruction, width / 2f, height - 12f, paint)
             return

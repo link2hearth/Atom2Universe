@@ -64,7 +64,7 @@
     <string name="lex_stat_crit_chance_1">The chance that a hit is critical: it then hurts more.</string>
     <string name="lex_stat_crit_chance_2">%1$d%% base, +%2$d%% per point of [[attr_dex|DEX]], plus items</string>
     <string name="lex_stat_crit_chance_3">Never above %1$d%%</string>
-    <string name="lex_stat_crit_chance_4">[[strike|Timed strike]]: +%1$d points for a good gesture, +%2$d for a perfect one</string>
+    <string name="lex_stat_crit_chance_4">[[strike|Strike timing]] changes base damage, never critical-hit chance.</string>
     <string name="lex_you_crit">You: %1$d%% on floor %2$d</string>
     <string name="lex_stat_crit_damage">Crit damage</string>
     <string name="lex_stat_crit_damage_1">The multiplier of a critical hit.</string>
@@ -116,8 +116,8 @@
     <string name="lex_parry_3">[[attr_dex|DEX]] widens the window: +%1$d ms per point.</string>
     <string name="lex_parry_4">A perfect parry triggers your [[archetype|archetype]]\'s perk.</string>
     <string name="lex_strike">Timed strike</string>
-    <string name="lex_strike_1">Swipe when the cursor crosses the golden zone during your attack.</string>
-    <string name="lex_strike_2">Good: +%1$d points of [[stat_crit_chance|crit]]. Perfect: +%2$d points.</string>
+    <string name="lex_strike_1">Swipe in the arrow direction when the cursor reaches the green zone. The small red zone is perfect.</string>
+    <string name="lex_strike_2">Perfect: maximum damage in the range. Good: the middle of the range. Critical hits are rolled separately.</string>
     <string name="lex_strike_3">On a control spell: good = the enemy [[resist|resists]] %1$d%% less; perfect = it rolls twice and keeps the worse.</string>
     <string name="lex_ambush">Ambush</string>
     <string name="lex_ambush_1">Monsters strike first.</string>
@@ -143,7 +143,7 @@
     <string name="lex_chase_2">While a monster chases you, you can\'t [[rest|rest]].</string>
     <string name="lex_chase_3">When a fight ends, a chaser within %1$d tiles jumps you at once.</string>
     <string name="lex_death">Death</string>
-    <string name="lex_death_1">You return to floor %1$d with all your gear.</string>
+    <string name="lex_death_1">Keep your gear and choose: retry the floor where you died or return to the last checkpoint. Checkpoints every %1$d floors: 1, 11, 21…</string>
     <string name="lex_death_2">You lose %1$d%% of your gold.</string>
     <string name="lex_state_burn">Burning</string>
     <string name="lex_state_burn_1">It loses HP at the start of each of its turns.</string>
@@ -355,4 +355,5 @@
     <string name="lex_reaction_infection_1">[[element_poison|Poison]] on an [[state_exposed|exposed]] enemy: one more dose, and its exposure lasts %1$d turn longer.</string>
     <string name="lex_reaction_deathblow_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_paralyzed|paralyzed]] enemy: guaranteed critical hit.</string>
     <string name="lex_reaction_holy_fire_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_burn|burning]] enemy: the burn goes out and heals you for %1$s of what it would have done.</string>
+    <string name="lex_strike_miss">Miss: minimum damage, reduced by enemy defense against poorly executed blows. Tougher monsters, deeper floors and bosses defend better. Stronger equipment and attributes help overcome this defense; damage can fall to zero. A completely blocked blow triggers no on-hit effects.</string>
 </resources>

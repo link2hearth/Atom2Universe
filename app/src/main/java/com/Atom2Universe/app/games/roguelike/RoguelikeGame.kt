@@ -64,7 +64,8 @@ class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
 data class LogEntry(@StringRes val keyRes: Int, val args: List<Any> = emptyList())
 
 /** Ce qu'on affiche après une mort : où on est tombé, combien d'or est perdu. */
-data class DeathReport(val floor: Int, val goldLost: Int)
+data class DeathReport(val floor: Int, val goldLost: Int,
+    val checkpointFloor: Int = RoguelikeGame.checkpointFloor(floor))
 
 // ─── Moteur de la carte ────────────────────────────────────────────────────────
 /**
@@ -78,10 +79,9 @@ class RoguelikeGame(
     private val rng: Random = Random,
     /**
      * Un checkpoint automatique tous les N étages (11, 21, 31… pour N = 10) : la mort ramène au
-     * dernier atteint. 0 : toujours l'étage [CHECKPOINT], comme dans le jeu aujourd'hui. Sert
-     * aux simulations en attendant les vrais checkpoints de boss (voir DONJON.md).
+     * dernier atteint si le joueur le choisit. 0 reste disponible pour les simulations.
      */
-    private val checkpointEvery: Int = 0,
+    private val checkpointEvery: Int = CHECKPOINT_INTERVAL,
     /**
      * La mort ramène à ce nombre d'étages **avant** le checkpoint (sans descendre sous l'étage [CHECKPOINT]) : on refait
      * un peu de chemin, donc on farme un peu. 0 : au checkpoint même. Sert aux simulations, en attendant que le jeu laisse
@@ -132,6 +132,10 @@ class RoguelikeGame(
         const val WANDERER_MAX_STEPS = 10
         const val DEATH_GOLD_LOSS = 0.30f
         const val CHECKPOINT     = 1
+        const val CHECKPOINT_INTERVAL = 10
+
+        fun checkpointFloor(floor: Int, interval: Int = CHECKPOINT_INTERVAL): Int =
+            if (interval <= 0) CHECKPOINT else CHECKPOINT + (floor.coerceAtLeast(CHECKPOINT) - CHECKPOINT) / interval * interval
         /**
          * Les reliques ne se trouvent **qu'en explorant** (décidé le 18/09/2026) : jamais sur
          * un monstre. Une relique attend au bout du cul-de-sac le plus éloigné du départ, sur
@@ -188,6 +192,16 @@ class RoguelikeGame(
             }
             return RoguelikeGame(hero, j.getInt("floor")).apply {
                 heroSpritePath = j.getString("heroSprite")
+                checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
+                val pendingDeath = j.optJSONObject("deathReport")
+                if (pendingDeath != null) {
+                    val deathFloor = pendingDeath.getInt("floor").coerceAtLeast(CHECKPOINT)
+                    deathReport = DeathReport(deathFloor, pendingDeath.getInt("goldLost"),
+                        pendingDeath.optInt("checkpointFloor", checkpointFloor(deathFloor)).coerceIn(CHECKPOINT, deathFloor))
+                } else if (j.getInt("hp") <= 0) {
+                    // A defeat saved before dismissing the combat screen still requires a choice.
+                    die()
+                }
                 log.clear()
                 addLog(R.string.roguelike_log_resume, floor)
             }
@@ -199,7 +213,7 @@ class RoguelikeGame(
 
     init { hero.floor = floor }
     /** L'étage où la mort ramène. */
-    var checkpoint = CHECKPOINT
+    var checkpoint = checkpointFloor(startFloor, checkpointEvery)
         private set
     var level: DungeonLevel = generateLevel(floor)
         private set
@@ -330,6 +344,20 @@ class RoguelikeGame(
         addLog(R.string.roguelike_log_sold, item, price)
     }
 
+    /** Sell a confirmed selection in one pass; reject a stale selection without selling part of it. */
+    fun sellAll(items: Set<Equipment>): Boolean {
+        if (!isExploring || items.isEmpty()) return false
+        val owned = hero.bag.filter { it in items && it !in hero.equipped.values }
+        if (owned.size != items.size) return false
+        val price = owned.sumOf { LootSystem.sellPrice(it).toLong() }
+        val balance = hero.gold.toLong() + price
+        if (price < 0 || balance > Int.MAX_VALUE) return false
+        hero.bag.removeAll { it in items }
+        hero.gold = balance.toInt()
+        addLog(R.string.roguelike_log_sold_many, owned.size, price)
+        return true
+    }
+
     // ── Reliques ────────────────────────────────────────────────────────────────
 
     /** Porter ou ranger une relique, seulement hors combat. */
@@ -343,7 +371,14 @@ class RoguelikeGame(
         for (r in hero.discoverResonances()) addLog(R.string.roguelike_log_resonance_found, r, Resonance.BONUS, r.attribute)
     }
 
-    fun dismissDeath() { deathReport = null }
+    fun restartAfterDeath(atCheckpoint: Boolean) {
+        val report = deathReport ?: return
+        deathReport = null
+        changeFloor(if (atCheckpoint) report.checkpointFloor else report.floor)
+    }
+
+    /** Default choice retained for simulation callers. */
+    fun dismissDeath() = restartAfterDeath(atCheckpoint = true)
 
     // ── Combat ──────────────────────────────────────────────────────────────────
 
@@ -400,11 +435,10 @@ class RoguelikeGame(
     private fun die() {
         val lost = (hero.gold * DEATH_GOLD_LOSS).roundToInt()
         hero.gold -= lost
-        deathReport = DeathReport(floor, lost)
+        deathReport = DeathReport(floor, lost, (checkpoint - deathRetreat).coerceIn(CHECKPOINT, floor))
         hero.healFull()
         hero.relicCooldowns.clear()
         hero.specialCooldown = 0
-        changeFloor((checkpoint - deathRetreat).coerceAtLeast(CHECKPOINT))
         log.clear()
         addLog(R.string.roguelike_log_player_death)
     }
@@ -495,7 +529,7 @@ class RoguelikeGame(
 
     private fun changeFloor(newFloor: Int) {
         floor = newFloor
-        if (checkpointEvery > 0 && (floor - 1) % checkpointEvery == 0) checkpoint = maxOf(checkpoint, floor)
+        checkpoint = maxOf(checkpoint, checkpointFloor(floor, checkpointEvery))
         hero.floor = floor
         level = generateLevel(floor)
         playerPos = level.start
@@ -587,6 +621,14 @@ class RoguelikeGame(
     /** Le niveau n'est pas sauvegardé : il est régénéré à la reprise. */
     fun toJson(): JSONObject = JSONObject().apply {
         put("floor",      floor)
+        put("checkpoint", checkpoint)
+        deathReport?.let { report ->
+            put("deathReport", JSONObject().apply {
+                put("floor", report.floor)
+                put("goldLost", report.goldLost)
+                put("checkpointFloor", report.checkpointFloor)
+            })
+        }
         put("hp",         hero.hp)
         put("gold",       hero.gold)
         put("deepestFloor", hero.deepestFloor)
