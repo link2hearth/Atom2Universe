@@ -156,6 +156,37 @@ class DungeonArtDemoActivity : ThemedActivity() {
         options.addView(mobs, cell())
         options.addView(pause, cell())
         banner.addView(options)
+        banner.addView(button(R.string.dungeon_demo_backdrop) {
+            val choices = DungeonArtDemoView.Backdrop.entries
+            val names = intArrayOf(R.string.dungeon_demo_backdrop_dungeon, R.string.dungeon_demo_backdrop_inn,
+                R.string.dungeon_demo_meadow_day, R.string.dungeon_demo_meadow_night,
+                R.string.dungeon_demo_jungle_day, R.string.dungeon_demo_jungle_night)
+            AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+                .setTitle(R.string.dungeon_demo_backdrop)
+                .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), choices.indexOf(scene.backdrop)) { dialog, index ->
+                    scene.changeBackdrop(choices[index])
+                    dialog.dismiss()
+                }.show()
+        })
+        banner.addView(button(R.string.dungeon_demo_rat_appearance) {
+            if (!scene.inputLocked) {
+                val styles = DungeonDemoSprites.MonsterStyle.entries
+                val names = intArrayOf(R.string.dungeon_demo_rat_common, R.string.dungeon_demo_rat_grey,
+                    R.string.dungeon_demo_rat_brown, R.string.dungeon_demo_rat_albino, R.string.dungeon_demo_rat_boss,
+                    R.string.dungeon_demo_skeleton, R.string.dungeon_demo_skeleton_moss, R.string.dungeon_demo_skeleton_ash,
+                    R.string.dungeon_demo_skeleton_boss, R.string.dungeon_demo_zombie,
+                    R.string.dungeon_demo_zombie_swamp, R.string.dungeon_demo_zombie_pale,
+                    R.string.dungeon_demo_zombie_boss, R.string.dungeon_demo_vampire,
+                    R.string.dungeon_demo_vampire_night, R.string.dungeon_demo_vampire_bat,
+                    R.string.dungeon_demo_vampire_bat_ash)
+                AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
+                    .setTitle(R.string.dungeon_demo_rat_appearance)
+                    .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), styles.indexOf(scene.selectedMonsterStyle)) { dialog, index ->
+                        scene.setMonsterStyle(styles[index])
+                        dialog.dismiss()
+                    }.show()
+            }
+        })
         val gestures = LinearLayout(this)
         gestures.addView(button(R.string.dungeon_gesture_button) {
             val kinds = DungeonGesture.Kind.entries

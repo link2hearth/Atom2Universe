@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dungeon_demo_meadow_day">Flower meadow · day</string>
+    <string name="dungeon_demo_meadow_night">Flower meadow · night</string>
+    <string name="dungeon_demo_jungle_day">Exotic forest · day</string>
+    <string name="dungeon_demo_jungle_night">Exotic forest · night</string>
+    <string name="dungeon_demo_backdrop">Choose scenery</string>
+    <string name="dungeon_demo_backdrop_dungeon">Dungeon · stone and torches</string>
+    <string name="dungeon_demo_backdrop_inn">Inn · hearth and timber</string>
+    <string name="dungeon_demo_vampire">Vampire · crimson cape</string>
+    <string name="dungeon_demo_vampire_night">Night vampire · violet cape</string>
+    <string name="dungeon_demo_vampire_bat">Vampire bat · crimson wings</string>
+    <string name="dungeon_demo_vampire_bat_ash">Ash vampire bat · violet wings</string>
+    <string name="dungeon_demo_zombie">Zombie · random pastel clothes</string>
+    <string name="dungeon_demo_zombie_boss">Zombie boss · huge belly</string>
+    <string name="dungeon_demo_zombie_swamp">Swamp zombie · mossy skin</string>
+    <string name="dungeon_demo_zombie_pale">Pale zombie · one-eyed</string>
+    <string name="dungeon_demo_skeleton_boss">Skeleton boss · ember eyes</string>
+    <string name="dungeon_demo_rat_appearance">Selected monster appearance</string>
+    <string name="dungeon_demo_rat_common">Common rat</string>
+    <string name="dungeon_demo_rat_grey">Grey rat · short tail</string>
+    <string name="dungeon_demo_rat_brown">Brown rat · curled tail</string>
+    <string name="dungeon_demo_rat_albino">Albino rat · red eyes</string>
+    <string name="dungeon_demo_rat_boss">Boss rat · big and furious</string>
     <string name="dungeon_demo_title">Dungeon · Art demo</string>
-    <string name="dungeon_demo_description">Tap a piece to change it. Tap a rat to target it.</string>
+    <string name="dungeon_demo_description">Tap a piece to change it. Tap a monster to target it.</string>
     <string name="dungeon_demo_heavy">Heavy armor</string>
     <string name="dungeon_demo_standard">Standard</string>
     <string name="dungeon_demo_isotope">Isotope</string>
     <string name="dungeon_demo_mixed">Mixed pieces</string>
     <string name="dungeon_demo_toggle_set">Switch set</string>
-    <string name="dungeon_demo_three_rats">3 rats</string>
-    <string name="dungeon_demo_one_rat">1 rat</string>
+    <string name="dungeon_demo_three_rats">3 monsters</string>
+    <string name="dungeon_demo_one_rat">1 monster</string>
     <string name="dungeon_demo_tint">Piece color</string>
     <string name="dungeon_demo_done">Done</string>
     <string name="dungeon_demo_piece_description">%1$s · %2$s · %3$s · Change appearance</string>
@@ -48,7 +70,11 @@
     <string name="dungeon_gesture_perfect">Perfect!</string>
     <string name="dungeon_gesture_return">Swipe right then left: finish when the arrows overlap</string>
     <string name="dungeon_gesture_right">Swipe right when the arrows overlap</string>
+    <string name="dungeon_gesture_swipe">Swipe in the indicated direction when the cursor crosses the window</string>
     <string name="dungeon_gesture_select">Next spell gesture</string>
     <string name="dungeon_gesture_tap">Tap when the two rings overlap</string>
     <string name="dungeon_gesture_triangle">Draw a triangle: finish when the outlines overlap</string>
+    <string name="dungeon_demo_skeleton">Skeleton · ivory bones</string>
+    <string name="dungeon_demo_skeleton_moss">Mossy skeleton · greenish bones</string>
+    <string name="dungeon_demo_skeleton_ash">Ash skeleton · cracked skull</string>
 </resources>

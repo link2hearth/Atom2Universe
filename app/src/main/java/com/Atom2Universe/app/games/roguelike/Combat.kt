@@ -141,6 +141,8 @@ class Enemy(
     countdown: Int,
     /** Sa vitesse : 1 à l'étage 1, elle monte avec l'étage (voir [Encounters.speedMult]). */
     val speed: Double = 1.0,
+    /** Chef d'un groupe de trois : statistiques renforcées et apparence de boss. */
+    val isBoss: Boolean = false,
 ) {
     var hp = maxHp
     val alive get() = hp > 0
@@ -214,6 +216,8 @@ object Encounters {
      */
     const val HP_SCALE     = 1.3f
     const val DAMAGE_SCALE = 1.5f
+    const val BOSS_HP_MULT = 2f
+    const val BOSS_DAMAGE_MULT = 1.5f
 
     /**
      * L'étage où les courbes changent de régime. Jusque-là, PV et dégâts montent en ligne
@@ -262,7 +266,13 @@ object Encounters {
 
     fun roll(floor: Int, rng: Random): List<MonsterType> {
         val eligible = MonsterType.entries.filter { it.minFloor <= floor }
-        return List(groupSize(floor, rng)) { eligible.random(rng) }
+        val count = groupSize(floor, rng)
+        if (count == 3) {
+            // Un chef et deux classiques de sa famille ; les petits groupes restent variés.
+            val family = eligible.random(rng)
+            return List(3) { family }
+        }
+        return List(count) { eligible.random(rng) }
     }
 
     /**
@@ -271,13 +281,18 @@ object Encounters {
      */
     fun build(types: List<MonsterType>, floor: Int): List<Enemy> = types.mapIndexed { i, t ->
         val cadence = t.cadence + types.size - 1
+        val boss = types.size == 3 && i == 0
+        // Les anciens groupes déjà générés peuvent être mixtes : leur chef reste le plus fort.
+        val baseHp = if (boss) types.maxOf { it.baseHp } else t.baseHp
+        val baseDamage = if (boss) types.maxOf { it.baseDamage } else t.baseDamage
         Enemy(
             type      = t,
-            maxHp     = (t.baseHp * hpMult(floor)).roundToInt(),
-            damage    = (t.baseDamage * damageMult(floor)).roundToInt(),
+            maxHp     = (baseHp * hpMult(floor) * if (boss) BOSS_HP_MULT else 1f).roundToInt(),
+            damage    = (baseDamage * damageMult(floor) * if (boss) BOSS_DAMAGE_MULT else 1f).roundToInt(),
             cadence   = cadence,
             countdown = cadence - (i % cadence),
             speed     = speedMult(floor),
+            isBoss    = boss,
         )
     }
 }

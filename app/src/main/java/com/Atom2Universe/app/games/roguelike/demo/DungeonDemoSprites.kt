@@ -262,9 +262,71 @@ internal object DungeonDemoSprites {
         ........#ppp#......#ppp#.........
         .........###........###..........
     """
-    fun rat(): Bitmap = pixels(RAT, mapOf('#' to outline, 's' to 0xFF51454F.toInt(),
-        'm' to 0xFF86746F.toInt(), 'h' to 0xFFB8A48D.toInt(),
-        'p' to 0xFFCF8C8B.toInt(), 'G' to 0xFFF2DAA8.toInt()))
+    internal enum class MonsterStyle(val shadow: Long, val fur: Long, val light: Long,
+        val skin: Long, val eye: Long) {
+        COMMON(0xFF51454F, 0xFF86746F, 0xFFB8A48D, 0xFFCF8C8B, 0xFFF2DAA8),
+        GREY(0xFF343E50, 0xFF68788B, 0xFFA4B2BD, 0xFFA77F92, 0xFFEDD98A),
+        BROWN(0xFF50352F, 0xFF956044, 0xFFD09A66, 0xFFC88A78, 0xFFFFD575),
+        ALBINO(0xFF8E879A, 0xFFD2CCD0, 0xFFFFF0E1, 0xFFE3A0AA, 0xFFE74F69),
+        BOSS(0xFF382F3B, 0xFF66515B, 0xFFC79B87, 0xFFB46A76, 0xFFFF674C),
+        SKELETON(0xFF686979, 0xFFC3BDA4, 0xFFF0E5C4, 0xFF85644F, 0xFFFFB35D),
+        SKELETON_MOSS(0xFF455C55, 0xFF91A88A, 0xFFD4D8AD, 0xFF52755B, 0xFFABE778),
+        SKELETON_ASH(0xFF45455C, 0xFF858899, 0xFFCFCDDC, 0xFF686079, 0xFFFF785C),
+        SKELETON_BOSS(0xFF615264, 0xFFBAAD98, 0xFFF4DFC0, 0xFF795262, 0xFFFF5429),
+        ZOMBIE(0xFF43534A, 0xFF7B9570, 0xFFB0BC88, 0xFF91616B, 0xFFFFD57A),
+        ZOMBIE_SWAMP(0xFF354F4D, 0xFF608E81, 0xFFA1BE91, 0xFF537849, 0xFFE7F589),
+        ZOMBIE_PALE(0xFF5C5369, 0xFFA29AA7, 0xFFD0C4C5, 0xFF896079, 0xFFFFAA71),
+        ZOMBIE_BOSS(0xFF525443, 0xFF93916D, 0xFFC7BA8A, 0xFF98707B, 0xFFFF733E),
+        VAMPIRE(0xFF392D45, 0xFFB6A4AC, 0xFFE3D2CB, 0xFF984C65, 0xFFFF6757),
+        VAMPIRE_NIGHT(0xFF292D47, 0xFFA5A6C1, 0xFFDDD8EA, 0xFF71619E, 0xFFFF9676),
+        VAMPIRE_BAT(0xFF3D2C43, 0xFF826171, 0xFFBB9195, 0xFF925369, 0xFFFF6A4E),
+        VAMPIRE_BAT_ASH(0xFF34344F, 0xFF767D9E, 0xFFB7BCD4, 0xFF75699A, 0xFFFFAB69);
+
+        val isSkeleton get() = this == SKELETON || this == SKELETON_MOSS || this == SKELETON_ASH || this == SKELETON_BOSS
+        val isZombie get() = this == ZOMBIE || this == ZOMBIE_SWAMP || this == ZOMBIE_PALE || this == ZOMBIE_BOSS
+        val isHumanoid get() = isSkeleton || isZombie
+        val isBat get() = this == VAMPIRE_BAT || this == VAMPIRE_BAT_ASH
+        val isVampire get() = this == VAMPIRE || this == VAMPIRE_NIGHT || isBat
+        val isBossAppearance get() = this == BOSS || this == SKELETON_BOSS || this == ZOMBIE_BOSS ||
+            this == VAMPIRE || this == VAMPIRE_NIGHT
+    }
+
+    fun rat(style: MonsterStyle = MonsterStyle.COMMON): Bitmap {
+        if (style.isSkeleton) return DungeonSkeletonSprites.create(style)
+        if (style.isZombie) return DungeonZombieSprites.create(style)
+        if (style.isVampire) return DungeonVampireSprites.create(style)
+        val rows = RAT.trimIndent().lines().toMutableList()
+        // Même corps de base ; les silhouettes de tête restent propres à chaque variété.
+        when (style) {
+            MonsterStyle.GREY -> rows[2] = ".......#sss#..###................"
+            MonsterStyle.BROWN -> {
+                rows[1] = "........####....................."
+                rows[2] = ".......#spps#..###..............."
+            }
+            MonsterStyle.ALBINO -> rows[3] = ".......#ppp###hph#..............."
+            MonsterStyle.BOSS -> {
+                rows[0] = ".......####...####..............."
+                rows[1] = "......#spps#.#spps#..............."
+                rows[2] = "......#spps###hppmm#.............."
+                rows[3] = ".....#hhhhhhhhmmss#..............."
+                rows[4] = "....#hhhhhhhhmmmss#..............."
+                rows[5] = "...#hhhhhhhmmmmss#..######........"
+                rows[6] = "...#hhhhhmmmmms#..#hhmmmm##......."
+                rows[7] = "..#hhh###hhmmms###hhhmmmmm#......."
+                rows[8] = "..#hhh#G#hhmmmss#hhmmmmmmm#......."
+                rows[9] = ".#hhhh###hhmmmss#mmmmmmmssmm#....."
+                rows[10] = "#phhhhhhhhhmmmss#mmmmsssssmm#...."
+                rows[11] = "#pphhhmmmhhhmmss#mmsssssssmm#...."
+                rows[12] = ".#####ww#hhmmss#ssssssssssss#...."
+                rows[13] = ".....#w#hmmmss#sssssssssssss#...."
+                rows[14] = "......########ssssssmmsssss#....."
+            }
+            else -> Unit
+        }
+        return pixels(rows.joinToString("\n"), mapOf('#' to outline, 's' to style.shadow.toInt(),
+            'm' to style.fur.toInt(), 'h' to style.light.toInt(), 'p' to style.skin.toInt(),
+            'G' to style.eye.toInt(), 'w' to 0xFFF1DDBA.toInt()))
+    }
     private fun pixels(source: String, colors: Map<Char, Int>): Bitmap {
         val rows = source.trimIndent().lines()
         val w = rows.maxOf { it.length }

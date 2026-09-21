@@ -12,6 +12,7 @@ import kotlin.math.*
 internal class DungeonGesture(private val context: Context) {
     enum class Kind { RIGHT, RETURN, CIRCLE, TRIANGLE, TAP, DOUBLE_TAP }
     enum class Grade { MISS, GOOD, PERFECT }
+    private enum class SwipeDirection(val dx: Int, val dy: Int) { UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0) }
     var kind = Kind.RIGHT
         private set
     var active = false
@@ -28,6 +29,8 @@ internal class DungeonGesture(private val context: Context) {
     private var pointer = -1
     private var targetRadius = 20f
     private var defending = false
+    private var swipeDirection = SwipeDirection.UP
+    private var nextSwipeDirection = 0
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     private val good = 0xFF91E6C3.toInt()
@@ -39,6 +42,7 @@ internal class DungeonGesture(private val context: Context) {
         R.string.dungeon_gesture_tap, R.string.dungeon_gesture_double).map { context.getString(it) }
     private val results = listOf(R.string.dungeon_gesture_miss, R.string.dungeon_gesture_good,
         R.string.dungeon_gesture_perfect).map { context.getString(it) }
+    private val swipeInstruction = context.getString(R.string.dungeon_gesture_swipe)
     val result get() = results[grade.ordinal]
     fun shake(now: Float): Float {
         val age = now - resolvedAt
@@ -58,6 +62,7 @@ internal class DungeonGesture(private val context: Context) {
         pointer = -1
         points.clear()
         targetRadius = listOf(16f, 21f, 26f).random()
+        if (kind == Kind.RIGHT) swipeDirection = SwipeDirection.entries[nextSwipeDirection++ % SwipeDirection.entries.size]
         resolvedAt = -10000f
     }
     fun update(now: Float) {
@@ -125,7 +130,11 @@ internal class DungeonGesture(private val context: Context) {
         val length = points.zipWithNext().sumOf { (a,b) -> hypot(b.first-a.first,b.second-a.second).toDouble() }.toFloat()
         return when (kind) {
             Kind.TAP, Kind.DOUBLE_TAP -> width < 18 && height < 18
-            Kind.RIGHT -> dx >= 42 && abs(dy) < dx * .55f && length < dx * 1.6f
+            Kind.RIGHT -> {
+                val travel = dx * swipeDirection.dx + dy * swipeDirection.dy
+                val sideways = abs(dx * swipeDirection.dy - dy * swipeDirection.dx)
+                travel >= 42 && sideways < travel * .55f && length < travel * 1.6f
+            }
             Kind.RETURN -> width >= 50 && height < width * .5f && abs(dx) < width * .35f &&
                 points.maxOf { it.first } - first.first >= width * .8f && length >= width * 1.6f
             Kind.CIRCLE, Kind.TRIANGLE -> {
@@ -173,6 +182,39 @@ internal class DungeonGesture(private val context: Context) {
         val color = if (active) {
             if (abs(p - target) <= .035f) good else if (defending) bad else blue
         } else if (grade == Grade.MISS) bad else good
+
+        // La frappe de la démo emploie maintenant la même idée que le combat réel :
+        // un curseur traverse la fenêtre, et la flèche impose le sens du swipe.
+        if (kind == Kind.RIGHT && active) {
+            val horizontal = swipeDirection.dy != 0
+            val bar = if (horizontal) android.graphics.RectF(width * .15f, height * .55f, width * .85f, height * .55f + 8f)
+            else android.graphics.RectF(width * .5f - 4f, height * .31f, width * .5f + 4f, height * .79f)
+            paint.style = Paint.Style.FILL
+            paint.color = 0xFF263238.toInt(); canvas.drawRoundRect(bar, 4f, 4f, paint)
+            fun along(at: Float) = if (horizontal) bar.left + bar.width() * at else bar.top + bar.height() * at
+            val goodL = along(.625f); val goodR = along(.815f)
+            paint.color = good
+            if (horizontal) canvas.drawRoundRect(goodL, bar.top, goodR, bar.bottom, 4f, 4f, paint)
+            else canvas.drawRoundRect(bar.left, goodL, bar.right, goodR, 4f, 4f, paint)
+            val perfectL = along(.685f); val perfectR = along(.755f)
+            paint.color = bad
+            if (horizontal) canvas.drawRoundRect(perfectL, bar.top - 1f, perfectR, bar.bottom + 1f, 4f, 4f, paint)
+            else canvas.drawRoundRect(bar.left - 1f, perfectL, bar.right + 1f, perfectR, 4f, 4f, paint)
+            val cursor = along(p)
+            paint.color = white
+            if (horizontal) canvas.drawRect(cursor - 1.5f, bar.top - 4f, cursor + 1.5f, bar.bottom + 4f, paint)
+            else canvas.drawRect(bar.left - 4f, cursor - 1.5f, bar.right + 4f, cursor + 1.5f, paint)
+            val arrowX = if (horizontal) along(.72f) else bar.centerX()
+            val arrowY = if (horizontal) bar.centerY() else along(.72f)
+            paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f; paint.strokeCap = Paint.Cap.ROUND; paint.color = good
+            val dx = swipeDirection.dx.toFloat(); val dy = swipeDirection.dy.toFloat()
+            canvas.drawLine(arrowX - dx * 12f, arrowY - dy * 12f, arrowX + dx * 12f, arrowY + dy * 12f, paint)
+            canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f - dy * 6f, arrowY + dy * 5f + dx * 6f, paint)
+            canvas.drawLine(arrowX + dx * 12f, arrowY + dy * 12f, arrowX + dx * 5f + dy * 6f, arrowY + dy * 5f - dx * 6f, paint)
+            paint.strokeCap = Paint.Cap.BUTT; paint.style = Paint.Style.FILL; paint.textAlign = Paint.Align.CENTER; paint.textSize = 6f
+            canvas.drawText(swipeInstruction, width / 2f, height - 12f, paint)
+            return
+        }
 
         fun outline(radius: Float, tint: Int, thickness: Float) {
             path.reset()

@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dungeon_demo_meadow_day">Prairie fleurie · jour</string>
+    <string name="dungeon_demo_meadow_night">Prairie fleurie · nuit</string>
+    <string name="dungeon_demo_jungle_day">Forêt exotique · jour</string>
+    <string name="dungeon_demo_jungle_night">Forêt exotique · nuit</string>
+    <string name="dungeon_demo_backdrop">Choisir le décor</string>
+    <string name="dungeon_demo_backdrop_dungeon">Donjon · pierres et torches</string>
+    <string name="dungeon_demo_backdrop_inn">Auberge · cheminée et boiseries</string>
+    <string name="dungeon_demo_vampire">Vampire · cape pourpre</string>
+    <string name="dungeon_demo_vampire_night">Vampire nocturne · cape violette</string>
+    <string name="dungeon_demo_vampire_bat">Chauve-souris vampire · ailes pourpres</string>
+    <string name="dungeon_demo_vampire_bat_ash">Chauve-souris cendrée · ailes violettes</string>
+    <string name="dungeon_demo_zombie">Zombie · habits pastel aléatoires</string>
+    <string name="dungeon_demo_zombie_boss">Zombie boss · gros ventre</string>
+    <string name="dungeon_demo_zombie_swamp">Zombie des marais · peau moussue</string>
+    <string name="dungeon_demo_zombie_pale">Zombie blafard · borgne</string>
+    <string name="dungeon_demo_skeleton_boss">Squelette boss · yeux de braise</string>
+    <string name="dungeon_demo_rat_appearance">Apparence du monstre ciblé</string>
+    <string name="dungeon_demo_rat_common">Rat commun</string>
+    <string name="dungeon_demo_rat_grey">Rat gris · queue courte</string>
+    <string name="dungeon_demo_rat_brown">Rat brun · queue recourbée</string>
+    <string name="dungeon_demo_rat_albino">Rat albinos · yeux rouges</string>
+    <string name="dungeon_demo_rat_boss">Rat boss · gros et furieux</string>
     <string name="dungeon_demo_title">Donjon · Démo visuelle</string>
-    <string name="dungeon_demo_description">Touche une pièce pour la modifier. Touche un rat pour le cibler.</string>
+    <string name="dungeon_demo_description">Touche une pièce pour la modifier. Touche un monstre pour le cibler.</string>
     <string name="dungeon_demo_heavy">Armure lourde</string>
     <string name="dungeon_demo_standard">Ordinaire</string>
     <string name="dungeon_demo_isotope">Isotope</string>
     <string name="dungeon_demo_mixed">Pièces mélangées</string>
     <string name="dungeon_demo_toggle_set">Changer de set</string>
-    <string name="dungeon_demo_three_rats">3 rats</string>
-    <string name="dungeon_demo_one_rat">1 rat</string>
+    <string name="dungeon_demo_three_rats">3 monstres</string>
+    <string name="dungeon_demo_one_rat">1 monstre</string>
     <string name="dungeon_demo_tint">Teinte de la pièce</string>
     <string name="dungeon_demo_done">Terminé</string>
     <string name="dungeon_demo_piece_description">%1$s · %2$s · %3$s · Modifier l’apparence</string>
@@ -48,7 +70,11 @@
     <string name="dungeon_gesture_perfect">Parfait !</string>
     <string name="dungeon_gesture_return">Aller-retour : termine quand les flèches se superposent</string>
     <string name="dungeon_gesture_right">Glisse à droite quand les flèches se superposent</string>
+    <string name="dungeon_gesture_swipe">Glisse dans le sens de la flèche quand le curseur traverse la fenêtre</string>
     <string name="dungeon_gesture_select">Geste du prochain sort</string>
     <string name="dungeon_gesture_tap">Touche quand les deux cercles se superposent</string>
     <string name="dungeon_gesture_triangle">Trace un triangle : termine à la superposition</string>
+    <string name="dungeon_demo_skeleton">Squelette · os ivoire</string>
+    <string name="dungeon_demo_skeleton_moss">Squelette moussu · os verdâtres</string>
+    <string name="dungeon_demo_skeleton_ash">Squelette cendré · crâne fissuré</string>
 </resources>
