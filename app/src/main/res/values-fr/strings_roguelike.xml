@@ -568,4 +568,18 @@
     <string name="roguelike_region_inn">Auberge</string>
     <string name="roguelike_region_spaceship">Vaisseau spatial</string>
     <string name="roguelike_region_floor">%1$d · %2$s</string>
+    <string name="roguelike_region_pirate_cabin">Cabine du capitaine</string>
+    <string name="roguelike_format_micro">Lieu unique</string>
+    <string name="roguelike_format_expedition">Petite expédition</string>
+    <string name="roguelike_format_region">Grande région</string>
+    <string name="roguelike_format_vast">Très grande région</string>
+    <string name="roguelike_region_crypt">Crypte</string>
+    <string name="roguelike_region_village">Village délabré</string>
+    <string name="roguelike_region_camp">Camp abandonné</string>
+    <string name="roguelike_region_depot">Dépôt ferroviaire</string>
+    <string name="roguelike_region_port">Port</string>
+    <string name="roguelike_map_format">%1$s · %2$d × %3$d</string>
+    <string name="roguelike_camp_hint">Feu de camp · touche le feu pour te reposer</string>
+    <string name="roguelike_camp_return_hint">Reviens au feu du départ pour te soigner</string>
+    <string name="roguelike_log_camp_rest">Au feu, tes forces et tes reliques sont restaurées. PV %1$s/%2$s</string>
 </resources>

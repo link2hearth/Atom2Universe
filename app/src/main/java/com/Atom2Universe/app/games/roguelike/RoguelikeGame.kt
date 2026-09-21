@@ -29,6 +29,8 @@ enum class PackState { IDLE, CHASING }
 /** Un monstre visible sur la carte = un groupe de 1 à 3 ennemis en combat. */
 class MonsterPack(val types: List<MonsterType>, var pos: Pos) {
     val home = pos
+    internal var patrol: List<Pos> = emptyList()
+    internal var patrolIndex = 1
     var state = PackState.IDLE
     var lostTurns = 0
     var alive = true
@@ -41,7 +43,21 @@ class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
     val items    = mutableListOf<Item>()
     val visible  = Array(h) { BooleanArray(w) }
     val explored = Array(h) { BooleanArray(w) }
-    val theme    = DungeonTheme.forFloor(floor)
+    var theme    = DungeonTheme.forFloor(floor)
+        internal set
+    internal var format = DungeonFormat.MICRO
+    internal var targetPacks = 3
+    internal val districts = Array(h) { IntArray(w) }
+    internal var sites: List<MapSite> = emptyList()
+    internal var quietCells: Set<Pos> = emptySet()
+    internal var campDistances = Array(h) { IntArray(w) { -1 } }
+    var mausoleums: List<Pos> = emptyList()
+    internal var passages: Map<Pos, MapPassage> = emptyMap()
+    internal var waterways: Map<Pos, MapWaterway> = emptyMap()
+    internal var scenery: Map<Pos, MapScenery> = emptyMap()
+    val themes = Array(h) { Array(w) { theme } }
+    fun themeAt(x: Int, y: Int): DungeonTheme = if (inBounds(x, y)) themes[y][x] else theme
+    fun backdropAt(pos: Pos) = if (scenery[pos]?.kind == SceneryKind.CHAPEL) DungeonBackdrop.CRYPT else themeAt(pos.x, pos.y).backdropAt(pos.x, pos.y)
     var start    = Pos(1, 1)
 
     fun inBounds(x: Int, y: Int)  = x in 0 until w && y in 0 until h
@@ -93,31 +109,6 @@ class RoguelikeGame(
     var onFloorChanged: ((floor: Int) -> Unit)?   = null
 
     companion object {
-        // Dimensions extrêmes de la carte, impaires : le labyrinthe se creuse sur les cases impaires
-        const val MIN_MAP_W      = 21
-        const val MIN_MAP_H      = 15
-        const val MAX_MAP_W      = 41
-        const val MAX_MAP_H      = 27
-        /** Cases de carte par monstre : la carte grandit avec le nombre de monstres. */
-        const val MAP_CELLS_PER_PACK = 100
-        const val MAX_PACKS      = 12
-        /** Aucun monstre à moins de ce nombre de pas du départ (réduit sur les petites cartes). */
-        const val MIN_PACK_DISTANCE = 12
-
-        fun packCount(floor: Int) = minOf(3 + floor, MAX_PACKS)
-
-        /**
-         * Moins il y a de monstres, plus la carte est petite : on vient pour se battre, pas
-         * pour tourner en rond. Environ la moitié de la carte est du sol, soit ~50 cases de
-         * sol par monstre. Format 3:2, dimensions impaires, bornées.
-         */
-        fun mapSize(packs: Int): Pair<Int, Int> {
-            val area = packs * MAP_CELLS_PER_PACK
-            fun odd(v: Int) = if (v % 2 == 0) v + 1 else v
-            val w = odd(kotlin.math.sqrt(area * 1.5).roundToInt()).coerceIn(MIN_MAP_W, MAX_MAP_W)
-            val h = odd((area / w.toFloat()).roundToInt()).coerceIn(MIN_MAP_H, MAX_MAP_H)
-            return w to h
-        }
         const val FOV_RADIUS     = 8
         /** Distance à laquelle un monstre nous repère (en vue directe). */
         const val SIGHT          = 6
@@ -125,11 +116,6 @@ class RoguelikeGame(
         const val CHASE_MEMORY   = 5
         /** Un poursuivant à cette distance à la fin d'un combat enchaîne directement. */
         const val CHAIN_DISTANCE = 2
-        const val REST_HEAL      = 0.20f
-        /** Chance, à chaque tour de repos, d'attirer un monstre errant. */
-        const val REST_NOISE_CHANCE = 0.10f
-        const val WANDERER_MIN_STEPS = 5
-        const val WANDERER_MAX_STEPS = 10
         const val DEATH_GOLD_LOSS = 0.30f
         const val CHECKPOINT     = 1
         const val CHECKPOINT_INTERVAL = 10
@@ -250,7 +236,8 @@ class RoguelikeGame(
     val isChased get() = level.packs.any { it.alive && it.state == PackState.CHASING }
 
     /** Le repos soigne et recharge les reliques : utile tant que l'un des deux n'est pas plein. */
-    fun canRest() = isExploring && !isChased && (hero.hp < hero.maxHp || hero.relicsRecharging)
+    fun onCampTile() = playerPos == level.start
+    fun canRest() = isExploring && onCampTile() && !isChased && (hero.hp < hero.maxHp || hero.relicsRecharging || hero.specialCooldown > 0)
 
     fun onStairsTile() = level.tiles[playerPos.y][playerPos.x] == TileType.STAIRS_DOWN
 
@@ -260,7 +247,7 @@ class RoguelikeGame(
         if (!isExploring) return
         val nx = playerPos.x + dx; val ny = playerPos.y + dy
         val pack = level.packAt(nx, ny)
-        if (pack != null) { startCombat(pack, ambush = false); return }
+        if (pack != null) { startCombat(pack, ambush = false, encounterPos = pack.pos); return }
         if (!level.canStep(playerPos, dx, dy)) return
         playerPos = Pos(nx, ny)
         hero.walkRelics()
@@ -268,38 +255,16 @@ class RoguelikeGame(
         endMapTurn()
     }
 
-    /** Un tour de repos : les monstres continuent de bouger pendant ce temps. */
+    /** Full recovery is possible only on the starting fire, with no active pursuit. */
     fun rest(): Boolean {
         if (!canRest()) return false
-        hero.heal(ceil(hero.maxHp * REST_HEAL).toInt())
-        hero.tickRelics()
-        addLog(R.string.roguelike_log_rest, hero.hp, hero.maxHp)
-        if (rng.nextFloat() < REST_NOISE_CHANCE) spawnWanderer()
+        hero.healFull()
+        hero.relicCooldowns.clear()
+        hero.specialCooldown = 0
+        addLog(R.string.roguelike_log_camp_rest, hero.hp, hero.maxHp)
         endMapTurn(resting = true)
         return true
     }
-
-    /**
-     * Le repos fait du bruit : un monstre errant surgit hors de vue, à quelques pas, et
-     * vient droit sur nous. S'il arrive sans qu'on l'ait vu, c'est une embuscade.
-     */
-    private fun spawnWanderer() {
-        val dist = DungeonGenerator.distances(level.tiles, playerPos)
-        val spots = mutableListOf<Pos>()
-        for (y in 0 until level.h) for (x in 0 until level.w) {
-            if (dist[y][x] !in WANDERER_MIN_STEPS..WANDERER_MAX_STEPS || level.visible[y][x]) continue
-            if (level.tiles[y][x] != TileType.FLOOR || level.packAt(x, y) != null) continue
-            spots += Pos(x, y)
-        }
-        val pos = spots.randomOrNull(rng) ?: return
-        level.packs += MonsterPack(Encounters.roll(floor, rng), pos).apply {
-            state = PackState.CHASING
-            // Il nous a entendus : il ne renonce pas tant qu'il n'a pas fait le chemin
-            lostTurns = -WANDERER_MAX_STEPS
-        }
-        addLog(R.string.roguelike_log_rest_noise)
-    }
-
     /** Sur l'escalier : on demande avant de descendre (on peut vouloir finir l'étage). */
     fun openStairs() {
         if (isExploring && onStairsTile()) stairsOpen = true
@@ -382,9 +347,9 @@ class RoguelikeGame(
 
     // ── Combat ──────────────────────────────────────────────────────────────────
 
-    private fun startCombat(pack: MonsterPack, ambush: Boolean) {
+    private fun startCombat(pack: MonsterPack, ambush: Boolean, encounterPos: Pos = playerPos) {
         combatPack = pack
-        combat = Combat(hero, floor, Encounters.build(pack.types, floor), ambush, rng, visualSeed = pack.home.x * 73856093 xor pack.home.y * 19349663, backdrop = level.theme.backdrop(pack.home.x + pack.home.y))
+        combat = Combat(hero, floor, Encounters.build(pack.types, floor), ambush, rng, visualSeed = pack.home.x * 73856093 xor pack.home.y * 19349663, backdrop = level.backdropAt(encounterPos))
         onCombatStart?.invoke()
     }
 
@@ -411,12 +376,6 @@ class RoguelikeGame(
                 r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
-                // Le vagabond reprend son souffle tout seul, sans bruit : pas de repos, donc pas de monstre errant.
-                // Si un poursuivant l'a enchaîné, il n'a pas eu le temps de souffler.
-                if (combat == null && hero.archetype == Archetype.VAGABOND && hero.hp < hero.maxHp) {
-                    hero.healFull()
-                    addLog(R.string.roguelike_log_vagabond_recover)
-                }
             }
             CombatPhase.DEFEAT -> die()
             else -> {}
@@ -480,14 +439,20 @@ class RoguelikeGame(
 
     private fun wander(pack: MonsterPack) {
         if (rng.nextFloat() > 0.3f) return
+        fun calm(p: Pos) = p in level.quietCells || level.campDistances[p.y][p.x] in 0..7
+        if (pack.patrol.size > 1) {
+            if (pack.pos == pack.patrol[pack.patrolIndex]) pack.patrolIndex = (pack.patrolIndex + 1) % pack.patrol.size
+            val next = bfsFirstStep(pack.pos, pack.patrol[pack.patrolIndex], avoidQuiet = true) ?: return
+            if (!calm(next) && level.packAt(next.x,next.y) == null && next != playerPos) pack.pos = next
+            return
+        }
         val dx = rng.nextInt(-1, 2); val dy = rng.nextInt(-1, 2)
         val n = Pos(pack.pos.x + dx, pack.pos.y + dy)
-        if (level.canStep(pack.pos, dx, dy) && level.packAt(n.x, n.y) == null && n != playerPos && n.chebyshev(pack.home) <= 4)
+        if (level.canStep(pack.pos, dx, dy) && !calm(n) && level.packAt(n.x, n.y) == null && n != playerPos && n.chebyshev(pack.home) <= 4)
             pack.pos = n
     }
-
     /** Premier pas du plus court chemin (8 directions), limité pour rester léger. */
-    private fun bfsFirstStep(from: Pos, to: Pos): Pos? {
+    private fun bfsFirstStep(from: Pos, to: Pos, avoidQuiet: Boolean = false): Pos? {
         val prev = HashMap<Pos, Pos>()
         val queue = ArrayDeque<Pos>()
         queue.add(from); prev[from] = from
@@ -502,6 +467,7 @@ class RoguelikeGame(
                 if (dx == 0 && dy == 0) continue
                 val n = Pos(c.x + dx, c.y + dy)
                 if (n in prev || !level.canStep(c, dx, dy)) continue
+                if (avoidQuiet && (n in level.quietCells || level.campDistances[n.y][n.x] in 0..7)) continue
                 prev[n] = c; queue.add(n)
             }
         }
@@ -557,7 +523,7 @@ class RoguelikeGame(
         for (i in 1 until steps) {
             val x = (x0 + dx * i.toFloat() / steps).roundToInt()
             val y = (y0 + dy * i.toFloat() / steps).roundToInt()
-            if (lv.tiles[y][x] == TileType.WALL) return false
+            if (lv.tiles[y][x] == TileType.WALL && Pos(x,y) !in lv.waterways) return false
         }
         return true
     }
@@ -565,36 +531,22 @@ class RoguelikeGame(
     // ── Génération ──────────────────────────────────────────────────────────────
 
     private fun generateLevel(floor: Int): DungeonLevel {
-        val packCount = packCount(floor)
-        val (w, h) = mapSize(packCount)
-        val lv     = DungeonLevel(w, h, floor)
-        val layout = DungeonGenerator.generate(w, h, rng, lv.theme.outdoor)
-        for (y in 0 until h) for (x in 0 until w) lv.tiles[y][x] = layout.tiles[y][x]
-        lv.start = layout.start
-
-        // Monstres : loin du départ (en pas réels), surtout dans les salles, parfois en plein couloir.
-        // Sur une petite carte, « loin » se raccourcit pour qu'ils trouvent tous leur place.
-        val dist = DungeonGenerator.distances(lv.tiles, lv.start)
-        val maxDist = dist.maxOf { row -> row.max() }
-        val minDist = minOf(MIN_PACK_DISTANCE, maxDist / 3)
-        val farCells = mutableListOf<Pos>()
-        for (y in 0 until h) for (x in 0 until w)
-            if (lv.tiles[y][x] == TileType.FLOOR && dist[y][x] >= minDist) farCells += Pos(x, y)
-        val farRoomCells = farCells.filter { p -> layout.rooms.any { it.contains(p) } }
-
-        var attempts = 0
-        while (lv.packs.size < packCount && attempts++ < packCount * 20) {
-            val pool = if (farRoomCells.isNotEmpty() && rng.nextFloat() < 0.65f) farRoomCells else farCells
-            val pos = pool.randomOrNull(rng) ?: break
-            if (lv.packs.any { it.pos.chebyshev(pos) <= 2 }) continue
-            lv.packs += MonsterPack(Encounters.roll(floor, rng), pos)
+        val prepared = DungeonLevelFactory.create(floor, rng)
+        val lv = prepared.level
+        val layout = prepared.layout
+        val w = lv.w; val h = lv.h
+        val dist = DungeonPaths.distances(lv, lv.start)
+        val farCells = (0 until h).flatMap { y -> (0 until w).map { x -> Pos(x,y) } }
+            .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && dist[it.y][it.x] >= 8 }
+        for (spawn in prepared.population.spawns) {
+            lv.packs += MonsterPack(Encounters.roll(floor, rng), spawn.pos).apply { patrol = spawn.patrol }
         }
-
+        val quietLoot = prepared.population.sites.filter { it.kind == MapSiteKind.QUIET }.map { it.pos }
         // Parfois une relique, au bout du cul-de-sac le plus éloigné du départ
         val firstRelic = hero.relics.isEmpty() && floor >= FIRST_RELIC_FLOOR
         if (firstRelic || (floor >= FIRST_RELIC_FLOOR && rng.nextFloat() < RELIC_CHANCE)) {
             val relic = Relic.entries.filter { it !in hero.relics }.randomOrNull(rng)
-            val spot = layout.deadEnds.filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
+            val spot = (quietLoot + layout.deadEnds).filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
                 .maxByOrNull { dist[it.y][it.x] }
                 ?: farCells.maxByOrNull { dist[it.y][it.x] }
             if (relic != null && spot != null) lv.items += Item(ItemType.RELIC, spot, relic)
@@ -602,10 +554,10 @@ class RoguelikeGame(
 
         // L'or récompense l'exploration : d'abord au bout des culs-de-sac
         val relicSpots = lv.items.map { it.pos }.toSet()
-        val spots = (layout.deadEnds.shuffled(rng) + layout.rooms.shuffled(rng).map { it.randomInner(rng) })
+        val spots = (quietLoot.shuffled(rng) + layout.deadEnds.shuffled(rng) + layout.rooms.shuffled(rng).map { it.randomInner(rng) })
             .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start && it !in relicSpots }
             .distinct()
-        val goldCount = 3 + rng.nextInt(3)
+        val goldCount = 3 + lv.targetPacks / 4 + rng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
 
         return lv

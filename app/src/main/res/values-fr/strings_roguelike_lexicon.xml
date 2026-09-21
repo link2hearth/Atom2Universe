@@ -135,9 +135,9 @@
     <string name="lex_special_1">Le bouton du bas : la capacité de ton [[archetype|archétype]]. Verrouillé sans archétype.</string>
     <string name="lex_special_2">Recharge : %1$d tours</string>
     <string name="lex_rest">Repos</string>
-    <string name="lex_rest_1">Le bouton de repos rend %1$d %% de tes PV par tour.</string>
+    <string name="lex_rest_1">Le repos est possible uniquement sur le feu du départ : il restaure tous tes PV et recharge tes reliques.</string>
     <string name="lex_rest_2">Impossible tant qu\'un monstre te [[chase|poursuit]].</string>
-    <string name="lex_rest_3">Chaque tour de repos : %1$d %% de chances qu\'un monstre errant approche.</string>
+    <string name="lex_rest_3">Le feu ne fait pas apparaître de monstres. Les soins de combat restent disponibles.</string>
     <string name="lex_chase">Poursuite</string>
     <string name="lex_chase_1">Un monstre qui te voit te poursuit ; s\'il te rattrape, le combat commence.</string>
     <string name="lex_chase_2">Tant qu\'un monstre te poursuit, tu ne peux pas te [[rest|reposer]].</string>
@@ -319,7 +319,7 @@
     <string name="lex_base_orb_damage">+%1$d %% à tous les dégâts que tu infliges, arme et sorts.</string>
     <string name="lex_archetype_vagabond_1">Il se bat un peu à tout : un peu de défense, un peu de mobilité.</string>
     <string name="lex_archetype_vagabond_2">Parade parfaite : une roulade. Il évite le coup, et son prochain coup d\'arme frappe %1$d %% plus fort.</string>
-    <string name="lex_archetype_vagabond_3">Après un combat, il récupère tous ses PV tout seul, sans faire de bruit. Si un autre ennemi est déjà sur ses talons, le combat suivant démarre tout de suite et il ne récupère pas.</string>
+    <string name="lex_archetype_vagabond_3">Comme les autres archétypes, il retrouve ses forces au feu du départ entre les combats.</string>
     <string name="lex_archetype_necromancer_1">Ses pantins encaissent les coups et frappent en retour.</string>
     <string name="lex_archetype_necromancer_2">Parade parfaite : ses pantins récupèrent %1$d %% de leurs PV.</string>
     <string name="lex_archetype_necromancer_3">L\'Appel des morts invoque %1$d pantins, qui ont chacun %2$d %% de tes PV max. Ils prennent %3$d %% de chaque coup que tu aurais reçu, tu gardes le reste. Chaque coup d\'arme est répété par chaque pantin à hauteur de %4$d %% de ses dégâts : en entier avec un geste parfait, la moitié avec un bon geste, rien avec un raté.</string>

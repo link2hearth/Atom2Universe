@@ -14,6 +14,7 @@ import kotlin.math.*
  */
 private val LOG_AMOUNT_ARGS: Map<Int, Set<Int>> = mapOf(
     R.string.roguelike_log_rest to setOf(0, 1),
+    R.string.roguelike_log_camp_rest to setOf(0, 1),
     R.string.roguelike_log_victory to setOf(0),
     R.string.roguelike_log_gold_pickup to setOf(0),
     R.string.roguelike_log_sold to setOf(1),
@@ -110,6 +111,7 @@ class RoguelikeView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         stopHold()
         actors.clearMapPacks()
+        mapArt.clearTiles()
     }
 
     private val sd get() = context.resources.displayMetrics.density * context.resources.configuration.fontScale
@@ -124,6 +126,7 @@ class RoguelikeView @JvmOverloads constructor(
         if (drawnLevel !== g.level) {
             drawnLevel = g.level
             actors.clearMapPacks()
+            mapArt.clearTiles()
             lastPlayerPos = null
         }
         lastPlayerPos?.let { if (it.x != g.playerPos.x) facingLeft = g.playerPos.x < it.x }
@@ -176,7 +179,37 @@ class RoguelikeView @JvmOverloads constructor(
             if (!lv.explored[ty][tx]) continue
             val l = tileLeft(tx); val t = tileTop(ty)
             val rect = RectF(l, t, l + tileSize, t + tileSize)
-            mapArt.tile(canvas, rect, lv.theme, lv.tiles[ty][tx], tx, ty)
+            val theme = lv.themeAt(tx, ty)
+            val passage = lv.passages[Pos(tx, ty)]
+            val waterway = lv.waterways[Pos(tx, ty)]
+            val scenery = lv.scenery[Pos(tx, ty)]
+            var neighbours = 0
+            if (theme == DungeonTheme.CEMETERY || theme == DungeonTheme.DUNGEON || theme == DungeonTheme.FOREST || theme == DungeonTheme.SPACESHIP || theme == DungeonTheme.MINE || theme == DungeonTheme.MINE_DEPOT || theme == DungeonTheme.CRYPT) {
+                if (!lv.walkable(tx, ty - 1)) neighbours = neighbours or 1
+                if (!lv.walkable(tx + 1, ty)) neighbours = neighbours or 2
+                if (!lv.walkable(tx, ty + 1)) neighbours = neighbours or 4
+                if (!lv.walkable(tx - 1, ty)) neighbours = neighbours or 8
+            }
+            if (theme == DungeonTheme.PIRATE_CABIN) {
+                if (!lv.walkable(tx, ty - 1) || lv.themeAt(tx, ty - 1) != theme) neighbours = neighbours or 1
+                if (!lv.walkable(tx + 1, ty) || lv.themeAt(tx + 1, ty) != theme) neighbours = neighbours or 2
+                if (!lv.walkable(tx, ty + 1) || lv.themeAt(tx, ty + 1) != theme) neighbours = neighbours or 4
+                if (!lv.walkable(tx - 1, ty) || lv.themeAt(tx - 1, ty) != theme) neighbours = neighbours or 8
+            }
+            if (theme == DungeonTheme.PIRATE) {
+                if (ty == 0) neighbours = neighbours or 16
+                if (tx == lv.w - 1) neighbours = neighbours or 32
+                if (ty == lv.h - 1) neighbours = neighbours or 64
+                if (tx == 0) neighbours = neighbours or 128
+            }
+            val monument = lv.mausoleums.firstOrNull {
+                tx in it.x until it.x + CemeteryMonuments.SIZE && ty in it.y until it.y + CemeteryMonuments.SIZE
+            }
+            if (monument != null) mapArt.mausoleumCell(canvas, rect, tx - monument.x, ty - monument.y)
+            else mapArt.tile(canvas, rect, theme, if (scenery != null || waterway != null || passage?.kind == PassageKind.FENCE) TileType.FLOOR else lv.tiles[ty][tx], tx, ty, neighbours)
+            if (passage != null) mapArt.passage(canvas, rect, passage)
+            if (waterway != null) mapArt.waterway(canvas, rect, waterway)
+            if (scenery != null) mapArt.scenery(canvas, rect, scenery)
             if (!lv.visible[ty][tx]) {
                 pFog.alpha = 170
                 canvas.drawRect(rect, pFog)
@@ -255,11 +288,13 @@ class RoguelikeView @JvmOverloads constructor(
     private fun drawHud(canvas: Canvas, g: RoguelikeGame) {
         pText.textAlign = Paint.Align.RIGHT
         pText.textSize = sd * 12f
-        val region = context.getString(R.string.roguelike_region_floor, g.floor, context.getString(g.level.theme.label))
+        val region = context.getString(R.string.roguelike_region_floor, g.floor, context.getString(g.level.themeAt(g.playerPos.x, g.playerPos.y).label))
         val badge = RectF(width - pText.measureText(region) - 24f, 8f, width - 8f, 16f + sd * 18f)
         canvas.drawRoundRect(badge, 6f, 6f, pIconBg)
         pText.color = 0xFFE3D7B3.toInt()
         canvas.drawText(region, badge.right - 8f, badge.bottom - 8f, pText)
+        pText.textSize = sd * 10f
+        canvas.drawText(context.getString(R.string.roguelike_map_format, context.getString(g.level.format.label), g.level.w, g.level.h), badge.right - 8f, badge.bottom + sd * 14f, pText)
         val logSize  = sd * 17f; val hintSize = sd * 15f
         val lineH    = logSize * 1.4f
         val lines    = g.log.takeLast(3)
@@ -276,6 +311,8 @@ class RoguelikeView @JvmOverloads constructor(
             !g.isExploring   -> null
             g.isChased       -> R.string.roguelike_hint_chased
             g.onStairsTile() -> R.string.roguelike_descend_hint
+            g.onCampTile()   -> R.string.roguelike_camp_hint
+            g.hero.hp < g.hero.maxHp -> R.string.roguelike_camp_return_hint
             else             -> null
         }
         if (hint != null) {
@@ -353,13 +390,11 @@ class RoguelikeView @JvmOverloads constructor(
             canvas.drawText("↓", r.centerX(), r.centerY() + r.height() * 0.22f, pText)
         }
 
-        // Repos : grisé si poursuivi ou déjà en pleine forme
-        val rest = restBtnRect()
-        val canRest = g.canRest()
-        canvas.drawCircle(rest.centerX(), rest.centerY(), rest.width() / 2f, if (canRest) pIconOn else pIconBg)
-        pText.color = if (canRest) 0xFFFFFFFF.toInt() else 0xFF555555.toInt(); pText.textSize = rest.height() * 0.5f
-        canvas.drawText("☾", rest.centerX(), rest.centerY() + rest.height() * 0.18f, pText)
-
+        if (g.onCampTile()) {
+            val rest = restBtnRect()
+            canvas.drawCircle(rest.centerX(), rest.centerY(), rest.width() / 2f, if (g.canRest()) pIconOn else pIconBg)
+            mapArt.scenery(canvas, rest, MapScenery(SceneryKind.BONFIRE))
+        }
         drawRelicStatus(canvas, g)
 
         // Bouton inventaire (sac ⚔)
@@ -622,7 +657,8 @@ class RoguelikeView @JvmOverloads constructor(
 
                     tap -> when {
                         inventoryBtnRect().contains(touchDownX, touchDownY) -> onOpenInventory?.invoke()
-                        restBtnRect().contains(touchDownX, touchDownY) -> onRest?.invoke()
+                        g.onCampTile() && (restBtnRect().contains(touchDownX, touchDownY) ||
+                            RectF(tileLeft(g.playerPos.x),tileTop(g.playerPos.y),tileLeft(g.playerPos.x)+tileSize,tileTop(g.playerPos.y)+tileSize).contains(touchDownX,touchDownY)) -> onRest?.invoke()
                         stairsIconRect().contains(touchDownX, touchDownY) && g.onStairsTile() -> onOpenStairs?.invoke()
                     }
 

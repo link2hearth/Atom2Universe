@@ -135,9 +135,9 @@
     <string name="lex_special_1">The bottom button: your [[archetype|archetype]]\'s ability. Locked without an archetype.</string>
     <string name="lex_special_2">Recharge: %1$d turns</string>
     <string name="lex_rest">Rest</string>
-    <string name="lex_rest_1">The rest button restores %1$d%% of your HP per turn.</string>
+    <string name="lex_rest_1">Rest is only available on the starting fire: it restores all HP and recharges your relics.</string>
     <string name="lex_rest_2">Impossible while a monster is [[chase|chasing]] you.</string>
-    <string name="lex_rest_3">Each rest turn: %1$d%% chance that a wandering monster approaches.</string>
+    <string name="lex_rest_3">The fire does not spawn monsters. Combat healing remains available.</string>
     <string name="lex_chase">Chase</string>
     <string name="lex_chase_1">A monster that sees you chases you; if it catches you, combat starts.</string>
     <string name="lex_chase_2">While a monster chases you, you can\'t [[rest|rest]].</string>
@@ -319,7 +319,7 @@
     <string name="lex_base_orb_damage">+%1$d%% to all the damage you deal, weapon and spells.</string>
     <string name="lex_archetype_vagabond_1">It fights a bit of everything: some defense, some mobility.</string>
     <string name="lex_archetype_vagabond_2">Perfect parry: a roll. It avoids the blow, and its next weapon hit is %1$d%% stronger.</string>
-    <string name="lex_archetype_vagabond_3">After a fight, it recovers all its HP on its own, without making noise. If another enemy is already on its heels, the next fight starts right away and it does not recover.</string>
+    <string name="lex_archetype_vagabond_3">Like every archetype, it recovers at the starting fire between fights.</string>
     <string name="lex_archetype_necromancer_1">Its puppets take the blows and strike back.</string>
     <string name="lex_archetype_necromancer_2">Perfect parry: its puppets recover %1$d%% of their health.</string>
     <string name="lex_archetype_necromancer_3">Call of the dead summons %1$d puppets, each with %2$d%% of your max HP. They take %3$d%% of every blow you would take, you keep the rest. Every weapon hit is echoed by each puppet for %4$d%% of its damage: in full with a perfect gesture, half with a good one, nothing with a miss.</string>

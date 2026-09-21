@@ -357,7 +357,7 @@ class RelicTest {
         g.hero.relicCooldowns[Relic.VENOM] = 2
         assertTrue("PV pleins, mais une relique à recharger : on peut se reposer", g.canRest())
         g.rest()
-        assertEquals(1, g.hero.relicCooldown(Relic.VENOM))
+        assertEquals(0, g.hero.relicCooldown(Relic.VENOM))
     }
 
     @Test

@@ -1,12 +1,69 @@
 package com.Atom2Universe.app.games.roguelike
 
+import android.graphics.Bitmap
+import android.util.LruCache
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 
 /** Small, deterministic pixel compositions. Coordinates are a 32-pixel tile. */
 internal class DungeonMapArt {
-    private val p = Paint().apply { isAntiAlias = false }
+    private val p = Paint().apply { isAntiAlias = false; isFilterBitmap = false }
+    private val cemeteryArt = CemeteryTileArt()
+    private val mineArt = MineTileArt()
+    private val mineTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val sceneryArt = SceneryTileArt()
+    private data class SceneryKey(val kind: SceneryKind, val variant: Int, val connections: Int)
+    private val sceneryTiles = LruCache<SceneryKey, Bitmap>(96)
+    fun scenery(c: Canvas, bounds: RectF, scenery: MapScenery) {
+        val key = SceneryKey(scenery.kind, scenery.variant, scenery.connections)
+        val size = SceneryTileArt.SIZE * scenery.kind.span
+        val bitmap = sceneryTiles.get(key) ?: Bitmap.createBitmap(
+            sceneryArt.render(scenery.kind, scenery.variant, scenery.connections), size, size, Bitmap.Config.ARGB_8888
+        ).also { sceneryTiles.put(key, it) }
+        val x = scenery.column * SceneryTileArt.SIZE
+        val y = scenery.row * SceneryTileArt.SIZE
+        c.drawBitmap(bitmap, Rect(x, y, x + SceneryTileArt.SIZE, y + SceneryTileArt.SIZE), bounds, p)
+    }
+    private val spaceshipArt = SpaceshipTileArt()
+    private val spaceshipTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val pirateArt = PirateTileArt()
+    private data class PirateKey(val x: Int, val y: Int, val tile: TileType, val neighbours: Int, val cabin: Boolean)
+    private val pirateTiles = LruCache<PirateKey, Bitmap>(384)
+    private val forestArt = ForestTileArt()
+    private val forestTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val interiorArt = DungeonInteriorTileArt()
+    private val interiorTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private data class CemeteryKey(val x: Int, val y: Int, val tile: TileType, val neighbours: Int)
+    // Bounded raster cache: no per-frame generation or texture files.
+    private val cemeteryTiles = LruCache<CemeteryKey, Bitmap>(384)
+    private val passageArt=PassageTileArt()
+    private val waterwayArt=WaterwayTileArt()
+    private val waterwayTiles=LruCache<MapWaterway,Bitmap>(64)
+    fun waterway(c: Canvas,bounds: RectF,waterway: MapWaterway) {
+        val bitmap=waterwayTiles.get(waterway) ?: Bitmap.createBitmap(
+            waterwayArt.render(waterway.bridge,waterway.horizontalFlow,waterway.connections,waterway.variant),
+            WaterwayTileArt.SIZE,WaterwayTileArt.SIZE,Bitmap.Config.ARGB_8888
+        ).also { waterwayTiles.put(waterway,it) }
+        c.drawBitmap(bitmap,null,bounds,p)
+    }
+    private val passageTiles=LruCache<MapPassage,Bitmap>(48)
+    fun passage(c: Canvas,bounds: RectF,passage: MapPassage) {
+        val bitmap=passageTiles.get(passage) ?: Bitmap.createBitmap(
+            passageArt.render(passage.kind,passage.horizontal,passage.connections),
+            PassageTileArt.SIZE,PassageTileArt.SIZE,Bitmap.Config.ARGB_8888
+        ).also { passageTiles.put(passage,it) }
+        c.drawBitmap(bitmap,null,bounds,p)
+    }
+    private var mausoleum: Bitmap? = null
+    fun clearTiles() { cemeteryTiles.evictAll(); interiorTiles.evictAll(); forestTiles.evictAll(); pirateTiles.evictAll(); spaceshipTiles.evictAll(); mineTiles.evictAll() }
+    fun mausoleumCell(c: Canvas, bounds: RectF, column: Int, row: Int) {
+        val bitmap = mausoleum ?: Bitmap.createBitmap(cemeteryArt.renderMausoleum(),
+            CemeteryTileArt.SIZE * 4, CemeteryTileArt.SIZE * 4, Bitmap.Config.ARGB_8888).also { mausoleum = it }
+        val section = bitmap.width / CemeteryMonuments.SIZE
+        c.drawBitmap(bitmap, Rect(column * section, row * section, (column + 1) * section, (row + 1) * section), bounds, p)
+    }
     private fun box(c: Canvas, x: Int, y: Int, w: Int, h: Int, color: Int) {
         p.color = color
         c.drawRect(x.toFloat(), y.toFloat(), (x + w).toFloat(), (y + h).toFloat(), p)
@@ -16,7 +73,62 @@ internal class DungeonMapArt {
         (android.graphics.Color.green(color) + amount).coerceIn(0, 255),
         (android.graphics.Color.blue(color) + amount).coerceIn(0, 255))
 
-    fun tile(c: Canvas, bounds: RectF, theme: DungeonTheme, tile: TileType, x: Int, y: Int) {
+    fun tile(c: Canvas, bounds: RectF, theme: DungeonTheme, tile: TileType, x: Int, y: Int, neighbours: Int = 0) {
+        if (theme == DungeonTheme.MINE || theme == DungeonTheme.MINE_DEPOT) {
+            val key = CemeteryKey(x, y, tile, neighbours)
+            val bitmap = mineTiles.get(key) ?: Bitmap.createBitmap(
+                mineArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, neighbours),
+                MineTileArt.SIZE, MineTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { mineTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
+        if (theme == DungeonTheme.PIRATE || theme == DungeonTheme.PIRATE_CABIN || theme == DungeonTheme.PORT) {
+            val cabin = theme == DungeonTheme.PIRATE_CABIN
+            val key = PirateKey(x, y, tile, neighbours, cabin)
+            val bitmap = pirateTiles.get(key) ?: Bitmap.createBitmap(
+                pirateArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, cabin, neighbours),
+                PirateTileArt.SIZE, PirateTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { pirateTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
+        if (theme == DungeonTheme.SPACESHIP) {
+            val key = CemeteryKey(x, y, tile, neighbours)
+            val bitmap = spaceshipTiles.get(key) ?: Bitmap.createBitmap(
+                spaceshipArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, neighbours),
+                SpaceshipTileArt.SIZE, SpaceshipTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { spaceshipTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
+        if (theme == DungeonTheme.FOREST) {
+            val key = CemeteryKey(x, y, tile, neighbours)
+            val bitmap = forestTiles.get(key) ?: Bitmap.createBitmap(
+                forestArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, neighbours),
+                ForestTileArt.SIZE, ForestTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { forestTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
+        if (theme == DungeonTheme.DUNGEON || theme == DungeonTheme.CRYPT) {
+            val key = CemeteryKey(x, y, tile, neighbours)
+            val bitmap = interiorTiles.get(key) ?: Bitmap.createBitmap(
+                interiorArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, neighbours),
+                DungeonInteriorTileArt.SIZE, DungeonInteriorTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { interiorTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
+        if (theme == DungeonTheme.CEMETERY) {
+            val key = CemeteryKey(x, y, tile, neighbours)
+            val bitmap = cemeteryTiles.get(key) ?: Bitmap.createBitmap(
+                cemeteryArt.render(x, y, tile == TileType.WALL, tile == TileType.STAIRS_DOWN, neighbours),
+                CemeteryTileArt.SIZE, CemeteryTileArt.SIZE, Bitmap.Config.ARGB_8888
+            ).also { cemeteryTiles.put(key, it) }
+            c.drawBitmap(bitmap, null, bounds, p)
+            return
+        }
         c.save()
         c.translate(bounds.left, bounds.top)
         c.scale(bounds.width() / 32f, bounds.height() / 32f)
@@ -41,26 +153,6 @@ internal class DungeonMapArt {
             // Dark footing makes every blocking cell distinct from a walkable path.
             box(c, 1, 5, 30, 26, shade(ground, -22))
             when (theme) {
-                DungeonTheme.CEMETERY -> when (seed % 5) {
-                    0 -> tree(c, false)
-                    1 -> {
-                        box(c, 3, 10, 26, 18, stone)
-                        box(c, 1, 8, 30, 4, shade(stone, 18))
-                        box(c, 6, 5, 20, 3, shade(stone, 8))
-                        box(c, 10, 15, 12, 13, 0xFF202B30.toInt())
-                        box(c, 5, 14, 3, 14, shade(stone, 22))
-                        box(c, 24, 14, 3, 14, shade(stone, -15))
-                    }
-                    else -> {
-                        box(c, 7, 25, 20, 4, shade(stone, -25))
-                        box(c, 10, 10, 13, 17, stone)
-                        box(c, 12, 7, 9, 3, shade(stone, 12))
-                        box(c, 11, 11, 2, 14, shade(stone, 18))
-                        box(c, 16, 12, 2, 9, shade(stone, -28))
-                        box(c, 13, 15, 8, 2, shade(stone, -28))
-                        box(c, 6, 28, 7, 2, 0xFF496354.toInt())
-                    }
-                }
                 DungeonTheme.FOREST -> tree(c, true)
                 DungeonTheme.FIELDS -> {
                     for (i in 0..4) {
@@ -78,6 +170,25 @@ internal class DungeonMapArt {
                             intArrayOf(0xFF8D5353.toInt(), 0xFF668173.toInt(), 0xFFB09658.toInt())[(i + seed % 3) % 3])
                         box(c, 3, 15 + row * 11, 26, 2, stone)
                     }
+                }
+                DungeonTheme.VILLAGE -> {
+                    box(c, 5, 12, 23, 17, 0xFF9F9D89.toInt())
+                    box(c, 7, 14, 19, 1, 0xFFD0C5A3.toInt())
+                    for (i in 0..6) box(c, 14 - i * 2, 4 + i, 4 + i * 4, 2,
+                        if (i % 2 == 0) 0xFF939C99.toInt() else 0xFF6D8187.toInt())
+                    box(c, 3, 12, 27, 2, 0xFFB9B69B.toInt())
+                    box(c, 9, 17, 6, 6, 0xFF3B5158.toInt())
+                    box(c, 11, 17, 1, 6, 0xFFC4B590.toInt())
+                    box(c, 19, 19, 6, 10, 0xFF655A4F.toInt())
+                    box(c, 19, 24, 6, 1, 0xFFB9A080.toInt())
+                    box(c, 5, 26, 5, 3, 0xFF8FA381.toInt())
+                }
+                DungeonTheme.CAMP -> {
+                    for (i in 0..17) box(c, 15 - i * 2 / 3, 7 + i, 3 + i * 4 / 3, 1,
+                        if (i % 4 == 0) 0xFFBCB28A.toInt() else 0xFF969C7D.toInt())
+                    box(c, 14, 15, 4, 10, 0xFF384C4C.toInt())
+                    box(c, 2, 27, 3, 3, 0xFFBCA986.toInt())
+                    box(c, 27, 27, 3, 3, 0xFFBCA986.toInt())
                 }
                 DungeonTheme.PIRATE, DungeonTheme.INN -> {
                     box(c, 5, 7, 23, 21, stone)

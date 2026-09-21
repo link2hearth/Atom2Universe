@@ -1701,7 +1701,9 @@ class RoguelikeSimulationTest {
             val chaser = visiblePacks.filter { it.state == PackState.CHASING }.minByOrNull { it.pos.chebyshev(g.playerPos) }
             if (chaser != null && moveToward(g, listOf(chaser.pos), avoidPacks = false)) return
         }
-        // Souffler dès qu'on peut
+        // Return to the starting fire for recovery between fights.
+        if (!g.isChased && hero.hp < hero.maxHp * 0.9f && !g.onCampTile() &&
+            moveToward(g, listOf(lv.start), avoidPacks = true)) return
         if (g.canRest() && hero.hp < hero.maxHp * 0.9f) {
             val packsBefore = lv.packs.size
             g.rest()

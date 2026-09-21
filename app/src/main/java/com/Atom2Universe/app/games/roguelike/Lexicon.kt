@@ -310,8 +310,8 @@ object Lexicon {
             },
             entry("special", c, R.string.lex_special) { add(R.string.lex_special_1); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN) },
             entry("rest", c, R.string.lex_rest) {
-                add(R.string.lex_rest_1, env.pct(RoguelikeGame.REST_HEAL)); add(R.string.lex_rest_2)
-                add(R.string.lex_rest_3, env.pct(RoguelikeGame.REST_NOISE_CHANCE))
+                add(R.string.lex_rest_1); add(R.string.lex_rest_2)
+                add(R.string.lex_rest_3)
             },
             entry("chase", c, R.string.lex_chase) {
                 add(R.string.lex_chase_1); add(R.string.lex_chase_2); add(R.string.lex_chase_3, RoguelikeGame.CHAIN_DISTANCE)

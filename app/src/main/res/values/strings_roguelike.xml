@@ -568,4 +568,18 @@
     <string name="roguelike_region_inn">Inn</string>
     <string name="roguelike_region_spaceship">Spaceship</string>
     <string name="roguelike_region_floor">%1$d · %2$s</string>
+    <string name="roguelike_region_pirate_cabin">Captain\'s cabin</string>
+    <string name="roguelike_format_micro">Unique location</string>
+    <string name="roguelike_format_expedition">Small expedition</string>
+    <string name="roguelike_format_region">Large region</string>
+    <string name="roguelike_format_vast">Vast region</string>
+    <string name="roguelike_region_crypt">Crypt</string>
+    <string name="roguelike_region_village">Ruined village</string>
+    <string name="roguelike_region_camp">Abandoned camp</string>
+    <string name="roguelike_region_depot">Rail depot</string>
+    <string name="roguelike_region_port">Port</string>
+    <string name="roguelike_map_format">%1$s · %2$d × %3$d</string>
+    <string name="roguelike_camp_hint">Campfire · tap the fire to rest</string>
+    <string name="roguelike_camp_return_hint">Return to the starting fire to heal</string>
+    <string name="roguelike_log_camp_rest">The fire restores your strength and relics. HP %1$s/%2$s</string>
 </resources>
