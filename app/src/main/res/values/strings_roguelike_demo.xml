@@ -77,4 +77,19 @@
     <string name="dungeon_demo_skeleton">Skeleton · ivory bones</string>
     <string name="dungeon_demo_skeleton_moss">Mossy skeleton · greenish bones</string>
     <string name="dungeon_demo_skeleton_ash">Ash skeleton · cracked skull</string>
+    <string name="dungeon_demo_wheat_day">Wheat field · Day</string>
+    <string name="dungeon_demo_wheat_night">Wheat field · Night</string>
+    <string name="dungeon_demo_battlefield_day">Battlefield · Day</string>
+    <string name="dungeon_demo_battlefield_night">Battlefield · Night</string>
+    <string name="dungeon_demo_cemetery_day">Cemetery · Day</string>
+    <string name="dungeon_demo_cemetery_night">Cemetery · Night</string>
+    <string name="dungeon_demo_crypt">Crypt</string>
+    <string name="dungeon_demo_library">Occult library</string>
+    <string name="dungeon_demo_mine">Abandoned mine</string>
+    <string name="dungeon_demo_monastery_day">Snowy monastery · Day</string>
+    <string name="dungeon_demo_monastery_night">Snowy monastery · Night</string>
+    <string name="dungeon_demo_spaceship">Spaceship</string>
+    <string name="dungeon_demo_pirate_deck_day">Pirate deck · Day</string>
+    <string name="dungeon_demo_pirate_deck_night">Pirate deck · Night</string>
+    <string name="dungeon_demo_captain_cabin">Captain’s cabin</string>
 </resources>

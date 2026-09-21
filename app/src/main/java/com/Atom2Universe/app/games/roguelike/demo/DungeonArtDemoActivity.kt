@@ -157,10 +157,17 @@ class DungeonArtDemoActivity : ThemedActivity() {
         options.addView(pause, cell())
         banner.addView(options)
         banner.addView(button(R.string.dungeon_demo_backdrop) {
-            val choices = DungeonArtDemoView.Backdrop.entries
+            val choices = com.Atom2Universe.app.games.roguelike.DungeonBackdrop.entries
             val names = intArrayOf(R.string.dungeon_demo_backdrop_dungeon, R.string.dungeon_demo_backdrop_inn,
                 R.string.dungeon_demo_meadow_day, R.string.dungeon_demo_meadow_night,
-                R.string.dungeon_demo_jungle_day, R.string.dungeon_demo_jungle_night)
+                R.string.dungeon_demo_jungle_day, R.string.dungeon_demo_jungle_night,
+                R.string.dungeon_demo_wheat_day, R.string.dungeon_demo_wheat_night,
+                R.string.dungeon_demo_battlefield_day, R.string.dungeon_demo_battlefield_night,
+                R.string.dungeon_demo_cemetery_day, R.string.dungeon_demo_cemetery_night,
+                R.string.dungeon_demo_crypt, R.string.dungeon_demo_library, R.string.dungeon_demo_mine,
+                R.string.dungeon_demo_monastery_day, R.string.dungeon_demo_monastery_night,
+                R.string.dungeon_demo_spaceship, R.string.dungeon_demo_pirate_deck_day,
+                R.string.dungeon_demo_pirate_deck_night, R.string.dungeon_demo_captain_cabin)
             AlertDialog.Builder(this, R.style.Theme_A2U_Dialog)
                 .setTitle(R.string.dungeon_demo_backdrop)
                 .setSingleChoiceItems(names.map { getString(it) }.toTypedArray(), choices.indexOf(scene.backdrop)) { dialog, index ->

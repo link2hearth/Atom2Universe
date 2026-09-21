@@ -77,4 +77,19 @@
     <string name="dungeon_demo_skeleton">Squelette · os ivoire</string>
     <string name="dungeon_demo_skeleton_moss">Squelette moussu · os verdâtres</string>
     <string name="dungeon_demo_skeleton_ash">Squelette cendré · crâne fissuré</string>
+    <string name="dungeon_demo_wheat_day">Champ de blé · Jour</string>
+    <string name="dungeon_demo_wheat_night">Champ de blé · Nuit</string>
+    <string name="dungeon_demo_battlefield_day">Champ de bataille · Jour</string>
+    <string name="dungeon_demo_battlefield_night">Champ de bataille · Nuit</string>
+    <string name="dungeon_demo_cemetery_day">Cimetière · Jour</string>
+    <string name="dungeon_demo_cemetery_night">Cimetière · Nuit</string>
+    <string name="dungeon_demo_crypt">Crypte</string>
+    <string name="dungeon_demo_library">Bibliothèque occulte</string>
+    <string name="dungeon_demo_mine">Mine abandonnée</string>
+    <string name="dungeon_demo_monastery_day">Monastère enneigé · Jour</string>
+    <string name="dungeon_demo_monastery_night">Monastère enneigé · Nuit</string>
+    <string name="dungeon_demo_spaceship">Vaisseau spatial</string>
+    <string name="dungeon_demo_pirate_deck_day">Pont pirate · Jour</string>
+    <string name="dungeon_demo_pirate_deck_night">Pont pirate · Nuit</string>
+    <string name="dungeon_demo_captain_cabin">Cabine du capitaine</string>
 </resources>

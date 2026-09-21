@@ -32,6 +32,9 @@ internal class DungeonCombatArt {
 
     private val sceneArt = com.Atom2Universe.app.games.roguelike.demo.DungeonSceneArt()
     private var background: Bitmap? = null
+    private val backdropArt = DungeonBackdropArt()
+    private var backdrop = DungeonBackdrop.DUNGEON
+    private var cachedBackdrop: DungeonBackdrop? = null
     private var visualCombat: Combat? = null
     private var monsterStyles = emptyList<DungeonDemoSprites.MonsterStyle>()
 
@@ -39,6 +42,8 @@ internal class DungeonCombatArt {
     fun prepareCombat(combat: Combat) {
         if (visualCombat === combat) return
         visualCombat = combat
+        // Stable pendant tout l'étage, y compris après reprise d'une sauvegarde.
+        backdrop = DungeonBackdrop.entries[(combat.floor.coerceAtLeast(1) - 1) % DungeonBackdrop.entries.size]
         val used = mutableSetOf<DungeonDemoSprites.MonsterStyle>()
         monsterStyles = combat.enemies.map { enemy ->
             val variants = DungeonDemoSprites.MonsterStyle.entries.filter { style ->
@@ -63,11 +68,12 @@ internal class DungeonCombatArt {
         val scale = bounds.width() / 240f
         val worldHeight = kotlin.math.ceil(bounds.height() / scale).toInt()
         val floorY = minOf(84f, worldHeight * .28f)
-        if (background?.height != worldHeight) {
+        if (background?.height != worldHeight || cachedBackdrop != backdrop) {
             background?.recycle()
             background = Bitmap.createBitmap(240, worldHeight, Bitmap.Config.ARGB_8888).also {
-                sceneArt.drawBackground(Canvas(it), floorY, worldHeight.toFloat())
+                backdropArt.drawBackground(Canvas(it), backdrop, floorY, worldHeight.toFloat())
             }
+            cachedBackdrop = backdrop
         }
         canvas.save()
         canvas.clipRect(bounds)
@@ -79,7 +85,7 @@ internal class DungeonCombatArt {
         }
         val pixels = Canvas(requireNotNull(atmosphereFrame))
         pixels.drawBitmap(requireNotNull(background), 0f, 0f, paint)
-        sceneArt.drawAtmosphere(pixels, floorY, this.clock)
+        backdropArt.drawAtmosphere(pixels, backdrop, floorY, this.clock)
         canvas.drawBitmap(requireNotNull(atmosphereFrame), 0f, 0f, paint)
         canvas.restore()
     }

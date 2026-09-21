@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.roguelike.demo
 
+import com.Atom2Universe.app.games.roguelike.DungeonBackdrop
+import com.Atom2Universe.app.games.roguelike.DungeonBackdropArt
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -27,14 +29,10 @@ import kotlin.math.sin
  */
 class DungeonArtDemoView(context: Context) : View(context) {
     enum class Action { ATTACK, ICE, SHATTER }
-    enum class Backdrop(val outdoor: Boolean = false, val jungle: Boolean = false, val night: Boolean = false) {
-        DUNGEON, INN, MEADOW_DAY(true), MEADOW_NIGHT(true, night = true),
-        JUNGLE_DAY(true, jungle = true), JUNGLE_NIGHT(true, jungle = true, night = true)
-    }
-    var backdrop = Backdrop.DUNGEON
+    var backdrop = DungeonBackdrop.DUNGEON
         private set
 
-    fun changeBackdrop(value: Backdrop) {
+    fun changeBackdrop(value: DungeonBackdrop) {
         backdrop = value
         drawBackground(Canvas(background))
         invalidate()
@@ -91,6 +89,7 @@ class DungeonArtDemoView(context: Context) : View(context) {
         get() = health[selectedRat]
         set(value) { health[selectedRat] = value }
     private val sceneArt = DungeonSceneArt()
+    private val backdropArt = DungeonBackdropArt()
     private val ink = 0xFF111729.toInt()
     private val gold = 0xFFDBB975.toInt()
     private val white = 0xFFE8EAD5.toInt()
@@ -400,29 +399,8 @@ class DungeonArtDemoView(context: Context) : View(context) {
         c.restore()
     }
 
-    private fun drawBackground(c: Canvas) {
-        if (backdrop.outdoor) {
-            DungeonOutdoorBackdrop.draw(c, floorY, worldHeight, backdrop.jungle, backdrop.night)
-            return
-        }
-        if (backdrop == Backdrop.INN) {
-            DungeonInnBackdrop.draw(c, floorY, worldHeight)
-            return
-        }
-        sceneArt.drawBackground(c, floorY, worldHeight)
-    }
-
-    private fun drawAtmosphere(c: Canvas) {
-        if (backdrop.outdoor) {
-            DungeonOutdoorBackdrop.atmosphere(c, floorY, clock, backdrop.jungle, backdrop.night)
-            return
-        }
-        if (backdrop == Backdrop.INN) {
-            DungeonInnBackdrop.atmosphere(c, floorY, clock)
-            return
-        }
-        sceneArt.drawAtmosphere(c, floorY, clock)
-    }
+    private fun drawBackground(c: Canvas) = backdropArt.drawBackground(c, backdrop, floorY, worldHeight)
+    private fun drawAtmosphere(c: Canvas) = backdropArt.drawAtmosphere(c, backdrop, floorY, clock)
     private fun shadow(c: Canvas, x: Float, y: Float, width: Float) {
         box(c, x + 2, y - 1, width - 4, 3f, 0x66313B49)
         box(c, x, y, width, 2f, 0xAA172538.toInt())
