@@ -144,8 +144,8 @@
     <string name="roguelike_attr_int">INT</string>
     <string name="roguelike_attr_wis">SAG</string>
     <string name="roguelike_attr_cha">CHA</string>
-    <string name="roguelike_attr_desc_str">Force — dégâts de l\'arme : +%1$d %% par point au-dessus de 10.</string>
-    <string name="roguelike_attr_desc_dex">Dextérité — chance de critique, parade plus large, esquive (sauf en armure lourde), et puissance du Venin.</string>
+    <string name="roguelike_attr_desc_str">Force — dégâts des armes de Force et des poings : +%1$d %% par point au-dessus de 10.</string>
+    <string name="roguelike_attr_desc_dex">Dextérité — dégâts des dagues, chance de critique, esquive et puissance du Venin.</string>
     <string name="roguelike_attr_desc_con">Constitution — points de vie : +%1$s par point au-dessus de 10.</string>
     <string name="roguelike_attr_desc_int">Intelligence — sorts de feu, de glace et de foudre : +%1$d %% de dégâts par point au-dessus de 10, et ils figent ou paralysent plus souvent.</string>
     <string name="roguelike_attr_desc_wis">Sagesse — les reliques et le Spécial se rechargent plus vite : un tour de moins tous les %1$d points au-dessus de 10.</string>
@@ -170,14 +170,14 @@
     <string name="roguelike_relic_hunters_mark">Marque du chasseur</string>
     <string name="roguelike_relic_poisoned_blades">Lames empoisonnées</string>
     <string name="roguelike_relic_freezing_rain">Bourrasque glacée</string>
-    <string name="roguelike_relic_chain_lightning">Chaîne d\'éclairs</string>
+    <string name="roguelike_relic_chain_lightning">Étincelles errantes</string>
     <string name="roguelike_relic_sunder_desc">Inflige %1$s–%2$s dégâts (sans élément) et [[state_fractured|fracture]] la cible pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_war_cry_desc">[[state_weakened|Affaiblit]] tous les ennemis pendant %3$d tours (leurs coups font %10$d %% de moins), et tes %16$d prochains coups d\'arme font +%7$d %%. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_earthquake_desc">Inflige %1$s–%2$s dégâts (sans élément) à tous les ennemis, qui chancellent : leur prochain tour recule. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_hunters_mark_desc">Inflige %1$s–%2$s dégâts (sans élément) et [[state_marked|marque]] la cible jusqu\'à sa mort : tes critiques la frappent plus fort, et ton Coup mortel trouve la faille. Quand elle meurt, la marque saute sur un autre ennemi. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Enduit ton arme : chacun de tes %3$d prochains coups d\'arme ajoute une dose de [[state_poison|poison]] (%17$d au plus), qui ronge %5$s PV par tour. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_freezing_rain_desc">Inflige %1$s–%2$s dégâts de glace à tous les ennemis et peut [[state_frozen|geler]] chacun : il ralentit très fort pendant %18$s tours, et ses coups sont engourdis. Chacun résiste parfois. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_chain_lightning_desc">Inflige %1$s–%2$s dégâts à la cible, puis saute sur chacun des autres ennemis en perdant %11$d %% à chaque saut. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_chain_lightning_desc">Trois petites étincelles de foudre visent au hasard les ennemis vivants. %1$s–%2$s dégâts de base totaux partagés entre les étincelles. Aucune paralysie. Recharge : %4$d tours.</string>
 
     <!-- Réactions : un sort sur une cible déjà dans un certain état -->
     <string name="roguelike_reaction_explosion">Explosion !</string>
@@ -213,7 +213,7 @@
     <string name="roguelike_combat_poisoned_blades">lames empoisonnées ×%1$d</string>
     <!-- Le grimoire, lot 2 -->
     <string name="roguelike_relic_rend">Saignée</string>
-    <string name="roguelike_relic_whirlwind">Tourbillon</string>
+    <string name="roguelike_relic_whirlwind">Balayage de lance</string>
     <string name="roguelike_relic_fan_of_knives">Dagues en éventail</string>
     <string name="roguelike_relic_smoke_bomb">Bombe fumigène</string>
     <string name="roguelike_relic_acid_flask">Fiole d\'acide</string>
@@ -230,7 +230,7 @@
     <string name="roguelike_relic_slow">Verglas</string>
     <string name="roguelike_relic_hourglass">Sablier</string>
     <string name="roguelike_relic_rend_desc">Inflige %1$s–%2$s dégâts (sans élément) et ouvre une [[state_bleeding|plaie]] pendant %3$d tours : la cible perd %8$s PV chaque fois qu\'elle attaque. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_whirlwind_desc">Un coup d\'arme sur tous les ennemis : %1$s–%2$s dégâts chacun (sans élément). Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_whirlwind_desc">Balaye le groupe : %1$s–%2$s dégâts physiques par ennemi. Peut transmettre un enchantement de poison actif sur l’arme. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Lance des dagues sur tous les ennemis : %1$s–%2$s dégâts chacun (sans élément). Une dague critique ouvre une [[state_bleeding|plaie]] (%8$s PV chaque fois que la cible attaque). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Aveugle]] tous les ennemis pendant %3$d tours (ils attaquent au désavantage), et ton prochain coup d\'arme est une attaque sournoise : un critique assuré. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_acid_flask_desc">Inflige %1$s–%2$s dégâts, ajoute une dose de [[state_poison|poison]] (%5$s PV par tour) et [[state_fractured|fracture]] la cible pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
@@ -344,10 +344,11 @@
     <string name="roguelike_combat_good">BIEN !</string>
     <string name="roguelike_combat_parry_perfect">PARADE PARFAITE !</string>
     <string name="roguelike_combat_parry_good">PARADE !</string>
+    <string name="roguelike_combat_parry_miss">PARADE RATÉE !</string>
     <string name="roguelike_combat_too_early">Trop tôt !</string>
     <string name="roguelike_combat_hint_choose">Touche un ennemi pour le cibler, puis choisis</string>
     <string name="roguelike_combat_hint_strike">Glisse dans le sens de la flèche : vert = bien, rouge = parfait !</string>
-    <string name="roguelike_combat_hint_parry">Touche quand l\'anneau se referme pour parer !</string>
+    <string name="roguelike_combat_hint_parry">Touche quand les deux cercles se superposent pour parer !</string>
     <string name="roguelike_combat_start">COMBAT !</string>
     <string name="roguelike_combat_ambush">EMBUSCADE !</string>
     <string name="roguelike_combat_victory">VICTOIRE</string>
@@ -643,4 +644,25 @@
     <string name="roguelike_action_zoom">Vue proche</string>
     <string name="roguelike_banner_floor">%1$s\n%2$s</string>
     <string name="roguelike_banner_health">%1$s\n%2$s/%3$s</string>
+    <string name="roguelike_attr_end">END</string>
+    <string name="roguelike_base_spear">Lance</string>
+    <string name="roguelike_archetype_barbarian">Barbare</string>
+    <string name="roguelike_special_smash">Fracas</string>
+    <string name="roguelike_base_club">Massue</string>
+    <string name="roguelike_weight_fur">Fourrure</string>
+    <string name="roguelike_base_fur_helmet">Coiffe de fourrure</string>
+    <string name="roguelike_base_fur_armor">Harnais de fourrure</string>
+    <string name="roguelike_base_fur_boots">Bottes de fourrure</string>
+    <string name="roguelike_isotope_barbarian">%1$s · Barbare</string>
+    <string name="roguelike_combat_breached">Brèche · %1$d</string>
+    <string name="roguelike_relic_blazing_axe">Hache ardente</string>
+    <string name="roguelike_relic_blazing_axe_desc">Frappe de feu puissante : %1$s–%2$s dégâts, puis brûlure pendant %3$d tours de la cible. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_northern_breath">Souffle du Nord</string>
+    <string name="roguelike_relic_northern_breath_desc">Inflige %1$s–%2$s dégâts de glace à chaque ennemi et le ralentit pendant %3$d de ses tours. Chaque cible peut résister. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_thunder_club">Massue tonnante</string>
+    <string name="roguelike_relic_thunder_club_desc">Inflige %1$s–%2$s dégâts de foudre et tente de paralyser la cible pendant %3$d de ses tours. Recharge : %4$d tours, jamais moins de 3.</string>
+    <string name="roguelike_relic_venomous_wound">Plaie venimeuse</string>
+    <string name="roguelike_relic_venomous_wound_desc">Inflige %1$s–%2$s dégâts de poison et ajoute une dose (%5$s dégâts par tour) pendant %3$d tours de la cible. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_seismic_strike">Frappe sismique</string>
+    <string name="roguelike_relic_seismic_strike_desc">Une frappe physique : %1$s–%2$s dégâts de base totaux répartis entre tous les ennemis vivants, avant critiques et réactions. Recharge : %4$d tours.</string>
 </resources>

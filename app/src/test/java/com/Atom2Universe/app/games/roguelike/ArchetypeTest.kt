@@ -25,10 +25,10 @@ class ArchetypeTest {
 
     private fun heroOf(a: Archetype, shield: Boolean = false) = heroWearing(a.weight, a.weight, a.weight, shield)
 
-    /** Un combat contre un gobelin solide ; le d20 d'attaque sort 20 : il touche toujours. */
+    /** Un gobelin solide dont l'attaque échoue : les atouts exigent une défense réussie. */
     private fun fight(hero: Hero, hp: Int = 1000) = Combat(
         hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, 10, 1, 1)), ambush = true,
-        rng = Random(1), attackDie = { 20 },
+        rng = Random(1), attackDie = { 1 },
     )
 
     @Test

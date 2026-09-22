@@ -443,11 +443,12 @@ class InventoryPanel(
 
     private fun relicClass(relic: Relic): Archetype? = when {
         relic == Relic.HEAL || relic == Relic.HOURGLASS -> null
+        relic.attribute == StatType.STR -> Archetype.BARBARIAN
         relic.attribute == StatType.CON -> Archetype.WARRIOR
         relic.attribute == StatType.DEX -> Archetype.ROGUE
-        relic.attribute == StatType.STR -> Archetype.VAGABOND
-        relic.attribute == StatType.WIS -> Archetype.MAGE
-        relic.attribute == StatType.INT -> Archetype.NECROMANCER
+        relic.attribute == StatType.END -> Archetype.VAGABOND
+        relic.attribute == StatType.INT -> Archetype.MAGE
+        relic.attribute == StatType.WIS -> Archetype.NECROMANCER
         else -> null
     }
 

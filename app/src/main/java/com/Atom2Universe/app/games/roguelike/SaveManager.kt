@@ -135,5 +135,10 @@ object SaveManager {
         weight    = j.optString("weight", "").takeIf { it.isNotEmpty() }
             ?.let { runCatching { ArmorWeight.valueOf(it) }.getOrNull() },
         isotopeZ  = if (j.has("isotope")) j.getInt("isotope") else null,
-    )
+    ).let { item ->
+        // Une ancienne lanterne conserve sa puissance, mais son implicite suit maintenant END.
+        if (item.base == ItemBase.LANTERN) item.copy(implicits = item.implicits.map {
+            if (it.type == StatType.STR) it.copy(type = StatType.END) else it
+        }) else item
+    }
 }

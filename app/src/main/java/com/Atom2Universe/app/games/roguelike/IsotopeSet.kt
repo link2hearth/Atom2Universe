@@ -32,6 +32,7 @@ data class IsotopeSet(
      * (« Deutérium stellaire »), et ainsi de suite avec les mots des cycles de [Grade].
      */
     val cycle: Int = 0,
+    val barbarian: Boolean = false,
 ) {
     /**
      * Le numéro du set dans la suite sans fin des tranches : [z] au premier tour, puis 118 de plus
@@ -41,17 +42,18 @@ data class IsotopeSet(
     val index get() = z + cycle * Grade.ELEMENTS
 
     /** L'archétype tourne avec l'élément : lourd, léger, tissu, en boucle. */
-    val archetype: Archetype get() = Archetype.entries[(z - 1) % Archetype.entries.size]
+    val archetype: Archetype get() = if (barbarian) Archetype.BARBARIAN else LEGACY_ARCHETYPES[(z - 1) % LEGACY_ARCHETYPES.size]
 
     val firstFloor get() = (index - 1) * IsotopeSets.BAND_FLOORS + 1
     val lastFloor get() = index * IsotopeSets.BAND_FLOORS
 
     /** Le lien du lexique vers la fiche du set. */
-    val lexiconId get() = IsotopeSets.lexiconId(z)
+    val lexiconId get() = IsotopeSets.lexiconId(z) + if (barbarian) "_barbarian" else ""
 
     /** « Deutérium », ou « Li-6 » quand l'isotope n'a pas de nom propre, suivi du mot du cycle (« Li-6 stellaire »). */
     fun label(context: Context): String {
-        val name = nameRes?.let(context::getString) ?: "${symbol()}-$mass"
+        val baseName = nameRes?.let(context::getString) ?: "${symbol()}-$mass"
+        val name = if (barbarian) context.getString(R.string.roguelike_isotope_barbarian, baseName) else baseName
         val word = LootSystem.cycleWord(context, cycle) ?: return name
         return context.getString(R.string.roguelike_isotope_cycle, name, word)
     }
@@ -67,6 +69,8 @@ data class IsotopeSet(
     }
 
     private companion object {
+        // Ne jamais faire dépendre les objets déjà sauvegardés du nombre de classes actuel.
+        val LEGACY_ARCHETYPES = listOf(Archetype.WARRIOR, Archetype.ROGUE, Archetype.MAGE, Archetype.VAGABOND, Archetype.NECROMANCER)
         val periodic by lazy { getPeriodicElements() }
         val ELIDING = setOf('a', 'e', 'i', 'o', 'u', 'y', 'h')
     }
@@ -114,6 +118,7 @@ object IsotopeSets {
     /** Nécromancien : un pantin de plus, et les recharges de ses sorts raccourcissent d'un tour (la SAG). */
     const val PUPPETS = 3
     const val RECHARGE_CUT = 1
+    const val BARBARIAN_BREACH_TURNS = 3
 
     /** Les sets qui existent. Un par élément au plus, et aucun pour un élément sans autre isotope. */
     val ALL = listOf(

@@ -12,7 +12,9 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
-class RoguelikeActivity : ThemedActivity() {
+open class RoguelikeActivity : ThemedActivity() {
+    protected open val testMode = false
+    private var testButton: Button? = null
 
     private lateinit var gameView:     RoguelikeView
     private lateinit var combatView:   CombatView
@@ -76,7 +78,19 @@ class RoguelikeActivity : ThemedActivity() {
         })
 
         // sfx et music démarrés dans onResume uniquement (évite le double init EAS)
-        if (SaveManager.hasSave(this)) {
+        if (testMode) {
+            attachGame(RoguelikeGame().also { DungeonTestPanel.unlock(it.hero) })
+            testButton = Button(this).apply {
+                setText(R.string.dungeon_test_tools)
+                setOnClickListener {
+                    if (game.isExploring && !inventory.isOpen && !lexicon.isOpen) {
+                        DungeonTestPanel(this@RoguelikeActivity, { game }, { attachGame(it) }, { refresh() }).show()
+                    }
+                }
+            }
+            (healthBar.parent as LinearLayout).addView(testButton, 1)
+            DungeonTestPanel(this, { game }, { attachGame(it) }, { refresh() }).show()
+        } else if (SaveManager.hasSave(this)) {
             showContinueDialog()
         } else {
             attachGame(RoguelikeGame())
@@ -130,6 +144,7 @@ class RoguelikeActivity : ThemedActivity() {
 
     /** Étage le plus profond jamais atteint, pour les stats jeux. */
     private fun saveBestFloorIfBetter(floor: Int) {
+        if (testMode) return
         val prefs = getSharedPreferences("roguelike_save", MODE_PRIVATE)
         if (floor > prefs.getInt("best_floor", 0)) {
             prefs.edit { putInt("best_floor", floor) }
@@ -184,13 +199,14 @@ class RoguelikeActivity : ThemedActivity() {
     }
 
     private fun scheduleStateSave() {
+        if (testMode) return
         saveHandler.removeCallbacks(deferredSave)
         saveHandler.postDelayed(deferredSave, 1_000L)
     }
 
     private fun saveNow() {
         saveHandler.removeCallbacks(deferredSave)
-        SaveManager.saveImmediate(this, game)
+        if (!testMode) SaveManager.saveImmediate(this, game)
     }
 
     private fun showCombat() {
@@ -200,6 +216,7 @@ class RoguelikeActivity : ThemedActivity() {
     }
 
     private fun refresh() {
+        testButton?.isEnabled = game.isExploring
         gameView.invalidate()
         val h = game.hero
         tvFloorLevel.text = getString(R.string.roguelike_banner_floor,

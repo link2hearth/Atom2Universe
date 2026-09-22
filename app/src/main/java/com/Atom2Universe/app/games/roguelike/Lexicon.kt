@@ -80,6 +80,7 @@ object Lexicon {
     /** Le Spécial d'un archétype : Garde, Coup mortel, Image miroir. */
     fun specialId(a: Archetype) = when (a) {
         Archetype.WARRIOR -> "special_guard"; Archetype.ROGUE -> "special_deadly"; Archetype.MAGE -> "special_mirror"
+        Archetype.BARBARIAN -> "special_smash"
         Archetype.VAGABOND -> "special_combo"; Archetype.NECROMANCER -> "special_puppets"
     }
 
@@ -92,6 +93,7 @@ object Lexicon {
     @StringRes private fun attrNameRes(t: StatType) = when (t) {
         StatType.STR -> R.string.lex_attr_name_str; StatType.DEX -> R.string.lex_attr_name_dex
         StatType.CON -> R.string.lex_attr_name_con; StatType.INT -> R.string.lex_attr_name_int
+        StatType.END -> R.string.lex_attr_name_end
         StatType.WIS -> R.string.lex_attr_name_wis; else -> R.string.lex_attr_name_cha
     }
 
@@ -164,13 +166,13 @@ object Lexicon {
         entryT(idOf(t), LexiconCategory.ATTRIBUTES,
             { env -> env.s(R.string.lex_title_attr, env.s(t.labelRes), env.s(attrNameRes(t))) }) {
             when (t) {
-                StatType.STR -> { add(R.string.lex_attr_str_1); add(R.string.lex_attr_str_2, env.pct(Hero.STR_DAMAGE_PER_POINT)) }
+                StatType.STR -> { add(R.string.lex_attr_str_1); add(R.string.lex_attr_str_2, env.pct(Hero.WEAPON_ATTRIBUTE_DAMAGE_PER_POINT)) }
                 StatType.DEX -> {
                     add(R.string.lex_attr_dex_1)
                     add(R.string.lex_attr_dex_2, env.pct(Hero.CRIT_PER_DEX))
-                    add(R.string.lex_attr_dex_3, Hero.PARRY_MS_PER_DEX)
                     add(R.string.lex_attr_dex_4, env.pct(ArmorClass.AC_STEP))
                 }
+                StatType.END -> { add(R.string.lex_attr_end_1); add(R.string.lex_attr_end_2) }
                 StatType.CON -> { add(R.string.lex_attr_con_1); add(R.string.lex_attr_con_2, env.num(Hero.HP_PER_CON)) }
                 StatType.INT -> add(R.string.lex_attr_int_1)
                 StatType.WIS -> {
@@ -238,7 +240,7 @@ object Lexicon {
             },
             entry(idOf(StatType.WEAPON_DMG), c, R.string.lex_stat_weapon_dmg) {
                 add(R.string.lex_stat_weapon_dmg_1)
-                add(R.string.lex_stat_weapon_dmg_2, env.pct(Hero.STR_DAMAGE_PER_POINT))
+                add(R.string.lex_stat_weapon_dmg_2, env.pct(Hero.WEAPON_ATTRIBUTE_DAMAGE_PER_POINT))
                 add(R.string.lex_stat_weapon_dmg_3, Hero.FIST_MIN, Hero.FIST_MAX)
                 env.hero?.let { you(R.string.lex_you_weapon, env.num(it.weaponMin), env.num(it.weaponMax)) }
                 youDepth()
@@ -287,13 +289,16 @@ object Lexicon {
             },
             entry("parry", c, R.string.lex_parry) {
                 add(R.string.lex_parry_1)
-                add(R.string.lex_parry_2, env.dec(Combat.PARRY_GOOD_MULT), env.dec(Combat.PARRY_PERFECT_MULT))
-                add(R.string.lex_parry_3, Hero.PARRY_MS_PER_DEX)
+                add(R.string.lex_parry_2, env.dec(Combat.PARRY_GOOD_MULT), env.dec(Combat.PARRY_PERFECT_MULT), env.dec(Combat.PARRY_MISS_MULT))
+                add(R.string.lex_parry_defense, env.pct(ArmorClass.timingBonus(Timing.GOOD) * ArmorClass.AC_STEP),
+                    env.pct(ArmorClass.timingBonus(Timing.PERFECT) * ArmorClass.AC_STEP), env.pct(1f - ArmorClass.MIN_HIT))
+                add(R.string.lex_parry_3)
                 add(R.string.lex_parry_4)
             },
             entry("strike", c, R.string.lex_strike) {
                 add(R.string.lex_strike_1)
                 add(R.string.lex_strike_2)
+                add(R.string.lex_parry_3)
                 add(R.string.lex_strike_miss)
                 add(R.string.lex_strike_3, env.pct(SpellSave.landChance(dc + SpellSave.GOOD_STRIKE_DC, 0) - SpellSave.landChance(dc, 0)))
             },
@@ -487,6 +492,7 @@ object Lexicon {
         val each = Archetype.entries.map { a ->
             entry(idOf(a), c, a.labelRes) {
                 when (a) {
+                    Archetype.BARBARIAN -> { add(R.string.lex_archetype_barbarian) }
                     Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1, env.pct(1f - Hero.WARRIOR_WEAPON_DAMAGE_MULT)); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
                     Archetype.ROGUE -> { add(R.string.lex_archetype_rogue_1); add(R.string.lex_archetype_rogue_2) }
                     Archetype.MAGE -> { add(R.string.lex_archetype_mage_1); add(R.string.lex_archetype_mage_2) }
@@ -504,6 +510,7 @@ object Lexicon {
             }
         }
         val specials = listOf(
+            entry(specialId(Archetype.BARBARIAN), c, Archetype.BARBARIAN.specialRes) { add(R.string.lex_special_smash); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN) },
             entry(specialId(Archetype.WARRIOR), c, Archetype.WARRIOR.specialRes) {
                 add(R.string.lex_special_guard_1, env.pct(Combat.GUARD_THORNS_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
@@ -535,6 +542,7 @@ object Lexicon {
                     ArmorWeight.LIGHT -> R.string.lex_weight_light_1
                     ArmorWeight.HEAVY -> R.string.lex_weight_heavy_1
                     ArmorWeight.MEDIUM -> R.string.lex_weight_medium_1
+                    ArmorWeight.FUR -> R.string.lex_weight_fur
                     ArmorWeight.ULTRALIGHT -> R.string.lex_weight_ultralight_1
                 })
                 add(R.string.lex_weight_armor, env.dec(w.armorMult))
@@ -567,6 +575,7 @@ object Lexicon {
                 if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
                 if (b == ItemBase.BOW) add(R.string.lex_base_bow, env.pct(Combat.BOW_EXPOSE_THRESHOLD), env.pct(Combat.DEADLY_HP_THRESHOLD))
                 if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, Combat.GRIMOIRE_PUPPETS, env.pct(Combat.GRIMOIRE_ECHO_BONUS))
+                if (b == ItemBase.CLUB) add(R.string.lex_base_club)
                 if (b == ItemBase.LANTERN) add(R.string.lex_base_lantern, env.pct(Combat.LANTERN_CHAIN_BONUS))
                 if (b in ArmorWeight.WEIGHTED) add(R.string.lex_base_weights)
             }
@@ -581,7 +590,7 @@ object Lexicon {
 
     // ── Sets d'isotope : cachés tant qu'aucune pièce n'est tombée ───────────────
 
-    private fun isotopeSets() = IsotopeSets.ALL.map { set ->
+    private fun isotopeSets() = IsotopeSets.ALL.flatMap { listOf(it, it.copy(barbarian = true)) }.map { set ->
         entryT(set.lexiconId, LexiconCategory.ITEMS, { env -> env.s(R.string.lex_set_title, set.label(env.ctx)) },
             secret = true, known = { h -> h != null && set.z in h.knownSets }) {
             val a = set.archetype
@@ -589,6 +598,7 @@ object Lexicon {
                 set.firstFloor, set.lastFloor)
             add(R.string.lex_set_2, IsotopeSets.SLOTS.size, env.link(specialId(a), env.s(a.specialRes)))
             when (a) {
+                Archetype.BARBARIAN -> { add(R.string.lex_set_barbarian) }
                 Archetype.WARRIOR -> {
                     add(R.string.lex_set_special_guard, env.pct(IsotopeSets.GUARD_THORNS_SHARE), env.pct(Combat.GUARD_THORNS_SHARE),
                         IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)

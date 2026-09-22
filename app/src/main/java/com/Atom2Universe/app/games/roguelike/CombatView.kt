@@ -34,22 +34,16 @@ class CombatView @JvmOverloads constructor(
 
     companion object {
         private const val INTRO_MS   = 700L
-        private const val STRIKE_MS  = 1350L
         private const val HIT_MS     = 550L
         private const val STATUS_MS  = 600L
         private const val PAUSE_MS   = 450L
-        private const val WINDUP_MS  = 950L
         private const val IMPACT_MS  = 500L
         private const val FLOAT_MS   = 900L
 
         // Zone de la frappe, en fraction de la barre
         private const val STRIKE_CENTER  = 0.72f
-        private const val STRIKE_GOOD    = 0.13f
-        private const val STRIKE_PERFECT = 0.045f
 
         // Fenêtre de parade autour de l'impact
-        private const val PARRY_PERFECT_MS = 70
-        private const val PARRY_GOOD_MS    = 160
 
         // Couleurs des états du grimoire (celles des éléments sont dans elementColor)
         private const val FRACTURED_COLOR = 0xFFBCAAA4.toInt()
@@ -92,9 +86,14 @@ class CombatView @JvmOverloads constructor(
     private var parry: Timing? = null
     /** Le Sablier : l'élan de cette attaque est plus lent, et les fenêtres de parade plus larges. */
     private var windupScale = 1f
-    private fun windupMs() = (WINDUP_MS * windupScale).toLong()
+    private fun strikeMs() = CombatTiming.strikeMs(combat?.hero)
+    private fun strikeGood() = CombatTiming.strikeGood(combat?.hero)
+    private fun strikePerfect() = CombatTiming.strikePerfect(combat?.hero)
+    private fun windupMs() = (CombatTiming.windupMs(combat?.hero) * windupScale).toLong()
     /** Les ennemis touchés par la dernière action : ils tremblent, et ceux qui meurent s'effacent. */
     private var hitTargets = emptySet<Int>()
+    private var spellTargets = emptyList<Int>()
+    private val relicArt = RelicCombatArt()
 
     private data class Floater(val text: String, val x: Float, val y: Float, val color: Int, val big: Boolean, val start: Long)
     private val floaters = mutableListOf<Floater>()
@@ -143,6 +142,7 @@ class CombatView @JvmOverloads constructor(
         combat = c
         dungeonArt.prepareCombat(c)
         visualAction = null
+        spellTargets = emptyList()
         strikeTiming = Timing.MISS
         heroSpritePath = heroSprite
         target = c.aliveIndices().firstOrNull() ?: 0
@@ -225,7 +225,7 @@ class CombatView @JvmOverloads constructor(
         val t = elapsed()
         when (stage) {
             Stage.INTRO -> if (t >= INTRO_MS) proceed()
-            Stage.STRIKE_TIMING -> if (t >= STRIKE_MS) resolveStrike(Timing.MISS)
+            Stage.STRIKE_TIMING -> if (t >= strikeMs()) resolveStrike(Timing.MISS)
             Stage.PLAYER_APPROACH -> if (t >= approachMs) applyPlayerStrike(strikeTiming)
             Stage.PLAYER_HIT -> if (t >= HIT_MS) afterPlayerAction()
             Stage.HERO_STATUS -> if (t >= STATUS_MS) proceed()
@@ -234,7 +234,7 @@ class CombatView @JvmOverloads constructor(
             }
             Stage.ENEMY_PAUSE -> if (t >= PAUSE_MS) nextAttacker()
             Stage.ENEMY_WINDUP -> {
-                val lateLimit = windupMs() + goodWindow()
+                val lateLimit = windupMs() + goodWindow() + lateMissWindow()
                 val tapped = parry
                 if (t >= lateLimit || (tapped != null && t >= windupMs())) resolveEnemyStrike(tapped ?: Timing.MISS)
             }
@@ -247,8 +247,10 @@ class CombatView @JvmOverloads constructor(
 
     /** En garde (guerrier), les deux fenêtres de parade doublent. */
     private fun guardMult() = if (combat?.guarding == true) 2 else 1
-    private fun goodWindow() = ((PARRY_GOOD_MS + (combat?.hero?.parryBonusMs ?: 0)) * guardMult() * windupScale).toInt()
-    private fun perfectWindow() = ((PARRY_PERFECT_MS + (combat?.hero?.parryBonusMs ?: 0) / 2) * guardMult() * windupScale).toInt()
+    private fun goodWindow() = (CombatTiming.parryGood(combat?.hero) * guardMult() * windupScale).toInt()
+    private fun perfectWindow() = (CombatTiming.parryPerfect(combat?.hero) * guardMult() * windupScale).toInt()
+    /** Laisse le cercle sortir de la zone verte avant de terminer un geste sans appui. */
+    private fun lateMissWindow() = (120 * windupScale).toInt()
 
     // ── Tour du joueur ──────────────────────────────────────────────────────────
 
@@ -267,6 +269,11 @@ class CombatView @JvmOverloads constructor(
 
     private fun resolveStrike(timing: Timing) {
         visualAction = pendingAction
+        spellTargets = when ((pendingAction as? Action.Cast)?.relic?.target) {
+            RelicTarget.ALL, RelicTarget.CHAIN -> listOf(target) + (combat?.aliveIndices()?.filter { it != target } ?: emptyList())
+            RelicTarget.MISSILES, RelicTarget.SELF -> emptyList()
+            else -> listOf(target)
+        }
         strikeTiming = timing
         if (pendingAction == Action.Deadly && combat?.hero?.archetype == Archetype.VAGABOND && chainFirst == null) {
             applyPlayerStrike(timing)
@@ -291,7 +298,11 @@ class CombatView @JvmOverloads constructor(
         }
         val hits = when (val a = pendingAction) {
             is Action.Cast -> c.castRelic(a.relic, target, timing).hits
-            Action.Deadly  -> if (c.hero.archetype == Archetype.VAGABOND) c.chain(target, chainFirst ?: timing, timing) else listOf(c.deadlyStrike(target, timing))
+            Action.Deadly -> when (c.hero.archetype) {
+                Archetype.VAGABOND -> c.chain(target, chainFirst ?: timing, timing)
+                Archetype.BARBARIAN -> listOf(c.smash(target, timing))
+                else -> listOf(c.deadlyStrike(target, timing))
+            }
             else           -> listOf(c.attack(target, timing))
         }
         chainFirst = null
@@ -307,6 +318,7 @@ class CombatView @JvmOverloads constructor(
 
     /** Ce que la dernière action a fait à chaque ennemi touché, puis on passe au tour ennemi. */
     private fun showHits(hits: List<HitResult>) {
+        spellTargets = hits.map { it.target }
         hitTargets = hits.filter { !it.noDamage && it.damage > 0 }.map { it.target }.toSet()
         floatHits(hits)
         if (hits.any { !it.noDamage && it.damage > 0 }) onStrike?.invoke(hits.any { it.crit })
@@ -379,6 +391,7 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         val end = c.lastHeroTurnEnd
         if (end.isEmpty) { proceed(); return }
+        hitTargets = end.meteor.map { it.target }.toSet()
         if (end.meteor.isNotEmpty()) {
             showBanner(context.getString(R.string.roguelike_combat_meteor_impact), Relic.METEOR.color or 0xFF303030.toInt())
             floatHits(end.meteor)
@@ -507,6 +520,8 @@ class CombatView @JvmOverloads constructor(
             floatText(context.getString(R.string.roguelike_combat_absorbed, num(strike.absorbed)), heroRect.centerX(), heroRect.bottom, BARRIER_COLOR, false)
         if (strike.puppetAbsorbed > 0)
             floatText(context.getString(R.string.roguelike_combat_puppet_absorbed, num(strike.puppetAbsorbed)), heroRect.centerX(), heroRect.bottom + 18f * sp, PUPPET_COLOR, false)
+        if (strike.recovered)
+            floatText(context.getString(R.string.roguelike_combat_counterspell), heroRect.centerX(), heroRect.bottom, 0xFFB39DDB.toInt(), false)
         if (strike.missed) {
             // Le texte dit ce que fait le héros, pas ce que rate le monstre : avec un bouclier
             // ou en guerrier il encaisse sur son armure, sinon il s'écarte
@@ -514,6 +529,7 @@ class CombatView @JvmOverloads constructor(
             val res = if (hero.hasShield || hero.archetype == Archetype.WARRIOR) R.string.roguelike_combat_blocked
                 else R.string.roguelike_combat_dodged
             floatText(context.getString(res), heroRect.centerX(), heroRect.top, 0xFFB0BEC5.toInt(), true)
+            if (timing != Timing.MISS) onParry?.invoke(timing == Timing.PERFECT)
             enter(Stage.ENEMY_IMPACT)
             return
         }
@@ -535,12 +551,10 @@ class CombatView @JvmOverloads constructor(
             enter(Stage.ENEMY_IMPACT)
             return
         }
-        if (strike.recovered)
-            floatText(context.getString(R.string.roguelike_combat_counterspell), heroRect.centerX(), heroRect.bottom, 0xFFB39DDB.toInt(), false)
         when (timing) {
             Timing.PERFECT -> { showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt()); onParry?.invoke(true) }
             Timing.GOOD    -> { showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt()); onParry?.invoke(false) }
-            Timing.MISS    -> onHeroHit?.invoke()
+            Timing.MISS    -> { showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt()); onHeroHit?.invoke() }
         }
         floatText(context.getString(R.string.roguelike_combat_damage, num(strike.damage)), heroRect.centerX(), heroRect.top,
             if (timing == Timing.MISS) 0xFFEF5350.toInt() else 0xFFB0BEC5.toInt(), timing == Timing.MISS)
@@ -564,11 +578,15 @@ class CombatView @JvmOverloads constructor(
         drawEnemies(canvas, c)
         drawHero(canvas, c)
         val casting = visualAction as? Action.Cast
-        if (stage == Stage.PLAYER_APPROACH && casting != null) {
-            enemyRects.getOrNull(target)?.let {
-                dungeonArt.drawProjectile(canvas, sceneRect, heroRect, it,
-                    (elapsed() / approachMs).coerceIn(0f, 1f), casting.relic.color)
-            }
+        if (casting != null && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) {
+            val impact = stage == Stage.PLAYER_HIT
+            val progress = elapsed() / if (impact) HIT_MS.toFloat() else approachMs
+            relicArt.draw(canvas, sceneRect, heroRect, enemyRects, spellTargets,
+                casting.relic, progress, impact)
+        }
+        if (stage == Stage.HERO_STATUS && c.lastHeroTurnEnd.meteor.isNotEmpty()) {
+            relicArt.draw(canvas, sceneRect, heroRect, enemyRects, c.lastHeroTurnEnd.meteor.map { it.target },
+                Relic.METEOR, elapsed() / STATUS_MS.toFloat(), true, meteorFall = true)
         }
         drawButtons(canvas, c)
         drawHint(canvas)
@@ -589,7 +607,7 @@ class CombatView @JvmOverloads constructor(
     private fun drawEnemies(canvas: Canvas, c: Combat) {
         for ((i, e) in c.enemies.withIndex()) {
             val base = enemyRects.getOrNull(i) ?: continue
-            if (!e.alive && !(stage == Stage.PLAYER_HIT && i in hitTargets)) continue
+            if (!e.alive && !((stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets)) continue
             val r = RectF(base)
 
             // L'attaquant s'avance pendant son élan
@@ -602,13 +620,13 @@ class CombatView @JvmOverloads constructor(
                     (heroRect.top - base.top) * progress)
             }
             // Recul quand on le touche
-            val hitNow = stage == Stage.PLAYER_HIT && i in hitTargets
+            val hitNow = (stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets
             if (hitNow) r.offset(sin(elapsed() / 30.0).toFloat() * 6f * density, 0f)
 
             dungeonArt.drawShadow(canvas, r)
             val spriteAlpha = if (!e.alive) ((1f - elapsed().toFloat() / HIT_MS).coerceIn(0f, 1f) * 255).toInt() else 255
             dungeonArt.drawMonster(canvas, r, e.type, spriteAlpha, icy = e.frozen, hurt = hitNow, index = i)
-            if (hitNow) dungeonArt.drawImpact(canvas, r, elapsed() / HIT_MS.toFloat(), e.frozen, visualAction !is Action.Cast, i)
+            if (hitNow && visualAction !is Action.Cast && stage == Stage.PLAYER_HIT) dungeonArt.drawImpact(canvas, r, elapsed() / HIT_MS.toFloat(), e.frozen, visualAction !is Action.Cast, i)
             pSprite.alpha = 255
 
             val barTop = base.bottom + 4f * density
@@ -716,6 +734,7 @@ class CombatView @JvmOverloads constructor(
             if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonDoses, e.poisonTurns) to elementColor(Element.POISON))
             if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
             if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to elementColor(Element.LIGHTNING))
+            if (e.breachedTurns > 0) add(context.getString(R.string.roguelike_combat_breached, e.breachedTurns) to FRACTURED_COLOR)
             if (e.fracturedTurns > 0) add(context.getString(R.string.roguelike_combat_fractured, e.fracturedTurns) to FRACTURED_COLOR)
             if (e.weakenedTurns > 0) add(context.getString(R.string.roguelike_combat_weakened, e.weakenedTurns) to WEAKENED_COLOR)
             if (e.blindedTurns > 0) add(context.getString(R.string.roguelike_combat_blinded, e.blindedTurns) to BLINDED_COLOR)
@@ -760,7 +779,10 @@ class CombatView @JvmOverloads constructor(
             swing = stage == Stage.PLAYER_HIT && melee && elapsed() < 220L,
             casting = (stage == Stage.STRIKE_TIMING && pendingAction is Action.Cast) ||
                 ((stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT) && visualAction is Action.Cast),
-            blocking = blocking)
+            blocking = blocking,
+            invocation = (visualAction as? Action.Cast)?.relic == Relic.METEOR &&
+                (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT),
+            castProgress = if (stage == Stage.PLAYER_APPROACH) elapsed() / approachMs else 1f - elapsed() / HIT_MS.toFloat())
 
         val hero = c.hero
         val left = heroRect.left - 12f * density
@@ -886,8 +908,15 @@ class CombatView @JvmOverloads constructor(
             Stage.ENEMY_WINDUP  -> R.string.roguelike_combat_hint_parry
             else -> return
         }
-        pText.textSize = 14f * sp; pText.color = 0xFFB0BEC5.toInt()
-        canvas.drawText(context.getString(res), width / 2f, height * 0.78f, pText)
+        val lines = context.getString(res).split('\n')
+        pText.color = 0xFFB0BEC5.toInt()
+        lines.forEachIndexed { index, text ->
+            pText.textSize = 14f * sp
+            val room = (width - 20f * density).coerceAtLeast(1f)
+            val textWidth = pText.measureText(text)
+            if (textWidth > room) pText.textSize *= room / textWidth
+            canvas.drawText(text, width / 2f, height * 0.78f - (lines.lastIndex - index) * 17f * sp, pText)
+        }
     }
 
     private fun drawStrikeBar(canvas: Canvas) {
@@ -902,19 +931,19 @@ class CombatView @JvmOverloads constructor(
         DungeonTimingShadow.draw(canvas, b.left, b.top, b.right, b.bottom, cr, density)
         pFill.color = 0xFF263238.toInt(); canvas.drawRoundRect(b, cr, cr, pFill)
         fun along(p: Float) = if (horizontal) b.left + b.width() * p else b.top + b.height() * p
-        val goodL = along(STRIKE_CENTER - STRIKE_GOOD)
-        val goodR = along(STRIKE_CENTER + STRIKE_GOOD)
+        val goodL = along(STRIKE_CENTER - strikeGood())
+        val goodR = along(STRIKE_CENTER + strikeGood())
         pFill.color = 0xFF7CB342.toInt()
         if (horizontal) canvas.drawRoundRect(goodL, b.top, goodR, b.bottom, cr, cr, pFill)
         else canvas.drawRoundRect(b.left, goodL, b.right, goodR, cr, cr, pFill)
-        val perfL = along(STRIKE_CENTER - STRIKE_PERFECT)
-        val perfR = along(STRIKE_CENTER + STRIKE_PERFECT)
+        val perfL = along(STRIKE_CENTER - strikePerfect())
+        val perfR = along(STRIKE_CENTER + strikePerfect())
         if (horizontal) DungeonTimingShadow.draw(canvas, perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, density)
         else DungeonTimingShadow.draw(canvas, b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, density)
         pFill.color = 0xFFE53935.toInt()
         if (horizontal) canvas.drawRoundRect(perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, cr, pFill)
         else canvas.drawRoundRect(b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, cr, pFill)
-        val cursor = along((elapsed().toFloat() / STRIKE_MS).coerceIn(0f, 1f))
+        val cursor = along((elapsed().toFloat() / strikeMs()).coerceIn(0f, 1f))
         if (horizontal) DungeonTimingShadow.draw(canvas, cursor - 3f * density, b.top - 8f * density, cursor + 3f * density, b.bottom + 8f * density, 0f, density)
         else DungeonTimingShadow.draw(canvas, b.left - 8f * density, cursor - 3f * density, b.right + 8f * density, cursor + 3f * density, 0f, density)
         pFill.color = Color.WHITE
@@ -942,22 +971,36 @@ class CombatView @JvmOverloads constructor(
         pStroke.strokeCap = Paint.Cap.BUTT; pStroke.strokeJoin = Paint.Join.MITER
     }
 
-    /** Geste de parade au centre de l'écran : toucher quand les deux cercles coïncident. */
+    /** Geste de parade d'origine : toucher quand les deux cercles coïncident. */
     private fun drawParryRing(canvas: Canvas) {
         val cx = width / 2f; val cy = height / 2f
         val inner = heroRect.width() * 0.62f
-        val p = (elapsed().toFloat() / windupMs()).coerceAtMost(1.3f)
-        val radius = inner * (1f + 2.2f * (1f - p).coerceAtLeast(0f))
+        val p = elapsed().toFloat() / windupMs()
+        // Même taille et approche qu'à l'origine. Après la cible, le cercle continue
+        // sans rayon négatif ni arrêt, même avec une fenêtre de parade très longue.
+        val radius = inner * if (p <= 1f) 1f + 2.2f * (1f - p)
+            else kotlin.math.exp(-2.2f * (p - 1f))
+        // Les bandes montrent les mêmes tolérances que la reconnaissance du geste.
+        fun band(window: Int, color: Int) {
+            val fraction = window.toFloat() / windupMs()
+            val outer = inner * (1f + 2.2f * fraction)
+            val inside = inner * kotlin.math.exp(-2.2f * fraction)
+            pStroke.color = color
+            pStroke.strokeWidth = outer - inside
+            canvas.drawCircle(cx, cy, (outer + inside) / 2f, pStroke)
+        }
+        band(goodWindow(), 0x304CAF50)
+        band(perfectWindow(), 0x50FFD54F)
+        // Sous le blanc, un trait plus large laisse 1 dp de noir de chaque côté.
+        pStroke.strokeWidth = 5f * density
+        pStroke.color = Color.BLACK
+        canvas.drawCircle(cx, cy, inner, pStroke)
         pStroke.strokeWidth = 3f * density
-        pStroke.color = 0x88FFFFFF.toInt()
+        pStroke.color = Color.WHITE
         canvas.drawCircle(cx, cy, inner, pStroke)
         pStroke.strokeWidth = 5f * density
         pStroke.color = when (parry) { Timing.PERFECT -> 0xFFFFD54F.toInt(); Timing.GOOD -> 0xFF81D4FA.toInt(); Timing.MISS -> 0xFF616161.toInt(); null -> 0xFFEF5350.toInt() }
         canvas.drawCircle(cx, cy, radius, pStroke)
-        if (parry == Timing.MISS) {
-            pText.textSize = 14f * sp; pText.color = 0xFF9E9E9E.toInt()
-            canvas.drawText(context.getString(R.string.roguelike_combat_too_early), cx, cy + inner + 20f * sp, pText)
-        }
     }
 
     private fun drawFloaters(canvas: Canvas) {
@@ -1031,11 +1074,11 @@ class CombatView @JvmOverloads constructor(
         val length = hypot(dx, dy)
         if (length <= 24f * density) return
         gestureConsumed = true
-        val d = abs((time - stageStart).toFloat() / STRIKE_MS - STRIKE_CENTER)
+        val d = abs((time - stageStart).toFloat() / strikeMs() - STRIKE_CENTER)
         val directed = (dx * swipeDirection.dx + dy * swipeDirection.dy) / length >= .72f
         resolveStrike(if (!directed) Timing.MISS else when {
-            d <= STRIKE_PERFECT -> Timing.PERFECT
-            d <= STRIKE_GOOD -> Timing.GOOD
+            d <= strikePerfect() -> Timing.PERFECT
+            d <= strikeGood() -> Timing.GOOD
             else -> Timing.MISS
         })
     }
@@ -1055,7 +1098,12 @@ class CombatView @JvmOverloads constructor(
                     parry = when {
                         delta <= perfectWindow() -> Timing.PERFECT
                         delta <= goodWindow()    -> Timing.GOOD
-                        else                     -> Timing.MISS   // trop tôt : raté, pas de second essai
+                        else                     -> Timing.MISS   // trop tôt ou trop tard, pas de second essai
+                    }
+                    when (parry) {
+                        Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt())
+                        Timing.GOOD -> showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt())
+                        else -> showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt())
                     }
                     postInvalidateOnAnimation()
                 }
@@ -1112,7 +1160,7 @@ class CombatView @JvmOverloads constructor(
             tappedEnemy >= 0 && c.enemies[tappedEnemy].alive -> { target = tappedEnemy; invalidate() }
             attackBtn.contains(x, y) -> choose(Action.Attack)
             specialBtn.contains(x, y) && c.canUseSpecial() ->
-                if (c.hero.archetype == Archetype.ROGUE || c.hero.archetype == Archetype.VAGABOND) choose(Action.Deadly) else useInstantSpecial(c)
+                if (c.hero.archetype == Archetype.ROGUE || c.hero.archetype == Archetype.VAGABOND || c.hero.archetype == Archetype.BARBARIAN) choose(Action.Deadly) else useInstantSpecial(c)
             else -> {
                 val slot = relicBtns.indexOfFirst { it.contains(x, y) }
                 val relic = if (slot >= 0) c.hero.relicSlots[slot] else null

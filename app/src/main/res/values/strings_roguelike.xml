@@ -144,8 +144,8 @@
     <string name="roguelike_attr_int">INT</string>
     <string name="roguelike_attr_wis">WIS</string>
     <string name="roguelike_attr_cha">CHA</string>
-    <string name="roguelike_attr_desc_str">Strength — weapon damage: +%1$d%% per point above 10.</string>
-    <string name="roguelike_attr_desc_dex">Dexterity — critical chance, a wider parry window, dodge (except in heavy armor), and the power of Venom.</string>
+    <string name="roguelike_attr_desc_str">Strength — Strength weapon and unarmed damage: +%1$d %% per point above 10.</string>
+    <string name="roguelike_attr_desc_dex">Dexterity — dagger damage, critical chance, dodge and Venom power.</string>
     <string name="roguelike_attr_desc_con">Constitution — hit points: +%1$s per point above 10.</string>
     <string name="roguelike_attr_desc_int">Intelligence — fire, ice and lightning spells: +%1$d%% damage per point above 10, and they freeze or paralyze more often.</string>
     <string name="roguelike_attr_desc_wis">Wisdom — relics and the Special recharge faster: one turn less every %1$d points above 10.</string>
@@ -170,14 +170,14 @@
     <string name="roguelike_relic_hunters_mark">Hunter\'s Mark</string>
     <string name="roguelike_relic_poisoned_blades">Poisoned Blades</string>
     <string name="roguelike_relic_freezing_rain">Icy gust</string>
-    <string name="roguelike_relic_chain_lightning">Chain Lightning</string>
+    <string name="roguelike_relic_chain_lightning">Wandering sparks</string>
     <string name="roguelike_relic_sunder_desc">Deals %1$s–%2$s damage (no element) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_war_cry_desc">[[state_weakened|Weakens]] every enemy for %3$d turns (their blows hit %10$d%% softer), and your next %16$d weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_earthquake_desc">Deals %1$s–%2$s damage (no element) to every enemy, and they stagger: their next turn comes later. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_hunters_mark_desc">Deals %1$s–%2$s damage (no element) and [[state_marked|marks]] the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of [[state_poison|poison]] (%17$d at most), eating %5$s HP per turn. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s ice damage to all enemies and may [[state_frozen|freeze]] each: it slows down a lot for %18$s turns, and its blows are numbed. Each sometimes resists. Cooldown: %4$d turns.</string>
-    <string name="roguelike_relic_chain_lightning_desc">Deals %1$s–%2$s damage to the target, then leaps to every other enemy, losing %11$d%% at each leap. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_chain_lightning_desc">Three small lightning sparks seek living enemies at random. %1$s–%2$s total base damage shared among the sparks. No paralysis. Cooldown: %4$d turns.</string>
 
     <!-- Réactions : un sort sur une cible déjà dans un certain état -->
     <string name="roguelike_reaction_explosion">Explosion!</string>
@@ -213,7 +213,7 @@
     <string name="roguelike_combat_poisoned_blades">poisoned blades ×%1$d</string>
     <!-- Le grimoire, lot 2 -->
     <string name="roguelike_relic_rend">Rend</string>
-    <string name="roguelike_relic_whirlwind">Whirlwind</string>
+    <string name="roguelike_relic_whirlwind">Spear sweep</string>
     <string name="roguelike_relic_fan_of_knives">Fan of Knives</string>
     <string name="roguelike_relic_smoke_bomb">Smoke Bomb</string>
     <string name="roguelike_relic_acid_flask">Acid Flask</string>
@@ -230,7 +230,7 @@
     <string name="roguelike_relic_slow">Black ice</string>
     <string name="roguelike_relic_hourglass">Hourglass</string>
     <string name="roguelike_relic_rend_desc">Deals %1$s–%2$s damage (no element) and opens a [[state_bleeding|wound]] for %3$d turns: the target loses %8$s HP every time it attacks. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_whirlwind_desc">A weapon strike on every enemy: %1$s–%2$s damage each (no element). Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_whirlwind_desc">Sweep across the group: %1$s–%2$s physical damage per enemy. Can carry an active poison weapon enchantment. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$s–%2$s damage each (no element). A critical dagger opens a wound (%8$s HP each time the target attacks). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, adds a dose of [[state_poison|poison]] (%5$s HP per turn) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
@@ -344,10 +344,11 @@
     <string name="roguelike_combat_good">GOOD!</string>
     <string name="roguelike_combat_parry_perfect">PERFECT PARRY!</string>
     <string name="roguelike_combat_parry_good">PARRY!</string>
+    <string name="roguelike_combat_parry_miss">PARRY MISSED!</string>
     <string name="roguelike_combat_too_early">Too early!</string>
     <string name="roguelike_combat_hint_choose">Tap an enemy to target it, then choose</string>
     <string name="roguelike_combat_hint_strike">Swipe in the arrow direction: green = good, red = perfect!</string>
-    <string name="roguelike_combat_hint_parry">Tap when the ring closes to parry!</string>
+    <string name="roguelike_combat_hint_parry">Tap when the two circles overlap to parry!</string>
     <string name="roguelike_combat_start">FIGHT!</string>
     <string name="roguelike_combat_ambush">AMBUSH!</string>
     <string name="roguelike_combat_victory">VICTORY</string>
@@ -643,4 +644,25 @@
     <string name="roguelike_action_zoom">Close view</string>
     <string name="roguelike_banner_floor">%1$s\n%2$s</string>
     <string name="roguelike_banner_health">%1$s\n%2$s/%3$s</string>
+    <string name="roguelike_attr_end">END</string>
+    <string name="roguelike_base_spear">Spear</string>
+    <string name="roguelike_archetype_barbarian">Barbarian</string>
+    <string name="roguelike_special_smash">Smash</string>
+    <string name="roguelike_base_club">Club</string>
+    <string name="roguelike_weight_fur">Fur</string>
+    <string name="roguelike_base_fur_helmet">Fur headpiece</string>
+    <string name="roguelike_base_fur_armor">Fur harness</string>
+    <string name="roguelike_base_fur_boots">Fur boots</string>
+    <string name="roguelike_isotope_barbarian">%1$s · Barbarian</string>
+    <string name="roguelike_combat_breached">Breach · %1$d</string>
+    <string name="roguelike_relic_blazing_axe">Blazing axe</string>
+    <string name="roguelike_relic_blazing_axe_desc">A heavy fire strike: %1$s–%2$s damage, then burn for %3$d enemy turns. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_northern_breath">Breath of the North</string>
+    <string name="roguelike_relic_northern_breath_desc">Deal %1$s–%2$s ice damage to each enemy and slow them for %3$d of their turns. Each may resist. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_thunder_club">Thundering club</string>
+    <string name="roguelike_relic_thunder_club_desc">Deal %1$s–%2$s lightning damage and attempt to paralyze the target for %3$d of its turns. Cooldown: %4$d turns, never below 3.</string>
+    <string name="roguelike_relic_venomous_wound">Venomous wound</string>
+    <string name="roguelike_relic_venomous_wound_desc">Deal %1$s–%2$s poison damage and apply one poison dose (%5$s damage per turn) for %3$d enemy turns. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_seismic_strike">Seismic strike</string>
+    <string name="roguelike_relic_seismic_strike_desc">A physical strike: %1$s–%2$s total base damage shared among all living enemies, before critical hits and reactions. Cooldown: %4$d turns.</string>
 </resources>

@@ -211,10 +211,12 @@ class GrimoireTest {
     }
 
     @Test
-    fun laChaineToucheToutLeMondeCibleEnPremier() {
+    fun lesEtincellesVisentTroisFoisSansParalysie() {
         val c = fight(Relic.CHAIN_LIGHTNING, enemies = 3)
         val cast = c.castRelic(Relic.CHAIN_LIGHTNING, 1, Timing.MISS)
-        assertEquals(listOf(1, 0, 2), cast.hits.map { it.target })
+        assertEquals(3, cast.hits.size)
+        assertTrue(cast.hits.all { it.target in 0..2 })
+        assertTrue(c.enemies.all { it.paralyzedTurns == 0 })
     }
 
     // ── Résonances ──────────────────────────────────────────────────────────────

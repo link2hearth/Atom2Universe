@@ -19,11 +19,12 @@ class WeaponFitTest {
     @Test
     fun laTableDesArmesCompatibles() {
         val table = mapOf(
-            Archetype.WARRIOR to setOf(ItemBase.SWORD, ItemBase.AXE, ItemBase.MACE),
-            Archetype.VAGABOND to setOf(ItemBase.SWORD, ItemBase.AXE, ItemBase.DAGGER),
+            Archetype.BARBARIAN to setOf(ItemBase.SWORD, ItemBase.AXE),
+            Archetype.WARRIOR to setOf(ItemBase.SWORD, ItemBase.MACE),
+            Archetype.VAGABOND to setOf(ItemBase.SWORD, ItemBase.SPEAR),
             Archetype.ROGUE to setOf(ItemBase.SWORD, ItemBase.DAGGER),
-            Archetype.MAGE to setOf(ItemBase.SWORD, ItemBase.STAFF, ItemBase.SCEPTER),
-            Archetype.NECROMANCER to setOf(ItemBase.SWORD, ItemBase.STAFF, ItemBase.SCEPTER, ItemBase.DAGGER),
+            Archetype.MAGE to setOf(ItemBase.SWORD, ItemBase.STAFF),
+            Archetype.NECROMANCER to setOf(ItemBase.SWORD, ItemBase.SCEPTER),
         )
         val weapons = ItemBase.entries.filter { it.slot == EquipSlot.WEAPON }
         for (a in Archetype.entries) assertEquals(a.name, table.getValue(a), weapons.filter { a.accepts(it) }.toSet())

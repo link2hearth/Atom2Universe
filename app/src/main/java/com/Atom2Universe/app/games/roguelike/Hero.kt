@@ -27,13 +27,15 @@ enum class Archetype(
     val weapons: Set<ItemBase>,
 ) : Labeled {
 
-    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt(), ItemBase.SHIELD, setOf(ItemBase.AXE, ItemBase.MACE)),
+    WARRIOR(R.string.roguelike_archetype_warrior, R.string.roguelike_special_guard,  ArmorWeight.HEAVY, 0xFF8D6E63.toInt(), ItemBase.SHIELD, setOf(ItemBase.MACE)),
     ROGUE  (R.string.roguelike_archetype_rogue,   R.string.roguelike_special_deadly, ArmorWeight.LIGHT, 0xFF546E7A.toInt(), ItemBase.BOW, setOf(ItemBase.DAGGER)),
-    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt(), ItemBase.ORB, setOf(ItemBase.STAFF, ItemBase.SCEPTER)),
+    MAGE   (R.string.roguelike_archetype_mage,    R.string.roguelike_special_mirror, ArmorWeight.CLOTH, 0xFF5E35B1.toInt(), ItemBase.ORB, setOf(ItemBase.STAFF)),
     /** Entre le voleur et le guerrier : deux coups d'arme d'affilée, et la roulade. */
-    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt(), ItemBase.LANTERN, setOf(ItemBase.AXE, ItemBase.DAGGER)),
+    VAGABOND(R.string.roguelike_archetype_vagabond, R.string.roguelike_special_combo, ArmorWeight.MEDIUM, 0xFF6D8B4E.toInt(), ItemBase.LANTERN, setOf(ItemBase.SPEAR)),
     /** Sous le mage : des pantins gratuits qui encaissent à sa place et frappent en écho. */
-    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt(), ItemBase.GRIMOIRE, setOf(ItemBase.STAFF, ItemBase.SCEPTER, ItemBase.DAGGER)),
+    NECROMANCER(R.string.roguelike_archetype_necromancer, R.string.roguelike_special_puppets, ArmorWeight.ULTRALIGHT, 0xFF4E6E64.toInt(), ItemBase.GRIMOIRE, setOf(ItemBase.SCEPTER)),
+    BARBARIAN(R.string.roguelike_archetype_barbarian, R.string.roguelike_special_smash, ArmorWeight.FUR,
+        0xFFAD6941.toInt(), ItemBase.CLUB, setOf(ItemBase.AXE)),
     ;
 
     fun accepts(weapon: ItemBase) = weapon == ItemBase.SWORD || weapon in weapons
@@ -58,15 +60,15 @@ class Hero {
         const val BASE_HP        = 28
         const val HP_PER_CON     = 4
         /** Ce que rapporte un point au-dessus de 10 (l'inventaire affiche ces mêmes chiffres). */
-        const val STR_DAMAGE_PER_POINT = 0.04f
+        const val WEAPON_ATTRIBUTE_DAMAGE_PER_POINT = 0.04f
         const val RELIC_DAMAGE_PER_POINT = 0.05f
         const val WIS_POINTS_PER_TURN = 6
         const val GOLD_PER_CHA = 0.03f
         /** Le critique de départ, et ce que rapporte un point de DEX. */
         const val BASE_CRIT = 0.05f
         const val CRIT_PER_DEX = 0.01f
-        /** Ce qu'un point de DEX ajoute à la fenêtre de parade, en millisecondes. */
-        const val PARRY_MS_PER_DEX = 4
+        /** Points effectifs d’Endurance au-dessus de 10 nécessaires pour atteindre le plafond gestuel. */
+        const val TIMING_END_CAP = 60f
         /** Sans arme, on se bat à mains nues. */
         const val FIST_MIN       = 2
         const val FIST_MAX       = 4
@@ -92,6 +94,7 @@ class Hero {
         const val ARCHETYPE_PIECES = 2
         /** Recharge du bouton « Spécial » pendant un combat ; remise à zéro à la victoire. */
         const val SPECIAL_COOLDOWN = 5
+        const val MIN_SPECIAL_COOLDOWN = 3
         /** Une arme qui ne va pas à l'archétype porté frappe de cette part en moins (les sorts n'en souffrent pas). */
         const val WRONG_WEAPON_MALUS = 0.15f
         /** Le guerrier échange une part de ses dégâts d'arme contre sa robustesse. */
@@ -197,6 +200,7 @@ class Hero {
             Archetype.VAGABOND -> Element.LIGHTNING
             Archetype.MAGE -> Element.FIRE
             Archetype.NECROMANCER -> Element.ICE
+            Archetype.BARBARIAN -> Element.PHYSICAL
         }
     }
 
@@ -244,9 +248,9 @@ class Hero {
 
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
 
-    /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis FOR : +4 % par point. */
-    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult * weaponTypeMult).roundToInt()
-    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * strMult * orbMult * weaponTypeMult).roundToInt()
+    /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis sa caractéristique : +4 % par point. */
+    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * orbMult * weaponTypeMult).roundToInt()
+    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * orbMult * weaponTypeMult).roundToInt()
     /** 1, ou moins si l'arme portée ne va pas à l'archétype (sans archétype, jamais de malus). */
     val weaponTypeMult: Float get() {
         val a = archetype ?: return 1f
@@ -255,7 +259,9 @@ class Hero {
             (if (a == Archetype.WARRIOR) WARRIOR_WEAPON_DAMAGE_MULT else 1f)
     }
     private val orbMult get() = if (equipped[EquipSlot.OFFHAND]?.base == ItemBase.ORB) 1f + ORB_DAMAGE_SHARE else 1f
-    private val strMult get() = 1f + STR_DAMAGE_PER_POINT * effective(StatType.STR)
+    /** Même caractéristique que celle donnée par le type d’arme ; FOR à mains nues. */
+    val weaponAttribute get() = equipped[EquipSlot.WEAPON]?.damageAttribute ?: StatType.STR
+    private val weaponAttributeMult get() = 1f + WEAPON_ATTRIBUTE_DAMAGE_PER_POINT * effective(weaponAttribute)
 
     /**
      * Le multiplicateur d'une relique : **sa** caractéristique ([Relic.attribute] — INT
@@ -358,7 +364,9 @@ class Hero {
     fun dodgeChance(floor: Int) = 1f - ArmorClass.hitChance(armorClass, ArmorClass.monsterAttack(floor))
 
     /** La parade s'élargit de 4 ms par point de DEX. */
-    val parryBonusMs get() = (PARRY_MS_PER_DEX * effective(StatType.DEX)).roundToInt()
+    /** Aide gestuelle bornée, calculée avec la résistance en profondeur comme les autres bonus. */
+    val timingAssistance get() = (effective(StatType.END) / TIMING_END_CAP).coerceIn(0f, 1f)
+    val parryBonusMs get() = (CombatTiming.parryGood(this) - CombatTiming.PARRY_GOOD_MS).roundToInt()
 
     /**
      * La vitesse du héros : ce que sa jauge gagne par unité de temps (1 : normale). Les

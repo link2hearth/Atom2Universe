@@ -11,15 +11,19 @@ internal object DungeonClassSprites {
         Archetype.MAGE -> 260
         Archetype.VAGABOND -> 35
         Archetype.NECROMANCER -> 185
+        Archetype.BARBARIAN -> 20
     }
 
     fun offsetX(item: DemoGear) = when {
+        item.family == Archetype.BARBARIAN && item.slot == EquipSlot.HELMET -> 1f
         item.family == Archetype.ROGUE && item.slot == EquipSlot.OFFHAND -> -6f
         item.family == Archetype.NECROMANCER && item.slot == EquipSlot.CHEST -> -6f
         item.family == Archetype.MAGE && item.slot == EquipSlot.HELMET -> -1f
         else -> 0f
     }
     fun offsetY(item: DemoGear) = when {
+        // La tête courte du barbare doit rejoindre le cou du torse au point (14, 13).
+        item.family == Archetype.BARBARIAN && item.slot == EquipSlot.HELMET -> 5f
         item.family == Archetype.ROGUE && item.slot == EquipSlot.OFFHAND -> -2f
         item.family == Archetype.NECROMANCER && item.slot == EquipSlot.CHEST -> -6f
         item.family == Archetype.MAGE && item.slot == EquipSlot.HELMET -> -4f
@@ -28,6 +32,7 @@ internal object DungeonClassSprites {
 
     fun source(item: DemoGear): String {
         val models = when (item.family) {
+            Archetype.BARBARIAN -> barbarian()
             Archetype.ROGUE -> rogue
             Archetype.MAGE -> mage
             Archetype.VAGABOND -> wanderer
@@ -84,6 +89,33 @@ internal object DungeonClassSprites {
             else -> Unit
         }
         return rows.joinToString("\n") { String(it) }
+    }
+
+    private fun barbarian() = wanderer.copyOf().apply {
+        this[0] = """
+            ....mmmmmm....
+            ..mmhmmhmmmm..
+            .mmhmmmmhmmmm.
+            .mm#pppppp#mm.
+            ..#peppeep#...
+            ..#ppppppp#...
+            ...#bpppb#....
+            ....#bbb#.....
+        """
+        this[1] = """
+            ..mmm....mmm..
+            .mhmmp##pmmhm.
+            mhmppppppppmhm
+            .mmppppppppmm.
+            ..#ppgppppp#..
+            ..#pppgpppp#..
+            ..#ppppgppp#..
+            ..#pppppgpp#..
+            ..#ggggGggg#..
+            ..#mmmmmmmm#..
+            ..mmhmmmhmhm..
+            ...mm..mmm....
+        """
     }
 
     // Capuche enveloppante et masque, gilet court à bandoulière, bottes souples, dague et arc.

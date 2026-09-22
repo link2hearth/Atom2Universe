@@ -148,6 +148,16 @@ object ArmorClass {
 
     /** Chance de toucher : le 1 rate toujours, et les faces [ALWAYS_HIT_FROM] à 20 touchent toujours ([MIN_HIT]). */
     fun hitChance(ac: Int, attack: Int) = ((21 - (ac - attack)) / 20f).coerceIn(MIN_HIT, 0.95f)
+
+    /** Le geste améliore le même jet défensif que l'équipement, sans second tirage. */
+    fun timingBonus(timing: Timing) = when (timing) {
+        Timing.MISS -> 0
+        Timing.GOOD -> 1
+        Timing.PERFECT -> 2
+    }
+
+    fun hits(roll: Int, ac: Int, attack: Int, timing: Timing): Boolean =
+        roll >= ALWAYS_HIT_FROM || (roll != 1 && roll + attack >= ac + timingBonus(timing))
 }
 
 /**
@@ -234,6 +244,7 @@ class Enemy(
 
     // ── États partagés du grimoire (voir [RelicEffect]) : ils perdent un tour à la fin de chacun de ses tours ──
     var fracturedTurns = 0
+    var breachedTurns = 0
     var weakenedTurns = 0
     /** Aveuglé : il attaque avec désavantage, comme la rage, mais sans la vitesse. */
     var blindedTurns = 0
@@ -283,7 +294,9 @@ object Encounters {
     }
 
     fun hpMult(floor: Int)     = HP_SCALE * (1f + 0.22f * (floor.coerceAtMost(DEEP_FLOOR) - 1)) * depthMult(floor)
-    fun damageMult(floor: Int) = DAMAGE_SCALE * (1f + 0.15f * (floor.coerceAtMost(DEEP_FLOOR) - 1)) * depthMult(floor)
+    /** Départ adouci de 20 % jusqu'à l'étage 5, retour progressif à la normale à l'étage 20. */
+    fun earlyDamageMult(floor: Int) = 0.8f + 0.2f * ((floor - 5) / 15f).coerceIn(0f, 1f)
+    fun damageMult(floor: Int) = DAMAGE_SCALE * (1f + 0.15f * (floor.coerceAtMost(DEEP_FLOOR) - 1)) * depthMult(floor) * earlyDamageMult(floor)
     /**
      * La vitesse des monstres monte avec l'étage : +0,4 % par étage, ×1,4 à l'étage 100, puis
      * plus rien — sinon ils seraient 41 fois plus rapides à l'étage 10 000. Leur vitesse par
@@ -460,24 +473,30 @@ enum class Relic(
     HASTE           (R.string.roguelike_relic_haste,           R.string.roguelike_relic_haste_desc,           Element.LIGHTNING, StatType.DEX, RelicTarget.SELF,     RelicEffect.HASTE,          3, 3, 0xFF26A69A.toInt(), 132, 7),
     VENOM           (R.string.roguelike_relic_venom,           R.string.roguelike_relic_venom_desc,           Element.POISON,    StatType.DEX, RelicTarget.ONE,      RelicEffect.POISON,         3, 4, 0xFF3E8E3A.toInt(), 133, 3),
     HUNTERS_MARK    (R.string.roguelike_relic_hunters_mark,    R.string.roguelike_relic_hunters_mark_desc,    Element.PHYSICAL,  StatType.DEX, RelicTarget.ONE,      RelicEffect.MARK,           3, 0, 0xFF9E3B3B.toInt(), 132, 11),
-    // Vagabond (FOR)
-    LANTERNE        (R.string.roguelike_relic_lanterne,        R.string.roguelike_relic_lanterne_desc,        Element.FIRE,      StatType.STR, RelicTarget.ONE,      RelicEffect.BURN,           3, 4, 0xFFD9822B.toInt(), 113, 6),
-    SLOW            (R.string.roguelike_relic_slow,            R.string.roguelike_relic_slow_desc,            Element.ICE,       StatType.STR, RelicTarget.ONE,      RelicEffect.SLOW,           3, 3, 0xFF5C6BC0.toInt(), 132, 13),
-    CHAIN_LIGHTNING (R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.STR, RelicTarget.CHAIN,     RelicEffect.NONE,           3, 0, 0xFF7B6A12.toInt(), 132, 12),
-    CHAMPIGNON      (R.string.roguelike_relic_champignon,      R.string.roguelike_relic_champignon_desc,      Element.POISON,    StatType.STR, RelicTarget.ONE,      RelicEffect.POISON,         3, 6, 0xFF6B8E23.toInt(), 133, 14),
-    WHIRLWIND       (R.string.roguelike_relic_whirlwind,       R.string.roguelike_relic_whirlwind_desc,       Element.PHYSICAL,  StatType.STR, RelicTarget.ALL,      RelicEffect.NONE,           3, 0, 0xFF9A6A2E.toInt(), 133, 9),
-    // Mage (SAG)
-    FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.WIS, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
-    FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.WIS, RelicTarget.ALL,      RelicEffect.FREEZE,         3, 1, 0xFF1E6F8C.toInt(), 132, 6),
-    LIGHTNING       (R.string.roguelike_relic_lightning,       R.string.roguelike_relic_lightning_desc,       Element.LIGHTNING, StatType.WIS, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
-    ACID_FLASK      (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,    StatType.WIS, RelicTarget.ONE,      RelicEffect.ACID,           3, 2, 0xFF5E8C1E.toInt(), 133, 14),
-    HOLY_LIGHT      (R.string.roguelike_relic_holy_light,      R.string.roguelike_relic_holy_light_desc,      Element.HOLY,      StatType.WIS, RelicTarget.ONE,      RelicEffect.BLIND,          3, 1, 0xFFB09A3A.toInt(), 113, 2),
-    // Nécromancien (INT)
-    METEOR          (R.string.roguelike_relic_meteor,          R.string.roguelike_relic_meteor_desc,          Element.FIRE,      StatType.INT, RelicTarget.ALL,      RelicEffect.DELAYED,        3, 2, 0xFFC0501E.toInt(), 113, 0),
-    ICE_SHARD       (R.string.roguelike_relic_ice_shard,       R.string.roguelike_relic_ice_shard_desc,       Element.ICE,       StatType.INT, RelicTarget.ONE,      RelicEffect.FREEZE,         3, 1, 0xFF2F7FB5.toInt(), 113, 8),
-    MAGIC_MISSILE   (R.string.roguelike_relic_magic_missile,   R.string.roguelike_relic_magic_missile_desc,   Element.LIGHTNING, StatType.INT, RelicTarget.MISSILES, RelicEffect.NONE,           3, 0, 0xFFB39A1E.toInt(), 132, 8),
-    PESTE           (R.string.roguelike_relic_peste,           R.string.roguelike_relic_peste_desc,           Element.POISON,    StatType.INT, RelicTarget.ALL,      RelicEffect.POISON,         3, 3, 0xFF3E8E3A.toInt(), 133, 3),
-    PONCTION        (R.string.roguelike_relic_ponction,        R.string.roguelike_relic_ponction_desc,        Element.PHYSICAL,  StatType.INT, RelicTarget.ONE,      RelicEffect.DRAIN,          3, 0, 0xFF7E2F4F.toInt(), 132, 4),
+    // Vagabond (END)
+    LANTERNE        (R.string.roguelike_relic_lanterne,        R.string.roguelike_relic_lanterne_desc,        Element.FIRE,      StatType.END, RelicTarget.ONE,      RelicEffect.BURN,           3, 4, 0xFFD9822B.toInt(), 113, 6),
+    SLOW            (R.string.roguelike_relic_slow,            R.string.roguelike_relic_slow_desc,            Element.ICE,       StatType.END, RelicTarget.ONE,      RelicEffect.SLOW,           3, 3, 0xFF5C6BC0.toInt(), 132, 13),
+    CHAIN_LIGHTNING (R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.END, RelicTarget.MISSILES,     RelicEffect.NONE,           3, 0, 0xFF7B6A12.toInt(), 132, 12),
+    CHAMPIGNON      (R.string.roguelike_relic_champignon,      R.string.roguelike_relic_champignon_desc,      Element.POISON,    StatType.END, RelicTarget.ONE,      RelicEffect.POISON,         3, 6, 0xFF6B8E23.toInt(), 133, 14),
+    WHIRLWIND       (R.string.roguelike_relic_whirlwind,       R.string.roguelike_relic_whirlwind_desc,       Element.PHYSICAL,  StatType.END, RelicTarget.ALL,      RelicEffect.NONE,           3, 0, 0xFF9A6A2E.toInt(), 133, 9),
+    // Barbare (FOR) : impacts courts, mêmes éléments et mêmes résistances que les autres classes.
+    BLAZING_AXE(R.string.roguelike_relic_blazing_axe, R.string.roguelike_relic_blazing_axe_desc, Element.FIRE, StatType.STR, RelicTarget.ONE, RelicEffect.BURN, 4, 1, 0xFFCF5727.toInt(), 113, 6),
+    NORTHERN_BREATH(R.string.roguelike_relic_northern_breath, R.string.roguelike_relic_northern_breath_desc, Element.ICE, StatType.STR, RelicTarget.ALL, RelicEffect.SLOW, 5, 1, 0xFF8BCAD4.toInt(), 132, 13),
+    THUNDER_CLUB(R.string.roguelike_relic_thunder_club, R.string.roguelike_relic_thunder_club_desc, Element.LIGHTNING, StatType.STR, RelicTarget.ONE, RelicEffect.PARALYZE, 5, 1, 0xFFE6B752.toInt(), 132, 5),
+    VENOMOUS_WOUND(R.string.roguelike_relic_venomous_wound, R.string.roguelike_relic_venomous_wound_desc, Element.POISON, StatType.STR, RelicTarget.ONE, RelicEffect.POISON, 4, 2, 0xFF8FAD43.toInt(), 133, 3),
+    SEISMIC_STRIKE(R.string.roguelike_relic_seismic_strike, R.string.roguelike_relic_seismic_strike_desc, Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.NONE, 5, 0, 0xFFAD794C.toInt(), 133, 9),
+    // Mage (INT)
+    FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.INT, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
+    FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.INT, RelicTarget.ALL,      RelicEffect.FREEZE,         3, 1, 0xFF1E6F8C.toInt(), 132, 6),
+    LIGHTNING       (R.string.roguelike_relic_lightning,       R.string.roguelike_relic_lightning_desc,       Element.LIGHTNING, StatType.INT, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
+    ACID_FLASK      (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,    StatType.INT, RelicTarget.ONE,      RelicEffect.ACID,           3, 2, 0xFF5E8C1E.toInt(), 133, 14),
+    HOLY_LIGHT      (R.string.roguelike_relic_holy_light,      R.string.roguelike_relic_holy_light_desc,      Element.HOLY,      StatType.INT, RelicTarget.ONE,      RelicEffect.BLIND,          3, 1, 0xFFB09A3A.toInt(), 113, 2),
+    // Nécromancien (SAG)
+    METEOR          (R.string.roguelike_relic_meteor,          R.string.roguelike_relic_meteor_desc,          Element.FIRE,      StatType.WIS, RelicTarget.ALL,      RelicEffect.DELAYED,        3, 2, 0xFFC0501E.toInt(), 113, 0),
+    ICE_SHARD       (R.string.roguelike_relic_ice_shard,       R.string.roguelike_relic_ice_shard_desc,       Element.ICE,       StatType.WIS, RelicTarget.ONE,      RelicEffect.FREEZE,         3, 1, 0xFF2F7FB5.toInt(), 113, 8),
+    MAGIC_MISSILE   (R.string.roguelike_relic_magic_missile,   R.string.roguelike_relic_magic_missile_desc,   Element.LIGHTNING, StatType.WIS, RelicTarget.MISSILES, RelicEffect.NONE,           3, 0, 0xFFB39A1E.toInt(), 132, 8),
+    PESTE           (R.string.roguelike_relic_peste,           R.string.roguelike_relic_peste_desc,           Element.POISON,    StatType.WIS, RelicTarget.ALL,      RelicEffect.POISON,         3, 3, 0xFF3E8E3A.toInt(), 133, 3),
+    PONCTION        (R.string.roguelike_relic_ponction,        R.string.roguelike_relic_ponction_desc,        Element.PHYSICAL,  StatType.WIS, RelicTarget.ONE,      RelicEffect.DRAIN,          3, 0, 0xFF7E2F4F.toInt(), 132, 4),
     // Neutres (hors de la grille : le Soin remplace la potion, le Sablier aide au timing)
     HEAL            (R.string.roguelike_relic_heal,            R.string.roguelike_relic_heal_desc,            Element.HOLY,      StatType.WIS, RelicTarget.SELF,     RelicEffect.HEAL,           3, 0, 0xFF43A047.toInt(), 17, 0),
     HOURGLASS       (R.string.roguelike_relic_hourglass,       R.string.roguelike_relic_hourglass_desc,       Element.PHYSICAL,  StatType.WIS, RelicTarget.SELF,     RelicEffect.HOURGLASS,      3, 3, 0xFFC9A227.toInt(), 132, 14);
@@ -498,7 +517,7 @@ enum class Relic(
     val doseCoef get() = RelicBudget.doseCoef(this)
 
     /** La recharge la plus courte possible, quelle que soit la SAG (voir [Hero.castCooldown]). */
-    val minCooldown get() = if (effect == RelicEffect.HEAL) HEAL_MIN_COOLDOWN else 1
+    val minCooldown get() = if (attribute == StatType.STR) 3 else if (effect == RelicEffect.HEAL) HEAL_MIN_COOLDOWN else 1
 
     companion object {
         const val BURN_SHARE       = 0.25f
@@ -743,7 +762,7 @@ object RelicBudget {
     /** Le nombre de cibles d'un lancer moyen, en « cibles pleines ». Les traits se partagent un lancer. */
     fun targets(r: Relic) = when (r.target) {
         RelicTarget.ONE, RelicTarget.SELF, RelicTarget.MISSILES -> 1f
-        RelicTarget.ALL   -> REF_GROUP
+        RelicTarget.ALL   -> if (r == Relic.SEISMIC_STRIKE) 1f else REF_GROUP
         RelicTarget.CHAIN -> REF_CHAIN
     }
 
@@ -751,12 +770,14 @@ object RelicBudget {
     fun share(r: Relic) = value(r) / targets(r)
 
     /** Ce que vaut l'effet sur une cible, en coups d'épée (négatif : ce que le sort gagne à payer un prix). */
+    fun poisonDotShare(r: Relic) = if (r == Relic.CHAMPIGNON) 0.6f else POISON_DOT_SHARE
+
     fun effectValue(r: Relic): Float = when (r.effect) {
         RelicEffect.NONE      -> 0f
         RelicEffect.BURN      -> hitCoef(r) * Relic.BURN_SHARE * r.effectTurns
         RelicEffect.FREEZE    -> FREEZE_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
         RelicEffect.PARALYZE  -> PARALYSIS_TURN_VALUE * r.effectTurns * REF_LAND_CHANCE
-        RelicEffect.POISON    -> share(r) * POISON_DOT_SHARE
+        RelicEffect.POISON    -> share(r) * poisonDotShare(r)
         RelicEffect.FRACTURE  -> FRACTURE_TURN_VALUE * r.effectTurns
         RelicEffect.MARK      -> MARK_VALUE
         RelicEffect.WARCRY    -> WEAKEN_TURN_VALUE * r.effectTurns
@@ -777,13 +798,13 @@ object RelicBudget {
     fun hitCoef(r: Relic): Float = when {
         !r.hits -> 0f
         r.effect == RelicEffect.BURN   -> share(r) / (1f + Relic.BURN_SHARE * r.effectTurns)
-        r.effect == RelicEffect.POISON -> share(r) * (1f - POISON_DOT_SHARE)
+        r.effect == RelicEffect.POISON -> share(r) * (1f - poisonDotShare(r))
         else -> share(r) - effectValue(r)
     }
 
     /** Ce qu'une dose ronge par tour, en coups d'épée. */
     fun doseCoef(r: Relic): Float = when (r.effect) {
-        RelicEffect.POISON -> share(r) * POISON_DOT_SHARE / r.effectTurns
+        RelicEffect.POISON -> share(r) * poisonDotShare(r) / r.effectTurns
         RelicEffect.ENCHANT_POISON -> share(r) / enchantDoseTicks(r)
         RelicEffect.ACID -> share(r) * ACID_DOSE_SHARE / Relic.ENCHANT_DOSE_TURNS
         else -> 0f
@@ -928,8 +949,9 @@ class Combat(
     val backdrop: DungeonBackdrop = DungeonTheme.forFloor(floor).backdrop(floor),
 ) {
     companion object {
-        const val PARRY_GOOD_MULT  = 0.5f
-        const val PARRY_PERFECT_MULT = 0.2f
+        const val PARRY_MISS_MULT = 1.1f
+        const val PARRY_GOOD_MULT = 0.85f
+        const val PARRY_PERFECT_MULT = 0.6f
 
         /** Coup mortel : une cible sous ce seuil de PV est exposée. */
         const val DEADLY_HP_THRESHOLD = 0.30f
@@ -940,7 +962,7 @@ class Combat(
         const val MIRROR_REGEN_SHARE = 0.04f
         /** Vagabond : l'Enchaînement frappe deux fois ; une roulade parfaite relève le prochain coup de cette part. */
         const val CHAIN_HITS = 2
-        const val ROLL_BONUS = 0.5f
+        const val ROLL_BONUS = 0.25f
         /** Nécromancien : nombre de pantins invoqués, PV d'un pantin, part des coups gardée par le héros, écho. */
         const val PUPPETS = 2
         const val PUPPET_HP_SHARE = 0.15f
@@ -955,7 +977,11 @@ class Combat(
         /** Le grimoire relève aussi l'écho de chaque pantin de cette part. */
         const val GRIMOIRE_ECHO_BONUS = 1.0f
         /** La lanterne du vagabond : le second coup de l'Enchaînement frappe de cette part en plus. */
-        const val LANTERN_CHAIN_BONUS = 1.0f
+        const val LANTERN_CHAIN_BONUS = 0.5f
+        const val CHAIN_HIT_MULT = 0.6f
+        const val SMASH_MULT = 1.5f
+        const val BREACH_BONUS = 0.15f
+        const val BREACH_TURNS = 2
         /** Sa parade parfaite soigne les pantins de cette part de leurs PV. */
         const val PUPPET_PARRY_HEAL = 0.5f
 
@@ -1090,7 +1116,7 @@ class Combat(
     fun attackCost() = FULL_ACTION
     fun relicCost(relic: Relic) = if (relic.hits) FULL_ACTION else SUPPORT_ACTION
     /** La Garde et l'Image miroir ne frappent pas ; le Coup mortel, si. */
-    fun specialCost() = if (hero.archetype == Archetype.ROGUE || hero.archetype == Archetype.VAGABOND) FULL_ACTION else SUPPORT_ACTION
+    fun specialCost() = if (hero.archetype == Archetype.ROGUE || hero.archetype == Archetype.VAGABOND || hero.archetype == Archetype.BARBARIAN) FULL_ACTION else SUPPORT_ACTION
 
     /**
      * Empoisonnée, figée, paralysée, aveuglée, charmée, marquée ou bien entamée : le voleur y
@@ -1124,6 +1150,7 @@ class Combat(
         var raw = (if (timed) StrikeDamage.base(hero.weaponMin, hero.weaponMax, timing) else weaponRoll()) * damageMult
         if (rollReady) { rollReady = false; raw *= 1f + ROLL_BONUS }
         if (empoweredAttacks > 0) { empoweredAttacks--; raw *= 1f + empowerBonus }
+        if (foe.breachedTurns > 0) raw *= 1f + BREACH_BONUS
         val sneak = ambushReady
         ambushReady = false
         if (timed) raw = StrikeDamage.afterDefense(raw, timing,
@@ -1172,7 +1199,7 @@ class Combat(
             else -> listOf(target) + aliveIndices().filter { it != target }
         }
         val hits = mutableListOf<HitResult>()
-        var mult = if (relic.target == RelicTarget.MISSILES) 1f / Relic.MISSILE_COUNT else 1f
+        var mult = if (relic.target == RelicTarget.MISSILES) 1f / Relic.MISSILE_COUNT else if (relic == Relic.SEISMIC_STRIKE) 1f / touched.size.coerceAtLeast(1) else 1f
         for (planned in touched) {
             // Un trait vise un ennemi encore debout, au hasard
             val i = if (planned >= 0) planned else aliveIndices().randomOrNull(rng) ?: break
@@ -1226,6 +1253,7 @@ class Combat(
         val rx = if (immune) Reacting() else react(relic.element, i, 1f)
         val reactions = rx.reactions
         var mult = affinity.damageMult * mult0 * rx.mult
+        if (relic.element == Element.PHYSICAL && e.breachedTurns > 0) mult *= 1f + BREACH_BONUS
         // La Cristallisation : énorme contre un figé, et le gel se brise (sauf avec Zéro absolu)
         if (relic.effect == RelicEffect.CRYSTALLIZE && e.frozen) {
             mult *= Relic.CRYSTAL_MULT
@@ -1506,7 +1534,7 @@ class Combat(
 
     private fun spendSpecial() {
         val base = if (hero.setArchetype != null) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN
-        hero.specialCooldown = hero.spellCooldown(base)
+        hero.specialCooldown = hero.spellCooldown(base).coerceAtLeast(Hero.MIN_SPECIAL_COOLDOWN)
     }
 
     /** Guerrier : on passe son tour en garde (parade plus large, et chaque coup reçu est renvoyé en partie, voir [retaliate]). */
@@ -1515,6 +1543,19 @@ class Combat(
         guarding = true
         spendSpecial()
         afterPlayerAction(specialCost())
+    }
+
+    /** Fracas ouvre une brèche physique ; aucun étourdissement sur le Spécial. */
+    fun smash(target: Int, timing: Timing): HitResult {
+        check(canUseSpecial() && hero.archetype == Archetype.BARBARIAN)
+        val result = weaponHit(target, timing, damageMult = SMASH_MULT)
+        if (result.damage > 0 && enemies[target].alive && hero.classOffhand(Archetype.BARBARIAN)) {
+            enemies[target].breachedTurns = maxOf(enemies[target].breachedTurns,
+                if (hero.specialBoosted(Archetype.BARBARIAN)) IsotopeSets.BARBARIAN_BREACH_TURNS else BREACH_TURNS)
+        }
+        spendSpecial()
+        afterPlayerAction(specialCost())
+        return result
     }
 
     /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
@@ -1536,7 +1577,7 @@ class Combat(
         val lantern = hero.classOffhand(Archetype.VAGABOND)
         for ((i, timing) in listOf(first, second).take(CHAIN_HITS).withIndex()) {
             val at = if (enemies[target].alive) target else aliveIndices().firstOrNull() ?: break
-            hits += weaponHit(at, timing, damageMult = bonus * if (lantern && i > 0) 1f + LANTERN_CHAIN_BONUS else 1f)
+            hits += weaponHit(at, timing, damageMult = CHAIN_HIT_MULT * bonus * if (lantern && i > 0) 1f + LANTERN_CHAIN_BONUS else 1f)
         }
         spendSpecial()
         afterPlayerAction(specialCost())
@@ -1887,18 +1928,18 @@ class Combat(
         }
         // Enragé ou aveuglé : il attaque avec désavantage (deux d20, le pire gardé)
         val roll = if (e.enraged || e.blindedTurns > 0) minOf(attackDie(), attackDie()) else attackDie()
-        val hits = roll >= ArmorClass.ALWAYS_HIT_FROM || (roll != 1 &&roll + ArmorClass.monsterAttack(floor) >= hero.armorClass)
-        if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true, bleed = bled)
+        val hits = ArmorClass.hits(roll, hero.armorClass, ArmorClass.monsterAttack(floor), parry)
 
         // Le coup brut, avant parade et armure : c'est sur lui que se calcule ce qu'on renvoie
         // Affaibli, et engourdi par la glace : ses coups font moins mal
         val weakened = (if (e.weakenedTurns > 0) WEAKEN_MULT else 1f) * (if (e.frozen) NUMB_MULT else 1f)
-        val spread = 0.85f + rng.nextFloat() * 0.30f
-        val blow = e.damage * spread * weakened * ArmorClass.DAMAGE_COMPENSATION
+        // La fourchette est choisie par le geste, sans variation aléatoire supplémentaire.
+        // Le renvoi conserve comme référence le coup de base, avant le geste et l'armure.
+        val blow = e.damage * weakened * ArmorClass.DAMAGE_COMPENSATION
 
-        // La parade parfaite, selon l'archétype
+        // Les atouts parfaits exigent aussi que le jet défensif ait évité le coup.
         var recovered = false
-        if (parry == Timing.PERFECT) when (hero.archetype) {
+        if (!hits && parry == Timing.PERFECT) when (hero.archetype) {
             // Le guerrier bloque : rien ne passe, et le coup renvoie. Sans bouclier, ça marche, mais il renvoie moins
             Archetype.WARRIOR -> {
                 val thorns = retaliate(enemyIndex, blow, blocked = true)
@@ -1920,10 +1961,16 @@ class Combat(
             // Ses pantins reprennent des forces
             Archetype.NECROMANCER -> for (i in puppetHpList.indices)
                 puppetHpList[i] = (puppetHpList[i] + puppetMaxHp * PUPPET_PARRY_HEAL).roundToInt().coerceAtMost(puppetMaxHp)
+            Archetype.BARBARIAN -> {
+                // Une parade parfaite prépare une ouverture, sans dégâts gratuits ni cumul.
+                e.breachedTurns = maxOf(e.breachedTurns, BREACH_TURNS)
+            }
             null -> {}
         }
 
-        val parryMult = when (parry) { Timing.MISS -> 1f; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
+        if (!hits) return EnemyStrike(enemyIndex, 0, parry, missed = true, bleed = bled, recovered = recovered)
+
+        val parryMult = when (parry) { Timing.MISS -> PARRY_MISS_MULT; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val armorMult = maxOf(if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f, if (purifiedTurns > 0) Reaction.PURIFIED_ARMOR else 1f)
         val puppetsBefore = puppetHpList.sum()
         var dmg = throughPuppets(hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1))
@@ -1968,6 +2015,7 @@ class Combat(
         if (phase != CombatPhase.ENEMY_TURN) return
         val e = enemies[actingEnemy]
         if (e.fracturedTurns > 0) e.fracturedTurns--
+        if (e.breachedTurns > 0) e.breachedTurns--
         if (e.weakenedTurns > 0) e.weakenedTurns--
         if (e.blindedTurns > 0) e.blindedTurns--
         if (e.bleedTurns > 0 && --e.bleedTurns == 0) e.bleedDamage = 0

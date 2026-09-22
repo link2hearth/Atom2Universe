@@ -124,7 +124,7 @@ internal class DungeonCombatArt {
     }
     fun drawHero(canvas: Canvas, bounds: RectF, hero: Hero, windup: Boolean = false,
         swing: Boolean = false, casting: Boolean = false, blocking: Boolean = false,
-        portrait: Boolean = false) {
+        portrait: Boolean = false, invocation: Boolean = false, castProgress: Float = 0f) {
         paint.alpha = 255
         updateEquipment(hero)
         val (actorFrame, actorCanvas) = actorBuffer(if (portrait) "heroPortrait" else "hero")
@@ -138,7 +138,8 @@ internal class DungeonCombatArt {
             else -> 0f
         }
         sceneArt.drawPaperDoll(actorCanvas, equipment, images, windup, swing, casting, blocking,
-            !portrait && !windup && !swing && !casting && !blocking, clock, nod)
+            !portrait && !windup && !swing && !casting && !blocking, clock, nod,
+            if (invocation) -25f - 70f * castProgress.coerceIn(0f, 1f) else -25f)
         actorCanvas.restore()
         if (portrait) {
             canvas.drawBitmap(actorFrame, android.graphics.Rect(20, 12, 48, 40), bounds, paint)

@@ -296,8 +296,6 @@ class RoguelikeView @JvmOverloads constructor(
     private fun drawPlayer(canvas: Canvas, g: RoguelikeGame) {
         val l = tileLeft(g.playerPos.x); val t = tileTop(g.playerPos.y)
         val rect = RectF(l, t, l + tileSize, t + tileSize)
-        pFill.color = 0x775ECAC7
-        canvas.drawOval(l + tileSize * .2f, t + tileSize * .76f, l + tileSize * .8f, t + tileSize * .94f, pFill)
         canvas.save()
         if (facingLeft) canvas.scale(-1f, 1f, rect.centerX(), rect.centerY())
         actors.drawShadow(canvas, rect, hero = true)

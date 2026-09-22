@@ -22,8 +22,8 @@
     <string name="dungeon_demo_rat_brown">Brown rat · curled tail</string>
     <string name="dungeon_demo_rat_albino">Albino rat · red eyes</string>
     <string name="dungeon_demo_rat_boss">Boss rat · big and furious</string>
-    <string name="dungeon_demo_title">Dungeon · Art demo</string>
-    <string name="dungeon_demo_description">Tap a piece to change it. Tap a monster to target it.</string>
+    <string name="dungeon_demo_title">Dungeon · Test bench</string>
+    <string name="dungeon_demo_description">Temporary dungeon session: floors, spells and equipment</string>
     <string name="dungeon_demo_heavy">Heavy armor</string>
     <string name="dungeon_demo_standard">Standard</string>
     <string name="dungeon_demo_isotope">Isotope</string>
@@ -92,4 +92,22 @@
     <string name="dungeon_demo_pirate_deck_day">Pirate deck · Day</string>
     <string name="dungeon_demo_pirate_deck_night">Pirate deck · Night</string>
     <string name="dungeon_demo_captain_cabin">Captain’s cabin</string>
+    <string name="dungeon_test_tools">Test tools</string>
+    <string name="dungeon_test_floor">Go to floor</string>
+    <string name="dungeon_test_gear">Equip a complete class loadout</string>
+    <string name="dungeon_test_item">Add items to the bag</string>
+    <string name="dungeon_test_restore">Restore health and cooldowns</string>
+    <string name="dungeon_test_gold">Add 10,000 gold</string>
+    <string name="dungeon_test_reveal">Reveal the map</string>
+    <string name="dungeon_test_range">Enter a number from 1 to %1$d</string>
+    <string name="dungeon_test_notice">Temporary session: normal save and floor record are preserved. All relics and four slots are available in the inventory. Changing floor keeps your equipment; use the class loadout tool to choose its drop floor.</string>
+    <string name="dungeon_test_preset">Floor %1$d</string>
+    <string name="dungeon_test_class">Class</string>
+    <string name="dungeon_test_power">Item power (1–10,000)</string>
+    <string name="dungeon_test_rarity">Rarity</string>
+    <string name="dungeon_test_weight">Armor weight</string>
+    <string name="dungeon_test_quantity">Quantity (1–100)</string>
+    <string name="dungeon_test_seed">Equipment seed (same number = same rolls)</string>
+    <string name="dungeon_test_set">Activate the class isotope set bonus</string>
+    <string name="dungeon_test_equipment_floor">Equipment drop floor (1–10,000)</string>
 </resources>

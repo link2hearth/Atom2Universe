@@ -25,15 +25,15 @@ class NewArchetypesTest {
     }
 
     /** Un gobelin solide dont le d20 d'attaque sort 20 (il touche toujours). [ambush] : il frappe avant le héros. */
-    private fun fight(hero: Hero, hp: Int = 100000, damage: Int = 10, ambush: Boolean = false) =
-        Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, damage, 1, 1)), ambush = ambush, rng = Random(1), attackDie = { 20 })
+    private fun fight(hero: Hero, hp: Int = 100000, damage: Int = 10, ambush: Boolean = false, die: Int = 20) =
+        Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, damage, 1, 1)), ambush = ambush, rng = Random(1), attackDie = { die })
 
     // ── L'armure ────────────────────────────────────────────────────────────────
 
     @Test
-    fun lesCinqPoidsGardentLaMoyenneDArmureEtDeVitesse() {
+    fun lesSixPoidsGardentLaMoyenneDArmureEtDeVitesse() {
         val n = ArmorWeight.entries.size
-        assertEquals(5, n)
+        assertEquals(6, n)
         assertEquals(1f, ArmorWeight.entries.sumOf { it.armorMult.toDouble() }.toFloat() / n, 0.0001f)
         assertEquals(0f, ArmorWeight.entries.sumOf { it.speedPerPiece.toDouble() }.toFloat() / n, 0.0001f)
     }
@@ -78,7 +78,7 @@ class NewArchetypesTest {
     @Test
     fun laRouladeParfaiteEviteLeCoupEtRelevePlusTardLeProchainCoup() {
         val hero = heroOf(Archetype.VAGABOND)
-        val c = fight(hero, ambush = true)
+        val c = fight(hero, ambush = true, die = 1)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.PERFECT)
         assertTrue(s.dodged)
@@ -98,7 +98,7 @@ class NewArchetypesTest {
         assertEquals(Hero.BASE_CRIT_MULT + gear + IsotopeSets.CRIT_DAMAGE_BONUS, hero.critMult, 0.001f)
         val c = fight(hero)
         c.chain(0, Timing.MISS, Timing.MISS)
-        assertEquals(hero.spellCooldown(IsotopeSets.SPECIAL_COOLDOWN), hero.specialCooldown)
+        assertEquals(hero.spellCooldown(IsotopeSets.SPECIAL_COOLDOWN).coerceAtLeast(Hero.MIN_SPECIAL_COOLDOWN), hero.specialCooldown)
     }
 
     // ── Le nécromancien ─────────────────────────────────────────────────────────
@@ -248,7 +248,7 @@ class NewArchetypesTest {
 
     @Test
     fun laRouladePreparelProchainCoupEtSeVoit() {
-        val c = fight(heroOf(Archetype.VAGABOND), ambush = true)
+        val c = fight(heroOf(Archetype.VAGABOND), ambush = true, die = 1)
         assertTrue(!c.rollReady)
         c.startEnemyTurn()
         c.resolveStrike(0, Timing.PERFECT)

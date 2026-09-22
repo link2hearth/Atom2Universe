@@ -111,7 +111,7 @@ internal class DungeonSceneArt {
     }
     fun drawPaperDoll(c: Canvas, equipment: Map<EquipSlot, DemoGear>, images: Map<EquipSlot, Bitmap>,
         windup: Boolean = false, swing: Boolean = false, casting: Boolean = false,
-        blocking: Boolean = false, animateIdle: Boolean = false, clock: Float = 0f, nod: Float = 0f) {
+        blocking: Boolean = false, animateIdle: Boolean = false, clock: Float = 0f, nod: Float = 0f, castAngle: Float = -25f) {
         fun gear(slot: EquipSlot) = equipment.getValue(slot)
         fun gearBitmap(slot: EquipSlot) = images.getValue(slot)
         fun wornPiece(c: Canvas, slot: EquipSlot, x: Float, y: Float) {
@@ -123,24 +123,31 @@ internal class DungeonSceneArt {
             else intArrayOf(0xFFAA7964.toInt(), 0xFFD5AA89.toInt(), 0xFFE8C5A3.toInt())
         val bowOnBack = gear(EquipSlot.OFFHAND).equipped && gear(EquipSlot.OFFHAND).family == Archetype.ROGUE
         if (bowOnBack) {
-            // Pointe derrière l'épaule libre, à l'opposé de l'arme ; le miroir de scène
-            // s'applique ensuite à l'ensemble du personnage, arc compris.
+            // Corde en diagonale derrière l'épaule, courbure vers l'extérieur du dos.
+            // L'icône du jeu est verticale (16 × 24), celle de la démo horizontale (25 × 9).
+            val bow = gearBitmap(EquipSlot.OFFHAND)
             c.save()
-            c.translate(9f, 17f)
-            c.rotate(60f)
-            c.scale(1.25f, 1.25f)
-            sprite(c, gearBitmap(EquipSlot.OFFHAND), -12f, -4f, 1f)
+            c.translate(11f, 16f)
+            if (bow.width > bow.height) {
+                c.rotate(45f)
+                sprite(c, bow, -12f, -1f, 1f)
+            } else {
+                c.rotate(-45f)
+                c.scale(-1f, 1f)
+                sprite(c, bow, -3f, -12f, 1f)
+            }
             c.restore()
         }
         // Bassin et jambes sous les pièces, pas de jambes redessinées par-dessus les bottes.
         box(c, 8f, 22f, 12f, 6f, ink)
-        box(c, 9f, 23f, 4f, 7f, tones[0])
-        box(c, 16f, 23f, 4f, 7f, tones[0])
+        val legTone = if (gear(EquipSlot.BOOTS).equipped) tones[0] else 0xFF394454.toInt()
+        box(c, 9f, 23f, 4f, 7f, legTone)
+        box(c, 16f, 23f, 4f, 7f, legTone)
         wornPiece(c, EquipSlot.BOOTS, 6f, 26f)
         // Bras court : raccord arrondi au coude, poignée au point (8, 2).
         c.save()
         c.translate(19f, 15f)
-        c.rotate(when { swing -> 70f; windup -> -55f; casting -> -25f; else -> 8f })
+        c.rotate(when { swing -> 70f; windup -> -55f; casting -> castAngle; else -> 8f })
         path.reset()
         path.moveTo(0f, 0f)
         path.lineTo(3f, 4f)

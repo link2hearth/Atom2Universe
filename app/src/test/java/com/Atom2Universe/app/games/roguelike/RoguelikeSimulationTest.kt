@@ -234,11 +234,12 @@ class RoguelikeSimulationTest {
 
     /** La spécialisation guide le bot sans lui interdire les autres reliques ni les autres sets. */
     private fun preferredStat(wanted: Archetype): StatType = when (wanted) {
+        Archetype.BARBARIAN -> StatType.STR
         Archetype.WARRIOR -> StatType.CON
         Archetype.ROGUE -> StatType.DEX
-        Archetype.VAGABOND -> StatType.STR
-        Archetype.MAGE -> StatType.WIS
-        Archetype.NECROMANCER -> StatType.INT
+        Archetype.VAGABOND -> StatType.END
+        Archetype.MAGE -> StatType.INT
+        Archetype.NECROMANCER -> StatType.WIS
     }
 
     /**
@@ -1615,12 +1616,13 @@ class RoguelikeSimulationTest {
                 // devant un gros coup, le mage lève ses doubles dès qu'il n'en a plus
                 val exposed = alive.filter { c.isExposed(c.enemies[it]) }.minByOrNull { c.enemies[it].hp }
                 val special = if (!useSpecial || !c.canUseSpecial()) null else when (c.hero.archetype) {
-                    Archetype.ROGUE   -> exposed?.let { { c.deadlyStrike(it, strike(skill, rng)); Unit } }
+                    Archetype.ROGUE   -> exposed?.let { { c.deadlyStrike(it, strike(skill, rng, c.hero)); Unit } }
                     // Garde et doubles ne frappent pas : jamais juste après un autre tour sans frapper
                     Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.2f && !lastWasSupport) ({ c.guard(); lastWasSupport = true }) else null
                     Archetype.MAGE    -> if (c.mirrorImages == 0 && !lastWasSupport) ({ c.mirrorImage(); lastWasSupport = true }) else null
                     // Deux coups d'arme : il enchaîne dès qu'il peut. Le nécromancien invoque ses pantins, puis rappelle les tombés.
-                    Archetype.VAGABOND -> ({ c.chain(target, strike(skill, rng), strike(skill, rng)); Unit })
+                    Archetype.BARBARIAN -> ({ c.smash(target, strike(skill, rng, c.hero)); Unit })
+                    Archetype.VAGABOND -> ({ c.chain(target, strike(skill, rng, c.hero), strike(skill, rng, c.hero)); Unit })
                     Archetype.NECROMANCER -> if ((c.puppetHp.isEmpty() || c.puppetHp.any { it <= 0 }) && !lastWasSupport) ({ c.recallPuppets(); lastWasSupport = true }) else null
                     null -> null
                 }
@@ -1641,17 +1643,17 @@ class RoguelikeSimulationTest {
                     combo != null -> {
                         cs?.let { it.combos++ }
                         val r = combo.first
-                        if (r == null) c.attack(combo.second, strike(skill, rng))
-                        else { cs?.cast(r); c.castRelic(r, combo.second, strike(skill, rng)); lastWasSupport = !r.hits }
+                        if (r == null) c.attack(combo.second, strike(skill, rng, c.hero))
+                        else { cs?.cast(r); c.castRelic(r, combo.second, strike(skill, rng, c.hero)); lastWasSupport = !r.hits }
                     }
-                    ready != null -> { cs?.let { it.casts++; it.cast(ready) }; c.castRelic(ready, aimAt(ready), strike(skill, rng)); lastWasSupport = !ready.hits }
-                    else -> c.attack(target, strike(skill, rng))
+                    ready != null -> { cs?.let { it.casts++; it.cast(ready) }; c.castRelic(ready, aimAt(ready), strike(skill, rng, c.hero)); lastWasSupport = !ready.hits }
+                    else -> c.attack(target, strike(skill, rng, c.hero))
                 }
             } else {
                 val (_, attackers) = c.startEnemyTurn()
                 for (a in attackers) {
                     if (c.phase != CombatPhase.ENEMY_TURN) break
-                    c.resolveStrike(a, parry(skill, rng, guarding = c.guarding, slowed = c.hourglassStrikes > 0))
+                    c.resolveStrike(a, parry(skill, rng, c.hero, guarding = c.guarding, slowed = c.hourglassStrikes > 0))
                 }
                 c.endEnemyTurn()
             }
@@ -1659,22 +1661,40 @@ class RoguelikeSimulationTest {
         fs.turnsInFight += turns
     }
 
-    private fun strike(s: Skill, rng: Random): Timing {
-        val x = rng.nextFloat()
-        return when { x < s.strikePerfect -> Timing.PERFECT; x < s.strikePerfect + s.strikeGood -> Timing.GOOD; else -> Timing.MISS }
+    /** Erreurs temporelles calibrées sur les anciennes fenêtres ; les nouvelles règles jugent le geste. */
+    private fun gestureError(perfect: Float, good: Float, oldPerfectMs: Float, oldGoodMs: Float,
+                             oldHalfDuration: Float, rng: Random): Float {
+        val roll = rng.nextFloat()
+        val (low, high) = when {
+            roll < perfect -> 0f to oldPerfectMs
+            roll < perfect + good -> oldPerfectMs to oldGoodMs
+            else -> oldGoodMs to oldHalfDuration
+        }
+        return low + rng.nextFloat() * (high - low)
     }
 
-    /**
-     * En garde, la fenêtre de parade double : les ratés sont divisés par 1,6, les parfaits
-     * multipliés d'autant. Sous le Sablier (fenêtre ×1,5, élan plus lent) : encore ×1,4.
-     */
-    private fun parry(s: Skill, rng: Random, guarding: Boolean = false, slowed: Boolean = false): Timing {
-        val k = (if (guarding) 1.6f else 1f) * (if (slowed) 1.4f else 1f)
-        val miss = (1f - s.parryPerfect - s.parryGood) / k
-        val perfect = (s.parryPerfect * k).coerceAtMost(1f - miss)
-        val good = 1f - miss - perfect
-        val x = rng.nextFloat()
-        return when { x < perfect -> Timing.PERFECT; x < perfect + good -> Timing.GOOD; else -> Timing.MISS }
+    private fun strike(s: Skill, rng: Random, hero: Hero): Timing {
+        val error = gestureError(s.strikePerfect, s.strikeGood, 1350f * .045f,
+            1350f * .13f, 675f, rng)
+        val duration = CombatTiming.strikeMs(hero)
+        return when {
+            error <= duration * CombatTiming.strikePerfect(hero) -> Timing.PERFECT
+            error <= duration * CombatTiming.strikeGood(hero) -> Timing.GOOD
+            else -> Timing.MISS
+        }
+    }
+
+    private fun parry(s: Skill, rng: Random, hero: Hero, guarding: Boolean = false, slowed: Boolean = false): Timing {
+        // Même règle temporelle que CombatView : garde et Sablier multiplient les fenêtres.
+        val scale = (if (guarding) 2f else 1f) * (if (slowed) Relic.HOURGLASS_SLOW else 1f)
+        // La préparation plus courte laisse moins de temps au joueur simulé pour réagir.
+        val error = gestureError(s.parryPerfect, s.parryGood, 70f, 160f, 475f, rng) *
+            950f / CombatTiming.WINDUP_MS
+        return when {
+            error <= CombatTiming.parryPerfect(hero) * scale -> Timing.PERFECT
+            error <= CombatTiming.parryGood(hero) * scale -> Timing.GOOD
+            else -> Timing.MISS
+        }
     }
 
     // ── Carte : ce qu'un joueur raisonnable ferait avec ce qu'il voit ───────────

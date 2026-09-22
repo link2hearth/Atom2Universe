@@ -57,9 +57,18 @@ internal object EquipmentArt {
                 r(5, top, 3, 15-top, dark); r(6, top+1, 2, 13-top, metal); r(6, top+1, 1, 11-top, light)
                 r(3, 14, 8, 2, dark); r(4, 14, 6, 1, gold); r(6, 16, 2, 5, wood); r(5, 21, 4, 1, gold)
             }
+            ItemBase.SPEAR -> {
+                r(7, 6, 2, 17, dark); r(7, 8, 1, 14, wood)
+                r(6, 2, 4, 7, dark); r(7, 0, 2, 9, metal); r(7, 1, 1, 6, light)
+                r(6, 9, 4, 2, gold)
+            }
             ItemBase.AXE -> {
                 handle(); r(5, 2, 3, 12, wood); r(2, 3, 10, 7, dark); r(1, 5, 12, 4, dark)
                 r(2, 5, 10, 3, metal); r(3, 4, 8, 2, metal); r(2, 5, 1, 3, light); r(11, 5, 1, 3, light); r(6, 3, 1, 8, gold)
+            }
+            ItemBase.CLUB -> {
+                handle(); r(4, 1, 7, 12, dark); r(5, 2, 5, 10, wood)
+                r(5, 4, 5, 2, metal); r(5, 8, 5, 2, metal); r(6, 2, 1, 10, gold)
             }
             ItemBase.MACE -> {
                 handle(); r(3, 2, 8, 9, dark); r(2, 4, 10, 5, dark); r(3, 4, 8, 5, metal)

@@ -16,7 +16,7 @@ interface Labeled {
 
 // ─── Stats ──────────────────────────────────────────────────────────────────────
 
-/** Les six caractéristiques D&D, plus les bonus que donnent les objets. */
+/** Les sept caractéristiques D&D, plus les bonus que donnent les objets. */
 enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolean) : Labeled {
     STR          (R.string.roguelike_attr_str,             false),
     DEX          (R.string.roguelike_attr_dex,             false),
@@ -24,6 +24,7 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
     INT          (R.string.roguelike_attr_int,             false),
     WIS          (R.string.roguelike_attr_wis,             false),
     CHA          (R.string.roguelike_attr_cha,             false),
+    END          (R.string.roguelike_attr_end,             false),
     ARMOR        (R.string.roguelike_stattype_armor,       false),
     MAX_HP       (R.string.roguelike_stattype_maxhp,       false),
     WEAPON_DMG   (R.string.roguelike_stattype_weapon_dmg,  false),
@@ -35,7 +36,7 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
     SPEED        (R.string.roguelike_stattype_speed,       true);
 
     companion object {
-        val ATTRIBUTES = listOf(STR, DEX, CON, INT, WIS, CHA)
+        val ATTRIBUTES = listOf(STR, DEX, CON, INT, WIS, CHA, END)
     }
 }
 
@@ -125,12 +126,13 @@ enum class ItemBase(
     val armorBase: Float,
     val spellBonus: Float,
 ) {
-    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  StatType.STR, 1.00f, 0f, 0f),
+    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  null,         1.00f, 0f, 0f),
     AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.10f, 0f, 0f),
     DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 1.10f, 0f, 0f),
     MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.05f, 0f, 0f),
     STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 1.10f, 0f, 0.10f),
     SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 1.10f, 0f, 0.05f),
+    SPEAR  (R.string.roguelike_base_spear,   EquipSlot.WEAPON,  StatType.END, 1.10f, 0f, 0f),
     SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f),
     ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f),
     // Une main gauche par archétype (voir DONJON.md) : le bouclier du guerrier, l'orbe du mage, l'arc
@@ -138,7 +140,8 @@ enum class ItemBase(
     // avec les archétypes ; leur part de défense, avec l'équilibrage des mains gauches.
     BOW     (R.string.roguelike_base_bow,      EquipSlot.OFFHAND, StatType.DEX, 0f,    0f, 0f),
     GRIMOIRE(R.string.roguelike_base_grimoire, EquipSlot.OFFHAND, StatType.WIS, 0f,    0f, 0f),
-    LANTERN (R.string.roguelike_base_lantern,  EquipSlot.OFFHAND, StatType.STR, 0f,    0f, 0f),
+    CLUB    (R.string.roguelike_base_club, EquipSlot.OFFHAND, StatType.STR, 0f, 0f, 0f),
+    LANTERN (R.string.roguelike_base_lantern,  EquipSlot.OFFHAND, StatType.END, 0f,    0f, 0f),
     HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f, 0f),
     ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f, 0f),
     BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f, 0f),
@@ -180,7 +183,9 @@ enum class ArmorWeight(
         R.string.roguelike_base_cap, R.string.roguelike_base_hauberk, R.string.roguelike_base_greaves, dexCap = 2),
     /** Sous le tissu : le nécromancien, qui compte sur ses pantins. */
     ULTRALIGHT(R.string.roguelike_weight_ultralight, 0.5f, 0, true, 0.025f,
-        R.string.roguelike_base_veil, R.string.roguelike_base_shroud, R.string.roguelike_base_wraps);
+        R.string.roguelike_base_veil, R.string.roguelike_base_shroud, R.string.roguelike_base_wraps),
+    FUR(R.string.roguelike_weight_fur, 1.0f, 0, true, 0f,
+        R.string.roguelike_base_fur_helmet, R.string.roguelike_base_fur_armor, R.string.roguelike_base_fur_boots, dexCap = 1);
 
     fun nounRes(base: ItemBase) = when (base) {
         ItemBase.HELMET -> helmetRes
@@ -222,7 +227,9 @@ data class Equipment(
     /** Le numéro du set d'isotope dont la pièce fait partie, ou null : [IsotopeSet.index], le numéro atomique plus 118 par tour de table. Le nom est historique. */
     val isotopeZ: Int? = null,
 ) {
-    val isotopeSet get() = isotopeZ?.let(IsotopeSets::of)
+    /** Les épées conservent la caractéristique tirée dans leurs implicites, y compris au rechargement. */
+    val damageAttribute get() = base.attribute ?: implicits.firstOrNull { it.type in StatType.ATTRIBUTES }?.type ?: StatType.STR
+    val isotopeSet get() = isotopeZ?.let(IsotopeSets::of)?.let { if (weight == ArmorWeight.FUR) it.copy(barbarian = true) else it }
     val slot get() = base.slot
     /** Ce que la pièce ajoute à la CA : son poids, ou le bouclier. */
     val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
@@ -331,7 +338,7 @@ object AffixBudget {
      * (+4 ms par point sur 160). On compte donc ses points 1,8 fois quand on mesure ce
      * qu'elle vaut, sinon son axe paraîtrait deux fois trop étroit.
      */
-    private const val DEX_PARRY_FACTOR = 1.8f
+    // Le timing appartient désormais à END, pas à DEX.
 
     /** Coups d'épée donnés dans un combat type — sert à mesurer ce que vaut le vol de vie. */
     private const val HITS_PER_FIGHT = 5f
@@ -388,10 +395,10 @@ object AffixBudget {
     private fun mainImplicit(p: Int) = LootSystem.mainAttribute(p)
     /** Une caractéristique donnée par une des cinq autres pièces, au hasard. */
     private fun sideImplicit(p: Int) = LootSystem.sideAttribute(p)
-    /** Ces cinq tirages au hasard se répartissent sur les six caractéristiques. */
-    private fun spread(p: Int) = 5f * sideImplicit(p) / 6f
+    /** Ces cinq tirages au hasard se répartissent sur les caractéristiques disponibles. */
+    private fun spread(p: Int) = 5f * sideImplicit(p) / StatType.ATTRIBUTES.size
 
-    /** L'épée donne la FOR, le bouclier la CON : ces deux-là sont mieux servies. */
+    /** Référence de budget : une arme de FOR et un bouclier de CON. */
     fun refStr(p: Int) = Hero.BASE_ATTRIBUTE + mainImplicit(p) + spread(p)
     fun refCon(p: Int) = refStr(p)
     /** DEX, INT, SAG, CHA : seulement ce qui tombe au hasard. */
@@ -422,8 +429,8 @@ object AffixBudget {
      */
     fun perPoint(type: StatType, p: Int): Float = when (type) {
         // Axe : dégâts à l'arme
-        StatType.STR         -> 0.04f * w(p) / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p))
-        StatType.DEX         -> DEX_PARRY_FACTOR * 0.01f * w(p) * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
+        StatType.STR, StatType.END -> 0.04f * w(p) / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p))
+        StatType.DEX         -> 0.01f * w(p) * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.WEAPON_DMG  -> 1f / refWeaponDamage(p)
         StatType.CRIT_CHANCE -> (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.CRIT_DAMAGE -> refCritChance(p) / critFactor(p)
@@ -531,6 +538,10 @@ object LootSystem {
     /** Puissance typique d'un étage : 1 à l'étage 1, ~41 à l'étage 100, ~4 000 à l'étage 10 000. */
     fun powerCenter(floor: Int) = 1f + (floor - 1) * 0.4f
 
+    /** Même tirage de puissance pour les drops ordinaires et les objets du banc de test. */
+    fun rollPowerForFloor(floor: Int, rng: Random) =
+        (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceAtLeast(1)
+
     /**
      * La puissance de l'étage 100. Les **taux** que les objets donnent d'office (le bonus
      * « dégâts des sorts » du bâton et de l'orbe) s'y arrêtent : un taux ne se dilue pas.
@@ -572,7 +583,7 @@ object LootSystem {
      */
     private val affixWeights: Map<StatType, Float> = mapOf(
         StatType.STR to 10f, StatType.DEX to 10f, StatType.CON to 10f, StatType.INT to 10f,
-        StatType.WIS to 8f,  StatType.CHA to 6f,
+        StatType.WIS to 8f,  StatType.CHA to 6f, StatType.END to 10f,
         StatType.ARMOR to 10f, StatType.MAX_HP to 10f,
         StatType.WEAPON_DMG to 6f, StatType.SPELL_DMG to 6f,
         StatType.CRIT_CHANCE to 5f, StatType.CRIT_DAMAGE to 5f,
@@ -619,10 +630,10 @@ object LootSystem {
         // Dans la tranche d'un set d'isotope, une part des objets en est une pièce. Le tirage n'a lieu
         // que là : partout ailleurs, les dés tombent comme avant.
         IsotopeSets.forFloor(floor)?.let { set ->
-            if (rng.nextFloat() < IsotopeSets.dropShare) return createSetPiece(set, IsotopeSets.BASES.random(rng), lootId, rng)
+            if (rng.nextFloat() < IsotopeSets.dropShare) return createSetPiece(if (rng.nextInt(6) == 0) set.copy(barbarian = true) else set, IsotopeSets.BASES.random(rng), lootId, rng)
         }
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
-        val power = (powerCenter(floor) + rng.nextFloat() * 3f - 2f).roundToInt().coerceAtLeast(1)
+        val power = rollPowerForFloor(floor, rng)
         return create(pickBase(rng), power, pickRarity(floor, rng), lootId, rng)
     }
 
@@ -631,7 +642,7 @@ object LootSystem {
      * varie un peu d'une pièce à l'autre ([IsotopeSets.basePower]).
      */
     fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random): Equipment {
-        val power = IsotopeSets.basePower(set.z) + rng.nextInt(IsotopeSets.POWER_SPREAD)
+        val power = IsotopeSets.basePower(set.index) + rng.nextInt(IsotopeSets.POWER_SPREAD)
         return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.index)
     }
 
@@ -650,7 +661,7 @@ object LootSystem {
 
         val implicits = mutableListOf<StatRoll>()
         val attr = base.attribute ?: StatType.ATTRIBUTES.random(rng)
-        val attrValue = if (base.attribute != null) mainAttribute(power) else sideAttribute(power)
+        val attrValue = if (base.attribute != null || base == ItemBase.SWORD) mainAttribute(power) else sideAttribute(power)
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
         if (base.armorBase > 0f)
             implicits += StatRoll(StatType.MAX_HP, (base.armorBase * HP_PER_ARMOR_BASE * s).roundToInt().toFloat())
@@ -682,9 +693,9 @@ object LootSystem {
 
     private fun pickBase(rng: Random): ItemBase = weighted(listOf(
         ItemBase.SWORD to 6f, ItemBase.AXE to 5f, ItemBase.DAGGER to 5f, ItemBase.MACE to 4f,
-        ItemBase.STAFF to 5f, ItemBase.SCEPTER to 4f,
+        ItemBase.STAFF to 5f, ItemBase.SCEPTER to 4f, ItemBase.SPEAR to 5f,
         ItemBase.SHIELD to 6f, ItemBase.ORB to 5f,
-        ItemBase.BOW to 4f, ItemBase.GRIMOIRE to 4f, ItemBase.LANTERN to 4f,
+        ItemBase.CLUB to 4f, ItemBase.BOW to 4f, ItemBase.GRIMOIRE to 4f, ItemBase.LANTERN to 4f,
         ItemBase.HELMET to 10f, ItemBase.ARMOR to 12f, ItemBase.BOOTS to 10f,
         ItemBase.AMULET to 7f, ItemBase.RING to 8f,
     ), rng)
@@ -709,11 +720,12 @@ object LootSystem {
             ItemBase.AXE     -> pick(91 + wo, 5..9)
             ItemBase.MACE    -> pick(92 + wo, 0..3)
             ItemBase.STAFF   -> pick(93 + wo, 0..3)
+            ItemBase.SPEAR   -> pick(93 + wo, 0..3)
             ItemBase.SCEPTER -> pick(93 + wo, 4..7)
             ItemBase.SHIELD  -> pick(134, 2..4)
             ItemBase.ORB     -> pick(133, 0..5)
             // Icônes provisoires : celles de l'orbe, en attendant les vraies
-            ItemBase.BOW, ItemBase.GRIMOIRE, ItemBase.LANTERN -> pick(133, 0..5)
+            ItemBase.CLUB, ItemBase.BOW, ItemBase.GRIMOIRE, ItemBase.LANTERN -> pick(133, 0..5)
             ItemBase.HELMET  -> pick(listOf(122, 119, 125)[shade], 0..15)
             ItemBase.ARMOR   -> pick(listOf(123, 120, 126)[shade], 0..15)
             ItemBase.BOOTS   -> pick(listOf(124, 121, 127)[shade], 0..15)
