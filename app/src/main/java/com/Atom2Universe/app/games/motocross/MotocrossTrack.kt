@@ -7,14 +7,22 @@ import kotlin.random.Random
 internal class MotocrossTrack(val seed: Int) {
     data class Point(val x: Float, val y: Float)
     data class Section(val start: Float, val end: Float, val kind: Kind, val difficulty: Int)
-    enum class Kind { ROLLERS, TABLE, DOUBLE, VALLEY, STEPS, RIDGE, JUMP, REST, BRIDGE }
+    enum class Kind { ROLLERS, TABLE, DOUBLE, VALLEY, STEPS, RIDGE, JUMP, REST, BRIDGE, LOOP, TRANSFER }
+    /** État propre à la moto : une branche éloignée de la boucle est dans un autre plan. */
+    class RouteState {
+        val ignoredDecks = HashSet<Int>()
+        val loopCursors = HashMap<Int, Int>()
+        fun clear() { ignoredDecks.clear(); loopCursors.clear() }
+        fun accepts(roadId: Int, segment: Int, loop: Boolean): Boolean = roadId !in ignoredDecks &&
+            (loopCursors[roadId]?.let { abs(segment - it) <= 36 } ?: !loop)
+    }
     private data class Module(val kind: Kind, val difficulty: Int, val knots: List<Point>, val launchXs: Set<Float>)
 
     val points = ArrayList<Point>()
     val sections = ArrayList<Section>()
     val checkpoints = ArrayList<Float>()
     val roads = ArrayList<MotocrossRoad>()
-    private data class Rail(val a: Point, val b: Point, val roadId: Int) {
+    private data class Rail(val a: Point, val b: Point, val roadId: Int, val segment: Int, val loop: Boolean) {
         val dx = b.x - a.x
         val dy = b.y - a.y
         val length2 = dx * dx + dy * dy
@@ -32,22 +40,46 @@ internal class MotocrossTrack(val seed: Int) {
         checkpoints.add(3f)
         var x = 12f
         val recent = ArrayList<Module>()
+        val recentStructures = ArrayList<MotocrossStructures.Recipe>()
         repeat(36) { index ->
             val tier = when { index < 8 -> 0; index < 20 -> 1; else -> 2 }
-            val special = if (index % 8 == 1) MotocrossStructures.bridges[random.nextInt(tier + 1)] else null
+            val candidates = when {
+                index == 7 || index == 16 || index == 28 -> MotocrossStructures.transfers
+                index % 9 == 5 -> MotocrossStructures.loops
+                index % 3 == 1 -> MotocrossStructures.bridges
+                else -> emptyList()
+            }.filter { it.difficulty <= tier }
+            // Garantir au moins un réseau à trois niveaux, puis un à quatre par circuit.
+            val featured = when (index) {
+                10 -> candidates.filter { it.levels == 3 }
+                25 -> candidates.filter { it.levels == 4 }
+                else -> emptyList()
+            }
+            val fresh = featured.ifEmpty { candidates.filter { it !in recentStructures }.ifEmpty { candidates } }
+            val special = fresh.takeIf { it.isNotEmpty() }?.let { it[random.nextInt(it.size)] }
             if (special != null) {
                 val end = x + special.ground.last().x
-                sections.add(Section(x, end, Kind.BRIDGE, tier))
+                val kind = when { special.transfer -> Kind.TRANSFER; special.loop -> Kind.LOOP; else -> Kind.BRIDGE }
+                sections.add(Section(x, end, kind, special.difficulty))
                 for (p in special.ground.drop(1)) points.add(Point(x + p.x, p.y))
-                for (deck in special.decks) roads.add(MotocrossRoad(deck.map { Point(x + it.x, it.y) }))
+                for ((id, deck) in special.decks.withIndex()) roads.add(MotocrossRoad(
+                    deck.map { Point(x + it.x, it.y) }, special.loop || id in special.guidedDecks))
+                recentStructures.add(special)
+                if (recentStructures.size > 4) recentStructures.removeAt(0)
                 checkpoints.add(end - 2f)
                 x = end
                 return@repeat
             }
             val module = if (index % 5 == 4) REST else {
                 val pool = MODULES.filter { it.difficulty <= tier && it !in recent }
-                val jumps = pool.filter { it.kind == Kind.JUMP }
-                val choices = if (index % 6 == 2 && jumps.isNotEmpty()) jumps else pool
+                val featuredKind = when (index) {
+                    0 -> Kind.TABLE
+                    3 -> Kind.VALLEY
+                    12 -> Kind.STEPS
+                    21 -> Kind.RIDGE
+                    else -> if (index % 6 == 2) Kind.JUMP else null
+                }
+                val choices = pool.filter { it.kind == featuredKind }.ifEmpty { pool }
                 choices[random.nextInt(choices.size)]
             }
             val end = x + module.knots.last().x
@@ -65,8 +97,9 @@ internal class MotocrossTrack(val seed: Int) {
         }
         finishX = x + 8f
         points.add(Point(finishX + 30f, 0f))
-        for ((roadId, road) in roads.withIndex()) for ((a, b) in road.points.zipWithNext()) {
-            val rail = Rail(a, b, roadId)
+        for ((roadId, road) in roads.withIndex()) for ((segment, pair) in road.points.zipWithNext().withIndex()) {
+            val (a, b) = pair
+            val rail = Rail(a, b, roadId, segment, road.loop)
             require(rail.length2 > 0f)
             for (bucket in floor(min(a.x, b.x) / 8f).toInt()..floor(max(a.x, b.x) / 8f).toInt()) {
                 railBuckets.getOrPut(bucket) { ArrayList() }.add(rail)
@@ -93,7 +126,7 @@ internal class MotocrossTrack(val seed: Int) {
 
     /** Point de contact le plus proche, normale sortante. Pas d'allocation par roue. */
     fun contact(x: Float, y: Float, mountX: Float, mountY: Float,
-                upX: Float, upY: Float, ignoredDecks: Set<Int>, out: FloatArray) {
+                upX: Float, upY: Float, route: RouteState, out: FloatArray) {
         var best = Float.POSITIVE_INFINITY
         var i = segmentAt(x - 1.2f)
         while (i < points.lastIndex && points[i].x <= x + 1.2f) {
@@ -117,7 +150,7 @@ internal class MotocrossTrack(val seed: Int) {
         for (bucket in floor((x - 1.2f) / 8f).toInt()..floor((x + 1.2f) / 8f).toInt()) {
             val rails = railBuckets[bucket] ?: continue
             for (rail in rails) {
-                if (rail.roadId in ignoredDecks) continue
+                if (!route.accepts(rail.roadId, rail.segment, rail.loop)) continue
                 if (rail.nx * upX + rail.ny * upY <= .2f) continue
                 val mountSide = (mountX - rail.a.x) * rail.nx + (mountY - rail.a.y) * rail.ny
                 if (mountSide <= .02f) continue // Aucun accrochage depuis le dessous d'un pont.
@@ -149,12 +182,12 @@ internal class MotocrossTrack(val seed: Int) {
     }
 
     /** Collision avec les surfaces de la voie suivie, jamais le pont traversé dessous. */
-    fun hitsBody(x: Float, y: Float, radius: Float, ignoredDecks: Set<Int>): Boolean {
+    fun hitsBody(x: Float, y: Float, radius: Float, route: RouteState): Boolean {
         if (y - radius < height(x)) return true
         val reach = radius + .08f
         for (bucket in floor((x - reach) / 8f).toInt()..floor((x + reach) / 8f).toInt()) {
             for (rail in railBuckets[bucket] ?: continue) {
-                if (rail.roadId in ignoredDecks) continue
+                if (!route.accepts(rail.roadId, rail.segment, rail.loop)) continue
                 val t = (((x - rail.a.x) * rail.dx + (y - rail.a.y) * rail.dy) / rail.length2).coerceIn(0f, 1f)
                 val dx = x - rail.a.x - t * rail.dx
                 val dy = y - rail.a.y - t * rail.dy
@@ -166,13 +199,42 @@ internal class MotocrossTrack(val seed: Int) {
 
     /** Garder la voie basse jusqu'à la sortie complète du tablier, même quand
      * sa rampe de sortie finit par descendre sous le casque puis sous les roues. */
-    fun updateUnderpasses(x: Float, y: Float, ignoredDecks: MutableSet<Int>) {
+    fun updateUnderpasses(x: Float, y: Float, route: RouteState) {
+        val ignoredDecks = route.ignoredDecks
         for ((id, road) in roads.withIndex()) {
             if (x < road.minX - 2f || x > road.maxX + 2f) {
                 ignoredDecks.remove(id)
+                route.loopCursors.remove(id)
                 continue
             }
             if (id in ignoredDecks) continue
+            if (road.loop) {
+                val cursor = route.loopCursors[id]
+                if (cursor == null) {
+                    val entry = road.points.first()
+                    if (x < entry.x - 1.4f) continue
+                    if (x > entry.x + 2f || y < entry.y - .12f) {
+                        ignoredDecks.add(id)
+                        continue
+                    }
+                    route.loopCursors[id] = 0
+                }
+                val previous = route.loopCursors.getValue(id)
+                var nearest = previous
+                var distance = Float.POSITIVE_INFINITY
+                for (i in max(0, previous - 24)..min(road.points.lastIndex, previous + 24)) {
+                    val p = road.points[i]
+                    val d = (x - p.x).pow(2) + (y - p.y).pow(2)
+                    if (d < distance) { distance = d; nearest = i }
+                }
+                // En cas de chute dans le cercle, rejoindre la voie basse sans attraper
+                // le mur de sortie. Freiner et reculer sur la branche reste possible.
+                if (distance > 16f) {
+                    ignoredDecks.add(id)
+                    route.loopCursors.remove(id)
+                } else route.loopCursors[id] = nearest
+                continue
+            }
             // Anticiper le nez de la moto avant que le châssis atteigne le bord.
             if (x < road.minX - 1.4f) continue
             val atX = x.coerceIn(road.minX, road.maxX)
@@ -188,6 +250,9 @@ internal class MotocrossTrack(val seed: Int) {
             if (y < deckY - .12f) ignoredDecks.add(id)
         }
     }
+
+    fun activeLoop(route: RouteState): MotocrossRoad? =
+        route.loopCursors.keys.firstOrNull { it !in route.ignoredDecks }?.let { roads[it] }
 
     /** Sol visible sous la moto, sans sélectionner un étage situé au-dessus d'elle. */
     fun heightBelow(x: Float, y: Float): Float {
@@ -241,6 +306,22 @@ internal class MotocrossTrack(val seed: Int) {
         // Les variantes restent fixes ; seul leur ordre change avec la graine.
         private val REST = module(Kind.REST, 0, 0f, 0f, 8f, 0f)
         private val MODULES = listOf(
+            module(Kind.TABLE, 0, 0f,0f, 4f,0f, 8f,1.2f, 13f,1.2f, 17f,0f,
+                21f,0f, 25f,1.6f, 31f,1.6f, 36f,0f, 41f,0f),
+            module(Kind.VALLEY, 0, 0f,0f, 4f,0f, 10f,-1f, 16f,0f,
+                22f,.9f, 28f,-1.2f, 35f,0f, 40f,0f),
+            module(Kind.STEPS, 1, 0f,0f, 4f,0f, 8f,.7f, 11f,.7f, 15f,1.4f,
+                18f,1.4f, 22f,2.1f, 26f,2.1f, 31f,1.2f, 35f,1.2f, 42f,0f, 47f,0f),
+            module(Kind.RIDGE, 1, 0f,0f, 4f,0f, 12f,1.8f, 17f,1.1f,
+                22f,2.2f, 27f,1.3f, 32f,2f, 41f,0f, 46f,0f),
+            module(Kind.TABLE, 1, 0f,0f, 5f,0f, 10f,1.6f, 16f,1.6f, 21f,.5f,
+                26f,2f, 32f,2f, 38f,0f, 43f,0f),
+            module(Kind.VALLEY, 2, 0f,0f, 5f,0f, 12f,-1.5f, 18f,.8f,
+                25f,-1.8f, 33f,1.6f, 40f,-1f, 47f,0f, 52f,0f),
+            module(Kind.STEPS, 2, 0f,0f, 4f,0f, 9f,1f, 12f,1f, 17f,2f,
+                21f,2f, 26f,3f, 30f,3f, 35f,2f, 39f,2f, 44f,1f, 48f,1f, 54f,0f, 59f,0f),
+            module(Kind.RIDGE, 2, 0f,0f, 5f,0f, 14f,2.5f, 20f,1.4f,
+                26f,2.8f, 33f,1.5f, 39f,2.3f, 49f,0f, 54f,0f),
             // Petites / moyennes, accessibles dès le départ.
             rhythm(Kind.ROLLERS, 0, .45f, 1.05f, .5f, .65f, 1.1f, .45f),
             rhythm(Kind.ROLLERS, 0, .4f, .6f, .85f, 1.1f, .8f, .55f, .4f),

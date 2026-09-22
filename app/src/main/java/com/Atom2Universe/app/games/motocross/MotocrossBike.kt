@@ -25,7 +25,8 @@ internal class MotocrossBike {
     var impact = 0f; private set
     val headLocalX: Float get() = .12f + lean * .30f
     val headLocalY: Float get() = 1.05f - impact * .08f
-    private val ignoredDecks = HashSet<Int>()
+    private val route = MotocrossTrack.RouteState()
+    fun activeLoop(track: MotocrossTrack): MotocrossRoad? = track.activeLoop(route)
     private val contact = FloatArray(4)
     private var forceX = 0f
     private var forceY = 0f
@@ -35,7 +36,7 @@ internal class MotocrossBike {
         x = atX; y = track.height(x) + .84f
         vx = 0f; vy = 0f; angle = 0f; angularVelocity = 0f; lean = 0f
         crashed = false; impact = 0f
-        ignoredDecks.clear()
+        route.clear()
         rear.compression = 0f; front.compression = 0f
         rear.spin = 0f; front.spin = 0f
         rear.grounded = false; front.grounded = false
@@ -45,7 +46,7 @@ internal class MotocrossBike {
 
     fun step(dt: Float, throttle: Boolean, brake: Boolean, leanInput: Float, track: MotocrossTrack) {
         if (crashed) return
-        track.updateUnderpasses(x, y, ignoredDecks)
+        track.updateUnderpasses(x, y, route)
         lean += (leanInput - lean) * (1f - exp(-10f * dt))
         impact *= exp(-9f * dt)
         forceX = -vx * .13f
@@ -82,9 +83,9 @@ internal class MotocrossBike {
         val ca = cos(angle); val sa = sin(angle)
         val headX = x + ca * headLocalX - sa * headLocalY
         val headY = y + sa * headLocalX + ca * headLocalY
-        track.updateUnderpasses(x, y, ignoredDecks)
-        if (track.hitsBody(headX, headY, .20f, ignoredDecks) ||
-            track.hitsBody(x, y, .13f, ignoredDecks) || y < -12f ||
+        track.updateUnderpasses(x, y, route)
+        if (track.hitsBody(headX, headY, .20f, route) ||
+            track.hitsBody(x, y, .13f, route) || y < -12f ||
             !x.isFinite() || !y.isFinite() || !angle.isFinite()) crashed = true
     }
 
@@ -102,7 +103,7 @@ internal class MotocrossBike {
         val restX = x + ca * localX + sa * REST
         val restY = y + sa * localX - ca * REST
         track.contact(restX, restY, x + ca * localX, y + sa * localX,
-            -sa, ca, ignoredDecks, contact)
+            -sa, ca, route, contact)
         val nx = contact[2]; val ny = contact[3]
         wheel.surfaceX = contact[0]; wheel.surfaceY = contact[1]
         wheel.normalX = nx; wheel.normalY = ny
