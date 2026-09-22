@@ -665,4 +665,5 @@
     <string name="roguelike_relic_venomous_wound_desc">Inflige %1$s–%2$s dégâts de poison et ajoute une dose (%5$s dégâts par tour) pendant %3$d tours de la cible. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_seismic_strike">Frappe sismique</string>
     <string name="roguelike_relic_seismic_strike_desc">Une frappe physique : %1$s–%2$s dégâts de base totaux répartis entre tous les ennemis vivants, avant critiques et réactions. Recharge : %4$d tours.</string>
+    <string name="roguelike_combat_puppet_hp_cost">Coût : %1$s PV</string>
 </resources>

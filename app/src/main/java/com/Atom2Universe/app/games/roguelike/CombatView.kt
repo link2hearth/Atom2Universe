@@ -135,11 +135,24 @@ class CombatView @JvmOverloads constructor(
     private val pOverlay = Paint().apply { color = 0xCC000000.toInt() }
     /** Rendu pixel-art partagé avec la démo, sans aucun bouton ni geste de celle-ci. */
     private val dungeonArt = DungeonCombatArt()
+    private val puppetArt = DungeonPuppetArt()
+    private var puppetAttackTargets = emptyList<Int>()
+    private var commandedPuppetAttack = false
+    private var visualPuppetTarget = -1
+    private var brokenMirror = -1
+    private var heroHurtImpact = false
+    private var puppetHpBeforeImpact = emptyList<Int>()
 
     // ── Démarrage ───────────────────────────────────────────────────────────────
 
     fun start(c: Combat, heroSprite: String) {
         combat = c
+        puppetAttackTargets = emptyList()
+        commandedPuppetAttack = false
+        visualPuppetTarget = -1
+        brokenMirror = -1
+        heroHurtImpact = false
+        puppetHpBeforeImpact = emptyList()
         dungeonArt.prepareCombat(c)
         visualAction = null
         spellTargets = emptyList()
@@ -269,6 +282,7 @@ class CombatView @JvmOverloads constructor(
 
     private fun resolveStrike(timing: Timing) {
         visualAction = pendingAction
+        commandedPuppetAttack = pendingAction == Action.Attack && combat?.puppetsAttack == true
         spellTargets = when ((pendingAction as? Action.Cast)?.relic?.target) {
             RelicTarget.ALL, RelicTarget.CHAIN -> listOf(target) + (combat?.aliveIndices()?.filter { it != target } ?: emptyList())
             RelicTarget.MISSILES, RelicTarget.SELF -> emptyList()
@@ -318,6 +332,7 @@ class CombatView @JvmOverloads constructor(
 
     /** Ce que la dernière action a fait à chaque ennemi touché, puis on passe au tour ennemi. */
     private fun showHits(hits: List<HitResult>) {
+        puppetAttackTargets = hits.filter { it.echo > 0 || commandedPuppetAttack && it.damage > 0 }.map { it.target }
         spellTargets = hits.map { it.target }
         hitTargets = hits.filter { !it.noDamage && it.damage > 0 }.map { it.target }.toSet()
         floatHits(hits)
@@ -363,6 +378,7 @@ class CombatView @JvmOverloads constructor(
      * il part tout de suite, et son nom s'affiche.
      */
     private fun castWithoutStrike(c: Combat, relic: Relic) {
+        commandedPuppetAttack = false
         visualAction = Action.Cast(relic)
         if (!c.enemies[target].alive) target = c.aliveIndices().first()
         val before = c.hero.hp
@@ -375,11 +391,22 @@ class CombatView @JvmOverloads constructor(
 
     /** Garde et Image miroir : pas de geste, le tour part tout de suite. */
     private fun useInstantSpecial(c: Combat) {
+        commandedPuppetAttack = false
         visualAction = null
+        puppetAttackTargets = emptyList()
         when (c.hero.archetype) {
             Archetype.WARRIOR -> { c.guard(); showBanner(context.getString(R.string.roguelike_combat_guard), 0xFFBCAAA4.toInt()) }
             Archetype.MAGE    -> { c.mirrorImage(); showBanner(context.getString(R.string.roguelike_combat_mirror_cast), 0xFFB39DDB.toInt()) }
-            Archetype.NECROMANCER -> { c.recallPuppets(); showBanner(context.getString(R.string.roguelike_combat_puppets), 0xFF80CBC4.toInt()) }
+            Archetype.NECROMANCER -> {
+                val cost = c.puppetRecallHpCost
+                val hits = c.recallPuppets()
+                floatText(context.getString(R.string.roguelike_combat_damage, num(cost)),
+                    heroRect.centerX(), heroRect.top, 0xFFEF5350.toInt(), false)
+                showBanner(context.getString(R.string.roguelike_combat_puppets), PUPPET_COLOR)
+                showHits(hits)
+                puppetAttackTargets = hits.map { it.target }
+                return
+            }
             else -> return
         }
         hitTargets = emptySet()
@@ -489,6 +516,11 @@ class CombatView @JvmOverloads constructor(
             return
         }
         attacker = next
+        brokenMirror = -1
+        puppetHpBeforeImpact = emptyList()
+        // Le même pantin que dans throughPuppets intercepte visuellement le coup.
+        visualPuppetTarget = c.puppetHp.indexOfFirst { it > 0 }
+        heroHurtImpact = false
         parry = null
         windupScale = if (c.hourglassStrikes > 0) Relic.HOURGLASS_SLOW else 1f
         enter(Stage.ENEMY_WINDUP)
@@ -496,7 +528,11 @@ class CombatView @JvmOverloads constructor(
 
     private fun resolveEnemyStrike(timing: Timing) {
         val c = combat ?: return
+        puppetHpBeforeImpact = c.puppetHp.toList()
         val strike = c.resolveStrike(attacker, timing)
+        heroHurtImpact = strike.damage > 0
+        brokenMirror = if (strike.imageHit) c.mirrorImages else -1
+        if (strike.charmed || strike.bledOut) visualPuppetTarget = -1
         val ar = enemyRects[attacker]
         if (strike.bleed > 0) {
             floatText(context.getString(R.string.roguelike_combat_damage, num(strike.bleed)), ar.centerX(), ar.top, BLEED_COLOR, false)
@@ -518,8 +554,10 @@ class CombatView @JvmOverloads constructor(
         }
         if (strike.absorbed > 0)
             floatText(context.getString(R.string.roguelike_combat_absorbed, num(strike.absorbed)), heroRect.centerX(), heroRect.bottom, BARRIER_COLOR, false)
-        if (strike.puppetAbsorbed > 0)
-            floatText(context.getString(R.string.roguelike_combat_puppet_absorbed, num(strike.puppetAbsorbed)), heroRect.centerX(), heroRect.bottom + 18f * sp, PUPPET_COLOR, false)
+        if (strike.puppetAbsorbed > 0) {
+            val defender = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else heroRect
+            floatText(context.getString(R.string.roguelike_combat_puppet_absorbed, num(strike.puppetAbsorbed)), defender.centerX(), defender.top, PUPPET_COLOR, false)
+        }
         if (strike.recovered)
             floatText(context.getString(R.string.roguelike_combat_counterspell), heroRect.centerX(), heroRect.bottom, 0xFFB39DDB.toInt(), false)
         if (strike.missed) {
@@ -534,7 +572,8 @@ class CombatView @JvmOverloads constructor(
             return
         }
         if (strike.imageHit) {
-            floatText(context.getString(R.string.roguelike_combat_image_hit), heroRect.centerX(), heroRect.top, 0xFFB39DDB.toInt(), true)
+            val image = companionBounds(brokenMirror)
+            floatText(context.getString(R.string.roguelike_combat_image_hit), image.centerX(), image.top, 0xFFB39DDB.toInt(), true)
             enter(Stage.ENEMY_IMPACT)
             return
         }
@@ -554,9 +593,9 @@ class CombatView @JvmOverloads constructor(
         when (timing) {
             Timing.PERFECT -> { showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt()); onParry?.invoke(true) }
             Timing.GOOD    -> { showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt()); onParry?.invoke(false) }
-            Timing.MISS    -> { showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt()); onHeroHit?.invoke() }
+            Timing.MISS    -> { showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt()); if (heroHurtImpact) onHeroHit?.invoke() }
         }
-        floatText(context.getString(R.string.roguelike_combat_damage, num(strike.damage)), heroRect.centerX(), heroRect.top,
+        if (strike.damage > 0) floatText(context.getString(R.string.roguelike_combat_damage, num(strike.damage)), heroRect.centerX(), heroRect.top,
             if (timing == Timing.MISS) 0xFFEF5350.toInt() else 0xFFB0BEC5.toInt(), timing == Timing.MISS)
         enter(Stage.ENEMY_IMPACT)
     }
@@ -575,6 +614,8 @@ class CombatView @JvmOverloads constructor(
         dungeonArt.drawBackdrop(canvas, sceneRect)
 
         drawOrderBar(canvas, c)
+        drawPuppets(canvas, c)
+        drawMirrorImages(canvas, c)
         drawEnemies(canvas, c)
         drawHero(canvas, c)
         val casting = visualAction as? Action.Cast
@@ -604,6 +645,69 @@ class CombatView @JvmOverloads constructor(
         }
     }
 
+    private fun companionBounds(index: Int): RectF {
+        val unit = sceneRect.width() / 240f
+        val size = 32f * unit
+        val top = heroRect.top
+        val cx = if (index == 0 || index == 2) heroRect.centerX() - 53f * unit else heroRect.centerX()
+        val y = when (index) { 0 -> top; 3 -> top - 43f * unit; else -> top + 57f * unit }
+        return RectF(cx - size / 2f, y, cx + size / 2f, y + 36f * unit)
+    }
+
+    private fun drawMirrorImages(canvas: Canvas, c: Combat) {
+        val breaking = stage == Stage.ENEMY_IMPACT && brokenMirror >= 0
+        val count = c.mirrorImages + if (breaking) 1 else 0
+        for (i in 0 until count) {
+            val bounds = companionBounds(i)
+            val shatter = if (breaking && i == brokenMirror)
+                ((elapsed() / IMPACT_MS.toFloat() - .25f) / .75f).coerceIn(0f, 1f) else 0f
+            val unit = sceneRect.width() / 240f
+            bounds.offset(sin(SystemClock.uptimeMillis() / 520.0 + i * 1.7).toFloat() * unit, -shatter * 8f * unit)
+            val alpha = (145 * (1f - shatter)).toInt()
+            canvas.saveLayerAlpha(sceneRect, alpha)
+            dungeonArt.drawHero(canvas, bounds, c.hero, actorKey = "mirror:$i",
+                casting = stage == Stage.PLAYER_APPROACH && visualAction is Action.Cast,
+                swing = stage == Stage.PLAYER_HIT && visualAction == Action.Attack && elapsed() < 220L)
+            pStroke.color = 0xFFB39DDB.toInt()
+            pStroke.strokeWidth = unit
+            canvas.drawOval(bounds.left + 6f * unit, bounds.bottom,
+                bounds.right - 6f * unit, bounds.bottom + 3f * unit, pStroke)
+            canvas.restore()
+            if (shatter > 0f) dungeonArt.drawImpact(canvas, bounds, shatter, true, false, 100 + i)
+        }
+    }
+
+    private fun drawPuppets(canvas: Canvas, c: Combat) {
+        val unit = sceneRect.width() / 240f
+        for ((i, hp) in c.puppetHp.withIndex()) {
+            val hurt = stage == Stage.ENEMY_IMPACT && hp < puppetHpBeforeImpact.getOrElse(i) { hp }
+            if (hp <= 0 && !hurt) continue
+            val bounds = companionBounds(i)
+            val attacking = commandedPuppetAttack &&
+                (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)
+            if (attacking) {
+                val destination = enemyRects.getOrNull(target)
+                val progress = if (stage == Stage.PLAYER_APPROACH) (elapsed() / approachMs).coerceIn(0f, 1f)
+                    else (1f - elapsed() / HIT_MS.toFloat()).coerceIn(0f, 1f)
+                if (destination != null) bounds.offset(
+                    (destination.centerX() - bounds.centerX()) * progress * .55f,
+                    (destination.centerY() - bounds.centerY()) * progress * .55f)
+            }
+            if (hurt) bounds.offset(sin(elapsed() / 25.0).toFloat() * 2f * unit, 0f)
+            val fade = if (hp <= 0) (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f) else 1f
+            canvas.saveLayerAlpha(sceneRect, (255 * fade).toInt())
+            puppetArt.draw(canvas, bounds,
+                SystemClock.uptimeMillis(), i, hp.toFloat() / c.puppetMaxHp)
+            if (hurt) dungeonArt.drawImpact(canvas, bounds, elapsed() / IMPACT_MS.toFloat(), false, false, 200 + i)
+            canvas.restore()
+            if (stage == Stage.PLAYER_HIT && puppetAttackTargets.isNotEmpty()) {
+                val destination = enemyRects.getOrNull(puppetAttackTargets[i % puppetAttackTargets.size])
+                if (destination != null) puppetArt.drawBolt(canvas, bounds, destination,
+                    (elapsed() / HIT_MS.toFloat()).coerceIn(0f, 1f))
+            }
+        }
+    }
+
     private fun drawEnemies(canvas: Canvas, c: Combat) {
         for ((i, e) in c.enemies.withIndex()) {
             val base = enemyRects.getOrNull(i) ?: continue
@@ -614,10 +718,19 @@ class CombatView @JvmOverloads constructor(
             if (attacker == i && (stage == Stage.ENEMY_WINDUP || stage == Stage.ENEMY_IMPACT)) {
                 val progress = if (stage == Stage.ENEMY_WINDUP)
                     ((elapsed() - windupMs() + 400f) / 400f).coerceIn(0f, 1f)
+                else if (brokenMirror >= 0)
+                    (1f - (elapsed() / IMPACT_MS.toFloat() - .3f) / .7f).coerceIn(0f, 1f)
                 else (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f)
                 val unit = width / 240f
-                r.offset((heroRect.left - 27f * unit - base.left) * progress,
-                    (heroRect.top - base.top) * progress)
+                val destination = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else RectF(heroRect)
+                if (stage == Stage.ENEMY_IMPACT && brokenMirror >= 0) {
+                    // Le résultat du jet est connu à l'impact : le dernier mouvement révèle le double frappé.
+                    val mirror = companionBounds(brokenMirror)
+                    val redirect = (elapsed() / (IMPACT_MS * .25f)).coerceIn(0f, 1f)
+                    destination.offset((mirror.left - destination.left) * redirect, (mirror.top - destination.top) * redirect)
+                }
+                r.offset((destination.left - 27f * unit - base.left) * progress,
+                    (destination.top - base.top) * progress)
             }
             // Recul quand on le touche
             val hitNow = (stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets
@@ -762,7 +875,7 @@ class CombatView @JvmOverloads constructor(
 
     private fun drawHero(canvas: Canvas, c: Combat) {
         val r = RectF(heroRect)
-        val melee = visualAction == Action.Attack || visualAction == Action.Deadly
+        val melee = (visualAction == Action.Attack && !commandedPuppetAttack) || visualAction == Action.Deadly
         if (melee && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) {
             val destination = enemyRects.getOrNull(target)
             val progress = if (stage == Stage.PLAYER_APPROACH) (elapsed() / 220f).coerceIn(0f, 1f)
@@ -772,12 +885,14 @@ class CombatView @JvmOverloads constructor(
                 (destination.top + 8f * unit - heroRect.top) * progress)
         }
         val blocking = c.guarding || (stage == Stage.ENEMY_IMPACT && parry != null && parry != Timing.MISS)
-        if (stage == Stage.ENEMY_IMPACT && !blocking) r.offset(sin(elapsed() / 25.0).toFloat() * 7f * density, 0f)
+        if (stage == Stage.ENEMY_IMPACT && !blocking && heroHurtImpact) r.offset(sin(elapsed() / 25.0).toFloat() * 7f * density, 0f)
         dungeonArt.drawShadow(canvas, r, hero = true)
         dungeonArt.drawHero(canvas, r, c.hero,
-            windup = (stage == Stage.STRIKE_TIMING && pendingAction !is Action.Cast) || (stage == Stage.PLAYER_APPROACH && melee),
+            windup = (stage == Stage.STRIKE_TIMING && pendingAction !is Action.Cast &&
+                !(pendingAction == Action.Attack && c.puppetsAttack)) || (stage == Stage.PLAYER_APPROACH && melee),
             swing = stage == Stage.PLAYER_HIT && melee && elapsed() < 220L,
             casting = (stage == Stage.STRIKE_TIMING && pendingAction is Action.Cast) ||
+                (commandedPuppetAttack && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) ||
                 ((stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT) && visualAction is Action.Cast),
             blocking = blocking,
             invocation = (visualAction as? Action.Cast)?.relic == Relic.METEOR &&
@@ -816,18 +931,7 @@ class CombatView @JvmOverloads constructor(
         if (c.puppetHp.isNotEmpty()) {
             pText.color = PUPPET_COLOR
             canvas.drawText(context.getString(R.string.roguelike_combat_puppets_line, c.puppetHp.count { it > 0 }, c.puppetHp.size), left, y, pText)
-            y += 6f * sp
-            val n = c.puppetHp.size
-            val gap = 6f * density
-            val barW = ((right - left) - gap * (n - 1)) / n
-            val barH = 9f * density
-            for ((i, hp) in c.puppetHp.withIndex()) {
-                val x0 = left + i * (barW + gap)
-                pFill.color = 0xFF263238.toInt(); canvas.drawRect(x0, y, x0 + barW, y + barH, pFill)
-                pFill.color = PUPPET_COLOR
-                canvas.drawRect(x0, y, x0 + barW * (hp.toFloat() / c.puppetMaxHp).coerceIn(0f, 1f), y + barH, pFill)
-            }
-            y += barH + 10f * sp
+            y += 15f * sp
         }
         if (c.empoweredAttacks > 0) {
             pText.color = EMPOWERED_COLOR
@@ -879,7 +983,10 @@ class CombatView @JvmOverloads constructor(
         } else {
             val cd = c.hero.specialCooldown
             drawButton(canvas, specialBtn, context.getString(archetype.specialRes),
-                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else context.getString(archetype.labelRes),
+                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd)
+                else if (archetype == Archetype.NECROMANCER)
+                    context.getString(R.string.roguelike_combat_puppet_hp_cost, num(c.puppetRecallHpCost))
+                else context.getString(archetype.labelRes),
                 active && c.canUseSpecial(), archetype.color)
         }
     }

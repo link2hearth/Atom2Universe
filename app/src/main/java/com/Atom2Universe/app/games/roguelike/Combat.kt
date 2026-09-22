@@ -965,16 +965,16 @@ class Combat(
         const val ROLL_BONUS = 0.25f
         /** Nécromancien : nombre de pantins invoqués, PV d'un pantin, part des coups gardée par le héros, écho. */
         const val PUPPETS = 2
-        const val PUPPET_HP_SHARE = 0.15f
-        const val PUPPET_SELF_SHARE = 0.60f
+        const val PUPPET_RECALL_COOLDOWN = 4
+        const val PUPPET_RECALL_HP_SHARE = 0.15f
+        const val PUPPET_HP_SHARE = 0.10f
+        const val PUPPET_SELF_SHARE = 0f
         const val ECHO_SHARE = 0.25f
         const val PUPPET_SUMMON_HIT_SHARE = 0.40f
         const val ECHO_GOOD_FACTOR = 0.5f
         /** L'arc du voleur : une cible sous cette part de ses PV est exposée (au lieu de [DEADLY_HP_THRESHOLD]). */
         const val BOW_EXPOSE_THRESHOLD = 0.60f
-        /** Le grimoire du nécromancien : un pantin de plus. */
-        const val GRIMOIRE_PUPPETS = 1
-        /** Le grimoire relève aussi l'écho de chaque pantin de cette part. */
+        /** Le grimoire relève l'écho de chaque pantin de cette part. */
         const val GRIMOIRE_ECHO_BONUS = 1.0f
         /** La lanterne du vagabond : le second coup de l'Enchaînement frappe de cette part en plus. */
         const val LANTERN_CHAIN_BONUS = 0.5f
@@ -1029,8 +1029,11 @@ class Combat(
     /** Nécromancien : les PV de chaque pantin (0 : tombé). Vide pour les autres archétypes. */
     private val puppetHpList = mutableListOf<Int>()
     val puppetHp: List<Int> get() = puppetHpList
+    /** L'attaque normale est exécutée par les pantins, avec l'arme et les enchantements du maître. */
+    val puppetsAttack get() = hero.archetype == Archetype.NECROMANCER && puppetHpList.any { it > 0 }
     /** Les PV pleins d'un pantin. */
     val puppetMaxHp get() = (hero.maxHp * PUPPET_HP_SHARE).roundToInt().coerceAtLeast(1)
+    val puppetRecallHpCost get() = (hero.maxHp * PUPPET_RECALL_HP_SHARE).roundToInt().coerceAtLeast(1)
 
     // ── Ce que les reliques posent sur le héros, pour ce combat ──
     /** Cri de guerre : coups d'arme renforcés qui restent, et de combien (en part d'un coup). */
@@ -1095,9 +1098,14 @@ class Combat(
      * les recharges n'avancent pas. En embuscade, son tour « manqué » compte, comme avant.
      */
     private var upkeepDue = ambush
+    private var openingPuppetCooldown = ambush && hero.archetype == Archetype.NECROMANCER
 
     init {
         hero.floor = floor
+        if (hero.archetype == Archetype.NECROMANCER) {
+            restorePuppets()
+            hero.specialCooldown = PUPPET_RECALL_COOLDOWN
+        }
         advance()
     }
 
@@ -1108,7 +1116,8 @@ class Combat(
      */
     fun canCast(relic: Relic) = phase == CombatPhase.PLAYER_TURN && relic in hero.relicSlots && hero.relicCooldown(relic) == 0 &&
         !(relic.effect == RelicEffect.DELAYED && meteorTurns > 0)
-    fun canUseSpecial() = phase == CombatPhase.PLAYER_TURN && hero.archetype != null && hero.specialCooldown == 0
+    fun canUseSpecial() = phase == CombatPhase.PLAYER_TURN && hero.archetype != null && hero.specialCooldown == 0 &&
+        (hero.archetype != Archetype.NECROMANCER || hero.hp > puppetRecallHpCost)
 
     // ── Ce que coûte chaque action, en jauge (1 : toute la jauge) ──
     // Une action qui ne frappe pas coûte une demi-jauge : on rejoue plus vite (voir DONJON.md,
@@ -1132,6 +1141,8 @@ class Combat(
 
     fun attack(target: Int, timing: Timing): HitResult {
         check(phase == CombatPhase.PLAYER_TURN)
+        // Avec des pantins, ce coup est leur attaque commandée : ils héritent des effets
+        // de l'arme. Le maître ne porte pas un deuxième coup en plus de celui-ci.
         val result = weaponHit(target, timing)
         val echo = echo(target, timing)
         afterPlayerAction(attackCost())
@@ -1533,6 +1544,10 @@ class Combat(
     private fun deadlyCritBonus() = if (hero.specialBoosted(Archetype.ROGUE)) IsotopeSets.DEADLY_CRIT_BONUS else DEADLY_CRIT_BONUS
 
     private fun spendSpecial() {
+        if (hero.archetype == Archetype.NECROMANCER) {
+            hero.specialCooldown = PUPPET_RECALL_COOLDOWN
+            return
+        }
         val base = if (hero.setArchetype != null) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN
         hero.specialCooldown = hero.spellCooldown(base).coerceAtLeast(Hero.MIN_SPECIAL_COOLDOWN)
     }
@@ -1584,23 +1599,35 @@ class Combat(
         return hits
     }
 
-    /** Nécromancien : invoque ou relève ses pantins ; chacun frappe aussitôt à 40 % des dégâts moyens d'arme. */
-    fun recallPuppets() {
-        check(canUseSpecial() && hero.archetype == Archetype.NECROMANCER)
-        val count = (if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS) +
-            if (hero.classOffhand(Archetype.NECROMANCER)) GRIMOIRE_PUPPETS else 0
+    /** L'arrivée en combat prépare la protection, sans attaque gratuite ni dépense de tour. */
+    private fun restorePuppets() {
+        val count = if (hero.specialBoosted(Archetype.NECROMANCER)) IsotopeSets.PUPPETS else PUPPETS
         puppetHpList.clear()
         repeat(count) { puppetHpList += puppetMaxHp }
+    }
+
+    /** Nécromancien : relève ses pantins ; chacun frappe aussitôt à 40 % des dégâts moyens d'arme. */
+    fun recallPuppets(): List<HitResult> {
+        check(canUseSpecial() && hero.archetype == Archetype.NECROMANCER)
+        // Sacrifice direct : ni l'armure, ni les pantins, ni la barrière ne paient à sa place.
+        hero.hp -= puppetRecallHpCost
+        restorePuppets()
         val targets = aliveIndices()
+        val damageByTarget = mutableMapOf<Int, Int>()
         if (targets.isNotEmpty()) {
             val avg = (hero.weaponMin + hero.weaponMax) / 2f
             for (i in puppetHpList.indices) {
                 val at = targets[i % targets.size].takeIf { enemies[it].alive } ?: aliveIndices().firstOrNull() ?: break
-                wound(at, avg * PUPPET_SUMMON_HIT_SHARE)
+                val damage = wound(at, avg * PUPPET_SUMMON_HIT_SHARE)
+                damageByTarget[at] = (damageByTarget[at] ?: 0) + damage
             }
         }
         spendSpecial()
+        val hits = damageByTarget.map { (at, damage) ->
+            HitResult(target = at, damage = damage, crit = false, killed = !enemies[at].alive)
+        }
         afterPlayerAction(specialCost())
+        return hits
     }
 
     /**
@@ -1621,21 +1648,12 @@ class Combat(
         return total
     }
 
-    /**
-     * Les pantins encaissent : ils prennent la part [PUPPET_SELF_SHARE] en moins de chaque coup, le nécromancien
-     * garde le reste ; ce qu'un pantin ne peut pas absorber retombe sur lui. Renvoie ce qu'il subit.
-     */
+    /** Un pantin absorbe le coup entier, même mortel : aucun surplus vers le héros ou un autre pantin. */
     private fun throughPuppets(dmg: Int): Int {
-        if (puppetHpList.none { it > 0 }) return dmg
-        val mine = (dmg * PUPPET_SELF_SHARE).roundToInt().coerceAtLeast(1)
-        var left = dmg - mine
-        for (i in puppetHpList.indices) {
-            if (left <= 0) break
-            val take = minOf(puppetHpList[i], left)
-            puppetHpList[i] -= take
-            left -= take
-        }
-        return mine + left
+        val defender = puppetHpList.indexOfFirst { it > 0 }
+        if (defender < 0) return dmg
+        puppetHpList[defender] = (puppetHpList[defender] - dmg).coerceAtLeast(0)
+        return 0
     }
 
     /**
@@ -1728,7 +1746,9 @@ class Combat(
         if (stoneskinTurns > 0) stoneskinTurns--
         if (purifiedTurns > 0) purifiedTurns--
         if (hasteTurns > 0) hasteTurns--
-        hero.tickRelics()
+        // L'embuscade ne consomme pas un tour du nouveau délai avant la première action du maître.
+        hero.tickRelics(includeSpecial = !openingPuppetCooldown)
+        openingPuppetCooldown = false
         guarding = false
     }
 
@@ -1972,9 +1992,9 @@ class Combat(
 
         val parryMult = when (parry) { Timing.MISS -> PARRY_MISS_MULT; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val armorMult = maxOf(if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f, if (purifiedTurns > 0) Reaction.PURIFIED_ARMOR else 1f)
-        val puppetsBefore = puppetHpList.sum()
-        var dmg = throughPuppets(hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1))
-        val puppetTaken = puppetsBefore - puppetHpList.sum()
+        val incoming = hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1)
+        var dmg = throughPuppets(incoming)
+        val puppetTaken = incoming - dmg
         // Le Bouclier arcanique prend d'abord
         val absorbed = minOf(barrier, dmg)
         barrier -= absorbed

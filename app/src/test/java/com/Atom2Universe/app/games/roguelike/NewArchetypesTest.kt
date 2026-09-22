@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.random.Random
+import kotlin.math.roundToInt
 
 /** Le vagabond (poids intermédiaire) et le nécromancien (poids super léger) : armure, Spéciaux, sets. */
 class NewArchetypesTest {
@@ -103,15 +104,50 @@ class NewArchetypesTest {
 
     // ── Le nécromancien ─────────────────────────────────────────────────────────
 
+    /** Les tests du rappel forcent sa disponibilité ; le combat démarre désormais en recharge. */
+    private fun recallReady(c: Combat) {
+        c.hero.specialCooldown = 0
+        c.recallPuppets()
+    }
+
+    @Test
+    fun premiereVagueGratuiteEtRappelSacrifieQuinzePourCentDesPvMax() {
+        val hero = heroOf(Archetype.NECROMANCER)
+        val before = hero.hp
+        val c = fight(hero)
+        assertEquals(before, hero.hp)
+        val cost = (hero.maxHp * .15f).roundToInt().coerceAtLeast(1)
+        assertEquals(cost, c.puppetRecallHpCost)
+        recallReady(c)
+        assertEquals(before - cost, hero.hp)
+    }
+
+    @Test
+    fun rappelInterditSiLeSacrificeEstMortel() {
+        val c = fight(heroOf(Archetype.NECROMANCER))
+        c.hero.specialCooldown = 0
+        c.hero.hp = c.puppetRecallHpCost
+        assertTrue(!c.canUseSpecial())
+        val before = c.puppetHp.toList()
+        assertTrue(runCatching { c.recallPuppets() }.isFailure)
+        assertEquals(c.puppetRecallHpCost, c.hero.hp)
+        assertEquals(before, c.puppetHp)
+        c.hero.hp++
+        assertTrue(c.canUseSpecial())
+        c.recallPuppets()
+        assertEquals(1, c.hero.hp)
+    }
+
     @Test
     fun appelDesMortsInvoqueDeuxPantinsEtTroisAvecLeSet() {
         val plain = fight(heroOf(Archetype.NECROMANCER))
-        assertTrue("aucun pantin avant l'Appel", plain.puppetHp.isEmpty())
-        plain.recallPuppets()
+        assertTrue(plain.puppetsAttack)
+        assertEquals(4, plain.hero.specialCooldown)
+        assertTrue(!plain.canUseSpecial())
         assertEquals(Combat.PUPPETS, plain.puppetHp.size)
+        assertEquals((plain.hero.maxHp * .10f).roundToInt().coerceAtLeast(1), plain.puppetMaxHp)
         assertTrue(plain.puppetHp.all { it == plain.puppetMaxHp })
         val boosted = fight(setHero(5))
-        boosted.recallPuppets()
         assertEquals(IsotopeSets.PUPPETS, boosted.puppetHp.size)
         assertTrue("les autres n'en ont pas", fight(heroOf(Archetype.MAGE)).puppetHp.isEmpty())
     }
@@ -121,30 +157,59 @@ class NewArchetypesTest {
         val hero = heroOf(Archetype.NECROMANCER)
         val c = fight(hero)
         val before = c.enemies[0].hp
-        c.recallPuppets()
+        recallReady(c)
         val oneHit = ((hero.weaponMin + hero.weaponMax) / 2f * Combat.PUPPET_SUMMON_HIT_SHARE).toInt().coerceAtLeast(1)
         assertTrue("la salve d'invocation blesse", before - c.enemies[0].hp >= oneHit * Combat.PUPPETS)
     }
 
     @Test
-    fun lesPantinsEncaissentLaPlusGrosseParteDuCoup() {
-        val c = fight(heroOf(Archetype.NECROMANCER), damage = 8)
-        c.recallPuppets()
-        while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
-        val before = c.puppetHp.sum()
+    fun lesPantinsAbsorbentToutMemeUnCoupMortelEnEmbuscade() {
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 10000, ambush = true)
+        val heroHp = c.hero.hp
+        assertEquals(CombatPhase.ENEMY_TURN, c.phase)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
-        val lost = before - c.puppetHp.sum()
-        assertTrue(s.damage > 0 && lost > 0)
-        val heroShare = s.damage.toFloat() / (s.damage + lost)
-        assertEquals(Combat.PUPPET_SELF_SHARE, heroShare, 0.12f)
+        assertEquals(0, s.damage)
+        assertEquals(heroHp, c.hero.hp)
+        assertTrue(s.puppetAbsorbed > c.puppetMaxHp)
+        assertEquals(0, c.puppetHp[0])
+        assertEquals(c.puppetMaxHp, c.puppetHp[1])
+        c.resolveStrike(0, Timing.MISS)
+        assertTrue(!c.puppetsAttack)
+        assertEquals(heroHp, c.hero.hp)
+        assertTrue(c.resolveStrike(0, Timing.MISS).damage > 0)
+    }
+
+    @Test
+    fun embuscadeNeReduitPasLaRechargeAvantLaPremiereAction() {
+        val c = fight(heroOf(Archetype.NECROMANCER), ambush = true)
+        c.startEnemyTurn()
+        c.resolveStrike(0, Timing.MISS)
+        c.endEnemyTurn()
+        assertEquals(CombatPhase.PLAYER_TURN, c.phase)
+        assertEquals(4, c.hero.specialCooldown)
+    }
+
+    @Test
+    fun rappelDisponibleApresQuatreActionsDuNecromancien() {
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 1)
+        for (remaining in 3 downTo 0) {
+            c.attack(0, Timing.MISS)
+            while (c.phase == CombatPhase.ENEMY_TURN) {
+                val turn = c.startEnemyTurn()
+                turn.attackers.forEach { c.resolveStrike(it, Timing.MISS) }
+                c.endEnemyTurn()
+            }
+            assertEquals(remaining, c.hero.specialCooldown)
+        }
+        assertTrue(c.canUseSpecial())
     }
 
     @Test
     fun lEchoDependDuGeste() {
         fun loss(timing: Timing): Pair<Int, Int> {
             val c = fight(heroOf(Archetype.NECROMANCER))
-            c.recallPuppets()
+            recallReady(c)
             val before = c.enemies[0].hp
             val hit = c.attack(0, timing)
             return (before - c.enemies[0].hp) to hit.damage
@@ -162,7 +227,7 @@ class NewArchetypesTest {
     @Test
     fun leRappelRelevePantinsTombesEtFrappe() {
         val c = fight(heroOf(Archetype.NECROMANCER), damage = 20)
-        c.recallPuppets()
+        recallReady(c)
         while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
         c.startEnemyTurn()
         c.resolveStrike(0, Timing.MISS)
@@ -171,7 +236,7 @@ class NewArchetypesTest {
         assertEquals(CombatPhase.PLAYER_TURN, c.phase)
         c.hero.specialCooldown = 0
         val before = c.enemies[0].hp
-        c.recallPuppets()
+        recallReady(c)
         assertTrue(c.puppetHp.all { it == c.puppetMaxHp })
         assertTrue("la salve blesse", c.enemies[0].hp < before)
     }
@@ -212,13 +277,13 @@ class NewArchetypesTest {
     }
 
     @Test
-    fun leGrimoireDonneUnPantinEtUnEchoPlusFort() {
+    fun leGrimoireRenforceLEchoSansAjouterDePantin() {
         val plain = fight(withOffhand(Archetype.NECROMANCER, null))
         val book = fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))
-        plain.recallPuppets()
-        book.recallPuppets()
-        assertEquals(plain.puppetHp.size + Combat.GRIMOIRE_PUPPETS, book.puppetHp.size)
-        fun echo(c: Combat): Int { c.recallPuppets(); val before = c.enemies[0].hp; val hit = c.attack(0, Timing.PERFECT); return before - c.enemies[0].hp - hit.damage }
+        recallReady(plain)
+        recallReady(book)
+        assertEquals(plain.puppetHp.size, book.puppetHp.size)
+        fun echo(c: Combat): Int { recallReady(c); val before = c.enemies[0].hp; val hit = c.attack(0, Timing.PERFECT); return before - c.enemies[0].hp - hit.damage }
         assertTrue(echo(fight(withOffhand(Archetype.NECROMANCER, ItemBase.GRIMOIRE))) > echo(fight(withOffhand(Archetype.NECROMANCER, null))))
     }
 
@@ -235,7 +300,7 @@ class NewArchetypesTest {
     @Test
     fun lesResultatsDisentCeQueLesPantinsOntFait() {
         val c = fight(heroOf(Archetype.NECROMANCER), damage = 8)
-        c.recallPuppets()
+        recallReady(c)
         while (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)

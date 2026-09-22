@@ -525,7 +525,8 @@ object Lexicon {
                 add(R.string.lex_special_combo_1, Combat.CHAIN_HITS); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.NECROMANCER), c, Archetype.NECROMANCER.specialRes) {
-                add(R.string.lex_special_puppets_1, env.pct(Combat.PUPPET_SUMMON_HIT_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+                add(R.string.lex_special_puppets_1, env.pct(Combat.PUPPET_SUMMON_HIT_SHARE), env.pct(Combat.PUPPET_RECALL_HP_SHARE))
+                add(R.string.lex_special_2, Combat.PUPPET_RECALL_COOLDOWN)
             },
         )
         return listOf(general) + each + specials
@@ -574,7 +575,7 @@ object Lexicon {
                 if (b == ItemBase.SHIELD) add(R.string.lex_base_shield, dodgePct(ArmorClass.SHIELD))
                 if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
                 if (b == ItemBase.BOW) add(R.string.lex_base_bow, env.pct(Combat.BOW_EXPOSE_THRESHOLD), env.pct(Combat.DEADLY_HP_THRESHOLD))
-                if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, Combat.GRIMOIRE_PUPPETS, env.pct(Combat.GRIMOIRE_ECHO_BONUS))
+                if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, 0, env.pct(Combat.GRIMOIRE_ECHO_BONUS))
                 if (b == ItemBase.CLUB) add(R.string.lex_base_club)
                 if (b == ItemBase.LANTERN) add(R.string.lex_base_lantern, env.pct(Combat.LANTERN_CHAIN_BONUS))
                 if (b in ArmorWeight.WEIGHTED) add(R.string.lex_base_weights)
@@ -621,7 +622,7 @@ object Lexicon {
                 }
                 Archetype.NECROMANCER -> {
                     add(R.string.lex_set_special_puppets, IsotopeSets.PUPPETS, Combat.PUPPETS,
-                        IsotopeSets.SPECIAL_COOLDOWN, Hero.SPECIAL_COOLDOWN)
+                        Combat.PUPPET_RECALL_COOLDOWN, Combat.PUPPET_RECALL_COOLDOWN)
                     add(R.string.lex_set_recharge, IsotopeSets.RECHARGE_CUT)
                 }
             }

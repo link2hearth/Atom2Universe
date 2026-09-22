@@ -124,10 +124,11 @@ internal class DungeonCombatArt {
     }
     fun drawHero(canvas: Canvas, bounds: RectF, hero: Hero, windup: Boolean = false,
         swing: Boolean = false, casting: Boolean = false, blocking: Boolean = false,
-        portrait: Boolean = false, invocation: Boolean = false, castProgress: Float = 0f) {
+        portrait: Boolean = false, invocation: Boolean = false, castProgress: Float = 0f,
+        actorKey: String? = null) {
         paint.alpha = 255
         updateEquipment(hero)
-        val (actorFrame, actorCanvas) = actorBuffer(if (portrait) "heroPortrait" else "hero")
+        val (actorFrame, actorCanvas) = actorBuffer(actorKey ?: if (portrait) "heroPortrait" else "hero")
         actorCanvas.save()
         actorCanvas.translate(50f, 12f)
         actorCanvas.scale(-1f, 1f)

@@ -665,4 +665,5 @@
     <string name="roguelike_relic_venomous_wound_desc">Deal %1$s–%2$s poison damage and apply one poison dose (%5$s damage per turn) for %3$d enemy turns. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_seismic_strike">Seismic strike</string>
     <string name="roguelike_relic_seismic_strike_desc">A physical strike: %1$s–%2$s total base damage shared among all living enemies, before critical hits and reactions. Cooldown: %4$d turns.</string>
+    <string name="roguelike_combat_puppet_hp_cost">Cost: %1$s HP</string>
 </resources>
