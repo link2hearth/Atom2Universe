@@ -187,6 +187,15 @@ enum class ArmorWeight(
     FUR(R.string.roguelike_weight_fur, 1.0f, 0, true, 0f,
         R.string.roguelike_base_fur_helmet, R.string.roguelike_base_fur_armor, R.string.roguelike_base_fur_boots, dexCap = 1);
 
+    val primaryAttribute: StatType get() = when (this) {
+        HEAVY -> StatType.CON
+        LIGHT -> StatType.DEX
+        CLOTH -> StatType.INT
+        MEDIUM -> StatType.END
+        ULTRALIGHT -> StatType.WIS
+        FUR -> StatType.STR
+    }
+
     fun nounRes(base: ItemBase) = when (base) {
         ItemBase.HELMET -> helmetRes
         ItemBase.ARMOR  -> chestRes
@@ -235,6 +244,17 @@ data class Equipment(
     val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
     /** Ce que la pièce change à la vitesse par son poids (les affixes de vitesse sont à part). */
     val weightSpeed get() = weight?.speedPerPiece ?: 0f
+    /** Upgrade old armor without rerolling its values or secondary affixes. */
+    fun withClassPrimaryAttribute(): Equipment {
+        val primary = weight?.primaryAttribute ?: return this
+        if (base !in ArmorWeight.WEIGHTED) return this
+        val index = implicits.indexOfFirst { it.type in StatType.ATTRIBUTES }
+        if (index < 0 || implicits[index].type == primary) return this
+        return copy(implicits = implicits.mapIndexed { i, stat ->
+            if (i == index) stat.copy(type = primary) else stat
+        })
+    }
+
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
 }
@@ -361,7 +381,7 @@ object AffixBudget {
         StatType.CRIT_CHANCE to floatArrayOf(.020f, .026f, .032f, .040f, .048f, .056f, .068f, .080f),
         StatType.CRIT_DAMAGE to floatArrayOf(.12f, .16f, .20f, .25f, .30f, .36f, .43f, .50f),
         StatType.SPELL_DMG   to floatArrayOf(.08f, .11f, .14f, .18f, .22f, .26f, .30f, .35f),
-        StatType.LIFE_STEAL  to floatArrayOf(.004f, .006f, .008f, .010f, .013f, .016f, .019f, .023f),
+        StatType.LIFE_STEAL  to floatArrayOf(.010f, .016f, .022f, .028f, .034f, .040f, .045f, .050f),
         StatType.DEX         to floatArrayOf(3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f),
         // La vitesse : +2 % au premier palier, +8 % au dernier. Un taux, qui vaut double (voir perPoint)
         StatType.SPEED       to floatArrayOf(.020f, .025f, .030f, .040f, .050f, .060f, .070f, .080f),
@@ -501,7 +521,7 @@ object AffixBudget {
      * en dessous de sa part. On arrondit donc le minimum vers le haut, pas au plus proche.
      */
     fun minRoll(type: StatType, tier: Int): Float {
-        val low = nominal(type, tier) * ROLL_MIN
+        val low = (nominal(type, tier) * ROLL_MIN).let { if (type == StatType.LIFE_STEAL) it.coerceAtLeast(.01f) else it }
         return if (type.isPercent) low else kotlin.math.ceil(low).coerceAtLeast(1f)
     }
 
@@ -596,13 +616,13 @@ object LootSystem {
      */
     private val affixPools: Map<EquipSlot, List<StatType>> = run {
         val attrs = StatType.ATTRIBUTES
-        val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP)
+        val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.LIFE_STEAL)
         val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED)
         // La vitesse : sur l'arme, les bottes et les bijoux (comme la vitesse d'attaque et de
         // course de Diablo), pas sur le casque, l'armure ni la main gauche
         mapOf(
             EquipSlot.WEAPON  to attrs + listOf(StatType.WEAPON_DMG, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED),
-            EquipSlot.OFFHAND to attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE),
+            EquipSlot.OFFHAND to attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.LIFE_STEAL),
             EquipSlot.HELMET  to armorPiece,
             EquipSlot.CHEST   to armorPiece,
             EquipSlot.BOOTS   to armorPiece + StatType.SPEED,
@@ -627,10 +647,10 @@ object LootSystem {
     }
 
     fun generate(floor: Int, lootId: Long = 0, rng: Random = Random): Equipment {
-        // Dans la tranche d'un set d'isotope, une part des objets en est une pièce. Le tirage n'a lieu
-        // que là : partout ailleurs, les dés tombent comme avant.
-        IsotopeSets.forFloor(floor)?.let { set ->
-            if (rng.nextFloat() < IsotopeSets.dropShare) return createSetPiece(if (rng.nextInt(6) == 0) set.copy(barbarian = true) else set, IsotopeSets.BASES.random(rng), lootId, rng)
+        // Chaque classe peut trouver son set à tous les étages.
+        if (rng.nextFloat() < IsotopeSets.dropShare) {
+            return createSetPiece(IsotopeSets.PERMANENT.random(rng),
+                IsotopeSets.BASES.random(rng), lootId, rng, floor)
         }
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
         val power = rollPowerForFloor(floor, rng)
@@ -641,8 +661,9 @@ object LootSystem {
      * Une pièce d'un set d'isotope : rare, du poids de l'archétype du set, et d'une puissance qui
      * varie un peu d'une pièce à l'autre ([IsotopeSets.basePower]).
      */
-    fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random): Equipment {
-        val power = IsotopeSets.basePower(set.index) + rng.nextInt(IsotopeSets.POWER_SPREAD)
+    fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random, floor: Int? = null): Equipment {
+        val power = if (floor != null || set.index < 0) IsotopeSets.powerForFloor(floor ?: 1, rng)
+            else IsotopeSets.basePower(set.index) + rng.nextInt(IsotopeSets.POWER_SPREAD)
         return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.index)
     }
 
@@ -660,7 +681,7 @@ object LootSystem {
         val armor  = (base.armorBase * (weight?.armorMult ?: 1f) * s).roundToInt()
 
         val implicits = mutableListOf<StatRoll>()
-        val attr = base.attribute ?: StatType.ATTRIBUTES.random(rng)
+        val attr = weight?.primaryAttribute ?: base.attribute ?: StatType.ATTRIBUTES.random(rng)
         val attrValue = if (base.attribute != null || base == ItemBase.SWORD) mainAttribute(power) else sideAttribute(power)
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
         if (base.armorBase > 0f)
@@ -686,7 +707,7 @@ object LootSystem {
         val tier = AffixBudget.pickTier(type, power, rng)
         val full = AffixBudget.nominal(type, tier)
         val value = full * (AffixBudget.ROLL_MIN + rng.nextFloat() * (1f - AffixBudget.ROLL_MIN))
-        val rolled = if (type.isPercent) value
+        val rolled = if (type.isPercent) value.coerceAtLeast(AffixBudget.minRoll(type, tier))
                      else value.roundToInt().toFloat().coerceAtLeast(AffixBudget.minRoll(type, tier))
         return StatRoll(type, rolled, tier)
     }

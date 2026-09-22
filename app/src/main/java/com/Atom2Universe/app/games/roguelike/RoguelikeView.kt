@@ -217,6 +217,14 @@ class RoguelikeView @JvmOverloads constructor(
             val waterway = lv.waterways[Pos(tx, ty)]
             val scenery = lv.scenery[Pos(tx, ty)]
             var neighbours = 0
+            if (theme == DungeonTheme.CAMP || theme == DungeonTheme.VILLAGE || theme == DungeonTheme.BATTLEFIELD || theme == DungeonTheme.FIELDS) {
+                fun wallAt(x: Int, y: Int) = lv.inBounds(x, y) && !lv.walkable(x, y) &&
+                    lv.themeAt(x, y) == theme && lv.scenery[Pos(x, y)] == null
+                if (wallAt(tx, ty - 1)) neighbours = neighbours or 1
+                if (wallAt(tx + 1, ty)) neighbours = neighbours or 2
+                if (wallAt(tx, ty + 1)) neighbours = neighbours or 4
+                if (wallAt(tx - 1, ty)) neighbours = neighbours or 8
+            }
             if (theme == DungeonTheme.CEMETERY || theme == DungeonTheme.DUNGEON || theme == DungeonTheme.FOREST || theme == DungeonTheme.SPACESHIP || theme == DungeonTheme.MINE || theme == DungeonTheme.MINE_DEPOT || theme == DungeonTheme.CRYPT) {
                 if (!lv.walkable(tx, ty - 1)) neighbours = neighbours or 1
                 if (!lv.walkable(tx + 1, ty)) neighbours = neighbours or 2

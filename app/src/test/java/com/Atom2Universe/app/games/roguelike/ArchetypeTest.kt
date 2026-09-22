@@ -54,13 +54,13 @@ class ArchetypeTest {
     }
 
     @Test
-    fun lesDoublesRegenerentLeMage() {
+    fun lesDoublesNeRegenerentPasLeMage() {
         val hero = heroOf(Archetype.MAGE)
         hero.hp = hero.maxHp / 2
         val before = hero.hp
         val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 5, 1, 1)), ambush = false, rng = Random(1))
         c.mirrorImage()
-        assertEquals((hero.maxHp * Combat.MIRROR_REGEN_SHARE).roundToInt().coerceAtLeast(1), hero.hp - before)
+        assertEquals(0, hero.hp - before)
     }
 
     // ── Parade parfaite ─────────────────────────────────────────────────────────
@@ -101,11 +101,11 @@ class ArchetypeTest {
 
     /**
      * Passer son tour sans lancer de dé, au même coût que la Garde (une demi-jauge) : un sort
-     * de soutien qui ne fait que soigner, la Régénération.
+     * de soutien sans dégâts directs, les Lames empoisonnées.
      */
     private fun Combat.waitWithoutDice() {
-        hero.addRelic(Relic.HEAL)
-        castRelic(Relic.HEAL, 0, Timing.MISS)
+        hero.addRelic(Relic.POISONED_BLADES)
+        castRelic(Relic.POISONED_BLADES, 0, Timing.MISS)
     }
 
     @Test
@@ -171,7 +171,7 @@ class ArchetypeTest {
         val hp0 = hero.hp
         c.mirrorImage()
         assertEquals(Combat.MIRROR_IMAGES, c.mirrorImages)
-        assertTrue("les doubles régénèrent le mage", hero.hp >= hp0)
+        assertEquals("les doubles ne soignent pas", hp0, hero.hp)
         val afterMirror = hero.hp
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
@@ -207,5 +207,22 @@ class ArchetypeTest {
         assertFalse(next.canUseSpecial())
         hero.tickRelics(Hero.SPECIAL_COOLDOWN)
         assertTrue(next.canUseSpecial())
+    }
+    @Test fun mageSpecialCooldownIgnoresWisdomWithAndWithoutSet() {
+        for (set in listOf(false, true)) for (wisdom in listOf(0f, 600f)) {
+            val h = heroOf(Archetype.MAGE)
+            if (set) {
+                val mirage = IsotopeSets.PERMANENT.first { it.archetype == Archetype.MAGE }
+                for (base in IsotopeSets.BASES) {
+                    val item = LootSystem.createSetPiece(mirage, base, 0, Random(1), 1)
+                    h.equipped[item.slot] = item.copy(affixes = emptyList())
+                }
+            }
+            h.equipped[EquipSlot.RING] = piece(ItemBase.RING, null).copy(
+                implicits = listOf(StatRoll(StatType.WIS, wisdom)), affixes = emptyList())
+            val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 1, 1)), false, Random(1))
+            c.mirrorImage()
+            assertEquals(if (set) IsotopeSets.SPECIAL_COOLDOWN else Hero.SPECIAL_COOLDOWN, h.specialCooldown)
+        }
     }
 }

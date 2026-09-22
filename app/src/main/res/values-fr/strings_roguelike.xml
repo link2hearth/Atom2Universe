@@ -492,8 +492,8 @@
     <string name="roguelike_relic_champignon_desc">Inflige %1$s–%2$s dégâts et ajoute une dose de [[state_poison|poison]] (%17$d au plus) : chaque dose ronge %5$s PV par tour pendant %3$d tours, très longtemps. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_peste">Peste</string>
     <string name="roguelike_relic_peste_desc">Inflige %1$s–%2$s dégâts à tous les ennemis et ajoute une dose de [[state_poison|poison]] (%17$d au plus) à chacun : chaque dose ronge %5$s PV par tour pendant %3$d tours. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_ponction">Ponction vitale</string>
-    <string name="roguelike_relic_ponction_desc">Inflige %1$s–%2$s dégâts (sans élément) et te rend en PV la moitié des dégâts infligés. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_ponction">Rupture d&#8217;âme</string>
+    <string name="roguelike_relic_ponction_desc">Inflige %1$s–%2$s dégâts physiques, renforcés par la Sagesse. Aucun soin intrinsèque. Recharge : %4$d tours.</string>
     <string name="roguelike_reaction_thermal_shock">Choc thermique !</string>
     <string name="roguelike_reaction_plasma">Plasma !</string>
     <string name="roguelike_reaction_calcination">Calcination !</string>
@@ -670,4 +670,10 @@
     <string name="inv_filter_class">Classe</string>
     <string name="inv_filter_value">%1$s : %2$s</string>
     <string name="inv_rating">Score %1$s</string>
+    <string name="roguelike_set_bastion">Bastion</string>
+    <string name="roguelike_set_shadow">Ombre</string>
+    <string name="roguelike_set_mirage">Mirage</string>
+    <string name="roguelike_set_wandering">Errance</string>
+    <string name="roguelike_set_afterlife">Outre-tombe</string>
+    <string name="roguelike_set_ravage">Ravage</string>
 </resources>

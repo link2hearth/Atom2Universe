@@ -61,51 +61,33 @@ class IsotopeSetTest {
     }
 
     @Test
-    fun chaqueSetNeTombeQueDansSaTranche() {
-        val rng = Random(1)
-        for (s in IsotopeSets.ALL) {
-            for (floor in s.firstFloor..s.lastFloor) assertEquals(s, IsotopeSets.forFloor(floor))
-            assertTrue(IsotopeSets.forFloor(s.firstFloor - 1) != s)
-        }
-        // Le scandium (21) n'a pas de set : sa tranche reste vide
-        assertNull(IsotopeSets.forFloor(21 * 25))
-        repeat(3000) {
-            val outside = LootSystem.generate(rng.nextInt(20 * 25 + 1, 21 * 25 + 1), 0, rng)
-            assertNull("aucune pièce de set hors des tranches", outside.isotopeZ)
-        }
-    }
-
-    @Test
-    fun huitPourCentDesObjetsDeLaTrancheSontDuSet() {
+    fun tousLesSetsTombentPartoutAuTierSuperieur() {
         val rng = Random(2)
-        val n = 20000
-        for (s in IsotopeSets.ALL) {
-            val share = List(n) { LootSystem.generate(rng.nextInt(s.firstFloor, s.lastFloor + 1), 0, rng) }
-                .count { it.isotopeZ == s.z } / n.toFloat()
-            assertEquals("set ${s.z}", IsotopeSets.DROP_SHARE, share, 0.01f)
+        for (floor in listOf(1, 5, 6, 25, 26, 501, 525, 2950, 2951, 10000)) {
+            val pieces = List(20000) { LootSystem.generate(floor, 0, rng) }.filter { it.isotopeZ != null }
+            assertEquals(IsotopeSets.DROP_SHARE, pieces.size / 20000f, 0.01f)
+            assertEquals(Archetype.entries.toSet(), pieces.map { it.isotopeSet!!.archetype }.toSet())
+            val center = kotlin.math.floor(LootSystem.powerCenter(floor).toDouble()).toInt()
+            val next = ((center - 1) / Grade.POWER_PER_TIER + 1) * Grade.POWER_PER_TIER + 1
+            for (piece in pieces) {
+                assertTrue(piece.power in next until next + Grade.POWER_PER_TIER)
+                assertEquals(Rarity.RARE, piece.rarity)
+                assertEquals(piece.isotopeSet!!.archetype.weight, piece.weight)
+            }
         }
     }
 
     @Test
-    fun lesPiecesSontDuBonPoidsRaresEtFortes() {
-        val rng = Random(3)
-        for (s in IsotopeSets.ALL) {
-            val powers = mutableSetOf<Int>()
-            repeat(500) {
-                val e = LootSystem.createSetPiece(s, IsotopeSets.BASES.random(rng), 0, rng)
-                assertEquals(s.archetype.weight, e.weight)
-                assertEquals(Rarity.RARE, e.rarity)
-                assertTrue(e.slot in IsotopeSets.SLOTS)
-                powers += e.power
-            }
-            val base = IsotopeSets.basePower(s.z)
-            assertEquals("trois puissances par set", setOf(base, base + 1, base + 2), powers)
+    fun anciensEtNouveauxSetsSeCombinentSansChangerLesStats() {
+        for (set in IsotopeSets.PERMANENT) {
+            assertEquals(set, IsotopeSets.of(set.index))
+            val old = if (set.archetype == Archetype.BARBARIAN) deuterium.copy(barbarian = true)
+                else IsotopeSets.ALL.first { it.archetype == set.archetype }
+            val hero = heroWearing(old, set, set)
+            assertEquals(set.archetype, hero.setArchetype)
+            assertTrue(IsotopeSets.discovered(hero, set))
         }
-        assertEquals(10, IsotopeSets.basePower(1))
-        // Mieux que tout le butin ordinaire du premier étage
-        assertTrue(LootSystem.scale(10) > 5 * LootSystem.scale(1))
     }
-
     @Test
     fun sansLesTroisPiecesDuMemeArchetypeRienNeChange() {
         assertNull(Hero.starter().setArchetype)

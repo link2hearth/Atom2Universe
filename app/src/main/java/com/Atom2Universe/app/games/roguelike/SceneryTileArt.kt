@@ -12,6 +12,9 @@ internal class SceneryTileArt {
         val p=SceneryPixels(SIZE*kind.span)
         with(p) {
             when(kind) {
+                SceneryKind.CARGO, SceneryKind.REACTOR, SceneryKind.BOOKCASES,
+                SceneryKind.ORE_VEIN, SceneryKind.OAK, SceneryKind.HAYSTACK,
+                SceneryKind.BANQUET_TABLE, SceneryKind.MEMORIAL -> LargeSceneryArt.draw(this, kind, variant)
                 SceneryKind.WELL -> well(this,variant)
                 SceneryKind.STALL -> stall(this,variant)
                 SceneryKind.CART -> cart(this,false)

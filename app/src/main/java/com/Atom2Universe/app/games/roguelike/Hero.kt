@@ -237,7 +237,7 @@ class Hero {
 
     val maxHp: Int get() {
         val plain = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
-        return (plain * (1f + if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f)).roundToInt()
+        return HitPointBalance.playerHp((plain * (1f + if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f)).roundToInt(), floor)
     }
 
     /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
@@ -306,8 +306,6 @@ class Hero {
      */
     fun relicAmount(relic: Relic): Int = when (relic.effect) {
         RelicEffect.BARRIER -> (maxHp * Relic.BARRIER_SHARE).roundToInt().coerceAtLeast(1)
-        RelicEffect.REGEN   -> (maxHp * Relic.REGEN_SHARE).roundToInt().coerceAtLeast(1)
-        RelicEffect.HEAL    -> (maxHp * Relic.HEAL_SHARE).roundToInt().coerceAtLeast(1)
         RelicEffect.BLEED, RelicEffect.BLEED_ON_CRIT -> bleedDamage(relic)
         RelicEffect.STONESKIN -> (Relic.THORNS_SHARE * 100).roundToInt()
         else -> 0
@@ -328,7 +326,7 @@ class Hero {
     val critMult get() = BASE_CRIT_MULT + equipSum(StatType.CRIT_DAMAGE) + if (specialBoosted(Archetype.VAGABOND)) IsotopeSets.CRIT_DAMAGE_BONUS else 0f
 
     /** Part des dégâts infligés à l'épée rendue en PV. */
-    val lifeSteal get() = equipSum(StatType.LIFE_STEAL)
+    val lifeSteal get() = equipSum(StatType.LIFE_STEAL).coerceIn(0f, 0.25f)
 
     /** Recharge des sorts : SAG retire un tour tous les 6 points. */
     fun spellCooldown(base: Int) = (base - (effective(StatType.WIS) / WIS_POINTS_PER_TURN).toInt() -
@@ -336,8 +334,7 @@ class Hero {
 
     /**
      * La recharge d'une relique après son lancer : la SAG la raccourcit, jamais sous
-     * [Relic.minCooldown] (le Soin garde au moins 3 tours, sinon une grosse SAG le relancerait à
-     * chaque tour et le héros ne mourrait plus).
+     * [Relic.minCooldown] (3 tours pour les reliques de Force, 1 pour les autres).
      */
     fun castCooldown(relic: Relic) = spellCooldown(relic.cooldown).coerceAtLeast(relic.minCooldown)
 

@@ -87,7 +87,7 @@ class NewArchetypesTest {
         assertTrue("pas de riposte gratuite", s.counter == null)
         c.endEnemyTurn()
         // Le coup suivant est relevé de ROLL_BONUS : au moins la moitié de plus que le plus petit coup d'arme
-        val hit = c.attack(0, Timing.MISS)
+        val hit = c.attack(0, Timing.PERFECT)
         assertTrue("${hit.damage} < ${hero.weaponMin}", hit.damage >= (hero.weaponMin * (1f + Combat.ROLL_BONUS)).toInt() - 1)
     }
 
@@ -259,7 +259,7 @@ class NewArchetypesTest {
 
     @Test
     fun chaqueArchetypeAUneMainGaucheEtElleNeCompteQueChezLui() {
-        assertEquals(setOf(ItemBase.SHIELD, ItemBase.BOW, ItemBase.ORB, ItemBase.LANTERN, ItemBase.GRIMOIRE), Archetype.entries.map { it.offhand }.toSet())
+        assertEquals(setOf(ItemBase.SHIELD, ItemBase.BOW, ItemBase.ORB, ItemBase.LANTERN, ItemBase.GRIMOIRE, ItemBase.CLUB), Archetype.entries.map { it.offhand }.toSet())
         assertTrue(withOffhand(Archetype.ROGUE, ItemBase.BOW).classOffhand(Archetype.ROGUE))
         assertTrue("l'arc ne sert pas au mage", !withOffhand(Archetype.MAGE, ItemBase.BOW).classOffhand(Archetype.MAGE))
         assertTrue("sans archétype, rien", !Hero.starter().also { it.equipped[EquipSlot.OFFHAND] = bareOffhand(ItemBase.BOW) }.classOffhand(Archetype.ROGUE))
@@ -289,8 +289,8 @@ class NewArchetypesTest {
 
     @Test
     fun laLanternePorteLeSecondCoupDeLEnchainement() {
-        val without = fight(withOffhand(Archetype.VAGABOND, null)).chain(0, Timing.MISS, Timing.MISS)
-        val with = fight(withOffhand(Archetype.VAGABOND, ItemBase.LANTERN)).chain(0, Timing.MISS, Timing.MISS)
+        val without = fight(withOffhand(Archetype.VAGABOND, null)).chain(0, Timing.PERFECT, Timing.PERFECT)
+        val with = fight(withOffhand(Archetype.VAGABOND, ItemBase.LANTERN)).chain(0, Timing.PERFECT, Timing.PERFECT)
         assertEquals("le premier coup ne change pas", without[0].damage, with[0].damage)
         assertTrue("le second frappe plus fort : ${with[1].damage} contre ${without[1].damage}", with[1].damage > without[1].damage)
     }

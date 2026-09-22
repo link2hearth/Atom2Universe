@@ -84,8 +84,6 @@ internal class CemeteryTileArt {
 
     private fun ground(tx: Int, ty: Int, wall: Boolean, neighbours: Int) {
         val seed = hash(tx, ty)
-        val paved = !wall && hash(tx / 3, ty / 3, 3) % 4 == 0
-        val gravel = !wall && !paved && seed % 5 == 0
         for (y in 0 until SIZE) for (x in 0 until SIZE) {
             val n = hash(tx * SIZE + x, ty * SIZE + y, 1)
             val edge = (neighbours and 1 != 0 && y < 3 + hash(tx * SIZE + x, ty, 2) % 4) ||
@@ -94,29 +92,9 @@ internal class CemeteryTileArt {
                 (neighbours and 8 != 0 && x < 3 + hash(tx, ty * SIZE + y, 2) % 4)
             dot(x, y, if (wall || edge) {
                 when (n % 53) { 0 -> moss; 1, 2 -> shadow; else -> grass }
-            } else when (n % 29) { 0 -> earth; 1 -> 0xFF58665D.toInt(); else -> if (gravel) 0xFF6E7569.toInt() else soil })
+            } else when (n % 29) { 0 -> earth; 1 -> 0xFF58665D.toInt(); else -> soil })
         }
-        if (paved) {
-            for (row in 0..3) for (col in -1..2) {
-                val x = col * 20 + (row % 2) * 10 + 2
-                val y = row * 13 + 1
-                rect(x, y, 17, 10, 0xFF76817A.toInt())
-                rect(x + 1, y, 15, 1, 0xFF929A89.toInt())
-                rect(x + 1, y + 9, 16, 1, 0xFF4E615C.toInt())
-                if (hash(tx + col, ty + row) % 3 == 0) {
-                    line(x + 7, y, x + 9, y + 4, soil)
-                    line(x + 9, y + 4, x + 6, y + 8, soil)
-                    rect(x + 1, y + 7, 3, 2, moss)
-                }
-            }
-        } else if (!wall && seed % 9 == 0) {
-            oval(24, 28, 13, 6, shadow)
-            oval(24, 27, 11, 4, 0xFF607C7D.toInt())
-            line(15, 25, 23, 25, 0xFF96A9A0.toInt())
-            line(24, 29, 31, 29, 0xFF7E9892.toInt())
-            dot(32, 26, light)
-        }
-        repeat(if (wall) 6 else if (gravel) 28 else 5) { i ->
+        repeat(if (wall) 6 else 5) { i ->
             val x = hash(tx, ty, i + 10) % 44 + 2
             val y = hash(tx, ty, i + 40) % 44 + 2
             if (wall) grassTuft(x, y, i) else {
@@ -125,7 +103,7 @@ internal class CemeteryTileArt {
                 if (seed % 4 == 0) dot(x - 1, y, 0xFFAD9570.toInt())
             }
         }
-        if (!wall && !paved && seed % 7 == 0) {
+        if (!wall && seed % 7 == 0) {
             line(5, 36, 15, 32, 0xFF596053.toInt())
             line(10, 34, 10, 30, 0xFF596053.toInt())
             dot(16, 34, warm)

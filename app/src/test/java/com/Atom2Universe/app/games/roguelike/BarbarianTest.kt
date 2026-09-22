@@ -53,6 +53,21 @@ class BarbarianTest {
         assertEquals(IsotopeSets.BARBARIAN_BREACH_TURNS, fight.enemies[0].breachedTurns)
     }
 
+    @Test fun ravageBoostsSmashDamageEvenWithoutClub() {
+        fun damage(boosted: Boolean): Int {
+            val hero = hero(false)
+            for (slot in IsotopeSets.SLOTS) hero.equipped[slot] = hero.equipped.getValue(slot)
+                .copy(isotopeZ = if (boosted) IsotopeSets.forArchetype(Archetype.BARBARIAN).index else null)
+            val combat = fight(hero)
+            val hit = combat.smash(0, Timing.PERFECT)
+            assertEquals(0, combat.enemies[0].breachedTurns)
+            val multiplier = if (boosted) 3f else 2f
+            assertEquals(kotlin.math.round(hero.weaponMax * multiplier * if (hit.crit) hero.critMult else 1f).toInt(), hit.damage)
+            return hit.damage
+        }
+        assertTrue(damage(true) > damage(false))
+    }
+
     @Test fun wisdomCannotRemoveSpecialCooldown() {
         val hero = hero()
         hero.equipped[EquipSlot.WEAPON] = hero.equipped.getValue(EquipSlot.WEAPON).copy(

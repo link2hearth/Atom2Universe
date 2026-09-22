@@ -30,12 +30,6 @@ internal class MineTileArt {
                     val x=(seed%43+i*17)%46;val y=(seed%37+i*11)%47
                     rect(x,y,2+i%3,1,if(i%3==0)0xFF697068 else 0xFF3D4846)
                 }
-                when(seed%5) {
-                    0 -> {oval(10,19,26,10,0xFF394F53);oval(13,20,21,6,0xFF45656B);rect(17,21,12,1,0xFF7F9C99)}
-                    1 -> {line(9,11,22,21,0xFF323F3F);line(22,21,20,28,0xFF323F3F);line(22,21,32,17,0xFF323F3F)}
-                    2 -> {rect(5,6,7,3,0xFF717971);rect(6,6,4,1,0xFF9CA591);rect(33,37,5,2,0xFF798076)}
-                    3 -> {rect(6,34,14,3,0xFF655C4A);line(7,34,18,35,0xFF9B8766)}
-                }
                 if(neighbours and 1!=0)rect(1,0,46,3,0xFF35423F)
                 if(neighbours and 8!=0)rect(0,3,2,43,0xFF35423F)
             }

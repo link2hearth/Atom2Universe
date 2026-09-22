@@ -2,17 +2,18 @@ package com.Atom2Universe.app.games.roguelike
 
 internal enum class SceneryKind(val span:Int=1, val solid:Boolean=true) {
     BONFIRE(solid=false), WELL, STALL, CART, CAMPFIRE, RUIN(2), CHAPEL(2), MINECART,
-    RAIL(solid=false), MARSH(solid=false), CLIFF
+    RAIL(solid=false), MARSH(solid=false), CLIFF,
+    CARGO(2), REACTOR(2), BOOKCASES(2), ORE_VEIN(2), OAK(2), HAYSTACK(2),
+    BANQUET_TABLE(2), MEMORIAL(2)
 }
 internal data class MapScenery(val kind:SceneryKind,val column:Int=0,val row:Int=0,val variant:Int=0,val connections:Int=0) {
-    val solid get() = kind.solid && !(kind.span==2 && column==1 && row==1)
+    val solid get() = kind.solid && !(kind in listOf(SceneryKind.RUIN, SceneryKind.CHAPEL) && column==1 && row==1)
 }
 
 /** Decorations are part of collision, never painted over an existing route without validation. */
 internal object DungeonScenery {
     private val directions=listOf(Pos(0,-1),Pos(1,0),Pos(0,1),Pos(-1,0))
     fun place(level:DungeonLevel):Map<Pos,MapScenery> {
-        if(level.theme==DungeonTheme.PIRATE || level.theme==DungeonTheme.SPACESHIP) return emptyMap()
         val result=linkedMapOf<Pos,MapScenery>()
         val protected=mutableSetOf<Pos>()
         fun protect(p:Pos) { for(y in p.y-1..p.y+1)for(x in p.x-1..p.x+1)protected+=Pos(x,y) }
@@ -27,10 +28,21 @@ internal object DungeonScenery {
             return (0 until level.h).all { y -> (0 until level.w).all { x -> !level.walkable(x,y)||distance[y][x]>=0 } }
         }
         val anchors=mutableListOf<Pos>()
-        for(kind in listOf(SceneryKind.CHAPEL,SceneryKind.RUIN,SceneryKind.WELL,SceneryKind.STALL,SceneryKind.CART,SceneryKind.CAMPFIRE)) {
+        for(kind in listOf(SceneryKind.CARGO, SceneryKind.REACTOR, SceneryKind.BOOKCASES,
+            SceneryKind.ORE_VEIN, SceneryKind.OAK, SceneryKind.HAYSTACK,
+            SceneryKind.BANQUET_TABLE, SceneryKind.MEMORIAL,
+            SceneryKind.CHAPEL,SceneryKind.RUIN,SceneryKind.WELL,SceneryKind.STALL,SceneryKind.CART,SceneryKind.CAMPFIRE)) {
             // Trade stalls belong to settled field edges, chapels to the cemetery.
             val candidates=ordered.filter { p ->
                 when(kind) {
+                    SceneryKind.CARGO -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.PIRATE, DungeonTheme.PORT)
+                    SceneryKind.REACTOR -> level.themeAt(p.x,p.y)==DungeonTheme.SPACESHIP
+                    SceneryKind.BOOKCASES -> level.themeAt(p.x,p.y)==DungeonTheme.LIBRARY
+                    SceneryKind.ORE_VEIN -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.MINE, DungeonTheme.MINE_DEPOT)
+                    SceneryKind.OAK -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.FOREST, DungeonTheme.CAMP, DungeonTheme.VILLAGE)
+                    SceneryKind.HAYSTACK -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.FIELDS, DungeonTheme.VILLAGE, DungeonTheme.CAMP)
+                    SceneryKind.BANQUET_TABLE -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.INN, DungeonTheme.PIRATE_CABIN)
+                    SceneryKind.MEMORIAL -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.MONASTERY, DungeonTheme.DUNGEON, DungeonTheme.CRYPT, DungeonTheme.BATTLEFIELD)
                     SceneryKind.CHAPEL -> level.themeAt(p.x,p.y)==DungeonTheme.CEMETERY
                     SceneryKind.STALL -> level.themeAt(p.x,p.y) in listOf(DungeonTheme.VILLAGE,DungeonTheme.FIELDS,DungeonTheme.PORT) ||
                         (level.themeAt(p.x,p.y).outdoor && (-3..3).any { dx -> (-3..3).any { dy -> level.themeAt(p.x+dx,p.y+dy)==DungeonTheme.INN } })
@@ -44,7 +56,7 @@ internal object DungeonScenery {
                 if(cells.any { it in protected || it in result || level.themeAt(it.x,it.y)!=level.themeAt(p.x,p.y) })continue
                 // Keep the front accessible, and the 2x2 entrance walkable.
                 if((0 until span).any { !level.walkable(p.x+it,p.y+span) })continue
-                if(span==2 && !level.walkable(p.x+1,p.y+1))continue
+                if(kind in listOf(SceneryKind.RUIN, SceneryKind.CHAPEL) && !level.walkable(p.x+1,p.y+1))continue
                 val old=cells.map { level.tiles[it.y][it.x] }
                 cells.forEach { q -> if(MapScenery(kind,q.x-p.x,q.y-p.y).solid)level.tiles[q.y][q.x]=TileType.WALL }
                 if(!connected()) {cells.forEachIndexed { i,q -> level.tiles[q.y][q.x]=old[i] };continue}

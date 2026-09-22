@@ -24,7 +24,7 @@ class ChainedCombatTest {
     }
 
     /** Tue tous les ennemis du combat en cours, sans laisser le héros mourir. */
-    private fun win(g: RoguelikeGame) {
+    private fun win(g: RoguelikeGame, remainingHp: Int? = null) {
         val c = g.combat ?: error("aucun combat en cours")
         var guard = 0
         while (c.phase == CombatPhase.PLAYER_TURN || c.phase == CombatPhase.ENEMY_TURN) {
@@ -42,6 +42,7 @@ class ChainedCombatTest {
             }
         }
         assertEquals("le héros devait gagner", CombatPhase.VICTORY, c.phase)
+        remainingHp?.let { g.hero.hp = it }
         g.finishCombat()
     }
 
@@ -96,5 +97,33 @@ class ChainedCombatTest {
         }
         assertEquals(2, fights)
         assertTrue(g.level.packs.none { it.alive })
+    }
+    @Test fun victoryHealsAfterLootButNeverBeforeAnIncomingFight() {
+        for (chained in listOf(false, true)) for (withLoot in listOf(false, true)) {
+            val g = RoguelikeGame(rng = Random(7), levelSeed = 7L)
+            g.level.packs.forEach { it.alive = false }
+            val here = g.playerPos
+            val first = MonsterPack(listOf(MonsterType.RAT), Pos(here.x + 1, here.y))
+            first.state = PackState.CHASING
+            g.level.packs += first
+            if (chained) {
+                val next = MonsterPack(listOf(MonsterType.RAT), Pos(here.x, here.y + 1))
+                next.state = PackState.CHASING
+                g.level.packs += next
+            }
+            g.tryMove(1, 0)
+            if (withLoot) g.pendingLoot.addLast(LootSystem.generate(1, 0, Random(3)))
+            win(g, remainingHp = 7)
+            if (g.pendingLoot.isNotEmpty()) assertEquals(7, g.hero.hp)
+            clearLoot(g)
+            if (chained) {
+                assertTrue(g.combat != null)
+                assertEquals("no healing between chained fights", 7, g.hero.hp)
+                win(g, remainingHp = 3)
+                clearLoot(g)
+            }
+            assertNull(g.combat)
+            assertEquals("full recovery after the final victory", g.hero.maxHp, g.hero.hp)
+        }
     }
 }

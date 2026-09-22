@@ -363,7 +363,7 @@ class GrimoireTest {
             c.castRelic(relics.first(), 0, Timing.MISS)
             return strikeOf(c)
         }
-        val bare = strike(Relic.HEAL)
+        val bare = strike(Relic.POISONED_BLADES)
         val stone = strike(Relic.STONESKIN)
         val rampart = strike(Relic.STONESKIN, Relic.WAR_CRY)
         assertEquals(0, bare.thorns)
@@ -375,13 +375,13 @@ class GrimoireTest {
     // ── Refonte du 20/09/2026 : la Ponction vitale et le Verglas ─────────────────
 
     @Test
-    fun laPonctionRendLaMoitieDesDegatsInfliges() {
+    fun laRuptureDAmeNeSoignePas() {
         val c = fight(Relic.PONCTION)
         c.hero.hp = c.hero.maxHp / 2
         val before = c.hero.hp
         val hit = c.castRelic(Relic.PONCTION, 0, Timing.MISS).main!!
         assertTrue(hit.damage > 0)
-        assertEquals((hit.damage * Relic.DRAIN_SHARE).let { Math.round(it) }, c.hero.hp - before)
+        assertEquals(0, c.hero.hp - before)
     }
 
     @Test
@@ -526,19 +526,20 @@ class GrimoireTest {
         assertTrue(Reaction.PURIFY in hit.reactions)
         assertEquals("le poison est nettoyé", 0, c.enemies[0].poisonDoses)
         assertTrue("purifié", c.purifiedTurns > 0)
-        assertTrue("il récupère des PV", c.regenTurns > 0)
+        assertEquals("aucun soin", 0, c.lifeStolen)
 
     }
 
     @Test
-    fun leSacreSurUnBruleLeSoigne() {
+    fun leSacreSurUnBruleInfligeDesDegats() {
         val c = fight(Relic.HOLY_LIGHT, d20 = 20)
         c.enemies[0].burning()
         c.hero.hp = 1
         val hit = c.castRelic(Relic.HOLY_LIGHT, 0, Timing.MISS).main!!
         assertTrue(Reaction.HOLY_FIRE in hit.reactions)
         assertEquals(0, c.enemies[0].burnTurns)
-        assertTrue("soigné", c.hero.hp > 1)
+        assertEquals("aucun soin", 1, c.hero.hp)
+        assertTrue("conversion en dégâts", hit.explosion > 0)
     }
 
     @Test

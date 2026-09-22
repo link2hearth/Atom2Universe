@@ -86,12 +86,6 @@ internal class ForestTileArt {
             val x=3+hash(tx,ty,i+11)%42;val y=5+hash(tx,ty,i+23)%39
             if(wall || isJungle(tx,ty)) tuft(x,y) else {rect(x,y,2,1,woodLight);dot(x+1,y+1,wood)}
         }
-        if(!wall) when(seed%9) {
-            0->{oval(24,28,12,5,deep);oval(24,27,10,3,0xFF789F92.toInt());rect(17,26,8,1,0xFFBAD1C0.toInt());rect(27,29,4,1,leaf)}
-            1->{for(i in 0..3){val x=10+i*7;val y=30-i*3;oval(x,y,4,2,wood);oval(x,y-1,3,1,cream)}}
-            2->{for(i in 0..3){val x=7+i*10;val y=12+(seed/(i+1))%24;rect(x,y,2,1,if(i%2==0) peach else lilac)}}
-            else->Unit
-        }
         // Small edge flowers never occupy the open centre of a path.
         if(!wall && mask!=0 && seed%3==0) flower(if(mask and 8!=0) 5 else 42,32,if(isJungle(tx,ty))pink else lilac,2)
     }

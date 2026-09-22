@@ -147,7 +147,8 @@ class RoguelikeGame(
                 val bagJson = j.getJSONArray("bag")
                 for (i in 0 until bagJson.length()) bag += SaveManager.equipFromJson(bagJson.getJSONObject(i))
                 nextLootId = j.getLong("nextLootId")
-                hp = j.getInt("hp").coerceIn(1, maxHp)
+                floor = j.getInt("floor")
+                hp = HitPointBalance.restore(j.getInt("hp"), j.optDouble("hpMultiplier", 1.0), floor).coerceIn(1, maxHp)
                 specialCooldown = j.optInt("specialCooldown", 0)
                 val relicsJson = j.optJSONArray("relics")
                 if (relicsJson == null) {
@@ -155,7 +156,7 @@ class RoguelikeGame(
                     addRelic(Relic.FIREBALL)
                 } else {
                     for (i in 0 until relicsJson.length())
-                        runCatching { Relic.valueOf(relicsJson.getString(i)) }.getOrNull()?.let { relics += it }
+                        Relic.fromSavedName(relicsJson.getString(i))?.let { relics += it }
                     j.optJSONObject("relicCooldowns")?.let { cds ->
                         for (name in cds.keys()) relics.firstOrNull { it.name == name }?.let { relicCooldowns[it] = cds.getInt(name) }
                     }
@@ -445,6 +446,8 @@ class RoguelikeGame(
             .filter { it.alive && it.state == PackState.CHASING && it.pos.chebyshev(playerPos) <= CHAIN_DISTANCE }
             .minByOrNull { it.pos.chebyshev(playerPos) }
         if (next == null) {
+            // Recover only after the entire chain and its loot have been resolved.
+            hero.healFull()
             openStairsOnArrival()
             return
         }
@@ -659,6 +662,7 @@ class RoguelikeGame(
             })
         }
         put("hp",         hero.hp)
+        put("hpMultiplier", HitPointBalance.playerMultiplier(hero.floor))
         put("gold",       hero.gold)
         put("deepestFloor", hero.deepestFloor)
         put("heroSprite", heroSpritePath)

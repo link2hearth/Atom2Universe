@@ -493,7 +493,7 @@ class InventoryPanel(
     }
 
     private fun relicClass(relic: Relic): Archetype? = when {
-        relic == Relic.HEAL || relic == Relic.HOURGLASS -> null
+        relic == Relic.HOURGLASS -> null
         relic.attribute == StatType.STR -> Archetype.BARBARIAN
         relic.attribute == StatType.CON -> Archetype.WARRIOR
         relic.attribute == StatType.DEX -> Archetype.ROGUE

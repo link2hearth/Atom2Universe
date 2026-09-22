@@ -178,7 +178,7 @@ object Lexicon {
                 StatType.WIS -> {
                     add(R.string.lex_attr_wis_1)
                     add(R.string.lex_attr_wis_2, Hero.WIS_POINTS_PER_TURN)
-                    add(R.string.lex_attr_wis_3, Relic.HEAL_MIN_COOLDOWN)
+                    add(R.string.lex_attr_wis_3, 1)
                 }
                 else -> { add(R.string.lex_attr_cha_1); add(R.string.lex_attr_cha_2, env.pct(Hero.GOLD_PER_CHA)) }
             }
@@ -200,6 +200,7 @@ object Lexicon {
             entry(idOf(StatType.MAX_HP), c, R.string.lex_stat_max_hp) {
                 add(R.string.lex_stat_max_hp_1)
                 add(R.string.lex_stat_max_hp_2, Hero.BASE_HP, Hero.HP_PER_CON)
+                add(R.string.lex_stat_hp_curve)
                 add(R.string.lex_stat_max_hp_3)
                 env.hero?.let { you(R.string.lex_you_hp, env.num(it.hp), env.num(it.maxHp)) }
             },
@@ -362,7 +363,6 @@ object Lexicon {
             entry("state_stoneskin", c, R.string.lex_state_stoneskin) {
                 add(R.string.lex_state_stoneskin_1, env.dec(Relic.STONESKIN_ARMOR), env.pct(Relic.THORNS_SHARE))
             },
-            entry("state_regen", c, R.string.lex_state_regen) { add(R.string.lex_state_regen_1) },
             entry("state_haste", c, R.string.lex_state_haste) { add(R.string.lex_state_haste_1, env.dec(Relic.HASTE_SPEED)) },
             entry("state_hourglass", c, R.string.lex_state_hourglass) { add(R.string.lex_state_hourglass_1, env.dec(Relic.HOURGLASS_SLOW)) },
             entry("state_empowered", c, R.string.lex_state_empowered) { add(R.string.lex_state_empowered_1, Relic.WARCRY_ATTACKS) },
@@ -424,7 +424,7 @@ object Lexicon {
                     Reaction.INFECTION -> add(R.string.lex_reaction_infection_1, Reaction.EXPOSED_EXTRA)
                     Reaction.SHATTER -> add(R.string.lex_reaction_shatter_1, env.dec(Reaction.SHATTER_MULT))
                     Reaction.DEATHBLOW -> add(R.string.lex_reaction_deathblow_1)
-                    Reaction.PURIFY -> add(R.string.lex_reaction_purify_1, Reaction.PURIFIED_TURNS, env.dec(Reaction.PURIFIED_ARMOR), env.pct(Reaction.PURIFIED_REGEN_SHARE))
+                    Reaction.PURIFY -> add(R.string.lex_reaction_purify_1, Reaction.PURIFIED_TURNS, env.dec(Reaction.PURIFIED_ARMOR), 0)
                     Reaction.HOLY_FIRE -> add(R.string.lex_reaction_holy_fire_1, env.pct(Reaction.HOLY_FIRE_SHARE))
                 }
             }
@@ -444,7 +444,7 @@ object Lexicon {
         return env.s(relic.descRes, env.num(lo), env.num(hi), relic.effectTurns, hero.castCooldown(relic),
             env.num(hero.poisonDose(relic)), hero.spellDc(relic), empowerPct, env.num(hero.relicAmount(relic)),
             env.pct(Combat.FRACTURE_MULT - 1f), env.pct(1f - Combat.WEAKEN_MULT), env.pct(1f - Relic.CHAIN_FALLOFF),
-            Relic.CRYSTAL_MULT.roundToInt(), env.pct(Relic.HEAL_SHARE), Relic.STONESKIN_ARMOR.roundToInt(),
+            Relic.CRYSTAL_MULT.roundToInt(), 0, Relic.STONESKIN_ARMOR.roundToInt(),
             Relic.MISSILE_COUNT, Relic.WARCRY_ATTACKS, Relic.POISON_MAX_DOSES, env.dec(Relic.FREEZE_TURN_LENGTH),
             env.pct(Relic.BURN_SHARE))
     }
@@ -519,7 +519,7 @@ object Lexicon {
                 add(R.string.lex_special_deadly_2, env.pct(Combat.DEADLY_HP_THRESHOLD)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.MAGE), c, Archetype.MAGE.specialRes) {
-                add(R.string.lex_special_mirror_1, Combat.MIRROR_IMAGES, env.pct(Combat.MIRROR_REGEN_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+                add(R.string.lex_special_mirror_1, Combat.MIRROR_IMAGES, 0); add(R.string.lex_special_mirror_fixed, Hero.SPECIAL_COOLDOWN, IsotopeSets.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.VAGABOND), c, Archetype.VAGABOND.specialRes) {
                 add(R.string.lex_special_combo_1, Combat.CHAIN_HITS); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
@@ -591,12 +591,11 @@ object Lexicon {
 
     // ── Sets d'isotope : cachés tant qu'aucune pièce n'est tombée ───────────────
 
-    private fun isotopeSets() = IsotopeSets.ALL.flatMap { listOf(it, it.copy(barbarian = true)) }.map { set ->
+    private fun isotopeSets() = IsotopeSets.PERMANENT.map { set ->
         entryT(set.lexiconId, LexiconCategory.ITEMS, { env -> env.s(R.string.lex_set_title, set.label(env.ctx)) },
-            secret = true, known = { h -> h != null && set.z in h.knownSets }) {
+            secret = true, known = { h -> h != null && IsotopeSets.discovered(h, set) }) {
             val a = set.archetype
-            add(R.string.lex_set_1, env.link(idOf(a), env.s(a.labelRes)), env.link(idOf(a.weight), env.s(a.weight.labelRes)),
-                set.firstFloor, set.lastFloor)
+            add(R.string.lex_set_1, env.link(idOf(a), env.s(a.labelRes)), env.link(idOf(a.weight), env.s(a.weight.labelRes)))
             add(R.string.lex_set_2, IsotopeSets.SLOTS.size, env.link(specialId(a), env.s(a.specialRes)))
             when (a) {
                 Archetype.BARBARIAN -> { add(R.string.lex_set_barbarian) }

@@ -32,12 +32,7 @@ internal class PirateTileArt {
             if(cabin)when(seed%6){0->desk();1->window();2->books();3->chest();4->bottles();else->chair()}
             else when(seed%6){0->barrels();1->crate();2->cannon();3->mast();4->sail();else->capstan()}
         }else if(stairs)hatch(cabin)
-        else when(seed%13){
-            0->rope(24,28,9)
-            1-> {rect(9,15,29,20,dark);rect(10,16,27,17,ink);for(x in 12..35 step 4)rect(x,17,2,15,wood);rect(10,23,27,2,pale)}
-            2-> {line(12,31,32,21,if(cabin)dark else pale);line(14,33,34,23,dark)}
-            else->Unit
-        }
+        // Walkable deck stays clear; raised props belong to blocking cells.
         return pixels
     }
     private fun floor(tx:Int,ty:Int,cabin:Boolean,rug:Boolean,mask:Int){

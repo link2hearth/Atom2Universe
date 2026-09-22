@@ -38,7 +38,7 @@
     <string name="lex_attr_int_1">Les dégâts des bâtons et les sorts du Mage : feu, glace, foudre…</string>
     <string name="lex_attr_wis_1">Les dégâts des sceptres et la [[cooldown|recharge]] de tes reliques et du [[special|Spécial]].</string>
     <string name="lex_attr_wis_2">−1 tour de recharge tous les %1$d points au-dessus de 10</string>
-    <string name="lex_attr_wis_3">Jamais moins d\'1 tour (%1$d pour le Soin)</string>
+    <string name="lex_attr_wis_3">Jamais moins d&#8217;un tour.</string>
     <string name="lex_attr_cha_1">L\'or que tu trouves.</string>
     <string name="lex_attr_cha_2">+%1$d %% d\'or par point au-dessus de 10</string>
     <string name="lex_attr_relics">Les [[relics|reliques]] qui la suivent : +%1$d %% de dégâts par point au-dessus de 10, et un contrôle (gel, paralysie…) qui prend plus souvent (+%2$d %% tous les 2 points)</string>
@@ -76,7 +76,7 @@
     <string name="lex_stat_speed_3">Pièce [[weight_heavy|lourde]] : %1$s %% par pièce ; pièce [[weight_light|légère]] : %2$s %%</string>
     <string name="lex_you_speed">Toi : %1$d %%</string>
     <string name="lex_stat_life_steal">Vol de vie</string>
-    <string name="lex_stat_life_steal_1">Une part des dégâts de ton arme te soigne.</string>
+    <string name="lex_stat_life_steal_1" formatted="false">Les dégâts directs des armes, spéciaux, reliques et réactions rendent des PV selon la vie réellement retirée aux ennemis. Aucun soin par dégâts périodiques, pantins ou renvois. Disponible sur tous les emplacements : 1 à 5 % par affixe, cumul limité à 25 %.</string>
     <string name="lex_you_life_steal">Toi : %1$s %%</string>
     <string name="lex_stat_weapon_dmg">Dégâts d\'arme</string>
     <string name="lex_stat_weapon_dmg_1">Les dégâts de ton arme, avant critique.</string>
@@ -138,7 +138,7 @@
     <string name="lex_rest">Repos</string>
     <string name="lex_rest_1">Passer sur le feu du départ restaure automatiquement tous tes PV et recharge tes reliques et ton Spécial.</string>
     <string name="lex_rest_2">Aucun bouton à toucher : le soin se déclenche dès ton arrivée, même pendant une [[chase|poursuite]].</string>
-    <string name="lex_rest_3">Le feu ne fait pas apparaître de monstres. Les soins de combat restent disponibles.</string>
+    <string name="lex_rest_3">Après une victoire et le ramassage du butin, tes PV sont entièrement restaurés si aucun combat ne doit être enchaîné. Aucun soin entre deux combats enchaînés.</string>
     <string name="lex_rest_4">Reste immobile 5 secondes sur le feu de départ pour revenir au checkpoint ou régénérer l’étage actuel avec une nouvelle carte.</string>
     <string name="lex_chase">Poursuite</string>
     <string name="lex_chase_1">Un monstre qui te voit te poursuit ; s\'il te rattrape, le combat commence.</string>
@@ -229,7 +229,7 @@
     <string name="lex_reactions_2">Elles marchent pour tout le monde, sans équipement. Rien ne les annonce : on les découvre en jouant.</string>
     <string name="lex_reaction_explosion_1">Le [[element_fire|feu]] sur un [[state_poison|empoisonné]] : toutes les doses restantes tombent d\'un coup, et le poison disparaît.</string>
     <string name="lex_reaction_shatter_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_frozen|figé]] : dégâts ×%1$s, la glace se brise.</string>
-    <string name="lex_reaction_purify_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_poison|empoisonné]] : le poison est nettoyé, et tu es purifié %1$d tours : armure ×%2$s et %3$s de tes PV max rendus par tour et par dose nettoyée.</string>
+    <string name="lex_reaction_purify_1">Les dégâts physiques ou sacrés sur un ennemi empoisonné consomment le poison et donnent une armure ×%2$s pendant %1$d tours. Aucun soin.</string>
     <string name="lex_resonances">Résonances</string>
     <string name="lex_resonances_1">Deux reliques précises portées ensemble donnent +%1$d dans une caractéristique, et un effet en plus.</string>
     <string name="lex_resonances_2">On les découvre en portant la paire une première fois.</string>
@@ -262,7 +262,7 @@
     <string name="lex_special_guard_1">Tu passes ton tour : tes fenêtres de parade doublent jusqu\'à ton prochain tour, et chaque coup reçu est renvoyé à hauteur de %1$d %%.</string>
     <string name="lex_special_deadly_1">Un coup d\'arme sur une cible exposée : critique assuré, multiplicateur +%1$s.</string>
     <string name="lex_special_deadly_2">Exposée : [[state_poison|empoisonnée]], [[state_frozen|figée]], [[state_paralyzed|paralysée]], [[state_marked|marquée]], ou sous %1$d %% de ses PV.</string>
-    <string name="lex_special_mirror_1">Tu crées %1$d doubles : chacun peut prendre un coup à ta place, jusqu\'à la fin du combat. Tant qu\'un double est présent, tu récupères %2$d %% de tes PV max à chaque tour.</string>
+    <string name="lex_special_mirror_1">Crée %1$d doubles qui peuvent absorber les attaques ennemies jusqu&#8217;à leur destruction ou la fin du combat. Ils ne te soignent pas.</string>
     <string name="lex_weight_cloth_1">Peu d\'armure : pour qui compte sur ses sorts.</string>
     <string name="lex_weight_light_1">Un peu moins d\'armure, mais il évite les coups.</string>
     <string name="lex_weight_heavy_1">Beaucoup d\'armure : il encaisse.</string>
@@ -308,11 +308,11 @@
     <string name="lex_you_depth_point">À l\'étage %1$d, un point compte pour %2$s %% de sa valeur : [[depth|résistance en profondeur]]</string>
     <string name="lex_you_depth">Toi, à l\'étage %1$d : un point vaut %2$s</string>
     <string name="lex_set_title">Set %1$s</string>
-    <string name="lex_set_1">Un set d\'isotope pour le %1$s : trois pièces (casque, armure, bottes) de poids %2$s. Ses pièces ne tombent qu\'aux étages %3$d à %4$d, et surpassent tout ce qu\'on y trouve d\'autre.</string>
-    <string name="lex_set_2">Porte %1$d pièces de sets d\'isotope de ce type (elles peuvent venir de sets différents) pour améliorer ton Spécial : %2$s.</string>
+    <string name="lex_set_1">Un set spécial pour le %1$s : trois pièces (casque, armure, bottes) de poids %2$s. Disponible à tous les étages, dans le tier immédiatement supérieur à celui de cet étage.</string>
+    <string name="lex_set_2">Porte les %1$d pièces de ce set, même de puissances différentes, pour améliorer ton Spécial : %2$s.</string>
     <string name="lex_set_special_guard">Les coups sont renvoyés à hauteur de %1$d %% au lieu de %2$d %%, et la recharge passe à %3$d tours au lieu de %4$d.</string>
     <string name="lex_set_hp">Donne aussi %1$d %% de PV max en plus.</string>
-    <string name="lex_set_drop">%1$d %% des objets trouvés à ces étages sont une pièce de ce set.</string>
+    <string name="lex_set_drop">%1$d %% des objets trouvés sont des pièces de sets spéciaux, réparties à parts égales entre les six classes.</string>
     <string name="lex_you_set">Toi : %1$d pièces sur %2$d</string>
     <string name="lex_set_special_deadly">Le critique garanti gagne +%1$s au multiplicateur au lieu de +%2$s, et la recharge passe à %3$d tours au lieu de %4$d.</string>
     <string name="lex_set_special_mirror">%1$d doubles au lieu de %2$d, et la recharge passe à %3$d tours au lieu de %4$d.</string>
@@ -325,7 +325,7 @@
     <string name="lex_archetype_necromancer_1">Ses pantins sont présents dès le début du combat, même en embuscade. L\'Appel des morts commence avec quatre tours de recharge. L\'attaque normale commande les pantins ; le nécromancien ne frappe lui-même que lorsqu\'il ne reste aucun pantin vivant.</string>
     <string name="lex_archetype_necromancer_2">Geste parfait et défense réussie : ses pantins récupèrent %1$d %% de leurs PV.</string>
     <string name="lex_archetype_necromancer_3">Tu disposes de %1$d pantins, qui ont chacun %2$d %% de tes PV max. Un pantin absorbe %3$d %% du coup à ta place, même si cela le tue : le surplus est perdu. Sans pantin vivant, tu subis les dégâts. Leur attaque commandée utilise les dégâts et les effets de ton arme. Chaque pantin vivant ajoute un écho à hauteur de %4$d %% des dégâts moyens d\'arme : en entier avec un geste parfait, la moitié avec un bon geste, rien avec un raté.</string>
-    <string name="lex_special_combo_1">%1$d frappes, un geste chacune, pour une action. Chaque frappe inflige 60 %% des dégâts d’arme ; avec lanterne, la seconde inflige 90 %% : 150 %% au total avant les autres effets.</string>
+    <string name="lex_special_combo_1">%1$d frappes, un geste chacune, pour une action. Chaque frappe inflige 60 %% des dégâts d’arme ; avec lanterne, la seconde inflige 90 %% : 200 %% au total avant les autres effets.</string>
     <string name="lex_special_puppets_1">Invoque ou relève les pantins avec tous leurs PV en sacrifiant %2$d %% de tes PV max. La première vague du combat est gratuite. Le rappel exige assez de PV pour survivre au sacrifice. Chacun frappe aussitôt à hauteur de %1$d %% des dégâts moyens de ton arme.</string>
     <string name="lex_weight_ultralight_1">Presque pas d\'armure : il compte sur ses pantins.</string>
     <string name="lex_weight_medium_1">Un peu de tout : une bonne armure et un peu d\'esquive.</string>
@@ -356,14 +356,16 @@
     <string name="lex_reaction_neurotoxin_1">Le [[element_poison|poison]] sur un [[state_paralyzed|paralysé]] : la paralysie dure %1$d tour de plus.</string>
     <string name="lex_reaction_infection_1">Le [[element_poison|poison]] sur un [[state_exposed|exposé]] : une dose de plus, et son exposition dure %1$d tour de plus.</string>
     <string name="lex_reaction_deathblow_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_paralyzed|paralysé]] : critique garanti.</string>
-    <string name="lex_reaction_holy_fire_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_burn|brûlé]] : la brûlure s\'éteint et te soigne de %1$s de ce qu\'elle aurait fait.</string>
+    <string name="lex_reaction_holy_fire_1">Les dégâts physiques ou sacrés consomment la brûlure et infligent immédiatement %1$s de ses dégâts restants.</string>
     <string name="lex_strike_miss">Raté : minimum de la fourchette, réduit par la défense du monstre contre les coups mal exécutés. Les monstres robustes, les étages profonds et les boss défendent mieux. Ton équipement et tes caractéristiques aident à dépasser cette défense ; les dégâts peuvent tomber à zéro. Un coup entièrement bloqué ne déclenche aucun effet au contact.</string>
     <string name="lex_attr_name_end">Endurance</string>
     <string name="lex_attr_end_1">La caractéristique du Vagabond : dégâts des lances et précision des gestes de combat.</string>
     <string name="lex_attr_end_2">Jusqu’à 15 %% de temps supplémentaire et 20 %% de largeur en plus pour les zones de réussite. Plafond à 60 points effectifs au-dessus de 10 ; la résistance en profondeur s’applique. Ne change pas la fréquence des tours.</string>
     <string name="lex_archetype_barbarian">Force, hache et armures de fourrure. Avec une massue, Fracas ouvre une brèche physique. Une défense réussie avec un geste parfait ouvre aussi une brèche brève, sans riposte gratuite.</string>
-    <string name="lex_special_smash">Une frappe à 150 %% des dégâts d’arme. Avec une massue, un coup infligeant des dégâts ouvre une brèche pendant 2 tours ennemis : +15 %% de dégâts reçus des armes et des reliques physiques. Sans cumul ni étourdissement.</string>
+    <string name="lex_special_smash">Une frappe à 200 %% des dégâts d’arme. Avec une massue, un coup infligeant des dégâts ouvre une brèche pendant 2 tours ennemis : +15 %% de dégâts reçus des armes et des reliques physiques. Sans cumul ni étourdissement.</string>
     <string name="lex_weight_fur">Armure du Barbare : protection moyenne, aucun changement de vitesse, Dextérité limitée à +1 en défense.</string>
     <string name="lex_base_club">Main secondaire du Barbare. Donne de la Force et permet à Fracas d’ouvrir une brèche physique (+15 %% de dégâts) pendant 2 tours ennemis.</string>
-    <string name="lex_set_barbarian">Trois pièces d’isotope du Barbare prolongent la brèche de Fracas à 3 tours ennemis. Recharge de base du spécial : 4 tours au lieu de 5, jamais moins de 3 après la Sagesse.</string>
+    <string name="lex_set_barbarian">Trois pièces de Ravage portent Fracas à 300 %% des dégâts de votre arme au lieu de 200 %% et prolongent la brèche de Fracas à 3 tours ennemis avec la massue équipée. Recharge de base du spécial : 4 tours au lieu de 5, jamais moins de 3 après la Sagesse.</string>
+    <string name="lex_stat_hp_curve">PV du joueur et des ennemis : ×2,5 à l&#8217;étage 1. Progression linéaire jusqu&#8217;à l&#8217;étage 250 : ×4 pour le joueur, ×5 pour les ennemis. Ces multiplicateurs restent constants ensuite.</string>
+    <string name="lex_special_mirror_fixed">Recharge fixe : %1$d tours, ou %2$d avec le set Mirage complet. La Sagesse ne la réduit pas.</string>
 </resources>

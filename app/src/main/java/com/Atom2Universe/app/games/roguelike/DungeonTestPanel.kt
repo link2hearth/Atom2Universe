@@ -105,8 +105,7 @@ internal class DungeonTestPanel(
             val rollSeed = seed.valid(Int.MAX_VALUE) ?: return@dialog false
             val rng = Random(rollSeed)
             val type = Archetype.entries[archetype.selectedItemPosition]
-            val set = if (type == Archetype.BARBARIAN) IsotopeSets.ALL.first().copy(barbarian = true)
-                else IsotopeSets.ALL.first { it.archetype == type }
+            val set = IsotopeSets.forArchetype(type)
             val hero = game().hero
             val bases = listOf(type.weapons.first(), type.offhand, ItemBase.HELMET,
                 ItemBase.ARMOR, ItemBase.BOOTS, ItemBase.AMULET, ItemBase.RING)

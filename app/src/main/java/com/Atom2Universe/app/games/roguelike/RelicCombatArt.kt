@@ -103,10 +103,6 @@ internal class RelicCombatArt {
                     val xx=hx-24+i*10+t*8
                     line(c,xx+5,hy-7,xx,hy); line(c,xx,hy,xx+5,hy+7)
                 }
-                Relic.HEAL -> repeat(5) { i ->
-                    val xx=hx-16+i*8; val yy=hy+12-((t+i*.19f)%1f)*34
-                    line(c,xx-3,yy,xx+3,yy,true); line(c,xx,yy-3,xx,yy+3,true)
-                }
                 Relic.HOURGLASS -> {
                     ink=0xFFC9A227.toInt(); light=0xFFFFEDAD.toInt()
                     line(c,hx-8,hy-12,hx+8,hy-12); line(c,hx-8,hy+12,hx+8,hy+12)
@@ -221,7 +217,7 @@ internal class RelicCombatArt {
                         repeat(5) { i -> line(c,ex-4+i*2,ey-65,ex-4+i*2,ey+14,i%2==0) }
                         ring(c,ex,ey,6+t*20,t)
                     }
-                    Relic.STONESKIN, Relic.POISONED_BLADES, Relic.HASTE, Relic.HEAL,
+                    Relic.STONESKIN, Relic.POISONED_BLADES, Relic.HASTE,
                     Relic.HOURGLASS, Relic.WAR_CRY -> Unit
                 }
             }

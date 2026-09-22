@@ -275,25 +275,6 @@ class RelicTest {
         assertEquals(4, hero.unlockedRelicSlots)
     }
 
-    /** Une énorme SAG raccourcit les recharges, mais le Soin garde au moins 3 tours. */
-    @Test
-    fun leSoinGardeTroisToursDeRecharge() {
-        val sage = heroWith(StatType.WIS, 200)
-        assertEquals(1, sage.castCooldown(Relic.FIREBALL))
-        assertEquals(Relic.HEAL_MIN_COOLDOWN, sage.castCooldown(Relic.HEAL))
-    }
-
-    /** Le Soin rend 35 % des PV max d'un coup, pour une demi-jauge. */
-    @Test
-    fun leSoinRendUnTiersDesPv() {
-        val hero = Hero.starter().apply { addRelic(Relic.HEAL) }
-        hero.hp = 1
-        val c = Combat(hero, 1, listOf(Enemy(MonsterType.RAT, 1000, 1, 1, 1)), ambush = false, rng = Random(1))
-        c.castRelic(Relic.HEAL, 0, Timing.MISS)
-        assertEquals(1 + Math.round(hero.maxHp * Relic.HEAL_SHARE), hero.hp)
-        assertEquals(Combat.SUPPORT_ACTION, c.relicCost(Relic.HEAL), 1e-9)
-    }
-
     @Test
     fun leSortSuitLaPuissanceDeLArme() {
         val hero = Hero.starter()
@@ -388,12 +369,11 @@ class RelicTest {
                 RelicEffect.DELAYED   -> -hit * RelicBudget.DELAY_PREMIUM / (1f + RelicBudget.DELAY_PREMIUM)
                 RelicEffect.BLIND     -> RelicBudget.BLIND_TURN_VALUE * r.effectTurns
                 // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
-                RelicEffect.SMOKE, RelicEffect.BARRIER, RelicEffect.REGEN, RelicEffect.HEAL,
+                RelicEffect.SMOKE, RelicEffect.BARRIER,
                 RelicEffect.STONESKIN, RelicEffect.CHARM,
                 RelicEffect.HASTE, RelicEffect.HOURGLASS -> RelicBudget.share(r)
                 // Ralentissement et soin : une part du coup, le reste dans l'effet
                 RelicEffect.SLOW      -> RelicBudget.share(r) * RelicBudget.SLOW_EFFECT_SHARE
-                RelicEffect.DRAIN     -> RelicBudget.share(r) * RelicBudget.DRAIN_EFFECT_SHARE
             }
             assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
                 1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)

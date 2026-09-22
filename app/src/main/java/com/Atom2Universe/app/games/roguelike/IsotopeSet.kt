@@ -7,18 +7,10 @@ import com.Atom2Universe.app.periodic.getPeriodicElements
 import java.text.Normalizer
 
 /**
- * Un set d'isotope : trois pièces (casque, armure, bottes) d'un même archétype, qui ne tombent
- * que dans **la tranche de 25 étages de leur élément** (l'hydrogène aux étages 1 à 25, l'hélium
- * aux étages 26 à 50…). Voir DONJON.md, « Les sets d'isotopes ».
- *
- * Un seul set par élément, au plus : [z] est donc son identifiant. Les trois poids d'armure
- * tournent avec le numéro atomique — lourd, léger, tissu, en boucle — et l'archétype suit
- * ([archetype]).
- *
- * Le bonus ne dépend **que de l'archétype**, pas de l'isotope : trois pièces de sets du même
- * archétype (deux de deutérium et une de béryllium, par exemple) l'activent, voir
- * [Hero.setArchetype]. Il améliore le Spécial de l'archétype et donne une stat de base qui le sert
- * (PV du lourd, vitesse du léger, dégâts des sorts du mage). Rien à deux pièces.
+ * Sets spéciaux permanents par classe (DONJON.md).
+ * Les identifiants négatifs désignent les six sets actuels ; les positifs conservent
+ * la lecture des isotopes historiques et de leurs cycles, sans changer les stats sauvegardées.
+ * Les anciennes pièces prennent le nom actuel et se combinent avec les nouvelles.
  */
 data class IsotopeSet(
     /** Le numéro atomique de l'élément. */
@@ -42,20 +34,24 @@ data class IsotopeSet(
     val index get() = z + cycle * Grade.ELEMENTS
 
     /** L'archétype tourne avec l'élément : lourd, léger, tissu, en boucle. */
-    val archetype: Archetype get() = if (barbarian) Archetype.BARBARIAN else LEGACY_ARCHETYPES[(z - 1) % LEGACY_ARCHETYPES.size]
+    val archetype: Archetype get() = if (barbarian) Archetype.BARBARIAN else if (z < 0) PERMANENT_ARCHETYPES[-z - 1] else LEGACY_ARCHETYPES[(z - 1) % LEGACY_ARCHETYPES.size]
 
     val firstFloor get() = (index - 1) * IsotopeSets.BAND_FLOORS + 1
     val lastFloor get() = index * IsotopeSets.BAND_FLOORS
 
     /** Le lien du lexique vers la fiche du set. */
-    val lexiconId get() = IsotopeSets.lexiconId(z) + if (barbarian) "_barbarian" else ""
+    val lexiconId get() = "special_set_${archetype.name.lowercase(java.util.Locale.ROOT)}"
 
-    /** « Deutérium », ou « Li-6 » quand l'isotope n'a pas de nom propre, suivi du mot du cycle (« Li-6 stellaire »). */
+    /** Nom permanent de la classe, y compris pour les pièces historiques. */
     fun label(context: Context): String {
-        val baseName = nameRes?.let(context::getString) ?: "${symbol()}-$mass"
-        val name = if (barbarian) context.getString(R.string.roguelike_isotope_barbarian, baseName) else baseName
-        val word = LootSystem.cycleWord(context, cycle) ?: return name
-        return context.getString(R.string.roguelike_isotope_cycle, name, word)
+        return context.getString(when (archetype) {
+            Archetype.WARRIOR -> R.string.roguelike_set_bastion
+            Archetype.ROGUE -> R.string.roguelike_set_shadow
+            Archetype.MAGE -> R.string.roguelike_set_mirage
+            Archetype.VAGABOND -> R.string.roguelike_set_wandering
+            Archetype.NECROMANCER -> R.string.roguelike_set_afterlife
+            Archetype.BARBARIAN -> R.string.roguelike_set_ravage
+        })
     }
 
     /** Le symbole de l'élément (« Li »). */
@@ -71,16 +67,32 @@ data class IsotopeSet(
     private companion object {
         // Ne jamais faire dépendre les objets déjà sauvegardés du nombre de classes actuel.
         val LEGACY_ARCHETYPES = listOf(Archetype.WARRIOR, Archetype.ROGUE, Archetype.MAGE, Archetype.VAGABOND, Archetype.NECROMANCER)
+        val PERMANENT_ARCHETYPES = LEGACY_ARCHETYPES + Archetype.BARBARIAN
         val periodic by lazy { getPeriodicElements() }
         val ELIDING = setOf('a', 'e', 'i', 'o', 'u', 'y', 'h')
     }
 }
 
 object IsotopeSets {
+    // Identifiants fixes négatifs, sans collision avec les anciennes sauvegardes.
+    val PERMANENT = (1..6).map { IsotopeSet(-it, 0) }
+    fun forArchetype(archetype: Archetype) = PERMANENT.first { it.archetype == archetype }
+
+    /** Tirage dans le tier immédiatement supérieur à celui de l'étage. */
+    fun powerForFloor(floor: Int, rng: kotlin.random.Random): Int {
+        val center = kotlin.math.floor(LootSystem.powerCenter(floor.coerceAtLeast(1)).toDouble()).toInt()
+        return ((center - 1) / Grade.POWER_PER_TIER + 1) * Grade.POWER_PER_TIER + 1 +
+            rng.nextInt(Grade.POWER_PER_TIER)
+    }
+
+    fun discovered(hero: Hero, set: IsotopeSet): Boolean =
+        hero.knownSets.any { of(it)?.archetype == set.archetype } ||
+            (hero.bag + hero.equipped.values).any { it.isotopeSet?.archetype == set.archetype }
+
     /** Étages par élément : la même tranche que les noms d'objets ([Grade]). */
     const val BAND_FLOORS = 25
 
-    /** Part des objets tombés dans la tranche qui sont une pièce du set. */
+    /** Part globale des objets qui sont une pièce spéciale, répartie entre les six classes. */
     const val DROP_SHARE = 0.08f
 
     /** La part réellement utilisée : les bancs de mesure la mettent à 0 pour mesurer « sans sets ». */
@@ -118,9 +130,10 @@ object IsotopeSets {
     /** Nécromancien : un pantin de plus, et les recharges de ses sorts raccourcissent d'un tour (la SAG). */
     const val PUPPETS = 3
     const val RECHARGE_CUT = 1
+    const val BARBARIAN_SMASH_MULT = 3f
     const val BARBARIAN_BREACH_TURNS = 3
 
-    /** Les sets qui existent. Un par élément au plus, et aucun pour un élément sans autre isotope. */
+    /** Catalogue historique : sauvegardes et anciens bancs de mesure uniquement. */
     val ALL = listOf(
         IsotopeSet(1, 2, R.string.roguelike_isotope_deuterium),   // lourd
         IsotopeSet(2, 3),                                          // léger
@@ -246,13 +259,14 @@ object IsotopeSets {
 
     /** Le set de ce numéro ([IsotopeSet.index]) : les tours suivants reprennent les mêmes sets, un mot de cycle en plus. */
     fun of(index: Int): IsotopeSet? {
+        if (index < 0) return PERMANENT.firstOrNull { it.z == index }
         if (index < 1) return null
         val base = BY_Z[(index - 1) % Grade.ELEMENTS + 1] ?: return null
         val cycle = (index - 1) / Grade.ELEMENTS
         return if (cycle == 0) base else base.copy(cycle = cycle)
     }
 
-    /** Le set qui tombe à cet étage, ou null. Les tranches se suivent sans fin : après l'oganesson, on repart du deutérium. */
+    /** Ancienne rotation, conservée pour les bancs historiques ; jamais utilisée par le butin actuel. */
     fun forFloor(floor: Int) = if (floor < 1) null else of((floor - 1) / BAND_FLOORS + 1)
 
     fun lexiconId(z: Int) = "set_$z"

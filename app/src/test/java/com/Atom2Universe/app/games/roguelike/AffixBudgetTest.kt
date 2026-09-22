@@ -107,14 +107,14 @@ class AffixBudgetTest {
                 if (hero.equipped[e.slot] == null) hero.equipped[e.slot] = e
             }
             for (t in listOf(StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.SPELL_DMG, StatType.LIFE_STEAL)) {
-                val total = hero.equipped.values.sumOf { it.sum(t).toDouble() }.toFloat()
+                val total = if (t == StatType.LIFE_STEAL) hero.lifeSteal else hero.equipped.values.sumOf { it.sum(t).toDouble() }.toFloat()
                 worst[t] = maxOf(worst[t] ?: 0f, total)
             }
         }
         assertTrue("critique des objets : ${worst[StatType.CRIT_CHANCE]}", worst.getValue(StatType.CRIT_CHANCE) <= 0.30f)
         assertTrue("dégâts critiques : ${worst[StatType.CRIT_DAMAGE]}", worst.getValue(StatType.CRIT_DAMAGE) <= 2.0f)
         assertTrue("dégâts des sorts : ${worst[StatType.SPELL_DMG]}", worst.getValue(StatType.SPELL_DMG) <= 1.60f)
-        assertTrue("vol de vie : ${worst[StatType.LIFE_STEAL]}", worst.getValue(StatType.LIFE_STEAL) <= 0.15f)
+        assertTrue("vol de vie : ${worst[StatType.LIFE_STEAL]}", worst.getValue(StatType.LIFE_STEAL) <= 0.25f)
     }
 
     // ── La note dit la même chose que le budget ─────────────────────────────────

@@ -13,7 +13,8 @@ class WeaponFitTest {
     private fun heroOf(a: Archetype, weapon: ItemBase?) = Hero.starter().apply {
         for ((slot, base) in listOf(EquipSlot.HELMET to ItemBase.HELMET, EquipSlot.CHEST to ItemBase.ARMOR, EquipSlot.BOOTS to ItemBase.BOOTS))
             equipped[slot] = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = a.weight)
-        weapon?.let { equipped[EquipSlot.WEAPON] = weapon(it) }
+        if (weapon == null) equipped.remove(EquipSlot.WEAPON)
+        else equipped[EquipSlot.WEAPON] = weapon(weapon)
     }
 
     @Test
@@ -71,5 +72,33 @@ class WeaponFitTest {
         // À puissance égale, le multiplicateur de dégâts ne fait pas d'un type d'arme un choix perdant
         val mults = ItemBase.entries.filter { it.slot == EquipSlot.WEAPON }.map { it.damageMult }
         assertTrue("écart de dégâts : ${mults.min()} à ${mults.max()}", mults.max() / mults.min() < 1.25f)
+    }
+    @Test fun betterOffClassWeaponStillDealsDamageWithItsOwnAttribute() {
+        val h = heroOf(Archetype.WARRIOR, ItemBase.MACE)
+        h.equipped[EquipSlot.WEAPON] = weapon(ItemBase.MACE, 1)
+        val oldDamage = h.weaponMax
+        h.equipped[EquipSlot.WEAPON] = weapon(ItemBase.STAFF, 20)
+        assertEquals(StatType.INT, h.weaponAttribute)
+        assertEquals(.85f * Hero.WARRIOR_WEAPON_DAMAGE_MULT, h.weaponTypeMult, .0001f)
+        assertTrue(h.weaponMin > 0)
+        assertTrue(h.weaponMax > oldDamage)
+        val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 100, 100)), false, Random(1))
+        assertTrue(c.attack(0, Timing.GOOD).damage > 0)
+    }
+
+    @Test fun armorPrimaryFollowsClassAndLegacyMigrationPreservesOtherStats() {
+        val mapping = mapOf(ArmorWeight.HEAVY to StatType.CON, ArmorWeight.LIGHT to StatType.DEX,
+            ArmorWeight.CLOTH to StatType.INT, ArmorWeight.MEDIUM to StatType.END,
+            ArmorWeight.ULTRALIGHT to StatType.WIS, ArmorWeight.FUR to StatType.STR)
+        for ((weight, stat) in mapping) for (base in ArmorWeight.WEIGHTED) {
+            val item = LootSystem.create(base, 20, Rarity.RARE, 42, Random(9), forcedWeight = weight)
+            assertEquals(stat, item.implicits.first().type)
+            val old = item.copy(implicits = item.implicits.mapIndexed { i, roll ->
+                if (i == 0) roll.copy(type = StatType.CHA) else roll
+            })
+            val upgraded = old.withClassPrimaryAttribute()
+            assertEquals(item, upgraded)
+            assertEquals(upgraded, upgraded.withClassPrimaryAttribute())
+        }
     }
 }

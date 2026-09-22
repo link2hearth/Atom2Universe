@@ -125,13 +125,7 @@ internal class SpaceshipTileArt {
             rect(x+3,y+2,26,1,0xFF6B8091.toInt());rect(x+3,y+20,7,1,ink)
             dot(x+4,y+5,light);dot(x+27,y+18,stone)
         }
-        when(seed%10) {
-            0->{rect(12,12,24,23,ink);for(y in 14..32 step 3)rect(14,y,20,1,stone)}
-            1->{rect(13,12,23,24,dark);rect(14,12,21,1,stone);rect(14,35,21,1,ink);rect(22,22,6,2,ink);dot(16,15,light);dot(32,32,light)}
-            2->{for(i in 0..3){rect(13+i*6,22,3,2,warm);rect(15+i*6,24,3,2,warm)}}
-            3->{line(12,17,1,1,9,stone);line(16,17,1,1,6,dark)}
-            else->Unit
-        }
+        // Grilles and equipment are reserved for walls, not walkable panels.
         if(mask and 1!=0){rect(0,0,48,4,ink);rect(7,1,30,1,cyan)}
         if(mask and 8!=0){rect(0,0,4,48,ink);rect(1,8,1,29,cyan)}
         if(mask and 2!=0){rect(44,0,4,48,ink);rect(46,8,1,29,cyan)}

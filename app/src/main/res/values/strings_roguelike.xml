@@ -492,8 +492,8 @@
     <string name="roguelike_relic_champignon_desc">Deals %1$s–%2$s damage and adds a dose of [[state_poison|poison]] (up to %17$d): each dose eats %5$s HP per turn for %3$d turns, a very long time. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_peste">Plague</string>
     <string name="roguelike_relic_peste_desc">Deals %1$s–%2$s damage to all enemies and adds a dose of [[state_poison|poison]] (up to %17$d) to each: each dose eats %5$s HP per turn for %3$d turns. Cooldown: %4$d turns.</string>
-    <string name="roguelike_relic_ponction">Life drain</string>
-    <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s damage (no element) and restores half of the damage dealt as HP. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_ponction">Soul rupture</string>
+    <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s physical damage, powered by Wisdom. No innate healing. Cooldown: %4$d turns.</string>
     <string name="roguelike_reaction_thermal_shock">Thermal shock!</string>
     <string name="roguelike_reaction_plasma">Plasma!</string>
     <string name="roguelike_reaction_calcination">Calcination!</string>
@@ -670,4 +670,10 @@
     <string name="inv_filter_class">Class</string>
     <string name="inv_filter_value">%1$s: %2$s</string>
     <string name="inv_rating">Score %1$s</string>
+    <string name="roguelike_set_bastion">Bastion</string>
+    <string name="roguelike_set_shadow">Shadow</string>
+    <string name="roguelike_set_mirage">Mirage</string>
+    <string name="roguelike_set_wandering">Wandering</string>
+    <string name="roguelike_set_afterlife">Afterlife</string>
+    <string name="roguelike_set_ravage">Ravage</string>
 </resources>

@@ -155,7 +155,8 @@ internal class DungeonMapArt {
             when (theme) {
                 DungeonTheme.FOREST -> tree(c, true)
                 DungeonTheme.FIELDS -> {
-                    for (i in 0..4) {
+                    if (terrainSeed(x, y) % 3 == 0) outdoorObstacle(c, DungeonTheme.BATTLEFIELD, x, y, 0)
+                    else for (i in 0..4) {
                         val xx = 3 + i * 6
                         val yy = 6 + (seed / (i + 1)) % 6
                         box(c, xx, yy, 2, 24 - yy, stone)
@@ -171,25 +172,8 @@ internal class DungeonMapArt {
                         box(c, 3, 15 + row * 11, 26, 2, stone)
                     }
                 }
-                DungeonTheme.VILLAGE -> {
-                    box(c, 5, 12, 23, 17, 0xFF9F9D89.toInt())
-                    box(c, 7, 14, 19, 1, 0xFFD0C5A3.toInt())
-                    for (i in 0..6) box(c, 14 - i * 2, 4 + i, 4 + i * 4, 2,
-                        if (i % 2 == 0) 0xFF939C99.toInt() else 0xFF6D8187.toInt())
-                    box(c, 3, 12, 27, 2, 0xFFB9B69B.toInt())
-                    box(c, 9, 17, 6, 6, 0xFF3B5158.toInt())
-                    box(c, 11, 17, 1, 6, 0xFFC4B590.toInt())
-                    box(c, 19, 19, 6, 10, 0xFF655A4F.toInt())
-                    box(c, 19, 24, 6, 1, 0xFFB9A080.toInt())
-                    box(c, 5, 26, 5, 3, 0xFF8FA381.toInt())
-                }
-                DungeonTheme.CAMP -> {
-                    for (i in 0..17) box(c, 15 - i * 2 / 3, 7 + i, 3 + i * 4 / 3, 1,
-                        if (i % 4 == 0) 0xFFBCB28A.toInt() else 0xFF969C7D.toInt())
-                    box(c, 14, 15, 4, 10, 0xFF384C4C.toInt())
-                    box(c, 2, 27, 3, 3, 0xFFBCA986.toInt())
-                    box(c, 27, 27, 3, 3, 0xFFBCA986.toInt())
-                }
+                DungeonTheme.VILLAGE, DungeonTheme.CAMP, DungeonTheme.BATTLEFIELD ->
+                    outdoorObstacle(c, theme, x, y, neighbours)
                 DungeonTheme.PIRATE, DungeonTheme.INN -> {
                     box(c, 5, 7, 23, 21, stone)
                     box(c, 7, 9, 19, 17, shade(stone, -22))
@@ -219,9 +203,22 @@ internal class DungeonMapArt {
                         box(c, if (row % 2 == 0) 11 else 22, 3 + row * 8, 1, 7, shade(stone, -35))
                     }
                     box(c, 1, 2, 30, 2, shade(stone, 20))
-                    if (theme == DungeonTheme.BATTLEFIELD) {
-                        box(c, 17, 4, 2, 22, 0xFFC0B9A7.toInt())
-                        box(c, 12, 20, 12, 3, 0xFF564333.toInt())
+                    if (theme == DungeonTheme.MONASTERY) when (terrainSeed(x, y) % 4) {
+                        0 -> {
+                            box(c, 10, 6, 12, 17, shade(stone, -45))
+                            box(c, 12, 5, 8, 2, shade(stone, 22))
+                            box(c, 15, 7, 2, 15, shade(stone, 12))
+                            box(c, 11, 13, 10, 2, shade(stone, 12))
+                        }
+                        1 -> {
+                            box(c, 12, 5, 8, 21, shade(stone, 9))
+                            box(c, 10, 4, 12, 3, shade(stone, 26))
+                            box(c, 10, 25, 12, 3, shade(stone, -15))
+                        }
+                        2 -> {
+                            for (i in 0..5) box(c, 4 + i % 3 * 2, 5 + i * 3, 4, 3, 0xFF657C59.toInt())
+                        }
+                        else -> Unit
                     }
                 }
             }
@@ -233,6 +230,80 @@ internal class DungeonMapArt {
             box(c, 27, 3, 3, 26, 0xFFC5AB69.toInt())
         }
         c.restore()
+    }
+
+    private fun terrainSeed(x: Int, y: Int): Int {
+        var n = x * 374761393 + y * 668265263
+        n = (n xor (n ushr 13)) * 1274126177
+        return (n xor (n ushr 16)) and Int.MAX_VALUE
+    }
+
+    // Local maxima keep tents/houses at least three cells apart, without a grid pattern.
+    private fun landmark(x: Int, y: Int): Boolean {
+        val seed = terrainSeed(x, y)
+        return (-2..2).all { dy -> (-2..2).all { dx ->
+            (dx == 0 && dy == 0) || terrainSeed(x + dx, y + dy) < seed
+        } }
+    }
+
+    private fun outdoorObstacle(c: Canvas, theme: DungeonTheme, x: Int, y: Int, mask: Int) {
+        val seed = terrainSeed(x, y)
+        if (theme != DungeonTheme.BATTLEFIELD && landmark(x, y)) {
+            if (theme == DungeonTheme.CAMP) {
+                // Torn canvas and a collapsed ridge distinguish the abandoned camp.
+                for (i in 0..17) box(c, 15 - i * 2 / 3, 7 + i, 3 + i * 4 / 3, 1,
+                    if (i % 4 == 0) 0xFFBCB28A.toInt() else 0xFF868C70.toInt())
+                box(c, 14, 16, 4, 9, 0xFF384C4C.toInt())
+                box(c, 9, 18, 2, 5, 0xFF505D4B.toInt())
+                box(c, 3, 26, 25, 3, 0xFF6B604B.toInt())
+            } else {
+                box(c, 5, 12, 23, 17, 0xFF9F9D89.toInt())
+                for (i in 0..6) box(c, 14 - i * 2, 4 + i, 4 + i * 4, 2,
+                    if (i % 2 == 0) 0xFF939C99.toInt() else 0xFF6D8187.toInt())
+                box(c, 3, 12, 27, 2, 0xFFB9B69B.toInt())
+                box(c, 9, 17, 6, 6, 0xFF3B5158.toInt())
+                box(c, 19, 19, 6, 10, 0xFF655A4F.toInt())
+            }
+            return
+        }
+        when (seed % 6) {
+            0, 1 -> tree(c, theme != DungeonTheme.BATTLEFIELD && seed % 3 != 0)
+            2, 3, 4 -> {
+                // Connect only to neighbouring masonry, not to trees or landmarks.
+                var joined = 0
+                val offsets = arrayOf(0 to -1, 1 to 0, 0 to 1, -1 to 0)
+                offsets.forEachIndexed { i, (dx, dy) ->
+                    if (mask and (1 shl i) != 0 && terrainSeed(x + dx, y + dy) % 6 in 2..4 &&
+                        (theme == DungeonTheme.BATTLEFIELD || !landmark(x + dx, y + dy))) joined = joined or (1 shl i)
+                }
+                lowWall(c, joined, seed)
+            }
+            else -> {
+                // A broad rock pile reads as a solid obstacle, unlike loose floor pebbles.
+                box(c, 3, 16, 26, 13, 0xFF59665F.toInt())
+                box(c, 6, 10, 13, 15, 0xFF929B87.toInt())
+                box(c, 7, 10, 11, 2, 0xFFB5BBA2.toInt())
+                box(c, 18, 16, 10, 10, 0xFF7B8979.toInt())
+                box(c, 18, 16, 9, 2, 0xFFA6AF95.toInt())
+                box(c, 9, 25, 13, 4, 0xFF748164.toInt())
+            }
+        }
+    }
+
+    private fun lowWall(c: Canvas, mask: Int, seed: Int) {
+        fun segment(x: Int, y: Int, w: Int, h: Int) {
+            box(c, x, y, w, h, 0xFF56635F.toInt())
+            box(c, x, y, w, 3, 0xFFAFB49B.toInt())
+            box(c, x + 1, y + 4, (w - 2).coerceAtLeast(1), (h - 5).coerceAtLeast(1), 0xFF85917F.toInt())
+            for (xx in x + 6 until x + w step 8) box(c, xx, y + 3, 1, h - 3, 0xFF56635F.toInt())
+        }
+        if (mask and 1 != 0) segment(10, 0, 12, 20)
+        if (mask and 4 != 0) segment(10, 15, 12, 17)
+        val left = if (mask and 8 != 0) 0 else 3
+        val right = if (mask and 2 != 0) 32 else 29
+        segment(left, 13, right - left, 15)
+        box(c, 7 + seed % 12, 14, 5, 2, 0xFF73916B.toInt())
+        box(c, 12, 23, 7, 3, 0xFF647C59.toInt())
     }
 
     private fun tree(c: Canvas, leafy: Boolean) {

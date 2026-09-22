@@ -38,7 +38,7 @@
     <string name="lex_attr_int_1">Staff damage and the Mage’s spells: fire, ice, lightning…</string>
     <string name="lex_attr_wis_1">Scepter damage and the [[cooldown|cooldown]] of relics and your [[special|Special]].</string>
     <string name="lex_attr_wis_2">−1 recharge turn every %1$d points above 10</string>
-    <string name="lex_attr_wis_3">Never under 1 turn (%1$d for Heal)</string>
+    <string name="lex_attr_wis_3">Never under 1 turn.</string>
     <string name="lex_attr_cha_1">The gold you find.</string>
     <string name="lex_attr_cha_2">+%1$d%% gold per point above 10</string>
     <string name="lex_attr_relics">The [[relics|relics]] that follow it: +%1$d%% damage per point above 10, and control (freeze, paralysis…) that lands more often (+%2$d%% every 2 points)</string>
@@ -76,7 +76,7 @@
     <string name="lex_stat_speed_3">[[weight_heavy|Heavy]] piece: %1$s%% each; [[weight_light|light]] piece: %2$s%%</string>
     <string name="lex_you_speed">You: %1$d%%</string>
     <string name="lex_stat_life_steal">Life steal</string>
-    <string name="lex_stat_life_steal_1">A share of your weapon damage heals you.</string>
+    <string name="lex_stat_life_steal_1" formatted="false">Direct weapon, special, relic and reaction damage restores HP from actual enemy health removed. No healing from damage over time, puppets or reflected damage. Available on every equipment slot: 1–5% per affix, capped at 25% total.</string>
     <string name="lex_you_life_steal">You: %1$s%%</string>
     <string name="lex_stat_weapon_dmg">Weapon damage</string>
     <string name="lex_stat_weapon_dmg_1">The damage of your weapon, before crits.</string>
@@ -138,7 +138,7 @@
     <string name="lex_rest">Rest</string>
     <string name="lex_rest_1">Stepping onto the starting fire automatically restores all HP and recharges your relics and Special.</string>
     <string name="lex_rest_2">No button needed: healing triggers on arrival, even during a [[chase|chase]].</string>
-    <string name="lex_rest_3">The fire does not spawn monsters. Combat healing remains available.</string>
+    <string name="lex_rest_3">After victory and collecting loot, your HP is fully restored unless another fight is chained immediately. No healing between chained fights.</string>
     <string name="lex_rest_4">Hold still on the starting fire for 5 seconds to return to your checkpoint or regenerate the current floor with a new layout.</string>
     <string name="lex_chase">Chase</string>
     <string name="lex_chase_1">A monster that sees you chases you; if it catches you, combat starts.</string>
@@ -229,7 +229,7 @@
     <string name="lex_reactions_2">They work for everyone, no gear needed. Nothing announces them: you find them by playing.</string>
     <string name="lex_reaction_explosion_1">[[element_fire|Fire]] on a [[state_poison|poisoned]] enemy: all remaining doses deal their damage at once, and the poison is gone.</string>
     <string name="lex_reaction_shatter_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_frozen|frozen]] enemy: damage ×%1$s, the ice shatters.</string>
-    <string name="lex_reaction_purify_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_poison|poisoned]] enemy: the poison is cleansed, and you are purified for %1$d turns: armor ×%2$s and %3$s of your max HP restored per turn and per dose cleansed.</string>
+    <string name="lex_reaction_purify_1">Physical or holy damage on a poisoned enemy consumes the poison and grants armor ×%2$s for %1$d turns. No healing.</string>
     <string name="lex_resonances">Resonances</string>
     <string name="lex_resonances_1">Two specific relics worn together give +%1$d in an attribute, and an extra effect.</string>
     <string name="lex_resonances_2">You find them by wearing the pair for the first time.</string>
@@ -262,7 +262,7 @@
     <string name="lex_special_guard_1">You skip your turn: your parry windows double until your next turn, and each blow you take is sent back at %1$d%%.</string>
     <string name="lex_special_deadly_1">A weapon hit on an exposed target: guaranteed crit, multiplier +%1$s.</string>
     <string name="lex_special_deadly_2">Exposed: [[state_poison|poisoned]], [[state_frozen|frozen]], [[state_paralyzed|paralyzed]], [[state_marked|marked]], or under %1$d%% of its HP.</string>
-    <string name="lex_special_mirror_1">You create %1$d doubles: each can take a blow in your place, until the fight ends. While a double remains, you recover %2$d%% of your max HP each turn.</string>
+    <string name="lex_special_mirror_1">Create %1$d doubles that can absorb enemy attacks until destroyed or combat ends. They do not heal you.</string>
     <string name="lex_weight_cloth_1">Little armor: for those who count on their spells.</string>
     <string name="lex_weight_light_1">Slightly less armor, but it avoids blows.</string>
     <string name="lex_weight_heavy_1">Lots of armor: it takes the blows.</string>
@@ -308,11 +308,11 @@
     <string name="lex_you_depth_point">On floor %1$d, a point counts for %2$s%% of its value: [[depth|resistance in depth]]</string>
     <string name="lex_you_depth">You, on floor %1$d: a point is worth %2$s</string>
     <string name="lex_set_title">Set %1$s</string>
-    <string name="lex_set_1">An isotope set for the %1$s: three pieces (helmet, armor, boots) of %2$s weight. Its pieces only drop on floors %3$d to %4$d, and are stronger than anything else found there.</string>
-    <string name="lex_set_2">Wear %1$d pieces from isotope sets of this kind (they can come from different sets) to improve your special: %2$s.</string>
+    <string name="lex_set_1">A special set for the %1$s: three pieces (helmet, armor, boots) of %2$s weight. Available on every floor, in the tier immediately above that of the floor where it drops.</string>
+    <string name="lex_set_2">Wear all %1$d pieces of this set, even at different power levels, to improve your special: %2$s.</string>
     <string name="lex_set_special_guard">Blows are sent back at %1$d%% instead of %2$d%%, and the recharge is %3$d turns instead of %4$d.</string>
     <string name="lex_set_hp">Also gives %1$d%% more max HP.</string>
-    <string name="lex_set_drop">%1$d%% of the items found on its floors are a piece of this set.</string>
+    <string name="lex_set_drop">%1$d%% of found items are special set pieces, shared equally between the six classes.</string>
     <string name="lex_you_set">You: %1$d of %2$d pieces</string>
     <string name="lex_set_special_deadly">Guaranteed crits gain +%1$s to the multiplier instead of +%2$s, and the recharge is %3$d turns instead of %4$d.</string>
     <string name="lex_set_special_mirror">%1$d doubles instead of %2$d, and the recharge is %3$d turns instead of %4$d.</string>
@@ -325,7 +325,7 @@
     <string name="lex_archetype_necromancer_1">Puppets are present from the start of combat, even during an ambush. Call of the dead starts with a four-turn cooldown. Normal attacks command the puppets; the necromancer only strikes personally when no puppet remains alive.</string>
     <string name="lex_archetype_necromancer_2">Perfect timing and a successful defense: its puppets recover %1$d%% of their health.</string>
     <string name="lex_archetype_necromancer_3">You have %1$d puppets, each with %2$d%% of your max HP. One puppet absorbs %3$d%% of the blow for you, even if it dies: excess damage is discarded. Without a living puppet, you take the damage. Their commanded attack uses your weapon damage and effects. Each living puppet adds an echo for %4$d%% of average weapon damage: in full with perfect timing, half with good timing, nothing with a miss.</string>
-    <string name="lex_special_combo_1">%1$d strikes, one gesture each, for one action. Each deals 60 %% weapon damage; with a lantern, the second deals 90 %%: 150 %% total before other effects.</string>
+    <string name="lex_special_combo_1">%1$d strikes, one gesture each, for one action. Each deals 60 %% weapon damage; with a lantern, the second deals 90 %%: 200 %% total before other effects.</string>
     <string name="lex_special_puppets_1">Summon or revive your puppets at full health by sacrificing %2$d%% of your max HP. The first wave of combat is free. You must have enough HP to survive the sacrifice. Each immediately strikes for %1$d%% of your weapon\'s average damage.</string>
     <string name="lex_weight_ultralight_1">Almost no armor: it counts on its puppets.</string>
     <string name="lex_weight_medium_1">A bit of everything: a fair amount of armor and some dodge.</string>
@@ -356,14 +356,16 @@
     <string name="lex_reaction_neurotoxin_1">[[element_poison|Poison]] on a [[state_paralyzed|paralyzed]] enemy: the paralysis lasts %1$d turn longer.</string>
     <string name="lex_reaction_infection_1">[[element_poison|Poison]] on an [[state_exposed|exposed]] enemy: one more dose, and its exposure lasts %1$d turn longer.</string>
     <string name="lex_reaction_deathblow_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_paralyzed|paralyzed]] enemy: guaranteed critical hit.</string>
-    <string name="lex_reaction_holy_fire_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_burn|burning]] enemy: the burn goes out and heals you for %1$s of what it would have done.</string>
+    <string name="lex_reaction_holy_fire_1">Physical or holy damage consumes the burn and deals %1$s of its remaining damage immediately.</string>
     <string name="lex_strike_miss">Miss: minimum damage, reduced by enemy defense against poorly executed blows. Tougher monsters, deeper floors and bosses defend better. Stronger equipment and attributes help overcome this defense; damage can fall to zero. A completely blocked blow triggers no on-hit effects.</string>
     <string name="lex_attr_name_end">Endurance</string>
     <string name="lex_attr_end_1">The Vagabond’s attribute: spear damage and combat gesture timing.</string>
     <string name="lex_attr_end_2">Up to 15 %% more gesture time and 20 %% wider success zones. The cap is reached at 60 effective points above 10; depth resistance applies. Does not change turn frequency.</string>
     <string name="lex_archetype_barbarian">Strength, axe and fur armor. With a club, Smash opens a physical breach. A perfect successful defense also opens a brief breach, without a free counterattack.</string>
-    <string name="lex_special_smash">One strike at 150 %% weapon damage. With a club, a damaging hit opens a breach for 2 enemy turns: +15 %% weapon and physical relic damage received. No stacking or stun.</string>
+    <string name="lex_special_smash">One strike at 200 %% weapon damage. With a club, a damaging hit opens a breach for 2 enemy turns: +15 %% weapon and physical relic damage received. No stacking or stun.</string>
     <string name="lex_weight_fur">Barbarian armor: balanced armor, no speed modifier, Dexterity contributes at most +1 to defense.</string>
     <string name="lex_base_club">Barbarian offhand. Grants Strength and lets Smash open a physical breach (+15 %% damage) for 2 enemy turns.</string>
-    <string name="lex_set_barbarian">Three Barbarian isotope pieces extend the Smash breach to 3 enemy turns. Base special cooldown: 4 turns instead of 5, never below 3 after Wisdom.</string>
+    <string name="lex_set_barbarian">Three Ravage pieces raise Smash to 300 %% weapon damage instead of 200 %% and extend the Smash breach to 3 enemy turns with the club equipped. Base special cooldown: 4 turns instead of 5, never below 3 after Wisdom.</string>
+    <string name="lex_stat_hp_curve">Player and enemy HP: ×2.5 on floor 1. Linear progression to floor 250: ×4 for the player, ×5 for enemies. Multipliers remain constant afterwards.</string>
+    <string name="lex_special_mirror_fixed">Fixed cooldown: %1$d turns, or %2$d with the full Mirage set. Wisdom does not reduce it.</string>
 </resources>

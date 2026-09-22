@@ -126,33 +126,7 @@ internal class DungeonInteriorTileArt {
             val x = col * 32 + row % 2 * 16
             slab(x + 1, row * 16 + 1, 30, 14, hash(tx * 2 + col, ty * 3 + row), false)
         }
-        // Low-contrast details belong to the ground, so they never resemble solid obstacles.
-        when (seed % 11) {
-            0 -> {
-                rect(13, 19, 24, 10, mortar); rect(16, 17, 18, 13, mortar)
-                rect(15, 20, 20, 7, 0xFF49646A.toInt())
-                rect(18, 20, 9, 1, 0xFF758D8D.toInt()); rect(28, 25, 5, 1, stone)
-            }
-            1 -> {
-                rect(13, 14, 22, 21, mortar); rect(14, 15, 20, 18, dark)
-                for (x in 16..32 step 4) rect(x, 16, 2, 16, ink)
-                rect(14, 23, 20, 2, mortar)
-                dot(14, 15, stone); dot(33, 32, stone)
-            }
-            2 -> {
-                line(11, 24, 1, 0, 20, dark)
-                line(21, 14, 0, 1, 20, dark)
-                line(12, 15, 1, 1, 18, dark)
-                line(12, 32, 1, -1, 18, dark)
-                dot(21, 24, stone)
-            }
-            3, 4 -> for (i in 0..5) {
-                val x = 7 + hash(tx, ty, i) % 34; val y = 8 + hash(tx, ty, i + 9) % 30
-                rect(x, y, 3 + i % 3, 2, stone); rect(x + 1, y + 2, 3, 1, mortar)
-            }
-            5 -> { line(12, 33, 1, -1, 20, mortar); line(23, 22, 1, 0, 9, mortar) }
-            else -> Unit
-        }
+        // Keep the flagstones uninterrupted so open routes remain easy to read.
         if (mask and 1 != 0) { rect(0, 0, 48, 4, mortar); rect(0, 4, 48, 2, dark) }
         if (mask and 8 != 0) rect(0, 0, 3, 48, mortar)
         if (mask and 2 != 0) rect(46, 0, 2, 48, mortar)
