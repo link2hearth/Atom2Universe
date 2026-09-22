@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.roguelike
 
 import androidx.annotation.StringRes
 import com.Atom2Universe.app.R
+import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.*
 import kotlin.random.Random
@@ -93,6 +94,7 @@ class RoguelikeGame(
     val hero: Hero = Hero.starter(),
     startFloor: Int = 1,
     private val rng: Random = Random,
+    levelSeed: Long = Random.nextLong(),
     /**
      * Un checkpoint automatique tous les N étages (11, 21, 31… pour N = 10) : la mort ramène au
      * dernier atteint si le joueur le choisit. 0 reste disponible pour les simulations.
@@ -135,7 +137,7 @@ class RoguelikeGame(
         const val RELIC_CHANCE = 0.15f
         const val FIRST_RELIC_FLOOR = 2
 
-        fun fromJson(j: JSONObject): RoguelikeGame {
+        fun inventoryFromJson(j: JSONObject): RoguelikeGame {
             val hero = Hero().apply {
                 gold    = j.getInt("gold")
                 deepestFloor = j.optInt("deepestFloor", j.getInt("floor"))
@@ -176,7 +178,7 @@ class RoguelikeGame(
                     discoverResonances()
                 }
             }
-            return RoguelikeGame(hero, j.getInt("floor")).apply {
+            return RoguelikeGame(hero, j.getInt("floor"), levelSeed = j.optLong("levelSeed", Random.nextLong())).apply {
                 heroSpritePath = j.getString("heroSprite")
                 checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
                 val pendingDeath = j.optJSONObject("deathReport")
@@ -192,16 +194,24 @@ class RoguelikeGame(
                 addLog(R.string.roguelike_log_resume, floor)
             }
         }
+
+        fun fromJson(j: JSONObject): RoguelikeGame = inventoryFromJson(j).apply {
+            restoreMapState(j)
+        }
     }
 
     var floor = startFloor
+        private set
+    var levelSeed: Long = levelSeed
+        private set
+    var regenerationCount = 0
         private set
 
     init { hero.floor = floor }
     /** L'étage où la mort ramène. */
     var checkpoint = checkpointFloor(startFloor, checkpointEvery)
         private set
-    var level: DungeonLevel = generateLevel(floor)
+    var level: DungeonLevel = generateLevel(floor, levelSeed)
         private set
     var playerPos: Pos = level.start
         private set
@@ -217,6 +227,8 @@ class RoguelikeGame(
     /** Équipements gagnés au dernier combat, proposés un par un. */
     val pendingLoot = ArrayDeque<Equipment>()
     val pendingEquipDrop get() = pendingLoot.firstOrNull()
+
+    private var stairsArrivalPending = false
 
     var stairsOpen = false
         private set
@@ -244,24 +256,34 @@ class RoguelikeGame(
     // ── Actions sur la carte ────────────────────────────────────────────────────
 
     fun tryMove(dx: Int, dy: Int) {
-        if (!isExploring) return
+        if (!isExploring || (dx == 0 && dy == 0)) return
         val nx = playerPos.x + dx; val ny = playerPos.y + dy
         val pack = level.packAt(nx, ny)
         if (pack != null) { startCombat(pack, ambush = false, encounterPos = pack.pos); return }
         if (!level.canStep(playerPos, dx, dy)) return
         playerPos = Pos(nx, ny)
+        stairsArrivalPending = onStairsTile()
         hero.walkRelics()
+        recoverAtCamp()
         pickup()
         endMapTurn()
+        openStairsOnArrival()
+    }
+
+    /** Arrival heals immediately, without spending an extra map turn. */
+    private fun recoverAtCamp() {
+        if (!onCampTile()) return
+        if (hero.hp == hero.maxHp && !hero.relicsRecharging && hero.specialCooldown == 0) return
+        hero.healFull()
+        hero.relicCooldowns.clear()
+        hero.specialCooldown = 0
+        addLog(R.string.roguelike_log_camp_rest, hero.hp, hero.maxHp)
     }
 
     /** Full recovery is possible only on the starting fire, with no active pursuit. */
     fun rest(): Boolean {
         if (!canRest()) return false
-        hero.healFull()
-        hero.relicCooldowns.clear()
-        hero.specialCooldown = 0
-        addLog(R.string.roguelike_log_camp_rest, hero.hp, hero.maxHp)
+        recoverAtCamp()
         endMapTurn(resting = true)
         return true
     }
@@ -270,7 +292,14 @@ class RoguelikeGame(
         if (isExploring && onStairsTile()) stairsOpen = true
     }
 
-    fun closeStairs() { stairsOpen = false }
+    private fun openStairsOnArrival() {
+        if (stairsArrivalPending && isExploring) {
+            stairsArrivalPending = false
+            openStairs()
+        }
+    }
+
+    fun closeStairs() { stairsOpen = false; stairsArrivalPending = false }
 
     fun descend() {
         if (!stairsOpen) return
@@ -345,6 +374,25 @@ class RoguelikeGame(
     /** Default choice retained for simulation callers. */
     fun dismissDeath() = restartAfterDeath(atCheckpoint = true)
 
+    fun returnToCheckpoint() {
+        if (!isExploring || !onCampTile()) return
+        changeFloor(checkpoint)
+        addLog(R.string.roguelike_log_camp_checkpoint, checkpoint)
+    }
+
+    /** Regenerates this floor from the next random state, preserving the hero and checkpoint. */
+    fun regenerateCurrentFloor() {
+        if (!isExploring || !onCampTile()) return
+        levelSeed = rng.nextLong()
+        regenerationCount++
+        level = generateLevel(floor, levelSeed)
+        playerPos = level.start
+        stairsArrivalPending = false
+        computeFov()
+        recoverAtCamp()
+        addLog(R.string.roguelike_log_camp_regenerate, floor)
+    }
+
     // ── Combat ──────────────────────────────────────────────────────────────────
 
     private fun startCombat(pack: MonsterPack, ambush: Boolean, encounterPos: Pos = playerPos) {
@@ -386,7 +434,11 @@ class RoguelikeGame(
     private fun chainIfChased() {
         val next = level.packs
             .filter { it.alive && it.state == PackState.CHASING && it.pos.chebyshev(playerPos) <= CHAIN_DISTANCE }
-            .minByOrNull { it.pos.chebyshev(playerPos) } ?: return
+            .minByOrNull { it.pos.chebyshev(playerPos) }
+        if (next == null) {
+            openStairsOnArrival()
+            return
+        }
         addLog(R.string.roguelike_log_chain)
         startCombat(next, ambush = false)
     }
@@ -502,10 +554,14 @@ class RoguelikeGame(
         floor = newFloor
         checkpoint = maxOf(checkpoint, checkpointFloor(floor, checkpointEvery))
         hero.floor = floor
-        level = generateLevel(floor)
+        levelSeed = rng.nextLong()
+        regenerationCount = 0
+        level = generateLevel(floor, levelSeed)
         playerPos = level.start
+        stairsArrivalPending = false
         computeFov()
         if (hero.reachFloor(floor)) addLog(R.string.roguelike_log_relic_slot, hero.unlockedRelicSlots, Hero.RELIC_SLOTS)
+        recoverAtCamp()
         onFloorChanged?.invoke(floor)
     }
 
@@ -535,8 +591,9 @@ class RoguelikeGame(
 
     // ── Génération ──────────────────────────────────────────────────────────────
 
-    private fun generateLevel(floor: Int): DungeonLevel {
-        val prepared = DungeonLevelFactory.create(floor, rng)
+    private fun generateLevel(floor: Int, seed: Long): DungeonLevel {
+        val levelRng = Random(seed)
+        val prepared = DungeonLevelFactory.create(floor, levelRng)
         val lv = prepared.level
         val layout = prepared.layout
         val w = lv.w; val h = lv.h
@@ -546,7 +603,7 @@ class RoguelikeGame(
         val captainSite = DungeonBestiary.captainSite(lv, prepared.population.spawns)
         for (spawn in prepared.population.spawns) {
             val types = if (spawn.pos == captainSite) Encounters.captain(floor)
-                else Encounters.roll(floor, rng, lv.themeAt(spawn.pos.x, spawn.pos.y), lv.backdropAt(spawn.pos))
+                else Encounters.roll(floor, levelRng, lv.themeAt(spawn.pos.x, spawn.pos.y), lv.backdropAt(spawn.pos))
             lv.packs += MonsterPack(types, spawn.pos).apply {
                 patrol = spawn.patrol.takeIf { route -> route.all {
                     DungeonBestiary.canWander(types, lv.themeAt(it.x, it.y), lv.backdropAt(it))
@@ -556,8 +613,8 @@ class RoguelikeGame(
         val quietLoot = prepared.population.sites.filter { it.kind == MapSiteKind.QUIET }.map { it.pos }
         // Parfois une relique, au bout du cul-de-sac le plus éloigné du départ
         val firstRelic = hero.relics.isEmpty() && floor >= FIRST_RELIC_FLOOR
-        if (firstRelic || (floor >= FIRST_RELIC_FLOOR && rng.nextFloat() < RELIC_CHANCE)) {
-            val relic = Relic.entries.filter { it !in hero.relics }.randomOrNull(rng)
+        if (firstRelic || (floor >= FIRST_RELIC_FLOOR && levelRng.nextFloat() < RELIC_CHANCE)) {
+            val relic = Relic.entries.filter { it !in hero.relics }.randomOrNull(levelRng)
             val spot = (quietLoot + layout.deadEnds).filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start }
                 .maxByOrNull { dist[it.y][it.x] }
                 ?: farCells.maxByOrNull { dist[it.y][it.x] }
@@ -566,10 +623,10 @@ class RoguelikeGame(
 
         // L'or récompense l'exploration : d'abord au bout des culs-de-sac
         val relicSpots = lv.items.map { it.pos }.toSet()
-        val spots = (quietLoot.shuffled(rng) + layout.deadEnds.shuffled(rng) + layout.rooms.shuffled(rng).map { it.randomInner(rng) })
+        val spots = (quietLoot.shuffled(levelRng) + layout.deadEnds.shuffled(levelRng) + layout.rooms.shuffled(levelRng).map { it.randomInner(levelRng) })
             .filter { lv.tiles[it.y][it.x] == TileType.FLOOR && it != lv.start && it !in relicSpots }
             .distinct()
-        val goldCount = 3 + lv.targetPacks / 4 + rng.nextInt(3)
+        val goldCount = 3 + lv.targetPacks / 4 + levelRng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
 
         return lv
@@ -582,8 +639,7 @@ class RoguelikeGame(
 
     // ── Sauvegarde ──────────────────────────────────────────────────────────────
 
-    /** Le niveau n'est pas sauvegardé : il est régénéré à la reprise. */
-    fun toJson(): JSONObject = JSONObject().apply {
+    fun inventoryToJson(): JSONObject = JSONObject().apply {
         put("floor",      floor)
         put("checkpoint", checkpoint)
         deathReport?.let { report ->
@@ -611,4 +667,120 @@ class RoguelikeGame(
         put("affinities", org.json.JSONArray().also { arr -> hero.knownAffinities.forEach { arr.put(it) } })
         put("sets", org.json.JSONArray().also { arr -> hero.knownSets.forEach { arr.put(it) } })
     }
+
+    fun mapStateToJson(): JSONObject = JSONObject().apply {
+        put("floor", floor)
+        put("levelSeed", levelSeed)
+        put("regenerationCount", regenerationCount)
+        put("player", posToJson(playerPos))
+        put("stairsOpen", stairsOpen)
+        put("stairsArrivalPending", stairsArrivalPending)
+        put("deathReport", deathReport?.let { report -> JSONObject().apply {
+            put("floor", report.floor)
+            put("goldLost", report.goldLost)
+            put("checkpointFloor", report.checkpointFloor)
+        } })
+        put("explored", JSONArray().also { rows ->
+            for (y in 0 until level.h) rows.put(String(CharArray(level.w) { x -> if (level.explored[y][x]) '1' else '0' }))
+        })
+        put("packs", JSONArray().also { arr ->
+            level.packs.forEach { pack ->
+                arr.put(JSONObject().apply {
+                    put("types", JSONArray().also { types -> pack.types.forEach { types.put(it.name) } })
+                    put("home", posToJson(pack.home))
+                    put("pos", posToJson(pack.pos))
+                    put("alive", pack.alive)
+                    put("state", pack.state.name)
+                    put("lostTurns", pack.lostTurns)
+                    put("patrolIndex", pack.patrolIndex)
+                })
+            }
+        })
+        put("items", JSONArray().also { arr ->
+            level.items.forEach { item ->
+                arr.put(JSONObject().apply {
+                    put("type", item.type.name)
+                    put("pos", posToJson(item.pos))
+                    item.relic?.let { put("relic", it.name) }
+                })
+            }
+        })
+        val stairs = findStairs()
+        if (stairs != null) put("stairs", posToJson(stairs))
+    }
+
+    fun toJson(): JSONObject = inventoryToJson().apply {
+        val state = mapStateToJson()
+        for (key in state.keys()) put(key, state.get(key))
+    }
+
+    fun restoreFromSavedState(j: JSONObject) = restoreMapState(j)
+
+    private fun restoreMapState(j: JSONObject) {
+        floor = j.optInt("floor", floor)
+        hero.floor = floor
+        checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
+        levelSeed = j.optLong("levelSeed", levelSeed)
+        regenerationCount = j.optInt("regenerationCount", 0).coerceAtLeast(0)
+        level = generateLevel(floor, levelSeed)
+        j.optJSONArray("explored")?.let { rows ->
+            for (y in 0 until minOf(rows.length(), level.h)) {
+                val row = rows.optString(y, "")
+                for (x in 0 until minOf(row.length, level.w)) level.explored[y][x] = row[x] == '1'
+            }
+        }
+        j.optJSONArray("packs")?.let { arr ->
+            val generated = level.packs.associateBy { "${it.home.x}:${it.home.y}:${it.types.joinToString(",")}" }
+            for (i in 0 until arr.length()) {
+                val p = arr.getJSONObject(i)
+                val types = p.getJSONArray("types").let { typesJson ->
+                    (0 until typesJson.length()).mapNotNull { index ->
+                        runCatching { MonsterType.valueOf(typesJson.getString(index)) }.getOrNull()
+                    }
+                }
+                val home = posFromJson(p.getJSONObject("home"))
+                val pack = generated["${home.x}:${home.y}:${types.joinToString(",")}"] ?: continue
+                pack.pos = posFromJson(p.getJSONObject("pos"))
+                pack.alive = p.optBoolean("alive", true)
+                pack.state = runCatching { PackState.valueOf(p.optString("state", PackState.IDLE.name)) }.getOrDefault(PackState.IDLE)
+                pack.lostTurns = p.optInt("lostTurns", 0)
+                pack.patrolIndex = p.optInt("patrolIndex", pack.patrolIndex).coerceAtLeast(0)
+            }
+        }
+        j.optJSONArray("items")?.let { arr ->
+            level.items.clear()
+            for (i in 0 until arr.length()) {
+                val item = arr.getJSONObject(i)
+                val type = runCatching { ItemType.valueOf(item.getString("type")) }.getOrNull() ?: continue
+                val relic = item.optString("relic", "").takeIf { it.isNotEmpty() }?.let {
+                    runCatching { Relic.valueOf(it) }.getOrNull()
+                }
+                level.items += Item(type, posFromJson(item.getJSONObject("pos")), relic)
+            }
+        }
+        playerPos = j.optJSONObject("player")?.let(::posFromJson)?.takeIf { level.walkable(it.x, it.y) } ?: level.start
+        stairsOpen = j.optBoolean("stairsOpen", false)
+        stairsArrivalPending = j.optBoolean("stairsArrivalPending", false)
+        deathReport = j.optJSONObject("deathReport")?.let { report ->
+            DeathReport(report.getInt("floor"), report.getInt("goldLost"),
+                report.optInt("checkpointFloor", checkpointFloor(report.getInt("floor"))))
+        }
+        combat = null
+        combatPack = null
+        computeFov()
+    }
+
+    private fun findStairs(): Pos? {
+        for (y in 0 until level.h) for (x in 0 until level.w) {
+            if (level.tiles[y][x] == TileType.STAIRS_DOWN) return Pos(x, y)
+        }
+        return null
+    }
+
+    private fun posToJson(pos: Pos) = JSONObject().apply {
+        put("x", pos.x)
+        put("y", pos.y)
+    }
+
+    private fun posFromJson(j: JSONObject) = Pos(j.getInt("x"), j.getInt("y"))
 }

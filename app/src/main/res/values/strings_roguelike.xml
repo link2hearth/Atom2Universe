@@ -632,4 +632,15 @@
     <string name="roguelike_camp_hint">Campfire · tap the fire to rest</string>
     <string name="roguelike_camp_return_hint">Return to the starting fire to heal</string>
     <string name="roguelike_log_camp_rest">The fire restores your strength and relics. HP %1$s/%2$s</string>
+    <string name="roguelike_camp_menu_title">Campfire</string>
+    <string name="roguelike_camp_menu_checkpoint">Return to checkpoint · floor %1$d</string>
+    <string name="roguelike_camp_menu_regenerate">Regenerate floor %1$d</string>
+    <string name="roguelike_log_camp_checkpoint">You return to checkpoint floor %1$d.</string>
+    <string name="roguelike_log_camp_regenerate">Floor %1$d is regenerated.</string>
+    <string name="roguelike_action_inventory">Inventory</string>
+    <string name="roguelike_action_heal">Heal</string>
+    <string name="roguelike_action_map">Map</string>
+    <string name="roguelike_action_zoom">Close view</string>
+    <string name="roguelike_banner_floor">%1$s\n%2$s</string>
+    <string name="roguelike_banner_health">%1$s\n%2$s/%3$s</string>
 </resources>

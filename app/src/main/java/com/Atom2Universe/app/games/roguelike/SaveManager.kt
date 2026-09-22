@@ -4,44 +4,84 @@ import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 
-/**
- * Sauvegarde l'état du joueur dans les SharedPreferences (pas le niveau — il est
- * régénéré à la reprise). Format JSON via org.json (pas de dépendance externe).
- */
+/** Sauvegarde séparée : état rapide du niveau et inventaire long du héros. */
 object SaveManager {
 
     private const val PREFS = "roguelike_save"
-    /** v6 : le donjon sans fin, une puissance par objet (les éléments). Les parties d'avant sont abandonnées. */
+    private const val KEY_STATE = "state_v7"
+    private const val KEY_INVENTORY = "inventory_v7"
+    /** v6 : ancienne sauvegarde monolithique, migrée à la première reprise. */
     private const val KEY   = "save_v6"
     private val OLD_KEYS = listOf("save_v5")
 
     // ── API publique ─────────────────────────────────────────────────────────────
 
     fun hasSave(ctx: Context): Boolean =
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).contains(KEY)
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).let {
+            it.contains(KEY_STATE) && it.contains(KEY_INVENTORY) || it.contains(KEY)
+        }
 
     fun save(ctx: Context, game: RoguelikeGame) {
-        val json = game.toJson().toString()
+        saveInventory(ctx, game)
+        saveState(ctx, game)
+    }
+
+    fun saveState(ctx: Context, game: RoguelikeGame) {
+        val json = game.mapStateToJson().toString()
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
             OLD_KEYS.forEach { remove(it) }
-            putString(KEY, json)
+            remove(KEY)
+            putString(KEY_STATE, json)
         }.apply()
     }
 
+    fun saveInventory(ctx: Context, game: RoguelikeGame) {
+        val json = game.inventoryToJson().toString()
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
+            OLD_KEYS.forEach { remove(it) }
+            remove(KEY)
+            putString(KEY_INVENTORY, json)
+        }.apply()
+    }
+
+    fun saveImmediate(ctx: Context, game: RoguelikeGame) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
+            OLD_KEYS.forEach { remove(it) }
+            remove(KEY)
+            putString(KEY_INVENTORY, game.inventoryToJson().toString())
+            putString(KEY_STATE, game.mapStateToJson().toString())
+        }.commit()
+    }
+
     fun load(ctx: Context): RoguelikeGame? {
-        val str = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getString(KEY, null) ?: return null
-        return try { RoguelikeGame.fromJson(JSONObject(str)) } catch (_: Exception) { null }
+        val prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val inventory = prefs.getString(KEY_INVENTORY, null)
+        val state = prefs.getString(KEY_STATE, null)
+        if (inventory != null && state != null) {
+            return try {
+                val game = RoguelikeGame.inventoryFromJson(JSONObject(inventory))
+                game.restoreFromSavedState(JSONObject(state))
+                game
+            } catch (_: Exception) { null }
+        }
+        val legacy = prefs.getString(KEY, null) ?: return null
+        return try {
+            RoguelikeGame.fromJson(JSONObject(legacy)).also { saveImmediate(ctx, it) }
+        } catch (_: Exception) { null }
     }
 
     fun clear(ctx: Context) {
-        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().remove(KEY).apply()
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .remove(KEY)
+            .remove(KEY_STATE)
+            .remove(KEY_INVENTORY)
+            .apply()
     }
 
     /** Résumé lisible pour l'écran de choix : "Étage 12 — 340 or". */
     fun saveSummary(ctx: Context): String? {
-        val str = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getString(KEY, null) ?: return null
+        val prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val str = prefs.getString(KEY_INVENTORY, null) ?: prefs.getString(KEY, null) ?: return null
         return try {
             val j = JSONObject(str)
             ctx.getString(com.Atom2Universe.app.R.string.roguelike_floor_gold_summary, j.getInt("floor"),

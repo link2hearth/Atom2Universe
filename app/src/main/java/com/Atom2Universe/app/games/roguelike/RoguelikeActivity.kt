@@ -2,6 +2,8 @@ package com.Atom2Universe.app.games.roguelike
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
@@ -15,12 +17,15 @@ class RoguelikeActivity : ThemedActivity() {
     private lateinit var gameView:     RoguelikeView
     private lateinit var combatView:   CombatView
     private lateinit var btnBack:      ImageButton
-    private lateinit var tvGold:       TextView
     private lateinit var tvFloorLevel: TextView
+    private lateinit var btnInventory: Button
+    private lateinit var healthBar:    ProgressBar
     private lateinit var inventory:    InventoryPanel
     private lateinit var lexicon:      LexiconPanel
 
     private var game = RoguelikeGame()
+    private val saveHandler = Handler(Looper.getMainLooper())
+    private val deferredSave = Runnable { SaveManager.saveState(this, game) }
 
     private val sfx   by lazy { RoguelikeSoundEngine(lifecycleScope) }
     private val music by lazy { DungeonProceduralMusic(lifecycleScope) }
@@ -33,13 +38,32 @@ class RoguelikeActivity : ThemedActivity() {
         gameView     = findViewById(R.id.roguelike_view)
         combatView   = findViewById(R.id.roguelike_combat_view)
         btnBack      = findViewById(R.id.roguelike_btn_back)
-        tvGold       = findViewById(R.id.roguelike_tv_gold)
         tvFloorLevel = findViewById(R.id.roguelike_tv_floorlevel)
+        btnInventory = findViewById(R.id.roguelike_btn_inventory)
+        healthBar    = findViewById(R.id.roguelike_health_bar)
 
         lexicon      = LexiconPanel(findViewById(R.id.roguelike_lexicon)) { game }
-        inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory), lexicon) { refresh() }
+        inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory), lexicon,
+            onChanged = { saveNow(); refresh() },
+            onClosed = { saveNow() })
 
-        btnBack.setOnClickListener { finish() }
+        btnBack.setOnClickListener {
+            when {
+                lexicon.isOpen -> lexicon.back()
+                inventory.isOpen -> inventory.back()
+                else -> finish()
+            }
+        }
+        btnInventory.setOnClickListener {
+            if (game.isExploring && !lexicon.isOpen) {
+                if (inventory.isOpen) {
+                    inventory.back()
+                } else {
+                    saveNow()
+                    inventory.show(game)
+                }
+            }
+        }
         // Retour : ferme d'abord le lexique, puis l'inventaire, s'ils sont ouverts
         onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -85,7 +109,7 @@ class RoguelikeActivity : ThemedActivity() {
         music.stop()
         sfx.stop()
         // La mort ne remet pas à zéro : on sauvegarde toujours (équipement, or, étage)
-        SaveManager.save(this, game)
+        saveNow()
     }
 
     override fun onResume() {
@@ -97,6 +121,7 @@ class RoguelikeActivity : ThemedActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        saveHandler.removeCallbacks(deferredSave)
         music.stop()
         sfx.stop()
     }
@@ -115,21 +140,29 @@ class RoguelikeActivity : ThemedActivity() {
         game          = g
         gameView.game = g
 
-        g.onFloorChanged = { floor -> music.onFloorChanged(floor); saveBestFloorIfBetter(floor) }
-        g.onCombatStart  = { showCombat() }
+        g.onFloorChanged = { floor -> music.onFloorChanged(floor); saveBestFloorIfBetter(floor); saveNow() }
+        g.onCombatStart  = { saveNow(); showCombat() }
 
-        gameView.onMove          = { dx, dy -> g.tryMove(dx, dy); refresh() }
-        gameView.onRest          = { g.rest(); refresh() }
-        gameView.onOpenStairs    = { g.openStairs(); refresh() }
-        gameView.onCloseStairs   = { g.closeStairs(); refresh() }
-        gameView.onDescend       = { sfx.onDescend(); g.descend(); refresh() }
-        gameView.onEquipItem     = { g.equipPendingDrop(); refresh() }
-        gameView.onStashDrop     = { g.stashPendingDrop(); refresh() }
-        gameView.onOpenInventory = { inventory.show(g) }
+        gameView.onMove          = { dx, dy -> g.tryMove(dx, dy); scheduleStateSave(); refresh() }
+        gameView.onCloseStairs   = { g.closeStairs(); scheduleStateSave(); refresh() }
+        gameView.onDescend       = { sfx.onDescend(); g.descend(); saveNow(); refresh() }
+        gameView.onEquipItem     = { g.equipPendingDrop(); saveNow(); refresh() }
+        gameView.onStashDrop     = { g.stashPendingDrop(); saveNow(); refresh() }
+
         gameView.onRestartAfterDeath = { atCheckpoint ->
             g.restartAfterDeath(atCheckpoint)
-            SaveManager.save(this, g)
+            saveNow()
             refresh()
+        }
+        gameView.onCampfireHeld = {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.roguelike_camp_menu_title)
+                .setItems(arrayOf(getString(R.string.roguelike_camp_menu_checkpoint, g.checkpoint),
+                    getString(R.string.roguelike_camp_menu_regenerate, g.floor))) { _, choice ->
+                    if (choice == 0) g.returnToCheckpoint() else g.regenerateCurrentFloor()
+                    saveNow()
+                    refresh()
+                }.show()
         }
 
         combatView.onStrike    = { crit -> sfx.onPlayerAttack(crit) }
@@ -138,6 +171,7 @@ class RoguelikeActivity : ThemedActivity() {
         combatView.onParry     = { perfect -> sfx.onParry(perfect) }
         combatView.onFinished  = {
             g.finishCombat()
+            saveNow()
             // Un poursuivant tout proche a pu relancer un combat pendant finishCombat
             if (g.combat == null) combatView.visibility = View.GONE
             refresh()
@@ -149,6 +183,16 @@ class RoguelikeActivity : ThemedActivity() {
         refresh()
     }
 
+    private fun scheduleStateSave() {
+        saveHandler.removeCallbacks(deferredSave)
+        saveHandler.postDelayed(deferredSave, 1_000L)
+    }
+
+    private fun saveNow() {
+        saveHandler.removeCallbacks(deferredSave)
+        SaveManager.saveImmediate(this, game)
+    }
+
     private fun showCombat() {
         val c = game.combat ?: return
         combatView.visibility = View.VISIBLE
@@ -158,7 +202,14 @@ class RoguelikeActivity : ThemedActivity() {
     private fun refresh() {
         gameView.invalidate()
         val h = game.hero
-        tvGold.text       = getString(R.string.roguelike_hud_gold, DungeonNumbers.format(this, h.gold))
-        tvFloorLevel.text = getString(R.string.roguelike_hud_floor, game.floor)
+        tvFloorLevel.text = getString(R.string.roguelike_banner_floor,
+            getString(R.string.roguelike_region_floor, game.floor,
+                getString(game.level.themeAt(game.playerPos.x, game.playerPos.y).label)),
+            getString(R.string.roguelike_map_format, getString(game.level.format.label), game.level.w, game.level.h))
+        btnInventory.text = getString(R.string.roguelike_banner_health,
+            h.archetype?.let { getString(it.labelRes) } ?: getString(R.string.inv_no_class),
+            DungeonNumbers.format(this, h.hp), DungeonNumbers.format(this, h.maxHp))
+        btnInventory.isEnabled = game.isExploring
+        healthBar.progress = (h.hp.toDouble() / h.maxHp.coerceAtLeast(1) * 1000).toInt().coerceIn(0, 1000)
     }
 }

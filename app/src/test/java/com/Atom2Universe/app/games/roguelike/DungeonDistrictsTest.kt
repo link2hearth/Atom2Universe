@@ -54,16 +54,51 @@ class DungeonDistrictsTest {
             }
         }
     }
-    @Test fun restRequiresStandingOnStartingFire() {
+
+    @Test fun floorCurveKeepsEarlyGameSmallAndOpensLateGameGradually() {
+        val early=(0 until 80).map { DungeonFormats.rollForFloor(15,Random(it)) }
+        assertTrue(early.all { maxOf(it.w,it.h)<=25 })
+        assertTrue(early.all { it.packs<=12 })
+
+        val lateMid=(0 until 80).map { DungeonFormats.rollForFloor(400,Random(it)) }
+        assertTrue(lateMid.all { maxOf(it.w,it.h)<=81 })
+
+        val cap=(0 until 160).map { DungeonFormats.rollForFloor(500,Random(it)) }
+        assertTrue(cap.all { maxOf(it.w,it.h)<=99 })
+        assertTrue(cap.any { maxOf(it.w,it.h)<=39 })
+        assertTrue(cap.any { maxOf(it.w,it.h)>=90 })
+    }
+
+    @Test fun stairsReopenOnlyAfterLeavingAndReturning() {
+        val g = RoguelikeGame(rng = Random(7))
+        g.level.packs.clear()
+        val start = g.playerPos
+        val step = listOf(Pos(1,0), Pos(-1,0), Pos(0,1), Pos(0,-1))
+            .first { g.level.canStep(start, it.x, it.y) }
+        g.level.tiles[start.y + step.y][start.x + step.x] = TileType.STAIRS_DOWN
+        g.tryMove(step.x, step.y)
+        assertTrue(g.stairsOpen)
+        g.closeStairs()
+        assertFalse(g.stairsOpen)
+        g.tryMove(0, 0)
+        assertFalse(g.stairsOpen)
+        g.tryMove(-step.x, -step.y)
+        assertFalse(g.stairsOpen)
+        g.tryMove(step.x, step.y)
+        assertTrue(g.stairsOpen)
+    }
+
+    @Test fun returningToStartingFireAutomaticallyHeals() {
         val g=RoguelikeGame(rng=Random(7))
         g.level.packs.clear()
         val start=g.playerPos
         val step=listOf(Pos(1,0),Pos(-1,0),Pos(0,1),Pos(0,-1)).first { g.level.canStep(start,it.x,it.y) }
         g.hero.hp=g.hero.maxHp/2
         g.tryMove(step.x,step.y)
+        assertEquals(g.hero.maxHp/2,g.hero.hp)
         assertFalse(g.canRest());assertFalse(g.rest())
         g.tryMove(-step.x,-step.y)
-        assertTrue(g.onCampTile());assertTrue(g.rest())
+        assertTrue(g.onCampTile())
         assertEquals(g.hero.maxHp,g.hero.hp)
         assertFalse(g.canRest())
     }

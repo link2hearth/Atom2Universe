@@ -135,12 +135,13 @@
     <string name="lex_special_1">Le bouton du bas : la capacité de ton [[archetype|archétype]]. Verrouillé sans archétype.</string>
     <string name="lex_special_2">Recharge : %1$d tours</string>
     <string name="lex_rest">Repos</string>
-    <string name="lex_rest_1">Le repos est possible uniquement sur le feu du départ : il restaure tous tes PV et recharge tes reliques.</string>
-    <string name="lex_rest_2">Impossible tant qu\'un monstre te [[chase|poursuit]].</string>
+    <string name="lex_rest_1">Passer sur le feu du départ restaure automatiquement tous tes PV et recharge tes reliques et ton Spécial.</string>
+    <string name="lex_rest_2">Aucun bouton à toucher : le soin se déclenche dès ton arrivée, même pendant une [[chase|poursuite]].</string>
     <string name="lex_rest_3">Le feu ne fait pas apparaître de monstres. Les soins de combat restent disponibles.</string>
+    <string name="lex_rest_4">Reste immobile 5 secondes sur le feu de départ pour revenir au checkpoint ou régénérer l’étage actuel avec une nouvelle carte.</string>
     <string name="lex_chase">Poursuite</string>
     <string name="lex_chase_1">Un monstre qui te voit te poursuit ; s\'il te rattrape, le combat commence.</string>
-    <string name="lex_chase_2">Tant qu\'un monstre te poursuit, tu ne peux pas te [[rest|reposer]].</string>
+    <string name="lex_chase_2">Le [[rest|feu du départ]] te soigne même pendant une poursuite, mais les monstres continuent de te suivre.</string>
     <string name="lex_chase_3">À la fin d\'un combat, un poursuivant à %1$d cases ou moins s\'enchaîne aussitôt.</string>
     <string name="lex_death">Mort</string>
     <string name="lex_death_1">Tu gardes ton équipement et choisis : rejouer l\'étage de ta mort ou revenir au dernier checkpoint. Checkpoints tous les %1$d étages : 1, 11, 21…</string>

@@ -5,7 +5,7 @@ import kotlin.random.Random
 /** Pure generation pipeline, shared by gameplay and the connectivity/population checks. */
 internal object DungeonLevelFactory {
     data class Prepared(val level:DungeonLevel,val layout:DungeonLayout,val population:PopulationPlan)
-    fun create(floor:Int,rng:Random,spec:DungeonSpec= DungeonFormats.roll(rng)):Prepared {
+    fun create(floor:Int,rng:Random,spec:DungeonSpec= DungeonFormats.rollForFloor(floor,rng)):Prepared {
         val plan=DungeonDistricts.generate(spec,rng)
         val level=DungeonLevel(spec.w,spec.h,floor)
         level.theme=spec.regions.first();level.format=spec.format;level.targetPacks=spec.packs

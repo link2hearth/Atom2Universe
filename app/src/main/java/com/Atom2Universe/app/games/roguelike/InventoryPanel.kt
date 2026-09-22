@@ -24,7 +24,12 @@ import java.text.NumberFormat
 import kotlin.math.abs
 
 /** Separate character, paginated equipment and relic pages. */
-class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, private val onChanged: () -> Unit) {
+class InventoryPanel(
+    private val root: View,
+    private val lexicon: LexiconPanel,
+    private val onChanged: () -> Unit,
+    private val onClosed: () -> Unit = {},
+) {
     private enum class Page(val label: Int) {
         CHARACTER(R.string.inv_page_character), EQUIPMENT(R.string.inv_page_equipment), RELICS(R.string.inv_page_relics)
     }
@@ -55,7 +60,6 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         maximumFractionDigits = 1
     }
     private val header = column()
-    private val gold = text("", 14f, accent)
     private val list = RecyclerView(ctx)
     private val selectedEquipment = linkedSetOf<Equipment>()
     private var selectedSaleValue = 0L
@@ -125,18 +129,7 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         val container = root as LinearLayout
         container.removeAllViews()
         container.setBackgroundColor(0xFF0B101B.toInt())
-        container.setPadding(dp(12), dp(8), dp(12), dp(8))
-        val toolbar = row()
-        toolbar.addView(text(ctx.getString(R.string.roguelike_equipment_title), 20f, ink, true), LinearLayout.LayoutParams(0, -2, 1f))
-        toolbar.addView(gold)
-        toolbar.addView(ImageButton(ctx).apply {
-            setImageResource(R.drawable.ic_close)
-            imageTintList = android.content.res.ColorStateList.valueOf(ink)
-            background = null
-            contentDescription = ctx.getString(R.string.roguelike_inventory_close)
-            setOnClickListener { hide() }
-        }, LinearLayout.LayoutParams(dp(48), dp(48)))
-        container.addView(toolbar)
+        container.setPadding(dp(12), dp(10), dp(12), dp(8))
         val navigation = row()
         Page.entries.forEach { target ->
             val tab = button(ctx.getString(target.label), target == page) { openPage(target) }
@@ -178,7 +171,11 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         refresh()
         list.scrollToPosition(0)
     }
-    fun hide() { dialog?.dismiss(); dialog = null; clearSelection(); root.visibility = View.GONE }
+    fun hide() {
+        val wasOpen = isOpen
+        dialog?.dismiss(); dialog = null; clearSelection(); root.visibility = View.GONE
+        if (wasOpen) onClosed()
+    }
 
     /** Android Back leaves selection mode before closing the inventory. */
     fun back() { if (selectedEquipment.isNotEmpty()) cancelSelection() else hide() }
@@ -238,7 +235,6 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
 
     fun refresh() {
         val hero = game?.hero ?: return
-        gold.text = ctx.getString(R.string.roguelike_hud_gold, DungeonNumbers.format(ctx, hero.gold))
         header.removeAllViews()
         tabs.forEach { (target, tab) ->
             tab.background = frame(if (target == page) accent else 0xFF303C52.toInt())
@@ -305,9 +301,6 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
     }
 
     private fun buildCharacter(hero: Hero) {
-        section(header, R.string.inv_character)
-        header.addView(text(className(hero), 16f, accent, true))
-        header.addView(text(ctx.getString(R.string.inv_health, number.format(hero.hp), number.format(hero.maxHp)), 13f, muted))
         val dollRow = row()
         val left = column()
         val right = column()
@@ -326,9 +319,14 @@ class InventoryPanel(private val root: View, private val lexicon: LexiconPanel, 
         }, LinearLayout.LayoutParams(0, dp(230), 1.15f))
         dollRow.addView(right, LinearLayout.LayoutParams(0, -2, 1f))
         header.addView(dollRow)
-        header.addView(slotCard(hero, EquipSlot.BOOTS))
+        val bootsRow = row()
+        // Same width as the side slots, centered beneath the hero.
+        bootsRow.addView(View(ctx), LinearLayout.LayoutParams(0, 0, 1.075f))
+        bootsRow.addView(slotCard(hero, EquipSlot.BOOTS),
+            LinearLayout.LayoutParams(0, -2, 1f).apply { topMargin = dp(6) })
+        bootsRow.addView(View(ctx), LinearLayout.LayoutParams(0, 0, 1.075f))
+        header.addView(bootsRow)
         hero.setArchetype?.let { header.addView(text(ctx.getString(R.string.inv_set_active, ctx.getString(it.labelRes)), 13f, EquipmentArt.LEGENDARY)) }
-        header.addView(text(ctx.getString(R.string.inv_slots_hint), 12f, muted))
     }
 
     private fun slotCard(hero: Hero, slot: EquipSlot): View {

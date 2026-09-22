@@ -6,10 +6,11 @@
     android:orientation="vertical"
     android:background="#0D0D0D">
 
-    <!-- Banner : back | floor+level | gold -->
+    <!-- Banner : back | floor+level | character -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
         android:orientation="horizontal"
         android:paddingStart="4dp"
         android:paddingEnd="12dp"
@@ -29,24 +30,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textColor="#EEEEEE"
             android:gravity="center"
             android:fontFamily="monospace"
             android:textStyle="bold"
             tools:text="Floor 1" />
 
-        <TextView
-            android:id="@+id/roguelike_tv_gold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#FFD600"
+        <Button android:id="@+id/roguelike_btn_inventory" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:minWidth="48dp" android:minHeight="48dp"
+            android:paddingHorizontal="8dp" android:textSize="11sp" android:textAllCaps="false"
+            android:background="@drawable/bg_roguelike_character_button"
             android:fontFamily="monospace"
-            android:textStyle="bold"
-            tools:text="0 gold" />
-
+            android:textColor="#F5F7FA"
+            tools:text="Warrior\n45/50" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/roguelike_health_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:max="1000"
+        android:progressTint="#55D27D"
+        android:progressBackgroundTint="#172018" />
 
     <!-- Carte + écran de combat par-dessus -->
     <FrameLayout

@@ -135,12 +135,13 @@
     <string name="lex_special_1">The bottom button: your [[archetype|archetype]]\'s ability. Locked without an archetype.</string>
     <string name="lex_special_2">Recharge: %1$d turns</string>
     <string name="lex_rest">Rest</string>
-    <string name="lex_rest_1">Rest is only available on the starting fire: it restores all HP and recharges your relics.</string>
-    <string name="lex_rest_2">Impossible while a monster is [[chase|chasing]] you.</string>
+    <string name="lex_rest_1">Stepping onto the starting fire automatically restores all HP and recharges your relics and Special.</string>
+    <string name="lex_rest_2">No button needed: healing triggers on arrival, even during a [[chase|chase]].</string>
     <string name="lex_rest_3">The fire does not spawn monsters. Combat healing remains available.</string>
+    <string name="lex_rest_4">Hold still on the starting fire for 5 seconds to return to your checkpoint or regenerate the current floor with a new layout.</string>
     <string name="lex_chase">Chase</string>
     <string name="lex_chase_1">A monster that sees you chases you; if it catches you, combat starts.</string>
-    <string name="lex_chase_2">While a monster chases you, you can\'t [[rest|rest]].</string>
+    <string name="lex_chase_2">The [[rest|starting fire]] heals you even during a chase, but monsters keep following you.</string>
     <string name="lex_chase_3">When a fight ends, a chaser within %1$d tiles jumps you at once.</string>
     <string name="lex_death">Death</string>
     <string name="lex_death_1">Keep your gear and choose: retry the floor where you died or return to the last checkpoint. Checkpoints every %1$d floors: 1, 11, 21…</string>

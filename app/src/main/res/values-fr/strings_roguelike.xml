@@ -632,4 +632,15 @@
     <string name="roguelike_camp_hint">Feu de camp · touche le feu pour te reposer</string>
     <string name="roguelike_camp_return_hint">Reviens au feu du départ pour te soigner</string>
     <string name="roguelike_log_camp_rest">Au feu, tes forces et tes reliques sont restaurées. PV %1$s/%2$s</string>
+    <string name="roguelike_camp_menu_title">Feu de camp</string>
+    <string name="roguelike_camp_menu_checkpoint">Revenir au checkpoint · étage %1$d</string>
+    <string name="roguelike_camp_menu_regenerate">Régénérer l’étage %1$d</string>
+    <string name="roguelike_log_camp_checkpoint">Tu reviens au checkpoint de l’étage %1$d.</string>
+    <string name="roguelike_log_camp_regenerate">L’étage %1$d est régénéré.</string>
+    <string name="roguelike_action_inventory">Inventaire</string>
+    <string name="roguelike_action_heal">Soin</string>
+    <string name="roguelike_action_map">Carte</string>
+    <string name="roguelike_action_zoom">Vue proche</string>
+    <string name="roguelike_banner_floor">%1$s\n%2$s</string>
+    <string name="roguelike_banner_health">%1$s\n%2$s/%3$s</string>
 </resources>
