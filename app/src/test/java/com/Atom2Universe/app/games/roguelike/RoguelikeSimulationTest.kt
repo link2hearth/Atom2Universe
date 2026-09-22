@@ -58,6 +58,9 @@ class RoguelikeSimulationTest {
     private val checkpointEvery = System.getenv("SIM_CHECKPOINT")?.toInt() ?: 0
     /** Le bot qui connaît le grimoire (reliques choisies, combos). SIM_SMART=0 : l'ancien bot. */
     private val smart = System.getenv("SIM_SMART") != "0"
+    /** Archétypes écartés des essais d'équipement pour les bancs de contre-mesure (ex. MAGE). */
+    private val avoidedArchetypes = System.getenv("SIM_AVOID_ARCHETYPES")
+        ?.split(",")?.map { Archetype.valueOf(it.trim()) }?.toSet() ?: emptySet()
     /** Variante du banc : mesure le rôle des Spéciaux dans le choix spontané de l'équipement. */
     private val simUseSpecial = System.getenv("SIM_USE_SPECIAL") != "0"
     /** Séries de 3 combats d'essai par paire de reliques, quand le bot choisit les siennes. */
@@ -166,6 +169,8 @@ class RoguelikeSimulationTest {
         var relicSwitches = 0
         /** Les reliques portées à la fin de chaque profil, pour voir ce que le bot a choisi. */
         val finalRelics = mutableListOf<String>()
+        /** Toutes les reliques distinctes découvertes pendant chaque profil, même celles restées dans le sac. */
+        val discoveredRelics = mutableListOf<String>()
         fun f(n: Int) = floors.getOrPut(n) { FloorStat() }
     }
 
@@ -403,15 +408,17 @@ class RoguelikeSimulationTest {
             out.appendLine("Changements de reliques : ${group.sumOf { it.relicSwitches }} / ${group.sumOf { it.relicChecks }} révisions ; combos joués : ${group.sumOf { it.comboSteps }} ; arrêts sur temps : ${group.sumOf { it.wallClockCut }}")
         }
         out.appendLine("\nDurée : ${(System.currentTimeMillis() - start) / 1000} s")
-        out.appendLine("\nDétail par bot : meilleur étage, morts totales, morts aux étages 1 / 2 / 3 / 4 / 5, morts pleins PV, embuscades, enchaînements, limites atteintes")
-        val botCsv = StringBuilder("wanted,style,skill,seed,best_floor,deaths,deaths_floor1,deaths_floor2,deaths_floor3,deaths_floor4,deaths_floor5,deaths_full_hp,deaths_ambush,deaths_chained,time_cut,map_cut,map_resets\n")
+        out.appendLine("\nDétail par bot : meilleur étage, morts totales, morts aux étages 1 / 2 / 3 / 4 / 5, morts pleins PV, embuscades, enchaînements, reliques distinctes découvertes, limites atteintes")
+        val botCsv = StringBuilder("wanted,style,skill,seed,best_floor,deaths,deaths_floor1,deaths_floor2,deaths_floor3,deaths_floor4,deaths_floor5,deaths_full_hp,deaths_ambush,deaths_chained,discovered_relic_count,discovered_relics,time_cut,map_cut,map_resets\n")
         val fightCsv = StringBuilder("wanted,style,skill,seed,floor,class,enemies,bosses,outcome,player_actions,hp_start,max_hp_start,ambush,chained,armor_pieces,weapon,weapon_power,relic_count,relics,enemy_types,enemy_hp_left,enemy_max_hp,life_steal,life_stolen\n")
         for ((t, r) in results) {
             val early = (1..5).map { r.floors[it]?.deaths ?: 0 }
             val deaths = r.floors.values.sumOf { it.deaths }
-            out.appendLine("${t.wanted ?: "LIBRE"} ${t.style} ${t.skill} graine ${t.seed} : ${r.bestFloors.single()} ; $deaths ; ${early.joinToString("/")} ; ${r.deathsFullHp} ; ${r.deathsAmbush} ; ${r.deathsChained} ; temps=${r.wallClockCut}, carte=${r.timeouts}")
+            val discovered = r.discoveredRelics.single()
+            val discoveredCount = if (discovered.isBlank()) 0 else discovered.split("+").size
+            out.appendLine("${t.wanted ?: "LIBRE"} ${t.style} ${t.skill} graine ${t.seed} : ${r.bestFloors.single()} ; $deaths ; ${early.joinToString("/")} ; ${r.deathsFullHp} ; ${r.deathsAmbush} ; ${r.deathsChained} ; reliques=$discoveredCount ; temps=${r.wallClockCut}, carte=${r.timeouts}")
             botCsv.appendLine((listOf(t.wanted ?: "LIBRE", t.style, t.skill, t.seed, r.bestFloors.single(), deaths) + early +
-                listOf(r.deathsFullHp, r.deathsAmbush, r.deathsChained, r.wallClockCut, r.timeouts, r.mapResets)).joinToString(","))
+                listOf(r.deathsFullHp, r.deathsAmbush, r.deathsChained, discoveredCount, discovered, r.wallClockCut, r.timeouts, r.mapResets)).joinToString(","))
             out.appendLine("Régénérations au feu : ${r.mapResets}")
             r.timeoutInfo.forEach { out.appendLine(it) }
             for (row in r.combatRows) fightCsv.appendLine("${t.wanted ?: "LIBRE"},${t.style},${t.skill},${t.seed},$row")
@@ -1379,12 +1386,14 @@ class RoguelikeSimulationTest {
      * la meilleure arme qui lui va, sa main gauche de classe si elle existe, et le meilleur bijou de chaque sorte.
      * Il faut au moins [Hero.ARCHETYPE_PIECES] pièces du poids pour compter comme cet archétype.
      */
-    private fun candidateLoadouts(hero: Hero): List<Loadout> {
+    private fun candidateLoadouts(hero: Hero, avoided: Set<Archetype> = emptySet()): List<Loadout> {
         val pool = hero.equipped.values + hero.bag
         fun best(slot: EquipSlot, a: Archetype?, filter: (Equipment) -> Boolean = { true }) =
             pool.filter { it.slot == slot && filter(it) }.maxByOrNull { LootSystem.rating(it, a) }
-        val out = mutableListOf<Loadout>(hero.equipped.toMap())
+        val out = mutableListOf<Loadout>()
+        if (hero.archetype !in avoided) out += hero.equipped.toMap()
         for (a in Archetype.entries) {
+            if (a in avoided) continue
             val variants = listOf<(Equipment) -> Boolean>({ true }, { it.isotopeSet?.archetype == a })
             for (armorFilter in variants) {
                 val loadout = mutableMapOf<EquipSlot, Equipment>()
@@ -1410,8 +1419,8 @@ class RoguelikeSimulationTest {
      * avec ses reliques et ses combos), garde celui qui gagne le plus (à égalité, la meilleure note), l'enfile, puis
      * refait le choix des reliques : un autre archétype change ce que valent les sorts.
      */
-    private fun optimizeGear(hero: Hero, floor: Int, skill: Skill, r: Report, wanted: Archetype? = null) {
-        val candidates = candidateLoadouts(hero)
+    private fun optimizeGear(hero: Hero, floor: Int, skill: Skill, r: Report, wanted: Archetype? = null, avoided: Set<Archetype> = emptySet()) {
+        val candidates = candidateLoadouts(hero, avoided)
         r.stock.getOrPut((floor - 1) / 25 * 25 + 1) { StockStat() }.also { st ->
             val pool = hero.equipped.values + hero.bag
             st.decisions++
@@ -1562,7 +1571,7 @@ class RoguelikeSimulationTest {
                 (wallFloor > 0 || g.floor - lastGearFloor >= 10 || (newSetPiece && g.floor - lastGearFloor >= 3))) {
                 lastGearFloor = g.floor
                 newSetPiece = false
-                optimizeGear(g.hero, maxOf(g.floor, wallFloor), skill, r, wanted)
+                optimizeGear(g.hero, maxOf(g.floor, wallFloor), skill, r, wanted, avoidedArchetypes)
                 wallFloor = 0
             }
             if (g.floor != lastFloor) {
@@ -1617,6 +1626,17 @@ class RoguelikeSimulationTest {
                         if (slots.containsAll(IsotopeSets.SLOTS)) r.firstCompleteSetFloor.putIfAbsent(a, g.floor)
                     }
                     val cur = g.hero.equipped[e.slot]
+                    // Une consigne d'évitement doit aussi s'appliquer au ramassage immédiat :
+                    // sinon deux pièces tombées entre deux essais d'équipement peuvent former
+                    // brièvement l'archétype écarté.
+                    fun createsAvoidedArchetype(item: Equipment): Boolean {
+                        if (item.slot !in IsotopeSets.SLOTS) return false
+                        return avoidedArchetypes.any { avoided ->
+                            IsotopeSets.SLOTS.count { slot ->
+                                (if (slot == item.slot) item else g.hero.equipped[slot])?.weight == avoided.weight
+                            } >= Hero.ARCHETYPE_PIECES
+                        }
+                    }
                     // Le bot connaît sa classe : une arme qui n'est pas la sienne note moins bien
                     val archetype = wanted ?: g.hero.archetype
                     // Une pièce étrangère peut dépanner ; une pièce du set visé reçoit un léger bonus.
@@ -1627,7 +1647,8 @@ class RoguelikeSimulationTest {
                             (if (item.weight == wanted.weight) rating / 5 else 0) +
                             (if (item.isotopeSet?.archetype == wanted) rating / 4 else 0)
                     }
-                    if (cur == null || dropScore(e) > dropScore(cur)) g.equipPendingDrop() else g.stashPendingDrop()
+                    if (!createsAvoidedArchetype(e) && (cur == null || dropScore(e) > dropScore(cur))) g.equipPendingDrop()
+                    else g.stashPendingDrop()
                 }
                 g.stairsOpen -> g.descend()
                 else -> { mapStep(g, mem); r.f(g.floor).mapTurns++ }
@@ -1645,6 +1666,7 @@ class RoguelikeSimulationTest {
         if (g.hero.setArchetype != null) r.setBonusAtEnd++
         r.setPiecesAtEnd += g.hero.equipped.values.count { it.isotopeZ != null }
         r.finalRelics += g.hero.relicSlots.filterNotNull().sortedBy { it.ordinal }.joinToString(" + ") { it.name }
+        r.discoveredRelics += g.hero.relics.sortedBy { it.ordinal }.joinToString("+") { it.name }
     }
 
     /** Joue un combat entier. Renvoie true si le héros est mort. */
@@ -1739,7 +1761,7 @@ class RoguelikeSimulationTest {
                 val special = if (!useSpecial || !c.canUseSpecial()) null else when (c.hero.archetype) {
                     Archetype.ROGUE   -> exposed?.let { { c.deadlyStrike(it, strike(skill, rng, c.hero)); Unit } }
                     // Garde et doubles ne frappent pas : jamais juste après un autre tour sans frapper
-                    Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.2f && !lastWasSupport) ({ c.guard(); lastWasSupport = true }) else null
+                    Archetype.WARRIOR -> if (incoming > c.hero.maxHp * 0.15f && !lastWasSupport) ({ c.guard(); lastWasSupport = true }) else null
                     Archetype.MAGE    -> if (c.mirrorImages == 0 && !lastWasSupport) ({ c.mirrorImage(); lastWasSupport = true }) else null
                     // Deux coups d'arme : il enchaîne dès qu'il peut. Le nécromancien invoque ses pantins, puis rappelle les tombés.
                     Archetype.BARBARIAN -> ({ c.smash(target, strike(skill, rng, c.hero)); Unit })

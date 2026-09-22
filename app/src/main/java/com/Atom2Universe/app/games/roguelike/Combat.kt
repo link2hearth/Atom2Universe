@@ -456,19 +456,19 @@ enum class Relic(
 ) : Labeled {
     // Une relique par élément et par archétype (refonte du 20/09/2026, voir DONJON.md, « Refonte du grimoire »).
     // Guerrier (CON)
-    FER_ROUGE       (R.string.roguelike_relic_fer_rouge,       R.string.roguelike_relic_fer_rouge_desc,       Element.FIRE,      StatType.CON, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
+    FER_ROUGE       (R.string.roguelike_relic_fer_rouge,       R.string.roguelike_relic_fer_rouge_desc,       Element.FIRE,      StatType.CON, RelicTarget.ONE,      RelicEffect.BURN,           2, 2, 0xFFB5451B.toInt(), 113, 6),
     STONESKIN       (R.string.roguelike_relic_stoneskin,       R.string.roguelike_relic_stoneskin_desc,       Element.ICE,       StatType.CON, RelicTarget.SELF,     RelicEffect.STONESKIN,      3, 2, 0xFF5F8FA8.toInt(), 132, 2),
-    MARTEAU_FOUDRE  (R.string.roguelike_relic_marteau_foudre,  R.string.roguelike_relic_marteau_foudre_desc,  Element.LIGHTNING, StatType.CON, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
-    POISONED_BLADES (R.string.roguelike_relic_poisoned_blades, R.string.roguelike_relic_poisoned_blades_desc, Element.POISON,    StatType.CON, RelicTarget.SELF,     RelicEffect.ENCHANT_POISON, 3, 3, 0xFF2E7D32.toInt(), 133, 5),
+    MARTEAU_FOUDRE  (R.string.roguelike_relic_marteau_foudre,  R.string.roguelike_relic_marteau_foudre_desc,  Element.LIGHTNING, StatType.CON, RelicTarget.ONE,      RelicEffect.PARALYZE,       2, 2, 0xFF9C7A12.toInt(), 132, 5),
+    POISONED_BLADES (R.string.roguelike_relic_poisoned_blades, R.string.roguelike_relic_poisoned_blades_desc, Element.POISON,    StatType.CON, RelicTarget.SELF,     RelicEffect.ENCHANT_POISON, 3, 4, 0xFF2E7D32.toInt(), 133, 5),
     WAR_CRY         (R.string.roguelike_relic_war_cry,         R.string.roguelike_relic_war_cry_desc,         Element.PHYSICAL,  StatType.CON, RelicTarget.ALL,      RelicEffect.WARCRY,         3, 2, 0xFF8E2424.toInt(), 132, 0),
     // Voleur (DEX)
     COCKTAIL        (R.string.roguelike_relic_cocktail,        R.string.roguelike_relic_cocktail_desc,        Element.FIRE,      StatType.DEX, RelicTarget.ALL,      RelicEffect.BURN,           3, 2, 0xFFC0501E.toInt(), 113, 0),
-    CRYSTALLIZE     (R.string.roguelike_relic_crystallize,     R.string.roguelike_relic_crystallize_desc,     Element.ICE,       StatType.DEX, RelicTarget.ONE,      RelicEffect.CRYSTALLIZE,    3, 0, 0xFF4A8FC0.toInt(), 134, 1),
+    CRYSTALLIZE     (R.string.roguelike_relic_crystallize,     R.string.roguelike_relic_crystallize_desc,     Element.ICE,       StatType.DEX, RelicTarget.ONE,      RelicEffect.CRYSTALLIZE,    2, 0, 0xFF4A8FC0.toInt(), 134, 1),
     HASTE           (R.string.roguelike_relic_haste,           R.string.roguelike_relic_haste_desc,           Element.LIGHTNING, StatType.DEX, RelicTarget.SELF,     RelicEffect.HASTE,          3, 3, 0xFF26A69A.toInt(), 132, 7),
     VENOM           (R.string.roguelike_relic_venom,           R.string.roguelike_relic_venom_desc,           Element.POISON,    StatType.DEX, RelicTarget.ONE,      RelicEffect.POISON,         3, 4, 0xFF3E8E3A.toInt(), 133, 3),
-    HUNTERS_MARK    (R.string.roguelike_relic_hunters_mark,    R.string.roguelike_relic_hunters_mark_desc,    Element.PHYSICAL,  StatType.DEX, RelicTarget.ONE,      RelicEffect.MARK,           3, 0, 0xFF9E3B3B.toInt(), 132, 11),
+    HUNTERS_MARK    (R.string.roguelike_relic_hunters_mark,    R.string.roguelike_relic_hunters_mark_desc,    Element.PHYSICAL,  StatType.DEX, RelicTarget.ONE,      RelicEffect.MARK,           2, 0, 0xFF9E3B3B.toInt(), 132, 11),
     // Vagabond (END)
-    LANTERNE        (R.string.roguelike_relic_lanterne,        R.string.roguelike_relic_lanterne_desc,        Element.FIRE,      StatType.END, RelicTarget.ONE,      RelicEffect.BURN,           3, 4, 0xFFD9822B.toInt(), 113, 6),
+    LANTERNE        (R.string.roguelike_relic_lanterne,        R.string.roguelike_relic_lanterne_desc,        Element.FIRE,      StatType.END, RelicTarget.ONE,      RelicEffect.BURN,           3, 3, 0xFFD9822B.toInt(), 113, 6),
     SLOW            (R.string.roguelike_relic_slow,            R.string.roguelike_relic_slow_desc,            Element.ICE,       StatType.END, RelicTarget.ONE,      RelicEffect.SLOW,           3, 3, 0xFF5C6BC0.toInt(), 132, 13),
     CHAIN_LIGHTNING (R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.END, RelicTarget.MISSILES,     RelicEffect.NONE,           3, 0, 0xFF7B6A12.toInt(), 132, 12),
     CHAMPIGNON      (R.string.roguelike_relic_champignon,      R.string.roguelike_relic_champignon_desc,      Element.POISON,    StatType.END, RelicTarget.ONE,      RelicEffect.POISON,         3, 6, 0xFF6B8E23.toInt(), 133, 14),
@@ -480,11 +480,11 @@ enum class Relic(
     VENOMOUS_WOUND(R.string.roguelike_relic_venomous_wound, R.string.roguelike_relic_venomous_wound_desc, Element.POISON, StatType.STR, RelicTarget.ONE, RelicEffect.POISON, 4, 2, 0xFF8FAD43.toInt(), 133, 3),
     SEISMIC_STRIKE(R.string.roguelike_relic_seismic_strike, R.string.roguelike_relic_seismic_strike_desc, Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.NONE, 5, 0, 0xFFAD794C.toInt(), 133, 9),
     // Mage (INT)
-    FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.INT, RelicTarget.ONE,      RelicEffect.BURN,           3, 2, 0xFFB5451B.toInt(), 113, 6),
-    FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.INT, RelicTarget.ALL,      RelicEffect.FREEZE,         3, 1, 0xFF1E6F8C.toInt(), 132, 6),
-    LIGHTNING       (R.string.roguelike_relic_lightning,       R.string.roguelike_relic_lightning_desc,       Element.LIGHTNING, StatType.INT, RelicTarget.ONE,      RelicEffect.PARALYZE,       3, 2, 0xFF9C7A12.toInt(), 132, 5),
-    ACID_FLASK      (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,    StatType.INT, RelicTarget.ONE,      RelicEffect.ACID,           3, 2, 0xFF5E8C1E.toInt(), 133, 14),
-    HOLY_LIGHT      (R.string.roguelike_relic_holy_light,      R.string.roguelike_relic_holy_light_desc,      Element.HOLY,      StatType.INT, RelicTarget.ONE,      RelicEffect.BLIND,          3, 1, 0xFFB09A3A.toInt(), 113, 2),
+    FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.INT, RelicTarget.ONE,      RelicEffect.BURN,           5, 2, 0xFFB5451B.toInt(), 113, 6),
+    FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.INT, RelicTarget.ALL,      RelicEffect.FREEZE,         5, 1, 0xFF1E6F8C.toInt(), 132, 6),
+    LIGHTNING       (R.string.roguelike_relic_lightning,       R.string.roguelike_relic_lightning_desc,       Element.LIGHTNING, StatType.INT, RelicTarget.ONE,      RelicEffect.PARALYZE,       5, 2, 0xFF9C7A12.toInt(), 132, 5),
+    ACID_FLASK      (R.string.roguelike_relic_acid_flask,      R.string.roguelike_relic_acid_flask_desc,      Element.POISON,    StatType.INT, RelicTarget.ONE,      RelicEffect.ACID,           5, 2, 0xFF5E8C1E.toInt(), 133, 14),
+    HOLY_LIGHT      (R.string.roguelike_relic_holy_light,      R.string.roguelike_relic_holy_light_desc,      Element.HOLY,      StatType.INT, RelicTarget.ONE,      RelicEffect.BLIND,          5, 1, 0xFFB09A3A.toInt(), 113, 2),
     // Nécromancien (SAG)
     METEOR          (R.string.roguelike_relic_meteor,          R.string.roguelike_relic_meteor_desc,          Element.FIRE,      StatType.WIS, RelicTarget.ALL,      RelicEffect.DELAYED,        3, 2, 0xFFC0501E.toInt(), 113, 0),
     ICE_SHARD       (R.string.roguelike_relic_ice_shard,       R.string.roguelike_relic_ice_shard_desc,       Element.ICE,       StatType.WIS, RelicTarget.ONE,      RelicEffect.FREEZE,         3, 1, 0xFF2F7FB5.toInt(), 113, 8),
@@ -492,7 +492,7 @@ enum class Relic(
     PESTE           (R.string.roguelike_relic_peste,           R.string.roguelike_relic_peste_desc,           Element.POISON,    StatType.WIS, RelicTarget.ALL,      RelicEffect.POISON,         3, 3, 0xFF3E8E3A.toInt(), 133, 3),
     PONCTION        (R.string.roguelike_relic_ponction,        R.string.roguelike_relic_ponction_desc,        Element.PHYSICAL,  StatType.WIS, RelicTarget.ONE,      RelicEffect.NONE,           3, 0, 0xFF7E2F4F.toInt(), 132, 4),
     // Hors de la grille : le Sablier aide au timing.
-    HOURGLASS       (R.string.roguelike_relic_hourglass,       R.string.roguelike_relic_hourglass_desc,       Element.PHYSICAL,  StatType.WIS, RelicTarget.SELF,     RelicEffect.HOURGLASS,      3, 3, 0xFFC9A227.toInt(), 132, 14);
+    HOURGLASS       (R.string.roguelike_relic_hourglass,       R.string.roguelike_relic_hourglass_desc,       Element.PHYSICAL,  StatType.WIS, RelicTarget.SELF,     RelicEffect.HOURGLASS,      3, 4, 0xFFC9A227.toInt(), 132, 14);
 
     /** Un sort qui ne frappe pas : il ne fait que poser son effet. */
     val hits get() = effect.hits
@@ -526,7 +526,7 @@ enum class Relic(
         const val CHAIN_FALLOFF = 0.7f
         const val MISSILE_COUNT = 3
         /** Cristallisation contre un figé. */
-        const val CRYSTAL_MULT = 3f
+        const val CRYSTAL_MULT = 2f
         /** Bouclier arcanique : la barrière, en part des PV max (fixe, la caractéristique ne la grossit pas). */
         const val BARRIER_SHARE = 0.20f
         /** Peau de pierre : l'armure est multipliée par ça, et les épines renvoient cette part des coups. */
@@ -707,9 +707,9 @@ object RelicBudget {
     const val PARALYSIS_TURN_VALUE = 0.8f
     /** Un gel prend une fois sur deux contre un monstre normal, à équipement de l'étage. */
     const val REF_LAND_CHANCE = 0.5f
-    const val POISON_DOT_SHARE = 0.2f
+    const val POISON_DOT_SHARE = 0.05f
     const val FRACTURE_TURN_VALUE = 0.06f
-    const val MARK_VALUE = 0.5f
+    const val MARK_VALUE = 0.2f
     const val WEAKEN_TURN_VALUE = 0.15f
     const val BLIND_TURN_VALUE = 0.3f
     /** Saignée : la part de la valeur qui part dans le saignement. */
@@ -722,7 +722,7 @@ object RelicBudget {
     /** Fiole d'acide : la part de la valeur dans la dose. */
     const val ACID_DOSE_SHARE = 0.1f
     /** Cristallisation : la part du coup normal ; le reste paie le ×[Relic.CRYSTAL_MULT] contre un figé. */
-    const val CRYSTAL_HIT_SHARE = 0.7f
+    const val CRYSTAL_HIT_SHARE = 0.85f
     /** Verglas : la part de la valeur qui paie le ralentissement ; le reste est le coup. */
     const val SLOW_EFFECT_SHARE = 0.5f
     /** Météore : ce qu'on gagne à attendre (il peut tomber sur un combat déjà fini). */
@@ -751,7 +751,7 @@ object RelicBudget {
     fun share(r: Relic) = value(r) / targets(r)
 
     /** Ce que vaut l'effet sur une cible, en coups d'épée (négatif : ce que le sort gagne à payer un prix). */
-    fun poisonDotShare(r: Relic) = if (r == Relic.CHAMPIGNON) 0.6f else POISON_DOT_SHARE
+    fun poisonDotShare(r: Relic) = if (r == Relic.CHAMPIGNON) 0.15f else POISON_DOT_SHARE
 
     fun effectValue(r: Relic): Float = when (r.effect) {
         RelicEffect.NONE      -> 0f
@@ -956,9 +956,11 @@ class Combat(
         const val GRIMOIRE_ECHO_BONUS = 1.0f
         /** La lanterne du vagabond : le second coup de l'Enchaînement frappe de cette part en plus. */
         const val LANTERN_CHAIN_BONUS = 0.5f
-        const val CHAIN_HIT_MULT = 0.6f
-        const val SMASH_MULT = 2f
-        const val BREACH_BONUS = 0.15f
+        /** L'Enchaînement doit payer sa recharge : 2 × 0,70 (1,4 coup), ou 1,75 avec lanterne. */
+        const val CHAIN_HIT_MULT = 0.70f
+        /** Fracas garde un gros impact ponctuel, sans égaler le Coup mortel garanti du voleur. */
+        const val SMASH_MULT = 2.2f
+        const val BREACH_BONUS = 0.20f
         const val BREACH_TURNS = 2
         /** Sa parade parfaite soigne les pantins de cette part de leurs PV. */
         const val PUPPET_PARRY_HEAL = 0.5f
@@ -976,10 +978,12 @@ class Combat(
         const val MARK_CRIT_BONUS = 0.5f
         /** Corrosion : doses de poison au plus. */
         const val CORROSION_MAX_DOSES = 5
+        /** Guerrier en Garde : le prochain tour ennemi lui inflige cette part des dégâts après parade et armure. */
+        const val GUARD_DAMAGE_MULT = 0.75f
         /** Guerrier en Garde : chaque coup reçu (bloqué ou encaissé) renvoie cette part du coup brut. */
-        const val GUARD_THORNS_SHARE = 0.5f
+        const val GUARD_THORNS_SHARE = 0.70f
         /** Guerrier, blocage parfait au bouclier : le coup de bouclier renvoie cette part. */
-        const val BLOCK_THORNS_SHARE = 0.3f
+        const val BLOCK_THORNS_SHARE = 0.40f
         /** Le même blocage sans bouclier : il marche, mais renvoie moins. */
         const val BARE_BLOCK_THORNS_SHARE = 0.2f
 
@@ -1962,7 +1966,8 @@ class Combat(
 
         val parryMult = when (parry) { Timing.MISS -> PARRY_MISS_MULT; Timing.GOOD -> PARRY_GOOD_MULT; Timing.PERFECT -> PARRY_PERFECT_MULT }
         val armorMult = maxOf(if (stoneskinTurns > 0) Relic.STONESKIN_ARMOR else 1f, if (purifiedTurns > 0) Reaction.PURIFIED_ARMOR else 1f)
-        val incoming = hero.mitigate(blow * parryMult, floor, armorMult).roundToInt().coerceAtLeast(1)
+        val guardMult = if (guarding) GUARD_DAMAGE_MULT else 1f
+        val incoming = hero.mitigate(blow * parryMult * guardMult, floor, armorMult).roundToInt().coerceAtLeast(1)
         var dmg = throughPuppets(incoming)
         val puppetTaken = incoming - dmg
         // Le Bouclier arcanique prend d'abord
