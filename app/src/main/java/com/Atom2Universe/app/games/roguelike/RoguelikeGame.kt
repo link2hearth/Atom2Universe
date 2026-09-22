@@ -331,6 +331,15 @@ class RoguelikeGame(
         addLog(R.string.roguelike_log_equip, item.slot, item)
     }
 
+    /** Remet un objet porté dans le sac, uniquement hors combat. */
+    fun unequip(item: Equipment): Boolean {
+        if (!isExploring || hero.equipped[item.slot] != item) return false
+        hero.equipped.remove(item.slot)
+        hero.bag += item
+        hero.hp = hero.hp.coerceAtMost(hero.maxHp)
+        return true
+    }
+
     fun sell(item: Equipment) {
         if (!isExploring || !hero.bag.remove(item)) return
         val price = LootSystem.sellPrice(item)

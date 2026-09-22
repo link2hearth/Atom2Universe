@@ -8,9 +8,10 @@ import android.graphics.Typeface
 
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.*
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,10 +19,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.games.roguelike.LexiconText.setLexiconText
 import com.Atom2Universe.app.util.SystemBarsManager
 import java.text.NumberFormat
-import kotlin.math.abs
 
 /** Separate character, paginated equipment and relic pages. */
 class InventoryPanel(
@@ -43,12 +42,15 @@ class InventoryPanel(
     private val accent = 0xFFE8BF78.toInt()
     private var game: RoguelikeGame? = null
     private var slot: EquipSlot? = null
-    private var type: ItemBase? = null
-    private var weight: ArmorWeight? = null
+    private var filterClass: Archetype? = null
     private var rarity = 0
     private var recent = false
     private var expandedStats = true
     private var dialog: Dialog? = null
+    private var equipmentPopup: PopupWindow? = null
+    private var characterArea: FrameLayout? = null
+    private var inventoryDetail: Equipment? = null
+    private var expandedItem: Equipment? = null
     private var items = emptyList<Equipment>()
     private var availableRelics = emptyList<Relic>()
     private var pager: InventoryBagPager? = null
@@ -90,10 +92,13 @@ class InventoryPanel(
             }
             val item = items[position - 1]
             val selected = item in selectedEquipment
+            val expanded = expandedItem == item && selectedEquipment.isEmpty()
+            val tile = column().apply {
+                background = frame(if (selected || expanded) accent else item.inventoryColor)
+                isSelected = selected || expanded
+            }
             val card = row().apply {
-                background = frame(if (selected) accent else item.inventoryColor).apply {
-                    if (selected) setColor(0xFF2B3543.toInt())
-                }
+                if (selected) setBackgroundColor(0xFF2B3543.toInt())
                 isSelected = selected
                 setPadding(dp(10), dp(10), dp(10), dp(10))
                 minimumHeight = dp(84)
@@ -112,16 +117,18 @@ class InventoryPanel(
             val worn = game?.hero?.equipped?.get(item.slot)
             val rating = LootSystem.rating(item, game?.hero?.archetype)
             val delta = rating - (worn?.let { LootSystem.rating(it, game?.hero?.archetype) } ?: 0)
-            words.addView(text(ctx.getString(R.string.inv_rating_line, number.format(rating), signed(delta.toDouble())), 12f,
+            words.addView(text(ctx.getString(R.string.inv_rating, number.format(rating)), 12f,
                 if (delta > 0) green else if (delta < 0) red else muted))
             card.addView(words, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(12) })
             card.setOnClickListener {
-                if (selectedEquipment.isNotEmpty()) toggleEquipmentSelection(item) else showDetail(item)
+                if (selectedEquipment.isNotEmpty()) toggleEquipmentSelection(item) else toggleDetail(item, box.top)
             }
             card.setOnLongClickListener {
                 if (game?.isExploring == true) { toggleEquipmentSelection(item); true } else false
             }
-            box.addView(card, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
+            tile.addView(card)
+            if (expanded) tile.addView(comparisonDetail(item))
+            box.addView(tile, LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(8) })
         }
     }
 
@@ -173,12 +180,23 @@ class InventoryPanel(
     }
     fun hide() {
         val wasOpen = isOpen
+        equipmentPopup?.dismiss()
         dialog?.dismiss(); dialog = null; clearSelection(); root.visibility = View.GONE
         if (wasOpen) onClosed()
     }
 
     /** Android Back leaves selection mode before closing the inventory. */
-    fun back() { if (selectedEquipment.isNotEmpty()) cancelSelection() else hide() }
+    fun back() {
+        if (equipmentPopup != null) equipmentPopup?.dismiss()
+        else if (page == Page.EQUIPMENT && expandedItem != null) {
+            val index = items.indexOf(expandedItem)
+            expandedItem = null
+            if (index >= 0) adapter.notifyItemChanged(index + 1)
+        }
+        else if (page == Page.EQUIPMENT && inventoryDetail != null) closeInventoryDetail()
+        else if (selectedEquipment.isNotEmpty()) cancelSelection()
+        else hide()
+    }
 
     private fun clearSelection() {
         selectedEquipment.clear()
@@ -189,6 +207,9 @@ class InventoryPanel(
     private fun cancelSelection() { clearSelection(); updateSelectionUi() }
 
     private fun toggleEquipmentSelection(item: Equipment) {
+        val expandedIndex = items.indexOf(expandedItem)
+        expandedItem = null
+        if (expandedIndex >= 0) adapter.notifyItemChanged(expandedIndex + 1)
         if (selectedEquipment.remove(item)) selectedSaleValue -= LootSystem.sellPrice(item).toLong()
         else { selectedEquipment.add(item); selectedSaleValue += LootSystem.sellPrice(item).toLong() }
         updateSelectionUi()
@@ -235,6 +256,8 @@ class InventoryPanel(
 
     fun refresh() {
         val hero = game?.hero ?: return
+        equipmentPopup?.dismiss()
+        characterArea = null
         header.removeAllViews()
         tabs.forEach { (target, tab) ->
             tab.background = frame(if (target == page) accent else 0xFF303C52.toInt())
@@ -243,7 +266,13 @@ class InventoryPanel(
         }
         when (page) {
             Page.CHARACTER -> { buildCharacter(hero); buildStats(hero) }
-            Page.EQUIPMENT -> { prepareEquipment(hero); buildFilters(hero) }
+            Page.EQUIPMENT -> {
+                prepareEquipment(hero); buildCharacter(hero); buildFilters(hero)
+                inventoryDetail?.let { item ->
+                    if (hero.equipped[item.slot] != item) inventoryDetail = null
+                    else showEquippedDetail(item)
+                }
+            }
             Page.RELICS -> buildRelics(hero)
         }
         adapter.notifyDataSetChanged()
@@ -259,18 +288,23 @@ class InventoryPanel(
     private fun prepareEquipment(hero: Hero) {
         // Constant-size cache key: opening an unchanged bag does not scan or rank it again.
         val key = listOf(hero, hero.bag.size, hero.nextLootId, hero.archetype,
-            hero.equipped.values.toList(), slot, type, weight, rarity, recent)
+            hero.equipped.values.toList(), slot, filterClass, rarity, recent)
         if (key != pagerKey) {
+            expandedItem = null
             clearSelection()
             pagerKey = key
             visibleCount = InventoryBagPager.PAGE_SIZE
             val filterSlot = slot
-            val filterType = type
-            val filterWeight = weight
+            val selectedClass = filterClass
             val filterRarity = rarity
             pager = InventoryBagPager(hero.bag, recent, hero.archetype) { e ->
-            (filterSlot == null || e.slot == filterSlot) && (filterType == null || e.base == filterType) &&
-                (filterWeight == null || e.weight == filterWeight) && when (filterRarity) {
+            (filterSlot == null || e.slot == filterSlot) &&
+                (selectedClass == null || when (e.slot) {
+                    EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS -> e.weight == selectedClass.weight
+                    EquipSlot.WEAPON -> selectedClass.accepts(e.base)
+                    EquipSlot.OFFHAND -> e.base == selectedClass.offhand
+                    EquipSlot.AMULET, EquipSlot.RING -> true
+                }) && when (filterRarity) {
                     1 -> e.isotopeZ == null && e.rarity == Rarity.NORMAL
                     2 -> e.isotopeZ == null && e.rarity == Rarity.MAGIC
                     3 -> e.isotopeZ == null && e.rarity == Rarity.RARE
@@ -301,31 +335,41 @@ class InventoryPanel(
     }
 
     private fun buildCharacter(hero: Hero) {
+        val area = column()
+        val frame = FrameLayout(ctx)
+        characterArea = frame
+        frame.addView(area, FrameLayout.LayoutParams(-1, -2))
+        header.addView(frame, LinearLayout.LayoutParams(-1, -2))
         val dollRow = row()
         val left = column()
         val right = column()
-        listOf(EquipSlot.HELMET, EquipSlot.WEAPON, EquipSlot.AMULET).forEach { left.addView(slotCard(hero, it)) }
-        listOf(EquipSlot.CHEST, EquipSlot.OFFHAND, EquipSlot.RING).forEach { right.addView(slotCard(hero, it)) }
+        listOf(EquipSlot.HELMET, EquipSlot.CHEST).forEach { left.addView(slotCard(hero, it)) }
+        listOf(EquipSlot.AMULET, EquipSlot.RING).forEach { right.addView(slotCard(hero, it)) }
         dollRow.addView(left, LinearLayout.LayoutParams(0, -2, 1f))
         val art = DungeonCombatArt()
         dollRow.addView(object : View(ctx) {
             init { contentDescription = ctx.getString(R.string.inv_character_preview) }
             override fun onDraw(canvas: Canvas) {
                 super.onDraw(canvas)
-                val width = width * .9f
+                val width = minOf(width, height) * .8f
                 val left = (getWidth() - width) / 2
                 art.drawHero(canvas, RectF(left, height / 2f - width / 2, left + width, height / 2f + width / 2), hero)
             }
-        }, LinearLayout.LayoutParams(0, dp(230), 1.15f))
+        }, LinearLayout.LayoutParams(0, dp(160), 1f))
         dollRow.addView(right, LinearLayout.LayoutParams(0, -2, 1f))
-        header.addView(dollRow)
-        val bootsRow = row()
-        // Same width as the side slots, centered beneath the hero.
-        bootsRow.addView(View(ctx), LinearLayout.LayoutParams(0, 0, 1.075f))
-        bootsRow.addView(slotCard(hero, EquipSlot.BOOTS),
-            LinearLayout.LayoutParams(0, -2, 1f).apply { topMargin = dp(6) })
-        bootsRow.addView(View(ctx), LinearLayout.LayoutParams(0, 0, 1.075f))
-        header.addView(bootsRow)
+        area.addView(dollRow)
+        val bottomRow = row().apply { gravity = Gravity.TOP }
+        listOf(EquipSlot.BOOTS, EquipSlot.WEAPON, EquipSlot.OFFHAND).forEachIndexed { index, slot ->
+            bottomRow.addView(slotCard(hero, slot),
+                LinearLayout.LayoutParams(0, -2, 1f).apply {
+                    topMargin = dp(6)
+                    if (index == 1) {
+                        marginStart = dp(4)
+                        marginEnd = dp(4)
+                    }
+                })
+        }
+        area.addView(bottomRow)
         hero.setArchetype?.let { header.addView(text(ctx.getString(R.string.inv_set_active, ctx.getString(it.labelRes)), 13f, EquipmentArt.LEGENDARY)) }
     }
 
@@ -333,6 +377,10 @@ class InventoryPanel(
         val item = hero.equipped[slot]
         return column().apply {
             background = frame(item?.inventoryColor ?: 0xFF354058.toInt())
+            if (page == Page.EQUIPMENT && this@InventoryPanel.slot == slot) {
+                (background as GradientDrawable).setStroke(dp(3), accent)
+                isSelected = true
+            }
             setPadding(dp(6), dp(6), dp(6), dp(6))
             layoutParams = LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(6) }
             val line = row()
@@ -345,11 +393,14 @@ class InventoryPanel(
             addView(line)
             addView(text(item?.let { LootSystem.displayName(ctx, it) } ?: ctx.getString(R.string.inv_slot_empty), 12f,
                 item?.inventoryColor ?: muted, true))
+            if (item != null) addView(scoreLabel(item, hero.archetype))
             setOnClickListener {
-                if (item != null) showDetail(item) else {
+                if (page == Page.EQUIPMENT) {
+                    this@InventoryPanel.slot = if (this@InventoryPanel.slot == slot) null else slot
+                    inventoryDetail = item.takeIf { this@InventoryPanel.slot != null }
+                    refresh()
+                } else if (item != null) showEquippedDetail(item) else {
                     this@InventoryPanel.slot = slot
-                    type = null
-                    weight = null
                     rarity = 0
                     openPage(Page.EQUIPMENT)
                 }
@@ -360,8 +411,8 @@ class InventoryPanel(
     private fun buildStats(hero: Hero) {
         val summary = row()
         for ((label, value) in listOf(
-            R.string.roguelike_stattype_weapon_dmg to ctx.getString(R.string.inv_range, number.format(hero.weaponMin), number.format(hero.weaponMax)),
             R.string.roguelike_stattype_armor to number.format(hero.armor),
+            R.string.roguelike_stattype_weapon_dmg to ctx.getString(R.string.inv_range, number.format(hero.weaponMin), number.format(hero.weaponMax)),
             R.string.roguelike_stattype_speed to ctx.getString(R.string.inv_percent, number.format(hero.speed * 100)))) {
             summary.addView(column().apply {
                 gravity = Gravity.CENTER
@@ -500,108 +551,161 @@ class InventoryPanel(
         }
         bagCount = text("", 13f, muted).also { header.addView(it) }
         updateBagCount()
-        filterRow(R.string.inv_filter_slot, listOf(ctx.getString(R.string.inv_all)) + EquipSlot.entries.map { ctx.getString(it.labelRes) },
-            slot?.ordinal?.plus(1) ?: 0) { slot = EquipSlot.entries.getOrNull(it - 1); type = null; refresh() }
-        val bases = ItemBase.entries.filter { slot == null || it.slot == slot }
-        filterRow(R.string.inv_filter_type, listOf(ctx.getString(R.string.inv_all)) + bases.map { ctx.getString(it.nounRes) },
-            type?.let { bases.indexOf(it) + 1 } ?: 0) { type = bases.getOrNull(it - 1); refresh() }
-        filterRow(R.string.inv_filter_weight, listOf(ctx.getString(R.string.inv_all)) + ArmorWeight.entries.map { ctx.getString(it.labelRes) },
-            weight?.ordinal?.plus(1) ?: 0) { weight = ArmorWeight.entries.getOrNull(it - 1); refresh() }
-        filterRow(R.string.inv_filter_rarity, listOf(ctx.getString(R.string.inv_all)) + Rarity.entries.map { ctx.getString(it.labelRes) } + ctx.getString(R.string.inv_legendary), rarity) {
+        val filters = row()
+        filterButton(filters, R.string.inv_filter_class, listOf(ctx.getString(R.string.inv_all)) + Archetype.entries.map { ctx.getString(it.labelRes) },
+            filterClass?.ordinal?.plus(1) ?: 0) { filterClass = Archetype.entries.getOrNull(it - 1); refresh() }
+        filterButton(filters, R.string.inv_filter_rarity, listOf(ctx.getString(R.string.inv_all)) + Rarity.entries.map { ctx.getString(it.labelRes) } + ctx.getString(R.string.inv_legendary), rarity) {
             rarity = it; refresh()
         }
-        val sorts = row()
-        sorts.addView(button(ctx.getString(R.string.roguelike_inventory_sort_best), !recent) { recent = false; refresh() }, LinearLayout.LayoutParams(0, -2, 1f))
-        sorts.addView(button(ctx.getString(R.string.roguelike_inventory_sort_recent), recent) { recent = true; refresh() }, LinearLayout.LayoutParams(0, -2, 1f))
-        header.addView(sorts)
-        header.addView(text(ctx.getString(R.string.inv_score_hint), 12f, muted))
-        if (slot != null || type != null || weight != null || rarity != 0) {
-            header.addView(button(ctx.getString(R.string.inv_reset)) { slot = null; type = null; weight = null; rarity = 0; refresh() })
+        filters.addView(button(ctx.getString(if (recent) R.string.roguelike_inventory_sort_recent else R.string.roguelike_inventory_sort_best)) {
+            recent = !recent; refresh()
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        header.addView(filters)
+        if (slot != null || filterClass != null || rarity != 0) {
+            header.addView(button(ctx.getString(R.string.inv_reset)) { slot = null; inventoryDetail = null; filterClass = null; rarity = 0; refresh() })
         }
         if (items.isEmpty()) header.addView(text(ctx.getString(if (hero.bag.isEmpty()) R.string.roguelike_inventory_empty else R.string.inv_no_match), 15f, muted).apply {
             setPadding(dp(12), dp(24), dp(12), dp(24))
         })
     }
 
-    private fun filterRow(label: Int, choices: List<String>, selected: Int, change: (Int) -> Unit) {
-        val line = row()
-        line.addView(text(ctx.getString(label), 13f, muted), LinearLayout.LayoutParams(dp(78), -2))
-        line.addView(button(choices.getOrElse(selected) { choices.first() }) {
+    private fun filterButton(parent: LinearLayout, label: Int, choices: List<String>, selected: Int, change: (Int) -> Unit) {
+        parent.addView(button(ctx.getString(R.string.inv_filter_value, ctx.getString(label), choices.getOrElse(selected) { choices.first() }), selected != 0) {
             android.app.AlertDialog.Builder(ctx, R.style.Theme_Dungeon_Dialog).setTitle(label).setSingleChoiceItems(choices.toTypedArray(), selected) { d, index ->
                 d.dismiss(); change(index)
             }.setNegativeButton(android.R.string.cancel, null).show().also { applyWindowMode(it) }
-        }, LinearLayout.LayoutParams(0, -2, 1f))
-        header.addView(line)
+        }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
     }
 
-    private fun showDetail(item: Equipment) {
-        val hero = game?.hero ?: return
-        dialog?.dismiss()
-        val worn = hero.equipped[item.slot]
-        val equipped = worn == item
-        if (!equipped && item !in hero.bag) return
-        val modal = Dialog(ctx)
-        modal.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog = modal
-        val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)); setBackgroundColor(0xFF101827.toInt()) }
-        val title = row()
-        title.addView(text(ctx.getString(if (equipped) R.string.roguelike_loot_equipped_badge else R.string.inv_comparison), 19f, ink, true), LinearLayout.LayoutParams(0, -2, 1f))
-        title.addView(button(ctx.getString(R.string.inv_close_detail)) { modal.dismiss() })
-        body.addView(title)
-        val content = column()
-        body.addView(ScrollView(ctx).apply { addView(content) }, LinearLayout.LayoutParams(-1, 0, 1f))
-        val after = if (equipped) hero else InventoryStats.preview(hero, item)
-        if (equipped) itemDescription(content, item, after.archetype)
-        else {
-            val pieces = row().apply { gravity = Gravity.TOP }
-            val candidate = column()
-            val current = column()
-            section(candidate, R.string.inv_candidate)
-            itemDescription(candidate, item, after.archetype, compact = true)
-            section(current, R.string.inv_current_item)
-            if (worn != null) itemDescription(current, worn, hero.archetype, compact = true)
-            else current.addView(text(ctx.getString(R.string.roguelike_loot_nothing_equipped), 14f, muted))
-            pieces.addView(candidate, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(8) })
-            pieces.addView(current, LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) })
-            content.addView(pieces)
+    private fun closeInventoryDetail() {
+        inventoryDetail = null
+        slot = null
+        refresh()
+    }
+
+    private fun showEquippedDetail(item: Equipment) {
+        val g = game ?: return
+        val area = characterArea ?: return
+        val inline = page == Page.EQUIPMENT
+        if (g.hero.equipped[item.slot] != item) return
+        if (!inline && (area.width == 0 || area.height == 0)) return
+        equipmentPopup?.dismiss()
+        val popup = PopupWindow(ctx)
+        fun close() {
+            if (inline) closeInventoryDetail() else popup.dismiss()
         }
-        if (!equipped) {
-            if (hero.archetype != after.archetype) content.addView(text(ctx.getString(R.string.inv_class_change, className(hero), className(after)), 14f, accent))
-            val setBefore = hero.setArchetype?.let { ctx.getString(it.labelRes) } ?: ctx.getString(R.string.inv_none)
-            val setAfter = after.setArchetype?.let { ctx.getString(it.labelRes) } ?: ctx.getString(R.string.inv_none)
-            if (hero.setArchetype != after.setArchetype) content.addView(text(ctx.getString(R.string.inv_set_change, setBefore, setAfter), 13f, EquipmentArt.LEGENDARY))
-            fun element(h: Hero) = h.attackElement?.let { ctx.getString(Lexicon.elementRes(it)) } ?: ctx.getString(R.string.inv_none)
-            if (hero.attackElement != after.attackElement) content.addView(text(ctx.getString(R.string.inv_element_change, element(hero), element(after)), 13f, muted))
-            fun offhand(h: Hero) = ctx.getString(if (h.archetype?.let { h.classOffhand(it) } == true) R.string.inv_active else R.string.inv_inactive)
-            if (offhand(hero) != offhand(after)) content.addView(text(ctx.getString(R.string.inv_offhand_change, offhand(hero), offhand(after)), 13f, muted))
-            comparisonHeading(content)
-            val beforeStats = InventoryStats.values(hero).associateBy { it.key }
-            InventoryStats.values(after).forEach { next ->
-                val before = beforeStats[next.key] ?: next.copy(value = 0.0)
-                comparisonRow(content, before, next)
+        val body = column().apply {
+            background = frame(item.inventoryColor)
+            setPadding(dp(10), dp(6), dp(10), dp(6))
+            setOnClickListener { close() }
+        }
+        val taps = GestureDetector(ctx, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                close()
+                return true
             }
+        })
+        val content = column()
+        val title = row()
+        title.addView(icon(item), LinearLayout.LayoutParams(dp(36), dp(40)))
+        title.addView(text(LootSystem.displayName(ctx, item), 15f, item.inventoryColor, true),
+            LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(8) })
+        if (inline) title.addView(button(ctx.getString(R.string.inv_unequip), true) {
+            if (g.unequip(item)) {
+                inventoryDetail = null
+                slot = null
+                refresh()
+                onChanged()
+            }
+        }.apply { isEnabled = g.isExploring }, LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(8) })
+        title.setOnClickListener { close() }
+        body.addView(title)
+        content.addView(text(subtitle(item), 12f, muted))
+        content.addView(scoreLabel(item, g.hero.archetype))
+        content.addView(text(LootSystem.describe(ctx, item, linked = false, archetype = g.hero.archetype)
+            .joinToString("\n"), 13f, ink))
+        body.addView(object : ScrollView(ctx) {
+            override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+                val handled = super.dispatchTouchEvent(event)
+                taps.onTouchEvent(event)
+                return handled
+            }
+        }.apply { addView(content) }, LinearLayout.LayoutParams(-1, 0, 1f))
+        if (inline) {
+            // Keep the character measured underneath the sheet. Build both before layout:
+            // replacing children from a layout callback can leave them unmeasured in RecyclerView.
+            area.getChildAt(0).visibility = View.INVISIBLE
+            area.addView(body, FrameLayout.LayoutParams(-1, -1))
+            return
         }
-        if (!equipped) {
-            val actions = row()
-            actions.addView(button(ctx.getString(R.string.roguelike_loot_equip_btn), true) {
-                game?.equipFromBag(item)
-                modal.dismiss(); refresh(); onChanged()
-            }.apply { isEnabled = game?.isExploring == true }, LinearLayout.LayoutParams(0, -2, 1f))
-            actions.addView(button(ctx.getString(R.string.roguelike_inventory_sell, DungeonNumbers.format(ctx, LootSystem.sellPrice(item)))) {
-                game?.sell(item)
-                modal.dismiss(); refresh(); onChanged()
-            }.apply { isEnabled = game?.isExploring == true }, LinearLayout.LayoutParams(0, -2, 1f))
-            body.addView(actions)
-        }
-        scaleDetailText(body)
-        modal.setContentView(body)
-        modal.setOnDismissListener { if (dialog === modal) dialog = null }
-        modal.show()
-        modal.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        modal.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        applyWindowMode(modal)
+        popup.contentView = body
+        popup.width = area.width
+        popup.height = area.height
+        popup.isFocusable = true
+        popup.isOutsideTouchable = true
+        popup.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        popup.inputMethodMode = PopupWindow.INPUT_METHOD_NOT_NEEDED
+        popup.setOnDismissListener { if (equipmentPopup === popup) equipmentPopup = null }
+        equipmentPopup = popup
+        popup.showAsDropDown(area, 0, -area.height, Gravity.START)
     }
 
+    private fun toggleDetail(item: Equipment, top: Int) {
+        val previous = items.indexOf(expandedItem)
+        expandedItem = if (expandedItem == item) null else item
+        val current = items.indexOf(item)
+        if (previous >= 0 && previous != current) adapter.notifyItemChanged(previous + 1)
+        if (current >= 0) {
+            adapter.notifyItemChanged(current + 1)
+            // Keep the touched tile in place when another expanded tile above it collapses.
+            (list.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(current + 1, top)
+        }
+    }
+
+    /** Part of the selected tile: normal list content, with no overlay or nested scrolling. */
+    private fun comparisonDetail(item: Equipment): View {
+        val g = requireNotNull(game)
+        val hero = g.hero
+        val body = column().apply { setPadding(dp(8), 0, dp(8), dp(8)) }
+        val content = row().apply { gravity = Gravity.TOP }
+        val candidate = column().apply { setPadding(dp(6), dp(6), dp(6), dp(6)) }
+        val current = column().apply { setPadding(dp(6), dp(6), dp(6), dp(6)) }
+        val worn = hero.equipped[item.slot]
+        val candidateScore = LootSystem.rating(item, hero.archetype)
+        val wornScore = worn?.let { LootSystem.rating(it, hero.archetype) } ?: 0
+        fun scoreColor(score: Int, other: Int) = if (score > other) green else if (score < other) red else muted
+        candidate.addView(text(ctx.getString(R.string.inv_candidate), 15f, accent, true))
+        val after = InventoryStats.preview(hero, item)
+        itemDescription(candidate, item, after.archetype)
+        candidate.addView(scoreLabel(item, hero.archetype, scoreColor(candidateScore, wornScore)))
+        if (hero.archetype != after.archetype) {
+            candidate.addView(text(ctx.getString(R.string.inv_class_change, className(hero), className(after)), 13f, accent))
+        }
+        current.addView(text(ctx.getString(R.string.inv_current_item), 15f, accent, true))
+        if (worn != null) {
+            itemDescription(current, worn, hero.archetype)
+            current.addView(scoreLabel(worn, hero.archetype, scoreColor(wornScore, candidateScore)))
+        } else current.addView(text(ctx.getString(R.string.roguelike_loot_nothing_equipped), 13f, muted))
+        content.addView(candidate, LinearLayout.LayoutParams(0, -2, 1f))
+        content.addView(View(ctx).apply { setBackgroundColor(0xFF354058.toInt()) },
+            LinearLayout.LayoutParams(dp(1), -1))
+        content.addView(current, LinearLayout.LayoutParams(0, -2, 1f))
+        body.addView(content)
+        val actions = row()
+        actions.addView(button(ctx.getString(R.string.roguelike_loot_equip_btn), true) {
+            g.equipFromBag(item)
+            expandedItem = null; refresh(); onChanged()
+        }.apply { isEnabled = g.isExploring }, LinearLayout.LayoutParams(0, -2, 1f))
+        actions.addView(button(ctx.getString(R.string.roguelike_inventory_sell, DungeonNumbers.format(ctx, LootSystem.sellPrice(item)))) {
+            g.sell(item)
+            expandedItem = null; refresh(); onChanged()
+        }.apply { isEnabled = g.isExploring }, LinearLayout.LayoutParams(0, -2, 1f))
+        body.addView(actions)
+        return body
+    }
+
+    private fun scoreLabel(item: Equipment, archetype: Archetype?, color: Int = muted) =
+        text(ctx.getString(R.string.inv_rating, number.format(LootSystem.rating(item, archetype))), 13f, color, true)
     private fun applyWindowMode(modal: Dialog) {
         val window = modal.window ?: return
         WindowCompat.setDecorFitsSystemWindows(window, true)
@@ -615,54 +719,9 @@ class InventoryPanel(
         }
     }
 
-    private fun itemDescription(parent: LinearLayout, item: Equipment, archetype: Archetype?, compact: Boolean = false) {
-        val line = if (compact) column() else row()
-        line.addView(icon(item), LinearLayout.LayoutParams(dp(56), dp(64)))
-        val words = column()
-        // Keep the name outside lexicon spans: links otherwise override rarity colors.
-        words.addView(text(LootSystem.displayName(ctx, item), 16f, item.inventoryColor, true))
-        words.addView(text(subtitle(item), 12f, muted))
-        line.addView(words, if (compact) LinearLayout.LayoutParams(-1, -2)
-            else LinearLayout.LayoutParams(0, -2, 1f).apply { marginStart = dp(10) })
-        parent.addView(line)
-        parent.addView(text("", 13f, ink).apply {
-            setLexiconText(LootSystem.describe(ctx, item, linked = true, archetype = archetype).joinToString("\n")) {
-                dialog?.dismiss()
-                lexicon.open(it)
-            }
-        })
-    }
-
-    private fun comparisonHeading(parent: LinearLayout) {
-        val heading = row().apply { setPadding(dp(4), dp(16), dp(4), dp(4)) }
-        for (res in listOf(R.string.inv_selected_column, R.string.inv_equipped_column, R.string.inv_delta)) {
-            heading.addView(text(ctx.getString(res), 11f, muted).apply { gravity = Gravity.END }, LinearLayout.LayoutParams(0, -2, 1f))
-        }
-        parent.addView(heading)
-    }
-
-    private fun comparisonRow(parent: LinearLayout, before: InventoryStats.Value, after: InventoryStats.Value) {
-        val diff = after.value - before.value
-        val changed = abs(diff) >= .05
-        val color = if (!changed) muted else if ((diff > 0) != after.lowerIsBetter) green else red
-        val line = column().apply {
-            setPadding(dp(4), dp(8), dp(4), dp(8))
-            if (changed) setBackgroundColor(0xFF1B293C.toInt())
-        }
-        line.addView(text(label(after), 12f, ink))
-        val values = row()
-        for ((str, tint) in listOf(value(after) to ink, value(before) to muted,
-            (if (changed) signed(diff) else ctx.getString(R.string.roguelike_delta_equal)) to color)) {
-            values.addView(text(str, 12f, tint).apply { gravity = Gravity.END }, LinearLayout.LayoutParams(0, -2, 1f))
-        }
-        line.addView(values)
-        parent.addView(line)
-    }
-
-    /** Enlarge every label and action in the detail sheet, preserving system font scaling. */
-    private fun scaleDetailText(view: View) {
-        if (view is TextView) view.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, view.textSize * 1.4f)
-        if (view is ViewGroup) for (index in 0 until view.childCount) scaleDetailText(view.getChildAt(index))
+    private fun itemDescription(parent: LinearLayout, item: Equipment, archetype: Archetype?) {
+        parent.addView(text(LootSystem.describe(ctx, item, linked = false, archetype = archetype)
+            .joinToString("\n"), 15f, ink))
     }
 
     private fun label(stat: InventoryStats.Value) = stat.name?.let { ctx.getString(stat.label, ctx.getString(it)) } ?: ctx.getString(stat.label)
@@ -675,7 +734,6 @@ class InventoryPanel(
             InventoryStats.Unit.TURNS -> ctx.getString(R.string.inv_turns, n)
         }
     }
-    private fun signed(n: Double) = ctx.getString(if (n >= 0) R.string.inv_positive else R.string.inv_negative, number.format(abs(n)))
     private fun className(hero: Hero) = hero.archetype?.let { ctx.getString(it.labelRes) } ?: ctx.getString(R.string.inv_no_class)
     private fun subtitle(item: Equipment) = listOfNotNull(ctx.getString(item.slot.labelRes),
         item.weight?.let { ctx.getString(it.labelRes) }, ctx.getString(if (item.isotopeZ != null) R.string.inv_legendary else item.rarity.labelRes)).joinToString(ctx.getString(R.string.inv_separator))
