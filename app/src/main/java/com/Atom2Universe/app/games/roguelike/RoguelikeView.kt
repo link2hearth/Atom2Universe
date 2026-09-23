@@ -60,6 +60,8 @@ class RoguelikeView @JvmOverloads constructor(
     private var tileSize = 40f
     private var zoomScale = 1f
     private var pinching = false
+    /** Reste verrouillé jusqu'à la fin complète du geste multi-doigts. */
+    private var multiTouchGesture = false
     private val maxZoomScale = 1.8f
     private val scaleDetector = ScaleGestureDetector(ctx, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
@@ -537,9 +539,19 @@ class RoguelikeView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val g = game ?: return false
         scaleDetector.onTouchEvent(event)
-        if (event.pointerCount > 1 || pinching) {
+        if (event.pointerCount > 1 || event.actionMasked == MotionEvent.ACTION_POINTER_DOWN) {
+            multiTouchGesture = true
+            stopHold()
+            removeCallbacks(campHold)
+            touching = false
+            movedThisTouch = false
+            invalidate()
+        }
+        if (multiTouchGesture || event.pointerCount > 1 || pinching) {
             if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
                 pinching = false
+                multiTouchGesture = false
+                touching = false
             }
             return true
         }

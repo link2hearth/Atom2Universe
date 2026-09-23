@@ -19,6 +19,7 @@ open class RoguelikeActivity : ThemedActivity() {
     private lateinit var gameView:     RoguelikeView
     private lateinit var combatView:   CombatView
     private lateinit var btnBack:      ImageButton
+    private lateinit var btnMusic:     ImageButton
     private lateinit var tvFloorLevel: TextView
     private lateinit var btnInventory: Button
     private lateinit var healthBar:    ProgressBar
@@ -31,6 +32,8 @@ open class RoguelikeActivity : ThemedActivity() {
 
     private val sfx   by lazy { RoguelikeSoundEngine(lifecycleScope) }
     private val music by lazy { DungeonProceduralMusic(lifecycleScope) }
+    private val audioPrefs by lazy { getSharedPreferences("roguelike_settings", MODE_PRIVATE) }
+    private var musicEnabled = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +43,24 @@ open class RoguelikeActivity : ThemedActivity() {
         gameView     = findViewById(R.id.roguelike_view)
         combatView   = findViewById(R.id.roguelike_combat_view)
         btnBack      = findViewById(R.id.roguelike_btn_back)
+        btnMusic     = findViewById(R.id.roguelike_btn_music)
         tvFloorLevel = findViewById(R.id.roguelike_tv_floorlevel)
         btnInventory = findViewById(R.id.roguelike_btn_inventory)
         healthBar    = findViewById(R.id.roguelike_health_bar)
+
+        musicEnabled = audioPrefs.getBoolean("music_enabled", true)
+        updateMusicButton()
+        btnMusic.setOnClickListener {
+            musicEnabled = !musicEnabled
+            audioPrefs.edit { putBoolean("music_enabled", musicEnabled) }
+            if (musicEnabled) {
+                syncMusic()
+                music.start()
+            } else {
+                music.stop()
+            }
+            updateMusicButton()
+        }
 
         lexicon      = LexiconPanel(findViewById(R.id.roguelike_lexicon)) { game }
         inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory), lexicon,
@@ -130,7 +148,8 @@ open class RoguelikeActivity : ThemedActivity() {
         super.onResume()
         enableImmersiveMode()
         sfx.start()
-        music.start(game.floor)
+        syncMusic()
+        if (musicEnabled) music.start()
     }
 
     override fun onDestroy() {
@@ -155,7 +174,7 @@ open class RoguelikeActivity : ThemedActivity() {
         game          = g
         gameView.game = g
 
-        g.onFloorChanged = { floor -> music.onFloorChanged(floor); saveBestFloorIfBetter(floor); saveNow() }
+        g.onFloorChanged = { floor -> saveBestFloorIfBetter(floor); saveNow() }
         g.onCombatStart  = { saveNow(); showCombat() }
 
         gameView.onMove          = { dx, dy -> g.tryMove(dx, dy); scheduleStateSave(); refresh() }
@@ -184,6 +203,7 @@ open class RoguelikeActivity : ThemedActivity() {
         combatView.onEnemyDied = { sfx.onMonsterDied() }
         combatView.onHeroHit   = { sfx.onPlayerHit() }
         combatView.onParry     = { perfect -> sfx.onParry(perfect) }
+        combatView.onOutcomeShown = { syncMusic() }
         combatView.onFinished  = {
             g.finishCombat()
             saveNow()
@@ -213,9 +233,33 @@ open class RoguelikeActivity : ThemedActivity() {
         val c = game.combat ?: return
         combatView.visibility = View.VISIBLE
         combatView.start(c, game.heroSpritePath)
+        syncMusic()
+    }
+
+    private fun updateMusicButton() {
+        btnMusic.setImageResource(if (musicEnabled) R.drawable.ic_volume_up_24 else R.drawable.ic_volume_off)
+        val action = getString(if (musicEnabled) R.string.roguelike_music_mute else R.string.roguelike_music_unmute)
+        btnMusic.contentDescription = action
+        btnMusic.tooltipText = action
+    }
+
+    private fun syncMusic() {
+        val c = game.combat
+        val mode = when {
+            c != null && combatView.isOutcomeShown && c.phase == CombatPhase.VICTORY -> DungeonProceduralMusic.Mode.VICTORY
+            c != null && combatView.isOutcomeShown && c.phase == CombatPhase.DEFEAT -> DungeonProceduralMusic.Mode.DEFEAT
+            c != null -> DungeonProceduralMusic.Mode.BATTLE
+            game.deathReport != null -> DungeonProceduralMusic.Mode.SILENT
+            else -> DungeonProceduralMusic.Mode.EXPLORE
+        }
+        val pos = game.playerPos
+        val theme = game.level.themeAt(pos.x, pos.y)
+        val backdrop = c?.backdrop ?: game.level.backdropAt(pos).takeIf { it == DungeonBackdrop.CRYPT }
+        music.setScene(theme, backdrop, mode)
     }
 
     private fun refresh() {
+        syncMusic()
         testButton?.isEnabled = game.isExploring
         gameView.invalidate()
         val h = game.hero

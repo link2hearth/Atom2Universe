@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="roguelike_music_mute">Couper la musique</string>
+    <string name="roguelike_music_unmute">Activer la musique</string>
     <string name="roguelike_title">Donjon</string>
     <string name="roguelike_description">Explorez le donjon, combattez au tour par tour et lootez votre équipement</string>
 

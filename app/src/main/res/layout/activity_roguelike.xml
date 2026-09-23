@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="#0D0D0D">
 
-    <!-- Banner : back | floor+level | character -->
+    <!-- Banner : back | music | floor+level | character -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,6 +25,16 @@
             android:src="@drawable/ic_arrow_back"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/back" />
+
+        <ImageButton
+            android:id="@+id/roguelike_btn_music"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_volume_up_24"
+            android:tint="#EEEEEE"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/roguelike_music_mute" />
 
         <TextView
             android:id="@+id/roguelike_tv_floorlevel"

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="roguelike_music_mute">Mute music</string>
+    <string name="roguelike_music_unmute">Enable music</string>
     <string name="roguelike_title">Dungeon</string>
     <string name="roguelike_description">Explore the dungeon, fight turn by turn and loot your gear</string>
 

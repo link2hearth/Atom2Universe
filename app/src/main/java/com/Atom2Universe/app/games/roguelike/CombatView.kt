@@ -24,6 +24,7 @@ class CombatView @JvmOverloads constructor(
 ) : View(ctx, attrs) {
 
     var onFinished:   (() -> Unit)? = null
+    var onOutcomeShown: (() -> Unit)? = null
     var onStrike:     ((crit: Boolean) -> Unit)? = null
     var onEnemyDied:  (() -> Unit)? = null
     var onHeroHit:    (() -> Unit)? = null
@@ -72,6 +73,7 @@ class CombatView @JvmOverloads constructor(
     private sealed class Action { object Attack : Action(); object Deadly : Action(); data class Cast(val relic: Relic) : Action() }
 
     private var stage = Stage.INTRO
+    val isOutcomeShown: Boolean get() = stage == Stage.END_PANEL
     private var stageStart = 0L
     private var target = 0
     private var pendingAction: Action? = null
@@ -165,8 +167,10 @@ class CombatView @JvmOverloads constructor(
     }
 
     private fun enter(s: Stage) {
+        val newOutcome = s == Stage.END_PANEL && stage != Stage.END_PANEL
         stage = s
         stageStart = SystemClock.uptimeMillis()
+        if (newOutcome) onOutcomeShown?.invoke()
         if (s == Stage.STRIKE_TIMING) {
             swipeDirection = SwipeDirection.entries[nextSwipeDirection++ % SwipeDirection.entries.size]
         }
