@@ -307,7 +307,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.cosmo_run_hub_desc,
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_cosmorun,
-            activityClass = CosmoRunActivity::class.java
+            activityClass = CosmoRunActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.cosmorun.CosmoRunHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "caves",
