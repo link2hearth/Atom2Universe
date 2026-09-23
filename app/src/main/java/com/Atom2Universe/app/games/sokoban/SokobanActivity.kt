@@ -16,6 +16,10 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import android.content.res.ColorStateList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -35,6 +39,11 @@ class SokobanActivity : ThemedActivity() {
     private lateinit var loadingView: View
     private lateinit var diffRow: LinearLayout
     private lateinit var btnUndo: MaterialButton
+
+    private var generationJob: Job? = null
+    private var rewarded = false
+    private var generating = false
+    private var loadedDifficulty = SokobanDifficulty.EASY
 
     private val game = SokobanGame()
     private val handler = Handler(Looper.getMainLooper())
@@ -61,11 +70,12 @@ class SokobanActivity : ThemedActivity() {
             cancelAutoNext(); startNewPuzzle()
         }
         findViewById<MaterialButton>(R.id.sokoban_btn_reset).setOnClickListener {
+            if (generating) return@setOnClickListener
             cancelAutoNext(); game.reset(); board.loadGame(game); onBoardChanged()
             tvMessage.text = getString(R.string.sokoban_hint)
         }
         btnUndo.setOnClickListener {
-            if (game.undo()) {
+            if (!generating && game.undo()) {
                 cancelAutoNext()
                 board.loadGame(game)
                 onBoardChanged()
@@ -100,6 +110,12 @@ class SokobanActivity : ThemedActivity() {
             }
             val btn = MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
                 text = label
+                textSize = 12f
+                isAllCaps = false
+                setPadding(0, 0, 0, 0)
+                minWidth = 0
+                cornerRadius = (14 * resources.displayMetrics.density).toInt()
+                setTextColor(0xFFE3EEE5.toInt())
                 val dp = (4 * resources.displayMetrics.density).toInt()
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                     .also { it.setMargins(dp, 0, dp, 0) }
@@ -123,24 +139,44 @@ class SokobanActivity : ThemedActivity() {
         val active = getColor(R.color.sokoban_active)
         val inactive = getColor(R.color.sokoban_inactive)
         for ((diff, btn) in diffButtons) {
-            btn.setBackgroundColor(if (diff == game.difficulty) active else inactive)
+            btn.backgroundTintList = ColorStateList.valueOf(if (diff == game.difficulty) active else inactive)
+            btn.strokeColor = ColorStateList.valueOf(if (diff == game.difficulty) 0xFF9EE3BC.toInt() else 0xFF3F6268.toInt())
         }
     }
 
     private fun startNewPuzzle() {
+        cancelAutoNext()
+        generationJob?.cancel()
+        generating = true
+        board.isEnabled = false
+        btnUndo.isEnabled = false
+        findViewById<View>(R.id.sokoban_btn_reset).isEnabled = false
+        tvMessage.text = getString(R.string.sokoban_loading_label)
         loadingView.visibility = View.VISIBLE
         board.visibility = View.INVISIBLE
         val diff = game.difficulty
-        lifecycleScope.launch {
+        generationJob = lifecycleScope.launch {
             val puzzle = withContext(Dispatchers.Default) {
-                SokobanGenerator.generate(diff)
+                val context = currentCoroutineContext()
+                SokobanGenerator.generate(diff) { context.ensureActive() }
             }
+            generating = false
+            board.isEnabled = true
+            findViewById<View>(R.id.sokoban_btn_reset).isEnabled = true
             loadingView.visibility = View.GONE
             board.visibility = View.VISIBLE
             if (puzzle == null) {
+                if (game.puzzle != null) {
+                    game.difficulty = loadedDifficulty
+                    updateDiffButtons()
+                    updateBest()
+                }
+                onBoardChanged()
                 tvMessage.text = getString(R.string.sokoban_error)
                 return@launch
             }
+            rewarded = false
+            loadedDifficulty = diff
             game.load(puzzle)
             board.loadGame(game)
             tvMessage.text = getString(R.string.sokoban_hint)
@@ -152,7 +188,12 @@ class SokobanActivity : ThemedActivity() {
     private fun onBoardChanged() {
         tvMoves.text = getString(R.string.sokoban_moves, game.moves)
         tvPushes.text = getString(R.string.sokoban_pushes, game.pushes)
-        btnUndo.isEnabled = game.canUndo
+        btnUndo.isEnabled = game.canUndo && !generating
+        val puzzle = game.puzzle
+        findViewById<TextView>(R.id.sokoban_delivery).text = if (puzzle == null) "" else
+            getString(R.string.sokoban_delivery, game.boxes.count { it in puzzle.goals }, puzzle.goals.size)
+        findViewById<TextView>(R.id.sokoban_target).text = if (puzzle == null) "" else
+            getString(R.string.sokoban_target, puzzle.optimalPushes)
     }
 
     private fun onSolved() {
@@ -162,7 +203,10 @@ class SokobanActivity : ThemedActivity() {
         tvMessage.text = getString(R.string.sokoban_solved, game.moves, best)
 
         val reward = NeutrinoRewards.sokoban(diff.ordinal)
-        NeutrinoRepository(this).addBalance(reward)
+        if (!rewarded) {
+            NeutrinoRepository(this).addBalance(reward)
+            rewarded = true
+        }
 
         val r = Runnable { pendingAutoNext = null; startNewPuzzle() }
         pendingAutoNext = r

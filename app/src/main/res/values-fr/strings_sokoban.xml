@@ -7,7 +7,7 @@
     <string name="sokoban_diff_medium">Moyen</string>
     <string name="sokoban_diff_hard">Difficile</string>
     <string name="sokoban_diff_expert">Expert</string>
-    <string name="sokoban_hint">Pousse chaque caisse sur une cible. Les caisses se poussent, jamais ne se tirent.</string>
+    <string name="sokoban_hint">Guide le robot et pousse les caisses sur les quais lumineux. Glisse ou utilise les flèches.</string>
     <string name="sokoban_moves">Coups : %1$d</string>
     <string name="sokoban_pushes">Poussées : %1$d</string>
     <string name="sokoban_best">Record : %1$d</string>
@@ -16,4 +16,16 @@
     <string name="sokoban_undo">Annuler</string>
     <string name="sokoban_reset">Recommencer</string>
     <string name="sokoban_new">Nouveau</string>
+    <string name="sokoban_identity">DÉPÔT ORBITAL</string>
+    <string name="sokoban_loading_label">Préparation de la prochaine livraison…</string>
+    <string name="sokoban_delivery">Livraisons · %1$d / %2$d</string>
+    <string name="sokoban_target">Défi · %1$d poussées</string>
+    <string name="sokoban_up_label">Aller en haut</string>
+    <string name="sokoban_down_label">Aller en bas</string>
+    <string name="sokoban_left_label">Aller à gauche</string>
+    <string name="sokoban_right_label">Aller à droite</string>
+    <string name="sokoban_arrow_up">▲</string>
+    <string name="sokoban_arrow_down">▼</string>
+    <string name="sokoban_arrow_left">◀</string>
+    <string name="sokoban_arrow_right">▶</string>
 </resources>

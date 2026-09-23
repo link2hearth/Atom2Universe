@@ -2,9 +2,9 @@ package com.Atom2Universe.app.games.sokoban
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.TypedValue
+import android.animation.ValueAnimator
+import android.view.animation.DecelerateInterpolator
 import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
@@ -22,35 +22,14 @@ class SokobanBoardView @JvmOverloads constructor(
     private var offsetX = 0f
     private var offsetY = 0f
 
-    private val accent: Int = run {
-        val tv = TypedValue()
-        if (context.theme.resolveAttribute(
-                com.Atom2Universe.app.R.attr.a2uMidiAccent, tv, true)) tv.data
-        else 0xFF38BDF8.toInt()
-    }
-
-    private val paintWall = fill(0xFF334155.toInt())
-    private val paintFloor = fill(0xFF1E293B.toInt())
-    private val paintFloorBorder = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        color = 0xFF273449.toInt()
-        strokeWidth = 2f
-    }
-    private val paintGoal = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-        color = 0xFF22C55E.toInt()
-        strokeWidth = 4f
-    }
-    private val paintBox = fill(0xFFB45309.toInt())
-    private val paintBoxTop = fill(0xFFD97706.toInt())
-    private val paintBoxDone = fill(0xFF16A34A.toInt())
-    private val paintBoxDoneTop = fill(0xFF22C55E.toInt())
-    private val paintPlayer = fill(accent)
-    private val paintPlayerCore = fill(0xFF0F172A.toInt())
-
-    private fun fill(c: Int) = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL; color = c
-    }
+    // Le dépôt orbital : ardoise, cuivre et menthe. Dessin vectoriel natif.
+    private val renderer = SokobanRenderer()
+    private var animator: ValueAnimator? = null
+    private var progress = 1f
+    private var previousPlayer = 0
+    private var pushedFrom = -1
+    private var pushedTo = -1
+    private var facing = SokobanDir.DOWN
 
     // Swipe
     private var downX = 0f
@@ -63,14 +42,16 @@ class SokobanBoardView @JvmOverloads constructor(
 
     private fun recalcLayout() {
         val p = game?.puzzle ?: return
-        val cellW = width.toFloat() / p.width
-        val cellH = height.toFloat() / p.height
+        val cellW = (width - paddingLeft - paddingRight).toFloat() / p.width
+        val cellH = (height - paddingTop - paddingBottom).toFloat() / p.height
         cellSize = minOf(cellW, cellH)
         offsetX = (width - cellSize * p.width) / 2f
         offsetY = (height - cellSize * p.height) / 2f
     }
 
     fun loadGame(g: SokobanGame) {
+        animator?.cancel()
+        progress = 1f
         game = g
         solved = false
         recalcLayout()
@@ -79,9 +60,21 @@ class SokobanBoardView @JvmOverloads constructor(
 
     /** Joue un déplacement et déclenche les rappels. Utilisé par le swipe et le D-pad. */
     fun move(dir: SokobanDir) {
-        if (solved) return
+        if (solved || !isEnabled) return
         val g = game ?: return
-        if (!g.move(dir)) return
+        animator?.end()
+        previousPlayer = g.player
+        val oldBoxes = g.boxes.toSet()
+        facing = dir
+        if (!g.move(dir)) { invalidate(); return }
+        pushedFrom = (oldBoxes - g.boxes).firstOrNull() ?: -1
+        pushedTo = (g.boxes - oldBoxes).firstOrNull() ?: -1
+        animator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 115
+            interpolator = DecelerateInterpolator()
+            addUpdateListener { progress = it.animatedValue as Float; invalidate() }
+            start()
+        }
         invalidate()
         onChanged?.invoke()
         if (g.isSolved()) {
@@ -91,57 +84,19 @@ class SokobanBoardView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
         val g = game ?: return
-        val p = g.puzzle ?: return
-        val r = cellSize * 0.12f
-        val inset = cellSize * 0.04f
+        renderer.draw(canvas, g, cellSize, offsetX, offsetY,
+            progress, previousPlayer, pushedFrom, pushedTo, facing)
+    }
 
-        for (y in 0 until p.height) {
-            for (x in 0 until p.width) {
-                val idx = y * p.width + x
-                val cx = offsetX + x * cellSize
-                val cy = offsetY + y * cellSize
-                val l = cx + inset; val t = cy + inset
-                val rr = cx + cellSize - inset; val bb = cy + cellSize - inset
-
-                if (p.isWall(idx)) {
-                    canvas.drawRoundRect(l, t, rr, bb, r, r, paintWall)
-                    continue
-                }
-                canvas.drawRoundRect(l, t, rr, bb, r, r, paintFloor)
-                canvas.drawRoundRect(l, t, rr, bb, r, r, paintFloorBorder)
-
-                if (idx in p.goals) {
-                    val g0 = cellSize * 0.30f
-                    canvas.drawRoundRect(cx + g0, cy + g0, cx + cellSize - g0, cy + cellSize - g0,
-                        r * 0.5f, r * 0.5f, paintGoal)
-                }
-            }
-        }
-
-        // Caisses
-        for (box in g.boxes) {
-            val x = box % p.width; val y = box / p.width
-            val cx = offsetX + x * cellSize
-            val cy = offsetY + y * cellSize
-            val onGoal = box in p.goals
-            val m = cellSize * 0.14f
-            canvas.drawRoundRect(cx + m, cy + m, cx + cellSize - m, cy + cellSize - m, r, r,
-                if (onGoal) paintBoxDone else paintBox)
-            val m2 = cellSize * 0.26f
-            canvas.drawRoundRect(cx + m2, cy + m2, cx + cellSize - m2, cy + cellSize - m2, r * 0.6f, r * 0.6f,
-                if (onGoal) paintBoxDoneTop else paintBoxTop)
-        }
-
-        // Joueur
-        val px = g.player % p.width; val py = g.player / p.width
-        val pcx = offsetX + px * cellSize + cellSize / 2f
-        val pcy = offsetY + py * cellSize + cellSize / 2f
-        canvas.drawCircle(pcx, pcy, cellSize * 0.34f, paintPlayer)
-        canvas.drawCircle(pcx, pcy, cellSize * 0.14f, paintPlayerCore)
+    override fun onDetachedFromWindow() {
+        animator?.cancel()
+        super.onDetachedFromWindow()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) return false
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 downX = event.x; downY = event.y

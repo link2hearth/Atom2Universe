@@ -29,19 +29,33 @@ object SokobanGenerator {
     private const val EARLY_EXTRA = 3       // s'arrêter à targetDepth + ceci
     private const val EARLY_MIN_VARIETY = 12
 
-    fun generate(difficulty: SokobanDifficulty): SokobanPuzzle? {
-        val deadline = System.currentTimeMillis() + MAX_TOTAL_MS
+    fun generate(difficulty: SokobanDifficulty, checkCancellation: () -> Unit = {}): SokobanPuzzle? {
+        val deadline = System.nanoTime() + MAX_TOTAL_MS * 1_000_000
         var best: SearchResult? = null
 
         var attempt = 0
-        while (attempt < MAX_ATTEMPTS && System.currentTimeMillis() < deadline) {
+        while (attempt < MAX_ATTEMPTS && System.nanoTime() < deadline) {
+            checkCancellation()
             attempt++
             val room = buildRoom(difficulty) ?: continue
             val boxCount = difficulty.randomBoxCount()
             if (room.floor.size < boxCount + 4) continue
 
-            val goals = room.floor.shuffled().take(boxCount).sorted().toIntArray()
-            val result = reverseSearch(room, goals, difficulty, deadline) ?: continue
+            // Chaque quai doit laisser la place à au moins un tirage inverse.
+            val candidates = room.floor.filter { cell ->
+                SokobanDir.entries.any { dir ->
+                    (1..2).all { step ->
+                        val x = cell % room.width + dir.dx * step
+                        val y = cell / room.width + dir.dy * step
+                        room.inBounds(x, y) && !room.wall[y * room.width + x]
+                    }
+                }
+            }
+            if (candidates.size < boxCount) continue
+            val goals = candidates.shuffled().take(boxCount).sorted().toIntArray()
+            // Une pièce ne doit pas consommer tout le budget des autres essais.
+            val attemptDeadline = minOf(deadline, System.nanoTime() + 300_000_000L)
+            val result = reverseSearch(room, goals, difficulty, attemptDeadline, checkCancellation) ?: continue
 
             if (best == null || result.distance > best!!.distance) {
                 best = result.copy(room = room, goals = goals)
@@ -73,8 +87,13 @@ object SokobanGenerator {
         }
 
         // Garde la plus grande composante connexe de sol, le reste devient mur.
-        val floorSeed = (0 until w * h).firstOrNull { !wall[it] } ?: return null
-        val component = floodFill(w, h, wall, floorSeed)
+        val remaining = (wall.indices).filter { !wall[it] }.toMutableSet()
+        var component: Set<Int> = emptySet()
+        while (remaining.isNotEmpty()) {
+            val connected = floodFill(w, h, wall, remaining.first())
+            remaining.removeAll(connected)
+            if (connected.size > component.size) component = connected
+        }
         for (i in wall.indices) if (!wall[i] && i !in component) wall[i] = true
         if (component.size < 9) return null
 
@@ -115,7 +134,8 @@ object SokobanGenerator {
         room: Room,
         goals: IntArray,
         difficulty: SokobanDifficulty,
-        deadline: Long
+        deadline: Long,
+        checkCancellation: () -> Unit
     ): SearchResult? {
         val w = room.width; val h = room.height; val n = room.size
         val wall = room.wall
@@ -190,10 +210,24 @@ object SokobanGenerator {
         // Réservoir des états les plus profonds (à la profondeur max courante).
         val reservoir = ArrayList<Node>()
         var maxDist = -1
+        var seenAtDepth = 0
+        var fallback: Node? = null
         fun consider(node: Node) {
+            if (node.dist > (fallback?.dist ?: 0)) fallback = node
+            // Préfère les départs où aucune caisse n'est déjà garée.
+            if (node.boxes.any { it in goals }) return
             when {
-                node.dist > maxDist -> { maxDist = node.dist; reservoir.clear(); reservoir.add(node) }
-                node.dist == maxDist && reservoir.size < RESERVOIR_CAP -> reservoir.add(node)
+                node.dist > maxDist -> {
+                    maxDist = node.dist; reservoir.clear(); reservoir.add(node); seenAtDepth = 1
+                }
+                node.dist == maxDist -> {
+                    seenAtDepth++
+                    if (reservoir.size < RESERVOIR_CAP) reservoir.add(node)
+                    else {
+                        val slot = Random.nextInt(seenAtDepth)
+                        if (slot < RESERVOIR_CAP) reservoir[slot] = node
+                    }
+                }
             }
         }
 
@@ -217,7 +251,10 @@ object SokobanGenerator {
         while (queue.isNotEmpty()) {
             if (nodes >= nodeBudget) break
             if (maxDist >= earlyDepth && reservoir.size >= EARLY_MIN_VARIETY) break
-            if ((nodes and 0x3FF) == 0 && System.currentTimeMillis() >= deadline) break
+            if ((nodes and 0x7F) == 0) {
+                checkCancellation()
+                if (System.nanoTime() >= deadline) break
+            }
 
             val node = queue.removeFirst()
             nodes++
@@ -254,8 +291,7 @@ object SokobanGenerator {
             for (b in node.boxes) isBox[b] = false
         }
 
-        if (reservoir.isEmpty() || maxDist <= 0) return null
-        val chosen = reservoir.random()
+        val chosen = reservoir.randomOrNull() ?: fallback ?: return null
         return SearchResult(chosen.boxes, chosen.player, chosen.dist)
     }
 
