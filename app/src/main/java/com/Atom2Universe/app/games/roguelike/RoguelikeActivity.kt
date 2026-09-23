@@ -1,14 +1,17 @@
 package com.Atom2Universe.app.games.roguelike
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.games.roguelike.demo.DungeonArtDemoActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
@@ -29,6 +32,13 @@ open class RoguelikeActivity : ThemedActivity() {
     private var game = RoguelikeGame()
     private val saveHandler = Handler(Looper.getMainLooper())
     private val deferredSave = Runnable { SaveManager.saveState(this, game) }
+
+    // Accès testeur caché : appui long de 3s sur le bouton retour ouvre le mode test.
+    // Le joueur lambda n'a aucune raison de maintenir ce bouton.
+    private val secretTestHandler = Handler(Looper.getMainLooper())
+    private val openSecretTestMode = Runnable {
+        startActivity(Intent(this, DungeonArtDemoActivity::class.java))
+    }
 
     private val sfx   by lazy { RoguelikeSoundEngine(lifecycleScope) }
     private val music by lazy { DungeonProceduralMusic(lifecycleScope) }
@@ -72,6 +82,16 @@ open class RoguelikeActivity : ThemedActivity() {
                 lexicon.isOpen -> lexicon.back()
                 inventory.isOpen -> inventory.back()
                 else -> finish()
+            }
+        }
+        if (!testMode) {
+            btnBack.setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> secretTestHandler.postDelayed(openSecretTestMode, 3000)
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL ->
+                        secretTestHandler.removeCallbacks(openSecretTestMode)
+                }
+                false
             }
         }
         btnInventory.setOnClickListener {
@@ -155,6 +175,7 @@ open class RoguelikeActivity : ThemedActivity() {
     override fun onDestroy() {
         super.onDestroy()
         saveHandler.removeCallbacks(deferredSave)
+        secretTestHandler.removeCallbacks(openSecretTestMode)
         music.stop()
         sfx.stop()
     }
