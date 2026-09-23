@@ -7,4 +7,37 @@
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Temps : %1$s</string>
     <string name="match3_neutrinos">⚛ +%1$d neutrinos</string>
+    <string name="forge_back">Retour aux jeux</string>
+    <string name="forge_eyebrow">L\'ATELIER • EXPÉDITION</string>
+    <string name="forge_subtitle">La forge gravitationnelle</string>
+    <string name="forge_pitch">Six contrats pour réveiller la forge. Assemble les métaux, nettoie les scories et livre le cœur énergétique. Sans chrono.</string>
+    <string name="forge_start">Lancer une expédition</string>
+    <string name="forge_continue">Reprendre l\'expédition</string>
+    <string name="forge_arcade">Surchauffe • mode chrono classique</string>
+    <string name="forge_how">Échange deux pièces voisines pour aligner au moins trois métaux identiques. Glisse une pièce ou touche deux pièces.\n\nIncline le téléphone pour diriger la chute des pièces, même pendant les cascades. La grille reste fixe ; les pièces tombent vers le bas physique.</string>
+    <string name="forge_menu">Atelier</string>
+    <string name="forge_status">Contrat %1$d/6 · %2$d coups</string>
+    <string name="forge_alloy">Alliage : %1$s · %2$d/%3$d</string>
+    <string name="forge_slag">Scories nettoyées · %1$d/%2$d</string>
+    <string name="forge_delivery">Livre le cœur lumineux</string>
+    <string name="forge_alloy_hint">Aligne le métal demandé. Seuls les échanges réussis coûtent un coup ; les cascades sont gratuites.</string>
+    <string name="forge_slag_hint">Fais des alignements sur les cases brunes striées pour les nettoyer.</string>
+    <string name="forge_delivery_hint">Amène le cœur au bord turquoise. Élimine les pièces sur son chemin et incline l’appareil pour diriger les chutes.</string>
+    <string name="forge_success">Contrat rempli</string>
+    <string name="forge_complete">La forge est réveillée !</string>
+    <string name="forge_success_hint">Beau travail. Toutes les cascades sont terminées.</string>
+    <string name="forge_failed">Plus de coups disponibles</string>
+    <string name="forge_retry_hint">Rejoue ce même contrat en essayant une autre approche.</string>
+    <string name="forge_next">Contrat suivant</string>
+    <string name="forge_retry">Réessayer ce contrat</string>
+    <string name="forge_finish">Terminer l\'expédition</string>
+    <string name="forge_reshuffled">Aucun coup possible : les métaux ont été remélangés gratuitement.</string>
+    <string name="forge_board_description">Plateau de la forge. Glisse un métal vers son voisin ou touche deux pièces voisines.</string>
+    <string name="forge_resolving">Cascade en cours… Les pièces en mouvement ne peuvent pas encore être échangées.</string>
+    <string name="forge_input_queued">Geste enregistré pour la fin de la cascade.</string>
+    <string name="forge_invalid_swap">Cet échange ne crée pas d’alignement de trois métaux. Aucun coup dépensé.</string>
+    <string name="forge_board_changed">Ces pièces ont bougé pendant la cascade. Refais le geste sur leur nouvelle position.</string>
+    <string-array name="forge_materials">
+        <item>Argent</item><item>Bronze</item><item>Cuivre</item><item>Diamant</item><item>Or</item>
+    </string-array>
 </resources>

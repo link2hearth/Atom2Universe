@@ -441,8 +441,13 @@
         <activity
             android:name=".games.match3.Match3Activity"
             android:exported="false"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.A2U" />
+            android:screenOrientation="locked"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden"
+            android:theme="@style/Theme.A2U">
+            <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
+            <property android:name="android.window.PROPERTY_COMPAT_ALLOW_ORIENTATION_OVERRIDE" android:value="false" />
+            <property android:name="android.window.PROPERTY_COMPAT_ALLOW_DISPLAY_ORIENTATION_OVERRIDE" android:value="false" />
+        </activity>
         <activity
             android:name=".games.othello.OthelloActivity"
             android:exported="false"

@@ -20,7 +20,6 @@ import android.view.animation.DecelerateInterpolator
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
-import java.io.IOException
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -49,17 +48,12 @@ class Match3View @JvmOverloads constructor(
     }
 
     // gridCols/gridRows sont fixes — la grille ne change jamais
-    private val gridCols = COLS
-    private val gridRows = ROWS
+    private val landscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+    private val gridCols = if (landscape) ROWS else COLS
+    private val gridRows = if (landscape) COLS else ROWS
 
     // ── Assets ────────────────────────────────────────────────────────────────
-    private val gemAssetPaths = arrayOf(
-        "Assets/sprites/Argent.png",
-        "Assets/sprites/Bronze.png",
-        "Assets/sprites/Cuivre.png",
-        "Assets/sprites/Diamant.png",
-        "Assets/sprites/Or.png"
-    )
+    private val forgeArt = ForgeArt()
     private val gemFallbackColors = intArrayOf(
         Color.parseColor("#ADBECA"),
         Color.parseColor("#C77E36"),
@@ -67,8 +61,6 @@ class Match3View @JvmOverloads constructor(
         Color.parseColor("#82D9FF"),
         Color.parseColor("#E6C838")
     )
-    private val gemBitmaps    = arrayOfNulls<Bitmap>(GEM_COUNT)
-    private val scaledBitmaps = arrayOfNulls<Bitmap>(GEM_COUNT)
 
     // ── Grille ────────────────────────────────────────────────────────────────
     private val grid    = Array(gridRows) { IntArray(gridCols) }
@@ -158,14 +150,17 @@ class Match3View @JvmOverloads constructor(
     private val orientationListener = object : OrientationEventListener(context) {
         override fun onOrientationChanged(orientation: Int) {
             if (orientation == ORIENTATION_UNKNOWN) return
-            // Quand le display est en reverse portrait (ROTATION_180), LEFT/RIGHT sont visuellement
-            // inversés — les gemmes doivent tomber dans la direction opposée.
-            val flipped = getDisplayRotation() == Surface.ROTATION_180
+            val angle = (orientation + when (getDisplayRotation()) {
+                Surface.ROTATION_90 -> 90
+                Surface.ROTATION_180 -> 180
+                Surface.ROTATION_270 -> 270
+                else -> 0
+            }) % 360
             gravDir = when {
-                orientation < 45 || orientation >= 315 -> GravDir.DOWN
-                orientation < 135                      -> if (flipped) GravDir.LEFT else GravDir.RIGHT
-                orientation < 225                      -> GravDir.DOWN
-                else                                   -> if (flipped) GravDir.RIGHT else GravDir.LEFT
+                angle < 45 || angle >= 315 -> GravDir.DOWN
+                angle < 135 -> GravDir.RIGHT
+                angle < 225 -> GravDir.UP
+                else -> GravDir.LEFT
             }
         }
     }
@@ -185,7 +180,6 @@ class Match3View @JvmOverloads constructor(
     }
 
     init {
-        loadBitmaps()
         initGrid()
     }
 
@@ -196,25 +190,6 @@ class Match3View @JvmOverloads constructor(
     }
 
     // ── Chargement ────────────────────────────────────────────────────────────
-    private fun loadBitmaps() {
-        for (i in gemAssetPaths.indices) {
-            try {
-                context.assets.open(gemAssetPaths[i]).use { stream ->
-                    gemBitmaps[i] = BitmapFactory.decodeStream(stream)
-                }
-            } catch (_: IOException) {}
-        }
-    }
-
-    private fun rescaleBitmaps() {
-        val size = (tileSize * 0.88f).toInt()
-        if (size <= 0) return
-        for (i in gemBitmaps.indices) {
-            val src = gemBitmaps[i] ?: continue
-            scaledBitmaps[i] = Bitmap.createScaledBitmap(src, size, size, true)
-        }
-    }
-
     private fun initGrid() {
         for (r in 0 until gridRows) for (c in 0 until gridCols) grid[r][c] = randomGemAvoidingMatch(r, c)
     }
@@ -234,7 +209,6 @@ class Match3View @JvmOverloads constructor(
         gridLeft = (w - tileSize * gridCols) / 2f
         gridTop  = (h - tileSize * gridRows) / 2f
         paintRing.strokeWidth = tileSize * 0.07f
-        rescaleBitmaps()
     }
 
     // ── Dessin ────────────────────────────────────────────────────────────────
@@ -359,17 +333,7 @@ class Match3View @JvmOverloads constructor(
         val gSize = tileSize * scale
         val pad   = gemPad * scale
 
-        val bmp = scaledBitmaps[gemType]
-        if (bmp != null) {
-            paintGem.alpha = alpha
-            canvas.drawBitmap(bmp, Rect(0, 0, bmp.width, bmp.height),
-                RectF(gx + pad, gy + pad, gx + gSize - pad, gy + gSize - pad), paintGem)
-        } else {
-            paintFallback.color = gemFallbackColors[gemType]
-            paintFallback.alpha = alpha
-            canvas.drawRoundRect(gx + pad, gy + pad, gx + gSize - pad, gy + gSize - pad,
-                radius * scale, radius * scale, paintFallback)
-        }
+        forgeArt.piece(canvas, gemType, gx + pad, gy + pad, gSize - pad * 2, alpha)
 
         if (showRing && scale > 1.01f) {
             paintRing.alpha = ((scale - 1f) / (DRAG_SCALE_MAX - 1f) * 255).toInt().coerceIn(0, 255)

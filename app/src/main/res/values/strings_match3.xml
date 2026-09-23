@@ -7,4 +7,37 @@
     <string name="match3_game_over">Game Over</string>
     <string name="match3_time">Time: %1$s</string>
     <string name="match3_neutrinos">⚛ +%1$d neutrinos</string>
+    <string name="forge_back">Back to games</string>
+    <string name="forge_eyebrow">THE WORKSHOP • EXPEDITION</string>
+    <string name="forge_subtitle">The gravity forge</string>
+    <string name="forge_pitch">Six contracts to bring the forge to life. Match metals, clear slag and deliver the energy core. No timer.</string>
+    <string name="forge_start">Start an expedition</string>
+    <string name="forge_continue">Continue expedition</string>
+    <string name="forge_arcade">Overheat • classic timed mode</string>
+    <string name="forge_how">Swap two neighbouring pieces to align at least three identical metals. Swipe, or tap two pieces.\n\nTilt your phone to direct falling pieces, even during cascades. The board stays fixed; pieces fall towards physical down.</string>
+    <string name="forge_menu">Workshop</string>
+    <string name="forge_status">Contract %1$d/6 · %2$d moves</string>
+    <string name="forge_alloy">%1$s alloy · %2$d/%3$d</string>
+    <string name="forge_slag">Slag cleared · %1$d/%2$d</string>
+    <string name="forge_delivery">Deliver the glowing core</string>
+    <string name="forge_alloy_hint">Match the requested metal. Only successful swaps cost a move; cascades are free.</string>
+    <string name="forge_slag_hint">Match pieces on the scratched brown cells to clean them.</string>
+    <string name="forge_delivery_hint">Bring the core to the turquoise edge. Clear pieces in its path and tilt the device to direct the falls.</string>
+    <string name="forge_success">Contract complete</string>
+    <string name="forge_complete">The forge is alive!</string>
+    <string name="forge_success_hint">Well forged. All cascades have been resolved.</string>
+    <string name="forge_failed">Out of moves</string>
+    <string name="forge_retry_hint">Try this same contract again with a different approach.</string>
+    <string name="forge_next">Next contract</string>
+    <string name="forge_retry">Retry contract</string>
+    <string name="forge_finish">Finish expedition</string>
+    <string name="forge_reshuffled">No moves available: metals reshuffled for free.</string>
+    <string name="forge_board_description">Forge board. Swipe a metal towards a neighbour or tap two neighbouring pieces.</string>
+    <string name="forge_resolving">Cascade in progress… Moving pieces cannot be swapped yet.</string>
+    <string name="forge_input_queued">Swipe queued for the end of the cascade.</string>
+    <string name="forge_invalid_swap">This swap does not match three metals. No move spent.</string>
+    <string name="forge_board_changed">These pieces moved during the cascade. Swipe again at their new position.</string>
+    <string-array name="forge_materials">
+        <item>Silver</item><item>Bronze</item><item>Copper</item><item>Diamond</item><item>Gold</item>
+    </string-array>
 </resources>

@@ -442,7 +442,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.match3_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_match3,
-            activityClass = Match3Activity::class.java
+            activityClass = Match3Activity::class.java,
+            artworkClass = com.Atom2Universe.app.games.match3.Match3HubTileDrawable::class,
+            showDescription = false
         ),
         // Bigger (Suika)
         HubTile(
