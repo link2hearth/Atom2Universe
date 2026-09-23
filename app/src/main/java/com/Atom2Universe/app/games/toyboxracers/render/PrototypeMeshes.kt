@@ -494,6 +494,9 @@ internal object PrototypeMeshFactory {
     }
 
     private fun houseCourseColor(fraction: Float, index: Int): FloatArray = when {
+        HouseGeometry.isJumpApproach(fraction) ->
+            if ((index / 3) % 2 == 0) color(1f, .67f, .22f) else CREAM
+        HouseGeometry.isJumpLanding(fraction) -> color(.40f, .76f, .66f)
         fraction in 0.10f..0.21f || fraction in 0.34f..0.45f ||
             fraction in 0.68f..0.79f || fraction >= 0.88f ->
             if ((index / 10) % 2 == 0) HOUSE_DUCT else HOUSE_DUCT_LIGHT

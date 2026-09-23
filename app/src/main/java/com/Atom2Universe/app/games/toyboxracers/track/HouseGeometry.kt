@@ -3,165 +3,231 @@ package com.Atom2Universe.app.games.toyboxracers.track
 import com.Atom2Universe.app.games.toyboxracers.models.DecorCatalog
 import com.Atom2Universe.app.games.toyboxracers.models.DecorPlacement
 import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
+import kotlin.math.PI
+import kotlin.math.cos
 
-/** Maison ouverte en coupe : garage, séjour et mezzanine autour d'un atrium.
- * X/Z = plan horizontal, Y = altitude absolue. Les planchers sont des volumes
- * finis partagés par le rendu et les collisions, jamais une hauteur globale.
- * HOUSE_GROUND_FLOOR reste l'identifiant sauvegardé du mode Maison.
+/**
+ * Maison de poupée ouverte par le toit : atelier, séjour/cuisine, chambre.
+ * Les dalles, murs et ouvertures partagent les mêmes cotes. Les quatre rampes
+ * passent dans les ailes extérieures, hors des dalles des étages.
  */
 internal object HouseGeometry {
     const val LEVEL_HEIGHT = 26f
     const val HALF_WIDTH = 214f
     const val HALF_DEPTH = 102f
+    private const val SHELL_X = 132f
+    private const val SHELL_Z = 94f
+    private const val ATRIUM_X = 38f
+    private const val ATRIUM_Z = 30f
+    private const val SLAB = 1.2f
+    private val wallColors = intArrayOf(0xB9D8D5, 0xF0D4D9, 0xD7CFEB)
+    private val accents = intArrayOf(0x579C9A, 0xD68D78, 0x9A84BE)
+
+    // Coordonnées en segments du ruban, partagées par le profil et les vides.
+    private data class Jump(val approach: Float, val lip: Float, val landing: Float, val end: Float)
+    private val jumps = listOf(
+        Jump(1.08f, 1.62f, 1.72f, 2.18f),
+        Jump(23.30f, 23.84f, 23.98f, 24.58f)
+    )
+    val crossings: List<GradeCrossing>
+        get() = jumps.map { GradeCrossing(it.lip / route.size, it.landing / route.size) }
 
     fun floorBoxes(): List<RoomBox> = buildList {
-        add(RoomBox(0f, -.4f, 0f, HALF_WIDTH * 2f, .8f, HALF_DEPTH * 2f, 0xD7E6E4))
+        add(RoomBox(0f, -SLAB / 2, 0f, HALF_WIDTH * 2, SLAB, HALF_DEPTH * 2, 0xCFDFDE))
         for (level in 1..2) {
-            val y = level * LEVEL_HEIGHT - .4f
+            val y = level * LEVEL_HEIGHT - SLAB / 2
             val color = if (level == 1) 0xF3DFC5 else 0xE5DDF2
-            // Ouverture centrale de 76 × 60 sur les trois niveaux.
-            add(RoomBox(-69f, y, 0f, 62f, .8f, 160f, color))
-            add(RoomBox(69f, y, 0f, 62f, .8f, 160f, color))
-            add(RoomBox(0f, y, -55f, 76f, .8f, 50f, color))
-            add(RoomBox(0f, y, 55f, 76f, .8f, 50f, color))
+            for (side in floatArrayOf(-1f, 1f)) {
+                add(RoomBox(side * (SHELL_X + ATRIUM_X) / 2, y, 0f,
+                    SHELL_X - ATRIUM_X, SLAB, SHELL_Z * 2, color))
+                add(RoomBox(0f, y, side * (SHELL_Z + ATRIUM_Z) / 2,
+                    ATRIUM_X * 2, SLAB, SHELL_Z - ATRIUM_Z, color))
+            }
         }
     }
 
     fun wallBoxes(): List<RoomBox> = buildList {
         for (level in 0..2) {
-            val y = level * LEVEL_HEIGHT
-            val color = if (level == 1) 0xF0D4D9 else 0xD2DDED
-            for (z in floatArrayOf(-96f, 96f))
-                add(RoomBox(0f, y + 5f, z, 232f, 10f, 2f, color))
-            // Grandes ouvertures aux quatre coins pour les rampes extérieures.
-            for (x in floatArrayOf(-132f, 132f))
-                add(RoomBox(x, y + 5f, 0f, 2f, 10f, 78f, color))
-            if (level < 2) for (x in floatArrayOf(-35f, 35f))
-                for (z in floatArrayOf(-27f, 27f))
-                    add(RoomBox(x, y + LEVEL_HEIGHT / 2f, z, 2f, LEVEL_HEIGHT, 2f, 0xF3E9D7))
+            val base = level * LEVEL_HEIGHT
+            val color = wallColors[level]
+            // Façades continues du plancher au plafond, fenêtres en retrait.
+            for (side in floatArrayOf(-1f, 1f)) {
+                add(RoomBox(0f, base + 13f, side * SHELL_Z, SHELL_X * 2 + 2f, 26f, 2f, color))
+                // Deux portails de 52 unités (z = ±36..±88) raccordent les rampes.
+                add(RoomBox(side * SHELL_X, base + 13f, 0f, 2f, 26f, 72f, color))
+                for (z in floatArrayOf(-91f, 91f))
+                    add(RoomBox(side * SHELL_X, base + 13f, z, 2f, 26f, 6f, color))
+                for (z in floatArrayOf(-62f, 62f))
+                    add(RoomBox(side * SHELL_X, base + 22f, z, 2f, 8f, 52f, color))
+            }
         }
+        // Socle périphérique bas : les ailes restent lisibles depuis la voiture.
         for (x in floatArrayOf(-HALF_WIDTH, HALF_WIDTH))
-            add(RoomBox(x, 2f, 0f, 2f, 4f, HALF_DEPTH * 2f, 0xD2DDED))
+            add(RoomBox(x, 2f, 0f, 2f, 4f, HALF_DEPTH * 2, 0x8DA7B3))
         for (z in floatArrayOf(-HALF_DEPTH, HALF_DEPTH))
-            add(RoomBox(0f, 2f, z, HALF_WIDTH * 2f, 4f, 2f, 0xD2DDED))
+            add(RoomBox(0f, 2f, z, HALF_WIDTH * 2, 4f, 2f, 0x8DA7B3))
     }
 
     fun furnitureBoxes(): List<RoomBox> = buildList {
         fun box(x: Float, y: Float, z: Float, w: Float, h: Float, d: Float, color: Int) {
             add(RoomBox(x, y, z, w, h, d, color))
         }
-        fun rail(x: Float, baseY: Float, z: Float, w: Float, d: Float, color: Int = 0xF7E7C8) {
-            box(x, baseY + 1.1f, z, w, 2.2f, d, color)
-            box(x, baseY + 4.7f, z, w, .7f, d, 0xC79A5A)
-        }
-        fun post(x: Float, baseY: Float, z: Float) = box(x, baseY + 2.4f, z, .9f, 4.8f, .9f, 0xB57F4A)
-
-        // Garde-corps autour de l'atrium. Les ouvertures au centre laissent passer
-        // le pont de jeu, mais les bords dangereux deviennent lisibles.
-        for (level in 1..2) {
-            val y = level * LEVEL_HEIGHT
-            for (z in floatArrayOf(-31f, 31f)) {
-                rail(-19f, y, z, 36f, .85f)
-                rail(19f, y, z, 36f, .85f)
-                for (x in floatArrayOf(-37f, -19f, 0f, 19f, 37f)) post(x, y, z)
-            }
-            for (x in floatArrayOf(-39f, 39f)) {
-                rail(x, y, -19f, .85f, 22f)
-                rail(x, y, 19f, .85f, 22f)
-                for (z in floatArrayOf(-30f, -8f, 8f, 30f)) post(x, y, z)
-            }
-        }
-
-        // Portes, fenetres et plinthes : volumes minces colles aux murs exterieurs.
         for (level in 0..2) {
             val y = level * LEVEL_HEIGHT
-            for (x in floatArrayOf(-76f, -25f, 25f, 76f)) {
-                box(x, y + 9f, -94.55f, 20f, 11f, .35f, 0x9FD2E3)
-                box(x, y + 9f, 94.55f, 20f, 11f, .35f, 0x9FD2E3)
-                box(x, y + 9f, -94.15f, .7f, 12f, .6f, 0xFFF0D1)
-                box(x, y + 9f, 94.15f, .7f, 12f, .6f, 0xFFF0D1)
-                box(x, y + 9f, -94.15f, 21f, .7f, .6f, 0xFFF0D1)
-                box(x, y + 9f, 94.15f, 21f, .7f, .6f, 0xFFF0D1)
-                box(x, y + 2.8f, -93.2f, 23f, .8f, 2.8f, 0xC79A5A)
-                box(x, y + 2.8f, 93.2f, 23f, .8f, 2.8f, 0xC79A5A)
-            }
-        }
-        for (x in floatArrayOf(-103f, 103f)) {
-            box(x, 9f, 83f, 13f, 18f, .8f, 0xA8D1B7)
-            box(x + if (x < 0f) 4f else -4f, 9.4f, 82.35f, .7f, 1.1f, .7f, 0xE8C36E)
-            box(x, 35f, -83f, 13f, 18f, .8f, 0xDDB4C3)
-            box(x + if (x < 0f) 4f else -4f, 35.4f, -82.35f, .7f, 1.1f, .7f, 0xE8C36E)
-        }
-
-        // Planches qui montent sur les meubles et plateformes larges pour jouer
-        // sans avoir l'impression de suivre une piste peinte au sol.
-        box(-75f, 3.3f, -52f, 42f, 1.0f, 13f, 0xC08A55)
-        box(-91f, 7.1f, -57f, 34f, 1.0f, 11f, 0xD6A46E)
-        box(79f, 29.2f, -51f, 46f, 1.0f, 13f, 0xC08A55)
-        box(94f, 33.1f, -57f, 32f, 1.0f, 11f, 0xD6A46E)
-        box(-74f, 55.2f, 49f, 46f, 1.0f, 13f, 0xC08A55)
-        box(-91f, 59.0f, 55f, 32f, 1.0f, 11f, 0xD6A46E)
-
-        // Escalier hybride : une moitie rampe lisse, l'autre vraies marches.
-        box(126f, 4.5f, 66f, 18f, 1.0f, 28f, 0xA7B9C6)
-        for (i in 0..6) {
-            val z = 54f + i * 3.7f
-            box(139f, 1.2f + i * 1.55f, z, 18f, 1.0f, 3.2f, 0xF3E9D7)
-            box(148f, 1.8f + i * 1.55f, z, .9f, 3.6f, .8f, 0xB57F4A)
-        }
-        box(132f, 14.8f, 80f, 38f, 1.0f, 14f, 0xC08A55)
-
-        // Conduits larges d'aeration : les cotes bordent la bande jouable, mais
-        // le centre reste la surface de conduite continue.
-        for (level in 0..1) {
-            val y = level * LEVEL_HEIGHT
-            for (side in intArrayOf(-1, 1)) {
-                box(side * 110f, y + 6f, -53f, 2.2f, 12f, 20f, 0x8DA7B3)
-                box(side * 170f, y + 13f, -19f, 2.2f, 12f, 22f, 0x8DA7B3)
-                box(side * 110f, y + 19.8f, 16f, 2.2f, 12f, 20f, 0x8DA7B3)
-                for (i in 0..4) {
-                    box(side * 116f, y + 4f + i * 3.8f, -33f + i * 14f, 8f, .28f, .9f, 0xE6EEF2)
+            val accent = accents[level]
+            // Plinthes, corniches et piliers : chaque bloc appartient à la structure.
+            for (z in floatArrayOf(-92.7f, 92.7f)) {
+                box(0f, y + .8f, z, SHELL_X * 2 - 2, 1.6f, .6f, accent)
+                box(0f, y + 24.7f, z, SHELL_X * 2 - 2, 1.2f, .8f, 0xFFF0D1)
+                for (x in floatArrayOf(-96f, -48f, 0f, 48f, 96f)) {
+                    box(x, y + 14f, z, 25f, 13f, .3f, 0xFFF0D1)
+                    box(x, y + 14f, z - kotlin.math.sign(z) * .25f,
+                        22f, 10f, .3f, 0x8DBED3)
+                    box(x, y + 14f, z - kotlin.math.sign(z) * .5f,
+                        .7f, 11f, .3f, 0xFFF0D1)
+                    box(x, y + 14f, z - kotlin.math.sign(z) * .5f,
+                        23f, .7f, .3f, 0xFFF0D1)
+                    box(x, y + 7f, z - kotlin.math.sign(z), 26f, .7f, 2f, 0xDAB68B)
                 }
             }
+            for (x in floatArrayOf(-SHELL_X + 2, SHELL_X - 2)) {
+                for (z in floatArrayOf(-90f, 90f))
+                    box(x, y + 13f, z, 2f, 26f, 3f, 0xFFF0D1)
+                box(x, y + .8f, 0f, .7f, 1.6f, 70f, accent)
+                for (z in floatArrayOf(-62f, 62f))
+                    box(x, y + 18.8f, z, .8f, 1.6f, 52f, accent)
+            }
         }
-
-        // Quelques meubles solides agrandissent les pieces sans fermer le circuit.
-        box(-155f, 5f, -72f, 30f, 10f, 13f, 0xA8D1B7)
-        box(-155f, 10.4f, -72f, 31f, .8f, 14f, 0xFFF0D1)
-        box(154f, 31f, 70f, 31f, 10f, 13f, 0xDDB4C3)
-        box(154f, 36.4f, 70f, 32f, .8f, 14f, 0xFFF0D1)
-        box(0f, 56f, 79f, 62f, 8f, 10f, 0xB9AAD8)
-        box(0f, 60.5f, 79f, 63f, .8f, 11f, 0xFFF0D1)
+        // Poteaux de l'atrium ancrés dans la dalle, hors du passage du pont.
+        for (x in floatArrayOf(-36f, 36f)) for (z in floatArrayOf(-28f, 28f))
+            box(x, 26f, z, 2f, 52f, 2f, 0xFFF0D1)
+        for (level in 1..2) {
+            val y = level * LEVEL_HEIGHT
+            fun rail(x: Float, z: Float, w: Float, d: Float) {
+                box(x, y + .7f, z, w, 1.4f, d, accents[level])
+                box(x, y + 4f, z, w, .6f, d, 0xDAB68B)
+            }
+            for (z in floatArrayOf(-31f, 31f)) {
+                rail(0f, z, 78f, .8f)
+                for (x in floatArrayOf(-38f, -19f, 0f, 19f, 38f))
+                    box(x, y + 2f, z, .7f, 4f, .7f, 0xFFF0D1)
+            }
+            for (x in floatArrayOf(-39f, 39f)) {
+                // Au dernier étage, ouverture de 36 unités pour le pont et le saut.
+                if (level == 1) rail(x, 0f, .8f, 60f)
+                else for (z in floatArrayOf(-24.5f, 24.5f)) rail(x, z, .8f, 13f)
+                for (z in floatArrayOf(-30f, -18f, 18f, 30f))
+                    box(x, y + 2f, z, .7f, 4f, .7f, 0xFFF0D1)
+            }
+        }
+        // Piles sous les grandes rampes : sommet exactement sous le tablier.
+        for (segment in floatArrayOf(5f, 17f, 31f, 37f)) {
+            val p = point(segment / route.size)
+            val top = p.y + PrototypeTrack.ROAD_SURFACE_LIFT - PrototypeTrack.ROAD_THICKNESS
+            box(p.x, top / 2, p.z, 5f, top, 5f, 0xA9BDC6)
+            box(p.x, .6f, p.z, 10f, 1.2f, 10f, 0x8DA7B3)
+        }
     }
 
-    fun furnitureDecorations(): List<DecorPlacement> = listOf(
-        DecorPlacement(DecorCatalog["garage.workbench"], -78f, 0f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["garage.tool_chest"], 78f, 0f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["garage.tires"], 78f, 0f, 30f),
-        DecorPlacement(DecorCatalog["garage.storage_rack"], -157f, 0f, 70f, quarterTurns = 2, scale = .75f),
-        DecorPlacement(DecorCatalog["garage.crate"], 152f, 0f, 22f, scale = .9f),
-        DecorPlacement(DecorCatalog["living.sofa"], -78f, 26f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["living.coffee_table"], -80f, 26f, -42f, scale = .6f),
-        DecorPlacement(DecorCatalog["living.plant"], -83f, 26f, 27f),
-        DecorPlacement(DecorCatalog["living.tv_cabinet"], -154f, 26f, 70f, quarterTurns = 2, scale = .8f),
-        DecorPlacement(DecorCatalog["living.floor_lamp"], -155f, 26f, -30f, scale = .8f),
-        DecorPlacement(DecorCatalog["kitchen.counter"], 78f, 26f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["kitchen.fridge"], 90f, 26f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["kitchen.island"], 156f, 26f, -20f, scale = .75f),
-        DecorPlacement(DecorCatalog["kitchen.fruit_bowl"], 156f, 33.6f, -20f, scale = .75f),
-        DecorPlacement(DecorCatalog["bedroom.wardrobe"], -80f, 52f, -72f, scale = .6f),
-        DecorPlacement(DecorCatalog["office.dresser"], 78f, 52f, -72f, scale = .7f),
-        DecorPlacement(DecorCatalog["office.computer"], 154f, 52f, -70f, quarterTurns = 2, scale = .75f),
-        DecorPlacement(DecorCatalog["bathroom.vanity"], -154f, 52f, 71f, scale = .8f),
-        DecorPlacement(DecorCatalog["living.armchair"], -80f, 52f, 30f, scale = .8f),
-        DecorPlacement(DecorCatalog["living.books"], 80f, 52f, 28f)
-    )
+    fun furnitureDecorations(): List<DecorPlacement> = buildList {
+        fun place(id: String, x: Float, y: Float, z: Float, scale: Float = 1f, turn: Int = 0): DecorPlacement {
+            return DecorPlacement(DecorCatalog[id], x, y, z, turn, scale).also { add(it) }
+        }
+        fun onTop(id: String, support: DecorPlacement, scale: Float) {
+            place(id, support.x, support.solids.maxOf { it.top }, support.z, scale)
+        }
+        // Atelier : outils sur l'établi, stockage contre les murs, espace de jeu central.
+        place("garage.workbench", -76f, 0f, -82f, .85f)
+        place("garage.toolbox", -80f, 8.5f, -81f, .7f)
+        place("garage.tool_chest", -48f, 0f, -83f)
+        place("garage.storage_rack", 76f, 0f, -83f, .85f)
+        place("garage.tires", 95f, 0f, -82f)
+        onTop("garage.crate", place("garage.crate", 108f, 0f, 18f, 1.2f), .8f)
+        place("garage.cone", 28f, 0f, -77f, .8f)
+        place("garage.cone", 28f, 0f, -42f, .8f)
+        place("garage.storage_rack", -90f, 0f, 82f, .8f, 2)
+        place("garage.tires", -106f, 0f, 25f, 1.1f)
+
+        // Séjour côté ouest, cuisine côté est : petits objets posés sur leurs meubles.
+        place("living.sofa", -87f, 26f, -81f, 1.05f)
+        onTop("living.books", place("living.coffee_table", -89f, 26f, -63f, .75f), .55f)
+        place("kawaii.rug_patchwork", -88f, 26f, -46f, .8f)
+        place("living.floor_lamp", -109f, 26f, -81f, .9f)
+        place("living.armchair", -87f, 26f, -35f, .9f, 2)
+        place("living.tv_cabinet", -88f, 26f, 0f, .8f, 2)
+        place("kitchen.fridge", 107f, 26f, -82f, .9f)
+        onTop("kitchen.kettle", place("kitchen.counter", 86f, 26f, -82f, .9f), .7f)
+        place("kitchen.sink", 64f, 26f, -82f, .9f)
+        place("kitchen.oven", 43f, 26f, -82f, .9f)
+        onTop("kitchen.fruit_bowl", place("kitchen.island", 88f, 26f, 4f, .95f), .75f)
+        place("living.dining_table", 85f, 26f, 34f, .8f)
+        place("living.dining_chair", 85f, 26f, 23f, .8f)
+        place("living.dining_chair", 85f, 26f, 45f, .8f, 2)
+
+        // Chambre et coin lecture, tous les meubles reposent sur la mezzanine.
+        place("bedroom.double_bed", -78f, 52f, -83f, .8f)
+        onTop("bedroom.table_lamp", place("bedroom.nightstand", -95f, 52f, -83f, .8f), .8f)
+        place("bedroom.wardrobe", -44f, 52f, -83f, .9f)
+        place("office.dresser", 82f, 52f, -82f, .9f)
+        place("living.armchair", 89f, 52f, 27f, 1.1f)
+        onTop("living.books", place("living.coffee_table", 90f, 52f, 43f, .7f), .5f)
+        place("kawaii.rug_stripes", -88f, 52f, -42f, 1.1f)
+        place("living.floor_lamp", 108f, 52f, 30f)
+        place("living.books", -89f, 52f, 24f, .9f)
+        for (level in 0..2) {
+            val y = level * LEVEL_HEIGHT
+            for (x in floatArrayOf(-30f, 30f))
+                place("living.plant", x, y, 82f, 1.1f)
+            place("living.plant", 111f, y, 80f, .9f)
+        }
+    }
 
     fun toys(): List<ToyObstacle> = listOf(
-        ToyObstacle(ToyKind.TEDDY, -82f, 25f, 5.5f, 10f),
-        ToyObstacle(ToyKind.BLOCKS, 20f, -25f, 6.5f, 7f)
+        ToyObstacle(ToyKind.TEDDY, -86f, 28f, 5.5f, 10f),
+        ToyObstacle(ToyKind.BLOCKS, -15f, -24f, 6.5f, 7f),
+        ToyObstacle(ToyKind.TRAIN, 22f, 28f, 8f, 7f),
+        ToyObstacle(ToyKind.SPINNING_TOP, 91f, 42f, 5f, 8f)
     )
 
+    /** Élargissement progressif : aucune marche latérale à l'entrée des réceptions. */
+    fun roadWidth(fraction: Float): Float {
+        val s = fraction * route.size
+        var width = 15f
+        for (range in listOf(4f..7f, 16f..19f, 30f..33f, 36f..39f)) {
+            val blend = minOf((s - range.start) / .4f, (range.endInclusive - s) / .4f).coerceIn(0f, 1f)
+            width = maxOf(width, 15f + 2.5f * smooth(blend))
+        }
+        for (jump in jumps) {
+            val blend = minOf((s - jump.approach + .2f) / .3f, (jump.end + .2f - s) / .3f).coerceIn(0f, 1f)
+            width = maxOf(width, 15f + 4f * smooth(blend))
+        }
+        return width
+    }
+
+    fun isJumpApproach(fraction: Float) = jumps.any { fraction * route.size in it.approach..it.lip }
+    fun isJumpLanding(fraction: Float) = jumps.any { fraction * route.size in it.landing..it.end }
+
+    private fun smooth(t: Float) = t * t * (3f - 2f * t)
+
+    private fun stuntHeight(s: Float): Float {
+        for (jump in jumps) {
+            if (s in jump.approach..jump.lip) {
+                val t = (s - jump.approach) / (jump.lip - jump.approach)
+                // Pente positive à la lèvre : l'impulsion provient des roues.
+                return 4.5f * t * t
+            }
+            if (s in jump.lip..jump.landing)
+                return 4.5f - 3.5f * (s - jump.lip) / (jump.landing - jump.lip)
+            if (s in jump.landing..jump.end)
+                return 1f - smooth((s - jump.landing) / (jump.end - jump.landing))
+        }
+        // Double vague sur la ligne droite du séjour, loin des virages.
+        for (center in floatArrayOf(12.85f, 13.55f)) {
+            val t = (s - center) / .3f
+            if (t in -1f..1f) return 1.4f * (1f + cos(t * PI.toFloat()))
+        }
+        return 0f
+    }
     // Ruban fermé : montée à l'est, descente à l'ouest, pont sur l'atrium.
     // Les changements d'altitude passent hors des planchers des étages.
     private val route = listOf(
@@ -190,7 +256,7 @@ internal object HouseGeometry {
         val a = p(-1); val b = p(0); val c = p(1); val d = p(2)
         fun curve(a: Float, b: Float, c: Float, d: Float) = .5f *
             (2*b + (-a+c)*t + (2*a-5*b+4*c-d)*t*t + (-a+3*b-3*c+d)*t*t*t)
-        val y = b.y + (c.y-b.y) * t*t*(3f-2f*t)
+        val y = b.y + (c.y-b.y) * t*t*(3f-2f*t) + stuntHeight(scaled)
         // Le lift commun de la piste évite deux faces coplanaires avec le parquet.
         return Vec3(curve(a.x,b.x,c.x,d.x), y,
             curve(a.z,b.z,c.z,d.z))

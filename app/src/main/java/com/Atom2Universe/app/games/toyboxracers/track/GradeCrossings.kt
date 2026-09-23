@@ -15,5 +15,6 @@ internal object CircuitCrossings {
         )
     )
 
-    fun crossingsFor(kind: CircuitKind): List<GradeCrossing> = table[kind] ?: emptyList()
+    fun crossingsFor(kind: CircuitKind): List<GradeCrossing> =
+        if (kind.usesHouseLayout) HouseGeometry.crossings else table[kind] ?: emptyList()
 }

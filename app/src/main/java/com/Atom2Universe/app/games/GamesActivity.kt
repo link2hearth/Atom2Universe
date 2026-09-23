@@ -164,7 +164,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.toybox_racers_description,
             iconRes = R.drawable.ic_toybox_racers,
             defaultColorRes = R.color.game_tile_toybox_racers,
-            activityClass = ToyboxRacersActivity::class.java
+            activityClass = ToyboxRacersActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.toyboxracers.ToyboxHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "caves",
@@ -291,14 +293,6 @@ class GamesActivity : BaseHubActivity() {
             showDescription = false
         ),
         HubTile(
-            id = "reflex",
-            titleRes = R.string.reflex_title,
-            descriptionRes = R.string.reflex_description,
-            iconRes = android.R.drawable.ic_menu_view,
-            defaultColorRes = R.color.game_tile_reflex,
-            activityClass = ReflexActivity::class.java
-        ),
-        HubTile(
             id = "wavesurf",
             titleRes = R.string.wave_surf_title,
             descriptionRes = R.string.wave_surf_description,
@@ -314,7 +308,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.orbite_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_orbite,
-            activityClass = OrbiteActivity::class.java
+            activityClass = OrbiteActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.orbite.OrbiteHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "hexrunner",
@@ -325,14 +321,6 @@ class GamesActivity : BaseHubActivity() {
             activityClass = HexRunnerActivity::class.java,
             artworkClass = com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,
             showDescription = false
-        ),
-        HubTile(
-            id = "escape_labyrinth",
-            titleRes = R.string.escape_title,
-            descriptionRes = R.string.escape_description,
-            iconRes = android.R.drawable.ic_menu_compass,
-            defaultColorRes = R.color.game_tile_escape_labyrinth,
-            activityClass = EscapeLabyrinthActivity::class.java
         ),
         // Puzzle
         HubTile(
@@ -371,7 +359,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.color_stack_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_colorstack,
-            activityClass = ColorStackActivity::class.java
+            activityClass = ColorStackActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.colorstack.ColorStackHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "pipetap",
@@ -382,6 +372,14 @@ class GamesActivity : BaseHubActivity() {
             activityClass = PipeTapActivity::class.java
         ),
         HubTile(
+            id = "escape_labyrinth",
+            titleRes = R.string.escape_title,
+            descriptionRes = R.string.escape_description,
+            iconRes = android.R.drawable.ic_menu_compass,
+            defaultColorRes = R.color.game_tile_escape_labyrinth,
+            activityClass = EscapeLabyrinthActivity::class.java
+        ),
+        HubTile(
             id = "circles",
             titleRes = R.string.circles_hub_title,
             descriptionRes = R.string.circles_hub_desc,
@@ -390,6 +388,14 @@ class GamesActivity : BaseHubActivity() {
             activityClass = CirclesActivity::class.java,
             artworkClass = com.Atom2Universe.app.games.circles.CirclesHubTileDrawable::class,
             showDescription = false
+        ),
+        HubTile(
+            id = "reflex",
+            titleRes = R.string.reflex_title,
+            descriptionRes = R.string.reflex_description,
+            iconRes = android.R.drawable.ic_menu_view,
+            defaultColorRes = R.color.game_tile_reflex,
+            activityClass = ReflexActivity::class.java
         ),
         HubTile(
             id = "starbridges",

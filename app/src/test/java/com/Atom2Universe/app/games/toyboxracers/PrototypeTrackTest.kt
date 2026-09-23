@@ -62,7 +62,7 @@ class PrototypeTrackTest {
     @Test
     fun circuitsWithoutACrossingNeverReportAJumpGap() {
         for (kind in CircuitKind.entries) {
-            if (kind == CircuitKind.FIGURE_EIGHT) continue
+            if (kind == CircuitKind.FIGURE_EIGHT || kind.usesHouseLayout) continue
             val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, kind))
             assertTrue("$kind ne doit avoir aucun croisement pour cette itération",
                 CircuitCrossings.crossingsFor(kind).isEmpty())
@@ -340,7 +340,7 @@ class PrototypeTrackTest {
         assertEquals(52f, track.furnitureHeightAt(80f, 0f, 53f), .001f)
         assertEquals("Le vide de l'atrium ne doit pas être un plancher invisible",
             0f, track.furnitureHeightAt(0f, 15f, 60f), .001f)
-        assertTrue(track.allSamples().all { track.hasDeck(it) })
+        assertTrue(track.allSamples().any { !track.hasDeck(it) })
         assertTrue(track.allSamples().any { it.position.y > 51f })
         assertTrue(track.allSamples().any { it.tangent.y > .1f })
         assertTrue(track.allSamples().any { it.tangent.y < -.1f })
@@ -358,15 +358,56 @@ class PrototypeTrackTest {
                     p.z > it.back - .6f && p.z < it.front + .6f
             }
             assertFalse("La trajectoire doit rester praticable à $p", blocked)
-            assertTrue("La surface visible doit exister pour la collision à $p",
-                track.decksAt(p.x, p.z).any { abs(it.sample.position.y - p.y) < .02f })
+            if (track.hasDeck(sample)) {
+                assertTrue("La surface visible doit exister pour la collision à $p",
+                    track.decksAt(p.x, p.z).any { abs(it.sample.position.y - p.y) < .02f })
+            }
+        }
+    }
+
+    @Test
+    fun houseJumpsHaveRealGapsAndWideLowerLandings() {
+        val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
+        val gaps = CircuitCrossings.crossingsFor(CircuitKind.HOUSE_GROUND_FLOOR)
+        assertEquals(2, gaps.size)
+        for (gap in gaps) {
+            val start = track.allSamples().first { it.fraction >= gap.gapStartFraction }
+            val crossing = track.crossingAt(start.distance + .01f)!!
+            val end = track.sampleAt(crossing.endDistance + .1f)
+            val middle = track.sampleAt((crossing.startDistance + crossing.endDistance) * .5f)
+            assertFalse(track.hasDeck(middle))
+            assertTrue(track.hasDeck(end))
+            assertTrue("La réception doit être plus basse que le tremplin", start.position.y > end.position.y + 2f)
+            assertTrue("La réception doit pardonner un écart de trajectoire", end.roadWidth >= 18f)
+            assertTrue("Le vide reste franchissable à vitesse de course",
+                crossing.endDistance - crossing.startDistance in 6f..13f)
+            assertFalse("Aucune dalle invisible ne doit combler le saut",
+                track.decksAt(middle.position.x, middle.position.z).any {
+                    abs(it.sample.position.y - middle.position.y) < .1f
+                })
+        }
+    }
+
+    @Test
+    fun houseFurnitureAtEachLevelIsSupportedByAFloor() {
+        val floors = HouseGeometry.floorBoxes()
+        for (decor in HouseGeometry.furnitureDecorations()) {
+            if (decor.y !in listOf(0f, 26f, 52f)) continue // Accessoires posés sur les meubles.
+            val bounds = decor.model.bounds
+            for (px in listOf(bounds.left, bounds.right)) for (pz in listOf(bounds.back, bounds.front)) {
+                val x = decor.x + decor.rotatedX(px, pz) * decor.scale
+                val z = decor.z + decor.rotatedZ(px, pz) * decor.scale
+                assertTrue("${decor.model.id} doit reposer sur son étage, à $x/$z",
+                    floors.any { abs(it.top - decor.y) < .01f && x in it.left..it.right && z in it.back..it.front })
+            }
         }
     }
 
     @Test
     fun continuousHouseDescentsKeepWheelContactAtFullSpeed() {
         val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
-        val descents = track.allSamples().filter { it.tangent.y < -.1f }
+        // Les rampes d'étage restent continues ; les nouveaux tremplins doivent décoller.
+        val descents = track.allSamples().filter { it.tangent.y < -.1f && it.fraction in .65f.. .84f }
         assertTrue(descents.isNotEmpty())
         for (sample in descents) {
             val car = ArcadeCar(track)

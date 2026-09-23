@@ -70,12 +70,14 @@ internal class ToyboxMinimapView(context: Context) : View(context) {
             if (track.scene.circuit.usesHouseLayout) {
                 val level = ((sample.position.y + HouseGeometry.LEVEL_HEIGHT * .5f) /
                     HouseGeometry.LEVEL_HEIGHT).toInt().coerceIn(0, 2)
-                if (level != previousLevel) {
+                if (track.isJumpGap(distance)) {
+                    previousLevel = -1
+                } else if (level != previousLevel) {
                     levelRoutes[level].moveTo(mapX(sample.position.x), mapZ(sample.position.z))
+                    previousLevel = level
                 } else {
                     levelRoutes[level].lineTo(mapX(sample.position.x), mapZ(sample.position.z))
                 }
-                previousLevel = level
             }
             if (track.isJumpGap(distance)) {
                 connected = false

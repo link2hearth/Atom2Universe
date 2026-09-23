@@ -594,7 +594,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         }
         return ToyboxWorld(
             name = name,
-            volumes = listOf(floor) + houseFloors + visualVolumes,
+            volumes = (houseFloors.ifEmpty { listOf(floor) }) + visualVolumes,
             trackSections = legacySceneTrackSections(scene),
             decorations = decorations
         )

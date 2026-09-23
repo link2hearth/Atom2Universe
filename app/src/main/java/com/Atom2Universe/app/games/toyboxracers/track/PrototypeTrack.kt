@@ -305,12 +305,7 @@ internal class PrototypeTrack(
     }
 
     private fun roadWidth(fraction: Float): Float {
-        if (scene.circuit.usesHouseLayout) return when {
-            fraction in 0.10f..0.21f || fraction in 0.34f..0.45f ||
-                fraction in 0.68f..0.79f || fraction >= 0.88f -> 17.5f
-            fraction in 0.22f..0.31f || fraction in 0.55f..0.64f -> 14.5f
-            else -> 13f
-        }
+        if (scene.circuit.usesHouseLayout) return HouseGeometry.roadWidth(fraction)
         if (scene.circuit.usesFurnitureLayout) return when (OrganicCircuits.surface(scene.circuit, fraction)) {
             CourseSurface.DECK -> 9f
             CourseSurface.FLOOR -> 18f
