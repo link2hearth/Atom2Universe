@@ -22,7 +22,39 @@
     <string name="forge_delivery">Deliver the glowing core</string>
     <string name="forge_alloy_hint">Match the requested metal. Only successful swaps cost a move; cascades are free.</string>
     <string name="forge_slag_hint">Match pieces on the scratched brown cells to clean them.</string>
-    <string name="forge_delivery_hint">Bring the core to the turquoise edge. Clear pieces in its path and tilt the device to direct the falls.</string>
+    <string name="forge_delivery_hint">Each core has its own exit, shown by its green arrow. Other edges do not deliver it. Tilt the device and clear a path around rivets.</string>
+    <string name="forge_delivery_count">Cores delivered · %1$d/%2$d</string>
+    <string name="forge_dual_alloy">%1$s · %2$d/%3$d\n%4$s · %5$d/%3$d</string>
+    <string name="forge_dual_hint">Collect both metals. Riveted pieces stay fixed: guide the pieces around them.</string>
+    <string name="forge_rivet_hint">This piece is riveted: it cannot move and survives explosions. Go around it.</string>
+    <string name="forge_bonuses_help">4 aligned pieces: clear the entire line.\nAn L or T: explode at the junction within a radius of 3 cells.\nCores and rivets survive bonuses.</string>
+    <string name="forge_menu_tagline">Tilt. Match. Fire up the forge.</string>
+    <string name="forge_expedition_title">Expedition</string>
+    <string name="forge_expedition_desc">Metals, slag and cores to deliver.</string>
+    <string name="forge_rounds_button">%1$d rounds</string>
+    <string name="forge_round_status">Contract %1$d/%2$d · %3$d moves</string>
+    <string name="forge_resume_expedition">Resume · round %1$d/%2$d</string>
+    <string name="forge_endless_title">Endless deliveries</string>
+    <string name="forge_endless_desc">Varied boards and obstacles, one core at a time.\nFrom board 5: two cores, two directions. From board 9: three.</string>
+    <string name="forge_resume_round">Continue · board %1$d</string>
+    <string name="forge_new_run">New game</string>
+    <string name="forge_best_score">Best: %1$d points</string>
+    <string name="forge_rules">How to play</string>
+    <string name="forge_arcade_short">Overheat</string>
+    <string-array name="forge_gravity_directions">
+        <item>Falling down</item>
+        <item>Falling left</item>
+        <item>Falling right</item>
+        <item>Falling up</item>
+    </string-array>
+    <string name="forge_slag_endless_title">Slag · endless</string>
+    <string name="forge_slag_endless_desc">Clean increasingly coated boards. Double layers at board 4, beams at 6, blasts at 8 and triple layers at 10.</string>
+    <string name="forge_overheat_desc">Race for a high score against the clock. Every match restores time: aim for four in a row and L/T shapes to blast the board!</string>
+    <string name="forge_overheat_start">Fire up the forge</string>
+    <string name="forge_rules_body">%1$s\n\n%2$s\n\nScore: 10 points per piece, 40 per special line and 100 per explosion. Cascades multiply these points up to ×5. Delivering a core earns 250 points. Finishing a board earns 100 points plus 15 per remaining move.\n\nThe clock only tracks play time: there is no time limit. It pauses in menus, in the background and between boards.\n\nRetrying resets the current board score, keeping points from previous boards and total play time.</string>
+    <string name="forge_clock_format">%1$02d:%2$02d</string>
+    <string name="forge_metrics">%1$d points · %2$s</string>
+    <string name="forge_endless_status">Board %1$d · %2$d moves\nGrid %3$d × %4$d</string>
     <string name="forge_success">Contract complete</string>
     <string name="forge_complete">The forge is alive!</string>
     <string name="forge_success_hint">Well forged. All cascades have been resolved.</string>

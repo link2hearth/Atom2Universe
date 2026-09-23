@@ -31,7 +31,6 @@ class Match3View @JvmOverloads constructor(
         private const val COLS = 10   // côté court (largeur en portrait)
         private const val ROWS = 16   // côté long  (hauteur en portrait, direction de chute)
         private const val GEM_COUNT = 5
-        private const val MATCH_MIN = 3
 
         private const val DRAG_SCALE_MAX = 1.18f
         private const val DRAG_SCALE_MS  = 130f
@@ -54,6 +53,7 @@ class Match3View @JvmOverloads constructor(
 
     // ── Assets ────────────────────────────────────────────────────────────────
     private val forgeArt = ForgeArt()
+    private val gravityFrame = GravityFrame()
     private val gemFallbackColors = intArrayOf(
         Color.parseColor("#ADBECA"),
         Color.parseColor("#C77E36"),
@@ -101,6 +101,9 @@ class Match3View @JvmOverloads constructor(
         val cx: Float, val cy: Float, val startTime: Long
     )
     private val popCells = mutableListOf<PopCell>()
+    private var bonusBurst: ForgeGame.Burst? = null
+    private var bonusStarted = 0L
+    private val paintBonus = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // ── Particules ────────────────────────────────────────────────────────────
     private data class Particle(
@@ -146,6 +149,8 @@ class Match3View @JvmOverloads constructor(
     // vers le bas physique réel.
     private enum class GravDir { DOWN, UP, RIGHT, LEFT }
     private var gravDir = GravDir.DOWN
+    val gravityDirection get() = when (gravDir) { GravDir.DOWN -> 0; GravDir.LEFT -> 1; GravDir.RIGHT -> 2; GravDir.UP -> 3 }
+    var onGravityChanged: ((Int) -> Unit)? = null
 
     private val orientationListener = object : OrientationEventListener(context) {
         override fun onOrientationChanged(orientation: Int) {
@@ -156,12 +161,14 @@ class Match3View @JvmOverloads constructor(
                 Surface.ROTATION_270 -> 270
                 else -> 0
             }) % 360
+            val previous = gravDir
             gravDir = when {
                 angle < 45 || angle >= 315 -> GravDir.DOWN
                 angle < 135 -> GravDir.RIGHT
                 angle < 225 -> GravDir.UP
                 else -> GravDir.LEFT
             }
+            if (previous != gravDir) { onGravityChanged?.invoke(gravityDirection); invalidate() }
         }
     }
 
@@ -205,7 +212,8 @@ class Match3View @JvmOverloads constructor(
     // ── Taille ────────────────────────────────────────────────────────────────
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         if (w == 0 || h == 0) return
-        tileSize = minOf(w.toFloat() / gridCols, h.toFloat() / gridRows)
+        val padding = 28f * resources.displayMetrics.density
+        tileSize = minOf((w - padding) / gridCols, (h - padding) / gridRows).coerceAtLeast(1f)
         gridLeft = (w - tileSize * gridCols) / 2f
         gridTop  = (h - tileSize * gridRows) / 2f
         paintRing.strokeWidth = tileSize * 0.07f
@@ -302,6 +310,10 @@ class Match3View @JvmOverloads constructor(
             canvas.drawCircle(px, py, p.radius * (1f - t * 0.5f), paintParticle)
         }
 
+        drawBonuses(canvas, now)
+        gravityFrame.draw(canvas, gridLeft, gridTop, gridLeft + gridCols * tileSize,
+            gridTop + gridRows * tileSize, gravityDirection, resources.displayMetrics.density)
+
         // Overlay game over
         if (gameOver) drawGameOverOverlay(canvas)
 
@@ -313,6 +325,38 @@ class Match3View @JvmOverloads constructor(
     }
 
     private fun tileX(col: Int) = gridLeft + col * tileSize
+
+    private fun drawBonuses(canvas: Canvas, now: Long) {
+        val burst = bonusBurst ?: return
+        val t = ((now - bonusStarted).toFloat() / POP_ANIM_MS).coerceIn(0f, 1f)
+        if (t >= 1f) { bonusBurst = null; return }
+        val fade = 1f - t
+        canvas.save()
+        canvas.clipRect(gridLeft, gridTop, gridLeft + gridCols * tileSize, gridTop + gridRows * tileSize)
+        for (beam in burst.beams) {
+            val x = tileX(beam.origin % gridCols) + tileSize / 2
+            val y = tileY(beam.origin / gridCols) + tileSize / 2
+            for (core in listOf(false, true)) {
+                paintBonus.color = if (core) 0xfffff4d0.toInt() else 0xffffb657.toInt()
+                paintBonus.alpha = (fade * if (core) 255 else 140).toInt()
+                paintBonus.strokeWidth = tileSize * (if (core) .1f else .6f) * fade
+                if (beam.horizontal) canvas.drawLine(gridLeft, y, gridLeft + gridCols * tileSize, y, paintBonus)
+                else canvas.drawLine(x, gridTop, x, gridTop + gridRows * tileSize, paintBonus)
+            }
+        }
+        for (origin in burst.bombs) {
+            val x = tileX(origin % gridCols) + tileSize / 2
+            val y = tileY(origin / gridCols) + tileSize / 2
+            val radius = tileSize * (ForgeGame.BLAST_RADIUS + .5f) * sqrt(t)
+            paintBonus.style = Paint.Style.FILL; paintBonus.color = 0xffffaa4a.toInt(); paintBonus.alpha = (fade * 80).toInt()
+            canvas.drawCircle(x, y, radius, paintBonus)
+            paintBonus.style = Paint.Style.STROKE; paintBonus.strokeWidth = tileSize * .12f * fade + 1
+            paintBonus.color = 0xffffdc97.toInt(); paintBonus.alpha = (fade * 255).toInt()
+            canvas.drawCircle(x, y, radius, paintBonus)
+        }
+        paintBonus.style = Paint.Style.FILL
+        canvas.restore()
+    }
     private fun tileY(row: Int) = gridTop  + row * tileSize
     private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
     private fun smoothStep(t: Float) = t * t * (3f - 2f * t)
@@ -430,43 +474,34 @@ class Match3View @JvmOverloads constructor(
         val tmp = grid[r1][c1]; grid[r1][c1] = grid[r2][c2]; grid[r2][c2] = tmp
     }
 
-    private fun findMatches(): Set<Pair<Int, Int>> {
-        val matched = mutableSetOf<Pair<Int, Int>>()
-        for (r in 0 until gridRows) {
-            var c = 0
-            while (c < gridCols) {
-                var len = 1
-                while (c + len < gridCols && grid[r][c + len] == grid[r][c]) len++
-                if (len >= MATCH_MIN) for (k in 0 until len) matched.add(r to c + k)
-                c += len
-            }
-        }
-        for (c in 0 until gridCols) {
-            var r = 0
-            while (r < gridRows) {
-                var len = 1
-                while (r + len < gridRows && grid[r + len][c] == grid[r][c]) len++
-                if (len >= MATCH_MIN) for (k in 0 until len) matched.add(r + k to c)
-                r += len
-            }
-        }
-        return matched
-    }
+    private fun patterns() = Match3Patterns(IntArray(gridRows * gridCols) { grid[it / gridCols][it % gridCols] }, gridCols)
+
+    private fun findMatches(): Set<Pair<Int, Int>> = patterns().matches().map { it / gridCols to it % gridCols }.toSet()
 
     private fun processMatches(matches: Set<Pair<Int, Int>>) {
+        if (gameOver) return
+        val burst = patterns().burst()
+        val destroyed = burst.cleared.map { it / gridCols to it % gridCols }
+        bonusBurst = burst
+        bonusStarted = SystemClock.uptimeMillis()
+        if (burst.beams.isNotEmpty() || burst.bombs.isNotEmpty()) {
+            soundEngine.playForgeBurst(burst.bombs.isNotEmpty())
+            performHapticFeedback(if (burst.bombs.isNotEmpty()) android.view.HapticFeedbackConstants.LONG_PRESS
+                else android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+        }
         // Note pentatonique basée sur la gemme majoritaire du match
         val dominant = matches.groupBy { (r, c) -> grid[r][c] }.maxBy { it.value.size }.key
         soundEngine.playMatch(dominant, comboCount)
         comboCount++
 
-        score += matches.size * 10
+        score += destroyed.size * 10 + burst.beams.size * 40 + burst.bombs.size * 100
         onScoreChanged?.invoke(score)
         // +1 sec par match, plafonné au timerMax courant
         timerValue = (timerValue + TIMER_PER_MATCH).coerceAtMost(timerMax)
         // Enregistrer les couleurs matchées pour le cycle diversité
         for ((r, c) in matches) matchedColorsInCycle.add(grid[r][c])
         val now = SystemClock.uptimeMillis()
-        for ((r, c) in matches) {
+        for ((r, c) in destroyed) {
             cleared[r][c] = true
             val cx = tileX(c) + tileSize / 2f
             val cy = tileY(r) + tileSize / 2f
@@ -546,8 +581,9 @@ class Match3View @JvmOverloads constructor(
     // ── Reset ─────────────────────────────────────────────────────────────────
     fun resetGame() {
         handler.removeCallbacksAndMessages(null)
-        swapAnimator?.cancel(); swapAnimator = null; swapAnim = null
+        swapAnimator?.removeAllListeners(); swapAnimator?.cancel(); swapAnimator = null; swapAnim = null
         popCells.clear(); particles.clear()
+        bonusBurst = null
         isProcessing = false
         dragRow = -1; dragCol = -1; swipeTriggered = false
         score = 0
@@ -572,6 +608,7 @@ class Match3View @JvmOverloads constructor(
         gameOver = true
         isProcessing = true
         timerValue = 0f
+        swapAnimator?.removeAllListeners(); swapAnimator?.cancel(); swapAnimator = null; swapAnim = null
         handler.removeCallbacksAndMessages(null)
         val prefs = context.getSharedPreferences("match3_save", Context.MODE_PRIVATE)
         gameElapsedMs = if (gameStartUptimeMs > 0L) SystemClock.uptimeMillis() - gameStartUptimeMs else 0L
@@ -610,7 +647,7 @@ class Match3View @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         handler.removeCallbacksAndMessages(null)
-        swapAnimator?.cancel()
+        swapAnimator?.removeAllListeners(); swapAnimator?.cancel()
         orientationListener.disable()
         soundEngine.stop()
     }

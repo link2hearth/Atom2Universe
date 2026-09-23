@@ -71,6 +71,18 @@ class Match3SoundEngine {
 
     // ── Bas niveau ────────────────────────────────────────────────────────────
 
+    fun playForgeBurst(bomb: Boolean) {
+        if (!ready) return
+        if (bomb) {
+            noteOnOff(CH_SUB, 36, 112, 340)
+            noteOnOff(CH_SUB, 43, 95, 300)
+            noteOnOff(CH_MAIN, 84, 100, 120)
+        } else {
+            noteOnOff(CH_MAIN, 79, 100, 160)
+            noteOnOff(CH_MAIN, 91, 90, 200)
+        }
+    }
+
     private fun noteOnOff(ch: Int, note: Int, vel: Int, durationMs: Long) {
         val d = driver ?: return
         d.queueEvent(byteArrayOf((0x90 or ch).toByte(), note.toByte(), vel.toByte()))

@@ -41,6 +41,12 @@
                 android:textStyle="bold"
                 android:paddingEnd="8dp" />
 
+            <com.Atom2Universe.app.games.match3.GravityIndicatorView
+                android:id="@+id/match3_gravity"
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp" />
+
             <TextView
                 android:id="@+id/match3_btn_new"
                 android:layout_width="wrap_content"

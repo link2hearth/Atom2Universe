@@ -22,7 +22,39 @@
     <string name="forge_delivery">Livre le cœur lumineux</string>
     <string name="forge_alloy_hint">Aligne le métal demandé. Seuls les échanges réussis coûtent un coup ; les cascades sont gratuites.</string>
     <string name="forge_slag_hint">Fais des alignements sur les cases brunes striées pour les nettoyer.</string>
-    <string name="forge_delivery_hint">Amène le cœur au bord turquoise. Élimine les pièces sur son chemin et incline l’appareil pour diriger les chutes.</string>
+    <string name="forge_delivery_hint">Chaque cœur a sa propre sortie, indiquée par sa flèche verte. Les autres bords ne le livrent pas. Incline l’appareil et ouvre un passage autour des rivets.</string>
+    <string name="forge_delivery_count">Cœurs livrés · %1$d/%2$d</string>
+    <string name="forge_dual_alloy">%1$s · %2$d/%3$d\n%4$s · %5$d/%3$d</string>
+    <string name="forge_dual_hint">Récolte les deux métaux. Les pièces rivetées restent fixes : fais passer les pièces autour.</string>
+    <string name="forge_rivet_hint">Cette pièce est rivetée : elle ne bouge pas et résiste aux explosions. Contourne-la.</string>
+    <string name="forge_bonuses_help">4 pièces alignées : toute la ligne est balayée.\nUn L ou un T : explosion à la jonction, dans un rayon de 3 cases.\nLes cœurs et les rivets résistent aux bonus.</string>
+    <string name="forge_menu_tagline">Incline. Aligne. Fais exploser la forge.</string>
+    <string name="forge_expedition_title">Expédition</string>
+    <string name="forge_expedition_desc">Métaux, scories et cœurs à livrer.</string>
+    <string name="forge_rounds_button">%1$d rounds</string>
+    <string name="forge_round_status">Contrat %1$d/%2$d · %3$d coups</string>
+    <string name="forge_resume_expedition">Reprendre · round %1$d/%2$d</string>
+    <string name="forge_endless_title">Livraisons infinies</string>
+    <string name="forge_endless_desc">Des grilles et des obstacles variés, un cœur à la fois.\nDès le tableau 5 : deux cœurs, deux directions. Dès le 9 : trois.</string>
+    <string name="forge_resume_round">Reprendre · tableau %1$d</string>
+    <string name="forge_new_run">Nouvelle partie</string>
+    <string name="forge_best_score">Record : %1$d points</string>
+    <string name="forge_rules">Comment jouer</string>
+    <string name="forge_arcade_short">Surchauffe</string>
+    <string-array name="forge_gravity_directions">
+        <item>Chute vers le bas</item>
+        <item>Chute vers la gauche</item>
+        <item>Chute vers la droite</item>
+        <item>Chute vers le haut</item>
+    </string-array>
+    <string name="forge_slag_endless_title">Scories · infini</string>
+    <string name="forge_slag_endless_desc">Nettoie des tableaux de plus en plus chargés. Couches doubles au tableau 4, lignes au 6, explosions au 8 et couches triples au 10.</string>
+    <string name="forge_overheat_desc">La course au score contre la montre. Chaque alignement rend du temps : vise les x4 et les L/T pour tout faire exploser !</string>
+    <string name="forge_overheat_start">Allumer la forge</string>
+    <string name="forge_rules_body">%1$s\n\n%2$s\n\nScore : 10 points par pièce, 40 par ligne spéciale et 100 par explosion. Les cascades multiplient ces points, jusqu’à ×5. Un cœur livré vaut 250 points. Un tableau terminé rapporte 100 points et 15 par coup restant.\n\nLe chrono mesure seulement la durée jouée : aucune limite de temps. Il s’arrête dans les menus, en arrière-plan et entre les tableaux.\n\nRéessayer un tableau remet son score à zéro, en conservant les points des tableaux précédents et le temps total joué.</string>
+    <string name="forge_clock_format">%1$02d:%2$02d</string>
+    <string name="forge_metrics">%1$d points · %2$s</string>
+    <string name="forge_endless_status">Tableau %1$d · %2$d coups\nGrille %3$d × %4$d</string>
     <string name="forge_success">Contrat rempli</string>
     <string name="forge_complete">La forge est réveillée !</string>
     <string name="forge_success_hint">Beau travail. Toutes les cascades sont terminées.</string>
