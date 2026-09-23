@@ -453,12 +453,6 @@
             </LinearLayout>
             <View style="@style/StatDivider" />
 
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_quiz_accuracy" />
-                <TextView android:id="@+id/stat_quiz_accuracy_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
             <!-- Memory : une ligne par difficulté (rempli dynamiquement) -->
             <TextView
                 android:layout_width="match_parent"

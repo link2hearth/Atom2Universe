@@ -7,8 +7,4 @@
     <!-- Pixel Art Editor -->
     <dimen name="palette_max_height">76dp</dimen>
 
-    <!-- Quiz -->
-    <dimen name="quiz_button_margin">12dp</dimen>
-    <dimen name="quiz_button_height">56dp</dimen>
-    <dimen name="quiz_button_padding">16dp</dimen>
 </resources>

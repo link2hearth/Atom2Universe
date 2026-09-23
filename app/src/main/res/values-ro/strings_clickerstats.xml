@@ -22,7 +22,6 @@
     <string name="stat_escape_solved">Evadare din Labirint – Rezolvate</string>
     <string name="stat_escape_perfect">Evadare din Labirint – Perfect</string>
     <string name="stat_starbridges_solved">Poduri stelare – Rezolvate</string>
-    <string name="stat_quiz_accuracy">Quiz – Precizie</string>
     <string name="stat_memory_title">Memorie</string>
     <string name="stat_circles_title">Cercuri</string>
     <string name="stat_memory_diff">Memorie – %1$s</string>

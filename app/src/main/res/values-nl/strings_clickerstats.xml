@@ -42,7 +42,6 @@
     <string name="stat_escape_solved">Ontsnappen uit het labyrint – Opgelost</string>
     <string name="stat_escape_perfect">Ontsnappen uit het labyrint – Perfect</string>
     <string name="stat_starbridges_solved">Star Bridges – Opgelost</string>
-    <string name="stat_quiz_accuracy">Quiz – Nauwkeurigheid</string>
     <string name="stat_memory_title">Memory</string>
     <string name="stat_circles_title">Circles</string>
     <string name="stat_memory_diff">Memory – %1$s</string>

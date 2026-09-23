@@ -358,11 +358,6 @@ class ClickerStatsActivity : ThemedActivity() {
         val sbSolved = SharedGameStats.total(this, "starbridges_save", "solved")
         findViewById<TextView>(R.id.stat_starbridges_solved_value).text = if (sbSolved > 0) fmt.format(sbSolved) else "—"
 
-        val qzCorrect = SharedGameStats.total(this, "quiz_stats", "lifetime_correct")
-        val qzTotal = SharedGameStats.total(this, "quiz_stats", "lifetime_total")
-        findViewById<TextView>(R.id.stat_quiz_accuracy_value).text =
-            if (qzTotal > 0) "${qzCorrect * 100 / qzTotal}% ($qzCorrect/$qzTotal)" else "—"
-
         bindMemoryStats()
         bindCirclesStats()
 
@@ -445,7 +440,6 @@ class ClickerStatsActivity : ThemedActivity() {
             R.id.stat_escape_solved_value to listOf(SyncedStat("escape_labyrinth_prefs", "solved")),
             R.id.stat_escape_perfect_value to listOf(SyncedStat("escape_labyrinth_prefs", "solved_perfect")),
             R.id.stat_starbridges_solved_value to listOf(SyncedStat("starbridges_save", "solved")),
-            R.id.stat_quiz_accuracy_value to listOf(SyncedStat("quiz_stats", "lifetime_correct"), SyncedStat("quiz_stats", "lifetime_total")),
             // Records : le meilleur de tous les appareils
             R.id.stat_colorstack_time_value to listOf(SyncedStat(g, "colorstack_hard_best_ms")),
             R.id.stat_hexrunner_best_value to listOf(SyncedStat(g, "hexrunner_best_ms")),

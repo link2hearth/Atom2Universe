@@ -43,9 +43,7 @@ val COUNTER_KEYS = listOf(
     CounterKey("escape_labyrinth_prefs", "solved"),
     CounterKey("escape_labyrinth_prefs", "solved_perfect"),
     CounterKey("starbridges_save", "solved"),
-    CounterKey("trebuchet_game", "sites_destroyed"),
-    CounterKey("quiz_stats", "lifetime_correct"),
-    CounterKey("quiz_stats", "lifetime_total")
+    CounterKey("trebuchet_game", "sites_destroyed")
 )
 
 /**

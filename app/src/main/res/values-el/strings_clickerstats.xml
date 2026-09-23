@@ -22,7 +22,6 @@
     <string name="stat_escape_solved">Διαφυγή από το Λαβύρινθο – Επιλύθηκαν</string>
     <string name="stat_escape_perfect">Διαφυγή από το Λαβύρινθο – Τέλειο</string>
     <string name="stat_starbridges_solved">Star Bridges – Επιλύθηκαν</string>
-    <string name="stat_quiz_accuracy">Quiz – Ακρίβεια</string>
     <string name="stat_memory_title">Μνήμη</string>
     <string name="stat_circles_title">Circles</string>
     <string name="stat_memory_diff">Μνήμη – %1$s</string>

@@ -27,7 +27,6 @@ import com.Atom2Universe.app.games.circles.CirclesActivity
 import com.Atom2Universe.app.games.orbite.OrbiteActivity
 import com.Atom2Universe.app.games.pipetap.PipeTapActivity
 import com.Atom2Universe.app.games.starbridges.StarBridgesActivity
-import com.Atom2Universe.app.quiz.QuizActivity
 import com.Atom2Universe.app.games.colorstack.ColorStackActivity
 import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
@@ -93,15 +92,6 @@ class GamesActivity : BaseHubActivity() {
             artworkClass = com.Atom2Universe.app.crypto.ClickerHubTileDrawable::class,
             showDescription = false,
             activityClass = MainClickerActivity::class.java
-        ),
-        // Quiz en 2ème
-        HubTile(
-            id = "quiz",
-            titleRes = R.string.games_quiz_title,
-            descriptionRes = R.string.games_quiz_desc,
-            iconRes = android.R.drawable.ic_menu_help,
-            defaultColorRes = R.color.game_tile_quiz,
-            activityClass = QuizActivity::class.java
         ),
         // Survivor
         HubTile(
