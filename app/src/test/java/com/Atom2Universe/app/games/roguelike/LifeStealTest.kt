@@ -25,9 +25,10 @@ class LifeStealTest {
     }
 
     @Test fun relicDirectDamageUsesEquipmentLifeSteal() {
-        val h = hero().apply { addRelic(Relic.PONCTION) }
+        // Une relique sans soin propre (la Ponction vitale rend aussi la moitié de ses dégâts)
+        val h = hero().apply { addRelic(Relic.HUNTERS_MARK) }
         val c = fight(h)
-        val hit = c.castRelic(Relic.PONCTION, 0, Timing.PERFECT).main!!
+        val hit = c.castRelic(Relic.HUNTERS_MARK, 0, Timing.PERFECT).main!!
         assertEquals(minOf(h.maxHp - 1, (hit.damage * h.lifeSteal).toInt()), c.lifeStolen)
         assertEquals(1 + c.lifeStolen, h.hp)
     }
@@ -48,7 +49,7 @@ class LifeStealTest {
         assertTrue(found > 0)
     }
 
-    @Test fun legacyHealIsDiscardedAndSoulRuptureKeepsItsSaveIdentity() {
+    @Test fun legacyHealIsDiscardedAndLifeDrainKeepsItsSaveIdentity() {
         assertNull(Relic.fromSavedName("HEAL"))
         assertNull(Relic.fromSavedName("UNKNOWN"))
         assertEquals(Relic.PONCTION, Relic.fromSavedName("PONCTION"))

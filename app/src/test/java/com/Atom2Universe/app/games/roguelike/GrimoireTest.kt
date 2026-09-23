@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.roguelike
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.random.Random
@@ -379,13 +380,14 @@ class GrimoireTest {
     // ── Refonte du 20/09/2026 : la Ponction vitale et le Verglas ─────────────────
 
     @Test
-    fun laRuptureDAmeNeSoignePas() {
+    fun laPonctionVitaleRendLaMoitieDesDegats() {
+        // La seule exception au vol de vie de l'équipement (le héros de test n'en porte pas)
         val c = fight(Relic.PONCTION)
         c.hero.hp = c.hero.maxHp / 2
         val before = c.hero.hp
-        val hit = c.castRelic(Relic.PONCTION, 0, Timing.MISS).main!!
+        val hit = c.castRelic(Relic.PONCTION, 0, Timing.PERFECT).main!!
         assertTrue(hit.damage > 0)
-        assertEquals(0, c.hero.hp - before)
+        assertEquals(Math.round(hit.damage * Relic.DRAIN_SHARE), c.hero.hp - before)
     }
 
     @Test
@@ -412,10 +414,62 @@ class GrimoireTest {
     private fun Enemy.exposedNow() { fracturedTurns = 2 }
 
     @Test
-    fun laGlaceSurUnBruleFaitUnChocThermique() {
+    fun laGlaceSurUnBruleFaitDeLaVapeur() {
         val (c, hit) = reaction(Relic.ICE_SHARD) { it.burning() }
-        assertTrue(Reaction.THERMAL_SHOCK in hit.reactions)
+        assertTrue(Reaction.VAPOR in hit.reactions)
         assertEquals("la brûlure s'éteint", 0, c.enemies[0].burnTurns)
+        assertTrue("la vapeur l'aveugle", c.enemies[0].blindedTurns >= Reaction.VAPOR_BLIND_TURNS)
+    }
+
+    // ── La marque d'élément ─────────────────────────────────────────────────────
+
+    @Test
+    fun unGelResisteLaisseLaMarqueDeGlace() {
+        val c = fight(Relic.ICE_SHARD, d20 = 20)
+        assertTrue(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save!!.saved)
+        assertFalse(c.enemies[0].frozen)
+        assertEquals(Element.ICE, c.enemies[0].elementMark)
+    }
+
+    @Test
+    fun laMarqueDeclencheUneReactionEtSeConsomme() {
+        val c = fight(Relic.FIREBALL)
+        c.enemies[0].apply { elementMark = Element.ICE; elementMarkTime = Combat.ELEMENT_MARK_TIME }
+        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
+        assertTrue("la marque de glace compte comme un figé", Reaction.THERMAL_SHOCK in hit.reactions)
+        assertNull("la réaction l'a consommée", c.enemies[0].elementMark)
+    }
+
+    @Test
+    fun laMarqueSEffaceAvecLeTemps() {
+        val c = fight()
+        c.enemies[0].apply { elementMark = Element.LIGHTNING; elementMarkTime = 0.5 }
+        c.attack(0, Timing.MISS)
+        enemyTurn(c)
+        assertNull(c.enemies[0].elementMark)
+    }
+
+    @Test
+    fun uneEtincelleErranteLaisseLaMarqueDeFoudre() {
+        val c = fight(Relic.CHAIN_LIGHTNING)
+        c.castRelic(Relic.CHAIN_LIGHTNING, 0, Timing.MISS)
+        assertEquals("pas de paralysie, mais la foudre est là", Element.LIGHTNING, c.enemies[0].elementMark)
+        assertEquals(0, c.enemies[0].paralyzedTurns)
+    }
+
+    @Test
+    fun lesEpinesDeGivreMarquentUnEnnemiSansElement() {
+        val c = fight(Relic.STONESKIN)
+        c.castRelic(Relic.STONESKIN, 0, Timing.MISS)
+        enemyTurn(c)
+        assertEquals(Element.ICE, c.enemies[0].elementMark)
+    }
+
+    @Test
+    fun laCristallisationGeleUneCibleQuiNEtaitPasFigee() {
+        val c = fight(Relic.CRYSTALLIZE, d20 = 1)
+        c.castRelic(Relic.CRYSTALLIZE, 0, Timing.MISS)
+        assertTrue(c.enemies[0].frozen)
     }
 
     @Test
@@ -439,11 +493,24 @@ class GrimoireTest {
     }
 
     @Test
-    fun laGlaceSurUnParalyseLeFigeSansJet() {
+    fun laGlaceSurUnParalyseLeRendFragile() {
         val (c, hit) = reaction(Relic.ICE_SHARD) { it.paralyzedNow() }
         assertTrue(Reaction.RIGIDITY in hit.reactions)
-        assertTrue("gelé malgré son jet réussi", c.enemies[0].frozen)
-        assertEquals(0, c.enemies[0].paralyzedTurns)
+        assertTrue(c.enemies[0].fragile)
+        assertTrue("toujours paralysé", c.enemies[0].paralyzedTurns > 0)
+        assertFalse("la réaction remplace le gel du sort", c.enemies[0].frozen)
+    }
+
+    @Test
+    fun uneCibleFragilePrendLeDoubleDeLAttaqueNormaleSuivante() {
+        fun blow(fragile: Boolean): Int {
+            val c = fight()
+            if (fragile) c.enemies[0].fragileMult = Reaction.FRAGILE_MULT
+            val dmg = c.attack(0, Timing.PERFECT).damage
+            assertFalse("la fragilité est consommée", c.enemies[0].fragile)
+            return dmg
+        }
+        assertEquals(blow(false) * Reaction.FRAGILE_MULT, blow(true).toFloat(), 1f)
     }
 
     @Test

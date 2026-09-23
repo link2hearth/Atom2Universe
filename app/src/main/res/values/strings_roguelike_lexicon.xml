@@ -173,6 +173,11 @@
     <string name="lex_state_charmed_1">Its next attack hits one of its allies. Alone, it loses it.</string>
     <string name="lex_state_slowed">Slowed</string>
     <string name="lex_state_slowed_1">Its gauge fills at ×%1$s of its speed.</string>
+    <string name="lex_state_fragile">Fragile</string>
+    <string name="lex_state_fragile_1">Your next normal attack on it deals ×%1$s, whatever its element. Relics and Specials do not use it up.</string>
+    <string name="lex_state_element_mark">Element mark</string>
+    <string name="lex_state_element_mark_1">A [[element_fire|fire]], [[element_ice|ice]] or [[element_lightning|lightning]] hit that does not leave its state (resisted freeze, slow, delayed blow…) leaves its mark for %1$s turns.</string>
+    <string name="lex_state_element_mark_2">The [[reactions|reactions]] treat the mark as that element’s state, and use it up.</string>
     <string name="lex_state_barrier">Barrier</string>
     <string name="lex_state_barrier_1">Absorbs the next damage, up to a cap.</string>
     <string name="lex_state_thorns">Thorns</string>
@@ -339,11 +344,12 @@
     <string name="lex_state_exposed">Exposed</string>
     <string name="lex_state_exposed_1">Fractured, marked or blinded: [[element_physical|physical]] and [[element_holy|holy]] leave the enemy wide open.</string>
     <string name="lex_reactions_3">Your basic attack carries your archetype\'s element (with the right weapon and the class off-hand): it triggers reactions too, but with %1$s of their bonus.</string>
-    <string name="lex_reaction_thermal_shock_1">[[element_fire|Fire]] on a [[state_frozen|frozen]] enemy, or [[element_ice|ice]] on a [[state_burn|burning]] one: damage ×%1$s, and both states vanish.</string>
+    <string name="lex_reaction_thermal_shock_1">[[element_fire|Fire]] on a [[state_frozen|frozen]] enemy: damage ×%1$s, and the ice vanishes.</string>
+    <string name="lex_reaction_vapor_1">[[element_ice|Ice]] on a [[state_burn|burning]] enemy: damage ×%1$s, the burn goes out and the steam [[state_blinded|blinds]] it for %2$d turn.</string>
     <string name="lex_reaction_plasma_1">[[element_lightning|Lightning]] on a [[state_burn|burning]] enemy: damage ×%1$s, and the burn lasts %2$d turns longer.</string>
     <string name="lex_reaction_calcination_1">[[element_fire|Fire]] on an [[state_exposed|exposed]] enemy: damage ×%1$s.</string>
     <string name="lex_reaction_short_circuit_1">[[element_fire|Fire]] on a [[state_paralyzed|paralyzed]] enemy: damage ×%1$s, and the paralysis is gone.</string>
-    <string name="lex_reaction_rigidity_1">[[element_ice|Ice]] on a [[state_paralyzed|paralyzed]] enemy: it freezes at once for %1$d turn, no saving throw, and the paralysis is gone.</string>
+    <string name="lex_reaction_rigidity_1">[[element_ice|Ice]] on a [[state_paralyzed|paralyzed]] enemy: it stays paralyzed and becomes [[state_fragile|fragile]] instead of freezing.</string>
     <string name="lex_reaction_poison_ice_1">[[element_ice|Ice]] on a [[state_poison|poisoned]] enemy: the remaining poison turns into a slowdown of the same length.</string>
     <string name="lex_reaction_frozen_armor_1">[[element_ice|Ice]] on an [[state_exposed|exposed]] enemy: it freezes at once for %1$d turn, no saving throw, and its exposure lasts %2$d turn longer.</string>
     <string name="lex_reaction_convulsions_1">[[element_lightning|Lightning]] on a [[state_poison|poisoned]] enemy: guaranteed paralysis for %1$d turn, and the poison bites once more right away.</string>

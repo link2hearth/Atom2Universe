@@ -235,7 +235,7 @@
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$s–%2$s damage each (no element). A critical dagger opens a wound (%8$s HP each time the target attacks). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, [[state_poison|poisons]] the target (%5$s HP per turn) and [[state_fractured|fractures]] it for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage — %12$d times as much to a [[state_frozen|frozen]] target, whose ice then shatters. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage and can [[state_frozen|freeze]] the target (it sometimes resists). Against an already frozen target: %12$d times the damage, and the ice shatters. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_meteor_desc">Raises a pyre that ignites %3$d turns later on all enemies: %1$s–%2$s fire damage each. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_magic_missile_desc">%15$d bolts, each on a random enemy, sharing %1$s–%2$s lightning damage. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_arcane_shield_desc">A barrier absorbs the next %8$s damage. If it still holds when your turn comes back, your relics recharge one turn faster. Recharge: %4$d turns.</string>
@@ -278,6 +278,10 @@
     <string name="roguelike_combat_haste">haste %1$d</string>
     <string name="roguelike_combat_hourglass">hourglass %1$d</string>
     <string name="roguelike_combat_slowed">slowed %1$d</string>
+    <string name="roguelike_combat_fragile">fragile</string>
+    <string name="roguelike_combat_mark_fire">embers</string>
+    <string name="roguelike_combat_mark_ice">frost</string>
+    <string name="roguelike_combat_mark_lightning">charged</string>
     <string name="roguelike_combat_stoneskin">stoneskin %1$d</string>
     <string name="roguelike_combat_meteor_incoming">meteor in %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relic found: %1$s! It\'s ready for your next fight.</string>
@@ -493,9 +497,10 @@
     <string name="roguelike_relic_champignon_desc">Deals %1$s–%2$s damage and [[state_poison|poisons]] the target: %5$s HP per turn for %3$d turns. Casting it again makes the poison last longer (%17$d turns at most). Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_peste">Plague</string>
     <string name="roguelike_relic_peste_desc">Deals %1$s–%2$s damage to all enemies and [[state_poison|poisons]] each of them: %5$s HP per turn for %3$d turns. Casting it again makes the poison last longer (%17$d turns at most). Cooldown: %4$d turns.</string>
-    <string name="roguelike_relic_ponction">Soul rupture</string>
-    <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s physical damage, powered by Wisdom. No innate healing. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_ponction">Life drain</string>
+    <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s physical damage and gives you back half of it as HP: the only healing outside life steal. Cooldown: %4$d turns.</string>
     <string name="roguelike_reaction_thermal_shock">Thermal shock!</string>
+    <string name="roguelike_reaction_vapor">Vapor!</string>
     <string name="roguelike_reaction_plasma">Plasma!</string>
     <string name="roguelike_reaction_calcination">Calcination!</string>
     <string name="roguelike_reaction_short_circuit">Short circuit!</string>

@@ -1300,6 +1300,8 @@ class RoguelikeSimulationTest {
         val worn = c.hero.relicSlots.filterNotNull()
         val ready = worn.filter { c.canCast(it) }
         val alive = c.aliveIndices()
+        // Un ennemi fragile (la Rigidité) : l'attaque normale suivante fait double, on la lui donne
+        alive.firstOrNull { c.enemies[it].fragile }?.let { return null to it }
         for (r in ready) alive.firstOrNull { triggers(r, c.enemies[it]) }?.let { return r to it }
         for (s in ready) {
             val payoff = worn.firstOrNull { it != s && prepares(s, it) } ?: continue

@@ -351,6 +351,10 @@ object Lexicon {
             entry("state_blinded", c, R.string.lex_state_blinded) { add(R.string.lex_state_blinded_1) },
             entry("state_charmed", c, R.string.lex_state_charmed) { add(R.string.lex_state_charmed_1) },
             entry("state_slowed", c, R.string.lex_state_slowed) { add(R.string.lex_state_slowed_1, env.dec(Relic.SLOW_SPEED)) },
+            entry("state_fragile", c, R.string.lex_state_fragile) { add(R.string.lex_state_fragile_1, env.dec(Reaction.FRAGILE_MULT)) },
+            entry("state_element_mark", c, R.string.lex_state_element_mark) {
+                add(R.string.lex_state_element_mark_1, env.dec(Combat.ELEMENT_MARK_TIME)); add(R.string.lex_state_element_mark_2)
+            },
             entry("state_barrier", c, R.string.lex_state_barrier) { add(R.string.lex_state_barrier_1) },
             entry("state_thorns", c, R.string.lex_state_thorns) {
                 add(R.string.lex_state_thorns_1)
@@ -404,11 +408,12 @@ object Lexicon {
                 secret = true, known = { h -> h != null && r in h.knownReactions }) {
                 when (r) {
                     Reaction.THERMAL_SHOCK -> add(R.string.lex_reaction_thermal_shock_1, env.dec(Reaction.THERMAL_MULT))
+                    Reaction.VAPOR -> add(R.string.lex_reaction_vapor_1, env.dec(Reaction.VAPOR_MULT), Reaction.VAPOR_BLIND_TURNS)
                     Reaction.EXPLOSION -> add(R.string.lex_reaction_explosion_1)
                     Reaction.PLASMA -> add(R.string.lex_reaction_plasma_1, env.dec(Reaction.PLASMA_MULT), Reaction.PLASMA_BURN_TURNS)
                     Reaction.CALCINATION -> add(R.string.lex_reaction_calcination_1, env.dec(Reaction.CALCINATION_MULT))
                     Reaction.SHORT_CIRCUIT -> add(R.string.lex_reaction_short_circuit_1, env.dec(Reaction.SHORT_CIRCUIT_MULT))
-                    Reaction.RIGIDITY -> add(R.string.lex_reaction_rigidity_1, Reaction.RIGIDITY_TURNS)
+                    Reaction.RIGIDITY -> add(R.string.lex_reaction_rigidity_1, env.dec(Reaction.FRAGILE_MULT))
                     Reaction.POISON_ICE -> add(R.string.lex_reaction_poison_ice_1)
                     Reaction.FROZEN_ARMOR -> add(R.string.lex_reaction_frozen_armor_1, Reaction.RIGIDITY_TURNS, Reaction.EXPOSED_EXTRA)
                     Reaction.CONVULSIONS -> add(R.string.lex_reaction_convulsions_1, Reaction.CONVULSION_TURNS)

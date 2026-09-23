@@ -235,7 +235,7 @@
     <string name="roguelike_relic_fan_of_knives_desc">Lance des dagues sur tous les ennemis : %1$s–%2$s dégâts chacun (sans élément). Une dague critique ouvre une [[state_bleeding|plaie]] (%8$s PV chaque fois que la cible attaque). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Aveugle]] tous les ennemis pendant %3$d tours (ils attaquent au désavantage), et ton prochain coup d\'arme est une attaque sournoise : un critique assuré. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_acid_flask_desc">Inflige %1$s–%2$s dégâts, [[state_poison|empoisonne]] la cible (%5$s PV par tour) et la [[state_fractured|fracture]] pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_crystallize_desc">Inflige %1$s–%2$s dégâts — %12$d fois plus à une cible [[state_frozen|figée]], dont la glace se brise. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_crystallize_desc">Inflige %1$s–%2$s dégâts et peut [[state_frozen|geler]] la cible (elle résiste parfois). Contre une cible déjà figée : %12$d fois plus de dégâts, et la glace se brise. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_meteor_desc">Dresse un bûcher qui s\'embrase %3$d tours plus tard sur tous les ennemis : %1$s–%2$s dégâts de feu chacun. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_magic_missile_desc">%15$d éclairs, chacun sur un ennemi au hasard, qui se partagent %1$s–%2$s dégâts de foudre. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_arcane_shield_desc">Une barrière absorbe les %8$s prochains dégâts. Si elle tient encore quand ton tour revient, tes reliques se rechargent d\'un tour plus vite. Recharge : %4$d tours.</string>
@@ -278,6 +278,10 @@
     <string name="roguelike_combat_haste">hâte %1$d</string>
     <string name="roguelike_combat_hourglass">sablier %1$d</string>
     <string name="roguelike_combat_slowed">ralenti %1$d</string>
+    <string name="roguelike_combat_fragile">fragile</string>
+    <string name="roguelike_combat_mark_fire">braises</string>
+    <string name="roguelike_combat_mark_ice">givre</string>
+    <string name="roguelike_combat_mark_lightning">chargé</string>
     <string name="roguelike_combat_stoneskin">peau de pierre %1$d</string>
     <string name="roguelike_combat_meteor_incoming">météore dans %1$d</string>
     <string name="roguelike_log_relic_found_equipped">Relique trouvée : %1$s ! Elle est prête pour le prochain combat.</string>
@@ -493,9 +497,10 @@
     <string name="roguelike_relic_champignon_desc">Inflige %1$s–%2$s dégâts et [[state_poison|empoisonne]] la cible : %5$s PV par tour pendant %3$d tours. Relancé, le poison dure plus longtemps (%17$d tours au plus). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_peste">Peste</string>
     <string name="roguelike_relic_peste_desc">Inflige %1$s–%2$s dégâts à tous les ennemis et les [[state_poison|empoisonne]] tous : %5$s PV par tour pendant %3$d tours. Relancé, le poison dure plus longtemps (%17$d tours au plus). Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_ponction">Rupture d&#8217;âme</string>
-    <string name="roguelike_relic_ponction_desc">Inflige %1$s–%2$s dégâts physiques, renforcés par la Sagesse. Aucun soin intrinsèque. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_ponction">Ponction vitale</string>
+    <string name="roguelike_relic_ponction_desc">Inflige %1$s–%2$s dégâts physiques et te rend en PV la moitié des dégâts infligés : le seul soin hors vol de vie. Recharge : %4$d tours.</string>
     <string name="roguelike_reaction_thermal_shock">Choc thermique !</string>
+    <string name="roguelike_reaction_vapor">Vapeur !</string>
     <string name="roguelike_reaction_plasma">Plasma !</string>
     <string name="roguelike_reaction_calcination">Calcination !</string>
     <string name="roguelike_reaction_short_circuit">Court-circuit !</string>

@@ -173,6 +173,11 @@
     <string name="lex_state_charmed_1">Sa prochaine attaque frappe un de ses alliés. Seul, il la perd.</string>
     <string name="lex_state_slowed">Ralenti</string>
     <string name="lex_state_slowed_1">Sa jauge se remplit à ×%1$s de sa vitesse.</string>
+    <string name="lex_state_fragile">Fragile</string>
+    <string name="lex_state_fragile_1">Ta prochaine attaque normale sur lui fait ×%1$s, quel que soit son élément. Les reliques et les Spéciaux ne la consomment pas.</string>
+    <string name="lex_state_element_mark">Marque d\'élément</string>
+    <string name="lex_state_element_mark_1">Un coup de [[element_fire|feu]], de [[element_ice|glace]] ou de [[element_lightning|foudre]] qui ne pose pas son état (gel résisté, ralentissement, coup retardé…) laisse sa marque pendant %1$s tours.</string>
+    <string name="lex_state_element_mark_2">Les [[reactions|réactions]] la lisent comme l\'état de cet élément, et la consomment.</string>
     <string name="lex_state_barrier">Barrière</string>
     <string name="lex_state_barrier_1">Absorbe les prochains dégâts, jusqu\'à un plafond.</string>
     <string name="lex_state_thorns">Épines</string>
@@ -339,11 +344,12 @@
     <string name="lex_state_exposed">Exposé</string>
     <string name="lex_state_exposed_1">Fracturé, marqué ou aveuglé : le [[element_physical|physique]] et le [[element_holy|sacré]] laissent l\'ennemi ouvert.</string>
     <string name="lex_reactions_3">Ton attaque de base porte l\'élément de ton archétype (avec la bonne arme et la main gauche de classe) : elle déclenche aussi les réactions, mais avec %1$s de leur bonus.</string>
-    <string name="lex_reaction_thermal_shock_1">Le [[element_fire|feu]] sur un [[state_frozen|figé]], ou la [[element_ice|glace]] sur un [[state_burn|brûlé]] : dégâts ×%1$s, et les deux états disparaissent.</string>
+    <string name="lex_reaction_thermal_shock_1">Le [[element_fire|feu]] sur un [[state_frozen|figé]] : dégâts ×%1$s, et la glace disparaît.</string>
+    <string name="lex_reaction_vapor_1">La [[element_ice|glace]] sur un [[state_burn|brûlé]] : dégâts ×%1$s, la brûlure s\'éteint et la vapeur l\'[[state_blinded|aveugle]] %2$d tour.</string>
     <string name="lex_reaction_plasma_1">La [[element_lightning|foudre]] sur un [[state_burn|brûlé]] : dégâts ×%1$s, et la brûlure dure %2$d tours de plus.</string>
     <string name="lex_reaction_calcination_1">Le [[element_fire|feu]] sur un [[state_exposed|exposé]] : dégâts ×%1$s.</string>
     <string name="lex_reaction_short_circuit_1">Le [[element_fire|feu]] sur un [[state_paralyzed|paralysé]] : dégâts ×%1$s, et la paralysie disparaît.</string>
-    <string name="lex_reaction_rigidity_1">La [[element_ice|glace]] sur un [[state_paralyzed|paralysé]] : il gèle aussitôt %1$d tour, sans jet de sauvegarde, et la paralysie disparaît.</string>
+    <string name="lex_reaction_rigidity_1">La [[element_ice|glace]] sur un [[state_paralyzed|paralysé]] : il reste paralysé et devient [[state_fragile|fragile]] au lieu de geler.</string>
     <string name="lex_reaction_poison_ice_1">La [[element_ice|glace]] sur un [[state_poison|empoisonné]] : le poison restant devient un ralentissement de même durée.</string>
     <string name="lex_reaction_frozen_armor_1">La [[element_ice|glace]] sur un [[state_exposed|exposé]] : il gèle aussitôt %1$d tour, sans jet, et son exposition dure %2$d tour de plus.</string>
     <string name="lex_reaction_convulsions_1">La [[element_lightning|foudre]] sur un [[state_poison|empoisonné]] : paralysie garantie %1$d tour, et le poison mord une fois de plus tout de suite.</string>

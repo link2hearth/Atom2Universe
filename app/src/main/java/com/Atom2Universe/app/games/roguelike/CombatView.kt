@@ -858,6 +858,13 @@ class CombatView @JvmOverloads constructor(
             if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
             if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
             if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
+            if (e.fragile) add(context.getString(R.string.roguelike_combat_fragile) to elementColor(Element.ICE))
+            when (e.elementMark) {
+                Element.FIRE -> add(context.getString(R.string.roguelike_combat_mark_fire) to elementColor(Element.FIRE))
+                Element.ICE -> add(context.getString(R.string.roguelike_combat_mark_ice) to elementColor(Element.ICE))
+                Element.LIGHTNING -> add(context.getString(R.string.roguelike_combat_mark_lightning) to elementColor(Element.LIGHTNING))
+                else -> {}
+            }
             if (e.slowed) add(context.getString(R.string.roguelike_combat_slowed, kotlin.math.ceil(e.slowTime).toInt()) to SLOWED_COLOR)
         }
         pText.textSize = 11f * sp
