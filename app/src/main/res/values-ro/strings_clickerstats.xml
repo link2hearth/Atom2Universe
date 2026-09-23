@@ -42,8 +42,6 @@
     <string name="stat_pipetap_won">PipeTap Greu</string>
     <string name="stat_starswar_score">Războiul Stelelor – Scor</string>
     <string name="stat_starswar_wave">Războiul Stelelor – Val</string>
-    <string name="stat_reflex_easy">Reflex – Ușor</string>
-    <string name="stat_reflex_hard">Reflex – Greu</string>
     <string name="stat_flappy_score">Pisica sărind</string>
     <string name="stat_2048_best">2048 – Cel mai bun scor</string>
     <string name="stat_particules_score">Particule – Scor</string>

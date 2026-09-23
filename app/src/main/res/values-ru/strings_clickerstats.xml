@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Сложный</string>
     <string name="stat_starswar_score">Stars War – Счёт</string>
     <string name="stat_starswar_wave">Stars War – Волна</string>
-    <string name="stat_reflex_easy">Рефлексы – Лёгкий</string>
-    <string name="stat_reflex_hard">Рефлексы – Сложный</string>
     <string name="stat_flappy_score">Jumping Cat</string>
     <string name="stat_2048_best">2048 – Лучший счёт</string>
     <string name="stat_particules_score">Частицы – Счёт</string>

@@ -121,6 +121,11 @@ object NeutrinoRewards {
     const val NUCLEA_PER_WAVE = 2
     fun nuclea(wavesCleared: Int) = wavesCleared * NUCLEA_PER_WAVE
 
+    // ── Réflexes : 1 neutrino par tranche de 5 000 points ─────────────────────
+    // Le combo multiplie les points : bien jouer rapporte plus vite que durer.
+    const val REFLEX_POINTS_PER_NEUTRINO = 5000
+    fun reflex(score: Long) = (score / REFLEX_POINTS_PER_NEUTRINO).toInt()
+
     // ── Temps de jeu : 1 neutrino par tranche de 15 s ──────────────────────────
     const val SECONDS_PER_NEUTRINO = 15
     fun perTime(elapsedMs: Long) = (elapsedMs / (SECONDS_PER_NEUTRINO * 1000L)).toInt()
@@ -186,6 +191,7 @@ object NeutrinoRewards {
                 R.string.neutrino_info_note_site
             ),
             Entry(R.string.nuclea_title, "$NUCLEA_PER_WAVE", R.string.neutrino_info_note_wave),
+            Entry(R.string.reflex_title, "1 / $REFLEX_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),

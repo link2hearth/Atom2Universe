@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Важкий</string>
     <string name="stat_starswar_score">Зоряна Війна – Рахунок</string>
     <string name="stat_starswar_wave">Зоряна Війна – Хвиля</string>
-    <string name="stat_reflex_easy">Рефлекс – Легкий</string>
-    <string name="stat_reflex_hard">Рефлекс – Важкий</string>
     <string name="stat_flappy_score">Стрибучий Кіт</string>
     <string name="stat_2048_best">2048 – Найкращий рахунок</string>
     <string name="stat_particules_score">Частинки – Рахунок</string>

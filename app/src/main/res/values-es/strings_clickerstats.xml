@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Difícil</string>
     <string name="stat_starswar_score">Stars War – Puntos</string>
     <string name="stat_starswar_wave">Stars War – Oleada</string>
-    <string name="stat_reflex_easy">Reflejos – Fácil</string>
-    <string name="stat_reflex_hard">Reflejos – Difícil</string>
     <string name="stat_flappy_score">Gato saltarín</string>
     <string name="stat_2048_best">2048 – Mejor puntuación</string>
     <string name="stat_particules_score">Partículas – Puntos</string>

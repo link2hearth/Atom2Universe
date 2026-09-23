@@ -14,6 +14,7 @@
     <string name="stat_minesweeper_best">Minesweeper – Best time</string>
     <string name="stat_sokoban_best">Sokoban – Fewest moves</string>
     <string name="stat_balance_best_level">Balance – Best level</string>
+    <string name="stat_reflex_best">Collider – Best score</string>
     <string name="stat_nuclea_wave">NUCLÉA – Best wave</string>
     <string name="stat_trebuchet_distance">Trebuchet – Distance</string>
     <string name="stat_trebuchet_sites">Trebuchet – Sites destroyed</string>
@@ -50,8 +51,6 @@
     <string name="stat_pipetap_won">PipeTap Hard</string>
     <string name="stat_starswar_score">Stars War – Score</string>
     <string name="stat_starswar_wave">Stars War – Wave</string>
-    <string name="stat_reflex_easy">Reflex – Easy</string>
-    <string name="stat_reflex_hard">Reflex – Hard</string>
     <string name="stat_flappy_score">Jumping Cat</string>
     <string name="stat_2048_best">2048 – Best Score</string>
     <string name="stat_particules_score">Particles – Score</string>

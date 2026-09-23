@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="reflex_title">Reflex</string>
-    <string name="reflex_description">Tap the circles as fast as possible!</string>
-    <string name="reflex_score_label">SCORE</string>
-    <string name="reflex_best_easy_label">BEST (EASY)</string>
-    <string name="reflex_best_hard_label">BEST (HARD)</string>
-    <string name="reflex_mode_easy">Easy</string>
-    <string name="reflex_mode_hard">Hard</string>
+    <string name="reflex_title">Collider</string>
+    <string name="reflex_description">Tap each particle when its ring closes. Never touch antimatter!</string>
     <string name="reflex_start">Play</string>
-    <string name="reflex_status_ready">Choose a mode and press Play</string>
-    <string name="reflex_status_go">Go! Tap the circles!</string>
-    <string name="reflex_status_hit">Hit! +%1$d pts - Total: %2$d</string>
-    <string name="reflex_status_game_over">Game over! Final score: %1$d</string>
-    <string name="reflex_status_new_record">New record! Score: %1$d</string>
+    <string name="reflex_replay">Play again</string>
+    <string name="reflex_menu">Menu</string>
+    <string name="reflex_resume">Resume</string>
+    <string name="reflex_paused">Paused</string>
+    <string name="reflex_game_over">Game over</string>
+    <string name="reflex_new_record">New record!</string>
+    <string name="reflex_best_format">Record %1$s</string>
+    <string name="reflex_overheat">OVERHEAT</string>
+    <string name="reflex_combo_format">Combo %1$d</string>
+    <string name="reflex_mult_format">×%1$d</string>
+    <string name="reflex_points_format">+%1$d</string>
+    <string name="reflex_life_up">+1 life</string>
+    <string name="reflex_grade_perfect">Perfect!</string>
+    <string name="reflex_grade_good">Good</string>
+    <string name="reflex_grade_early">Too early</string>
+    <string name="reflex_grade_miss">Missed</string>
+    <string name="reflex_kind_proton">Proton</string>
+    <string name="reflex_kind_anti">Antimatter</string>
+    <string name="reflex_kind_electron">Electron</string>
+    <string name="reflex_kind_nucleus">Nucleus</string>
+    <string name="reflex_kind_chain">Chain</string>
+    <string name="reflex_stat_combo">Best combo: %1$d</string>
+    <string name="reflex_stat_perfects">Perfect hits: %1$d</string>
+    <string name="reflex_stat_neutrinos">+%1$d neutrinos</string>
 </resources>

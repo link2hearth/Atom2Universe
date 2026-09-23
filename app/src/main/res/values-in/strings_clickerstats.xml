@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Sulit</string>
     <string name="stat_starswar_score">Stars War – Skor</string>
     <string name="stat_starswar_wave">Stars War – Gelombang</string>
-    <string name="stat_reflex_easy">Refleks – Mudah</string>
-    <string name="stat_reflex_hard">Refleks – Sulit</string>
     <string name="stat_flappy_score">Kucing Melompat</string>
     <string name="stat_2048_best">2048 – Skor Terbaik</string>
     <string name="stat_particules_score">Partikel – Skor</string>

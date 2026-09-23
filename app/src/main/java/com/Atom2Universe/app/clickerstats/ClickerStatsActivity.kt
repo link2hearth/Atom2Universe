@@ -250,10 +250,8 @@ class ClickerStatsActivity : ThemedActivity() {
         findViewById<TextView>(R.id.stat_starswar_wave_value).text  = if (swWave > 0) fmt.format(swWave) else "—"
 
         val rx = getSharedPreferences("reflex_save", MODE_PRIVATE)
-        val rxEasy = rx.getInt("best_easy", 0)
-        val rxHard = rx.getInt("best_hard", 0)
-        findViewById<TextView>(R.id.stat_reflex_easy_value).text = if (rxEasy > 0) formatMs(rxEasy.toLong()) else "—"
-        findViewById<TextView>(R.id.stat_reflex_hard_value).text = if (rxHard > 0) formatMs(rxHard.toLong()) else "—"
+        val rxBest = rx.getLong("best_score", 0L)
+        findViewById<TextView>(R.id.stat_reflex_best_value).text = if (rxBest > 0) fmt.format(rxBest) else "—"
 
         val fc = getSharedPreferences("flappy_cat_save", MODE_PRIVATE)
         val fcScore = fc.getInt("best_score", 0)
@@ -445,8 +443,7 @@ class ClickerStatsActivity : ThemedActivity() {
             R.id.stat_hexrunner_best_value to listOf(SyncedStat(g, "hexrunner_best_ms")),
             R.id.stat_starswar_score_value to listOf(SyncedStat("stars_war_save", "best_score")),
             R.id.stat_starswar_wave_value to listOf(SyncedStat("stars_war_save", "best_wave")),
-            R.id.stat_reflex_easy_value to listOf(SyncedStat("reflex_save", "best_easy")),
-            R.id.stat_reflex_hard_value to listOf(SyncedStat("reflex_save", "best_hard")),
+            R.id.stat_reflex_best_value to listOf(SyncedStat("reflex_save", "best_score")),
             R.id.stat_flappy_score_value to listOf(SyncedStat("flappy_cat_save", "best_score")),
             R.id.stat_2048_best_value to listOf(SyncedStat("game2048_save", "best_score")),
             R.id.stat_wavesurf_speed_value to listOf(SyncedStat("wave_surf_save", "best_speed")),

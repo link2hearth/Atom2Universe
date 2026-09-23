@@ -42,8 +42,6 @@
     <string name="stat_pipetap_won">PipeTap Δύσκολο</string>
     <string name="stat_starswar_score">Πόλεμος Άστρων – Σκορ</string>
     <string name="stat_starswar_wave">Πόλεμος Άστρων – Κύμα</string>
-    <string name="stat_reflex_easy">Reflex – Εύκολο</string>
-    <string name="stat_reflex_hard">Reflex – Δύσκολο</string>
     <string name="stat_flappy_score">Πηδηχτή Γάτα</string>
     <string name="stat_2048_best">2048 – Καλύτερο Σκορ</string>
     <string name="stat_particules_score">Σωματίδια – Σκορ</string>

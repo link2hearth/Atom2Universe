@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="reflex_title">Réflexes</string>
-    <string name="reflex_description">Tapez les cercles le plus vite possible !</string>
-    <string name="reflex_score_label">SCORE</string>
-    <string name="reflex_best_easy_label">MEILLEUR (FACILE)</string>
-    <string name="reflex_best_hard_label">MEILLEUR (DIFFICILE)</string>
-    <string name="reflex_mode_easy">Facile</string>
-    <string name="reflex_mode_hard">Difficile</string>
+    <string name="reflex_title">Collisionneur</string>
+    <string name="reflex_description">Touche chaque particule quand son anneau se referme. Jamais l\'antimatière !</string>
     <string name="reflex_start">Jouer</string>
-    <string name="reflex_status_ready">Choisissez un mode et appuyez sur Jouer</string>
-    <string name="reflex_status_go">C\'est parti ! Tapez les cercles !</string>
-    <string name="reflex_status_hit">Touché ! +%1$d pts - Total : %2$d</string>
-    <string name="reflex_status_game_over">Game over ! Score final : %1$d</string>
-    <string name="reflex_status_new_record">Nouveau record ! Score : %1$d</string>
+    <string name="reflex_replay">Rejouer</string>
+    <string name="reflex_menu">Menu</string>
+    <string name="reflex_resume">Reprendre</string>
+    <string name="reflex_paused">Pause</string>
+    <string name="reflex_game_over">Fin de partie</string>
+    <string name="reflex_new_record">Nouveau record !</string>
+    <string name="reflex_best_format">Record %1$s</string>
+    <string name="reflex_overheat">SURCHAUFFE</string>
+    <string name="reflex_combo_format">Combo %1$d</string>
+    <string name="reflex_mult_format">×%1$d</string>
+    <string name="reflex_points_format">+%1$d</string>
+    <string name="reflex_life_up">+1 vie</string>
+    <string name="reflex_grade_perfect">Parfait !</string>
+    <string name="reflex_grade_good">Bien</string>
+    <string name="reflex_grade_early">Trop tôt</string>
+    <string name="reflex_grade_miss">Raté</string>
+    <string name="reflex_kind_proton">Proton</string>
+    <string name="reflex_kind_anti">Antimatière</string>
+    <string name="reflex_kind_electron">Électron</string>
+    <string name="reflex_kind_nucleus">Noyau</string>
+    <string name="reflex_kind_chain">Chaîne</string>
+    <string name="reflex_stat_combo">Meilleur combo : %1$d</string>
+    <string name="reflex_stat_perfects">Parfaits : %1$d</string>
+    <string name="reflex_stat_neutrinos">+%1$d neutrinos</string>
 </resources>

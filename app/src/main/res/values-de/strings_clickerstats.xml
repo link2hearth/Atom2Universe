@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Schwer</string>
     <string name="stat_starswar_score">Stars War – Punkte</string>
     <string name="stat_starswar_wave">Stars War – Welle</string>
-    <string name="stat_reflex_easy">Reflex – Einfach</string>
-    <string name="stat_reflex_hard">Reflex – Schwer</string>
     <string name="stat_flappy_score">Springende Katze</string>
     <string name="stat_2048_best">2048 – Bestes Ergebnis</string>
     <string name="stat_particules_score">Partikel – Punkte</string>

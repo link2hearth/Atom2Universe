@@ -292,14 +292,8 @@
             <View style="@style/StatDivider" />
 
             <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_reflex_easy" />
-                <TextView android:id="@+id/stat_reflex_easy_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_reflex_hard" />
-                <TextView android:id="@+id/stat_reflex_hard_value" style="@style/StatValue" tools:text="—" />
+                <TextView style="@style/StatLabel" android:text="@string/stat_reflex_best" />
+                <TextView android:id="@+id/stat_reflex_best_value" style="@style/StatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 

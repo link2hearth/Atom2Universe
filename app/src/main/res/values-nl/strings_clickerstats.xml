@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Moeilijk</string>
     <string name="stat_starswar_score">Stars War – Score</string>
     <string name="stat_starswar_wave">Stars War – Golf</string>
-    <string name="stat_reflex_easy">Reflexen – Makkelijk</string>
-    <string name="stat_reflex_hard">Reflexen – Moeilijk</string>
     <string name="stat_flappy_score">Jumping Cat</string>
     <string name="stat_2048_best">2048 – Beste score</string>
     <string name="stat_particules_score">Deeltjes – Score</string>

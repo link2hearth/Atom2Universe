@@ -273,6 +273,7 @@
     <string name="neutrino_info_note_wave">par vague terminée</string>
     <string name="neutrino_info_note_site">selon le site rasé</string>
     <string name="neutrino_info_note_betting">selon la mise</string>
+    <string name="neutrino_info_note_score">selon le score</string>
 
     <string name="gacha_result_copies_count">Copies : x%1$d</string>
     <string name="gacha_result_copies_placeholder">Copies : x0</string>

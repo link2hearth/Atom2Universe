@@ -276,6 +276,7 @@
     <string name="neutrino_info_note_wave">per wave cleared</string>
     <string name="neutrino_info_note_site">by site razed</string>
     <string name="neutrino_info_note_betting">by your bet</string>
+    <string name="neutrino_info_note_score">by score</string>
 
     <string name="gacha_result_copies_count">Copies: x%1$d</string>
     <string name="gacha_result_copies_placeholder">Copies: x0</string>

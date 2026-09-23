@@ -20,8 +20,6 @@
     <string name="stat_pipetap_won">PipeTap Trudny</string>
     <string name="stat_starswar_score">Stars War – Wynik</string>
     <string name="stat_starswar_wave">Stars War – Fala</string>
-    <string name="stat_reflex_easy">Refleks – Łatwy</string>
-    <string name="stat_reflex_hard">Refleks – Trudny</string>
     <string name="stat_flappy_score">Jumping Cat</string>
     <string name="stat_2048_best">2048 – Najlepszy wynik</string>
     <string name="stat_particules_score">Cząstki – Wynik</string>
