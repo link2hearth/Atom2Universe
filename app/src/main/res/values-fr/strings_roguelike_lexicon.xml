@@ -74,7 +74,7 @@
     <string name="lex_stat_speed_3">Pièce [[weight_heavy|lourde]] : %1$s %% par pièce ; pièce [[weight_light|légère]] : %2$s %%</string>
     <string name="lex_you_speed">Toi : %1$d %%</string>
     <string name="lex_stat_life_steal">Vol de vie</string>
-    <string name="lex_stat_life_steal_1" formatted="false">Les dégâts directs des armes, spéciaux, reliques et réactions rendent des PV selon la vie réellement retirée aux ennemis. Aucun soin par dégâts périodiques, pantins ou renvois. Disponible sur tous les emplacements : 1 à 5 % par affixe, cumul limité à 25 %.</string>
+    <string name="lex_stat_life_steal_1" formatted="false">Les dégâts directs des armes, spéciaux, reliques et réactions rendent des PV selon la vie réellement retirée aux ennemis. Aucun soin par dégâts périodiques, pantins ou renvois. Disponible sur tous les emplacements : 1 à 5 % par affixe, cumul limité à 25 %. Le seul autre soin en combat : la relique [[relic_ponction|Ponction vitale]].</string>
     <string name="lex_you_life_steal">Toi : %1$s %%</string>
     <string name="lex_stat_weapon_dmg">Dégâts d\'arme</string>
     <string name="lex_stat_weapon_dmg_1">Les dégâts de ton arme, avant critique.</string>
@@ -126,10 +126,9 @@
     <string name="lex_rage_1">Un ennemi que tu contrôles %1$d fois d\'affilée, sans qu\'il ait pu frapper, s\'enrage pendant %2$d tours.</string>
     <string name="lex_rage_2">Enragé : impossible à contrôler, sa jauge se remplit ×%1$s plus vite, mais il vise moins bien (deux essais, le pire compte).</string>
     <string name="lex_resist">Résiste</string>
-    <string name="lex_resist_1">Quand un sort de contrôle (gel, paralysie, charme, lenteur) échoue, l\'ennemi « résiste ».</string>
+    <string name="lex_resist_1">Quand un sort de contrôle (gel, paralysie, ralentissement) échoue, l\'ennemi « résiste ».</string>
     <string name="lex_resist_2">À équipement de l\'étage, l\'effet prend environ %1$d %% du temps : %2$d %% contre un [[affinities|vulnérable]], %3$d %% contre un [[affinities|résistant]].</string>
     <string name="lex_resist_3">La caractéristique de la relique, ton arme et un bon geste le rendent plus probable.</string>
-    <string name="lex_resist_4">Un ennemi immunisé ne subit rien.</string>
     <string name="lex_special">Spécial</string>
     <string name="lex_special_1">Le bouton du bas : la capacité de ton [[archetype|archétype]]. Verrouillé sans archétype.</string>
     <string name="lex_special_2">Recharge : %1$d tours.</string>
@@ -172,7 +171,7 @@
     <string name="lex_state_charmed">Charmé</string>
     <string name="lex_state_charmed_1">Sa prochaine attaque frappe un de ses alliés. Seul, il la perd.</string>
     <string name="lex_state_slowed">Ralenti</string>
-    <string name="lex_state_slowed_1">Sa jauge se remplit à ×%1$s de sa vitesse.</string>
+    <string name="lex_state_slowed_1">Sa jauge se remplit à ×%1$s de sa vitesse, pendant %2$s de tes tours par tour de ralentissement.</string>
     <string name="lex_state_fragile">Fragile</string>
     <string name="lex_state_fragile_1">Ta prochaine attaque normale sur lui fait ×%1$s, quel que soit son élément. Les reliques et les Spéciaux ne la consomment pas.</string>
     <string name="lex_state_element_mark">Marque d\'élément</string>
@@ -213,13 +212,13 @@
     <string name="lex_element_physical_1">Sans élément : aucun monstre n\'y est vulnérable ni résistant.</string>
     <string name="lex_element_arcane">Arcanique</string>
     <string name="lex_element_arcane_1">Sans élément : jamais résisté.</string>
-    <string name="lex_element_affinity">Les monstres y sont vulnérables, résistants ou immunisés : voir [[affinities|Affinités]].</string>
+    <string name="lex_element_affinity">Les monstres y sont vulnérables ou résistants : voir [[affinities|Affinités]].</string>
     <string name="lex_affinities">Affinités</string>
     <string name="lex_affinities_1">Ce qu\'un monstre pense d\'un élément.</string>
     <string name="lex_affinities_2">Vulnérable : dégâts ×%1$s, et il [[resist|résiste]] %2$d %% moins aux effets.</string>
     <string name="lex_affinities_3">Résistant : dégâts ×%1$s, et il résiste %2$d %% plus.</string>
-    <string name="lex_affinities_4">Immunisé : ni dégâts, ni effet.</string>
     <string name="lex_affinities_5">Rien ne les affiche : on les découvre en frappant. Elles sont notées dans [[cat:MONSTERS|Monstres]].</string>
+    <string name="lex_affinities_6">Chaque région a son monstre, le seul qui résiste à un élément. Ailleurs, aucun monstre ne résiste à rien.</string>
     <string name="lex_affinity_vulnerable">Vulnérable</string>
     <string name="lex_affinity_normal">Normal</string>
     <string name="lex_affinity_resistant">Résistant</string>
@@ -228,7 +227,7 @@
     <string name="lex_monster_line">%1$s : %2$s</string>
     <string name="lex_monster_floor">Apparaît à partir de l\'étage %1$d.</string>
     <string name="lex_reactions">Réactions</string>
-    <string name="lex_reactions_1">Un coup qui touche un ennemi déjà dans l\'état d\'un autre élément fait quelque chose en plus : il y a une réaction pour chaque paire d\'éléments.</string>
+    <string name="lex_reactions_1">Un coup qui touche un ennemi déjà dans l\'état d\'un autre élément (ou qui porte sa [[state_element_mark|marque]]) fait quelque chose en plus : il y a une réaction pour chaque paire d\'éléments.</string>
     <string name="lex_reactions_2">Elles marchent pour tout le monde, sans équipement. Rien ne les annonce : on les découvre en jouant.</string>
     <string name="lex_reaction_explosion_1">Le [[element_fire|feu]] sur un [[state_poison|empoisonné]] : tout le poison restant tombe d\'un coup, et le poison disparaît.</string>
     <string name="lex_reaction_shatter_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_frozen|figé]] : dégâts ×%1$s, la glace se brise.</string>
@@ -243,6 +242,7 @@
     <string name="lex_relics_2">On les trouve en explorant. Elles sont rares : fouille le bout des culs-de-sac.</string>
     <string name="lex_relics_3">Un emplacement au départ, puis un de plus aux étages %1$s.</string>
     <string name="lex_relics_4">Dans l\'inventaire, toucher une relique la porte ou la range. Une relique trouvée ne se perd jamais.</string>
+    <string name="lex_relics_6">Un sort qui rebondit (zéro dégât) pose quand même son effet, pour la moitié de sa durée, sauf la brûlure, qui est une part du coup.</string>
     <string name="lex_relics_5">Seules les reliques trouvées ont leur fiche ici.</string>
     <string name="lex_relic_facts">Élément : %1$s · Caractéristique : %2$s · Cible : %3$s</string>
     <string name="lex_target_one">un ennemi</string>

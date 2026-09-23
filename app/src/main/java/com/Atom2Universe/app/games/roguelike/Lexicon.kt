@@ -308,7 +308,7 @@ object Lexicon {
                 add(R.string.lex_resist_1)
                 add(R.string.lex_resist_2, env.pct(SpellSave.landChance(dc, 0)),
                     env.pct(SpellSave.landChance(dc, Affinity.VULNERABLE.saveBonus)), env.pct(SpellSave.landChance(dc, Affinity.RESISTANT.saveBonus)))
-                add(R.string.lex_resist_3); add(R.string.lex_resist_4)
+                add(R.string.lex_resist_3)
             },
             entry("special", c, R.string.lex_special) { add(R.string.lex_special_1); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN) },
             entry("rest", c, R.string.lex_rest) {
@@ -350,7 +350,7 @@ object Lexicon {
             },
             entry("state_blinded", c, R.string.lex_state_blinded) { add(R.string.lex_state_blinded_1) },
             entry("state_charmed", c, R.string.lex_state_charmed) { add(R.string.lex_state_charmed_1) },
-            entry("state_slowed", c, R.string.lex_state_slowed) { add(R.string.lex_state_slowed_1, env.dec(Relic.SLOW_SPEED)) },
+            entry("state_slowed", c, R.string.lex_state_slowed) { add(R.string.lex_state_slowed_1, env.dec(Relic.SLOW_SPEED), env.dec(Relic.SLOW_TURN_LENGTH)) },
             entry("state_fragile", c, R.string.lex_state_fragile) { add(R.string.lex_state_fragile_1, env.dec(Reaction.FRAGILE_MULT)) },
             entry("state_element_mark", c, R.string.lex_state_element_mark) {
                 add(R.string.lex_state_element_mark_1, env.dec(Combat.ELEMENT_MARK_TIME)); add(R.string.lex_state_element_mark_2)
@@ -394,7 +394,7 @@ object Lexicon {
                 env.pct(SpellSave.landChance(dc, Affinity.VULNERABLE.saveBonus) - SpellSave.landChance(dc, 0)))
             add(R.string.lex_affinities_3, env.dec(Affinity.RESISTANT.damageMult),
                 env.pct(SpellSave.landChance(dc, 0) - SpellSave.landChance(dc, Affinity.RESISTANT.saveBonus)))
-            add(R.string.lex_affinities_4); add(R.string.lex_affinities_5)
+            add(R.string.lex_affinities_5); add(R.string.lex_affinities_6)
         }
     }
 
@@ -455,7 +455,7 @@ object Lexicon {
         val intro = entry("relics", c, R.string.lex_relics) {
             add(R.string.lex_relics_1); add(R.string.lex_relics_2)
             add(R.string.lex_relics_3, Hero.RELIC_SLOT_FLOORS.joinToString(", "))
-            add(R.string.lex_relics_4); add(R.string.lex_relics_5)
+            add(R.string.lex_relics_4); add(R.string.lex_relics_6); add(R.string.lex_relics_5)
         }
         return listOf(intro) + Relic.entries.map { r ->
             entry(idOf(r), c, r.labelRes, secret = true, known = { h -> h != null && r in h.relics }) {

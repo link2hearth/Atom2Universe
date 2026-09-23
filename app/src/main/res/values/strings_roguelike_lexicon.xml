@@ -74,7 +74,7 @@
     <string name="lex_stat_speed_3">[[weight_heavy|Heavy]] piece: %1$s%% each; [[weight_light|light]] piece: %2$s%%</string>
     <string name="lex_you_speed">You: %1$d%%</string>
     <string name="lex_stat_life_steal">Life steal</string>
-    <string name="lex_stat_life_steal_1" formatted="false">Direct weapon, special, relic and reaction damage restores HP from actual enemy health removed. No healing from damage over time, puppets or reflected damage. Available on every equipment slot: 1–5% per affix, capped at 25% total.</string>
+    <string name="lex_stat_life_steal_1" formatted="false">Direct weapon, special, relic and reaction damage restores HP from actual enemy health removed. No healing from damage over time, puppets or reflected damage. Available on every equipment slot: 1–5% per affix, capped at 25% total. The only other healing in combat: the [[relic_ponction|Life drain]] relic.</string>
     <string name="lex_you_life_steal">You: %1$s%%</string>
     <string name="lex_stat_weapon_dmg">Weapon damage</string>
     <string name="lex_stat_weapon_dmg_1">The damage of your weapon, before crits.</string>
@@ -126,10 +126,9 @@
     <string name="lex_rage_1">An enemy you control %1$d times in a row, without it getting to strike, goes into a rage for %2$d turns.</string>
     <string name="lex_rage_2">Enraged: impossible to control, its gauge fills ×%1$s faster, but it aims worse (two tries, the worse counts).</string>
     <string name="lex_resist">Resists</string>
-    <string name="lex_resist_1">When a control spell (freeze, paralysis, charm, slow) fails, the enemy \"resists\".</string>
+    <string name="lex_resist_1">When a control spell (freeze, paralysis, slow) fails, the enemy \"resists\".</string>
     <string name="lex_resist_2">With the floor\'s average gear the effect lands about %1$d%% of the time: %2$d%% against a [[affinities|vulnerable]] enemy, %3$d%% against a [[affinities|resistant]] one.</string>
     <string name="lex_resist_3">The relic\'s attribute, your weapon and a good gesture make it more likely.</string>
-    <string name="lex_resist_4">An immune enemy suffers nothing.</string>
     <string name="lex_special">Special</string>
     <string name="lex_special_1">The bottom button: your [[archetype|archetype]]\'s ability. Locked without an archetype.</string>
     <string name="lex_special_2">Cooldown: %1$d turns.</string>
@@ -172,7 +171,7 @@
     <string name="lex_state_charmed">Charmed</string>
     <string name="lex_state_charmed_1">Its next attack hits one of its allies. Alone, it loses it.</string>
     <string name="lex_state_slowed">Slowed</string>
-    <string name="lex_state_slowed_1">Its gauge fills at ×%1$s of its speed.</string>
+    <string name="lex_state_slowed_1">Its gauge fills at ×%1$s of its speed, for %2$s of your turns per turn of slow.</string>
     <string name="lex_state_fragile">Fragile</string>
     <string name="lex_state_fragile_1">Your next normal attack on it deals ×%1$s, whatever its element. Relics and Specials do not use it up.</string>
     <string name="lex_state_element_mark">Element mark</string>
@@ -213,13 +212,13 @@
     <string name="lex_element_physical_1">No element: no monster is vulnerable or resistant to it.</string>
     <string name="lex_element_arcane">Arcane</string>
     <string name="lex_element_arcane_1">No element: never resisted.</string>
-    <string name="lex_element_affinity">Monsters can be vulnerable, resistant or immune to it: see [[affinities|Affinities]].</string>
+    <string name="lex_element_affinity">Monsters can be vulnerable or resistant to it: see [[affinities|Affinities]].</string>
     <string name="lex_affinities">Affinities</string>
     <string name="lex_affinities_1">What a monster thinks of an element.</string>
     <string name="lex_affinities_2">Vulnerable: damage ×%1$s, and it [[resist|resists]] effects %2$d%% less.</string>
     <string name="lex_affinities_3">Resistant: damage ×%1$s, and it resists %2$d%% more.</string>
-    <string name="lex_affinities_4">Immune: no damage, no effect.</string>
     <string name="lex_affinities_5">Nothing shows them: you find out by hitting. They are noted under [[cat:MONSTERS|Monsters]].</string>
+    <string name="lex_affinities_6">Each region has its own monster, the only one that resists an element. Everywhere else, no monster resists anything.</string>
     <string name="lex_affinity_vulnerable">Vulnerable</string>
     <string name="lex_affinity_normal">Normal</string>
     <string name="lex_affinity_resistant">Resistant</string>
@@ -228,7 +227,7 @@
     <string name="lex_monster_line">%1$s: %2$s</string>
     <string name="lex_monster_floor">Appears from floor %1$d.</string>
     <string name="lex_reactions">Reactions</string>
-    <string name="lex_reactions_1">A blow that hits an enemy already in the state of another element does something extra: there is a reaction for every pair of elements.</string>
+    <string name="lex_reactions_1">A blow that hits an enemy already in the state of another element (or carrying its [[state_element_mark|mark]]) does something extra: there is a reaction for every pair of elements.</string>
     <string name="lex_reactions_2">They work for everyone, no gear needed. Nothing announces them: you find them by playing.</string>
     <string name="lex_reaction_explosion_1">[[element_fire|Fire]] on a [[state_poison|poisoned]] enemy: all the remaining poison deals its damage at once, and the poison is gone.</string>
     <string name="lex_reaction_shatter_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_frozen|frozen]] enemy: damage ×%1$s, the ice shatters.</string>
@@ -243,6 +242,7 @@
     <string name="lex_relics_2">You find them by exploring. They are rare: search the far end of dead ends.</string>
     <string name="lex_relics_3">One slot at the start, then one more at floors %1$s.</string>
     <string name="lex_relics_4">In the inventory, tapping a relic wears or stows it. A relic you found is never lost.</string>
+    <string name="lex_relics_6">A spell that bounces off (zero damage) still lays its effect, for half its duration, except a burn, which is a share of the blow.</string>
     <string name="lex_relics_5">Only the relics you found have a page here.</string>
     <string name="lex_relic_facts">Element: %1$s · Attribute: %2$s · Target: %3$s</string>
     <string name="lex_target_one">one enemy</string>
