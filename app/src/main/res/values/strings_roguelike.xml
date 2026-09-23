@@ -45,7 +45,6 @@
     <string name="roguelike_monster_rat">Rat</string>
     <string name="roguelike_monster_goblin">Goblin</string>
     <string name="roguelike_monster_skeleton">Skeleton</string>
-    <string name="roguelike_monster_orc">Orc</string>
     <string name="roguelike_monster_demon">Demon</string>
     <string name="roguelike_monster_alien_scout">Alien scout</string>
     <string name="roguelike_monster_alien_crawler">Alien crawler</string>
@@ -164,7 +163,7 @@
     <string name="roguelike_relic_fireball_desc">Deals %1$s–%2$s damage, then [[state_burn|burns]] the target for %3$d turns (%19$d%% of the hit each turn). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_ice_shard_desc">Deals %1$s–%2$s damage and can [[state_frozen|freeze]] the target: it slows down sharply for %18$s turns, and its blows are numbed (weaker). It sometimes resists — high INT and a good swipe make that rarer. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_lightning_desc">Deals %1$s–%2$s damage and [[state_paralyzed|paralyzes]] the target for %3$d turns: each of its attacks can fall flat (magic still gets through). High INT and a good swipe make that more likely. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_venom_desc">Deals %1$s–%2$s damage and adds a dose of [[state_poison|poison]] (%17$d at most): each dose eats %5$s HP per turn for %3$d turns. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_venom_desc">Deals %1$s–%2$s damage and [[state_poison|poisons]] the target: %5$s HP per turn for %3$d turns. Casting it again makes the poison last longer (%17$d turns at most). Recharge: %4$d turns.</string>
     <!-- Le grimoire : reliques du 18/09/2026 (voir DONJON.md, « Le grimoire ») -->
     <string name="roguelike_relic_sunder">Sunder</string>
     <string name="roguelike_relic_war_cry">War Cry</string>
@@ -177,7 +176,7 @@
     <string name="roguelike_relic_war_cry_desc">[[state_weakened|Weakens]] every enemy for %3$d turns (their blows hit %10$d%% softer), and your next %16$d weapon attacks deal +%7$d%%. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_earthquake_desc">Deals %1$s–%2$s damage (no element) to every enemy, and they stagger: their next turn comes later. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_hunters_mark_desc">Deals %1$s–%2$s damage (no element) and [[state_marked|marks]] the target until it dies: your critical hits strike it harder, and your Deadly Strike finds its opening. When it dies, the mark jumps to another enemy. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits adds a dose of [[state_poison|poison]] (%17$d at most), eating %5$s HP per turn. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_poisoned_blades_desc">Coats your weapon: each of your next %3$d weapon hits [[state_poison|poisons]] the target (%5$s HP per turn), or makes its poison last longer (%17$d turns at most). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_freezing_rain_desc">Deals %1$s–%2$s ice damage to all enemies and may [[state_frozen|freeze]] each: it slows down a lot for %18$s turns, and its blows are numbed. Each sometimes resists. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_chain_lightning_desc">Three small lightning sparks seek living enemies at random. %1$s–%2$s total base damage shared among the sparks. No paralysis. Cooldown: %4$d turns.</string>
 
@@ -195,7 +194,7 @@
     <string name="roguelike_resonance_storm">Storm</string>
     <string name="roguelike_resonance_avalanche">Avalanche</string>
     <string name="roguelike_resonance_battering_ram">Battering Ram</string>
-    <string name="roguelike_resonance_alchemy_desc">when poison explodes, every other enemy gets a dose of Venom</string>
+    <string name="roguelike_resonance_alchemy_desc">when poison explodes, every other enemy is poisoned by Venom</string>
     <string name="roguelike_resonance_firestorm_desc">steam blinds for one more turn</string>
     <string name="roguelike_resonance_storm_desc">Chain Lightning paralyzes the soaked enemies it electrocutes</string>
     <string name="roguelike_resonance_avalanche_desc">Earthquake can freeze the enemies it doesn\'t shatter</string>
@@ -235,7 +234,7 @@
     <string name="roguelike_relic_whirlwind_desc">Sweep across the group: %1$s–%2$s physical damage per enemy. Can carry an active poison weapon enchantment. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$s–%2$s damage each (no element). A critical dagger opens a wound (%8$s HP each time the target attacks). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, adds a dose of [[state_poison|poison]] (%5$s HP per turn) and [[state_fractured|fractures]] the target for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
+    <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, [[state_poison|poisons]] the target (%5$s HP per turn) and [[state_fractured|fractures]] it for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_crystallize_desc">Deals %1$s–%2$s damage — %12$d times as much to a [[state_frozen|frozen]] target, whose ice then shatters. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_meteor_desc">Raises a pyre that ignites %3$d turns later on all enemies: %1$s–%2$s fire damage each. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_magic_missile_desc">%15$d bolts, each on a random enemy, sharing %1$s–%2$s lightning damage. Cooldown: %4$d turns.</string>
@@ -244,8 +243,8 @@
     <string name="roguelike_relic_regeneration_desc">Heals %8$s HP at each of your next %3$d turns. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_heal_desc">Heals %8$s HP at once (%13$d%% of your max HP). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_stoneskin_desc">For %3$d turns your armor is multiplied by %14$d, and every blow you take sends %8$s%% back to its author. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_haste_desc">Your speed doubles for your next %3$d turns: you act more often. Cooldown: %4$d turns.</string>
-    <string name="roguelike_relic_slow_desc">Deals %1$s–%2$s ice damage and the target slips: it is much slower for its next %3$d turns and plays far less often. It sometimes resists. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_haste_desc">Your [[state_haste|speed rises]] for your next %3$d turns: you act more often. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_slow_desc">Deals %1$s–%2$s ice damage and the target slips: it is [[state_slowed|slowed]] for %3$d turns. It sometimes resists. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_hourglass_desc">Turns back time: the next %3$d enemy attacks come more slowly, and your parry window is wider. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_charm_desc">The target\'s next attack hits one of its allies instead (alone, it loses it). It sometimes resists. Recharge: %4$d turns.</string>
 
@@ -260,7 +259,7 @@
     <string name="roguelike_resonance_discord">Discord</string>
     <string name="roguelike_resonance_rampart">Rampart</string>
     <string name="roguelike_resonance_absolute_zero_desc">Crystallize no longer shatters the ice</string>
-    <string name="roguelike_resonance_corrosion_desc">poison stacks up to 5 doses instead of 3</string>
+    <string name="roguelike_resonance_corrosion_desc">poison lasts up to 12 turns instead of 8</string>
     <string name="roguelike_resonance_pack_desc">every dagger that hits the marked target is a critical</string>
     <string name="roguelike_resonance_hemorrhage_desc">Whirlwind makes every enemy bleed</string>
     <string name="roguelike_resonance_dawn_desc">every turn of Regeneration also burns the undead</string>
@@ -305,7 +304,7 @@
     <string name="roguelike_combat_cooldown">ready in %1$d</string>
     <string name="roguelike_combat_hp">%1$s / %2$s</string>
     <string name="roguelike_combat_burning">burning %1$d</string>
-    <string name="roguelike_combat_poisoned">poison ×%1$d (%2$d)</string>
+    <string name="roguelike_combat_poisoned">poison (%1$d)</string>
     <string name="roguelike_combat_frozen">frozen</string>
     <string name="roguelike_combat_paralyzed">paralyzed %1$d</string>
     <string name="roguelike_combat_frozen_skip">Frozen!</string>
@@ -491,9 +490,9 @@
     <string name="roguelike_relic_marteau_foudre">Thunder hammer</string>
     <string name="roguelike_relic_marteau_foudre_desc">A hammer blow charged with lightning: %1$s–%2$s damage and the target is [[state_paralyzed|paralyzed]] for %3$d turns, each of its attacks may fall flat. It sometimes resists. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_champignon">Toxic mushroom</string>
-    <string name="roguelike_relic_champignon_desc">Deals %1$s–%2$s damage and adds a dose of [[state_poison|poison]] (up to %17$d): each dose eats %5$s HP per turn for %3$d turns, a very long time. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_champignon_desc">Deals %1$s–%2$s damage and [[state_poison|poisons]] the target: %5$s HP per turn for %3$d turns. Casting it again makes the poison last longer (%17$d turns at most). Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_peste">Plague</string>
-    <string name="roguelike_relic_peste_desc">Deals %1$s–%2$s damage to all enemies and adds a dose of [[state_poison|poison]] (up to %17$d) to each: each dose eats %5$s HP per turn for %3$d turns. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_peste_desc">Deals %1$s–%2$s damage to all enemies and [[state_poison|poisons]] each of them: %5$s HP per turn for %3$d turns. Casting it again makes the poison last longer (%17$d turns at most). Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_ponction">Soul rupture</string>
     <string name="roguelike_relic_ponction_desc">Deals %1$s–%2$s physical damage, powered by Wisdom. No innate healing. Cooldown: %4$d turns.</string>
     <string name="roguelike_reaction_thermal_shock">Thermal shock!</string>
@@ -660,11 +659,11 @@
     <string name="roguelike_relic_blazing_axe">Blazing axe</string>
     <string name="roguelike_relic_blazing_axe_desc">A heavy fire strike: %1$s–%2$s damage, then burn for %3$d enemy turns. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_northern_breath">Breath of the North</string>
-    <string name="roguelike_relic_northern_breath_desc">Deal %1$s–%2$s ice damage to each enemy and slow them for %3$d of their turns. Each may resist. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_northern_breath_desc">Deal %1$s–%2$s ice damage to each enemy and [[state_slowed|slow]] them for %3$d turns. Each may resist. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_thunder_club">Thundering club</string>
     <string name="roguelike_relic_thunder_club_desc">Deal %1$s–%2$s lightning damage and attempt to paralyze the target for %3$d of its turns. Cooldown: %4$d turns, never below 3.</string>
     <string name="roguelike_relic_venomous_wound">Venomous wound</string>
-    <string name="roguelike_relic_venomous_wound_desc">Deal %1$s–%2$s poison damage and apply one poison dose (%5$s damage per turn) for %3$d enemy turns. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_venomous_wound_desc">Deal %1$s–%2$s poison damage and poison the target (%5$s damage per turn) for %3$d of its turns. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_seismic_strike">Seismic strike</string>
     <string name="roguelike_relic_seismic_strike_desc">A physical strike: %1$s–%2$s total base damage shared among all living enemies, before critical hits and reactions. Cooldown: %4$d turns.</string>
     <string name="roguelike_combat_puppet_hp_cost">Cost: %1$s HP</string>

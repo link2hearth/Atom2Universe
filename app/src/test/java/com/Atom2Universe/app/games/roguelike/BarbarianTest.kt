@@ -61,27 +61,27 @@ class BarbarianTest {
             val combat = fight(hero)
             val hit = combat.smash(0, Timing.PERFECT)
             assertEquals(0, combat.enemies[0].breachedTurns)
-            val multiplier = if (boosted) 3f else 2f
+            val multiplier = if (boosted) IsotopeSets.BARBARIAN_SMASH_MULT else Combat.SMASH_MULT
             assertEquals(kotlin.math.round(hero.weaponMax * multiplier * if (hit.crit) hero.critMult else 1f).toInt(), hit.damage)
             return hit.damage
         }
         assertTrue(damage(true) > damage(false))
     }
 
-    @Test fun wisdomCannotRemoveSpecialCooldown() {
+    @Test fun wisdomNoLongerShortensSpecialCooldown() {
         val hero = hero()
         hero.equipped[EquipSlot.WEAPON] = hero.equipped.getValue(EquipSlot.WEAPON).copy(
             affixes = listOf(StatRoll(StatType.WIS, 10000f)))
         val fight = fight(hero)
         fight.smash(0, Timing.PERFECT)
-        assertEquals(Hero.MIN_SPECIAL_COOLDOWN, hero.specialCooldown)
+        assertEquals(Hero.SPECIAL_COOLDOWN, hero.specialCooldown)
     }
 
     @Test fun wandererRelicsKeepTheirSaveIdentifiersAndDistinctRole() {
         assertEquals(RelicTarget.MISSILES, Relic.valueOf("CHAIN_LIGHTNING").target)
         assertEquals(RelicTarget.ALL, Relic.valueOf("WHIRLWIND").target)
         assertEquals(StatType.END, Relic.WHIRLWIND.attribute)
-        assertTrue(RelicBudget.poisonDotShare(Relic.CHAMPIGNON) > RelicBudget.poisonDotShare(Relic.VENOMOUS_WOUND))
-        assertEquals(1.5f, Combat.CHAIN_HIT_MULT * (2f + Combat.LANTERN_CHAIN_BONUS), .001f)
+        assertTrue(Relic.CHAMPIGNON.effectTurns > Relic.VENOMOUS_WOUND.effectTurns)
+        assertEquals("deux coups, 1,75 avec la lanterne", 1.75f, Combat.CHAIN_HIT_MULT * (2f + Combat.LANTERN_CHAIN_BONUS), .001f)
     }
 }

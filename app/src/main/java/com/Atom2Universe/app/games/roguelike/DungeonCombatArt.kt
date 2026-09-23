@@ -58,7 +58,7 @@ internal class DungeonCombatArt {
                     MonsterType.RAT -> style.creature == null && !style.isHumanoid && !style.isVampire && !style.isAlien && !style.isPirate && !style.isSpider
                     MonsterType.SPIDER -> style.isSpider
                     MonsterType.SKELETON -> style.isSkeleton
-                    MonsterType.ORC, MonsterType.ZOMBIE -> style.isZombie
+                    MonsterType.ZOMBIE -> style.isZombie
                     MonsterType.GOBLIN, MonsterType.DEMON, MonsterType.SCORPION,
                     MonsterType.CARNIVOROUS_PLANT, MonsterType.FELINE, MonsterType.WOLF,
                     MonsterType.BEAR, MonsterType.TROLL, MonsterType.SNAKE -> style.creature == type
@@ -235,7 +235,6 @@ internal class DungeonCombatArt {
         MonsterType.RAT -> DungeonDemoSprites.MonsterStyle.COMMON
         MonsterType.GOBLIN -> DungeonDemoSprites.MonsterStyle.GOBLIN_GREEN
         MonsterType.SKELETON -> DungeonDemoSprites.MonsterStyle.SKELETON
-        MonsterType.ORC -> DungeonDemoSprites.MonsterStyle.ZOMBIE_SWAMP
         MonsterType.DEMON -> DungeonDemoSprites.MonsterStyle.DEMON_EMBER
         MonsterType.SCORPION -> DungeonDemoSprites.MonsterStyle.SCORPION_SAND
         MonsterType.CARNIVOROUS_PLANT -> DungeonDemoSprites.MonsterStyle.PLANT_JADE

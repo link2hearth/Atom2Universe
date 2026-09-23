@@ -62,7 +62,6 @@ class Hero {
         /** Ce que rapporte un point au-dessus de 10 (l'inventaire affiche ces mêmes chiffres). */
         const val WEAPON_ATTRIBUTE_DAMAGE_PER_POINT = 0.04f
         const val RELIC_DAMAGE_PER_POINT = 0.05f
-        const val WIS_POINTS_PER_TURN = 6
         const val GOLD_PER_CHA = 0.03f
         /** Le critique de départ, et ce que rapporte un point de DEX. */
         const val BASE_CRIT = 0.05f
@@ -328,12 +327,16 @@ class Hero {
     /** Part des dégâts infligés à l'épée rendue en PV. */
     val lifeSteal get() = equipSum(StatType.LIFE_STEAL).coerceIn(0f, 0.25f)
 
-    /** Recharge des sorts : SAG retire un tour tous les 6 points. */
-    fun spellCooldown(base: Int) = (base - (effective(StatType.WIS) / WIS_POINTS_PER_TURN).toInt() -
+    /**
+     * Recharge des sorts. La SAG ne la raccourcit plus (le propriétaire, 23/09/2026) : la valeur
+     * d'une relique se compte sur sa recharge, et chaque tour retiré était un lancer gratuit. Seul
+     * le set du nécromancien la raccourcit encore.
+     */
+    fun spellCooldown(base: Int) = (base -
         if (specialBoosted(Archetype.NECROMANCER)) IsotopeSets.RECHARGE_CUT else 0).coerceAtLeast(1)
 
     /**
-     * La recharge d'une relique après son lancer : la SAG la raccourcit, jamais sous
+     * La recharge d'une relique après son lancer : le set du nécromancien la raccourcit, jamais sous
      * [Relic.minCooldown] (3 tours pour les reliques de Force, 1 pour les autres).
      */
     fun castCooldown(relic: Relic) = spellCooldown(relic.cooldown).coerceAtLeast(relic.minCooldown)

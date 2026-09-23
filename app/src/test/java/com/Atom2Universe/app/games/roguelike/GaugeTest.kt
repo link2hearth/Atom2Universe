@@ -142,7 +142,7 @@ class GaugeTest {
             c.canCast(Relic.FIREBALL).also { c.attack(0, Timing.MISS) }
         }
         // L'ennemi ne joue qu'un tour sur deux : la recharge avance quand même à chaque tour du héros
-        assertEquals(listOf(false, false, true), ready)
+        assertEquals(List(Relic.FIREBALL.cooldown - 1) { false } + true, ready)
     }
 
     // ── Les coûts ───────────────────────────────────────────────────────────────
@@ -217,12 +217,12 @@ class GaugeTest {
             return Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), attackDie = { 1 })
                 .also { it.castRelic(relic, 0, Timing.MISS) }
         }
-        // Deux sorts à demi-jauge : sans Hâte, le gobelin passe avant le prochain tour du héros ; avec (vitesse ×2), le héros joue
-        // deux fois de suite avant lui
+        // Deux sorts à demi-jauge : sans Hâte, le gobelin passe avant le prochain tour du héros ; avec
+        // (vitesse ×1,4), le héros le double
         assertEquals(listOf(0, Combat.HERO), fight(Relic.WAR_CRY).forecast(2).map { it.actor })
         val c = fight(Relic.HASTE)
         assertEquals(Relic.HASTE_SPEED, c.heroRate, 1e-9)
-        assertEquals(listOf(Combat.HERO, Combat.HERO), c.forecast(2).map { it.actor })
+        assertEquals(listOf(Combat.HERO, 0), c.forecast(2).map { it.actor })
     }
 
     @Test
@@ -232,9 +232,25 @@ class GaugeTest {
         val c = Combat(hero, 1, listOf(rat), ambush = false, rng = Random(1), d20 = { 1 }, attackDie = { 1 })
         val hit = c.castRelic(Relic.SLOW, 0, Timing.MISS).main!!
         assertFalse(hit.save!!.saved)
-        assertEquals(Relic.SLOW.effectTurns, rat.slowTurns)
-        assertEquals(Relic.SLOW_SPEED, rat.rate, 1e-9)
+        assertTrue(rat.slowed)
         assertEquals(1, rat.controlStreak)
+    }
+
+    @Test
+    fun leRalentissementDureAutantSurUnEnnemiLent() {
+        // Compté en tours du héros : un chef lent n'est pas ralenti plus longtemps qu'un rat
+        fun delay(cadence: Int): Double {
+            val hero = heroWithAllSlots().apply { addRelic(Relic.SLOW); hp = 1_000_000 }
+            val foe = Enemy(MonsterType.GOBLIN, maxHp = 1_000_000, damage = 3, cadence = cadence, countdown = cadence)
+            val c = Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), d20 = { 1 }, attackDie = { 1 })
+            val before = c.timeUntilTurn(0)
+            foe.slowTime = Relic.SLOW.effectTurns * Relic.SLOW_TURN_LENGTH
+            return c.timeUntilTurn(0) - before
+        }
+        val slowLength = Relic.SLOW.effectTurns * Relic.SLOW_TURN_LENGTH
+        // Ralenti de moitié pendant tout ce temps : il perd la moitié de ce temps, quelle que soit sa cadence
+        assertEquals(slowLength * (1 - Relic.SLOW_SPEED), delay(4), 1e-6)
+        assertEquals(delay(4), delay(8), 1e-6)
     }
 
     @Test

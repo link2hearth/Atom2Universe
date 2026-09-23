@@ -36,9 +36,7 @@
     <string name="lex_attr_con_1">Your health and mace damage.</string>
     <string name="lex_attr_con_2">+%1$s HP per point above 10</string>
     <string name="lex_attr_int_1">Staff damage and the Mage’s spells: fire, ice, lightning…</string>
-    <string name="lex_attr_wis_1">Scepter damage and the [[cooldown|cooldown]] of relics and your [[special|Special]].</string>
-    <string name="lex_attr_wis_2">−1 recharge turn every %1$d points above 10</string>
-    <string name="lex_attr_wis_3">Never under 1 turn.</string>
+    <string name="lex_attr_wis_1">Scepter damage and the Necromancer’s relics: their damage, and how often their effects land.</string>
     <string name="lex_attr_cha_1">The gold you find.</string>
     <string name="lex_attr_cha_2">+%1$d%% gold per point above 10</string>
     <string name="lex_attr_relics">The [[relics|relics]] that follow it: +%1$d%% damage per point above 10, and control (freeze, paralysis…) that lands more often (+%2$d%% every 2 points)</string>
@@ -109,7 +107,7 @@
     <string name="lex_cooldown">Recharge</string>
     <string name="lex_cooldown_1">The number of turns to wait before casting a relic again.</string>
     <string name="lex_cooldown_2">It drops by 1 each combat turn, and everything is ready again when the fight ends.</string>
-    <string name="lex_cooldown_3">[[attr_wis|WIS]] shortens it. The [[special|Special]] recharges in %1$d turns.</string>
+    <string name="lex_cooldown_3">The [[special|Special]] recharges in %1$d turns.</string>
     <string name="lex_parry">Parry</string>
     <string name="lex_parry_1">Tap when the moving circle overlaps the fixed circle. A small timing error still gives a good result; too early or too late is a miss. The circle keeps shrinking past the target.</string>
     <string name="lex_parry_2">If the blow lands, timing selects its damage range: good ×%1$s, perfect ×%2$s, miss ×%3$s. Your armor then reduces the damage.</string>
@@ -134,7 +132,7 @@
     <string name="lex_resist_4">An immune enemy suffers nothing.</string>
     <string name="lex_special">Special</string>
     <string name="lex_special_1">The bottom button: your [[archetype|archetype]]\'s ability. Locked without an archetype.</string>
-    <string name="lex_special_2">Base cooldown: %1$d turns; Wisdom can shorten it, never below 3 turns.</string>
+    <string name="lex_special_2">Cooldown: %1$d turns.</string>
     <string name="lex_rest">Rest</string>
     <string name="lex_rest_1">Stepping onto the starting fire automatically restores all HP and recharges your relics and Special.</string>
     <string name="lex_rest_2">No button needed: healing triggers on arrival, even during a [[chase|chase]].</string>
@@ -151,8 +149,8 @@
     <string name="lex_state_burn_1">It loses HP at the start of each of its turns.</string>
     <string name="lex_state_burn_2">%1$d%% of the hit that burned it, every turn</string>
     <string name="lex_state_poison">Poisoned</string>
-    <string name="lex_state_poison_1">It loses HP on each of its turns, in doses.</string>
-    <string name="lex_state_poison_2">Up to %1$d doses; casting poison again renews the duration.</string>
+    <string name="lex_state_poison_1">It loses HP on each of its turns.</string>
+    <string name="lex_state_poison_2">Poisoning it again does not make the poison stronger: it adds turns, up to %1$d.</string>
     <string name="lex_state_frozen">Frozen</string>
     <string name="lex_state_frozen_1">Its gauge is slowed a lot (×%1$s for %2$s turns per freeze) and its blows are numbed (×%3$s).</string>
     <string name="lex_state_frozen_2">The ice stays on it until the end of its next turn.</string>
@@ -191,7 +189,7 @@
     <string name="lex_state_empowered">Empowered strikes</string>
     <string name="lex_state_empowered_1">Your next %1$d weapon hits hurt more.</string>
     <string name="lex_state_poisoned_blades">Poisoned blades</string>
-    <string name="lex_state_poisoned_blades_1">Each of your next weapon hits adds a dose of [[state_poison|poison]].</string>
+    <string name="lex_state_poisoned_blades_1">Each of your next weapon hits [[state_poison|poisons]] the target, or makes its poison last longer.</string>
     <string name="lex_state_ambush">Sneak attack</string>
     <string name="lex_state_ambush_1">Your next weapon hit is a guaranteed crit.</string>
     <string name="lex_state_meteor">Meteor</string>
@@ -203,7 +201,7 @@
     <string name="lex_element_lightning">Lightning</string>
     <string name="lex_element_lightning_1">The element of [[state_paralyzed|paralysis]].</string>
     <string name="lex_element_poison">Poison</string>
-    <string name="lex_element_poison_1">The element of [[state_poison|poison]], which builds up in doses.</string>
+    <string name="lex_element_poison_1">The element of [[state_poison|poison]], which works over time.</string>
     <string name="lex_element_holy">Holy</string>
     <string name="lex_element_holy_1">Light: the undead fear it.</string>
     <string name="lex_element_physical">Physical</string>
@@ -227,7 +225,7 @@
     <string name="lex_reactions">Reactions</string>
     <string name="lex_reactions_1">A blow that hits an enemy already in the state of another element does something extra: there is a reaction for every pair of elements.</string>
     <string name="lex_reactions_2">They work for everyone, no gear needed. Nothing announces them: you find them by playing.</string>
-    <string name="lex_reaction_explosion_1">[[element_fire|Fire]] on a [[state_poison|poisoned]] enemy: all remaining doses deal their damage at once, and the poison is gone.</string>
+    <string name="lex_reaction_explosion_1">[[element_fire|Fire]] on a [[state_poison|poisoned]] enemy: all the remaining poison deals its damage at once, and the poison is gone.</string>
     <string name="lex_reaction_shatter_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_frozen|frozen]] enemy: damage ×%1$s, the ice shatters.</string>
     <string name="lex_reaction_purify_1">Physical or holy damage on a poisoned enemy consumes the poison and grants armor ×%2$s for %1$d turns. No healing.</string>
     <string name="lex_resonances">Resonances</string>
@@ -348,13 +346,13 @@
     <string name="lex_reaction_rigidity_1">[[element_ice|Ice]] on a [[state_paralyzed|paralyzed]] enemy: it freezes at once for %1$d turn, no saving throw, and the paralysis is gone.</string>
     <string name="lex_reaction_poison_ice_1">[[element_ice|Ice]] on a [[state_poison|poisoned]] enemy: the remaining poison turns into a slowdown of the same length.</string>
     <string name="lex_reaction_frozen_armor_1">[[element_ice|Ice]] on an [[state_exposed|exposed]] enemy: it freezes at once for %1$d turn, no saving throw, and its exposure lasts %2$d turn longer.</string>
-    <string name="lex_reaction_convulsions_1">[[element_lightning|Lightning]] on a [[state_poison|poisoned]] enemy: guaranteed paralysis for %1$d turn, and the doses deal their damage once.</string>
+    <string name="lex_reaction_convulsions_1">[[element_lightning|Lightning]] on a [[state_poison|poisoned]] enemy: guaranteed paralysis for %1$d turn, and the poison bites once more right away.</string>
     <string name="lex_reaction_ice_shock_1">[[element_lightning|Lightning]] on a [[state_frozen|frozen]] enemy: the ice turns into a %1$d-turn paralysis.</string>
     <string name="lex_reaction_lightning_rod_1">[[element_lightning|Lightning]] on an [[state_exposed|exposed]] enemy: the bolt jumps to the other enemies for %1$s of the blow.</string>
-    <string name="lex_reaction_spark_1">[[element_poison|Poison]] on a [[state_burn|burning]] enemy: the burn turns into poison, one more dose equal to the one just applied.</string>
-    <string name="lex_reaction_frostbite_1">[[element_poison|Poison]] on a [[state_frozen|frozen]] enemy: one more dose right away, the ice stays.</string>
+    <string name="lex_reaction_spark_1">[[element_poison|Poison]] on a [[state_burn|burning]] enemy: the burn turns into poison, which lasts longer.</string>
+    <string name="lex_reaction_frostbite_1">[[element_poison|Poison]] on a [[state_frozen|frozen]] enemy: the poison lasts longer, the ice stays.</string>
     <string name="lex_reaction_neurotoxin_1">[[element_poison|Poison]] on a [[state_paralyzed|paralyzed]] enemy: the paralysis lasts %1$d turn longer.</string>
-    <string name="lex_reaction_infection_1">[[element_poison|Poison]] on an [[state_exposed|exposed]] enemy: one more dose, and its exposure lasts %1$d turn longer.</string>
+    <string name="lex_reaction_infection_1">[[element_poison|Poison]] on an [[state_exposed|exposed]] enemy: the poison lasts longer, and its exposure lasts %1$d turn longer.</string>
     <string name="lex_reaction_deathblow_1">[[element_physical|Physical]] or [[element_holy|holy]] on a [[state_paralyzed|paralyzed]] enemy: guaranteed critical hit.</string>
     <string name="lex_reaction_holy_fire_1">Physical or holy damage consumes the burn and deals %1$s of its remaining damage immediately.</string>
     <string name="lex_strike_miss">Miss: minimum damage, reduced by enemy defense against poorly executed blows. Tougher monsters, deeper floors and bosses defend better. Stronger equipment and attributes help overcome this defense; damage can fall to zero. A completely blocked blow triggers no on-hit effects.</string>
@@ -365,7 +363,7 @@
     <string name="lex_special_smash">One strike at 200 %% weapon damage. With a club, a damaging hit opens a breach for 2 enemy turns: +15 %% weapon and physical relic damage received. No stacking or stun.</string>
     <string name="lex_weight_fur">Barbarian armor: balanced armor, no speed modifier, Dexterity contributes at most +1 to defense.</string>
     <string name="lex_base_club">Barbarian offhand. Grants Strength and lets Smash open a physical breach (+15 %% damage) for 2 enemy turns.</string>
-    <string name="lex_set_barbarian">Three Ravage pieces raise Smash to 300 %% weapon damage instead of 200 %% and extend the Smash breach to 3 enemy turns with the club equipped. Base special cooldown: 4 turns instead of 5, never below 3 after Wisdom.</string>
+    <string name="lex_set_barbarian">Three Ravage pieces raise Smash to 300 %% weapon damage instead of 200 %% and extend the Smash breach to 3 enemy turns with the club equipped. Special cooldown: 4 turns instead of 5.</string>
     <string name="lex_stat_hp_curve">Player and enemy HP: ×2.5 on floor 1. Linear progression to floor 250: ×4 for the player, ×5 for enemies. Multipliers remain constant afterwards.</string>
-    <string name="lex_special_mirror_fixed">Fixed cooldown: %1$d turns, or %2$d with the full Mirage set. Wisdom does not reduce it.</string>
+    <string name="lex_special_mirror_fixed">Fixed cooldown: %1$d turns, or %2$d with the full Mirage set.</string>
 </resources>

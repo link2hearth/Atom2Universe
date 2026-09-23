@@ -35,8 +35,9 @@ class ArmorClassTest {
     fun leLegerAjouteSaCaEtLaDex() {
         val light = heroIn(ArmorWeight.LIGHT, dexBonus = 6)
         val cloth = heroIn(ArmorWeight.CLOTH, dexBonus = 6)
-        // +1 par pièce légère ; la DEX (+3) compte dans les deux
-        assertEquals(cloth.armorClass + 3, light.armorClass)
+        // +1 par pièce légère ; la DEX de l'anneau compte dans les deux, et le léger porte en plus
+        // sa propre DEX (la caractéristique de sa classe, depuis le 22/09/2026)
+        assertTrue(light.armorClass >= cloth.armorClass + 3)
     }
 
     @Test
@@ -55,8 +56,9 @@ class ArmorClassTest {
     }
 
     @Test
-    fun lePoidsNeChangePasLesPv() {
-        assertEquals(heroIn(ArmorWeight.HEAVY).maxHp, heroIn(ArmorWeight.CLOTH).maxHp)
+    fun leLourdDonneDesPvParSaCon() {
+        // Depuis le 22/09/2026, le lourd porte la CON du guerrier : plus de PV que le tissu (INT)
+        assertTrue(heroIn(ArmorWeight.HEAVY).maxHp > heroIn(ArmorWeight.CLOTH).maxHp)
     }
 
     @Test

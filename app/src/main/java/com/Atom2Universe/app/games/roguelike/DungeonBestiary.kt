@@ -18,44 +18,47 @@ internal object DungeonBestiary {
         MonsterType.GOBLIN to goblins, MonsterType.TROLL to trolls, MonsterType.SNAKE to snakes,
     ).filter { it.second > 0 }
 
+    /**
+     * Chaque carte a son **monstre fétiche**, le seul du bestiaire à résister à un élément (à 50 %),
+     * et il ne vit que là (le propriétaire, 23/09/2026) : un joueur qui connaît le jeu sait qu'au
+     * champ de bataille il y a des démons, et laisse sa relique de feu. Zombie : cimetière et
+     * crypte ; squelette : donjon ; ours : forêt ; serpent : champs ; démon : champ de bataille ;
+     * scorpion : mine et dépôt ; vampire : bibliothèque ; brute : bateau, cabine et port ;
+     * gobelin : auberge ; rampant : vaisseau. Le monastère, le village et le camp n'en ont pas.
+     * Les autres monstres (rats, araignées, chauves-souris, loups, trolls…) ne résistent à rien.
+     */
     private val populations = DungeonTheme.entries.associateWith { theme ->
         when (theme) {
             DungeonTheme.SPACESHIP -> listOf(MonsterType.ALIEN_SCOUT to 40,
                 MonsterType.ALIEN_CRAWLER to 35, MonsterType.ALIEN_FLOATER to 25)
-            DungeonTheme.CEMETERY -> population(rats = 10, zombies = 35, skeletons = 25, spiders = 15, demons = 15)
-            DungeonTheme.CRYPT -> population(rats = 10, zombies = 25, skeletons = 25, spiders = 20, demons = 20)
-            DungeonTheme.DUNGEON -> population(rats = 10, zombies = 15, skeletons = 15, spiders = 15,
-                goblins = 20, trolls = 10, demons = 10, snakes = 5)
-            DungeonTheme.MINE -> population(rats = 10, zombies = 10, skeletons = 5, spiders = 20,
-                scorpions = 20, goblins = 20, trolls = 10, snakes = 5)
-            DungeonTheme.MINE_DEPOT -> population(rats = 20, zombies = 10, spiders = 15,
-                goblins = 35, trolls = 10, snakes = 10)
-            DungeonTheme.BATTLEFIELD -> population(rats = 10, zombies = 25, skeletons = 25,
-                demons = 20, goblins = 15, wolves = 5)
-            DungeonTheme.CAMP -> population(rats = 10, zombies = 10, goblins = 35, trolls = 15,
-                wolves = 20, snakes = 10)
-            DungeonTheme.LIBRARY -> population(rats = 15, vampires = 45, bats = 10, spiders = 20, demons = 10)
-            DungeonTheme.INN -> population(rats = 25, vampires = 45, bats = 10, spiders = 5, goblins = 15)
-            DungeonTheme.MONASTERY -> population(rats = 10, vampires = 25, skeletons = 25, spiders = 15, demons = 25)
-            DungeonTheme.VILLAGE -> population(rats = 20, vampires = 25, bats = 10, spiders = 10, goblins = 25, wolves = 10)
-            DungeonTheme.FOREST -> population(rats = 15, spiders = 10, wolves = 25, bears = 15,
-                felines = 10, plants = 10, goblins = 10, snakes = 5)
+            DungeonTheme.CEMETERY -> population(rats = 15, zombies = 45, spiders = 20, bats = 20)
+            DungeonTheme.CRYPT -> population(rats = 10, zombies = 50, spiders = 25, bats = 15)
+            DungeonTheme.DUNGEON -> population(rats = 20, skeletons = 35, spiders = 20, trolls = 25)
+            DungeonTheme.MINE -> population(rats = 20, spiders = 25, scorpions = 35, trolls = 20)
+            DungeonTheme.MINE_DEPOT -> population(rats = 35, spiders = 25, scorpions = 15, trolls = 25)
+            DungeonTheme.BATTLEFIELD -> population(rats = 20, demons = 45, bats = 15, wolves = 20)
+            DungeonTheme.CAMP -> population(rats = 25, trolls = 35, wolves = 40)
+            DungeonTheme.LIBRARY -> population(rats = 20, vampires = 50, bats = 15, spiders = 15)
+            DungeonTheme.INN -> population(rats = 30, bats = 10, spiders = 10, goblins = 50)
+            DungeonTheme.MONASTERY -> population(rats = 30, bats = 25, spiders = 25, wolves = 20)
+            DungeonTheme.VILLAGE -> population(rats = 35, bats = 20, spiders = 15, wolves = 30)
+            DungeonTheme.FOREST -> population(rats = 15, spiders = 15, wolves = 30, bears = 20,
+                felines = 10, plants = 10)
             DungeonTheme.FIELDS -> population(rats = 25, bats = 5, spiders = 10, wolves = 20,
-                snakes = 20, plants = 10, goblins = 10)
+                snakes = 30, plants = 10)
             DungeonTheme.PIRATE -> population(rats = 20, pirates = 60, brutes = 20)
             DungeonTheme.PIRATE_CABIN -> population(rats = 15, pirates = 55, brutes = 25, spiders = 5)
             DungeonTheme.PORT -> population(rats = 35, pirates = 50, brutes = 15)
         }
     }
 
-    private val darkForest = population(rats = 5, bats = 10, spiders = 20, wolves = 20,
-        bears = 10, plants = 10, trolls = 10, goblins = 10, snakes = 5)
-    private val jungle = population(rats = 5, spiders = 15, felines = 25, plants = 25,
-        snakes = 20, trolls = 5, goblins = 5)
-    private val dayVillage = population(rats = 35, spiders = 10, goblins = 30, wolves = 15, snakes = 10)
-    private val nightFields = population(rats = 15, bats = 15, spiders = 10, wolves = 30,
-        snakes = 10, plants = 10, goblins = 10)
-    private val dayMonastery = population(rats = 20, skeletons = 40, spiders = 20, demons = 20)
+    private val darkForest = population(rats = 10, bats = 10, spiders = 20, wolves = 25,
+        bears = 15, plants = 10, trolls = 10)
+    private val jungle = population(rats = 10, spiders = 20, felines = 35, plants = 30, trolls = 5)
+    private val dayVillage = population(rats = 45, spiders = 20, wolves = 35)
+    private val nightFields = population(rats = 15, bats = 15, spiders = 10, wolves = 25,
+        snakes = 25, plants = 10)
+    private val dayMonastery = population(rats = 35, spiders = 35, wolves = 30)
 
     private fun choices(theme: DungeonTheme, backdrop: DungeonBackdrop) = when {
         theme == DungeonTheme.FOREST && backdrop.jungle -> jungle

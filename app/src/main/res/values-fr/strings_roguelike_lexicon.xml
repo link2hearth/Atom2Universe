@@ -36,9 +36,7 @@
     <string name="lex_attr_con_1">Tes points de vie et les dégâts des masses.</string>
     <string name="lex_attr_con_2">+%1$s PV par point au-dessus de 10</string>
     <string name="lex_attr_int_1">Les dégâts des bâtons et les sorts du Mage : feu, glace, foudre…</string>
-    <string name="lex_attr_wis_1">Les dégâts des sceptres et la [[cooldown|recharge]] de tes reliques et du [[special|Spécial]].</string>
-    <string name="lex_attr_wis_2">−1 tour de recharge tous les %1$d points au-dessus de 10</string>
-    <string name="lex_attr_wis_3">Jamais moins d&#8217;un tour.</string>
+    <string name="lex_attr_wis_1">Les dégâts des sceptres et les reliques du Nécromancien : leurs dégâts, et la chance que leurs effets prennent.</string>
     <string name="lex_attr_cha_1">L\'or que tu trouves.</string>
     <string name="lex_attr_cha_2">+%1$d %% d\'or par point au-dessus de 10</string>
     <string name="lex_attr_relics">Les [[relics|reliques]] qui la suivent : +%1$d %% de dégâts par point au-dessus de 10, et un contrôle (gel, paralysie…) qui prend plus souvent (+%2$d %% tous les 2 points)</string>
@@ -109,7 +107,7 @@
     <string name="lex_cooldown">Recharge</string>
     <string name="lex_cooldown_1">Le nombre de tours à attendre avant de relancer une relique.</string>
     <string name="lex_cooldown_2">Elle baisse de 1 à chaque tour de combat, et tout est prêt à la fin du combat.</string>
-    <string name="lex_cooldown_3">[[attr_wis|SAG]] la raccourcit. Le [[special|Spécial]] se recharge en %1$d tours.</string>
+    <string name="lex_cooldown_3">Le [[special|Spécial]] se recharge en %1$d tours.</string>
     <string name="lex_parry">Parade</string>
     <string name="lex_parry_1">Touche quand le cercle mobile se superpose au cercle fixe. Un petit décalage donne un geste presque réussi ; trop tôt ou trop tard, le geste est raté. Le cercle continue à rétrécir après la cible.</string>
     <string name="lex_parry_2">Si le coup touche, le geste choisit sa fourchette : presque réussi ×%1$s, parfait ×%2$s, raté ×%3$s. Ton armure réduit ensuite les dégâts.</string>
@@ -134,7 +132,7 @@
     <string name="lex_resist_4">Un ennemi immunisé ne subit rien.</string>
     <string name="lex_special">Spécial</string>
     <string name="lex_special_1">Le bouton du bas : la capacité de ton [[archetype|archétype]]. Verrouillé sans archétype.</string>
-    <string name="lex_special_2">Recharge de base : %1$d tours ; la Sagesse peut la raccourcir, jamais sous 3 tours.</string>
+    <string name="lex_special_2">Recharge : %1$d tours.</string>
     <string name="lex_rest">Repos</string>
     <string name="lex_rest_1">Passer sur le feu du départ restaure automatiquement tous tes PV et recharge tes reliques et ton Spécial.</string>
     <string name="lex_rest_2">Aucun bouton à toucher : le soin se déclenche dès ton arrivée, même pendant une [[chase|poursuite]].</string>
@@ -151,8 +149,8 @@
     <string name="lex_state_burn_1">Il perd des PV au début de chacun de ses tours.</string>
     <string name="lex_state_burn_2">%1$d %% du coup qui l\'a brûlé, à chaque tour</string>
     <string name="lex_state_poison">Empoisonné</string>
-    <string name="lex_state_poison_1">Il perd des PV à chacun de ses tours, par doses.</string>
-    <string name="lex_state_poison_2">Jusqu\'à %1$d doses ; relancer un poison renouvelle la durée.</string>
+    <string name="lex_state_poison_1">Il perd des PV à chacun de ses tours.</string>
+    <string name="lex_state_poison_2">L\'empoisonner encore ne rend pas le poison plus fort : ça ajoute des tours, jusqu\'à %1$d.</string>
     <string name="lex_state_frozen">Figé</string>
     <string name="lex_state_frozen_1">Sa jauge est très ralentie (×%1$s pendant %2$s tours par gel) et ses coups sont engourdis (×%3$s).</string>
     <string name="lex_state_frozen_2">La glace reste sur lui jusqu\'à la fin de son tour suivant.</string>
@@ -191,7 +189,7 @@
     <string name="lex_state_empowered">Coups renforcés</string>
     <string name="lex_state_empowered_1">Tes %1$d prochains coups d\'arme font plus mal.</string>
     <string name="lex_state_poisoned_blades">Lames empoisonnées</string>
-    <string name="lex_state_poisoned_blades_1">Chacun de tes prochains coups d\'arme ajoute une dose de [[state_poison|poison]].</string>
+    <string name="lex_state_poisoned_blades_1">Chacun de tes prochains coups d\'arme [[state_poison|empoisonne]] la cible, ou fait durer son poison plus longtemps.</string>
     <string name="lex_state_ambush">Attaque sournoise</string>
     <string name="lex_state_ambush_1">Ton prochain coup d\'arme est un critique assuré.</string>
     <string name="lex_state_meteor">Météore</string>
@@ -203,7 +201,7 @@
     <string name="lex_element_lightning">Foudre</string>
     <string name="lex_element_lightning_1">L\'élément de la [[state_paralyzed|paralysie]].</string>
     <string name="lex_element_poison">Poison</string>
-    <string name="lex_element_poison_1">L\'élément du [[state_poison|poison]], qui s\'accumule par doses.</string>
+    <string name="lex_element_poison_1">L\'élément du [[state_poison|poison]], qui agit dans la durée.</string>
     <string name="lex_element_holy">Sacré</string>
     <string name="lex_element_holy_1">La lumière : les morts-vivants la craignent.</string>
     <string name="lex_element_physical">Physique</string>
@@ -227,7 +225,7 @@
     <string name="lex_reactions">Réactions</string>
     <string name="lex_reactions_1">Un coup qui touche un ennemi déjà dans l\'état d\'un autre élément fait quelque chose en plus : il y a une réaction pour chaque paire d\'éléments.</string>
     <string name="lex_reactions_2">Elles marchent pour tout le monde, sans équipement. Rien ne les annonce : on les découvre en jouant.</string>
-    <string name="lex_reaction_explosion_1">Le [[element_fire|feu]] sur un [[state_poison|empoisonné]] : toutes les doses restantes tombent d\'un coup, et le poison disparaît.</string>
+    <string name="lex_reaction_explosion_1">Le [[element_fire|feu]] sur un [[state_poison|empoisonné]] : tout le poison restant tombe d\'un coup, et le poison disparaît.</string>
     <string name="lex_reaction_shatter_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_frozen|figé]] : dégâts ×%1$s, la glace se brise.</string>
     <string name="lex_reaction_purify_1">Les dégâts physiques ou sacrés sur un ennemi empoisonné consomment le poison et donnent une armure ×%2$s pendant %1$d tours. Aucun soin.</string>
     <string name="lex_resonances">Résonances</string>
@@ -348,13 +346,13 @@
     <string name="lex_reaction_rigidity_1">La [[element_ice|glace]] sur un [[state_paralyzed|paralysé]] : il gèle aussitôt %1$d tour, sans jet de sauvegarde, et la paralysie disparaît.</string>
     <string name="lex_reaction_poison_ice_1">La [[element_ice|glace]] sur un [[state_poison|empoisonné]] : le poison restant devient un ralentissement de même durée.</string>
     <string name="lex_reaction_frozen_armor_1">La [[element_ice|glace]] sur un [[state_exposed|exposé]] : il gèle aussitôt %1$d tour, sans jet, et son exposition dure %2$d tour de plus.</string>
-    <string name="lex_reaction_convulsions_1">La [[element_lightning|foudre]] sur un [[state_poison|empoisonné]] : paralysie garantie %1$d tour, et les doses tombent une fois d\'un coup.</string>
+    <string name="lex_reaction_convulsions_1">La [[element_lightning|foudre]] sur un [[state_poison|empoisonné]] : paralysie garantie %1$d tour, et le poison mord une fois de plus tout de suite.</string>
     <string name="lex_reaction_ice_shock_1">La [[element_lightning|foudre]] sur un [[state_frozen|figé]] : le gel devient une paralysie de %1$d tours.</string>
     <string name="lex_reaction_lightning_rod_1">La [[element_lightning|foudre]] sur un [[state_exposed|exposé]] : l\'éclair saute sur les autres ennemis, pour %1$s du coup.</string>
-    <string name="lex_reaction_spark_1">Le [[element_poison|poison]] sur un [[state_burn|brûlé]] : la brûlure devient du poison, une dose de plus égale à celle qui vient d\'être posée.</string>
-    <string name="lex_reaction_frostbite_1">Le [[element_poison|poison]] sur un [[state_frozen|figé]] : une dose de plus tout de suite, le gel reste.</string>
+    <string name="lex_reaction_spark_1">Le [[element_poison|poison]] sur un [[state_burn|brûlé]] : la brûlure devient du poison, qui dure plus longtemps.</string>
+    <string name="lex_reaction_frostbite_1">Le [[element_poison|poison]] sur un [[state_frozen|figé]] : le poison dure plus longtemps, le gel reste.</string>
     <string name="lex_reaction_neurotoxin_1">Le [[element_poison|poison]] sur un [[state_paralyzed|paralysé]] : la paralysie dure %1$d tour de plus.</string>
-    <string name="lex_reaction_infection_1">Le [[element_poison|poison]] sur un [[state_exposed|exposé]] : une dose de plus, et son exposition dure %1$d tour de plus.</string>
+    <string name="lex_reaction_infection_1">Le [[element_poison|poison]] sur un [[state_exposed|exposé]] : le poison dure plus longtemps, et son exposition dure %1$d tour de plus.</string>
     <string name="lex_reaction_deathblow_1">Le [[element_physical|physique]] ou le [[element_holy|sacré]] sur un [[state_paralyzed|paralysé]] : critique garanti.</string>
     <string name="lex_reaction_holy_fire_1">Les dégâts physiques ou sacrés consomment la brûlure et infligent immédiatement %1$s de ses dégâts restants.</string>
     <string name="lex_strike_miss">Raté : minimum de la fourchette, réduit par la défense du monstre contre les coups mal exécutés. Les monstres robustes, les étages profonds et les boss défendent mieux. Ton équipement et tes caractéristiques aident à dépasser cette défense ; les dégâts peuvent tomber à zéro. Un coup entièrement bloqué ne déclenche aucun effet au contact.</string>
@@ -365,7 +363,7 @@
     <string name="lex_special_smash">Une frappe à 200 %% des dégâts d’arme. Avec une massue, un coup infligeant des dégâts ouvre une brèche pendant 2 tours ennemis : +15 %% de dégâts reçus des armes et des reliques physiques. Sans cumul ni étourdissement.</string>
     <string name="lex_weight_fur">Armure du Barbare : protection moyenne, aucun changement de vitesse, Dextérité limitée à +1 en défense.</string>
     <string name="lex_base_club">Main secondaire du Barbare. Donne de la Force et permet à Fracas d’ouvrir une brèche physique (+15 %% de dégâts) pendant 2 tours ennemis.</string>
-    <string name="lex_set_barbarian">Trois pièces de Ravage portent Fracas à 300 %% des dégâts de votre arme au lieu de 200 %% et prolongent la brèche de Fracas à 3 tours ennemis avec la massue équipée. Recharge de base du spécial : 4 tours au lieu de 5, jamais moins de 3 après la Sagesse.</string>
+    <string name="lex_set_barbarian">Trois pièces de Ravage portent Fracas à 300 %% des dégâts de votre arme au lieu de 200 %% et prolongent la brèche de Fracas à 3 tours ennemis avec la massue équipée. Recharge du spécial : 4 tours au lieu de 5.</string>
     <string name="lex_stat_hp_curve">PV du joueur et des ennemis : ×2,5 à l&#8217;étage 1. Progression linéaire jusqu&#8217;à l&#8217;étage 250 : ×4 pour le joueur, ×5 pour les ennemis. Ces multiplicateurs restent constants ensuite.</string>
-    <string name="lex_special_mirror_fixed">Recharge fixe : %1$d tours, ou %2$d avec le set Mirage complet. La Sagesse ne la réduit pas.</string>
+    <string name="lex_special_mirror_fixed">Recharge fixe : %1$d tours, ou %2$d avec le set Mirage complet.</string>
 </resources>

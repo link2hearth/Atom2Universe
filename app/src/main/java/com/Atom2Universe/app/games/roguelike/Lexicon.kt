@@ -175,11 +175,7 @@ object Lexicon {
                 StatType.END -> { add(R.string.lex_attr_end_1); add(R.string.lex_attr_end_2) }
                 StatType.CON -> { add(R.string.lex_attr_con_1); add(R.string.lex_attr_con_2, env.num(Hero.HP_PER_CON)) }
                 StatType.INT -> add(R.string.lex_attr_int_1)
-                StatType.WIS -> {
-                    add(R.string.lex_attr_wis_1)
-                    add(R.string.lex_attr_wis_2, Hero.WIS_POINTS_PER_TURN)
-                    add(R.string.lex_attr_wis_3, 1)
-                }
+                StatType.WIS -> add(R.string.lex_attr_wis_1)
                 else -> { add(R.string.lex_attr_cha_1); add(R.string.lex_attr_cha_2, env.pct(Hero.GOLD_PER_CHA)) }
             }
             // Chaque relique suit sa caractéristique : un point de plus au DD, c'est un cran de contrôle en plus
@@ -338,7 +334,7 @@ object Lexicon {
                 add(R.string.lex_state_burn_1); add(R.string.lex_state_burn_2, env.pct(Relic.BURN_SHARE))
             },
             entry("state_poison", c, R.string.lex_state_poison) {
-                add(R.string.lex_state_poison_1); add(R.string.lex_state_poison_2, Relic.POISON_MAX_DOSES)
+                add(R.string.lex_state_poison_1); add(R.string.lex_state_poison_2, Relic.POISON_MAX_TURNS)
             },
             entry("state_frozen", c, R.string.lex_state_frozen) {
                 add(R.string.lex_state_frozen_1, env.dec(Relic.CHILL_SPEED, 2), env.dec(Relic.FREEZE_TURN_LENGTH), env.dec(Combat.NUMB_MULT))
@@ -440,12 +436,12 @@ object Lexicon {
      */
     fun relicText(env: LexiconEnv, relic: Relic, hero: Hero): String {
         val (lo, hi) = hero.relicDamage(relic)
-        val empowerPct = (RelicBudget.empowerBonus(relic) * hero.relicMult(relic) * 100).roundToInt()
+        val empowerPct = (RelicBudget.empowerBonus(relic) * 100).roundToInt()
         return env.s(relic.descRes, env.num(lo), env.num(hi), relic.effectTurns, hero.castCooldown(relic),
             env.num(hero.poisonDose(relic)), hero.spellDc(relic), empowerPct, env.num(hero.relicAmount(relic)),
             env.pct(Combat.FRACTURE_MULT - 1f), env.pct(1f - Combat.WEAKEN_MULT), env.pct(1f - Relic.CHAIN_FALLOFF),
             Relic.CRYSTAL_MULT.roundToInt(), 0, Relic.STONESKIN_ARMOR.roundToInt(),
-            Relic.MISSILE_COUNT, Relic.WARCRY_ATTACKS, Relic.POISON_MAX_DOSES, env.dec(Relic.FREEZE_TURN_LENGTH),
+            Relic.MISSILE_COUNT, Relic.WARCRY_ATTACKS, Relic.POISON_MAX_TURNS, env.dec(Relic.FREEZE_TURN_LENGTH),
             env.pct(Relic.BURN_SHARE))
     }
 

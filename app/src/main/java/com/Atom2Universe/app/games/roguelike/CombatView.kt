@@ -847,7 +847,7 @@ class CombatView @JvmOverloads constructor(
     private fun drawStatuses(canvas: Canvas, e: Enemy, cx: Float, y: Float) {
         val parts = buildList<Pair<String, Int>> {
             if (e.burnTurns > 0) add(context.getString(R.string.roguelike_combat_burning, e.burnTurns) to elementColor(Element.FIRE))
-            if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonDoses, e.poisonTurns) to elementColor(Element.POISON))
+            if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonTurns) to elementColor(Element.POISON))
             if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
             if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to elementColor(Element.LIGHTNING))
             if (e.breachedTurns > 0) add(context.getString(R.string.roguelike_combat_breached, e.breachedTurns) to FRACTURED_COLOR)
@@ -858,7 +858,7 @@ class CombatView @JvmOverloads constructor(
             if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
             if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
             if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
-            if (e.slowTurns > 0) add(context.getString(R.string.roguelike_combat_slowed, e.slowTurns) to SLOWED_COLOR)
+            if (e.slowed) add(context.getString(R.string.roguelike_combat_slowed, kotlin.math.ceil(e.slowTime).toInt()) to SLOWED_COLOR)
         }
         pText.textSize = 11f * sp
         pText.textAlign = Paint.Align.LEFT

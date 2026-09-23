@@ -785,7 +785,17 @@ object LootSystem {
         val weight = e.weight
         if (e.armor > 0)     r += e.armor / (weight?.armorMult ?: 1f) * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
         r += (e.acBonus - (weight?.acPerPiece ?: 0) + if (weight != null) ArmorWeight.AVERAGE_AC else 0f) * AffixBudget.perAcPoint() * 100f
-        for (s in e.allStats) r += s.value * AffixBudget.perPoint(s.type, p) * 100f
+        // Depuis le 22/09/2026, chaque poids porte la caractéristique de sa classe (tissu : INT, léger : DEX…).
+        // Comptée à son prix, le tissu notait 40 % au-dessus du léger à matière égale : la caractéristique
+        // imposée par le poids vaut donc la moyenne des six, comme la CA du poids plus haut.
+        var weightStat = weight?.primaryAttribute
+        for (s in e.allStats) {
+            val perPoint = if (s.type == weightStat && s in e.implicits) {
+                weightStat = null
+                ArmorWeight.entries.map { AffixBudget.perPoint(it.primaryAttribute, p) }.average().toFloat()
+            } else AffixBudget.perPoint(s.type, p)
+            r += s.value * perPoint * 100f
+        }
         return (r * scale(p)).roundToInt()
     }
 

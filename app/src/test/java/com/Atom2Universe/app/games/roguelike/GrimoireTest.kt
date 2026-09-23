@@ -67,10 +67,11 @@ class GrimoireTest {
     fun unSortPhysiqueBriseLeGel() {
         val c = fight(Relic.ICE_SHARD, Relic.WHIRLWIND, d20 = 20)
         c.enemies[0].frozenTime = 1.0
-        val hit = c.castRelic(Relic.WHIRLWIND, 0, Timing.MISS).main!!
+        // Geste parfait : le coup maximal, sans la défense qui ne pèse que sur un geste raté
+        val hit = c.castRelic(Relic.WHIRLWIND, 0, Timing.PERFECT).main!!
         assertEquals(listOf(Reaction.SHATTER), hit.reactions)
-        val (lo, _) = c.hero.relicDamage(Relic.WHIRLWIND)
-        assertTrue("×2 (${hit.damage} contre au moins $lo)", hit.damage >= (lo * Reaction.SHATTER_MULT).toInt())
+        val (_, hi) = c.hero.relicDamage(Relic.WHIRLWIND)
+        assertTrue("×2 (${hit.damage} contre au moins $hi)", hit.damage >= (hi * Reaction.SHATTER_MULT).toInt())
         assertFalse(c.enemies[0].frozen)
     }
 
@@ -102,21 +103,20 @@ class GrimoireTest {
         val c = fight(Relic.VENOM, Relic.FIREBALL)
         castAndPass(c, Relic.VENOM)
         val e = c.enemies[0]
-        val expected = e.poisonDoses * e.poisonDoseDamage * e.poisonTurns
+        val expected = e.poisonDamage * e.poisonTurns
         assertTrue(expected > 0)
         val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
         assertTrue(Reaction.EXPLOSION in hit.reactions)
         assertEquals(expected, hit.explosion)
-        assertEquals("le poison est consommé", 0, e.poisonDoses)
+        assertEquals("le poison est consommé", 0, e.poisonTurns)
     }
 
     @Test
-    fun unImmuniseNeReagitPas() {
-        // Le démon est immunisé au feu : pas de Fonte, le gel tient
+    fun unResistantReagitQuandMeme() {
+        // Le démon résiste au feu (il n'y est plus immunisé) : le Choc thermique se déclenche
         val c = fight(Relic.FIREBALL, type = MonsterType.DEMON)
         c.enemies[0].frozenTime = 1.0
-        assertTrue(c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!.reactions.isEmpty())
-        assertTrue(c.enemies[0].frozen)
+        assertTrue(Reaction.THERMAL_SHOCK in c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!.reactions)
     }
 
     // ── Les nouveaux états ──────────────────────────────────────────────────────
@@ -126,10 +126,10 @@ class GrimoireTest {
         fun damageOn(fractured: Boolean): Int {
             val c = fight()
             if (fractured) c.enemies[0].fracturedTurns = 3
-            return c.attack(0, Timing.MISS).damage
+            return c.attack(0, Timing.PERFECT).damage
         }
         val normal = damageOn(false)
-        assertEquals(Math.round(normal * Combat.FRACTURE_MULT), damageOn(true))
+        assertEquals(normal * Combat.FRACTURE_MULT, damageOn(true).toFloat(), 1f)
     }
 
     @Test
@@ -198,16 +198,20 @@ class GrimoireTest {
         assertEquals(Relic.POISONED_BLADES.effectTurns, c.poisonedBlades)
         enemyTurn(c)
         c.attack(0, Timing.MISS)
-        assertEquals(1, c.enemies[0].poisonDoses)
+        assertEquals(Relic.BLADE_POISON_TURNS, c.enemies[0].poisonTurns)
         assertEquals(Relic.POISONED_BLADES.effectTurns - 1, c.poisonedBlades)
     }
 
     @Test
-    fun lesLamesNeMordentPasUnImmunise() {
-        val c = fight(Relic.POISONED_BLADES, type = MonsterType.SKELETON)
-        castAndPass(c, Relic.POISONED_BLADES)
-        c.attack(0, Timing.MISS)
-        assertEquals(0, c.enemies[0].poisonDoses)
+    fun lesLamesMordentMoinsUnResistant() {
+        fun bite(type: MonsterType): Int {
+            val c = fight(Relic.POISONED_BLADES, type = type)
+            castAndPass(c, Relic.POISONED_BLADES)
+            c.attack(0, Timing.MISS)
+            assertEquals("plus aucun monstre n'est immunisé au poison", Relic.BLADE_POISON_TURNS, c.enemies[0].poisonTurns)
+            return c.enemies[0].poisonDamage
+        }
+        assertTrue(bite(MonsterType.SKELETON) < bite(MonsterType.GOBLIN))
     }
 
     @Test
@@ -242,9 +246,9 @@ class GrimoireTest {
     fun alchimieLExplosionEmpoisonneLesAutres() {
         val c = fight(Relic.VENOM, Relic.FIREBALL, enemies = 2)
         castAndPass(c, Relic.VENOM, target = 0)
-        assertEquals(0, c.enemies[1].poisonDoses)
+        assertEquals(0, c.enemies[1].poisonTurns)
         c.castRelic(Relic.FIREBALL, 0, Timing.MISS)
-        assertEquals(1, c.enemies[1].poisonDoses)
+        assertEquals(Relic.VENOM.effectTurns, c.enemies[1].poisonTurns)
     }
 
     // ── Lot 2 : saignement ──────────────────────────────────────────────────────
@@ -261,7 +265,7 @@ class GrimoireTest {
         castAndPass(c, Relic.POISONED_BLADES)
         c.relicCooldowns.clear()
         assertEquals(3, c.castRelic(Relic.WHIRLWIND, 0, Timing.MISS).hits.size)
-        assertTrue(c.enemies.all { it.poisonDoses == 1 })
+        assertTrue(c.enemies.all { it.poisonTurns == Relic.BLADE_POISON_TURNS })
         assertEquals(Relic.POISONED_BLADES.effectTurns - 1, c.poisonedBlades)
     }
 
@@ -271,32 +275,32 @@ class GrimoireTest {
     fun laFioleEmpoisonneEtFracture() {
         val c = fight(Relic.ACID_FLASK)
         c.castRelic(Relic.ACID_FLASK, 0, Timing.MISS)
-        assertEquals(1, c.enemies[0].poisonDoses)
+        assertEquals(Relic.ENCHANT_DOSE_TURNS, c.enemies[0].poisonTurns)
         assertEquals(Relic.ACID_FLASK.effectTurns, c.enemies[0].fracturedTurns)
     }
 
     @Test
-    fun corrosionCinqDosesAuLieuDeTrois() {
-        fun dosesAfter(vararg relics: Relic): Int {
+    fun corrosionProlongeLePlafondDuPoison() {
+        fun turnsAfter(vararg relics: Relic): Int {
             val c = fight(*relics)
-            c.enemies[0].apply { poisonDoses = 4; poisonTurns = 2; poisonDoseDamage = 1 }
+            c.enemies[0].apply { poisonTurns = 7; poisonDamage = 1 }
             c.castRelic(Relic.ACID_FLASK, 0, Timing.MISS)
-            return c.enemies[0].poisonDoses
+            return c.enemies[0].poisonTurns
         }
-        assertEquals(Relic.POISON_MAX_DOSES, dosesAfter(Relic.ACID_FLASK))
-        assertEquals(Combat.CORROSION_MAX_DOSES, dosesAfter(Relic.ACID_FLASK, Relic.POISONED_BLADES))
+        assertEquals(Relic.POISON_MAX_TURNS, turnsAfter(Relic.ACID_FLASK))
+        assertEquals(7 + Relic.ENCHANT_DOSE_TURNS, turnsAfter(Relic.ACID_FLASK, Relic.POISONED_BLADES))
     }
 
     // ── Lot 2 : les sorts du mage ───────────────────────────────────────────────
 
     @Test
-    fun laCristallisationFrappeTriplePuisBrise() {
+    fun laCristallisationFrappeFortPuisBrise() {
         val c = fight(Relic.CRYSTALLIZE)
         c.enemies[0].frozenTime = 1.0
-        val (lo, _) = c.hero.relicDamage(Relic.CRYSTALLIZE)
-        // Le gobelin résiste à la glace : ×0,5, puis ×3
-        val hit = c.castRelic(Relic.CRYSTALLIZE, 0, Timing.MISS).main!!
-        assertTrue(hit.damage >= (lo * 0.5f * Relic.CRYSTAL_MULT).toInt())
+        val (_, hi) = c.hero.relicDamage(Relic.CRYSTALLIZE)
+        // Le gobelin résiste à la glace : ×0,5, puis ×CRYSTAL_MULT contre un figé
+        val hit = c.castRelic(Relic.CRYSTALLIZE, 0, Timing.PERFECT).main!!
+        assertTrue(hit.damage >= (hi * 0.5f * Relic.CRYSTAL_MULT).toInt())
         assertFalse(c.enemies[0].frozen)
     }
 
@@ -389,7 +393,7 @@ class GrimoireTest {
         val c = fight(Relic.SLOW, d20 = 1)
         val hit = c.castRelic(Relic.SLOW, 0, Timing.MISS).main!!
         assertTrue("il frappe", hit.damage > 0)
-        assertTrue("et ralentit", c.enemies[0].slowTurns > 0)
+        assertTrue("et ralentit", c.enemies[0].slowed)
     }
 
     // ── Refonte du 20/09/2026 : une réaction par paire d'éléments ────────────────
@@ -404,7 +408,7 @@ class GrimoireTest {
     private fun Enemy.burning() { burnTurns = 2; burnDamage = 3 }
     private fun Enemy.frozenNow() { frozenTime = 2.0 }
     private fun Enemy.paralyzedNow() { paralyzedTurns = 2 }
-    private fun Enemy.poisonedNow() { poisonDoses = 1; poisonTurns = 3; poisonDoseDamage = 5 }
+    private fun Enemy.poisonedNow() { poisonTurns = 3; poisonDamage = 5 }
     private fun Enemy.exposedNow() { fracturedTurns = 2 }
 
     @Test
@@ -446,8 +450,8 @@ class GrimoireTest {
     fun laGlaceSurUnEmpoisonneEnFaitUnRalentissement() {
         val (c, hit) = reaction(Relic.ICE_SHARD) { it.poisonedNow() }
         assertTrue(Reaction.POISON_ICE in hit.reactions)
-        assertEquals(0, c.enemies[0].poisonDoses)
-        assertEquals(3, c.enemies[0].slowTurns)
+        assertEquals(0, c.enemies[0].poisonTurns)
+        assertTrue("le poison devient un ralentissement", c.enemies[0].slowed)
     }
 
     @Test
@@ -463,7 +467,7 @@ class GrimoireTest {
         val (c, hit) = reaction(Relic.LIGHTNING) { it.poisonedNow() }
         assertTrue(Reaction.CONVULSIONS in hit.reactions)
         assertTrue(c.enemies[0].paralyzedTurns >= Reaction.CONVULSION_TURNS)
-        assertEquals("les doses tombent une fois", 5, hit.explosion)
+        assertEquals("le poison mord une fois de plus", 5, hit.explosion)
     }
 
     @Test
@@ -487,14 +491,14 @@ class GrimoireTest {
         val (c, hit) = reaction(Relic.VENOM) { it.burning() }
         assertTrue(Reaction.SPARK in hit.reactions)
         assertEquals("la brûlure est devenue du poison", 0, c.enemies[0].burnTurns)
-        assertEquals("la dose posée et une dose de plus", 2, c.enemies[0].poisonDoses)
+        assertEquals("le poison posé, prolongé", Relic.VENOM.effectTurns + Relic.ENCHANT_DOSE_TURNS, c.enemies[0].poisonTurns)
     }
 
     @Test
     fun lePoisonSurUnFigeFaitUneEngelure() {
         val (c, hit) = reaction(Relic.VENOM) { it.frozenNow() }
         assertTrue(Reaction.FROSTBITE in hit.reactions)
-        assertEquals(2, c.enemies[0].poisonDoses)
+        assertEquals(Relic.VENOM.effectTurns + Relic.ENCHANT_DOSE_TURNS, c.enemies[0].poisonTurns)
         assertTrue("le gel reste", c.enemies[0].frozen)
     }
 
@@ -509,7 +513,7 @@ class GrimoireTest {
     fun lePoisonSurUnExposeInfecte() {
         val (c, hit) = reaction(Relic.VENOM) { it.exposedNow() }
         assertTrue(Reaction.INFECTION in hit.reactions)
-        assertEquals(2, c.enemies[0].poisonDoses)
+        assertEquals(Relic.VENOM.effectTurns + Relic.ENCHANT_DOSE_TURNS, c.enemies[0].poisonTurns)
         assertEquals(2 + Reaction.EXPOSED_EXTRA, c.enemies[0].fracturedTurns)
     }
 
@@ -524,7 +528,7 @@ class GrimoireTest {
     fun leSacreSurUnEmpoisonnePurifieLeHeros() {
         val (c, hit) = reaction(Relic.HOLY_LIGHT) { it.poisonedNow() }
         assertTrue(Reaction.PURIFY in hit.reactions)
-        assertEquals("le poison est nettoyé", 0, c.enemies[0].poisonDoses)
+        assertEquals("le poison est nettoyé", 0, c.enemies[0].poisonTurns)
         assertTrue("purifié", c.purifiedTurns > 0)
         assertEquals("aucun soin", 0, c.lifeStolen)
 
@@ -553,7 +557,7 @@ class GrimoireTest {
                 equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.STAFF, 1, Rarity.NORMAL, 0, Random(0))
                 if (offhand) equipped[EquipSlot.OFFHAND] = LootSystem.create(ItemBase.ORB, 1, Rarity.NORMAL, 0, Random(0))
             }
-            val c = Combat(hero, 1, listOf(Enemy(MonsterType.ORC, 100000, 3, 1, 1)), ambush = false, rng = Random(1), attackDie = { 15 })
+            val c = Combat(hero, 1, listOf(Enemy(MonsterType.TROLL, 100000, 3, 1, 1)), ambush = false, rng = Random(1), attackDie = { 15 })
             if (frozen) c.enemies[0].frozenTime = 2.0
             return c.attack(0, Timing.MISS)
         }

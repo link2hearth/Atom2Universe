@@ -106,7 +106,8 @@ class IsotopeSetTest {
         assertTrue(hero.specialBoosted(Archetype.WARRIOR))
         val withSet = hero.maxHp
         val without = withoutSet(hero).maxHp
-        assertEquals(without * (1f + IsotopeSets.HP_SHARE), withSet.toFloat(), 0.5f)
+        // Le multiplicateur de PV de l'étage (×2,5 au départ) s'applique après, avec son arrondi
+        assertEquals(without * (1f + IsotopeSets.HP_SHARE), withSet.toFloat(), 3f)
         assertTrue(withSet > without)
     }
 
@@ -128,7 +129,8 @@ class IsotopeSetTest {
         val relic = Relic.entries.first { it.attribute == StatType.INT }
         val withSet = hero.relicMult(relic)
         val without = withoutSet(hero).relicMult(relic)
-        assertEquals(IsotopeSets.SPELL_SHARE, withSet - without, 0.001f)
+        // Le bonus s'ajoute aux « dégâts des sorts » de l'équipement (aucun ici) : il multiplie le reste
+        assertEquals(1f + IsotopeSets.SPELL_SHARE, withSet / without, 0.001f)
     }
 
     private fun fight(hero: Hero) = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 100000, 10, 1, 1)), ambush = false,

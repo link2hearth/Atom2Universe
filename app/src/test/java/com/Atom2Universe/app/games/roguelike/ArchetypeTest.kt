@@ -49,8 +49,11 @@ class ArchetypeTest {
     @Test
     fun leGuerrierFrappeMoinsFortAvecSonArme() {
         val hero = heroOf(Archetype.WARRIOR)
-        hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.AXE, null)
+        hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.MACE, null)
         assertEquals(Hero.WARRIOR_WEAPON_DAMAGE_MULT, hero.weaponTypeMult, 0.001f)
+        // La hache est l'arme du barbare : le malus d'arme hors classe s'y ajoute (0,85 × 0,85)
+        hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.AXE, null)
+        assertEquals(Hero.WARRIOR_WEAPON_DAMAGE_MULT * (1f - Hero.WRONG_WEAPON_MALUS), hero.weaponTypeMult, 0.001f)
     }
 
     @Test
@@ -183,11 +186,11 @@ class ArchetypeTest {
     @Test
     fun leCoupMortelSurUneCibleExposee() {
         val hero = heroOf(Archetype.ROGUE)
-        val enemy = Enemy(MonsterType.GOBLIN, 1000, 5, 1, 1).apply { poisonTurns = 2; poisonDoses = 1; poisonDoseDamage = 1 }
+        val enemy = Enemy(MonsterType.GOBLIN, 1000, 5, 1, 1).apply { poisonTurns = 2; poisonDamage = 1 }
         val c = Combat(hero, 1, listOf(enemy), ambush = false, rng = Random(1))
-        val hit = c.deadlyStrike(0, Timing.MISS)
+        val hit = c.deadlyStrike(0, Timing.PERFECT)
         assertTrue("critique garanti", hit.crit)
-        assertTrue(hit.damage >= (hero.weaponMin * (hero.critMult + Combat.DEADLY_CRIT_BONUS)).toInt())
+        assertTrue(hit.damage >= (hero.weaponMax * (hero.critMult + Combat.DEADLY_CRIT_BONUS)).toInt())
     }
 
     @Test

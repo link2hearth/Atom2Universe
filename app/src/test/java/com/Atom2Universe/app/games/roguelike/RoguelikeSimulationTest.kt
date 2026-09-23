@@ -1752,6 +1752,8 @@ class RoguelikeSimulationTest {
                 val ready = c.hero.relicSlots.filterNotNull().firstOrNull {
                     val e = c.enemies[aimAt(it)]
                     c.canCast(it) && (simRelics == null || it.name in simRelics) && !(lastWasSupport && !it.hits) &&
+                        // On ne réenduit pas une arme encore enduite : ce serait un tour perdu
+                        !(it.effect == RelicEffect.ENCHANT_POISON && c.poisonedBlades > 0) &&
                         e.type.affinity(it.element) != Affinity.IMMUNE &&
                         !(e.enraged && (it.element == Element.ICE || it.element == Element.LIGHTNING || it.effect == RelicEffect.SLOW))
                 }

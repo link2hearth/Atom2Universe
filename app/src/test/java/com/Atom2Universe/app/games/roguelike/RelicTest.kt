@@ -153,7 +153,7 @@ class RelicTest {
 
     @Test
     fun enrageSaJaugeSeRemplitDeuxFoisPlusVite() {
-        fun brute(rage: Int) = Enemy(MonsterType.ORC, 1000, 3, cadence = 4, countdown = 4).apply { rageTurns = rage }
+        fun brute(rage: Int) = Enemy(MonsterType.TROLL, 1000, 3, cadence = 4, countdown = 4).apply { rageTurns = rage }
         val calm = Combat(Hero.starter(), 1, listOf(brute(0)), ambush = false, rng = Random(1), d20 = { 1 })
         val angry = Combat(Hero.starter(), 1, listOf(brute(3)), ambush = false, rng = Random(1), d20 = { 1 })
         assertEquals(3.5, calm.timeUntilTurn(0), 1e-9)
@@ -171,21 +171,44 @@ class RelicTest {
     // ── Affinités ───────────────────────────────────────────────────────────────
 
     @Test
-    fun unImmuniseNePrendNiDegatsNiEffet() {
-        val c = fightWith(Relic.FIREBALL, type = MonsterType.DEMON)
-        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
-        assertEquals(Affinity.IMMUNE, hit.affinity)
-        assertEquals(0, hit.damage)
-        assertEquals(0, c.enemies[0].burnTurns)
+    fun chaqueMonstreResisteAUnElementAuPlusEtPersonneNEstImmunise() {
+        // Un monstre fétiche par carte, qui résiste à 50 % à un élément (le propriétaire, 23/09/2026)
+        for (t in MonsterType.entries) {
+            val affinities = Element.entries.map { t.affinity(it) }
+            assertFalse("$t est immunisé à quelque chose", Affinity.IMMUNE in affinities)
+            assertTrue("$t résiste à plusieurs éléments", affinities.count { it == Affinity.RESISTANT } <= 1)
+        }
+    }
+
+    @Test
+    fun unMonstreFeticheNeVitQueDansSaCarte() {
+        val home = mapOf(
+            MonsterType.ZOMBIE to setOf(DungeonTheme.CEMETERY, DungeonTheme.CRYPT),
+            MonsterType.SKELETON to setOf(DungeonTheme.DUNGEON),
+            MonsterType.BEAR to setOf(DungeonTheme.FOREST),
+            MonsterType.SNAKE to setOf(DungeonTheme.FIELDS),
+            MonsterType.DEMON to setOf(DungeonTheme.BATTLEFIELD),
+            MonsterType.SCORPION to setOf(DungeonTheme.MINE, DungeonTheme.MINE_DEPOT),
+            MonsterType.VAMPIRE to setOf(DungeonTheme.LIBRARY),
+            MonsterType.PIRATE_BRUTE to setOf(DungeonTheme.PIRATE, DungeonTheme.PIRATE_CABIN, DungeonTheme.PORT),
+            MonsterType.GOBLIN to setOf(DungeonTheme.INN),
+            MonsterType.ALIEN_CRAWLER to setOf(DungeonTheme.SPACESHIP),
+        )
+        for (t in MonsterType.entries) {
+            val resists = Element.entries.any { t.affinity(it) == Affinity.RESISTANT }
+            assertEquals("$t : un monstre qui résiste est un monstre fétiche", resists, t in home)
+        }
+        for ((t, themes) in home) assertEquals("$t ne vit que chez lui", themes, DungeonBestiary.habitats(t).toSet())
     }
 
     @Test
     fun unVulnerablePrendDouble() {
         val c = fightWith(Relic.FIREBALL, type = MonsterType.RAT)
-        val (lo, _) = c.hero.relicDamage(Relic.FIREBALL)
-        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.MISS).main!!
+        val (_, hi) = c.hero.relicDamage(Relic.FIREBALL)
+        // Geste parfait : le coup maximal, sans la défense qui ne pèse que sur un geste raté
+        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.PERFECT).main!!
         assertEquals(Affinity.VULNERABLE, hit.affinity)
-        assertTrue(hit.damage >= 2 * lo)
+        assertTrue(hit.damage >= 2 * hi)
     }
 
     @Test
@@ -197,36 +220,30 @@ class RelicTest {
         assertEquals(0.25f, SpellSave.landChance(dc, SpellSave.monsterProficiency(1) + Affinity.RESISTANT.saveBonus), 1e-4f)
     }
 
-    @Test
-    fun lImmuniteDispenseDuJet() {
-        val c = fightWith(Relic.VENOM, type = MonsterType.SKELETON)
-        c.castRelic(Relic.VENOM, 0, Timing.MISS)
-        assertEquals(0, c.enemies[0].poisonDoses)
-    }
-
     // ── Feu, poison ─────────────────────────────────────────────────────────────
 
     @Test
-    fun lePoisonSEmpileEtSEteint() {
+    fun lePoisonSeProlongeEtSEteint() {
         val c = fightWith(Relic.VENOM)
         val enemy = c.enemies[0]
-        // Deux doses : on lance, on attend la recharge en attaquant, on relance
+        // On lance, on attend la recharge en attaquant, on relance : le poison dure plus longtemps, sans mordre plus fort
         c.castRelic(Relic.VENOM, 0, Timing.MISS)
         while (!c.canCast(Relic.VENOM)) {
             if (c.phase == CombatPhase.ENEMY_TURN) enemyTurn(c) else c.attack(0, Timing.MISS)
         }
+        val left = enemy.poisonTurns
         c.castRelic(Relic.VENOM, 0, Timing.MISS)
-        assertEquals(2, enemy.poisonDoses)
+        assertEquals(minOf(left + Relic.VENOM.effectTurns, Relic.POISON_MAX_TURNS), enemy.poisonTurns)
         val tick = c.startEnemyTurn().ticks.single()
         assertEquals(Element.POISON, tick.element)
-        // Le gobelin est vulnérable au poison : chaque dose ronge double
-        assertEquals(2 * 2 * c.hero.poisonDose(Relic.VENOM), tick.damage)
+        // Le gobelin est vulnérable au poison : il ronge double, mais une seule fois
+        assertEquals(2 * c.hero.poisonDose(Relic.VENOM), tick.damage)
         c.endEnemyTurn()
-        repeat(Relic.VENOM.effectTurns) {
+        repeat(Relic.POISON_MAX_TURNS) {
             if (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
             enemyTurn(c)
         }
-        assertEquals(0, enemy.poisonDoses)
+        assertEquals(0, enemy.poisonTurns)
     }
 
     @Test
@@ -293,23 +310,24 @@ class RelicTest {
     }
 
     @Test
-    fun leVeninSuitLaDexLesElementsLInt() {
+    fun chaqueReliqueSuitSaCaracteristique() {
+        // Les Lames empoisonnées sont au voleur (DEX), la Boule de feu au mage (INT)
         val base = Hero.starter()
         val dex = heroWith(StatType.DEX, 10)
         val int = heroWith(StatType.INT, 10)
-        assertTrue(dex.relicPower(Relic.VENOM) > base.relicPower(Relic.VENOM))
-        assertEquals(base.relicPower(Relic.VENOM), int.relicPower(Relic.VENOM), 1e-4f)
-        assertTrue(int.relicPower(Relic.ICE_SHARD) > base.relicPower(Relic.ICE_SHARD))
-        assertEquals(base.relicPower(Relic.ICE_SHARD), dex.relicPower(Relic.ICE_SHARD), 1e-4f)
+        assertTrue(dex.relicPower(Relic.POISONED_BLADES) > base.relicPower(Relic.POISONED_BLADES))
+        assertEquals(base.relicPower(Relic.POISONED_BLADES), int.relicPower(Relic.POISONED_BLADES), 1e-4f)
+        assertTrue(int.relicPower(Relic.FIREBALL) > base.relicPower(Relic.FIREBALL))
+        assertEquals(base.relicPower(Relic.FIREBALL), dex.relicPower(Relic.FIREBALL), 1e-4f)
     }
 
     @Test
     fun leDdSuitLaCaracDeLaRelique() {
         val int = heroWith(StatType.INT, 6)
         val dex = heroWith(StatType.DEX, 6)
-        assertEquals(Hero.starter().spellDc(Relic.ICE_SHARD) + 3, int.spellDc(Relic.ICE_SHARD))
-        assertEquals(Hero.starter().spellDc(Relic.ICE_SHARD), dex.spellDc(Relic.ICE_SHARD))
-        assertEquals(Hero.starter().spellDc(Relic.VENOM) + 3, dex.spellDc(Relic.VENOM))
+        assertEquals(Hero.starter().spellDc(Relic.LIGHTNING) + 3, int.spellDc(Relic.LIGHTNING))
+        assertEquals(Hero.starter().spellDc(Relic.LIGHTNING), dex.spellDc(Relic.LIGHTNING))
+        assertEquals(Hero.starter().spellDc(Relic.POISONED_BLADES) + 3, dex.spellDc(Relic.POISONED_BLADES))
     }
 
     @Test
@@ -352,7 +370,8 @@ class RelicTest {
                 RelicEffect.BURN      -> hit * Relic.BURN_SHARE * r.effectTurns
                 RelicEffect.FREEZE    -> RelicBudget.FREEZE_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
                 RelicEffect.PARALYZE  -> RelicBudget.PARALYSIS_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
-                RelicEffect.POISON    -> r.doseCoef * r.effectTurns
+                // Le coup ne paie qu'une part des doses : la cible meurt souvent avant la fin
+                RelicEffect.POISON    -> r.doseCoef * r.effectTurns * RelicBudget.POISON_PAID_SHARE
                 RelicEffect.FRACTURE  -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns
                 RelicEffect.MARK      -> RelicBudget.MARK_VALUE
                 // L'affaiblissement de chaque ennemi, plus les coups renforcés du héros, partagés
@@ -362,7 +381,8 @@ class RelicTest {
                 RelicEffect.BLEED     -> RelicBudget.bleedCoef(r) * r.effectTurns * RelicBudget.REF_ATTACKS_PER_TURN
                 RelicEffect.BLEED_ON_CRIT -> RelicBudget.REF_CRIT_CHANCE *
                     RelicBudget.bleedCoef(r) * Relic.FAN_BLEED_TURNS * RelicBudget.REF_ATTACKS_PER_TURN
-                RelicEffect.ACID      -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns + r.doseCoef * Relic.ENCHANT_DOSE_TURNS
+                RelicEffect.ACID      -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns +
+                    r.doseCoef * Relic.ENCHANT_DOSE_TURNS * RelicBudget.POISON_PAID_SHARE
                 // Le surplus du coup contre un figé, à la fréquence où on en trouve un
                 RelicEffect.CRYSTALLIZE -> RelicBudget.share(r) - hit
                 // Des prix payés : le coup en vaut plus que la part
