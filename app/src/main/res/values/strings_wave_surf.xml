@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="wave_surf_title">Wave Surf</string>
-    <string name="wave_surf_description">Surf the procedural hills — tap to dive and build speed!</string>
+    <string name="wave_surf_description">Control gravity: press to pull down hard, release to soar!</string>
+    <string name="wave_surf_hint">Hold for strong gravity. Tap downhill to boost your speed. Release uphill to soar or hop at low speed.</string>
     <string name="wave_surf_restart">Restart</string>
     <string name="wave_surf_hud_distance">%1$d m</string>
     <string name="wave_surf_hud_speed">%1$d km/h</string>

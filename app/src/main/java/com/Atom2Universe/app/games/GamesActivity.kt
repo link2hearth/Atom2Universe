@@ -263,7 +263,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.wave_surf_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_wavesurf,
-            activityClass = WaveSurfActivity::class.java
+            activityClass = WaveSurfActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.wavesurf.WaveSurfHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "motocross",

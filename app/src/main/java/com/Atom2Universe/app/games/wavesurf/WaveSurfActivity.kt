@@ -22,6 +22,9 @@ class WaveSurfActivity : ThemedActivity() {
         val tvDist = findViewById<TextView>(R.id.wave_surf_hud_distance)
         val tvSpeed = findViewById<TextView>(R.id.wave_surf_hud_speed)
         val tvAlt = findViewById<TextView>(R.id.wave_surf_hud_altitude)
+        tvDist.text = getString(R.string.wave_surf_hud_distance, 0)
+        tvSpeed.text = getString(R.string.wave_surf_hud_speed, 0)
+        tvAlt.text = getString(R.string.wave_surf_hud_altitude, 0)
 
         gameView.onStats = { distM, speedKmh, altitudeM ->
             runOnUiThread {

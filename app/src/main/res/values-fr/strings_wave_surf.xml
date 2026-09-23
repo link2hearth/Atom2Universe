@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="wave_surf_title">Wave Surf</string>
-    <string name="wave_surf_description">Surfez les collines — appuyez pour plonger et gagner de la vitesse !</string>
+    <string name="wave_surf_description">Modulez la gravité : appuyez pour tirer fort vers le sol, relâchez pour voler !</string>
+    <string name="wave_surf_hint">Maintenez pour renforcer la gravité. Cliquez en descente pour accélérer. Relâchez en montée pour voler ou faire un petit saut.</string>
     <string name="wave_surf_restart">Recommencer</string>
     <string name="wave_surf_hud_distance">%1$d m</string>
     <string name="wave_surf_hud_speed">%1$d km/h</string>

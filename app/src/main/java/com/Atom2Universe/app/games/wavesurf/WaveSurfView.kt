@@ -2,10 +2,16 @@ package com.Atom2Universe.app.games.wavesurf
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
+import android.view.Choreographer
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -14,295 +20,53 @@ class WaveSurfView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : SurfaceView(context, attrs), SurfaceHolder.Callback, Runnable {
 
-    /** Faux dès qu'une surface a refusé le canevas matériel : voir [lockFrame]. */
-    private var hardwareCanvas = true
-
-    /**
-     * Attrape l'image à venir — **sur le processeur graphique**.
-     *
-     * C'était [SurfaceHolder.lockCanvas], donc un canevas logiciel : le processeur
-     * calculait et écrivait lui-même les quatre millions et demi de pixels de l'écran,
-     * à chaque image. Mesuré à la tablette sur le jeu Particules, qui souffrait du même
-     * mal, cela coûtait un cœur entier et un ampère pendant que la puce graphique
-     * restait à deux pour cent ; le basculement a ramené le jeu à trente pour cent d'un
-     * cœur et la puce de 53 à 36 degrés. Remplir des surfaces est précisément ce que la
-     * carte graphique fait pour rien.
-     *
-     * [SurfaceHolder.lockHardwareCanvas] ne demande qu'une chose : **tout redessiner à
-     * chaque image**, puisque le contenu de l'image précédente n'est pas conservé — ce
-     * que cette vue fait déjà, son rendu commençant par repeindre l'écran entier.
-     *
-     * Le repli logiciel n'est pas de la prudence de principe : une surface peut refuser
-     * le canevas matériel, et le jeu doit alors continuer comme avant plutôt que de
-     * s'arrêter. Un refus vaut pour toujours, on ne le redemande pas soixante fois par
-     * seconde ; une toile nulle, en revanche, veut seulement dire que la surface n'est
-     * pas prête, et c'est l'appelant qui patiente.
-     */
-    private fun lockFrame(): Canvas? {
-        if (hardwareCanvas) {
-            try {
-                return holder.lockHardwareCanvas()
-            } catch (_: Throwable) {
-                hardwareCanvas = false
-            }
-        }
-        return holder.lockCanvas()
-    }
-
-    enum class ColorTheme(val shortLabel: String) {
-        VIVID("Vivid"), PASTEL("Pastel"), WEATHERED("Old"), GRAYSCALE("Gray")
-    }
+    enum class ColorTheme { VIVID, PASTEL, WEATHERED, GRAYSCALE }
 
     companion object {
         private const val PIXELS_PER_METER = 60f
-        private const val BASE_GRAVITY = 900f
-        private const val DIVE_MULTIPLIER = 3.2f
-        private const val BASE_PUSH_ACCEL = 42f
-        private const val START_GROUND_SPEED = 90f
-        private const val INITIAL_LAUNCH_SPEED = 360f
-        private const val GROUND_DRAG = 0.9978f
-        private const val HOLDING_DRAG = 0.9991f
-        private const val AIR_DRAG = 0.999f
-        private const val DIVE_PULL_STRENGTH = 0.85f
-        private const val JUMP_BASE = 180f
-        private const val JUMP_SPEED_RATIO = 0.4f
-        private const val MAX_JUMP_IMPULSE = 380f
-        private const val AUTO_JUMP_SPEED_THRESHOLD = 120f
-        private const val MIN_LANDING_SPEED = 22f
-        private const val UPHILL_DECEL_FACTOR_MIN = 0.35f
-        private const val UPHILL_DECEL_SPEED = 420f
-        private const val UPHILL_DRAG_BONUS = 0.9995f
-        private const val UPHILL_PRESS_GRACE_DURATION = 2f
-        private const val AIR_PRESS_FORWARD_IMPULSE = 120f
-        private const val AIR_PRESS_DOWN_IMPULSE = 260f
-        private const val GROUND_PRESS_FORWARD_IMPULSE = 140f
-        private const val DOWNHILL_IMPULSE_MULTIPLIER = 1.35f
-        private const val START_SCREEN_X_RATIO = 0.2f
-        private const val CAMERA_LERP = 0.12f
-        private const val CAMERA_VERTICAL_LERP = 0.10f
-        // Ratio de l'écran depuis le haut où le joueur est ancré (0.62 = bas du 2/3 supérieur)
-        private const val CAMERA_TARGET_Y_RATIO = 0.62f
-        private const val TRAIL_MAX_POINTS = 24
-        private const val TRAIL_MAX_AGE_MS = 320L
-        private const val TRAIL_SAMPLE_INTERVAL_MS = 30L
-        private const val FRAME_TIME_NS = 1_000_000_000L / 60
+        private const val PLAYER_SCREEN_X = 0.20f
+        private const val TERRAIN_ANCHOR_Y = 150f
+        private const val TERRAIN_SCREEN_Y = 0.68f
+        private const val TRAIL_AGE = 0.4f
     }
 
-    // ── Terrain ───────────────────────────────────────────────────────────────
+    private data class Size(val width: Float, val height: Float)
+    private data class TrailPoint(val x: Float, val y: Float, val time: Float)
+    private enum class Input { PRESS, RELEASE, CANCEL }
 
-    private data class TP(val x: Float, val y: Float)
+    private val physics = WaveSurfPhysics()
+    private val terrain get() = physics.terrain
+    private val pendingPress = ConcurrentLinkedQueue<Input>()
+    private var touchPressed = false
+    private val pendingReset = AtomicBoolean(true)
+    private val pendingSize = AtomicReference<Size?>(null)
+    @Volatile private var running = false
+    private var resumed = false
+    private var surfaceReady = false
+    private var thread: Thread? = null
+    @Volatile private var renderHandler: Handler? = null
+    private var hardwareCanvas = true
+    @Volatile var currentTheme = ColorTheme.VIVID
+        private set
 
-    private enum class SegType { NORMAL, DOUBLE_HILL, LONG_VALLEY, PLATEAU, ROLLERS, BIG_RAMP }
-
-    private inner class Terrain {
-        val pts = mutableListOf<TP>()
-        var minY = 120f; var maxY = 480f
-        var baseLevel = 320f; var defBase = 320f
-        val span get() = maxY - minY
-        var cx = 0f; var cy = baseLevel
-        var minAmp = 48f; var maxAmp = 120f
-        var curAmp = 72f; var phase = 0f; var phaseSpd = 0.015f
-
-        fun configure(minY: Float, maxY: Float, base: Float) {
-            this.minY = minY; this.maxY = maxY
-            baseLevel = base.coerceIn(minY + 20f, maxY - 20f)
-            defBase = baseLevel
-            minAmp = (span * 0.12f).coerceAtLeast(24f)
-            maxAmp = (span * 0.26f).coerceAtLeast(minAmp + 12f)
-            cy = baseLevel
-        }
-
-        fun reset(startX: Float, endX: Float) {
-            pts.clear(); cx = startX
-            val margin = (maxAmp * 0.6f).coerceAtLeast(36f)
-            baseLevel = (defBase + rnd(-span * 0.08f, span * 0.08f))
-                .coerceIn(minY + margin, maxY - margin)
-            curAmp = rnd(minAmp, maxAmp)
-            val wl = rnd(640f, 1240f)
-            phaseSpd = (2f * PI.toFloat() / wl.coerceAtLeast(60f))
-            phase = rnd(0f, 2f * PI.toFloat())
-            cy = (baseLevel + sin(phase) * curAmp).coerceIn(minY, maxY)
-            pts.add(TP(cx, cy)); ensure(endX)
-        }
-
-        fun ensure(maxX: Float) {
-            if (pts.isEmpty()) pts.add(TP(cx, cy))
-            while (pts.last().x < maxX) append()
-        }
-
-        fun prune(minX: Float) {
-            while (pts.size > 4 && pts[1].x < minX) pts.removeAt(0)
-        }
-
-        fun height(x: Float): Float {
-            if (pts.isEmpty()) return baseLevel
-            if (x <= pts.first().x) return pts.first().y
-            if (x >= pts.last().x) return pts.last().y
-            for (i in 1 until pts.size) {
-                if (x <= pts[i].x) {
-                    val p = pts[i - 1]; val q = pts[i]
-                    val t = ((x - p.x) / (q.x - p.x).coerceAtLeast(1f)).coerceIn(0f, 1f)
-                    return lerp(p.y, q.y, t)
-                }
-            }
-            return baseLevel
-        }
-
-        fun slope(x: Float): Float {
-            if (pts.size < 2) return 0f
-            if (x <= pts.first().x) return atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x)
-            for (i in 1 until pts.size) {
-                if (x <= pts[i].x) return atan2(pts[i].y - pts[i - 1].y, pts[i].x - pts[i - 1].x)
-            }
-            val n = pts.size
-            return atan2(pts[n - 1].y - pts[n - 2].y, pts[n - 1].x - pts[n - 2].x)
-        }
-
-        // ── Segment types ────────────────────────────────────────────────────
-
-        private fun pickType(): SegType {
-            val r = Random.nextFloat()
-            return when {
-                r < 0.33f -> SegType.NORMAL
-                r < 0.53f -> SegType.DOUBLE_HILL
-                r < 0.68f -> SegType.LONG_VALLEY
-                r < 0.78f -> SegType.PLATEAU
-                r < 0.93f -> SegType.ROLLERS
-                else      -> SegType.BIG_RAMP
-            }
-        }
-
-        private fun append() {
-            when (pickType()) {
-                SegType.NORMAL      -> normalHill()
-                SegType.DOUBLE_HILL -> doubleHill()
-                SegType.LONG_VALLEY -> longValley()
-                SegType.PLATEAU     -> plateau()
-                SegType.ROLLERS     -> rollers()
-                SegType.BIG_RAMP    -> bigRamp()
-            }
-        }
-
-        // Bosse sinusoïdale standard
-        private fun normalHill() {
-            val tb = newBase()
-            val amp = rnd(minAmp, maxAmp)
-            val len = rnd(640f, 1240f)
-            subSeg(targetBase = tb, amplitude = amp, length = len, wavelength = len)
-        }
-
-        // Deux bosses avec mini-creux entre elles
-        private fun doubleHill() {
-            val margin = (maxAmp * 0.6f).coerceAtLeast(36f)
-            val peakBase = rnd(minY + margin, minY + margin + span * 0.25f)
-                .coerceIn(minY + margin, maxY - margin)
-            val valleyBase = (peakBase + rnd(span * 0.08f, span * 0.18f))
-                .coerceIn(minY + margin, maxY - margin)
-            val amp = rnd(minAmp * 0.45f, maxAmp * 0.65f)
-            val halfLen = rnd(380f, 680f)
-            // Première bosse
-            subSeg(peakBase, amp, halfLen, halfLen)
-            // Mini-creux rapide
-            subSeg(valleyBase, amp * 0.35f, halfLen * 0.35f, halfLen * 0.35f)
-            // Deuxième bosse légèrement décalée
-            val peak2 = (peakBase + rnd(-span * 0.06f, span * 0.06f)).coerceIn(minY + margin, maxY - margin)
-            subSeg(peak2, amp * rnd(0.8f, 1.1f), halfLen * rnd(0.9f, 1.2f), halfLen)
-        }
-
-        // Creux long et presque plat
-        private fun longValley() {
-            val margin = (maxAmp * 0.6f).coerceAtLeast(36f)
-            val valBase = rnd(maxY - margin - span * 0.18f, maxY - margin)
-                .coerceIn(minY + margin, maxY - margin)
-            val amp = rnd(6f, 22f)  // quasi-plat = amplitude minuscule
-            val len = rnd(1200f, 2600f)
-            subSeg(targetBase = valBase, amplitude = amp, length = len, wavelength = len * 0.6f)
-        }
-
-        // Plateau relativement plat à hauteur variable
-        private fun plateau() {
-            val plateauBase = rnd(defBase - span * 0.18f, defBase + span * 0.18f)
-                .coerceIn(minY + (maxAmp * 0.6f).coerceAtLeast(36f), maxY - (maxAmp * 0.6f).coerceAtLeast(36f))
-            val amp = rnd(4f, 14f)
-            val len = rnd(500f, 1100f)
-            subSeg(plateauBase, amp, len, len * 0.8f)
-        }
-
-        // Petites bosses serrées (washboard)
-        private fun rollers() {
-            val base = newBase()
-            val amp = rnd(minAmp * 0.28f, minAmp * 0.65f)
-            val totalLen = rnd(640f, 1240f)
-            val wl = rnd(180f, 300f) // courte longueur d'onde = beaucoup d'oscillations
-            subSeg(base, amp, totalLen, wl)
-        }
-
-        // Montée raide suivie d'un long creux
-        private fun bigRamp() {
-            val margin = (maxAmp * 0.6f).coerceAtLeast(36f)
-            val topBase = rnd(minY + margin, defBase - span * 0.05f)
-                .coerceIn(minY + margin, maxY - margin)
-            val bottomBase = rnd(defBase + span * 0.05f, maxY - margin)
-                .coerceIn(minY + margin, maxY - margin)
-            // Montée abrupte
-            subSeg(topBase, minAmp * 0.25f, rnd(320f, 580f), 300f)
-            // Long creux plat
-            subSeg(bottomBase, rnd(8f, 20f), rnd(900f, 1800f), 800f)
-        }
-
-        private fun subSeg(targetBase: Float, amplitude: Float, length: Float, wavelength: Float) {
-            val steps = (length / 36f).toInt().coerceAtLeast(8)
-            val stepLen = length / steps
-            val sb = baseLevel; val sa = curAmp; val sp = phaseSpd
-            val ep = (2f * PI.toFloat() / wavelength.coerceAtLeast(60f))
-            for (i in 1..steps) {
-                val t = i.toFloat() / steps
-                val e = ease(t)
-                phase += lerp(sp, ep, e) * stepLen
-                val y = (lerp(sb, targetBase, e) + sin(phase) * lerp(sa, amplitude, e)).coerceIn(minY, maxY)
-                cx += stepLen; cy = y; pts.add(TP(cx, y))
-            }
-            baseLevel = targetBase; curAmp = amplitude
-            phaseSpd = (2f * PI.toFloat() / wavelength.coerceAtLeast(60f))
-            phase = ((phase % (2f * PI.toFloat())) + 2f * PI.toFloat()) % (2f * PI.toFloat())
-        }
-
-        private fun newBase(): Float {
-            val margin = (maxAmp * 0.6f).coerceAtLeast(30f)
-            return (baseLevel + rnd(-span * 0.04f, span * 0.04f)).coerceIn(minY + margin, maxY - margin)
-        }
-    }
-
-    // ── Player ────────────────────────────────────────────────────────────────
-
-    private data class TrailPt(val x: Float, val y: Float, val t: Long)
-
-    private var px = 0f; private var py = 0f
-    private var pvx = 0f; private var pvy = 0f
-    private var pspd = START_GROUND_SPEED; private var onGround = true
-    private val trail = mutableListOf<TrailPt>()
-    private var lastTrail = Long.MIN_VALUE / 2
-    private var dist = 0f; private var elapsedMs = 0L
-    private var sessionBestSpeed = 0f
-    private var sessionBestAlt = 0f
-
-    // ── Input ─────────────────────────────────────────────────────────────────
-
-    @Volatile private var pressing = false
-    private var pressDur = 0f; private var pendRel = false
-
-    // ── Camera ────────────────────────────────────────────────────────────────
-
-    private var camX = 0f; private var camY = 0f; private var camS = 1f
-
-    // ── Dimensions ────────────────────────────────────────────────────────────
-
-    private var vw = 1f; private var vh = 1f
-
-    // ── Objects ───────────────────────────────────────────────────────────────
-
-    private val terrain = Terrain()
-    var currentTheme: ColorTheme = ColorTheme.VIVID
+    private var vw = 1f
+    private var vh = 1f
+    private var camX = 0f
+    private var camY = 0f
+    private var camS = 1f
+    private var renderX = 0f
+    private var renderY = 0f
+    private var cameraZoom = 0f
+    private var cameraZoomVelocity = 0f
+    private var elapsed = 0f
+    private var lastTrail = -1f
+    private var lastStats = -1f
+    private val trail = ArrayDeque<TrailPoint>()
+    private val prefs = context.getSharedPreferences("wave_surf_save", Context.MODE_PRIVATE)
+    private var bestSpeed = prefs.getInt("best_speed", 0)
+    private var bestAltitude = prefs.getInt("best_altitude", 0)
+    private var savedSpeed = bestSpeed
+    private var savedAltitude = bestAltitude
 
     private val skyPaint = Paint()
     private val terrFill = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -311,210 +75,257 @@ class WaveSurfView @JvmOverloads constructor(
     private val ballPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val trailPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val starPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val terrainPath = Path()
+    private val surfacePath = Path()
     private val stars = Array(45) { Triple(Random.nextFloat(), Random.nextFloat() * 0.55f, 0.7f + Random.nextFloat() * 1.1f) }
-
-    @Volatile private var running = false
-    private var thread: Thread? = null
-    private var lastNs = 0L
 
     var onStats: ((distM: Float, speedKmh: Float, altitudeM: Float) -> Unit)? = null
 
     init { holder.addCallback(this); isFocusable = true }
 
-    // ── Surface lifecycle ─────────────────────────────────────────────────────
+    // Le fil de jeu possède le terrain et la physique. Le fil UI dépose des
+    // commandes, même pour recommencer : aucune mutation pendant le dessin.
+    override fun surfaceCreated(holder: SurfaceHolder) {}
 
-    override fun surfaceCreated(h: SurfaceHolder) {}
-
-    override fun surfaceChanged(h: SurfaceHolder, fmt: Int, w: Int, ht: Int) {
-        vw = w.toFloat().coerceAtLeast(1f)
-        vh = ht.toFloat().coerceAtLeast(1f)
-        terrStroke.strokeWidth = (vh * 0.004f).coerceAtLeast(1.5f)
-        terrain.configure(vh * 0.72f, vh * 0.96f, vh * 0.87f)
-        resetGame()
-        if (!running) resume()
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        pendingSize.set(Size(width.toFloat().coerceAtLeast(1f), height.toFloat().coerceAtLeast(1f)))
+        surfaceReady = true
+        startLoopIfReady()
     }
 
-    override fun surfaceDestroyed(h: SurfaceHolder) { pause() }
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        surfaceReady = false
+        stopLoop()
+    }
 
     fun resume() {
-        if (running) return
-        running = true; lastNs = System.nanoTime()
-        thread = Thread(this).apply { name = "WaveSurf"; start() }
+        resumed = true
+        startLoopIfReady()
     }
 
     fun pause() {
-        running = false; thread?.join(500); thread = null
+        resumed = false
+        stopLoop()
+    }
+
+    private fun startLoopIfReady() {
+        if (!resumed || !surfaceReady || running) return
+        running = true
+        thread = Thread(this, "WaveSurf").apply { start() }
+    }
+
+    private fun stopLoop() {
+        running = false
+        renderHandler?.post { Looper.myLooper()?.quit() }
+        thread?.join()
+        thread = null
+        pendingPress.clear()
+        touchPressed = false
+        physics.cancelPress()
+        saveRecords()
     }
 
     fun cycleTheme(): ColorTheme {
-        currentTheme = when (currentTheme) {
-            ColorTheme.VIVID     -> ColorTheme.PASTEL
-            ColorTheme.PASTEL    -> ColorTheme.WEATHERED
-            ColorTheme.WEATHERED -> ColorTheme.GRAYSCALE
-            ColorTheme.GRAYSCALE -> ColorTheme.VIVID
-        }
+        currentTheme = ColorTheme.entries[(currentTheme.ordinal + 1) % ColorTheme.entries.size]
         return currentTheme
     }
 
-    // ── Game loop ─────────────────────────────────────────────────────────────
-
-    override fun run() {
-        while (running) {
-            val now = System.nanoTime()
-            val delta = ((now - lastNs) / 1e9f).coerceIn(0f, 1f / 30f)
-            lastNs = now
-            update(delta)
-            val canvas = try { lockFrame() } catch (e: Exception) { null }
-            if (canvas != null) try { renderFrame(canvas) } finally { holder.unlockCanvasAndPost(canvas) }
-            val sleep = FRAME_TIME_NS - (System.nanoTime() - now)
-            if (sleep > 1_000_000L) Thread.sleep(sleep / 1_000_000L)
-        }
+    fun resetGame() {
+        touchPressed = false
+        pendingPress.clear()
+        pendingReset.set(true)
     }
 
-    // ── Touch ─────────────────────────────────────────────────────────────────
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        when (ev.actionMasked) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> setPress(true)
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> if (ev.pointerCount <= 1) setPress(false)
-            MotionEvent.ACTION_POINTER_UP -> if (ev.pointerCount <= 1) setPress(false)
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> setTouchPressed(true, newPress = true)
+            // Le relâchement du dernier doigt libère la balle, y compris après
+            // un appui à plusieurs doigts. Une annulation libère toujours l'appui.
+            MotionEvent.ACTION_POINTER_UP -> setTouchPressed(event.pointerCount > 1)
+            MotionEvent.ACTION_UP -> {
+                setTouchPressed(false)
+                performClick()
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                touchPressed = false
+                pendingPress.add(Input.CANCEL)
+            }
         }
         return true
     }
 
-    private fun setPress(p: Boolean) {
-        if (p == pressing) return
-        pressing = p
-        if (p) { pressDur = 0f; pendRel = false; applyImpulse() }
-        else   { pressDur = 0f; pendRel = onGround }
+    private fun setTouchPressed(pressed: Boolean, newPress: Boolean = false) {
+        if (!running || (touchPressed == pressed && !newPress)) return
+        touchPressed = pressed
+        // Préserve même un appui bref entièrement situé entre deux images.
+        pendingPress.add(if (pressed) Input.PRESS else Input.RELEASE)
     }
 
-    // ── Reset ─────────────────────────────────────────────────────────────────
-
-    fun resetGame() {
-        camS = 1f; camY = 0f
-        val ww = vw / camS
-        terrain.reset(-ww, -ww + ww * 3f)
-        px = -ww + ww * START_SCREEN_X_RATIO
-        py = terrain.height(px) - 12f
-        pspd = START_GROUND_SPEED; pvx = 0f; pvy = 0f; onGround = true
-        camX = px - ww * START_SCREEN_X_RATIO
-        dist = 0f; pressing = false; pressDur = 0f; pendRel = false
-        trail.clear(); lastTrail = Long.MIN_VALUE / 2; elapsedMs = 0L
-        val a = Math.toRadians(20.0).toFloat()
-        onGround = false; pspd = INITIAL_LAUNCH_SPEED
-        pvx = cos(a) * INITIAL_LAUNCH_SPEED; pvy = -sin(a) * INITIAL_LAUNCH_SPEED
+    override fun performClick(): Boolean {
+        super.performClick()
+        return true
     }
 
-    // ── Physics ───────────────────────────────────────────────────────────────
-
-    private fun update(dt: Float) {
-        elapsedMs += (dt * 1000f).toLong()
-        if (pressing) pressDur += dt else pressDur = 0f
-        val ww = vw / camS
-        terrain.ensure(camX + ww * 2.6f); terrain.prune(camX - ww * 1.2f)
-
-        if (onGround) {
-            val sl = terrain.slope(px)
-            val tx = cos(sl); val ty = sin(sl)
-            val grace = pressing && sl > 0 && pressDur < UPHILL_PRESS_GRACE_DURATION
-            val dive = pressing && !grace
-            val g = BASE_GRAVITY * if (dive) DIVE_MULTIPLIER else 1f
-            var slopeA = -g * sin(sl)
-            if (sl > 0 && pspd > 0) slopeA *= lerp(1f, UPHILL_DECEL_FACTOR_MIN, (pspd / UPHILL_DECEL_SPEED).coerceIn(0f, 1f))
-            pspd += (slopeA + if (pressing) BASE_PUSH_ACCEL else BASE_PUSH_ACCEL * 0.12f) * dt
-            var drag = if (dive) HOLDING_DRAG else GROUND_DRAG
-            if (sl > 0 && pspd > 0) drag = drag.coerceAtLeast(lerp(drag, UPHILL_DRAG_BONUS, (pspd / UPHILL_DECEL_SPEED).coerceIn(0f, 1f)))
-            pspd *= drag.dpow(dt * 60f); if (pspd < 0.001f) pspd = 0f
-            pvx = pspd * tx; pvy = pspd * ty
-            px += pvx * dt; py = terrain.height(px)
-            val crest = sl < Math.toRadians(-6.0).toFloat()
-            if ((crest && pspd >= AUTO_JUMP_SPEED_THRESHOLD) || (!pressing && pendRel && crest && pspd > 0f)) {
-                val imp = (JUMP_BASE + pspd * JUMP_SPEED_RATIO).coerceIn(JUMP_BASE, MAX_JUMP_IMPULSE)
-                onGround = false; pvy -= imp; py -= 1.5f
-                pspd = hypot(pvx, pvy); pendRel = false
+    override fun run() {
+        // La surface est dessinée au rythme réel de l'écran (60/90/120 Hz),
+        // au lieu d'un sleep à 60 Hz qui dérive par rapport à sa synchronisation.
+        Looper.prepare()
+        val looper = checkNotNull(Looper.myLooper())
+        val choreographer = Choreographer.getInstance()
+        renderHandler = Handler(looper)
+        if (!running) {
+            renderHandler = null
+            return
+        }
+        var lastNs = 0L
+        var accumulator = 0f
+        var previousX = physics.x
+        var previousY = physics.y
+        val callback = object : Choreographer.FrameCallback {
+            override fun doFrame(now: Long) {
+                if (!running) return
+                val frameDt = if (lastNs == 0L) 0f else ((now - lastNs) / 1e9f).coerceIn(0f, 0.1f)
+                lastNs = now
+                pendingSize.getAndSet(null)?.let { size ->
+                    vw = size.width; vh = size.height
+                    camS = baseScale() * exp(cameraZoom)
+                    // Une nouvelle surface ne remet pas la partie à zéro.
+                    snapCamera()
+                }
+                if (pendingReset.getAndSet(false)) {
+                    saveRecords()
+                    physics.reset()
+                    previousX = physics.x; previousY = physics.y
+                    renderX = physics.x; renderY = physics.y
+                    trail.clear(); elapsed = 0f; lastTrail = -1f; lastStats = -1f
+                    cameraZoom = 0f; cameraZoomVelocity = 0f
+                    camS = baseScale()
+                    snapCamera()
+                    accumulator = 0f
+                }
+                while (true) {
+                    when (pendingPress.poll() ?: break) {
+                        Input.PRESS -> physics.setPress(true)
+                        Input.RELEASE -> physics.setPress(false)
+                        Input.CANCEL -> physics.cancelPress()
+                    }
+                }
+                accumulator += frameDt
+                while (accumulator >= WaveSurfPhysics.STEP) {
+                    previousX = physics.x; previousY = physics.y
+                    physics.step()
+                    elapsed += WaveSurfPhysics.STEP
+                    accumulator -= WaveSurfPhysics.STEP
+                    captureTrail()
+                }
+                // Même interpolation pour la bille et la caméra.
+                val fraction = accumulator / WaveSurfPhysics.STEP
+                renderX = previousX + (physics.x - previousX) * fraction
+                renderY = previousY + (physics.y - previousY) * fraction
+                updateCamera(frameDt)
+                terrain.ensure(camX + vw / camS + 200f)
+                terrain.prune(camX - 1600f)
+                publishStats()
+                val canvas = try { lockFrame() } catch (_: Exception) { null }
+                if (canvas != null) {
+                    try {
+                        drawSky(canvas)
+                        drawTerrain(canvas)
+                        drawBall(canvas)
+                    } finally {
+                        holder.unlockCanvasAndPost(canvas)
+                    }
+                }
+                if (running) choreographer.postFrameCallback(this)
             }
-        } else {
-            val g = BASE_GRAVITY * if (pressing) DIVE_MULTIPLIER else 1f
-            pvy += g * dt
-            val drag = AIR_DRAG.dpow(dt * 60f); pvx *= drag; pvy *= drag
-            if (pressing) {
-                val sl = terrain.slope(px)
-                val dp = (-sin(sl)).coerceAtLeast(0f)
-                if (dp > 0f) { val da = g * dp * dt * DIVE_PULL_STRENGTH; pvx += cos(sl) * da; pvy += sin(sl) * da }
-            }
-            px += pvx * dt; py += pvy * dt
-            val gy = terrain.height(px)
-            if (py >= gy) {
-                py = gy
-                val sl = terrain.slope(px); val tx = cos(sl); val ty = sin(sl)
-                val proj = pvx * tx + pvy * ty
-                pspd = if ((proj * 0.97f) < MIN_LANDING_SPEED) 0f else proj * 0.97f
-                pvx = pspd * tx; pvy = pspd * ty; onGround = true; pendRel = false
-            }
         }
-        if (!onGround) { pendRel = false; pspd = hypot(pvx, pvy) }
-        dist = dist.coerceAtLeast(px)
-        updateCamera(dt); captureTrail()
-        val speedKmh = (pspd / PIXELS_PER_METER) * 3.6f
-        val groundY = terrain.height(px)
-        val altitudeM = ((groundY - py) / PIXELS_PER_METER).coerceAtLeast(0f)
-        if (speedKmh > sessionBestSpeed || altitudeM > sessionBestAlt) {
-            if (speedKmh > sessionBestSpeed) sessionBestSpeed = speedKmh
-            if (altitudeM > sessionBestAlt) sessionBestAlt = altitudeM
-            saveRecords()
-        }
-        onStats?.invoke(dist / PIXELS_PER_METER, speedKmh, altitudeM)
-    }
-
-    private fun saveRecords() {
-        val prefs = context.getSharedPreferences("wave_surf_save", Context.MODE_PRIVATE)
-        val prevSpeed = prefs.getInt("best_speed", 0)
-        val prevAlt   = prefs.getInt("best_altitude", 0)
-        val newSpeed  = sessionBestSpeed.toInt()
-        val newAlt    = sessionBestAlt.toInt()
-        if (newSpeed > prevSpeed || newAlt > prevAlt) {
-            prefs.edit()
-                .putInt("best_speed",    maxOf(newSpeed, prevSpeed))
-                .putInt("best_altitude", maxOf(newAlt, prevAlt))
-                .apply()
+        try {
+            choreographer.postFrameCallback(callback)
+            Looper.loop()
+        } finally {
+            choreographer.removeFrameCallback(callback)
+            renderHandler = null
+            running = false
         }
     }
 
-    private fun applyImpulse() {
-        if (onGround) {
-            val sl = terrain.slope(px)
-            var imp = GROUND_PRESS_FORWARD_IMPULSE
-            if (sl < 0) imp *= 1f + (DOWNHILL_IMPULSE_MULTIPLIER - 1f) * (-sin(sl)).coerceIn(0.2f, 1f)
-            pvx += cos(sl) * imp; pvy += sin(sl) * imp; pspd = hypot(pvx, pvy)
-        } else {
-            pvx += AIR_PRESS_FORWARD_IMPULSE; pvy += AIR_PRESS_DOWN_IMPULSE; pspd = hypot(pvx, pvy)
+    /** Redessine toute la surface sur le GPU, avec repli logiciel si nécessaire. */
+    private fun lockFrame(): Canvas? {
+        if (hardwareCanvas) {
+            try {
+                return holder.lockHardwareCanvas()
+            } catch (_: Exception) {
+                hardwareCanvas = false
+            }
         }
+        return holder.lockCanvas()
+    }
+
+    private fun baseScale() = min(vw / 2600f, vh / 1000f)
+
+    private fun snapCamera() {
+        camX = renderX - vw / camS * PLAYER_SCREEN_X
+        camY = TERRAIN_ANCHOR_Y - vh / camS * TERRAIN_SCREEN_Y
     }
 
     private fun updateCamera(dt: Float) {
-        val ww = vw / camS
-        camX += ((px - ww * START_SCREEN_X_RATIO) - camX) * CAMERA_LERP.coerceIn(0.08f, 0.25f)
-        // Ancre le joueur à CAMERA_TARGET_Y_RATIO depuis le haut.
-        // Quand le joueur saute haut, py diminue → desired devient négatif → clampé à 0
-        // → la caméra reste en haut du monde et le terrain descend vers le bas de l'écran.
-        val desired = (py - vh * CAMERA_TARGET_Y_RATIO).coerceAtLeast(0f)
-        camY += (desired - camY) * CAMERA_VERTICAL_LERP.coerceIn(0.06f, 0.22f)
-        camY = camY.coerceAtLeast(0f)
+        // Suit la hauteur courante, avec une courte anticipation de la montée.
+        // Aucun sommet mémorisé, verrou pendant le vol ni délai après réception.
+        val predictedY = renderY + min(physics.vy, 0f) * 0.16f
+        val height = (TERRAIN_ANCHOR_Y - predictedY).coerceAtLeast(0f)
+        // Marge fixe de cadrage : sa taille ne doit pas rétroagir sur le zoom.
+        val topSpace = (vh * (TERRAIN_SCREEN_Y - 0.10f) - baseBallRadius() * 2f).coerceAtLeast(1f)
+        val availableHeight = topSpace / baseScale()
+        val zoomStart = min(400f, availableHeight * 0.45f)
+        val zoomRange = min(1600f, availableHeight * 0.5f)
+        val excess = (height - zoomStart).coerceAtLeast(0f) / zoomRange
+        // La courbe démarre avec une dérivée nulle : pas de cran à son entrée.
+        val targetZoom = -0.5f * ln(1f + excess * excess)
+
+        // Ressort amorti critique en échelle logarithmique : la vitesse du zoom
+        // reste continue, y compris quand on clique, relâche ou touche le sol.
+        // Solution analytique indépendante de la fréquence de l'écran.
+        val response = 9f
+        val error = cameraZoom - targetZoom
+        val motion = cameraZoomVelocity + response * error
+        val decay = exp(-response * dt)
+        cameraZoom = targetZoom + (error + motion * dt) * decay
+        cameraZoomVelocity = (cameraZoomVelocity - response * motion * dt) * decay
+        camS = baseScale() * exp(cameraZoom)
+        // Pivot fixe sur la bille interpolée : pas de second filtre horizontal
+        // qui retarde le décor puis le fait rattraper à chaque changement de zoom.
+        snapCamera()
     }
+
+    private fun publishStats() {
+        val speedKmh = physics.speed / PIXELS_PER_METER * 3.6f
+        val altitudeM = physics.altitude / PIXELS_PER_METER
+        bestSpeed = max(bestSpeed, speedKmh.toInt())
+        bestAltitude = max(bestAltitude, altitudeM.toInt())
+        if (elapsed - lastStats < 0.1f) return
+        lastStats = elapsed
+        saveRecords()
+        onStats?.invoke(physics.x.coerceAtLeast(0f) / PIXELS_PER_METER, speedKmh, altitudeM)
+    }
+
+    private fun saveRecords() {
+        if (bestSpeed <= savedSpeed && bestAltitude <= savedAltitude) return
+        prefs.edit().putInt("best_speed", bestSpeed).putInt("best_altitude", bestAltitude).apply()
+        savedSpeed = bestSpeed; savedAltitude = bestAltitude
+    }
+
+    private fun baseBallRadius() = 8f * resources.displayMetrics.density
+
+    // La bille, son halo et sa traînée changent d'échelle avec le terrain.
+    // À zoom normal, on conserve la taille habituelle ; à zoom moitié, le rayon aussi.
+    private fun ballRadius() = baseBallRadius() * (camS / baseScale())
 
     private fun captureTrail() {
-        if (elapsedMs - lastTrail >= TRAIL_SAMPLE_INTERVAL_MS) {
-            trail.add(TrailPt(px, py, elapsedMs)); lastTrail = elapsedMs
+        if (elapsed - lastTrail >= 0.025f) {
+            trail.addLast(TrailPoint(physics.x, physics.y, elapsed))
+            lastTrail = elapsed
         }
-        while (trail.size > TRAIL_MAX_POINTS) trail.removeAt(0)
-        while (trail.isNotEmpty() && elapsedMs - trail.first().t > TRAIL_MAX_AGE_MS) trail.removeAt(0)
-    }
-
-    // ── Rendering ─────────────────────────────────────────────────────────────
-
-    private fun renderFrame(canvas: Canvas) {
-        drawSky(canvas); drawTerrain(canvas); drawBall(canvas)
+        while (trail.isNotEmpty() && elapsed - trail.first().time > TRAIL_AGE) trail.removeFirst()
     }
 
     private fun drawSky(canvas: Canvas) {
@@ -529,109 +340,56 @@ class WaveSurfView @JvmOverloads constructor(
     }
 
     private fun drawTerrain(canvas: Canvas) {
-        val pts = terrain.pts; if (pts.isEmpty()) return
-        val s = camS; val ww = vw / s
-        val x0 = camX - ww * 0.25f; val x1 = camX + ww * 1.1f
-        val path = Path()
-        path.moveTo((x0 - camX) * s, vh)
-        var started = false
-        for (pt in pts) {
-            if (pt.x < x0) continue
-            if (pt.x > x1) { path.lineTo((x1 - camX) * s, vh); break }
-            path.lineTo((pt.x - camX) * s, (pt.y - camY) * s)
-            started = true
+        terrainPath.rewind(); surfacePath.rewind()
+        terrainPath.moveTo(-8f, vh)
+        var screenX = -8f
+        while (screenX <= vw + 8f) {
+            val screenY = (terrain.height(camX + screenX / camS) - camY) * camS
+            terrainPath.lineTo(screenX, screenY)
+            if (screenX == -8f) surfacePath.moveTo(screenX, screenY) else surfacePath.lineTo(screenX, screenY)
+            screenX += 4f
         }
-        if (!started) path.lineTo((x1 - camX) * s, vh)
-        path.lineTo((x1 - camX) * s, vh); path.close()
-
-        // Gradient horizontal basé sur le thème (8 stops répartis sur la largeur visible)
-        val stops = 8
-        val gColors = IntArray(stops)
-        val gPos = FloatArray(stops) { i -> i.toFloat() / (stops - 1) }
-        for (i in 0 until stops) {
-            gColors[i] = getTerrainColor(camX + ww * gPos[i])
-        }
-        terrFill.shader = LinearGradient(0f, 0f, vw, 0f, gColors, gPos, Shader.TileMode.CLAMP)
-        canvas.drawPath(path, terrFill)
-
-        // Assombrissement vertical pour donner de la profondeur
+        terrainPath.lineTo(vw + 8f, vh); terrainPath.close()
+        val colors = IntArray(8) { getTerrainColor(camX + vw / camS * it / 7f) }
+        terrFill.shader = LinearGradient(0f, 0f, vw, 0f, colors, null, Shader.TileMode.CLAMP)
+        canvas.drawPath(terrainPath, terrFill)
         terrDark.shader = LinearGradient(0f, 0f, 0f, vh,
-            intArrayOf(Color.argb(0, 0, 0, 0), Color.argb(155, 0, 0, 0)),
-            floatArrayOf(0f, 1f), Shader.TileMode.CLAMP)
-        canvas.drawPath(path, terrDark)
-
-        terrStroke.color = Color.argb(70, 255, 255, 255)
-        canvas.drawPath(path, terrStroke)
-    }
-
-    private fun getTerrainColor(worldX: Float): Int {
-        return when (currentTheme) {
-            ColorTheme.VIVID -> {
-                val hue = ((worldX / 28000f) * 360f + 360f * 100f) % 360f
-                Color.HSVToColor(floatArrayOf(hue, 0.82f, 0.74f))
-            }
-            ColorTheme.PASTEL -> {
-                val hue = ((worldX / 28000f) * 360f + 360f * 100f) % 360f
-                Color.HSVToColor(floatArrayOf(hue, 0.28f, 0.97f))
-            }
-            ColorTheme.WEATHERED -> {
-                val hue = ((worldX / 40000f) * 360f + 15f + 360f * 100f) % 360f
-                Color.HSVToColor(floatArrayOf(hue, 0.40f, 0.50f))
-            }
-            ColorTheme.GRAYSCALE -> {
-                val wave = (sin(worldX / 7000f) * 0.55f + sin(worldX / 2800f + 1.4f) * 0.45f + 1f) / 2f
-                val v = (0.17f + 0.62f * wave).coerceIn(0.12f, 0.88f)
-                val g = (v * 255).toInt()
-                Color.rgb(g, g, g)
-            }
-        }
+            intArrayOf(Color.TRANSPARENT, Color.argb(175, 0, 0, 0)), null, Shader.TileMode.CLAMP)
+        canvas.drawPath(terrainPath, terrDark)
+        terrStroke.color = Color.argb(130, 255, 255, 255)
+        terrStroke.strokeWidth = resources.displayMetrics.density * 1.2f
+        canvas.drawPath(surfacePath, terrStroke)
     }
 
     private fun drawBall(canvas: Canvas) {
-        val s = camS
-        val r = (vh * 0.04f).coerceIn(12f, 28f)
-        val sr = (r * s).coerceAtLeast(6f)
-        val bx = (px - camX) * s; val by = (py - camY) * s
-        val cy2 = by - sr * 0.4f
-        val now = elapsedMs
-
-        // Couleur basée sur la vitesse : bleu (210°) → rouge (0°) à 200 km/h
-        val speedKmh = (pspd / PIXELS_PER_METER) * 3.6f
-        val t = (speedKmh / 200f).coerceIn(0f, 1f)
-        val hue = 210f * (1f - t)
-        val sat = 0.68f + 0.28f * t
-        val coreColor  = Color.HSVToColor(floatArrayOf(hue, sat, 1.0f))
-        val glowColor  = Color.HSVToColor(floatArrayOf(hue, sat * 0.50f, 1.0f))
-        val trailColor = Color.HSVToColor(floatArrayOf(hue, sat * 0.72f, 0.94f))
-        val trailR = Color.red(trailColor); val trailG = Color.green(trailColor); val trailB = Color.blue(trailColor)
-        val glowR  = Color.red(glowColor);  val glowG  = Color.green(glowColor);  val glowB  = Color.blue(glowColor)
-        val highlight = Color.HSVToColor(floatArrayOf(hue, sat * 0.12f, 1.0f))
-
-        // Trail
-        trail.forEach { pt ->
-            val age = now - pt.t; if (age < 0 || age > TRAIL_MAX_AGE_MS) return@forEach
-            val life = (1f - age.toFloat() / TRAIL_MAX_AGE_MS).coerceIn(0f, 1f)
-            val alpha = ((0.08f + life * 0.30f) * 255).toInt().coerceIn(0, 255)
-            trailPaint.color = Color.argb(alpha, trailR, trailG, trailB)
-            val sx = (pt.x - camX) * s; val sy = (pt.y - camY) * s
-            canvas.drawCircle(sx, sy, sr * (0.4f + life * 0.55f), trailPaint)
+        val r = ballRadius()
+        val bx = (renderX - camX) * camS
+        // Même décalage en glisse et en vol : le centre ne saute pas au décollage.
+        val by = (renderY - camY) * camS - r * 0.8f
+        val hue = 210f * (1f - (physics.speed / 1500f).coerceIn(0f, 1f))
+        val color = Color.HSVToColor(floatArrayOf(hue, 0.78f, 1f))
+        for (point in trail) {
+            val life = (1f - (elapsed - point.time) / TRAIL_AGE).coerceIn(0f, 1f)
+            trailPaint.color = Color.argb((life * 100).toInt(), Color.red(color), Color.green(color), Color.blue(color))
+            canvas.drawCircle((point.x - camX) * camS, (point.y - camY) * camS - r * 0.8f, r * (0.25f + life * 0.65f), trailPaint)
         }
-        // Halo
-        ballPaint.shader = RadialGradient(bx, cy2, sr * 1.5f,
-            intArrayOf(Color.argb(175, glowR, glowG, glowB), Color.argb(0, glowR, glowG, glowB)),
-            floatArrayOf(0f, 1f), Shader.TileMode.CLAMP)
-        canvas.drawCircle(bx, cy2, sr * 1.5f, ballPaint)
-        // Cœur
-        ballPaint.shader = RadialGradient(bx - sr * 0.28f, cy2 - sr * 0.28f, sr,
-            intArrayOf(highlight, coreColor),
-            floatArrayOf(0.08f, 1f), Shader.TileMode.CLAMP)
-        canvas.drawCircle(bx, cy2, sr, ballPaint)
+        ballPaint.shader = RadialGradient(bx, by, r * 2.2f,
+            intArrayOf(Color.argb(150, Color.red(color), Color.green(color), Color.blue(color)), Color.TRANSPARENT),
+            null, Shader.TileMode.CLAMP)
+        canvas.drawCircle(bx, by, r * 2.2f, ballPaint)
+        ballPaint.shader = RadialGradient(bx - r * 0.25f, by - r * 0.25f, r,
+            intArrayOf(Color.WHITE, color), null, Shader.TileMode.CLAMP)
+        canvas.drawCircle(bx, by, r, ballPaint)
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    private fun lerp(a: Float, b: Float, t: Float) = a + (b - a) * t
-    private fun ease(t: Float) = (1f - cos(PI.toFloat() * t.coerceIn(0f, 1f))) / 2f
-    private fun rnd(a: Float, b: Float) = a + Random.nextFloat() * (b - a)
-    private fun Float.dpow(e: Float) = this.toDouble().pow(e.toDouble()).toFloat()
+    private fun getTerrainColor(worldX: Float): Int = when (currentTheme) {
+        ColorTheme.VIVID -> Color.HSVToColor(floatArrayOf((worldX / 28000f * 360f + 36000f) % 360f, 0.82f, 0.74f))
+        ColorTheme.PASTEL -> Color.HSVToColor(floatArrayOf((worldX / 28000f * 360f + 36000f) % 360f, 0.28f, 0.97f))
+        ColorTheme.WEATHERED -> Color.HSVToColor(floatArrayOf((worldX / 40000f * 360f + 36015f) % 360f, 0.4f, 0.5f))
+        ColorTheme.GRAYSCALE -> {
+            val wave = (sin(worldX / 7000f) * 0.55f + sin(worldX / 2800f + 1.4f) * 0.45f + 1f) / 2f
+            val gray = ((0.17f + 0.62f * wave).coerceIn(0.12f, 0.88f) * 255f).toInt()
+            Color.rgb(gray, gray, gray)
+        }
+    }
 }

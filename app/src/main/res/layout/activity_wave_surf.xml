@@ -29,7 +29,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0 m"
             android:textSize="15sp"
             android:textColor="?attr/a2uMidiAccent"
             android:gravity="center"
@@ -40,7 +39,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0 km/h"
             android:textSize="14sp"
             android:textColor="?attr/a2uMidiAccent"
             android:gravity="center"
@@ -51,7 +49,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0 m ↑"
             android:textSize="14sp"
             android:textColor="?attr/a2uMidiAccent"
             android:gravity="center"
@@ -79,6 +76,18 @@
             android:contentDescription="@string/wave_surf_restart" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:gravity="center"
+        android:text="@string/wave_surf_hint"
+        android:textSize="13sp"
+        android:textColor="?attr/a2uMidiAccent" />
 
     <com.Atom2Universe.app.games.wavesurf.WaveSurfView
         android:id="@+id/wave_surf_view"

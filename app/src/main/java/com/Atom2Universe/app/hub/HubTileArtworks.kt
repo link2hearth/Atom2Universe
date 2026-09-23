@@ -52,6 +52,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.motocross.MotocrossHubTileDrawable::class,
         com.Atom2Universe.app.games.hexrunner.HexRunnerActivity::class.java.name to
             com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,
+        com.Atom2Universe.app.games.wavesurf.WaveSurfActivity::class.java.name to
+            com.Atom2Universe.app.games.wavesurf.WaveSurfHubTileDrawable::class,
         com.Atom2Universe.app.games.cosmorun.CosmoRunActivity::class.java.name to
             com.Atom2Universe.app.games.cosmorun.CosmoRunHubTileDrawable::class,
         com.Atom2Universe.app.games.game2048.Game2048Activity::class.java.name to
