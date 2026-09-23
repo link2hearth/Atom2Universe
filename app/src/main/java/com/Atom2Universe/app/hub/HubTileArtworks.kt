@@ -68,6 +68,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.sokoban.SokobanHubTileDrawable::class,
         com.Atom2Universe.app.games.pipetap.PipeTapActivity::class.java.name to
             com.Atom2Universe.app.games.pipetap.PipeTapHubTileDrawable::class,
+        com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthActivity::class.java.name to
+            com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthHubTileDrawable::class,
         com.Atom2Universe.app.games.game2048.Game2048Activity::class.java.name to
             com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
         com.Atom2Universe.app.games.sudoku.SudokuActivity::class.java.name to

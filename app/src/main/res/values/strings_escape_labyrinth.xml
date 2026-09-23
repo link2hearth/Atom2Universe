@@ -21,4 +21,6 @@
     <string name="escape_status_caught">Spotted after %1$d turns! Tap to retry.</string>
     <string name="escape_status_win">Escaped in %1$d turns (optimal: %2$d). Tap to play again.</string>
     <string name="escape_status_win_perfect">Perfect escape in %1$d turns! Tap to play again.</string>
+    <string name="escape_turns_target">/%1$d</string>
+    <string name="escape_controls_hint">Swipe to move · Tap to wait\nAmber crystals: collect · Coral tiles: watched</string>
 </resources>

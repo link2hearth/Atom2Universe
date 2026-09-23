@@ -164,20 +164,20 @@ object EscapeLabyrinthGame {
         for (i in nxtStates.indices) {
             val nxt = nxtStates[i]
             if (nxt.row == tr && nxt.col == tc) {
-                val caught = play.copy(guardPhase = nextPhase, turn = play.turn + 1, caught = true)
+                val caught = play.copy(row = tr, col = tc, guardPhase = nextPhase, turn = play.turn + 1, caught = true)
                 return ActionResult(MoveOutcome.BLOCKED_BY_GUARD, caught)
             }
             val prv = curStates.getOrNull(i)
             if (prv != null && prv.row == tr && prv.col == tc &&
                 nxt.row == play.row && nxt.col == play.col) {
-                val caught = play.copy(guardPhase = nextPhase, turn = play.turn + 1, caught = true)
+                val caught = play.copy(row = tr, col = tc, guardPhase = nextPhase, turn = play.turn + 1, caught = true)
                 return ActionResult(MoveOutcome.BLOCKED_BY_GUARD, caught)
             }
         }
 
         // Vision check (after guard advances)
         if (guardVisionAt(level, nextPhase).contains(cellKey(tr, tc))) {
-            val caught = play.copy(guardPhase = nextPhase, turn = play.turn + 1, caught = true)
+            val caught = play.copy(row = tr, col = tc, guardPhase = nextPhase, turn = play.turn + 1, caught = true)
             return ActionResult(MoveOutcome.IN_VISION, caught)
         }
 
@@ -286,6 +286,8 @@ object EscapeLabyrinthGame {
         val level = Level(seed, diff, size, size, grid, adj, start, exit,
             bonuses, guards, cycle, phases, bonusByCell, 0)
 
+        if (guards.size < diff.patrolMin || bonuses.size < diff.bonusMin) return null
+        if (cellKey(start.first, start.second) in guardVisionAt(level, 0)) return null
         val solveTurns = validateLevel(level) ?: return null
         return Level(seed, diff, size, size, grid, adj, start, exit,
             bonuses, guards, cycle, phases, bonusByCell, solveTurns)
@@ -343,6 +345,8 @@ object EscapeLabyrinthGame {
                 cands.add(C(r, c, r, c + 1, r * 2, c * 2 + 1))
         }
         cands.shuffle(rng)
+        // Open dead ends first: more escape routes, fewer mandatory backtracks.
+        cands.sortBy { min(adj[it.r][it.c].size, adj[it.nr][it.nc].size) }
         var added = 0
         for (cand in cands) {
             if (added >= count) break
@@ -429,12 +433,16 @@ object EscapeLabyrinthGame {
             if (occupied.contains(cellKey(startCell.first, startCell.second))) continue
             val cycle = buildPatrolCycle(startCell, adj, forbidden, occupied, rng) ?: continue
             if (cycle.size < 4) continue
+            // Keep the time-expanded solvability search bounded as patrols combine.
+            if (lcm(lcmList(guards.map { it.path.size }), cycle.size) > 120) continue
             cycle.forEach { (r, c) -> occupied.add(cellKey(r, c)) }
             val path = cycle.mapIndexed { i, (r, c) ->
                 val (nr, nc) = cycle[(i + 1) % cycle.size]
                 GuardStep(r, c, Dir.between(r, c, nr, nc))
             }
-            guards.add(Guard(guards.size, path, diff.visionRange, diff.halfAngle,
+            val offset = rng.nextInt(path.size)
+            val staggered = path.drop(offset) + path.take(offset)
+            guards.add(Guard(guards.size, staggered, diff.visionRange, diff.halfAngle,
                 emptyList(), emptySet()))
         }
         return guards
@@ -447,33 +455,33 @@ object EscapeLabyrinthGame {
         occupied: Set<String>,
         rng: Random
     ): List<Pair<Int, Int>>? {
-        val stack = ArrayDeque<Pair<Pair<Int, Int>, Pair<Int, Int>?>>() // (current, prev)
-        val visited = mutableSetOf(cellKey(start.first, start.second))
-        stack.addLast(start to null)
-        var iters = 0
-        while (stack.isNotEmpty() && stack.size <= MAX_PATROL_LEN) {
-            if (++iters > 3000) break
-            val (cur, prev) = stack.last()
-            val (cr, cc) = cur
-            val nbrs = adj[cr][cc]
-                .map { it.asCell().let { (r, c) -> r to c } }
-                .filter { n -> !forbidden.contains(cellKey(n.first, n.second))
-                    && !occupied.contains(cellKey(n.first, n.second))
-                    && n != prev }
-                .toMutableList()
-            nbrs.shuffle(rng)
-            // Close the loop?
-            if (stack.size >= 4 && nbrs.any { it == start })
-                return stack.map { it.first }
-            val next = nbrs.firstOrNull { !visited.contains(cellKey(it.first, it.second)) }
-            if (next == null) {
-                visited.remove(cellKey(cur.first, cur.second))
-                stack.removeLast(); continue
+        val route = mutableListOf(start)
+        val visited = mutableSetOf(start)
+        var budget = 600
+        var fallback = listOf(start)
+        fun search(cur: Pair<Int, Int>): List<Pair<Int, Int>>? {
+            if (--budget <= 0) return null
+            if (route.size in 3..6 && route.size > fallback.size) fallback = route.toList()
+            val neighbors = adj[cur.first][cur.second].map { it.asCell() }
+                .filter { cellKey(it.first, it.second) !in forbidden &&
+                    cellKey(it.first, it.second) !in occupied }.shuffled(rng)
+            if (route.size >= 4 && start in neighbors) return route.toList()
+            if (route.size >= min(MAX_PATROL_LEN, 12)) return null
+            for (next in neighbors) {
+                if (!visited.add(next)) continue
+                route.add(next)
+                val result = search(next)
+                if (result != null) return result
+                route.removeAt(route.lastIndex)
+                visited.remove(next)
+                if (budget <= 0) break
             }
-            visited.add(cellKey(next.first, next.second))
-            stack.addLast(next to cur)
+            return null
         }
-        return null
+        return search(start) ?: if (fallback.size >= 3) {
+            // Corridor sentinels turn back at each end; every transition remains adjacent.
+            fallback + fallback.drop(1).dropLast(1).asReversed()
+        } else null
     }
 
     // ── Vision template construction ─────────────────────────────────────────

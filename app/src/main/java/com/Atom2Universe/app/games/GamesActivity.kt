@@ -379,7 +379,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.escape_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_escape_labyrinth,
-            activityClass = EscapeLabyrinthActivity::class.java
+            activityClass = EscapeLabyrinthActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "circles",

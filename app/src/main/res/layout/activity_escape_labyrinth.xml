@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0A18">
+    android:background="#0C1619">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
 
@@ -29,25 +29,35 @@
             android:src="@android:drawable/ic_media_previous"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/escape_back"
-            app:tint="#AACCFF" />
+            app:tint="#70E6C8" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/escape_title"
-            android:textColor="#CCE6FF"
+            android:textColor="#EEE1C7"
             android:textSize="16sp"
             android:textStyle="bold"
             android:ellipsize="end"
             android:singleLine="true"
             android:paddingStart="4dp" />
 
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/escape_difficulty_row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/escape_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
         <!-- Difficulty buttons -->
         <Button
             android:id="@+id/escape_btn_easy"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/escape_diff_easy"
             android:textSize="11sp"
             android:textColor="#FFFFFF"
@@ -59,7 +69,7 @@
         <Button
             android:id="@+id/escape_btn_medium"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/escape_diff_medium"
             android:textSize="11sp"
             android:textColor="#FFFFFF"
@@ -71,7 +81,7 @@
         <Button
             android:id="@+id/escape_btn_hard"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/escape_diff_hard"
             android:textSize="11sp"
             android:textColor="#FFFFFF"
@@ -94,7 +104,7 @@
         android:paddingEnd="8dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        app:layout_constraintTop_toBottomOf="@id/escape_header"
+        app:layout_constraintTop_toBottomOf="@id/escape_difficulty_row"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -102,7 +112,7 @@
             android:id="@+id/escape_tv_difficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#88AABB"
+            android:textColor="#91ABA5"
             android:textSize="12sp"
             android:paddingEnd="8dp" />
 
@@ -110,7 +120,7 @@
             android:id="@+id/escape_tv_turns"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#AADDFF"
+            android:textColor="#B5D1C8"
             android:textSize="12sp"
             android:paddingEnd="8dp"
             android:text="@string/escape_turns_label_zero" />
@@ -120,16 +130,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#FFDD88"
+            android:textColor="#F0C16F"
             android:textSize="12sp" />
 
         <Button
             android:id="@+id/escape_btn_new"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="48dp"
             android:text="@string/escape_btn_new"
             android:textSize="11sp"
-            android:textColor="#AACCFF"
+            android:textColor="#70E6C8"
             android:background="@android:color/transparent"
             style="?attr/borderlessButtonStyle" />
 
@@ -143,7 +153,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="12sp"
-        android:textColor="#AADDCC"
+        android:textColor="#B5D1C8"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:paddingBottom="2dp"
@@ -160,6 +170,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/escape_tv_status"
+        app:layout_constraintBottom_toTopOf="@id/escape_hint"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/escape_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/escape_controls_hint"
+        android:textColor="#91ABA5"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -170,10 +193,10 @@
         android:id="@+id/escape_loading_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#AA0A0A18"
+        android:background="#E60C1619"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/escape_tv_status"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/escape_hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -181,7 +204,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:indeterminateTint="#4499FF" />
+            android:indeterminateTint="#70E6C8" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

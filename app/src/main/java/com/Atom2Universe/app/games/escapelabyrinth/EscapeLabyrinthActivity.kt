@@ -112,7 +112,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     }
 
     private fun updateDifficultyButtons() {
-        val sel = 0xFFFFFFFF.toInt(); val unsel = 0x55FFFFFF.toInt()
+        val sel = 0xFF70E6C8.toInt(); val unsel = 0xFF91ABA5.toInt()
         btnEasy.setTextColor(if (currentDifficulty == Difficulty.EASY)   sel else unsel)
         btnMedium.setTextColor(if (currentDifficulty == Difficulty.MEDIUM) sel else unsel)
         btnHard.setTextColor(if (currentDifficulty == Difficulty.HARD)   sel else unsel)
@@ -128,7 +128,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     private fun startNewGame() {
         if (isGenerating) return
         isGenerating = true
-        setInputEnabled(false)
+        updateInputAvailability()
         loadingOverlay.visibility = View.VISIBLE
         tvStatus.text = getString(R.string.escape_status_generating)
 
@@ -142,13 +142,16 @@ class EscapeLabyrinthActivity : ThemedActivity() {
             isGenerating = false
             loadingOverlay.visibility = View.GONE
             if (level == null) {
+                currentLevel?.let { currentDifficulty = it.difficulty }
+                updateDifficultyButtons()
                 tvStatus.text = getString(R.string.escape_status_gen_error)
+                updateInputAvailability()
                 return@launch
             }
             currentLevel = level
             currentPlay = EscapeLabyrinthGame.initialPlay(level)
             refreshView()
-            setInputEnabled(true)
+            updateInputAvailability()
             tvStatus.text = getString(R.string.escape_status_ready)
         }
     }
@@ -156,6 +159,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     // ── Action handling ──────────────────────────────────────────────────────
 
     private fun attemptMove(dr: Int, dc: Int) {
+        if (isGenerating) return
         val level = currentLevel ?: return
         val play = currentPlay ?: return
         if (play.completed || play.caught) { startNewGame(); return }
@@ -167,6 +171,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     }
 
     private fun attemptWait() {
+        if (isGenerating) return
         val level = currentLevel ?: return
         val play = currentPlay ?: return
         if (play.completed || play.caught) { startNewGame(); return }
@@ -185,7 +190,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
                 val perfect = play.turn <= lvl.solveTurns
                 // EASY=2, MEDIUM=5, HARD=10 ; ×2 si parcours parfait
                 NeutrinoRepository(this).addBalance(
-                    NeutrinoRewards.escape(currentDifficulty.ordinal, perfect)
+                    NeutrinoRewards.escape(lvl.difficulty.ordinal, perfect)
                 )
                 prefs.edit {
                     putInt("solved", prefs.getInt("solved", 0) + 1)
@@ -195,12 +200,12 @@ class EscapeLabyrinthActivity : ThemedActivity() {
                     getString(R.string.escape_status_win_perfect, play.turn)
                 else
                     getString(R.string.escape_status_win, play.turn, lvl.solveTurns)
-                setInputEnabled(false)
+                updateInputAvailability()
             }
             MoveOutcome.BLOCKED_BY_GUARD,
             MoveOutcome.IN_VISION -> {
                 tvStatus.text = getString(R.string.escape_status_caught, play.turn)
-                setInputEnabled(false)
+                updateInputAvailability()
             }
             MoveOutcome.MISSING_ORBS -> {
                 val lvl = currentLevel!!
@@ -241,7 +246,7 @@ class EscapeLabyrinthActivity : ThemedActivity() {
     /** Affiche "Tour 12/52" avec le 12 en rouge si > optimal. */
     private fun buildTurnSpan(turn: Int, optimal: Int): SpannableStringBuilder {
         val prefix = getString(R.string.escape_turns_prefix)   // "Tour "
-        val suffix = "/$optimal"
+        val suffix = getString(R.string.escape_turns_target, optimal)
         val turnStr = turn.toString()
         val sb = SpannableStringBuilder(prefix).append(turnStr).append(suffix)
         if (turn > optimal) {
@@ -252,8 +257,13 @@ class EscapeLabyrinthActivity : ThemedActivity() {
         return sb
     }
 
-    private fun setInputEnabled(enabled: Boolean) {
-        mazeView.isClickable = enabled
-        mazeView.isFocusable = enabled
+    private fun updateInputAvailability() {
+        // End screens accept a tap to restart; only generation blocks the board.
+        mazeView.isEnabled = !isGenerating
+        mazeView.isClickable = !isGenerating
+        btnNew.isEnabled = !isGenerating
+        btnEasy.isEnabled = !isGenerating
+        btnMedium.isEnabled = !isGenerating
+        btnHard.isEnabled = !isGenerating
     }
 }

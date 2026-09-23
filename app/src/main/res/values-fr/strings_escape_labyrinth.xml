@@ -21,4 +21,6 @@
     <string name="escape_status_caught">Repéré après %1$d tours ! Tapez pour rejouer.</string>
     <string name="escape_status_win">Évasion en %1$d tours (optimal : %2$d). Tapez pour rejouer.</string>
     <string name="escape_status_win_perfect">Évasion parfaite en %1$d tours ! Tapez pour rejouer.</string>
+    <string name="escape_turns_target">/%1$d</string>
+    <string name="escape_controls_hint">Glissez pour avancer · Touchez pour patienter\nCristaux dorés : à collecter · Cases corail : surveillées</string>
 </resources>
