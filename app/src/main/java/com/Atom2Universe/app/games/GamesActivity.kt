@@ -369,7 +369,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.pipetap_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_pipetap,
-            activityClass = PipeTapActivity::class.java
+            activityClass = PipeTapActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.pipetap.PipeTapHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "escape_labyrinth",

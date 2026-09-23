@@ -62,6 +62,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.wavesurf.WaveSurfHubTileDrawable::class,
         com.Atom2Universe.app.games.cosmorun.CosmoRunActivity::class.java.name to
             com.Atom2Universe.app.games.cosmorun.CosmoRunHubTileDrawable::class,
+        com.Atom2Universe.app.games.pipetap.PipeTapActivity::class.java.name to
+            com.Atom2Universe.app.games.pipetap.PipeTapHubTileDrawable::class,
         com.Atom2Universe.app.games.game2048.Game2048Activity::class.java.name to
             com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
         com.Atom2Universe.app.games.sudoku.SudokuActivity::class.java.name to

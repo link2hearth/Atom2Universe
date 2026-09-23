@@ -9,4 +9,7 @@
     <string name="pipetap_btn_next">Taille suivante</string>
     <string name="pipetap_widget_cancel">Annuler</string>
     <string name="pipetap_widget_confirm">Démarrer</string>
+    <string name="pipetap_station">STATION HYDRAULIQUE</string>
+    <string name="pipetap_flow_status">En eau · %1$d / %2$d tuyaux</string>
+    <string name="pipetap_time_format">%1$02d:%2$02d</string>
 </resources>

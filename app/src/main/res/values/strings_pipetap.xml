@@ -9,4 +9,7 @@
     <string name="pipetap_btn_next">Next size</string>
     <string name="pipetap_widget_cancel">Cancel</string>
     <string name="pipetap_widget_confirm">Start</string>
+    <string name="pipetap_station">HYDRAULIC STATION</string>
+    <string name="pipetap_flow_status">Flow restored · %1$d / %2$d pipes</string>
+    <string name="pipetap_time_format">%1$02d:%2$02d</string>
 </resources>

@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0F1E">
+    android:background="#09171E">
 
     <!-- Header -->
     <LinearLayout
         android:id="@+id/pipetap_header"
         android:layout_width="0dp"
         android:layout_height="52dp"
-        android:background="#0D1526"
+        android:background="#142831"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="4dp"
@@ -26,7 +26,7 @@
             android:contentDescription="@string/color_stack_back"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back_24"
-            app:tint="#94A3B8" />
+            app:tint="#ABC2C6" />
 
         <TextView
             android:layout_width="0dp"
@@ -35,7 +35,9 @@
             android:layout_weight="1"
             android:text="@string/pipetap_title"
             android:textColor="#E2E8F0"
-            android:textSize="18sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.06"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <!-- Stats : moves + time -->
@@ -44,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:textColor="#94A3B8"
+            android:textColor="#ABC2C6"
             android:textSize="13sp" />
 
         <TextView
@@ -52,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:textColor="#94A3B8"
+            android:textColor="#ABC2C6"
             android:textSize="13sp" />
 
     </LinearLayout>
@@ -78,6 +80,42 @@
 
     </HorizontalScrollView>
 
+    <LinearLayout
+        android:id="@+id/pipetap_status_panel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:background="@drawable/pipetap_console_panel"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/pipetap_diff_scroll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pipetap_station"
+            android:textColor="#C99C59"
+            android:letterSpacing="0.12"
+            android:textStyle="bold"
+            android:textSize="11sp" />
+        <TextView
+            android:id="@+id/pipetap_flow_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#D9EEEB"
+            android:textSize="13sp" />
+        <ProgressBar
+            android:id="@+id/pipetap_flow_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="8dp"
+            android:progressTint="#37DACB"
+            android:progressBackgroundTint="#35515A" />
+    </LinearLayout>
     <!-- Game view -->
     <com.Atom2Universe.app.games.pipetap.PipeTapView
         android:id="@+id/pipetap_game_view"
@@ -86,14 +124,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pipetap_diff_scroll" />
+        app:layout_constraintTop_toBottomOf="@id/pipetap_status_panel" />
 
     <!-- Win overlay -->
     <FrameLayout
         android:id="@+id/pipetap_win_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#99000000"
+        android:background="#BB09171E"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -104,6 +142,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:background="@drawable/pipetap_console_panel"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="32dp">
@@ -112,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pipetap_solved"
-                android:textColor="#06B6D4"
+                android:textColor="#37DACB"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -138,14 +178,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
                     android:text="@string/pipetap_btn_again"
-                    android:textColor="#94A3B8" />
+                    android:textColor="#ABC2C6" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/pipetap_btn_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pipetap_btn_next"
-                    android:backgroundTint="#06B6D4" />
+                    android:textColor="#09171E"
+                    android:backgroundTint="#37DACB" />
 
             </LinearLayout>
 

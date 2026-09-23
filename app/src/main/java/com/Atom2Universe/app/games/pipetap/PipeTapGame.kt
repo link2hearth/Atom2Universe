@@ -88,13 +88,31 @@ class PipeTapGame {
         val visited = Array(size) { BooleanArray(size) }
         val startX = nextInt(size)
         val startY = nextInt(size)
+        source = Pair(startX, startY)
         val stack = ArrayDeque<Pair<Int,Int>>()
-        stack.addLast(Pair(startX, startY))
         visited[startY][startX] = true
 
         data class Edge(val x: Int, val y: Int, val dir: Int)
         val edges = mutableListOf<Edge>()
 
+        // Choose the source's outlets before growing the network. A normal DFS
+        // rooted at the source would almost always leave it with only one outlet.
+        // Respect the board boundary and cap the source at three outlets.
+        val outlets = neighbours(startX, startY, size).toMutableList()
+        for (i in outlets.size - 1 downTo 1) {
+            val j = nextInt(i + 1)
+            val tmp = outlets[i]; outlets[i] = outlets[j]; outlets[j] = tmp
+        }
+        val outletCount = 1 + nextInt(minOf(3, outlets.size))
+        for (nb in outlets.take(outletCount)) {
+            edges += Edge(startX, startY, nb.dir)
+            edges += Edge(nb.x, nb.y, nb.opp)
+            visited[nb.y][nb.x] = true
+            stack.addLast(Pair(nb.x, nb.y))
+        }
+
+        // Each selected outlet is already connected to the source. Grow only into
+        // unvisited cells so the completed network remains a connected tree.
         while (stack.isNotEmpty()) {
             val (cx, cy) = stack.last()
             val nbs = neighbours(cx, cy, size).filter { !visited[it.y][it.x] }.toMutableList()
@@ -126,11 +144,6 @@ class PipeTapGame {
             }
         }
         return g
-    }
-
-    private fun findSource(g: Array<IntArray>): Pair<Int,Int> {
-        for (y in g.indices) for (x in g[y].indices) if (g[y][x] != 0) return Pair(x, y)
-        return Pair(0, 0)
     }
 
     // ── Solve check (BFS) ─────────────────────────────────────────────────────────
@@ -194,7 +207,6 @@ class PipeTapGame {
         seed = customSeed.ifBlank { System.currentTimeMillis().toString(36) }
         seeded(seed)
         grid = generateGrid(diff.gridSize)
-        source = findSource(grid)
         moves = 0
         elapsedSeconds = 0
         solved = false

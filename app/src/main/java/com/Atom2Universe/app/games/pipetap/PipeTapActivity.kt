@@ -45,6 +45,9 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     private val handler = Handler(Looper.getMainLooper())
     private var timerStartMs = 0L
     private var timerRunning = false
+    private val revealWin = Runnable {
+        if (game.solved && !isFinishing && !isDestroyed) showWinOverlay()
+    }
 
     private val timerRunnable = object : Runnable {
         override fun run() {
@@ -99,6 +102,8 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     }
 
     override fun onPause() {
+        gameView.animationsActive = false
+        handler.removeCallbacks(revealWin)
         super.onPause()
         stopTimer()
         saveGame()
@@ -106,6 +111,8 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
 
     override fun onResume() {
         super.onResume()
+        gameView.animationsActive = true
+        if (game.solved) showWinOverlay()
         if (!game.solved) startTimer()
     }
 
@@ -121,6 +128,9 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
             ).apply {
                 text = diff.label
                 textSize = 12f
+                cornerRadius = (12 * resources.displayMetrics.density).toInt()
+                strokeWidth = resources.displayMetrics.density.toInt().coerceAtLeast(1)
+                strokeColor = ColorStateList.valueOf(Color.parseColor("#35515A"))
                 val params = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -134,15 +144,17 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     }
 
     private fun updateDiffChips() {
-        val activeColor   = ColorStateList.valueOf(Color.parseColor("#06B6D4"))
-        val inactiveColor = ColorStateList.valueOf(Color.parseColor("#1F2937"))
+        val activeColor   = ColorStateList.valueOf(Color.parseColor("#37DACB"))
+        val inactiveColor = ColorStateList.valueOf(Color.parseColor("#172C35"))
         for ((diff, chip) in diffChipMap) {
             chip.backgroundTintList = if (diff == game.difficulty) activeColor else inactiveColor
+            chip.setTextColor(Color.parseColor(if (diff == game.difficulty) "#09171E" else "#C1D5D7"))
         }
     }
 
     // ── Game control ──────────────────────────────────────────────────────────────
     private fun startNewGame(diff: PipeTapDifficulty) {
+        handler.removeCallbacks(revealWin)
         stopTimer()
         winOverlay.visibility = View.GONE
         game.newGame(diff)
@@ -151,6 +163,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
         updateStats()
         updateDiffChips()
         saveGame()
+        gameView.animationsActive = true
         startTimer()
     }
 
@@ -160,7 +173,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
             stopTimer()
             saveGame()
             awardReward()
-            showWinOverlay()
+            handler.postDelayed(revealWin, gameView.flowSettlingDelay() + 300L)
         }
     }
 
@@ -171,6 +184,7 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
             formatTime(game.elapsedSeconds)
         )
         winOverlay.visibility = View.VISIBLE
+        gameView.animationsActive = false
     }
 
     // ── Reward ────────────────────────────────────────────────────────────────────
@@ -202,11 +216,19 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     private fun updateStats() {
         movesText.text = getString(R.string.pipetap_moves, game.moves)
         timeText.text  = formatTime(game.elapsedSeconds)
+        val connected = game.computeReachable().size
+        val total = game.grid.sumOf { row -> row.count { it != 0 } }
+        findViewById<TextView>(R.id.pipetap_flow_status).text =
+            getString(R.string.pipetap_flow_status, connected, total)
+        findViewById<android.widget.ProgressBar>(R.id.pipetap_flow_progress).apply {
+            max = total
+            progress = connected
+        }
     }
 
     private fun formatTime(seconds: Long): String {
         val s = seconds.coerceAtLeast(0)
-        return "%02d:%02d".format(s / 60, s % 60)
+        return getString(R.string.pipetap_time_format, s / 60, s % 60)
     }
 
     // ── Persistence ───────────────────────────────────────────────────────────────
