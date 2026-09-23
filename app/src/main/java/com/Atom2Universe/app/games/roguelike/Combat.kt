@@ -315,12 +315,16 @@ object Encounters {
     const val SPEED_PER_FLOOR = 0.004
     fun speedMult(floor: Int)  = 1.0 + SPEED_PER_FLOOR * (floor.coerceAtMost(DEEP_FLOOR) - 1)
 
-    /** Taille du groupe : seul au début, jusqu'à 3 à partir de l'étage 5. */
+    /** Premier étage où un groupe de trois — donc un boss à sa tête ([isBoss]) — peut apparaître. */
+    const val FIRST_BOSS_FLOOR = 6
+
+    /** Taille du groupe : seul au début, jusqu'à 3 (avec un boss) à partir de [FIRST_BOSS_FLOOR]. */
     fun groupSize(floor: Int, rng: Random): Int {
         val r = rng.nextFloat()
         return when {
             floor <= 2 -> 1
             floor <= 4 -> if (r < 0.70f) 1 else 2
+            floor < FIRST_BOSS_FLOOR -> if (r < 0.50f) 1 else 2
             else       -> when { r < 0.50f -> 1; r < 0.85f -> 2; else -> 3 }
         }
     }
@@ -2158,7 +2162,10 @@ class Combat(
         val floorGold = 1f + 0.10f * (floor - 1)
         for (e in enemies) {
             gold += (rng.nextInt(e.type.goldMin, e.type.goldMax + 1) * floorGold * hero.goldMult).roundToInt()
-            LootSystem.tryDrop(floor, hero.nextLootId, rng)?.let { loot += it; hero.nextLootId++ }
+            // Un boss lâche toujours un équipement ; les autres, une fois sur cinq.
+            val drop = if (e.isBoss) LootSystem.generate(floor, hero.nextLootId, rng)
+                else LootSystem.tryDrop(floor, hero.nextLootId, rng)
+            drop?.let { loot += it; hero.nextLootId++ }
         }
         rewards = CombatRewards(gold, loot)
         return CombatPhase.VICTORY

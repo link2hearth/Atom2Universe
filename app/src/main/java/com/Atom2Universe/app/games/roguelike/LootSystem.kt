@@ -652,6 +652,11 @@ object LootSystem {
             return createSetPiece(IsotopeSets.PERMANENT.random(rng),
                 IsotopeSets.BASES.random(rng), lootId, rng, floor)
         }
+        return generateNormal(floor, lootId, rng)
+    }
+
+    /** Une pièce ordinaire, jamais d'un set d'isotope. */
+    fun generateNormal(floor: Int, lootId: Long = 0, rng: Random = Random): Equipment {
         // Puissance : autour de celle de l'étage, un peu en dessous le plus souvent
         val power = rollPowerForFloor(floor, rng)
         return create(pickBase(rng), power, pickRarity(floor, rng), lootId, rng)

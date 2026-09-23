@@ -137,6 +137,12 @@ class RoguelikeGame(
         const val RELIC_CHANCE = 0.15f
         const val FIRST_RELIC_FLOOR = 2
 
+        /**
+         * Sur les premiers étages, au moins un équipement par étage : si la première victoire
+         * de l'étage ne lâche rien, elle donne une pièce ordinaire (jamais une pièce de set).
+         */
+        const val GUARANTEED_GEAR_FLOORS = 5
+
         fun inventoryFromJson(j: JSONObject): RoguelikeGame {
             val hero = Hero().apply {
                 gold    = j.getInt("gold")
@@ -232,6 +238,8 @@ class RoguelikeGame(
     private var stairsArrivalPending = false
 
     var stairsOpen = false
+    /** Un équipement est déjà tombé sur cet étage (voir [GUARANTEED_GEAR_FLOORS]). */
+    private var gearDroppedThisFloor = false
         private set
     var deathReport: DeathReport? = null
         private set
@@ -431,6 +439,9 @@ class RoguelikeGame(
                 val r = c.rewards!!
                 hero.gold += r.gold
                 pendingLoot.addAll(r.equipment)
+                if (floor <= GUARANTEED_GEAR_FLOORS && !gearDroppedThisFloor && r.equipment.isEmpty())
+                    pendingLoot += LootSystem.generateNormal(floor, hero.nextLootId++, rng)
+                if (pendingLoot.isNotEmpty()) gearDroppedThisFloor = true
                 r.equipment.forEach { e -> e.isotopeSet?.let { hero.knownSets += it.z } }
                 addLog(R.string.roguelike_log_victory, r.gold)
                 if (pendingLoot.isEmpty()) chainIfChased()
@@ -568,6 +579,7 @@ class RoguelikeGame(
         hero.floor = floor
         levelSeed = rng.nextLong()
         regenerationCount = 0
+        gearDroppedThisFloor = false
         level = generateLevel(floor, levelSeed)
         playerPos = level.start
         stairsArrivalPending = false
@@ -688,6 +700,7 @@ class RoguelikeGame(
         put("player", posToJson(playerPos))
         put("stairsOpen", stairsOpen)
         put("stairsArrivalPending", stairsArrivalPending)
+        put("gearDroppedThisFloor", gearDroppedThisFloor)
         put("deathReport", deathReport?.let { report -> JSONObject().apply {
             put("floor", report.floor)
             put("goldLost", report.goldLost)
@@ -774,6 +787,7 @@ class RoguelikeGame(
         playerPos = j.optJSONObject("player")?.let(::posFromJson)?.takeIf { level.walkable(it.x, it.y) } ?: level.start
         stairsOpen = j.optBoolean("stairsOpen", false)
         stairsArrivalPending = j.optBoolean("stairsArrivalPending", false)
+        gearDroppedThisFloor = j.optBoolean("gearDroppedThisFloor", false)
         deathReport = j.optJSONObject("deathReport")?.let { report ->
             DeathReport(report.getInt("floor"), report.getInt("goldLost"),
                 report.optInt("checkpointFloor", checkpointFloor(report.getInt("floor"))))
