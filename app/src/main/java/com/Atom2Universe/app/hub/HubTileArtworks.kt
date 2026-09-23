@@ -67,7 +67,9 @@ object HubTileArtworks {
         com.Atom2Universe.app.games.balance.BalanceActivity::class.java.name to
             com.Atom2Universe.app.games.balance.BalanceHubTileDrawable::class,
         com.Atom2Universe.app.games.trebuchet.TrebuchetActivity::class.java.name to
-            com.Atom2Universe.app.games.trebuchet.TrebuchetHubTileDrawable::class
+            com.Atom2Universe.app.games.trebuchet.TrebuchetHubTileDrawable::class,
+        com.Atom2Universe.app.games.caves.CaveWorldMenuActivity::class.java.name to
+            com.Atom2Universe.app.games.caves.CaveWorldHubTileDrawable::class
     )
 
     fun forActivity(activityClassName: String): KClass<out Drawable>? = byActivity[activityClassName]
