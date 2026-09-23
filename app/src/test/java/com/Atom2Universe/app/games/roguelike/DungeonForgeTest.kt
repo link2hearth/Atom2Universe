@@ -108,6 +108,31 @@ class DungeonForgeTest {
         assertEquals(1_000_000, g.hero.gold)
     }
 
+    @Test fun returningToTheCheckpointYouStandOnDoesNotRerollTheForge() {
+        // Au feu de camp de l'étage 51 (son propre checkpoint), le menu ne doit pas servir à tirer une forge
+        val g = RoguelikeGame(startFloor = 51, rng = Random(2))
+        assertEquals(51, g.checkpoint)
+        repeat(300) {
+            g.returnToCheckpoint()
+            assertEquals(51, g.floor)
+            assertNull(g.level.forge)
+        }
+        // Et une forge déjà là ne disparaît pas non plus
+        assertTrue(g.placeForgeNearHero())
+        g.returnToCheckpoint()
+        assertNotNull(g.level.forge)
+    }
+
+    @Test fun returningToAnEarlierCheckpointIsANewArrival() {
+        val withForge = (0 until 400).count { seed ->
+            val g = RoguelikeGame(startFloor = 58, rng = Random(seed))
+            g.returnToCheckpoint()
+            assertEquals(51, g.floor)
+            g.level.forge != null
+        }
+        assertTrue("$withForge forges sur 400", withForge in 5..40)
+    }
+
     /** La sauvegarde (JSON) ne tourne pas dans les tests sur ordinateur : on vérifie la régénération. */
     @Test fun theForgeSurvivesRegeneration() {
         repeat(20) { seed ->

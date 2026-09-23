@@ -444,7 +444,9 @@ class RoguelikeGame(
 
     fun returnToCheckpoint() {
         if (!isExploring || !onCampTile()) return
-        changeFloor(checkpoint)
+        // Déjà sur l'étage du checkpoint : ce n'est pas une nouvelle arrivée, la chance de forge ne se relance pas
+        // (sinon ce menu, répété au feu de camp, ferait apparaître une forge sans rien jouer)
+        changeFloor(checkpoint, keepForgeRoll = checkpoint == floor)
         addLog(R.string.roguelike_log_camp_checkpoint, checkpoint)
     }
 
@@ -623,14 +625,14 @@ class RoguelikeGame(
         }
     }
 
-    private fun changeFloor(newFloor: Int) {
+    private fun changeFloor(newFloor: Int, keepForgeRoll: Boolean = false) {
         floor = newFloor
         checkpoint = maxOf(checkpoint, checkpointFloor(floor, checkpointEvery))
         hero.floor = floor
         levelSeed = rng.nextLong()
         regenerationCount = 0
         gearDroppedThisFloor = false
-        forgeOnFloor = DungeonForge.rollPresence(floor, rng)
+        if (!keepForgeRoll) forgeOnFloor = DungeonForge.rollPresence(floor, rng)
         forgeOpen = false
         level = generateLevel(floor, levelSeed)
         playerPos = level.start
