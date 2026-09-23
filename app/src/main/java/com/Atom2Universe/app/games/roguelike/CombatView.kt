@@ -456,7 +456,11 @@ class CombatView @JvmOverloads constructor(
         floatTicks(turn.ticks)
         for (stop in turn.stopped) {
             val r = enemyRects[stop.enemy]
-            val res = if (stop.element == Element.ICE) R.string.roguelike_combat_frozen_skip else R.string.roguelike_combat_paralyzed_skip
+            val res = when (stop.element) {
+                Element.ICE -> R.string.roguelike_combat_frozen_skip
+                Element.PHYSICAL -> R.string.roguelike_combat_feared_skip
+                else -> R.string.roguelike_combat_paralyzed_skip
+            }
             floatText(context.getString(res), r.centerX(), r.centerY(), elementColor(stop.element), false)
         }
         for (s in turn.saves) floatSave(s.save, enemyRects[s.enemy])
@@ -858,6 +862,7 @@ class CombatView @JvmOverloads constructor(
             if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
             if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
             if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
+            if (e.frightened) add(context.getString(R.string.roguelike_combat_frightened) to FRACTURED_COLOR)
             if (e.fragile) add(context.getString(R.string.roguelike_combat_fragile) to elementColor(Element.ICE))
             when (e.elementMark) {
                 Element.FIRE -> add(context.getString(R.string.roguelike_combat_mark_fire) to elementColor(Element.FIRE))

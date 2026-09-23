@@ -230,6 +230,8 @@ class Enemy(
      */
     var elementMark: Element? = null
     var elementMarkTime = 0.0
+    /** Effrayé (la Frappe sismique) : à son prochain tour, une chance sur deux de perdre son attaque (voir [Relic.FEAR_ROLL]). */
+    var frightened = false
     /** Fragile (la Rigidité) : la prochaine attaque normale du héros sur lui est multipliée par ça. 1 : pas fragile. */
     var fragileMult = 1f
     val fragile get() = fragileMult > 1f
@@ -439,6 +441,10 @@ enum class RelicEffect(val hits: Boolean = true) {
     SLOW,
     /** Sablier : les prochaines attaques ennemies arrivent plus lentement, la fenêtre de parade s'élargit. */
     HOURGLASS(hits = false),
+    /** Frappe sismique : chaque ennemi touché a peur, une chance sur deux de perdre sa prochaine attaque. */
+    FEAR,
+    /** Balayage de lance : chaque ennemi touché recule de [Relic.SWEEP_PUSH] dans sa jauge. */
+    PUSH,
     /**
      * Ponction vitale : le héros récupère [Relic.DRAIN_SHARE] des dégâts du coup. La **seule**
      * exception au vol de vie de l'équipement comme soin en combat (le propriétaire, 23/09/2026).
@@ -493,13 +499,13 @@ enum class Relic(
     SLOW            (R.string.roguelike_relic_slow,            R.string.roguelike_relic_slow_desc,            Element.ICE,       StatType.END, RelicTarget.ONE,      RelicEffect.SLOW,           5, 3, 0xFF5C6BC0.toInt(), 132, 13),
     CHAIN_LIGHTNING (R.string.roguelike_relic_chain_lightning, R.string.roguelike_relic_chain_lightning_desc, Element.LIGHTNING, StatType.END, RelicTarget.MISSILES,     RelicEffect.NONE,           3, 0, 0xFF7B6A12.toInt(), 132, 12),
     CHAMPIGNON      (R.string.roguelike_relic_champignon,      R.string.roguelike_relic_champignon_desc,      Element.POISON,    StatType.END, RelicTarget.ONE,      RelicEffect.POISON,         5, 3, 0xFF6B8E23.toInt(), 133, 14),
-    WHIRLWIND       (R.string.roguelike_relic_whirlwind,       R.string.roguelike_relic_whirlwind_desc,       Element.PHYSICAL,  StatType.END, RelicTarget.ALL,      RelicEffect.NONE,           3, 0, 0xFF9A6A2E.toInt(), 133, 9),
+    WHIRLWIND       (R.string.roguelike_relic_whirlwind,       R.string.roguelike_relic_whirlwind_desc,       Element.PHYSICAL,  StatType.END, RelicTarget.ALL,      RelicEffect.PUSH,           3, 0, 0xFF9A6A2E.toInt(), 133, 9),
     // Barbare (FOR) : impacts courts, mêmes éléments et mêmes résistances que les autres classes.
     BLAZING_AXE(R.string.roguelike_relic_blazing_axe, R.string.roguelike_relic_blazing_axe_desc, Element.FIRE, StatType.STR, RelicTarget.ONE, RelicEffect.BURN, 4, 2, 0xFFCF5727.toInt(), 113, 6),
     NORTHERN_BREATH(R.string.roguelike_relic_northern_breath, R.string.roguelike_relic_northern_breath_desc, Element.ICE, StatType.STR, RelicTarget.ALL, RelicEffect.SLOW, 6, 2, 0xFF8BCAD4.toInt(), 132, 13),
     THUNDER_CLUB(R.string.roguelike_relic_thunder_club, R.string.roguelike_relic_thunder_club_desc, Element.LIGHTNING, StatType.STR, RelicTarget.ONE, RelicEffect.PARALYZE, 4, 2, 0xFFE6B752.toInt(), 132, 5),
     VENOMOUS_WOUND(R.string.roguelike_relic_venomous_wound, R.string.roguelike_relic_venomous_wound_desc, Element.POISON, StatType.STR, RelicTarget.ONE, RelicEffect.POISON, 4, 2, 0xFF8FAD43.toInt(), 133, 3),
-    SEISMIC_STRIKE(R.string.roguelike_relic_seismic_strike, R.string.roguelike_relic_seismic_strike_desc, Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.NONE, 5, 0, 0xFFAD794C.toInt(), 133, 9),
+    SEISMIC_STRIKE(R.string.roguelike_relic_seismic_strike, R.string.roguelike_relic_seismic_strike_desc, Element.PHYSICAL, StatType.STR, RelicTarget.ALL, RelicEffect.FEAR, 5, 0, 0xFFAD794C.toInt(), 133, 9),
     // Mage (INT)
     FIREBALL        (R.string.roguelike_relic_fireball,        R.string.roguelike_relic_fireball_desc,        Element.FIRE,      StatType.INT, RelicTarget.ONE,      RelicEffect.BURN,           5, 2, 0xFFB5451B.toInt(), 113, 6),
     FREEZING_RAIN   (R.string.roguelike_relic_freezing_rain,   R.string.roguelike_relic_freezing_rain_desc,   Element.ICE,       StatType.INT, RelicTarget.ALL,      RelicEffect.FREEZE,         5, 1, 0xFF1E6F8C.toInt(), 132, 6),
@@ -592,8 +598,10 @@ enum class Relic(
          */
         const val FREEZE_TURN_LENGTH = 1.5
         const val CHILL_SPEED = 0.25
-        /** Séisme : chaque ennemi recule de ça dans sa jauge (son prochain tour est repoussé). */
-        const val EARTHQUAKE_PUSH = 0.25
+        /** Balayage de lance : chaque ennemi recule de ça dans sa jauge (son prochain tour est repoussé). */
+        const val SWEEP_PUSH = 0.25
+        /** Frappe sismique : un effrayé perd sa prochaine attaque si le d20 fait au plus ça (une chance sur deux). */
+        const val FEAR_ROLL = 10
     }
 }
 
@@ -769,6 +777,9 @@ object RelicBudget {
     const val REF_CRIT_CHANCE = 0.15f
     /** Cristallisation : la part du coup normal ; le reste paie le ×[Relic.CRYSTAL_MULT] contre un figé. */
     const val CRYSTAL_HIT_SHARE = 0.85f
+    /** Peur et recul : ce qu'ils valent, en coups d'épée. **Provisoires** (23/09/2026), à mesurer comme le contrôle. */
+    const val FEAR_VALUE = 0.4f
+    const val PUSH_VALUE = 0.2f
     /** Ponction vitale : la part de la valeur qui paie le soin (réglage d'avant le 22/09/2026). */
     const val DRAIN_EFFECT_SHARE = 0.25f
     /** Verglas : la part de la valeur qui paie le ralentissement ; le reste est le coup. */
@@ -820,6 +831,8 @@ object RelicBudget {
         RelicEffect.BLIND     -> BLIND_TURN_VALUE * r.effectTurns
         RelicEffect.SLOW      -> share(r) * SLOW_EFFECT_SHARE
         RelicEffect.DRAIN     -> share(r) * DRAIN_EFFECT_SHARE
+        RelicEffect.FEAR      -> FEAR_VALUE
+        RelicEffect.PUSH      -> PUSH_VALUE
         RelicEffect.ENCHANT_POISON, RelicEffect.SMOKE, RelicEffect.BARRIER,
         RelicEffect.STONESKIN, RelicEffect.CHARM,
         RelicEffect.HASTE, RelicEffect.HOURGLASS -> share(r)
@@ -1473,6 +1486,7 @@ class Combat(
         e.paralyzedTurns = 0
         e.charmed = false
         e.slowTime = 0.0
+        e.frightened = false
         return true
     }
 
@@ -1511,6 +1525,8 @@ class Combat(
             }
             RelicEffect.BLIND -> e.blindedTurns = maxOf(e.blindedTurns, turns)
             RelicEffect.DRAIN -> hero.heal((result.damage * Relic.DRAIN_SHARE).roundToInt())
+            RelicEffect.FEAR -> if (!e.enraged) e.frightened = true
+            RelicEffect.PUSH -> e.gauge -= Relic.SWEEP_PUSH
             RelicEffect.SLOW -> {
                 val save = rollSave(e, relic.element, dc, timing)
                 if (save.saved) return save to false
@@ -2014,6 +2030,14 @@ class Combat(
                 return EnemyTurnStart(ticks, emptyList(), listOf(StatusStop(i, Element.LIGHTNING)), listOf(EnemySave(i, save)), enraged)
             }
             return EnemyTurnStart(ticks, listOf(i), emptyList(), listOf(EnemySave(i, save)))
+        }
+        if (e.frightened) {
+            e.frightened = false
+            // Une attaque perdue est un contrôle, comme la paralysie : la rage empêche d'enchaîner
+            if (d20() <= Relic.FEAR_ROLL) {
+                val enraged = if (controlled(e)) listOf(i) else emptyList()
+                return EnemyTurnStart(ticks, emptyList(), listOf(StatusStop(i, Element.PHYSICAL)), enraged = enraged)
+            }
         }
         return EnemyTurnStart(ticks, listOf(i), emptyList())
     }

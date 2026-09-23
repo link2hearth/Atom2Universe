@@ -466,6 +466,45 @@ class GrimoireTest {
     }
 
     @Test
+    fun desEclairsErrantsLaissentLaMarqueDeFoudre() {
+        val c = fight(Relic.MAGIC_MISSILE)
+        c.castRelic(Relic.MAGIC_MISSILE, 0, Timing.MISS)
+        assertEquals(Element.LIGHTNING, c.enemies[0].elementMark)
+    }
+
+    // ── Peur et recul ───────────────────────────────────────────────────────────
+
+    @Test
+    fun laFrappeSismiqueEffraieEtFaitPerdreLAttaqueSurUnMauvaisDe() {
+        val c = fight(Relic.SEISMIC_STRIKE, d20 = 1)
+        c.castRelic(Relic.SEISMIC_STRIKE, 0, Timing.MISS)
+        assertTrue(c.enemies[0].frightened)
+        val turn = c.startEnemyTurn()
+        assertTrue("pétrifié, il ne frappe pas", turn.attackers.isEmpty())
+        assertEquals(Element.PHYSICAL, turn.stopped.single().element)
+        assertFalse("la peur ne dure qu'un tour", c.enemies[0].frightened)
+    }
+
+    @Test
+    fun uneFrappeSismiqueRateeLaisseAttaquer() {
+        val c = fight(Relic.SEISMIC_STRIKE, d20 = 20)
+        c.castRelic(Relic.SEISMIC_STRIKE, 0, Timing.MISS)
+        assertEquals(listOf(0), c.startEnemyTurn().attackers)
+    }
+
+    @Test
+    fun leBalayageRepousseLeProchainTour() {
+        fun wait(relic: Relic): Double {
+            val hero = heroWithAllSlots().apply { addRelic(relic); hp = 1_000_000 }
+            val foe = Enemy(MonsterType.GOBLIN, maxHp = 1_000_000, damage = 3, cadence = 4, countdown = 4)
+            val c = Combat(hero, 1, listOf(foe), ambush = false, rng = Random(1), d20 = { 20 }, attackDie = { 1 })
+            c.castRelic(relic, 0, Timing.MISS)
+            return c.timeUntilTurn(0)
+        }
+        assertTrue(wait(Relic.WHIRLWIND) > wait(Relic.HUNTERS_MARK))
+    }
+
+    @Test
     fun laCristallisationGeleUneCibleQuiNEtaitPasFigee() {
         val c = fight(Relic.CRYSTALLIZE, d20 = 1)
         c.castRelic(Relic.CRYSTALLIZE, 0, Timing.MISS)

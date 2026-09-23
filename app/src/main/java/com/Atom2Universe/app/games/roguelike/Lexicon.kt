@@ -357,6 +357,7 @@ object Lexicon {
             entry("state_blinded", c, R.string.lex_state_blinded) { add(R.string.lex_state_blinded_1) },
             entry("state_charmed", c, R.string.lex_state_charmed) { add(R.string.lex_state_charmed_1) },
             entry("state_slowed", c, R.string.lex_state_slowed) { add(R.string.lex_state_slowed_1, env.dec(Relic.SLOW_SPEED), env.dec(Relic.SLOW_TURN_LENGTH)) },
+            entry("state_frightened", c, R.string.lex_state_frightened) { add(R.string.lex_state_frightened_1, env.pct(Relic.FEAR_ROLL / 20f)) },
             entry("state_fragile", c, R.string.lex_state_fragile) { add(R.string.lex_state_fragile_1, env.dec(Reaction.FRAGILE_MULT)) },
             entry("state_element_mark", c, R.string.lex_state_element_mark) {
                 add(R.string.lex_state_element_mark_1, env.dec(Combat.ELEMENT_MARK_TIME)); add(R.string.lex_state_element_mark_2)

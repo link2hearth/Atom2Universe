@@ -179,6 +179,8 @@
     <string name="lex_state_slowed_1">Its gauge fills at ×%1$s of its speed, for %2$s of your turns per turn of slow.</string>
     <string name="lex_state_fragile">Fragile</string>
     <string name="lex_state_fragile_1">Your next normal attack on it deals ×%1$s, whatever its element. Relics and Specials do not use it up.</string>
+    <string name="lex_state_frightened">Afraid</string>
+    <string name="lex_state_frightened_1">On its next turn, %1$d%% chance to lose its attack. An enraged enemy is not afraid.</string>
     <string name="lex_state_element_mark">Element mark</string>
     <string name="lex_state_element_mark_1">A [[element_fire|fire]], [[element_ice|ice]] or [[element_lightning|lightning]] hit that does not leave its state (resisted freeze, slow, delayed blow…) leaves its mark for %1$s turns.</string>
     <string name="lex_state_element_mark_2">The [[reactions|reactions]] treat the mark as that element’s state, and use it up.</string>

@@ -179,6 +179,8 @@
     <string name="lex_state_slowed_1">Sa jauge se remplit à ×%1$s de sa vitesse, pendant %2$s de tes tours par tour de ralentissement.</string>
     <string name="lex_state_fragile">Fragile</string>
     <string name="lex_state_fragile_1">Ta prochaine attaque normale sur lui fait ×%1$s, quel que soit son élément. Les reliques et les Spéciaux ne la consomment pas.</string>
+    <string name="lex_state_frightened">Effrayé</string>
+    <string name="lex_state_frightened_1">À son prochain tour, %1$d %% de chances de perdre son attaque. Un ennemi enragé n\'a pas peur.</string>
     <string name="lex_state_element_mark">Marque d\'élément</string>
     <string name="lex_state_element_mark_1">Un coup de [[element_fire|feu]], de [[element_ice|glace]] ou de [[element_lightning|foudre]] qui ne pose pas son état (gel résisté, ralentissement, coup retardé…) laisse sa marque pendant %1$s tours.</string>
     <string name="lex_state_element_mark_2">Les [[reactions|réactions]] la lisent comme l\'état de cet élément, et la consomment.</string>

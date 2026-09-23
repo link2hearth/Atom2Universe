@@ -231,7 +231,7 @@
     <string name="roguelike_relic_slow">Verglas</string>
     <string name="roguelike_relic_hourglass">Sablier</string>
     <string name="roguelike_relic_rend_desc">Inflige %1$s–%2$s dégâts (sans élément) et ouvre une [[state_bleeding|plaie]] pendant %3$d tours : la cible perd %8$s PV chaque fois qu\'elle attaque. Recharge : %4$d tours.</string>
-    <string name="roguelike_relic_whirlwind_desc">Balaye le groupe : %1$s–%2$s dégâts physiques par ennemi. Peut transmettre un enchantement de poison actif sur l’arme. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_whirlwind_desc">Balaye le groupe : %1$s–%2$s dégâts physiques par ennemi, et chacun recule : son prochain tour arrive plus tard. Peut transmettre un enchantement de poison actif sur l’arme. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Lance des dagues sur tous les ennemis : %1$s–%2$s dégâts chacun (sans élément). Une dague critique ouvre une [[state_bleeding|plaie]] (%8$s PV chaque fois que la cible attaque). Recharge : %4$d tours.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Aveugle]] tous les ennemis pendant %3$d tours (ils attaquent au désavantage), et ton prochain coup d\'arme est une attaque sournoise : un critique assuré. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_acid_flask_desc">Inflige %1$s–%2$s dégâts, [[state_poison|empoisonne]] la cible (%5$s PV par tour) et la [[state_fractured|fracture]] pendant %3$d tours : elle prend %9$d %% de dégâts en plus, de tout. Recharge : %4$d tours.</string>
@@ -279,6 +279,8 @@
     <string name="roguelike_combat_hourglass">sablier %1$d</string>
     <string name="roguelike_combat_slowed">ralenti %1$d</string>
     <string name="roguelike_combat_fragile">fragile</string>
+    <string name="roguelike_combat_frightened">effrayé</string>
+    <string name="roguelike_combat_feared_skip">Pétrifié !</string>
     <string name="roguelike_combat_mark_fire">braises</string>
     <string name="roguelike_combat_mark_ice">givre</string>
     <string name="roguelike_combat_mark_lightning">chargé</string>
@@ -679,7 +681,7 @@
     <string name="roguelike_relic_venomous_wound">Plaie venimeuse</string>
     <string name="roguelike_relic_venomous_wound_desc">Inflige %1$s–%2$s dégâts de poison et empoisonne la cible (%5$s dégâts par tour) pendant %3$d de ses tours. Recharge : %4$d tours.</string>
     <string name="roguelike_relic_seismic_strike">Frappe sismique</string>
-    <string name="roguelike_relic_seismic_strike_desc">Une frappe physique : %1$s–%2$s dégâts de base totaux répartis entre tous les ennemis vivants, avant critiques et réactions. Recharge : %4$d tours.</string>
+    <string name="roguelike_relic_seismic_strike_desc">Une frappe physique : %1$s–%2$s dégâts de base totaux répartis entre tous les ennemis vivants, et chacun est [[state_frightened|effrayé]] : il peut perdre sa prochaine attaque. Recharge : %4$d tours.</string>
     <string name="roguelike_combat_puppet_hp_cost">Coût : %1$s PV</string>
     <string name="inv_unequip">Enlever</string>
     <string name="inv_filter_class">Classe</string>

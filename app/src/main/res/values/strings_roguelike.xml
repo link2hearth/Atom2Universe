@@ -231,7 +231,7 @@
     <string name="roguelike_relic_slow">Black ice</string>
     <string name="roguelike_relic_hourglass">Hourglass</string>
     <string name="roguelike_relic_rend_desc">Deals %1$s–%2$s damage (no element) and opens a [[state_bleeding|wound]] for %3$d turns: the target loses %8$s HP every time it attacks. Recharge: %4$d turns.</string>
-    <string name="roguelike_relic_whirlwind_desc">Sweep across the group: %1$s–%2$s physical damage per enemy. Can carry an active poison weapon enchantment. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_whirlwind_desc">Sweep across the group: %1$s–%2$s physical damage per enemy, and each one is pushed back: its next turn comes later. Can carry an active poison weapon enchantment. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_fan_of_knives_desc">Throws daggers at every enemy: %1$s–%2$s damage each (no element). A critical dagger opens a wound (%8$s HP each time the target attacks). Recharge: %4$d turns.</string>
     <string name="roguelike_relic_smoke_bomb_desc">[[state_blinded|Blinds]] every enemy for %3$d turns (they attack with disadvantage), and your next weapon attack is a sneak attack: a guaranteed critical. Recharge: %4$d turns.</string>
     <string name="roguelike_relic_acid_flask_desc">Deals %1$s–%2$s damage, [[state_poison|poisons]] the target (%5$s HP per turn) and [[state_fractured|fractures]] it for %3$d turns: it takes %9$d%% more damage from everything. Recharge: %4$d turns.</string>
@@ -279,6 +279,8 @@
     <string name="roguelike_combat_hourglass">hourglass %1$d</string>
     <string name="roguelike_combat_slowed">slowed %1$d</string>
     <string name="roguelike_combat_fragile">fragile</string>
+    <string name="roguelike_combat_frightened">afraid</string>
+    <string name="roguelike_combat_feared_skip">Too scared!</string>
     <string name="roguelike_combat_mark_fire">embers</string>
     <string name="roguelike_combat_mark_ice">frost</string>
     <string name="roguelike_combat_mark_lightning">charged</string>
@@ -679,7 +681,7 @@
     <string name="roguelike_relic_venomous_wound">Venomous wound</string>
     <string name="roguelike_relic_venomous_wound_desc">Deal %1$s–%2$s poison damage and poison the target (%5$s damage per turn) for %3$d of its turns. Cooldown: %4$d turns.</string>
     <string name="roguelike_relic_seismic_strike">Seismic strike</string>
-    <string name="roguelike_relic_seismic_strike_desc">A physical strike: %1$s–%2$s total base damage shared among all living enemies, before critical hits and reactions. Cooldown: %4$d turns.</string>
+    <string name="roguelike_relic_seismic_strike_desc">A physical strike: %1$s–%2$s total base damage shared among all living enemies, and each one is [[state_frightened|afraid]]: it may lose its next attack. Cooldown: %4$d turns.</string>
     <string name="roguelike_combat_puppet_hp_cost">Cost: %1$s HP</string>
     <string name="inv_unequip">Remove</string>
     <string name="inv_filter_class">Class</string>

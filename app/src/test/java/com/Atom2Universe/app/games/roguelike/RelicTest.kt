@@ -395,6 +395,8 @@ class RelicTest {
                 // Ralentissement et soin : une part du coup, le reste dans l'effet
                 RelicEffect.SLOW      -> RelicBudget.share(r) * RelicBudget.SLOW_EFFECT_SHARE
                 RelicEffect.DRAIN     -> RelicBudget.share(r) * RelicBudget.DRAIN_EFFECT_SHARE
+                RelicEffect.FEAR      -> RelicBudget.FEAR_VALUE
+                RelicEffect.PUSH      -> RelicBudget.PUSH_VALUE
             }
             assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
                 1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)
