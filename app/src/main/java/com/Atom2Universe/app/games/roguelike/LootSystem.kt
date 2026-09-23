@@ -672,6 +672,17 @@ object LootSystem {
         return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.index)
     }
 
+    /**
+     * La forge ([DungeonForge]) : un nouveau tirage de l'objet à la puissance de [floor]. Même type
+     * d'objet, même rareté, même poids ; une pièce de set reste une pièce du même set.
+     */
+    fun reforge(item: Equipment, floor: Int, lootId: Long, rng: Random): Equipment {
+        item.isotopeSet?.let { set ->
+            return createSetPiece(IsotopeSets.forArchetype(set.archetype), item.base, lootId, rng, floor)
+        }
+        return create(item.base, rollPowerForFloor(floor, rng), item.rarity, lootId, rng, forcedWeight = item.weight)
+    }
+
     fun create(
         base: ItemBase, power: Int, rarity: Rarity, lootId: Long, rng: Random,
         forcedWeight: ArmorWeight? = null,

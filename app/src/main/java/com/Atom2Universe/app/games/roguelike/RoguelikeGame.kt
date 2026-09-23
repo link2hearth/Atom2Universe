@@ -53,6 +53,9 @@ class DungeonLevel(val w: Int, val h: Int, val floor: Int) {
     internal var quietCells: Set<Pos> = emptySet()
     internal var campDistances = Array(h) { IntArray(w) { -1 } }
     var mausoleums: List<Pos> = emptyList()
+    /** La forge de l'étage, s'il y en a une ([DungeonForge]). */
+    var forge: Pos? = null
+        internal set
     internal var passages: Map<Pos, MapPassage> = emptyMap()
     internal var waterways: Map<Pos, MapWaterway> = emptyMap()
     internal var scenery: Map<Pos, MapScenery> = emptyMap()
@@ -218,6 +221,9 @@ class RoguelikeGame(
     /** L'étage où la mort ramène. */
     var checkpoint = checkpointFloor(startFloor, checkpointEvery)
         private set
+    /** Une forge sur cet étage : tirée à l'arrivée ([DungeonForge.rollPresence]), gardée si on régénère l'étage. */
+    var forgeOnFloor = false
+        private set
     var level: DungeonLevel = generateLevel(floor, levelSeed)
         private set
     var playerPos: Pos = level.start
@@ -238,6 +244,9 @@ class RoguelikeGame(
     private var stairsArrivalPending = false
 
     var stairsOpen = false
+    /** Le joueur se tient sur la forge et sa fenêtre est ouverte. */
+    var forgeOpen = false
+        private set
     /** Un équipement est déjà tombé sur cet étage (voir [GUARANTEED_GEAR_FLOORS]). */
     private var gearDroppedThisFloor = false
         private set
@@ -252,7 +261,7 @@ class RoguelikeGame(
     // ── État ────────────────────────────────────────────────────────────────────
 
     /** Rien d'ouvert par-dessus la carte : on peut bouger. */
-    val isExploring get() = combat == null && pendingLoot.isEmpty() && !stairsOpen && deathReport == null
+    val isExploring get() = combat == null && pendingLoot.isEmpty() && !stairsOpen && !forgeOpen && deathReport == null
 
     val isChased get() = level.packs.any { it.alive && it.state == PackState.CHASING }
 
@@ -277,6 +286,7 @@ class RoguelikeGame(
         pickup()
         endMapTurn()
         openStairsOnArrival()
+        if (isExploring && playerPos == level.forge) forgeOpen = true
     }
 
     /** Arrival heals immediately, without spending an extra map turn. */
@@ -309,6 +319,46 @@ class RoguelikeGame(
     }
 
     fun closeStairs() { stairsOpen = false; stairsArrivalPending = false }
+
+    // ── Forge ───────────────────────────────────────────────────────────────────
+
+    val forgePrice get() = DungeonForge.price(floor)
+
+    fun closeForge() { forgeOpen = false }
+
+    /** Outil de test : une forge sur cet étage, sur une case libre à côté du héros. */
+    internal fun placeForgeNearHero(): Boolean {
+        val taken = level.items.map { it.pos }.toSet()
+        val spot = (1..3).asSequence().flatMap { r -> (-r..r).asSequence().flatMap { dy -> (-r..r).asSequence().map { dx -> Pos(playerPos.x + dx, playerPos.y + dy) } } }
+            .firstOrNull { level.inBounds(it.x, it.y) && level.tiles[it.y][it.x] == TileType.FLOOR && it != playerPos &&
+                it != level.start && it !in taken && it !in level.scenery && level.packAt(it.x, it.y) == null } ?: return false
+        forgeOnFloor = true
+        level.forge = spot
+        level.explored[spot.y][spot.x] = true
+        return true
+    }
+
+    /**
+     * Reforge [item] (porté ou dans le sac) au niveau de l'étage : il est remplacé à sa place par le
+     * nouveau tirage. Renvoie l'objet forgé, ou null si la forge n'est pas ouverte ou l'or manque.
+     */
+    fun reforge(item: Equipment): Equipment? {
+        if (!forgeOpen || combat != null) return null
+        val price = forgePrice
+        if (hero.gold < price) return null
+        val worn = hero.equipped[item.slot] === item
+        val bagIndex = if (worn) -1 else hero.bag.indexOfFirst { it === item }
+        if (!worn && bagIndex < 0) return null
+        val forged = LootSystem.reforge(item, floor, hero.nextLootId++, rng)
+        hero.gold -= price
+        if (worn) {
+            hero.equipped[item.slot] = forged
+            hero.hp = hero.hp.coerceAtMost(hero.maxHp)
+        } else hero.bag[bagIndex] = forged
+        forged.isotopeSet?.let { hero.knownSets += it.z }
+        addLog(R.string.roguelike_log_forged, forged, price)
+        return forged
+    }
 
     fun descend() {
         if (!stairsOpen) return
@@ -580,6 +630,8 @@ class RoguelikeGame(
         levelSeed = rng.nextLong()
         regenerationCount = 0
         gearDroppedThisFloor = false
+        forgeOnFloor = DungeonForge.rollPresence(floor, rng)
+        forgeOpen = false
         level = generateLevel(floor, levelSeed)
         playerPos = level.start
         stairsArrivalPending = false
@@ -653,6 +705,14 @@ class RoguelikeGame(
         val goldCount = 3 + lv.targetPacks / 4 + levelRng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
 
+        // La forge : dans une salle, loin du feu de camp, jamais sur un objet ni sur un décor
+        if (forgeOnFloor) {
+            val taken = lv.items.map { it.pos }.toSet()
+            lv.forge = (layout.rooms.shuffled(levelRng).map { it.randomInner(levelRng) } + farCells.shuffled(levelRng))
+                .firstOrNull { lv.tiles[it.y][it.x] == TileType.FLOOR && it.chebyshev(lv.start) > 2 && it !in taken &&
+                    it !in lv.scenery && it !in lv.passages && it !in lv.waterways }
+        }
+
         return lv
     }
 
@@ -701,6 +761,8 @@ class RoguelikeGame(
         put("stairsOpen", stairsOpen)
         put("stairsArrivalPending", stairsArrivalPending)
         put("gearDroppedThisFloor", gearDroppedThisFloor)
+        put("forge", forgeOnFloor)
+        put("forgeOpen", forgeOpen)
         put("deathReport", deathReport?.let { report -> JSONObject().apply {
             put("floor", report.floor)
             put("goldLost", report.goldLost)
@@ -748,6 +810,7 @@ class RoguelikeGame(
         checkpoint = j.optInt("checkpoint", checkpoint).coerceIn(CHECKPOINT, floor)
         levelSeed = j.optLong("levelSeed", levelSeed)
         regenerationCount = j.optInt("regenerationCount", 0).coerceAtLeast(0)
+        forgeOnFloor = j.optBoolean("forge", false)
         level = generateLevel(floor, levelSeed)
         j.optJSONArray("explored")?.let { rows ->
             for (y in 0 until minOf(rows.length(), level.h)) {
@@ -788,6 +851,7 @@ class RoguelikeGame(
         stairsOpen = j.optBoolean("stairsOpen", false)
         stairsArrivalPending = j.optBoolean("stairsArrivalPending", false)
         gearDroppedThisFloor = j.optBoolean("gearDroppedThisFloor", false)
+        forgeOpen = j.optBoolean("forgeOpen", false) && playerPos == level.forge
         deathReport = j.optJSONObject("deathReport")?.let { report ->
             DeathReport(report.getInt("floor"), report.getInt("goldLost"),
                 report.optInt("checkpointFloor", checkpointFloor(report.getInt("floor"))))

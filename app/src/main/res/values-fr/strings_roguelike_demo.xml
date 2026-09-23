@@ -99,6 +99,7 @@
     <string name="dungeon_test_restore">Restaurer les PV et les recharges</string>
     <string name="dungeon_test_gold">Ajouter 10 000 pièces d’or</string>
     <string name="dungeon_test_reveal">Révéler la carte</string>
+    <string name="dungeon_test_forge">Forge à côté du héros</string>
     <string name="dungeon_test_range">Saisir un nombre entre 1 et %1$d</string>
     <string name="dungeon_test_notice">Session temporaire : sauvegarde normale et record préservés. Toutes les reliques et quatre emplacements sont disponibles dans l’inventaire. Changer d’étage conserve votre équipement ; utilisez l’outil de classe pour choisir son étage de provenance.</string>
     <string name="dungeon_test_preset">Étage %1$d</string>

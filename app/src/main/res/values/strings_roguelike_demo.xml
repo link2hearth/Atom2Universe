@@ -99,6 +99,7 @@
     <string name="dungeon_test_restore">Restore health and cooldowns</string>
     <string name="dungeon_test_gold">Add 10,000 gold</string>
     <string name="dungeon_test_reveal">Reveal the map</string>
+    <string name="dungeon_test_forge">Forge next to the hero</string>
     <string name="dungeon_test_range">Enter a number from 1 to %1$d</string>
     <string name="dungeon_test_notice">Temporary session: normal save and floor record are preserved. All relics and four slots are available in the inventory. Changing floor keeps your equipment; use the class loadout tool to choose its drop floor.</string>
     <string name="dungeon_test_preset">Floor %1$d</string>

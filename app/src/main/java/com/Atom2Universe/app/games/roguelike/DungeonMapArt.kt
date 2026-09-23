@@ -320,6 +320,29 @@ internal class DungeonMapArt {
         }
     }
 
+    /** La forge ([DungeonForge]) : une enclume, une barre chauffée à blanc et quelques étincelles. */
+    fun forge(c: Canvas, bounds: RectF) {
+        c.save()
+        c.translate(bounds.left, bounds.top)
+        c.scale(bounds.width() / 32f, bounds.height() / 32f)
+        box(c, 4, 28, 24, 2, 0x55000000)
+        // Le socle et la taille de l'enclume
+        box(c, 7, 23, 18, 5, 0xFF3A3F47.toInt())
+        box(c, 11, 17, 10, 6, 0xFF4A505A.toInt())
+        // La table et la bigorne
+        box(c, 5, 12, 22, 5, 0xFF5F6773.toInt())
+        box(c, 1, 13, 4, 3, 0xFF5F6773.toInt())
+        box(c, 5, 12, 22, 1, 0xFF8C95A3.toInt())
+        // La barre de métal chauffée
+        box(c, 9, 9, 13, 3, 0xFFE0661F.toInt())
+        box(c, 11, 10, 8, 1, 0xFFFFD27A.toInt())
+        // Les étincelles
+        box(c, 6, 5, 2, 2, 0xFFFFB347.toInt())
+        box(c, 24, 4, 2, 2, 0xFFFFE08A.toInt())
+        box(c, 15, 2, 1, 2, 0xFFFFB347.toInt())
+        c.restore()
+    }
+
     fun pickup(c: Canvas, bounds: RectF, gold: Boolean, variant: Int = 0) {
         c.save()
         c.translate(bounds.left, bounds.top)

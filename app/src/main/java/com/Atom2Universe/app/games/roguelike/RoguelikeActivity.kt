@@ -28,6 +28,7 @@ open class RoguelikeActivity : ThemedActivity() {
     private lateinit var healthBar:    ProgressBar
     private lateinit var inventory:    InventoryPanel
     private lateinit var lexicon:      LexiconPanel
+    private lateinit var forge:        ForgePanel
 
     private var game = RoguelikeGame()
     private val saveHandler = Handler(Looper.getMainLooper())
@@ -76,11 +77,15 @@ open class RoguelikeActivity : ThemedActivity() {
         inventory    = InventoryPanel(findViewById(R.id.roguelike_inventory), lexicon,
             onChanged = { saveNow(); refresh() },
             onClosed = { saveNow() })
+        forge        = ForgePanel(findViewById(R.id.roguelike_forge), lexicon,
+            onChanged = { saveNow(); refresh() },
+            onLeave = { game.closeForge(); saveNow(); refresh() })
 
         btnBack.setOnClickListener {
             when {
                 lexicon.isOpen -> lexicon.back()
                 inventory.isOpen -> inventory.back()
+                forge.isOpen -> forge.back()
                 else -> finish()
             }
         }
@@ -110,6 +115,7 @@ open class RoguelikeActivity : ThemedActivity() {
                 when {
                     lexicon.isOpen   -> lexicon.back()
                     inventory.isOpen -> inventory.back()
+                    forge.isOpen     -> forge.back()
                     else             -> finish()
                 }
             }
@@ -235,6 +241,7 @@ open class RoguelikeActivity : ThemedActivity() {
 
         combatView.visibility = View.GONE
         inventory.hide()
+        forge.hide()
         lexicon.hide()
         refresh()
     }
@@ -281,6 +288,9 @@ open class RoguelikeActivity : ThemedActivity() {
 
     private fun refresh() {
         syncMusic()
+        // La forge s'ouvre quand le héros marche dessus, et se ferme quand le jeu la referme
+        if (game.forgeOpen && !forge.isOpen) forge.show(game)
+        else if (!game.forgeOpen && forge.isOpen) forge.hide()
         testButton?.isEnabled = game.isExploring
         gameView.invalidate()
         val h = game.hero

@@ -447,6 +447,15 @@
     <string name="roguelike_stairs_next">Floor %1$d awaits below</string>
     <string name="roguelike_stairs_descend">↓  Descend</string>
     <string name="roguelike_stairs_stay">Stay</string>
+    <string name="roguelike_forge_title">FORGE · floor %1$d</string>
+    <string name="roguelike_forge_gold">Gold: %1$s</string>
+    <string name="roguelike_forge_price">Reforge: %1$s gold</string>
+    <string name="roguelike_forge_reforge">Reforge · %1$s gold</string>
+    <string name="roguelike_forge_worn">Equipped</string>
+    <string name="roguelike_forge_previous">Before: score %1$s</string>
+    <string name="roguelike_forge_leave">Leave</string>
+    <string name="roguelike_forge_empty">Nothing to reforge</string>
+    <string name="roguelike_log_forged">%1$s forged: −%2$s gold.</string>
     <!-- Suffixes des grands nombres (DungeonNumbers) : milliers, millions, milliards… -->
     <string-array name="roguelike_number_suffixes">
         <item>k</item>

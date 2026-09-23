@@ -144,6 +144,11 @@
     <string name="lex_death">Mort</string>
     <string name="lex_death_1">Tu gardes ton équipement et choisis : rejouer l\'étage de ta mort ou revenir au dernier checkpoint. Checkpoints tous les %1$d étages : 1, 11, 21…</string>
     <string name="lex_death_2">Tu perds %1$d %% de ton or.</string>
+    <string name="lex_forge">Forge</string>
+    <string name="lex_forge_1">Une structure rare : à partir de l\'étage %1$d, %2$d %% de chances sur chaque étage atteint.</string>
+    <string name="lex_forge_2">Reforger remplace un objet par un nouveau tirage au niveau de l\'étage : même type, même rareté, même poids. Une pièce de set reste dans son set.</string>
+    <string name="lex_forge_3">Chaque reforge coûte environ %1$d étages d\'or à cette profondeur. On peut recommencer tant qu\'on peut payer.</string>
+    <string name="lex_forge_you">Ici, étage %1$d : %2$s or par reforge.</string>
     <string name="lex_state_burn">Brûlé</string>
     <string name="lex_state_burn_1">Il perd des PV au début de chacun de ses tours.</string>
     <string name="lex_state_burn_2">%1$d %% du coup qui l\'a brûlé, à chaque tour</string>

@@ -19,6 +19,7 @@ private val LOG_AMOUNT_ARGS: Map<Int, Set<Int>> = mapOf(
     R.string.roguelike_log_victory to setOf(0),
     R.string.roguelike_log_gold_pickup to setOf(0),
     R.string.roguelike_log_sold to setOf(1),
+    R.string.roguelike_log_forged to setOf(1),
 )
 
 /** Résout une entrée de journal : les arguments Labeled/Equipment sont d'abord traduits en texte. */
@@ -164,7 +165,7 @@ class RoguelikeView @JvmOverloads constructor(
         drawPacks(canvas, g)
         drawPlayer(canvas, g)
         drawHud(canvas, g)
-        val overlay = g.stairsOpen || g.pendingEquipDrop != null || g.deathReport != null
+        val overlay = g.stairsOpen || g.forgeOpen || g.pendingEquipDrop != null || g.deathReport != null
         if (g.stairsOpen)               drawStairs(canvas, g)
         if (g.pendingEquipDrop != null) drawLootPopup(canvas, g)
         if (g.deathReport != null)      drawDeathPanel(canvas, g)
@@ -262,6 +263,13 @@ class RoguelikeView @JvmOverloads constructor(
     // ── Objets au sol ────────────────────────────────────────────────────────────
 
     private fun drawItems(canvas: Canvas, g: RoguelikeGame) {
+        // La forge est une structure : elle reste dessinée sous le brouillard une fois découverte
+        g.level.forge?.let { f ->
+            if (isOnScreen(f.x, f.y) && g.level.explored[f.y][f.x]) {
+                val l = tileLeft(f.x); val t = tileTop(f.y)
+                mapArt.forge(canvas, RectF(l, t, l + tileSize, t + tileSize))
+            }
+        }
         for (item in g.level.items) {
             val tx = item.pos.x; val ty = item.pos.y
             if (!isOnScreen(tx, ty) || !g.level.visible[ty][tx]) continue

@@ -94,6 +94,8 @@ class RoguelikeSimulationTest {
         var groupSizes = 0; var mapTurns = 0
         /** Combats arrêtés à [MAX_FIGHT_TURNS] tours : un combat qui ne finit pas est un bug. */
         var stuck = 0
+        /** L'économie : pièces d'équipement tombées, leur valeur de revente, l'or gagné (sol + combats) et perdu aux morts. */
+        var drops = 0; var dropValue = 0L; var goldEarned = 0L; var goldLost = 0L
     }
 
     companion object {
@@ -171,6 +173,8 @@ class RoguelikeSimulationTest {
         val finalRelics = mutableListOf<String>()
         /** Toutes les reliques distinctes découvertes pendant chaque profil, même celles restées dans le sac. */
         val discoveredRelics = mutableListOf<String>()
+        /** Étage -> or en poche + valeur de revente du sac, à la première arrivée (la richesse si tout était revendu). */
+        val wealthOnArrival = mutableMapOf<Int, MutableList<Long>>()
         fun f(n: Int) = floors.getOrPut(n) { FloorStat() }
     }
 
@@ -472,6 +476,61 @@ class RoguelikeSimulationTest {
         }
         out.appendLine("(${(System.currentTimeMillis() - start) / 1000} s)")
         File("build/roguelike-long${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
+        println(out)
+    }
+
+    /**
+     * L'économie de l'or, pour fixer le prix de la forge : par tranche d'étages, combien de pièces d'équipement
+     * tombent par passage sur un étage, ce qu'elles valent à la revente, et l'or gagné (sol + combats).
+     * Les bots ne revendent pas (l'optimiseur a besoin de son sac) : la revente est comptée comme si tout le butin
+     * était vendu, ce qui la surestime un peu (les pièces portées ne se vendent pas).
+     * Se lance avec la règle de référence SIM_CHECKPOINT=10 SIM_RETREAT=20. SIM_PROFILES=4 (par joueur),
+     * SIM_MAX_FLOOR=200, SIM_BAND=10, SIM_STYLES. Écrit build/roguelike-gold.txt.
+     */
+    @Test
+    fun goldEconomy() {
+        val perStyle = System.getenv("SIM_PROFILES")?.toInt() ?: 4
+        val floorCap = System.getenv("SIM_MAX_FLOOR")?.toInt() ?: 200
+        val band = System.getenv("SIM_BAND")?.toInt() ?: 10
+        val players = System.getenv("SIM_STYLES")?.split(",")?.map { it.split(":").let { (a, b) -> Style.valueOf(a) to Skill.valueOf(b) } }
+            ?: listOf(Style.CASUAL to Skill.CORRECT, Style.OPTIMIZER to Skill.CORRECT)
+        val start = System.currentTimeMillis()
+        File("build/roguelike-progress.txt").writeText("")
+        val tasks = players.flatMap { (style, skill) -> (0 until perStyle).map { Triple(style, skill, it) } }
+        val results = tasks.parallelStream().map { (style, skill, i) ->
+            val r = Report(skill)
+            playProfile(skill, r, Random(i * 7919L + skill.ordinal + 101), style, floorCap, label = "$style $skill bot $i")
+            Triple(style, skill, r)
+        }.collect(java.util.stream.Collectors.toList())
+
+        fun table(title: String, reports: List<Report>): String = buildString {
+            appendLine("── $title : ${reports.size} bots, meilleurs étages ${reports.flatMap { it.bestFloors }.sorted()} ──")
+            appendLine(String.format("%-9s %8s %7s %9s %9s %9s %9s %8s %11s %8s",
+                "étages", "passages", "pièces", "revente", "or gagné", "total", "or perdu", "puiss.", "richesse", "total/P"))
+            appendLine("%-9s %8s %7s %9s %9s %9s %9s %8s %11s %8s".format("", "", "/pass.", "/pass.", "/pass.", "/pass.", "/pass.", "moy.", "à l'arrivée", ""))
+            for (lo in 1..floorCap step band) {
+                val hi = lo + band - 1
+                val fs = reports.flatMap { r -> r.floors.filterKeys { it in lo..hi }.values }
+                val visits = fs.sumOf { it.entries }
+                if (visits == 0) continue
+                val drops = fs.sumOf { it.drops }.toDouble() / visits
+                val value = fs.sumOf { it.dropValue }.toDouble() / visits
+                val earned = fs.sumOf { it.goldEarned }.toDouble() / visits
+                val lost = fs.sumOf { it.goldLost }.toDouble() / visits
+                val power = LootSystem.powerCenter((lo + hi) / 2)
+                val wealth = reports.flatMap { it.wealthOnArrival[lo] ?: emptyList() }.sorted().let { if (it.isEmpty()) "—" else it[it.size / 2].toString() }
+                appendLine(String.format("%-9s %8d %7.2f %9.0f %9.0f %9.0f %9.0f %8.1f %11s %8.1f",
+                    "$lo-$hi", visits, drops, value, earned, value + earned, lost, power, wealth, (value + earned) / power))
+            }
+            appendLine()
+        }
+        val out = StringBuilder("══════ Économie de l'or : $perStyle bots par joueur, jusqu'à l'étage $floorCap, checkpoint $checkpointEvery, retour $deathRetreat ══════\n")
+        out.appendLine("Par passage sur un étage (une arrivée, retours après une mort compris). « revente » = valeur de revente de toutes les pièces tombées ;")
+        out.appendLine("« richesse » = or en poche + revente du sac à la première arrivée au premier étage de la tranche (médiane) ; « total/P » = total par passage ÷ puissance moyenne des objets.\n")
+        for ((style, skill) in players.distinct()) out.append(table("$style $skill", results.filter { it.first == style && it.second == skill }.map { it.third }))
+        out.append(table("TOUS", results.map { it.third }))
+        out.appendLine("(${(System.currentTimeMillis() - start) / 1000} s)")
+        File("build/roguelike-gold${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
         println(out)
     }
 
@@ -1585,9 +1644,13 @@ class RoguelikeSimulationTest {
                 if (reached.add(g.floor)) {
                     r.deathsBeforeFloor.getOrPut(g.floor) { mutableListOf() } += deaths
                     r.gearOnArrival.getOrPut(g.floor) { mutableListOf() } += g.hero.equipped.values.sumOf { LootSystem.rating(it) }
+                    r.wealthOnArrival.getOrPut(g.floor) { mutableListOf() } += g.hero.gold + g.hero.bag.sumOf { LootSystem.sellPrice(it).toLong() }
                 }
                 best = maxOf(best, g.floor)
             }
+            // L'or gagné ou perdu pendant ce pas, compté à l'étage où il a eu lieu
+            val goldBefore = g.hero.gold
+            val goldFloor = g.floor
             when {
                 g.combat != null -> {
                     val cc = g.combat!!
@@ -1622,6 +1685,8 @@ class RoguelikeSimulationTest {
                 g.deathReport != null -> g.dismissDeath()
                 g.pendingEquipDrop != null -> {
                     val e = g.pendingEquipDrop!!
+                    r.f(g.floor).drops++
+                    r.f(g.floor).dropValue += LootSystem.sellPrice(e)
                     if (e.isotopeZ != null) newSetPiece = true
                     e.isotopeSet?.archetype?.let { a ->
                         r.setDrops.merge(a, 1, Int::plus)
@@ -1655,8 +1720,12 @@ class RoguelikeSimulationTest {
                     else g.stashPendingDrop()
                 }
                 g.stairsOpen -> g.descend()
+                // Les bots ne se servent pas de la forge : ils la referment
+                g.forgeOpen -> g.closeForge()
                 else -> { mapStep(g, mem); r.f(g.floor).mapTurns++ }
             }
+            val goldDelta = g.hero.gold - goldBefore
+            if (goldDelta > 0) r.f(goldFloor).goldEarned += goldDelta else r.f(goldFloor).goldLost -= goldDelta
         }
         if (turns >= maxMapTurns) {
             r.timeouts++

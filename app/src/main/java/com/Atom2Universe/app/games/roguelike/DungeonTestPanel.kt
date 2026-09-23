@@ -65,7 +65,7 @@ internal class DungeonTestPanel(
     fun show() {
         val actions = intArrayOf(R.string.dungeon_test_floor, R.string.dungeon_test_gear,
             R.string.dungeon_test_item, R.string.dungeon_test_restore, R.string.dungeon_test_gold,
-            R.string.dungeon_test_reveal)
+            R.string.dungeon_test_reveal, R.string.dungeon_test_forge)
         AlertDialog.Builder(activity, R.style.Theme_Dungeon_Dialog)
             .setTitle(R.string.dungeon_test_tools)
             .setItems(actions.map { activity.getString(it) }.toTypedArray()) { _, index ->
@@ -76,6 +76,7 @@ internal class DungeonTestPanel(
                     3 -> { game().hero.apply { healFull(); relicCooldowns.clear(); specialCooldown = 0 }; refresh() }
                     4 -> { game().hero.gold = (game().hero.gold.toLong() + 10000).coerceAtMost(Int.MAX_VALUE.toLong()).toInt(); refresh() }
                     5 -> { game().level.explored.forEach { it.fill(true) }; refresh() }
+                    6 -> { game().placeForgeNearHero(); refresh() }
                 }
             }.setNegativeButton(android.R.string.cancel, null).show()
     }

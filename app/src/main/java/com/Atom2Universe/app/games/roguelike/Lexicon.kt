@@ -321,6 +321,12 @@ object Lexicon {
             entry("death", c, R.string.lex_death) {
                 add(R.string.lex_death_1, RoguelikeGame.CHECKPOINT_INTERVAL); add(R.string.lex_death_2, env.pct(RoguelikeGame.DEATH_GOLD_LOSS))
             },
+            entry("forge", c, R.string.lex_forge) {
+                add(R.string.lex_forge_1, DungeonForge.MIN_FLOOR, env.pct(DungeonForge.CHANCE))
+                add(R.string.lex_forge_2)
+                add(R.string.lex_forge_3, DungeonForge.FLOORS_OF_INCOME)
+                if (env.hero != null && env.floor >= DungeonForge.MIN_FLOOR) you(R.string.lex_forge_you, env.floor, env.num(DungeonForge.price(env.floor)))
+            },
         )
     }
 

@@ -144,6 +144,11 @@
     <string name="lex_death">Death</string>
     <string name="lex_death_1">Keep your gear and choose: retry the floor where you died or return to the last checkpoint. Checkpoints every %1$d floors: 1, 11, 21…</string>
     <string name="lex_death_2">You lose %1$d%% of your gold.</string>
+    <string name="lex_forge">Forge</string>
+    <string name="lex_forge_1">A rare structure: from floor %1$d, a %2$d%% chance on each floor you reach.</string>
+    <string name="lex_forge_2">Reforging replaces an item with a new draw at the current floor: same type, same rarity, same weight. A set piece stays in its set.</string>
+    <string name="lex_forge_3">Each reforge costs about %1$d floors of gold at that depth. You can reforge again as long as you can pay.</string>
+    <string name="lex_forge_you">Here, floor %1$d: %2$s gold per reforge.</string>
     <string name="lex_state_burn">Burning</string>
     <string name="lex_state_burn_1">It loses HP at the start of each of its turns.</string>
     <string name="lex_state_burn_2">%1$d%% of the hit that burned it, every turn</string>
