@@ -1212,6 +1212,8 @@ class RoguelikeSimulationTest {
     fun combosAtFixedGear() {
         val series = System.getenv("SIM_SERIES")?.toInt() ?: 1000
         val floors = System.getenv("SIM_FLOORS")?.split(",")?.map { it.trim().toInt() } ?: listOf(15, 30, 60)
+        // SIM_CHAIN=1 : un combat seul à PV pleins, comme en jeu (le héros récupère après chaque victoire isolée)
+        val chain = System.getenv("SIM_CHAIN")?.toInt() ?: 3
         val pairs = (Resonance.entries.map { it.a to it.b } +
             Relic.entries.flatMap { a -> Relic.entries.filter { b -> a != b && prepares(a, b) }.map { b -> a to b } })
             .distinctBy { setOf(it.first, it.second) }
@@ -1223,7 +1225,7 @@ class RoguelikeSimulationTest {
                 val hero = geared(floor, rng)
                 relics.forEach { hero.addRelic(it) }
                 var ok = true
-                repeat(3) { if (ok) ok = soloFight(hero, floor, Skill.CORRECT, rng, stuck, combos) }
+                repeat(chain) { if (ok) ok = soloFight(hero, floor, Skill.CORRECT, rng, stuck, combos) }
                 if (ok) wins++
             }
             return 100.0 * wins / series
@@ -1239,11 +1241,11 @@ class RoguelikeSimulationTest {
             val res = Resonance.active(listOf(a, b)).firstOrNull()?.name ?: ""
             String.format("%-34s", "${a.name} + ${b.name}") + cells.joinToString("") { String.format("%18s", it) } + "  $res"
         }.collect(java.util.stream.Collectors.toList())
-        val out = StringBuilder("══════ Combos à équipement égal ($series séries de 3 combats, joueur correct) : au hasard → en combo ══════\n")
+        val out = StringBuilder("══════ Combos à équipement égal ($series séries de $chain combats, joueur correct) : au hasard → en combo ══════\n")
         out.appendLine(String.format("%-34s", "Étage") + floors.joinToString("") { String.format("%18d", it) })
         out.appendLine(String.format("%-34s", "aucun sort") + base.joinToString("") { String.format("%18s", String.format("%5.1f", it)) })
         rows.forEach { out.appendLine(it) }
-        out.appendLine("(victoires sur 3 combats enchaînés ; ${(System.currentTimeMillis() - start) / 1000} s)")
+        out.appendLine("(victoires sur $chain combats enchaînés ; ${(System.currentTimeMillis() - start) / 1000} s)")
         File("build/roguelike-combos.txt").writeText(out.toString())
         println(out)
     }
