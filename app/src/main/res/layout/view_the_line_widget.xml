@@ -4,10 +4,10 @@
     android:id="@+id/the_line_widget_card"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="#0F172A"
+    app:cardBackgroundColor="#041A12"
     app:cardCornerRadius="18dp"
     app:cardElevation="0dp"
-    app:strokeColor="#1F2937"
+    app:strokeColor="#0D3A29"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -72,7 +72,7 @@
                 android:id="@+id/the_line_widget_result_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#CC0F172A"
+                android:background="#CC041A12"
                 android:visibility="gone"
                 android:clickable="true"
                 android:focusable="true">
@@ -116,7 +116,7 @@
                 android:id="@+id/the_line_widget_reset_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#CC0F172A"
+                android:background="#CC041A12"
                 android:visibility="gone"
                 android:clickable="true"
                 android:focusable="true">
@@ -156,7 +156,7 @@
                             android:gravity="center"
                             android:text="@string/the_line_diff_simple"
                             android:textSize="12sp"
-                            android:textColor="#7AD3FF"
+                            android:textColor="#E9A869"
                             android:background="@drawable/bg_widget_arrow"
                             android:clickable="true"
                             android:focusable="true" />

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="the_line_title">La Ligne</string>
-    <string name="the_line_description">Relie les points, remplis la grille</string>
+    <string name="the_line_title">Circuit</string>
+    <string name="the_line_description">Trace le circuit par toutes les bornes</string>
     <string name="the_line_back">Retour</string>
-    <string name="the_line_mode_single">Simple</string>
-    <string name="the_line_mode_multi">Multi</string>
+    <string name="the_line_mode_single">Piste</string>
+    <string name="the_line_mode_multi">Câblage</string>
     <string name="the_line_diff_easy">Facile</string>
     <string name="the_line_diff_medium">Moyen</string>
     <string name="the_line_diff_hard">Difficile</string>
@@ -12,12 +12,16 @@
     <string name="the_line_remaining">Cases restantes : %1$d</string>
     <string name="the_line_hint_single">Trace un chemin de S à F qui visite chaque case.</string>
     <string name="the_line_hint_multi">Relie chaque paire de couleurs sans croiser les chemins.</string>
-    <string name="the_line_completed">Niveau %1$d terminé !</string>
+    <string name="the_line_completed">Niveau %1$d terminé</string>
     <string name="the_line_error">Impossible de générer une grille. Réessaie.</string>
     <string name="the_line_btn_reset">Nouvelle partie</string>
     <string name="the_line_new_game">Nouvelle partie</string>
-    <string name="the_line_solved_label">✓ Résolu !</string>
-    <string name="the_line_diff_simple">Simple</string>
-    <string name="the_line_diff_multi">Multi</string>
+    <string name="the_line_solved_label">✓ Sous tension !</string>
+    <string name="the_line_diff_simple">Piste</string>
+    <string name="the_line_diff_multi">Câblage</string>
     <string name="the_line_widget_cancel">✕ Annuler</string>
+    <string name="the_line_clear_desc">Effacer les tracés</string>
+    <string name="the_line_win_title">Sous tension !</string>
+    <string name="the_line_next">Suivant</string>
+    <string name="the_line_widget_label">%1$s · %2$s</string>
 </resources>

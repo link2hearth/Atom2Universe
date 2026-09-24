@@ -434,7 +434,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.the_line_description,
             iconRes = android.R.drawable.ic_menu_edit,
             defaultColorRes = R.color.the_line_active,
-            activityClass = TheLineActivity::class.java
+            activityClass = TheLineActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "sokoban",

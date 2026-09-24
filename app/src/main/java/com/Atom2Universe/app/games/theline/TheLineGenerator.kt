@@ -185,9 +185,34 @@ object TheLineGenerator {
             val segments = splitIntoSegments(coords, pairCount)
             TheLinePuzzle(mode, width, height, blocked, coords, segments = segments)
         } else {
+            val cpMin = difficulty.checkpointsMin
+            val cpMax = maxOf(cpMin, difficulty.checkpointsMax)
+            val count = Random.nextInt(cpMin, cpMax + 1)
             TheLinePuzzle(mode, width, height, blocked, coords,
-                endpoints = coords.first() to coords.last())
+                endpoints = coords.first() to coords.last(),
+                checkpoints = pickCheckpoints(coords.size, count).map { coords[it] })
         }
+    }
+
+    /**
+     * Choisit les bornes le long du chemin : le premier et le dernier pas, puis des pas
+     * intermédiaires à peu près régulièrement espacés, avec un peu de jeu pour que les
+     * numéros ne tombent pas tous à la même distance. Rend des indices strictement croissants.
+     */
+    fun pickCheckpoints(pathLength: Int, wanted: Int, random: Random = Random): List<Int> {
+        if (pathLength <= 1) return listOf(0)
+        val count = wanted.coerceIn(2, pathLength)
+        val result = mutableListOf(0)
+        val step = (pathLength - 1).toFloat() / (count - 1)
+        for (k in 1 until count - 1) {
+            val jitter = (random.nextFloat() - 0.5f) * step * 0.6f
+            val ideal = (k * step + jitter).toInt()
+            val lo = result.last() + 1
+            val hi = pathLength - 1 - (count - 1 - k)
+            result.add(ideal.coerceIn(lo, hi))
+        }
+        result.add(pathLength - 1)
+        return result
     }
 
     private fun splitIntoSegments(path: List<TLCoord>, count: Int): List<TLSegment> {

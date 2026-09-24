@@ -21,6 +21,8 @@ import com.Atom2Universe.app.games.theline.TheLineGame
 import com.Atom2Universe.app.games.theline.TheLineGenerator
 import com.Atom2Universe.app.games.theline.TheLineMode
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.games.theline.CircuitPainter
 import kotlin.math.hypot
 
 class TheLineWidgetView @JvmOverloads constructor(
@@ -34,13 +36,13 @@ class TheLineWidgetView @JvmOverloads constructor(
         private const val KEY_DIFFICULTY = "difficulty"
         private const val KEY_MODE = "mode"
 
-        private val DIFFICULTY_LABELS = listOf("Facile", "Moyen", "Difficile")
+        private val DIFFICULTY_LABELS = listOf(R.string.the_line_diff_easy, R.string.the_line_diff_medium, R.string.the_line_diff_hard)
         private val DIFFICULTY_COLORS = listOf("#4AB3FF", "#F6B93B", "#FF6B6B")
         private val DIFFICULTIES = listOf(
             TheLineDifficulty.EASY, TheLineDifficulty.MEDIUM, TheLineDifficulty.HARD
         )
 
-        private const val COLOR_MODE_ACTIVE = "#7AD3FF"
+        private const val COLOR_MODE_ACTIVE = "#E9A869"
         private const val COLOR_MODE_INACTIVE = "#64748B"
     }
 
@@ -55,7 +57,7 @@ class TheLineWidgetView @JvmOverloads constructor(
 
     private val game = TheLineGame()
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val baseCardColor = Color.parseColor("#0F172A")
+    private val baseCardColor = CircuitPainter.MASK_BOTTOM
 
     // Mode sélectionné dans l'overlay (pas encore appliqué)
     private var pendingMode = TheLineMode.SINGLE
@@ -125,12 +127,9 @@ class TheLineWidgetView @JvmOverloads constructor(
             resetOverlay.visibility = GONE
         }
 
-        boardView.onBoardChanged = {
-            if (game.isComplete()) showResultOverlay()
-        }
-        boardView.onPathCompleted = { _ ->
-            if (game.isComplete()) showResultOverlay()
-        }
+        // La récompense tombe à la résolution, le panneau quand le courant a fini de passer.
+        boardView.onSolved = { claimReward() }
+        boardView.onPowered = { resultOverlay.visibility = VISIBLE }
 
         val headerArea = findViewById<FrameLayout>(R.id.the_line_widget_header_area)
         headerArea.setOnTouchListener { _, event -> handleHeaderTouch(event) }
@@ -202,14 +201,10 @@ class TheLineWidgetView @JvmOverloads constructor(
         return true
     }
 
-    private fun showResultOverlay() {
-        resultOverlay.visibility = VISIBLE
-        val reward = when (game.difficulty) {
-            TheLineDifficulty.EASY   -> 1
-            TheLineDifficulty.MEDIUM -> 2
-            TheLineDifficulty.HARD   -> 3
-        }
-        NeutrinoRepository(context).addBalance(reward)
+    private fun claimReward() {
+        if (game.rewardClaimed) return
+        game.rewardClaimed = true
+        NeutrinoRepository(context).addBalance(NeutrinoRewards.theLine(game.difficulty.ordinal))
     }
 
     private fun startNewGame(diff: TheLineDifficulty) {
@@ -222,8 +217,10 @@ class TheLineWidgetView @JvmOverloads constructor(
 
     private fun updateDifficultyLabel() {
         val idx = DIFFICULTIES.indexOf(game.difficulty).coerceAtLeast(0)
-        val modePrefix = if (game.mode == TheLineMode.MULTI) "M · " else ""
-        difficultyLabel.text = "$modePrefix${DIFFICULTY_LABELS[idx]}"
+        val modeLabel = context.getString(
+            if (game.mode == TheLineMode.MULTI) R.string.the_line_mode_multi else R.string.the_line_mode_single
+        )
+        difficultyLabel.text = context.getString(R.string.the_line_widget_label, modeLabel, context.getString(DIFFICULTY_LABELS[idx]))
         difficultyLabel.setTextColor(Color.parseColor(DIFFICULTY_COLORS[idx]))
     }
 

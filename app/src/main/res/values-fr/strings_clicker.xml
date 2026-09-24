@@ -232,9 +232,9 @@
     <string name="music_widget_back_to_clicker_desc">Retour à l\'écran widget</string>
     <string name="music_widget_lyrics_btn_desc">Afficher/masquer les paroles</string>
     <string name="music_widget_no_lyrics">Aucune parole disponible</string>
-    <string name="crypto_the_line_widget_toggle_desc">Afficher/masquer le widget La Ligne</string>
-    <string name="crypto_the_line_widget_opacity_label">Opacité du widget La Ligne</string>
-    <string name="crypto_banner_toggle_the_line_label">Afficher le toggle La Ligne</string>
+    <string name="crypto_the_line_widget_toggle_desc">Afficher/masquer le widget Circuit</string>
+    <string name="crypto_the_line_widget_opacity_label">Opacité du widget Circuit</string>
+    <string name="crypto_banner_toggle_the_line_label">Afficher le toggle Circuit</string>
     <string name="dev_mode_title">⚠ DEV MODE</string>
     <string name="dev_atoms_section">ATOMES</string>
     <string name="dev_neutrinos_section">NEUTRINOS</string>
@@ -281,7 +281,7 @@
     <string name="gacha_not_enough_tickets_multi">%1$d tickets requis pour un tirage ×%1$d.</string>
     <string name="gacha_multi_results_title">RÉSULTATS</string>
     <string name="gacha_press_continue">Appuyez pour continuer</string>
-    <string name="banner_label_the_line">Ligne</string>
+    <string name="banner_label_the_line">Circuit</string>
     <string name="earth_from_sun_label">Depuis le Soleil</string>
     <string name="gacha_title">GACHA</string>
     <string name="gacha_sun_desc">Soleil gacha</string>

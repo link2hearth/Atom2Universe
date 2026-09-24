@@ -235,9 +235,9 @@
     <string name="music_widget_back_to_clicker_desc">Back to widget screen</string>
     <string name="music_widget_lyrics_btn_desc">Toggle lyrics</string>
     <string name="music_widget_no_lyrics">No lyrics available</string>
-    <string name="crypto_the_line_widget_toggle_desc">Show/hide The Line widget</string>
-    <string name="crypto_the_line_widget_opacity_label">The Line widget opacity</string>
-    <string name="crypto_banner_toggle_the_line_label">Show The Line toggle</string>
+    <string name="crypto_the_line_widget_toggle_desc">Show/hide the Circuit widget</string>
+    <string name="crypto_the_line_widget_opacity_label">Circuit widget opacity</string>
+    <string name="crypto_banner_toggle_the_line_label">Show the Circuit toggle</string>
     <string name="dev_mode_title">⚠ DEV MODE</string>
     <string name="dev_atoms_section">ATOMS</string>
     <string name="dev_neutrinos_section">NEUTRINOS</string>
@@ -284,7 +284,7 @@
     <string name="gacha_not_enough_tickets_multi">Need %1$d tickets for a ×%1$d draw.</string>
     <string name="gacha_multi_results_title">RESULTS</string>
     <string name="gacha_press_continue">Tap to continue</string>
-    <string name="banner_label_the_line">Line</string>
+    <string name="banner_label_the_line">Circuit</string>
     <string name="earth_from_sun_label">From the Sun</string>
     <string name="gacha_title">GACHA</string>
     <string name="gacha_sun_desc">Gacha</string>
