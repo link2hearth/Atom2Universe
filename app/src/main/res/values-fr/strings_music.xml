@@ -125,7 +125,7 @@
     <string name="music_auto_track_number_error">Erreur lors de l\'écriture des tags</string>
     <string name="music_folder_sort_by_name">Nom</string>
     <string name="music_folder_sort_by_track">Piste #</string>
-    <string name="music_sort_albums">Trier les albums</string>
+    <string name="music_sort_albums">Trier les albums d\'un artiste</string>
     <string name="music_sort_name_asc">Nom (A-Z)</string>
     <string name="music_sort_name_desc">Nom (Z-A)</string>
     <string name="music_sort_year_asc">Année (ancien → récent)</string>

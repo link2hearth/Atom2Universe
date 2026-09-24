@@ -2891,34 +2891,38 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
     }
 
     /**
-     * Scroll vers le premier artiste commençant par la lettre donnée.
+     * Scroll vers le premier artiste (ou album) commençant par la lettre donnée.
      * "#" correspond aux chiffres et symboles (tout ce qui n'est pas A-Z).
      */
     private fun scrollToLetter(letter: String) {
-        val artists = when (currentLevel) {
+        // Noms tels qu'ils sont triés, dans l'ordre exact de la liste affichée
+        val sortNames = when (currentLevel) {
             NavigationLevel.ARTISTS -> MusicLibrary.getArtists()
+                .map { MusicLibrary.getArtistSortName(it.name) }
             NavigationLevel.ALBUM_ARTISTS -> MusicLibrary.getAlbumArtists()
+                .map { MusicLibrary.getArtistSortName(it.name) }
             NavigationLevel.FAVORITE_ARTISTS -> {
                 // Récupère les artistes favoris comme dans navigateToFavoriteArtists
                 val favoriteArtistNames = ArtistCustomizationManager.getFavoriteArtistNames()
                 MusicLibrary.getArtists().filter { artist ->
                     favoriteArtistNames.any { it.equals(artist.name, ignoreCase = true) }
-                }
+                }.map { MusicLibrary.getArtistSortName(it.name) }
             }
+            // Les albums sont triés sur leur nom sans accents (sans ignorer "The ")
+            NavigationLevel.ALL_ALBUMS -> MusicLibrary.getAllAlbums()
+                .map { MusicLibrary.removeAccents(it.name) }
             else -> return
         }
 
         val position = if (letter == "#") {
-            // Cherche le premier artiste qui ne commence pas par A-Z (en ignorant "The ")
-            artists.indexOfFirst { artist ->
-                val sortName = MusicLibrary.getArtistSortName(artist.name)
+            // Cherche le premier nom qui ne commence pas par A-Z
+            sortNames.indexOfFirst { sortName ->
                 val firstChar = sortName.firstOrNull()?.uppercaseChar() ?: '#'
                 firstChar !in 'A'..'Z'
             }
         } else {
-            // Cherche le premier artiste commençant par la lettre (en ignorant "The ")
-            artists.indexOfFirst { artist ->
-                val sortName = MusicLibrary.getArtistSortName(artist.name)
+            // Cherche le premier nom commençant par la lettre
+            sortNames.indexOfFirst { sortName ->
                 sortName.firstOrNull()?.uppercaseChar() == letter.firstOrNull()
             }
         }
@@ -2941,7 +2945,8 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
     private fun updateAlphabetIndexVisibility() {
         val shouldShow = currentLevel == NavigationLevel.ARTISTS ||
                 currentLevel == NavigationLevel.ALBUM_ARTISTS ||
-                currentLevel == NavigationLevel.FAVORITE_ARTISTS
+                currentLevel == NavigationLevel.FAVORITE_ARTISTS ||
+                currentLevel == NavigationLevel.ALL_ALBUMS
 
         alphabetIndex.visibility = if (shouldShow) View.VISIBLE else View.GONE
     }
@@ -3505,30 +3510,6 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
 
         updateDisplayModeIcon()
         updateAlphabetIndexVisibility()
-
-        // Vérification rapide des années manquantes en arrière-plan si le tri est par date.
-        // Évite de devoir faire un deep scan complet juste pour que le tri par date fonctionne.
-        val currentSort = MusicLibrary.currentAlbumSortOrder
-        if ((currentSort == MusicLibrary.AlbumSortOrder.YEAR_ASC || currentSort == MusicLibrary.AlbumSortOrder.YEAR_DESC)
-            && albums.any { it.year == null }) {
-            val albumsNeedingYear = albums.filter { it.year == null }.map { it.id }.toSet()
-            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                MusicLibrary.fixMissingYears()
-                MusicLibrary.setAlbumSortOrder(MusicLibrary.currentAlbumSortOrder)
-                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                    if (currentLevel == NavigationLevel.ALL_ALBUMS) {
-                        val refreshed = MusicLibrary.getAllAlbums().map { AlbumListItem.AlbumItem(it) }
-                        albumAdapter.submitList(refreshed) {
-                            refreshed.forEachIndexed { pos, item ->
-                                if (item.album.id in albumsNeedingYear) {
-                                    albumAdapter.notifyItemChanged(pos)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun navigateToFavoriteAlbums(scrollToAlbum: Album? = null) {

@@ -51,7 +51,7 @@ object MusicLibrary {
      * Removes diacritics (accents) from a string for sorting purposes.
      * e.g., "Tété" -> "Tete", "Björk" -> "Bjork"
      */
-    private fun removeAccents(text: String): String {
+    fun removeAccents(text: String): String {
         val normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
         return normalized.replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
     }
@@ -83,7 +83,7 @@ object MusicLibrary {
         allTracks = cached.allTracks
         artists = cached.artists
         albumArtists = cached.albumArtists
-        allAlbums = cached.allAlbums
+        allAlbums = sortedByName(cached.allAlbums)
         folderTree = cached.folderTree
         currentAlbumSortOrder = cached.sortOrder
     }
@@ -188,12 +188,17 @@ object MusicLibrary {
             albumArtists.forEach { artist ->
                 sortAlbums(artist.albums)
             }
-            // Re-trier aussi la liste de tous les albums (bug fix : manquait avant)
-            val mutableAllAlbums = allAlbums.toMutableList()
-            sortAlbums(mutableAllAlbums)
-            allAlbums = mutableAllAlbums
+            // Tous les albums ne suit pas ce réglage : toujours par nom, voir sortedByName
         }
     }
+
+    /**
+     * Ordre de la section Tous les albums : toujours alphabétique, quel que soit le réglage
+     * de tri (celui-ci ne concerne que les albums d'un artiste). La barre alphabétique de
+     * cette section compte sur cet ordre.
+     */
+    private fun sortedByName(albums: Collection<Album>): List<Album> =
+        albums.sortedBy { removeAccents(it.name).lowercase() }
 
     private fun sortAlbums(albums: MutableList<Album>) {
         when (currentAlbumSortOrder) {
@@ -377,10 +382,7 @@ object MusicLibrary {
         // Construire les listes finales triées
         val newArtists = artistMap.values.sortedBy { getArtistSortName(it.name).lowercase() }
         val newAlbumArtists = albumArtistMap.values.sortedBy { getArtistSortName(it.name).lowercase() }
-        // Trier allAlbums avec l'ordre courant (bug fix : était toujours par nom avant)
-        val newAllAlbumsMutable = albumsMap.values.toMutableList()
-        sortAlbums(newAllAlbumsMutable)
-        val newAllAlbums: List<Album> = newAllAlbumsMutable
+        val newAllAlbums = sortedByName(albumsMap.values)
 
         // Construire le folder tree
         val newFolderTree = buildFolderTreeInternal(tracksSnapshot)
