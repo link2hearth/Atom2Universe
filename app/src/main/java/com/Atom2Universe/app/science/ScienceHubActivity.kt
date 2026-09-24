@@ -26,6 +26,10 @@ class ScienceHubActivity : BaseHubActivity() {
 
     override fun getHubSubtitle(): Int = R.string.science_hub_subtitle
 
+    // Comme le hub des jeux : chaque module a son illustration (HubTileArtworks), en tuiles carrées.
+    override fun supportsTileColors(): Boolean = false
+    override fun supportsListMode(): Boolean = false
+
     override fun getDefaultTiles(): List<HubTile> = listOf(
         HubTile(
             id = "periodic_table",

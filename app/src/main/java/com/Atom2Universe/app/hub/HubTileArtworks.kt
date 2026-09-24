@@ -101,7 +101,24 @@ object HubTileArtworks {
         com.Atom2Universe.app.games.link.LinkActivity::class.java.name to
             com.Atom2Universe.app.games.link.LinkHubTileDrawable::class,
         com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java.name to
-            com.Atom2Universe.app.games.infernale.InfernaleHubTileDrawable::class
+            com.Atom2Universe.app.games.infernale.InfernaleHubTileDrawable::class,
+        // Hub Sciences
+        com.Atom2Universe.app.periodic.PeriodicTableActivity::class.java.name to
+            com.Atom2Universe.app.periodic.PeriodicHubTileDrawable::class,
+        com.Atom2Universe.app.science.nuclide.NuclideTableActivity::class.java.name to
+            com.Atom2Universe.app.science.nuclide.NuclideHubTileDrawable::class,
+        com.Atom2Universe.app.games.gameoflife.GameOfLifeActivity::class.java.name to
+            com.Atom2Universe.app.games.gameoflife.GameOfLifeHubTileDrawable::class,
+        com.Atom2Universe.app.science.pendulum.DoublePendulumActivity::class.java.name to
+            com.Atom2Universe.app.science.pendulum.DoublePendulumHubTileDrawable::class,
+        com.Atom2Universe.app.science.solarsystem.SolarSystemActivity::class.java.name to
+            com.Atom2Universe.app.science.solarsystem.SolarSystemHubTileDrawable::class,
+        com.Atom2Universe.app.science.reaction.ReactionDiffusionActivity::class.java.name to
+            com.Atom2Universe.app.science.reaction.ReactionDiffusionHubTileDrawable::class,
+        com.Atom2Universe.app.science.boids.BoidsActivity::class.java.name to
+            com.Atom2Universe.app.science.boids.BoidsHubTileDrawable::class,
+        com.Atom2Universe.app.science.cosmicscale.CosmicScaleActivity::class.java.name to
+            com.Atom2Universe.app.science.cosmicscale.CosmicScaleHubTileDrawable::class
     )
 
     fun forActivity(activityClassName: String): KClass<out Drawable>? = byActivity[activityClassName]
