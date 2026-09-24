@@ -987,7 +987,11 @@ class Combat(
         const val DEADLY_HP_THRESHOLD = 0.30f
         /** Coup mortel sur une cible exposée : critique garanti, et ce bonus au multiplicateur. */
         const val DEADLY_CRIT_BONUS = 1f
-        const val MIRROR_IMAGES = 3
+        /**
+         * Image miroir : deux doubles (trois avec le set, un de plus avec l'orbe). Jusqu'au 24/09/2026 : trois,
+         * soit cinq au plus, et 85 % des coups qui tombaient sur un double.
+         */
+        const val MIRROR_IMAGES = 2
         /**
          * L'orbe, main gauche du mage : un double de plus à l'Image miroir. Avant le 24/09/2026, elle donnait
          * +20 % à tous les dégâts, tout le temps, à quiconque la portait — le seul bonus permanent des mains
@@ -997,12 +1001,15 @@ class Combat(
         /** Vagabond : l'Enchaînement frappe deux fois ; une roulade parfaite relève le prochain coup de cette part. */
         const val CHAIN_HITS = 2
         const val ROLL_BONUS = 0.25f
-        /** Nécromancien : nombre de pantins invoqués, PV d'un pantin, part des coups gardée par le héros, écho. */
+        /**
+         * Nécromancien : nombre de pantins, recharge et prix du rappel (part des PV max), PV d'un pantin, écho.
+         * Depuis le 24/09/2026, un pantin ne prend le coup que jusqu'à ses PV (le surplus passe au héros) : ses PV
+         * passent de 10 à 20 % des PV max, et le rappel coûte 10 % au lieu de 15 %.
+         */
         const val PUPPETS = 2
         const val PUPPET_RECALL_COOLDOWN = 4
-        const val PUPPET_RECALL_HP_SHARE = 0.15f
-        const val PUPPET_HP_SHARE = 0.10f
-        const val PUPPET_SELF_SHARE = 0f
+        const val PUPPET_RECALL_HP_SHARE = 0.10f
+        const val PUPPET_HP_SHARE = 0.20f
         const val ECHO_SHARE = 0.25f
         const val PUPPET_SUMMON_HIT_SHARE = 0.40f
         const val ECHO_GOOD_FACTOR = 0.5f
@@ -1660,7 +1667,7 @@ class Combat(
         return result
     }
 
-    /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
+    /** Mage : des doubles qui prennent les coups à sa place, façon D&D. */
     fun mirrorImage() {
         check(canUseSpecial() && hero.archetype == Archetype.MAGE)
         mirrorImages = (if (hero.specialBoosted(Archetype.MAGE)) IsotopeSets.MIRROR_IMAGES else MIRROR_IMAGES) +
@@ -1737,11 +1744,16 @@ class Combat(
     }
 
     /** Un pantin absorbe le coup entier, même mortel : aucun surplus vers le héros ou un autre pantin. */
+    /**
+     * Le premier pantin debout prend le coup jusqu'à ses PV ; le surplus passe au héros. Jusqu'au 24/09/2026,
+     * un pantin à 10 % des PV avalait un coup entier, quelle que soit sa taille.
+     */
     private fun throughPuppets(dmg: Int): Int {
         val defender = puppetHpList.indexOfFirst { it > 0 }
         if (defender < 0) return dmg
-        puppetHpList[defender] = (puppetHpList[defender] - dmg).coerceAtLeast(0)
-        return 0
+        val taken = minOf(dmg, puppetHpList[defender])
+        puppetHpList[defender] -= taken
+        return dmg - taken
     }
 
     /**

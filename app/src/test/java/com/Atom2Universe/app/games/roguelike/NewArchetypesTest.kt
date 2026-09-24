@@ -105,7 +105,7 @@ class NewArchetypesTest {
         val before = hero.hp
         val c = fight(hero)
         assertEquals(before, hero.hp)
-        val cost = (hero.maxHp * .15f).roundToInt().coerceAtLeast(1)
+        val cost = (hero.maxHp * Combat.PUPPET_RECALL_HP_SHARE).roundToInt().coerceAtLeast(1)
         assertEquals(cost, c.puppetRecallHpCost)
         recallReady(c)
         assertEquals(before - cost, hero.hp)
@@ -134,7 +134,7 @@ class NewArchetypesTest {
         assertEquals(4, plain.hero.specialCooldown)
         assertTrue(!plain.canUseSpecial())
         assertEquals(Combat.PUPPETS, plain.puppetHp.size)
-        assertEquals((plain.hero.maxHp * .10f).roundToInt().coerceAtLeast(1), plain.puppetMaxHp)
+        assertEquals((plain.hero.maxHp * Combat.PUPPET_HP_SHARE).roundToInt().coerceAtLeast(1), plain.puppetMaxHp)
         assertTrue(plain.puppetHp.all { it == plain.puppetMaxHp })
         val boosted = fight(setHero(5))
         assertEquals(IsotopeSets.PUPPETS, boosted.puppetHp.size)
@@ -152,21 +152,28 @@ class NewArchetypesTest {
     }
 
     @Test
-    fun lesPantinsAbsorbentToutMemeUnCoupMortelEnEmbuscade() {
+    fun lePantinNePrendQueSesPvEtLeSurplusPasseAuHeros() {
         val c = fight(heroOf(Archetype.NECROMANCER), damage = 10000, ambush = true)
         val heroHp = c.hero.hp
         assertEquals(CombatPhase.ENEMY_TURN, c.phase)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.MISS)
+        assertEquals("il ne prend que ses PV", c.puppetMaxHp, s.puppetAbsorbed)
+        assertEquals(0, c.puppetHp[0])
+        assertEquals("le second pantin reste debout", c.puppetMaxHp, c.puppetHp[1])
+        assertTrue("le surplus passe au héros", s.damage > 0)
+        assertEquals((heroHp - s.damage).coerceAtLeast(0), c.hero.hp)
+    }
+
+    @Test
+    fun unPetitCoupNeTraversePasLePantin() {
+        val c = fight(heroOf(Archetype.NECROMANCER), damage = 1, ambush = true)
+        val heroHp = c.hero.hp
+        c.startEnemyTurn()
+        val s = c.resolveStrike(0, Timing.MISS)
         assertEquals(0, s.damage)
         assertEquals(heroHp, c.hero.hp)
-        assertTrue(s.puppetAbsorbed > c.puppetMaxHp)
-        assertEquals(0, c.puppetHp[0])
-        assertEquals(c.puppetMaxHp, c.puppetHp[1])
-        c.resolveStrike(0, Timing.MISS)
-        assertTrue(!c.puppetsAttack)
-        assertEquals(heroHp, c.hero.hp)
-        assertTrue(c.resolveStrike(0, Timing.MISS).damage > 0)
+        assertTrue(s.puppetAbsorbed > 0)
     }
 
     @Test

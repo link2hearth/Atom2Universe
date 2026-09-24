@@ -502,8 +502,7 @@ object Lexicon {
                     Archetype.NECROMANCER -> {
                         add(R.string.lex_archetype_necromancer_1)
                         add(R.string.lex_archetype_necromancer_2, env.pct(Combat.PUPPET_PARRY_HEAL))
-                        add(R.string.lex_archetype_necromancer_3, Combat.PUPPETS, env.pct(Combat.PUPPET_HP_SHARE),
-                            env.pct(1f - Combat.PUPPET_SELF_SHARE), env.pct(Combat.ECHO_SHARE))
+                        add(R.string.lex_archetype_necromancer_3, Combat.PUPPETS, env.pct(Combat.PUPPET_HP_SHARE), env.pct(Combat.ECHO_SHARE))
                     }
                 }
                 add(R.string.lex_archetype_special, env.link(specialId(a), env.s(a.specialRes)))

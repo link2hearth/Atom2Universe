@@ -125,7 +125,7 @@ object IsotopeSets {
     const val DEADLY_CRIT_BONUS = 2f
     const val SPEED_BONUS = 0.15f
     /** Mage : plus de doubles à l'Image miroir, et les dégâts des sorts montent. */
-    const val MIRROR_IMAGES = 4
+    const val MIRROR_IMAGES = 3
     const val SPELL_SHARE = 0.25f
     /** Vagabond : chaque coup de l'Enchaînement frappe plus fort, et les dégâts critiques montent. */
     const val CHAIN_DAMAGE_BONUS = 0.25f
