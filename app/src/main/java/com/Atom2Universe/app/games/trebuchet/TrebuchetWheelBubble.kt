@@ -61,7 +61,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
     var game: TrebuchetGame? = null
 
     /** Prévenu à chaque cran tourné : l'activité rafraîchit son bandeau. */
-    var onValueChanged: (() -> Unit)? = null
+    var onValueChanged: ((TrebuchetSfx.Tool) -> Unit)? = null
 
     /**
      * Un réglage vu par les roulettes : un nom court, une unité, et un nombre dont on
@@ -94,21 +94,23 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
          * et c'est tout l'intérêt : le joueur a déjà appris le geste sur les lignes
          * précédentes, il n'a rien de neuf à comprendre pour changer de projectile.
          */
-        val choice: Boolean = false
+        val choice: Boolean = false,
+        /** Le bruit d'atelier du réglage : le même que quand le doigt tient la pièce. */
+        val tool: TrebuchetSfx.Tool = TrebuchetSfx.Tool.HAMMER
     ) {
         BEAM(R.string.trebuchet_dial_beam, R.string.trebuchet_unit_m, 2, 1, 0.5f),
-        LEVER(R.string.trebuchet_dial_lever, R.string.trebuchet_unit_ratio, 1, 1, 0.1f),
+        LEVER(R.string.trebuchet_dial_lever, R.string.trebuchet_unit_ratio, 1, 1, 0.1f, tool = TrebuchetSfx.Tool.SLIDE),
         POST(R.string.trebuchet_dial_post, R.string.trebuchet_unit_m, 2, 1, 0.5f),
-        MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0, 100f),
-        HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1, 0.1f),
-        PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0, 1f),
+        MASS(R.string.trebuchet_dial_mass, R.string.trebuchet_unit_kg, 5, 0, 100f, tool = TrebuchetSfx.Tool.STONES),
+        HANG(R.string.trebuchet_dial_hang, R.string.trebuchet_unit_m, 2, 1, 0.1f, tool = TrebuchetSfx.Tool.ROPE_HANG),
+        PIN(R.string.trebuchet_dial_pin, R.string.trebuchet_unit_deg, 2, 0, 1f, tool = TrebuchetSfx.Tool.HOOK),
         // La fronde est le seul réglage à deux décimales, et elle les mérite : c'est
         // le plus sensible de la machine avec le crochet, dix centimètres y déplacent
         // un tir de plusieurs dizaines de mètres, et le joueur qui cherche son réglage
         // fin n'avait aucun moyen de descendre plus bas. La flèche, elle, garde son
         // cran de dix centimètres — on ne va pas de six mètres à sept en appuyant cent
         // fois — et c'est la roulette des centièmes qui fait le travail de précision.
-        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 2, 0.1f),
+        SLING(R.string.trebuchet_dial_sling, R.string.trebuchet_unit_m, 2, 2, 0.1f, tool = TrebuchetSfx.Tool.ROPE_TIE),
         SHOT(R.string.trebuchet_dial_shot, R.string.trebuchet_unit_none, 0, 0, 1f, choice = true),
 
         // La charge de la bombe, en bâtons. Trois chiffres parce qu'on va jusqu'à cent
@@ -842,7 +844,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         repeat(d.digits - 1 - columnOf(d)) { poids *= 10 }
         val scaled = (value(g, d) * p).roundToInt() + delta * poids
         apply(g, d, scaled.coerceAtLeast(0) / p)
-        onValueChanged?.invoke()
+        onValueChanged?.invoke(d.tool)
         invalidate()
     }
 
@@ -870,7 +872,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val scaled = (value(g, d) * pow10(d.decimals)).roundToInt() + delta * weight
 
         apply(g, d, scaled.coerceAtLeast(0) / pow10(d.decimals))
-        onValueChanged?.invoke()
+        onValueChanged?.invoke(d.tool)
         invalidate()
     }
 
@@ -880,7 +882,7 @@ class TrebuchetWheelBubble @JvmOverloads constructor(
         val i = kinds.indexOf(g.config.projectile)
         val next = ((i + delta) % kinds.size + kinds.size) % kinds.size
         synchronized(g) { g.setProjectile(kinds[next]) }
-        onValueChanged?.invoke()
+        onValueChanged?.invoke(Dial.SHOT.tool)
         invalidate()
     }
 

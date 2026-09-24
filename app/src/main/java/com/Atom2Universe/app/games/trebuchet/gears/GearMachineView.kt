@@ -426,7 +426,7 @@ class GearMachineView @JvmOverloads constructor(
      * pas genant tant qu'on y mesurait des portees sur une dalle nue ; depuis qu'on y
      * demolit un village, le silence est ce qui manque le plus.
      */
-    private val sfx = TrebuchetSfx()
+    private val sfx = TrebuchetSfx(context)
 
     /** Nombre de pierres brisees a la derniere image : sert a sonner les chocs. */
     private var lastBroken = 0

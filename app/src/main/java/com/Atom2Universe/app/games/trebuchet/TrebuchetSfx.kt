@@ -1,5 +1,11 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.media.SoundPool
+import android.os.SystemClock
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -7,32 +13,69 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.billthefarmer.mididriver.MidiDriver
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
 
 /**
- * L'ambiance sonore du trébuchet, via Sonivox EAS — même patron que
- * [com.Atom2Universe.app.games.match3.Match3SoundEngine] ou
- * [com.Atom2Universe.app.games.caves.CaveSoundEngine] : le moteur natif est
- * possédé en propre, démarré et arrêté avec la vue qui le porte.
+ * L'ambiance sonore du trébuchet — et de l'atelier, qui partage son décor.
  *
- * Pas de musique : seulement des bruitages ponctuels. Rien n'utilise de fichier
- * audio — tout sort de la banque General MIDI intégrée, y compris la banque
- * « Sound Effects » (programmes 121-128) qui fournit la détonation (Gunshot)
- * qu'aucun instrument ordinaire n'approche.
+ * Deux sources, chacune pour ce qu'elle fait bien :
+ * - **de vrais enregistrements** (`assets/trebuchet/audio/`) pour tout ce qui doit
+ *   sonner comme de la matière : l'atelier (bois, cailloux, cordes, crochet), le tir,
+ *   les villageois qui fuient, et le vent de fond en boucle ;
+ * - **Sonivox EAS** (General MIDI) pour les chocs, les explosions et les feux
+ *   d'artifice, qui sonnaient déjà juste — même patron que
+ *   [com.Atom2Universe.app.games.caves.CaveSoundEngine] : le moteur natif est possédé
+ *   en propre, démarré et arrêté avec la vue qui le porte.
  */
-class TrebuchetSfx {
+class TrebuchetSfx(private val context: Context) {
 
     private companion object {
-        const val CH_PERC = 9        // Percussion GM : marteau, explosion, étincelles.
+        const val CH_PERC = 9        // Percussion GM : explosion, étincelles.
         const val CH_CRACK = 1       // Program 127 — Gunshot.
         const val CH_BREATH = 2      // Program 121 — Breath Noise.
-        const val CH_VOICE = 3       // Program 54 — Synth Voice.
 
         const val PITCH_CENTER = 8192
+
+        const val AUDIO_DIR = "trebuchet/audio"
+        const val AMBIENCE = "ambience_wind_birds"
+
+        /** Le vent reste **derrière** : il meuble le silence, il ne couvre rien. */
+        const val AMBIENCE_VOLUME = 0.35f
+
+        /** Un seul cri de groupe à la fois : un village qui hurle en rafale lasse vite. */
+        const val VILLAGERS_COOLDOWN_MS = 1500L
     }
 
-    /** Coupe tous les bruitages sans arrêter le moteur — le réglage du menu. */
+    /**
+     * Ce que le joueur règle dans l'atelier : chaque pièce a son bruit.
+     *
+     * Le [cooldownMs] est l'écart minimal entre deux sons du même outil. Un glissé
+     * fluide ou une roulette qu'on fait défiler en appelleraient des dizaines par
+     * seconde ; un coup de marteau supporte d'être répété vite, des cailloux qu'on
+     * déverse non — on laisse le son finir avant d'en verser d'autres.
+     */
+    enum class Tool(val samples: Array<String>, val cooldownMs: Long) {
+        /** Longueur de la poutre, hauteur du poteau, projectile, charge, poids. */
+        HAMMER(arrayOf("hammer_0", "hammer_1", "hammer_2"), 180L),
+        /** Le bras court : la poutre coulisse dans son logement. */
+        SLIDE(arrayOf("beam_slide"), 900L),
+        /** La masse du contrepoids : on y verse des pierres. */
+        STONES(arrayOf("stones_pour"), 1000L),
+        /** La suspension du contrepoids : la corde se tend sous la caisse. */
+        ROPE_HANG(arrayOf("rope_hang"), 900L),
+        /** L'angle du crochet de largage. */
+        HOOK(arrayOf("hook_click"), 250L),
+        /** La longueur de la fronde : on refait le nœud. */
+        ROPE_TIE(arrayOf("rope_tie"), 900L)
+    }
+
+    /** Coupe tous les bruitages, vent compris, sans arrêter les moteurs — le réglage du menu. */
     var enabled = true
+        set(value) {
+            field = value
+            updateAmbience()
+        }
 
     private var driver: MidiDriver? = null
     private var ready = false
@@ -42,16 +85,25 @@ class TrebuchetSfx {
     /** Les toms graves de la table de percussion : le registre d'un éboulement. */
     private val TOMS = intArrayOf(41, 43, 45, 47)
 
+    // Les enregistrements. Le fil de physique (cris) et celui de l'interface (atelier)
+    // jouent tous les deux : d'où les tables concurrentes.
+    @Volatile private var pool: SoundPool? = null
+    private val pending = ConcurrentHashMap<Int, String>()
+    private val samples = ConcurrentHashMap<String, Int>()
+    private val lastPlayed = ConcurrentHashMap<String, Long>()
+    private var ambience: MediaPlayer? = null
+
     fun start() {
         scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
         val d = MidiDriver.getInstance {
             ready = true
             programChange(CH_CRACK, 127)
             programChange(CH_BREATH, 121)
-            programChange(CH_VOICE, 54)
         }
         driver = d
         d.start()
+        loadSamples()
+        startAmbience()
     }
 
     fun stop() {
@@ -60,34 +112,85 @@ class TrebuchetSfx {
         scope = null
         driver?.stop()
         driver = null
+        pool?.release()
+        pool = null
+        pending.clear()
+        samples.clear()
+        lastPlayed.clear()
+        ambience?.release()
+        ambience = null
+    }
+
+    private fun loadSamples() {
+        val sp = SoundPool.Builder().setMaxStreams(6).setAudioAttributes(
+            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+        ).build()
+        // Un son n'est jouable qu'une fois décodé : jusque-là, on se tait plutôt que
+        // de demander à SoundPool un identifiant qu'il ne connaît pas encore.
+        sp.setOnLoadCompleteListener { source, id, status ->
+            val name = pending.remove(id)
+            if (source === pool && status == 0 && name != null) samples[name] = id
+        }
+        pool = sp
+        val names = Tool.entries.flatMap { it.samples.asList() } + listOf("launch", "villagers_flee")
+        for (name in names) {
+            try {
+                context.assets.openFd("$AUDIO_DIR/$name.ogg").use { pending[sp.load(it, 1)] = name }
+            } catch (e: Exception) {
+                Log.w("TrebuchetSfx", "Cannot load $name", e)
+            }
+        }
+    }
+
+    /** Le vent et les oiseaux, en boucle : un enregistrement fait pour se répéter sans couture. */
+    private fun startAmbience() {
+        try {
+            ambience = MediaPlayer().apply {
+                context.assets.openFd("$AUDIO_DIR/$AMBIENCE.ogg").use {
+                    setDataSource(it.fileDescriptor, it.startOffset, it.length)
+                }
+                setAudioAttributes(
+                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build()
+                )
+                isLooping = true
+                setVolume(AMBIENCE_VOLUME, AMBIENCE_VOLUME)
+                prepare()
+            }
+        } catch (e: Exception) {
+            Log.w("TrebuchetSfx", "Cannot start ambience", e)
+            ambience?.release()
+            ambience = null
+        }
+        updateAmbience()
+    }
+
+    private fun updateAmbience() {
+        val player = ambience ?: return
+        if (enabled && !player.isPlaying) player.start()
+        else if (!enabled && player.isPlaying) player.pause()
     }
 
     // ── Bruitages ────────────────────────────────────────────────────────────
 
-    /** Un coup de bois sec : l'édition de la machine au marteau. */
-    fun hammerTap() {
-        if (!enabled) return
-        val note = if (rng.nextBoolean()) 76 else 77
-        note(CH_PERC, note, 70 + rng.nextInt(31))
+    /**
+     * Le bruit d'atelier de la pièce qu'on règle. Appelable à chaque image d'un
+     * glissé : c'est ici, et non chez l'appelant, que la cadence est tenue.
+     */
+    fun edit(tool: Tool) {
+        val name = tool.samples[rng.nextInt(tool.samples.size)]
+        // La cadence est celle de l'outil, pas du fichier : les trois marteaux se
+        // partagent la leur, sinon un glissé les ferait sonner ensemble.
+        play(name, 0.8f, 0.94f + rng.nextFloat() * 0.12f, tool.name, tool.cooldownMs)
     }
 
-    /** Le cri d'un villageois qui déguerpit : une voix qui dégringole. */
-    fun villagerCry() {
-        if (!enabled) return
-        val base = (74 + rng.nextInt(7) - 3).coerceIn(60, 84)
-        val vel = 90 + rng.nextInt(28)
-        note(CH_VOICE, base, vel)
-        scope?.launch {
-            var bend = PITCH_CENTER
-            repeat(6) {
-                delay(28L)
-                bend -= 950
-                pitchBend(CH_VOICE, bend.coerceAtLeast(0))
-            }
-            noteOff(CH_VOICE, base)
-            pitchBend(CH_VOICE, PITCH_CENTER)
-        }
-    }
+    /** Le départ du tir : le bois qui grince, la corde qui claque, le bras qui fouette. */
+    fun launch() = play("launch", 0.9f)
+
+    /** Les villageois qui détalent en criant. */
+    fun villagerCry() =
+        play("villagers_flee", 0.75f, 0.92f + rng.nextFloat() * 0.16f, cooldownMs = VILLAGERS_COOLDOWN_MS)
 
     /**
      * Une pierre qui cède : **un choc mat et grave, jamais une explosion**.
@@ -144,6 +247,24 @@ class TrebuchetSfx {
     }
 
     // ── Bas niveau ───────────────────────────────────────────────────────────
+
+    /**
+     * Joue un enregistrement, légèrement désaccordé par [rate] pour qu'un son répété
+     * ne sonne pas comme une boucle. Muet tant qu'il n'est pas décodé.
+     */
+    private fun play(
+        name: String, volume: Float, rate: Float = 1f,
+        group: String = name, cooldownMs: Long = 0L
+    ) {
+        if (!enabled) return
+        val sp = pool ?: return
+        val id = samples[name] ?: return
+        val now = SystemClock.uptimeMillis()
+        val previous = lastPlayed[group]
+        if (previous != null && now - previous < cooldownMs) return
+        lastPlayed[group] = now
+        sp.play(id, volume, volume, 1, 0, rate.coerceIn(0.5f, 2f))
+    }
 
     private fun noteOnOffDelayed(channel: Int, pitch: Int, velocity: Int, durationMs: Long) {
         note(channel, pitch, velocity)

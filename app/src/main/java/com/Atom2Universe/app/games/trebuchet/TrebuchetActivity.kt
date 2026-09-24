@@ -255,7 +255,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         // Les roulettes règlent la même machine que le doigt, et préviennent quand
         // elles tournent : les deux moyens restent en phase sans se connaître.
         wheels.game = gameView.game
-        wheels.onValueChanged = { gameView.playHammerTap(); updateUi() }
+        wheels.onValueChanged = { tool -> gameView.playEdit(tool); updateUi() }
         gearEditor.gearView = gearView
         gearEditor.onEdited = { updateUi() }
 
@@ -907,6 +907,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         when (game.phase) {
             TrebuchetGame.Phase.BUILD -> {
                 synchronized(game) { game.release() }
+                gameView.playLaunch()
                 gameView.syncPhase()
             }
             TrebuchetGame.Phase.FLIGHT -> {

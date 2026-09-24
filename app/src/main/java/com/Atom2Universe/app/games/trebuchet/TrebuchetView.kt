@@ -304,9 +304,6 @@ class TrebuchetView @JvmOverloads constructor(
         /** Sous ce déplacement, un doigt posé est un appui, pas un glissement. */
         const val DRAG_SLOP_DP = 9f
 
-        /** Cadence minimale entre deux coups de marteau pendant un glissé de réglage. */
-        const val HAMMER_INTERVAL_MS = 110L
-
         /**
          * Tolérance de saisie, en dp. En dp et non en mètres : sur une grande machine
          * tout est plus petit à l'écran, et une marge en mètres deviendrait ridicule.
@@ -416,11 +413,7 @@ class TrebuchetView @JvmOverloads constructor(
 
 
     /** L'ambiance sonore : marteau, vent, cris, explosions, feux d'artifice. */
-    private val sfx = TrebuchetSfx()
-
-    /** Dernier instant où le marteau a tapé, pour ne pas marteler à chaque frame
-     *  d'un glissé continu — voir [applyGrip]. */
-    private var lastHammerAt = 0L
+    private val sfx = TrebuchetSfx(context)
 
     /** Horloge réelle, pour le balancement des plantes — pas l'heure du jeu, qui court
      *  soixante-douze fois plus vite et se remonte à la main. Elle vit dans le décor,
@@ -1385,18 +1378,26 @@ class TrebuchetView @JvmOverloads constructor(
             Grip.SLING_LENGTH -> game.setSlingLength(v)
             Grip.NONE -> {}
         }
-        // Un coup de marteau de temps en temps, pas un par frame : un glissé fluide
-        // en enverrait des dizaines par seconde, ce qui martèlerait au lieu de taper.
-        val now = SystemClock.uptimeMillis()
-        if (now - lastHammerAt >= HAMMER_INTERVAL_MS) {
-            lastHammerAt = now
-            sfx.hammerTap()
+        // Chaque pièce a son bruit d'atelier. Appelé à chaque image du glissé : c'est
+        // [TrebuchetSfx.edit] qui tient la cadence, pas nous.
+        val tool = when (grip) {
+            Grip.BEAM_LENGTH, Grip.POST_HEIGHT -> TrebuchetSfx.Tool.HAMMER
+            Grip.LEVER -> TrebuchetSfx.Tool.SLIDE
+            Grip.CW_MASS -> TrebuchetSfx.Tool.STONES
+            Grip.CW_HANG -> TrebuchetSfx.Tool.ROPE_HANG
+            Grip.PIN_ANGLE -> TrebuchetSfx.Tool.HOOK
+            Grip.SLING_LENGTH -> TrebuchetSfx.Tool.ROPE_TIE
+            Grip.NONE -> return
         }
+        sfx.edit(tool)
     }
 
-    /** Permet à la roulette ([TrebuchetWheelBubble]), qui règle la même machine
-     *  sans passer par ici, de taper le même marteau à chaque cran tourné. */
-    fun playHammerTap() = sfx.hammerTap()
+    /** Permet aux roulettes ([TrebuchetWheelBubble]), qui règlent la même machine
+     *  sans passer par ici, de faire le même bruit que le doigt. */
+    fun playEdit(tool: TrebuchetSfx.Tool) = sfx.edit(tool)
+
+    /** Le départ du tir, sonné par l'activité quand le joueur décroche la détente. */
+    fun playLaunch() = sfx.launch()
 
     /** Coupe ou rétablit tous les bruitages — le réglage du menu. */
     var soundEnabled: Boolean
