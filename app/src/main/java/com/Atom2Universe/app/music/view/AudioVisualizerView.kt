@@ -1,4 +1,4 @@
-﻿package com.Atom2Universe.app.music.view
+package com.Atom2Universe.app.music.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -36,50 +36,63 @@ class AudioVisualizerView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    enum class VisualizationMode {
-        NONE,       // Désactivé
-        // Modes "plats" (1-5)
-        BARS,       // 1 - Barres verticales psychédéliques
-        WAVE,       // 2 - Forme d'onde
-        MIRROR,     // 3 - Barres miroir depuis le centre
-        SPECTRUM,   // 4 - Courbe de spectre lissée
-        FIRE,       // 5 - Effet de flammes
-        // Modes "centraux" (6-15) - supportent fullscreen
-        CIRCLE,     // 6 - Visualisation circulaire stéréo
-        PARTICLES,  // 7 - Particules explosives
-        RADIAL,     // 8 - Rayons depuis le centre (style DJ)
-        BLOB,       // 9 - Liquide non-newtonien
-        PARTICLES_MONO, // 10 - Particules en niveaux de gris
-        KALEIDOSCOPE, // 11 - Mandala psychédélique symétrique
-        BOIDS,      // 12 - Flocking organique + fond plasma
-        JULIA,      // 13 - Fractale de Julia animée
-        MANDELBROT_ZOOM, // 14 - Zoom infini dans Mandelbrot
-        JULIA_GRAYSCALE, // 15 - Fractale de Julia en nuances de gris
-        DELAUNAY_MESH,   // 16 - Maillage Delaunay réactif à l'audio
-        DELAUNAY_GRAYSCALE, // 17 - Maillage Delaunay en noir et blanc
-        VORONOI,            // 18 - Diagramme de Voronoï pondéré réactif
-        VORONOI_GRAYSCALE,  // 19 - Voronoï en niveaux de gris
-        PENROSE_RHOMBUS,    // 20 - Losanges flottants
-        PENROSE_TRUE        // 21 - Pavage de Penrose géométriquement correct
+    enum class VisualizationMode(val labelRes: Int) {
+        NONE(R.string.music_viz_bars),
+        BARS(R.string.music_viz_bars),
+        WAVE(R.string.music_viz_wave),
+        MIRROR(R.string.music_viz_mirror),
+        SPECTRUM(R.string.music_viz_spectrum),
+        FIRE(R.string.music_viz_fire),
+        CIRCLE(R.string.music_viz_circle),
+        PARTICLES(R.string.music_viz_particles),
+        RADIAL(R.string.music_viz_radial),
+        LIQUID_CHROME(R.string.music_viz_liquid_chrome),
+        PHOSPHOR(R.string.music_viz_phosphor),
+        KALEIDOSCOPE(R.string.music_viz_kaleidoscope),
+        NEON_TUNNEL(R.string.music_viz_neon_tunnel),
+        SYNTHWAVE(R.string.music_viz_synthwave),
+        PLASMA(R.string.music_viz_plasma),
+        SPIROGRAPH(R.string.music_viz_spirograph),
+        DELAUNAY_MESH(R.string.music_viz_delaunay),
+        AURORA(R.string.music_viz_aurora),
+        VORONOI(R.string.music_viz_voronoi),
+        TERRAIN(R.string.music_viz_terrain),
+        PENROSE_RHOMBUS(R.string.music_viz_penrose),
+        PENROSE_TRUE(R.string.music_viz_mosaic);
+
+        companion object {
+            // Keep selected effects and custom order when upgrading the old catalogue.
+            fun fromSavedName(name: String?): VisualizationMode? = when (name) {
+                "BLOB" -> LIQUID_CHROME
+                "PARTICLES_MONO" -> PHOSPHOR
+                "BOIDS" -> NEON_TUNNEL
+                "JULIA" -> SYNTHWAVE
+                "MANDELBROT_ZOOM" -> PLASMA
+                "JULIA_GRAYSCALE" -> SPIROGRAPH
+                "DELAUNAY_GRAYSCALE" -> AURORA
+                "VORONOI_GRAYSCALE" -> TERRAIN
+                else -> entries.firstOrNull { it.name == name }
+            }
+        }
     }
 
     // Modes qui supportent l'affichage fullscreen (quand pochette cachée)
     fun isCentralMode(): Boolean = mode in listOf(
-        VisualizationMode.FIRE,        // fullscreen = feu en bas + flocons de neige en haut
+        VisualizationMode.FIRE,
         VisualizationMode.CIRCLE,
         VisualizationMode.PARTICLES,
         VisualizationMode.RADIAL,
-        VisualizationMode.BLOB,
-        VisualizationMode.PARTICLES_MONO,
+        VisualizationMode.LIQUID_CHROME,
+        VisualizationMode.PHOSPHOR,
         VisualizationMode.KALEIDOSCOPE,
-        VisualizationMode.BOIDS,
-        VisualizationMode.JULIA,
-        VisualizationMode.MANDELBROT_ZOOM,
-        VisualizationMode.JULIA_GRAYSCALE,
+        VisualizationMode.NEON_TUNNEL,
+        VisualizationMode.SYNTHWAVE,
+        VisualizationMode.PLASMA,
+        VisualizationMode.SPIROGRAPH,
         VisualizationMode.DELAUNAY_MESH,
-        VisualizationMode.DELAUNAY_GRAYSCALE,
+        VisualizationMode.AURORA,
         VisualizationMode.VORONOI,
-        VisualizationMode.VORONOI_GRAYSCALE,
+        VisualizationMode.TERRAIN,
         VisualizationMode.PENROSE_RHOMBUS,
         VisualizationMode.PENROSE_TRUE
     )
@@ -100,13 +113,10 @@ class AudioVisualizerView @JvmOverloads constructor(
         private const val CIRCLE_POINTS = 48
         private const val PARTICLE_COUNT = 120  // Augmenté pour l'effet starfield
         private const val RADIAL_RAYS = 64
-        private const val BLOB_POINTS = 32
         private const val FIRE_COLUMNS = 40
-
-        // Constantes flocons de neige (mode FIRE fullscreen)
-        private const val SNOW_BUCKETS   = 10
-        private const val SNOW_MIN_SIZE  = 4f
-        private const val SNOW_MAX_SIZE  = 14f
+        private const val SNOW_BUCKETS = 10
+        private const val SNOW_MIN_SIZE = 4f
+        private const val SNOW_MAX_SIZE = 14f
         private const val SNOW_MAX_COUNT = 500
 
         // Smoothing factor (0 = pas de smoothing, 1 = pas de changement)
@@ -128,23 +138,21 @@ class AudioVisualizerView @JvmOverloads constructor(
         set(value) {
             field = value
             // Reset particles when changing mode
-            if (value == VisualizationMode.PARTICLES || value == VisualizationMode.PARTICLES_MONO) {
+            if (value == VisualizationMode.PARTICLES || value == VisualizationMode.FIRE) {
                 initParticles()
             }
-            // Initialize kaleidoscope facets
-            if (value == VisualizationMode.KALEIDOSCOPE) {
-                initFacets()
+            if (value == VisualizationMode.FIRE) {
+                fireHeights.fill(0f)
+                snowNeedsPrewarm = true
             }
-            // Initialize boids
-            if (value == VisualizationMode.BOIDS) {
-                initBoids()
-            }
+            scenes.reset()
+            lastFrameTimeNanos = 0L
             // Initialize Delaunay mesh
-            if (value == VisualizationMode.DELAUNAY_MESH || value == VisualizationMode.DELAUNAY_GRAYSCALE) {
+            if (value == VisualizationMode.DELAUNAY_MESH) {
                 if (cachedWidth > 0 && cachedHeight > 0) initDelaunayMesh()
             }
             // Initialize Voronoi
-            if (value == VisualizationMode.VORONOI || value == VisualizationMode.VORONOI_GRAYSCALE) {
+            if (value == VisualizationMode.VORONOI) {
                 voronoiSeeds.clear()
             }
             // Initialize Penrose
@@ -158,15 +166,41 @@ class AudioVisualizerView @JvmOverloads constructor(
             invalidate()
         }
 
+    // Flocons de neige (mode FIRE en fullscreen)
+    private data class Snowflake(
+        var x: Float,
+        var y: Float,
+        var vy: Float,          // vitesse de chute (px/frame)
+        var swayPhase: Float,   // phase de l'oscillation latérale
+        var swayAmp: Float,     // amplitude latérale (px)
+        var swaySpeed: Float,   // vitesse de l'oscillation
+        val bucketIdx: Int      // index dans snowBitmaps (taille pré-rendue)
+    )
+    private val snowflakes = ArrayList<Snowflake>(500)
+
+    // Bitmaps pré-rendus des flocons (10 tailles discrètes, constantes dans companion object)
+    private val snowBitmaps       = arrayOfNulls<Bitmap>(SNOW_BUCKETS)
+    private val snowBitmapPaint   = Paint(Paint.ANTI_ALIAS_FLAG).apply { isFilterBitmap = true }
+    private var snowBitmapsReady  = false
+    private var snowNeedsPrewarm = true
+
+    private val firePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val fireHeights = FloatArray(FIRE_COLUMNS)
+
+    private val scenes = MusicVisualScenes()
+    private var lastAudioNanos = 0L
+    private val barPeaks = FloatArray(BAR_COUNT)
+
     // Données audio brutes et lissées
     // PERFORMANCE: Buffers pré-alloués (réutilisés, pas de copyOf())
     private val waveformBuffer = ByteArray(256)
-    private val fftBuffer = ByteArray(128)
+    private val fftBuffer = ByteArray(258)
     private var waveformSize = 0
     private var fftSize = 0
 
     // PERFORMANCE: Données lissées pour transitions fluides
     private val smoothedFft = FloatArray(128)
+    private val targetFft = FloatArray(128)
     private val smoothedWaveform = FloatArray(256) { 0.5f }
 
     // === PAINTS PRÉ-ALLOUÉS (évite allocations dans onDraw) ===
@@ -222,9 +256,6 @@ class AudioVisualizerView @JvmOverloads constructor(
         strokeWidth = 2f
     }
 
-    private val firePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-    }
 
     // PERFORMANCE: Pré-allouer le paint pour les labels (évite création dans drawCircle)
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -296,67 +327,9 @@ class AudioVisualizerView @JvmOverloads constructor(
     )
     private val particles = ArrayList<Particle>(PARTICLE_COUNT)
 
-    // Flocons de neige (mode FIRE en fullscreen)
-    private data class Snowflake(
-        var x: Float,
-        var y: Float,
-        var vy: Float,          // vitesse de chute (px/frame)
-        var swayPhase: Float,   // phase de l'oscillation latérale
-        var swayAmp: Float,     // amplitude latérale (px)
-        var swaySpeed: Float,   // vitesse de l'oscillation
-        val bucketIdx: Int      // index dans snowBitmaps (taille pré-rendue)
-    )
-    private val snowflakes = ArrayList<Snowflake>(500)
-
-    // Bitmaps pré-rendus des flocons (10 tailles discrètes, constantes dans companion object)
-    private val snowBitmaps       = arrayOfNulls<Bitmap>(SNOW_BUCKETS)
-    private val snowBitmapPaint   = Paint(Paint.ANTI_ALIAS_FLAG).apply { isFilterBitmap = true }
-    private var snowBitmapsReady  = false
-    private var snowLastFrameTime = 0L   // pour le delta-time des flocons
-
-    // Kaleidoscope facets
-    private data class Facet(
-        var x: Float,      // Position dans le secteur (0-1)
-        var y: Float,      // Position dans le secteur (0-1)
-        var size: Float,   // Taille (0-1)
-        var hue: Float,    // Couleur (0-360)
-        var shape: Int,    // Type de forme (0-2)
-        var rotation: Float, // Rotation propre
-        var speed: Float   // Vitesse de changement
-    )
-    private val facets = ArrayList<Facet>(60) // 60 facettes pour remplir l'espace
-
-    // Boids (flocking algorithm)
-    private data class Boid(
-        var x: Float,
-        var y: Float,
-        var vx: Float,     // Vélocité X
-        var vy: Float,     // Vélocité Y
-        var angle: Float   // Angle de direction (pour le dessin)
-    )
-    private val boids = ArrayList<Boid>(100)
-    private val boidCount = 60 // Nombre de boids (optimisé pour performance)
-
-    // Flying diamonds for kaleidoscope (particles ejected on beats)
-    private data class FlyingDiamond(
-        var x: Float,
-        var y: Float,
-        var vx: Float,     // Vitesse X
-        var vy: Float,     // Vitesse Y
-        var rotation: Float,
-        var rotationSpeed: Float,
-        var size: Float,
-        var alpha: Float,  // Transparence (1.0 = opaque, 0.0 = invisible)
-        var hue: Float,
-        var age: Float     // Age en frames (pour fade out)
-    )
-    private val flyingDiamonds = ArrayList<FlyingDiamond>(50)
-    private var lastBeatTime = 0f  // Pour éviter trop de beats rapprochés
     private var bassHistory = FloatArray(10)  // Historique des niveaux de basse
     private var bassHistoryIndex = 0
 
-    // Fire columns heights
-    private val fireHeights = FloatArray(FIRE_COLUMNS)
 
     // === DONNÉES POUR DELAUNAY_MESH ===
     private data class MeshPoint(
@@ -503,18 +476,10 @@ class AudioVisualizerView @JvmOverloads constructor(
 
     // Shaders pour fond et effets tunnel
     private var tunnelShader: RadialGradient? = null
-    private var tunnelShaderMono: RadialGradient? = null
-    private var blobBackgroundShader: RadialGradient? = null
 
     // Pool de shaders pour particules (réutilisés en rotation)
     private val particleTrailShaders = arrayOfNulls<LinearGradient>(8)
     private var particleShaderIndex = 0
-
-    // Pool de shaders pour fire (40 colonnes, réutilisés)
-    private val fireGradientShaders = arrayOfNulls<LinearGradient>(FIRE_COLUMNS)
-    private val fireGlowShader: LinearGradient? = null
-
-    // (paints flocons supprimés : rendu bitmap pré-calculé)
 
     // Shaders pour spectrum et radial
     private var spectrumShader: LinearGradient? = null
@@ -556,22 +521,6 @@ class AudioVisualizerView @JvmOverloads constructor(
         particlesNeedPrewarm = true
     }
 
-    private fun initFacets() {
-        facets.clear()
-        // Créer 60 facettes avec positions/propriétés aléatoires
-        for (i in 0 until 60) {
-            facets.add(Facet(
-                x = (Math.random() * 0.9f).toFloat() + 0.05f, // 5-95% du secteur
-                y = (Math.random() * 0.9f).toFloat() + 0.05f,
-                size = (Math.random() * 0.08f + 0.02f).toFloat(), // 2-10% de la taille
-                hue = (Math.random() * 360).toFloat(),
-                shape = (Math.random() * 3).toInt(), // 3 types de formes
-                rotation = (Math.random() * 360).toFloat(),
-                speed = (Math.random() * 0.5f + 0.3f).toFloat() // Vitesse de rotation
-            ))
-        }
-    }
-
     fun updateWaveform(data: ByteArray) {
         // PERFORMANCE: Réutiliser le buffer au lieu de copyOf() - zero allocation
         waveformSize = minOf(data.size, waveformBuffer.size)
@@ -580,46 +529,53 @@ class AudioVisualizerView @JvmOverloads constructor(
         // PERFORMANCE: Smooth waveform data
         val size = minOf(waveformSize, smoothedWaveform.size)
         for (i in 0 until size) {
-            val newValue = (waveformBuffer[i].toInt() + 128) / 256f
+            val newValue = (waveformBuffer[i].toInt() and 0xff) / 256f
             smoothedWaveform[i] = smoothedWaveform[i] * SMOOTHING + newValue * (1 - SMOOTHING)
         }
 
+        smoothedWaveform.fill(0.5f, size)
         invalidate()
     }
 
     fun updateFft(data: ByteArray) {
+        lastAudioNanos = System.nanoTime()
         // PERFORMANCE: Réutiliser le buffer au lieu de copyOf() - zero allocation
         fftSize = minOf(data.size, fftBuffer.size)
         System.arraycopy(data, 0, fftBuffer, 0, fftSize)
 
         // PERFORMANCE: Smooth FFT data + detect bass
-        val size = minOf(fftSize - 1, smoothedFft.size)
+        val size = minOf((fftSize / 2 - 1).coerceAtLeast(0), smoothedFft.size)
         var bassSum = 0f
 
         for (i in 0 until size) {
-            val magnitude = abs(fftBuffer[i + 1].toInt()) / 128f
-            smoothedFft[i] = smoothedFft[i] * SMOOTHING + magnitude * (1 - SMOOTHING)
+            val real = fftBuffer[(i + 1) * 2].toFloat()
+            val imaginary = fftBuffer[(i + 1) * 2 + 1].toFloat()
+            val magnitude = (sqrt(real * real + imaginary * imaginary) / 128f).coerceAtMost(1f)
+            targetFft[i] = magnitude
 
             // Accumuler les basses (premiers bins FFT)
             if (i < 8) {
-                bassSum += smoothedFft[i]
+                bassSum += magnitude
             }
         }
 
+        targetFft.fill(0f, size)
+
         // Détection de beat adaptative (historique glissant)
-        lastBassLevel = bassLevel
-        bassLevel = bassSum / 8f
-        bassHistory[bassHistoryIndex] = bassLevel
+        val capturedBass = bassSum / 8f
+        bassHistory[bassHistoryIndex] = capturedBass
         bassHistoryIndex = (bassHistoryIndex + 1) % bassHistory.size
         var bassAvg = 0f
         for (v in bassHistory) bassAvg += v
         bassAvg /= bassHistory.size
         if (beatCooldown > 0) beatCooldown--
-        beatDetected = beatCooldown == 0 &&
-                bassLevel > bassAvg * 1.4f &&
-                bassLevel > 0.3f &&
-                bassLevel > lastBassLevel * 1.15f
-        if (beatDetected) beatCooldown = 4
+        val onset = beatCooldown == 0 &&
+                capturedBass > bassAvg * 1.4f &&
+                capturedBass > 0.06f &&
+                capturedBass > lastBassLevel * 1.15f
+        lastBassLevel = capturedBass
+        if (onset) beatCooldown = 4
+        beatDetected = beatDetected || onset
 
         invalidate()
     }
@@ -628,13 +584,20 @@ class AudioVisualizerView @JvmOverloads constructor(
         // Reset buffers
         waveformSize = 0
         fftSize = 0
-        waveformBuffer.fill(0)
+        waveformBuffer.fill(0x80.toByte())
         fftBuffer.fill(0)
         // Reset smoothed data
         smoothedFft.fill(0f)
+        targetFft.fill(0f)
         smoothedWaveform.fill(0.5f)
         bassLevel = 0f
         lastBassLevel = 0f
+        beatDetected = false
+        beatCooldown = 0
+        bassHistory.fill(0f)
+        lastAudioNanos = 0L
+        barPeaks.fill(0f)
+        scenes.reset()
         invalidate()
     }
 
@@ -642,16 +605,21 @@ class AudioVisualizerView @JvmOverloads constructor(
     var isFullscreen: Boolean = false
         set(value) {
             if (field != value) {
-                if (!value) {
-                    snowflakes.clear()       // retour bande → flocons disparus
-                    snowLastFrameTime = 0L   // reset du timer pour le prochain passage
-                } else {
-                    if (!snowBitmapsReady) initSnowBitmaps()
-                    snowLastFrameTime = 0L   // évite un delta géant à la première frame
-                    prewarmSnowflakes()
-                }
+                snowflakes.clear()
+                snowNeedsPrewarm = true
             }
             field = value
+            invalidate()
+        }
+
+    // The main player is covered by a second visualizer in true fullscreen.
+    // Stop its animation loop as well as its audio capture updates while covered.
+    var isRenderingActive: Boolean = true
+        set(value) {
+            if (field == value) return
+            field = value
+            lastFrameTimeNanos = 0L
+            beatDetected = false
             invalidate()
         }
 
@@ -660,7 +628,14 @@ class AudioVisualizerView @JvmOverloads constructor(
         // PERFORMANCE: Initialiser les shaders uniquement quand les dimensions changent
         cachedWidth = w
         cachedHeight = h
+        snowNeedsPrewarm = true
         initShaders()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        lastFrameTimeNanos = 0L
+        scenes.release()
     }
 
     /**
@@ -686,29 +661,6 @@ class AudioVisualizerView @JvmOverloads constructor(
             Shader.TileMode.CLAMP
         )
 
-        tunnelShaderMono = RadialGradient(
-            centerX, centerY, maxDistance,
-            intArrayOf(
-                Color.argb(40, 70, 70, 70),
-                Color.argb(20, 40, 40, 40),
-                Color.TRANSPARENT
-            ),
-            floatArrayOf(0f, 0.4f, 1f),
-            Shader.TileMode.CLAMP
-        )
-
-        // Blob background shader
-        val maxRadius = min(cachedWidth, cachedHeight) / 2f * 0.92f
-        blobBackgroundShader = RadialGradient(
-            centerX, centerY, maxRadius,
-            intArrayOf(
-                Color.argb(255, 20, 20, 30),
-                Color.argb(255, 10, 10, 15),
-                Color.argb(255, 5, 5, 8)
-            ),
-            floatArrayOf(0f, 0.7f, 1f),
-            Shader.TileMode.CLAMP
-        )
 
         // Pool de shaders pour traînées de particules (réutilisés en rotation)
         // Les coordonnées seront mises à jour dynamiquement mais le shader reste alloué
@@ -722,7 +674,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         }
 
         // Réinitialiser le mesh Delaunay si le mode est actif (dimensions changées)
-        if (mode == VisualizationMode.DELAUNAY_MESH || mode == VisualizationMode.DELAUNAY_GRAYSCALE) initDelaunayMesh()
+        if (mode == VisualizationMode.DELAUNAY_MESH) initDelaunayMesh()
         // Réinitialiser le pavage de Penrose si le mode est actif (dimensions changées)
         if (mode == VisualizationMode.PENROSE_RHOMBUS) initPenroseRhombuses()
         // Réinitialiser le pavage de Penrose géométrique si le mode est actif
@@ -733,16 +685,40 @@ class AudioVisualizerView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         // PERFORMANCE: Arrêter l'animation en mode NONE (zero allocation, zero CPU)
-        if (mode == VisualizationMode.NONE) {
+        if (!isRenderingActive || !isShown || windowVisibility != VISIBLE ||
+            mode == VisualizationMode.NONE || width == 0 || height == 0) {
+            lastFrameTimeNanos = 0L
             return
         }
 
         // Delta-time : compense les variations de framerate (1.0 = 60fps nominal)
         val now = System.nanoTime()
         deltaTime = if (lastFrameTimeNanos > 0L) {
-            ((now - lastFrameTimeNanos) / 16_666_667f).coerceIn(0.5f, 3f)
+            ((now - lastFrameTimeNanos) / 16_666_667f).coerceIn(0.01f, 3f)
         } else 1f
         lastFrameTimeNanos = now
+
+        // Release frozen audio gently when a session pauses or stops sending captures.
+        if (lastAudioNanos > 0L && now - lastAudioNanos > 500_000_000L) {
+            val decay = kotlin.math.exp(-deltaTime * 0.08f)
+            targetFft.fill(0f)
+            for (i in smoothedWaveform.indices) {
+                smoothedWaveform[i] = 0.5f + (smoothedWaveform[i] - 0.5f) * decay
+            }
+            beatDetected = false
+        }
+
+        // Captures arrive much less often than display frames. Interpolate the spectrum
+        // on the display clock so sizes/heights do not jump together on every callback.
+        val attack = 1f - kotlin.math.exp(-deltaTime / 2.7f) // 45 ms
+        val release = 1f - kotlin.math.exp(-deltaTime / 7.2f) // 120 ms
+        var bassSum = 0f
+        for (i in smoothedFft.indices) {
+            val blend = if (targetFft[i] > smoothedFft[i]) attack else release
+            smoothedFft[i] += (targetFft[i] - smoothedFft[i]) * blend
+            if (i < 8) bassSum += smoothedFft[i]
+        }
+        bassLevel = bassSum / 8f
 
         when (mode) {
             VisualizationMode.NONE -> {
@@ -758,107 +734,71 @@ class AudioVisualizerView @JvmOverloads constructor(
             VisualizationMode.CIRCLE -> drawCircle(canvas)
             VisualizationMode.PARTICLES -> drawParticles(canvas)
             VisualizationMode.RADIAL -> drawRadial(canvas)
-            VisualizationMode.BLOB -> drawBlob(canvas)
-            VisualizationMode.PARTICLES_MONO -> drawParticlesMono(canvas)
-            VisualizationMode.KALEIDOSCOPE -> drawKaleidoscope(canvas)
-            VisualizationMode.BOIDS -> drawBoids(canvas)
-            VisualizationMode.JULIA -> drawJulia(canvas)
-            VisualizationMode.MANDELBROT_ZOOM -> drawMandelbrotZoom(canvas)
-            VisualizationMode.JULIA_GRAYSCALE -> drawJuliaGrayscale(canvas)
             VisualizationMode.DELAUNAY_MESH -> drawDelaunayMesh(canvas)
-            VisualizationMode.DELAUNAY_GRAYSCALE -> drawDelaunayMesh(canvas, grayscale = true)
             VisualizationMode.VORONOI -> drawVoronoi(canvas)
-            VisualizationMode.VORONOI_GRAYSCALE -> drawVoronoi(canvas, grayscale = true)
             VisualizationMode.PENROSE_RHOMBUS -> drawPenroseRhombus(canvas)
             VisualizationMode.PENROSE_TRUE -> drawPenroseTrue(canvas)
+            else -> scenes.draw(canvas, mode, width, height, deltaTime, smoothedFft, smoothedWaveform, beatDetected)
         }
 
         // Continue animation - PAS DE RESET pour éviter les lags
-        animationPhase += animationSpeed
+        animationPhase += animationSpeed * deltaTime
         // Pas de reset, laisse aller à l'infini
 
         // Update color phase for psychedelic effect
-        colorPhase = (colorPhase + colorSpeed) % 360f
+        colorPhase = (colorPhase + colorSpeed * deltaTime) % 360f
 
-        postInvalidateDelayed(16) // ~60fps
+        beatDetected = false // Consume each audio onset once, even between capture callbacks.
+        if (isShown) postInvalidateOnAnimation()
     }
 
-    private val hsvBar = floatArrayOf(0f, 0.8f, 1f)  // For bar color cycling
+    private val hsvBar = floatArrayOf(0f, 0.8f, 1f)
 
     private fun drawBars(canvas: Canvas) {
-        val barCount = 32
-        val barWidth = width.toFloat() / barCount * 0.7f
-        val barSpacing = width.toFloat() / barCount * 0.3f
-        val maxHeight = height.toFloat() * 0.9f
-
-        val data = if (fftSize > 0) fftBuffer else null
-
-        for (i in 0 until barCount) {
-            val barHeight = if (data != null && data.size > i + 1) {
-                // Use FFT data
-                val magnitude = Math.abs(data[i + 1].toInt()) / 128f
-                magnitude * maxHeight
+        val stride = width / BAR_COUNT.toFloat()
+        val maxHeight = height * 0.88f
+        val ledHeight = maxHeight / 24f
+        for (i in 0 until BAR_COUNT) {
+            val bin = ((i / (BAR_COUNT - 1f)) * (i / (BAR_COUNT - 1f)) * 126f).toInt()
+            val level = if (fftSize > 0) {
+                (smoothedFft[bin] * 2f).coerceAtMost(1f)
             } else {
-                // Animated idle state
-                val phase = animationPhase + (i.toFloat() / barCount) * Math.PI.toFloat() * 2f
-                ((sin(phase.toDouble()).toFloat() + 1f) / 2f * 0.3f + 0.1f) * maxHeight
+                0.08f + (sin(animationPhase + i * 0.35f) + 1f) * 0.06f
             }
-
-            val left = i * (barWidth + barSpacing) + barSpacing / 2
-            val top = height - barHeight
-            val right = left + barWidth
-            val bottom = height.toFloat()
-
-            // Psychedelic color effect - each bar has a different hue based on position + phase
-            val barHue = (colorPhase + (i.toFloat() / barCount) * 360f) % 360f
-            hsvBar[0] = barHue
-            barPaint.color = Color.HSVToColor(hsvBar)
-
-            // Gradient effect based on height
-            val alpha = (150 + (barHeight / maxHeight * 105)).toInt().coerceIn(150, 255)
-            barPaint.alpha = alpha
-
-            canvas.drawRoundRect(
-                left, top, right, bottom,
-                barWidth / 2, barWidth / 2,
-                barPaint
-            )
+            barPeaks[i] = maxOf(level, barPeaks[i] - 0.006f * deltaTime)
+            val left = i * stride + stride * 0.12f
+            val right = (i + 1) * stride - stride * 0.12f
+            for (led in 0 until 24) {
+                hsvBar[0] = 165f - led * 6.2f
+                hsvBar[1] = 0.8f
+                hsvBar[2] = 1f
+                barPaint.color = Color.HSVToColor(if (led / 24f < level) 240 else 22, hsvBar)
+                val bottom = height - led * ledHeight
+                canvas.drawRect(left, bottom - ledHeight * 0.72f, right, bottom, barPaint)
+            }
+            barPaint.color = Color.argb(220, 220, 255, 245)
+            val peakY = height - barPeaks[i] * maxHeight
+            canvas.drawRect(left, peakY - maxOf(1f, ledHeight * 0.18f), right, peakY, barPaint)
         }
-
-        barPaint.alpha = 255
     }
 
     private fun drawWave(canvas: Canvas) {
-        wavePath.reset()
-
-        val data = if (waveformSize > 0) waveformBuffer else null
-        val centerY = height / 2f
-        val amplitude = height / 2f * 0.8f
-
-        if (data != null && data.isNotEmpty()) {
-            val step = data.size.toFloat() / width
-            wavePath.moveTo(0f, centerY)
-
-            for (x in 0 until width) {
-                val dataIndex = (x * step).toInt().coerceIn(0, data.size - 1)
-                val value = (data[dataIndex].toInt() + 128) / 256f
-                val y = centerY - (value - 0.5f) * amplitude * 2
-                wavePath.lineTo(x.toFloat(), y)
-            }
-        } else {
-            // Animated idle state
-            wavePath.moveTo(0f, centerY)
-            for (x in 0 until width step 2) {
-                val phase = animationPhase + (x.toFloat() / width) * Math.PI.toFloat() * 4f
-                val y = centerY + sin(phase.toDouble()).toFloat() * amplitude * 0.3f
-                wavePath.lineTo(x.toFloat(), y)
-            }
+        wavePath.rewind()
+        val amplitude = height * 0.42f
+        for (i in smoothedWaveform.indices) {
+            val x = i / smoothedWaveform.lastIndex.toFloat() * width
+            val value = if (waveformSize > 0) (smoothedWaveform[i] - 0.5f) * 2f
+                else sin(animationPhase + i * 0.05f) * 0.15f
+            val y = height * 0.5f - value * amplitude
+            if (i == 0) wavePath.moveTo(x, y) else wavePath.lineTo(x, y)
         }
-
+        wavePaint.color = Color.argb(35, 70, 235, 255)
+        wavePaint.strokeWidth = 10f * resources.displayMetrics.density
+        canvas.drawPath(wavePath, wavePaint)
+        wavePaint.color = Color.rgb(145, 250, 255)
+        wavePaint.strokeWidth = 1.5f * resources.displayMetrics.density
         canvas.drawPath(wavePath, wavePaint)
     }
-
-    /** Construit un path fermé lissé via conversion Catmull-Rom → cubique Bézier */
     private fun buildSmoothClosedPath(path: Path, px: FloatArray, py: FloatArray, n: Int) {
         path.moveTo(px[0], py[0])
         for (i in 0 until n) {
@@ -889,7 +829,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         val centerY = height / 2f
         val baseRadius = min(circleWidth, height.toFloat()) / 2f * 0.56f
 
-        val data = if (fftSize > 0) fftBuffer else null
+        val data = if (fftSize > 0) smoothedFft else null
         val points = 48
 
         // 3 couches concentriques (inner → outer) avec lissage cubique
@@ -902,7 +842,7 @@ class AudioVisualizerView @JvmOverloads constructor(
                 val angle = (i.toFloat() / points) * Math.PI.toFloat() * 2f - Math.PI.toFloat() / 2f
                 val radiusOffset = if (data != null && data.size > i + 2) {
                     val dataIndex = (i * 2) % (data.size - 2) + 1
-                    val magnitude = Math.abs(data[dataIndex].toInt()) / 128f
+                    val magnitude = data[dataIndex]
                     magnitude * layerRadius * fftScale
                 } else {
                     val phase = animationPhase + (i.toFloat() / points) * Math.PI.toFloat() * 4f
@@ -933,7 +873,7 @@ class AudioVisualizerView @JvmOverloads constructor(
                 val angle = (i.toFloat() / points) * Math.PI.toFloat() * 2f - Math.PI.toFloat() / 2f
                 val radiusOffset = if (data != null && data.size > i + 3) {
                     val dataIndex = (i * 2 + 1) % (data.size - 2) + 2
-                    val magnitude = Math.abs(data[dataIndex].toInt()) / 128f
+                    val magnitude = data[dataIndex]
                     magnitude * layerRadius * fftScale
                 } else {
                     val phase = animationPhase + (i.toFloat() / points) * Math.PI.toFloat() * 4f + Math.PI.toFloat() / 4f
@@ -1021,7 +961,7 @@ class AudioVisualizerView @JvmOverloads constructor(
     private fun drawSpectrum(canvas: Canvas) {
         spectrumPath.reset()
 
-        val data = if (fftSize > 0) fftBuffer else null
+        val data = if (fftSize > 0) smoothedFft else null
         val barCount = 32
         val maxHeight = height.toFloat() * 0.85f
 
@@ -1032,7 +972,7 @@ class AudioVisualizerView @JvmOverloads constructor(
 
         for (i in 0 until barCount) {
             val barHeight = if (data != null && data.size > i + 1) {
-                val magnitude = Math.abs(data[i + 1].toInt()) / 128f
+                val magnitude = data[i + 1]
                 magnitude * maxHeight
             } else {
                 val phase = animationPhase + (i.toFloat() / barCount) * Math.PI.toFloat() * 2f
@@ -1216,7 +1156,7 @@ class AudioVisualizerView @JvmOverloads constructor(
             }
         }
 
-        // === MINI BLOB AU CENTRE ===
+        // === MINI LIQUID_CHROME AU CENTRE ===
         // Taille du blob pilotée par pics de volume (pas les basses)
         val blobBaseSize = min(width, height) * 0.06f
         val blobPulse = 1f + beatEnvelope * 0.35f
@@ -1289,168 +1229,6 @@ class AudioVisualizerView @JvmOverloads constructor(
         canvas.drawCircle(centerX, centerY, coreSize, particlePaint)
     }
 
-    /**
-     * Mode PARTICLES_MONO - Variante niveaux de gris du mode particules.
-     * Style: starfield monochrome avec blob central réduit.
-     */
-    private fun drawParticlesMono(canvas: Canvas) {
-        val centerX = width / 2f
-        val centerY = height / 2f
-        val maxDistance = sqrt((width.toFloat() * width + height.toFloat() * height).toDouble()).toFloat() / 2f
-
-        // Pre-warm : même distribution initiale que drawParticles
-        if (particlesNeedPrewarm && maxDistance > 0f) {
-            repeat(PARTICLE_COUNT) {
-                val dist = (Math.random() * maxDistance * 0.85f).toFloat()
-                spawnStarParticle(centerX, centerY, dist)
-            }
-            particlesNeedPrewarm = false
-        }
-
-        val audioIntensity = if (smoothedFft.isNotEmpty() && fftSize > 0) {
-            var sum = 0f
-            for (i in 0 until minOf(32, smoothedFft.size)) {
-                sum += smoothedFft[i]
-            }
-            (sum / 32f * 2.5f).coerceIn(0.1f, 1.2f)
-        } else {
-            0.3f + (sin(animationPhase.toDouble()).toFloat() + 1f) / 6f
-        }
-
-        val beatMultiplier = if (beatDetected) 3f else 1f
-        val spawnRate = ((1 + audioIntensity * 4) * beatMultiplier).toInt()
-        repeat(spawnRate) {
-            spawnStarParticle(centerX, centerY)
-        }
-
-        // PERFORMANCE: Tunnel shader pré-alloué (mono)
-        blobPaint.shader = tunnelShaderMono
-        blobPaint.alpha = (20 + audioIntensity * 30).toInt().coerceIn(15, 50)
-        canvas.drawCircle(centerX, centerY, maxDistance, blobPaint)
-        blobPaint.shader = null
-        blobPaint.alpha = 255
-
-        for (p in particles) {
-            if (p.life <= 0f) continue
-
-            val dx = p.x - centerX
-            val dy = p.y - centerY
-            val distance = sqrt((dx * dx + dy * dy).toDouble()).toFloat()
-
-            val dirX = if (distance > 0.1f) dx / distance else 0f
-            val dirY = if (distance > 0.1f) dy / distance else 0f
-
-            val speed = p.vx * deltaTime
-
-            p.x += dirX * speed
-            p.y += dirY * speed
-
-            if (p.x < -30 || p.x > width + 30 || p.y < -30 || p.y > height + 30) {
-                p.life = 0f
-                continue
-            }
-
-            val perspectiveSize = p.size * (0.3f + (distance / maxDistance) * 2.5f)
-            val distanceRatio = distance / maxDistance
-            val alpha = when {
-                distanceRatio < 0.15f -> (distanceRatio / 0.15f * 255).toInt()
-                distanceRatio > 0.75f -> ((1f - distanceRatio) / 0.25f * 255).toInt()
-                else -> 255
-            }.coerceIn(0, 255)
-
-            val grayValue = (180 + (1f - distanceRatio) * 55 + audioIntensity * 20).toInt().coerceIn(140, 255)
-
-            // PERFORMANCE: Traînée optimisée (shader uniquement pour grosses particules)
-            val trailLength = speed * 2.5f
-            val trailStartX = p.x - dirX * trailLength
-            val trailStartY = p.y - dirY * trailLength
-
-            if (perspectiveSize > 4f) {
-                // Grosse particule = traînée avec gradient
-                radialPaint.shader = LinearGradient(
-                    trailStartX, trailStartY, p.x, p.y,
-                    Color.TRANSPARENT,
-                    Color.argb(alpha, grayValue, grayValue, grayValue),
-                    Shader.TileMode.CLAMP
-                )
-                radialPaint.strokeWidth = perspectiveSize * 0.7f
-                radialPaint.strokeCap = Paint.Cap.ROUND
-                canvas.drawLine(trailStartX, trailStartY, p.x, p.y, radialPaint)
-                radialPaint.shader = null
-            } else {
-                // Petite particule = traînée simple (zero allocation)
-                radialPaint.color = Color.argb(alpha / 2, grayValue, grayValue, grayValue)
-                radialPaint.strokeWidth = perspectiveSize * 0.7f
-                radialPaint.strokeCap = Paint.Cap.ROUND
-                canvas.drawLine(trailStartX, trailStartY, p.x, p.y, radialPaint)
-            }
-
-            particlePaint.color = Color.argb(alpha, grayValue, grayValue, grayValue)
-            canvas.drawCircle(p.x, p.y, perspectiveSize * 0.5f, particlePaint)
-
-            if (perspectiveSize > 5f) {
-                particlePaint.color = Color.argb(alpha / 4, grayValue, grayValue, grayValue)
-                canvas.drawCircle(p.x, p.y, perspectiveSize * 1.1f, particlePaint)
-            }
-        }
-
-        val blobBaseSize = min(width, height) * 0.04f
-        val blobPulse = 1f + audioIntensity * 0.4f + (if (beatDetected) 0.3f else 0f)
-        val blobSize = blobBaseSize * blobPulse
-
-        val ringCount = 4
-        for (ring in 0 until ringCount) {
-            val ringProgress = (ring + 1).toFloat() / ringCount
-            val baseRingRadius = blobSize * ringProgress
-
-            val ringPhase = animationPhase * 2f - ring * 0.4f
-            val waveAmount = sin(ringPhase.toDouble()).toFloat() * audioIntensity * 0.3f
-
-            val ringAlpha = (180 - ring * 30).coerceIn(80, 180)
-            val ringGray = (200 + waveAmount * 40 + audioIntensity * 20).toInt().coerceIn(160, 255)
-
-            blobOutlinePaint.color = Color.argb(ringAlpha, ringGray, ringGray, ringGray)
-            blobOutlinePaint.strokeWidth = 2f + audioIntensity * 2f
-
-            blobPath.reset()
-            val points = 32
-            for (i in 0 until points) {
-                val angleRad = Math.toRadians((i * 360f / points).toDouble())
-                val fftDeform = if (smoothedFft.isNotEmpty() && fftSize > 0) {
-                    val fftIdx = (i * smoothedFft.size / points).coerceIn(0, smoothedFft.size - 1)
-                    smoothedFft[fftIdx] * blobSize * 0.2f
-                } else {
-                    0f
-                }
-
-                val radius = baseRingRadius * (1f + waveAmount) + fftDeform
-                val x = centerX + cos(angleRad).toFloat() * radius
-                val y = centerY + sin(angleRad).toFloat() * radius
-
-                if (i == 0) blobPath.moveTo(x, y) else blobPath.lineTo(x, y)
-            }
-            blobPath.close()
-            canvas.drawPath(blobPath, blobOutlinePaint)
-        }
-
-        // PERFORMANCE: Glow optimisé avec cercles multiples (zero allocation)
-        val coreSize = blobSize * 0.25f + bassLevel * blobSize * 0.15f
-        val coreGray = (220 + audioIntensity * 30).toInt().coerceIn(180, 255)
-        val coreColor = Color.argb(255, coreGray, coreGray, coreGray)
-
-        // Glow avec cercles concentriques (zero allocation)
-        blobPaint.color = coreColor
-        blobPaint.alpha = 50
-        canvas.drawCircle(centerX, centerY, coreSize * 2.5f, blobPaint)
-        blobPaint.alpha = 100
-        canvas.drawCircle(centerX, centerY, coreSize * 1.8f, blobPaint)
-        blobPaint.alpha = 150
-        canvas.drawCircle(centerX, centerY, coreSize * 1.2f, blobPaint)
-
-        particlePaint.color = coreColor
-        canvas.drawCircle(centerX, centerY, coreSize, particlePaint)
-    }
-
     private fun spawnStarParticle(centerX: Float, centerY: Float, startDist: Float = -1f) {
         // Trouver une particule morte à réutiliser
         for (p in particles) {
@@ -1478,7 +1256,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         val centerY = height / 2f
         val maxRadius = sqrt((centerX * centerX + centerY * centerY).toDouble()).toFloat()
 
-        val data = if (fftSize > 0) fftBuffer else null
+        val data = if (fftSize > 0) smoothedFft else null
         val rayCount = RADIAL_RAYS
 
         // Fond avec cercles concentriques subtils
@@ -1541,123 +1319,18 @@ class AudioVisualizerView @JvmOverloads constructor(
         canvas.drawCircle(centerX, centerY, centerRadius * 2f, blobPaint)
     }
 
-    /**
-     * Mode BLOB - Liquide non-newtonien sur haut-parleur
-     * Style: vue du dessus, ondulations concentriques qui rebondissent
-     */
-    private fun drawBlob(canvas: Canvas) {
-        val centerX = width / 2f
-        val centerY = height / 2f
-        // En fullscreen, utiliser plus d'espace (92% au lieu de 85%)
-        val maxRadius = if (isFullscreen) {
-            min(width, height) / 2f * 0.92f
-        } else {
-            min(width, height) / 2f * 0.85f
-        }
-
-        // PERFORMANCE: Fond sombre avec shader pré-alloué
-        blobPaint.shader = blobBackgroundShader
-        canvas.drawCircle(centerX, centerY, maxRadius, blobPaint)
-        blobPaint.shader = null
-
-        // Calculer l'amplitude globale basée sur les basses
-        val globalAmplitude = if (smoothedFft.isNotEmpty() && fftSize > 0) {
-            // Moyenne des basses (premiers bins FFT)
-            var bassSum = 0f
-            for (i in 0 until minOf(16, smoothedFft.size)) {
-                bassSum += smoothedFft[i]
-            }
-            (bassSum / 16f * 3f).coerceIn(0f, 1f)
-        } else {
-            (sin((animationPhase * 2).toDouble()).toFloat() + 1f) / 2f * 0.5f
-        }
-
-        // Dessiner plusieurs anneaux concentriques qui ondulent
-        val ringCount = 8
-        val waveSpeed = animationPhase * 3f
-
-        for (ring in 0 until ringCount) {
-            val ringProgress = (ring + 1).toFloat() / ringCount
-            val baseRingRadius = maxRadius * ringProgress * 0.85f
-
-            // Chaque anneau a une phase différente pour créer l'effet d'ondulation
-            val ringPhase = waveSpeed - ring * 0.5f
-
-            // L'amplitude diminue vers l'extérieur
-            val ringAmplitude = globalAmplitude * (1f - ringProgress * 0.5f)
-
-            // Hauteur simulée de l'anneau (pour l'effet 3D)
-            val waveHeight = sin(ringPhase.toDouble()).toFloat() * ringAmplitude
-
-            // Couleur basée sur la hauteur (plus clair quand "haut")
-            val brightness = 0.3f + (waveHeight + 1f) / 2f * 0.5f
-            hsvTemp[0] = (colorPhase + ring * 15f) % 360f
-            hsvTemp[1] = 0.6f - waveHeight * 0.2f
-            hsvTemp[2] = brightness + ringAmplitude * 0.3f
-
-            val ringColor = Color.HSVToColor((180 + waveHeight * 75).toInt().coerceIn(100, 255), hsvTemp)
-
-            // Dessiner l'anneau déformé
-            blobPath.reset()
-            val points = 64
-            for (i in 0 until points) {
-                val angle = (i * 360f / points)
-                val angleRad = Math.toRadians(angle.toDouble())
-
-                // Déformation basée sur FFT pour chaque angle
-                val fftDeform = if (smoothedFft.isNotEmpty() && fftSize > 0) {
-                    val fftIdx = (i * smoothedFft.size / points).coerceIn(0, smoothedFft.size - 1)
-                    smoothedFft[fftIdx] * maxRadius * 0.15f * (1f - ringProgress * 0.5f)
-                } else {
-                    0f
-                }
-
-                // Perturbation ondulante
-                val wavePerturbation = sin((angle * 3f + ringPhase * 60f).toDouble() * Math.PI / 180).toFloat() *
-                        maxRadius * 0.05f * ringAmplitude
-
-                val radius = baseRingRadius + fftDeform + wavePerturbation
-                val x = centerX + cos(angleRad).toFloat() * radius
-                val y = centerY + sin(angleRad).toFloat() * radius
-
-                if (i == 0) {
-                    blobPath.moveTo(x, y)
-                } else {
-                    blobPath.lineTo(x, y)
-                }
-            }
-            blobPath.close()
-
-            // Style de l'anneau
-            blobOutlinePaint.color = ringColor
-            blobOutlinePaint.strokeWidth = 3f + ringAmplitude * 4f
-            blobOutlinePaint.alpha = (200 - ring * 15).coerceIn(80, 200)
-            canvas.drawPath(blobPath, blobOutlinePaint)
-        }
-
-        // Point central qui pulse fortement avec les basses
-        val centerPulse = 10f + globalAmplitude * 30f + (if (beatDetected) 20f else 0f)
-        hsvTemp[0] = colorPhase
-        hsvTemp[1] = 0.5f
-        hsvTemp[2] = 1f
-        blobPaint.color = Color.HSVToColor(220, hsvTemp)
-        canvas.drawCircle(centerX, centerY, centerPulse, blobPaint)
-
-        // Glow autour du centre
-        blobPaint.color = Color.HSVToColor(60, hsvTemp)
-        canvas.drawCircle(centerX, centerY, centerPulse * 2f, blobPaint)
-
-        // Reflets de lumière (effet 3D)
-        val highlightOffset = globalAmplitude * 15f
-        particlePaint.color = Color.argb(60, 255, 255, 255)
-        canvas.drawCircle(centerX - highlightOffset, centerY - highlightOffset, 8f + globalAmplitude * 10f, particlePaint)
-    }
+    // === MODE 16: DELAUNAY_MESH - Maillage Delaunay réactif à l'audio ===
 
     /**
      * Mode FIRE - Effet de flammes avec base bleue chalumeau
      * Style: feu réactif à la musique, flammes intenses = base bleue
      */
     private fun drawFire(canvas: Canvas) {
+        if (isFullscreen && !snowBitmapsReady) initSnowBitmaps()
+        if (isFullscreen && snowNeedsPrewarm) {
+            prewarmSnowflakes()
+            snowNeedsPrewarm = false
+        }
         val columnWidth = width.toFloat() / FIRE_COLUMNS
         // En fullscreen le feu est limité au tiers inférieur pour laisser place aux flocons
         val maxHeight      = if (isFullscreen) height * 0.35f else height * 0.85f
@@ -1688,7 +1361,8 @@ class AudioVisualizerView @JvmOverloads constructor(
 
             // Smooth transition + random flicker plus prononcé
             val flicker = (Math.random() * 0.2f - 0.1f).toFloat()
-            fireHeights[i] = fireHeights[i] * 0.6f + (targetHeight * (1f + flicker)) * 0.4f
+            val blend = 1f - kotlin.math.exp(-0.510826f * deltaTime)
+            fireHeights[i] += (targetHeight * (1f + flicker) - fireHeights[i]) * blend
         }
 
         // Dessiner les flammes
@@ -1755,7 +1429,7 @@ class AudioVisualizerView @JvmOverloads constructor(
         // Particules de braise qui montent - plus fréquentes !
         // Spawn régulier + extra sur les beats
         val emberSpawnChance = if (beatDetected) 0.8f else 0.25f
-        if (Math.random() < emberSpawnChance) {
+        if (Math.random() < 1f - kotlin.math.exp(kotlin.math.ln(1f - emberSpawnChance) * deltaTime)) {
             // Spawn 1-3 braises selon l'intensité
             val spawnCount = if (beatDetected) 3 else 1
             repeat(spawnCount) {
@@ -1770,10 +1444,10 @@ class AudioVisualizerView @JvmOverloads constructor(
         // Update et draw embers (réutilise le système de particules)
         for (p in particles) {
             if (p.life > 0f && p.vy < 0) {  // Les braises montent (vy négatif)
-                p.y += p.vy
-                p.x += p.vx
-                p.life -= 0.025f  // Durent un peu plus longtemps
-                p.vy += 0.04f  // Ralentissement progressif
+                p.y += p.vy * deltaTime
+                p.x += p.vx * deltaTime
+                p.life -= 0.025f * deltaTime  // Durent un peu plus longtemps
+                p.vy += 0.04f * deltaTime  // Ralentissement progressif
 
                 val alpha = (p.life * 220).toInt().coerceIn(0, 220)
 
@@ -1818,10 +1492,7 @@ class AudioVisualizerView @JvmOverloads constructor(
             val meltEnd   = h * 0.73f   // complètement fondu avant le feu
 
             // Delta-time : normalise le mouvement à 16ms (60fps) quelle que soit la cadence réelle
-            val nowMs = android.os.SystemClock.elapsedRealtime()
-            val dt = if (snowLastFrameTime == 0L) 1f
-                     else ((nowMs - snowLastFrameTime).coerceIn(1L, 50L) / 16f)
-            snowLastFrameTime = nowMs
+            val dt = deltaTime
 
             // Spawn ~8/sec indépendamment du framerate (prob corrigée par dt)
             if (snowflakes.size < SNOW_MAX_COUNT && Math.random() < (0.13f * dt).coerceAtMost(0.5f)) {
@@ -1935,880 +1606,6 @@ class AudioVisualizerView @JvmOverloads constructor(
             }
         }
     }
-
-    /**
-     * Mode KALEIDOSCOPE - Vrai kaléidoscope avec effet MIROIR
-     * LA CLÉ: Symétrie miroir + rotation = vrai effet kaléidoscope
-     */
-    private fun drawKaleidoscope(canvas: Canvas) {
-        val centerX = width / 2f
-        val centerY = height / 2f
-        val maxRadius = min(width, height) / 2f
-
-        // KALÉIDOSCOPE avec 12 miroirs (symétrie dense)
-        val sectors = 12
-        val sectorAngle = 360f / sectors
-
-        // Rotation globale lente
-        val time = animationPhase * 0.5f
-
-        // Pulsation globale (toutes les formes respirent ensemble)
-        val pulse = (sin((animationPhase * 0.3f).toDouble()).toFloat() + 1f) * 0.15f + 0.7f
-
-        // DÉTECTION DES BEATS par variation RELATIVE (s'adapte au volume)
-        var beatDetected = false
-
-        if (fftSize > 4) {
-            // Calculer le niveau de basse actuel
-            var bassSum = 0f
-            val bassCount = min(8, fftSize / 2)
-            for (i in 0 until bassCount) {
-                bassSum += abs(fftBuffer[i].toInt())
-            }
-            val currentBass = bassSum / bassCount
-
-            // Calculer la moyenne des niveaux récents
-            var bassAvg = 0f
-            for (level in bassHistory) {
-                bassAvg += level
-            }
-            bassAvg /= bassHistory.size
-
-            // BEAT = pic significatif par rapport à la moyenne récente
-            // Si niveau actuel > 1.8x la moyenne ET cooldown respecté
-            if (currentBass > bassAvg * 1.8f && currentBass > 20f && (time - lastBeatTime) > 0.25f) {
-                beatDetected = true
-            }
-
-            // Mettre à jour l'historique (moyenne mobile)
-            bassHistory[bassHistoryIndex] = currentBass
-            bassHistoryIndex = (bassHistoryIndex + 1) % bassHistory.size
-        }
-
-        // Si beat détecté, éjecter des losanges
-        if (beatDetected) {
-            lastBeatTime = time
-
-            // Éjecter 2-3 losanges (réduit) dans des directions aléatoires
-            val ejectCount = (2 + (Math.random() * 2).toInt())
-            for (i in 0 until ejectCount) {
-                val angle = Math.random() * 2 * Math.PI
-                // Vitesse modérée - la friction réduite fera le reste
-                val speed = 7f + (Math.random() * 5).toFloat()  // 7-12
-
-                flyingDiamonds.add(FlyingDiamond(
-                    x = centerX,
-                    y = centerY,
-                    vx = cos(angle).toFloat() * speed,
-                    vy = sin(angle).toFloat() * speed,
-                    rotation = (Math.random() * 360).toFloat(),
-                    rotationSpeed = ((Math.random() * 10 - 5).toFloat()),
-                    size = maxRadius * (0.08f + (Math.random() * 0.06f).toFloat()),
-                    alpha = 1.0f,
-                    hue = (Math.random() * 360).toFloat(),
-                    age = 0f
-                ))
-            }
-        }
-
-        // METTRE À JOUR les losanges volants
-        val iterator = flyingDiamonds.iterator()
-        while (iterator.hasNext()) {
-            val diamond = iterator.next()
-
-            // Vieillissement et fade out
-            diamond.age += 1f
-            diamond.alpha = 1f - (diamond.age / 300f) // Disparaît en 300 frames (~5 sec)
-
-            // Mouvement
-            diamond.x += diamond.vx
-            diamond.y += diamond.vy
-            diamond.rotation += diamond.rotationSpeed
-
-            // Rebond sur les bords avec peu de perte d'énergie
-            if (diamond.x < 0 || diamond.x > width) {
-                diamond.vx = -diamond.vx * 0.85f
-                diamond.x = diamond.x.coerceIn(0f, width.toFloat())
-            }
-            if (diamond.y < 0 || diamond.y > height) {
-                diamond.vy = -diamond.vy * 0.85f
-                diamond.y = diamond.y.coerceIn(0f, height.toFloat())
-            }
-
-            // Supprimer si totalement transparent
-            if (diamond.alpha <= 0f) {
-                iterator.remove()
-            }
-        }
-
-        // Dessiner chaque secteur avec symétrie miroir
-        for (sector in 0 until sectors) {
-            canvas.save()
-            canvas.rotate(sector * sectorAngle, centerX, centerY)
-
-            // Alternance de miroirs pour effet kaléidoscope authentique
-            if (sector % 2 == 1) {
-                canvas.scale(-1f, 1f, centerX, centerY)
-            }
-
-            // COUCHES CONCENTRIQUES de losanges
-            // Couche 1: Losanges du centre (6 losanges, rotation lente)
-            val layer1Rotation = time * 8f
-            val layer1Count = 6
-            val layer1Radius = maxRadius * 0.25f * pulse
-            val layer1Size = maxRadius * 0.15f
-
-            for (i in 0 until layer1Count) {
-                val angle = (i * 360f / layer1Count + layer1Rotation) * Math.PI / 180f
-                val x = centerX + cos(angle).toFloat() * layer1Radius
-                val y = centerY + sin(angle).toFloat() * layer1Radius
-
-                hsvTemp[0] = (time * 20f + i * 60f) % 360f
-                hsvTemp[1] = 0.9f
-                hsvTemp[2] = 0.95f
-                blobPaint.color = Color.HSVToColor(hsvTemp)
-
-                canvas.save()
-                canvas.rotate(layer1Rotation * 2f + i * 30f, x, y)
-                drawDiamond(canvas, x, y, layer1Size, blobPaint)
-                canvas.restore()
-            }
-
-            // Couche 2: Losanges moyens (8 losanges, rotation opposée)
-            val layer2Rotation = -time * 6f
-            val layer2Count = 8
-            val layer2Radius = maxRadius * 0.5f * pulse
-            val layer2Size = maxRadius * 0.12f
-
-            for (i in 0 until layer2Count) {
-                val angle = (i * 360f / layer2Count + layer2Rotation) * Math.PI / 180f
-                val x = centerX + cos(angle).toFloat() * layer2Radius
-                val y = centerY + sin(angle).toFloat() * layer2Radius
-
-                hsvTemp[0] = (time * 25f + i * 45f + 180f) % 360f
-                hsvTemp[1] = 0.85f
-                hsvTemp[2] = 0.9f
-                blobPaint.color = Color.HSVToColor(hsvTemp)
-
-                canvas.save()
-                canvas.rotate(layer2Rotation * 1.5f + i * 22.5f, x, y)
-                drawDiamond(canvas, x, y, layer2Size, blobPaint)
-                canvas.restore()
-            }
-
-            // Couche 3: Losanges externes (10 losanges, rotation lente)
-            val layer3Rotation = time * 4f
-            val layer3Count = 10
-            val layer3Radius = maxRadius * 0.75f * pulse
-            val layer3Size = maxRadius * 0.1f
-
-            for (i in 0 until layer3Count) {
-                val angle = (i * 360f / layer3Count + layer3Rotation) * Math.PI / 180f
-                val x = centerX + cos(angle).toFloat() * layer3Radius
-                val y = centerY + sin(angle).toFloat() * layer3Radius
-
-                hsvTemp[0] = (time * 15f + i * 36f + 120f) % 360f
-                hsvTemp[1] = 0.8f
-                hsvTemp[2] = 0.85f
-                blobPaint.color = Color.HSVToColor(hsvTemp)
-
-                canvas.save()
-                canvas.rotate(layer3Rotation + i * 18f, x, y)
-                drawDiamond(canvas, x, y, layer3Size, blobPaint)
-                canvas.restore()
-            }
-
-            // Couche 4: Petits losanges intermédiaires (effet de densité)
-            val layer4Rotation = -time * 10f
-            val layer4Count = 12
-            val layer4Radius = maxRadius * 0.37f * pulse
-            val layer4Size = maxRadius * 0.06f
-
-            for (i in 0 until layer4Count) {
-                val angle = (i * 360f / layer4Count + layer4Rotation) * Math.PI / 180f
-                val x = centerX + cos(angle).toFloat() * layer4Radius
-                val y = centerY + sin(angle).toFloat() * layer4Radius
-
-                hsvTemp[0] = (time * 30f + i * 30f + 240f) % 360f
-                hsvTemp[1] = 0.95f
-                hsvTemp[2] = 1.0f
-                blobPaint.color = Color.HSVToColor(hsvTemp)
-
-                canvas.save()
-                canvas.rotate(layer4Rotation * 3f, x, y)
-                drawDiamond(canvas, x, y, layer4Size, blobPaint)
-                canvas.restore()
-            }
-
-            canvas.restore()
-        }
-
-        // Centre brillant pulsant
-        val centerSize = maxRadius * 0.08f * pulse
-        hsvTemp[0] = (time * 40f) % 360f
-        hsvTemp[1] = 1.0f
-        hsvTemp[2] = 1.0f
-        blobPaint.color = Color.HSVToColor(hsvTemp)
-        canvas.drawCircle(centerX, centerY, centerSize, blobPaint)
-
-        // DESSINER les losanges volants (par-dessus tout)
-        for (diamond in flyingDiamonds) {
-            canvas.save()
-            canvas.rotate(diamond.rotation, diamond.x, diamond.y)
-
-            hsvTemp[0] = diamond.hue
-            hsvTemp[1] = 0.9f
-            hsvTemp[2] = 0.95f
-            val color = Color.HSVToColor(hsvTemp)
-
-            // Appliquer l'alpha pour le fade out
-            val alpha = (diamond.alpha * 255).toInt().coerceIn(0, 255)
-            blobPaint.color = Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
-
-            drawDiamond(canvas, diamond.x, diamond.y, diamond.size, blobPaint)
-
-            canvas.restore()
-        }
-    }
-
-    // Fonction helper pour dessiner un losange (diamant)
-    private fun drawDiamond(canvas: Canvas, cx: Float, cy: Float, size: Float, paint: Paint) {
-        blobPath.reset()
-        blobPath.moveTo(cx, cy - size)           // Haut
-        blobPath.lineTo(cx + size * 0.6f, cy)    // Droite
-        blobPath.lineTo(cx, cy + size)           // Bas
-        blobPath.lineTo(cx - size * 0.6f, cy)    // Gauche
-        blobPath.close()
-        canvas.drawPath(blobPath, paint)
-    }
-
-    private fun initBoids() {
-        boids.clear()
-        for (i in 0 until boidCount) {
-            boids.add(Boid(
-                x = (Math.random() * width).toFloat(),
-                y = (Math.random() * height).toFloat(),
-                vx = (Math.random() * 2 - 1).toFloat(),  // Vitesse réduite de moitié
-                vy = (Math.random() * 2 - 1).toFloat(),  // Vitesse réduite de moitié
-                angle = 0f
-            ))
-        }
-    }
-
-    /**
-     * Mode BOIDS - Algorithme de flocking + fond plasma
-     * 3 règles simples: Séparation + Alignement + Cohésion = comportement organique
-     */
-    private fun drawBoids(canvas: Canvas) {
-        // PLASMA BACKGROUND - Vagues de couleurs ondulantes
-        val time = animationPhase * 0.3f
-
-        // Adapter le pas selon la taille du canvas pour maintenir la performance
-        // Petit écran : step 4, Grand écran : step 12-20
-        val plasmaStep = when {
-            width * height < 100000 -> 4  // Petit (~300x300)
-            width * height < 500000 -> 8  // Moyen (~700x700)
-            else -> 16                     // Fullscreen (1920x1080)
-        }
-
-        // Dessiner le plasma par bandes (optimisé selon taille)
-        for (y in 0 until height step plasmaStep) {
-            for (x in 0 until width step plasmaStep) {
-                // Plasma = combinaison de plusieurs ondes sinusoïdales
-                val wave1 = sin((x * 0.01f + time).toDouble()).toFloat()
-                val wave2 = cos((y * 0.01f + time * 1.3f).toDouble()).toFloat()
-                val wave3 = sin((x * 0.008f + y * 0.008f + time * 0.8f).toDouble()).toFloat()
-
-                val plasma = (wave1 + wave2 + wave3) / 3f
-
-                // Mapper à une couleur arc-en-ciel
-                val hue = ((plasma + 1f) * 180f + colorPhase) % 360f
-                hsvTemp[0] = hue
-                hsvTemp[1] = 0.6f
-                hsvTemp[2] = 0.3f // Sombre pour que les boids ressortent
-
-                blobPaint.color = Color.HSVToColor(hsvTemp)
-                canvas.drawRect(x.toFloat(), y.toFloat(), (x + plasmaStep).toFloat(), (y + plasmaStep).toFloat(), blobPaint)
-            }
-        }
-
-        // BOIDS - Algorithme de flocking (optimisé)
-        val perceptionRadius = 50f      // Réduit pour moins de comparaisons
-        val separationRadius = 20f      // Réduit proportionnellement
-        val maxSpeed = 2f               // Vitesse réduite de moitié
-        val maxForce = 0.08f            // Force réduite proportionnellement
-
-        for (boid in boids) {
-            var separationX = 0f
-            var separationY = 0f
-            var alignmentX = 0f
-            var alignmentY = 0f
-            var cohesionX = 0f
-            var cohesionY = 0f
-            var nearbyCount = 0
-            var tooCloseCount = 0
-
-            // Trouver les voisins et calculer les forces
-            for (other in boids) {
-                if (other === boid) continue
-
-                val dx = other.x - boid.x
-                val dy = other.y - boid.y
-                val distSq = dx * dx + dy * dy
-
-                if (distSq < perceptionRadius * perceptionRadius && distSq > 0) {
-                    nearbyCount++
-
-                    // COHÉSION: Aller vers le centre du groupe
-                    cohesionX += other.x
-                    cohesionY += other.y
-
-                    // ALIGNEMENT: Copier la direction du groupe
-                    alignmentX += other.vx
-                    alignmentY += other.vy
-
-                    // SÉPARATION: Éviter les trop proches
-                    if (distSq < separationRadius * separationRadius) {
-                        tooCloseCount++
-                        val dist = sqrt(distSq.toDouble()).toFloat()
-                        separationX -= dx / dist
-                        separationY -= dy / dist
-                    }
-                }
-            }
-
-            // Appliquer les forces
-            if (nearbyCount > 0) {
-                // Cohésion
-                cohesionX = cohesionX / nearbyCount - boid.x
-                cohesionY = cohesionY / nearbyCount - boid.y
-                val cohesionMag = sqrt((cohesionX * cohesionX + cohesionY * cohesionY).toDouble()).toFloat()
-                if (cohesionMag > 0) {
-                    cohesionX = (cohesionX / cohesionMag) * maxForce * 0.5f
-                    cohesionY = (cohesionY / cohesionMag) * maxForce * 0.5f
-                }
-
-                // Alignement
-                alignmentX = alignmentX / nearbyCount
-                alignmentY = alignmentY / nearbyCount
-                val alignMag = sqrt((alignmentX * alignmentX + alignmentY * alignmentY).toDouble()).toFloat()
-                if (alignMag > 0) {
-                    alignmentX = (alignmentX / alignMag) * maxForce * 0.8f
-                    alignmentY = (alignmentY / alignMag) * maxForce * 0.8f
-                }
-            }
-
-            if (tooCloseCount > 0) {
-                // Séparation
-                val sepMag = sqrt((separationX * separationX + separationY * separationY).toDouble()).toFloat()
-                if (sepMag > 0) {
-                    separationX = (separationX / sepMag) * maxForce * 1.5f
-                    separationY = (separationY / sepMag) * maxForce * 1.5f
-                }
-            }
-
-            // Ajouter les forces à la vélocité
-            boid.vx += separationX + alignmentX + cohesionX
-            boid.vy += separationY + alignmentY + cohesionY
-
-            // Limiter la vitesse
-            val speed = sqrt((boid.vx * boid.vx + boid.vy * boid.vy).toDouble()).toFloat()
-            if (speed > maxSpeed) {
-                boid.vx = (boid.vx / speed) * maxSpeed
-                boid.vy = (boid.vy / speed) * maxSpeed
-            }
-
-            // Mettre à jour position
-            boid.x += boid.vx
-            boid.y += boid.vy
-
-            // Wrap around (téléportation aux bords)
-            if (boid.x < 0) boid.x = width.toFloat()
-            if (boid.x > width) boid.x = 0f
-            if (boid.y < 0) boid.y = height.toFloat()
-            if (boid.y > height) boid.y = 0f
-
-            // Angle de direction pour le dessin
-            boid.angle = Math.toDegrees(Math.atan2(boid.vy.toDouble(), boid.vx.toDouble())).toFloat()
-
-            // DESSINER LE BOID - Triangle pointu dans la direction du mouvement
-            canvas.save()
-            canvas.rotate(boid.angle, boid.x, boid.y)
-
-            // Couleur basée sur la vitesse
-            val speedRatio = speed / maxSpeed
-            hsvTemp[0] = (180f + speedRatio * 180f) % 360f
-            hsvTemp[1] = 0.8f
-            hsvTemp[2] = 0.9f
-            particlePaint.color = Color.HSVToColor(hsvTemp)
-
-            // Triangle
-            val size = 6f
-            blobPath.reset()
-            blobPath.moveTo(boid.x + size * 2, boid.y)
-            blobPath.lineTo(boid.x - size, boid.y - size)
-            blobPath.lineTo(boid.x - size, boid.y + size)
-            blobPath.close()
-            canvas.drawPath(blobPath, particlePaint)
-
-            canvas.restore()
-        }
-    }
-
-    // === MODE 13: JULIA - Fractale de Julia animée ===
-    private var juliaPhase = 0f
-    private var juliaBitmap: Bitmap? = null
-    private val juliaResolution = 180 // Résolution optimisée (était 200)
-    private val juliaMaxIterations = 48 // Réduit de 64 à 48 pour meilleures perfs
-    private val juliaPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        isFilterBitmap = true // Interpolation pour un rendu lisse
-    }
-    private var juliaFrameSkip = 0 // Pour ne recalculer que tous les N frames
-    private val juliaUpdateInterval = 4 // Recalcule tous les 4 frames (60fps → 15fps calcul)
-
-    // Cache des valeurs précalculées
-    private var cachedCReal = 0f
-    private var cachedCImag = 0f
-    private var cachedRotation = 0f
-    private var cachedZoom = 1.5f
-
-    private fun drawJulia(canvas: Canvas) {
-        val w = width.toFloat()
-        val h = height.toFloat()
-
-        // Optimisation: ne recalculer la fractale que tous les N frames
-        juliaFrameSkip++
-        val shouldRecalculate = juliaFrameSkip >= juliaUpdateInterval
-
-        if (shouldRecalculate) {
-            juliaFrameSkip = 0
-
-            // Calculer l'amplitude moyenne pour la pulsation (optimisé)
-            var sum = 0f
-            var bassSum = 0f
-            val fftSize = smoothedFft.size
-            val bassLimit = fftSize / 10
-
-            for (i in 0 until fftSize) {
-                sum += smoothedFft[i]
-                if (i < bassLimit) bassSum += smoothedFft[i]
-            }
-            val avgAmplitude = sum / fftSize
-            val bassEnergy = if (bassLimit > 0) bassSum / bassLimit else 0f
-
-            // Paramètre c de la fractale de Julia qui varie avec la musique
-            // Vitesse divisée par 4 pour mieux apprécier les formes
-            val musicInfluence = avgAmplitude * 0.3f
-            val baseAngle = animationPhase * 0.0125f + musicInfluence // 0.05 / 4 = 0.0125
-            val radiusVariation = 0.7885f + bassEnergy * 0.1f
-
-            // Précalculer les valeurs qui seront utilisées dans la boucle
-            cachedCReal = radiusVariation * cos(baseAngle)
-            cachedCImag = radiusVariation * sin(baseAngle)
-            cachedRotation = animationPhase * 0.005f // 0.02 / 4 = 0.005
-            cachedZoom = 1.5f / (1.0f + bassEnergy * 0.3f)
-
-            // Créer/recréer le bitmap si nécessaire
-            if (juliaBitmap == null || juliaBitmap!!.width != juliaResolution || juliaBitmap!!.height != juliaResolution) {
-                juliaBitmap?.recycle()
-                juliaBitmap = Bitmap.createBitmap(
-                    juliaResolution,
-                    juliaResolution,
-                    Bitmap.Config.ARGB_8888
-                )
-            }
-
-            val bitmap = juliaBitmap!!
-
-            // Précalculer les constantes trigonométriques
-            val cosR = cos(cachedRotation)
-            val sinR = sin(cachedRotation)
-            val halfRes = juliaResolution / 2f
-            val resScale = juliaResolution / 4f
-            val colorPhaseInt = colorPhase.toInt() // Éviter les conversions répétées
-
-            // Calculer la fractale (boucle optimisée)
-            for (py in 0 until juliaResolution) {
-                val yBase = (py - halfRes) / resScale * cachedZoom
-
-                for (px in 0 until juliaResolution) {
-                    val xBase = (px - halfRes) / resScale * cachedZoom
-
-                    // Appliquer la rotation (précalculée)
-                    val x = xBase * cosR - yBase * sinR
-                    val y = xBase * sinR + yBase * cosR
-                    // Itération de Julia: z = z² + c (optimisée)
-                    var zx = x
-                    var zy = y
-                    var iteration = 0
-                    var zx2 = zx * zx
-                    var zy2 = zy * zy
-
-                    // Boucle optimisée: précalcul de zx² et zy²
-                    while (zx2 + zy2 < 4.0f && iteration < juliaMaxIterations) {
-                        zy = 2.0f * zx * zy + cachedCImag
-                        zx = zx2 - zy2 + cachedCReal
-                        zx2 = zx * zx
-                        zy2 = zy * zy
-                        iteration++
-                    }
-
-                    // Magnitude finale pour smooth coloring (optimisée)
-                    val magnitude = sqrt(zx2 + zy2)
-
-                    // Calculer la couleur avec smooth coloring
-                    val color = if (iteration == juliaMaxIterations) {
-                        // Point dans l'ensemble: utiliser la magnitude pour créer des variations
-                        val normalizedMag = (magnitude * 0.5f).coerceIn(0f, 1f)
-                        val distSq = x * x + y * y // Éviter sqrt si possible
-                        val distFactor = distSq / (cachedZoom * cachedZoom)
-
-                        // Créer un gradient basé sur la magnitude et la distance
-                        val hue = ((colorPhaseInt + distFactor * 60f + normalizedMag * 120f) % 360f).toInt()
-                        val saturation = 0.6f + normalizedMag * 0.3f
-                        val value = 0.1f + normalizedMag * 0.4f + avgAmplitude * 0.2f
-                        Color.HSVToColor(floatArrayOf(hue.toFloat(), saturation, value))
-                    } else {
-                        // Point hors de l'ensemble: smooth coloring
-                        val smoothIter = if (magnitude > 1f) {
-                            iteration + 1f - (kotlin.math.ln(kotlin.math.ln(magnitude.toDouble())) / 0.6931471805599453).toFloat() // ln(2) précalculé
-                        } else {
-                            iteration.toFloat()
-                        }
-                        val normalizedIter = (smoothIter / juliaMaxIterations).coerceIn(0f, 1f)
-
-                        val hue = ((normalizedIter * 720f + colorPhaseInt) % 360f).toInt()
-                        val saturation = 0.7f + avgAmplitude * 0.3f
-                        val value = 0.5f + normalizedIter * 0.5f
-                        Color.HSVToColor(floatArrayOf(hue.toFloat(), saturation, value))
-                    }
-
-                    bitmap.setPixel(px, py, color)
-                }
-            }
-        }
-
-        // Toujours dessiner le bitmap (même si pas recalculé)
-        if (juliaBitmap != null) {
-            val destRect = RectF(0f, 0f, w, h)
-            canvas.drawBitmap(juliaBitmap!!, null, destRect, juliaPaint)
-        }
-    }
-
-    // === MODE 15: JULIA_GRAYSCALE - Fractale de Julia en nuances de gris (gratuit) ===
-    private var juliaGrayBitmap: Bitmap? = null
-    private val juliaGrayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        isFilterBitmap = true
-    }
-    private var juliaGrayFrameSkip = 0
-
-    private fun drawJuliaGrayscale(canvas: Canvas) {
-        val w = width.toFloat()
-        val h = height.toFloat()
-
-        // Optimisation: ne recalculer la fractale que tous les N frames
-        juliaGrayFrameSkip++
-        val shouldRecalculate = juliaGrayFrameSkip >= juliaUpdateInterval
-
-        if (shouldRecalculate) {
-            juliaGrayFrameSkip = 0
-
-            // Calculer l'amplitude moyenne pour la pulsation (optimisé)
-            var sum = 0f
-            var bassSum = 0f
-            val fftSize = smoothedFft.size
-            val bassLimit = fftSize / 10
-
-            for (i in 0 until fftSize) {
-                sum += smoothedFft[i]
-                if (i < bassLimit) bassSum += smoothedFft[i]
-            }
-            val avgAmplitude = sum / fftSize
-            val bassEnergy = if (bassLimit > 0) bassSum / bassLimit else 0f
-
-            // Paramètre c de la fractale de Julia qui varie avec la musique
-            val musicInfluence = avgAmplitude * 0.3f
-            val baseAngle = animationPhase * 0.0125f + musicInfluence
-            val radiusVariation = 0.7885f + bassEnergy * 0.1f
-
-            // Précalculer les valeurs
-            cachedCReal = radiusVariation * cos(baseAngle)
-            cachedCImag = radiusVariation * sin(baseAngle)
-            cachedRotation = animationPhase * 0.005f
-            cachedZoom = 1.5f / (1.0f + bassEnergy * 0.3f)
-
-            // Créer/recréer le bitmap si nécessaire
-            if (juliaGrayBitmap == null || juliaGrayBitmap!!.width != juliaResolution || juliaGrayBitmap!!.height != juliaResolution) {
-                juliaGrayBitmap?.recycle()
-                juliaGrayBitmap = Bitmap.createBitmap(
-                    juliaResolution,
-                    juliaResolution,
-                    Bitmap.Config.ARGB_8888
-                )
-            }
-
-            val bitmap = juliaGrayBitmap!!
-
-            // Précalculer les constantes trigonométriques
-            val cosR = cos(cachedRotation)
-            val sinR = sin(cachedRotation)
-            val halfRes = juliaResolution / 2f
-            val resScale = juliaResolution / 4f
-
-            // Calculer la fractale
-            for (py in 0 until juliaResolution) {
-                val yBase = (py - halfRes) / resScale * cachedZoom
-
-                for (px in 0 until juliaResolution) {
-                    val xBase = (px - halfRes) / resScale * cachedZoom
-
-                    // Appliquer la rotation
-                    val x = xBase * cosR - yBase * sinR
-                    val y = xBase * sinR + yBase * cosR
-
-                    // Itération de Julia: z = z² + c
-                    var zx = x
-                    var zy = y
-                    var iteration = 0
-                    var zx2 = zx * zx
-                    var zy2 = zy * zy
-
-                    while (zx2 + zy2 < 4.0f && iteration < juliaMaxIterations) {
-                        zy = 2.0f * zx * zy + cachedCImag
-                        zx = zx2 - zy2 + cachedCReal
-                        zx2 = zx * zx
-                        zy2 = zy * zy
-                        iteration++
-                    }
-
-                    // Magnitude finale pour smooth coloring
-                    val magnitude = sqrt(zx2 + zy2)
-
-                    // Calculer la couleur en NUANCES DE GRIS
-                    val color = if (iteration == juliaMaxIterations) {
-                        // Point dans l'ensemble (la figure): gris moyen/clair - TOUJOURS visible
-                        val normalizedMag = (magnitude * 0.5f).coerceIn(0f, 1f)
-
-                        // Figure: plage fixe 0.55-0.75 pour contraste garanti avec le fond (max 0.35)
-                        val intensity = (0.55f + normalizedMag * 0.15f + avgAmplitude * 0.05f).coerceIn(0.55f, 0.75f)
-                        val gray = (intensity * 255f).toInt()
-                        Color.rgb(gray, gray, gray)
-                    } else {
-                        // Point hors de l'ensemble (le fond): dégradé radial noir→gris foncé
-                        val smoothIter = if (magnitude > 1f) {
-                            iteration + 1f - (kotlin.math.ln(kotlin.math.ln(magnitude.toDouble())) / 0.6931471805599453).toFloat()
-                        } else {
-                            iteration.toFloat()
-                        }
-                        val normalizedIter = (smoothIter / juliaMaxIterations).coerceIn(0f, 1f)
-
-                        // Distance radiale du centre pour gradient (0 = centre, 1 = bord)
-                        val distFromCenter = sqrt(x * x + y * y) / (cachedZoom * 2f)
-                        val radialFactor = (1f - distFromCenter.coerceIn(0f, 1f)) // Inverse: 1 au centre, 0 aux bords
-
-                        // Fond: plage fixe 0-0.35 pour contraste garanti avec figure (min 0.55)
-                        val intensity = (normalizedIter * 0.12f + radialFactor * 0.20f + avgAmplitude * 0.03f).coerceIn(0f, 0.35f)
-                        val gray = (intensity * 255f).toInt()
-                        Color.rgb(gray, gray, gray)
-                    }
-
-                    bitmap.setPixel(px, py, color)
-                }
-            }
-        }
-
-        // Toujours dessiner le bitmap
-        if (juliaGrayBitmap != null) {
-            val destRect = RectF(0f, 0f, w, h)
-            canvas.drawBitmap(juliaGrayBitmap!!, null, destRect, juliaGrayPaint)
-        }
-    }
-
-    // === MODE 14: MANDELBROT_ZOOM - Zoom hypnotique avec polynômes de Bernstein ===
-    // Coloring par polynômes de Bernstein: dégradés mathématiquement lisses, zéro clignotement
-    // Ref: solarianprogrammer.com/2013/02/28/mandelbrot-set-cpp-11/
-    private var mandelbrotBitmap: Bitmap? = null
-    private val mandelbrotResolution = 180
-    private val mandelbrotPixels = IntArray(mandelbrotResolution * mandelbrotResolution)
-    private var mandelbrotZoom = 200.0
-    private var mandelbrotCenterX = -0.7436438870371587
-    private var mandelbrotCenterY = 0.1318259043124515
-    private var mandelbrotFrameSkip = 0
-    private val mandelbrotUpdateInterval = 6
-    private val mandelbrotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        isFilterBitmap = true
-    }
-    private var mandelbrotColorOffset = 0.0
-
-    // Cibles de zoom sur le bord du Mandelbrot
-    private val mandelbrotTargets = listOf(
-        doubleArrayOf(-0.7436438870371587, 0.1318259043124515, 5e12),
-        doubleArrayOf(0.281717921930775, 0.5771052841488505, 1e12),
-        doubleArrayOf(-0.04524078208, 0.98681620434, 5e9),
-        doubleArrayOf(-1.768528969208280, 0.001741366958326, 5e9),
-        doubleArrayOf(-0.10109636384562, 0.9562865108091415, 1e11)
-    )
-    private var mandelbrotTargetIdx = 0
-    private var mandelbrotLogZoom = kotlin.math.ln(200.0)
-
-    private fun drawMandelbrotZoom(canvas: Canvas) {
-        val w = width.toFloat()
-        val h = height.toFloat()
-
-        mandelbrotFrameSkip++
-        if (mandelbrotFrameSkip < mandelbrotUpdateInterval) {
-            if (mandelbrotBitmap != null) {
-                canvas.drawBitmap(mandelbrotBitmap!!, null, RectF(0f, 0f, w, h), mandelbrotPaint)
-            }
-            return
-        }
-        mandelbrotFrameSkip = 0
-
-        var sum = 0f
-        var bassSum = 0f
-        val fftSize = smoothedFft.size
-        val bassLimit = fftSize / 10
-        for (i in 0 until fftSize) {
-            sum += smoothedFft[i]
-            if (i < bassLimit) bassSum += smoothedFft[i]
-        }
-        val avgAmplitude = sum / fftSize
-        val bassEnergy = if (bassLimit > 0) bassSum / bassLimit else 0f
-
-        // Décalage de couleur ultra lent (les teintes glissent imperceptiblement)
-        mandelbrotColorOffset += 0.0005 + avgAmplitude * 0.001
-        if (mandelbrotColorOffset > 1000.0) mandelbrotColorOffset -= 1000.0
-
-        // Zoom lent et contemplatif
-        mandelbrotLogZoom += 0.003 + bassEnergy * 0.001
-        mandelbrotZoom = kotlin.math.exp(mandelbrotLogZoom)
-
-        val target = mandelbrotTargets[mandelbrotTargetIdx]
-        if (mandelbrotZoom > target[2]) {
-            mandelbrotTargetIdx = (mandelbrotTargetIdx + 1) % mandelbrotTargets.size
-            val nt = mandelbrotTargets[mandelbrotTargetIdx]
-            mandelbrotCenterX = nt[0]
-            mandelbrotCenterY = nt[1]
-            mandelbrotLogZoom = kotlin.math.ln(200.0)
-            mandelbrotZoom = 200.0
-        }
-
-        if (mandelbrotBitmap == null || mandelbrotBitmap!!.width != mandelbrotResolution) {
-            mandelbrotBitmap?.recycle()
-            mandelbrotBitmap = Bitmap.createBitmap(
-                mandelbrotResolution, mandelbrotResolution,
-                Bitmap.Config.ARGB_8888
-            )
-        }
-
-        val maxIter = (150 + kotlin.math.log10(mandelbrotZoom) * 40).toInt().coerceIn(150, 500)
-        val halfRes = mandelbrotResolution / 2.0
-        val scale = 1.5 / mandelbrotZoom
-        val colorOff = mandelbrotColorOffset
-        val pixels = mandelbrotPixels
-        val cx = mandelbrotCenterX
-        val cy = mandelbrotCenterY
-        val res = mandelbrotResolution
-        val ln2 = 0.6931471805599453
-
-        for (py in 0 until res) {
-            val y0 = (py - halfRes) / halfRes * scale + cy
-            val rowOff = py * res
-
-            for (px in 0 until res) {
-                val x0 = (px - halfRes) / halfRes * scale + cx
-
-                var zx = 0.0
-                var zy = 0.0
-                var zx2 = 0.0
-                var zy2 = 0.0
-                var iter = 0
-
-                // Bailout à 256² pour un smooth count plus précis
-                while (zx2 + zy2 < 65536.0 && iter < maxIter) {
-                    zy = 2.0 * zx * zy + y0
-                    zx = zx2 - zy2 + x0
-                    zx2 = zx * zx
-                    zy2 = zy * zy
-                    iter++
-                }
-
-                if (iter == maxIter) {
-                    pixels[rowOff + px] = 0xFF000000.toInt()
-                } else {
-                    // Smooth iteration count: valeur continue (pas de sauts discrets)
-                    val smoothIter = iter + 1.0 -
-                            kotlin.math.ln(kotlin.math.ln(sqrt(zx2 + zy2))) / ln2
-
-                    // Polynômes de Bernstein: noir→bleu→vert→jaune→orange→noir
-                    // Boucle avec frac() → bandes de couleur lisses le long du bord
-                    val raw = smoothIter * 0.04 + colorOff
-                    val t = raw - floor(raw)
-                    val ti = 1.0 - t
-
-                    val r = (9.0 * ti * t * t * t * 255.0).toInt()
-                    val g = (15.0 * ti * ti * t * t * 255.0).toInt()
-                    val b = (8.5 * ti * ti * ti * t * 255.0).toInt()
-
-                    pixels[rowOff + px] = (0xFF shl 24) or
-                            (r.coerceIn(0, 255) shl 16) or
-                            (g.coerceIn(0, 255) shl 8) or
-                            b.coerceIn(0, 255)
-                }
-            }
-        }
-
-        // --- Pousser le noir vers le bord de l'écran ---
-        // Trouve le centre de gravité du noir et le pousse vers le côté le plus proche
-        val black = 0xFF000000.toInt()
-        var blackSumX = 0.0
-        var blackSumY = 0.0
-        var blackTotal = 0
-
-        for (py2 in 0 until res) {
-            val ro = py2 * res
-            for (px2 in 0 until res) {
-                if (pixels[ro + px2] == black) {
-                    blackSumX += px2.toDouble()
-                    blackSumY += py2.toDouble()
-                    blackTotal++
-                }
-            }
-        }
-
-        val totalPixels = res * res
-
-        if (blackTotal >= totalPixels) {
-            // 100% noir → cible suivante
-            mandelbrotTargetIdx = (mandelbrotTargetIdx + 1) % mandelbrotTargets.size
-            val nt = mandelbrotTargets[mandelbrotTargetIdx]
-            mandelbrotCenterX = nt[0]
-            mandelbrotCenterY = nt[1]
-            mandelbrotLogZoom = kotlin.math.ln(200.0)
-            mandelbrotZoom = 200.0
-        } else if (blackTotal > totalPixels * 7 / 10) {
-            // Centre de gravité du noir par rapport au centre de l'image
-            val blackCx = blackSumX / blackTotal - halfRes
-            val blackCy = blackSumY / blackTotal - halfRes
-            val blackDist = sqrt(blackCx * blackCx + blackCy * blackCy) / halfRes
-
-            if (blackDist > 0.02) {
-                // Le noir est légèrement décentré → le pousser encore plus loin
-                // (plus il est proche du centre, plus on pousse fort)
-                val strength = 0.008 * (1.0 - blackDist).coerceAtLeast(0.0)
-                mandelbrotCenterX -= blackCx / halfRes * scale * strength
-                mandelbrotCenterY -= blackCy / halfRes * scale * strength
-            } else {
-                // Le noir est pile au centre → micro poussée pour casser la symétrie
-                mandelbrotCenterX += scale * 0.001
-            }
-        }
-
-        mandelbrotBitmap!!.setPixels(pixels, 0, res, 0, 0, res, res)
-        canvas.drawBitmap(mandelbrotBitmap!!, null, RectF(0f, 0f, w, h), mandelbrotPaint)
-    }
-
-    // === MODE 16: DELAUNAY_MESH - Maillage Delaunay réactif à l'audio ===
 
     private fun initDelaunayMesh() {
         meshPoints.clear()
@@ -3470,7 +2267,7 @@ class AudioVisualizerView @JvmOverloads constructor(
 
         // Delta time
         val nowNs = System.nanoTime()
-        val dt = ((nowNs - voronoiLastTimeNs) / 1_000_000_000f * 60f).coerceIn(0.5f, 3f)
+        val dt = ((nowNs - voronoiLastTimeNs) / 1_000_000_000f * 60f).coerceIn(0.01f, 3f)
         voronoiLastTimeNs = nowNs
 
         // Amplitude locale depuis smoothedFft

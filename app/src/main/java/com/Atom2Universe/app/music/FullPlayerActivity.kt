@@ -90,17 +90,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     private lateinit var btnVizSpectrum: TextView
     private lateinit var btnVizParticles: TextView
     private lateinit var btnVizRadial: TextView
-    private lateinit var btnVizBlob: TextView
-    private lateinit var btnVizParticlesMono: TextView
+    private lateinit var btnVizLiquidChrome: TextView
+    private lateinit var btnVizPhosphor: TextView
     private var btnVizKaleidoscope: TextView? = null
-    private var btnVizBoids: TextView? = null
-    private var btnVizJulia: TextView? = null
-    private var btnVizMandelbrot: TextView? = null
-    private var btnVizJuliaGrayscale: TextView? = null
+    private var btnVizNeonTunnel: TextView? = null
+    private var btnVizSynthwave: TextView? = null
+    private var btnVizPlasma: TextView? = null
+    private var btnVizSpirograph: TextView? = null
     private var btnVizDelaunay: TextView? = null
-    private var btnVizDelaunayGrayscale: TextView? = null
+    private var btnVizAurora: TextView? = null
     private var btnVizVoronoi: TextView? = null
-    private var btnVizVoronoiGrayscale: TextView? = null
+    private var btnVizTerrain: TextView? = null
     private var btnVizPenrose: TextView? = null
     private var btnVizPenroseTrue: TextView? = null
     private lateinit var btnVizFire: TextView
@@ -172,17 +172,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     private lateinit var btnVizCircleFs: TextView
     private lateinit var btnVizParticlesFs: TextView
     private lateinit var btnVizRadialFs: TextView
-    private lateinit var btnVizBlobFs: TextView
-    private lateinit var btnVizParticlesMonoFs: TextView
+    private lateinit var btnVizLiquidChromeFs: TextView
+    private lateinit var btnVizPhosphorFs: TextView
     private lateinit var btnVizKaleidoscopeFs: TextView
-    private lateinit var btnVizBoidsFs: TextView
-    private lateinit var btnVizJuliaFs: TextView
-    private lateinit var btnVizMandelbrotFs: TextView
-    private var btnVizJuliaGrayscaleFs: TextView? = null
+    private lateinit var btnVizNeonTunnelFs: TextView
+    private lateinit var btnVizSynthwaveFs: TextView
+    private lateinit var btnVizPlasmaFs: TextView
+    private var btnVizSpirographFs: TextView? = null
     private var btnVizDelaunayFs: TextView? = null
-    private var btnVizDelaunayGrayscaleFs: TextView? = null
+    private var btnVizAuroraFs: TextView? = null
     private var btnVizVoronoiFs: TextView? = null
-    private var btnVizVoronoiGrayscaleFs: TextView? = null
+    private var btnVizTerrainFs: TextView? = null
     private var btnVizPenroseFs: TextView? = null
     private var btnVizPenroseTrueFs: TextView? = null
     private var isTrueFullscreen: Boolean = false
@@ -370,17 +370,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         btnVizSpectrum = findViewById(R.id.btn_viz_spectrum)
         btnVizParticles = findViewById(R.id.btn_viz_particles)
         btnVizRadial = findViewById(R.id.btn_viz_radial)
-        btnVizBlob = findViewById(R.id.btn_viz_blob)
-        btnVizParticlesMono = findViewById(R.id.btn_viz_particles_mono)
+        btnVizLiquidChrome = findViewById(R.id.btn_viz_liquid_chrome)
+        btnVizPhosphor = findViewById(R.id.btn_viz_phosphor)
         btnVizKaleidoscope = findViewById(R.id.btn_viz_kaleidoscope) // Peut être null si layout pas rebuild
-        btnVizBoids = findViewById(R.id.btn_viz_boids) // Peut être null si layout pas rebuild
-        btnVizJulia = findViewById(R.id.btn_viz_julia) // Peut être null si layout pas rebuild
-        btnVizMandelbrot = findViewById(R.id.btn_viz_mandelbrot) // Peut être null si layout pas rebuild
-        btnVizJuliaGrayscale = findViewById(R.id.btn_viz_julia_grayscale) // Peut être null si layout pas rebuild
+        btnVizNeonTunnel = findViewById(R.id.btn_viz_neon_tunnel) // Peut être null si layout pas rebuild
+        btnVizSynthwave = findViewById(R.id.btn_viz_synthwave) // Peut être null si layout pas rebuild
+        btnVizPlasma = findViewById(R.id.btn_viz_plasma) // Peut être null si layout pas rebuild
+        btnVizSpirograph = findViewById(R.id.btn_viz_spirograph) // Peut être null si layout pas rebuild
         btnVizDelaunay = findViewById(R.id.btn_viz_delaunay)
-        btnVizDelaunayGrayscale = findViewById(R.id.btn_viz_delaunay_grayscale)
+        btnVizAurora = findViewById(R.id.btn_viz_aurora)
         btnVizVoronoi = findViewById(R.id.btn_viz_voronoi)
-        btnVizVoronoiGrayscale = findViewById(R.id.btn_viz_voronoi_grayscale)
+        btnVizTerrain = findViewById(R.id.btn_viz_terrain)
         btnVizPenrose = findViewById(R.id.btn_viz_penrose)
         btnVizPenroseTrue = findViewById(R.id.btn_viz_penrose_true)
         btnVizFire = findViewById(R.id.btn_viz_fire)
@@ -435,17 +435,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         btnVizCircleFs = findViewById(R.id.btn_viz_circle_fs)
         btnVizParticlesFs = findViewById(R.id.btn_viz_particles_fs)
         btnVizRadialFs = findViewById(R.id.btn_viz_radial_fs)
-        btnVizBlobFs = findViewById(R.id.btn_viz_blob_fs)
-        btnVizParticlesMonoFs = findViewById(R.id.btn_viz_particles_mono_fs)
+        btnVizLiquidChromeFs = findViewById(R.id.btn_viz_liquid_chrome_fs)
+        btnVizPhosphorFs = findViewById(R.id.btn_viz_phosphor_fs)
         btnVizKaleidoscopeFs = findViewById(R.id.btn_viz_kaleidoscope_fs)
-        btnVizBoidsFs = findViewById(R.id.btn_viz_boids_fs)
-        btnVizJuliaFs = findViewById(R.id.btn_viz_julia_fs)
-        btnVizMandelbrotFs = findViewById(R.id.btn_viz_mandelbrot_fs)
-        btnVizJuliaGrayscaleFs = findViewById(R.id.btn_viz_julia_grayscale_fs)
+        btnVizNeonTunnelFs = findViewById(R.id.btn_viz_neon_tunnel_fs)
+        btnVizSynthwaveFs = findViewById(R.id.btn_viz_synthwave_fs)
+        btnVizPlasmaFs = findViewById(R.id.btn_viz_plasma_fs)
+        btnVizSpirographFs = findViewById(R.id.btn_viz_spirograph_fs)
         btnVizDelaunayFs = findViewById(R.id.btn_viz_delaunay_fs)
-        btnVizDelaunayGrayscaleFs = findViewById(R.id.btn_viz_delaunay_grayscale_fs)
+        btnVizAuroraFs = findViewById(R.id.btn_viz_aurora_fs)
         btnVizVoronoiFs = findViewById(R.id.btn_viz_voronoi_fs)
-        btnVizVoronoiGrayscaleFs = findViewById(R.id.btn_viz_voronoi_grayscale_fs)
+        btnVizTerrainFs = findViewById(R.id.btn_viz_terrain_fs)
         btnVizPenroseFs = findViewById(R.id.btn_viz_penrose_fs)
         btnVizPenroseTrueFs = findViewById(R.id.btn_viz_penrose_true_fs)
 
@@ -961,48 +961,48 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.RADIAL)
         }
 
-        btnVizBlob.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.BLOB)
+        btnVizLiquidChrome.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.LIQUID_CHROME)
         }
 
-        btnVizParticlesMono.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PARTICLES_MONO)
+        btnVizPhosphor.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PHOSPHOR)
         }
 
         btnVizKaleidoscope?.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.KALEIDOSCOPE)
         }
 
-        btnVizBoids?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.BOIDS)
+        btnVizNeonTunnel?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.NEON_TUNNEL)
         }
 
-        btnVizJulia?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.JULIA)
+        btnVizSynthwave?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.SYNTHWAVE)
         }
 
-        btnVizMandelbrot?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM)
+        btnVizPlasma?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PLASMA)
         }
 
-        btnVizJuliaGrayscale?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE)
+        btnVizSpirograph?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.SPIROGRAPH)
         }
 
         btnVizDelaunay?.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.DELAUNAY_MESH)
         }
 
-        btnVizDelaunayGrayscale?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE)
+        btnVizAurora?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.AURORA)
         }
 
         btnVizVoronoi?.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.VORONOI)
         }
 
-        btnVizVoronoiGrayscale?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE)
+        btnVizTerrain?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.TERRAIN)
         }
 
         btnVizPenrose?.setOnClickListener {
@@ -1030,48 +1030,48 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.RADIAL)
         }
 
-        btnVizBlobFs.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.BLOB)
+        btnVizLiquidChromeFs.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.LIQUID_CHROME)
         }
 
-        btnVizParticlesMonoFs.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PARTICLES_MONO)
+        btnVizPhosphorFs.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PHOSPHOR)
         }
 
         btnVizKaleidoscopeFs.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.KALEIDOSCOPE)
         }
 
-        btnVizBoidsFs.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.BOIDS)
+        btnVizNeonTunnelFs.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.NEON_TUNNEL)
         }
 
-        btnVizJuliaFs.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.JULIA)
+        btnVizSynthwaveFs.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.SYNTHWAVE)
         }
 
-        btnVizMandelbrotFs.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM)
+        btnVizPlasmaFs.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.PLASMA)
         }
 
-        btnVizJuliaGrayscaleFs?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE)
+        btnVizSpirographFs?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.SPIROGRAPH)
         }
 
         btnVizDelaunayFs?.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.DELAUNAY_MESH)
         }
 
-        btnVizDelaunayGrayscaleFs?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE)
+        btnVizAuroraFs?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.AURORA)
         }
 
         btnVizVoronoiFs?.setOnClickListener {
             toggleVisualizerMode(AudioVisualizerView.VisualizationMode.VORONOI)
         }
 
-        btnVizVoronoiGrayscaleFs?.setOnClickListener {
-            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE)
+        btnVizTerrainFs?.setOnClickListener {
+            toggleVisualizerMode(AudioVisualizerView.VisualizationMode.TERRAIN)
         }
 
         btnVizPenroseFs?.setOnClickListener {
@@ -1135,35 +1135,35 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             add(btnVizCircle to AudioVisualizerView.VisualizationMode.CIRCLE)   // 6
             add(btnVizParticles to AudioVisualizerView.VisualizationMode.PARTICLES) // 7
             add(btnVizRadial to AudioVisualizerView.VisualizationMode.RADIAL)   // 8
-            add(btnVizBlob to AudioVisualizerView.VisualizationMode.BLOB)       // 9
-            add(btnVizParticlesMono to AudioVisualizerView.VisualizationMode.PARTICLES_MONO) // 10
+            add(btnVizLiquidChrome to AudioVisualizerView.VisualizationMode.LIQUID_CHROME)       // 9
+            add(btnVizPhosphor to AudioVisualizerView.VisualizationMode.PHOSPHOR) // 10
             // Ajouter boutons 11-16 seulement s'ils existent (pour compatibilité avant rebuild)
             btnVizKaleidoscope?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.KALEIDOSCOPE) // 11
             }
-            btnVizBoids?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.BOIDS) // 12
+            btnVizNeonTunnel?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.NEON_TUNNEL) // 12
             }
-            btnVizJulia?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.JULIA) // 13
+            btnVizSynthwave?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.SYNTHWAVE) // 13
             }
-            btnVizMandelbrot?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM) // 14
+            btnVizPlasma?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.PLASMA) // 14
             }
-            btnVizJuliaGrayscale?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE) // 15
+            btnVizSpirograph?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.SPIROGRAPH) // 15
             }
             btnVizDelaunay?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.DELAUNAY_MESH) // 16
             }
-            btnVizDelaunayGrayscale?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE) // 17
+            btnVizAurora?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.AURORA) // 17
             }
             btnVizVoronoi?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.VORONOI) // 18
             }
-            btnVizVoronoiGrayscale?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE) // 19
+            btnVizTerrain?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.TERRAIN) // 19
             }
             btnVizPenrose?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS) // 20
@@ -1185,11 +1185,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
 
     private fun loadVisualizerMode() {
         val modeName = prefs.getString(PREF_VISUALIZER_MODE, AudioVisualizerView.VisualizationMode.BARS.name)
-        currentVisualizerMode = try {
-            AudioVisualizerView.VisualizationMode.valueOf(modeName ?: AudioVisualizerView.VisualizationMode.BARS.name)
-        } catch (_: IllegalArgumentException) {
-            AudioVisualizerView.VisualizationMode.BARS
-        }
+        currentVisualizerMode = AudioVisualizerView.VisualizationMode.fromSavedName(modeName)
+            ?: AudioVisualizerView.VisualizationMode.BARS
         visualizer.mode = currentVisualizerMode
         updateVisualizerButtons()
     }
@@ -1211,17 +1208,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         AudioVisualizerView.VisualizationMode.CIRCLE,
         AudioVisualizerView.VisualizationMode.PARTICLES,
         AudioVisualizerView.VisualizationMode.RADIAL,
-        AudioVisualizerView.VisualizationMode.BLOB,
-        AudioVisualizerView.VisualizationMode.PARTICLES_MONO,
+        AudioVisualizerView.VisualizationMode.LIQUID_CHROME,
+        AudioVisualizerView.VisualizationMode.PHOSPHOR,
         AudioVisualizerView.VisualizationMode.KALEIDOSCOPE,
-        AudioVisualizerView.VisualizationMode.BOIDS,
-        AudioVisualizerView.VisualizationMode.JULIA,
-        AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE,
+        AudioVisualizerView.VisualizationMode.NEON_TUNNEL,
+        AudioVisualizerView.VisualizationMode.SYNTHWAVE,
+        AudioVisualizerView.VisualizationMode.SPIROGRAPH,
         AudioVisualizerView.VisualizationMode.DELAUNAY_MESH,
-        AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE,
+        AudioVisualizerView.VisualizationMode.AURORA,
         AudioVisualizerView.VisualizationMode.VORONOI,
-        AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE,
-        AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM,
+        AudioVisualizerView.VisualizationMode.TERRAIN,
+        AudioVisualizerView.VisualizationMode.PLASMA,
         AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS,
         AudioVisualizerView.VisualizationMode.PENROSE_TRUE
     )
@@ -1230,8 +1227,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         val saved = MusicPreferences.getInstance(this).visualizerModesOrder
         if (saved.isEmpty()) return defaultVizOrder
         val result = saved.mapNotNull { name ->
-            try { AudioVisualizerView.VisualizationMode.valueOf(name) } catch (_: IllegalArgumentException) { null }
-        }.toMutableList()
+            AudioVisualizerView.VisualizationMode.fromSavedName(name)?.takeUnless { it == AudioVisualizerView.VisualizationMode.NONE }
+        }.distinct().toMutableList()
         defaultVizOrder.forEach { mode -> if (mode !in result) result.add(mode) }
         return result
     }
@@ -1249,17 +1246,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             AudioVisualizerView.VisualizationMode.CIRCLE to btnVizCircle,
             AudioVisualizerView.VisualizationMode.PARTICLES to btnVizParticles,
             AudioVisualizerView.VisualizationMode.RADIAL to btnVizRadial,
-            AudioVisualizerView.VisualizationMode.BLOB to btnVizBlob,
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO to btnVizParticlesMono,
+            AudioVisualizerView.VisualizationMode.LIQUID_CHROME to btnVizLiquidChrome,
+            AudioVisualizerView.VisualizationMode.PHOSPHOR to btnVizPhosphor,
             AudioVisualizerView.VisualizationMode.KALEIDOSCOPE to btnVizKaleidoscope,
-            AudioVisualizerView.VisualizationMode.BOIDS to btnVizBoids,
-            AudioVisualizerView.VisualizationMode.JULIA to btnVizJulia,
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM to btnVizMandelbrot,
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE to btnVizJuliaGrayscale,
+            AudioVisualizerView.VisualizationMode.NEON_TUNNEL to btnVizNeonTunnel,
+            AudioVisualizerView.VisualizationMode.SYNTHWAVE to btnVizSynthwave,
+            AudioVisualizerView.VisualizationMode.PLASMA to btnVizPlasma,
+            AudioVisualizerView.VisualizationMode.SPIROGRAPH to btnVizSpirograph,
             AudioVisualizerView.VisualizationMode.DELAUNAY_MESH to btnVizDelaunay,
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE to btnVizDelaunayGrayscale,
+            AudioVisualizerView.VisualizationMode.AURORA to btnVizAurora,
             AudioVisualizerView.VisualizationMode.VORONOI to btnVizVoronoi,
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE to btnVizVoronoiGrayscale,
+            AudioVisualizerView.VisualizationMode.TERRAIN to btnVizTerrain,
             AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS to btnVizPenrose,
             AudioVisualizerView.VisualizationMode.PENROSE_TRUE to btnVizPenroseTrue
         )
@@ -1269,17 +1266,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             AudioVisualizerView.VisualizationMode.CIRCLE to btnVizCircleFs,
             AudioVisualizerView.VisualizationMode.PARTICLES to btnVizParticlesFs,
             AudioVisualizerView.VisualizationMode.RADIAL to btnVizRadialFs,
-            AudioVisualizerView.VisualizationMode.BLOB to btnVizBlobFs,
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO to btnVizParticlesMonoFs,
+            AudioVisualizerView.VisualizationMode.LIQUID_CHROME to btnVizLiquidChromeFs,
+            AudioVisualizerView.VisualizationMode.PHOSPHOR to btnVizPhosphorFs,
             AudioVisualizerView.VisualizationMode.KALEIDOSCOPE to btnVizKaleidoscopeFs,
-            AudioVisualizerView.VisualizationMode.BOIDS to btnVizBoidsFs,
-            AudioVisualizerView.VisualizationMode.JULIA to btnVizJuliaFs,
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM to btnVizMandelbrotFs,
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE to btnVizJuliaGrayscaleFs,
+            AudioVisualizerView.VisualizationMode.NEON_TUNNEL to btnVizNeonTunnelFs,
+            AudioVisualizerView.VisualizationMode.SYNTHWAVE to btnVizSynthwaveFs,
+            AudioVisualizerView.VisualizationMode.PLASMA to btnVizPlasmaFs,
+            AudioVisualizerView.VisualizationMode.SPIROGRAPH to btnVizSpirographFs,
             AudioVisualizerView.VisualizationMode.DELAUNAY_MESH to btnVizDelaunayFs,
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE to btnVizDelaunayGrayscaleFs,
+            AudioVisualizerView.VisualizationMode.AURORA to btnVizAuroraFs,
             AudioVisualizerView.VisualizationMode.VORONOI to btnVizVoronoiFs,
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE to btnVizVoronoiGrayscaleFs,
+            AudioVisualizerView.VisualizationMode.TERRAIN to btnVizTerrainFs,
             AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS to btnVizPenroseFs,
             AudioVisualizerView.VisualizationMode.PENROSE_TRUE to btnVizPenroseTrueFs
         )
@@ -1293,10 +1290,15 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         var normalPos = 1
         orderedModes.forEach { mode ->
             val btn = modeToBtn[mode] as? TextView ?: return@forEach
-            btn.text = normalPos.toString()
+            btn.setText(mode.labelRes)
+            btn.contentDescription = getString(mode.labelRes)
+            btn.setPadding(marginPx * 2, 0, marginPx * 2, 0)
+            btn.setSingleLine()
             val params = btn.layoutParams as? ViewGroup.MarginLayoutParams
                 ?: ViewGroup.MarginLayoutParams(btn.layoutParams)
             params.marginStart = if (normalPos == 1) 0 else marginPx
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            params.height = (40 * resources.displayMetrics.density).toInt()
             btn.layoutParams = params
             normalContainer.addView(btn)
             normalPos++
@@ -1306,18 +1308,25 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         reorderBtn?.let { normalContainer.addView(it) }
 
         // Reorder fullscreen buttons (only modes that have a fs button)
-        // Le numéro affiché = position dans orderedModes (identique au bouton normal)
+        // Use the same localized names as the normal player and the widget.
         val fsContainer = findFsContainer() ?: return
         val reorderSeparatorFs = findViewById<View>(R.id.viz_reorder_separator_fs)
         val reorderBtnFs = findViewById<View>(R.id.btn_reorder_visuals_fs)
         fsContainer.removeAllViews()
         var isFirstFs = true
-        orderedModes.forEachIndexed { index, mode ->
-            val btn = modeToBtnFs[mode] ?: return@forEachIndexed
-            if (btn is TextView) btn.text = (index + 1).toString()
+        orderedModes.forEach { mode ->
+            val btn = modeToBtnFs[mode] ?: return@forEach
+            if (btn is TextView) {
+                btn.setText(mode.labelRes)
+                btn.contentDescription = getString(mode.labelRes)
+                btn.setPadding(marginPx * 2, 0, marginPx * 2, 0)
+                btn.setSingleLine()
+            }
             val params = btn.layoutParams as? ViewGroup.MarginLayoutParams
                 ?: ViewGroup.MarginLayoutParams(btn.layoutParams)
             params.marginStart = if (isFirstFs) 0 else marginPx
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            params.height = (40 * resources.displayMetrics.density).toInt()
             btn.layoutParams = params
             fsContainer.addView(btn)
             isFirstFs = false
@@ -1331,29 +1340,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
 
     private fun showVizReorderDialog() {
         val musicPrefs = MusicPreferences.getInstance(this)
-        val allLabels = mapOf(
-            AudioVisualizerView.VisualizationMode.BARS to getString(R.string.music_viz_bars),
-            AudioVisualizerView.VisualizationMode.WAVE to getString(R.string.music_viz_wave),
-            AudioVisualizerView.VisualizationMode.MIRROR to getString(R.string.music_viz_mirror),
-            AudioVisualizerView.VisualizationMode.SPECTRUM to getString(R.string.music_viz_spectrum),
-            AudioVisualizerView.VisualizationMode.FIRE to getString(R.string.music_viz_fire),
-            AudioVisualizerView.VisualizationMode.CIRCLE to getString(R.string.music_viz_circle),
-            AudioVisualizerView.VisualizationMode.PARTICLES to getString(R.string.music_viz_particles),
-            AudioVisualizerView.VisualizationMode.RADIAL to getString(R.string.music_viz_radial),
-            AudioVisualizerView.VisualizationMode.BLOB to getString(R.string.music_viz_blob),
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO to getString(R.string.music_viz_particles_mono),
-            AudioVisualizerView.VisualizationMode.KALEIDOSCOPE to getString(R.string.music_viz_kaleidoscope),
-            AudioVisualizerView.VisualizationMode.BOIDS to getString(R.string.music_viz_boids),
-            AudioVisualizerView.VisualizationMode.JULIA to getString(R.string.music_viz_julia),
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM to getString(R.string.music_viz_mandelbrot),
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE to getString(R.string.music_viz_julia_grayscale),
-            AudioVisualizerView.VisualizationMode.DELAUNAY_MESH to getString(R.string.music_viz_delaunay),
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE to getString(R.string.music_viz_delaunay_grayscale),
-            AudioVisualizerView.VisualizationMode.VORONOI to getString(R.string.music_viz_voronoi),
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE to getString(R.string.music_viz_voronoi_grayscale),
-            AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS to getString(R.string.music_viz_penrose),
-            AudioVisualizerView.VisualizationMode.PENROSE_TRUE to getString(R.string.music_viz_penrose_true)
-        )
+        val allLabels = AudioVisualizerView.VisualizationMode.entries.associateWith { getString(it.labelRes) }
 
         val orderedItems: MutableList<Pair<AudioVisualizerView.VisualizationMode, String>> =
             resolveVizOrder().mapNotNull { mode ->
@@ -1564,10 +1551,10 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                             samplingRate: Int
                         ) {
                             waveform?.let {
-                                this@FullPlayerActivity.visualizer.updateWaveform(it)
-                                // Mettre à jour aussi le visualiseur fullscreen si actif
                                 if (isTrueFullscreen) {
                                     this@FullPlayerActivity.visualizerFullscreen.updateWaveform(it)
+                                } else {
+                                    this@FullPlayerActivity.visualizer.updateWaveform(it)
                                 }
                             }
                         }
@@ -1578,10 +1565,10 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                             samplingRate: Int
                         ) {
                             fft?.let {
-                                this@FullPlayerActivity.visualizer.updateFft(it)
-                                // Mettre à jour aussi le visualiseur fullscreen si actif
                                 if (isTrueFullscreen) {
                                     this@FullPlayerActivity.visualizerFullscreen.updateFft(it)
+                                } else {
+                                    this@FullPlayerActivity.visualizer.updateFft(it)
                                 }
                             }
                         }
@@ -1845,17 +1832,17 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             AudioVisualizerView.VisualizationMode.CIRCLE,
             AudioVisualizerView.VisualizationMode.PARTICLES,
             AudioVisualizerView.VisualizationMode.RADIAL,
-            AudioVisualizerView.VisualizationMode.BLOB,
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO,
+            AudioVisualizerView.VisualizationMode.LIQUID_CHROME,
+            AudioVisualizerView.VisualizationMode.PHOSPHOR,
             AudioVisualizerView.VisualizationMode.KALEIDOSCOPE,
-            AudioVisualizerView.VisualizationMode.BOIDS,
-            AudioVisualizerView.VisualizationMode.JULIA,
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM,
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.NEON_TUNNEL,
+            AudioVisualizerView.VisualizationMode.SYNTHWAVE,
+            AudioVisualizerView.VisualizationMode.PLASMA,
+            AudioVisualizerView.VisualizationMode.SPIROGRAPH,
             AudioVisualizerView.VisualizationMode.DELAUNAY_MESH,
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.AURORA,
             AudioVisualizerView.VisualizationMode.VORONOI,
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.TERRAIN,
             AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS,
             AudioVisualizerView.VisualizationMode.PENROSE_TRUE
         )
@@ -2136,6 +2123,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     @SuppressLint("ClickableViewAccessibility")
     private fun enterTrueFullscreen() {
         isTrueFullscreen = true
+        visualizer.isRenderingActive = false
 
         // Empêcher la mise en veille de l'écran
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -2182,6 +2170,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
 
     private fun exitTrueFullscreen() {
         isTrueFullscreen = false
+        visualizer.isRenderingActive = true
 
         // Annuler le timer de masquage des contrôles
         handler.removeCallbacks(hideControlsRunnable)
@@ -2264,26 +2253,26 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
             add(btnVizCircleFs to AudioVisualizerView.VisualizationMode.CIRCLE)
             add(btnVizParticlesFs to AudioVisualizerView.VisualizationMode.PARTICLES)
             add(btnVizRadialFs to AudioVisualizerView.VisualizationMode.RADIAL)
-            add(btnVizBlobFs to AudioVisualizerView.VisualizationMode.BLOB)
-            add(btnVizParticlesMonoFs to AudioVisualizerView.VisualizationMode.PARTICLES_MONO)
+            add(btnVizLiquidChromeFs to AudioVisualizerView.VisualizationMode.LIQUID_CHROME)
+            add(btnVizPhosphorFs to AudioVisualizerView.VisualizationMode.PHOSPHOR)
             add(btnVizKaleidoscopeFs to AudioVisualizerView.VisualizationMode.KALEIDOSCOPE)
-            add(btnVizBoidsFs to AudioVisualizerView.VisualizationMode.BOIDS)
-            add(btnVizJuliaFs to AudioVisualizerView.VisualizationMode.JULIA)
-            add(btnVizMandelbrotFs to AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM)
-            btnVizJuliaGrayscaleFs?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE)
+            add(btnVizNeonTunnelFs to AudioVisualizerView.VisualizationMode.NEON_TUNNEL)
+            add(btnVizSynthwaveFs to AudioVisualizerView.VisualizationMode.SYNTHWAVE)
+            add(btnVizPlasmaFs to AudioVisualizerView.VisualizationMode.PLASMA)
+            btnVizSpirographFs?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.SPIROGRAPH)
             }
             btnVizDelaunayFs?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.DELAUNAY_MESH)
             }
-            btnVizDelaunayGrayscaleFs?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE)
+            btnVizAuroraFs?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.AURORA)
             }
             btnVizVoronoiFs?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.VORONOI)
             }
-            btnVizVoronoiGrayscaleFs?.let { btn ->
-                add(btn to AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE)
+            btnVizTerrainFs?.let { btn ->
+                add(btn to AudioVisualizerView.VisualizationMode.TERRAIN)
             }
             btnVizPenroseFs?.let { btn ->
                 add(btn to AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS)

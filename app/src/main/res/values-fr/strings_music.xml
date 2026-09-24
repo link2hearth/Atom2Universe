@@ -349,4 +349,16 @@
     <string name="music_settings_trusted_wifi_inactive">Sync LAN désactivée sur ce réseau</string>
     <string name="music_settings_trusted_wifi_no_wifi">Aucun Wi-Fi connecté</string>
     <string name="music_settings_trusted_wifi_unknown_network">réseau Wi-Fi</string>
+
+    <!-- Music visual scenes -->
+    <string name="music_viz_liquid_chrome">Liquide vibrant</string>
+    <string name="music_viz_phosphor">Oscilloscope</string>
+    <string name="music_viz_neon_tunnel">Tunnel néon</string>
+    <string name="music_viz_synthwave">Synthwave</string>
+    <string name="music_viz_plasma">Plasma rétro</string>
+    <string name="music_viz_spirograph">Spirographe</string>
+    <string name="music_viz_aurora">Aurore</string>
+    <string name="music_viz_terrain">Relief filaire</string>
+    <string name="music_viz_mosaic">Mosaïque cristalline</string>
+    <string name="music_viz_number">%1$02d</string>
 </resources>

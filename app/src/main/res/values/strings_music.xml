@@ -322,7 +322,7 @@
     <string name="music_viz_delaunay_grayscale">Delaunay Grayscale</string>
     <string name="music_viz_voronoi">Voronoi</string>
     <string name="music_viz_voronoi_grayscale">Voronoi Grayscale</string>
-    <string name="music_viz_penrose">Losanges flottants</string>
+    <string name="music_viz_penrose">Floating diamonds</string>
     <string name="music_viz_penrose_true">Penrose</string>
     <string name="music_reorder_visuals">Reorder visuals</string>
     <string name="music_reorder_reset">Reset</string>
@@ -342,4 +342,16 @@
     <string name="music_settings_trusted_wifi_inactive">LAN sync disabled on this network</string>
     <string name="music_settings_trusted_wifi_no_wifi">Not connected to Wi-Fi</string>
     <string name="music_settings_trusted_wifi_unknown_network">Wi-Fi network</string>
+
+    <!-- Music visual scenes -->
+    <string name="music_viz_liquid_chrome">Vibrating liquid</string>
+    <string name="music_viz_phosphor">Phosphor scope</string>
+    <string name="music_viz_neon_tunnel">Neon tunnel</string>
+    <string name="music_viz_synthwave">Synthwave</string>
+    <string name="music_viz_plasma">Retro plasma</string>
+    <string name="music_viz_spirograph">Spirograph</string>
+    <string name="music_viz_aurora">Aurora</string>
+    <string name="music_viz_terrain">Wireframe terrain</string>
+    <string name="music_viz_mosaic">Crystal mosaic</string>
+    <string name="music_viz_number">%1$02d</string>
 </resources>

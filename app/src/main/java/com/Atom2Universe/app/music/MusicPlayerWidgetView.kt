@@ -53,29 +53,9 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         private const val HIDE_DELAY_MS = 9_000L
         private const val FADE_DURATION_MS = 1_000L
 
-        private val VIZ_MODES = listOf(
-            AudioVisualizerView.VisualizationMode.BARS              to "Bars",
-            AudioVisualizerView.VisualizationMode.WAVE              to "Wave",
-            AudioVisualizerView.VisualizationMode.MIRROR            to "Mirror",
-            AudioVisualizerView.VisualizationMode.SPECTRUM          to "Spectrum",
-            AudioVisualizerView.VisualizationMode.FIRE              to "Fire",
-            AudioVisualizerView.VisualizationMode.CIRCLE            to "Circle",
-            AudioVisualizerView.VisualizationMode.PARTICLES         to "Particles",
-            AudioVisualizerView.VisualizationMode.RADIAL            to "Radial",
-            AudioVisualizerView.VisualizationMode.BLOB              to "Blob",
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO    to "Particles B&W",
-            AudioVisualizerView.VisualizationMode.KALEIDOSCOPE      to "Kaleidoscope",
-            AudioVisualizerView.VisualizationMode.BOIDS             to "Boids",
-            AudioVisualizerView.VisualizationMode.JULIA             to "Julia",
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM   to "Mandelbrot",
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE   to "Julia B&W",
-            AudioVisualizerView.VisualizationMode.DELAUNAY_MESH     to "Delaunay",
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE to "Delaunay B&W",
-            AudioVisualizerView.VisualizationMode.VORONOI           to "Voronoï",
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE to "Voronoï B&W",
-            AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS   to "Penrose",
-            AudioVisualizerView.VisualizationMode.PENROSE_TRUE      to "Penrose True",
-        )
+        private val VIZ_MODES = AudioVisualizerView.VisualizationMode.entries
+            .filter { it != AudioVisualizerView.VisualizationMode.NONE }
+            .map { it to it.labelRes }
     }
 
     private val prefs: SharedPreferences =
@@ -161,9 +141,8 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         lyricsSyncLine = findViewById(R.id.music_widget_lyrics_sync_line)
 
         val savedName = prefs.getString(KEY_VIZ_MODE, AudioVisualizerView.VisualizationMode.CIRCLE.name)
-        currentVizMode = runCatching {
-            AudioVisualizerView.VisualizationMode.valueOf(savedName ?: "")
-        }.getOrDefault(AudioVisualizerView.VisualizationMode.CIRCLE)
+        currentVizMode = AudioVisualizerView.VisualizationMode.fromSavedName(savedName)
+            ?: AudioVisualizerView.VisualizationMode.CIRCLE
         applyVizMode(currentVizMode)
 
         header.setOnTouchListener { _, event -> handleHeaderTouch(event) }
@@ -300,17 +279,17 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
             AudioVisualizerView.VisualizationMode.CIRCLE,
             AudioVisualizerView.VisualizationMode.PARTICLES,
             AudioVisualizerView.VisualizationMode.RADIAL,
-            AudioVisualizerView.VisualizationMode.BLOB,
-            AudioVisualizerView.VisualizationMode.PARTICLES_MONO,
+            AudioVisualizerView.VisualizationMode.LIQUID_CHROME,
+            AudioVisualizerView.VisualizationMode.PHOSPHOR,
             AudioVisualizerView.VisualizationMode.KALEIDOSCOPE,
-            AudioVisualizerView.VisualizationMode.BOIDS,
-            AudioVisualizerView.VisualizationMode.JULIA,
-            AudioVisualizerView.VisualizationMode.MANDELBROT_ZOOM,
-            AudioVisualizerView.VisualizationMode.JULIA_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.NEON_TUNNEL,
+            AudioVisualizerView.VisualizationMode.SYNTHWAVE,
+            AudioVisualizerView.VisualizationMode.PLASMA,
+            AudioVisualizerView.VisualizationMode.SPIROGRAPH,
             AudioVisualizerView.VisualizationMode.DELAUNAY_MESH,
-            AudioVisualizerView.VisualizationMode.DELAUNAY_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.AURORA,
             AudioVisualizerView.VisualizationMode.VORONOI,
-            AudioVisualizerView.VisualizationMode.VORONOI_GRAYSCALE,
+            AudioVisualizerView.VisualizationMode.TERRAIN,
             AudioVisualizerView.VisualizationMode.PENROSE_RHOMBUS,
             AudioVisualizerView.VisualizationMode.PENROSE_TRUE,
         )
@@ -444,8 +423,8 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
             val view = convertView ?: inflater.inflate(R.layout.item_viz_picker, parent, false)
             val (mode, name) = VIZ_MODES[position]
             view.findViewById<TextView>(R.id.viz_item_number).text =
-                "%02d".format(position + 1)
-            view.findViewById<TextView>(R.id.viz_item_name).text = name
+                context.getString(R.string.music_viz_number, position + 1)
+            view.findViewById<TextView>(R.id.viz_item_name).setText(name)
             val checkView = view.findViewById<TextView>(R.id.viz_item_check)
             checkView.visibility = if (mode == currentVizMode) VISIBLE else INVISIBLE
             view.setBackgroundColor(

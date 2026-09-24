@@ -169,7 +169,7 @@
 
             <!-- Mode 9: Blob -->
             <TextView
-                android:id="@+id/btn_viz_blob"
+                android:id="@+id/btn_viz_liquid_chrome"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -179,11 +179,11 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_blob" />
+                android:contentDescription="@string/music_viz_liquid_chrome" />
 
             <!-- Mode 10: Particles Mono -->
             <TextView
-                android:id="@+id/btn_viz_particles_mono"
+                android:id="@+id/btn_viz_phosphor"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -193,7 +193,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_particles_mono" />
+                android:contentDescription="@string/music_viz_phosphor" />
 
             <!-- Mode 11: Kaleidoscope -->
             <TextView
@@ -211,7 +211,7 @@
 
             <!-- Mode 12: Boids -->
             <TextView
-                android:id="@+id/btn_viz_boids"
+                android:id="@+id/btn_viz_neon_tunnel"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -221,11 +221,11 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_boids" />
+                android:contentDescription="@string/music_viz_neon_tunnel" />
 
             <!-- Mode 13: Julia -->
             <TextView
-                android:id="@+id/btn_viz_julia"
+                android:id="@+id/btn_viz_synthwave"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -235,11 +235,11 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_julia" />
+                android:contentDescription="@string/music_viz_synthwave" />
 
             <!-- Mode 14: Mandelbrot -->
             <TextView
-                android:id="@+id/btn_viz_mandelbrot"
+                android:id="@+id/btn_viz_plasma"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -249,11 +249,11 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_mandelbrot" />
+                android:contentDescription="@string/music_viz_plasma" />
 
             <!-- Mode 15: Julia Grayscale (gratuit) -->
             <TextView
-                android:id="@+id/btn_viz_julia_grayscale"
+                android:id="@+id/btn_viz_spirograph"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -263,7 +263,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_julia_grayscale" />
+                android:contentDescription="@string/music_viz_spirograph" />
 
             <!-- Mode 16: Delaunay Mesh -->
             <TextView
@@ -281,7 +281,7 @@
 
             <!-- Mode 17: Delaunay Grayscale (gratuit) -->
             <TextView
-                android:id="@+id/btn_viz_delaunay_grayscale"
+                android:id="@+id/btn_viz_aurora"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -291,7 +291,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_delaunay_grayscale" />
+                android:contentDescription="@string/music_viz_aurora" />
 
             <!-- Mode 18: Voronoi (payant) -->
             <TextView
@@ -309,7 +309,7 @@
 
             <!-- Mode 19: Voronoi Grayscale (gratuit) -->
             <TextView
-                android:id="@+id/btn_viz_voronoi_grayscale"
+                android:id="@+id/btn_viz_terrain"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="4dp"
@@ -319,7 +319,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_voronoi_grayscale" />
+                android:contentDescription="@string/music_viz_terrain" />
 
             <!-- Mode 20: Losanges flottants -->
             <TextView
@@ -347,7 +347,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@color/audio_text_secondary"
-                android:contentDescription="@string/music_viz_penrose_true" />
+                android:contentDescription="@string/music_viz_mosaic" />
 
             <!-- Bouton réorganisation (séparateur visuel + icône) -->
             <View
@@ -953,7 +953,7 @@
                         android:contentDescription="@string/music_viz_radial" />
 
                     <TextView
-                        android:id="@+id/btn_viz_blob_fs"
+                        android:id="@+id/btn_viz_liquid_chrome_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -963,10 +963,10 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_blob" />
+                        android:contentDescription="@string/music_viz_liquid_chrome" />
 
                     <TextView
-                        android:id="@+id/btn_viz_particles_mono_fs"
+                        android:id="@+id/btn_viz_phosphor_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -976,7 +976,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_particles_mono" />
+                        android:contentDescription="@string/music_viz_phosphor" />
 
                     <TextView
                         android:id="@+id/btn_viz_kaleidoscope_fs"
@@ -992,7 +992,7 @@
                         android:contentDescription="@string/music_viz_kaleidoscope" />
 
                     <TextView
-                        android:id="@+id/btn_viz_boids_fs"
+                        android:id="@+id/btn_viz_neon_tunnel_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1002,10 +1002,10 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_boids" />
+                        android:contentDescription="@string/music_viz_neon_tunnel" />
 
                     <TextView
-                        android:id="@+id/btn_viz_julia_fs"
+                        android:id="@+id/btn_viz_synthwave_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1015,10 +1015,10 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_julia" />
+                        android:contentDescription="@string/music_viz_synthwave" />
 
                     <TextView
-                        android:id="@+id/btn_viz_mandelbrot_fs"
+                        android:id="@+id/btn_viz_plasma_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1028,10 +1028,10 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_mandelbrot" />
+                        android:contentDescription="@string/music_viz_plasma" />
 
                     <TextView
-                        android:id="@+id/btn_viz_julia_grayscale_fs"
+                        android:id="@+id/btn_viz_spirograph_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1041,7 +1041,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_julia_grayscale" />
+                        android:contentDescription="@string/music_viz_spirograph" />
 
                     <!-- Mode 16: Delaunay Mesh -->
                     <TextView
@@ -1059,7 +1059,7 @@
 
                     <!-- Mode 17: Delaunay Grayscale (gratuit) -->
                     <TextView
-                        android:id="@+id/btn_viz_delaunay_grayscale_fs"
+                        android:id="@+id/btn_viz_aurora_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1069,7 +1069,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_delaunay_grayscale" />
+                        android:contentDescription="@string/music_viz_aurora" />
 
                     <!-- Mode 18: Voronoi (payant) -->
                     <TextView
@@ -1087,7 +1087,7 @@
 
                     <!-- Mode 19: Voronoi Grayscale (gratuit) -->
                     <TextView
-                        android:id="@+id/btn_viz_voronoi_grayscale_fs"
+                        android:id="@+id/btn_viz_terrain_fs"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="6dp"
@@ -1097,7 +1097,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_voronoi_grayscale" />
+                        android:contentDescription="@string/music_viz_terrain" />
 
                     <!-- Mode 20: Losanges flottants -->
                     <TextView
@@ -1125,7 +1125,7 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/audio_text_secondary"
-                        android:contentDescription="@string/music_viz_penrose_true" />
+                        android:contentDescription="@string/music_viz_mosaic" />
 
                     <!-- Bouton réorganisation fullscreen -->
                     <View
