@@ -89,7 +89,11 @@ internal object MusicLibraryStyle {
             }
 
             val list = activity.findViewById<RecyclerView>(R.id.content_list)
-            list.setPadding(dp(12), dp(4), dp(12), dp(12))
+            // Aucun padding en haut : la grille dessine alors une rangée cachée juste au-dessus
+            // de l'écran, puis la reprend pour ancre à chaque mise en page (chargement d'une
+            // pochette…). Après un saut de la barre alphabétique, la liste remontait ainsi
+            // rangée par rangée jusqu'au début.
+            list.setPadding(dp(12), 0, dp(12), dp(12))
             // Les fonds et états de sélection des adapters restent responsables de leurs états.
             list.addItemDecoration(object : RecyclerView.ItemDecoration() {
                 private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
