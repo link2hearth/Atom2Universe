@@ -424,7 +424,9 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.starbridges_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_starbridges,
-            activityClass = StarBridgesActivity::class.java
+            activityClass = StarBridgesActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.starbridges.StarBridgesHubTileDrawable::class,
+            showDescription = false
         ),
         HubTile(
             id = "theline",

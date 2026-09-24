@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0F1E">
+    android:background="#060A1C">
 
-    <!-- Header -->
+    <!-- Bannière -->
     <LinearLayout
         android:id="@+id/sb_header"
         android:layout_width="0dp"
         android:layout_height="52dp"
-        android:background="#0D1333"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="4dp"
@@ -23,10 +22,10 @@
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/color_stack_back"
+            android:contentDescription="@string/back"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back_24"
-            app:tint="#94A3B8" />
+            app:tint="#C8C4E8" />
 
         <TextView
             android:layout_width="0dp"
@@ -34,25 +33,28 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/starbridges_title"
-            android:textColor="#E2E8F0"
+            android:textColor="#FFD27A"
             android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/sb_stat_bridges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:textColor="#94A3B8"
-            android:textSize="13sp" />
+            android:fontFamily="serif"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/sb_stat_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="#94A3B8"
+            android:textColor="#9A9CC0"
             android:textSize="13sp" />
+
+        <ImageButton
+            android:id="@+id/sb_atlas_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/starbridges_atlas_title"
+            android:padding="8dp"
+            android:src="@drawable/ic_constellation_atlas"
+            app:tint="#FFD27A" />
 
         <ImageButton
             android:id="@+id/sb_restart_button"
@@ -62,11 +64,11 @@
             android:contentDescription="@string/starbridges_restart_desc"
             android:padding="8dp"
             android:src="@drawable/ic_restart"
-            app:tint="#94A3B8" />
+            app:tint="#C8C4E8" />
 
     </LinearLayout>
 
-    <!-- Size chips -->
+    <!-- Tailles de grille -->
     <HorizontalScrollView
         android:id="@+id/sb_size_scroll"
         android:layout_width="0dp"
@@ -83,25 +85,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp" />
+            android:paddingVertical="4dp" />
 
     </HorizontalScrollView>
 
-    <!-- Hint message -->
-    <TextView
-        android:id="@+id/sb_hint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="4dp"
-        android:textColor="#818CF8"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_size_scroll" />
-
-    <!-- Board -->
+    <!-- Plateau -->
     <com.Atom2Universe.app.games.starbridges.StarBridgesBoardView
         android:id="@+id/sb_board"
         android:layout_width="0dp"
@@ -109,71 +97,70 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_hint" />
+        app:layout_constraintTop_toBottomOf="@id/sb_size_scroll" />
 
-    <!-- Win overlay -->
-    <FrameLayout
+    <!-- Résultat : en bas, pour laisser voir la constellation qu'on vient de tracer. -->
+    <LinearLayout
         android:id="@+id/sb_win_overlay"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#CC000000"
+        android:layout_height="wrap_content"
+        android:background="#D8060A1C"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="22dp"
         android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sb_hint">
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/sb_win_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#FFD27A"
+            android:textSize="26sp"
+            android:fontFamily="serif"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/sb_win_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="#9A9CC0"
+            android:textSize="14sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="32dp">
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sb_btn_atlas"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/starbridges_solved_header"
-                android:textColor="#818CF8"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:layout_marginEnd="12dp"
+                android:text="@string/starbridges_btn_atlas"
+                android:textColor="#FFD27A"
+                app:strokeColor="#80FFD27A" />
 
-            <TextView
-                android:id="@+id/sb_win_message"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sb_btn_again"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:textColor="#CBD5E1"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/sb_btn_again"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"
-                    android:text="@string/starbridges_btn_again"
-                    android:textColor="#94A3B8" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/sb_btn_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#4F46E5"
-                    android:text="@string/starbridges_btn_next" />
-
-            </LinearLayout>
+                android:backgroundTint="#3A2F6E"
+                android:text="@string/starbridges_btn_again" />
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

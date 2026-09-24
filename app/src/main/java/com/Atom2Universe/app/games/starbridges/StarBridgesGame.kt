@@ -257,7 +257,7 @@ class StarBridgesGame {
         bridges = mutableMapOf()
         moves = 0
         solved = false
-        rewardClaimed = false
+        // rewardClaimed est gardé : effacer une grille gagnée puis la refaire ne paie pas deux fois.
         selectedNodeId = null
         // elapsedSeconds intentionally kept — same puzzle, timer continues
     }
@@ -346,6 +346,77 @@ class StarBridgesGame {
 
     fun totalBridgesPlaced(): Int = bridges.values.sumOf { it }
     fun totalBridgesRequired(): Int = solution.size
+
+    // ── Gestes ────────────────────────────────────────────────────────────────────
+
+    /**
+     * La voisine de [nodeId] dans la direction ([dx], [dy]) — chacun vaut -1, 0 ou 1 — ou
+     * null s'il n'y en a pas. Les liens possibles ne relient jamais que la plus proche
+     * étoile de chaque direction : c'est donc au plus une étoile.
+     */
+    fun neighborInDirection(nodeId: Int, dx: Int, dy: Int): SbNode? {
+        val from = nodes.firstOrNull { it.id == nodeId } ?: return null
+        for (e in edges) {
+            val otherId = when (nodeId) { e.from -> e.to; e.to -> e.from; else -> continue }
+            val other = nodes.firstOrNull { it.id == otherId } ?: continue
+            val ox = other.x - from.x; val oy = other.y - from.y
+            if (Integer.signum(ox) == dx && Integer.signum(oy) == dy) return other
+        }
+        return null
+    }
+
+    fun keyOf(a: Int, b: Int): String = makeEdgeKey(a, b)
+
+    fun hasBridge(key: String): Boolean = (bridges[key] ?: 0) > 0
+
+    /** Les deux étoiles d'une clé de lien. */
+    fun endsOf(key: String): Pair<Int, Int> {
+        val dash = key.indexOf('-')
+        return key.substring(0, dash).toInt() to key.substring(dash + 1).toInt()
+    }
+
+    /**
+     * Les liens posés, dans l'ordre où la lumière les parcourt à la victoire : de proche en
+     * proche depuis la première étoile, comme un feu qui court le long de la figure.
+     */
+    fun ignitionOrder(): List<String> {
+        val placed = bridges.filterValues { it > 0 }.keys
+        val adj = HashMap<Int, MutableList<String>>()
+        for (k in placed) {
+            val (a, b) = endsOf(k)
+            adj.getOrPut(a) { mutableListOf() }.add(k)
+            adj.getOrPut(b) { mutableListOf() }.add(k)
+        }
+        val order = ArrayList<String>()
+        val seenNodes = HashSet<Int>()
+        val seenKeys = HashSet<String>()
+        val queue = ArrayDeque<Int>()
+        nodes.firstOrNull()?.let { queue.addLast(it.id); seenNodes.add(it.id) }
+        while (queue.isNotEmpty()) {
+            val n = queue.removeFirst()
+            for (k in adj[n].orEmpty()) {
+                if (!seenKeys.add(k)) continue
+                order.add(k)
+                val (a, b) = endsOf(k)
+                val other = if (a == n) b else a
+                if (seenNodes.add(other)) queue.addLast(other)
+            }
+        }
+        return order
+    }
+
+    /**
+     * Le nom de la constellation, en deux indices (un nom, un adjectif) tirés de la graine :
+     * la même grille porte toujours le même nom, et le nom se traduit puisqu'on ne garde
+     * que les indices.
+     */
+    fun nameIndices(nounCount: Int, adjectiveCount: Int): Pair<Int, Int> {
+        var h = 0
+        for (c in seed) h = h * 31 + c.code
+        val noun = Math.floorMod(h, nounCount)
+        val adjective = Math.floorMod(h / 7 + size * 13, adjectiveCount)
+        return noun to adjective
+    }
 
     // ── Persistence ───────────────────────────────────────────────────────────────
     fun serialize(): String {

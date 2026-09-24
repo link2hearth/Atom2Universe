@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="starbridges_title">Star Bridges</string>
-    <string name="starbridges_description">Reliez toutes les étoiles avec des ponts sans croisement</string>
+    <string name="starbridges_title">Constellations</string>
+    <string name="starbridges_description">Reliez les étoiles en constellations et remplissez votre atlas du ciel</string>
+    <string name="starbridges_restart_desc">Effacer les traits</string>
+    <string name="starbridges_size">%1$d×%1$d</string>
+    <string name="starbridges_time">%1$02d:%2$02d</string>
+    <string name="starbridges_win_line">%1$s · %2$d gestes</string>
+    <string name="starbridges_btn_again">Nouvelle constellation</string>
+    <string name="starbridges_btn_atlas">Atlas</string>
+    <string name="starbridges_atlas_title">Atlas céleste</string>
+    <string name="starbridges_atlas_empty">Ton ciel est encore vide</string>
+    <string name="starbridges_atlas_detail">%1$s · %2$s · %3$s</string>
+    <plurals name="starbridges_atlas_count">
+        <item quantity="one">%d constellation</item>
+        <item quantity="other">%d constellations</item>
+    </plurals>
+    <string name="constellation_name_format">%1$s %2$s</string>
+    <string-array name="constellation_nouns">
+        <item>m:le Héron</item><item>f:la Lyre</item><item>m:le Renard</item><item>f:la Baleine</item>
+        <item>m:l\'Aigle</item><item>m:le Cerf</item><item>f:la Harpe</item><item>m:le Loup</item>
+        <item>f:la Couronne</item><item>m:le Serpent</item><item>f:la Balance</item><item>m:le Phare</item>
+        <item>f:la Chouette</item><item>m:le Dragon</item><item>f:la Flèche</item><item>m:le Navire</item>
+        <item>f:la Méduse</item><item>m:le Lynx</item><item>f:la Licorne</item><item>m:le Compas</item>
+        <item>f:la Plume</item><item>m:le Sablier</item><item>f:la Tortue</item><item>m:le Corbeau</item>
+        <item>f:la Lanterne</item><item>m:le Faucon</item><item>f:la Clé</item><item>m:l\'Ours</item>
+        <item>f:la Sirène</item><item>m:le Griffon</item><item>f:l\'Ancre</item><item>m:le Lièvre</item>
+    </string-array>
+    <string-array name="constellation_adjectives">
+        <item>boréal|boréale</item><item>austral|australe</item><item>brisé|brisée</item><item>endormi|endormie</item>
+        <item>ancien|ancienne</item><item>perdu|perdue</item><item>silencieux|silencieuse</item><item>lointain|lointaine</item>
+        <item>doré|dorée</item><item>errant|errante</item><item>oublié|oubliée</item><item>céleste|céleste</item>
+        <item>pâle|pâle</item><item>sauvage|sauvage</item><item>éternel|éternelle</item><item>secret|secrète</item>
+        <item>voilé|voilée</item><item>solitaire|solitaire</item><item>ardent|ardente</item><item>glacé|glacée</item>
+        <item>fidèle|fidèle</item><item>rêveur|rêveuse</item><item>veilleur|veilleuse</item><item>discret|discrète</item>
+        <item>radieux|radieuse</item><item>nocturne|nocturne</item><item>captif|captive</item><item>éveillé|éveillée</item>
+    </string-array>
+
+    <!-- Ancienne interface, gardée tant que les autres langues la traduisent. -->
     <string name="starbridges_bridges">%1$d / %2$d ponts</string>
     <string name="starbridges_solved">Constellation complétée !</string>
     <string name="starbridges_solved_header">★ Complété !</string>
-    <string name="starbridges_win_message">Terminé en %1$s — %2$d actions, %3$d ponts.</string>
-    <string name="starbridges_btn_again">Nouvelle partie</string>
     <string name="starbridges_btn_next">Grille suivante</string>
     <string name="starbridges_hint_source">Touchez une étoile pour commencer un pont.</string>
     <string name="starbridges_hint_target">Touchez une étoile alignée pour placer le pont.</string>
-    <string name="starbridges_restart_desc">Recommencer ce puzzle</string>
+    <string name="starbridges_win_message">Terminé en %1$s — %2$d actions, %3$d ponts.</string>
 </resources>
