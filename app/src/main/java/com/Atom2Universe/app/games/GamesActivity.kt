@@ -49,6 +49,10 @@ import com.Atom2Universe.app.hub.HubTile
 
 class GamesActivity : BaseHubActivity() {
 
+    private companion object {
+        const val KEY_ACCRETION_MOVED = "accretion_before_chess"
+    }
+
     override fun getLayoutResId(): Int = R.layout.activity_base_hub
 
     override fun getPrefsName(): String = "games_hub_prefs"
@@ -197,6 +201,17 @@ class GamesActivity : BaseHubActivity() {
             defaultColorRes = R.color.game_tile_balance,
             activityClass = BalanceActivity::class.java,
             artworkClass = com.Atom2Universe.app.games.balance.BalanceHubTileDrawable::class,
+            showDescription = false
+        ),
+        // Accrétion (ancien Bigger, façon Suika)
+        HubTile(
+            id = "bigger",
+            titleRes = R.string.bigger_title,
+            descriptionRes = R.string.bigger_description,
+            iconRes = android.R.drawable.ic_menu_upload,
+            defaultColorRes = R.color.game_tile_bigger,
+            activityClass = BiggerActivity::class.java,
+            artworkClass = com.Atom2Universe.app.games.bigger.BiggerHubTileDrawable::class,
             showDescription = false
         ),
         // Jeux de plateau
@@ -448,15 +463,6 @@ class GamesActivity : BaseHubActivity() {
             artworkClass = com.Atom2Universe.app.games.match3.Match3HubTileDrawable::class,
             showDescription = false
         ),
-        // Bigger (Suika)
-        HubTile(
-            id = "bigger",
-            titleRes = R.string.bigger_title,
-            descriptionRes = R.string.bigger_description,
-            iconRes = android.R.drawable.ic_menu_upload,
-            defaultColorRes = R.color.game_tile_bigger,
-            activityClass = BiggerActivity::class.java
-        ),
         HubTile(
             id = "infernale",
             titleRes = R.string.infernale_title,
@@ -466,6 +472,23 @@ class GamesActivity : BaseHubActivity() {
             activityClass = com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java
         )
     )
+
+    /**
+     * Accrétion est montée devant les échecs. L'ordre par défaut suffit pour qui n'a jamais
+     * déplacé de tuile ; pour les autres, l'ordre enregistré l'emporterait. On le corrige
+     * donc **une seule fois** : ensuite, la tuile reste là où le joueur la range.
+     */
+    override fun normalizeTileOrder(tiles: List<HubTile>): List<HubTile> {
+        if (hubPrefs.getBoolean(KEY_ACCRETION_MOVED, false)) return tiles
+        hubPrefs.edit().putBoolean(KEY_ACCRETION_MOVED, true).apply()
+        val accretion = tiles.firstOrNull { it.id == "bigger" } ?: return tiles
+        val others = tiles.filter { it !== accretion }
+        val chess = others.indexOfFirst { it.id == "chess" }
+        if (chess < 0) return tiles
+        val moved = others.toMutableList().apply { add(chess, accretion) }
+        if (loadTileOrder().isNotEmpty()) saveTileOrder(moved.map { it.id })
+        return moved
+    }
 
     override fun onTileClicked(tile: HubTile) {
         if (tile.activityClass != null) {

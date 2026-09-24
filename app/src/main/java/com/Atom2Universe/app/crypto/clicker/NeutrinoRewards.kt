@@ -126,6 +126,13 @@ object NeutrinoRewards {
     const val REFLEX_POINTS_PER_NEUTRINO = 5000
     fun reflex(score: Long) = (score / REFLEX_POINTS_PER_NEUTRINO).toInt()
 
+    // ── Accrétion : 1 neutrino par tranche de 150 points ──────────────────────
+    // Une partie jouée au hasard fait ~4 400 points en ~175 lâchers, soit un neutrino
+    // toutes les douze secondes environ — le rythme des jeux payés au temps. Les chaînes
+    // et les gros astres d'un joueur qui vise font monter ce rythme.
+    const val BIGGER_POINTS_PER_NEUTRINO = 150
+    fun bigger(score: Int) = score / BIGGER_POINTS_PER_NEUTRINO
+
     // ── Temps de jeu : 1 neutrino par tranche de 15 s ──────────────────────────
     const val SECONDS_PER_NEUTRINO = 15
     fun perTime(elapsedMs: Long) = (elapsedMs / (SECONDS_PER_NEUTRINO * 1000L)).toInt()
@@ -192,6 +199,7 @@ object NeutrinoRewards {
             ),
             Entry(R.string.nuclea_title, "$NUCLEA_PER_WAVE", R.string.neutrino_info_note_wave),
             Entry(R.string.reflex_title, "1 / $REFLEX_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
+            Entry(R.string.bigger_title, "1 / $BIGGER_POINTS_PER_NEUTRINO", R.string.neutrino_info_note_score),
             Entry(R.string.orbite_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.hex_runner_hub_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),
             Entry(R.string.match3_title, "1 / $SECONDS_PER_NEUTRINO s", R.string.neutrino_info_note_time),

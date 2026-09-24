@@ -244,12 +244,12 @@ abstract class BaseHubActivity : AppCompatActivity() {
         tilesAdapter.setTiles(normalizeTileOrder(orderedTiles))
     }
 
-    private fun loadTileOrder(): List<String> {
+    protected fun loadTileOrder(): List<String> {
         val saved = hubPrefs.getString(KEY_TILE_ORDER, null)
         return saved?.split(",")?.filter { it.isNotEmpty() } ?: emptyList()
     }
 
-    private fun saveTileOrder(order: List<String>) {
+    protected fun saveTileOrder(order: List<String>) {
         hubPrefs.edit { putString(KEY_TILE_ORDER, order.joinToString(",")) }
     }
 

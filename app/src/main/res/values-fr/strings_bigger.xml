@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bigger_title">BIGGER</string>
-    <string name="bigger_description">Faites tomber et fusionnez des billes pour atteindre 1024</string>
+    <string name="bigger_title">Accrétion</string>
+    <string name="bigger_description">De la poussière au trou noir : fusionnez les astres jumeaux pour les faire grandir</string>
     <string name="bigger_goal">→ %1$d</string>
     <string name="bigger_restart">Recommencer</string>
+    <string name="bigger_restart_confirm">Recommencer ?</string>
+    <string name="bigger_score">%1$d</string>
+    <string name="bigger_best">Record %1$d</string>
+    <string name="bigger_points">+%1$d</string>
+    <string name="bigger_chain">×%1$d</string>
+    <string name="bigger_annihilation">Annihilation</string>
+    <string name="bigger_over_title">Débordement</string>
+    <string name="bigger_over_new_record">Nouveau record !</string>
+    <string name="bigger_over_neutrinos">+%1$d neutrinos</string>
+    <string name="bigger_play_again">Rejouer</string>
+    <string-array name="bigger_tier_names">
+        <item>Poussière</item>
+        <item>Caillou</item>
+        <item>Astéroïde</item>
+        <item>Lune</item>
+        <item>Planète rocheuse</item>
+        <item>Planète océan</item>
+        <item>Géante de glace</item>
+        <item>Géante gazeuse</item>
+        <item>Naine rouge</item>
+        <item>Étoile</item>
+        <item>Géante bleue</item>
+        <item>Trou noir</item>
+    </string-array>
 </resources>
