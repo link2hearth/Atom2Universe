@@ -79,7 +79,6 @@
     <string name="lex_you_weapon">Toi : %1$s–%2$s</string>
     <string name="lex_stat_spell_dmg">Dégâts des sorts</string>
     <string name="lex_stat_spell_dmg_1">Un bonus qui multiplie les dégâts de toutes tes reliques.</string>
-    <string name="lex_stat_spell_dmg_2">De base : %1$s %2$d %%, %3$s %4$d %%, %5$s %6$d %%</string>
     <string name="lex_stat_rating">Note</string>
     <string name="lex_stat_rating_1">Un chiffre pour comparer deux objets et trier le sac.</string>
     <string name="lex_stat_rating_2">Chaque ligne vaut ce qu\'elle apporte à son domaine : un affixe plein vaut %1$d points</string>
@@ -281,7 +280,6 @@
     <string name="lex_base_attr_random">Donne une caractéristique au hasard.</string>
     <string name="lex_base_damage">Dégâts d\'arme ×%1$s</string>
     <string name="lex_base_armor">Armure de base : %1$s</string>
-    <string name="lex_base_spell">+%1$d %% de [[stat_spell_dmg|dégâts des sorts]] de base</string>
     <string name="lex_base_weights">Existe en [[weight_cloth|tissu]], [[weight_light|léger]] ou [[weight_heavy|lourd]].</string>
     <string name="lex_tiers">Paliers d\'affixes</string>
     <string name="lex_tiers_1">Un affixe a un palier (P1, P2…) : plus il est haut, plus la ligne est forte.</string>
@@ -318,7 +316,6 @@
     <string name="lex_set_special_mirror">%1$d doubles au lieu de %2$d, et la recharge passe à %3$d tours au lieu de %4$d.</string>
     <string name="lex_set_speed">Donne aussi %1$d %% de vitesse en plus.</string>
     <string name="lex_set_spell">Donne aussi %1$d %% de dégâts des sorts en plus.</string>
-    <string name="lex_base_orb_damage">+%1$d %% à tous les dégâts que tu infliges, arme et sorts.</string>
     <string name="lex_archetype_vagabond_1">Il se bat un peu à tout : un peu de défense, un peu de mobilité.</string>
     <string name="lex_archetype_vagabond_2">Geste parfait et esquive réussie : une roulade prépare son prochain coup d\'arme, qui frappe %1$d %% plus fort.</string>
     <string name="lex_archetype_vagabond_3">Comme les autres archétypes, il retrouve ses forces au feu du départ entre les combats.</string>
@@ -375,4 +372,7 @@
     <string name="lex_stat_class_perk">Chance d\'atout</string>
     <string name="lex_stat_class_perk_1">La chance qu\'une [[parry|parade parfaite]] déclenche l\'atout de ton [[archetype|archétype]] : %1$d %% au départ, au plus %2$d %%.</string>
     <string name="lex_you_class_perk">Toi : %1$d %%</string>
+    <string name="lex_base_orb_mirror">Mage : l\'[[special_mirror|Image miroir]] crée %1$d double de plus.</string>
+    <string name="lex_rarity_affixes_exact">%1$d affixes en plus de la base ; chacun a son [[tiers|palier]].</string>
+    <string name="lex_set_affixes">Chaque pièce porte %1$d affixes, un de plus qu\'une pièce rare.</string>
 </resources>

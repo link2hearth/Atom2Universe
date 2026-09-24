@@ -72,7 +72,7 @@ enum class Rarity(
 ) : Labeled {
     NORMAL(R.string.roguelike_rarity_normal, 0xFFBDBDBD.toInt(), 0, 0, 1f),
     MAGIC (R.string.roguelike_rarity_magic,  0xFF6E9BFF.toInt(), 1, 2, 2f),
-    RARE  (R.string.roguelike_rarity_rare,   0xFFFFD54F.toInt(), 3, 4, 4f),
+    RARE  (R.string.roguelike_rarity_rare,   0xFFFFD54F.toInt(), 3, 3, 4f),
 }
 
 // ─── Emplacements ──────────────────────────────────────────────────────────────
@@ -126,29 +126,28 @@ enum class ItemBase(
     val attribute: StatType?,
     val damageMult: Float,
     val armorBase: Float,
-    val spellBonus: Float,
 ) {
-    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  null,         1.00f, 0f, 0f),
-    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.10f, 0f, 0f),
-    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 1.10f, 0f, 0f),
-    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.05f, 0f, 0f),
-    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 1.10f, 0f, 0.10f),
-    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 1.10f, 0f, 0.05f),
-    SPEAR  (R.string.roguelike_base_spear,   EquipSlot.WEAPON,  StatType.END, 1.10f, 0f, 0f),
-    SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    4f, 0f),
-    ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f, 0.08f),
+    SWORD  (R.string.roguelike_base_sword,   EquipSlot.WEAPON,  null,         1.00f, 0f),
+    AXE    (R.string.roguelike_base_axe,     EquipSlot.WEAPON,  StatType.STR, 1.10f, 0f),
+    DAGGER (R.string.roguelike_base_dagger,  EquipSlot.WEAPON,  StatType.DEX, 1.10f, 0f),
+    MACE   (R.string.roguelike_base_mace,    EquipSlot.WEAPON,  StatType.CON, 1.05f, 0f),
+    STAFF  (R.string.roguelike_base_staff,   EquipSlot.WEAPON,  StatType.INT, 1.10f, 0f),
+    SCEPTER(R.string.roguelike_base_scepter, EquipSlot.WEAPON,  StatType.WIS, 1.10f, 0f),
+    SPEAR  (R.string.roguelike_base_spear,   EquipSlot.WEAPON,  StatType.END, 1.10f, 0f),
+    SHIELD (R.string.roguelike_base_shield,  EquipSlot.OFFHAND, StatType.CON, 0f,    0f),
+    ORB    (R.string.roguelike_base_orb,     EquipSlot.OFFHAND, StatType.INT, 0f,    0f),
     // Une main gauche par archétype (voir DONJON.md) : le bouclier du guerrier, l'orbe du mage, l'arc
     // du voleur, le grimoire du nécromancien, la lanterne du vagabond. Leur effet sur le Spécial viendra
     // avec les archétypes ; leur part de défense, avec l'équilibrage des mains gauches.
-    BOW     (R.string.roguelike_base_bow,      EquipSlot.OFFHAND, StatType.DEX, 0f,    0f, 0f),
-    GRIMOIRE(R.string.roguelike_base_grimoire, EquipSlot.OFFHAND, StatType.WIS, 0f,    0f, 0f),
-    CLUB    (R.string.roguelike_base_club, EquipSlot.OFFHAND, StatType.STR, 0f, 0f, 0f),
-    LANTERN (R.string.roguelike_base_lantern,  EquipSlot.OFFHAND, StatType.END, 0f,    0f, 0f),
-    HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f, 0f),
-    ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f, 0f),
-    BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f, 0f),
-    AMULET (R.string.roguelike_base_amulet,  EquipSlot.AMULET,  null,         0f,    0f, 0f),
-    RING   (R.string.roguelike_base_ring,    EquipSlot.RING,    null,         0f,    0f, 0f),
+    BOW     (R.string.roguelike_base_bow,      EquipSlot.OFFHAND, StatType.DEX, 0f,    0f),
+    GRIMOIRE(R.string.roguelike_base_grimoire, EquipSlot.OFFHAND, StatType.WIS, 0f,    0f),
+    CLUB    (R.string.roguelike_base_club, EquipSlot.OFFHAND, StatType.STR, 0f, 0f),
+    LANTERN (R.string.roguelike_base_lantern,  EquipSlot.OFFHAND, StatType.END, 0f,    0f),
+    HELMET (R.string.roguelike_base_helmet,  EquipSlot.HELMET,  null,         0f,    3f),
+    ARMOR  (R.string.roguelike_base_armor,   EquipSlot.CHEST,   null,         0f,    6f),
+    BOOTS  (R.string.roguelike_base_boots,   EquipSlot.BOOTS,   null,         0f,    3f),
+    AMULET (R.string.roguelike_base_amulet,  EquipSlot.AMULET,  null,         0f,    0f),
+    RING   (R.string.roguelike_base_ring,    EquipSlot.RING,    null,         0f,    0f),
 }
 
 // ─── Poids d'armure ────────────────────────────────────────────────────────────
@@ -249,6 +248,16 @@ data class Equipment(
         })
     }
 
+    /**
+     * Les objets sauvegardés avant le 24/09/2026 : le bâton, le sceptre et l'orbe perdent leurs dégâts des
+     * sorts d'office, le bouclier son armure et ses PV d'office. Les affixes ne bougent pas.
+     */
+    fun withoutRemovedImplicits(): Equipment = when {
+        base == ItemBase.SHIELD -> copy(armor = 0, implicits = implicits.filter { it.type != StatType.MAX_HP })
+        base in setOf(ItemBase.STAFF, ItemBase.SCEPTER, ItemBase.ORB) -> copy(implicits = implicits.filter { it.type != StatType.SPELL_DMG })
+        else -> this
+    }
+
     val allStats get() = implicits + affixes
     fun sum(type: StatType) = allStats.filter { it.type == type }.sumOf { it.value.toDouble() }.toFloat()
 }
@@ -278,8 +287,9 @@ data class Equipment(
  * paliers, choisie pour tomber sur les zones du donjon : étages 1, 6, 11, 21, 31, 41, 61, 81.
  * Le donjon est sans fin, les paliers aussi : au-delà du 8ᵉ, chacun s'ouvre à une puissance
  * 1,3 fois plus haute que le précédent ([tierPower]) — le palier 26 vers l'étage 10 000.
- * Les taux (dégâts des sorts, dégâts critiques, vol de vie, vitesse) s'arrêtent au palier 8 ;
- * tout le reste continue, caractéristiques comprises ([maxTierOf]).
+ * Le vol de vie s'arrête au palier 8 ; les taux « en rampe » ([RAMPS] : dégâts des sorts,
+ * dégâts critiques, vitesse, atout) montent jusqu'au palier 20 ; tout le reste continue sans
+ * fin, caractéristiques comprises ([maxTierOf]).
  *
  * ### Deux familles d'affixes
  * - **Les affixes à budget** (caractéristiques, armure, PV, dégâts d'arme) : leur valeur
@@ -324,14 +334,14 @@ object AffixBudget {
         else Math.round(TIER_POWER[TIERS - 1] * Math.pow(DEEP_TIER_GROWTH, (tier - TIERS).toDouble())).toInt()
 
     /**
-     * Le dernier palier d'une stat. Les **taux** (dégâts des sorts, dégâts critiques, vol de
-     * vie, vitesse) s'arrêtent au 8ᵉ : leur effet ne dépend pas de la profondeur, un palier de
-     * plus n'y apporterait rien. Tout le reste continue : dégâts d'arme, armure, PV, critique,
-     * et les caractéristiques (voir [LootSystem.attributeWeight]).
+     * Le dernier palier d'une stat. Le vol de vie s'arrête au 8ᵉ (le soin en combat : 5 % par pièce,
+     * 25 % au total). Les taux en rampe ([RAMPS]) montent jusqu'au palier [RAMP_LAST_TIER]. Tout le
+     * reste continue : dégâts d'arme, armure, PV, critique, et les caractéristiques (voir
+     * [LootSystem.attributeWeight]).
      */
-    fun maxTierOf(type: StatType): Int = when (type) {
-        StatType.SPELL_DMG, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED -> TIERS
-        StatType.CLASS_PERK -> CLASS_PERK_LAST_TIER
+    fun maxTierOf(type: StatType): Int = when {
+        type == StatType.LIFE_STEAL -> TIERS
+        type in RAMPS -> RAMP_LAST_TIER
         else -> Int.MAX_VALUE
     }
 
@@ -340,7 +350,7 @@ object AffixBudget {
      * [CRIT_RESIST_AFFIXES] affixes de critique ont gagné au-delà du palier 8. Nulle jusqu'à
      * l'étage 100 environ.
      */
-    fun critResistance(power: Int) = CRIT_RESIST_AFFIXES * CRIT_DEEP_STEP * (maxTier(power) - TIERS).coerceAtLeast(0)
+    fun critResistance(power: Int) = CRIT_RESIST_AFFIXES * CRIT_DEEP_STEP * spread(StatType.CRIT_CHANCE) * (maxTier(power) - TIERS).coerceAtLeast(0)
 
     /** Un tirage va de 55 % à 100 % de la valeur du palier : il reste une marge à chasser. */
     const val ROLL_MIN = 0.55f
@@ -362,7 +372,7 @@ object AffixBudget {
      * Les affixes à plafond. Ce qu'un équipement complet peut en porter, réparti sur les
      * huit paliers. Deux raisons d'y être :
      *
-     * - **Ce sont des taux** (critique, dégâts critiques, dégâts des sorts, vol de vie) :
+     * - **Ce sont des taux** (critique, vol de vie ; les autres taux sont en rampe, voir [RAMPS]) :
      *   leur effet ne dépend pas de la puissance de l'objet. Les régler à 12 % donnerait
      *   +13 % de critique dès l'étage 1, et plus rien à chasser ensuite.
      * - **Leur axe ne grandit pas** : la CHA donne 3 % d'or par point, à l'étage 1 comme à
@@ -374,30 +384,39 @@ object AffixBudget {
      */
     private val CAPPED: Map<StatType, FloatArray> = mapOf(
         StatType.CRIT_CHANCE to floatArrayOf(.020f, .026f, .032f, .040f, .048f, .056f, .068f, .080f),
-        StatType.CRIT_DAMAGE to floatArrayOf(.12f, .16f, .20f, .25f, .30f, .36f, .43f, .50f),
-        StatType.SPELL_DMG   to floatArrayOf(.08f, .11f, .14f, .18f, .22f, .26f, .30f, .35f),
         StatType.LIFE_STEAL  to floatArrayOf(.010f, .016f, .022f, .028f, .034f, .040f, .045f, .050f),
         StatType.DEX         to floatArrayOf(3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f),
-        // La vitesse : +2 % au premier palier, +8 % au dernier. Un taux, qui vaut double (voir perPoint)
-        StatType.SPEED       to floatArrayOf(.020f, .025f, .030f, .040f, .050f, .060f, .070f, .080f),
         StatType.CHA         to floatArrayOf(2f, 3f, 4f, 5f, 6f, 8f, 10f, 12f),
-        StatType.CLASS_PERK  to FloatArray(TIERS) { classPerk(it + 1) },
     )
 
     /**
-     * L'atout de classe (20 % de base, plafond 50 %) : +1 % au palier 1, puis en ligne droite jusqu'à +8 % au
-     * palier [CLASS_PERK_LAST_TIER] (étage 1 900 environ). Il continue après le palier 8, comme le critique : il
-     * se chasse sur toute la partie. Vers l'étage 100, un affixe plein donne +3,6 %, et trois portent à plus
-     * de 30 % (décidé par le propriétaire le 24/09/2026).
+     * Les taux en rampe : du palier 1 au palier [RAMP_LAST_TIER] (étage 1 900 environ), en ligne droite.
+     * Avant le 24/09/2026, ils s'arrêtaient au palier 8 (étage 81) à des valeurs bien plus hautes (dégâts
+     * des sorts +35 %, dégâts critiques +50 %) : tout était trouvé à l'étage 100. Le propriétaire les veut
+     * plus bas et à chasser sur toute la partie. Vers l'étage 100 (palier 9), un affixe plein donne
+     * environ 40 % de son maximum.
      */
-    const val CLASS_PERK_LAST_TIER = 20
-    private const val CLASS_PERK_FIRST = 0.01f
-    private const val CLASS_PERK_TOP = 0.08f
-    private fun classPerk(tier: Int) =
-        CLASS_PERK_FIRST + (CLASS_PERK_TOP - CLASS_PERK_FIRST) * (tier.coerceAtMost(CLASS_PERK_LAST_TIER) - 1) / (CLASS_PERK_LAST_TIER - 1)
+    private val RAMPS: Map<StatType, Pair<Float, Float>> = mapOf(
+        StatType.SPELL_DMG   to (.02f to .30f),
+        StatType.CRIT_DAMAGE to (.05f to .40f),
+        // La vitesse vaut double (voir perPoint)
+        StatType.SPEED       to (.01f to .08f),
+        // L'atout de classe (20 % de base, plafond 50 %) : trois affixes portent à plus de 30 % vers l'étage 100
+        StatType.CLASS_PERK  to (.01f to .08f),
+    )
 
-    /** Vrai si [type] se règle par un plafond posé à la main plutôt que par la règle des 12 %. */
-    fun isCapped(type: StatType) = type in CAPPED
+    /** Vrai si [type] monte en rampe jusqu'au palier [RAMP_LAST_TIER]. */
+    fun isRamp(type: StatType) = type in RAMPS
+
+    /** Le palier où les taux en rampe atteignent leur maximum. */
+    const val RAMP_LAST_TIER = 20
+
+    private fun ramp(type: StatType, tier: Int): Float? = RAMPS[type]?.let { (first, top) ->
+        first + (top - first) * (tier.coerceIn(1, RAMP_LAST_TIER) - 1) / (RAMP_LAST_TIER - 1)
+    }
+
+    /** Vrai si [type] se règle par un plafond ou une rampe posés à la main plutôt que par la règle des 12 %. */
+    fun isCapped(type: StatType) = type in CAPPED || type in RAMPS
 
     /**
      * Certains affixes n'apparaissent pas avant un certain palier, comme les gros
@@ -434,13 +453,13 @@ object AffixBudget {
 
     /** Dégâts moyens d'une épée de puissance p, avant caractéristiques (base 4–7). */
     fun refWeaponDamage(p: Int) = 5.5f * LootSystem.scale(p)
-    /** Casque 3 + armure 6 + bottes 3 + bouclier 4. */
-    fun refArmor(p: Int) = 16f * LootSystem.scale(p)
+    /** Casque 3 + armure 6 + bottes 3 (le bouclier ne donne plus d'armure depuis le 24/09/2026). */
+    fun refArmor(p: Int) = 12f * LootSystem.scale(p)
     /** La constante de l'armure à cette puissance : dégâts reçus × k / (k + armure). */
     fun refK(p: Int) = 50f * LootSystem.scale(p)
-    /** PV de base, PV de la CON, et les PV implicites des quatre pièces défensives. */
+    /** PV de base, PV de la CON, et les PV implicites des trois pièces d'armure. */
     fun refHp(p: Int) = Hero.BASE_HP + Hero.HP_PER_CON * (refCon(p) - Hero.BASE_ATTRIBUTE) +
-        16f * LootSystem.HP_PER_ARMOR_BASE * LootSystem.scale(p)
+        12f * LootSystem.HP_PER_ARMOR_BASE * LootSystem.scale(p)
     fun refCritChance(p: Int) = 0.05f + 0.01f * (refOther(p) - Hero.BASE_ATTRIBUTE) * w(p)
 
     /**
@@ -507,12 +526,29 @@ object AffixBudget {
      * plafond c'est une valeur posée ; pour les autres elle tombe de la règle des 12 %.
      * Au-delà du 8ᵉ palier, le critique gagne [CRIT_DEEP_STEP] par palier.
      */
-    fun nominal(type: StatType, tier: Int): Float {
+    fun nominal(type: StatType, tier: Int): Float = unspread(type, tier) * spread(type)
+
+    /**
+     * Toutes les stats tombent sur les sept pièces depuis le 24/09/2026. Une stat qui n'en avait que
+     * quelques-unes (les dégâts d'arme : l'arme seule) garderait sa valeur par affixe et s'empilerait
+     * sept fois : chaque affixe vaut donc sa valeur d'avant × (pièces d'avant / 7), et un équipement
+     * complet en porte au plus autant qu'avant. Le propriétaire a préféré ça à des limites par pièce.
+     * Les dégâts d'arme n'en sont pas : un affixe entier ne peut pas valoir moins de +1, ils restent
+     * sur l'arme (voir [LootSystem.affixPool]).
+     */
+    fun spread(type: StatType): Float = when (type) {
+        StatType.CRIT_DAMAGE -> 3f / 7
+        StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.SPEED -> 4f / 7
+        StatType.MAX_HP -> 6f / 7
+        else -> 1f
+    }
+
+    private fun unspread(type: StatType, tier: Int): Float {
+        ramp(type, tier)?.let { return it }
         CAPPED[type]?.let {
             if (tier <= TIERS) return it[tier - 1]
             return when (type) {
                 StatType.CRIT_CHANCE -> it[TIERS - 1] + CRIT_DEEP_STEP * (tier - TIERS)
-                StatType.CLASS_PERK -> classPerk(tier)
                 // DEX et CHA grandissent exactement comme leur poids baisse (voir LootSystem.attributeWeight) :
                 // un affixe garde ce qu'il valait au palier 8
                 StatType.DEX, StatType.CHA -> it[TIERS - 1] / LootSystem.attributeWeight(tierPower(tier).toFloat())
@@ -559,7 +595,7 @@ object LootSystem {
 
     /**
      * PV donnés par une pièce défensive, par point de son armure de base. Casque, armure,
-     * bottes et bouclier totalisent 16 d'armure de base, soit 12 × la puissance en PV.
+     * bottes totalisent 12 d'armure de base, soit 9 × la puissance en PV (le bouclier n'en donne plus).
      * C'est ce qui fait tenir le sac de PV au rythme des dégâts des monstres.
      */
     const val HP_PER_ARMOR_BASE = 0.75f
@@ -623,26 +659,18 @@ object LootSystem {
     )
 
     /**
-     * Ce que chaque emplacement peut porter. Un affixe ne sort jamais deux fois sur le même
-     * objet : on ne veut pas d'un anneau qui empile trois fois la même ligne.
+     * Toutes les stats peuvent tomber sur toutes les pièces (propriétaire, 24/09/2026 : des objets superbes
+     * et d'autres nuls), sauf l'armure, qui n'a de sens que sur une pièce qui protège, et les dégâts
+     * d'arme, qui restent sur l'arme. Un affixe ne sort jamais deux fois sur le même objet.
      */
-    private val affixPools: Map<EquipSlot, List<StatType>> = run {
-        // La chance d'atout de classe tombe partout, comme les caractéristiques
-        val attrs = StatType.ATTRIBUTES + StatType.CLASS_PERK
-        val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.LIFE_STEAL)
-        val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED)
-        // La vitesse : sur l'arme, les bottes et les bijoux (comme la vitesse d'attaque et de
-        // course de Diablo), pas sur le casque, l'armure ni la main gauche
-        mapOf(
-            EquipSlot.WEAPON  to attrs + listOf(StatType.WEAPON_DMG, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED),
-            EquipSlot.OFFHAND to attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.LIFE_STEAL),
-            EquipSlot.HELMET  to armorPiece,
-            EquipSlot.CHEST   to armorPiece,
-            EquipSlot.BOOTS   to armorPiece + StatType.SPEED,
-            EquipSlot.AMULET  to jewel,
-            EquipSlot.RING    to jewel,
-        )
+    private fun affixPool(slot: EquipSlot): List<StatType> = StatType.entries.filter { type ->
+        when (type) {
+            StatType.ARMOR -> slot in ARMOR_AFFIX_SLOTS
+            StatType.WEAPON_DMG -> slot == EquipSlot.WEAPON
+            else -> true
+        }
     }
+    private val ARMOR_AFFIX_SLOTS = setOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS, EquipSlot.OFFHAND)
 
     /** Tire [count] affixes différents dans [pool], chacun selon sa fréquence. */
     private fun pickAffixes(pool: List<StatType>, count: Int, rng: Random): List<StatType> {
@@ -682,7 +710,8 @@ object LootSystem {
     fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random, floor: Int? = null): Equipment {
         val power = if (floor != null || set.index < 0) IsotopeSets.powerForFloor(floor ?: 1, rng)
             else IsotopeSets.basePower(set.index) + rng.nextInt(IsotopeSets.POWER_SPREAD)
-        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight).copy(isotopeZ = set.index)
+        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight, affixCount = IsotopeSets.SET_AFFIXES)
+            .copy(isotopeZ = set.index)
     }
 
     /**
@@ -699,6 +728,8 @@ object LootSystem {
     fun create(
         base: ItemBase, power: Int, rarity: Rarity, lootId: Long, rng: Random,
         forcedWeight: ArmorWeight? = null,
+        /** Imposé pour les pièces de set ([IsotopeSets.SET_AFFIXES]) ; sinon, celui de la rareté. */
+        affixCount: Int? = null,
     ): Equipment {
         val s = scale(power)
 
@@ -715,12 +746,9 @@ object LootSystem {
         implicits += StatRoll(attr, attrValue.roundToInt().toFloat())
         if (base.armorBase > 0f)
             implicits += StatRoll(StatType.MAX_HP, (base.armorBase * HP_PER_ARMOR_BASE * s).roundToInt().toFloat())
-        // Un taux : il s'arrête à l'étage 100 (voir DEEP_POWER)
-        if (base.spellBonus > 0f)
-            implicits += StatRoll(StatType.SPELL_DMG, base.spellBonus * (1f + 0.1f * (power.coerceAtMost(DEEP_POWER) - 1)))
 
-        val count = rng.nextInt(rarity.minAffixes, rarity.maxAffixes + 1)
-        val pool = affixPools.getValue(base.slot).filter { AffixBudget.allows(it, power) }
+        val count = affixCount ?: rng.nextInt(rarity.minAffixes, rarity.maxAffixes + 1)
+        val pool = affixPool(base.slot).filter { AffixBudget.allows(it, power) }
         val affixes = pickAffixes(pool, count, rng).map { rollAffix(it, power, rng) }
 
         val (row, col) = pickSprite(base, power, rng)

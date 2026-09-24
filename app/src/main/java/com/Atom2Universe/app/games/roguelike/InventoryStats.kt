@@ -32,8 +32,7 @@ internal object InventoryStats {
         add("classPerk", R.string.roguelike_stattype_class_perk, hero.classPerkChance * 100, Unit.PERCENT)
         add("speed", R.string.roguelike_stattype_speed, hero.speed * 100, Unit.PERCENT)
         add("steal", R.string.roguelike_stattype_life_steal, hero.lifeSteal * 100, Unit.PERCENT)
-        add("spellBonus", R.string.inv_spell_bonus,
-            hero.equipped.values.sumOf { it.sum(StatType.SPELL_DMG).toDouble() } * 100, Unit.PERCENT)
+        add("spellBonus", R.string.inv_spell_bonus, hero.spellBonus * 100, Unit.PERCENT)
         add("parry", R.string.inv_parry, hero.parryBonusMs, Unit.MS)
         add("gold", R.string.inv_gold_bonus, (hero.goldMult - 1) * 100, Unit.PERCENT)
         for (stat in StatType.ATTRIBUTES) add(stat.name, stat.labelRes, hero.attribute(stat))

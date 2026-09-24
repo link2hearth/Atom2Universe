@@ -26,9 +26,9 @@ class AffixBudgetTest {
     /** Les affixes réglés par la règle des 12 % ; les autres ont un plafond posé à la main. */
     private val budgetStats = StatType.entries.filter { !AffixBudget.isCapped(it) }
 
-    /** Ce que vaut une valeur d'affixe sur son axe, en %. */
+    /** Ce que vaut une valeur d'affixe sur son axe, en %, rapporté à sa part (les stats étalées sur sept pièces, AffixBudget.spread). */
     private fun worth(type: StatType, value: Float, power: Int) =
-        value * AffixBudget.perPoint(type, power) * 100f
+        value * AffixBudget.perPoint(type, power) * 100f / AffixBudget.spread(type)
 
     // ── L'invariant ─────────────────────────────────────────────────────────────
 
@@ -133,8 +133,11 @@ class AffixBudgetTest {
             val floor = rng.nextInt(1, 101)
             val e = LootSystem.generate(floor, 0, rng)
             if (e.affixes.isEmpty()) return@repeat
-            points += e.affixes.sumOf { (it.value * AffixBudget.perPoint(it.type, e.power) * 100f).toDouble() }.toFloat()
-            affixes += e.affixes.size
+            // Les taux en rampe sont volontairement sous le budget jusqu'au palier 20 (24/09/2026) : hors de la moyenne
+            val budgeted = e.affixes.filter { !AffixBudget.isRamp(it.type) }
+            // Les stats étalées sur sept pièces valent une part de leur budget (AffixBudget.spread)
+            points += budgeted.sumOf { (it.value * AffixBudget.perPoint(it.type, e.power) * 100f / AffixBudget.spread(it.type)).toDouble() }.toFloat()
+            affixes += budgeted.size
         }
         val avg = points / affixes
         assertTrue("un affixe vaut $avg points de note, on attend ~9,3", avg in 8f..11f)

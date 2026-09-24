@@ -48,7 +48,9 @@ class LootSystemTest {
         val rng = Random(3)
         repeat(5000) {
             val e = LootSystem.generate(rng.nextInt(1, 101), 0, rng)
-            assertTrue(e.affixes.size in e.rarity.minAffixes..e.rarity.maxAffixes)
+            // Une pièce de set porte un affixe de plus qu'une rare (IsotopeSets.SET_AFFIXES)
+            if (e.isotopeZ != null) assertEquals(IsotopeSets.SET_AFFIXES, e.affixes.size)
+            else assertTrue(e.affixes.size in e.rarity.minAffixes..e.rarity.maxAffixes)
             assertEquals("pas deux fois le même affixe", e.affixes.size, e.affixes.map { it.type }.toSet().size)
         }
     }

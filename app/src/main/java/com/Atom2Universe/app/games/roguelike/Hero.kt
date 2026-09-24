@@ -98,8 +98,6 @@ class Hero {
         const val WRONG_WEAPON_MALUS = 0.15f
         /** Le guerrier échange une part de ses dégâts d'arme contre sa robustesse. */
         const val WARRIOR_WEAPON_DAMAGE_MULT = 0.85f
-        /** L'orbe est la main gauche de celui qui tue vite : tous les dégâts qu'il inflige, arme et sorts, montent de cette part. */
-        const val ORB_DAMAGE_SHARE = 0.20f
         /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
         const val MIN_SPEED = 0.5f
         /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
@@ -212,6 +210,9 @@ class Hero {
 
     private fun equipSum(type: StatType): Float = equipped.values.sumOf { it.sum(type).toDouble() }.toFloat()
 
+    /** Les « dégâts des sorts » de l'équipement : ce que donnent le bâton et l'orbe, plus tous les affixes. */
+    val spellBonus: Float get() = equipSum(StatType.SPELL_DMG)
+
     // ── Caractéristiques D&D ────────────────────────────────────────────────────
 
     /** La caractéristique : la base, l'équipement, et les résonances des reliques portées. */
@@ -247,8 +248,8 @@ class Hero {
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
 
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis sa caractéristique : +4 % par point. */
-    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * orbMult * weaponTypeMult).roundToInt()
-    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * orbMult * weaponTypeMult).roundToInt()
+    val weaponMin get() = (((equipped[EquipSlot.WEAPON]?.damageMin ?: FIST_MIN) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * weaponTypeMult).roundToInt()
+    val weaponMax get() = (((equipped[EquipSlot.WEAPON]?.damageMax ?: FIST_MAX) + equipSum(StatType.WEAPON_DMG)) * weaponAttributeMult * weaponTypeMult).roundToInt()
     /** 1, ou moins si l'arme portée ne va pas à l'archétype (sans archétype, jamais de malus). */
     val weaponTypeMult: Float get() {
         val a = archetype ?: return 1f
@@ -256,7 +257,6 @@ class Hero {
         return (if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS) *
             (if (a == Archetype.WARRIOR) WARRIOR_WEAPON_DAMAGE_MULT else 1f)
     }
-    private val orbMult get() = if (equipped[EquipSlot.OFFHAND]?.base == ItemBase.ORB) 1f + ORB_DAMAGE_SHARE else 1f
     /** Même caractéristique que celle donnée par le type d’arme ; FOR à mains nues. */
     val weaponAttribute get() = equipped[EquipSlot.WEAPON]?.damageAttribute ?: StatType.STR
     private val weaponAttributeMult get() = 1f + WEAPON_ATTRIBUTE_DAMAGE_PER_POINT * effective(weaponAttribute)
@@ -266,7 +266,7 @@ class Hero {
      * pour le mage, DEX pour le Venin du voleur) ajoute 5 % par point, puis les bonus
      * « dégâts des sorts » des objets.
      */
-    fun relicMult(relic: Relic) = orbMult * (1f + RELIC_DAMAGE_PER_POINT * effective(relic.attribute)) * (1f + equipSum(StatType.SPELL_DMG) + if (specialBoosted(Archetype.MAGE)) IsotopeSets.SPELL_SHARE else 0f)
+    fun relicMult(relic: Relic) = (1f + RELIC_DAMAGE_PER_POINT * effective(relic.attribute)) * (1f + spellBonus + if (specialBoosted(Archetype.MAGE)) IsotopeSets.SPELL_SHARE else 0f)
 
     /**
      * La puissance d'une relique : l'épée de référence de la puissance de l'arme portée,

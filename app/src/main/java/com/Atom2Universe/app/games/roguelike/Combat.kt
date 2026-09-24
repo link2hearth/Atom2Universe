@@ -988,6 +988,12 @@ class Combat(
         /** Coup mortel sur une cible exposée : critique garanti, et ce bonus au multiplicateur. */
         const val DEADLY_CRIT_BONUS = 1f
         const val MIRROR_IMAGES = 3
+        /**
+         * L'orbe, main gauche du mage : un double de plus à l'Image miroir. Avant le 24/09/2026, elle donnait
+         * +20 % à tous les dégâts, tout le temps, à quiconque la portait — le seul bonus permanent des mains
+         * gauches, et une raison de plus de préférer le mage.
+         */
+        const val ORB_EXTRA_IMAGES = 1
         /** Vagabond : l'Enchaînement frappe deux fois ; une roulade parfaite relève le prochain coup de cette part. */
         const val CHAIN_HITS = 2
         const val ROLL_BONUS = 0.25f
@@ -1657,7 +1663,8 @@ class Combat(
     /** Mage : trois doubles qui prennent les coups à sa place, façon D&D. */
     fun mirrorImage() {
         check(canUseSpecial() && hero.archetype == Archetype.MAGE)
-        mirrorImages = if (hero.specialBoosted(Archetype.MAGE)) IsotopeSets.MIRROR_IMAGES else MIRROR_IMAGES
+        mirrorImages = (if (hero.specialBoosted(Archetype.MAGE)) IsotopeSets.MIRROR_IMAGES else MIRROR_IMAGES) +
+            if (hero.classOffhand(Archetype.MAGE)) ORB_EXTRA_IMAGES else 0
         spendSpecial()
         afterPlayerAction(specialCost())
     }
@@ -2062,7 +2069,7 @@ class Combat(
         // Image miroir, comme dans D&D : avant son jet d'attaque, un d20 dit s'il vise un
         // double — 6+ avec trois doubles, 8+ avec deux, 11+ avec le dernier
         if (mirrorImages > 0) {
-            val need = when (mirrorImages) { 4 -> 5; 3 -> 6; 2 -> 8; else -> 11 }
+            val need = when { mirrorImages >= 5 -> 4; mirrorImages == 4 -> 5; mirrorImages == 3 -> 6; mirrorImages == 2 -> 8; else -> 11 }
             if (attackDie() >= need) { mirrorImages--; return EnemyStrike(enemyIndex, 0, parry, imageHit = true, bleed = bled) }
         }
         // Enragé ou aveuglé : il attaque avec désavantage (deux tirages, le héros garde le meilleur)

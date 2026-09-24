@@ -196,7 +196,7 @@ class GaugeTest {
         // Deux fois plus rapide qu'un gobelin de cadence 2 : quatre tours du héros pour un du gobelin
         val hero = heroWithAllSlots().apply {
             equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(1))
-                .let { it.copy(affixes = listOf(StatRoll(StatType.SPEED, 1f, 8))) }
+                .let { it.copy(implicits = listOf(StatRoll(StatType.SPEED, 1f)), affixes = emptyList()) }
             hp = 1_000_000
         }
         assertEquals(2f, hero.speed, 1e-5f)

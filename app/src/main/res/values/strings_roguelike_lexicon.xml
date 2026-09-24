@@ -79,7 +79,6 @@
     <string name="lex_you_weapon">You: %1$s–%2$s</string>
     <string name="lex_stat_spell_dmg">Spell damage</string>
     <string name="lex_stat_spell_dmg_1">A bonus that multiplies the damage of all your relics.</string>
-    <string name="lex_stat_spell_dmg_2">Base: %1$s %2$d%%, %3$s %4$d%%, %5$s %6$d%%</string>
     <string name="lex_stat_rating">Rating</string>
     <string name="lex_stat_rating_1">A number to compare two items and sort the bag.</string>
     <string name="lex_stat_rating_2">Each line is worth what it brings to its field: a full affix is worth %1$d points</string>
@@ -281,7 +280,6 @@
     <string name="lex_base_attr_random">Gives a random attribute.</string>
     <string name="lex_base_damage">Weapon damage ×%1$s</string>
     <string name="lex_base_armor">Base armor: %1$s</string>
-    <string name="lex_base_spell">+%1$d%% base [[stat_spell_dmg|spell damage]]</string>
     <string name="lex_base_weights">Comes in [[weight_cloth|cloth]], [[weight_light|light]] or [[weight_heavy|heavy]].</string>
     <string name="lex_tiers">Affix tiers</string>
     <string name="lex_tiers_1">An affix has a tier (T1, T2…): the higher it is, the stronger the line.</string>
@@ -318,7 +316,6 @@
     <string name="lex_set_special_mirror">%1$d doubles instead of %2$d, and the recharge is %3$d turns instead of %4$d.</string>
     <string name="lex_set_speed">Also gives %1$d%% more speed.</string>
     <string name="lex_set_spell">Also gives %1$d%% more spell damage.</string>
-    <string name="lex_base_orb_damage">+%1$d%% to all the damage you deal, weapon and spells.</string>
     <string name="lex_archetype_vagabond_1">It fights a bit of everything: some defense, some mobility.</string>
     <string name="lex_archetype_vagabond_2">Perfect timing and a successful dodge: a roll prepares the next weapon hit, making it %1$d%% stronger.</string>
     <string name="lex_archetype_vagabond_3">Like every archetype, it recovers at the starting fire between fights.</string>
@@ -375,4 +372,7 @@
     <string name="lex_stat_class_perk">Perk chance</string>
     <string name="lex_stat_class_perk_1">The chance that a [[parry|perfect parry]] triggers your [[archetype|archetype]]\'s perk: %1$d%% to start, at most %2$d%%.</string>
     <string name="lex_you_class_perk">You: %1$d%%</string>
+    <string name="lex_base_orb_mirror">Mage: [[special_mirror|Mirror image]] creates %1$d more double.</string>
+    <string name="lex_rarity_affixes_exact">%1$d affixes on top of the base; each has its [[tiers|tier]].</string>
+    <string name="lex_set_affixes">Each piece carries %1$d affixes, one more than a rare piece.</string>
 </resources>

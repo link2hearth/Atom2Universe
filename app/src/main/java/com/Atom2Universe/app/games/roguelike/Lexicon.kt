@@ -244,10 +244,6 @@ object Lexicon {
             },
             entry(idOf(StatType.SPELL_DMG), c, R.string.lex_stat_spell_dmg) {
                 add(R.string.lex_stat_spell_dmg_1)
-                add(R.string.lex_stat_spell_dmg_2,
-                    env.s(ItemBase.STAFF.nounRes), env.pct(ItemBase.STAFF.spellBonus),
-                    env.s(ItemBase.SCEPTER.nounRes), env.pct(ItemBase.SCEPTER.spellBonus),
-                    env.s(ItemBase.ORB.nounRes), env.pct(ItemBase.ORB.spellBonus))
             },
             entry("stat_rating", c, R.string.lex_stat_rating) {
                 add(R.string.lex_stat_rating_1)
@@ -562,6 +558,7 @@ object Lexicon {
         val rarities = Rarity.entries.map { r ->
             entry(idOf(r), c, r.labelRes) {
                 if (r.maxAffixes == 0) add(R.string.lex_rarity_normal_1)
+                else if (r.minAffixes == r.maxAffixes) add(R.string.lex_rarity_affixes_exact, r.minAffixes)
                 else add(R.string.lex_rarity_affixes, r.minAffixes, r.maxAffixes)
                 add(R.string.lex_rarity_sell, r.sellMult.roundToInt())
             }
@@ -574,8 +571,7 @@ object Lexicon {
                 else add(R.string.lex_base_attr_random)
                 if (b.damageMult > 0f) add(R.string.lex_base_damage, env.dec(b.damageMult, 2))
                 if (b.armorBase > 0f) add(R.string.lex_base_armor, env.num(b.armorBase.roundToInt()))
-                if (b.spellBonus > 0f) add(R.string.lex_base_spell, env.pct(b.spellBonus))
-                if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
+                if (b == ItemBase.ORB) add(R.string.lex_base_orb_mirror, Combat.ORB_EXTRA_IMAGES)
                 if (b == ItemBase.BOW) add(R.string.lex_base_bow, env.pct(Combat.BOW_EXPOSE_THRESHOLD), env.pct(Combat.DEADLY_HP_THRESHOLD))
                 if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, 0, env.pct(Combat.GRIMOIRE_ECHO_BONUS))
                 if (b == ItemBase.CLUB) add(R.string.lex_base_club)
@@ -599,6 +595,7 @@ object Lexicon {
             val a = set.archetype
             add(R.string.lex_set_1, env.link(idOf(a), env.s(a.labelRes)), env.link(idOf(a.weight), env.s(a.weight.labelRes)))
             add(R.string.lex_set_2, IsotopeSets.SLOTS.size, env.link(specialId(a), env.s(a.specialRes)))
+            add(R.string.lex_set_affixes, IsotopeSets.SET_AFFIXES)
             when (a) {
                 Archetype.BARBARIAN -> { add(R.string.lex_set_barbarian) }
                 Archetype.WARRIOR -> {

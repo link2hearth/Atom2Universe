@@ -107,6 +107,9 @@ object IsotopeSets {
     const val POWER_SPREAD = 3
     fun basePower(index: Int) = index * Grade.TIERS * Grade.POWER_PER_TIER
 
+    /** Les affixes d'une pièce de set : un de plus qu'une pièce rare (propriétaire, 24/09/2026). */
+    const val SET_AFFIXES = 4
+
     /** Les trois emplacements d'un set. */
     val SLOTS = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS)
     val BASES = listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)
