@@ -1,560 +1,365 @@
 package com.Atom2Universe.app.games.link
 
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.random.Random
 
+/**
+ * Intrication (ancien « Link ») : les règles, sans rien d'Android.
+ *
+ * Chaque case de la grille est un atome excité ; son **énergie** (0 à 4) dit combien de
+ * fois il doit encore être touché. Le niveau donne une **main de pièces** (dominos,
+ * trominos, tétrominos) : poser une pièce sur des atomes leur retire un niveau
+ * d'énergie chacun. Deux atomes **intriqués** partagent leur sort : toucher l'un fait
+ * aussi descendre l'autre, où qu'il soit sur la grille.
+ *
+ * On ne pose jamais une pièce qui ferait descendre un atome sous zéro, jumeau compris.
+ * La partie est gagnée quand toutes les pièces sont posées et tous les atomes au repos.
+ *
+ * Le générateur fabrique les énergies en posant lui-même les pièces sur une grille au
+ * repos : une solution existe toujours, et toute autre façon de tout poser gagne aussi.
+ *
+ * Une **partie** compte [FLOORS] étages de plus en plus chargés ; le dernier est le boss,
+ * avec toutes les formes et un maximum de paires. Chaque étage rapporte des points
+ * selon sa taille, moins ce qu'ont coûté les annulations : le score récompense celui
+ * qui réfléchit avant de poser.
+ */
 class LinkGame {
 
-    enum class Difficulty { EASY, MEDIUM, HARD }
-    enum class CellType { NORMAL, PLUS }
-    enum class GenerationMode { BASE, PLUS, RANDOM }
-    enum class GameMode { CLASSIC, PERFECT }
-    enum class PairsLevel { FEW, NORMAL, MANY }
+    /** Une pièce, en cases relatives, ramenée en haut à gauche. */
+    class Shape(val id: Int, cells: List<Pair<Int, Int>>) {
+        val cells: List<Pair<Int, Int>> = normalize(cells)
+        val size get() = cells.size
+        /** Toutes les orientations (rotations et miroirs), sans doublon. */
+        val variants: List<List<Pair<Int, Int>>> = run {
+            val seen = LinkedHashMap<String, List<Pair<Int, Int>>>()
+            var cur = this.cells
+            repeat(4) {
+                cur = normalize(cur.map { (x, y) -> -y to x })
+                seen.getOrPut(key(cur)) { cur }
+                val mirror = normalize(cur.map { (x, y) -> -x to y })
+                seen.getOrPut(key(mirror)) { mirror }
+            }
+            seen.values.toList()
+        }
+        private val keys = variants.map { key(it) }.toSet()
+        fun matches(normalized: List<Pair<Int, Int>>) = key(normalized) in keys
+    }
 
-    data class DifficultyConfig(
-        val sizeMin: Int, val sizeMax: Int,
-        val plusMin: Int, val plusMax: Int,
-        val pairMin: Int, val pairMax: Int,
-        val scrambleMin: Int, val scrambleMax: Int
-    )
+    /** Une pièce posée : la pièce de la main, et les cases touchées (indices y × largeur + x). */
+    class Placement(val handIndex: Int, val cells: List<Int>)
 
-    data class Cell(
-        val type: CellType,
-        var value: Int,
-        val pairId: Int?,
-        val pairColor: Int?
-    )
-
-    data class Coord(val row: Int, val col: Int)
-    data class CellChange(val row: Int, val col: Int, val previous: Int, val next: Int)
+    enum class Result { PLACED, NO_MATCH, EXHAUSTED }
 
     companion object {
-        val CONFIGS = mapOf(
-            Difficulty.EASY   to DifficultyConfig(3, 4,  0, 1,  0, 2,  12, 20),
-            Difficulty.MEDIUM to DifficultyConfig(5, 6,  1, 3,  2, 5,  30, 50),
-            Difficulty.HARD   to DifficultyConfig(7, 8,  3, 6,  4, 10, 60, 100)
-        )
-        // Perfect mode: grilles fixes, très peu de coups (chacun doit être rejoué exactement)
-        val PERFECT_CONFIGS = mapOf(
-            Difficulty.EASY   to DifficultyConfig(3, 3,  0, 0,  0, 1,  1, 2),
-            Difficulty.MEDIUM to DifficultyConfig(4, 4,  0, 1,  0, 2,  2, 3),
-            Difficulty.HARD   to DifficultyConfig(5, 5,  1, 2,  1, 3,  3, 5)
-        )
-        val LINK_LENGTHS = intArrayOf(2, 3, 4)
-        private const val MAX_HISTORY = 200
-        private const val MAX_VISITS = 7
+        const val MAX_ENERGY = 4
+        const val FLOORS = 15
+        /** Ce que coûte une annulation, et un étage recommencé, en part des points de l'étage. */
+        const val UNDO_COST = 0.10f
+        const val RESTART_COST = 0.25f
+        /** Bonus d'un étage fini sans rien annuler ni recommencer. */
+        const val PERFECT_BONUS = 0.25f
+        /** Un étage fini rapporte toujours au moins cette part. */
+        const val FLOOR_MIN_SHARE = 0.2f
 
-        // Couleurs ordonnées pour maximiser le contraste entre paires consécutives :
-        // rouge / bleu / vert / orange / violet / cyan / jaune / rose ...
-        val PAIR_COLORS = intArrayOf(
-            0xFFE53935.toInt(), // 0  rouge vif
-            0xFF1565C0.toInt(), // 1  bleu foncé
-            0xFF2E7D32.toInt(), // 2  vert foncé
-            0xFFE64A19.toInt(), // 3  orange brûlé
-            0xFF7B1FA2.toInt(), // 4  violet
-            0xFF00838F.toInt(), // 5  cyan-sarcelle
-            0xFFF9A825.toInt(), // 6  ambre/jaune
-            0xFFC2185B.toInt(), // 7  rose magenta
-            0xFF283593.toInt(), // 8  indigo foncé
-            0xFF00695C.toInt(), // 9  sarcelle foncé
-            0xFFFF8F00.toInt(), // 10 ambre vif
-            0xFF6A1B9A.toInt(), // 11 violet profond
-            0xFF039BE5.toInt(), // 12 bleu ciel
-            0xFF558B2F.toInt(), // 13 vert olive
-            0xFF5D4037.toInt(), // 14 brun chocolat
-            0xFF37474F.toInt()  // 15 anthracite
+        val SHAPES = listOf(
+            Shape(0, listOf(0 to 0, 1 to 0)),                         // domino
+            Shape(1, listOf(0 to 0, 1 to 0, 2 to 0)),                 // ligne de 3
+            Shape(2, listOf(0 to 0, 1 to 0, 0 to 1)),                 // coin
+            Shape(3, listOf(0 to 0, 1 to 0, 0 to 1, 1 to 1)),         // carré
+            Shape(4, listOf(0 to 0, 1 to 0, 2 to 0, 3 to 0)),         // ligne de 4
+            Shape(5, listOf(0 to 0, 0 to 1, 0 to 2, 1 to 2)),         // L
+            Shape(6, listOf(0 to 0, 1 to 0, 2 to 0, 1 to 1)),         // T
+            Shape(7, listOf(0 to 0, 1 to 0, 1 to 1, 2 to 1))          // zigzag
         )
 
-        val PAIRS_RANGE = mapOf(
-            PairsLevel.FEW    to (1 to 2),
-            PairsLevel.NORMAL to (3 to 4),
-            PairsLevel.MANY   to (5 to 6)
-        )
+        fun normalize(cells: List<Pair<Int, Int>>): List<Pair<Int, Int>> {
+            val mx = cells.minOf { it.first }; val my = cells.minOf { it.second }
+            return cells.map { (x, y) -> (x - mx) to (y - my) }.sortedWith(compareBy({ it.second }, { it.first }))
+        }
 
-        private val ZIGZAG_BASE = listOf(Coord(0,0), Coord(0,1), Coord(1,1), Coord(1,2))
-        private val L_BASE      = listOf(Coord(0,0), Coord(1,0), Coord(2,0), Coord(2,1))
-    }
+        private fun key(cells: List<Pair<Int, Int>>) = cells.joinToString(";") { "${it.first},${it.second}" }
 
-    var board: Array<Array<Cell>> = emptyArray()
-        private set
-    private var initialBoard: Array<Array<Cell>> = emptyArray()
-    var pairs: MutableMap<Int, MutableList<Coord>> = mutableMapOf()
-        private set
-    var moves = 0
-        private set
-    private val history = ArrayDeque<List<CellChange>>()
-    var isVictory = false
-        private set
-
-    var difficulty = Difficulty.MEDIUM
-    var linkLength = 3
-    var generationMode = GenerationMode.PLUS
-    var gameMode = GameMode.CLASSIC
-    var pairsLevel = PairsLevel.NORMAL
-    var solutionMoveCount = 0
-        private set
-
-    val size get() = board.size
-    val canUndo get() = history.isNotEmpty()
-
-    // --- Shape variant sets for validation ---
-    private val zigzagKeys: Set<String> by lazy { allVariantKeys(ZIGZAG_BASE) }
-    private val lKeys: Set<String>      by lazy { allVariantKeys(L_BASE) }
-
-    fun generateLevel() {
-        if (gameMode == GameMode.PERFECT) generatePerfectLevel()
-        else generateClassicLevel()
-    }
-
-    private fun generateClassicLevel() {
-        val cfg = CONFIGS[difficulty]!!
-        val sz = Random.nextInt(cfg.sizeMin, cfg.sizeMax + 1)
-        val newBoard = buildInitialBoard(sz, cfg)
-        val scrambleCount = Random.nextInt(cfg.scrambleMin, cfg.scrambleMax + 1)
-        scramble(newBoard, scrambleCount)
-        board = newBoard
-        initialBoard = cloneBoard(newBoard)
-        moves = 0
-        history.clear()
-        isVictory = false
-        solutionMoveCount = 0
-    }
-
-    private fun generatePerfectLevel() {
-        val cfg = PERFECT_CONFIGS[difficulty]!!
-        val sz = cfg.sizeMin  // taille fixe par difficulté
-        val newBoard = buildInitialBoard(sz, cfg)
-        val targetCount = Random.nextInt(cfg.scrambleMin, cfg.scrambleMax + 1)
-        solutionMoveCount = applyPerfectScramble(newBoard, targetCount)
-        board = newBoard
-        initialBoard = cloneBoard(newBoard)
-        moves = 0
-        history.clear()
-        isVictory = false
-    }
-
-    // Mélange perfect : applique N coups exacts avec normalEffect.
-    // Rejouer exactement ces coups (dans n'importe quel ordre) résout la grille
-    // car normalEffect est sa propre inverse (f∘f = identité).
-    private fun applyPerfectScramble(board: Array<Array<Cell>>, targetCount: Int): Int {
-        val sz = board.size
-        val usedKeys = mutableSetOf<String>()
-        var applied = 0
-        var attempts = 0
-        val maxAttempts = targetCount * 20 + 50
-        while (applied < targetCount && attempts < maxAttempts) {
-            attempts++
-            val pattern = randomPattern(sz) ?: continue
-            val key = patternKey(pattern)
-            if (key in usedKeys) continue
-            applyToBoard(board, pattern, ::normalEffect)
-            if (isBoardSolved(board)) {
-                applyToBoard(board, pattern, ::normalEffect)  // annule
-                continue
+        /**
+         * Ce que demande l'étage [floor] (1 à [FLOORS]). La grille grandit par paliers ;
+         * les formes et les paires arrivent une à une, pour qu'on apprenne chaque règle
+         * avant la suivante.
+         */
+        fun paramsFor(floor: Int): Params {
+            val f = floor.coerceIn(1, FLOORS)
+            if (f == FLOORS) return Params(size = 7, pieces = 20, pairs = 7, maxEnergy = MAX_ENERGY,
+                shapePool = SHAPES.indices.toList(), everyShape = true)
+            val size = when {
+                f <= 3 -> 4
+                f <= 7 -> 5
+                f <= 11 -> 6
+                else -> 7
             }
-            usedKeys.add(key)
-            applied++
-        }
-        return applied
-    }
-
-    private fun patternKey(pattern: List<Coord>) =
-        pattern.sortedWith(compareBy({ it.row }, { it.col }))
-            .joinToString("|") { "${it.row},${it.col}" }
-
-    private fun isBoardSolved(board: Array<Array<Cell>>) =
-        board.all { row -> row.all { cell ->
-            if (cell.type == CellType.PLUS) cell.value == 10 else cell.value == 0
-        } }
-
-    // --- Public move API ---
-
-    fun applyMove(path: List<Coord>): List<Coord>? {
-        if (!isPatternValid(path)) return null
-        val changes = mutableListOf<CellChange>()
-        val selectedKeys = path.map { coordKey(it) }.toSet()
-        val usedPairs = mutableSetOf<Int>()
-
-        path.forEach { c ->
-            val cell = board[c.row][c.col]
-            val prev = cell.value
-            normalEffect(cell)
-            changes.add(CellChange(c.row, c.col, prev, cell.value))
-        }
-        path.forEach { c ->
-            val cell = board[c.row][c.col]
-            val pid = cell.pairId ?: return@forEach
-            if (pid in usedPairs) return@forEach
-            val partner = pairPartner(c.row, c.col, pid) ?: return@forEach
-            if (coordKey(partner) in selectedKeys) return@forEach
-            usedPairs.add(pid)
-            val pc = board[partner.row][partner.col]
-            val prev = pc.value
-            normalEffect(pc)
-            changes.add(CellChange(partner.row, partner.col, prev, pc.value))
-        }
-
-        history.addLast(changes)
-        if (history.size > MAX_HISTORY) history.removeFirst()
-        moves++
-        isVictory = checkVictory()
-        return changes.map { Coord(it.row, it.col) }
-    }
-
-    fun undoLastMove(): List<Coord>? {
-        if (history.isEmpty()) return null
-        val entry = history.removeLast()
-        entry.forEach { ch -> board[ch.row][ch.col].value = ch.previous }
-        moves = max(0, moves - 1)
-        isVictory = false
-        return entry.map { Coord(it.row, it.col) }
-    }
-
-    fun restartLevel() {
-        board = cloneBoard(initialBoard)
-        history.clear()
-        moves = 0
-        isVictory = false
-    }
-
-    fun countRemaining(): Pair<Int, Int> {
-        var normal = 0; var plus = 0
-        for (row in board) for (cell in row) {
-            if (cell.type == CellType.PLUS && cell.value != 10) plus++
-            else if (cell.type == CellType.NORMAL && cell.value != 0) normal++
-        }
-        return Pair(normal, plus)
-    }
-
-    fun pairPartner(row: Int, col: Int, pairId: Int): Coord? =
-        pairs[pairId]?.firstOrNull { it.row != row || it.col != col }
-
-    // --- Pattern validation ---
-
-    fun isPatternValid(path: List<Coord>): Boolean {
-        if (path.size != linkLength) return false
-        val keys = path.map { coordKey(it) }.toSet()
-        if (keys.size != linkLength) return false
-        for (c in path) if (c.row !in board.indices || c.col !in board[c.row].indices) return false
-        if (!isConnected(path)) return false
-        return when (linkLength) {
-            2 -> isLine(path)
-            3 -> isLine(path) || isCorner(path)
-            4 -> isLine(path) || isSquare(path) || isZigzag(path) || isLShape(path)
-            else -> false
-        }
-    }
-
-    private fun isConnected(coords: List<Coord>): Boolean {
-        val visited = mutableSetOf(coordKey(coords[0]))
-        val queue = ArrayDeque<Coord>().also { it.add(coords[0]) }
-        while (queue.isNotEmpty()) {
-            val cur = queue.removeFirst()
-            for (coord in coords) {
-                if (coordKey(coord) in visited) continue
-                if (abs(coord.row - cur.row) + abs(coord.col - cur.col) == 1) {
-                    visited.add(coordKey(coord))
-                    queue.add(coord)
-                }
+            val pool = when {
+                f <= 4 -> listOf(0, 1, 2)
+                f <= 7 -> listOf(0, 1, 2, 3, 4)
+                else -> SHAPES.indices.toList()
             }
+            val pairs = intArrayOf(0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5)[f - 1]
+            // Assez de pièces pour que la grille soit pleine, puis de plus en plus chargée :
+            // c'est la superposition des pièces qui fait le casse-tête.
+            val density = (1.0f + 0.045f * (f - 1)).coerceAtMost(1.6f)
+            val averageSize = pool.map { SHAPES[it].size }.average().toFloat()
+            return Params(
+                size = size,
+                pieces = kotlin.math.ceil(size * size * density / averageSize).toInt().coerceAtMost(18),
+                pairs = pairs,
+                maxEnergy = if (f < 4) 3 else MAX_ENERGY,
+                shapePool = pool
+            )
         }
-        return visited.size == coords.size
-    }
 
-    private fun isLine(coords: List<Coord>): Boolean {
-        val rows = coords.map { it.row }; val cols = coords.map { it.col }
-        if (rows.toSet().size == 1) return cols.sorted().zipWithNext().all { (a, b) -> b == a + 1 }
-        if (cols.toSet().size == 1) return rows.sorted().zipWithNext().all { (a, b) -> b == a + 1 }
-        return false
-    }
-
-    private fun isCorner(coords: List<Coord>): Boolean {
-        if (coords.size != 3) return false
-        val rows = coords.map { it.row }.toSet().toList()
-        val cols = coords.map { it.col }.toSet().toList()
-        if (rows.size != 2 || cols.size != 2) return false
-        val present = coords.map { "${it.row}:${it.col}" }.toSet()
-        return rows.sumOf { r -> cols.count { c -> "$r:$c" !in present } } == 1
-    }
-
-    private fun isSquare(coords: List<Coord>): Boolean {
-        if (coords.size != 4) return false
-        val rows = coords.map { it.row }.toSet().toList()
-        val cols = coords.map { it.col }.toSet().toList()
-        if (rows.size != 2 || cols.size != 2) return false
-        val present = coords.map { "${it.row}:${it.col}" }.toSet()
-        return rows.all { r -> cols.all { c -> "$r:$c" in present } }
-    }
-
-    private fun isZigzag(coords: List<Coord>) = shapeKey(normalizeShape(coords)) in zigzagKeys
-    private fun isLShape(coords: List<Coord>)  = shapeKey(normalizeShape(coords)) in lKeys
-
-    // --- Shape variant helpers ---
-
-    private fun normalizeShape(coords: List<Coord>): List<Coord> {
-        val minRow = coords.minOf { it.row }; val minCol = coords.minOf { it.col }
-        return coords.map { Coord(it.row - minRow, it.col - minCol) }
-            .sortedWith(compareBy({ it.row }, { it.col }))
-    }
-
-    private fun shapeKey(coords: List<Coord>) = coords.joinToString("|") { "${it.row},${it.col}" }
-
-    private fun allVariantKeys(base: List<Coord>): Set<String> {
-        val result = mutableSetOf<String>()
-        val transforms = listOf<(Coord) -> Coord>(
-            { p -> Coord(p.row, p.col) },
-            { p -> Coord(p.col, -p.row) },
-            { p -> Coord(-p.row, -p.col) },
-            { p -> Coord(-p.col, p.row) }
-        )
-        for (t in transforms) {
-            val r = base.map(t)
-            result.add(shapeKey(normalizeShape(r)))
-            result.add(shapeKey(normalizeShape(r.map { Coord(it.row, -it.col) })))
+        /** Les points d'un étage : sa taille, moins ce qu'ont coûté les annulations. */
+        fun floorScore(pieces: Int, floor: Int, undos: Int, restarts: Int): Int {
+            val base = pieces * 10 * floor
+            val kept = (1f - UNDO_COST * undos - RESTART_COST * restarts).coerceAtLeast(FLOOR_MIN_SHARE)
+            val perfect = undos == 0 && restarts == 0
+            return (base * kept).toInt() + if (perfect) (base * PERFECT_BONUS).toInt() else 0
         }
-        return result
     }
 
-    private fun buildVariantList(base: List<Coord>): List<List<Coord>> {
-        val result = mutableListOf<List<Coord>>(); val seen = mutableSetOf<String>()
-        val transforms = listOf<(Coord) -> Coord>(
-            { p -> Coord(p.row, p.col) },
-            { p -> Coord(p.col, -p.row) },
-            { p -> Coord(-p.row, -p.col) },
-            { p -> Coord(-p.col, p.row) }
-        )
-        for (t in transforms) {
-            val r = base.map(t)
-            val nr = normalizeShape(r); if (seen.add(shapeKey(nr))) result.add(nr)
-            val nm = normalizeShape(r.map { Coord(it.row, -it.col) }); if (seen.add(shapeKey(nm))) result.add(nm)
+    class Params(
+        val size: Int, val pieces: Int, val pairs: Int, val maxEnergy: Int, val shapePool: List<Int>,
+        /** Le boss : chaque forme au moins une fois dans la main. */
+        val everyShape: Boolean = false
+    )
+
+    /** L'étage en cours, 1 à [FLOORS]. */
+    var floor = 1
+    var width = 0
+        private set
+    var height = 0
+        private set
+    /** Énergies au début du niveau. */
+    var initial = IntArray(0)
+        private set
+    var energy = IntArray(0)
+        private set
+    /** Paires intriquées, en indices de cases : [a0, b0, a1, b1, …]. */
+    var pairCells = IntArray(0)
+        private set
+    /** Jumeau de chaque case, -1 si elle n'est pas intriquée. */
+    private var partner = IntArray(0)
+    /** La main : un indice de [SHAPES] par pièce. */
+    var hand = IntArray(0)
+        private set
+    val placements = mutableListOf<Placement>()
+    /** Les points de l'étage en cours ont été comptés. */
+    var floorScored = false
+        private set
+    /** Annulations et recommencements de l'étage en cours : c'est ce qui coûte des points. */
+    var undos = 0
+        private set
+    var restarts = 0
+        private set
+    /** Points de chaque étage fini, -1 tant qu'il ne l'est pas. */
+    val floorScores = IntArray(FLOORS) { -1 }
+    /** Étages finis sans rien annuler ni recommencer. */
+    val perfectFloors = BooleanArray(FLOORS)
+    /** Les poses du générateur (non sauvegardées) : une solution, pour les tests. */
+    var solution: List<List<Int>> = emptyList()
+        private set
+
+    val pairCount get() = pairCells.size / 2
+    fun partnerOf(cell: Int) = partner.getOrElse(cell) { -1 }
+    fun isUsed(handIndex: Int) = placements.any { it.handIndex == handIndex }
+    val isVictory get() = placements.size == hand.size && energy.all { it == 0 }
+    val isBoss get() = floor == FLOORS
+    val totalScore get() = floorScores.filter { it > 0 }.sum()
+    val isRunOver get() = floorScores[FLOORS - 1] >= 0
+
+    // ── Partie ────────────────────────────────────────────────────────────────────
+    fun newRun(random: Random = Random) {
+        floor = 1
+        floorScores.fill(-1)
+        perfectFloors.fill(false)
+        generate(random)
+    }
+
+    /** Compte les points de l'étage qu'on vient de finir ; rend -1 s'ils l'étaient déjà. */
+    fun scoreFloor(): Int {
+        if (floorScored || !isVictory) return -1
+        floorScored = true
+        val points = floorScore(hand.size, floor, undos, restarts)
+        floorScores[floor - 1] = points
+        perfectFloors[floor - 1] = undos == 0 && restarts == 0
+        return points
+    }
+
+    fun nextFloor(random: Random = Random) {
+        if (floor >= FLOORS) return
+        floor++
+        generate(random)
+    }
+
+    // ── Génération ────────────────────────────────────────────────────────────────
+    fun generate(random: Random = Random) {
+        val p = paramsFor(floor)
+        repeat(400) {
+            if (tryGenerate(p, random)) return
         }
-        return result
+        // Filet de sécurité : sans paire, une grille se remplit toujours.
+        tryGenerate(Params(p.size, p.pieces, 0, p.maxEnergy, p.shapePool, p.everyShape), random)
     }
 
-    // --- Board construction ---
+    private fun tryGenerate(p: Params, random: Random): Boolean {
+        val n = p.size * p.size
+        val e = IntArray(n)
+        val cells = (0 until n).shuffled(random)
+        val pairs = IntArray(p.pairs * 2) { cells[it] }
+        val part = IntArray(n) { -1 }
+        for (k in 0 until p.pairs) { part[pairs[k * 2]] = pairs[k * 2 + 1]; part[pairs[k * 2 + 1]] = pairs[k * 2] }
 
-    private fun buildInitialBoard(sz: Int, cfg: DifficultyConfig): Array<Array<Cell>> {
-        val total = sz * sz
-        val shuffled = (0 until total).toMutableList().also { it.shuffle() }
-        val plusTarget = Random.nextInt(min(cfg.plusMin, total), min(cfg.plusMax, total) + 1)
-        val plusSet = shuffled.take(plusTarget).toSet()
-
-        val maxPairs = total / 2
-        val (pMin, pMax) = PAIRS_RANGE[pairsLevel]!!
-        val pairCount = Random.nextInt(min(pMin, maxPairs), min(pMax, maxPairs) + 1)
-        val pairAssignments = buildPairAssignments(sz, total, pairCount)
-
-        val newPairs = mutableMapOf<Int, MutableList<Coord>>()
-        val result = Array(sz) { row ->
-            Array(sz) { col ->
-                val idx = row * sz + col
-                val pa = pairAssignments[idx]
-                val type = if (idx in plusSet) CellType.PLUS else CellType.NORMAL
-                val value = if (type == CellType.PLUS) 10 else 0
-                if (pa != null) newPairs.getOrPut(pa.first) { mutableListOf() }.add(Coord(row, col))
-                Cell(type, value, pa?.first, pa?.second)
+        val shapes = IntArray(p.pieces) { i ->
+            if (p.everyShape && i < p.shapePool.size) p.shapePool[i] else p.shapePool[random.nextInt(p.shapePool.size)]
+        }
+        // Les grosses pièces d'abord : elles ont besoin de place.
+        val order = shapes.sortedByDescending { SHAPES[it].size }
+        val touchedPairs = HashSet<Int>()
+        val poses = mutableListOf<List<Int>>()
+        for (s in order) {
+            var best: List<Int>? = null
+            var bestScore = -1
+            repeat(40) {
+                val v = SHAPES[s].variants[random.nextInt(SHAPES[s].variants.size)]
+                val w = v.maxOf { it.first } + 1; val h = v.maxOf { it.second } + 1
+                if (w > p.size || h > p.size) return@repeat
+                val ox = random.nextInt(p.size - w + 1); val oy = random.nextInt(p.size - h + 1)
+                val placed = v.map { (x, y) -> (oy + y) * p.size + ox + x }
+                val hit = affected(placed, part)
+                if (hit.any { e[it] >= p.maxEnergy }) return@repeat
+                // On préfère couvrir des atomes encore au repos, pour que la grille soit pleine.
+                val score = hit.count { e[it] == 0 } * 4 + random.nextInt(4)
+                if (score > bestScore) { bestScore = score; best = placed }
             }
+            val chosen = best ?: return false
+            poses.add(chosen)
+            for (c in affected(chosen, part)) e[c]++
+            for (c in chosen) if (part[c] >= 0) touchedPairs.add(minOf(c, part[c]))
         }
-        pairs = newPairs
-        return result
-    }
+        // Une paire que rien ne touche n'apprend rien au joueur : on recommence.
+        if (touchedPairs.size < p.pairs) return false
+        if (e.count { it == 0 } > n / 4) return false
 
-    private fun buildPairAssignments(sz: Int, total: Int, count: Int): Map<Int, Pair<Int, Int>> {
-        val shuffled = (0 until total).toMutableList().also { it.shuffle() }
-        val result = mutableMapOf<Int, Pair<Int, Int>>()
-        var ptr = 0
-        for (id in 0 until count) {
-            while (ptr < shuffled.size && shuffled[ptr] in result) ptr++
-            if (ptr >= shuffled.size - 1) break
-            val first = shuffled[ptr++]
-            while (ptr < shuffled.size && shuffled[ptr] in result) ptr++
-            if (ptr >= shuffled.size) break
-            val second = shuffled[ptr++]
-            val color = PAIR_COLORS[id % PAIR_COLORS.size]
-            result[first] = Pair(id, color)
-            result[second] = Pair(id, color)
-        }
-        return result
-    }
-
-    // --- Board scrambling ---
-
-    private fun scramble(board: Array<Array<Cell>>, count: Int) {
-        when (generationMode) {
-            GenerationMode.BASE   -> scrambleBase(board, count)
-            GenerationMode.PLUS   -> scramblePlus(board, count)
-            GenerationMode.RANDOM -> scrambleRandom(board, count)
-        }
-    }
-
-    private fun scrambleBase(board: Array<Array<Cell>>, count: Int) {
-        val sz = board.size; var applied = 0; var attempts = 0
-        val max = count * 6 + 30
-        while (applied < count && attempts < max) {
-            attempts++
-            val pattern = randomPattern(sz) ?: continue
-            if (applyToBoard(board, pattern, ::normalEffect)) applied++
-        }
-    }
-
-    private fun scramblePlus(board: Array<Array<Cell>>, count: Int) {
-        val sz = board.size
-        val visits = Array(sz) { IntArray(sz) }
-        var applied = 0; var attempts = 0; val max = count * 8 + 50
-        while (applied < count && attempts < max) {
-            attempts++
-            val pattern = randomPattern(sz) ?: continue
-            val affected = collectAffected(board, pattern)
-            if (affected.isEmpty() || affected.any { visits[it.row][it.col] >= MAX_VISITS }) continue
-            if (applyToBoard(board, pattern, ::creationEffect)) {
-                affected.forEach { visits[it.row][it.col]++ }
-                applied++
-            }
-        }
-    }
-
-    private fun scrambleRandom(board: Array<Array<Cell>>, count: Int) {
-        val sz = board.size
-        val visits = Array(sz) { IntArray(sz) }
-        var applied = 0; var attempts = 0; val max = count * 8 + 50
-        while (applied < count && attempts < max) {
-            attempts++
-            val pattern = randomPattern(sz) ?: continue
-            if (Random.nextBoolean()) {
-                val affected = collectAffected(board, pattern)
-                if (affected.isEmpty() || affected.any { visits[it.row][it.col] >= MAX_VISITS }) continue
-                if (applyToBoard(board, pattern, ::creationEffect)) {
-                    affected.forEach { visits[it.row][it.col]++ }
-                    applied++
-                }
-            } else {
-                if (applyToBoard(board, pattern, ::normalEffect)) applied++
-            }
-        }
-        if (applied < count) scrambleBase(board, count - applied)
-    }
-
-    private fun applyToBoard(board: Array<Array<Cell>>, path: List<Coord>, effect: (Cell) -> Unit): Boolean {
-        if (path.size != linkLength) return false
-        val selectedKeys = path.map { coordKey(it) }.toSet()
-        val usedPairs = mutableSetOf<Int>()
-        for (c in path) {
-            if (c.row !in board.indices || c.col !in board[c.row].indices) return false
-            effect(board[c.row][c.col])
-        }
-        for (c in path) {
-            val cell = board[c.row][c.col]
-            val pid = cell.pairId ?: continue
-            if (pid in usedPairs) continue
-            val partner = pairPartner(c.row, c.col, pid) ?: continue
-            if (coordKey(partner) in selectedKeys) continue
-            usedPairs.add(pid)
-            if (partner.row in board.indices && partner.col in board[partner.row].indices)
-                effect(board[partner.row][partner.col])
-        }
+        width = p.size; height = p.size
+        initial = e; energy = e.copyOf()
+        pairCells = pairs; partner = part
+        hand = shapes.sortedBy { SHAPES[it].size * 10 + it }.toIntArray()
+        placements.clear()
+        floorScored = false
+        undos = 0; restarts = 0
+        solution = poses
         return true
     }
 
-    private fun collectAffected(board: Array<Array<Cell>>, path: List<Coord>): List<Coord> {
-        val result = mutableListOf<Coord>()
-        val selectedKeys = path.map { coordKey(it) }.toSet()
-        val usedPairs = mutableSetOf<Int>()
-        for (c in path) {
-            result.add(c)
-            val cell = board[c.row][c.col]
-            val pid = cell.pairId ?: continue
-            if (pid in usedPairs) continue
-            val partner = pairPartner(c.row, c.col, pid) ?: continue
-            if (coordKey(partner) in selectedKeys) continue
-            usedPairs.add(pid)
-            result.add(partner)
+    /** Les cases qu'une pose touche : ses cases, plus le jumeau de chacune s'il n'est pas déjà dedans. */
+    private fun affected(cells: List<Int>, part: IntArray): List<Int> {
+        val out = cells.toMutableList()
+        for (c in cells) {
+            val t = part[c]
+            if (t >= 0 && t !in cells && t !in out) out.add(t)
         }
-        return result
+        return out
     }
 
-    // --- Cell effects ---
+    fun affected(cells: List<Int>): List<Int> = affected(cells, partner)
 
-    private fun normalEffect(cell: Cell) {
-        cell.value = if (cell.type == CellType.PLUS) {
-            if (cell.value < 10) cell.value + 1 else 9
-        } else {
-            if (cell.value > 0) cell.value - 1 else 1
+    // ── Jeu ───────────────────────────────────────────────────────────────────────
+    /** La pièce de la main, encore libre, dont [cells] a la forme ; -1 si aucune. */
+    fun matchingPiece(cells: List<Int>): Int {
+        if (cells.isEmpty() || cells.toSet().size != cells.size) return -1
+        val shape = normalize(cells.map { (it % width) to (it / width) })
+        for (i in hand.indices) {
+            if (!isUsed(i) && SHAPES[hand[i]].size == cells.size && SHAPES[hand[i]].matches(shape)) return i
+        }
+        return -1
+    }
+
+    /**
+     * Pose une pièce sur [cells]. NO_MATCH : aucune pièce libre n'a cette forme.
+     * EXHAUSTED : un des atomes touchés (jumeaux compris) est déjà au repos.
+     */
+    fun place(cells: List<Int>): Result {
+        val piece = matchingPiece(cells)
+        if (piece < 0) return Result.NO_MATCH
+        val hit = affected(cells)
+        if (hit.any { energy[it] <= 0 }) return Result.EXHAUSTED
+        for (c in hit) energy[c]--
+        placements.add(Placement(piece, cells.toList()))
+        return Result.PLACED
+    }
+
+    fun undo(): Placement? {
+        if (floorScored) return null
+        val last = placements.removeLastOrNull() ?: return null
+        for (c in affected(last.cells)) energy[c]++
+        undos++
+        return last
+    }
+
+    fun restart() {
+        if (floorScored || placements.isEmpty()) return
+        placements.clear()
+        energy = initial.copyOf()
+        restarts++
+    }
+
+    // ── Sauvegarde ────────────────────────────────────────────────────────────────
+    /**
+     * Une ligne : `2;étage;taille;énergies;paires;main;poses;compté;annulations;recommencements;scores;parfaits`.
+     * Les énergies sont un chiffre par case ; les poses, `pièce:cases` séparées par des
+     * barres ; les parfaits, un 0 ou un 1 par étage.
+     */
+    fun serialize(): String {
+        if (width == 0) return ""
+        return buildString {
+            append("2;").append(floor).append(';').append(width)
+            append(';').append(initial.joinToString(""))
+            append(';').append(pairCells.joinToString(","))
+            append(';').append(hand.joinToString(","))
+            append(';').append(placements.joinToString("/") { "${it.handIndex}:${it.cells.joinToString(",")}" })
+            append(';').append(if (floorScored) 1 else 0)
+            append(';').append(undos).append(';').append(restarts)
+            append(';').append(floorScores.joinToString(","))
+            append(';').append(perfectFloors.joinToString("") { if (it) "1" else "0" })
         }
     }
 
-    private fun creationEffect(cell: Cell) {
-        cell.value = if (cell.type == CellType.PLUS) {
-            if (cell.value > 0) cell.value - 1 else 1
-        } else {
-            if (cell.value < 10) cell.value + 1 else 9
-        }
-    }
-
-    // --- Random pattern generation ---
-
-    private fun randomPattern(sz: Int): List<Coord>? = when (linkLength) {
-        2 -> randomLine(sz, 2)
-        3 -> if (Random.nextBoolean()) randomLine(sz, 3) else randomCorner(sz)
-        4 -> listOf({ randomLine(sz, 4) }, { randomSquare(sz) },
-                    { randomVariant(sz, buildVariantList(ZIGZAG_BASE)) },
-                    { randomVariant(sz, buildVariantList(L_BASE)) })
-            .shuffled().firstNotNullOfOrNull { it() }
-        else -> null
-    }
-
-    private fun randomLine(sz: Int, len: Int): List<Coord>? {
-        if (sz < len) return null
-        return if (Random.nextBoolean()) {
-            val row = Random.nextInt(sz); val start = Random.nextInt(sz - len + 1)
-            List(len) { Coord(row, start + it) }
-        } else {
-            val col = Random.nextInt(sz); val start = Random.nextInt(sz - len + 1)
-            List(len) { Coord(start + it, col) }
-        }
-    }
-
-    private fun randomCorner(sz: Int): List<Coord>? {
-        if (sz < 2) return null
-        repeat(40) {
-            val pr = Random.nextInt(sz); val pc = Random.nextInt(sz)
-            val dirs = listOf(Pair(-1,0) to Pair(0,1), Pair(-1,0) to Pair(0,-1),
-                              Pair(1,0) to Pair(0,1),  Pair(1,0) to Pair(0,-1)).shuffled()
-            for ((d1, d2) in dirs) {
-                val r1 = pr + d1.first; val c1 = pc + d1.second
-                val r2 = pr + d2.first; val c2 = pc + d2.second
-                if (r1 in 0 until sz && c1 in 0 until sz && r2 in 0 until sz && c2 in 0 until sz)
-                    return listOf(Coord(pr, pc), Coord(r1, c1), Coord(r2, c2))
+    fun deserialize(line: String): Boolean {
+        val f = line.split(';')
+        if (f.size != 12 || f[0] != "2") return false
+        return try {
+            fun ints(s: String) = if (s.isEmpty()) IntArray(0) else s.split(',').map { it.toInt() }.toIntArray()
+            val size = f[2].toInt()
+            val init = IntArray(f[3].length) { f[3][it] - '0' }
+            if (init.size != size * size) return false
+            val scores = ints(f[10])
+            if (scores.size != FLOORS || f[11].length != FLOORS) return false
+            val pairs = ints(f[4])
+            val part = IntArray(size * size) { -1 }
+            for (k in 0 until pairs.size / 2) { part[pairs[k * 2]] = pairs[k * 2 + 1]; part[pairs[k * 2 + 1]] = pairs[k * 2] }
+            floor = f[1].toInt().coerceIn(1, FLOORS)
+            width = size; height = size
+            initial = init; energy = init.copyOf()
+            pairCells = pairs; partner = part
+            hand = ints(f[5])
+            placements.clear()
+            if (f[6].isNotEmpty()) for (p in f[6].split('/')) {
+                val (piece, cells) = p.split(':')
+                val list = ints(cells).toList()
+                for (c in affected(list)) energy[c]--
+                placements.add(Placement(piece.toInt(), list))
             }
+            floorScored = f[7] == "1"
+            undos = f[8].toInt(); restarts = f[9].toInt()
+            scores.copyInto(floorScores)
+            for (i in 0 until FLOORS) perfectFloors[i] = f[11][i] == '1'
+            energy.all { it >= 0 }
+        } catch (_: RuntimeException) {
+            false
         }
-        return randomLine(sz, 3)
     }
-
-    private fun randomSquare(sz: Int): List<Coord>? {
-        if (sz < 2) return null
-        val r = Random.nextInt(sz - 1); val c = Random.nextInt(sz - 1)
-        return listOf(Coord(r, c), Coord(r, c+1), Coord(r+1, c+1), Coord(r+1, c))
-    }
-
-    private fun randomVariant(sz: Int, variants: List<List<Coord>>): List<Coord>? {
-        for (v in variants.shuffled()) {
-            val maxR = v.maxOf { it.row }; val maxC = v.maxOf { it.col }
-            if (sz <= maxR || sz <= maxC) continue
-            val br = Random.nextInt(sz - maxR); val bc = Random.nextInt(sz - maxC)
-            return v.map { Coord(it.row + br, it.col + bc) }
-        }
-        return null
-    }
-
-    // --- Misc helpers ---
-
-    private fun checkVictory(): Boolean {
-        val (n, p) = countRemaining(); return n == 0 && p == 0
-    }
-
-    private fun cloneBoard(src: Array<Array<Cell>>): Array<Array<Cell>> =
-        Array(src.size) { r -> Array(src[r].size) { c -> src[r][c].let { Cell(it.type, it.value, it.pairId, it.pairColor) } } }
-
-    private fun coordKey(c: Coord) = "${c.row}:${c.col}"
 }

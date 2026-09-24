@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="link_title">Link</string>
-    <string name="link_description">Connect cells to reach zero — or ten!</string>
+    <string name="link_title">Entanglement</string>
+    <string name="link_description">Bring every atom back to rest</string>
     <string name="link_moves_label">Moves:</string>
     <string name="link_difficulty_easy">Small</string>
     <string name="link_difficulty_medium">Medium</string>
@@ -22,6 +22,23 @@
     <string name="link_msg_nothing_to_undo">Nothing to undo.</string>
     <string name="link_msg_restart">Puzzle reset.</string>
     <string name="link_victory_check">✓</string>
-    <string name="link_victory_title">Solved!</string>
+    <string name="link_victory_title">At rest</string>
     <string name="link_victory_moves">%1$d moves</string>
+    <string name="link_floor">Floor %1$d/%2$d</string>
+    <string name="link_floor_boss">Final floor</string>
+    <string name="link_score">%1$d pts</string>
+    <string name="link_floor_points">+%1$d points</string>
+    <string name="link_floor_perfect">Perfect · +%1$d points</string>
+    <string name="link_next_floor">Next floor</string>
+    <string name="link_run_over">Run complete</string>
+    <string name="link_run_summary">%1$d points · best %2$d</string>
+    <string name="link_run_new_best">%1$d points · new best!</string>
+    <plurals name="link_run_perfect">
+        <item quantity="one">%1$d perfect floor out of %2$d · +%3$d neutrinos</item>
+        <item quantity="other">%1$d perfect floors out of %2$d · +%3$d neutrinos</item>
+    </plurals>
+    <string name="link_floor_cell">%1$d · %2$d</string>
+    <string name="link_new_run">New run</string>
+    <string name="link_restart_floor">Restart floor</string>
+    <string name="link_new_run_confirm">Abandon this run?</string>
 </resources>

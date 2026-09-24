@@ -86,11 +86,11 @@ object NeutrinoRewards {
         return if (perfect) base * 2 else base
     }
 
-    // ── Link : base difficulté × multiplicateur jumelles ───────────────────────
-    fun linkBase(difficultyOrdinal: Int) = (difficultyOrdinal + 1) * 2   // 2/4/6
-    fun linkMultiplier(pairsOrdinal: Int) = pairsOrdinal + 1             // 1/2/3
-    fun link(difficultyOrdinal: Int, pairsOrdinal: Int) =
-        linkBase(difficultyOrdinal) * linkMultiplier(pairsOrdinal)
+    // ── Intrication (ex-Link) : à la fin de la partie, selon le score ───────────
+    // Une partie de 15 étages jouée sans rien annuler vaut ~23 000 points, soit ~150
+    // neutrinos pour une bonne demi-heure : le rythme des jeux payés au temps.
+    const val LINK_POINTS_PER_NEUTRINO = 150
+    fun link(score: Int) = score / LINK_POINTS_PER_NEUTRINO
 
     // ── Trébuchet : de 10 à 50 selon le site rasé ──────────────────────────────
     //
@@ -187,8 +187,8 @@ object NeutrinoRewards {
             ),
             Entry(
                 R.string.link_title,
-                "${linkBase(0)}/${linkBase(1)}/${linkBase(2)} × ${linkMultiplier(0)}/${linkMultiplier(1)}/${linkMultiplier(2)}",
-                R.string.neutrino_info_note_pairs
+                "1 / $LINK_POINTS_PER_NEUTRINO",
+                R.string.neutrino_info_note_score
             ),
             Entry(R.string.escape_title, list(ESCAPE_VALUES.toList()), R.string.neutrino_info_note_perfect),
             // Arcade

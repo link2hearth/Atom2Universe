@@ -91,7 +91,9 @@ object HubTileArtworks {
         com.Atom2Universe.app.games.starbridges.StarBridgesActivity::class.java.name to
             com.Atom2Universe.app.games.starbridges.StarBridgesHubTileDrawable::class,
         com.Atom2Universe.app.games.theline.TheLineActivity::class.java.name to
-            com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class
+            com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class,
+        com.Atom2Universe.app.games.link.LinkActivity::class.java.name to
+            com.Atom2Universe.app.games.link.LinkHubTileDrawable::class
     )
 
     fun forActivity(activityClassName: String): KClass<out Drawable>? = byActivity[activityClassName]

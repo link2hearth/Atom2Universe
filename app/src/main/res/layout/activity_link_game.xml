@@ -1,217 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?android:attr/windowBackground">
+    android:background="#0B0A24">
 
-    <!-- Top bar -->
+    <!-- Bannière -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:id="@+id/link_header"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:background="#070B1F"
         android:gravity="center_vertical"
-        android:padding="8dp">
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/link_back_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back_24"
+            app:tint="#B8C0F0" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.06"
+            android:text="@string/link_title"
+            android:textColor="#B388FF"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/link_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#4FC3F7"
+                android:textSize="13sp"
+                tools:text="Étage 7/15" />
+
+            <TextView
+                android:id="@+id/link_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#B8C0F0"
+                android:textSize="12sp"
+                tools:text="1 240 pts" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/link_btn_undo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@android:drawable/ic_media_previous"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back" />
+            android:contentDescription="@string/link_btn_undo"
+            android:padding="8dp"
+            android:src="@drawable/ic_undo"
+            app:tint="#B8C0F0" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/link_title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="?android:attr/textColorPrimary" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/link_moves_label"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginEnd="4dp" />
-
-        <TextView
-            android:id="@+id/link_moves_value"
+        <ImageButton
+            android:id="@+id/link_btn_restart"
             android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:gravity="center"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/link_btn_restart"
+            android:padding="8dp"
+            android:src="@drawable/ic_restart"
+            app:tint="#B8C0F0" />
+
     </LinearLayout>
 
-    <!-- Controls ligne 1 : mode + taille de grille -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:paddingTop="2dp">
-
-        <Spinner
-            android:id="@+id/link_mode_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/link_difficulty_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <!-- Controls ligne 2 : cases jumelles + longueur de lien -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:paddingBottom="4dp">
-
-        <Spinner
-            android:id="@+id/link_pairs_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/link_length_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <!-- Board + overlay de victoire -->
-    <FrameLayout
-        android:layout_width="match_parent"
+    <!-- Plateau -->
+    <com.Atom2Universe.app.games.link.LinkBoardView
+        android:id="@+id/link_board_view"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:padding="12dp"
+        app:layout_constraintBottom_toTopOf="@id/link_hand_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/link_header" />
 
-        <com.Atom2Universe.app.games.link.LinkBoardView
-            android:id="@+id/link_board_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <!-- La main : les pièces à poser. -->
+    <com.Atom2Universe.app.games.link.LinkHandView
+        android:id="@+id/link_hand_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#070B1F"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Victoire : par-dessus la main, pour laisser voir la grille apaisée. -->
+    <LinearLayout
+        android:id="@+id/link_victory_overlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#E6070B1F"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="22dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/link_perfect_counter"
+            android:id="@+id/link_victory_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:layout_margin="8dp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:background="#CC000000"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:fontFamily="monospace"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/link_victory_title"
+            android:textColor="#E0F7FF"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/link_victory_moves"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="#B8C0F0"
+            android:textSize="14sp" />
+
+        <!-- Fin de partie : les points de chaque étage, les parfaits marqués. -->
+        <GridLayout
+            android:id="@+id/link_run_breakdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:columnCount="5"
             android:visibility="gone" />
 
-        <FrameLayout
-            android:id="@+id/link_victory_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#CC000000"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="260dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="#1E2A1E"
-                android:padding="28dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/link_victory_check"
-                    android:textSize="52sp"
-                    android:textColor="#66BB6A"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/link_victory_title"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/link_victory_moves"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textColor="#AAAAAA"
-                    android:layout_marginBottom="24dp" />
-
-                <Button
-                    android:id="@+id/link_victory_new_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/link_btn_new_level"
-                    android:backgroundTint="#2E7D32"
-                    android:textColor="#FFFFFF" />
-            </LinearLayout>
-        </FrameLayout>
-    </FrameLayout>
-
-    <!-- Message -->
-    <TextView
-        android:id="@+id/link_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:gravity="center"
-        android:textSize="13sp"
-        android:minLines="2"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <!-- Bottom buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp">
-
-        <Button
-            android:id="@+id/link_btn_undo"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/link_victory_new_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/link_btn_undo" />
+            android:layout_marginTop="14dp"
+            android:backgroundTint="#4A2F9E"
+            android:text="@string/link_next_floor"
+            android:textColor="#FFFFFF" />
 
-        <Button
-            android:id="@+id/link_btn_restart"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/link_btn_restart" />
-
-        <Button
-            android:id="@+id/link_btn_new_level"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/link_btn_new_level" />
     </LinearLayout>
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

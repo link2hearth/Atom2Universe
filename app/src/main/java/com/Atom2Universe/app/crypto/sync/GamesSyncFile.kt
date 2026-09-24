@@ -248,6 +248,8 @@ val HIGH_SCORE_KEYS = listOf(
     HighScoreKey("game_stats",         "colorstack_hard_best_ms", HighScoreType.LONG, L),
     HighScoreKey("game_stats",         "hexrunner_best_ms",       HighScoreType.LONG, H),
     HighScoreKey("hot_potato_save",    "best_score",      HighScoreType.INT),
+    // Intrication : le meilleur score d'une partie de 15 étages.
+    HighScoreKey("link_save",          "best_score",      HighScoreType.INT),
     HighScoreKey("match3_save",        "best_score",      HighScoreType.INT),
     // Durée de survie : plus c'est long, mieux c'est.
     HighScoreKey("match3_save",        "best_time_ms",    HighScoreType.LONG),
