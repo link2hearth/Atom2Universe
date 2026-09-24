@@ -96,14 +96,24 @@ class Hero {
         const val MIN_SPECIAL_COOLDOWN = 3
         /** Une arme qui ne va pas à l'archétype porté frappe de cette part en moins (les sorts n'en souffrent pas). */
         const val WRONG_WEAPON_MALUS = 0.15f
-        /** Le guerrier échange une part de ses dégâts d'arme contre sa robustesse. */
-        const val WARRIOR_WEAPON_DAMAGE_MULT = 0.85f
         /** La vitesse ne descend jamais sous ça, quoi qu'on porte. */
         const val MIN_SPEED = 0.5f
         /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
         const val MAX_CRIT = 0.6f
         /** L'atout de classe après une parade parfaite : une fois sur cinq au départ, au plus une fois sur deux. */
         const val BASE_CLASS_PERK = 0.2f
+        /**
+         * Le vagabond n'a ni l'esquive du voleur ni les doubles du mage : sa roulade part d'office au
+         * plafond, sur une parade parfaite sur deux (banc du 24/09/2026 : il encaissait 84 % des coups et
+         * mourait 73 % du temps contre trois ; à 35 %, encore 68 %). L'affixe « Chance d'atout » ne lui sert pas.
+         */
+        const val VAGABOND_CLASS_PERK = 0.5f
+        /**
+         * Le barbare encaisse, comme le d12 de PV de D&D : +75 % de PV max. Sans défense (ni esquive, ni
+         * doubles, ni pantins), il avait les PV d'une classe légère et mourait 72 % du temps contre trois
+         * (57 % avec +50 %).
+         */
+        const val BARBARIAN_HP_SHARE = 0.75f
         const val MAX_CLASS_PERK = 0.5f
         /** Les bancs de mesure : une chance d'atout imposée à tous (1 = à chaque parade parfaite). Null en jeu. */
         @Volatile var classPerkOverride: Float? = null
@@ -242,7 +252,9 @@ class Hero {
 
     val maxHp: Int get() {
         val plain = BASE_HP + HP_PER_CON * bonus(StatType.CON) + equipSum(StatType.MAX_HP).roundToInt()
-        return HitPointBalance.playerHp((plain * (1f + if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f)).roundToInt(), floor)
+        val share = (if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f) +
+            (if (archetype == Archetype.BARBARIAN) BARBARIAN_HP_SHARE else 0f)
+        return HitPointBalance.playerHp((plain * (1f + share)).roundToInt(), floor)
     }
 
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
@@ -254,8 +266,7 @@ class Hero {
     val weaponTypeMult: Float get() {
         val a = archetype ?: return 1f
         val w = equipped[EquipSlot.WEAPON]?.base ?: return 1f
-        return (if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS) *
-            (if (a == Archetype.WARRIOR) WARRIOR_WEAPON_DAMAGE_MULT else 1f)
+        return if (a.accepts(w)) 1f else 1f - WRONG_WEAPON_MALUS
     }
     /** Même caractéristique que celle donnée par le type d’arme ; FOR à mains nues. */
     val weaponAttribute get() = equipped[EquipSlot.WEAPON]?.damageAttribute ?: StatType.STR
@@ -355,7 +366,8 @@ class Hero {
      * tomber à chaque coup. Les bancs de mesure peuvent l'imposer ([classPerkOverride]).
      */
     val classPerkChance: Float get() = classPerkOverride
-        ?: (BASE_CLASS_PERK + equipSum(StatType.CLASS_PERK)).coerceIn(0f, MAX_CLASS_PERK)
+        ?: ((if (archetype == Archetype.VAGABOND) VAGABOND_CLASS_PERK else BASE_CLASS_PERK) + equipSum(StatType.CLASS_PERK))
+            .coerceIn(0f, MAX_CLASS_PERK)
 
     /** La parade s'élargit de 4 ms par point de DEX. */
     /** Aide gestuelle bornée, calculée avec la résistance en profondeur comme les autres bonus. */

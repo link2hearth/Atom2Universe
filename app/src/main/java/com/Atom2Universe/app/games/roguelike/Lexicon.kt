@@ -494,11 +494,11 @@ object Lexicon {
         val each = Archetype.entries.map { a ->
             entry(idOf(a), c, a.labelRes) {
                 when (a) {
-                    Archetype.BARBARIAN -> { add(R.string.lex_archetype_barbarian) }
-                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1, env.pct(1f - Hero.WARRIOR_WEAPON_DAMAGE_MULT)); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
+                    Archetype.BARBARIAN -> { add(R.string.lex_archetype_barbarian); add(R.string.lex_archetype_barbarian_hp, env.pct(Hero.BARBARIAN_HP_SHARE)) }
+                    Archetype.WARRIOR -> { add(R.string.lex_archetype_warrior_1); add(R.string.lex_archetype_warrior_2, env.pct(Combat.BLOCK_THORNS_SHARE), env.pct(Combat.BARE_BLOCK_THORNS_SHARE)) }
                     Archetype.ROGUE -> { add(R.string.lex_archetype_rogue_1); add(R.string.lex_archetype_rogue_2) }
                     Archetype.MAGE -> { add(R.string.lex_archetype_mage_1); add(R.string.lex_archetype_mage_2) }
-                    Archetype.VAGABOND -> { add(R.string.lex_archetype_vagabond_1); add(R.string.lex_archetype_vagabond_2, env.pct(Combat.ROLL_BONUS)); add(R.string.lex_archetype_vagabond_3) }
+                    Archetype.VAGABOND -> { add(R.string.lex_archetype_vagabond_1); add(R.string.lex_archetype_vagabond_2, env.pct(Combat.ROLL_BONUS)); add(R.string.lex_archetype_vagabond_perk, env.pct(Hero.VAGABOND_CLASS_PERK), env.pct(Hero.BASE_CLASS_PERK)); add(R.string.lex_archetype_vagabond_3) }
                     Archetype.NECROMANCER -> {
                         add(R.string.lex_archetype_necromancer_1)
                         add(R.string.lex_archetype_necromancer_2, env.pct(Combat.PUPPET_PARRY_HEAL))

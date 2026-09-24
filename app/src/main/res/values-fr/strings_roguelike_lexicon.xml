@@ -255,7 +255,7 @@
     <string name="lex_archetype_2">Il vient de %1$d pièces sur 3 (casque, armure, bottes) du même poids : [[weight_heavy|lourd]] pour le [[archetype_warrior|Guerrier]], [[weight_medium|intermédiaire]] pour le [[archetype_vagabond|Vagabond]], [[weight_light|léger]] pour le [[archetype_rogue|Voleur]], [[weight_cloth|tissu]] pour le [[archetype_mage|Mage]], [[weight_ultralight|super léger]] pour le [[archetype_necromancer|Nécromancien]]. Les pièces de [[weight_fur|fourrure]] donnent le [[archetype_barbarian|Barbare]].</string>
     <string name="lex_archetype_3">Sans majorité, pas d\'archétype : le [[special|Spécial]] reste verrouillé.</string>
     <string name="lex_archetype_4">N\'importe quelle relique peut être portée par n\'importe quel archétype.</string>
-    <string name="lex_archetype_warrior_1">Il encaisse et renvoie les coups, mais ses attaques d\'arme infligent %1$d %% de dégâts en moins.</string>
+    <string name="lex_archetype_warrior_1">Il encaisse et renvoie les coups.</string>
     <string name="lex_archetype_warrior_2">Geste parfait et blocage réussi : il renvoie %1$d %% du coup de base avec un bouclier, %2$d %% sans.</string>
     <string name="lex_archetype_rogue_1">Il évite les coups et frappe les cibles exposées.</string>
     <string name="lex_archetype_rogue_2">Geste parfait et esquive réussie : il riposte d\'un coup d\'arme gratuit.</string>
@@ -375,4 +375,6 @@
     <string name="lex_base_orb_mirror">Mage : l\'[[special_mirror|Image miroir]] crée %1$d double de plus.</string>
     <string name="lex_rarity_affixes_exact">%1$d affixes en plus de la base ; chacun a son [[tiers|palier]].</string>
     <string name="lex_set_affixes">Chaque pièce porte %1$d affixes, un de plus qu\'une pièce rare.</string>
+    <string name="lex_archetype_barbarian_hp">+%1$d %% de PV max : il encaisse.</string>
+    <string name="lex_archetype_vagabond_perk">Sa roulade part sur %1$d %% des parades parfaites au départ (les autres : %2$d %%).</string>
 </resources>

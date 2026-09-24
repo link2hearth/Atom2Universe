@@ -83,6 +83,13 @@ class RoguelikeSimulationTest {
         val specialBy = mutableMapOf<String, Int>()
         val castBy = mutableMapOf<Relic, Int>()
         fun cast(r: Relic) { castBy.merge(r, 1, Int::plus) }
+        /** Ce qui frappe le héros : coups des monstres, et comment chacun s'est terminé. */
+        var enemyAttacks = 0; var dodged = 0; var perks = 0; var imageHits = 0; var landed = 0
+        var damageTaken = 0L; var puppetAbsorbed = 0L; var barrierAbsorbed = 0L
+        /** Ce que le héros inflige : par sorte d'action (« attaque », « relique », « Spécial »), et pendant les tours ennemis. */
+        val actionsBy = mutableMapOf<String, Int>()
+        val damageBy = mutableMapOf<String, Long>()
+        var thorns = 0L; var counters = 0L; var enemyTurnDamage = 0L
     }
 
     /** Un groupe de combats : combien, combien de morts, PV perdus (somme des parts de PV max). */
@@ -1567,6 +1574,89 @@ class RoguelikeSimulationTest {
         println(out)
     }
 
+    /**
+     * Ce qui tue une classe : mêmes équipements que [archetypesByRarity] (mêmes dés, étage 100, équipement
+     * de l'étage 95), contre 3 ennemis (un boss et deux accompagnants), soin complet avant chaque combat.
+     * Pour chaque classe, en normal et en rare, sans relique puis avec les 3 qu'elle choisit : les coups
+     * reçus (esquivés, évités par l'atout, pris par un double, encaissés), ce que coûte un coup encaissé,
+     * et d'où viennent les dégâts infligés (attaque, relique, Spécial, pendant les tours ennemis).
+     * Réglages : SIM_HEROES=30, SIM_FIGHTS=100, SIM_ENEMIES=3, SIM_SKILL=CORRECT. Écrit build/roguelike-diagnosis.txt.
+     */
+    @Test
+    fun classDiagnosis() {
+        val heroes = System.getenv("SIM_HEROES")?.toInt() ?: 30
+        val fights = System.getenv("SIM_FIGHTS")?.toInt() ?: 100
+        val count = System.getenv("SIM_ENEMIES")?.toInt() ?: 3
+        val skill = System.getenv("SIM_SKILL")?.let(Skill::valueOf) ?: Skill.CORRECT
+        val gearFloor = 95; val floor = 100
+        val start = System.currentTimeMillis()
+
+        class Row(val a: Archetype, val tier: GearTier, val withRelics: Boolean) {
+            val cs = CombatStat(); var fights = 0; var deaths = 0; var turns = 0L
+            var maxHpSum = 0L; var enemyHpSum = 0L
+        }
+        val jobs = Archetype.entries.flatMap { a -> listOf(GearTier.NORMAL, GearTier.RARE).flatMap { t -> listOf(false, true).map { Triple(a, t, it) } } }
+        val rows = jobs.parallelStream().map { (a, tier, withRelics) ->
+            val row = Row(a, tier, withRelics)
+            for (i in 0 until heroes) {
+                val template = heroWithAllSlots().apply {
+                    this.floor = floor
+                    deepestFloor = floor
+                    equipped.putAll(classGear(a, tier, i, gearFloor))
+                    relicSlots.fill(null)
+                    relics.clear()
+                    healFull()
+                }
+                val worn = if (!withRelics) emptyList() else {
+                    Relic.entries.filter { it != Relic.HOURGLASS }.forEach { template.relics += it }
+                    chooseRelics(template, floor, skill, trialChain = 1, series = 36)
+                    template.relicSlots.filterNotNull()
+                }
+                repeat(fights) { k ->
+                    val hero = trialCopy(template, worn)
+                    val rng = Random(i * 1_000_003L + count * 10_007L + k)
+                    val family = Encounters.roll(floor, rng).first()
+                    val enemies = Encounters.build(List(count) { family }, floor)
+                    row.enemyHpSum += enemies.sumOf { it.maxHp.toLong() }
+                    row.maxHpSum += hero.maxHp
+                    val combat = Combat(hero, floor, enemies, ambush = false, rng = rng)
+                    val stat = FloorStat()
+                    playCombat(combat, skill, stat, rng, combos = true, cs = row.cs, maxTurns = 500)
+                    row.fights++
+                    row.turns += stat.turnsInFight
+                    if (hero.hp <= 0) row.deaths++
+                }
+            }
+            row
+        }.collect(java.util.stream.Collectors.toList())
+
+        fun pct(x: Double) = String.format("%5.1f%%", 100 * x)
+        val out = StringBuilder("══════ Ce qui tue chaque classe (étage $floor, équipement de l'étage $gearFloor, $count ennemis, $skill) ══════\n")
+        out.appendLine("$heroes tirages × $fights combats par ligne ; soin complet avant chaque combat. Coups reçus : ce que les monstres ont lancé sur le héros.")
+        out.appendLine("« coups pour mourir » = PV max / dégâts d'un coup encaissé. Dégâts infligés : par action du héros, en % des PV du groupe ennemi.")
+        for (withRelics in listOf(false, true)) {
+            out.appendLine("\n── ${if (withRelics) "Avec 3 reliques choisies" else "Sans relique"} ──")
+            out.appendLine(String.format("%-12s %-6s | %6s | %5s | %5s | %6s | %6s | %6s | %6s | %7s | %6s | %7s | %s",
+                "Classe", "Rareté", "Morts", "Tours", "Coups", "Esquiv", "Atout", "Double", "Touché", "Coup/PV", "Pr mour", "Dég/act", "Part des dégâts : attaque · relique · Spécial · tour ennemi (renvoi, riposte, poisons)"))
+            for (r in rows.filter { it.withRelics == withRelics }) {
+                val cs = r.cs; val n = r.fights.toDouble()
+                val att = cs.enemyAttacks.coerceAtLeast(1).toDouble()
+                val hitCost = cs.damageTaken.toDouble() / cs.landed.coerceAtLeast(1) / (r.maxHpSum / n)
+                val dealt = cs.damageBy.values.sum() + cs.enemyTurnDamage
+                val actions = cs.actionsBy.values.sum().coerceAtLeast(1)
+                fun share(x: Long) = pct(x.toDouble() / dealt.coerceAtLeast(1))
+                out.appendLine(String.format("%-12s %-6s | %6s | %5.1f | %5.1f | %6s | %6s | %6s | %6s | %7s | %7.1f | %7s | %s · %s · %s · %s",
+                    r.a, r.tier.label, pct(r.deaths / n), r.turns / n, cs.enemyAttacks / n,
+                    pct(cs.dodged / att), pct(cs.perks / att), pct(cs.imageHits / att), pct(cs.landed / att),
+                    pct(hitCost), 1 / hitCost, pct(cs.damageBy.values.sum().toDouble() / actions / (r.enemyHpSum / n)),
+                    share(cs.damageBy["attaque"] ?: 0), share(cs.damageBy["relique"] ?: 0), share(cs.damageBy["Spécial"] ?: 0), share(cs.enemyTurnDamage)))
+            }
+        }
+        out.appendLine("\n(${(System.currentTimeMillis() - start) / 1000} s)")
+        File("build/roguelike-diagnosis${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
+        println(out)
+    }
+
     // ── Le bot joueur de combos : ce que sait un joueur qui connaît le jeu ──────
 
     /** [r] lancé sur [e] déclencherait une réaction (ou son bonus contre un figé). */
@@ -2106,6 +2196,8 @@ class RoguelikeSimulationTest {
                 }
                 lastWasSupport = false
                 val combo = if (combos) comboChoice(c, target) else null
+                val enemyHpBefore = c.enemies.sumOf { it.hp.toLong() }
+                val kind = when { special != null -> "Spécial"; combo?.first != null || (combo == null && ready != null) -> "relique"; else -> "attaque" }
                 when {
                     special != null -> {
                         cs?.let {
@@ -2126,13 +2218,34 @@ class RoguelikeSimulationTest {
                     ready != null -> { cs?.let { it.casts++; it.cast(ready) }; c.castRelic(ready, aimAt(ready), strike(skill, rng, c.hero)); lastWasSupport = !ready.hits }
                     else -> c.attack(target, strike(skill, rng, c.hero))
                 }
+                cs?.let {
+                    it.actionsBy.merge(kind, 1, Int::plus)
+                    it.damageBy.merge(kind, enemyHpBefore - c.enemies.sumOf { e -> e.hp.toLong() }, Long::plus)
+                }
             } else {
+                val enemyHpBefore = c.enemies.sumOf { it.hp.toLong() }
                 val (_, attackers) = c.startEnemyTurn()
                 for (a in attackers) {
                     if (c.phase != CombatPhase.ENEMY_TURN) break
-                    c.resolveStrike(a, parry(skill, rng, c.hero, guarding = c.guarding, slowed = c.hourglassStrikes > 0))
+                    val s = c.resolveStrike(a, parry(skill, rng, c.hero, guarding = c.guarding, slowed = c.hourglassStrikes > 0))
+                    cs?.let {
+                        if (s.charmed || s.bledOut) return@let
+                        it.enemyAttacks++
+                        when {
+                            s.imageHit -> it.imageHits++
+                            s.blocked || s.dodged -> it.perks++
+                            s.missed -> it.dodged++
+                            else -> it.landed++
+                        }
+                        it.damageTaken += s.damage
+                        it.puppetAbsorbed += s.puppetAbsorbed
+                        it.barrierAbsorbed += s.absorbed
+                        it.thorns += s.thorns
+                        it.counters += s.counter?.damage ?: 0
+                    }
                 }
                 c.endEnemyTurn()
+                cs?.let { it.enemyTurnDamage += enemyHpBefore - c.enemies.sumOf { e -> e.hp.toLong() } }
             }
         }
         fs.turnsInFight += turns

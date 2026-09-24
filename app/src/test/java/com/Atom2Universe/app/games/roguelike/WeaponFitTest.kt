@@ -79,7 +79,7 @@ class WeaponFitTest {
         val oldDamage = h.weaponMax
         h.equipped[EquipSlot.WEAPON] = weapon(ItemBase.STAFF, 20)
         assertEquals(StatType.INT, h.weaponAttribute)
-        assertEquals(.85f * Hero.WARRIOR_WEAPON_DAMAGE_MULT, h.weaponTypeMult, .0001f)
+        assertEquals(.85f, h.weaponTypeMult, .0001f)
         assertTrue(h.weaponMin > 0)
         assertTrue(h.weaponMax > oldDamage)
         val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 100, 100)), false, Random(1))

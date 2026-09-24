@@ -255,7 +255,7 @@
     <string name="lex_archetype_2">It comes from %1$d of 3 pieces (helmet, armor, boots) of the same weight: [[weight_heavy|heavy]] for the [[archetype_warrior|Warrior]], [[weight_medium|medium]] for the [[archetype_vagabond|Wanderer]], [[weight_light|light]] for the [[archetype_rogue|Rogue]], [[weight_cloth|cloth]] for the [[archetype_mage|Mage]], [[weight_ultralight|featherlight]] for the [[archetype_necromancer|Necromancer]]. [[weight_fur|Fur]] armor identifies the [[archetype_barbarian|Barbarian]].</string>
     <string name="lex_archetype_3">Without a majority, no archetype: the [[special|Special]] stays locked.</string>
     <string name="lex_archetype_4">Any relic can be worn by any archetype.</string>
-    <string name="lex_archetype_warrior_1">It takes blows and sends them back, but its weapon attacks deal %1$d%% less damage.</string>
+    <string name="lex_archetype_warrior_1">It takes blows and sends them back.</string>
     <string name="lex_archetype_warrior_2">Perfect timing and a successful block: reflects %1$d%% of the base blow with a shield, %2$d%% without.</string>
     <string name="lex_archetype_rogue_1">It avoids blows and strikes exposed targets.</string>
     <string name="lex_archetype_rogue_2">Perfect timing and a successful dodge: counters with a free weapon hit.</string>
@@ -375,4 +375,6 @@
     <string name="lex_base_orb_mirror">Mage: [[special_mirror|Mirror image]] creates %1$d more double.</string>
     <string name="lex_rarity_affixes_exact">%1$d affixes on top of the base; each has its [[tiers|tier]].</string>
     <string name="lex_set_affixes">Each piece carries %1$d affixes, one more than a rare piece.</string>
+    <string name="lex_archetype_barbarian_hp">+%1$d%% max HP: it takes the blows.</string>
+    <string name="lex_archetype_vagabond_perk">Its roll triggers on %1$d%% of perfect parries to start (others: %2$d%%).</string>
 </resources>

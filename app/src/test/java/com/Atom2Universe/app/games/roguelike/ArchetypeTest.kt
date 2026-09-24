@@ -47,13 +47,22 @@ class ArchetypeTest {
     }
 
     @Test
-    fun leGuerrierFrappeMoinsFortAvecSonArme() {
+    fun leGuerrierFrappePleinementAvecSonArme() {
+        // Plus de malus propre au guerrier depuis le 24/09/2026 : seul le malus d'arme hors classe reste
         val hero = heroOf(Archetype.WARRIOR)
         hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.MACE, null)
-        assertEquals(Hero.WARRIOR_WEAPON_DAMAGE_MULT, hero.weaponTypeMult, 0.001f)
-        // La hache est l'arme du barbare : le malus d'arme hors classe s'y ajoute (0,85 × 0,85)
+        assertEquals(1f, hero.weaponTypeMult, 0.001f)
         hero.equipped[EquipSlot.WEAPON] = piece(ItemBase.AXE, null)
-        assertEquals(Hero.WARRIOR_WEAPON_DAMAGE_MULT * (1f - Hero.WRONG_WEAPON_MALUS), hero.weaponTypeMult, 0.001f)
+        assertEquals(1f - Hero.WRONG_WEAPON_MALUS, hero.weaponTypeMult, 0.001f)
+    }
+
+    @Test
+    fun leBarbareAPlusDePvEtLeVagabondRouleSouvent() {
+        // Fourrure et intermédiaire donnent les mêmes PV de pièce, et ni l'une ni l'autre de la CON
+        val ratio = heroOf(Archetype.BARBARIAN).maxHp.toFloat() / heroOf(Archetype.VAGABOND).maxHp
+        assertTrue("barbare / vagabond : $ratio", ratio > 1.3f)
+        assertEquals(Hero.VAGABOND_CLASS_PERK, heroOf(Archetype.VAGABOND).classPerkChance, 0f)
+        assertEquals(Hero.BASE_CLASS_PERK, heroOf(Archetype.MAGE).classPerkChance, 0f)
     }
 
     @Test
