@@ -16,6 +16,8 @@ class ReadingHubActivity : BaseHubActivity() {
 
     override fun getLayoutResId(): Int = R.layout.activity_base_hub
 
+    override fun supportsTileColors(): Boolean = false
+
     override fun getPrefsName(): String = "reading_hub_prefs"
 
     override fun getParentHubPrefsName(): String = "audio_hub_prefs"

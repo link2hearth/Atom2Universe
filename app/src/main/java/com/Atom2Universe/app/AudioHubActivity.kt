@@ -659,7 +659,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             context = this,
             onTileClick = { tile -> onTileClicked(tile) },
             onOrderChanged = { order -> saveTileOrder(order) },
-            onEditTile = { tile -> showTileEditDialog(tile) },
+            onEditTile = null,
             onLongPressTile = { _ -> enterEditMode() },
             onQuickAccessClick = { _, item ->
                 try {
@@ -670,6 +670,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
             }
         )
         tilesAdapter.setShowQuickAccessButtons(true)
+        tilesAdapter.setIllustratedListMode(true)
 
         // Setup RecyclerView with GridLayoutManager (2 columns)
         tilesRecyclerView.layoutManager = GridLayoutManager(this, 2)
@@ -715,15 +716,14 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
 
     private fun loadTiles() {
         val savedOrder = loadTileOrder()
-        val savedColors = loadTileColors()
         val savedQuickAccess = loadQuickAccess()
 
         // Apply customization to tiles
         val tilesWithCustomization = defaultTiles.map { tile ->
-            val colorData = savedColors[tile.id]
             tile.copy(
-                customColorHex = colorData?.first,
-                textColorMode = colorData?.second ?: "auto",
+                artworkClass = tile.activityClass?.let { com.Atom2Universe.app.hub.HubTileArtworks.forActivity(it.name) },
+                customColorHex = null,
+                textColorMode = "auto",
                 quickAccessItems = savedQuickAccess[tile.id] ?: emptyList()
             )
         }

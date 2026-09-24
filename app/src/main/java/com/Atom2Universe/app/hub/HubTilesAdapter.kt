@@ -49,6 +49,7 @@ class HubTilesAdapter(
     private var showQuickAccessButtons: Boolean = false
     private var spanCount: Int = 2
     private var squareTiles: Boolean = false
+    private var illustratedListMode: Boolean = false
     private var recyclerView: RecyclerView? = null
     private val artworkCache = mutableMapOf<String, Drawable>()
 
@@ -59,6 +60,14 @@ class HubTilesAdapter(
     }
 
     fun getTiles(): List<HubTile> = tiles.toList()
+
+    /** Les hubs illustrés peuvent garder une vignette lisible à côté du texte en liste. */
+    fun setIllustratedListMode(enabled: Boolean) {
+        if (illustratedListMode != enabled) {
+            illustratedListMode = enabled
+            notifyDataSetChanged()
+        }
+    }
 
     fun getTileIds(): List<String> = tiles.map { it.id }
 
@@ -174,7 +183,11 @@ class HubTilesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TileViewHolder {
-        val layoutRes = if (isGridMode) R.layout.item_hub_tile_grid else R.layout.item_hub_tile_list
+        val layoutRes = when (viewType) {
+            0 -> R.layout.item_hub_tile_grid
+            2 -> R.layout.item_hub_tile_artwork_list
+            else -> R.layout.item_hub_tile_list
+        }
         val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return TileViewHolder(view)
     }
@@ -241,7 +254,7 @@ class HubTilesAdapter(
     override fun getItemCount(): Int = tiles.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (isGridMode) 0 else 1
+        return if (isGridMode) 0 else if (illustratedListMode) 2 else 1
     }
 
     fun onItemMove(fromPosition: Int, toPosition: Int) {
@@ -276,6 +289,11 @@ class HubTilesAdapter(
         // Taille et ombre d'origine, lues une fois : les vues sont recyclees, un titre agrandi ou
         // assombri pour une tuile ne doit ni s'additionner, ni deteindre sur la tuile suivante.
         private val titleBaseSize = title.textSize
+        private val titleBaseMaxLines = title.maxLines
+        private val artworkBaseLayout = artwork?.layoutParams?.let {
+            androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
+                it as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams)
+        }
         private val titleBaseLayout = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(
             title.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams)
         private val titleBaseShadow = floatArrayOf(title.shadowRadius, title.shadowDx, title.shadowDy)
@@ -283,6 +301,7 @@ class HubTilesAdapter(
         private val badgeBaseSize = badge1?.textSize ?: 0f
 
         fun bind(tile: HubTile) {
+            val artworkRow = itemViewType == 2
             val bgColor = if (tile.customColorHex != null) {
                 try {
                     Color.parseColor(tile.customColorHex)
@@ -292,7 +311,7 @@ class HubTilesAdapter(
             } else {
                 ContextCompat.getColor(context, tile.defaultColorRes)
             }
-            card.setCardBackgroundColor(bgColor)
+            card.setCardBackgroundColor(if (tile.artworkClass != null) 0xFF111B2B.toInt() else bgColor)
 
             val customArtwork = tile.artworkClass?.let { artworkClass ->
                 artworkCache.getOrPut("${tile.id}:${artworkClass.qualifiedName}") {
@@ -300,7 +319,20 @@ class HubTilesAdapter(
                 }
             }
             artwork?.setImageDrawable(customArtwork)
-            artwork?.visibility = if (customArtwork != null) View.VISIBLE else View.GONE
+            artwork?.visibility = if (customArtwork != null) View.VISIBLE else if (artworkRow) View.INVISIBLE else View.GONE
+            if (isGridMode && artworkBaseLayout != null) {
+                artwork?.layoutParams = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(artworkBaseLayout).apply {
+                    if (showQuickAccessButtons && tile.quickAccessItems.isNotEmpty()) {
+                        // Les raccourcis occupent la moitié gauche : centrer le décor dans la moitié libre.
+                        startToStart = -1
+                        startToEnd = R.id.tile_quick_access_container
+                    }
+                }
+            }
+            if (artworkRow) {
+                artwork?.outlineProvider = roundedBadgeOutline
+                artwork?.clipToOutline = true
+            }
             val textColor = if (customArtwork != null) Color.WHITE else calculateTextColor(bgColor, tile.textColorMode)
             val subtitleColor = if (customArtwork != null) Color.argb(230, 255, 255, 255)
                 else calculateSubtitleColor(bgColor, tile.textColorMode)
@@ -321,13 +353,16 @@ class HubTilesAdapter(
                 }
             }
 
-            val textStyle = if (customArtwork != null)
+            val textStyle = if (customArtwork != null && !artworkRow)
                 tile.activityClass?.let { HubTileArtworks.textStyleFor(it.name) } else null
             val label = context.getString(tile.titleRes)
             title.text = if (customArtwork != null)
                 HubTileArtworks.titleCase(label, context.resources.configuration.locales[0]) else label
             title.setTextColor(textStyle?.color ?: textColor)
-            title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, titleBaseSize * (textStyle?.scale ?: 1f))
+            val besideShortcuts = isGridMode && customArtwork != null && showQuickAccessButtons && tile.quickAccessItems.isNotEmpty()
+            title.maxLines = if (besideShortcuts) 2 else titleBaseMaxLines
+            title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,
+                titleBaseSize * if (besideShortcuts) 1.1f else (textStyle?.scale ?: 1f))
             title.layoutParams = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams(titleBaseLayout).apply {
                 if (isGridMode && textStyle?.lowerTitle == true) {
                     topToBottom = -1
@@ -350,7 +385,7 @@ class HubTilesAdapter(
             description?.setTextColor(subtitleColor)
             // Une illustration dit d'elle-même ce qu'est le jeu : seul le titre reste posé dessus.
             description?.visibility =
-                if (tile.showDescription && customArtwork == null) View.VISIBLE else View.GONE
+                if (tile.showDescription && (customArtwork == null || artworkRow)) View.VISIBLE else View.GONE
 
             if (isEditMode && editButton != null && onEditTile != null) {
                 editButton.visibility = View.VISIBLE

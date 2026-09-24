@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.science
 
 import android.content.Intent
+import android.os.Bundle
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.gameoflife.GameOfLifeActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
@@ -28,7 +29,12 @@ class ScienceHubActivity : BaseHubActivity() {
 
     // Comme le hub des jeux : chaque module a son illustration (HubTileArtworks), en tuiles carrées.
     override fun supportsTileColors(): Boolean = false
-    override fun supportsListMode(): Boolean = false
+    override fun supportsListMode(): Boolean = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tilesAdapter.setSquareTiles(true)
+    }
 
     override fun getDefaultTiles(): List<HubTile> = listOf(
         HubTile(

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games
 
 import android.content.Intent
+import android.os.Bundle
 import android.widget.Toast
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.farm.FarmState
@@ -24,10 +25,16 @@ class GamesActivity : BaseHubActivity() {
 
     override fun getHubSubtitle(): Int? = null
 
-    // Chaque jeu a son illustration, déclarée une seule fois dans HubTileArtworks : pas de
-    // couleur de tuile à choisir, et une grille de carrés seulement.
+    // La grille garde ses carrés ; la liste place l'illustration à côté du titre et du descriptif.
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tilesAdapter.setSquareTiles(true)
+        tilesAdapter.setIllustratedListMode(true)
+    }
+
+    // Chaque jeu a son illustration, déclarée une seule fois dans HubTileArtworks.
     override fun supportsTileColors(): Boolean = false
-    override fun supportsListMode(): Boolean = false
+    override fun supportsListMode(): Boolean = true
 
     override fun getDefaultTiles(): List<HubTile> = GamesCatalog.tiles
 

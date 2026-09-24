@@ -1,6 +1,8 @@
 package com.Atom2Universe.app.audio
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audioeditor.AudioEditorActivity
 import com.Atom2Universe.app.dictaphone.DictaphoneActivity
@@ -13,7 +15,34 @@ import com.Atom2Universe.app.sf2creator.Sf2CreatorActivity
 
 class AudioSubHubActivity : BaseHubActivity() {
 
+    private lateinit var ambience: AudioHubAmbience
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tilesAdapter.setIllustratedListMode(true)
+        val recycler = findViewById<RecyclerView>(R.id.hub_recycler_view)
+        ambience = AudioHubAmbience(recycler)
+        recycler.addItemDecoration(ambience)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ambience.setActive(true)
+    }
+
+    override fun onPause() {
+        ambience.setActive(false)
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        ambience.dispose()
+        super.onDestroy()
+    }
+
     override fun getLayoutResId(): Int = R.layout.activity_base_hub
+
+    override fun supportsTileColors(): Boolean = false
 
     override fun getPrefsName(): String = "audio_sub_hub_prefs"
 

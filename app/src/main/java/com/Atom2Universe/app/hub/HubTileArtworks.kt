@@ -25,6 +25,12 @@ import kotlin.reflect.KClass
  */
 object HubTileArtworks {
     private val byActivity: Map<String, KClass<out Drawable>> = mapOf(
+        com.Atom2Universe.app.audio.AudioSubHubActivity::class.java.name to AudioOverviewHubTileDrawable::class,
+        com.Atom2Universe.app.games.GamesActivity::class.java.name to GamesOverviewHubTileDrawable::class,
+        com.Atom2Universe.app.creative.CreativeHubActivity::class.java.name to CreativeOverviewHubTileDrawable::class,
+        com.Atom2Universe.app.reading.ReadingHubActivity::class.java.name to ReadingOverviewHubTileDrawable::class,
+        com.Atom2Universe.app.science.ScienceHubActivity::class.java.name to ScienceOverviewHubTileDrawable::class,
+        com.Atom2Universe.app.stats.StatsHubActivity::class.java.name to StatsOverviewHubTileDrawable::class,
         MainClickerActivity::class.java.name to ClickerHubTileDrawable::class,
         FarmActivity::class.java.name to FarmHubTileDrawable::class,
         com.Atom2Universe.app.games.match3.Match3Activity::class.java.name to
@@ -102,6 +108,28 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.link.LinkHubTileDrawable::class,
         com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java.name to
             com.Atom2Universe.app.games.infernale.InfernaleHubTileDrawable::class,
+        // Hub Audio (également retrouvées par les raccourcis du hub principal).
+        com.Atom2Universe.app.music.MusicPlayerActivity::class.java.name to
+            com.Atom2Universe.app.audio.MusicHubTileDrawable::class,
+        com.Atom2Universe.app.midi.ui.MidiPlayerActivity::class.java.name to
+            com.Atom2Universe.app.audio.MidiHubTileDrawable::class,
+        com.Atom2Universe.app.radio.RadioActivity::class.java.name to
+            com.Atom2Universe.app.audio.RadioHubTileDrawable::class,
+        com.Atom2Universe.app.audioeditor.AudioEditorActivity::class.java.name to
+            com.Atom2Universe.app.audio.AudioEditorHubTileDrawable::class,
+        com.Atom2Universe.app.sf2creator.Sf2CreatorActivity::class.java.name to
+            com.Atom2Universe.app.audio.Sf2CreatorHubTileDrawable::class,
+        com.Atom2Universe.app.dictaphone.DictaphoneActivity::class.java.name to
+            com.Atom2Universe.app.audio.DictaphoneHubTileDrawable::class,
+        // Lecture, création et statistiques.
+        com.Atom2Universe.app.books.BookLibraryActivity::class.java.name to BooksHubTileDrawable::class,
+        com.Atom2Universe.app.comics.ComicsLibraryActivity::class.java.name to ComicsHubTileDrawable::class,
+        com.Atom2Universe.app.notes.ui.NotesActivity::class.java.name to NotesHubTileDrawable::class,
+        com.Atom2Universe.app.pixelart.PixelArtEditorActivity::class.java.name to PixelArtHubTileDrawable::class,
+        com.Atom2Universe.app.pixelart.CanvasEditorActivity::class.java.name to CanvasHubTileDrawable::class,
+        com.Atom2Universe.app.stats.ui.StatsActivity::class.java.name to AudioStatsHubTileDrawable::class,
+        com.Atom2Universe.app.clickerstats.ClickerStatsActivity::class.java.name to GameStatsHubTileDrawable::class,
+        com.Atom2Universe.app.stats.ui.ReadingStatsActivity::class.java.name to ReadingStatsHubTileDrawable::class,
         // Hub Sciences
         com.Atom2Universe.app.periodic.PeriodicTableActivity::class.java.name to
             com.Atom2Universe.app.periodic.PeriodicHubTileDrawable::class,

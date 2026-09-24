@@ -199,6 +199,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
         )
 
         tilesAdapter.setShowQuickAccessButtons(supportsQuickAccess())
+        tilesAdapter.setIllustratedListMode(true)
         tilesAdapter.setSquareTiles(!supportsListMode())
 
         recyclerView.adapter = tilesAdapter
