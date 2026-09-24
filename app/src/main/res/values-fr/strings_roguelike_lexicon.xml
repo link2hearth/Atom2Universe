@@ -32,7 +32,6 @@
     <string name="lex_attr_dex_1">Les dégâts des dagues, le critique et l’esquive ; la caractéristique du Voleur.</string>
     <string name="lex_attr_dex_2">[[stat_crit_chance|Chance de critique]] : +%1$d %% par point</string>
     <string name="lex_attr_dex_3">Fenêtre de [[parry|parade]] : +%1$d ms par point</string>
-    <string name="lex_attr_dex_4">[[stat_dodge|Esquive]] : +%1$d %% tous les 2 points, sauf avec une pièce d\'armure [[weight_heavy|lourde]]</string>
     <string name="lex_attr_con_1">Tes points de vie et les dégâts des masses.</string>
     <string name="lex_attr_con_2">+%1$s PV par point au-dessus de 10</string>
     <string name="lex_attr_int_1">Les dégâts des bâtons et les sorts du Mage : feu, glace, foudre…</string>
@@ -54,9 +53,6 @@
     <string name="lex_you_armor">Toi : %1$s, soit %2$d %% de dégâts en moins à l\'étage %3$d</string>
     <string name="lex_stat_dodge">Esquive</string>
     <string name="lex_stat_dodge_1">La chance que les monstres de l\'étage te ratent.</string>
-    <string name="lex_stat_dodge_2">Pièce [[weight_light|légère]] : +%1$d %% par pièce ; bouclier : +%2$d %%</string>
-    <string name="lex_stat_dodge_3">[[attr_dex|DEX]] : +%1$d %% tous les 2 points au-dessus de 10, sauf avec une pièce [[weight_heavy|lourde]]</string>
-    <string name="lex_stat_dodge_4">Toujours entre %1$d %% et %2$d %%</string>
     <string name="lex_you_dodge">Toi : %1$d %% à l\'étage %2$d</string>
     <string name="lex_stat_crit_chance">Chance de critique</string>
     <string name="lex_stat_crit_chance_1">La chance qu\'un coup soit critique : il fait alors plus mal.</string>
@@ -111,9 +107,7 @@
     <string name="lex_parry">Parade</string>
     <string name="lex_parry_1">Touche quand le cercle mobile se superpose au cercle fixe. Un petit décalage donne un geste presque réussi ; trop tôt ou trop tard, le geste est raté. Le cercle continue à rétrécir après la cible.</string>
     <string name="lex_parry_2">Si le coup touche, le geste choisit sa fourchette : presque réussi ×%1$s, parfait ×%2$s, raté ×%3$s. Ton armure réduit ensuite les dégâts.</string>
-    <string name="lex_parry_defense">Le même jet de défense utilise ton équipement : léger et DEX favorisent l\'esquive, le bouclier favorise le blocage. Le geste ajoute jusqu\'à %1$d points de chance si presque réussi, %2$d si parfait, avec un plafond de %3$d %% hors affaiblissements ennemis.</string>
     <string name="lex_parry_3">L’[[attr_end|END]] augmente le temps du geste de 15 %% maximum et la largeur des fenêtres de 20 %% maximum. La DEX ne modifie pas le timing.</string>
-    <string name="lex_parry_4">Un geste parfait ne garantit pas d\'éviter le coup. Si le jet de défense réussit aussi, il déclenche l\'atout de ton [[archetype|archétype]].</string>
     <string name="lex_strike">Frapper juste</string>
     <string name="lex_strike_1">Effectue le swipe dans le sens de la flèche quand le curseur atteint la zone verte. La petite zone rouge donne un parfait.</string>
     <string name="lex_strike_2">Parfait : maximum de la fourchette de dégâts. Bien : milieu de la fourchette. Le critique est tiré séparément.</string>
@@ -277,10 +271,7 @@
     <string name="lex_weight_light_1">Un peu moins d\'armure, mais il évite les coups.</string>
     <string name="lex_weight_heavy_1">Beaucoup d\'armure : il encaisse.</string>
     <string name="lex_weight_armor">[[stat_armor|Armure]] ×%1$s</string>
-    <string name="lex_weight_dodge">[[stat_dodge|Esquive]] : +%1$d %% par pièce</string>
     <string name="lex_weight_speed">[[stat_speed|Vitesse]] : %1$s %% par pièce</string>
-    <string name="lex_weight_dex_yes">La [[attr_dex|DEX]] compte dans l\'esquive.</string>
-    <string name="lex_weight_dex_no">La [[attr_dex|DEX]] ne compte plus dans l\'esquive.</string>
     <string name="lex_weight_archetype">Deux pièces sur trois : %1$s</string>
     <string name="lex_rarity_normal_1">Aucun affixe : rien que la base de l\'objet.</string>
     <string name="lex_rarity_affixes">%1$d à %2$d affixes en plus de la base ; chacun a son [[tiers|palier]].</string>
@@ -291,7 +282,6 @@
     <string name="lex_base_damage">Dégâts d\'arme ×%1$s</string>
     <string name="lex_base_armor">Armure de base : %1$s</string>
     <string name="lex_base_spell">+%1$d %% de [[stat_spell_dmg|dégâts des sorts]] de base</string>
-    <string name="lex_base_shield">+%1$d %% d\'[[stat_dodge|esquive]]</string>
     <string name="lex_base_weights">Existe en [[weight_cloth|tissu]], [[weight_light|léger]] ou [[weight_heavy|lourd]].</string>
     <string name="lex_tiers">Paliers d\'affixes</string>
     <string name="lex_tiers_1">Un affixe a un palier (P1, P2…) : plus il est haut, plus la ligne est forte.</string>
@@ -338,8 +328,7 @@
     <string name="lex_special_combo_1">%1$d frappes, un geste chacune, pour une action. Chaque frappe inflige 60 %% des dégâts d’arme ; avec lanterne, la seconde inflige 90 %% : 200 %% au total avant les autres effets.</string>
     <string name="lex_special_puppets_1">Invoque ou relève les pantins avec tous leurs PV en sacrifiant %2$d %% de tes PV max. La première vague du combat est gratuite. Le rappel exige assez de PV pour survivre au sacrifice. Chacun frappe aussitôt à hauteur de %1$d %% des dégâts moyens de ton arme.</string>
     <string name="lex_weight_ultralight_1">Presque pas d\'armure : il compte sur ses pantins.</string>
-    <string name="lex_weight_medium_1">Un peu de tout : une bonne armure et un peu d\'esquive.</string>
-    <string name="lex_weight_dex_cap">La [[attr_dex|DEX]] compte dans l\'esquive, jusqu\'à +%1$d.</string>
+    <string name="lex_weight_medium_1">Un peu de tout : une bonne armure, un peu plus lent.</string>
     <string name="lex_set_special_combo">Chaque coup de l\'enchaînement frappe %1$d %% plus fort, et la recharge passe à %2$d tours au lieu de %3$d.</string>
     <string name="lex_set_special_puppets">%1$d pantins au lieu de %2$d, dès le début du combat et à chaque rappel. La recharge de l\'Appel des morts reste de %3$d tours.</string>
     <string name="lex_set_crit_damage">Donne aussi +%1$s aux dégâts critiques.</string>
@@ -374,9 +363,16 @@
     <string name="lex_attr_end_2">Jusqu’à 15 %% de temps supplémentaire et 20 %% de largeur en plus pour les zones de réussite. Plafond à 60 points effectifs au-dessus de 10 ; la résistance en profondeur s’applique. Ne change pas la fréquence des tours.</string>
     <string name="lex_archetype_barbarian">Force, hache et armures de fourrure. Avec une massue, Fracas ouvre une brèche physique. Une défense réussie avec un geste parfait ouvre aussi une brèche brève, sans riposte gratuite.</string>
     <string name="lex_special_smash">Une frappe à 200 %% des dégâts d’arme. Avec une massue, un coup infligeant des dégâts ouvre une brèche pendant 2 tours ennemis : +15 %% de dégâts reçus des armes et des reliques physiques. Sans cumul ni étourdissement.</string>
-    <string name="lex_weight_fur">Armure du Barbare : protection moyenne, aucun changement de vitesse, Dextérité limitée à +1 en défense.</string>
+    <string name="lex_weight_fur">Armure du Barbare : protection moyenne, aucun changement de vitesse.</string>
     <string name="lex_base_club">Main secondaire du Barbare. Donne de la Force et permet à Fracas d’ouvrir une brèche physique (+15 %% de dégâts) pendant 2 tours ennemis.</string>
     <string name="lex_set_barbarian">Trois pièces de Ravage portent Fracas à 300 %% des dégâts de votre arme au lieu de 200 %% et prolongent la brèche de Fracas à 3 tours ennemis avec la massue équipée. Recharge du spécial : 4 tours au lieu de 5.</string>
     <string name="lex_stat_hp_curve">PV du joueur et des ennemis : ×2,5 à l&#8217;étage 1. Progression linéaire jusqu&#8217;à l&#8217;étage 250 : ×4 pour le joueur, ×5 pour les ennemis. Ces multiplicateurs restent constants ensuite.</string>
     <string name="lex_special_mirror_fixed">Recharge fixe : %1$d tours, ou %2$d avec le set Mirage complet.</string>
+    <string name="lex_attr_dex_dodge">[[stat_dodge|Esquive]] : avec la DEX attendue à ton étage, tu esquives %1$d %%, au plus %2$d %%</string>
+    <string name="lex_stat_dodge_dex">Seule la [[attr_dex|DEX]] donne de l\'esquive. Les monstres attendent la DEX d\'un voleur de leur étage : avec elle, tu esquives %1$d %% ; avec moitié moins, moitié moins.</string>
+    <string name="lex_stat_dodge_max">Jamais plus de %1$d %%</string>
+    <string name="lex_parry_perk">Une parade parfaite déclenche l\'atout de ton [[archetype|archétype]] %1$d %% du temps, jusqu\'à %2$d %% avec la [[stat_class_perk|chance d\'atout]]. Le blocage, la riposte et la roulade évitent le coup.</string>
+    <string name="lex_stat_class_perk">Chance d\'atout</string>
+    <string name="lex_stat_class_perk_1">La chance qu\'une [[parry|parade parfaite]] déclenche l\'atout de ton [[archetype|archétype]] : %1$d %% au départ, au plus %2$d %%.</string>
+    <string name="lex_you_class_perk">Toi : %1$d %%</string>
 </resources>

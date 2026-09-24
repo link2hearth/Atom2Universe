@@ -33,7 +33,9 @@ enum class StatType(@StringRes override val labelRes: Int, val isPercent: Boolea
     CRIT_DAMAGE  (R.string.roguelike_stattype_crit_damage, true),
     LIFE_STEAL   (R.string.roguelike_stattype_life_steal,  true),
     /** Vitesse : la jauge du héros se remplit plus vite (+10 % = un tour de plus tous les dix). */
-    SPEED        (R.string.roguelike_stattype_speed,       true);
+    SPEED        (R.string.roguelike_stattype_speed,       true),
+    /** Chance qu'une parade parfaite déclenche l'atout de la classe (voir [Hero.classPerkChance]). */
+    CLASS_PERK   (R.string.roguelike_stattype_class_perk,  true);
 
     companion object {
         val ATTRIBUTES = listOf(STR, DEX, CON, INT, WIS, CHA, END)
@@ -155,11 +157,10 @@ enum class ItemBase(
  * Le poids d'une pièce d'armure (casque, armure, bottes). **C'est le stuff qui fait la
  * classe**, comme dans Diablo : on ne choisit pas d'archétype, on le porte.
  *  - Tissu : peu d'armure — le mage, qui compte sur ses sorts.
- *  - Léger : un peu moins d'armure, +1 CA par pièce, et la DEX compte dans la CA — le
- *    voleur, qui **évite**.
- *  - Lourd : beaucoup d'armure, mais la DEX ne compte plus dans la CA — le guerrier, qui
- *    **encaisse**.
- * L'armure réduit les dégâts d'un coup ; la CA ([ArmorClass]) décide s'il touche. La
+ *  - Léger : un peu moins d'armure, mais de la DEX d'office — le voleur, qui **évite**.
+ *  - Lourd : beaucoup d'armure — le guerrier, qui **encaisse**.
+ * L'armure réduit les dégâts d'un coup ; l'esquive, qui ne vient que de la DEX ([Dodge]),
+ * décide s'il touche. La
  * moyenne des cinq multiplicateurs vaut 1 (0,5 / 0,7 / 0,95 / 1,25 / 1,6) : le héros de référence ne change pas.
  * [speedPerPiece] : l'armure lourde ralentit, la légère accélère, le tissu ne change rien —
  * la moyenne vaut 0, là aussi (voir DONJON.md, « La jauge »).
@@ -167,25 +168,23 @@ enum class ItemBase(
  */
 enum class ArmorWeight(
     @StringRes override val labelRes: Int,
-    val armorMult: Float, val acPerPiece: Int, val dexCounts: Boolean, val speedPerPiece: Float,
+    val armorMult: Float, val speedPerPiece: Float,
     @StringRes val helmetRes: Int, @StringRes val chestRes: Int, @StringRes val bootsRes: Int,
-    /** Ce que la DEX peut ajouter à la CA au plus (l'armure intermédiaire de D&D : +2). */
-    val dexCap: Int = Int.MAX_VALUE,
 ) : Labeled {
-    CLOTH(R.string.roguelike_weight_cloth, 0.7f, 0, true, 0f,
+    CLOTH(R.string.roguelike_weight_cloth, 0.7f, 0f,
         R.string.roguelike_base_hood, R.string.roguelike_base_robe, R.string.roguelike_base_sandals),
-    LIGHT(R.string.roguelike_weight_light, 0.95f, 1, true, 0.05f,
+    LIGHT(R.string.roguelike_weight_light, 0.95f, 0.05f,
         R.string.roguelike_base_coif, R.string.roguelike_base_jerkin, R.string.roguelike_base_boots),
-    HEAVY(R.string.roguelike_weight_heavy, 1.6f, 0, false, -0.05f,
+    HEAVY(R.string.roguelike_weight_heavy, 1.6f, -0.05f,
         R.string.roguelike_base_helm, R.string.roguelike_base_plate, R.string.roguelike_base_sabatons),
-    /** Entre le léger et le lourd : le vagabond. La DEX compte dans la CA, jusqu'à +2. */
-    MEDIUM(R.string.roguelike_weight_medium, 1.25f, 0, true, -0.025f,
-        R.string.roguelike_base_cap, R.string.roguelike_base_hauberk, R.string.roguelike_base_greaves, dexCap = 2),
+    /** Entre le léger et le lourd : le vagabond. */
+    MEDIUM(R.string.roguelike_weight_medium, 1.25f, -0.025f,
+        R.string.roguelike_base_cap, R.string.roguelike_base_hauberk, R.string.roguelike_base_greaves),
     /** Sous le tissu : le nécromancien, qui compte sur ses pantins. */
-    ULTRALIGHT(R.string.roguelike_weight_ultralight, 0.5f, 0, true, 0.025f,
+    ULTRALIGHT(R.string.roguelike_weight_ultralight, 0.5f, 0.025f,
         R.string.roguelike_base_veil, R.string.roguelike_base_shroud, R.string.roguelike_base_wraps),
-    FUR(R.string.roguelike_weight_fur, 1.0f, 0, true, 0f,
-        R.string.roguelike_base_fur_helmet, R.string.roguelike_base_fur_armor, R.string.roguelike_base_fur_boots, dexCap = 1);
+    FUR(R.string.roguelike_weight_fur, 1.0f, 0f,
+        R.string.roguelike_base_fur_helmet, R.string.roguelike_base_fur_armor, R.string.roguelike_base_fur_boots);
 
     val primaryAttribute: StatType get() = when (this) {
         HEAVY -> StatType.CON
@@ -206,9 +205,6 @@ enum class ArmorWeight(
     companion object {
         /** Les bases qui ont un poids. */
         val WEIGHTED = setOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)
-
-        /** La CA moyenne d'une pièce, tous poids confondus : ce que la note d'objet compte pour le poids. */
-        val AVERAGE_AC = entries.map { it.acPerPiece }.average().toFloat()
     }
 }
 
@@ -240,8 +236,6 @@ data class Equipment(
     val damageAttribute get() = base.attribute ?: implicits.firstOrNull { it.type in StatType.ATTRIBUTES }?.type ?: StatType.STR
     val isotopeSet get() = isotopeZ?.let(IsotopeSets::of)?.let { if (weight == ArmorWeight.FUR) it.copy(barbarian = true) else it }
     val slot get() = base.slot
-    /** Ce que la pièce ajoute à la CA : son poids, ou le bouclier. */
-    val acBonus get() = (weight?.acPerPiece ?: 0) + if (base == ItemBase.SHIELD) ArmorClass.SHIELD else 0
     /** Ce que la pièce change à la vitesse par son poids (les affixes de vitesse sont à part). */
     val weightSpeed get() = weight?.speedPerPiece ?: 0f
     /** Upgrade old armor without rerolling its values or secondary affixes. */
@@ -337,6 +331,7 @@ object AffixBudget {
      */
     fun maxTierOf(type: StatType): Int = when (type) {
         StatType.SPELL_DMG, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED -> TIERS
+        StatType.CLASS_PERK -> CLASS_PERK_LAST_TIER
         else -> Int.MAX_VALUE
     }
 
@@ -386,7 +381,20 @@ object AffixBudget {
         // La vitesse : +2 % au premier palier, +8 % au dernier. Un taux, qui vaut double (voir perPoint)
         StatType.SPEED       to floatArrayOf(.020f, .025f, .030f, .040f, .050f, .060f, .070f, .080f),
         StatType.CHA         to floatArrayOf(2f, 3f, 4f, 5f, 6f, 8f, 10f, 12f),
+        StatType.CLASS_PERK  to FloatArray(TIERS) { classPerk(it + 1) },
     )
+
+    /**
+     * L'atout de classe (20 % de base, plafond 50 %) : +1 % au palier 1, puis en ligne droite jusqu'à +8 % au
+     * palier [CLASS_PERK_LAST_TIER] (étage 1 900 environ). Il continue après le palier 8, comme le critique : il
+     * se chasse sur toute la partie. Vers l'étage 100, un affixe plein donne +3,6 %, et trois portent à plus
+     * de 30 % (décidé par le propriétaire le 24/09/2026).
+     */
+    const val CLASS_PERK_LAST_TIER = 20
+    private const val CLASS_PERK_FIRST = 0.01f
+    private const val CLASS_PERK_TOP = 0.08f
+    private fun classPerk(tier: Int) =
+        CLASS_PERK_FIRST + (CLASS_PERK_TOP - CLASS_PERK_FIRST) * (tier.coerceAtMost(CLASS_PERK_LAST_TIER) - 1) / (CLASS_PERK_LAST_TIER - 1)
 
     /** Vrai si [type] se règle par un plafond posé à la main plutôt que par la règle des 12 %. */
     fun isCapped(type: StatType) = type in CAPPED
@@ -450,7 +458,8 @@ object AffixBudget {
     fun perPoint(type: StatType, p: Int): Float = when (type) {
         // Axe : dégâts à l'arme
         StatType.STR, StatType.END -> 0.04f * w(p) / (1f + 0.04f * (refStr(p) - Hero.BASE_ATTRIBUTE) * w(p))
-        StatType.DEX         -> 0.01f * w(p) * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
+        // La DEX donne du critique et de l'esquive : un point d'esquive retire un point des coups reçus
+        StatType.DEX         -> 0.01f * w(p) * (Hero.BASE_CRIT_MULT - 1f) / critFactor(p) + Dodge.AT_REFERENCE / Dodge.referenceDexAtPower(p)
         StatType.WEAPON_DMG  -> 1f / refWeaponDamage(p)
         StatType.CRIT_CHANCE -> (Hero.BASE_CRIT_MULT - 1f) / critFactor(p)
         StatType.CRIT_DAMAGE -> refCritChance(p) / critFactor(p)
@@ -473,16 +482,18 @@ object AffixBudget {
         // Deux axes à la fois : +10 % de vitesse, c'est 10 % de coups en plus par coup reçu,
         // donc autant de dégâts infligés que de dégâts évités sur un combat
         StatType.SPEED       -> SPEED_AXES
+        StatType.CLASS_PERK  -> CLASS_PERK_AXIS
     }
 
     /** La vitesse compte sur les dégâts **et** sur la survie. */
     private const val SPEED_AXES = 2f
 
     /**
-     * Ce que vaut +1 CA sur l'axe de la survie : il retire 5 points de chance d'être touché
-     * au héros de référence, qui l'est 3 fois sur 4 — soit 1/15 des dégâts reçus.
+     * Ce que vaut +100 % de chance d'atout de classe sur l'axe de la survie : un joueur moyen réussit
+     * environ une parade sur deux en parfait, et la moitié des atouts (blocage, riposte, roulade)
+     * évitent le coup — soit un quart des coups reçus.
      */
-    fun perAcPoint() = ArmorClass.AC_STEP / ArmorClass.REF_HIT
+    private const val CLASS_PERK_AXIS = 0.25f
 
     /** Le palier le plus haut qu'un objet de cette puissance peut porter, toutes stats confondues. */
     fun maxTier(power: Int): Int {
@@ -501,6 +512,7 @@ object AffixBudget {
             if (tier <= TIERS) return it[tier - 1]
             return when (type) {
                 StatType.CRIT_CHANCE -> it[TIERS - 1] + CRIT_DEEP_STEP * (tier - TIERS)
+                StatType.CLASS_PERK -> classPerk(tier)
                 // DEX et CHA grandissent exactement comme leur poids baisse (voir LootSystem.attributeWeight) :
                 // un affixe garde ce qu'il valait au palier 8
                 StatType.DEX, StatType.CHA -> it[TIERS - 1] / LootSystem.attributeWeight(tierPower(tier).toFloat())
@@ -607,7 +619,7 @@ object LootSystem {
         StatType.ARMOR to 10f, StatType.MAX_HP to 10f,
         StatType.WEAPON_DMG to 6f, StatType.SPELL_DMG to 6f,
         StatType.CRIT_CHANCE to 5f, StatType.CRIT_DAMAGE to 5f,
-        StatType.LIFE_STEAL to 3f, StatType.SPEED to 5f,
+        StatType.LIFE_STEAL to 3f, StatType.SPEED to 5f, StatType.CLASS_PERK to 5f,
     )
 
     /**
@@ -615,7 +627,8 @@ object LootSystem {
      * objet : on ne veut pas d'un anneau qui empile trois fois la même ligne.
      */
     private val affixPools: Map<EquipSlot, List<StatType>> = run {
-        val attrs = StatType.ATTRIBUTES
+        // La chance d'atout de classe tombe partout, comme les caractéristiques
+        val attrs = StatType.ATTRIBUTES + StatType.CLASS_PERK
         val armorPiece = attrs + listOf(StatType.ARMOR, StatType.MAX_HP, StatType.LIFE_STEAL)
         val jewel = attrs + listOf(StatType.MAX_HP, StatType.SPELL_DMG, StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.LIFE_STEAL, StatType.SPEED)
         // La vitesse : sur l'arme, les bottes et les bijoux (comme la vitesse d'attaque et de
@@ -795,15 +808,14 @@ object LootSystem {
         if (e.damageMax > 0) r += (e.damageMin + e.damageMax) / 2f / AffixBudget.refWeaponDamage(p) * 100f *
             if (fits) 1f else 1f - Hero.WRONG_WEAPON_MALUS
         // Le poids ne compte pas dans la note : choisir léger ou lourd, c'est choisir son archétype, et ce choix est au joueur, pas à la flèche
-        // du sac. Sans ça, le léger (+1 CA, +5 % de vitesse par pièce) notait 20 à 30 % plus haut que les autres à puissance égale, et
+        // du sac. Sans ça, le léger (+5 % de vitesse par pièce) notait plus haut que les autres à puissance égale, et
         // qui équipait « le mieux noté » finissait voleur (voir DONJON.md, « Plancher de 30 % »). On compte donc l'armure nue (avant le
-        // multiplicateur du poids), la CA du poids moyenne des cinq poids, et aucune vitesse de poids (leur moyenne est nulle).
+        // multiplicateur du poids), et aucune vitesse de poids (leur moyenne est nulle).
         val weight = e.weight
         if (e.armor > 0)     r += e.armor / (weight?.armorMult ?: 1f) * AffixBudget.perPoint(StatType.ARMOR, p) * 100f
-        r += (e.acBonus - (weight?.acPerPiece ?: 0) + if (weight != null) ArmorWeight.AVERAGE_AC else 0f) * AffixBudget.perAcPoint() * 100f
         // Depuis le 22/09/2026, chaque poids porte la caractéristique de sa classe (tissu : INT, léger : DEX…).
         // Comptée à son prix, le tissu notait 40 % au-dessus du léger à matière égale : la caractéristique
-        // imposée par le poids vaut donc la moyenne des six, comme la CA du poids plus haut.
+        // imposée par le poids vaut donc la moyenne des six.
         var weightStat = weight?.primaryAttribute
         for (s in e.allStats) {
             val perPoint = if (s.type == weightStat && s in e.implicits) {
@@ -868,9 +880,6 @@ object LootSystem {
     /** Les lettres devant lesquelles le français élide « de » (Hydrogène, Or, Argon…). */
     private val ELIDING = setOf('a', 'e', 'i', 'o', 'u', 'y', 'h')
 
-    /** Des points de CA en points d'esquive, pour le joueur qui ne connaît pas D&D. */
-    private fun dodgePercent(ac: Int) = Math.round(ac * ArmorClass.AC_STEP * 100)
-
     /**
      * Lignes de description : dégâts, armure, poids, puis toutes les stats. Rien que des noms et des
      * chiffres : ce que veut dire « Léger » ou « P4 » est dans le lexique. [linked] : les mots
@@ -884,7 +893,6 @@ object LootSystem {
         if (e.damageMax > 0 && archetype != null && !archetype.accepts(e.base))
             add(LexiconText.link(Lexicon.idOf(archetype), context.getString(R.string.roguelike_item_wrong_weapon)))
         e.isotopeSet?.let { add(context.getString(R.string.roguelike_item_set_line, LexiconText.link(it.lexiconId, it.label(context)))) }
-        if (e.base == ItemBase.SHIELD) add(context.getString(R.string.roguelike_item_shield_ac, dodgePercent(ArmorClass.SHIELD)))
         e.implicits.forEach { add(it.display(context, linked = true)) }
         e.affixes.forEach { add(it.display(context, linked = true)) }
     }.map { if (linked) it else LexiconText.strip(it) }

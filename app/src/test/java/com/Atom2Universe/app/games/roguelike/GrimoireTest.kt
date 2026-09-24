@@ -88,9 +88,14 @@ class GrimoireTest {
 
     @Test
     fun aveugleIlAttaqueAvecDesavantage() {
-        // Les dés sortent 20 puis 1 : aveuglé, il garde le 1 et rate
-        val dice = ArrayDeque(listOf(20, 1))
-        val c = fight(attackDie = { dice.removeFirst() })
+        // Le héros esquive 40 % ; les tirages sortent 0,9 puis 0,1 : aveuglé, le monstre tire deux fois et le héros garde le meilleur
+        val rolls = ArrayDeque(listOf(0.9f, 0.1f))
+        val hero = heroWithAllSlots().apply {
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+                .copy(implicits = listOf(StatRoll(StatType.DEX, Dodge.referenceDex(1))), affixes = emptyList())
+        }
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, maxHp = 1000, damage = 3, cadence = 1, countdown = 1)),
+            ambush = false, rng = Random(1), d20 = { 1 }, dodgeRoll = { rolls.removeFirst() })
         c.enemies[0].blindedTurns = 1
         c.attack(0, Timing.MISS)
         val t = c.startEnemyTurn()

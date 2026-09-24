@@ -104,6 +104,11 @@ class Hero {
         const val MIN_SPEED = 0.5f
         /** La chance de critique réelle ne dépasse jamais ça : les objets ne doivent pas y suffire seuls. */
         const val MAX_CRIT = 0.6f
+        /** L'atout de classe après une parade parfaite : une fois sur cinq au départ, au plus une fois sur deux. */
+        const val BASE_CLASS_PERK = 0.2f
+        const val MAX_CLASS_PERK = 0.5f
+        /** Les bancs de mesure : une chance d'atout imposée à tous (1 = à chaque parade parfaite). Null en jeu. */
+        @Volatile var classPerkOverride: Float? = null
 
         fun affinityKey(type: MonsterType, element: Element) = "${type.name}:${element.name}"
 
@@ -239,12 +244,6 @@ class Hero {
         return HitPointBalance.playerHp((plain * (1f + if (specialBoosted(Archetype.WARRIOR)) IsotopeSets.HP_SHARE else 0f)).roundToInt(), floor)
     }
 
-    /** La puissance moyenne du casque, de l'armure et des bottes portés (1 sans armure). */
-    private val armorPower: Int get() {
-        val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
-        return if (pieces.isEmpty()) 1 else Math.round(pieces.map { it.power }.average()).toInt()
-    }
-
     val armor get() = equipped.values.sumOf { it.armor } + equipSum(StatType.ARMOR).roundToInt()
 
     /** Dégâts de l'arme portée (ou des poings), plus les bonus, puis sa caractéristique : +4 % par point. */
@@ -345,23 +344,18 @@ class Hero {
     private fun modifier(type: StatType) = kotlin.math.floor(effective(type) / 2f).toInt()
 
     /**
-     * La classe d'armure, façon D&D : 10 + maîtrise (celle des pièces d'armure portées) +
-     * les bonus des pièces (léger, bouclier) + le modificateur de DEX — sauf si une pièce
-     * lourde est portée : la DEX ne compte plus. Voir [ArmorClass].
+     * La chance d'esquiver les monstres de [floor] : seule la DEX en donne (voir [Dodge]). Les points
+     * bruts, pas ceux « qui comptent à cet étage » : la DEX de référence grandit au même rythme.
      */
-    val armorClass: Int get() {
-        val pieces = listOf(EquipSlot.HELMET, EquipSlot.CHEST, EquipSlot.BOOTS).mapNotNull { equipped[it] }
-        val dexCounts = pieces.none { it.weight?.dexCounts == false }
-        val dexCap = pieces.minOfOrNull { it.weight?.dexCap ?: Int.MAX_VALUE } ?: Int.MAX_VALUE
-        val dex = if (dexCounts) modifier(StatType.DEX).coerceAtMost(dexCap) else 0
-        return ArmorClass.BASE + SpellSave.proficiency(armorPower) + equipped.values.sumOf { it.acBonus } + dex
-    }
+    fun dodgeChance(floor: Int) = Dodge.chance(bonus(StatType.DEX).toFloat(), floor)
 
     /**
-     * Ce que le joueur lit à la place de la CA (jargon de D&D) : la chance que les monstres
-     * de cet étage le ratent. Un point de CA vaut 5 points d'esquive.
+     * La chance qu'une parade parfaite déclenche l'atout de la classe (blocage, riposte, roulade…) :
+     * [BASE_CLASS_PERK], plus les affixes, jamais plus de [MAX_CLASS_PERK] — l'atout ne doit pas
+     * tomber à chaque coup. Les bancs de mesure peuvent l'imposer ([classPerkOverride]).
      */
-    fun dodgeChance(floor: Int) = 1f - ArmorClass.hitChance(armorClass, ArmorClass.monsterAttack(floor))
+    val classPerkChance: Float get() = classPerkOverride
+        ?: (BASE_CLASS_PERK + equipSum(StatType.CLASS_PERK)).coerceIn(0f, MAX_CLASS_PERK)
 
     /** La parade s'élargit de 4 ms par point de DEX. */
     /** Aide gestuelle bornée, calculée avec la résistance en profondeur comme les autres bonus. */

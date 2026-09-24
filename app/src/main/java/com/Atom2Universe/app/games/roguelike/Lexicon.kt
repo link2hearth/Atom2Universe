@@ -136,9 +136,6 @@ object Lexicon {
         return ((power - 1) / step).roundToInt() + 1
     }
 
-    /** Des points de CA en pourcentage d'esquive. */
-    private fun dodgePct(ac: Int) = Math.round(ac * ArmorClass.AC_STEP * 100)
-
     private val periodic by lazy { getPeriodicElements() }
 
     val categories: List<LexiconCategory> get() = LexiconCategory.entries
@@ -170,7 +167,7 @@ object Lexicon {
                 StatType.DEX -> {
                     add(R.string.lex_attr_dex_1)
                     add(R.string.lex_attr_dex_2, env.pct(Hero.CRIT_PER_DEX))
-                    add(R.string.lex_attr_dex_4, env.pct(ArmorClass.AC_STEP))
+                    add(R.string.lex_attr_dex_dodge, env.pct(Dodge.AT_REFERENCE), env.pct(Dodge.MAX))
                 }
                 StatType.END -> { add(R.string.lex_attr_end_1); add(R.string.lex_attr_end_2) }
                 StatType.CON -> { add(R.string.lex_attr_con_1); add(R.string.lex_attr_con_2, env.num(Hero.HP_PER_CON)) }
@@ -208,9 +205,8 @@ object Lexicon {
             },
             entry("stat_dodge", c, R.string.lex_stat_dodge) {
                 add(R.string.lex_stat_dodge_1)
-                add(R.string.lex_stat_dodge_2, dodgePct(ArmorWeight.LIGHT.acPerPiece), dodgePct(ArmorClass.SHIELD))
-                add(R.string.lex_stat_dodge_3, env.pct(ArmorClass.AC_STEP))
-                add(R.string.lex_stat_dodge_4, env.pct(1f - ArmorClass.hitChance(-999, 0)), env.pct(1f - ArmorClass.hitChance(999, 0)))
+                add(R.string.lex_stat_dodge_dex, env.pct(Dodge.AT_REFERENCE))
+                add(R.string.lex_stat_dodge_max, env.pct(Dodge.MAX))
                 env.hero?.let { you(R.string.lex_you_dodge, env.pct(it.dodgeChance(env.floor)), env.floor) }
             },
             entry(idOf(StatType.CRIT_CHANCE), c, R.string.lex_stat_crit_chance) {
@@ -234,6 +230,10 @@ object Lexicon {
             entry(idOf(StatType.LIFE_STEAL), c, R.string.lex_stat_life_steal) {
                 add(R.string.lex_stat_life_steal_1)
                 env.hero?.let { you(R.string.lex_you_life_steal, env.dec(it.lifeSteal * 100f)) }
+            },
+            entry(idOf(StatType.CLASS_PERK), c, R.string.lex_stat_class_perk) {
+                add(R.string.lex_stat_class_perk_1, env.pct(Hero.BASE_CLASS_PERK), env.pct(Hero.MAX_CLASS_PERK))
+                env.hero?.let { you(R.string.lex_you_class_perk, env.pct(it.classPerkChance)) }
             },
             entry(idOf(StatType.WEAPON_DMG), c, R.string.lex_stat_weapon_dmg) {
                 add(R.string.lex_stat_weapon_dmg_1)
@@ -287,10 +287,8 @@ object Lexicon {
             entry("parry", c, R.string.lex_parry) {
                 add(R.string.lex_parry_1)
                 add(R.string.lex_parry_2, env.dec(Combat.PARRY_GOOD_MULT), env.dec(Combat.PARRY_PERFECT_MULT), env.dec(Combat.PARRY_MISS_MULT))
-                add(R.string.lex_parry_defense, env.pct(ArmorClass.timingBonus(Timing.GOOD) * ArmorClass.AC_STEP),
-                    env.pct(ArmorClass.timingBonus(Timing.PERFECT) * ArmorClass.AC_STEP), env.pct(1f - ArmorClass.MIN_HIT))
                 add(R.string.lex_parry_3)
-                add(R.string.lex_parry_4)
+                add(R.string.lex_parry_perk, env.pct(Hero.BASE_CLASS_PERK), env.pct(Hero.MAX_CLASS_PERK))
             },
             entry("strike", c, R.string.lex_strike) {
                 add(R.string.lex_strike_1)
@@ -555,10 +553,7 @@ object Lexicon {
                     ArmorWeight.ULTRALIGHT -> R.string.lex_weight_ultralight_1
                 })
                 add(R.string.lex_weight_armor, env.dec(w.armorMult))
-                if (w.acPerPiece > 0) add(R.string.lex_weight_dodge, dodgePct(w.acPerPiece))
                 if (w.speedPerPiece != 0f) add(R.string.lex_weight_speed, env.signed(Math.round(w.speedPerPiece * 100)))
-                if (w.dexCounts && w.dexCap != Int.MAX_VALUE) add(R.string.lex_weight_dex_cap, w.dexCap)
-                else add(if (w.dexCounts) R.string.lex_weight_dex_yes else R.string.lex_weight_dex_no)
                 Archetype.entries.firstOrNull { it.weight == w }?.let {
                     add(R.string.lex_weight_archetype, env.link(idOf(it), env.s(it.labelRes)))
                 }
@@ -580,7 +575,6 @@ object Lexicon {
                 if (b.damageMult > 0f) add(R.string.lex_base_damage, env.dec(b.damageMult, 2))
                 if (b.armorBase > 0f) add(R.string.lex_base_armor, env.num(b.armorBase.roundToInt()))
                 if (b.spellBonus > 0f) add(R.string.lex_base_spell, env.pct(b.spellBonus))
-                if (b == ItemBase.SHIELD) add(R.string.lex_base_shield, dodgePct(ArmorClass.SHIELD))
                 if (b == ItemBase.ORB) add(R.string.lex_base_orb_damage, env.pct(Hero.ORB_DAMAGE_SHARE))
                 if (b == ItemBase.BOW) add(R.string.lex_base_bow, env.pct(Combat.BOW_EXPOSE_THRESHOLD), env.pct(Combat.DEADLY_HP_THRESHOLD))
                 if (b == ItemBase.GRIMOIRE) add(R.string.lex_base_grimoire, 0, env.pct(Combat.GRIMOIRE_ECHO_BONUS))

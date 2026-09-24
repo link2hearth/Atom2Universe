@@ -415,7 +415,6 @@
     <string name="roguelike_item_weight_cloth">Cloth: little armor</string>
     <string name="roguelike_item_weight_light">Light: +%1$d%% dodge, +%2$d%% speed, DEX helps you dodge</string>
     <string name="roguelike_item_weight_heavy">Heavy: −%1$d%% speed, DEX no longer helps you dodge</string>
-    <string name="roguelike_item_shield_ac">+%1$d%% [[stat_dodge|dodge]]</string>
     <string name="roguelike_base_amulet">Amulet</string>
     <string name="roguelike_base_ring">Ring</string>
     <string name="roguelike_item_damage">%1$s–%2$s damage</string>
@@ -693,4 +692,5 @@
     <string name="roguelike_set_wandering">Wandering</string>
     <string name="roguelike_set_afterlife">Afterlife</string>
     <string name="roguelike_set_ravage">Ravage</string>
+    <string name="roguelike_stattype_class_perk">Perk chance</string>
 </resources>

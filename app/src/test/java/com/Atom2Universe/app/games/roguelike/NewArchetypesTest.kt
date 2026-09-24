@@ -25,9 +25,10 @@ class NewArchetypesTest {
         }
     }
 
-    /** Un gobelin solide dont le d20 d'attaque sort 20 (il touche toujours). [ambush] : il frappe avant le héros. */
-    private fun fight(hero: Hero, hp: Int = 100000, damage: Int = 10, ambush: Boolean = false, die: Int = 20) =
-        Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, damage, 1, 1)), ambush = ambush, rng = Random(1), attackDie = { die })
+    /** Un gobelin solide qui touche toujours. [ambush] : il frappe avant le héros ; [perk] : le tirage de l'atout de classe (0 : toujours). */
+    private fun fight(hero: Hero, hp: Int = 100000, damage: Int = 10, ambush: Boolean = false, perk: Float = 1f) =
+        Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, damage, 1, 1)), ambush = ambush, rng = Random(1),
+            dodgeRoll = { 1f }, perkRoll = { perk })
 
     // ── L'armure ────────────────────────────────────────────────────────────────
 
@@ -42,18 +43,6 @@ class NewArchetypesTest {
     @Test
     fun chaqueArchetypeVientDeSonPoids() {
         for (a in Archetype.entries) assertEquals(a, heroOf(a).archetype)
-    }
-
-    @Test
-    fun laDexterieNeDepassePasSonPlafondEnIntermediaire() {
-        fun ac(weight: ArmorWeight, dex: Float): Int {
-            val hero = heroOf(Archetype.entries.first { it.weight == weight })
-            hero.equipped[EquipSlot.HELMET] = hero.equipped.getValue(EquipSlot.HELMET).let { it.copy(implicits = it.implicits + StatRoll(StatType.DEX, dex)) }
-            return hero.armorClass
-        }
-        assertTrue("intermédiaire : au plus +${ArmorWeight.MEDIUM.dexCap}", ac(ArmorWeight.MEDIUM, 60f) - ac(ArmorWeight.MEDIUM, 0f) <= ArmorWeight.MEDIUM.dexCap)
-        assertTrue("léger : plus", ac(ArmorWeight.LIGHT, 60f) - ac(ArmorWeight.LIGHT, 0f) > ArmorWeight.MEDIUM.dexCap)
-        assertEquals("lourd : rien", ac(ArmorWeight.HEAVY, 0f), ac(ArmorWeight.HEAVY, 60f))
     }
 
     // ── Le vagabond ─────────────────────────────────────────────────────────────
@@ -79,7 +68,7 @@ class NewArchetypesTest {
     @Test
     fun laRouladeParfaiteEviteLeCoupEtRelevePlusTardLeProchainCoup() {
         val hero = heroOf(Archetype.VAGABOND)
-        val c = fight(hero, ambush = true, die = 1)
+        val c = fight(hero, ambush = true, perk = 0f)
         c.startEnemyTurn()
         val s = c.resolveStrike(0, Timing.PERFECT)
         assertTrue(s.dodged)
@@ -313,7 +302,7 @@ class NewArchetypesTest {
 
     @Test
     fun laRouladePreparelProchainCoupEtSeVoit() {
-        val c = fight(heroOf(Archetype.VAGABOND), ambush = true, die = 1)
+        val c = fight(heroOf(Archetype.VAGABOND), ambush = true, perk = 0f)
         assertTrue(!c.rollReady)
         c.startEnemyTurn()
         c.resolveStrike(0, Timing.PERFECT)

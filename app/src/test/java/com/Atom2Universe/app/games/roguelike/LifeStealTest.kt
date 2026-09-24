@@ -76,7 +76,7 @@ class LifeStealTest {
             h.equipped[e.slot] = e
         }
         h.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 100, Rarity.NORMAL, 0, Random(1)).copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .1f)))
-        val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 1, 1)), true, Random(8), attackDie = { 1 })
+        val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 1, 1)), true, Random(8), perkRoll = { 0f })
         c.startEnemyTurn()
         val hit = c.resolveStrike(0, Timing.PERFECT).counter!!
         assertTrue(c.lifeStolen > 0)

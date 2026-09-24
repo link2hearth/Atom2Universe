@@ -951,7 +951,7 @@ class RoguelikeSimulationTest {
                             if (ownOffhand) hero.equipped[EquipSlot.OFFHAND] = best(floor, rng) { it.base == a.offhand } else hero.equipped.remove(EquipSlot.OFFHAND)
                             simRelics?.filter { it != "NONE" }?.forEach { hero.addRelic(Relic.valueOf(it)) }
                             hero.healFull()
-                            hit += ArmorClass.hitChance(hero.armorClass, ArmorClass.monsterAttack(floor))
+                            hit += 1f - hero.dodgeChance(floor)
                             dex += hero.attribute(StatType.DEX)
                             val fightRng = Random(floor * 31L + i)
                             var ok = true
@@ -1309,6 +1309,264 @@ class RoguelikeSimulationTest {
         println(out)
     }
 
+    /** Ce qu'un bot du banc [relicBuildsByGroup] a vécu : son build, et par taille de groupe (1 à 3) ses combats. */
+    private class BuildRun(val relics: List<Relic>, val archetype: Archetype?) {
+        val fights = IntArray(4); val deaths = IntArray(4); val stuck = IntArray(4); val winTurns = LongArray(4)
+        val casts = mutableMapOf<Relic, Int>()
+    }
+
+    /**
+     * Les builds de reliques à l'étage 100 : chaque bot tire un équipement de l'étage 95 (le meilleur de
+     * 15 objets, au hasard), reçoit **toutes** les reliques et choisit ses 3 (les emplacements ouverts à
+     * l'étage 100) par [chooseRelics], essais à PV pleins. Puis il enchaîne des combats contre 1, 2 et 3
+     * ennemis (3 = un boss et deux accompagnants, comme en jeu), soigné et recharges prêtes avant chacun.
+     * Un combat qui atteint la limite de tours est arrêté et compté à part (bloqué).
+     *
+     * On y lit les morts par groupe, les reliques les plus portées, et surtout celles qui sont portées
+     * quand le bot meurt. Réglages : SIM_HEROES=64 (bots), SIM_FIGHTS=100 (combats par bot et par
+     * taille de groupe), SIM_GEAR_FLOOR=95, SIM_FLOOR=100, SIM_TURN_LIMIT=500, SIM_SKILL=CORRECT,
+     * SIM_TRIAL_SERIES=36 (combats d'essai par combinaison). Écrit build/roguelike-builds.txt.
+     */
+    @Test
+    fun relicBuildsByGroup() {
+        val heroes = System.getenv("SIM_HEROES")?.toInt() ?: 64
+        val fightsPerGroup = System.getenv("SIM_FIGHTS")?.toInt() ?: 100
+        val gearFloor = System.getenv("SIM_GEAR_FLOOR")?.toInt() ?: 95
+        val floor = System.getenv("SIM_FLOOR")?.toInt() ?: 100
+        val turnLimit = System.getenv("SIM_TURN_LIMIT")?.toInt() ?: 500
+        val skill = System.getenv("SIM_SKILL")?.let(Skill::valueOf) ?: Skill.CORRECT
+        val trialSeries = System.getenv("SIM_TRIAL_SERIES")?.toInt() ?: 36
+        val start = System.currentTimeMillis()
+        val runs = (0 until heroes).toList().parallelStream().map { i ->
+            val rng = Random(gearFloor * 7919L + i)
+            val template = geared(gearFloor, rng).apply {
+                this.floor = floor
+                deepestFloor = floor
+                relicSlots.fill(null)
+                relics.clear()
+                Relic.entries.filter { it != Relic.HOURGLASS }.forEach { relics += it }
+                chooseRelics(this, floor, skill, trialChain = 1, series = trialSeries)
+            }
+            val worn = template.relicSlots.filterNotNull()
+            val run = BuildRun(worn, template.archetype)
+            for (count in 1..3) repeat(fightsPerGroup) { k ->
+                val hero = trialCopy(template, worn)
+                val fightRng = Random(i * 1_000_003L + count * 10_007L + k)
+                val family = Encounters.roll(floor, fightRng).first()
+                val combat = Combat(hero, floor, Encounters.build(List(count) { family }, floor), ambush = false, rng = fightRng)
+                val stat = FloorStat()
+                val cs = CombatStat()
+                playCombat(combat, skill, stat, fightRng, combos = true, cs = cs, maxTurns = turnLimit)
+                run.fights[count]++
+                when {
+                    combat.phase == CombatPhase.VICTORY -> run.winTurns[count] += stat.turnsInFight.toLong()
+                    hero.hp <= 0 -> run.deaths[count]++
+                    else -> run.stuck[count]++
+                }
+                cs.castBy.forEach { (r, n) -> run.casts.merge(r, n, Int::plus) }
+            }
+            run
+        }.collect(java.util.stream.Collectors.toList())
+
+        fun pct(a: Int, b: Int) = if (b == 0) "   —  " else String.format("%5.1f%%", 100.0 * a / b)
+        val out = StringBuilder("══════ Builds de reliques à l'étage $floor ($heroes bots, équipement de l'étage $gearFloor, $skill) ══════\n")
+        out.appendLine("$fightsPerGroup combats par bot et par taille de groupe, soin complet et recharges prêtes avant chacun ; limite $turnLimit tours ; ${runs.first().relics.size} reliques portées.")
+        out.appendLine("Choix des reliques : chaque relique seule, puis les combinaisons des 8 meilleures, $trialSeries combats d'essai chacune (groupes au hasard).")
+
+        out.appendLine("\n── Morts par groupe ──")
+        out.appendLine("Ennemis | combats | morts | bloqués | victoires | tours par victoire")
+        for (count in 1..3) {
+            val f = runs.sumOf { it.fights[count] }; val d = runs.sumOf { it.deaths[count] }; val s = runs.sumOf { it.stuck[count] }
+            val w = f - d - s
+            out.appendLine(String.format("%7s | %7d | %5d (%s) | %4d | %s | %5.1f", if (count == 3) "3 (boss)" else "$count",
+                f, d, pct(d, f), s, pct(w, f), runs.sumOf { it.winTurns[count] }.toDouble() / w.coerceAtLeast(1)))
+        }
+        val botsWithDeath = (1..3).map { c -> runs.count { it.deaths[c] > 0 } }
+        out.appendLine("Bots morts au moins une fois : 1 ennemi ${botsWithDeath[0]}/$heroes · 2 ennemis ${botsWithDeath[1]}/$heroes · 3 ennemis ${botsWithDeath[2]}/$heroes")
+
+        val totalDeaths = IntArray(4) { c -> runs.sumOf { it.deaths[c] } }
+        val allDeaths = totalDeaths.sum()
+        out.appendLine("\n── Reliques : portées, lancées, et présentes aux morts ──")
+        out.appendLine("« part des morts » : parmi toutes les morts du groupe, celles où la relique était équipée. « taux » : morts / combats quand elle est portée.")
+        out.appendLine(String.format("%-16s | %5s | %9s | %-24s | %-24s | %-24s | %s", "Relique", "bots", "lancers/c",
+            "1 ennemi : part · taux", "2 ennemis : part · taux", "3 ennemis : part · taux", "toutes morts"))
+        val relicRows = Relic.entries.filter { it != Relic.HOURGLASS }.map { r -> r to runs.filter { r in it.relics } }
+            .sortedWith(compareByDescending<Pair<Relic, List<BuildRun>>> { (_, with) -> with.sumOf { it.deaths.sum() } }.thenByDescending { it.second.size })
+        for ((r, with) in relicRows) {
+            val fights = with.sumOf { it.fights.sum() }
+            val cells = (1..3).map { c ->
+                val d = with.sumOf { it.deaths[c] }
+                "${pct(d, totalDeaths[c])} · ${pct(d, with.sumOf { it.fights[c] })}"
+            }
+            out.appendLine(String.format("%-16s | %2d/%-2d | %9s | %-24s | %-24s | %-24s | %s", r.name, with.size, heroes,
+                if (fights == 0) "—" else String.format("%.2f", runs.sumOf { it.casts[r] ?: 0 }.toDouble() / fights),
+                cells[0], cells[1], cells[2], pct(with.sumOf { it.deaths.sum() }, allDeaths)))
+        }
+
+        out.appendLine("\n── Builds (trio de reliques) : du plus meurtrier au plus sûr ──")
+        out.appendLine("Build | bots | archétypes | morts 1 · 2 · 3 ennemis (taux) | bloqués")
+        runs.groupBy { it.relics.map { r -> r.name }.sorted().joinToString(" + ") }
+            .entries.sortedByDescending { (_, l) -> l.sumOf { it.deaths.sum() }.toDouble() / l.sumOf { it.fights.sum() } }
+            .forEach { (build, l) ->
+                val arch = l.groupingBy { it.archetype?.name ?: "aucun" }.eachCount().entries.joinToString(",") { "${it.key}×${it.value}" }
+                out.appendLine("$build | ${l.size} | $arch | " + (1..3).joinToString(" · ") { c ->
+                    pct(l.sumOf { it.deaths[c] }, l.sumOf { it.fights[c] }) } + " | ${l.sumOf { it.stuck.sum() }}")
+            }
+
+        out.appendLine("\n── Par archétype du bot (majorité de poids d'armure) ──")
+        runs.groupBy { it.archetype?.name ?: "aucun" }.toSortedMap().forEach { (a, l) ->
+            out.appendLine(String.format("%-12s | %2d bots | morts %s", a, l.size, (1..3).joinToString(" · ") { c ->
+                pct(l.sumOf { it.deaths[c] }, l.sumOf { it.fights[c] }) }))
+        }
+        out.appendLine("\n(${(System.currentTimeMillis() - start) / 1000} s)")
+        File("build/roguelike-builds${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
+        println(out)
+    }
+
+    /** Une rareté d'équipement du banc [archetypesByRarity] : les trois du butin, et le set de classe. */
+    private enum class GearTier(val label: String, val rarity: Rarity, val set: Boolean = false) {
+        NORMAL("normal", Rarity.NORMAL), MAGIC("magique", Rarity.MAGIC), RARE("rare", Rarity.RARE), SET("set", Rarity.RARE, set = true)
+    }
+
+    /**
+     * L'équipement complet d'une classe, **mêmes dés pour toutes** : pour le bot [i], chaque emplacement a sa
+     * graine (puissance de l'étage [gearFloor], affixes), quelle que soit la classe ou la rareté. Seuls changent
+     * le poids de l'armure (celui de la classe, qui en donne la caractéristique), l'arme et la main gauche de
+     * la classe, et la rareté. Le set : des pièces rares à la même puissance, avec le bonus des trois pièces.
+     */
+    private fun classGear(a: Archetype, tier: GearTier, i: Int, gearFloor: Int): Map<EquipSlot, Equipment> {
+        val bases = mapOf(
+            EquipSlot.WEAPON to a.weapons.first(), EquipSlot.OFFHAND to a.offhand,
+            EquipSlot.HELMET to ItemBase.HELMET, EquipSlot.CHEST to ItemBase.ARMOR, EquipSlot.BOOTS to ItemBase.BOOTS,
+            EquipSlot.AMULET to ItemBase.AMULET, EquipSlot.RING to ItemBase.RING,
+        )
+        return bases.entries.associate { (slot, base) ->
+            val rng = Random(gearFloor * 1_000_003L + i * 101L + slot.ordinal)
+            val power = LootSystem.rollPowerForFloor(gearFloor, rng)
+            val item = LootSystem.create(base, power, tier.rarity, 0, rng, forcedWeight = if (base in ArmorWeight.WEIGHTED) a.weight else null)
+            slot to if (tier.set && slot in IsotopeSets.SLOTS) item.copy(isotopeZ = IsotopeSets.forArchetype(a).index) else item
+        }
+    }
+
+    /**
+     * Les classes à équipement égal, et ce que vaut la rareté : chaque classe porte un équipement complet de sa
+     * classe ([classGear], mêmes dés pour toutes) en normal, magique, rare, puis en set. À l'étage 100, elle
+     * enchaîne des combats contre 1, 2 et 3 ennemis (soin complet et recharges prêtes avant chacun, mêmes
+     * graines de combat pour toutes), sans relique puis avec les 3 reliques qu'elle choisit parmi toutes.
+     * Réglages : SIM_HEROES=40 (tirages d'équipement), SIM_FIGHTS=100 (par tirage et par taille de groupe),
+     * SIM_GEAR_FLOOR=95, SIM_FLOOR=100, SIM_TURN_LIMIT=500, SIM_SKILL=CORRECT, SIM_TRIAL_SERIES=36,
+     * SIM_PERK=1 (chance d'atout imposée à tous ; celle du jeu sinon), SIM_MONSTER_DMG=1.1 (coups des monstres).
+     * Écrit build/roguelike-rarity.txt.
+     */
+    @Test
+    fun archetypesByRarity() {
+        val perk = System.getenv("SIM_PERK")?.toFloat()
+        val monsterDamage = System.getenv("SIM_MONSTER_DMG")?.toFloat() ?: Dodge.damageMult
+        val savedDamage = Dodge.damageMult
+        Hero.classPerkOverride = perk
+        Dodge.damageMult = monsterDamage
+        try { archetypesByRarityRun(perk, monsterDamage) } finally {
+            Hero.classPerkOverride = null
+            Dodge.damageMult = savedDamage
+        }
+    }
+
+    private fun archetypesByRarityRun(perk: Float?, monsterDamage: Float) {
+        val heroes = System.getenv("SIM_HEROES")?.toInt() ?: 40
+        val fightsPerGroup = System.getenv("SIM_FIGHTS")?.toInt() ?: 100
+        val gearFloor = System.getenv("SIM_GEAR_FLOOR")?.toInt() ?: 95
+        val floor = System.getenv("SIM_FLOOR")?.toInt() ?: 100
+        val turnLimit = System.getenv("SIM_TURN_LIMIT")?.toInt() ?: 500
+        val skill = System.getenv("SIM_SKILL")?.let(Skill::valueOf) ?: Skill.CORRECT
+        val trialSeries = System.getenv("SIM_TRIAL_SERIES")?.toInt() ?: 36
+        val start = System.currentTimeMillis()
+
+        class Cell(val a: Archetype, val tier: GearTier) {
+            val deaths = Array(2) { IntArray(4) }; val stuck = Array(2) { IntArray(4) }; val fights = Array(2) { IntArray(4) }
+            val winTurns = Array(2) { LongArray(4) }
+            var hp = 0.0; var armor = 0.0; var dodge = 0.0; var weapon = 0.0; var mainStat = 0.0; var crit = 0.0; var speed = 0.0; var perkChance = 0.0
+            val relics = mutableMapOf<Relic, Int>()
+        }
+        val jobs = Archetype.entries.flatMap { a -> GearTier.entries.map { a to it } }
+        val cells = jobs.parallelStream().map { (a, tier) ->
+            val cell = Cell(a, tier)
+            for (i in 0 until heroes) {
+                val template = heroWithAllSlots().apply {
+                    this.floor = floor
+                    deepestFloor = floor
+                    equipped.putAll(classGear(a, tier, i, gearFloor))
+                    healFull()
+                }
+                check(template.archetype == a && (!tier.set || template.setArchetype == a))
+                cell.hp += template.maxHp; cell.armor += template.armor; cell.dodge += template.dodgeChance(floor)
+                cell.weapon += (template.weaponMin + template.weaponMax) / 2.0
+                cell.mainStat += template.attribute(preferredStat(a)); cell.crit += template.critChance(floor); cell.speed += template.speed
+                cell.perkChance += template.classPerkChance
+                val chosen = template.apply {
+                    relicSlots.fill(null)
+                    relics.clear()
+                    Relic.entries.filter { it != Relic.HOURGLASS }.forEach { relics += it }
+                    chooseRelics(this, floor, skill, trialChain = 1, series = trialSeries)
+                }.relicSlots.filterNotNull()
+                chosen.forEach { cell.relics.merge(it, 1, Int::plus) }
+                for ((v, worn) in listOf(emptyList<Relic>(), chosen).withIndex()) for (count in 1..3) repeat(fightsPerGroup) { k ->
+                    val hero = trialCopy(template, worn)
+                    val fightRng = Random(i * 1_000_003L + count * 10_007L + k)
+                    val family = Encounters.roll(floor, fightRng).first()
+                    val combat = Combat(hero, floor, Encounters.build(List(count) { family }, floor), ambush = false, rng = fightRng)
+                    val stat = FloorStat()
+                    playCombat(combat, skill, stat, fightRng, combos = true, maxTurns = turnLimit)
+                    cell.fights[v][count]++
+                    when {
+                        combat.phase == CombatPhase.VICTORY -> cell.winTurns[v][count] += stat.turnsInFight.toLong()
+                        hero.hp <= 0 -> cell.deaths[v][count]++
+                        else -> cell.stuck[v][count]++
+                    }
+                }
+            }
+            cell
+        }.collect(java.util.stream.Collectors.toList())
+
+        fun pct(x: Int, n: Int) = String.format("%5.1f%%", 100.0 * x / n.coerceAtLeast(1))
+        val out = StringBuilder("══════ Classes à équipement égal, par rareté (étage $floor, équipement de l'étage $gearFloor, $skill) ══════\n")
+        out.appendLine("$heroes tirages d'équipement par classe (mêmes dés pour toutes), $fightsPerGroup combats par tirage et par taille de groupe ; soin complet avant chaque combat ; limite $turnLimit tours.")
+        out.appendLine("Normal : 0 affixe · magique : 1-2 · rare : 3-4 · set : rare + bonus des 3 pièces (même puissance que le rare).")
+        out.appendLine("Atout de classe sur parade parfaite : ${perk?.let { "imposé à ${(it * 100).roundToInt()} %" } ?: "règle du jeu (${(Hero.BASE_CLASS_PERK * 100).roundToInt()} % + affixes, plafond ${(Hero.MAX_CLASS_PERK * 100).roundToInt()} %)"} ; coups des monstres ×$monsterDamage.")
+
+        out.appendLine("\n── Stats moyennes du héros ──")
+        out.appendLine(String.format("%-12s %-8s | %6s | %6s | %7s | %6s | %s | %6s | %5s | %5s", "Classe", "Rareté", "PV max", "Armure", "Esquive", "Arme", "Carac. de classe", "Crit.", "Vit.", "Atout"))
+        for (c in cells) {
+            val n = heroes.toDouble()
+            out.appendLine(String.format("%-12s %-8s | %6.0f | %6.0f | %6.1f%% | %6.0f | %4s %5.1f       | %5.1f%% | %5.2f | %4.0f%%", c.a, c.tier.label,
+                c.hp / n, c.armor / n, 100 * c.dodge / n, c.weapon / n, preferredStat(c.a), c.mainStat / n, 100 * c.crit / n, c.speed / n, 100 * c.perkChance / n))
+        }
+
+        for ((v, title) in listOf("sans relique", "avec 3 reliques choisies par le bot").withIndex()) {
+            out.appendLine("\n── Morts, $title : 1 · 2 · 3 ennemis (boss) — tours par victoire contre 3 ──")
+            out.appendLine(String.format("%-12s | %-26s | %-26s | %-26s | %-26s", "Classe", *GearTier.entries.map { it.label }.toTypedArray()))
+            for (a in Archetype.entries) {
+                val row = GearTier.entries.map { t ->
+                    val c = cells.first { it.a == a && it.tier == t }
+                    val w3 = c.fights[v][3] - c.deaths[v][3] - c.stuck[v][3]
+                    (1..3).joinToString(" ") { pct(c.deaths[v][it], c.fights[v][it]).trim() } +
+                        String.format(" · %.0f t", c.winTurns[v][3].toDouble() / w3.coerceAtLeast(1)) +
+                        (c.stuck[v].sum().takeIf { it > 0 }?.let { " ⚠$it" } ?: "")
+                }
+                out.appendLine(String.format("%-12s | %-26s | %-26s | %-26s | %-26s", a, *row.toTypedArray()))
+            }
+        }
+
+        out.appendLine("\n── Reliques choisies (sur $heroes tirages), par classe, toutes raretés confondues ──")
+        for (a in Archetype.entries) {
+            val counts = mutableMapOf<Relic, Int>()
+            cells.filter { it.a == a }.forEach { c -> c.relics.forEach { (r, n) -> counts.merge(r, n, Int::plus) } }
+            out.appendLine(String.format("%-12s ", a) + counts.entries.sortedByDescending { it.value }.take(6).joinToString("  ") { "${it.key.name} ×${it.value}" })
+        }
+        out.appendLine("\n(${(System.currentTimeMillis() - start) / 1000} s)")
+        File("build/roguelike-rarity${System.getenv("SIM_OUT") ?: ""}.txt").writeText(out.toString())
+        println(out)
+    }
+
     // ── Le bot joueur de combos : ce que sait un joueur qui connaît le jeu ──────
 
     /** [r] lancé sur [e] déclencherait une réaction (ou son bonus contre un figé). */
@@ -1385,7 +1643,8 @@ class RoguelikeSimulationTest {
      * reliques les départagent. Au-delà de 8 reliques, il garde les meilleures seules et deux
      * partenaires de réaction, pour ne pas essayer des centaines de combinaisons.
      */
-    private fun chooseRelics(hero: Hero, floor: Int, skill: Skill, wanted: Archetype? = null) {
+    private fun chooseRelics(hero: Hero, floor: Int, skill: Skill, wanted: Archetype? = null,
+                             trialChain: Int = 3, series: Int = trialSeries) {
         // Le Sablier change le gameplay (la fenêtre de parade), pas la simulation : les bots ne le portent pas
         val owned = hero.relics.filter { it != Relic.HOURGLASS }
         val slots = hero.unlockedRelicSlots
@@ -1401,10 +1660,10 @@ class RoguelikeSimulationTest {
             val rng = Random(floor * 977L)
             val stat = FloorStat()
             var wins = 0
-            repeat(trialSeries) {
+            repeat(series) {
                 val h = trialCopy(hero, relics)
                 var ok = true
-                repeat(3) { if (ok) ok = soloFight(h, floor, skill, rng, stat, combos = true) }
+                repeat(trialChain) { if (ok) ok = soloFight(h, floor, skill, rng, stat, combos = true) }
                 if (ok) wins++
             }
             return wins * TRIAL_WIN_WEIGHT - stat.turnsInFight
@@ -1800,13 +2059,14 @@ class RoguelikeSimulationTest {
         return died
     }
 
-    private fun playCombat(c: Combat, skill: Skill, fs: FloorStat, rng: Random, combos: Boolean = false, cs: CombatStat? = null, useSpecial: Boolean = true) {
+    private fun playCombat(c: Combat, skill: Skill, fs: FloorStat, rng: Random, combos: Boolean = false, cs: CombatStat? = null, useSpecial: Boolean = true,
+                           maxTurns: Int = MAX_FIGHT_TURNS) {
         var turns = 0
         // Un sort qui ne frappe pas (bouclier, charme…) n'est jamais lancé deux tours de
         // suite : avec une SAG haute, sa recharge tombe à 1 et le bot ne frappait plus jamais
         var lastWasSupport = false
         while (c.phase == CombatPhase.PLAYER_TURN || c.phase == CombatPhase.ENEMY_TURN) {
-            if (turns > MAX_FIGHT_TURNS) { fs.stuck++; break }
+            if (turns >= maxTurns) { fs.stuck++; break }
             if (c.phase == CombatPhase.PLAYER_TURN) {
                 turns++
                 val alive = c.aliveIndices()

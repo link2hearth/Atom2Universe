@@ -133,8 +133,9 @@ class IsotopeSetTest {
         assertEquals(1f + IsotopeSets.SPELL_SHARE, withSet / without, 0.001f)
     }
 
-    private fun fight(hero: Hero) = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 100000, 10, 1, 1)), ambush = false,
-        rng = Random(1), attackDie = { 20 })
+    /** Un gobelin qui frappe à 100 : assez fort pour que les parts de renvoi (70 % contre 75 %) ne tombent pas sur le même arrondi. */
+    private fun fight(hero: Hero) = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 100000, 100, 1, 1)), ambush = false,
+        rng = Random(1), attackDie = { 20 }, dodgeRoll = { 1f })
 
     @Test
     fun laGardeRenvoiePlusEtRevientPlusVite() {

@@ -415,7 +415,6 @@
     <string name="roguelike_item_weight_cloth">Tissu : peu d\'armure</string>
     <string name="roguelike_item_weight_light">Léger : +%1$d %% d\'esquive, +%2$d %% de vitesse, la DEX aide à esquiver</string>
     <string name="roguelike_item_weight_heavy">Lourd : −%1$d %% de vitesse, la DEX n\'aide plus à esquiver</string>
-    <string name="roguelike_item_shield_ac">+%1$d %% d\'[[stat_dodge|esquive]]</string>
     <string name="roguelike_base_amulet">Amulette</string>
     <string name="roguelike_base_ring">Anneau</string>
     <string name="roguelike_item_damage">%1$s–%2$s dégâts</string>
@@ -693,4 +692,5 @@
     <string name="roguelike_set_wandering">Errance</string>
     <string name="roguelike_set_afterlife">Outre-tombe</string>
     <string name="roguelike_set_ravage">Ravage</string>
+    <string name="roguelike_stattype_class_perk">Chance d\'atout</string>
 </resources>

@@ -6,47 +6,50 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 
 class ParryBalanceTest {
-    private fun combat(hero: Hero, die: Int, seed: Int = 0): Combat = Combat(
+    /** Un gobelin qui frappe ; [dodge] : le tirage d'esquive, [perk] : celui de l'atout (1 : jamais d'atout). */
+    private fun combat(hero: Hero, dodge: Float = 1f, perk: Float = 1f, seed: Int = 0): Combat = Combat(
         hero, 1, listOf(Enemy(MonsterType.GOBLIN, 100000, 100, 1, 1)),
-        ambush = true, rng = Random(seed), attackDie = { die },
+        ambush = true, rng = Random(seed), dodgeRoll = { dodge }, perkRoll = { perk },
     ).also { it.startEnemyTurn() }
+
+    private fun heroOf(archetype: Archetype) = Hero.starter().apply {
+        for (base in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)) {
+            val item = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = archetype.weight)
+            equipped[item.slot] = item
+        }
+        addRelic(Relic.FIREBALL)
+        relicCooldowns[Relic.FIREBALL] = 3
+    }
 
     @Test fun timingSelectsDamageBeforeArmorWithoutAnotherRandomSpread() {
         for ((timing, multiplier) in listOf(Timing.PERFECT to .6f, Timing.GOOD to .85f, Timing.MISS to 1.1f)) {
             repeat(10) { seed ->
                 val hero = Hero.starter()
-                val expected = hero.mitigate(100f * ArmorClass.DAMAGE_COMPENSATION * multiplier, 1).roundToInt()
-                val strike = combat(hero, 20, seed).resolveStrike(0, timing)
+                val expected = hero.mitigate(100f * Dodge.damageMult * multiplier, 1).roundToInt()
+                val strike = combat(hero, seed = seed).resolveStrike(0, timing)
                 assertEquals(expected, strike.damage)
                 assertFalse(strike.missed)
             }
         }
     }
 
-    @Test fun timingAddsOneOrTwoDefensiveFacesOnTheSameDie() {
-        fun avoided(timing: Timing) = (1..20).count { die ->
-            combat(Hero.starter(), die).resolveStrike(0, timing).missed
+    @Test fun timingDoesNotChangeDodge() {
+        // Le geste choisit les dégâts et l'atout ; l'esquive ne vient que de la DEX
+        val hero = Hero.starter().apply {
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+                .copy(implicits = listOf(StatRoll(StatType.DEX, 5f)), affixes = emptyList())
         }
+        fun avoided(timing: Timing) = (0 until 20).count { i -> combat(hero, dodge = i / 20f).resolveStrike(0, timing).missed }
         val baseline = avoided(Timing.MISS)
-        assertEquals(baseline + 1, avoided(Timing.GOOD))
-        assertEquals(baseline + 2, avoided(Timing.PERFECT))
-        for (timing in Timing.entries) {
-            val hits = (1..20).count { ArmorClass.hits(it, 10000, 0, timing) }
-            assertEquals(6, hits) // Le plafond de défense reste à 70 %.
-        }
+        assertTrue(baseline > 0)
+        assertEquals(baseline, avoided(Timing.GOOD))
+        assertEquals(baseline, avoided(Timing.PERFECT))
     }
 
-    @Test fun perfectTimingCannotGuaranteeAvoidanceOrClassPerks() {
+    @Test fun perfectTimingWithoutThePerkRollGivesNoPerk() {
         for (archetype in Archetype.entries) {
-            val hero = Hero.starter().apply {
-                for (base in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)) {
-                    val item = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = archetype.weight)
-                    equipped[item.slot] = item
-                }
-                addRelic(Relic.FIREBALL)
-                relicCooldowns[Relic.FIREBALL] = 3
-            }
-            val c = combat(hero, 20)
+            val hero = heroOf(archetype)
+            val c = combat(hero)
             val cooldown = hero.relicCooldown(Relic.FIREBALL)
             val strike = c.resolveStrike(0, Timing.PERFECT)
             assertTrue("$archetype subit le coup", strike.damage + strike.puppetAbsorbed > 0)
@@ -59,16 +62,35 @@ class ParryBalanceTest {
         }
     }
 
-    @Test fun equipmentStillDeterminesTheDefensiveThreshold() {
+    @Test fun thePerkTriggersEvenOnAHit() {
+        // Le monstre ne rate pas (tirage d'esquive à 1), mais l'atout tombe : le blocage, la riposte et la roulade évitent le coup
+        for (archetype in listOf(Archetype.WARRIOR, Archetype.ROGUE, Archetype.VAGABOND)) {
+            val c = combat(heroOf(archetype), perk = 0f)
+            val strike = c.resolveStrike(0, Timing.PERFECT)
+            assertEquals("$archetype évite le coup", 0, strike.damage)
+            assertTrue(strike.blocked || strike.dodged)
+        }
+        assertNotNull(combat(heroOf(Archetype.ROGUE), perk = 0f).resolveStrike(0, Timing.PERFECT).counter)
+        assertTrue(combat(heroOf(Archetype.VAGABOND), perk = 0f).also { it.resolveStrike(0, Timing.PERFECT) }.rollReady)
+        // Le mage récupère une recharge, mais prend le coup
+        val mage = heroOf(Archetype.MAGE)
+        val strike = combat(mage, perk = 0f).resolveStrike(0, Timing.PERFECT)
+        assertTrue(strike.recovered)
+        assertTrue(strike.damage > 0)
+    }
+
+    @Test fun thePerkChanceStartsAtTwentyAndIsCapped() {
         val hero = Hero.starter()
-        val before = hero.armorClass
-        val shield = LootSystem.create(ItemBase.SHIELD, 1, Rarity.NORMAL, 0, Random(0))
-        hero.equipped[EquipSlot.OFFHAND] = shield
-        val attack = ArmorClass.monsterAttack(1)
-        for (timing in Timing.entries) {
-            val without = (1..20).count { !ArmorClass.hits(it, before, attack, timing) }
-            val with = (1..20).count { !ArmorClass.hits(it, hero.armorClass, attack, timing) }
-            assertEquals(without + ArmorClass.SHIELD, with)
+        assertEquals(Hero.BASE_CLASS_PERK, hero.classPerkChance, 0f)
+        hero.equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+            .copy(implicits = listOf(StatRoll(StatType.CLASS_PERK, 0.9f)), affixes = emptyList())
+        assertEquals(Hero.MAX_CLASS_PERK, hero.classPerkChance, 0f)
+    }
+
+    @Test fun onlyPerfectTimingTriggersThePerk() {
+        for (timing in listOf(Timing.GOOD, Timing.MISS)) {
+            val strike = combat(heroOf(Archetype.WARRIOR), perk = 0f).resolveStrike(0, timing)
+            assertFalse(strike.blocked)
         }
     }
 

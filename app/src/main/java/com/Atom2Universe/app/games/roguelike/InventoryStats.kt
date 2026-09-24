@@ -29,6 +29,7 @@ internal object InventoryStats {
         add("crit", R.string.roguelike_stattype_crit_chance, hero.critChance(hero.floor) * 100, Unit.PERCENT)
         add("critMult", R.string.roguelike_stattype_crit_damage, hero.critMult * 100, Unit.PERCENT)
         add("dodge", R.string.inv_dodge, hero.dodgeChance(hero.floor) * 100, Unit.PERCENT)
+        add("classPerk", R.string.roguelike_stattype_class_perk, hero.classPerkChance * 100, Unit.PERCENT)
         add("speed", R.string.roguelike_stattype_speed, hero.speed * 100, Unit.PERCENT)
         add("steal", R.string.roguelike_stattype_life_steal, hero.lifeSteal * 100, Unit.PERCENT)
         add("spellBonus", R.string.inv_spell_bonus,

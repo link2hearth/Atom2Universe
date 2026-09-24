@@ -109,49 +109,36 @@ object SpellSave {
 }
 
 /**
- * La classe d'armure et le jet d'attaque des monstres, façon D&D : le monstre lance
- * **d20 + son bonus d'attaque** ; s'il atteint la CA du héros ([Hero.armorClass]), il
- * touche, et **alors seulement** l'armure réduit ses dégâts et la parade joue. Un 20
- * touche toujours, un 1 rate toujours.
- *
- * Le bonus d'attaque suit l'étage comme la maîtrise du héros suit ses pièces : ils
- * s'annulent, et le héros de référence (bouclier, pièces sans bonus, DEX 10) est touché
- * [REF_HIT] = 3 fois sur 4. Pour que ce héros prenne en moyenne autant qu'avant la CA,
- * les coups qui touchent sont relevés de [DAMAGE_COMPENSATION] : l'équilibre PV / dégâts
- * réglé avec les affixes tient, et c'est l'écart à la référence qui paie — le voleur léger
- * esquive plus, le mage en tissu prend plus souvent.
+ * L'esquive (refonte du 24/09/2026, voir DONJON.md) : **0 % de base, et seule la DEX en donne**.
+ * Avant, c'était la classe d'armure de D&D (10 + maîtrise + DEX contre d20 + attaque du monstre) :
+ * la DEX montait d'un point par étage et le bonus d'attaque des monstres d'un point tous les 20,
+ * si bien qu'un voleur touchait le plancher de 30 % de coups reçus dès l'étage 10 et n'en bougeait
+ * plus. Désormais, le monstre « attend » la DEX d'un voleur de son étage ([referenceDex]) : qui l'a
+ * esquive [AT_REFERENCE], qui en a moitié moins esquive moitié moins, et jamais plus de [MAX].
+ * La DEX garde ainsi sa valeur à tous les étages, sans jamais tout bloquer.
  */
-object ArmorClass {
-    const val BASE = 10
-    const val SHIELD = 2
-    const val MONSTER_ATTACK_BASE = 6
-    /** Un point de CA, c'est une face du d20 : 5 points de chance d'être touché. */
-    const val AC_STEP = 0.05f
-    const val REF_HIT = 0.75f
-    const val DAMAGE_COMPENSATION = 1f / REF_HIT
+object Dodge {
+    /** L'esquive d'un héros qui a exactement la DEX de référence de son étage. */
+    const val AT_REFERENCE = 0.40f
+    /** L'esquive la plus haute : au moins un coup sur deux passe. */
+    const val MAX = 0.50f
 
-    fun monsterAttack(floor: Int) = SpellSave.monsterProficiency(floor) + MONSTER_ATTACK_BASE
     /**
-     * Le plancher de la chance d'être touché : quelle que soit la CA, un monstre touche au moins 30 % du temps (les faces
-     * [ALWAYS_HIT_FROM] à 20 du d20). Sans lui, un voleur qui empile la DEX (dague, arc, armure légère) n'était touché que
-     * par les 20 naturels et n'encaissait presque rien (voir DONJON.md, « Voleur : la chance d'être touché plancher »).
-     * Comme le plafond du critique, il empêche une caractéristique de ne plus rien coûter à l'adversaire.
+     * Les coups des monstres qui touchent. L'ancienne CA les relevait d'un tiers pour compenser les
+     * coups ratés du héros de référence ; il n'en rate plus. ×1,1 garde la difficulté d'avant la
+     * refonte pour toutes les classes sauf le voleur (banc du 24/09/2026). Les bancs peuvent le changer.
      */
-    const val MIN_HIT = 0.30f
-    val ALWAYS_HIT_FROM = 21 - Math.round(MIN_HIT * 20)
+    @Volatile var damageMult = 1.1f
 
-    /** Chance de toucher : le 1 rate toujours, et les faces [ALWAYS_HIT_FROM] à 20 touchent toujours ([MIN_HIT]). */
-    fun hitChance(ac: Int, attack: Int) = ((21 - (ac - attack)) / 20f).coerceIn(MIN_HIT, 0.95f)
+    /**
+     * La DEX au-dessus de 10 d'un voleur de cet étage : trois pièces légères (DEX d'office) et
+     * ses deux armes de DEX (dague, arc), à la puissance de l'étage, sans aucun affixe.
+     */
+    fun referenceDex(floor: Int) = referenceDexAtPower(LootSystem.powerCenter(floor).roundToInt().coerceAtLeast(1))
+    fun referenceDexAtPower(p: Int) = 3f * LootSystem.sideAttribute(p) + 2f * LootSystem.mainAttribute(p)
 
-    /** Le geste améliore le même jet défensif que l'équipement, sans second tirage. */
-    fun timingBonus(timing: Timing) = when (timing) {
-        Timing.MISS -> 0
-        Timing.GOOD -> 1
-        Timing.PERFECT -> 2
-    }
-
-    fun hits(roll: Int, ac: Int, attack: Int, timing: Timing): Boolean =
-        roll >= ALWAYS_HIT_FROM || (roll != 1 && roll + attack >= ac + timingBonus(timing))
+    /** La chance d'esquiver les monstres de [floor] avec [dexPoints] points de DEX au-dessus de 10. */
+    fun chance(dexPoints: Float, floor: Int) = (AT_REFERENCE * dexPoints / referenceDex(floor)).coerceIn(0f, MAX)
 }
 
 /**
@@ -982,8 +969,12 @@ class Combat(
     private val rng: Random = Random,
     /** Le d20 des jets de sauvegarde (les tests le truquent). */
     private val d20: () -> Int = { rng.nextInt(1, 21) },
-    /** Le d20 des jets d'attaque des monstres. */
+    /** Le d20 des monstres face à l'Image miroir. */
     private val attackDie: () -> Int = { rng.nextInt(1, 21) },
+    /** Le tirage de l'esquive, entre 0 et 1 : sous la chance d'esquive du héros, le coup est évité. */
+    private val dodgeRoll: () -> Float = { rng.nextFloat() },
+    /** Le tirage de l'atout de classe après une parade parfaite, entre 0 et 1 (voir [Hero.classPerkChance]). */
+    private val perkRoll: () -> Float = { rng.nextFloat() },
     val visualSeed: Int = floor,
     val backdrop: DungeonBackdrop = DungeonTheme.forFloor(floor).backdrop(floor),
 ) {
@@ -2074,20 +2065,21 @@ class Combat(
             val need = when (mirrorImages) { 4 -> 5; 3 -> 6; 2 -> 8; else -> 11 }
             if (attackDie() >= need) { mirrorImages--; return EnemyStrike(enemyIndex, 0, parry, imageHit = true, bleed = bled) }
         }
-        // Enragé ou aveuglé : il attaque avec désavantage (deux d20, le pire gardé)
-        val roll = if (e.enraged || e.blindedTurns > 0) minOf(attackDie(), attackDie()) else attackDie()
-        val hits = ArmorClass.hits(roll, hero.armorClass, ArmorClass.monsterAttack(floor), parry)
+        // Enragé ou aveuglé : il attaque avec désavantage (deux tirages, le héros garde le meilleur)
+        val roll = if (e.enraged || e.blindedTurns > 0) minOf(dodgeRoll(), dodgeRoll()) else dodgeRoll()
+        val hits = roll >= hero.dodgeChance(floor)
 
         // Le coup brut, avant parade et armure : c'est sur lui que se calcule ce qu'on renvoie
         // Affaibli, et engourdi par la glace : ses coups font moins mal
         val weakened = (if (e.weakenedTurns > 0) WEAKEN_MULT else 1f) * (if (e.frozen) NUMB_MULT else 1f)
         // La fourchette est choisie par le geste, sans variation aléatoire supplémentaire.
         // Le renvoi conserve comme référence le coup de base, avant le geste et l'armure.
-        val blow = e.damage * weakened * ArmorClass.DAMAGE_COMPENSATION
+        val blow = e.damage * weakened * Dodge.damageMult
 
-        // Les atouts parfaits exigent aussi que le jet défensif ait évité le coup.
+        // Une parade parfaite déclenche l'atout de la classe une fois sur [Hero.classPerkChance], esquive ou pas.
+        // Le blocage, la riposte et la roulade évitent le coup ; les autres atouts s'ajoutent au coup reçu.
         var recovered = false
-        if (!hits && parry == Timing.PERFECT) when (hero.archetype) {
+        if (parry == Timing.PERFECT && perkRoll() < hero.classPerkChance) when (hero.archetype) {
             // Le guerrier bloque : rien ne passe, et le coup renvoie. Sans bouclier, ça marche, mais il renvoie moins
             Archetype.WARRIOR -> {
                 val thorns = retaliate(enemyIndex, blow, blocked = true)

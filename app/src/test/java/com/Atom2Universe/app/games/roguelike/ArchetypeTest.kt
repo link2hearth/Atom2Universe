@@ -25,10 +25,10 @@ class ArchetypeTest {
 
     private fun heroOf(a: Archetype, shield: Boolean = false) = heroWearing(a.weight, a.weight, a.weight, shield)
 
-    /** Un gobelin solide dont l'attaque échoue : les atouts exigent une défense réussie. */
+    /** Un gobelin solide qui touche toujours, et une parade parfaite qui déclenche toujours l'atout de classe. */
     private fun fight(hero: Hero, hp: Int = 1000) = Combat(
         hero, 1, listOf(Enemy(MonsterType.GOBLIN, hp, 10, 1, 1)), ambush = true,
-        rng = Random(1), attackDie = { 1 },
+        rng = Random(1), dodgeRoll = { 1f }, perkRoll = { 0f },
     )
 
     @Test
