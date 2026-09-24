@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -42,7 +42,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/startup_button_background"
+        android:background="@drawable/audio_panel_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
@@ -50,7 +50,7 @@
         app:tabIndicatorColor="?attr/a2uMidiAccent"
         app:tabMode="fixed"
         app:tabSelectedTextColor="?attr/a2uMidiAccent"
-        app:tabTextColor="@color/startup_text_secondary" />
+        app:tabTextColor="@color/audio_text_secondary" />
 
     <!-- ViewPager for tab content -->
     <androidx.viewpager2.widget.ViewPager2
@@ -80,7 +80,7 @@
             android:layout_height="64dp"
             android:alpha="0.5"
             android:src="@drawable/ic_music_note"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,7 +88,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/sf2_import_no_presets"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -98,7 +98,7 @@
         android:id="@+id/bottom_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/startup_button_background"
+        android:background="@drawable/audio_panel_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="12dp"
@@ -125,7 +125,7 @@
             android:minWidth="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/sf2_import_select_none"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="11sp" />
 
         <TextView
@@ -135,7 +135,7 @@
             android:layout_marginHorizontal="8dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="11sp" />
 
         <Button
@@ -145,7 +145,7 @@
             android:backgroundTint="?attr/a2uMidiAccent"
             android:minWidth="100dp"
             android:text="@string/sf2_import_button"
-            android:textColor="@android:color/white"
+            android:textColor="@color/audio_on_accent"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -185,7 +185,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/sf2_importing"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="14sp" />
 
         </LinearLayout>

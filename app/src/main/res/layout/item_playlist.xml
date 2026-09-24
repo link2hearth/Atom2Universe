@@ -9,9 +9,9 @@
     android:layout_marginEnd="4dp"
     android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
-    app:cardBackgroundColor="@color/midi_surface"
+    app:cardBackgroundColor="@color/audio_surface"
     app:cardElevation="1dp"
-    app:cardCornerRadius="6dp">
+    app:cardCornerRadius="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:id="@+id/playlist_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -52,7 +52,7 @@
                 android:id="@+id/playlist_track_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp"
                 tools:text="15 morceaux" />
 
@@ -66,7 +66,7 @@
             android:src="@android:drawable/ic_menu_more"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            app:tint="@color/midi_text_secondary"
+            app:tint="@color/audio_text_secondary"
             android:contentDescription="@string/notes_action_menu" />
 
     </LinearLayout>

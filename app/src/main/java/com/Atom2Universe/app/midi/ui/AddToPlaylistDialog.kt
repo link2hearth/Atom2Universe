@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -44,7 +44,7 @@ class AddToPlaylistDialog : DialogFragment() {
         }
 
         // Dialog temporaire pendant le chargement (avec thème sombre)
-        return AlertDialog.Builder(context, R.style.Theme_A2U_AlertDialog_Dark)
+        return AlertDialog.Builder(context, R.style.ThemeOverlay_A2U_Audio_AlertDialog)
             .setTitle(R.string.midi_add_to_playlist)
             .setMessage(R.string.midi_loading_playlists)
             .setNegativeButton(R.string.midi_cancel) { _, _ -> dismiss() }
@@ -77,7 +77,7 @@ class AddToPlaylistDialog : DialogFragment() {
         dismiss()
 
         // Recréer le dialog avec les playlists (avec thème sombre)
-        AlertDialog.Builder(savedContext, R.style.Theme_A2U_AlertDialog_Dark)
+        AlertDialog.Builder(savedContext, R.style.ThemeOverlay_A2U_Audio_AlertDialog)
             .setTitle(dialogTitle)
             .setAdapter(adapter) { _, which ->
                 when (which) {
@@ -100,7 +100,7 @@ class AddToPlaylistDialog : DialogFragment() {
             setHintTextColor(ContextCompat.getColor(savedContext, R.color.midi_text_secondary))
         }
 
-        AlertDialog.Builder(savedContext, R.style.Theme_A2U_AlertDialog_Dark)
+        AlertDialog.Builder(savedContext, R.style.ThemeOverlay_A2U_Audio_AlertDialog)
             .setTitle(R.string.midi_create_playlist)
             .setView(editText)
             .setPositiveButton(R.string.midi_create) { _, _ ->
@@ -127,7 +127,7 @@ class AddToPlaylistDialog : DialogFragment() {
 
         val adapter = ArrayAdapter(savedContext, R.layout.item_dialog_list, options)
 
-        AlertDialog.Builder(savedContext, R.style.Theme_A2U_AlertDialog_Dark)
+        AlertDialog.Builder(savedContext, R.style.ThemeOverlay_A2U_Audio_AlertDialog)
             .setTitle(savedContext.getString(R.string.midi_add_to_playlist_title, trackTitle))
             .setAdapter(adapter) { _, which ->
                 when (which) {

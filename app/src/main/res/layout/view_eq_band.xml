@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="10sp"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:gravity="center"/>
 
     <!-- Vertical slider container -->
@@ -22,7 +22,7 @@
         android:layout_width="36dp"
         android:layout_height="140dp"
         android:layout_marginVertical="4dp"
-        android:background="@color/music_surface">
+        android:background="@drawable/audio_panel_background">
 
         <!-- The SeekBar will be rotated 270 degrees to become vertical -->
         <SeekBar
@@ -46,6 +46,6 @@
         android:layout_height="wrap_content"
         android:text="1K"
         android:textSize="11sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:gravity="center"/>
 </LinearLayout>

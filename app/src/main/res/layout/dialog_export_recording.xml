@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:inputType="textNoSuggestions"
             android:maxLines="1"
-            android:textColor="@color/midi_text_primary" />
+            android:textColor="@color/audio_text_primary" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/practice_export_format_midi"
-        android:textColor="@color/midi_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:checked="true" />
 
     <CheckBox
@@ -38,6 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/practice_export_format_wav"
-        android:textColor="@color/midi_text_primary" />
+        android:textColor="@color/audio_text_primary" />
 
 </LinearLayout>

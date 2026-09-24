@@ -33,7 +33,7 @@ import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -2901,7 +2901,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         val container = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(24, 16, 24, 16)
-            setBackgroundResource(R.drawable.bg_title_overlay)
+            setBackgroundResource(R.drawable.audio_popup_background)
             gravity = Gravity.CENTER
             minimumWidth = minWidthPx
         }

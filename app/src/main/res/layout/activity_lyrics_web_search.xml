@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/music_background"
+        android:background="@drawable/audio_screen_background"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="Recherche de paroles"
-        app:titleTextColor="@color/music_text_primary" />
+        app:titleTextColor="@color/audio_text_primary" />
 
     <!-- WebView -->
     <WebView

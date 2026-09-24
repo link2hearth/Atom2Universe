@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Window
@@ -18,7 +18,7 @@ class VelocityRangeDialog(
     private val currentStart: Int,
     private val currentEnd: Int,
     private val onRangeSelected: (start: Int, end: Int) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     private lateinit var titleText: TextView
     private lateinit var startSeekbar: SeekBar

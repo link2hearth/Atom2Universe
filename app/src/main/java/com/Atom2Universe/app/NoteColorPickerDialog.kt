@@ -35,7 +35,18 @@ class NoteColorPickerDialog(
     private val currentColorHex: String?,
     private val currentTextColorMode: String,
     private val onColorSelected: (colorHex: String?, textColorMode: String) -> Unit
-) : Dialog(context, R.style.Theme_A2U_Dialog) {
+) : Dialog(
+    context,
+    if (com.Atom2Universe.app.audio.AudioStyle.isAudioContext(context))
+        R.style.ThemeOverlay_A2U_Audio_Dialog else R.style.Theme_A2U_Dialog
+) {
+
+    override fun onStart() {
+        super.onStart()
+        if (com.Atom2Universe.app.audio.AudioStyle.isAudioContext(context)) {
+            com.Atom2Universe.app.audio.AudioStyle.styleDialog(this)
+        }
+    }
 
     // Quick colors palette
     private val quickColors = listOf(

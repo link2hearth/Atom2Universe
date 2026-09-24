@@ -203,10 +203,10 @@ class QueueTrackAdapter(
 
             if (isPlaying) {
                 playingIndicator.visibility = View.VISIBLE
-                itemView.setBackgroundResource(R.color.music_track_playing_bg)
+                itemView.setBackgroundResource(R.drawable.audio_selected_row_background)
             } else {
                 playingIndicator.visibility = View.INVISIBLE
-                itemView.setBackgroundResource(android.R.color.transparent)
+                itemView.setBackgroundResource(R.drawable.audio_row_background)
             }
         }
     }

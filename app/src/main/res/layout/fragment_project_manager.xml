@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/sf2_project_manager"
-        android:textColor="@color/startup_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/sf2_project_manager_subtitle"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,7 @@
             android:drawablePadding="8dp"
             android:drawableTint="@android:color/white"
             android:text="@string/sf2_new_project"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/audio_on_accent" />
 
         <!-- Import SF2 button -->
         <Button
@@ -62,12 +62,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:backgroundTint="@color/startup_button_background"
+            android:backgroundTint="@color/audio_surface_raised"
             android:drawableStart="@drawable/ic_folder_open"
             android:drawablePadding="8dp"
-            android:drawableTint="@color/startup_text_primary"
+            android:drawableTint="@color/audio_text_primary"
             android:text="@string/sf2_import"
-            android:textColor="@color/startup_text_primary" />
+            android:textColor="@color/audio_text_primary" />
 
     </LinearLayout>
 
@@ -101,7 +101,7 @@
             android:layout_height="64dp"
             android:src="@drawable/ic_folder_open"
             android:alpha="0.5"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/sf2_no_projects"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="16sp" />
 
     </LinearLayout>

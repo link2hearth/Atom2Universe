@@ -13,7 +13,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.google.android.material.color.MaterialColors
 import com.Atom2Universe.app.midi.data.MidiDatabase
 import com.Atom2Universe.app.midi.repository.MidiRepository
@@ -59,7 +59,7 @@ import java.util.Locale
  * - MediaBrowser connection au MidiPlaybackService
  * - Mini player en bas (collapsed state)
  */
-class MidiPlayerActivity : ThemedActivity() {
+class MidiPlayerActivity : AudioThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -497,11 +497,12 @@ class MidiPlayerActivity : ThemedActivity() {
             getColor(R.color.midi_accent)
         )
         tabs.forEachIndexed { index, tab ->
+            tab.isSelected = index == selectedPosition
             if (index == selectedPosition) {
                 tab.setTextColor(activeColor)
                 tab.setTypeface(null, android.graphics.Typeface.BOLD)
             } else {
-                tab.setTextColor(getColor(R.color.midi_text_secondary))
+                tab.setTextColor(getColor(R.color.audio_text_secondary))
                 tab.setTypeface(null, android.graphics.Typeface.NORMAL)
             }
         }

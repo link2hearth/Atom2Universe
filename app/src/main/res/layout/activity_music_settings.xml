@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/music_surface"
+        android:background="@drawable/audio_panel_background"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/music_settings"
-        app:titleTextColor="@color/music_text_primary" />
+        app:titleTextColor="@color/audio_text_primary"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,7 +48,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -106,7 +109,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -177,7 +180,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -245,7 +248,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -293,7 +296,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -402,7 +405,7 @@
                     android:drawablePadding="4dp"
                     android:padding="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="?attr/selectableItemBackground" />
+                    android:background="@drawable/audio_row_background" />
 
                 <!-- API 1 Advanced Options Container -->
                 <LinearLayout
@@ -543,7 +546,7 @@
                     android:drawablePadding="4dp"
                     android:padding="4dp"
                     android:layout_marginBottom="4dp"
-                    android:background="?attr/selectableItemBackground" />
+                    android:background="@drawable/audio_row_background" />
 
                 <!-- API 2 Advanced Options Container -->
                 <LinearLayout
@@ -691,7 +694,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true">
 
@@ -747,7 +750,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginTop="8dp">
@@ -792,7 +795,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/audio_row_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginTop="8dp">

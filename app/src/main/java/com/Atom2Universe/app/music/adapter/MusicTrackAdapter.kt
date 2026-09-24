@@ -279,7 +279,7 @@ class MusicTrackAdapter(
             btnAddToPlaylist?.visibility = if (showAddToPlaylist) View.VISIBLE else View.GONE
 
             if (isPlaying) {
-                itemView.setBackgroundResource(R.color.music_track_playing_bg)
+                itemView.setBackgroundResource(R.drawable.audio_selected_row_background)
             } else {
                 itemView.setBackgroundResource(android.R.color.transparent)
             }
@@ -332,7 +332,7 @@ class MusicTrackAdapter(
             btnAddToPlaylist?.visibility = if (showAddToPlaylist) View.VISIBLE else View.GONE
 
             if (isPlaying) {
-                itemView.setBackgroundResource(R.color.music_track_playing_bg)
+                itemView.setBackgroundResource(R.drawable.audio_selected_row_background)
             } else {
                 itemView.setBackgroundResource(android.R.color.transparent)
             }

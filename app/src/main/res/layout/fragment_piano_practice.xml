@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/midi_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar avec navigation -->
     <LinearLayout
@@ -16,7 +16,7 @@
         android:gravity="center_vertical"
         android:paddingVertical="4dp"
         android:paddingHorizontal="8dp"
-        android:background="@color/midi_surface"
+        android:background="@drawable/audio_panel_background"
         android:elevation="4dp"
         tools:ignore="UselessParent"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_arrow_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_primary"
+                app:tint="@color/audio_text_primary"
                 android:contentDescription="@string/back" />
 
             <!-- Spacer pour pousser les tabs à droite -->
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/midi_nav_library"
-                        android:textColor="@color/midi_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="8dp"
@@ -69,7 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/midi_nav_playlists"
-                        android:textColor="@color/midi_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="8dp"
@@ -80,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/midi_nav_now_playing"
-                        android:textColor="@color/midi_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="8dp"
@@ -127,7 +127,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginEnd="4dp"
-                android:background="@drawable/rounded_container_background"
+                android:background="@drawable/audio_panel_background"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="2dp"
                 android:visibility="gone"
@@ -140,7 +140,7 @@
                     android:layout_height="32dp"
                     android:src="@drawable/ic_hand_left"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/midi_text_secondary"
+                    app:tint="@color/audio_text_secondary"
                     android:contentDescription="@string/practice_left_hand_only" />
 
                 <!-- Bouton deux mains -->
@@ -160,7 +160,7 @@
                     android:layout_height="32dp"
                     android:src="@drawable/ic_hand_right"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/midi_text_secondary"
+                    app:tint="@color/audio_text_secondary"
                     android:contentDescription="@string/practice_right_hand_only" />
 
             </LinearLayout>
@@ -173,7 +173,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginEnd="4dp"
-                android:background="@drawable/rounded_container_background"
+                android:background="@drawable/audio_panel_background"
                 android:paddingHorizontal="4dp"
                 android:paddingVertical="2dp"
                 android:visibility="gone"
@@ -218,7 +218,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_piano_keyboard"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:visibility="gone"
                 android:contentDescription="@string/midi_keyboard_connected"
                 tools:visibility="visible" />
@@ -230,7 +230,7 @@
                 android:layout_height="40dp"
                 android:src="@drawable/ic_more_vert"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_primary"
+                app:tint="@color/audio_text_primary"
                 android:contentDescription="@string/settings" />
 
     </LinearLayout>
@@ -280,7 +280,7 @@
                 android:id="@+id/txt_track_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -292,7 +292,7 @@
                 android:id="@+id/txt_instrument"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp"
                 android:maxLines="1"
                 android:maxWidth="160dp"
@@ -360,7 +360,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp"
-        android:background="@color/midi_surface_variant"
+        android:background="@color/audio_surface_raised"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/controls_panel"
         app:layout_constraintStart_toStartOf="parent"
@@ -382,7 +382,7 @@
                 android:layout_height="44dp"
                 android:src="@drawable/ic_chevron_left"
                 android:background="@drawable/circle_button_background"
-                app:tint="@color/midi_text_primary"
+                app:tint="@color/audio_text_primary"
                 android:contentDescription="@string/practice_octave_down" />
 
             <!-- Mini-clavier indicateur -->
@@ -400,7 +400,7 @@
                 android:layout_height="44dp"
                 android:src="@drawable/ic_chevron_right"
                 android:background="@drawable/circle_button_background"
-                app:tint="@color/midi_text_primary"
+                app:tint="@color/audio_text_primary"
                 android:contentDescription="@string/practice_octave_up" />
 
         </LinearLayout>
@@ -418,7 +418,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container_background"
+                android:background="@drawable/audio_panel_background"
                 android:padding="4dp">
 
                 <ImageButton
@@ -427,7 +427,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/ic_remove"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/midi_text_primary"
+                    app:tint="@color/audio_text_primary"
                     android:contentDescription="@string/practice_less_octaves" />
 
                 <TextView
@@ -436,7 +436,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="64dp"
                     android:gravity="center"
-                    android:textColor="@color/midi_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     tools:text="3 oct." />
@@ -447,7 +447,7 @@
                     android:layout_height="40dp"
                     android:src="@drawable/ic_add"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/midi_text_primary"
+                    app:tint="@color/audio_text_primary"
                     android:contentDescription="@string/practice_more_octaves" />
 
             </LinearLayout>
@@ -479,7 +479,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container_background"
+                android:background="@drawable/audio_panel_background"
                 android:padding="8dp">
 
                 <ImageView
@@ -495,7 +495,7 @@
                     android:id="@+id/txt_current_instrument"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/midi_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="13sp"
                     android:maxWidth="180dp"
                     android:ellipsize="end"
@@ -506,7 +506,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_expand_more"
-                    app:tint="@color/midi_text_secondary"
+                    app:tint="@color/audio_text_secondary"
                     android:layout_marginStart="4dp"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no" />
@@ -544,7 +544,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="8dp"
-        android:background="@color/midi_surface"
+        android:background="@drawable/audio_panel_background"
         android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -574,7 +574,7 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_speaker_solo"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/practice_i_play" />
 
             <!-- Bouton LED clavier (envoyer les notes au clavier externe) -->
@@ -584,7 +584,7 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_piano_keyboard"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:visibility="gone"
                 android:contentDescription="@string/practice_keyboard_leds" />
 
@@ -595,7 +595,7 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_volume_off"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:visibility="gone"
                 android:contentDescription="@string/practice_mute_led_sound" />
 
@@ -606,7 +606,7 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_speaker_muted"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:visibility="gone"
                 android:contentDescription="@string/practice_mute_internal_synth" />
 
@@ -617,7 +617,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="13sp"
                 android:fontFamily="monospace"
                 tools:text="1:23" />
@@ -639,8 +639,8 @@
                 android:layout_width="52dp"
                 android:layout_height="52dp"
                 android:src="@drawable/ic_play"
-                android:background="@drawable/play_button_background"
-                app:tint="@android:color/white"
+                android:background="@drawable/audio_control_background"
+                app:tint="@color/audio_on_accent"
                 android:contentDescription="@string/play"
                 android:scaleType="centerInside"
                 android:padding="12dp" />
@@ -653,7 +653,7 @@
                 android:layout_marginStart="8dp"
                 android:src="@drawable/ic_stop"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_primary"
+                app:tint="@color/audio_text_primary"
                 android:contentDescription="@string/stop" />
 
             <!-- Temps restant (entre stop et vitesse) -->
@@ -663,7 +663,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="13sp"
                 android:fontFamily="monospace"
                 tools:text="-2:22" />
@@ -683,7 +683,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/practice_speed_max"
-                    android:textColor="@color/midi_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="11sp"
                     android:textStyle="bold" />
 
@@ -693,7 +693,7 @@
                     android:layout_height="32dp"
                     android:src="@drawable/ic_speed"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    app:tint="@color/midi_text_secondary"
+                    app:tint="@color/audio_text_secondary"
                     android:contentDescription="@string/practice_speed" />
 
             </LinearLayout>
@@ -705,7 +705,7 @@
                 android:layout_height="36dp"
                 android:src="@drawable/ic_sleep_timer"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/practice_countdown" />
 
         </LinearLayout>
@@ -752,7 +752,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/practice_speed_min"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -771,7 +771,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/practice_speed_max"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
         </LinearLayout>

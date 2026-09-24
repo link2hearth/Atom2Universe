@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -26,7 +26,7 @@ class KeyRangeDialog(
     currentStart: Int = rootNote,
     currentEnd: Int = rootNote,
     private val onRangeSelected: (start: Int, end: Int) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     private val initialStart = currentStart
     private val initialEnd = currentEnd

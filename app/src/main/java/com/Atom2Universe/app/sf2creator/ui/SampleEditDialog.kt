@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Window
@@ -21,7 +21,7 @@ class SampleEditDialog(
     context: Context,
     private val sample: Sf2SampleEntity,
     private val onSave: (Sf2SampleEntity) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     // UI elements
     private lateinit var sampleNameInput: EditText

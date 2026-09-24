@@ -7,14 +7,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.sf2creator.data.PitchResult
 import com.Atom2Universe.app.sf2creator.data.Sf2ProjectRepository
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SampleEntity
@@ -49,7 +49,7 @@ import java.io.File
  * - From Export: "Add to Project" → ProjectManager → select/create project → ProjectDetail
  * - From ProjectDetail: "Add sample" → back to Record flow
  */
-class Sf2CreatorActivity : ThemedActivity() {
+class Sf2CreatorActivity : AudioThemedActivity() {
 
     private lateinit var titleText: TextView
     private lateinit var stepIndicator: TextView

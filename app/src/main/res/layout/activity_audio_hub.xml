@@ -4,87 +4,118 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background"
-    android:padding="24dp">
+    android:background="@android:color/transparent"
+    android:padding="16dp">
 
-    <!-- Cloud button : la teinte dit d'un coup d'oeil si un compte est lie -->
-    <ImageButton
-        android:id="@+id/cloud_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/hub_cloud"
-        android:src="@drawable/ic_cloud_off"
-        app:tint="@color/startup_text_secondary"
-        app:layout_constraintEnd_toStartOf="@id/settings_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Settings button -->
-    <ImageButton
-        android:id="@+id/settings_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/hub_settings"
-        android:src="@drawable/ic_settings"
-        app:tint="@color/startup_text_secondary"
-        app:layout_constraintEnd_toStartOf="@id/view_toggle_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- View toggle button (grid/list) -->
-    <ImageButton
-        android:id="@+id/view_toggle_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/hub_toggle_view"
-        android:src="@drawable/ic_view_list"
-        app:tint="@color/startup_text_secondary"
-        app:layout_constraintEnd_toStartOf="@id/language_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Language button -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/language_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/hub_change_language"
-        android:gravity="center"
-        android:padding="0dp"
-        android:textAllCaps="true"
-        android:textColor="@color/startup_text_secondary"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Title -->
-    <TextView
-        android:id="@+id/audio_hub_title"
-        android:layout_width="wrap_content"
+    <!-- Le nom reste visible à gauche ; seules les actions défilent si nécessaire. -->
+    <LinearLayout
+        android:id="@+id/hub_actions"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/audio_hub_title"
-        android:textColor="@color/startup_text_primary"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/audio_panel_background"
+        android:padding="4dp"
+        android:elevation="2dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_button" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/audio_hub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/app_name"
+            android:textColor="@color/audio_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:accessibilityHeading="true" />
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end|center_vertical">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/theme_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="12dp"
+                    android:text="@string/settings_theme_title"
+                    android:textColor="@color/audio_on_accent"
+                    android:textAllCaps="false"
+                    app:backgroundTint="?attr/a2uMusicAccent"
+                    app:cornerRadius="16dp" />
+
+                <ImageButton
+                    android:id="@+id/cloud_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/hub_cloud"
+                    android:src="@drawable/ic_cloud_off"
+                    app:tint="@color/audio_text_secondary" />
+
+                <ImageButton
+                    android:id="@+id/settings_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/hub_settings"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/audio_text_secondary" />
+
+                <ImageButton
+                    android:id="@+id/view_toggle_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/hub_toggle_view"
+                    android:src="@drawable/ic_view_list"
+                    app:tint="@color/audio_text_secondary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/language_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/hub_change_language"
+                    android:gravity="center"
+                    android:padding="0dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/audio_text_secondary"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
     <!-- Playback controls card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/playback_controls_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:cardBackgroundColor="@color/audio_hub_card_background"
-        app:cardCornerRadius="16dp"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/audio_surface"
+        app:cardCornerRadius="24dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/audio_outline"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/audio_hub_title">
+        app:layout_constraintTop_toBottomOf="@id/hub_actions">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,7 +132,7 @@
                 android:contentDescription="@string/audio_hub_stop"
                 android:src="@drawable/ic_stop"
                 app:backgroundTint="@color/audio_hub_stop_button"
-                app:fabSize="normal"
+                app:fabCustomSize="48dp"
                 app:tint="@android:color/white" />
 
             <!-- Play/Pause button -->
@@ -113,9 +144,9 @@
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@string/audio_hub_play_pause"
                 android:src="@drawable/ic_play"
-                app:backgroundTint="@color/audio_hub_play_button"
+                app:backgroundTint="?attr/a2uMusicAccent"
                 app:fabSize="normal"
-                app:tint="@android:color/white" />
+                app:tint="@color/audio_on_accent" />
 
             <!-- Now playing info -->
             <LinearLayout
@@ -131,14 +162,14 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/audio_hub_no_playback"
-                    android:textColor="@color/startup_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/source_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="12sp"
                     android:visibility="gone" />
 
@@ -149,11 +180,11 @@
                 android:id="@+id/sleep_timer_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:contentDescription="@string/sleep_timer_title"
                 android:src="@drawable/ic_sleep_timer"
-                app:backgroundTint="@color/audio_hub_card_background"
-                app:fabSize="normal"
+                app:backgroundTint="@color/audio_surface"
+                app:fabCustomSize="48dp"
                 app:tint="?attr/a2uMidiAccent" />
 
         </LinearLayout>
@@ -165,7 +196,7 @@
         android:id="@+id/tiles_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,9 +212,9 @@
         android:contentDescription="@string/hub_confirm_edit"
         android:src="@drawable/ic_check"
         android:visibility="gone"
-        app:backgroundTint="#4CAF50"
+        app:backgroundTint="?attr/a2uMusicAccent"
         app:fabSize="mini"
-        app:tint="@android:color/white"
+        app:tint="@color/audio_on_accent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -33,7 +33,7 @@ class PitchSelectionDialog(
     private val detectedPitch: PitchResult,
     private val samples: ShortArray,
     private val onPitchSelected: (Int) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     private lateinit var detectedPitchText: TextView
     private lateinit var octaveSpinner: Spinner

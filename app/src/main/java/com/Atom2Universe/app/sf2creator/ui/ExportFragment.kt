@@ -18,7 +18,7 @@ import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment

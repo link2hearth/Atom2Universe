@@ -39,7 +39,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.AudioPlaybackManager
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.google.android.material.color.MaterialColors
 import com.Atom2Universe.app.music.adapter.AlbumAdapter
 import com.Atom2Universe.app.music.adapter.ArtistAdapter
@@ -77,7 +77,7 @@ import com.Atom2Universe.app.music.navidrome.NavidromeLibrary
 import com.Atom2Universe.app.music.navidrome.SubsonicApiClient
 import com.Atom2Universe.app.util.enableImmersiveMode
 
-class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener {
+class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerListener {
 
     companion object {
         const val EXTRA_OPEN_FULL_PLAYER = "extra_open_full_player"
@@ -335,6 +335,7 @@ class MusicPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener
         }
 
         initViews()
+        MusicLibraryStyle.apply(this)
         setupToolbar()
         setupAdapters()
         setupSwipeGesture()

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sf2_edit_sample_title"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -27,7 +27,7 @@
             android:layout_marginTop="12dp"
             android:labelFor="@+id/sample_name_input"
             android:text="@string/sf2_sample_name_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <EditText
@@ -36,12 +36,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:autofillHints=""
-            android:background="@drawable/bg_rounded_dark"
+            android:background="@drawable/audio_panel_background"
             android:inputType="text"
             android:maxLength="20"
             android:padding="10dp"
-            android:textColor="@color/startup_text_primary"
-            android:textColorHint="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_primary"
+            android:textColorHint="@color/audio_text_secondary"
             android:textSize="14sp"
             android:importantForAutofill="no" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_key_range"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_section_velocity"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -477,7 +477,7 @@
                 android:minWidth="100dp"
                 android:paddingHorizontal="16dp"
                 android:text="@string/midi_cancel"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="16sp" />
 
             <Button

@@ -9,8 +9,8 @@
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="@color/startup_button_background"
-    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:checkedIcon="@drawable/ic_check"
     app:checkedIconTint="?attr/a2uMidiAccent">
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/startup_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
                     android:id="@+id/preset_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -65,7 +65,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/sf2_import_expand"
                 android:src="@drawable/ic_chevron_down"
-                app:tint="@color/startup_text_secondary" />
+                app:tint="@color/audio_text_secondary" />
 
         </LinearLayout>
 

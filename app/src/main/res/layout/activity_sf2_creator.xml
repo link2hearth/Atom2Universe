@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background"
+    android:background="@drawable/audio_screen_background"
     android:padding="16dp">
 
     <!-- Back button -->
@@ -15,7 +15,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_arrow_back"
-        app:tint="@color/startup_text_secondary"
+        app:tint="@color/audio_text_secondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:text="@string/sf2_creator_title"
-        android:textColor="@color/startup_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/back_button"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sf2_step_1_of_3"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@id/back_button"
         app:layout_constraintEnd_toEndOf="parent"

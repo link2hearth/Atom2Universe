@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_screen_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
-            android:background="@color/music_text_secondary"/>
+            android:background="@color/audio_text_secondary"/>
 
         <!-- Header with title and enable switch -->
         <LinearLayout
@@ -45,7 +45,7 @@
                 android:text="@string/eq_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/music_text_primary"/>
+                android:textColor="@color/audio_text_primary"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchEqEnabled"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/eq_preset"
                 android:textSize="14sp"
-                android:textColor="@color/music_text_secondary"/>
+                android:textColor="@color/audio_text_secondary"/>
 
             <Spinner
                 android:id="@+id/spinnerPreset"
@@ -78,7 +78,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
-                android:background="@color/music_surface"
+                android:background="@drawable/audio_panel_background"
                 android:paddingHorizontal="12dp"
                 android:popupBackground="@color/music_surface"/>
 
@@ -90,7 +90,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_save"
                 android:contentDescription="@string/eq_save_preset"
-                app:tint="@color/music_text_primary"/>
+                app:tint="@color/audio_text_primary"/>
 
             <ImageButton
                 android:id="@+id/btnDeletePreset"
@@ -99,7 +99,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:drawable/ic_menu_delete"
                 android:contentDescription="@string/eq_delete_preset"
-                app:tint="@color/music_text_primary"/>
+                app:tint="@color/audio_text_primary"/>
         </LinearLayout>
 
         <!-- Apply to selector (Global/Track/Album/Artist) -->
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/eq_apply_to"
                 android:textSize="14sp"
-                android:textColor="@color/music_text_secondary"/>
+                android:textColor="@color/audio_text_secondary"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupApplyTo"

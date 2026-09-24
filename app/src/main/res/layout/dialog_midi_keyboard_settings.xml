@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/midi_keyboard_name"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:gravity="end" />
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/midi_keyboard_manufacturer"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="14sp"
             android:gravity="end" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/midi_keyboard_connection"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
         <TextView
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="14sp"
             android:gravity="end" />
 
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/midi_keyboard_ports"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
         <TextView
@@ -115,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="14sp"
             android:gravity="end" />
 
@@ -125,7 +125,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/midi_divider"
+        android:background="@color/audio_outline"
         android:layout_marginBottom="16dp" />
 
     <!-- Section Configuration -->
@@ -151,14 +151,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/midi_keyboard_led_channel"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="14sp" />
 
         <Spinner
             android:id="@+id/spinner_led_channel"
             android:layout_width="80dp"
             android:layout_height="40dp"
-            android:background="@drawable/rounded_container_background"
+            android:background="@drawable/audio_panel_background"
             android:padding="4dp"
             android:popupBackground="@color/midi_surface" />
 
@@ -182,14 +182,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_keyboard_octave_offset"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_keyboard_octave_offset_desc"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp" />
 
@@ -215,7 +215,7 @@
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:gravity="center" />

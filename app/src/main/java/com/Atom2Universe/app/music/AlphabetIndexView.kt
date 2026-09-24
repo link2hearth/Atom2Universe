@@ -45,7 +45,7 @@ class AlphabetIndexView @JvmOverloads constructor(
         // Couleurs par défaut
         textPaint.color = ContextCompat.getColor(context, R.color.music_text_secondary)
         selectedPaint.color = ContextCompat.getColor(context, R.color.music_accent)
-        backgroundPaint.color = ContextCompat.getColor(context, R.color.music_surface)
+        backgroundPaint.color = ContextCompat.getColor(context, R.color.audio_surface)
         backgroundPaint.alpha = 200
     }
 

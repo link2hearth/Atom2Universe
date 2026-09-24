@@ -57,7 +57,7 @@ class AudioVisualizationView @JvmOverloads constructor(
         style = Paint.Style.STROKE
     }
     private val bgPaint = Paint().apply {
-        color = "#1A1A1A".toColorInt()
+        color = com.Atom2Universe.app.audio.AudioStyle.surface(context)
     }
 
     // Gradient colors for bars

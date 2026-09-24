@@ -10,7 +10,7 @@ import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.color.MaterialColors
 import androidx.fragment.app.Fragment

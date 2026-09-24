@@ -4,17 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/startup_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Header -->
     <LinearLayout
         android:id="@+id/dictaphone_header"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="?attr/a2uMidiAccent"
+        android:background="@drawable/audio_panel_background"
         android:gravity="center_vertical"
         android:paddingStart="4dp"
-        android:paddingEnd="12dp">
+        android:paddingEnd="12dp"
+        android:layout_marginHorizontal="12dp"
+        android:elevation="2dp"
+        android:layout_marginTop="12dp">
 
         <ImageButton
             android:id="@+id/dictaphone_btn_back"
@@ -41,12 +44,14 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:background="@drawable/dictaphone_quality_bg"
-            android:textColor="@android:color/white"
+            android:background="@drawable/audio_chip_background"
+            android:textColor="?attr/a2uMusicAccent"
             android:textSize="13sp"
             android:textStyle="bold"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+        android:minHeight="48dp"
+        android:gravity="center" />
     </LinearLayout>
 
     <!-- Recording zone -->
@@ -64,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="00:00"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="48sp"
             android:textStyle="bold"
             android:fontFamily="monospace"
@@ -98,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp"
             android:visibility="gone" />
 
@@ -116,7 +121,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/startup_button_background" />
+        android:background="@color/audio_outline" />
 
     <!-- Recordings list header -->
     <TextView
@@ -126,7 +131,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
         android:text="@string/dictaphone_recordings_title"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="13sp"
         android:textAllCaps="true" />
 
@@ -138,7 +143,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
         android:text="@string/dictaphone_recordings_empty"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="14sp"
         android:visibility="gone" />
 
@@ -148,6 +153,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:paddingHorizontal="12dp" />
 
 </LinearLayout>

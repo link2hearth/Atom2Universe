@@ -9,9 +9,9 @@
     android:layout_marginEnd="4dp"
     android:layout_marginTop="2dp"
     android:layout_marginBottom="2dp"
-    app:cardBackgroundColor="@color/midi_surface"
+    app:cardBackgroundColor="@color/audio_surface"
     app:cardElevation="1dp"
-    app:cardCornerRadius="6dp">
+    app:cardCornerRadius="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                     android:id="@+id/track_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/midi_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:maxLines="1"
@@ -59,7 +59,7 @@
                     android:id="@+id/track_artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="11sp"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -69,7 +69,7 @@
                     android:id="@+id/track_album"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="10sp"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -105,7 +105,7 @@
                 android:src="@android:drawable/ic_menu_info_details"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
-                app:tint="@color/midi_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/midi_track_info" />
 
         </LinearLayout>
@@ -120,13 +120,13 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
-            android:background="@color/midi_surface_variant">
+            android:background="@color/audio_surface_raised">
 
             <!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/midi_divider"
+                android:background="@color/audio_outline"
                 android:layout_marginBottom="6dp" />
 
             <!-- Loading indicator -->
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:text="@string/midi_info_loading"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="11sp" />
 
             </LinearLayout>
@@ -189,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="10sp"
                     tools:text="Type 1 • 8 pistes • 480 PPQ • 125 Ko" />
 
@@ -199,7 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="10sp"
                     tools:text="Tempo: 120 BPM • Mesure: 4/4" />
 
@@ -209,7 +209,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/midi_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="10sp"
                     android:textStyle="italic"
                     tools:text="Piano, Guitare, Basse, Batterie" />
@@ -220,7 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/midi_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="10sp"
                     android:visibility="gone"
                     tools:text="© 2025 Artist Name" />

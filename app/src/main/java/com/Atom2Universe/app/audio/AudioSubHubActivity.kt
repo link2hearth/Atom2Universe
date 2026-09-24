@@ -13,6 +13,27 @@ import com.Atom2Universe.app.sf2creator.Sf2CreatorActivity
 
 class AudioSubHubActivity : BaseHubActivity() {
 
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyTheme(this)
+        theme.applyStyle(R.style.ThemeOverlay_A2U_Audio, true)
+        super.onCreate(savedInstanceState)
+        val header = findViewById<android.view.View>(R.id.header)
+        (header.parent as android.view.View).setBackgroundResource(R.drawable.audio_screen_background)
+        header.background = AudioStyle.panel(this)
+        findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.hub_recycler_view)
+            .addOnChildAttachStateChangeListener(object : androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener {
+                override fun onChildViewAttachedToWindow(view: android.view.View) {
+                    (view as? com.google.android.material.card.MaterialCardView)?.apply {
+                        radius = 24f * resources.displayMetrics.density
+                        cardElevation = 4f * resources.displayMetrics.density
+                        strokeWidth = resources.displayMetrics.density.toInt().coerceAtLeast(1)
+                        strokeColor = androidx.core.graphics.ColorUtils.setAlphaComponent(AudioStyle.accent(context), 60)
+                    }
+                }
+                override fun onChildViewDetachedFromWindow(view: android.view.View) = Unit
+            })
+    }
+
     override fun getLayoutResId(): Int = R.layout.activity_base_hub
 
     override fun getPrefsName(): String = "audio_sub_hub_prefs"

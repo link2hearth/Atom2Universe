@@ -5,18 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/startup_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar avec flèche retour -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/radio_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/startup_button_background"
-        android:elevation="4dp"
+        android:background="@drawable/audio_panel_background"
+        android:elevation="2dp"
         app:title="@string/radio_title"
-        app:titleTextColor="@color/startup_text_primary"
-        app:navigationIcon="?attr/homeAsUpIndicator" />
+        app:titleTextColor="@color/audio_text_primary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,13 +38,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/radio_status_idle"
-            android:textColor="@color/startup_text_secondary" />
+            android:textColor="@color/audio_text_secondary" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/startup_button_background"
+            android:background="@drawable/audio_panel_background"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -60,7 +63,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="@string/radio_player_empty"
-                    android:textColor="@color/startup_text_primary"
+                    android:textColor="@color/audio_text_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -70,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/radio_player_status_idle"
-                    android:textColor="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -79,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -87,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="13sp"
                 android:textStyle="italic"
                 android:visibility="gone" />
@@ -130,20 +133,20 @@
                     android:id="@+id/radio_play_button"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:background="@drawable/circle_button_bg"
+                    android:background="@drawable/audio_control_background"
                     android:contentDescription="@string/radio_action_play"
                     android:src="@drawable/ic_play"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/audio_on_accent" />
 
                 <ImageButton
                     android:id="@+id/radio_pause_button"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_marginStart="16dp"
-                    android:background="@drawable/circle_button_bg"
+                    android:background="@drawable/audio_control_background"
                     android:contentDescription="@string/radio_action_pause"
                     android:src="@drawable/ic_pause"
-                    app:tint="@android:color/white" />
+                    app:tint="@color/audio_on_accent" />
 
                 <ImageButton
                     android:id="@+id/radio_stop_button"
@@ -171,7 +174,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/radio_action_reload"
                     android:src="@drawable/ic_reload"
-                    app:tint="@color/startup_text_primary" />
+                    app:tint="@color/audio_text_primary" />
 
                 <ImageButton
                     android:id="@+id/radio_favorite_button"
@@ -208,7 +211,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/startup_button_background"
+            android:background="@drawable/audio_panel_background"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -216,7 +219,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/radio_favorites_title"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -226,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/radio_favorites_empty"
-                android:textColor="@color/startup_text_secondary" />
+                android:textColor="@color/audio_text_secondary" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/radio_favorites_list"
@@ -249,7 +252,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/startup_button_background"
+            android:background="@drawable/audio_panel_background"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -257,7 +260,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/radio_search_title"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -268,8 +271,8 @@
                 android:layout_marginTop="8dp"
                 android:hint="@string/radio_search_placeholder"
                 android:inputType="text"
-                android:textColor="@color/startup_text_primary"
-                android:textColorHint="@color/startup_text_secondary" />
+                android:textColor="@color/audio_text_primary"
+                android:textColorHint="@color/audio_text_secondary" />
 
             <Spinner
                 android:id="@+id/radio_country"
@@ -322,7 +325,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/radio_results_empty"
-                android:textColor="@color/startup_text_secondary" />
+                android:textColor="@color/audio_text_secondary" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/radio_results_list"

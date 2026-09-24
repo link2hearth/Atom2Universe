@@ -128,7 +128,7 @@ class SampleWaveformView @JvmOverloads constructor(
     }
 
     private val backgroundPaint = Paint().apply {
-        color = "#1E1E1E".toColorInt()
+        color = com.Atom2Universe.app.audio.AudioStyle.surface(context)
         style = Paint.Style.FILL
     }
 

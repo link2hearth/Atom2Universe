@@ -9,7 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.appbar.MaterialToolbar
 
@@ -17,7 +17,7 @@ import com.google.android.material.appbar.MaterialToolbar
  * Activité avec WebView pour rechercher des paroles en ligne.
  * Ouvre automatiquement une recherche Google avec le titre et l'artiste.
  */
-class LyricsWebSearchActivity : ThemedActivity() {
+class LyricsWebSearchActivity : AudioThemedActivity() {
 
     companion object {
         private const val EXTRA_TITLE = "title"

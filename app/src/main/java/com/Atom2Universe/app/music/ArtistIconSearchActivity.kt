@@ -15,13 +15,13 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
  * Activity pour rechercher une image d'artiste sur Google Images.
  * Permet de telecharger une image via long-press.
  */
-class ArtistIconSearchActivity : ThemedActivity() {
+class ArtistIconSearchActivity : AudioThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

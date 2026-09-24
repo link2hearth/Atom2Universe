@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="a2uAudioTheme" format="boolean" />
     <attr name="a2uMidiAccent" format="color" />
     <attr name="a2uMidiAccentOnText" format="color" />
     <attr name="a2uMusicAccent" format="color" />

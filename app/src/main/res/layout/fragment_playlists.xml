@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/midi_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Header pour navigation (visible quand on voit le contenu d'une playlist) -->
     <LinearLayout
@@ -15,7 +15,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="12dp"
-        android:background="@color/midi_surface"
+        android:background="@drawable/audio_panel_background"
         android:elevation="2dp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +30,7 @@
             android:layout_height="40dp"
             android:src="@android:drawable/ic_menu_revert"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/midi_text_primary"
+            app:tint="@color/audio_text_primary"
             android:contentDescription="@string/canvas_back"
             android:rotation="180" />
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
-            android:textColor="@color/midi_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -65,7 +65,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/midi_background"
+        android:background="@drawable/audio_screen_background"
         android:clipToPadding="false"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/midi_playlists_empty"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="16sp"
             android:gravity="center"
             android:paddingStart="32dp"
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        app:tint="@color/midi_text_primary"
+        app:tint="@color/audio_text_primary"
         app:backgroundTint="?attr/a2uMidiAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

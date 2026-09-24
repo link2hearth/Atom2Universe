@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.music.adapter.QueueItemTouchHelper
 import com.Atom2Universe.app.music.adapter.QueueTrackAdapter
 import com.Atom2Universe.app.music.adapter.VizReorderAdapter
@@ -60,7 +60,7 @@ import com.Atom2Universe.app.music.equalizer.MusicEqualizerManager
 import com.Atom2Universe.app.music.equalizer.ui.EqualizerFragment
 import java.util.Locale
 
-class FullPlayerActivity : ThemedActivity(), MusicPlaybackHolder.PlayerListener {
+class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerListener {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

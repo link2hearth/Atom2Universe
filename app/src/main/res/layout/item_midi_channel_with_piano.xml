@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/midi_surface"
+    android:background="@drawable/audio_panel_background"
     android:layout_marginBottom="4dp">
 
     <!-- Header: Infos canal + Toggle visibilité -->
@@ -33,7 +33,7 @@
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textColor="@color/midi_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="13sp"
             android:gravity="center"
             tools:text="1" />
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="120dp"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -67,7 +67,7 @@
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
                 android:background="@drawable/multi_program_badge_bg"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:visibility="gone"
@@ -157,7 +157,7 @@
             android:layout_height="40dp"
             android:src="@android:drawable/ic_lock_silent_mode_off"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/midi_text_secondary"
+            app:tint="@color/audio_text_secondary"
             android:contentDescription="@string/midi_mute_track"
             android:layout_marginEnd="4dp" />
 
@@ -168,7 +168,7 @@
             android:layout_height="40dp"
             android:src="@android:drawable/arrow_down_float"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/midi_text_secondary"
+            app:tint="@color/audio_text_secondary"
             android:contentDescription="@string/midi_toggle_keyboard"
             android:rotation="0" />
 

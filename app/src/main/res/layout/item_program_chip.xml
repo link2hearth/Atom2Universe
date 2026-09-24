@@ -9,8 +9,8 @@
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="@color/startup_button_background"
-    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
 
@@ -30,7 +30,7 @@
             android:background="@drawable/bg_rounded_accent"
             android:backgroundTint="?attr/a2uMidiAccent"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/audio_on_accent"
             android:textSize="11sp"
             android:textStyle="bold" />
 
@@ -47,14 +47,14 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:maxWidth="100dp"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/program_instruments_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
         </LinearLayout>

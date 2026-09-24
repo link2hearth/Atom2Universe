@@ -7,7 +7,9 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="12dp"
-    android:paddingVertical="8dp">
+    android:paddingVertical="8dp"
+    android:background="@drawable/audio_row_background"
+        android:layout_marginBottom="6dp">
 
     <!-- Left side: Title and meta -->
     <LinearLayout
@@ -22,7 +24,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -32,7 +34,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -42,10 +44,10 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/circle_button_bg"
+        android:background="@drawable/audio_control_background"
         android:contentDescription="@string/radio_action_play"
         android:src="@drawable/ic_play"
-        app:tint="@android:color/white" />
+        app:tint="@color/audio_on_accent" />
 
     <ImageButton
         android:id="@+id/radio_item_favorite"

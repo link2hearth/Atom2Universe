@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2InstrumentEntity
 import com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView
@@ -25,7 +25,7 @@ class InstrumentGlobalEditDialog(
     context: Context,
     private val instrument: Sf2InstrumentEntity,
     private val onSave: (Sf2InstrumentEntity) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     // UI elements
     private lateinit var dialogTitle: TextView

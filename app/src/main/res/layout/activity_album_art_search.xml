@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_screen_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -14,9 +14,12 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/music_surface"
+            android:background="@drawable/audio_panel_background"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:titleTextColor="@color/music_text_primary" />
+            app:titleTextColor="@color/audio_text_primary"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

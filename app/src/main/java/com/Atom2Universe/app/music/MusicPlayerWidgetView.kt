@@ -45,7 +45,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), MusicPlaybackHolder.PlayerListener {
+) : FrameLayout(com.Atom2Universe.app.audio.AudioStyle.wrapContext(context), attrs, defStyleAttr), MusicPlaybackHolder.PlayerListener {
 
     companion object {
         private const val PREFS = "music_widget_prefs"
@@ -139,7 +139,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
     private val tapThresholdPx = 12f * context.resources.displayMetrics.density
 
     init {
-        inflate(context, R.layout.view_music_player_widget, this)
+        inflate(this.context, R.layout.view_music_player_widget, this)
 
         cardView       = findViewById(R.id.music_widget_card)
         bgView         = findViewById(R.id.music_widget_bg)
@@ -336,7 +336,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
             lyricsSyncLine.text = "…"
             lyricsSyncLine.visibility = VISIBLE
             lyricsVisible = true
-            lyricsBtn.setTextColor(0xFF3B82F6.toInt())
+            lyricsBtn.setTextColor(com.Atom2Universe.app.audio.AudioStyle.accent(context))
 
             val lyrics = withContext(Dispatchers.IO) {
                 runCatching { LyricsManager.getLyrics(track) }.getOrNull()
@@ -373,7 +373,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
         lyricsLines = null
         lastSyncedLineIdx = -1
         lyricsOverlay.visibility = GONE
-        lyricsBtn.setTextColor(0xFF64748B.toInt())
+        lyricsBtn.setTextColor(com.Atom2Universe.app.audio.AudioStyle.secondaryText(context))
     }
 
     private fun updateSyncedLyrics(positionMs: Long) {
@@ -449,7 +449,7 @@ class MusicPlayerWidgetView @JvmOverloads constructor(
             val checkView = view.findViewById<TextView>(R.id.viz_item_check)
             checkView.visibility = if (mode == currentVizMode) VISIBLE else INVISIBLE
             view.setBackgroundColor(
-                if (mode == currentVizMode) 0x22_3B_82_F6.toInt() else 0x00_00_00_00
+                if (mode == currentVizMode) com.Atom2Universe.app.audio.AudioStyle.selectedSurface(context) else 0x00_00_00_00
             )
             return view
         }

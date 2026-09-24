@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sf2_instrument_name_label"
-                    android:textColor="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="12sp" />
 
                 <EditText
@@ -41,14 +41,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:autofillHints=""
-                    android:background="@drawable/bg_rounded_dark"
+                    android:background="@drawable/audio_panel_background"
                     android:hint="@string/sf2_instrument_name_hint"
                     android:importantForAutofill="no"
                     android:inputType="text"
                     android:maxLength="20"
                     android:padding="10dp"
-                    android:textColor="@color/startup_text_primary"
-                    android:textColorHint="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_primary"
+                    android:textColorHint="@color/audio_text_secondary"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/a2uMidiAccent"
                 android:text="@string/sf2_export"
-                android:textColor="@android:color/white"
+                android:textColor="@color/audio_on_accent"
                 android:textSize="14sp"
                 android:minWidth="90dp" />
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/sf2_program_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <Spinner
@@ -80,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/bg_rounded_dark"
+            android:background="@drawable/audio_panel_background"
             android:padding="8dp"
             android:popupBackground="@color/startup_background" />
 
@@ -102,7 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sf2_root_note_title"
-                    android:textColor="@color/startup_text_secondary"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="12sp" />
 
                 <TextView
@@ -119,9 +119,9 @@
                 android:id="@+id/change_note_button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:backgroundTint="@color/startup_button_background"
+                android:backgroundTint="@color/audio_surface_raised"
                 android:text="@string/sf2_change_note"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="12dp" />
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_key_range"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -159,9 +159,9 @@
                 android:id="@+id/set_key_range_button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:backgroundTint="@color/startup_button_background"
+                android:backgroundTint="@color/audio_surface_raised"
                 android:text="@string/sf2_set_key_range"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="12dp" />
@@ -182,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_section_velocity"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <TextView
@@ -199,9 +199,9 @@
                 android:id="@+id/set_vel_range_button"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:backgroundTint="@color/startup_button_background"
+                android:backgroundTint="@color/audio_surface_raised"
                 android:text="@string/sf2_change_note"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp"
                 android:minWidth="0dp"
                 android:paddingHorizontal="12dp" />
@@ -215,7 +215,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_preview_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <!-- Engine selector row -->
@@ -232,7 +232,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp" />
 
             <Button
@@ -264,7 +264,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/sf2_octave_down"
                 android:src="@drawable/ic_chevron_left"
-                app:tint="@color/startup_text_secondary" />
+                app:tint="@color/audio_text_secondary" />
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -293,7 +293,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/sf2_octave_up"
                 android:src="@drawable/ic_chevron_right"
-                app:tint="@color/startup_text_secondary" />
+                app:tint="@color/audio_text_secondary" />
 
         </LinearLayout>
 
@@ -307,7 +307,7 @@
             android:orientation="horizontal"
             android:visibility="gone"
             android:padding="6dp"
-            android:background="@drawable/bg_rounded_dark">
+            android:background="@drawable/audio_panel_background">
 
             <Button
                 android:id="@+id/ctrl_minus_large"
@@ -343,9 +343,9 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/sf2_ctrl_reset"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
-                app:strokeColor="@color/startup_text_secondary" />
+                app:strokeColor="@color/audio_text_secondary" />
 
             <Button
                 android:id="@+id/ctrl_plus_small"
@@ -563,7 +563,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <!-- Post-export buttons -->
@@ -579,12 +579,12 @@
                 android:id="@+id/share_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/startup_button_background"
+                android:backgroundTint="@color/audio_surface_raised"
                 android:drawableStart="@drawable/ic_share"
                 android:drawablePadding="8dp"
-                android:drawableTint="@color/startup_text_primary"
+                android:drawableTint="@color/audio_text_primary"
                 android:text="@string/sf2_share"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:visibility="gone"
                 style="?android:attr/buttonBarButtonStyle" />
 
@@ -593,12 +593,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:backgroundTint="@color/startup_button_background"
+                android:backgroundTint="@color/audio_surface_raised"
                 android:drawableStart="@drawable/ic_midi"
                 android:drawablePadding="8dp"
-                android:drawableTint="@color/startup_text_primary"
+                android:drawableTint="@color/audio_text_primary"
                 android:text="@string/sf2_open_midi"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:visibility="gone"
                 style="?android:attr/buttonBarButtonStyle" />
 
@@ -611,12 +611,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/startup_button_background"
+            android:backgroundTint="@color/audio_surface_raised"
             android:drawableStart="@drawable/ic_folder_open"
             android:drawablePadding="8dp"
             android:drawableTint="?attr/a2uMidiAccent"
             android:text="@string/sf2_add_to_project"
-            android:textColor="@color/startup_text_primary" />
+            android:textColor="@color/audio_text_primary" />
 
     </LinearLayout>
 

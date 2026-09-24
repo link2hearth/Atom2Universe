@@ -6,7 +6,9 @@
     android:orientation="horizontal"
     android:paddingHorizontal="12dp"
     android:paddingVertical="8dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:background="@drawable/audio_row_background"
+        android:layout_marginBottom="6dp">
 
     <ImageButton
         android:id="@+id/dictaphone_item_play"
@@ -29,7 +31,7 @@
             android:id="@+id/dictaphone_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="15sp"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -39,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -49,7 +51,7 @@
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_edit"
-        app:tint="@color/startup_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/dictaphone_action_rename" />
 
     <ImageButton
@@ -58,7 +60,7 @@
         android:layout_height="40dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_delete"
-        app:tint="@color/startup_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/dictaphone_action_delete" />
 
 </LinearLayout>

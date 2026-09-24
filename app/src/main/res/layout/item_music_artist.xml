@@ -25,7 +25,7 @@
             android:contentDescription="@string/music_artist"
             android:padding="8dp"
             android:scaleType="center"
-            app:tint="@color/music_text_primary" />
+            app:tint="@color/audio_text_primary" />
 
     </FrameLayout>
 
@@ -46,7 +46,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:textStyle="bold"
         android:maxLines="1"
         android:ellipsize="end"
@@ -63,7 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:maxLines="1"
         android:ellipsize="end"
         android:layout_marginStart="16dp"
@@ -83,7 +83,7 @@
         android:src="@drawable/ic_shuffle"
         android:contentDescription="@string/music_shuffle"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         app:layout_constraintEnd_toStartOf="@id/btn_play"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -107,7 +107,7 @@
         android:layout_height="24dp"
         android:src="@drawable/ic_chevron_right"
         android:contentDescription="@string/music_open"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

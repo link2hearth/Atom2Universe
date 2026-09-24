@@ -19,7 +19,7 @@
         android:padding="10dp"
         android:src="@drawable/ic_drag_handle"
         android:scaleType="centerInside"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/music_viz_drag_handle" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:gravity="center" />
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textSize="15sp"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:paddingStart="8dp"
         android:paddingEnd="8dp" />
 

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/startup_button_background"
-    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
             android:background="@drawable/bg_rounded_accent"
             android:backgroundTint="?attr/a2uMidiAccent"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/audio_on_accent"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -38,7 +38,7 @@
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/delete_button"
@@ -53,7 +53,7 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="8dp"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/delete_button"
             app:layout_constraintStart_toEndOf="@id/root_note_badge"
@@ -86,7 +86,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/sf2_delete_sample"
             android:src="@drawable/ic_close"
-            app:tint="@color/startup_text_secondary"
+            app:tint="@color/audio_text_secondary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

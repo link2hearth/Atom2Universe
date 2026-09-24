@@ -31,7 +31,7 @@ import androidx.core.content.edit
  * Écran de paramètres du Hub.
  * Centralise les options globales de l'application.
  */
-class HubSettingsActivity : ThemedActivity() {
+class HubSettingsActivity : com.Atom2Universe.app.audio.AudioThemedActivity() {
 
     companion object {
         private const val PREFS_NAME = "audio_hub_prefs"
@@ -41,8 +41,6 @@ class HubSettingsActivity : ThemedActivity() {
     private lateinit var backButton: ImageButton
     private lateinit var autoResumeSwitch: SwitchMaterial
     private lateinit var autoResumeSetting: LinearLayout
-    private lateinit var themeSetting: LinearLayout
-    private lateinit var themeValue: TextView
     private lateinit var systemBarsSwitch: SwitchMaterial
     private lateinit var systemBarsSetting: LinearLayout
     private lateinit var autoCleanupSwitch: SwitchMaterial
@@ -73,7 +71,6 @@ class HubSettingsActivity : ThemedActivity() {
 
     override fun onResume() {
         super.onResume()
-        updateThemeValue()
         updateCloudSummary()
     }
 
@@ -98,8 +95,6 @@ class HubSettingsActivity : ThemedActivity() {
         backButton = findViewById(R.id.back_button)
         autoResumeSwitch = findViewById(R.id.auto_resume_switch)
         autoResumeSetting = findViewById(R.id.auto_resume_setting)
-        themeSetting = findViewById(R.id.theme_setting)
-        themeValue = findViewById(R.id.theme_value)
         systemBarsSwitch = findViewById(R.id.system_bars_switch)
         systemBarsSetting = findViewById(R.id.system_bars_setting)
         autoCleanupSwitch = findViewById(R.id.auto_cleanup_switch)
@@ -126,11 +121,6 @@ class HubSettingsActivity : ThemedActivity() {
         }
         autoResumeSwitch.setOnCheckedChangeListener { _, isChecked ->
             AudioFocusManager.setAutoResumeEnabled(isChecked)
-        }
-
-        // Theme setting
-        themeSetting.setOnClickListener {
-            showThemeSelectionDialog()
         }
 
         // System bars setting
@@ -171,35 +161,7 @@ class HubSettingsActivity : ThemedActivity() {
         autoResumeSwitch.isChecked = AudioFocusManager.isAutoResumeEnabled()
         systemBarsSwitch.isChecked = SystemBarsManager.shouldShowSystemBars(this)
         autoCleanupSwitch.isChecked = prefs.getBoolean("auto_cleanup_enabled", false)
-        updateThemeValue()
         updateCleanupStatus()
-    }
-
-    private fun updateThemeValue() {
-        val currentTheme = AppThemeManager.getSelectedTheme(this)
-        themeValue.text = getString(currentTheme.labelRes)
-    }
-
-    private fun showThemeSelectionDialog() {
-        val themes = AppThemeManager.getAvailableThemes()
-        val themeLabels = themes.map { getString(it.labelRes) }.toTypedArray()
-        val currentTheme = AppThemeManager.getSelectedTheme(this)
-        val checkedIndex = themes.indexOf(currentTheme).coerceAtLeast(0)
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.theme_select_title)
-            .setSingleChoiceItems(themeLabels, checkedIndex) { dialog, which ->
-                val selectedTheme = themes[which]
-                if (selectedTheme != currentTheme) {
-                    AppThemeManager.setSelectedTheme(this, selectedTheme)
-                    dialog.dismiss()
-                    recreate()
-                } else {
-                    dialog.dismiss()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
     }
 
     private fun updateCleanupStatus() {

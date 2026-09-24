@@ -11,7 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +19,7 @@ import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.cloud.CloudActivity
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.music.lyrics.api.ApiTestResult
 import com.Atom2Universe.app.music.lyrics.api.GenericLyricsApiClient
 import com.Atom2Universe.app.music.lyrics.api.LyricsApiConfig
@@ -41,7 +41,7 @@ import java.util.Locale
 /**
  * Activité des préférences du lecteur audio.
  */
-class MusicSettingsActivity : ThemedActivity() {
+class MusicSettingsActivity : AudioThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

@@ -1,7 +1,8 @@
 package com.Atom2Universe.app.midi.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
+import com.Atom2Universe.app.audio.AudioStyle
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -27,7 +28,7 @@ class ThemeSelectionDialog(
     context: Context,
     private val onThemeSelected: (PracticeTheme) -> Unit,
     private val onCustomThemeConfigureRequested: (() -> Unit)? = null
-) : Dialog(context, R.style.Theme_A2U_Dialog) {
+) : AudioDialog(context) {
 
     private val density = context.resources.displayMetrics.density
 
@@ -36,7 +37,7 @@ class ThemeSelectionDialog(
 
         val rootLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#1A1A2E"))
+            setBackgroundColor(AudioStyle.surface(context))
             setPadding(dp(16), dp(16), dp(16), dp(16))
         }
 
@@ -77,7 +78,7 @@ class ThemeSelectionDialog(
         // Bouton fermer
         val closeButton = TextView(context).apply {
             text = context.getString(R.string.close)
-            setTextColor(Color.parseColor("#BB86FC"))
+            setTextColor(AudioStyle.accent(context))
             textSize = 16f
             gravity = Gravity.CENTER
             setPadding(dp(16), dp(16), dp(16), dp(8))
@@ -107,8 +108,8 @@ class ThemeSelectionDialog(
             radius = dp(12).toFloat()
             cardElevation = dp(4).toFloat()
             setCardBackgroundColor(
-                if (isSelected) Color.parseColor("#2A2A4E")
-                else Color.parseColor("#252538")
+                if (isSelected) AudioStyle.selectedSurface(context)
+                else AudioStyle.surface(context)
             )
         }
 
@@ -166,7 +167,7 @@ class ThemeSelectionDialog(
 
         val descText = TextView(context).apply {
             text = theme.description
-            setTextColor(Color.parseColor("#888888"))
+            setTextColor(AudioStyle.secondaryText(context))
             textSize = 12f
         }
         textContainer.addView(descText)
@@ -216,8 +217,8 @@ class ThemeSelectionDialog(
             radius = dp(12).toFloat()
             cardElevation = dp(4).toFloat()
             setCardBackgroundColor(
-                if (isSelected) Color.parseColor("#2A2A4E")
-                else Color.parseColor("#252538")
+                if (isSelected) AudioStyle.selectedSurface(context)
+                else AudioStyle.surface(context)
             )
         }
 
@@ -235,8 +236,8 @@ class ThemeSelectionDialog(
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 cornerRadius = dp(8).toFloat()
-                setColor(Color.parseColor("#3A3A5E"))
-                setStroke(dp(2), Color.parseColor("#BB86FC"))
+                setColor(AudioStyle.surface(context))
+                setStroke(dp(2), AudioStyle.accent(context))
             }
         }
         cardContent.addView(iconView)
@@ -260,7 +261,7 @@ class ThemeSelectionDialog(
             } else {
                 theme.description
             }
-            setTextColor(Color.parseColor("#888888"))
+            setTextColor(AudioStyle.secondaryText(context))
             textSize = 12f
         }
         textContainer.addView(descText)
@@ -269,7 +270,7 @@ class ThemeSelectionDialog(
         val baseTheme = theme.getBaseTheme()
         val baseInfo = TextView(context).apply {
             text = "Base: ${baseTheme.displayName}"
-            setTextColor(Color.parseColor("#BB86FC"))
+            setTextColor(AudioStyle.accent(context))
             textSize = 11f
             setPadding(0, dp(2), 0, 0)
         }
@@ -286,7 +287,7 @@ class ThemeSelectionDialog(
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 cornerRadius = dp(20).toFloat()
-                setColor(Color.parseColor("#BB86FC"))
+                setColor(AudioStyle.accent(context))
             }
             setOnClickListener {
                 dismiss()

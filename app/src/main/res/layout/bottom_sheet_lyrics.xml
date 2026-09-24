@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_dialog_background">
 
     <!-- Header -->
     <TextView
@@ -16,7 +16,7 @@
         android:text="@string/lyrics_title"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:layout_marginBottom="8dp" />
 
     <!-- Status text -->
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/lyrics_loading"
         android:textSize="16sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:layout_marginBottom="4dp" />
 
     <!-- Alternatives navigation row - hidden by default, shown when multiple results are available -->
@@ -46,7 +46,7 @@
             android:src="@drawable/ic_chevron_left"
             android:contentDescription="@string/lyrics_prev_alt"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/music_text_primary" />
+            app:tint="@color/audio_text_primary" />
 
         <TextView
             android:id="@+id/tv_alt_counter"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/music_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
         <ImageButton
@@ -64,7 +64,7 @@
             android:src="@drawable/ic_chevron_right"
             android:contentDescription="@string/lyrics_next_alt"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/music_text_primary" />
+            app:tint="@color/audio_text_primary" />
 
     </LinearLayout>
 
@@ -99,8 +99,8 @@
             android:textSize="16sp"
             android:lineSpacingExtra="6dp"
             android:enabled="false"
-            android:textColor="@color/music_text_primary"
-            android:textColorHint="@color/music_text_secondary"
+            android:textColor="@color/audio_text_primary"
+            android:textColorHint="@color/audio_text_secondary"
             android:padding="16dp"
             android:background="@android:color/transparent"
             android:scrollbars="vertical" />

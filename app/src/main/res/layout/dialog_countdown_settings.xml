@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/practice_countdown_description"
-        android:textColor="@color/midi_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="14sp"
         android:layout_marginBottom="24dp" />
 
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/practice_countdown_title"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="16sp" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/practice_countdown_disabled"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <View
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10s"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -91,7 +91,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/midi_divider"
+        android:background="@color/audio_outline"
         android:layout_marginVertical="8dp" />
 
     <!-- Start on first note option -->
@@ -112,14 +112,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/practice_countdown_start_on_play"
-                android:textColor="@color/midi_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/practice_countdown_start_on_play_desc"
-                android:textColor="@color/midi_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp" />
 

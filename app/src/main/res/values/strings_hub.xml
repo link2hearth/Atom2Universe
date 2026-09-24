@@ -41,4 +41,5 @@
 
     <string name="back_button_desc">Back</string>
     <string name="hub_tile_ready_badge">%1$d ready</string>
+    <string name="hub_theme_current">Current theme: %1$s</string>
 </resources>

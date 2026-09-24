@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sf2_global_params_title"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -27,9 +27,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
             android:text="@string/sf2_global_params_info"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="13sp"
-            android:background="@drawable/bg_rounded_dark"
+            android:background="@drawable/audio_panel_background"
             android:padding="12dp" />
 
         <!-- ==================== VOLUME ENVELOPE ==================== -->
@@ -325,7 +325,7 @@
                 android:minWidth="100dp"
                 android:paddingHorizontal="16dp"
                 android:text="@string/midi_cancel"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="16sp" />
 
             <Button

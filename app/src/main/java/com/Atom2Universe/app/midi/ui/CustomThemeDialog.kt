@@ -1,7 +1,8 @@
 package com.Atom2Universe.app.midi.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
+import com.Atom2Universe.app.audio.AudioStyle
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -31,7 +32,7 @@ class CustomThemeDialog(
     context: Context,
     private val imagePickerLauncher: ActivityResultLauncher<String>,
     private val onThemeConfigured: () -> Unit
-) : Dialog(context, R.style.Theme_A2U_Dialog) {
+) : AudioDialog(context) {
 
     private val density = context.resources.displayMetrics.density
 
@@ -45,7 +46,7 @@ class CustomThemeDialog(
 
         val rootLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#1A1A2E"))
+            setBackgroundColor(AudioStyle.surface(context))
             setPadding(dp(16), dp(16), dp(16), dp(16))
         }
 
@@ -62,7 +63,7 @@ class CustomThemeDialog(
         // Description
         val descText = TextView(context).apply {
             text = context.getString(R.string.custom_theme_desc)
-            setTextColor(Color.parseColor("#AAAAAA"))
+            setTextColor(AudioStyle.secondaryText(context))
             textSize = 14f
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, dp(16))
@@ -177,7 +178,7 @@ class CustomThemeDialog(
 
         val baseThemeDesc = TextView(context).apply {
             text = context.getString(R.string.custom_theme_base_desc)
-            setTextColor(Color.parseColor("#888888"))
+            setTextColor(AudioStyle.secondaryText(context))
             textSize = 12f
             setPadding(dp(8), 0, dp(8), dp(8))
         }
@@ -204,7 +205,7 @@ class CustomThemeDialog(
         // Bouton Fermer (applique automatiquement le thème si configuré)
         val closeButton = createButton(
             context.getString(R.string.close),
-            Color.parseColor("#BB86FC")
+            AudioStyle.accent(context)
         ) {
             // Sélectionner automatiquement le thème personnalisé si une image est configurée
             if (PracticeThemeManager.hasCustomBackground()) {
@@ -243,7 +244,7 @@ class CustomThemeDialog(
     private fun addSectionTitle(container: LinearLayout, title: String) {
         val sectionTitle = TextView(context).apply {
             text = title
-            setTextColor(Color.parseColor("#BB86FC"))
+            setTextColor(AudioStyle.accent(context))
             textSize = 14f
             setPadding(dp(8), dp(12), dp(8), dp(4))
         }
@@ -272,8 +273,8 @@ class CustomThemeDialog(
             radius = dp(8).toFloat()
             cardElevation = dp(2).toFloat()
             setCardBackgroundColor(
-                if (isSelected) Color.parseColor("#2A2A4E")
-                else Color.parseColor("#252538")
+                if (isSelected) AudioStyle.selectedSurface(context)
+                else AudioStyle.surface(context)
             )
         }
 

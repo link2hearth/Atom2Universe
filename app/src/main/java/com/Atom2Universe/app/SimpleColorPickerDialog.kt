@@ -45,7 +45,18 @@ class SimpleColorPickerDialog(
     private val initialAlpha: Int = 255,
     private val onColorWithAlphaSelected: ((colorInt: Int) -> Unit)? = null,
     private val onColorSelected: (colorHex: String, textColorMode: String) -> Unit
-) : Dialog(context, R.style.Theme_A2U_Dialog) {
+) : Dialog(
+    context,
+    if (com.Atom2Universe.app.audio.AudioStyle.isAudioContext(context))
+        R.style.ThemeOverlay_A2U_Audio_Dialog else R.style.Theme_A2U_Dialog
+) {
+
+    override fun onStart() {
+        super.onStart()
+        if (com.Atom2Universe.app.audio.AudioStyle.isAudioContext(context)) {
+            com.Atom2Universe.app.audio.AudioStyle.styleDialog(this)
+        }
+    }
 
     // Quick colors palette
     private val quickColors = listOf(

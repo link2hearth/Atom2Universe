@@ -12,7 +12,7 @@
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:scaleType="centerCrop"
-        android:background="@color/music_surface"
+        android:background="@drawable/audio_panel_background"
         android:contentDescription="@string/music_album_art" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:textSize="14sp"
         android:gravity="center" />
 

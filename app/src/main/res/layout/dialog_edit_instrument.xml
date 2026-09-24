@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/sf2_program_label"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="12sp" />
 
     <Spinner
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/bg_spinner" />
+        android:background="@drawable/audio_chip_background" />
 
     <!-- Bank number -->
     <TextView
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="@string/sf2_bank_label"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="12sp" />
 
     <Spinner
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/bg_spinner" />
+        android:background="@drawable/audio_chip_background" />
 
     <!-- Sample count info -->
     <TextView
@@ -64,8 +64,8 @@
         android:drawableStart="@drawable/ic_music_note"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:textColor="@color/startup_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="14sp"
-        app:drawableTint="@color/startup_text_secondary" />
+        app:drawableTint="@color/audio_text_secondary" />
 
 </LinearLayout>

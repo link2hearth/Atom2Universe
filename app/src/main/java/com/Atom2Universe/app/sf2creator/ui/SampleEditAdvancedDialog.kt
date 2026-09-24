@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.sf2creator.ui
 
-import android.app.Dialog
+import com.Atom2Universe.app.audio.AudioDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.sf2creator.data.SampleData
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SampleEntity
@@ -25,7 +25,7 @@ class SampleEditAdvancedDialog(
     context: Context,
     private val sample: Sf2SampleEntity,
     private val onSave: (Sf2SampleEntity) -> Unit
-) : Dialog(context) {
+) : AudioDialog(context) {
 
     // UI elements
     private lateinit var sampleNameInput: EditText

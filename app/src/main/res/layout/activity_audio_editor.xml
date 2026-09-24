@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Main content -->
     <LinearLayout
@@ -16,10 +16,13 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="#1E1E1E"
+            android:background="@drawable/audio_panel_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="8dp">
+            android:paddingHorizontal="8dp"
+        android:layout_marginHorizontal="12dp"
+        android:elevation="2dp"
+        android:layout_marginTop="12dp">
 
             <ImageButton
                 android:id="@+id/btnBack"
@@ -74,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/audio_editor_no_file"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="14sp"
                 android:ellipsize="middle"
                 android:singleLine="true" />
@@ -107,7 +110,7 @@
             android:layout_height="100dp"
             android:gravity="center"
             android:text="@string/audio_editor_no_tracks"
-            android:textColor="#555555"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp"
             android:visibility="visible" />
 
@@ -124,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/audio_editor_time_zero"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="monospace" />
 
@@ -138,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/audio_editor_time_zero"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
                 android:fontFamily="monospace" />
 
@@ -152,8 +155,8 @@
             android:layout_marginHorizontal="8dp"
             android:max="1000"
             android:progress="0"
-            android:progressTint="#4CAF50"
-            android:thumbTint="#4CAF50" />
+            android:progressTint="?attr/a2uMusicAccent"
+            android:thumbTint="?attr/a2uMusicAccent" />
 
         <!-- Playback controls -->
         <LinearLayout
@@ -181,22 +184,22 @@
                     android:id="@+id/btnPlay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/circle_button_bg"
+                    android:background="@drawable/audio_control_background"
                     android:contentDescription="@string/audio_editor_play"
                     android:src="@drawable/ic_play"
                     android:padding="14dp"
-                    app:tint="#FFFFFF" />
+                    app:tint="@color/audio_on_accent" />
 
                 <ImageButton
                     android:id="@+id/btnPause"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/circle_button_bg"
+                    android:background="@drawable/audio_control_background"
                     android:contentDescription="@string/audio_editor_pause"
                     android:src="@drawable/ic_pause"
                     android:padding="14dp"
                     android:visibility="gone"
-                    app:tint="#FFFFFF" />
+                    app:tint="@color/audio_on_accent" />
 
             </FrameLayout>
 
@@ -214,7 +217,7 @@
             android:layout_marginHorizontal="12dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:background="@drawable/rounded_dialog_bg"
+            android:background="@drawable/audio_panel_background"
             android:padding="4dp">
 
             <ImageButton
@@ -269,7 +272,7 @@
                 android:layout_width="1dp"
                 android:layout_height="24dp"
                 android:layout_marginHorizontal="4dp"
-                android:background="#444444" />
+                android:background="@color/audio_surface_raised" />
 
             <ImageButton
                 android:id="@+id/btnTrim"
@@ -293,7 +296,7 @@
                 android:layout_width="1dp"
                 android:layout_height="24dp"
                 android:layout_marginHorizontal="4dp"
-                android:background="#444444" />
+                android:background="@color/audio_surface_raised" />
 
             <ImageButton
                 android:id="@+id/btnUndo"
@@ -408,7 +411,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:padding="24dp"
-            android:background="@drawable/rounded_dialog_bg">
+            android:background="@drawable/audio_panel_background">
 
             <ProgressBar
                 android:layout_width="48dp"

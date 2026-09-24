@@ -310,25 +310,11 @@ class ArtistAdapter(
         private val artistImage: ImageView = itemView.findViewById(R.id.artist_image)
         private val defaultIcon: ImageView = itemView.findViewById(R.id.default_icon)
         private val artistName: TextView = itemView.findViewById(R.id.artist_name)
-        private val artistInfo: TextView = itemView.findViewById(R.id.artist_info)
         private val favoriteIcon: ImageView? = itemView.findViewById(R.id.favorite_icon)
         private val btnPlay: ImageView = itemView.findViewById(R.id.btn_play)
-        private val btnShuffle: ImageView = itemView.findViewById(R.id.btn_shuffle)
 
         fun bind(artist: Artist, isFavorite: Boolean) {
             artistName.text = artist.name
-
-            val albumText = itemView.context.resources.getQuantityString(
-                R.plurals.music_album_count, artist.albumCount, artist.albumCount
-            )
-            val trackText = itemView.context.resources.getQuantityString(
-                R.plurals.music_track_count_plural, artist.trackCount, artist.trackCount
-            )
-            artistInfo.text = itemView.context.getString(
-                R.string.music_artist_album_track_counts,
-                albumText,
-                trackText
-            )
 
             // Le ratio 1:1 est gere par ConstraintLayout dans le XML
 
@@ -342,12 +328,12 @@ class ArtistAdapter(
                     colorBackground.setBackgroundColor(customColor.toColorInt())
                 } catch (_: Exception) {
                     colorBackground.setBackgroundColor(
-                        ContextCompat.getColor(itemView.context, R.color.music_surface)
+                        ContextCompat.getColor(itemView.context, R.color.audio_surface)
                     )
                 }
             } else {
                 colorBackground.setBackgroundColor(
-                    ContextCompat.getColor(itemView.context, R.color.music_surface)
+                    ContextCompat.getColor(itemView.context, R.color.audio_surface)
                 )
             }
 
@@ -379,7 +365,6 @@ class ArtistAdapter(
 
             // Quick action buttons
             btnPlay.setOnClickListener { onPlayClick?.invoke(artist) }
-            btnShuffle.setOnClickListener { onShuffleClick?.invoke(artist) }
         }
     }
 

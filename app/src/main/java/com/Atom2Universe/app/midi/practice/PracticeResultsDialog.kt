@@ -25,7 +25,7 @@ class PracticeResultsDialog(
     private val metrics: ScoringMetrics,
     private val trackTitle: String,
     private val onDismiss: (() -> Unit)? = null
-) : Dialog(context, R.style.Theme_PracticeResultsDialog) {
+) : Dialog(context, R.style.ThemeOverlay_A2U_Audio_Dialog) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

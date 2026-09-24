@@ -38,6 +38,7 @@ import com.Atom2Universe.app.hub.HubTileTouchCallback
 import com.Atom2Universe.app.hub.QuickAccessItem
 import com.Atom2Universe.app.music.lyrics.LyricsManager
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.util.CacheCleanerManager
 import com.Atom2Universe.app.music.sync.peer.A2USyncService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +49,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, SleepTimerManager.Listener {
+class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), AudioHubPlaybackController.Listener, SleepTimerManager.Listener {
 
     companion object {
         private const val PREFS_NAME = "audio_hub_prefs"
@@ -189,6 +190,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_audio_hub)
+        setupEdgeToEdgeBackground()
 
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
 
@@ -230,6 +232,12 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
         setupLanguageButton()
         updateLanguageButtonLabel()
         setupSleepTimerButton()
+        findViewById<Button>(R.id.theme_button).apply {
+            contentDescription = getString(R.string.hub_theme_current,
+                getString(AppThemeManager.getSelectedTheme(this@AudioHubActivity).labelRes))
+            setOnClickListener { showThemeSelectionDialog() }
+        }
+        setupHubSurfaces()
         setupSettingsButton()
         setupCloudButton()
         setupModuleTiles()
@@ -376,6 +384,7 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
 
     override fun onResume() {
         super.onResume()
+        updateSystemBarsVisibility()
         // Refresh state when returning to activity
         playbackController.refreshState()
         updateLanguageButtonLabel()
@@ -403,6 +412,9 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
     }
 
     private fun updateUI(state: AudioHubPlaybackController.PlaybackState) {
+        findViewById<View>(R.id.playback_controls_card).visibility =
+            if (state.isPlaying) View.VISIBLE else View.GONE
+
         // Update play/pause button
         if (state.isPlaying) {
             playPauseButton.setImageResource(R.drawable.ic_pause)
@@ -543,6 +555,62 @@ class AudioHubActivity : ThemedActivity(), AudioHubPlaybackController.Listener, 
 
     override fun onTimerCancelled() {
         updateSleepTimerButtonState()
+    }
+
+    private fun showThemeSelectionDialog() {
+        val themes = AppThemeManager.getAvailableThemes()
+        val themeLabels = themes.map { getString(it.labelRes) }.toTypedArray()
+        val currentTheme = AppThemeManager.getSelectedTheme(this)
+        val checkedIndex = themes.indexOf(currentTheme).coerceAtLeast(0)
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.theme_select_title)
+            .setSingleChoiceItems(themeLabels, checkedIndex) { dialog, which ->
+                val selectedTheme = themes[which]
+                if (selectedTheme != currentTheme) {
+                    AppThemeManager.setSelectedTheme(this, selectedTheme)
+                    dialog.dismiss()
+                    recreate()
+                } else {
+                    dialog.dismiss()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun setupEdgeToEdgeBackground() {
+        androidx.core.view.WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes = window.attributes.apply {
+                layoutInDisplayCutoutMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                } else {
+                    android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                }
+            }
+        }
+        // Les insets protègent toujours les commandes, mais le fond couvre aussi leur zone.
+        window.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.audio_screen_background))
+        findViewById<View>(android.R.id.content).setBackgroundResource(R.drawable.audio_screen_background)
+        androidx.core.view.ViewCompat.requestApplyInsets(findViewById(android.R.id.content))
+    }
+
+    private fun setupHubSurfaces() {
+        val card = findViewById<com.google.android.material.card.MaterialCardView>(R.id.playback_controls_card)
+        card.getChildAt(0)?.background = com.Atom2Universe.app.audio.AudioStyle.panel(this)
+        tilesRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewAttachedToWindow(view: View) {
+                (view as? com.google.android.material.card.MaterialCardView)?.apply {
+                    radius = 24f * resources.displayMetrics.density
+                    cardElevation = 4f * resources.displayMetrics.density
+                    strokeWidth = resources.displayMetrics.density.toInt().coerceAtLeast(1)
+                    strokeColor = androidx.core.graphics.ColorUtils.setAlphaComponent(
+                        com.Atom2Universe.app.audio.AudioStyle.accent(context), 60)
+                }
+            }
+            override fun onChildViewDetachedFromWindow(view: View) = Unit
+        })
     }
 
     private fun setupSettingsButton() {

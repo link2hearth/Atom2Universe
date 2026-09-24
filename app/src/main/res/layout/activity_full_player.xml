@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_full_player_gradient">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -80,7 +80,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_wave" />
 
             <!-- Mode 3: Mirror -->
@@ -94,7 +94,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_mirror" />
 
             <!-- Mode 4: Spectrum -->
@@ -108,7 +108,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_spectrum" />
 
             <!-- Mode 5: Fire -->
@@ -122,7 +122,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_fire" />
 
             <!-- Mode 6: Circle -->
@@ -136,7 +136,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_circle" />
 
             <!-- Mode 7: Particles -->
@@ -150,7 +150,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_particles" />
 
             <!-- Mode 8: Radial -->
@@ -164,7 +164,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_radial" />
 
             <!-- Mode 9: Blob -->
@@ -178,7 +178,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_blob" />
 
             <!-- Mode 10: Particles Mono -->
@@ -192,7 +192,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_particles_mono" />
 
             <!-- Mode 11: Kaleidoscope -->
@@ -206,7 +206,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_kaleidoscope" />
 
             <!-- Mode 12: Boids -->
@@ -220,7 +220,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_boids" />
 
             <!-- Mode 13: Julia -->
@@ -234,7 +234,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_julia" />
 
             <!-- Mode 14: Mandelbrot -->
@@ -248,7 +248,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_mandelbrot" />
 
             <!-- Mode 15: Julia Grayscale (gratuit) -->
@@ -262,7 +262,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_julia_grayscale" />
 
             <!-- Mode 16: Delaunay Mesh -->
@@ -276,7 +276,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_delaunay" />
 
             <!-- Mode 17: Delaunay Grayscale (gratuit) -->
@@ -290,7 +290,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_delaunay_grayscale" />
 
             <!-- Mode 18: Voronoi (payant) -->
@@ -304,7 +304,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_voronoi" />
 
             <!-- Mode 19: Voronoi Grayscale (gratuit) -->
@@ -318,7 +318,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_voronoi_grayscale" />
 
             <!-- Mode 20: Losanges flottants -->
@@ -332,7 +332,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_penrose" />
 
             <!-- Mode 21: Penrose géométrique -->
@@ -346,7 +346,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@color/music_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:contentDescription="@string/music_viz_penrose_true" />
 
             <!-- Bouton réorganisation (séparateur visuel + icône) -->
@@ -356,7 +356,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="2dp"
-                android:background="@color/music_text_secondary"
+                android:background="@color/audio_text_secondary"
                 android:alpha="0.3" />
 
             <ImageView
@@ -367,7 +367,7 @@
                 android:background="@drawable/bg_viz_button_inactive"
                 android:src="@drawable/ic_drag_handle"
                 android:scaleType="centerInside"
-                app:tint="@color/music_text_secondary"
+                app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/music_reorder_visuals" />
 
         </LinearLayout>
@@ -383,7 +383,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_lyrics"
         android:scaleType="centerInside"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/lyrics_button"
         app:layout_constraintEnd_toStartOf="@id/btn_toggle_album_art"
         app:layout_constraintTop_toTopOf="@id/toolbar"
@@ -398,7 +398,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_chevron_up"
         android:scaleType="centerInside"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/music_toggle_album_art"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/toolbar"
@@ -411,7 +411,7 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="8dp"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -543,11 +543,11 @@
         android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/bg_play_button"
+        android:background="@drawable/audio_control_background"
         android:src="@drawable/ic_fullscreen"
         android:scaleType="centerInside"
         android:padding="12dp"
-        app:tint="@android:color/white"
+        app:tint="@color/audio_on_accent"
         android:contentDescription="@string/music_fullscreen"
         android:visibility="gone"
         android:elevation="20dp"
@@ -564,7 +564,7 @@
         android:gravity="center"
         android:textSize="19sp"
         android:textStyle="bold"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:maxLines="1"
         android:singleLine="true"
         android:ellipsize="marquee"
@@ -595,7 +595,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="13sp"
-            android:textColor="@color/music_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:maxLines="1"
             android:singleLine="true"
             android:ellipsize="marquee"
@@ -608,7 +608,7 @@
             android:layout_height="wrap_content"
             android:text=" · "
             android:textSize="13sp"
-            android:textColor="@color/music_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:alpha="0.5" />
 
         <TextView
@@ -618,7 +618,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="13sp"
-            android:textColor="@color/music_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:alpha="0.7"
             android:maxLines="1"
             android:singleLine="true"
@@ -660,7 +660,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:textSize="12sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         tools:text="0:00"
         app:layout_constraintTop_toBottomOf="@id/seek_bar"
         app:layout_constraintStart_toStartOf="parent" />
@@ -671,7 +671,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:textSize="12sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         tools:text="3:45"
         app:layout_constraintTop_toBottomOf="@id/seek_bar"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -685,7 +685,7 @@
         android:layout_marginEnd="4dp"
         android:layout_marginTop="8dp"
         android:textSize="12sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         android:alpha="0.8"
         tools:text="42 plays"
         app:layout_constraintStart_toStartOf="parent"
@@ -709,7 +709,7 @@
             android:layout_height="32dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_shuffle"
-            app:tint="@color/music_text_secondary"
+            app:tint="@color/audio_text_secondary"
             android:contentDescription="@string/music_shuffle" />
 
         <ImageButton
@@ -719,7 +719,7 @@
             android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_media_previous"
-            app:tint="@color/music_text_primary"
+            app:tint="@color/audio_text_primary"
             android:contentDescription="@string/music_previous" />
 
         <ImageButton
@@ -727,11 +727,12 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="6dp"
-            android:background="@drawable/bg_play_button"
+            android:background="@drawable/audio_control_background"
             android:padding="4dp"
             android:src="@android:drawable/ic_media_play"
-            app:tint="@android:color/white"
-            android:contentDescription="@string/music_play_pause" />
+            app:tint="@color/audio_on_accent"
+            android:contentDescription="@string/music_play_pause"
+        android:elevation="6dp" />
 
         <ImageButton
             android:id="@+id/btn_next"
@@ -739,7 +740,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_media_next"
-            app:tint="@color/music_text_primary"
+            app:tint="@color/audio_text_primary"
             android:contentDescription="@string/music_next" />
 
         <ImageButton
@@ -749,7 +750,7 @@
             android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_repeat"
-            app:tint="@color/music_text_secondary"
+            app:tint="@color/audio_text_secondary"
             android:contentDescription="@string/music_repeat" />
 
     </LinearLayout>
@@ -762,7 +763,7 @@
         android:layout_marginEnd="12dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_favorite_outline"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/music_add_to_favorites"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/controls"
@@ -789,7 +790,7 @@
         android:text="@string/music_queue"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="@color/music_text_primary"
+        android:textColor="@color/audio_text_primary"
         app:layout_constraintTop_toBottomOf="@id/queue_divider"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -799,7 +800,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textSize="12sp"
-        android:textColor="@color/music_text_secondary"
+        android:textColor="@color/audio_text_secondary"
         tools:text="(12 tracks)"
         app:layout_constraintStart_toEndOf="@id/queue_title"
         app:layout_constraintBaseline_toBaselineOf="@id/queue_title" />
@@ -813,7 +814,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_edit"
         android:scaleType="centerInside"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/music_edit_playlist_mode"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/btn_save_queue_as_playlist"
@@ -829,7 +830,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_playlist_add"
         android:scaleType="centerInside"
-        app:tint="@color/music_text_secondary"
+        app:tint="@color/audio_text_secondary"
         android:contentDescription="@string/music_save_queue_as_playlist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/queue_title"
@@ -909,7 +910,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_fire" />
 
                     <TextView
@@ -922,7 +923,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_circle" />
 
                     <TextView
@@ -935,7 +936,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_particles" />
 
                     <TextView
@@ -948,7 +949,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_radial" />
 
                     <TextView
@@ -961,7 +962,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_blob" />
 
                     <TextView
@@ -974,7 +975,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_particles_mono" />
 
                     <TextView
@@ -987,7 +988,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_kaleidoscope" />
 
                     <TextView
@@ -1000,7 +1001,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_boids" />
 
                     <TextView
@@ -1013,7 +1014,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_julia" />
 
                     <TextView
@@ -1026,7 +1027,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_mandelbrot" />
 
                     <TextView
@@ -1039,7 +1040,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_julia_grayscale" />
 
                     <!-- Mode 16: Delaunay Mesh -->
@@ -1053,7 +1054,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_delaunay" />
 
                     <!-- Mode 17: Delaunay Grayscale (gratuit) -->
@@ -1067,7 +1068,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_delaunay_grayscale" />
 
                     <!-- Mode 18: Voronoi (payant) -->
@@ -1081,7 +1082,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_voronoi" />
 
                     <!-- Mode 19: Voronoi Grayscale (gratuit) -->
@@ -1095,7 +1096,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_voronoi_grayscale" />
 
                     <!-- Mode 20: Losanges flottants -->
@@ -1109,7 +1110,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_penrose" />
 
                     <!-- Mode 21: Penrose géométrique -->
@@ -1123,7 +1124,7 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:textColor="@color/music_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:contentDescription="@string/music_viz_penrose_true" />
 
                     <!-- Bouton réorganisation fullscreen -->
@@ -1133,7 +1134,7 @@
                         android:layout_height="22dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="2dp"
-                        android:background="@color/music_text_secondary"
+                        android:background="@color/audio_text_secondary"
                         android:alpha="0.3" />
 
                     <ImageView
@@ -1144,7 +1145,7 @@
                         android:background="@drawable/bg_viz_button_inactive"
                         android:src="@drawable/ic_drag_handle"
                         android:scaleType="centerInside"
-                        app:tint="@color/music_text_secondary"
+                        app:tint="@color/audio_text_secondary"
                         android:contentDescription="@string/music_reorder_visuals" />
 
                 </LinearLayout>
@@ -1291,10 +1292,10 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_marginHorizontal="24dp"
-                    android:background="@drawable/bg_play_button"
+                    android:background="@drawable/audio_control_background"
                     android:padding="4dp"
                     android:src="@android:drawable/ic_media_play"
-                    app:tint="@android:color/white"
+                    app:tint="@color/audio_on_accent"
                     android:contentDescription="@string/music_play_pause" />
 
                 <ImageButton

@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import com.Atom2Universe.app.LocaleHelper
 import com.google.android.material.button.MaterialButton
 import androidx.appcompat.app.AlertDialog
@@ -32,7 +32,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.RadioRecordingService
 import com.Atom2Universe.app.Recorder
 import com.Atom2Universe.app.SaveCore
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.TrackMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +42,7 @@ import kotlinx.coroutines.cancel
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.AudioHubActivity
 
-class RadioActivity : ThemedActivity(), RadioPlaybackHolder.PlayerListener {
+class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

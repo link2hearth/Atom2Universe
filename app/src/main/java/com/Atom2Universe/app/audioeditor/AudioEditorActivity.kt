@@ -18,7 +18,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
+import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -27,7 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.audio.AudioThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.AudioHubActivity
 import com.google.android.material.button.MaterialButton
@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Main Activity for the Audio Editor module.
  * Provides audio playback, waveform visualization, recording, and basic editing capabilities.
  */
-class AudioEditorActivity : ThemedActivity() {
+class AudioEditorActivity : AudioThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

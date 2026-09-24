@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background"
+    android:background="@drawable/audio_screen_background"
     android:padding="24dp">
 
     <!-- Back button -->
@@ -15,7 +15,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/back"
         android:src="@drawable/ic_arrow_back"
-        app:tint="@color/startup_text_secondary"
+        app:tint="@color/audio_text_secondary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/settings_title"
-        android:textColor="@color/startup_text_primary"
+        android:textColor="@color/audio_text_primary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/back_button"
@@ -61,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/audio_surface"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -83,7 +83,7 @@
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@null"
                         android:src="@drawable/ic_cloud_off"
-                        app:tint="@color/startup_text_secondary" />
+                        app:tint="@color/audio_text_secondary" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -95,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/cloud_settings_entry"
-                            android:textColor="@color/startup_text_primary"
+                            android:textColor="@color/audio_text_primary"
                             android:textSize="16sp" />
 
                         <TextView
@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/cloud_settings_entry_desc"
-                            android:textColor="@color/startup_text_secondary"
+                            android:textColor="@color/audio_text_secondary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -128,8 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/audio_surface"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -153,7 +153,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_auto_resume_title"
-                            android:textColor="@color/startup_text_primary"
+                            android:textColor="@color/audio_text_primary"
                             android:textSize="16sp" />
 
                         <TextView
@@ -161,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/settings_auto_resume_summary"
-                            android:textColor="@color/startup_text_secondary"
+                            android:textColor="@color/audio_text_secondary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -187,66 +187,13 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Theme setting -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:id="@+id/theme_setting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/settings_theme_title"
-                            android:textColor="@color/startup_text_primary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/theme_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textColor="@color/startup_text_secondary"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/startup_text_secondary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
             <!-- System bars setting -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/audio_surface"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -270,7 +217,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_system_bars_title"
-                            android:textColor="@color/startup_text_primary"
+                            android:textColor="@color/audio_text_primary"
                             android:textSize="16sp" />
 
                         <TextView
@@ -278,7 +225,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/settings_system_bars_summary"
-                            android:textColor="@color/startup_text_secondary"
+                            android:textColor="@color/audio_text_secondary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -309,8 +256,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/audio_surface"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -334,7 +281,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_auto_cleanup_title"
-                            android:textColor="@color/startup_text_primary"
+                            android:textColor="@color/audio_text_primary"
                             android:textSize="16sp" />
 
                         <TextView
@@ -342,7 +289,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/settings_auto_cleanup_summary"
-                            android:textColor="@color/startup_text_secondary"
+                            android:textColor="@color/audio_text_secondary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -362,8 +309,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="@color/audio_hub_card_background"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/audio_surface"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -376,7 +323,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/settings_manual_cleanup_title"
-                        android:textColor="@color/startup_text_primary"
+                        android:textColor="@color/audio_text_primary"
                         android:textSize="16sp" />
 
                     <TextView
@@ -386,7 +333,7 @@
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="12dp"
                         android:text="@string/settings_cleanup_status_none"
-                        android:textColor="@color/startup_text_secondary"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="12sp" />
 
                     <Button
@@ -424,13 +371,13 @@
             android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_info"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/about_title"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="14sp" />
 
     </LinearLayout>

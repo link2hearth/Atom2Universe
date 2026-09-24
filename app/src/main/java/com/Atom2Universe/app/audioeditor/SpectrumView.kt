@@ -561,7 +561,7 @@ class SpectrumView @JvmOverloads constructor(
     }
 
     private fun drawEmptyState(canvas: Canvas) {
-        canvas.drawColor("#1A1A1A".toColorInt())
+        canvas.drawColor(com.Atom2Universe.app.audio.AudioStyle.surface(context))
         val text = "No spectrum data"
         val textWidth = labelPaint.measureText(text)
         canvas.drawText(

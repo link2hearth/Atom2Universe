@@ -108,7 +108,7 @@ class WaveformView @JvmOverloads constructor(
     }
 
     private val backgroundPaint = Paint().apply {
-        color = "#1E1E1E".toColorInt()
+        color = com.Atom2Universe.app.audio.AudioStyle.surface(context)
     }
 
     private val centerLinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {

@@ -6,9 +6,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="8dp"
-    app:cardBackgroundColor="#DD1A1A1A">
+    app:cardBackgroundColor="@color/audio_surface">
 
     <LinearLayout
         android:layout_width="320dp"
@@ -95,7 +95,7 @@
                     android:id="@+id/txt_accuracy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="14sp"
                     tools:text="87.5% accuracy"/>
             </LinearLayout>

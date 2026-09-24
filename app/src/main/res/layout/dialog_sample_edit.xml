@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sf2_edit_sample_title"
-            android:textColor="@color/startup_text_primary"
+            android:textColor="@color/audio_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_sample_name_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <EditText
@@ -35,12 +35,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/bg_rounded_dark"
+            android:background="@drawable/audio_panel_background"
             android:inputType="text"
             android:maxLength="20"
             android:padding="12dp"
-            android:textColor="@color/startup_text_primary"
-            android:textColorHint="@color/startup_text_secondary" />
+            android:textColor="@color/audio_text_primary"
+            android:textColorHint="@color/audio_text_secondary" />
 
         <!-- Key Range -->
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_key_range"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_gain_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -108,7 +108,7 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_envelope_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <!-- Attack -->
@@ -134,7 +134,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_attack_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -152,7 +152,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -168,7 +168,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_decay_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -186,7 +186,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -202,7 +202,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_sustain_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -220,7 +220,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -236,7 +236,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_release_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -254,7 +254,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -265,7 +265,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_fine_tune_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -290,7 +290,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -301,7 +301,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_filter_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <!-- Cutoff -->
@@ -316,7 +316,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_filter_cutoff_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -334,7 +334,7 @@
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -350,7 +350,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_filter_resonance_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -368,7 +368,7 @@
                 android:layout_width="64dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -379,7 +379,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_effects_send_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <!-- Chorus -->
@@ -394,7 +394,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_chorus_send_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -412,7 +412,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -428,7 +428,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_reverb_send_label"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -446,7 +446,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -457,7 +457,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/sf2_pan_label"
-            android:textColor="@color/startup_text_secondary"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <LinearLayout
@@ -471,7 +471,7 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_pan_left"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <SeekBar
@@ -488,7 +488,7 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:text="@string/sf2_pan_right"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp" />
 
             <TextView
@@ -496,7 +496,7 @@
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -515,7 +515,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_cancel"
-                android:textColor="@color/startup_text_secondary" />
+                android:textColor="@color/audio_text_secondary" />
 
             <Button
                 android:id="@+id/save_button"
