@@ -172,8 +172,8 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
         updateStats()
         if (solved) {
             stopTimer()
-            saveGame()
             awardReward()
+            saveGame()
             handler.postDelayed(revealWin, gameView.flowSettlingDelay() + 300L)
         }
     }

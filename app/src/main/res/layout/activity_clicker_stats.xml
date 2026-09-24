@@ -58,7 +58,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/game_stats_sections"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -71,84 +71,91 @@
             android:paddingTop="12dp"
             android:paddingBottom="16dp">
 
+            <LinearLayout android:tag="farm" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/farm_title" />
+
+                <LinearLayout android:tag="extra_farm" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="clicker" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/hub_clicker_title" />
             <!-- Clics totaux -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_total_clicks" />
                 <TextView android:id="@+id/stat_total_clicks_value"
-                    style="@style/StatValue" tools:text="0" />
+                    style="@style/GameStatValue" tools:text="0" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Clics pendant frénésie APC -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_frenzy_clicks" />
                 <TextView android:id="@+id/stat_frenzy_clicks_value"
-                    style="@style/StatValue" tools:text="0" />
+                    style="@style/GameStatValue" tools:text="0" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Frénésies APC -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_apc_frenzies" />
                 <TextView android:id="@+id/stat_apc_frenzies_value"
-                    style="@style/StatValue" tools:text="0" />
+                    style="@style/GameStatValue" tools:text="0" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Frénésies APS -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_aps_frenzies" />
                 <TextView android:id="@+id/stat_aps_frenzies_value"
-                    style="@style/StatValue" tools:text="0" />
+                    style="@style/GameStatValue" tools:text="0" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Record clics/s -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_max_cps" />
                 <TextView android:id="@+id/stat_max_cps_value"
-                    style="@style/StatValue" tools:text="—" />
+                    style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Record clics en frénésie APC -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_max_apc_clicks" />
                 <TextView android:id="@+id/stat_max_apc_clicks_value"
-                    style="@style/StatValue" tools:text="—" />
+                    style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Temps de jeu -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_play_time" />
                 <TextView android:id="@+id/stat_play_time_value"
-                    style="@style/StatValue" tools:text="—" />
+                    style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Bonus éléments APC -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_element_bonus_apc" />
                 <TextView android:id="@+id/stat_element_bonus_apc_value"
-                    style="@style/StatValue" tools:text="—" />
+                    style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- Bonus éléments APS -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_element_bonus_aps" />
                 <TextView android:id="@+id/stat_element_bonus_aps_value"
-                    style="@style/StatValue" tools:text="—" />
+                    style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
@@ -185,312 +192,310 @@
             </LinearLayout>
 
             <!-- APC % -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_production_apc" />
                 <TextView android:id="@+id/stat_production_apc_value"
-                    style="@style/StatValue" tools:text="—" android:textColor="#4A90D9" />
+                    style="@style/GameStatValue" tools:text="—" android:textColor="#4A90D9" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
             <!-- APS % -->
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel"
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel"
                     android:text="@string/stat_production_aps" />
                 <TextView android:id="@+id/stat_production_aps_value"
-                    style="@style/StatValue" tools:text="—" android:textColor="#4CAF50" />
+                    style="@style/GameStatValue" tools:text="—" android:textColor="#4CAF50" />
             </LinearLayout>
             <View style="@style/StatDivider" />
 
-            <!-- ── Section : victoires ────────────────────────────────────────── -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/stat_section_wins"
-                android:textColor="?attr/a2uMusicAccent"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textAllCaps="true"
-                android:letterSpacing="0.12"
-                android:paddingTop="20dp"
-                android:paddingBottom="6dp" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_solitaire_won" />
-                <TextView android:id="@+id/stat_solitaire_won_value" style="@style/StatValue" tools:text="—" />
+                <LinearLayout android:tag="extra_clicker" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="trebuchet" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/trebuchet_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_trebuchet_distance" />
+                <TextView android:id="@+id/stat_trebuchet_distance_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_sudoku_won" />
-                <TextView android:id="@+id/stat_sudoku_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_trebuchet_sites" />
+                <TextView android:id="@+id/stat_trebuchet_sites_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_trebuchet" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="survivor" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/survivor_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_survivor_time" />
+                <TextView android:id="@+id/stat_survivor_time_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_chess_won" />
-                <TextView android:id="@+id/stat_chess_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_survivor_level" />
+                <TextView android:id="@+id/stat_survivor_kills_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_survivor" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="nuclea" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/nuclea_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_nuclea_wave" />
+                <TextView android:id="@+id/stat_nuclea_wave_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_nuclea" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="roguelike" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/roguelike_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_roguelike_floor" />
+                <TextView android:id="@+id/stat_roguelike_floor_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_roguelike" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="particules" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/particules_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_particules_score" />
+                <TextView android:id="@+id/stat_particules_score_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_draughts_won" />
-                <TextView android:id="@+id/stat_draughts_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_particules_level" />
+                <TextView android:id="@+id/stat_particules_level_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_particules" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="starswar" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/sw_brand_name" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_starswar_score" />
+                <TextView android:id="@+id/stat_starswar_score_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_starswar_wave" />
+                <TextView android:id="@+id/stat_starswar_wave_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_starswar" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="cosmorun" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/cosmo_run_hub_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_cosmorun_score" />
+                <TextView android:id="@+id/stat_cosmorun_score_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_cosmorun" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="balance" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/balance_title" />
+                <LinearLayout android:tag="extra_balance" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="bigger" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/bigger_title" />
 
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_2048_won" />
-                <TextView android:id="@+id/stat_2048_won_value" style="@style/StatValue" tools:text="—" />
+                <LinearLayout android:tag="extra_bigger" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="chess" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/chess_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_chess_won" />
+                <TextView android:id="@+id/stat_chess_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_chess" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="draughts" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/draughts_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_draughts_won" />
+                <TextView android:id="@+id/stat_draughts_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_draughts" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="othello" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/othello_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_othello_won" />
+                <TextView android:id="@+id/stat_othello_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_othello" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="solitaire" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/solitaire_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_solitaire_won" />
+                <TextView android:id="@+id/stat_solitaire_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_solitaire" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="memory" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/memory_title" />
+
+                <LinearLayout android:id="@+id/memory_diff_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+                <LinearLayout android:tag="extra_memory" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="blackjack" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/blackjack_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_blackjack_won" />
+                <TextView android:id="@+id/stat_blackjack_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_blackjack" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="roulette" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/roulette_title" />
+
+                <LinearLayout android:tag="extra_roulette" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="flappycat" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/flappy_cat_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_flappy_score" />
+                <TextView android:id="@+id/stat_flappy_score_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_flappycat" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="hotpotato" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/hot_potato_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_hotpotato_score" />
+                <TextView android:id="@+id/stat_hotpotato_score_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_hotpotato" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="wavesurf" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/wave_surf_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_wavesurf_speed" />
+                <TextView android:id="@+id/stat_wavesurf_speed_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_blackjack_won" />
-                <TextView android:id="@+id/stat_blackjack_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_wavesurf_altitude" />
+                <TextView android:id="@+id/stat_wavesurf_altitude_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_wavesurf" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="orbite" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/orbite_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_orbite_score" />
+                <TextView android:id="@+id/stat_orbite_score_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_orbite" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="hexrunner" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/hex_runner_hub_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_hexrunner_best" />
+                <TextView android:id="@+id/stat_hexrunner_best_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_hexrunner" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="game2048" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/game2048_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_2048_won" />
+                <TextView android:id="@+id/stat_2048_won_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_colorstack_won" />
-                <TextView android:id="@+id/stat_colorstack_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_2048_best" />
+                <TextView android:id="@+id/stat_2048_best_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_game2048" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="sudoku" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/sudoku_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_sudoku_won" />
+                <TextView android:id="@+id/stat_sudoku_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_sudoku" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="minesweeper" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/minesweeper_title" />
+                <LinearLayout android:tag="extra_minesweeper" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="colorstack" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/color_stack_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_colorstack_won" />
+                <TextView android:id="@+id/stat_colorstack_won_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_colorstack_best_time" />
-                <TextView android:id="@+id/stat_colorstack_time_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_colorstack_best_time" />
+                <TextView android:id="@+id/stat_colorstack_time_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_colorstack" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="pipetap" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/pipetap_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_pipetap_won" />
+                <TextView android:id="@+id/stat_pipetap_won_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_pipetap" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="escape_labyrinth" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/escape_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_escape_solved" />
+                <TextView android:id="@+id/stat_escape_solved_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_escape_perfect" />
+                <TextView android:id="@+id/stat_escape_perfect_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_escape_labyrinth" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="circles" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/circles_hub_title" />
 
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_pipetap_won" />
-                <TextView android:id="@+id/stat_pipetap_won_value" style="@style/StatValue" tools:text="—" />
+                <LinearLayout android:id="@+id/circles_diff_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+                <LinearLayout android:tag="extra_circles" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="reflex" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/reflex_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_reflex_best" />
+                <TextView android:id="@+id/stat_reflex_best_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_reflex" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="starbridges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/starbridges_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_starbridges_solved" />
+                <TextView android:id="@+id/stat_starbridges_solved_value" style="@style/GameStatValue" tools:text="—" />
+            </LinearLayout>
+                <LinearLayout android:tag="extra_starbridges" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="theline" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/the_line_title" />
+
+                <LinearLayout android:tag="extra_theline" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="link" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/link_title" />
+
+                <LinearLayout android:tag="extra_link" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+            <LinearLayout android:tag="match3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/GameStatSection" android:text="@string/match3_title" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_match3_best" />
+                <TextView android:id="@+id/stat_match3_best_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
             <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_othello_won" />
-                <TextView android:id="@+id/stat_othello_won_value" style="@style/StatValue" tools:text="—" />
+            <LinearLayout style="@style/GameStatRow">
+                <TextView style="@style/GameStatLabel" android:text="@string/stat_match3_best_time" />
+                <TextView android:id="@+id/stat_match3_best_time_value" style="@style/GameStatValue" tools:text="—" />
             </LinearLayout>
-
-            <!-- ── Section : records ─────────────────────────────────────────── -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/stat_section_records"
-                android:textColor="?attr/a2uMusicAccent"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textAllCaps="true"
-                android:letterSpacing="0.12"
-                android:paddingTop="20dp"
-                android:paddingBottom="6dp" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_starswar_score" />
-                <TextView android:id="@+id/stat_starswar_score_value" style="@style/StatValue" tools:text="—" />
+                <LinearLayout android:tag="extra_match3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
             </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_starswar_wave" />
-                <TextView android:id="@+id/stat_starswar_wave_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_reflex_best" />
-                <TextView android:id="@+id/stat_reflex_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_flappy_score" />
-                <TextView android:id="@+id/stat_flappy_score_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_2048_best" />
-                <TextView android:id="@+id/stat_2048_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_particules_score" />
-                <TextView android:id="@+id/stat_particules_score_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_particules_level" />
-                <TextView android:id="@+id/stat_particules_level_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_wavesurf_speed" />
-                <TextView android:id="@+id/stat_wavesurf_speed_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_wavesurf_altitude" />
-                <TextView android:id="@+id/stat_wavesurf_altitude_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_survivor_time" />
-                <TextView android:id="@+id/stat_survivor_time_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_survivor_level" />
-                <TextView android:id="@+id/stat_survivor_kills_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_match3_best" />
-                <TextView android:id="@+id/stat_match3_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_match3_best_time" />
-                <TextView android:id="@+id/stat_match3_best_time_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_hexrunner_best" />
-                <TextView android:id="@+id/stat_hexrunner_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_hotpotato_score" />
-                <TextView android:id="@+id/stat_hotpotato_score_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_motocross_distance" />
-                <TextView android:id="@+id/stat_motocross_distance_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_orbite_score" />
-                <TextView android:id="@+id/stat_orbite_score_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_cosmorun_score" />
-                <TextView android:id="@+id/stat_cosmorun_score_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_minesweeper_best" />
-                <TextView android:id="@+id/stat_minesweeper_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_sokoban_best" />
-                <TextView android:id="@+id/stat_sokoban_best_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_balance_best_level" />
-                <TextView android:id="@+id/stat_balance_best_level_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_nuclea_wave" />
-                <TextView android:id="@+id/stat_nuclea_wave_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_trebuchet_distance" />
-                <TextView android:id="@+id/stat_trebuchet_distance_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_trebuchet_sites" />
-                <TextView android:id="@+id/stat_trebuchet_sites_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_roguelike_floor" />
-                <TextView android:id="@+id/stat_roguelike_floor_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_escape_solved" />
-                <TextView android:id="@+id/stat_escape_solved_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_escape_perfect" />
-                <TextView android:id="@+id/stat_escape_perfect_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <LinearLayout style="@style/StatRow">
-                <TextView style="@style/StatLabel" android:text="@string/stat_starbridges_solved" />
-                <TextView android:id="@+id/stat_starbridges_solved_value" style="@style/StatValue" tools:text="—" />
-            </LinearLayout>
-            <View style="@style/StatDivider" />
-
-            <!-- Memory : une ligne par difficulté (rempli dynamiquement) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/stat_memory_title"
-                android:textColor="?attr/a2uMusicAccent"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textAllCaps="true"
-                android:letterSpacing="0.12"
-                android:paddingTop="20dp"
-                android:paddingBottom="6dp" />
-            <LinearLayout
-                android:id="@+id/memory_diff_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <!-- Circles : une ligne par difficulté (rempli dynamiquement) -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/stat_circles_title"
-                android:textColor="?attr/a2uMusicAccent"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                android:textAllCaps="true"
-                android:letterSpacing="0.12"
-                android:paddingTop="20dp"
-                android:paddingBottom="6dp" />
-            <LinearLayout
-                android:id="@+id/circles_diff_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
         </LinearLayout>
 
     </ScrollView>

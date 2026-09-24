@@ -22,6 +22,10 @@ data class CounterKey(
 }
 
 val COUNTER_KEYS = listOf(
+    CounterKey("game_stats", "colorstack_played_", isPrefix = true),
+    CounterKey("game_stats", "colorstack_won_", isPrefix = true),
+    CounterKey("roulette_stats", "spins"),
+    CounterKey("roulette_stats", "wins"),
     CounterKey("game_stats", "solitaire_played"),
     CounterKey("game_stats", "solitaire_won"),
     CounterKey("game_stats", "colorstack_hard_played"),

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.game2048
 
 import android.content.Context
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -206,6 +207,8 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
         qTarget: Int = if (quantumMode) game.quantumTarget else 0,
         jokers: Int = 0
     ) {
+        GameStatsRepository(this).recordGame2048Started()
+        resultRecorded = false
         ignoreSpinnerChange = true
         val sizeIdx = GRID_SIZES.indexOf(size).coerceAtLeast(0)
         sizeSpinner.setSelection(sizeIdx)
@@ -313,7 +316,12 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
         }
     }
 
+    private var resultRecorded = false
+
     private fun onWin() {
+        if (resultRecorded) return
+        resultRecorded = true
+        GameStatsRepository(this).recordGame2048Won()
         parallelUniverses++
         saveUniverses()
         updateDisplays()
@@ -329,6 +337,8 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
     }
 
     private fun onGameOver() {
+        if (resultRecorded) return
+        resultRecorded = true
         parallelUniverses++
         saveUniverses()
         updateDisplays()
@@ -366,7 +376,10 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
 
         if (!restored) {
             game.newGame(4, 256)
+            GameStatsRepository(this).recordGame2048Started()
         }
+
+        resultRecorded = game.hasWon || game.gameOver
 
         // Restaurer le mode quantique si la partie sauvegardée l'avait
         quantumMode = game.quantumMode

@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.solitaire
 
 import android.content.Context
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -184,6 +185,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
 
     private fun startNewGame() {
         game.newGame()
+        GameStatsRepository(this).recordSolitaireStarted()
         moves = 0
         elapsedTimeMs = 0
         isGameWon = false
@@ -375,6 +377,8 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
     }
 
     private fun onGameWon() {
+        if (isGameWon) return
+        GameStatsRepository(this).recordSolitaireWon()
         isGameWon = true
         isAutoFinishing = false
         stopTimer()

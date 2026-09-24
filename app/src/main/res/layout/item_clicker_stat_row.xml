@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout style="@style/StatRow">
+    <LinearLayout style="@style/GameStatRow">
         <TextView
             android:id="@+id/row_label"
-            style="@style/StatLabel" />
+            style="@style/GameStatLabel" />
         <TextView
             android:id="@+id/row_value"
-            style="@style/StatValue" />
+            style="@style/GameStatValue" />
     </LinearLayout>
 
     <View style="@style/StatDivider" />

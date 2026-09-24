@@ -38,8 +38,24 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     private lateinit var prefs: SharedPreferences
     private var ignoreSpinnerChange = false
 
-    // Timer Hard : ms depuis le début, 0 si annulé ou hors Hard
     private var hardGameStartMs = 0L
+    private var hardElapsedMs = 0L
+    private var timerKnown = false
+    private var victoryRecorded = false
+
+    private fun checkpointTimer() {
+        if (hardGameStartMs != 0L) {
+            hardElapsedMs += android.os.SystemClock.elapsedRealtime() - hardGameStartMs
+            hardGameStartMs = 0L
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (timerKnown && !victoryRecorded && game.difficulty == ColorStackGame.Difficulty.HARD) {
+            hardGameStartMs = android.os.SystemClock.elapsedRealtime()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
@@ -65,6 +81,8 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
         val restored = loadGame()
         if (!restored) {
             game.newGame(ColorStackGame.Difficulty.EASY)
+            GameStatsRepository(this).recordColorStackStarted(game.difficulty.name)
+            timerKnown = true
         }
 
         ignoreSpinnerChange = true
@@ -79,8 +97,8 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
 
     override fun onPause() {
         super.onPause()
+        checkpointTimer()
         saveGame()
-        hardGameStartMs = 0L
     }
 
     private fun setupSpinner() {
@@ -125,9 +143,12 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
         ignoreSpinnerChange = false
         updateUI()
         statusText.text = getString(R.string.color_stack_status_new)
+        victoryRecorded = false
+        hardElapsedMs = 0L
+        timerKnown = true
+        hardGameStartMs = if (diff == ColorStackGame.Difficulty.HARD) android.os.SystemClock.elapsedRealtime() else 0L
+        GameStatsRepository(this).recordColorStackStarted(diff.name)
         saveGame()
-        hardGameStartMs = if (diff == ColorStackGame.Difficulty.HARD) System.currentTimeMillis() else 0L
-        if (diff == ColorStackGame.Difficulty.HARD) GameStatsRepository(this).recordColorStackHardStarted()
     }
 
     private fun restartGame() {
@@ -158,19 +179,15 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
         updateUI()
         if (game.solved) {
             statusText.text = getString(R.string.color_stack_status_won)
-            when (game.difficulty) {
-                ColorStackGame.Difficulty.HARD -> {
-                    val statsRepo = GameStatsRepository(this)
-                    statsRepo.recordColorStackHardWon()
-                    if (hardGameStartMs > 0L) {
-                        statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
-                    }
-                    hardGameStartMs = 0L
-                    NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
+            if (!victoryRecorded) {
+                checkpointTimer()
+                victoryRecorded = true
+                val statsRepo = GameStatsRepository(this)
+                statsRepo.recordColorStackWon(game.difficulty.name)
+                if (game.difficulty == ColorStackGame.Difficulty.HARD && timerKnown && hardElapsedMs > 0L) {
+                    statsRepo.recordColorStackHardBestTime(hardElapsedMs)
                 }
-                ColorStackGame.Difficulty.MEDIUM -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
-                ColorStackGame.Difficulty.EASY -> NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
-                else -> Unit
+                NeutrinoRepository(this).addBalance(NeutrinoRewards.colorStack(game.difficulty.ordinal))
             }
         }
         saveGame()
@@ -184,11 +201,24 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     }
 
     private fun saveGame() {
-        prefs.edit { putString(KEY_SAVE, game.serialize()) }
+        val running = if (hardGameStartMs != 0L) android.os.SystemClock.elapsedRealtime() - hardGameStartMs else 0L
+        prefs.edit {
+            // Inclus dans la partie : un nouveau jeu créé par le widget ne peut pas
+            // récupérer le chronomètre ou la victoire de la partie précédente.
+            putString(KEY_SAVE, org.json.JSONObject(game.serialize())
+                .put("stats_elapsed_ms", hardElapsedMs + running)
+                .put("stats_timer_known", timerKnown)
+                .put("stats_victory_recorded", victoryRecorded).toString())
+        }
     }
 
     private fun loadGame(): Boolean {
         val json = prefs.getString(KEY_SAVE, null) ?: return false
-        return game.deserialize(json)
+        if (!game.deserialize(json)) return false
+        val saved = org.json.JSONObject(json)
+        hardElapsedMs = saved.optLong("stats_elapsed_ms", 0L)
+        timerKnown = saved.optBoolean("stats_timer_known", false)
+        victoryRecorded = saved.optBoolean("stats_victory_recorded", game.solved)
+        return true
     }
 }

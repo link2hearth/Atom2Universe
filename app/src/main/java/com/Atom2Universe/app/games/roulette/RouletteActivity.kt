@@ -176,6 +176,8 @@ class RouletteActivity : ThemedActivity() {
         showStatus(getString(R.string.roulette_status_spinning))
 
         game.spin()
+        val stats = getSharedPreferences("roulette_stats", MODE_PRIVATE)
+        stats.edit().putInt("spins", stats.getInt("spins", 0) + 1).apply()
         for (col in 0..2) startColumnSpin(col)
         for (col in 0..2) {
             val delay = SPIN_DURATION_MS + col * COLUMN_DELAY_MS
@@ -250,6 +252,9 @@ class RouletteActivity : ThemedActivity() {
 
         if (totalMult > 0) {
             val gain = selectedBet * totalMult
+            val stats = getSharedPreferences("roulette_stats", MODE_PRIVATE)
+            stats.edit().putInt("wins", stats.getInt("wins", 0) + 1)
+                .putInt("best_payout", maxOf(stats.getInt("best_payout", 0), gain)).apply()
             music.onWin(totalMult)
             balance += gain
             neutrinoRepo.setBalance(balance)

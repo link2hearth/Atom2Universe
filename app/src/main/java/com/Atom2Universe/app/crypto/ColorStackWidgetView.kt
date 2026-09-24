@@ -190,7 +190,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
         updateDifficultyLabel()
         persistGame()
         hardGameStartMs = if (diff == ColorStackGame.Difficulty.HARD) System.currentTimeMillis() else 0L
-        if (diff == ColorStackGame.Difficulty.HARD) GameStatsRepository(context).recordColorStackHardStarted()
+        GameStatsRepository(context).recordColorStackStarted(diff.name)
     }
 
     private fun updateDifficultyLabel() {
@@ -214,10 +214,10 @@ class ColorStackWidgetView @JvmOverloads constructor(
             resultOverlay.visibility = VISIBLE
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit { remove(KEY_SAVE) }
+            GameStatsRepository(context).recordColorStackWon(game.difficulty.name)
             when (game.difficulty) {
                 ColorStackGame.Difficulty.HARD -> {
                     val statsRepo = GameStatsRepository(context)
-                    statsRepo.recordColorStackHardWon()
                     if (hardGameStartMs > 0L) {
                         statsRepo.recordColorStackHardBestTime(System.currentTimeMillis() - hardGameStartMs)
                     }
@@ -249,6 +249,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
         val restored = json != null && game.deserialize(json)
         if (!restored) {
             game.newGame(ColorStackGame.Difficulty.EASY)
+            GameStatsRepository(context).recordColorStackStarted(game.difficulty.name)
             persistGame()
         }
         colorStackView.game = game

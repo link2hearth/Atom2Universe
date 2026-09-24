@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.sudoku
 
 import android.content.Context
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -232,6 +233,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
             }
 
             gridView.setBoard(board)
+            GameStatsRepository(this@SudokuActivity).recordSudokuStarted()
             elapsedTimeMs = 0
             isPuzzleSolved = false
             clearSelectedNumber()
@@ -467,10 +469,12 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
     }
 
     private fun checkForCompletion() {
+        if (isPuzzleSolved) return
         val board = gridView.getBoard()
 
         if (board.isSolved()) {
             isPuzzleSolved = true
+            GameStatsRepository(this).recordSudokuWon()
             stopTimer()
             setStatus(getString(R.string.sudoku_status_solved), isError = false)
             statusText.setTextColor(ContextCompat.getColor(this, R.color.sudoku_status_ok))

@@ -34,10 +34,11 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import android.content.Intent
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
-import java.util.Locale
 import androidx.core.content.edit
 
 class ClickerStatsActivity : ThemedActivity() {
+
+    private var recordsJob: kotlinx.coroutines.Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +47,7 @@ class ClickerStatsActivity : ThemedActivity() {
 
         val stats = ClickerStatsRepository(this).load()
 
-        val fmt = NumberFormat.getNumberInstance(Locale.FRENCH)
+        val fmt = NumberFormat.getNumberInstance(resources.configuration.locales[0])
 
         findViewById<TextView>(R.id.stat_total_clicks_value).text =
             fmt.format(stats.totalClicks)
@@ -77,7 +78,6 @@ class ClickerStatsActivity : ThemedActivity() {
             formatElementBonus(elemBonuses.flatAps, elemBonuses.multAps)
 
         bindProductionSplit(stats)
-        bindGameStats()
         setupLongPressDeletes()
 
         findViewById<ImageButton>(R.id.stats_back_btn).setOnClickListener { finish() }
@@ -165,6 +165,17 @@ class ClickerStatsActivity : ThemedActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val container = findViewById<LinearLayout>(R.id.game_stats_sections)
+        val sections = (0 until container.childCount).map { container.getChildAt(it) }.associateBy { it.tag }
+        container.removeAllViews()
+        com.Atom2Universe.app.games.GamesCatalog.orderedTiles(this).forEach { tile ->
+            sections[tile.id]?.let { container.addView(it) }
+        }
+        bindGameStats()
+    }
+
     private fun bindProductionSplit(stats: com.Atom2Universe.app.crypto.clicker.ClickerStats) {
         val apc = stats.lifetimeApcAtoms
         val aps = stats.lifetimeApsAtoms
@@ -218,10 +229,10 @@ class ClickerStatsActivity : ThemedActivity() {
 
     private fun bindGameStats() {
         val gameStats = GameStatsRepository(this).load()
-        val fmt = NumberFormat.getNumberInstance(Locale.FRENCH)
+        val fmt = NumberFormat.getNumberInstance(resources.configuration.locales[0])
 
         fun TextView.setWins(won: Int, played: Int) {
-            text = if (played > 0) "${fmt.format(won)} / ${fmt.format(played)}" else "—"
+            text = if (played > 0 || won > 0) getString(R.string.game_stat_ratio, fmt.format(won), fmt.format(played)) else getString(R.string.game_stat_empty)
         }
 
         // Compteurs : la somme de tous les appareils (cet appareil + ceux vus à la dernière sync).
@@ -297,11 +308,6 @@ class ClickerStatsActivity : ThemedActivity() {
         val hpScore = hp.getInt("best_score", 0)
         findViewById<TextView>(R.id.stat_hotpotato_score_value).text = if (hpScore > 0) fmt.format(hpScore) else "—"
 
-        val mx = getSharedPreferences("motocross_save", MODE_PRIVATE)
-        val mxBest = mx.getInt("trial_best", 0)
-        findViewById<TextView>(R.id.stat_motocross_distance_value).text =
-            if (mxBest > 0) "${fmt.format(mxBest)} m" else "—"
-
         val ob = getSharedPreferences("orbite_save", MODE_PRIVATE)
         val obBest = ob.getInt("best", 0)
         findViewById<TextView>(R.id.stat_orbite_score_value).text = if (obBest > 0) fmt.format(obBest) else "—"
@@ -309,29 +315,6 @@ class ClickerStatsActivity : ThemedActivity() {
         val cr = getSharedPreferences("cosmo_run_save", MODE_PRIVATE)
         val crBest = cr.getInt("best_score", 0)
         findViewById<TextView>(R.id.stat_cosmorun_score_value).text = if (crBest > 0) fmt.format(crBest) else "—"
-
-        // Minesweeper / Sokoban / Balance : un seul chiffre = le meilleur, toutes difficultés confondues
-        val msPrefs = com.Atom2Universe.app.games.minesweeper.MinesweeperPrefs(this)
-        val msBest = com.Atom2Universe.app.games.minesweeper.MinesweeperDifficulty.entries
-            .map { msPrefs.getBestTime(it) }
-            .filter { it >= 0 }
-            .minOrNull()
-        findViewById<TextView>(R.id.stat_minesweeper_best_value).text =
-            if (msBest != null) "%d:%02d".format(msBest / 60, msBest % 60) else "—"
-
-        val skPrefs = getSharedPreferences("sokoban_prefs", MODE_PRIVATE)
-        val skBest = com.Atom2Universe.app.games.sokoban.SokobanDifficulty.entries
-            .map { skPrefs.getInt("best_" + it.name, 0) }
-            .filter { it > 0 }
-            .minOrNull()
-        findViewById<TextView>(R.id.stat_sokoban_best_value).text = if (skBest != null) fmt.format(skBest) else "—"
-
-        val blPrefs = getSharedPreferences("balance_game", MODE_PRIVATE)
-        val blBest = com.Atom2Universe.app.games.balance.BalanceGame.Difficulty.entries
-            .map { blPrefs.getInt("best_level_" + it.ordinal, 0) }
-            .maxOrNull()
-        findViewById<TextView>(R.id.stat_balance_best_level_value).text =
-            if (blBest != null && blBest > 0) fmt.format(blBest) else "—"
 
         val nc = getSharedPreferences("nuclea_save", MODE_PRIVATE)
         val ncWave = nc.getInt("best_wave", 0)
@@ -356,11 +339,13 @@ class ClickerStatsActivity : ThemedActivity() {
         val sbSolved = SharedGameStats.total(this, "starbridges_save", "solved")
         findViewById<TextView>(R.id.stat_starbridges_solved_value).text = if (sbSolved > 0) fmt.format(sbSolved) else "—"
 
+        bindAdditionalStats()
         bindMemoryStats()
         bindCirclesStats()
 
         // Particules : Room DB async
-        lifecycleScope.launch {
+        recordsJob?.cancel()
+        recordsJob = lifecycleScope.launch {
             val meta = com.Atom2Universe.app.games.particules.data.ParticulesDatabase
                 .getInstance(applicationContext).metaDao().getMeta()
             val scoreView = findViewById<TextView>(R.id.stat_particules_score_value)
@@ -370,6 +355,8 @@ class ClickerStatsActivity : ThemedActivity() {
             val level = meta?.highestLevel ?: 0
             scoreView.text = if (score > 0) fmt.format(score) else "—"
             levelView.text = if (level > 0) fmt.format(level) else "—"
+            addExtraStat("particules", getString(R.string.game_stat_combo), number(meta?.bestCombo ?: 0),
+                listOf(SyncedStat(ParticulesRecords.SOURCE, ParticulesRecords.KEY_BEST_COMBO)))
         }
     }
 
@@ -381,13 +368,13 @@ class ClickerStatsActivity : ThemedActivity() {
         for (diff in com.Atom2Universe.app.games.memory.MemoryDifficulty.entries) {
             val time = prefs.getInt("best_time_" + diff.name, 0)
             val moves = prefs.getInt("best_moves_" + diff.name, 0)
-            if (time == 0 && moves == 0) continue
+
             val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
-            row.findViewById<TextView>(R.id.row_label).text = getString(R.string.stat_memory_diff, diff.label)
+            row.findViewById<TextView>(R.id.row_label).text = getString(R.string.game_stat_grid, diff.cols, diff.rows)
             val parts = mutableListOf<String>()
             if (time > 0) parts.add("%d:%02d".format(time / 60, time % 60))
             if (moves > 0) parts.add(getString(R.string.stat_moves_format, moves))
-            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ")
+            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ").ifEmpty { getString(R.string.game_stat_empty) }
             onLongPressDelete(row, listOf(
                 SyncedStat("memory_save", "best_time_" + diff.name),
                 SyncedStat("memory_save", "best_moves_" + diff.name)
@@ -404,12 +391,12 @@ class ClickerStatsActivity : ThemedActivity() {
         for (diff in com.Atom2Universe.app.games.circles.CirclesDifficulty.entries) {
             val solved = SharedGameStats.total(this, "circles_save", "solved_" + diff.name)
             val moves = prefs.getInt("best_moves_" + diff.name, 0)
-            if (solved == 0) continue
+
             val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
-            row.findViewById<TextView>(R.id.row_label).text = getString(R.string.stat_circles_diff, diff.label)
+            row.findViewById<TextView>(R.id.row_label).text = difficultyLabel(diff.name)
             val parts = mutableListOf(getString(R.string.stat_solved_format, solved))
             if (moves > 0) parts.add(getString(R.string.stat_moves_format, moves))
-            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ")
+            row.findViewById<TextView>(R.id.row_value).text = parts.joinToString(" · ").ifEmpty { getString(R.string.game_stat_empty) }
             onLongPressDelete(row, listOf(
                 SyncedStat("circles_save", "solved_" + diff.name),
                 SyncedStat("circles_save", "best_moves_" + diff.name)
@@ -453,13 +440,8 @@ class ClickerStatsActivity : ThemedActivity() {
             R.id.stat_match3_best_value to listOf(SyncedStat("match3_save", "best_score")),
             R.id.stat_match3_best_time_value to listOf(SyncedStat("match3_save", "best_time_ms")),
             R.id.stat_hotpotato_score_value to listOf(SyncedStat("hot_potato_save", "best_score")),
-            R.id.stat_motocross_distance_value to listOf(SyncedStat("motocross_save", "trial_best")),
             R.id.stat_orbite_score_value to listOf(SyncedStat("orbite_save", "best")),
             R.id.stat_cosmorun_score_value to listOf(SyncedStat("cosmo_run_save", "best_score")),
-            // Une seule ligne pour toutes les difficultés : on les supprime toutes
-            R.id.stat_minesweeper_best_value to listOf(SyncedStat("minesweeper_prefs", "best_", isPrefix = true)),
-            R.id.stat_sokoban_best_value to listOf(SyncedStat("sokoban_prefs", "best_", isPrefix = true)),
-            R.id.stat_balance_best_level_value to listOf(SyncedStat("balance_game", "best_level_", isPrefix = true)),
             R.id.stat_nuclea_wave_value to listOf(SyncedStat("nuclea_save", "best_wave")),
             R.id.stat_trebuchet_distance_value to listOf(SyncedStat("trebuchet_game", "best_distance")),
             R.id.stat_roguelike_floor_value to listOf(SyncedStat("roguelike_save", "best_floor")),
@@ -482,7 +464,7 @@ class ClickerStatsActivity : ThemedActivity() {
         row.setOnLongClickListener {
             val popup = PopupMenu(this, row, Gravity.END)
             val counters = stats.filter { it.isCounter }
-            val fmt = NumberFormat.getNumberInstance(Locale.FRENCH)
+            val fmt = NumberFormat.getNumberInstance(resources.configuration.locales[0])
 
             SharedGameStats.breakdown(this, counters).forEach { (deviceName, values) ->
                 val name = deviceName ?: getString(R.string.stat_device_this)
@@ -513,6 +495,94 @@ class ClickerStatsActivity : ThemedActivity() {
                 }
             }
             .show()
+    }
+
+
+    private fun extraContainer(game: String): LinearLayout =
+        findViewById<LinearLayout>(R.id.game_stats_sections).findViewWithTag("extra_$game")
+
+    private fun number(value: Number): String = NumberFormat.getNumberInstance(resources.configuration.locales[0]).format(value)
+
+    private fun difficultyLabel(name: String): String = getString(when (name) {
+        "EASY" -> R.string.game_stat_easy
+        "NORMAL" -> R.string.game_stat_normal
+        "MEDIUM" -> R.string.game_stat_medium
+        "HARD" -> R.string.game_stat_hard
+        "EXPERT" -> R.string.game_stat_expert
+        else -> R.string.game_stat_extreme
+    })
+
+    private fun addExtraStat(game: String, label: String, value: String, stats: List<SyncedStat> = emptyList()) {
+        val container = extraContainer(game)
+        val row = layoutInflater.inflate(R.layout.item_clicker_stat_row, container, false)
+        row.findViewById<TextView>(R.id.row_label).text = label
+        row.findViewById<TextView>(R.id.row_value).text = value
+        if (stats.isNotEmpty()) onLongPressDelete(row, stats)
+        container.addView(row)
+    }
+
+    private fun recordRow(game: String, label: String, prefs: String, key: String, fallback: String? = null) {
+        val data = getSharedPreferences(prefs, MODE_PRIVATE).all
+        val value = (data[key] as? Number) ?: (fallback?.let { data[it] } as? Number)
+        val text = if (value == null || value.toDouble() <= 0) getString(R.string.game_stat_empty)
+            else number(value)
+        addExtraStat(game, label, text, listOfNotNull(SyncedStat(prefs, key), fallback?.let { SyncedStat(prefs, it) }))
+    }
+
+    private fun bindAdditionalStats() {
+        val sections = findViewById<LinearLayout>(R.id.game_stats_sections)
+        // Certaines tuiles n'ont pas encore de statistiques pertinentes à afficher.
+        for (index in 0 until sections.childCount) {
+            extraContainer(sections.getChildAt(index).tag as String).removeAllViews()
+        }
+        for (diff in listOf("EASY", "MEDIUM")) {
+            val played = SharedGameStats.total(this, "game_stats", "colorstack_played_$diff")
+            val won = SharedGameStats.total(this, "game_stats", "colorstack_won_$diff")
+            addExtraStat("colorstack", getString(R.string.game_stat_wins_difficulty, difficultyLabel(diff)),
+                getString(R.string.game_stat_ratio, number(won), number(played)),
+                listOf(SyncedStat("game_stats", "colorstack_won_$diff"), SyncedStat("game_stats", "colorstack_played_$diff")))
+        }
+        recordRow("bigger", getString(R.string.game_stat_score), "bigger_save", "best_score")
+        recordRow("link", getString(R.string.game_stat_score), "link_save", "best_score")
+        recordRow("reflex", getString(R.string.game_stat_combo), "reflex_save", "best_combo")
+        recordRow("match3", getString(R.string.forge_endless_title), "match3_forge", "best_endless")
+        recordRow("match3", getString(R.string.forge_slag_endless_title), "match3_forge", "best_slag")
+        for (rounds in listOf(3, 6, 12)) {
+            recordRow("match3", getString(R.string.game_stat_expedition, rounds), "match3_forge",
+                "best_expedition_$rounds", fallback = if (rounds == 6) "best_expedition" else null)
+        }
+        val tier = getSharedPreferences("bigger_save", MODE_PRIVATE).getInt("discovered_tier", -1)
+        addExtraStat("bigger", getString(R.string.game_stat_tier), if (tier < 0) getString(R.string.game_stat_empty) else number(tier + 1))
+        val hits = getSharedPreferences("trebuchet_game", MODE_PRIVATE).all.filterKeys { it.startsWith("best_hits") }
+            .values.mapNotNull { (it as? Int)?.takeIf { n -> n > 0 } }.minOrNull()
+        addExtraStat("trebuchet", getString(R.string.game_stat_hits), hits?.let { number(it) } ?: getString(R.string.game_stat_empty),
+            listOf(SyncedStat("trebuchet_game", "best_hits", isPrefix = true)))
+        val farm = com.Atom2Universe.app.games.farm.FarmState(getSharedPreferences("farm_v1", MODE_PRIVATE))
+        addExtraStat("farm", getString(R.string.game_stat_harvests), number(farm.harvests))
+        addExtraStat("farm", getString(R.string.game_stat_parcels), number(farm.parcels.count { it.unlocked }))
+        addExtraStat("farm", getString(R.string.game_stat_coins), number(farm.coins))
+        val line = getSharedPreferences("the_line_save", MODE_PRIVATE)
+        for (mode in com.Atom2Universe.app.games.theline.TheLineMode.entries) {
+            for (diff in com.Atom2Universe.app.games.theline.TheLineDifficulty.entries) {
+                val slot = mode.ordinal * com.Atom2Universe.app.games.theline.TheLineDifficulty.entries.size + diff.ordinal
+                val modeName = getString(if (mode.ordinal == 0) R.string.the_line_mode_single else R.string.the_line_mode_multi)
+                addExtraStat("theline", getString(R.string.game_stat_mode_difficulty, modeName, difficultyLabel(diff.name)),
+                    number((line.getInt("level_$slot", 1) - 1).coerceAtLeast(0)))
+            }
+        }
+        com.Atom2Universe.app.games.minesweeper.MinesweeperDifficulty.entries.forEach { diff ->
+            val time = com.Atom2Universe.app.games.minesweeper.MinesweeperPrefs(this).getBestTime(diff)
+            addExtraStat("minesweeper", getString(R.string.game_stat_time_difficulty, difficultyLabel(diff.name)), if (time < 0) getString(R.string.game_stat_empty)
+                else getString(R.string.game_stat_seconds, time.toDouble()), listOf(SyncedStat("minesweeper_prefs", "best_${diff.name}")))
+        }
+        com.Atom2Universe.app.games.balance.BalanceGame.Difficulty.entries.forEach { diff ->
+            recordRow("balance", getString(R.string.game_stat_level_difficulty, difficultyLabel(diff.name)), "balance_game", "best_level_${diff.ordinal}")
+        }
+        val spins = SharedGameStats.total(this, "roulette_stats", "spins")
+        val wins = SharedGameStats.total(this, "roulette_stats", "wins")
+        addExtraStat("roulette", getString(R.string.game_stat_spins), number(spins), listOf(SyncedStat("roulette_stats", "spins")))
+        addExtraStat("roulette", getString(R.string.game_stat_winning_spins), number(wins), listOf(SyncedStat("roulette_stats", "wins")))
+        recordRow("roulette", getString(R.string.game_stat_payout), "roulette_stats", "best_payout")
     }
 
     private fun formatMs(ms: Long): String {

@@ -89,6 +89,16 @@ class GameStatsRepository(context: Context) {
     fun recordSolitaireStarted() = increment("solitaire_played")
     fun recordSolitaireWon()     = increment("solitaire_won")
 
+    fun recordColorStackStarted(difficulty: String) {
+        if (difficulty == "HARD") recordColorStackHardStarted()
+        else increment("colorstack_played_$difficulty")
+    }
+
+    fun recordColorStackWon(difficulty: String) {
+        if (difficulty == "HARD") recordColorStackHardWon()
+        else increment("colorstack_won_$difficulty")
+    }
+
     fun recordColorStackHardStarted() = increment("colorstack_hard_played")
     fun recordColorStackHardWon()     = increment("colorstack_hard_won")
 

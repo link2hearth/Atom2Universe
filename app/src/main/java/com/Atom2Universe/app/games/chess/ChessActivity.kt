@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.chess
 
 import android.content.Context
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -128,6 +129,7 @@ class ChessActivity : AppCompatActivity(),
      */
     private fun startNewGame() {
         game.newGame()
+        GameStatsRepository(this).recordChessStarted()
         elapsedTimeMs = 0
 
         ai = if (currentDifficulty.hasAI()) {
@@ -387,6 +389,7 @@ class ChessActivity : AppCompatActivity(),
 
         // Victoire du joueur contre l'IA
         if (game.isCheckmate && game.currentTurn == PieceColor.BLACK && ai != null) {
+            GameStatsRepository(this).recordChessWon()
             Toast.makeText(this, R.string.chess_victory_title, Toast.LENGTH_SHORT).show()
             val reward = when (currentDifficulty) {
                 ChessDifficulty.TRAINING -> NeutrinoRewards.CHESS_TRAINING
