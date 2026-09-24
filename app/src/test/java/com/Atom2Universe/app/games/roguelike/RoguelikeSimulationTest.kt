@@ -1760,7 +1760,10 @@ class RoguelikeSimulationTest {
         }
         // Toutes les reliques sont essayées seules. On réserve ensuite deux places aux partenaires
         // des six meilleures : un sort moyen seul peut être indispensable au meilleur combo.
-        val ranked = owned.sortedByDescending { trial(listOf(it)) }
+        // Un score par relique, calculé une fois : sortedByDescending { trial(...) } relançait les essais à chaque
+        // comparaison du tri (~300 essais au lieu de ~31), et l'optimiseur y passait l'essentiel de son temps
+        val solo = owned.associateWith { trial(listOf(it)) }
+        val ranked = owned.sortedByDescending { solo.getValue(it) }
         val shortlist = if (owned.size <= 8) owned else {
             val own = if (wanted == null) emptyList() else ranked.filter { it.attribute == preferredStat(wanted) }.take(2)
             val core = (ranked.take(if (wanted == null) 6 else 4) + own).distinct()
