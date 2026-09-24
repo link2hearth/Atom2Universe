@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="6dp"
-        android:textColor="#F1F5F9"
+        android:textColor="@color/audio_text_primary"
         android:textSize="13sp" />
 
     <TextView

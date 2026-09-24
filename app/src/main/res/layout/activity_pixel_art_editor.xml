@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1a1a1a">
+    android:background="@color/audio_surface">
 
     <!-- Top Toolbar with horizontal scroll for small screens -->
     <HorizontalScrollView
         android:id="@+id/toolbar_scroll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#2d2d2d"
+        android:background="@color/audio_surface_raised"
         android:scrollbars="none"
         android:fillViewport="true"
         app:layout_constraintTop_toTopOf="parent"
@@ -75,7 +75,7 @@
                 android:src="@android:drawable/ic_menu_gallery"
                 android:scaleType="centerInside"
                 android:contentDescription="@string/pixel_art_reference_title"
-                app:tint="#666666" />
+                app:tint="@color/audio_text_tertiary" />
 
             <ImageButton
                 android:id="@+id/btn_reference_visibility"
@@ -86,7 +86,7 @@
                 android:scaleType="centerInside"
                 android:contentDescription="@string/pixel_art_reference_visibility"
                 android:visibility="gone"
-                app:tint="#666666" />
+                app:tint="@color/audio_text_tertiary" />
 
             <ImageButton
                 android:id="@+id/btn_reference_adjust"
@@ -97,7 +97,7 @@
                 android:scaleType="centerInside"
                 android:contentDescription="@string/pixel_art_reference_adjust"
                 android:visibility="gone"
-                app:tint="#666666" />
+                app:tint="@color/audio_text_tertiary" />
 
         </LinearLayout>
 
@@ -147,7 +147,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_dialog_dialer"
             android:contentDescription="@string/pixel_art_sheet_mode"
-            app:tint="#666666" />
+            app:tint="@color/audio_text_tertiary" />
 
         <ImageButton
             android:id="@+id/btn_menu"
@@ -339,7 +339,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#303030"
+        android:background="@color/audio_surface_raised"
         android:padding="6dp"
         android:gravity="center_vertical"
         android:visibility="gone"
@@ -351,7 +351,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pixel_art_sheet_columns"
-            android:textColor="#aaaaaa"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp"
             android:paddingEnd="8dp" />
 
@@ -405,7 +405,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pixel_art_grid_lines"
-            android:textColor="#aaaaaa"
+            android:textColor="@color/audio_text_secondary"
             android:buttonTint="#00BCD4"
             android:textSize="11sp"
             android:checked="true" />
@@ -417,7 +417,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#252525"
+        android:background="@color/audio_surface"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_panel"
@@ -496,7 +496,7 @@
                     android:id="@+id/txt_frame_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#aaaaaa"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="11sp"
                     tools:text="1/1" />
 
@@ -682,7 +682,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#2d2d2d"
+        android:background="@color/audio_surface_raised"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -827,7 +827,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pixel_art_shape_filled"
-                    android:textColor="#aaaaaa"
+                    android:textColor="@color/audio_text_secondary"
                     android:buttonTint="#FF9800"
                     android:textSize="11sp"
                     android:layout_marginStart="4dp" />
@@ -837,7 +837,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pixel_art_shape_bend"
-                    android:textColor="#aaaaaa"
+                    android:textColor="@color/audio_text_secondary"
                     android:buttonTint="#4CAF50"
                     android:textSize="11sp"
                     android:layout_marginStart="4dp" />
@@ -872,7 +872,7 @@
                     android:layout_height="44dp"
                     android:text="↶"
                     android:textSize="20sp"
-                    android:textColor="#888888"
+                    android:textColor="@color/audio_text_secondary"
                     android:minWidth="0dp"
                     android:padding="0dp"
                     android:insetTop="0dp"
@@ -889,7 +889,7 @@
                     android:layout_height="44dp"
                     android:text="↷"
                     android:textSize="20sp"
-                    android:textColor="#888888"
+                    android:textColor="@color/audio_text_secondary"
                     android:minWidth="0dp"
                     android:padding="0dp"
                     android:insetTop="0dp"
@@ -952,7 +952,7 @@
                     android:id="@+id/txt_layer_position"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#aaaaaa"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="11sp"
                     android:layout_marginEnd="8dp" />
 
@@ -960,7 +960,7 @@
                     android:id="@+id/txt_layer_scale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#aaaaaa"
+                    android:textColor="@color/audio_text_secondary"
                     android:textSize="11sp"
                     android:layout_marginEnd="16dp" />
 
@@ -1294,7 +1294,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:orientation="horizontal"
-                android:background="#404040"
+                android:background="@color/audio_surface_raised"
                 android:gravity="center_vertical"
                 android:paddingStart="8dp"
                 android:paddingEnd="4dp">
@@ -1314,14 +1314,14 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:contentDescription="@string/pixel_art_close"
-                    app:tint="#AAAAAA" />
+                    app:tint="@color/audio_text_secondary" />
             </LinearLayout>
 
             <!-- Preview image -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#1a1a1a"
+                android:background="@color/audio_surface"
                 android:padding="8dp">
 
                 <ImageView

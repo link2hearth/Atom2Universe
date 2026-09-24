@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/startup_background">
+    android:background="@android:color/transparent">
 
     <include layout="@layout/view_editor_toolbar" />
 
@@ -48,7 +48,7 @@
                 android:layout_marginTop="8dp"
                 android:minHeight="200dp"
                 android:gravity="top"
-                android:textColor="#F1F5F9"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="16sp"
                 android:background="@null"
                 android:hint="@string/notes_content_hint"
@@ -62,7 +62,7 @@
                 android:layout_marginTop="8dp"
                 android:minHeight="200dp"
                 android:gravity="top"
-                android:textColor="#94A3B8"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="14sp"
                 android:fontFamily="monospace"
                 android:background="@null"
@@ -77,7 +77,7 @@
                 android:padding="8dp"
                 android:textColor="#3B82F6"
                 android:textSize="13sp"
-                android:background="#1E293B"
+                android:background="@color/audio_surface"
                 android:visibility="gone" />
 
             <!-- Backlinks section -->
@@ -92,7 +92,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#1E293B" />
+                    android:background="@color/audio_surface" />
 
                 <TextView
                     android:id="@+id/backlinks_header"
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp"
-                    android:textColor="#64748B"
+                    android:textColor="@color/audio_text_tertiary"
                     android:textSize="12sp"
                     android:textAllCaps="true"
                     android:letterSpacing="0.08" />
@@ -120,7 +120,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
-        android:background="#0F172A"
+        android:background="@color/audio_background"
         android:gravity="center_vertical"
         android:paddingStart="8dp"
         android:paddingEnd="8dp">
@@ -132,7 +132,7 @@
             android:src="@drawable/ic_mic_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_stt_start"
-            app:tint="#94A3B8" />
+            app:tint="@color/audio_text_secondary" />
 
         <ImageButton
             android:id="@+id/btn_tts"
@@ -141,7 +141,7 @@
             android:src="@drawable/ic_volume_up_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_tts_speak"
-            app:tint="#94A3B8" />
+            app:tint="@color/audio_text_secondary" />
 
     </LinearLayout>
 

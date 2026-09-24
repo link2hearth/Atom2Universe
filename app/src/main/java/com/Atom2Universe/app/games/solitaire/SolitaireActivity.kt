@@ -83,6 +83,7 @@ class SolitaireActivity : AppCompatActivity(), SolitaireView.OnGameActionListene
     private val database by lazy { SolitaireDatabase.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_solitaire)

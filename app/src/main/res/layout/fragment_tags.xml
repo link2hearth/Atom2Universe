@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/startup_background">
+    android:background="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,14 +13,14 @@
         android:gravity="center_vertical"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
-        android:background="#0F172A">
+        android:background="@color/audio_background">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/notes_nav_tags"
-            android:textColor="#F1F5F9"
+            android:textColor="@color/audio_text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:src="@drawable/ic_sort_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_sort"
-            app:tint="#94A3B8" />
+            app:tint="@color/audio_text_secondary" />
 
         <ImageButton
             android:id="@+id/btn_new_category"
@@ -39,7 +39,7 @@
             android:src="@drawable/ic_create_new_folder_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_create_category"
-            app:tint="#94A3B8" />
+            app:tint="@color/audio_text_secondary" />
 
         <ImageButton
             android:id="@+id/btn_new_tag"
@@ -48,7 +48,7 @@
             android:src="@drawable/ic_add_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_create_tag"
-            app:tint="#94A3B8" />
+            app:tint="@color/audio_text_secondary" />
 
     </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/notes_tags_empty"
-            android:textColor="#64748B"
+            android:textColor="@color/audio_text_tertiary"
             android:visibility="gone" />
 
     </FrameLayout>

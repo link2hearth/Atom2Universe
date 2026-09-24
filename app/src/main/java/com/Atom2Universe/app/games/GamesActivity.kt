@@ -32,13 +32,11 @@ import com.Atom2Universe.app.games.game2048.Game2048Activity
 import com.Atom2Universe.app.games.particules.ParticulesActivity
 import com.Atom2Universe.app.games.roguelike.RoguelikeActivity
 import com.Atom2Universe.app.games.balance.BalanceActivity
-import com.Atom2Universe.app.games.farm.FarmHubTileDrawable
 import com.Atom2Universe.app.games.farm.FarmState
 import com.Atom2Universe.app.games.trebuchet.TrebuchetActivity
 import com.Atom2Universe.app.games.bigger.BiggerActivity
 import com.Atom2Universe.app.games.match3.Match3Activity
 import com.Atom2Universe.app.games.survivor.SurvivorActivity
-import com.Atom2Universe.app.games.survivor.SurvivorHubTileDrawable
 import com.Atom2Universe.app.games.nuclea.NucleaActivity
 import com.Atom2Universe.app.games.reflex.ReflexActivity
 import com.Atom2Universe.app.games.solitaire.SolitaireActivity
@@ -64,6 +62,11 @@ class GamesActivity : BaseHubActivity() {
 
     override fun getHubSubtitle(): Int? = null
 
+    // Chaque jeu a son illustration, déclarée une seule fois dans HubTileArtworks : pas de
+    // couleur de tuile à choisir, et une grille de carrés seulement.
+    override fun supportsTileColors(): Boolean = false
+    override fun supportsListMode(): Boolean = false
+
     override fun getDefaultTiles(): List<HubTile> = listOf(
         HubTile(
             id = "farm",
@@ -71,9 +74,6 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.farm_description,
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_caves,
-            artworkClass = FarmHubTileDrawable::class,
-            // The garden art says what the game is; the title alone sits over it, no text band.
-            showDescription = false,
             activityClass = com.Atom2Universe.app.games.farm.FarmActivity::class.java
         ),
         // Clicker en tête
@@ -83,8 +83,6 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.hub_clicker_desc,
             iconRes = R.drawable.ic_clicker,
             defaultColorRes = R.color.audio_hub_tile_clicker,
-            artworkClass = com.Atom2Universe.app.crypto.ClickerHubTileDrawable::class,
-            showDescription = false,
             activityClass = MainClickerActivity::class.java
         ),
         // Trébuchet (machine de jet)
@@ -94,9 +92,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.trebuchet_description,
             iconRes = android.R.drawable.ic_menu_send,
             defaultColorRes = R.color.game_tile_trebuchet,
-            activityClass = TrebuchetActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.trebuchet.TrebuchetHubTileDrawable::class,
-            showDescription = false
+            activityClass = TrebuchetActivity::class.java
         ),
         // Survivor
         HubTile(
@@ -105,8 +101,6 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.survivor_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_survivor,
-            artworkClass = SurvivorHubTileDrawable::class,
-            showDescription = false,
             activityClass = SurvivorActivity::class.java
         ),
         // Nucléa (twin-stick de fusion)
@@ -116,9 +110,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.nuclea_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_nuclea,
-            activityClass = NucleaActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.nuclea.NucleaHubTileDrawable::class,
-            showDescription = false
+            activityClass = NucleaActivity::class.java
         ),
         // Roguelike
         HubTile(
@@ -127,9 +119,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.roguelike_description,
             iconRes = android.R.drawable.ic_menu_mapmode,
             defaultColorRes = R.color.game_tile_roguelike,
-            activityClass = RoguelikeActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.roguelike.DungeonHubTileDrawable::class,
-            showDescription = false
+            activityClass = RoguelikeActivity::class.java
         ),
         // Arcade : casse-briques + shmup
         HubTile(
@@ -138,9 +128,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.particules_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_particules,
-            activityClass = ParticulesActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.particules.ParticulesHubTileDrawable::class,
-            showDescription = false
+            activityClass = ParticulesActivity::class.java
         ),
         HubTile(
             id = "motocross",
@@ -148,9 +136,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.motocross_description,
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_motocross,
-            activityClass = MotocrossActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.motocross.MotocrossHubTileDrawable::class,
-            showDescription = false
+            activityClass = MotocrossActivity::class.java
         ),
         HubTile(
             id = "starswar",
@@ -158,9 +144,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.stars_war_description,
             iconRes = R.drawable.ic_space_fight,
             defaultColorRes = R.color.game_tile_starswar,
-            activityClass = StarsWarActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.starswar.SpaceFightHubTileDrawable::class,
-            showDescription = false
+            activityClass = StarsWarActivity::class.java
         ),
         HubTile(
             id = "toybox_racers",
@@ -168,9 +152,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.toybox_racers_description,
             iconRes = R.drawable.ic_toybox_racers,
             defaultColorRes = R.color.game_tile_toybox_racers,
-            activityClass = ToyboxRacersActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.toyboxracers.ToyboxHubTileDrawable::class,
-            showDescription = false
+            activityClass = ToyboxRacersActivity::class.java
         ),
         HubTile(
             id = "caves",
@@ -178,9 +160,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.cave_description,
             iconRes = android.R.drawable.ic_menu_mapmode,
             defaultColorRes = R.color.game_tile_caves,
-            activityClass = CaveWorldMenuActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.caves.CaveWorldHubTileDrawable::class,
-            showDescription = false
+            activityClass = CaveWorldMenuActivity::class.java
         ),
         HubTile(
             id = "cosmorun",
@@ -188,9 +168,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.cosmo_run_hub_desc,
             iconRes = android.R.drawable.ic_menu_directions,
             defaultColorRes = R.color.game_tile_cosmorun,
-            activityClass = CosmoRunActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.cosmorun.CosmoRunHubTileDrawable::class,
-            showDescription = false
+            activityClass = CosmoRunActivity::class.java
         ),
         // Équilibre (levier physique)
         HubTile(
@@ -199,9 +177,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.balance_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_balance,
-            activityClass = BalanceActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.balance.BalanceHubTileDrawable::class,
-            showDescription = false
+            activityClass = BalanceActivity::class.java
         ),
         // Accrétion (ancien Bigger, façon Suika)
         HubTile(
@@ -210,9 +186,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.bigger_description,
             iconRes = android.R.drawable.ic_menu_upload,
             defaultColorRes = R.color.game_tile_bigger,
-            activityClass = BiggerActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.bigger.BiggerHubTileDrawable::class,
-            showDescription = false
+            activityClass = BiggerActivity::class.java
         ),
         // Jeux de plateau
         HubTile(
@@ -221,9 +195,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.chess_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_chess,
-            activityClass = ChessActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.chess.ChessHubTileDrawable::class,
-            showDescription = false
+            activityClass = ChessActivity::class.java
         ),
         HubTile(
             id = "draughts",
@@ -231,9 +203,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.draughts_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_draughts,
-            activityClass = DraughtsActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.draughts.DraughtsHubTileDrawable::class,
-            showDescription = false
+            activityClass = DraughtsActivity::class.java
         ),
         HubTile(
             id = "othello",
@@ -241,9 +211,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.othello_hub_desc,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_othello,
-            activityClass = OthelloActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.othello.ReversiHubTileDrawable::class,
-            showDescription = false
+            activityClass = OthelloActivity::class.java
         ),
         // Cartes & mémoire
         HubTile(
@@ -252,9 +220,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.solitaire_description,
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_solitaire,
-            activityClass = SolitaireActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.solitaire.SolitaireHubTileDrawable::class,
-            showDescription = false
+            activityClass = SolitaireActivity::class.java
         ),
         HubTile(
             id = "memory",
@@ -262,9 +228,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.memory_description,
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_memory,
-            activityClass = MemoryActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.memory.MemoryHubTileDrawable::class,
-            showDescription = false
+            activityClass = MemoryActivity::class.java
         ),
         HubTile(
             id = "blackjack",
@@ -272,9 +236,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.blackjack_description,
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.game_tile_blackjack,
-            activityClass = BlackjackActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.blackjack.BlackjackHubTileDrawable::class,
-            showDescription = false
+            activityClass = BlackjackActivity::class.java
         ),
         HubTile(
             id = "roulette",
@@ -282,9 +244,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.roulette_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_roulette,
-            activityClass = RouletteActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.roulette.RouletteHubTileDrawable::class,
-            showDescription = false
+            activityClass = RouletteActivity::class.java
         ),
         // Arcade
         HubTile(
@@ -293,9 +253,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.flappy_cat_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_flappycat,
-            activityClass = FlappyCatActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.flappycat.JumpingCatHubTileDrawable::class,
-            showDescription = false
+            activityClass = FlappyCatActivity::class.java
         ),
         HubTile(
             id = "hotpotato",
@@ -303,9 +261,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.hot_potato_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_hotpotato,
-            activityClass = HotPotatoActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.hotpotato.HotPotatoHubTileDrawable::class,
-            showDescription = false
+            activityClass = HotPotatoActivity::class.java
         ),
         HubTile(
             id = "wavesurf",
@@ -313,9 +269,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.wave_surf_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_wavesurf,
-            activityClass = WaveSurfActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.wavesurf.WaveSurfHubTileDrawable::class,
-            showDescription = false
+            activityClass = WaveSurfActivity::class.java
         ),
         HubTile(
             id = "orbite",
@@ -323,9 +277,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.orbite_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_orbite,
-            activityClass = OrbiteActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.orbite.OrbiteHubTileDrawable::class,
-            showDescription = false
+            activityClass = OrbiteActivity::class.java
         ),
         HubTile(
             id = "hexrunner",
@@ -333,9 +285,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.hex_runner_hub_desc,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_hexrunner,
-            activityClass = HexRunnerActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.hexrunner.HexRunnerHubTileDrawable::class,
-            showDescription = false
+            activityClass = HexRunnerActivity::class.java
         ),
         // Puzzle
         HubTile(
@@ -344,9 +294,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.game2048_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_game2048,
-            activityClass = Game2048Activity::class.java,
-            artworkClass = com.Atom2Universe.app.games.game2048.Game2048HubTileDrawable::class,
-            showDescription = false
+            activityClass = Game2048Activity::class.java
         ),
         HubTile(
             id = "sudoku",
@@ -354,9 +302,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.sudoku_description,
             iconRes = android.R.drawable.ic_dialog_dialer,
             defaultColorRes = R.color.game_tile_sudoku,
-            activityClass = SudokuActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.sudoku.SudokuHubTileDrawable::class,
-            showDescription = false
+            activityClass = SudokuActivity::class.java
         ),
         HubTile(
             id = "minesweeper",
@@ -364,9 +310,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.minesweeper_description,
             iconRes = android.R.drawable.ic_menu_info_details,
             defaultColorRes = R.color.game_tile_minesweeper,
-            activityClass = MinesweeperActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.minesweeper.MinesweeperHubTileDrawable::class,
-            showDescription = false
+            activityClass = MinesweeperActivity::class.java
         ),
         HubTile(
             id = "colorstack",
@@ -374,9 +318,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.color_stack_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_colorstack,
-            activityClass = ColorStackActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.colorstack.ColorStackHubTileDrawable::class,
-            showDescription = false
+            activityClass = ColorStackActivity::class.java
         ),
         HubTile(
             id = "pipetap",
@@ -384,9 +326,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.pipetap_description,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_pipetap,
-            activityClass = PipeTapActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.pipetap.PipeTapHubTileDrawable::class,
-            showDescription = false
+            activityClass = PipeTapActivity::class.java
         ),
         HubTile(
             id = "escape_labyrinth",
@@ -394,9 +334,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.escape_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_escape_labyrinth,
-            activityClass = EscapeLabyrinthActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.escapelabyrinth.EscapeLabyrinthHubTileDrawable::class,
-            showDescription = false
+            activityClass = EscapeLabyrinthActivity::class.java
         ),
         HubTile(
             id = "circles",
@@ -404,9 +342,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.circles_hub_desc,
             iconRes = android.R.drawable.ic_menu_rotate,
             defaultColorRes = R.color.game_tile_circles,
-            activityClass = CirclesActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.circles.CirclesHubTileDrawable::class,
-            showDescription = false
+            activityClass = CirclesActivity::class.java
         ),
         HubTile(
             id = "reflex",
@@ -414,9 +350,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.reflex_description,
             iconRes = android.R.drawable.ic_menu_view,
             defaultColorRes = R.color.game_tile_reflex,
-            activityClass = ReflexActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.reflex.ReflexHubTileDrawable::class,
-            showDescription = false
+            activityClass = ReflexActivity::class.java
         ),
         HubTile(
             id = "starbridges",
@@ -424,9 +358,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.starbridges_description,
             iconRes = android.R.drawable.ic_menu_compass,
             defaultColorRes = R.color.game_tile_starbridges,
-            activityClass = StarBridgesActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.starbridges.StarBridgesHubTileDrawable::class,
-            showDescription = false
+            activityClass = StarBridgesActivity::class.java
         ),
         HubTile(
             id = "theline",
@@ -434,9 +366,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.the_line_description,
             iconRes = android.R.drawable.ic_menu_edit,
             defaultColorRes = R.color.the_line_active,
-            activityClass = TheLineActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class,
-            showDescription = false
+            activityClass = TheLineActivity::class.java
         ),
         HubTile(
             id = "sokoban",
@@ -444,9 +374,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.sokoban_description,
             iconRes = android.R.drawable.ic_menu_sort_by_size,
             defaultColorRes = R.color.game_tile_sokoban,
-            activityClass = SokobanActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.sokoban.SokobanHubTileDrawable::class,
-            showDescription = false
+            activityClass = SokobanActivity::class.java
         ),
         HubTile(
             id = "link",
@@ -454,9 +382,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.link_description,
             iconRes = android.R.drawable.ic_menu_share,
             defaultColorRes = R.color.game_tile_link,
-            activityClass = LinkActivity::class.java,
-            artworkClass = com.Atom2Universe.app.games.link.LinkHubTileDrawable::class,
-            showDescription = false
+            activityClass = LinkActivity::class.java
         ),
         // Match 3
         HubTile(
@@ -465,9 +391,7 @@ class GamesActivity : BaseHubActivity() {
             descriptionRes = R.string.match3_description,
             iconRes = android.R.drawable.ic_menu_slideshow,
             defaultColorRes = R.color.game_tile_match3,
-            activityClass = Match3Activity::class.java,
-            artworkClass = com.Atom2Universe.app.games.match3.Match3HubTileDrawable::class,
-            showDescription = false
+            activityClass = Match3Activity::class.java
         ),
         HubTile(
             id = "infernale",

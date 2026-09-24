@@ -10,7 +10,7 @@ import com.Atom2Universe.app.R
 /** Couleurs pour les contrôles construits en Kotlin, identiques aux ressources XML audio. */
 object AudioStyle {
     fun wrapContext(context: Context): Context = androidx.appcompat.view.ContextThemeWrapper(
-        context, com.Atom2Universe.app.AppThemeManager.getSelectedTheme(context).styleRes
+        context, com.Atom2Universe.app.AppThemeManager.selectedStyleRes(context)
     ).apply { theme.applyStyle(R.style.ThemeOverlay_A2U_Audio, true) }
 
     fun isAudioContext(context: Context): Boolean = TypedValue().let {

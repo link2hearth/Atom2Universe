@@ -27,9 +27,10 @@ import androidx.core.content.edit
 /**
  * Activité de base pour tous les hubs.
  * Fournit les fonctionnalités communes:
- * - Toggle liste/grille
+ * - Toggle liste/grille (sauf pour un hub en tuiles carrées seulement)
  * - Drag & drop pour réordonner
- * - Mode édition pour personnaliser les couleurs (via SimpleColorPickerDialog)
+ * - Mode édition pour personnaliser les couleurs (via SimpleColorPickerDialog), sauf pour un hub
+ *   dont chaque tuile porte son illustration
  * - Long-press sur une tuile pour l'ajouter en raccourci dans le hub parent
  */
 abstract class BaseHubActivity : AppCompatActivity() {
@@ -63,6 +64,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LocaleHelper.ensureLocale(this)
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         LocaleHelper.ensureLocale(this)
         enableImmersiveMode()
@@ -76,7 +78,8 @@ abstract class BaseHubActivity : AppCompatActivity() {
         setupEditModeButton()
         setupRecyclerView()
 
-        isGridMode = hubPrefs.getString(KEY_VIEW_MODE, VIEW_MODE_GRID) == VIEW_MODE_GRID
+        isGridMode = !supportsListMode() ||
+            hubPrefs.getString(KEY_VIEW_MODE, VIEW_MODE_GRID) == VIEW_MODE_GRID
         updateViewMode()
     }
 
@@ -92,6 +95,18 @@ abstract class BaseHubActivity : AppCompatActivity() {
     abstract fun getDefaultTiles(): List<HubTile>
     open fun normalizeTileOrder(tiles: List<HubTile>): List<HubTile> = tiles
     abstract fun onTileClicked(tile: HubTile)
+
+    /**
+     * Faux pour un hub dont chaque tuile porte son illustration : une couleur choisie n'y
+     * changerait rien, le dessin la recouvre. Le mode édition ne sert plus qu'à ranger.
+     */
+    open fun supportsTileColors(): Boolean = true
+
+    /**
+     * Faux pour un hub qui ne s'affiche qu'en grille de tuiles carrées : le bouton liste/grille
+     * disparaît. Les illustrations sont dessinées pour un carré, une bande longue les rognerait.
+     */
+    open fun supportsListMode(): Boolean = true
 
     open fun onQuickAccessClicked(tile: HubTile, item: QuickAccessItem) {}
     open fun supportsQuickAccess(): Boolean = false
@@ -119,6 +134,10 @@ abstract class BaseHubActivity : AppCompatActivity() {
     }
 
     private fun setupViewToggle() {
+        if (!supportsListMode()) {
+            viewToggleButton.visibility = View.GONE
+            return
+        }
         viewToggleButton.setOnClickListener {
             isGridMode = !isGridMode
             hubPrefs.edit { putString(KEY_VIEW_MODE, if (isGridMode) VIEW_MODE_GRID else VIEW_MODE_LIST) }
@@ -162,7 +181,7 @@ abstract class BaseHubActivity : AppCompatActivity() {
     private fun updateEditModeUI() {
         if (isEditMode) {
             editModeButton.setImageResource(R.drawable.ic_check)
-            editModeButton.setColorFilter(Color.parseColor("#4CAF50"))
+            editModeButton.setColorFilter(com.Atom2Universe.app.audio.AudioStyle.accent(this))
         } else {
             editModeButton.setImageResource(R.drawable.ic_edit)
             editModeButton.clearColorFilter()
@@ -174,12 +193,13 @@ abstract class BaseHubActivity : AppCompatActivity() {
             context = this,
             onTileClick = { tile -> onTileClicked(tile) },
             onOrderChanged = { order -> saveTileOrder(order) },
-            onEditTile = { tile -> showColorPicker(tile) },
+            onEditTile = if (supportsTileColors()) { tile -> showColorPicker(tile) } else null,
             onQuickAccessClick = { tile, item -> onQuickAccessClicked(tile, item) },
             onLongPressTile = { tile -> handleTileLongPress(tile) }
         )
 
         tilesAdapter.setShowQuickAccessButtons(supportsQuickAccess())
+        tilesAdapter.setSquareTiles(!supportsListMode())
 
         recyclerView.adapter = tilesAdapter
 
@@ -225,8 +245,12 @@ abstract class BaseHubActivity : AppCompatActivity() {
         val savedColors = loadTileColors()
 
         val tilesWithCustomization = defaultTiles.map { tile ->
-            val colorData = savedColors[tile.id]
+            // Une couleur enregistrée avant qu'un hub ne les retire resterait sinon pour toujours.
+            val colorData = if (supportsTileColors()) savedColors[tile.id] else null
             tile.copy(
+                // L'illustration se lit dans le registre commun : une seule déclaration par jeu.
+                artworkClass = tile.artworkClass
+                    ?: tile.activityClass?.let { HubTileArtworks.forActivity(it.name) },
                 customColorHex = colorData?.first,
                 textColorMode = colorData?.second ?: "auto",
                 quickAccessItems = emptyList()

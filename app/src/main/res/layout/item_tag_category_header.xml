@@ -21,7 +21,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="#94A3B8"
+        android:textColor="@color/audio_text_secondary"
         android:textSize="11sp"
         android:textAllCaps="true"
         android:letterSpacing="0.1" />
@@ -33,6 +33,6 @@
         android:src="@drawable/ic_more_vert_24"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/notes_menu"
-        app:tint="#64748B" />
+        app:tint="@color/audio_text_tertiary" />
 
 </LinearLayout>

@@ -1,47 +1,21 @@
 package com.Atom2Universe.app.games.starswar
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.PixelFormat
 import android.graphics.Shader
-import android.graphics.drawable.Drawable
-import android.util.LruCache
 import kotlin.math.min
-import kotlin.math.roundToInt
 import kotlin.random.Random
 
 /** Décor statique : rendu du jeu utilisé une fois, puis seule l'image est conservée.
  * Cache partagé entre les hubs et leurs recréations, borné à 2 Mio, sans contexte d'activité.
  */
-class SpaceFightHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : Drawable() {
-    companion object {
-        private const val MAX_EDGE = 512
-        private val images = object : LruCache<Long, Bitmap>(2 * 1024 * 1024) {
-            override fun sizeOf(key: Long, value: Bitmap): Int = value.allocationByteCount
-        }
-    }
+class SpaceFightHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) :
+    com.Atom2Universe.app.hub.CachedHubArtworkDrawable() {
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-
-    override fun draw(canvas: Canvas) {
-        if (bounds.isEmpty) return
-        val scale = min(1f, MAX_EDGE.toFloat() / maxOf(bounds.width(), bounds.height()))
-        val w = (bounds.width() * scale).roundToInt().coerceAtLeast(1)
-        val h = (bounds.height() * scale).roundToInt().coerceAtLeast(1)
-        val key = (w.toLong() shl 32) or h.toLong()
-        val bitmap = images.get(key) ?: Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888).also {
-            render(Canvas(it), w.toFloat(), h.toFloat())
-            images.put(key, it)
-        }
-        canvas.drawBitmap(bitmap, null, bounds, paint)
-    }
-
-    private fun render(canvas: Canvas, w: Float, h: Float) {
+    override fun render(canvas: Canvas, w: Float, h: Float) {
         val art = SpaceFightArt()
         val brush = Paint(Paint.ANTI_ALIAS_FLAG)
         val size = min(w, h)
@@ -73,8 +47,4 @@ class SpaceFightHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) 
         canvas.drawRect(0f, h * .35f, w, h, brush)
     }
 
-    override fun setAlpha(alpha: Int) { paint.alpha = alpha; invalidateSelf() }
-    override fun setColorFilter(colorFilter: ColorFilter?) { paint.colorFilter = colorFilter; invalidateSelf() }
-    @Deprecated("Deprecated in Java")
-    override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 }

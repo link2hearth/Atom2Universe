@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 open class ThemedActivity : AppCompatActivity() {
 
-    /** Surcharge locale pour les familles d'écrans, après le thème choisi par l'utilisateur. */
-    protected open val moduleThemeOverlay: Int = 0
+    /**
+     * Posé après le thème choisi par l'utilisateur : le style commun de l'appli par défaut,
+     * qu'une famille d'écrans peut remplacer par le sien.
+     */
+    protected open val moduleThemeOverlay: Int = R.style.ThemeOverlay_A2U_App
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))

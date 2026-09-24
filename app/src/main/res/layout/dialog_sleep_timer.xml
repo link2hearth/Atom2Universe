@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sleep_timer_hours"
                 android:textSize="12sp"
-                android:textColor="#B0B0B0" />
+                android:textColor="@color/audio_text_secondary" />
 
             <NumberPicker
                 android:id="@+id/hours_picker"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sleep_timer_minutes"
                 android:textSize="12sp"
-                android:textColor="#B0B0B0" />
+                android:textColor="@color/audio_text_secondary" />
 
             <NumberPicker
                 android:id="@+id/minutes_picker"

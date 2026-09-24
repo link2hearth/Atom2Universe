@@ -24,6 +24,6 @@
     <string name="audio_hub_music_desc">Your music library</string>
     <string name="audio_hub_editor_title">Audio Editor</string>
     <string name="audio_hub_editor_desc">Trim your audio files</string>
-    <string name="audio_hub_stats_title">Statistics</string>
+    <string name="audio_hub_stats_title">Music Lover</string>
     <string name="audio_hub_stats_desc">Your listening recaps</string>
 </resources>

@@ -18,14 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_slideshow_popup_label"
-            android:textColor="#94A3B8"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_slideshow_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="@color/audio_text_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="8dp"
-        android:background="#334155" />
+        android:background="@color/audio_surface_raised" />
 
     <!-- Alignement image -->
     <androidx.appcompat.widget.SwitchCompat
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crypto_image_center_label"
-        android:textColor="#E2E8F0"
+        android:textColor="@color/audio_text_primary"
         android:textSize="12sp" />
 
 </LinearLayout>

@@ -10,7 +10,13 @@ import com.Atom2Universe.app.games.survivor.SurvivorHubTileDrawable
 import kotlin.reflect.KClass
 
 /**
- * Les illustrations de tuile, rangees par activite.
+ * Les illustrations de tuile, rangees par activite : **le seul endroit ou une illustration est
+ * declaree**. Le hub y cherche celle de chaque tuile, et le raccourci celle de son activite.
+ *
+ * Toutes suivent le meme format : une classe `…HubTileDrawable(context: Context)` qui herite de
+ * [CachedHubArtworkDrawable] et ne fait que dessiner son decor dans `render` - le cache, la taille
+ * bornee et la mise a l'echelle sont communs. Aucun texte dans le dessin : le titre est pose par
+ * la tuile, en bas, et le bas du decor reste donc degage.
  *
  * Un raccourci ajoute sur une tuile du hub principal ne garde que le nom de classe de son activite
  * et une couleur figee au moment de l'ajout - pour une tuile illustree, cette couleur est celle
@@ -93,7 +99,9 @@ object HubTileArtworks {
         com.Atom2Universe.app.games.theline.TheLineActivity::class.java.name to
             com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class,
         com.Atom2Universe.app.games.link.LinkActivity::class.java.name to
-            com.Atom2Universe.app.games.link.LinkHubTileDrawable::class
+            com.Atom2Universe.app.games.link.LinkHubTileDrawable::class,
+        com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java.name to
+            com.Atom2Universe.app.games.infernale.InfernaleHubTileDrawable::class
     )
 
     fun forActivity(activityClassName: String): KClass<out Drawable>? = byActivity[activityClassName]
@@ -104,15 +112,10 @@ object HubTileArtworks {
      */
     class TextStyle(val color: Int, val scale: Float, val lowerTitle: Boolean = false)
 
+    /** Les seules exceptions au titre blanc, agrandi et abaisse de toutes les tuiles illustrees. */
     private val textStyles: Map<String, TextStyle> = mapOf(
         // L'herbe de la ferme est claire : le titre y est ecrit en noir, en grand.
-        FarmActivity::class.java.name to TextStyle(android.graphics.Color.BLACK, 1.5f, true),
-        MainClickerActivity::class.java.name to TextStyle(android.graphics.Color.WHITE, 1.5f, true),
-        SurvivorActivity::class.java.name to TextStyle(android.graphics.Color.WHITE, 1.5f, true),
-        com.Atom2Universe.app.games.nuclea.NucleaActivity::class.java.name to
-            TextStyle(android.graphics.Color.WHITE, 1.5f, true),
-        com.Atom2Universe.app.games.starswar.StarsWarActivity::class.java.name to
-            TextStyle(android.graphics.Color.WHITE, 1.5f, true)
+        FarmActivity::class.java.name to TextStyle(android.graphics.Color.BLACK, 1.5f, true)
     )
 
     private val defaultStyle = TextStyle(android.graphics.Color.WHITE, 1.5f, true)

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#2d2d2d">
+    android:background="@color/audio_surface_raised">
 
     <!-- Color preview -->
     <FrameLayout
@@ -122,7 +122,7 @@
             android:id="@+id/txt_rgb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#aaaaaa"
+            android:textColor="@color/audio_text_secondary"
             android:textSize="12sp"
             android:text="R: 0  G: 0  B: 0  A: 255" />
     </LinearLayout>

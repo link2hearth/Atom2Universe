@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:paddingStart="12dp"
     android:paddingEnd="8dp"
-    android:background="#0F172A"
+    android:background="@color/audio_background"
     android:layout_marginTop="8dp">
 
     <TextView
@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="#F1F5F9"
+        android:textColor="@color/audio_text_primary"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -27,7 +27,7 @@
         android:paddingEnd="6dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:textColor="#64748B"
+        android:textColor="@color/audio_text_tertiary"
         android:textSize="11sp" />
 
     <ImageButton
@@ -36,7 +36,7 @@
         android:layout_height="36dp"
         android:src="@drawable/ic_add_24"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:tint="#64748B"
+        app:tint="@color/audio_text_tertiary"
         android:contentDescription="@null" />
 
     <ImageButton
@@ -45,7 +45,7 @@
         android:layout_height="36dp"
         android:src="@drawable/ic_more_vert"
         android:background="?attr/selectableItemBackgroundBorderless"
-        app:tint="#64748B"
+        app:tint="@color/audio_text_tertiary"
         android:contentDescription="@null" />
 
 </LinearLayout>

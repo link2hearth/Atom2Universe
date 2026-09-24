@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0A0A0A">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Header -->
     <LinearLayout
@@ -78,7 +78,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginEnd="8dp" />
 
                 <Button
@@ -89,7 +89,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginEnd="8dp" />
 
                 <Button
@@ -100,7 +100,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C" />
+                    android:backgroundTint="@color/audio_surface" />
 
             </LinearLayout>
 
@@ -140,7 +140,7 @@
                 android:id="@+id/dev_atom_snapshot"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#888888"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:layout_marginBottom="8dp"
@@ -161,7 +161,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginEnd="6dp" />
 
                 <TextView
@@ -184,7 +184,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginStart="6dp"
                     android:layout_marginEnd="12dp" />
 
@@ -196,7 +196,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C" />
+                    android:backgroundTint="@color/audio_surface" />
 
             </LinearLayout>
 
@@ -243,7 +243,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginEnd="6dp" />
 
                 <TextView
@@ -266,7 +266,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginStart="6dp"
                     android:layout_marginEnd="12dp" />
 
@@ -278,7 +278,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C" />
+                    android:backgroundTint="@color/audio_surface" />
 
             </LinearLayout>
 
@@ -324,7 +324,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C"
+                    android:backgroundTint="@color/audio_surface"
                     android:layout_marginEnd="8dp" />
 
                 <Button
@@ -335,7 +335,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C" />
+                    android:backgroundTint="@color/audio_surface" />
 
             </LinearLayout>
 
@@ -366,7 +366,7 @@
                 android:textSize="12sp"
                 android:fontFamily="monospace"
                 android:textColor="?attr/a2uMidiAccent"
-                android:backgroundTint="#1C1C1C"
+                android:backgroundTint="@color/audio_surface"
                 android:layout_marginBottom="10dp" />
 
             <LinearLayout
@@ -382,7 +382,7 @@
                     android:layout_weight="1"
                     android:hint="@string/dev_element_input_hint"
                     android:textColor="#FFFFFF"
-                    android:textColorHint="#555555"
+                    android:textColorHint="@color/audio_text_tertiary"
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:inputType="number"
@@ -396,7 +396,7 @@
                     android:textSize="12sp"
                     android:fontFamily="monospace"
                     android:textColor="?attr/a2uMidiAccent"
-                    android:backgroundTint="#1C1C1C" />
+                    android:backgroundTint="@color/audio_surface" />
 
             </LinearLayout>
 

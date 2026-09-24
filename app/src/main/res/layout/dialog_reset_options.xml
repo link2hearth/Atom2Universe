@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/stats_reset_word_hint"
         android:textColor="#DDDDDD"
-        android:textColorHint="#888888"
+        android:textColorHint="@color/audio_text_secondary"
         android:textSize="14sp"
         android:inputType="text"
         android:singleLine="true"

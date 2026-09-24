@@ -1,49 +1,22 @@
 package com.Atom2Universe.app.games.farm
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.ColorFilter
 import android.graphics.LinearGradient
 import android.graphics.Paint
-import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.Shader
-import android.graphics.drawable.Drawable
 import kotlin.math.max
 
-class FarmHubTileDrawable(private val context: Context) : Drawable() {
-    private val sprites by lazy { FarmSprites(context) }
+class FarmHubTileDrawable(context: Context) : com.Atom2Universe.app.hub.CachedHubArtworkDrawable() {
+    // Le cache commun survit au hub : il ne doit retenir que le contexte de l'application.
+    private val appContext = context.applicationContext
+    private val sprites by lazy { FarmSprites(appContext) }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val rect = RectF()
-    private var cachedBitmap: Bitmap? = null
-    private var cachedWidth = 0
-    private var cachedHeight = 0
 
-    override fun draw(canvas: Canvas) {
-        val b = bounds
-        if (b.isEmpty) return
-
-        val bitmap = bitmapFor(b.width(), b.height())
-        canvas.drawBitmap(bitmap, b.left.toFloat(), b.top.toFloat(), bitmapPaint)
-    }
-
-    private fun bitmapFor(width: Int, height: Int): Bitmap {
-        cachedBitmap?.let { bitmap ->
-            if (cachedWidth == width && cachedHeight == height && !bitmap.isRecycled) return bitmap
-        }
-        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { bitmap ->
-            cachedBitmap?.recycle()
-            cachedBitmap = bitmap
-            cachedWidth = width
-            cachedHeight = height
-            render(Canvas(bitmap), width.toFloat(), height.toFloat())
-        }
-    }
-
-    private fun render(canvas: Canvas, w: Float, h: Float) {
+    override fun render(canvas: Canvas, w: Float, h: Float) {
         canvas.save()
 
         paint.shader = LinearGradient(
@@ -104,14 +77,4 @@ class FarmHubTileDrawable(private val context: Context) : Drawable() {
         }
     }
 
-    override fun setAlpha(alpha: Int) {
-        paint.alpha = alpha
-    }
-
-    override fun setColorFilter(colorFilter: ColorFilter?) {
-        paint.colorFilter = colorFilter
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun getOpacity(): Int = PixelFormat.TRANSLUCENT
 }

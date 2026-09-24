@@ -5,10 +5,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="3dp"
-    app:cardBackgroundColor="#1E293B"
-    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:strokeColor="#334155"
+    app:strokeColor="@color/audio_outline"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -25,7 +25,7 @@
             android:id="@+id/tag_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#F1F5F9"
+            android:textColor="@color/audio_text_primary"
             android:textSize="12sp" />
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:textColor="#64748B"
+            android:textColor="@color/audio_text_tertiary"
             android:textSize="10sp" />
 
         <ImageView
@@ -42,7 +42,7 @@
             android:layout_height="16dp"
             android:layout_marginStart="2dp"
             android:src="@drawable/ic_expand_more_24"
-            app:tint="#64748B"
+            app:tint="@color/audio_text_tertiary"
             android:contentDescription="@null" />
 
         <ImageView
@@ -51,7 +51,7 @@
             android:layout_height="16dp"
             android:layout_marginStart="2dp"
             android:src="@drawable/ic_edit_24"
-            app:tint="#64748B"
+            app:tint="@color/audio_text_tertiary"
             android:contentDescription="@string/notes_edit_tag"
             android:clickable="true"
             android:focusable="true" />

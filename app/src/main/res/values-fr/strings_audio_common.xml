@@ -24,6 +24,6 @@
     <string name="audio_hub_editor_title">Éditeur Audio</string>
     <string name="audio_hub_editor_desc">Découpez vos fichiers audio</string>
     <string name="audio_hub_source_with_subtitle">%1$s - %2$s</string>
-    <string name="audio_hub_stats_title">Statistiques</string>
+    <string name="audio_hub_stats_title">Mélomane</string>
     <string name="audio_hub_stats_desc">Vos récapitulatifs d\'écoute</string>
 </resources>

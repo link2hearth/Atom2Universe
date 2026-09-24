@@ -4,13 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background">
+    android:background="@drawable/audio_screen_background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0F172A"
-        app:elevation="4dp">
+        android:background="@drawable/audio_panel_background"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        app:elevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_arrow_back_24"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="#94A3B8"
+                app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/notes_back" />
 
             <View
@@ -53,7 +56,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:text="@string/notes_nav_home"
-                        android:textColor="#94A3B8"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -66,7 +69,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:text="@string/notes_nav_groups"
-                        android:textColor="#94A3B8"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -79,7 +82,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:text="@string/notes_nav_favorites"
-                        android:textColor="#94A3B8"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -92,7 +95,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:text="@string/notes_nav_tags"
-                        android:textColor="#94A3B8"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -105,7 +108,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:text="@string/notes_nav_search"
-                        android:textColor="#94A3B8"
+                        android:textColor="@color/audio_text_secondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />

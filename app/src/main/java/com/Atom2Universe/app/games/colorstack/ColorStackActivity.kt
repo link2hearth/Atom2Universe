@@ -42,6 +42,7 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     private var hardGameStartMs = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_color_stack)

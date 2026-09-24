@@ -90,6 +90,7 @@ class CanvasEditorActivity : AppCompatActivity(), InfiniteCanvasListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_canvas_editor)

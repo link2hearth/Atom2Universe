@@ -4,16 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/startup_background">
+    android:background="@drawable/audio_screen_background">
 
-    <!-- Header row -->
+    <!-- En-tête : un panneau flottant, comme celui du hub principal -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/audio_panel_background"
+        android:elevation="2dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +30,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_arrow_back"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
         <!-- Title section -->
         <LinearLayout
@@ -40,7 +44,7 @@
                 android:id="@+id/hub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/startup_text_primary"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -48,7 +52,7 @@
                 android:id="@+id/hub_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/startup_text_secondary"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -61,7 +65,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/hub_toggle_view"
             android:src="@drawable/ic_view_list"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
         <!-- Edit mode button -->
         <ImageButton
@@ -71,7 +75,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/hub_edit_mode"
             android:src="@drawable/ic_edit"
-            app:tint="@color/startup_text_secondary" />
+            app:tint="@color/audio_text_secondary" />
 
     </LinearLayout>
 
@@ -92,7 +96,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="16dp"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

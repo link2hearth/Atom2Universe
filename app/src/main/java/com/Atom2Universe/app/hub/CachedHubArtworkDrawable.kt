@@ -14,7 +14,14 @@ import kotlin.math.roundToInt
 abstract class CachedHubArtworkDrawable : Drawable() {
     private data class Key(val type: Class<*>, val width: Int, val height: Int)
     companion object {
-        private val images = object : LruCache<Key, Bitmap>(2 * 1024 * 1024) {
+        /**
+         * De quoi garder toute la grille des jeux : une quarantaine de tuiles carrées d'environ
+         * 0,9 Mio chacune. À 2 Mio, le cache ne tenait que deux tuiles et chaque défilement
+         * redessinait les décors. Borné au huitième de la mémoire de l'appli sur un petit appareil.
+         */
+        private val images = object : LruCache<Key, Bitmap>(
+            minOf(40 * 1024 * 1024, (Runtime.getRuntime().maxMemory() / 8).toInt())
+        ) {
             override fun sizeOf(key: Key, value: Bitmap): Int = value.allocationByteCount
         }
     }

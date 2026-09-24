@@ -234,7 +234,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         setupSleepTimerButton()
         findViewById<Button>(R.id.theme_button).apply {
             contentDescription = getString(R.string.hub_theme_current,
-                getString(AppThemeManager.getSelectedTheme(this@AudioHubActivity).labelRes))
+                AppThemeManager.selectedLabel(this@AudioHubActivity))
             setOnClickListener { showThemeSelectionDialog() }
         }
         setupHubSurfaces()
@@ -558,25 +558,7 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
     }
 
     private fun showThemeSelectionDialog() {
-        val themes = AppThemeManager.getAvailableThemes()
-        val themeLabels = themes.map { getString(it.labelRes) }.toTypedArray()
-        val currentTheme = AppThemeManager.getSelectedTheme(this)
-        val checkedIndex = themes.indexOf(currentTheme).coerceAtLeast(0)
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.theme_select_title)
-            .setSingleChoiceItems(themeLabels, checkedIndex) { dialog, which ->
-                val selectedTheme = themes[which]
-                if (selectedTheme != currentTheme) {
-                    AppThemeManager.setSelectedTheme(this, selectedTheme)
-                    dialog.dismiss()
-                    recreate()
-                } else {
-                    dialog.dismiss()
-                }
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        ThemePickerDialog(this) { recreate() }.show()
     }
 
     private fun setupEdgeToEdgeBackground() {
@@ -599,18 +581,6 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
     private fun setupHubSurfaces() {
         val card = findViewById<com.google.android.material.card.MaterialCardView>(R.id.playback_controls_card)
         card.getChildAt(0)?.background = com.Atom2Universe.app.audio.AudioStyle.panel(this)
-        tilesRecyclerView.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
-            override fun onChildViewAttachedToWindow(view: View) {
-                (view as? com.google.android.material.card.MaterialCardView)?.apply {
-                    radius = 24f * resources.displayMetrics.density
-                    cardElevation = 4f * resources.displayMetrics.density
-                    strokeWidth = resources.displayMetrics.density.toInt().coerceAtLeast(1)
-                    strokeColor = androidx.core.graphics.ColorUtils.setAlphaComponent(
-                        com.Atom2Universe.app.audio.AudioStyle.accent(context), 60)
-                }
-            }
-            override fun onChildViewDetachedFromWindow(view: View) = Unit
-        })
     }
 
     private fun setupSettingsButton() {

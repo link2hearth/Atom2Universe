@@ -123,6 +123,7 @@ class GachaActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         applySystemBarsVisibility(showStatusBar = false, showNavBar = false)
         setContentView(R.layout.activity_gacha)

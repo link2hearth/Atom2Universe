@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Appliqué uniquement aux activités audio ; les attributs a2uMusicAccent restent hérités. -->
-    <style name="ThemeOverlay.A2U.Audio" parent="">
+    <!-- Le style commun de l'appli : posé par ThemedActivity sur chaque écran, après le thème de
+         couleur choisi (les attributs a2uMusicAccent en viennent). Né avec la suite audio, d'où
+         le nom des couleurs audio_* qu'il utilise. -->
+    <style name="ThemeOverlay.A2U.App" parent="">
         <item name="a2uAudioTheme">true</item>
         <item name="a2uMidiAccent">?attr/a2uMusicAccent</item>
         <item name="a2uMidiAccentOnText">@color/audio_on_accent</item>
@@ -37,6 +39,9 @@
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.A2U.Audio.Small</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.A2U.Audio.Medium</item>
     </style>
+
+    <!-- La suite audio garde son nom de style, mais n'a plus rien en propre. -->
+    <style name="ThemeOverlay.A2U.Audio" parent="ThemeOverlay.A2U.App" />
 
     <style name="ThemeOverlay.A2U.Audio.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:windowBackground">@drawable/audio_dialog_background</item>

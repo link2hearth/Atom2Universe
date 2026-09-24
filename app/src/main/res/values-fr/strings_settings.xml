@@ -137,4 +137,14 @@
     <string name="theme_blue">Bleu</string>
     <string name="theme_red">Rouge</string>
     <string name="theme_indigo">Indigo</string>
+    <string name="theme_section_presets">Prédéfinis</string>
+    <string name="theme_section_spectrum">Couleur libre</string>
+    <string name="theme_section_intensity">Intensité</string>
+    <string name="theme_intensity_vivid">Vive</string>
+    <string name="theme_intensity_soft">Douce</string>
+    <string name="theme_intensity_pastel">Pastel</string>
+    <string name="theme_spectrum_label">Couleur libre, %1$s</string>
+    <string name="theme_hue_bar">Teinte</string>
+    <string name="theme_preview">Aperçu</string>
+    <string name="theme_apply">Appliquer</string>
 </resources>

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="#1E293B"
-    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:strokeColor="#1F2937"
+    app:strokeColor="@color/audio_outline"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:id="@+id/group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#F1F5F9"
+                android:textColor="@color/audio_text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="#94A3B8"
+                android:textColor="@color/audio_text_secondary"
                 android:textSize="12sp"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="#64748B"
+            android:textColor="@color/audio_text_tertiary"
             android:textSize="12sp" />
 
         <ImageButton
@@ -60,7 +60,7 @@
             android:src="@drawable/ic_more_vert_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_menu"
-            app:tint="#64748B" />
+            app:tint="@color/audio_text_tertiary" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

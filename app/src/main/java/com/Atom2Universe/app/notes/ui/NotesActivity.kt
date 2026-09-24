@@ -18,6 +18,7 @@ class NotesActivity : AppCompatActivity() {
     lateinit var viewModel: NotesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         enableImmersiveMode()

@@ -73,6 +73,7 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
     private val database by lazy { SudokuDatabase.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_sudoku)

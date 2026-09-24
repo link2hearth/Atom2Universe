@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="6dp"
-    app:cardBackgroundColor="#1E293B"
-    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/audio_surface"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:strokeColor="#1F2937"
+    app:strokeColor="@color/audio_outline"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#F1F5F9"
+            android:textColor="@color/audio_text_primary"
             android:textSize="13sp" />
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
-            android:textColor="#64748B"
+            android:textColor="@color/audio_text_tertiary"
             android:textSize="11sp" />
 
         <ImageButton
@@ -42,7 +42,7 @@
             android:src="@drawable/ic_more_vert_24"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/notes_menu"
-            app:tint="#64748B" />
+            app:tint="@color/audio_text_tertiary" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

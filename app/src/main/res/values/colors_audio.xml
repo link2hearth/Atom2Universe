@@ -5,6 +5,7 @@
     <color name="audio_surface_raised">#2B3442</color>
     <color name="audio_text_primary">#F5F7FA</color>
     <color name="audio_text_secondary">#B9C3D2</color>
+    <color name="audio_text_tertiary">#7C8799</color>
     <color name="audio_outline">#28FFFFFF</color>
     <color name="audio_on_accent">#10141C</color>
     <color name="audio_ripple">#24FFFFFF</color>

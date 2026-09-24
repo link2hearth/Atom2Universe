@@ -48,6 +48,8 @@ class HubTilesAdapter(
     private var isGridMode: Boolean = true
     private var showQuickAccessButtons: Boolean = false
     private var spanCount: Int = 2
+    private var squareTiles: Boolean = false
+    private var recyclerView: RecyclerView? = null
     private val artworkCache = mutableMapOf<String, Drawable>()
 
     fun setTiles(newTiles: List<HubTile>) {
@@ -92,6 +94,24 @@ class HubTilesAdapter(
             spanCount = count
             notifyDataSetChanged()
         }
+    }
+
+    /** Tuiles aussi hautes que larges, au lieu de se partager la hauteur de l'écran. */
+    fun setSquareTiles(square: Boolean) {
+        if (squareTiles != square) {
+            squareTiles = square
+            notifyDataSetChanged()
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
     }
 
     fun setShowQuickAccessButtons(show: Boolean) {
@@ -162,7 +182,10 @@ class HubTilesAdapter(
     override fun onBindViewHolder(holder: TileViewHolder, position: Int) {
         val tile = tiles[position]
 
-        if (isGridMode && recyclerViewHeight > 0) {
+        val squareSide = squareSide(holder.itemView)
+        if (isGridMode && squareSide > 0) {
+            holder.itemView.layoutParams.height = squareSide
+        } else if (isGridMode && recyclerViewHeight > 0) {
             val density = context.resources.displayMetrics.density
             val screenWidth = context.resources.displayMetrics.widthPixels
             val maxTileHeight = (screenWidth * 0.35).toInt()
@@ -193,6 +216,20 @@ class HubTilesAdapter(
             }
             true
         }
+    }
+
+    /**
+     * Le côté d'une tuile carrée : la largeur d'une colonne, moins les marges de la carte. Zéro
+     * tant que la grille n'est pas mesurée — le hub la redessine dès qu'elle l'est.
+     */
+    private fun squareSide(item: View): Int {
+        if (!squareTiles) return 0
+        val rv = recyclerView ?: return 0
+        val inner = rv.width - rv.paddingLeft - rv.paddingRight
+        if (inner <= 0) return 0
+        val lp = item.layoutParams as? ViewGroup.MarginLayoutParams
+        val margins = (lp?.leftMargin ?: 0) + (lp?.rightMargin ?: 0)
+        return inner / spanCount.coerceAtLeast(1) - margins
     }
 
     override fun onViewRecycled(holder: TileViewHolder) {
@@ -311,9 +348,11 @@ class HubTilesAdapter(
 
             description?.setText(tile.descriptionRes)
             description?.setTextColor(subtitleColor)
-            description?.visibility = if (tile.showDescription) View.VISIBLE else View.GONE
+            // Une illustration dit d'elle-même ce qu'est le jeu : seul le titre reste posé dessus.
+            description?.visibility =
+                if (tile.showDescription && customArtwork == null) View.VISIBLE else View.GONE
 
-            if (isEditMode && editButton != null) {
+            if (isEditMode && editButton != null && onEditTile != null) {
                 editButton.visibility = View.VISIBLE
                 editButton.setColorFilter(textColor)
                 editButton.setOnClickListener { onEditTile?.invoke(tile) }

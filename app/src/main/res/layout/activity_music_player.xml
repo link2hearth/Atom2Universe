@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/music_background">
+    android:background="@drawable/audio_screen_background">
 
     <!-- Toolbar avec navigation intégrée -->
     <com.google.android.material.appbar.MaterialToolbar
@@ -239,8 +239,8 @@
         android:contentDescription="@string/music_widget_back_to_clicker_desc"
         android:visibility="gone"
         app:fabSize="mini"
-        app:backgroundTint="#1E293B"
-        app:tint="#94A3B8"
+        app:backgroundTint="@color/audio_surface"
+        app:tint="@color/audio_text_secondary"
         app:elevation="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/mini_player" />

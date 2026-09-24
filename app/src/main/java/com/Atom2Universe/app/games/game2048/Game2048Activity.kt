@@ -72,6 +72,7 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_game2048)

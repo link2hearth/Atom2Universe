@@ -146,18 +146,8 @@
         <item name="colorControlNormal">@color/white</item>
     </style>
 
-    <!-- Dark AlertDialog theme with dark background -->
-    <style name="Theme_A2U_AlertDialog_Dark" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="colorPrimary">?attr/a2uMidiAccent</item>
-        <item name="colorAccent">?attr/a2uMidiAccent</item>
-        <item name="android:background">@color/midi_surface</item>
-        <item name="android:windowBackground">@color/midi_surface</item>
-        <item name="android:textColorPrimary">@color/midi_text_primary</item>
-        <item name="android:textColorSecondary">@color/midi_text_secondary</item>
-        <item name="buttonBarPositiveButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog</item>
-        <item name="buttonBarNegativeButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog</item>
-        <item name="buttonBarNeutralButtonStyle">@style/Widget.A2U.Button.TextButton.Dialog</item>
-    </style>
+    <!-- Ancien dialogue sombre (Cave World) : désormais le dialogue commun de l'appli. -->
+    <style name="Theme_A2U_AlertDialog_Dark" parent="ThemeOverlay.A2U.Audio.AlertDialog" />
 
     <!-- Practice Results Dialog - discrete centered popup -->
     <style name="Theme.PracticeResultsDialog" parent="Theme.MaterialComponents.Dialog">
@@ -274,14 +264,14 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">#AAAAAA</item>
+        <item name="android:textColor">@color/audio_text_secondary</item>
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">monospace</item>
     </style>
     <style name="StatValue">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/audio_text_primary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">monospace</item>
@@ -289,7 +279,7 @@
     <style name="StatDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">#1E1E1E</item>
+        <item name="android:background">@color/audio_outline</item>
     </style>
 
     <!-- Un bouton du catalogue du trébuchet : appui court = valeur suivante,
