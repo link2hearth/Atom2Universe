@@ -17,7 +17,6 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
     override fun onSurfaceCreated(savedState: CaveRenderer.SavedState?) {
         if (wired) return
         wired = true
-        wireSkills()
         wireEnemies()
         r.enemyManager.spawnManager.exploration = true
         r.enemyManager.explorationCombat=true
@@ -41,39 +40,6 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
     }
     override fun update(dt: Float) {
         r.enemyManager.update(dt, r.camera.playerX, r.camera.playerY, r.camera.playerZ)
-    }
-
-    // ── Compétences : endurance, saut, chute ──────────────────────────────────
-
-    private fun wireSkills() {
-        val skillBook = r.skillBook
-        val playerNode = r.playerNode
-
-        playerNode.onEnduranceXp = { xp ->
-            skillBook.enduranceXp += xp
-            val formula = skillBook.computedMaxHp
-            val newMax  = formula.coerceAtMost(120)
-            if (newMax > playerNode.maxHp) {
-                playerNode.setMaxHp(newMax)
-                r.playerStats.maxHp = newMax
-            }
-        }
-
-        val physics = r.physics
-        physics.skillBook = skillBook
-        physics.onJumped = { skillBook.athleticsXp += 1 }
-        physics.onFallLanded = { fallBlocks ->
-            val threshold = skillBook.fallSafeBlocks
-            if (fallBlocks > threshold) {
-                val damage = ((fallBlocks - threshold) * 2.5).toInt().coerceAtLeast(1)
-                playerNode.applyDamage(damage)
-                val xpGain = ((fallBlocks - threshold) * 10).toInt().coerceAtLeast(1)
-                skillBook.acrobaticsXp += xpGain
-            } else {
-                // Chute sans dégâts : petit XP acrobatics quand même
-                skillBook.acrobaticsXp += (fallBlocks * 2).toInt().coerceAtLeast(1)
-            }
-        }
     }
 
     // ── Monstres : attaques, récompenses, butin ───────────────────────────────
@@ -128,10 +94,5 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
 
         saved.wardStonePositions.forEach { (x, z) -> r.enemyManager.wardStoneZones.add(Pair(x, z)) }
 
-        val skillBook = r.skillBook
-        skillBook.athleticsXp  = saved.skillAthleticsXp
-        skillBook.speedXp      = saved.skillSpeedXp
-        skillBook.enduranceXp  = saved.skillEnduranceXp
-        skillBook.acrobaticsXp = saved.skillAcrobaticsXp
     }
 }

@@ -45,27 +45,18 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     /** Donne une impulsion de recul (unités/s) ; [vx]/[vz] = direction × force. */
     fun applyKnockback(vx: Double, vz: Double) { knockX = vx; knockZ = vz }
 
-    var skillBook: com.Atom2Universe.app.games.caves.entity.SkillBook? = null
-
-    // Callbacks
-    var onJumped:            (() -> Unit)? = null
-    var onFallLanded:        ((fallBlocks: Double) -> Unit)? = null
-    // ratio 0→1 pendant la charge, 0 quand relâché/sauté
-    var onJumpChargeChanged: ((ratio: Float) -> Unit)? = null
-
     private var prevJumpPressed = false
     private var coyoteTimer     = 0f
     private var stepUpRemaining = 0.0
-    private var lastGroundY     = 0.0
-    private var prevOnGround    = false
-
-    private var jumpHoldTime = 0f
-    private var jumpHoldMaxTime = 0f
-    private var jumpStartVy = 0.0
-    private var jumpMaxVy = 0.0
 
     companion object {
         private const val GRAVITY        = 24.0   // m/s²
+        const val WALK_SPEED             = 3.5    // m/s
+        const val SPRINT_SPEED           = 6.5    // m/s
+        // Hauteur du saut, fixe. 1 bloc pile ne dépasse jamais le bloc (la gravité s'applique
+        // dès la première image) : ni marche franchie, ni bloc posé sous soi.
+        const val JUMP_BLOCKS            = 1.25
+        private val JUMP_VY              = sqrt(2.0 * GRAVITY * JUMP_BLOCKS)
         private const val TERM_VEL       = 40.0   // m/s vitesse terminale chute
         private const val AIR_SPEED      = 4.0    // m/s en l'air
         private const val WATER_SPEED    = 3.0    // m/s dans l'eau
@@ -98,12 +89,9 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             driftX += (current[0] - driftX) * response
             driftZ += (current[2] - driftZ) * response
         } else { driftX = 0.0; driftZ = 0.0 }
-        val sb = skillBook
-
         // ── Coyote time ───────────────────────────────────────────────────────
         if (onGround) {
             coyoteTimer = COYOTE_SEC
-            lastGroundY = y
         } else {
             coyoteTimer = (coyoteTimer - dt).coerceAtLeast(0f)
         }
@@ -111,8 +99,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val jumpJustPressed = jumpPressed && !prevJumpPressed
 
         // ── Mouvement horizontal ──────────────────────────────────────────────
-        val groundSpeed = if (isSprinting) sb?.sprintSpeed ?: com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_SPRINT_SPEED
-                          else             com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_WALK_SPEED
+        val groundSpeed = if (isSprinting) SPRINT_SPEED else WALK_SPEED
         val hSpeed = (when {
             inWater  -> WATER_SPEED * dt
             onGround -> groundSpeed * dt
@@ -195,14 +182,14 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
                 }
                 onGround    = false
                 coyoteTimer = 0f
-                clearJumpHold()
             }
 
             else -> {
                 val canJump = coyoteTimer > 0f && velocityY <= 0.5
 
-                if (canJump && jumpPressed && (jumpJustPressed || onGround)) startJump()
-                applyJumpHold(dt, jumpPressed)
+                if (canJump && jumpPressed && (jumpJustPressed || onGround)) {
+                    velocityY = JUMP_VY; coyoteTimer = 0f; onGround = false
+                }
 
                 velocityY = (velocityY - GRAVITY * dt).coerceAtLeast(-TERM_VEL)
                 val dy = velocityY * dt
@@ -214,11 +201,6 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
                     y = binarySearchFloor(x, y, z, dy)
                     velocityY = 0.0
                     onGround  = true
-                    clearJumpHold()
-                    if (!prevOnGround) {
-                        val fallBlocks = lastGroundY - y
-                        if (fallBlocks > 0.5) onFallLanded?.invoke(fallBlocks)
-                    }
                 } else {
                     velocityY = 0.0
                 }
@@ -226,51 +208,8 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         }
 
         prevJumpPressed = jumpPressed
-        prevOnGround = onGround
         return Triple(x, y, z)
     }
-
-    private fun startJump() {
-        val sb = skillBook
-        val maxBlocks  = sb?.maxJumpBlocks() ?: 1.0
-        val minBlocks  = 1.0
-        clearJumpHold()
-        jumpStartVy    = com.Atom2Universe.app.games.caves.entity.SkillBook.jumpVyForBlocks(minBlocks)
-        jumpMaxVy      = com.Atom2Universe.app.games.caves.entity.SkillBook.jumpVyForBlocks(maxBlocks.coerceAtLeast(minBlocks))
-        jumpHoldMaxTime = if (maxBlocks <= minBlocks + 0.01) 0f
-        else 0.08f + ((maxBlocks - minBlocks) / 19.0).coerceIn(0.0, 1.0).toFloat() * 0.52f
-        velocityY       = jumpStartVy
-        coyoteTimer     = 0f
-        onGround        = false
-        onJumped?.invoke()
-        onJumpChargeChanged?.invoke(0f)
-    }
-
-    private fun applyJumpHold(dt: Float, jumpPressed: Boolean) {
-        if (!jumpPressed || jumpHoldMaxTime <= 0f || jumpHoldTime >= jumpHoldMaxTime || velocityY <= 0.0) {
-            if (!jumpPressed) clearJumpHold()
-            return
-        }
-
-        val prevRatio = jumpHoldRatio()
-        jumpHoldTime = (jumpHoldTime + dt).coerceAtMost(jumpHoldMaxTime)
-        val targetVy = jumpStartVy + (jumpMaxVy - jumpStartVy) * jumpHoldRatio()
-        if (velocityY < targetVy) velocityY = targetVy
-
-        val newRatio = jumpHoldRatio()
-        if (abs(newRatio - prevRatio) > 0.005f) onJumpChargeChanged?.invoke(newRatio)
-    }
-
-    private fun clearJumpHold() {
-        if (jumpHoldTime > 0f || jumpHoldMaxTime > 0f) onJumpChargeChanged?.invoke(0f)
-        jumpHoldTime = 0f
-        jumpHoldMaxTime = 0f
-        jumpStartVy = 0.0
-        jumpMaxVy = 0.0
-    }
-
-    private fun jumpHoldRatio(): Float =
-        if (jumpHoldMaxTime <= 0f) 0f else (jumpHoldTime / jumpHoldMaxTime).coerceIn(0f, 1f)
 
     /** Lowest collision-free height at the destination, rather than a half-block overshoot. */
     private fun smallStepHeight(x: Double, y: Double, z: Double): Double {
@@ -327,15 +266,8 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         knockX          = 0.0
         knockZ          = 0.0
         onGround        = false
-        prevOnGround    = false
         prevJumpPressed = false
         coyoteTimer     = 0f
         stepUpRemaining = 0.0
-        lastGroundY     = 0.0
-        clearJumpHold()
-        onJumpChargeChanged?.invoke(0f)
     }
-
-    // Ratio de charge courant (0→1), utile pour affichage HUD externe
-    val jumpChargeRatio: Float get() = jumpHoldRatio()
 }

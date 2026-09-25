@@ -66,6 +66,32 @@ internal class HeldEquipmentMesh {
         }
     }
 
+    /** Tronc de pyramide le long de Y : base w0×d0 en y0, sommet w1×d1 en y1 (demi-largeurs). */
+    fun taper(x: Float, y0: Float, y1: Float, z: Float, w0: Float, d0: Float, w1: Float, d1: Float, color: Int) {
+        val points = arrayOf(floatArrayOf(x-w0,y0,z-d0),floatArrayOf(x+w0,y0,z-d0),
+            floatArrayOf(x+w1,y1,z-d1),floatArrayOf(x-w1,y1,z-d1),
+            floatArrayOf(x-w0,y0,z+d0),floatArrayOf(x+w0,y0,z+d0),
+            floatArrayOf(x+w1,y1,z+d1),floatArrayOf(x-w1,y1,z+d1))
+        val faces = arrayOf(intArrayOf(0,3,2,1),intArrayOf(4,5,6,7),intArrayOf(0,4,7,3),
+            intArrayOf(1,2,6,5),intArrayOf(3,7,6,2),intArrayOf(0,1,5,4))
+        val shades = floatArrayOf(.72f,.95f,.68f,.84f,1f,.5f)
+        for (i in faces.indices) for (j in intArrayOf(0,1,2,0,2,3)) {
+            val p = points[faces[i][j]]; vertex(p[0],p[1],p[2],color,shades[i])
+        }
+    }
+
+    /** Applique une matrice (colonne par colonne) aux sommets ajoutés depuis l'indice [from]. */
+    fun transform(from: Int, m: FloatArray) {
+        var i = from
+        while (i < count) {
+            val x = vertices[i]; val y = vertices[i+1]; val z = vertices[i+2]
+            vertices[i] = m[0]*x+m[4]*y+m[8]*z+m[12]
+            vertices[i+1] = m[1]*x+m[5]*y+m[9]*z+m[13]
+            vertices[i+2] = m[2]*x+m[6]*y+m[10]*z+m[14]
+            i += 6
+        }
+    }
+
     fun stone(x: Float, y: Float, z: Float, size: Float = .065f) {
         rod(x,y-size*.65f,z,x+.012f,y,z-.008f,size*.55f,0x858C94,size)
         rod(x+.012f,y,z-.008f,x-.008f,y+size*.75f,z,size,0x858C94,size*.35f)
@@ -82,7 +108,7 @@ internal class HeldEquipmentMesh {
 
     /** Pose complète utilisée directement par les deux caméras, inspectable sans OpenGL. */
     fun pose(type: String?, rock: Boolean, fps: Boolean, charge: Float, rockCharge: Float,
-             release: Float, loaded: Boolean, accent: Int, reload: Float = 0f, shotIndex: Int = 0, bladeColor: Int? = null) {
+             release: Float, loaded: Boolean, accent: Int, reload: Float = 0f, shotIndex: Int = 0) {
         clear()
         val m = this
         if(type=="dual_pistols") {
@@ -128,7 +154,7 @@ internal class HeldEquipmentMesh {
                 m.rod(leftElbowX,elbowY,elbowZ,handX,handY,handZ,.052f,0xD5A17C,.034f)
                 if (!pulling || charge <= .01f) m.hand(handX,handY,handZ)
             }
-            m.weapon(type,charge,release,loaded,accent, showSlingHand = !fps,reload=reload,shotIndex=shotIndex,bladeColor=bladeColor)
+            m.weapon(type,charge,release,loaded,accent, showSlingHand = !fps,reload=reload,shotIndex=shotIndex)
         }
     }
 
@@ -146,8 +172,8 @@ internal class HeldEquipmentMesh {
     }
 
     /** Grip à l'origine. Les pièces mobiles utilisent le même repère dans les deux vues. */
-    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true, reload: Float = 0f, shotIndex: Int = 0, dualSpacing: Float = .16f, bladeColor: Int? = null) {
-        val wood = 0x85502C; val leather = 0x392B28; val metal = bladeColor ?: 0xA9BBC7
+    fun weapon(type: String, charge: Float, release: Float, loaded: Boolean, accent: Int, showSlingHand: Boolean = true, reload: Float = 0f, shotIndex: Int = 0, dualSpacing: Float = .16f) {
+        val wood = 0x85502C; val leather = 0x392B28; val metal = 0xA9BBC7
         val snap = if (release >= 0f) sin(release*38f)*exp(-release*10f)*.085f else 0f
         when (type) {
             "shotgun", "smg", "lever_rifle" -> longGun(type,release,reload,accent)
@@ -157,27 +183,6 @@ internal class HeldEquipmentMesh {
                     weapon("gun",0f,if(side==shotIndex%2) release else -1f,loaded,accent,reload=reload)
                     for(i in start until count step 6) vertices[i]+=if(side==0) -dualSpacing else dualSpacing
                 }
-            }
-            "sword" -> {
-                rod(0f,-.12f,0f,0f,.14f,0f,.03f,leather)
-                box(0f,.14f,0f,.13f,.025f,.035f,accent)
-                box(0f,.47f,0f,.037f,.31f,.015f,metal)
-                rod(0f,.78f,0f,0f,.88f,0f,.037f,metal,0f)
-            }
-            "spear" -> {
-                rod(0f,-.28f,.3f,0f,.28f,-.85f,.025f,wood)
-                rod(0f,.28f,-.85f,0f,.38f,-1.13f,.055f,metal,0f)
-            }
-            "hammer" -> {
-                rod(0f,-.14f,0f,0f,.58f,0f,.032f,wood)
-                box(0f,.57f,0f,.16f,.10f,.10f,metal)
-                box(0f,.57f,0f,.045f,.115f,.11f,accent)
-            }
-            "fishing_rod" -> {
-                rod(0f,-.14f,0f,0f,.62f,-.48f,.025f,wood,.008f)
-                rod(0f,.62f,-.48f,0f,.44f,-.72f,.008f,wood,.003f)
-                rod(0f,.44f,-.72f,0f,-.25f,-.72f,.002f,0xDDDFC9)
-                box(.03f,.02f,-.04f,.05f,.05f,.028f,metal)
             }
             "sling" -> {
                 rod(0f,-.12f,0f,0f,.09f,0f,.031f,wood,.043f)

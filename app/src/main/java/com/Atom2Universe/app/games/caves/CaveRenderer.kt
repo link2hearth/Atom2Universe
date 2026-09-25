@@ -30,6 +30,12 @@ import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.mode.GameMode
 import com.Atom2Universe.app.games.caves.mode.SurvivalMode
 import com.Atom2Universe.app.games.caves.render.HeldEquipmentMesh
+import com.Atom2Universe.app.games.caves.render.HeldItemModels
+import com.Atom2Universe.app.games.caves.render.HeldItemPoses
+import com.Atom2Universe.app.games.caves.render.HeldKind
+import com.Atom2Universe.app.games.caves.render.HeldLook
+import com.Atom2Universe.app.games.caves.render.HeldState
+import com.Atom2Universe.app.games.caves.render.Mat4
 import com.Atom2Universe.app.games.caves.render.Camera
 import com.Atom2Universe.app.games.caves.render.ChunkMesh
 import com.Atom2Universe.app.games.caves.render.MobModels
@@ -90,11 +96,7 @@ internal class CaveRenderer(
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
         val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
         val recoverableAmmo: List<StuckAmmo> = emptyList(),
-        val passiveAnimals: String = "[]",
-        val skillAthleticsXp:  Int = 0,
-        val skillSpeedXp:      Int = 0,
-        val skillEnduranceXp:  Int = 0,
-        val skillAcrobaticsXp: Int = 0
+        val passiveAnimals: String = "[]"
     )
 
     val camera = Camera(8.0, 8.0, 8.0)
@@ -357,7 +359,8 @@ internal class CaveRenderer(
         projectiles.add(Projectile(sx,sy,sz,dx/len,dy/len,dz/len,19f,e.scaledDamage+1,ammoWeaponDef,
             fromEnemy=true,kind=ProjectileKind.ARROW,maxRange=24f))
     }
-    internal fun meleeVisual(type: String) { equipmentRelease=0f;releasedEquipment=type }
+    /** Coup de mêlée lancé : l'animation part de l'armé atteint (0 = simple tape). */
+    internal fun meleeVisual(strength: Float) { heldAttack=0f; heldAttackCharge=maxOf(strength,heldChargeShown).coerceIn(0f,1f) }
     private fun magazine(id: Short, profile: RangedProfile): MagazineState = magazines.getOrPut(id) {
         MagazineState(profile.magazine,profile.reload).also { m ->
             if(mode.allowsWorldEdits) runCatching { org.json.JSONObject(frontierLife.magazines).optJSONObject(id.toString())?.let { m.restore(it) } }
@@ -448,7 +451,6 @@ internal class CaveRenderer(
 
     // ── Progression joueur ────────────────────────────────────────────────────
 
-    val skillBook   = com.Atom2Universe.app.games.caves.entity.SkillBook()
     val playerStats = PlayerStats()
     val projectiles = ArrayList<Projectile>(64)
     @Volatile var recoverableAmmoSnapshot: List<StuckAmmo> = emptyList()
@@ -461,6 +463,7 @@ internal class CaveRenderer(
     private val RANGED_WEAPON_TYPES = RangedProfile.all.keys
     private val magazines = mutableMapOf<Short, MagazineState>()
     private var fireWasDown = false
+    private var lastFirePresses = 0
     private var lastFireWeapon: Short? = null
     private var lastWeaponStatus = ""
     var weaponStatusCallback: ((String) -> Unit)? = null
@@ -502,7 +505,6 @@ internal class CaveRenderer(
     var swingCallback:    (() -> Unit)?                           = null
     var sprintCallback:       ((Boolean) -> Unit)?                = null
     var crouchCallback:       ((Boolean) -> Unit)?                = null
-    var jumpChargeCallback:   ((Float) -> Unit)?                  = null
     var playerHitCallback:    (() -> Unit)?                       = null
     /** L'inventaire et les barres ont été remplacés d'un bloc (kit d'armes) : l'UI doit tout relire. */
     var loadoutChangedCallback: (() -> Unit)?                     = null
@@ -2066,7 +2068,10 @@ internal class CaveRenderer(
             rockChargeTime = 0f; weaponChargeTime = 0f
             return
         }
-        val down=touch.rtChargeRaw>.3f
+        // Un appui plus court qu'une image compte quand même : il vaut une image enfoncée.
+        val tapped=touch.firePresses!=lastFirePresses
+        lastFirePresses=touch.firePresses
+        val down=touch.rtChargeRaw>.3f || tapped && !fireWasDown
         val pressed=down && !fireWasDown
         fireWasDown=down
         val held=hotbar[selectedSlot]
@@ -2086,7 +2091,7 @@ internal class CaveRenderer(
         }
         if(mode.allowsWorldEdits && held==E.ROD) {
             rockChargeTime=0f;weaponChargeTime=0f
-            if(pressed && (inventory[held] ?: 0)>0) fishing.action()
+            if(pressed && (isCreative || (inventory[held] ?: 0)>0)) { fishing.action(); startSwing() }
             return
         }
         if(mode.allowsWorldEdits && expeditionCombat.guard>0f) {
@@ -2095,7 +2100,7 @@ internal class CaveRenderer(
         if (heldItemMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
         if(mode.allowsWorldEdits && held!=null && E.isEquipment(held)) {
             rockChargeTime=0f;weaponChargeTime=0f
-            if((inventory[held] ?: 0)<=0) return
+            if(!isCreative && (inventory[held] ?: 0)<=0) return
             if(held in E.melee) { if(down) expeditionCombat.hold(dt); expeditionCombat.input(held,down) }
             else if(pressed) expeditionCombat.equip(held)
             return
@@ -2321,7 +2326,12 @@ internal class CaveRenderer(
         // Minage libre et gratuit en mode construction, peu importe ce qui est en main.
         // En mode combat, viser un caillou permet quand même de le ramasser (munitions),
         // sans avoir à repasser en construction juste pour ça.
-        if (touch.laserActive && heldItemMode == HotbarMode.BUILD && tryToolStrike()) {
+        // Un outil se brandit tant que le bouton est tenu, qu'il y ait un bloc visé ou non.
+        // Un ennemi à portée devant passe avant le bloc : chaque coup le frappe (voir toolImpact).
+        val tool = heldKind()?.takeIf { !it.melee && it != HeldKind.FISHING_ROD }
+        toolSwinging = touch.laserActive && tool != null && playerNode.isAlive
+        if (toolSwinging && mode.allowsCombat &&
+            expeditionCombat.targetsInArc(ExpeditionCombat.TOOL_REACH, ExpeditionCombat.TOOL_ARC, 1).isNotEmpty()) {
             mineTarget=null; mineDamage=0f; miningCallback?.invoke(0f,null)
             return
         }
@@ -2387,31 +2397,6 @@ internal class CaveRenderer(
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
         }
-    }
-
-    private fun tryToolStrike(): Boolean {
-        if (!mode.allowsCombat || isCreative) return false
-        val held=hotbar[selectedSlot]
-        if (held != null && com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(held)<0) return false
-        val sx=camera.playerX; val sy=camera.eyeY; val sz=camera.playerZ
-        // March the short aim ray, stopping at opaque terrain before considering a target.
-        for(step in 1..18) {
-            val distance=step*.18
-            val x=sx+camera.aimX*distance; val y=sy+camera.aimY*distance; val z=sz+camera.aimZ*distance
-            if (projectileSolid(x,y,z)) return false
-            val enemy=enemyManager.enemies.firstOrNull { e ->
-                e.hp>0 && (x-e.x).pow(2)+(z-e.z).pow(2)<(e.def.radius+.25).pow(2) &&
-                    y>=e.y && y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)
-            } ?: continue
-            if (weaponAttackCooldown <= 0f) {
-                val n=com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(held)
-                val damage=if(n<0) 2 else 3+(n/3)*2+if(n%3==1) 2 else 0
-                enemyManager.damageEnemy(enemy,damage)
-                weaponAttackCooldown=.65f; startSwing()
-            }
-            return true
-        }
-        return false
     }
 
     private fun collectBlock(blockType: Short) {
@@ -3128,8 +3113,10 @@ internal class CaveRenderer(
         m.box(0f,-.66f,.29f,.12f,.09f,.024f,0x9C8055)
         val type = selectedEquipmentType()
         val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
-        val active = type != null || throwing || (heldItemMode == HotbarMode.COMBAT && hotbar[selectedSlot] in ROCK_IDS)
-        if (!active) for (side in listOf(-1f,1f)) {
+        val held = heldKind()
+        val active = held == null && (type != null || throwing || (heldItemMode == HotbarMode.COMBAT && hotbar[selectedSlot] in ROCK_IDS))
+        // Outil ou arme de mêlée : seul le bras gauche pend, le droit est dessiné avec l'objet.
+        if (!active) for (side in if (held != null) listOf(-1f) else listOf(-1f,1f)) {
             m.rod(side*.27f,-.38f,0f,side*.31f,-.67f,-side*step,.080f,0x435B78,.061f)
             m.rod(side*.31f,-.67f,-side*step,side*.32f,-.94f,-side*step,.059f,0xD5A17C,.045f)
             m.hand(side*.32f,-.97f,-side*step)
@@ -3144,6 +3131,7 @@ internal class CaveRenderer(
         // Lower the intact torso; bent knees and raised local feet compensate this translation.
         android.opengl.Matrix.translateM(equipmentModel, 0, 0f, -crouchDrop, 0f)
         drawEquipmentMesh(equipmentModel,camera.vpMatrix)
+        if (held != null) drawHeldItemTps(held)
         if (active) {
             android.opengl.Matrix.translateM(equipmentModel,0,0f,-.38f,0f)
             android.opengl.Matrix.rotateM(equipmentModel,0,-camera.pitch,1f,0f,0f)
@@ -3155,7 +3143,11 @@ internal class CaveRenderer(
     // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────────
 
     /** Déclenche une animation de swing (un coup aller-retour). */
-    internal fun startSwing() { swingActive = true; swingTimer = 0f }
+    internal fun startSwing() {
+        swingActive = true; swingTimer = 0f
+        // Les outils rejouent un coup complet ; la mêlée a sa propre animation (meleeVisual).
+        if (heldKind()?.melee == false && heldUse < 0f) heldUse = 0f
+    }
 
     private fun drawViewmodel(dt: Float) {
         if (camera.thirdPerson) return
@@ -3179,6 +3171,7 @@ internal class CaveRenderer(
         val isWeapon = held != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(held)
 
 
+        heldKind()?.let { drawHeldItem(it); return }
         val type = selectedEquipmentType()
         val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
         if (type != null || throwing || (heldItemMode == HotbarMode.COMBAT && (held == null || held in ROCK_IDS))) {
@@ -3474,6 +3467,136 @@ internal class CaveRenderer(
             equipmentRelease += dt
             if (equipmentRelease > .55f) { equipmentRelease = -1f; releasedEquipment = null }
         }
+        updateHeldItemAnimation(dt)
+    }
+
+    // ── Outils et armes de mêlée tenus en main (render/HeldItemModels) ────────
+    private var heldEquip = 1f
+    private var heldUse = -1f
+    private var heldAttack = -1f
+    private var heldAttackCharge = 0f
+    private var heldChargeShown = 0f
+    private var heldGuard = 0f
+    private var heldWalk = 0f
+    private var heldLastId: Short? = null
+    private var toolSwinging = false
+    private val identityModel = FloatArray(16).also { android.opengl.Matrix.setIdentityM(it, 0) }
+
+    /** Objet tenu dessiné par le nouveau module, ou null s'il garde son propre rendu. */
+    private fun heldKind(): HeldKind? {
+        val id = hotbar.getOrNull(selectedSlot) ?: return null
+        E.melee[id]?.let { return HeldKind.forWeaponType(it.type) }
+        if (id == E.ROD) return HeldKind.FISHING_ROD
+        if (id == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return HeldKind.HOE
+        if (id == com.Atom2Universe.app.games.caves.node.FrontierItems.SHEARS) return HeldKind.SHEARS
+        val n = com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(id)
+        if (n < 0) return null
+        return when (n % 3) { 0 -> HeldKind.PICKAXE; 1 -> HeldKind.AXE; else -> HeldKind.SHOVEL }
+    }
+
+    private fun heldLook(): HeldLook {
+        val id = hotbar.getOrNull(selectedSlot)
+        val n = com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(id)
+        if (n >= 0) return HeldLook(intArrayOf(0xA7794B, 0x8E9592, 0xD4DED7, 0x83BCC3)[(n / 3).coerceIn(0, 3)])
+        return when (id) {
+            E.WOOD_SWORD -> HeldLook(0xB28A50, 0x7A5634)
+            E.STONE_SPEAR -> HeldLook(0x888F91, 0xB08B5A)
+            E.IRON_SWORD -> HeldLook(0xCFD6D4, 0xBFA779)
+            E.IRON_SPEAR -> HeldLook(0xCFD6D4, 0x8F6C4A)
+            E.STEEL_SWORD -> HeldLook(0x83CBD1, 0xE5C36A)
+            E.STEEL_HAMMER -> HeldLook(0x83CBD1, 0xB8864F)
+            com.Atom2Universe.app.games.caves.node.FrontierItems.SHEARS -> HeldLook(0xC9D3D6, 0xB04A3A)
+            E.ROD -> HeldLook(0x9AA9B1, handle = 0xC39154)
+            else -> HeldLook(0x9AA3A0)
+        }
+    }
+
+    private fun updateHeldItemAnimation(dt: Float) {
+        val id = hotbar.getOrNull(selectedSlot)
+        val kind = heldKind()
+        if (id != heldLastId) {
+            // Changement d'objet : il remonte depuis le bas de l'écran, les gestes en cours s'arrêtent.
+            heldLastId = id; heldEquip = 0f; heldUse = -1f; heldAttack = -1f; heldChargeShown = 0f
+        }
+        heldEquip = (heldEquip + dt / .22f).coerceAtMost(1f)
+        if (kind == null) return
+        val looping = (mineTarget != null || toolSwinging) && !gamePaused
+        if (heldUse >= 0f || looping) {
+            // Bouton tenu : les coups s'enchaînent ; relâché, le coup en cours se termine.
+            val before = maxOf(heldUse, 0f)
+            heldUse = before + dt / HeldItemPoses.useDuration(kind)
+            // L'outil touche au moment où il s'abat, pas à l'appui : le coup se voit avant de porter.
+            if (before < HeldItemPoses.USE_IMPACT && heldUse >= HeldItemPoses.USE_IMPACT) toolImpact(kind)
+            if (heldUse >= 1f) heldUse = if (looping) heldUse - 1f else -1f
+        }
+        if (heldAttack >= 0f) {
+            heldAttack += dt / HeldItemPoses.attackDuration(kind)
+            if (heldAttack >= 1f) heldAttack = -1f
+        }
+        val charge = if (mode.allowsWorldEdits && kind.melee) (expeditionCombat.charge / .9f).coerceIn(0f, 1f) else 0f
+        heldChargeShown = if (charge > .01f) charge else if (heldAttack < 0f) 0f else heldChargeShown
+        val guardTarget = if (mode.allowsWorldEdits && expeditionCombat.guard > 0f) 1f else 0f
+        heldGuard += (guardTarget - heldGuard) * (dt / .09f).coerceAtMost(1f)
+        val moving = hypot(camera.playerX - walkLastX, camera.playerZ - walkLastZ) > .001
+        if (camera.thirdPerson) return // La marche TPS avance déjà walkPhase dans drawPlayerBox.
+        if (moving && !gamePaused) walkPhase += dt * 7.5f
+        walkLastX = camera.playerX; walkLastZ = camera.playerZ
+        heldWalk += ((if (moving && physics.onGround) 1f else 0f) - heldWalk) * (dt / .15f).coerceAtMost(1f)
+    }
+
+    private fun toolImpact(kind: HeldKind) {
+        if (kind.melee || kind == HeldKind.FISHING_ROD || !mode.allowsCombat || !playerNode.isAlive) return
+        val n = com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(hotbar.getOrNull(selectedSlot))
+        // Les outils blessent peu : la hache est la meilleure, le tier ajoute un point par palier.
+        val damage = if (n < 0) 2 else 2 + n / 3 + (if (n % 3 == 1) 1 else 0)
+        expeditionCombat.toolStrike(damage)
+    }
+
+    private fun heldState(): HeldState {
+        val breath = sin(elapsed * 1.7f) * .004f
+        return HeldState(equip = heldEquip, use = heldUse, attack = heldAttack, charge = heldChargeShown,
+            guard = heldGuard,
+            bobX = sin(walkPhase) * .014f * heldWalk,
+            bobY = -abs(cos(walkPhase)) * .016f * heldWalk + breath)
+    }
+
+    /** Vue 1re personne : bras + objet, tout en repère vue, sur une profondeur neuve. */
+    private fun drawHeldItem(kind: HeldKind) {
+        val m = equipmentMesh
+        HeldItemModels.fpsFrame(m, kind, heldLook(), HeldItemPoses.pose(kind, heldState(), heldAttackCharge))
+        if (mode.allowsWorldEdits && expeditionCombat.shield && heldGuard > .05f) {
+            // Rondache levée à gauche pendant la garde.
+            val y = -.62f + .40f * HeldItemPoses.smooth(heldGuard)
+            m.box(-.36f, y, -.66f, .17f, .20f, .03f, 0x946E4D)
+            m.box(-.36f, y, -.70f, .024f, .20f, .014f, 0xBBC9C6)
+        }
+        drawEquipmentMesh(identityModel, vmProj)
+    }
+
+    /** Vue 3e personne : bras droit tendu tenant l'objet, balancé autour de l'épaule. */
+    private fun drawHeldItemTps(kind: HeldKind) {
+        val pose = HeldItemPoses.pose(kind, heldState(), heldAttackCharge)
+        val rest = HeldItemPoses.rest(kind)
+        val m = equipmentMesh
+        m.clear()
+        m.rod(0f, 0f, 0f, .03f, -.24f, -.10f, .080f, 0x435B78, .061f)
+        m.rod(.03f, -.24f, -.10f, 0f, -.36f, -.32f, .059f, 0xD5A17C, .045f)
+        val start = m.count
+        HeldItemModels.build(m, kind, heldLook())
+        HeldItemModels.fist(m)
+        val grip = Mat4.identity()
+        Mat4.translate(grip, 0f, -.36f, -.34f)
+        Mat4.rotate(grip, (pose.wristRoll - rest.wristRoll) * .6f, 2)
+        Mat4.rotate(grip, -35f + (pose.wristPitch - rest.wristPitch) * .8f, 0)
+        Mat4.scale(grip, 1.35f)
+        m.transform(start, grip)
+        // Toute la chaîne tourne autour de l'épaule droite.
+        val arm = Mat4.identity()
+        Mat4.translate(arm, .27f, -.38f, 0f)
+        Mat4.rotate(arm, (pose.armYaw - pose.x * 120f) * .7f, 1)
+        Mat4.rotate(arm, (pose.wristPitch - rest.wristPitch) * .55f + pose.y * 150f, 0)
+        m.transform(0, arm)
+        drawEquipmentMesh(equipmentModel, camera.vpMatrix)
     }
 
     private fun drawEquipment(type: String?, rock: Boolean, fps: Boolean) {
@@ -3498,18 +3621,7 @@ internal class CaveRenderer(
         val dip=sin(reload*PI.toFloat())
         android.opengl.Matrix.rotateM(equipmentModel,0,dip*28f,0f,0f,1f)
         android.opengl.Matrix.translateM(equipmentModel,0,0f,-dip*.12f,0f)
-        if(type in setOf("sword","spear","hammer")) {
-            val wind=expeditionCombat.charge/.9f
-            val swing=if(release>=0f) sin((release/.5f).coerceIn(0f,1f)*PI.toFloat()) else 0f
-            android.opengl.Matrix.rotateM(equipmentModel,0,wind*35f-swing*75f,1f,0f,0f)
-            android.opengl.Matrix.rotateM(equipmentModel,0,if(type=="sword") swing*55f else 0f,0f,0f,1f)
-            if(expeditionCombat.guard>0f) android.opengl.Matrix.rotateM(equipmentModel,0,-65f,0f,0f,1f)
-        }
-        val bladeColor=when(hotbar[selectedSlot]) {
-            E.WOOD_SWORD -> 0xB28A50; E.STONE_SPEAR -> 0x888F91
-            E.STEEL_SWORD, E.STEEL_HAMMER -> 0x83CBD1; else -> null
-        }
-        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0,bladeColor)
+        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0)
         if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) {
             m.box(-.28f,.12f,-.02f,.17f,.22f,.035f,0x946E4D)
             m.box(-.28f,.12f,-.06f,.022f,.22f,.014f,0xBBC9C6)
@@ -4006,7 +4118,6 @@ internal class CaveRenderer(
         if (touch.flyDown) camera.moveVertical(-speed)
     }
 
-    private var speedXpAccum = 0f
     private var prevSprinting = false
     private var prevCrouching = false
     private var footstepQuietTime = 0.0
@@ -4080,8 +4191,7 @@ internal class CaveRenderer(
             footstepsMoving = true
             // Stable intended speed avoids collision/frame jitter changing the tempo.
             // Actual travel still gates playback, so pushing a wall never sustains steps.
-            val speed = (if (nowSprinting) skillBook.sprintSpeed else
-                com.Atom2Universe.app.games.caves.entity.SkillBook.BASE_WALK_SPEED) * input * chargeMul
+            val speed = (if (nowSprinting) PhysicsNode.SPRINT_SPEED else PhysicsNode.WALK_SPEED) * input * chargeMul
             val stride = 1.6 + (speed - 3.5).coerceAtLeast(0.0) * .10
             val interval = (stride / speed.coerceAtLeast(.1)).coerceIn(.23, .92).toFloat()
             val ground = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 - .08), floorInt(newZ))
@@ -4095,18 +4205,6 @@ internal class CaveRenderer(
         } else {
             footstepsMoving = false
             eventBus.publish(GameEvent.Footstep())
-        }
-
-        // XP Speed : distance parcourue au sol
-        if (physics.onGround) {
-            val dx = newX - camera.playerX; val dz = newZ - camera.playerZ
-            val dist = sqrt(dx * dx + dz * dz).toFloat()
-            val rate = if (nowSprinting) 0.3f else 0.1f
-            speedXpAccum += dist * rate
-            if (speedXpAccum >= 1f) {
-                skillBook.speedXp += speedXpAccum.toInt()
-                speedXpAccum -= speedXpAccum.toInt()
-            }
         }
 
         camera.playerX = newX; camera.playerY = newY; camera.playerZ = newZ

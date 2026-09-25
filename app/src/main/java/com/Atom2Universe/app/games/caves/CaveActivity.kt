@@ -256,11 +256,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
-                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife,
-                skillAthleticsXp    = save.skillAthleticsXp,
-                skillSpeedXp        = save.skillSpeedXp,
-                skillEnduranceXp    = save.skillEnduranceXp,
-                skillAcrobaticsXp   = save.skillAcrobaticsXp
+                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -278,11 +274,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
-                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife,
-                skillAthleticsXp    = save.skillAthleticsXp,
-                skillSpeedXp        = save.skillSpeedXp,
-                skillEnduranceXp    = save.skillEnduranceXp,
-                skillAcrobaticsXp   = save.skillAcrobaticsXp
+                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             else -> null
         }
@@ -804,7 +796,6 @@ class CaveActivity : ThemedActivity() {
         renderer.syncInventoryStacks()
         lastSnapshotTime=maxOf(System.currentTimeMillis(),lastSnapshotTime+1)
         val stats = renderer.playerStats
-        val sb    = renderer.skillBook
         return CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             terrainVersion = renderer.world.terrainVersion,
@@ -824,10 +815,6 @@ class CaveActivity : ThemedActivity() {
             playerShield        = stats.shield,
             playerShieldCurrent = renderer.playerNode.shield,
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList(),
-            skillAthleticsXp    = sb.athleticsXp,
-            skillSpeedXp        = sb.speedXp,
-            skillEnduranceXp    = sb.enduranceXp,
-            skillAcrobaticsXp   = sb.acrobaticsXp,
             weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
             passiveAnimals = renderer.passiveAnimals.snapshotNow(),
             recoverableAmmo = renderer.recoverableAmmoSnapshot
@@ -1070,7 +1057,7 @@ class CaveActivity : ThemedActivity() {
                 }
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
                 if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.pressDown() }
-                if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f }
+                if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f; touch.firePresses++ }
                 if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true; uiTouchIds.add(pid) }
                 val hitsAction = hitsRun || listOf(vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).any { hit(it) }
                 if (!hitsQuickbar && !hitsHudOnly && !hitsAction) {

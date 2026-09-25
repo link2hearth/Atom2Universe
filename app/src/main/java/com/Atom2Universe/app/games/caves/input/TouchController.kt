@@ -39,6 +39,10 @@ class TouchController {
     // Valeur analogique de la gâchette droite (0..1) — utilisée pour la charge du lancer de cailloux
     @Volatile var rtChargeRaw = 0f
 
+    // Nombre d'appuis sur le bouton d'action depuis le lancement. Un appui très bref peut
+    // commencer et finir entre deux images : le compteur garde la trace qu'il a eu lieu.
+    @Volatile var firePresses = 0
+
     // Pose de bloc (1 bloc par appui, consommé par le renderer)
     @Volatile var placeRequested = false
 

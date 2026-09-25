@@ -10,7 +10,6 @@ internal class PlayerNode(maxHp: Int = 50, maxShield: Int = 0) {
 
     var onHpChanged:     ((hp: Int, maxHp: Int) -> Unit)? = null
     var onShieldChanged: ((current: Int, max: Int) -> Unit)? = null
-    var onEnduranceXp:   ((xp: Int) -> Unit)? = null
 
     val isAlive: Boolean get() = hp > 0
 
@@ -24,7 +23,6 @@ internal class PlayerNode(maxHp: Int = 50, maxShield: Int = 0) {
             onShieldChanged?.invoke(shield, maxShield)
         }
         onHpChanged?.invoke(hp, maxHp)
-        if (damage > 0) onEnduranceXp?.invoke(damage)
         return hp <= 0
     }
 
@@ -32,7 +30,6 @@ internal class PlayerNode(maxHp: Int = 50, maxShield: Int = 0) {
         val actual = (maxHp - hp).coerceAtLeast(0).coerceAtMost(amount)
         hp = (hp + actual).coerceAtMost(maxHp)
         onHpChanged?.invoke(hp, maxHp)
-        if (actual > 0) onEnduranceXp?.invoke(actual)
     }
 
     fun tickShield(dt: Float) {
