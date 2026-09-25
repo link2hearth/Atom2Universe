@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.MeadowTextures
 
 internal object LodBuilder {
 
@@ -181,21 +182,47 @@ internal object LodBuilder {
             heights[index] = if (useKnown) known!!.toInt() else sample.first
             blocks[index] = if (useKnown) entry!!.blocks[cell] else sample.second
         }
+        // Couleur propre à chaque point de la grille : la pointe d'un arbre (ses feuilles) est verte
+        // et sa base garde la couleur du sol, en dégradé. Peindre tout le triangle avec un seul
+        // coin donnait des pics couleur d'herbe ou de terre. L'herbe et les feuilles prennent la
+        // teinte de leur climat, comme sur le terrain détaillé (même calcul que le shader).
+        val colors = IntArray(side * side)
+        val reference = MeadowTextures.climateColor(0, BlockRegistry.vividStyle)
+        for (z in 0 until side) for (x in 0 until side) {
+            val index = z * side + x
+            val block = blocks[index]
+            val base = BlockRegistry.getColor(block)
+            colors[index] = if (BlockRegistry.climateMask(BlockRegistry.getLayerForFace(block, 0, AIR)) == 0) base
+                else tint(base, MeadowTextures.climateColor(
+                    world.vegetationClimateAt(cx * CHUNK_SIZE + x * step, cz * CHUNK_SIZE + z * step),
+                    BlockRegistry.vividStyle), reference)
+        }
         val buf = Buf((side - 1) * (side - 1) * 36)
-        fun vertex(x: Int, z: Int, color: Int, shade: Float) {
+        fun vertex(x: Int, z: Int, shade: Float) {
+            val color = colors[z * side + x]
             buf.add6((x * step).toFloat(), (heights[z * side + x] + 1).toFloat(), (z * step).toFloat(),
                 ((color ushr 16) and 255) / 255f * shade,
                 ((color ushr 8) and 255) / 255f * shade, (color and 255) / 255f * shade)
         }
         for (z in 0 until side - 1) for (x in 0 until side - 1) {
-            val color = BlockRegistry.getColor(blocks[z * side + x])
             val slope = heights[z * side + x] - heights[(z + 1) * side + x + 1]
             val shade = (.88f + slope * .012f).coerceIn(.65f, 1f)
             // Counter-clockwise from above, matching GL back-face culling.
-            vertex(x,z,color,shade); vertex(x,z+1,color,shade); vertex(x+1,z+1,color,shade)
-            vertex(x,z,color,shade); vertex(x+1,z+1,color,shade); vertex(x+1,z,color,shade)
+            vertex(x,z,shade); vertex(x,z+1,shade); vertex(x+1,z+1,shade)
+            vertex(x,z,shade); vertex(x+1,z+1,shade); vertex(x+1,z,shade)
         }
         return buf.toArray()
+    }
+
+    /** couleur × climat / climat de référence, par canal : le `1 + delta` du shader du monde. */
+    private fun tint(color: Int, climate: Int, reference: Int): Int {
+        var out = 0
+        for (shift in intArrayOf(16, 8, 0)) {
+            val c = (color ushr shift) and 255
+            val k = ((climate ushr shift) and 255).toFloat() / ((reference ushr shift) and 255).coerceAtLeast(1)
+            out = out or ((c * k).toInt().coerceIn(0, 255) shl shift)
+        }
+        return out
     }
 
     private class Buf(cap: Int = 8192) {

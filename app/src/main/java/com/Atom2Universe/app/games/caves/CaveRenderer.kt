@@ -201,6 +201,8 @@ internal class CaveRenderer(
     private val MAX_PENDING_MESH_BYTES = 8L * 1024 * 1024
     private var waitingMeshChunks = 0
     private var waitingFirstMeshes = 0
+    // Plus grande distance (en chunks, carré autour du joueur) réellement dessinée depuis le dernier relevé.
+    private var drawnDetailReach = 0; private var drawnLodReach = 0
     // GL-thread backlog: retain waiting requests instead of reallocating a queue node
     // and sorting the entire backlog every frame.
     private val pendingMeshKeys = LinkedHashSet<Long>()
@@ -278,6 +280,11 @@ internal class CaveRenderer(
     private var lastLightCamX = 0.0; private var lastLightCamY = 0.0; private var lastLightCamZ = 0.0
     private val columnsWithMesh = HashSet<Long>(2048)        // réutilisé chaque frame
     private var columnsMeshCount = -1; private var columnsAge = 0
+    // Colonnes dont toute la surface (du point le plus bas au plus haut, d'après le cache du LOD)
+    // a son maillage : seules celles-là passent du LOD au détail.
+    private val columnsCovered = HashSet<Long>(2048)
+    private class ColumnSpan(val entry: LodCache.Entry, val minCy: Int, val maxCy: Int)
+    private val columnSpans = HashMap<Long, ColumnSpan>(2048)
     private val columnsAwaitingMesh = HashSet<Long>(512)     // colonnes dont la surface n'est pas encore maillée
     private val TARGET_FRAME_NS = 33_333_333L
 
@@ -799,6 +806,7 @@ internal class CaveRenderer(
             wASky         = it.attrib("a_skyLight")
             wATint        = it.attrib("a_tint")
             wABlock       = it.attrib("a_blockLight")
+            SolidChunkMesh.layout = intArrayOf(wAPos, wAUv, wASky, wATint, wABlock)
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
@@ -1008,7 +1016,11 @@ internal class CaveRenderer(
             if (scaled !== bmp) scaled.recycle()
             bmp.recycle()
         }
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
+        // Mipmaps : au loin, un bloc ne couvre que quelques pixels et la texture pleine taille, lue
+        // au plus proche, y crépitait en moiré (l'effet « quadrillé »). Des copies réduites et
+        // lissées prennent le relais avec la distance ; de près, le pixel reste net (MAG NEAREST).
+        GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D_ARRAY)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST_MIPMAP_LINEAR)
         GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST)
         GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
         GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
@@ -1136,8 +1148,14 @@ internal class CaveRenderer(
         columnsAwaitingMesh.clear()
         val surfaceMax = world.surfaceChunkMax
         fun awaitColumn(key: Long) {
-            if (world.keyToCy(key) in 0..surfaceMax && !meshes.containsKey(key))
-                columnsAwaitingMesh.add(lodKey(world.keyToCx(key), world.keyToCz(key)))
+            val kcy = world.keyToCy(key)
+            if (kcy !in 0..surfaceMax || meshes.containsKey(key)) return
+            val kcx = world.keyToCx(key); val kcz = world.keyToCz(key)
+            // Seul un chunk que la surface traverse retient la colonne en LOD : un chunk de ciel
+            // chargé au-dessus du joueur (qui attend sa lumière) la faisait repasser en LOD.
+            val span = columnSpan(kcx, kcz)
+            if (span != null && kcy !in span.minCy..span.maxCy) return
+            columnsAwaitingMesh.add(lodKey(kcx, kcz))
         }
         world.forEachInFlight(::awaitColumn)
         for (key in building) awaitColumn(key)
@@ -1149,15 +1167,17 @@ internal class CaveRenderer(
             awaitColumn(candidate)
             if (!pendingChunk.generated) continue
             val first = !meshes.containsKey(candidate)
-            if (first) waitingFirst++
-            if (!canDispatch || candidate in building) continue
             val dx = world.keyToCx(candidate) - cx
             val dy = world.keyToCy(candidate) - cy
             val dz = world.keyToCz(candidate) - cz
             // Loin du joueur, un premier maillage attend que la lumière soit stable : sinon il serait
             // refait aussitôt. Le LOD couvre le trou en attendant. Près du joueur, rien n'attend.
-            if (first && !pendingChunk.lightSettled &&
-                maxOf(abs(dx), abs(dy), abs(dz)) > FIRST_MESH_NO_WAIT_RADIUS) continue
+            val waitsForLight = first && !pendingChunk.lightSettled &&
+                maxOf(abs(dx), abs(dy), abs(dz)) > FIRST_MESH_NO_WAIT_RADIUS
+            // Seuls les maillages prêts à partir comptent pour freiner la génération : ceux qui
+            // attendent leur lumière la bloquaient, et des chunks restaient vides longtemps.
+            if (first && !waitsForLight) waitingFirst++
+            if (waitsForLight || !canDispatch || candidate in building) continue
             val distance = dx * dx + dy * dy + dz * dz
             if (first) firstCount = offer(firstKeys, firstDist, firstCount, candidate, distance)
             else refreshCount = offer(refreshKeys, refreshDist, refreshCount, candidate, distance)
@@ -1170,7 +1190,10 @@ internal class CaveRenderer(
         while (rebuilt < 2 && meshJobs.get() < 2 && pendingMeshBytes.get() < MAX_PENDING_MESH_BYTES) {
             // Alternate first geometry and refreshes even when only one worker is free.
             // A continuous stream of new chunks must not starve existing dark meshes.
-            val preferFirst = meshDispatchSerial % 2L == 0L
+            // Deux places sur trois aux premiers maillages : ils comblent des trous, alors qu'un
+            // rafraîchissement ne retouche que les bords d'un chunk déjà visible. À parts égales,
+            // un monde à la distance 16 mettait plusieurs minutes à se remplir (mesuré).
+            val preferFirst = meshDispatchSerial % 3L != 2L
             val takeFirst = if (preferFirst) firstTaken < firstCount else refreshTaken >= refreshCount
             val key = when {
                 takeFirst && firstTaken < firstCount -> firstKeys[firstTaken++]
@@ -1314,7 +1337,7 @@ internal class CaveRenderer(
                     val entry = iterator.next()
                     if (entry.key !in loadedKeys) {
                         for (position in entry.value.positions) lightSources.remove(position)
-                        localLights.clear()
+                        if (entry.value.positions.isNotEmpty()) forgetLocalLightsAround(entry.key)
                         iterator.remove()
                         lightsDirty = true
                     }
@@ -1502,12 +1525,20 @@ internal class CaveRenderer(
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
             if (!withinSimulationRange(kcx, kcz)) continue
             if (!isChunkInFrustum(kcx, kcy, kcz)) continue
+            // Relais par colonne : tant que la surface d'une colonne n'est pas toute maillée, seul
+            // son LOD s'affiche. Montrer les deux superposait des pentes de LOD au terrain ; montrer
+            // les chunks déjà prêts sans LOD laissait des trous. Autour du joueur, toujours le détail.
+            // Sous la surface de la colonne (grottes), le détail s'affiche toujours.
+            if (columnHandsToLod(kcx, kcz) && kcy >= (columnSpan(kcx, kcz)?.minCy ?: 0)) continue
             val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
-            mesh.draw(wAPos, wAUv, wASky, wATint, wABlock)
+            mesh.draw()
+            val d = maxOf(abs(kcx - lodCenterX), abs(kcz - lodCenterZ))
+            if (d > drawnDetailReach) drawnDetailReach = d
         }
+        SolidChunkMesh.endDraws()
         GLES30.glUniform1f(wUPosScale, 1f)
         GLES30.glUniform1f(wUUvScale, 1f)
         // Keep the complete selection available to non-chunk world draws.
@@ -1523,24 +1554,37 @@ internal class CaveRenderer(
         // premier maillage, le LOD reste (sinon le ciel, maillé avant la surface, laissait un trou).
         // Reparcourir les milliers de maillages à chaque image coûtait cher (mesuré) : on ne
         // recompte que quand leur nombre change, et de toute façon toutes les 30 images.
-        if (meshes.size != columnsMeshCount || ++columnsAge >= 30) {
+        ++columnsAge
+        if ((meshes.size != columnsMeshCount && columnsAge >= 5) || columnsAge >= 30) {
             columnsMeshCount = meshes.size; columnsAge = 0
             columnsWithMesh.clear()
             meshes.keys.forEach { k ->
                 val x = world.keyToCx(k); val z = world.keyToCz(k)
                 if (withinSimulationRange(x, z)) columnsWithMesh.add(lodKey(x, z))
             }
+            columnsCovered.clear()
+            if (columnSpans.size > 8192) columnSpans.clear()   // colonnes quittées depuis longtemps
+            for (key in columnsWithMesh) {
+                val x = lodKeyToCx(key); val z = lodKeyToCz(key)
+                val span = columnSpan(x, z)
+                var covered = true
+                // Une montagne plus haute que la plage chargée n'est jamais couverte : elle reste
+                // entière en LOD au lieu d'être trouée là où ses chunks hauts manquent.
+                if (span != null) for (y in span.minCy..span.maxCy)
+                    if (!meshes.containsKey(world.chunkKey(x, y, z))) { covered = false; break }
+                if (covered) columnsCovered.add(key)
+            }
         }
         lodShader?.use()
         GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(lodUAmbient, ambientFor(dayT) * (1f - caveBlend))
         // Itère par super-tuiles (8×8 colonnes) : ~125 tests frustum au lieu de 8000.
-        for ((sk, keys) in lodGrid) {
+        if (lodEnabled) for ((sk, keys) in lodGrid) {
             val scx = superKeyToCx(sk) * LOD_SUPER
             val scz = superKeyToCz(sk) * LOD_SUPER
             if (!isLodSuperTileInFrustum(scx, scz)) continue
             for (key in keys) {
-                if (columnsWithMesh.contains(key) && !columnsAwaitingMesh.contains(key)) continue
+                if (columnsWithMesh.contains(key) && !columnHandsToLod(lodKeyToCx(key), lodKeyToCz(key))) continue
                 val mesh = lodMeshes[key] ?: continue
                 val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
                 if (!withinLodRange(lcx, lcz)) continue
@@ -1549,6 +1593,8 @@ internal class CaveRenderer(
                     -camera.y.toFloat(),
                     (lcz.toDouble() * CHUNK_SIZE - camera.z).toFloat())
                 mesh.draw(lodAPos, lodARgb)
+                val d = maxOf(abs(lcx - lodCenterX), abs(lcz - lodCenterZ))
+                if (d > drawnLodReach) drawnLodReach = d
             }
         }
 
@@ -1687,7 +1733,9 @@ internal class CaveRenderer(
                     "waitingFirst=$waitingFirstMeshes firstUploads=$firstMeshUploads provisional=$provisionalUploads " +
                     "refreshUploads=$refreshMeshUploads lightWorker=${lightWorkerRunning.get()} " +
                     "lightPending=${world.hasPendingLight()} lodJobs=${lodBuilding.size} " +
-                    "meshes=${meshes.size} position=$cx,$cy,$cz")
+                    "meshes=${meshes.size} position=$cx,$cy,$cz " +
+                    "reach=${viewDistances.simulation}/${viewDistances.view} detailDrawn=$drawnDetailReach lodDrawn=$drawnLodReach")
+                drawnDetailReach = 0; drawnLodReach = 0
                 firstMeshUploads = 0
                 refreshMeshUploads = 0
                 provisionalUploads = 0
@@ -2434,7 +2482,17 @@ internal class CaveRenderer(
             }
         }
         chunkLightStates[key] = ChunkLightState(chunk, chunk.version, positions)
-        if (positions.isNotEmpty() || previous?.positions?.isNotEmpty() == true) localLights.clear()
+        // Seuls les chunks à portée de ces sources changent de lumières, et seulement si les
+        // sources ont changé. Tout vider à chaque maillage d'un chunk éclairé forçait chaque chunk
+        // d'eau à refaire son tri parmi des centaines de sources : un tiers du fil GL au chargement.
+        if (positions != (previous?.positions ?: emptyList<Triple<Int, Int, Int>>())) forgetLocalLightsAround(key)
+    }
+
+    /** Oublie les lumières retenues des chunks à portée d'une source de ce chunk (17 blocs → 2 chunks). */
+    private fun forgetLocalLightsAround(key: Long) {
+        if (localLights.isEmpty()) return
+        val cx = world.keyToCx(key); val cy = world.keyToCy(key); val cz = world.keyToCz(key)
+        for (dz in -2..2) for (dy in -2..2) for (dx in -2..2) localLights.remove(world.chunkKey(cx + dx, cy + dy, cz + dz))
     }
 
     // Offsets voisins par bit de face du masque renvoyé par LightEngine.computeSky.
@@ -3532,6 +3590,32 @@ internal class CaveRenderer(
 
     // ── LOD helpers ──────────────────────────────────────────────────────────
 
+    /** La colonne attend encore un chunk de surface et son LOD existe : on n'affiche que le LOD. */
+    private val lodEnabled get() = worldSource == null && viewDistances.view > viewDistances.simulation
+
+    private fun columnHandsToLod(cx: Int, cz: Int): Boolean {
+        if (!lodEnabled) return false
+        if (maxOf(abs(cx - camera.chunkX()), abs(cz - camera.chunkZ())) <= FIRST_MESH_NO_WAIT_RADIUS) return false
+        val key = lodKey(cx, cz)
+        return (columnsAwaitingMesh.contains(key) || !columnsCovered.contains(key)) &&
+            lodMeshes.containsKey(key) && withinLodRange(cx, cz)
+    }
+
+    /** Chunks (cy) que la surface de la colonne traverse, d'après les hauteurs du LOD ; null si inconnues. */
+    private fun columnSpan(cx: Int, cz: Int): ColumnSpan? {
+        val entry = lodCache?.get(cx, cz) ?: return null
+        val key = lodKey(cx, cz)
+        columnSpans[key]?.let { if (it.entry === entry) return it }
+        var min = Int.MAX_VALUE; var max = Int.MIN_VALUE
+        for (h in entry.heights) {
+            if (h == Short.MIN_VALUE) continue
+            if (h < min) min = h.toInt(); if (h > max) max = h.toInt()
+        }
+        if (min > max) return null
+        return ColumnSpan(entry, Math.floorDiv(min, CHUNK_SIZE), Math.floorDiv(max, CHUNK_SIZE))
+            .also { columnSpans[key] = it }
+    }
+
     private fun withinSimulationRange(cx: Int, cz: Int): Boolean {
         if (worldSource != null) return true
         val dx = cx - lodCenterX; val dz = cz - lodCenterZ
@@ -3548,6 +3632,15 @@ internal class CaveRenderer(
     private fun streamLod(cx: Int, cz: Int, moved: Boolean) {
         lodCenterX = cx; lodCenterZ = cz
         if (worldSource != null) return
+        // Deux curseurs égaux (n/n) : pas de LOD du tout, même comme bouche-trou au chargement.
+        if (!lodEnabled) {
+            val iterator = lodMeshes.entries.iterator()
+            while (iterator.hasNext()) {
+                val entry = iterator.next()
+                iterator.remove(); entry.value.destroy(); lodGridRemove(entry.key)
+            }
+            return
+        }
         if (moved) lodScanIndex = 0
         // Edits take priority, with bounded work/vertex queues just like full chunks.
         // Copie à la main : toList() lit d'abord la taille puis appelle next() autant de fois, et

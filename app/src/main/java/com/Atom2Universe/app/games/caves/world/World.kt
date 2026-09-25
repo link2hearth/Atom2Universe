@@ -183,16 +183,22 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
         if (isSurface) {
             // Cylindre : disque XZ + plage Y fixe — simple et stable
+            // Cylindre : disque XZ + plage Y autour du joueur, prolongée vers le haut jusqu'au sommet
+            // de chaque colonne. Sans ça, une montagne plus haute que la plage n'était jamais
+            // chargée en détail et restait en LOD (de grands pans lisses au-dessus du terrain).
             val rxz = renderRadiusXZ; val ry = renderRadiusYSurface
             val rxz2 = rxz * rxz
             for (dz in -rxz..rxz)
-                for (dy in -ry..ry)
-                    for (dx in -rxz..rxz) {
+                for (dx in -rxz..rxz) {
                 if (dx * dx + dz * dz > rxz2) continue
-                val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
-                if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
-                val key = chunkKey(cx, cy, cz)
-                if (!chunks.containsKey(key) && !inFlight.contains(key)) offer(dx, dy, dz, key)
+                val cx = pcx + dx; val cz = pcz + dz
+                val top = columnReach(cx, cz, pcy, ry)
+                for (dy in -ry..top) {
+                    val cy = pcy + dy
+                    if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
+                    val key = chunkKey(cx, cy, cz)
+                    if (!chunks.containsKey(key) && !inFlight.contains(key)) offer(dx, dy, dz, key)
+                }
             }
         } else {
             // Horizontal distance is configurable; keep the vertical band bounded.
@@ -236,9 +242,9 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             val rxz = renderRadiusXZ + 1; val ry = renderRadiusYSurface + 1
             val rxz2 = rxz * rxz
             chunks.entries.filter { (_, c) ->
-                val dx = c.cx - pcx; val dz = c.cz - pcz
+                val dx = c.cx - pcx; val dz = c.cz - pcz; val dy = c.cy - pcy
                 !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) &&
-                    (dx * dx + dz * dz > rxz2 || abs(c.cy - pcy) > ry)
+                    (dx * dx + dz * dz > rxz2 || dy < -ry || dy > maxOf(ry, columnReach(c.cx, c.cz, pcy, ry - 1) + 1))
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
         } else {
             val unloadR2 = (renderRadiusXZ + 2).let { it * it }
@@ -251,6 +257,31 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
         return missing > scheduled
     }
+
+    /**
+     * Hauteur (en chunks au-dessus du joueur) jusqu'où charger la colonne : au moins [ry], et
+     * jusqu'au chunk de son sommet s'il est plus haut (plus un chunk pour les arbres), borné à
+     * [COLUMN_EXTRA_CY] de plus pour qu'un pic extrême ne charge pas tout le ciel.
+     */
+    private fun columnReach(cx: Int, cz: Int, pcy: Int, ry: Int): Int {
+        if (terrainVersion < 2 || source != null) return ry
+        val top = columnTopCy(cx, cz)
+        return (top + 1 - pcy).coerceIn(ry, ry + COLUMN_EXTRA_CY)
+    }
+
+    /** Chunk (cy) du point le plus haut du relief de la colonne, 9 échantillons, mémorisé. */
+    private fun columnTopCy(cx: Int, cz: Int): Int {
+        val key = (cx.toLong() and 0xFFFFF) or ((cz.toLong() and 0xFFFFF) shl 20)
+        columnTops[key]?.let { return it }
+        var top = Double.NEGATIVE_INFINITY
+        for (z in 0..2) for (x in 0..2)
+            top = maxOf(top, surfaceHeight(cx * 16.0 + x * 7.5, cz * 16.0 + z * 7.5))
+        if (columnTops.size > 20000) columnTops.clear()
+        return Math.floorDiv(top.toInt(), CHUNK_SIZE).also { columnTops[key] = it }
+    }
+    private val columnTops = HashMap<Long, Int>()
+    // 8 chunks = 128 blocs de plus au-dessus de la plage normale, au plus.
+    private val COLUMN_EXTRA_CY = 8
 
     // Meilleurs candidats du passage en cours (fil de rendu uniquement) et dernier centre déchargé.
     private val bestKeys = LongArray(16)
