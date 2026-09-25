@@ -12,7 +12,7 @@
     <string name="cave_storage_close">Revenir au monde</string>
     <string name="cave_storage_row">%1$s × %2$d</string>
     <string name="cave_storage_empty">Rien ici pour le moment.</string>
-    <string name="cave_storage_hint">Choisissez le sens et la quantité, puis touchez un objet. Le sac reste illimité. Casser ce bloc rend son contenu.</string>
+    <string name="cave_storage_hint">Glissez une pile entre le sac, la barre et le coffre. Touchez pour les informations ; maintenez pour diviser, ajustez le nombre puis touchez ailleurs. Casser ce bloc rend son contenu.</string>
     <string name="cave_mill_hint">Ajoutez du blé. Reliez une roue de courant directement ou par 12 axes adjacents maximum. De l’eau courante doit toucher la roue. 1 blé → 3 farines en 6 secondes. Les machines travaillent pendant le jeu à proximité.</string>
     <string name="cave_mill_running">Transmission active. Ajoutez du blé : 1 blé → 3 farines en 6 secondes. Fermez ce panneau pour reprendre la production.</string>
     <string name="cave_cooker_hint">Ajoutez du charbon et de la farine ou des pommes de terre. En 10 secondes : 3 farines/pommes de terre + 1 combustible → 4 pains/pommes de terre cuites. Fermez le panneau pour cuire.</string>

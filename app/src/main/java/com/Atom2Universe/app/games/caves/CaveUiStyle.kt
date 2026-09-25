@@ -17,6 +17,20 @@ internal object CaveUiStyle {
     const val BORDER = 0xFF577263.toInt()
     const val WARNING = 0xFFE8B5A5.toInt()
     fun dp(context: Context, n: Int) = (n * context.resources.displayMetrics.density).toInt()
+    fun bubble(context: Context) = GradientDrawable().apply {
+        setColor(0xE623332D.toInt())
+        cornerRadius = dp(context, 22).toFloat()
+        setStroke(dp(context, 1), 0x9986A38C.toInt())
+    }
+
+    fun openBubble(view: View) {
+        view.animate().cancel()
+        view.alpha = 0f
+        view.scaleX = .96f
+        view.scaleY = .96f
+        view.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(160L)
+            .setInterpolator(android.view.animation.DecelerateInterpolator()).start()
+    }
     fun panel(context: Context, color: Int = CARD, stroke: Int = BORDER, selected: Boolean = false) =
         GradientDrawable().apply {
             setColor(color); cornerRadius = dp(context, 12).toFloat()

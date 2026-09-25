@@ -77,7 +77,7 @@ internal object LightEngine {
 
     private fun idx(lx: Int, ly: Int, lz: Int) = lx + ly * N + lz * N * N
 
-    private fun passable(block: Short): Boolean =
+    internal fun passable(block: Short): Boolean =
         block == AIR || isTransparent(block) || isDecoration(block) || isWater(block) || isLeaf(block)
 
     /**

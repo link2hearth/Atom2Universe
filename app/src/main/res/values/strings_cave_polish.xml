@@ -24,7 +24,8 @@
     <string name="cave_catalog_pinned">Shortcut assigned</string>
     <string name="cave_catalog_bar_full">Bar full: drag onto the shortcut you want to replace.</string>
     <string name="cave_storage_matching">Deposit matching stacks, except favorites and stacks in the bar</string>
-    <string name="cave_storage_drag_hint">Tap to transfer · hold to drag · quantity applies to each transfer</string>
+    <string name="cave_storage_drag_hint">Tap: details · drag: move stack · hold: favorites / split</string>
+    <string name="cave_stack_confirm">Confirm</string>
     <string name="cave_storage_bag_title">Bag · %1$d</string>
     <string name="cave_storage_box_title">Storage · %1$d</string>
     <string name="cave_storage_empty_filtered">No matching items</string>
@@ -40,4 +41,15 @@
     <string name="cave_inventory_empty_bag">Bag empty · drop a stack anywhere here</string>
     <string name="cave_inventory_moved_bag">%1$s moved to the bag</string>
     <string name="cave_inventory_moved_bar">%1$s moved to slot %2$d</string>
+    <string name="cave_stack_split_amount">Amount to split off</string>
+    <string name="cave_stack_up">▲</string>
+    <string name="cave_stack_down">▼</string>
+    <string name="cave_stack_increase">Increase amount</string>
+    <string name="cave_stack_decrease">Decrease amount</string>
+    <string name="cave_stack_split_done">Stack split</string>
+    <string name="cave_stack_moved">Stack moved</string>
+    <string name="cave_pause_title">Pause</string>
+    <string name="cave_pause_resume">Resume game</string>
+    <string name="cave_pause_simulation_distance">Simulation distance: %1$d chunks</string>
+    <string name="cave_pause_view_distance">View distance (LOD): %1$d chunks</string>
 </resources>

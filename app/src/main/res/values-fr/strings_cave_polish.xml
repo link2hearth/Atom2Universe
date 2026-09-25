@@ -24,7 +24,8 @@
     <string name="cave_catalog_pinned">Raccourci attribué</string>
     <string name="cave_catalog_bar_full">Barre pleine : glisse sur le raccourci à remplacer.</string>
     <string name="cave_storage_matching">Ranger les piles déjà présentes, sauf les favoris et les piles de la barre</string>
-    <string name="cave_storage_drag_hint">Touche pour transférer · maintiens pour glisser · la quantité choisie s’applique à chaque transfert</string>
+    <string name="cave_storage_drag_hint">Toucher : infos · glisser : déplacer · appui long : favoris / diviser</string>
+    <string name="cave_stack_confirm">Valider</string>
     <string name="cave_storage_bag_title">Sac · %1$d</string>
     <string name="cave_storage_box_title">Stockage · %1$d</string>
     <string name="cave_storage_empty_filtered">Aucun objet correspondant</string>
@@ -40,4 +41,15 @@
     <string name="cave_inventory_empty_bag">Sac vide · glisse une pile ici pour la ranger</string>
     <string name="cave_inventory_moved_bag">%1$s rangé dans le sac</string>
     <string name="cave_inventory_moved_bar">%1$s placé dans la case %2$d</string>
+    <string name="cave_stack_split_amount">Quantité à détacher</string>
+    <string name="cave_stack_up">▲</string>
+    <string name="cave_stack_down">▼</string>
+    <string name="cave_stack_increase">Augmenter la quantité</string>
+    <string name="cave_stack_decrease">Diminuer la quantité</string>
+    <string name="cave_stack_split_done">Pile divisée</string>
+    <string name="cave_stack_moved">Pile déplacée</string>
+    <string name="cave_pause_title">Pause</string>
+    <string name="cave_pause_resume">Reprendre la partie</string>
+    <string name="cave_pause_simulation_distance">Distance de simulation : %1$d chunks</string>
+    <string name="cave_pause_view_distance">Distance d’affichage (LOD) : %1$d chunks</string>
 </resources>

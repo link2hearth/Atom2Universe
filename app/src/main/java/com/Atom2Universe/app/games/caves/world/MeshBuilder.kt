@@ -75,11 +75,13 @@ internal object MeshBuilder {
         if (buf.size == 0) return emptyVertices
         // Read the reusable builder directly; avoid a second full-sized intermediate array.
         val raw = buf.data
-        val colored = FloatArray(buf.size / 7 * 11)
+        val colored = FloatArray(buf.size / 7 * 12)
         val blend = ClimateBlend(chunk.worldX, chunk.worldZ, BlockRegistry.vividStyle, world::vegetationClimateAt)
         for (vertex in 0 until buf.size / 7) {
-            val src = vertex * 7; val dst = vertex * 11
+            val src = vertex * 7; val dst = vertex * 12
             raw.copyInto(colored, dst, src, src + 7)
+            colored[dst + 11] = vertexBlockLight(chunk, world, cache, raw[src], raw[src + 1], raw[src + 2],
+                (raw[src + 5] / 4096f).toInt())
             val mask = BlockRegistry.climateMask(raw[src + 5].toInt() % 4096)
             if (mask != 0 && chunk.worldY >= 0) {
                 blend.writeDelta(raw[src], raw[src + 2], colored, dst + 7)
@@ -87,6 +89,40 @@ internal object MeshBuilder {
             }
         }
         return colored
+    }
+
+    /**
+     * Lumière des torches d'un sommet (0..1) : moyenne des quatre cases d'air qui le touchent du
+     * côté éclairé de la face. C'est la moyenne qui lisse d'un sommet à l'autre — une seule case
+     * par face donnerait des carreaux ; une case pleine n'entre pas dans le compte, sinon chaque
+     * coin de mur noircirait. La face émissive (flamme, lampe) reste à pleine lumière.
+     */
+    private fun vertexBlockLight(chunk: Chunk, world: World, cache: World.ChunkLookupCache,
+                                 x: Float, y: Float, z: Float, face: Int): Float {
+        if (face !in 0..5) return 1f
+        val n = faceOffsets[face]
+        val sx = x + n[0] * .5f; val sy = y + n[1] * .5f; val sz = z + n[2] * .5f
+        // Les deux axes du plan de la face, décalés d'un demi-bloc de part et d'autre du sommet.
+        val ax = if (n[0] != 0) 0f else .5f
+        val ay = if (n[1] != 0) 0f else .5f
+        val az = if (n[2] != 0) 0f else .5f
+        var sum = 0; var count = 0
+        for (i in 0 until 4) {
+            // Deux des trois décalages varient ; le troisième (le long de la normale) vaut 0.
+            val first = if (i and 1 == 0) -1f else 1f
+            val second = if (i and 2 == 0) -1f else 1f
+            val ox: Float; val oy: Float; val oz: Float
+            when {
+                n[0] != 0 -> { ox = 0f; oy = ay * first; oz = az * second }
+                n[1] != 0 -> { ox = ax * first; oy = 0f; oz = az * second }
+                else -> { ox = ax * first; oy = ay * second; oz = 0f }
+            }
+            val level = world.passableBlockLightAt(chunk, kotlin.math.floor(sx + ox).toInt(),
+                kotlin.math.floor(sy + oy).toInt(), kotlin.math.floor(sz + oz).toInt(), cache)
+            if (level < 0) continue
+            sum += level; count++
+        }
+        return if (count == 0) 0f else sum / (count * 15f)
     }
 
     // Lumière du ciel (0..1) du voxel d'air adjacent à une face.
@@ -223,11 +259,14 @@ internal object MeshBuilder {
             val packed = 0f
 
             val above = world.neighborBlock(chunk, lx, ly + 1, lz, cache)
-            val below = world.neighborBlock(chunk, lx, ly - 1, lz, cache)
-            val east  = world.neighborBlock(chunk, lx + 1, ly, lz, cache)
-            val west  = world.neighborBlock(chunk, lx - 1, ly, lz, cache)
-            val south = world.neighborBlock(chunk, lx, ly, lz + 1, cache)
-            val north = world.neighborBlock(chunk, lx, ly, lz - 1, cache)
+            // Côtés et dessous : un voisin pas encore chargé compte comme de l'eau. Sinon chaque bord
+            // de la zone chargée dresse un grand rideau d'eau vertical en pleine mer, qui avance avec
+            // le joueur. Le chargement du voisin reconstruit ce maillage, et la vraie rive apparaît.
+            val below = world.neighborBlockOr(chunk, lx, ly - 1, lz, WATER, cache)
+            val east  = world.neighborBlockOr(chunk, lx + 1, ly, lz, WATER, cache)
+            val west  = world.neighborBlockOr(chunk, lx - 1, ly, lz, WATER, cache)
+            val south = world.neighborBlockOr(chunk, lx, ly, lz + 1, WATER, cache)
+            val north = world.neighborBlockOr(chunk, lx, ly, lz - 1, WATER, cache)
 
             // Les coins partagent leurs hauteurs avec les cases voisines : le flux crée ainsi
             // une pente continue au lieu de cubes d'eau empilés.

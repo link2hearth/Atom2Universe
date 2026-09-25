@@ -48,16 +48,36 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
     val craftMax = button(R.string.cave_catalog_craft_max)
     val ingredients = column()
     val summary = label(12f)
-    val status = label(11f).apply { accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE;maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END }
+    val status = label(11f).apply {
+        accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE;maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END
+        setPadding(dp(8),dp(2),dp(8),dp(2))
+    }
     val empty = label().apply { gravity = Gravity.CENTER; setText(R.string.cave_ui_empty_search) }
     lateinit var pager: ViewPager2
     lateinit var recipeList: RecyclerView
     lateinit var pageLabel: TextView
     lateinit var footer: LinearLayout
-    lateinit var shortcutBar: LinearLayout
     lateinit var bagDropArea: FrameLayout
     lateinit var detailScroll: ScrollView
+    private lateinit var catalogPanel: View
+    private lateinit var storageHost: FrameLayout
     private var bubble: PopupWindow? = null
+
+    fun animateOpen() = CaveUiStyle.openBubble(if (storageHost.visibility == View.VISIBLE) storageHost else catalogPanel)
+
+    fun showStorage(content: View) {
+        dismissDetails()
+        catalogPanel.visibility=View.GONE
+        storageHost.removeAllViews()
+        storageHost.addView(content,FrameLayout.LayoutParams(-1,-1,Gravity.CENTER))
+        storageHost.visibility=View.VISIBLE
+    }
+
+    fun hideStorage() {
+        storageHost.removeAllViews()
+        storageHost.visibility=View.GONE
+        catalogPanel.visibility=View.VISIBLE
+    }
 
     fun dismissDetails() { bubble?.dismiss() }
 
@@ -75,11 +95,12 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         val y=(if(below+height<metrics.heightPixels-dp(68)) below else location[1]-height-dp(4))
             .coerceIn(dp(8),(metrics.heightPixels-height-dp(8)).coerceAtLeast(dp(8)))
         bubble=PopupWindow(detailScroll,width,height,true).apply {
-            setBackgroundDrawable(CaveUiStyle.panel(activity,CaveUiStyle.SURFACE))
+            setBackgroundDrawable(CaveUiStyle.bubble(activity))
             elevation=dp(10).toFloat();isOutsideTouchable=true
             inputMethodMode=PopupWindow.INPUT_METHOD_NOT_NEEDED
             showAtLocation(activity.invOverlay,Gravity.TOP or Gravity.LEFT,x,y)
         }
+        CaveUiStyle.openBubble(detailScroll)
     }
 
     fun resizeDetails() {
@@ -92,22 +113,47 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
 
     fun populate(root: FrameLayout) {
         root.removeAllViews()
+        root.background = null
         val portrait=activity.resources.displayMetrics.heightPixels>activity.resources.displayMetrics.widthPixels
         val dim = FrameLayout(activity).apply {
-            id = R.id.cave_inv_dim_area; setBackgroundColor(0x3514211B); isClickable = true
-            layoutParams = FrameLayout.LayoutParams(-1, -1).also { it.bottomMargin = dp(68) }
+            id = R.id.cave_inv_dim_area; isClickable = true
+            layoutParams = FrameLayout.LayoutParams(-1, -1)
         }
         root.addView(dim)
-        val panel = column().apply {
-            id = R.id.cave_inv_panel; isClickable = true
-            background = CaveUiStyle.panel(activity, 0xF51C302B.toInt(), 0xFF577263.toInt())
-            setPadding(dp(6), dp(4), dp(6), dp(4))
-            val metrics = activity.resources.displayMetrics
-            layoutParams = FrameLayout.LayoutParams(minOf((metrics.widthPixels * .94f).toInt(), dp(1100)), -1).also {
-                it.gravity = Gravity.CENTER; it.setMargins(0, dp(4), 0, dp(4))
+        // The transparent host eats outside taps without obscuring the world. Its child
+        // uses the available window size, including when the search keyboard is visible.
+        val host = object : FrameLayout(activity) {
+            override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+                val width = View.MeasureSpec.getSize(widthMeasureSpec)
+                val height = View.MeasureSpec.getSize(heightMeasureSpec)
+                val narrow = height > width
+                val bubbleWidth = minOf((width * if (narrow) .92f else .82f).toInt(), dp(940))
+                val bubbleHeight = minOf((height - dp(24)).coerceAtLeast(1), dp(if (narrow) 560 else 420))
+                for (i in 0 until childCount) {
+                    getChildAt(i).layoutParams.apply {
+                        this.width = bubbleWidth
+                        this.height = bubbleHeight
+                    }
+                }
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec)
             }
         }
-        dim.addView(panel)
+        dim.addView(host, FrameLayout.LayoutParams(-1, -1).apply {
+            bottomMargin = CaveItemTile.edge(activity) + dp(26)
+        })
+        val panel = column().apply {
+            id = R.id.cave_inv_panel; isClickable = true
+            background = CaveUiStyle.bubble(activity)
+            elevation = dp(8).toFloat()
+            setPadding(dp(10), dp(4), dp(10), dp(4))
+            layoutParams = FrameLayout.LayoutParams(-1, -1, Gravity.CENTER)
+        }
+        host.addView(panel)
+        catalogPanel=panel
+        storageHost=FrameLayout(activity).apply {
+            visibility=View.GONE;isClickable=true
+        }
+        host.addView(storageHost,FrameLayout.LayoutParams(-1,-1,Gravity.CENTER))
         fun icon(b: Button,key: String,res: Int) {
             CaveUiStyle.icon(b,key,activity.getString(res))
             b.layoutParams=LinearLayout.LayoutParams(dp(44),dp(44)).also { it.setMargins(dp(2),dp(2),dp(2),dp(2)) }
@@ -118,6 +164,11 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             Triple(recentOnly,"clock",R.string.cave_catalog_recent),Triple(filterAll,"all",R.string.cave_ui_all),
             Triple(filterGear,"combat",R.string.cave_ui_equipment),Triple(filterBuild,"place",R.string.cave_ui_materials),
             Triple(filterGarden,"garden",R.string.cave_ui_garden),Triple(related,"previous",R.string.cave_ui_previous))) icon(b,key,res)
+        inventoryTab.layoutParams.height=dp(44)
+        craftTab.layoutParams.height=dp(44)
+        for(button in listOf(filterAll,filterGear,filterBuild,filterGarden,favoritesOnly,recentOnly)) {
+            button.layoutParams.height=dp(36)
+        }
         panel.addView(row().apply {
             addView(inventoryTab); addView(craftTab)
             if(!portrait) {
@@ -137,8 +188,8 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             isHorizontalScrollBarEnabled=false
             addView(row().apply {
                 for(b in listOf(filterAll,filterGear,filterBuild,filterGarden,favoritesOnly,recentOnly)) addView(b)
-                addView(category,LinearLayout.LayoutParams(dp(130),dp(44)))
-                addView(craftable,LinearLayout.LayoutParams(-2,dp(44)))
+                addView(category,LinearLayout.LayoutParams(dp(130),dp(36)))
+                addView(craftable,LinearLayout.LayoutParams(-2,dp(36)))
             })
         })
         summary.visibility=View.GONE
@@ -153,12 +204,14 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         content.addView(empty, FrameLayout.LayoutParams(-1, -1))
         pageLabel = label(12f).apply { id = R.id.cave_inv_page_indicator; gravity = Gravity.CENTER }
         footer = row().apply {
-            addView(previous); addView(pageLabel, LinearLayout.LayoutParams(0, dp(44), 1f)); addView(next)
+            previous.layoutParams.height = dp(36)
+            next.layoutParams.height = dp(36)
+            addView(previous); addView(pageLabel, LinearLayout.LayoutParams(0, dp(36), 1f)); addView(next)
         }
         library.addView(footer)
         detailScroll = ScrollView(activity).apply { isFillViewport = false }
         val detail = column().apply {
-            id = R.id.cave_inv_info_column; background = CaveUiStyle.panel(activity, CaveUiStyle.SURFACE)
+            id = R.id.cave_inv_info_column
             setPadding(dp(8), dp(8), dp(8), dp(8))
         }
         detailScroll.addView(detail)
@@ -184,12 +237,5 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             addView(button(R.string.cave_inv_sell_btn).apply { id = R.id.cave_inv_sell_btn; setTextColor(CaveUiStyle.WARNING) })
         })
         panel.addView(status, LinearLayout.LayoutParams(-1, -2))
-        shortcutBar=row().apply {
-            background=CaveUiStyle.panel(activity,CaveUiStyle.SURFACE)
-            setPadding(dp(4),dp(4),dp(4),dp(4))
-        }
-        root.addView(shortcutBar,FrameLayout.LayoutParams(
-            minOf((activity.resources.displayMetrics.widthPixels*.94f).toInt(),dp(540)),dp(60),
-            Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin=dp(4) })
     }
 }

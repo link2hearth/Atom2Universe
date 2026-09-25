@@ -88,7 +88,6 @@ class CaveActivity : ThemedActivity() {
     internal var isCreative = false
     /** Partie du mode Assaut : carte préparée, ni construction, ni destruction, ni sauvegarde. */
     internal var isAssault = false
-    private  var survivalInventory: Map<Short, Int> = emptyMap()
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -232,9 +231,6 @@ class CaveActivity : ThemedActivity() {
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
         lastSnapshotTime=save?.lastPlayedAt ?: 0L
         isCreative = save?.isCreative ?: false
-        if (isCreative) {
-            survivalInventory = save?.inventory ?: emptyMap()
-        }
         // Restaurer les instances d'armes AVANT de créer le renderer
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
         save?.weaponInstances?.forEach { (id, inst) ->
@@ -245,7 +241,8 @@ class CaveActivity : ThemedActivity() {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
-                inventory = BlockRegistry.creativeList().associateWith { 1 },
+                inventory = if(runCatching { org.json.JSONObject(save.frontierLife).has("stacks") }.getOrDefault(false)) save.inventory
+                    else BlockRegistry.creativeList().associateWith { 1 } + save.inventory,
                 hotbar = if(save.playerY!=0.0) save.hotbar else BlockRegistry.creativeList().let { keys -> List(ACTIVE_SIZE) { i -> keys.getOrNull(i) } },
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
@@ -461,6 +458,10 @@ class CaveActivity : ThemedActivity() {
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)
         invManager.setupOverlay(invOverlay)
+        // One hotbar above both the game HUD and the inventory: same position and tiles,
+        // with native drag targets still reachable while a bubble is open.
+        (hotbarLayout.parent as android.view.ViewGroup).removeView(hotbarLayout)
+        root.addView(hotbarLayout)
 
         // ── Outil de capture de structure (mode créatif) ───────────────────────
         if (isCreative) {
@@ -800,6 +801,7 @@ class CaveActivity : ThemedActivity() {
     private var lastSnapshotTime=0L
     private fun buildSaveSnap(): CaveWorldSave? {
         val id    = worldId ?: return null
+        renderer.syncInventoryStacks()
         lastSnapshotTime=maxOf(System.currentTimeMillis(),lastSnapshotTime+1)
         val stats = renderer.playerStats
         val sb    = renderer.skillBook
@@ -809,9 +811,7 @@ class CaveActivity : ThemedActivity() {
             lastPlayedAt = lastSnapshotTime,
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
-            inventory = if (isCreative) survivalInventory + renderer.inventory.filterKeys {
-                com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
-            } else renderer.inventory.toMap(),
+            inventory = renderer.inventory.toMap(),
             hotbar = renderer.hotbar.toList(),
             farming = renderer.farming.snapshot(),
             workshops = renderer.workshops.snapshot(), worldTimeMs = renderer.worldTimeSnapshot,
@@ -849,7 +849,7 @@ class CaveActivity : ThemedActivity() {
         }
         // Container and backpack snapshots must describe the same side of a transfer.
         // Crafting edits the bag on the UI thread while the inventory pauses simulation.
-        if (glSuspended || invOverlay.visibility == View.VISIBLE) capture() else glView.queueEvent { capture() }
+        if (glSuspended || (invOverlay.visibility == View.VISIBLE && !invManager.storagePageOpen)) capture() else glView.queueEvent { capture() }
     }
 
     private suspend fun saveWorldNow() {
@@ -866,103 +866,18 @@ class CaveActivity : ThemedActivity() {
 
     private fun saveWorld() = saveWorldAsync(flushChunks = true)
 
-    // ── Confirmation quitter ──────────────────────────────────────────────────
+    // ── Pause et distances ────────────────────────────────────────────────────
 
     private fun showQuitConfirmation() {
-        val dp = resources.displayMetrics.density
-        val dialogRoot = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE; setColor(0xFF111122.toInt())
-                cornerRadius = 12 * dp; setStroke((1 * dp).toInt(), 0x55FFFFFF.toInt())
-            }
-            val p = (20 * dp).toInt()
-            setPadding(p, p, p, (10 * dp).toInt())
-        }
-        dialogRoot.addView(android.widget.TextView(this).apply {
-            text = getString(R.string.cave_quit_title); setTextColor(Color.WHITE)
-            textSize = 17f; typeface = android.graphics.Typeface.DEFAULT_BOLD
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.bottomMargin = (8 * dp).toInt() }
-        })
-        dialogRoot.addView(android.widget.TextView(this).apply {
-            text = getString(R.string.cave_quit_message); setTextColor(0xCCFFFFFF.toInt())
-            textSize = 13f
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                .also { it.bottomMargin = (18 * dp).toInt() }
-        })
-        val btnRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL; gravity = Gravity.END
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        }
-        dialogRoot.addView(btnRow)
-        val dialog = AlertDialog.Builder(this).setView(dialogRoot).create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        if (renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
-            setText(R.string.cave_frontier_help)
-            setOnClickListener {
-                AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_frontier_help)
-                    .setMessage(R.string.cave_frontier_help_body)
-                    .setPositiveButton(android.R.string.ok,null).show()
-            }
-        },dialogRoot.indexOfChild(btnRow))
-        if(renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
-            setText(R.string.cave_frontier_more_guide)
-            setOnClickListener {
-                AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_frontier_more_guide)
-                    .setMessage(getString(R.string.cave_frontier_more_body)+"\n\n"+getString(R.string.cave_husbandry_hint)+"\n\n"+getString(R.string.cave_combat_help)+"\n\n"+getString(R.string.cave_catalog_guide))
-                    .setPositiveButton(android.R.string.ok,null).show()
-            }
-        },dialogRoot.indexOfChild(btnRow))
-        if(renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
-            setText(R.string.cave_equipment_title)
-            setOnClickListener {
-                glView.queueEvent {
-                    val combat=renderer.expeditionCombat
-                    val armor=combat.armor
-                    val reduction=(com.Atom2Universe.app.games.caves.node.ExpeditionItems.armor(armor)*100).toInt()
-                    val shield=combat.shield
-                    uiHandler.post {
-                        AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_equipment_title)
-                            .setMessage(getString(R.string.cave_equipment_summary,
-                                armor?.let { blockName(it) } ?: getString(R.string.cave_ui_missing), reduction,
-                                getString(if(shield) R.string.cave_ui_ready else R.string.cave_ui_missing)))
-                            .setPositiveButton(android.R.string.ok,null)
-                            .setNeutralButton(R.string.cave_equipment_remove) { _,_ -> glView.queueEvent { renderer.expeditionCombat.removeEquipment() } }.show()
-                    }
-                }
-            }
-        },dialogRoot.indexOfChild(btnRow))
-        if (!renderer.mode.singleWeapon) dialogRoot.addView(Button(this).apply {
-            setText(R.string.cave_cheat_weapon_kit)
-            setTextColor(0xFF9FD5FF.toInt())
-            setOnClickListener {
-                isEnabled = false
-                glView.queueEvent {
-                    renderer.giveWeaponTestKit()
-                    uiHandler.post {
-                        refreshInventoryUi()
-                        android.widget.Toast.makeText(this@CaveActivity,
-                            R.string.cave_cheat_weapon_kit_done,android.widget.Toast.LENGTH_LONG).show()
-                    }
-                }
-                dialog.dismiss()
-            }
-        },dialogRoot.indexOfChild(btnRow))
-        btnRow.addView(Button(this).apply {
-            text = getString(R.string.cave_quit_cancel); setTextColor(0xAAFFFFFF.toInt())
-            setBackgroundColor(Color.TRANSPARENT); setOnClickListener { dialog.dismiss() }
-        })
-        btnRow.addView(Button(this).apply {
-            text = getString(R.string.cave_quit_confirm); setTextColor(0xFFFF5555.toInt())
-            setBackgroundColor(Color.TRANSPARENT)
-            setOnClickListener { dialog.dismiss(); lifecycleScope.launch {
+        CavePausePanel(this).show {
+            renderer.gamePaused = true
+            lifecycleScope.launch {
                 runCatching { saveWorldNow() }.onSuccess { finish() }.onFailure {
-                    Toast.makeText(this@CaveActivity,R.string.cave_save_error,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@CaveActivity, R.string.cave_save_error, Toast.LENGTH_LONG).show()
+                    showQuitConfirmation()
                 }
-            } }
-        })
-        dialog.show()
+            }
+        }
     }
 
     // ── Boutons action ────────────────────────────────────────────────────────
@@ -1088,6 +1003,12 @@ class CaveActivity : ThemedActivity() {
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
         if (!::glView.isInitialized) return super.dispatchKeyEvent(event)
         if (::invOverlay.isInitialized && invOverlay.visibility == View.VISIBLE) {
+            if(invManager.storagePageOpen) {
+                if(event.action==KeyEvent.ACTION_DOWN && (event.keyCode==KeyEvent.KEYCODE_BACK || event.keyCode==KeyEvent.KEYCODE_BUTTON_B)) {
+                    invManager.closeInventory();return true
+                }
+                return super.dispatchKeyEvent(event)
+            }
             if (event.action == KeyEvent.ACTION_DOWN && invManager.handleInvGamepadKey(event.keyCode)) return true
             if (event.action == KeyEvent.ACTION_UP) return true
             return super.dispatchKeyEvent(event)

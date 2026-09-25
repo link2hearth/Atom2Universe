@@ -52,9 +52,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     // File de propagation de la skylight (drainée sur le thread GL, séparée du meshing).
     val lightQueue = ConcurrentLinkedQueue<Long>()
     private val lightQueued = ConcurrentHashMap.newKeySet<Long>()
-    val renderRadiusXZ     = 8   // rayon XZ commun aux deux modes
+    var renderRadiusXZ = 8
+        private set
+    fun setSimulationDistance(chunks: Int) {
+        renderRadiusXZ = chunks.coerceIn(6, 32)
+    }
     val renderRadiusYSurface = 5  // plage Y en surface (cylindre) — identique à avant
-    val renderRadiusCave   = 7   // rayon de la sphère souterrain
+    val renderRadiusCave   = 7   // rayon vertical maximal en souterrain
 
     // SURFACE_CY_MAX (bande de surface) est défini dans Chunk.kt, partagé avec LodBuilder et
     // CaveRenderer. Le coût de streaming reste borné par renderRadiusYSurface : seuls les chunks
@@ -166,12 +170,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
             }
         } else {
-            // Sphère : rayon uniforme en souterrain
-            val r = renderRadiusCave; val r2 = r * r
+            // Horizontal distance is configurable; keep the vertical band bounded.
+            val r = renderRadiusXZ; val ry = minOf(r, renderRadiusCave)
+            val r2 = r * r; val ry2 = ry * ry
             for (dz in -r..r)
-                for (dy in -r..r)
+                for (dy in -ry..ry)
                     for (dx in -r..r) {
-                if (dx * dx + dy * dy + dz * dz > r2) continue
+                if ((dx * dx + dz * dz) * ry2 + dy * dy * r2 > r2 * ry2) continue
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
@@ -192,18 +197,26 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             scheduled++
         }
 
-        // Déchargement : bounding-box cylindre en surface, sphère en souterrain
+        // Déchargement : même forme que le chargement (disque en surface, ellipsoïde en souterrain),
+        // un chunk de marge pour qu'un pas en arrière ne recharge pas le bord.
+        // La boîte carrée d'avant (±2 chunks, ±2 étages) gardait jusqu'à trois fois le cylindre
+        // chargé : en explorant, tout ce qu'on traversait restait maillé et dessiné, et la
+        // mémoire graphique montait sans fin (5 500 maillages et 580 Mo mesurés sur tablette).
         if (isSurface) {
-            val rxz = renderRadiusXZ + 2; val ry = renderRadiusYSurface + 2
+            val rxz = renderRadiusXZ + 1; val ry = renderRadiusYSurface + 1
+            val rxz2 = rxz * rxz
             chunks.entries.filter { (_, c) ->
-                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && (
-                    abs(c.cx - pcx) > rxz || abs(c.cy - pcy) > ry || abs(c.cz - pcz) > rxz)
+                val dx = c.cx - pcx; val dz = c.cz - pcz
+                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) &&
+                    (dx * dx + dz * dz > rxz2 || abs(c.cy - pcy) > ry)
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
         } else {
-            val unloadR2 = (renderRadiusCave + 2).let { it * it }
+            val unloadR2 = (renderRadiusXZ + 2).let { it * it }
+            val unloadY2 = (minOf(renderRadiusXZ, renderRadiusCave) + 2).let { it * it }
             chunks.entries.filter { (_, c) ->
                 val dx = c.cx - pcx; val dy = c.cy - pcy; val dz = c.cz - pcz
-                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) && dx * dx + dy * dy + dz * dz > unloadR2
+                !inFlight.contains(chunkKey(c.cx, c.cy, c.cz)) &&
+                    (dx * dx + dz * dz) * unloadY2 + dy * dy * unloadR2 > unloadR2 * unloadY2
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
         }
         return candidates.size > scheduled
@@ -1120,6 +1133,27 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val bz = floor(wz / BIOME_STEP) * BIOME_STEP
         BiomeMap.biomeWeights(bx, bz, seed, w)
         return blendedSurfaceHeight(wx, wz, w)
+    }
+
+    /** Analytical surface only: no chunk allocation, population, lighting or simulation. */
+    internal fun distantSurface(wx: Int, wz: Int): Pair<Int, Short> {
+        val x = wx.toDouble(); val z = wz.toDouble()
+        val height = surfaceHeight(x, z).toInt()
+        val water = if (terrainVersion >= 3) natural.waterLevelAt(x, z) else SEA_LEVEL
+        if (height < water) return water to
+            if (terrainVersion >= 3 && natural.temperature(x, z) < .18) ICE else WATER
+        val biomes = BiomeRegistry.surfaceBiomes
+        if (terrainVersion >= 3) {
+            val id = natural.biomeIdAt(x, z)
+            val biome = biomes.firstOrNull { it.id == id } ?: biomes.first()
+            return height to natural.topBlock(biome, x, z, height, water)
+        }
+        val weights = DoubleArray(biomes.size)
+        val biome = biomes[BiomeMap.biomeWeights(floor(x / BIOME_STEP) * BIOME_STEP,
+            floor(z / BIOME_STEP) * BIOME_STEP, seed, weights)]
+        val block = if (terrainVersion >= 2) landscape.topBlock(biome, x, z, height)
+            else altitudeBlock(biome, x, z, height)?.block ?: surfaceNoiseBlock(biome, x, z)
+        return height to block
     }
 
     /**
@@ -2310,6 +2344,22 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Voisinage pour le mesh ────────────────────────────────────────────────
 
+    /**
+     * Comme [neighborBlock], mais une case d'un chunk absent ou pas encore généré vaut [unknown]
+     * au lieu d'air : au bord de la zone chargée, « je ne sais pas » n'est pas « il n'y a rien ».
+     */
+    fun neighborBlockOr(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, unknown: Short,
+                        cache: ChunkLookupCache? = null): Short {
+        if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
+            return baseChunk.blockAt(lx, ly, lz)
+        val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
+        val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
+        val neighbor = (if (cache != null) cache.getOrPut(chunkKey(ncx, ncy, ncz)) { getChunk(ncx, ncy, ncz) }
+            else getChunk(ncx, ncy, ncz)) ?: return unknown
+        if (!neighbor.generated) return unknown
+        return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
+    }
+
     fun neighborBlock(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Short {
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE)
             return baseChunk.blockAt(lx, ly, lz)
@@ -2320,6 +2370,27 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             ?: return AIR
         if (!neighbor.generated) return AIR
         return neighbor.blockAt(wx - ncx * CHUNK_SIZE, wy - ncy * CHUNK_SIZE, wz - ncz * CHUNK_SIZE)
+    }
+
+    /**
+     * Lumière des torches (0..15, quartet haut de `chunk.light`) d'une case, même hors du chunk
+     * de base, et ce qu'elle contient : un sommet ne moyenne que les cases où la lumière passe.
+     * Renvoie -1 pour une case pleine ou d'un chunk pas encore généré.
+     */
+    fun passableBlockLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Int {
+        val chunk: Chunk; val x: Int; val y: Int; val z: Int
+        if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE) {
+            chunk = baseChunk; x = lx; y = ly; z = lz
+        } else {
+            val wx = baseChunk.worldX + lx; val wy = baseChunk.worldY + ly; val wz = baseChunk.worldZ + lz
+            val ncx = Math.floorDiv(wx, CHUNK_SIZE); val ncy = Math.floorDiv(wy, CHUNK_SIZE); val ncz = Math.floorDiv(wz, CHUNK_SIZE)
+            val neighbor = (if (cache != null) cache.getOrPut(chunkKey(ncx, ncy, ncz)) { getChunk(ncx, ncy, ncz) }
+                else getChunk(ncx, ncy, ncz)) ?: return -1
+            if (!neighbor.generated) return -1
+            chunk = neighbor; x = wx - ncx * CHUNK_SIZE; y = wy - ncy * CHUNK_SIZE; z = wz - ncz * CHUNK_SIZE
+        }
+        if (!LightEngine.passable(chunk.blockAt(x, y, z))) return -1
+        return (chunk.light[x + y * CHUNK_SIZE + z * CHUNK_SIZE * CHUNK_SIZE].toInt() ushr 4) and 15
     }
 
     // ── Lumière du ciel ───────────────────────────────────────────────────────

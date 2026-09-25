@@ -4,6 +4,7 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
+import com.Atom2Universe.app.games.caves.CaveStackInventory
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.random.Random
@@ -16,8 +17,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     data class Pos(val x: Int, val y: Int, val z: Int) {
         fun move(dx: Int, dy: Int, dz: Int) = Pos(x+dx,y+dy,z+dz)
     }
-    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1)
-    private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1)
+    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1,val stacks: List<CaveStackInventory.Stack> = emptyList())
+    private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1,val stacks: CaveStackInventory = CaveStackInventory())
     private val stores = linkedMapOf<Pos,Store>()
     val machinery=ArrayList<Enemy>()
     private val knownMachines=linkedMapOf<Pos,Enemy>()
@@ -132,7 +133,31 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun view(p: Pos): View? {
         if(!loaded(p) || !F.isContainer(block(p))) return null
         val s=store(p)
-        return View(p,block(p),s.items.toMap(),powered(p),s.selection,s.progress,recipes.indexOfFirst { it.key==s.active })
+        s.stacks.reconcile(s.items)
+        return View(p,block(p),s.items.toMap(),powered(p),s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },s.stacks.snapshot())
+    }
+    @Synchronized fun splitStack(p: Pos,key: Long,count: Int): Boolean {
+        if(!loaded(p) || !F.isContainer(block(p))) return false
+        val s=store(p);s.stacks.reconcile(s.items)
+        return s.stacks.split(key,count)
+    }
+    @Synchronized fun moveStack(p: Pos,key: Long,target: Long?): Boolean {
+        if(!loaded(p) || !F.isContainer(block(p))) return false
+        val s=store(p);s.stacks.reconcile(s.items)
+        return s.stacks.moveToBag(key,target)
+    }
+    @Synchronized fun transferStack(p: Pos,inventory: MutableMap<Short,Int>,player: CaveStackInventory,
+        hotbar: Array<Short?>,key: Long,deposit: Boolean,target: Long?=null,slot: Int?=null): Int {
+        if(!loaded(p) || !F.isContainer(block(p))) return 0
+        val s=store(p);s.stacks.reconcile(s.items)
+        val from=if(deposit) player else s.stacks;val to=if(deposit) s.stacks else player
+        val source=from.get(key) ?: return 0
+        val destination=if(deposit) s.items else inventory
+        val count=minOf(source.count,Int.MAX_VALUE-(destination[source.id] ?: 0).coerceAtLeast(0))
+        if(count<=0 || !transfer(p,inventory,source.id,count,deposit)) return 0
+        from.take(key,count);to.receive(source.id,count,target,if(deposit) null else slot,bagOnly=slot==null)
+        player.writeBar(hotbar)
+        return count
     }
     /** Atomic exact transfer. Capacity and overflow are checked before either side changes. */
     @Synchronized fun transfer(p: Pos, inventory: MutableMap<Short,Int>, id: Short, requested: Int, deposit: Boolean): Boolean {
@@ -225,9 +250,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     @Synchronized fun snapshot(): String {
         val rows=JSONArray()
-        for((p,s) in stores) rows.put(JSONObject().put("x",p.x).put("y",p.y).put("z",p.z)
+        for((p,s) in stores) {
+            s.stacks.reconcile(s.items)
+            rows.put(JSONObject().put("x",p.x).put("y",p.y).put("z",p.z).put("stacks",s.stacks.json())
             .put("selectionKey",recipes.getOrNull(s.selection)?.key ?: "").put("active",s.active).put("progress",s.progress)
             .put("items",JSONObject().also { j -> s.items.forEach { (id,n)->j.put(id.toString(),n) } }))
+        }
         return JSONObject().put("stores",rows).put("hoppers",JSONArray().also { a ->
             hoppers.forEach { a.put(JSONArray().put(it.x).put(it.y).put(it.z)) }
         }).toString()
@@ -239,7 +267,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         for(i in 0 until rows.length()) runCatching {
             val j=rows.getJSONObject(i)
             val s=Store(progress=j.optInt("progress").coerceIn(0,29),active=j.optString("active",""),
-                selection=recipes.indexOfFirst { it.key==j.optString("selectionKey","") })
+                selection=recipes.indexOfFirst { it.key==j.optString("selectionKey","") },stacks=CaveStackInventory(j.optString("stacks","[]")))
             val items=j.optJSONObject("items") ?: JSONObject()
             items.keys().forEach { key ->
                 val id=key.toIntOrNull(); val n=items.optInt(key)

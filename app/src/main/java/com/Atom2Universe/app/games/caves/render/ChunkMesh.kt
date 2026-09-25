@@ -59,7 +59,8 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
         }
     }
 
-    fun draw(aPos: Int, aUv: Int, aSky: Int = -1, aTint: Int = -1) {
+    /** [aBlock] : lumière des torches par sommet, 12e flottant du maillage des chunks. */
+    fun draw(aPos: Int, aUv: Int, aSky: Int = -1, aTint: Int = -1, aBlock: Int = -1) {
         if (!ready || vertexCount == 0) return
         val stride = floatsPerVertex * 4
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vboId)
@@ -75,7 +76,16 @@ internal class ChunkMesh(private val floatsPerVertex: Int = 6) {
             GLES30.glEnableVertexAttribArray(aTint)
             GLES30.glVertexAttribPointer(aTint, 4, GLES30.GL_FLOAT, false, stride, 28)
         }
+        if (aBlock >= 0 && floatsPerVertex >= 12) {
+            GLES30.glEnableVertexAttribArray(aBlock)
+            GLES30.glVertexAttribPointer(aBlock, 1, GLES30.GL_FLOAT, false, stride, 44)
+        }
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+        if (aBlock >= 0 && floatsPerVertex >= 12) {
+            GLES30.glDisableVertexAttribArray(aBlock)
+            // Tout ce qui se dessine ensuite sans maillage de chunk n'a pas de lumière cuite.
+            GLES30.glVertexAttrib1f(aBlock, 0f)
+        }
         if (aTint >= 0) {
             GLES30.glDisableVertexAttribArray(aTint)
             GLES30.glVertexAttrib4f(aTint, 0f, 0f, 0f, 0f)

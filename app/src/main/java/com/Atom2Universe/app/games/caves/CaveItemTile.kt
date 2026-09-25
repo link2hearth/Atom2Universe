@@ -11,6 +11,12 @@ import com.Atom2Universe.app.R
 
 /** One reusable tile for the bag, recipe ingredients and both sides of a chest. */
 internal class CaveItemTile(context: Context): FrameLayout(context) {
+    companion object {
+        fun edge(context: Context)=minOf(CaveUiStyle.dp(context,60),
+            (context.resources.displayMetrics.widthPixels-CaveUiStyle.dp(context,100))/CaveActivity.ACTIVE_SIZE-CaveUiStyle.dp(context,4))
+            .coerceAtLeast(CaveUiStyle.dp(context,32))
+        fun pitch(context: Context)=edge(context)+CaveUiStyle.dp(context,4)
+    }
     private fun dp(n: Int)=CaveUiStyle.dp(context,n)
     private val icon=View(context)
     private val label=TextView(context).apply {

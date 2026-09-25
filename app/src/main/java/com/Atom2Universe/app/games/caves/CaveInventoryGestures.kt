@@ -8,6 +8,7 @@ import android.view.ViewConfiguration
 
 /** Moving starts a drag immediately; a stationary hold toggles a favorite once. */
 internal object CaveInventoryGestures {
+    fun clear(view: View) { (view.tag as? Binding)?.dispose();view.tag=null;view.setOnTouchListener(null) }
     fun bind(view: View, active: () -> Boolean = { true }, inactiveTap: () -> Unit = {},
              tap: () -> Unit, favorite: () -> Unit, drag: () -> Unit) {
         (view.tag as? Binding)?.dispose()

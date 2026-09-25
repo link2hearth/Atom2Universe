@@ -16,6 +16,7 @@ internal class FrontierLife(json: String) {
     var equipment="{}"
     var magazines="{}"
     var fisheries="{}"
+    var stacks="[]"
     var elapsedMs=0L
         private set
     private val purchases=mutableMapOf<String,Pair<Long,Int>>()
@@ -31,6 +32,7 @@ internal class FrontierLife(json: String) {
         equipment=root.optString("equipment","{}")
         magazines=root.optString("magazines","{}")
         fisheries=root.optString("fisheries","{}")
+        stacks=root.optString("stacks","[]")
         val rows=root.optJSONObject("purchases") ?: JSONObject()
         rows.keys().forEach { key -> rows.optJSONArray(key)?.let { a -> purchases[key]=a.optLong(0) to a.optInt(1).coerceIn(0,8) } }
     }
@@ -69,7 +71,7 @@ internal class FrontierLife(json: String) {
         putPlace("home",home);putPlace("expedition",expedition);put("lastTravel",lastTravel)
         put("elapsed",elapsedMs)
         put("residents",residents)
-        put("equipment",equipment);put("magazines",magazines);put("fisheries",fisheries)
+        put("equipment",equipment);put("magazines",magazines);put("fisheries",fisheries);put("stacks",stacks)
         put("purchases",JSONObject().also { rows -> purchases.forEach { (key,p)->rows.put(key,JSONArray().put(p.first).put(p.second)) } })
     }.toString()
 }

@@ -66,6 +66,7 @@ internal class CaveRenderer(
     private val vividStyle = CaveVisualStyle.isVivid(context)
     private val grayscaleStyle = CaveVisualStyle.current(context) == CaveVisualStyle.Theme.GRAYSCALE
     private var wATint = -1
+    private var wABlock = -1
 
     data class SavedState(
         val x: Double, val y: Double, val z: Double,
@@ -98,8 +99,19 @@ internal class CaveRenderer(
     private val storage = worldId?.let {
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
+    @Volatile private var viewDistances = CaveViewDistances.load(context)
     internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
-                               source = worldSource)
+                               source = worldSource).apply { setSimulationDistance(viewDistances.simulation) }
+
+    /** Called on the GL thread, including while the pause bubble is open. */
+    internal fun setViewDistances(value: CaveViewDistances) {
+        viewDistances = value.normalized()
+        world.setSimulationDistance(viewDistances.simulation)
+        lastCx = Int.MAX_VALUE
+        streamNeedsMore = true
+        lodScanIndex = 0
+        cleanupCounter = CLEANUP_INTERVAL
+    }
     private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
     private val decorSource = worldSource as? MapSource
     private val decorRenderer = decorSource?.let { com.Atom2Universe.app.games.caves.render.CaveDecorRenderer(it) }
@@ -108,11 +120,18 @@ internal class CaveRenderer(
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
     private val lodBuilding    = ConcurrentHashMap.newKeySet<Long>()
     private val lodRebuildRequested = ConcurrentHashMap.newKeySet<Long>()
+    private val lodRebuildBatch = ArrayList<Long>(16)
     private val lodUploadQueue = ConcurrentLinkedQueue<Pair<Long, FloatArray>>()
     private val lodUploadQueueSize = java.util.concurrent.atomic.AtomicInteger(0)
-    private val LOD_RADIUS   = 32
-    private val INITIAL_LOD_BUILD_LIMIT = 512
-    private val MAX_LOD_TILES = 8000
+    private val lodPendingUploads = ConcurrentHashMap.newKeySet<Long>()
+    @Volatile private var lodCenterX = 0
+    @Volatile private var lodCenterZ = 0
+    private var lodScanIndex = 0
+    private val lodOffsets = buildList {
+        val radius = CaveViewDistances.MAX_VIEW
+        for (z in -radius..radius) for (x in -radius..radius)
+            if (x * x + z * z <= radius * radius) add(x to z)
+    }.sortedBy { (x, z) -> x * x + z * z }
     private val LOD_SUPER    = 8                           // 8×8 = 64 colonnes par super-tuile
     // Hauteur (blocs) de la bande de surface, pour les bounding-box de frustum LOD.
     private val SURFACE_BAND_H = ((world.surfaceChunkMax + 1) * CHUNK_SIZE).toFloat()
@@ -279,6 +298,12 @@ internal class CaveRenderer(
     // One mixed shortcut bar. Item categories affect actions, never the destination slot.
     val hotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
     internal val frontierLife = FrontierLife(savedState?.frontierLife ?: "{}")
+    internal val inventoryStacks = CaveStackInventory(frontierLife.stacks)
+    internal fun syncInventoryStacks() = inventoryStacks.reconcile(inventory,hotbar,selectedSlot)
+    internal fun notifyHotbar() {
+        syncInventoryStacks()
+        hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+    }
     internal val residents by lazy { com.Atom2Universe.app.games.caves.entity.FrontierResidents(world,frontierLife.residents) }
     var travelCallback: (() -> Unit)? = null
     var tradeCallback: ((TradeView) -> Unit)? = null
@@ -322,6 +347,7 @@ internal class CaveRenderer(
         }
     }
     internal fun frontierSnapshot(): String {
+        syncInventoryStacks();frontierLife.stacks=inventoryStacks.json()
         frontierLife.residents=residents.snapshot()
         frontierLife.equipment=expeditionCombat.snapshot();frontierLife.fisheries=fishing.snapshot()
         val saved=runCatching { org.json.JSONObject(frontierLife.magazines) }.getOrElse { org.json.JSONObject() }
@@ -473,6 +499,7 @@ internal class CaveRenderer(
         in vec3 a_uv;
         in float a_skyLight;
         in vec4 a_tint;
+        in float a_blockLight;
         uniform mat4 u_mvp;
         uniform vec3 u_chunk_offset;
         out vec2 v_uv;
@@ -481,6 +508,7 @@ internal class CaveRenderer(
         out vec3 v_worldPos;
         out float v_skyLight;
         out vec4 v_tint;
+        out float v_blockLight;
         void main() {
             vec3 worldPos = a_pos + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
@@ -490,6 +518,7 @@ internal class CaveRenderer(
             v_worldPos = worldPos;
             v_skyLight = a_skyLight;
             v_tint = a_tint;
+            v_blockLight = a_blockLight;
         }
     """.trimIndent()
 
@@ -510,6 +539,7 @@ internal class CaveRenderer(
         in float v_faceDir;
         in vec3 v_worldPos;
         in float v_skyLight;
+        in float v_blockLight;
         in vec4 v_tint;
         out vec4 fragColor;
         void main() {
@@ -544,6 +574,12 @@ internal class CaveRenderer(
                 float diffuse = 0.35 + 0.65 * abs(dot(normal, toLight));
                 torchContrib += atten * diffuse * u_lights[i].w * flicker * u_lightColors[i].rgb;
             }
+            // Lumière des torches cuite dans le maillage (0..1, lissée d'un sommet à l'autre) : toutes
+            // les sources éclairent, arrêtées par les murs, pour le prix d'une multiplication. Même
+            // pente que la boucle ci-dessus (portée ~16 blocs, atténuation au carré), même flamme.
+            float baked = v_blockLight;   // niveau 15 contre la torche, un de moins par bloc
+            float flame = 1.0 + 0.025 * sin(u_time * 7.3) + 0.012 * sin(u_time * 13.7);
+            torchContrib += vec3(1.0, 0.678, 0.302) * (baked * baked * 0.8 * flame);
             // Lumière du ciel cuite (0..1) × ambiance jour/nuit ; plancher pénombre pour ne jamais
             // être 100 % noir ; les torches s'ajoutent par-dessus dans les zones non exposées.
             float sky = v_skyLight * u_ambient;
@@ -748,6 +784,7 @@ internal class CaveRenderer(
             wAUv          = it.attrib("a_uv")
             wASky         = it.attrib("a_skyLight")
             wATint        = it.attrib("a_tint")
+            wABlock       = it.attrib("a_blockLight")
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
@@ -840,7 +877,7 @@ internal class CaveRenderer(
             savedState.hotbar.take(hotbar.size).forEachIndexed { i,id ->
                 hotbar[i]=id?.takeIf { (inventory[it] ?: 0)>0 }
             }
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
             inventoryCallback?.invoke(inventory.toMap())
             recoverableAmmoSnapshot=savedState.recoverableAmmo
             for(a in savedState.recoverableAmmo) {
@@ -882,7 +919,7 @@ internal class CaveRenderer(
                 }
             }
             inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
         }
         farmSessionReady = true
         lastFrameNs = System.nanoTime()
@@ -917,20 +954,8 @@ internal class CaveRenderer(
     }
 
     private fun scheduleInitialLodBuilds() {
-        val cache = lodCache ?: return
-        val pcx = camera.chunkX(); val pcz = camera.chunkZ()
-        val r = LOD_RADIUS
-        scope.launch {
-            cache.cachedColumns()
-                .mapNotNull { (cx, cz) ->
-                    val dx = cx - pcx; val dz = cz - pcz
-                    val d2 = dx * dx + dz * dz
-                    if (d2 <= r * r) Triple(d2, cx, cz) else null
-                }
-                .sortedBy { it.first }
-                .take(INITIAL_LOD_BUILD_LIMIT)
-                .forEach { (_, cx, cz) -> scheduleLodBuild(cx, cz) }
-        }
+        lodCenterX = camera.chunkX(); lodCenterZ = camera.chunkZ()
+        lodScanIndex = 0
     }
 
     private fun loadBlockTextures(): Int {
@@ -1058,6 +1083,7 @@ internal class CaveRenderer(
                 maxNewChunks = batchSize
             ) { chunk -> scheduleChunkBuild(chunk) }
         }
+        streamLod(cx, cz, movedChunk)
 
         // Propagation de lumière sur un thread de fond dédié (jamais sur le thread GL → pas de lag),
         // et mono-thread via un guard atomique → pas de course, la skylight converge proprement.
@@ -1183,7 +1209,7 @@ internal class CaveRenderer(
             if (lighting.belongsTo(chunk) && chunk.version == ver) {
                 val needsLightRefresh = !lighting.isCurrent()
                 if (!meshes.containsKey(key)) firstMeshUploads++ else refreshMeshUploads++
-                val mesh = meshes.getOrPut(key) { ChunkMesh(11) }
+                val mesh = meshes.getOrPut(key) { ChunkMesh(12) }
                 mesh.upload(verts); mesh.flushPending()
                 // Show valid geometry now. A changing neighbour light must never leave a hole.
                 if (needsLightRefresh) {
@@ -1203,6 +1229,8 @@ internal class CaveRenderer(
         while (System.nanoTime() < uploadDeadline) {
             val (key, verts) = lodUploadQueue.poll() ?: break
             lodUploadQueueSize.decrementAndGet()
+            lodPendingUploads.remove(key)
+            if (!withinLodRange(lodKeyToCx(key), lodKeyToCz(key))) continue
             var isNew = false
             val mesh = lodMeshes.getOrPut(key) { isNew = true; ChunkMesh(6) }
             mesh.upload(verts); mesh.flushPending()
@@ -1278,10 +1306,11 @@ internal class CaveRenderer(
                 }
             // Nettoyage et cap LOD
             lodMeshes.keys
-                .filter { key -> abs(lodKeyToCx(key) - pcx) > LOD_RADIUS + 4 || abs(lodKeyToCz(key) - pcz) > LOD_RADIUS + 4 }
+                .filter { key -> !withinLodRange(lodKeyToCx(key), lodKeyToCz(key), 4) }
                 .forEach { key -> lodMeshes.remove(key)?.also { it.destroy(); lodGridRemove(key) } }
-            if (lodMeshes.size > MAX_LOD_TILES) {
-                val toEvictLod = lodMeshes.size - MAX_LOD_TILES
+            val maxLodTiles = (viewDistances.view * 2 + 9).let { it * it }
+            if (lodMeshes.size > maxLodTiles) {
+                val toEvictLod = lodMeshes.size - maxLodTiles
                 val lodHeap = java.util.PriorityQueue<Long>(toEvictLod + 1,
                     compareBy { key -> val dx = lodKeyToCx(key) - pcx; val dz = lodKeyToCz(key) - pcz; dx*dx + dz*dz })
                 for (key in lodMeshes.keys) { lodHeap.offer(key); if (lodHeap.size > toEvictLod) lodHeap.poll() }
@@ -1413,15 +1442,18 @@ internal class CaveRenderer(
         GLES30.glUniform1i(wUTex, 0)
 
         extractFrustumPlanes(camera.vpMatrix)
+        // Les murs portent leur lumière de torche dans le maillage : aucune boucle par pixel. La
+        // sélection de sources reste pour ce qui n'a pas de maillage (arme en main, objets).
+        GLES30.glUniform1i(wULightCount, 0)
         for ((key, mesh) in meshes) {
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
+            if (!withinSimulationRange(kcx, kcz)) continue
             if (!isChunkInFrustum(kcx, kcy, kcz)) continue
             val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
             val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
             val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
-            uploadChunkLights(key, offX, offY, offZ, wULights, wULightColors, wULightCount)
-            mesh.draw(wAPos, wAUv, wASky, wATint)
+            mesh.draw(wAPos, wAUv, wASky, wATint, wABlock)
         }
         // Keep the complete selection available to non-chunk world draws.
         GLES30.glUniform4fv(wULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
@@ -1434,7 +1466,10 @@ internal class CaveRenderer(
         // évitant le double-rendu près du joueur. Le LOD reste visible pendant le gap
         // génération→upload (pas de trou).
         columnsWithMesh.clear()
-        meshes.keys.forEach { k -> columnsWithMesh.add(lodKey(world.keyToCx(k), world.keyToCz(k))) }
+        meshes.keys.forEach { k ->
+            val x = world.keyToCx(k); val z = world.keyToCz(k)
+            if (withinSimulationRange(x, z)) columnsWithMesh.add(lodKey(x, z))
+        }
         lodShader?.use()
         GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(lodUAmbient, ambientFor(dayT) * (1f - caveBlend))
@@ -1447,6 +1482,7 @@ internal class CaveRenderer(
                 if (columnsWithMesh.contains(key)) continue
                 val mesh = lodMeshes[key] ?: continue
                 val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
+                if (!withinLodRange(lcx, lcz)) continue
                 GLES30.glUniform3f(lodUChunkOffset,
                     (lcx.toDouble() * CHUNK_SIZE - camera.x).toFloat(),
                     -camera.y.toFloat(),
@@ -1458,7 +1494,7 @@ internal class CaveRenderer(
         decorRenderer?.draw(camera, if (headUnderwater) ambientFor(dayT) * .4f else ambientFor(dayT), caveBlend, caveFogEnd)
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
-        if (!gamePaused) mode.update(dt)
+        if (!gamePaused) { mode.update(dt);if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot) }
         if (worldSource == null) {
             if (!gamePaused) {
                 passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ,hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0)>0 })
@@ -1543,6 +1579,7 @@ internal class CaveRenderer(
         // Tri des chunks visibles seulement : transparence stable, tampon réutilisé.
         visibleWaterKeys.clear()
         for (key in waterMeshes.keys) {
+            if (!withinSimulationRange(world.keyToCx(key), world.keyToCz(key))) continue
             if (isChunkInFrustum(world.keyToCx(key), world.keyToCy(key), world.keyToCz(key)))
                 visibleWaterKeys.add(key)
         }
@@ -1818,7 +1855,7 @@ internal class CaveRenderer(
         weaponChargeTime = 0f; rockChargeTime = 0f
         equipmentRelease = -1f; releasedEquipment = null
         fireWasDown = false
-        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        notifyHotbar()
         return true
     }
 
@@ -2280,7 +2317,7 @@ internal class CaveRenderer(
             val emptySlot = targetBar.indexOfFirst { it == null }
             if (emptySlot != -1) {
                 targetBar[emptySlot] = dropType
-                hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+                notifyHotbar()
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
@@ -2414,7 +2451,7 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
-            meshes.getOrPut(key) { ChunkMesh(11) }.also { it.upload(verts); it.flushPending() }
+            meshes.getOrPut(key) { ChunkMesh(12) }.also { it.upload(verts); it.flushPending() }
             if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(waterVerts); it.flushPending() }
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
@@ -3143,10 +3180,15 @@ internal class CaveRenderer(
         return o
     }
 
+    private var vmUpload: ByteBuffer? = null
+
     /** Dessine une géométrie world-shader (atlas de blocs) en pleine lumière fixe. */
     private fun drawWorldVm(arr: FloatArray, count: Int, model: FloatArray) {
         android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, model, 0)
-        val buf = ByteBuffer.allocateDirect(count * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        // Un seul tampon, agrandi au besoin : l'arme en main se redessine à chaque image.
+        if ((vmUpload?.capacity() ?: 0) < count * 4)
+            vmUpload = ByteBuffer.allocateDirect(count * 4).order(ByteOrder.nativeOrder())
+        val buf = vmUpload!!.also { it.clear() }.asFloatBuffer()
         buf.put(arr, 0, count); buf.position(0)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, count * 4, buf, GLES30.GL_DYNAMIC_DRAW)
@@ -3414,6 +3456,49 @@ internal class CaveRenderer(
 
     // ── LOD helpers ──────────────────────────────────────────────────────────
 
+    private fun withinSimulationRange(cx: Int, cz: Int): Boolean {
+        if (worldSource != null) return true
+        val dx = cx - lodCenterX; val dz = cz - lodCenterZ
+        val radius = viewDistances.simulation
+        return dx * dx + dz * dz <= radius * radius
+    }
+
+    private fun withinLodRange(cx: Int, cz: Int, margin: Int = 0): Boolean {
+        val dx = cx - lodCenterX; val dz = cz - lodCenterZ
+        val radius = viewDistances.view + margin
+        return dx * dx + dz * dz <= radius * radius
+    }
+
+    private fun streamLod(cx: Int, cz: Int, moved: Boolean) {
+        lodCenterX = cx; lodCenterZ = cz
+        if (worldSource != null) return
+        if (moved) lodScanIndex = 0
+        // Edits take priority, with bounded work/vertex queues just like full chunks.
+        // Copie à la main : toList() lit d'abord la taille puis appelle next() autant de fois, et
+        // plante (NoSuchElementException) si un fil LOD retire une clé entre les deux. L'itérateur
+        // d'un ensemble concurrent, lui, ne plante jamais : on s'arrête simplement où il s'arrête.
+        lodRebuildBatch.clear()
+        for (key in lodRebuildRequested) { lodRebuildBatch.add(key); if (lodRebuildBatch.size >= 16) break }
+        for (key in lodRebuildBatch) {
+            val x = lodKeyToCx(key); val z = lodKeyToCz(key)
+            if (!withinLodRange(x, z)) lodRebuildRequested.remove(key)
+            else scheduleLodBuild(x, z)
+        }
+        var scanned = 0
+        var scheduled = 0
+        val radius2 = viewDistances.view * viewDistances.view
+        while (lodScanIndex < lodOffsets.size && scanned++ < 256 && scheduled < 4 &&
+            lodBuilding.size < 8 && lodUploadQueueSize.get() < 48) {
+            val (dx, dz) = lodOffsets[lodScanIndex]
+            if (dx * dx + dz * dz > radius2) break
+            lodScanIndex++
+            val key = lodKey(cx + dx, cz + dz)
+            if (lodMeshes.containsKey(key) || key in lodBuilding || key in lodPendingUploads) continue
+            scheduleLodBuild(cx + dx, cz + dz)
+            scheduled++
+        }
+    }
+
     private fun lodKey(cx: Int, cz: Int): Long =
         (cx.toLong() and 0xFFFFF) or ((cz.toLong() and 0xFFFFF) shl 20)
 
@@ -3427,23 +3512,25 @@ internal class CaveRenderer(
     private fun scheduleLodBuild(cx: Int, cz: Int) {
         // Une carte préparée tient entière dans la distance de vue : le LOD lointain ne sert à rien.
         if (worldSource != null) return
+        if (!withinLodRange(cx, cz)) return
         val key = lodKey(cx, cz)
         lodRebuildRequested.add(key)
+        if (lodBuilding.size >= 8 || lodUploadQueueSize.get() >= 48 || key in lodPendingUploads) return
         if (!lodBuilding.add(key)) return
         scope.launch(lodDispatcher) {
             try {
-                do {
-                    lodRebuildRequested.remove(key)
-                    val verts = LodBuilder.buildColumn(cx, cz, world, lodCache)
-                    if (verts.isNotEmpty() && lodUploadQueueSize.get() < 64) {
-                        lodUploadQueueSize.incrementAndGet()
-                        lodUploadQueue.add(Pair(key, verts))
-                    }
-                    // Conserver une édition/génération survenue pendant le calcul.
-                } while (isActive && lodRebuildRequested.contains(key))
+                lodRebuildRequested.remove(key)
+                if (!withinLodRange(cx, cz)) return@launch
+                val verts = if (withinSimulationRange(cx, cz))
+                    LodBuilder.buildColumn(cx, cz, world, lodCache, coarse = true)
+                    else LodBuilder.buildDistantColumn(cx, cz, world, lodCache)
+                if (verts.isNotEmpty() && withinLodRange(cx, cz)) {
+                    lodPendingUploads.add(key)
+                    lodUploadQueueSize.incrementAndGet()
+                    lodUploadQueue.add(Pair(key, verts))
+                }
             } finally {
                 lodBuilding.remove(key)
-                if (scope.isActive && lodRebuildRequested.contains(key)) scheduleLodBuild(cx, cz)
             }
         }
     }
@@ -3919,7 +4006,7 @@ internal class CaveRenderer(
         if (mode.singleWeapon && index != 0) return
         if (index !in hotbar.indices) return
         selectedSlot = index
-        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        notifyHotbar()
     }
 
     // Détermine le meta d'orientation au moment du placement.
@@ -3965,7 +4052,7 @@ internal class CaveRenderer(
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
-        hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+        notifyHotbar()
     }
     private fun consumeFarmItem(id: Short) {
         if (isCreative) return
@@ -3975,7 +4062,7 @@ internal class CaveRenderer(
             for (i in hotbar.indices) if (hotbar[i] == id) hotbar[i]=null
         }
         inventoryCallback?.invoke(inventory.toMap())
-        hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+        notifyHotbar()
     }
 
     internal data class TradeView(val key: String,val role: Int,val offers: List<FrontierLife.Offer>,val remaining: List<Int>,val items: Map<Short,Int>)
@@ -3995,7 +4082,7 @@ internal class CaveRenderer(
             val id=hotbar[i] ?: continue
             if((inventory[id] ?: 0)<=0) hotbar[i]=null
         }
-        inventoryCallback?.invoke(inventory.toMap());hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+        inventoryCallback?.invoke(inventory.toMap());notifyHotbar()
     }
     private fun interactActor(sx: Double,sy: Double,sz: Double,dx: Double,dy: Double,dz: Double): Boolean {
         if(worldSource!=null || !mode.allowsWorldEdits || !playerNode.isAlive) return false
@@ -4160,14 +4247,14 @@ internal class CaveRenderer(
                 } else inventory[blockType] = count - 1
             }
             inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
             return
         }
         if (BlockRegistry.get(blockType)?.placeable == false && blockType != BUCKET_EMPTY && blockType != BUCKET_FULL) return
         startSwing()
         if ((inventory[blockType] ?: 0) <= 0) {
             hotbar[selectedSlot] = null
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
             return
         }
         target ?: return
@@ -4235,7 +4322,7 @@ internal class CaveRenderer(
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
-        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        notifyHotbar()
     }
 
     internal fun selectWorkshopRecipe(p: FrontierWorkshops.Pos,index: Int) {
@@ -4243,9 +4330,29 @@ internal class CaveRenderer(
             (p.x+.5-camera.playerX).pow(2)+(p.y+.5-camera.playerY).pow(2)+(p.z+.5-camera.playerZ).pow(2)>36) return
         if(workshops.select(p,index)) checkpointCallback?.invoke()
     }
+    internal fun mutateStorageStack(p: FrontierWorkshops.Pos,key: Long,player: Boolean,
+        split: Int?=null,target: Long?=null,barSlot: Int?=null,transfer: Boolean=false,notify: Boolean=true): Int {
+        val distance=(camera.playerX-p.x-.5).pow(2)+(camera.playerY-p.y).pow(2)+(camera.playerZ-p.z-.5).pow(2)
+        if(!mode.allowsWorldEdits || distance>81.0 || workshops.view(p)==null) return 0
+        syncInventoryStacks()
+        val changed=when {
+            transfer -> workshops.transferStack(p,inventory,inventoryStacks,hotbar,key,player,target,barSlot)
+            player -> {
+                val ok=when { split!=null -> inventoryStacks.split(key,split)
+                    barSlot!=null -> inventoryStacks.moveToBar(key,barSlot)
+                    else -> inventoryStacks.moveToBag(key,target) }
+                inventoryStacks.writeBar(hotbar);if(ok) 1 else 0
+            }
+            split!=null -> if(workshops.splitStack(p,key,split)) 1 else 0
+            else -> if(workshops.moveStack(p,key,target)) 1 else 0
+        }
+        if(notify) { inventoryCallback?.invoke(inventory.toMap());notifyHotbar() }
+        return changed
+    }
+
     internal fun transferStorageBatch(p: FrontierWorkshops.Pos,ids: List<Short>) {
         for(id in ids) transferStorage(p,id,Int.MAX_VALUE,true,false)
-        inventoryCallback?.invoke(inventory.toMap());hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+        inventoryCallback?.invoke(inventory.toMap());notifyHotbar()
     }
     internal fun transferStorage(p: FrontierWorkshops.Pos, id: Short, count: Int, deposit: Boolean, notify: Boolean=true) {
         val distance = (camera.playerX-p.x-.5).let { it*it } + (camera.playerY-p.y).let { it*it } +
@@ -4256,7 +4363,7 @@ internal class CaveRenderer(
             if (hotbar[i]?.let { (inventory[it] ?: 0) <= 0 } == true) hotbar[i] = null
         if(notify) {
             inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
         }
     }
 
@@ -4279,7 +4386,7 @@ internal class CaveRenderer(
             for(i in hotbar.indices) if(i!=selectedSlot && hotbar[i]==to) hotbar[i]=null
             hotbar[selectedSlot] = to
             inventoryCallback?.invoke(inventory.toMap())
-            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+            notifyHotbar()
             return
         }
         val newFromCount = (inventory[from] ?: 1) - 1
@@ -4294,7 +4401,7 @@ internal class CaveRenderer(
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
-        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        notifyHotbar()
     }
 
     private fun isInsidePlayer(bx: Int, by: Int, bz: Int): Boolean {

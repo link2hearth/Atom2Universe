@@ -4,7 +4,7 @@ import com.Atom2Universe.app.games.caves.node.BlockRegistry
 
 internal object LodBuilder {
 
-    fun buildColumn(cx: Int, cz: Int, world: World, cache: LodCache? = null): FloatArray {
+    fun buildColumn(cx: Int, cz: Int, world: World, cache: LodCache? = null, coarse: Boolean = false): FloatArray {
         val H = CHUNK_SIZE
         val buf = Buf()
         // Une seule résolution des chunks par colonne voisine, au lieu de rescanner la
@@ -83,6 +83,8 @@ internal object LodBuilder {
             }
         }
 
+        if (coarse) return buildDistantColumn(cx, cz, world, cache)
+
         // ── Faces supérieures (couleur du bloc, pleine lumière) ───────────────
         for (lz in 0 until H) for (lx in 0 until H) {
             val h = heights[lz * H + lx]
@@ -155,6 +157,44 @@ internal object LodBuilder {
             }
         }
 
+        return buf.toArray()
+    }
+
+    /** A shared 4-block grid extends the horizon without generating full chunks.
+     * Adjacent tiles sample identical world coordinates along their edges.
+     * Analytical samples never enter the persistent cache of explored/edited terrain. */
+    fun buildDistantColumn(cx: Int, cz: Int, world: World, cache: LodCache?): FloatArray {
+        val step = 4
+        val side = CHUNK_SIZE / step + 1
+        val heights = IntArray(side * side)
+        val blocks = ShortArray(side * side)
+        for (z in 0 until side) for (x in 0 until side) {
+            val wx = cx * CHUNK_SIZE + x * step
+            val wz = cz * CHUNK_SIZE + z * step
+            val entry = cache?.get(Math.floorDiv(wx, CHUNK_SIZE), Math.floorDiv(wz, CHUNK_SIZE))
+            val cell = Math.floorMod(wz, CHUNK_SIZE) * CHUNK_SIZE + Math.floorMod(wx, CHUNK_SIZE)
+            val known = entry?.heights?.get(cell)
+            val sample = world.distantSurface(wx, wz)
+            val index = z * side + x
+            val useKnown = known != null && known != Short.MIN_VALUE &&
+                (!(isWater(sample.second) || sample.second == ICE) || known.toInt() >= sample.first)
+            heights[index] = if (useKnown) known!!.toInt() else sample.first
+            blocks[index] = if (useKnown) entry!!.blocks[cell] else sample.second
+        }
+        val buf = Buf((side - 1) * (side - 1) * 36)
+        fun vertex(x: Int, z: Int, color: Int, shade: Float) {
+            buf.add6((x * step).toFloat(), (heights[z * side + x] + 1).toFloat(), (z * step).toFloat(),
+                ((color ushr 16) and 255) / 255f * shade,
+                ((color ushr 8) and 255) / 255f * shade, (color and 255) / 255f * shade)
+        }
+        for (z in 0 until side - 1) for (x in 0 until side - 1) {
+            val color = BlockRegistry.getColor(blocks[z * side + x])
+            val slope = heights[z * side + x] - heights[(z + 1) * side + x + 1]
+            val shade = (.88f + slope * .012f).coerceIn(.65f, 1f)
+            // Counter-clockwise from above, matching GL back-face culling.
+            vertex(x,z,color,shade); vertex(x,z+1,color,shade); vertex(x+1,z+1,color,shade)
+            vertex(x,z,color,shade); vertex(x+1,z+1,color,shade); vertex(x+1,z,color,shade)
+        }
         return buf.toArray()
     }
 

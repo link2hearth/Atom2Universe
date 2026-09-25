@@ -12,7 +12,7 @@
     <string name="cave_storage_close">Return to world</string>
     <string name="cave_storage_row">%1$s × %2$d</string>
     <string name="cave_storage_empty">Nothing here yet.</string>
-    <string name="cave_storage_hint">Choose a direction and quantity, then touch an item. Your backpack remains unlimited. Breaking this block returns its contents.</string>
+    <string name="cave_storage_hint">Drag a stack between bag, bar and storage. Tap for details; hold to split, adjust the amount, then tap outside. Breaking this block returns its contents.</string>
     <string name="cave_mill_hint">Add wheat. Connect a current wheel directly or through up to 12 touching shafts. The wheel needs flowing water beside it. 1 wheat → 3 flour every 6 seconds. Machines run while you play nearby.</string>
     <string name="cave_mill_running">Power connected. Add wheat: 1 wheat → 3 flour in 6 seconds. Close this panel to resume production.</string>
     <string name="cave_cooker_hint">Add coal or charcoal and flour or potatoes. Every 10 seconds: 3 flour/potatoes + 1 fuel → 4 bread/baked potatoes. Close the panel to cook.</string>
