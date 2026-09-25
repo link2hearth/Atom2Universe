@@ -231,12 +231,15 @@ class SquadCommandTest {
         val nodes = puppets(squad).map { p ->
             val n = p.orderedNode
             assertTrue("poste d'assaut manquant", n >= 0)
-            val d = distanceToPlayer(n)
-            assertTrue("poste de tir à $d blocs", d in 6.0..20.0)
+            // Les postes se placent autour de la position **annoncée** par la radio, qui est
+            // floue de ±radioBlur : mesurée depuis le vrai joueur, la pointe (0,65 × engageRadius,
+            // moins 15 % de tremblement) peut légitimement tomber à 4 ou 5 blocs.
+            val d = distanceToAnnounced(cmd, n)
+            assertTrue("poste de tir à $d blocs de la position annoncée", d in 6.0..20.0)
             assertFalse("un ordre d'assaut laisse réagir à ce qu'on entend", p.strict)
             n
         }
-        val bearings = nodes.map { bearingOfNode(it) }
+        val bearings = nodes.map { bearingFromAnnounced(cmd, it) }
         // Une file indienne, ce sont quatre hommes dans le même azimut. On veut l'inverse.
         for (i in bearings.indices) for (j in i + 1 until bearings.size) {
             val gap = abs(normalize(bearings[i] - bearings[j]))
@@ -423,6 +426,13 @@ class SquadCommandTest {
 
     private fun distanceToPlayer(node: Int) =
         hypot(grid.nodeX[node] + .5 - MID, grid.nodeZ[node] + .5 - MID)
+
+    /** Distance et azimut vus depuis la position que la radio annonce, celle que visent les postes. */
+    private fun distanceToAnnounced(cmd: SquadCommand, node: Int) =
+        hypot(grid.nodeX[node] + .5 - cmd.reportedX, grid.nodeZ[node] + .5 - cmd.reportedZ)
+
+    private fun bearingFromAnnounced(cmd: SquadCommand, node: Int) =
+        Math.toDegrees(atan2(grid.nodeX[node] + .5 - cmd.reportedX, grid.nodeZ[node] + .5 - cmd.reportedZ))
 
     private fun bearingOfNode(node: Int) =
         Math.toDegrees(atan2(grid.nodeX[node] + .5 - MID, grid.nodeZ[node] + .5 - MID))
