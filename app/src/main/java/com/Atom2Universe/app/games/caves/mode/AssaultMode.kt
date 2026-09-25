@@ -17,6 +17,7 @@ import com.Atom2Universe.app.games.caves.ai.Squad
 import com.Atom2Universe.app.games.caves.ai.SquadCommand
 import com.Atom2Universe.app.games.caves.ai.SquadMember
 import com.Atom2Universe.app.games.caves.ai.SquadSpawn
+import com.Atom2Universe.app.games.caves.ai.SquadTuning
 import com.Atom2Universe.app.games.caves.ai.SuburbDeployment
 import com.Atom2Universe.app.games.caves.ai.TowerDeployment
 import com.Atom2Universe.app.games.caves.ai.LineOfSight
@@ -65,9 +66,11 @@ internal class AssaultMode(
         source.map.sizeX == BuiltinMaps.ARENA_SIZE && source.map.sizeZ == BuiltinMaps.ARENA_DEPTH &&
         source.map.spawnsB.isNotEmpty()
     // Une escouade tient un secteur et monte à l'assaut d'un seul bloc : quatre à six hommes.
-    private val squadSize = if (isTower) TOWER_SQUAD_SIZE else FIELD_SQUAD_SIZE
-    private val squadCount = if (isTower) TOWER_SQUADS else if (isSuburb) SUBURB_SQUADS else FIELD_SQUADS
-    private val soldierCount = squadSize * squadCount
+    // Dans la tour, chaque poste fixe lui-même son effectif.
+    private val squadSize = FIELD_SQUAD_SIZE
+    private val squadCount = if (isSuburb) SUBURB_SQUADS else FIELD_SQUADS
+    private val soldierCount =
+        if (isTower) OfficeTowerMap.POSTS.sumOf { it.size } else squadSize * squadCount
     val match = AssaultMatch(targetsPerRound = soldierCount,
         roundSeconds = if (isTower) 20 * 60f else if (isSuburb) 10 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
     private var roundWeapon = "gun"
@@ -205,7 +208,7 @@ internal class AssaultMode(
         navGrid = grid
         pathFinder = PathFinder(grid)
         routes = RouteQueue(grid)
-        command = SquadCommand(grid, solid, rng)
+        command = SquadCommand(grid, solid, rng, if (isTower) TOWER_COMMAND else SquadTuning())
         if (!listeningSteps) {
             listeningSteps = true
             // Les soldats entendent exactement les pas que le joueur entend : même cadence, et
@@ -710,7 +713,7 @@ internal class AssaultMode(
 
     /** Les cases de départ, déjà groupées par escouade, selon la carte jouée. */
     private fun planSquads(grid: NavGrid): List<IntArray> {
-        towerDeployment?.let { return it.chooseSquads(squadCount, squadSize, rng) }
+        towerDeployment?.let { return it.chooseSquads(rng) }
         suburbDeployment?.let { return it.chooseSquads(squadCount, squadSize, rng) }
         val pool = deploymentPool(grid)
         if (pool.isEmpty()) return emptyList()
@@ -833,9 +836,13 @@ internal class AssaultMode(
         const val STUCK_LOG_SECONDS = 2f
 
         // Effectifs : une seule escouade attaque à la fois, la garnison entière sert de réserve.
-        const val TOWER_SQUAD_SIZE = 5
-        const val TOWER_SQUADS = 12
         const val FIELD_SQUAD_SIZE = 4
+        /**
+         * La tour est un parcours : ses postes sont placés à la main, ils ne glissent pas vers le
+         * joueur annoncé, et un appel au secours n'est suivi que par les escouades du même étage —
+         * celles des autres étages restent à leur poste au lieu de se masser à la verticale du combat.
+         */
+        val TOWER_COMMAND = SquadTuning(holdDriftSpeed = 0f, reinforceFloorBand = 4.0)
         const val SUBURB_SQUADS = 2
         const val FIELD_SQUADS = 3
 

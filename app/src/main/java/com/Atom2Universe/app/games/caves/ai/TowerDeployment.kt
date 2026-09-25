@@ -4,12 +4,17 @@ import com.Atom2Universe.app.games.caves.world.MapPoint
 import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import kotlin.random.Random
 
-/** Garnison créée une fois par manche, répartie en escouades par niveau puis par aile. Aucun renfort. */
+/**
+ * Garnison de la tour, créée une fois par manche. Aucun renfort, et **aucun tirage de pièce** :
+ * chaque escouade occupe un poste choisi à la main dans [OfficeTowerMap.POSTS], le long du
+ * parcours. Le chef de file se tient sur le poste, ses hommes à quelques pas autour ; seul ce
+ * placement autour du poste change d'une manche à l'autre.
+ */
 internal class TowerDeployment(private val grid: NavGrid, spawn: MapPoint) {
-    private val zones = Array(OfficeTowerMap.PLAYABLE_LEVELS) { Array(ROOMS) { ArrayList<Int>() } }
+    private val pools = ArrayList<IntArray>(OfficeTowerMap.POSTS.size)
 
     init {
-        // Écarter les surfaces décoratives isolées et les pièces inaccessibles au joueur.
+        // Seules comptent les cases que le joueur peut atteindre depuis le sas.
         val reachable = BooleanArray(grid.nodeCount)
         val queue = IntArray(grid.nodeCount)
         var read = 0; var write = 0
@@ -22,47 +27,38 @@ internal class TowerDeployment(private val grid: NavGrid, spawn: MapPoint) {
                 if (!reachable[next]) { reachable[next] = true; queue[write++] = next }
             }
         }
-        for (n in 0 until grid.nodeCount) {
-            if (!reachable[n]) continue
-            val y = grid.nodeY[n]
-            if (y < 3 || (y - 3) % 6 != 0) continue
-            val level = (y - 3) / 6
-            if (level !in zones.indices) continue
-            val x = grid.nodeX[n]; val z = grid.nodeZ[n]
-            val wing = when (x) { in 4..61 -> 0; in 78..135 -> 1; else -> continue }
-            val room = when (z) {
-                in 4..27 -> 0; in 33..51 -> 1; in 68..86 -> 2; in 92..115 -> 3
-                else -> continue
+        for (post in OfficeTowerMap.POSTS) {
+            // Le chef d'abord (la case la plus proche du poste), puis les voisines au même niveau.
+            val around = ArrayList<Int>()
+            for (n in 0 until grid.nodeCount) {
+                if (!reachable[n] || grid.nodeY[n] != post.y) continue
+                val dx = grid.nodeX[n] - post.x; val dz = grid.nodeZ[n] - post.z
+                if (dx * dx + dz * dz <= POST_RADIUS * POST_RADIUS) around.add(n)
             }
-            val dx = x - spawn.x; val dz = z - spawn.z
-            if (level == 0 && dx * dx + dz * dz < 24 * 24) continue
-            zones[level][wing * 4 + room].add(n)
+            around.sortBy {
+                val dx = grid.nodeX[it] - post.x; val dz = grid.nodeZ[it] - post.z
+                dx * dx + dz * dz
+            }
+            pools.add(around.toIntArray())
         }
     }
 
-    /**
-     * Une escouade par pièce, réparties sur tous les niveaux : deux par étage pour une garnison de
-     * douze. Les hommes d'une même escouade démarrent groupés, c'est ce qui leur donne un secteur
-     * à tenir et un côté d'où arriver quand la radio les envoie.
-     */
-    fun chooseSquads(count: Int, size: Int, rng: Random): List<IntArray> {
-        val result = ArrayList<IntArray>(count)
-        val used = HashSet<Int>()
-        for (i in 0 until count) {
-            val level = i % zones.size
-            val first = rng.nextInt(ROOMS)
-            for (offset in 0 until ROOMS) {
-                val room = (first + offset) % ROOMS
-                if (!used.add(level * ROOMS + room)) continue
-                val group = SquadSpawn.grab(grid, zones[level][room], size, rng)
-                if (group.size >= 2) { result.add(group); break }
-            }
+    /** Une escouade par poste, dans l'ordre de [OfficeTowerMap.POSTS]. Un poste introuvable est sauté. */
+    fun chooseSquads(rng: Random): List<IntArray> {
+        val result = ArrayList<IntArray>(pools.size)
+        for ((i, pool) in pools.withIndex()) {
+            if (pool.isEmpty()) continue
+            val group = SquadSpawn.grab(grid, pool.asList(), OfficeTowerMap.POSTS[i].size, rng, seed = pool[0])
+            if (group.isNotEmpty()) result.add(group)
         }
         return result
     }
 
+    /** Cases réellement disponibles autour de chaque poste (pour les tests). */
+    fun poolSizes(): List<Int> = pools.map { it.size }
+
     private companion object {
-        /** Deux ailes de quatre pièces par niveau. */
-        const val ROOMS = 8
+        /** Rayon autour du poste où se placent les hommes de l'escouade. */
+        const val POST_RADIUS = 4
     }
 }

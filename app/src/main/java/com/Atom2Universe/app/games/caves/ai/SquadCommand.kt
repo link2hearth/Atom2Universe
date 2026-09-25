@@ -60,6 +60,13 @@ internal data class SquadTuning(
      * qu'une réserve ait le temps de s'y rendre même si l'escouade attaquée est anéantie en
      * quelques secondes. */
     val distressMemorySeconds: Float = 10f,
+    /**
+     * Écart de hauteur maximal (en blocs, pieds contre pieds) entre une réserve et le dernier
+     * combat pour qu'elle y réponde. Illimité par défaut : la radio porte partout. Dans un
+     * bâtiment à étages, une escouade trois niveaux plus haut ne peut que glisser à la verticale du
+     * combat, sur son propre plancher — elle quitterait son poste sans jamais aider.
+     */
+    val reinforceFloorBand: Double = Double.POSITIVE_INFINITY,
     /** Distance à laquelle l'escouade activée se regroupe, hors de vue du joueur. */
     val rallyDistance: Double = 22.0,
     /** Un homme à moins de ça de son poste de regroupement est considéré en place. */
@@ -210,6 +217,7 @@ internal class SquadCommand(
      * que [distressLeft] est positif, les réserves y répondent comme si le combat durait encore.
      */
     private var distressX = 0.0
+    private var distressY = 0.0
     private var distressZ = 0.0
     private var distressLeft = 0f
 
@@ -272,7 +280,7 @@ internal class SquadCommand(
             val sq = squads[i]
             for (j in sq.members.indices) {
                 val m = sq.members[j]
-                if (m.alive && m.shaken) { distressX = m.x; distressZ = m.z; distressLeft = tuning.distressMemorySeconds }
+                if (m.alive && m.shaken) { distressX = m.x; distressY = m.y; distressZ = m.z; distressLeft = tuning.distressMemorySeconds }
             }
         }
 
@@ -412,7 +420,7 @@ internal class SquadCommand(
      */
     private fun driftTowardContact(s: Squad, dt: Float) {
         val targetX: Double; val targetZ: Double; val standoff: Double; val speed: Float
-        if (distressLeft > 0f) {
+        if (distressLeft > 0f && abs(s.anchorY - distressY) <= tuning.reinforceFloorBand) {
             targetX = distressX; targetZ = distressZ; standoff = 0.0
             speed = tuning.reinforceDriftSpeed
         } else {
