@@ -1655,6 +1655,7 @@ internal class CaveRenderer(
                 if(p.kind != ProjectileKind.LEGACY && (projectileSolid(p.x,p.y,p.z) ||
                     decorSource?.decorHitsSegment(ox,oy,oz,p.x,p.y,p.z) == true)) {
                     spawnImpact(p.x,p.y,p.z)
+                    if (p.kind == ProjectileKind.BULLET || p.kind == ProjectileKind.PELLET) announceImpact(p.x,p.y,p.z)
                     if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
                         p.x=ox;p.y=oy;p.z=oz;p.stuck=true;recovered=true
                     } else { iter.remove() }
@@ -2020,6 +2021,28 @@ internal class CaveRenderer(
         val id = hotbar[selectedSlot] ?: return 0
         if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return 0
         return com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id)?.rolledStats?.get(key) ?: 0
+    }
+
+    /**
+     * Le bruit d'une balle qui frappe un mur, en mode Assaut seulement : béton, bois ou métal selon
+     * le bloc touché, plus faible avec la distance et placé à gauche ou à droite comme les animaux.
+     * Les balles des soldats aussi : entendre claquer le mur juste à côté, c'est savoir qu'on est visé.
+     */
+    private fun announceImpact(x: Double, y: Double, z: Double) {
+        if (mode.allowsWorldEdits) return
+        val dx = x - camera.playerX
+        val dz = z - camera.playerZ
+        val distance = kotlin.math.sqrt(dx * dx + dz * dz + (y - camera.eyeY) * (y - camera.eyeY))
+        if (distance > IMPACT_HEARING) return
+        val block = worldBlockAt(floor(x).toInt(), floor(y).toInt(), floor(z).toInt())
+        val material = when {
+            block == AIR || block in 1000..1019 -> "wood"   // meubles (décor) et planches
+            block == BRICK_OBSIDIAN || block == FURNACE || block == IRON -> "metal"
+            else -> "concrete"
+        }
+        val yaw = Math.toRadians(camera.yaw.toDouble())
+        val pan = ((-cos(yaw) * dx + sin(yaw) * dz) / distance.coerceAtLeast(1.0)).toFloat() * .65f
+        eventBus.publish(GameEvent.BulletImpact(material, (1f - distance.toFloat() / IMPACT_HEARING.toFloat()), pan))
     }
 
     private fun spawnImpact(x: Double, y: Double, z: Double) {
@@ -3078,7 +3101,7 @@ internal class CaveRenderer(
         val wasReloading = magazine.reloadRemaining > 0f
         magazine.reload()
         if (!wasReloading && magazine.reloadRemaining > 0f) {
-            eventBus.publish(GameEvent.WeaponReload(complete = false))
+            eventBus.publish(GameEvent.WeaponReload(complete = false, weaponType = selectedEquipmentType() ?: ""))
         }
     }
 
@@ -3957,5 +3980,7 @@ internal class CaveRenderer(
         private const val AUTO_SHOOT_RANGE = 30.0
         private const val PROJ_SPEED       = 15f
         private const val PROJ_MAX_DIST    = 40.0
+        /** Au-delà, une balle qui frappe un mur ne s'entend plus. */
+        private const val IMPACT_HEARING   = 40.0
     }
 }

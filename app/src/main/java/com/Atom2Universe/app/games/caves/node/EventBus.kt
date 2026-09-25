@@ -26,7 +26,19 @@ internal sealed class GameEvent {
     data class EnemyFired(val weaponType: String) : GameEvent()
 
     data class WeaponFired(val weaponType: String) : GameEvent()
-    data class WeaponReload(val complete: Boolean) : GameEvent()
+    /** [weaponType] : l'arme rechargée (« gun », « smg »…), pour jouer le bon geste. */
+    data class WeaponReload(val complete: Boolean, val weaponType: String = "") : GameEvent()
+    /**
+     * Une balle vient de frapper un bloc (mode Assaut). [material] : « concrete », « wood » ou
+     * « metal ». Volume et panoramique sont déjà calculés depuis la position du joueur.
+     */
+    data class BulletImpact(val material: String, val volume: Float, val pan: Float) : GameEvent()
+    /** Début d'une manche du mode Assaut. */
+    object RoundStarted : GameEvent()
+    /** Fin d'une manche : [won] si toute la garnison est tombée. */
+    data class RoundEnded(val won: Boolean) : GameEvent()
+    /** Boucle d'ambiance à jouer (nom de fichier sans extension), ou null pour le silence. */
+    data class Ambience(val track: String?) : GameEvent()
     data class Footstep(val surface: String = "stone", val running: Boolean = false,
                         val moving: Boolean = false, val interval: Float = .46f) : GameEvent()
     data class AnimalCall(val species: String, val volume: Float, val pan: Float) : GameEvent()

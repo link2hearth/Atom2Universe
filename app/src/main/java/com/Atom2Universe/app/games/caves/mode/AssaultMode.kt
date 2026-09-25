@@ -333,11 +333,47 @@ internal class AssaultMode(
             AssaultMatch.Event.NONE -> kotlin.Unit
         }
 
+        announcePhase()
+        updateAmbience()
+
         statusTimer += dt
         if (forceStatus || statusTimer >= STATUS_INTERVAL) {
             statusTimer = 0f
             onStatus?.invoke(match.status())
         }
+    }
+
+    // ── Sons de manche et ambiance ────────────────────────────────────────────
+
+    private var heardPhase: AssaultMatch.Phase? = null
+    private var ambience: String? = null
+    private var ambienceAnnounced = false
+
+    /** Radio au départ de la manche, fanfare ou glas à la fin, quelle que soit la cause de la fin. */
+    private fun announcePhase() {
+        val phase = match.phase
+        if (phase == heardPhase) return
+        val previous = heardPhase
+        heardPhase = phase
+        if (phase == AssaultMatch.Phase.PLAYING) r.eventBus.publish(GameEvent.RoundStarted)
+        else if (previous == AssaultMatch.Phase.PLAYING)
+            r.eventBus.publish(GameEvent.RoundEnded(match.status().lastEnd == AssaultMatch.RoundEnd.CLEARED))
+    }
+
+    /** Dans la tour, l'ambiance suit l'étage : serveurs au 2e, vent sur le toit, bureaux ailleurs. */
+    private fun updateAmbience() {
+        val track = if (!isTower) null else {
+            val level = kotlin.math.round((player.eyeY - EYE_HEIGHT - OfficeTowerMap.feet(0)) / 6.0).toInt()
+            when {
+                level >= OfficeTowerMap.FLOORS -> "amb_rooftop"
+                level == 2 -> "amb_servers"
+                else -> "amb_office"
+            }
+        }
+        if (ambienceAnnounced && track == ambience) return
+        ambience = track
+        ambienceAnnounced = true
+        r.eventBus.publish(GameEvent.Ambience(track))
     }
 
     /** Appelé sur le thread GL depuis le sélecteur en jeu. */

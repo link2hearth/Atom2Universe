@@ -45,3 +45,10 @@ DC offset removal, gain balancing and short edge fades. No synthesized layers ar
 Footsteps additionally use a 1200 Hz low-pass filter without makeup gain.
 The original source authors do not endorse this project.
 Credits and license links are also accessible from the Cave World menu.
+
+## Generated with ElevenLabs (sound effects), 25/09/2026
+
+reload_gun, reload_smg, reload_dual_pistols, reload_shotgun, reload_lever_rifle,
+impact_concrete, impact_wood, impact_metal, round_start_radio, round_won, round_lost,
+amb_office, amb_servers, amb_rooftop. Levels equalized afterwards; ambience loops
+cross-faded over their last 1.5 s. Generated on a free account: no commercial licence.
