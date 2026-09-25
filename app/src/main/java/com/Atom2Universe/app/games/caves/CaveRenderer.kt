@@ -988,9 +988,12 @@ internal class CaveRenderer(
     }
 
     private fun loadBlockTextures(): Int {
+        // Copie locale : lire le champ dans la lambda capturerait tout le renderer, et le
+        // registre statique le garderait en mémoire (avec le monde entier) après la sortie.
+        val vivid = vividStyle
         com.Atom2Universe.app.games.caves.node.MeadowTextures.itemTextureNames.forEach { name ->
             BlockRegistry.registerGeneratedTexture(name) { size ->
-                com.Atom2Universe.app.games.caves.node.MeadowTextures.texture(name, size, vivid = vividStyle)
+                com.Atom2Universe.app.games.caves.node.MeadowTextures.texture(name, size, vivid = vivid)
             }
         }
 
