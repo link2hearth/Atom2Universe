@@ -121,6 +121,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun hasPendingLight(): Boolean = lightQueue.isNotEmpty()
 
+    /** Chunks demandés dont la génération n'est pas finie. */
+    inline fun forEachInFlight(action: (Long) -> Unit) { for (key in inFlightKeys) action(key) }
+    @PublishedApi internal val inFlightKeys: Set<Long> get() = inFlight
+
     fun enqueueLight(key: Long) {
         chunks[key]?.ecologyLightReady=false
         if (lightQueued.add(key)) lightQueue.add(key)

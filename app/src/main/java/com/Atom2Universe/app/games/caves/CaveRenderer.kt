@@ -277,6 +277,8 @@ internal class CaveRenderer(
     private var lightsDirty = true
     private var lastLightCamX = 0.0; private var lastLightCamY = 0.0; private var lastLightCamZ = 0.0
     private val columnsWithMesh = HashSet<Long>(2048)        // réutilisé chaque frame
+    private var columnsMeshCount = -1; private var columnsAge = 0
+    private val columnsAwaitingMesh = HashSet<Long>(512)     // colonnes dont la surface n'est pas encore maillée
     private val TARGET_FRAME_NS = 33_333_333L
 
     // Physique
@@ -559,7 +561,8 @@ internal class CaveRenderer(
             float mask = v_tint.w > 0.5 ? 1.0 : 0.0;
             if (v_tint.w > 1.5) {
                 // Same integer fringe as MeadowTextures.capDepth; soil is never recolored.
-                vec2 pixel = clamp(floor(v_uv * 32.0), vec2(0.0), vec2(31.0));
+                // fract : une face fusionnée répète la texture, le liseré se mesure dans chaque bloc.
+                vec2 pixel = clamp(floor(fract(v_uv) * 32.0), vec2(0.0), vec2(31.0));
                 int i = int(min(pixel.x, 31.0 - pixel.x)) / 2;
                 float depth = i >= 6 ? 10.0 : (i == 2 || i == 3 || i == 5) ? 8.0 : 6.0;
                 mask = pixel.y <= depth ? 1.0 : 0.0;
@@ -1130,11 +1133,20 @@ internal class CaveRenderer(
             dists[i] = distance; keys[i] = key
             return minOf(count + 1, keys.size)
         }
+        columnsAwaitingMesh.clear()
+        val surfaceMax = world.surfaceChunkMax
+        fun awaitColumn(key: Long) {
+            if (world.keyToCy(key) in 0..surfaceMax && !meshes.containsKey(key))
+                columnsAwaitingMesh.add(lodKey(world.keyToCx(key), world.keyToCz(key)))
+        }
+        world.forEachInFlight(::awaitColumn)
+        for (key in building) awaitColumn(key)
         val pendingIt = pendingSet.iterator()
         while (pendingIt.hasNext()) {
             val candidate = pendingIt.next()
             val pendingChunk = world.getChunkByKey(candidate)
             if (pendingChunk == null) { pendingIt.remove(); continue }
+            awaitColumn(candidate)
             if (!pendingChunk.generated) continue
             val first = !meshes.containsKey(candidate)
             if (first) waitingFirst++
@@ -1507,11 +1519,17 @@ internal class CaveRenderer(
         // Shader dédié : couleur plate (BlockDef.color) × ambiance, pas de texture.
         // Masquage : une colonne ayant un mesh réel (cy quelconque) n'affiche pas son LOD,
         // évitant le double-rendu près du joueur. Le LOD reste visible pendant le gap
-        // génération→upload (pas de trou).
-        columnsWithMesh.clear()
-        meshes.keys.forEach { k ->
-            val x = world.keyToCx(k); val z = world.keyToCz(k)
-            if (withinSimulationRange(x, z)) columnsWithMesh.add(lodKey(x, z))
+        // génération→upload (pas de trou) : tant qu'un chunk de surface de la colonne attend son
+        // premier maillage, le LOD reste (sinon le ciel, maillé avant la surface, laissait un trou).
+        // Reparcourir les milliers de maillages à chaque image coûtait cher (mesuré) : on ne
+        // recompte que quand leur nombre change, et de toute façon toutes les 30 images.
+        if (meshes.size != columnsMeshCount || ++columnsAge >= 30) {
+            columnsMeshCount = meshes.size; columnsAge = 0
+            columnsWithMesh.clear()
+            meshes.keys.forEach { k ->
+                val x = world.keyToCx(k); val z = world.keyToCz(k)
+                if (withinSimulationRange(x, z)) columnsWithMesh.add(lodKey(x, z))
+            }
         }
         lodShader?.use()
         GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
@@ -1522,7 +1540,7 @@ internal class CaveRenderer(
             val scz = superKeyToCz(sk) * LOD_SUPER
             if (!isLodSuperTileInFrustum(scx, scz)) continue
             for (key in keys) {
-                if (columnsWithMesh.contains(key)) continue
+                if (columnsWithMesh.contains(key) && !columnsAwaitingMesh.contains(key)) continue
                 val mesh = lodMeshes[key] ?: continue
                 val lcx = lodKeyToCx(key); val lcz = lodKeyToCz(key)
                 if (!withinLodRange(lcx, lcz)) continue

@@ -13,9 +13,11 @@ internal object MeshBuilder {
         intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
 
     /** Maillage solide d'un chunk, tassé pour la carte graphique (voir [PackedMesh]). */
-    fun build(chunk: Chunk, world: World): PackedMesh {
+    fun build(chunk: Chunk, world: World, mergeFaces: Boolean = true): PackedMesh {
         val buf = solidScratch.get()!!.also { it.clear() }
         val cache = World.ChunkLookupCache()
+        val blend = ClimateBlend(chunk.worldX, chunk.worldZ, BlockRegistry.vividStyle, world::vegetationClimateAt)
+        val greedy = greedyScratch.get()!!.also { it.reset() }
 
         for (lz in 0 until CHUNK_SIZE)
             for (ly in 0 until CHUNK_SIZE)
@@ -66,18 +68,33 @@ internal object MeshBuilder {
                 MeadowTextures.rareKnotFace(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz)
                 else -1
             val above = world.neighborBlock(chunk, lx, ly + 1, lz, cache)
-            if (shouldRenderFace(block, above))                                        addFace(buf, x, y, z, 0, block, above, meta, knotFace, skyOf(chunk, world, lx, ly + 1, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz, cache)))  addFace(buf, x, y, z, 1, block, AIR,  meta, knotFace, skyOf(chunk, world, lx, ly - 1, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz, cache)))  addFace(buf, x, y, z, 2, block, above, meta, knotFace, skyOf(chunk, world, lx + 1, ly, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz, cache)))  addFace(buf, x, y, z, 3, block, above, meta, knotFace, skyOf(chunk, world, lx - 1, ly, lz, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))  addFace(buf, x, y, z, 4, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz + 1, cache))
-            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))  addFace(buf, x, y, z, 5, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz - 1, cache))
+            // Faces pleines : mises de côté pour être fusionnées (voir [mergeCubeFaces]).
+            if (shouldRenderFace(block, above))
+                collectCube(greedy, chunk, world, cache, blend, 0, lx, ly, lz, block, above, meta, knotFace,
+                    skyOf(chunk, world, lx, ly + 1, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly - 1, lz, cache)))
+                collectCube(greedy, chunk, world, cache, blend, 1, lx, ly, lz, block, AIR, meta, knotFace,
+                    skyOf(chunk, world, lx, ly - 1, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx + 1, ly, lz, cache)))
+                collectCube(greedy, chunk, world, cache, blend, 2, lx, ly, lz, block, above, meta, knotFace,
+                    skyOf(chunk, world, lx + 1, ly, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx - 1, ly, lz, cache)))
+                collectCube(greedy, chunk, world, cache, blend, 3, lx, ly, lz, block, above, meta, knotFace,
+                    skyOf(chunk, world, lx - 1, ly, lz, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))
+                collectCube(greedy, chunk, world, cache, blend, 4, lx, ly, lz, block, above, meta, knotFace,
+                    skyOf(chunk, world, lx, ly, lz + 1, cache))
+            if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))
+                collectCube(greedy, chunk, world, cache, blend, 5, lx, ly, lz, block, above, meta, knotFace,
+                    skyOf(chunk, world, lx, ly, lz - 1, cache))
         }
-        if (buf.size == 0) return PackedMesh.EMPTY
+        mergeCubeFaces(greedy, mergeFaces)
+        val merged = greedy.out
+        if (buf.size == 0 && merged.size == 0) return PackedMesh.EMPTY
         // Read the reusable builder directly; avoid a second full-sized intermediate array.
         val raw = buf.data
-        val colored = FloatArray(buf.size / 7 * 12)
-        val blend = ClimateBlend(chunk.worldX, chunk.worldZ, BlockRegistry.vividStyle, world::vegetationClimateAt)
+        val colored = FloatArray(buf.size / 7 * 12 + merged.size)
+        merged.data.copyInto(colored, buf.size / 7 * 12, 0, merged.size)
         for (vertex in 0 until buf.size / 7) {
             val src = vertex * 7; val dst = vertex * 12
             raw.copyInto(colored, dst, src, src + 7)
@@ -90,6 +107,139 @@ internal object MeshBuilder {
             }
         }
         return PackedMesh.pack(colored, 12)
+    }
+
+    /**
+     * Étape B de la distance de vue : les faces pleines de même aspect (texture, ciel, torches,
+     * teinte de climat) sont réunies en rectangles, tranche par tranche, comme un carrelage posé
+     * en grandes dalles. Une plaine de 16 × 16 blocs d'herbe devient une face au lieu de 256.
+     * La texture se répète d'elle-même (GL_REPEAT) : ses coordonnées vont de 0 à la taille du
+     * rectangle. Une face dont les quatre coins diffèrent (dégradé de lumière ou de teinte)
+     * reste seule, avec ses valeurs par sommet : l'éclairage ne change pas d'un pixel.
+     */
+    private class GreedyScratch {
+        val packed = IntArray(6 * 4096)
+        val sky = FloatArray(6 * 4096)
+        val light = FloatArray(6 * 4096)
+        val tint = FloatArray(6 * 4096 * 4)
+        val out = GrowableFloatArray(8192)
+        val cornerLight = FloatArray(4)
+        val cornerTint = FloatArray(16)
+        val corner = FloatArray(20)   // x, y, z, u, v des quatre coins
+        fun reset() { packed.fill(-1); out.clear() }
+    }
+    private val greedyScratch = ThreadLocal.withInitial { GreedyScratch() }
+
+    // Coins d'une face pleine d'un bloc, dans l'ordre où [emitFace] les écrit.
+    private val cubeCorners = arrayOf(
+        intArrayOf(0,1,0, 1,1,0, 1,1,1, 0,1,1), intArrayOf(0,0,1, 1,0,1, 1,0,0, 0,0,0),
+        intArrayOf(1,0,1, 1,1,1, 1,1,0, 1,0,0), intArrayOf(0,0,0, 0,1,0, 0,1,1, 0,0,1),
+        intArrayOf(0,0,1, 0,1,1, 1,1,1, 1,0,1), intArrayOf(1,0,0, 1,1,0, 0,1,0, 0,0,0))
+
+    private fun collectCube(g: GreedyScratch, chunk: Chunk, world: World, cache: World.ChunkLookupCache,
+                            blend: ClimateBlend, face: Int, lx: Int, ly: Int, lz: Int, block: Short,
+                            above: Short, meta: Byte, knotFace: Int, sky: Float) {
+        val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
+        val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer) else baseLayer
+        val marker = if (BlockRegistry.lightEmission(block) > 0) 7 else face
+        val packed = marker * 4096 + layer
+        val corners = cubeCorners[face]
+        val light = g.cornerLight; val tint = g.cornerTint
+        val mask = if (chunk.worldY >= 0) BlockRegistry.climateMask(layer) else 0
+        var uniform = true
+        for (c in 0 until 4) {
+            val x = (lx + corners[c * 3]).toFloat(); val y = (ly + corners[c * 3 + 1]).toFloat()
+            val z = (lz + corners[c * 3 + 2]).toFloat()
+            light[c] = vertexBlockLight(chunk, world, cache, x, y, z, marker)
+            if (mask != 0) { blend.writeDelta(x, z, tint, c * 4); tint[c * 4 + 3] = mask.toFloat() }
+            else { tint[c * 4] = 0f; tint[c * 4 + 1] = 0f; tint[c * 4 + 2] = 0f; tint[c * 4 + 3] = 0f }
+            if (c > 0 && (light[c] != light[0] || tint[c * 4] != tint[0] ||
+                    tint[c * 4 + 1] != tint[1] || tint[c * 4 + 2] != tint[2])) uniform = false
+        }
+        if (!uniform) {
+            emitFace(g, face, lx.toFloat(), ly.toFloat(), lz.toFloat(), lx + 1f, ly + 1f, lz + 1f,
+                packed.toFloat(), sky)
+            return
+        }
+        val cell = face * 4096 + lx + ly * 16 + lz * 256
+        g.packed[cell] = packed; g.sky[cell] = sky; g.light[cell] = light[0]
+        tint.copyInto(g.tint, cell * 4, 0, 4)
+    }
+
+    /** Case (tranche, a, b) d'une direction de face → indice de cellule. */
+    private fun cellOf(face: Int, slice: Int, a: Int, b: Int): Int = face * 4096 + when (face) {
+        0, 1 -> a + slice * 16 + b * 256        // tranche = y, a = x, b = z
+        2, 3 -> slice + b * 16 + a * 256        // tranche = x, a = z, b = y
+        else -> a + b * 16 + slice * 256        // tranche = z, a = x, b = y
+    }
+
+    private fun sameCell(g: GreedyScratch, i: Int, j: Int): Boolean =
+        g.packed[j] == g.packed[i] && g.sky[j] == g.sky[i] && g.light[j] == g.light[i] &&
+            g.tint[j * 4] == g.tint[i * 4] && g.tint[j * 4 + 1] == g.tint[i * 4 + 1] &&
+            g.tint[j * 4 + 2] == g.tint[i * 4 + 2] && g.tint[j * 4 + 3] == g.tint[i * 4 + 3]
+
+    private fun mergeCubeFaces(g: GreedyScratch, merge: Boolean) {
+        for (face in 0 until 6) for (slice in 0 until 16) for (b in 0 until 16) {
+            var a = 0
+            while (a < 16) {
+                val start = cellOf(face, slice, a, b)
+                if (g.packed[start] < 0) { a++; continue }
+                var w = 1
+                while (merge && a + w < 16 && sameCell(g, start, cellOf(face, slice, a + w, b))) w++
+                var h = 1
+                grow@ while (merge && b + h < 16) {
+                    for (k in 0 until w) if (!sameCell(g, start, cellOf(face, slice, a + k, b + h))) break@grow
+                    h++
+                }
+                g.cornerLight.fill(g.light[start])
+                for (c in 0 until 4) g.tint.copyInto(g.cornerTint, c * 4, start * 4, start * 4 + 4)
+                val packed = g.packed[start].toFloat(); val sky = g.sky[start]
+                for (hb in 0 until h) for (k in 0 until w) g.packed[cellOf(face, slice, a + k, b + hb)] = -1
+                val s = slice.toFloat(); val a0 = a.toFloat(); val a1 = (a + w).toFloat()
+                val b0 = b.toFloat(); val b1 = (b + h).toFloat()
+                when (face) {
+                    0, 1 -> emitFace(g, face, a0, s, b0, a1, s + 1f, b1, packed, sky)
+                    2, 3 -> emitFace(g, face, s, b0, a0, s + 1f, b1, a1, packed, sky)
+                    else -> emitFace(g, face, a0, b0, s, a1, b1, s + 1f, packed, sky)
+                }
+                a += w
+            }
+        }
+    }
+
+    /**
+     * Une face pleine couvrant la boîte [x0,x1]×[y0,y1]×[z0,z1], au format large (12 flottants),
+     * avec la lumière et la teinte de `g.cornerLight` / `g.cornerTint` : la texture garde le sens
+     * qu'elle a sur un bloc seul, répétée sur toute la taille du rectangle.
+     */
+    private fun emitFace(g: GreedyScratch, face: Int, x0: Float, y0: Float, z0: Float,
+                         x1: Float, y1: Float, z1: Float, packed: Float, sky: Float) {
+        val wx = x1 - x0; val hy = y1 - y0; val wz = z1 - z0
+        val c = g.corner
+        fun corner(i: Int, x: Float, y: Float, z: Float, u: Float, v: Float) {
+            c[i * 5] = x; c[i * 5 + 1] = y; c[i * 5 + 2] = z; c[i * 5 + 3] = u; c[i * 5 + 4] = v
+        }
+        when (face) {
+            0 -> { corner(0, x0, y1, z0, 0f, 0f); corner(1, x1, y1, z0, wx, 0f)
+                   corner(2, x1, y1, z1, wx, wz); corner(3, x0, y1, z1, 0f, wz) }
+            1 -> { corner(0, x0, y0, z1, 0f, 0f); corner(1, x1, y0, z1, wx, 0f)
+                   corner(2, x1, y0, z0, wx, wz); corner(3, x0, y0, z0, 0f, wz) }
+            2 -> { corner(0, x1, y0, z1, 0f, hy); corner(1, x1, y1, z1, 0f, 0f)
+                   corner(2, x1, y1, z0, wz, 0f); corner(3, x1, y0, z0, wz, hy) }
+            3 -> { corner(0, x0, y0, z0, 0f, hy); corner(1, x0, y1, z0, 0f, 0f)
+                   corner(2, x0, y1, z1, wz, 0f); corner(3, x0, y0, z1, wz, hy) }
+            4 -> { corner(0, x0, y0, z1, 0f, hy); corner(1, x0, y1, z1, 0f, 0f)
+                   corner(2, x1, y1, z1, wx, 0f); corner(3, x1, y0, z1, wx, hy) }
+            else -> { corner(0, x1, y0, z0, 0f, hy); corner(1, x1, y1, z0, 0f, 0f)
+                      corner(2, x0, y1, z0, wx, 0f); corner(3, x0, y0, z0, wx, hy) }
+        }
+        val out = g.out; val light = g.cornerLight; val tint = g.cornerTint
+        for (i in faceTriangles) {
+            out.add(c[i * 5]); out.add(c[i * 5 + 1]); out.add(c[i * 5 + 2])
+            out.add(c[i * 5 + 3]); out.add(c[i * 5 + 4]); out.add(packed); out.add(sky)
+            out.add(tint[i * 4]); out.add(tint[i * 4 + 1]); out.add(tint[i * 4 + 2]); out.add(tint[i * 4 + 3])
+            out.add(light[i])
+        }
     }
 
     /**
@@ -151,22 +301,6 @@ internal object MeshBuilder {
         if (!isVisible(neighbor)) return false
         if (isTransparent(block) && block == neighbor) return false
         return true
-    }
-
-    private fun addFace(buf: GrowableFloatArray, x: Float, y: Float, z: Float, face: Int, block: Short, above: Short, meta: Byte = 0, knotFace: Int = -1, sky: Float = 1f) {
-        val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
-        val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer)
-            else baseLayer
-        val rotCW  = face > 1
-        val packed = (if (BlockRegistry.lightEmission(block) > 0) 7 else face) * 4096f + layer.toFloat()
-        when (face) {
-            0 -> buf.quad(x,y+1,z,  x+1,y+1,z,  x+1,y+1,z+1, x,y+1,z+1, packed, false, sky)
-            1 -> buf.quad(x,y,z+1,  x+1,y,z+1,  x+1,y,z,     x,y,z,     packed, false, sky)
-            2 -> buf.quad(x+1,y,z+1,x+1,y+1,z+1,x+1,y+1,z,   x+1,y,z,   packed, rotCW, sky)
-            3 -> buf.quad(x,y,z,    x,y+1,z,     x,y+1,z+1,   x,y,z+1,   packed, rotCW, sky)
-            4 -> buf.quad(x,y,z+1,  x,y+1,z+1,   x+1,y+1,z+1, x+1,y,z+1, packed, rotCW, sky)
-            5 -> buf.quad(x+1,y,z,  x+1,y+1,z,   x,y+1,z,     x,y,z,     packed, rotCW, sky)
-        }
     }
 
     private fun addTorch(buf: GrowableFloatArray, x: Float, y: Float, z: Float, meta: Byte, sky: Float) {
