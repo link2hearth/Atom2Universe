@@ -36,6 +36,7 @@ import com.Atom2Universe.app.games.caves.render.MobModels
 import com.Atom2Universe.app.games.caves.render.EnemyRenderer
 import com.Atom2Universe.app.games.caves.render.ProjectileRenderer
 import com.Atom2Universe.app.games.caves.render.ShaderProgram
+import com.Atom2Universe.app.games.caves.render.SolidChunkMesh
 import com.Atom2Universe.app.games.caves.world.*
 import kotlinx.coroutines.*
 import java.nio.ByteBuffer
@@ -67,6 +68,7 @@ internal class CaveRenderer(
     private val grayscaleStyle = CaveVisualStyle.current(context) == CaveVisualStyle.Theme.GRAYSCALE
     private var wATint = -1
     private var wABlock = -1
+    private var wUPosScale = -1; private var wUUvScale = -1
 
     data class SavedState(
         val x: Double, val y: Double, val z: Double,
@@ -112,7 +114,7 @@ internal class CaveRenderer(
         lodScanIndex = 0
         cleanupCounter = CLEANUP_INTERVAL
     }
-    private val meshes = ConcurrentHashMap<Long, ChunkMesh>()
+    private val meshes = ConcurrentHashMap<Long, SolidChunkMesh>()
     private val decorSource = worldSource as? MapSource
     private val decorRenderer = decorSource?.let { com.Atom2Universe.app.games.caves.render.CaveDecorRenderer(it) }
     private val uploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
@@ -202,6 +204,9 @@ internal class CaveRenderer(
     // GL-thread backlog: retain waiting requests instead of reallocating a queue node
     // and sorting the entire backlog every frame.
     private val pendingMeshKeys = LinkedHashSet<Long>()
+    // Les 2 meilleurs candidats de chaque sorte, choisis en un passage (fil GL uniquement).
+    private val meshPickFirst = LongArray(2); private val meshPickFirstDist = IntArray(2)
+    private val meshPickRefresh = LongArray(2); private val meshPickRefreshDist = IntArray(2)
     private var meshDispatchSerial = 0L
     private var refreshMeshUploads = 0
     private var firstMeshUploads = 0
@@ -209,17 +214,20 @@ internal class CaveRenderer(
     private var perfLogNs = 0L
     private var perfFrames = 0
 
+    /** Eau : [vertices] en flottants. Terrain solide : [packed], au format tassé. */
     private data class LitMeshUpload(
         val key: Long, val version: Int, val vertices: FloatArray,
-        val lighting: MeshLightingSnapshot
-    )
+        val lighting: MeshLightingSnapshot, val packed: PackedMesh? = null,
+    ) {
+        val bytes: Long get() = packed?.byteSize?.toLong() ?: (vertices.size.toLong() * 4)
+    }
     private fun enqueueMesh(queue: ConcurrentLinkedQueue<LitMeshUpload>, upload: LitMeshUpload) {
-        pendingMeshBytes.addAndGet(upload.vertices.size.toLong() * 4)
+        pendingMeshBytes.addAndGet(upload.bytes)
         queue.add(upload)
     }
     private fun pollMesh(queue: ConcurrentLinkedQueue<LitMeshUpload>): LitMeshUpload? {
         val upload = queue.poll() ?: return null
-        pendingMeshBytes.addAndGet(-upload.vertices.size.toLong() * 4)
+        pendingMeshBytes.addAndGet(-upload.bytes)
         return upload
     }
     // Le LOD ignore la skylight : mémoriser la géométrie déjà soumise.
@@ -502,6 +510,9 @@ internal class CaveRenderer(
         in float a_blockLight;
         uniform mat4 u_mvp;
         uniform vec3 u_chunk_offset;
+        // Terrain tassé : positions et UV arrivent en entiers (voir PackedMesh) ; 1 pour le reste.
+        uniform float u_posScale;
+        uniform float u_uvScale;
         out vec2 v_uv;
         out float v_layer;
         out float v_faceDir;
@@ -510,9 +521,9 @@ internal class CaveRenderer(
         out vec4 v_tint;
         out float v_blockLight;
         void main() {
-            vec3 worldPos = a_pos + u_chunk_offset;
+            vec3 worldPos = a_pos * u_posScale + u_chunk_offset;
             gl_Position = u_mvp * vec4(worldPos, 1.0);
-            v_uv      = a_uv.xy;
+            v_uv      = a_uv.xy * u_uvScale;
             v_layer   = mod(a_uv.z, 4096.0);
             v_faceDir = floor(a_uv.z / 4096.0);
             v_worldPos = worldPos;
@@ -795,9 +806,16 @@ internal class CaveRenderer(
             wULightCount  = it.uniform("u_lightCount")
             wUTime        = it.uniform("u_time")
             wUUnderwater  = it.uniform("u_underwater")
+            wUPosScale    = it.uniform("u_posScale")
+            wUUvScale     = it.uniform("u_uvScale")
+            GLES30.glUniform1f(wUPosScale, 1f)
+            GLES30.glUniform1f(wUUvScale, 1f)
         }
         waterShader = ShaderProgram(VERT_WORLD, FRAG_WATER).also {
             it.use()
+            // L'eau reste en flottants : échelle 1, posée une fois pour toutes.
+            GLES30.glUniform1f(it.uniform("u_posScale"), 1f)
+            GLES30.glUniform1f(it.uniform("u_uvScale"), 1f)
             waterPhaseUniform = it.uniform("u_wavePhase")
             waterTintUniform = it.uniform("u_waterTint")
             waterSkyUniform = it.uniform("u_skyColor")
@@ -1098,34 +1116,55 @@ internal class CaveRenderer(
         // Only select work when a worker and upload budget are actually available.
         val pendingSet = pendingMeshKeys
         while (true) { pendingSet.add(world.rebuildQueue.poll() ?: break) }
-        pendingSet.removeAll { world.getChunkByKey(it) == null }
-        waitingMeshChunks = pendingSet.size
-        waitingFirstMeshes = pendingSet.count { key ->
-            !meshes.containsKey(key) && world.getChunkByKey(key)?.generated == true
+        // Un seul passage sur la file (souvent plus d'un millier de clés à grande distance) : retirer
+        // les chunks déchargés, compter, et garder les 2 plus proches de chaque sorte — premier
+        // maillage ou rafraîchissement. Relire la file à chaque étape coûtait un tiers du fil GL.
+        val canDispatch = meshJobs.get() < 2 && pendingMeshBytes.get() < MAX_PENDING_MESH_BYTES
+        val firstKeys = meshPickFirst; val firstDist = meshPickFirstDist
+        val refreshKeys = meshPickRefresh; val refreshDist = meshPickRefreshDist
+        var firstCount = 0; var refreshCount = 0; var waitingFirst = 0
+        fun offer(keys: LongArray, dists: IntArray, count: Int, key: Long, distance: Int): Int {
+            if (count == keys.size && distance >= dists[count - 1]) return count
+            var i = if (count < keys.size) count else count - 1
+            while (i > 0 && dists[i - 1] > distance) { dists[i] = dists[i - 1]; keys[i] = keys[i - 1]; i-- }
+            dists[i] = distance; keys[i] = key
+            return minOf(count + 1, keys.size)
         }
+        val pendingIt = pendingSet.iterator()
+        while (pendingIt.hasNext()) {
+            val candidate = pendingIt.next()
+            val pendingChunk = world.getChunkByKey(candidate)
+            if (pendingChunk == null) { pendingIt.remove(); continue }
+            if (!pendingChunk.generated) continue
+            val first = !meshes.containsKey(candidate)
+            if (first) waitingFirst++
+            if (!canDispatch || candidate in building) continue
+            val dx = world.keyToCx(candidate) - cx
+            val dy = world.keyToCy(candidate) - cy
+            val dz = world.keyToCz(candidate) - cz
+            // Loin du joueur, un premier maillage attend que la lumière soit stable : sinon il serait
+            // refait aussitôt. Le LOD couvre le trou en attendant. Près du joueur, rien n'attend.
+            if (first && !pendingChunk.lightSettled &&
+                maxOf(abs(dx), abs(dy), abs(dz)) > FIRST_MESH_NO_WAIT_RADIUS) continue
+            val distance = dx * dx + dy * dy + dz * dz
+            if (first) firstCount = offer(firstKeys, firstDist, firstCount, candidate, distance)
+            else refreshCount = offer(refreshKeys, refreshDist, refreshCount, candidate, distance)
+        }
+        waitingMeshChunks = pendingSet.size
+        waitingFirstMeshes = waitingFirst
         var rebuilt = 0
+        var firstTaken = 0; var refreshTaken = 0
         val dispatchedSolids = HashSet<Long>(2)
         while (rebuilt < 2 && meshJobs.get() < 2 && pendingMeshBytes.get() < MAX_PENDING_MESH_BYTES) {
             // Alternate first geometry and refreshes even when only one worker is free.
             // A continuous stream of new chunks must not starve existing dark meshes.
             val preferFirst = meshDispatchSerial % 2L == 0L
-            var bestKey: Long? = null
-            var bestClass = Int.MAX_VALUE
-            var bestDistance = Int.MAX_VALUE
-            for (candidate in pendingSet) {
-                if (candidate in building || world.getChunkByKey(candidate)?.generated != true) continue
-                val priority = if ((!meshes.containsKey(candidate)) == preferFirst) 0 else 1
-                val dx = world.keyToCx(candidate) - cx
-                val dy = world.keyToCy(candidate) - cy
-                val dz = world.keyToCz(candidate) - cz
-                val distance = dx * dx + dy * dy + dz * dz
-                if (priority < bestClass || (priority == bestClass && distance < bestDistance)) {
-                    bestKey = candidate
-                    bestClass = priority
-                    bestDistance = distance
-                }
+            val takeFirst = if (preferFirst) firstTaken < firstCount else refreshTaken >= refreshCount
+            val key = when {
+                takeFirst && firstTaken < firstCount -> firstKeys[firstTaken++]
+                refreshTaken < refreshCount -> refreshKeys[refreshTaken++]
+                else -> break
             }
-            val key = bestKey ?: break
             val chunk = world.getChunkByKey(key) ?: continue
             if (!building.add(key)) continue
             pendingSet.remove(key)
@@ -1142,7 +1181,7 @@ internal class CaveRenderer(
                     val verts      = MeshBuilder.build(chunk, world)
                     val waterVerts = MeshBuilder.buildWater(chunk, world)
                     if (chunk.version == snapVersion) {
-                        enqueueMesh(uploadQueue, LitMeshUpload(key, snapVersion, verts, lighting))
+                        enqueueMesh(uploadQueue, LitMeshUpload(key, snapVersion, NO_FLOATS, lighting, verts))
                         if (chunk.waterVersion == snapWaterVer)
                             enqueueMesh(waterOnlyUploadQueue, LitMeshUpload(key, snapWaterVer, waterVerts, lighting))
                     }
@@ -1204,13 +1243,13 @@ internal class CaveRenderer(
         // suivante, rien n'est perdu, juste étalé.
         val uploadDeadline = System.nanoTime() + UPLOAD_BUDGET_NS
         while (System.nanoTime() < uploadDeadline) {
-            val (key, ver, verts, lighting) = pollMesh(uploadQueue) ?: break
+            val (key, ver, _, lighting, packed) = pollMesh(uploadQueue) ?: break
             val chunk = world.getChunkByKey(key) ?: continue
             if (lighting.belongsTo(chunk) && chunk.version == ver) {
                 val needsLightRefresh = !lighting.isCurrent()
                 if (!meshes.containsKey(key)) firstMeshUploads++ else refreshMeshUploads++
-                val mesh = meshes.getOrPut(key) { ChunkMesh(12) }
-                mesh.upload(verts); mesh.flushPending()
+                val mesh = meshes.getOrPut(key) { SolidChunkMesh() }
+                mesh.upload(packed ?: PackedMesh.EMPTY); mesh.flushPending()
                 // Show valid geometry now. A changing neighbour light must never leave a hole.
                 if (needsLightRefresh) {
                     provisionalUploads++
@@ -1445,6 +1484,8 @@ internal class CaveRenderer(
         // Les murs portent leur lumière de torche dans le maillage : aucune boucle par pixel. La
         // sélection de sources reste pour ce qui n'a pas de maillage (arme en main, objets).
         GLES30.glUniform1i(wULightCount, 0)
+        GLES30.glUniform1f(wUPosScale, 1f / PackedMesh.POS_SCALE)
+        GLES30.glUniform1f(wUUvScale, 1f / PackedMesh.UV_SCALE)
         for ((key, mesh) in meshes) {
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
             if (!withinSimulationRange(kcx, kcz)) continue
@@ -1455,6 +1496,8 @@ internal class CaveRenderer(
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
             mesh.draw(wAPos, wAUv, wASky, wATint, wABlock)
         }
+        GLES30.glUniform1f(wUPosScale, 1f)
+        GLES30.glUniform1f(wUUvScale, 1f)
         // Keep the complete selection available to non-chunk world draws.
         GLES30.glUniform4fv(wULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
         GLES30.glUniform4fv(wULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
@@ -2382,6 +2425,8 @@ internal class CaveRenderer(
         intArrayOf(1, 0, 0), intArrayOf(-1, 0, 0),   // +X, −X
         intArrayOf(0, 0, 1), intArrayOf(0, 0, -1)    // +Z, −Z
     )
+    // Rayon (en chunks) où un premier maillage part sans attendre que sa lumière soit stable.
+    private val FIRST_MESH_NO_WAIT_RADIUS = 2
     private val LIGHT_BATCH = 192   // chunks traités par lancement de fond (BFS, sans mesh → bon marché)
 
     /**
@@ -2399,7 +2444,20 @@ internal class CaveRenderer(
             val chunk = world.getChunkByKey(key)?.takeIf { it.generated } ?: continue
             val version=chunk.version
             val r = LightEngine.computeSky(chunk, world) or LightEngine.computeBlock(chunk, world)
-            if(r==0 && version==chunk.version) chunk.ecologyLightReady=true
+            if(r==0 && version==chunk.version) {
+                chunk.ecologyLightReady=true
+                if (!chunk.lightSettled) {
+                    // Première stabilisation : le chunk peut recevoir son premier maillage, et ses
+                    // voisins se re-maillent une seule fois pour sa forme ET sa lumière de bord.
+                    chunk.lightSettled = true
+                    chunk.meshDirty = true
+                    world.rebuildQueue.add(key)
+                    for (o in LIGHT_FACE_OFFSETS) {
+                        val nb = world.getChunk(chunk.cx + o[0], chunk.cy + o[1], chunk.cz + o[2]) ?: continue
+                        if (nb.generated) { nb.meshDirty = true; world.rebuildQueue.add(world.chunkKey(nb.cx, nb.cy, nb.cz)) }
+                    }
+                }
+            }
             else if(version!=chunk.version) world.enqueueLight(key)
             if (r != 0) {
                 chunk.lightMeshDirty = true            // lumière changée → mesh périmé, on attend le calme
@@ -2451,7 +2509,7 @@ internal class CaveRenderer(
             val chunk = world.getChunk(ncx, ncy, ncz)?.takeIf { it.generated } ?: continue
             val verts      = MeshBuilder.build(chunk, world)
             val waterVerts = MeshBuilder.buildWater(chunk, world)
-            meshes.getOrPut(key) { ChunkMesh(12) }.also { it.upload(verts); it.flushPending() }
+            meshes.getOrPut(key) { SolidChunkMesh() }.also { it.upload(verts); it.flushPending() }
             if (waterVerts.isNotEmpty()) waterMeshes.getOrPut(key) { ChunkMesh(7) }.also { it.upload(waterVerts); it.flushPending() }
             else waterMeshes.remove(key)?.destroy()
             refreshChunkLightSources(chunk)
@@ -4438,6 +4496,7 @@ internal class CaveRenderer(
     }
 
     companion object {
+        private val NO_FLOATS = FloatArray(0)
         private const val AUTO_SHOOT_RANGE = 30.0
         private const val PROJ_SPEED       = 15f
         private const val PROJ_MAX_DIST    = 40.0

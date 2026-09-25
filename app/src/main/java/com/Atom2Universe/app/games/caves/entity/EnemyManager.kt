@@ -161,7 +161,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // du mob pour que son corps n'entre pas dans la caméra en vue FPS.
         val archer=explorationCombat && e.def.id=="skeleton" && dist>4.0
         val keep = if(archer) 9.0 else keepDist(e)
-        val sight= !explorationCombat || clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
+        // La vue ne sert qu'à repérer (detectRange) ou à tirer (17 blocs) : au-delà, inutile de lancer
+        // le rayon, qui coûte 10 lectures de bloc par bloc de distance et par monstre, à chaque image.
+        val sight= !explorationCombat || dist3d<maxOf(e.def.detectRange,18.0) &&
+            clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
         val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f)
 
         val prevState = e.state

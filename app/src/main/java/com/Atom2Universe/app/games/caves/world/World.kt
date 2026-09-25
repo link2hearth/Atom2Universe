@@ -152,7 +152,29 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             return streamWholeWorld(bounds, pcx, pcy, pcz, viewDirX, viewDirZ, maxNewChunks, onNeedGenerate)
         }
 
-        val candidates = mutableListOf<ChunkCandidate>()
+        // File pleine et joueur immobile : rien à lancer, rien à décharger. Le balayage du cylindre
+        // (des milliers de cases à la distance 16) ne changerait rien ; on redemandera plus tard.
+        if (maxNewChunks <= 0 && chunkKey(pcx, pcy, pcz) == lastUnloadCenter &&
+            lastUnloadRadius == renderRadiusXZ) return true
+
+        // Seuls les [maxNewChunks] meilleurs candidats servent : on les garde au fil du parcours
+        // (insertion bornée, sans objet ni tri). Trier les milliers de chunks manquants à chaque
+        // passage — douze fois par seconde, sur le fil de rendu — coûtait 80 % de ce fil à la
+        // distance 16 (mesuré), dont la moitié à emballer des entiers pour le comparateur.
+        val keep = maxNewChunks.coerceIn(0, bestKeys.size)
+        var kept = 0
+        var missing = 0
+        fun offer(dx: Int, dy: Int, dz: Int, key: Long) {
+            missing++
+            if (keep == 0) return
+            val priority = streamPriority(dx, dy, dz, viewDirX, viewDirZ)
+            if (kept == keep && priority >= bestPriority[kept - 1]) return
+            var i = if (kept < keep) kept++ else kept - 1
+            while (i > 0 && bestPriority[i - 1] > priority) {
+                bestPriority[i] = bestPriority[i - 1]; bestKeys[i] = bestKeys[i - 1]; i--
+            }
+            bestPriority[i] = priority; bestKeys[i] = key
+        }
         val isSurface = if (terrainVersion >= 3) pcy * CHUNK_SIZE >= surfaceHeight(pcx * 16.0 + 8, pcz * 16.0 + 8) - 32 else pcy >= 0
 
         if (isSurface) {
@@ -166,8 +188,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
-                if (!chunks.containsKey(key) && !inFlight.contains(key))
-                    candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
+                if (!chunks.containsKey(key) && !inFlight.contains(key)) offer(dx, dy, dz, key)
             }
         } else {
             // Horizontal distance is configurable; keep the vertical band bounded.
@@ -180,22 +201,27 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 val cx = pcx + dx; val cy = pcy + dy; val cz = pcz + dz
                 if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                 val key = chunkKey(cx, cy, cz)
-                if (!chunks.containsKey(key) && !inFlight.contains(key))
-                    candidates.add(ChunkCandidate(cx, cy, cz, key, streamPriority(dx, dy, dz, viewDirX, viewDirZ)))
+                if (!chunks.containsKey(key) && !inFlight.contains(key)) offer(dx, dy, dz, key)
             }
         }
 
-        // Stream nearest chunks first, with a small view-direction bonus.
-        candidates.sortBy { it.priority }
+        // Les plus proches d'abord, avec un petit bonus dans la direction du regard.
         var scheduled = 0
-        for (c in candidates) {
-            if (scheduled >= maxNewChunks) break
-            if (!inFlight.add(c.key)) continue
-            val chunk = Chunk(c.cx, c.cy, c.cz)
-            chunks[c.key] = chunk
+        for (i in 0 until kept) {
+            val key = bestKeys[i]
+            if (!inFlight.add(key)) continue
+            val chunk = Chunk(keyToCx(key), keyToCy(key), keyToCz(key))
+            chunks[key] = chunk
             onNeedGenerate(chunk)
             scheduled++
         }
+
+        // Décharger ne sert qu'après un déplacement : sans changement de chunk, rien ne sort du
+        // cylindre, et ce balayage de tous les chunks chargés se refaisait douze fois par seconde.
+        val center = chunkKey(pcx, pcy, pcz)
+        if (center == lastUnloadCenter && lastUnloadRadius == renderRadiusXZ) return missing > scheduled
+        lastUnloadCenter = center
+        lastUnloadRadius = renderRadiusXZ
 
         // Déchargement : même forme que le chargement (disque en surface, ellipsoïde en souterrain),
         // un chunk de marge pour qu'un pas en arrière ne recharge pas le bord.
@@ -219,8 +245,14 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     (dx * dx + dz * dz) * unloadY2 + dy * dy * unloadR2 > unloadR2 * unloadY2
             }.forEach { (key, _) -> chunks.remove(key); inFlight.remove(key) }
         }
-        return candidates.size > scheduled
+        return missing > scheduled
     }
+
+    // Meilleurs candidats du passage en cours (fil de rendu uniquement) et dernier centre déchargé.
+    private val bestKeys = LongArray(16)
+    private val bestPriority = IntArray(16)
+    private var lastUnloadCenter = Long.MIN_VALUE
+    private var lastUnloadRadius = -1
 
     /**
      * Charge tous les chunks de [bounds], les plus proches du joueur d'abord, et n'en décharge
@@ -287,13 +319,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             intArrayOf(chunk.cx,chunk.cy-1,chunk.cz), intArrayOf(chunk.cx,chunk.cy+1,chunk.cz),
             intArrayOf(chunk.cx,chunk.cy,chunk.cz-1), intArrayOf(chunk.cx,chunk.cy,chunk.cz+1)
         )
+        // Les voisins ne sont pas re-maillés ici mais quand la lumière de ce chunk se sera
+        // stabilisée (CaveRenderer.processLightBatch) : un seul passage pour la forme et la lumière.
         for ((nx, ny, nz) in neighbors) {
             val nb = getChunk(nx, ny, nz) ?: continue
-            if (nb.generated) {
-                nb.meshDirty = true
-                rebuildQueue.add(chunkKey(nx, ny, nz))
-                enqueueLight(nx, ny, nz)
-            }
+            if (nb.generated) enqueueLight(nx, ny, nz)
         }
     }
 

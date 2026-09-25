@@ -12,7 +12,8 @@ internal object MeshBuilder {
     private val faceOffsets = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
         intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
 
-    fun build(chunk: Chunk, world: World): FloatArray {
+    /** Maillage solide d'un chunk, tassé pour la carte graphique (voir [PackedMesh]). */
+    fun build(chunk: Chunk, world: World): PackedMesh {
         val buf = solidScratch.get()!!.also { it.clear() }
         val cache = World.ChunkLookupCache()
 
@@ -72,7 +73,7 @@ internal object MeshBuilder {
             if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz + 1, cache)))  addFace(buf, x, y, z, 4, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz + 1, cache))
             if (shouldRenderFace(block, world.neighborBlock(chunk, lx, ly, lz - 1, cache)))  addFace(buf, x, y, z, 5, block, above, meta, knotFace, skyOf(chunk, world, lx, ly, lz - 1, cache))
         }
-        if (buf.size == 0) return emptyVertices
+        if (buf.size == 0) return PackedMesh.EMPTY
         // Read the reusable builder directly; avoid a second full-sized intermediate array.
         val raw = buf.data
         val colored = FloatArray(buf.size / 7 * 12)
@@ -88,7 +89,7 @@ internal object MeshBuilder {
                 colored[dst + 10] = mask.toFloat()
             }
         }
-        return colored
+        return PackedMesh.pack(colored, 12)
     }
 
     /**

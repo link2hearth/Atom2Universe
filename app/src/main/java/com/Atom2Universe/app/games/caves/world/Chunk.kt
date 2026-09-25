@@ -206,6 +206,9 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     // Masque des faces de bord (0..5) dont la skylight a changé depuis le dernier mesh : à la
     // stabilisation, on en déduit quels voisins re-mesher (leurs faces de bord nous échantillonnent).
     var lightBoundaryDirty = 0
+    // Vrai dès que la lumière s'est stabilisée une première fois : avant, un premier maillage
+    // serait refait aussitôt, et ses voisins avec lui (écrit par le passage de lumière seulement).
+    @Volatile var lightSettled = false
     @Volatile var waterMeshDirty = false
     @Volatile var pendingVertices: FloatArray? = null
     @Volatile var version = 0
