@@ -309,6 +309,10 @@ object Lexicon {
                 add(R.string.lex_rest_1); add(R.string.lex_rest_2)
                 add(R.string.lex_rest_3); add(R.string.lex_rest_4)
             },
+            entry("camp", c, R.string.lex_camp) {
+                add(R.string.lex_camp_1); add(R.string.lex_camp_2)
+                add(R.string.lex_camp_3); add(R.string.lex_camp_4)
+            },
             entry("chase", c, R.string.lex_chase) {
                 add(R.string.lex_chase_1); add(R.string.lex_chase_2); add(R.string.lex_chase_3, RoguelikeGame.CHAIN_DISTANCE)
             },
@@ -513,7 +517,7 @@ object Lexicon {
         val specials = listOf(
             entry(specialId(Archetype.BARBARIAN), c, Archetype.BARBARIAN.specialRes) { add(R.string.lex_special_smash); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN) },
             entry(specialId(Archetype.WARRIOR), c, Archetype.WARRIOR.specialRes) {
-                add(R.string.lex_special_guard_1, env.pct(Combat.GUARD_THORNS_SHARE)); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
+                add(R.string.lex_special_guard_1, env.pct(Combat.GUARD_THORNS_SHARE), Combat.GUARD_TURNS); add(R.string.lex_special_2, Hero.SPECIAL_COOLDOWN)
             },
             entry(specialId(Archetype.ROGUE), c, Archetype.ROGUE.specialRes) {
                 add(R.string.lex_special_deadly_1, env.dec(Combat.DEADLY_CRIT_BONUS))

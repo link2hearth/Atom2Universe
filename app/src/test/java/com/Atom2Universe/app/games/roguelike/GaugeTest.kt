@@ -184,7 +184,7 @@ class GaugeTest {
     fun lArmureLegereAccelereLaLourdeRalentit() {
         fun hero(weight: ArmorWeight) = heroWithAllSlots().apply {
             for (b in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS))
-                equipped[b.slot] = LootSystem.create(b, 1, Rarity.NORMAL, 0, Random(1), forcedWeight = weight)
+                equipped[b.slot] = LootSystem.create(b, 1, Rarity.COMMON, 0, Random(1), forcedWeight = weight)
         }
         assertEquals(1.15f, hero(ArmorWeight.LIGHT).speed, 1e-5f)
         assertEquals(1.00f, hero(ArmorWeight.CLOTH).speed, 1e-5f)
@@ -195,7 +195,7 @@ class GaugeTest {
     fun unHerosRapideRejoueAvantUnMonstreLent() {
         // Deux fois plus rapide qu'un gobelin de cadence 2 : quatre tours du héros pour un du gobelin
         val hero = heroWithAllSlots().apply {
-            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(1))
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(1))
                 .let { it.copy(implicits = listOf(StatRoll(StatType.SPEED, 1f)), affixes = emptyList()) }
             hp = 1_000_000
         }

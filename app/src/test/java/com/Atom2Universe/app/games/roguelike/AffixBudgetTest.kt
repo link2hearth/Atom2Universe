@@ -103,7 +103,7 @@ class AffixBudgetTest {
         repeat(2000) {
             val hero = Hero()
             for (base in ItemBase.entries) {
-                val e = LootSystem.create(base, LootSystem.DEEP_POWER, Rarity.RARE, 0, rng)
+                val e = LootSystem.create(base, LootSystem.DEEP_POWER, Rarity.EPIC, 0, rng)
                 if (hero.equipped[e.slot] == null) hero.equipped[e.slot] = e
             }
             for (t in listOf(StatType.CRIT_CHANCE, StatType.CRIT_DAMAGE, StatType.SPELL_DMG, StatType.LIFE_STEAL)) {

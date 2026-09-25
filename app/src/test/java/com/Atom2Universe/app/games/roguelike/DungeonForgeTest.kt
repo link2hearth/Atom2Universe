@@ -108,29 +108,48 @@ class DungeonForgeTest {
         assertEquals(1_000_000, g.hero.gold)
     }
 
-    @Test fun returningToTheCheckpointYouStandOnDoesNotRerollTheForge() {
-        // Au feu de camp de l'étage 51 (son propre checkpoint), le menu ne doit pas servir à tirer une forge
-        val g = RoguelikeGame(startFloor = 51, rng = Random(2))
-        assertEquals(51, g.checkpoint)
-        repeat(300) {
-            g.returnToCheckpoint()
+    @Test fun travellingFromTheCampNeverBringsAForge() {
+        // Sinon, des allers-retours au feu entre deux étages feraient apparaître une forge sans rien jouer
+        repeat(400) { seed ->
+            val g = RoguelikeGame(startFloor = 58, rng = Random(seed))
+            g.hero.reachFloor(58)
+            g.travelFromCamp(51)
             assertEquals(51, g.floor)
             assertNull(g.level.forge)
         }
-        // Et une forge déjà là ne disparaît pas non plus
-        assertTrue(g.placeForgeNearHero())
-        g.returnToCheckpoint()
-        assertNotNull(g.level.forge)
     }
 
-    @Test fun returningToAnEarlierCheckpointIsANewArrival() {
-        val withForge = (0 until 400).count { seed ->
-            val g = RoguelikeGame(startFloor = 58, rng = Random(seed))
-            g.returnToCheckpoint()
-            assertEquals(51, g.floor)
-            g.level.forge != null
+    @Test fun theStairsBringTheForgeNextToTheCampfire() {
+        var seen = 0
+        for (seed in 0 until 600) {
+            val g = RoguelikeGame(startFloor = 57, rng = Random(seed))
+            g.stairsOpen = true
+            g.descend()
+            assertEquals(58, g.floor)
+            val forge = g.level.forge ?: continue
+            seen++
+            assertTrue("forge à ${forge.chebyshev(g.level.start)} cases du feu", forge.chebyshev(g.level.start) in 1..4)
+            assertEquals(TileType.FLOOR, g.level.tiles[forge.y][forge.x])
         }
-        assertTrue("$withForge forges sur 400", withForge in 5..40)
+        assertTrue("au moins quelques forges tirées ($seen)", seen > 5)
+    }
+
+    @Test fun theCampOnlyLeadsToFloorsAlreadyReached() {
+        val g = RoguelikeGame(startFloor = 30, rng = Random(3))
+        g.hero.reachFloor(30)
+        g.travelFromCamp(200)
+        assertEquals("pas plus loin que l'étage le plus profond", 30, g.floor)
+        g.travelFromCamp(1)
+        assertEquals(1, g.floor)
+        g.travelFromCamp(0)
+        assertEquals(1, g.floor)
+    }
+
+    @Test fun regeneratingKeepsAForgeAlreadyThere() {
+        val g = RoguelikeGame(startFloor = 51, rng = Random(2))
+        assertTrue(g.placeForgeNearHero())
+        g.regenerateCurrentFloor()
+        assertNotNull(g.level.forge)
     }
 
     /** La sauvegarde (JSON) ne tourne pas dans les tests sur ordinateur : on vérifie la régénération. */

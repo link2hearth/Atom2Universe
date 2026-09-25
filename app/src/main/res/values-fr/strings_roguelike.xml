@@ -337,7 +337,7 @@
     <string name="roguelike_combat_dodged">ESQUIVÉ !</string>
     <string name="roguelike_combat_counter">Riposte −%1$s</string>
     <string name="roguelike_combat_counterspell">Contresort !</string>
-    <string name="roguelike_combat_guarding">en garde</string>
+    <string name="roguelike_combat_guarding">en garde %1$d</string>
     <string name="roguelike_combat_images">doubles ×%1$d</string>
     <string name="roguelike_inventory_archetype">Archétype : %1$s</string>
     <string name="roguelike_inventory_archetype_none">Archétype : [[archetype|aucun]]</string>
@@ -490,6 +490,8 @@
     <string name="roguelike_base_shroud">Suaire</string>
     <string name="roguelike_base_wraps">Bandelettes</string>
     <string name="roguelike_item_wrong_weapon">Pas ta classe</string>
+    <string name="roguelike_item_affinity">Affinité : %1$s</string>
+    <string name="roguelike_item_affinity_all">toutes les classes</string>
     <string name="roguelike_combat_echo">écho +%1$s</string>
     <string name="roguelike_combat_puppet_absorbed">pantins −%1$s</string>
     <string name="roguelike_combat_puppets_line">pantins %1$d/%2$d</string>
@@ -620,7 +622,7 @@
     <string name="inv_sell_selection_failed">Vente indisponible : la sélection ou l\'état du jeu a changé, ou la limite d\'or serait dépassée.</string>
     <string name="roguelike_log_sold_many">%1$d équipements vendus pour %2$d or.</string>
     <string name="roguelike_combat_no_damage">Aucun dégât</string>
-    <string name="roguelike_death_restart_floor">Rejouer l\'étage %1$d</string>
+    <string name="roguelike_death_restart_floor">Recommencer l\'étage %1$d</string>
     <string name="roguelike_death_restart_checkpoint">Checkpoint · étage %1$d</string>
 
     <string name="roguelike_region_cemetery">Cimetière</string>
@@ -652,6 +654,9 @@
     <string name="roguelike_camp_menu_title">Feu de camp</string>
     <string name="roguelike_camp_menu_checkpoint">Revenir au checkpoint · étage %1$d</string>
     <string name="roguelike_camp_menu_regenerate">Régénérer l’étage %1$d</string>
+    <string name="roguelike_camp_menu_floor">Étage</string>
+    <string name="roguelike_camp_menu_travel">Y aller</string>
+    <string name="roguelike_log_camp_travel">Tu te rends à l’étage %1$d.</string>
     <string name="roguelike_log_camp_checkpoint">Tu reviens au checkpoint de l’étage %1$d.</string>
     <string name="roguelike_log_camp_regenerate">L’étage %1$d est régénéré.</string>
     <string name="roguelike_action_inventory">Inventaire</string>

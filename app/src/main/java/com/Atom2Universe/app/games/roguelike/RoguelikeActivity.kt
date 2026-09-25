@@ -25,7 +25,6 @@ open class RoguelikeActivity : ThemedActivity() {
     private lateinit var btnMusic:     ImageButton
     private lateinit var tvFloorLevel: TextView
     private lateinit var btnInventory: Button
-    private lateinit var healthBar:    ProgressBar
     private lateinit var inventory:    InventoryPanel
     private lateinit var lexicon:      LexiconPanel
     private lateinit var forge:        ForgePanel
@@ -57,7 +56,6 @@ open class RoguelikeActivity : ThemedActivity() {
         btnMusic     = findViewById(R.id.roguelike_btn_music)
         tvFloorLevel = findViewById(R.id.roguelike_tv_floorlevel)
         btnInventory = findViewById(R.id.roguelike_btn_inventory)
-        healthBar    = findViewById(R.id.roguelike_health_bar)
 
         musicEnabled = audioPrefs.getBoolean("music_enabled", true)
         updateMusicButton()
@@ -132,32 +130,12 @@ open class RoguelikeActivity : ThemedActivity() {
                     }
                 }
             }
-            (healthBar.parent as LinearLayout).addView(testButton, 1)
+            (combatView.parent.parent as LinearLayout).addView(testButton, 1)
             DungeonTestPanel(this, { game }, { attachGame(it) }, { refresh() }).show()
-        } else if (SaveManager.hasSave(this)) {
-            showContinueDialog()
         } else {
-            attachGame(RoguelikeGame())
+            // Toujours la même partie : on reprend la sauvegarde, sans demander
+            attachGame(SaveManager.load(this) ?: RoguelikeGame())
         }
-    }
-
-    // ── Dialog continuer / nouvelle partie ──────────────────────────────────────
-
-    private fun showContinueDialog() {
-        val summary = SaveManager.saveSummary(this) ?: getString(R.string.roguelike_save_in_progress_fallback)
-        AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
-            .setTitle(R.string.roguelike_title)
-            .setMessage(getString(R.string.roguelike_resume_dialog_message, summary))
-            .setCancelable(false)
-            .setPositiveButton(R.string.roguelike_resume_dialog_continue) { _, _ ->
-                val saved = SaveManager.load(this)
-                attachGame(saved ?: RoguelikeGame())
-            }
-            .setNegativeButton(R.string.roguelike_resume_dialog_new_game) { _, _ ->
-                SaveManager.clear(this)
-                attachGame(RoguelikeGame())
-            }
-            .show()
     }
 
     // ── Cycle de vie — sauvegarde auto ───────────────────────────────────────────
@@ -210,20 +188,49 @@ open class RoguelikeActivity : ThemedActivity() {
         gameView.onEquipItem     = { g.equipPendingDrop(); saveNow(); refresh() }
         gameView.onStashDrop     = { g.stashPendingDrop(); saveNow(); refresh() }
 
-        gameView.onRestartAfterDeath = { atCheckpoint ->
-            g.restartAfterDeath(atCheckpoint)
+        gameView.onRestartAfterDeath = {
+            // La mort fait rejouer l'étage où l'on est tombé ; le feu de camp mène ensuite où l'on veut
+            g.restartAfterDeath(atCheckpoint = false)
             saveNow()
             refresh()
         }
-        gameView.onCampfireHeld = {
-            AlertDialog.Builder(this)
+        gameView.onCampfireTapped = {
+            // Le sélecteur d'étage : tous les étages déjà découverts, l'étage actuel au départ
+            val picker = NumberPicker(this).apply {
+                minValue = 1
+                maxValue = g.hero.deepestFloor.coerceAtLeast(g.floor)
+                value = g.floor
+                wrapSelectorWheel = false
+            }
+            val label = TextView(this).apply {
+                setText(R.string.roguelike_camp_menu_floor)
+                gravity = android.view.Gravity.CENTER
+            }
+            val content = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = android.view.Gravity.CENTER_HORIZONTAL
+                val pad = (16 * resources.displayMetrics.density).toInt()
+                setPadding(pad, pad, pad, 0)
+                addView(label)
+                addView(picker)
+            }
+            AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
                 .setTitle(R.string.roguelike_camp_menu_title)
-                .setItems(arrayOf(getString(R.string.roguelike_camp_menu_checkpoint, g.checkpoint),
-                    getString(R.string.roguelike_camp_menu_regenerate, g.floor))) { _, choice ->
-                    if (choice == 0) g.returnToCheckpoint() else g.regenerateCurrentFloor()
+                .setView(content)
+                .setPositiveButton(R.string.roguelike_camp_menu_travel) { _, _ ->
+                    if (picker.value != g.floor) {
+                        g.travelFromCamp(picker.value)
+                        saveNow()
+                        refresh()
+                    }
+                }
+                .setNeutralButton(getString(R.string.roguelike_camp_menu_regenerate, g.floor)) { _, _ ->
+                    g.regenerateCurrentFloor()
                     saveNow()
                     refresh()
-                }.show()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
 
         combatView.onStrike    = { crit -> sfx.onPlayerAttack(crit) }
@@ -302,6 +309,5 @@ open class RoguelikeActivity : ThemedActivity() {
             h.archetype?.let { getString(it.labelRes) } ?: getString(R.string.inv_no_class),
             DungeonNumbers.format(this, h.hp), DungeonNumbers.format(this, h.maxHp))
         btnInventory.isEnabled = game.isExploring
-        healthBar.progress = (h.hp.toDouble() / h.maxHp.coerceAtLeast(1) * 1000).toInt().coerceIn(0, 1000)
     }
 }

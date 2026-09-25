@@ -78,17 +78,6 @@ object SaveManager {
             .apply()
     }
 
-    /** Résumé lisible pour l'écran de choix : "Étage 12 — 340 or". */
-    fun saveSummary(ctx: Context): String? {
-        val prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        val str = prefs.getString(KEY_INVENTORY, null) ?: prefs.getString(KEY, null) ?: return null
-        return try {
-            val j = JSONObject(str)
-            ctx.getString(com.Atom2Universe.app.R.string.roguelike_floor_gold_summary, j.getInt("floor"),
-                DungeonNumbers.format(ctx, j.getInt("gold")))
-        } catch (_: Exception) { null }
-    }
-
     // ── Sérialisation Equipment ──────────────────────────────────────────────────
 
     private fun statsToJson(stats: List<StatRoll>) = JSONArray().also { arr ->
@@ -107,7 +96,9 @@ object SaveManager {
     fun equipToJson(e: Equipment): JSONObject = JSONObject().apply {
         put("base",      e.base.name)
         put("power",     e.power)
-        put("rarity",    e.rarity.name)
+        // « grade » : le nom actuel. « rarity » garde l'ancien nom, lisible par une version d'avant
+        put("grade",     e.rarity.name)
+        put("rarity",    Rarity.legacyName(e.rarity))
         put("dmgMin",    e.damageMin)
         put("dmgMax",    e.damageMax)
         put("armor",     e.armor)
@@ -123,7 +114,8 @@ object SaveManager {
     fun equipFromJson(j: JSONObject) = Equipment(
         base      = ItemBase.valueOf(j.getString("base")),
         power     = j.getInt("power"),
-        rarity    = Rarity.valueOf(j.getString("rarity")),
+        rarity    = j.optString("grade").takeIf { it.isNotEmpty() }?.let { Rarity.valueOf(it) }
+            ?: Rarity.fromLegacy(j.getString("rarity")),
         damageMin = j.getInt("dmgMin"),
         damageMax = j.getInt("dmgMax"),
         armor     = j.getInt("armor"),

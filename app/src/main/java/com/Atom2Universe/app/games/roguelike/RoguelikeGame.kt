@@ -99,8 +99,9 @@ class RoguelikeGame(
     private val rng: Random = Random,
     levelSeed: Long = Random.nextLong(),
     /**
-     * Un checkpoint automatique tous les N étages (11, 21, 31… pour N = 10) : la mort ramène au
-     * dernier atteint si le joueur le choisit. 0 reste disponible pour les simulations.
+     * **Simulations seulement** : un checkpoint tous les N étages (11, 21, 31… pour N = 10), où
+     * [dismissDeath] ramène les bots. Le joueur, lui, n'a plus de checkpoint depuis le
+     * 25/09/2026 : la mort fait recommencer l'étage, et le menu du feu mène à tout étage atteint.
      */
     private val checkpointEvery: Int = CHECKPOINT_INTERVAL,
     /**
@@ -436,18 +437,27 @@ class RoguelikeGame(
     fun restartAfterDeath(atCheckpoint: Boolean) {
         val report = deathReport ?: return
         deathReport = null
-        changeFloor(if (atCheckpoint) report.checkpointFloor else report.floor)
+        // Recommencer l'étage n'est pas une arrivée par l'escalier : pas de nouveau tirage de forge
+        // (celle qui était là reste). Le retour au checkpoint des bots, lui, en est une.
+        val target = if (atCheckpoint) report.checkpointFloor else report.floor
+        changeFloor(target, keepForgeRoll = target == floor)
     }
 
     /** Default choice retained for simulation callers. */
     fun dismissDeath() = restartAfterDeath(atCheckpoint = true)
 
-    fun returnToCheckpoint() {
+    /**
+     * Le menu du feu de camp : partir vers n'importe quel étage déjà découvert (de 1 à
+     * [Hero.deepestFloor]). Le voyage ne fait jamais apparaître de forge : elle n'est que la
+     * surprise d'une arrivée par l'escalier.
+     */
+    fun travelFromCamp(target: Int) {
         if (!isExploring || !onCampTile()) return
-        // Déjà sur l'étage du checkpoint : ce n'est pas une nouvelle arrivée, la chance de forge ne se relance pas
-        // (sinon ce menu, répété au feu de camp, ferait apparaître une forge sans rien jouer)
-        changeFloor(checkpoint, keepForgeRoll = checkpoint == floor)
-        addLog(R.string.roguelike_log_camp_checkpoint, checkpoint)
+        val destination = target.coerceIn(1, hero.deepestFloor.coerceAtLeast(1))
+        if (destination == floor) return
+        forgeOnFloor = false
+        changeFloor(destination, keepForgeRoll = true)
+        addLog(R.string.roguelike_log_camp_travel, destination)
     }
 
     /** Regenerates this floor from the next random state, preserving the hero and checkpoint. */
@@ -707,12 +717,18 @@ class RoguelikeGame(
         val goldCount = 3 + lv.targetPacks / 4 + levelRng.nextInt(3)
         spots.take(goldCount).forEach { lv.items += Item(ItemType.GOLD, it) }
 
-        // La forge : dans une salle, loin du feu de camp, jamais sur un objet ni sur un décor
+        // La forge : la surprise de l'arrivée, dans la salle du feu de camp, à deux ou trois pas du
+        // feu. Sans salle autour du feu (carte ouverte), sur une case libre tout près de lui.
         if (forgeOnFloor) {
             val taken = lv.items.map { it.pos }.toSet()
-            lv.forge = (layout.rooms.shuffled(levelRng).map { it.randomInner(levelRng) } + farCells.shuffled(levelRng))
-                .firstOrNull { lv.tiles[it.y][it.x] == TileType.FLOOR && it.chebyshev(lv.start) > 2 && it !in taken &&
-                    it !in lv.scenery && it !in lv.passages && it !in lv.waterways }
+            val campRoom = layout.rooms.firstOrNull { it.contains(lv.start) }
+            fun free(p: Pos) = lv.inBounds(p.x, p.y) && lv.tiles[p.y][p.x] == TileType.FLOOR && p != lv.start &&
+                p !in taken && p !in lv.scenery && p !in lv.passages && p !in lv.waterways
+            val near = (-4..4).flatMap { dy -> (-4..4).map { dx -> Pos(lv.start.x + dx, lv.start.y + dy) } }
+                .filter { free(it) && lv.campDistances[it.y][it.x] in 1..6 }
+                .shuffled(levelRng)
+            lv.forge = near.filter { campRoom?.contains(it) != false }.minByOrNull { if (it.chebyshev(lv.start) in 2..3) 0 else 1 }
+                ?: near.minByOrNull { lv.campDistances[it.y][it.x] }
         }
 
         return lv

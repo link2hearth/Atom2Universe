@@ -18,6 +18,8 @@ import kotlin.math.sin
  * à l'arme, deux reliques, le Spécial de l'archétype). Il mesure les deux gestes en rythme et les transmet au [Combat] :
  *  - pendant sa propre attaque, un swipe quand le curseur traverse la zone dorée ;
  *  - pendant l'attaque d'un ennemi, une touche au moment où l'anneau se referme.
+ * En paysage, la scène prend toute la largeur (ennemis à gauche, héros à droite avec ses
+ * pantins ou doubles) et les six boutons s'alignent en une rangée dessous.
  */
 class CombatView @JvmOverloads constructor(
     ctx: Context, attrs: AttributeSet? = null
@@ -112,7 +114,22 @@ class CombatView @JvmOverloads constructor(
     private var heroRect = RectF()
     /** Partie « scène » : même repère 240 px et même miroir que la démo artistique. */
     private var sceneRect = RectF()
-    private var buttonsArea = RectF()
+    /**
+     * Taille d'un pixel des personnages à l'écran. En portrait c'est celle du décor ; en
+     * paysage le décor remplit la largeur, mais les personnages se règlent sur la hauteur du sol.
+     */
+    private var sceneUnit = 1f
+    /** Écran plus large que haut : la scène sur toute la largeur, les boutons en une rangée dessous. */
+    private var landscape = false
+    /** En paysage, la bande sous la scène : consigne et boutons. */
+    private var panelRect = RectF()
+    /** Là où s'écrivent les PV et les effets du héros : sous lui en portrait, dans le panneau en paysage. */
+    private var statsRect = RectF()
+    private var hintX = 0f
+    private var hintY = 0f
+    private var hintRoom = 1f
+    private var ringX = 0f
+    private var ringY = 0f
     private var attackBtn = RectF()
     private val relicBtns = Array(Hero.RELIC_SLOTS) { RectF() }
     private var specialBtn = RectF()
@@ -193,45 +210,118 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         if (width == 0) return
         val w = width.toFloat(); val h = height.toFloat()
-        val n = c.enemies.size
-        val m0 = 10f * density
-        orderBar = RectF(m0, 6f * density, w - m0, 6f * density + 36f * density)
-        sceneRect = RectF(0f, 0f, w, h * .79f)
-        val scale = w / 240f
-        val worldHeight = sceneRect.height() / scale
-        val floorY = min(84f, worldHeight * .28f)
-        // Même composition que la démo : le chef (index 0) occupe toujours le coin bas gauche.
-        val rawXs = floatArrayOf(178f, 178f, 99f)
-        val rawYs = floatArrayOf(worldHeight - 45f, floorY + (worldHeight - floorY) * .40f, worldHeight - 45f)
-        enemyRects.clear()
-        for (i in 0 until n) {
-            val rawX = rawXs[i.coerceAtMost(rawXs.lastIndex)]
-            val rawY = rawYs[i.coerceAtMost(rawYs.lastIndex)]
-            val monsterW = 46f * scale
-            val monsterH = 44f * scale
-            val left = sceneRect.left + (240f - rawX - 46f) * scale
-            val top = sceneRect.top + (rawY - 18f) * scale
-            enemyRects += RectF(left, top, left + monsterW, top + monsterH)
-        }
-        val heroLeft = sceneRect.left + (240f - 38f - 36f) * scale
-        val heroTop = sceneRect.top + (floorY + 16f) * scale
-        heroRect = RectF(heroLeft, heroTop, heroLeft + 36f * scale, heroTop + 36f * scale)
-
-        // Grille 3 × 2 : l'attaque et le Spécial à gauche, les quatre reliques à droite
-        buttonsArea = RectF(0f, h * 0.80f, w, h)
+        landscape = w > h
         val m = 10f * density
-        val cellW = (w - 4 * m) / 3f
-        val bh = h * 0.075f
-        val row1 = h * 0.81f
-        val row2 = row1 + bh + m
-        fun cell(col: Int, top: Float) = RectF(m + col * (cellW + m), top, m + col * (cellW + m) + cellW, top + bh)
-        attackBtn    = cell(0, row1)
-        specialBtn   = cell(0, row2)
-        relicBtns[0] = cell(1, row1)
-        relicBtns[1] = cell(2, row1)
-        relicBtns[2] = cell(1, row2)
-        relicBtns[3] = cell(2, row2)
-        strikeBar = RectF(w * 0.16f, h * .5f - 11f * density, w * 0.84f, h * .5f + 11f * density)
+        orderBar = RectF(m, 6f * density, w - m, 6f * density + 36f * density)
+        enemyRects.clear()
+        if (landscape) {
+            // Les six boutons sur une rangée en bas, la consigne juste au-dessus.
+            val bh = min(64f * density, h * .14f)
+            val buttonsTop = h - m - bh
+            val sceneBottom = buttonsTop - 30f * sp
+            sceneRect = RectF(0f, 0f, w, sceneBottom)
+            panelRect = RectF(0f, sceneBottom, w, h)
+            // Le décor (240 px de large) remplit toute la largeur : il est simplement rogné
+            // en hauteur, et montre moins de mur. Les personnages, eux, se règlent sur la
+            // hauteur du sol, sinon ils deviendraient énormes.
+            val backdropScale = w / 240f
+            val floor = min(84f, sceneBottom / backdropScale * .28f) * backdropScale
+            val u = min((sceneBottom - floor) / 150f, w / 300f)
+            sceneUnit = u
+            fun monster(left: Float, top: Float) = RectF(left, top, left + 46f * u, top + 44f * u)
+            // Les ennemis à gauche, en formation : une colonne de front (côté héros), en
+            // haut et en bas, et le chef derrière elle, au milieu, protégé par les deux
+            // autres. Sous chacun, la place de sa barre de vie et de ses effets.
+            val upper = floor + 2f * u
+            val lower = sceneBottom - (44f + 30f) * u
+            val mid = (upper + lower) / 2f
+            val back = 24f * u
+            val front = back + 74f * u
+            val types = c.enemies.map { it.type }
+            val boss = c.enemies.indices.firstOrNull { Encounters.isBoss(types, it) }
+            val guards = c.enemies.indices.filter { it != boss }
+            val spots = arrayOfNulls<Pair<Float, Float>>(c.enemies.size)
+            when (guards.size) {
+                0 -> {}
+                1 -> spots[guards[0]] = front to mid
+                else -> {
+                    spots[guards[0]] = front to upper
+                    spots[guards[1]] = front to lower
+                    for (extra in guards.drop(2)) spots[extra] = back to mid
+                }
+            }
+            if (boss != null) spots[boss] = if (guards.isEmpty()) front to mid else back to mid
+            for (spot in spots) {
+                val (x, y) = spot ?: (front to mid)
+                enemyRects += monster(x, y)
+            }
+            // Le héros à droite, sans coller au bord, à mi-hauteur du sol : ses pantins ou
+            // doubles se placent devant lui, au-dessus et en dessous.
+            val heroTop = (floor + sceneBottom) / 2f - 22f * u
+            val heroRight = w - maxOf(60f * u, w * .12f)
+            heroRect = RectF(heroRight - 36f * u, heroTop, heroRight, heroTop + 36f * u)
+        } else {
+            val scale = w / 240f
+            sceneUnit = scale
+            sceneRect = RectF(0f, 0f, w, h * .79f)
+            val worldHeight = sceneRect.height() / scale
+            val floorY = min(84f, worldHeight * .28f)
+            fun monster(left: Float, top: Float) = RectF(
+                sceneRect.left + left * scale, sceneRect.top + top * scale,
+                sceneRect.left + (left + 46f) * scale, sceneRect.top + (top + 44f) * scale)
+            // Même composition que la démo : le chef (index 0) occupe toujours le coin bas gauche.
+            val rawXs = floatArrayOf(178f, 178f, 99f)
+            val rawYs = floatArrayOf(worldHeight - 45f, floorY + (worldHeight - floorY) * .40f, worldHeight - 45f)
+            for (i in c.enemies.indices) {
+                val rawX = rawXs[i.coerceAtMost(rawXs.lastIndex)]
+                val rawY = rawYs[i.coerceAtMost(rawYs.lastIndex)]
+                enemyRects += monster(240f - rawX - 46f, rawY - 18f)
+            }
+            val heroLeft = sceneRect.left + (240f - 38f - 36f) * scale
+            val heroTop = sceneRect.top + (floorY + 16f) * scale
+            heroRect = RectF(heroLeft, heroTop, heroLeft + 36f * scale, heroTop + 36f * scale)
+        }
+
+        if (landscape) {
+            // Une rangée : Attaque, Spécial, puis les quatre reliques.
+            val bh = min(64f * density, h * .14f)
+            val cellW = (w - 7 * m) / 6f
+            val top = h - m - bh
+            fun cell(col: Int) = RectF(m + col * (cellW + m), top, m + col * (cellW + m) + cellW, top + bh)
+            attackBtn = cell(0)
+            specialBtn = cell(1)
+            for (i in relicBtns.indices) relicBtns[i] = cell(2 + i)
+            // La fiche du héros sous lui, comme en portrait : dans le mur, le décor la cachait.
+            val statsRight = min(w - 16f * density, heroRect.centerX() + 110f * density)
+            statsRect = RectF(statsRight - 220f * density, heroRect.bottom, statsRight, sceneRect.bottom)
+            hintX = w / 2f
+            hintY = top - 8f * density
+            hintRoom = w - 2 * m
+            val length = min(sceneRect.width() * .5f, sceneRect.height() * .7f)
+            strikeBar = RectF(sceneRect.centerX() - length / 2f, sceneRect.centerY() - 11f * density,
+                sceneRect.centerX() + length / 2f, sceneRect.centerY() + 11f * density)
+            ringX = sceneRect.centerX(); ringY = sceneRect.centerY()
+        } else {
+            panelRect = RectF()
+            // Grille 3 × 2 : l'attaque et le Spécial à gauche, les quatre reliques à droite
+            val cellW = (w - 4 * m) / 3f
+            val bh = h * 0.075f
+            val row1 = h * 0.81f
+            val row2 = row1 + bh + m
+            fun cell(col: Int, top: Float) = RectF(m + col * (cellW + m), top, m + col * (cellW + m) + cellW, top + bh)
+            attackBtn    = cell(0, row1)
+            specialBtn   = cell(0, row2)
+            relicBtns[0] = cell(1, row1)
+            relicBtns[1] = cell(2, row1)
+            relicBtns[2] = cell(1, row2)
+            relicBtns[3] = cell(2, row2)
+            statsRect = RectF(heroRect.left - 12f * density, heroRect.bottom, w - 16f * density, h)
+            hintX = w / 2f
+            hintY = h * 0.78f
+            hintRoom = w - 20f * density
+            strikeBar = RectF(w * 0.16f, h * .5f - 11f * density, w * 0.84f, h * .5f + 11f * density)
+            ringX = w / 2f; ringY = h / 2f
+        }
     }
 
     // ── Boucle d'animation ──────────────────────────────────────────────────────
@@ -262,7 +352,7 @@ class CombatView @JvmOverloads constructor(
     }
 
     /** En garde (guerrier), les deux fenêtres de parade doublent. */
-    private fun guardMult() = if (combat?.guarding == true) 2 else 1
+    private fun guardMult() = if ((combat?.guardTurns ?: 0) > 0) 2 else 1
     private fun goodWindow() = (CombatTiming.parryGood(combat?.hero) * guardMult() * windupScale).toInt()
     private fun perfectWindow() = (CombatTiming.parryPerfect(combat?.hero) * guardMult() * windupScale).toInt()
     /** Laisse le cercle sortir de la zone verte avant de terminer un geste sans appui. */
@@ -619,6 +709,7 @@ class CombatView @JvmOverloads constructor(
         if (combat == null) return
         canvas.drawColor(0xFF161F30.toInt())
         dungeonArt.drawBackdrop(canvas, sceneRect)
+        if (landscape) canvas.drawRect(panelRect, pBg)
 
         drawOrderBar(canvas, c)
         drawPuppets(canvas, c)
@@ -630,11 +721,11 @@ class CombatView @JvmOverloads constructor(
             val impact = stage == Stage.PLAYER_HIT
             val progress = elapsed() / if (impact) HIT_MS.toFloat() else approachMs
             relicArt.draw(canvas, sceneRect, heroRect, enemyRects, spellTargets,
-                casting.relic, progress, impact)
+                casting.relic, progress, impact, pixel = sceneUnit)
         }
         if (stage == Stage.HERO_STATUS && c.lastHeroTurnEnd.meteor.isNotEmpty()) {
             relicArt.draw(canvas, sceneRect, heroRect, enemyRects, c.lastHeroTurnEnd.meteor.map { it.target },
-                Relic.METEOR, elapsed() / STATUS_MS.toFloat(), true, meteorFall = true)
+                Relic.METEOR, elapsed() / STATUS_MS.toFloat(), true, meteorFall = true, pixel = sceneUnit)
         }
         drawButtons(canvas, c)
         drawHint(canvas)
@@ -653,11 +744,20 @@ class CombatView @JvmOverloads constructor(
     }
 
     private fun companionBounds(index: Int): RectF {
-        val unit = sceneRect.width() / 240f
+        val unit = sceneUnit
         val size = 32f * unit
         val top = heroRect.top
-        val cx = if (index == 0 || index == 2) heroRect.centerX() - 53f * unit else heroRect.centerX()
-        val y = when (index) { 0 -> top; 3 -> top - 43f * unit; else -> top + 57f * unit }
+        val cx: Float
+        val y: Float
+        if (landscape) {
+            // En paysage, un carré de deux sur deux devant le héros (côté ennemis) : le
+            // dessous du héros reste libre pour sa fiche.
+            cx = heroRect.centerX() - (if (index <= 1) 48f else 92f) * unit
+            y = top + (if (index % 2 == 0) -28f else 28f) * unit
+        } else {
+            cx = if (index == 0 || index == 2) heroRect.centerX() - 53f * unit else heroRect.centerX()
+            y = when (index) { 0 -> top; 3 -> top - 43f * unit; else -> top + 57f * unit }
+        }
         return RectF(cx - size / 2f, y, cx + size / 2f, y + 36f * unit)
     }
 
@@ -668,7 +768,7 @@ class CombatView @JvmOverloads constructor(
             val bounds = companionBounds(i)
             val shatter = if (breaking && i == brokenMirror)
                 ((elapsed() / IMPACT_MS.toFloat() - .25f) / .75f).coerceIn(0f, 1f) else 0f
-            val unit = sceneRect.width() / 240f
+            val unit = sceneUnit
             bounds.offset(sin(SystemClock.uptimeMillis() / 520.0 + i * 1.7).toFloat() * unit, -shatter * 8f * unit)
             val alpha = (145 * (1f - shatter)).toInt()
             canvas.saveLayerAlpha(sceneRect, alpha)
@@ -685,7 +785,7 @@ class CombatView @JvmOverloads constructor(
     }
 
     private fun drawPuppets(canvas: Canvas, c: Combat) {
-        val unit = sceneRect.width() / 240f
+        val unit = sceneUnit
         for ((i, hp) in c.puppetHp.withIndex()) {
             val hurt = stage == Stage.ENEMY_IMPACT && hp < puppetHpBeforeImpact.getOrElse(i) { hp }
             if (hp <= 0 && !hurt) continue
@@ -728,7 +828,7 @@ class CombatView @JvmOverloads constructor(
                 else if (brokenMirror >= 0)
                     (1f - (elapsed() / IMPACT_MS.toFloat() - .3f) / .7f).coerceIn(0f, 1f)
                 else (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f)
-                val unit = width / 240f
+                val unit = sceneUnit
                 val destination = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else RectF(heroRect)
                 if (stage == Stage.ENEMY_IMPACT && brokenMirror >= 0) {
                     // Le résultat du jet est connu à l'impact : le dernier mouvement révèle le double frappé.
@@ -751,7 +851,7 @@ class CombatView @JvmOverloads constructor(
 
             val barTop = base.bottom + 4f * density
             // Même barre pixel-art que la démo : le cadre clair désigne la cible.
-            val unit = width / 240f
+            val unit = sceneUnit
             val bar = RectF(base.centerX() - 26f * unit, barTop, base.centerX() + 26f * unit, barTop + 6f * unit)
             pFill.color = if (target == i && e.alive) 0xFF91A9B5.toInt() else 0xFF111729.toInt()
             canvas.drawRect(bar, pFill)
@@ -895,11 +995,11 @@ class CombatView @JvmOverloads constructor(
             val destination = enemyRects.getOrNull(target)
             val progress = if (stage == Stage.PLAYER_APPROACH) (elapsed() / 220f).coerceIn(0f, 1f)
                 else (1f - (elapsed() - 100f) / (HIT_MS - 100f)).coerceIn(0f, 1f)
-            val unit = width / 240f
+            val unit = sceneUnit
             if (destination != null) r.offset((destination.left + 36f * unit - heroRect.left) * progress,
                 (destination.top + 8f * unit - heroRect.top) * progress)
         }
-        val blocking = c.guarding || (stage == Stage.ENEMY_IMPACT && parry != null && parry != Timing.MISS)
+        val blocking = c.guardTurns > 0 || (stage == Stage.ENEMY_IMPACT && parry != null && parry != Timing.MISS)
         if (stage == Stage.ENEMY_IMPACT && !blocking && heroHurtImpact) r.offset(sin(elapsed() / 25.0).toFloat() * 7f * density, 0f)
         dungeonArt.drawShadow(canvas, r, hero = true)
         dungeonArt.drawHero(canvas, r, c.hero,
@@ -914,13 +1014,19 @@ class CombatView @JvmOverloads constructor(
                 (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT),
             castProgress = if (stage == Stage.PLAYER_APPROACH) elapsed() / approachMs else 1f - elapsed() / HIT_MS.toFloat())
 
+        drawHeroStats(canvas, c)
+    }
+
+    /** PV, barre de vie et effets du héros, dans [statsRect]. */
+    private fun drawHeroStats(canvas: Canvas, c: Combat) {
         val hero = c.hero
-        val left = heroRect.left - 12f * density
-        val right = width - 16f * density
+        val left = statsRect.left
+        val right = statsRect.right
+        val top = statsRect.top
         pText.textAlign = Paint.Align.LEFT
         pText.textSize = 15f * sp; pText.color = Color.WHITE
-        canvas.drawText(context.getString(R.string.roguelike_combat_hp, num(hero.hp), num(hero.maxHp)), left, heroRect.bottom + 18f * density, pText)
-        val bar = RectF(left, heroRect.bottom + 24f * density, right, heroRect.bottom + 30f * density)
+        canvas.drawText(context.getString(R.string.roguelike_combat_hp, num(hero.hp), num(hero.maxHp)), left, top + 18f * density, pText)
+        val bar = RectF(left, top + 24f * density, right, top + 30f * density)
         pFill.color = 0xFF333333.toInt(); canvas.drawRect(bar, pFill)
         val ratio = hero.hp.toFloat() / hero.maxHp
         pFill.color = when { ratio > 0.5f -> 0xFF43A047.toInt(); ratio > 0.25f -> 0xFFFB8C00.toInt(); else -> 0xFFE53935.toInt() }
@@ -928,9 +1034,9 @@ class CombatView @JvmOverloads constructor(
         // Garde et doubles sous la barre de vie
         pText.textSize = 12f * sp
         var y = bar.bottom + 16f * sp
-        if (c.guarding) {
+        if (c.guardTurns > 0) {
             pText.color = 0xFFBCAAA4.toInt()
-            canvas.drawText(context.getString(R.string.roguelike_combat_guarding), left, y, pText)
+            canvas.drawText(context.getString(R.string.roguelike_combat_guarding, c.guardTurns), left, y, pText)
             y += 15f * sp
         }
         if (c.mirrorImages > 0) {
@@ -1033,10 +1139,10 @@ class CombatView @JvmOverloads constructor(
         pText.color = 0xFFB0BEC5.toInt()
         lines.forEachIndexed { index, text ->
             pText.textSize = 14f * sp
-            val room = (width - 20f * density).coerceAtLeast(1f)
+            val room = hintRoom.coerceAtLeast(1f)
             val textWidth = pText.measureText(text)
             if (textWidth > room) pText.textSize *= room / textWidth
-            canvas.drawText(text, width / 2f, height * 0.78f - (lines.lastIndex - index) * 17f * sp, pText)
+            canvas.drawText(text, hintX, hintY - (lines.lastIndex - index) * 17f * sp, pText)
         }
     }
 
@@ -1094,7 +1200,7 @@ class CombatView @JvmOverloads constructor(
 
     /** Geste de parade d'origine : toucher quand les deux cercles coïncident. */
     private fun drawParryRing(canvas: Canvas) {
-        val cx = width / 2f; val cy = height / 2f
+        val cx = ringX; val cy = ringY
         val inner = heroRect.width() * 0.62f
         val p = elapsed().toFloat() / windupMs()
         // Même taille et approche qu'à l'origine. Après la cible, le cercle continue
@@ -1143,7 +1249,7 @@ class CombatView @JvmOverloads constructor(
         if (age > FLOAT_MS) { banner = null; return }
         pText.textSize = 26f * sp; pText.color = bannerColor
         pText.alpha = ((1f - age.toFloat() / FLOAT_MS) * 255).toInt().coerceIn(0, 255)
-        canvas.drawText(text, width / 2f, height * 0.42f, pText)
+        canvas.drawText(text, sceneRect.centerX(), height * 0.42f, pText)
         pText.alpha = 255
     }
 

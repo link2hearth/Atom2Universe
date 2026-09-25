@@ -10,7 +10,7 @@ import kotlin.random.Random
 class DodgeTest {
 
     private fun piece(base: ItemBase, weight: ArmorWeight?, tier: Int = 1) =
-        LootSystem.create(base, tier, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
+        LootSystem.create(base, tier, Rarity.COMMON, 0, Random(0), forcedWeight = weight)
 
     /** Un anneau qui ne donne que [dex] points de DEX. */
     private fun dexRing(dex: Float) = piece(ItemBase.RING, null).copy(

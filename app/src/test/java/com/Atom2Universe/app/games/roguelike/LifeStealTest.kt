@@ -40,7 +40,7 @@ class LifeStealTest {
     @Test fun generatedLifeStealStaysBetweenOneAndFivePercent() {
         var found = 0
         for (power in listOf(1, 10, 100, 1000)) repeat(100) { seed ->
-            val e = LootSystem.create(ItemBase.SWORD, power, Rarity.RARE, seed.toLong(), Random(seed))
+            val e = LootSystem.create(ItemBase.SWORD, power, Rarity.EPIC, seed.toLong(), Random(seed))
             for (roll in e.affixes.filter { it.type == StatType.LIFE_STEAL }) {
                 found++
                 assertTrue(roll.value in .01f.. .05f)
@@ -72,10 +72,10 @@ class LifeStealTest {
     @Test fun rogueRiposteStealsLife() {
         val h = hero()
         for (base in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)) {
-            val e = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.LIGHT)
+            val e = LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.LIGHT)
             h.equipped[e.slot] = e
         }
-        h.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 100, Rarity.NORMAL, 0, Random(1)).copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .1f)))
+        h.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 100, Rarity.COMMON, 0, Random(1)).copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .1f)))
         val c = Combat(h, 1, listOf(Enemy(MonsterType.GOBLIN, 10000, 1, 1, 1)), true, Random(8), perkRoll = { 0f })
         c.startEnemyTurn()
         val hit = c.resolveStrike(0, Timing.PERFECT).counter!!
@@ -94,10 +94,10 @@ class LifeStealTest {
     @Test fun puppetEchoDoesNotAddLifeSteal() {
         val h = hero()
         for (base in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)) {
-            val e = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = Archetype.NECROMANCER.weight)
+            val e = LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = Archetype.NECROMANCER.weight)
             h.equipped[e.slot] = e
         }
-        h.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 100, Rarity.NORMAL, 0, Random(1)).copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .1f)))
+        h.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 100, Rarity.COMMON, 0, Random(1)).copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .1f)))
         val c = fight(h)
         val hit = c.attack(0, Timing.PERFECT)
         assertTrue(hit.echo > 0)
@@ -108,7 +108,7 @@ class LifeStealTest {
         for (base in listOf(ItemBase.SWORD, ItemBase.SHIELD, ItemBase.HELMET, ItemBase.ARMOR,
             ItemBase.BOOTS, ItemBase.AMULET, ItemBase.RING)) {
             val found = (0..500).asSequence().map { seed ->
-                LootSystem.create(base, 100, Rarity.RARE, seed.toLong(), Random(seed))
+                LootSystem.create(base, 100, Rarity.EPIC, seed.toLong(), Random(seed))
             }.firstOrNull { item -> item.affixes.any { it.type == StatType.LIFE_STEAL } }
             assertNotNull("Life steal must be available on $base", found)
             h.equipped[base.slot] = found!!.copy(affixes = listOf(StatRoll(StatType.LIFE_STEAL, .05f)))

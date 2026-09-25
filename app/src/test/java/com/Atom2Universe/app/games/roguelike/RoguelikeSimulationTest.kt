@@ -996,7 +996,7 @@ class RoguelikeSimulationTest {
             val power = LootSystem.powerCenter(floor).roundToInt()
             val avg = ArmorWeight.entries.map { w ->
                 val rng = Random(floor * 17L + w.ordinal)
-                (1..n).map { LootSystem.rating(LootSystem.create(IsotopeSets.BASES.random(rng), power, Rarity.RARE, 0, rng, forcedWeight = w)) }.average()
+                (1..n).map { LootSystem.rating(LootSystem.create(IsotopeSets.BASES.random(rng), power, Rarity.EPIC, 0, rng, forcedWeight = w)) }.average()
             }
             out.appendLine(String.format("%-8d", floor) + avg.joinToString("") { String.format("%13.0f", it) })
         }
@@ -1078,7 +1078,8 @@ class RoguelikeSimulationTest {
         val series = System.getenv("SIM_SERIES")?.toInt() ?: 600
         val skill = System.getenv("SIM_SKILL")?.let { Skill.valueOf(it) } ?: Skill.CORRECT
         val relic = System.getenv("SIM_RELIC")?.let { Relic.valueOf(it) } ?: Relic.FIREBALL
-        val weapons = listOf(ItemBase.SWORD, ItemBase.AXE, ItemBase.DAGGER, ItemBase.MACE, ItemBase.STAFF, ItemBase.SCEPTER)
+        // Toutes les armes du jeu : une arme ajoutée plus tard entre d'elle-même dans le banc
+        val weapons = ItemBase.entries.filter { it.slot == EquipSlot.WEAPON }
         val saved = IsotopeSets.dropShare
         IsotopeSets.dropShare = 0f
         try {
@@ -1432,7 +1433,7 @@ class RoguelikeSimulationTest {
 
     /** Une rareté d'équipement du banc [archetypesByRarity] : les trois du butin, et le set de classe. */
     private enum class GearTier(val label: String, val rarity: Rarity, val set: Boolean = false) {
-        NORMAL("normal", Rarity.NORMAL), MAGIC("magique", Rarity.MAGIC), RARE("rare", Rarity.RARE), SET("set", Rarity.RARE, set = true)
+        NORMAL("normal", Rarity.COMMON), MAGIC("magique", Rarity.RARE), RARE("rare", Rarity.EPIC), SET("set", Rarity.EPIC, set = true)
     }
 
     /**

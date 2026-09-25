@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 class CombatTimingTest {
     private fun hero(stat: StatType, points: Float) = Hero().apply {
-        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 1, Random(0))
+        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 1, Random(0))
             .copy(implicits = listOf(StatRoll(stat, points)), affixes = emptyList())
     }
 
@@ -33,13 +33,13 @@ class CombatTimingTest {
 
     @Test fun swordUsesItsRolledAttributeAndSpearUsesEndurance() {
         for (attribute in StatType.ATTRIBUTES) {
-            val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.NORMAL, 1, Random(0))
+            val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.COMMON, 1, Random(0))
                 .copy(implicits = listOf(StatRoll(attribute, 25f)))
             val hero = Hero().apply { equipped[EquipSlot.WEAPON] = sword }
             assertEquals(attribute, hero.weaponAttribute)
             assertEquals(sword.damageMax * 2, hero.weaponMax)
         }
-        val spear = LootSystem.create(ItemBase.SPEAR, 1, Rarity.NORMAL, 1, Random(0))
+        val spear = LootSystem.create(ItemBase.SPEAR, 1, Rarity.COMMON, 1, Random(0))
         assertEquals(StatType.END, spear.damageAttribute)
         assertTrue(Archetype.VAGABOND.accepts(spear.base))
     }

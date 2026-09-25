@@ -6,7 +6,7 @@ import kotlin.random.Random
 
 class StrikeDamageTest {
     private fun hero(low: Int = 10, high: Int = 20, critical: Float = 0f) = Hero().apply {
-        equipped[EquipSlot.WEAPON] = Equipment(ItemBase.SWORD, 1, Rarity.NORMAL,
+        equipped[EquipSlot.WEAPON] = Equipment(ItemBase.SWORD, 1, Rarity.COMMON,
             low, high, 0, listOf(StatRoll(StatType.CRIT_CHANCE, critical - Hero.BASE_CRIT)),
             emptyList(), 0, 0, 1L)
     }

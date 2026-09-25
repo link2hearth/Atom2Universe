@@ -71,7 +71,7 @@ class IsotopeSetTest {
             val next = ((center - 1) / Grade.POWER_PER_TIER + 1) * Grade.POWER_PER_TIER + 1
             for (piece in pieces) {
                 assertTrue(piece.power in next until next + Grade.POWER_PER_TIER)
-                assertEquals(Rarity.RARE, piece.rarity)
+                assertEquals(Rarity.EPIC, piece.rarity)
                 assertEquals(piece.isotopeSet!!.archetype.weight, piece.weight)
             }
         }

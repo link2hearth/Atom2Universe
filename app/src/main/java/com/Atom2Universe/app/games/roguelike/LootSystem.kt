@@ -70,9 +70,24 @@ enum class Rarity(
     @StringRes override val labelRes: Int, val colorArgb: Int,
     val minAffixes: Int, val maxAffixes: Int, val sellMult: Float,
 ) : Labeled {
-    NORMAL(R.string.roguelike_rarity_normal, 0xFFBDBDBD.toInt(), 0, 0, 1f),
-    MAGIC (R.string.roguelike_rarity_magic,  0xFF6E9BFF.toInt(), 1, 2, 2f),
-    RARE  (R.string.roguelike_rarity_rare,   0xFFFFD54F.toInt(), 3, 3, 4f),
+    // Au-dessus, le set d'isotope : « Légendaire », en or ([EquipmentArt.LEGENDARY]).
+    COMMON(R.string.roguelike_rarity_common, 0xFFBDBDBD.toInt(), 0, 0, 1f),
+    RARE  (R.string.roguelike_rarity_rare,   0xFF6E9BFF.toInt(), 1, 2, 2f),
+    EPIC  (R.string.roguelike_rarity_epic,   0xFFB388FF.toInt(), 3, 3, 4f);
+
+    companion object {
+        /**
+         * Les noms des sauvegardes d'avant le 25/09/2026 : Normal, Magique, Rare. Le « RARE »
+         * d'alors (3 affixes) est l'Épique d'aujourd'hui, d'où la clé à part ([SaveManager]).
+         */
+        fun fromLegacy(name: String): Rarity = when (name) {
+            "NORMAL" -> COMMON
+            "MAGIC" -> RARE
+            "RARE" -> EPIC
+            else -> valueOf(name)
+        }
+        fun legacyName(r: Rarity) = when (r) { COMMON -> "NORMAL"; RARE -> "MAGIC"; EPIC -> "RARE" }
+    }
 }
 
 // ─── Emplacements ──────────────────────────────────────────────────────────────
@@ -710,7 +725,7 @@ object LootSystem {
     fun createSetPiece(set: IsotopeSet, base: ItemBase, lootId: Long, rng: Random, floor: Int? = null): Equipment {
         val power = if (floor != null || set.index < 0) IsotopeSets.powerForFloor(floor ?: 1, rng)
             else IsotopeSets.basePower(set.index) + rng.nextInt(IsotopeSets.POWER_SPREAD)
-        return create(base, power, Rarity.RARE, lootId, rng, forcedWeight = set.archetype.weight, affixCount = IsotopeSets.SET_AFFIXES)
+        return create(base, power, Rarity.EPIC, lootId, rng, forcedWeight = set.archetype.weight, affixCount = IsotopeSets.SET_AFFIXES)
             .copy(isotopeZ = set.index)
     }
 
@@ -779,9 +794,9 @@ object LootSystem {
     ), rng)
 
     private fun pickRarity(floor: Int, rng: Random): Rarity = weighted(listOf(
-        Rarity.NORMAL to maxOf(25f, 55f - floor * 0.3f),
-        Rarity.MAGIC  to 35f,
-        Rarity.RARE   to minOf(35f, 10f + floor * 0.25f),
+        Rarity.COMMON to maxOf(25f, 55f - floor * 0.3f),
+        Rarity.RARE  to 35f,
+        Rarity.EPIC   to minOf(35f, 10f + floor * 0.25f),
     ), rng)
 
     /**
@@ -913,11 +928,29 @@ object LootSystem {
      * chiffres : ce que veut dire « Léger » ou « P4 » est dans le lexique. [linked] : les mots
      * deviennent des liens (voir [LexiconText]) ; sinon les lignes sont nues (canvas).
      */
+    /**
+     * Les classes à qui va une arme ou une main gauche : l'épée va à toutes, les autres armes
+     * à celles qui les acceptent ([Archetype.weapons]), une main gauche à la classe dont c'est
+     * la sienne ([Archetype.offhand]). Null pour l'armure et les bijoux : leur poids le dit.
+     */
+    fun affinity(base: ItemBase): List<Archetype>? = when (base.slot) {
+        EquipSlot.WEAPON -> Archetype.entries.filter { it.accepts(base) }
+        EquipSlot.OFFHAND -> Archetype.entries.filter { it.offhand == base }
+        else -> null
+    }?.takeIf { it.isNotEmpty() }
+
     fun describe(context: Context, e: Equipment, linked: Boolean = false, archetype: Archetype? = null): List<String> = buildList {
         if (e.damageMax > 0) add(context.getString(R.string.roguelike_item_damage,
             DungeonNumbers.format(context, e.damageMin), DungeonNumbers.format(context, e.damageMax)))
         if (e.armor > 0) add(context.getString(R.string.roguelike_item_armor, DungeonNumbers.format(context, e.armor)))
         e.weight?.let { add(LexiconText.link(Lexicon.idOf(it), context.getString(it.labelRes))) }
+        affinity(e.base)?.let { classes ->
+            add(context.getString(R.string.roguelike_item_affinity,
+                if (classes.size == Archetype.entries.size) context.getString(R.string.roguelike_item_affinity_all)
+                else classes.joinToString(context.getString(R.string.inv_separator)) {
+                    LexiconText.link(Lexicon.idOf(it), context.getString(it.labelRes))
+                }))
+        }
         if (e.damageMax > 0 && archetype != null && !archetype.accepts(e.base))
             add(LexiconText.link(Lexicon.idOf(archetype), context.getString(R.string.roguelike_item_wrong_weapon)))
         e.isotopeSet?.let { add(context.getString(R.string.roguelike_item_set_line, LexiconText.link(it.lexiconId, it.label(context)))) }

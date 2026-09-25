@@ -10,7 +10,7 @@ import kotlin.math.roundToInt
 class NewArchetypesTest {
 
     private fun piece(base: ItemBase, weight: ArmorWeight?) =
-        LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
+        LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = weight)
 
     private fun heroOf(a: Archetype) = Hero.starter().apply {
         equipped[EquipSlot.HELMET] = piece(ItemBase.HELMET, a.weight)
@@ -249,7 +249,7 @@ class NewArchetypesTest {
     // ── Les mains gauches de classe ─────────────────────────────────────────────
 
     /** Une main gauche sans aucune stat : seul son effet de classe joue. */
-    private fun bareOffhand(base: ItemBase) = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0)).copy(implicits = emptyList())
+    private fun bareOffhand(base: ItemBase) = LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0)).copy(implicits = emptyList())
 
     private fun withOffhand(a: Archetype, base: ItemBase?) = heroOf(a).also { h -> base?.let { h.equipped[EquipSlot.OFFHAND] = bareOffhand(it) } }
 

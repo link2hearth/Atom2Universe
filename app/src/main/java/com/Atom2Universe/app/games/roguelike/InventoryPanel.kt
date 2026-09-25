@@ -305,9 +305,9 @@ class InventoryPanel(
                     EquipSlot.OFFHAND -> e.base == selectedClass.offhand
                     EquipSlot.AMULET, EquipSlot.RING -> true
                 }) && when (filterRarity) {
-                    1 -> e.isotopeZ == null && e.rarity == Rarity.NORMAL
-                    2 -> e.isotopeZ == null && e.rarity == Rarity.MAGIC
-                    3 -> e.isotopeZ == null && e.rarity == Rarity.RARE
+                    1 -> e.isotopeZ == null && e.rarity == Rarity.COMMON
+                    2 -> e.isotopeZ == null && e.rarity == Rarity.RARE
+                    3 -> e.isotopeZ == null && e.rarity == Rarity.EPIC
                     4 -> e.isotopeZ != null
                     else -> true
                 }
@@ -421,10 +421,15 @@ class InventoryPanel(
             }, LinearLayout.LayoutParams(0, -2, 1f))
         }
         header.addView(summary)
+        // Le bouton des statistiques détaillées, et à côté le Lexique, ouvert sur les statistiques
         val toggle = button(ctx.getString(if (expandedStats) R.string.inv_stats_less else R.string.inv_stats_more)) {
             expandedStats = !expandedStats; refresh()
         }
-        header.addView(toggle)
+        val buttons = row()
+        buttons.addView(toggle, LinearLayout.LayoutParams(0, -2, 1f))
+        buttons.addView(button(ctx.getString(R.string.lex_button)) { lexicon.open("cat:STATS") },
+            LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(8) })
+        header.addView(buttons)
         if (!expandedStats) return
         header.addView(text(ctx.getString(R.string.inv_floor_stats, hero.floor), 12f, muted))
         val stats = column().apply { background = frame(0xFF29354B.toInt()); setPadding(dp(10), dp(8), dp(10), dp(8)) }

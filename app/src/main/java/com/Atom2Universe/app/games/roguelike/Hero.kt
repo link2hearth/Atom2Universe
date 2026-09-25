@@ -122,7 +122,7 @@ class Hero {
 
         /** Un héros neuf : une épée d'Hydrogène toute simple, et aucune relique — elles se trouvent. */
         fun starter(): Hero = Hero().apply {
-            val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.NORMAL, nextLootId++, Random(0))
+            val sword = LootSystem.create(ItemBase.SWORD, 1, Rarity.COMMON, nextLootId++, Random(0))
             equipped[EquipSlot.WEAPON] = sword
             healFull()
         }

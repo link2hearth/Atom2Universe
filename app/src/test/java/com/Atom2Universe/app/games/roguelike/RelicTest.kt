@@ -298,14 +298,14 @@ class RelicTest {
         val (lo1, hi1) = hero.relicDamage(Relic.FIREBALL)
         assertTrue(lo1 < hi1)
         val dc1 = hero.spellDc(Relic.ICE_SHARD)
-        hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 13, Rarity.NORMAL, 0, Random(0))
+        hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 13, Rarity.COMMON, 0, Random(0))
         assertTrue(hero.relicDamage(Relic.FIREBALL).first > hi1)
         assertTrue("la maîtrise suit l'arme", hero.spellDc(Relic.ICE_SHARD) > dc1)
     }
 
     /** Un héros avec un anneau qui donne [points] dans [attr]. */
     private fun heroWith(attr: StatType, points: Int) = Hero.starter().apply {
-        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
             .copy(implicits = listOf(StatRoll(attr, points.toFloat())), affixes = emptyList())
     }
 

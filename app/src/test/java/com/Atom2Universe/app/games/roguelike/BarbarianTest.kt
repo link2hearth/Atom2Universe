@@ -7,7 +7,7 @@ import kotlin.random.Random
 class BarbarianTest {
     private fun hero(club: Boolean = true) = Hero().apply {
         for (base in IsotopeSets.BASES + ItemBase.AXE + if (club) listOf(ItemBase.CLUB) else emptyList()) {
-            val item = LootSystem.create(base, 10, Rarity.NORMAL, nextLootId++, Random(1), ArmorWeight.FUR)
+            val item = LootSystem.create(base, 10, Rarity.COMMON, nextLootId++, Random(1), ArmorWeight.FUR)
                 .copy(affixes = emptyList())
             equipped[item.slot] = item
         }

@@ -14,7 +14,7 @@ class ParryBalanceTest {
 
     private fun heroOf(archetype: Archetype) = Hero.starter().apply {
         for (base in listOf(ItemBase.HELMET, ItemBase.ARMOR, ItemBase.BOOTS)) {
-            val item = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = archetype.weight)
+            val item = LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = archetype.weight)
             equipped[item.slot] = item
         }
         addRelic(Relic.FIREBALL)
@@ -36,7 +36,7 @@ class ParryBalanceTest {
     @Test fun timingDoesNotChangeDodge() {
         // Le geste choisit les dégâts et l'atout ; l'esquive ne vient que de la DEX
         val hero = Hero.starter().apply {
-            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
                 .copy(implicits = listOf(StatRoll(StatType.DEX, 5f)), affixes = emptyList())
         }
         fun avoided(timing: Timing) = (0 until 20).count { i -> combat(hero, dodge = i / 20f).resolveStrike(0, timing).missed }
@@ -82,7 +82,7 @@ class ParryBalanceTest {
     @Test fun thePerkChanceStartsAtTwentyAndIsCapped() {
         val hero = Hero.starter()
         assertEquals(Hero.BASE_CLASS_PERK, hero.classPerkChance, 0f)
-        hero.equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+        hero.equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
             .copy(implicits = listOf(StatRoll(StatType.CLASS_PERK, 0.9f)), affixes = emptyList())
         assertEquals(Hero.MAX_CLASS_PERK, hero.classPerkChance, 0f)
     }

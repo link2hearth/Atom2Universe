@@ -50,8 +50,9 @@ class RoguelikeView @JvmOverloads constructor(
     var onCloseStairs:    (() -> Unit)? = null
     var onEquipItem:      (() -> Unit)? = null
     var onStashDrop:      (() -> Unit)? = null
-    var onRestartAfterDeath: ((atCheckpoint: Boolean) -> Unit)? = null
-    var onCampfireHeld: (() -> Unit)? = null
+    var onRestartAfterDeath: (() -> Unit)? = null
+    /** Un appui sur le héros quand il est sur le feu de camp : le menu du camp. */
+    var onCampfireTapped: (() -> Unit)? = null
 
     private val mapArt = DungeonMapArt()
     private val actors = DungeonCombatArt()
@@ -120,13 +121,13 @@ class RoguelikeView @JvmOverloads constructor(
     private var touchDownX = 0f; private var touchDownY = 0f
     private var touchCurrX = 0f; private var touchCurrY = 0f
     private var touching   = false
-    private var campHoldShown = false
-    private val campHold = Runnable {
-        val g = game
-        if (touching && !movedThisTouch && g?.isExploring == true && g.onCampTile()) {
-            campHoldShown = true
-            onCampfireHeld?.invoke()
-        }
+
+    /** Le héros sous le doigt : sa case, élargie à 48 dp quand la carte est dézoomée. */
+    private fun heroTouched(g: RoguelikeGame, x: Float, y: Float): Boolean {
+        val cx = tileLeft(g.playerPos.x) + tileSize / 2f
+        val cy = tileTop(g.playerPos.y) + tileSize / 2f
+        val half = maxOf(tileSize, 48f * context.resources.displayMetrics.density) / 2f
+        return abs(x - cx) <= half && abs(y - cy) <= half
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldW: Int, oldH: Int) {
@@ -357,22 +358,19 @@ class RoguelikeView @JvmOverloads constructor(
         canvas.drawText(context.getString(R.string.roguelike_death_title), cx, cy - 100f * sd, pText)
         pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 15f
         canvas.drawText(context.getString(R.string.roguelike_death_summary, report.floor, DungeonNumbers.format(context, report.goldLost)), cx, cy - 60f * sd, pText)
-        for (atCheckpoint in listOf(false, true)) {
-            val bounds = deathChoiceRect(atCheckpoint)
-            pFill.color = if (atCheckpoint) 0xFF35465D.toInt() else 0xFF246241.toInt()
-            canvas.drawRoundRect(bounds, 8f * sd, 8f * sd, pFill)
-            val label = context.getString(if (atCheckpoint) R.string.roguelike_death_restart_checkpoint else R.string.roguelike_death_restart_floor,
-                if (atCheckpoint) report.checkpointFloor else report.floor)
-            pText.color = Color.WHITE; pText.textSize = sd * 16f
-            val availableWidth = bounds.width() - 20f * sd
-            if (pText.measureText(label) > availableWidth) pText.textSize *= availableWidth / pText.measureText(label)
-            canvas.drawText(label, bounds.centerX(), bounds.centerY() - (pText.ascent() + pText.descent()) / 2f, pText)
-        }
+        val bounds = deathRestartRect()
+        pFill.color = 0xFF246241.toInt()
+        canvas.drawRoundRect(bounds, 8f * sd, 8f * sd, pFill)
+        val label = context.getString(R.string.roguelike_death_restart_floor, report.floor)
+        pText.color = Color.WHITE; pText.textSize = sd * 16f
+        val availableWidth = bounds.width() - 20f * sd
+        if (pText.measureText(label) > availableWidth) pText.textSize *= availableWidth / pText.measureText(label)
+        canvas.drawText(label, bounds.centerX(), bounds.centerY() - (pText.ascent() + pText.descent()) / 2f, pText)
     }
 
-    private fun deathChoiceRect(atCheckpoint: Boolean): RectF {
+    private fun deathRestartRect(): RectF {
         val halfWidth = minOf(width / 2f - 16f * sd, 220f * sd)
-        val top = height / 2f + (if (atCheckpoint) 42f else -22f) * sd
+        val top = height / 2f - 22f * sd
         return RectF(width / 2f - halfWidth, top, width / 2f + halfWidth, top + 52f * sd)
     }
 
@@ -434,7 +432,7 @@ class RoguelikeView @JvmOverloads constructor(
 
         canvas.drawRect(RectF(0f, 0f, width.toFloat(), height.toFloat()), pOverlay)
         canvas.drawRoundRect(panel, cr, cr, pLootBg)
-        pLootBorder.color = equip.rarity.colorArgb
+        pLootBorder.color = equip.inventoryColor
         canvas.drawRoundRect(panel, cr, cr, pLootBorder)
 
         pText.textAlign = Paint.Align.CENTER; pText.color = 0xFFCCCCCC.toInt(); pText.textSize = sd * 13f
@@ -477,7 +475,7 @@ class RoguelikeView @JvmOverloads constructor(
         val iconRect = RectF(col.centerX() - iconSize / 2, col.top + gap,
                              col.centerX() + iconSize / 2, col.top + gap + iconSize)
 
-        pLootBorder.color = equip.rarity.colorArgb
+        pLootBorder.color = equip.inventoryColor
         canvas.drawRoundRect(iconRect, cr * 0.4f, cr * 0.4f, pLootCardBg)
         canvas.drawRoundRect(iconRect, cr * 0.4f, cr * 0.4f, pLootBorder)
         PixelArtIcon.draw(canvas, EquipmentArt.icon(equip), RectF(iconRect.left + 4f, iconRect.top + 4f, iconRect.right - 4f, iconRect.bottom - 4f), pSprite)
@@ -489,12 +487,12 @@ class RoguelikeView @JvmOverloads constructor(
         canvas.drawText(context.getString(if (isNew) R.string.roguelike_loot_new_badge else R.string.roguelike_loot_equipped_badge), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.5f
 
-        pText.color = equip.rarity.colorArgb; pText.textSize = sd * 13f
+        pText.color = equip.inventoryColor; pText.textSize = sd * 13f
         canvas.drawText(LootSystem.displayName(context, equip), col.centerX(), y + sd * 13f, pText)
         y += sd * 13f + gap * 0.4f
 
         pText.color = 0xFF78909C.toInt(); pText.textSize = sd * 11f
-        canvas.drawText(context.getString(R.string.roguelike_item_subtitle, context.getString(equip.rarity.labelRes),
+        canvas.drawText(context.getString(R.string.roguelike_item_subtitle, context.getString(if (equip.isotopeZ != null) R.string.inv_legendary else equip.rarity.labelRes),
             context.getString(R.string.roguelike_rating, DungeonNumbers.format(context, LootSystem.rating(equip, game?.hero?.archetype)))), col.centerX(), y + sd * 11f, pText)
         y += sd * 11f + gap * 0.3f
 
@@ -550,7 +548,6 @@ class RoguelikeView @JvmOverloads constructor(
         if (event.pointerCount > 1 || event.actionMasked == MotionEvent.ACTION_POINTER_DOWN) {
             multiTouchGesture = true
             stopHold()
-            removeCallbacks(campHold)
             touching = false
             movedThisTouch = false
             invalidate()
@@ -568,13 +565,10 @@ class RoguelikeView @JvmOverloads constructor(
                 touchDownX = event.x; touchDownY = event.y
                 touchCurrX = event.x; touchCurrY = event.y
                 touching = true; invalidate()
-                campHoldShown = false
-                if (g.isExploring && g.onCampTile()) postDelayed(campHold, CAMP_HOLD_MS)
             }
             MotionEvent.ACTION_MOVE -> {
                 touchCurrX = event.x; touchCurrY = event.y
                 val dx = touchCurrX - touchDownX; val dy = touchCurrY - touchDownY
-                if (sqrt(dx * dx + dy * dy) >= swipeMinPx) removeCallbacks(campHold)
                 if (sqrt(dx * dx + dy * dy) >= swipeMinPx && canWalk(g)) {
                     val dir = sectorDir(dx, dy)
                     if (dir != holdDir) {
@@ -594,18 +588,13 @@ class RoguelikeView @JvmOverloads constructor(
                 val tap = dist < swipeMinPx && !movedThisTouch
                 val walked = movedThisTouch
                 stopHold()
-                removeCallbacks(campHold)
                 movedThisTouch = false
 
                 when {
                     g.deathReport != null -> if (tap && event.action == MotionEvent.ACTION_UP) {
-                        for (atCheckpoint in listOf(false, true)) {
-                            val bounds = deathChoiceRect(atCheckpoint)
-                            if (bounds.contains(touchDownX, touchDownY) && bounds.contains(event.x, event.y)) {
-                                onRestartAfterDeath?.invoke(atCheckpoint)
-                                break
-                            }
-                        }
+                        val bounds = deathRestartRect()
+                        if (bounds.contains(touchDownX, touchDownY) && bounds.contains(event.x, event.y))
+                            onRestartAfterDeath?.invoke()
                     }
 
                     g.pendingEquipDrop != null -> if (tap) {
@@ -628,7 +617,10 @@ class RoguelikeView @JvmOverloads constructor(
 
 
                     // Swipe trop rapide pour que ACTION_MOVE ait déclenché un pas
-                    !campHoldShown && !walked && dist >= swipeMinPx ->
+                    tap && event.action == MotionEvent.ACTION_UP && g.onCampTile() && heroTouched(g, touchDownX, touchDownY) ->
+                        onCampfireTapped?.invoke()
+
+                    !walked && dist >= swipeMinPx ->
                         slide(g, sectorDir(dx, dy), dx, dy)?.let { (mx, my) -> onMove?.invoke(mx, my) }
                 }
                 touching = false; invalidate()
@@ -642,7 +634,6 @@ class RoguelikeView @JvmOverloads constructor(
     private companion object {
         const val FIRST_REPEAT_MS = 220L
         const val REPEAT_MS       = 140L
-        const val CAMP_HOLD_MS    = 5_000L
         /** Les 8 directions, dans l'ordre des secteurs de 45° (0 = droite, y vers le bas). */
         val DIRS8 = listOf(1 to 0, 1 to 1, 0 to 1, -1 to 1, -1 to 0, -1 to -1, 0 to -1, 1 to -1)
     }

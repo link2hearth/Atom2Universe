@@ -65,8 +65,8 @@ internal class RelicCombatArt {
     }
 
     fun draw(canvas: Canvas, scene: RectF, hero: RectF, enemies: List<RectF>, targets: List<Int>,
-        relic: Relic, progress: Float, impact: Boolean, meteorFall: Boolean = false) {
-        val unit=scene.width()/240f
+        relic: Relic, progress: Float, impact: Boolean, meteorFall: Boolean = false, pixel: Float = scene.width() / 240f) {
+        val unit=pixel
         if(unit<=0f) return
         palette(relic.element)
         val t=progress.coerceIn(0f,1f)

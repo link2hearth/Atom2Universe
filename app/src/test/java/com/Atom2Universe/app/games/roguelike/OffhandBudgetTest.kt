@@ -11,7 +11,7 @@ class OffhandBudgetTest {
         val out = StringBuilder("Note d'une main gauche Normale, par puissance\n")
         for (power in listOf(1, 10, 20, 50)) {
             for (base in ItemBase.entries.filter { it.slot == EquipSlot.OFFHAND }) {
-                val e = LootSystem.create(base, power, Rarity.NORMAL, 0, Random(0))
+                val e = LootSystem.create(base, power, Rarity.COMMON, 0, Random(0))
                 out.appendLine(String.format("P%-3d %-8s note %5d  armure %3d  %s", power, base.name, LootSystem.rating(e), e.armor,
                     e.implicits.joinToString(" ") { "${it.type.name}:${"%.2f".format(it.value)}" }))
             }

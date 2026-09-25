@@ -1043,7 +1043,9 @@ class Combat(
         const val ELEMENT_MARK_TIME = 2.0
         /** Corrosion : le poison dure jusqu'à ce nombre de tours au lieu de [Relic.POISON_MAX_TURNS]. */
         const val CORROSION_MAX_TURNS = 12
-        /** Guerrier en Garde : le prochain tour ennemi lui inflige cette part des dégâts après parade et armure. */
+        /** Guerrier en Garde : ses fenêtres de parade restent doublées pendant ce nombre de tours du héros. */
+        const val GUARD_TURNS = 3
+        /** Guerrier en Garde : le premier ennemi qui l'attaque lui inflige cette part des dégâts après parade et armure. */
         const val GUARD_DAMAGE_MULT = 0.75f
         /** Guerrier en Garde : chaque coup reçu (bloqué ou encaissé) renvoie cette part du coup brut. */
         const val GUARD_THORNS_SHARE = 0.70f
@@ -1064,8 +1066,20 @@ class Combat(
         private const val TIME_EPSILON = 1e-9
     }
 
-    /** Guerrier : en garde jusqu'à son prochain tour (l'écran double la fenêtre de parade). */
+    /**
+     * Guerrier : la Garde attend le premier ennemi qui l'attaque (moins de dégâts, Représaille),
+     * même si le héros rejoue entre-temps, tant que [guardTurns] n'est pas écoulé.
+     */
     var guarding = false
+        private set
+    /** Un ennemi a attaqué le guerrier en garde pendant ce tour : la Garde tombe à la fin du tour. */
+    private var guardStruck = false
+    /**
+     * Guerrier : tours du héros où la Garde tient encore sa parade (l'écran double la
+     * fenêtre de parade tant que ce compte n'est pas nul). Elle dure plus que le reste de la
+     * Garde : la Garde ne coûte qu'une demi-action, son tour revient vite.
+     */
+    var guardTurns = 0
         private set
     /** Mage : doubles de l'Image miroir encore debout. */
     var mirrorImages = 0
@@ -1646,10 +1660,11 @@ class Combat(
             else hero.spellCooldown(base).coerceAtLeast(Hero.MIN_SPECIAL_COOLDOWN)
     }
 
-    /** Guerrier : on passe son tour en garde (parade plus large, et chaque coup reçu est renvoyé en partie, voir [retaliate]). */
+    /** Guerrier : on passe son tour en garde (parade plus large [GUARD_TURNS] tours ; le premier ennemi qui attaque frappe moins fort et se voit renvoyer une part du coup, voir [retaliate]). */
     fun guard() {
         check(canUseSpecial() && hero.archetype == Archetype.WARRIOR)
         guarding = true
+        guardTurns = GUARD_TURNS
         spendSpecial()
         afterPlayerAction(specialCost())
     }
@@ -1850,7 +1865,7 @@ class Combat(
         // L'embuscade ne consomme pas un tour du nouveau délai avant la première action du maître.
         hero.tickRelics(includeSpecial = !openingPuppetCooldown)
         openingPuppetCooldown = false
-        guarding = false
+        if (guardTurns > 0 && --guardTurns == 0) guarding = false
     }
 
     // ── La jauge ────────────────────────────────────────────────────────────────
@@ -2075,6 +2090,8 @@ class Combat(
             if (aliveIndices().isEmpty()) phase = win()
             return EnemyStrike(enemyIndex, 0, parry, bleed = bled, charmed = true, charmHit = charmHit)
         }
+        // Il vise le héros : c'est l'attaque que la Garde attendait
+        if (guarding) guardStruck = true
         // Il a pu frapper : la série de contrôles qui mène à la rage repart de zéro. Pas avant
         // le charme : une attaque détournée est un contrôle, sinon le Charme bloquerait sans fin
         e.controlStreak = 0
@@ -2185,6 +2202,7 @@ class Combat(
         if (e.blindedTurns > 0) e.blindedTurns--
         if (e.bleedTurns > 0 && --e.bleedTurns == 0) e.bleedDamage = 0
         e.thawing = false
+        if (guardStruck) { guarding = false; guardStruck = false }
         e.gauge -= FULL_ACTION
         advance()
     }

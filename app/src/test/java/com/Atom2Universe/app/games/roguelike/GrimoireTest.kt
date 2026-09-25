@@ -91,7 +91,7 @@ class GrimoireTest {
         // Le héros esquive 40 % ; les tirages sortent 0,9 puis 0,1 : aveuglé, le monstre tire deux fois et le héros garde le meilleur
         val rolls = ArrayDeque(listOf(0.9f, 0.1f))
         val hero = heroWithAllSlots().apply {
-            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+            equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
                 .copy(implicits = listOf(StatRoll(StatType.DEX, Dodge.referenceDex(1))), affixes = emptyList())
         }
         val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, maxHp = 1000, damage = 3, cadence = 1, countdown = 1)),
@@ -366,7 +366,7 @@ class GrimoireTest {
             val brute = Enemy(MonsterType.GOBLIN, maxHp = 1000, damage = 100, cadence = 1, countdown = 1)
             val hero = heroWithAllSlots().apply {
                 relics.forEach { addRelic(it) }
-                equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.NORMAL, 0, Random(0))
+                equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
                     .copy(implicits = listOf(StatRoll(StatType.ARMOR, 40f)), affixes = emptyList())
             }
             val c = Combat(hero, 1, listOf(brute), ambush = false, rng = Random(1), attackDie = { 15 })
@@ -662,21 +662,21 @@ class GrimoireTest {
         // Le mage (feu) avec une arme de mage et l'orbe : son attaque de base fait fondre un figé
         fun hitOn(frozen: Boolean, offhand: Boolean): HitResult {
             val hero = Hero.starter().apply {
-                equipped[EquipSlot.HELMET] = LootSystem.create(ItemBase.HELMET, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
-                equipped[EquipSlot.CHEST] = LootSystem.create(ItemBase.ARMOR, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
-                equipped[EquipSlot.BOOTS] = LootSystem.create(ItemBase.BOOTS, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
-                equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.STAFF, 1, Rarity.NORMAL, 0, Random(0))
-                if (offhand) equipped[EquipSlot.OFFHAND] = LootSystem.create(ItemBase.ORB, 1, Rarity.NORMAL, 0, Random(0))
+                equipped[EquipSlot.HELMET] = LootSystem.create(ItemBase.HELMET, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
+                equipped[EquipSlot.CHEST] = LootSystem.create(ItemBase.ARMOR, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
+                equipped[EquipSlot.BOOTS] = LootSystem.create(ItemBase.BOOTS, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
+                equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.STAFF, 1, Rarity.COMMON, 0, Random(0))
+                if (offhand) equipped[EquipSlot.OFFHAND] = LootSystem.create(ItemBase.ORB, 1, Rarity.COMMON, 0, Random(0))
             }
             val c = Combat(hero, 1, listOf(Enemy(MonsterType.TROLL, 100000, 3, 1, 1)), ambush = false, rng = Random(1), attackDie = { 15 })
             if (frozen) c.enemies[0].frozenTime = 2.0
             return c.attack(0, Timing.MISS)
         }
         assertEquals(Element.FIRE, Hero.starter().apply {
-            equipped[EquipSlot.HELMET] = LootSystem.create(ItemBase.HELMET, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
-            equipped[EquipSlot.CHEST] = LootSystem.create(ItemBase.ARMOR, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
-            equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.STAFF, 1, Rarity.NORMAL, 0, Random(0))
-            equipped[EquipSlot.OFFHAND] = LootSystem.create(ItemBase.ORB, 1, Rarity.NORMAL, 0, Random(0))
+            equipped[EquipSlot.HELMET] = LootSystem.create(ItemBase.HELMET, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
+            equipped[EquipSlot.CHEST] = LootSystem.create(ItemBase.ARMOR, 1, Rarity.COMMON, 0, Random(0), forcedWeight = ArmorWeight.CLOTH)
+            equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.STAFF, 1, Rarity.COMMON, 0, Random(0))
+            equipped[EquipSlot.OFFHAND] = LootSystem.create(ItemBase.ORB, 1, Rarity.COMMON, 0, Random(0))
         }.attackElement)
         assertTrue(Reaction.THERMAL_SHOCK in hitOn(frozen = true, offhand = true).reactions)
         assertTrue("sans la main gauche de classe : rien", hitOn(frozen = true, offhand = false).reactions.isEmpty())

@@ -12,7 +12,8 @@ internal val Equipment.inventoryColor: Int get() = if (isotopeZ != null) Equipme
 
 /** The same pixel-art pieces are used by the inventory and the combat paper doll. */
 internal object EquipmentArt {
-    const val LEGENDARY = 0xFFFFA348.toInt()
+    /** Le set d'isotope, « Légendaire » : l'or, au-dessus de l'Épique violet. */
+    const val LEGENDARY = 0xFFFFD54F.toInt()
     private val cache = LruCache<String, Bitmap>(128)
 
     fun gear(slot: EquipSlot, item: Equipment?, fallback: Archetype): DemoGear {
@@ -33,7 +34,7 @@ internal object EquipmentArt {
     }
 
     fun empty(slot: EquipSlot): Bitmap = icon(Equipment(
-        base = ItemBase.entries.first { it.slot == slot }, power = 1, rarity = Rarity.NORMAL,
+        base = ItemBase.entries.first { it.slot == slot }, power = 1, rarity = Rarity.COMMON,
         damageMin = 0, damageMax = 0, armor = 0, implicits = emptyList(), affixes = emptyList(),
         spriteRow = 0, spriteCol = 0, lootId = 0,
     ))

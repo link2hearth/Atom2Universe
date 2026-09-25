@@ -8,11 +8,11 @@ import kotlin.random.Random
 /** Les armes qui vont à un archétype, et le malus des autres (voir DONJON.md, « Armes compatibles »). */
 class WeaponFitTest {
 
-    private fun weapon(base: ItemBase, power: Int = 10) = LootSystem.create(base, power, Rarity.NORMAL, 0, Random(0))
+    private fun weapon(base: ItemBase, power: Int = 10) = LootSystem.create(base, power, Rarity.COMMON, 0, Random(0))
 
     private fun heroOf(a: Archetype, weapon: ItemBase?) = Hero.starter().apply {
         for ((slot, base) in listOf(EquipSlot.HELMET to ItemBase.HELMET, EquipSlot.CHEST to ItemBase.ARMOR, EquipSlot.BOOTS to ItemBase.BOOTS))
-            equipped[slot] = LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = a.weight)
+            equipped[slot] = LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = a.weight)
         if (weapon == null) equipped.remove(EquipSlot.WEAPON)
         else equipped[EquipSlot.WEAPON] = weapon(weapon)
     }
@@ -91,7 +91,7 @@ class WeaponFitTest {
             ArmorWeight.CLOTH to StatType.INT, ArmorWeight.MEDIUM to StatType.END,
             ArmorWeight.ULTRALIGHT to StatType.WIS, ArmorWeight.FUR to StatType.STR)
         for ((weight, stat) in mapping) for (base in ArmorWeight.WEIGHTED) {
-            val item = LootSystem.create(base, 20, Rarity.RARE, 42, Random(9), forcedWeight = weight)
+            val item = LootSystem.create(base, 20, Rarity.EPIC, 42, Random(9), forcedWeight = weight)
             assertEquals(stat, item.implicits.first().type)
             val old = item.copy(implicits = item.implicits.mapIndexed { i, roll ->
                 if (i == 0) roll.copy(type = StatType.CHA) else roll

@@ -111,7 +111,7 @@ internal class DungeonTestPanel(
             val bases = listOf(type.weapons.first(), type.offhand, ItemBase.HELMET,
                 ItemBase.ARMOR, ItemBase.BOOTS, ItemBase.AMULET, ItemBase.RING)
             bases.forEach { base ->
-                val equipment = LootSystem.create(base, LootSystem.rollPowerForFloor(selectedFloor, rng), Rarity.RARE, hero.nextLootId++, rng, type.weight).let {
+                val equipment = LootSystem.create(base, LootSystem.rollPowerForFloor(selectedFloor, rng), Rarity.EPIC, hero.nextLootId++, rng, type.weight).let {
                     if (isotope.isChecked && base in IsotopeSets.BASES) it.copy(isotopeZ = set.index) else it
                 }
                 if (isotope.isChecked) hero.knownSets += set.z

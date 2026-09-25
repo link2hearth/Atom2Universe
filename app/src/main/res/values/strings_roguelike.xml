@@ -337,7 +337,7 @@
     <string name="roguelike_combat_dodged">DODGED!</string>
     <string name="roguelike_combat_counter">Riposte −%1$s</string>
     <string name="roguelike_combat_counterspell">Counterspell!</string>
-    <string name="roguelike_combat_guarding">on guard</string>
+    <string name="roguelike_combat_guarding">on guard %1$d</string>
     <string name="roguelike_combat_images">doubles ×%1$d</string>
     <string name="roguelike_inventory_archetype">Archetype: %1$s</string>
     <string name="roguelike_inventory_archetype_none">Archetype: [[archetype|none]]</string>
@@ -490,6 +490,8 @@
     <string name="roguelike_base_shroud">Shroud</string>
     <string name="roguelike_base_wraps">Wraps</string>
     <string name="roguelike_item_wrong_weapon">Not your class</string>
+    <string name="roguelike_item_affinity">Affinity: %1$s</string>
+    <string name="roguelike_item_affinity_all">every class</string>
     <string name="roguelike_combat_echo">echo +%1$s</string>
     <string name="roguelike_combat_puppet_absorbed">puppets −%1$s</string>
     <string name="roguelike_combat_puppets_line">puppets %1$d/%2$d</string>
@@ -620,7 +622,7 @@
     <string name="inv_sell_selection_failed">Sale unavailable: the selection or game state has changed, or the gold limit would be exceeded.</string>
     <string name="roguelike_log_sold_many">Sold %1$d items for %2$d gold.</string>
     <string name="roguelike_combat_no_damage">No damage</string>
-    <string name="roguelike_death_restart_floor">Retry floor %1$d</string>
+    <string name="roguelike_death_restart_floor">Restart floor %1$d</string>
     <string name="roguelike_death_restart_checkpoint">Checkpoint · floor %1$d</string>
 
     <string name="roguelike_region_cemetery">Cemetery</string>
@@ -652,6 +654,9 @@
     <string name="roguelike_camp_menu_title">Campfire</string>
     <string name="roguelike_camp_menu_checkpoint">Return to checkpoint · floor %1$d</string>
     <string name="roguelike_camp_menu_regenerate">Regenerate floor %1$d</string>
+    <string name="roguelike_camp_menu_floor">Floor</string>
+    <string name="roguelike_camp_menu_travel">Go</string>
+    <string name="roguelike_log_camp_travel">You travel to floor %1$d.</string>
     <string name="roguelike_log_camp_checkpoint">You return to checkpoint floor %1$d.</string>
     <string name="roguelike_log_camp_regenerate">Floor %1$d is regenerated.</string>
     <string name="roguelike_action_inventory">Inventory</string>

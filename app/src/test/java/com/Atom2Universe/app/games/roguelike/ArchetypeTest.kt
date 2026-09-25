@@ -13,7 +13,7 @@ import kotlin.random.Random
 class ArchetypeTest {
 
     private fun piece(base: ItemBase, weight: ArmorWeight?) =
-        LootSystem.create(base, 1, Rarity.NORMAL, 0, Random(0), forcedWeight = weight)
+        LootSystem.create(base, 1, Rarity.COMMON, 0, Random(0), forcedWeight = weight)
 
     private fun heroWearing(helmet: ArmorWeight, chest: ArmorWeight, boots: ArmorWeight, shield: Boolean = false) =
         Hero.starter().apply {
@@ -166,13 +166,31 @@ class ArchetypeTest {
     // ── Le bouton « Spécial » ───────────────────────────────────────────────────
 
     @Test
-    fun laGardeDureJusquAuProchainTour() {
+    fun laGardeTombeApresLePremierEnnemiQuiAttaque() {
         val c = Combat(heroOf(Archetype.WARRIOR), 1, listOf(Enemy(MonsterType.GOBLIN, 100, 5, 1, 1)), ambush = false, rng = Random(1))
         c.guard()
         assertTrue(c.guarding)
-        c.startEnemyTurn(); c.endEnemyTurn()
+        assertEquals(Combat.GUARD_TURNS, c.guardTurns)
+        c.startEnemyTurn(); c.resolveStrike(0, Timing.MISS); c.endEnemyTurn()
         assertFalse(c.guarding)
+        assertTrue("la parade reste large", c.guardTurns > 0)
         assertFalse("en recharge", c.canUseSpecial())
+    }
+
+    @Test
+    fun laGardeAttendLEnnemiMemeSiLeHerosRejoue() {
+        // Un gobelin lent : le guerrier se met en garde, puis rejoue avant d'être attaqué
+        val c = Combat(heroOf(Archetype.WARRIOR), 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 10, 2, 2)), ambush = false,
+            rng = Random(1), attackDie = { 20 })
+        c.guard()
+        assertEquals("le héros rejoue avant le gobelin", CombatPhase.PLAYER_TURN, c.phase)
+        c.attack(0, Timing.MISS)
+        assertEquals(CombatPhase.ENEMY_TURN, c.phase)
+        assertTrue("toujours en garde", c.guarding)
+        c.startEnemyTurn()
+        assertTrue("le premier coup reçu est renvoyé", c.resolveStrike(0, Timing.MISS).thorns > 0)
+        c.endEnemyTurn()
+        assertFalse(c.guarding)
     }
 
     @Test
