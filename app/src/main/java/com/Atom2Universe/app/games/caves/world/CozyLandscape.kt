@@ -7,7 +7,8 @@ import kotlin.random.Random
 /** Version 2 only. Every feature is a function of world coordinates, never chunk load order. */
 internal class CozyLandscape(private val seed: Long,
                              private val nearCave: (Int, Int) -> Boolean = { _, _ -> false },
-                             private val natural: NaturalTerrain? = null) {
+                             private val natural: NaturalTerrain? = null,
+                             private val reserved: (Int, Int, Int) -> Boolean = { _, _, _ -> false }) {
     private data class Relief(val base: Double, val amplitude: Double)
     private data class Site(val x: Int, val z: Int, val y: Int, val kind: Int)
     private val relief = ConcurrentHashMap<Long, Relief>()
@@ -25,7 +26,7 @@ internal class CozyLandscape(private val seed: Long,
             },
             { x, z ->
                 val plot = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
-                nearCave(x, z) || (plot.kind >= 0 && x in plot.x - 7..plot.x + 19 && z in plot.z - 7..plot.z + 19)
+                reserved(x,z,10) || nearCave(x, z) || (plot.kind >= 0 && x in plot.x - 7..plot.x + 19 && z in plot.z - 7..plot.z + 19)
             })
     }
     private val offset = (seed and 0xFFFFF) * 0.0001
@@ -116,7 +117,7 @@ internal class CozyLandscape(private val seed: Long,
             if (y > 0 && c.blockAt(x, y - 1, z) != tops[i]) continue
             val wx = c.worldX + x; val wz = c.worldZ + z
             if (y == 0 && nearCave(wx, wz)) continue
-            if (cold.reserves(wx, wz)) continue
+            if (cold.reserves(wx, wz) || reserved(wx,wz,0)) continue
             val rng = random(wx, wz, 71893L)
             val biome = BiomeRegistry.surfaceBiomes[biomes[i]]
             val patch = SimplexNoise.noise(wx * .042 + offset + 49, wz * .042)
@@ -172,7 +173,7 @@ internal class CozyLandscape(private val seed: Long,
                     biome.treeType in setOf("oak", "darkwood") && variant.nextInt(5) == 0 -> "broad_oak"
                     else -> biome.treeType
                 }
-                if (nearCave(x, z) || cold.reserves(x, z, TreeShape.REACH)) continue
+                if (nearCave(x, z) || cold.reserves(x, z, TreeShape.REACH) || reserved(x,z,TreeShape.REACH)) continue
                 val s = site(Math.floorDiv(x, 128), Math.floorDiv(z, 128))
                 if (s.kind >= 0 && x in s.x - TreeShape.REACH..s.x + 12 + TreeShape.REACH && z in s.z - TreeShape.REACH..s.z + 12 + TreeShape.REACH) continue
                 val y = height(x.toDouble(), z.toDouble()).toInt()

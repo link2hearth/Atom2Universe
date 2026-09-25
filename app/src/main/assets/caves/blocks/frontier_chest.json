@@ -1,0 +1,17 @@
+{
+  "id": 9800,
+  "name": "frontier_chest",
+  "texture_top": "frontier:9800:top",
+  "texture_side": "frontier:9800:side",
+  "texture_bottom": "frontier:9800:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_chest",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": 9842,
+  "name": "frontier_loom",
+  "texture_top": "frontier:9842:top",
+  "texture_side": "frontier:9842:side",
+  "texture_bottom": "frontier:9842:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_loom",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

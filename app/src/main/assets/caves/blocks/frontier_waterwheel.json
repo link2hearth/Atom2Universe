@@ -1,0 +1,17 @@
+{
+  "id": 9803,
+  "name": "frontier_waterwheel",
+  "texture_top": "frontier:9803:top",
+  "texture_side": "frontier:9803:side",
+  "texture_bottom": "frontier:9803:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_waterwheel",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

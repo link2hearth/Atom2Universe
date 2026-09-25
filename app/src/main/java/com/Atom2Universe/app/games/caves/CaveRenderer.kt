@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.caves
 
+import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
@@ -56,7 +57,7 @@ internal class CaveRenderer(
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
     private val savedState: SavedState? = null,
-    private val terrainVersion: Int = 4,
+    private val terrainVersion: Int = 5,
     /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
     private val worldSource: WorldSource? = null,
     /** Règles de la partie : la survie par défaut. */
@@ -71,9 +72,10 @@ internal class CaveRenderer(
         val yaw: Float, val pitch: Float,
         val inventory: Map<Short, Int>,
         val hotbar: List<Short?>,
-        val buildHotbar: List<Short?> = emptyList(),
-        val gardenHotbar: List<Short?> = emptyList(),
         val farming: String = "{}",
+        val workshops: String = "{}",
+        val worldTimeMs: Long = 400_000L,
+        val frontierLife: String = "{}",
         val playerHp: Int = 20,
         val playerLevel: Int = 1,
         val playerXp: Int = 0,
@@ -124,6 +126,11 @@ internal class CaveRenderer(
     private var starShader:  ShaderProgram? = null
     private var waterShader: ShaderProgram? = null
     private var waterPhaseUniform = 0
+    private var waterTintUniform = 0
+    private var waterSkyUniform = 0
+    private val waterTint = floatArrayOf(.08f,.43f,.50f)
+    private var waterBiomeKey = Long.MIN_VALUE
+    private var targetWaterTint = floatArrayOf(.08f,.43f,.50f)
     private val visibleWaterKeys = ArrayList<Long>()
     private var lodShader:   ShaderProgram? = null
     private var wAPos = 0; private var wAUv = 0; private var wASky = 0; private var wUMvp = 0; private var wUTex = 0
@@ -269,43 +276,78 @@ internal class CaveRenderer(
     private val ammoWeaponDef = WeaponDef(WeaponColor.WHITE, WeaponVariant.SQUARE)
     private val rockWeaponDef = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
 
-    // Deux barres de raccourcis séparées (combat : armes/munitions/bonus ; construction :
-    // blocs), la bascule entre les deux est instantanée et gratuite — voir [toggleHotbarMode].
-    val combatHotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
-    val buildHotbar  = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
-    val gardenHotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
-    internal val farming by lazy { com.Atom2Universe.app.games.caves.world.Farming(world, ::forceMeshRebuild) }
-    var hotbarMode = HotbarMode.COMBAT
+    // One mixed shortcut bar. Item categories affect actions, never the destination slot.
+    val hotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
+    internal val frontierLife = FrontierLife(savedState?.frontierLife ?: "{}")
+    internal val residents by lazy { com.Atom2Universe.app.games.caves.entity.FrontierResidents(world,frontierLife.residents) }
+    var travelCallback: (() -> Unit)? = null
+    var tradeCallback: ((TradeView) -> Unit)? = null
+    var checkpointCallback: (() -> Unit)? = null
+    private var checkpointTimer=0f
+    internal val expeditionCombat by lazy { ExpeditionCombat(this,context,frontierLife.equipment) }
+    private val fishing by lazy { FishingLine(this,context,frontierLife.fisheries) }
+    @Volatile internal var nearbyStations: Set<Short> = emptySet()
         private set
-    fun bar(mode: HotbarMode): Array<Short?> = when(mode) {
-        HotbarMode.COMBAT -> combatHotbar
-        HotbarMode.BUILD -> buildHotbar
-        HotbarMode.GARDEN -> gardenHotbar
+    internal fun refreshCraftStations() {
+        val found=mutableSetOf<Short>()
+        val px=floor(camera.playerX).toInt();val py=floor(camera.playerY-1).toInt();val pz=floor(camera.playerZ).toInt()
+        for(dx in -4..4) for(dy in -3..3) for(dz in -4..4) {
+            if(dx*dx+dy*dy+dz*dz>16) continue
+            val id=world.blockAt(px+dx,py+dy,pz+dz)
+            if(id==E.ANVIL && clearCombatLine(camera.playerX,camera.eyeY,camera.playerZ,px+dx+.5,py+dy+1.05,pz+dz+.5)) found+=id
+        }
+        nearbyStations=found
     }
-    val hotbar: Array<Short?> get() = bar(hotbarMode)
+    internal fun clearCombatLine(ax: Double,ay: Double,az: Double,bx: Double,by: Double,bz: Double): Boolean {
+        val dx=bx-ax;val dy=by-ay;val dz=bz-az
+        val steps=ceil(sqrt(dx*dx+dy*dy+dz*dz)*10).toInt().coerceAtLeast(1)
+        for(i in 1 until steps) {
+            val t=i.toDouble()/steps
+            if(projectileSolid(ax+dx*t,ay+dy*t,az+dz*t)) return false
+        }
+        return true
+    }
+    internal fun fireExplorationArrow(e: com.Atom2Universe.app.games.caves.entity.Enemy,tx: Double,ty: Double,tz: Double) {
+        val sx=e.x;val sy=e.y+e.def.eyeHeight;val sz=e.z
+        val distance=hypot(tx-sx,tz-sz)
+        val dx=tx-sx;val dy=ty-sy+ProjectileKind.ARROW.gravity*.5*(distance/19.0).pow(2);val dz=tz-sz
+        val len=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.01)
+        projectiles.add(Projectile(sx,sy,sz,dx/len,dy/len,dz/len,19f,e.scaledDamage+1,ammoWeaponDef,
+            fromEnemy=true,kind=ProjectileKind.ARROW,maxRange=24f))
+    }
+    internal fun meleeVisual(type: String) { equipmentRelease=0f;releasedEquipment=type }
+    private fun magazine(id: Short, profile: RangedProfile): MagazineState = magazines.getOrPut(id) {
+        MagazineState(profile.magazine,profile.reload).also { m ->
+            if(mode.allowsWorldEdits) runCatching { org.json.JSONObject(frontierLife.magazines).optJSONObject(id.toString())?.let { m.restore(it) } }
+        }
+    }
+    internal fun frontierSnapshot(): String {
+        frontierLife.residents=residents.snapshot()
+        frontierLife.equipment=expeditionCombat.snapshot();frontierLife.fisheries=fishing.snapshot()
+        val saved=runCatching { org.json.JSONObject(frontierLife.magazines) }.getOrElse { org.json.JSONObject() }
+        magazines.forEach { (id,m) -> saved.put(id.toString(),m.snapshot()) }
+        saved.keys().asSequence().toList().forEach { key ->
+            if(com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(key.toShortOrNull() ?: 0)==null) saved.remove(key)
+        }
+        frontierLife.magazines=saved.toString()
+        return frontierLife.snapshot()
+    }
+    internal val workshops by lazy { FrontierWorkshops(world, worldSeed).also { it.restore(savedState?.workshops ?: "{}") } }
+    var craftStationCallback: (() -> Unit)? = null
+    var storageCallback: ((FrontierWorkshops.View, Map<Short, Int>) -> Unit)? = null
+    val worldTimeSnapshot: Long get() = gameTimeMs
+    internal fun checkpointCommitted(changes: Map<String,CaveCheckpoint.Edit>) { storage?.acknowledge(changes) }
+    internal fun chunkSnapshot() = storage?.snapshot().orEmpty()
+    internal val farming by lazy { com.Atom2Universe.app.games.caves.world.Farming(world, ::forceMeshRebuild, ::ecologicalLight) }
     internal fun itemMode(id: Short) = if (com.Atom2Universe.app.games.caves.node.FarmItems.isItem(id)) HotbarMode.GARDEN
         else if (isCombatItem(id)) HotbarMode.COMBAT else HotbarMode.BUILD
-    // Slot sélectionné mémorisé séparément par mode, pour retrouver la même sélection
-    // en revenant sur un mode plutôt que d'hériter de l'index laissé par l'autre.
-    private var combatSelectedSlot = 0
-    private var buildSelectedSlot  = 0
-    private var gardenSelectedSlot = 0
-    var selectedSlot: Int
-        get() = when(hotbarMode) { HotbarMode.COMBAT -> combatSelectedSlot; HotbarMode.BUILD -> buildSelectedSlot; HotbarMode.GARDEN -> gardenSelectedSlot }
-        set(v) { when(hotbarMode) { HotbarMode.COMBAT -> combatSelectedSlot = v; HotbarMode.BUILD -> buildSelectedSlot = v; HotbarMode.GARDEN -> gardenSelectedSlot = v } }
-
-    fun toggleHotbarMode() {
-        if (mode.singleWeapon) return
-        switchHotbarMode(HotbarMode.entries[(hotbarMode.ordinal+1)%HotbarMode.entries.size])
-    }
-    fun switchHotbarMode(next: HotbarMode) {
-        hotbarMode = next
-        hotbarModeCallback?.invoke(hotbarMode)
-        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
-    }
+    // Context follows the selected item; there are no separate shortcut banks.
+    val heldItemMode: HotbarMode get() = hotbar.getOrNull(selectedSlot)?.let(::itemMode) ?: HotbarMode.BUILD
+    var selectedSlot = 0
+        private set
 
     /** Combat = armes équipées, munitions (cailloux/flèches/carreaux/balles) et pierres de garde. */
-    internal fun isCombatItem(id: Short): Boolean =
+    internal fun isCombatItem(id: Short): Boolean = E.isEquipment(id) ||
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id) ||
         id in ROCK_IDS || id == ARROW_ID || id == BOLT_ID || id == BULLET_ID ||
         id == com.Atom2Universe.app.games.caves.world.WARD_STONE
@@ -410,7 +452,7 @@ internal class CaveRenderer(
     var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
-    var hotbarModeCallback: ((HotbarMode) -> Unit)?                       = null
+    var fishingGaugeCallback: ((FishingLine.Gauge)->Unit)? = null
     var farmMessageCallback: ((String) -> Unit)? = null
     var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?       = null
     var shieldCallback:   ((current: Int, max: Int) -> Unit)?    = null
@@ -522,6 +564,8 @@ internal class CaveRenderer(
         #version 300 es
         precision highp float;
         uniform vec3 u_wavePhase;
+        uniform vec3 u_waterTint;
+        uniform vec3 u_skyColor;
         uniform vec3 u_caveFog;
         uniform float u_ambient;
         uniform float u_caveFloor;
@@ -542,19 +586,19 @@ internal class CaveRenderer(
             float b = v_worldPos.z * 0.85 + u_wavePhase.y;
             vec3 normal = normalize(cross(dFdx(v_worldPos), dFdy(v_worldPos)));
             float top = smoothstep(0.55, 0.95, abs(normal.y));
-            float ripple = sin(a) * sin(b);
+            float ripple = sin(a) * 0.55 + sin(b) * 0.30 + sin(a+b) * 0.15;
             float fall = sin(v_worldPos.y * 5.0 + u_wavePhase.z + sin(a));
             float wave = 0.5 + 0.5 * mix(fall, ripple, top);
             vec3 viewDir = normalize(-v_worldPos);
             if (dot(normal, viewDir) < 0.0) normal = -normal;
             float fade = 1.0 - smoothstep(24.0, 80.0, length(v_worldPos));
-            normal = normalize(normal + vec3(cos(a) * sin(b), 0.0,
-                sin(a) * cos(b)) * (0.09 * top * fade));
+            normal = normalize(normal + vec3(cos(a) * 0.55 + cos(a+b) * 0.15, 0.0,
+                cos(b) * 0.30 + cos(a+b) * 0.15) * (0.12 * top * fade));
             float grazing = 1.0 - clamp(dot(normal, viewDir), 0.0, 1.0);
             float fresnel = 0.04 + 0.96 * grazing * grazing * grazing * grazing * grazing;
-            vec3 deepColor    = ${if (vividStyle) "vec3(0.025, 0.24, 0.74)" else "vec3(0.05, 0.28, 0.72)"};
-            vec3 shallowColor = ${if (vividStyle) "vec3(0.08, 0.55, 0.94)" else "vec3(0.16, 0.50, 0.90)"};
-            vec3 baseColor    = mix(deepColor, shallowColor, wave * 0.5 + 0.2);
+            vec3 deepColor = u_waterTint * vec3(0.35, 0.62, 0.75);
+            vec3 shallowColor = u_waterTint + vec3(0.07, 0.16, 0.12);
+            vec3 baseColor = mix(deepColor, shallowColor, wave * 0.22 + 0.28);
             float faceLight = mix(0.78, 1.0, top);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
@@ -571,11 +615,14 @@ internal class CaveRenderer(
             float sky = v_skyLight * u_ambient;
             vec3 baseLight = vec3(max(sky, u_caveFloor));
             vec3 lighting = baseLight + (vec3(1.0) - baseLight) * (vec3(1.0) - exp(-torchContrib * 1.8));
-            vec3 reflection = vec3(0.40, 0.64, 0.80) * sky;
-            vec3 color = mix(baseColor * faceLight * lighting, reflection, fresnel * 0.65);
+            vec3 reflection = mix(u_skyColor, vec3(0.72,0.80,0.81) * u_ambient, 0.22) * v_skyLight;
+            vec3 color = mix(baseColor * faceLight * lighting, reflection, fresnel * 0.78);
             float glint = pow(max(dot(normal, normalize(viewDir + vec3(0.35, 0.85, 0.4))), 0.0), 48.0);
-            color += vec3(0.65, 0.8, 0.9) * glint * sky * top * fade * 0.28;
-            fragColor = vec4(color, mix(0.48, 0.86, fresnel));
+            color += vec3(0.90, 0.90, 0.76) * glint * sky * top * fade * 0.24;
+            // Thin descending streaks give waterfalls a readable motion without opaque blue walls.
+            float streak = pow(max(0.0, fall), 12.0) * (1.0-top) * fade;
+            color += vec3(0.30,0.36,0.33) * streak * lighting * 0.22;
+            fragColor = vec4(color, mix(0.30 + 0.10 * (1.0-top), 0.82, fresnel));
             fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
     """.trimIndent()
@@ -690,7 +737,6 @@ internal class CaveRenderer(
         val liveFarmInventory = if (farmSessionReady) inventory.filterKeys {
             com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
         } else null
-        val liveGardenBar = if (farmSessionReady) gardenHotbar.toList() else null
         GLES30.glClearColor(0.682f, 0.910f, 0.973f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
         lastFrameNs = System.nanoTime()
@@ -716,6 +762,8 @@ internal class CaveRenderer(
         waterShader = ShaderProgram(VERT_WORLD, FRAG_WATER).also {
             it.use()
             waterPhaseUniform = it.uniform("u_wavePhase")
+            waterTintUniform = it.uniform("u_waterTint")
+            waterSkyUniform = it.uniform("u_skyColor")
             waterCaveFogUniform = it.uniform("u_caveFog")
             wWAPos         = it.attrib("a_pos")
             wWAUv          = it.attrib("a_uv")
@@ -781,23 +829,16 @@ internal class CaveRenderer(
         playerBoxVbo = ids[1]
         vmVbo        = ids[2]
 
-        if (savedState != null) {
+        if (farmSessionReady && mode.allowsWorldEdits) {
+            warmSpawnNeighborhood()
+        } else if (savedState != null) {
             camera.playerX = savedState.x; camera.playerY = savedState.y; camera.playerZ = savedState.z
             camera.x = savedState.x; camera.y = savedState.y; camera.z = savedState.z
             camera.yaw = savedState.yaw; camera.pitch = savedState.pitch
             inventory.putAll(savedState.inventory)
-            if (savedState.buildHotbar.isNotEmpty()) {
-                // Format récent : les deux barres sont déjà séparées.
-                savedState.hotbar.take(combatHotbar.size).forEachIndexed { i, v -> combatHotbar[i] = v }
-                savedState.buildHotbar.take(buildHotbar.size).forEachIndexed { i, v -> buildHotbar[i] = v }
-            } else {
-                // Ancienne sauvegarde (une seule barre mixte) : on répartit par catégorie.
-                var ci = 0; var bi = 0
-                for (v in savedState.hotbar) {
-                    if (v == null) continue
-                    if (isCombatItem(v)) { if (ci < combatHotbar.size) combatHotbar[ci++] = v }
-                    else { if (bi < buildHotbar.size) buildHotbar[bi++] = v }
-                }
+            hotbar.fill(null)
+            savedState.hotbar.take(hotbar.size).forEachIndexed { i,id ->
+                hotbar[i]=id?.takeIf { (inventory[it] ?: 0)>0 }
             }
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
             inventoryCallback?.invoke(inventory.toMap())
@@ -821,7 +862,10 @@ internal class CaveRenderer(
             warmSpawnNeighborhood()
             mode.onPlayerPlaced(camera.x, camera.y, camera.z)
         }
-        if (!farmSessionReady) farming.restore(savedState?.farming ?: "{}")
+        if (!farmSessionReady) {
+            farming.restore(savedState?.farming ?: "{}")
+            if (savedState != null && mode.fixedTimeOfDayMs == null) gameTimeMs = savedState.worldTimeMs
+        }
         liveFarmInventory?.let { live ->
             inventory.keys.removeAll { com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it) }
             inventory.putAll(live)
@@ -829,22 +873,12 @@ internal class CaveRenderer(
         if (mode.allowsWorldEdits) {
             val hoe = com.Atom2Universe.app.games.caves.node.FarmSoil.HOE
             inventory[hoe] = 1
-            (liveGardenBar ?: savedState?.gardenHotbar)?.take(gardenHotbar.size)?.forEachIndexed { i, id ->
-                gardenHotbar[i] = id?.takeIf { itemMode(it) == HotbarMode.GARDEN && (inventory[it] ?: 0) > 0 }
-            }
-            for (bar in arrayOf(buildHotbar,combatHotbar)) for (i in bar.indices) {
-                if (bar[i]?.let { itemMode(it) == HotbarMode.GARDEN } == true) bar[i] = null
-            }
-            gardenHotbar[0] = hoe
-            if (farming.initialize()) for (crop in com.Atom2Universe.app.games.caves.node.FarmItems.crops.indices) {
-                val seed = com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
-                inventory[seed] = (inventory[seed] ?: 0) + 3
-            }
-            for (crop in com.Atom2Universe.app.games.caves.node.FarmItems.crops.indices) {
-                val seed = com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
-                if ((inventory[seed] ?: 0) > 0 && seed !in gardenHotbar) {
-                    val empty = gardenHotbar.indexOfFirst { it == null }
-                    if (empty >= 0) gardenHotbar[empty] = seed
+            if (farming.initialize()) {
+                // Starter shortcuts are offered once; cleared slots stay cleared on reload.
+                if(hoe !in hotbar) hotbar.indexOfFirst { it==null }.takeIf { it>=0 }?.let { hotbar[it]=hoe }
+                for (crop in listOf(0,4,5)) {
+                    val seed=com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
+                    inventory[seed]=(inventory[seed] ?: 0)+3
                 }
             }
             inventoryCallback?.invoke(inventory.toMap())
@@ -977,18 +1011,25 @@ internal class CaveRenderer(
 
         elapsed += dt
         // Heure figée par le mode (Assaut : midi) ; sinon le jour et la nuit tournent.
-        if (!gamePaused && mode.allowsWorldEdits && rawDt < 1f) farming.advance((rawDt * 1000f).toLong())
+        if (!gamePaused && mode.allowsWorldEdits && rawDt < 1f) {
+            frontierLife.advance((rawDt*1000f).toLong())
+            farming.advance((rawDt * 1000f).toLong())
+            workshops.advance(rawDt)
+            workshops.feedAnimals(passiveAnimals,rawDt)
+            checkpointTimer+=rawDt
+            if(checkpointTimer>=10f) { checkpointTimer=0f;checkpointCallback?.invoke() }
+        }
         if (!gamePaused && mode.fixedTimeOfDayMs == null) gameTimeMs += (dt * 1_000f).toLong()
 
-        waterTickAccum += dt
-        if (waterTickAccum >= 0.25f) {
+        if(!gamePaused) waterTickAccum += dt
+        if (!gamePaused && waterTickAccum >= 0.25f) {
             waterTickAccum = 0f
             world.tickWater()
             if (!gamePaused && mode.allowsWorldEdits) world.tickLeaves { if (!isCreative) collectBlock(it) }
         }
 
-        gravityTickAccum += dt
-        if (gravityTickAccum >= 0.1f) {
+        if(!gamePaused) gravityTickAccum += dt
+        if (!gamePaused && gravityTickAccum >= 0.1f) {
             gravityTickAccum = 0f
             world.tickFalling(64)
         }
@@ -1420,10 +1461,14 @@ internal class CaveRenderer(
         if (!gamePaused) mode.update(dt)
         if (worldSource == null) {
             if (!gamePaused) {
-                passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ)
+                passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ,hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0)>0 })
+                residents.update(dt,camera.playerX,camera.playerY,camera.playerZ,ambientFor(dayT)<.4f)
+                workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ)
                 updateAnimalAudio(dt)
             }
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+            enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
+            enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
         }
         enemyRenderer.render(
             enemyManager.enemies,
@@ -1447,6 +1492,8 @@ internal class CaveRenderer(
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
         projRenderer.renderParticles(impactParticles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
 
+        drawFishingLine()
+
         // ── Boîte joueur (TPS) ────────────────────────────────────────────────
         updateEquipmentAnimation(if (gamePaused) 0f else dt)
         drawPlayerBox(dt)
@@ -1463,14 +1510,29 @@ internal class CaveRenderer(
         // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
         val waterAmbient = if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT)
         waterShader?.use()
+        val waterKey=world.chunkKey(camera.chunkX(),Math.floorDiv(floor(camera.playerY).toInt(),16),camera.chunkZ())
+        if(waterKey!=waterBiomeKey) {
+            waterBiomeKey=waterKey
+            val biome = world.naturalSurfaceBiomeAt(camera.playerX, camera.playerY, camera.playerZ)
+            targetWaterTint = when {
+                biome == "wetlands" -> floatArrayOf(.20f,.38f,.27f)
+                biome == "tundra" || biome == "taiga" || biome == "iceberg" -> floatArrayOf(.16f,.37f,.49f)
+                biome?.startsWith("magic_forest") == true -> floatArrayOf(.22f,.35f,.57f)
+                biome == "jungle" || biome == "desert" -> floatArrayOf(.05f,.50f,.46f)
+                else -> floatArrayOf(.08f,.43f,.50f)
+            }
+        }
+        for (i in 0..2) waterTint[i] += (targetWaterTint[i]-waterTint[i]) * (dt*.8f).coerceIn(0f,1f)
+        GLES30.glUniform3f(waterTintUniform, waterTint[0],waterTint[1],waterTint[2])
+        GLES30.glUniform3f(waterSkyUniform, skyR,skyG,skyB)
         GLES30.glUniform3f(waterCaveFogUniform, caveBlend, caveFogEnd * 0.55f, caveFogEnd)
         GLES30.glUniformMatrix4fv(wWUMvp, 1, false, camera.vpMatrix, 0)
         GLES30.glUniform1f(wWUAmbient, waterAmbient)
         GLES30.glUniform1f(wWUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wWUTime, elapsed)
         GLES30.glUniform3f(waterPhaseUniform,
-            ((camera.x * 1.1 + elapsed.toDouble() * 1.7) % (2.0 * Math.PI)).toFloat(),
-            ((camera.z * 0.85 + elapsed.toDouble() * 1.3) % (2.0 * Math.PI)).toFloat(),
+            ((camera.x * 1.1 + elapsed.toDouble() * .7) % (2.0 * Math.PI)).toFloat(),
+            ((camera.z * 0.85 + elapsed.toDouble() * .5) % (2.0 * Math.PI)).toFloat(),
             ((camera.y * 5.0 + elapsed.toDouble() * 4.0) % (2.0 * Math.PI)).toFloat())
         GLES30.glUniform4fv(wWULights, cachedLightCount.coerceAtLeast(1), lightData, 0)
         GLES30.glUniform4fv(wWULightColors, cachedLightCount.coerceAtLeast(1), lightColors, 0)
@@ -1721,11 +1783,10 @@ internal class CaveRenderer(
             val id = existing ?: ItemRegistry.rollInstance(type,Random.Default)?.let { registry.allocate(it) } ?: continue
             inventory[id] = 1
             // Les objets déplacés de la barre restent dans l'inventaire.
-            for (i in combatHotbar.indices) if (combatHotbar[i] == id) combatHotbar[i] = null
-            combatHotbar[slot] = id
+            for (i in hotbar.indices) if (hotbar[i] == id) hotbar[i] = null
+            hotbar[slot] = id
             for (ammo in ammoCandidatesFor(type)) inventory[ammo] = maxOf(inventory[ammo] ?: 0,250)
         }
-        hotbarMode = HotbarMode.COMBAT
         selectedSlot = 0
         weaponChargeTime = 0f; rockChargeTime = 0f
         equipmentRelease = -1f; releasedEquipment = null
@@ -1748,9 +1809,8 @@ internal class CaveRenderer(
         }
         inventory.clear()
         inventory[id] = 1
-        combatHotbar.fill(null)
-        combatHotbar[0] = id
-        hotbarMode = HotbarMode.COMBAT
+        hotbar.fill(null)
+        hotbar[0] = id
         selectedSlot = 0
         magazines.clear()
         magazines[id] = MagazineState(profile.magazine, profile.reload)
@@ -1758,7 +1818,7 @@ internal class CaveRenderer(
         weaponChargeTime = 0f; rockChargeTime = 0f
         equipmentRelease = -1f; releasedEquipment = null
         fireWasDown = false
-        hotbarCallback?.invoke(combatHotbar.copyOf(), selectedSlot)
+        hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
         return true
     }
 
@@ -1798,13 +1858,14 @@ internal class CaveRenderer(
         if (!infiniteAmmo && ammoCount <= 0) return false
 
         val profile = RangedProfile.all[def.weaponType] ?: return false
-        val magazine = if(profile.magazine>0) magazines.getOrPut(heldId) { MagazineState(profile.magazine,profile.reload) } else null
+        val magazine = if(profile.magazine>0) magazine(heldId,profile) else null
         if(magazine != null && !magazine.shoot()) {
             reloadWithSound(magazine)
             return false
         }
         val stats = weapon.rolledStats
-        val baseDamage = weapon.rolledDamage ?: 1
+        val drawPower=if(mode.allowsWorldEdits && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
+        val baseDamage = ((weapon.rolledDamage ?: 1)*drawPower).roundToInt()
         val yawRad = Math.toRadians(camera.yaw.toDouble())
         val rightX = -cos(yawRad); val rightZ = sin(yawRad)
         val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
@@ -1816,13 +1877,13 @@ internal class CaveRenderer(
         val ammoWeapon = ammoWeaponDef
         val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
-            val spread=profile.spread*heat
+            val spread=profile.spread*heat*if(mode.allowsWorldEdits && physics.isCrouching) .65f else 1f
             var dx=camera.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             var dy=camera.aimY.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             var dz=camera.aimZ.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             val len=sqrt(dx*dx+dy*dy+dz*dz);dx/=len;dy/=len;dz/=len
             projectiles.add(Projectile(spawnX,spawnY,spawnZ,dx,dy,dz,
-                profile.speed,(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
+                profile.speed*sqrt(drawPower),(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
                 isRock=profile.kind==ProjectileKind.ROCK,stats=stats,isPlayerWeapon=true,
                 kind=profile.kind,ammoId=if(profile.kind==ProjectileKind.ARROW || profile.kind==ProjectileKind.BOLT) ammoId else null,
                 maxRange=profile.range))
@@ -1860,6 +1921,10 @@ internal class CaveRenderer(
         val pressed=down && !fireWasDown
         fireWasDown=down
         val held=hotbar[selectedSlot]
+        if(mode.allowsWorldEdits) {
+            expeditionCombat.tick(dt,held)
+            fishing.tick(dt,held,down)
+        }
         if(held!=lastFireWeapon) {
             rockChargeTime=0f;weaponChargeTime=0f;lastFireWeapon=held
         }
@@ -1870,7 +1935,22 @@ internal class CaveRenderer(
                 eventBus.publish(GameEvent.WeaponReload(complete = true))
             }
         }
-        if (hotbarMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
+        if(mode.allowsWorldEdits && held==E.ROD) {
+            rockChargeTime=0f;weaponChargeTime=0f
+            if(pressed && (inventory[held] ?: 0)>0) fishing.action()
+            return
+        }
+        if(mode.allowsWorldEdits && expeditionCombat.guard>0f) {
+            rockChargeTime=0f;weaponChargeTime=0f;return
+        }
+        if (heldItemMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
+        if(mode.allowsWorldEdits && held!=null && E.isEquipment(held)) {
+            rockChargeTime=0f;weaponChargeTime=0f
+            if((inventory[held] ?: 0)<=0) return
+            if(held in E.melee) { if(down) expeditionCombat.hold(dt); expeditionCombat.input(held,down) }
+            else if(pressed) expeditionCombat.equip(held)
+            return
+        }
 
         // Viser un caillou au sol le ramasse plutôt que de tirer dans le vide dessus
         // (voir [updateMining]) — on n'engage donc pas le tir dans ce cas.
@@ -2092,8 +2172,12 @@ internal class CaveRenderer(
         // Minage libre et gratuit en mode construction, peu importe ce qui est en main.
         // En mode combat, viser un caillou permet quand même de le ramasser (munitions),
         // sans avoir à repasser en construction juste pour ça.
+        if (touch.laserActive && heldItemMode == HotbarMode.BUILD && tryToolStrike()) {
+            mineTarget=null; mineDamage=0f; miningCallback?.invoke(0f,null)
+            return
+        }
         val canMine = touch.laserActive &&
-            (hotbarMode == HotbarMode.BUILD || (hotbarMode == HotbarMode.COMBAT && isAimingAtRockBlock()))
+            (heldItemMode == HotbarMode.BUILD || (heldItemMode == HotbarMode.COMBAT && hotbar[selectedSlot] !in E.melee && isAimingAtRockBlock()))
         val target = if (canMine) raycastBlock() else null
 
         if (target == null) {
@@ -2109,13 +2193,33 @@ internal class CaveRenderer(
 
         val blockType = worldBlockAt(bx, by, bz)
         val hardness = BlockRegistry.getHardness(blockType)
-        mineDamage += dt / hardness
+        mineDamage += dt * com.Atom2Universe.app.games.caves.node.FrontierItems.miningSpeed(hotbar[selectedSlot], BlockRegistry.get(blockType)) / hardness
 
         miningCallback?.invoke(mineDamage, blockType)
 
         if (mineDamage >= 1f) {
+            val box = workshops.view(FrontierWorkshops.Pos(bx,by,bz))
+            if (box?.items?.any { (id,count) -> (inventory[id] ?: 0).toLong()+count > Int.MAX_VALUE } == true) {
+                mineDamage = 0f
+                farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_storage_overflow))
+                return
+            }
             val farmDrops = farming.harvest(bx, by, bz, uproot = true)
             if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
+            if (!isCreative && BlockRegistry.get(blockType)?.harvestCategory == "plant" && Random.nextFloat() < .12f) {
+                val biome=world.naturalSurfaceBiomeAt(bx.toDouble(),by.toDouble(),bz.toDouble())
+                val crops=when(biome) {
+                    "desert", "red_desert", "savanna" -> intArrayOf(1,9,14,18)
+                    "taiga", "tundra" -> intArrayOf(4,5,15,17)
+                    "jungle", "jungle_edge", "wetlands" -> intArrayOf(2,10,13,18)
+                    "forest", "birch_forest", "dark_forest", "redwood_forest" -> intArrayOf(7,8,11,16,17)
+                    else -> intArrayOf(0,2,3,6,8,12)
+                }
+                grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(crops[Random.nextInt(crops.size)]) to 1))
+            }
+            val contents = workshops.breakBlock(FrontierWorkshops.Pos(bx, by, bz))
+            for ((id, count) in contents) inventory[id] = ((inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            if (contents.isNotEmpty()) inventoryCallback?.invoke(inventory.toMap())
             world.setBlock(bx, by, bz, AIR)
             forceMeshRebuild(bx, by, bz)
             world.enqueueIfFalling(bx, by + 1, bz)
@@ -2136,6 +2240,31 @@ internal class CaveRenderer(
         }
     }
 
+    private fun tryToolStrike(): Boolean {
+        if (!mode.allowsCombat || isCreative) return false
+        val held=hotbar[selectedSlot]
+        if (held != null && com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(held)<0) return false
+        val sx=camera.playerX; val sy=camera.eyeY; val sz=camera.playerZ
+        // March the short aim ray, stopping at opaque terrain before considering a target.
+        for(step in 1..18) {
+            val distance=step*.18
+            val x=sx+camera.aimX*distance; val y=sy+camera.aimY*distance; val z=sz+camera.aimZ*distance
+            if (projectileSolid(x,y,z)) return false
+            val enemy=enemyManager.enemies.firstOrNull { e ->
+                e.hp>0 && (x-e.x).pow(2)+(z-e.z).pow(2)<(e.def.radius+.25).pow(2) &&
+                    y>=e.y && y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)
+            } ?: continue
+            if (weaponAttackCooldown <= 0f) {
+                val n=com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(held)
+                val damage=if(n<0) 2 else 3+(n/3)*2+if(n%3==1) 2 else 0
+                enemyManager.damageEnemy(enemy,damage)
+                weaponAttackCooldown=.65f; startSwing()
+            }
+            return true
+        }
+        return false
+    }
+
     private fun collectBlock(blockType: Short) {
         if (blockType.toInt() in 7020..7023) {
             grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(0) to 1))
@@ -2143,11 +2272,11 @@ internal class CaveRenderer(
         }
         // Resolve once: breaking stone yields cobble, never recursively breaks the result.
         val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
+        val newStack=(inventory[dropType] ?: 0)==0
         inventory[dropType] = (inventory[dropType] ?: 0) + count
-        // Un bloc ramassé va dans la barre correspondant à sa catégorie (combat pour les
-        // munitions/pierres de garde, construction pour le reste), pas forcément la barre visible.
-        val targetBar = bar(itemMode(dropType))
-        if (targetBar.none { it == dropType }) {
+        // New pickups can fill a free shortcut, without replacing the player's assignments.
+        val targetBar = hotbar
+        if (newStack && targetBar.none { it == dropType }) {
             val emptySlot = targetBar.indexOfFirst { it == null }
             if (emptySlot != -1) {
                 targetBar[emptySlot] = dropType
@@ -2190,7 +2319,12 @@ internal class CaveRenderer(
         for (ly in 0 until CHUNK_SIZE)
             for (lz in 0 until CHUNK_SIZE)
                 for (lx in 0 until CHUNK_SIZE) {
-            val intensity = when (val block = chunk.blockAt(lx, ly, lz)) {
+            val block=chunk.blockAt(lx,ly,lz)
+            if(worldSource==null && block.toInt() in 9800..9891) {
+                workshops.discover(FrontierWorkshops.Pos(wx0+lx,wy0+ly,wz0+lz),block)
+                if(block==com.Atom2Universe.app.games.caves.node.FrontierItems.MARKET_BELL) residents.discoverBell(wx0+lx,wy0+ly,wz0+lz)
+            }
+            val intensity = when (block) {
                 TORCH -> 1.0f
                 LAVA  -> 0.85f
                 else  -> BlockRegistry.lightEmission(block) / 15f
@@ -2226,7 +2360,10 @@ internal class CaveRenderer(
             val key = world.pollLightKey() ?: break
             processed++
             val chunk = world.getChunkByKey(key)?.takeIf { it.generated } ?: continue
-            val r = LightEngine.computeSky(chunk, world)
+            val version=chunk.version
+            val r = LightEngine.computeSky(chunk, world) or LightEngine.computeBlock(chunk, world)
+            if(r==0 && version==chunk.version) chunk.ecologyLightReady=true
+            else if(version!=chunk.version) world.enqueueLight(key)
             if (r != 0) {
                 chunk.lightMeshDirty = true            // lumière changée → mesh périmé, on attend le calme
                 chunk.lightBoundaryDirty = chunk.lightBoundaryDirty or (r and 0x3F)   // faces de bord changées
@@ -2303,7 +2440,7 @@ internal class CaveRenderer(
 
     /** Called on the GL thread; unproject the touched pixel using the actual rendered camera. */
     fun placeBlockAtScreen(xf: Float, yf: Float) {
-        if (!mode.allowsWorldEdits || hotbarMode == HotbarMode.COMBAT) return
+        if (!mode.allowsWorldEdits || heldItemMode == HotbarMode.COMBAT) return
         if (!xf.isFinite() || !yf.isFinite() || xf !in 0f..1f || yf !in 0f..1f) return
         val inverse = FloatArray(16)
         if (!android.opengl.Matrix.invertM(inverse, 0, camera.vpMatrix, 0)) return
@@ -2321,6 +2458,8 @@ internal class CaveRenderer(
             (camera.x - camera.playerX).let { it * it } +
             (camera.y - camera.playerY).let { it * it } +
             (camera.z - camera.playerZ).let { it * it })
+        if(interactActor(camera.x,camera.y,camera.z,dx/length,dy/length,dz/length)) return
+        if(hotbar[selectedSlot]==com.Atom2Universe.app.games.caves.node.FrontierItems.CHARM) { placeBlock(null,true);return }
         val target = raycastBlock(camera.x, camera.y, camera.z,
             dx / length, dy / length, dz / length, MINE_REACH + orbitDistance) ?: return
         // A third-person camera must not extend the player's building reach.
@@ -2330,7 +2469,7 @@ internal class CaveRenderer(
         val distanceSquared = (px - camera.playerX).let { it * it } +
             (py - camera.playerY).let { it * it } + (pz - camera.playerZ).let { it * it }
         if (distanceSquared > MINE_REACH * MINE_REACH) return
-        placeBlock(target)
+        placeBlock(target,true)
     }
 
     /** Expanded crop sprites can extend outside their base voxel; stop them at solid occluders. */
@@ -2794,7 +2933,8 @@ internal class CaveRenderer(
         val m = equipmentMesh
         m.clear()
         // Explorateur : veste, ceinture, bottes, sac et visage.
-        m.box(0f,-.59f,0f,.22f,.29f,.13f,0x435B78)
+        val armorColor=when(expeditionCombat.armor) { E.PADDED_ARMOR -> 0xAC835C; E.IRON_ARMOR -> 0xA3AFB6; E.STEEL_ARMOR -> 0x73AFBF; else -> 0x435B78 }
+        m.box(0f,-.59f,0f,.22f,.29f,.13f,armorColor)
         m.box(0f,-.86f,0f,.225f,.035f,.14f,0x49382B)
         m.box(0f,-.85f,-.15f,.035f,.028f,.012f,0xC6AA67)
         m.box(0f,-.18f,0f,.18f,.20f,.17f,0xD5A17C)
@@ -2814,7 +2954,7 @@ internal class CaveRenderer(
         m.box(0f,-.66f,.29f,.12f,.09f,.024f,0x9C8055)
         val type = selectedEquipmentType()
         val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
-        val active = type != null || throwing || (hotbarMode == HotbarMode.COMBAT && hotbar[selectedSlot] in ROCK_IDS)
+        val active = type != null || throwing || (heldItemMode == HotbarMode.COMBAT && hotbar[selectedSlot] in ROCK_IDS)
         if (!active) for (side in listOf(-1f,1f)) {
             m.rod(side*.27f,-.38f,0f,side*.31f,-.67f,-side*step,.080f,0x435B78,.061f)
             m.rod(side*.31f,-.67f,-side*step,side*.32f,-.94f,-side*step,.059f,0xD5A17C,.045f)
@@ -2867,7 +3007,7 @@ internal class CaveRenderer(
 
         val type = selectedEquipmentType()
         val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
-        if (type != null || throwing || (hotbarMode == HotbarMode.COMBAT && (held == null || held in ROCK_IDS))) {
+        if (type != null || throwing || (heldItemMode == HotbarMode.COMBAT && (held == null || held in ROCK_IDS))) {
             android.opengl.Matrix.setIdentityM(equipmentModel,0)
             val charge = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f,1f)
             val recoil = if (equipmentRelease >= 0f) exp(-equipmentRelease*15f)*.065f else 0f
@@ -3089,11 +3229,18 @@ internal class CaveRenderer(
 
     /** Called on the GL thread, like firing and magazine updates. */
     fun reloadAssaultWeapon() {
-        if (mode !is com.Atom2Universe.app.games.caves.mode.AssaultMode || !mode.allowsCombat) return
+        if (!mode.allowsCombat || gamePaused) return
+        if(mode.allowsWorldEdits) {
+            val held=hotbar[selectedSlot]
+            if(held==E.ROD) { fishing.cancel();return }
+            if(heldItemMode==HotbarMode.COMBAT && (held in E.melee || expeditionCombat.shield && (RangedProfile.all[selectedEquipmentType()]?.magazine ?: 0)==0)) {
+                expeditionCombat.raiseGuard();return
+            }
+        }
         val profile = RangedProfile.all[selectedEquipmentType()] ?: return
         val id = hotbar[selectedSlot] ?: return
         if (profile.magazine <= 0) return
-        reloadWithSound(magazines.getOrPut(id) { MagazineState(profile.magazine, profile.reload) })
+        reloadWithSound(magazine(id,profile))
         publishWeaponStatus()
     }
 
@@ -3110,8 +3257,13 @@ internal class CaveRenderer(
         val profile=RangedProfile.all[type]
         val id=hotbar[selectedSlot]
         val reserve=ammoBlockIdFor(type)?.let { inventory[it] ?: 0 } ?: 0
-        val mag=if(id!=null && profile!=null && profile.magazine>0) magazines.getOrPut(id) { MagazineState(profile.magazine,profile.reload) } else null
-        val status=if(hotbarMode!=HotbarMode.COMBAT || mag==null) ""
+        val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
+        val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
+            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_status,expeditionCombat.stamina.toInt())
+            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && id in E.melee) context.getString(com.Atom2Universe.app.R.string.cave_melee_status,expeditionCombat.stamina.toInt())
+            else if(mode.allowsWorldEdits && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
+            else if(heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_ranged_charge, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100),reserve)
+            else if(heldItemMode!=HotbarMode.COMBAT || mag==null) ""
             else if(mag.reloadRemaining>0f) context.getString(com.Atom2Universe.app.R.string.cave_weapon_reloading)
             else if(mode.infiniteAmmo) context.getString(com.Atom2Universe.app.R.string.cave_assault_magazine,
                 mag.remaining, profile?.magazine ?: 0)
@@ -3120,7 +3272,9 @@ internal class CaveRenderer(
     }
 
     private fun selectedEquipmentType(): String? {
-        val id = hotbar[selectedSlot] ?: return null
+        val id = hotbar[selectedSlot] ?: return if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) "buckler" else null
+        E.melee[id]?.let { return it.type }
+        if(id==E.ROD) return "fishing_rod"
         val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return null
         return ItemRegistry.get(instance.defId)?.weaponType
     }
@@ -3165,12 +3319,39 @@ internal class CaveRenderer(
         val dip=sin(reload*PI.toFloat())
         android.opengl.Matrix.rotateM(equipmentModel,0,dip*28f,0f,0f,1f)
         android.opengl.Matrix.translateM(equipmentModel,0,0f,-dip*.12f,0f)
-        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0)
+        if(type in setOf("sword","spear","hammer")) {
+            val wind=expeditionCombat.charge/.9f
+            val swing=if(release>=0f) sin((release/.5f).coerceIn(0f,1f)*PI.toFloat()) else 0f
+            android.opengl.Matrix.rotateM(equipmentModel,0,wind*35f-swing*75f,1f,0f,0f)
+            android.opengl.Matrix.rotateM(equipmentModel,0,if(type=="sword") swing*55f else 0f,0f,0f,1f)
+            if(expeditionCombat.guard>0f) android.opengl.Matrix.rotateM(equipmentModel,0,-65f,0f,0f,1f)
+        }
+        val bladeColor=when(hotbar[selectedSlot]) {
+            E.WOOD_SWORD -> 0xB28A50; E.STONE_SPEAR -> 0x888F91
+            E.STEEL_SWORD, E.STEEL_HAMMER -> 0x83CBD1; else -> null
+        }
+        m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0,bladeColor)
+        if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) {
+            m.box(-.28f,.12f,-.02f,.17f,.22f,.035f,0x946E4D)
+            m.box(-.28f,.12f,-.06f,.022f,.22f,.014f,0xBBC9C6)
+        }
         drawEquipmentMesh(equipmentModel,if(fps) vmProj else camera.vpMatrix)
         if (fps && type == "sling" && !rock) {
             m.slingDrawHand(charge,release)
             drawEquipmentMesh(equipmentModel,vmProj,0.32f)
         }
+    }
+
+    private fun drawFishingLine() {
+        val b=fishing.bobber ?: return
+        val m=equipmentMesh;m.clear()
+        val bx=(b.x-camera.x).toFloat();val by=(b.y-camera.y).toFloat();val bz=(b.z-camera.z).toFloat()
+        val bob=if(fishing.biting) -.12f+sin(elapsed*24)*.06f else sin(elapsed*3)*.025f
+        m.rod(bx,by+bob-.07f,bz,bx,by+bob+.07f,bz,.042f,0xF2E4BC)
+        m.box(bx,by+bob+.065f,bz,.035f,.035f,.035f,0xE76543)
+        m.rod((camera.playerX-camera.x).toFloat(),(camera.eyeY-camera.y-.2).toFloat(),(camera.playerZ-camera.z).toFloat(),bx,by+bob+.08f,bz,.003f,0xD7DBCB)
+        android.opengl.Matrix.setIdentityM(equipmentModel,0)
+        drawEquipmentMesh(equipmentModel,camera.vpMatrix)
     }
 
     private fun drawEquipmentMesh(model: FloatArray, projection: FloatArray, alpha: Float = 1f) {
@@ -3736,7 +3917,7 @@ internal class CaveRenderer(
 
     fun selectSlot(index: Int) {
         if (mode.singleWeapon && index != 0) return
-        if (index !in 0..18) return
+        if (index !in hotbar.indices) return
         selectedSlot = index
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
@@ -3776,10 +3957,11 @@ internal class CaveRenderer(
 
     private fun grantFarmItems(items: List<Pair<Short, Int>>) {
         for ((id,count) in items) {
+            val newStack=(inventory[id] ?: 0)==0
             inventory[id] = ((inventory[id] ?: 0).toLong()+count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-            if (id !in gardenHotbar) {
-                val empty = (1 until gardenHotbar.size).firstOrNull { gardenHotbar[it] == null }
-                if (empty != null) gardenHotbar[empty] = id
+            if (newStack && id !in hotbar) {
+                val empty = hotbar.indices.firstOrNull { hotbar[it] == null }
+                if (empty != null) hotbar[empty] = id
             }
         }
         inventoryCallback?.invoke(inventory.toMap())
@@ -3790,14 +3972,148 @@ internal class CaveRenderer(
         val left=(inventory[id] ?: 0)-1
         if (left > 0) inventory[id]=left else {
             inventory.remove(id)
-            for (i in 1 until gardenHotbar.size) if (gardenHotbar[i] == id) gardenHotbar[i]=null
+            for (i in hotbar.indices) if (hotbar[i] == id) hotbar[i]=null
         }
         inventoryCallback?.invoke(inventory.toMap())
         hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
     }
 
-    private fun placeBlock(target: RayHit? = raycastBlock()) {
-        if (hotbarMode == HotbarMode.GARDEN && target != null) {
+    internal data class TradeView(val key: String,val role: Int,val offers: List<FrontierLife.Offer>,val remaining: List<Int>,val items: Map<Short,Int>)
+    internal fun tradeView(key: String): TradeView? {
+        val r=residents.nearby(key,camera.playerX,camera.playerY,camera.playerZ) ?: return null
+        val offers=frontierLife.offers(r.role)
+        return TradeView(key,r.role,offers,offers.indices.map { frontierLife.remaining(key,it,frontierLife.elapsedMs) },inventory.toMap())
+    }
+    internal fun trade(key: String,index: Int): Boolean {
+        if(worldSource!=null || !mode.allowsWorldEdits || !playerNode.isAlive) return false
+        val r=residents.nearby(key,camera.playerX,camera.playerY,camera.playerZ) ?: return false
+        if(!frontierLife.trade(key,r.role,index,inventory,frontierLife.elapsedMs)) return false
+        changedFrontierInventory();return true
+    }
+    internal fun changedFrontierInventory() {
+        for(i in hotbar.indices) {
+            val id=hotbar[i] ?: continue
+            if((inventory[id] ?: 0)<=0) hotbar[i]=null
+        }
+        inventoryCallback?.invoke(inventory.toMap());hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+    }
+    private fun interactActor(sx: Double,sy: Double,sz: Double,dx: Double,dy: Double,dz: Double): Boolean {
+        if(worldSource!=null || !mode.allowsWorldEdits || !playerNode.isAlive) return false
+        val solid=raycastBlock(sx,sy,sz,dx,dy,dz,12.0)?.distance ?: 12.0
+        val actors=passiveAnimals.visible+residents.visible
+        var selected: com.Atom2Universe.app.games.caves.entity.Enemy?=null
+        var nearest=solid
+        for(a in actors) {
+            if(hypot(a.x-camera.playerX,a.z-camera.playerZ)>4.5 || abs(a.y-camera.playerY)>4) continue
+            val height=if(a.def.behavior=="settler") 1.8 else if(a.young) .8 else 1.25
+            val radius=if(a.def.behavior=="settler") .4 else (a.def.radius*(if(a.young) .65 else .85)).coerceAtLeast(.3)
+            var enter=0.0;var leave=nearest
+            val origin=doubleArrayOf(sx,sy,sz);val direction=doubleArrayOf(dx,dy,dz)
+            val low=doubleArrayOf(a.x-radius,a.y,a.z-radius);val high=doubleArrayOf(a.x+radius,a.y+height,a.z+radius)
+            for(axis in 0..2) {
+                if(abs(direction[axis])<1e-8) { if(origin[axis]<low[axis] || origin[axis]>high[axis]) leave=-1.0 }
+                else { val u=(low[axis]-origin[axis])/direction[axis];val v=(high[axis]-origin[axis])/direction[axis]
+                    enter=maxOf(enter,minOf(u,v));leave=minOf(leave,maxOf(u,v)) }
+            }
+            if(enter<=leave && enter<nearest) { nearest=enter;selected=a }
+        }
+        val actor=selected ?: return false
+        residents.resident(actor)?.let { resident ->
+            val view=tradeView(resident.key) ?: return false
+            touch.reset();gamePaused=true;tradeCallback?.invoke(view);return true
+        }
+        val result=passiveAnimals.interact(actor,hotbar[selectedSlot],inventory)
+        if(result==0) return false
+        val message=when(result) {
+            1 -> com.Atom2Universe.app.R.string.cave_animal_fed
+            2 -> com.Atom2Universe.app.R.string.cave_animal_ready
+            else -> com.Atom2Universe.app.R.string.cave_animal_wait
+        }
+        if(result!=3) { changedFrontierInventory();startSwing() }
+        farmMessageCallback?.invoke(context.getString(message));return true
+    }
+    /** Validate loaded terrain before moving the player. No destination writes or remote mining. */
+    internal fun travel(home: Boolean): Int {
+        val missing=com.Atom2Universe.app.R.string.cave_travel_missing
+        if(worldSource!=null || !mode.allowsWorldEdits || !playerNode.isAlive ||
+            (inventory[com.Atom2Universe.app.games.caves.node.FrontierItems.CHARM] ?: 0)<1) return missing
+        if(frontierLife.elapsedMs-frontierLife.lastTravel<20_000L) return com.Atom2Universe.app.R.string.cave_travel_wait
+        val dest=(if(home) frontierLife.home else frontierLife.expedition) ?: return missing
+        for(cx in Math.floorDiv(dest.x-5,16)..Math.floorDiv(dest.x+5,16))
+            for(cy in Math.floorDiv(dest.y-5,16)..Math.floorDiv(dest.y+6,16))
+                for(cz in Math.floorDiv(dest.z-5,16)..Math.floorDiv(dest.z+5,16)) world.pregenerateChunk(cx,cy,cz)
+        if(home && world.blockAt(dest.x,dest.y,dest.z)!=com.Atom2Universe.app.games.caves.node.FrontierItems.HEARTH) return missing
+        var landing: FrontierLife.Place?=null
+        search@ for(r in 0..4) for(dx in -r..r) for(dz in -r..r) {
+            if(abs(dx)!=r && abs(dz)!=r) continue
+            for(dy in listOf(0,1,-1,2,-2,3,-3)) {
+                val x=dest.x+dx;val y=dest.y+dy;val z=dest.z+dz
+                val floor=world.blockAt(x,y-1,z);val def=BlockRegistry.get(floor)
+                if(floor==AIR || isWater(floor) || floor==LAVA || isDecoration(floor) || isTransparent(floor) ||
+                    def==null || def.slab || def.stairs || def.blockHeight<1f) continue
+                if(world.blockAt(x,y,z)!=AIR || world.blockAt(x,y+1,z)!=AIR) continue
+                landing=FrontierLife.Place(x,y,z);break@search
+            }
+        }
+        val p=landing ?: return com.Atom2Universe.app.R.string.cave_travel_blocked
+        val from=FrontierLife.Place(floorInt(camera.playerX),floorInt(camera.playerY-1.62),floorInt(camera.playerZ))
+        frontierLife.arrived(from,home,frontierLife.elapsedMs)
+        fishing.cancel()
+        camera.playerX=p.x+.5;camera.playerY=p.y+1.62;camera.playerZ=p.z+.5
+        physics.reset();touch.reset();enemyManager.enemies.clear()
+        enemyManager.spawnManager.resetAfterTravel()
+        mineTarget=null;mineDamage=0f;rockChargeTime=0f;weaponChargeTime=0f
+        projectiles.removeAll { it.fromEnemy }
+        camera.eyeDrop=0.0;camera.update()
+        warmSpawnNeighborhood();checkpointCallback?.invoke()
+        return com.Atom2Universe.app.R.string.cave_travel_done
+    }
+
+    private fun placeBlock(target: RayHit? = raycastBlock(), actorChecked: Boolean=false) {
+        if(worldSource==null && mode.allowsWorldEdits && playerNode.isAlive) {
+            if(!actorChecked && interactActor(
+                if(camera.thirdPerson) camera.playerX else camera.x,
+                if(camera.thirdPerson) camera.orbitY else camera.y,
+                if(camera.thirdPerson) camera.playerZ else camera.z,
+                camera.aimX.toDouble(),camera.aimY.toDouble(),camera.aimZ.toDouble())) return
+            val held=hotbar[selectedSlot]
+            if(held==com.Atom2Universe.app.games.caves.node.FrontierItems.CHARM && (inventory[held] ?: 0)>0) {
+                gamePaused=true;touch.reset();travelCallback?.invoke();return
+            }
+            if(target!=null && !physics.isCrouching && world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.HEARTH) {
+                frontierLife.bindHome(FrontierLife.Place(target.bx,target.by,target.bz))
+                farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_travel_bound))
+                checkpointCallback?.invoke();return
+            }
+        }
+        if (target != null && !physics.isCrouching && mode.allowsWorldEdits) {
+            if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
+                touch.reset();craftStationCallback?.invoke();return
+            }
+            workshops.view(FrontierWorkshops.Pos(target.bx,target.by,target.bz))?.let { box ->
+                touch.laserActive = false
+                gamePaused=true
+                storageCallback?.invoke(box, inventory.toMap())
+                return
+            }
+        }
+        val held = hotbar[selectedSlot]
+        if (held != null && (inventory[held] ?: 0) > 0) {
+            val heal = com.Atom2Universe.app.games.caves.node.FrontierItems.healing(held)
+            if (heal > 0) {
+                if (playerNode.isAlive && playerNode.hp < playerNode.maxHp) {
+                    playerNode.applyHeal(heal); consumeFarmItem(held); startSwing()
+                }
+                return
+            }
+            if (held == com.Atom2Universe.app.games.caves.node.FrontierItems.COMPOST) {
+                if (target != null && farming.fertilize(target.bx,target.by,target.bz)) {
+                    consumeFarmItem(held); startSwing()
+                } else farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_frontier_compost_hint))
+                return
+            }
+        }
+        if (heldItemMode == HotbarMode.GARDEN && target != null) {
             val drops = farming.harvest(target.bx,target.by,target.bz,uproot=false)
             if (drops != null) {
                 if (drops.isEmpty()) farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_farm_not_ready))
@@ -3840,7 +4156,7 @@ internal class CaveRenderer(
             if (!isCreative) {
                 if (count == 1) {
                     inventory.remove(blockType)
-                    for (i in buildHotbar.indices) if (buildHotbar[i] == blockType) buildHotbar[i] = null
+                    for (i in hotbar.indices) if (hotbar[i] == blockType) hotbar[i] = null
                 } else inventory[blockType] = count - 1
             }
             inventoryCallback?.invoke(inventory.toMap())
@@ -3904,6 +4220,7 @@ internal class CaveRenderer(
         } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
+        workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)
         world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
@@ -3921,9 +4238,45 @@ internal class CaveRenderer(
         hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
     }
 
+    internal fun selectWorkshopRecipe(p: FrontierWorkshops.Pos,index: Int) {
+        if(!mode.allowsWorldEdits || !playerNode.isAlive ||
+            (p.x+.5-camera.playerX).pow(2)+(p.y+.5-camera.playerY).pow(2)+(p.z+.5-camera.playerZ).pow(2)>36) return
+        if(workshops.select(p,index)) checkpointCallback?.invoke()
+    }
+    internal fun transferStorageBatch(p: FrontierWorkshops.Pos,ids: List<Short>) {
+        for(id in ids) transferStorage(p,id,Int.MAX_VALUE,true,false)
+        inventoryCallback?.invoke(inventory.toMap());hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+    }
+    internal fun transferStorage(p: FrontierWorkshops.Pos, id: Short, count: Int, deposit: Boolean, notify: Boolean=true) {
+        val distance = (camera.playerX-p.x-.5).let { it*it } + (camera.playerY-p.y).let { it*it } +
+            (camera.playerZ-p.z-.5).let { it*it }
+        if (!mode.allowsWorldEdits || distance > 81.0) return
+        if (!workshops.transfer(p, inventory, id, count, deposit)) return
+        for (i in hotbar.indices)
+            if (hotbar[i]?.let { (inventory[it] ?: 0) <= 0 } == true) hotbar[i] = null
+        if(notify) {
+            inventoryCallback?.invoke(inventory.toMap())
+            hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
+        }
+    }
+
+    /** Wait for occluded light to settle before allowing hostile population checks. */
+    internal fun spawnLight(x: Int,y: Int,z: Int): Int {
+        val c=world.getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16))
+        return if(c?.ecologyLightReady==true) ecologicalLight(x,y,z) else 15
+    }
+    internal fun ecologicalLight(x: Int, y: Int, z: Int): Int {
+        val chunk = world.getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16)) ?: return 15
+        if (!meshes.containsKey(world.chunkKey(chunk.cx,chunk.cy,chunk.cz))) return 15
+        val sky = chunk.skyAt(Math.floorMod(x,16),Math.floorMod(y,16),Math.floorMod(z,16))
+        val index=Math.floorMod(x,16)+Math.floorMod(y,16)*16+Math.floorMod(z,16)*256
+        val blockLight=(chunk.light[index].toInt() ushr 4) and 15
+        return maxOf((sky*ambientFor(dayFraction())).toInt(),blockLight).coerceIn(0,15)
+    }
     private fun swapBucketInInventory(from: Short, to: Short) {
         if (isCreative) {
             inventory[to] = (inventory[to] ?: 0) + 1
+            for(i in hotbar.indices) if(i!=selectedSlot && hotbar[i]==to) hotbar[i]=null
             hotbar[selectedSlot] = to
             inventoryCallback?.invoke(inventory.toMap())
             hotbarCallback?.invoke(hotbar.copyOf(), selectedSlot)
@@ -3932,7 +4285,8 @@ internal class CaveRenderer(
         val newFromCount = (inventory[from] ?: 1) - 1
         if (newFromCount <= 0) inventory.remove(from) else inventory[from] = newFromCount
         inventory[to] = (inventory[to] ?: 0) + 1
-        // Toujours remplacer dans le slot actif — le seau reste à la même position
+        // Keep the resulting stack in hand; it must not occupy a second slot as well.
+        for(i in hotbar.indices) if(i!=selectedSlot && hotbar[i]==to) hotbar[i]=null
         hotbar[selectedSlot] = to
         if (newFromCount <= 0) {
             for (j in hotbar.indices) {

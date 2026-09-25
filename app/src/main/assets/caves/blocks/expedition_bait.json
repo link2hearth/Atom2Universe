@@ -1,0 +1,12 @@
+{
+  "id": 9893,
+  "name": "expedition_bait",
+  "texture_top": "expedition:9893:top",
+  "texture_side": "expedition:9893:side",
+  "texture_bottom": "expedition:9893:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_bait",
+  "creative_tab": "resources",
+  "placeable": false
+}

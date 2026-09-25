@@ -1,0 +1,12 @@
+{
+  "id": 9913,
+  "name": "expedition_shield",
+  "texture_top": "expedition:9913:top",
+  "texture_side": "expedition:9913:side",
+  "texture_bottom": "expedition:9913:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_shield",
+  "creative_tab": "resources",
+  "placeable": false
+}

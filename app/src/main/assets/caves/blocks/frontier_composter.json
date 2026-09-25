@@ -1,0 +1,17 @@
+{
+  "id": 9806,
+  "name": "frontier_composter",
+  "texture_top": "frontier:9806:top",
+  "texture_side": "frontier:9806:side",
+  "texture_bottom": "frontier:9806:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_composter",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -13,6 +13,24 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
         canvas.save(); canvas.translate(bounds.left.toFloat(), bounds.top.toFloat())
         canvas.scale(bounds.width()/32f, bounds.height()/32f)
         when (kind) {
+            "close", "remove" -> { canvas.drawLine(9f,9f,23f,23f,paint);canvas.drawLine(23f,9f,9f,23f,paint) }
+            "previous", "next" -> {
+                if(kind=="next") canvas.rotate(180f,16f,16f)
+                canvas.drawLine(20f,7f,11f,16f,paint);canvas.drawLine(11f,16f,20f,25f,paint)
+            }
+            "star" -> {
+                val path=Path()
+                repeat(10) { i -> val a=Math.PI*i/5-Math.PI/2;val r=if(i%2==0) 12 else 5
+                    val x=16+(kotlin.math.cos(a)*r).toFloat();val y=16+(kotlin.math.sin(a)*r).toFloat()
+                    if(i==0) path.moveTo(x,y) else path.lineTo(x,y) }
+                path.close();canvas.drawPath(path,paint)
+            }
+            "clock" -> { canvas.drawCircle(16f,16f,11f,paint);canvas.drawLine(16f,8f,16f,16f,paint);canvas.drawLine(16f,16f,22f,19f,paint) }
+            "sort" -> { for(i in 0..2) canvas.drawLine(6f,9f+i*7,25f-i*5,9f+i*7,paint) }
+            "info" -> { canvas.drawCircle(16f,16f,11f,paint);canvas.drawCircle(16f,10f,1f,paint);canvas.drawLine(16f,15f,16f,23f,paint) }
+            "craft" -> { canvas.drawLine(9f,26f,23f,8f,paint);canvas.drawRoundRect(13f,5f,28f,11f,2f,2f,paint);canvas.drawLine(5f,27f,26f,27f,paint) }
+            "pin" -> { canvas.drawRoundRect(8f,6f,24f,16f,3f,3f,paint);canvas.drawLine(11f,16f,8f,21f,paint);canvas.drawLine(8f,21f,24f,21f,paint);canvas.drawLine(24f,21f,21f,16f,paint);canvas.drawLine(16f,21f,16f,28f,paint) }
+            "all" -> { for(x in 0..1) for(y in 0..1) canvas.drawRoundRect(6f+x*12,6f+y*12,14f+x*12,14f+y*12,2f,2f,paint) }
             "map" -> {
                 val path = Path().apply { moveTo(5f,8f); lineTo(12f,5f); lineTo(20f,8f); lineTo(27f,5f); lineTo(27f,24f); lineTo(20f,27f); lineTo(12f,24f); lineTo(5f,27f); close(); moveTo(12f,5f); lineTo(12f,24f); moveTo(20f,8f); lineTo(20f,27f) }
                 canvas.drawPath(path, paint)

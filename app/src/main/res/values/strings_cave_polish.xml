@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_fishing_control">Keep the fish inside your zone. Hold Action to rise, release to sink.</string>
+    <string name="cave_fishing_reel">Reel it in</string>
+    <string name="cave_fishing_gauge_hint">Hold ↑  ·  release ↓</string>
+    <string name="cave_count_thousand">%1$.1fk</string>
+    <string name="cave_count_million">%1$.1fM</string>
+    <string name="cave_catalog_favorite">Pin / unpin favorite</string>
+    <string name="cave_catalog_favorites">Favorites</string>
+    <string name="cave_catalog_recent">Recently acquired</string>
+    <string name="cave_catalog_clear">Clear search and filters</string>
+    <string name="cave_catalog_craft_max">Craft batch · up to 64</string>
+    <string name="cave_catalog_sort_name">Name</string>
+    <string name="cave_catalog_sort_count">Quantity</string>
+    <string name="cave_catalog_sort_recent">Most recent</string>
+    <string name="cave_catalog_jump">Go to page</string>
+    <string name="cave_catalog_summary">%1$d / %2$d items</string>
+    <string name="cave_catalog_recipes">%1$d recipes</string>
+    <string name="cave_catalog_drag_hint">Tap: details · hold: favorite · drag: move stack</string>
+    <string name="cave_catalog_ingredient">%1$s · owned %2$d / needed %3$d · %4$s</string>
+    <string name="cave_catalog_make_ingredient">Make this ingredient</string>
+    <string name="cave_catalog_station">%1$s · %2$s</string>
+    <string name="cave_catalog_recipe_state">%1$s · %2$s</string>
+    <string name="cave_catalog_pinned">Shortcut assigned</string>
+    <string name="cave_catalog_bar_full">Bar full: drag onto the shortcut you want to replace.</string>
+    <string name="cave_storage_matching">Deposit matching stacks, except favorites and stacks in the bar</string>
+    <string name="cave_storage_drag_hint">Tap to transfer · hold to drag · quantity applies to each transfer</string>
+    <string name="cave_storage_bag_title">Bag · %1$d</string>
+    <string name="cave_storage_box_title">Storage · %1$d</string>
+    <string name="cave_storage_empty_filtered">No matching items</string>
+    <string name="cave_storage_done">Transferred %1$s × %2$d</string>
+    <string name="cave_catalog_guide">The bag and bar are two parts of the same inventory. Drag a stack from the bag to a specific bar slot: it leaves the bag and the replaced stack returns there. Drag between bar slots to swap their stacks; drag back to the bag to free a slot. All stacks, including those in the bar, can be used for crafting. Tap an item for details; hold still to toggle its favorite. Arrows change pages, including during a drag. Recipes are shown when you own at least one ingredient in the bag or bar; Available requires all ingredients, tools and stations. Tap a recipe for ingredients and crafting.</string>
+    <string name="cave_catalog_page">%1$d / %2$d · %3$d items</string>
+    <string name="cave_catalog_craft_quantity">×%1$d</string>
+    <string name="cave_catalog_craft_action">Craft %1$s batches</string>
+    <string name="cave_catalog_favorite_added">Added to favorites</string>
+    <string name="cave_catalog_favorite_removed">Removed from favorites</string>
+    <string name="cave_catalog_recipe_hint">Recipes using at least one ingredient you own</string>
+    <string name="cave_catalog_no_known_recipe">No matching recipe uses an ingredient in your inventory yet.</string>
+    <string name="cave_inventory_empty_bag">Bag empty · drop a stack anywhere here</string>
+    <string name="cave_inventory_moved_bag">%1$s moved to the bag</string>
+    <string name="cave_inventory_moved_bar">%1$s moved to slot %2$d</string>
+</resources>

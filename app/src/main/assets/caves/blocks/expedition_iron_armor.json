@@ -1,0 +1,12 @@
+{
+  "id": 9911,
+  "name": "expedition_iron_armor",
+  "texture_top": "expedition:9911:top",
+  "texture_side": "expedition:9911:side",
+  "texture_bottom": "expedition:9911:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_iron_armor",
+  "creative_tab": "resources",
+  "placeable": false
+}

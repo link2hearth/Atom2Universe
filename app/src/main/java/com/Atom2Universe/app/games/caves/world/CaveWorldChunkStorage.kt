@@ -1,151 +1,56 @@
 package com.Atom2Universe.app.games.caves.world
 
 import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
 
-class CaveWorldChunkStorage(worldDir: File) {
-
-    private val diffsDir = File(worldDir, "chunks").also { it.mkdirs() }
-    private val executor = Executors.newSingleThreadExecutor()
-
-    // Cache mémoire blocs : clé "cx_cy_cz" → (localIndex → blockType)
-    private val cache     = ConcurrentHashMap<String, ConcurrentHashMap<Int, Short>>()
-    // Cache mémoire meta : clé "cx_cy_cz" → (localIndex → metaByte)
-    private val metaCache = ConcurrentHashMap<String, ConcurrentHashMap<Int, Byte>>()
-    private fun cacheKey(cx: Int, cy: Int, cz: Int) = "${cx}_${cy}_${cz}"
-    private fun diffFile(cx: Int, cy: Int, cz: Int) = File(diffsDir, "${cx}_${cy}_${cz}.diff")
-    private fun metaFile(cx: Int, cy: Int, cz: Int) = File(diffsDir, "${cx}_${cy}_${cz}.meta")
-
-    fun applyDiff(chunk: Chunk) {
-        val diff = loadDiff(chunk.cx, chunk.cy, chunk.cz) ?: return
-        diff.forEach { (idx, type) -> chunk.blocks[idx] = type }
+/** Edits are committed with the inventory. Legacy chunk files remain read-only migration sources. */
+class CaveWorldChunkStorage(private val worldDir: File) {
+    private val reader=CaveCheckpoint.Reader(worldDir)
+    private data class MutableEdit(val blocks: MutableMap<Int,Short>,val meta: MutableMap<Int,Byte>)
+    private val cache=object : LinkedHashMap<String,MutableEdit>(256,.75f,true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String,MutableEdit>?) =
+            size>2048 && eldest?.key !in dirty
     }
-
-    fun applyMetaDiff(chunk: Chunk) {
-        val diff = loadMetaDiff(chunk.cx, chunk.cy, chunk.cz) ?: return
-        diff.forEach { (idx, value) -> chunk.meta[idx] = value }
-    }
-
-    fun recordChange(cx: Int, cy: Int, cz: Int, localIndex: Int, type: Short) {
-        val k = cacheKey(cx, cy, cz)
-        cache.getOrPut(k) { ConcurrentHashMap() }[localIndex] = type
-        val snapshot = HashMap(cache[k]!!)
-        executor.execute { writeDiff(cx, cy, cz, snapshot) }
-    }
-
-    fun recordMetaChange(cx: Int, cy: Int, cz: Int, localIndex: Int, value: Byte) {
-        val k = cacheKey(cx, cy, cz)
-        metaCache.getOrPut(k) { ConcurrentHashMap() }[localIndex] = value
-        val snapshot = HashMap(metaCache[k]!!)
-        executor.execute { writeMetaDiff(cx, cy, cz, snapshot) }
-    }
-
-    private fun loadMetaDiff(cx: Int, cy: Int, cz: Int): Map<Int, Byte>? {
-        val k = cacheKey(cx, cy, cz)
-        metaCache[k]?.let { return it }
-        val f = metaFile(cx, cy, cz)
-        if (!f.exists()) return null
-        return runCatching {
-            val map = ConcurrentHashMap<Int, Byte>()
-            GZIPInputStream(f.inputStream().buffered()).use { gz ->
-                DataInputStream(gz).use { din ->
-                    val count = din.readUnsignedShort()
+    private val dirty=hashMapOf<String,Long>()
+    private var revision=0L
+    private fun key(cx: Int,cy: Int,cz: Int) = "${cx}_${cy}_${cz}"
+    private fun load(key: String): MutableEdit = cache.getOrPut(key) {
+        val saved=reader.chunk(key)
+        if(saved!=null) MutableEdit(saved.blocks.toMutableMap(),saved.meta.toMutableMap()) else {
+            val blocks=mutableMapOf<Int,Short>(); val meta=mutableMapOf<Int,Byte>()
+            for(extension in listOf("diff","meta")) {
+                val file=File(worldDir,"chunks/$key.$extension")
+                if(file.exists()) GZIPInputStream(file.inputStream().buffered()).use { gz -> DataInputStream(gz).use { input ->
+                    val count=input.readUnsignedShort();require(count<=4096)
                     repeat(count) {
-                        val idx   = din.readUnsignedShort()
-                        val value = din.readByte()
-                        map[idx] = value
+                        val index=input.readUnsignedShort();require(index<4096)
+                        if(extension=="diff") blocks[index]=input.readShort() else meta[index]=input.readByte()
                     }
-                }
+                } }
             }
-            metaCache[k] = map
-            map
-        }.getOrNull()
-    }
-
-    private fun writeMetaDiff(cx: Int, cy: Int, cz: Int, diff: Map<Int, Byte>) {
-        runCatching {
-            val target = metaFile(cx, cy, cz)
-            val temp = File(target.parentFile, "${target.name}.tmp")
-            temp.outputStream().buffered().use { os ->
-                GZIPOutputStream(os).use { gz ->
-                    DataOutputStream(gz).use { dout ->
-                        dout.writeShort(diff.size)
-                        diff.forEach { (idx, value) ->
-                            dout.writeShort(idx)
-                            dout.writeByte(value.toInt())
-                        }
-                    }
-                }
-            }
-            if (!temp.renameTo(target)) {
-                temp.copyTo(target, overwrite = true)
-                temp.delete()
-            }
+            MutableEdit(blocks,meta)
         }
     }
-
-    private fun loadDiff(cx: Int, cy: Int, cz: Int): Map<Int, Short>? {
-        val k = cacheKey(cx, cy, cz)
-        cache[k]?.let { return it }
-
-        val f = diffFile(cx, cy, cz)
-        if (!f.exists()) return null
-
-        return runCatching {
-            val map = ConcurrentHashMap<Int, Short>()
-            GZIPInputStream(f.inputStream().buffered()).use { gz ->
-                DataInputStream(gz).use { din ->
-                    val count = din.readUnsignedShort()
-                    repeat(count) {
-                        val idx  = din.readUnsignedShort()
-                        val type = din.readShort()
-                        map[idx] = type
-                    }
-                }
-            }
-            cache[k] = map
-            map
-        }.getOrNull()
+    @Synchronized fun applyDiff(chunk: Chunk) { load(key(chunk.cx,chunk.cy,chunk.cz)).blocks.forEach { (i,v)->chunk.blocks[i]=v } }
+    @Synchronized fun applyMetaDiff(chunk: Chunk) { load(key(chunk.cx,chunk.cy,chunk.cz)).meta.forEach { (i,v)->chunk.meta[i]=v } }
+    @Synchronized fun recordChange(cx: Int,cy: Int,cz: Int,localIndex: Int,type: Short) {
+        val k=key(cx,cy,cz);load(k).blocks[localIndex]=type;dirty[k]=++revision
     }
-
-    private fun writeDiff(cx: Int, cy: Int, cz: Int, diff: Map<Int, Short>) {
-        runCatching {
-            val target = diffFile(cx, cy, cz)
-            val temp = File(target.parentFile, "${target.name}.tmp")
-            temp.outputStream().buffered().use { os ->
-                GZIPOutputStream(os).use { gz ->
-                    DataOutputStream(gz).use { dout ->
-                        dout.writeShort(diff.size)
-                        diff.forEach { (idx, type) ->
-                            dout.writeShort(idx)
-                            dout.writeShort(type.toInt())
-                        }
-                    }
-                }
-            }
-            if (!temp.renameTo(target)) {
-                temp.copyTo(target, overwrite = true)
-                temp.delete()
-            }
+    @Synchronized fun recordMetaChange(cx: Int,cy: Int,cz: Int,localIndex: Int,value: Byte) {
+        val k=key(cx,cy,cz);load(k).meta[localIndex]=value;dirty[k]=++revision
+    }
+    // Keep changes until a committed snapshot acknowledges this precise revision.
+    @Synchronized internal fun snapshot(): Map<String,CaveCheckpoint.Edit> = dirty.mapValues { (k,v) ->
+        val e=cache.getValue(k);CaveCheckpoint.Edit(e.blocks.toMap(),e.meta.toMap(),v)
+    }
+    @Synchronized internal fun acknowledge(changes: Map<String,CaveCheckpoint.Edit>) {
+        for((key,edit) in changes) if(dirty[key]==edit.revision) dirty.remove(key)
+        if(cache.size>2048) {
+            val entries=cache.iterator()
+            while(entries.hasNext() && cache.size>2048) if(entries.next().key !in dirty) entries.remove()
         }
     }
-
-    /** Attend les écritures déjà demandées avant de laisser le monde se fermer. */
-    fun flush() {
-        runCatching { executor.submit {}.get() }
-    }
-
-    fun shutdown() {
-        flush()
-        executor.shutdown()
-        runCatching {
-            if (!executor.awaitTermination(3, TimeUnit.SECONDS)) executor.shutdownNow()
-        }
-    }
+    fun flush() = Unit
+    @Synchronized fun shutdown() { reader.close() }
 }

@@ -694,7 +694,7 @@
     <string name="cave_block_desc_hoe">Use on top of clear soil to till it. Does not wear out.</string>
     <string name="cave_ui_garden">Gardening</string>
     <string name="cave_farm_seed_name">Seeds · %1$s</string>
-    <string name="cave_farm_seed_hint">Plant on clear farmland. Ready after %1$d minutes spent in this world. No water needed. Harvesting returns seeds.</string>
+    <string name="cave_farm_seed_hint">Plant on clear farmland. About %1$d minutes with light and water within 4 blocks. Dry soil grows more slowly; darkness pauses growth. Only nearby crops grow. Harvesting returns seeds.</string>
     <string name="cave_farm_produce_hint">Harvested food. Use to restore 3 health points. Select Gardening and use a mature plant to harvest it.</string>
     <string name="cave_farm_not_ready">This plant is still growing.</string>
     <string name="cave_farm_plant_hint">Plant on farmland with two empty blocks above the planting space.</string>

@@ -1,0 +1,23 @@
+{
+  "ingredients": [
+    {
+      "id": 9920,
+      "count": 2
+    },
+    {
+      "id": 9921,
+      "count": 2
+    },
+    {
+      "id": 9922,
+      "count": 1
+    },
+    {
+      "id": 9855,
+      "count": 2
+    }
+  ],
+  "result_item": "lever_rifle",
+  "result_count": 1,
+  "station": 9891
+}

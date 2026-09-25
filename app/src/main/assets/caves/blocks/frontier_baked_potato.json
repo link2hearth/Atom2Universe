@@ -1,0 +1,17 @@
+{
+  "id": 9814,
+  "name": "frontier_baked_potato",
+  "texture_top": "frontier:9814:top",
+  "texture_side": "frontier:9814:side",
+  "texture_bottom": "frontier:9814:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_baked_potato",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

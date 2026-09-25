@@ -50,8 +50,8 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     // ── Hotbar ────────────────────────────────────────────────────────────────
 
-    fun buildHotbarUI(container: LinearLayout, modeButton: Button? = null) {
-        val sideButtonsWidth = 54 + if (modeButton != null) 54 else 0
+    fun buildHotbarUI(container: LinearLayout) {
+        val sideButtonsWidth = 54
         val fixedWidth = sideButtonsWidth + 10 + CaveActivity.ACTIVE_SIZE * 4
         val sz = (((res.displayMetrics.widthPixels / dp - 16 - fixedWidth) / CaveActivity.ACTIVE_SIZE)
             .coerceIn(24f, 52f) * dp).toInt()
@@ -59,12 +59,6 @@ internal class CaveHud(private val activity: CaveActivity) {
         container.background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
         container.setPadding((5*dp).toInt(), (3*dp).toInt(), (5*dp).toInt(), (3*dp).toInt())
         quickbarWidth = CaveActivity.ACTIVE_SIZE * sz + (fixedWidth * dp).toInt()
-        modeButton?.let { button ->
-            button.layoutParams = LinearLayout.LayoutParams((48*dp).toInt(), (48*dp).toInt()).also {
-                it.marginEnd = (6*dp).toInt()
-            }
-            container.addView(button)
-        }
         container.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             vitals?.layoutParams = vitals?.layoutParams?.also { it.width = (container.width - 22*dp).toInt().coerceAtLeast(1) }
         }
@@ -125,7 +119,7 @@ internal class CaveHud(private val activity: CaveActivity) {
             slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
             // Les armes n'empilent pas → pas de compteur
-            slotCounts[i]?.text = if (eff != null && !isWeapon) count.toString() else ""
+            slotCounts[i]?.text = if (eff != null && !isWeapon) CaveUiStyle.count(activity,count) else ""
         }
 
         // Arme en main : affiché uniquement si le slot sélectionné contient une arme
@@ -149,6 +143,7 @@ internal class CaveHud(private val activity: CaveActivity) {
     // ── Hotbar highlighting pendant l'inventaire ──────────────────────────────
 
     fun updateHotbarForInventory() {
+        updateActiveBarOverlay()
         val inv = activity.invManager
         val base = inv.hotbarBase()
         for (i in 0 until CaveActivity.ACTIVE_SIZE) {
@@ -165,14 +160,15 @@ internal class CaveHud(private val activity: CaveActivity) {
             }
             slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(android.graphics.Color.TRANSPARENT); cornerRadius = 3 * dp }
-            slotCounts[i]?.text = if (eff != null) count.toString() else ""
+            slotCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
         }
     }
 
-    // ── Overlay active bar (conservé pour compatibilité, non utilisé) ─────────
+    // Same inventory slots, rendered inside the overlay so native drops reach them.
 
     fun buildOverlayActiveBar(container: LinearLayout) {
         val inv = activity.invManager
+        container.removeAllViews()
         repeat(CaveActivity.ACTIVE_SIZE) { i ->
             val frame = FrameLayout(activity).apply {
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
@@ -180,8 +176,8 @@ internal class CaveHud(private val activity: CaveActivity) {
                 background = overlaySlotDrawable(false)
             }
             val colorDot = View(activity).apply {
-                layoutParams = FrameLayout.LayoutParams((40 * dp).toInt(), (40 * dp).toInt())
-                    .also { it.gravity = Gravity.CENTER }
+                layoutParams = FrameLayout.LayoutParams(-1,-1)
+                    .also { it.setMargins((4*dp).toInt(),(4*dp).toInt(),(4*dp).toInt(),(12*dp).toInt()) }
                 background = GradientDrawable().apply { setColor(Color.TRANSPARENT) }
             }
             val countTv = TextView(activity).apply {
@@ -196,8 +192,7 @@ internal class CaveHud(private val activity: CaveActivity) {
             overlayActiveFrames[i] = frame
             overlayActiveColors[i] = colorDot
             overlayActiveCounts[i] = countTv
-            frame.setOnClickListener { inv.onOverlayActiveSlotClick(i) }
-            frame.setOnLongClickListener { inv.startSlotDrag(it, inv.hotbarBase() + i); true }
+            inv.bindBarGestures(frame,i)
             frame.setOnDragListener(inv.makeSlotDragListener { inv.hotbarBase() + i })
         }
     }
@@ -213,9 +208,11 @@ internal class CaveHud(private val activity: CaveActivity) {
             val isSel    = invIdx == inv.selectedSlotIdx
             val isCursor = inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
             overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel, isCursor)
+            overlayActiveFrames[i]?.contentDescription=activity.getString(R.string.cave_ui_shortcut_description,i+1,
+                eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
             overlayActiveColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
-            overlayActiveCounts[i]?.text = if (eff != null) count.toString() else ""
+            overlayActiveCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
         }
     }
 

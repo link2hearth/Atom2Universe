@@ -9,7 +9,7 @@ internal object FarmItems {
     fun produce(crop: Int): Short = (9700 + crop).toShort()
     fun seedCrop(id: Short) = (id.toInt() - 9600).takeIf { it in crops.indices }
     fun produceCrop(id: Short) = (id.toInt() - 9700).takeIf { it in crops.indices }
-    fun isItem(id: Short) = id == FarmSoil.HOE || seedCrop(id) != null || produceCrop(id) != null
+    fun isItem(id: Short) = id == FarmSoil.HOE || FrontierItems.isGardenItem(id) || ExpeditionItems.isGardenItem(id) || seedCrop(id) != null || produceCrop(id) != null
     fun durationMs(crop: Int): Long = when (crops[crop]) {
         FarmCrop.RADISH, FarmCrop.LETTUCE -> 240_000L
         FarmCrop.CORN, FarmCrop.PINEAPPLE -> 720_000L

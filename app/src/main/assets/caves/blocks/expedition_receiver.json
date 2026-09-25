@@ -1,0 +1,12 @@
+{
+  "id": 9921,
+  "name": "expedition_receiver",
+  "texture_top": "expedition:9921:top",
+  "texture_side": "expedition:9921:side",
+  "texture_bottom": "expedition:9921:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_receiver",
+  "creative_tab": "resources",
+  "placeable": false
+}

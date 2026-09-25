@@ -25,7 +25,19 @@ internal object NaturalTerrainSettings {
 }
 
 /** A single surface with branching, world-coordinate cave networks. */
-internal class NaturalTerrain(private val seed: Long, private val profiles: List<NaturalBiomeProfile> = NaturalTerrainSettings.profiles) {
+internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiomeProfile> = NaturalTerrainSettings.profiles, frontier: Boolean = false) {
+    // Preserve v3/v4 seeds exactly; v5 gives climates distinct silhouettes and broader rare woods.
+    private val profiles = if (!frontier) profiles else profiles.map { p ->
+        when(p.id) {
+            "desert" -> p.copy(base=16.0, amplitude=65.0)
+            "savanna" -> p.copy(base=18.0, amplitude=100.0)
+            "dark_forest" -> p.copy(base=25.0, amplitude=95.0)
+            "jungle" -> p.copy(base=16.0, amplitude=115.0)
+            "wetlands" -> p.copy(base=2.0, amplitude=18.0, rarity=0.0)
+            "taiga", "snowy_taiga" -> p.copy(base=25.0, amplitude=125.0)
+            else -> if(p.id.startsWith("magic_forest")) p.copy(amplitude=75.0, rarity=.025) else p
+        }
+    }
     companion object {
         const val SEA_LEVEL = 74; const val SURFACE_MAX_CY = 255
         private const val LAKE_CELL = 384.0; private const val POND_CELL = 112.0

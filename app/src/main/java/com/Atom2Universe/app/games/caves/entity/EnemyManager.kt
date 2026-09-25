@@ -46,6 +46,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         set(v) { player?.onShieldChanged = v }
 
     var isCreative = false
+    var explorationCombat = false
+    var meleeImpact: ((Enemy,Float,Float)->Unit)? = null
+    var rangedImpact: ((Enemy,Double,Double,Double)->Unit)? = null
+    var clearSight: ((Double,Double,Double,Double,Double,Double)->Boolean)? = null
 
     // Fournit les dégâts thorns de l'arme équipée (0 si pas d'épines)
     var thornsProvider: (() -> Int)? = null
@@ -134,7 +138,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         applyMobKnockback(e, dt)
 
         // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
-        if (e.freezeTimer > 0f) { e.freezeTimer -= dt; return }
+        if (e.freezeTimer > 0f) { e.freezeTimer -= dt;e.attackWindup=0f; return }
+        if(e.staggerTimer>0f) { e.staggerTimer=(e.staggerTimer-dt).coerceAtLeast(0f);e.attackWindup=0f }
 
         WaterCurrent.sample(world, e.x, e.y + 0.25, e.z, current)
         val inWater = current[3] > 0.0
@@ -154,11 +159,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         // Distance de garde souhaitée au centre du joueur : tient compte du rayon
         // du mob pour que son corps n'entre pas dans la caméra en vue FPS.
-        val keep = keepDist(e)
+        val archer=explorationCombat && e.def.id=="skeleton" && dist>4.0
+        val keep = if(archer) 9.0 else keepDist(e)
+        val sight= !explorationCombat || clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
+        val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f)
 
         val prevState = e.state
         e.state = when (e.state) {
-            EnemyState.WANDER -> if (dist3d < e.def.detectRange) EnemyState.CHASE else EnemyState.WANDER
+            EnemyState.WANDER -> if (dist3d < e.def.detectRange && sight) EnemyState.CHASE else EnemyState.WANDER
             EnemyState.CHASE  -> when {
                 dist3d <= keep + ATTACK_REACH    -> EnemyState.ATTACK
                 dist3d > e.def.detectRange * 2.0 -> { e.alertPlayed = false; EnemyState.WANDER }
@@ -171,7 +179,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobNearby(e.isBoss))
         }
 
-        val spd = e.scaledSpeed.toDouble() * dt * if (inWater) 0.45 else 1.0
+        val spd = e.scaledSpeed.toDouble() * dt * if(preparing) 0.0 else if (inWater) 0.45 else 1.0
         when (e.state) {
             EnemyState.WANDER -> {
                 e.stuckTimer = 0f
@@ -215,6 +223,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             }
         }
 
+        if(explorationCombat && e.attackWindup>0f) e.yaw=e.windupYaw
+
         // Attaque : découplée de l'état de déplacement. Dès que le mob est à portée,
         // le cooldown tourne et il frappe — la séparation entre mobs ne l'empêche plus.
         e.attackCooldown -= dt
@@ -236,6 +246,29 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                     ally.hp = (ally.hp - e.scaledDamage).coerceAtLeast(0)
                     ally.hitFlash = 0.15f
                     if (ally.state == EnemyState.WANDER) ally.state = EnemyState.CHASE
+                }
+            }
+        } else if(explorationCombat) {
+            if(e.staggerTimer==0f && e.hp>0) {
+                if(e.attackWindup>0f) {
+                    e.attackWindup=(e.attackWindup-dt).coerceAtLeast(0f)
+                    e.strikeTime=.4f
+                    if(e.attackWindup==0f) {
+                        e.attackCooldown=if(archer) 2.2f else if(e.def.radius>.65f) 1.5f else 1.05f
+                        e.strikeTime=.55f
+                        val facing=if(dist>.01) (sin(Math.toRadians(e.windupYaw.toDouble()))*dx+cos(Math.toRadians(e.windupYaw.toDouble()))*dz)/dist else 1.0
+                        if(sight && facing>.65) {
+                            if(archer && dist<17) rangedImpact?.invoke(e,px,py-.25,pz)
+                            else if(dist3d<=keepDist(e)+ATTACK_REACH && playerInvTimer<=0f) {
+                                playerInvTimer=.5f
+                                meleeImpact?.invoke(e,(dx/dist.coerceAtLeast(.001)).toFloat(),(dz/dist.coerceAtLeast(.001)).toFloat())
+                            }
+                        }
+                    }
+                } else if(e.attackCooldown<=0f && sight && (archer && dist<16 || !archer && dist3d<=keep+ATTACK_REACH)) {
+                    e.attackWindup=if(archer) .8f else if(e.def.radius>.65f) .75f else .48f
+                    e.windupYaw=atan2(dx,dz).toFloat()*180f/PI.toFloat()
+                    e.strikeTime=.4f
                 }
             }
         } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {

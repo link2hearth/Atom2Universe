@@ -19,12 +19,15 @@ internal class SpawnManager(
     var worldSpawnY: Double = 0.0
     var worldSpawnZ: Double = 0.0
     var eventBus: EventBus? = null
+    var exploration = false
+    var lightAt: ((Int, Int, Int) -> Int)? = null
 
     private val rng          = Random(seed xor -0x4E94FF4A4E94FF4BL)
     private var nextId       = 0
     private var bossEnemyId  = -1
     private var bossRewardGiven = false
     private var spawnCooldown = SPAWN_INTERVAL
+    fun resetAfterTravel() { bossEnemyId=-1;bossRewardGiven=false;spawnCooldown=SPAWN_INTERVAL }
 
     private data class SpawnBlock(
         val x: Double,
@@ -55,7 +58,16 @@ internal class SpawnManager(
     }
 
     private fun rollMobForSpawn(zone: Int, biome: String): MobDef {
-        val eligible = MobRegistry.allEligibleFor(biome, zone)
+        val eligible = MobRegistry.allEligibleFor(biome, zone).filter { def ->
+            !exploration || when(def.id) {
+                "mummy" -> biome in setOf("desert", "sandstone", "savanna")
+                "imp", "golem" -> biome in setOf("volcanic", "lava", "basalt") || zone >= 4
+                "wraith" -> biome.startsWith("magic") || zone >= 3
+                "ogre", "troll" -> biome in setOf("dark_forest", "jungle") || zone >= 3
+                "dwarf" -> zone >= 2
+                else -> true
+            }
+        }
         if (eligible.isEmpty()) return mobForZone(zone, biome)
         // Tirage pondéré : petits mobs (poids élevé) fréquents, gros (poids faible) rares.
         val totalWeight = eligible.sumOf { it.spawnWeight.toDouble() }
@@ -101,16 +113,17 @@ internal class SpawnManager(
 
         val origin = availableBlocks[rng.nextInt(availableBlocks.size)]
         val def = rollMobForSpawn(origin.zone, origin.biome)
-        val spawnBoss = bossEnemyId == -1 && def.bossEligible && rng.nextFloat() < BOSS_CHANCE
+        val spawnBoss = (!exploration || origin.zone >= 4) && bossEnemyId == -1 && def.bossEligible && rng.nextFloat() < BOSS_CHANCE
         val packSize = if (spawnBoss) 1 else rollPackSize().coerceAtMost(spawnSlots)
 
         val selected = dispersePack(origin, availableBlocks, packSize)
         for ((index, block) in selected.withIndex()) {
             val e = Enemy(nextId++, def, block.x, block.y, block.z)
+            e.exploration=exploration
             e.level       = block.zone
             e.isBoss      = spawnBoss && index == 0
             e.hp          = e.maxHp
-            e.state       = EnemyState.CHASE
+            e.state       = if (exploration) EnemyState.WANDER else EnemyState.CHASE
 
             if (e.isBoss) {
                 bossEnemyId = e.id; bossRewardGiven = false
@@ -143,6 +156,7 @@ internal class SpawnManager(
 
             val sy = findSpawnGround(sx, sz, py) ?: return@repeat
             if (!hasSpawnHeadroom(sx, sy, sz)) return@repeat
+            if (exploration && (lightAt?.invoke(floor(sx).toInt(), floor(sy).toInt(), floor(sz).toInt()) ?: 15) > 7) return@repeat
 
             val biome = biomeAt(sx, sy, sz)
             val zone  = computeLevel(sx, sy, sz).coerceAtLeast(1)
@@ -178,8 +192,11 @@ internal class SpawnManager(
         val bz = Math.floor(sz).toInt()
         val startY = (nearY + 20.0).toInt()
         for (by in startY downTo startY - 120) {
+            if (world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by+2,16),Math.floorDiv(bz,16))?.generated != true ||
+                world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by,16),Math.floorDiv(bz,16))?.generated != true) continue
             val b = world.blockAt(bx, by, bz)
-            if (b == AIR || isWater(b) || isDecoration(b)) continue
+            if (b == AIR || isWater(b) || isDecoration(b) || isLeaf(b) ||
+                com.Atom2Universe.app.games.caves.node.BlockRegistry.isPartial(b)) continue
             val a1 = world.blockAt(bx, by + 1, bz)
             val a2 = world.blockAt(bx, by + 2, bz)
             if (a1 == AIR && a2 == AIR) return (by + 1).toDouble()
@@ -213,7 +230,7 @@ internal class SpawnManager(
     }
 
     private fun isInSafeZone(px: Double, pz: Double): Boolean {
-        if (distFromSpawnChunks(px, pz) < SAFE_ZONE_CHUNKS) return true
+        if (distFromSpawnChunks(px, pz) < if(exploration) 1.0 else SAFE_ZONE_CHUNKS) return true
         return wardStoneZones.any { (wx, wz) ->
             val dX = (px - wx) / CHUNK_SIZE; val dZ = (pz - wz) / CHUNK_SIZE
             sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
@@ -221,7 +238,7 @@ internal class SpawnManager(
     }
 
     private fun canSpawnAt(sx: Double, sz: Double): Boolean {
-        if (distFromSpawnChunks(sx, sz) < SAFE_ZONE_CHUNKS) return false
+        if (distFromSpawnChunks(sx, sz) < if(exploration) 1.0 else SAFE_ZONE_CHUNKS) return false
         return wardStoneZones.none { (wx, wz) ->
             val dX = (sx - wx) / CHUNK_SIZE; val dZ = (sz - wz) / CHUNK_SIZE
             sqrt(dX * dX + dZ * dZ) < WARD_SAFE_RADIUS
@@ -235,6 +252,12 @@ internal class SpawnManager(
     }
 
     fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int {
+        if(exploration) {
+            val depth=(world.surfaceHeight(blockX,blockZ)-blockY).coerceAtLeast(0.0)
+            val biome=biomeAt(blockX,blockY,blockZ)
+            val danger=if(biome in setOf("volcanic","dark_forest","jungle") || biome.startsWith("magic")) 1 else 0
+            return (1+(depth/48).toInt()+danger).coerceIn(1,6)
+        }
         val dX = (blockX - worldSpawnX) / CHUNK_SIZE
         val dY = (blockY - worldSpawnY) / CHUNK_SIZE
         val dZ = (blockZ - worldSpawnZ) / CHUNK_SIZE

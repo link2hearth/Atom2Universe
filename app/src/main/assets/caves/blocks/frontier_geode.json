@@ -1,0 +1,17 @@
+{
+  "id": 9860,
+  "name": "frontier_geode",
+  "texture_top": "frontier:9860:top",
+  "texture_side": "frontier:9860:side",
+  "texture_bottom": "frontier:9860:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_geode",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

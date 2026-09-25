@@ -21,6 +21,13 @@ internal class Enemy(
     /** Aspect de la faune, indépendant du niveau et conservé dans la sauvegarde. */
     var young = false
     var coat = 0
+    var domestic = false
+    var growth = 600f
+    var affection = 0f
+    var breedRest = 0f
+    var mealRest = 0f
+    /** -1: needs feeding, 0: product ready, positive: production in progress. */
+    var productTime = -1f
     /** Seconds remaining in the shared rifle recoil animation. */
     var shotRecoil = 0f
     var heldWeaponType: String? = null
@@ -32,11 +39,15 @@ internal class Enemy(
     var weaponReload = 0f
     /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
     var strikeTime = 0f
+    var attackWindup = 0f
+    var windupYaw = 0f
+    var staggerTimer = 0f
+    var exploration = false
     var walkPhase = 0f
     var motionBlend = 0f
 
     // HP = hpBase × level² : linéaire au carré, sans cap, calibré à ~500 HP à level 10 (hpBase=5)
-    private fun scaledHp(): Int = (def.hpBase.toLong() * level * level).toInt().coerceAtLeast(1)
+    private fun scaledHp(): Int = (def.hpBase.toLong() * if(exploration) (2 + (level-1)*2) else level * level).toInt().coerceAtLeast(1)
     val maxHp get() = if (isBoss) scaledHp() * BOSS_HP_MULT else scaledHp()
     val scaledDamage get() = (if (isBoss) def.damageBase * 3 else def.damageBase) + (level - 1) / 3
     val scaledSpeed get() = def.speed * (1f + (level - 1) * def.speedScalePerLevel).coerceAtMost(if (isBoss) 2.0f else 3.0f)

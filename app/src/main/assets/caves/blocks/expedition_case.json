@@ -1,0 +1,12 @@
+{
+  "id": 9923,
+  "name": "expedition_case",
+  "texture_top": "expedition:9923:top",
+  "texture_side": "expedition:9923:side",
+  "texture_bottom": "expedition:9923:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_case",
+  "creative_tab": "resources",
+  "placeable": false
+}

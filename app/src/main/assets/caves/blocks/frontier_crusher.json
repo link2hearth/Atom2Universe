@@ -1,0 +1,17 @@
+{
+  "id": 9841,
+  "name": "frontier_crusher",
+  "texture_top": "frontier:9841:top",
+  "texture_side": "frontier:9841:side",
+  "texture_bottom": "frontier:9841:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_crusher",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

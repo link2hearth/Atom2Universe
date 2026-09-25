@@ -1,0 +1,17 @@
+{
+  "id": 9851,
+  "name": "frontier_milk",
+  "texture_top": "frontier:9851:top",
+  "texture_side": "frontier:9851:side",
+  "texture_bottom": "frontier:9851:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_milk",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

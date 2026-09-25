@@ -9,6 +9,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.Atom2Universe.app.games.caves.world.CaveCheckpoint
 
 internal data class StuckAmmo(val x: Double,val y: Double,val z: Double,
     val vx: Double,val vy: Double,val vz: Double,val ammoId: Short)
@@ -26,9 +27,11 @@ internal data class CaveWorldSave(
     var playerPitch: Float,
     var inventory: Map<Short, Int>,
     var hotbar: List<Short?>,
-    var buildHotbar: List<Short?> = emptyList(),
-    var gardenHotbar: List<Short?> = emptyList(),
     var farming: String = "{}",
+    var workshops: String = "{}",
+    var worldTimeMs: Long = 400_000L,
+    var frontierLife: String = "{}",
+    var chunkChanges: Map<String,CaveCheckpoint.Edit> = emptyMap(),
     // Progression joueur
     var playerHp: Int = 20,
     var playerLevel: Int = 1,
@@ -50,7 +53,7 @@ internal data class CaveWorldSave(
     var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
     var passiveAnimals: String = "[]",
-    val terrainVersion: Int = 4
+    val terrainVersion: Int = 5
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -67,10 +70,11 @@ internal object CaveWorldSaveManager {
         File(savesDir(context), "$id.json")
 
     fun listWorlds(context: Context): List<CaveWorldSave> =
-        savesDir(context).listFiles { f -> f.extension == "json" }
-            ?.mapNotNull { file -> runCatching { fromJson(JSONObject(file.readText())) }.getOrNull() }
-            ?.sortedByDescending { it.lastPlayedAt }
-            ?: emptyList()
+        savesDir(context).listFiles().orEmpty().mapNotNull { file ->
+            when { file.extension=="json" -> file.nameWithoutExtension
+                file.isDirectory && File(file,"checkpoint.db").exists() -> file.name
+                else -> null }
+        }.distinct().mapNotNull { loadWorld(context,it) }.sortedByDescending { it.lastPlayedAt }
 
     fun createWorld(context: Context, name: String, seed: Long, isCreative: Boolean = false): CaveWorldSave {
         val id = "${System.currentTimeMillis()}_${(1000..9999).random()}"
@@ -81,7 +85,7 @@ internal object CaveWorldSaveManager {
             playerX = 0.0, playerY = 0.0, playerZ = 0.0,
             playerYaw = 0f, playerPitch = 0f,
             inventory = emptyMap(),
-            hotbar = List(19) { null }
+            hotbar = List(CaveActivity.ACTIVE_SIZE) { null }
         )
         persist(context, save)
         return save
@@ -89,8 +93,9 @@ internal object CaveWorldSaveManager {
 
     fun updateWorld(context: Context, save: CaveWorldSave) = persist(context, save)
 
-    fun updateFields(context: Context, snap: CaveWorldSave) {
-        val existing = loadWorld(context, snap.id) ?: return
+    @Synchronized fun updateFields(context: Context, snap: CaveWorldSave): Boolean {
+        val existing = checkNotNull(loadWorld(context, snap.id)) { "World checkpoint unavailable" }
+        if (existing.lastPlayedAt > snap.lastPlayedAt) return false
         existing.lastPlayedAt        = snap.lastPlayedAt
         existing.playerX             = snap.playerX
         existing.playerY             = snap.playerY
@@ -99,9 +104,11 @@ internal object CaveWorldSaveManager {
         existing.playerPitch         = snap.playerPitch
         existing.inventory           = snap.inventory
         existing.hotbar              = snap.hotbar
-        existing.buildHotbar         = snap.buildHotbar
-        existing.gardenHotbar = snap.gardenHotbar
         existing.farming = snap.farming
+        existing.workshops = snap.workshops
+        existing.worldTimeMs = snap.worldTimeMs
+        existing.frontierLife = snap.frontierLife
+        existing.chunkChanges = snap.chunkChanges
         existing.playerHp            = snap.playerHp
         existing.playerLevel         = snap.playerLevel
         existing.playerXp            = snap.playerXp
@@ -121,6 +128,7 @@ internal object CaveWorldSaveManager {
         existing.recoverableAmmo = snap.recoverableAmmo
         existing.passiveAnimals = snap.passiveAnimals
         persist(context, existing)
+        return true
     }
 
     fun deleteWorld(context: Context, id: String) {
@@ -128,11 +136,13 @@ internal object CaveWorldSaveManager {
         File(context.filesDir, "cave_worlds/$id").deleteRecursively()
     }
 
-    fun loadWorld(context: Context, id: String): CaveWorldSave? =
-        runCatching { fromJson(JSONObject(saveFile(context, id).readText())) }.getOrNull()
+    @Synchronized fun loadWorld(context: Context, id: String): CaveWorldSave? =
+        runCatching { fromJson(JSONObject(CaveCheckpoint.metadata(File(context.filesDir,"cave_worlds/$id"))
+            ?: android.util.AtomicFile(saveFile(context,id)).readFully().toString(Charsets.UTF_8))) }.getOrNull()
 
-    private fun persist(context: Context, save: CaveWorldSave) {
+    @Synchronized private fun persist(context: Context, save: CaveWorldSave) {
         val json = JSONObject().apply {
+            put("itemSchema",1)
             put("id", save.id)
             put("name", save.name)
             put("seed", save.seed)
@@ -151,11 +161,11 @@ internal object CaveWorldSaveManager {
             val hotbarArr = JSONArray()
             save.hotbar.forEach { v -> hotbarArr.put(v?.toInt() ?: -1) }
             put("hotbar", hotbarArr)
-            val buildHotbarArr = JSONArray()
-            save.buildHotbar.forEach { v -> buildHotbarArr.put(v?.toInt() ?: -1) }
-            put("buildHotbar", buildHotbarArr)
-            put("gardenHotbar", JSONArray().also { a -> save.gardenHotbar.forEach { a.put(it?.toInt() ?: -1) } })
+
             put("farming", save.farming)
+            put("workshops", save.workshops)
+            put("worldTimeMs", save.worldTimeMs)
+            put("frontierLife", save.frontierLife)
             put("playerHp", save.playerHp)
             put("playerLevel", save.playerLevel)
             put("playerXp", save.playerXp)
@@ -198,10 +208,42 @@ internal object CaveWorldSaveManager {
                 }) }
             })
         }
-        saveFile(context, save.id).writeText(json.toString())
+        CaveCheckpoint.commit(File(context.filesDir,"cave_worlds/${save.id}"),json.toString(),save.chunkChanges)
+        // Compatibility mirror only: the database is authoritative and world listing also
+        // discovers database directories if a crash interrupts this optional mirror write.
+        runCatching {
+            val file=android.util.AtomicFile(saveFile(context,save.id))
+            val output=file.startWrite()
+            try { output.write(json.toString().toByteArray(Charsets.UTF_8));file.finishWrite(output) }
+            catch(error: Exception) { file.failWrite(output);throw error }
+        }.onFailure { android.util.Log.w("CaveSave","Checkpoint committed; metadata mirror unavailable",it) }
     }
 
     private fun fromJson(j: JSONObject): CaveWorldSave {
+        // Old static buckets overlapped weapon instance IDs. Known weapons keep their IDs;
+        // only unambiguous bucket stacks and references move below the weapon range.
+        if(j.optInt("itemSchema",0)<1) {
+            val weaponIds=j.optJSONObject("weaponInstances") ?: JSONObject()
+            fun migrateItems(items: JSONObject?) {
+                items ?: return
+                for(old in 10000..10001) {
+                    val key=old.toString();val count=items.optInt(key,0)
+                    if(count<=0 || weaponIds.has(key)) continue
+                    val newKey=(old-10).toString()
+                    items.put(newKey,(items.optLong(newKey,0)+count).coerceAtMost(Int.MAX_VALUE.toLong()))
+                    items.remove(key)
+                }
+            }
+            migrateItems(j.optJSONObject("inventory"))
+            for(key in listOf("hotbar","buildHotbar","gardenHotbar")) j.optJSONArray(key)?.let { arr ->
+                for(i in 0 until arr.length()) { val old=arr.optInt(i,-1)
+                    if(old in 10000..10001 && !weaponIds.has(old.toString())) arr.put(i,old-10)
+                }
+            }
+            val workshops=runCatching { JSONObject(j.optString("workshops","{}")) }.getOrElse { JSONObject() }
+            workshops.optJSONArray("stores")?.let { rows -> for(i in 0 until rows.length()) migrateItems(rows.optJSONObject(i)?.optJSONObject("items")) }
+            j.put("workshops",workshops.toString())
+        }
         val invJson = j.optJSONObject("inventory") ?: JSONObject()
         val inventory = mutableMapOf<Short, Int>()
         invJson.keys().forEach { k -> inventory[k.toShort()] = invJson.getInt(k) }
@@ -257,10 +299,12 @@ internal object CaveWorldSaveManager {
             playerYaw = j.getDouble("playerYaw").toFloat(),
             playerPitch = j.getDouble("playerPitch").toFloat(),
             inventory = inventory,
-            hotbar = hotbar,
-            buildHotbar = buildHotbar,
-            gardenHotbar = j.optJSONArray("gardenHotbar")?.let { a -> (0 until a.length()).map { a.optInt(it, -1).takeIf { id -> id >= 0 }?.toShort() } } ?: emptyList(),
+            hotbar = CaveHotbar.restore(hotbar,buildHotbar,
+                j.optJSONArray("gardenHotbar")?.let { a -> (0 until a.length()).map { a.optInt(it,-1).takeIf { id -> id>=0 }?.toShort() } }.orEmpty(),if(j.optBoolean("isCreative",false)) null else inventory),
             farming = j.optString("farming", "{}"),
+            workshops = j.optString("workshops", "{}"),
+            worldTimeMs = j.optLong("worldTimeMs", 400_000L).coerceAtLeast(0L),
+            frontierLife = j.optString("frontierLife", "{}"),
             playerHp = j.optInt("playerHp", 20),
             playerLevel = j.optInt("playerLevel", 1),
             playerXp = j.optInt("playerXp", 0),

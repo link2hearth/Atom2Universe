@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_fishing_control">Garde le poisson dans ta zone. Maintiens Action pour monter, relâche pour descendre.</string>
+    <string name="cave_fishing_reel">Ramène ta prise</string>
+    <string name="cave_fishing_gauge_hint">Maintiens ↑  ·  relâche ↓</string>
+    <string name="cave_count_thousand">%1$.1fk</string>
+    <string name="cave_count_million">%1$.1fM</string>
+    <string name="cave_catalog_favorite">Ajouter / retirer des favoris</string>
+    <string name="cave_catalog_favorites">Favoris</string>
+    <string name="cave_catalog_recent">Acquis récemment</string>
+    <string name="cave_catalog_clear">Effacer recherche et filtres</string>
+    <string name="cave_catalog_craft_max">Fabriquer un lot · jusqu’à 64</string>
+    <string name="cave_catalog_sort_name">Nom</string>
+    <string name="cave_catalog_sort_count">Quantité</string>
+    <string name="cave_catalog_sort_recent">Plus récents</string>
+    <string name="cave_catalog_jump">Aller à la page</string>
+    <string name="cave_catalog_summary">%1$d / %2$d objets</string>
+    <string name="cave_catalog_recipes">%1$d recettes</string>
+    <string name="cave_catalog_drag_hint">Toucher : détails · appui long : favori · glisser : déplacer la pile</string>
+    <string name="cave_catalog_ingredient">%1$s · possédé %2$d / requis %3$d · %4$s</string>
+    <string name="cave_catalog_make_ingredient">Fabriquer cet ingrédient</string>
+    <string name="cave_catalog_station">%1$s · %2$s</string>
+    <string name="cave_catalog_recipe_state">%1$s · %2$s</string>
+    <string name="cave_catalog_pinned">Raccourci attribué</string>
+    <string name="cave_catalog_bar_full">Barre pleine : glisse sur le raccourci à remplacer.</string>
+    <string name="cave_storage_matching">Ranger les piles déjà présentes, sauf les favoris et les piles de la barre</string>
+    <string name="cave_storage_drag_hint">Touche pour transférer · maintiens pour glisser · la quantité choisie s’applique à chaque transfert</string>
+    <string name="cave_storage_bag_title">Sac · %1$d</string>
+    <string name="cave_storage_box_title">Stockage · %1$d</string>
+    <string name="cave_storage_empty_filtered">Aucun objet correspondant</string>
+    <string name="cave_storage_done">Transfert : %1$s × %2$d</string>
+    <string name="cave_catalog_guide">Le sac et la barre sont deux parties du même inventaire. Glisse une pile du sac vers une case précise de la barre : elle quitte le sac, et la pile remplacée y revient. Glisser entre deux cases de la barre échange leurs piles ; glisser vers le sac libère la case. Toutes les piles, y compris celles de la barre, servent à fabriquer. Touche un objet pour sa fiche ; maintiens sans bouger pour changer son favori. Les flèches changent de page, également pendant un glisser. Les recettes affichées utilisent au moins un ingrédient possédé dans le sac ou la barre ; Disponibles exige tous les ingrédients, outils et postes. Touche une recette pour ses ingrédients et sa fabrication.</string>
+    <string name="cave_catalog_page">%1$d / %2$d · %3$d objets</string>
+    <string name="cave_catalog_craft_quantity">×%1$d</string>
+    <string name="cave_catalog_craft_action">Fabriquer %1$s lots</string>
+    <string name="cave_catalog_favorite_added">Ajouté aux favoris</string>
+    <string name="cave_catalog_favorite_removed">Retiré des favoris</string>
+    <string name="cave_catalog_recipe_hint">Recettes avec au moins un ingrédient possédé</string>
+    <string name="cave_catalog_no_known_recipe">Aucune recette correspondante n’utilise encore un ingrédient de ton inventaire.</string>
+    <string name="cave_inventory_empty_bag">Sac vide · glisse une pile ici pour la ranger</string>
+    <string name="cave_inventory_moved_bag">%1$s rangé dans le sac</string>
+    <string name="cave_inventory_moved_bar">%1$s placé dans la case %2$d</string>
+</resources>

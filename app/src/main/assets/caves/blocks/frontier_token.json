@@ -1,0 +1,17 @@
+{
+  "id": 9848,
+  "name": "frontier_token",
+  "texture_top": "frontier:9848:top",
+  "texture_side": "frontier:9848:side",
+  "texture_bottom": "frontier:9848:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_token",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

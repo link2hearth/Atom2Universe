@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.caves.entity
 import com.Atom2Universe.app.games.caves.node.MobDef
 import com.Atom2Universe.app.games.caves.render.AnimalModels
 import com.Atom2Universe.app.games.caves.world.*
+import com.Atom2Universe.app.games.caves.node.FrontierItems as F
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.*
@@ -33,6 +34,12 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                     if (xyz.any { !it.isFinite() }) continue
                     animals += Enemy(j, def, xyz[0], xyz[1], xyz[2]).apply {
                         young = a.optBoolean("young", false)
+                        domestic=a.optBoolean("domestic")
+                        growth=a.optDouble("growth",600.0).toFloat().coerceIn(0f,600f)
+                        affection=a.optDouble("affection",0.0).toFloat().coerceIn(0f,60f)
+                        breedRest=a.optDouble("breedRest",0.0).toFloat().coerceIn(0f,300f)
+                        mealRest=a.optDouble("mealRest",0.0).toFloat().coerceIn(0f,30f)
+                        productTime=a.optDouble("productTime",-1.0).toFloat().coerceIn(-1f,120f)
                         coat = a.optInt("coat", if(def.id == "cow") 1 else 0)
                             .coerceIn(0, AnimalModels.coatCount(def.id)-1)
                         yaw = a.optDouble("yaw", 0.0).toFloat().takeIf { it.isFinite() } ?: 0f
@@ -48,7 +55,7 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         snapshot = json
     }
 
-    fun update(dt: Float, px: Double, py: Double, pz: Double) {
+    fun update(dt: Float, px: Double, py: Double, pz: Double, held: Short?) {
         timer -= dt
         if (timer <= 0f) {
             timer = 2f
@@ -62,6 +69,11 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         for (a in visible) {
             if (!loaded(a.x, a.y, a.z)) continue
             a.animTime += dt
+            a.affection=(a.affection-dt).coerceAtLeast(0f)
+            a.breedRest=(a.breedRest-dt).coerceAtLeast(0f)
+            a.mealRest=(a.mealRest-dt).coerceAtLeast(0f)
+            if(a.productTime>0f) a.productTime=(a.productTime-dt).coerceAtLeast(0f)
+            if(a.young) { a.growth=(a.growth-dt).coerceAtLeast(0f); if(a.growth==0f) a.young=false }
             a.wanderTimer -= dt
             if (a.wanderTimer <= 0) {
                 a.resting = random.nextInt(3) == 0
@@ -72,14 +84,20 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
             }
             // Le joueur très proche fait s'écarter l'animal, sans riposte.
             val dx = a.x-px; val dz = a.z-pz; val distance = hypot(dx, dz)
-            val shy = distance < 2.5 && abs(a.y-py) < 3
+            val lured=held==food(a) && distance<12 && abs(a.y-py)<4
+            val shy = !a.domestic && !lured && distance < 2.5 && abs(a.y-py) < 3
             if (shy && distance > .01) {
                 a.resting = false
                 a.wanderDirX = (dx/distance).toFloat(); a.wanderDirZ = (dz/distance).toFloat()
                 a.yaw = atan2(a.wanderDirX, a.wanderDirZ)*180/PI.toFloat()
             }
+            if(lured && distance>2.0) {
+                a.resting=false
+                a.wanderDirX=(-dx/distance).toFloat();a.wanderDirZ=(-dz/distance).toFloat()
+                a.yaw=atan2(a.wanderDirX,a.wanderDirZ)*180/PI.toFloat()
+            } else if(lured) a.resting=true
             // Les petits rejoignent un adulte de leur espèce au lieu de se disperser.
-            if (a.young && !shy) {
+            if (a.young && !shy && !lured) {
                 var adult: Enemy? = null
                 var nearest = Double.MAX_VALUE
                 for (other in visible) {
@@ -106,13 +124,75 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
                 else { a.wanderTimer=0f; a.resting=true }
             }
         }
-        if (timer == 2f) snapshot = JSONArray().also { cells ->
+        if(timer==2f) breed()
+    }
+
+    fun snapshotNow(): String {
+        snapshot=JSONArray().also { cells ->
             residents.forEach { (key, group) -> cells.put(JSONObject().put("cell", key).put("animals", JSONArray().also { list ->
                 group.forEach { a -> list.put(JSONObject().put("species", a.def.id).put("x", a.x).put("y", a.y).put("z", a.z)
-                    .put("young", a.young).put("coat", a.coat)
+                    .put("young", a.young).put("coat", a.coat).put("domestic",a.domestic)
+                    .put("growth",a.growth.toDouble()).put("affection",a.affection.toDouble())
+                    .put("breedRest",a.breedRest.toDouble()).put("mealRest",a.mealRest.toDouble()).put("productTime",a.productTime.toDouble())
                     .put("yaw", a.yaw.toDouble()).put("resting", a.resting).put("timer", a.wanderTimer.toDouble())) }
             })) }
         }.toString()
+        return snapshot
+    }
+
+    fun food(a: Enemy): Short = when(a.def.id) { "pig"->9704; "chicken"->9600;else->9700 }
+
+    /** Returns 0 when the held item has no animal action; 1 fed, 2 collected, 3 not ready. */
+    fun interact(a: Enemy, held: Short?, inventory: MutableMap<Short,Int>): Int {
+        if(a !in visible) return 0
+        if(held==food(a)) {
+            if((inventory[held] ?: 0)<=0 || a.mealRest>0f) return 3
+            val left=inventory.getValue(held)-1
+            if(left==0) inventory.remove(held) else inventory[held]=left
+            a.domestic=true;a.mealRest=30f
+            if(a.young) { a.growth=(a.growth-120f).coerceAtLeast(0f); if(a.growth==0f) a.young=false }
+            else {
+                if(a.breedRest==0f) a.affection=60f
+                if(a.productTime<0f) a.productTime=120f
+            }
+            return 1
+        }
+        val product: Short = when {
+            a.def.id=="cow" && held==BUCKET_EMPTY -> F.MILK
+            a.def.id=="sheep" && held==F.SHEARS -> F.WOOL
+            a.def.id=="chicken" && held==null -> F.EGG
+            a.def.id=="pig" && held==null -> F.TRUFFLE
+            else -> return 0
+        }
+        val count=if(product==F.WOOL) 3 else 1
+        if(a.young || !a.domestic || a.productTime!=0f || (inventory[product] ?: 0)>Int.MAX_VALUE-count ||
+            (held!=null && (inventory[held] ?: 0)<1)) return 3
+        if(held==BUCKET_EMPTY) {
+            val left=inventory.getValue(held)-1
+            if(left==0) inventory.remove(held) else inventory[held]=left
+        }
+        inventory[product]=(inventory[product] ?: 0)+count;a.productTime=-1f
+        return 2
+    }
+
+    private fun breed() {
+        for(a in visible) {
+            if(a.young || a.affection<=0 || a.breedRest>0) continue
+            if(visible.count { hypot(it.x-a.x,it.z-a.z)<12 }>=12) continue
+            val mate=visible.firstOrNull { it!==a && it.def.id==a.def.id && !it.young && it.affection>0 &&
+                it.breedRest==0f && abs(it.y-a.y)<1.1 && hypot(it.x-a.x,it.z-a.z)<4 } ?: continue
+            val group=residents.values.firstOrNull { a in it } ?: continue
+            if(group.size>=24) continue
+            val baby=Enemy(group.size,a.def,a.x,a.y,a.z).apply { young=true;domestic=true;coat=a.coat;resting=true;wanderTimer=1f }
+            // Birth is only possible in a free patch beside both parents.
+            val spot=listOf(2.0 to 0.0,-2.0 to 0.0,0.0 to 2.0,0.0 to -2.0).firstNotNullOfOrNull { (dx,dz) ->
+                val x=a.x+dx;val z=a.z+dz
+                val y=floorAt(x,z,a.y,radius(baby))
+                if(y!=null && visible.none { abs(it.y-y)<2 && hypot(it.x-x,it.z-z)<radius(it)+radius(baby) }) Triple(x,y,z) else null
+            } ?: continue
+            baby.x=spot.first;baby.y=spot.second;baby.z=spot.third;group.add(baby)
+            a.affection=0f;mate.affection=0f;a.breedRest=300f;mate.breedRest=300f
+        }
     }
 
     private val current = DoubleArray(4)

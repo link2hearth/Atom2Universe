@@ -1,0 +1,17 @@
+{
+  "id": 9804,
+  "name": "frontier_shaft",
+  "texture_top": "frontier:9804:top",
+  "texture_side": "frontier:9804:side",
+  "texture_bottom": "frontier:9804:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_shaft",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": 9807,
+  "name": "frontier_hopper",
+  "texture_top": "frontier:9807:top",
+  "texture_side": "frontier:9807:side",
+  "texture_bottom": "frontier:9807:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_hopper",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

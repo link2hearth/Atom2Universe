@@ -2,8 +2,6 @@ package com.Atom2Universe.app.games.caves.mode
 
 import com.Atom2Universe.app.games.caves.CaveRenderer
 import com.Atom2Universe.app.games.caves.node.GameEvent
-import com.Atom2Universe.app.games.caves.node.ItemRegistry
-import com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
 import com.Atom2Universe.app.games.caves.world.WARD_STONE
 
 /**
@@ -14,12 +12,19 @@ import com.Atom2Universe.app.games.caves.world.WARD_STONE
  */
 internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
 
-    // HP max du dernier mob tué — plafond pour les gains d'endurance
-    private var lastKilledMobMaxHp = 20
+    private var wired = false
 
     override fun onSurfaceCreated(savedState: CaveRenderer.SavedState?) {
+        if (wired) return
+        wired = true
         wireSkills()
         wireEnemies()
+        r.enemyManager.spawnManager.exploration = true
+        r.enemyManager.explorationCombat=true
+        r.enemyManager.clearSight=r::clearCombatLine
+        r.enemyManager.meleeImpact={ enemy,dx,dz -> r.expeditionCombat.receive(enemy.scaledDamage,dx,dz,enemy) }
+        r.enemyManager.rangedImpact=r::fireExplorationArrow
+        r.enemyManager.spawnManager.lightAt = r::spawnLight
         if (savedState != null) restoreProgress(savedState)
     }
 
@@ -30,6 +35,10 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         r.enemyManager.worldSpawnZ = z
     }
 
+    override val headshotMultiplier: Float get() = 1.4f
+    override fun onPlayerShot(damage: Int,dirX: Double,dirZ: Double) {
+        r.expeditionCombat.receive(damage,dirX.toFloat(),dirZ.toFloat())
+    }
     override fun update(dt: Float) {
         r.enemyManager.update(dt, r.camera.playerX, r.camera.playerY, r.camera.playerZ)
     }
@@ -43,7 +52,7 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         playerNode.onEnduranceXp = { xp ->
             skillBook.enduranceXp += xp
             val formula = skillBook.computedMaxHp
-            val newMax  = formula.coerceAtMost(lastKilledMobMaxHp)
+            val newMax  = formula.coerceAtMost(120)
             if (newMax > playerNode.maxHp) {
                 playerNode.setMaxHp(newMax)
                 r.playerStats.maxHp = newMax
@@ -79,27 +88,25 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
             r.playerStats.addXp(xpGain)
-            // Le dernier mob tué fixe le plafond HP pour les gains d'endurance
-            lastKilledMobMaxHp = event.mobMaxHp.coerceAtLeast(20)
             if (event.isBoss) {
                 r.inventory[WARD_STONE] = (r.inventory[WARD_STONE] ?: 0) + 1
                 r.inventoryCallback?.invoke(r.inventory.toMap())
             }
         }
 
-        r.lootNode.onItemsDropped = { items ->
-            for (item in items) {
-                if (ItemRegistry.get(item.defId)?.type == "weapon") {
-                    val id = WeaponInstanceRegistry.allocate(item)
-                    r.inventory[id] = 1
-                    // Une arme dropée va toujours dans la barre combat, même si la barre
-                    // construction est active au moment du kill.
-                    val freeHotbarSlot = r.combatHotbar.indexOfFirst { it == null }
-                    if (freeHotbarSlot >= 0) r.combatHotbar[freeHotbarSlot] = id
-                }
+        // Exploration rewards feed the workshop instead of flooding the bag with random guns.
+        // Existing weapons remain usable; Assault keeps its own equipment rules.
+        r.lootNode.onItemsDropped = { _ -> }
+        r.eventBus.subscribe { event ->
+            if (event !is GameEvent.MobDied) return@subscribe
+            val resource: Short = when(event.mobDefId) {
+                "spider", "slime" -> 3111
+                "golem", "dwarf" -> 3114
+                else -> 3110
             }
+            r.inventory[resource] = ((r.inventory[resource] ?: 0).toLong() + 1 + event.level.coerceAtMost(3))
+                .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
             r.inventoryCallback?.invoke(r.inventory.toMap())
-            r.hotbarCallback?.invoke(r.hotbar.copyOf(), r.selectedSlot)
         }
     }
 

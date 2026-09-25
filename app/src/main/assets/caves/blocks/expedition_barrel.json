@@ -1,0 +1,12 @@
+{
+  "id": 9920,
+  "name": "expedition_barrel",
+  "texture_top": "expedition:9920:top",
+  "texture_side": "expedition:9920:side",
+  "texture_bottom": "expedition:9920:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_barrel",
+  "creative_tab": "resources",
+  "placeable": false
+}

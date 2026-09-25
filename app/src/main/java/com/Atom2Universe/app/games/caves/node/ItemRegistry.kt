@@ -20,6 +20,13 @@ internal object ItemRegistry {
 
     fun get(id: String): ItemDef? = defs[id]
 
+    /** Assembly produces repeatable equipment; random affixes remain a loot rule. */
+    fun forgedInstance(defId: String): ItemInstance? {
+        val def=defs[defId] ?: return null
+        return ItemInstance(def.id,ItemRarity.COMMON,def.damageBase?.let { (it.min+it.max)/2 },
+            def.stats.mapValues { (_,range)->(range.min+range.max)/2 },tier=def.tier)
+    }
+
     fun rollInstance(defId: String, rng: kotlin.random.Random, mobLevel: Int = 1, mobMaxHp: Int = 0): ItemInstance? {
         val def = defs[defId] ?: return null
         val rarity = rollRarity(def.rarityWeights, rng)

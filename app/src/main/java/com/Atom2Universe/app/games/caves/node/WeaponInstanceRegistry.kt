@@ -7,14 +7,14 @@ internal object WeaponInstanceRegistry {
 
     private val instances = mutableMapOf<Short, ItemInstance>()
 
-    fun isWeapon(id: Short): Boolean = id.toInt() >= ID_START
+    fun isWeapon(id: Short): Boolean = id in instances
 
     fun get(id: Short): ItemInstance? = instances[id]
 
     fun allocate(instance: ItemInstance): Short {
         for (i in ID_START..ID_END) {
             val s = i.toShort()
-            if (s !in instances) {
+            if (s !in instances && BlockRegistry.get(s) == null && i !in 10000..10001) {
                 instances[s] = instance
                 return s
             }

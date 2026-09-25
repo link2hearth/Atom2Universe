@@ -1,0 +1,12 @@
+{
+  "id": 9903,
+  "name": "expedition_iron_spear",
+  "texture_top": "expedition:9903:top",
+  "texture_side": "expedition:9903:side",
+  "texture_bottom": "expedition:9903:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_iron_spear",
+  "creative_tab": "resources",
+  "placeable": false
+}

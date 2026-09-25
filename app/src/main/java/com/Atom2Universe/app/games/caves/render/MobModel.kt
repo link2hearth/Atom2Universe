@@ -9,7 +9,7 @@ package com.Atom2Universe.app.games.caves.render
  *
  * Aucune dépendance Android : géométrie pure, testable, sans GL.
  */
-internal enum class Limb { NONE, LEG, ARM, WEAPON, MUZZLE_FLASH, HEAD, TAIL, WING, LOOK, CLOTH, CRAWL }
+internal enum class Limb { NONE, LEG, ARM, WEAPON, MUZZLE_FLASH, HEAD, TAIL, WING, LOOK, CLOTH, CRAWL, ROTOR }
 
 /** Une boîte du modèle. Tailles pleines (w,h,d), centre (cx,cy,cz). */
 internal class MobPart(
@@ -47,7 +47,7 @@ internal class MobModel(
 internal object MobModels {
 
     private val models: Map<String, MobModel> by lazy {
-        EnemyModels.all + listOf("sheep", "cow", "chicken", "pig").associateWith {
+        EnemyModels.all + FrontierModels.all + listOf("sheep", "cow", "chicken", "pig").associateWith {
             AnimalModels.get(it, false, 0)
         }
     }

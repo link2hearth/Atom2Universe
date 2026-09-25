@@ -1,0 +1,17 @@
+{
+  "id": 9856,
+  "name": "frontier_plate",
+  "texture_top": "frontier:9856:top",
+  "texture_side": "frontier:9856:side",
+  "texture_bottom": "frontier:9856:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_plate",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

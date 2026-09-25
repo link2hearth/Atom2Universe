@@ -1,0 +1,17 @@
+{
+  "id": 9802,
+  "name": "frontier_mill",
+  "texture_top": "frontier:9802:top",
+  "texture_side": "frontier:9802:side",
+  "texture_bottom": "frontier:9802:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_mill",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

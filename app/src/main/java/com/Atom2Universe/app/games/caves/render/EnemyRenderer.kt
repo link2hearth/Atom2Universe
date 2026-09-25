@@ -288,7 +288,7 @@ internal class EnemyRenderer {
             if (e.hp <= 0) continue
             if (count >= MAX_VISIBLE) break
             count++
-            if (e.exhibitPose != null || e.def.behavior == "passive") continue
+            if (e.exhibitPose != null || e.def.behavior in setOf("passive", "settler", "machine")) continue
 
             val ex = (e.x - camX).toFloat()
             val ey = (e.y - camY).toFloat()
@@ -382,6 +382,14 @@ internal class EnemyRenderer {
     private val heldFrames = HashMap<String, Array<FloatArray?>>()
 
     private fun heldWeaponVertices(e: Enemy): FloatArray? {
+        if(e.exploration && e.def.model=="skeleton") {
+            val stage=if(e.attackWindup>0f) 1+((1f-e.attackWindup/.8f)*8).toInt().coerceIn(0,8) else 0
+            val frames=heldFrames.getOrPut("exploration_bow") { arrayOfNulls(10) }
+            frames[stage]?.let { return it }
+            heldMesh.clear()
+            heldMesh.weapon("bow",if(stage==0) 0f else (stage-1)/8f,-1f,stage>0,0x9EAEB5,showSlingHand=false)
+            return heldMesh.vertices.copyOf(heldMesh.count).also { frames[stage]=it }
+        }
         val weaponType = e.heldWeaponType ?: return null
         if (e.def.model == "soldier" && e.exhibitPose != ExhibitPose.REFERENCE) {
             val reloadFrame = (e.weaponReload * 8).toInt().coerceIn(0, 8)
@@ -413,6 +421,7 @@ internal class EnemyRenderer {
     private var pHeavyArms = false; private var pResting = false; private var pMoving = false
     private var pGait = 0f; private var pLocomotion = 0f; private var pWalk = 0f
     private var pStrike = 0f; private var pBreath = 0f; private var pFlinch = 0f
+    private var pArcher = false
     private var pGrazingDrop = 0f; private var pSxz = 1f; private var pSyY = 1f
     private var pAnimTime = 0f; private var pId = 0; private var pRecoil = 0f; private var pFlash = 0f
     private val pTint = FloatArray(3)
@@ -453,14 +462,15 @@ internal class EnemyRenderer {
         pReference = e.exhibitPose == ExhibitPose.REFERENCE
         pPassive = e.def.behavior == "passive"
         pSoldier = e.def.model == "soldier"
+        pArcher = e.exploration && e.def.model=="skeleton"
         pHeavyArms = e.def.model == "ogre" || e.def.model == "golem"
         pResting = e.resting
         pAnimTime = e.animTime
         pId = e.id
         pRecoil = e.shotRecoil
         pMoving = !e.resting && (e.state == EnemyState.CHASE || e.state == EnemyState.WANDER)
-        pGait = if (pPassive || pSoldier) e.animTime * model.gait else e.walkPhase
-        pLocomotion = if (pPassive || pSoldier) { if (pMoving) 1f else 0f } else e.motionBlend
+        pGait = if (pPassive || pSoldier || e.def.behavior=="settler") e.animTime * model.gait else e.walkPhase
+        pLocomotion = if (pPassive || pSoldier || e.def.behavior=="settler") { if (pMoving) 1f else 0f } else e.motionBlend
         pWalk = if (pReference) 0f else sin(pGait) * pLocomotion
         pStrike = if (pReference || pPassive || pSoldier) 0f else (e.strikeTime / .55f).coerceIn(0f, 1f)
         pBreath = if (pReference || pPassive) 0f else sin(e.animTime * 1.8f + e.id * .73f) * model.breath
@@ -509,9 +519,11 @@ internal class EnemyRenderer {
         val baseRad = Math.toRadians(part.baseTiltDeg.toDouble()).toFloat()
         if (pReference && part.limb != Limb.NONE) return 0f
         return when (part.limb) {
+            Limb.ROTOR -> baseRad + pAnimTime * 2f
             Limb.LEG -> baseRad + part.side * pWalk * model.stride
             Limb.ARM ->
                 if (pSoldier) baseRad
+                else if(pArcher) baseRad - if(part.side>0) 1.3f else .7f
                 else baseRad - pStrike * (if (pHeavyArms) 1.15f else if (part.side > 0) 1f else .65f) -
                     part.side * pWalk * model.stride * .65f
             Limb.HEAD -> if (pResting) .65f + .12f * sin(pAnimTime * 2f) else .04f * sin(pAnimTime * 2f)
@@ -558,6 +570,12 @@ internal class EnemyRenderer {
             ry += pBreath
             rz += (pStrike * .6f - pFlinch * .45f) * (ly / model.heightVox).coerceIn(0f, 1f)
         }
+        if(part.limb==Limb.ROTOR) {
+            val rx=lx-part.pivotX
+            lx=part.pivotX+rx*cosA-dy*sinA
+            ry=part.pivotY+rx*sinA+dy*cosA
+            rz=lz
+        }
         if (part.limb == Limb.WING) {
             // Aile articulée sur le flanc, autour de Z, vers l'extérieur.
             val pivotX = if (pPassive) part.cx - part.side * part.w * .5f else part.pivotX
@@ -601,9 +619,9 @@ internal class EnemyRenderer {
         var i = 0
         while (i < verts.size) {
             // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
-            val px = .09f - verts[i]
-            val py = 1.16f + verts[i + 1] + recoil * .027f
-            val pz = .36f - verts[i + 2] - recoil * .108f
+            val px = (if(pArcher) 6f*pS else .09f) - verts[i]
+            val py = (if(pArcher) 19f*pS else 1.16f) + verts[i + 1] + recoil * .027f
+            val pz = (if(pArcher) 10.5f*pS else .36f) - verts[i + 2] - recoil * .108f
             boV[n++] = pEx + px * pCosY + pz * pSinY
             boV[n++] = pEy + py
             boV[n++] = pEz - px * pSinY + pz * pCosY

@@ -1,0 +1,12 @@
+{
+  "id": 9896,
+  "name": "expedition_deep_fish",
+  "texture_top": "expedition:9896:top",
+  "texture_side": "expedition:9896:side",
+  "texture_bottom": "expedition:9896:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_deep_fish",
+  "creative_tab": "resources",
+  "placeable": false
+}

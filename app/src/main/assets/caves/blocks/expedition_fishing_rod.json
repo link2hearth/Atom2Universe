@@ -1,0 +1,12 @@
+{
+  "id": 9892,
+  "name": "expedition_fishing_rod",
+  "texture_top": "expedition:9892:top",
+  "texture_side": "expedition:9892:side",
+  "texture_bottom": "expedition:9892:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_fishing_rod",
+  "creative_tab": "resources",
+  "placeable": false
+}

@@ -1,0 +1,17 @@
+{
+  "id": 9872,
+  "name": "frontier_market_bell",
+  "texture_top": "frontier:9872:top",
+  "texture_side": "frontier:9872:side",
+  "texture_bottom": "frontier:9872:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_market_bell",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

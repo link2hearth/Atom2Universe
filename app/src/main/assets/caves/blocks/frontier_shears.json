@@ -1,0 +1,17 @@
+{
+  "id": 9846,
+  "name": "frontier_shears",
+  "texture_top": "frontier:9846:top",
+  "texture_side": "frontier:9846:side",
+  "texture_bottom": "frontier:9846:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_shears",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

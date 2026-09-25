@@ -6,12 +6,15 @@ import kotlin.math.*
 import kotlin.random.Random
 
 class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
-            val terrainVersion: Int = 4,
+            val terrainVersion: Int = 5,
             /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
             private val source: WorldSource? = null) {
-    private val natural by lazy { NaturalTerrain(seed) }
+    internal fun frontierHomes(x: Double,z: Double) = if(terrainVersion>=5) frontier.homes(x,z) else emptyList()
+    private val frontier by lazy { FrontierLandscape(seed, natural) }
+    private val natural by lazy { NaturalTerrain(seed, frontier = terrainVersion >= 5) }
     val surfaceChunkMax get() = if (terrainVersion >= 3) NaturalTerrain.SURFACE_MAX_CY else SURFACE_CY_MAX
-    private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave, if (terrainVersion >= 3) natural else null) }
+    private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave, if (terrainVersion >= 3) natural else null,
+        { x,z,margin -> terrainVersion >= 5 && frontier.reserves(x,z,margin) }) }
 
     internal fun naturalSurfaceBiomeAt(x: Double, y: Double, z: Double): String? =
         if (terrainVersion >= 3 && y >= natural.height(x, z) - 12) natural.biomeIdAt(x, z) else null
@@ -115,6 +118,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     fun hasPendingLight(): Boolean = lightQueue.isNotEmpty()
 
     fun enqueueLight(key: Long) {
+        chunks[key]?.ecologyLightReady=false
         if (lightQueued.add(key)) lightQueue.add(key)
     }
 
@@ -248,12 +252,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     fun abandonChunk(chunk: Chunk) {
         val key = chunkKey(chunk.cx, chunk.cy, chunk.cz)
-        chunks.remove(key)
-        inFlight.remove(key)
+        if(chunks.remove(key,chunk)) inFlight.remove(key)
     }
 
     fun markGenerated(chunk: Chunk) {
         val key = chunkKey(chunk.cx, chunk.cy, chunk.cz)
+        // A synchronous travel preload may already have replaced this background job.
+        if(chunks[key] !== chunk) return
         inFlight.remove(key)
         chunk.generated = true
         chunk.meshDirty = true
@@ -411,7 +416,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         chunk.version++; chunk.meshDirty = true
         val key = chunkKey(cx, cy, cz)
         rebuildQueue.add(key)
-        if (skyPassable(old) != skyPassable(type)) enqueueLightAndNeighbors(cx, cy, cz)
+        if (skyPassable(old) != skyPassable(type) || emission(old)!=emission(type)) enqueueLightAndNeighbors(cx, cy, cz)
         storage?.recordChange(cx, cy, cz,
             lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
     }
@@ -460,7 +465,11 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     }
 
     private fun generateProcedural(chunk: Chunk) {
-        if (terrainVersion >= 3) { natural.generate(chunk, landscape); return }
+        if (terrainVersion >= 3) {
+            natural.generate(chunk, landscape)
+            if (terrainVersion >= 5) frontier.decorate(chunk)
+            return
+        }
         when {
             chunk.cy in 0..SURFACE_CY_MAX                           -> generateSurface(chunk)
             chunk.cy < 0 && isUndergroundSurface(chunk.cy)         -> generateUndergroundSurface(chunk)
@@ -1735,6 +1744,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
 
     // ── Modification de blocs ─────────────────────────────────────────────────
 
+    private fun emission(block: Short) = when(block) { TORCH->15;LAVA->12;else->com.Atom2Universe.app.games.caves.node.BlockRegistry.lightEmission(block) }
     private fun skyPassable(block: Short): Boolean =
         block == AIR || isTransparent(block) || isDecoration(block) || isWater(block) || isLeaf(block)
 
@@ -1807,7 +1817,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val key = chunkKey(cx, cy, cz)
         chunk.meshDirty = true
         rebuildQueue.add(key)
-        if (skyPassable(old) != skyPassable(type)) enqueueLightAndNeighbors(cx, cy, cz)
+        if (skyPassable(old) != skyPassable(type) || emission(old)!=emission(type)) enqueueLightAndNeighbors(cx, cy, cz)
         storage?.recordChange(cx, cy, cz, lx + ly * CHUNK_SIZE + lz * CHUNK_SIZE * CHUNK_SIZE, type)
         for ((nx, ny, nz) in arrayOf(
             intArrayOf(cx-1,cy,cz), intArrayOf(cx+1,cy,cz),

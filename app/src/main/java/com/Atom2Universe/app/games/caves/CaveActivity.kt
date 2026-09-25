@@ -46,6 +46,7 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import android.widget.ImageView
 import com.Atom2Universe.app.games.caves.render.MinimapRenderer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -66,6 +67,7 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal lateinit var glView: GLSurfaceView
+    private var glSuspended = true
     internal lateinit var renderer: CaveRenderer
     private  val touch   = TouchController()
     private var vQuickbar: View? = null
@@ -87,7 +89,6 @@ class CaveActivity : ThemedActivity() {
     /** Partie du mode Assaut : carte préparée, ni construction, ni destruction, ni sauvegarde. */
     internal var isAssault = false
     private  var survivalInventory: Map<Short, Int> = emptyMap()
-    private  var survivalHotbar: List<Short?> = List(ACTIVE_SIZE) { null }
 
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
@@ -150,6 +151,7 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal fun blockName(type: Short): String {
+        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)?.let { return weaponName(it.defId) }
         com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)?.let { crop ->
             return getString(R.string.cave_farm_seed_name, getString(com.Atom2Universe.app.games.caves.node.FarmItems.crops[crop].label))
         }
@@ -228,10 +230,10 @@ class CaveActivity : ThemedActivity() {
         isAssault = mapSource != null
         worldId = if (isAssault) null else intent.getStringExtra(EXTRA_WORLD_ID)
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
+        lastSnapshotTime=save?.lastPlayedAt ?: 0L
         isCreative = save?.isCreative ?: false
         if (isCreative) {
             survivalInventory = save?.inventory ?: emptyMap()
-            survivalHotbar    = save?.hotbar    ?: List(ACTIVE_SIZE) { null }
         }
         // Restaurer les instances d'armes AVANT de créer le renderer
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
@@ -244,7 +246,7 @@ class CaveActivity : ThemedActivity() {
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
                 inventory = BlockRegistry.creativeList().associateWith { 1 },
-                hotbar = BlockRegistry.creativeList().let { keys -> List(ACTIVE_SIZE) { i -> keys.getOrNull(i) } },
+                hotbar = if(save.playerY!=0.0) save.hotbar else BlockRegistry.creativeList().let { keys -> List(ACTIVE_SIZE) { i -> keys.getOrNull(i) } },
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,
@@ -257,7 +259,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
-                gardenHotbar = save.gardenHotbar, farming = save.farming,
+                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -266,7 +268,7 @@ class CaveActivity : ThemedActivity() {
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
                 yaw = save.playerYaw, pitch = save.playerPitch,
-                inventory = save.inventory, hotbar = save.hotbar, buildHotbar = save.buildHotbar,
+                inventory = save.inventory, hotbar = save.hotbar,
                 playerHp            = save.playerHp,
                 playerLevel         = save.playerLevel,
                 playerXp            = save.playerXp,
@@ -279,7 +281,7 @@ class CaveActivity : ThemedActivity() {
                 wardStonePositions  = save.wardStonePositions,
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
-                gardenHotbar = save.gardenHotbar, farming = save.farming,
+                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife,
                 skillAthleticsXp    = save.skillAthleticsXp,
                 skillSpeedXp        = save.skillSpeedXp,
                 skillEnduranceXp    = save.skillEnduranceXp,
@@ -292,7 +294,7 @@ class CaveActivity : ThemedActivity() {
             context = this, touch = touch,
             worldSeed = save?.seed ?: System.currentTimeMillis(),
             worldId = worldId, savedState = savedState,
-            terrainVersion = save?.terrainVersion ?: 4,
+            terrainVersion = save?.terrainVersion ?: 5,
             worldSource = mapSource,
             modeFactory = if (mapSource != null) { r ->
                 if (mapSource.isShowcase) com.Atom2Universe.app.games.caves.mode.ShowcaseMode(r, mapSource)
@@ -340,9 +342,11 @@ class CaveActivity : ThemedActivity() {
         makeCircular(btnPlace, 0x66336600.toInt())
         btnPlace.visibility = View.GONE
         vGameArea = hudView.findViewById(R.id.cave_game_area)
-        if (renderer.mode is AssaultMode) {
+        // En Assaut, allowsCombat reste faux tant que la manche n'a pas commencé (choix d'arme) :
+        // le bouton doit exister dès l'ouverture, pas seulement pendant la manche.
+        if (renderer.mode is AssaultMode || renderer.mode.allowsCombat) {
             val reload = Button(this).apply {
-                hud.controlIcon(this, "reload", getString(R.string.cave_controls_reload))
+                hud.controlIcon(this, "reload", getString(if(renderer.mode is AssaultMode) R.string.cave_controls_reload else R.string.cave_secondary_action))
                 setOnClickListener { glView.queueEvent { renderer.reloadAssaultWeapon() } }
                 // dispatchTouchEvent handles each finger, including a second finger while walking.
                 // Consume native touch clicks to avoid a second reload on release; retain
@@ -364,10 +368,8 @@ class CaveActivity : ThemedActivity() {
         val miningBar     = hudView.findViewById<android.widget.ProgressBar>(R.id.cave_mining_progress)
         val hotbarLayout  = hudView.findViewById<LinearLayout>(R.id.cave_hotbar)
 
-        val hotbarModeButton = if (!isAssault) btnCombatMode.also {
-            (it.parent as android.view.ViewGroup).removeView(it)
-        } else null
-        hud.buildHotbarUI(hotbarLayout, hotbarModeButton)
+        btnCombatMode.visibility=View.GONE
+        hud.buildHotbarUI(hotbarLayout)
         if (renderer.mode.singleWeapon) hotbarLayout.visibility = View.GONE
         vQuickbar = hotbarLayout
         btnBack.background = CaveUiStyle.panel(this, 0x66293F33, 0x6686A38C)
@@ -394,21 +396,15 @@ class CaveActivity : ThemedActivity() {
         }
         btnCamera.alpha = 0.5f
 
-        fun applyCombatModeUi(mode: HotbarMode) {
-            hud.controlIcon(btnCombatMode, when(mode) { HotbarMode.COMBAT -> "combat"; HotbarMode.BUILD -> "place"; HotbarMode.GARDEN -> "garden" },
-                getString(when(mode) { HotbarMode.COMBAT -> R.string.cave_ui_equipment; HotbarMode.BUILD -> R.string.cave_ui_materials; HotbarMode.GARDEN -> R.string.cave_ui_garden }))
-        }
-        applyCombatModeUi(renderer.hotbarMode)
-        applyBuildModeUi(renderer.hotbarMode, btnPlace)
-        btnCombatMode.setOnClickListener { renderer.toggleHotbarMode() }
+        applyBuildModeUi(renderer.heldItemMode, btnPlace)
+        val lifePanel=FrontierLifePanel(this)
+        renderer.tradeCallback={ view -> uiHandler.post { lifePanel.trade(view) } }
+        renderer.travelCallback={ uiHandler.post { lifePanel.travel() } }
+        renderer.checkpointCallback={ uiHandler.post { saveWorldAsync() } }
+        val storagePanel = FrontierStoragePanel(this)
+        renderer.craftStationCallback = { uiHandler.post { invManager.openInventory() } }
+        renderer.storageCallback = { box, items -> uiHandler.post { storagePanel.show(box, items) } }
         renderer.farmMessageCallback = { message -> uiHandler.post { Toast.makeText(this, message, Toast.LENGTH_SHORT).show() } }
-        renderer.hotbarModeCallback = { mode ->
-            uiHandler.post {
-                applyCombatModeUi(mode)
-                applyBuildModeUi(mode, btnPlace)
-                invManager.onHotbarModeChanged()
-            }
-        }
 
         val btnMap = hudView.findViewById<Button>(R.id.cave_btn_map)
         hud.controlIcon(btnMap, "map", getString(R.string.cave_ui_map))
@@ -439,10 +435,17 @@ class CaveActivity : ThemedActivity() {
             }
         }
         renderer.inventoryCallback = { inv -> uiHandler.post { invManager.onInventoryChanged(inv); saveWorldAsync() } }
-        renderer.hotbarCallback    = { slots, selected -> uiHandler.post { hud.updateHotbarUI(slots, selected) } }
+        renderer.hotbarCallback    = { slots, selected -> uiHandler.post {
+            hud.updateHotbarUI(slots, selected)
+            applyBuildModeUi(slots.getOrNull(selected)?.let(renderer::itemMode) ?: HotbarMode.BUILD,btnPlace)
+            if(::invOverlay.isInitialized && invOverlay.visibility==View.VISIBLE) hud.updateActiveBarOverlay()
+        } }
 
         hud.buildHealthBar(root, renderer.mode is AssaultMode)
         hud.buildWeaponInHand(root)
+        val fishingGauge=FishingGaugeView(this)
+        vGameArea?.addView(fishingGauge,FrameLayout.LayoutParams(CaveUiStyle.dp(this,154),minOf(CaveUiStyle.dp(this,260),(resources.displayMetrics.heightPixels*.62f).toInt()),Gravity.CENTER_VERTICAL or Gravity.START).apply { marginStart=CaveUiStyle.dp(this@CaveActivity,12) })
+        renderer.fishingGaugeCallback={ state -> uiHandler.post { fishingGauge.update(state) } }
         renderer.weaponStatusCallback = { text -> uiHandler.post { hud.updateWeaponStatus(text) } }
         hud.buildDamageFlash(root)
 
@@ -757,6 +760,7 @@ class CaveActivity : ThemedActivity() {
 
     private fun resumeGame() {
         glView.onResume()
+        glSuspended = false
         touch.crouchToggleEnabled = CaveControlsPrefs.crouchToggle(this)
         touch.runToggleEnabled = CaveControlsPrefs.runToggle(this)
         soundEngine?.resume()
@@ -764,7 +768,13 @@ class CaveActivity : ThemedActivity() {
         forceImmersiveMode()
         vGameArea?.let { applyButtonPositions(it) }
     }
-    override fun onPause()   { super.onPause(); if (!::glView.isInitialized) return; glView.onPause();  music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel() }
+    override fun onPause()   {
+        super.onPause()
+        if (!::glView.isInitialized) return
+        glView.onPause()
+        glSuspended = true
+        music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel()
+    }
     override fun onDestroy() {
         assaultWeaponDialog?.dismiss()
         assaultWeaponDialog = null
@@ -781,28 +791,31 @@ class CaveActivity : ThemedActivity() {
     private fun refreshInventoryUi() {
         // Les anciennes banques UI ne doivent pas réécrire les slots du kit.
         invManager.initInvSlots()
-        renderer.hotbarModeCallback?.invoke(renderer.hotbarMode)
+        renderer.hotbarCallback?.invoke(renderer.hotbar.copyOf(),renderer.selectedSlot)
         renderer.inventoryCallback?.invoke(renderer.inventory.toMap())
     }
 
     // ── Save ──────────────────────────────────────────────────────────────────
 
+    private var lastSnapshotTime=0L
     private fun buildSaveSnap(): CaveWorldSave? {
         val id    = worldId ?: return null
+        lastSnapshotTime=maxOf(System.currentTimeMillis(),lastSnapshotTime+1)
         val stats = renderer.playerStats
         val sb    = renderer.skillBook
         return CaveWorldSave(
             id = id, name = "", seed = 0L, createdAt = 0L,
             terrainVersion = renderer.world.terrainVersion,
-            lastPlayedAt = System.currentTimeMillis(),
+            lastPlayedAt = lastSnapshotTime,
             playerX = renderer.camera.playerX, playerY = renderer.camera.playerY, playerZ = renderer.camera.playerZ,
             playerYaw = renderer.camera.yaw, playerPitch = renderer.camera.pitch,
             inventory = if (isCreative) survivalInventory + renderer.inventory.filterKeys {
                 com.Atom2Universe.app.games.caves.node.FarmItems.isItem(it)
             } else renderer.inventory.toMap(),
-            hotbar    = if (isCreative) survivalHotbar    else renderer.combatHotbar.map { it },
-            buildHotbar = if (isCreative) emptyList()     else renderer.buildHotbar.map { it },
-            gardenHotbar = renderer.gardenHotbar.toList(), farming = renderer.farming.snapshot(),
+            hotbar = renderer.hotbar.toList(),
+            farming = renderer.farming.snapshot(),
+            workshops = renderer.workshops.snapshot(), worldTimeMs = renderer.worldTimeSnapshot,
+            chunkChanges = renderer.chunkSnapshot(), frontierLife = renderer.frontierSnapshot(),
             isCreative          = isCreative,
             playerHp            = renderer.playerNode.hp,
             playerLevel         = stats.level,
@@ -816,23 +829,37 @@ class CaveActivity : ThemedActivity() {
             skillEnduranceXp    = sb.enduranceXp,
             skillAcrobaticsXp   = sb.acrobaticsXp,
             weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
-            passiveAnimals = renderer.passiveAnimals.snapshot,
+            passiveAnimals = renderer.passiveAnimals.snapshotNow(),
             recoverableAmmo = renderer.recoverableAmmoSnapshot
         )
     }
 
     fun saveWorldAsync(flushChunks: Boolean = false) {
-        val snap = buildSaveSnap() ?: return
-        lifecycleScope.launch(Dispatchers.IO) {
-            CaveWorldSaveManager.updateFields(this@CaveActivity, snap)
-            if (flushChunks) renderer.flushStorage()
+        if (worldId == null) return
+        val capture = {
+            val snap = buildSaveSnap()
+            if (snap != null) lifecycleScope.launch(Dispatchers.IO) {
+                runCatching {
+                    if(CaveWorldSaveManager.updateFields(this@CaveActivity, snap)) renderer.checkpointCommitted(snap.chunkChanges)
+                }.onFailure {
+                    uiHandler.post { Toast.makeText(this@CaveActivity,R.string.cave_save_error,Toast.LENGTH_LONG).show() }
+                }
+                if (flushChunks) renderer.flushStorage()
+            }
         }
+        // Container and backpack snapshots must describe the same side of a transfer.
+        // Crafting edits the bag on the UI thread while the inventory pauses simulation.
+        if (glSuspended || invOverlay.visibility == View.VISIBLE) capture() else glView.queueEvent { capture() }
     }
 
     private suspend fun saveWorldNow() {
-        val snap = buildSaveSnap() ?: return
+        val snap = if (glSuspended) buildSaveSnap() else {
+            val ready=CompletableDeferred<CaveWorldSave?>()
+            glView.queueEvent { runCatching { buildSaveSnap() }.fold(ready::complete,ready::completeExceptionally) }
+            ready.await()
+        } ?: return
         withContext(Dispatchers.IO) {
-            CaveWorldSaveManager.updateFields(this@CaveActivity, snap)
+            if(CaveWorldSaveManager.updateFields(this@CaveActivity, snap)) renderer.checkpointCommitted(snap.chunkChanges)
             renderer.flushStorage()
         }
     }
@@ -871,6 +898,41 @@ class CaveActivity : ThemedActivity() {
         dialogRoot.addView(btnRow)
         val dialog = AlertDialog.Builder(this).setView(dialogRoot).create()
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        if (renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
+            setText(R.string.cave_frontier_help)
+            setOnClickListener {
+                AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_frontier_help)
+                    .setMessage(R.string.cave_frontier_help_body)
+                    .setPositiveButton(android.R.string.ok,null).show()
+            }
+        },dialogRoot.indexOfChild(btnRow))
+        if(renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
+            setText(R.string.cave_frontier_more_guide)
+            setOnClickListener {
+                AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_frontier_more_guide)
+                    .setMessage(getString(R.string.cave_frontier_more_body)+"\n\n"+getString(R.string.cave_husbandry_hint)+"\n\n"+getString(R.string.cave_combat_help)+"\n\n"+getString(R.string.cave_catalog_guide))
+                    .setPositiveButton(android.R.string.ok,null).show()
+            }
+        },dialogRoot.indexOfChild(btnRow))
+        if(renderer.mode.allowsWorldEdits) dialogRoot.addView(Button(this).apply {
+            setText(R.string.cave_equipment_title)
+            setOnClickListener {
+                glView.queueEvent {
+                    val combat=renderer.expeditionCombat
+                    val armor=combat.armor
+                    val reduction=(com.Atom2Universe.app.games.caves.node.ExpeditionItems.armor(armor)*100).toInt()
+                    val shield=combat.shield
+                    uiHandler.post {
+                        AlertDialog.Builder(this@CaveActivity).setTitle(R.string.cave_equipment_title)
+                            .setMessage(getString(R.string.cave_equipment_summary,
+                                armor?.let { blockName(it) } ?: getString(R.string.cave_ui_missing), reduction,
+                                getString(if(shield) R.string.cave_ui_ready else R.string.cave_ui_missing)))
+                            .setPositiveButton(android.R.string.ok,null)
+                            .setNeutralButton(R.string.cave_equipment_remove) { _,_ -> glView.queueEvent { renderer.expeditionCombat.removeEquipment() } }.show()
+                    }
+                }
+            }
+        },dialogRoot.indexOfChild(btnRow))
         if (!renderer.mode.singleWeapon) dialogRoot.addView(Button(this).apply {
             setText(R.string.cave_cheat_weapon_kit)
             setTextColor(0xFF9FD5FF.toInt())
@@ -894,7 +956,11 @@ class CaveActivity : ThemedActivity() {
         btnRow.addView(Button(this).apply {
             text = getString(R.string.cave_quit_confirm); setTextColor(0xFFFF5555.toInt())
             setBackgroundColor(Color.TRANSPARENT)
-            setOnClickListener { dialog.dismiss(); lifecycleScope.launch { saveWorldNow(); finish() } }
+            setOnClickListener { dialog.dismiss(); lifecycleScope.launch {
+                runCatching { saveWorldNow() }.onSuccess { finish() }.onFailure {
+                    Toast.makeText(this@CaveActivity,R.string.cave_save_error,Toast.LENGTH_LONG).show()
+                }
+            } }
         })
         dialog.show()
     }
@@ -1136,7 +1202,7 @@ class CaveActivity : ThemedActivity() {
 
     private fun handleWorldTapCandidate(ev: MotionEvent, idx: Int, pid: Int) {
         val candidate = tapCandidates.remove(pid) ?: return
-        if (renderer.hotbarMode == HotbarMode.COMBAT) return
+        if (renderer.heldItemMode == HotbarMode.COMBAT) return
         val x = ev.getX(idx); val y = ev.getY(idx)
         val moved = hypot(x - candidate.x, y - candidate.y)
         val elapsed = ev.eventTime - candidate.downMs

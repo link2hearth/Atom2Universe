@@ -1,0 +1,12 @@
+{
+  "id": 9898,
+  "name": "expedition_fish_stew",
+  "texture_top": "expedition:9898:top",
+  "texture_side": "expedition:9898:side",
+  "texture_bottom": "expedition:9898:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_fish_stew",
+  "creative_tab": "resources",
+  "placeable": false
+}

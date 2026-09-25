@@ -1,0 +1,12 @@
+{
+  "id": 9925,
+  "name": "expedition_steel_plate",
+  "texture_top": "expedition:9925:top",
+  "texture_side": "expedition:9925:side",
+  "texture_bottom": "expedition:9925:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_steel_plate",
+  "creative_tab": "resources",
+  "placeable": false
+}

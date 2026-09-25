@@ -13,6 +13,7 @@ internal data class CraftDef(
     val resultItemId: String? = null,
     val groups: List<CraftGroup> = emptyList(),
     val tools: List<Short> = emptyList(),
+    val station: Short? = null,
 ) {
     val inputIds: Set<Short> = (ingredients.map { it.first } + groups.flatMap { it.ids } + tools).toSet()
     init {
@@ -22,16 +23,17 @@ internal data class CraftDef(
         require(ingredients.all { it.second > 0 } && groups.all { it.count > 0 && it.ids.isNotEmpty() })
         require(tools.none { it in inputs }) { "A required tool cannot be consumed" }
     }
-    fun maxCraftable(inv: Map<Short, Int>): Int {
+    fun maxCraftable(inv: Map<Short, Int>, stations: Set<Short> = emptySet()): Int {
+        if(station != null && station !in stations) return 0
         if (tools.any { (inv[it] ?: 0) < 1 }) return 0
         val limits = ingredients.map { (id, n) -> (inv[id] ?: 0).coerceAtLeast(0).toLong() / n } + groups.map { it.available(inv) / it.count }
         return (limits.minOrNull() ?: 0).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
-    fun canCraft(inv: Map<Short, Int>) = maxCraftable(inv) > 0
+    fun canCraft(inv: Map<Short, Int>, stations: Set<Short> = emptySet()) = maxCraftable(inv, stations) > 0
 
     /** Exact debit for mixed wood/fuel batches; equipment is never consumed. */
-    fun consumption(inv: Map<Short, Int>, batches: Int): Map<Short, Int>? {
-        if (batches <= 0 || maxCraftable(inv) < batches) return null
+    fun consumption(inv: Map<Short, Int>, batches: Int, stations: Set<Short> = emptySet()): Map<Short, Int>? {
+        if (batches <= 0 || maxCraftable(inv, stations) < batches) return null
         val debit = ingredients.associate { it.first to Math.multiplyExact(it.second, batches) }.toMutableMap()
         for (group in groups) {
             var remaining = group.count.toLong() * batches
@@ -66,7 +68,7 @@ internal data class CraftDef(
             val result = j.optInt("result", 0).toShort()
             require(result == 0.toShort() || BlockRegistry.get(result) != null)
             return CraftDef(exact, result, j.optInt("result_count", 1),
-                j.optString("result_item").takeIf { it.isNotBlank() }, groups, tools)
+                j.optString("result_item").takeIf { it.isNotBlank() }, groups, tools, if(j.has("station")) j.getInt("station").toShort().also { require(BlockRegistry.get(it)?.placeable == true) } else null)
         }
     }
 }

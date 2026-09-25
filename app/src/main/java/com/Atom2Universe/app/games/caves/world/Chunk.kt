@@ -174,9 +174,9 @@ const val COTTON_VIOLET:     Short = 9031
 const val COTTON_WHITE:      Short = 9032
 const val COTTON_YELLOW:     Short = 9033
 
-// ── Famille 10000 : Items ─────────────────────────────────────────────────────
-const val BUCKET_EMPTY: Short = 10000
-const val BUCKET_FULL:  Short = 10001
+// ── Famille 9990 : Seaux (hors plage des armes) ─────────────────────────────────────────────────────
+const val BUCKET_EMPTY: Short = 9990
+const val BUCKET_FULL:  Short = 9991
 
 // ── Propriétés de bloc — délèguent à BlockRegistry après load() ───────────────
 fun isDecoration(block: Short)  = BlockRegistry.isDecoration(block)
@@ -192,8 +192,9 @@ data class StructureHint(val lx: Int, val ly: Int, val lz: Int, val type: Int)
 class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     val blocks = ShortArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
     val meta   = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
-    // Lumière du ciel par voxel : niveau 0..15 dans le quartet bas (le quartet haut est réservé
-    // à une éventuelle lumière de bloc). Rempli par LightEngine, lu par MeshBuilder.
+    // Ciel dans le quartet bas, lumière artificielle occluse dans le quartet haut.
+    // Le rendu conserve ses lumières visuelles indépendantes.
+    @Volatile var ecologyLightReady=false
     @Volatile var light = ByteArray(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
         internal set
 

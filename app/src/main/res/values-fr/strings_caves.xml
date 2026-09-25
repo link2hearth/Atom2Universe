@@ -694,7 +694,7 @@
     <string name="cave_block_desc_hoe">Utiliser sur le dessus d’une terre dégagée pour la labourer. Ne s’use pas.</string>
     <string name="cave_ui_garden">Jardinage</string>
     <string name="cave_farm_seed_name">Graines · %1$s</string>
-    <string name="cave_farm_seed_hint">Planter sur une terre labourée dégagée. Récolte après %1$d minutes passées dans ce monde. Aucune eau nécessaire. La récolte rend des graines.</string>
+    <string name="cave_farm_seed_hint">Planter sur une terre labourée dégagée. Environ %1$d minutes avec lumière et eau à 4 blocs maximum. Sans eau, la croissance ralentit ; dans le noir, elle s’arrête. Seules les cultures proches poussent. La récolte rend des graines.</string>
     <string name="cave_farm_produce_hint">Aliment récolté. Utiliser pour récupérer 3 points de vie. En Jardinage, utiliser un plant mûr pour le récolter.</string>
     <string name="cave_farm_not_ready">Cette plante pousse encore.</string>
     <string name="cave_farm_plant_hint">Planter sur une terre labourée avec deux blocs libres au-dessus du plant.</string>

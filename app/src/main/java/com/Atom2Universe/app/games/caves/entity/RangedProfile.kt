@@ -29,6 +29,12 @@ internal class MagazineState(private val capacity: Int, private val duration: Fl
     var shots = 0
         private set
     val progress get() = if (reloadRemaining > 0f) 1f-reloadRemaining/duration else 0f
+    fun snapshot()=org.json.JSONObject().put("remaining",remaining).put("reload",reloadRemaining.toDouble()).put("shots",shots)
+    fun restore(j: org.json.JSONObject) {
+        remaining=j.optInt("remaining",capacity).coerceIn(0,capacity)
+        reloadRemaining=j.optDouble("reload",0.0).toFloat().takeIf { it.isFinite() }?.coerceIn(0f,duration) ?: 0f
+        shots=j.optInt("shots",0).coerceAtLeast(0)
+    }
     fun reload() { if (remaining < capacity && reloadRemaining <= 0f) reloadRemaining = duration }
     fun update(dt: Float) {
         if (reloadRemaining <= 0f) return

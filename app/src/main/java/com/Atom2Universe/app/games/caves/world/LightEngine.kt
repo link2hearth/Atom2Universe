@@ -14,6 +14,59 @@ package com.Atom2Universe.app.games.caves.world
  * point fixe (itération de Gauss-Seidel, bornée car les niveaux sont dans 0..15).
  */
 internal object LightEngine {
+    /** Artificial light uses the high nibble and travels through free cells, never solid walls. */
+    fun computeBlock(chunk: Chunk, world: World): Int {
+        val values=checkNotNull(scratchLocal.get()).also { it.fill(0) }
+        val queue=checkNotNull(queueLocal.get()).also { it.clear() }
+        fun emit(x: Int,y: Int,z: Int,level: Int) {
+            if(level<=0 || x !in 0..15 || y !in 0..15 || z !in 0..15) return
+            val i=x+y*16+z*256
+            if(level>values[i]) { values[i]=level.toByte();queue.add(i) }
+        }
+        fun outside(x: Int,y: Int,z: Int): Int {
+            val wx=chunk.worldX+x;val wy=chunk.worldY+y;val wz=chunk.worldZ+z
+            val c=world.getChunk(Math.floorDiv(wx,16),Math.floorDiv(wy,16),Math.floorDiv(wz,16)) ?: return 0
+            if(!c.generated) return 0
+            return (c.light[Math.floorMod(wx,16)+Math.floorMod(wy,16)*16+Math.floorMod(wz,16)*256].toInt() ushr 4) and 15
+        }
+        for(z in 0..15) for(y in 0..15) for(x in 0..15) {
+            val block=chunk.blockAt(x,y,z)
+            val source=when(block) { TORCH->15;LAVA->12;else->com.Atom2Universe.app.games.caves.node.BlockRegistry.lightEmission(block) }
+            emit(x,y,z,source)
+            if(!passable(block)) continue
+            if(x==0) emit(x,y,z,outside(-1,y,z)-1)
+            if(x==15) emit(x,y,z,outside(16,y,z)-1)
+            if(y==0) emit(x,y,z,outside(x,-1,z)-1)
+            if(y==15) emit(x,y,z,outside(x,16,z)-1)
+            if(z==0) emit(x,y,z,outside(x,y,-1)-1)
+            if(z==15) emit(x,y,z,outside(x,y,16)-1)
+        }
+        fun spreadTo(x: Int,y: Int,z: Int,level: Int) {
+            if(x in 0..15 && y in 0..15 && z in 0..15 && passable(chunk.blockAt(x,y,z))) emit(x,y,z,level)
+        }
+        while(queue.isNotEmpty()) {
+            val i=queue.poll();val x=i%16;val y=(i/16)%16;val z=i/256;val level=values[i]-1
+            if(level<=0) continue
+            spreadTo(x+1,y,z,level);spreadTo(x-1,y,z,level);spreadTo(x,y+1,z,level)
+            spreadTo(x,y-1,z,level);spreadTo(x,y,z+1,level);spreadTo(x,y,z-1,level)
+        }
+        val previous=chunk.light;var next: ByteArray?=null;var mask=0
+        for(z in 0..15) for(y in 0..15) for(x in 0..15) {
+            val i=x+y*16+z*256
+            if(((previous[i].toInt() ushr 4) and 15)==values[i].toInt()) continue
+            val result=next ?: previous.copyOf().also { next=it }
+            result[i]=((previous[i].toInt() and 15) or (values[i].toInt() shl 4)).toByte()
+            mask=mask or 64
+            if(y==15) mask=mask or 1
+            if(y==0) mask=mask or 2
+            if(x==15) mask=mask or 4
+            if(x==0) mask=mask or 8
+            if(z==15) mask=mask or 16
+            if(z==0) mask=mask or 32
+        }
+        next?.let { chunk.light=it }
+        return mask
+    }
 
     const val MAX_LIGHT = 15
 

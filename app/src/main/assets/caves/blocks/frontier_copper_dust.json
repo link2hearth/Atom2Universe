@@ -1,0 +1,17 @@
+{
+  "id": 9858,
+  "name": "frontier_copper_dust",
+  "texture_top": "frontier:9858:top",
+  "texture_side": "frontier:9858:side",
+  "texture_bottom": "frontier:9858:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_copper_dust",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

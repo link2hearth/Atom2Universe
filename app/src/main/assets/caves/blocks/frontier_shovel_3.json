@@ -1,0 +1,17 @@
+{
+  "id": 9882,
+  "name": "frontier_shovel_3",
+  "texture_top": "frontier:9882:top",
+  "texture_side": "frontier:9882:side",
+  "texture_bottom": "frontier:9882:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_shovel_3",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

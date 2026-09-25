@@ -32,4 +32,16 @@ internal object CaveUiStyle {
             panel(button.context, if (primary) ACCENT else CARD), null)
     }
     fun accessible(view: View, label: String) { view.contentDescription = label; view.isFocusable = true }
+    fun icon(button: Button,kind: String,label: String,active: Boolean=false) {
+        button(button, false);button.text="";button.contentDescription=label;button.tooltipText=label
+        val glyph=android.graphics.drawable.InsetDrawable(CaveActionDrawable(kind),dp(button.context,11))
+        button.background=RippleDrawable(ColorStateList.valueOf(0x337DAD8B),android.graphics.drawable.LayerDrawable(arrayOf(
+            panel(button.context,if(active) SELECTED else CARD,if(active) ACCENT else BORDER,active),glyph)),null)
+        button.isSelected=active
+    }
+    fun count(context: Context,n: Int): String = when {
+        n>=1_000_000 -> context.getString(com.Atom2Universe.app.R.string.cave_count_million,n/1_000_000.0)
+        n>=10_000 -> context.getString(com.Atom2Universe.app.R.string.cave_count_thousand,n/1000.0)
+        else -> java.text.NumberFormat.getIntegerInstance().format(n)
+    }
 }

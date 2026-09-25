@@ -61,6 +61,8 @@ internal object BlockRegistry {
     fun load(assets: AssetManager) {
         if (defs.isNotEmpty()) return
         FarmSoil.registerTextures()
+        FrontierItems.registerTextures()
+        ExpeditionItems.registerTextures()
         UndergroundTextures.register()
         StreetMaterials.register()
         val files = assets.list("caves/blocks") ?: return

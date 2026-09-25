@@ -1,0 +1,12 @@
+{
+  "id": 9922,
+  "name": "expedition_magazine",
+  "texture_top": "expedition:9922:top",
+  "texture_side": "expedition:9922:side",
+  "texture_bottom": "expedition:9922:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_magazine",
+  "creative_tab": "resources",
+  "placeable": false
+}
