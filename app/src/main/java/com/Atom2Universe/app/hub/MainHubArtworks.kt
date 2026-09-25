@@ -2,6 +2,10 @@ package com.Atom2Universe.app.hub
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Typeface
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioHubTileDrawable
 import com.Atom2Universe.app.audio.AudioTileScene
 import kotlin.math.cos
@@ -20,23 +24,38 @@ class AudioOverviewHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Contex
             line(x + 4f, 118f, x + 4f, 145f, accent, 3f)
         }
         note(147f, 104f, 0xFFF0D8A5.toInt())
-        box(91f, 174f, 119f, 28f, 0xFF33445F.toInt(), 4f)
-        for (i in 0..8) {
-            box(94f + i * 13f, 177f, 11f, 22f, 0xFFD8E3EE.toInt(), 1f)
-            if (i % 7 in intArrayOf(0, 1, 3, 4, 5)) box(103f + i * 13f, 177f, 6f, 13f, 0xFF101A2D.toInt(), 1f)
-        }
     }
 }
 
-class GamesOverviewHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : AudioHubTileDrawable(0xFF789DF1.toInt()) {
+class GamesOverviewHubTileDrawable(context: Context) : AudioHubTileDrawable(0xFF789DF1.toInt()) {
+    private val aceRank = context.getString(R.string.hub_artwork_ace_rank)
+
     override fun drawScene(scene: AudioTileScene, accent: Int) = with(scene) {
         glow(148f, 117f, 112f, accent)
+        // As de cœur : une vraie enseigne et deux index opposés, lisibles en miniature.
         canvas.save()
-        canvas.rotate(-9f, 91f, 53f)
-        box(59f, 16f, 55f, 67f, 0xFFD7E2EF.toInt(), 9f)
-        for ((x, y) in arrayOf(70f to 29f, 96f to 29f, 83f to 46f, 70f to 63f, 96f to 63f))
-            oval(x, y, 6f, 6f, 0xFF4C6385.toInt())
+        canvas.rotate(-12f, 84f, 53f)
+        box(55f, 14f, 58f, 78f, 0xFF8B9BB4.toInt(), 6f)
+        box(56f, 14f, 55f, 75f, 0xFFF4EBDD.toInt(), 5f)
+        heart(this, 70f, 39f, 27f)
+        val rankPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0xFFBC4D64.toInt()
+            textSize = 13f
+            typeface = Typeface.create(Typeface.SERIF, Typeface.BOLD)
+        }
+        repeat(2) {
+            canvas.save()
+            if (it == 1) canvas.rotate(180f, 83.5f, 51.5f)
+            canvas.drawText(aceRank, 61f, 29f, rankPaint)
+            heart(this, 61f, 32f, 8f)
+            canvas.restore()
+        }
         canvas.restore()
+
+        // Silhouettes d'échecs au-dessus de la manette : roi ivoire et pion bleu.
+        chessPiece(this, 217f, 21f, king = true)
+        chessPiece(this, 171f, 39f, king = false)
+
         box(54f, 89f, 192f, 80f, 0xFF7488AE.toInt(), 37f)
         oval(49f, 109f, 67f, 82f, 0xFF7488AE.toInt())
         oval(184f, 109f, 67f, 82f, 0xFF7488AE.toInt())
@@ -51,6 +70,65 @@ class GamesOverviewHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Contex
         oval(119f, 144f, 22f, 22f, 0xFF17273D.toInt())
         oval(159f, 144f, 22f, 22f, 0xFF17273D.toInt())
         line(143f, 120f, 154f, 120f, accent, 3f)
+
+        // Dé au premier plan, face cinq ; les points restent sur le dé uniquement.
+        canvas.save()
+        canvas.rotate(-12f, 58f, 169f)
+        box(32f, 145f, 49f, 49f, 0xFF91A6BC.toInt(), 8f)
+        box(32f, 142f, 46f, 46f, 0xFFF0E7D7.toInt(), 7f)
+        for ((x, y) in arrayOf(43f to 153f, 67f to 153f, 55f to 165f, 43f to 177f, 67f to 177f)) {
+            oval(x - 3.5f, y - 3.5f, 7f, 7f, 0xFF293B57.toInt())
+        }
+        canvas.restore()
+
+        // Pions de dames, avec épaisseur et anneau gravé.
+        for ((x, y, color) in arrayOf(
+            Triple(222f, 163f, 0xFFCF9F70.toInt()),
+            Triple(238f, 179f, 0xFFDCB98B.toInt())
+        )) {
+            oval(x, y + 6f, 35f, 18f, 0xFF7C5947.toInt())
+            box(x, y + 9f, 35f, 6f, 0xFF7C5947.toInt(), 0f)
+            oval(x, y, 35f, 18f, color)
+            arc(x + 5f, y + 3f, 25f, 11f, 0f, 360f, 0xFF956A4C.toInt(), 1.5f)
+        }
+    }
+
+    private fun heart(scene: AudioTileScene, x: Float, y: Float, size: Float) {
+        val path = Path().apply {
+            moveTo(x + size * .5f, y + size)
+            cubicTo(x - size * .45f, y + size * .35f, x + size * .05f, y - size * .3f,
+                x + size * .5f, y + size * .2f)
+            cubicTo(x + size * .95f, y - size * .3f, x + size * 1.45f, y + size * .35f,
+                x + size * .5f, y + size)
+            close()
+        }
+        scene.canvas.drawPath(path, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = 0xFFBC4D64.toInt() })
+    }
+
+    private fun chessPiece(scene: AudioTileScene, x: Float, y: Float, king: Boolean) = with(scene) {
+        val body = if (king) 0xFFE9D6B4.toInt() else 0xFF92B5CB.toInt()
+        val shade = if (king) 0xFFB69876.toInt() else 0xFF587F9D.toInt()
+        canvas.save()
+        canvas.translate(x, y)
+        if (king) {
+            line(0f, 0f, 0f, 14f, body, 5f)
+            line(-6f, 5f, 6f, 5f, body, 5f)
+            box(-11f, 16f, 22f, 10f, body, 3f)
+        } else {
+            oval(-10f, 4f, 20f, 20f, body)
+        }
+        val stem = Path().apply {
+            moveTo(-7f, 27f)
+            cubicTo(-5f, 37f, -9f, 45f, -15f, 50f)
+            lineTo(15f, 50f)
+            cubicTo(9f, 45f, 5f, 37f, 7f, 27f)
+            close()
+        }
+        canvas.drawPath(stem, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = body })
+        box(-11f, 25f, 22f, 5f, shade, 2f)
+        box(-17f, 49f, 34f, 7f, body, 3f)
+        box(-19f, 55f, 38f, 6f, shade, 2f)
+        canvas.restore()
     }
 }
 

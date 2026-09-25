@@ -86,6 +86,10 @@ abstract class BaseHubActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         LocaleHelper.ensureLocale(this)
+        // Le hub gère lui-même la rotation (configChanges) : l'activité n'est pas recréée.
+        // Sans ce recalcul, la grille garderait les colonnes et les hauteurs du portrait,
+        // et les tuiles deviendraient des rectangles allongés en paysage.
+        updateViewMode()
     }
 
     abstract fun getLayoutResId(): Int
@@ -166,7 +170,11 @@ abstract class BaseHubActivity : AppCompatActivity() {
     private fun updateViewMode() {
         if (isGridMode) {
             val spanCount = calculateSpanCount()
-            recyclerView.layoutManager = GridLayoutManager(this, spanCount)
+            // On garde le gestionnaire existant quand c'en est déjà un en grille :
+            // changer seulement le nombre de colonnes conserve la position de défilement.
+            val grid = recyclerView.layoutManager as? GridLayoutManager
+            if (grid != null) grid.spanCount = spanCount
+            else recyclerView.layoutManager = GridLayoutManager(this, spanCount)
             tilesAdapter.setSpanCount(spanCount)
             viewToggleButton.setImageResource(R.drawable.ic_view_list)
         } else {
@@ -224,14 +232,18 @@ abstract class BaseHubActivity : AppCompatActivity() {
      * ce qui évite complètement ce flash.
      */
     private fun awaitCorrectTileHeightBeforeDraw() {
+        var appliedWidth = -1
         var appliedHeight = -1
         recyclerView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
+                val width = recyclerView.width
                 val height = recyclerView.height
-                if (height <= 0) return false
-                if (height != appliedHeight) {
+                if (width <= 0 || height <= 0) return false
+                // La largeur compte aussi : c'est elle qui donne le côté des tuiles carrées.
+                if (width != appliedWidth || height != appliedHeight) {
+                    appliedWidth = width
                     appliedHeight = height
-                    tilesAdapter.setRecyclerViewHeight(height)
+                    tilesAdapter.setRecyclerViewSize(width, height)
                     return false
                 }
                 recyclerView.viewTreeObserver.removeOnPreDrawListener(this)

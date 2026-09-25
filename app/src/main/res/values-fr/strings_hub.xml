@@ -42,4 +42,5 @@
     <string name="back_button_desc">Retour</string>
     <string name="hub_tile_ready_badge">%1$d prêt(s)</string>
     <string name="hub_theme_current">Thème actuel : %1$s</string>
+    <string name="hub_artwork_ace_rank">A</string>
 </resources>

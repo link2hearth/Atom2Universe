@@ -186,6 +186,13 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
     }
 
+    // L'activité gère la rotation elle-même (configChanges) : sans ce recalcul, les tuiles
+    // garderaient la hauteur mesurée dans l'ancienne orientation.
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::tilesAdapter.isInitialized) awaitCorrectTileHeightBeforeDraw()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
@@ -698,14 +705,17 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
      * ce qui évite complètement ce flash.
      */
     private fun awaitCorrectTileHeightBeforeDraw() {
+        var appliedWidth = -1
         var appliedHeight = -1
         tilesRecyclerView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
+                val width = tilesRecyclerView.width
                 val height = tilesRecyclerView.height
-                if (height <= 0) return false
-                if (height != appliedHeight) {
+                if (width <= 0 || height <= 0) return false
+                if (width != appliedWidth || height != appliedHeight) {
+                    appliedWidth = width
                     appliedHeight = height
-                    tilesAdapter.setRecyclerViewHeight(height)
+                    tilesAdapter.setRecyclerViewSize(width, height)
                     return false
                 }
                 tilesRecyclerView.viewTreeObserver.removeOnPreDrawListener(this)

@@ -43,6 +43,7 @@ class HubTilesAdapter(
 
     private val tiles = mutableListOf<HubTile>()
     private var itemTouchHelper: ItemTouchHelper? = null
+    private var recyclerViewWidth: Int = 0
     private var recyclerViewHeight: Int = 0
     private var isEditMode: Boolean = false
     private var isGridMode: Boolean = true
@@ -75,8 +76,13 @@ class HubTilesAdapter(
         itemTouchHelper = helper
     }
 
-    fun setRecyclerViewHeight(height: Int) {
-        if (recyclerViewHeight != height) {
+    /**
+     * La taille de la grille. Un changement de largeur seul (rotation) doit aussi redessiner :
+     * le côté des tuiles carrées se calcule sur la largeur, pas sur la hauteur.
+     */
+    fun setRecyclerViewSize(width: Int, height: Int) {
+        if (recyclerViewWidth != width || recyclerViewHeight != height) {
+            recyclerViewWidth = width
             recyclerViewHeight = height
             notifyDataSetChanged()
         }
