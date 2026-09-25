@@ -642,7 +642,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val def=BlockRegistry.get(type)
         val drop=BlockRegistry.harvestDrop(type)
         return when {
-                        type in E.melee -> E.melee.getValue(type).let { p -> activity.getString(R.string.cave_melee_description,p.damage,p.reach,p.recovery,p.targets,p.stamina.toInt()) }
+                        type in E.melee -> E.melee.getValue(type).let { p -> activity.getString(R.string.cave_melee_info,p.damage,p.reach,p.recovery,p.targets) }
                         E.armor(type)>0f -> activity.getString(R.string.cave_armor_description,(E.armor(type)*100).toInt())
                         type==E.SHIELD -> activity.getString(R.string.cave_shield_description,82,50)
                         type==E.ROD || type==E.BAIT -> activity.getString(R.string.cave_fishing_aim)

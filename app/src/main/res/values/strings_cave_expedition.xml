@@ -29,9 +29,6 @@
     <string name="cave_block_expedition_rivets">Rivets</string>
     <string name="cave_block_expedition_blank">Forged blank</string>
     <string name="cave_craft_station">Nearby station (4 blocks): %1$s — %2$s</string>
-    <string name="cave_melee_status">Stamina %1$d · hold to charge · secondary: guard</string>
-    <string name="cave_guard_status">Guard · stamina %1$d</string>
-    <string name="cave_melee_tired">Catch your breath before attacking.</string>
     <string name="cave_equipment_use">Action: equip · Equipment menu: inspect / remove</string>
     <string name="cave_equipment_changed">Equipment updated. Armor: %1$d%% · shield: %2$s</string>
     <string name="cave_equipment_full">Make room in the bag before changing equipment.</string>
@@ -46,12 +43,14 @@
     <string name="cave_secondary_action">Secondary: guard / reload / cancel cast</string>
     <string name="cave_combat_help">Melee: tap Action for a quick hit; hold and release for a heavy hit. Secondary raises a short guard: perfect timing parries frontal hits. Carry a buckler and equip it with Action. Armor works while worn, even with a bow. Use the Equipment menu to inspect or remove worn gear. Forge metals in an ember forge, then craft equipment beside an anvil. Fishing: cast at deep water, press Action at the bite, then keep the fish inside the gauge zone by holding and releasing Action.</string>
     <string name="cave_equipment_remove">Remove worn armor and buckler</string>
-    <string name="cave_melee_description">Damage %1$d · reach %2$.1f blocks\nRecovery %3$.2f s · targets %4$d · stamina %5$d\nTap Action for a quick hit; hold and release to charge. Secondary guards. Heavy hits interrupt enemies.</string>
     <string name="cave_armor_description">Reduces combat damage by %1$d%% while worn. Select in the hotbar and press Action to equip. Equipment menu: inspect or remove.</string>
-    <string name="cave_shield_description">Equip with Action. Secondary guards for a short time; a well-timed frontal parry cancels damage. Ordinary blocks absorb %1$d%% with a buckler, %2$d%% with a weapon. Guarding consumes stamina.</string>
+    <string name="cave_shield_description">Equip with Action. Secondary guards for a short time; a well-timed frontal parry cancels damage. Ordinary blocks absorb %1$d%% with a buckler, %2$d%% with a weapon.</string>
     <string name="cave_fish_description">Cook fish over fuel, simmer with potatoes and onions, or press two fish into oil. Oil makes lamps; hamlet traders also buy catches and oil. A fished pool rests for 75 seconds of active play.</string>
     <string name="cave_forge_description">Forge: iron + coal → blank; resonant geode + coal → resonant powder. Anvil: assemble melee weapons, armor, firearm parts and ammunition nearby. The mechanical press improves plate, rivet and cartridge-case yields.</string>
     <string name="cave_equipment_title">Worn equipment</string>
     <string name="cave_equipment_summary">Armor: %1$s\nDamage reduction: %2$d%%\nBuckler: %3$s\n\nWorn items are stored separately from the bag and saved with the world.</string>
     <string name="cave_parried">Parry!</string>
+    <string name="cave_melee_hint">Hold to charge · secondary: guard</string>
+    <string name="cave_guard_hint">Guard</string>
+    <string name="cave_melee_info">Damage %1$d · reach %2$.1f blocks\nRecovery %3$.2f s · targets %4$d\nTap Action for a quick hit; hold and release to charge. Secondary guards. Heavy hits interrupt enemies.</string>
 </resources>

@@ -3431,8 +3431,8 @@ internal class CaveRenderer(
         val reserve=ammoBlockIdFor(type)?.let { inventory[it] ?: 0 } ?: 0
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
         val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
-            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_status,expeditionCombat.stamina.toInt())
-            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && id in E.melee) context.getString(com.Atom2Universe.app.R.string.cave_melee_status,expeditionCombat.stamina.toInt())
+            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_hint)
+            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && id in E.melee) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
             else if(mode.allowsWorldEdits && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
             else if(heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_ranged_charge, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100),reserve)
             else if(heldItemMode!=HotbarMode.COMBAT || mag==null) ""

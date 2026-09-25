@@ -29,9 +29,6 @@
     <string name="cave_block_expedition_rivets">Rivets</string>
     <string name="cave_block_expedition_blank">Ébauche forgée</string>
     <string name="cave_craft_station">Poste à proximité (4 blocs) : %1$s — %2$s</string>
-    <string name="cave_melee_status">Endurance %1$d · maintenir pour charger · secondaire : garde</string>
-    <string name="cave_guard_status">Garde · endurance %1$d</string>
-    <string name="cave_melee_tired">Reprends ton souffle avant de frapper.</string>
     <string name="cave_equipment_use">Action : équiper · menu Équipement : consulter / retirer</string>
     <string name="cave_equipment_changed">Équipement modifié. Armure : %1$d%% · bouclier : %2$s</string>
     <string name="cave_equipment_full">Libère de la place dans le sac avant de changer l’équipement.</string>
@@ -46,12 +43,14 @@
     <string name="cave_secondary_action">Secondaire : garde / rechargement / annuler le lancer</string>
     <string name="cave_combat_help">Mêlée : touche Action pour un coup rapide ; maintiens puis relâche pour un coup puissant. Secondaire lève une courte garde : au bon moment, elle pare les coups de face. Équipe un bouclier avec Action. L’armure protège tant qu’elle est portée, même avec un arc. Utilise le menu Équipement pour consulter ou retirer les objets portés. Transforme les métaux dans la forge à braises, puis fabrique près d’une enclume. Pêche : lance en eau profonde, appuie sur Action à la touche, puis garde le poisson dans la zone de la jauge en maintenant et relâchant Action.</string>
     <string name="cave_equipment_remove">Retirer l’armure et le bouclier portés</string>
-    <string name="cave_melee_description">Dégâts %1$d · portée %2$.1f blocs\nRécupération %3$.2f s · cibles %4$d · endurance %5$d\nTouche Action pour frapper ; maintiens puis relâche pour charger. Secondaire : garde. Les coups puissants interrompent les ennemis.</string>
     <string name="cave_armor_description">Réduit les dégâts de combat de %1$d%% quand elle est portée. Sélectionne-la dans la barre de raccourcis et appuie sur Action. Menu Équipement : consulter ou retirer.</string>
-    <string name="cave_shield_description">Équipe avec Action. Secondaire lève une courte garde ; une parade de face au bon moment annule les dégâts. Le bouclier absorbe %1$d%% lors d’un blocage ordinaire, contre %2$d%% avec une arme. La garde consomme de l’endurance.</string>
+    <string name="cave_shield_description">Équipe avec Action. Secondaire lève une courte garde ; une parade de face au bon moment annule les dégâts. Le bouclier absorbe %1$d%% lors d’un blocage ordinaire, contre %2$d%% avec une arme.</string>
     <string name="cave_fish_description">Grille le poisson avec du combustible, mijote-le avec pommes de terre et oignon, ou presse deux poissons pour obtenir de l’huile. L’huile sert aux lampes ; les habitants achètent aussi certaines prises et l’huile. Un bassin pêché se repose 75 secondes de jeu actif.</string>
     <string name="cave_forge_description">Forge : fer + charbon → ébauche ; géode + charbon → poudre résonante. Enclume : assemble à proximité armes de mêlée, armures, pièces d’armes à feu et munitions. La presse mécanique améliore les rendements en plaques, rivets et douilles.</string>
     <string name="cave_equipment_title">Équipement porté</string>
     <string name="cave_equipment_summary">Armure : %1$s\nRéduction des dégâts : %2$d%%\nBouclier : %3$s\n\nLes objets portés sont séparés du sac et sauvegardés avec le monde.</string>
     <string name="cave_parried">Parade !</string>
+    <string name="cave_melee_hint">Maintenir pour charger · secondaire : garde</string>
+    <string name="cave_guard_hint">Garde</string>
+    <string name="cave_melee_info">Dégâts %1$d · portée %2$.1f blocs\nRécupération %3$.2f s · cibles %4$d\nTouche Action pour frapper ; maintiens puis relâche pour charger. Secondaire : garde. Les coups puissants interrompent les ennemis.</string>
 </resources>

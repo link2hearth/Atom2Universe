@@ -36,14 +36,14 @@ internal object ExpeditionItems {
     const val BLANK: Short = 9927
 
     data class Melee(val type: String, val damage: Int, val reach: Double,
-        val arc: Double, val recovery: Float, val stamina: Float, val targets: Int)
+        val arc: Double, val recovery: Float, val targets: Int)
     val melee = mapOf(
-        WOOD_SWORD to Melee("sword", 6, 2.8, .78, .52f, 13f, 2),
-        STONE_SPEAR to Melee("spear", 8, 3.9, .96, .80f, 17f, 1),
-        IRON_SWORD to Melee("sword", 13, 3.0, .78, .50f, 15f, 2),
-        IRON_SPEAR to Melee("spear", 16, 4.2, .96, .78f, 18f, 1),
-        STEEL_SWORD to Melee("sword", 22, 3.1, .75, .48f, 16f, 2),
-        STEEL_HAMMER to Melee("hammer", 34, 2.9, .68, 1.05f, 28f, 3))
+        WOOD_SWORD to Melee("sword", 6, 2.8, .78, .52f, 2),
+        STONE_SPEAR to Melee("spear", 8, 3.9, .96, .80f, 1),
+        IRON_SWORD to Melee("sword", 13, 3.0, .78, .50f, 2),
+        IRON_SPEAR to Melee("spear", 16, 4.2, .96, .78f, 1),
+        STEEL_SWORD to Melee("sword", 22, 3.1, .75, .48f, 2),
+        STEEL_HAMMER to Melee("hammer", 34, 2.9, .68, 1.05f, 3))
     fun armor(id: Short?) = when(id) { PADDED_ARMOR -> .18f; IRON_ARMOR -> .34f; STEEL_ARMOR -> .48f; else -> 0f }
     fun isEquipment(id: Short) = id in melee || id in PADDED_ARMOR..SHIELD
     fun isGardenItem(id: Short) = id in ROD..FISH_OIL
