@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cave_waila_block">Block: %1$s</string>
     <string name="cave_fishing_control">Keep the fish inside your zone. Hold Action to rise, release to sink.</string>
     <string name="cave_fishing_reel">Reel it in</string>
     <string name="cave_fishing_gauge_hint">Hold ↑  ·  release ↓</string>

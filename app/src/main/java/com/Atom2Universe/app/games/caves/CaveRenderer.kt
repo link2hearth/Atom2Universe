@@ -306,6 +306,7 @@ internal class CaveRenderer(
 
     private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
     private var mineTarget: RayHit? = null
+    private var lookTarget: RayHit? = null
     private var mineDamage = 0f
 
     val inventory = mutableMapOf<Short, Int>()
@@ -506,6 +507,7 @@ internal class CaveRenderer(
     var fpsCallback:      ((Int) -> Unit)?                       = null
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
     var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
+    var lookAtCallback:   ((Short?) -> Unit)? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var fishingGaugeCallback: ((FishingLine.Gauge)->Unit)? = null
@@ -2336,8 +2338,10 @@ internal class CaveRenderer(
         // Mode sans construction ni destruction (Assaut) : la carte ne se touche pas.
         if (!mode.allowsWorldEdits) {
             touch.placeRequested = false
+            updateLookTarget()
             return
         }
+        updateLookTarget()
         if (touch.placeRequested) {
             touch.placeRequested = false
             placeBlock()
@@ -2416,6 +2420,14 @@ internal class CaveRenderer(
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
+        }
+    }
+
+    private fun updateLookTarget() {
+        val target=raycastBlock()
+        if(lookTarget?.bx!=target?.bx || lookTarget?.by!=target?.by || lookTarget?.bz!=target?.bz) {
+            lookTarget=target
+            lookAtCallback?.invoke(target?.let { worldBlockAt(it.bx,it.by,it.bz) })
         }
     }
 
@@ -2884,10 +2896,10 @@ internal class CaveRenderer(
     // ── Rendu laser + highlight ───────────────────────────────────────────────
 
     private fun renderLaserAndHighlight() {
-        val target = mineTarget ?: return
-        if (!touch.laserActive) return
-
-        val verts = buildLaserVerts(target) + buildHighlightVerts(target, mineDamage)
+        val target = lookTarget ?: return
+        val mining=touch.laserActive && mineTarget?.let { it.bx==target.bx && it.by==target.by && it.bz==target.bz }==true
+        val verts = buildHighlightVerts(target,if(mining) mineDamage else 0.02f) +
+            if(mining) buildCrackVerts(target,mineDamage) else FloatArray(0)
         if (verts.isEmpty()) return
 
         val buf = ByteBuffer.allocateDirect(verts.size * 4)
@@ -3027,7 +3039,7 @@ internal class CaveRenderer(
         val x1=x+1+ep; val y1=y+1+ep; val z1=z+1+ep
 
         val t = progress.coerceIn(0f, 1f)
-        val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
+        val cr = 0.018f+t*0.045f; val cg = 0.026f+t*0.035f; val cb = 0.035f+t*0.025f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
         val outlineDef = BlockRegistry.get(block)?.takeIf { it.partial }
@@ -3064,6 +3076,41 @@ internal class CaveRenderer(
         v(x0,y0,z1); v(x0,y1,z1); v(x1,y1,z1); v(x0,y0,z1); v(x1,y1,z1); v(x1,y0,z1)
         v(x1,y0,z0); v(x1,y1,z0); v(x0,y1,z0); v(x1,y0,z0); v(x0,y1,z0); v(x0,y0,z0)
         return out
+    }
+
+    /** Pixel-like branching fracture lines, revealed in five discrete mining stages. */
+    private fun buildCrackVerts(target: RayHit,progress: Float): FloatArray {
+        val stage=when { progress>=.88f->5;progress>=.68f->4;progress>=.48f->3;progress>=.29f->2;progress>=.12f->1;else->0 }
+        if(stage==0) return FloatArray(0)
+        val paths=listOf(
+            listOf(0.48f to 0.54f,0.39f to 0.62f,0.42f to 0.70f,0.32f to 0.79f),
+            listOf(0.40f to 0.63f,0.27f to 0.58f,0.20f to 0.49f),
+            listOf(0.41f to 0.69f,0.55f to 0.73f,0.62f to 0.84f),
+            listOf(0.27f to 0.58f,0.23f to 0.43f,0.13f to 0.36f),
+            listOf(0.55f to 0.73f,0.70f to 0.68f,0.79f to 0.59f)
+        )
+        val nx=target.fnx;val ny=target.fny;val nz=target.fnz
+        val baseX=target.bx.toFloat()-camera.x.toFloat()+nx*.012f
+        val baseY=target.by.toFloat()-camera.y.toFloat()+ny*.012f
+        val baseZ=target.bz.toFloat()-camera.z.toFloat()+nz*.012f
+        fun point(p: Pair<Float,Float>): FloatArray = when {
+            nx!=0 -> floatArrayOf(baseX,baseY+p.second,baseZ+p.first)
+            ny!=0 -> floatArrayOf(baseX+p.first,baseY,baseZ+p.second)
+            else -> floatArrayOf(baseX+p.first,baseY+p.second,baseZ)
+        }
+        val out=ArrayList<Float>(stage*120)
+        fun addSegment(a: Pair<Float,Float>,b: Pair<Float,Float>) {
+            val p=point(a);val q=point(b)
+            var ux=q[0]-p[0];var uy=q[1]-p[1];var uz=q[2]-p[2]
+            val len=kotlin.math.sqrt(ux*ux+uy*uy+uz*uz).coerceAtLeast(.0001f);ux/=len;uy/=len;uz/=len
+            var wx=uy*nz-uz*ny;var wy=uz*nx-ux*nz;var wz=ux*ny-uy*nx
+            val wl=kotlin.math.sqrt(wx*wx+wy*wy+wz*wz).coerceAtLeast(.0001f);wx=wx/wl*.009f;wy=wy/wl*.009f;wz=wz/wl*.009f
+            fun v(x:Float,y:Float,z:Float){out.add(x);out.add(y);out.add(z);out.add(.72f);out.add(.75f);out.add(.78f)}
+            v(p[0]-wx,p[1]-wy,p[2]-wz);v(q[0]-wx,q[1]-wy,q[2]-wz);v(q[0]+wx,q[1]+wy,q[2]+wz)
+            v(p[0]-wx,p[1]-wy,p[2]-wz);v(q[0]+wx,q[1]+wy,q[2]+wz);v(p[0]+wx,p[1]+wy,p[2]+wz)
+        }
+        for(path in paths.take(stage)) path.zipWithNext(::addSegment)
+        return out.toFloatArray()
     }
 
     // ── Collision caméra TPS ─────────────────────────────────────────────────

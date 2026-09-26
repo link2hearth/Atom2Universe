@@ -117,9 +117,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
     var invSlotsReady = false
     var selectedSlotIdx = -1
     var dragSourceIdx = -1
+    private var selectedCreativeType: Short? = null
 
     fun hotbarBase() = (invSlots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
-    fun selectedType(): Short? = selectedSlotIdx.takeIf { it in invSlots.indices }?.let { invSlots[it] }
+    fun selectedType(): Short? = if(activity.isCreative && selectedCreativeType!=null) selectedCreativeType
+        else selectedSlotIdx.takeIf { it in invSlots.indices }?.let { invSlots[it] }
     private fun catalogTypeAt(index: Int): Short? = if (activity.isCreative) creativeCatalog.getOrNull(index) else invSlots.getOrNull(index)
 
     // ── Crafting ──────────────────────────────────────────────────────────────
@@ -308,10 +310,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private fun selectInventorySlot(index: Int) {
         if (activity.isCreative) {
             val id=catalogTypeAt(index) ?: return
-            selectedRecipe=null;assigningShortcut=false
-            val free=renderer.hotbar.indexOfFirst { it==null }.takeIf { it>=0 } ?: renderer.selectedSlot
-            assignCreativeTypeToBar(id,free)
-            refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel();updateCraftingList()
+            selectedRecipe=null;assigningShortcut=false;selectedCreativeType=id;selectedSlotIdx=-1
+            refreshPagedAdapter();updateInfoPanel();updateCraftingList()
             return
         }
         if (index !in invSlots.indices) return
@@ -364,9 +364,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
     private fun assignCreativeTypeToBar(id: Short,index: Int) {
         if (!activity.isCreative || index !in renderer.hotbar.indices) return
+        // Stack positions are reconciled against renderer.inventory; without a
+        // backing count syncInventoryStacks() immediately discards this creative item.
+        renderer.inventory[id]=maxOf(renderer.inventory[id] ?: 0,1)
         renderer.inventoryStacks.receive(id,1,slot=index)
         renderer.inventoryStacks.writeBar(renderer.hotbar)
         renderer.syncInventoryStacks();renderer.notifyHotbar()
+        renderer.inventoryCallback?.invoke(renderer.inventory.toMap())
         selectedSlotIdx=hotbarBase()+index
         activity.saveWorldAsync()
     }
@@ -376,7 +380,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if(b>=hotbarBase()) assignToBar(stack.key,b-hotbarBase())
         else returnToBag(InventoryDrag(stack.key,stack.id,stack.slot.takeIf { it>=0 }),stackKeys.getOrNull(b))
     }
-    private data class InventoryDrag(val key: Long,val id: Short,val slot: Int?)
+    private data class InventoryDrag(val key: Long,val id: Short,val slot: Int?,val creative: Boolean=false)
 
     internal fun bindBarGestures(view: View,index: Int) {
         CaveInventoryGestures.bind(view,
@@ -423,6 +427,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
     fun startSlotDrag(view: View,idx: Int) {
         ui.dismissDetails()
+        val fromRealHotbar=hud.overlayActiveFrames.any { it===view }
+        if(activity.isCreative && !fromRealHotbar) {
+            val id=catalogTypeAt(idx) ?: return
+            dragSourceIdx=idx
+            val token=InventoryDrag(0L,id,null,creative=true)
+            if(!view.startDragAndDrop(ClipData.newPlainText("cave-item",id.toString()),View.DragShadowBuilder(view),token,0)) dragSourceIdx=-1
+            return
+        }
         val stack=stackAt(idx) ?: return
         dragSourceIdx=idx
         val token=InventoryDrag(stack.key,stack.id,stack.slot.takeIf { it>=0 })
@@ -437,7 +449,17 @@ internal class InventoryManager(private val activity: CaveActivity) {
             DragEvent.ACTION_DROP -> {
                 v.alpha=1f
                 val index=idxProvider()
-                if(token!=null && index in invSlots.indices && (renderer.inventory[token.id] ?: 0)>0) {
+                val barSlot=hud.overlayActiveFrames.indexOfFirst { it===v }
+                if(token!=null && activity.isCreative) {
+                    when {
+                        barSlot>=0 && token.creative -> assignCreativeTypeToBar(token.id,barSlot)
+                        barSlot>=0 -> assignToBar(token.key,barSlot)
+                        !token.creative && (renderer.inventory[token.id] ?: 0)>0 -> returnToBag(token)
+                    }
+                    refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel()
+                    ui.status.text=if(barSlot>=0) activity.getString(R.string.cave_inventory_moved_bar,activity.blockName(token.id),barSlot+1)
+                        else activity.getString(R.string.cave_inventory_moved_bag,activity.blockName(token.id))
+                } else if(token!=null && !token.creative && index in invSlots.indices && (renderer.inventory[token.id] ?: 0)>0) {
                     val target=if(index>=hotbarBase()) index-hotbarBase() else null
                     if(target!=null) assignToBar(token.key,target) else returnToBag(token,stackKeys.getOrNull(index))
                     refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel()
@@ -486,7 +508,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     private fun showPausedInventory() {
-        assigningShortcut = false; selectedSlotIdx = -1; selectedRecipe = null
+        assigningShortcut = false; selectedSlotIdx = -1; selectedCreativeType=null; selectedRecipe = null
         activity.releaseGameInputs()
         if (!invSlotsReady) initInvSlots()
         showOverlay()
@@ -531,6 +553,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(ui.search.windowToken, 0)
         ui.search.clearFocus()
         selectedSlotIdx = -1
+        selectedCreativeType=null
         selectedRecipe  = null
         invGpZone       = InvGpZone.HOTBAR
         invGpCursor     = 0

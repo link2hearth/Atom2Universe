@@ -310,6 +310,7 @@ class CaveActivity : ThemedActivity() {
         root.addView(hudView)
 
         val tvCoords      = hudView.findViewById<android.widget.TextView>(R.id.cave_tv_coords)
+        val tvWaila       = hudView.findViewById<android.widget.TextView>(R.id.cave_tv_waila)
         val tvFps         = hudView.findViewById<android.widget.TextView>(R.id.cave_tv_fps)
         val btnBack       = hudView.findViewById<View>(R.id.cave_btn_back).also { vBtnBack = it }
         val btnMode       = hudView.findViewById<Button>(R.id.cave_btn_mode)
@@ -402,10 +403,12 @@ class CaveActivity : ThemedActivity() {
             val mapView = minimapView ?: return@setOnClickListener
             if (mapView.visibility == View.GONE) {
                 mapView.visibility = View.VISIBLE
+                tvCoords.visibility = View.VISIBLE
                 btnMap.alpha = 1.0f
                 startMinimapLoop()
             } else {
                 mapView.visibility = View.GONE
+                tvCoords.visibility = View.GONE
                 btnMap.alpha = 0.5f
                 minimapJob?.cancel()
                 minimapJob = null
@@ -413,6 +416,10 @@ class CaveActivity : ThemedActivity() {
         }
         renderer.modeCallback    = { mode -> uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser) } }
         renderer.posCallback     = { pos  -> uiHandler.post { tvCoords.text = pos } }
+        renderer.lookAtCallback = { block -> uiHandler.post {
+            if(block==null) { tvWaila.visibility=View.GONE;tvWaila.text="" }
+            else { tvWaila.text=getString(R.string.cave_waila_block,blockName(block));tvWaila.visibility=View.VISIBLE }
+        } }
         renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = "$fps FPS" } }
         renderer.miningCallback  = { progress, blockType ->
             uiHandler.post {
