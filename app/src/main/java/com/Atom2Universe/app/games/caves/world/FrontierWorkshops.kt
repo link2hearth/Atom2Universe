@@ -310,7 +310,9 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     private fun refreshRotation() {
         cranks.entries.removeAll { (p,t) -> !loaded(p) || block(p)!=F.CRANK || t<=0f }
-        val sources=knownMachines.keys.filter { loaded(it) && block(it)==F.WATERWHEEL } + cranks.keys
+        // Every known wheel and crank is a candidate; the driving rule says which ones turn right now.
+        val sources=knownMachines.keys.filter { loaded(it) && block(it)==F.WATERWHEEL } +
+            knownKinetics.keys.filter { loaded(it) && block(it)==F.CRANK }
         rotation=network.solve(sources)
     }
     /** Shafts from saves older than the network have no orientation: pick the axis joining the most parts. */
