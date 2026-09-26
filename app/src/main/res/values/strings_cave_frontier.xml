@@ -146,4 +146,12 @@ Animals can be fed, bred and harvested without slaughter. Walls now block the li
     <string name="cave_oven_input">Ingredients (%1$d)</string>
     <string name="cave_oven_fuel">Fuel (%1$d)</string>
     <string name="cave_oven_output">Products (%1$d)</string>
+    <string name="cave_block_frontier_crucible">Crucible</string>
+    <string name="cave_block_frontier_cast_mold">Casting mould</string>
+    <string name="cave_block_frontier_molten_copper">Molten copper</string>
+    <string name="cave_block_frontier_molten_iron">Molten iron</string>
+    <string name="cave_block_frontier_molten_steel">Molten steel</string>
+    <string name="cave_block_frontier_molten_gold">Molten gold</string>
+    <string name="cave_block_frontier_molten_silver">Molten silver</string>
+    <string name="cave_block_frontier_iron_plate">Iron plate</string>
 </resources>

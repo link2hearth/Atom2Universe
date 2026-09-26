@@ -231,6 +231,10 @@ internal object ShowcaseMap {
         // 14. Foundry: a wheel works the bellows through a gearbox, the bellows blow on the forge.
         wheel(190, 0, 109, false); part(191, 0, 109, F.SHAFT, 'x'); part(192, 0, 109, F.GEARBOX, 'y')
         part(193, 0, 109, F.BELLOWS, 'y'); put(194, y, 109, com.Atom2Universe.app.games.caves.node.ExpeditionItems.FORGE, 2)
+        // The crucible on the forge pours into the mould beside it, at its own height; a hopper under the
+        // mould carries the pieces into a chest (meta 1: it pours towards +X).
+        part(194, 1, 109, F.CRUCIBLE, 'y'); put(194, y + 1, 110, F.CAST_MOLD, 0)
+        put(194, y, 110, F.HOPPER, 1); put(195, y, 110, F.CHEST, 0)
         // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
         wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
         part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)

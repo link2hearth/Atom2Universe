@@ -49,7 +49,13 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
      * angle in radians; light 0..1. */
     class Kinetic(val pos: Pos,val block: Short) { var axis=1; var angle=0f; var speed=0f; var light=1f
         /** Crank fixed to a part on the + side of its axis: its mesh is turned round. */
-        var flipped=false }
+        var flipped=false
+        /** Crucible: how far it leans (radians, up to [MAX_TILT]) and whether it is pouring (it leans over
+         * its mould, [mold] when that mould is drawn). */
+        var tilt=0f; var pouring=false; var mold: Kinetic?=null
+        /** Crucible and mould: how full they really are (0..1) and how full they look. The look follows the
+         * pour: the crucible empties as it leans past its lip, its mould fills by as much. */
+        var fill=0f; var level=0f; var feeding=false }
     private val knownKinetics=linkedMapOf<Pos,Kinetic>()
     /** Turning parts near the player, refreshed once per second; angles advance every frame. */
     val kinetics=ArrayList<Kinetic>()
@@ -133,18 +139,39 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(E.FORGE,mapOf(3103.toShort() to 1),mapOf(3116.toShort() to 1),6,heat=2),
         Recipe(E.FORGE,mapOf(3102.toShort() to 1),mapOf(3117.toShort() to 1),6,heat=2),
         Recipe(E.FORGE,mapOf(3114.toShort() to 2,CHARCOAL to 1),mapOf(F.STEEL to 1),15,heat=3),
-        Recipe(F.PRESS,mapOf(3115.toShort() to 1),mapOf(F.PLATE to 2),6,true),
-        Recipe(F.PRESS,mapOf(F.STEEL to 1),mapOf(F.GEAR to 3),10,true),
+        // Crucible on a forge: every form of a metal melts into measures of it, at that metal's heat.
+        Recipe(F.CRUCIBLE,mapOf(3115.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(F.COPPER_DUST to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(3104.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),4,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(3114.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(F.IRON_DUST to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3101.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3116.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3103.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3117.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3102.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(F.STEEL to 1),mapOf(F.MOLTEN_STEEL to 1),4,heat=3),
+        // Casting mould: ingots first (the automatic choice), then plates and the blank. The metal sets in
+        // the mould (its time is the cooling), so what comes out is already cold.
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(3115.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(3114.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(F.STEEL to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_GOLD to 1),mapOf(3116.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_SILVER to 1),mapOf(3117.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(F.PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(F.IRON_PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(E.STEEL_PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 2),mapOf(E.BLANK to 1),10),
+        // Press: it shapes cast plates, never ingots.
+        Recipe(F.PRESS,mapOf(E.STEEL_PLATE to 1),mapOf(F.GEAR to 3),10,true),
         Recipe(F.LOOM,mapOf(F.WOOL to 2),mapOf(F.CLOTH to 3),10,true),
         Recipe(F.VAT,mapOf(F.MILK to 1),mapOf(F.CHEESE to 3,BUCKET_EMPTY to 1),30),
         Recipe(F.COOKER,mapOf(F.EGG to 2,9706.toShort() to 1),mapOf(F.OMELETTE to 2),10),
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.FLOUR to 2,F.EGG to 1),mapOf(F.PANCAKE to 4,BUCKET_EMPTY to 1),12),
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.TRUFFLE to 1,9705.toShort() to 2),mapOf(F.CREAM_SOUP to 3,BUCKET_EMPTY to 1),15)
     ) + listOf(
-        Recipe(E.FORGE,mapOf(3114.toShort() to 1,CHARCOAL to 1),mapOf(E.BLANK to 1),8,heat=2),
         Recipe(E.FORGE,mapOf(F.GEODE to 1),mapOf(E.POWDER to 8),12,heat=1),
-        Recipe(F.PRESS,mapOf(F.STEEL to 1),mapOf(E.STEEL_PLATE to 2),8,true),
-        Recipe(F.PRESS,mapOf(3114.toShort() to 1),mapOf(E.RIVETS to 8),6,true),
+        Recipe(F.PRESS,mapOf(F.IRON_PLATE to 1),mapOf(E.RIVETS to 8),6,true),
         Recipe(F.PRESS,mapOf(F.PLATE to 1),mapOf(E.CASE to 8),6,true),
         Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
         Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
@@ -163,7 +190,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun discover(p: Pos,id: Short) {
         if(id==F.HOPPER) hoppers.add(p)
         if(F.isContainer(id) && id!=F.CHEST && id!=F.CACHE) store(p)
-        if(id in TURNING || id==F.HOPPER) knownKinetics.getOrPut(p) { Kinetic(p,id) }
+        if(id in TURNING || id==F.HOPPER || id==F.CRUCIBLE || id==F.CAST_MOLD) knownKinetics.getOrPut(p) { Kinetic(p,id) }
         if(id==F.MOLD_WET) drying.getOrPut(p) { 0f }
     }
     @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double,light: (Int,Int,Int)->Float) {
@@ -184,6 +211,21 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                     // The spout points where the hopper pours: an axis and which way along it.
                     val d=HOPPER_DIRS[(world.metaAt(p.x,p.y,p.z).toInt() and 7).coerceIn(0,4)]
                     k.axis=if(d[0]!=0) 0 else if(d[1]!=0) 1 else 2;k.flipped=d[0]+d[1]+d[2]<0
+                } else if(k.block==F.CRUCIBLE) {
+                    // It leans towards its mould: the axis of that side, flipped when the mould is on the - side.
+                    val d=moldSide(p)
+                    k.axis=if(d==null) -1 else if(d[0]!=0) 0 else 2;k.flipped=d!=null && d[0]+d[2]<0
+                    val s=store(p);val mold=spout(p)
+                    val molten=F.MOLTEN.sumOf { s.items[it] ?: 0 }
+                    k.fill=if(exhibition) 1f else (molten.toFloat()/(mold?.let { moldNeeds(store(it)) } ?: 1)).coerceAtMost(1f)
+                    k.pouring=p in tipped
+                    k.mold=mold?.let { knownKinetics[it] }
+                } else if(k.block==F.CAST_MOLD) {
+                    // Flat, not turning: molten metal fills it, then the piece cast in it stays until taken.
+                    val s=store(p)
+                    k.axis=2;k.flipped=false
+                    k.fill=if(s.items.keys.any { it !in F.MOLTEN }) 1f
+                        else (F.MOLTEN.sumOf { s.items[it] ?: 0 }.toFloat()/moldNeeds(s)).coerceAtMost(1f)
                 } else {
                     val meta=world.metaAt(p.x,p.y,p.z)
                     k.axis=PartialBlockModel.shaftAxis(meta);k.flipped=meta.toInt() and PartialBlockModel.CRANK_ON_PLUS!=0
@@ -205,8 +247,28 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         }
         // Angle advances with time, never by a fixed step per frame: smooth at 60 and 120 Hz.
         for(k in kinetics) if(k.speed!=0f) k.angle=(k.angle+k.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
+        // A crucible leans over its mould while it pours, and rights itself after. On the exhibition map
+        // nothing melts: it leans and rights itself in turn, to show how it moves.
+        showClock=(showClock+dt)%(2*SHOW_POUR)
+        // Its metal runs out once it leans past its lip, into its mould; it keeps leaning until it looks empty.
+        for(k in kinetics) k.feeding=false
+        for(k in kinetics) if(k.block==F.CRUCIBLE) {
+            val pouring=if(exhibition) showClock<SHOW_POUR else k.pouring || k.tilt>0f && k.level>0.01f
+            val target=if(pouring && k.axis>=0) MAX_TILT else 0f
+            k.tilt=if(k.tilt<target) minOf(target,k.tilt+TILT_SPEED*dt) else maxOf(target,k.tilt-TILT_SPEED*dt)
+            val before=k.level
+            k.level=when {
+                k.tilt>LIP_TILT -> maxOf(0f,k.level-FLOW*dt)
+                k.tilt<=0f -> toward(k.level,k.fill,FLOW*dt)
+                else -> k.level
+            }
+            k.mold?.let { m -> if(k.tilt>0f) m.feeding=true; if(k.level<before) m.level=minOf(1f,m.level+before-k.level) }
+        }
+        // A mould nobody pours into shows what it really holds: empty again once its piece is taken.
+        for(k in kinetics) if(k.block==F.CAST_MOLD && !k.feeding) k.level=toward(k.level,k.fill,FLOW*dt)
         for(m in visibleWindmills) if(m.speed!=0f) m.angle=(m.angle+m.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
     }
+    private fun toward(from: Float,to: Float,step: Float)=if(from<to) minOf(to,from+step) else maxOf(to,from-step)
     /** A machine shows an axle end on the face where a gearbox drives it: axis of that face, flipped when
      * the gearbox is on the - side. Axis -1: no gearbox, nothing drawn. Returns which way that face turns
      * about its +axis (±1), so the machine's parts follow the axle that drives them. */
@@ -341,9 +403,9 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val box=s.stacks(z);val boxItems=s.items(z)
         val from=if(deposit) player else box;val to=if(deposit) box else player
         val source=from.get(if(deposit) key else rawKey(key)) ?: return 0
-        if(deposit && (z==ZONE_OUTPUT || z==ZONE_FUEL && !isFuel(source.id))) return 0
+        if(deposit && (z==ZONE_OUTPUT || z==ZONE_FUEL && !isFuel(source.id)) || source.id in F.MOLTEN) return 0
         val destination=if(deposit) boxItems else inventory
-        val count=minOf(source.count,Int.MAX_VALUE-(destination[source.id] ?: 0).coerceAtLeast(0))
+        val count=minOf(source.count,Int.MAX_VALUE-(destination[source.id] ?: 0).coerceAtLeast(0),if(deposit) room(p,s,source.id) else Int.MAX_VALUE)
         if(count<=0 || !move(boxItems,inventory,source.id,count,deposit)) return 0
         from.take(source.key,count);to.receive(source.id,count,if(deposit) target?.let { rawKey(it) } else target,if(deposit) null else slot,bagOnly=slot==null)
         player.writeBar(hotbar)
@@ -351,12 +413,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     /** Atomic exact transfer by item. Ovens take fuel into their fuel compartment and give their products first. */
     @Synchronized fun transfer(p: Pos, inventory: MutableMap<Short,Int>, id: Short, requested: Int, deposit: Boolean): Boolean {
-        if(requested <= 0 || !loaded(p) || !F.isContainer(block(p))) return false
+        if(requested <= 0 || !loaded(p) || !F.isContainer(block(p)) || id in F.MOLTEN) return false
         val s=store(p)
         val box=if(!zoned(block(p))) s.items
             else if(deposit) (if(isFuel(id)) s.fuel else s.items)
             else listOf(s.output,s.items,s.fuel).firstOrNull { (it[id] ?: 0)>0 } ?: return false
-        return move(box,inventory,id,requested,deposit)
+        return move(box,inventory,id,if(deposit) minOf(requested,room(p,s,id)) else requested,deposit)
     }
     /** Capacity and overflow are checked before either side changes. */
     private fun move(box: MutableMap<Short,Int>,inventory: MutableMap<Short,Int>,id: Short,requested: Int,deposit: Boolean): Boolean {
@@ -376,6 +438,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         stores.remove(p)?.let { s -> for(m in listOf(s.items,s.fuel,s.output)) for((id,n) in m) contents[id]=(contents[id] ?: 0)+n }
         // Dry bricks come out of their mould (the bricks are the block's drop): the mould goes back to the bag.
         if(block(p)==F.MOLD_DRY) contents[F.BRICK_MOLD]=(contents[F.BRICK_MOLD] ?: 0)+1
+        // Metal still molten sets as ingots when its crucible or mould is broken.
+        for(m in F.MOLTEN) contents.remove(m)?.let { n -> val solid=F.SOLID.getValue(m); contents[solid]=(contents[solid] ?: 0)+n }
         // Breaking a turning windmill head gives its sails back.
         windmills.remove(p)?.let { mill ->
             for(s in mill.sails) contents[s[3].toShort()]=(contents[s[3].toShort()] ?: 0)+1
@@ -454,6 +518,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         for(entry in cranks.entries) entry.setValue(entry.value-1f)
         refreshRotation()
         dryMolds()
+        pour()
         // Only nearby, loaded workshops run. No offline production or distant world reads.
         for((p,s) in stores) {
             if(!loaded(p) || !simulated(p)) continue
@@ -464,14 +529,22 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             val fuel=fuelBox.keys.sorted().firstOrNull { isFuel(it) && (fuelBox[it] ?: 0)>0 }
             fun burnOne() { val left=fuelBox.getValue(fuel!!)-1; if(left==0) fuelBox.remove(fuel) else fuelBox[fuel]=left }
             // The forge's heat: its fire (lit, or fuel ready to light it) raised by the bellows beside it.
-            val heat=if(machine!=E.FORGE || s.burn<=0f && fuel==null) 0 else 1+bellows(p)
+            // A crucible takes the heat of the forge it sits on, and keeps that forge's fire going.
+            val hearth=if(machine==E.FORGE) p else if(machine==F.CRUCIBLE && block(p.move(0,-1,0))==E.FORGE) p.move(0,-1,0) else null
+            val fire=hearth?.let { store(it) }
+            val fireFuel=fire?.fuel?.keys?.sorted()?.firstOrNull { isFuel(it) && (fire.fuel[it] ?: 0)>0 }
+            val heat=if(fire==null || fire.burn<=0f && fireFuel==null) 0 else 1+bellows(hearth!!)
             val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || speedAt(p)!=0f) &&
-                (machine!=F.COOKER || fuel!=null) && heat>=r.heat && canProcess(s,r.input,r.output,out) }
+                (machine!=F.COOKER || fuel!=null) && heat>=r.heat && canProcess(s,r.input,r.output,out) &&
+                (machine!=F.CRUCIBLE || crucibleTakes(s,r.output.keys.first())) }
             if(recipe!=null) {
-                if(recipe.heat>0) {
+                if(recipe.heat>0 && fire!=null) {
                     // Keep the fire going: a fuel lasts FORGE_FUEL_SECONDS on embers, half as long red, a third white.
-                    if(s.burn<=0f) { burnOne(); s.burn=FORGE_FUEL_SECONDS }
-                    s.burn-=heat
+                    if(fire.burn<=0f) {
+                        val left=fire.fuel.getValue(fireFuel!!)-1; if(left==0) fire.fuel.remove(fireFuel) else fire.fuel[fireFuel]=left
+                        fire.burn=FORGE_FUEL_SECONDS
+                    }
+                    fire.burn-=heat
                 }
                 val recipeKey=recipe.key
                 if(s.active!=recipeKey) { s.active=recipeKey;s.progress=0;s.partial=0f }
@@ -511,12 +584,58 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             val into=store(target)
             fun destination(id: Short)=if(zoned(block(target)) && isFuel(id)) into.fuel else into.items
             val id=box.keys.sorted().firstOrNull { id ->
-                if(block(target)==F.HOPPER) hopperTakes(into.items,id) else (destination(id)[id] ?: 0)<Int.MAX_VALUE } ?: continue
+                if(block(target)==F.HOPPER) hopperTakes(into.items,id) else (destination(id)[id] ?: 0)<Int.MAX_VALUE && room(target,into,id)>0 } ?: continue
             moveOne(box,destination(id),id)
         }
     }
+    /** One metal at a time in a crucible (a melting recipe only gives one kind of metal). */
+    private fun crucibleTakes(s: Store,molten: Short)=s.items.keys.none { it in F.MOLTEN && it!=molten }
+    /** Which molten metal an item melts into, if any. */
+    private fun meltsInto(id: Short)=recipes.firstOrNull { it.machine==F.CRUCIBLE && id in it.input }?.output?.keys?.first()
+    /** Where a crucible pours: a mould beside it at its own height (a hopper can then sit under the mould),
+     * or on the ground beside the forge it sits on. */
+    private fun spout(p: Pos): Pos? {
+        for(dy in intArrayOf(0,-1)) for(d in HOPPER_DIRS.drop(1)) {
+            val q=p.move(d[0],dy,d[2]); if(block(q)==F.CAST_MOLD) return q
+        }
+        return null
+    }
+    /** The side it leans to: the direction of its mould. */
+    private fun moldSide(p: Pos): IntArray? = spout(p)?.let { q -> intArrayOf(q.x-p.x,0,q.z-p.z) }
+    /** How many more of [id] a container takes. A crucible holds one metal, and just what its mould needs
+     * for one piece (one measure without a mould). */
+    private fun room(p: Pos,s: Store,id: Short): Int {
+        if(block(p)!=F.CRUCIBLE) return Int.MAX_VALUE
+        val metal=meltsInto(id) ?: return 0
+        val present=s.items.keys.mapNotNull { if(it in F.MOLTEN) it else meltsInto(it) }.toSet()
+        if(present.any { it!=metal }) return 0
+        val batch=spout(p)?.let { moldNeeds(store(it)) } ?: 1
+        return (batch-s.items.values.sum()).coerceAtLeast(0)
+    }
+    /** Crucibles leaning over their mould right now. */
+    private val tipped=HashSet<Pos>()
+    private var showClock=0f
+    /** Measures a mould waits for: its chosen shape, or one (an ingot) when left automatic. */
+    private fun moldNeeds(s: Store)=recipes.getOrNull(s.selection)?.takeIf { it.machine==F.CAST_MOLD }?.input?.values?.sum() ?: 1
+    /** Once all its metal has melted, a crucible leans over its mould and pours one measure a second,
+     * one piece at a time; then it rights itself for the next batch. */
+    private fun pour() {
+        tipped.clear()
+        for((p,s) in stores) {
+            if(!loaded(p) || block(p)!=F.CRUCIBLE || !simulated(p)) continue
+            if(s.items.keys.any { it !in F.MOLTEN }) continue
+            val metal=s.items.keys.firstOrNull { it in F.MOLTEN } ?: continue
+            val target=spout(p) ?: continue
+            if(!loaded(target)) continue
+            val mold=store(target)
+            if(mold.items.keys.any { it !in F.MOLTEN || it!=metal }) continue
+            if((mold.items[metal] ?: 0)>=moldNeeds(mold)) continue
+            moveOne(s.items,mold.items,metal)
+            tipped+=p
+        }
+    }
     /** A hopper holds up to [HOPPER_KINDS] kinds of item, [HOPPER_STACK] of each. */
-    private fun hopperTakes(box: Map<Short,Int>,id: Short)=(box[id] ?: 0)<HOPPER_STACK && (id in box || box.size<HOPPER_KINDS)
+    private fun hopperTakes(box: Map<Short,Int>,id: Short)=id !in F.MOLTEN && (box[id] ?: 0)<HOPPER_STACK && (id in box || box.size<HOPPER_KINDS)
     private fun moveOne(from: MutableMap<Short,Int>,to: MutableMap<Short,Int>,id: Short) {
         val left=from.getValue(id)-1; if(left==0) from.remove(id) else from[id]=left
         to[id]=(to[id] ?: 0)+1
@@ -595,6 +714,14 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         const val MAX_KINETICS=512
         /** Machines driven by the network: drawn whole by KineticRenderer, with a part that shows their work. */
         val MACHINES=setOf(F.MILL,F.PRESS,F.CRUSHER,F.LOOM,F.BELLOWS)
+        /** Exhibition map: the crucible leans and rights itself every this many seconds. */
+        const val SHOW_POUR=3f
+        /** A crucible leans this far to pour, at this pace (radians, radians a second). */
+        const val MAX_TILT=1.9f
+        const val TILT_SPEED=1.4f
+        /** The crucible's metal starts running out past this lean (radians), this much of it a second. */
+        const val LIP_TILT=.6f
+        const val FLOW=.8f
         /** Stand-ins in recipes for a family of blocks: any log, any sand, charcoal or coal. */
         val LOG: Short=1000
         val SAND: Short=4000

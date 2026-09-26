@@ -48,7 +48,8 @@ internal class KineticRenderer {
         val meshes = listOf(shaftMesh(), cogMesh(large = false), cogMesh(large = true), crankMesh(),
             wheelMesh(1.45f, 8), wheelMesh(2.45f, 12), socketMesh(),
             millMesh(), millstoneMesh(), pressMesh(), pressHeadMesh(), crusherMesh(), rollerMesh(), loomMesh(), shuttleMesh(),
-            bellowsMesh(), bellowsBoardMesh(), bellowsLeatherMesh(), hopperMesh(), spoutMesh())
+            bellowsMesh(), bellowsBoardMesh(), bellowsLeatherMesh(), hopperMesh(), spoutMesh(),
+            crucibleStandMesh(), crucibleMesh(), moltenMesh(), moldMetalMesh())
         check(meshes.size == TYPES)
         var first = 0
         for ((type, mesh) in meshes.withIndex()) {
@@ -67,7 +68,7 @@ internal class KineticRenderer {
         bindMesh(meshVbo)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, instanceVbo)
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, instances.size * 4, null, GLES30.GL_DYNAMIC_DRAW)
-        for (location in 3..4) {
+        for (location in 3..5) {
             GLES30.glEnableVertexAttribArray(location)
             GLES30.glVertexAttribDivisor(location, 1)
         }
@@ -90,6 +91,7 @@ internal class KineticRenderer {
         val instanceStride = INSTANCE_FLOATS * 4
         GLES30.glVertexAttribPointer(3, 3, GLES30.GL_FLOAT, false, instanceStride, first * instanceStride)
         GLES30.glVertexAttribPointer(4, 3, GLES30.GL_FLOAT, false, instanceStride, first * instanceStride + 12)
+        GLES30.glVertexAttribPointer(5, 1, GLES30.GL_FLOAT, false, instanceStride, first * instanceStride + 24)
     }
 
     private fun type(k: FrontierWorkshops.Kinetic) = when (k.block) {
@@ -109,11 +111,13 @@ internal class KineticRenderer {
         FrontierItems.LOOM -> LOOM to SHUTTLE
         FrontierItems.BELLOWS -> BELLOWS to BELLOWS_BOARD
         FrontierItems.HOPPER -> HOPPER to SPOUT
+        FrontierItems.CRUCIBLE -> CRUCIBLE_STAND to CRUCIBLE_POT
+        FrontierItems.CAST_MOLD -> MOLD_METAL to MOLD_METAL
         else -> null
     }
 
     private var count = 0
-    private fun put(k: FrontierWorkshops.Kinetic, camera: Camera, axis: Float, angle: Float, dz: Float = 0f) {
+    private fun put(k: FrontierWorkshops.Kinetic, camera: Camera, axis: Float, angle: Float, dz: Float = 0f, level: Float = 1f) {
         if ((count + 1 + MAX_WINDMILLS) * INSTANCE_FLOATS > instances.size) return
         val o = count * INSTANCE_FLOATS
         instances[o] = (k.pos.x - camera.x).toFloat()
@@ -122,6 +126,7 @@ internal class KineticRenderer {
         instances[o + 3] = axis
         instances[o + 4] = angle
         instances[o + 5] = k.light
+        instances[o + 6] = level
         count++
     }
 
@@ -130,6 +135,23 @@ internal class KineticRenderer {
         val machine = machineTypes(k.block)
         if (machine == null) {
             if (type(k) == type) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, k.angle + phase(k))
+            return
+        }
+        if (k.block == FrontierItems.CRUCIBLE) {
+            // Stand, pot and metal turn about the horizontal axis across the spout; the pot leans towards
+            // its mould (at -axis when flipped, else +axis).
+            val tiltAxis = if (k.axis == 2) 0 else 2
+            val toward = if (k.flipped) -1f else 1f
+            val lean = if (k.axis == 0) -toward * k.tilt else toward * k.tilt
+            when (type) {
+                CRUCIBLE_STAND -> put(k, camera, tiltAxis.toFloat(), 0f)
+                CRUCIBLE_POT -> put(k, camera, tiltAxis.toFloat(), lean)
+                MOLTEN -> if (k.level > .01f) put(k, camera, tiltAxis.toFloat(), lean, level = k.level)
+            }
+            return
+        }
+        if (k.block == FrontierItems.CAST_MOLD) {
+            if (type == MOLD_METAL && k.level > .01f) put(k, camera, 2f, 0f, level = k.level)
             return
         }
         when (type) {
@@ -167,6 +189,7 @@ internal class KineticRenderer {
             instances[o + 3] = m.axis.toFloat()
             instances[o + 4] = m.angle
             instances[o + 5] = m.light
+            instances[o + 6] = 1f
             n++
         }
         if (n == 0) return
@@ -486,13 +509,45 @@ internal class KineticRenderer {
         prism(0f, 0f, 2.6f / 16f, 2.6f / 16f, .44f, .5f, 0f, IRON_LIGHT)
     }.data.toFloatArray()
 
+    /** Crucible stand: two posts along the tilt axis (local Z) holding the pivot; local Y is up here. */
+    private fun crucibleStandMesh() = MeshOut().apply {
+        for (s in intArrayOf(-1, 1)) {
+            prism(0f, -.12f, 1.2f / 16f, .38f, s * .44f - .04f, s * .44f + .04f, 0f, IRON)
+            prism(0f, -.46f, 3f / 16f, .04f, s * .44f - .05f, s * .44f + .05f, 0f, IRON_LIGHT)
+            prism(0f, .02f, 1f / 16f, 1f / 16f, s * .3f - .1f, s * .3f + .1f, 0f, IRON_LIGHT)
+        }
+    }.data.toFloatArray()
+
+    /** The pot, fired clay, open at the top (local +Y), turning on the pivot at the origin. */
+    private fun crucibleMesh() = MeshOut().apply {
+        val w = 5f / 16f; val t = 1f / 16f
+        prism(0f, -.3f, w, t, -w, w, 0f, CLAY_DARK)
+        for (s in intArrayOf(-1, 1)) {
+            prism(s * (w - t / 2), 0f, t / 2, .3f, -w, w, 0f, CLAY)
+            prism(0f, 0f, w, .3f, s * (w - t / 2) - t / 2, s * (w - t / 2) + t / 2, 0f, CLAY)
+        }
+        for (s in intArrayOf(-1, 1)) prism(s * (w + t / 2), .28f, t / 2, .03f, -w, w, 0f, CLAY_DARK)
+    }.data.toFloatArray()
+
+    /** Molten metal filling the pot from its floor, drawn only when there is some; its height follows the level. */
+    private fun moltenMesh() = MeshOut().apply {
+        prism(0f, -.005f, 4f / 16f, .235f, -4f / 16f, 4f / 16f, 0f, GLOW)
+        prism(0f, .235f, 3f / 16f, .01f, -3f / 16f, 3f / 16f, 0f, GLOW_LIGHT)
+    }.data.toFloatArray()
+
+    /** Molten metal in the hollow on top of a casting mould, spreading from the middle as it fills. */
+    private fun moldMetalMesh() = MeshOut().apply {
+        prism(0f, -.12f, 9f / 32f, .004f, -5f / 32f, 5f / 32f, 0f, GLOW)
+        prism(0f, -.114f, 6f / 32f, .003f, -3f / 32f, 3f / 32f, 0f, GLOW_LIGHT)
+    }.data.toFloatArray()
+
     private fun shuttleMesh() = MeshOut().apply {
         prism(0f, .1f, .09f, .03f, .05f, .1f, 0f, LIGHT)
         prism(0f, .1f, .04f, .02f, .1f, .11f, 0f, CLOTH)
     }.data.toFloatArray()
 
     companion object {
-        private const val TYPES = 20
+        private const val TYPES = 24
         private const val SOCKET = 6
         private const val MILL = 7
         private const val MILLSTONE = 8
@@ -507,9 +562,19 @@ internal class KineticRenderer {
         private const val BELLOWS_LEATHER = 17
         private const val HOPPER = 18
         private const val SPOUT = 19
+        private const val CRUCIBLE_STAND = 20
+        private const val CRUCIBLE_POT = 21
+        private const val MOLTEN = 22
+        private const val MOLD_METAL = 23
+        private const val CLAY = 0xA85B40
+        private const val CLAY_DARK = 0x7A4030
+        private const val GLOW = 0xFF8A2A
+        private const val GLOW_LIGHT = 0xFFD27A
         /** Per type: 0 = turns about its axis, 1 = strikes down and back up, 2 = runs to and fro along X,
-         * 3 = folds down from its base (the bellows' leather). */
-        private val MOTION = IntArray(TYPES).also { it[PRESS_HEAD] = 1; it[SHUTTLE] = 2; it[BELLOWS_BOARD] = 1; it[BELLOWS_LEATHER] = 3 }
+         * 3 = folds down from its base (the bellows' leather), 4 = a liquid as high as its level (then turns),
+         * 5 = a liquid as wide as its level. */
+        private val MOTION = IntArray(TYPES).also { it[PRESS_HEAD] = 1; it[SHUTTLE] = 2; it[BELLOWS_BOARD] = 1; it[BELLOWS_LEATHER] = 3
+            it[MOLTEN] = 4; it[MOLD_METAL] = 5 }
         private const val LEATHER = 0x7A5236
         private const val LEATHER_DARK = 0x5A3A24
         /** Crusher rollers: each is this far from the middle, across X. */
@@ -525,7 +590,7 @@ internal class KineticRenderer {
         private const val FRAME = 0x9A7446
         private const val BEAM = 0x6E4E2C
         private const val MESH_FLOATS = 9
-        private const val INSTANCE_FLOATS = 6
+        private const val INSTANCE_FLOATS = 7
         private const val COG_TEETH = 8
         private const val LARGE_TEETH = 16
         private const val ROD = 2.5f / 16f
@@ -538,6 +603,7 @@ internal class KineticRenderer {
             layout(location=2) in vec3 aColor;
             layout(location=3) in vec3 iOffset;
             layout(location=4) in vec3 iAxisAngleLight;
+            layout(location=5) in float iLevel;
             uniform mat4 uVp;
             // 0: turns about local Z; 1: strikes down local Z and back once a turn; 2: runs to and fro along local X.
             uniform int uMotion;
@@ -559,13 +625,16 @@ internal class KineticRenderer {
                 float angle = flipped ? -iAxisAngleLight.y : iAxisAngleLight.y;
                 vec3 p = aPosition;
                 vec3 n = aNormal;
+                // Liquids: the crucible's rises from the pot floor, the mould's spreads from the middle.
+                if (uMotion == 4) p.y = -0.24 + (p.y + 0.24) * iLevel;
+                else if (uMotion == 5) { float w = sqrt(iLevel); p.x *= w; p.z *= w; }
                 if (uMotion == 1) p.z -= 0.295 * (0.5 - 0.5 * cos(angle));
                 else if (uMotion == 2) p.x += 0.26 * sin(angle);
                 else if (uMotion == 3) p.z = -0.42 + (p.z + 0.42) * (1.0 - 0.49 * (0.5 - 0.5 * cos(angle)));
                 else {
                     float c = cos(angle);
                     float s = sin(angle);
-                    p = vec3(aPosition.x * c - aPosition.y * s, aPosition.x * s + aPosition.y * c, aPosition.z);
+                    p = vec3(p.x * c - p.y * s, p.x * s + p.y * c, p.z);
                     n = vec3(aNormal.x * c - aNormal.y * s, aNormal.x * s + aNormal.y * c, aNormal.z);
                 }
                 if (flipped) { p = vec3(-p.x, p.y, -p.z); n = vec3(-n.x, n.y, -n.z); }

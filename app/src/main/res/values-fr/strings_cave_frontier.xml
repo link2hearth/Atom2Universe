@@ -146,4 +146,12 @@ Les animaux se nourrissent, se reproduisent et produisent sans abattage. Les mur
     <string name="cave_oven_input">Entrée (%1$d)</string>
     <string name="cave_oven_fuel">Combustible (%1$d)</string>
     <string name="cave_oven_output">Sortie (%1$d)</string>
+    <string name="cave_block_frontier_crucible">Creuset</string>
+    <string name="cave_block_frontier_cast_mold">Moule de coulée</string>
+    <string name="cave_block_frontier_molten_copper">Cuivre en fusion</string>
+    <string name="cave_block_frontier_molten_iron">Fer en fusion</string>
+    <string name="cave_block_frontier_molten_steel">Acier en fusion</string>
+    <string name="cave_block_frontier_molten_gold">Or en fusion</string>
+    <string name="cave_block_frontier_molten_silver">Argent en fusion</string>
+    <string name="cave_block_frontier_iron_plate">Plaque de fer</string>
 </resources>

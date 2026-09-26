@@ -592,7 +592,7 @@
         <item>Une grande roue et une longue rangée de renvois : six ateliers</item>
         <item>À la main : une manivelle sur un renvoi, deux ateliers</item>
         <item>Plus vite : le petit engrenage double la vitesse, la presse demande deux fois plus de force</item>
-        <item>Fonderie : un soufflet sur un renvoi attise la forge</item>
+        <item>Fonderie : le soufflet attise la forge, le creuset verse dans son moule</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>

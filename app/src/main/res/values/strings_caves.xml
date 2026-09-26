@@ -592,7 +592,7 @@
         <item>A large wheel and a long row of gearboxes: six workshops</item>
         <item>By hand: a crank on a gearbox, two workshops</item>
         <item>Faster: the small cogwheel doubles the speed, the press asks twice the force</item>
-        <item>Foundry: bellows on a gearbox blow on the forge</item>
+        <item>Foundry: bellows blow on the forge, the crucible pours into its mould</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Cottage</item>

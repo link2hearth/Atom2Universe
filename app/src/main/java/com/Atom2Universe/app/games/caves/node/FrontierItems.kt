@@ -39,6 +39,22 @@ internal object FrontierItems {
     /** Clay in its mould, set down to dry in the sun; a day of sun turns it into [MOLD_DRY]. */
     const val MOLD_WET: Short = 9828
     const val MOLD_DRY: Short = 9829
+    /** Sits on a forge and melts metal with its heat; turned by a gearbox, it tips and pours. */
+    const val CRUCIBLE: Short = 9865
+    /** Takes what a crucible pours and gives the chosen piece, hot. */
+    const val CAST_MOLD: Short = 9866
+    const val MOLTEN_COPPER: Short = 9867
+    const val MOLTEN_IRON: Short = 9868
+    const val MOLTEN_STEEL: Short = 9869
+    const val MOLTEN_GOLD: Short = 9873
+    const val MOLTEN_SILVER: Short = 9874
+    /** Cast in a mould, then shaped by the press. */
+    const val IRON_PLATE: Short = 9875
+    /** Metal in fusion: it lives in crucibles and moulds only, never in a bag. */
+    val MOLTEN = setOf(MOLTEN_COPPER, MOLTEN_IRON, MOLTEN_STEEL, MOLTEN_GOLD, MOLTEN_SILVER)
+    /** What each molten metal sets into when it leaves its crucible or mould. */
+    val SOLID = mapOf(MOLTEN_COPPER to 3115.toShort(), MOLTEN_IRON to 3114.toShort(), MOLTEN_STEEL to 9859.toShort(),
+        MOLTEN_GOLD to 3116.toShort(), MOLTEN_SILVER to 3117.toShort())
 
     const val PRESS: Short = 9840
     const val CRUSHER: Short = 9841
@@ -67,7 +83,7 @@ internal object FrontierItems {
     const val CHARM: Short = 9871
     const val MARKET_BELL: Short = 9872
 
-    fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE || id==HOPPER
+    fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE || id==HOPPER || id==CRUCIBLE || id==CAST_MOLD
     fun healing(id: Short): Int = when (id) {
         BREAD -> 7; SALAD -> 6; STEW -> 14; BAKED_POTATO -> 6
         BERRY_TART -> 12; RATATOUILLE -> 16; TRAVEL_RATION -> 10
@@ -133,6 +149,35 @@ internal object FrontierItems {
         }
     }
 
+    /** Crucible, casting mould, molten metals and hot pieces. */
+    private fun foundryItem(id: Int, face: String, rect: (Int, Int, Int, Int, Long) -> Unit, c: Canvas, p: Paint) {
+        val glow = when (id) { 9867 -> 0xFFE8783A; 9868 -> 0xFFF2A23C; 9869 -> 0xFFFFE7A6; 9873 -> 0xFFFFD24A; 9874 -> 0xFFF4F1E8; else -> 0xFFE8683A }
+        when (id) {
+            9865 -> {
+                // Crucible: a fired clay pot with its pivot pins.
+                rect(0, 0, 32, 32, 0x00000000)
+                rect(6, 6, 20, 22, 0xFF8C4A34); rect(8, 8, 16, 18, 0xFFA85B40)
+                if (face == "top") { rect(8, 8, 16, 16, 0xFF2A1A14); rect(11, 11, 10, 10, 0xFFE8783A) }
+                rect(2, 14, 4, 4, 0xFF5E656B); rect(26, 14, 4, 4, 0xFF5E656B); rect(6, 4, 20, 3, 0xFF6E3A28)
+            }
+            9866 -> {
+                // Casting mould: a stone block with the shape hollowed in its top.
+                rect(0, 0, 32, 32, 0xFF6F7A73); rect(2, 2, 28, 28, 0xFF84908A)
+                if (face == "top") { rect(7, 11, 18, 10, 0xFF2E3336); rect(9, 13, 14, 6, 0xFF3E4448) }
+                else { rect(0, 20, 32, 2, 0xFF4E5852) }
+            }
+            in 9867..9874 -> {
+                // Molten metal: a glowing pool in a ladle.
+                p.color = 0xFF3E4448.toInt(); c.drawCircle(16f, 18f, 12f, p)
+                p.color = glow.toInt(); c.drawCircle(16f, 18f, 9f, p)
+                p.color = 0xFFFFF4C8.toInt(); c.drawCircle(13f, 15f, 3f, p)
+                rect(26, 6, 3, 12, 0xFF5E656B)
+            }
+            // Iron plate: a flat grey sheet with a bevelled edge.
+            else -> { rect(4, 8, 24, 16, 0xFF4E5559); rect(5, 9, 22, 14, 0xFF8A9299); rect(6, 10, 12, 2, 0xFFC4CBD0); rect(5, 22, 22, 1, 0xFF5E656B) }
+        }
+    }
+
     private fun texture(id: Int, face: String, size: Int): Bitmap {
         val b = Bitmap.createBitmap(32, 32, Bitmap.Config.ARGB_8888)
         val c = Canvas(b); val p = Paint().apply { isAntiAlias = false }
@@ -140,6 +185,7 @@ internal object FrontierItems {
             p.color = color.toInt(); c.drawRect(x.toFloat(), y.toFloat(), (x+w).toFloat(), (y+h).toFloat(), p)
         }
         if (id == 9805) cookerFace(face, ::rect, c, p)
+        else if (id in 9865..9875) foundryItem(id, face, ::rect, c, p)
         else if (id in listOf(9808, 9809, 9821, 9822, 9823, 9824, 9825, 9826, 9827, 9828, 9829)) {
             // Mechanical parts: wood, a darker hub and the mark of their role.
             rect(0,0,32,32,0xFF8E6A40); rect(2,2,28,28,0xFFB48A56)
