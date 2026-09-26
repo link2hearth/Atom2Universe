@@ -42,6 +42,7 @@ internal sealed class GameEvent {
     data class Footstep(val surface: String = "stone", val running: Boolean = false,
                         val moving: Boolean = false, val interval: Float = .46f) : GameEvent()
     data class AnimalCall(val species: String, val volume: Float, val pan: Float) : GameEvent()
+    data class NatureAmbience(val rain: Float, val crickets: Float) : GameEvent()
 
     /**
      * Un soldat du mode Assaut vient de tomber. À ne pas confondre avec [MobDied], qui veut dire

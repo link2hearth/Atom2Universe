@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_nature_weather">Météo et nuages</string>
+    <string name="cave_nature_wildlife">Petite faune</string>
+    <string name="cave_nature_hint">La météo évolue progressivement, avec de la neige dans les régions froides. Observez les papillons et abeilles dans la végétation, les oiseaux au-dessus des arbres, les poissons et libellules près de l’eau, et les lucioles la nuit.</string>
+</resources>

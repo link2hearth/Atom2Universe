@@ -103,6 +103,27 @@ internal class CavePausePanel(private val activity: CaveActivity) {
         view.setOnSeekBarChangeListener(listener(1))
         simulation.setOnSeekBarChangeListener(listener(2))
         refreshLabels()
+        if (activity.renderer.supportsNature) {
+            var weather = activity.renderer.weatherEnabled
+            var wildlife = activity.renderer.wildlifeEnabled
+            fun applyNature() {
+                val w = weather; val life = wildlife
+                activity.glView.queueEvent { activity.renderer.setNatureEnabled(w, life) }
+            }
+            body.addView(android.widget.Switch(activity).apply {
+                setText(R.string.cave_nature_weather); setTextColor(CaveUiStyle.TEXT)
+                isChecked = weather
+                setPadding(0, dp(8), 0, dp(8))
+                setOnCheckedChangeListener { _, checked -> weather = checked; applyNature() }
+            })
+            body.addView(android.widget.Switch(activity).apply {
+                setText(R.string.cave_nature_wildlife); setTextColor(CaveUiStyle.TEXT)
+                isChecked = wildlife
+                setPadding(0, dp(8), 0, dp(8))
+                setOnCheckedChangeListener { _, checked -> wildlife = checked; applyNature() }
+            })
+            label().apply { setText(R.string.cave_nature_hint); textSize = 12f }
+        }
         root.addView(Button(activity).apply {
             setText(R.string.cave_quit_confirm); CaveUiStyle.button(this)
             setTextColor(CaveUiStyle.WARNING)

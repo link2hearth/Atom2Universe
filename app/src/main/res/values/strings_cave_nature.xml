@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_nature_weather">Weather and clouds</string>
+    <string name="cave_nature_wildlife">Small wildlife</string>
+    <string name="cave_nature_hint">Weather changes gradually, with snow in cold regions. Look for butterflies and bees in greenery, birds above the trees, fish and dragonflies by the water, and fireflies at night.</string>
+</resources>

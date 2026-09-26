@@ -24,6 +24,8 @@ internal class CaveSoundEngine(private val context: Context) {
     private var footstepStream = 0
     private var footstepSurface = ""
     private var footstepRate = 1f
+    private var rainStream = 0
+    private var cricketStream = 0
 
     // Ambiance : une boucle longue, trop lourde pour le SoundPool, jouée par un MediaPlayer. Tout ce
     // qui la touche passe par le fil principal, dans l'ordre où les événements arrivent.
@@ -55,12 +57,21 @@ internal class CaveSoundEngine(private val context: Context) {
                 context.assets.openFd("caves/audio/$name.wav").use { ids[name] = sounds.load(it, 1) }
             } catch (e: Exception) { Log.w("CaveAudio", "Cannot load $name", e) }
         }
+        Thread({
+            try {
+                val files = CaveNatureSounds.prepare(context.cacheDir)
+                synchronized(this) {
+                    if (pool === sounds) for ((name, file) in files) ids[name] = sounds.load(file.path, 1)
+                }
+            } catch (e: Exception) { Log.w("CaveAudio", "Cannot prepare nature sounds", e) }
+        }, "CaveNatureAudio").start()
     }
 
     @Synchronized fun pause() {
         paused = true
         main.post { ambiencePlayer?.let { if (it.isPlaying) it.pause() } }
         stopFootsteps()
+        stopNature()
         streams.keys.forEach { pool?.stop(it) }
         streams.clear()
     }
@@ -77,6 +88,7 @@ internal class CaveSoundEngine(private val context: Context) {
             ambienceTrack = null
         }
         stopFootsteps()
+        stopNature()
         pool?.release()
         pool = null
         ids.clear(); loaded.clear(); streams.clear(); lastPlayed.clear()
@@ -95,6 +107,7 @@ internal class CaveSoundEngine(private val context: Context) {
                 is GameEvent.Ambience -> main.post { switchAmbience(event.track) }
                 is GameEvent.Footstep -> onFootstep(event)
                 is GameEvent.AnimalCall -> onAnimal(event)
+                is GameEvent.NatureAmbience -> onNature(event)
                 is GameEvent.MobNearby -> Unit // Detection is silent; no unrelated creaking cue.
                 // The shot carries the hit feedback; no extra "tac" on contact.
                 is GameEvent.MobHit -> Unit
@@ -105,6 +118,25 @@ internal class CaveSoundEngine(private val context: Context) {
                 is GameEvent.SoldierDown -> Unit
             }
         }
+    }
+
+    @Synchronized private fun onNature(event: GameEvent.NatureAmbience) {
+        if (paused) return
+        val sounds = pool ?: return
+        fun loop(name: String, stream: Int, volume: Float): Int {
+            if (volume < .005f) { if (stream != 0) sounds.stop(stream); return 0 }
+            if (stream != 0) { sounds.setVolume(stream, volume, volume); return stream }
+            val id = ids[name]?.takeIf { it in loaded } ?: return 0
+            return sounds.play(id, volume, volume, 8, -1, 1f)
+        }
+        rainStream = loop("nature_rain", rainStream, event.rain * .08f)
+        cricketStream = loop("nature_crickets", cricketStream, event.crickets * .06f)
+    }
+
+    private fun stopNature() {
+        if (rainStream != 0) pool?.stop(rainStream)
+        if (cricketStream != 0) pool?.stop(cricketStream)
+        rainStream = 0; cricketStream = 0
     }
 
     @Synchronized private fun onShot(type: String, enemy: Boolean = false) {

@@ -119,6 +119,28 @@ internal class CaveRenderer(
     private val decorSource = worldSource as? MapSource
     private val decorRenderer = decorSource?.let { com.Atom2Universe.app.games.caves.render.CaveDecorRenderer(it) }
     private val kineticRenderer = com.Atom2Universe.app.games.caves.render.KineticRenderer()
+    private val ambientWeather = com.Atom2Universe.app.games.caves.world.AmbientWeather(worldSeed)
+    private val ambientWildlife = com.Atom2Universe.app.games.caves.entity.AmbientWildlife(world, worldSeed)
+    private val ambientRenderer = com.Atom2Universe.app.games.caves.render.AmbientRenderer(world, grayscaleStyle)
+    internal val supportsNature get() = worldSource == null
+    @Volatile internal var weatherEnabled = context.getSharedPreferences("cave_nature", Context.MODE_PRIVATE).getBoolean("weather", true)
+        private set
+    @Volatile internal var wildlifeEnabled = context.getSharedPreferences("cave_nature", Context.MODE_PRIVATE).getBoolean("wildlife", true)
+        private set
+    private var natureClimate = 0
+    private var natureSampleTimer = 0f
+    private var natureShelter = 0f
+    private var natureAudioPaused = false
+
+    /** Called on the GL thread by the pause menu. */
+    internal fun setNatureEnabled(weather: Boolean, wildlife: Boolean) {
+        weatherEnabled = weather; wildlifeEnabled = wildlife
+        if (!wildlife) ambientWildlife.clear()
+        natureSampleTimer = 0f
+        eventBus.publish(GameEvent.NatureAmbience(0f, 0f))
+        context.getSharedPreferences("cave_nature", Context.MODE_PRIVATE).edit()
+            .putBoolean("weather", weather).putBoolean("wildlife", wildlife).apply()
+    }
     private val uploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
@@ -899,6 +921,7 @@ internal class CaveRenderer(
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets)
         decorRenderer?.onSurfaceCreated()
+        ambientRenderer.onSurfaceCreated()
         kineticRenderer.onSurfaceCreated()
         projRenderer.onSurfaceCreated(context.assets)
 
@@ -1450,7 +1473,37 @@ internal class CaveRenderer(
         caveBlend = caveBlend.coerceAtMost(altitudeBlend)
         // ── Cycle jour/nuit ───────────────────────────────────────────────────
         val dayT = dayFraction()
-        val (skyR, skyG, skyB) = skyColorFor(dayT)
+        if (supportsNature && gamePaused && !natureAudioPaused) {
+            eventBus.publish(GameEvent.NatureAmbience(0f, 0f))
+            natureAudioPaused = true
+            natureSampleTimer = 0f
+        }
+        if (supportsNature && !gamePaused) {
+            natureAudioPaused = false
+            natureSampleTimer -= dt
+            if (natureSampleTimer <= 0f) {
+                natureSampleTimer = .5f
+                val x = floorInt(camera.playerX); val z = floorInt(camera.playerZ)
+                natureClimate = world.vegetationClimateAt(x, z)
+                val roof = com.Atom2Universe.app.games.caves.world.weatherRoof(world, x, z, camera.playerY)
+                natureShelter = when { roof > camera.playerY + 8 -> 0f; roof > camera.playerY -> .12f; else -> 1f }
+                val outside = natureShelter * (1f-caveBlend) * if (isHeadInWater()) 0f else 1f
+                val rain = if (weatherEnabled) ambientWeather.precipitation else 0f
+                val crickets = if (wildlifeEnabled && natureClimate != 1 && natureClimate != 4 && ambientFor(dayT) < .45f)
+                    outside * (1f-rain) else 0f
+                eventBus.publish(GameEvent.NatureAmbience(rain * (1f-ambientWeather.snow) * outside, crickets))
+            }
+            ambientWeather.update(gameTimeMs, dt, natureClimate, weatherEnabled)
+            if (wildlifeEnabled) ambientWildlife.update(dt, camera,
+                ambientFor(dayT), if (weatherEnabled) ambientWeather.precipitation else 0f)
+        }
+        val cloudCover = if (supportsNature && weatherEnabled) ambientWeather.cloud else 0f
+        val weatherLight = if (supportsNature && weatherEnabled) ambientWeather.light else 1f
+        val (clearR, clearG, clearB) = skyColorFor(dayT)
+        val overcast = ambientFor(dayT)
+        val skyR = lerpF(clearR, .36f * overcast, cloudCover * .8f)
+        val skyG = lerpF(clearG, .43f * overcast, cloudCover * .8f)
+        val skyB = lerpF(clearB, .51f * overcast, cloudCover * .8f)
         val skyGray = skyR * .2126f + skyG * .7152f + skyB * .0722f
         GLES30.glClearColor(
             (if (grayscaleStyle) skyGray else skyR) * (1f - caveBlend),
@@ -1462,15 +1515,18 @@ internal class CaveRenderer(
         GLES30.glDepthMask(false)
         GLES30.glEnable(GLES30.GL_BLEND)
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-        renderSkyBody(sunTex,  sunAngleFor(dayT),  12f, sunAlphaFor(dayT) * (1f - caveBlend),  false)
-        renderSkyBody(moonTex, moonAngleFor(dayT),  8f, moonAlphaFor(dayT) * (1f - caveBlend), true)
-        renderStars(starsAlphaFor(dayT) * (1f - caveBlend))
+        val celestialVisibility = (1f - caveBlend) * (1f - cloudCover * .85f)
+        renderSkyBody(sunTex,  sunAngleFor(dayT),  12f, sunAlphaFor(dayT) * celestialVisibility,  false)
+        renderSkyBody(moonTex, moonAngleFor(dayT),  8f, moonAlphaFor(dayT) * celestialVisibility, true)
+        renderStars(starsAlphaFor(dayT) * celestialVisibility)
         GLES30.glDisable(GLES30.GL_BLEND)
         GLES30.glDepthMask(true)
 
         // ── Rendu chunks ─────────────────────────────────────────────────────
+        if (supportsNature && weatherEnabled) ambientRenderer.clouds(camera, ambientWeather,
+            gameTimeMs / 1000.0, ambientFor(dayT), caveBlend)
         val headUnderwater = isHeadInWater()
-        val sceneAmbient = ambientFor(dayT) * if (headUnderwater) 0.85f else 1f
+        val sceneAmbient = ambientFor(dayT) * weatherLight * if (headUnderwater) 0.85f else 1f
         worldShader?.use()
         val caveFogEnd = (minOf(world.renderRadiusCave, world.renderRadiusYSurface) - 1) * CHUNK_SIZE.toFloat()
         GLES30.glUniform3f(caveFogUniform, caveBlend, caveFogEnd * 0.55f, caveFogEnd)
@@ -1617,7 +1673,7 @@ internal class CaveRenderer(
         }
         lodShader?.use()
         GLES30.glUniformMatrix4fv(lodUMvp, 1, false, camera.vpMatrix, 0)
-        GLES30.glUniform1f(lodUAmbient, ambientFor(dayT) * (1f - caveBlend))
+        GLES30.glUniform1f(lodUAmbient, ambientFor(dayT) * weatherLight * (1f - caveBlend))
         // Itère par super-tuiles (8×8 colonnes) : ~125 tests frustum au lieu de 8000.
         if (lodEnabled) for ((sk, keys) in lodGrid) {
             val scx = superKeyToCx(sk) * LOD_SUPER
@@ -1639,6 +1695,7 @@ internal class CaveRenderer(
         }
 
         decorRenderer?.draw(camera, sceneAmbient, caveBlend, caveFogEnd)
+        if (supportsNature && wildlifeEnabled) ambientRenderer.wildlife(camera, ambientWildlife, sceneAmbient)
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) { mode.update(dt);if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot) }
@@ -1761,6 +1818,8 @@ internal class CaveRenderer(
         GLES30.glDisable(GLES30.GL_BLEND)
 
         // ── Viewmodel 1re personne (bras + objet tenu) ────────────────────────
+        if (supportsNature && weatherEnabled && caveBlend < .99f) ambientRenderer.precipitation(camera, ambientWeather,
+            gameTimeMs / 1000.0, sceneAmbient, headUnderwater)
         drawViewmodel(dt)
 
         posAccum += dt
@@ -4830,6 +4889,7 @@ internal class CaveRenderer(
         lodShader?.destroy()
         enemyRenderer.destroy()
         decorRenderer?.destroy()
+        ambientRenderer.destroy()
         kineticRenderer.destroy()
         projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
