@@ -11,7 +11,7 @@ internal object FrontierModels {
         spawnZoneMin=0, spawnWeight=0f, lootTable="", behavior=behavior, bossEligible=false, xpBase=0)
 
     val all: Map<String,MobModel> by lazy {
-        (0..2).associate { "settler_$it" to resident(it) } + ("workshop_rotor" to rotor())
+        (0..2).associate { "settler_$it" to resident(it) }
     }
     private fun resident(role: Int): MobModel {
         val parts=mutableListOf<MobPart>()
@@ -33,12 +33,5 @@ internal object FrontierModels {
         box(0f,28f,0f,if(role==0) 11f else 7.5f,1.5f,if(role==0) 10f else 7.5f,if(role==0) 0xFFD6B878.toInt() else cloth,Limb.LOOK,0,21f)
         if(role==2) box(0f,19f,2.9f,1.8f,2.4f,.6f,0xFFB4EDD8.toInt())
         return MobModel(parts,30f,gait=6f,stride=.35f,breath=.08f)
-    }
-    private fun rotor(): MobModel {
-        val parts=mutableListOf<MobPart>()
-        for(i in 0..3) parts+=MobPart(0f,15f,0f,3f,25f,1.2f,0xFFC4AA76.toInt(),
-            Limb.ROTOR,pivotY=15f,baseTiltDeg=i*45f,pivotZ=0f,pivotX=0f)
-        parts+=MobPart(0f,15f,.8f,5f,5f,2f,0xFF637C83.toInt())
-        return MobModel(parts,30f,breath=0f)
     }
 }

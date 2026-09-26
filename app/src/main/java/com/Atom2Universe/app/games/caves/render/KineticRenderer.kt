@@ -12,9 +12,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
-/** Rotating mechanical parts. One mesh per part type, built once; every placed part is an instance
- * (position, axis, angle, light), so each part type costs a single draw call. The rotation is
- * applied in the vertex shader: the CPU only uploads six floats per visible part.
+/** Rotating mechanical parts and the machines they drive. One mesh per part type, built once; every placed
+ * part is one or more instances (position, axis, angle, light), so each part type costs a single draw call.
+ * The motion is applied in the vertex shader: the CPU only uploads six floats per instance.
+ *
+ * A machine is drawn whole: its body (always upright), the axle ends on its two input faces (turned with its
+ * input axis) and the part that shows its work: a millstone, a press head, two crusher rollers, a shuttle.
  */
 internal class KineticRenderer {
     private var shader: ShaderProgram? = null
@@ -25,7 +28,8 @@ internal class KineticRenderer {
     private val meshCount = IntArray(TYPES)
     private var vpLocation = 0
     private var fogLocation = 0
-    private val instances = FloatArray((FrontierWorkshops.MAX_KINETICS + MAX_WINDMILLS) * INSTANCE_FLOATS)
+    private var motionLocation = 0
+    private val instances = FloatArray((FrontierWorkshops.MAX_KINETICS * 4 + MAX_WINDMILLS) * INSTANCE_FLOATS)
     /** Sails of each turning windmill, meshed once when it starts: (buffer, vertex count). */
     private val windmillMeshes = HashMap<FrontierWorkshops.Windmill, IntArray>()
     private val drawnWindmills = HashSet<FrontierWorkshops.Windmill>()
@@ -39,9 +43,12 @@ internal class KineticRenderer {
         shader = ShaderProgram(VERTEX, FRAGMENT).also {
             vpLocation = it.uniform("uVp")
             fogLocation = it.uniform("uCaveFog")
+            motionLocation = it.uniform("uMotion")
         }
         val meshes = listOf(shaftMesh(), cogMesh(large = false), cogMesh(large = true), crankMesh(),
-            wheelMesh(1.45f, 8), wheelMesh(2.45f, 12))
+            wheelMesh(1.45f, 8), wheelMesh(2.45f, 12), socketMesh(),
+            millMesh(), millstoneMesh(), pressMesh(), pressHeadMesh(), crusherMesh(), rollerMesh(), loomMesh(), shuttleMesh())
+        check(meshes.size == TYPES)
         var first = 0
         for ((type, mesh) in meshes.withIndex()) {
             meshFirst[type] = first; meshCount[type] = mesh.size / MESH_FLOATS; first += meshCount[type]
@@ -93,27 +100,58 @@ internal class KineticRenderer {
         else -> 0
     }
 
+    /** The mesh types a machine is drawn with: body, working part (the axle ends are [SOCKET] for all). */
+    private fun machineTypes(block: Short) = when (block) {
+        FrontierItems.MILL -> MILL to MILLSTONE
+        FrontierItems.PRESS -> PRESS to PRESS_HEAD
+        FrontierItems.CRUSHER -> CRUSHER to ROLLER
+        FrontierItems.LOOM -> LOOM to SHUTTLE
+        else -> null
+    }
+
+    private var count = 0
+    private fun put(k: FrontierWorkshops.Kinetic, camera: Camera, axis: Float, angle: Float, dz: Float = 0f) {
+        if ((count + 1 + MAX_WINDMILLS) * INSTANCE_FLOATS > instances.size) return
+        val o = count * INSTANCE_FLOATS
+        instances[o] = (k.pos.x - camera.x).toFloat()
+        instances[o + 1] = (k.pos.y - camera.y).toFloat()
+        instances[o + 2] = (k.pos.z - camera.z).toFloat() + dz
+        instances[o + 3] = axis
+        instances[o + 4] = angle
+        instances[o + 5] = k.light
+        count++
+    }
+
+    /** Every instance of [type] that part [k] needs. Machine bodies stand upright (axis code 1: local Z is up). */
+    private fun emit(k: FrontierWorkshops.Kinetic, type: Int, camera: Camera) {
+        val machine = machineTypes(k.block)
+        if (machine == null) {
+            if (type(k) == type) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, k.angle + phase(k))
+            return
+        }
+        when (type) {
+            SOCKET -> put(k, camera, k.axis.toFloat(), k.angle)
+            machine.first -> put(k, camera, 1f, 0f)
+            // Two rollers side by side along X, turning towards each other.
+            ROLLER -> if (machine.second == ROLLER) {
+                put(k, camera, 0f, k.angle, dz = -ROLLER_GAP)
+                put(k, camera, 0f, -k.angle, dz = ROLLER_GAP)
+            }
+            machine.second -> put(k, camera, 1f, k.angle)
+        }
+    }
+
     fun draw(parts: List<FrontierWorkshops.Kinetic>, windmills: List<FrontierWorkshops.Windmill>, camera: Camera,
              caveBlend: Float, fogEnd: Float) {
         val s = shader ?: return
         if (parts.isEmpty() && windmills.isEmpty()) { releaseWindmills(emptySet()); return }
         // Instances grouped by part type, one contiguous range per mesh.
-        var n = 0
+        count = 0
         for (type in 0 until TYPES) {
-            groupStart[type] = n
-            for (k in parts) {
-                if (n >= FrontierWorkshops.MAX_KINETICS) break
-                if (type(k) != type) continue
-                val o = n * INSTANCE_FLOATS
-                instances[o] = (k.pos.x - camera.x).toFloat()
-                instances[o + 1] = (k.pos.y - camera.y).toFloat()
-                instances[o + 2] = (k.pos.z - camera.z).toFloat()
-                instances[o + 3] = k.axis.toFloat() + if (k.flipped) 3f else 0f
-                instances[o + 4] = k.angle + phase(k)
-                instances[o + 5] = k.light
-                n++
-            }
+            groupStart[type] = count
+            for (k in parts) emit(k, type, camera)
         }
+        var n = count
         groupStart[TYPES] = n
         val mills = windmills.take(MAX_WINDMILLS)
         for (m in mills) {
@@ -141,8 +179,10 @@ internal class KineticRenderer {
             val count = groupStart[type + 1] - groupStart[type]
             if (count == 0) continue
             bindInstances(groupStart[type])
+            GLES30.glUniform1i(motionLocation, MOTION[type])
             GLES30.glDrawArraysInstanced(GLES30.GL_TRIANGLES, meshFirst[type], meshCount[type], count)
         }
+        GLES30.glUniform1i(motionLocation, 0)
         drawnWindmills.clear()
         for ((i, m) in mills.withIndex()) {
             val mesh = windmillMeshes.getOrPut(m) { uploadWindmill(m) }
@@ -327,8 +367,117 @@ internal class KineticRenderer {
         }
     }.data.toFloatArray()
 
+    // ── Machines: bodies in an upright frame (local Z = up), 1/16 = one pixel of a block ─────
+
+    /** The axle ends on the two input faces: a stub and a flange, turning with the network. */
+    private fun socketMesh() = MeshOut().apply {
+        for (side in intArrayOf(-1, 1)) {
+            val z0 = if (side > 0) .40f else -.5f; val z1 = if (side > 0) .5f else -.40f
+            prism(0f, 0f, ROD, ROD, z0, z1, 0f, WOOD)
+            prism(ROD + .25f / 16f, 0f, .25f / 16f, .6f / 16f, z0, z1, 0f, DARK)
+            val f0 = if (side > 0) .47f else -.505f; val f1 = if (side > 0) .505f else -.47f
+            for (a in 0..1) prism(0f, 0f, 2.6f / 16f, 2.6f / 16f, f0, f1, a * (PI / 4).toFloat(), IRON)
+        }
+    }.data.toFloatArray()
+
+    /** Four slim corner posts from [z0] to the top; beams round the top when [top]. */
+    private fun MeshOut.frame(z0: Float, top: Boolean = true) {
+        val c = 7f / 16f; val t = 1f / 16f
+        for (sx in intArrayOf(-1, 1)) for (sy in intArrayOf(-1, 1)) prism(sx * c, sy * c, t, t, z0, .5f, 0f, POST)
+        if (top) for (s in intArrayOf(-1, 1)) {
+            prism(0f, s * c, c, t, .5f - 2 * t, .5f, 0f, POST)
+            prism(s * c, 0f, t, c, .5f - 2 * t, .5f, 0f, POST)
+        }
+    }
+
+    /** Millstone: a plank base, the fixed bed stone and a spout, a gantry holding the spindle;
+     * the runner stone turns on the bed stone. */
+    private fun millMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 7f / 16f, -.5f, -.12f, 0f, LIGHT)
+        prism(0f, 0f, 7.2f / 16f, 7.2f / 16f, -.26f, -.22f, 0f, DARK)
+        for (a in 0..1) prism(0f, 0f, 6f / 16f, 6f / 16f, -.12f, -.03f, a * (PI / 4).toFloat(), STONE_DARK)
+        prism(0f, .44f, 1.2f / 16f, .06f, -.2f, -.12f, 0f, IRON)
+        for (s in intArrayOf(-1, 1)) prism(s * 6.6f / 16f, 0f, 1f / 16f, 1.2f / 16f, -.12f, .5f, 0f, POST)
+        prism(0f, 0f, 7.6f / 16f, 1.2f / 16f, .38f, .46f, 0f, POST)
+    }.data.toFloatArray()
+
+    private fun millstoneMesh() = MeshOut().apply {
+        for (a in 0..1) prism(0f, 0f, 5.8f / 16f, 5.8f / 16f, -.03f, .2f, a * (PI / 4).toFloat(), STONE)
+        // Grooves across the top: they show the stone turning.
+        for (i in 0..3) prism(0f, 0f, 5.4f / 16f, .45f / 16f, .2f, .215f, (i * PI / 4).toFloat(), STONE_DARK)
+        prism(0f, 0f, ROD * .8f, ROD * .8f, .2f, .38f, 0f, WOOD)
+    }.data.toFloatArray()
+
+    /** Press: a stone and iron anvil below, a wooden housing above, the head strikes between them. */
+    private fun pressMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 7f / 16f, -.5f, -.25f, 0f, STONE_DARK)
+        prism(0f, 0f, 4.6f / 16f, 4.6f / 16f, -.25f, -.2f, 0f, IRON_LIGHT)
+        prism(0f, 0f, 7f / 16f, 7f / 16f, .22f, .5f, 0f, LIGHT)
+        prism(0f, 0f, 7.2f / 16f, 7.2f / 16f, .3f, .34f, 0f, DARK)
+        frame(-.25f)
+    }.data.toFloatArray()
+
+    private fun pressHeadMesh() = MeshOut().apply {
+        prism(0f, 0f, 4f / 16f, 4f / 16f, .1f, .2f, 0f, IRON)
+        prism(0f, 0f, 1.2f / 16f, 1.2f / 16f, .2f, .5f, 0f, IRON_LIGHT)
+    }.data.toFloatArray()
+
+    /** Crusher: a trough, iron cheeks at both ends of the rollers, a hopper rim on top. */
+    private fun crusherMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 7f / 16f, -.5f, -.3f, 0f, LIGHT)
+        for (s in intArrayOf(-1, 1)) {
+            prism(s * .46f, 0f, .04f, 6.4f / 16f, -.3f, .34f, 0f, IRON)
+            prism(0f, s * .41f, .42f, .04f, .22f, .38f, 0f, WOOD)
+        }
+        frame(-.3f, top = false)
+    }.data.toFloatArray()
+
+    /** One roller, along its own local Z (drawn with axis X): an iron drum with ridges. */
+    private fun rollerMesh() = MeshOut().apply {
+        for (a in 0..1) prism(0f, 0f, 2.8f / 16f, 2.8f / 16f, -.42f, .42f, a * (PI / 4).toFloat(), IRON)
+        for (i in 0 until 8) {
+            val angle = (i * 2 * PI / 8).toFloat()
+            prism(cos(angle) * 3f / 16f, sin(angle) * 3f / 16f, .5f / 16f, .6f / 16f, -.42f, .42f, angle, IRON_LIGHT)
+        }
+    }.data.toFloatArray()
+
+    /** Loom: warp beam at the back, threads across, a reed, the woven cloth rolled on the front beam. */
+    private fun loomMesh() = MeshOut().apply {
+        frame(-.5f, top = false)
+        for (s in intArrayOf(-1, 1)) prism(0f, s * 7f / 16f, .42f, 1f / 16f, -.5f, -.42f, 0f, POST)
+        prism(0f, .32f, .42f, .06f, .18f, .3f, 0f, LIGHT)
+        prism(0f, -.32f, .4f, .08f, -.12f, .04f, 0f, WOOL)
+        for (i in 0 until 7) prism(-.3f + i * .1f, .02f, .2f / 16f, .3f, .03f, .045f, 0f, CLOTH)
+        prism(0f, -.18f, .36f, .12f, .02f, .04f, 0f, WOOL)
+        prism(0f, -.04f, .42f, .02f, .03f, .22f, 0f, DARK)
+    }.data.toFloatArray()
+
+    private fun shuttleMesh() = MeshOut().apply {
+        prism(0f, .1f, .09f, .03f, .05f, .1f, 0f, LIGHT)
+        prism(0f, .1f, .04f, .02f, .1f, .11f, 0f, CLOTH)
+    }.data.toFloatArray()
+
     companion object {
-        private const val TYPES = 6
+        private const val TYPES = 15
+        private const val SOCKET = 6
+        private const val MILL = 7
+        private const val MILLSTONE = 8
+        private const val PRESS = 9
+        private const val PRESS_HEAD = 10
+        private const val CRUSHER = 11
+        private const val ROLLER = 12
+        private const val LOOM = 13
+        private const val SHUTTLE = 14
+        /** Per type: 0 = turns about its axis, 1 = strikes down and back up, 2 = runs to and fro along X. */
+        private val MOTION = IntArray(TYPES).also { it[PRESS_HEAD] = 1; it[SHUTTLE] = 2 }
+        /** Crusher rollers: each is this far from the middle, across X. */
+        private const val ROLLER_GAP = 3.5f / 16f
+        private const val STONE = 0xA5A29B
+        private const val STONE_DARK = 0x77746E
+        private const val IRON = 0x5E656B
+        private const val IRON_LIGHT = 0x8A9299
+        private const val WOOL = 0xE2D6BC
+        private const val POST = 0x8A6A44
         private const val MAX_WINDMILLS = 16
         private const val CLOTH = 0xF3F0E8
         private const val FRAME = 0x9A7446
@@ -348,6 +497,8 @@ internal class KineticRenderer {
             layout(location=3) in vec3 iOffset;
             layout(location=4) in vec3 iAxisAngleLight;
             uniform mat4 uVp;
+            // 0: turns about local Z; 1: strikes down local Z and back once a turn; 2: runs to and fro along local X.
+            uniform int uMotion;
             out vec3 vNormal;
             out vec3 vColor;
             out float vLight;
@@ -364,10 +515,16 @@ internal class KineticRenderer {
                 bool flipped = axis > 2.5;
                 if (flipped) axis -= 3.0;
                 float angle = flipped ? -iAxisAngleLight.y : iAxisAngleLight.y;
-                float c = cos(angle);
-                float s = sin(angle);
-                vec3 p = vec3(aPosition.x * c - aPosition.y * s, aPosition.x * s + aPosition.y * c, aPosition.z);
-                vec3 n = vec3(aNormal.x * c - aNormal.y * s, aNormal.x * s + aNormal.y * c, aNormal.z);
+                vec3 p = aPosition;
+                vec3 n = aNormal;
+                if (uMotion == 1) p.z -= 0.295 * (0.5 - 0.5 * cos(angle));
+                else if (uMotion == 2) p.x += 0.26 * sin(angle);
+                else {
+                    float c = cos(angle);
+                    float s = sin(angle);
+                    p = vec3(aPosition.x * c - aPosition.y * s, aPosition.x * s + aPosition.y * c, aPosition.z);
+                    n = vec3(aNormal.x * c - aNormal.y * s, aNormal.x * s + aNormal.y * c, aNormal.z);
+                }
                 if (flipped) { p = vec3(-p.x, p.y, -p.z); n = vec3(-n.x, n.y, -n.z); }
                 vec3 world = orient(p, axis) + vec3(0.5) + iOffset;
                 gl_Position = uVp * vec4(world, 1.0);

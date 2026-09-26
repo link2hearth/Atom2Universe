@@ -11,7 +11,8 @@ import kotlin.math.abs
  * - two small cogwheels side by side turn at the same speed, opposite ways;
  * - a large cogwheel and a small one set diagonally trade speed ×2 / ÷2, opposite ways;
  * - a gearbox turns the rotation by 90° between the four faces around its axis;
- * - a machine takes the rotation of the axle or gearbox face that points at it, and passes nothing on.
+ * - a machine takes the rotation through its two input faces, the ends of its axis, from an axle in
+ *   line or a gearbox face; it passes nothing on.
  *
  * Each machine needs force in proportion to its speed; each driving source gives a fixed force.
  * A network whose machines need more than its sources give stops entirely, as does a network whose
@@ -70,7 +71,7 @@ internal class KineticNetwork(
                     when {
                         axial(kq) && axis(q) == a -> out += q to 1f
                         kq == Kind.GEARBOX && axis(q) != a -> out += q to (-sign * gearboxFace(axis(q), a)).toFloat()
-                        kq == Kind.MACHINE -> out += q to 1f
+                        kq == Kind.MACHINE && axis(q) == a -> out += q to 1f
                     }
                 }
                 val b = (a + 1) % 3; val c = (a + 2) % 3
@@ -92,7 +93,7 @@ internal class KineticNetwork(
                     val q = step(p, a, sign)
                     val kq = kind(blockAt(q.x, q.y, q.z)) ?: continue
                     if (axial(kq) && axis(q) == a) out += q to (sign * gearboxFace(g, a)).toFloat()
-                    if (kq == Kind.MACHINE) out += q to 1f
+                    if (kq == Kind.MACHINE && axis(q) == a) out += q to 1f
                 }
             }
             // Machines are ends: they take rotation and pass none on.

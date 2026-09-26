@@ -10,7 +10,9 @@
   "creative_tab": "functional",
   "placeable": true,
   "decoration": false,
-  "transparent": false,
+  "transparent": true,
+  "kinetic": "machine",
+  "orient_mode": "axis",
   "harvest_category": "recoverable",
   "placement_rule": "any",
   "tags": []

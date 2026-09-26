@@ -103,6 +103,8 @@ internal object PartialBlockModel {
             b.y + if (i and 2 == 0) 0f else b.height, b.z + if (i and 4 == 0) 0f else b.depth) }
         normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
     }
+    private val cubeBox = listOf(Box(0f, 0f, 0f, 1f, 1f, 1f))
+    private val cubeSurfaces = surfaces(cubeBox[0])
     private val shaftSurfaces = Array(3) { surfaces(shaftBoxes[it][0]) }
     private val plateSurfaces = Array(3) { surfaces(plateBoxes[it][0]) }
 
@@ -110,11 +112,13 @@ internal object PartialBlockModel {
     fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> = when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftBoxes[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateBoxes[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeBox
         else -> boxes(meta, def.slab, def.blockHeight, mask)
     }
     fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> = when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftSurfaces[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateSurfaces[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeSurfaces
         else -> faces(meta, def.slab, def.blockHeight, mask)
     }
     fun intersect(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, x: Double, y: Double, z: Double,

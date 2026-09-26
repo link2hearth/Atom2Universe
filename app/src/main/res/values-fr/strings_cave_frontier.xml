@@ -13,7 +13,7 @@
     <string name="cave_storage_row">%1$s × %2$d</string>
     <string name="cave_storage_empty">Rien ici pour le moment.</string>
     <string name="cave_storage_hint">Glissez une pile entre le sac, la barre et le coffre. Touchez pour les informations ; maintenez pour diviser, ajustez le nombre puis touchez ailleurs. Casser ce bloc rend son contenu.</string>
-    <string name="cave_mill_hint">Ajoutez du blé. Il tourne avec un axe venant d’une roue dans l’eau courante, d’une manivelle ou d’engrenages. 1 blé → 3 farines ; plus vite quand il tourne plus vite.</string>
+    <string name="cave_mill_hint">Ajoutez du blé. Posez-le contre le bout d’un axe ou un côté d’un renvoi d’angle : il tourne par ses deux bouts d’axe. 1 blé → 3 farines ; plus vite quand il tourne plus vite.</string>
     <string name="cave_mill_running">Transmission active. Ajoutez du blé : 1 blé → 3 farines en 6 secondes. Fermez ce panneau pour reprendre la production.</string>
     <string name="cave_cooker_hint">Ajoutez du charbon et de la farine ou des pommes de terre. En 10 secondes : 3 farines/pommes de terre + 1 combustible → 4 pains/pommes de terre cuites. Fermez le panneau pour cuire.</string>
     <string name="cave_composter_hint">3 récoltes identiques → 1 compost en 20 secondes. Utilisez le compost sur une culture pour accélérer sa croissance. Fermez le panneau pour reprendre.</string>
@@ -107,7 +107,7 @@
     <string name="cave_animal_ready">Produit récolté. Nourrissez cet animal pour sa prochaine production.</string>
     <string name="cave_animal_wait">Cet animal grandit, digère ou prépare encore son produit.</string>
     <string name="cave_husbandry_hint">Attirez et nourrissez vaches et moutons avec du blé, cochons avec des carottes, poules avec des graines de blé. Deux adultes nourris proches se reproduisent, puis se reposent 5 minutes. Les petits grandissent en 10 minutes. Nourrir accélère leur croissance. Lait : seau vide ; laine : cisailles ; œufs et truffes : main vide. Après un repas, production en 2 minutes.</string>
-    <string name="cave_machine_power">Doit tourner : un axe, un engrenage ou un renvoi d’angle pointé vers elle. Déposez les ingrédients ; les recettes sont automatiques.</string>
+    <string name="cave_machine_power">Doit tourner par l’un de ses deux bouts d’axe : posez-la contre le bout d’un axe ou un côté d’un renvoi d’angle. Déposez les ingrédients ; les recettes sont automatiques.</string>
     <string name="cave_machine_recipe">%1$s → %2$s · %3$d s</string>
     <string name="cave_machine_unpowered">À l’arrêt · rien ne la fait tourner.</string>
     <string name="cave_machine_powered">Transmission active</string>

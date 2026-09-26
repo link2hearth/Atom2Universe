@@ -1627,11 +1627,9 @@ internal class CaveRenderer(
             }
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
-            enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         } else if (exhibition) {
             if (!gamePaused) workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
-            enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         }
         enemyRenderer.render(

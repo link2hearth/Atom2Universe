@@ -6,6 +6,8 @@ import org.json.JSONObject
 const val ORIENT_NONE: Byte   = 0  // non orientable
 const val KINETIC_ROD = 1
 const val KINETIC_PLATE = 2
+/** A machine: a full cube to walk into and point at, drawn whole by KineticRenderer. */
+const val KINETIC_MACHINE = 3
 const val ORIENT_FACING: Byte = 1  // tourne horizontalement (N/S/E/W), toujours droit
 const val ORIENT_AXIS: Byte   = 2  // s'aligne sur un axe (X/Y/Z), peut se coucher
 
@@ -43,7 +45,8 @@ internal data class BlockDef(
     val spriteWidth: Float = 1f,
     val blockHeight: Float = 1f,
     /** Turning part drawn by KineticRenderer, oriented by its ORIENT_AXIS meta
-     * (see PartialBlockModel.shaftAxis): 0 = none, [KINETIC_ROD] (shaft, crank) or [KINETIC_PLATE] (cogwheels). */
+     * (see PartialBlockModel.shaftAxis): 0 = none, [KINETIC_ROD] (shaft, crank), [KINETIC_PLATE] (cogwheels)
+     * or [KINETIC_MACHINE] (mill, press, crusher, loom). */
     val kineticShape: Int = 0,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
@@ -100,7 +103,7 @@ internal data class BlockDef(
                 replaceable     = j.optBoolean("replaceable", false),
                 stairs          = j.optBoolean("stairs", false),
                 slab            = j.optBoolean("slab", false),
-                kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; else -> 0 },
+                kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; "machine" -> KINETIC_MACHINE; else -> 0 },
             )
         }
     }

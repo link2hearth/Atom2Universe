@@ -152,7 +152,7 @@ internal object ShowcaseMap {
         }
         fun plinth(x: Int, z: Int, height: Int) { for (h in 0 until height) put(x, y + h, z, COBBLESTONE, 0) }
         // 0. Wheel, shafts and mill.
-        wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'y')
+        wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'x')
         // 1. Crank on a gearbox, which sends the rotation up a vertical shaft.
         part(172, 1, 59, F.CRANK, 'z'); part(172, 1, 60, F.GEARBOX, 'x'); plinth(172, 60, 1)
         for (h in 2..5) part(172, h, 60, F.SHAFT, 'y')
@@ -174,13 +174,13 @@ internal object ShowcaseMap {
         part(174, 3, 69, F.GEARBOX, 'x'); for (h in 1..2) part(174, h, 69, F.SHAFT, 'y'); part(174, 0, 69, F.MILL, 'y')
         // 6. Four machines at work: one wheel for crusher, mill and loom (8 of 8), another for the press.
         wheel(182, 0, 70, false); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
-        part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.CRUSHER, 'y')
-        part(186, 0, 71, F.MILL, 'y'); part(186, 0, 69, F.LOOM, 'y')
-        wheel(192, 0, 70, false); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'y')
+        part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.CRUSHER, 'x')
+        part(186, 0, 71, F.MILL, 'z'); part(186, 0, 69, F.LOOM, 'z')
+        wheel(192, 0, 70, false); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'x')
         // 7. Too much for one wheel: press, crusher and mill need 10, the wheel gives 8. Everything stops.
         wheel(157, 0, 82, false); for (x in 158..160) part(x, 0, 82, F.SHAFT, 'x')
-        part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'y'); part(162, 0, 82, F.CRUSHER, 'y')
-        part(161, 0, 81, F.MILL, 'y')
+        part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'z'); part(162, 0, 82, F.CRUSHER, 'x')
+        part(161, 0, 81, F.MILL, 'z')
         // 8. Gears that cannot agree: round the loop the speed comes back doubled. Everything stops.
         part(172, 0, 81, F.CRANK, 'z'); part(172, 0, 82, F.GEARBOX, 'x'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
         part(172, 2, 82, F.SHAFT, 'y'); part(172, 3, 82, F.LARGE_COGWHEEL, 'y')
@@ -196,9 +196,9 @@ internal object ShowcaseMap {
         // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
         wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
         part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)
-        part(162, 1, 95, F.PRESS, 'y'); plinth(162, 95, 1)
-        part(161, 1, 96, F.CRUSHER, 'y'); plinth(161, 96, 1)
-        part(161, 1, 94, F.MILL, 'y'); plinth(161, 94, 1)
+        part(162, 1, 95, F.PRESS, 'x'); plinth(162, 95, 1)
+        part(161, 1, 96, F.CRUSHER, 'z'); plinth(161, 96, 1)
+        part(161, 1, 94, F.MILL, 'z'); plinth(161, 94, 1)
     }
 
     fun create(): A2Map {

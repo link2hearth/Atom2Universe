@@ -25,9 +25,18 @@ class KineticNetworkTest {
     }
     private val base = KineticNetwork.BASE
 
+    @Test fun aMachineOnlyTakesTheRotationThroughItsInputFaces() {
+        val g = Grid()
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL, 'y')
+        g.active += Pos(0, 0, 0)
+        assertEquals(0f, g.solve(Pos(0, 0, 0)).speedAt(Pos(4, 0, 0)), 1e-4f)
+        g.put(4, 0, 0, F.MILL, 'x')
+        assertEquals(base, g.solve(Pos(0, 0, 0)).speedAt(Pos(4, 0, 0)), 1e-4f)
+    }
+
     @Test fun wheelTurnsALineOfShaftsAndTheMillAtItsEnd() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL)
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL, 'x')
         g.active += Pos(0, 0, 0)
         val r = g.solve(Pos(0, 0, 0))
         for (x in 1..3) assertEquals(base, r.speedAt(Pos(x, 0, 0)), 1e-4f)
@@ -73,11 +82,11 @@ class KineticNetworkTest {
     @Test fun tooManyMachinesStopTheWholeNetworkUntilASecondSourceHelps() {
         val g = Grid()
         g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x')
-        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.CRUSHER)
+        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.CRUSHER, 'x')
         g.active += Pos(0, 0, 0)
         var r = g.solve(Pos(0, 0, 0))
         assertEquals(base, r.speedAt(Pos(5, 0, 0)), 1e-4f)           // 4 of 8
-        g.put(4, 0, 1, F.PRESS); g.put(4, 0, -1, F.MILL)               // 4 + 4 + 2 = 10 of 8
+        g.put(4, 0, 1, F.PRESS, 'z'); g.put(4, 0, -1, F.MILL, 'z')               // 4 + 4 + 2 = 10 of 8
         r = g.solve(Pos(0, 0, 0))
         assertTrue(r.network.getValue(Pos(0, 0, 0)).overloaded)
         assertEquals(0f, r.speedAt(Pos(5, 0, 0)), 0f)
@@ -121,7 +130,7 @@ class KineticNetworkTest {
     @Test fun largeWheelIsSlowerAndStronger() {
         val g = Grid()
         g.put(0, 0, 0, F.LARGE_WATERWHEEL, 'x'); g.put(1, 0, 0, F.SHAFT, 'x'); g.put(2, 0, 0, F.GEARBOX, 'y')
-        g.put(3, 0, 0, F.PRESS); g.put(2, 0, 1, F.CRUSHER); g.put(2, 0, -1, F.MILL)
+        g.put(3, 0, 0, F.PRESS, 'x'); g.put(2, 0, 1, F.CRUSHER, 'z'); g.put(2, 0, -1, F.MILL, 'z')
         g.direction[Pos(0, 0, 0)] = KineticNetwork.DRIVE_POSITIVE
         val r = g.solve(Pos(0, 0, 0))
         assertEquals(KineticNetwork.LARGE_WHEEL_SPEED, r.speedAt(Pos(1, 0, 0)), 1e-4f)
