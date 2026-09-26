@@ -30,6 +30,8 @@ internal object FrontierItems {
     const val GEARBOX: Short = 9821
     const val CRANK: Short = 9822
     const val LARGE_WATERWHEEL: Short = 9823
+    const val WINDMILL: Short = 9824
+    const val SAIL: Short = 9825
 
     const val PRESS: Short = 9840
     const val CRUSHER: Short = 9841
@@ -95,7 +97,7 @@ internal object FrontierItems {
         fun rect(x: Int, y: Int, w: Int, h: Int, color: Long) {
             p.color = color.toInt(); c.drawRect(x.toFloat(), y.toFloat(), (x+w).toFloat(), (y+h).toFloat(), p)
         }
-        if (id in listOf(9808, 9809, 9821, 9822, 9823)) {
+        if (id in listOf(9808, 9809, 9821, 9822, 9823, 9824, 9825)) {
             // Mechanical parts: wood, a darker hub and the mark of their role.
             rect(0,0,32,32,0xFF8E6A40); rect(2,2,28,28,0xFFB48A56)
             when (id) {
@@ -116,6 +118,17 @@ internal object FrontierItems {
                     rect(15,3,2,26,0xFF6E4E2C); rect(3,15,26,2,0xFF6E4E2C)
                     for(i in 0 until 8) { val a=i*Math.PI/4; rect((16+kotlin.math.cos(a)*13).toInt()-2,(16+kotlin.math.sin(a)*13).toInt()-2,5,5,0xFFC9A26B) }
                     rect(13,13,6,6,0xFF4A3520)
+                }
+                9824 -> {
+                    // Windmill head: a round bearing plate with its hub.
+                    p.color=0xFF6F7A73.toInt(); c.drawCircle(16f,16f,12f,p)
+                    p.color=0xFF4E5852.toInt(); c.drawCircle(16f,16f,8f,p)
+                    rect(12,12,8,8,0xFFC4A06A); rect(14,14,4,4,0xFF4A3520)
+                }
+                9825 -> {
+                    // Sail: cloth stretched on a wooden frame, with a cross brace.
+                    rect(0,0,32,32,0xFF6E4E2C); rect(3,3,26,26,0xFFE8E0C7)
+                    rect(15,3,2,26,0xFFB48A56); rect(3,15,26,2,0xFFB48A56)
                 }
                 9821 -> { rect(4,4,24,24,0xFF6F7A73); rect(7,7,18,18,0xFF4E5852); rect(13,2,6,28,0xFFC4A06A); rect(2,13,28,6,0xFFC4A06A) }
                 else -> { rect(14,4,4,24,0xFFC4A06A); rect(14,4,12,4,0xFF6E4E2C); rect(22,4,4,10,0xFF4A3520) }

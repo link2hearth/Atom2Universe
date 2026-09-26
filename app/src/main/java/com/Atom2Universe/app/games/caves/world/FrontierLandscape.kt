@@ -152,9 +152,9 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
                     for(dx in 0..18) for(dz in 10..18) put(dx,5,dz,plank)
                     put(3,1,15,F.COMPOSTER); put(8,1,15,F.CACHE); put(13,1,15,F.COOKER)
                 }
-                else -> { // Prospector workshop with a hand-cranked mill (log axis code 1 = along X).
+                else -> { // Prospector workshop: a mill turned by a crank on a gearbox (axis code 1 = along X, 0 = Y).
                     hut(1,1,if(rng.nextBoolean()) 0 else 4); plot(11,1,7,16,GRAVEL)
-                    put(13,1,3,F.MILL); put(14,1,3,F.SHAFT,1); put(15,1,3,F.CRANK,1)
+                    put(13,1,3,F.MILL); put(14,1,3,F.GEARBOX,0); put(15,1,3,F.CRANK,1)
                     for(dz in 9..14) for(dx in 11..16) put(dx,1,dz,if(rng.nextInt(5)==0) COPPER else ROCK)
                     put(12,1,6,F.CACHE)
                 }

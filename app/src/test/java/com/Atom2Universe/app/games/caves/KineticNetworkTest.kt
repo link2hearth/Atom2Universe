@@ -19,9 +19,9 @@ class KineticNetworkTest {
             metas[p] = (when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }).toByte()
         }
         fun solve(vararg sources: Pos) = KineticNetwork({ x, y, z -> blocks[Pos(x, y, z)] ?: AIR },
-            { x, y, z -> metas[Pos(x, y, z)] ?: 0 }) { p, _ ->
+            { x, y, z -> metas[Pos(x, y, z)] ?: 0 }, driving = { p, _ ->
             direction[p] ?: if (p in active) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE
-        }.solve(sources.toList())
+        }).solve(sources.toList())
     }
     private val base = KineticNetwork.BASE
 
@@ -130,6 +130,20 @@ class KineticNetworkTest {
         // A small wheel on the same axle wants twice the speed: they cannot agree.
         g.put(-1, 0, 0, F.WATERWHEEL, 'x'); g.active += Pos(-1, 0, 0)
         assertTrue(g.solve(Pos(0, 0, 0), Pos(-1, 0, 0)).network.getValue(Pos(0, 0, 0)).conflict)
+    }
+
+    @Test fun windmillForceFollowsItsSails() {
+        val g = Grid()
+        g.put(0, 0, 0, F.WINDMILL, 'z'); g.put(0, 0, 1, F.SHAFT, 'z'); g.put(0, 0, 2, F.GEARBOX, 'x')
+        g.put(0, -1, 2, F.SHAFT, 'y'); g.put(0, -2, 2, F.PRESS)
+        g.active += Pos(0, 0, 0)
+        fun solve(sails: Float) = KineticNetwork({ x, y, z -> g.blocks[Pos(x, y, z)] ?: AIR }, { x, y, z -> g.metas[Pos(x, y, z)] ?: 0 },
+            { p, _ -> if (p in g.active) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE }) { sails }.solve(listOf(Pos(0, 0, 0)))
+        var r = solve(12f)
+        assertEquals(KineticNetwork.WINDMILL_SPEED, kotlin.math.abs(r.speedAt(Pos(0, -2, 2))), 1e-4f)
+        assertEquals(2f, r.network.getValue(Pos(0, 0, 0)).stress, 1e-4f) // the press at half speed
+        r = solve(1f)
+        assertTrue(r.network.getValue(Pos(0, 0, 0)).overloaded)
     }
 
     @Test fun recipeTimeFollowsSpeed() {

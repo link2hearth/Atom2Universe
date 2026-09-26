@@ -382,6 +382,10 @@ internal class CaveRenderer(
     internal val workshops by lazy { FrontierWorkshops(world, worldSeed).also {
         it.restore(savedState?.workshops ?: "{}")
         it.exhibition = exhibition
+        (worldSource as? com.Atom2Universe.app.games.caves.world.MapSource)?.takeIf { s -> s.isShowcase }?.let { s ->
+            for (mill in com.Atom2Universe.app.games.caves.world.ShowcaseMap.windmills())
+                it.addWindmill(FrontierWorkshops.Pos(mill.x + s.originX, mill.y + s.originY, mill.z + s.originZ), mill.axis, mill.sails)
+        }
     } }
     /** The Assault exhibition map shows the mechanical parts turning. */
     private val exhibition get() = (worldSource as? com.Atom2Universe.app.games.caves.world.MapSource)?.isShowcase == true
@@ -1624,11 +1628,11 @@ internal class CaveRenderer(
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
-            kineticRenderer.draw(workshops.kinetics,camera,caveBlend,caveFogEnd)
+            kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         } else if (exhibition) {
             if (!gamePaused) workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
             enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
-            kineticRenderer.draw(workshops.kinetics,camera,caveBlend,caveFogEnd)
+            kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         }
         enemyRenderer.render(
             enemyManager.enemies,
@@ -4464,6 +4468,17 @@ internal class CaveRenderer(
             if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) {
                 workshops.crank(FrontierWorkshops.Pos(target.bx,target.by,target.bz));startSwing();return
             }
+            if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.WINDMILL) {
+                val change=workshops.toggleWindmill(FrontierWorkshops.Pos(target.bx,target.by,target.bz))
+                for(p in change.changed) forceMeshRebuild(p.x,p.y,p.z)
+                if(change.returned.isNotEmpty()) {
+                    grantFarmItems(change.returned.map { it.key to it.value })
+                    farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_windmill_sails_returned))
+                }
+                if(change.tooFewSails) farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_windmill_too_few,
+                    FrontierWorkshops.MIN_SAILS))
+                startSwing();return
+            }
             workshops.view(FrontierWorkshops.Pos(target.bx,target.by,target.bz))?.let { box ->
                 touch.laserActive = false
                 gamePaused=true
@@ -4591,7 +4606,17 @@ internal class CaveRenderer(
                 if (camera.fwdX > 0) 1 else 3
             } else if (camera.fwdZ > 0) 0 else 2
             (facing or if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
-        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT
+        else if (blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) {
+            // A crank goes on one of the four working faces of a gearbox, the ones around its axis.
+            val box = world.blockAt(target.bx, target.by, target.bz)
+            val faceAxis = if (target.fnx != 0) 0 else if (target.fny != 0) 1 else 2
+            if (box != com.Atom2Universe.app.games.caves.node.FrontierItems.GEARBOX ||
+                PartialBlockModel.shaftAxis(world.metaAt(target.bx, target.by, target.bz)) == faceAxis) return
+            val onPlus = target.fnx + target.fny + target.fnz < 0
+            (computeOrientMeta(blockType, target.fnx, target.fny, target.fnz).toInt() or
+                (if (onPlus) PartialBlockModel.CRANK_ON_PLUS else 0)).toByte()
+        } else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)

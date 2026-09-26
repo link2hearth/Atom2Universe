@@ -661,6 +661,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         type==F.MILL -> activity.getString(R.string.cave_mill_hint)
                         type==F.WATERWHEEL || type==F.LARGE_WATERWHEEL -> activity.getString(R.string.cave_wheel_hint)
                         type==F.CRANK -> activity.getString(R.string.cave_crank_hint)
+                        type==F.WINDMILL || type==F.SAIL -> activity.getString(R.string.cave_windmill_hint)
                         type==F.SHAFT || type==F.COGWHEEL || type==F.LARGE_COGWHEEL || type==F.GEARBOX -> activity.getString(R.string.cave_kinetic_hint)
                         type==F.COOKER -> activity.getString(R.string.cave_cooker_hint)
                         type==F.COMPOSTER || type==F.COMPOST -> activity.getString(R.string.cave_composter_hint)

@@ -29,10 +29,15 @@
     <string name="cave_block_frontier_large_cogwheel">Large cogwheel</string>
     <string name="cave_block_frontier_gearbox">Gearbox</string>
     <string name="cave_block_frontier_crank">Hand crank</string>
+    <string name="cave_block_frontier_windmill">Windmill head</string>
+    <string name="cave_block_frontier_sail">Sail</string>
+    <string name="cave_windmill_hint">Join sails together in front of the head, then use it: the sails turn and drive the axle behind it. Use it again to stop them and put them back. Each sail adds force; the wind is always the same.</string>
+    <string name="cave_windmill_too_few">At least %1$d sails joined in front of the head.</string>
+    <string name="cave_windmill_sails_returned">Some sails had no room and went back to your bag.</string>
     <string name="cave_block_frontier_large_waterwheel">Large water wheel</string>
     <string name="cave_wheel_hint">Place it so that flowing or falling water runs through its paddles: the current sets which way it turns. It turns the axle through its hub. The large wheel turns half as fast and is twice as strong.</string>
     <string name="cave_kinetic_hint">Turns with the axle it continues. Two cogwheels side by side turn opposite ways; a large and a small one set diagonally double or halve the speed. A gearbox turns the rotation a quarter turn.</string>
-    <string name="cave_crank_hint">Use it to turn it for 10 seconds. Little force.</string>
+    <string name="cave_crank_hint">Place it on a side of a gearbox. Use it again and again to keep it turning. Little force.</string>
     <string name="cave_machine_overloaded">Stopped · not enough force: add a wheel or remove a machine.</string>
     <string name="cave_machine_conflict">Stopped · parts turn against each other.</string>
     <string name="cave_block_frontier_cooker">Field kitchen</string>

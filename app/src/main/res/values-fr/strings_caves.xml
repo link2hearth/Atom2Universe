@@ -579,7 +579,7 @@
     </string-array>
     <string-array name="cave_showcase_mechanics_names">
         <item>Roue, axes et moulin</item>
-        <item>Manivelle et axe vertical</item>
+        <item>Manivelle sur un renvoi d’angle, vers un axe vertical</item>
         <item>Engrenages côte à côte</item>
         <item>Grand et petits engrenages : deux fois plus vite</item>
         <item>Renvoi d’angle : un quart de tour</item>
@@ -588,6 +588,7 @@
         <item>Trop pour une seule roue : à l’arrêt</item>
         <item>Engrenages qui ne s’accordent pas : à l’arrêt</item>
         <item>Grande roue : deux fois plus lente, deux fois plus forte</item>
+        <item>Moulin à vent : voiles, renvoi d’angle et moulin en bas</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>

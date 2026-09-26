@@ -31,19 +31,30 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private val rotorDef=FrontierModels.definition("workshop_rotor","machine",.48f)
     /** A turning part drawn by KineticRenderer: axis 0 = X, 1 = Y, 2 = Z; speed as in KineticNetwork;
      * angle in radians; light 0..1. */
-    class Kinetic(val pos: Pos,val block: Short) { var axis=1; var angle=0f; var speed=0f; var light=1f }
+    class Kinetic(val pos: Pos,val block: Short) { var axis=1; var angle=0f; var speed=0f; var light=1f
+        /** Crank fixed to a part on the + side of its axis: its mesh is turned round. */
+        var flipped=false }
     private val knownKinetics=linkedMapOf<Pos,Kinetic>()
     /** Turning parts near the player, refreshed once per second; angles advance every frame. */
     val kinetics=ArrayList<Kinetic>()
     private val cranks=hashMapOf<Pos,Float>()
     /** Exhibition map: every source turns (no flowing water, nobody at the cranks), nothing is produced. */
     var exhibition=false
-    private val network=KineticNetwork({ x,y,z -> world.blockAt(x,y,z) },{ x,y,z -> world.metaAt(x,y,z) },::drive)
+    private val network=KineticNetwork({ x,y,z -> world.blockAt(x,y,z) },{ x,y,z -> world.metaAt(x,y,z) },::drive) { p ->
+        windmills[p]?.let { minOf(it.sails.size,MAX_SAIL_FORCE).toFloat() } ?: 0f
+    }
+    /** An assembled windmill: its sails left the world and turn as one piece around the head's axis.
+     * Each sail is (dx, dy, dz, block) from the head. */
+    class Windmill(val pos: Pos,val axis: Int,val sails: List<IntArray>) { var angle=0f; var speed=0f; var light=1f }
+    private val windmills=linkedMapOf<Pos,Windmill>()
+    /** Windmills near the player, refreshed with the other turning parts. */
+    val visibleWindmills=ArrayList<Windmill>()
     private val current=DoubleArray(4)
     /** Which way a source turns right now (KineticNetwork.DRIVE_*). */
     private fun drive(p: Pos,id: Short): Int {
         if(exhibition) return KineticNetwork.DRIVE_EITHER
         if(id==F.CRANK) return if((cranks[p] ?: 0f)>0f) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE
+        if(id==F.WINDMILL) return if(p in windmills) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE
         val meta=world.metaAt(p.x,p.y,p.z).toInt()
         // The current pushing on each paddle cell turns the wheel one way or the other; they add up.
         val axis=PartialBlockModel.shaftAxis(meta.toByte());val u=(axis+1)%3;val v=(axis+2)%3
@@ -111,7 +122,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double,light: (Int,Int,Int)->Float) {
         visualTimer-=dt
         if(visualTimer<=0f) {
-            visualTimer=1f;machinery.clear();running.clear();kinetics.clear()
+            visualTimer=1f;machinery.clear();running.clear();kinetics.clear();visibleWindmills.clear()
             // advance() does not run on the exhibition map: solve the rotation here instead.
             if(exhibition) refreshRotation()
             val parts=knownKinetics.iterator()
@@ -119,9 +130,20 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 val k=parts.next().value;val p=k.pos
                 if(!loaded(p) || block(p)!=k.block) { parts.remove();continue }
                 if(abs(p.y-y)>32 || (p.x-x).pow(2)+(p.z-z).pow(2)>48.0.pow(2) || kinetics.size>=MAX_KINETICS) continue
-                k.axis=PartialBlockModel.shaftAxis(world.metaAt(p.x,p.y,p.z))
+                val meta=world.metaAt(p.x,p.y,p.z)
+                k.axis=PartialBlockModel.shaftAxis(meta);k.flipped=meta.toInt() and PartialBlockModel.CRANK_ON_PLUS!=0
                 k.speed=speedAt(p);k.light=light(p.x,p.y,p.z)
                 kinetics.add(k)
+            }
+            for(mill in windmills.values) {
+                val p=mill.pos
+                if(!loaded(p) || block(p)!=F.WINDMILL) continue
+                if(abs(p.y-y)>64 || (p.x-x).pow(2)+(p.z-z).pow(2)>64.0.pow(2)) continue
+                // The head is a solid block, always dark inside: take the light around it.
+                mill.speed=speedAt(p)
+                mill.light=maxOf(light(p.x+1,p.y,p.z),light(p.x-1,p.y,p.z),light(p.x,p.y+1,p.z),
+                    maxOf(light(p.x,p.y-1,p.z),light(p.x,p.y,p.z+1),light(p.x,p.y,p.z-1)))
+                visibleWindmills.add(mill)
             }
             val iterator=knownMachines.iterator()
             while(iterator.hasNext()) {
@@ -135,6 +157,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         for(p in running) knownMachines[p]?.let { it.animTime=(it.animTime+dt)%3141.59f }
         // Angle advances with time, never by a fixed step per frame: smooth at 60 and 120 Hz.
         for(k in kinetics) if(k.speed!=0f) k.angle=(k.angle+k.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
+        for(m in visibleWindmills) if(m.speed!=0f) m.angle=(m.angle+m.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
     }
     @Synchronized fun feedAnimals(animals: com.Atom2Universe.app.games.caves.entity.PassiveAnimals,dt: Float) {
         feedTimer+=dt
@@ -222,8 +245,53 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun breakBlock(p: Pos): Map<Short,Int> {
         hoppers.remove(p); knownMachines.remove(p); knownKinetics.remove(p); cranks.remove(p)
         if(F.isContainer(block(p))) store(p)
-        return stores.remove(p)?.items?.toMap().orEmpty()
+        val contents=stores.remove(p)?.items?.toMutableMap() ?: mutableMapOf()
+        // Breaking a turning windmill head gives its sails back.
+        windmills.remove(p)?.let { mill ->
+            for(s in mill.sails) contents[s[3].toShort()]=(contents[s[3].toShort()] ?: 0)+1
+            refreshRotation()
+        }
+        return contents
     }
+    /** What happened when the player used a windmill head. */
+    class WindmillChange(val changed: List<Pos>,val returned: Map<Short,Int>,val tooFewSails: Boolean=false)
+    /** Starts a windmill (its joined sails leave the world and turn) or stops it (they go back in place;
+     * a sail whose cell is now taken returns to the bag). */
+    @Synchronized fun toggleWindmill(p: Pos): WindmillChange {
+        if(!loaded(p) || block(p)!=F.WINDMILL) return WindmillChange(emptyList(),emptyMap())
+        windmills.remove(p)?.let { mill ->
+            val changed=ArrayList<Pos>();val returned=HashMap<Short,Int>()
+            for(s in mill.sails) {
+                val q=p.move(s[0],s[1],s[2]);val id=s[3].toShort()
+                if(loaded(q) && block(q)==AIR) { world.setBlock(q.x,q.y,q.z,id);changed+=q }
+                else returned[id]=(returned[id] ?: 0)+1
+            }
+            refreshRotation()
+            return WindmillChange(changed,returned)
+        }
+        val axis=PartialBlockModel.shaftAxis(world.metaAt(p.x,p.y,p.z))
+        val step=when(axis) { 0 -> intArrayOf(1,0,0); 1 -> intArrayOf(0,1,0); else -> intArrayOf(0,0,1) }
+        val found=LinkedHashSet<Pos>();val queue=ArrayDeque<Pos>()
+        for(sign in intArrayOf(1,-1)) {
+            val q=p.move(step[0]*sign,step[1]*sign,step[2]*sign)
+            if(loaded(q) && block(q)==F.SAIL && found.add(q)) queue.add(q)
+        }
+        while(queue.isNotEmpty() && found.size<MAX_SAILS) {
+            val q=queue.removeFirst()
+            for(d in arrayOf(intArrayOf(1,0,0),intArrayOf(-1,0,0),intArrayOf(0,1,0),intArrayOf(0,-1,0),intArrayOf(0,0,1),intArrayOf(0,0,-1))) {
+                val r=q.move(d[0],d[1],d[2])
+                if(r!=p && loaded(r) && block(r)==F.SAIL && found.size<MAX_SAILS && found.add(r)) queue.add(r)
+            }
+        }
+        if(found.size<MIN_SAILS) return WindmillChange(emptyList(),emptyMap(),tooFewSails=true)
+        val sails=found.map { intArrayOf(it.x-p.x,it.y-p.y,it.z-p.z,block(it).toInt()) }
+        for(q in found) world.setBlock(q.x,q.y,q.z,AIR)
+        windmills[p]=Windmill(p,axis,sails)
+        refreshRotation()
+        return WindmillChange(found.toList(),emptyMap())
+    }
+    /** Exhibition map: a windmill that turns from the start, its sails never placed as blocks. */
+    @Synchronized fun addWindmill(p: Pos,axis: Int,sails: List<IntArray>) { windmills[p]=Windmill(p,axis,sails) }
     private fun canProcess(s: Store,input: Map<Short,Int>,output: Map<Short,Int>): Boolean =
         input.all { (id,n)->(s.items[id] ?: 0)>=n } && output.all { (id,n)->
             (s.items[id] ?: 0).toLong()-(input[id] ?: 0)+n<=Int.MAX_VALUE }
@@ -291,11 +359,22 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         }
         return JSONObject().put("stores",rows).put("hoppers",JSONArray().also { a ->
             hoppers.forEach { a.put(JSONArray().put(it.x).put(it.y).put(it.z)) }
+        }).put("windmills",JSONArray().also { a ->
+            // The sails are not in the world while they turn: the save is their only copy.
+            for(m in windmills.values) a.put(JSONObject().put("x",m.pos.x).put("y",m.pos.y).put("z",m.pos.z).put("axis",m.axis)
+                .put("sails",JSONArray().also { s -> m.sails.forEach { v -> s.put(JSONArray().put(v[0]).put(v[1]).put(v[2]).put(v[3])) } }))
         }).toString()
     }
     @Synchronized fun restore(json: String) {
-        stores.clear(); hoppers.clear()
+        stores.clear(); hoppers.clear(); windmills.clear()
         val root=runCatching { JSONObject(json) }.getOrNull() ?: return
+        val mills=root.optJSONArray("windmills") ?: JSONArray()
+        for(i in 0 until mills.length()) runCatching {
+            val j=mills.getJSONObject(i);val s=j.getJSONArray("sails")
+            val p=Pos(j.getInt("x"),j.getInt("y"),j.getInt("z"))
+            windmills[p]=Windmill(p,j.getInt("axis"),(0 until s.length()).map { k ->
+                val v=s.getJSONArray(k);intArrayOf(v.getInt(0),v.getInt(1),v.getInt(2),v.getInt(3)) })
+        }
         val rows=root.optJSONArray("stores") ?: JSONArray()
         for(i in 0 until rows.length()) runCatching {
             val j=rows.getJSONObject(i)
@@ -311,16 +390,18 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val hs=root.optJSONArray("hoppers") ?: return
         for(i in 0 until hs.length()) runCatching { val a=hs.getJSONArray(i); hoppers.add(Pos(a.getInt(0),a.getInt(1),a.getInt(2))) }
     }
-    /** Turns a crank for ten seconds. */
+    /** One turn of the handle: the crank keeps going a moment, so it turns as long as the player keeps at it. */
     @Synchronized fun crank(p: Pos) {
         if(!loaded(p) || block(p)!=F.CRANK) return
-        cranks[p]=CRANK_SECONDS
-        refreshRotation()
+        val idle=(cranks[p] ?: 0f)<=0f
+        cranks[p]=minOf((cranks[p] ?: 0f)+CRANK_PULSE,CRANK_MAX)
+        if(idle) refreshRotation()
     }
     private fun refreshRotation() {
         cranks.entries.removeAll { (p,t) -> !loaded(p) || block(p)!=F.CRANK || t<=0f }
         // Every known wheel and crank is a candidate; the driving rule says which ones turn right now.
-        val sources=knownKinetics.keys.filter { loaded(it) && block(it) in SOURCES }
+        val sources=knownKinetics.keys.filter { loaded(it) && block(it) in SOURCES } +
+            windmills.keys.filter { loaded(it) && block(it)==F.WINDMILL }
         rotation=network.solve(sources)
     }
     companion object {
@@ -329,6 +410,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val SOURCES=setOf(F.WATERWHEEL,F.LARGE_WATERWHEEL,F.CRANK)
         /** A water wheel (speed 16) turns half a turn per second. */
         const val RADIANS_PER_SPEED=(PI/16).toFloat()
-        const val CRANK_SECONDS=10f
+        /** Seconds of turning per use of a crank, and the most it can store ahead. */
+        const val CRANK_PULSE=2f
+        const val CRANK_MAX=4f
+        const val MIN_SAILS=4
+        const val MAX_SAILS=256
+        /** One force per sail, up to this. */
+        const val MAX_SAIL_FORCE=32
     }
 }

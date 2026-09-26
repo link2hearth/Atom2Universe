@@ -26,7 +26,24 @@ internal object ShowcaseMap {
         intArrayOf(155, 57, 167, 63), intArrayOf(169, 57, 175, 63), intArrayOf(176, 56, 187, 63),
         intArrayOf(188, 56, 201, 64), intArrayOf(155, 65, 167, 75), intArrayOf(169, 65, 179, 75),
         intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87),
-        intArrayOf(155, 89, 170, 101))
+        intArrayOf(155, 89, 170, 101), intArrayOf(173, 96, 187, 106))
+
+    // The windmill of the mechanics wing: head high on a timber tower, facing the promenade.
+    private const val MILL_X = 180
+    private const val MILL_H = 8
+    private const val MILL_Z = 100
+    class ExpoWindmill(val x: Int, val y: Int, val z: Int, val axis: Int, val sails: List<IntArray>)
+    /** Windmills that turn from the start: their sails are never placed as blocks. */
+    fun windmills(): List<ExpoWindmill> {
+        val sail = com.Atom2Universe.app.games.caves.node.FrontierItems.SAIL.toInt()
+        val cells = ArrayList<IntArray>()
+        fun add(dx: Int, dy: Int) { cells += intArrayOf(dx, dy, -1, sail) }
+        add(0, 0)
+        // Four spars with a blade along one side of each: the classic pinwheel.
+        for (i in 1..5) { add(i, 0); add(0, i); add(-i, 0); add(0, -i) }
+        for (i in 2..5) { add(i, 1); add(-1, i); add(-i, -1); add(1, -i) }
+        return listOf(ExpoWindmill(MILL_X, FLOOR + 1 + MILL_H, MILL_Z, 2, cells))
+    }
     /** Index of the mechanical exhibit under (x, z), in the order of cave_showcase_mechanics_names. */
     fun mechanicsAt(x: Int, z: Int): Int? = mechanicsExhibits.indexOfFirst { (x0, z0, x1, z1) -> x in x0..x1 && z in z0..z1 }
         .takeIf { it >= 0 && mechanicsContains(x, z) }
@@ -123,7 +140,9 @@ internal object ShowcaseMap {
         for (x in 153 until WIDTH) put(x, y, 114, COBBLESTONE, 0)
         for (z in 52..58) for (x in 174..179) put(x, FLOOR, z, COBBLESTONE, 0)
         fun part(x: Int, h: Int, z: Int, id: Short, axis: Char) =
-            put(x, y + h, z, id, (when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }).toByte())
+            put(x, y + h, z, id, ((when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }) or
+                // Every crank here is fixed before its gearbox, which lies on the + side of its axis.
+                (if (id == com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) PartialBlockModel.CRANK_ON_PLUS else 0)).toByte())
         val F = com.Atom2Universe.app.games.caves.node.FrontierItems
         // A wheel dips its lower paddles into a water trough dug in the floor, across its plane.
         fun wheel(x: Int, h: Int, z: Int, large: Boolean) {
@@ -134,12 +153,14 @@ internal object ShowcaseMap {
         fun plinth(x: Int, z: Int, height: Int) { for (h in 0 until height) put(x, y + h, z, COBBLESTONE, 0) }
         // 0. Wheel, shafts and mill.
         wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'y')
-        // 1. Crank and vertical shaft.
-        part(172, 0, 60, F.CRANK, 'y'); for (h in 1..4) part(172, h, 60, F.SHAFT, 'y')
+        // 1. Crank on a gearbox, which sends the rotation up a vertical shaft.
+        part(172, 1, 59, F.CRANK, 'z'); part(172, 1, 60, F.GEARBOX, 'x'); plinth(172, 60, 1)
+        for (h in 2..5) part(172, h, 60, F.SHAFT, 'y')
         // 2. Cogwheels side by side, turning in turn.
-        part(178, 1, 58, F.CRANK, 'z'); for (x in 178..184) part(x, 1, 59, F.COGWHEEL, 'z')
+        part(178, 1, 57, F.CRANK, 'z'); part(178, 1, 58, F.GEARBOX, 'y'); plinth(178, 58, 1); for (x in 178..184) part(x, 1, 59, F.COGWHEEL, 'z')
         // 3. Large and small cogwheels: the small ones turn twice as fast.
-        part(193, 2, 58, F.CRANK, 'z'); part(193, 2, 59, F.LARGE_COGWHEEL, 'z')
+        part(193, 2, 57, F.CRANK, 'z'); part(193, 2, 58, F.GEARBOX, 'y'); plinth(193, 58, 2)
+        part(193, 2, 59, F.LARGE_COGWHEEL, 'z')
         part(194, 3, 59, F.COGWHEEL, 'z'); part(192, 1, 59, F.COGWHEEL, 'z')
         for (z in 60..62) part(194, 3, z, F.SHAFT, 'z')
         // 4. Gearbox: a quarter turn each side, reversed straight through.
@@ -148,7 +169,8 @@ internal object ShowcaseMap {
         for (z in 71..73) part(161, 0, z, F.SHAFT, 'z'); for (z in 67..69) part(161, 0, z, F.SHAFT, 'z')
         for (x in 162..165) part(x, 0, 70, F.SHAFT, 'x')
         // 5. From horizontal to vertical, as in a windmill: the gearbox sends the rotation down to the mill.
-        part(174, 3, 66, F.CRANK, 'z'); for (z in 67..68) part(174, 3, z, F.SHAFT, 'z')
+        part(174, 3, 66, F.CRANK, 'z'); part(174, 3, 67, F.GEARBOX, 'y'); plinth(174, 67, 3)
+        part(174, 3, 68, F.SHAFT, 'z')
         part(174, 3, 69, F.GEARBOX, 'x'); for (h in 1..2) part(174, h, 69, F.SHAFT, 'y'); part(174, 0, 69, F.MILL, 'y')
         // 6. Four machines at work: one wheel for crusher, mill and loom (8 of 8), another for the press.
         wheel(182, 0, 70, false); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
@@ -160,9 +182,17 @@ internal object ShowcaseMap {
         part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'y'); part(162, 0, 82, F.CRUSHER, 'y')
         part(161, 0, 81, F.MILL, 'y')
         // 8. Gears that cannot agree: round the loop the speed comes back doubled. Everything stops.
-        part(172, 0, 82, F.CRANK, 'y'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
+        part(172, 0, 81, F.CRANK, 'z'); part(172, 0, 82, F.GEARBOX, 'x'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
         part(172, 2, 82, F.SHAFT, 'y'); part(172, 3, 82, F.LARGE_COGWHEEL, 'y')
         part(173, 3, 83, F.COGWHEEL, 'y'); part(173, 2, 83, F.SHAFT, 'y'); part(173, 1, 83, F.COGWHEEL, 'y')
+        // 10. Windmill: sails on the head, a shaft out the back, a gearbox sends the rotation down to the mill.
+        part(MILL_X, MILL_H, MILL_Z, F.WINDMILL, 'z'); part(MILL_X, MILL_H, MILL_Z + 1, F.SHAFT, 'z')
+        part(MILL_X, MILL_H, MILL_Z + 2, F.GEARBOX, 'x')
+        for (h in 1 until MILL_H) part(MILL_X, h, MILL_Z + 2, F.SHAFT, 'y')
+        part(MILL_X, 0, MILL_Z + 2, F.MILL, 'y')
+        for (x in intArrayOf(MILL_X - 2, MILL_X + 2)) for (z in intArrayOf(MILL_Z + 1, MILL_Z + 3))
+            for (h in 0..MILL_H + 1) put(x, y + h, z, WOOD, 0)
+        for (x in MILL_X - 2..MILL_X + 2) for (z in MILL_Z + 1..MILL_Z + 3) put(x, y + MILL_H + 2, z, PLANK, 0)
         // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
         wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
         part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)

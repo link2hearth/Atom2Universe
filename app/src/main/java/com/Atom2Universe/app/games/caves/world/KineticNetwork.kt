@@ -22,10 +22,12 @@ internal class KineticNetwork(
     private val blockAt: (Int, Int, Int) -> Short,
     private val metaAt: (Int, Int, Int) -> Byte,
     /** Is this source turning right now, and which way: [DRIVE_NONE], [DRIVE_POSITIVE] or [DRIVE_NEGATIVE]
-     * about its +axis, or [DRIVE_EITHER] when it has no direction of its own (crank). */
+     * about its +axis, or [DRIVE_EITHER] when it has no direction of its own (crank, windmill). */
     private val driving: (FrontierWorkshops.Pos, Short) -> Int,
+    /** Force of a windmill head: grows with its sails. */
+    private val windForce: (FrontierWorkshops.Pos) -> Float = { 0f },
 ) {
-    private enum class Kind { SHAFT, COG, LARGE_COG, CRANK, GEARBOX, WHEEL, LARGE_WHEEL, MACHINE }
+    private enum class Kind { SHAFT, COG, LARGE_COG, CRANK, GEARBOX, WHEEL, LARGE_WHEEL, WINDMILL, MACHINE }
 
     class Network(val stress: Float, val capacity: Float, val overloaded: Boolean, val conflict: Boolean) {
         val stopped get() = overloaded || conflict
@@ -42,11 +44,12 @@ internal class KineticNetwork(
         F.GEARBOX -> Kind.GEARBOX
         F.WATERWHEEL -> Kind.WHEEL
         F.LARGE_WATERWHEEL -> Kind.LARGE_WHEEL
+        F.WINDMILL -> Kind.WINDMILL
         F.MILL, F.PRESS, F.CRUSHER, F.LOOM -> Kind.MACHINE
         else -> null
     }
     private fun axial(k: Kind?) = k != null && k != Kind.GEARBOX && k != Kind.MACHINE
-    private fun source(k: Kind?) = k == Kind.WHEEL || k == Kind.LARGE_WHEEL || k == Kind.CRANK
+    private fun source(k: Kind?) = k == Kind.WHEEL || k == Kind.LARGE_WHEEL || k == Kind.CRANK || k == Kind.WINDMILL
     private fun axis(p: FrontierWorkshops.Pos) = PartialBlockModel.shaftAxis(metaAt(p.x, p.y, p.z))
     private fun step(p: FrontierWorkshops.Pos, axis: Int, sign: Int) = when (axis) {
         0 -> p.move(sign, 0, 0); 1 -> p.move(0, sign, 0); else -> p.move(0, 0, sign)
@@ -130,7 +133,7 @@ internal class KineticNetwork(
                 if (!source(k)) continue
                 val drive = driving(m, id)
                 if (drive == DRIVE_NONE || (pass == 0) == (drive == DRIVE_EITHER)) continue
-                capacity += capacity(k)
+                capacity += if (k == Kind.WINDMILL) windForce(m) else capacity(k)
                 val wanted = sourceSpeed(k) * (if (drive == DRIVE_EITHER) 1 else drive) / rel.getValue(m)
                 if (scale == null) scale = wanted
                 else if (drive == DRIVE_EITHER) { if (abs(abs(scale) - abs(wanted)) > 1e-6 * abs(wanted)) conflict = true }
@@ -153,7 +156,11 @@ internal class KineticNetwork(
     }
 
     private fun capacity(k: Kind?) = when (k) { Kind.CRANK -> CRANK_FORCE; Kind.LARGE_WHEEL -> LARGE_WHEEL_FORCE; else -> WHEEL_FORCE }
-    private fun sourceSpeed(k: Kind?) = if (k == Kind.LARGE_WHEEL) LARGE_WHEEL_SPEED.toDouble() else BASE.toDouble()
+    private fun sourceSpeed(k: Kind?) = when (k) {
+        Kind.LARGE_WHEEL -> LARGE_WHEEL_SPEED.toDouble()
+        Kind.WINDMILL -> WINDMILL_SPEED.toDouble()
+        else -> BASE.toDouble()
+    }
 
     companion object {
         /** Speed of a water wheel; recipes take their listed time at this speed. */
@@ -162,6 +169,8 @@ internal class KineticNetwork(
         const val WHEEL_FORCE = 8f
         const val LARGE_WHEEL_FORCE = 16f
         const val LARGE_WHEEL_SPEED = 8f
+        /** The wind is constant: a windmill always turns at this speed. */
+        const val WINDMILL_SPEED = 8f
         const val CRANK_FORCE = 4f
         const val DRIVE_NONE = 0
         const val DRIVE_POSITIVE = 1

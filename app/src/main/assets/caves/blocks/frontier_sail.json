@@ -1,0 +1,17 @@
+{
+  "id": 9825,
+  "name": "frontier_sail",
+  "texture_top": "frontier:9825:top",
+  "texture_side": "frontier:9825:side",
+  "texture_bottom": "frontier:9825:top",
+  "color": "#E8E0C7",
+  "hardness": 0.6,
+  "drop": "frontier_sail",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}
