@@ -351,19 +351,51 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         return when { geology > .44 -> BASALT; geology < -.45 -> 2201; geology > .23 -> GRANITE; geology < -.28 -> QUARTZ; else -> STONE }
     }
 
+    // Données immuables après publication, partagées entre les étages d'une colonne.
+    // LRU borné (~6 Mio), sans vider brutalement tout le cache pendant l'exploration.
+    private class SurfaceColumn {
+        val heights = IntArray(256)
+        val tops = ShortArray(256)
+        val indices = IntArray(256)
+        val waterLevels = IntArray(256)
+        val frozen = BooleanArray(256)
+        val floodBelow = DoubleArray(256) { Double.NEGATIVE_INFINITY }
+    }
+    private val surfaceColumns = LinkedHashMap<Long, SurfaceColumn>(128, .75f, true)
+
+    private fun surfaceColumn(cx: Int, cz: Int): SurfaceColumn {
+        val key = columnCacheKey(cx, cz)
+        synchronized(surfaceColumns) { surfaceColumns[key]?.let { return it } }
+        // Les deux générateurs peuvent calculer des colonnes différentes en parallèle.
+        val result = SurfaceColumn()
+        val biomes = BiomeRegistry.surfaceBiomes
+        for (z in 0..15) for (x in 0..15) {
+            val wx = (cx * 16 + x).toDouble(); val wz = (cz * 16 + z).toDouble(); val i = z * 16 + x
+            val h = height(wx, wz).toInt(); result.heights[i] = h
+            val water = waterLevelAt(wx, wz); result.waterLevels[i] = water
+            val id = biomeIdAt(wx.toDouble(), wz.toDouble())
+            result.indices[i] = biomes.indexOfFirst { it.id == id }.coerceAtLeast(0)
+            result.tops[i] = topBlock(biomes[result.indices[i]], wx, wz, h, water)
+            result.frozen[i] = temperature(wx, wz) < .18
+            if (h > water + 6 && aquiferWetness(wx, wz) > 0.0)
+                result.floodBelow[i] = aquiferTable(wx, wz, h)
+        }
+        synchronized(surfaceColumns) {
+            surfaceColumns[key]?.let { return it }
+            surfaceColumns[key] = result
+            if (surfaceColumns.size > 1024) {
+                val oldest = surfaceColumns.entries.iterator()
+                oldest.next(); oldest.remove()
+            }
+        }
+        return result
+    }
+
     @JvmOverloads
     fun generate(chunk: Chunk, landscape: CozyLandscape, decorateUnderground: Boolean = true) {
-        val biomes = BiomeRegistry.surfaceBiomes
-        val heights = IntArray(256); val tops = ShortArray(256); val indices = IntArray(256)
-        val waterLevels = IntArray(256)
-        for (z in 0..15) for (x in 0..15) {
-            val wx = chunk.worldX + x; val wz = chunk.worldZ + z; val i = z * 16 + x
-            val h = height(wx.toDouble(), wz.toDouble()).toInt(); heights[i] = h
-            waterLevels[i] = waterLevelAt(wx.toDouble(), wz.toDouble())
-            val id = biomeIdAt(wx.toDouble(), wz.toDouble())
-            indices[i] = biomes.indexOfFirst { it.id == id }.coerceAtLeast(0)
-            tops[i] = topBlock(biomes[indices[i]], wx.toDouble(), wz.toDouble(), h, waterLevels[i])
-        }
+        val surface = surfaceColumn(chunk.cx, chunk.cz)
+        val heights = surface.heights; val tops = surface.tops; val indices = surface.indices
+        val waterLevels = surface.waterLevels
         if (chunk.worldY > max(SEA_LEVEL, heights.max()) + TreeShape.HEIGHT) return
         // Shared 4-block lattice: interpolation remains identical across chunk boundaries.
         val field = DoubleArray(125)
@@ -383,10 +415,10 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
             val i = z * 16 + x
             val h = heights[i]; val depth = h - wy; val top = tops[i]; val waterLevel = waterLevels[i]
             val block = when {
-                wy > h -> if (wy == waterLevel && temperature(wx.toDouble(), wz.toDouble()) < .18) ICE else if (wy <= waterLevel) WATER else AIR
+                wy > h -> if (wy == waterLevel && surface.frozen[i]) ICE else if (wy <= waterLevel) WATER else AIR
                 // Keep a seabed/lakebed so a surface water body cannot flood entire cave networks on load.
                 density(x, y, z) > 0 && !(h <= waterLevel && depth < 8) ->
-                    if (isFlooded(wx, wy, wz, h, waterLevel)) WATER else AIR
+                    if (wy < surface.floodBelow[i]) WATER else AIR
                 depth == 0 -> top
                 depth < 4 && top in shortArrayOf(SAND, REDSAND, CLAY, MUD, SANDSTONE) -> if (top == SAND || top == REDSAND) SANDSTONE else top
                 depth < 4 && top in shortArrayOf(GRASS, FOREST_FLOOR, MOSS, DIRT_SNOW) -> DIRT

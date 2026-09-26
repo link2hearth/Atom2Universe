@@ -1124,7 +1124,12 @@ internal class CaveRenderer(
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
         val movedChunk = cx != lastCx || cy != lastCy || cz != lastCz
         streamTickAccum += dt
-        if (movedChunk || (streamNeedsMore && streamTickAccum >= 0.08f)) {
+        // Réalimenter dès que les générateurs manquent de travail. Attendre systématiquement
+        // 80 ms entre lots de 8 imposait à lui seul ~22 s pour les 2 167 chunks du rayon 8,
+        // même si la génération terminait bien avant (notamment les chunks de ciel).
+        val generatorsNeedWork = generationJobs.get() < 2 && waitingFirstMeshes < 64 &&
+            pendingMeshBytes.get() < MAX_PENDING_MESH_BYTES
+        if (movedChunk || (streamNeedsMore && (streamTickAccum >= 0.08f || generatorsNeedWork))) {
             // Workers must not accumulate hundreds of jobs/vertex arrays behind the renderer.
             val batchSize = if (waitingFirstMeshes >= 64 || pendingMeshBytes.get() >= MAX_PENDING_MESH_BYTES) 0
                 else (8 - generationJobs.get()).coerceAtLeast(0)

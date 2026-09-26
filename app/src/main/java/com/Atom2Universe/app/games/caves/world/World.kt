@@ -24,17 +24,18 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         source?.vegetationClimateAt(wx, wz)?.let { return it }
         val biomes = BiomeRegistry.surfaceBiomes
         if (biomes.isEmpty()) return 0
-        val weights = DoubleArray(biomes.size)
-        BiomeMap.biomeWeights(wx.toDouble(), wz.toDouble(), seed, weights)
         var temperature = 0.0
         var humidity = 0.0
-        for (i in biomes.indices) {
-            temperature += weights[i] * biomes[i].temperature
-            humidity += weights[i] * biomes[i].humidity
-        }
         if (terrainVersion >= 3) {
             temperature = natural.temperature(wx.toDouble(), wz.toDouble()) - max(0.0, natural.height(wx.toDouble(), wz.toDouble()) - 200) / 1600
             humidity = natural.humidity(wx.toDouble(), wz.toDouble())
+        } else {
+            val weights = DoubleArray(biomes.size)
+            BiomeMap.biomeWeights(wx.toDouble(), wz.toDouble(), seed, weights)
+            for (i in biomes.indices) {
+                temperature += weights[i] * biomes[i].temperature
+                humidity += weights[i] * biomes[i].humidity
+            }
         }
         return when {
             temperature < .30 -> 4
@@ -168,10 +169,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val keep = maxNewChunks.coerceIn(0, bestKeys.size)
         var kept = 0
         var missing = 0
-        fun offer(dx: Int, dy: Int, dz: Int, key: Long) {
+        fun offer(dx: Int, dy: Int, dz: Int, key: Long, tier: Int = 0) {
             missing++
             if (keep == 0) return
-            val priority = streamPriority(dx, dy, dz, viewDirX, viewDirZ)
+            val priority = tier * 1_000_000 + streamPriority(dx, dy, dz, viewDirX, viewDirZ)
             if (kept == keep && priority >= bestPriority[kept - 1]) return
             var i = if (kept < keep) kept++ else kept - 1
             while (i > 0 && bestPriority[i - 1] > priority) {
@@ -193,11 +194,21 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 if (dx * dx + dz * dz > rxz2) continue
                 val cx = pcx + dx; val cz = pcz + dz
                 val top = columnReach(cx, cz, pcy, ry)
+                val surface = if (terrainVersion >= 3) columnSurfaceSpan(cx, cz) else null
                 for (dy in -ry..top) {
                     val cy = pcy + dy
                     if (terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < ISLAND_CY_MIN) continue
                     val key = chunkKey(cx, cy, cz)
-                    if (!chunks.containsKey(key) && !inFlight.contains(key)) offer(dx, dy, dz, key)
+                    if (!chunks.containsKey(key) && !inFlight.contains(key)) {
+                        // Collisions proches d'abord, puis relief/arbres visibles, puis les autres
+                        // étages. Le sous-sol lointain ne retient plus la surface derrière le LOD.
+                        val tier = when {
+                            surface == null || maxOf(abs(dx), abs(dy), abs(dz)) <= 2 -> 0
+                            cy in surface -> 1
+                            else -> 2
+                        }
+                        offer(dx, dy, dz, key, tier)
+                    }
                 }
             }
         } else {
@@ -265,21 +276,29 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      */
     private fun columnReach(cx: Int, cz: Int, pcy: Int, ry: Int): Int {
         if (terrainVersion < 2 || source != null) return ry
-        val top = columnTopCy(cx, cz)
+        val top = columnSurfaceSpan(cx, cz).last - TREE_CHUNKS_ABOVE_SURFACE
         return (top + 1 - pcy).coerceIn(ry, ry + COLUMN_EXTRA_CY)
     }
 
-    /** Chunk (cy) du point le plus haut du relief de la colonne, 9 échantillons, mémorisé. */
-    private fun columnTopCy(cx: Int, cz: Int): Int {
+    /** Relief, eau et arbres : plage estimée avec les mêmes 9 échantillons que le plafond. */
+    private fun columnSurfaceSpan(cx: Int, cz: Int): IntRange {
         val key = (cx.toLong() and 0xFFFFF) or ((cz.toLong() and 0xFFFFF) shl 20)
         columnTops[key]?.let { return it }
         var top = Double.NEGATIVE_INFINITY
-        for (z in 0..2) for (x in 0..2)
-            top = maxOf(top, surfaceHeight(cx * 16.0 + x * 7.5, cz * 16.0 + z * 7.5))
+        var bottom = Double.POSITIVE_INFINITY
+        for (z in 0..2) for (x in 0..2) {
+            val h = surfaceHeight(cx * 16.0 + x * 7.5, cz * 16.0 + z * 7.5)
+            top = maxOf(top, h)
+            bottom = minOf(bottom, h)
+        }
         if (columnTops.size > 20000) columnTops.clear()
-        return Math.floorDiv(top.toInt(), CHUNK_SIZE).also { columnTops[key] = it }
+        // Une marge sous le sol couvre les flancs et les variations entre échantillons.
+        return (Math.floorDiv(bottom.toInt(), CHUNK_SIZE) - 1..
+            Math.floorDiv(top.toInt(), CHUNK_SIZE) + TREE_CHUNKS_ABOVE_SURFACE)
+            .also { columnTops[key] = it }
     }
-    private val columnTops = HashMap<Long, Int>()
+    private val TREE_CHUNKS_ABOVE_SURFACE = (TreeShape.HEIGHT + CHUNK_SIZE - 1) / CHUNK_SIZE
+    private val columnTops = HashMap<Long, IntRange>()
     // 8 chunks = 128 blocs de plus au-dessus de la plage normale, au plus.
     private val COLUMN_EXTRA_CY = 8
 
