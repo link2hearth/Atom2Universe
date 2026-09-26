@@ -152,9 +152,19 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
                     for(dx in 0..18) for(dz in 10..18) put(dx,5,dz,plank)
                     put(3,1,15,F.COMPOSTER); put(8,1,15,F.CACHE); put(13,1,15,F.COOKER)
                 }
-                else -> { // Prospector workshop: a mill turned by a crank on a gearbox (axis code 1 = along X, 0 = Y).
+                else -> { // Prospector workshop with a small windmill (axis codes as for logs: 0 = Y, 1 = X, 2 = Z).
                     hut(1,1,if(rng.nextBoolean()) 0 else 4); plot(11,1,7,16,GRAVEL)
-                    put(13,1,3,F.MILL,1); put(14,1,3,F.GEARBOX,0); put(15,1,3,F.CRANK,1)
+                    // Timber tower; the head on its front, a shaft and a gearbox send the rotation down to the mill.
+                    for(dx in listOf(13,15)) for(dz in listOf(4,6)) for(dy in 1..6) put(dx,dy,dz,wood)
+                    for(dx in 13..15) for(dz in 3..6) put(dx,7,dz,plank)
+                    put(14,6,3,F.WINDMILL,2); put(14,6,4,F.SHAFT,2); put(14,6,5,F.GEARBOX,1)
+                    for(dy in 2..5) put(14,dy,5,F.SHAFT,0)
+                    put(14,1,5,F.MILL)
+                    // Sails left as blocks, a pinwheel in front of the head: using the head sets them turning.
+                    fun sail(a: Int,b: Int) = put(14+a,6+b,2,F.SAIL)
+                    sail(0,0)
+                    for(i in 1..3) { sail(i,0); sail(0,i); sail(-i,0); sail(0,-i) }
+                    for(i in 2..3) { sail(i,1); sail(-1,i); sail(-i,-1); sail(1,-i) }
                     for(dz in 9..14) for(dx in 11..16) put(dx,1,dz,if(rng.nextInt(5)==0) COPPER else ROCK)
                     put(12,1,6,F.CACHE)
                 }

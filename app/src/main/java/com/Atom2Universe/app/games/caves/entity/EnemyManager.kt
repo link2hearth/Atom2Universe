@@ -60,6 +60,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     // ── Tick principal ────────────────────────────────────────────────────────
 
+    /** Simulation distance from the pause menu: enemies farther than this leave the world. */
+    var despawnChunks = DESPAWN_CHUNKS
+
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
         if (isCreative) { enemies.clear(); return }
         lastPx = px; lastPz = pz
@@ -69,7 +72,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
         for (e in enemies) if (e.hp > 0 && e.freezeTimer <= 0f) e.animTime += dt
 
-        val despawnDist2 = (DESPAWN_CHUNKS * CHUNK_SIZE).toDouble().let { it * it }
+        // Never inside the spawn ring, or enemies would vanish as they appear.
+        val despawnDist2 = (maxOf(despawnChunks, SpawnManager.SPAWN_MAX_CHUNKS + 1) * CHUNK_SIZE).toDouble().let { it * it }
         enemies.removeAll { e ->
             if (e.hp <= 0) {
                 spawnManager.onEnemyDied(e)
@@ -434,7 +438,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         const val GRAVITY        = 20f
         const val MAX_FALL       = -20f
         const val STEP_UP_VEL    = 7.0
-        const val DESPAWN_CHUNKS = 6
+        const val DESPAWN_CHUNKS = 4
         const val ATTACK_REACH    = 0.6    // portée d'attaque au-delà de la distance de garde
         const val PLAYER_STANDOFF = 1.5    // marge XZ au-delà du rayon du mob (corps hors caméra)
         const val SEP_GAP         = 0.7    // espace désiré entre les surfaces de deux mobs

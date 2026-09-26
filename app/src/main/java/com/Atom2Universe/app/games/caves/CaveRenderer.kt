@@ -105,12 +105,12 @@ internal class CaveRenderer(
     }
     @Volatile private var viewDistances = CaveViewDistances.load(context)
     internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
-                               source = worldSource).apply { setSimulationDistance(viewDistances.simulation) }
+                               source = worldSource).apply { setSimulationDistance(viewDistances.detail) }
 
     /** Called on the GL thread, including while the pause bubble is open. */
     internal fun setViewDistances(value: CaveViewDistances) {
         viewDistances = value.normalized()
-        world.setSimulationDistance(viewDistances.simulation)
+        world.setSimulationDistance(viewDistances.detail)
         lastCx = Int.MAX_VALUE
         streamNeedsMore = true
         lodScanIndex = 0
@@ -1620,6 +1620,11 @@ internal class CaveRenderer(
         if (!gamePaused) { mode.update(dt);if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot) }
         if (worldSource == null) {
             if (!gamePaused) {
+                // Simulation distance from the pause menu: how far living things and machines stay active.
+                val simulation = viewDistances.simulation * CHUNK_SIZE.toDouble()
+                passiveAnimals.simulationRadius = simulation; residents.simulationRadius = simulation
+                enemyManager.despawnChunks = viewDistances.simulation
+                workshops.simulationRadius = simulation
                 passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ,hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0)>0 })
                 residents.update(dt,camera.playerX,camera.playerY,camera.playerZ,ambientFor(dayT)<.4f)
                 workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
@@ -1629,6 +1634,7 @@ internal class CaveRenderer(
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         } else if (exhibition) {
+            workshops.simulationRadius = viewDistances.simulation * CHUNK_SIZE.toDouble()
             if (!gamePaused) workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         }
@@ -1753,7 +1759,7 @@ internal class CaveRenderer(
                     "refreshUploads=$refreshMeshUploads lightWorker=${lightWorkerRunning.get()} " +
                     "lightPending=${world.hasPendingLight()} lodJobs=${lodBuilding.size} " +
                     "meshes=${meshes.size} position=$cx,$cy,$cz " +
-                    "reach=${viewDistances.simulation}/${viewDistances.view} detailDrawn=$drawnDetailReach lodDrawn=$drawnLodReach")
+                    "reach=${viewDistances.detail}/${viewDistances.view}/${viewDistances.simulation} detailDrawn=$drawnDetailReach lodDrawn=$drawnLodReach")
                 drawnDetailReach = 0; drawnLodReach = 0
                 firstMeshUploads = 0
                 refreshMeshUploads = 0
@@ -3722,7 +3728,7 @@ internal class CaveRenderer(
     // ── LOD helpers ──────────────────────────────────────────────────────────
 
     /** La colonne attend encore un chunk de surface et son LOD existe : on n'affiche que le LOD. */
-    private val lodEnabled get() = worldSource == null && viewDistances.view > viewDistances.simulation
+    private val lodEnabled get() = worldSource == null && viewDistances.view > viewDistances.detail
 
     private fun columnHandsToLod(cx: Int, cz: Int): Boolean {
         if (!lodEnabled) return false
@@ -3750,7 +3756,7 @@ internal class CaveRenderer(
     private fun withinSimulationRange(cx: Int, cz: Int): Boolean {
         if (worldSource != null) return true
         val dx = cx - lodCenterX; val dz = cz - lodCenterZ
-        val radius = viewDistances.simulation
+        val radius = viewDistances.detail
         return dx * dx + dz * dz <= radius * radius
     }
 

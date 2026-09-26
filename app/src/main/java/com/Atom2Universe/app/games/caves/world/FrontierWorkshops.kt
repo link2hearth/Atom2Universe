@@ -32,6 +32,10 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     /** Turning parts near the player, refreshed once per second; angles advance every frame. */
     val kinetics=ArrayList<Kinetic>()
     private val cranks=hashMapOf<Pos,Float>()
+    /** Simulation distance from the pause menu, in blocks: parts and workshops beyond it neither turn nor work. */
+    var simulationRadius=64.0
+    private var playerX=Double.NaN;private var playerZ=Double.NaN
+    private fun simulated(p: Pos)=playerX.isNaN() || (p.x+.5-playerX).pow(2)+(p.z+.5-playerZ).pow(2)<=simulationRadius.pow(2)
     /** Exhibition map: every source turns (no flowing water, nobody at the cranks), nothing is produced. */
     var exhibition=false
     private val network=KineticNetwork({ x,y,z -> world.blockAt(x,y,z) },{ x,y,z -> world.metaAt(x,y,z) },::drive) { p ->
@@ -124,6 +128,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double,light: (Int,Int,Int)->Float) {
         visualTimer-=dt
+        playerX=x;playerZ=z
         if(visualTimer<=0f) {
             visualTimer=1f;kinetics.clear();visibleWindmills.clear()
             // advance() does not run on the exhibition map: solve the rotation here instead.
@@ -132,16 +137,19 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             while(parts.hasNext()) {
                 val k=parts.next().value;val p=k.pos
                 if(!loaded(p) || block(p)!=k.block) { parts.remove();continue }
-                if(abs(p.y-y)>32 || (p.x-x).pow(2)+(p.z-z).pow(2)>48.0.pow(2) || kinetics.size>=MAX_KINETICS) continue
-                val meta=world.metaAt(p.x,p.y,p.z)
-                k.axis=PartialBlockModel.shaftAxis(meta);k.flipped=meta.toInt() and PartialBlockModel.CRANK_ON_PLUS!=0
+                if(abs(p.y-y)>32 || !simulated(p) || kinetics.size>=MAX_KINETICS) continue
+                if(k.block in MACHINES) gearboxSide(k)
+                else {
+                    val meta=world.metaAt(p.x,p.y,p.z)
+                    k.axis=PartialBlockModel.shaftAxis(meta);k.flipped=meta.toInt() and PartialBlockModel.CRANK_ON_PLUS!=0
+                }
                 k.speed=speedAt(p);k.light=light(p.x,p.y,p.z)
                 kinetics.add(k)
             }
             for(mill in windmills.values) {
                 val p=mill.pos
                 if(!loaded(p) || block(p)!=F.WINDMILL) continue
-                if(abs(p.y-y)>64 || (p.x-x).pow(2)+(p.z-z).pow(2)>64.0.pow(2)) continue
+                if(abs(p.y-y)>64 || !simulated(p)) continue
                 // The head is a solid block, always dark inside: take the light around it.
                 mill.speed=speedAt(p)
                 mill.light=maxOf(light(p.x+1,p.y,p.z),light(p.x-1,p.y,p.z),light(p.x,p.y+1,p.z),
@@ -152,6 +160,20 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         // Angle advances with time, never by a fixed step per frame: smooth at 60 and 120 Hz.
         for(k in kinetics) if(k.speed!=0f) k.angle=(k.angle+k.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
         for(m in visibleWindmills) if(m.speed!=0f) m.angle=(m.angle+m.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
+    }
+    /** A machine shows an axle end on the face where a gearbox drives it: axis of that face, flipped when
+     * the gearbox is on the - side. Axis -1: no gearbox, nothing drawn. */
+    private fun gearboxSide(k: Kinetic) {
+        k.axis=-1
+        for(axis in 0..2) for(sign in intArrayOf(1,-1)) {
+            val q=when(axis) { 0 -> k.pos.move(sign,0,0); 1 -> k.pos.move(0,sign,0); else -> k.pos.move(0,0,sign) }
+            val id=block(q);val qAxis=PartialBlockModel.shaftAxis(world.metaAt(q.x,q.y,q.z))
+            val gearbox=id==F.GEARBOX && qAxis!=axis
+            // The mill's spindle: a vertical shaft (or any turning axle) coming down onto it.
+            val spindle=k.block==F.MILL && axis==1 && sign>0 && id in TURNING && id !in MACHINES && qAxis==1
+            if(!gearbox && !spindle) continue
+            k.axis=axis;k.flipped=sign<0;return
+        }
     }
     @Synchronized fun feedAnimals(animals: com.Atom2Universe.app.games.caves.entity.PassiveAnimals,dt: Float) {
         feedTimer+=dt
@@ -304,7 +326,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         refreshRotation()
         // Only nearby, loaded workshops run. No offline production or distant world reads.
         for((p,s) in stores) {
-            if(!loaded(p)) continue
+            if(!loaded(p) || !simulated(p)) continue
             val machine=block(p)
             val fuel=s.items.keys.sorted().firstOrNull { "fuel" in BlockRegistry.get(it)?.tags.orEmpty() && (s.items[it] ?: 0)>0 }
             val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || speedAt(p)!=0f) &&
@@ -394,8 +416,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private fun refreshRotation() {
         cranks.entries.removeAll { (p,t) -> !loaded(p) || block(p)!=F.CRANK || t<=0f }
         // Every known wheel and crank is a candidate; the driving rule says which ones turn right now.
-        val sources=knownKinetics.keys.filter { loaded(it) && block(it) in SOURCES } +
-            windmills.keys.filter { loaded(it) && block(it)==F.WINDMILL }
+        val sources=knownKinetics.keys.filter { loaded(it) && simulated(it) && block(it) in SOURCES } +
+            windmills.keys.filter { loaded(it) && simulated(it) && block(it)==F.WINDMILL }
         rotation=network.solve(sources)
     }
     companion object {

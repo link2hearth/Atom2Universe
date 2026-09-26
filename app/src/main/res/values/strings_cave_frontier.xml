@@ -13,7 +13,7 @@
     <string name="cave_storage_row">%1$s × %2$d</string>
     <string name="cave_storage_empty">Nothing here yet.</string>
     <string name="cave_storage_hint">Drag a stack between bag, bar and storage. Tap for details; hold to split, adjust the amount, then tap outside. Breaking this block returns its contents.</string>
-    <string name="cave_mill_hint">Add wheat. Place it against the end of a shaft or a side of a gearbox: it takes the rotation through its two axle ends. 1 wheat → 3 flour; faster when it turns faster.</string>
+    <string name="cave_mill_hint">Add wheat. It turns on a vertical shaft coming down onto it, or against a side of a gearbox. 1 wheat → 3 flour; faster when it turns faster.</string>
     <string name="cave_mill_running">Power connected. Add wheat: 1 wheat → 3 flour in 6 seconds. Close this panel to resume production.</string>
     <string name="cave_cooker_hint">Add coal or charcoal and flour or potatoes. Every 10 seconds: 3 flour/potatoes + 1 fuel → 4 bread/baked potatoes. Close the panel to cook.</string>
     <string name="cave_composter_hint">3 identical harvested crops → 1 compost in 20 seconds. Use compost on a growing crop to speed it up. Close the panel to resume.</string>
@@ -107,7 +107,7 @@
     <string name="cave_animal_ready">Product collected. Feed this animal for its next production.</string>
     <string name="cave_animal_wait">This animal is growing, digesting or still preparing its product.</string>
     <string name="cave_husbandry_hint">Lure and feed cows and sheep with wheat, pigs with carrots, chickens with wheat seeds. Two fed adults nearby breed, then rest for 5 minutes. Babies mature in 10 minutes; feeding speeds growth. Milk: empty bucket; wool: shears; eggs and truffles: empty hand. Products are ready 2 minutes after feeding.</string>
-    <string name="cave_machine_power">Needs rotation through one of its two axle ends: place it against the end of a shaft or a side of a gearbox. Deposit ingredients; recipes run automatically.</string>
+    <string name="cave_machine_power">Needs rotation from a gearbox: place it against one of its sides, never straight on a shaft. A row of gearboxes shares its force between the workshops beside it. Deposit ingredients; recipes run automatically.</string>
     <string name="cave_machine_recipe">%1$s → %2$s · %3$d s</string>
     <string name="cave_machine_unpowered">Stopped · nothing turns it.</string>
     <string name="cave_machine_powered">Transmission active</string>

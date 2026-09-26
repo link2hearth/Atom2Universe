@@ -584,11 +584,14 @@
         <item>Grand et petits engrenages : deux fois plus vite</item>
         <item>Renvoi d’angle : un quart de tour</item>
         <item>De l’horizontale à la verticale, comme dans un moulin à vent</item>
-        <item>Quatre machines sur deux roues</item>
+        <item>Une rangée de renvois partage une roue entre ses ateliers</item>
         <item>Trop pour une seule roue : à l’arrêt</item>
         <item>Engrenages qui ne s’accordent pas : à l’arrêt</item>
         <item>Grande roue : deux fois plus lente, deux fois plus forte</item>
         <item>Moulin à vent : voiles, renvoi d’angle et moulin en bas</item>
+        <item>Une grande roue et une longue rangée de renvois : six ateliers</item>
+        <item>À la main : une manivelle sur un renvoi, deux ateliers</item>
+        <item>Plus vite : le petit engrenage double la vitesse, la presse demande deux fois plus de force</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>

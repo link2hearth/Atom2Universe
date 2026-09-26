@@ -71,6 +71,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private var gridIndices = emptyList<Int>()
     private var gridColumns = CaveActivity.GRID_COLS
     private val categoryKeys = listOf("", "terrain", "wood", "stone", "nature", "functional", "cotton", "ores", "resources")
+    // BlockRegistry.creativeList() filters and sorts the full registry. Keep one
+    // snapshot: the comparator can ask for thousands of IDs during one sort.
+    private val creativeCatalog by lazy(LazyThreadSafetyMode.NONE) { BlockRegistry.creativeList() }
 
     // ── Slots ─────────────────────────────────────────────────────────────────
     // The count map covers bag + bar; each stack is shown in exactly one location.
@@ -117,6 +120,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun hotbarBase() = (invSlots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
     fun selectedType(): Short? = selectedSlotIdx.takeIf { it in invSlots.indices }?.let { invSlots[it] }
+    private fun catalogTypeAt(index: Int): Short? = if (activity.isCreative) creativeCatalog.getOrNull(index) else invSlots.getOrNull(index)
 
     // ── Crafting ──────────────────────────────────────────────────────────────
     var selectedRecipe: CraftDef? = null
@@ -302,6 +306,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private data class IconState(val button: Button,val key: String,val label: Int,val active: Boolean)
 
     private fun selectInventorySlot(index: Int) {
+        if (activity.isCreative) {
+            val id=catalogTypeAt(index) ?: return
+            selectedRecipe=null;assigningShortcut=false
+            val free=renderer.hotbar.indexOfFirst { it==null }.takeIf { it>=0 } ?: renderer.selectedSlot
+            assignCreativeTypeToBar(id,free)
+            refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel();updateCraftingList()
+            return
+        }
         if (index !in invSlots.indices) return
         if (assigningShortcut && index >= hotbarBase() && selectedType() != null) {
             swapSlots(selectedSlotIdx, index); assigningShortcut = false
@@ -349,6 +361,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if(!renderer.inventoryStacks.moveToBar(key,index)) return
         renderer.inventoryStacks.writeBar(renderer.hotbar)
         syncHotbar();selectedSlotIdx=hotbarBase()+index;activity.saveWorldAsync()
+    }
+    private fun assignCreativeTypeToBar(id: Short,index: Int) {
+        if (!activity.isCreative || index !in renderer.hotbar.indices) return
+        renderer.inventoryStacks.receive(id,1,slot=index)
+        renderer.inventoryStacks.writeBar(renderer.hotbar)
+        renderer.syncInventoryStacks();renderer.notifyHotbar()
+        selectedSlotIdx=hotbarBase()+index
+        activity.saveWorldAsync()
     }
     fun swapSlots(a: Int,b: Int) {
         val stack=stackAt(a) ?: return
@@ -523,15 +543,17 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     fun refreshPagedAdapter() {
         val needle=folded(query)
-        gridIndices = (0 until hotbarBase()).filter { index ->
-            val type=invSlots[index] ?: return@filter false
-            (renderer.inventory[type] ?: 0)>0 && name(type).contains(needle) &&
+        val catalogSize=if(activity.isCreative) creativeCatalog.size else hotbarBase()
+        gridIndices = (0 until catalogSize).filter { index ->
+            val type=catalogTypeAt(index) ?: return@filter false
+            (activity.isCreative || (renderer.inventory[type] ?: 0)>0) && name(type).contains(needle) &&
                 (bankFilter==null || renderer.itemMode(type)==bankFilter) &&
                 (!onlyFavorites || isFavorite(type)) && (!onlyRecent || type in recent.take(24)) &&
                 (categoryIndex==0 || BlockRegistry.get(type)?.creativeTab==categoryKeys[categoryIndex])
-        }.sortedWith(compareByDescending<Int> { isFavorite(invSlots[it]!!) }.thenComparator { a,b ->
-            val x=invSlots[a]!!;val y=invSlots[b]!!
-            when(sortOrder) { 1 -> countAt(b).compareTo(countAt(a))
+        }.sortedWith(compareByDescending<Int> { catalogTypeAt(it)?.let(::isFavorite) ?: false }.thenComparator { a,b ->
+            val x=catalogTypeAt(a) ?: return@thenComparator 0
+            val y=catalogTypeAt(b) ?: return@thenComparator 0
+            when(sortOrder) { 1 -> (if(activity.isCreative) 0 else countAt(b)).compareTo(if(activity.isCreative) 0 else countAt(a))
                 2 -> (recent.indexOf(x).takeIf { it>=0 } ?: Int.MAX_VALUE).compareTo(recent.indexOf(y).takeIf { it>=0 } ?: Int.MAX_VALUE)
                 else -> name(x).compareTo(name(y)) }.takeIf { it!=0 } ?: name(x).compareTo(name(y))
         })
@@ -542,7 +564,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             ui.pager.visibility = if (browsingCraft) View.GONE else View.VISIBLE
             ui.footer.visibility = if (browsingCraft) View.GONE else View.VISIBLE
             ui.category.visibility = if (!browsingCraft) View.VISIBLE else View.GONE
-            ui.summary.text=activity.getString(R.string.cave_catalog_summary,gridIndices.size,hotbarBase())
+            ui.summary.text=activity.getString(R.string.cave_catalog_summary,gridIndices.size,catalogSize)
             ui.craftable.visibility = if (browsingCraft) View.VISIBLE else View.GONE
             if (!browsingCraft) { ui.empty.setText(if(hotbarBase()==0) R.string.cave_inventory_empty_bag else R.string.cave_ui_empty_search);ui.empty.visibility = if (gridIndices.isEmpty()) View.VISIBLE else View.GONE }
             updateActions()
@@ -1013,7 +1035,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         override fun onBindViewHolder(holder: PageVH, position: Int) {
             val start = position * pageSize
             val indices = gridIndices.drop(start).take(pageSize)
-            holder.rv.adapter = PageSlotAdapter(indices.map { invSlots.getOrNull(it) }, indices, cellSize)
+            holder.rv.adapter = PageSlotAdapter(indices.map { catalogTypeAt(it) }, indices, cellSize)
         }
     }
 
@@ -1032,7 +1054,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         })
         override fun onBindViewHolder(holder: VH,position: Int) {
             val index=indices[position];val id=items[position] ?: return
-            holder.tile.bind(activity.blockDrawable(id,3f),activity.blockName(id),countAt(index),
+            holder.tile.bind(activity.blockDrawable(id,3f),activity.blockName(id),if(activity.isCreative) 0 else countAt(index),
                 index==selectedSlotIdx || invGpZone==InvGpZone.GRID && index==invGpCursor,isFavorite(id),
                 accent=WeaponInstanceRegistry.get(id)?.let { weaponRarityColor(it.rarity) })
             CaveInventoryGestures.bind(holder.tile,

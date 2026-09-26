@@ -65,6 +65,8 @@ internal class FrontierResidents(private val world: World,json: String) {
         it.actor in visible && hypot(it.actor.x-x,it.actor.z-z)<5 && abs(it.actor.y-y)<4 &&
             (!it.bell || world.blockAt(it.home.x,it.home.y,it.home.z)==F.MARKET_BELL)
     }
+    /** Simulation distance from the pause menu, in blocks: residents appear and walk within it. */
+    var simulationRadius=64.0
     @Synchronized fun update(dt: Float,x: Double,y: Double,z: Double,night: Boolean) {
         timer-=dt
         if(timer<=0f) {
@@ -74,19 +76,19 @@ internal class FrontierResidents(private val world: World,json: String) {
                 val p=bellIterator.next()
                 if(!loaded(p.x,p.y,p.z)) continue
                 if(world.blockAt(p.x,p.y,p.z)!=F.MARKET_BELL) { bellIterator.remove();continue }
-                if(hypot(p.x-x,p.z-z)<56 && abs(p.y-y)<24)
+                if(hypot(p.x-x,p.z-z)<simulationRadius && abs(p.y-y)<24)
                     for(role in 0..2) add("bell:${p.x}:${p.y}:${p.z}:$role",role,p,true)
             }
             for(home in world.frontierHomes(x,z)) for(role in 0..2) {
                 val p=FrontierLife.Place(home.x+(if(role==0) 4 else 34),home.y+1,home.z+12+role*5)
-                if(hypot(p.x-x,p.z-z)<64 && abs(p.y-y)<24) add("hamlet:${home.x}:${home.z}:$role",role,p,false)
+                if(hypot(p.x-x,p.z-z)<simulationRadius+8 && abs(p.y-y)<24) add("hamlet:${home.x}:${home.z}:$role",role,p,false)
             }
             visible.clear()
             val iterator=people.iterator()
             while(iterator.hasNext()) {
                 val r=iterator.next().value;val p=r.home;val a=r.actor
                 if(r.bell && loaded(p.x,p.y,p.z) && world.blockAt(p.x,p.y,p.z)!=F.MARKET_BELL) { iterator.remove();continue }
-                if(visible.size<24 && hypot(a.x-x,a.z-z)<56 && abs(a.y-y)<24 && loaded(floor(a.x).toInt(),floor(a.y).toInt(),floor(a.z).toInt())) visible.add(a)
+                if(visible.size<24 && hypot(a.x-x,a.z-z)<simulationRadius && abs(a.y-y)<24 && loaded(floor(a.x).toInt(),floor(a.y).toInt(),floor(a.z).toInt())) visible.add(a)
             }
         }
         for(a in visible) {

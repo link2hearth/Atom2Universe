@@ -50,6 +50,7 @@
     <string name="cave_stack_moved">Pile déplacée</string>
     <string name="cave_pause_title">Pause</string>
     <string name="cave_pause_resume">Reprendre la partie</string>
+    <string name="cave_pause_render_distance">Distance de rendu : %1$d chunks</string>
     <string name="cave_pause_simulation_distance">Distance de simulation : %1$d chunks</string>
     <string name="cave_pause_view_distance">Distance d’affichage (LOD) : %1$d chunks</string>
 </resources>

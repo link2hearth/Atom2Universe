@@ -16,8 +16,8 @@ import kotlin.math.tan
  * part is one or more instances (position, axis, angle, light), so each part type costs a single draw call.
  * The motion is applied in the vertex shader: the CPU only uploads six floats per instance.
  *
- * A machine is drawn whole: its body (always upright), the axle ends on its two input faces (turned with its
- * input axis) and the part that shows its work: a millstone, a press head, two crusher rollers, a shuttle.
+ * A machine is drawn whole: its body (always upright), the axle end on the face its gearbox drives,
+ * and the part that shows its work: a millstone, a press head, two crusher rollers, a shuttle.
  */
 internal class KineticRenderer {
     private var shader: ShaderProgram? = null
@@ -130,7 +130,7 @@ internal class KineticRenderer {
             return
         }
         when (type) {
-            SOCKET -> put(k, camera, k.axis.toFloat(), k.angle)
+            SOCKET -> if (k.axis >= 0) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, k.angle)
             machine.first -> put(k, camera, 1f, 0f)
             // Two rollers side by side along X, turning towards each other.
             ROLLER -> if (machine.second == ROLLER) {
@@ -369,15 +369,11 @@ internal class KineticRenderer {
 
     // ── Machines: bodies in an upright frame (local Z = up), 1/16 = one pixel of a block ─────
 
-    /** The axle ends on the two input faces: a stub and a flange, turning with the network. */
+    /** The axle end on the face a gearbox drives, at local +z: a short stub and a flange, turning with the network. */
     private fun socketMesh() = MeshOut().apply {
-        for (side in intArrayOf(-1, 1)) {
-            val z0 = if (side > 0) .40f else -.5f; val z1 = if (side > 0) .5f else -.40f
-            prism(0f, 0f, ROD, ROD, z0, z1, 0f, WOOD)
-            prism(ROD + .25f / 16f, 0f, .25f / 16f, .6f / 16f, z0, z1, 0f, DARK)
-            val f0 = if (side > 0) .47f else -.505f; val f1 = if (side > 0) .505f else -.47f
-            for (a in 0..1) prism(0f, 0f, 2.6f / 16f, 2.6f / 16f, f0, f1, a * (PI / 4).toFloat(), IRON)
-        }
+        prism(0f, 0f, ROD, ROD, .42f, .5f, 0f, WOOD)
+        prism(ROD + .25f / 16f, 0f, .25f / 16f, .6f / 16f, .42f, .5f, 0f, DARK)
+        for (a in 0..1) prism(0f, 0f, 2.6f / 16f, 2.6f / 16f, .47f, .505f, a * (PI / 4).toFloat(), IRON)
     }.data.toFloatArray()
 
     /** Four slim corner posts from [z0] to the top; beams round the top when [top]. */

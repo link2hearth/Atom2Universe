@@ -55,15 +55,19 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         snapshot = json
     }
 
+    /** Simulation distance from the pause menu, in blocks: animals are placed and move within it. */
+    var simulationRadius = 64.0
+
     fun update(dt: Float, px: Double, py: Double, pz: Double, held: Short?) {
         timer -= dt
         if (timer <= 0f) {
             timer = 2f
             val cx = floor(px / 32).toInt(); val cz = floor(pz / 32).toInt()
-            for (z in cz - 1..cz + 1) for (x in cx - 1..cx + 1) populate(x, z, py)
+            val cells = kotlin.math.ceil(simulationRadius / 32).toInt()
+            for (z in cz - cells..cz + cells) for (x in cx - cells..cx + cells) populate(x, z, py)
             visible.clear()
             for (group in residents.values) for (a in group) {
-                if (visible.size < 32 && abs(a.y - py) < 24 && (a.x-px).pow(2) + (a.z-pz).pow(2) < 48.0.pow(2) && loaded(a.x, a.y, a.z)) visible += a
+                if (visible.size < 32 && abs(a.y - py) < 24 && (a.x-px).pow(2) + (a.z-pz).pow(2) < simulationRadius.pow(2) && loaded(a.x, a.y, a.z)) visible += a
             }
         }
         for (a in visible) {

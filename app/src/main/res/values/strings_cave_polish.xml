@@ -50,6 +50,7 @@
     <string name="cave_stack_moved">Stack moved</string>
     <string name="cave_pause_title">Pause</string>
     <string name="cave_pause_resume">Resume game</string>
+    <string name="cave_pause_render_distance">Render distance: %1$d chunks</string>
     <string name="cave_pause_simulation_distance">Simulation distance: %1$d chunks</string>
     <string name="cave_pause_view_distance">View distance (LOD): %1$d chunks</string>
 </resources>

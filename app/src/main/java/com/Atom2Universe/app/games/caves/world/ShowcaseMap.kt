@@ -26,7 +26,8 @@ internal object ShowcaseMap {
         intArrayOf(155, 57, 167, 63), intArrayOf(169, 57, 175, 63), intArrayOf(176, 56, 187, 63),
         intArrayOf(188, 56, 201, 64), intArrayOf(155, 65, 167, 75), intArrayOf(169, 65, 179, 75),
         intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87),
-        intArrayOf(155, 89, 170, 101), intArrayOf(173, 96, 187, 106))
+        intArrayOf(155, 89, 170, 101), intArrayOf(173, 96, 187, 106),
+        intArrayOf(180, 77, 201, 87), intArrayOf(188, 89, 201, 101), intArrayOf(155, 104, 171, 113))
 
     // The windmill of the mechanics wing: head high on a timber tower, facing the promenade.
     private const val MILL_X = 180
@@ -42,7 +43,24 @@ internal object ShowcaseMap {
         // Four spars with a blade along one side of each: the classic pinwheel.
         for (i in 1..5) { add(i, 0); add(0, i); add(-i, 0); add(0, -i) }
         for (i in 2..5) { add(i, 1); add(-1, i); add(-i, -1); add(1, -i) }
-        return listOf(ExpoWindmill(MILL_X, FLOOR + 1 + MILL_H, MILL_Z, 2, cells))
+        return listOf(ExpoWindmill(MILL_X, FLOOR + 1 + MILL_H, MILL_Z, 2, cells)) + frontierWindmills()
+    }
+    private fun frontierBlueprint(climate: Int, kind: Int) = FrontierLandscape.blueprint(kind, arid = climate == 2,
+        cold = climate == 1, kotlin.random.Random(7300 + kind)) { _, _ -> 0 }
+    /** The windmills of the settlement rows (the prospector's): here they turn, their sails never placed as blocks. */
+    private fun frontierWindmills(): List<ExpoWindmill> {
+        val F = com.Atom2Universe.app.games.caves.node.FrontierItems
+        val out = ArrayList<ExpoWindmill>()
+        for (climate in 0..2) for (kind in 0 until FrontierLandscape.KINDS) {
+            val blueprint = frontierBlueprint(climate, kind)
+            val (head, cell) = blueprint.entries.firstOrNull { it.value.id == F.WINDMILL }?.toPair() ?: continue
+            val sails = blueprint.filter { it.value.id == F.SAIL }.keys.map {
+                intArrayOf(it.first - head.first, it.second - head.second, it.third - head.third, F.SAIL.toInt())
+            }
+            val (ox, oz) = frontierOrigin(climate, kind)
+            out += ExpoWindmill(ox + head.first, FLOOR + head.second, oz + head.third, PartialBlockModel.shaftAxis(cell.meta), sails)
+        }
+        return out
     }
     /** Index of the mechanical exhibit under (x, z), in the order of cave_showcase_mechanics_names. */
     fun mechanicsAt(x: Int, z: Int): Int? = mechanicsExhibits.indexOfFirst { (x0, z0, x1, z1) -> x in x0..x1 && z in z0..z1 }
@@ -152,7 +170,7 @@ internal object ShowcaseMap {
         }
         fun plinth(x: Int, z: Int, height: Int) { for (h in 0 until height) put(x, y + h, z, COBBLESTONE, 0) }
         // 0. Wheel, shafts and mill.
-        wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'x')
+        wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.GEARBOX, 'y'); part(166, 0, 60, F.MILL, 'y')
         // 1. Crank on a gearbox, which sends the rotation up a vertical shaft.
         part(172, 1, 59, F.CRANK, 'z'); part(172, 1, 60, F.GEARBOX, 'x'); plinth(172, 60, 1)
         for (h in 2..5) part(172, h, 60, F.SHAFT, 'y')
@@ -172,15 +190,16 @@ internal object ShowcaseMap {
         part(174, 3, 66, F.CRANK, 'z'); part(174, 3, 67, F.GEARBOX, 'y'); plinth(174, 67, 3)
         part(174, 3, 68, F.SHAFT, 'z')
         part(174, 3, 69, F.GEARBOX, 'x'); for (h in 1..2) part(174, h, 69, F.SHAFT, 'y'); part(174, 0, 69, F.MILL, 'y')
-        // 6. Four machines at work: one wheel for crusher, mill and loom (8 of 8), another for the press.
+        // 6. A row of gearboxes shares one wheel between the workshops beside it: mill, loom and crusher
+        // take 8 of 8. Another wheel drives the press.
         wheel(182, 0, 70, false); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
-        part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.CRUSHER, 'x')
-        part(186, 0, 71, F.MILL, 'z'); part(186, 0, 69, F.LOOM, 'z')
-        wheel(192, 0, 70, false); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'x')
+        part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.GEARBOX, 'y')
+        part(186, 0, 71, F.MILL, 'y'); part(186, 0, 69, F.LOOM, 'y'); part(187, 0, 71, F.CRUSHER, 'y')
+        wheel(192, 0, 70, false); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.GEARBOX, 'y'); part(195, 0, 70, F.PRESS, 'y')
         // 7. Too much for one wheel: press, crusher and mill need 10, the wheel gives 8. Everything stops.
         wheel(157, 0, 82, false); for (x in 158..160) part(x, 0, 82, F.SHAFT, 'x')
-        part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'z'); part(162, 0, 82, F.CRUSHER, 'x')
-        part(161, 0, 81, F.MILL, 'z')
+        part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'y'); part(162, 0, 82, F.CRUSHER, 'y')
+        part(161, 0, 81, F.MILL, 'y')
         // 8. Gears that cannot agree: round the loop the speed comes back doubled. Everything stops.
         part(172, 0, 81, F.CRANK, 'z'); part(172, 0, 82, F.GEARBOX, 'x'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
         part(172, 2, 82, F.SHAFT, 'y'); part(172, 3, 82, F.LARGE_COGWHEEL, 'y')
@@ -193,12 +212,27 @@ internal object ShowcaseMap {
         for (x in intArrayOf(MILL_X - 2, MILL_X + 2)) for (z in intArrayOf(MILL_Z + 1, MILL_Z + 3))
             for (h in 0..MILL_H + 1) put(x, y + h, z, WOOD, 0)
         for (x in MILL_X - 2..MILL_X + 2) for (z in MILL_Z + 1..MILL_Z + 3) put(x, y + MILL_H + 2, z, PLANK, 0)
+        // 11. A large wheel and a long row of gearboxes: six workshops at half speed take 8 of 16.
+        wheel(182, 1, 82, true); part(183, 1, 82, F.SHAFT, 'x')
+        for (x in 184..186) {
+            part(x, 1, 82, F.GEARBOX, 'y'); plinth(x, 82, 1)
+            plinth(x, 81, 1); plinth(x, 83, 1)
+        }
+        part(184, 1, 81, F.MILL, 'y'); part(185, 1, 81, F.LOOM, 'y'); part(186, 1, 81, F.PRESS, 'y')
+        part(184, 1, 83, F.CRUSHER, 'y'); part(185, 1, 83, F.MILL, 'y'); part(186, 1, 83, F.LOOM, 'y')
+        // 12. By hand: a crank on a gearbox turns two workshops, 4 of 4.
+        part(193, 1, 93, F.CRANK, 'z'); part(193, 1, 94, F.GEARBOX, 'y'); plinth(193, 94, 1)
+        part(194, 1, 94, F.MILL, 'y'); plinth(194, 94, 1); part(192, 1, 94, F.LOOM, 'y'); plinth(192, 94, 1)
+        // 13. Faster: the small cogwheel turns twice as fast, and the press asks twice the force (8 of 8).
+        wheel(157, 1, 109, false); part(158, 1, 109, F.SHAFT, 'x'); part(159, 1, 109, F.LARGE_COGWHEEL, 'x')
+        part(159, 2, 110, F.COGWHEEL, 'x'); part(160, 2, 110, F.SHAFT, 'x')
+        part(161, 2, 110, F.GEARBOX, 'y'); plinth(161, 110, 2); part(162, 2, 110, F.PRESS, 'y'); plinth(162, 110, 2)
         // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
         wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
         part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)
-        part(162, 1, 95, F.PRESS, 'x'); plinth(162, 95, 1)
-        part(161, 1, 96, F.CRUSHER, 'z'); plinth(161, 96, 1)
-        part(161, 1, 94, F.MILL, 'z'); plinth(161, 94, 1)
+        part(162, 1, 95, F.PRESS, 'y'); plinth(162, 95, 1)
+        part(161, 1, 96, F.CRUSHER, 'y'); plinth(161, 96, 1)
+        part(161, 1, 94, F.MILL, 'y'); plinth(161, 94, 1)
     }
 
     fun create(): A2Map {
@@ -276,9 +310,9 @@ internal object ShowcaseMap {
         }
         for (climate in 0..2) for (kind in 0 until FrontierLandscape.KINDS) {
             val (ox, oz) = frontierOrigin(climate, kind)
-            val blueprint = FrontierLandscape.blueprint(kind, arid = climate == 2, cold = climate == 1,
-                kotlin.random.Random(7300 + kind)) { _, _ -> 0 }
-            for ((pos, cell) in blueprint) put(ox + pos.first, FLOOR + pos.second, oz + pos.third, cell.id, cell.meta)
+            for ((pos, cell) in frontierBlueprint(climate, kind))
+                if (cell.id != com.Atom2Universe.app.games.caves.node.FrontierItems.SAIL)
+                    put(ox + pos.first, FLOOR + pos.second, oz + pos.third, cell.id, cell.meta)
         }
         fill(65, FLOOR, 5, WIDTH - 2, FLOOR, 7, COBBLESTONE)
         val tops = IntArray(WIDTH * depth) { FLOOR }

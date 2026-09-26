@@ -25,22 +25,53 @@ class KineticNetworkTest {
     }
     private val base = KineticNetwork.BASE
 
-    @Test fun aMachineOnlyTakesTheRotationThroughItsInputFaces() {
+    @Test fun aMachineOnlyTakesTheRotationFromAGearbox() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL, 'y')
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL)
         g.active += Pos(0, 0, 0)
         assertEquals(0f, g.solve(Pos(0, 0, 0)).speedAt(Pos(4, 0, 0)), 1e-4f)
-        g.put(4, 0, 0, F.MILL, 'x')
-        assertEquals(base, g.solve(Pos(0, 0, 0)).speedAt(Pos(4, 0, 0)), 1e-4f)
+        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.MILL)
+        assertEquals(base, g.solve(Pos(0, 0, 0)).speedAt(Pos(5, 0, 0)), 1e-4f)
+    }
+
+    @Test fun onlyTheMillTurnsOnAShaftComingDownOntoIt() {
+        val g = Grid()
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); g.put(1, 0, 0, F.GEARBOX, 'z'); g.put(1, 1, 0, F.SHAFT, 'y')
+        g.put(1, 2, 0, F.MILL); g.put(1, -1, 0, F.SHAFT, 'y'); g.put(1, -2, 0, F.PRESS)
+        g.active += Pos(0, 0, 0)
+        var r = g.solve(Pos(0, 0, 0))
+        assertEquals(0f, r.speedAt(Pos(1, 2, 0)), 1e-4f)     // above the shaft: not its spindle
+        assertEquals(0f, r.speedAt(Pos(1, -2, 0)), 1e-4f)    // a press never takes a shaft
+        g.put(1, -2, 0, F.MILL)
+        r = g.solve(Pos(0, 0, 0))
+        assertEquals(base, r.speedAt(Pos(1, -2, 0)), 1e-4f)
+    }
+
+    @Test fun aRowOfGearboxesSharesOneNetwork() {
+        val g = Grid()
+        // Gearboxes along X, each passing the rotation on as a shaft between them would.
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); g.put(1, 0, 0, F.GEARBOX, 'y'); g.put(2, 0, 0, F.GEARBOX, 'y'); g.put(3, 0, 0, F.GEARBOX, 'y')
+        g.put(4, 0, 0, F.SHAFT, 'x')
+        for (x in 1..3) g.put(x, 0, 1, F.MILL)
+        g.active += Pos(0, 0, 0)
+        val r = g.solve(Pos(0, 0, 0))
+        // Straight through, each gearbox reverses the rotation: three of them, the shaft after turns backwards.
+        assertEquals(-base, r.speedAt(Pos(4, 0, 0)), 1e-4f)
+        for (x in 1..3) assertEquals(base, r.speedAt(Pos(x, 0, 1)), 1e-4f)
+        assertEquals(6f, r.network.getValue(Pos(0, 0, 0)).stress, 1e-4f)
+        // A gearbox touching by its axis face does not take part.
+        g.put(2, 1, 0, F.GEARBOX, 'y'); g.put(2, 2, 0, F.MILL)
+        assertEquals(0f, g.solve(Pos(0, 0, 0)).speedAt(Pos(2, 2, 0)), 1e-4f)
     }
 
     @Test fun wheelTurnsALineOfShaftsAndTheMillAtItsEnd() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL, 'x')
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x')
+        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.MILL)
         g.active += Pos(0, 0, 0)
         val r = g.solve(Pos(0, 0, 0))
         for (x in 1..3) assertEquals(base, r.speedAt(Pos(x, 0, 0)), 1e-4f)
-        assertEquals(base, r.speedAt(Pos(4, 0, 0)), 1e-4f)
+        assertEquals(base, r.speedAt(Pos(5, 0, 0)), 1e-4f)
         // A shaft across the line does not connect.
         g.put(2, 1, 0, F.SHAFT, 'z')
         assertEquals(0f, g.solve(Pos(0, 0, 0)).speedAt(Pos(2, 1, 0)), 0f)
@@ -82,11 +113,11 @@ class KineticNetworkTest {
     @Test fun tooManyMachinesStopTheWholeNetworkUntilASecondSourceHelps() {
         val g = Grid()
         g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x')
-        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.CRUSHER, 'x')
+        g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.CRUSHER)
         g.active += Pos(0, 0, 0)
         var r = g.solve(Pos(0, 0, 0))
         assertEquals(base, r.speedAt(Pos(5, 0, 0)), 1e-4f)           // 4 of 8
-        g.put(4, 0, 1, F.PRESS, 'z'); g.put(4, 0, -1, F.MILL, 'z')               // 4 + 4 + 2 = 10 of 8
+        g.put(4, 0, 1, F.PRESS); g.put(4, 0, -1, F.MILL)               // 4 + 4 + 2 = 10 of 8
         r = g.solve(Pos(0, 0, 0))
         assertTrue(r.network.getValue(Pos(0, 0, 0)).overloaded)
         assertEquals(0f, r.speedAt(Pos(5, 0, 0)), 0f)
@@ -130,7 +161,7 @@ class KineticNetworkTest {
     @Test fun largeWheelIsSlowerAndStronger() {
         val g = Grid()
         g.put(0, 0, 0, F.LARGE_WATERWHEEL, 'x'); g.put(1, 0, 0, F.SHAFT, 'x'); g.put(2, 0, 0, F.GEARBOX, 'y')
-        g.put(3, 0, 0, F.PRESS, 'x'); g.put(2, 0, 1, F.CRUSHER, 'z'); g.put(2, 0, -1, F.MILL, 'z')
+        g.put(3, 0, 0, F.PRESS); g.put(2, 0, 1, F.CRUSHER); g.put(2, 0, -1, F.MILL)
         g.direction[Pos(0, 0, 0)] = KineticNetwork.DRIVE_POSITIVE
         val r = g.solve(Pos(0, 0, 0))
         assertEquals(KineticNetwork.LARGE_WHEEL_SPEED, r.speedAt(Pos(1, 0, 0)), 1e-4f)
@@ -144,12 +175,12 @@ class KineticNetworkTest {
     @Test fun windmillForceFollowsItsSails() {
         val g = Grid()
         g.put(0, 0, 0, F.WINDMILL, 'z'); g.put(0, 0, 1, F.SHAFT, 'z'); g.put(0, 0, 2, F.GEARBOX, 'x')
-        g.put(0, -1, 2, F.SHAFT, 'y'); g.put(0, -2, 2, F.PRESS)
+        g.put(0, -1, 2, F.SHAFT, 'y'); g.put(0, -2, 2, F.GEARBOX, 'x'); g.put(0, -3, 2, F.PRESS)
         g.active += Pos(0, 0, 0)
         fun solve(sails: Float) = KineticNetwork({ x, y, z -> g.blocks[Pos(x, y, z)] ?: AIR }, { x, y, z -> g.metas[Pos(x, y, z)] ?: 0 },
             { p, _ -> if (p in g.active) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE }) { sails }.solve(listOf(Pos(0, 0, 0)))
         var r = solve(12f)
-        assertEquals(KineticNetwork.WINDMILL_SPEED, kotlin.math.abs(r.speedAt(Pos(0, -2, 2))), 1e-4f)
+        assertEquals(KineticNetwork.WINDMILL_SPEED, kotlin.math.abs(r.speedAt(Pos(0, -3, 2))), 1e-4f)
         assertEquals(2f, r.network.getValue(Pos(0, 0, 0)).stress, 1e-4f) // the press at half speed
         r = solve(1f)
         assertTrue(r.network.getValue(Pos(0, 0, 0)).overloaded)

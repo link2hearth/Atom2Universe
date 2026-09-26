@@ -584,11 +584,14 @@
         <item>Large and small cogwheels: twice as fast</item>
         <item>Gearbox: a quarter turn</item>
         <item>From horizontal to vertical, as in a windmill</item>
-        <item>Four machines on two wheels</item>
+        <item>A row of gearboxes shares a wheel between its workshops</item>
         <item>Too much for one wheel: stopped</item>
         <item>Gears that cannot agree: stopped</item>
         <item>Large wheel: half the speed, twice the force</item>
         <item>Windmill: sails, a gearbox and the mill below</item>
+        <item>A large wheel and a long row of gearboxes: six workshops</item>
+        <item>By hand: a crank on a gearbox, two workshops</item>
+        <item>Faster: the small cogwheel doubles the speed, the press asks twice the force</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Cottage</item>
