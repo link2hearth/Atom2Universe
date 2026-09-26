@@ -37,13 +37,7 @@ internal object ShowcaseMap {
     class ExpoWindmill(val x: Int, val y: Int, val z: Int, val axis: Int, val sails: List<IntArray>)
     /** Windmills that turn from the start: their sails are never placed as blocks. */
     fun windmills(): List<ExpoWindmill> {
-        val sail = com.Atom2Universe.app.games.caves.node.FrontierItems.SAIL.toInt()
-        val cells = ArrayList<IntArray>()
-        fun add(dx: Int, dy: Int) { cells += intArrayOf(dx, dy, -1, sail) }
-        add(0, 0)
-        // Four spars with a blade along one side of each: the classic pinwheel.
-        for (i in 1..5) { add(i, 0); add(0, i); add(-i, 0); add(0, -i) }
-        for (i in 2..5) { add(i, 1); add(-1, i); add(-i, -1); add(1, -i) }
+        val cells = RegionalSettlements.sails()
         return listOf(ExpoWindmill(MILL_X, FLOOR + 1 + MILL_H, MILL_Z, 2, cells)) + frontierWindmills()
     }
     private fun frontierBlueprint(climate: Int, kind: Int) = FrontierLandscape.blueprint(kind, arid = climate == 2,

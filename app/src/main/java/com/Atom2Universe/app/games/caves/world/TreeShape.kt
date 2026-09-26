@@ -51,6 +51,7 @@ internal object TreeShape {
             else -> WOOD
         }
         val leaf = when (type) {
+            "autumn" -> if (rng.nextBoolean()) LEAVES_ORANGE else LEAVES_FALL
             "sapin", "redwood" -> LEAVES_SAPIN
             "darkwood" -> LEAVES_DARK
             "jungle", "jungle_small" -> LEAVES_JUNGLE

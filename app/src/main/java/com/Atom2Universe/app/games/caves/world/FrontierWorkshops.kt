@@ -85,6 +85,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             when { lean>0 -> KineticNetwork.DRIVE_NEGATIVE; lean<0 -> KineticNetwork.DRIVE_POSITIVE; else -> KineticNetwork.DRIVE_EITHER }
         } }
     private val windmills=linkedMapOf<Pos,Windmill>()
+    // Persist discovery separately from running state: stopping/breaking a natural mill is permanent.
+    private val discoveredNaturalMills=mutableSetOf<Pos>()
     /** Windmills near the player, refreshed with the other turning parts. */
     val visibleWindmills=ArrayList<Windmill>()
     private val current=DoubleArray(4)
@@ -188,6 +190,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val s=store(p);s.selection=index;s.progress=0;s.active="";return true
     }
     @Synchronized fun discover(p: Pos,id: Short) {
+        if(id==F.WINDMILL && world.generatedWindmill(p) && discoveredNaturalMills.add(p))
+            windmills.putIfAbsent(p, Windmill(p,2,RegionalSettlements.sails()))
         if(id==F.HOPPER) hoppers.add(p)
         if(F.isContainer(id) && id!=F.CHEST && id!=F.CACHE) store(p)
         if(id in TURNING || id==F.HOPPER || id==F.CRUCIBLE || id==F.CAST_MOLD) knownKinetics.getOrPut(p) { Kinetic(p,id) }
@@ -655,6 +659,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             hoppers.forEach { a.put(JSONArray().put(it.x).put(it.y).put(it.z)) }
         }).put("drying",JSONArray().also { a ->
             drying.forEach { (p,t) -> a.put(JSONArray().put(p.x).put(p.y).put(p.z).put(t.toDouble())) }
+        }).put("naturalMills",JSONArray().also { a ->
+            discoveredNaturalMills.forEach { a.put(JSONArray().put(it.x).put(it.y).put(it.z)) }
         }).put("windmills",JSONArray().also { a ->
             // The sails are not in the world while they turn: the save is their only copy.
             for(m in windmills.values) a.put(JSONObject().put("x",m.pos.x).put("y",m.pos.y).put("z",m.pos.z).put("axis",m.axis)
@@ -663,7 +669,13 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     @Synchronized fun restore(json: String) {
         stores.clear(); hoppers.clear(); windmills.clear(); drying.clear()
+        discoveredNaturalMills.clear()
         val root=runCatching { JSONObject(json) }.getOrNull() ?: return
+        val naturalMills=root.optJSONArray("naturalMills") ?: JSONArray()
+        for(i in 0 until naturalMills.length()) {
+            val a=naturalMills.optJSONArray(i) ?: continue
+            if(a.length()==3) discoveredNaturalMills.add(Pos(a.getInt(0),a.getInt(1),a.getInt(2)))
+        }
         val mills=root.optJSONArray("windmills") ?: JSONArray()
         for(i in 0 until mills.length()) runCatching {
             val j=mills.getJSONObject(i);val s=j.getJSONArray("sails")

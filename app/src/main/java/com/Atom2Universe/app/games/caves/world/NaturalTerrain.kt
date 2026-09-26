@@ -25,19 +25,8 @@ internal object NaturalTerrainSettings {
 }
 
 /** A single surface with branching, world-coordinate cave networks. */
-internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiomeProfile> = NaturalTerrainSettings.profiles, frontier: Boolean = false) {
-    // Preserve v3/v4 seeds exactly; v5 gives climates distinct silhouettes and broader rare woods.
-    private val profiles = if (!frontier) profiles else profiles.map { p ->
-        when(p.id) {
-            "desert" -> p.copy(base=16.0, amplitude=65.0)
-            "savanna" -> p.copy(base=18.0, amplitude=100.0)
-            "dark_forest" -> p.copy(base=25.0, amplitude=95.0)
-            "jungle" -> p.copy(base=16.0, amplitude=115.0)
-            "wetlands" -> p.copy(base=2.0, amplitude=18.0, rarity=0.0)
-            "taiga", "snowy_taiga" -> p.copy(base=25.0, amplitude=125.0)
-            else -> if(p.id.startsWith("magic_forest")) p.copy(amplitude=75.0, rarity=.025) else p
-        }
-    }
+internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiomeProfile> = NaturalTerrainSettings.profiles) {
+    private val profiles = RegionalBiomes.profiles(profiles)
     companion object {
         const val SEA_LEVEL = 74; const val SURFACE_MAX_CY = 255
         private const val LAKE_CELL = 384.0; private const val POND_CELL = 112.0
@@ -51,35 +40,39 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         SimplexNoise.noise(x * scale + offset + salt, z * scale - offset)
     private fun smooth(v: Double) = v.coerceIn(0.0, 1.0).let { it * it * (3 - 2 * it) }
     private fun mix(a: Double, b: Double, t: Double) = a + (b - a) * t
-    fun temperature(x: Double, z: Double) = (.5 + n(x, z, .00065, 410.0) * .75).coerceIn(0.0, 1.0)
+    fun temperature(x: Double, z: Double): Double {
+        val px = x + n(x, z, .0007, 140.0) * 160
+        val pz = z + n(x, z, .0007, 240.0) * 160
+        return (.5 + n(px, pz, .00023, 410.0) * .85).coerceIn(0.0, 1.0)
+    }
     fun humidity(x: Double, z: Double) = (.5 + n(x, z, .0008, 870.0) * .75).coerceIn(0.0, 1.0)
 
+    /** Climate eligibility precedes local variety: a noise peak cannot put snow in the tropics. */
     private fun weights(x: Double, z: Double, out: DoubleArray): Int {
         val t = temperature(x, z); val h = humidity(x, z)
-        val continental = n(x, z, .00045, 181.0)
-        val rugged = n(x, z, .00085, 920.0)
+        val continent = n(x, z, .00045, 181.0)
         var best = -Double.MAX_VALUE; var dominant = 0
         for (i in profiles.indices) {
             val p = profiles[i]
             val ocean = p.id == "ocean" || p.id == "iceberg"
+            val cold = p.temperature <= .30
+            val hot = p.temperature >= .75
+            val snowy = p.id == "tundra" || p.id == "snowy_taiga" || p.id == "frost_plains" || p.id == "iceberg"
+            val allowed = (!cold || t < .39) && (!hot || t > .63) && (!snowy || t < .25)
             val special = when (p.id) {
-                // Seuil relevé (était -.08) : il faut un creux continental bien plus marqué
-                // pour basculer en océan, ce qui réduit nettement leur emprise.
-                "ocean", "iceberg" -> (-continental - .30) * 2.5
-                "mountains", "rocky", "volcanic" -> (rugged - .40) * 1.2
-                "wetlands" -> -.12
+                "ocean", "iceberg" -> (-continent - .30) * 3.2
+                "mountains", "rocky", "volcanic" -> (n(x, z, .00085, 920.0) - .48) * .7
                 else -> 0.0
             }
-            val score = -((t - p.temperature).pow(2) + (h - p.humidity).pow(2)) * 2.6 +
-                n(x, z, .0014, 2100.0 + i * 137.0) * .20 + special - p.rarity -
-                // Le sceau des terres non océaniques suit le même seuil relevé, pour ne pas
-                // laisser une bande de relief mou entre "océan" et "terre" qui ne serait ni l'un ni l'autre.
-                (if (!ocean) max(0.0, -continental - .30) * 2.5 else 0.0)
+            val score = if (!allowed) -1e6 else
+                -((t - p.temperature).pow(2) * 4.5 + (h - p.humidity).pow(2) * 2.8) +
+                n(x, z, .0011, 2100.0 + i * 137) * .13 + special - p.rarity -
+                (if (!ocean) max(0.0, -continent - .30) * 3.2 else 0.0)
             out[i] = score
             if (score > best) { best = score; dominant = i }
         }
         var sum = 0.0
-        for (i in out.indices) { out[i] = max(0.0, out[i] - best + .16).pow(2); sum += out[i] }
+        for (i in out.indices) { out[i] = max(0.0, out[i] - best + .12).pow(2); sum += out[i] }
         for (i in out.indices) out[i] /= sum
         return dominant
     }
@@ -114,7 +107,10 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         val peak = smooth((n(x, z, .0009, 121.0) - .45) / .35)
         val ridge = (1.0 - abs(n(x, z, .0010, 51.0))).pow(2) * peak
         val hills = n(x, z, .0025, 62.0) * .035 + n(x, z, .009, 92.0) * .006
-        val land = SEA_LEVEL + base + amplitude * (broad * .65 + ridge * .28 + hills)
+        // Most normal relief stays below sea + 50. Very rare massifs have a broad, smooth apron.
+        val massif = smooth((n(x, z, .00031, 6110.0) - .70) / .22) *
+            smooth((base + 4) / 18) * (90 + 150 * ridge)
+        val land = SEA_LEVEL + base + amplitude * (broad * .65 + ridge * .28 + hills) + massif
         val river = abs(n(x, z, .0012, 712.0))
         val valley = (1 - smooth((river - .012) / .08)) * (1 - smooth((land - 110) / 180))
         return mix(land, min(land, SEA_LEVEL - 3.0), valley)
@@ -260,6 +256,20 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
     fun topBlock(b: SurfaceBiomeDef, x: Double, z: Double, h: Int, waterLevel: Int = SEA_LEVEL): Short {
         val patch = n(x, z, .035, 334.0)
         val wet = humidity(x, z)
+        run {
+            val t = temperature(x, z)
+            if (t < .25 && b.id in setOf("tundra", "snowy_taiga", "frost_plains", "iceberg"))
+                return if (h < waterLevel - 2) GRAVEL else if (patch > .2) SNOW else DIRT_SNOW
+            if (h > SEA_LEVEL + 105 && t < .36) return if (patch > -.2) SNOW else STONE
+            if (h > SEA_LEVEL + 65) return if (patch > .3) GRAVEL else STONE
+            RegionalBiomes.variant(b.id)?.let { v ->
+                if (h > waterLevel + 2) return when (b.id) {
+                    "sandstone_badlands" -> if (patch > .25) 2308.toShort() else REDSAND // natural terracotta
+                    "willow_marsh", "tropical_marsh" -> if (patch > .25) MOSS else MUD
+                    else -> v.ground
+                }
+            }
+        }
         if (h <= waterLevel + 2) {
             if (patch > .22 && h >= waterLevel - 16) return CLAY
             if (wet > .65 && h >= waterLevel - 2) return if (patch > -.15) MUD else CLAY
@@ -277,43 +287,47 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         }
     }
 
-    /**
-     * Broad galleries and their branches share one warped vertical field, so their
-     * intersections form junctions instead of unrelated pockets. Frequencies and
-     * widths leave room for the shared four-block sampling lattice and the player.
-     * All inputs are world coordinates: no per-chunk RNG or generation-order state.
-     */
+    /** V6: gently sloping galleries, occasional vaulted halls and sparse connecting shafts. */
     fun caveField(x: Double, y: Double, z: Double): Double {
         val depth = height(x, z) - y
         if (depth < -8) return -10.0
-        val warpX = SimplexNoise.noise(x * .006 + offset + 131, y * .008, z * .006) * 18
-        val warpZ = SimplexNoise.noise(x * .006 + offset + 317, y * .008, z * .006) * 18
-        val px = x + warpX; val pz = z + warpZ
-        val region = SimplexNoise.noise(x * .003 + offset + 711, y * .004, z * .003)
-        val spacious = smooth((region + .45) / .9)
-        val vertical = SimplexNoise.noise(px * .009 + offset + 510, y * .027, pz * .009)
-        val main = SimplexNoise.noise(px * .015 + offset + 950, y * .009, pz * .015)
-        val branch = SimplexNoise.noise(px * .023 + offset + 1350, y * .012, pz * .023)
-        val width = .19 + spacious * .07
-        val gallery = min((width - abs(main)) * 34, (.21 - abs(vertical)) * 25)
-        val branches = min((.16 - abs(branch)) * 30, (.18 - abs(vertical)) * 25)
-        val chamber = SimplexNoise.noise(px * .010 + offset + 180, y * .017, pz * .010)
-        val room = (chamber - mix(.57, .34, spacious)) * 38
-        // A smooth union widens mouths into chambers without angular seams.
+        fun noise(px: Double, py: Double, pz: Double, salt: Double) =
+            SimplexNoise.noise(px + offset + salt, py, pz)
+        val px = x + noise(x * .006, y * .004, z * .006, 131.0) * 20
+        val pz = z + noise(x * .006, y * .004, z * .006, 317.0) * 20
+        val region = noise(x * .0025, y * .003, z * .0025, 711.0)
+        val deep = smooth((depth - 35) / 100)
+        val spacious = smooth((region - .08) / .55) * deep
+        // Two passage families share the same floor field, meeting at walkable junctions.
+        val level = noise(px * .0045, y * .023, pz * .0045, 510.0)
+        val main = noise(px * .014, y * .005, pz * .014, 950.0)
+        val branch = noise(px * .024, y * .006, pz * .024, 1350.0)
+        val gallery = min((.20 + spacious * .07 - abs(main)) * 36, (.23 - abs(level)) * 30)
+        val branches = min((.15 - abs(branch)) * 32, (.20 - abs(level)) * 30)
+        val chamber = noise(px * .008, y * .012, pz * .008, 180.0)
+        // Vaulted rooms are concentrated in deep regions, with rock pillars left inside the largest ones.
+        val room = min((chamber - mix(.70, .42, spacious)) * 40, (.43 - abs(level)) * 32)
+        val pillar = max(abs(noise(x * .035, 0.0, z * .035, 2410.0)),
+            abs(noise(x * .035, 0.0, z * .035, 2910.0)))
+        val halls = min(room, (pillar - .075) * 45)
         fun join(a: Double, b: Double, radius: Double): Double {
-            val blend = max(radius - abs(a - b), 0.0) / radius
-            return max(a, b) + blend * blend * radius * .25
+            val t = max(radius - abs(a - b), 0.0) / radius
+            return max(a, b) + t * t * radius * .25
         }
-        val network = join(join(gallery, branches, 1.5), room, 3.0)
-        // Open only selected parts of the network at the surface. Underground,
-        // the restriction fades continuously; oceans retain their separate seal.
-        val entrance = smooth((n(x, z, .009, 177.0) - .22) / .24)
-        val cover = (1 - smooth(depth / 32)) * (1 - entrance) * 12
+        val shaftA = noise(x * .013, y * .0015, z * .013, 3800.0)
+        val shaftB = noise(x * .013, y * .0015, z * .013, 4800.0)
+        val shafts = min((.105 - max(abs(shaftA), abs(shaftB))) * 34,
+            (region - .44) * 24) - (1 - deep) * 8
+        val network = join(join(gallery, branches, 1.2), max(halls, shafts), 2.0)
+        // Selected mouths widen into the first gallery; elsewhere keep a substantial soil roof.
+        val entrance = smooth((n(x, z, .006, 177.0) - .40) / .20)
+        val cover = (1 - smooth(depth / 24)) * (1 - entrance) * 14
         return network - cover
     }
     fun caveAt(x: Int, y: Int, z: Int): Boolean {
         val h = height(x.toDouble(), z.toDouble()).toInt()
-        if (y > h || (h <= SEA_LEVEL && h - y < 8)) return false
+        val water = waterLevelAt(x.toDouble(), z.toDouble())
+        if (y > h || (h <= water && h - y < 8)) return false
         val gx = Math.floorDiv(x, 4) * 4; val gy = Math.floorDiv(y, 4) * 4; val gz = Math.floorDiv(z, 4) * 4
         val tx = Math.floorMod(x, 4) / 4.0; val ty = Math.floorMod(y, 4) / 4.0; val tz = Math.floorMod(z, 4) / 4.0
         fun plane(dz: Int): Double {

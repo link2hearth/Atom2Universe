@@ -80,7 +80,7 @@ internal class FrontierResidents(private val world: World,json: String) {
                     for(role in 0..2) add("bell:${p.x}:${p.y}:${p.z}:$role",role,p,true)
             }
             for(home in world.frontierHomes(x,z)) for(role in 0..2) {
-                val p=FrontierLife.Place(home.x+(if(role==0) 4 else 34),home.y+1,home.z+12+role*5)
+                val p=FrontierLife.Place(home.x-6+role*5,home.y+1,home.z+2)
                 if(hypot(p.x-x,p.z-z)<simulationRadius+8 && abs(p.y-y)<24) add("hamlet:${home.x}:${home.z}:$role",role,p,false)
             }
             visible.clear()

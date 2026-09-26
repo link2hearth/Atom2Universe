@@ -282,7 +282,8 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
         val y = floor(world.surfaceHeight(x,z))+1
         if (abs(py-y)>24 || !loaded(x,y,z)) return
         val biome = world.naturalSurfaceBiomeAt(x,y,z) ?: BiomeMap.surfaceBiomeAt(x,z,seed).id
-        val allowed = definitions.filter { biome in it.biomes }
+        val habitat = com.Atom2Universe.app.games.caves.world.RegionalBiomes.parent(biome)
+        val allowed = definitions.filter { habitat in it.biomes }
         val group = mutableListOf<Enemy>()
         if (allowed.isNotEmpty() && rng.nextInt(3) != 0) {
             val def=allowed[rng.nextInt(allowed.size)]

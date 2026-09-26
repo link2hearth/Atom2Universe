@@ -64,8 +64,7 @@ internal class CaveRenderer(
     private val worldSeed: Long = System.currentTimeMillis(),
     private val worldId: String? = null,
     private val savedState: SavedState? = null,
-    private val terrainVersion: Int = 5,
-    /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
+   /** Blocs préparés à l'avance (carte Assaut) ; null = génération procédurale. */
     private val worldSource: WorldSource? = null,
     /** Règles de la partie : la survie par défaut. */
     modeFactory: (CaveRenderer) -> GameMode = ::SurvivalMode,
@@ -104,7 +103,7 @@ internal class CaveRenderer(
         CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
     }
     @Volatile private var viewDistances = CaveViewDistances.load(context)
-    internal val world = World(seed = worldSeed, storage = storage, terrainVersion = terrainVersion,
+    internal val world = World(seed = worldSeed, storage = storage,
                                source = worldSource).apply { setSimulationDistance(viewDistances.detail) }
 
     /** Called on the GL thread, including while the pause bubble is open. */
@@ -413,6 +412,7 @@ internal class CaveRenderer(
     private var playerBoxVbo = 0
     private var elapsed = 0f
     private var waterTickAccum   = 0f
+    private var leafTickAccum = 0f
     private var gravityTickAccum = 0f
     private var walkPhase  = 0f   // phase de balancement (rad), avance seulement quand le joueur marche
     private var walkLastX  = 0.0  // position précédente pour détecter le mouvement
@@ -628,7 +628,12 @@ internal class CaveRenderer(
             vec3 lit = baseLight * faceLight + (lighting - baseLight);
             fragColor = vec4(fd > 5.5 ? col.rgb * glow : col.rgb * lit, 1.0);
             if (u_underwater > 0.5) {
-                fragColor = vec4(fragColor.rgb * vec3(0.18, 0.48, 0.88) * 0.55, 1.0);
+                // Keep nearby textures readable: immersion comes from a mild cool tint,
+                // with a light distant haze that still respects night and cave lighting.
+                vec3 submerged = fragColor.rgb * vec3(0.72, 0.90, 1.0);
+                float haze = smoothstep(8.0, 48.0, length(v_worldPos)) * 0.16;
+                vec3 waterHaze = vec3(0.12, 0.38, 0.46) * max(u_ambient, u_caveFloor);
+                fragColor.rgb = mix(submerged, waterHaze, haze);
             }
             fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
@@ -992,8 +997,7 @@ internal class CaveRenderer(
             // would leave spawns near an edge or the map's top permanently loading.
             if (bounds != null && (cx !in bounds.minCx..bounds.maxCx ||
                     cy !in bounds.minCy..bounds.maxCy || cz !in bounds.minCz..bounds.maxCz)) continue
-            if (worldSource == null && world.terrainVersion < 3 && cy > SURFACE_CY_MAX && cy < 625) continue
-            spawnChunks.add(world.chunkKey(cx, cy, cz))
+           spawnChunks.add(world.chunkKey(cx, cy, cz))
         }
         // Keep a full horizontal safety ring, but only the vertical chunks supporting
         // the player's feet/body. The other layers stream asynchronously near-first.
@@ -1106,10 +1110,14 @@ internal class CaveRenderer(
         if (!gamePaused && mode.fixedTimeOfDayMs == null) gameTimeMs += (dt * 1_000f).toLong()
 
         if(!gamePaused) waterTickAccum += dt
-        if (!gamePaused && waterTickAccum >= 0.25f) {
-            waterTickAccum = 0f
+        if (!gamePaused && waterTickAccum >= 0.1f) {
+            waterTickAccum %= 0.1f
             world.tickWater()
-            if (!gamePaused && mode.allowsWorldEdits) world.tickLeaves { if (!isCreative) collectBlock(it) }
+        }
+        if (!gamePaused) leafTickAccum += dt
+        if (!gamePaused && leafTickAccum >= 0.25f) {
+            leafTickAccum %= 0.25f
+            if (mode.allowsWorldEdits) world.tickLeaves { if (!isCreative) collectBlock(it) }
         }
 
         if(!gamePaused) gravityTickAccum += dt
@@ -1462,11 +1470,12 @@ internal class CaveRenderer(
 
         // ── Rendu chunks ─────────────────────────────────────────────────────
         val headUnderwater = isHeadInWater()
+        val sceneAmbient = ambientFor(dayT) * if (headUnderwater) 0.85f else 1f
         worldShader?.use()
         val caveFogEnd = (minOf(world.renderRadiusCave, world.renderRadiusYSurface) - 1) * CHUNK_SIZE.toFloat()
         GLES30.glUniform3f(caveFogUniform, caveBlend, caveFogEnd * 0.55f, caveFogEnd)
         GLES30.glUniformMatrix4fv(wUMvp, 1, false, camera.vpMatrix, 0)
-        GLES30.glUniform1f(wUAmbient, if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT))
+        GLES30.glUniform1f(wUAmbient, sceneAmbient)
         GLES30.glUniform1f(wUCaveFloor, CAVE_FLOOR)
         GLES30.glUniform1f(wUTime, elapsed)
         GLES30.glUniform1f(wUUnderwater, if (headUnderwater) 1f else 0f)
@@ -1629,7 +1638,7 @@ internal class CaveRenderer(
             }
         }
 
-        decorRenderer?.draw(camera, if (headUnderwater) ambientFor(dayT) * .4f else ambientFor(dayT), caveBlend, caveFogEnd)
+        decorRenderer?.draw(camera, sceneAmbient, caveBlend, caveFogEnd)
 
         // ── Mise à jour + rendu ennemis ───────────────────────────────────────
         if (!gamePaused) { mode.update(dt);if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot) }
@@ -1691,12 +1700,13 @@ internal class CaveRenderer(
         drawFallingBlocks(dt)
 
         // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
-        val waterAmbient = if (headUnderwater) ambientFor(dayT) * 0.4f else ambientFor(dayT)
+        val waterAmbient = sceneAmbient
         waterShader?.use()
         val waterKey=world.chunkKey(camera.chunkX(),Math.floorDiv(floor(camera.playerY).toInt(),16),camera.chunkZ())
         if(waterKey!=waterBiomeKey) {
             waterBiomeKey=waterKey
             val biome = world.naturalSurfaceBiomeAt(camera.playerX, camera.playerY, camera.playerZ)
+                ?.let(com.Atom2Universe.app.games.caves.world.RegionalBiomes::parent)
             targetWaterTint = when {
                 biome == "wetlands" -> floatArrayOf(.20f,.38f,.27f)
                 biome == "tundra" || biome == "taiga" || biome == "iceberg" -> floatArrayOf(.16f,.37f,.49f)
@@ -2404,6 +2414,7 @@ internal class CaveRenderer(
             if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
             if (!isCreative && BlockRegistry.get(blockType)?.harvestCategory == "plant" && Random.nextFloat() < .12f) {
                 val biome=world.naturalSurfaceBiomeAt(bx.toDouble(),by.toDouble(),bz.toDouble())
+                    ?.let(com.Atom2Universe.app.games.caves.world.RegionalBiomes::parent)
                 val crops=when(biome) {
                     "desert", "red_desert", "savanna" -> intArrayOf(1,9,14,18)
                     "taiga", "tundra" -> intArrayOf(4,5,15,17)

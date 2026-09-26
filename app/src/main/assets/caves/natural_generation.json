@@ -1,178 +1,178 @@
 {
-  "version": 3,
+  "version": 6,
   "biomes": [
     {
       "id": "birch_forest",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.48,
       "humidity": 0.6,
       "rarity": 0
     },
     {
       "id": "dark_forest",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.45,
       "humidity": 0.85,
       "rarity": 0
     },
     {
       "id": "desert",
-      "base": 10,
-      "amplitude": 30,
+      "base": 10.0,
+      "amplitude": 30.0,
       "temperature": 0.95,
       "humidity": 0.08,
       "rarity": 0
     },
     {
       "id": "forest",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.55,
       "humidity": 0.65,
       "rarity": 0
     },
     {
       "id": "iceberg",
-      "base": -24,
-      "amplitude": 80,
+      "base": -16,
+      "amplitude": 26,
       "temperature": 0.04,
       "humidity": 0.55,
       "rarity": 0
     },
     {
       "id": "jungle_edge",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.8,
       "humidity": 0.65,
       "rarity": 0
     },
     {
       "id": "jungle",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.9,
       "humidity": 0.9,
       "rarity": 0
     },
     {
       "id": "magic_forest_blue",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.3,
       "humidity": 0.8,
-      "rarity": 0.12
+      "rarity": 0.09
     },
     {
       "id": "magic_forest_pink",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.65,
       "humidity": 0.65,
-      "rarity": 0.14
+      "rarity": 0.09
     },
     {
       "id": "magic_forest_purple",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.6,
       "humidity": 0.8,
-      "rarity": 0.14
+      "rarity": 0.09
     },
     {
       "id": "magic_forest_yellow",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.7,
       "humidity": 0.5,
-      "rarity": 0.14
+      "rarity": 0.09
     },
     {
       "id": "mountains",
-      "base": 180,
-      "amplitude": 1200,
+      "base": 20,
+      "amplitude": 48,
       "temperature": 0.22,
       "humidity": 0.5,
       "rarity": 0
     },
     {
       "id": "ocean",
-      "base": -46,
-      "amplitude": 10,
+      "base": -28,
+      "amplitude": 12,
       "temperature": 0.55,
       "humidity": 0.55,
       "rarity": 0.12
     },
     {
       "id": "plains",
-      "base": 9,
-      "amplitude": 12,
+      "base": 9.0,
+      "amplitude": 20.0,
       "temperature": 0.55,
       "humidity": 0.45,
-      "rarity": -0.1
+      "rarity": 0
     },
     {
       "id": "red_desert",
-      "base": 20,
-      "amplitude": 90,
+      "base": 16.0,
+      "amplitude": 42.0,
       "temperature": 0.8,
       "humidity": 0.15,
       "rarity": 0
     },
     {
       "id": "redwood_forest",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.55,
       "humidity": 0.9,
       "rarity": 0
     },
     {
       "id": "rocky",
-      "base": 100,
-      "amplitude": 450,
+      "base": 18,
+      "amplitude": 44,
       "temperature": 0.45,
       "humidity": 0.3,
       "rarity": 0
     },
     {
       "id": "savanna",
-      "base": 10,
-      "amplitude": 30,
+      "base": 10.0,
+      "amplitude": 30.0,
       "temperature": 0.8,
       "humidity": 0.35,
       "rarity": 0
     },
     {
       "id": "taiga",
-      "base": 12,
-      "amplitude": 40,
+      "base": 12.0,
+      "amplitude": 40.0,
       "temperature": 0.2,
       "humidity": 0.65,
       "rarity": 0
     },
     {
       "id": "tundra",
-      "base": 10,
-      "amplitude": 30,
+      "base": 10.0,
+      "amplitude": 30.0,
       "temperature": 0.07,
       "humidity": 0.3,
       "rarity": 0
     },
     {
       "id": "volcanic",
-      "base": 100,
-      "amplitude": 600,
+      "base": 18,
+      "amplitude": 44,
       "temperature": 0.9,
       "humidity": 0.2,
       "rarity": 0.08
     },
     {
       "id": "wetlands",
-      "base": 1,
-      "amplitude": 4,
+      "base": 3,
+      "amplitude": 12,
       "temperature": 0.6,
       "humidity": 0.95,
       "rarity": 0

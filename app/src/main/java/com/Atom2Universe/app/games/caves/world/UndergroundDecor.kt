@@ -22,7 +22,7 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
         // Slightly irregular boundaries within slowly varying, three-dimensional regions.
         val edge = noise(x, y, z, 917.0, .06) * .035
         return when {
-            thermal < .30 + edge && depth < 240 -> Biome.FROZEN
+            thermal < .25 + edge && depth < 240 -> Biome.FROZEN
             depth > 170 && region > .18 + edge && thermal > .48 -> Biome.BASALT
             depth < 100 && wet > .55 + edge -> Biome.ROOTS
             depth > 45 && wet > .55 + edge && region < .24 -> Biome.FUNGAL
@@ -106,7 +106,7 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
                     var space = 0
                     while (space < 10 && s.air(x, y + direction * space, z)) space++
                     if (space < 5) continue
-                    val length = min(8, min(space - 3, 3 + (rng / 7 % 6).toInt()))
+                    val length = min(8, min(space / 3, 3 + (rng / 7 % 6).toInt()))
                     fun put(dx: Int, dy: Int, dz: Int, block: Short) {
                         val px = x + dx; val py = y + dy; val pz = z + dz
                         if (px in 0..15 && py in 0..15 && pz in 0..15 && s.air(px, py, pz))

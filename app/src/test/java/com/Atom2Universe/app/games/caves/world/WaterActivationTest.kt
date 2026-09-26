@@ -28,22 +28,22 @@ class WaterActivationTest {
     }
 
     /** Publication normale d'un chunk préparé, sans bruit de terrain ni API Android. */
+    @Suppress("UNCHECKED_CAST")
     private fun load(world: World, cx: Int, cy: Int, cz: Int, fill: (Chunk) -> Unit): Chunk {
-        var result: Chunk? = null
-        world.updateAroundPlayer(cx, cy, cz, maxNewChunks = 1) { chunk ->
-            assertEquals(cx, chunk.cx); assertEquals(cy, chunk.cy); assertEquals(cz, chunk.cz)
-            chunk.blocks.fill(STONE)
-            fill(chunk)
-            world.markGenerated(chunk)
-            result = chunk
-        }
-        return checkNotNull(result)
+        val chunks = World::class.java.getDeclaredField("chunks").apply { isAccessible = true }
+            .get(world) as java.util.concurrent.ConcurrentHashMap<Long, Chunk>
+        val chunk = Chunk(cx, cy, cz)
+        chunk.blocks.fill(STONE)
+        fill(chunk)
+        chunks[world.chunkKey(cx, cy, cz)] = chunk
+        world.markGenerated(chunk)
+        return chunk
     }
 
     private fun settle(world: World) { repeat(300) { world.tickWater() } }
 
     @Test fun savedWaterfallResumesWithoutEditingABlock() {
-        val world = World(terrainVersion = 1)
+        val world = World()
         val chunk = load(world, 0, 5, 0) {
             for (y in 1..13) it.setBlock(8, y, 8, AIR)
             it.setBlock(8, 14, 8, WATER_FLOW)
@@ -55,15 +55,67 @@ class WaterActivationTest {
     }
 
     @Test fun savedFlowWithoutSupplyDrainsOnLoad() {
-        val world = World(terrainVersion = 1)
+        val world = World()
         val chunk = load(world, 0, 5, 0) { it.setBlock(8, 8, 8, WATER_FLOW) }
         settle(world)
         assertEquals(AIR, chunk.blockAt(8, 8, 8))
     }
 
+    @Test fun closingTheFeedDrainsTheWaterfallAndItsLowerStream() {
+        val world = World()
+        val chunk = load(world, 0, 5, 0) {
+            it.setBlock(7, 10, 8, WATER)
+            for (y in 2..10) it.setBlock(8, y, 8, AIR)
+            for (x in 9..12) it.setBlock(x, 2, 8, AIR)
+        }
+        settle(world)
+        assertEquals(WATER_FLOW, chunk.blockAt(8, 2, 8))
+        assertEquals(WATER_FLOW, chunk.blockAt(11, 2, 8))
+        // Like the reported sluice: keep the upstream water, place a solid block across its outlet.
+        world.setBlock(8, 90, 8, CLAY)
+        settle(world)
+        assertEquals(WATER, chunk.blockAt(7, 10, 8))
+        for (y in 2..9) assertEquals("Hanging waterfall at $y", AIR, chunk.blockAt(8, y, 8))
+        for (x in 9..12) assertEquals("Disconnected stream at $x", AIR, chunk.blockAt(x, 2, 8))
+        world.setBlock(8, 90, 8, AIR)
+        settle(world)
+        assertEquals("Reopening the sluice resumes the waterfall", WATER_FLOW, chunk.blockAt(8, 2, 8))
+    }
+
+    @Test fun meetingSourcesRefillSurfaceWithoutManufacturingPermanentWater() {
+        val world = World()
+        val chunk = load(world, 0, 5, 0) {
+            it.setBlock(7, 8, 8, WATER)
+            it.setBlock(8, 8, 8, AIR)
+            it.setBlock(9, 8, 8, WATER)
+        }
+        settle(world)
+        assertEquals(WATER_FLOW, chunk.blockAt(8, 8, 8))
+        assertEquals(0, world.waterFlowLevel(8, 88, 8))
+        world.setBlock(7, 88, 8, STONE)
+        world.setBlock(9, 88, 8, STONE)
+        settle(world)
+        assertEquals("Refilled water must drain when both feeds are blocked", AIR, chunk.blockAt(8, 8, 8))
+    }
+
+    @Test fun cutWaterfallDrainsAcrossVerticalChunkBoundary() {
+        val world = World()
+        val lower = load(world, 0, 4, 0) { for (y in 2..15) it.setBlock(8, y, 8, AIR) }
+        val upper = load(world, 0, 5, 0) {
+            for (y in 0..8) it.setBlock(8, y, 8, AIR)
+            it.setBlock(7, 8, 8, WATER)
+        }
+        settle(world)
+        assertEquals(WATER_FLOW, lower.blockAt(8, 2, 8))
+        world.setBlock(8, 88, 8, CLAY)
+        settle(world)
+        for (y in 0..7) assertEquals(AIR, upper.blockAt(8, y, 8))
+        for (y in 2..15) assertEquals(AIR, lower.blockAt(8, y, 8))
+    }
+
     @Test fun newAirChunkWakesRiverAcrossHorizontalBoundaryInEitherOrder() {
         for (waterFirst in listOf(true, false)) {
-            val world = World(terrainVersion = 1)
+            val world = World()
             fun river() = load(world, 0, 5, 0) { it.setBlock(15, 8, 8, WATER) }
             fun ravine() = load(world, 1, 5, 0) {
                 for (y in 1..8) it.setBlock(0, y, 8, AIR)
@@ -79,7 +131,7 @@ class WaterActivationTest {
     }
 
     @Test fun savedFlowWaitsForSupplyAboveThenContinuesDown() {
-        val world = World(terrainVersion = 1)
+        val world = World()
         val lower = load(world, 0, 5, 0) {
             for (y in 1..14) it.setBlock(8, y, 8, AIR)
             it.setBlock(8, 15, 8, WATER_FLOW)
@@ -107,7 +159,7 @@ class WaterActivationTest {
             spriteMargin = 0f, spriteHeight = .5f, replaceable = true)
         decorations[id.toInt()] = true
         try {
-            val world = World(terrainVersion = 1)
+            val world = World()
             val chunk = load(world, 0, 5, 0) {
                 it.setBlock(8, 8, 8, WATER)
                 it.setBlock(9, 8, 8, id)
