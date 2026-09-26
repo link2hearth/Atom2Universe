@@ -20,6 +20,15 @@ internal object ShowcaseMap {
     private const val FRONTIER_END_Z = 355
     private const val FRONTIER_AISLE_X = 124
     fun frontierContains(x: Int, z: Int) = x in 76 until WIDTH && z in FRONTIER_Z..FRONTIER_END_Z
+    // Mechanics wing beside the crop garden, entered from the promenade. Every source turns here.
+    fun mechanicsContains(x: Int, z: Int) = x in 153 until WIDTH && z in 56..114
+    private val mechanicsExhibits = listOf(
+        intArrayOf(155, 57, 167, 63), intArrayOf(169, 57, 175, 63), intArrayOf(176, 56, 187, 63),
+        intArrayOf(188, 56, 201, 64), intArrayOf(155, 65, 167, 75), intArrayOf(169, 65, 179, 75),
+        intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87))
+    /** Index of the mechanical exhibit under (x, z), in the order of cave_showcase_mechanics_names. */
+    fun mechanicsAt(x: Int, z: Int): Int? = mechanicsExhibits.indexOfFirst { (x0, z0, x1, z1) -> x in x0..x1 && z in z0..z1 }
+        .takeIf { it >= 0 && mechanicsContains(x, z) }
     // First the six house models, one short row per climate, then the settlements.
     private const val HOUSES_Z = FRONTIER_Z + 4
     private const val HOUSE_ROW = 18
@@ -106,6 +115,48 @@ internal object ShowcaseMap {
         }
     }
 
+    /** Working displays of every rule of the rotation network (see KineticNetwork). */
+    private fun buildMechanics(put: (Int, Int, Int, Short, Byte) -> Unit) {
+        val y = FLOOR + 1
+        for (z in 56..114) put(153, y, z, COBBLESTONE, 0)
+        for (x in 153 until WIDTH) put(x, y, 114, COBBLESTONE, 0)
+        for (z in 52..58) for (x in 174..179) put(x, FLOOR, z, COBBLESTONE, 0)
+        fun part(x: Int, h: Int, z: Int, id: Short, axis: Char) =
+            put(x, y + h, z, id, ((when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }) or 8).toByte())
+        val F = com.Atom2Universe.app.games.caves.node.FrontierItems
+        // 0. Wheel, shafts and mill.
+        part(157, 0, 60, F.WATERWHEEL, 'y'); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'y')
+        // 1. Crank and vertical shaft.
+        part(172, 0, 60, F.CRANK, 'y'); for (h in 1..4) part(172, h, 60, F.SHAFT, 'y')
+        // 2. Cogwheels side by side, turning in turn.
+        part(178, 1, 58, F.CRANK, 'z'); for (x in 178..184) part(x, 1, 59, F.COGWHEEL, 'z')
+        // 3. Large and small cogwheels: the small ones turn twice as fast.
+        part(193, 2, 58, F.CRANK, 'z'); part(193, 2, 59, F.LARGE_COGWHEEL, 'z')
+        part(194, 3, 59, F.COGWHEEL, 'z'); part(192, 1, 59, F.COGWHEEL, 'z')
+        for (z in 60..62) part(194, 3, z, F.SHAFT, 'z')
+        // 4. Gearbox: a quarter turn each side, reversed straight through.
+        part(157, 0, 70, F.WATERWHEEL, 'y'); for (x in 158..160) part(x, 0, 70, F.SHAFT, 'x')
+        part(161, 0, 70, F.GEARBOX, 'y')
+        for (z in 71..73) part(161, 0, z, F.SHAFT, 'z'); for (z in 67..69) part(161, 0, z, F.SHAFT, 'z')
+        for (x in 162..165) part(x, 0, 70, F.SHAFT, 'x')
+        // 5. From horizontal to vertical, as in a windmill: the gearbox sends the rotation down to the mill.
+        part(174, 3, 66, F.CRANK, 'z'); for (z in 67..68) part(174, 3, z, F.SHAFT, 'z')
+        part(174, 3, 69, F.GEARBOX, 'x'); for (h in 1..2) part(174, h, 69, F.SHAFT, 'y'); part(174, 0, 69, F.MILL, 'y')
+        // 6. Four machines at work: one wheel for crusher, mill and loom (8 of 8), another for the press.
+        part(182, 0, 70, F.WATERWHEEL, 'y'); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
+        part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.CRUSHER, 'y')
+        part(186, 0, 71, F.MILL, 'y'); part(186, 0, 69, F.LOOM, 'y')
+        part(192, 0, 70, F.WATERWHEEL, 'y'); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'y')
+        // 7. Too much for one wheel: press, crusher and mill need 10, the wheel gives 8. Everything stops.
+        part(157, 0, 82, F.WATERWHEEL, 'y'); for (x in 158..160) part(x, 0, 82, F.SHAFT, 'x')
+        part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'y'); part(162, 0, 82, F.CRUSHER, 'y')
+        part(161, 0, 81, F.MILL, 'y')
+        // 8. Gears that cannot agree: round the loop the speed comes back doubled. Everything stops.
+        part(172, 0, 82, F.CRANK, 'y'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
+        part(172, 2, 82, F.SHAFT, 'y'); part(172, 3, 82, F.LARGE_COGWHEEL, 'y')
+        part(173, 3, 83, F.COGWHEEL, 'y'); part(173, 2, 83, F.SHAFT, 'y'); part(173, 1, 83, F.COGWHEEL, 'y')
+    }
+
     fun create(): A2Map {
         val exhibits = galleryBlocks()
         val depth = maxOf(mobGalleryZ() + ((mobBayCount()+2)/3)*10 + 4, FRONTIER_END_Z + 2)
@@ -122,12 +173,12 @@ internal object ShowcaseMap {
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
             // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !frontierContains(x, z)) continue
+            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !frontierContains(x, z) && !mechanicsContains(x, z)) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
                 (x == ORIGINAL_WIDTH - 1 && z > 55) ||
-                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149))
+                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149 && x !in 174..179))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
         // Two banks of ten/nine species. Five fixed growth snapshots along each bed.
@@ -154,6 +205,7 @@ internal object ShowcaseMap {
         fill(76, FLOOR + 1, 113, 151, FLOOR + 1, 113, COBBLESTONE)
         fill(111, FLOOR, 52, 116, FLOOR, 112, COBBLESTONE)
         fill(98, FLOOR, 52, 116, FLOOR, 54, COBBLESTONE)
+        buildMechanics(::put)
         // Frontier landmarks behind the crop garden, reached through its central gate.
         fill(111, FLOOR + 1, 113, 116, FLOOR + 1, 113, AIR)
         fill(111, FLOOR, 113, 116, FLOOR, 118, COBBLESTONE)

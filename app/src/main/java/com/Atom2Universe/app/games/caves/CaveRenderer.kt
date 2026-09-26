@@ -379,7 +379,12 @@ internal class CaveRenderer(
         frontierLife.magazines=saved.toString()
         return frontierLife.snapshot()
     }
-    internal val workshops by lazy { FrontierWorkshops(world, worldSeed).also { it.restore(savedState?.workshops ?: "{}") } }
+    internal val workshops by lazy { FrontierWorkshops(world, worldSeed).also {
+        it.restore(savedState?.workshops ?: "{}")
+        it.exhibition = exhibition
+    } }
+    /** The Assault exhibition map shows the mechanical parts turning. */
+    private val exhibition get() = (worldSource as? com.Atom2Universe.app.games.caves.world.MapSource)?.isShowcase == true
     var craftStationCallback: (() -> Unit)? = null
     var storageCallback: ((FrontierWorkshops.View, Map<Short, Int>) -> Unit)? = null
     val worldTimeSnapshot: Long get() = gameTimeMs
@@ -1620,6 +1625,10 @@ internal class CaveRenderer(
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             kineticRenderer.draw(workshops.kinetics,camera,caveBlend,caveFogEnd)
+        } else if (exhibition) {
+            if (!gamePaused) workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
+            enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
+            kineticRenderer.draw(workshops.kinetics,camera,caveBlend,caveFogEnd)
         }
         enemyRenderer.render(
             enemyManager.enemies,
@@ -2457,9 +2466,9 @@ internal class CaveRenderer(
             for (lz in 0 until CHUNK_SIZE)
                 for (lx in 0 until CHUNK_SIZE) {
             val block=chunk.blockAt(lx,ly,lz)
-            if(worldSource==null && block.toInt() in 9800..9891) {
+            if((worldSource==null || exhibition) && block.toInt() in 9800..9891) {
                 workshops.discover(FrontierWorkshops.Pos(wx0+lx,wy0+ly,wz0+lz),block)
-                if(block==com.Atom2Universe.app.games.caves.node.FrontierItems.MARKET_BELL) residents.discoverBell(wx0+lx,wy0+ly,wz0+lz)
+                if(worldSource==null && block==com.Atom2Universe.app.games.caves.node.FrontierItems.MARKET_BELL) residents.discoverBell(wx0+lx,wy0+ly,wz0+lz)
             }
             val intensity = when (block) {
                 TORCH -> 1.0f
@@ -4452,6 +4461,9 @@ internal class CaveRenderer(
             if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
                 touch.reset();craftStationCallback?.invoke();return
             }
+            if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) {
+                workshops.crank(FrontierWorkshops.Pos(target.bx,target.by,target.bz));startSwing();return
+            }
             workshops.view(FrontierWorkshops.Pos(target.bx,target.by,target.bz))?.let { box ->
                 touch.laserActive = false
                 gamePaused=true
@@ -4579,7 +4591,11 @@ internal class CaveRenderer(
                 if (camera.fwdX > 0) 1 else 3
             } else if (camera.fwdZ > 0) 0 else 2
             (facing or if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
-        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT
+        else if (blockType in FrontierWorkshops.TURNING || blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.GEARBOX)
+            // Mark the axis as chosen, so the part is never taken for an unoriented legacy shaft.
+            (computeOrientMeta(blockType, target.fnx, target.fny, target.fnz).toInt() or FrontierWorkshops.ORIENTED).toByte()
+        else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)

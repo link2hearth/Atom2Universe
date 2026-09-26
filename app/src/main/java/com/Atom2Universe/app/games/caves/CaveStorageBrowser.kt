@@ -193,7 +193,12 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         return buildList {
             add(a.getString(R.string.cave_storage_drag_hint))
             if(recipes.any { it.machine==v.block && it.power }) {
-                add(a.getString(if(v.powered) R.string.cave_machine_powered else R.string.cave_machine_unpowered));add(a.getString(R.string.cave_machine_power))
+                add(a.getString(when {
+                    v.powered -> R.string.cave_machine_powered
+                    v.overloaded -> R.string.cave_machine_overloaded
+                    v.conflict -> R.string.cave_machine_conflict
+                    else -> R.string.cave_machine_unpowered
+                }));add(a.getString(R.string.cave_machine_power))
             }
             recipes.getOrNull(v.active)?.let { add(a.getString(R.string.cave_machine_progress,v.progress,it.seconds)) }
         }.joinToString("\n\n")

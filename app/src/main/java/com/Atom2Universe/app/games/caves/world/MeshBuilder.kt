@@ -39,8 +39,8 @@ internal object MeshBuilder {
 
             val meta  = chunk.metaAt(lx, ly, lz)
             val definition = if (BlockRegistry.isPartial(block)) BlockRegistry.get(block) else null
-            // Shafts turn: KineticRenderer draws them, the chunk mesh keeps nothing.
-            if (definition?.shaft == true) continue
+            // Turning parts: KineticRenderer draws them, the chunk mesh keeps nothing.
+            if (definition?.kinetic == true) continue
             if (definition != null && (definition.stairs || definition.slab || definition.blockHeight < 1f)) {
                 val sky = skyOf(chunk, world, lx, ly, lz, cache)
                 val mask = StairConnections.maskAt(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz,
@@ -53,7 +53,7 @@ internal object MeshBuilder {
                         val neighbor = world.neighborBlock(chunk, lx+offset[0], ly+offset[1], lz+offset[2], cache)
                         val other = BlockRegistry.get(neighbor)
                         if (neighbor != AIR && other != null && !other.decoration && !other.transparent &&
-                            !other.water && !other.stairs && !other.slab && !other.shaft &&
+                            !other.water && !other.stairs && !other.slab && !other.kinetic &&
                             other.blockHeight >= (if (face.direction == 1) 1f else definition.blockHeight)) continue
                     }
                     val packed = face.direction * 4096f + BlockRegistry.getLayerForFace(block, face.direction, AIR)

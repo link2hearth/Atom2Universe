@@ -519,6 +519,8 @@ class CaveActivity : ThemedActivity() {
                     caption.text = getString(R.string.cave_showcase_frontier_caption,
                         frontierNames[index % frontierNames.size], frontierClimates[index / frontierNames.size])
                 } }
+                val mechanicsNames = resources.getStringArray(R.array.cave_showcase_mechanics_names)
+                mode.onMechanicsCaption = { index -> uiHandler.post { caption.text = mechanicsNames[index] } }
                 val houseNames = resources.getStringArray(R.array.cave_showcase_house_names)
                 mode.onHouseCaption = { index -> uiHandler.post {
                     caption.text = getString(R.string.cave_showcase_frontier_caption,

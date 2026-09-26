@@ -20,6 +20,7 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
     @Volatile var onColdCaption: ((Int) -> Unit)? = null
     @Volatile var onFrontierCaption: ((Int) -> Unit)? = null
     @Volatile var onHouseCaption: ((Int) -> Unit)? = null
+    @Volatile var onMechanicsCaption: ((Int) -> Unit)? = null
     @Volatile var onGardenCaption: ((Int, Int) -> Unit)? = null
     val mannequins = mutableListOf<Enemy>()
     private val exhibits = ShowcaseMap.galleryBlocks()
@@ -86,6 +87,10 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
         captionTimer = 0f
         val x = floor(r.camera.playerX - source.originX).toInt()
         val z = floor(r.camera.playerZ - source.originZ).toInt()
+        ShowcaseMap.mechanicsAt(x, z)?.let {
+            onMechanicsCaption?.invoke(it)
+            return
+        }
         ShowcaseMap.houseAt(x, z)?.let {
             onHouseCaption?.invoke(it)
             return

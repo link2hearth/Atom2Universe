@@ -577,6 +577,17 @@
         <item>Cold</item>
         <item>Arid</item>
     </string-array>
+    <string-array name="cave_showcase_mechanics_names">
+        <item>Wheel, shafts and mill</item>
+        <item>Crank and vertical shaft</item>
+        <item>Cogwheels side by side</item>
+        <item>Large and small cogwheels: twice as fast</item>
+        <item>Gearbox: a quarter turn</item>
+        <item>From horizontal to vertical, as in a windmill</item>
+        <item>Four machines on two wheels</item>
+        <item>Too much for one wheel: stopped</item>
+        <item>Gears that cannot agree: stopped</item>
+    </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Cottage</item>
         <item>Longhouse</item>

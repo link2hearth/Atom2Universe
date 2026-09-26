@@ -67,7 +67,7 @@ class PartialBlockModelTest {
     }
 
     private val shaft = com.Atom2Universe.app.games.caves.node.BlockDef(9804, "shaft", "", "", "", null, null, null, null,
-        0, 1f, false, true, false, false, false, 0, "", "functional", 0f, 0f, shaft = true)
+        0, 1f, false, true, false, false, false, 0, "", "functional", 0f, 0f, kineticShape = com.Atom2Universe.app.games.caves.node.KINETIC_ROD)
 
     @Test
     fun shaftIsAThinRodAlongItsLogAxis() {

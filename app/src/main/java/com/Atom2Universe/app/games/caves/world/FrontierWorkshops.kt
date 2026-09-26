@@ -17,8 +17,11 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     data class Pos(val x: Int, val y: Int, val z: Int) {
         fun move(dx: Int, dy: Int, dz: Int) = Pos(x+dx,y+dy,z+dz)
     }
-    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1,val stacks: List<CaveStackInventory.Stack> = emptyList())
-    private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1,val stacks: CaveStackInventory = CaveStackInventory())
+    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1,val stacks: List<CaveStackInventory.Stack> = emptyList(),val overloaded: Boolean=false,val conflict: Boolean=false)
+    private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1,val stacks: CaveStackInventory = CaveStackInventory()) {
+        /** Fraction of a second of work carried over: a machine turning at half speed works every other second. */
+        var partial=0f
+    }
     private val stores = linkedMapOf<Pos,Store>()
     val machinery=ArrayList<Enemy>()
     private val knownMachines=linkedMapOf<Pos,Enemy>()
@@ -26,11 +29,20 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private var feedTimer=0f
     private val running=hashSetOf<Pos>()
     private val rotorDef=FrontierModels.definition("workshop_rotor","machine",.48f)
-    /** A shaft drawn by KineticRenderer: axis 0 = X, 1 = Y, 2 = Z; angle in radians; light 0..1. */
-    class Kinetic(val pos: Pos) { var axis=1; var angle=0f; var powered=false; var light=1f }
-    private val knownShafts=linkedMapOf<Pos,Kinetic>()
-    /** Shafts near the player, refreshed once per second; angles advance every frame. */
+    /** A turning part drawn by KineticRenderer: axis 0 = X, 1 = Y, 2 = Z; speed as in KineticNetwork;
+     * angle in radians; light 0..1. */
+    class Kinetic(val pos: Pos,val block: Short) { var axis=1; var angle=0f; var speed=0f; var light=1f }
+    private val knownKinetics=linkedMapOf<Pos,Kinetic>()
+    /** Turning parts near the player, refreshed once per second; angles advance every frame. */
     val kinetics=ArrayList<Kinetic>()
+    private val cranks=hashMapOf<Pos,Float>()
+    /** Exhibition map: every source turns (no flowing water, nobody at the cranks), nothing is produced. */
+    var exhibition=false
+    private val network=KineticNetwork({ x,y,z -> world.blockAt(x,y,z) },{ x,y,z -> world.metaAt(x,y,z) }) { p,id ->
+        exhibition || if(id==F.WATERWHEEL) wheel(p) else (cranks[p] ?: 0f)>0f
+    }
+    private var rotation=KineticNetwork.Result(emptyMap(),emptyMap())
+    private fun speedAt(p: Pos)=rotation.speedAt(p)
     data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false) {
         val key: String = "$machine/" + input.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" } +
             "/" + output.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" }
@@ -71,10 +83,13 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         if(!loaded(p) || !F.isContainer(block(p)) || index != -1 && recipes.getOrNull(index)?.machine!=block(p)) return false
         val s=store(p);s.selection=index;s.progress=0;s.active="";return true
     }
-    @Synchronized fun discover(p: Pos,id: Short) {
+    @Synchronized fun discover(p: Pos,id: Short,fromChunk: Boolean=true) {
         if(id==F.HOPPER) hoppers.add(p)
         if(F.isContainer(id) && id!=F.CHEST && id!=F.CACHE) store(p)
-        if(id==F.SHAFT) knownShafts.getOrPut(p) { Kinetic(p) }
+        if(id in TURNING) {
+            if(fromChunk) orientLegacy(p)
+            knownKinetics.getOrPut(p) { Kinetic(p,id) }
+        }
         if(id in setOf(F.MILL,F.WATERWHEEL,F.PRESS,F.CRUSHER,F.LOOM)) {
             knownMachines.getOrPut(p) { Enemy(knownMachines.size,rotorDef,p.x+.5,p.y+.02,p.z+1.025).apply { resting=true } }
         }
@@ -83,13 +98,15 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         visualTimer-=dt
         if(visualTimer<=0f) {
             visualTimer=1f;machinery.clear();running.clear();kinetics.clear()
-            val shafts=knownShafts.iterator()
-            while(shafts.hasNext()) {
-                val k=shafts.next().value;val p=k.pos
-                if(!loaded(p) || block(p)!=F.SHAFT) { shafts.remove();continue }
+            // advance() does not run on the exhibition map: solve the rotation here instead.
+            if(exhibition) refreshRotation()
+            val parts=knownKinetics.iterator()
+            while(parts.hasNext()) {
+                val k=parts.next().value;val p=k.pos
+                if(!loaded(p) || block(p)!=k.block) { parts.remove();continue }
                 if(abs(p.y-y)>32 || (p.x-x).pow(2)+(p.z-z).pow(2)>48.0.pow(2) || kinetics.size>=MAX_KINETICS) continue
                 k.axis=PartialBlockModel.shaftAxis(world.metaAt(p.x,p.y,p.z))
-                k.powered=powered(p);k.light=light(p.x,p.y,p.z)
+                k.speed=speedAt(p);k.light=light(p.x,p.y,p.z)
                 kinetics.add(k)
             }
             val iterator=knownMachines.iterator()
@@ -98,12 +115,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 if(!loaded(p) || block(p) !in setOf(F.MILL,F.WATERWHEEL,F.PRESS,F.CRUSHER,F.LOOM)) { iterator.remove();continue }
                 if(abs(p.y-y)>24 || (p.x-x).pow(2)+(p.z-z).pow(2)>32.0.pow(2) || machinery.size>=48) continue
                 machinery.add(e)
-                if(powered(p)) running.add(p)
+                if(speedAt(p)!=0f) running.add(p)
             }
         }
         for(p in running) knownMachines[p]?.let { it.animTime=(it.animTime+dt)%3141.59f }
         // Angle advances with time, never by a fixed step per frame: smooth at 60 and 120 Hz.
-        for(k in kinetics) if(k.powered) k.angle=(k.angle+SHAFT_SPEED*dt)%(2f*PI.toFloat())
+        for(k in kinetics) if(k.speed!=0f) k.angle=(k.angle+k.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
     }
     @Synchronized fun feedAnimals(animals: com.Atom2Universe.app.games.caves.entity.PassiveAnimals,dt: Float) {
         feedTimer+=dt
@@ -142,16 +159,18 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         } }
     }
     @Synchronized fun placed(p: Pos, id: Short) {
-        stores.remove(p); hoppers.remove(p); knownMachines.remove(p); knownShafts.remove(p)
+        stores.remove(p); hoppers.remove(p); knownMachines.remove(p); knownKinetics.remove(p); cranks.remove(p)
         if(F.isContainer(id)) stores[p]=Store() // player-placed caches never roll loot
         if(id == F.HOPPER) hoppers.add(p)
-        discover(p,id)
+        discover(p,id,fromChunk=false)
     }
     @Synchronized fun view(p: Pos): View? {
         if(!loaded(p) || !F.isContainer(block(p))) return null
         val s=store(p)
         s.stacks.reconcile(s.items)
-        return View(p,block(p),s.items.toMap(),powered(p),s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },s.stacks.snapshot())
+        val net=rotation.network[p]
+        return View(p,block(p),s.items.toMap(),speedAt(p)!=0f,s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },s.stacks.snapshot(),
+            net?.overloaded==true,net?.conflict==true)
     }
     @Synchronized fun splitStack(p: Pos,key: Long,count: Int): Boolean {
         if(!loaded(p) || !F.isContainer(block(p))) return false
@@ -189,30 +208,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         return true
     }
     @Synchronized fun breakBlock(p: Pos): Map<Short,Int> {
-        hoppers.remove(p); knownMachines.remove(p); knownShafts.remove(p)
+        hoppers.remove(p); knownMachines.remove(p); knownKinetics.remove(p); cranks.remove(p)
         if(F.isContainer(block(p))) store(p)
         return stores.remove(p)?.items?.toMap().orEmpty()
     }
     private fun wheel(p: Pos) = block(p)==F.WATERWHEEL && directions.any { d ->
         val q=p.move(d[0],d[1],d[2]); loaded(q) && block(q)==WATER_FLOW
-    }
-    private fun powered(origin: Pos): Boolean {
-        if(wheel(origin)) return true
-        val queue=ArrayDeque<Pair<Pos,Int>>(); val seen=hashSetOf(origin)
-        queue.add(origin to 0)
-        while(queue.isNotEmpty() && seen.size <= 96) {
-            val (p,depth)=queue.removeFirst()
-            for(d in directions) {
-                val q=p.move(d[0],d[1],d[2])
-                if(!seen.add(q) || !loaded(q)) continue
-                val id=block(q)
-                if(id==F.WATERWHEEL && directions.any { v ->
-                    val water=q.move(v[0],v[1],v[2]); loaded(water) && block(water)==WATER_FLOW
-                }) return true
-                if(id==F.SHAFT && depth<12) queue.add(q to depth+1)
-            }
-        }
-        return false
     }
     private fun canProcess(s: Store,input: Map<Short,Int>,output: Map<Short,Int>): Boolean =
         input.all { (id,n)->(s.items[id] ?: 0)>=n } && output.all { (id,n)->
@@ -228,18 +229,24 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         accumulator+=dt.coerceIn(0f,1f)
         if(accumulator<1f) return
         accumulator-=1f
+        for(entry in cranks.entries) entry.setValue(entry.value-1f)
+        refreshRotation()
         // Only nearby, loaded workshops run. No offline production or distant world reads.
         for((p,s) in stores) {
             if(!loaded(p)) continue
             val machine=block(p)
             val fuel=s.items.keys.sorted().firstOrNull { "fuel" in BlockRegistry.get(it)?.tags.orEmpty() && (s.items[it] ?: 0)>0 }
-            val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || powered(p)) &&
+            val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || speedAt(p)!=0f) &&
                 (machine!=F.COOKER || fuel!=null) && canProcess(s,
                     if(machine==F.COOKER) r.input + (fuel!! to 1) else r.input,r.output) }
             if(recipe!=null) {
                 val recipeKey=recipe.key
-                if(s.active!=recipeKey) { s.active=recipeKey;s.progress=0 }
-                if(++s.progress>=recipe.seconds) {
+                if(s.active!=recipeKey) { s.active=recipeKey;s.progress=0;s.partial=0f }
+                if(recipe.power) {
+                    s.partial+=1f/KineticNetwork.durationFactor(speedAt(p))
+                    val seconds=s.partial.toInt();s.partial-=seconds;s.progress+=seconds
+                } else s.progress++
+                if(s.progress>=recipe.seconds) {
                     s.progress=0
                     process(s,if(machine==F.COOKER) recipe.input+(fuel!! to 1) else recipe.input,recipe.output)
                 }
@@ -295,9 +302,34 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val hs=root.optJSONArray("hoppers") ?: return
         for(i in 0 until hs.length()) runCatching { val a=hs.getJSONArray(i); hoppers.add(Pos(a.getInt(0),a.getInt(1),a.getInt(2))) }
     }
+    /** Turns a crank for ten seconds. */
+    @Synchronized fun crank(p: Pos) {
+        if(!loaded(p) || block(p)!=F.CRANK) return
+        cranks[p]=CRANK_SECONDS
+        refreshRotation()
+    }
+    private fun refreshRotation() {
+        cranks.entries.removeAll { (p,t) -> !loaded(p) || block(p)!=F.CRANK || t<=0f }
+        val sources=knownMachines.keys.filter { loaded(it) && block(it)==F.WATERWHEEL } + cranks.keys
+        rotation=network.solve(sources)
+    }
+    /** Shafts from saves older than the network have no orientation: pick the axis joining the most parts. */
+    private fun orientLegacy(p: Pos) {
+        val meta=world.metaAt(p.x,p.y,p.z).toInt()
+        if(meta and ORIENTED!=0) return
+        val mechanical=TURNING+setOf(F.GEARBOX,F.WATERWHEEL,F.MILL,F.PRESS,F.CRUSHER,F.LOOM)
+        fun count(dx: Int,dy: Int,dz: Int)=listOf(p.move(dx,dy,dz),p.move(-dx,-dy,-dz)).count { block(it) in mechanical }
+        // Log axis codes: 1 = X, 0 = Y, 2 = Z. Horizontal first: old mills sat beside their wheel.
+        val axis=listOf(1 to count(1,0,0),2 to count(0,0,1),0 to count(0,1,0)).maxByOrNull { it.second }!!
+        world.setMeta(p.x,p.y,p.z,((if(axis.second>0) axis.first else 0) or ORIENTED).toByte())
+    }
     companion object {
         const val MAX_KINETICS=512
-        /** Radians per second: half a turn per second until the network carries real speeds. */
-        const val SHAFT_SPEED=PI.toFloat()
+        /** Bit 3 of a turning part's meta: its axis was chosen, it is not a legacy shaft. */
+        const val ORIENTED=8
+        val TURNING=setOf(F.SHAFT,F.COGWHEEL,F.LARGE_COGWHEEL,F.CRANK)
+        /** A water wheel (speed 16) turns half a turn per second. */
+        const val RADIANS_PER_SPEED=(PI/16).toFloat()
+        const val CRANK_SECONDS=10f
     }
 }

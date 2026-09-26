@@ -14,6 +14,8 @@ internal object FrontierItems {
     const val COOKER: Short = 9805
     const val COMPOSTER: Short = 9806
     const val HOPPER: Short = 9807
+    const val COGWHEEL: Short = 9808
+    const val LARGE_COGWHEEL: Short = 9809
     const val FLOUR: Short = 9810
     const val BREAD: Short = 9811
     const val SALAD: Short = 9812
@@ -25,6 +27,8 @@ internal object FrontierItems {
     const val COMPOST: Short = 9818
     const val MORTAR: Short = 9819
     const val GEAR: Short = 9820
+    const val GEARBOX: Short = 9821
+    const val CRANK: Short = 9822
 
     const val PRESS: Short = 9840
     const val CRUSHER: Short = 9841
@@ -90,7 +94,24 @@ internal object FrontierItems {
         fun rect(x: Int, y: Int, w: Int, h: Int, color: Long) {
             p.color = color.toInt(); c.drawRect(x.toFloat(), y.toFloat(), (x+w).toFloat(), (y+h).toFloat(), p)
         }
-        if (toolIndex(id.toShort())>=0) {
+        if (id in listOf(9808, 9809, 9821, 9822)) {
+            // Mechanical parts: wood, a darker hub and the mark of their role.
+            rect(0,0,32,32,0xFF8E6A40); rect(2,2,28,28,0xFFB48A56)
+            when (id) {
+                9808, 9809 -> {
+                    p.color=0xFF6E4E2C.toInt(); c.drawCircle(16f,16f,if(id==9809) 14f else 10f,p)
+                    p.color=0xFFC9A26B.toInt(); c.drawCircle(16f,16f,if(id==9809) 11f else 7f,p)
+                    val teeth=if(id==9809) 12 else 8; val r=if(id==9809) 14f else 10f
+                    for(i in 0 until teeth) {
+                        val a=i*2*Math.PI/teeth
+                        rect((16+kotlin.math.cos(a)*r).toInt()-2,(16+kotlin.math.sin(a)*r).toInt()-2,4,4,0xFF6E4E2C)
+                    }
+                    rect(13,13,6,6,0xFF4A3520)
+                }
+                9821 -> { rect(4,4,24,24,0xFF6F7A73); rect(7,7,18,18,0xFF4E5852); rect(13,2,6,28,0xFFC4A06A); rect(2,13,28,6,0xFFC4A06A) }
+                else -> { rect(14,4,4,24,0xFFC4A06A); rect(14,4,12,4,0xFF6E4E2C); rect(22,4,4,10,0xFF4A3520) }
+            }
+        } else if (toolIndex(id.toShort())>=0) {
             rect(15, 9, 3, 21, 0xFFB48A56)
             val color = longArrayOf(0xFFBD935B, 0xFF909C96, 0xFFD4DED7, 0xFF83BCC3)[toolIndex(id.toShort())/3]
             when (toolIndex(id.toShort())%3) {

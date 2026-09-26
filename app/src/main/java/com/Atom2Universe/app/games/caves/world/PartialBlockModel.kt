@@ -75,7 +75,8 @@ internal object PartialBlockModel {
             normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
         }
 
-    // Shafts: a 6/16 rod through the whole block. Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z.
+    // Turning parts: a 6/16 rod through the whole block (shaft, crank) or a 6/16 thick plate across it
+    // (cogwheels). Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z; bit 3 marks an oriented part.
     /** Axis index of a shaft: 0 = X, 1 = Y, 2 = Z. */
     fun shaftAxis(meta: Byte) = when (meta.toInt() and 3) { 1 -> 0; 2 -> 2; else -> 1 }
     private const val ROD = 6f / 16f
@@ -87,18 +88,33 @@ internal object PartialBlockModel {
             else -> Box(low, low, 0f, ROD, ROD, 1f)
         })
     }
-    private val shaftSurfaces = Array(3) { axis ->
-        val b = shaftBoxes[axis][0]
+    private val plateBoxes = Array(3) { axis ->
+        val low = (1f - ROD) / 2f
+        listOf(when (axis) {
+            0 -> Box(low, 0f, 0f, ROD, 1f, 1f)
+            1 -> Box(0f, low, 0f, 1f, ROD, 1f)
+            else -> Box(0f, 0f, low, 1f, 1f, ROD)
+        })
+    }
+    private fun surfaces(b: Box) = run {
         val corners = Array(8) { i -> floatArrayOf(b.x + if (i and 1 == 0) 0f else b.width,
             b.y + if (i and 2 == 0) 0f else b.height, b.z + if (i and 4 == 0) 0f else b.depth) }
         normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
     }
+    private val shaftSurfaces = Array(3) { surfaces(shaftBoxes[it][0]) }
+    private val plateSurfaces = Array(3) { surfaces(plateBoxes[it][0]) }
 
-    /** The shape of any partial block, shafts included. */
-    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> =
-        if (def.shaft) shaftBoxes[shaftAxis(meta)] else boxes(meta, def.slab, def.blockHeight, mask)
-    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> =
-        if (def.shaft) shaftSurfaces[shaftAxis(meta)] else faces(meta, def.slab, def.blockHeight, mask)
+    /** The shape of any partial block, turning parts included. */
+    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> = when (def.kineticShape) {
+        com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftBoxes[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateBoxes[shaftAxis(meta)]
+        else -> boxes(meta, def.slab, def.blockHeight, mask)
+    }
+    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> = when (def.kineticShape) {
+        com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftSurfaces[shaftAxis(meta)]
+        com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateSurfaces[shaftAxis(meta)]
+        else -> faces(meta, def.slab, def.blockHeight, mask)
+    }
     fun intersect(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, x: Double, y: Double, z: Double,
                   dx: Double, dy: Double, dz: Double, reach: Double, mask: Int = -1): Hit? =
         intersectBoxes(boxes(def, meta, mask), x, y, z, dx, dy, dz, reach)

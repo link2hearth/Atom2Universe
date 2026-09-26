@@ -4,6 +4,8 @@ import org.json.JSONObject
 
 // Modes d'orientation — stockés dans Chunk.meta (bits 0-1)
 const val ORIENT_NONE: Byte   = 0  // non orientable
+const val KINETIC_ROD = 1
+const val KINETIC_PLATE = 2
 const val ORIENT_FACING: Byte = 1  // tourne horizontalement (N/S/E/W), toujours droit
 const val ORIENT_AXIS: Byte   = 2  // s'aligne sur un axe (X/Y/Z), peut se coucher
 
@@ -40,8 +42,9 @@ internal data class BlockDef(
     val slab: Boolean = false,
     val spriteWidth: Float = 1f,
     val blockHeight: Float = 1f,
-    /** Rotating shaft: a thin rod along its ORIENT_AXIS meta (see PartialBlockModel.shaftAxis). */
-    val shaft: Boolean = false,
+    /** Turning part drawn by KineticRenderer, oriented by its ORIENT_AXIS meta
+     * (see PartialBlockModel.shaftAxis): 0 = none, [KINETIC_ROD] (shaft, crank) or [KINETIC_PLATE] (cogwheels). */
+    val kineticShape: Int = 0,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
@@ -52,7 +55,8 @@ internal data class BlockDef(
     var layerSideSnow: Int = -1,
 ) {
     /** Not a full cube: collision, picking and meshing go through PartialBlockModel. */
-    val partial: Boolean get() = stairs || slab || blockHeight < 1f || shaft
+    val partial: Boolean get() = stairs || slab || blockHeight < 1f || kinetic
+    val kinetic: Boolean get() = kineticShape != 0
 
     companion object {
         fun fromJson(j: JSONObject): BlockDef {
@@ -96,7 +100,7 @@ internal data class BlockDef(
                 replaceable     = j.optBoolean("replaceable", false),
                 stairs          = j.optBoolean("stairs", false),
                 slab            = j.optBoolean("slab", false),
-                shaft           = j.optBoolean("shaft", false),
+                kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; else -> 0 },
             )
         }
     }

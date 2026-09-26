@@ -577,6 +577,17 @@
         <item>Froid</item>
         <item>Aride</item>
     </string-array>
+    <string-array name="cave_showcase_mechanics_names">
+        <item>Roue, axes et moulin</item>
+        <item>Manivelle et axe vertical</item>
+        <item>Engrenages côte à côte</item>
+        <item>Grand et petits engrenages : deux fois plus vite</item>
+        <item>Renvoi d’angle : un quart de tour</item>
+        <item>De l’horizontale à la verticale, comme dans un moulin à vent</item>
+        <item>Quatre machines sur deux roues</item>
+        <item>Trop pour une seule roue : à l’arrêt</item>
+        <item>Engrenages qui ne s’accordent pas : à l’arrêt</item>
+    </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>
         <item>Longère</item>
