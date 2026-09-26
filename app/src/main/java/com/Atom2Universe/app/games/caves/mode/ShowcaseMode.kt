@@ -18,10 +18,9 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
     @Volatile var onMobCaption: ((Enemy, ExhibitPose) -> Unit)? = null
     @Volatile var onTreeCaption: ((Int) -> Unit)? = null
     @Volatile var onColdCaption: ((Int) -> Unit)? = null
-    @Volatile var onVillageCaption: ((Int) -> Unit)? = null
+    @Volatile var onFrontierCaption: ((Int) -> Unit)? = null
+    @Volatile var onHouseCaption: ((Int) -> Unit)? = null
     @Volatile var onGardenCaption: ((Int, Int) -> Unit)? = null
-    @Volatile var onCaveCaption: ((Int) -> Unit)? = null
-    @Volatile var onDecorCaption: (() -> Unit)? = null
     val mannequins = mutableListOf<Enemy>()
     private val exhibits = ShowcaseMap.galleryBlocks()
     private var captionTimer = 0f
@@ -87,20 +86,16 @@ internal class ShowcaseMode(private val r: CaveRenderer, private val source: Map
         captionTimer = 0f
         val x = floor(r.camera.playerX - source.originX).toInt()
         val z = floor(r.camera.playerZ - source.originZ).toInt()
-        if (ShowcaseMap.decorContains(x, z)) {
-            onDecorCaption?.invoke()
+        ShowcaseMap.houseAt(x, z)?.let {
+            onHouseCaption?.invoke(it)
             return
         }
-        com.Atom2Universe.app.games.caves.world.CaveShowcase.biomeAt(x, z)?.let {
-            onCaveCaption?.invoke(it)
+        ShowcaseMap.frontierAt(x, z)?.let {
+            onFrontierCaption?.invoke(it)
             return
         }
         ShowcaseMap.gardenSample(x, z)?.let { (crop, stage) ->
             onGardenCaption?.invoke(crop, stage)
-            return
-        }
-        ShowcaseMap.villageAt(x, z)?.let {
-            onVillageCaption?.invoke(it)
             return
         }
         if (z >= ShowcaseMap.mobGalleryZ() - 2) {

@@ -129,7 +129,7 @@ data class VegetationEntry(val block: Short, val weight: Int)
  */
 data class HeightBlockEntry(val block: Short, val minHeight: Int, val thickness: Int = 1)
 
-/** Structure pouvant apparaître dans un biome, référencée par son nom dans StructureRegistry. */
+/** Structure pouvant apparaître dans un biome, référencée par son nom dans StructureData. */
 data class StructureEntry(val name: String, val weight: Int)
 
 data class CaveBiomeDef(

@@ -7,68 +7,53 @@ import kotlin.math.abs
 /** A finite, hand-composed material garden. Never used by the survival generator. */
 internal object ShowcaseMap {
     private const val ORIGINAL_WIDTH = 72
-    const val WIDTH = 232
-    fun villageAt(x: Int, z: Int): Int? =
-        if (x in 76..227 && z in 4..51) ((x - 76) / 52).takeIf { (x - 76) % 52 < 48 } else null
+    const val WIDTH = 204
     const val HEIGHT = 40
     const val FLOOR = 4
     const val TREE_Z = 50
     const val COLD_Z = 158
     const val GALLERY_Z = 212
-    fun decorContains(x: Int, z: Int) = x in 76..151 && z in 116..145
 
-    private fun furniture() = listOf(
-        CaveDecor("cave.desk", 92f, 5f, 124f, .1f),
-        CaveDecor("office.computer", 91.7f, 6.1f, 124f, .065f),
-        CaveDecor("office.pc_tower", 92.7f, 6.1f, 124f, .065f),
-        CaveDecor("living.dining_chair", 91.5f, 5f, 126f, .105f, 2),
-        CaveDecor("living.sofa", 92f, 5f, 135f, .14f),
-        CaveDecor("living.armchair", 95f, 5f, 137f, .14f, 3),
-        CaveDecor("living.coffee_table", 92f, 5f, 137f, .1f),
-        CaveDecor("garage.storage_rack", 133f, 5f, 138f, .12f),
-        CaveDecor("outdoor.family_car", 133f, 5f, 125f, .22f),
+    // Version 5 landmarks, as the survival generator builds them, on flat ground.
+    // One row per climate (temperate, cold, arid): the hamlet on the left, the five small sites on the right.
+    private const val FRONTIER_Z = 116
+    private const val FRONTIER_END_Z = 355
+    private const val FRONTIER_AISLE_X = 124
+    fun frontierContains(x: Int, z: Int) = x in 76 until WIDTH && z in FRONTIER_Z..FRONTIER_END_Z
+    // First the six house models, one short row per climate, then the settlements.
+    private const val HOUSES_Z = FRONTIER_Z + 4
+    private const val HOUSE_ROW = 18
+    private const val SETTLEMENTS_Z = HOUSES_Z + 3 * HOUSE_ROW + 2
+    private val houseX = intArrayOf(79, 94, 109, 130, 145, 160)
+    private fun houseOrigin(climate: Int, model: Int) = houseX[model] to HOUSES_Z + 3 + climate * HOUSE_ROW
+    private fun frontierRowZ(climate: Int) = SETTLEMENTS_Z + climate * 60
+    private fun frontierClimate(z: Int) =
+        (if (z < SETTLEMENTS_Z) (z - HOUSES_Z) / HOUSE_ROW else (z - SETTLEMENTS_Z) / 60).coerceIn(0, 2)
 
-        // Kitchen: small appliances sit exactly on the counter (9.6 model units high).
-        CaveDecor("kitchen.fridge", 80f, 5f, 119f, .11f),
-        CaveDecor("kitchen.oven", 81.5f, 5f, 119f, .11f),
-        CaveDecor("kitchen.sink", 83f, 5f, 119f, .11f),
-        CaveDecor("kitchen.counter", 84.6f, 5f, 119f, .11f),
-        CaveDecor("kitchen.toaster", 84.3f, 6.056f, 119f, .075f),
-        CaveDecor("kitchen.kettle", 85f, 6.056f, 119f, .075f),
-        CaveDecor("living.dining_table", 82.5f, 5f, 123f, .1f),
-        CaveDecor("living.dining_chair", 82.5f, 5f, 121.7f, .105f),
-        CaveDecor("living.dining_chair", 82.5f, 5f, 124.3f, .105f, 2),
+    /** Index climate * models + model of the house under (x, z), eaves and porch included. */
+    fun houseAt(x: Int, z: Int): Int? {
+        if (!frontierContains(x, z) || z >= SETTLEMENTS_Z) return null
+        for (climate in 0..2) for ((model, m) in FrontierHouses.models.withIndex()) {
+            val (ox, oz) = houseOrigin(climate, model)
+            if (x in ox - 1..ox + m.width && z in oz - 1..oz + m.depth) return climate * FrontierHouses.models.size + model
+        }
+        return null
+    }
+    private fun frontierOrigin(climate: Int, kind: Int): Pair<Int, Int> =
+        if (kind == 0) 80 to frontierRowZ(climate) + 6
+        else (129 + (kind - 1) % 3 * 25) to frontierRowZ(climate) + 6 + (kind - 1) / 3 * 30
 
-        // Complete the existing lounge: screen faces the sofa; books rest on the coffee table.
-        CaveDecor("living.tv_cabinet", 92f, 5f, 140f, .12f, 2),
-        CaveDecor("living.floor_lamp", 89.8f, 5f, 135f, .12f),
-        CaveDecor("living.books", 91.8f, 5.4795f, 137f, .065f),
-        CaveDecor("living.plant", 95f, 5f, 140f, .13f),
+    /** Index climate * KINDS + kind of the landmark under (x, z), entrance stair included. */
+    fun frontierAt(x: Int, z: Int): Int? {
+        if (!frontierContains(x, z)) return null
+        for (climate in 0..2) for (kind in 0 until FrontierLandscape.KINDS) {
+            val (ox, oz) = frontierOrigin(climate, kind)
+            val size = FrontierLandscape.size(kind)
+            if (x in ox - 1..ox + size && z in oz - 5..oz + size) return climate * FrontierLandscape.KINDS + kind
+        }
+        return null
+    }
 
-        // Workshop and roadside props, leaving room to circle the original car.
-        CaveDecor("garage.workbench", 138f, 5f, 138f, .11f),
-        CaveDecor("garage.tool_chest", 140.5f, 5f, 138f, .11f),
-        CaveDecor("garage.toolbox", 137.5f, 6.1f, 138.1f, .075f),
-        CaveDecor("garage.tires", 138f, 5f, 133f, .13f),
-        CaveDecor("garage.crate", 140f, 5.013f, 133f, .13f),
-        CaveDecor("garage.cone", 131.5f, 5f, 129f, .13f),
-        CaveDecor("garage.cone", 134.5f, 5f, 129f, .13f),
-
-        // A small outdoor rest area near the central promenade.
-        CaveDecor("outdoor.bench", 105f, 5f, 139f, .13f, 2),
-        CaveDecor("outdoor.planter", 102.8f, 5f, 139f, .13f),
-        CaveDecor("outdoor.mailbox", 108f, 5f, 139f, .11f, 2),
-        CaveDecor("outdoor.hedge", 105f, 5f, 141f, .13f),
-
-        // Open bedroom beside the central aisle. Bedside tops are 5.7 model units high.
-        CaveDecor("bedroom.double_bed", 104f, 5f, 124f, .12f),
-        CaveDecor("bedroom.nightstand", 102.4f, 5f, 122.9f, .12f),
-        CaveDecor("bedroom.nightstand", 105.6f, 5f, 122.9f, .12f),
-        CaveDecor("bedroom.table_lamp", 102.4f, 5.684f, 122.9f, .1f),
-        CaveDecor("living.books", 105.6f, 5.684f, 122.9f, .06f),
-        CaveDecor("bedroom.wardrobe", 108f, 5f, 120f, .12f, 3),
-        CaveDecor("office.dresser", 108f, 5f, 128f, .12f, 3)
-    )
     fun gardenContains(x: Int, z: Int) = x in 76..151 && z in 56..113
     fun gardenSample(x: Int, z: Int): Pair<Int, Int>? {
         if (!gardenContains(x, z)) return null
@@ -108,7 +93,7 @@ internal object ShowcaseMap {
     }
 
     fun climateAt(x: Int, z: Int): Int {
-        villageAt(x, z)?.let { return when (it) { 0 -> 4; 1 -> 1; else -> 0 } }
+        if (frontierContains(x, z)) return when (frontierClimate(z)) { 1 -> 4; 2 -> 1; else -> 0 }
         if (coldAt(x, z) != null) return 4
         // Adjacent grass samples on the avenue make the narrow color transition inspectable.
         if (z in 44..46 && x in 4..19) return if (x < 12) 0 else 3
@@ -123,7 +108,7 @@ internal object ShowcaseMap {
 
     fun create(): A2Map {
         val exhibits = galleryBlocks()
-        val depth = mobGalleryZ() + ((mobBayCount()+2)/3)*10 + 4
+        val depth = maxOf(mobGalleryZ() + ((mobBayCount()+2)/3)*10 + 4, FRONTIER_END_Z + 2)
         require(WIDTH.toLong() * HEIGHT * depth <= A2Map.MAX_VOLUME)
         val blocks = ShortArray(WIDTH * HEIGHT * depth)
         val meta = ByteArray(blocks.size)
@@ -137,19 +122,14 @@ internal object ShowcaseMap {
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
             // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !decorContains(x, z) && !CaveShowcase.contains(x, z)) continue
+            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !frontierContains(x, z)) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
                 (x == ORIGINAL_WIDTH - 1 && z > 55) ||
-                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149 && x !in 184..191))
+                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
-        // Right-hand wing, reached from the village promenade through an eight-block gate.
-        for (z in 52..154) for (x in 184..191) put(x, FLOOR, z, COBBLESTONE)
-        for (z in 56..155) put(156, FLOOR + 1, z, COBBLESTONE)
-        for (x in 156..231) put(x, FLOOR + 1, 155, COBBLESTONE)
-        CaveShowcase.build { x, y, z, id -> put(x, y, z, id) }
         // Two banks of ten/nine species. Five fixed growth snapshots along each bed.
         // Open paths let the player compare front, side and overhead views of crossed sprites.
         for (crop in FarmShowcasePlants.crops.indices) {
@@ -174,27 +154,34 @@ internal object ShowcaseMap {
         fill(76, FLOOR + 1, 113, 151, FLOOR + 1, 113, COBBLESTONE)
         fill(111, FLOOR, 52, 116, FLOOR, 112, COBBLESTONE)
         fill(98, FLOOR, 52, 116, FLOOR, 54, COBBLESTONE)
-        // Furniture court behind the crop garden; connect through its central gate.
+        // Frontier landmarks behind the crop garden, reached through its central gate.
         fill(111, FLOOR + 1, 113, 116, FLOOR + 1, 113, AIR)
-        fill(111, FLOOR, 113, 116, FLOOR, 144, COBBLESTONE)
-        for (x in 76..151) put(x, FLOOR + 1, 145, COBBLESTONE)
-        for (z in 116..145) {
-            put(76, FLOOR + 1, z, COBBLESTONE)
-            put(151, FLOOR + 1, z, COBBLESTONE)
+        fill(111, FLOOR, 113, 116, FLOOR, 118, COBBLESTONE)
+        fill(111, FLOOR, 116, FRONTIER_AISLE_X + 3, FLOOR, 118, COBBLESTONE)
+        for (x in 76 until WIDTH) {
+            if (x !in 111..116) put(x, FLOOR + 1, FRONTIER_Z, COBBLESTONE)
+            put(x, FLOOR + 1, FRONTIER_END_Z, COBBLESTONE)
         }
-        for (z in intArrayOf(124, 136)) {
-            fill(84, FLOOR, z - 4, 101, FLOOR, z + 4, 2202)
-            fill(125, FLOOR, z - 4, 141, FLOOR, z + 4, 2202)
-            fill(102, FLOOR, z, 124, FLOOR, z + 1, COBBLESTONE)
+        for (z in FRONTIER_Z..FRONTIER_END_Z) put(76, FLOOR + 1, z, COBBLESTONE)
+        for (climate in 0..2) {
+            fill(77, FLOOR, HOUSES_Z + climate * HOUSE_ROW, WIDTH - 2, FLOOR, HOUSES_Z + climate * HOUSE_ROW + HOUSE_ROW - 1,
+                when (climate) { 1 -> DIRT_SNOW; 2 -> SAND; else -> GRASS })
+            val z0 = frontierRowZ(climate) - 2
+            fill(77, FLOOR, z0, WIDTH - 2, FLOOR, minOf(frontierRowZ(climate) + 57, FRONTIER_END_Z - 1),
+                when (climate) { 1 -> DIRT_SNOW; 2 -> SAND; else -> GRASS })
         }
-        // Two walls and a wooden floor frame the bedroom, open towards the promenade.
-        fill(100, FLOOR, 118, 110, FLOOR, 131, PLANK)
-        fill(100, FLOOR + 1, 118, 100, FLOOR + 3, 131, WOOD_PLANK_WHITE)
-        fill(100, FLOOR + 1, 118, 110, FLOOR + 3, 118, WOOD_PLANK_WHITE)
-        for ((index, style) in VillageArchitecture.Style.entries.withIndex()) {
-            VillageArchitecture.generate(style, 260914 + index, listOf(3, 5, 6)[index]) { x, y, z, id ->
-                put(76 + index * 52 + x, FLOOR + y, 4 + z, id)
+        fill(FRONTIER_AISLE_X, FLOOR, FRONTIER_Z + 1, FRONTIER_AISLE_X + 3, FLOOR, FRONTIER_END_Z - 1, COBBLESTONE)
+        for (climate in 0..2) for (model in FrontierHouses.models.indices) {
+            val (ox, oz) = houseOrigin(climate, model)
+            FrontierHouses.build(model, FrontierHouses.style(arid = climate == 2, cold = climate == 1)) { x, y, z, id ->
+                put(ox + x, FLOOR + y, oz + z, id)
             }
+        }
+        for (climate in 0..2) for (kind in 0 until FrontierLandscape.KINDS) {
+            val (ox, oz) = frontierOrigin(climate, kind)
+            val blueprint = FrontierLandscape.blueprint(kind, arid = climate == 2, cold = climate == 1,
+                kotlin.random.Random(7300 + kind)) { _, _ -> 0 }
+            for ((pos, id) in blueprint) put(ox + pos.first, FLOOR + pos.second, oz + pos.third, id)
         }
         fill(65, FLOOR, 5, WIDTH - 2, FLOOR, 7, COBBLESTONE)
         val tops = IntArray(WIDTH * depth) { FLOOR }
@@ -307,6 +294,6 @@ internal object ShowcaseMap {
             fill(centerX - 8, FLOOR, centerZ - 2, centerX + 8, FLOOR, centerZ + 2, SANDSTONE)
         }
         return A2Map("biome_showcase", WIDTH, HEIGHT, depth, blocks, meta,
-            listOf(MapPoint(113, 5, 119)), emptyList(), furniture())
+            listOf(MapPoint(FRONTIER_AISLE_X + 2, FLOOR + 1, FRONTIER_Z + 2)), emptyList(), emptyList())
     }
 }

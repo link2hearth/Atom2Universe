@@ -320,12 +320,11 @@ internal class CaveHud(private val activity: CaveActivity) {
     }
 
 
-    // ── Panneau capture de structure (mode créatif uniquement) ────────────────
+    // ── Panneau zone A–B → carte Assaut (mode créatif uniquement) ────────────────
 
     private var btnStructA: Button? = null
     private var btnStructB: Button? = null
     private var tvStructDims: android.widget.TextView? = null
-    private var btnStructSave: Button? = null
     private var structPanel: LinearLayout? = null
     private var structPanelExpanded = false
     private var btnStructMap: android.widget.Button? = null
@@ -385,13 +384,7 @@ internal class CaveHud(private val activity: CaveActivity) {
         tvStructDims = tvDims
         row.addView(tvDims)
 
-        val bSave = mkBtn("💾").also {
-            it.setBackgroundColor(0x880044FF.toInt()); it.visibility = View.GONE
-        }
-        btnStructSave = bSave
-        row.addView(bSave)
-
-        // Même zone, mais exportée en carte du mode Assaut.
+        // La zone A–B s'exporte en carte du mode Assaut.
         val bMap = mkBtn("🗺").also {
             it.setBackgroundColor(0x88FF8C00.toInt()); it.visibility = View.GONE
         }
@@ -402,7 +395,6 @@ internal class CaveHud(private val activity: CaveActivity) {
 
         bA.setOnClickListener { onCornerAPressed() }
         bB.setOnClickListener { onCornerBPressed() }
-        bSave.setOnClickListener { onSaveStructurePressed() }
         bMap.setOnClickListener { onExportMapPressed() }
     }
 
@@ -438,58 +430,11 @@ internal class CaveHud(private val activity: CaveActivity) {
             val sz = kotlin.math.abs(a.third  - b.third)  + 1
             tvStructDims?.text = "${sx}×${sy}×${sz}"
             tvStructDims?.visibility = View.VISIBLE
-            btnStructSave?.visibility = View.VISIBLE
             btnStructMap?.visibility = View.VISIBLE
         } else {
             tvStructDims?.visibility = View.GONE
-            btnStructSave?.visibility = View.GONE
             btnStructMap?.visibility = View.GONE
         }
-    }
-
-    private fun onSaveStructurePressed() {
-        val a = activity.renderer.structCornerA ?: return
-        val b = activity.renderer.structCornerB ?: return
-
-        if (!com.Atom2Universe.app.games.caves.world.StructureCapture.hasStorageAccess()) {
-            android.app.AlertDialog.Builder(activity)
-                .setTitle("Accès stockage requis")
-                .setMessage("Autorisez l'accès à tous les fichiers pour écrire dans Documents/cave_world/.")
-                .setPositiveButton("Ouvrir Paramètres") { _, _ ->
-                    com.Atom2Universe.app.games.caves.world.StructureCapture.openStorageSettings(activity)
-                }
-                .setNegativeButton("Annuler", null)
-                .show()
-            return
-        }
-
-        val input = android.widget.EditText(activity).apply {
-            hint = "nom_de_structure"; setSingleLine(true)
-            setText("structure_${System.currentTimeMillis() / 1000}")
-        }
-        android.app.AlertDialog.Builder(activity)
-            .setTitle("💾 Sauvegarder la structure")
-            .setMessage("→ Documents/cave_world/structures/")
-            .setView(input)
-            .setPositiveButton("Sauvegarder") { _, _ ->
-                val name = input.text.toString().trim().ifEmpty { "structure" }
-                activity.lifecycleScope.launch(Dispatchers.IO) {
-                    val def = com.Atom2Universe.app.games.caves.world.StructureCapture.capture(
-                        activity.renderer.world, name, a, b)
-                    val file = com.Atom2Universe.app.games.caves.world.StructureCapture.save(def)
-                    com.Atom2Universe.app.games.caves.world.StructureRegistry.addUserStructure(def)
-                    withContext(Dispatchers.Main) {
-                        android.widget.Toast.makeText(activity,
-                            "✓ ${file.name}\nDocuments/cave_world/structures/",
-                            android.widget.Toast.LENGTH_LONG).show()
-                        activity.renderer.structCornerA = null
-                        activity.renderer.structCornerB = null
-                        refreshStructureButtons()
-                    }
-                }
-            }
-            .setNegativeButton("Annuler", null)
-            .show()
     }
 
     // ── Mode Assaut : manche, chrono, score ───────────────────────────────────
@@ -592,12 +537,12 @@ internal class CaveHud(private val activity: CaveActivity) {
         val a = activity.renderer.structCornerA ?: return
         val b = activity.renderer.structCornerB ?: return
 
-        if (!com.Atom2Universe.app.games.caves.world.StructureCapture.hasStorageAccess()) {
+        if (!com.Atom2Universe.app.games.caves.world.A2MapStorage.hasStorageAccess()) {
             android.app.AlertDialog.Builder(activity)
                 .setTitle(com.Atom2Universe.app.R.string.cave_storage_access_title)
                 .setMessage(com.Atom2Universe.app.R.string.cave_storage_access_message)
                 .setPositiveButton(com.Atom2Universe.app.R.string.cave_storage_open_settings) { _, _ ->
-                    com.Atom2Universe.app.games.caves.world.StructureCapture.openStorageSettings(activity)
+                    com.Atom2Universe.app.games.caves.world.A2MapStorage.openStorageSettings(activity)
                 }
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()

@@ -564,11 +564,28 @@
     <string name="cave_block_basalt">Basalt</string>
     <string name="cave_assault_showcase">Biome workshop · free visit</string>
     <string name="cave_showcase_hint">Garden behind the villages: 19 My Farm crops, five stages each. Landscapes and galleries further ahead.</string>
-    <string-array name="cave_showcase_village_names">
-        <item>Nordic hamlet · cottage, workshop and courtyard home · guardian statue</item>
-        <item>Oasis village · 5 varied sandstone buildings · pyramid with inner chamber</item>
-        <item>Stone borough · 6 buildings including shop and tower house · great temple</item>
+    <string-array name="cave_showcase_frontier_names">
+        <item>Hamlet · four homes</item>
+        <item>Survey camp</item>
+        <item>Archive ruins</item>
+        <item>Resonance garden</item>
+        <item>Kitchen garden</item>
+        <item>Prospector workshop</item>
     </string-array>
+    <string-array name="cave_showcase_frontier_climates">
+        <item>Temperate</item>
+        <item>Cold</item>
+        <item>Arid</item>
+    </string-array>
+    <string-array name="cave_showcase_house_names">
+        <item>Cottage</item>
+        <item>Longhouse</item>
+        <item>L-shaped house</item>
+        <item>Townhouse</item>
+        <item>Tower</item>
+        <item>Porch house</item>
+    </string-array>
+    <string name="cave_showcase_frontier_caption">%1$s · %2$s</string>
     <string-array name="cave_showcase_mob_names">
         <item>Dwarf</item><item>Goblin</item><item>Golem</item><item>Imp</item><item>Mummy</item><item>Ogre</item>
         <item>Skeleton</item><item>Slime</item><item>Spider</item><item>Troll</item><item>Wraith</item><item>Zombie</item><item>Assault soldier</item>
@@ -716,18 +733,9 @@
     <string name="cave_block_cave_calcite">Calcite formation</string>
     <string name="cave_block_cave_crystal">Decorative cave crystal</string>
     <string name="cave_loading_terrain">Preparing the surrounding terrain…</string>
-    <string-array name="cave_showcase_underground_names">
-        <item>Calcite cave · amber sun</item>
-        <item>Root cave · green fronds</item>
-        <item>Fungal cave · violet eye</item>
-        <item>Crystal cave · cyan star</item>
-        <item>Frozen cave · blue snowflake</item>
-        <item>Basalt cave · orange ember</item>
-    </string-array>
     <string name="cave_palette_grayscale">Black and white</string>
     <string name="cave_palette_change">Theme: %1$s. Tap to change.</string>
     <string name="cave_controls_reload">Reload</string>
-    <string name="cave_showcase_decor">3D decor — Bedroom, kitchen, lounge, office, workshop and garden. Walk around them and try their collisions.</string>
     <string name="cave_assault_maple_crossing">Maple Crossing — suburban crossroads</string>
     <string name="cave_block_street_asphalt">Asphalt</string>
     <string name="cave_block_street_concrete">Concrete</string>

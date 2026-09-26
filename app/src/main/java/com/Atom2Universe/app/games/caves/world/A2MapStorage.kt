@@ -1,7 +1,11 @@
 package com.Atom2Universe.app.games.caves.world
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.Settings
 import java.io.File
 
 /**
@@ -21,6 +25,21 @@ internal object A2MapStorage {
      */
     data class Entry(val name: String, val path: String)
 
+    /** True si l'app a accès en écriture au stockage externe public. */
+    fun hasStorageAccess(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            Environment.isExternalStorageManager()
+        else
+            Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+
+    /** Ouvre les paramètres système pour accorder MANAGE_EXTERNAL_STORAGE (Android 11+). */
+    fun openStorageSettings(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            context.startActivity(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                Uri.fromParts("package", context.packageName, null)))
+        }
+    }
+
     fun userMapsDir(): File =
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
             .resolve("cave_world/maps")
@@ -30,7 +49,7 @@ internal object A2MapStorage {
         val bundled = (context.assets.list(ASSET_DIR) ?: emptyArray())
             .filter { it.endsWith(ext) }
             .map { Entry(it.removeSuffix(ext), "$ASSET_PREFIX$ASSET_DIR/$it") }
-        val user = if (StructureCapture.hasStorageAccess()) {
+        val user = if (hasStorageAccess()) {
             userMapsDir().listFiles { f -> f.isFile && f.name.endsWith(ext) }
                 ?.map { Entry(it.name.removeSuffix(ext), it.absolutePath) }
                 .orEmpty()

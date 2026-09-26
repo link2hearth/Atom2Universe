@@ -476,9 +476,6 @@ class CaveActivity : ThemedActivity() {
                 }
             }
             root.addView(btnStruct)
-            lifecycleScope.launch(Dispatchers.IO) {
-                StructureRegistry.loadUserStructures()
-            }
         }
 
         applyModeUi(if (isCreative) PlayerMode.SPECTATOR else PlayerMode.WALK, btnMode, btnUp as Button, btnDown, btnLaser)
@@ -510,18 +507,22 @@ class CaveActivity : ThemedActivity() {
                         else getString(names[zone])
                 } }
                 val coldNames = resources.getStringArray(R.array.cave_showcase_cold_names)
-                val caveNames = resources.getStringArray(R.array.cave_showcase_underground_names)
-                mode.onCaveCaption = { index -> uiHandler.post { caption.text = caveNames[index] } }
-                mode.onDecorCaption = { uiHandler.post { caption.setText(R.string.cave_showcase_decor) } }
                 val gardenStages = resources.getStringArray(R.array.cave_showcase_garden_stages)
                 mode.onGardenCaption = { crop, stage -> uiHandler.post {
                     caption.text = getString(R.string.cave_showcase_garden_caption,
                         getString(com.Atom2Universe.app.games.caves.node.FarmShowcasePlants.crops[crop].label),
                         gardenStages[stage])
                 } }
-                val villageNames = resources.getStringArray(R.array.cave_showcase_village_names)
-                mode.onVillageCaption = { index -> uiHandler.post {
-                    caption.text = villageNames[index]
+                val frontierNames = resources.getStringArray(R.array.cave_showcase_frontier_names)
+                val frontierClimates = resources.getStringArray(R.array.cave_showcase_frontier_climates)
+                mode.onFrontierCaption = { index -> uiHandler.post {
+                    caption.text = getString(R.string.cave_showcase_frontier_caption,
+                        frontierNames[index % frontierNames.size], frontierClimates[index / frontierNames.size])
+                } }
+                val houseNames = resources.getStringArray(R.array.cave_showcase_house_names)
+                mode.onHouseCaption = { index -> uiHandler.post {
+                    caption.text = getString(R.string.cave_showcase_frontier_caption,
+                        houseNames[index % houseNames.size], frontierClimates[index / houseNames.size])
                 } }
                 mode.onColdCaption = { index -> uiHandler.post {
                     caption.text = coldNames[index]

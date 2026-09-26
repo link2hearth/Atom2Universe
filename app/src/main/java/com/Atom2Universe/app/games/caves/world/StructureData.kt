@@ -320,4 +320,6 @@ object StructureData {
     )
 
     val all: List<StructureDef> = listOf(HOUSE_WOOD, RUINS_STONE)
+
+    fun byName(name: String): StructureDef? = all.firstOrNull { it.name == name }
 }
