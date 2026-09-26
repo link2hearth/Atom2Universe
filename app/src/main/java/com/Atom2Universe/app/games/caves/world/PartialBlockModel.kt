@@ -75,6 +75,34 @@ internal object PartialBlockModel {
             normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
         }
 
+    // Shafts: a 6/16 rod through the whole block. Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z.
+    /** Axis index of a shaft: 0 = X, 1 = Y, 2 = Z. */
+    fun shaftAxis(meta: Byte) = when (meta.toInt() and 3) { 1 -> 0; 2 -> 2; else -> 1 }
+    private const val ROD = 6f / 16f
+    private val shaftBoxes = Array(3) { axis ->
+        val low = (1f - ROD) / 2f
+        listOf(when (axis) {
+            0 -> Box(0f, low, low, 1f, ROD, ROD)
+            1 -> Box(low, 0f, low, ROD, 1f, ROD)
+            else -> Box(low, low, 0f, ROD, ROD, 1f)
+        })
+    }
+    private val shaftSurfaces = Array(3) { axis ->
+        val b = shaftBoxes[axis][0]
+        val corners = Array(8) { i -> floatArrayOf(b.x + if (i and 1 == 0) 0f else b.width,
+            b.y + if (i and 2 == 0) 0f else b.height, b.z + if (i and 4 == 0) 0f else b.depth) }
+        normals.indices.map { f -> Face(f, TorchModel.faces[f].map { corners[it] }.toTypedArray()) }
+    }
+
+    /** The shape of any partial block, shafts included. */
+    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> =
+        if (def.shaft) shaftBoxes[shaftAxis(meta)] else boxes(meta, def.slab, def.blockHeight, mask)
+    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> =
+        if (def.shaft) shaftSurfaces[shaftAxis(meta)] else faces(meta, def.slab, def.blockHeight, mask)
+    fun intersect(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, x: Double, y: Double, z: Double,
+                  dx: Double, dy: Double, dz: Double, reach: Double, mask: Int = -1): Hit? =
+        intersectBoxes(boxes(def, meta, mask), x, y, z, dx, dy, dz, reach)
+
     /** Does a boundary expose any empty area? Also works with recessed soil heights. */
     fun hasOpenBoundary(cells: List<Box>, face: Int): Boolean {
         val covered = cells.sumOf { b ->
@@ -91,10 +119,14 @@ internal object PartialBlockModel {
     }
 
     fun intersect(meta: Byte, x: Double, y: Double, z: Double,
-        dx: Double, dy: Double, dz: Double, reach: Double, slab: Boolean = false, height: Float = 1f, mask: Int = -1): Hit? {
+        dx: Double, dy: Double, dz: Double, reach: Double, slab: Boolean = false, height: Float = 1f, mask: Int = -1): Hit? =
+        intersectBoxes(boxes(meta, slab, height, mask), x, y, z, dx, dy, dz, reach)
+
+    private fun intersectBoxes(cells: List<Box>, x: Double, y: Double, z: Double,
+        dx: Double, dy: Double, dz: Double, reach: Double): Hit? {
         var best: Hit? = null
         val origin = doubleArrayOf(x,y,z); val dir = doubleArrayOf(dx,dy,dz)
-        for (b in boxes(meta, slab, height, mask)) {
+        for (b in cells) {
             val low = floatArrayOf(b.x,b.y,b.z)
             val size = floatArrayOf(b.width, b.height, b.depth)
             var near = Double.NEGATIVE_INFINITY; var far = reach; var axis = 0; var sign = 0

@@ -26,6 +26,11 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private var feedTimer=0f
     private val running=hashSetOf<Pos>()
     private val rotorDef=FrontierModels.definition("workshop_rotor","machine",.48f)
+    /** A shaft drawn by KineticRenderer: axis 0 = X, 1 = Y, 2 = Z; angle in radians; light 0..1. */
+    class Kinetic(val pos: Pos) { var axis=1; var angle=0f; var powered=false; var light=1f }
+    private val knownShafts=linkedMapOf<Pos,Kinetic>()
+    /** Shafts near the player, refreshed once per second; angles advance every frame. */
+    val kinetics=ArrayList<Kinetic>()
     data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false) {
         val key: String = "$machine/" + input.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" } +
             "/" + output.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" }
@@ -69,24 +74,36 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun discover(p: Pos,id: Short) {
         if(id==F.HOPPER) hoppers.add(p)
         if(F.isContainer(id) && id!=F.CHEST && id!=F.CACHE) store(p)
-        if(id in setOf(F.MILL,F.WATERWHEEL,F.SHAFT,F.PRESS,F.CRUSHER,F.LOOM)) {
+        if(id==F.SHAFT) knownShafts.getOrPut(p) { Kinetic(p) }
+        if(id in setOf(F.MILL,F.WATERWHEEL,F.PRESS,F.CRUSHER,F.LOOM)) {
             knownMachines.getOrPut(p) { Enemy(knownMachines.size,rotorDef,p.x+.5,p.y+.02,p.z+1.025).apply { resting=true } }
         }
     }
-    @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double) {
+    @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double,light: (Int,Int,Int)->Float) {
         visualTimer-=dt
         if(visualTimer<=0f) {
-            visualTimer=1f;machinery.clear();running.clear()
+            visualTimer=1f;machinery.clear();running.clear();kinetics.clear()
+            val shafts=knownShafts.iterator()
+            while(shafts.hasNext()) {
+                val k=shafts.next().value;val p=k.pos
+                if(!loaded(p) || block(p)!=F.SHAFT) { shafts.remove();continue }
+                if(abs(p.y-y)>32 || (p.x-x).pow(2)+(p.z-z).pow(2)>48.0.pow(2) || kinetics.size>=MAX_KINETICS) continue
+                k.axis=PartialBlockModel.shaftAxis(world.metaAt(p.x,p.y,p.z))
+                k.powered=powered(p);k.light=light(p.x,p.y,p.z)
+                kinetics.add(k)
+            }
             val iterator=knownMachines.iterator()
             while(iterator.hasNext()) {
                 val (p,e)=iterator.next()
-                if(!loaded(p) || block(p) !in setOf(F.MILL,F.WATERWHEEL,F.SHAFT,F.PRESS,F.CRUSHER,F.LOOM)) { iterator.remove();continue }
+                if(!loaded(p) || block(p) !in setOf(F.MILL,F.WATERWHEEL,F.PRESS,F.CRUSHER,F.LOOM)) { iterator.remove();continue }
                 if(abs(p.y-y)>24 || (p.x-x).pow(2)+(p.z-z).pow(2)>32.0.pow(2) || machinery.size>=48) continue
                 machinery.add(e)
                 if(powered(p)) running.add(p)
             }
         }
         for(p in running) knownMachines[p]?.let { it.animTime=(it.animTime+dt)%3141.59f }
+        // Angle advances with time, never by a fixed step per frame: smooth at 60 and 120 Hz.
+        for(k in kinetics) if(k.powered) k.angle=(k.angle+SHAFT_SPEED*dt)%(2f*PI.toFloat())
     }
     @Synchronized fun feedAnimals(animals: com.Atom2Universe.app.games.caves.entity.PassiveAnimals,dt: Float) {
         feedTimer+=dt
@@ -125,7 +142,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         } }
     }
     @Synchronized fun placed(p: Pos, id: Short) {
-        stores.remove(p); hoppers.remove(p); knownMachines.remove(p)
+        stores.remove(p); hoppers.remove(p); knownMachines.remove(p); knownShafts.remove(p)
         if(F.isContainer(id)) stores[p]=Store() // player-placed caches never roll loot
         if(id == F.HOPPER) hoppers.add(p)
         discover(p,id)
@@ -172,7 +189,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         return true
     }
     @Synchronized fun breakBlock(p: Pos): Map<Short,Int> {
-        hoppers.remove(p); knownMachines.remove(p)
+        hoppers.remove(p); knownMachines.remove(p); knownShafts.remove(p)
         if(F.isContainer(block(p))) store(p)
         return stores.remove(p)?.items?.toMap().orEmpty()
     }
@@ -277,5 +294,10 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         }
         val hs=root.optJSONArray("hoppers") ?: return
         for(i in 0 until hs.length()) runCatching { val a=hs.getJSONArray(i); hoppers.add(Pos(a.getInt(0),a.getInt(1),a.getInt(2))) }
+    }
+    companion object {
+        const val MAX_KINETICS=512
+        /** Radians per second: half a turn per second until the network carries real speeds. */
+        const val SHAFT_SPEED=PI.toFloat()
     }
 }

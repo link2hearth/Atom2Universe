@@ -40,6 +40,8 @@ internal data class BlockDef(
     val slab: Boolean = false,
     val spriteWidth: Float = 1f,
     val blockHeight: Float = 1f,
+    /** Rotating shaft: a thin rod along its ORIENT_AXIS meta (see PartialBlockModel.shaftAxis). */
+    val shaft: Boolean = false,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
@@ -49,6 +51,9 @@ internal data class BlockDef(
     var layerSideSand: Int = -1,
     var layerSideSnow: Int = -1,
 ) {
+    /** Not a full cube: collision, picking and meshing go through PartialBlockModel. */
+    val partial: Boolean get() = stairs || slab || blockHeight < 1f || shaft
+
     companion object {
         fun fromJson(j: JSONObject): BlockDef {
             val colorStr = j.optString("color", "#444444").trimStart('#')
@@ -91,6 +96,7 @@ internal data class BlockDef(
                 replaceable     = j.optBoolean("replaceable", false),
                 stairs          = j.optBoolean("stairs", false),
                 slab            = j.optBoolean("slab", false),
+                shaft           = j.optBoolean("shaft", false),
             )
         }
     }

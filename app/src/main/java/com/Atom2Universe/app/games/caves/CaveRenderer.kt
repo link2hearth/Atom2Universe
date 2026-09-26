@@ -119,6 +119,7 @@ internal class CaveRenderer(
     private val meshes = ConcurrentHashMap<Long, SolidChunkMesh>()
     private val decorSource = worldSource as? MapSource
     private val decorRenderer = decorSource?.let { com.Atom2Universe.app.games.caves.render.CaveDecorRenderer(it) }
+    private val kineticRenderer = com.Atom2Universe.app.games.caves.render.KineticRenderer()
     private val uploadQueue = ConcurrentLinkedQueue<LitMeshUpload>()
 
     private val lodMeshes      = ConcurrentHashMap<Long, ChunkMesh>()
@@ -876,6 +877,7 @@ internal class CaveRenderer(
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets)
         decorRenderer?.onSurfaceCreated()
+        kineticRenderer.onSurfaceCreated()
         projRenderer.onSurfaceCreated(context.assets)
 
         playerNode.onHpChanged     = { hp, max -> playerHpCallback?.invoke(hp, max) }
@@ -1611,12 +1613,13 @@ internal class CaveRenderer(
             if (!gamePaused) {
                 passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ,hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0)>0 })
                 residents.update(dt,camera.playerX,camera.playerY,camera.playerZ,ambientFor(dayT)<.4f)
-                workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ)
+                workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
                 updateAnimalAudio(dt)
             }
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             enemyRenderer.render(workshops.machinery,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
+            kineticRenderer.draw(workshops.kinetics,camera,caveBlend,caveFogEnd)
         }
         enemyRenderer.render(
             enemyManager.enemies,
@@ -1818,8 +1821,8 @@ internal class CaveRenderer(
         val block = worldBlockAt(bx, by, bz)
         if (block == AIR || BlockRegistry.isDecoration(block) || BlockRegistry.isWater(block)) return false
         val def = BlockRegistry.get(block) ?: return true
-        if (!def.stairs && !def.slab && def.blockHeight >= 1f) return true
-        return PartialBlockModel.boxes(world.metaAt(bx, by, bz), def.slab, def.blockHeight, stairMaskAt(bx, by, bz)).any {
+        if (!def.partial) return true
+        return PartialBlockModel.boxes(def, world.metaAt(bx, by, bz), stairMaskAt(bx, by, bz)).any {
             x - bx >= it.x && x - bx <= it.x + it.width &&
                 y - by >= it.y && y - by <= it.y + it.height &&
                 z - bz >= it.z && z - bz <= it.z + it.depth
@@ -2675,14 +2678,15 @@ internal class CaveRenderer(
         repeat(ceil(reach * 3).toInt() + 3) {
             val b = worldBlockAt(bx, by, bz)
             if (b != AIR && (!isWater(b) || includeWater && b == WATER)) {
-                if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true || (BlockRegistry.get(b)?.blockHeight ?: 1f) < 1f)) {
-                    val stairHit = PartialBlockModel.intersect(world.metaAt(bx, by, bz),
-                        startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, BlockRegistry.get(b)?.slab == true, BlockRegistry.get(b)?.blockHeight ?: 1f, stairMaskAt(bx, by, bz))
+                val partialDef = BlockRegistry.get(b)?.takeIf { it.partial }
+                if (partialDef != null) {
+                    val stairHit = PartialBlockModel.intersect(partialDef, world.metaAt(bx, by, bz),
+                        startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, stairMaskAt(bx, by, bz))
                     if (stairHit != null) return RayHit(bx, by, bz, stairHit.nx, stairHit.ny, stairHit.nz).apply {
                         distance = stairHit.distance; hitY = startY + dirY * stairHit.distance - by
                     }
                 }
-                val hit = if ((BlockRegistry.get(b)?.stairs == true || BlockRegistry.get(b)?.slab == true || (BlockRegistry.get(b)?.blockHeight ?: 1f) < 1f)) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
+                val hit = if (partialDef != null) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
                     startX - bx, startY - by, startZ - bz, dirX, dirY, dirZ,
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ))
                 else !isDecoration(b) || BlockRegistry.decorationMask(b)?.intersects(
@@ -3009,11 +3013,12 @@ internal class CaveRenderer(
         val cr = t * 0.9f; val cg = (1f - t) * 0.4f; val cb = (1f - t) * 0.5f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
-        if ((BlockRegistry.get(block)?.stairs == true || BlockRegistry.get(block)?.slab == true || (BlockRegistry.get(block)?.blockHeight ?: 1f) < 1f)) {
+        val outlineDef = BlockRegistry.get(block)?.takeIf { it.partial }
+        if (outlineDef != null) {
             val vertices = ArrayList<Float>()
             val normals = arrayOf(floatArrayOf(0f,ep,0f), floatArrayOf(0f,-ep,0f),
                 floatArrayOf(ep,0f,0f), floatArrayOf(-ep,0f,0f), floatArrayOf(0f,0f,ep), floatArrayOf(0f,0f,-ep))
-            for (face in PartialBlockModel.faces(world.metaAt(target.bx, target.by, target.bz), BlockRegistry.get(block)?.slab == true, BlockRegistry.get(block)?.blockHeight ?: 1f, stairMaskAt(target.bx, target.by, target.bz))) {
+            for (face in PartialBlockModel.faces(outlineDef, world.metaAt(target.bx, target.by, target.bz), stairMaskAt(target.bx, target.by, target.bz))) {
                 val n = normals[face.direction]
                 for (i in intArrayOf(0,1,2,0,2,3)) {
                     val v = face.vertices[i]
@@ -4407,7 +4412,7 @@ internal class CaveRenderer(
                 val x=dest.x+dx;val y=dest.y+dy;val z=dest.z+dz
                 val floor=world.blockAt(x,y-1,z);val def=BlockRegistry.get(floor)
                 if(floor==AIR || isWater(floor) || floor==LAVA || isDecoration(floor) || isTransparent(floor) ||
-                    def==null || def.slab || def.stairs || def.blockHeight<1f) continue
+                    def==null || def.partial) continue
                 if(world.blockAt(x,y,z)!=AIR || world.blockAt(x,y+1,z)!=AIR) continue
                 landing=FrontierLife.Place(x,y,z);break@search
             }
@@ -4698,6 +4703,7 @@ internal class CaveRenderer(
         lodShader?.destroy()
         enemyRenderer.destroy()
         decorRenderer?.destroy()
+        kineticRenderer.destroy()
         projRenderer.destroy()
         if (blockTexArray != 0) GLES30.glDeleteTextures(1, intArrayOf(blockTexArray), 0)
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)

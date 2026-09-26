@@ -148,10 +148,9 @@ internal class AssaultMode(
             if (!blocksMovement(source.map.blockAt(x, y, z))) return false
             val def = com.Atom2Universe.app.games.caves.node.BlockRegistry.get(source.map.blockAt(x, y, z))
                 ?: return true
-            if (!def.stairs && !def.slab && def.blockHeight >= 1f) return true
+            if (!def.partial) return true
             return com.Atom2Universe.app.games.caves.world.PartialBlockModel.intersect(
-                source.map.metaAt(x, y, z), x0 - x, y0 - y, z0 - z, dx, dy, dz, 1.0,
-                def.slab, def.blockHeight,
+                def, source.map.metaAt(x, y, z), x0 - x, y0 - y, z0 - z, dx, dy, dz, 1.0,
                 com.Atom2Universe.app.games.caves.world.StairConnections.maskAt(
                     x, y, z, source.map::blockAt, source.map::metaAt)) != null
         }
@@ -528,7 +527,7 @@ internal class AssaultMode(
             val def = com.Atom2Universe.app.games.caves.node.BlockRegistry.get(block)
             val opaque = blocksMovement(block) && def != null &&
                 !com.Atom2Universe.app.games.caves.node.BlockRegistry.isTransparent(block) &&
-                !def.stairs && !def.slab && def.blockHeight >= 1f
+                !def.partial
             kind = if (opaque) OCCLUDES else SEE_THROUGH
             occluderKind[key] = kind
         }

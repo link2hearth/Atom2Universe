@@ -242,8 +242,9 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         for (bz in z0..z1) for (by in y0..y1) for (bx in x0..x1) {
             val b = blockAt(bx, by, bz)
             if (b != AIR && !isDecoration(b) && !isWater(b)) {
-                if (BlockRegistry.get(b)?.stairs != true && BlockRegistry.get(b)?.slab != true && (BlockRegistry.get(b)?.blockHeight ?: 1f) >= 1f) return true
-                if (PartialBlockModel.boxes(metaAt(bx, by, bz), BlockRegistry.get(b)?.slab == true, BlockRegistry.get(b)?.blockHeight ?: 1f, StairConnections.maskAt(bx, by, bz, blockAt, metaAt)).any { box ->
+                val def = BlockRegistry.get(b)
+                if (def == null || !def.partial) return true
+                if (PartialBlockModel.boxes(def, metaAt(bx, by, bz), StairConnections.maskAt(bx, by, bz, blockAt, metaAt)).any { box ->
                     px + PLAYER_WI > bx + box.x && px - PLAYER_W < bx + box.x + box.width &&
                     py + top > by + box.y && py - PLAYER_H_BELOW < by + box.y + box.height &&
                     pz + PLAYER_WI > bz + box.z && pz - PLAYER_W < bz + box.z + box.depth

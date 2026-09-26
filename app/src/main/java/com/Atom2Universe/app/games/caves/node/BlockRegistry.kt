@@ -73,7 +73,7 @@ internal object BlockRegistry {
             defs[def.id] = def
             val idx = def.id.toInt() and 0xFFFF
             emissionTable[idx] = def.lightEmission.coerceIn(0, 15).toByte()
-            partialTable[idx] = def.stairs || def.slab || def.blockHeight < 1f
+            partialTable[idx] = def.partial
             if (def.decoration)  decorationTable[idx]  = true
             if (def.transparent) transparentTable[idx] = true
             if (def.water)       waterTable[idx]       = true

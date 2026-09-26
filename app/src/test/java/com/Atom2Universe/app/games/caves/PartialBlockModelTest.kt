@@ -65,4 +65,27 @@ class PartialBlockModelTest {
             assertFalse(PartialBlockModel.hasOpenBoundary(cells, if (meta < 4) 1 else 0))
         }
     }
+
+    private val shaft = com.Atom2Universe.app.games.caves.node.BlockDef(9804, "shaft", "", "", "", null, null, null, null,
+        0, 1f, false, true, false, false, false, 0, "", "functional", 0f, 0f, shaft = true)
+
+    @Test
+    fun shaftIsAThinRodAlongItsLogAxis() {
+        // Same meta as logs: 0 = vertical, 1 = along X, 2 = along Z.
+        for ((meta, axis) in listOf(0 to 1, 1 to 0, 2 to 2)) {
+            assertEquals(axis, PartialBlockModel.shaftAxis(meta.toByte()))
+            val rod = PartialBlockModel.boxes(shaft, meta.toByte()).single()
+            val size = floatArrayOf(rod.width, rod.height, rod.depth)
+            val low = floatArrayOf(rod.x, rod.y, rod.z)
+            for (a in 0..2) {
+                assertEquals(if (a == axis) 1f else 6f / 16f, size[a], 1e-6f)
+                assertEquals(if (a == axis) 0f else 5f / 16f, low[a], 1e-6f)
+            }
+            assertEquals(6, PartialBlockModel.faces(shaft, meta.toByte()).size)
+        }
+        // A ray through the centre hits the rod; one through a corner of the cell passes beside it.
+        assertNotNull(PartialBlockModel.intersect(shaft, 1, .5, 1.5, .5, 0.0, -1.0, 0.0, 2.0))
+        assertNull(PartialBlockModel.intersect(shaft, 1, .1, 1.5, .1, 0.0, -1.0, 0.0, 2.0))
+        assertTrue(shaft.partial)
+    }
 }
