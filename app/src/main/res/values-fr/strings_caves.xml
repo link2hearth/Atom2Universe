@@ -310,7 +310,7 @@
 
     <string name="cave_controls_reset">Réinitialiser</string>
 
-    <string name="cave_controls_reset_confirm">Remettre tous les boutons à leur position et taille par défaut ?</string>
+    <string name="cave_controls_reset_confirm">Rétablir la disposition et le comportement des commandes tactiles par défaut ? Les boutons de manette restent inchangés. Sauvegardez pour appliquer.</string>
 
     <string name="cave_controls_saved">Contrôles sauvegardés</string>
     <string name="cave_controls_save_failed">Impossible de sauvegarder les contrôles. Veuillez réessayer.</string>
@@ -771,4 +771,39 @@
     <string name="cave_block_street_light">Plafonnier chaud</string>
     <string name="cave_audio_credits_title">Crédits des bruitages</string>
     <string name="cave_audio_credits_body">Kenney — Impact Sounds (CC0)\nhttps://kenney.nl/assets/impact-sounds\n\nBen Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney — The Free Firearm Sound Library (CC0)\nhttps://opengameart.org/content/the-free-firearm-sound-library\n\nartisticdude — Battle Sound Effects (CC0)\nhttps://opengameart.org/content/battle-sound-effects\n\nmikewest / AntumDeluge — Sheep Baa (CC0)\nhttps://opengameart.org/content/sheep-baa\n\nSecretlondon — Farm animals / Mudchute City Farm (CC BY-SA 3.0)\nhttps://opengameart.org/content/farm-animals\n\nIMadeIt — Chicken Sound Effect (CC BY 3.0)\nhttps://opengameart.org/content/chicken-sound-effect\n\nspookymodem — Crossbow Shot (CC BY 3.0)\nhttps://opengameart.org/content/crossbow-shot\n\nhttps://creativecommons.org/publicdomain/zero/1.0/\nhttps://creativecommons.org/licenses/by/3.0/\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\nExtraits sélectionnés, conversion mono, équilibrage du volume et fondus courts. Les enregistrements adaptés de vache, de cochon et le second bêlement restent sous CC BY-SA 3.0. Son original du projet : fusil à pompe.</string>
+    <string name="cave_controls_place_touch">À l’endroit touché : touchez un bloc pour poser à côté. Le bouton Poser utilise le viseur central.</string>
+    <string name="cave_controls_place_crosshair">Uniquement au viseur central : le bouton Poser est masqué. Touchez la zone de jeu, hors des autres boutons et de la barre de raccourcis, pour poser sous la croix au centre de l’écran.</string>
+    <string name="cave_controls_guard">Se mettre en garde</string>
+    <string name="cave_controls_cancel_fishing">Annuler la pêche</string>
+    <string name="cave_controls_tab_touch">Tactile</string>
+    <string name="cave_controls_tab_gamepad">Manette</string>
+    <string name="cave_pad_hint">Sélectionnez une action pour changer son bouton. Stick gauche : déplacement ; stick droit : caméra. LS / RS désignent les clics sur les sticks. Les commandes des menus restent inchangées.</string>
+    <string name="cave_pad_swap_hint">Choisissez un bouton. S’il est déjà attribué, les deux actions échangent leurs boutons.</string>
+    <string name="cave_pad_binding">%1$s : %2$s</string>
+    <string name="cave_pad_unused">Non attribué</string>
+    <string name="cave_pad_reset_confirm">Rétablir les boutons de manette par défaut ? Les réglages tactiles restent inchangés. Sauvegardez pour appliquer.</string>
+    <string name="cave_pad_jump">Sauter / Monter en vol</string>
+    <string name="cave_pad_crouch">S’accroupir / Descendre en vol</string>
+    <string name="cave_pad_attack">Attaquer / Tirer / Miner</string>
+    <string name="cave_pad_place">Poser / Interagir</string>
+    <string name="cave_pad_secondary">Recharger / Garde / Annuler la pêche</string>
+    <string name="cave_pad_inventory">Inventaire</string>
+    <string name="cave_pad_previous">Emplacement précédent</string>
+    <string name="cave_pad_next">Emplacement suivant</string>
+    <string name="cave_pad_run">Courir</string>
+    <string name="cave_pad_camera">Changer de caméra</string>
+    <string name="cave_pad_a">A</string>
+    <string name="cave_pad_b">B</string>
+    <string name="cave_pad_x">X</string>
+    <string name="cave_pad_y">Y</string>
+    <string name="cave_pad_lb">LB</string>
+    <string name="cave_pad_rb">RB</string>
+    <string name="cave_pad_lt">LT</string>
+    <string name="cave_pad_rt">RT</string>
+    <string name="cave_pad_ls">LS</string>
+    <string name="cave_pad_rs">RS</string>
+    <string name="cave_pad_up">↑</string>
+    <string name="cave_pad_down">↓</string>
+    <string name="cave_pad_left">←</string>
+    <string name="cave_pad_right">→</string>
 </resources>

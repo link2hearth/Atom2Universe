@@ -108,7 +108,11 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
         val dx = (fwdX * moveForward - rgtX * moveRight) * hSpeed + driftX * dt
         val dz = (fwdZ * moveForward - rgtZ * moveRight) * hSpeed + driftZ * dt
 
-        val newX = x + dx
+        // Retenue au bord uniquement en marchant sur un appui réel : ni en nageant,
+        // ni pendant un saut, une chute ou la montée progressive d'une marche.
+        val holdLedge = isCrouching && onGround && !inWater && !jumpPressed &&
+            velocityY <= 0.0 && stepUpRemaining == 0.0 && collidesAt(x, y - GROUND_FOLLOW, z)
+        val newX = x + if (holdLedge) supportedMovement(x, y, z, dx, alongX = true) else dx
         if (!collidesAt(newX, y, z)) {
             x = newX
         } else if (onGround && !inWater && !jumpPressed && velocityY <= 0.0 &&
@@ -121,7 +125,9 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             if (stepUpRemaining == 0.0) stepUpRemaining = if (!collidesAt(newX, y + .5, z)) .5 else STEP_MAX
         }
 
-        val newZ = z + dz
+        // Tester Z depuis le X réellement retenu protège aussi les coins et permet
+        // de glisser le long du bord au lieu de bloquer les deux axes.
+        val newZ = z + if (holdLedge) supportedMovement(x, y, z, dz, alongX = false) else dz
         if (!collidesAt(x, y, newZ)) {
             z = newZ
         } else if (onGround && !inWater && !jumpPressed && velocityY <= 0.0 &&
@@ -209,6 +215,33 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
 
         prevJumpPressed = jumpPressed
         return Triple(x, y, z)
+    }
+
+    /** Avance jusqu'au dernier appui, avec les mêmes volumes que les collisions (dalles incluses). */
+    private fun supportedMovement(x: Double, y: Double, z: Double, delta: Double, alongX: Boolean): Double {
+        if (delta == 0.0) return 0.0
+        fun supported(distance: Double): Boolean = collidesAt(
+            x + if (alongX) distance else 0.0,
+            y - GROUND_FOLLOW,
+            z + if (alongX) 0.0 else distance
+        )
+        // Petits intervalles : une image longue ne doit pas traverser un trou et
+        // retrouver un appui de l'autre côté sans voir le bord intermédiaire.
+        var safe = 0.0
+        while (abs(delta - safe) > 1e-9) {
+            val next = safe + (delta - safe).coerceIn(-.05, .05)
+            if (supported(next)) {
+                safe = next
+            } else {
+                var edge = next
+                repeat(10) {
+                    val mid = (safe + edge) * .5
+                    if (supported(mid)) safe = mid else edge = mid
+                }
+                return safe
+            }
+        }
+        return delta
     }
 
     /** Lowest collision-free height at the destination, rather than a half-block overshoot. */

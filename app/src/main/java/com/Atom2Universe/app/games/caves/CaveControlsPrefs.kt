@@ -1,6 +1,9 @@
 package com.Atom2Universe.app.games.caves
 
 import android.content.Context
+import com.Atom2Universe.app.games.caves.input.GamepadAction
+import com.Atom2Universe.app.games.caves.input.GamepadBindings
+import com.Atom2Universe.app.games.caves.input.XboxButton
 
 internal object CaveControlsPrefs {
     private const val PREFS = "cave_controls_v1"
@@ -31,12 +34,27 @@ internal object CaveControlsPrefs {
 
     fun crouchToggle(ctx: Context) = prefs(ctx).getBoolean("crouch_toggle", false)
     fun runToggle(ctx: Context) = prefs(ctx).getBoolean("run_toggle", false)
+    fun placeAtCrosshair(ctx: Context) = prefs(ctx).getBoolean("place_at_crosshair", false)
 
-    fun saveAll(ctx: Context, layouts: Map<Btn, Layout>, crouchToggle: Boolean = false, runToggle: Boolean = false): Boolean {
+    fun gamepadBindings(ctx: Context): Map<GamepadAction, XboxButton> {
+        val prefs = prefs(ctx)
+        val bindings = GamepadAction.entries.associateWith { action ->
+            val stored = prefs.getString("pad_${action.name}", null)
+            XboxButton.entries.firstOrNull { it.name == stored } ?: action.defaultButton
+        }
+        return if (GamepadBindings.valid(bindings)) bindings else GamepadBindings.defaults()
+    }
+
+    fun saveAll(ctx: Context, layouts: Map<Btn, Layout>, crouchToggle: Boolean = false, runToggle: Boolean = false,
+                placeAtCrosshair: Boolean = false,
+                gamepadBindings: Map<GamepadAction, XboxButton> = gamepadBindings(ctx)): Boolean {
         if (layouts.keys != Btn.entries.toSet()) return false
+        if (!GamepadBindings.valid(gamepadBindings)) return false
         val editor = prefs(ctx).edit()
+        for ((action, button) in gamepadBindings) editor.putString("pad_${action.name}", button.name)
         editor.putBoolean("crouch_toggle", crouchToggle)
         editor.putBoolean("run_toggle", runToggle)
+        editor.putBoolean("place_at_crosshair", placeAtCrosshair)
         for ((btn, layout) in layouts) {
             if (!layout.xf.isFinite() || !layout.yf.isFinite()) return false
             editor.putFloat("${btn.key}_x", layout.xf.coerceIn(0f, 1f))

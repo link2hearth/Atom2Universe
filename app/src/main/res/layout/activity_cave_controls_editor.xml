@@ -12,6 +12,7 @@
 
     <!-- Indice centre -->
     <TextView
+        android:id="@+id/cave_editor_touch_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -64,5 +65,37 @@
             android:textSize="10sp" />
 
     </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/cave_editor_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="44dp"
+        android:orientation="horizontal"
+        android:background="#EE101C22">
+        <RadioButton
+            android:id="@+id/cave_editor_tab_touch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/cave_controls_tab_touch"
+            android:textColor="#FFFFFF" />
+        <RadioButton
+            android:id="@+id/cave_editor_tab_gamepad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/cave_controls_tab_gamepad"
+            android:textColor="#FFFFFF" />
+    </RadioGroup>
+
+    <ScrollView
+        android:id="@+id/cave_editor_gamepad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="92dp"
+        android:fillViewport="true"
+        android:visibility="gone" />
 
 </FrameLayout>

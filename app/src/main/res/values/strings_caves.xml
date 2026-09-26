@@ -310,7 +310,7 @@
 
     <string name="cave_controls_reset">Reset</string>
 
-    <string name="cave_controls_reset_confirm">Reset all buttons to their default position and size?</string>
+    <string name="cave_controls_reset_confirm">Restore the default touch layout and behavior? Controller bindings will stay unchanged. Save to apply.</string>
 
     <string name="cave_controls_saved">Controls saved</string>
     <string name="cave_controls_save_failed">Could not save controls. Please try again.</string>
@@ -771,4 +771,39 @@
     <string name="cave_block_street_light">Warm ceiling light</string>
     <string name="cave_audio_credits_title">Sound credits</string>
     <string name="cave_audio_credits_body">Kenney — Impact Sounds (CC0)\nhttps://kenney.nl/assets/impact-sounds\n\nBen Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney — The Free Firearm Sound Library (CC0)\nhttps://opengameart.org/content/the-free-firearm-sound-library\n\nartisticdude — Battle Sound Effects (CC0)\nhttps://opengameart.org/content/battle-sound-effects\n\nmikewest / AntumDeluge — Sheep Baa (CC0)\nhttps://opengameart.org/content/sheep-baa\n\nSecretlondon — Farm animals / Mudchute City Farm (CC BY-SA 3.0)\nhttps://opengameart.org/content/farm-animals\n\nIMadeIt — Chicken Sound Effect (CC BY 3.0)\nhttps://opengameart.org/content/chicken-sound-effect\n\nspookymodem — Crossbow Shot (CC BY 3.0)\nhttps://opengameart.org/content/crossbow-shot\n\nhttps://creativecommons.org/publicdomain/zero/1.0/\nhttps://creativecommons.org/licenses/by/3.0/\nhttps://creativecommons.org/licenses/by-sa/3.0/\n\nSelected excerpts, mono conversion, gain balancing and edge fades. The adapted cow, pig and second sheep recordings remain under CC BY-SA 3.0. Original project sound: shotgun.</string>
+    <string name="cave_controls_place_touch">At the touch location: tap a block to place next to it. The Place button uses the crosshair.</string>
+    <string name="cave_controls_place_crosshair">Crosshair only: the Place button is hidden. Tap the game view, outside the other buttons and hotbar, to place at the center crosshair.</string>
+    <string name="cave_controls_guard">Guard</string>
+    <string name="cave_controls_cancel_fishing">Cancel fishing</string>
+    <string name="cave_controls_tab_touch">Touch</string>
+    <string name="cave_controls_tab_gamepad">Controller</string>
+    <string name="cave_pad_hint">Select an action to change its button. Left stick: movement; right stick: camera. LS / RS mean clicking the sticks. Menu controls stay unchanged.</string>
+    <string name="cave_pad_swap_hint">Choose a button. If it is already assigned, the two actions swap buttons.</string>
+    <string name="cave_pad_binding">%1$s: %2$s</string>
+    <string name="cave_pad_unused">Unassigned</string>
+    <string name="cave_pad_reset_confirm">Restore default controller bindings? Touch settings will stay unchanged. Save to apply.</string>
+    <string name="cave_pad_jump">Jump / Fly up</string>
+    <string name="cave_pad_crouch">Crouch / Fly down</string>
+    <string name="cave_pad_attack">Attack / Shoot / Mine</string>
+    <string name="cave_pad_place">Place / Interact</string>
+    <string name="cave_pad_secondary">Reload / Guard / Cancel fishing</string>
+    <string name="cave_pad_inventory">Inventory</string>
+    <string name="cave_pad_previous">Previous hotbar slot</string>
+    <string name="cave_pad_next">Next hotbar slot</string>
+    <string name="cave_pad_run">Sprint</string>
+    <string name="cave_pad_camera">Change camera</string>
+    <string name="cave_pad_a">A</string>
+    <string name="cave_pad_b">B</string>
+    <string name="cave_pad_x">X</string>
+    <string name="cave_pad_y">Y</string>
+    <string name="cave_pad_lb">LB</string>
+    <string name="cave_pad_rb">RB</string>
+    <string name="cave_pad_lt">LT</string>
+    <string name="cave_pad_rt">RT</string>
+    <string name="cave_pad_ls">LS</string>
+    <string name="cave_pad_rs">RS</string>
+    <string name="cave_pad_up">↑</string>
+    <string name="cave_pad_down">↓</string>
+    <string name="cave_pad_left">←</string>
+    <string name="cave_pad_right">→</string>
 </resources>

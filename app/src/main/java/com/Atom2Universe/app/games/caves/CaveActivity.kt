@@ -38,6 +38,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.games.caves.input.GamepadController
+import com.Atom2Universe.app.games.caves.input.GamepadAction
+import com.Atom2Universe.app.games.caves.input.XboxButton
 import com.Atom2Universe.app.games.caves.input.TouchController
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CraftRegistry
@@ -75,11 +77,11 @@ class CaveActivity : ThemedActivity() {
     private var assaultWeaponPending = false
     private val uiTouchIds = mutableSetOf<Int>()
     internal fun releaseGameInputs() {
-        touch.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
+        gamepad.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
         ptrReload = -1; vBtnReload?.isPressed = false
         tapCandidates.clear()
     }
-    private  val gamepad = GamepadController(touch)
+    private val gamepad = GamepadController(touch, ::handleGamepadAction)
     private  val uiHandler = Handler(Looper.getMainLooper())
     private  var worldId: String? = null
     private var soundEngine: CaveSoundEngine? = null
@@ -102,6 +104,7 @@ class CaveActivity : ThemedActivity() {
     private var crouchingUi = false
     private var walkingUi = true
     private var vBtnReload: View? = null
+    private var placeAtCrosshair = false
     private var vBtnLaser: View? = null; private var vBtnPlace: View? = null
     private var vGameArea: FrameLayout? = null
 
@@ -336,6 +339,7 @@ class CaveActivity : ThemedActivity() {
         // le bouton doit exister dès l'ouverture, pas seulement pendant la manche.
         if (renderer.mode is AssaultMode || renderer.mode.allowsCombat) {
             val reload = Button(this).apply {
+                visibility = View.GONE
                 hud.controlIcon(this, "reload", getString(if(renderer.mode is AssaultMode) R.string.cave_controls_reload else R.string.cave_secondary_action))
                 setOnClickListener { glView.queueEvent { renderer.reloadAssaultWeapon() } }
                 // dispatchTouchEvent handles each finger, including a second finger while walking.
@@ -443,6 +447,19 @@ class CaveActivity : ThemedActivity() {
         vGameArea?.addView(fishingGauge,FrameLayout.LayoutParams(CaveUiStyle.dp(this,154),minOf(CaveUiStyle.dp(this,260),(resources.displayMetrics.heightPixels*.62f).toInt()),Gravity.CENTER_VERTICAL or Gravity.START).apply { marginStart=CaveUiStyle.dp(this@CaveActivity,12) })
         renderer.fishingGaugeCallback={ state -> uiHandler.post { fishingGauge.update(state) } }
         renderer.weaponStatusCallback = { text -> uiHandler.post { hud.updateWeaponStatus(text) } }
+        renderer.secondaryActionCallback = { action -> uiHandler.post {
+            val button = vBtnReload as? Button ?: return@post
+            ptrReload = -1
+            button.isPressed = false
+            button.visibility = if (action == CaveRenderer.SecondaryAction.NONE) View.GONE else View.VISIBLE
+            val (icon, label) = when (action) {
+                CaveRenderer.SecondaryAction.RELOAD -> "reload" to R.string.cave_controls_reload
+                CaveRenderer.SecondaryAction.GUARD -> "combat" to R.string.cave_controls_guard
+                CaveRenderer.SecondaryAction.CANCEL_FISHING -> "close" to R.string.cave_controls_cancel_fishing
+                CaveRenderer.SecondaryAction.NONE -> "reload" to R.string.cave_controls_reload
+            }
+            hud.controlIcon(button, icon, getString(label))
+        } }
         hud.buildDamageFlash(root)
 
         renderer.playerHpCallback = { hp, maxHp -> uiHandler.post { hud.updateHealthBar(hp, maxHp) } }
@@ -762,10 +779,13 @@ class CaveActivity : ThemedActivity() {
     }
 
     private fun resumeGame() {
+        gamepad.configure(CaveControlsPrefs.gamepadBindings(this))
         glView.onResume()
         glSuspended = false
         touch.crouchToggleEnabled = CaveControlsPrefs.crouchToggle(this)
         touch.runToggleEnabled = CaveControlsPrefs.runToggle(this)
+        placeAtCrosshair = CaveControlsPrefs.placeAtCrosshair(this)
+        vBtnPlace?.let { applyBuildModeUi(renderer.heldItemMode, it) }
         soundEngine?.resume()
         if (renderer.mode !is AssaultMode) music.resume()
         forceImmersiveMode()
@@ -774,6 +794,7 @@ class CaveActivity : ThemedActivity() {
     override fun onPause()   {
         super.onPause()
         if (!::glView.isInitialized) return
+        releaseGameInputs()
         glView.onPause()
         glSuspended = true
         music.pause(); soundEngine?.pause(); saveWorld(); minimapJob?.cancel()
@@ -952,7 +973,7 @@ class CaveActivity : ThemedActivity() {
     }
 
     private fun applyBuildModeUi(mode: HotbarMode, btnPlace: View) {
-        btnPlace.visibility = if (mode != HotbarMode.COMBAT) View.VISIBLE else View.GONE
+        btnPlace.visibility = if (mode != HotbarMode.COMBAT && !placeAtCrosshair) View.VISIBLE else View.GONE
         if (btnPlace is Button) hud.controlIcon(btnPlace, if (mode == HotbarMode.GARDEN) "garden" else "place",
             getString(if (mode == HotbarMode.GARDEN) R.string.cave_farm_controls else R.string.cave_ui_materials))
     }
@@ -1010,34 +1031,38 @@ class CaveActivity : ThemedActivity() {
             if (event.action == KeyEvent.ACTION_UP) return true
             return super.dispatchKeyEvent(event)
         }
+        val controllerKey = event.isFromSource(InputDevice.SOURCE_GAMEPAD) ||
+            event.isFromSource(InputDevice.SOURCE_JOYSTICK) || KeyEvent.isGamepadButton(event.keyCode)
+        if (!controllerKey) return super.dispatchKeyEvent(event)
         if (event.action == KeyEvent.ACTION_DOWN) {
-            if (KeyEvent.isGamepadButton(event.keyCode)) setHudButtonsVisible(false)
-            when (event.keyCode) {
-                KeyEvent.KEYCODE_BUTTON_Y  -> { invManager.openInventory(); return true }
-                KeyEvent.KEYCODE_BUTTON_L1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot - 1 + ACTIVE_SIZE) % ACTIVE_SIZE) }; return true }
-                KeyEvent.KEYCODE_BUTTON_R1 -> { glView.queueEvent { renderer.selectSlot((renderer.selectedSlot + 1) % ACTIVE_SIZE) }; return true }
-                KeyEvent.KEYCODE_BUTTON_X  -> {
-                    if (event.repeatCount == 0) glView.queueEvent { renderer.reloadAssaultWeapon() }
-                    return true
-                }
-                KeyEvent.KEYCODE_BUTTON_THUMBR -> {
-                    if (event.repeatCount == 0) glView.queueEvent {
-                        val newTps = !renderer.camera.thirdPerson
-                        renderer.camera.thirdPerson = newTps
-                        uiHandler.post { vBtnCamera?.alpha = if (newTps) 1.0f else 0.5f }
-                    }
-                    return true
-                }
-            }
+            setHudButtonsVisible(false)
+            if (event.repeatCount > 0 && XboxButton.fromKey(event.keyCode) != null) return true
         }
-        if (event.action == KeyEvent.ACTION_UP &&
-            (event.keyCode == KeyEvent.KEYCODE_BUTTON_X || event.keyCode == KeyEvent.KEYCODE_BUTTON_THUMBR)) return true
         val consumed = when (event.action) {
             KeyEvent.ACTION_DOWN -> gamepad.onKeyDown(event.keyCode)
             KeyEvent.ACTION_UP   -> gamepad.onKeyUp(event.keyCode)
             else -> false
         }
         return consumed || super.dispatchKeyEvent(event)
+    }
+
+    private fun handleGamepadAction(action: GamepadAction) {
+        when (action) {
+            GamepadAction.INVENTORY -> invManager.openInventory()
+            GamepadAction.PREVIOUS_SLOT -> glView.queueEvent {
+                renderer.selectSlot((renderer.selectedSlot - 1 + ACTIVE_SIZE) % ACTIVE_SIZE)
+            }
+            GamepadAction.NEXT_SLOT -> glView.queueEvent {
+                renderer.selectSlot((renderer.selectedSlot + 1) % ACTIVE_SIZE)
+            }
+            GamepadAction.SECONDARY -> glView.queueEvent { renderer.reloadAssaultWeapon() }
+            GamepadAction.CAMERA -> glView.queueEvent {
+                val thirdPerson = !renderer.camera.thirdPerson
+                renderer.camera.thirdPerson = thirdPerson
+                uiHandler.post { vBtnCamera?.alpha = if (thirdPerson) 1f else .5f }
+            }
+            else -> Unit // Actions maintenues traitées par GamepadController.
+        }
     }
 
     // ── Touch multipoint ─────────────────────────────────────────────────────
@@ -1132,7 +1157,13 @@ class CaveActivity : ThemedActivity() {
             val xf = (x - location[0]) / glView.width
             val yf = (y - location[1]) / glView.height
             if (xf in 0f..1f && yf in 0f..1f) {
-                glView.queueEvent { renderer.placeBlockAtScreen(xf, yf) }
+                val center = placeAtCrosshair
+                glView.queueEvent {
+                    if (center) {
+                        if (!renderer.gamePaused && renderer.heldItemMode != HotbarMode.COMBAT)
+                            touch.placeRequested = true
+                    } else renderer.placeBlockAtScreen(xf, yf)
+                }
             }
         }
     }

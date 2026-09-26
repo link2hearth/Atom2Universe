@@ -2148,6 +2148,13 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         )
         deferredWaterActivations.getOrPut(targetKey) { ConcurrentHashMap() }
             .putIfAbsent(waterKey(sourceX, sourceY, sourceZ), intArrayOf(sourceX, sourceY, sourceZ))
+        // Le générateur peut avoir terminé entre le test du voisin et l'inscription.
+        // Dans ce cas sa notification est déjà passée : réveiller aussi directement
+        // la cellule pour ne pas dépendre d'un prochain rechargement du chunk.
+        if (isGeneratedBlock(targetX, targetY, targetZ)) {
+            activateWaterNeighborhood(sourceX, sourceY, sourceZ)
+            resumeDeferredWaterActivations(targetKey)
+        }
     }
 
     private fun resumeDeferredWaterActivations(chunkKey: Long) {
@@ -2166,45 +2173,59 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      *  - l'eau de CE chunk contre l'air d'un voisin déjà prêt (ou de ce chunk) ;
      *  - l'eau des voisins déjà prêts contre l'air de CE chunk, qui vient d'apparaître.
      * Un voisin pas encore généré sera traité à son tour, quand il arrivera.
-     * Seules les sources touchant l'air sont réveillées : l'océan, bordé de sol, ne coûte presque rien.
+     * Les flux sauvegardés reprennent aussi leur simulation, même entourés d'eau.
+     * Les sources d'un océan fermé restent endormies.
      */
     private fun wakeExposedWater(chunk: Chunk) {
         // Les cartes dessinées à la main (Assaut…) gardent leur eau telle qu'elle a été posée.
         if (source != null) return
         val s = CHUNK_SIZE
-        fun airAt(wx: Int, wy: Int, wz: Int): Boolean {
+        fun openAt(wx: Int, wy: Int, wz: Int): Boolean {
             val n = getChunk(Math.floorDiv(wx, s), Math.floorDiv(wy, s), Math.floorDiv(wz, s))
-            return n != null && n.generated &&
-                n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s)) == AIR
+            if (n == null || !n.generated) return false
+            val block = n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s))
+            return block == WATER_FLOW || canWaterDisplace(block)
         }
-        fun exposed(wx: Int, wy: Int, wz: Int) = airAt(wx, wy - 1, wz) ||
-            horizontalWaterDirs.any { airAt(wx + it[0], wy, wz + it[2]) }
+        fun exposed(wx: Int, wy: Int, wz: Int) = openAt(wx, wy - 1, wz) ||
+            horizontalWaterDirs.any { openAt(wx + it[0], wy, wz + it[2]) }
         val bx = chunk.worldX; val by = chunk.worldY; val bz = chunk.worldZ
         for (ly in 0 until s) for (lz in 0 until s) for (lx in 0 until s) {
-            if (chunk.blocks[lx + ly * s + lz * s * s] != WATER) continue
-            if (exposed(bx + lx, by + ly, bz + lz)) queueWaterUpdate(bx + lx, by + ly, bz + lz)
+            val block = chunk.blocks[lx + ly * s + lz * s * s]
+            if (block == WATER_FLOW || block == WATER && exposed(bx + lx, by + ly, bz + lz))
+                queueWaterUpdate(bx + lx, by + ly, bz + lz)
         }
         // Sources des voisins posées juste contre une face de ce chunk (dessus : eau qui tombe).
         fun wakeNeighbour(wx: Int, wy: Int, wz: Int) {
             val n = getChunk(Math.floorDiv(wx, s), Math.floorDiv(wy, s), Math.floorDiv(wz, s)) ?: return
-            if (!n.generated || n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s)) != WATER) return
-            if (exposed(wx, wy, wz)) queueWaterUpdate(wx, wy, wz)
+            if (!n.generated) return
+            val block = n.blockAt(Math.floorMod(wx, s), Math.floorMod(wy, s), Math.floorMod(wz, s))
+            if (block == WATER_FLOW || block == WATER && exposed(wx, wy, wz)) queueWaterUpdate(wx, wy, wz)
         }
         for (a in 0 until s) for (b in 0 until s) {
             wakeNeighbour(bx - 1, by + a, bz + b); wakeNeighbour(bx + s, by + a, bz + b)
             wakeNeighbour(bx + a, by + b, bz - 1); wakeNeighbour(bx + a, by + b, bz + s)
             wakeNeighbour(bx + a, by + s, bz + b)
+            wakeNeighbour(bx + a, by - 1, bz + b)
         }
     }
+
+    /** L'herbe et les petits végétaux remplaçables ne constituent pas une digue. */
+    private fun canWaterDisplace(block: Short): Boolean = block == AIR || isDecoration(block) &&
+        com.Atom2Universe.app.games.caves.node.BlockRegistry.get(block)?.let {
+            it.decoration && it.replaceable && !it.water && !it.waterlogged
+        } == true
 
     private fun setFlowWater(wx: Int, wy: Int, wz: Int, level: Int): Boolean {
         if (!isGeneratedBlock(wx, wy, wz)) return false
         val current = blockAt(wx, wy, wz)
-        if (current != AIR && current != WATER_FLOW) return false
+        if (current != WATER_FLOW && !canWaterDisplace(current)) return false
         val normalized = level.coerceIn(0, MAX_WATER_FLOW_LEVEL)
         val oldLevel = if (current == WATER_FLOW) cachedWaterFlowLevel(wx, wy, wz) else -1
         if (current == WATER_FLOW && oldLevel == normalized) return false
         if (current == AIR && !setWaterBlock(wx, wy, wz, WATER_FLOW)) return false
+        // Les plantes ont un maillage solide : il faut aussi le reconstruire pour
+        // retirer leur sprite, contrairement à la simple transition air/eau.
+        if (current != AIR && current != WATER_FLOW) setBlock(wx, wy, wz, WATER_FLOW)
         setWaterFlowLevel(wx, wy, wz, normalized)
         if (current == WATER_FLOW) markWaterMeshDirty(wx, wy, wz)
         activateWaterNeighborhood(wx, wy, wz)
@@ -2227,7 +2248,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         }
         // Une source se forme sur un support, mais pas au milieu d'une chute d'eau.
         val below = blockAt(wx, wy - 1, wz)
-        return below != AIR && below != WATER_FLOW
+        return below != WATER_FLOW && !canWaterDisplace(below)
     }
 
     private fun waterDirections(wx: Int, wy: Int, wz: Int, level: Int): Int {
@@ -2235,7 +2256,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         waterRouteMasks[key]?.let { if (it ushr 4 == level) return it and 15 }
         val cache = ChunkLookupCache()
         val mask = WaterFlowRouting.directions(wx, wy, wz, MAX_WATER_FLOW_LEVEL - level) { x, y, z ->
-            if (isGeneratedBlock(x, y, z)) blockAt(x, y, z, cache)
+            if (isGeneratedBlock(x, y, z)) {
+                val block = blockAt(x, y, z, cache)
+                if (canWaterDisplace(block)) AIR else block
+            }
             else {
                 deferWaterActivation(wx, wy, wz, x, y, z)
                 null
@@ -2293,7 +2317,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             return
         }
         val below = blockAt(wx, belowY, wz)
-        if (below == AIR) {
+        if (canWaterDisplace(below)) {
             setFlowWater(wx, belowY, wz, 0)
             return
         }
@@ -2308,7 +2332,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                 deferWaterActivation(wx, wy, wz, nx, wy, nz)
                 continue
             }
-            if (blockAt(nx, wy, nz) == AIR) setFlowWater(nx, wy, nz, nextLevel)
+            if (canWaterDisplace(blockAt(nx, wy, nz))) setFlowWater(nx, wy, nz, nextLevel)
         }
     }
 
@@ -2316,9 +2340,14 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         if (!isGeneratedBlock(wx, wy, wz)) return
         when (val current = blockAt(wx, wy, wz)) {
             WATER -> spreadWaterFrom(wx, wy, wz, 0)
-            AIR, WATER_FLOW -> {
+            else -> {
+                if (current != WATER_FLOW && !canWaterDisplace(current)) return
                 if (canBecomeWaterSource(wx, wy, wz)) {
-                    if (current != WATER) setWaterBlock(wx, wy, wz, WATER)
+                    if (current == AIR || current == WATER_FLOW) setWaterBlock(wx, wy, wz, WATER)
+                    else {
+                        waterRouteMasks.clear()
+                        setBlock(wx, wy, wz, WATER)
+                    }
                     activateWaterNeighborhood(wx, wy, wz)
                     spreadWaterFrom(wx, wy, wz, 0)
                     return

@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.core.view.doOnLayout
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.games.caves.input.GamepadBindings
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -29,7 +30,13 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
     private lateinit var toggleChoice: RadioButton
     private var crouchToggle = false
     private var runToggle = false
+    private var placeAtCrosshair = false
+    private lateinit var placementChoices: RadioGroup
+    private lateinit var touchPlacementChoice: RadioButton
+    private lateinit var crosshairPlacementChoice: RadioButton
     private var updatingChoices = false
+    private lateinit var gamepadEditor: CaveGamepadEditor
+    private var gamepadTab = false
 
     private data class BtnState(
         val cfg: CaveControlsPrefs.Btn,
@@ -48,7 +55,18 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         canvas         = findViewById(R.id.cave_editor_canvas)
         crouchToggle = CaveControlsPrefs.crouchToggle(this)
         runToggle = CaveControlsPrefs.runToggle(this)
+        placeAtCrosshair = CaveControlsPrefs.placeAtCrosshair(this)
         createBubble()
+        gamepadEditor = CaveGamepadEditor(this, findViewById(R.id.cave_editor_gamepad),
+            CaveControlsPrefs.gamepadBindings(this).toMutableMap())
+        gamepadEditor.refresh()
+        findViewById<RadioGroup>(R.id.cave_editor_tabs).setOnCheckedChangeListener { _, id ->
+            gamepadTab = id == R.id.cave_editor_tab_gamepad
+            closeBubble()
+            canvas.visibility = if (gamepadTab) View.GONE else View.VISIBLE
+            findViewById<View>(R.id.cave_editor_touch_hint).visibility = if (gamepadTab) View.GONE else View.VISIBLE
+            findViewById<View>(R.id.cave_editor_gamepad).visibility = if (gamepadTab) View.VISIBLE else View.GONE
+        }
         canvas.setOnClickListener { closeBubble() }
         seekBar.max = SIZE_MAX_DP - SIZE_MIN_DP
 
@@ -78,7 +96,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         }
     }
 
-    private fun createButtons() {
+    private fun createButtons(defaults: Boolean = false) {
         if (canvas.width <= 0 || canvas.height <= 0) return
         states.clear()
         canvas.removeAllViews()
@@ -89,9 +107,9 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         val h = canvas.height.toFloat()
 
         for (cfg in CaveControlsPrefs.Btn.entries) {
-            val xf     = CaveControlsPrefs.xf(this, cfg).coerceIn(0f, 1f)
-            val yf     = CaveControlsPrefs.yf(this, cfg).coerceIn(0f, 1f)
-            val sizeDp = CaveControlsPrefs.sizeDp(this, cfg)
+            val xf = if (defaults) cfg.defaultXf else CaveControlsPrefs.xf(this, cfg).coerceIn(0f, 1f)
+            val yf = if (defaults) cfg.defaultYf else CaveControlsPrefs.yf(this, cfg).coerceIn(0f, 1f)
+            val sizeDp = if (defaults) cfg.defaultSizeDp else CaveControlsPrefs.sizeDp(this, cfg)
             val normalizedSize = normalizeStateSize(sizeDp)
             val buttonSizePx = (normalizedSize * dp).toInt()
             val normalizedXf = normalizeNormalizedCoord(xf, w, buttonSizePx)
@@ -171,6 +189,21 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
             }
         }
         content.addView(crouchChoices)
+        placementChoices = RadioGroup(this).apply { orientation = RadioGroup.VERTICAL }
+        touchPlacementChoice = RadioButton(this).apply {
+            id = View.generateViewId(); setText(R.string.cave_controls_place_touch); setTextColor(Color.WHITE)
+            minHeight = dp(64)
+        }
+        crosshairPlacementChoice = RadioButton(this).apply {
+            id = View.generateViewId(); setText(R.string.cave_controls_place_crosshair); setTextColor(Color.WHITE)
+            minHeight = dp(64)
+        }
+        placementChoices.addView(touchPlacementChoice, RadioGroup.LayoutParams(-1, -2))
+        placementChoices.addView(crosshairPlacementChoice, RadioGroup.LayoutParams(-1, -2))
+        placementChoices.setOnCheckedChangeListener { _, id ->
+            if (!updatingChoices) placeAtCrosshair = id == crosshairPlacementChoice.id
+        }
+        content.addView(placementChoices)
         bubble = ScrollView(this).apply {
             visibility = View.GONE
             elevation = dp(12).toFloat()
@@ -192,7 +225,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
     private fun positionBubble() {
         val state = selected ?: return
         val gap = dp(10)
-        val top = findViewById<View>(R.id.cave_editor_topbar).bottom + gap
+        val top = findViewById<View>(R.id.cave_editor_tabs).bottom + gap
         val width = dp(320).coerceAtMost((canvas.width - gap * 2).coerceAtLeast(1))
         val availableHeight = (canvas.height - top - gap).coerceAtLeast(1)
         bubble.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
@@ -236,6 +269,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
                     selected = state
                     bubble.visibility = View.GONE
                     findViewById<View>(R.id.cave_editor_topbar).visibility = View.INVISIBLE
+                    findViewById<View>(R.id.cave_editor_tabs).visibility = View.INVISIBLE
                     true
                 }
                 MotionEvent.ACTION_MOVE -> {
@@ -250,6 +284,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
                 }
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     findViewById<View>(R.id.cave_editor_topbar).visibility = View.VISIBLE
+                    findViewById<View>(R.id.cave_editor_tabs).visibility = View.VISIBLE
                     selectState(state)
                     true
                 }
@@ -270,6 +305,8 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         toggleChoice.setText(if (isRun) R.string.cave_controls_run_toggle else R.string.cave_controls_toggle)
         updatingChoices = true
         crouchChoices.check(if (if (isRun) runToggle else crouchToggle) toggleChoice.id else holdChoice.id)
+        placementChoices.visibility = if (state.cfg == CaveControlsPrefs.Btn.PLACE) View.VISIBLE else View.GONE
+        placementChoices.check(if (placeAtCrosshair) crosshairPlacementChoice.id else touchPlacementChoice.id)
         updatingChoices = false
         bubble.visibility = View.VISIBLE
         positionBubble()
@@ -279,7 +316,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         if (states.size != CaveControlsPrefs.Btn.entries.size) return
         val saved = CaveControlsPrefs.saveAll(this, states.associate { s ->
             s.cfg to CaveControlsPrefs.Layout(s.xf, s.yf, s.sizeDp)
-        }, crouchToggle, runToggle)
+        }, crouchToggle, runToggle, placeAtCrosshair, gamepadEditor.bindings)
         if (!saved) {
             Toast.makeText(this, R.string.cave_controls_save_failed, Toast.LENGTH_LONG).show()
             return
@@ -291,12 +328,18 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
     private fun confirmReset() {
         MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(R.string.cave_controls_reset)
-            .setMessage(R.string.cave_controls_reset_confirm)
+            .setMessage(if (gamepadTab) R.string.cave_pad_reset_confirm else R.string.cave_controls_reset_confirm)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                CaveControlsPrefs.reset(this)
-                crouchToggle = false
-                runToggle = false
-                createButtons()
+                if (gamepadTab) {
+                    gamepadEditor.bindings.clear()
+                    gamepadEditor.bindings.putAll(GamepadBindings.defaults())
+                    gamepadEditor.refresh()
+                } else {
+                    crouchToggle = false
+                    runToggle = false
+                    placeAtCrosshair = false
+                    createButtons(defaults = true)
+                }
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()

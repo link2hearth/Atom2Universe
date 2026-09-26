@@ -5,6 +5,12 @@ import android.graphics.drawable.Drawable
 
 /** Line icons sized independently from translated labels and Android button padding. */
 internal class CaveActionDrawable(private val kind: String) : Drawable() {
+    /** Lets LayerDrawable/RippleDrawable create an independent copy when mutating backgrounds. */
+    private class IconState(private val kind: String) : Drawable.ConstantState() {
+        override fun newDrawable(): Drawable = CaveActionDrawable(kind)
+        override fun getChangingConfigurations(): Int = 0
+    }
+
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = CaveUiStyle.TEXT; style = Paint.Style.STROKE; strokeWidth = 1.6f
         strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
@@ -103,5 +109,6 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
     }
     override fun setAlpha(alpha: Int) { paint.alpha = alpha }
     override fun setColorFilter(colorFilter: ColorFilter?) { paint.colorFilter = colorFilter }
+    override fun getConstantState(): Drawable.ConstantState = IconState(kind)
     @Deprecated("Deprecated in Java") override fun getOpacity() = PixelFormat.TRANSLUCENT
 }

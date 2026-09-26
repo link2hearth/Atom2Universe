@@ -478,6 +478,9 @@ internal class CaveRenderer(
     private var lastFireWeapon: Short? = null
     private var lastWeaponStatus = ""
     var weaponStatusCallback: ((String) -> Unit)? = null
+    internal enum class SecondaryAction { NONE, RELOAD, GUARD, CANCEL_FISHING }
+    var secondaryActionCallback: ((SecondaryAction) -> Unit)? = null
+    private var lastSecondaryAction: SecondaryAction? = null
     private var weaponChargeTime = 0f   // temps de visée/tension avant de relâcher pour tirer
     private val WEAPON_CHARGE_VISUAL_MAX = 0.6f   // durée pour atteindre la tension visuelle max
     private val ARROW_ID: Short = 8010
@@ -668,8 +671,8 @@ internal class CaveRenderer(
             float grazing = 1.0 - clamp(dot(normal, viewDir), 0.0, 1.0);
             float fresnel = 0.04 + 0.96 * grazing * grazing * grazing * grazing * grazing;
             vec3 deepColor = u_waterTint * vec3(0.35, 0.62, 0.75);
-            vec3 shallowColor = u_waterTint + vec3(0.07, 0.16, 0.12);
-            vec3 baseColor = mix(deepColor, shallowColor, wave * 0.22 + 0.28);
+            vec3 shallowColor = u_waterTint + vec3(0.04, 0.10, 0.08);
+            vec3 baseColor = mix(deepColor, shallowColor, wave * 0.18 + 0.22);
             float faceLight = mix(0.78, 1.0, top);
             vec3 torchContrib = vec3(0.0);
             for (int i = 0; i < u_lightCount; i++) {
@@ -693,7 +696,10 @@ internal class CaveRenderer(
             // Thin descending streaks give waterfalls a readable motion without opaque blue walls.
             float streak = pow(max(0.0, fall), 12.0) * (1.0-top) * fade;
             color += vec3(0.30,0.36,0.33) * streak * lighting * 0.22;
-            fragColor = vec4(color, mix(0.30 + 0.10 * (1.0-top), 0.82, fresnel));
+            // Surface plus dense : le fond reste perceptible sans dominer la couleur.
+            // Les cascades gardent davantage de transparence que les plans d'eau.
+            float opacity = mix(0.58, 0.72, top);
+            fragColor = vec4(color, mix(opacity, 0.94, fresnel));
             fragColor.rgb *= 1.0 - u_caveFog.x * smoothstep(u_caveFog.y, u_caveFog.z, length(v_worldPos));
         }
     """.trimIndent()
@@ -2638,7 +2644,7 @@ internal class CaveRenderer(
 
     /** Called on the GL thread; unproject the touched pixel using the actual rendered camera. */
     fun placeBlockAtScreen(xf: Float, yf: Float) {
-        if (!mode.allowsWorldEdits || heldItemMode == HotbarMode.COMBAT) return
+        if (gamePaused || !mode.allowsWorldEdits || heldItemMode == HotbarMode.COMBAT) return
         if (!xf.isFinite() || !yf.isFinite() || xf !in 0f..1f || yf !in 0f..1f) return
         val inverse = FloatArray(16)
         if (!android.opengl.Matrix.invertM(inverse, 0, camera.vpMatrix, 0)) return
@@ -3504,6 +3510,18 @@ internal class CaveRenderer(
         val type=selectedEquipmentType()
         val profile=RangedProfile.all[type]
         val id=hotbar[selectedSlot]
+        val action = when {
+            !mode.allowsCombat -> SecondaryAction.NONE
+            mode.allowsWorldEdits && id == E.ROD -> SecondaryAction.CANCEL_FISHING
+            mode.allowsWorldEdits && heldItemMode == HotbarMode.COMBAT &&
+                (id in E.melee || expeditionCombat.shield && (profile?.magazine ?: 0) == 0) -> SecondaryAction.GUARD
+            heldItemMode == HotbarMode.COMBAT && id != null && (profile?.magazine ?: 0) > 0 -> SecondaryAction.RELOAD
+            else -> SecondaryAction.NONE
+        }
+        if (action != lastSecondaryAction) {
+            lastSecondaryAction = action
+            secondaryActionCallback?.invoke(action)
+        }
         val reserve=ammoBlockIdFor(type)?.let { inventory[it] ?: 0 } ?: 0
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
         val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
