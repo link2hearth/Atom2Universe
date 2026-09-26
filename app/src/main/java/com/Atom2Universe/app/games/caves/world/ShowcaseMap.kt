@@ -172,13 +172,14 @@ internal object ShowcaseMap {
             for (y in y0..y1) for (z in z0..z1) for (x in x0..x1) put(x, y, z, block)
         }
         for (z in 0 until depth) for (x in 0 until WIDTH) {
-            // L-shaped extension: keep the long existing exhibition and widen only its entrance.
-            if (x >= ORIGINAL_WIDTH && z > 55 && !gardenContains(x, z) && !frontierContains(x, z) && !mechanicsContains(x, z)) continue
+            // The extension has one continuous floor, gaps between its areas included: nobody falls between them.
+            if (x >= ORIGINAL_WIDTH && z > FRONTIER_END_Z) continue
             fill(x, 0, z, x, FLOOR - 1, z, STONE)
             put(x, FLOOR, z, if (z < GALLERY_Z - 3) SANDSTONE else 2202)
             if (x == 0 || x == WIDTH - 1 || z == 0 || z == depth - 1 ||
                 (x == ORIGINAL_WIDTH - 1 && z > 55) ||
-                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149 && x !in 174..179))
+                (x >= ORIGINAL_WIDTH && z == 55 && x !in 78..149 && x !in 174..179) ||
+                (x >= ORIGINAL_WIDTH && z == FRONTIER_END_Z))
                 put(x, FLOOR + 1, z, COBBLESTONE)
         }
         // Two banks of ten/nine species. Five fixed growth snapshots along each bed.
