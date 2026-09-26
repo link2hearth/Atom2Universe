@@ -25,7 +25,8 @@ internal object ShowcaseMap {
     private val mechanicsExhibits = listOf(
         intArrayOf(155, 57, 167, 63), intArrayOf(169, 57, 175, 63), intArrayOf(176, 56, 187, 63),
         intArrayOf(188, 56, 201, 64), intArrayOf(155, 65, 167, 75), intArrayOf(169, 65, 179, 75),
-        intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87))
+        intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87),
+        intArrayOf(155, 89, 170, 101))
     /** Index of the mechanical exhibit under (x, z), in the order of cave_showcase_mechanics_names. */
     fun mechanicsAt(x: Int, z: Int): Int? = mechanicsExhibits.indexOfFirst { (x0, z0, x1, z1) -> x in x0..x1 && z in z0..z1 }
         .takeIf { it >= 0 && mechanicsContains(x, z) }
@@ -122,10 +123,17 @@ internal object ShowcaseMap {
         for (x in 153 until WIDTH) put(x, y, 114, COBBLESTONE, 0)
         for (z in 52..58) for (x in 174..179) put(x, FLOOR, z, COBBLESTONE, 0)
         fun part(x: Int, h: Int, z: Int, id: Short, axis: Char) =
-            put(x, y + h, z, id, ((when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }) or 8).toByte())
+            put(x, y + h, z, id, (when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }).toByte())
         val F = com.Atom2Universe.app.games.caves.node.FrontierItems
+        // A wheel dips its lower paddles into a water trough dug in the floor, across its plane.
+        fun wheel(x: Int, h: Int, z: Int, large: Boolean) {
+            part(x, h, z, if (large) F.LARGE_WATERWHEEL else F.WATERWHEEL, 'x')
+            val half = if (large) 3 else 2
+            for (dz in -half..half) put(x, FLOOR, z + dz, WATER, 0)
+        }
+        fun plinth(x: Int, z: Int, height: Int) { for (h in 0 until height) put(x, y + h, z, COBBLESTONE, 0) }
         // 0. Wheel, shafts and mill.
-        part(157, 0, 60, F.WATERWHEEL, 'y'); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'y')
+        wheel(157, 0, 60, false); for (x in 158..164) part(x, 0, 60, F.SHAFT, 'x'); part(165, 0, 60, F.MILL, 'y')
         // 1. Crank and vertical shaft.
         part(172, 0, 60, F.CRANK, 'y'); for (h in 1..4) part(172, h, 60, F.SHAFT, 'y')
         // 2. Cogwheels side by side, turning in turn.
@@ -135,7 +143,7 @@ internal object ShowcaseMap {
         part(194, 3, 59, F.COGWHEEL, 'z'); part(192, 1, 59, F.COGWHEEL, 'z')
         for (z in 60..62) part(194, 3, z, F.SHAFT, 'z')
         // 4. Gearbox: a quarter turn each side, reversed straight through.
-        part(157, 0, 70, F.WATERWHEEL, 'y'); for (x in 158..160) part(x, 0, 70, F.SHAFT, 'x')
+        wheel(157, 0, 70, false); for (x in 158..160) part(x, 0, 70, F.SHAFT, 'x')
         part(161, 0, 70, F.GEARBOX, 'y')
         for (z in 71..73) part(161, 0, z, F.SHAFT, 'z'); for (z in 67..69) part(161, 0, z, F.SHAFT, 'z')
         for (x in 162..165) part(x, 0, 70, F.SHAFT, 'x')
@@ -143,18 +151,24 @@ internal object ShowcaseMap {
         part(174, 3, 66, F.CRANK, 'z'); for (z in 67..68) part(174, 3, z, F.SHAFT, 'z')
         part(174, 3, 69, F.GEARBOX, 'x'); for (h in 1..2) part(174, h, 69, F.SHAFT, 'y'); part(174, 0, 69, F.MILL, 'y')
         // 6. Four machines at work: one wheel for crusher, mill and loom (8 of 8), another for the press.
-        part(182, 0, 70, F.WATERWHEEL, 'y'); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
+        wheel(182, 0, 70, false); for (x in 183..185) part(x, 0, 70, F.SHAFT, 'x')
         part(186, 0, 70, F.GEARBOX, 'y'); part(187, 0, 70, F.CRUSHER, 'y')
         part(186, 0, 71, F.MILL, 'y'); part(186, 0, 69, F.LOOM, 'y')
-        part(192, 0, 70, F.WATERWHEEL, 'y'); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'y')
+        wheel(192, 0, 70, false); part(193, 0, 70, F.SHAFT, 'x'); part(194, 0, 70, F.PRESS, 'y')
         // 7. Too much for one wheel: press, crusher and mill need 10, the wheel gives 8. Everything stops.
-        part(157, 0, 82, F.WATERWHEEL, 'y'); for (x in 158..160) part(x, 0, 82, F.SHAFT, 'x')
+        wheel(157, 0, 82, false); for (x in 158..160) part(x, 0, 82, F.SHAFT, 'x')
         part(161, 0, 82, F.GEARBOX, 'y'); part(161, 0, 83, F.PRESS, 'y'); part(162, 0, 82, F.CRUSHER, 'y')
         part(161, 0, 81, F.MILL, 'y')
         // 8. Gears that cannot agree: round the loop the speed comes back doubled. Everything stops.
         part(172, 0, 82, F.CRANK, 'y'); part(172, 1, 82, F.COGWHEEL, 'y'); part(173, 1, 82, F.COGWHEEL, 'y')
         part(172, 2, 82, F.SHAFT, 'y'); part(172, 3, 82, F.LARGE_COGWHEEL, 'y')
         part(173, 3, 83, F.COGWHEEL, 'y'); part(173, 2, 83, F.SHAFT, 'y'); part(173, 1, 83, F.COGWHEEL, 'y')
+        // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
+        wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
+        part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)
+        part(162, 1, 95, F.PRESS, 'y'); plinth(162, 95, 1)
+        part(161, 1, 96, F.CRUSHER, 'y'); plinth(161, 96, 1)
+        part(161, 1, 94, F.MILL, 'y'); plinth(161, 94, 1)
     }
 
     fun create(): A2Map {
@@ -234,7 +248,7 @@ internal object ShowcaseMap {
             val (ox, oz) = frontierOrigin(climate, kind)
             val blueprint = FrontierLandscape.blueprint(kind, arid = climate == 2, cold = climate == 1,
                 kotlin.random.Random(7300 + kind)) { _, _ -> 0 }
-            for ((pos, id) in blueprint) put(ox + pos.first, FLOOR + pos.second, oz + pos.third, id)
+            for ((pos, cell) in blueprint) put(ox + pos.first, FLOOR + pos.second, oz + pos.third, cell.id, cell.meta)
         }
         fill(65, FLOOR, 5, WIDTH - 2, FLOOR, 7, COBBLESTONE)
         val tops = IntArray(WIDTH * depth) { FLOOR }

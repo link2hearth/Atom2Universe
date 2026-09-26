@@ -587,6 +587,7 @@
         <item>Quatre machines sur deux roues</item>
         <item>Trop pour une seule roue : à l’arrêt</item>
         <item>Engrenages qui ne s’accordent pas : à l’arrêt</item>
+        <item>Grande roue : deux fois plus lente, deux fois plus forte</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>

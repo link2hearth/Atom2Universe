@@ -4591,11 +4591,7 @@ internal class CaveRenderer(
                 if (camera.fwdX > 0) 1 else 3
             } else if (camera.fwdZ > 0) 0 else 2
             (facing or if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
-        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT
-        else if (blockType in FrontierWorkshops.TURNING || blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.GEARBOX)
-            // Mark the axis as chosen, so the part is never taken for an unoriented legacy shaft.
-            (computeOrientMeta(blockType, target.fnx, target.fny, target.fnz).toInt() or FrontierWorkshops.ORIENTED).toByte()
-        else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        } else if (isLeaf(blockType)) com.Atom2Universe.app.games.caves.world.LeafSupport.PERSISTENT else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)

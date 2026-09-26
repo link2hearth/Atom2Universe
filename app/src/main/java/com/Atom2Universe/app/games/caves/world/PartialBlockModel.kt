@@ -76,7 +76,7 @@ internal object PartialBlockModel {
         }
 
     // Turning parts: a 6/16 rod through the whole block (shaft, crank) or a 6/16 thick plate across it
-    // (cogwheels). Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z; bit 3 marks an oriented part.
+    // (cogwheels). Meta follows ORIENT_AXIS (logs): 0 = Y, 1 = X, 2 = Z.
     /** Axis index of a shaft: 0 = X, 1 = Y, 2 = Z. */
     fun shaftAxis(meta: Byte) = when (meta.toInt() and 3) { 1 -> 0; 2 -> 2; else -> 1 }
     private const val ROD = 6f / 16f

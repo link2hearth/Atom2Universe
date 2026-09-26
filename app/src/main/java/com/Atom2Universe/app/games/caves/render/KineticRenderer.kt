@@ -35,7 +35,8 @@ internal class KineticRenderer {
             vpLocation = it.uniform("uVp")
             fogLocation = it.uniform("uCaveFog")
         }
-        val meshes = listOf(shaftMesh(), cogMesh(large = false), cogMesh(large = true), crankMesh())
+        val meshes = listOf(shaftMesh(), cogMesh(large = false), cogMesh(large = true), crankMesh(),
+            wheelMesh(1.45f, 8), wheelMesh(2.45f, 12))
         var first = 0
         for ((type, mesh) in meshes.withIndex()) {
             meshFirst[type] = first; meshCount[type] = mesh.size / MESH_FLOATS; first += meshCount[type]
@@ -73,10 +74,12 @@ internal class KineticRenderer {
         GLES30.glVertexAttribPointer(4, 3, GLES30.GL_FLOAT, false, instanceStride, first * instanceStride + 12)
     }
 
-    private fun type(block: Short) = when (block) {
+    private fun type(k: FrontierWorkshops.Kinetic) = when (k.block) {
         FrontierItems.COGWHEEL -> 1
         FrontierItems.LARGE_COGWHEEL -> 2
         FrontierItems.CRANK -> 3
+        FrontierItems.WATERWHEEL -> 4
+        FrontierItems.LARGE_WATERWHEEL -> 5
         else -> 0
     }
 
@@ -89,7 +92,7 @@ internal class KineticRenderer {
             groupStart[type] = n
             for (k in parts) {
                 if (n >= FrontierWorkshops.MAX_KINETICS) break
-                if (type(k.block) != type) continue
+                if (type(k) != type) continue
                 val o = n * INSTANCE_FLOATS
                 instances[o] = (k.pos.x - camera.x).toFloat()
                 instances[o + 1] = (k.pos.y - camera.y).toFloat()
@@ -191,8 +194,35 @@ internal class KineticRenderer {
         prism(.4f, 0f, 1.2f / 16f, 1.2f / 16f, .28f, .48f, 0f, LIGHT)
     }.data.toFloatArray()
 
+    /** Paddle wheel: axle, two rims, spokes and paddles, [radius] from the axle to the paddle tips. */
+    private fun wheelMesh(radius: Float, spokes: Int) = MeshOut().apply {
+        val hub = 3.5f / 16f
+        prism(0f, 0f, hub, hub, -.5f, .5f, 0f, DARK)
+        val rim = radius * .72f
+        val segments = spokes * 2
+        for (side in intArrayOf(-1, 1)) {
+            val z0 = side * .36f - .045f; val z1 = side * .36f + .045f
+            for (i in 0 until segments) {
+                val angle = (i * 2 * PI / segments).toFloat()
+                prism(cos(angle) * rim, sin(angle) * rim, rim * tan(PI / segments).toFloat() * 1.08f, radius * .035f + .02f,
+                    z0, z1, angle + (PI / 2).toFloat(), DARK)
+            }
+            for (i in 0 until spokes) {
+                val angle = (i * 2 * PI / spokes).toFloat()
+                prism(cos(angle) * rim / 2, sin(angle) * rim / 2, rim / 2, radius * .02f + .015f, z0, z1, angle, WOOD)
+            }
+        }
+        // Paddles run from inside the rims out past them, across the whole width of the wheel.
+        for (i in 0 until spokes) {
+            val angle = ((i + .5) * 2 * PI / spokes).toFloat()
+            val inner = radius * .55f
+            val middle = (inner + radius) / 2
+            prism(cos(angle) * middle, sin(angle) * middle, (radius - inner) / 2, radius * .02f + .012f, -.42f, .42f, angle, LIGHT)
+        }
+    }.data.toFloatArray()
+
     companion object {
-        private const val TYPES = 4
+        private const val TYPES = 6
         private const val MESH_FLOATS = 9
         private const val INSTANCE_FLOATS = 6
         private const val COG_TEETH = 8

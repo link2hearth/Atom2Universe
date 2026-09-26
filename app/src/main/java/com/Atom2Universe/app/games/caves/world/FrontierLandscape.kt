@@ -9,7 +9,9 @@ import kotlin.random.Random
 
 /** Version 5 landmarks: each blueprint is independent of chunk generation order. */
 internal class FrontierLandscape(private val seed: Long, private val terrain: NaturalTerrain) {
-    private data class Voxel(val x: Int,val y: Int,val z: Int,val id: Short)
+    private data class Voxel(val x: Int,val y: Int,val z: Int,val id: Short,val meta: Byte)
+    /** One block of a landmark blueprint, with its orientation. */
+    class Cell(val id: Short,val meta: Byte=0)
     private data class Site(val x: Int,val z: Int,val y: Int,val size: Int,
                             val chunks: Map<Triple<Int,Int,Int>, List<Voxel>>)
     private val sites=ConcurrentHashMap<Long,Site>()
@@ -31,7 +33,7 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
         val arid=biome in setOf("desert","savanna","volcanic")
         val cold=terrain.temperature(x.toDouble(),z.toDouble())<.25
         val data=blueprint(kind,arid,cold,rng) { dx,dz -> terrain.height((x+dx).toDouble(),(z+dz).toDouble()).toInt()-y }
-        val voxels=data.map { (p,id)->Voxel(x+p.first,y+p.second,z+p.third,id) }
+        val voxels=data.map { (p,cell)->Voxel(x+p.first,y+p.second,z+p.third,cell.id,cell.meta) }
         Site(x,z,y,size,voxels.groupBy { Triple(Math.floorDiv(it.x,16),Math.floorDiv(it.y,16),Math.floorDiv(it.z,16)) })
     }
     fun homes(x: Double,z: Double): List<FrontierLife.Place> = buildList {
@@ -53,6 +55,7 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
         val site=site(Math.floorDiv(c.worldX,192),Math.floorDiv(c.worldZ,192))
         for(v in site.chunks[Triple(c.cx,c.cy,c.cz)].orEmpty()) {
             c.setBlock(v.x-c.worldX,v.y-c.worldY,v.z-c.worldZ,v.id)
+            c.setMeta(v.x-c.worldX,v.y-c.worldY,v.z-c.worldZ,v.meta)
         }
     }
     companion object {
@@ -60,12 +63,12 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
         fun size(kind: Int)=if(kind==0) 43 else 19
         /** One landmark relative to its floor (y = 0); [heightAt] is the terrain height relative to that floor.
          * Huts add an entrance stair up to five blocks in front of them (negative z). */
-        fun blueprint(kind: Int,arid: Boolean,cold: Boolean,rng: Random,heightAt: (Int,Int)->Int): Map<Triple<Int,Int,Int>,Short> {
+        fun blueprint(kind: Int,arid: Boolean,cold: Boolean,rng: Random,heightAt: (Int,Int)->Int): Map<Triple<Int,Int,Int>,Cell> {
             val wood=if(cold) WOOD_SAPIN else if(arid) WOOD_DARK else WOOD
             val plank=if(cold) PLANK_SAPIN else if(arid) PLANK_DARK else PLANK
             val stone=if(arid) SANDSTONE else if(cold) STONE else COBBLESTONE
-            val data=linkedMapOf<Triple<Int,Int,Int>,Short>()
-            fun put(dx: Int,dy: Int,dz: Int,id: Short) { data[Triple(dx,dy,dz)]=id }
+            val data=linkedMapOf<Triple<Int,Int,Int>,Cell>()
+            fun put(dx: Int,dy: Int,dz: Int,id: Short,meta: Byte=0) { data[Triple(dx,dy,dz)]=Cell(id,meta) }
             fun plot(ox: Int,oz: Int,w: Int,d: Int,floor: Short) {
                 for(dx in ox until ox+w) for(dz in oz until oz+d) {
                     val h=heightAt(dx,dz)
@@ -149,9 +152,9 @@ internal class FrontierLandscape(private val seed: Long, private val terrain: Na
                     for(dx in 0..18) for(dz in 10..18) put(dx,5,dz,plank)
                     put(3,1,15,F.COMPOSTER); put(8,1,15,F.CACHE); put(13,1,15,F.COOKER)
                 }
-                else -> { // Prospector workshop with an unpowered mill to reclaim.
+                else -> { // Prospector workshop with a hand-cranked mill (log axis code 1 = along X).
                     hut(1,1,if(rng.nextBoolean()) 0 else 4); plot(11,1,7,16,GRAVEL)
-                    put(13,1,3,F.MILL); put(14,1,3,F.SHAFT); put(15,1,3,F.WATERWHEEL)
+                    put(13,1,3,F.MILL); put(14,1,3,F.SHAFT,1); put(15,1,3,F.CRANK,1)
                     for(dz in 9..14) for(dx in 11..16) put(dx,1,dz,if(rng.nextInt(5)==0) COPPER else ROCK)
                     put(12,1,6,F.CACHE)
                 }

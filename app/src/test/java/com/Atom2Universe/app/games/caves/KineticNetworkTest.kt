@@ -12,18 +12,22 @@ class KineticNetworkTest {
     private class Grid {
         val blocks = HashMap<Pos, Short>(); val metas = HashMap<Pos, Byte>()
         val active = HashSet<Pos>()
+        /** Sources with a direction of their own; the others in [active] follow the network. */
+        val direction = HashMap<Pos, Int>()
         fun put(x: Int, y: Int, z: Int, id: Short, axis: Char = 'y') {
             val p = Pos(x, y, z); blocks[p] = id
-            metas[p] = ((when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }) or 8).toByte()
+            metas[p] = (when (axis) { 'x' -> 1; 'z' -> 2; else -> 0 }).toByte()
         }
         fun solve(vararg sources: Pos) = KineticNetwork({ x, y, z -> blocks[Pos(x, y, z)] ?: AIR },
-            { x, y, z -> metas[Pos(x, y, z)] ?: 0 }) { p, _ -> p in active }.solve(sources.toList())
+            { x, y, z -> metas[Pos(x, y, z)] ?: 0 }) { p, _ ->
+            direction[p] ?: if (p in active) KineticNetwork.DRIVE_EITHER else KineticNetwork.DRIVE_NONE
+        }.solve(sources.toList())
     }
     private val base = KineticNetwork.BASE
 
     @Test fun wheelTurnsALineOfShaftsAndTheMillAtItsEnd() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL)
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.MILL)
         g.active += Pos(0, 0, 0)
         val r = g.solve(Pos(0, 0, 0))
         for (x in 1..3) assertEquals(base, r.speedAt(Pos(x, 0, 0)), 1e-4f)
@@ -35,7 +39,7 @@ class KineticNetworkTest {
 
     @Test fun dryWheelTurnsNothing() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL); g.put(1, 0, 0, F.SHAFT, 'x')
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); g.put(1, 0, 0, F.SHAFT, 'x')
         assertEquals(0f, g.solve(Pos(0, 0, 0)).speedAt(Pos(1, 0, 0)), 0f)
     }
 
@@ -68,7 +72,7 @@ class KineticNetworkTest {
 
     @Test fun tooManyMachinesStopTheWholeNetworkUntilASecondSourceHelps() {
         val g = Grid()
-        g.put(0, 0, 0, F.WATERWHEEL); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x')
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x')
         g.put(4, 0, 0, F.GEARBOX, 'y'); g.put(5, 0, 0, F.CRUSHER)
         g.active += Pos(0, 0, 0)
         var r = g.solve(Pos(0, 0, 0))
@@ -98,6 +102,34 @@ class KineticNetworkTest {
         val r = g.solve(Pos(0, -1, 0))
         assertTrue(r.network.getValue(Pos(0, 0, 0)).conflict)
         assertEquals(0f, r.speedAt(Pos(1, 0, 0)), 0f)
+    }
+
+    @Test fun theCurrentSetsTheWheelDirectionAndOpposedWheelsStop() {
+        val g = Grid()
+        g.put(0, 0, 0, F.WATERWHEEL, 'x'); for (x in 1..3) g.put(x, 0, 0, F.SHAFT, 'x'); g.put(4, 0, 0, F.WATERWHEEL, 'x')
+        g.direction[Pos(0, 0, 0)] = KineticNetwork.DRIVE_NEGATIVE
+        var r = g.solve(Pos(0, 0, 0), Pos(4, 0, 0))
+        assertEquals(-base, r.speedAt(Pos(2, 0, 0)), 1e-4f)
+        g.direction[Pos(4, 0, 0)] = KineticNetwork.DRIVE_NEGATIVE
+        r = g.solve(Pos(0, 0, 0), Pos(4, 0, 0))
+        assertEquals(16f, r.network.getValue(Pos(0, 0, 0)).capacity, 1e-4f)
+        g.direction[Pos(4, 0, 0)] = KineticNetwork.DRIVE_POSITIVE
+        r = g.solve(Pos(0, 0, 0), Pos(4, 0, 0))
+        assertTrue(r.network.getValue(Pos(0, 0, 0)).conflict)
+    }
+
+    @Test fun largeWheelIsSlowerAndStronger() {
+        val g = Grid()
+        g.put(0, 0, 0, F.LARGE_WATERWHEEL, 'x'); g.put(1, 0, 0, F.SHAFT, 'x'); g.put(2, 0, 0, F.GEARBOX, 'y')
+        g.put(3, 0, 0, F.PRESS); g.put(2, 0, 1, F.CRUSHER); g.put(2, 0, -1, F.MILL)
+        g.direction[Pos(0, 0, 0)] = KineticNetwork.DRIVE_POSITIVE
+        val r = g.solve(Pos(0, 0, 0))
+        assertEquals(KineticNetwork.LARGE_WHEEL_SPEED, r.speedAt(Pos(1, 0, 0)), 1e-4f)
+        assertEquals(5f, r.network.getValue(Pos(0, 0, 0)).stress, 1e-4f) // (4 + 4 + 2) at half speed
+        assertFalse(r.network.getValue(Pos(0, 0, 0)).stopped)
+        // A small wheel on the same axle wants twice the speed: they cannot agree.
+        g.put(-1, 0, 0, F.WATERWHEEL, 'x'); g.active += Pos(-1, 0, 0)
+        assertTrue(g.solve(Pos(0, 0, 0), Pos(-1, 0, 0)).network.getValue(Pos(0, 0, 0)).conflict)
     }
 
     @Test fun recipeTimeFollowsSpeed() {

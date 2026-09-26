@@ -7,7 +7,7 @@ import kotlin.math.abs
  *
  * A speed is a signed rate of turn about the +axis of a part (X, Y or Z); [BASE] is the speed of a
  * water wheel. Rules, all local:
- * - an axle (shaft, cogwheel, crank) passes its rotation unchanged to the axle continuing it;
+ * - an axle (shaft, cogwheel, crank, water wheel) passes its rotation unchanged to the axle continuing it;
  * - two small cogwheels side by side turn at the same speed, opposite ways;
  * - a large cogwheel and a small one set diagonally trade speed ×2 / ÷2, opposite ways;
  * - a gearbox turns the rotation by 90° between the four faces around its axis;
@@ -15,15 +15,17 @@ import kotlin.math.abs
  *
  * Each machine needs force in proportion to its speed; each driving source gives a fixed force.
  * A network whose machines need more than its sources give stops entirely, as does a network whose
- * sources disagree on the speed, or whose gears form a loop that cannot turn. Speeds are solved once per second, never per frame.
+ * sources disagree on the speed or the direction, or whose gears form a loop that cannot turn.
+ * Speeds are solved once per second, never per frame.
  */
 internal class KineticNetwork(
     private val blockAt: (Int, Int, Int) -> Short,
     private val metaAt: (Int, Int, Int) -> Byte,
-    /** Is this source turning right now (wheel in flowing water, crank recently turned)? */
-    private val driving: (FrontierWorkshops.Pos, Short) -> Boolean,
+    /** Is this source turning right now, and which way: [DRIVE_NONE], [DRIVE_POSITIVE] or [DRIVE_NEGATIVE]
+     * about its +axis, or [DRIVE_EITHER] when it has no direction of its own (crank). */
+    private val driving: (FrontierWorkshops.Pos, Short) -> Int,
 ) {
-    private enum class Kind { SHAFT, COG, LARGE_COG, CRANK, GEARBOX, WHEEL, MACHINE }
+    private enum class Kind { SHAFT, COG, LARGE_COG, CRANK, GEARBOX, WHEEL, LARGE_WHEEL, MACHINE }
 
     class Network(val stress: Float, val capacity: Float, val overloaded: Boolean, val conflict: Boolean) {
         val stopped get() = overloaded || conflict
@@ -39,10 +41,12 @@ internal class KineticNetwork(
         F.CRANK -> Kind.CRANK
         F.GEARBOX -> Kind.GEARBOX
         F.WATERWHEEL -> Kind.WHEEL
+        F.LARGE_WATERWHEEL -> Kind.LARGE_WHEEL
         F.MILL, F.PRESS, F.CRUSHER, F.LOOM -> Kind.MACHINE
         else -> null
     }
-    private fun axial(k: Kind?) = k == Kind.SHAFT || k == Kind.COG || k == Kind.LARGE_COG || k == Kind.CRANK
+    private fun axial(k: Kind?) = k != null && k != Kind.GEARBOX && k != Kind.MACHINE
+    private fun source(k: Kind?) = k == Kind.WHEEL || k == Kind.LARGE_WHEEL || k == Kind.CRANK
     private fun axis(p: FrontierWorkshops.Pos) = PartialBlockModel.shaftAxis(metaAt(p.x, p.y, p.z))
     private fun step(p: FrontierWorkshops.Pos, axis: Int, sign: Int) = when (axis) {
         0 -> p.move(sign, 0, 0); 1 -> p.move(0, sign, 0); else -> p.move(0, 0, sign)
@@ -63,8 +67,6 @@ internal class KineticNetwork(
                     when {
                         axial(kq) && axis(q) == a -> out += q to 1f
                         kq == Kind.GEARBOX && axis(q) != a -> out += q to (-sign * gearboxFace(axis(q), a)).toFloat()
-                        // A wheel's value is its spin about the direction pointing at the axle.
-                        kq == Kind.WHEEL -> out += q to -sign.toFloat()
                         kq == Kind.MACHINE -> out += q to 1f
                     }
                 }
@@ -89,10 +91,6 @@ internal class KineticNetwork(
                     if (axial(kq) && axis(q) == a) out += q to (sign * gearboxFace(g, a)).toFloat()
                     if (kq == Kind.MACHINE) out += q to 1f
                 }
-            }
-            k == Kind.WHEEL -> for (a in 0..2) for (sign in intArrayOf(1, -1)) {
-                val q = step(p, a, sign)
-                if (axial(kind(blockAt(q.x, q.y, q.z))) && axis(q) == a) out += q to sign.toFloat()
             }
             // Machines are ends: they take rotation and pass none on.
         }
@@ -124,16 +122,19 @@ internal class KineticNetwork(
             }
             var scale: Double? = null
             var capacity = 0f
-            for (m in members) {
+            // Sources with a direction of their own set the network first; the others follow it and
+            // only need the same speed.
+            for (pass in 0..1) for (m in members) {
                 val id = blockAt(m.x, m.y, m.z)
                 val k = kind(id)
-                if ((k != Kind.WHEEL && k != Kind.CRANK) || !driving(m, id)) continue
+                if (!source(k)) continue
+                val drive = driving(m, id)
+                if (drive == DRIVE_NONE || (pass == 0) == (drive == DRIVE_EITHER)) continue
                 capacity += capacity(k)
-                // Neither the cube wheel nor the crank has a direction of its own yet: a source follows the
-                // direction of the network, only its speed must agree with the others.
-                val wanted = BASE / rel.getValue(m)
+                val wanted = sourceSpeed(k) * (if (drive == DRIVE_EITHER) 1 else drive) / rel.getValue(m)
                 if (scale == null) scale = wanted
-                else if (abs(abs(scale) - abs(wanted)) > 1e-6 * abs(wanted)) conflict = true
+                else if (drive == DRIVE_EITHER) { if (abs(abs(scale) - abs(wanted)) > 1e-6 * abs(wanted)) conflict = true }
+                else if (abs(scale - wanted) > 1e-6 * abs(wanted)) conflict = true
             }
             val s = scale ?: 0.0
             val tooFast = members.any { abs(s * rel.getValue(it)) > MAX_SPEED + 1e-6 }
@@ -151,14 +152,21 @@ internal class KineticNetwork(
         return Result(speed, networks)
     }
 
-    private fun capacity(k: Kind) = if (k == Kind.CRANK) CRANK_FORCE else WHEEL_FORCE
+    private fun capacity(k: Kind?) = when (k) { Kind.CRANK -> CRANK_FORCE; Kind.LARGE_WHEEL -> LARGE_WHEEL_FORCE; else -> WHEEL_FORCE }
+    private fun sourceSpeed(k: Kind?) = if (k == Kind.LARGE_WHEEL) LARGE_WHEEL_SPEED.toDouble() else BASE.toDouble()
 
     companion object {
         /** Speed of a water wheel; recipes take their listed time at this speed. */
         const val BASE = 16f
         const val MAX_SPEED = 256f
         const val WHEEL_FORCE = 8f
+        const val LARGE_WHEEL_FORCE = 16f
+        const val LARGE_WHEEL_SPEED = 8f
         const val CRANK_FORCE = 4f
+        const val DRIVE_NONE = 0
+        const val DRIVE_POSITIVE = 1
+        const val DRIVE_NEGATIVE = -1
+        const val DRIVE_EITHER = 2
         /** Force a machine needs at [BASE] speed; twice as much at twice the speed. */
         fun impact(machine: Short) = when (machine) { F.PRESS, F.CRUSHER -> 4f; else -> 2f }
         /** Recipe time multiplier from the speed of the machine. */

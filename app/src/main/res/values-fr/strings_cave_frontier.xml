@@ -29,6 +29,8 @@
     <string name="cave_block_frontier_large_cogwheel">Grand engrenage</string>
     <string name="cave_block_frontier_gearbox">Renvoi d’angle</string>
     <string name="cave_block_frontier_crank">Manivelle</string>
+    <string name="cave_block_frontier_large_waterwheel">Grande roue à eau</string>
+    <string name="cave_wheel_hint">Placez-la pour que de l’eau courante ou qui tombe passe dans ses aubes : le courant décide de son sens. Elle entraîne l’axe par son moyeu. La grande roue tourne deux fois moins vite et elle est deux fois plus forte.</string>
     <string name="cave_kinetic_hint">Tourne avec l’axe qu’il prolonge. Deux engrenages côte à côte tournent en sens contraire ; un grand et un petit posés en diagonale doublent ou divisent la vitesse par deux. Un renvoi d’angle tourne la rotation d’un quart de tour.</string>
     <string name="cave_crank_hint">Utilisez-la pour la faire tourner 10 secondes. Peu de force.</string>
     <string name="cave_machine_overloaded">À l’arrêt · pas assez de force : ajoutez une roue ou retirez une machine.</string>

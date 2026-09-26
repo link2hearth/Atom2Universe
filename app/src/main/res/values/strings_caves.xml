@@ -587,6 +587,7 @@
         <item>Four machines on two wheels</item>
         <item>Too much for one wheel: stopped</item>
         <item>Gears that cannot agree: stopped</item>
+        <item>Large wheel: half the speed, twice the force</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Cottage</item>

@@ -221,7 +221,7 @@ internal object BlockRegistry {
     fun getLayerForFace(id: Short, face: Int, above: Short, meta: Byte = 0): Int {
         val idx = id.toInt() and 0xFFFF
         when (orientModeTable[idx]) {
-            ORIENT_AXIS -> when (meta.toInt() and 3) {
+            ORIENT_AXIS -> when (meta.toInt()) {
                 1 -> return when (face) { 2, 3 -> layerTopTable[idx]; else -> layerSideTable[idx] }
                 2 -> return when (face) { 4, 5 -> layerTopTable[idx]; else -> layerSideTable[idx] }
             }
