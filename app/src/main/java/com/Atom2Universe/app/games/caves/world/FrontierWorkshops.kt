@@ -15,11 +15,33 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     data class Pos(val x: Int, val y: Int, val z: Int) {
         fun move(dx: Int, dy: Int, dz: Int) = Pos(x+dx,y+dy,z+dz)
     }
-    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1,val stacks: List<CaveStackInventory.Stack> = emptyList(),val overloaded: Boolean=false,val conflict: Boolean=false)
+    data class View(val pos: Pos, val block: Short, val items: Map<Short,Int>, val powered: Boolean,val selection: Int=-1,val progress: Int=0,val active: Int=-1,val stacks: List<CaveStackInventory.Stack> = emptyList(),val overloaded: Boolean=false,val conflict: Boolean=false,
+        /** Forge heat: 0 out, 1 embers, 2 red, 3 white. */
+        val heat: Int=0,
+        /** Ovens: ingredients are [stacks], fuel and finished products have their own compartments. */
+        val zoned: Boolean=false,val fuelStacks: List<CaveStackInventory.Stack> = emptyList(),
+        val outputStacks: List<CaveStackInventory.Stack> = emptyList())
     private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1,val stacks: CaveStackInventory = CaveStackInventory()) {
         /** Fraction of a second of work carried over: a machine turning at half speed works every other second. */
         var partial=0f
+        /** Forge: seconds of fire left from the last fuel, burnt faster the hotter it blows. */
+        var burn=0f
+        /** Ovens: the fuel and the finished products, kept apart from the ingredients in [items]. */
+        val fuel: MutableMap<Short,Int> = linkedMapOf()
+        var fuelStacks=CaveStackInventory()
+        val output: MutableMap<Short,Int> = linkedMapOf()
+        var outputStacks=CaveStackInventory()
+        fun items(zone: Int)=when(zone) { ZONE_FUEL -> fuel; ZONE_OUTPUT -> output; else -> items }
+        fun stacks(zone: Int)=when(zone) { ZONE_FUEL -> fuelStacks; ZONE_OUTPUT -> outputStacks; else -> stacks }
+        fun reconcile() { stacks.reconcile(items); fuelStacks.reconcile(fuel); outputStacks.reconcile(output) }
     }
+    /** The two ovens (cooking stove, forge) sort ingredients, fuel and products into three compartments. */
+    private fun zoned(id: Short)=id==F.COOKER || id==E.FORGE
+    private fun isFuel(id: Short)="fuel" in BlockRegistry.get(id)?.tags.orEmpty()
+    /** Stack keys shown to the panel carry their compartment in their top bits. */
+    private fun zoneOf(key: Long)=(key ushr ZONE_SHIFT).toInt()
+    private fun rawKey(key: Long)=key and ((1L shl ZONE_SHIFT)-1)
+    private fun tagged(stacks: List<CaveStackInventory.Stack>,zone: Int)=stacks.map { it.copy(key=it.key or (zone.toLong() shl ZONE_SHIFT)) }
     private val stores = linkedMapOf<Pos,Store>()
     private var visualTimer=0f
     private var feedTimer=0f
@@ -81,7 +103,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     private var rotation=KineticNetwork.Result(emptyMap(),emptyMap())
     private fun speedAt(p: Pos)=rotation.speedAt(p)
-    data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false) {
+    /** [heat]: the forge heat a recipe needs (0: no fire, 1 embers, 2 red, 3 white). */
+    data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false,val heat: Int=0) {
         val key: String = "$machine/" + input.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" } +
             "/" + output.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" }
     }
@@ -91,9 +114,25 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(F.MILL,mapOf(9700.toShort() to 1),mapOf(F.FLOUR to 3),6,true),
         Recipe(F.CRUSHER,mapOf(3101.toShort() to 1),mapOf(F.IRON_DUST to 2),8,true),
         Recipe(F.CRUSHER,mapOf(3104.toShort() to 1),mapOf(F.COPPER_DUST to 2),8,true),
-        Recipe(F.KILN,mapOf(F.IRON_DUST to 1,3100.toShort() to 1),mapOf(3114.toShort() to 1),12),
-        Recipe(F.KILN,mapOf(F.COPPER_DUST to 1,3100.toShort() to 1),mapOf(3115.toShort() to 1),12),
-        Recipe(F.KILN,mapOf(3114.toShort() to 2,3100.toShort() to 2),mapOf(F.STEEL to 1),20),
+        // Cooking stove: every dish that needs a fire (1 fuel per batch).
+        Recipe(F.COOKER,mapOf(9705.toShort() to 2,9704.toShort() to 1,9706.toShort() to 1),mapOf(F.STEW to 3),12),
+        Recipe(F.COOKER,mapOf(9702.toShort() to 2,9709.toShort() to 1,9710.toShort() to 1,9706.toShort() to 1),mapOf(F.RATATOUILLE to 3),12),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9707.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9716.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9717.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        // Forge furnace: all the metal, glass and fired clay. Its heat comes from fuel and bellows.
+        Recipe(E.FORGE,mapOf(LOG to 1),mapOf(CHARCOAL to 1),10,heat=0),
+        Recipe(E.FORGE,mapOf(3104.toShort() to 1),mapOf(3115.toShort() to 1),6,heat=1),
+        Recipe(E.FORGE,mapOf(F.COPPER_DUST to 1),mapOf(3115.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(SAND to 1),mapOf(8003.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(2300.toShort() to 1),mapOf(2000.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(2304.toShort() to 1),mapOf(2308.toShort() to 1),5,heat=1),
+        Recipe(E.FORGE,mapOf(3118.toShort() to 4),mapOf(3119.toShort() to 4),8,heat=1),
+        Recipe(E.FORGE,mapOf(3101.toShort() to 1),mapOf(3114.toShort() to 1),8,heat=2),
+        Recipe(E.FORGE,mapOf(F.IRON_DUST to 1),mapOf(3114.toShort() to 1),5,heat=2),
+        Recipe(E.FORGE,mapOf(3103.toShort() to 1),mapOf(3116.toShort() to 1),6,heat=2),
+        Recipe(E.FORGE,mapOf(3102.toShort() to 1),mapOf(3117.toShort() to 1),6,heat=2),
+        Recipe(E.FORGE,mapOf(3114.toShort() to 2,CHARCOAL to 1),mapOf(F.STEEL to 1),15,heat=3),
         Recipe(F.PRESS,mapOf(3115.toShort() to 1),mapOf(F.PLATE to 2),6,true),
         Recipe(F.PRESS,mapOf(F.STEEL to 1),mapOf(F.GEAR to 3),10,true),
         Recipe(F.LOOM,mapOf(F.WOOL to 2),mapOf(F.CLOTH to 3),10,true),
@@ -102,8 +141,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.FLOUR to 2,F.EGG to 1),mapOf(F.PANCAKE to 4,BUCKET_EMPTY to 1),12),
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.TRUFFLE to 1,9705.toShort() to 2),mapOf(F.CREAM_SOUP to 3,BUCKET_EMPTY to 1),15)
     ) + listOf(
-        Recipe(E.FORGE,mapOf(3114.toShort() to 1,3100.toShort() to 1),mapOf(E.BLANK to 1),8),
-        Recipe(E.FORGE,mapOf(F.GEODE to 1,3100.toShort() to 1),mapOf(E.POWDER to 8),12),
+        Recipe(E.FORGE,mapOf(3114.toShort() to 1,CHARCOAL to 1),mapOf(E.BLANK to 1),8,heat=2),
+        Recipe(E.FORGE,mapOf(F.GEODE to 1),mapOf(E.POWDER to 8),12,heat=1),
         Recipe(F.PRESS,mapOf(F.STEEL to 1),mapOf(E.STEEL_PLATE to 2),8,true),
         Recipe(F.PRESS,mapOf(3114.toShort() to 1),mapOf(E.RIVETS to 8),6,true),
         Recipe(F.PRESS,mapOf(F.PLATE to 1),mapOf(E.CASE to 8),6,true),
@@ -124,7 +163,8 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun discover(p: Pos,id: Short) {
         if(id==F.HOPPER) hoppers.add(p)
         if(F.isContainer(id) && id!=F.CHEST && id!=F.CACHE) store(p)
-        if(id in TURNING) knownKinetics.getOrPut(p) { Kinetic(p,id) }
+        if(id in TURNING || id==F.HOPPER) knownKinetics.getOrPut(p) { Kinetic(p,id) }
+        if(id==F.MOLD_WET) drying.getOrPut(p) { 0f }
     }
     @Synchronized fun animate(dt: Float,x: Double,y: Double,z: Double,light: (Int,Int,Int)->Float) {
         visualTimer-=dt
@@ -138,12 +178,18 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 val k=parts.next().value;val p=k.pos
                 if(!loaded(p) || block(p)!=k.block) { parts.remove();continue }
                 if(abs(p.y-y)>32 || !simulated(p) || kinetics.size>=MAX_KINETICS) continue
-                if(k.block in MACHINES) gearboxSide(k)
-                else {
+                var turn=1f
+                if(k.block in MACHINES) turn=gearboxSide(k)
+                else if(k.block==F.HOPPER) {
+                    // The spout points where the hopper pours: an axis and which way along it.
+                    val d=HOPPER_DIRS[(world.metaAt(p.x,p.y,p.z).toInt() and 7).coerceIn(0,4)]
+                    k.axis=if(d[0]!=0) 0 else if(d[1]!=0) 1 else 2;k.flipped=d[0]+d[1]+d[2]<0
+                } else {
                     val meta=world.metaAt(p.x,p.y,p.z)
                     k.axis=PartialBlockModel.shaftAxis(meta);k.flipped=meta.toInt() and PartialBlockModel.CRANK_ON_PLUS!=0
                 }
-                k.speed=speedAt(p);k.light=light(p.x,p.y,p.z)
+                // The network only keeps a machine's pace; its way round comes from what drives it.
+                k.speed=if(k.block in MACHINES) abs(speedAt(p))*turn else speedAt(p);k.light=light(p.x,p.y,p.z)
                 kinetics.add(k)
             }
             for(mill in windmills.values) {
@@ -162,8 +208,9 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         for(m in visibleWindmills) if(m.speed!=0f) m.angle=(m.angle+m.speed*RADIANS_PER_SPEED*dt)%(2f*PI.toFloat())
     }
     /** A machine shows an axle end on the face where a gearbox drives it: axis of that face, flipped when
-     * the gearbox is on the - side. Axis -1: no gearbox, nothing drawn. */
-    private fun gearboxSide(k: Kinetic) {
+     * the gearbox is on the - side. Axis -1: no gearbox, nothing drawn. Returns which way that face turns
+     * about its +axis (±1), so the machine's parts follow the axle that drives them. */
+    private fun gearboxSide(k: Kinetic): Float {
         k.axis=-1
         for(axis in 0..2) for(sign in intArrayOf(1,-1)) {
             val q=when(axis) { 0 -> k.pos.move(sign,0,0); 1 -> k.pos.move(0,sign,0); else -> k.pos.move(0,0,sign) }
@@ -172,8 +219,13 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             // The mill's spindle: a vertical shaft (or any turning axle) coming down onto it.
             val spindle=k.block==F.MILL && axis==1 && sign>0 && id in TURNING && id !in MACHINES && qAxis==1
             if(!gearbox && !spindle) continue
-            k.axis=axis;k.flipped=sign<0;return
+            k.axis=axis;k.flipped=sign<0
+            val driver=speedAt(q)
+            // A gearbox face at -sign from the gearbox turns at -sign·f·v, f = +1 for the first axis after its own.
+            val face=if(spindle) driver else -sign*(if(axis==(qAxis+1)%3) 1 else -1)*driver
+            return if(face<0f) -1f else 1f
         }
+        return 1f
     }
     @Synchronized fun feedAnimals(animals: com.Atom2Universe.app.games.caves.entity.PassiveAnimals,dt: Float) {
         feedTimer+=dt
@@ -210,7 +262,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         } }
     }
     @Synchronized fun placed(p: Pos, id: Short) {
-        stores.remove(p); hoppers.remove(p); knownKinetics.remove(p); cranks.remove(p)
+        stores.remove(p); hoppers.remove(p); knownKinetics.remove(p); cranks.remove(p); drying.remove(p)
         if(F.isContainer(id)) stores[p]=Store() // player-placed caches never roll loot
         if(id == F.HOPPER) hoppers.add(p)
         discover(p,id)
@@ -218,38 +270,97 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     @Synchronized fun view(p: Pos): View? {
         if(!loaded(p) || !F.isContainer(block(p))) return null
         val s=store(p)
-        s.stacks.reconcile(s.items)
+        s.reconcile()
         val net=rotation.network[p]
-        return View(p,block(p),s.items.toMap(),speedAt(p)!=0f,s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },s.stacks.snapshot(),
-            net?.overloaded==true,net?.conflict==true)
+        val zoned=zoned(block(p))
+        return View(p,block(p),if(zoned) s.items+s.fuel else s.items.toMap(),speedAt(p)!=0f,s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },
+            tagged(s.stacks.snapshot(),ZONE_INPUT),net?.overloaded==true,net?.conflict==true,if(block(p)==E.FORGE && s.burn>0f) 1+bellows(p) else 0,
+            zoned,tagged(s.fuelStacks.snapshot(),ZONE_FUEL),tagged(s.outputStacks.snapshot(),ZONE_OUTPUT))
+    }
+    /** How much the bellows around a forge raise its fire: +1 from speed 16 in all, +2 from 32. */
+    private fun bellows(p: Pos): Int {
+        var blow=0f
+        for(d in NEIGHBOURS) { val q=p.move(d[0],d[1],d[2]); if(block(q)==F.BELLOWS) blow+=abs(speedAt(q)) }
+        return when { blow>=2*KineticNetwork.BASE -> 2; blow>=KineticNetwork.BASE -> 1; else -> 0 }
+    }
+    /** Brick moulds drying: seconds of sun each has had. */
+    private val drying=linkedMapOf<Pos,Float>()
+    /** Daytime, set by the renderer: moulds only dry under the sun. */
+    @Volatile var sunUp=false
+    /** Cells whose block changed on their own (a mould that dried): the renderer remeshes them. */
+    private val changed=ArrayList<Pos>()
+    @Synchronized fun takeChanged(): List<Pos> = changed.toList().also { changed.clear() }
+    private fun underSky(p: Pos): Boolean {
+        for(y in p.y+1..p.y+SKY_CHECK) {
+            val b=world.blockAt(p.x,y,p.z)
+            if(b!=AIR && !isTransparent(b) && !isDecoration(b) && !isLeaf(b)) return false
+        }
+        return true
+    }
+    private fun dryMolds() {
+        val iterator=drying.entries.iterator()
+        while(iterator.hasNext()) {
+            val entry=iterator.next();val p=entry.key
+            if(!loaded(p)) continue
+            if(block(p)!=F.MOLD_WET) { iterator.remove();continue }
+            if(!sunUp || !simulated(p) || !underSky(p)) continue
+            entry.setValue(entry.value+1f)
+            if(entry.value>=DRY_SECONDS) {
+                world.setBlock(p.x,p.y,p.z,F.MOLD_DRY);changed+=p;iterator.remove()
+            }
+        }
     }
     @Synchronized fun splitStack(p: Pos,key: Long,count: Int): Boolean {
         if(!loaded(p) || !F.isContainer(block(p))) return false
-        val s=store(p);s.stacks.reconcile(s.items)
-        return s.stacks.split(key,count)
+        val s=store(p);s.reconcile()
+        return s.stacks(zoneOf(key)).split(rawKey(key),count)
     }
-    @Synchronized fun moveStack(p: Pos,key: Long,target: Long?): Boolean {
+    /** Reorders a stack inside its compartment, or moves it to [zone] in an oven: ingredients and fuel
+     * trade places (fuel only if it burns); nothing goes back into the products. */
+    @Synchronized fun moveStack(p: Pos,key: Long,target: Long?,zone: Int=zoneOf(key)): Boolean {
         if(!loaded(p) || !F.isContainer(block(p))) return false
-        val s=store(p);s.stacks.reconcile(s.items)
-        return s.stacks.moveToBag(key,target)
+        val s=store(p);s.reconcile()
+        val from=zoneOf(key);val into=target?.let { zoneOf(it) } ?: zone
+        if(into==from) return s.stacks(from).moveToBag(rawKey(key),target?.let { rawKey(it) })
+        val stack=s.stacks(from).get(rawKey(key)) ?: return false
+        if(!zoned(block(p)) || into==ZONE_OUTPUT || into==ZONE_FUEL && !isFuel(stack.id)) return false
+        val to=s.items(into);val count=minOf(stack.count,Int.MAX_VALUE-(to[stack.id] ?: 0))
+        if(count<=0) return false
+        val fromItems=s.items(from);val left=fromItems.getValue(stack.id)-count
+        if(left==0) fromItems.remove(stack.id) else fromItems[stack.id]=left
+        to[stack.id]=(to[stack.id] ?: 0)+count
+        s.stacks(from).take(rawKey(key),count);s.stacks(into).receive(stack.id,count,target?.let { rawKey(it) })
+        return true
     }
     @Synchronized fun transferStack(p: Pos,inventory: MutableMap<Short,Int>,player: CaveStackInventory,
-        hotbar: Array<Short?>,key: Long,deposit: Boolean,target: Long?=null,slot: Int?=null): Int {
+        hotbar: Array<Short?>,key: Long,deposit: Boolean,target: Long?=null,slot: Int?=null,zone: Int=ZONE_INPUT): Int {
         if(!loaded(p) || !F.isContainer(block(p))) return 0
-        val s=store(p);s.stacks.reconcile(s.items)
-        val from=if(deposit) player else s.stacks;val to=if(deposit) s.stacks else player
-        val source=from.get(key) ?: return 0
-        val destination=if(deposit) s.items else inventory
+        val s=store(p);s.reconcile()
+        // Depositing: into the compartment dropped on (ovens only); withdrawing: from the stack's own.
+        val z=if(!zoned(block(p))) ZONE_INPUT else if(deposit) target?.let { zoneOf(it) } ?: zone else zoneOf(key)
+        val box=s.stacks(z);val boxItems=s.items(z)
+        val from=if(deposit) player else box;val to=if(deposit) box else player
+        val source=from.get(if(deposit) key else rawKey(key)) ?: return 0
+        if(deposit && (z==ZONE_OUTPUT || z==ZONE_FUEL && !isFuel(source.id))) return 0
+        val destination=if(deposit) boxItems else inventory
         val count=minOf(source.count,Int.MAX_VALUE-(destination[source.id] ?: 0).coerceAtLeast(0))
-        if(count<=0 || !transfer(p,inventory,source.id,count,deposit)) return 0
-        from.take(key,count);to.receive(source.id,count,target,if(deposit) null else slot,bagOnly=slot==null)
+        if(count<=0 || !move(boxItems,inventory,source.id,count,deposit)) return 0
+        from.take(source.key,count);to.receive(source.id,count,if(deposit) target?.let { rawKey(it) } else target,if(deposit) null else slot,bagOnly=slot==null)
         player.writeBar(hotbar)
         return count
     }
-    /** Atomic exact transfer. Capacity and overflow are checked before either side changes. */
+    /** Atomic exact transfer by item. Ovens take fuel into their fuel compartment and give their products first. */
     @Synchronized fun transfer(p: Pos, inventory: MutableMap<Short,Int>, id: Short, requested: Int, deposit: Boolean): Boolean {
         if(requested <= 0 || !loaded(p) || !F.isContainer(block(p))) return false
-        val box=store(p).items
+        val s=store(p)
+        val box=if(!zoned(block(p))) s.items
+            else if(deposit) (if(isFuel(id)) s.fuel else s.items)
+            else listOf(s.output,s.items,s.fuel).firstOrNull { (it[id] ?: 0)>0 } ?: return false
+        return move(box,inventory,id,requested,deposit)
+    }
+    /** Capacity and overflow are checked before either side changes. */
+    private fun move(box: MutableMap<Short,Int>,inventory: MutableMap<Short,Int>,id: Short,requested: Int,deposit: Boolean): Boolean {
+        if(requested <= 0) return false
         val from=if(deposit) inventory else box; val to=if(deposit) box else inventory
         val amount=minOf(requested,(from[id] ?: 0).coerceAtLeast(0),Int.MAX_VALUE-(to[id] ?: 0).coerceAtLeast(0))
         if(amount <= 0) return false
@@ -259,9 +370,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         return true
     }
     @Synchronized fun breakBlock(p: Pos): Map<Short,Int> {
-        hoppers.remove(p); knownKinetics.remove(p); cranks.remove(p)
+        hoppers.remove(p); knownKinetics.remove(p); cranks.remove(p); drying.remove(p)
         if(F.isContainer(block(p))) store(p)
-        val contents=stores.remove(p)?.items?.toMutableMap() ?: mutableMapOf()
+        val contents=mutableMapOf<Short,Int>()
+        stores.remove(p)?.let { s -> for(m in listOf(s.items,s.fuel,s.output)) for((id,n) in m) contents[id]=(contents[id] ?: 0)+n }
+        // Dry bricks come out of their mould (the bricks are the block's drop): the mould goes back to the bag.
+        if(block(p)==F.MOLD_DRY) contents[F.BRICK_MOLD]=(contents[F.BRICK_MOLD] ?: 0)+1
         // Breaking a turning windmill head gives its sails back.
         windmills.remove(p)?.let { mill ->
             for(s in mill.sails) contents[s[3].toShort()]=(contents[s[3].toShort()] ?: 0)+1
@@ -308,13 +422,28 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     }
     /** Exhibition map: a windmill that turns from the start, its sails never placed as blocks. */
     @Synchronized fun addWindmill(p: Pos,axis: Int,sails: List<IntArray>) { windmills[p]=Windmill(p,axis,sails) }
-    private fun canProcess(s: Store,input: Map<Short,Int>,output: Map<Short,Int>): Boolean =
-        input.all { (id,n)->(s.items[id] ?: 0)>=n } && output.all { (id,n)->
-            (s.items[id] ?: 0).toLong()-(input[id] ?: 0)+n<=Int.MAX_VALUE }
-    private fun process(s: Store,input: Map<Short,Int>,output: Map<Short,Int>): Boolean {
-        if(!canProcess(s,input,output)) return false
-        for((id,n) in input) { val left=s.items.getValue(id)-n; if(left==0) s.items.remove(id) else s.items[id]=left }
-        for((id,n) in output) s.items[id]=(s.items[id] ?: 0)+n
+    /** A recipe asking for a stand-in ([LOG], [SAND], [CHARCOAL]) takes any block of that family. */
+    private val families: Map<Short,List<Short>> by lazy {
+        fun tagged(tag: String)=BlockRegistry.all().filter { tag in it.tags }.map { it.id }.sorted()
+        mapOf(LOG to tagged("logs"),SAND to BlockRegistry.all().filter { it.name in SANDS }.map { it.id }.sorted(),
+            CHARCOAL to listOf(CHARCOAL,3100.toShort()))
+    }
+    private fun family(id: Short)=families[id] ?: listOf(id)
+    private fun count(s: Store,id: Short)=family(id).sumOf { (s.items[it] ?: 0).toLong() }
+    private fun canProcess(s: Store,input: Map<Short,Int>,output: Map<Short,Int>,out: Map<Short,Int> = s.items): Boolean =
+        input.all { (id,n)->count(s,id)>=n } && output.all { (id,n)->
+            (out[id] ?: 0).toLong()-(if(out===s.items) input[id] ?: 0 else 0)+n<=Int.MAX_VALUE }
+    private fun process(s: Store,input: Map<Short,Int>,output: Map<Short,Int>,out: MutableMap<Short,Int> = s.items): Boolean {
+        if(!canProcess(s,input,output,out)) return false
+        for((wanted,n) in input) {
+            var left=n
+            for(id in family(wanted)) {
+                val take=minOf(left,s.items[id] ?: 0); if(take==0) continue
+                val rest=s.items.getValue(id)-take; if(rest==0) s.items.remove(id) else s.items[id]=rest
+                left-=take
+            }
+        }
+        for((id,n) in output) out[id]=(out[id] ?: 0)+n
         return true
     }
     private fun process(s: Store,input: Map<Short,Int>,out: Short,count: Int) = process(s,input,mapOf(out to count))
@@ -324,15 +453,26 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         accumulator-=1f
         for(entry in cranks.entries) entry.setValue(entry.value-1f)
         refreshRotation()
+        dryMolds()
         // Only nearby, loaded workshops run. No offline production or distant world reads.
         for((p,s) in stores) {
             if(!loaded(p) || !simulated(p)) continue
             val machine=block(p)
-            val fuel=s.items.keys.sorted().firstOrNull { "fuel" in BlockRegistry.get(it)?.tags.orEmpty() && (s.items[it] ?: 0)>0 }
+            // Ovens burn from their fuel compartment and put their products apart, so a product is never re-used.
+            val fuelBox=if(zoned(machine)) s.fuel else s.items
+            val out=if(zoned(machine)) s.output else s.items
+            val fuel=fuelBox.keys.sorted().firstOrNull { isFuel(it) && (fuelBox[it] ?: 0)>0 }
+            fun burnOne() { val left=fuelBox.getValue(fuel!!)-1; if(left==0) fuelBox.remove(fuel) else fuelBox[fuel]=left }
+            // The forge's heat: its fire (lit, or fuel ready to light it) raised by the bellows beside it.
+            val heat=if(machine!=E.FORGE || s.burn<=0f && fuel==null) 0 else 1+bellows(p)
             val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || speedAt(p)!=0f) &&
-                (machine!=F.COOKER || fuel!=null) && canProcess(s,
-                    if(machine==F.COOKER) r.input + (fuel!! to 1) else r.input,r.output) }
+                (machine!=F.COOKER || fuel!=null) && heat>=r.heat && canProcess(s,r.input,r.output,out) }
             if(recipe!=null) {
+                if(recipe.heat>0) {
+                    // Keep the fire going: a fuel lasts FORGE_FUEL_SECONDS on embers, half as long red, a third white.
+                    if(s.burn<=0f) { burnOne(); s.burn=FORGE_FUEL_SECONDS }
+                    s.burn-=heat
+                }
                 val recipeKey=recipe.key
                 if(s.active!=recipeKey) { s.active=recipeKey;s.progress=0;s.partial=0f }
                 if(recipe.power) {
@@ -341,7 +481,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 } else s.progress++
                 if(s.progress>=recipe.seconds) {
                     s.progress=0
-                    process(s,if(machine==F.COOKER) recipe.input+(fuel!! to 1) else recipe.input,recipe.output)
+                    if(process(s,recipe.input,recipe.output,out) && machine==F.COOKER) burnOne()
                 }
                 continue
             }
@@ -349,32 +489,53 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             s.progress=0
         }
 
+        // Hoppers: each second, take one item from the container above into their own small stock, and pour
+        // one item into the container they point at. A row of hoppers carries items along.
         for(p in hoppers) {
-            if(!loaded(p) || block(p)!=F.HOPPER) continue
-            val above=p.move(0,1,0); val below=p.move(0,-1,0)
-            if(!loaded(above) || !loaded(below) || !F.isContainer(block(above)) || !F.isContainer(block(below))) continue
-            val from=store(above).items; val to=store(below).items
-            // Machine outlets export products only; raw material stays inside the machine.
-            val id=from.keys.sorted().firstOrNull { id ->
-                val machine=block(above)
-                val selected=store(above).selection
-                val outputs=recipes.filterIndexed { index,r -> r.machine==machine && (selected<0 || selected==index) }
-                (to[id] ?: 0)<Int.MAX_VALUE && (outputs.isEmpty() || outputs.any { id in it.output })
-            } ?: continue
-            to[id]=(to[id] ?: 0)+1
-            val left=from.getValue(id)-1; if(left==0) from.remove(id) else from[id]=left
+            if(!loaded(p) || block(p)!=F.HOPPER || !simulated(p)) continue
+            val box=store(p).items
+            val above=p.move(0,1,0)
+            // Another hopper above pours by itself: never pull from it, or items would move twice.
+            if(loaded(above) && F.isContainer(block(above)) && block(above)!=F.HOPPER) {
+                val machine=block(above);val source=store(above)
+                // A machine gives only its products, an oven only its output; raw material stays inside.
+                val from=if(zoned(machine)) source.output else source.items
+                val outputs=recipes.filterIndexed { index,r -> r.machine==machine && (source.selection<0 || source.selection==index) }
+                val id=from.keys.sorted().firstOrNull { id ->
+                    hopperTakes(box,id) && (zoned(machine) || outputs.isEmpty() || outputs.any { id in it.output }) }
+                if(id!=null) moveOne(from,box,id)
+            }
+            val d=HOPPER_DIRS[(world.metaAt(p.x,p.y,p.z).toInt() and 7).coerceIn(0,4)]
+            val target=p.move(d[0],d[1],d[2])
+            if(!loaded(target) || !F.isContainer(block(target))) continue
+            val into=store(target)
+            fun destination(id: Short)=if(zoned(block(target)) && isFuel(id)) into.fuel else into.items
+            val id=box.keys.sorted().firstOrNull { id ->
+                if(block(target)==F.HOPPER) hopperTakes(into.items,id) else (destination(id)[id] ?: 0)<Int.MAX_VALUE } ?: continue
+            moveOne(box,destination(id),id)
         }
+    }
+    /** A hopper holds up to [HOPPER_KINDS] kinds of item, [HOPPER_STACK] of each. */
+    private fun hopperTakes(box: Map<Short,Int>,id: Short)=(box[id] ?: 0)<HOPPER_STACK && (id in box || box.size<HOPPER_KINDS)
+    private fun moveOne(from: MutableMap<Short,Int>,to: MutableMap<Short,Int>,id: Short) {
+        val left=from.getValue(id)-1; if(left==0) from.remove(id) else from[id]=left
+        to[id]=(to[id] ?: 0)+1
     }
     @Synchronized fun snapshot(): String {
         val rows=JSONArray()
         for((p,s) in stores) {
-            s.stacks.reconcile(s.items)
+            s.reconcile()
             rows.put(JSONObject().put("x",p.x).put("y",p.y).put("z",p.z).put("stacks",s.stacks.json())
-            .put("selectionKey",recipes.getOrNull(s.selection)?.key ?: "").put("active",s.active).put("progress",s.progress)
+            .put("fuelStacks",s.fuelStacks.json()).put("outputStacks",s.outputStacks.json())
+            .put("fuel",JSONObject().also { j -> s.fuel.forEach { (id,n)->j.put(id.toString(),n) } })
+            .put("output",JSONObject().also { j -> s.output.forEach { (id,n)->j.put(id.toString(),n) } })
+            .put("selectionKey",recipes.getOrNull(s.selection)?.key ?: "").put("active",s.active).put("progress",s.progress).put("burn",s.burn.toDouble())
             .put("items",JSONObject().also { j -> s.items.forEach { (id,n)->j.put(id.toString(),n) } }))
         }
         return JSONObject().put("stores",rows).put("hoppers",JSONArray().also { a ->
             hoppers.forEach { a.put(JSONArray().put(it.x).put(it.y).put(it.z)) }
+        }).put("drying",JSONArray().also { a ->
+            drying.forEach { (p,t) -> a.put(JSONArray().put(p.x).put(p.y).put(p.z).put(t.toDouble())) }
         }).put("windmills",JSONArray().also { a ->
             // The sails are not in the world while they turn: the save is their only copy.
             for(m in windmills.values) a.put(JSONObject().put("x",m.pos.x).put("y",m.pos.y).put("z",m.pos.z).put("axis",m.axis)
@@ -382,7 +543,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         }).toString()
     }
     @Synchronized fun restore(json: String) {
-        stores.clear(); hoppers.clear(); windmills.clear()
+        stores.clear(); hoppers.clear(); windmills.clear(); drying.clear()
         val root=runCatching { JSONObject(json) }.getOrNull() ?: return
         val mills=root.optJSONArray("windmills") ?: JSONArray()
         for(i in 0 until mills.length()) runCatching {
@@ -390,6 +551,10 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             val p=Pos(j.getInt("x"),j.getInt("y"),j.getInt("z"))
             windmills[p]=Windmill(p,j.getInt("axis"),(0 until s.length()).map { k ->
                 val v=s.getJSONArray(k);intArrayOf(v.getInt(0),v.getInt(1),v.getInt(2),v.getInt(3)) })
+        }
+        val dry=root.optJSONArray("drying") ?: JSONArray()
+        for(i in 0 until dry.length()) runCatching {
+            val a=dry.getJSONArray(i); drying[Pos(a.getInt(0),a.getInt(1),a.getInt(2))]=a.getDouble(3).toFloat()
         }
         val rows=root.optJSONArray("stores") ?: JSONArray()
         for(i in 0 until rows.length()) runCatching {
@@ -401,6 +566,12 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 val id=key.toIntOrNull(); val n=items.optInt(key)
                 if(id!=null && id in 1..32767 && n>0) s.items[id.toShort()]=n
             }
+            s.burn=j.optDouble("burn",0.0).toFloat()
+            for((name,into) in listOf("fuel" to s.fuel,"output" to s.output)) {
+                val o=j.optJSONObject(name) ?: continue
+                o.keys().forEach { key -> val id=key.toIntOrNull(); val n=o.optInt(key); if(id!=null && id in 1..32767 && n>0) into[id.toShort()]=n }
+            }
+            s.fuelStacks=CaveStackInventory(j.optString("fuelStacks","[]"));s.outputStacks=CaveStackInventory(j.optString("outputStacks","[]"))
             stores[Pos(j.getInt("x"),j.getInt("y"),j.getInt("z"))]=s
         }
         val hs=root.optJSONArray("hoppers") ?: return
@@ -423,7 +594,30 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     companion object {
         const val MAX_KINETICS=512
         /** Machines driven by the network: drawn whole by KineticRenderer, with a part that shows their work. */
-        val MACHINES=setOf(F.MILL,F.PRESS,F.CRUSHER,F.LOOM)
+        val MACHINES=setOf(F.MILL,F.PRESS,F.CRUSHER,F.LOOM,F.BELLOWS)
+        /** Stand-ins in recipes for a family of blocks: any log, any sand, charcoal or coal. */
+        val LOG: Short=1000
+        val SAND: Short=4000
+        val CHARCOAL: Short=3113
+        private val SANDS=setOf("sand","redsand","greysand")
+        /** Where a hopper pours, by its meta: down, +X, -X, +Z, -Z. */
+        val HOPPER_DIRS=arrayOf(intArrayOf(0,-1,0),intArrayOf(1,0,0),intArrayOf(-1,0,0),intArrayOf(0,0,1),intArrayOf(0,0,-1))
+        /** Meta of a hopper pouring towards (dx, dy, dz); anything not sideways pours down. */
+        fun hopperMeta(dx: Int,dy: Int,dz: Int): Byte=when {
+            dy!=0 -> 0; dx>0 -> 1; dx<0 -> 2; dz>0 -> 3; dz<0 -> 4; else -> 0
+        }.toByte()
+        const val HOPPER_KINDS=5
+        const val HOPPER_STACK=64
+        const val ZONE_INPUT=0
+        const val ZONE_FUEL=1
+        const val ZONE_OUTPUT=2
+        private const val ZONE_SHIFT=48
+        private val NEIGHBOURS=arrayOf(intArrayOf(1,0,0),intArrayOf(-1,0,0),intArrayOf(0,1,0),intArrayOf(0,-1,0),intArrayOf(0,0,1),intArrayOf(0,0,-1))
+        /** Seconds of embers per fuel in the forge. */
+        const val FORGE_FUEL_SECONDS=24f
+        /** A day of sun (the daytime of a 30 min day) dries a brick mould. */
+        const val DRY_SECONDS=1200f
+        private const val SKY_CHECK=96
         val TURNING=setOf(F.SHAFT,F.COGWHEEL,F.LARGE_COGWHEEL,F.CRANK,F.WATERWHEEL,F.LARGE_WATERWHEEL)+MACHINES
         val SOURCES=setOf(F.WATERWHEEL,F.LARGE_WATERWHEEL,F.CRANK)
         /** A water wheel (speed 16) turns half a turn per second. */

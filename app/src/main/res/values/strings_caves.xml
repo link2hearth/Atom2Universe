@@ -19,7 +19,7 @@
     <string name="cave_block_fired_brick">Fired brick</string>
     <string name="cave_block_mineral_powder">Mineral propellant</string>
     <string name="cave_block_terracotta">Terracotta</string>
-    <string name="cave_craft_furnace_hint">Keep a furnace in your inventory for firing and smelting recipes. Fuel is consumed; the furnace is kept.</string>
+    <string name="cave_craft_furnace_hint">Decorative. Cooking is done on a placed cooking stove, metal, glass and fired clay in a forge furnace.</string>
     <string name="cave_craft_table_hint">Decorative workbench. All crafting is available from your inventory.</string>
     <string name="cave_craft_bucket_hint">Use on water to fill, or on an empty space to pour.</string>
     <string name="cave_ui_ores">Ores</string>
@@ -592,6 +592,7 @@
         <item>A large wheel and a long row of gearboxes: six workshops</item>
         <item>By hand: a crank on a gearbox, two workshops</item>
         <item>Faster: the small cogwheel doubles the speed, the press asks twice the force</item>
+        <item>Foundry: bellows on a gearbox blow on the forge</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Cottage</item>

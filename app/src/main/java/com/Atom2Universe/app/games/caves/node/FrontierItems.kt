@@ -32,6 +32,13 @@ internal object FrontierItems {
     const val LARGE_WATERWHEEL: Short = 9823
     const val WINDMILL: Short = 9824
     const val SAIL: Short = 9825
+    /** Blows on a forge beside it: the faster it turns, the hotter the fire. */
+    const val BELLOWS: Short = 9826
+    /** Empty wooden brick mould; filled with clay it becomes [MOLD_WET]. */
+    const val BRICK_MOLD: Short = 9827
+    /** Clay in its mould, set down to dry in the sun; a day of sun turns it into [MOLD_DRY]. */
+    const val MOLD_WET: Short = 9828
+    const val MOLD_DRY: Short = 9829
 
     const val PRESS: Short = 9840
     const val CRUSHER: Short = 9841
@@ -60,7 +67,7 @@ internal object FrontierItems {
     const val CHARM: Short = 9871
     const val MARKET_BELL: Short = 9872
 
-    fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE
+    fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE || id==HOPPER
     fun healing(id: Short): Int = when (id) {
         BREAD -> 7; SALAD -> 6; STEW -> 14; BAKED_POTATO -> 6
         BERRY_TART -> 12; RATATOUILLE -> 16; TRAVEL_RATION -> 10
@@ -87,17 +94,53 @@ internal object FrontierItems {
     }
 
     fun registerTextures() {
-        for (id in 9800..9882) for (face in listOf("top", "side")) {
+        for (id in 9800..9882) for (face in if (id == 9805) listOf("top", "side", "front", "bottom") else listOf("top", "side")) {
             BlockRegistry.registerGeneratedTexture("frontier:$id:$face") { size -> texture(id, face, size) }
         }
     }
+    /** Cooking stove: an iron range on a brick base; oven door with a window in front, two burners on top. */
+    private fun cookerFace(face: String, rect: (Int, Int, Int, Int, Long) -> Unit, c: Canvas, p: Paint) {
+        val iron = 0xFF3E4448; val trim = 0xFFB8894F; val brick = 0xFF8C4A34; val mortar = 0xFF5E3526
+        fun bricks() {
+            rect(0, 24, 32, 8, brick)
+            rect(0, 27, 32, 1, mortar); rect(0, 31, 32, 1, mortar)
+            for (x in intArrayOf(5, 15, 25)) rect(x, 24, 1, 3, mortar)
+            for (x in intArrayOf(0, 10, 20, 30)) rect(x, 28, 1, 3, mortar)
+        }
+        when (face) {
+            "front" -> {
+                rect(0, 0, 32, 24, iron); rect(0, 0, 32, 2, trim); bricks()
+                rect(4, 5, 24, 16, 0xFF2A2E31); rect(6, 7, 20, 12, 0xFF1A1C1E)       // oven door
+                rect(8, 9, 16, 8, 0xFF3A2A20); rect(10, 13, 12, 4, 0xFFD55432); rect(12, 14, 8, 2, 0xFFFFB14A)
+                rect(6, 3, 20, 2, 0xFFD6D0C0)                                       // handle
+                for (x in intArrayOf(5, 25)) rect(x, 21, 2, 2, trim)                 // knobs
+            }
+            "top" -> {
+                rect(0, 0, 32, 32, iron); rect(0, 0, 32, 2, trim); rect(0, 30, 32, 2, trim)
+                for ((cx, cy) in listOf(10f to 11f, 22f to 21f)) {
+                    p.color = 0xFF1A1C1E.toInt(); c.drawCircle(cx, cy, 7f, p)
+                    p.color = 0xFF5A6066.toInt(); c.drawCircle(cx, cy, 5f, p)
+                    p.color = 0xFF1A1C1E.toInt(); c.drawCircle(cx, cy, 3f, p)
+                }
+                rect(22, 4, 6, 6, 0xFF5A6066)                                        // flue
+            }
+            "side" -> {
+                rect(0, 0, 32, 24, iron); rect(0, 0, 32, 2, trim); bricks()
+                rect(4, 6, 24, 1, 0xFF4E5559); rect(4, 14, 24, 1, 0xFF4E5559)
+                for (x in intArrayOf(6, 13, 20)) rect(x, 8, 4, 2, 0xFF6E767C)          // hooks
+            }
+            else -> { rect(0, 0, 32, 32, brick); for (y in 0..3) rect(0, y * 8, 32, 1, mortar) }
+        }
+    }
+
     private fun texture(id: Int, face: String, size: Int): Bitmap {
         val b = Bitmap.createBitmap(32, 32, Bitmap.Config.ARGB_8888)
         val c = Canvas(b); val p = Paint().apply { isAntiAlias = false }
         fun rect(x: Int, y: Int, w: Int, h: Int, color: Long) {
             p.color = color.toInt(); c.drawRect(x.toFloat(), y.toFloat(), (x+w).toFloat(), (y+h).toFloat(), p)
         }
-        if (id in listOf(9808, 9809, 9821, 9822, 9823, 9824, 9825)) {
+        if (id == 9805) cookerFace(face, ::rect, c, p)
+        else if (id in listOf(9808, 9809, 9821, 9822, 9823, 9824, 9825, 9826, 9827, 9828, 9829)) {
             // Mechanical parts: wood, a darker hub and the mark of their role.
             rect(0,0,32,32,0xFF8E6A40); rect(2,2,28,28,0xFFB48A56)
             when (id) {
@@ -129,6 +172,23 @@ internal object FrontierItems {
                     // Sail: cloth stretched on a wooden frame, with a cross brace.
                     rect(0,0,32,32,0xFF6E4E2C); rect(3,3,26,26,0xFFE8E0C7)
                     rect(15,3,2,26,0xFFB48A56); rect(3,15,26,2,0xFFB48A56)
+                }
+                9826 -> {
+                    // Bellows: two boards and the folded leather between them, a nozzle in front.
+                    rect(0,0,32,32,0xFF8E6A40); rect(3,6,26,5,0xFFC4A06A); rect(3,21,26,5,0xFFC4A06A)
+                    rect(5,11,22,10,0xFF7A5236); for(i in 0..2) rect(5,13+i*3,22,1,0xFF5A3A24)
+                    rect(27,14,5,4,0xFF5E656B)
+                }
+                9827, 9828, 9829 -> if(face=="side" && id!=9827) {
+                    // The mould's edge: planks with nail heads, the clay or bricks just showing above.
+                    rect(0,0,32,32,0xFF8E6A40); rect(0,24,32,8,0xFF6E4E2C); for(x in intArrayOf(3,15,27)) rect(x,27,2,2,0xFF3A2A18)
+                    rect(0,20,32,4,if(id==9828) 0xFF9C7B63 else 0xFFB5613F)
+                } else {
+                    // Brick mould: a wooden frame with four cells, empty, wet clay or dry bricks.
+                    rect(0,0,32,32,0xFF6E4E2C)
+                    val fill=when(id) { 9828 -> 0xFF9C7B63; 9829 -> 0xFFB5613F; else -> 0xFF4A3520 }
+                    for(cx in 0..1) for(cy in 0..1) rect(3+cx*14,3+cy*14,12,12,fill)
+                    if(id==9829) for(cx in 0..1) for(cy in 0..1) rect(4+cx*14,4+cy*14,10,2,0xFFD08A62)
                 }
                 9821 -> { rect(4,4,24,24,0xFF6F7A73); rect(7,7,18,18,0xFF4E5852); rect(13,2,6,28,0xFFC4A06A); rect(2,13,28,6,0xFFC4A06A) }
                 else -> { rect(14,4,4,24,0xFFC4A06A); rect(14,4,12,4,0xFF6E4E2C); rect(22,4,4,10,0xFF4A3520) }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cave_block_expedition_forge">Forge à braises</string>
+    <string name="cave_block_expedition_forge">Four de forge</string>
     <string name="cave_block_expedition_anvil">Enclume de forge</string>
     <string name="cave_block_expedition_fishing_rod">Canne à pêche</string>
     <string name="cave_block_expedition_bait">Appât</string>

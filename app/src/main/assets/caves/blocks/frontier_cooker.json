@@ -3,7 +3,7 @@
   "name": "frontier_cooker",
   "texture_top": "frontier:9805:top",
   "texture_side": "frontier:9805:side",
-  "texture_bottom": "frontier:9805:top",
+  "texture_bottom": "frontier:9805:bottom",
   "color": "#A78960",
   "hardness": 2.0,
   "drop": "frontier_cooker",
@@ -13,5 +13,7 @@
   "transparent": false,
   "harvest_category": "recoverable",
   "placement_rule": "any",
-  "tags": []
+  "tags": [],
+  "texture_front": "frontier:9805:front",
+  "orient_mode": "facing"
 }

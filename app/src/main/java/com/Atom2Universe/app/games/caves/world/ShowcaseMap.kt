@@ -27,7 +27,8 @@ internal object ShowcaseMap {
         intArrayOf(188, 56, 201, 64), intArrayOf(155, 65, 167, 75), intArrayOf(169, 65, 179, 75),
         intArrayOf(180, 65, 201, 75), intArrayOf(155, 77, 167, 87), intArrayOf(169, 77, 179, 87),
         intArrayOf(155, 89, 170, 101), intArrayOf(173, 96, 187, 106),
-        intArrayOf(180, 77, 201, 87), intArrayOf(188, 89, 201, 101), intArrayOf(155, 104, 171, 113))
+        intArrayOf(180, 77, 201, 87), intArrayOf(188, 89, 201, 101), intArrayOf(155, 104, 171, 113),
+        intArrayOf(188, 104, 201, 113))
 
     // The windmill of the mechanics wing: head high on a timber tower, facing the promenade.
     private const val MILL_X = 180
@@ -227,6 +228,9 @@ internal object ShowcaseMap {
         wheel(157, 1, 109, false); part(158, 1, 109, F.SHAFT, 'x'); part(159, 1, 109, F.LARGE_COGWHEEL, 'x')
         part(159, 2, 110, F.COGWHEEL, 'x'); part(160, 2, 110, F.SHAFT, 'x')
         part(161, 2, 110, F.GEARBOX, 'y'); plinth(161, 110, 2); part(162, 2, 110, F.PRESS, 'y'); plinth(162, 110, 2)
+        // 14. Foundry: a wheel works the bellows through a gearbox, the bellows blow on the forge.
+        wheel(190, 0, 109, false); part(191, 0, 109, F.SHAFT, 'x'); part(192, 0, 109, F.GEARBOX, 'y')
+        part(193, 0, 109, F.BELLOWS, 'y'); put(194, y, 109, com.Atom2Universe.app.games.caves.node.ExpeditionItems.FORGE, 2)
         // 9. Large wheel: half the speed, twice the force. Press, crusher and mill turn at half speed.
         wheel(157, 1, 95, true); for (x in 158..160) part(x, 1, 95, F.SHAFT, 'x')
         part(161, 1, 95, F.GEARBOX, 'y'); plinth(161, 95, 1)

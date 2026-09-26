@@ -2,7 +2,7 @@
 <resources>
     <string name="cave_frontier_food_hint">Use from the hotbar to restore %1$d health. Not consumed when health is full.</string>
     <string name="cave_frontier_tool_hint">Equip in the hotbar. Pickaxes mine rock and ores; axes cut wood; shovels dig soil. Wood → stone → iron → steel improves speed. Tools also defend against nearby creatures and do not wear out.</string>
-    <string name="cave_frontier_hopper_hint">Place between two containers, one above and one below. Transfers one item per second downwards. Below a machine, only finished products are extracted.</string>
+    <string name="cave_frontier_hopper_hint">Pulls one item a second from the container above (a machine gives only its products) into its own small stock, and pours it into the container it points at. Set it against the block it should pour into, or on a floor to pour down. Hoppers in a row carry items along.</string>
     <string name="cave_frontier_mortar_hint">Keep in your backpack to grind wheat into flour through crafting. A powered grain mill gives three times as much flour.</string>
     <string name="cave_storage_overflow">Your stock of one item is full. Empty this chest before breaking it.</string>
     <string name="cave_storage_withdraw">Take from storage</string>
@@ -15,7 +15,7 @@
     <string name="cave_storage_hint">Drag a stack between bag, bar and storage. Tap for details; hold to split, adjust the amount, then tap outside. Breaking this block returns its contents.</string>
     <string name="cave_mill_hint">Add wheat. It turns on a vertical shaft coming down onto it, or against a side of a gearbox. 1 wheat → 3 flour; faster when it turns faster.</string>
     <string name="cave_mill_running">Power connected. Add wheat: 1 wheat → 3 flour in 6 seconds. Close this panel to resume production.</string>
-    <string name="cave_cooker_hint">Add coal or charcoal and flour or potatoes. Every 10 seconds: 3 flour/potatoes + 1 fuel → 4 bread/baked potatoes. Close the panel to cook.</string>
+    <string name="cave_cooker_hint">Add coal or charcoal and ingredients. Each batch takes 1 fuel: bread, baked potatoes, stews, ratatouille, tarts, fish dishes. Close the panel to cook.</string>
     <string name="cave_composter_hint">3 identical harvested crops → 1 compost in 20 seconds. Use compost on a growing crop to speed it up. Close the panel to resume.</string>
     <string name="cave_frontier_help">Frontier workshops</string>
     <string name="cave_frontier_help_body">Gather wood and stone, craft tools, then explore for wayfarer caches and new seeds. Tools speed up matching materials. Irrigation and light improve crops; harvests can become seeds, meals or compost. Equip food in the hotbar and use it to heal. Use a chest or machine to open its storage; crouch to place against it. A hopper moves one item per second from the container above into the one below. Machines turn with a wheel or a crank, through shafts and gears. These systems do not change Assault mode.</string>
@@ -40,7 +40,7 @@
     <string name="cave_crank_hint">Place it on a side of a gearbox. Use it again and again to keep it turning. Little force.</string>
     <string name="cave_machine_overloaded">Stopped · not enough force: add a wheel or remove a machine.</string>
     <string name="cave_machine_conflict">Stopped · parts turn against each other.</string>
-    <string name="cave_block_frontier_cooker">Field kitchen</string>
+    <string name="cave_block_frontier_cooker">Cooking stove</string>
     <string name="cave_block_frontier_composter">Composter</string>
     <string name="cave_block_frontier_hopper">Gravity hopper</string>
     <string name="cave_block_frontier_flour">Flour</string>
@@ -130,4 +130,20 @@ Animals can be fed, bred and harvested without slaughter. Walls now block the li
     <string name="cave_block_frontier_pickaxe_3">Steel pickaxe</string>
     <string name="cave_block_frontier_axe_3">Steel axe</string>
     <string name="cave_block_frontier_shovel_3">Steel shovel</string>
+    <string name="cave_block_frontier_bellows">Bellows</string>
+    <string name="cave_block_frontier_brick_mold">Brick mould</string>
+    <string name="cave_block_frontier_mold_wet">Wet bricks in their mould</string>
+    <string name="cave_block_frontier_mold_dry">Dry bricks in their mould</string>
+    <string name="cave_forge_heat">Heat: %1$s</string>
+    <string name="cave_forge_recipe_heat">%1$s · %2$s</string>
+    <string name="cave_forge_hint">Add charcoal or coal. Embers melt copper and fire glass and clay; bellows beside the forge, turning from a gearbox, bring red heat (iron) at speed 16 and white heat (steel) at 32. The hotter, the faster the fuel burns.</string>
+    <string-array name="cave_forge_heat_levels">
+        <item>Out</item>
+        <item>Embers</item>
+        <item>Red</item>
+        <item>White</item>
+    </string-array>
+    <string name="cave_oven_input">Ingredients (%1$d)</string>
+    <string name="cave_oven_fuel">Fuel (%1$d)</string>
+    <string name="cave_oven_output">Products (%1$d)</string>
 </resources>

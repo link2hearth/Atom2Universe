@@ -1,0 +1,18 @@
+{
+  "id": 9826,
+  "name": "frontier_bellows",
+  "texture_top": "frontier:9826:top",
+  "texture_side": "frontier:9826:side",
+  "texture_bottom": "frontier:9826:top",
+  "color": "#8A6A44",
+  "hardness": 1.0,
+  "drop": "frontier_bellows",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "kinetic": "machine"
+}

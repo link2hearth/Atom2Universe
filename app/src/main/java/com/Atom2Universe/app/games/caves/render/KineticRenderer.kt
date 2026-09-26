@@ -47,7 +47,8 @@ internal class KineticRenderer {
         }
         val meshes = listOf(shaftMesh(), cogMesh(large = false), cogMesh(large = true), crankMesh(),
             wheelMesh(1.45f, 8), wheelMesh(2.45f, 12), socketMesh(),
-            millMesh(), millstoneMesh(), pressMesh(), pressHeadMesh(), crusherMesh(), rollerMesh(), loomMesh(), shuttleMesh())
+            millMesh(), millstoneMesh(), pressMesh(), pressHeadMesh(), crusherMesh(), rollerMesh(), loomMesh(), shuttleMesh(),
+            bellowsMesh(), bellowsBoardMesh(), bellowsLeatherMesh(), hopperMesh(), spoutMesh())
         check(meshes.size == TYPES)
         var first = 0
         for ((type, mesh) in meshes.withIndex()) {
@@ -106,6 +107,8 @@ internal class KineticRenderer {
         FrontierItems.PRESS -> PRESS to PRESS_HEAD
         FrontierItems.CRUSHER -> CRUSHER to ROLLER
         FrontierItems.LOOM -> LOOM to SHUTTLE
+        FrontierItems.BELLOWS -> BELLOWS to BELLOWS_BOARD
+        FrontierItems.HOPPER -> HOPPER to SPOUT
         else -> null
     }
 
@@ -130,7 +133,8 @@ internal class KineticRenderer {
             return
         }
         when (type) {
-            SOCKET -> if (k.axis >= 0) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, k.angle)
+            SOCKET -> if (k.axis >= 0 && k.block != FrontierItems.HOPPER) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, k.angle)
+            SPOUT -> if (k.block == FrontierItems.HOPPER) put(k, camera, k.axis.toFloat() + if (k.flipped) 3f else 0f, 0f)
             machine.first -> put(k, camera, 1f, 0f)
             // Two rollers side by side along X, turning towards each other.
             ROLLER -> if (machine.second == ROLLER) {
@@ -138,6 +142,7 @@ internal class KineticRenderer {
                 put(k, camera, 0f, -k.angle, dz = ROLLER_GAP)
             }
             machine.second -> put(k, camera, 1f, k.angle)
+            BELLOWS_LEATHER -> if (k.block == FrontierItems.BELLOWS) put(k, camera, 1f, k.angle)
         }
     }
 
@@ -448,13 +453,46 @@ internal class KineticRenderer {
         prism(0f, -.04f, .42f, .02f, .03f, .22f, 0f, DARK)
     }.data.toFloatArray()
 
+    /** Bellows: a fixed bottom board with its hinge; the top board rises and falls, the leather folds between. */
+    private fun bellowsMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 5f / 16f, -.5f, -.42f, 0f, LIGHT)
+        prism(0f, 5.4f / 16f, 7f / 16f, .6f / 16f, -.42f, -.3f, 0f, DARK)
+        prism(0f, -6.2f / 16f, 1f / 16f, 1.4f / 16f, -.5f, -.42f, 0f, IRON)
+    }.data.toFloatArray()
+
+    private fun bellowsBoardMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 5f / 16f, .1f, .18f, 0f, LIGHT)
+        prism(0f, -5.8f / 16f, 1f / 16f, 1.2f / 16f, .12f, .16f, 0f, DARK)
+    }.data.toFloatArray()
+
+    private fun bellowsLeatherMesh() = MeshOut().apply {
+        prism(0f, 0f, 6.4f / 16f, 4.4f / 16f, -.42f, .1f, 0f, LEATHER)
+        for (i in 0..2) prism(0f, 0f, 6.7f / 16f, 4.7f / 16f, -.3f + i * .13f, -.28f + i * .13f, 0f, LEATHER_DARK)
+    }.data.toFloatArray()
+
+    /** Hopper: an open iron bowl on top narrowing to a neck in the middle of the block. */
+    private fun hopperMesh() = MeshOut().apply {
+        prism(0f, 0f, 7f / 16f, 7f / 16f, .3f, .5f, 0f, IRON)
+        prism(0f, 0f, 5.6f / 16f, 5.6f / 16f, .44f, .505f, 0f, 0x1F2326)
+        prism(0f, 0f, 5f / 16f, 5f / 16f, .05f, .3f, 0f, IRON)
+        prism(0f, 0f, 3f / 16f, 3f / 16f, -.1f, .05f, 0f, IRON_LIGHT)
+        for (s in intArrayOf(-1, 1)) { prism(s * 7.2f / 16f, 0f, .4f / 16f, 7.2f / 16f, .36f, .42f, 0f, IRON_LIGHT)
+            prism(0f, s * 7.2f / 16f, 7.2f / 16f, .4f / 16f, .36f, .42f, 0f, IRON_LIGHT) }
+    }.data.toFloatArray()
+
+    /** The hopper's spout, along local +z from the neck to the face it pours through. */
+    private fun spoutMesh() = MeshOut().apply {
+        prism(0f, 0f, 2f / 16f, 2f / 16f, 0f, .5f, 0f, IRON)
+        prism(0f, 0f, 2.6f / 16f, 2.6f / 16f, .44f, .5f, 0f, IRON_LIGHT)
+    }.data.toFloatArray()
+
     private fun shuttleMesh() = MeshOut().apply {
         prism(0f, .1f, .09f, .03f, .05f, .1f, 0f, LIGHT)
         prism(0f, .1f, .04f, .02f, .1f, .11f, 0f, CLOTH)
     }.data.toFloatArray()
 
     companion object {
-        private const val TYPES = 15
+        private const val TYPES = 20
         private const val SOCKET = 6
         private const val MILL = 7
         private const val MILLSTONE = 8
@@ -464,8 +502,16 @@ internal class KineticRenderer {
         private const val ROLLER = 12
         private const val LOOM = 13
         private const val SHUTTLE = 14
-        /** Per type: 0 = turns about its axis, 1 = strikes down and back up, 2 = runs to and fro along X. */
-        private val MOTION = IntArray(TYPES).also { it[PRESS_HEAD] = 1; it[SHUTTLE] = 2 }
+        private const val BELLOWS = 15
+        private const val BELLOWS_BOARD = 16
+        private const val BELLOWS_LEATHER = 17
+        private const val HOPPER = 18
+        private const val SPOUT = 19
+        /** Per type: 0 = turns about its axis, 1 = strikes down and back up, 2 = runs to and fro along X,
+         * 3 = folds down from its base (the bellows' leather). */
+        private val MOTION = IntArray(TYPES).also { it[PRESS_HEAD] = 1; it[SHUTTLE] = 2; it[BELLOWS_BOARD] = 1; it[BELLOWS_LEATHER] = 3 }
+        private const val LEATHER = 0x7A5236
+        private const val LEATHER_DARK = 0x5A3A24
         /** Crusher rollers: each is this far from the middle, across X. */
         private const val ROLLER_GAP = 3.5f / 16f
         private const val STONE = 0xA5A29B
@@ -515,6 +561,7 @@ internal class KineticRenderer {
                 vec3 n = aNormal;
                 if (uMotion == 1) p.z -= 0.295 * (0.5 - 0.5 * cos(angle));
                 else if (uMotion == 2) p.x += 0.26 * sin(angle);
+                else if (uMotion == 3) p.z = -0.42 + (p.z + 0.42) * (1.0 - 0.49 * (0.5 - 0.5 * cos(angle)));
                 else {
                     float c = cos(angle);
                     float s = sin(angle);

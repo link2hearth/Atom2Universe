@@ -2,11 +2,11 @@
   "ingredients": [
     {
       "id": 2300,
-      "count": 16
+      "count": 12
     },
     {
-      "id": 3114,
-      "count": 4
+      "id": 3119,
+      "count": 6
     }
   ],
   "result": 9890,

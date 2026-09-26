@@ -24,6 +24,12 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
     private lateinit var box: RecyclerView
     private lateinit var bagTitle: TextView
     private lateinit var boxTitle: TextView
+    /** Ovens: the fuel and product compartments beside the ingredients ([box]). */
+    private var zoned=false
+    private lateinit var fuelBox: RecyclerView
+    private lateinit var outBox: RecyclerView
+    private lateinit var fuelTitle: TextView
+    private lateinit var outTitle: TextView
     private lateinit var status: TextView
     private lateinit var production: Button
     private lateinit var matching: Button
@@ -51,7 +57,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
     }
     private fun showReady(snapshot: FrontierWorkshops.View,items: Map<Short,Int>) {
         generation++;visible=true
-        view=snapshot;inventory=items;busy=false;query="";barTiles.clear()
+        view=snapshot;inventory=items;busy=false;query="";barTiles.clear();zoned=snapshot.zoned
         val root=LinearLayout(a).apply {
             orientation=LinearLayout.VERTICAL
             isFocusableInTouchMode=true
@@ -111,7 +117,28 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
             })
             return grid
         }
-        bag=side(true);box=side(false)
+        /** An oven's column: ingredients, fuel and products, each its own drop zone. */
+        fun ovenSide() {
+            val column=LinearLayout(a).apply {
+                orientation=LinearLayout.VERTICAL;background=CaveUiStyle.bubble(a)
+                setPadding(dp(6),dp(4),dp(6),dp(6));elevation=dp(6).toFloat()
+            }
+            fun section(zone: Int,weight: Float): Pair<TextView,RecyclerView> {
+                val title=label();column.addView(title,LinearLayout.LayoutParams(-1,dp(26)))
+                val grid=RecyclerView(a).apply {
+                    layoutManager=CaveItemGridLayout(a);clipToPadding=false;setPadding(dp(2),dp(2),dp(2),dp(2))
+                    itemAnimator=null;background=CaveUiStyle.bubble(a)
+                    setOnDragListener(dropTarget(false,zone=zone))
+                }
+                column.addView(grid,LinearLayout.LayoutParams(-1,0,weight).apply { bottomMargin=dp(4) })
+                return title to grid
+            }
+            section(FrontierWorkshops.ZONE_INPUT,1.4f).let { boxTitle=it.first;box=it.second }
+            section(FrontierWorkshops.ZONE_FUEL,1f).let { fuelTitle=it.first;fuelBox=it.second }
+            section(FrontierWorkshops.ZONE_OUTPUT,1f).let { outTitle=it.first;outBox=it.second }
+            columns.addView(column,LinearLayout.LayoutParams(0,-1,1f).apply { marginStart=dp(5);topMargin=dp(8);bottomMargin=dp(6) })
+        }
+        bag=side(true);if(zoned) ovenSide() else box=side(false)
         root.addView(columns,LinearLayout.LayoutParams(-1,0,1f))
         status=label().apply {
             maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END;setText(R.string.cave_storage_drag_hint)
@@ -126,7 +153,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         root.requestFocus()
         refresh()
     }
-    private fun dropTarget(player: Boolean,target: Long?=null,slot: Int?=null)=View.OnDragListener { targetView,event ->
+    private fun dropTarget(player: Boolean,target: Long?=null,slot: Int?=null,zone: Int=FrontierWorkshops.ZONE_INPUT)=View.OnDragListener { targetView,event ->
         val token=event.localState as? TransferDrag
         val accepts=visible && token!=null && token.generation==generation && !busy
         when(event.action) {
@@ -137,7 +164,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
                 targetView.alpha=1f
                 if(accepts) {
                     val v=view!!;val move=token!!;var moved=0
-                    runMutation({ moved=a.renderer.mutateStorageStack(v.pos,move.key,move.player,target=target,barSlot=slot,transfer=move.player!=player) }) {
+                    runMutation({ moved=a.renderer.mutateStorageStack(v.pos,move.key,move.player,target=target,barSlot=slot,transfer=move.player!=player,zone=zone) }) {
                         if(moved>0) status.setText(R.string.cave_stack_moved)
                     }
                 }
@@ -169,7 +196,14 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         val v=view ?: return;val needle=folded(query)
         fun filtered(rows: List<CaveStackInventory.Stack>)=rows.filter { folded(a.blockName(it.id)).contains(needle) }.sortedBy { folded(a.blockName(it.id)) }
         val bagRows=filtered(playerStacks.filter { it.slot<0 });val boxRows=filtered(v.stacks)
-        bagTitle.text=a.getString(R.string.cave_storage_bag_title,bagRows.size);boxTitle.text=a.getString(R.string.cave_storage_box_title,boxRows.size)
+        bagTitle.text=a.getString(R.string.cave_storage_bag_title,bagRows.size)
+        boxTitle.text=a.getString(if(zoned) R.string.cave_oven_input else R.string.cave_storage_box_title,boxRows.size)
+        if(zoned) {
+            val fuelRows=filtered(v.fuelStacks);val outRows=filtered(v.outputStacks)
+            fuelTitle.text=a.getString(R.string.cave_oven_fuel,fuelRows.size);outTitle.text=a.getString(R.string.cave_oven_output,outRows.size)
+            fuelBox.adapter=Items(fuelRows,false,FrontierWorkshops.ZONE_FUEL);outBox.adapter=Items(outRows,false,FrontierWorkshops.ZONE_OUTPUT)
+            fuelBox.alpha=if(busy) .5f else 1f;outBox.alpha=fuelBox.alpha
+        }
         val bagScroll=bag.layoutManager?.onSaveInstanceState();val boxScroll=box.layoutManager?.onSaveInstanceState()
         bag.adapter=Items(bagRows,true);box.adapter=Items(boxRows,false)
         bag.layoutManager?.onRestoreInstanceState(bagScroll);box.layoutManager?.onRestoreInstanceState(boxScroll)
@@ -200,10 +234,15 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
                     else -> R.string.cave_machine_unpowered
                 }));add(a.getString(R.string.cave_machine_power))
             }
+            if(v.block==com.Atom2Universe.app.games.caves.node.ExpeditionItems.FORGE) {
+                add(a.getString(R.string.cave_forge_heat,a.resources.getStringArray(R.array.cave_forge_heat_levels)[v.heat]))
+                add(a.getString(R.string.cave_forge_hint))
+            }
             recipes.getOrNull(v.active)?.let { add(a.getString(R.string.cave_machine_progress,v.progress,it.seconds)) }
         }.joinToString("\n\n")
     }
-    private inner class Items(private val rows: List<CaveStackInventory.Stack>,private val player: Boolean): RecyclerView.Adapter<Items.Holder>() {
+    private inner class Items(private val rows: List<CaveStackInventory.Stack>,private val player: Boolean,
+                              private val zone: Int=FrontierWorkshops.ZONE_INPUT): RecyclerView.Adapter<Items.Holder>() {
         inner class Holder(val tile: CaveItemTile): RecyclerView.ViewHolder(tile)
         override fun getItemCount()=rows.size
         override fun onCreateViewHolder(parent: ViewGroup,viewType: Int)=Holder(CaveItemTile(a).apply {
@@ -212,13 +251,19 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         override fun onBindViewHolder(holder: Holder,position: Int) {
             val stack=rows[position]
             holder.tile.bind(a.blockDrawable(stack.id,4f),a.blockName(stack.id),stack.count,favorite=a.invManager.isFavorite(stack.id))
-            bindGestures(holder.tile,stack,player);holder.tile.setOnDragListener(dropTarget(player,target=stack.key))
+            bindGestures(holder.tile,stack,player);holder.tile.setOnDragListener(dropTarget(player,target=stack.key,zone=zone))
         }
     }
     private fun depositMatching() {
         val v=view ?: return;if(busy) return
-        val keys=playerStacks.filter { it.slot<0 && it.id in v.items && !a.invManager.isFavorite(it.id) }.map { it.key }
-        runMutation({ for(key in keys) a.renderer.mutateStorageStack(v.pos,key,true,transfer=true,notify=false);a.renderer.changedFrontierInventory() }) { }
+        val keys=playerStacks.filter { it.slot<0 && it.id in v.items && !a.invManager.isFavorite(it.id) }
+        // In an oven, what already sits in the fuel compartment joins it there.
+        val fuel=v.fuelStacks.map { it.id }.toSet()
+        runMutation({
+            for(stack in keys) a.renderer.mutateStorageStack(v.pos,stack.key,true,transfer=true,notify=false,
+                zone=if(stack.id in fuel) FrontierWorkshops.ZONE_FUEL else FrontierWorkshops.ZONE_INPUT)
+            a.renderer.changedFrontierInventory()
+        }) { }
     }
     private fun runMutation(action: ()->Unit,after: ()->Unit) {
         val v=view ?: return;val session=generation
@@ -239,7 +284,8 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         val options=a.renderer.workshops.recipes.withIndex().filter { it.value.machine==v.block }
         val labels=listOf(a.getString(R.string.cave_machine_auto))+options.map { (_,recipe) ->
             fun names(items: Map<Short,Int>)=items.entries.joinToString { (id,n)->a.getString(R.string.cave_storage_row,a.blockName(id),n) }
-            a.getString(R.string.cave_machine_recipe,names(recipe.input),names(recipe.output),recipe.seconds)
+            val line=a.getString(R.string.cave_machine_recipe,names(recipe.input),names(recipe.output),recipe.seconds)
+            if(recipe.heat==0) line else a.getString(R.string.cave_forge_recipe_heat,line,a.resources.getStringArray(R.array.cave_forge_heat_levels)[recipe.heat])
         }
         bubbles.choices(anchor,a.getString(R.string.cave_machine_choose),labels) { index ->
             runMutation({ a.renderer.selectWorkshopRecipe(v.pos,if(index==0) -1 else options[index-1].index) }) { }

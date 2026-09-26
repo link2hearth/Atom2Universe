@@ -49,8 +49,50 @@ internal object ExpeditionItems {
     fun isGardenItem(id: Short) = id in ROD..FISH_OIL
     fun healing(id: Short) = when(id) { GRILLED_FISH -> 12; FISH_STEW -> 22; else -> 0 }
 
+    /** Forge furnace, one drawing per face: the fire door in front, masonry and the bellows' nozzle on
+     * the sides, the chimney and its glowing grate on top, plain stone below. */
+    private fun forgeFace(face: String,rect: (Int,Int,Int,Int,Long)->Unit) {
+        val stone=0xFF4A545E; val dark=0xFF353D46; val mortar=0xFF2B3139; val light=0xFF6C7A84
+        fun bricks(y0: Int,y1: Int) {
+            rect(0,y0,32,y1-y0,stone)
+            var row=0
+            for(y in y0 until y1 step 6) {
+                rect(0,y,32,1,mortar)
+                val shift=if(row%2==0) 0 else 5
+                for(x in -shift until 32 step 10) rect(maxOf(0,x),y,1,6.coerceAtMost(y1-y),mortar)
+                row++
+            }
+        }
+        when(face) {
+            "front" -> {
+                bricks(0,32)
+                rect(4,9,24,21,dark); rect(6,11,20,19,0xFF1B1A22)            // the arch
+                rect(3,7,26,3,light)                                          // iron lintel
+                rect(8,24,16,5,0xFFFFB14A); rect(10,20,12,5,0xFFD55432); rect(13,17,6,4,0xFFFFD27A)
+                for(x in intArrayOf(9,15,21)) rect(x,28,3,2,0xFFFF7A3A)       // embers
+                rect(2,29,28,3,dark)                                          // sill
+            }
+            "side" -> {
+                bricks(0,32)
+                for(x in intArrayOf(0,30)) rect(x,0,2,32,dark)                // corner stones
+                rect(12,16,8,8,light); rect(14,18,4,4,0xFF1B1A22)             // the nozzle's port
+                rect(4,0,24,3,0xFF2A2F36)                                     // soot under the top
+            }
+            "top" -> {
+                rect(0,0,32,32,dark); rect(2,2,28,28,stone)
+                rect(8,8,16,16,mortar); rect(10,10,12,12,0xFF1B1A22)          // chimney
+                rect(11,17,10,4,0xFFD55432); rect(13,19,6,2,0xFFFFB14A)
+                for(x in intArrayOf(10,14,18,21)) rect(x,10,1,12,light)       // grate
+            }
+            else -> {
+                rect(0,0,32,32,dark)
+                for(i in 0..5) rect((i*11)%29,(i*7)%29,3,3,stone)
+            }
+        }
+    }
+
     fun registerTextures() {
-        for(id in 9890..9927) for(face in listOf("top", "side")) {
+        for(id in 9890..9927) for(face in if(id==FORGE.toInt()) listOf("top","side","front","bottom") else listOf("top","side")) {
             BlockRegistry.registerGeneratedTexture("expedition:$id:$face") { size ->
                 val b=Bitmap.createBitmap(32,32,Bitmap.Config.ARGB_8888)
                 val c=Canvas(b); val p=Paint()
@@ -59,10 +101,10 @@ internal object ExpeditionItems {
                 }
                 val metal=if(id==9900) 0xFFB28A50 else if(id==9901) 0xFF888F91 else if(id>=9904) 0xFF83CBD1 else 0xFFD0D5D3
                 when(id.toShort()) {
-                    FORGE, ANVIL -> {
+                    FORGE -> forgeFace(face,::rect)
+                    ANVIL -> {
                         rect(0,0,32,32,0xFF414B55); rect(2,2,28,4,0xFF7F939A)
-                        if(id==FORGE.toInt()) { rect(5,13,22,15,0xFF211F29);rect(7,23,18,4,0xFFFFB14A);rect(10,19,12,5,0xFFD55432) }
-                        else { rect(3,11,26,6,0xFFA7BAC1);rect(12,17,8,9,0xFF738B99);rect(7,26,18,4,0xFFB3C3C5) }
+                        rect(3,11,26,6,0xFFA7BAC1);rect(12,17,8,9,0xFF738B99);rect(7,26,18,4,0xFFB3C3C5)
                     }
                     ROD -> { rect(19,2,3,25,0xFFC39154);rect(7,3,14,1,0xFFE4DCC5);rect(7,4,1,19,0xFFD1DCC7);rect(5,22,5,5,0xFFE96843) }
                     in RIVER_FISH..DEEP_FISH, GRILLED_FISH -> {

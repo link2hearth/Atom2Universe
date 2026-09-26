@@ -19,7 +19,7 @@
     <string name="cave_block_fired_brick">Brique cuite</string>
     <string name="cave_block_mineral_powder">Poudre propulsive minérale</string>
     <string name="cave_block_terracotta">Terre cuite</string>
-    <string name="cave_craft_furnace_hint">Gardez un four dans l’inventaire pour les recettes de cuisson et de fonte. Le combustible est consommé, le four est conservé.</string>
+    <string name="cave_craft_furnace_hint">Décoratif. La cuisine se fait sur un four de cuisine posé ; le métal, le verre et l’argile cuite dans un four de forge.</string>
     <string name="cave_craft_table_hint">Établi décoratif. Toutes les fabrications sont accessibles depuis l’inventaire.</string>
     <string name="cave_craft_bucket_hint">Utilisez-le sur l’eau pour le remplir, ou sur un espace vide pour le verser.</string>
     <string name="cave_ui_ores">Minerais</string>
@@ -592,6 +592,7 @@
         <item>Une grande roue et une longue rangée de renvois : six ateliers</item>
         <item>À la main : une manivelle sur un renvoi, deux ateliers</item>
         <item>Plus vite : le petit engrenage double la vitesse, la presse demande deux fois plus de force</item>
+        <item>Fonderie : un soufflet sur un renvoi attise la forge</item>
     </string-array>
     <string-array name="cave_showcase_house_names">
         <item>Maisonnette</item>

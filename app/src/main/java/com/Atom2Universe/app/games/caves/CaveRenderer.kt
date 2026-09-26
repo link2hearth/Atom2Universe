@@ -1090,7 +1090,9 @@ internal class CaveRenderer(
         if (!gamePaused && mode.allowsWorldEdits && rawDt < 1f) {
             frontierLife.advance((rawDt*1000f).toLong())
             farming.advance((rawDt * 1000f).toLong())
+            workshops.sunUp = ambientFor(dayFraction()) > .6f
             workshops.advance(rawDt)
+            for (p in workshops.takeChanged()) forceMeshRebuild(p.x, p.y, p.z)
             workshops.feedAnimals(passiveAnimals,rawDt)
             checkpointTimer+=rawDt
             if(checkpointTimer>=10f) { checkpointTimer=0f;checkpointCallback?.invoke() }
@@ -4667,7 +4669,9 @@ internal class CaveRenderer(
             val onPlus = target.fnx + target.fny + target.fnz < 0
             (computeOrientMeta(blockType, target.fnx, target.fny, target.fnz).toInt() or
                 (if (onPlus) PartialBlockModel.CRANK_ON_PLUS else 0)).toByte()
-        } else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
+        } else if (blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.HOPPER)
+            FrontierWorkshops.hopperMeta(-target.fnx, -target.fny, -target.fnz)
+        else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
         if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
         world.setBlock(px, py, pz, blockType)
         workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)
@@ -4694,12 +4698,13 @@ internal class CaveRenderer(
         if(workshops.select(p,index)) checkpointCallback?.invoke()
     }
     internal fun mutateStorageStack(p: FrontierWorkshops.Pos,key: Long,player: Boolean,
-        split: Int?=null,target: Long?=null,barSlot: Int?=null,transfer: Boolean=false,notify: Boolean=true): Int {
+        split: Int?=null,target: Long?=null,barSlot: Int?=null,transfer: Boolean=false,notify: Boolean=true,
+        zone: Int=FrontierWorkshops.ZONE_INPUT): Int {
         val distance=(camera.playerX-p.x-.5).pow(2)+(camera.playerY-p.y).pow(2)+(camera.playerZ-p.z-.5).pow(2)
         if(!mode.allowsWorldEdits || distance>81.0 || workshops.view(p)==null) return 0
         syncInventoryStacks()
         val changed=when {
-            transfer -> workshops.transferStack(p,inventory,inventoryStacks,hotbar,key,player,target,barSlot)
+            transfer -> workshops.transferStack(p,inventory,inventoryStacks,hotbar,key,player,target,barSlot,zone)
             player -> {
                 val ok=when { split!=null -> inventoryStacks.split(key,split)
                     barSlot!=null -> inventoryStacks.moveToBar(key,barSlot)
@@ -4707,7 +4712,7 @@ internal class CaveRenderer(
                 inventoryStacks.writeBar(hotbar);if(ok) 1 else 0
             }
             split!=null -> if(workshops.splitStack(p,key,split)) 1 else 0
-            else -> if(workshops.moveStack(p,key,target)) 1 else 0
+            else -> if(workshops.moveStack(p,key,target,zone)) 1 else 0
         }
         if(notify) { inventoryCallback?.invoke(inventory.toMap());notifyHotbar() }
         return changed

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="cave_block_expedition_forge">Ember forge</string>
+    <string name="cave_block_expedition_forge">Forge furnace</string>
     <string name="cave_block_expedition_anvil">Forge anvil</string>
     <string name="cave_block_expedition_fishing_rod">Fishing rod</string>
     <string name="cave_block_expedition_bait">Fishing bait</string>

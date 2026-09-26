@@ -48,7 +48,7 @@ internal class KineticNetwork(
         F.WATERWHEEL -> Kind.WHEEL
         F.LARGE_WATERWHEEL -> Kind.LARGE_WHEEL
         F.WINDMILL -> Kind.WINDMILL
-        F.MILL, F.PRESS, F.CRUSHER, F.LOOM -> Kind.MACHINE
+        F.MILL, F.PRESS, F.CRUSHER, F.LOOM, F.BELLOWS -> Kind.MACHINE
         else -> null
     }
     private fun axial(k: Kind?) = k != null && k != Kind.GEARBOX && k != Kind.MACHINE

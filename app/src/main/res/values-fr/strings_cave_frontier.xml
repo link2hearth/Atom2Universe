@@ -2,7 +2,7 @@
 <resources>
     <string name="cave_frontier_food_hint">Utilisez depuis la barre de raccourcis pour récupérer %1$d points de vie. Non consommé si la vie est pleine.</string>
     <string name="cave_frontier_tool_hint">Équipez dans la barre de raccourcis. Pioche pour roche et minerais, hache pour bois, pelle pour sols. Bois → pierre → fer → acier améliore la vitesse. Les outils permettent aussi de se défendre au contact et ne s’usent pas.</string>
-    <string name="cave_frontier_hopper_hint">Posez entre deux conteneurs, un au-dessus et un au-dessous. Transfère un objet par seconde vers le bas. Sous une machine, seuls les produits finis sont extraits.</string>
+    <string name="cave_frontier_hopper_hint">Prend chaque seconde un objet dans le conteneur au-dessus (une machine ne donne que ses produits), le garde dans son petit stock et le verse dans le conteneur qu’elle vise. Posez-la contre le bloc où elle doit verser, ou au sol pour verser vers le bas. Des trémies à la suite transportent les objets.</string>
     <string name="cave_frontier_mortar_hint">Gardez dans le sac pour moudre le blé en farine via la fabrication. Un moulin à grains alimenté produit trois fois plus de farine.</string>
     <string name="cave_storage_overflow">Le stock d’un objet est plein. Videz ce coffre avant de le casser.</string>
     <string name="cave_storage_withdraw">Prendre dans le coffre</string>
@@ -15,7 +15,7 @@
     <string name="cave_storage_hint">Glissez une pile entre le sac, la barre et le coffre. Touchez pour les informations ; maintenez pour diviser, ajustez le nombre puis touchez ailleurs. Casser ce bloc rend son contenu.</string>
     <string name="cave_mill_hint">Ajoutez du blé. Il tourne sur un axe vertical qui descend sur lui, ou contre un côté d’un renvoi d’angle. 1 blé → 3 farines ; plus vite quand il tourne plus vite.</string>
     <string name="cave_mill_running">Transmission active. Ajoutez du blé : 1 blé → 3 farines en 6 secondes. Fermez ce panneau pour reprendre la production.</string>
-    <string name="cave_cooker_hint">Ajoutez du charbon et de la farine ou des pommes de terre. En 10 secondes : 3 farines/pommes de terre + 1 combustible → 4 pains/pommes de terre cuites. Fermez le panneau pour cuire.</string>
+    <string name="cave_cooker_hint">Ajoutez du charbon ou du charbon de bois et les ingrédients. Chaque fournée prend 1 combustible : pain, pommes de terre, ragoûts, ratatouille, tartes, poissons. Fermez le panneau pour cuire.</string>
     <string name="cave_composter_hint">3 récoltes identiques → 1 compost en 20 secondes. Utilisez le compost sur une culture pour accélérer sa croissance. Fermez le panneau pour reprendre.</string>
     <string name="cave_frontier_help">Ateliers de frontière</string>
     <string name="cave_frontier_help_body">Ramassez du bois et de la pierre, fabriquez des outils, puis cherchez des caches et de nouvelles graines. Les outils accélèrent la récolte des matériaux adaptés. Eau et lumière favorisent les cultures ; transformez les récoltes en graines, plats ou compost. Équipez un plat dans la barre de raccourcis puis utilisez-le pour vous soigner. Utilisez un coffre ou une machine pour ouvrir son stock ; accroupissez-vous pour poser contre. Une trémie transfère un objet par seconde du conteneur au-dessus vers celui du dessous. Les machines tournent grâce à une roue ou une manivelle, par des axes et des engrenages. Ces systèmes ne modifient pas le mode Assaut.</string>
@@ -40,7 +40,7 @@
     <string name="cave_crank_hint">Posez-la sur un côté d’un renvoi d’angle. Actionnez-la encore et encore pour qu’elle continue de tourner. Peu de force.</string>
     <string name="cave_machine_overloaded">À l’arrêt · pas assez de force : ajoutez une roue ou retirez une machine.</string>
     <string name="cave_machine_conflict">À l’arrêt · des pièces tournent l’une contre l’autre.</string>
-    <string name="cave_block_frontier_cooker">Cuisine de campagne</string>
+    <string name="cave_block_frontier_cooker">Four de cuisine</string>
     <string name="cave_block_frontier_composter">Composteur</string>
     <string name="cave_block_frontier_hopper">Trémie gravitaire</string>
     <string name="cave_block_frontier_flour">Farine</string>
@@ -130,4 +130,20 @@ Les animaux se nourrissent, se reproduisent et produisent sans abattage. Les mur
     <string name="cave_block_frontier_pickaxe_3">Pioche en acier</string>
     <string name="cave_block_frontier_axe_3">Hache en acier</string>
     <string name="cave_block_frontier_shovel_3">Pelle en acier</string>
+    <string name="cave_block_frontier_bellows">Soufflet</string>
+    <string name="cave_block_frontier_brick_mold">Moule à briques</string>
+    <string name="cave_block_frontier_mold_wet">Briques crues dans leur moule</string>
+    <string name="cave_block_frontier_mold_dry">Briques sèches dans leur moule</string>
+    <string name="cave_forge_heat">Chaleur : %1$s</string>
+    <string name="cave_forge_recipe_heat">%1$s · %2$s</string>
+    <string name="cave_forge_hint">Ajoutez du charbon de bois ou du charbon. La braise fond le cuivre et cuit verre et argile ; des soufflets contre la forge, entraînés par un renvoi, donnent le rouge (fer) à vitesse 16 et le blanc (acier) à 32. Plus c’est chaud, plus le charbon brûle vite.</string>
+    <string-array name="cave_forge_heat_levels">
+        <item>Éteinte</item>
+        <item>Braise</item>
+        <item>Rouge</item>
+        <item>Blanc</item>
+    </string-array>
+    <string name="cave_oven_input">Entrée (%1$d)</string>
+    <string name="cave_oven_fuel">Combustible (%1$d)</string>
+    <string name="cave_oven_output">Sortie (%1$d)</string>
 </resources>
