@@ -18,8 +18,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.ArrayAdapter
-import android.widget.AdapterView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
@@ -65,13 +63,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
         return hud.overlayActiveFrames.mapNotNull { it as? CaveItemTile }
     }
     private var browsingCraft = false
+    private var browsingEquipment = false
     private var assigningShortcut = false
     private var query = ""
     private var categoryIndex = 0
     private var relatedType: Short? = null
     private var gridIndices = emptyList<Int>()
     private var gridColumns = CaveActivity.GRID_COLS
-    private val categoryKeys = listOf("", "terrain", "wood", "stone", "nature", "functional", "cotton", "ores", "resources")
+    private val category get() = InventoryCategory.entries[categoryIndex]
     // BlockRegistry.creativeList() filters and sorts the full registry. Keep one
     // snapshot: the comparator can ask for thousands of IDs during one sort.
     private val creativeCatalog by lazy(LazyThreadSafetyMode.NONE) { BlockRegistry.creativeList() }
@@ -86,7 +85,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private val favorites by lazy { preferences.getStringSet("favorites",emptySet()).orEmpty().toMutableSet() }
     private val recent by lazy { preferences.getString("recent","").orEmpty().split(',').mapNotNull { it.toShortOrNull() }.toMutableList() }
     private var previousCounts: Map<Short,Int> = emptyMap()
-    private var bankFilter: HotbarMode? = null
     private var onlyFavorites=false
     private var onlyRecent=false
     private var sortOrder=0
@@ -213,16 +211,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.close.setOnClickListener { closeInventory() }
         ui.inventoryTab.setOnClickListener { showLibrary(false) }
         ui.craftTab.setOnClickListener { showLibrary(true) }
-        val categories = intArrayOf(R.string.cave_ui_all, R.string.cave_ui_terrain, R.string.cave_ui_wood,
-            R.string.cave_ui_stone, R.string.cave_ui_nature, R.string.cave_ui_functional, R.string.cave_ui_cotton,
-            R.string.cave_ui_ores, R.string.cave_ui_resources)
-        ui.category.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
-            categories.map { activity.getString(it) })
-        ui.category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                (view as? TextView)?.setTextColor(CaveUiStyle.TEXT)
-                categoryIndex = position; currentPage = 0; refreshPagedAdapter();updateCraftingList()
+        ui.categoryButtons.forEachIndexed { index, button ->
+            button.setOnClickListener {
+                ui.dismissDetails()
+                categoryIndex = index; currentPage = 0; refreshPagedAdapter(); updateCraftingList()
             }
         }
         ui.search.setOnEditorActionListener { view,_,_ ->
@@ -251,12 +243,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 sortOrder=index;preferences.edit().putInt("sort",index).apply();currentPage=0;refreshPagedAdapter()
             }
         }
-        ui.clearSearch.setOnClickListener { ui.search.setText("");bankFilter=null;onlyFavorites=false;onlyRecent=false;categoryIndex=0;ui.category.setSelection(0);ui.craftable.isChecked=false;relatedType=null;refreshPagedAdapter();updateCraftingList() }
+        ui.clearSearch.setOnClickListener { ui.search.setText("");onlyFavorites=false;onlyRecent=false;categoryIndex=0;ui.craftable.isChecked=false;relatedType=null;refreshPagedAdapter();updateCraftingList() }
         ui.favoritesOnly.setOnClickListener { onlyFavorites=!onlyFavorites;currentPage=0;refreshPagedAdapter();updateCraftingList() }
         ui.recentOnly.setOnClickListener { onlyRecent=!onlyRecent;currentPage=0;refreshPagedAdapter();updateCraftingList() }
-        for((button,filter) in listOf(ui.filterAll to null,ui.filterGear to HotbarMode.COMBAT,ui.filterBuild to HotbarMode.BUILD,ui.filterGarden to HotbarMode.GARDEN)) {
-            button.setOnClickListener { bankFilter=filter;categoryIndex=0;ui.category.setSelection(0);currentPage=0;refreshPagedAdapter();updateCraftingList() }
-        }
         ui.craftMax.setOnClickListener { selectedRecipe?.let { doCraft(it,minOf(64,it.maxCraftable(renderer.inventory,renderer.nearbyStations))) } }
         pageIndicatorTv?.setOnClickListener {
             val field=android.widget.EditText(activity).apply { inputType=android.text.InputType.TYPE_CLASS_NUMBER;setText((currentPage+1).toString());selectAll() }
@@ -276,6 +265,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
 
     private fun showLibrary(craft: Boolean) {
         ui.dismissDetails()
+        browsingEquipment = false
+        ui.showEquipment(false)
         browsingCraft = craft; assigningShortcut = false; selectedRecipe = null; relatedType = null;recipeHistory.clear()
         invGpZone = if (craft) InvGpZone.CRAFTING else InvGpZone.HOTBAR
         invGpCursor = if (craft) 0 else hotbarBase()
@@ -301,11 +292,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.craftOne.alpha = if (ui.craftOne.isEnabled) 1f else .45f
         ui.craftFive.alpha = if (ui.craftFive.isEnabled) 1f else .45f
         ui.status.setText(if (assigningShortcut) R.string.cave_ui_choose_shortcut else if (browsingCraft) R.string.cave_catalog_recipe_hint else R.string.cave_catalog_drag_hint)
-        CaveUiStyle.button(ui.inventoryTab, !browsingCraft); CaveUiStyle.button(ui.craftTab, browsingCraft)
+        CaveUiStyle.button(ui.inventoryTab, !browsingCraft && !browsingEquipment); CaveUiStyle.button(ui.craftTab, browsingCraft && !browsingEquipment)
+        CaveUiStyle.icon(ui.equipped,"armor",activity.getString(R.string.cave_gear_equipped),browsingEquipment)
         for((b,key,label,active) in listOf(
-            IconState(ui.filterAll,"all",R.string.cave_ui_all,bankFilter==null),IconState(ui.filterGear,"combat",R.string.cave_ui_equipment,bankFilter==HotbarMode.COMBAT),
-            IconState(ui.filterBuild,"place",R.string.cave_ui_materials,bankFilter==HotbarMode.BUILD),IconState(ui.filterGarden,"garden",R.string.cave_ui_garden,bankFilter==HotbarMode.GARDEN),
             IconState(ui.favoritesOnly,"star",R.string.cave_catalog_favorites,onlyFavorites),IconState(ui.recentOnly,"clock",R.string.cave_catalog_recent,onlyRecent))) CaveUiStyle.icon(b,key,activity.getString(label),active)
+        ui.categoryButtons.forEachIndexed { index, button ->
+            val entry = InventoryCategory.entries[index]
+            CaveUiStyle.category(button, entry.icon, activity.getString(entry.label), index == categoryIndex)
+        }
 
     }
 
@@ -512,6 +506,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     private fun showPausedInventory() {
+        browsingEquipment = false
+        ui.showEquipment(false)
         assigningShortcut = false; selectedSlotIdx = -1; selectedCreativeType=null; selectedRecipe = null
         activity.releaseGameInputs()
         if (!invSlotsReady) initInvSlots()
@@ -574,9 +570,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         gridIndices = (0 until catalogSize).filter { index ->
             val type=catalogTypeAt(index) ?: return@filter false
             (activity.isCreative || (renderer.inventory[type] ?: 0)>0) && name(type).contains(needle) &&
-                (bankFilter==null || renderer.itemMode(type)==bankFilter) &&
                 (!onlyFavorites || isFavorite(type)) && (!onlyRecent || type in recent.take(24)) &&
-                (categoryIndex==0 || BlockRegistry.get(G.base(type) ?: type)?.creativeTab==categoryKeys[categoryIndex])
+                category.matches(type)
         }.sortedWith(compareByDescending<Int> { catalogTypeAt(it)?.let(::isFavorite) ?: false }.thenComparator { a,b ->
             val x=catalogTypeAt(a) ?: return@thenComparator 0
             val y=catalogTypeAt(b) ?: return@thenComparator 0
@@ -590,7 +585,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if (::ui.isInitialized) {
             ui.pager.visibility = if (browsingCraft) View.GONE else View.VISIBLE
             ui.footer.visibility = if (browsingCraft) View.GONE else View.VISIBLE
-            ui.category.visibility = if (!browsingCraft) View.VISIBLE else View.GONE
             ui.summary.text=activity.getString(R.string.cave_catalog_summary,gridIndices.size,catalogSize)
             ui.craftable.visibility = if (browsingCraft) View.VISIBLE else View.GONE
             if (!browsingCraft) { ui.empty.setText(if(hotbarBase()==0) R.string.cave_inventory_empty_bag else R.string.cave_ui_empty_search);ui.empty.visibility = if (gridIndices.isEmpty()) View.VISIBLE else View.GONE }
@@ -706,16 +700,27 @@ internal class InventoryManager(private val activity: CaveActivity) {
         activity.glView.queueEvent {
             action()
             activity.runOnUiThread {
-                syncHotbar();refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel();activity.saveWorldAsync()
+                syncHotbar();refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel()
+                if (browsingEquipment) refreshEquipment()
+                activity.saveWorldAsync()
             }
         }
     }
 
     private fun showEquipment() {
-        AlertDialog.Builder(activity).setTitle(R.string.cave_gear_equipped)
-            .setMessage(renderer.expeditionCombat.summary())
-            .setPositiveButton(android.R.string.ok,null)
-            .setNeutralButton(R.string.cave_gear_remove) { _,_ -> equipmentAction { renderer.expeditionCombat.removeEquipment() } }.show()
+        browsingEquipment = true; browsingCraft = false; assigningShortcut = false
+        ui.showEquipment(true)
+        updateActions()
+        refreshEquipment()
+    }
+
+    private fun refreshEquipment() {
+        ui.equipmentPanel.refresh(::itemDescription,
+            equip = { id -> equipmentAction {
+                if (activity.isCreative && G.get(id) == null && (renderer.inventory[id] ?: 0) == 0) renderer.inventory[id] = 1
+                renderer.expeditionCombat.equip(id)
+            } },
+            remove = { slot, shield -> equipmentAction { renderer.expeditionCombat.removeEquipmentSlot(slot, shield) } })
     }
 
     internal fun itemDescription(type: Short): String {
@@ -901,7 +906,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val recipes = CraftRegistry.all().filter { r ->
             (if(ui.craftable.isChecked) r.canCraft(renderer.inventory, renderer.nearbyStations)
                 else r.ingredients.any { (id,_) -> (renderer.inventory[id] ?: 0)>0 } || r.groups.any { it.available(renderer.inventory)>0 }) &&
-                (bankFilter==null || (if(r.resultItemId!=null) HotbarMode.COMBAT else renderer.itemMode(r.result))==bankFilter) &&
+                (if(r.resultItemId!=null) category in listOf(InventoryCategory.ALL, InventoryCategory.WEAPONS) else category.matches(r.result)) &&
                 (!onlyFavorites || recipeKey(r) in favoriteRecipes) &&
                 (!onlyRecent || r.result in recent.take(24)) &&
                 (relatedType == null || relatedType in r.inputIds) &&
@@ -1050,6 +1055,17 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if(storagePageOpen) return true
         if (event.source and InputDevice.SOURCE_JOYSTICK != InputDevice.SOURCE_JOYSTICK) return false
         val now = System.currentTimeMillis()
+        if (browsingEquipment) {
+            if (now - invGpLastMoveMs < INV_GP_REPEAT_MS) return true
+            val x = event.getAxisValue(MotionEvent.AXIS_X) + event.getAxisValue(MotionEvent.AXIS_HAT_X)
+            val y = event.getAxisValue(MotionEvent.AXIS_Y) + event.getAxisValue(MotionEvent.AXIS_HAT_Y)
+            val direction = when {
+                x < -.5f -> View.FOCUS_LEFT; x > .5f -> View.FOCUS_RIGHT
+                y < -.5f -> View.FOCUS_UP; y > .5f -> View.FOCUS_DOWN
+                else -> return true
+            }
+            invGpLastMoveMs = now; ui.equipmentPanel.moveFocus(direction); return true
+        }
 
         // Stick droit : changement de page
         val rsx = event.getAxisValue(MotionEvent.AXIS_Z)
@@ -1074,6 +1090,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun handleInvGamepadKey(keyCode: Int): Boolean {
+        if (browsingEquipment && !storagePageOpen) return when (keyCode) {
+            KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_BUTTON_Y -> { showLibrary(false); true }
+            KeyEvent.KEYCODE_BUTTON_A -> { activity.currentFocus?.performClick(); true }
+            KeyEvent.KEYCODE_DPAD_LEFT -> { ui.equipmentPanel.moveFocus(View.FOCUS_LEFT); true }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> { ui.equipmentPanel.moveFocus(View.FOCUS_RIGHT); true }
+            KeyEvent.KEYCODE_DPAD_UP -> { ui.equipmentPanel.moveFocus(View.FOCUS_UP); true }
+            KeyEvent.KEYCODE_DPAD_DOWN -> { ui.equipmentPanel.moveFocus(View.FOCUS_DOWN); true }
+            else -> false
+        }
         if(storagePageOpen) {
             if(keyCode==KeyEvent.KEYCODE_BUTTON_B || keyCode==KeyEvent.KEYCODE_BACK) { closeInventory();return true }
             return false

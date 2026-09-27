@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_equipment_shield">Shield</string>
+    <string name="cave_equipment_suit">Full armor</string>
+    <string name="cave_equipment_drag_hint">Drag armor onto its slot. Tap for details.</string>
+    <string name="cave_equipment_compact_totals">HP %1$d · Protection %2$d%%</string>
+    <string name="cave_equipment_return_hint">Drag worn armor here to remove it.</string>
+    <string name="cave_equipment_slot_item">%1$s: %2$s</string>
+    <string name="cave_equipment_available">Available armor</string>
+    <string name="cave_equipment_empty_list">No armor available in your inventory.</string>
+    <string name="cave_equipment_choose">Select armor on the left to compare and equip it.</string>
+    <string name="cave_equipment_remove_piece">Unequip</string>
+    <string name="cave_category_armor">Armor</string>
+    <string name="cave_category_weapons">Weapons</string>
+    <string name="cave_category_ammo">Ammunition</string>
+    <string name="cave_category_tools">Tools</string>
+    <string name="cave_category_kitchen">Cooking</string>
+    <string name="cave_category_blocks">Blocks</string>
     <string name="cave_double_slab_name">%1$s (bottom) + %2$s (top)</string>
     <string name="cave_craft_equipment">Required equipment (kept): %1$s · %2$s</string>
     <string name="cave_craft_logs">Any logs (can be mixed)</string>

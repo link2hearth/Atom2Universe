@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_equipment_shield">Bouclier</string>
+    <string name="cave_equipment_suit">Armure entière</string>
+    <string name="cave_equipment_drag_hint">Glissez l’armure vers sa case. Touchez-la pour les détails.</string>
+    <string name="cave_equipment_compact_totals">PV %1$d · Protection %2$d%%</string>
+    <string name="cave_equipment_return_hint">Glissez ici une pièce portée pour la retirer.</string>
+    <string name="cave_equipment_slot_item">%1$s : %2$s</string>
+    <string name="cave_equipment_available">Armures disponibles</string>
+    <string name="cave_equipment_empty_list">Aucune armure disponible dans votre inventaire.</string>
+    <string name="cave_equipment_choose">Sélectionnez une armure à gauche pour la comparer et l’équiper.</string>
+    <string name="cave_equipment_remove_piece">Retirer</string>
+    <string name="cave_category_armor">Armures</string>
+    <string name="cave_category_weapons">Armes</string>
+    <string name="cave_category_ammo">Munitions</string>
+    <string name="cave_category_tools">Outils</string>
+    <string name="cave_category_kitchen">Cuisine</string>
+    <string name="cave_category_blocks">Blocs</string>
     <string name="cave_double_slab_name">%1$s (bas) + %2$s (haut)</string>
     <string name="cave_craft_equipment">Équipement requis (conservé) : %1$s · %2$s</string>
     <string name="cave_craft_logs">Toutes bûches (mélange possible)</string>

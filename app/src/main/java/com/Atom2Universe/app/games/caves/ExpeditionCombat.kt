@@ -182,6 +182,16 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         for(id in items) r.inventory[id]=(r.inventory[id] ?: 0)+1
         pieces.clear();armor=null;shield=false;syncArmorHealth();r.changedFrontierInventory();announce()
     }
+    /** Remove one slot without disturbing the other armor pieces or the shield. */
+    fun removeEquipmentSlot(slot: G.Slot? = null, removeShield: Boolean = false) {
+        val id = if (removeShield) { if (shield) E.SHIELD else null }
+            else if (slot != null) pieces[slot] else armor
+        id ?: return
+        if ((r.inventory[id] ?: 0) == Int.MAX_VALUE) { message(R.string.cave_equipment_full); return }
+        r.inventory[id] = (r.inventory[id] ?: 0) + 1
+        if (removeShield) shield = false else if (slot != null) pieces.remove(slot) else armor = null
+        syncArmorHealth(); r.changedFrontierInventory(); announce()
+    }
     fun bonus(bonus: G.Bonus, includeWeapon: Boolean = true): Int {
         var total=pieces.values.sumOf { G.get(it)?.bonuses?.get(bonus) ?: 0 }
         if(includeWeapon && r.heldItemMode==HotbarMode.COMBAT) {

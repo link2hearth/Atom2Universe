@@ -31,7 +31,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         imeOptions = android.view.inputmethod.EditorInfo.IME_ACTION_DONE
         inputType = android.text.InputType.TYPE_CLASS_TEXT
     }
-    val category = Spinner(activity)
+    val categoryButtons = InventoryCategory.entries.map { category -> button(category.label) }
     val craftable = CheckBox(activity).apply { setText(R.string.cave_ui_craftable); setTextColor(CaveUiStyle.TEXT); textSize = 12f }
     val sort = button(R.string.cave_ui_sort)
     val previous = button(R.string.cave_ui_previous)
@@ -42,10 +42,6 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
     val favoritesOnly = button(R.string.cave_catalog_favorites)
     val recentOnly = button(R.string.cave_catalog_recent)
     val clearSearch = button(R.string.cave_catalog_clear)
-    val filterAll = button(R.string.cave_ui_all)
-    val filterGear = button(R.string.cave_ui_equipment)
-    val filterBuild = button(R.string.cave_ui_materials)
-    val filterGarden = button(R.string.cave_ui_garden)
     val craftMax = button(R.string.cave_catalog_craft_max)
     val ingredients = column()
     val summary = label(12f)
@@ -62,6 +58,18 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
     lateinit var detailScroll: ScrollView
     private lateinit var catalogPanel: View
     private lateinit var storageHost: FrameLayout
+    private lateinit var libraryPanel: View
+    lateinit var equipmentPanel: CaveEquipmentPanel
+        private set
+    fun showEquipment(show: Boolean) {
+        dismissDetails()
+        libraryPanel.visibility = if (show) View.GONE else View.VISIBLE
+        equipmentPanel.visibility = if (show) View.VISIBLE else View.GONE
+        search.visibility = if (show) View.GONE else View.VISIBLE
+        clearSearch.visibility = if (show) View.GONE else View.VISIBLE
+        sort.visibility = if (show) View.GONE else View.VISIBLE
+        status.visibility = if (show) View.GONE else View.VISIBLE
+    }
     private var bubble: PopupWindow? = null
 
     fun animateOpen() = CaveUiStyle.openBubble(if (storageHost.visibility == View.VISIBLE) storageHost else catalogPanel)
@@ -160,15 +168,13 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             b.layoutParams=LinearLayout.LayoutParams(dp(44),dp(44)).also { it.setMargins(dp(2),dp(2),dp(2),dp(2)) }
         }
         for((b,key,res) in listOf(Triple(close,"close",R.string.cave_ui_close),
-            Triple(equipped,"combat",R.string.cave_gear_equipped),
+            Triple(equipped,"armor",R.string.cave_gear_equipped),
             Triple(sort,"sort",R.string.cave_ui_sort),Triple(previous,"previous",R.string.cave_ui_previous),Triple(next,"next",R.string.cave_ui_next),
             Triple(clearSearch,"close",R.string.cave_catalog_clear),Triple(favoritesOnly,"star",R.string.cave_catalog_favorites),
-            Triple(recentOnly,"clock",R.string.cave_catalog_recent),Triple(filterAll,"all",R.string.cave_ui_all),
-            Triple(filterGear,"combat",R.string.cave_ui_equipment),Triple(filterBuild,"place",R.string.cave_ui_materials),
-            Triple(filterGarden,"garden",R.string.cave_ui_garden),Triple(related,"previous",R.string.cave_ui_previous))) icon(b,key,res)
+            Triple(recentOnly,"clock",R.string.cave_catalog_recent),Triple(related,"previous",R.string.cave_ui_previous))) icon(b,key,res)
         inventoryTab.layoutParams.height=dp(44)
         craftTab.layoutParams.height=dp(44)
-        for(button in listOf(filterAll,filterGear,filterBuild,filterGarden,favoritesOnly,recentOnly)) {
+        for(button in listOf(favoritesOnly,recentOnly)) {
             button.layoutParams.height=dp(36)
         }
         panel.addView(row().apply {
@@ -181,7 +187,10 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         val body = column()
         panel.addView(body, LinearLayout.LayoutParams(-1, 0, 1f))
         val library = column()
+        libraryPanel = library
         body.addView(library, LinearLayout.LayoutParams(-1,-1))
+        equipmentPanel = CaveEquipmentPanel(activity).apply { visibility = View.GONE }
+        body.addView(equipmentPanel, LinearLayout.LayoutParams(-1,-1))
         if(portrait) library.addView(row().apply {
             addView(search, LinearLayout.LayoutParams(0, dp(48), 1f))
             addView(clearSearch);addView(sort)
@@ -189,8 +198,8 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         library.addView(HorizontalScrollView(activity).apply {
             isHorizontalScrollBarEnabled=false
             addView(row().apply {
-                for(b in listOf(filterAll,filterGear,filterBuild,filterGarden,favoritesOnly,recentOnly)) addView(b)
-                addView(category,LinearLayout.LayoutParams(dp(130),dp(36)))
+                for(b in listOf(favoritesOnly,recentOnly)) addView(b)
+                for(b in categoryButtons) addView(b)
                 addView(craftable,LinearLayout.LayoutParams(-2,dp(36)))
             })
         })

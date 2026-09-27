@@ -46,6 +46,18 @@ internal object CaveUiStyle {
             panel(button.context, if (primary) ACCENT else CARD), null)
     }
     fun accessible(view: View, label: String) { view.contentDescription = label; view.isFocusable = true }
+    fun category(button: Button, kind: String, label: String, active: Boolean) {
+        button(button)
+        button.text = if (active) label else ""
+        button.contentDescription = label; button.tooltipText = label
+        button.isSelected = active
+        button.background = RippleDrawable(ColorStateList.valueOf(0x337DAD8B),
+            panel(button.context, if (active) SELECTED else CARD, if (active) ACCENT else BORDER, active), null)
+        button.setCompoundDrawablesRelative(CaveActionDrawable(kind).apply {
+            setBounds(0, 0, dp(button.context, 28), dp(button.context, 28))
+        }, null, null, null)
+        button.compoundDrawablePadding = if (active) dp(button.context, 6) else 0
+    }
     fun icon(button: Button,kind: String,label: String,active: Boolean=false) {
         button(button, false);button.text="";button.contentDescription=label;button.tooltipText=label
         val glyph=android.graphics.drawable.InsetDrawable(CaveActionDrawable(kind),dp(button.context,11))
