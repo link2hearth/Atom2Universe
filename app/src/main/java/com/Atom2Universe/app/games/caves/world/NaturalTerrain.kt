@@ -348,20 +348,37 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         val dx = Math.floorMod(x, 12) - (3 + (cell % 6).toInt())
         val dy = Math.floorMod(y, 12) - (3 + (cell / 7 % 6).toInt())
         val dz = Math.floorMod(z, 12) - (3 + (cell / 43 % 6).toInt())
-        if (depth > 2 && cell % 5 < 3 && dx * dx + dy * dy + dz * dz <= 7) {
+        if (depth > 2 && cell % 5 < 3 && dx * dx + dy * dy + dz * dz <= 3) {
             val category = (cell / 251 % 100).toInt()
-            val centerY = Math.floorDiv(y,12)*12 + 3 + (cell / 7 % 6).toInt()
-            val centerStage = MineralProgression.stage(centerY.toDouble())
-            val localStage = MineralProgression.stage(y.toDouble())
-            if (category < 30) return COAL
-            if (category < 50) return COPPER
-            // Metals stay within their cycle; independent resources never dilute with depth.
-            if (MineralProgression.tier(centerStage) == MineralProgression.tier(localStage)) {
-                val metal = if(category < 72) 0 else MineralProgression.localMetal(centerStage,(cell / 1031 % 100).toInt())
-                val stage = (MineralProgression.tier(centerStage)-1)*MineralProgression.METALS + metal
-                if (stage <= localStage && (metal==0 || localStage-stage<=2)) {
-                    if(category < 98 || depth < 40) return M.id(stage,M.Form.ORE)
-                    return when ((cell / 607 % 4).toInt()) { 0 -> REDSTONE; 1 -> RUBY; 2 -> EMERALD; else -> CRYSTAL }
+            val rare = category >= 98 && depth >= 40
+            // Previously radius²=7 produced 81 blocks. Preserve discovery frequency while
+            // reducing the quantity: metals 7/19, coal 19/27, rare stones 1–3 connected blocks.
+            val radiusSquared = (if (category < 30) 2 else 1) + (cell / 7919 % 2).toInt()
+            val inVein = if (rare) {
+                val length = 1 + (cell / 7919 % 3).toInt()
+                when ((cell / 1543 % 3).toInt()) {
+                    0 -> dy == 0 && dz == 0 && dx in -1 until length-1
+                    1 -> dx == 0 && dz == 0 && dy in -1 until length-1
+                    else -> dx == 0 && dy == 0 && dz in -1 until length-1
+                }
+            } else dx * dx + dy * dy + dz * dz <= radiusSquared
+            if (inVein) {
+                val centerY = Math.floorDiv(y,12)*12 + 3 + (cell / 7 % 6).toInt()
+                val centerStage = MineralProgression.stage(centerY.toDouble())
+                val localStage = MineralProgression.stage(y.toDouble())
+                if (category < 30) return COAL
+                if (category < 50) return COPPER
+                // Metals stay within their cycle; independent resources never dilute with depth.
+                if (MineralProgression.tier(centerStage) == MineralProgression.tier(localStage)) {
+                    val metal = if(category < 72) 0 else MineralProgression.localMetal(centerStage,(cell / 1031 % 100).toInt())
+                    val stage = (MineralProgression.tier(centerStage)-1)*MineralProgression.METALS + metal
+                    if (stage <= localStage && (metal==0 || localStage-stage<=2)) {
+                        if(category < 98 || depth < 40) return M.id(stage,M.Form.ORE)
+                        // Diamond joins the rare-stone budget from the cobalt layer down;
+                        // it never replaces a progression metal or enlarges a vein.
+                        if(centerY <= -750 && y <= -750 && cell / 8123 % 8 == 0L) return M.DIAMOND_ORE
+                        return when ((cell / 607 % 4).toInt()) { 0 -> REDSTONE; 1 -> RUBY; 2 -> EMERALD; else -> CRYSTAL }
+                    }
                 }
             }
         }

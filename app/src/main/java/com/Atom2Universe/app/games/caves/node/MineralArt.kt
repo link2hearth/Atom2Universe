@@ -3,51 +3,33 @@ package com.Atom2Universe.app.games.caves.node
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
-import kotlin.math.abs
 import com.Atom2Universe.app.games.caves.node.MineralItems.Form
 
 /** Pixel silhouettes, shared across tiers to keep the texture array bounded. */
 internal object MineralArt {
     fun textureKey(metal: Int, form: Form, tier: Int) = "mineral:$metal:${form.ordinal}:$tier"
+    fun oreVariantKey(base: String, variant: Int) = if (variant == 0) base else "$base:variant$variant"
     fun register() {
-        for (metal in 0..10) for (form in Form.entries) for (tier in 1..if(form == Form.ORE) 3 else 1) {
-            BlockRegistry.registerGeneratedTexture(textureKey(metal,form,tier)) { size -> texture(metal,form,tier,size) }
+        for (metal in 0..16) for (form in Form.entries) for (tier in 1..if(form == Form.ORE) 3 else 1) {
+            for (variant in 0 until if(form == Form.ORE) MineralOrePixels.VARIANTS else 1) {
+                BlockRegistry.registerGeneratedTexture(oreVariantKey(textureKey(metal,form,tier),variant)) { size ->
+                    texture(metal,form,tier,size,variant)
+                }
+            }
         }
     }
-    fun texture(metal: Int, form: Form, tier: Int, size: Int): Bitmap {
-        val color = MineralItems.metals.getOrNull(metal)?.color ?: if(metal == 9) 0x8EAEBE else 0xDF9251
+    fun texture(metal: Int, form: Form, tier: Int, size: Int, variant: Int = 0): Bitmap {
+        val color = MineralItems.metals.getOrNull(metal)?.color ?: when(metal) {
+            9 -> 0x8EAEBE; 10 -> 0xDF9251; 11 -> 0x252A34
+            12 -> 0xCC3349; 13 -> 0x50C878; 14 -> 0x88E8F0; 15 -> 0xAA3930; else -> 0xD5E8FA
+        }
         val bitmap=Bitmap.createBitmap(32,32,Bitmap.Config.ARGB_8888)
         fun shade(c: Int, light: Float, alpha: Int=255): Int = (alpha shl 24) or
             (((((c shr 16) and 255)*light).toInt().coerceIn(0,255)) shl 16) or
             (((((c shr 8) and 255)*light).toInt().coerceIn(0,255)) shl 8) or
             (((c and 255)*light).toInt().coerceIn(0,255))
         if (form == Form.ORE) {
-            val pixels=IntArray(1024)
-            val centers=arrayOf(7 to 8,23 to 7,17 to 20,5 to 26,27 to 27)
-            for(y in 0..31) for(x in 0..31) {
-                val noise=((x*73428767 xor y*912931) ushr 5) and 15
-                var inside=false;var edge=false
-                for((cx,cy) in centers) {
-                    val dx=x-cx;val dy=y-cy;val ax=abs(dx);val ay=abs(dy)
-                    val hit=when(metal) {
-                        0 -> ax+ay<=4 && !(dx< -1 && dy>1)
-                        1 -> abs(dx*2+dy+(y/3%2))<=1 && ay<6
-                        2 -> dx*dx+dy*dy<=12
-                        3 -> ax<=3 && ay<=3 && (ax+ay<5 || dx==dy)
-                        4 -> abs(dx+dy)<=1 && ay<7
-                        5 -> ax<=3 && ay<=3 && (ax>=2 || ay>=2)
-                        6 -> abs(ay-ax)<=1 && ay<=4
-                        7 -> ax<=5 && ay<=2 && dx+dy<5
-                        8 -> ax+ay<=4 && (ax<=1 || ay<=1 || ax==ay)
-                        else -> (abs(dx+(dy/3))<=1 && ay<6) || (dy in 0..3 && dx==dy)
-                    }
-                    if(hit) { inside=true;edge=dx+dy<0;break }
-                }
-                val fissure=if((x+2*y)%17==0) .78f else 1f
-                // Alpha 254 encodes only the mineral inclusion for the low-emission shader.
-                pixels[y*32+x]=if(inside) shade(color,if(edge) 1.22f else .78f+(tier-1)*.06f,254)
-                    else shade(0x454950,(.88f+noise*.012f)*fissure)
-            }
+            val pixels=MineralOrePixels.pixels(metal,color,tier,variant)
             bitmap.setPixels(pixels,0,32,0,0,32,32)
         } else {
             val c=Canvas(bitmap);val p=Paint().apply { isAntiAlias=false }
@@ -58,7 +40,15 @@ internal object MineralArt {
                 Form.INGOT -> { rect(5,12,22,12,dark);rect(7,9,18,12,mid);rect(9,9,14,3,bright) }
                 Form.MOLTEN -> { rect(5,9,22,17,dark);rect(7,11,18,12,mid);rect(10,12,10,3,bright) }
                 Form.DUST -> for(i in 0..19) rect(6+i*7%20,9+i*11%17,2,2,if(i%3==0) bright else mid)
-                Form.RAW -> { rect(7,8,17,17,dark);rect(10,6,12,16,mid);rect(7,13,18,8,mid);rect(11,8,7,4,bright) }
+                Form.RAW -> if(metal==16) {
+                    for(y in 7..26) {
+                        val half=if(y<=12) 6+(y-7) else (26-y)*11/14
+                        rect(16-half,y,half*2+1,1,dark)
+                        if(half>1) rect(17-half,y,half*2-1,1,if(y<12) bright else mid)
+                        if(y>=12 && half>1) rect(16,y,1,1,bright)
+                    }
+                    rect(7,12,19,1,bright)
+                } else { rect(7,8,17,17,dark);rect(10,6,12,16,mid);rect(7,13,18,8,mid);rect(11,8,7,4,bright) }
                 Form.PLATE,Form.ARMOR_PART -> { rect(5,7,22,21,dark);rect(6,7,19,18,mid);rect(7,8,17,2,bright)
                     if(form==Form.ARMOR_PART) {rect(7,14,17,2,dark);rect(7,20,17,2,dark)} }
                 Form.HEAD,Form.PICK -> { if(form==Form.PICK) rect(14,12,3,18,wood)

@@ -1,4 +1,6 @@
 <resources>
+    <string name="cave_diamond_ore">Diamond ore</string>
+    <string name="cave_raw_diamond">Raw diamond</string>
     <string name="cave_craft_any_iron">Iron ingots, any tier</string>
     <string name="cave_craft_any_steel">Steel ingots, any tier</string>
     <string name="cave_mineral_stone_pick">Stone pickaxe</string>

@@ -142,7 +142,8 @@ internal object MeshBuilder {
                             blend: ClimateBlend, face: Int, lx: Int, ly: Int, lz: Int, block: Short,
                             above: Short, meta: Byte, knotFace: Int, sky: Float) {
         val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
-        val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer) else baseLayer
+        val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer)
+            else BlockRegistry.oreLayer(baseLayer,chunk.worldX+lx,chunk.worldY+ly,chunk.worldZ+lz,face)
         val marker = if (com.Atom2Universe.app.games.caves.node.MineralItems.isOre(block)) 8 + face
             else if (BlockRegistry.lightEmission(block) > 0) 7 else face
         val packed = marker * 4096 + layer

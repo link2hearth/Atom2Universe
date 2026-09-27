@@ -49,7 +49,7 @@ internal data class CaveWorldSave(
     var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
     var passiveAnimals: String = "[]",
-    val terrainVersion: Int = 7
+    val terrainVersion: Int = 8
 ) {
     fun formattedLastPlayed(): String {
         val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -277,7 +277,7 @@ internal object CaveWorldSaveManager {
             id = j.getString("id"),
             name = j.getString("name"),
             seed = j.getLong("seed"),
-            terrainVersion = 7,
+            terrainVersion = 8,
             passiveAnimals = j.optString("passiveAnimals", "[]"),
             createdAt = j.getLong("createdAt"),
             lastPlayedAt = j.getLong("lastPlayedAt"),

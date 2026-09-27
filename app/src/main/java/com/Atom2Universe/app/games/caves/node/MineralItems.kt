@@ -7,6 +7,8 @@ import kotlin.math.roundToInt
 
 /** IDs below 4000 are reserved here, outside the persistent firearm-instance range. */
 internal object MineralItems {
+    const val DIAMOND_ORE: Short = 3009
+    const val RAW_DIAMOND: Short = 3121
     enum class Form(val label: Int) {
         ORE(R.string.cave_mineral_ore), RAW(R.string.cave_mineral_raw), DUST(R.string.cave_mineral_dust),
         INGOT(R.string.cave_mineral_ingot), MOLTEN(R.string.cave_mineral_molten), PLATE(R.string.cave_mineral_plate),
@@ -68,6 +70,8 @@ internal object MineralItems {
         (1..P.TIERS).associate { moltenSteel(it) to steel(it) }
 
     fun name(context: Context, id: Short): String? {
+        if(id==DIAMOND_ORE) return context.getString(R.string.cave_diamond_ore)
+        if(id==RAW_DIAMOND) return context.getString(R.string.cave_raw_diamond)
         if(id==ExpeditionItems.FORGE) return forgeName(context,0)
         variant(id)?.let { return context.getString(it.form.label, context.getString(it.metal.label), it.tier) }
         reinforcementTier(id)?.let { return context.getString(R.string.cave_forge_reinforcement, it) }
@@ -148,6 +152,20 @@ internal object MineralItems {
         val copperTexture=MineralArt.textureKey(10,Form.ORE,1)
         result += existing.getValue(3004).copy(textureTop=copperTexture,textureSide=copperTexture,textureBottom=copperTexture,
             lightEmission=3,color=0xFFE09650.toInt())
+        val coalTexture=MineralArt.textureKey(11,Form.ORE,1)
+        result += existing.getValue(3000).copy(textureTop=coalTexture,textureSide=coalTexture,textureBottom=coalTexture)
+        for (id in 3005..3008) {
+            val texture=MineralArt.textureKey(id-2993,Form.ORE,1)
+            result += existing.getValue(id.toShort()).copy(textureTop=texture,textureSide=texture,textureBottom=texture)
+        }
+        val diamondOreTexture=MineralArt.textureKey(16,Form.ORE,1)
+        result += existing.getValue(3007).copy(id=DIAMOND_ORE,name="diamond",drop="raw_diamond",
+            textureTop=diamondOreTexture,textureSide=diamondOreTexture,textureBottom=diamondOreTexture,
+            color=0xFFD5E8FA.toInt())
+        val diamondTexture=MineralArt.textureKey(16,Form.RAW,1)
+        result += resource.copy(id=RAW_DIAMOND,name="raw_diamond",drop="raw_diamond",
+            textureTop=diamondTexture,textureSide=diamondTexture,textureBottom=diamondTexture,
+            color=0xFFD5E8FA.toInt())
         return result
     }
 }

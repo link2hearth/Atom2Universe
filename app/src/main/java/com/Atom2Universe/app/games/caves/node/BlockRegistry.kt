@@ -43,9 +43,18 @@ internal object BlockRegistry {
     var vividStyle = false
         private set
     private var knotLayers = IntArray(0)
+    private var oreVariants = arrayOfNulls<IntArray>(0)
     val torchLayers = IntArray(4)
 
     fun knotLayer(layer: Int): Int = knotLayers.getOrNull(layer) ?: layer
+
+    /** Stable across reloads and chunk boundaries; called only while building a visible face. */
+    fun oreLayer(base: Int, x: Int, y: Int, z: Int, face: Int): Int {
+        val variants = oreVariants.getOrNull(base) ?: return base
+        var hash = x * 73428767 xor (y * 912931) xor (z * 4382893) xor (face * 19349663)
+        hash = (hash xor (hash ushr 13)) * 1274126177
+        return variants[(hash xor (hash ushr 16)) and (MineralOrePixels.VARIANTS - 1)]
+    }
 
     fun climateMask(layer: Int): Int = climateMasks.getOrNull(layer) ?: 0
 
@@ -96,7 +105,7 @@ internal object BlockRegistry {
             defs[def.id] = def
         }
         for (def in MineralItems.definitions(defs)) {
-            require(def.id !in defs || MineralItems.variant(def.id) != null || def.id == 3004.toShort())
+            require(def.id !in defs || MineralItems.variant(def.id) != null || def.id.toInt() in 3000..3008)
             defs[def.id] = def
             val index = def.id.toInt() and 0xffff
             emissionTable[index] = def.lightEmission.toByte()
@@ -180,6 +189,17 @@ internal object BlockRegistry {
             }
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
+
+        // Four paintings per ore, shared by all blocks of a material/visual tier. No item IDs
+        // or saved metadata for variants, and no texture generation during meshing/rendering.
+        val variantsByBase = HashMap<Int, IntArray>()
+        for (def in defs.values) if (MineralItems.isOre(def.id) || def.id.toInt() in 3000..3009) {
+            variantsByBase.getOrPut(def.layerTop) {
+                IntArray(MineralOrePixels.VARIANTS) { register(MineralArt.oreVariantKey(def.textureTop,it)) }
+            }
+        }
+        oreVariants = arrayOfNulls(bitmaps.size)
+        for ((base, variants) in variantsByBase) oreVariants[base] = variants
 
         // Climate now travels with mesh vertices; only rare bark variants need extra layers.
         val baseCount = bitmaps.size
