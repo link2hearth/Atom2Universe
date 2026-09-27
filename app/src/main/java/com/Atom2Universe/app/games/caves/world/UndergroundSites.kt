@@ -73,37 +73,51 @@ internal class UndergroundSites(private val seed: Long, private val terrain: Nat
             (key.y.toLong() * 42317861L) xor (key.z.toLong() * 132897987541L) xor 792137L
         val rng = Random(salt)
         if (rng.nextFloat() > .58f) return null
-        val turn = rng.nextInt(4)
+        // Plusieurs colonnes et orientations : une paroi mal orientée ne vide plus toute la cellule.
+        repeat(6) {
+            val firstTurn = rng.nextInt(4)
+            val x = key.x * CELL + 48 + rng.nextInt(32)
+            val z = key.z * CELL + 48 + rng.nextInt(32)
+            findEntrance(key, x, z, firstTurn, salt, rng)?.let { return it }
+        }
+        return null
+    }
+
+    private fun findEntrance(key: Key, x: Int, z: Int, firstTurn: Int, salt: Long, rng: Random): Site? {
         // The full rotated blueprint fits inside this cell, including its entrance apron.
-        val x = key.x * CELL + 52 + rng.nextInt(24)
-        val z = key.z * CELL + 52 + rng.nextInt(24)
         val h = terrain.height(x.toDouble(), z.toDouble()).toInt()
         val water = terrain.waterLevelAt(x.toDouble(), z.toDouble())
-        val top = minOf(key.y * HEIGHT + 68, h - 32)
-        val bottom = key.y * HEIGHT + 16
+        val top = minOf(key.y * HEIGHT + 80, h - 20)
+        val bottom = key.y * HEIGHT + 8
         if (top < bottom) return null
         // Search for a real dry cave floor; a site can never be buried without an entrance.
         for (y in top downTo bottom) {
             if (terrain.isFlooded(x, y + 1, z, h, water) ||
                 !terrain.caveAt(x, y + 1, z) || !terrain.caveAt(x, y + 2, z) || terrain.caveAt(x, y, z)) continue
-            val approach = rotate(0, -4, turn)
-            val ax = x + approach.first; val az = z + approach.second
-            if (terrain.groundAt(ax, y + 1, az) != AIR || terrain.groundAt(ax, y + 2, az) != AIR ||
-                terrain.groundAt(ax, y, az) == WATER) continue
-            if (terrain.groundAt(ax, y, az) == AIR && terrain.groundAt(ax, y - 1, az) in shortArrayOf(AIR, WATER)) continue
-            // Reject shallow roofs and aquifers over the footprint before digging any room.
-            var fits = true
-            for (dx in -24..24 step 8) for (dz in -8..44 step 4) {
-                val r = rotate(dx, dz, turn)
-                val wx = x + r.first; val wz = z + r.second
-                val roof = terrain.height(wx.toDouble(), wz.toDouble()).toInt()
-                if (roof - y < 22 || terrain.isFlooded(wx, y - 2, wz, roof,
-                        terrain.waterLevelAt(wx.toDouble(), wz.toDouble()))) fits = false
+            for (orientation in 0..3) {
+                val turn = (firstTurn + orientation) % 4
+                val approach = rotate(0, -4, turn)
+                val ax = x + approach.first; val az = z + approach.second
+                if (terrain.groundAt(ax, y + 1, az) != AIR || terrain.groundAt(ax, y + 2, az) != AIR ||
+                    terrain.groundAt(ax, y, az) == WATER) continue
+                if (terrain.groundAt(ax, y, az) == AIR && terrain.groundAt(ax, y - 1, az) in shortArrayOf(AIR, WATER)) continue
+                // Reject shallow roofs and aquifers over the footprint before digging any room.
+                var fits = true
+                footprint@ for (dx in -24..24 step 8) for (dz in -8..44 step 4) {
+                    val r = rotate(dx, dz, turn)
+                    val wx = x + r.first; val wz = z + r.second
+                    val roof = terrain.height(wx.toDouble(), wz.toDouble()).toInt()
+                    if (roof - y < 16 || terrain.isFlooded(wx, y - 2, wz, roof,
+                            terrain.waterLevelAt(wx.toDouble(), wz.toDouble()))) {
+                        fits = false
+                        break@footprint
+                    }
+                }
+                if (!fits) continue
+                val stage = MineralProgression.stage(y.toDouble())
+                val choices = Kind.entries.filter { stage >= it.firstStage }
+                return materialize(choices[rng.nextInt(choices.size)], Point(x, y, z), turn, salt)
             }
-            if (!fits) continue
-            val stage = MineralProgression.stage(y.toDouble())
-            val choices = Kind.entries.filter { stage >= it.firstStage }
-            return materialize(choices[rng.nextInt(choices.size)], Point(x, y, z), turn, salt)
         }
         return null
     }

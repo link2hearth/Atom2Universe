@@ -96,16 +96,16 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
             val roll = hash(wx, wy, wz, 221) % 100
             val biome = biomeAt(wx, wy, wz, h, s.humidity(x, z), s.temperature(x, z))
             val mushroomChance = when (biome) {
-                Biome.FUNGAL -> if (patch > .05) 18 else 3
-                Biome.ROOTS -> if (patch > .1) 8 else 1
-                else -> if (patch > .15) 3 else 0
+                Biome.FUNGAL -> if (patch > .05) 8 else 1
+                Biome.ROOTS -> if (patch > .1) 4 else 1
+                else -> if (patch > .15) 1 else 0
             }
             val plant: Short = when {
                 roll < mushroomChance -> mushroomAt(biome, wx, wy, wz)
                 patch < -.15 -> AIR // Calm stretches separate decorated pockets.
                 else -> when (biome) {
                     Biome.ROOTS -> if (roll < 24) 2630 else AIR
-                    Biome.CRYSTAL -> if (roll < 10) 2631 else AIR
+                    Biome.CRYSTAL -> if (roll < 4) 2631 else AIR
                     Biome.FROZEN -> if (roll < 12) 2632 else AIR
                     Biome.CALCITE -> if (roll < 10) 2633 else AIR
                     else -> AIR
@@ -133,6 +133,10 @@ internal class UndergroundDecor(private val seed: Long, private val terrain: Nat
                     val rng = hash(c.worldX + x, c.worldY + y, c.worldZ + z, 817)
                     if (rng % 3 == 0L) continue
                     val biome = biomeAt(c.worldX + x, c.worldY + y, c.worldZ + z, h, s.humidity(x, z), s.temperature(x, z))
+                    // Espacer les grandes colonies lumineuses sans modifier leur silhouette.
+                    // Tirage indépendant pour conserver la variété des tailles et des couleurs.
+                    if ((biome == Biome.FUNGAL || biome == Biome.CRYSTAL) &&
+                        hash(c.worldX + x, c.worldY + y, c.worldZ + z, 1913) % 2 == 0L) continue
                     if ((biome == Biome.FUNGAL || biome == Biome.BASALT) && !floor ||
                         biome == Biome.ROOTS && floor) continue
                     val direction = if (floor) 1 else -1

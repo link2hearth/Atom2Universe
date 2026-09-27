@@ -192,7 +192,7 @@ internal class SpawnManager(
                 val distance = (sx-px).pow(2) + (sy-py).pow(2) + (sz-pz).pow(2)
                 if (distance < 16.0*16.0 || distance > 64.0*64.0 || !canSpawnAt(sx,sz) ||
                     isNearExistingEnemy(sx,sy,sz) || guardianSpaceReserved(site,sx,sy,sz)) continue
-                if ((lightAt?.invoke(point.x,point.y,point.z) ?: 15) > 7 ||
+                if ((lightAt?.invoke(point.x,point.y,point.z) ?: 15) > MAX_SPAWN_LIGHT ||
                     !hasBodyRoom(MobRegistry.get(site.kind.mob),sx,sy,sz,false)) continue
                 result.add(SpawnBlock(sx,sy,sz,"",site.level,site))
             }
@@ -211,7 +211,7 @@ internal class SpawnManager(
 
             val sy = findSpawnGround(sx, sz, py) ?: return@repeat
             if (!hasSpawnHeadroom(sx, sy, sz)) return@repeat
-            if (exploration && (lightAt?.invoke(floor(sx).toInt(), floor(sy).toInt(), floor(sz).toInt()) ?: 15) > 7) return@repeat
+            if (exploration && (lightAt?.invoke(floor(sx).toInt(), floor(sy).toInt(), floor(sz).toInt()) ?: 15) > MAX_SPAWN_LIGHT) return@repeat
             if (exploration && isNearExistingEnemy(sx,sy,sz)) return@repeat
 
             val biome = biomeAt(sx, sy, sz)
@@ -315,7 +315,10 @@ internal class SpawnManager(
                 com.Atom2Universe.app.games.caves.node.BlockRegistry.isPartial(b)) continue
             val a1 = world.blockAt(bx, by + 1, bz)
             val a2 = world.blockAt(bx, by + 2, bz)
-            if (a1 == AIR && a2 == AIR) return (by + 1).toDouble()
+            // Les plantes traversables ne doivent pas stériliser les sols des biomes fongiques.
+            // La lumière reste vérifiée séparément, notamment dans une case contenant une torche.
+            if ((a1 == AIR || exploration && isDecoration(a1)) &&
+                (a2 == AIR || exploration && isDecoration(a2))) return (by + 1).toDouble()
         }
         return null
     }
@@ -387,6 +390,9 @@ internal class SpawnManager(
     }
 
     companion object {
+        // Pénombre naturelle (champignons <= 5) : spawn possible. Torche 15 : protection
+        // jusqu'à 9 pas de propagation dans l'air, les murs arrêtant la lumière.
+        const val MAX_SPAWN_LIGHT = 5
         const val SAFE_ZONE_CHUNKS  = 5.0
         const val WARD_SAFE_RADIUS  = 5.0
         const val SPAWN_INTERVAL    = 5f

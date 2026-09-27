@@ -918,6 +918,11 @@ internal class CaveRenderer(
         } else null
         GLES30.glClearColor(0.682f, 0.910f, 0.973f, 1f)
         GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+        if (com.Atom2Universe.app.BuildConfig.DEBUG) {
+            val depthBits = IntArray(1)
+            GLES30.glGetIntegerv(GLES30.GL_DEPTH_BITS, depthBits, 0)
+            android.util.Log.i("CavePerf", "depthBits=${depthBits[0]}")
+        }
         lastFrameNs = System.nanoTime()
 
         worldShader = ShaderProgram(VERT_WORLD, FRAG_WORLD).also {
@@ -3489,6 +3494,7 @@ internal class CaveRenderer(
 
 
         heldKind()?.let { drawHeldItem(it); return }
+        if (held == TORCH) { drawHeldTorch(swing); return }
         val type = selectedEquipmentType()
         val throwing = rockChargeTime > 0f || (releasedEquipment == "rock" && equipmentRelease >= 0f)
         if (type != null || throwing || (heldItemMode == HotbarMode.COMBAT && (held == null || held in ROCK_IDS))) {
@@ -3511,6 +3517,13 @@ internal class CaveRenderer(
             android.opengl.Matrix.rotateM(equipmentModel,0,recoil*95f,1f,0f,0f)
             drawEquipment(type,throwing || type == null,true)
             return
+        }
+        val holdingBlock = held != null && !isWeapon && G.template(held) == null &&
+            !BlockRegistry.isDecoration(held) && !com.Atom2Universe.app.games.caves.node.FarmItems.isItem(held)
+        if (holdingBlock) {
+            // Décalage en repère caméra : le bras accompagne le bloc vers le coin bas-droite.
+            vmModel[12] += .20f
+            vmModel[13] -= .18f
         }
         drawArm(isWeapon)
 
@@ -3580,13 +3593,50 @@ internal class CaveRenderer(
         return o
     }
 
-    /** Cube texturé du bloc tenu, présenté en biais dans le poing (world shader). */
+    private val heldPartialMeshes = HashMap<Short, FloatArray>()
+
+    /** Forme réelle du bloc tenu, présentée en biais dans le poing (world shader). */
     private fun drawHeldBlock(block: Short) {
         val s = 0.145f
         System.arraycopy(vmModel, 0, vmTmp, 0, 16)
         android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.60f, 0.06f)
         android.opengl.Matrix.rotateM(vmTmp, 0, -28f, 0f, 1f, 0f)
         android.opengl.Matrix.rotateM(vmTmp, 0, 20f, 1f, 0f, 0f)
+
+        val definition = BlockRegistry.get(block)
+        if (definition != null && definition.partial) {
+            val arr = heldPartialMeshes.getOrPut(block) {
+                // La caméra voit +Z : tourner l'escalier pour montrer les marches, pas son dos.
+                val meta: Byte = if (definition.stairs) 2 else 0
+                val faces = PartialBlockModel.faces(definition, meta)
+                val mesh = FloatArray(faces.size * 6 * 7)
+                var offset = 0
+                for (face in faces) {
+                    val layer = when (face.texture) {
+                        0 -> definition.layerTop
+                        1 -> definition.layerBottom
+                        2 -> definition.layerSide
+                        3 -> definition.layerFront
+                        else -> BlockRegistry.getLayerForFace(block, face.direction, AIR, meta)
+                    }
+                    for (i in intArrayOf(0, 1, 2, 0, 2, 3)) {
+                        val v = face.vertices[i]
+                        mesh[offset++] = (v[0] - .5f) * 2f * s
+                        mesh[offset++] = (v[1] - .5f) * 2f * s
+                        mesh[offset++] = (v[2] - .5f) * 2f * s
+                        mesh[offset++] = face.uv?.get(i)?.get(0)
+                            ?: if (face.direction == 2 || face.direction == 3) v[2] else v[0]
+                        mesh[offset++] = face.uv?.get(i)?.get(1)
+                            ?: if (face.direction < 2) v[2] else 1f - v[1]
+                        mesh[offset++] = face.direction * 4096f + layer
+                        mesh[offset++] = 1f
+                    }
+                }
+                mesh
+            }
+            drawWorldVm(arr, arr.size, vmTmp)
+            return
+        }
 
         val arr = FloatArray(36 * 7)
         var o = 0
@@ -3909,6 +3959,38 @@ internal class CaveRenderer(
             m.box(-.36f, y, -.66f, .17f, .20f, .03f, 0x946E4D)
             m.box(-.36f, y, -.70f, .024f, .20f, .014f, 0xBBC9C6)
         }
+        drawEquipmentMesh(identityModel, vmProj)
+    }
+
+    /** Torche en volume : le poing entoure le manche, la flamme reste au-dessus de la main. */
+    private fun drawHeldTorch(swing: Float) {
+        val state = heldState()
+        val lower = 1f - HeldItemPoses.smooth(state.equip)
+        val pose = com.Atom2Universe.app.games.caves.render.HeldPose(
+            x = state.bobX + .10f, y = state.bobY - .40f * lower - .04f * swing,
+            wristPitch = -12f - 40f * swing, wristYaw = 25f, wristRoll = 8f,
+        )
+        val m = equipmentMesh
+        m.clear()
+        val arm = HeldItemPoses.armMatrix(pose)
+        HeldItemModels.fpsArm(m)
+        m.transform(0, arm)
+        val start = m.count
+        // Même silhouette que la torche posée, réduite à la taille de la prise.
+        for (part in TorchModel.parts) {
+            val color = when (part.material) {
+                0 -> 0x996532
+                1 -> 0x59402C
+                2 -> 0xEFA33D
+                else -> 0xFFE397
+            }
+            val scale = .65f
+            m.box(0f, ((part.bottom + part.top) * .5f - .20f) * scale, 0f,
+                part.half * scale, (part.top - part.bottom) * .5f * scale,
+                part.half * scale, color)
+        }
+        HeldItemModels.fist(m)
+        m.transform(start, Mat4.mul(arm, HeldItemPoses.gripMatrix(pose)))
         drawEquipmentMesh(identityModel, vmProj)
     }
 

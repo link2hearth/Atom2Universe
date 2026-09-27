@@ -315,7 +315,10 @@ class CaveActivity : ThemedActivity() {
 
         glView = GLSurfaceView(this).apply {
             setEGLContextClientVersion(3)
-            setEGLConfigChooser(8, 8, 8, 0, 16, 0)
+            // Avec near=0.1 et far=1500, une profondeur 16 bits confond des faces
+            // distantes de plusieurs blocs : les faces internes sombres percent le relief.
+            // Exiger 24 bits, soit 256 fois plus de niveaux de profondeur.
+            setEGLConfigChooser(8, 8, 8, 0, 24, 0)
             setRenderer(renderer)
             renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         }

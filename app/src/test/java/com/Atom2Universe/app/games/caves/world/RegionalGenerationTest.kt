@@ -80,4 +80,53 @@ class RegionalGenerationTest {
             if (h <= water) for (y in h - 7..h) assertFalse(a.caveAt(x, y, z))
         }
     }
+
+    @Test fun terracedVillageBuildingsStayReachableOnSlopes() {
+        for (seed in 0..11) for (direction in listOf(-1, 1)) {
+            fun height(x: Int, z: Int) = Math.floorDiv((x - 44) * direction + z - 44, 4)
+            val plan = RegionalSettlements.village(Random(seed), false, false, false, ::height)
+            fun block(x: Int, y: Int, z: Int) = plan[Triple(x, y, z)]?.id
+                ?: if (y <= height(x, z)) STONE else AIR
+            val walkable = plan.filter { (p, cell) ->
+                cell.id != AIR && cell.id != WATER &&
+                    block(p.first, p.second + 1, p.third) == AIR &&
+                    block(p.first, p.second + 2, p.third) == AIR
+            }.keys
+            val start = Triple(44, 0, 44)
+            assertTrue(start in walkable)
+            val visited = mutableSetOf(start)
+            val queue = ArrayDeque<Triple<Int, Int, Int>>()
+            queue += start
+            while (queue.isNotEmpty()) {
+                val p = queue.removeFirst()
+                for ((dx, dz) in listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)) for (dy in -1..1) {
+                    val next = Triple(p.first + dx, p.second + dy, p.third + dz)
+                    // Enough headroom on the higher of the two adjacent steps.
+                    val top = maxOf(p.second, next.second) + 2
+                    if (next in walkable && block(p.first, top, p.third) == AIR &&
+                        block(next.first, top, next.third) == AIR && visited.add(next)) queue += next
+                }
+            }
+            val buildings = plan.filterValues { it.id == F.COOKER || it.id == F.MILL }.keys
+            assertTrue("Village should use different terraces", buildings.map { it.second }.distinct().size > 1)
+            for (p in buildings) assertTrue("Unreachable terrace: seed=$seed slope=$direction building=$p",
+                listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1).any { (dx, dz) ->
+                    Triple(p.first + dx, p.second - 1, p.third + dz) in visited
+                })
+            assertTrue("Plan must fit inside its reserved cell", plan.keys.all {
+                it.first in -8..98 && it.third in -8..98
+            })
+        }
+    }
+
+    @Test fun undergroundPlansFitExpandedPlacementMargins() {
+        for (kind in UndergroundSites.Kind.entries) for (salt in 0L..2L) {
+            val plan = UndergroundSites.blueprint(kind, salt)
+            for (p in plan.blocks.keys) {
+                // Anchors use [48,79] in X/Z and [8,80] in Y; any quarter-turn must fit.
+                assertTrue("Horizontal extent: $kind $p", p.x in -48..48 && p.z in -48..48)
+                assertTrue("Vertical extent: $kind $p", p.y in -8..15)
+            }
+        }
+    }
 }

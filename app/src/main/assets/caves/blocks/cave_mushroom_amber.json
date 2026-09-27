@@ -6,7 +6,7 @@
   "texture_bottom": "cave_art:a_mushroom_amber",
   "color": "#EBC47A",
   "hardness": 0.3,
-  "light_emission": 8,
+  "light_emission": 4,
   "drop": "cave_mushroom_amber",
   "creative_tab": "nature",
   "placement_rule": "solid",

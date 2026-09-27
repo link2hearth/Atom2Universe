@@ -6,7 +6,7 @@
   "texture_bottom": "cave_art:a_mushroom_blue",
   "color": "#9BAFEA",
   "hardness": 0.3,
-  "light_emission": 7,
+  "light_emission": 3,
   "drop": "cave_mushroom_blue",
   "creative_tab": "nature",
   "placement_rule": "solid",
