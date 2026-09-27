@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.CraftDef
 import com.Atom2Universe.app.games.caves.node.CraftGroup
+import com.Atom2Universe.app.games.caves.node.ForgedEquipment as G
 import com.Atom2Universe.app.games.caves.node.MineralItems as M
 import com.Atom2Universe.app.games.caves.node.MineralItems.Form as Fm
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
@@ -48,7 +49,8 @@ internal object MineralRecipes {
             craft(Fm.SWORD,listOf(id(Fm.BLADE) to 1,3110.toShort() to 1,E.RIVETS to 2))
             craft(Fm.SPEAR,listOf(id(Fm.BLADE) to 1,3110.toShort() to 3,E.RIVETS to 1))
             craft(Fm.HAMMER,listOf(id(Fm.HEAD) to 2,3110.toShort() to 2,E.RIVETS to 2))
-            craft(Fm.ARMOR,listOf(id(Fm.ARMOR_PART) to 8,F.CLOTH to 3,E.RIVETS to 4))
+            for(slot in G.Slot.entries) add(CraftDef(listOf(id(Fm.ARMOR_PART) to slot.plates,
+                F.CLOTH to 1,E.RIVETS to 2),result=G.Template(stage,slot).id,station=E.ANVIL))
         }
         for(tier in 1..MineralProgression.TIERS) {
             add(CraftDef(listOf(M.steel(tier) to 6,2300.toShort() to 4),result=M.reinforcement(tier),station=E.ANVIL))

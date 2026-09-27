@@ -121,7 +121,7 @@ class CaveActivity : ThemedActivity() {
 
     // ── Textures ──────────────────────────────────────────────────────────────
 
-    internal fun blockBitmap(type: Short): Bitmap? = BlockRegistry.getBitmap(type)
+    internal fun blockBitmap(type: Short): Bitmap? = BlockRegistry.getBitmap(com.Atom2Universe.app.games.caves.node.ForgedEquipment.base(type) ?: type)
 
     internal fun blockDrawable(type: Short, cornerDp: Float = 4f): Drawable {
         val dp = resources.displayMetrics.density
@@ -153,6 +153,8 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal fun blockName(type: Short): String {
+        com.Atom2Universe.app.games.caves.node.ForgedEquipment.get(type)?.let { return blockName(it.base) }
+        com.Atom2Universe.app.games.caves.node.ForgedEquipment.name(this,type)?.let { return it }
         com.Atom2Universe.app.games.caves.node.MineralItems.name(this,type)?.let { return it }
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)?.let { return weaponName(it.defId) }
         com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)?.let { crop ->
@@ -237,10 +239,12 @@ class CaveActivity : ThemedActivity() {
         isCreative = save?.isCreative ?: false
         // Restaurer les instances d'armes AVANT de créer le renderer
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
+        com.Atom2Universe.app.games.caves.node.ForgedEquipment.clear()
         save?.weaponInstances?.forEach { (id, inst) ->
             com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.restore(id, inst)
         }
 
+        com.Atom2Universe.app.games.caves.node.ForgedEquipment.restore(save?.forgedEquipment ?: "{}")
         val savedState = when {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -809,6 +813,7 @@ class CaveActivity : ThemedActivity() {
         music.stop()
         soundEngine?.destroy()
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
+        com.Atom2Universe.app.games.caves.node.ForgedEquipment.clear()
     }
 
     /** À appeler sur le thread UI quand le renderer a remplacé l'inventaire d'un bloc (kit d'armes). */
@@ -847,6 +852,7 @@ class CaveActivity : ThemedActivity() {
             playerShieldCurrent = renderer.playerNode.shield,
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList(),
             weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
+            forgedEquipment     = com.Atom2Universe.app.games.caves.node.ForgedEquipment.snapshot(),
             passiveAnimals = renderer.passiveAnimals.snapshotNow(),
             recoverableAmmo = renderer.recoverableAmmoSnapshot
         )

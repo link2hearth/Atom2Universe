@@ -10,6 +10,9 @@ internal object MineralArt {
     fun textureKey(metal: Int, form: Form, tier: Int) = "mineral:$metal:${form.ordinal}:$tier"
     fun oreVariantKey(base: String, variant: Int) = if (variant == 0) base else "$base:variant$variant"
     fun register() {
+        for(metal in MineralItems.metals.indices) for(slot in ForgedEquipment.Slot.entries) {
+            BlockRegistry.registerGeneratedTexture("armor:$metal:${slot.ordinal}") { size -> armor(metal,slot,size) }
+        }
         for (metal in 0..16) for (form in Form.entries) for (tier in 1..if(form == Form.ORE) 3 else 1) {
             for (variant in 0 until if(form == Form.ORE) MineralOrePixels.VARIANTS else 1) {
                 BlockRegistry.registerGeneratedTexture(oreVariantKey(textureKey(metal,form,tier),variant)) { size ->
@@ -17,6 +20,37 @@ internal object MineralArt {
                 }
             }
         }
+    }
+    private fun armor(metal: Int, slot: ForgedEquipment.Slot, size: Int): Bitmap {
+        val bitmap=Bitmap.createBitmap(32,32,Bitmap.Config.ARGB_8888)
+        val canvas=Canvas(bitmap); val paint=Paint().apply { isAntiAlias=false }
+        val color=MineralItems.metals[metal].color
+        fun rect(x: Int,y: Int,w: Int,h: Int,light: Float) {
+            paint.color=android.graphics.Color.rgb((((color shr 16) and 255)*light).toInt().coerceIn(0,255),
+                (((color shr 8) and 255)*light).toInt().coerceIn(0,255),((color and 255)*light).toInt().coerceIn(0,255))
+            canvas.drawRect(x.toFloat(),y.toFloat(),(x+w).toFloat(),(y+h).toFloat(),paint)
+        }
+        when(slot) {
+            ForgedEquipment.Slot.HELMET -> {
+                rect(7,7,18,20,.45f);rect(10,4,12,5,.65f);rect(8,8,16,11,1f)
+                rect(10,6,12,3,1.3f);rect(6,18,6,10,.8f);rect(20,18,6,10,.8f)
+                rect(10,16,12,4,.28f);rect(15,14,2,11,1.25f)
+            }
+            ForgedEquipment.Slot.CHEST -> {
+                rect(8,8,16,21,.5f);rect(2,7,7,10,.7f);rect(23,7,7,10,.7f)
+                rect(9,9,14,17,1f);rect(12,7,8,4,.35f);rect(10,12,3,11,1.3f)
+                rect(9,22,14,2,.7f);rect(9,27,14,2,1.2f);rect(3,8,5,2,1.3f);rect(24,8,5,2,1.3f)
+            }
+            ForgedEquipment.Slot.LEGS -> {
+                rect(7,5,18,9,.55f);rect(8,7,16,5,1.1f)
+                for(x in intArrayOf(8,18)) { rect(x,12,6,18,.5f);rect(x,12,4,16,1f);rect(x,20,5,4,1.25f) }
+            }
+            ForgedEquipment.Slot.BOOTS -> {
+                for(x in intArrayOf(4,18)) { rect(x+2,6,8,21,.5f);rect(x+3,8,6,13,1f)
+                    rect(x,22,10,6,.8f);rect(x,28,11,2,.4f);rect(x+3,9,2,10,1.3f);rect(x+1,23,7,2,1.25f) }
+            }
+        }
+        return if(size==32) bitmap else Bitmap.createScaledBitmap(bitmap,size,size,false).also { bitmap.recycle() }
     }
     fun texture(metal: Int, form: Form, tier: Int, size: Int, variant: Int = 0): Bitmap {
         val color = MineralItems.metals.getOrNull(metal)?.color ?: when(metal) {

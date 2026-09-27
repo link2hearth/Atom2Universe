@@ -113,6 +113,10 @@ internal object BlockRegistry {
             transparentTable[index] = def.transparent
             partialTable[index] = def.partial
         }
+        for (def in ForgedEquipment.definitions(defs.getValue(3101))) {
+            require(def.id !in defs) { "Duplicate armor template ${def.id}" }
+            defs[def.id]=def
+        }
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {
             require(def.harvestCategory in setOf("recoverable", "covered_soil", "fractured_stone",

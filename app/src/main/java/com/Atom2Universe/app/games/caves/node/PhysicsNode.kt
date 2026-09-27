@@ -21,6 +21,8 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
     var onGround  = false
 
     var isSprinting = false
+    var equipmentSpeed = 1.0
+    var equipmentJumpHeight = 1.0
     var isCrouching = false
         private set
     val eyeDrop: Double get() = if (isCrouching) 0.6 else 0.0
@@ -104,7 +106,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
             inWater  -> WATER_SPEED * dt
             onGround -> groundSpeed * dt
             else     -> AIR_SPEED   * dt
-        }) * if (isCrouching) 0.35 else 1.0
+        }) * (if (isCrouching) 0.35 else 1.0) * equipmentSpeed.coerceIn(1.0,1.3)
         val dx = (fwdX * moveForward - rgtX * moveRight) * hSpeed + driftX * dt
         val dz = (fwdZ * moveForward - rgtZ * moveRight) * hSpeed + driftZ * dt
 
@@ -194,7 +196,7 @@ class PhysicsNode(private val blockAt: (Int, Int, Int) -> Short) {
                 val canJump = coyoteTimer > 0f && velocityY <= 0.5
 
                 if (canJump && jumpPressed && (jumpJustPressed || onGround)) {
-                    velocityY = JUMP_VY; coyoteTimer = 0f; onGround = false
+                    velocityY = JUMP_VY * sqrt(equipmentJumpHeight.coerceIn(1.0,1.5)); coyoteTimer = 0f; onGround = false
                 }
 
                 velocityY = (velocityY - GRAVITY * dt).coerceAtLeast(-TERM_VEL)

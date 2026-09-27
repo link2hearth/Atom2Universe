@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves
 
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
+import com.Atom2Universe.app.games.caves.node.ForgedEquipment as G
 import android.content.ClipData
 import android.content.Context
 import android.graphics.Color
@@ -98,7 +99,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private val accents=Regex("\\p{M}+")
     private fun folded(text: String)=java.text.Normalizer.normalize(text.lowercase(java.util.Locale.ROOT),java.text.Normalizer.Form.NFD).replace(accents,"")
     private fun name(id: Short)=names.getOrPut(id) { folded(activity.blockName(id)) }
-    private fun favoriteKey(id: Short)=WeaponInstanceRegistry.get(id)?.let { "$id:${it.hashCode()}" } ?: id.toString()
+    private fun favoriteKey(id: Short)=G.get(id)?.let { "$id:${it.hashCode()}" }
+        ?: WeaponInstanceRegistry.get(id)?.let { "$id:${it.hashCode()}" } ?: id.toString()
     internal fun isFavorite(id: Short)=favoriteKey(id) in favorites
 
     private fun rebuildCatalog() {
@@ -268,6 +270,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         }
         ui.craftOne.setOnClickListener { selectedRecipe?.let { doCraft(it) } }
         ui.craftFive.setOnClickListener { selectedRecipe?.let { doCraft(it, 5) } }
+        ui.equipped.visibility=if(renderer.mode.allowsWorldEdits) View.VISIBLE else View.GONE
+        ui.equipped.setOnClickListener { showEquipment() }
     }
 
     private fun showLibrary(craft: Boolean) {
@@ -572,7 +576,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             (activity.isCreative || (renderer.inventory[type] ?: 0)>0) && name(type).contains(needle) &&
                 (bankFilter==null || renderer.itemMode(type)==bankFilter) &&
                 (!onlyFavorites || isFavorite(type)) && (!onlyRecent || type in recent.take(24)) &&
-                (categoryIndex==0 || BlockRegistry.get(type)?.creativeTab==categoryKeys[categoryIndex])
+                (categoryIndex==0 || BlockRegistry.get(G.base(type) ?: type)?.creativeTab==categoryKeys[categoryIndex])
         }.sortedWith(compareByDescending<Int> { catalogTypeAt(it)?.let(::isFavorite) ?: false }.thenComparator { a,b ->
             val x=catalogTypeAt(a) ?: return@thenComparator 0
             val y=catalogTypeAt(b) ?: return@thenComparator 0
@@ -622,7 +626,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 infoNameTv?.text  = activity.blockName(recipe.result)
                 infoCountTv?.text = activity.getString(R.string.cave_catalog_craft_quantity,recipe.resultCount)
             }
-            infoIngredientsTv?.text = activity.getString(R.string.cave_ui_available_batches, recipe.maxCraftable(renderer.inventory, renderer.nearbyStations))
+            infoIngredientsTv?.text = listOfNotNull(activity.getString(R.string.cave_ui_available_batches,
+                recipe.maxCraftable(renderer.inventory, renderer.nearbyStations)),G.describe(activity,recipe.result,preview=true)).joinToString("\n\n")
             infoDivider?.visibility       = View.VISIBLE
             infoIngredientsTv?.visibility = View.VISIBLE
             ingredientTiles(recipe)
@@ -685,10 +690,41 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 }
             }
         }
+        if(renderer.mode.allowsWorldEdits) {
+            val type=if(browsingCraft) null else selectedType()
+            if(type!=null && (G.template(type)!=null || E.armor(type)>0f || type==E.SHIELD)) {
+                ui.ingredients.addView(Button(activity).apply {
+                    setText(R.string.cave_gear_equip)
+                    setOnClickListener { equipmentAction { renderer.expeditionCombat.equip(type) } }
+                })
+            }
+        }
         ui.resizeDetails()
     }
 
+    private fun equipmentAction(action: () -> Unit) {
+        activity.glView.queueEvent {
+            action()
+            activity.runOnUiThread {
+                syncHotbar();refreshPagedAdapter();hud.updateHotbarForInventory();updateInfoPanel();activity.saveWorldAsync()
+            }
+        }
+    }
+
+    private fun showEquipment() {
+        AlertDialog.Builder(activity).setTitle(R.string.cave_gear_equipped)
+            .setMessage(renderer.expeditionCombat.summary())
+            .setPositiveButton(android.R.string.ok,null)
+            .setNeutralButton(R.string.cave_gear_remove) { _,_ -> equipmentAction { renderer.expeditionCombat.removeEquipment() } }.show()
+    }
+
     internal fun itemDescription(type: Short): String {
+        G.describe(activity,type)?.let { description ->
+            val slot=G.template(type)?.slot
+            val equipped=slot?.let { renderer.expeditionCombat.equipped(it) }
+            return if(equipped==null) description else description+"\n\n"+activity.getString(R.string.cave_gear_compare,
+                activity.blockName(equipped),G.describe(activity,equipped))
+        }
         WeaponInstanceRegistry.get(type)?.let { instance ->
             val definition=com.Atom2Universe.app.games.caves.node.ItemRegistry.get(instance.defId)
             return activity.getString(R.string.cave_ui_damage,instance.rolledDamage ?: 0,definition?.attackSpeedMs ?: 0)
@@ -702,7 +738,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         com.Atom2Universe.app.games.caves.node.MineralItems.pickStage(type)!=null -> activity.getString(R.string.cave_frontier_tool_hint)
                         com.Atom2Universe.app.games.caves.node.KitchenItems.isRawMeat(type) -> activity.getString(R.string.cave_kitchen_raw_hint)
                         com.Atom2Universe.app.games.caves.node.KitchenItems.isItem(type) && F.healing(type)==0 -> activity.getString(R.string.cave_kitchen_ingredient_hint)
-                        type in E.melee -> E.melee.getValue(type).let { p -> activity.getString(R.string.cave_melee_info,p.damage,p.reach,p.recovery,p.targets) }
+                        E.melee(type)!=null -> E.melee(type)!!.let { p -> activity.getString(R.string.cave_melee_info,p.damage,p.reach,p.recovery,p.targets) }
                         E.armor(type)>0f -> activity.getString(R.string.cave_armor_description,(E.armor(type)*100).toInt())
                         type==E.SHIELD -> activity.getString(R.string.cave_shield_description,82,50)
                         type==E.ROD || type==E.BAIT -> activity.getString(R.string.cave_fishing_aim)
@@ -924,7 +960,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val allocated = mutableListOf<Short>()
         val consumption = recipe.consumption(renderer.inventory, batches, renderer.nearbyStations) ?: return
         val weaponDefId = recipe.resultItemId
-        if (weaponDefId != null) {
+        val forged = weaponDefId==null && G.isCraft(recipe.result)
+        if(forged) {
+            val prepared=runCatching { repeat(batches*recipe.resultCount) { allocated+=G.allocate(G.roll(recipe.result)) } }
+            if(prepared.isFailure) {
+                allocated.forEach(G::free); ui.status.setText(R.string.cave_ui_craft_failed); return
+            }
+        } else if (weaponDefId != null) {
             val prepared = runCatching {
                 repeat(batches) {
                     val instance = (if(recipe.station!=null) com.Atom2Universe.app.games.caves.node.ItemRegistry.forgedInstance(weaponDefId) else com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(weaponDefId, kotlin.random.Random.Default))
@@ -946,7 +988,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 for(i in renderer.hotbar.indices) if(renderer.hotbar[i]==type) renderer.hotbar[i]=null
             } else renderer.inventory[type] = after
         }
-        if (weaponDefId != null) for (id in allocated) {
+        if (weaponDefId != null || forged) for (id in allocated) {
             renderer.inventory[id] = 1; addNewTypeByCategory(id)
         } else {
             val out = recipe.result

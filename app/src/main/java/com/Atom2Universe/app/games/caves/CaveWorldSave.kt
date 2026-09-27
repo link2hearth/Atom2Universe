@@ -47,6 +47,7 @@ internal data class CaveWorldSave(
     // Compétences RPG (XP cumulatif, niveau calculé à la volée)
     // IDs ≥ 10000 → instances d'armes dynamiques
     var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
+    var forgedEquipment: String = "{}",
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
     var passiveAnimals: String = "[]",
     val terrainVersion: Int = 8
@@ -117,6 +118,7 @@ internal object CaveWorldSaveManager {
         existing.wardStonePositions  = snap.wardStonePositions
         existing.isCreative          = snap.isCreative
         existing.weaponInstances     = snap.weaponInstances
+        existing.forgedEquipment     = snap.forgedEquipment
         existing.recoverableAmmo = snap.recoverableAmmo
         existing.passiveAnimals = snap.passiveAnimals
         persist(context, existing)
@@ -189,6 +191,7 @@ internal object CaveWorldSaveManager {
                 wiJson.put(id.toString(), o)
             }
             put("weaponInstances", wiJson)
+            put("forgedEquipment", save.forgedEquipment)
             put("recoverableAmmo",JSONArray().also { arr ->
                 save.recoverableAmmo.takeLast(256).forEach { a -> arr.put(JSONObject().apply {
                     put("x",a.x);put("y",a.y);put("z",a.z)
@@ -305,6 +308,7 @@ internal object CaveWorldSaveManager {
             wardStonePositions = wardStones,
             isCreative = j.optBoolean("isCreative", false),
             weaponInstances = weaponInstances,
+            forgedEquipment = j.optString("forgedEquipment", "{}"),
             recoverableAmmo = j.optJSONArray("recoverableAmmo")?.let { arr ->
                 (0 until minOf(arr.length(),256)).mapNotNull { i ->
                     val a=arr.optJSONObject(i) ?: return@mapNotNull null

@@ -22,6 +22,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
     }
     val inventoryTab = button(R.string.cave_ui_bag)
     val craftTab = button(R.string.cave_ui_workshop)
+    val equipped = button(R.string.cave_gear_equipped)
     val close = button(R.string.cave_ui_close)
     val search = EditText(activity).apply {
         setSingleLine(); textSize = 14f; setTextColor(CaveUiStyle.TEXT); setHintTextColor(CaveUiStyle.MUTED)
@@ -159,6 +160,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             b.layoutParams=LinearLayout.LayoutParams(dp(44),dp(44)).also { it.setMargins(dp(2),dp(2),dp(2),dp(2)) }
         }
         for((b,key,res) in listOf(Triple(close,"close",R.string.cave_ui_close),
+            Triple(equipped,"combat",R.string.cave_gear_equipped),
             Triple(sort,"sort",R.string.cave_ui_sort),Triple(previous,"previous",R.string.cave_ui_previous),Triple(next,"next",R.string.cave_ui_next),
             Triple(clearSearch,"close",R.string.cave_catalog_clear),Triple(favoritesOnly,"star",R.string.cave_catalog_favorites),
             Triple(recentOnly,"clock",R.string.cave_catalog_recent),Triple(filterAll,"all",R.string.cave_ui_all),
@@ -170,7 +172,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             button.layoutParams.height=dp(36)
         }
         panel.addView(row().apply {
-            addView(inventoryTab); addView(craftTab)
+            addView(inventoryTab); addView(craftTab); addView(equipped)
             if(!portrait) {
                 addView(search,LinearLayout.LayoutParams(0,dp(44),1f));addView(clearSearch);addView(sort)
             } else addView(Space(activity), LinearLayout.LayoutParams(0, 1, 1f))

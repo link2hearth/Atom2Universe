@@ -45,7 +45,12 @@ internal object ExpeditionItems {
         STEEL_SWORD to Melee("sword", 22, 3.1, .75, .48f, 2),
         STEEL_HAMMER to Melee("hammer", 34, 2.9, .68, 1.05f, 3)) + MineralItems.melee
     fun armor(id: Short?) = if(MineralItems.armorStage(id)!=null) 1f/3f else when(id) { PADDED_ARMOR -> .18f; IRON_ARMOR -> .34f; STEEL_ARMOR -> .48f; else -> 0f }
-    fun isEquipment(id: Short) = id in melee || id in PADDED_ARMOR..SHIELD || MineralItems.isEquipment(id)
+    fun melee(id: Short?): Melee? {
+        val item=ForgedEquipment.get(id)
+        val profile=melee[ForgedEquipment.base(id)] ?: return null
+        return if(item==null) profile else profile.copy(damage=item.damage)
+    }
+    fun isEquipment(id: Short) = ForgedEquipment.get(id)!=null || ForgedEquipment.template(id)!=null || id in melee || id in PADDED_ARMOR..SHIELD || MineralItems.isEquipment(id)
     fun isGardenItem(id: Short) = id in ROD..FISH_OIL
     fun healing(id: Short) = when(id) { GRILLED_FISH -> 12; FISH_STEW -> 22; else -> 0 }
 

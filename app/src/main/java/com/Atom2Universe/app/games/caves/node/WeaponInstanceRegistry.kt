@@ -5,16 +5,16 @@ internal object WeaponInstanceRegistry {
     private const val ID_START = 10000
     private const val ID_END   = 32767
 
-    private val instances = mutableMapOf<Short, ItemInstance>()
+    private val instances = java.util.concurrent.ConcurrentHashMap<Short, ItemInstance>()
 
-    fun isWeapon(id: Short): Boolean = id in instances
+    fun isWeapon(id: Short): Boolean = instances.containsKey(id)
 
     fun get(id: Short): ItemInstance? = instances[id]
 
-    fun allocate(instance: ItemInstance): Short {
+    @Synchronized fun allocate(instance: ItemInstance): Short {
         for (i in ID_START..ID_END) {
             val s = i.toShort()
-            if (s !in instances && BlockRegistry.get(s) == null && i !in 10000..10001) {
+            if (!instances.containsKey(s) && ForgedEquipment.get(s)==null && BlockRegistry.get(s) == null && i !in 10000..10001) {
                 instances[s] = instance
                 return s
             }

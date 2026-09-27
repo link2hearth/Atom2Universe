@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves
 
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
+import com.Atom2Universe.app.games.caves.node.ForgedEquipment as G
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
@@ -2166,7 +2167,11 @@ internal class CaveRenderer(
             reloadWithSound(magazine)
             return false
         }
-        val stats = weapon.rolledStats
+        val stats = if(mode.allowsWorldEdits) weapon.rolledStats.toMutableMap().also { stats ->
+            for(b in listOf(G.Bonus.ATTACK,G.Bonus.CRIT,G.Bonus.CRIT_DAMAGE)) {
+                stats[b.key]=((stats[b.key] ?: 0)+expeditionCombat.bonus(b,false)).coerceIn(0,b.cap)
+            }
+        } else weapon.rolledStats
         val drawPower=if(mode.allowsWorldEdits && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
         val baseDamage = ((weapon.rolledDamage ?: 1)*drawPower).roundToInt()
         val yawRad = Math.toRadians(camera.yaw.toDouble())
@@ -2199,7 +2204,8 @@ internal class CaveRenderer(
         }
 
         val speedBonus = stats["attack_speed"] ?: 0
-        weaponAttackCooldown=(profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
+        weaponAttackCooldown=if(mode.allowsWorldEdits) profile.interval/(1f+speedBonus/100f)
+            else (profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
         eventBus.publish(GameEvent.WeaponFired(def.weaponType ?: "gun"))
         if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) reloadWithSound(magazine)
         // Un coup de feu s'entend : le mode prévient les ennemis à portée d'oreille.
@@ -2253,7 +2259,7 @@ internal class CaveRenderer(
         if(mode.allowsWorldEdits && held!=null && E.isEquipment(held)) {
             rockChargeTime=0f;weaponChargeTime=0f
             if(!isCreative && (inventory[held] ?: 0)<=0) return
-            if(held in E.melee) { if(down) expeditionCombat.hold(dt); expeditionCombat.input(held,down) }
+            if(E.melee(held)!=null) { if(down) expeditionCombat.hold(dt); expeditionCombat.input(held,down) }
             else if(pressed) expeditionCombat.equip(held)
             return
         }
@@ -2490,7 +2496,7 @@ internal class CaveRenderer(
             return
         }
         val canMine = touch.laserActive &&
-            (heldItemMode == HotbarMode.BUILD || (heldItemMode == HotbarMode.COMBAT && hotbar[selectedSlot] !in E.melee && isAimingAtRockBlock()))
+            (heldItemMode == HotbarMode.BUILD || (heldItemMode == HotbarMode.COMBAT && E.melee(hotbar[selectedSlot])==null && isAimingAtRockBlock()))
         val target = if (canMine) raycastBlock() else null
 
         if (target == null) {
@@ -3321,7 +3327,7 @@ internal class CaveRenderer(
         val m = equipmentMesh
         m.clear()
         // Explorateur : veste, ceinture, bottes, sac et visage.
-        val armorColor=when(expeditionCombat.armor) { E.PADDED_ARMOR -> 0xAC835C; E.IRON_ARMOR -> 0xA3AFB6; E.STEEL_ARMOR -> 0x73AFBF; else -> 0x435B78 }
+        val armorColor=expeditionCombat.armorColor ?: when(expeditionCombat.armor) { E.PADDED_ARMOR -> 0xAC835C; E.IRON_ARMOR -> 0xA3AFB6; E.STEEL_ARMOR -> 0x73AFBF; else -> 0x435B78 }
         m.box(0f,-.59f,0f,.22f,.29f,.13f,armorColor)
         m.box(0f,-.86f,0f,.225f,.035f,.14f,0x49382B)
         m.box(0f,-.85f,-.15f,.035f,.028f,.012f,0xC6AA67)
@@ -3429,6 +3435,7 @@ internal class CaveRenderer(
         if (held != null) {
             when {
                 isWeapon                     -> drawHeldWeapon(held)
+                G.template(held)!=null        -> drawHeldFlat(G.base(held) ?: held)
                 BlockRegistry.isDecoration(held) || com.Atom2Universe.app.games.caves.node.FarmItems.isItem(held) -> drawHeldFlat(held)
                 else                         -> drawHeldBlock(held)
             }
@@ -3634,7 +3641,7 @@ internal class CaveRenderer(
         if(mode.allowsWorldEdits) {
             val held=hotbar[selectedSlot]
             if(held==E.ROD) { fishing.cancel();return }
-            if(heldItemMode==HotbarMode.COMBAT && (held in E.melee || expeditionCombat.shield && (RangedProfile.all[selectedEquipmentType()]?.magazine ?: 0)==0)) {
+            if(heldItemMode==HotbarMode.COMBAT && (E.melee(held)!=null || expeditionCombat.shield && (RangedProfile.all[selectedEquipmentType()]?.magazine ?: 0)==0)) {
                 expeditionCombat.raiseGuard();return
             }
         }
@@ -3661,7 +3668,7 @@ internal class CaveRenderer(
             !mode.allowsCombat -> SecondaryAction.NONE
             mode.allowsWorldEdits && id == E.ROD -> SecondaryAction.CANCEL_FISHING
             mode.allowsWorldEdits && heldItemMode == HotbarMode.COMBAT &&
-                (id in E.melee || expeditionCombat.shield && (profile?.magazine ?: 0) == 0) -> SecondaryAction.GUARD
+                (E.melee(id)!=null || expeditionCombat.shield && (profile?.magazine ?: 0) == 0) -> SecondaryAction.GUARD
             heldItemMode == HotbarMode.COMBAT && id != null && (profile?.magazine ?: 0) > 0 -> SecondaryAction.RELOAD
             else -> SecondaryAction.NONE
         }
@@ -3673,7 +3680,7 @@ internal class CaveRenderer(
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
         val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
             else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_hint)
-            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && id in E.melee) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
+            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
             else if(mode.allowsWorldEdits && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
             else if(heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_ranged_charge, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100),reserve)
             else if(heldItemMode!=HotbarMode.COMBAT || mag==null) ""
@@ -3686,7 +3693,7 @@ internal class CaveRenderer(
 
     private fun selectedEquipmentType(): String? {
         val id = hotbar[selectedSlot] ?: return if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) "buckler" else null
-        E.melee[id]?.let { return it.type }
+        E.melee(id)?.let { return it.type }
         if(id==E.ROD) return "fishing_rod"
         val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return null
         return ItemRegistry.get(instance.defId)?.weaponType
@@ -3727,7 +3734,7 @@ internal class CaveRenderer(
     private fun heldKind(): HeldKind? {
         val id = hotbar.getOrNull(selectedSlot) ?: return null
         if(M.pickStage(id)!=null) return HeldKind.PICKAXE
-        E.melee[id]?.let { return HeldKind.forWeaponType(it.type) }
+        E.melee(id)?.let { return HeldKind.forWeaponType(it.type) }
         if (id == E.ROD) return HeldKind.FISHING_ROD
         if (id == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return HeldKind.HOE
         if (id == com.Atom2Universe.app.games.caves.node.FrontierItems.SHEARS) return HeldKind.SHEARS
@@ -3737,7 +3744,7 @@ internal class CaveRenderer(
     }
 
     private fun heldLook(): HeldLook {
-        val id = hotbar.getOrNull(selectedSlot)
+        val id = G.base(hotbar.getOrNull(selectedSlot))
         M.variant(id)?.let { return HeldLook(it.metal.color) }
         val n = com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(id)
         if (n >= 0) return HeldLook(intArrayOf(0xA7794B, 0x8E9592, 0xD4DED7, 0x83BCC3)[(n / 3).coerceIn(0, 3)])
@@ -4403,6 +4410,8 @@ internal class CaveRenderer(
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
         val chargeMul = if (rockChargeTime > 0f) 0.55f else 1f
 
+        physics.equipmentSpeed=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.SPEED)/100.0 else 1.0
+        physics.equipmentJumpHeight=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.JUMP)/100.0 else 1.0
         physics.updateCrouch(touch.crouchRequested, camera.playerX, camera.playerY, camera.playerZ)
         if (physics.isCrouching) touch.cancelSprint()
         if (physics.isCrouching != prevCrouching) {
