@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_player_stats">Statistiques du joueur</string>
+    <string name="cave_player_show_stats">Afficher les statistiques du joueur</string>
+    <string name="cave_player_show_equipment">Afficher les emplacements d’équipement</string>
+    <string name="cave_player_health">Vie : %1$d / %2$d</string>
+    <string name="cave_player_defense">Défense de l’armure : %1$d</string>
+    <string name="cave_player_reduction">Réduction des dégâts à cette profondeur : %1$d%%</string>
+    <string name="cave_player_shield">Bouclier équipé : %1$s</string>
+    <string name="cave_player_critical_total">Dégâts critiques : %1$d%% des dégâts normaux</string>
+    <string name="cave_player_held">Objet en main</string>
+    <string name="cave_player_stats_note">Les bonus incluent l’armure portée et l’arme active. La protection dépend de la profondeur de l’attaquant.</string>
+    <string name="cave_equipment_relic">Relique</string>
+    <string name="cave_equipment_relic_future">Relique — emplacement réservé pour une prochaine mise à jour</string>
     <string name="cave_equipment_shield">Bouclier</string>
     <string name="cave_equipment_suit">Armure entière</string>
     <string name="cave_equipment_drag_hint">Glissez l’armure vers sa case. Touchez-la pour les détails.</string>

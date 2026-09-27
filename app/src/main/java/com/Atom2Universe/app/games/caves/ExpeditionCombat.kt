@@ -215,6 +215,14 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         }
         for(b in G.Bonus.entries) add(context.getString(R.string.cave_gear_total_bonus,context.getString(b.label),bonus(b),b.cap))
     }.joinToString("\n\n")
+    fun playerSummary(): String = buildList {
+        add(context.getString(R.string.cave_player_health, r.playerNode.hp, r.playerNode.maxHp))
+        add(context.getString(R.string.cave_player_defense, pieces.values.sumOf { G.get(it)?.defense ?: 0 }))
+        add(context.getString(R.string.cave_player_reduction, (reduction(P.stage(r.camera.playerY)) * 100).roundToInt()))
+        add(context.getString(R.string.cave_player_shield, context.getString(if (shield) R.string.cave_ui_ready else R.string.cave_ui_missing)))
+        for (b in G.Bonus.entries) add(context.getString(R.string.cave_gear_total_bonus, context.getString(b.label), bonus(b), b.cap))
+        add(context.getString(R.string.cave_player_critical_total, 200 + bonus(G.Bonus.CRIT_DAMAGE)))
+    }.joinToString("\n\n")
     companion object {
         const val TOOL_REACH = 2.6
         const val TOOL_ARC = .80

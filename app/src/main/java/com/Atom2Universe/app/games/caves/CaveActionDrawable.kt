@@ -34,9 +34,9 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
             "shield" -> {
                 canvas.drawPath(Path().apply { moveTo(16f,4f); lineTo(27f,8f); lineTo(25f,20f); quadTo(22f,26f,16f,29f); quadTo(10f,26f,7f,20f); lineTo(5f,8f); close(); moveTo(16f,8f); lineTo(16f,24f); moveTo(10f,14f); lineTo(22f,14f) },paint)
             }
-            "suit" -> {
-                canvas.drawCircle(16f,6f,4f,paint)
-                canvas.drawPath(Path().apply { moveTo(11f,12f); lineTo(21f,12f); lineTo(24f,20f); lineTo(20f,20f); lineTo(21f,29f); lineTo(16f,29f); lineTo(16f,22f); lineTo(15f,29f); lineTo(10f,29f); lineTo(11f,20f); lineTo(7f,20f); close() },paint)
+            "relic" -> {
+                canvas.drawCircle(16f,6f,3f,paint)
+                canvas.drawPath(Path().apply { moveTo(16f,10f); lineTo(26f,18f); lineTo(16f,29f); lineTo(6f,18f); close(); moveTo(16f,14f); lineTo(21f,19f); lineTo(16f,25f); lineTo(11f,19f); close() },paint)
             }
             "armor" -> {
                 val path = Path().apply { moveTo(11f,5f); lineTo(7f,8f); lineTo(4f,15f); lineTo(10f,18f); lineTo(10f,27f); lineTo(23f,27f); lineTo(23f,18f); lineTo(28f,15f); lineTo(25f,8f); lineTo(21f,5f); quadTo(16f,13f,11f,5f); close() }

@@ -565,6 +565,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     fun refreshPagedAdapter() {
+        if (browsingEquipment) updateEquipmentFilter()
         val needle=folded(query)
         val catalogSize=if(activity.isCreative) creativeCatalog.size else hotbarBase()
         gridIndices = (0 until catalogSize).filter { index ->
@@ -715,12 +716,25 @@ internal class InventoryManager(private val activity: CaveActivity) {
     }
 
     private fun refreshEquipment() {
-        ui.equipmentPanel.refresh(::itemDescription,
+        updateEquipmentFilter()
+        ui.equipmentPanel.refresh({ id -> G.describe(activity, id, false) ?: itemDescription(id) },
             equip = { id -> equipmentAction {
                 if (activity.isCreative && G.get(id) == null && (renderer.inventory[id] ?: 0) == 0) renderer.inventory[id] = 1
                 renderer.expeditionCombat.equip(id)
             } },
             remove = { slot, shield -> equipmentAction { renderer.expeditionCombat.removeEquipmentSlot(slot, shield) } })
+    }
+    private fun updateEquipmentFilter() {
+        val needle = folded(query)
+        ui.equipmentPanel.filter({ name(it).contains(needle) }, Comparator { a, b ->
+            val result = when (sortOrder) {
+                1 -> (renderer.inventory[b] ?: 0).compareTo(renderer.inventory[a] ?: 0)
+                2 -> (recent.indexOf(a).takeIf { it >= 0 } ?: Int.MAX_VALUE)
+                    .compareTo(recent.indexOf(b).takeIf { it >= 0 } ?: Int.MAX_VALUE)
+                else -> 0
+            }
+            if (result != 0) result else name(a).compareTo(name(b)).takeIf { it != 0 } ?: a.compareTo(b)
+        })
     }
 
     internal fun itemDescription(type: Short): String {

@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_player_stats">Player stats</string>
+    <string name="cave_player_show_stats">Show player stats</string>
+    <string name="cave_player_show_equipment">Show equipment slots</string>
+    <string name="cave_player_health">Health: %1$d / %2$d</string>
+    <string name="cave_player_defense">Armor defense: %1$d</string>
+    <string name="cave_player_reduction">Damage reduction at this depth: %1$d%%</string>
+    <string name="cave_player_shield">Equipped shield: %1$s</string>
+    <string name="cave_player_critical_total">Critical hit damage: %1$d%% of normal damage</string>
+    <string name="cave_player_held">Held item</string>
+    <string name="cave_player_stats_note">Bonuses include worn armor and the active weapon. Protection depends on the attacker’s depth.</string>
+    <string name="cave_equipment_relic">Relic</string>
+    <string name="cave_equipment_relic_future">Relic — reserved for a future update</string>
     <string name="cave_equipment_shield">Shield</string>
     <string name="cave_equipment_suit">Full armor</string>
     <string name="cave_equipment_drag_hint">Drag armor onto its slot. Tap for details.</string>

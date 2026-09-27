@@ -65,9 +65,6 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         dismissDetails()
         libraryPanel.visibility = if (show) View.GONE else View.VISIBLE
         equipmentPanel.visibility = if (show) View.VISIBLE else View.GONE
-        search.visibility = if (show) View.GONE else View.VISIBLE
-        clearSearch.visibility = if (show) View.GONE else View.VISIBLE
-        sort.visibility = if (show) View.GONE else View.VISIBLE
         status.visibility = if (show) View.GONE else View.VISIBLE
     }
     private var bubble: PopupWindow? = null
@@ -185,16 +182,16 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
             addView(close)
         })
         val body = column()
+        if(portrait) panel.addView(row().apply {
+            addView(search, LinearLayout.LayoutParams(0, dp(48), 1f))
+            addView(clearSearch);addView(sort)
+        })
         panel.addView(body, LinearLayout.LayoutParams(-1, 0, 1f))
         val library = column()
         libraryPanel = library
         body.addView(library, LinearLayout.LayoutParams(-1,-1))
         equipmentPanel = CaveEquipmentPanel(activity).apply { visibility = View.GONE }
         body.addView(equipmentPanel, LinearLayout.LayoutParams(-1,-1))
-        if(portrait) library.addView(row().apply {
-            addView(search, LinearLayout.LayoutParams(0, dp(48), 1f))
-            addView(clearSearch);addView(sort)
-        })
         library.addView(HorizontalScrollView(activity).apply {
             isHorizontalScrollBarEnabled=false
             addView(row().apply {

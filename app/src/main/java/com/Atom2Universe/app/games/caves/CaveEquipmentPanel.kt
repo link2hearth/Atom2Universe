@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.ScrollView
 import android.widget.ImageView
@@ -36,7 +37,7 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
         LEGS(G.Slot.LEGS, R.string.cave_gear_slot_legs, "legs", .17f, .68f),
         FEET(G.Slot.BOOTS, R.string.cave_gear_slot_boots, "boots", .5f, .88f),
         SHIELD(null, R.string.cave_equipment_shield, "shield", .83f, .37f),
-        SUIT(null, R.string.cave_equipment_suit, "suit", .83f, .68f)
+        RELIC(null, R.string.cave_equipment_relic, "relic", .83f, .68f)
     }
     private data class Transfer(val owner: CaveEquipmentPanel, val id: Short, val source: Slot? = null)
     private fun dp(n: Int) = CaveUiStyle.dp(activity, n)
@@ -55,12 +56,21 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
     }
     private val bag = column()
     private val board = EquipmentBoard()
+    private val rightTitle = text(R.string.cave_gear_equipped, 15f)
+    private val switchView = Button(activity)
+    private val statsContent = column()
+    private val statsScroll = ScrollView(activity).apply { addView(statsContent); visibility = View.GONE }
+    private var showingStats = false
     private var ids = emptyList<Short>()
+    private var allIds = emptyList<Short>()
+    private var matches: (Short) -> Boolean = { true }
+    private var order: Comparator<Short> = compareBy { activity.blockName(it) }
     private var chosen: Transfer? = null
     private var dragging: Transfer? = null
     private var busy = false
     private var describe: (Short) -> String = { "" }
     private var bubble: PopupWindow? = null
+    private var comparisonBubble: PopupWindow? = null
     private var equip: (Short) -> Unit = {}
     private var remove: (G.Slot?, Boolean) -> Unit = { _, _ -> }
     private val adapter = ArmorAdapter()
@@ -76,22 +86,38 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
             setTextColor(CaveUiStyle.MUTED); setOnClickListener { returnChosen() }; isFocusable = true
             setOnDragListener { _, event -> handleBagDrag(event) }
         })
-        addView(bag, LayoutParams(0, -1, 1f).apply { marginEnd = dp(8) })
+        addView(bag, LayoutParams(0, -1, 2.6f).apply { marginEnd = dp(8) })
         addView(column().apply {
             background = CaveUiStyle.panel(activity, 0xFF1B2B26.toInt())
-            addView(text(R.string.cave_gear_equipped, 15f))
+            addView(LinearLayout(activity).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                addView(rightTitle, LayoutParams(0, -2, 1f))
+                addView(switchView, LayoutParams(dp(44), dp(44)).apply { setMargins(dp(3), dp(3), dp(3), dp(3)) })
+            })
             addView(board, LayoutParams(-1, 0, 1f))
+            addView(statsScroll, LayoutParams(-1, 0, 1f))
             addView(totals.apply { maxLines = 1; ellipsize = android.text.TextUtils.TruncateAt.END })
             addView(hint)
-        }, LayoutParams(0, -1, 1.25f))
+        }, LayoutParams(0, -1, 1f))
+        CaveUiStyle.icon(switchView, "info", activity.getString(R.string.cave_player_show_stats))
+        switchView.setOnClickListener { showStats(!showingStats) }
         list.adapter = adapter
+        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState != RecyclerView.SCROLL_STATE_IDLE) dismissInfo()
+            }
+        })
         list.addOnLayoutChangeListener { _, l, _, r, _, _, _, _, _ ->
-            val columns = ((r - l) / dp(86)).coerceIn(1, 4)
+            val columns = ((r - l) / dp(86)).coerceAtLeast(1)
             if (grid.spanCount != columns) grid.spanCount = columns
         }
         inventoryTitle.setOnClickListener { returnChosen() }
         for ((slot, tile) in slots) {
             board.addView(tile)
+            if (slot == Slot.RELIC) {
+                tile.isEnabled = false
+                continue
+            }
             tile.setOnClickListener {
                 val transfer = chosen
                 if (transfer != null && transfer.source == null) place(slot, transfer)
@@ -110,31 +136,64 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
 
     fun refresh(describe: (Short) -> String, equip: (Short) -> Unit, remove: (G.Slot?, Boolean) -> Unit) {
         this.describe = describe
-        bubble?.dismiss()
+        dismissInfo()
         this.equip = equip; this.remove = remove; busy = false; chosen = null; dragging = null
         val renderer = activity.renderer
         val owned = renderer.inventory.filterValues { it > 0 }.keys
-        ids = (if (activity.isCreative) (BlockRegistry.creativeList() + owned).distinct() else owned)
-            .filter { InventoryCategory.ARMOR.matches(it) }
-            .sortedWith(compareBy<Short> { G.template(it)?.slot?.ordinal ?: G.Slot.entries.size }.thenBy { activity.blockName(it) })
-        empty.visibility = if (ids.isEmpty()) View.VISIBLE else View.GONE
-        adapter.notifyDataSetChanged()
+        allIds = (if (activity.isCreative) (BlockRegistry.creativeList() + owned).distinct() else owned)
+            .filter { InventoryCategory.ARMOR.matches(it) && target(it) != null }
+        applyFilter()
         val combat = renderer.expeditionCombat
         val reduction = (combat.reduction(MineralProgression.stage(renderer.camera.playerY)) * 100).roundToInt()
         totals.text = activity.getString(R.string.cave_equipment_compact_totals, renderer.playerNode.maxHp, reduction)
         totals.tooltipText = activity.getString(R.string.cave_gear_totals, renderer.playerNode.maxHp, reduction)
+        if (showingStats) populateStats()
         updateHighlights(); board.invalidate()
     }
+    fun filter(matches: (Short) -> Boolean, order: Comparator<Short>) {
+        this.matches = matches; this.order = order
+        dismissInfo(); chosen = null
+        applyFilter(); updateHighlights()
+    }
+    private fun applyFilter() {
+        ids = allIds.filter(matches).sortedWith(order)
+        empty.setText(if (allIds.isEmpty()) R.string.cave_equipment_empty_list else R.string.cave_ui_empty_search)
+        empty.visibility = if (ids.isEmpty()) View.VISIBLE else View.GONE
+        adapter.notifyDataSetChanged()
+        list.scrollToPosition(0)
+    }
+    private fun showStats(show: Boolean) {
+        dismissInfo()
+        showingStats = show
+        board.visibility = if (show) View.GONE else View.VISIBLE
+        statsScroll.visibility = if (show) View.VISIBLE else View.GONE
+        totals.visibility = if (show) View.GONE else View.VISIBLE
+        hint.visibility = if (show) View.GONE else View.VISIBLE
+        rightTitle.setText(if (show) R.string.cave_player_stats else R.string.cave_gear_equipped)
+        CaveUiStyle.icon(switchView, if (show) "armor" else "info",
+            activity.getString(if (show) R.string.cave_player_show_equipment else R.string.cave_player_show_stats))
+        if (show) populateStats()
+    }
+    private fun populateStats() {
+        statsContent.removeAllViews()
+        statsContent.addView(text(R.string.cave_player_stats).apply { text = activity.renderer.expeditionCombat.playerSummary() })
+        activity.renderer.hotbar.getOrNull(activity.renderer.selectedSlot)?.let { held ->
+            statsContent.addView(text(R.string.cave_player_held, 14f).apply { setTypeface(typeface, 1) })
+            statsContent.addView(text(R.string.cave_ui_details).apply { text = activity.blockName(held) })
+            statsContent.addView(text(R.string.cave_ui_details).apply { text = describe(held) })
+        }
+        statsContent.addView(text(R.string.cave_player_stats_note, 11f).apply { setTextColor(CaveUiStyle.MUTED) })
+    }
     private fun equipped(slot: Slot): Short? = activity.renderer.expeditionCombat.let { combat ->
-        when (slot) { Slot.SUIT -> combat.armor; Slot.SHIELD -> if (combat.shield) E.SHIELD else null
+        when (slot) { Slot.RELIC -> null; Slot.SHIELD -> if (combat.shield) E.SHIELD else null
             else -> combat.equipped(requireNotNull(slot.piece)) }
     }
     private fun target(id: Short): Slot? = if (id == E.SHIELD) Slot.SHIELD
         else G.template(id)?.slot?.let { piece -> Slot.entries.first { it.piece == piece } }
-            ?: Slot.SUIT.takeIf { E.armor(id) > 0f }
     private fun startDrag(view: View, transfer: Transfer): Boolean {
         if (busy) return false
-        bubble?.dismiss()
+        if (showingStats) showStats(false)
+        dismissInfo()
         chosen = transfer
         val started = view.startDragAndDrop(ClipData.newPlainText("", activity.blockName(transfer.id)),
             View.DragShadowBuilder(view), transfer, 0)
@@ -173,8 +232,27 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
             started
         }
     }
-    private fun showInfo(anchor: View, id: Short) {
-        bubble?.dismiss()
+    private fun dismissInfo() {
+        bubble?.dismiss(); comparisonBubble?.dismiss()
+        bubble = null; comparisonBubble = null
+    }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_DOWN) dismissInfo()
+        return super.dispatchTouchEvent(event)
+    }
+    private fun showInfo(anchor: View, id: Short, compare: Boolean = false) {
+        if (compare && showingStats) {
+            showStats(false)
+            board.post { if (isShown) showInfo(anchor, id, compare) }
+            return
+        }
+        dismissInfo()
+        bubble = itemBubble(anchor, id, if (compare) bag else board)
+        if (compare) target(id)?.let { slot ->
+            equipped(slot)?.let { worn -> comparisonBubble = itemBubble(slots.getValue(slot), worn, board) }
+        }
+    }
+    private fun itemBubble(anchor: View, id: Short, region: View): PopupWindow {
         val content = column().apply {
             setPadding(dp(10), dp(10), dp(10), dp(10))
             addView(ImageView(activity).apply { setImageDrawable(activity.blockDrawable(id, 0f)) }, LayoutParams(-1, dp(60)))
@@ -182,26 +260,39 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
             addView(text(R.string.cave_ui_details).apply { text = describe(id) })
         }
         val metrics = activity.resources.displayMetrics
-        val width = minOf(dp(300), (metrics.widthPixels * .85f).toInt())
+        val regionLocation = IntArray(2); region.getLocationOnScreen(regionLocation)
+        val regionLeft = regionLocation[0].coerceAtLeast(dp(8))
+        val regionRight = (regionLocation[0] + region.width).coerceAtMost(metrics.widthPixels - dp(8))
+        val width = minOf(dp(280), regionRight - regionLeft - dp(8)).coerceAtLeast(1)
         val limit = (metrics.heightPixels * .65f).toInt()
         val scroll = ScrollView(activity).apply { addView(content) }
         scroll.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(limit, MeasureSpec.AT_MOST))
         val height = scroll.measuredHeight.coerceAtMost(limit)
         val location = IntArray(2); anchor.getLocationOnScreen(location)
-        val x = (location[0] + anchor.width / 2 - width / 2).coerceIn(dp(8), (metrics.widthPixels - width - dp(8)).coerceAtLeast(dp(8)))
-        val y = (location[1] - height - dp(4)).coerceIn(dp(8), (metrics.heightPixels - height - dp(8)).coerceAtLeast(dp(8)))
-        bubble = PopupWindow(scroll, width, height, true).apply {
+        val besideRight = location[0] + anchor.width + dp(4)
+        val besideLeft = location[0] - width - dp(4)
+        val fitsBeside = besideRight + width <= regionRight || besideLeft >= regionLeft
+        val x = (when {
+            besideRight + width <= regionRight -> besideRight
+            besideLeft >= regionLeft -> besideLeft
+            else -> location[0] + anchor.width / 2 - width / 2
+        }).coerceIn(regionLeft, (regionRight - width).coerceAtLeast(regionLeft))
+        val preferredY = if (fitsBeside) location[1] else if (location[1] >= height + dp(8)) location[1] - height - dp(4)
+            else location[1] + anchor.height + dp(4)
+        val y = preferredY.coerceIn(dp(8), (metrics.heightPixels - height - dp(8)).coerceAtLeast(dp(8)))
+        val popup = PopupWindow(scroll, width, height, false).apply {
             setBackgroundDrawable(CaveUiStyle.bubble(activity)); elevation = dp(10).toFloat()
-            isOutsideTouchable = true; inputMethodMode = PopupWindow.INPUT_METHOD_NOT_NEEDED
+            isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NOT_NEEDED
             showAtLocation(activity.invOverlay, Gravity.TOP or Gravity.LEFT, x, y)
         }
         CaveUiStyle.openBubble(scroll)
+        return popup
     }
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        if (visibility != View.VISIBLE) bubble?.dismiss()
+        if (visibility != View.VISIBLE) dismissInfo()
     }
-    override fun onDetachedFromWindow() { bubble?.dismiss(); super.onDetachedFromWindow() }
+    override fun onDetachedFromWindow() { dismissInfo(); super.onDetachedFromWindow() }
     private fun token(event: DragEvent) = (event.localState as? Transfer)?.takeIf { it.owner === this }
     private fun place(slot: Slot, transfer: Transfer): Boolean {
         if (busy || transfer.source != null || target(transfer.id) != slot || transfer.id !in ids) return false
@@ -249,6 +340,12 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
             val active = slot == hover || compatible || transfer?.source == slot || tile.hasFocus()
             val title = activity.getString(slot.label)
             tile.bind(id?.let { activity.blockDrawable(it, 0f) } ?: CaveActionDrawable(slot.icon), title, 0, selected = active)
+            if (slot == Slot.RELIC) {
+                tile.alpha = .4f
+                tile.contentDescription = activity.getString(R.string.cave_equipment_relic_future)
+                tile.tooltipText = tile.contentDescription
+                continue
+            }
             tile.alpha = if (transfer != null && transfer.source == null && !compatible) .45f else 1f
             tile.contentDescription = if (id == null) activity.getString(R.string.cave_gear_empty, title)
                 else activity.getString(R.string.cave_equipment_slot_item, title, activity.blockName(id))
@@ -277,7 +374,7 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
             holder.tile.bind(activity.blockDrawable(id, 0f), activity.blockName(id),
                 if (activity.isCreative) 0 else activity.renderer.inventory[id] ?: 0, selected = chosen?.id == id)
             holder.tile.setOnClickListener {
-                if (!busy) { chosen = Transfer(this@CaveEquipmentPanel, id); updateHighlights(); showInfo(holder.tile, id) }
+                if (!busy) { chosen = Transfer(this@CaveEquipmentPanel, id); updateHighlights(); showInfo(holder.tile, id, compare = true) }
             }
             directDrag(holder.tile, true) { Transfer(this@CaveEquipmentPanel, id) }
             holder.tile.setOnDragListener { _, event -> handleBagDrag(event) }
