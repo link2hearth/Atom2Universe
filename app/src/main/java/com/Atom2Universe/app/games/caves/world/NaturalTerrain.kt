@@ -4,6 +4,7 @@ import android.content.res.AssetManager
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.*
+import com.Atom2Universe.app.games.caves.node.MineralItems as M
 
 internal data class NaturalBiomeProfile(val id: String, val base: Double, val amplitude: Double,
     val temperature: Double, val humidity: Double, val rarity: Double)
@@ -347,18 +348,21 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         val dx = Math.floorMod(x, 12) - (3 + (cell % 6).toInt())
         val dy = Math.floorMod(y, 12) - (3 + (cell / 7 % 6).toInt())
         val dz = Math.floorMod(z, 12) - (3 + (cell / 43 % 6).toInt())
-        if (depth > 5 && cell % 5 < 2 && dx * dx + dy * dy + dz * dz <= 7) {
-            val ore = (cell / 251 % 20).toInt()
-            return when {
-                ore < 6 -> COAL
-                ore < 11 -> IRON
-                ore < 15 -> COPPER
-                depth < 40 -> COAL
-                ore == 15 -> SILVER
-                ore == 16 -> GOLD
-                ore == 17 -> REDSTONE
-                ore == 18 -> if (cell % 2 == 0L) RUBY else EMERALD
-                else -> CRYSTAL
+        if (depth > 2 && cell % 5 < 3 && dx * dx + dy * dy + dz * dz <= 7) {
+            val category = (cell / 251 % 100).toInt()
+            val centerY = Math.floorDiv(y,12)*12 + 3 + (cell / 7 % 6).toInt()
+            val centerStage = MineralProgression.stage(centerY.toDouble())
+            val localStage = MineralProgression.stage(y.toDouble())
+            if (category < 30) return COAL
+            if (category < 50) return COPPER
+            // Metals stay within their cycle; independent resources never dilute with depth.
+            if (MineralProgression.tier(centerStage) == MineralProgression.tier(localStage)) {
+                val metal = if(category < 72) 0 else MineralProgression.localMetal(centerStage,(cell / 1031 % 100).toInt())
+                val stage = (MineralProgression.tier(centerStage)-1)*MineralProgression.METALS + metal
+                if (stage <= localStage && (metal==0 || localStage-stage<=2)) {
+                    if(category < 98 || depth < 40) return M.id(stage,M.Form.ORE)
+                    return when ((cell / 607 % 4).toInt()) { 0 -> REDSTONE; 1 -> RUBY; 2 -> EMERALD; else -> CRYSTAL }
+                }
             }
         }
         val geology = SimplexNoise.noise(x * .009 + offset + 390, y * .013, z * .009)

@@ -37,7 +37,7 @@ internal data class CraftDef(
         val debit = ingredients.associate { it.first to Math.multiplyExact(it.second, batches) }.toMutableMap()
         for (group in groups) {
             var remaining = group.count.toLong() * batches
-            for (id in group.ids.sorted()) {
+            for (id in if(group.tag=="mineral_steel") group.ids else group.ids.sorted()) {
                 val take = minOf(remaining, (inv[id] ?: 0).coerceAtLeast(0).toLong()).toInt()
                 if (take > 0) debit[id] = take
                 remaining -= take

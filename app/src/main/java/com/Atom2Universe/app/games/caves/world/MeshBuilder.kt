@@ -143,7 +143,8 @@ internal object MeshBuilder {
                             above: Short, meta: Byte, knotFace: Int, sky: Float) {
         val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
         val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer) else baseLayer
-        val marker = if (BlockRegistry.lightEmission(block) > 0) 7 else face
+        val marker = if (com.Atom2Universe.app.games.caves.node.MineralItems.isOre(block)) 8 + face
+            else if (BlockRegistry.lightEmission(block) > 0) 7 else face
         val packed = marker * 4096 + layer
         val corners = cubeCorners[face]
         val light = g.cornerLight; val tint = g.cornerTint
@@ -152,7 +153,7 @@ internal object MeshBuilder {
         for (c in 0 until 4) {
             val x = (lx + corners[c * 3]).toFloat(); val y = (ly + corners[c * 3 + 1]).toFloat()
             val z = (lz + corners[c * 3 + 2]).toFloat()
-            light[c] = vertexBlockLight(chunk, world, cache, x, y, z, marker)
+            light[c] = vertexBlockLight(chunk, world, cache, x, y, z, if (marker >= 8) face else marker)
             if (mask != 0) { blend.writeDelta(x, z, tint, c * 4); tint[c * 4 + 3] = mask.toFloat() }
             else { tint[c * 4] = 0f; tint[c * 4 + 1] = 0f; tint[c * 4 + 2] = 0f; tint[c * 4 + 3] = 0f }
             if (c > 0 && (light[c] != light[0] || tint[c * 4] != tint[0] ||

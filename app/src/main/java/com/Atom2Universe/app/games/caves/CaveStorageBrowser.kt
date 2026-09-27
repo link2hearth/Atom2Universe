@@ -68,7 +68,9 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
             setPadding(dp(10),dp(4),dp(6),dp(4))
         }
         root.addView(header)
-        header.addView(label().apply { text=a.blockName(snapshot.block);textSize=16f;setTextColor(CaveUiStyle.TEXT);maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END },LinearLayout.LayoutParams(0,dp(44),1f))
+        header.addView(label().apply { text=if(snapshot.block==com.Atom2Universe.app.games.caves.node.ExpeditionItems.FORGE)
+            com.Atom2Universe.app.games.caves.node.MineralItems.forgeName(a,snapshot.forgeTier) else a.blockName(snapshot.block)
+            textSize=16f;setTextColor(CaveUiStyle.TEXT);maxLines=1;ellipsize=android.text.TextUtils.TruncateAt.END },LinearLayout.LayoutParams(0,dp(44),1f))
         header.addView(EditText(a).apply {
             setSingleLine();setHint(R.string.cave_ui_search);textSize=14f;setTextColor(CaveUiStyle.TEXT);setHintTextColor(CaveUiStyle.MUTED)
             addTextChangedListener(object: TextWatcher {
@@ -237,6 +239,8 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
                 }));add(a.getString(R.string.cave_machine_power))
             }
             if(v.block==com.Atom2Universe.app.games.caves.node.ExpeditionItems.FORGE) {
+                add(com.Atom2Universe.app.games.caves.node.MineralItems.forgeName(a,v.forgeTier))
+                add(a.getString(R.string.cave_forge_upgrade_hint))
                 add(a.getString(R.string.cave_forge_heat,a.resources.getStringArray(R.array.cave_forge_heat_levels)[v.heat]))
                 add(a.getString(R.string.cave_forge_hint))
             }
@@ -287,7 +291,9 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         val labels=listOf(a.getString(R.string.cave_machine_auto))+options.map { (_,recipe) ->
             fun names(items: Map<Short,Int>)=items.entries.joinToString { (id,n)->a.getString(R.string.cave_storage_row,a.blockName(id),n) }
             val line=a.getString(R.string.cave_machine_recipe,names(recipe.input),names(recipe.output),recipe.seconds)
-            if(recipe.heat==0) line else a.getString(R.string.cave_forge_recipe_heat,line,a.resources.getStringArray(R.array.cave_forge_heat_levels)[recipe.heat])
+            val heated=if(recipe.heat==0) line else a.getString(R.string.cave_forge_recipe_heat,line,a.resources.getStringArray(R.array.cave_forge_heat_levels)[recipe.heat])
+            if(recipe.forgeTier==0) heated else a.getString(R.string.cave_mineral_recipe_forge,heated,
+                com.Atom2Universe.app.games.caves.node.MineralItems.forgeName(a,recipe.forgeTier))
         }
         bubbles.choices(anchor,a.getString(R.string.cave_machine_choose),labels) { index ->
             runMutation({ a.renderer.selectWorkshopRecipe(v.pos,if(index==0) -1 else options[index-1].index) }) { }

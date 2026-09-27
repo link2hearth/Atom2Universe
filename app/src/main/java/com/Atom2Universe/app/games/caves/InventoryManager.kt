@@ -696,6 +696,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val def=BlockRegistry.get(type)
         val drop=BlockRegistry.harvestDrop(type)
         return when {
+                        com.Atom2Universe.app.games.caves.node.MineralItems.reinforcementTier(type)!=null -> activity.getString(R.string.cave_mineral_reinforcement_hint)
+                        com.Atom2Universe.app.games.caves.node.MineralItems.armorStage(type)!=null -> activity.getString(R.string.cave_mineral_armor_stats,33,
+                            com.Atom2Universe.app.games.caves.node.MineralItems.armorHp(type))
+                        com.Atom2Universe.app.games.caves.node.MineralItems.pickStage(type)!=null -> activity.getString(R.string.cave_frontier_tool_hint)
                         com.Atom2Universe.app.games.caves.node.KitchenItems.isRawMeat(type) -> activity.getString(R.string.cave_kitchen_raw_hint)
                         com.Atom2Universe.app.games.caves.node.KitchenItems.isItem(type) && F.healing(type)==0 -> activity.getString(R.string.cave_kitchen_ingredient_hint)
                         type in E.melee -> E.melee.getValue(type).let { p -> activity.getString(R.string.cave_melee_info,p.damage,p.reach,p.recovery,p.targets) }
@@ -883,6 +887,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         "planks" -> R.string.cave_craft_planks
         "fuel" -> R.string.cave_craft_fuel
         "sand" -> R.string.cave_craft_sand
+        "mineral_iron" -> R.string.cave_craft_any_iron
+        "mineral_steel" -> R.string.cave_craft_any_steel
         else -> R.string.cave_craft_stone
     })
 

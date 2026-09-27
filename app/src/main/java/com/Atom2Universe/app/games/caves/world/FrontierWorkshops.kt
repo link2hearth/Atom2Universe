@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.FarmItems
+import com.Atom2Universe.app.games.caves.node.MineralItems as M
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
 import com.Atom2Universe.app.games.caves.CaveStackInventory
@@ -20,12 +21,13 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val heat: Int=0,
         /** Ovens: ingredients are [stacks], fuel and finished products have their own compartments. */
         val zoned: Boolean=false,val fuelStacks: List<CaveStackInventory.Stack> = emptyList(),
-        val outputStacks: List<CaveStackInventory.Stack> = emptyList())
+        val outputStacks: List<CaveStackInventory.Stack> = emptyList(), val forgeTier: Int=0)
     private data class Store(val items: MutableMap<Short,Int> = linkedMapOf(), var progress: Int = 0,var active: String="",var selection: Int=-1,val stacks: CaveStackInventory = CaveStackInventory()) {
         /** Fraction of a second of work carried over: a machine turning at half speed works every other second. */
         var partial=0f
         /** Forge: seconds of fire left from the last fuel, burnt faster the hotter it blows. */
         var burn=0f
+        var forgeTier=0
         /** Ovens: the fuel and the finished products, kept apart from the ingredients in [items]. */
         val fuel: MutableMap<Short,Int> = linkedMapOf()
         var fuelStacks=CaveStackInventory()
@@ -112,11 +114,11 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private var rotation=KineticNetwork.Result(emptyMap(),emptyMap())
     private fun speedAt(p: Pos)=rotation.speedAt(p)
     /** [heat]: the forge heat a recipe needs (0: no fire, 1 embers, 2 red, 3 white). */
-    data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false,val heat: Int=0) {
+    data class Recipe(val machine: Short,val input: Map<Short,Int>,val output: Map<Short,Int>,val seconds: Int,val power: Boolean=false,val heat: Int=0,val forgeTier: Int=0) {
         val key: String = "$machine/" + input.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" } +
             "/" + output.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" }
     }
-    val recipes=listOf(
+    private val legacyRecipes=listOf(
         Recipe(F.COOKER,mapOf(F.FLOUR to 3),mapOf(F.BREAD to 4),10),
         Recipe(F.COOKER,mapOf(9705.toShort() to 3),mapOf(F.BAKED_POTATO to 4),10),
         Recipe(F.MILL,mapOf(9700.toShort() to 1),mapOf(F.FLOUR to 3),6,true),
@@ -185,6 +187,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
         Recipe(F.PRESS,mapOf(E.DEEP_FISH to 2),mapOf(E.FISH_OIL to 1),8,true)
     ) + FarmItems.crops.indices.map { Recipe(F.COMPOSTER,mapOf(FarmItems.produce(it) to 3),mapOf(F.COMPOST to 1),20) } + KitchenRecipes.workshops
+    val recipes = legacyRecipes.filterNot(MineralRecipes::replacesWorkshop) + MineralRecipes.workshops
     @Synchronized fun select(p: Pos,index: Int): Boolean {
         if(!loaded(p) || !F.isContainer(block(p)) || index != -1 && recipes.getOrNull(index)?.machine!=block(p)) return false
         val s=store(p);s.selection=index;s.progress=0;s.active="";return true
@@ -341,7 +344,19 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val zoned=zoned(block(p))
         return View(p,block(p),if(zoned) s.items+s.fuel else s.items.toMap(),speedAt(p)!=0f,s.selection,s.progress,recipes.indexOfFirst { it.key==s.active },
             tagged(s.stacks.snapshot(),ZONE_INPUT),net?.overloaded==true,net?.conflict==true,if(block(p)==E.FORGE && s.burn>0f) 1+bellows(p) else 0,
-            zoned,tagged(s.fuelStacks.snapshot(),ZONE_FUEL),tagged(s.outputStacks.snapshot(),ZONE_OUTPUT))
+            zoned,tagged(s.fuelStacks.snapshot(),ZONE_FUEL),tagged(s.outputStacks.snapshot(),ZONE_OUTPUT),
+            if(block(p)==F.CRUCIBLE) stores[p.move(0,-1,0)]?.forgeTier ?: 0 else s.forgeTier)
+    }
+    /** Mutated with the player's inventory on the GL thread; never loses stored contents. */
+    @Synchronized fun upgradeForge(p: Pos, reinforcement: Short, inventory: MutableMap<Short,Int>): Boolean {
+        val tier=M.reinforcementTier(reinforcement) ?: return false
+        if(!loaded(p) || block(p)!=E.FORGE || (inventory[reinforcement] ?: 0)<=0) return false
+        val s=store(p)
+        if(tier<=s.forgeTier) return false
+        val left=inventory.getValue(reinforcement)-1
+        if(left==0) inventory.remove(reinforcement) else inventory[reinforcement]=left
+        s.forgeTier=tier
+        return true
     }
     /** How much the bellows around a forge raise its fire: +1 from speed 16 in all, +2 from 32. */
     private fun bellows(p: Pos): Int {
@@ -439,7 +454,10 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         hoppers.remove(p); knownKinetics.remove(p); cranks.remove(p); drying.remove(p)
         if(F.isContainer(block(p))) store(p)
         val contents=mutableMapOf<Short,Int>()
-        stores.remove(p)?.let { s -> for(m in listOf(s.items,s.fuel,s.output)) for((id,n) in m) contents[id]=(contents[id] ?: 0)+n }
+        stores.remove(p)?.let { s ->
+            for(m in listOf(s.items,s.fuel,s.output)) for((id,n) in m) contents[id]=(contents[id] ?: 0)+n
+            if(s.forgeTier>0) { val kit=M.reinforcement(s.forgeTier);contents[kit]=(contents[kit] ?: 0)+1 }
+        }
         // Dry bricks come out of their mould (the bricks are the block's drop): the mould goes back to the bag.
         if(block(p)==F.MOLD_DRY) contents[F.BRICK_MOLD]=(contents[F.BRICK_MOLD] ?: 0)+1
         // Metal still molten sets as ingots when its crucible or mould is broken.
@@ -539,7 +557,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             val fireFuel=fire?.fuel?.keys?.sorted()?.firstOrNull { isFuel(it) && (fire.fuel[it] ?: 0)>0 }
             val heat=if(fire==null || fire.burn<=0f && fireFuel==null) 0 else 1+bellows(hearth!!)
             val recipe=recipes.firstOrNull { r -> r.machine==machine && (s.selection<0 || recipes.getOrNull(s.selection)===r) && (!r.power || speedAt(p)!=0f) &&
-                (machine!=F.COOKER || fuel!=null) && heat>=r.heat && canProcess(s,r.input,r.output,out) &&
+                (machine!=F.COOKER || fuel!=null) && heat>=r.heat && (fire?.forgeTier ?: 0)>=r.forgeTier && canProcess(s,r.input,r.output,out) &&
                 (machine!=F.CRUCIBLE || crucibleTakes(s,r.output.keys.first())) }
             if(recipe!=null) {
                 if(recipe.heat>0 && fire!=null) {
@@ -652,7 +670,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
             .put("fuelStacks",s.fuelStacks.json()).put("outputStacks",s.outputStacks.json())
             .put("fuel",JSONObject().also { j -> s.fuel.forEach { (id,n)->j.put(id.toString(),n) } })
             .put("output",JSONObject().also { j -> s.output.forEach { (id,n)->j.put(id.toString(),n) } })
-            .put("selectionKey",recipes.getOrNull(s.selection)?.key ?: "").put("active",s.active).put("progress",s.progress).put("burn",s.burn.toDouble())
+            .put("selectionKey",recipes.getOrNull(s.selection)?.key ?: "").put("active",s.active).put("progress",s.progress).put("burn",s.burn.toDouble()).put("forgeTier",s.forgeTier)
             .put("items",JSONObject().also { j -> s.items.forEach { (id,n)->j.put(id.toString(),n) } }))
         }
         return JSONObject().put("stores",rows).put("hoppers",JSONArray().also { a ->
@@ -698,6 +716,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                 if(id!=null && id in 1..32767 && n>0) s.items[id.toShort()]=n
             }
             s.burn=j.optDouble("burn",0.0).toFloat()
+            s.forgeTier=j.optInt("forgeTier",0).coerceIn(0,MineralProgression.TIERS)
             for((name,into) in listOf("fuel" to s.fuel,"output" to s.output)) {
                 val o=j.optJSONObject(name) ?: continue
                 o.keys().forEach { key -> val id=key.toIntOrNull(); val n=o.optInt(key); if(id!=null && id in 1..32767 && n>0) into[id.toShort()]=n }

@@ -51,10 +51,10 @@ internal object FrontierItems {
     /** Cast in a mould, then shaped by the press. */
     const val IRON_PLATE: Short = 9875
     /** Metal in fusion: it lives in crucibles and moulds only, never in a bag. */
-    val MOLTEN = setOf(MOLTEN_COPPER, MOLTEN_IRON, MOLTEN_STEEL, MOLTEN_GOLD, MOLTEN_SILVER)
+    val MOLTEN by lazy { setOf(MOLTEN_COPPER, MOLTEN_IRON, MOLTEN_STEEL, MOLTEN_GOLD, MOLTEN_SILVER) + MineralItems.molten }
     /** What each molten metal sets into when it leaves its crucible or mould. */
-    val SOLID = mapOf(MOLTEN_COPPER to 3115.toShort(), MOLTEN_IRON to 3114.toShort(), MOLTEN_STEEL to 9859.toShort(),
-        MOLTEN_GOLD to 3116.toShort(), MOLTEN_SILVER to 3117.toShort())
+    val SOLID by lazy { mapOf(MOLTEN_COPPER to 3115.toShort(), MOLTEN_IRON to 3114.toShort(), MOLTEN_STEEL to 9859.toShort(),
+        MOLTEN_GOLD to 3116.toShort(), MOLTEN_SILVER to 3117.toShort()) + MineralItems.solid }
 
     const val PRESS: Short = 9840
     const val CRUSHER: Short = 9841
@@ -99,6 +99,7 @@ internal object FrontierItems {
     }
     /** Tools speed up the matching material; no arbitrary lock on hand gathering. */
     fun miningSpeed(tool: Short?, target: BlockDef?): Float {
+        MineralItems.miningSpeed(tool,target)?.let { return it }
         val n = toolIndex(tool)
         if (n !in 0..11 || target == null) return 1f
         val matches = when (n % 3) {

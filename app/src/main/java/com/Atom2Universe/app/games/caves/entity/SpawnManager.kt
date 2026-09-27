@@ -253,10 +253,7 @@ internal class SpawnManager(
 
     fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int {
         if(exploration) {
-            val depth=(world.surfaceHeight(blockX,blockZ)-blockY).coerceAtLeast(0.0)
-            val biome=biomeAt(blockX,blockY,blockZ)
-            val danger=if(biome in setOf("volcanic","dark_forest","jungle") || biome.startsWith("magic")) 1 else 0
-            return (1+(depth/48).toInt()+danger).coerceIn(1,6)
+            return com.Atom2Universe.app.games.caves.world.MineralProgression.stage(blockY)+1
         }
         val dX = (blockX - worldSpawnX) / CHUNK_SIZE
         val dY = (blockY - worldSpawnY) / CHUNK_SIZE

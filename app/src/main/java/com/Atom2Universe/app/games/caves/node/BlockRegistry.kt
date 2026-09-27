@@ -63,6 +63,7 @@ internal object BlockRegistry {
         FarmSoil.registerTextures()
         FrontierItems.registerTextures()
         ExpeditionItems.registerTextures()
+        MineralArt.register()
         UndergroundTextures.register()
         StreetMaterials.register()
         val files = assets.list("caves/blocks") ?: return
@@ -93,6 +94,15 @@ internal object BlockRegistry {
         for (def in KitchenItems.definitions(requireNotNull(defs[FarmSoil.HOE]))) {
             require(def.id !in defs) { "Duplicate kitchen item ${def.id}" }
             defs[def.id] = def
+        }
+        for (def in MineralItems.definitions(defs)) {
+            require(def.id !in defs || MineralItems.variant(def.id) != null || def.id == 3004.toShort())
+            defs[def.id] = def
+            val index = def.id.toInt() and 0xffff
+            emissionTable[index] = def.lightEmission.toByte()
+            decorationTable[index] = def.decoration
+            transparentTable[index] = def.transparent
+            partialTable[index] = def.partial
         }
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {

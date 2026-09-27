@@ -5,6 +5,8 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
 import com.Atom2Universe.app.games.caves.node.GameEvent
+import com.Atom2Universe.app.games.caves.node.MineralItems as M
+import com.Atom2Universe.app.games.caves.world.MineralProgression as P
 import org.json.JSONObject
 import kotlin.math.*
 
@@ -28,17 +30,23 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
     // Coup demandé pendant la récupération du précédent : il part dès que le bras est libre,
     // au lieu d'être avalé sans rien dire (c'est ce qui donnait « l'épée ne marche pas »).
     private var queued = 0f
+    private var healthFraction: Double? = null
+    private var observedHp: Int? = null
+    private var observedMaxHp: Int? = null
     init {
         val root=runCatching { JSONObject(json) }.getOrElse { JSONObject() }
         armor=root.optInt("armor").toShort().takeIf { E.armor(it)>0f }
         shield=root.optBoolean("shield")
+        healthFraction=root.optDouble("healthFraction",Double.NaN).takeIf { it.isFinite() }?.coerceIn(0.0,1.0)
         recovery=root.optDouble("recovery",0.0).toFloat().takeIf { it.isFinite() }?.coerceIn(0f,2f) ?: 0f
         guardRecovery=root.optDouble("guardRecovery",0.0).toFloat().takeIf { it.isFinite() }?.coerceIn(0f,1.1f) ?: 0f
     }
     fun snapshot()=JSONObject().put("armor",armor?.toInt() ?: 0).put("shield",shield)
-        .put("recovery",recovery.toDouble()).put("guardRecovery",guardRecovery.toDouble()).toString()
+        .put("recovery",recovery.toDouble()).put("guardRecovery",guardRecovery.toDouble())
+        .put("healthFraction",currentHealthFraction()).toString()
 
     fun tick(dt: Float, held: Short?) {
+        if(r.mode.allowsWorldEdits && r.mode.allowsCombat) syncArmorHealth()
         guard=(guard-dt).coerceAtLeast(0f); guardRecovery=(guardRecovery-dt).coerceAtLeast(0f)
         recovery=(recovery-dt).coerceAtLeast(0f)
         if(held!=previous || r.heldItemMode!=HotbarMode.COMBAT || r.playerNode.hp<=0) {
@@ -116,7 +124,8 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
             amount*=if(parry) 0f else if(shield) .18f else .5f
             if(parry) { message(R.string.cave_parried);attacker?.staggerTimer=.8f;attacker?.attackWindup=0f;attacker?.let { r.enemyManager.knockbackFromPlayer(it,5.0) };r.startSwing() }
         }
-        amount*=1f-E.armor(armor)
+        val stage=attacker?.let { it.level-1 } ?: P.stage(r.camera.playerY)
+        amount*=1f-(M.armorReduction(armor,stage) ?: E.armor(armor))
         if(amount>0f) {
             val final=amount.roundToInt().coerceAtLeast(1)
             r.playerNode.applyDamage(final);r.eventBus.publish(GameEvent.PlayerHit(final,dirX,dirZ))
@@ -133,18 +142,40 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         if(left==0) r.inventory.remove(id) else r.inventory[id]=left
         if(old!=null) r.inventory[old]=(r.inventory[old] ?: 0)+1
         if(id==E.SHIELD) shield=true else armor=id
+        syncArmorHealth()
         r.changedFrontierInventory();announce()
     }
     fun removeEquipment() {
         val items=listOfNotNull(armor, if(shield) E.SHIELD else null)
         if(items.any { (r.inventory[it] ?: 0)==Int.MAX_VALUE }) { message(R.string.cave_equipment_full);return }
         for(id in items) r.inventory[id]=(r.inventory[id] ?: 0)+1
-        armor=null;shield=false;r.changedFrontierInventory();announce()
+        armor=null;shield=false;syncArmorHealth();r.changedFrontierInventory();announce()
     }
     companion object {
         const val TOOL_REACH = 2.6
         const val TOOL_ARC = .80
     }
+    private fun currentHealthFraction(): Double {
+        val player=r.playerNode
+        var fraction=healthFraction ?: (player.hp.toDouble()/player.maxHp.coerceAtLeast(1))
+        if(observedHp!=null) fraction+=(player.hp-observedHp!!).toDouble()/(observedMaxHp ?: player.maxHp).coerceAtLeast(1)
+        if(player.hp<=0) fraction=0.0
+        healthFraction=fraction.coerceIn(0.0,1.0)
+        observedHp=player.hp;observedMaxHp=player.maxHp
+        return healthFraction!!
+    }
+    /** Fractional health survives swaps; rounding the displayed HP cannot heal by repeated swaps. */
+    private fun syncArmorHealth() {
+        val player=r.playerNode
+        val fraction=currentHealthFraction()
+        val maximum=M.armorHp(armor)
+        r.playerStats.maxHp=maximum
+        if(player.maxHp==maximum) return
+        player.hp=ceil(fraction*maximum).toInt().coerceIn(0,maximum)
+        player.setMaxHp(maximum)
+        observedHp=player.hp;observedMaxHp=maximum
+    }
+    fun healing(amount: Int) = (amount.toLong()*r.playerNode.maxHp/50).coerceIn(1,Int.MAX_VALUE.toLong()).toInt()
     private fun message(id: Int) { r.farmMessageCallback?.invoke(context.getString(id)) }
     private fun announce() { r.farmMessageCallback?.invoke(context.getString(R.string.cave_equipment_changed,
         (E.armor(armor)*100).roundToInt(),context.getString(if(shield) R.string.cave_ui_ready else R.string.cave_ui_missing))) }

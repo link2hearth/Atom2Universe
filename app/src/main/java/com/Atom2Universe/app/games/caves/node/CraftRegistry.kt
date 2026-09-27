@@ -16,6 +16,9 @@ internal object CraftRegistry {
             recipes += CraftDef.fromJson(JSONObject(json))
         }
         recipes += com.Atom2Universe.app.games.caves.world.KitchenRecipes.crafts
+        recipes.removeAll(com.Atom2Universe.app.games.caves.world.MineralRecipes::replacesCraft)
+        for(i in recipes.indices) recipes[i]=com.Atom2Universe.app.games.caves.world.MineralRecipes.industrialCraft(recipes[i])
+        recipes += com.Atom2Universe.app.games.caves.world.MineralRecipes.crafts
     }
 
     fun all(): List<CraftDef> = recipes

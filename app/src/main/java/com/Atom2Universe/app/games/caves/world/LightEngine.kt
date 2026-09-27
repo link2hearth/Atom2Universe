@@ -14,10 +14,22 @@ package com.Atom2Universe.app.games.caves.world
  * point fixe (itération de Gauss-Seidel, bornée car les niveaux sont dans 0..15).
  */
 internal object LightEngine {
+    /** An enclosed ore cannot illuminate anything. Missing neighbors are treated as rock;
+     * generation/mining queues the bordering chunks again when a face becomes exposed. */
+    fun exposedOre(chunk: Chunk, world: World, x: Int, y: Int, z: Int,
+                   cache: World.ChunkLookupCache): Boolean =
+        passable(world.neighborBlockOr(chunk,x+1,y,z,ROCK,cache)) ||
+        passable(world.neighborBlockOr(chunk,x-1,y,z,ROCK,cache)) ||
+        passable(world.neighborBlockOr(chunk,x,y+1,z,ROCK,cache)) ||
+        passable(world.neighborBlockOr(chunk,x,y-1,z,ROCK,cache)) ||
+        passable(world.neighborBlockOr(chunk,x,y,z+1,ROCK,cache)) ||
+        passable(world.neighborBlockOr(chunk,x,y,z-1,ROCK,cache))
+
     /** Artificial light uses the high nibble and travels through free cells, never solid walls. */
     fun computeBlock(chunk: Chunk, world: World): Int {
         val values=checkNotNull(scratchLocal.get()).also { it.fill(0) }
         val queue=checkNotNull(queueLocal.get()).also { it.clear() }
+        val neighbors = World.ChunkLookupCache()
         fun emit(x: Int,y: Int,z: Int,level: Int) {
             if(level<=0 || x !in 0..15 || y !in 0..15 || z !in 0..15) return
             val i=x+y*16+z*256
@@ -32,7 +44,8 @@ internal object LightEngine {
         for(z in 0..15) for(y in 0..15) for(x in 0..15) {
             val block=chunk.blockAt(x,y,z)
             val source=when(block) { TORCH->15;LAVA->12;else->com.Atom2Universe.app.games.caves.node.BlockRegistry.lightEmission(block) }
-            emit(x,y,z,source)
+            if (source > 0 && (!com.Atom2Universe.app.games.caves.node.MineralItems.isOre(block) ||
+                    exposedOre(chunk,world,x,y,z,neighbors))) emit(x,y,z,source)
             if(!passable(block)) continue
             if(x==0) emit(x,y,z,outside(-1,y,z)-1)
             if(x==15) emit(x,y,z,outside(16,y,z)-1)

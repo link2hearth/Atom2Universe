@@ -7,7 +7,7 @@ import kotlin.math.*
 class World(private val seed: Long = 42L, private val storage: CaveWorldChunkStorage? = null,
             /** Blocs préparés à l'avance ; null = génération procédurale (voir [WorldSource]). */
             private val source: WorldSource? = null) {
-    val terrainVersion: Int get() = 6
+    val terrainVersion: Int get() = 7
     internal fun frontierHomes(x: Double,z: Double) = if (source == null) settlements.homes(x,z) else emptyList()
     internal fun generatedWindmill(p: FrontierWorkshops.Pos) = source == null && settlements.windmill(p)
     private val settlements by lazy { RegionalSettlements(seed, natural) }

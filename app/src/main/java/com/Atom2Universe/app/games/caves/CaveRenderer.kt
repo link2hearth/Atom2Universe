@@ -33,6 +33,7 @@ import com.Atom2Universe.app.games.caves.render.HeldEquipmentMesh
 import com.Atom2Universe.app.games.caves.render.HeldItemModels
 import com.Atom2Universe.app.games.caves.render.HeldItemPoses
 import com.Atom2Universe.app.games.caves.render.HeldKind
+import com.Atom2Universe.app.games.caves.node.MineralItems as M
 import com.Atom2Universe.app.games.caves.render.HeldLook
 import com.Atom2Universe.app.games.caves.render.HeldState
 import com.Atom2Universe.app.games.caves.render.Mat4
@@ -281,7 +282,8 @@ internal class CaveRenderer(
     // juste assez visible pour s'orienter ; une torche fait une vraie différence par-dessus.
     private val CAVE_FLOOR = 0.07f
     private val lightSources = HashMap<Triple<Int,Int,Int>, Float>()
-    private data class ChunkLightState(val chunk: Chunk, val version: Int, val positions: List<Triple<Int, Int, Int>>)
+    private class ChunkLightState(val chunk: Chunk, val version: Int, val positions: List<Triple<Int, Int, Int>>,
+                                  val neighbors: Array<Chunk?>, val neighborVersions: IntArray)
     private val chunkLightStates = HashMap<Long, ChunkLightState>()
     private val lightColors = FloatArray(MAX_LIGHTS * 4)
     private val lightData = FloatArray(MAX_LIGHTS * 4)       // réutilisé chaque frame
@@ -290,6 +292,11 @@ internal class CaveRenderer(
     // cette salle même si les 32 sources proches du joueur sont dans un autre étage.
     private class LocalLights(val data: FloatArray, val colors: FloatArray)
     private val localLights = HashMap<Long, LocalLights>()
+    private val localLightKeys = arrayOfNulls<Triple<Int, Int, Int>>(MAX_LIGHTS)
+    private val localLightScores = DoubleArray(MAX_LIGHTS)
+    private val localLightValues = FloatArray(MAX_LIGHTS)
+    private var lightCandidateVisits = 0L
+    private var localLightSelections = 0
     // Sélection des MAX_LIGHTS sources les plus proches sans allouer de liste : un
     // filter{}.sortedBy{}.take{} sur TOUTES les sources du monde chargé (potentiellement
     // des centaines de torches) tournait 20x/s, indépendamment du combat — un vrai foyer
@@ -327,6 +334,7 @@ internal class CaveRenderer(
 
     private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
     private var mineTarget: RayHit? = null
+    private var lastBlockedMineral: Short? = null
     private var lookTarget: RayHit? = null
     private var mineDamage = 0f
 
@@ -614,7 +622,9 @@ internal class CaveRenderer(
                 mask = pixel.y <= depth ? 1.0 : 0.0;
             }
             col.rgb = clamp(col.rgb * (vec3(1.0) + v_tint.rgb * mask), 0.0, 1.0);
-            float fd = floor(v_faceDir + 0.5);
+            float marker = floor(v_faceDir + 0.5);
+            bool mineral = marker >= 8.0;
+            float fd = mineral ? marker - 8.0 : marker;
             // Voxel face axes are known: screen derivatives become tiny on nearby faces,
             // causing unstable normals (and dark patches) at mobile mediump precision.
             vec3 normal = fd < 1.5 ? vec3(0.0, 1.0, 0.0)
@@ -649,6 +659,11 @@ internal class CaveRenderer(
             // Directional face shading belongs to skylight; a torch can illuminate a ceiling.
             vec3 lit = baseLight * faceLight + (lighting - baseLight);
             fragColor = vec4(fd > 5.5 ? col.rgb * glow : col.rgb * lit, 1.0);
+            // Alpha 254 identifies inclusions, keeping the host rock dark.
+            if (mineral) {
+                float inclusion = 1.0 - step(0.998, col.a);
+                fragColor.rgb = col.rgb * max(lit, vec3(0.24 * inclusion));
+            }
             if (u_underwater > 0.5) {
                 // Keep nearby textures readable: immersion comes from a mild cool tint,
                 // with a light distant haze that still respects night and cave lighting.
@@ -1825,7 +1840,11 @@ internal class CaveRenderer(
         posAccum += dt
         if (posAccum >= 0.1f) {
             posAccum = 0f
-            posCallback?.invoke(camera.posString())
+            val mineralStage=com.Atom2Universe.app.games.caves.world.MineralProgression.stage(camera.playerY)
+            posCallback?.invoke(if(worldSource==null) context.getString(com.Atom2Universe.app.R.string.cave_mineral_depth,
+                camera.posString(),com.Atom2Universe.app.games.caves.world.MineralProgression.tier(mineralStage),
+                context.getString(M.metals[com.Atom2Universe.app.games.caves.world.MineralProgression.metal(mineralStage)].label))
+                else camera.posString())
         }
 
         if (com.Atom2Universe.app.BuildConfig.DEBUG) {
@@ -1843,7 +1862,9 @@ internal class CaveRenderer(
                     "refreshUploads=$refreshMeshUploads lightWorker=${lightWorkerRunning.get()} " +
                     "lightPending=${world.hasPendingLight()} lodJobs=${lodBuilding.size} " +
                     "meshes=${meshes.size} position=$cx,$cy,$cz " +
-                    "reach=${viewDistances.detail}/${viewDistances.view}/${viewDistances.simulation} detailDrawn=$drawnDetailReach lodDrawn=$drawnLodReach")
+                    "reach=${viewDistances.detail}/${viewDistances.view}/${viewDistances.simulation} detailDrawn=$drawnDetailReach lodDrawn=$drawnLodReach " +
+                    "lightQueries=$localLightSelections lightCandidates=$lightCandidateVisits")
+                localLightSelections = 0; lightCandidateVisits = 0
                 drawnDetailReach = 0; drawnLodReach = 0
                 firstMeshUploads = 0
                 refreshMeshUploads = 0
@@ -1859,26 +1880,45 @@ internal class CaveRenderer(
 
     /** Les sources sont choisies par volume éclairé, puis mises en cache hors du shader. */
     private fun selectChunkLights(key: Long): LocalLights {
-        val wx = world.keyToCx(key).toDouble() * CHUNK_SIZE
-        val wy = world.keyToCy(key).toDouble() * CHUNK_SIZE
-        val wz = world.keyToCz(key).toDouble() * CHUNK_SIZE
-        val candidates = lightSources.entries.mapNotNull { entry ->
-            val p = entry.key
-            val dx = maxOf(wx - p.first - .5, 0.0, p.first + .5 - wx - CHUNK_SIZE)
-            val dy = maxOf(wy - p.second - .5, 0.0, p.second + .5 - wy - CHUNK_SIZE)
-            val dz = maxOf(wz - p.third - .5, 0.0, p.third + .5 - wz - CHUNK_SIZE)
-            val radius = 16.0 * entry.value + 1.0 // marge pour la flamme murale
-            if (dx * dx + dy * dy + dz * dz >= radius * radius) null else entry
-        }.sortedBy { entry ->
-            val dx = entry.key.first + .5 - wx - CHUNK_SIZE * .5
-            val dy = entry.key.second + .5 - wy - CHUNK_SIZE * .5
-            val dz = entry.key.third + .5 - wz - CHUNK_SIZE * .5
-            (dx * dx + dy * dy + dz * dz) / (entry.value * entry.value).coerceAtLeast(.01f)
-        }.take(MAX_LIGHTS)
-        val data = FloatArray(candidates.size * 4)
+        val cx = world.keyToCx(key); val cy = world.keyToCy(key); val cz = world.keyToCz(key)
+        val wx = cx.toDouble() * CHUNK_SIZE
+        val wy = cy.toDouble() * CHUNK_SIZE
+        val wz = cz.toDouble() * CHUNK_SIZE
+        var filled = 0
+        localLightSelections++
+        // Source radius is at most 17 blocks, including the torch offset. The existing
+        // per-chunk index therefore limits the search to 5x5x5 buckets, regardless of
+        // world size. Keep the nearest 32 without sorting or allocating candidate lists.
+        for (oz in -2..2) for (oy in -2..2) for (ox in -2..2) {
+            val bucket = chunkLightStates[world.chunkKey(cx + ox, cy + oy, cz + oz)] ?: continue
+            for (p in bucket.positions) {
+                lightCandidateVisits++
+                val intensity = lightSources[p] ?: continue
+                val dx = maxOf(wx - p.first - .5, 0.0, p.first + .5 - wx - CHUNK_SIZE)
+                val dy = maxOf(wy - p.second - .5, 0.0, p.second + .5 - wy - CHUNK_SIZE)
+                val dz = maxOf(wz - p.third - .5, 0.0, p.third + .5 - wz - CHUNK_SIZE)
+                val radius = 16.0 * intensity + 1.0
+                if (dx * dx + dy * dy + dz * dz >= radius * radius) continue
+                val sx = p.first + .5 - wx - CHUNK_SIZE * .5
+                val sy = p.second + .5 - wy - CHUNK_SIZE * .5
+                val sz = p.third + .5 - wz - CHUNK_SIZE * .5
+                val score = (sx * sx + sy * sy + sz * sz) / (intensity * intensity).coerceAtLeast(.01f)
+                if (filled == MAX_LIGHTS && score >= localLightScores[filled - 1]) continue
+                var i = minOf(filled, MAX_LIGHTS - 1)
+                while (i > 0 && localLightScores[i - 1] > score) {
+                    localLightScores[i] = localLightScores[i - 1]
+                    localLightKeys[i] = localLightKeys[i - 1]
+                    localLightValues[i] = localLightValues[i - 1]
+                    i--
+                }
+                localLightScores[i] = score; localLightKeys[i] = p; localLightValues[i] = intensity
+                if (filled < MAX_LIGHTS) filled++
+            }
+        }
+        val data = FloatArray(filled * 4)
         val colors = FloatArray(data.size)
-        candidates.forEachIndexed { i, entry ->
-            val p = entry.key
+        for (i in 0 until filled) {
+            val p = localLightKeys[i]!!
             val block = world.blockAt(p.first, p.second, p.third)
             val natural = block != TORCH && block != LAVA
             val color = if (natural) BlockRegistry.get(block)?.color ?: -1 else 0xFFFFAD4D.toInt()
@@ -1886,7 +1926,7 @@ internal class CaveRenderer(
             data[i * 4] = (p.first - wx + (flame?.x ?: .5f)).toFloat()
             data[i * 4 + 1] = (p.second - wy + (flame?.y ?: .5f)).toFloat()
             data[i * 4 + 2] = (p.third - wz + (flame?.z ?: .5f)).toFloat()
-            data[i * 4 + 3] = entry.value
+            data[i * 4 + 3] = localLightValues[i]
             colors[i * 4] = ((color ushr 16) and 255) / 255f
             colors[i * 4 + 1] = ((color ushr 8) and 255) / 255f
             colors[i * 4 + 2] = (color and 255) / 255f
@@ -2454,6 +2494,7 @@ internal class CaveRenderer(
         val target = if (canMine) raycastBlock() else null
 
         if (target == null) {
+            lastBlockedMineral = null
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
@@ -2465,6 +2506,17 @@ internal class CaveRenderer(
         mineTarget = target
 
         val blockType = worldBlockAt(bx, by, bz)
+        if(!isCreative && !M.canMine(blockType,hotbar[selectedSlot])) {
+            mineDamage=0f
+            miningCallback?.invoke(0f,blockType)
+            if(blockType!=lastBlockedMineral) {
+                lastBlockedMineral=blockType
+                val name=M.name(context,M.requiredPick(blockType)) ?: context.getString(com.Atom2Universe.app.R.string.cave_mineral_stone_pick)
+                farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_mineral_requires_pick,name))
+            }
+            return
+        }
+        lastBlockedMineral=null
         val hardness = BlockRegistry.getHardness(blockType)
         mineDamage += dt * com.Atom2Universe.app.games.caves.node.FrontierItems.miningSpeed(hotbar[selectedSlot], BlockRegistry.get(blockType)) / hardness
 
@@ -2568,15 +2620,23 @@ internal class CaveRenderer(
     private fun refreshChunkLightSources(chunk: Chunk) {
         val key = world.chunkKey(chunk.cx, chunk.cy, chunk.cz)
         val previous = chunkLightStates[key]
-        if (previous?.chunk === chunk && previous.version == chunk.version) return
+        if (previous?.chunk === chunk && previous.version == chunk.version && lightNeighborsUnchanged(previous)) return
         lightsDirty = true
         val wx0 = chunk.worldX; val wy0 = chunk.worldY; val wz0 = chunk.worldZ
+        val neighborChunks = Array(LIGHT_FACE_OFFSETS.size) { i ->
+            val d = LIGHT_FACE_OFFSETS[i]
+            world.getChunk(chunk.cx+d[0],chunk.cy+d[1],chunk.cz+d[2])?.takeIf { it.generated }
+        }
+        val neighborVersions = IntArray(neighborChunks.size) { neighborChunks[it]?.version ?: -1 }
+        val neighborCache = World.ChunkLookupCache()
         previous?.positions?.forEach { lightSources.remove(it) }
         val positions = ArrayList<Triple<Int, Int, Int>>()
         for (ly in 0 until CHUNK_SIZE)
             for (lz in 0 until CHUNK_SIZE)
                 for (lx in 0 until CHUNK_SIZE) {
             val block=chunk.blockAt(lx,ly,lz)
+            // Include chunk boundaries: ores behind a solid neighbor cast no visible halo.
+            if(M.isOre(block) && !LightEngine.exposedOre(chunk,world,lx,ly,lz,neighborCache)) continue
             if((worldSource==null || exhibition) && block.toInt() in 9800..9891) {
                 workshops.discover(FrontierWorkshops.Pos(wx0+lx,wy0+ly,wz0+lz),block)
                 if(worldSource==null && block==com.Atom2Universe.app.games.caves.node.FrontierItems.MARKET_BELL) residents.discoverBell(wx0+lx,wy0+ly,wz0+lz)
@@ -2592,11 +2652,20 @@ internal class CaveRenderer(
                 lightSources[position] = intensity
             }
         }
-        chunkLightStates[key] = ChunkLightState(chunk, chunk.version, positions)
+        chunkLightStates[key] = ChunkLightState(chunk, chunk.version, positions, neighborChunks, neighborVersions)
         // Seuls les chunks à portée de ces sources changent de lumières, et seulement si les
         // sources ont changé. Tout vider à chaque maillage d'un chunk éclairé forçait chaque chunk
         // d'eau à refaire son tri parmi des centaines de sources : un tiers du fil GL au chargement.
         if (positions != (previous?.positions ?: emptyList<Triple<Int, Int, Int>>())) forgetLocalLightsAround(key)
+    }
+
+    private fun lightNeighborsUnchanged(state: ChunkLightState): Boolean {
+        for (i in LIGHT_FACE_OFFSETS.indices) {
+            val d = LIGHT_FACE_OFFSETS[i]; val c = state.chunk
+            val neighbor = world.getChunk(c.cx+d[0],c.cy+d[1],c.cz+d[2])?.takeIf { it.generated }
+            if (neighbor !== state.neighbors[i] || (neighbor?.version ?: -1) != state.neighborVersions[i]) return false
+        }
+        return true
     }
 
     /** Oublie les lumières retenues des chunks à portée d'une source de ce chunk (17 blocs → 2 chunks). */
@@ -3657,6 +3726,7 @@ internal class CaveRenderer(
     /** Objet tenu dessiné par le nouveau module, ou null s'il garde son propre rendu. */
     private fun heldKind(): HeldKind? {
         val id = hotbar.getOrNull(selectedSlot) ?: return null
+        if(M.pickStage(id)!=null) return HeldKind.PICKAXE
         E.melee[id]?.let { return HeldKind.forWeaponType(it.type) }
         if (id == E.ROD) return HeldKind.FISHING_ROD
         if (id == com.Atom2Universe.app.games.caves.node.FarmSoil.HOE) return HeldKind.HOE
@@ -3668,6 +3738,7 @@ internal class CaveRenderer(
 
     private fun heldLook(): HeldLook {
         val id = hotbar.getOrNull(selectedSlot)
+        M.variant(id)?.let { return HeldLook(it.metal.color) }
         val n = com.Atom2Universe.app.games.caves.node.FrontierItems.toolIndex(id)
         if (n >= 0) return HeldLook(intArrayOf(0xA7794B, 0x8E9592, 0xD4DED7, 0x83BCC3)[(n / 3).coerceIn(0, 3)])
         return when (id) {
@@ -4648,6 +4719,16 @@ internal class CaveRenderer(
             }
         }
         if (target != null && !physics.isCrouching && mode.allowsWorldEdits) {
+            val reinforcement=hotbar.getOrNull(selectedSlot)
+            if(world.blockAt(target.bx,target.by,target.bz)==E.FORGE && reinforcement!=null && M.reinforcementTier(reinforcement)!=null) {
+                val upgraded=workshops.upgradeForge(FrontierWorkshops.Pos(target.bx,target.by,target.bz),reinforcement,inventory)
+                if(upgraded) {
+                    changedFrontierInventory();startSwing();checkpointCallback?.invoke()
+                    farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_forge_upgraded,
+                        M.forgeName(context,M.reinforcementTier(reinforcement)!!)))
+                } else farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_forge_already_upgraded))
+                return
+            }
             if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
                 touch.reset();craftStationCallback?.invoke();return
             }
@@ -4677,7 +4758,7 @@ internal class CaveRenderer(
             val heal = com.Atom2Universe.app.games.caves.node.FrontierItems.healing(held)
             if (heal > 0) {
                 if (playerNode.isAlive && playerNode.hp < playerNode.maxHp) {
-                    playerNode.applyHeal(heal); consumeFarmItem(held); startSwing()
+                    playerNode.applyHeal(expeditionCombat.healing(heal)); consumeFarmItem(held); startSwing()
                 }
                 return
             }

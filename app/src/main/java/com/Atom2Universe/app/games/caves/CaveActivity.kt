@@ -153,6 +153,7 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal fun blockName(type: Short): String {
+        com.Atom2Universe.app.games.caves.node.MineralItems.name(this,type)?.let { return it }
         com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)?.let { return weaponName(it.defId) }
         com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)?.let { crop ->
             return getString(R.string.cave_farm_seed_name, getString(com.Atom2Universe.app.games.caves.node.FarmItems.crops[crop].label))

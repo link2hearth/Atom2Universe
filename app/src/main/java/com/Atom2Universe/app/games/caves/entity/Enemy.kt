@@ -2,6 +2,8 @@ package com.Atom2Universe.app.games.caves.entity
 
 import com.Atom2Universe.app.games.caves.node.MobDef
 import kotlin.math.pow
+import kotlin.math.roundToInt
+import com.Atom2Universe.app.games.caves.world.MineralProgression as P
 
 internal enum class EnemyState { WANDER, CHASE, ATTACK }
 internal enum class ExhibitPose { REFERENCE, IDLE, ACTION }
@@ -47,10 +49,12 @@ internal class Enemy(
     var motionBlend = 0f
 
     // HP = hpBase × level² : linéaire au carré, sans cap, calibré à ~500 HP à level 10 (hpBase=5)
-    private fun scaledHp(): Int = (def.hpBase.toLong() * if(exploration) (2 + (level-1)*2) else level * level).toInt().coerceAtLeast(1)
+    private fun scaledHp(): Int = if(exploration) (def.hpBase*10f*P.scale(level-1)).roundToInt().coerceAtLeast(1)
+        else (def.hpBase.toLong()*level*level).coerceIn(1,Int.MAX_VALUE.toLong()).toInt()
     val maxHp get() = if (isBoss) scaledHp() * BOSS_HP_MULT else scaledHp()
-    val scaledDamage get() = (if (isBoss) def.damageBase * 3 else def.damageBase) + (level - 1) / 3
-    val scaledSpeed get() = def.speed * (1f + (level - 1) * def.speedScalePerLevel).coerceAtMost(if (isBoss) 2.0f else 3.0f)
+    val scaledDamage get() = if(exploration) ((def.damageBase+2)*2f*(if(isBoss) 1.5f else 1f)*P.scale(level-1)).roundToInt().coerceAtLeast(1)
+        else (if (isBoss) def.damageBase * 3 else def.damageBase) + (level - 1) / 3
+    val scaledSpeed get() = def.speed * (1f + (level - 1) * def.speedScalePerLevel).coerceAtMost(if(exploration) 1.25f else if (isBoss) 2.0f else 3.0f)
     val baseScale get() = if (isBoss) def.spriteScale * BOSS_SPRITE_SCALE else def.spriteScale
 
     var hp: Int = def.hpBase
