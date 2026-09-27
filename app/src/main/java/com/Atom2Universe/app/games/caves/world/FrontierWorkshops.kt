@@ -184,7 +184,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
         Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
         Recipe(F.PRESS,mapOf(E.DEEP_FISH to 2),mapOf(E.FISH_OIL to 1),8,true)
-    ) + FarmItems.crops.indices.map { Recipe(F.COMPOSTER,mapOf(FarmItems.produce(it) to 3),mapOf(F.COMPOST to 1),20) }
+    ) + FarmItems.crops.indices.map { Recipe(F.COMPOSTER,mapOf(FarmItems.produce(it) to 3),mapOf(F.COMPOST to 1),20) } + KitchenRecipes.workshops
     @Synchronized fun select(p: Pos,index: Int): Boolean {
         if(!loaded(p) || !F.isContainer(block(p)) || index != -1 && recipes.getOrNull(index)?.machine!=block(p)) return false
         val s=store(p);s.selection=index;s.progress=0;s.active="";return true
@@ -298,9 +298,9 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         if(feedTimer<1f) return
         feedTimer-=1f
         for((p,s) in stores) {
-            if(!loaded(p) || block(p)!=F.TROUGH) continue
+            if(!loaded(p) || !simulated(p) || block(p)!=F.TROUGH) continue
             for(a in animals.visible) {
-                if(a.mealRest>0f || (!a.young && a.productTime>=0f) || abs(a.y-p.y)>2 || hypot(a.x-p.x-.5,a.z-p.z-.5)>4) continue
+                if(!animals.needsFood(a) || abs(a.y-p.y)>2 || hypot(a.x-p.x-.5,a.z-p.z-.5)>4) continue
                 // A trough cannot feed through the wall of an adjacent pen.
                 val distance=hypot(a.x-p.x-.5,a.z-p.z-.5);val steps=(distance*4).toInt().coerceAtLeast(1)
                 if((1 until steps).any { i ->

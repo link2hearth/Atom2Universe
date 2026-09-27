@@ -15,6 +15,7 @@ internal object CraftRegistry {
             val json = assets.open("caves/crafts/$file").bufferedReader().readText()
             recipes += CraftDef.fromJson(JSONObject(json))
         }
+        recipes += com.Atom2Universe.app.games.caves.world.KitchenRecipes.crafts
     }
 
     fun all(): List<CraftDef> = recipes

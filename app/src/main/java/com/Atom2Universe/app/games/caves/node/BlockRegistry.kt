@@ -90,6 +90,10 @@ internal object BlockRegistry {
             require(def.id !in defs) { "Duplicate farm item ${def.id}" }
             defs[def.id] = def
         }
+        for (def in KitchenItems.definitions(requireNotNull(defs[FarmSoil.HOE]))) {
+            require(def.id !in defs) { "Duplicate kitchen item ${def.id}" }
+            defs[def.id] = def
+        }
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {
             require(def.harvestCategory in setOf("recoverable", "covered_soil", "fractured_stone",

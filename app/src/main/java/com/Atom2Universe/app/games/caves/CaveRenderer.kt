@@ -1992,9 +1992,17 @@ internal class CaveRenderer(
                     val radius=e.def.radius.toDouble()+.5
                     e.hp>0 && (p.x-e.x).pow(2)+(p.z-e.z).pow(2)<radius*radius &&
                         p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)+.25
+                } ?: huntableAnimals.find { a ->
+                    val radius=a.def.radius * (if(a.young) .72 else 1.0)
+                    a.hp>0 && (p.x-a.x).pow(2)+(p.z-a.z).pow(2)<radius*radius &&
+                        p.y>=a.y && p.y<=a.y+passiveAnimals.height(a)
                 }
                 if(hit!=null) {
                     if(p.kind!=ProjectileKind.LEGACY) spawnImpact(p.x,p.y,p.z)
+                    if(hit.def.behavior=="passive") {
+                        damageAnimal(hit,p.damage)
+                        iter.remove();break
+                    }
                     // Tête : le haut du corps, au-dessus de MobModels.HEAD_START. Le mode décide ce
                     // qu'elle vaut (la survie ne change rien, l'Assaut double les dégâts).
                     val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
@@ -4476,6 +4484,18 @@ internal class CaveRenderer(
     private fun plantSoilOffset(x: Int, y: Int, z: Int): Float =
         if (worldBlockAt(x, y - 1, z) == com.Atom2Universe.app.games.caves.node.FarmSoil.FARMLAND) -1f / 16f else 0f
 
+    internal val huntableAnimals: List<com.Atom2Universe.app.games.caves.entity.Enemy>
+        get() = if(worldSource==null && mode.allowsCombat && playerNode.isAlive) passiveAnimals.visible else emptyList()
+
+    internal fun damageAnimal(animal: com.Atom2Universe.app.games.caves.entity.Enemy,damage: Int) {
+        if(animal !in huntableAnimals) return
+        val drops=passiveAnimals.damage(animal,damage)
+        if(drops.isNotEmpty()) {
+            grantFarmItems(drops)
+            farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_animal_meat_collected))
+        }
+    }
+
     private fun grantFarmItems(items: List<Pair<Short, Int>>) {
         for ((id,count) in items) {
             val newStack=(inventory[id] ?: 0)==0
@@ -4526,7 +4546,7 @@ internal class CaveRenderer(
         var nearest=solid
         for(a in actors) {
             if(hypot(a.x-camera.playerX,a.z-camera.playerZ)>4.5 || abs(a.y-camera.playerY)>4) continue
-            val height=if(a.def.behavior=="settler") 1.8 else if(a.young) .8 else 1.25
+            val height=if(a.def.behavior=="settler") 1.8 else passiveAnimals.height(a)
             val radius=if(a.def.behavior=="settler") .4 else (a.def.radius*(if(a.young) .65 else .85)).coerceAtLeast(.3)
             var enter=0.0;var leave=nearest
             val origin=doubleArrayOf(sx,sy,sz);val direction=doubleArrayOf(dx,dy,dz)
@@ -4546,12 +4566,32 @@ internal class CaveRenderer(
         val result=passiveAnimals.interact(actor,hotbar[selectedSlot],inventory)
         if(result==0) return false
         val message=when(result) {
-            1 -> com.Atom2Universe.app.R.string.cave_animal_fed
-            2 -> com.Atom2Universe.app.R.string.cave_animal_ready
-            else -> com.Atom2Universe.app.R.string.cave_animal_wait
+            1 -> context.getString(com.Atom2Universe.app.R.string.cave_animal_fed)
+            2 -> context.getString(com.Atom2Universe.app.R.string.cave_animal_ready)
+            4 -> context.getString(com.Atom2Universe.app.R.string.cave_equipment_full)
+            else -> animalStatus(actor)
         }
-        if(result!=3) { changedFrontierInventory();startSwing() }
-        farmMessageCallback?.invoke(context.getString(message));return true
+        if(result==1 || result==2) { changedFrontierInventory();startSwing() }
+        farmMessageCallback?.invoke(message);return true
+    }
+
+    private fun animalStatus(a: com.Atom2Universe.app.games.caves.entity.Enemy): String {
+        fun minutes(seconds: Float)=ceil(seconds/60f).toInt().coerceAtLeast(1)
+        if(a.young) return context.getString(com.Atom2Universe.app.R.string.cave_animal_growing,minutes(a.growth))
+        if(!a.domestic || a.productTime<0f) {
+            val foodName=when(a.def.id) {
+                "pig" -> com.Atom2Universe.app.R.string.cave_animal_food_carrot
+                "chicken" -> com.Atom2Universe.app.R.string.cave_animal_food_seeds
+                else -> com.Atom2Universe.app.R.string.cave_animal_food_wheat
+            }
+            return context.getString(com.Atom2Universe.app.R.string.cave_animal_needs_food,context.getString(foodName))
+        }
+        if(a.productTime>0f) return context.getString(com.Atom2Universe.app.R.string.cave_animal_producing,minutes(a.productTime))
+        return context.getString(when(a.def.id) {
+            "cow" -> com.Atom2Universe.app.R.string.cave_animal_collect_milk
+            "sheep" -> com.Atom2Universe.app.R.string.cave_animal_collect_wool
+            else -> com.Atom2Universe.app.R.string.cave_animal_collect_empty
+        })
     }
     /** Validate loaded terrain before moving the player. No destination writes or remote mining. */
     internal fun travel(home: Boolean): Int {

@@ -226,6 +226,8 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         val v=view ?: return a.getString(R.string.cave_storage_drag_hint);val recipes=a.renderer.workshops.recipes
         return buildList {
             add(a.getString(R.string.cave_storage_drag_hint))
+            if(v.block in setOf(com.Atom2Universe.app.games.caves.node.FrontierItems.COOKER,
+                    com.Atom2Universe.app.games.caves.node.FrontierItems.VAT)) add(a.getString(R.string.cave_kitchen_recipe_help))
             if(recipes.any { it.machine==v.block && it.power }) {
                 add(a.getString(when {
                     v.powered -> R.string.cave_machine_powered

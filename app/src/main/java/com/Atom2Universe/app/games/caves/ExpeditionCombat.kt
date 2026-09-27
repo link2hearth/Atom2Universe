@@ -80,22 +80,27 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
     /** Ennemis vivants dans le cône devant le regard, à portée et sans mur entre deux, du plus proche au plus loin. */
     fun targetsInArc(reach: Double, arc: Double, count: Int): List<Enemy> {
         val c=r.camera
-        return r.enemyManager.enemies.asSequence().filter { it.hp>0 }.mapNotNull { e ->
-            val dx=e.x-c.playerX; val dy=(c.eyeY).coerceIn(e.y+.15,e.y+e.def.eyeHeight.toDouble())-c.eyeY; val dz=e.z-c.playerZ
+        return (r.enemyManager.enemies.asSequence()+r.huntableAnimals.asSequence()).filter { it.hp>0 }.mapNotNull { e ->
+            val passive=e.def.behavior=="passive"
+            val height=if(passive) r.passiveAnimals.height(e) else e.def.eyeHeight.toDouble()
+            val radius=e.def.radius * if(passive && e.young) .72 else 1.0
+            val dx=e.x-c.playerX; val dy=(c.eyeY).coerceIn(e.y+.15,e.y+height)-c.eyeY; val dz=e.z-c.playerZ
             val distance=sqrt(dx*dx+dy*dy+dz*dz)
             val dot=(dx*c.aimX+dy*c.aimY+dz*c.aimZ)/distance.coerceAtLeast(.001)
-            if(distance-e.def.radius>reach || dot<arc || !r.clearCombatLine(c.playerX,c.eyeY,c.playerZ,e.x,c.eyeY+dy,e.z)) null else e to distance
+            if(distance-radius>reach || dot<arc || !r.clearCombatLine(c.playerX,c.eyeY,c.playerZ,e.x,c.eyeY+dy,e.z)) null else e to distance
         }.sortedBy { it.second }.take(count).map { it.first }.toList()
     }
     /** Coup d'outil (pioche, hache, houe…) : une seule cible, dégâts modestes, petit recul. */
     fun toolStrike(damage: Int) {
         val e=targetsInArc(TOOL_REACH,TOOL_ARC,1).firstOrNull() ?: return
+        if(e.def.behavior=="passive") { r.damageAnimal(e,damage);return }
         r.enemyManager.damageEnemy(e,damage)
         r.enemyManager.knockbackFromPlayer(e,2.0)
     }
     private fun strike(p: E.Melee, strength: Float) {
         val targets=targetsInArc(p.reach,p.arc,p.targets)
         for(e in targets) {
+            if(e.def.behavior=="passive") { r.damageAnimal(e,(p.damage*(1f+strength*.85f)).roundToInt());continue }
             r.enemyManager.damageEnemy(e,(p.damage*(1f+strength*.85f)).roundToInt())
             r.enemyManager.knockbackFromPlayer(e,if(p.type=="hammer") 7.0 else 2.5+strength*3.5)
             if(strength>.65f || p.type=="hammer") { e.staggerTimer=if(e.isBoss) .15f else .48f;e.attackWindup=0f }

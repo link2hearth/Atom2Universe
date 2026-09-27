@@ -88,9 +88,9 @@ internal object FrontierItems {
         BREAD -> 7; SALAD -> 6; STEW -> 14; BAKED_POTATO -> 6
         BERRY_TART -> 12; RATATOUILLE -> 16; TRAVEL_RATION -> 10
         CHEESE -> 9; OMELETTE -> 16; PANCAKE -> 18; CREAM_SOUP -> 24
-        else -> ExpeditionItems.healing(id)
+        else -> maxOf(ExpeditionItems.healing(id), KitchenItems.healing(id))
     }
-    fun isGardenItem(id: Short) = id in FLOUR..MORTAR || id in WOOL..CHEESE || id in OMELETTE..CREAM_SOUP || id == SHEARS || id == CHARM
+    fun isGardenItem(id: Short) = id in FLOUR..MORTAR || id in WOOL..CHEESE || id in OMELETTE..CREAM_SOUP || id == SHEARS || id == CHARM || KitchenItems.isItem(id)
 
     fun toolIndex(id: Short?): Int = when(id?.toInt()) {
         in 9830..9838 -> id!!.toInt()-9830

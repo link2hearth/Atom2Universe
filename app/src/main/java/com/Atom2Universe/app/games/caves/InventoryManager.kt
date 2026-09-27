@@ -671,6 +671,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     infoNameTv?.text  = activity.blockName(type)
                     infoCountTv?.text = activity.getString(R.string.cave_ui_owned, countAt(selectedSlotIdx))
                     infoIngredientsTv?.text = itemDescription(type)
+                    val foodRecipes=foodRecipes(type)
+                    if(foodRecipes.isNotEmpty()) ui.ingredients.addView(Button(activity).apply {
+                        text=activity.getString(R.string.cave_kitchen_recipes)
+                        setOnClickListener {
+                            AlertDialog.Builder(activity).setTitle(R.string.cave_kitchen_recipes)
+                                .setMessage(activity.getString(R.string.cave_kitchen_recipe_help)+"\n\n"+foodRecipes.joinToString("\n\n"))
+                                .setPositiveButton(android.R.string.ok,null).show()
+                        }
+                    })
                     infoDivider?.visibility = View.VISIBLE
                     infoIngredientsTv?.visibility = View.VISIBLE
                 }
@@ -687,6 +696,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         val def=BlockRegistry.get(type)
         val drop=BlockRegistry.harvestDrop(type)
         return when {
+                        com.Atom2Universe.app.games.caves.node.KitchenItems.isRawMeat(type) -> activity.getString(R.string.cave_kitchen_raw_hint)
+                        com.Atom2Universe.app.games.caves.node.KitchenItems.isItem(type) && F.healing(type)==0 -> activity.getString(R.string.cave_kitchen_ingredient_hint)
                         type in E.melee -> E.melee.getValue(type).let { p -> activity.getString(R.string.cave_melee_info,p.damage,p.reach,p.recovery,p.targets) }
                         E.armor(type)>0f -> activity.getString(R.string.cave_armor_description,(E.armor(type)*100).toInt())
                         type==E.SHIELD -> activity.getString(R.string.cave_shield_description,82,50)
@@ -727,6 +738,27 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         drop == null -> activity.getString(R.string.cave_ui_harvest_none)
                         else -> activity.getString(R.string.cave_ui_harvest_result, drop.second, activity.blockName(drop.first))
                     }
+    }
+
+    /** Food production is visible from ingredients and dishes, before owning a stove. */
+    private fun foodRecipes(type: Short): List<String> {
+        fun names(items: Map<Short,Int>)=items.entries.joinToString { (id,n) ->
+            activity.getString(R.string.cave_storage_row,activity.blockName(id),n)
+        }
+        val machines=setOf(F.COOKER,F.MILL,F.VAT)
+        val workshops=renderer.workshops.recipes.filter { it.machine in machines &&
+            (type==it.machine || type in it.input || type in it.output) }.map { recipe ->
+            activity.getString(R.string.cave_kitchen_recipe_station,activity.blockName(recipe.machine),
+                activity.getString(R.string.cave_machine_recipe,names(recipe.input),names(recipe.output),recipe.seconds))
+        }
+        val crafts=CraftRegistry.all().filter { (F.healing(it.result)>0 || it.result==F.FLOUR ||
+            it.result==com.Atom2Universe.app.games.caves.node.KitchenItems.CORNMEAL) && (type==it.result || type in it.inputIds) }.map { recipe ->
+            activity.getString(R.string.cave_kitchen_recipe_hand,names(recipe.ingredients.toMap()),
+                names(mapOf(recipe.result to recipe.resultCount))) +
+                if(recipe.tools.isEmpty()) "" else "\n"+activity.getString(R.string.cave_kitchen_required_tool,
+                    recipe.tools.joinToString { activity.blockName(it) })
+        }
+        return workshops+crafts
     }
 
     /** Icône d'un résultat de recette d'arme (pas encore d'instance rollée, juste l'aperçu). */
