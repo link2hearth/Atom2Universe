@@ -754,6 +754,7 @@
     <string name="cave_palette_change">Thème : %1$s. Toucher pour changer.</string>
     <string name="cave_controls_reload">Recharger</string>
     <string name="cave_assault_maple_crossing">Maple Crossing — lotissement américain</string>
+    <string name="cave_assault_dust2">Just You — désert en cubes (128 × 144)</string>
     <string name="cave_block_street_asphalt">Asphalte</string>
     <string name="cave_block_street_concrete">Béton</string>
     <string name="cave_block_street_sidewalk">Dalles de trottoir</string>

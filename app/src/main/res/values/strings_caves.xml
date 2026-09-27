@@ -754,6 +754,7 @@
     <string name="cave_palette_change">Theme: %1$s. Tap to change.</string>
     <string name="cave_controls_reload">Reload</string>
     <string name="cave_assault_maple_crossing">Maple Crossing — suburban crossroads</string>
+    <string name="cave_assault_dust2">Just You — voxel desert (128 × 144)</string>
     <string name="cave_block_street_asphalt">Asphalt</string>
     <string name="cave_block_street_concrete">Concrete</string>
     <string name="cave_block_street_sidewalk">Sidewalk paving</string>

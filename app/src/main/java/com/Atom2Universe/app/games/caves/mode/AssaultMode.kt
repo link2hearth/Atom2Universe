@@ -19,9 +19,11 @@ import com.Atom2Universe.app.games.caves.ai.SquadMember
 import com.Atom2Universe.app.games.caves.ai.SquadSpawn
 import com.Atom2Universe.app.games.caves.ai.SquadTuning
 import com.Atom2Universe.app.games.caves.ai.SuburbDeployment
+import com.Atom2Universe.app.games.caves.ai.Dust2Deployment
 import com.Atom2Universe.app.games.caves.ai.TowerDeployment
 import com.Atom2Universe.app.games.caves.ai.LineOfSight
 import com.Atom2Universe.app.games.caves.world.BuiltinMaps
+import com.Atom2Universe.app.games.caves.world.Dust2Map
 import com.Atom2Universe.app.games.caves.world.MapleCrossingMap
 import com.Atom2Universe.app.games.caves.world.OfficeTowerMap
 import com.Atom2Universe.app.games.caves.entity.RangedProfile
@@ -61,6 +63,7 @@ internal class AssaultMode(
 
     private val isTower = source.map.name == OfficeTowerMap.ID
     private val isSuburb = source.map.name == MapleCrossingMap.ID
+    private val isDust2 = source.map.name == Dust2Map.ID
     /** Le quartier des fonderies : déploiement au sol dans la moitié est, jamais sur les toits. */
     private val isArena = source.map.name == BuiltinMaps.ARENA_ID &&
         source.map.sizeX == BuiltinMaps.ARENA_SIZE && source.map.sizeZ == BuiltinMaps.ARENA_DEPTH &&
@@ -160,6 +163,7 @@ internal class AssaultMode(
     private var routes: RouteQueue? = null
     private var towerDeployment: TowerDeployment? = null
     private var suburbDeployment: SuburbDeployment? = null
+    private var dust2Deployment: Dust2Deployment? = null
     /** Le « talkie-walkie » : une seule escouade sur le joueur à la fois (voir [SquadCommand]). */
     private var command: SquadCommand? = null
 
@@ -223,6 +227,7 @@ internal class AssaultMode(
         }
         if (isTower) towerDeployment = TowerDeployment(grid, map.spawnsA.first())
         if (isSuburb) suburbDeployment = SuburbDeployment(grid, map.spawnsA.first())
+        if (isDust2) dust2Deployment = Dust2Deployment(grid, map.spawnsA.first())
     }
 
     override fun onPlayerPlaced(x: Double, y: Double, z: Double) = kotlin.Unit
@@ -750,6 +755,7 @@ internal class AssaultMode(
     private fun planSquads(grid: NavGrid): List<IntArray> {
         towerDeployment?.let { return it.chooseSquads(rng) }
         suburbDeployment?.let { return it.chooseSquads(squadCount, squadSize, rng) }
+        dust2Deployment?.let { return it.chooseSquads(squadSize, rng) }
         val pool = deploymentPool(grid)
         if (pool.isEmpty()) return emptyList()
         return SquadSpawn.cluster(grid, pool, squadCount, squadSize, rng)

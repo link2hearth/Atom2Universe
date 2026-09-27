@@ -63,7 +63,9 @@ internal object A2MapStorage {
             "$BUILTIN_PREFIX${OfficeTowerMap.ID}")
         val suburb = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_maple_crossing),
             "$BUILTIN_PREFIX${MapleCrossingMap.ID}")
-        return listOf(showcase, suburb, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
+        val dust2 = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_dust2),
+            "$BUILTIN_PREFIX${Dust2Map.ID}")
+        return listOf(showcase, dust2, suburb, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
     }
 
     fun load(context: Context, path: String): A2Map =
@@ -73,6 +75,8 @@ internal object A2MapStorage {
             ShowcaseMap.create()
         } else if (path == "$BUILTIN_PREFIX${BuiltinMaps.ARENA_ID}") {
             BuiltinMaps.arena()
+        } else if (path == "$BUILTIN_PREFIX${Dust2Map.ID}") {
+            Dust2Map.create()
         } else if (path == "$BUILTIN_PREFIX${OfficeTowerMap.ID}") {
             OfficeTowerMap.create()
         } else if (path == "$BUILTIN_PREFIX${MapleCrossingMap.ID}") {
