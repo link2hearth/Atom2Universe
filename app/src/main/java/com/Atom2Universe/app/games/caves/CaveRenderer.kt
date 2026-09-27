@@ -2658,6 +2658,11 @@ internal class CaveRenderer(
     }
 
     private fun collectBlock(blockType: Short) {
+        com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(blockType)?.let { (lower, upper) ->
+            collectBlock(lower)
+            collectBlock(upper)
+            return
+        }
         if (blockType.toInt() in 7020..7023) {
             grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(0) to 1))
             return
@@ -4953,13 +4958,35 @@ internal class CaveRenderer(
             return
         }
 
-        val px = target.bx + target.fnx
-        val py = target.by + target.fny
-        val pz = target.bz + target.fnz
+        val slab = BlockRegistry.get(blockType)?.slab == true
+        // Use the existing two-slabs recipe as the source of the matching full block.
+        val fullSlabBlock = if (slab) com.Atom2Universe.app.games.caves.node.CraftRegistry.all()
+            .firstOrNull { it.ingredients == listOf(blockType to 2) && it.resultCount == 1 &&
+                it.groups.isEmpty() && it.tools.isEmpty() && it.station == null &&
+                BlockRegistry.get(it.result)?.let { def -> def.placeable && !def.partial } == true }
+            ?.result else null
+        val targetUpper = world.metaAt(target.bx, target.by, target.bz).toInt() and 4 != 0
+        val targetType = world.blockAt(target.bx, target.by, target.bz)
+        fun combinedSlabs(existing: Short, existingUpper: Boolean): Short? {
+            if (!slab || BlockRegistry.get(existing)?.slab != true) return null
+            if (existing == blockType) return fullSlabBlock
+            return if (existingUpper) com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(blockType, existing)
+            else com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(existing, blockType)
+        }
+        val fillTarget = combinedSlabs(targetType, targetUpper) != null &&
+            ((!targetUpper && target.fny == 1) || (targetUpper && target.fny == -1))
+        val px = target.bx + if (fillTarget) 0 else target.fnx
+        val py = target.by + if (fillTarget) 0 else target.fny
+        val pz = target.bz + if (fillTarget) 0 else target.fnz
         if (isInsidePlayer(px, py, pz)) return
         val existing = world.blockAt(px, py, pz)
-        if (existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return
-        val orientMeta = if (BlockRegistry.get(blockType)?.slab == true) {
+        val placeUpper = target.fny < 0 || target.fny == 0 && target.hitY > .5
+        val existingUpper = world.metaAt(px, py, pz).toInt() and 4 != 0
+        val combinedType = combinedSlabs(existing, existingUpper)
+        val mergeSlabs = combinedType != null && (fillTarget || existingUpper != placeUpper)
+        if (!mergeSlabs && existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return
+        val placedType = if (mergeSlabs) combinedType!! else blockType
+        val orientMeta = if (mergeSlabs) 0.toByte() else if (slab) {
             (if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
         } else if (BlockRegistry.get(blockType)?.stairs == true) {
             val facing = if (abs(camera.fwdX) > abs(camera.fwdZ)) {
@@ -4979,14 +5006,14 @@ internal class CaveRenderer(
         } else if (blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.HOPPER)
             FrontierWorkshops.hopperMeta(-target.fnx, -target.fny, -target.fnz)
         else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
-        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(blockType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
-        world.setBlock(px, py, pz, blockType)
-        workshops.placed(FrontierWorkshops.Pos(px, py, pz), blockType)
+        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(placedType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
+        world.setBlock(px, py, pz, placedType)
+        workshops.placed(FrontierWorkshops.Pos(px, py, pz), placedType)
         world.setMeta(px, py, pz, orientMeta)
         forceMeshRebuild(px, py, pz)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
         if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)
-        if (isFalling(blockType)) world.enqueueIfFalling(px, py, pz)
+        if (isFalling(placedType)) world.enqueueIfFalling(px, py, pz)
         clearUnsupportedAround(px, py, pz)
         if (!isCreative) {
             inventory[blockType] = (inventory[blockType] ?: 1) - 1

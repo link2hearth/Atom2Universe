@@ -29,7 +29,7 @@ internal class CaveItemTile(context: Context): FrameLayout(context) {
     private val badge=View(context)
     init {
         isFocusable=true
-        addView(icon,LayoutParams(-1,-1).apply { setMargins(dp(10),dp(5),dp(10),dp(21)) })
+        addView(icon,LayoutParams(-1,-1).apply { setMargins(dp(4),dp(3),dp(4),dp(19)) })
         addView(label,LayoutParams(-1,dp(19),Gravity.BOTTOM).apply { marginStart=dp(3);marginEnd=dp(3) })
         addView(count,LayoutParams(-2,-2,Gravity.TOP or Gravity.END).apply { topMargin=dp(3);marginEnd=dp(3) })
         addView(badge,LayoutParams(dp(17),dp(17),Gravity.TOP or Gravity.START).apply { topMargin=dp(3);marginStart=dp(3) })

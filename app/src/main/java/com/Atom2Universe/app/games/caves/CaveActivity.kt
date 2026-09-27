@@ -132,6 +132,9 @@ class CaveActivity : ThemedActivity() {
                 def?.weaponType ?: def?.sprite ?: "gun",
                 instance?.rarity ?: com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON)
         }
+        val base = com.Atom2Universe.app.games.caves.node.ForgedEquipment.base(type) ?: type
+        val thumbnail = BlockRegistry.getItemIcon(base)
+        if (thumbnail != null) return com.Atom2Universe.app.games.caves.render.ItemThumbnailDrawable(thumbnail)
         val bmp = blockBitmap(type)
         return if (bmp != null) {
             RoundedBitmapDrawableFactory.create(resources, bmp).apply {
@@ -153,6 +156,9 @@ class CaveActivity : ThemedActivity() {
     }
 
     internal fun blockName(type: Short): String {
+        com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(type)?.let { (lower, upper) ->
+            return getString(R.string.cave_double_slab_name, blockName(lower), blockName(upper))
+        }
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.get(type)?.let { return blockName(it.base) }
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.name(this,type)?.let { return it }
         com.Atom2Universe.app.games.caves.node.MineralItems.name(this,type)?.let { return it }

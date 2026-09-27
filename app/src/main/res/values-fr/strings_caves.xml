@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="cave_double_slab_name">%1$s (bas) + %2$s (haut)</string>
     <string name="cave_craft_equipment">Équipement requis (conservé) : %1$s · %2$s</string>
     <string name="cave_craft_logs">Toutes bûches (mélange possible)</string>
     <string name="cave_craft_planks">Toutes planches (mélange possible)</string>

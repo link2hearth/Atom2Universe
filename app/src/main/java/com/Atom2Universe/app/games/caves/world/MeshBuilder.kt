@@ -38,6 +38,30 @@ internal object MeshBuilder {
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
+            val slabMaterials = com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(block)
+            if (slabMaterials != null) {
+                val sky = skyOf(chunk, world, lx, ly, lz, cache)
+                for (upper in listOf(false, true)) {
+                    val material = if (upper) slabMaterials.second else slabMaterials.first
+                    for (face in PartialBlockModel.faces(if (upper) 4 else 0, slab = true)) {
+                        // The two touching horizontal faces are internal to the combined cube.
+                        if (face.direction == if (upper) 1 else 0) continue
+                        val offset = faceOffsets[face.direction]
+                        val neighbor = world.neighborBlock(chunk, lx + offset[0], ly + offset[1], lz + offset[2], cache)
+                        if (!shouldRenderFace(block, neighbor)) continue
+                        val layer = BlockRegistry.surfaceLayer(BlockRegistry.getLayerForFace(material, face.direction, AIR, 0),
+                            chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz, face.direction)
+                        val packed = face.direction * 4096f + layer
+                        for (i in faceTriangles) {
+                            val v = face.vertices[i]
+                            val u = if (face.direction in 2..3) v[2] else v[0]
+                            val vv = if (face.direction < 2) v[2] else 1f - v[1]
+                            buf.add7(x + v[0], y + v[1], z + v[2], u, vv, packed, sky)
+                        }
+                    }
+                }
+                continue
+            }
             val definition = if (BlockRegistry.isPartial(block)) BlockRegistry.get(block) else null
             // Turning parts: KineticRenderer draws them, the chunk mesh keeps nothing.
             if (definition?.kinetic == true) continue

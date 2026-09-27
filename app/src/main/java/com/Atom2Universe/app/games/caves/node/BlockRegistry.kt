@@ -73,6 +73,8 @@ internal object BlockRegistry {
     private val generatedProviders = HashMap<String, (Int) -> Bitmap>()
 
     // Copies des faces top pour l'UI — stockées avant le recycle GL dans CaveRenderer
+    @Volatile private var itemIcons: Map<Short, Bitmap> = emptyMap()
+    fun getItemIcon(id: Short): Bitmap? = itemIcons[id]
     private val topBitmapById = HashMap<Short, Bitmap>()
     private val decorationMasks = HashMap<Short, SpriteHitMask>()
 
@@ -129,6 +131,10 @@ internal object BlockRegistry {
         for (def in ForgedEquipment.definitions(defs.getValue(3101))) {
             require(def.id !in defs) { "Duplicate armor template ${def.id}" }
             defs[def.id]=def
+        }
+        for (def in DoubleSlabs.definitions(defs)) {
+            require(def.id !in defs) { "Duplicate double slab ${def.id}" }
+            defs[def.id] = def
         }
         val byName = defs.values.associateBy { it.name }
         for (def in defs.values) {
@@ -204,6 +210,11 @@ internal object BlockRegistry {
                 }
             }
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
+        }
+
+        // Publish together. Existing UI drawables may still own previous thumbnails.
+        itemIcons = defs.values.filter { it.placeable && !it.decoration }.associate { def ->
+            def.id to com.Atom2Universe.app.games.caves.render.BlockItemIcon.create(def, bitmaps)
         }
 
         // Register all approved surface variants before taking the final layer-table sizes.
@@ -347,7 +358,7 @@ internal object BlockRegistry {
 
     fun creativeList(): List<Short> =
         defs.values
-            .filter { !it.water && "retired" !in it.tags && FarmShowcasePlants.sample(it.id) == null }
+            .filter { !it.water && "retired" !in it.tags && FarmShowcasePlants.sample(it.id) == null && DoubleSlabs.materials(it.id) == null }
             .sortedBy { it.id }
             .map { it.id }
 
