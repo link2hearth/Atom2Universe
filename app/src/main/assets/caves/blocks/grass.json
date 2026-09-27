@@ -1,9 +1,9 @@
 {
   "id": 101,
   "name": "grass",
-  "texture_top": "cozy:material:0",
-  "texture_side": "cozy:material:1",
-  "texture_bottom": "cozy:material:2",
+  "texture_top": "base_art:grass_top:0",
+  "texture_side": "base_art:grass_side:0",
+  "texture_bottom": "base_art:dirt:0",
   "color": "#819A5E",
   "hardness": 0.8,
   "drop": "dirt",

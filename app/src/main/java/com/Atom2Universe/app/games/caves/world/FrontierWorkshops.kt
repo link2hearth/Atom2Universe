@@ -323,6 +323,31 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
     private fun store(p: Pos): Store = stores.getOrPut(p) {
         Store().also { s -> if(block(p) == F.CACHE) {
             val rng = Random(seed xor (p.x.toLong()*341873128712L) xor (p.z.toLong()*132897987541L) xor p.y.toLong())
+            val site = world.undergroundCacheAt(p)
+            if (site != null) {
+                // Same checkpointed container lifecycle as villages: opening/reloading never rerolls.
+                // Local raw metal respects the current 250-block equipment layer, never the next one.
+                s.items[M.id(site.stage, M.Form.RAW)] = 3 + rng.nextInt(5)
+                s.items[TORCH] = 4 + rng.nextInt(5)
+                s.items[F.TRAVEL_RATION] = 1 + rng.nextInt(3)
+                s.items[3110] = 3 + rng.nextInt(4)
+                val relic: Short = when(site.kind) {
+                    UndergroundSites.Kind.ABANDONED_MINE -> UndergroundSites.BEAM
+                    UndergroundSites.Kind.FUNGAL_MINE -> 2626
+                    UndergroundSites.Kind.EMBER_FOUNDRY -> UndergroundSites.BASALT_BRICKS
+                    UndergroundSites.Kind.ZOMBIE_TEMPLE -> UndergroundSites.TOMB_BRICKS
+                    UndergroundSites.Kind.GOBLIN_LABORATORY -> F.GEAR
+                    UndergroundSites.Kind.CRYSTAL_SANCTUM -> 2614
+                    UndergroundSites.Kind.DWARVEN_MINE -> F.GEAR
+                    UndergroundSites.Kind.OGRE_DEN -> F.TRAVEL_RATION
+                    UndergroundSites.Kind.MUMMY_TOMB -> BRICK_SANDY
+                    UndergroundSites.Kind.TROLL_GROVE -> 2621
+                    UndergroundSites.Kind.WRAITH_ARCHIVE -> 2622
+                    UndergroundSites.Kind.SLIME_CISTERN -> MOSSY_COBBLESTONE
+                }
+                s.items[relic] = (s.items[relic] ?: 0) + 2 + rng.nextInt(3)
+                return@also
+            }
             s.items[3110] = 4+rng.nextInt(8) // sticks
             s.items[3111] = 6+rng.nextInt(8) // fibres
             s.items[F.BREAD] = 2+rng.nextInt(3)

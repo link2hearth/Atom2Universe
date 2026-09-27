@@ -6,6 +6,14 @@ import kotlin.math.abs
 
 /** Original pixel textures, generated once with the existing atlas (no external assets). */
 internal object UndergroundTextures {
+    private val mushroomHues = linkedMapOf(
+        "amber" to 0xEBC47A, "green" to 0x80CAA0, "violet" to 0xBB91E8,
+        "cyan" to 0x85D9E4, "blue" to 0x9BAFEA, "ember" to 0xE99A65,
+        "rose" to 0xF2A5C6)
+    private val caveDetails = mapOf(
+        "cave_fern" to 0x5FAD88, "cave_crystal_cluster" to 0x85D9E4,
+        "cave_ice_needles" to 0xB8DEEE, "cave_calcite_spires" to 0xD7C7A8,
+        "columnar_basalt" to 0x50515B, "cave_travertine" to 0xDACAAD)
     private val colors = mapOf(
         "amber" to 0xEBC47A, "green" to 0x80CAA0, "violet" to 0xBB91E8,
         "cyan" to 0x85D9E4, "blue" to 0x9BAFEA, "ember" to 0xE99A65,
@@ -15,9 +23,149 @@ internal object UndergroundTextures {
         "crystal" to 0xA5C9D9)
 
     fun register() {
+        UndergroundRuinTextures.register()
         for (name in colors.keys) BlockRegistry.registerGeneratedTexture("underground:$name") { size ->
             texture(name, size)
         }
+        for ((index, entry) in mushroomHues.entries.withIndex()) {
+            val (name, hue) = entry
+            BlockRegistry.registerGeneratedTexture("underground:mushroom_$name") { size ->
+                mushroom(hue, index, size)
+            }
+            for (gills in listOf(false, true)) {
+                val part = if (gills) "gills" else "cap"
+                BlockRegistry.registerGeneratedTexture("underground:${part}_$name") { size ->
+                    mushroomBlock(hue, gills, size)
+                }
+            }
+        }
+        for ((name, hue) in caveDetails) BlockRegistry.registerGeneratedTexture("underground:$name") { size ->
+            caveDetail(name, hue, size)
+        }
+    }
+
+    private fun shaded(rgb: Int, shade: Int = 0): Int = Color.rgb(
+        (((rgb shr 16) and 255) + shade).coerceIn(0, 255),
+        (((rgb shr 8) and 255) + shade).coerceIn(0, 255),
+        ((rgb and 255) + shade).coerceIn(0, 255))
+
+    private fun bitmap(pixels: IntArray, size: Int): Bitmap {
+        val source = Bitmap.createBitmap(pixels, 32, 32, Bitmap.Config.ARGB_8888)
+        if (size == 32) return source
+        return Bitmap.createScaledBitmap(source, size, size, false).also { source.recycle() }
+    }
+
+    /** Seven silhouettes: squat caps, clusters, tall parasols, bells and branching fans.
+     * Every stem reaches the ground row; the transparent background has no luminous square.
+     */
+    private fun mushroom(hue: Int, variant: Int, size: Int): Bitmap {
+        val pixels = IntArray(32 * 32)
+        fun specimen(cx: Int, top: Int, radius: Int, capHeight: Int, stemWidth: Int, bell: Boolean) {
+            val bottom = top + capHeight
+            for (y in bottom..31) for (x in cx - stemWidth..cx + stemWidth) {
+                if (x in 0..31) pixels[y * 32 + x] = shaded(0xC3CECA,
+                    if (x == cx - stemWidth) -38 else if (x == cx + stemWidth) -15 else 12)
+            }
+            for (y in top..bottom) for (x in 0..31) {
+                val down = y - top
+                val width = if (bell) minOf(radius, 2 + down * radius / maxOf(1, capHeight))
+                    else minOf(radius, 3 + down * 3)
+                if (abs(x - cx) > width) continue
+                val grain = (x * 19 + y * 31 + variant * 13) % 13 - 6
+                val shade = when {
+                    y == bottom -> -46 + if ((x - cx) % 3 == 0) 26 else 0
+                    abs(x - cx) == width -> -28
+                    y <= top + 2 -> 34
+                    (x * 7 + y * 13 + variant * 11) % 29 < 4 -> 64
+                    else -> grain - maxOf(0, x - cx) * 2
+                }
+                pixels[y * 32 + x] = shaded(hue, shade)
+            }
+        }
+        when (variant) {
+            0 -> { specimen(17, 9, 12, 9, 2, false); specimen(6, 22, 5, 4, 1, false) }
+            1 -> { specimen(21, 13, 7, 8, 1, true); specimen(10, 8, 7, 9, 1, true); specimen(6, 23, 4, 4, 1, true) }
+            2 -> { specimen(16, 3, 13, 8, 1, false); specimen(26, 22, 4, 4, 1, false) }
+            3 -> { specimen(9, 13, 7, 8, 1, true); specimen(21, 6, 8, 12, 1, true) }
+            4 -> { specimen(16, 8, 10, 11, 2, true); specimen(5, 24, 4, 4, 1, true) }
+            5 -> { specimen(9, 20, 7, 5, 1, false); specimen(23, 17, 7, 5, 1, false); specimen(16, 8, 9, 6, 1, false) }
+            else -> { specimen(23, 18, 7, 6, 1, false); specimen(10, 14, 8, 6, 1, false); specimen(16, 4, 10, 6, 1, false) }
+        }
+        return bitmap(pixels, size)
+    }
+
+    private fun mushroomBlock(hue: Int, gills: Boolean, size: Int): Bitmap {
+        val pixels = IntArray(32 * 32)
+        for (y in 0..31) for (x in 0..31) {
+            val grain = (x * 19 + y * 37) % 13 - 6
+            val fleckX = Math.floorMod(x + (y / 8) * 3, 11)
+            val fleckY = Math.floorMod(y, 9)
+            val shade = if (gills) {
+                if (Math.floorMod(x + y / 4, 5) < 2) -48 else 14 + grain
+            } else {
+                if (fleckX in 2..4 && fleckY in 3..5) 45 + grain else -18 + grain
+            }
+            pixels[y * 32 + x] = shaded(hue, shade)
+        }
+        return bitmap(pixels, size)
+    }
+
+    private fun caveDetail(name: String, hue: Int, size: Int): Bitmap {
+        val pixels = IntArray(32 * 32)
+        if (name == "columnar_basalt" || name == "cave_travertine") {
+            for (y in 0..31) for (x in 0..31) {
+                val grain = (x * 37 + y * 19) % 13 - 6
+                val shade = if (name == "columnar_basalt") {
+                    val stripe = Math.floorMod(x + (y / 14), 11)
+                    when (stripe) { 0, 1 -> -27; 2 -> 18; else -> grain }
+                } else {
+                    val band = Math.floorMod(y + x / 9, 10)
+                    when (band) { 0, 1 -> -30; 2 -> 22; 6 -> -11; else -> grain }
+                }
+                pixels[y * 32 + x] = shaded(hue, shade)
+            }
+            return bitmap(pixels, size)
+        }
+        if (name == "cave_fern") {
+            fun dot(x: Int, y: Int, tint: Int) {
+                if (x in 0..31 && y in 0..31) pixels[y * 32 + x] = shaded(hue, tint)
+            }
+            // Curved fronds, with alternating paired leaflets rather than a solid triangle.
+            for (side in listOf(-1, 1)) for (frond in 0..2) {
+                val reach = 5 + frond * 4
+                val height = 23 - frond * 5
+                for (step in 0..height) {
+                    val y = 31 - step
+                    val x = 16 + side * (step * reach / height)
+                    dot(x, y, -18)
+                    if (step > 3 && step % 3 == 0) for (leaf in 1..3) {
+                        dot(x + side * leaf, y + leaf / 2, 12 + frond * 5)
+                        dot(x - side * leaf, y - 1, -5)
+                    }
+                }
+            }
+        } else {
+            fun spike(cx: Int, top: Int, width: Int, slant: Int) {
+                for (y in top..31) {
+                    val center = cx + slant * (31 - y) / maxOf(1, 31 - top)
+                    val radius = minOf(width, (y - top) / 3)
+                    for (x in center - radius..center + radius) if (x in 0..31) {
+                        val shade = if (name == "cave_calcite_spires") {
+                            if (y % 6 == 0) -21 else if (x < center) 18 else -15
+                        } else {
+                            if (x == center) 57 else if (x < center) 20 else -43
+                        }
+                        pixels[y * 32 + x] = shaded(hue, shade)
+                    }
+                }
+            }
+            when (name) {
+                "cave_crystal_cluster" -> { spike(8, 15, 4, -4); spike(23, 11, 4, 4); spike(16, 3, 5, 0) }
+                "cave_ice_needles" -> { spike(6, 18, 2, -2); spike(24, 8, 2, 3); spike(12, 2, 2, -1); spike(19, 12, 2, 1) }
+                else -> { spike(7, 19, 4, 0); spike(25, 14, 4, 0); spike(15, 5, 5, 0) }
+            }
+        }
+        return bitmap(pixels, size)
     }
 
     private fun texture(name: String, size: Int): Bitmap {

@@ -81,7 +81,8 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 return@removeAll true
             }
             val dx = e.x - px; val dz = e.z - pz
-            dx * dx + dz * dz > despawnDist2
+            val dy = if (explorationCombat) e.y - py else 0.0
+            dx * dx + dy * dy + dz * dz > despawnDist2
         }
 
         spawnManager.update(dt, px, py, pz)
@@ -343,7 +344,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         if (e.velY>0 && explorationCombat) {
             val height=com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale).toDouble()
             val ceilingY=floor(newY+height).toInt()
-            val r=e.def.radius.toDouble()*.8
+            val r=if(e.isSiteBoss) e.collisionRadius else e.def.radius.toDouble()*.8
             for(bx in floor(e.x-r).toInt()..floor(e.x+r).toInt())
                 for(bz in floor(e.z-r).toInt()..floor(e.z+r).toInt()) {
                     if(!isFreeForMob(bx,ceilingY,bz)) { newY=e.y;e.velY=0.0 }
@@ -362,7 +363,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         if (!attack.hits(px,py,pz,playerEyeDrop?.invoke() ?: 0.0) || playerInvTimer>0f) return
         if(attack.shape==AttackShape.LUNGE) {
             val forward=(px-e.x)*sin(attack.yaw)+(pz-e.z)*cos(attack.yaw)
-            if(attack.lungeHit || forward < -e.def.radius || forward > attack.range*.35) return
+            if(attack.lungeHit || forward < -e.collisionRadius || forward > attack.range*.35) return
         }
         val originY=if(attack.ranged) attack.y else attack.y+e.def.eyeHeight
         if(attack.shape!=AttackShape.BEAM && clearSight?.invoke(attack.x,originY,attack.z,px,py-.6,pz)!=true) return
@@ -411,7 +412,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     /** Distance XZ à laquelle le mob se tient du centre du joueur (corps hors caméra). */
     private fun keepDist(e: Enemy): Double =
-        (e.def.radius.toDouble() + PLAYER_STANDOFF).coerceAtLeast(e.def.attackRange)
+        (e.collisionRadius + PLAYER_STANDOFF).coerceAtLeast(e.def.attackRange)
 
     /** Donne une impulsion de recul à [e], à l'opposé du joueur (réduite pour les boss). */
     fun knockbackFromPlayer(e: Enemy, strength: Double = MOB_KNOCKBACK) {
@@ -441,7 +442,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             if (o === e || o.hp <= 0) continue
             val dx = e.x - o.x; val dz = e.z - o.z
             val d2 = dx * dx + dz * dz
-            val want = e.def.radius.toDouble() + o.def.radius.toDouble() + SEP_GAP
+            val want = e.collisionRadius + o.collisionRadius + SEP_GAP
             if (d2 in 1e-6..(want * want)) {
                 val d = sqrt(d2)
                 val push = (want - d) / want
@@ -457,6 +458,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     // ── Déplacement + collision ───────────────────────────────────────────────
 
     private fun move(e: Enemy, dx: Double, dz: Double, allowStep: Boolean = true) {
+        if (e.isSiteBoss) { moveSiteBoss(e,dx,dz,allowStep); return }
         val r = e.def.radius.toDouble()
         val footY = Math.floor(e.y + 0.002).toInt()
         val headY = footY + 1
@@ -500,16 +502,47 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         }
     }
 
+    /** Site guardians use their enlarged body, including overhangs above the usual two cells. */
+    private fun moveSiteBoss(e: Enemy, dx: Double, dz: Double, allowStep: Boolean) {
+        fun free(x: Double, y: Double, z: Double): Boolean {
+            val radius = e.collisionRadius
+            val height = com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale)
+            for (bx in floor(x-radius+.01).toInt()..floor(x+radius-.01).toInt())
+                for (bz in floor(z-radius+.01).toInt()..floor(z+radius-.01).toInt())
+                    for (by in floor(y+.01).toInt()..floor(y+height-.01).toInt()) {
+                        if (world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by,16),Math.floorDiv(bz,16))?.generated != true ||
+                            !isFreeForMob(bx,by,bz)) return false
+                    }
+            return true
+        }
+        if (dx != 0.0) {
+            if (free(e.x+dx,e.y,e.z)) e.x += dx
+            else if (e.onGround && allowStep && free(e.x+dx,e.y+1,e.z)) {
+                e.velY=STEP_UP_VEL; e.x+=dx
+            }
+        }
+        if (dz != 0.0) {
+            if (free(e.x,e.y,e.z+dz)) e.z += dz
+            else if (e.onGround && allowStep && free(e.x,e.y+1,e.z+dz)) {
+                e.velY=STEP_UP_VEL; e.z+=dz
+            }
+        }
+    }
+
     private fun isFreeForMob(bx: Int, by: Int, bz: Int): Boolean {
         val b = world.blockAt(bx, by, bz)
-        return b == AIR || isWater(b) || isDecoration(b)
+        return b == AIR || isWater(b) || isDecoration(b) || isMineRail(b)
     }
+
+    private fun isMineRail(b: Short) = b == UndergroundSites.RAIL || b == UndergroundSites.RAIL_CROSSWISE
 
     private fun solidGroundBelow(wx: Double, wz: Double, fromY: Double): Double? {
         val bx = Math.floor(wx).toInt(); val bz = Math.floor(wz).toInt()
         val startY = Math.floor(fromY).toInt()
         for (by in startY downTo startY - 24) {
             val b = world.blockAt(bx, by, bz)
+            // A rail is a sixteenth-block step, not a one-block wall through the mine.
+            if (isMineRail(b)) return by + .0625
             if (b != AIR && !isWater(b) && !isDecoration(b)) return (by + 1).toDouble()
         }
         return null

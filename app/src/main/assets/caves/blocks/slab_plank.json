@@ -1,9 +1,9 @@
 {
   "id": 2500,
   "name": "slab_plank",
-  "texture_top": "cozy:material:9:B69058",
-  "texture_side": "cozy:material:9:B69058",
-  "texture_bottom": "cozy:material:9:B69058",
+  "texture_top": "base_art:planks:0",
+  "texture_side": "base_art:planks:0",
+  "texture_bottom": "base_art:planks:0",
   "color": "#B69058",
   "hardness": 1.5,
   "drop": "slab_plank",

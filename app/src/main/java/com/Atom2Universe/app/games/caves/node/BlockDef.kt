@@ -8,6 +8,8 @@ const val KINETIC_ROD = 1
 const val KINETIC_PLATE = 2
 /** A machine: a full cube to walk into and point at, drawn whole by KineticRenderer. */
 const val KINETIC_MACHINE = 3
+const val FURNITURE_BOOKSHELF = 1
+const val FURNITURE_BARREL = 2
 const val ORIENT_FACING: Byte = 1  // tourne horizontalement (N/S/E/W), toujours droit
 const val ORIENT_AXIS: Byte   = 2  // s'aligne sur un axe (X/Y/Z), peut se coucher
 
@@ -48,17 +50,22 @@ internal data class BlockDef(
      * (see PartialBlockModel.shaftAxis): 0 = none, [KINETIC_ROD] (shaft, crank), [KINETIC_PLATE] (cogwheels)
      * or [KINETIC_MACHINE] (mill, press, crusher, loom). */
     val kineticShape: Int = 0,
+    /** Static furniture uses the same boxes for meshing, collision and picking. */
+    val furnitureShape: Int = 0,
+    /** Opposite the front on horizontally facing blocks; defaults to the ordinary side. */
+    val textureBack: String? = null,
     // indices assignés par BlockRegistry.buildTextureAtlas()
     var layerTop: Int = -1,
     var layerSide: Int = -1,
     var layerBottom: Int = -1,
     var layerFront: Int = -1,
+    var layerBack: Int = -1,
     var layerSideGrass: Int = -1,
     var layerSideSand: Int = -1,
     var layerSideSnow: Int = -1,
 ) {
     /** Not a full cube: collision, picking and meshing go through PartialBlockModel. */
-    val partial: Boolean get() = stairs || slab || blockHeight < 1f || kinetic
+    val partial: Boolean get() = stairs || slab || blockHeight < 1f || kinetic || furnitureShape != 0
     val kinetic: Boolean get() = kineticShape != 0
 
     companion object {
@@ -77,6 +84,7 @@ internal data class BlockDef(
                 textureSide     = j.getString("texture_side"),
                 textureBottom   = j.getString("texture_bottom"),
                 textureFront     = j.optString("texture_front", "").ifEmpty { null },
+                textureBack      = j.optString("texture_back", "").ifEmpty { null },
                 textureSideGrass = j.optString("texture_side_grass", "").ifEmpty { null },
                 textureSideSand  = j.optString("texture_side_sand", "").ifEmpty { null },
                 textureSideSnow  = j.optString("texture_side_snow", "").ifEmpty { null },
@@ -104,6 +112,7 @@ internal data class BlockDef(
                 stairs          = j.optBoolean("stairs", false),
                 slab            = j.optBoolean("slab", false),
                 kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; "machine" -> KINETIC_MACHINE; else -> 0 },
+                furnitureShape  = when (j.optString("furniture", "")) { "bookshelf" -> FURNITURE_BOOKSHELF; "barrel" -> FURNITURE_BARREL; else -> 0 },
             )
         }
     }

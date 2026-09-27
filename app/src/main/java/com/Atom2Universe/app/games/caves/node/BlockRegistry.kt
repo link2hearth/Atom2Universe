@@ -29,12 +29,14 @@ internal object BlockRegistry {
     private val layerBottomTable    = IntArray(65536)
     private val layerSideTable      = IntArray(65536)
     private val layerFrontTable     = IntArray(65536)
+    private val layerBackTable      = IntArray(65536)
     private val layerSideGrassTable = IntArray(65536)
     private val layerSideSandTable  = IntArray(65536)
     private val layerSideSnowTable  = IntArray(65536)
 
     // Table d'orientation
     private val orientModeTable = ByteArray(65536)
+    private val rotateCapTable = BooleanArray(65536)
 
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
@@ -44,9 +46,18 @@ internal object BlockRegistry {
         private set
     private var knotLayers = IntArray(0)
     private var oreVariants = arrayOfNulls<IntArray>(0)
+    private var surfaceVariants = arrayOfNulls<IntArray>(0)
     val torchLayers = IntArray(4)
 
     fun knotLayer(layer: Int): Int = knotLayers.getOrNull(layer) ?: layer
+
+    /** Appearance only: use world coordinates, with no new IDs or saved metadata. */
+    fun surfaceLayer(base: Int, x: Int, y: Int, z: Int, face: Int): Int {
+        val variants = surfaceVariants.getOrNull(base) ?: return base
+        var hash = x * 73428767 xor (y * 912931) xor (z * 4382893) xor (face * 19349663)
+        hash = (hash xor (hash ushr 13)) * 1274126177
+        return variants[(hash xor (hash ushr 16)) and 3]
+    }
 
     /** Stable across reloads and chunk boundaries; called only while building a visible face. */
     fun oreLayer(base: Int, x: Int, y: Int, z: Int, face: Int): Int {
@@ -74,6 +85,7 @@ internal object BlockRegistry {
         ExpeditionItems.registerTextures()
         MineralArt.register()
         UndergroundTextures.register()
+        CaveFurnitureTextures.register()
         StreetMaterials.register()
         val files = assets.list("caves/blocks") ?: return
         for (file in files) {
@@ -90,6 +102,7 @@ internal object BlockRegistry {
             if (def.falling)     fallingTable[idx]     = true
             if (def.waterlogged) waterloggedTable[idx] = true
             orientModeTable[idx] = def.orientMode
+            rotateCapTable[idx] = def.orientMode == ORIENT_FACING && def.textureBack != null
         }
         for (def in FarmShowcasePlants.definitions(requireNotNull(defs[7020.toShort()]))) {
             require(def.id !in defs) { "Duplicate farm showcase block ${def.id}" }
@@ -155,11 +168,8 @@ internal object BlockRegistry {
             val idx = bitmaps.size
             textureIndexMap[name] = idx
             textureOrder += name
-            bitmaps += when {
-                generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
-                name.startsWith("cozy:") -> MeadowTextures.texture(name, tileSize, vivid = vivid)
-                name.startsWith("Items/") -> assets.open("caves/items/${name.removePrefix("Items/")}").use { BitmapFactory.decodeStream(it) }
-                else -> error("Unknown Cave World block texture: $name")
+            bitmaps += TexturePack.load(assets, name, tileSize, vivid) {
+                textureFallback(assets, name, tileSize, vivid)
             }
             return idx
         }
@@ -169,6 +179,7 @@ internal object BlockRegistry {
             def.layerSide   = register(def.textureSide)
             def.layerBottom = register(def.textureBottom)
             def.layerFront     = def.textureFront?.let { register(it) } ?: def.layerSide
+            def.layerBack      = def.textureBack?.let { register(it) } ?: def.layerSide
             def.layerSideGrass = def.textureSideGrass?.let { register(it) } ?: def.layerSide
             def.layerSideSand  = def.textureSideSand?.let  { register(it) } ?: def.layerSide
             def.layerSideSnow  = def.textureSideSnow?.let  { register(it) } ?: def.layerSide
@@ -178,6 +189,7 @@ internal object BlockRegistry {
             layerBottomTable[idx]    = def.layerBottom
             layerSideTable[idx]      = def.layerSide
             layerFrontTable[idx]     = def.layerFront
+            layerBackTable[idx]      = if (def.textureBack != null) def.layerBack else -1
             layerSideGrassTable[idx] = def.layerSideGrass
             layerSideSandTable[idx]  = def.layerSideSand
             layerSideSnowTable[idx]  = def.layerSideSnow
@@ -194,6 +206,16 @@ internal object BlockRegistry {
             topBitmapById[def.id] = src.copy(src.config ?: Bitmap.Config.ARGB_8888, false)
         }
 
+        // Register all approved surface variants before taking the final layer-table sizes.
+        val surfacesByBase = HashMap<Int, IntArray>()
+        for (name in textureOrder.toList()) if (BaseBlockTextures.variantCount(name) == 4) {
+            val base = textureIndexMap.getValue(name)
+            val family = name.substringBeforeLast(':')
+            surfacesByBase[base] = IntArray(4) { register("$family:$it") }
+        }
+        surfaceVariants = arrayOfNulls(bitmaps.size)
+        for ((base, variants) in surfacesByBase) surfaceVariants[base] = variants
+
         // Four paintings per ore, shared by all blocks of a material/visual tier. No item IDs
         // or saved metadata for variants, and no texture generation during meshing/rendering.
         val variantsByBase = HashMap<Int, IntArray>()
@@ -207,24 +229,44 @@ internal object BlockRegistry {
 
         // Climate now travels with mesh vertices; only rare bark variants need extra layers.
         val baseCount = bitmaps.size
-        climateMasks = IntArray(baseCount) { MeadowTextures.climateMask(textureOrder[it]) }
+        climateMasks = IntArray(baseCount) {
+            when {
+                textureOrder[it].startsWith("base_art:grass_top:") -> 1
+                textureOrder[it].startsWith("base_art:grass_side:") -> 3 + textureOrder[it].last().digitToInt()
+                else -> MeadowTextures.climateMask(textureOrder[it])
+            }
+        }
         knotLayers = IntArray(baseCount) { it }
         for (layer in 0 until baseCount) {
             val name = textureOrder[layer]
             if (MeadowTextures.hasKnotVariant(name)) {
-                knotLayers[layer] = bitmaps.size
-                textureOrder += "$name:knot"
-                bitmaps += MeadowTextures.texture("$name:knot", tileSize, vivid = vivid)
+                knotLayers[layer] = register("$name:knot")
             }
         }
         // Small opaque procedural materials for the volumetric torch; keep its inventory icon.
+        for (material in torchLayers.indices) torchLayers[material] = register("torch_model_$material")
+        return bitmaps
+    }
+
+    /** Kept independently of the PNG pack for missing files and exact, reproducible exports. */
+    internal fun textureFallback(assets: AssetManager, name: String, tileSize: Int, vivid: Boolean): Bitmap = when {
+        name in MeadowTextures.itemTextureNames -> MeadowTextures.texture(name, tileSize, vivid = vivid)
+        generatedProviders.containsKey(name) -> generatedProviders[name]!!(tileSize)
+        BaseBlockTextures.supports(name) -> BaseBlockTextures.texture(name, tileSize, vivid)
+        name.startsWith("cozy:") -> MeadowTextures.texture(name, tileSize, vivid = vivid)
+        name.startsWith("cave_art:") -> SelectedTextureDefaults.texture(name, tileSize)
+        name.startsWith("torch_model_") -> torchModelTexture(name.removePrefix("torch_model_").toInt(), tileSize)
+        name.startsWith("Items/") -> assets.open("caves/items/${name.removePrefix("Items/")}").use {
+            requireNotNull(BitmapFactory.decodeStream(it)) { "Invalid item texture: $name" }
+        }
+        else -> error("Unknown Cave World block texture: $name")
+    }
+
+    private fun torchModelTexture(material: Int, tileSize: Int): Bitmap {
         val colors = intArrayOf(0xFF89502B.toInt(), 0xFF49434A.toInt(),
             0xFFFF941F.toInt(), 0xFFFFDF79.toInt())
-        for (material in colors.indices) {
-            torchLayers[material] = bitmaps.size
-            textureOrder += "torch_model_$material"
-            val pixels = IntArray(tileSize * tileSize) { index ->
-                val color = colors[material]
+        val color = colors[material]
+        val pixels = IntArray(tileSize * tileSize) { index ->
                 val px = index % tileSize; val py = index / tileSize
                 val shade = when (material) {
                     0 -> if ((px / 3 + py / 11) % 3 == 0) .78f else 1f
@@ -235,10 +277,8 @@ internal object BlockRegistry {
                     ((((color shr 16) and 255) * shade).toInt().coerceAtMost(255) shl 16) or
                     ((((color shr 8) and 255) * shade).toInt().coerceAtMost(255) shl 8) or
                     (((color and 255) * shade).toInt().coerceAtMost(255))
-            }
-            bitmaps += Bitmap.createBitmap(pixels, tileSize, tileSize, Bitmap.Config.ARGB_8888)
         }
-        return bitmaps
+        return Bitmap.createBitmap(pixels, tileSize, tileSize, Bitmap.Config.ARGB_8888)
     }
 
     fun layerCount() = textureOrder.size
@@ -266,6 +306,7 @@ internal object BlockRegistry {
             ORIENT_FACING -> {
                 val frontFace = when (meta.toInt()) { 0 -> 5; 1 -> 4; 2 -> 2; else -> 3 }
                 if (face == frontFace) return layerFrontTable[idx]
+                if (face == (frontFace xor 1) && layerBackTable[idx] >= 0) return layerBackTable[idx]
             }
         }
         if (face == 1) return layerBottomTable[idx]
@@ -277,6 +318,12 @@ internal object BlockRegistry {
     }
 
     fun isOrientable(id: Short): Boolean = orientModeTable[id.toInt() and 0xFFFF] != ORIENT_NONE
+    /** Rotate a chest's lid and underside with its hinges. Other blocks keep their existing UVs. */
+    fun capQuarterTurns(id: Short, face: Int, meta: Byte): Int {
+        if (face > 1 || !rotateCapTable[id.toInt() and 0xffff]) return 0
+        val turn = when (meta.toInt() and 3) { 1 -> 2; 2 -> 1; 3 -> 3; else -> 0 }
+        return if (face == 1) (4 - turn) and 3 else turn
+    }
     fun getOrientMode(id: Short): Byte   = orientModeTable[id.toInt() and 0xFFFF]
 
     fun getLayerForDecoration(id: Short): Int = layerTopTable[id.toInt() and 0xFFFF]
@@ -300,7 +347,7 @@ internal object BlockRegistry {
 
     fun creativeList(): List<Short> =
         defs.values
-            .filter { !it.water && FarmShowcasePlants.sample(it.id) == null }
+            .filter { !it.water && "retired" !in it.tags && FarmShowcasePlants.sample(it.id) == null }
             .sortedBy { it.id }
             .map { it.id }
 

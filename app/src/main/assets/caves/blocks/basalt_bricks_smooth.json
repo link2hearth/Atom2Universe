@@ -1,0 +1,17 @@
+{
+  "id": 2678,
+  "name": "basalt_bricks_smooth",
+  "texture_top": "cave_art:a_basalt_bricks",
+  "texture_side": "cave_art:a_basalt_bricks",
+  "texture_bottom": "cave_art:a_basalt_bricks",
+  "color": "#4A4548",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "basalt_bricks_smooth",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

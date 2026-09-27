@@ -98,7 +98,8 @@ internal class CaveRenderer(
         val playerWeapons: List<String> = listOf("WHITE_SQUARE"),
         val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
         val recoverableAmmo: List<StuckAmmo> = emptyList(),
-        val passiveAnimals: String = "[]"
+        val passiveAnimals: String = "[]",
+        val defeatedSiteBosses: Set<String> = emptySet()
     )
 
     val camera = Camera(8.0, 8.0, 8.0)
@@ -499,7 +500,20 @@ internal class CaveRenderer(
     internal val eventBus           = EventBus()
     internal val playerNode         = PlayerNode()
     internal val lootNode           = LootNode(eventBus)
-    internal val enemyManager      = EnemyManager(world, worldSeed)
+    internal val enemyManager      = EnemyManager(world, worldSeed).apply {
+        spawnManager.restoreDefeatedSiteBosses(savedState?.defeatedSiteBosses.orEmpty())
+        spawnManager.siteBossDefeated = {
+            farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_guardian_defeated))
+            checkpointCallback?.invoke()
+        }
+        spawnManager.siteEntered = { site ->
+            val resource = context.resources.getIdentifier(
+                "cave_site_${site.kind.name.lowercase(java.util.Locale.ROOT)}", "string", context.packageName)
+            if (resource != 0) farmMessageCallback?.invoke(context.getString(
+                com.Atom2Universe.app.R.string.cave_site_depth_discovery,
+                context.getString(resource), site.depthBand + 1L, site.level))
+        }
+    }
     private val enemyRenderer      = EnemyRenderer()
     private val combatEffects = CombatEffectsRenderer()
     internal val passiveAnimals = com.Atom2Universe.app.games.caves.entity.PassiveAnimals(world, worldSeed).apply { restore(savedState?.passiveAnimals ?: "[]") }
@@ -637,7 +651,16 @@ internal class CaveRenderer(
             vec4 col = texture(u_tex, vec3(v_uv, v_layer));
             if (col.a < 0.5) discard;
             float mask = v_tint.w > 0.5 ? 1.0 : 0.0;
-            if (v_tint.w > 1.5) {
+            if (v_tint.w > 2.5) {
+                // Approved fringe A, independent of color filtering at distant mip levels.
+                // Masks 3..6 encode its four contours; the original soil stays untinted.
+                vec2 pixel = clamp(floor(fract(v_uv) * 32.0), vec2(0.0), vec2(31.0));
+                int variant = int(floor(v_tint.w + 0.5)) - 3;
+                int segment = (int(pixel.x) / 4 + variant * 3) % 8;
+                float depth = segment == 1 || segment == 6 ? 7.0
+                    : segment == 2 || segment == 5 ? 5.0 : segment == 3 ? 8.0 : 6.0;
+                mask = pixel.y <= depth ? 1.0 : 0.0;
+            } else if (v_tint.w > 1.5) {
                 // Same integer fringe as MeadowTextures.capDepth; soil is never recolored.
                 // fract : une face fusionnée répète la texture, le liseré se mesure dans chaque bloc.
                 vec2 pixel = clamp(floor(fract(v_uv) * 32.0), vec2(0.0), vec2(31.0));

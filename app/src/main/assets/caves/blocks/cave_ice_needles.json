@@ -1,0 +1,17 @@
+{
+  "id": 2632,
+  "name": "cave_ice_needles",
+  "texture_top": "underground:cave_ice_needles",
+  "texture_side": "underground:cave_ice_needles",
+  "texture_bottom": "underground:cave_ice_needles",
+  "color": "#B8DEEE",
+  "hardness": 0.5,
+  "light_emission": 0,
+  "drop": "cave_ice_needles",
+  "creative_tab": "stone",
+  "placement_rule": "solid",
+  "replaceable": false,
+  "tags": [],
+  "decoration": true,
+  "sprite_height": 0.85
+}

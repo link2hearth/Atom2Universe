@@ -214,6 +214,7 @@ class Chunk(val cx: Int, val cy: Int, val cz: Int) {
     @Volatile var version = 0
     @Volatile var waterVersion = 0
     var structureHints: MutableList<StructureHint>? = null
+    internal var undergroundSite: UndergroundSites.Site? = null
 
     val worldX get() = cx * CHUNK_SIZE
     val worldY get() = cy * CHUNK_SIZE

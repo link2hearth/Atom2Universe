@@ -3,7 +3,7 @@
   "name": "farmland",
   "texture_top": "farm_soil:top",
   "texture_side": "farm_soil:side",
-  "texture_bottom": "cozy:material:2",
+  "texture_bottom": "base_art:dirt:0",
   "color": "#533925",
   "hardness": 0.8,
   "block_height": 0.9375,

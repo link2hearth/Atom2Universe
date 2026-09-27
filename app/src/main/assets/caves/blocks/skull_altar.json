@@ -1,0 +1,17 @@
+{
+  "id": 2676,
+  "name": "skull_altar",
+  "texture_top": "cave_art:a_altar_top",
+  "texture_side": "cave_art:a_altar_side",
+  "texture_bottom": "cave_art:a_altar_top",
+  "color": "#88968C",
+  "hardness": 1.5,
+  "light_emission": 2,
+  "drop": "skull_altar",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

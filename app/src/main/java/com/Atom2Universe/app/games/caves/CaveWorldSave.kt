@@ -50,6 +50,7 @@ internal data class CaveWorldSave(
     var forgedEquipment: String = "{}",
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
     var passiveAnimals: String = "[]",
+    var defeatedSiteBosses: Set<String> = emptySet(),
     val terrainVersion: Int = 8
 ) {
     fun formattedLastPlayed(): String {
@@ -121,6 +122,8 @@ internal object CaveWorldSaveManager {
         existing.forgedEquipment     = snap.forgedEquipment
         existing.recoverableAmmo = snap.recoverableAmmo
         existing.passiveAnimals = snap.passiveAnimals
+        // Victories are monotonic: a delayed snapshot must never resurrect a defeated guardian.
+        existing.defeatedSiteBosses = existing.defeatedSiteBosses + snap.defeatedSiteBosses
         persist(context, existing)
         return true
     }
@@ -142,6 +145,9 @@ internal object CaveWorldSaveManager {
             put("seed", save.seed)
             put("terrainVersion", save.terrainVersion)
             put("passiveAnimals", save.passiveAnimals)
+            put("defeatedSiteBosses", JSONArray().also { bosses ->
+                save.defeatedSiteBosses.sorted().forEach { bosses.put(it) }
+            })
             put("createdAt", save.createdAt)
             put("lastPlayedAt", save.lastPlayedAt)
             put("playerX", save.playerX)
@@ -282,6 +288,11 @@ internal object CaveWorldSaveManager {
             seed = j.getLong("seed"),
             terrainVersion = 8,
             passiveAnimals = j.optString("passiveAnimals", "[]"),
+            defeatedSiteBosses = j.optJSONArray("defeatedSiteBosses")?.let { bosses ->
+                (0 until bosses.length()).mapNotNull { index ->
+                    bosses.optString(index).takeIf { it.isNotBlank() }
+                }.toSet()
+            } ?: emptySet(),
             createdAt = j.getLong("createdAt"),
             lastPlayedAt = j.getLong("lastPlayedAt"),
             playerX = j.getDouble("playerX"),

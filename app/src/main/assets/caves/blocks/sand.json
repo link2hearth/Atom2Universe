@@ -1,9 +1,9 @@
 {
   "id": 4000,
   "name": "sand",
-  "texture_top": "cozy:material:5:DDC99F",
-  "texture_side": "cozy:material:5:DDC99F",
-  "texture_bottom": "cozy:material:5:DDC99F",
+  "texture_top": "base_art:sand:0",
+  "texture_side": "base_art:sand:0",
+  "texture_bottom": "base_art:sand:0",
   "color": "#DDC99F",
   "hardness": 0.5,
   "falling": true,

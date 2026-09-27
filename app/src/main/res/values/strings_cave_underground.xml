@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_cave_mushroom_amber">Amber cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_amber">Giant amber mushroom cap</string>
+    <string name="cave_block_cave_mushroom_green">Green cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_green">Giant green mushroom cap</string>
+    <string name="cave_block_cave_mushroom_violet">Violet cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_violet">Giant violet mushroom cap</string>
+    <string name="cave_block_cave_mushroom_cyan">Cyan cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_cyan">Giant cyan mushroom cap</string>
+    <string name="cave_block_cave_mushroom_blue">Blue cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_blue">Giant blue mushroom cap</string>
+    <string name="cave_block_cave_mushroom_ember">Ember cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_ember">Giant ember mushroom cap</string>
+    <string name="cave_block_cave_mushroom_rose">Rose cave mushroom</string>
+    <string name="cave_block_giant_cave_cap_rose">Giant rose mushroom cap</string>
+    <string name="cave_block_cave_fern">Cave fern</string>
+    <string name="cave_block_cave_crystal_cluster">Luminous crystal cluster</string>
+    <string name="cave_block_cave_ice_needles">Ice needles</string>
+    <string name="cave_block_cave_calcite_spires">Calcite spires</string>
+    <string name="cave_block_columnar_basalt">Columnar basalt</string>
+    <string name="cave_block_cave_travertine">Cave travertine</string>
+</resources>

@@ -17,6 +17,10 @@ internal class Enemy(
 ) {
     var level: Int = 1
     var isBoss: Boolean = false
+    /** Stable authored habitat; boss victories are persisted separately from transient actors. */
+    var undergroundSiteId: String? = null
+    val isSiteBoss get() = isBoss && undergroundSiteId != null
+    val collisionRadius get() = def.radius.toDouble() * if (isSiteBoss) BOSS_SPRITE_SCALE else 1f
     var animTime: Float = 0f
     var exhibitPose: ExhibitPose? = null
     var resting = false

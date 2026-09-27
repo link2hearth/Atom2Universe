@@ -46,7 +46,7 @@ internal class EnemyAttack(
 
     companion object {
         fun forEnemy(e: Enemy, distance: Double): EnemyAttack {
-            val reach = max(e.def.radius + EnemyManager.PLAYER_STANDOFF, e.def.attackRange) + EnemyManager.ATTACK_REACH
+            val reach = max(e.collisionRadius + EnemyManager.PLAYER_STANDOFF, e.def.attackRange) + EnemyManager.ATTACK_REACH
             return when {
                 e.def.id == "skeleton" && distance > 4 -> EnemyAttack(AttackShape.ARROW, .95f, .55f, 16.0)
                 e.def.id == "spider" && distance > 5 -> EnemyAttack(AttackShape.VENOM, .95f, .65f, 10.0)

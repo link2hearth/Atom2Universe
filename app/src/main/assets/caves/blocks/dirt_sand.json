@@ -1,9 +1,9 @@
 {
   "id": 104,
   "name": "dirt_sand",
-  "texture_top": "cozy:material:5",
+  "texture_top": "base_art:sand:0",
   "texture_side": "cozy:cap:2:94765C:5",
-  "texture_bottom": "cozy:material:2",
+  "texture_bottom": "base_art:dirt:0",
   "color": "#DDC799",
   "hardness": 1.5,
   "drop": "dirt",

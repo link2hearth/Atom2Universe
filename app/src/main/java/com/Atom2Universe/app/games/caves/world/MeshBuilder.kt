@@ -41,11 +41,11 @@ internal object MeshBuilder {
             val definition = if (BlockRegistry.isPartial(block)) BlockRegistry.get(block) else null
             // Turning parts: KineticRenderer draws them, the chunk mesh keeps nothing.
             if (definition?.kinetic == true) continue
-            if (definition != null && (definition.stairs || definition.slab || definition.blockHeight < 1f)) {
+            if (definition != null && definition.partial) {
                 val sky = skyOf(chunk, world, lx, ly, lz, cache)
                 val mask = StairConnections.maskAt(chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz,
                     { bx, by, bz -> world.blockAt(bx, by, bz, cache) }, world::metaAt)
-                for (face in PartialBlockModel.faces(meta, definition.slab, definition.blockHeight, mask)) {
+                for (face in PartialBlockModel.faces(definition, meta, mask)) {
                     // Low soil keeps its recessed top, but buried bottoms and shared sides
                     // need no vertices. Do not apply full-face occlusion to stairs or slabs.
                     if (definition.blockHeight < 1f && face.direction != 0) {
@@ -53,14 +53,23 @@ internal object MeshBuilder {
                         val neighbor = world.neighborBlock(chunk, lx+offset[0], ly+offset[1], lz+offset[2], cache)
                         val other = BlockRegistry.get(neighbor)
                         if (neighbor != AIR && other != null && !other.decoration && !other.transparent &&
-                            !other.water && !other.stairs && !other.slab && !other.kinetic &&
+                            !other.water && !other.stairs && !other.slab && !other.kinetic && other.furnitureShape == 0 &&
                             other.blockHeight >= (if (face.direction == 1) 1f else definition.blockHeight)) continue
                     }
-                    val packed = face.direction * 4096f + BlockRegistry.getLayerForFace(block, face.direction, AIR)
+                    val baseLayer = when (face.texture) {
+                        0 -> definition.layerTop
+                        1 -> definition.layerBottom
+                        2 -> definition.layerSide
+                        3 -> definition.layerFront
+                        else -> BlockRegistry.getLayerForFace(block, face.direction, AIR, meta)
+                    }
+                    val layer = BlockRegistry.surfaceLayer(baseLayer, chunk.worldX + lx,
+                        chunk.worldY + ly, chunk.worldZ + lz, face.direction)
+                    val packed = face.direction * 4096f + layer
                     for (i in faceTriangles) {
                         val v = face.vertices[i]
-                        val u = when (face.direction) { 2, 3 -> v[2]; else -> v[0] }
-                        val vv = if (face.direction < 2) v[2] else 1f - v[1]
+                        val u = face.uv?.get(i)?.get(0) ?: when (face.direction) { 2, 3 -> v[2]; else -> v[0] }
+                        val vv = face.uv?.get(i)?.get(1) ?: if (face.direction < 2) v[2] else 1f - v[1]
                         buf.add7(x+v[0], y+v[1], z+v[2], u, vv, packed, sky)
                     }
                 }
@@ -141,7 +150,8 @@ internal object MeshBuilder {
     private fun collectCube(g: GreedyScratch, chunk: Chunk, world: World, cache: World.ChunkLookupCache,
                             blend: ClimateBlend, face: Int, lx: Int, ly: Int, lz: Int, block: Short,
                             above: Short, meta: Byte, knotFace: Int, sky: Float) {
-        val baseLayer = BlockRegistry.getLayerForFace(block, face, above, meta)
+        val baseLayer = BlockRegistry.surfaceLayer(BlockRegistry.getLayerForFace(block, face, above, meta),
+            chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz, face)
         val layer = if (face == knotFace) BlockRegistry.knotLayer(baseLayer)
             else BlockRegistry.oreLayer(baseLayer,chunk.worldX+lx,chunk.worldY+ly,chunk.worldZ+lz,face)
         val marker = if (com.Atom2Universe.app.games.caves.node.MineralItems.isOre(block)) 8 + face
@@ -160,9 +170,10 @@ internal object MeshBuilder {
             if (c > 0 && (light[c] != light[0] || tint[c * 4] != tint[0] ||
                     tint[c * 4 + 1] != tint[1] || tint[c * 4 + 2] != tint[2])) uniform = false
         }
-        if (!uniform) {
+        val capRotation = BlockRegistry.capQuarterTurns(block, face, meta)
+        if (!uniform || capRotation != 0) {
             emitFace(g, face, lx.toFloat(), ly.toFloat(), lz.toFloat(), lx + 1f, ly + 1f, lz + 1f,
-                packed.toFloat(), sky)
+                packed.toFloat(), sky, capRotation)
             return
         }
         val cell = face * 4096 + lx + ly * 16 + lz * 256
@@ -217,11 +228,17 @@ internal object MeshBuilder {
      * qu'elle a sur un bloc seul, répétée sur toute la taille du rectangle.
      */
     private fun emitFace(g: GreedyScratch, face: Int, x0: Float, y0: Float, z0: Float,
-                         x1: Float, y1: Float, z1: Float, packed: Float, sky: Float) {
+                         x1: Float, y1: Float, z1: Float, packed: Float, sky: Float, capRotation: Int = 0) {
         val wx = x1 - x0; val hy = y1 - y0; val wz = z1 - z0
         val c = g.corner
         fun corner(i: Int, x: Float, y: Float, z: Float, u: Float, v: Float) {
             c[i * 5] = x; c[i * 5 + 1] = y; c[i * 5 + 2] = z; c[i * 5 + 3] = u; c[i * 5 + 4] = v
+            // Rotated caps are emitted as individual unit faces, so UVs stay in [0, 1].
+            when (capRotation) {
+                1 -> { c[i * 5 + 3] = v; c[i * 5 + 4] = 1f - u }
+                2 -> { c[i * 5 + 3] = 1f - u; c[i * 5 + 4] = 1f - v }
+                3 -> { c[i * 5 + 3] = 1f - v; c[i * 5 + 4] = u }
+            }
         }
         when (face) {
             0 -> { corner(0, x0, y1, z0, 0f, 0f); corner(1, x1, y1, z0, wx, 0f)

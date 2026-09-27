@@ -11,12 +11,30 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     internal fun frontierHomes(x: Double,z: Double) = if (source == null) settlements.homes(x,z) else emptyList()
     internal fun generatedWindmill(p: FrontierWorkshops.Pos) = source == null && settlements.windmill(p)
     private val settlements by lazy { RegionalSettlements(seed, natural) }
+    private val undergroundSites by lazy { UndergroundSites(seed, natural) }
     private val natural by lazy { NaturalTerrain(seed) }
     val surfaceChunkMax get() = NaturalTerrain.SURFACE_MAX_CY
     private val landscape by lazy { CozyLandscape(seed, ::nearSurfaceCave, natural, settlements::reserves) }
 
     internal fun naturalSurfaceBiomeAt(x: Double, y: Double, z: Double): String? =
         if (source == null && y >= natural.height(x, z) - 12) natural.biomeIdAt(x, z) else null
+
+    /** Ecology reads loaded metadata only; the render thread never generates a site. */
+    internal fun undergroundSiteAt(x: Int, y: Int, z: Int): UndergroundSites.Site? {
+        if (source != null) return null
+        val c = getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16)) ?: return null
+        return if(c.generated) c.undergroundSite?.takeIf { it.contains(x,y,z) } else null
+    }
+    internal fun nearbyUndergroundSites(x: Double, y: Double, z: Double): List<UndergroundSites.Site> {
+        if(source != null) return emptyList()
+        return chunks.values.asSequence().filter { it.generated }.mapNotNull { it.undergroundSite }
+            .distinctBy { it.id }.filter {
+                abs(it.entrance.y-y)<20 && (it.bossPoint.x-x).pow(2)+(it.bossPoint.z-z).pow(2)<96.0*96.0
+            }.toList()
+    }
+    internal fun undergroundCacheAt(p: FrontierWorkshops.Pos): UndergroundSites.Site? =
+        getChunk(Math.floorDiv(p.x,16),Math.floorDiv(p.y,16),Math.floorDiv(p.z,16))
+            ?.takeIf { it.generated }?.undergroundSite?.takeIf { UndergroundSites.Point(p.x,p.y,p.z) in it.cachePositions }
 
     /** Visual climate only: does not alter generation, block IDs, or saved chunks. */
     internal fun vegetationClimateAt(wx: Int, wz: Int): Int {
@@ -480,6 +498,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         val src = source
         if (src != null) src.fill(chunk) else {
             natural.generate(chunk, landscape)
+            undergroundSites.decorate(chunk)
             settlements.decorate(chunk)
         }
         storage?.applyDiff(chunk)

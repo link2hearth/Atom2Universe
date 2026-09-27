@@ -4,7 +4,9 @@ package com.Atom2Universe.app.games.caves.world
 internal object PartialBlockModel {
     data class Box(val x: Float, val y: Float, val z: Float,
                    val width: Float = .5f, val height: Float = .5f, val depth: Float = .5f)
-    data class Face(val direction: Int, val vertices: Array<FloatArray>)
+    /** texture: -1 = usual face lookup, 0 = top, 1 = bottom, 2 = side, 3 = front. */
+    data class Face(val direction: Int, val vertices: Array<FloatArray>,
+                    val texture: Int = -1, val uv: Array<FloatArray>? = null)
     data class Hit(val distance: Double, val nx: Int, val ny: Int, val nz: Int)
     private val normals = arrayOf(intArrayOf(0,1,0), intArrayOf(0,-1,0),
         intArrayOf(1,0,0), intArrayOf(-1,0,0), intArrayOf(0,0,1), intArrayOf(0,0,-1))
@@ -109,13 +111,15 @@ internal object PartialBlockModel {
     private val plateSurfaces = Array(3) { surfaces(plateBoxes[it][0]) }
 
     /** The shape of any partial block, turning parts included. */
-    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> = when (def.kineticShape) {
+    fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> =
+        if (def.furnitureShape != 0) CaveFurnitureModel.boxes(def.furnitureShape, meta) else when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftBoxes[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateBoxes[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeBox
         else -> boxes(meta, def.slab, def.blockHeight, mask)
     }
-    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> = when (def.kineticShape) {
+    fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> =
+        if (def.furnitureShape != 0) CaveFurnitureModel.faces(def.furnitureShape, meta) else when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftSurfaces[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateSurfaces[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeSurfaces

@@ -3,6 +3,8 @@ package com.Atom2Universe.app.games.caves.mode
 import com.Atom2Universe.app.games.caves.CaveRenderer
 import com.Atom2Universe.app.games.caves.node.GameEvent
 import com.Atom2Universe.app.games.caves.world.WARD_STONE
+import com.Atom2Universe.app.games.caves.node.MineralItems as M
+import com.Atom2Universe.app.games.caves.world.MineralProgression as P
 
 /**
  * Le mode historique de Cave World : monde infini, monstres, XP, compétences et butin.
@@ -73,6 +75,12 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
             }
             r.inventory[resource] = ((r.inventory[resource] ?: 0).toLong() + 1 + event.level.coerceAtMost(3))
                 .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            if (event.isBoss) {
+                val stage = (event.level - 1).coerceIn(0, P.LAST_STAGE)
+                val metal = M.id(stage, M.Form.RAW)
+                r.inventory[metal] = ((r.inventory[metal] ?: 0).toLong() + 8)
+                    .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            }
             r.inventoryCallback?.invoke(r.inventory.toMap())
         }
     }

@@ -1,9 +1,9 @@
 {
   "id": 2000,
   "name": "stone",
-  "texture_top": "cozy:material:3:A0ABB4",
-  "texture_side": "cozy:material:3:A0ABB4",
-  "texture_bottom": "cozy:material:3:A0ABB4",
+  "texture_top": "base_art:stone:0",
+  "texture_side": "base_art:stone:0",
+  "texture_bottom": "base_art:stone:0",
   "color": "#A0ABB4",
   "hardness": 3.0,
   "texture_side_sand": "cozy:cap:3:A0ABB4:5",
