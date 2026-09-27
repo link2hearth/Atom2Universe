@@ -95,6 +95,7 @@ internal data class HeldState(
     val attack: Float = -1f,        // coup de mêlée lancé, -1 au repos
     val charge: Float = 0f,         // armé du coup de mêlée (bouton tenu)
     val guard: Float = 0f,          // parade levée
+    val impact: Float = 0f,         // rebond du poignet sur une cible réellement touchée
     val bobX: Float = 0f, val bobY: Float = 0f,
 )
 
@@ -108,6 +109,7 @@ internal object HeldItemPoses {
     /** Instant du coup d'outil où le fer arrive en bas : c'est là que l'ennemi est touché. */
     const val USE_IMPACT = .50f
     fun attackDuration(kind: HeldKind) = when (kind) { HeldKind.HAMMER -> .60f; HeldKind.SPEAR -> .42f; else -> .40f }
+    fun attackImpact(kind: HeldKind) = if(kind==HeldKind.HAMMER) .44f else .34f
 
     fun rest(kind: HeldKind) = when (kind) {
         HeldKind.SWORD -> HeldPose(wristPitch = -24f, wristYaw = 24f, wristRoll = 12f)
@@ -168,7 +170,7 @@ internal object HeldItemPoses {
         val start = rest(kind).lerp(windup(kind), fromCharge)
         val wind = windup(kind); val end = strikeEnd(kind)
         val lead = if (kind == HeldKind.HAMMER) .22f else .12f
-        val hit = if (kind == HeldKind.HAMMER) .44f else .34f
+        val hit = attackImpact(kind)
         return when {
             p < lead -> start.lerp(wind, easeOut(p / lead))
             p < hit -> wind.lerp(end, easeIn((p - lead) / (hit - lead)))
@@ -190,7 +192,8 @@ internal object HeldItemPoses {
         }
         if (s.guard > 0f) pose = pose.lerp(guardPose(kind), smooth(s.guard))
         val out = 1f - smooth(s.equip)
-        return pose + HeldPose(x = s.bobX + .06f * out, y = s.bobY - .40f * out, wristPitch = -25f * out)
+        return pose + HeldPose(x = s.bobX + .06f * out, y = s.bobY - .40f * out,
+            z = s.impact*.075f, wristPitch = -25f*out+s.impact*9f, wristRoll = -s.impact*6f)
     }
 
     /** Matrice du bras (repère vue) : l'origine est l'épaule, la main est à (HAND_X, HAND_Y, HAND_Z). */

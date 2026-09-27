@@ -51,6 +51,8 @@
     <string name="cave_equipment_summary">Armure : %1$s\nRéduction des dégâts : %2$d%%\nBouclier : %3$s\n\nLes objets portés sont séparés du sac et sauvegardés avec le monde.</string>
     <string name="cave_parried">Parade !</string>
     <string name="cave_melee_hint">Maintenir pour charger · secondaire : garde</string>
+    <string name="cave_melee_charging">Charge %1$d%% · relâcher pour frapper</string>
+    <string name="cave_melee_charged">Coup chargé prêt · relâcher pour déstabiliser</string>
     <string name="cave_guard_hint">Garde</string>
     <string name="cave_melee_info">Dégâts %1$d · portée %2$.1f blocs\nRécupération %3$.2f s · cibles %4$d\nTouche Action pour frapper ; maintiens puis relâche pour charger. Secondaire : garde. Les coups puissants interrompent les ennemis.</string>
 </resources>

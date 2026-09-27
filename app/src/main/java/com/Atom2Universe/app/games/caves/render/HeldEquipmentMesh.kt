@@ -315,6 +315,10 @@ internal class HeldEquipmentMesh {
         val len=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.0001f)
         val nx=dx/len;val ny=dy/len;val nz=dz/len
         when(kind) {
+            ProjectileKind.VENOM -> {
+                rod(x-nx*.12f,y-ny*.12f,z-nz*.12f,x,y,z,.11f,0xA4ED42,.06f)
+                rod(x-nx*.32f,y-ny*.32f,z-nz*.32f,x-nx*.1f,y-ny*.1f,z-nz*.1f,.018f,0x639F39,.065f)
+            }
             ProjectileKind.ROCK -> stone(x,y,z,.048f)
             ProjectileKind.ARROW,ProjectileKind.BOLT -> {
                 val length=if(kind==ProjectileKind.ARROW) .57f else .34f

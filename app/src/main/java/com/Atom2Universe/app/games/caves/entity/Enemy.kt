@@ -42,6 +42,10 @@ internal class Enemy(
     /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
     var strikeTime = 0f
     var attackWindup = 0f
+    var attack: EnemyAttack? = null
+    var attackRecovery = 0f
+    var hopRest = 0f
+    var landingSquash = 0f
     var windupYaw = 0f
     var staggerTimer = 0f
     var exploration = false

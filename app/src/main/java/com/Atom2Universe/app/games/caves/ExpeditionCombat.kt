@@ -3,6 +3,8 @@ package com.Atom2Universe.app.games.caves
 import android.content.Context
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.caves.entity.Enemy
+import com.Atom2Universe.app.games.caves.render.HeldKind
+import com.Atom2Universe.app.games.caves.render.HeldItemPoses
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
 import com.Atom2Universe.app.games.caves.node.ForgedEquipment as G
 import com.Atom2Universe.app.games.caves.node.GameEvent
@@ -90,8 +92,10 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
     private fun attack(profile: E.Melee, id: Short, strength: Float) {
         val speed=1f+bonus(G.Bonus.ATTACK)/100f
         recovery=profile.recovery*(1f+strength*.45f)/speed
-        pending=profile;pendingId=id;heavy=strength;impactIn=(if(profile.type=="hammer") .22f else .09f)/speed
-        r.meleeVisual(strength)
+        val kind=HeldKind.forWeaponType(profile.type) ?: HeldKind.SWORD
+        pending=profile;pendingId=id;heavy=strength
+        impactIn=HeldItemPoses.attackDuration(kind)*HeldItemPoses.attackImpact(kind)/speed
+        r.meleeVisual(strength,speed)
     }
     fun hold(dt: Float) { charge=if(recovery==0f && pending==null && guard==0f) (charge+dt).coerceAtMost(.9f) else .001f }
     fun raiseGuard() {
@@ -114,6 +118,7 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
     /** Coup d'outil (pioche, hache, houe…) : une seule cible, dégâts modestes, petit recul. */
     fun toolStrike(damage: Int) {
         val e=targetsInArc(TOOL_REACH,TOOL_ARC,1).firstOrNull() ?: return
+        r.meleeContact(e,false)
         if(e.def.behavior=="passive") { r.damageAnimal(e,damage);return }
         r.enemyManager.damageEnemy(e,damage)
         r.enemyManager.knockbackFromPlayer(e,2.0)
@@ -124,10 +129,11 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
             val critical=kotlin.random.Random.nextInt(100)<bonus(G.Bonus.CRIT)
             val multiplier=if(critical) 2f+bonus(G.Bonus.CRIT_DAMAGE)/100f else 1f
             val damage=(p.damage*(1f+strength*.85f)*multiplier).roundToInt()
+            r.meleeContact(e,strength>.65f || p.type=="hammer" || critical)
             if(e.def.behavior=="passive") { r.damageAnimal(e,damage);continue }
             r.enemyManager.damageEnemy(e,damage)
             if(critical) message(R.string.cave_gear_critical)
-            r.enemyManager.knockbackFromPlayer(e,if(p.type=="hammer") 7.0 else 2.5+strength*3.5)
+            r.enemyManager.knockbackFromPlayer(e,if(p.type=="hammer") 7.0+strength*2.0 else 4.0+strength*4.0)
             if(strength>.65f || p.type=="hammer") { e.staggerTimer=if(e.isBoss) .15f else .48f;e.attackWindup=0f }
         }
     }

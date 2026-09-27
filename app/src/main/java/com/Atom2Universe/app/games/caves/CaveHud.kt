@@ -225,6 +225,9 @@ internal class CaveHud(private val activity: CaveActivity) {
     // ── Flash rouge de dégât ────────────────────────────────────────────────────
 
     private var damageFlash: View? = null
+    private var combatFeedback: CombatFeedbackView? = null
+    fun meleeHit(heavy: Boolean) { combatFeedback?.hit(heavy) }
+    fun combatCharge(percent: Int) { combatFeedback?.charge(percent) }
 
     /** Vignette radiale rouge plein écran, transparente au centre, animée en alpha. */
     fun buildDamageFlash(root: FrameLayout) {
@@ -244,6 +247,9 @@ internal class CaveHud(private val activity: CaveActivity) {
         }
         root.addView(v)
         damageFlash = v
+        combatFeedback=CombatFeedbackView(activity).also {
+            root.addView(it,FrameLayout.LayoutParams((72*dp).toInt(),(72*dp).toInt(),Gravity.CENTER))
+        }
     }
 
     /** Déclenche un flash : pleine intensité puis fondu vers 0. */

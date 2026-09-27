@@ -49,5 +49,5 @@ internal class MagazineState(private val capacity: Int, private val duration: Fl
 }
 
 internal enum class ProjectileKind(val gravity: Double) {
-    LEGACY(0.0), ROCK(12.0), ARROW(4.5), BOLT(1.8), BULLET(0.0), PELLET(0.0)
+    LEGACY(0.0), ROCK(12.0), ARROW(4.5), BOLT(1.8), BULLET(0.0), PELLET(0.0), VENOM(1.2)
 }

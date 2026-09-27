@@ -474,6 +474,8 @@ class CaveActivity : ThemedActivity() {
             vBtnRun?.visibility = if (walkingUi && !crouching) View.VISIBLE else View.GONE
         } }
         renderer.playerHitCallback = { uiHandler.post { hud.flashDamage() } }
+        renderer.meleeHitCallback = { heavy -> uiHandler.post { hud.meleeHit(heavy) } }
+        renderer.combatChargeCallback = { percent -> uiHandler.post { hud.combatCharge(percent) } }
 
         invOverlay = layoutInflater.inflate(R.layout.overlay_cave_inventory, root, false)
         root.addView(invOverlay)

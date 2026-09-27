@@ -8,6 +8,7 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.entity.ImpactParticle
+import com.Atom2Universe.app.games.caves.render.CombatEffectsRenderer
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.ORIENT_AXIS
 import com.Atom2Universe.app.games.caves.node.ORIENT_FACING
@@ -383,16 +384,33 @@ internal class CaveRenderer(
         }
         return true
     }
-    internal fun fireExplorationArrow(e: com.Atom2Universe.app.games.caves.entity.Enemy,tx: Double,ty: Double,tz: Double) {
+    internal fun fireExplorationProjectile(e: com.Atom2Universe.app.games.caves.entity.Enemy,tx: Double,ty: Double,tz: Double) {
         val sx=e.x;val sy=e.y+e.def.eyeHeight;val sz=e.z
+        val venom=e.attack?.shape==com.Atom2Universe.app.games.caves.entity.AttackShape.VENOM
+        val kind=if(venom) ProjectileKind.VENOM else ProjectileKind.ARROW
+        val speed=if(venom) 9f else 19f
         val distance=hypot(tx-sx,tz-sz)
-        val dx=tx-sx;val dy=ty-sy+ProjectileKind.ARROW.gravity*.5*(distance/19.0).pow(2);val dz=tz-sz
+        val dx=tx-sx;val dy=ty-sy+kind.gravity*.5*(distance/speed).pow(2);val dz=tz-sz
         val len=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.01)
-        projectiles.add(Projectile(sx,sy,sz,dx/len,dy/len,dz/len,19f,e.scaledDamage+1,ammoWeaponDef,
-            fromEnemy=true,kind=ProjectileKind.ARROW,maxRange=24f))
+        projectiles.add(Projectile(sx,sy,sz,dx/len,dy/len,dz/len,speed,e.scaledDamage+1,ammoWeaponDef,
+            fromEnemy=true,kind=kind,maxRange=if(venom) 14f else 24f))
     }
     /** Coup de mêlée lancé : l'animation part de l'armé atteint (0 = simple tape). */
-    internal fun meleeVisual(strength: Float) { heldAttack=0f; heldAttackCharge=maxOf(strength,heldChargeShown).coerceIn(0f,1f) }
+    internal fun meleeVisual(strength: Float, speed: Float) {
+        heldAttack=0f;heldAttackSpeed=speed
+        heldAttackCharge=maxOf(strength,heldChargeShown).coerceIn(0f,1f)
+    }
+    internal fun meleeContact(e: com.Atom2Universe.app.games.caves.entity.Enemy, heavy: Boolean) {
+        val dx=camera.playerX-e.x;val dz=camera.playerZ-e.z
+        val distance=hypot(dx,dz).coerceAtLeast(.001)
+        val x=e.x+dx/distance*e.def.radius;val z=e.z+dz/distance*e.def.radius
+        val y=camera.eyeY.coerceIn(e.y+.2,e.y+e.def.eyeHeight)
+        spawnImpact(x,y,z)
+        combatEffects.impact(x,y,z,heavy)
+        heldImpact=if(heavy) .22f else .14f
+        meleeHitCallback?.invoke(heavy)
+        eventBus.publish(GameEvent.MeleeContact(heavy,e.def.id=="golem" || e.def.id=="dwarf"))
+    }
     private fun magazine(id: Short, profile: RangedProfile): MagazineState = magazines.getOrPut(id) {
         MagazineState(profile.magazine,profile.reload).also { m ->
             if(mode.allowsWorldEdits) runCatching { org.json.JSONObject(frontierLife.magazines).optJSONObject(id.toString())?.let { m.restore(it) } }
@@ -483,6 +501,7 @@ internal class CaveRenderer(
     internal val lootNode           = LootNode(eventBus)
     internal val enemyManager      = EnemyManager(world, worldSeed)
     private val enemyRenderer      = EnemyRenderer()
+    private val combatEffects = CombatEffectsRenderer()
     internal val passiveAnimals = com.Atom2Universe.app.games.caves.entity.PassiveAnimals(world, worldSeed).apply { restore(savedState?.passiveAnimals ?: "[]") }
     private val projRenderer       = ProjectileRenderer()
 
@@ -552,6 +571,10 @@ internal class CaveRenderer(
     var sprintCallback:       ((Boolean) -> Unit)?                = null
     var crouchCallback:       ((Boolean) -> Unit)?                = null
     var playerHitCallback:    (() -> Unit)?                       = null
+    var meleeHitCallback: ((Boolean) -> Unit)? = null
+    var combatChargeCallback: ((Int) -> Unit)? = null
+    private var lastCombatCharge = -1
+    private var heldImpact = 0f
     /** L'inventaire et les barres ont été remplacés d'un bloc (kit d'armes) : l'UI doit tout relire. */
     var loadoutChangedCallback: (() -> Unit)?                     = null
     private var weaponAttackCooldown = 0f
@@ -936,6 +959,7 @@ internal class CaveRenderer(
         LootTableRegistry.load(context.assets)
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets)
+        combatEffects.onSurfaceCreated()
         decorRenderer?.onSurfaceCreated()
         ambientRenderer.onSurfaceCreated()
         kineticRenderer.onSurfaceCreated()
@@ -1172,6 +1196,8 @@ internal class CaveRenderer(
             updateProjectiles(dt)
             publishWeaponStatus()
             updateImpactParticles(dt)
+            combatEffects.update(dt)
+            heldImpact=(heldImpact-dt).coerceAtLeast(0f)
         }
 
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
@@ -1756,6 +1782,7 @@ internal class CaveRenderer(
         // ── Rendu projectiles + particules d'impact ───────────────────────────
         projRenderer.render(projectiles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
         projRenderer.renderParticles(impactParticles, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
+        combatEffects.render(enemyManager.enemies,camera)
 
         drawFishingLine()
 
@@ -2439,6 +2466,7 @@ internal class CaveRenderer(
 
     private fun spawnImpact(x: Double, y: Double, z: Double) {
         val rng = Random.Default
+        if(impactParticles.size>248) return
         repeat(8) {
             val angle = rng.nextDouble() * 2.0 * PI
             val spd = rng.nextFloat() * 2.5f + 0.8f
@@ -3664,6 +3692,9 @@ internal class CaveRenderer(
         val type=selectedEquipmentType()
         val profile=RangedProfile.all[type]
         val id=hotbar[selectedSlot]
+        val meleeCharge=if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null)
+            (expeditionCombat.charge/.9f*20).toInt().coerceIn(0,20)*5 else 0
+        if(meleeCharge!=lastCombatCharge) { lastCombatCharge=meleeCharge;combatChargeCallback?.invoke(meleeCharge) }
         val action = when {
             !mode.allowsCombat -> SecondaryAction.NONE
             mode.allowsWorldEdits && id == E.ROD -> SecondaryAction.CANCEL_FISHING
@@ -3680,6 +3711,8 @@ internal class CaveRenderer(
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
         val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
             else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_hint)
+            else if(meleeCharge>=100) context.getString(com.Atom2Universe.app.R.string.cave_melee_charged)
+            else if(meleeCharge>0) context.getString(com.Atom2Universe.app.R.string.cave_melee_charging,meleeCharge)
             else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
             else if(mode.allowsWorldEdits && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
             else if(heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_ranged_charge, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100),reserve)
@@ -3723,6 +3756,7 @@ internal class CaveRenderer(
     private var heldUse = -1f
     private var heldAttack = -1f
     private var heldAttackCharge = 0f
+    private var heldAttackSpeed = 1f
     private var heldChargeShown = 0f
     private var heldGuard = 0f
     private var heldWalk = 0f
@@ -3780,7 +3814,7 @@ internal class CaveRenderer(
             if (heldUse >= 1f) heldUse = if (looping) heldUse - 1f else -1f
         }
         if (heldAttack >= 0f) {
-            heldAttack += dt / HeldItemPoses.attackDuration(kind)
+            heldAttack += dt * heldAttackSpeed / HeldItemPoses.attackDuration(kind)
             if (heldAttack >= 1f) heldAttack = -1f
         }
         val charge = if (mode.allowsWorldEdits && kind.melee) (expeditionCombat.charge / .9f).coerceIn(0f, 1f) else 0f
@@ -3806,6 +3840,7 @@ internal class CaveRenderer(
         val breath = sin(elapsed * 1.7f) * .004f
         return HeldState(equip = heldEquip, use = heldUse, attack = heldAttack, charge = heldChargeShown,
             guard = heldGuard,
+            impact = heldImpact/.22f,
             bobX = sin(walkPhase) * .014f * heldWalk,
             bobY = -abs(cos(walkPhase)) * .016f * heldWalk + breath)
     }
@@ -5018,6 +5053,7 @@ internal class CaveRenderer(
         waterShader?.destroy()
         lodShader?.destroy()
         enemyRenderer.destroy()
+        combatEffects.destroy()
         decorRenderer?.destroy()
         ambientRenderer.destroy()
         kineticRenderer.destroy()

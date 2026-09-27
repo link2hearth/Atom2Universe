@@ -19,6 +19,7 @@ internal sealed class GameEvent {
     data class PlayerHit(val damage: Int, val dirX: Float = 0f, val dirZ: Float = 0f) : GameEvent()
 
     data class MobHit(val isBoss: Boolean) : GameEvent()
+    data class MeleeContact(val heavy: Boolean, val armored: Boolean) : GameEvent()
 
     data class MobNearby(val isBoss: Boolean) : GameEvent()
 

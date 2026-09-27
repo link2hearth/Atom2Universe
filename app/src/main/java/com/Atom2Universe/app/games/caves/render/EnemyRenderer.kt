@@ -383,7 +383,7 @@ internal class EnemyRenderer {
 
     private fun heldWeaponVertices(e: Enemy): FloatArray? {
         if(e.exploration && e.def.model=="skeleton") {
-            val stage=if(e.attackWindup>0f) 1+((1f-e.attackWindup/.8f)*8).toInt().coerceIn(0,8) else 0
+            val stage=if(e.attackWindup>0f) 1+((1f-e.attackWindup/(e.attack?.windup ?: .95f))*8).toInt().coerceIn(0,8) else 0
             val frames=heldFrames.getOrPut("exploration_bow") { arrayOfNulls(10) }
             frames[stage]?.let { return it }
             heldMesh.clear()
@@ -421,6 +421,9 @@ internal class EnemyRenderer {
     private var pHeavyArms = false; private var pResting = false; private var pMoving = false
     private var pGait = 0f; private var pLocomotion = 0f; private var pWalk = 0f
     private var pStrike = 0f; private var pBreath = 0f; private var pFlinch = 0f
+    private var pCharge = 0f
+    private var pSpider = false
+    private var pCaster = false
     private var pArcher = false
     private var pGrazingDrop = 0f; private var pSxz = 1f; private var pSyY = 1f
     private var pAnimTime = 0f; private var pId = 0; private var pRecoil = 0f; private var pFlash = 0f
@@ -463,7 +466,9 @@ internal class EnemyRenderer {
         pPassive = e.def.behavior == "passive"
         pSoldier = e.def.model == "soldier"
         pArcher = e.exploration && e.def.model=="skeleton"
-        pHeavyArms = e.def.model == "ogre" || e.def.model == "golem"
+        pHeavyArms = e.def.model == "ogre" || e.def.model == "golem" || e.def.model == "troll"
+        pSpider = e.def.model == "spider"
+        pCaster = e.attack?.shape == com.Atom2Universe.app.games.caves.entity.AttackShape.BEAM
         pResting = e.resting
         pAnimTime = e.animTime
         pId = e.id
@@ -473,6 +478,8 @@ internal class EnemyRenderer {
         pLocomotion = if (pPassive || pSoldier || e.def.behavior=="settler") { if (pMoving) 1f else 0f } else e.motionBlend
         pWalk = if (pReference) 0f else sin(pGait) * pLocomotion
         pStrike = if (pReference || pPassive || pSoldier) 0f else (e.strikeTime / .55f).coerceIn(0f, 1f)
+        pCharge = if (!pReference && e.attackWindup > 0f)
+            (1f-e.attackWindup/(e.attack?.windup ?: 1f)).coerceIn(0f,1f) else 0f
         pBreath = if (pReference || pPassive) 0f else sin(e.animTime * 1.8f + e.id * .73f) * model.breath
         pFlinch = if (pReference || pPassive) 0f else e.hitFlash.coerceIn(0f, .25f) * 2f
         // Descente du cou pendant le broutage, commune à toute la tête (yeux,
@@ -483,14 +490,26 @@ internal class EnemyRenderer {
         pSxz = 1f; pSyY = 1f
         if (model.squash && !pReference) {
             val q = sin(if (pLocomotion > .1f) pGait else e.animTime * 2f)
-            pSyY = 1f + 0.14f * q - .18f * pStrike; pSxz = 1f / sqrt(pSyY)
+            pSyY = if (e.exploration && e.exhibitPose == null) {
+                // Compress before takeoff/after landing, stretch while airborne. The jump itself
+                // is simulated in EnemyManager, so eyes, body and hit volume travel together.
+                1f - .32f*pCharge - .28f*(e.landingSquash/.2f).coerceIn(0f,1f) +
+                    if (!e.onGround) (abs(e.velY).toFloat()*.055f).coerceAtMost(.28f) else .035f*q
+            } else 1f + .14f*q - .18f*pStrike
+            pSxz = 1f / sqrt(pSyY)
         }
         if (model.floats && !pReference) pEy += 0.15f * sin(e.animTime * FLOAT_FREQ)
+        if (pSpider) pEy -= pCharge*.12f
 
         levelTint(if (pPassive) 2 else e.level, e.isBoss, pTint)
         // La progression reste lisible sur le label ; elle ne masque plus les matériaux pastel.
         if (!pPassive) for (i in 0..2) pTint[i] = 1f + (pTint[i] - 1f) * .3f
-        pFlash = e.hitFlash.coerceIn(0f, 1f) * 0.7f
+        if(pCharge>0f) {
+            pTint[0] += pCharge*.24f
+            pTint[1] += pCharge*.10f
+            if(pCaster) pTint[2] += pCharge*.35f
+        }
+        pFlash = (e.hitFlash * 2.8f).coerceIn(0f, .7f)
     }
 
     private fun emitSlime(part: MobPart, offset: Int): Int {
@@ -523,15 +542,16 @@ internal class EnemyRenderer {
             Limb.LEG -> baseRad + part.side * pWalk * model.stride
             Limb.ARM ->
                 if (pSoldier) baseRad
-                else if(pArcher) baseRad - if(part.side>0) 1.3f else .7f
-                else baseRad - pStrike * (if (pHeavyArms) 1.15f else if (part.side > 0) 1f else .65f) -
+                else if(pArcher) baseRad - (if(part.side>0) 1.3f else .7f+pCharge*.7f-pStrike*.35f)
+                else if(pCaster) baseRad - pCharge*1.45f - pStrike*.8f
+                else baseRad - pCharge*(if(pHeavyArms) 2.65f else 1.8f) - pStrike * (if (pHeavyArms) .7f else if (part.side > 0) 1f else .65f) -
                     part.side * pWalk * model.stride * .65f
             Limb.HEAD -> if (pResting) .65f + .12f * sin(pAnimTime * 2f) else .04f * sin(pAnimTime * 2f)
             Limb.TAIL -> .18f * sin(pAnimTime * 2.5f)
-            Limb.WING -> if (pMoving) .22f * sin(pAnimTime * 12f) else .04f * sin(pAnimTime * 2f)
-            Limb.LOOK -> .04f * sin(pAnimTime * 1.8f + pId * .73f) - pStrike * .10f
+            Limb.WING -> (if (pMoving) .22f * sin(pAnimTime * 12f) else .04f * sin(pAnimTime * 2f)) + pCharge*.45f
+            Limb.LOOK -> .04f * sin(pAnimTime * 1.8f + pId * .73f) + pCharge*.18f - pStrike*.25f
             Limb.CLOTH -> baseRad + .10f * sin(pAnimTime * 2.3f + part.side) + pWalk * .12f
-            Limb.CRAWL -> part.side * pWalk * .22f
+            Limb.CRAWL -> part.side * (pWalk*.22f+pCharge*.48f-pStrike*.4f)
             Limb.NONE, Limb.WEAPON, Limb.MUZZLE_FLASH -> baseRad
         }
     }
@@ -568,7 +588,7 @@ internal class EnemyRenderer {
         }
         if (!pPassive && !pReference && part.limb != Limb.LEG && part.limb != Limb.CRAWL) {
             ry += pBreath
-            rz += (pStrike * .6f - pFlinch * .45f) * (ly / model.heightVox).coerceIn(0f, 1f)
+            rz += (pStrike * 2.3f - pCharge*1.8f - pFlinch * 2.5f) * (ly / model.heightVox).coerceIn(0f, 1f)
         }
         if(part.limb==Limb.ROTOR) {
             val rx=lx-part.pivotX

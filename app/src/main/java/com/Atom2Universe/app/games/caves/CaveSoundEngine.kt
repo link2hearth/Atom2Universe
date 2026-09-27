@@ -111,6 +111,8 @@ internal class CaveSoundEngine(private val context: Context) {
                 is GameEvent.MobNearby -> Unit // Detection is silent; no unrelated creaking cue.
                 // The shot carries the hit feedback; no extra "tac" on contact.
                 is GameEvent.MobHit -> Unit
+                is GameEvent.MeleeContact -> play(if(event.armored) "impact_metal" else "impact_wood",
+                    if(event.heavy) .75f else .45f,4,"melee",65)
                 is GameEvent.PlayerHit -> play("hurt", .7f, 5, cooldown = 200)
                 is GameEvent.MobDied -> Unit // Sonivox ding handled by the activity.
                 is GameEvent.BossSpawned -> play("boss", .72f, 4)

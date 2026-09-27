@@ -51,6 +51,8 @@
     <string name="cave_equipment_summary">Armor: %1$s\nDamage reduction: %2$d%%\nBuckler: %3$s\n\nWorn items are stored separately from the bag and saved with the world.</string>
     <string name="cave_parried">Parry!</string>
     <string name="cave_melee_hint">Hold to charge · secondary: guard</string>
+    <string name="cave_melee_charging">Charging %1$d%% · release to strike</string>
+    <string name="cave_melee_charged">Charged strike ready · release to stagger</string>
     <string name="cave_guard_hint">Guard</string>
     <string name="cave_melee_info">Damage %1$d · reach %2$.1f blocks\nRecovery %3$.2f s · targets %4$d\nTap Action for a quick hit; hold and release to charge. Secondary guards. Heavy hits interrupt enemies.</string>
 </resources>
