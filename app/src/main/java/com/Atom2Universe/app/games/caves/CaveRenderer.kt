@@ -186,6 +186,7 @@ internal class CaveRenderer(
     private var wUChunkOffset = 0; private var wUAmbient = 0; private var wUCaveFloor = 0
     private var wULightColors = 0; private var wULights = 0; private var wULightCount = 0; private var wUTime = 0
     private var wUUnderwater = 0
+    private var wUCameraFraction = 0
     private var lAPos = 0; private var lAColor = 0; private var lUMvp = 0; private var lUAlpha = 0
     private var sAPos = 0; private var sABrightness = 0; private var sUMvp = 0
     private var wWAPos = 0; private var wWAUv = 0; private var wWASky = 0; private var wWUMvp = 0
@@ -597,13 +598,14 @@ internal class CaveRenderer(
 
     private val VERT_WORLD = """
         #version 300 es
-        in vec3 a_pos;
+        in vec4 a_pos;
         in vec3 a_uv;
         in float a_skyLight;
         in vec4 a_tint;
         in float a_blockLight;
         uniform mat4 u_mvp;
         uniform vec3 u_chunk_offset;
+        uniform vec3 u_cameraFraction;
         // Terrain tassé : positions et UV arrivent en entiers (voir PackedMesh) ; 1 pour le reste.
         uniform float u_posScale;
         uniform float u_uvScale;
@@ -615,7 +617,18 @@ internal class CaveRenderer(
         out vec4 v_tint;
         out float v_blockLight;
         void main() {
-            vec3 worldPos = a_pos * u_posScale + u_chunk_offset;
+            vec3 worldPos = (a_pos.xyz * u_posScale + u_chunk_offset) - u_cameraFraction;
+            if (u_posScale < 0.5) {
+                // Recouvrement de 1/1024 de bloc dans le plan des faces pleines : les jonctions
+                // en T du maillage fusionné ne laissent plus filtrer le ciel par arrondi raster.
+                // Aucun déplacement selon la normale, aucun sommet ou triangle supplémentaire.
+                int edges = int(a_pos.w);
+                ivec3 code = ivec3(edges & 3, (edges >> 2) & 3, (edges >> 4) & 3);
+                vec3 direction = vec3(code.x == 1 ? -1.0 : code.x == 2 ? 1.0 : 0.0,
+                                      code.y == 1 ? -1.0 : code.y == 2 ? 1.0 : 0.0,
+                                      code.z == 1 ? -1.0 : code.z == 2 ? 1.0 : 0.0);
+                worldPos += direction * (1.0 / 1024.0);
+            }
             gl_Position = u_mvp * vec4(worldPos, 1.0);
             v_uv      = a_uv.xy * u_uvScale;
             v_layer   = mod(a_uv.z, 4096.0);
@@ -919,6 +932,7 @@ internal class CaveRenderer(
             wUMvp         = it.uniform("u_mvp")
             wUTex         = it.uniform("u_tex")
             wUChunkOffset = it.uniform("u_chunk_offset")
+            wUCameraFraction = it.uniform("u_cameraFraction")
             wUAmbient     = it.uniform("u_ambient")
             wUCaveFloor   = it.uniform("u_caveFloor")
             wULightColors = it.uniform("u_lightColors[0]")
@@ -1554,9 +1568,15 @@ internal class CaveRenderer(
                 natureShelter = when { roof > camera.playerY + 8 -> 0f; roof > camera.playerY -> .12f; else -> 1f }
                 val outside = natureShelter * (1f-caveBlend) * if (isHeadInWater()) 0f else 1f
                 val rain = if (weatherEnabled) ambientWeather.precipitation else 0f
+                // Un toit ou une canopée arrête les gouttes, pas le bruit de la pluie alentour.
+                // Seule la profondeur sous le terrain naturel étouffe progressivement ce bruit.
+                val underground = ((world.surfaceTopY(x, z) - camera.playerY - 2.0) / 16.0)
+                    .toFloat().coerceIn(0f, 1f)
+                val rainExposure = (if (roof > camera.playerY) .55f else 1f) *
+                    (1f-underground) * if (isHeadInWater()) 0f else 1f
                 val crickets = if (wildlifeEnabled && natureClimate != 1 && natureClimate != 4 && ambientFor(dayT) < .45f)
                     outside * (1f-rain) else 0f
-                eventBus.publish(GameEvent.NatureAmbience(rain * (1f-ambientWeather.snow) * outside, crickets))
+                eventBus.publish(GameEvent.NatureAmbience(rain * (1f-ambientWeather.snow) * rainExposure, crickets))
             }
             ambientWeather.update(gameTimeMs, dt, natureClimate, weatherEnabled)
             if (wildlifeEnabled) ambientWildlife.update(dt, camera,
@@ -1682,6 +1702,11 @@ internal class CaveRenderer(
         GLES30.glUniform1i(wULightCount, 0)
         GLES30.glUniform1f(wUPosScale, 1f / PackedMesh.POS_SCALE)
         GLES30.glUniform1f(wUUvScale, 1f / PackedMesh.UV_SCALE)
+        // Additionner d'abord des coordonnées entières, puis soustraire la même fraction
+        // de caméra pour tous les chunks : leurs sommets communs ont les mêmes arrondis.
+        val originX = floor(camera.x); val originY = floor(camera.y); val originZ = floor(camera.z)
+        GLES30.glUniform3f(wUCameraFraction, (camera.x - originX).toFloat(),
+            (camera.y - originY).toFloat(), (camera.z - originZ).toFloat())
         for ((key, mesh) in meshes) {
             val kcx = world.keyToCx(key); val kcy = world.keyToCy(key); val kcz = world.keyToCz(key)
             if (!withinSimulationRange(kcx, kcz)) continue
@@ -1691,15 +1716,16 @@ internal class CaveRenderer(
             // les chunks déjà prêts sans LOD laissait des trous. Autour du joueur, toujours le détail.
             // Sous la surface de la colonne (grottes), le détail s'affiche toujours.
             if (columnHandsToLod(kcx, kcz) && kcy >= (columnSpan(kcx, kcz)?.minCy ?: 0)) continue
-            val offX = (kcx.toDouble() * CHUNK_SIZE - camera.x).toFloat()
-            val offY = (kcy.toDouble() * CHUNK_SIZE - camera.y).toFloat()
-            val offZ = (kcz.toDouble() * CHUNK_SIZE - camera.z).toFloat()
+            val offX = (kcx.toDouble() * CHUNK_SIZE - originX).toFloat()
+            val offY = (kcy.toDouble() * CHUNK_SIZE - originY).toFloat()
+            val offZ = (kcz.toDouble() * CHUNK_SIZE - originZ).toFloat()
             GLES30.glUniform3f(wUChunkOffset, offX, offY, offZ)
             mesh.draw()
             val d = maxOf(abs(kcx - lodCenterX), abs(kcz - lodCenterZ))
             if (d > drawnDetailReach) drawnDetailReach = d
         }
         SolidChunkMesh.endDraws()
+        GLES30.glUniform3f(wUCameraFraction, 0f, 0f, 0f)
         GLES30.glUniform1f(wUPosScale, 1f)
         GLES30.glUniform1f(wUUvScale, 1f)
         // Keep the complete selection available to non-chunk world draws.

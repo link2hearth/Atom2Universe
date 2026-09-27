@@ -65,7 +65,7 @@ internal class SolidChunkMesh {
     private fun pointers(aPos: Int, aUv: Int, aSky: Int, aTint: Int, aBlock: Int) {
         val s = PackedMesh.STRIDE
         GLES30.glEnableVertexAttribArray(aPos)
-        GLES30.glVertexAttribPointer(aPos, 3, GLES30.GL_SHORT, false, s, 0)
+        GLES30.glVertexAttribPointer(aPos, 4, GLES30.GL_SHORT, false, s, 0)
         GLES30.glEnableVertexAttribArray(aUv)
         GLES30.glVertexAttribPointer(aUv, 3, GLES30.GL_UNSIGNED_SHORT, false, s, 8)
         if (aSky >= 0) {

@@ -125,13 +125,14 @@ internal class CaveSoundEngine(private val context: Context) {
     @Synchronized private fun onNature(event: GameEvent.NatureAmbience) {
         if (paused) return
         val sounds = pool ?: return
-        fun loop(name: String, stream: Int, volume: Float): Int {
-            if (volume < .005f) { if (stream != 0) sounds.stop(stream); return 0 }
+        fun loop(name: String, stream: Int, volume: Float, silenceThreshold: Float = .005f): Int {
+            if (volume < silenceThreshold) { if (stream != 0) sounds.stop(stream); return 0 }
             if (stream != 0) { sounds.setVolume(stream, volume, volume); return stream }
             val id = ids[name]?.takeIf { it in loaded } ?: return 0
             return sounds.play(id, volume, volume, 8, -1, 1f)
         }
-        rainStream = loop("nature_rain", rainStream, event.rain * .08f)
+        // Le mix de pluie est volontairement discret : ne pas couper sa version atténuée sous abri.
+        rainStream = loop("nature_rain", rainStream, event.rain * .035f, silenceThreshold = .0005f)
         cricketStream = loop("nature_crickets", cricketStream, event.crickets * .06f)
     }
 

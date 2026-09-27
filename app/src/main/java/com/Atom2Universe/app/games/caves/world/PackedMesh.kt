@@ -9,7 +9,8 @@ import java.nio.ByteOrder
  * mémoire graphique par chunk — c'est ce qui bornait la distance de simulation.
  *
  * Disposition d'un sommet ([STRIDE] octets, tout aligné sur son propre type) :
- * - 0  : position x, y, z en entiers signés ×[POS_SCALE] (précision 1/256 de bloc), + 2 octets vides ;
+ * - 0  : position x, y, z en entiers signés ×[POS_SCALE] (précision 1/256 de bloc) ;
+ * - 6  : directions du raccord visuel des faces pleines (2 bits par axe : 0 fixe, 1 moins, 2 plus) ;
  * - 8  : u, v en entiers ×[UV_SCALE], puis face × 4096 + couche de texture, sans signe ;
  * - 14 : lumière du ciel, 15 : lumière des torches, un octet chacune (0..255 = 0..1) ;
  * - 16 : teinte de climat r, g, b et son masque, en demi-flottants.
@@ -35,7 +36,7 @@ internal class PackedMesh(
          * Tasse des sommets « larges » (12 flottants, 6 par face : v0 v1 v2 v0 v2 v3). Une face qui
          * suit ce motif garde 4 sommets ; une qui ne le suit pas garde ses 6, rien n'est perdu.
          */
-        fun pack(wide: FloatArray, floatsPerVertex: Int): PackedMesh {
+        fun pack(wide: FloatArray, floatsPerVertex: Int, sealFromVertex: Int = Int.MAX_VALUE): PackedMesh {
             val vertexTotal = wide.size / floatsPerVertex
             if (vertexTotal == 0) return EMPTY
             val faces = vertexTotal / 6
@@ -58,12 +59,20 @@ internal class PackedMesh(
             val ibb = ByteBuffer.allocate(indexCount * if (wideIndices) 4 else 2).order(ByteOrder.nativeOrder())
             var next = 0
             fun index(i: Int) { if (wideIndices) ibb.putInt(i) else ibb.putShort(i.toShort()) }
-            fun emit(v: Int): Int {
+            fun emit(v: Int, opposite: Int = v): Int {
                 val s = v * floatsPerVertex
                 vbb.putShort(Math.round(wide[s] * POS_SCALE).toShort())
                 vbb.putShort(Math.round(wide[s + 1] * POS_SCALE).toShort())
                 vbb.putShort(Math.round(wide[s + 2] * POS_SCALE).toShort())
-                vbb.putShort(0)
+                // Seules les faces de cubes désignées par MeshBuilder reçoivent le raccord.
+                // L'axe normal reste fixe ; les deux axes du plan s'écartent du coin opposé.
+                // Sprites, eau et formes partielles conservent exactement leur silhouette.
+                var edges = 0
+                if (v >= sealFromVertex) for (axis in 0..2) {
+                    val direction = wide[s + axis].compareTo(wide[opposite * floatsPerVertex + axis])
+                    edges = edges or ((if (direction < 0) 1 else if (direction > 0) 2 else 0) shl (axis * 2))
+                }
+                vbb.putShort(edges.toShort())
                 vbb.putShort(Math.round(wide[s + 3] * UV_SCALE).coerceIn(0, 65535).toShort())
                 vbb.putShort(Math.round(wide[s + 4] * UV_SCALE).coerceIn(0, 65535).toShort())
                 vbb.putShort(Math.round(wide[s + 5]).coerceIn(0, 65535).toShort())
@@ -75,7 +84,8 @@ internal class PackedMesh(
             for (f in 0 until faces) {
                 val b = f * 6
                 if (same(b, b + 3) && same(b + 2, b + 4)) {
-                    val i0 = emit(b); val i1 = emit(b + 1); val i2 = emit(b + 2); val i3 = emit(b + 5)
+                    val i0 = emit(b, b + 2); val i1 = emit(b + 1, b + 5)
+                    val i2 = emit(b + 2, b); val i3 = emit(b + 5, b + 1)
                     index(i0); index(i1); index(i2); index(i0); index(i2); index(i3)
                 } else {
                     for (k in 0 until 6) index(emit(b + k))

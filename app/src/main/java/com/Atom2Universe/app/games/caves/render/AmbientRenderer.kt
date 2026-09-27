@@ -10,7 +10,31 @@ import kotlin.math.*
 
 /** Closed voxel animals and weather, one reusable GPU batch per pass. */
 internal class AmbientRenderer(private val world: World, private val grayscale: Boolean) {
-    private val buffer = ByteBuffer.allocateDirect(maxOf(6000, AmbientWildlife.MAX_CREATURES * AmbientAnimalModels.maxParts * 36) * 7 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+    // Silhouettes 9 × 9 : étoile, cristal à six branches et croix ramifiée.
+    // Les pixels contigus d'une ligne deviennent un seul rectangle, préparé une seule fois.
+    private val snowShapes = arrayOf(
+        arrayOf("....#....", ".#..#..#.", "..#.#.#..", "...###...", "#########",
+            "...###...", "..#.#.#..", ".#..#..#.", "....#...."),
+        arrayOf("..#...#..", "..#...#..", "...#.#...", "##..#..##", "..#####..",
+            "##..#..##", "...#.#...", "..#...#..", "..#...#.."),
+        arrayOf("..#.#.#..", "...###...", "#...#...#", ".#..#..#.", "#########",
+            ".#..#..#.", "#...#...#", "...###...", "..#.#.#..")
+    ).map { rows ->
+        buildList {
+            for ((row, pixels) in rows.withIndex()) {
+                var column = 0
+                while (column < pixels.length) {
+                    if (pixels[column] != '#') { column++; continue }
+                    val start = column
+                    while (column < pixels.length && pixels[column] == '#') column++
+                    add(floatArrayOf(start - 4.5f, column - 4.5f, 3.5f - row, 4.5f - row))
+                }
+            }
+        }
+    }
+    // 196 colonnes × 3 particules, dimensionné pour le flocon le plus détaillé.
+    private val buffer = ByteBuffer.allocateDirect(maxOf(196 * 3 * maxOf(3, snowShapes.maxOf { it.size }) * 6,
+        AmbientWildlife.MAX_CREATURES * AmbientAnimalModels.maxParts * 36) * 7 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
     private var shader: ShaderProgram? = null
     private var vbo = 0
     private var vao = 0
@@ -61,17 +85,6 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     private fun tri(ax: Float, ay: Float, az: Float, bx: Float, by: Float, bz: Float,
                     cx: Float, cy: Float, cz: Float, color: Int) {
         vertex(ax, ay, az, color); vertex(bx, by, bz, color); vertex(cx, cy, cz, color)
-    }
-
-    private fun body(w: Float, h: Float, d: Float, color: Int) {
-        tri(0f,h,0f, -w,0f,0f, 0f,0f,d,color)
-        tri(0f,h,0f, 0f,0f,d, w,0f,0f,color)
-        tri(0f,h,0f, w,0f,0f, 0f,0f,-d,color)
-        tri(0f,h,0f, 0f,0f,-d, -w,0f,0f,color)
-        tri(0f,-h,0f, 0f,0f,d, -w,0f,0f,color)
-        tri(0f,-h,0f, w,0f,0f, 0f,0f,d,color)
-        tri(0f,-h,0f, 0f,0f,-d, w,0f,0f,color)
-        tri(0f,-h,0f, -w,0f,0f, 0f,0f,-d,color)
     }
 
     private val corners = FloatArray(24)
@@ -175,6 +188,13 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
         buffer.clear(); light = ambient.coerceAtLeast(.16f); turnSin = 0f; turnCos = 1f
         val cx=floor(camera.x/2).toInt(); val cz=floor(camera.z/2).toInt()
         val snow=weather.snow
+        val snowing = snow > .5f
+        val yaw = Math.toRadians(camera.yaw.toDouble())
+        val rainSin = sin(yaw).toFloat(); val rainCos = cos(yaw).toFloat()
+        // Le flocon reste un carré face à la vue, même quand on regarde vers le ciel.
+        val upY = hypot(camera.aimX, camera.aimZ)
+        val upZ = -camera.aimY
+        light = ambient.coerceAtLeast(if (snowing) .40f else .30f)
         // Recheck a bounded number of columns each frame, including roofs built by the player.
         roofCursor=(roofCursor+12)%196
         var roofBudget = 24
@@ -189,29 +209,51 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
             }
             if (roofX[slot]!=x || roofZ[slot]!=z) continue
             val hash=(x*73428767 xor z*912931) and 1023
-            val density = weather.precipitation * (.52f + .48f*snow)
+            val density = weather.precipitation * (.85f + .15f*snow)
             val presence = ((density-hash/1023f)*18f).coerceIn(0f,1f)
             if (presence <= 0f) continue
-            val speed=(9.0+hash%7*.25)*(1-snow)+1.7*snow
-            val fall=seconds*speed+hash*.13
-            val y=camera.y+12.0-((fall%19.0+19.0)%19.0)
-            if (y < roofs[slot]+.15) continue
-            originX=(x+.28+(hash%17)/40.0-camera.x).toFloat(); originY=(y-camera.y).toFloat()
-            originZ=(z+.28+(hash%23)/55.0-camera.z).toFloat()
-            // Sway stays within the sampled column, so particles cannot drift through its roof.
-            originX += (sin(seconds*1.3+hash)*.22*snow).toFloat()
-            val edge=(1f-max(abs(originX),abs(originZ))/15f).coerceIn(0f,1f)
-            val nearby = ((hypot(originX,originZ)-1f)/2f).coerceIn(0f,1f)
-            alpha=(.14f+snow*.5f)*edge*presence*nearby
-            if (snow>.5f) {
-                body(.045f,.055f,.045f,0xF2F7FF)
-            } else {
-                val yaw=Math.toRadians(camera.yaw.toDouble())
-                turnSin=sin(yaw).toFloat(); turnCos=cos(yaw).toFloat()
-                val lean=weather.wind*.045f
-                val length=.20f+(hash%11)*.009f
-                tri(-.007f,0f,0f,.007f,0f,0f,lean+.007f,length,0f,0xAEC0C5)
-                tri(-.007f,0f,0f,lean+.007f,length,0f,lean-.007f,length,0f,0xAEC0C5)
+            val speed=if (snowing) 1.1+hash%7*.1 else (9.0+hash%7*.25)*(1-snow)+1.7*snow
+            // Trois particules étagées par colonne, visibles aussi à hauteur des yeux.
+            for (drop in 0 until 3) {
+                val fall=seconds*speed+hash*.13+drop*(19.0/3)
+                val y=camera.y+12.0-((fall%19.0+19.0)%19.0)
+                if (y < roofs[slot]+.15) continue
+                val jitter = hash + drop * 37
+                originX=(x+.28+(jitter%17)/40.0-camera.x).toFloat(); originY=(y-camera.y).toFloat()
+                originZ=(z+.28+(jitter%23)/55.0-camera.z).toFloat()
+                // Sway stays within the sampled column, so particles cannot drift through its roof.
+                originX += (sin(seconds*1.3+hash)*.22*snow).toFloat()
+                val edge=(1f-max(abs(originX),abs(originZ))/15f).coerceIn(0f,1f)
+                val nearby = ((hypot(originX,originZ)-.4f)/.8f).coerceIn(0f,1f)
+                val opacity=(if (snowing) .92f else .78f)*edge*presence*nearby
+                alpha=opacity
+                if (snowing) {
+                    turnSin=rainSin; turnCos=rainCos
+                    val pixelSize=.027f+(jitter%4)*.006f
+                    // Étoiles aux contours francs, de tailles variées, toujours face à la vue.
+                    for (span in snowShapes[jitter % snowShapes.size]) {
+                        val left=span[0]*pixelSize; val right=span[1]*pixelSize
+                        val bottom=span[2]*pixelSize; val top=span[3]*pixelSize
+                        tri(left,bottom*upY,bottom*upZ,right,bottom*upY,bottom*upZ,
+                            right,top*upY,top*upZ,0xF2F7FF)
+                        tri(left,bottom*upY,bottom*upZ,right,top*upY,top*upZ,
+                            left,top*upY,top*upZ,0xF2F7FF)
+                    }
+                } else {
+                    turnSin=rainSin; turnCos=rainCos
+                    val lean=weather.wind*.06f
+                    val length=.65f+(hash%11)*.035f
+                    val width=.025f+(hash%4)*.005f
+                    // Trois rectangles bleus, tête plus opaque et traînée qui s'estompe.
+                    // Faces tournées vers la caméra, test de profondeur conservé pour les abris.
+                    for (pixel in 0..2) {
+                        val bottom=pixel*length/3f; val top=bottom+length/3f-.025f
+                        val shift=pixel*lean/3f
+                        alpha=opacity*(1f-pixel*.23f)
+                        tri(shift-width,bottom,0f,shift+width,bottom,0f,shift+width,top,0f,0x579FE8)
+                        tri(shift-width,bottom,0f,shift+width,top,0f,shift-width,top,0f,0x579FE8)
+                    }
+                }
             }
         }
         flush(camera, false)

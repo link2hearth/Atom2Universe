@@ -113,8 +113,18 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
             smooth((base + 4) / 18) * (90 + 150 * ridge)
         val land = SEA_LEVEL + base + amplitude * (broad * .65 + ridge * .28 + hills) + massif
         val river = abs(n(x, z, .0012, 712.0))
-        val valley = (1 - smooth((river - .012) / .08)) * (1 - smooth((land - 110) / 180))
-        return mix(land, min(land, SEA_LEVEL - 3.0), valley)
+        val riverStrength = 1 - smooth((land - 110) / 180)
+        // Une large vallée rejoint des berges à quelques blocs de l'eau avant de creuser
+        // le lit. Le raccord s'élargit avec le dénivelé pour éviter les longues tranchées.
+        // L'eau reste au niveau de la mer : relever son niveau colonne par colonne ferait
+        // des marches et des débordements, comme pour les lacs.
+        val gorge = smooth((n(x, z, .00045, 1712.0) - .62) / .20)
+        val valleyWidth = .24 + smooth((land - SEA_LEVEL - 12) / 60) * .16
+        val floodplain = (1 - smooth((river - .075) / valleyWidth)) * riverStrength * (1 - gorge)
+        val banks = mix(land, min(land, SEA_LEVEL + 3.0), floodplain)
+        // Les rares pics du bruit régional conservent les gorges, avec une transition douce.
+        val channel = (1 - smooth((river - .012) / .08)) * riverStrength
+        return mix(banks, min(land, SEA_LEVEL - 3.0), channel)
     }
     private fun localAmplitude(x: Double, z: Double): Double {
         val gx = floor(x / 192).toInt(); val gz = floor(z / 192).toInt()

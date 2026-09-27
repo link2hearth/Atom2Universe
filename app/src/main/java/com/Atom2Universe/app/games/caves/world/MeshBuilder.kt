@@ -117,7 +117,7 @@ internal object MeshBuilder {
                 colored[dst + 10] = mask.toFloat()
             }
         }
-        return PackedMesh.pack(colored, 12)
+        return PackedMesh.pack(colored, 12, sealFromVertex = buf.size / 7)
     }
 
     /**
