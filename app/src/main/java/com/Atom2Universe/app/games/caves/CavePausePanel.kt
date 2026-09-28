@@ -61,48 +61,52 @@ internal class CavePausePanel(private val activity: CaveActivity) {
             thumbTintList = ColorStateList.valueOf(CaveUiStyle.ACCENT)
             body.addView(this, LinearLayout.LayoutParams(-1, dp(48)))
         }
-        /** The simulation never reaches past the detailed render distance. */
-        fun simulationMax() = minOf(CaveViewDistances.MAX_SIMULATION, distances.detail)
-        val simulationLabel = label()
-        val simulation = slider(CaveViewDistances.MIN_SIMULATION, simulationMax(), distances.simulation)
-        val detailLabel = label()
-        val detail = slider(CaveViewDistances.MIN_DETAIL, CaveViewDistances.MAX_DETAIL, distances.detail)
-        val viewLabel = label()
-        val view = slider(distances.detail, CaveViewDistances.MAX_VIEW, distances.view)
-        fun refreshLabels() {
-            detailLabel.text = activity.getString(R.string.cave_pause_render_distance, distances.detail)
-            viewLabel.text = activity.getString(R.string.cave_pause_view_distance, distances.view)
-            simulationLabel.text = activity.getString(R.string.cave_pause_simulation_distance, distances.simulation)
-            detail.contentDescription = detailLabel.text
-            view.contentDescription = viewLabel.text
-            simulation.contentDescription = simulationLabel.text
-        }
-        fun listener(slider: Int) = object : SeekBar.OnSeekBarChangeListener {
-            private var dragging = false
-            override fun onStartTrackingTouch(seekBar: SeekBar) { dragging = true }
-            override fun onStopTrackingTouch(seekBar: SeekBar) { dragging = false; applyDistances() }
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                if (updating || !fromUser) return
-                distances = when (slider) {
-                    0 -> distances.copy(detail = progress)
-                    1 -> distances.copy(view = progress)
-                    else -> distances.copy(simulation = progress)
-                }.normalized()
-                updating = true
-                view.min = distances.detail
-                view.progress = distances.view
-                simulation.max = simulationMax()
-                simulation.progress = distances.simulation
-                updating = false
-                refreshLabels()
-                // Keyboard/accessibility changes have no touch-release event.
-                if (!dragging) applyDistances()
+        // Une carte Assaut se charge, se dessine et se simule en entier dès le départ :
+        // les distances n'y changent rien, leurs curseurs n'ont pas lieu d'être.
+        if (!activity.isAssault) {
+            /** The simulation never reaches past the detailed render distance. */
+            fun simulationMax() = minOf(CaveViewDistances.MAX_SIMULATION, distances.detail)
+            val simulationLabel = label()
+            val simulation = slider(CaveViewDistances.MIN_SIMULATION, simulationMax(), distances.simulation)
+            val detailLabel = label()
+            val detail = slider(CaveViewDistances.MIN_DETAIL, CaveViewDistances.MAX_DETAIL, distances.detail)
+            val viewLabel = label()
+            val view = slider(distances.detail, CaveViewDistances.MAX_VIEW, distances.view)
+            fun refreshLabels() {
+                detailLabel.text = activity.getString(R.string.cave_pause_render_distance, distances.detail)
+                viewLabel.text = activity.getString(R.string.cave_pause_view_distance, distances.view)
+                simulationLabel.text = activity.getString(R.string.cave_pause_simulation_distance, distances.simulation)
+                detail.contentDescription = detailLabel.text
+                view.contentDescription = viewLabel.text
+                simulation.contentDescription = simulationLabel.text
             }
+            fun listener(slider: Int) = object : SeekBar.OnSeekBarChangeListener {
+                private var dragging = false
+                override fun onStartTrackingTouch(seekBar: SeekBar) { dragging = true }
+                override fun onStopTrackingTouch(seekBar: SeekBar) { dragging = false; applyDistances() }
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    if (updating || !fromUser) return
+                    distances = when (slider) {
+                        0 -> distances.copy(detail = progress)
+                        1 -> distances.copy(view = progress)
+                        else -> distances.copy(simulation = progress)
+                    }.normalized()
+                    updating = true
+                    view.min = distances.detail
+                    view.progress = distances.view
+                    simulation.max = simulationMax()
+                    simulation.progress = distances.simulation
+                    updating = false
+                    refreshLabels()
+                    // Keyboard/accessibility changes have no touch-release event.
+                    if (!dragging) applyDistances()
+                }
+            }
+            detail.setOnSeekBarChangeListener(listener(0))
+            view.setOnSeekBarChangeListener(listener(1))
+            simulation.setOnSeekBarChangeListener(listener(2))
+            refreshLabels()
         }
-        detail.setOnSeekBarChangeListener(listener(0))
-        view.setOnSeekBarChangeListener(listener(1))
-        simulation.setOnSeekBarChangeListener(listener(2))
-        refreshLabels()
         if (activity.renderer.supportsNature) {
             var weather = activity.renderer.weatherEnabled
             var wildlife = activity.renderer.wildlifeEnabled

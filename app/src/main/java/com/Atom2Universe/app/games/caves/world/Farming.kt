@@ -16,19 +16,11 @@ internal class Farming(private val world: World, private val rebuild: (Int, Int,
     private var cursor: MutableIterator<MutableMap.MutableEntry<Position, Plant>>? = null
     private var clockMs = 0L
     private var tickMs = 0L
-    var initialized = false
-        private set
 
-    @Synchronized fun initialize(): Boolean {
-        if (initialized) return false
-        initialized = true
-        return true
-    }
     @Synchronized fun restore(json: String) {
         plants.clear(); cursor = null; tickMs = 0L
         val root = runCatching { JSONObject(json) }.getOrElse { JSONObject() }
         clockMs = root.optLong("clock", 0L).coerceAtLeast(0L)
-        initialized = root.optBoolean("initialized", false)
         val rows = root.optJSONArray("plants") ?: return
         for (i in 0 until rows.length()) runCatching {
             val r = rows.getJSONArray(i)
@@ -45,7 +37,7 @@ internal class Farming(private val world: World, private val rebuild: (Int, Int,
         val rows = JSONArray()
         for (plant in plants.values) rows.put(JSONArray().put(plant.position.x).put(plant.position.y)
             .put(plant.position.z).put(plant.crop).put(plant.plantedAt).put(plant.growthMs).put(plant.checkedAt))
-        return JSONObject().put("clock",clockMs).put("initialized",initialized).put("plants",rows).toString()
+        return JSONObject().put("clock",clockMs).put("plants",rows).toString()
     }
     private fun loaded(p: Position) = world.getChunk(Math.floorDiv(p.x,CHUNK_SIZE),
         Math.floorDiv(p.y,CHUNK_SIZE),Math.floorDiv(p.z,CHUNK_SIZE))?.generated == true

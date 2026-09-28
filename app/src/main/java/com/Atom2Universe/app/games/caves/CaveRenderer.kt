@@ -1065,16 +1065,7 @@ internal class CaveRenderer(
             inventory.putAll(live)
         }
         if (mode.allowsWorldEdits) {
-            val hoe = com.Atom2Universe.app.games.caves.node.FarmSoil.HOE
-            inventory[hoe] = 1
-            if (farming.initialize()) {
-                // Starter shortcuts are offered once; cleared slots stay cleared on reload.
-                if(hoe !in hotbar) hotbar.indexOfFirst { it==null }.takeIf { it>=0 }?.let { hotbar[it]=hoe }
-                for (crop in listOf(0,4,5)) {
-                    val seed=com.Atom2Universe.app.games.caves.node.FarmItems.seed(crop)
-                    inventory[seed]=(inventory[seed] ?: 0)+3
-                }
-            }
+            // Rien n'est offert au départ : la houe se fabrique, les graines se trouvent.
             inventoryCallback?.invoke(inventory.toMap())
             notifyHotbar()
         }
@@ -1160,9 +1151,30 @@ internal class CaveRenderer(
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         val gameH = height.coerceAtLeast(1)
         GLES30.glViewport(0, 0, width, gameH)
-        camera.setProjection(70f, width.toFloat() / gameH)
+        viewAspect = width.toFloat() / gameH
+        camera.setProjection(zoomedFov(aimZoom), viewAspect)
         // Projection dédiée au viewmodel (FOV légèrement plus serré, near rapproché)
         android.opengl.Matrix.perspectiveM(vmProj, 0, 62f, width.toFloat() / gameH, 0.04f, 12f)
+    }
+
+    // ── Zoom de visée (gâchette gauche tenue, arme à feu en main) ────────────
+    private var viewAspect = 1f
+    /** Grossissement actuel de la vue : 1 sans zoom, glisse vers celui de l'arme. */
+    private var aimZoom = 1f
+
+    /** Angle de vue vertical pour un grossissement : la tangente du demi-angle est divisée par [zoom]. */
+    private fun zoomedFov(zoom: Float): Float =
+        Math.toDegrees(2.0 * atan(tan(Math.toRadians(BASE_FOV / 2.0)) / zoom)).toFloat()
+
+    private fun updateAimZoom(dt: Float) {
+        val profile = RangedProfile.of(hotbar[selectedSlot])
+        val wanted = if (!gamePaused && player.input.placeHeld && heldItemMode == HotbarMode.COMBAT &&
+            profile?.firearm == true && playerNode.isAlive) profile.zoom else 1f
+        var next = aimZoom + (wanted - aimZoom) * min(1f, dt * AIM_ZOOM_RATE)
+        if (abs(next - wanted) < .003f) next = wanted
+        if (next == aimZoom) return
+        aimZoom = next
+        camera.setProjection(zoomedFov(aimZoom), viewAspect)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -1181,10 +1193,12 @@ internal class CaveRenderer(
         pendingMode?.let { newMode -> pendingMode = null; applyModeSwitch(newMode) }
 
         readInput()
+        updateAimZoom(dt)
         val (dy, dp) = touch.consumeDeltas()
         if (spawnReady) {
-            camera.yaw -= dy
-            camera.pitch += dp
+            // Visée zoomée : la vue tourne d'autant moins vite, le réticule reste précis.
+            camera.yaw -= dy / aimZoom
+            camera.pitch += dp / aimZoom
         }
 
         if (!gamePaused) {
@@ -2352,10 +2366,11 @@ internal class CaveRenderer(
         // Mode sans construction ni destruction (Assaut) : la carte ne se touche pas.
         val input = player.input
         // Arme en main, la gâchette gauche (pose) devient l'action secondaire de l'arme.
+        // Une arme à feu (Assaut) la garde pour viser : tenue, elle zoome (voir updateAimZoom).
         if (input.place && heldItemMode == HotbarMode.COMBAT && mode.allowsCombat) {
             input.place = false
             placeChain = null
-            useWithWeapon()
+            if (RangedProfile.of(hotbar[selectedSlot])?.firearm != true) useWithWeapon()
         }
         if (!mode.allowsWorldEdits) {
             input.place = false
@@ -4909,5 +4924,9 @@ internal class CaveRenderer(
         /** Pose continue : attente avant le deuxième bloc (un appui bref n'en pose qu'un), puis entre deux blocs. */
         private const val PLACE_FIRST_DELAY = .25f
         private const val PLACE_REPEAT      = .15f
+        /** Angle de vue vertical sans zoom, en degrés. */
+        private const val BASE_FOV          = 70.0
+        /** Vitesse à laquelle le zoom de visée rejoint sa cible (par seconde) : ~0,15 s pour l'essentiel. */
+        private const val AIM_ZOOM_RATE     = 14f
     }
 }

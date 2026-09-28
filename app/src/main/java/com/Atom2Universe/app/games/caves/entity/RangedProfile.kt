@@ -4,12 +4,14 @@ package com.Atom2Universe.app.games.caves.entity
  * Une arme à distance : un objet ordinaire à identifiant fixe, aux dégâts fixes. Sans chargeur,
  * elle se tend (dégâts × tension, de 45 % à 100 %) ; avec, elle tire à pleine puissance.
  * [gear] : les bonus d'armure (critique, vitesse) s'appliquent à ses projectiles.
+ * [zoom] : grossissement de la visée (gâchette gauche tenue), armes à feu seulement ; 1 = aucun.
  */
 internal data class RangedProfile(
     val type: String, val item: Short, val damage: Int,
     val interval: Float, val speed: Float, val spread: Float, val range: Float,
     val magazine: Int = 0, val reload: Float = 0f, val automatic: Boolean = false,
-    val pellets: Int = 1, val kind: ProjectileKind = ProjectileKind.BULLET, val gear: Boolean = false
+    val pellets: Int = 1, val kind: ProjectileKind = ProjectileKind.BULLET, val gear: Boolean = false,
+    val zoom: Float = 1f
 ) {
     /** Armes à feu : réservées au mode Assaut, jamais fabriquées en Survie. */
     val firearm get() = kind == ProjectileKind.BULLET || kind == ProjectileKind.PELLET
@@ -20,11 +22,12 @@ internal data class RangedProfile(
             RangedProfile("bow",9907,14,.60f,32f,.003f,90f,kind=ProjectileKind.ARROW,gear=true),
             // Armée d'avance : le carreau part d'un coup, puis l'arbalète se réarme seule.
             RangedProfile("crossbow",9908,24,.85f,44f,.002f,100f,1,1.9f,kind=ProjectileKind.BOLT,gear=true),
-            RangedProfile("gun",9914,26,.32f,65f,.009f,75f,12,1.25f),
-            RangedProfile("shotgun",9915,87,.90f,55f,.12f,24f,6,2.2f,pellets=6,kind=ProjectileKind.PELLET),
-            RangedProfile("smg",9916,10,.095f,65f,.026f,48f,28,1.65f,automatic=true),
-            RangedProfile("dual_pistols",9917,17,.18f,65f,.027f,50f,20,1.9f,automatic=true),
-            RangedProfile("lever_rifle",9918,72,.95f,90f,.002f,120f,8,2.0f)
+            // Zoom léger pour les armes de près, franc pour la carabine, l'arme de loin.
+            RangedProfile("gun",9914,26,.32f,65f,.009f,75f,12,1.25f,zoom=1.3f),
+            RangedProfile("shotgun",9915,87,.90f,55f,.12f,24f,6,2.2f,pellets=6,kind=ProjectileKind.PELLET,zoom=1.15f),
+            RangedProfile("smg",9916,10,.095f,65f,.026f,48f,28,1.65f,automatic=true,zoom=1.25f),
+            RangedProfile("dual_pistols",9917,17,.18f,65f,.027f,50f,20,1.9f,automatic=true,zoom=1.15f),
+            RangedProfile("lever_rifle",9918,72,.95f,90f,.002f,120f,8,2.0f,zoom=2.2f)
         ).associateBy { it.type }
         private val byItem = all.values.associateBy { it.item }
         fun of(id: Short?): RangedProfile? = byItem[id]

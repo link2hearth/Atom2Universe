@@ -815,7 +815,7 @@
     <string name="cave_pad_jump">Sauter / Monter en vol</string>
     <string name="cave_pad_crouch">S’accroupir / Descendre en vol</string>
     <string name="cave_pad_attack">Attaquer / Tirer / Miner</string>
-    <string name="cave_pad_place">Poser / Interagir (arme : recharger, garde)</string>
+    <string name="cave_pad_place">Poser / Interagir (arme : viser, recharger, garde)</string>
     <string name="cave_pad_secondary">Recharger / Garde / Annuler la pêche</string>
     <string name="cave_pad_inventory">Inventaire</string>
     <string name="cave_pad_previous">Emplacement précédent</string>
