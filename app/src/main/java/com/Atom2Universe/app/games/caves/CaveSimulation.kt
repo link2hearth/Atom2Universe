@@ -4,6 +4,7 @@ import android.content.Context
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.entity.FrontierResidents
 import com.Atom2Universe.app.games.caves.entity.PassiveAnimals
+import com.Atom2Universe.app.games.caves.entity.Projectile
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.LootNode
 import com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
@@ -82,6 +83,8 @@ internal class CaveSimulation(
                 it.addWindmill(FrontierWorkshops.Pos(mill.x + s.originX, mill.y + s.originY, mill.z + s.originZ), mill.axis, mill.sails)
         }
     } }
+    /** Flèches, balles, cailloux et venin en vol, ou munitions plantées dans un mur. */
+    val projectiles = ArrayList<Projectile>(64)
     val farming by lazy { Farming(world, { x, y, z -> blockChanged(x, y, z) }, ::ecologicalLight) }
 
     // ── Heure du jour ─────────────────────────────────────────────────────────

@@ -59,6 +59,8 @@ import kotlin.math.*
 import kotlin.random.Random
 
 enum class PlayerMode { WALK, SPECTATOR }
+/** Un bloc touché par un rayon de visée, et la face par laquelle il est entré (fnx, fny, fnz). */
+internal data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
 enum class HotbarMode { COMBAT, BUILD, GARDEN }
 
 internal class CaveRenderer(
@@ -364,11 +366,10 @@ internal class CaveRenderer(
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
-    private data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
-    private var mineTarget: RayHit? = null
+    private var mineTarget by player::mineTarget
     private var lastBlockedMineral: Short? = null
     private var lookTarget: RayHit? = null
-    private var mineDamage = 0f
+    private var mineDamage by player::mineDamage
 
     val inventory get() = player.inventory
 
@@ -530,25 +531,25 @@ internal class CaveRenderer(
     // ── Progression joueur ────────────────────────────────────────────────────
 
     val playerStats get() = player.stats
-    val projectiles = ArrayList<Projectile>(64)
+    val projectiles get() = sim.projectiles
     @Volatile var recoverableAmmoSnapshot: List<StuckAmmo> = emptyList()
         private set
     private val impactParticles = ArrayList<ImpactParticle>(128)
 
     private val ROCK_IDS = setOf(2020.toShort(), 2021.toShort())
-    private var rockChargeTime = 0f
+    private var rockChargeTime by player::rockChargeTime
     private val ROCK_CHARGE_MAX = 1.5f
     private val RANGED_WEAPON_TYPES = RangedProfile.all.keys
-    private val magazines = mutableMapOf<Short, MagazineState>()
-    private var fireWasDown = false
-    private var lastFirePresses = 0
-    private var lastFireWeapon: Short? = null
+    private val magazines get() = player.magazines
+    private var fireWasDown by player::fireWasDown
+    private var lastFirePresses by player::lastFirePresses
+    private var lastFireWeapon by player::lastFireWeapon
     private var lastWeaponStatus = ""
     var weaponStatusCallback: ((String) -> Unit)? = null
     internal enum class SecondaryAction { NONE, RELOAD, GUARD, CANCEL_FISHING }
     var secondaryActionCallback: ((SecondaryAction) -> Unit)? = null
     private var lastSecondaryAction: SecondaryAction? = null
-    private var weaponChargeTime = 0f   // temps de visée/tension avant de relâcher pour tirer
+    private var weaponChargeTime by player::weaponChargeTime   // temps de visée/tension avant de relâcher pour tirer
     private val WEAPON_CHARGE_VISUAL_MAX = 0.6f   // durée pour atteindre la tension visuelle max
     private val ARROW_ID: Short = 8010
     private val BOLT_ID: Short = 8011
@@ -594,7 +595,7 @@ internal class CaveRenderer(
     private var heldImpact = 0f
     /** L'inventaire et les barres ont été remplacés d'un bloc (kit d'armes) : l'UI doit tout relire. */
     var loadoutChangedCallback: (() -> Unit)?                     = null
-    private var weaponAttackCooldown = 0f
+    private var weaponAttackCooldown by player::weaponAttackCooldown
 
     // ── Shaders ───────────────────────────────────────────────────────────────
 
@@ -1185,6 +1186,7 @@ internal class CaveRenderer(
 
         pendingMode?.let { newMode -> pendingMode = null; applyModeSwitch(newMode) }
 
+        readInput()
         val (dy, dp) = touch.consumeDeltas()
         if (spawnReady) {
             camera.yaw -= dy
@@ -1201,6 +1203,7 @@ internal class CaveRenderer(
         camera.eyeDrop = if (playerMode == PlayerMode.WALK) physics.eyeDrop else 0.0
         camera.update()
         adjustTpsCamera()
+        aimFromCamera()
 
         elapsed += dt
         if (!gamePaused) stepGame(dt, rawDt)
@@ -1910,6 +1913,28 @@ internal class CaveRenderer(
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
     }
 
+    /** Recopie les gestes de l'écran tactile et de la manette dans ceux du joueur. */
+    private fun readInput() = with(player.input) {
+        moveForward = touch.moveForward; moveRight = touch.moveRight
+        up = touch.flyUp; down = touch.flyDown
+        crouch = touch.crouchRequested; sprint = touch.sprintRequested
+        mining = touch.laserActive; fire = touch.rtChargeRaw; firePresses = touch.firePresses
+        // Une demande de pose attend la fin de la pause sur l'écran, où l'interface peut encore l'annuler.
+        if (!gamePaused && touch.placeRequested) { place = true; touch.placeRequested = false }
+    }
+
+    /** Oublie les gestes en cours : ceux de l'écran et ceux déjà recopiés dans le joueur. */
+    private fun resetInput() { touch.reset(); player.input.clear() }
+
+    /** La visée du joueur suit la croix au centre de l'écran. */
+    private fun aimFromCamera() {
+        player.aimX = camera.aimX; player.aimY = camera.aimY; player.aimZ = camera.aimZ
+        // En TPS le rayon part du point d'orbite (aligné avec la croix : caméra → orbite → bloc).
+        player.aimFromX = if (camera.thirdPerson) camera.playerX else camera.x
+        player.aimFromY = if (camera.thirdPerson) camera.orbitY else camera.y
+        player.aimFromZ = if (camera.thirdPerson) camera.playerZ else camera.z
+    }
+
     /**
      * Une image de jeu, sans rien dessiner : le monde vit, le joueur agit, les monstres jouent.
      * Tout ce qui change l'état de la partie passe ici, avant le dessin ; onDrawFrame ne fait
@@ -2031,23 +2056,23 @@ internal class CaveRenderer(
     }
     private val PLAYER_HIT_RADIUS = 0.4
 
-    /** Une balle traverse-t-elle le corps du joueur ? Cylindre qui va des pieds au sommet du crâne. */
-    private fun projectileHitsPlayer(p: Projectile): Boolean {
-        if (playerMode != PlayerMode.WALK) return false
-        val dx = p.x - camera.playerX; val dz = p.z - camera.playerZ
-        if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return false
-        return p.y >= camera.playerY - 1.62 && p.y <= camera.playerY + physics.heightAbove
+    /** Le joueur dont la balle traverse le corps, ou null. Cylindre qui va des pieds au sommet du crâne. */
+    private fun playerHitBy(p: Projectile): CavePlayer? = sim.players.firstOrNull { who ->
+        if (who.mode != PlayerMode.WALK) return@firstOrNull false
+        val dx = p.x - who.x; val dz = p.z - who.z
+        if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return@firstOrNull false
+        p.y >= who.y - 1.62 && p.y <= who.y + who.physics.heightAbove
     }
 
-    private fun canRecover(p: Projectile): Boolean {
-        val dx=p.x-camera.playerX; val dy=p.y-(camera.playerY-.5); val dz=p.z-camera.playerZ
-        if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return false
+    /** Le joueur qui peut ramasser cette munition plantée (assez près, rien entre les deux), ou null. */
+    private fun recoveredBy(p: Projectile): CavePlayer? = sim.players.firstOrNull { who ->
+        val dx=p.x-who.x; val dy=p.y-(who.y-.5); val dz=p.z-who.z
+        if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return@firstOrNull false
         val steps=ceil(sqrt(dx*dx+dy*dy+dz*dz)/.15).toInt().coerceAtLeast(1)
-        for (i in 1..steps) {
+        (1..steps).none { i ->
             val t=i.toDouble()/steps
-            if(projectileSolid(camera.playerX+dx*t,camera.playerY-.5+dy*t,camera.playerZ+dz*t)) return false
+            projectileSolid(who.x+dx*t,who.y-.5+dy*t,who.z+dz*t)
         }
-        return true
     }
 
     private fun updateProjectiles(dt: Float) {
@@ -2057,8 +2082,9 @@ internal class CaveRenderer(
             val p=iter.next()
             p.age+=dt
             if(p.stuck) {
-                if(p.age>.4f && p.ammoId != null && canRecover(p)) {
-                    inventory[p.ammoId]=(inventory[p.ammoId] ?: 0)+1
+                val who = if(p.age>.4f && p.ammoId != null) recoveredBy(p) else null
+                if(who != null) {
+                    who.inventory[p.ammoId!!]=(who.inventory[p.ammoId] ?: 0)+1
                     recovered=true; iter.remove()
                 }
                 continue
@@ -2080,9 +2106,11 @@ internal class CaveRenderer(
                 }
                 if (p.fromEnemy) {
                     // Balle de soldat : elle ne touche que le joueur (pas de tir ami entre soldats).
-                    if (projectileHitsPlayer(p)) {
+                    val shot = playerHitBy(p)
+                    if (shot != null) {
                         spawnImpact(p.x,p.y,p.z)
-                        mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
+                        // Les règles du mode ne gèrent que le joueur de l'appareil, le seul pour l'instant.
+                        if (shot === player) mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
                         iter.remove();break
                     }
                     if(p.travelDist>p.maxRange) { iter.remove();break }
@@ -2233,21 +2261,21 @@ internal class CaveRenderer(
         } else weapon.rolledStats
         val drawPower=if(mode.allowsWorldEdits && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
         val baseDamage = ((weapon.rolledDamage ?: 1)*drawPower).roundToInt()
-        val yawRad = Math.toRadians(camera.yaw.toDouble())
+        val yawRad = Math.toRadians(player.yaw.toDouble())
         val rightX = -cos(yawRad); val rightZ = sin(yawRad)
         val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
         // Départ quasi depuis la tête (précision) avec un léger décalage droite/avant
         // pour l'impression que c'est le bras qui tire — voir le même choix sur le jet à main nue.
-        val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
-        val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
-        val spawnY = camera.eyeY - 0.05
+        val spawnX = player.x + rightX * 0.10 + fwdX * 0.12
+        val spawnZ = player.z + rightZ * 0.10 + fwdZ * 0.12
+        val spawnY = player.eyeY - 0.05
         val ammoWeapon = ammoWeaponDef
         val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
             val spread=profile.spread*heat*if(mode.allowsWorldEdits && physics.isCrouching) .65f else 1f
-            var dx=camera.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
-            var dy=camera.aimY.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
-            var dz=camera.aimZ.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            var dx=player.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            var dy=player.aimY.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
+            var dz=player.aimZ.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             val len=sqrt(dx*dx+dy*dy+dz*dz);dx/=len;dy/=len;dz/=len
             projectiles.add(Projectile(spawnX,spawnY,spawnZ,dx,dy,dz,
                 profile.speed*sqrt(drawPower),(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
@@ -2286,9 +2314,10 @@ internal class CaveRenderer(
             return
         }
         // Un appui plus court qu'une image compte quand même : il vaut une image enfoncée.
-        val tapped=touch.firePresses!=lastFirePresses
-        lastFirePresses=touch.firePresses
-        val down=touch.rtChargeRaw>.3f || tapped && !fireWasDown
+        val input=player.input
+        val tapped=input.firePresses!=lastFirePresses
+        lastFirePresses=input.firePresses
+        val down=input.fire>.3f || tapped && !fireWasDown
         val pressed=down && !fireWasDown
         fireWasDown=down
         val held=hotbar[selectedSlot]
@@ -2338,7 +2367,7 @@ internal class CaveRenderer(
             // Vise en tenant le bouton (tension de l'arme), tire seulement au relâchement —
             // pas de tir instantané à l'appui, pour pouvoir viser d'abord. Si l'arme
             // sélectionnée n'a plus de munitions, tryWeaponRangedAttack ne fait simplement rien.
-            if (touch.rtChargeRaw > 0.3f) {
+            if (input.fire > 0.3f) {
                 weaponChargeTime += dt
             } else if (weaponChargeTime > 0.3f) {
                 tryWeaponRangedAttack()
@@ -2353,7 +2382,7 @@ internal class CaveRenderer(
         // Repli : jet de caillou à main nue, tant qu'il en reste dans l'inventaire.
         val rockId = ROCK_IDS.firstOrNull { (inventory[it] ?: 0) > 0 }
         if (rockId == null) { rockChargeTime = 0f; return }
-        val rt = touch.rtChargeRaw
+        val rt = input.fire
         if (rt > 0.3f) {
             rockChargeTime = (rockChargeTime + dt).coerceAtMost(ROCK_CHARGE_MAX)
         } else if (rockChargeTime > 0.3f) {
@@ -2363,16 +2392,16 @@ internal class CaveRenderer(
             // Départ quasi depuis la tête (vise juste), avec un tout petit décalage vers
             // la droite/l'avant pour donner l'impression que c'est le bras qui lance —
             // un décalage trop grand (ancien 0.45/0.35) désalignait le tir du réticule.
-            val yawRad = Math.toRadians(camera.yaw.toDouble())
+            val yawRad = Math.toRadians(player.yaw.toDouble())
             val rightX = -cos(yawRad); val rightZ = sin(yawRad)
             val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
-            val spawnX = camera.playerX + rightX * 0.10 + fwdX * 0.12
-            val spawnZ = camera.playerZ + rightZ * 0.10 + fwdZ * 0.12
-            val spawnY = camera.eyeY - 0.05
+            val spawnX = player.x + rightX * 0.10 + fwdX * 0.12
+            val spawnZ = player.z + rightZ * 0.10 + fwdZ * 0.12
+            val spawnY = player.eyeY - 0.05
             val rockWeapon = rockWeaponDef
             projectiles.add(Projectile(
                 spawnX, spawnY, spawnZ,
-                camera.aimX.toDouble(), camera.aimY.toDouble(), camera.aimZ.toDouble(),
+                player.aimX.toDouble(), player.aimY.toDouble(), player.aimZ.toDouble(),
                 speed, damage, rockWeapon, isRock = true
             ))
             startSwing()
@@ -2532,14 +2561,15 @@ internal class CaveRenderer(
 
     private fun updateMining(dt: Float) {
         // Mode sans construction ni destruction (Assaut) : la carte ne se touche pas.
+        val input = player.input
         if (!mode.allowsWorldEdits) {
-            touch.placeRequested = false
+            input.place = false
             updateLookTarget()
             return
         }
         updateLookTarget()
-        if (touch.placeRequested) {
-            touch.placeRequested = false
+        if (input.place) {
+            input.place = false
             placeBlock()
         }
 
@@ -2549,13 +2579,13 @@ internal class CaveRenderer(
         // Un outil se brandit tant que le bouton est tenu, qu'il y ait un bloc visé ou non.
         // Un ennemi à portée devant passe avant le bloc : chaque coup le frappe (voir toolImpact).
         val tool = heldKind()?.takeIf { !it.melee && it != HeldKind.FISHING_ROD }
-        toolSwinging = touch.laserActive && tool != null && playerNode.isAlive
+        toolSwinging = input.mining && tool != null && playerNode.isAlive
         if (toolSwinging && mode.allowsCombat &&
             expeditionCombat.targetsInArc(ExpeditionCombat.TOOL_REACH, ExpeditionCombat.TOOL_ARC, 1).isNotEmpty()) {
             mineTarget=null; mineDamage=0f; miningCallback?.invoke(0f,null)
             return
         }
-        val canMine = touch.laserActive &&
+        val canMine = input.mining &&
             (heldItemMode == HotbarMode.BUILD || (heldItemMode == HotbarMode.COMBAT && E.melee(hotbar[selectedSlot])==null && isAimingAtRockBlock()))
         val target = if (canMine) raycastBlock() else null
 
@@ -2847,18 +2877,9 @@ internal class CaveRenderer(
         }
     }
 
-    private fun raycastBlock(): RayHit? {
-        val dirX = camera.aimX.toDouble()
-        val dirY = camera.aimY.toDouble()
-        val dirZ = camera.aimZ.toDouble()
-
-        // En TPS le ray part du point d'orbite (aligné avec la croix : caméra→orbite→bloc).
-        val startX = if (camera.thirdPerson) camera.playerX else camera.x
-        val startY = if (camera.thirdPerson) camera.orbitY else camera.y
-        val startZ = if (camera.thirdPerson) camera.playerZ else camera.z
-
-        return raycastBlock(startX, startY, startZ, dirX, dirY, dirZ, MINE_REACH.toDouble())
-    }
+    /** Le bloc dans la visée du joueur, à portée de main. */
+    private fun raycastBlock(): RayHit? = raycastBlock(player.aimFromX, player.aimFromY, player.aimFromZ,
+        player.aimX.toDouble(), player.aimY.toDouble(), player.aimZ.toDouble(), MINE_REACH.toDouble())
 
     /** Called on the GL thread; unproject the touched pixel using the actual rendered camera. */
     fun placeBlockAtScreen(xf: Float, yf: Float) {
@@ -3128,7 +3149,7 @@ internal class CaveRenderer(
 
     private fun renderLaserAndHighlight() {
         val target = lookTarget ?: return
-        val mining=touch.laserActive && mineTarget?.let { it.bx==target.bx && it.by==target.by && it.bz==target.bz }==true
+        val mining=player.input.mining && mineTarget?.let { it.bx==target.bx && it.by==target.by && it.bz==target.bz }==true
         val verts = buildHighlightVerts(target,if(mining) mineDamage else 0.02f) +
             if(mining) buildCrackVerts(target,mineDamage) else FloatArray(0)
         if (verts.isEmpty()) return
@@ -4499,9 +4520,10 @@ internal class CaveRenderer(
 
     private fun updateSpectator(dt: Float) {
         val speed = 10f * dt
-        camera.moveHorizontal(touch.moveForward * speed, -touch.moveRight * speed)
-        if (touch.flyUp)   camera.moveVertical( speed)
-        if (touch.flyDown) camera.moveVertical(-speed)
+        val input = player.input
+        camera.moveHorizontal(input.moveForward * speed, -input.moveRight * speed)
+        if (input.up)   camera.moveVertical( speed)
+        if (input.down) camera.moveVertical(-speed)
     }
 
     private var prevSprinting = false
@@ -4548,13 +4570,14 @@ internal class CaveRenderer(
 
         physics.equipmentSpeed=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.SPEED)/100.0 else 1.0
         physics.equipmentJumpHeight=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.JUMP)/100.0 else 1.0
-        physics.updateCrouch(touch.crouchRequested, camera.playerX, camera.playerY, camera.playerZ)
-        if (physics.isCrouching) touch.cancelSprint()
+        val input = player.input
+        physics.updateCrouch(input.crouch, camera.playerX, camera.playerY, camera.playerZ)
+        if (physics.isCrouching) { touch.cancelSprint(); input.sprint = false }
         if (physics.isCrouching != prevCrouching) {
             prevCrouching = physics.isCrouching
             crouchCallback?.invoke(prevCrouching)
         }
-        physics.isSprinting = touch.sprintRequested && physics.onGround && !physics.isCrouching
+        physics.isSprinting = input.sprint && physics.onGround && !physics.isCrouching
         val nowSprinting = physics.isSprinting
         if (nowSprinting != prevSprinting) {
             prevSprinting = nowSprinting
@@ -4565,21 +4588,21 @@ internal class CaveRenderer(
             dt,
             camera.playerX, camera.playerY, camera.playerZ,
             fX, fZ, rX, rZ,
-            touch.moveForward * chargeMul, touch.moveRight * chargeMul, touch.flyUp
+            input.moveForward * chargeMul, input.moveRight * chargeMul, input.up
         )
 
         // Send movement state, never individual beats. SoundPool loops on its audio clock.
         val travelled = hypot(newX - camera.playerX, newZ - camera.playerZ)
-        val input = hypot(touch.moveForward, touch.moveRight).coerceAtMost(1f)
+        val push = hypot(input.moveForward, input.moveRight).coerceAtMost(1f)
         val feetBlock = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 + .10), floorInt(newZ))
-        val eligible = !physics.isCrouching && input > .03f && !isWater(feetBlock)
+        val eligible = !physics.isCrouching && push > .03f && !isWater(feetBlock)
         val movingOnGround = physics.onGround && travelled > .0001 && travelled < 2
         footstepQuietTime = if (movingOnGround) 0.0 else footstepQuietTime + dt
         if (eligible && (movingOnGround || (footstepsMoving && footstepQuietTime < .12))) {
             footstepsMoving = true
             // Stable intended speed avoids collision/frame jitter changing the tempo.
             // Actual travel still gates playback, so pushing a wall never sustains steps.
-            val speed = (if (nowSprinting) PhysicsNode.SPRINT_SPEED else PhysicsNode.WALK_SPEED) * input * chargeMul
+            val speed = (if (nowSprinting) PhysicsNode.SPRINT_SPEED else PhysicsNode.WALK_SPEED) * push * chargeMul
             val stride = 1.6 + (speed - 3.5).coerceAtLeast(0.0) * .10
             val interval = (stride / speed.coerceAtLeast(.1)).coerceIn(.23, .92).toFloat()
             val ground = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 - .08), floorInt(newZ))
@@ -4777,7 +4800,7 @@ internal class CaveRenderer(
         val actor=selected ?: return false
         residents.resident(actor)?.let { resident ->
             val view=tradeView(resident.key) ?: return false
-            touch.reset();gamePaused=true;tradeCallback?.invoke(view);return true
+            resetInput();gamePaused=true;tradeCallback?.invoke(view);return true
         }
         val result=passiveAnimals.interact(actor,hotbar[selectedSlot],inventory)
         if(result==0) return false
@@ -4837,7 +4860,7 @@ internal class CaveRenderer(
         frontierLife.arrived(from,home,frontierLife.elapsedMs)
         fishing.cancel()
         camera.playerX=p.x+.5;camera.playerY=p.y+1.62;camera.playerZ=p.z+.5
-        physics.reset();touch.reset();enemyManager.enemies.clear()
+        physics.reset();resetInput();enemyManager.enemies.clear()
         enemyManager.spawnManager.resetAfterTravel()
         mineTarget=null;mineDamage=0f;rockChargeTime=0f;weaponChargeTime=0f
         projectiles.removeAll { it.fromEnemy }
@@ -4855,7 +4878,7 @@ internal class CaveRenderer(
                 camera.aimX.toDouble(),camera.aimY.toDouble(),camera.aimZ.toDouble())) return
             val held=hotbar[selectedSlot]
             if(held==com.Atom2Universe.app.games.caves.node.FrontierItems.CHARM && (inventory[held] ?: 0)>0) {
-                gamePaused=true;touch.reset();travelCallback?.invoke();return
+                gamePaused=true;resetInput();travelCallback?.invoke();return
             }
             if(target!=null && !physics.isCrouching && world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.HEARTH) {
                 frontierLife.bindHome(FrontierLife.Place(target.bx,target.by,target.bz))
@@ -4875,7 +4898,7 @@ internal class CaveRenderer(
                 return
             }
             if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
-                touch.reset();craftStationCallback?.invoke();return
+                resetInput();craftStationCallback?.invoke();return
             }
             if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) {
                 workshops.crank(FrontierWorkshops.Pos(target.bx,target.by,target.bz));startSwing();return
@@ -4892,7 +4915,7 @@ internal class CaveRenderer(
                 startSwing();return
             }
             workshops.view(FrontierWorkshops.Pos(target.bx,target.by,target.bz))?.let { box ->
-                touch.laserActive = false
+                touch.laserActive = false; player.input.mining = false
                 gamePaused=true
                 storageCallback?.invoke(box, inventory.toMap())
                 return

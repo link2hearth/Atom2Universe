@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves
 
 import com.Atom2Universe.app.games.caves.entity.EnemyTarget
+import com.Atom2Universe.app.games.caves.entity.MagazineState
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
 import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
@@ -46,4 +47,67 @@ internal class CavePlayer(
 
     /** L'objet en main, s'il en reste au moins un dans l'inventaire. */
     val heldItem: Short? get() = hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0) > 0 }
+
+    /** Hauteur des yeux en ce moment (plus bas quand il est accroupi). */
+    val eyeY: Double get() = y - eyeDrop
+
+    // ── Ce qu'il demande, et où il vise ───────────────────────────────────────
+
+    /** Ses gestes pendant cette image : les armes, le minage et la marche ne lisent que ça. */
+    val input = PlayerInput()
+
+    // Le rayon de visée : il part de (aimFromX, aimFromY, aimFromZ) dans la direction (aimX, aimY, aimZ).
+    // Pour le joueur de l'appareil, c'est la croix au centre de l'écran.
+    var aimFromX = 0.0
+    var aimFromY = 0.0
+    var aimFromZ = 0.0
+    var aimX = 0f
+    var aimY = 0f
+    var aimZ = -1f
+
+    // ── Armes et minage ───────────────────────────────────────────────────────
+
+    /** Le bloc qu'il est en train de creuser, et où il en est (1 = cassé). */
+    var mineTarget: RayHit? = null
+    var mineDamage = 0f
+    /** Balles restantes et recharge de chaque arme à chargeur, par objet. */
+    val magazines = mutableMapOf<Short, MagazineState>()
+    /** Temps avant de pouvoir tirer à nouveau (s). */
+    var weaponAttackCooldown = 0f
+    /** Depuis combien de temps il tend l'arc ou l'arbalète (s). */
+    var weaponChargeTime = 0f
+    /** Depuis combien de temps il arme un jet de caillou (s). */
+    var rockChargeTime = 0f
+    // Pour reconnaître un nouvel appui sur le tir et un changement d'arme.
+    var fireWasDown = false
+    var lastFirePresses = 0
+    var lastFireWeapon: Short? = null
+}
+
+/**
+ * Les gestes d'un joueur pendant une image, quel que soit l'appareil qui les a produits
+ * (écran tactile, manette, et un jour le réseau).
+ */
+internal class PlayerInput {
+    var moveForward = 0f
+    var moveRight = 0f
+    /** Sauter, ou monter en vol libre. */
+    var up = false
+    /** Descendre en vol libre. */
+    var down = false
+    var crouch = false
+    var sprint = false
+    /** Bouton d'action tenu : creuser, brandir un outil. */
+    var mining = false
+    /** Gâchette, de 0 à 1. */
+    var fire = 0f
+    /** Compte les appuis sur le tir : un appui plus court qu'une image n'est pas perdu. */
+    var firePresses = 0
+    /** Poser un bloc : reste vrai jusqu'à ce que le jeu s'en occupe. */
+    var place = false
+
+    fun clear() {
+        moveForward = 0f; moveRight = 0f; up = false; down = false
+        crouch = false; sprint = false; mining = false; fire = 0f; place = false
+    }
 }
