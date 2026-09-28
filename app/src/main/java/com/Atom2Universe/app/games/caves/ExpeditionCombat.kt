@@ -60,8 +60,13 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         .put("recovery",recovery.toDouble()).put("guardRecovery",guardRecovery.toDouble())
         .put("healthFraction",currentHealthFraction()).toString()
 
+    fun resetActions() {
+        guard=0f; charge=0f; recovery=0f; guardRecovery=0f
+        pending=null; pendingId=null; impactIn=0f; heavy=0f; queued=0f; previous=null
+    }
+
     fun tick(dt: Float, held: Short?) {
-        if(r.mode.allowsWorldEdits && r.mode.allowsCombat) syncArmorHealth()
+        if(r.mode.usesSurvivalCombat && r.mode.allowsCombat) syncArmorHealth()
         guard=(guard-dt).coerceAtLeast(0f); guardRecovery=(guardRecovery-dt).coerceAtLeast(0f)
         recovery=(recovery-dt).coerceAtLeast(0f)
         if(held!=previous || r.heldItemMode!=HotbarMode.COMBAT || r.playerNode.hp<=0) {

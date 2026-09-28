@@ -35,6 +35,9 @@ internal interface GameMode {
     /** Le joueur peut-il creuser et poser des blocs ? */
     val allowsWorldEdits: Boolean get() = true
 
+    /** Survival attacks and equipment can also be tested on a protected map. */
+    val usesSurvivalCombat: Boolean get() = allowsWorldEdits
+
     /** Les tirs ne consomment pas de munitions de réserve (le chargeur se recharge quand même). */
     val infiniteAmmo: Boolean get() = false
     val singleWeapon: Boolean get() = false

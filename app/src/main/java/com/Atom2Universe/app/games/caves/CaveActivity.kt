@@ -203,7 +203,8 @@ class CaveActivity : ThemedActivity() {
                 mapPath?.let { path ->
                     runCatching {
                         MapSource(A2MapStorage.load(this@CaveActivity, path),
-                            isShowcase = path == A2MapStorage.SHOWCASE_PATH)
+                            isShowcase = path == A2MapStorage.SHOWCASE_PATH,
+                            isCombatTraining = path == A2MapStorage.TRAINING_PATH)
                     }.onFailure { error ->
                         android.util.Log.e("CaveMap", "Unable to load map: $path", error)
                     }.getOrNull()
@@ -301,6 +302,7 @@ class CaveActivity : ThemedActivity() {
             worldSource = mapSource,
             modeFactory = if (mapSource != null) { r ->
                 if (mapSource.isShowcase) com.Atom2Universe.app.games.caves.mode.ShowcaseMode(r, mapSource)
+                else if (mapSource.isCombatTraining) com.Atom2Universe.app.games.caves.mode.CombatTrainingMode(r, mapSource)
                 else AssaultMode(r, mapSource)
             } else ::SurvivalMode
         )
@@ -434,9 +436,18 @@ class CaveActivity : ThemedActivity() {
         }
         renderer.modeCallback    = { mode -> uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser) } }
         renderer.posCallback     = { pos  -> uiHandler.post { tvCoords.text = pos } }
-        renderer.lookAtCallback = { block, meta -> uiHandler.post {
-            if(block==null) { tvWaila.visibility=View.GONE;tvWaila.text="" }
-            else { tvWaila.text=getString(R.string.cave_waila_block,blockName(block,meta));tvWaila.visibility=View.VISIBLE }
+        val wailaPanel=hudView.findViewById<View>(R.id.cave_waila_panel)
+        val wailaHealth=hudView.findViewById<android.widget.ProgressBar>(R.id.cave_waila_health)
+        val wailaModels=listOf("dwarf","goblin","golem","imp","mummy","ogre","skeleton","slime","spider","troll","wraith","zombie","soldier")
+        val wailaNames=resources.getStringArray(R.array.cave_showcase_mob_names)
+        renderer.lookAtCallback = { block, meta, mob -> uiHandler.post {
+            wailaPanel.visibility=if(block!=null || mob!=null) View.VISIBLE else View.GONE
+            wailaHealth.visibility=if(mob!=null) View.VISIBLE else View.GONE
+            if(mob!=null) {
+                val name=wailaNames.getOrNull(wailaModels.indexOf(mob.model)) ?: getString(R.string.cave_waila_unknown_mob)
+                tvWaila.text=getString(if(mob.isBoss) R.string.cave_waila_boss else R.string.cave_waila_mob,name,mob.level,mob.hp,mob.maxHp)
+                wailaHealth.max=mob.maxHp;wailaHealth.progress=mob.hp
+            } else tvWaila.text=if(block!=null) getString(R.string.cave_waila_block,blockName(block,meta)) else ""
         } }
         renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = "$fps FPS" } }
         renderer.miningCallback  = { progress, blockType, meta ->
@@ -500,6 +511,8 @@ class CaveActivity : ThemedActivity() {
             hud.buildStructurePanel(root)
             // Bouton 📐 dans la barre de contrôles
             val btnStruct = Button(this).apply {
+                // Export Assaut conservé, mais son accès reste masqué tant que l'outil est secondaire.
+                visibility = View.GONE
                 text = "📐"; textSize = 14f; setBackgroundColor(0x55FFFFFF.toInt()); setTextColor(Color.WHITE)
                 layoutParams = FrameLayout.LayoutParams((40 * resources.displayMetrics.density).toInt(),
                     (40 * resources.displayMetrics.density).toInt()).also {
@@ -527,7 +540,10 @@ class CaveActivity : ThemedActivity() {
             btnCombatMode.visibility = View.GONE
             // L'heure est figée à midi : le bouton jour/nuit n'a plus de sens.
             btnDayNight.visibility = View.GONE
-            if (mapSource?.isShowcase != true) hud.buildMatchPanel(root)
+            if (renderer.mode is AssaultMode) hud.buildMatchPanel(root)
+            (renderer.mode as? com.Atom2Universe.app.games.caves.mode.CombatTrainingMode)?.let { mode ->
+                CombatTrainingPanel(this, root, mode) { index -> glView.queueEvent { mode.enter(index) } }
+            }
             (renderer.mode as? com.Atom2Universe.app.games.caves.mode.ShowcaseMode)?.let { mode ->
                 val caption = android.widget.TextView(this).apply {
                     setTextColor(Color.WHITE)

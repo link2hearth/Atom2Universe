@@ -13,7 +13,11 @@ internal class PlayerNode(maxHp: Int = 50, maxShield: Int = 0) {
 
     val isAlive: Boolean get() = hp > 0
 
+    /** Training redirects damage to shadow health, without disabling enemy attacks. */
+    var damagePreview: ((Int) -> Unit)? = null
+
     fun applyDamage(damage: Int): Boolean {
+        damagePreview?.let { it(damage); return false }
         val shAbsorb = minOf(shield, damage)
         shield -= shAbsorb
         val hpDmg = damage - shAbsorb

@@ -18,6 +18,7 @@ internal object A2MapStorage {
     private const val ASSET_PREFIX = "asset:"
     private const val BUILTIN_PREFIX = "builtin:"
     const val SHOWCASE_PATH = "builtin:biome_showcase"
+    const val TRAINING_PATH = "builtin:combat_training"
 
     /**
      * [path] : chemin de fichier, « asset:… » pour une carte livrée avec l'appli, ou
@@ -65,11 +66,16 @@ internal object A2MapStorage {
             "$BUILTIN_PREFIX${MapleCrossingMap.ID}")
         val dust2 = Entry(context.getString(com.Atom2Universe.app.R.string.cave_assault_dust2),
             "$BUILTIN_PREFIX${Dust2Map.ID}")
-        return listOf(showcase, dust2, suburb, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
+        val training = Entry(context.getString(com.Atom2Universe.app.R.string.cave_training_map), TRAINING_PATH)
+        return listOf(training, showcase, dust2, suburb, builtin, tower) + (bundled + user).sortedBy { it.name.lowercase() }
     }
 
     fun load(context: Context, path: String): A2Map =
-        if (path == SHOWCASE_PATH) {
+        if (path == TRAINING_PATH) {
+            com.Atom2Universe.app.games.caves.node.BlockRegistry.load(context.assets)
+            com.Atom2Universe.app.games.caves.node.MobRegistry.load(context.assets)
+            CombatTrainingMap.create()
+        } else if (path == SHOWCASE_PATH) {
             com.Atom2Universe.app.games.caves.node.BlockRegistry.load(context.assets)
             com.Atom2Universe.app.games.caves.node.MobRegistry.load(context.assets)
             ShowcaseMap.create()

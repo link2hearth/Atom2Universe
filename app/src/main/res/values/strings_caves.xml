@@ -856,4 +856,12 @@
     <string name="cave_block_sapling_willow">Willow sapling</string>
     <string name="cave_block_sapling_jungle_small">Small jungle tree sapling</string>
     <string name="cave_block_sapling_autumn">Autumn tree sapling</string>
+    <string name="cave_training_map">Combat lab — underground structures</string>
+    <string name="cave_training_choose">Structure: %1$s ▾</string>
+    <string name="cave_training_reset">Restart</string>
+    <string name="cave_training_status">Tier 1 · infinite ammo · invincible\nSurvival HP: last hit −%1$d · simulated defeats: %2$d\nAt 0 HP, the bar refills after 3 seconds.</string>
+    <string name="cave_training_bow">Draw: %1$d%% · arrows: ∞</string>
+    <string name="cave_waila_boss">Boss — %1$s · Tier %2$d\nHealth: %3$d / %4$d</string>
+    <string name="cave_waila_unknown_mob">Unknown creature</string>
+    <string name="cave_waila_mob">%1$s · Tier %2$d\nHealth: %3$d / %4$d</string>
 </resources>

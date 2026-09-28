@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.*
 
-/** Depth-tested world warnings, attack trails and contact flashes, batched in one draw call. */
+/** Depth-tested emitted beams and contact flashes, batched in one draw call. */
 internal class CombatEffectsRenderer {
     private var shader: ShaderProgram? = null
     private var vbo=0; private var position=0; private var color=0; private var matrix=0
@@ -49,61 +49,16 @@ internal class CombatEffectsRenderer {
     fun render(enemies: List<Enemy>,camera: Camera) {
         val effectShader=shader ?: return
         count=0;cx=camera.x;cy=camera.y;cz=camera.z
+        // Only an emitted beam is visible. Windups, aim lines and floor templates are gone.
         for(e in enemies) {
-            if(count+7000>vertices.size) break
             val a=e.attack ?: continue
             if(e.hp<=0 || e.occluded || e.freezeTimer>0 || e.staggerTimer>0 || e.confusionTimer>0) continue
-            if(e.attackWindup<=0f && a.flash<=0f) continue
+            if(e.attackWindup>0f || a.flash<=0f || a.shape!=AttackShape.BEAM) continue
             if((a.x-cx).pow(2)+(a.z-cz).pow(2)>48*48) continue
-            val firing=e.attackWindup<=0f
-            val progress=if(firing) 1.0 else (1-e.attackWindup/a.windup).coerceIn(0f,1f).toDouble()
-            red=1f;green=if(firing) .85f else .52f;blue=if(firing) .4f else .08f
-            alpha=if(firing) a.flash/.3f*.65f else .24f+progress.toFloat()*.25f
-            val y=a.y+.055
-            when(a.shape) {
-                AttackShape.BEAM,AttackShape.ARROW,AttackShape.VENOM -> {
-                    val beam=a.shape==AttackShape.BEAM
-                    if(beam) { red=.65f;green=.35f;blue=1f }
-                    if(a.shape==AttackShape.VENOM) { red=.45f;green=1f;blue=.12f }
-                    val width=if(firing && beam) a.width else .018+progress*.025
-                    line(a.x,a.y,a.z,a.targetX,a.targetY,a.targetZ,width)
-                    // Energy gathers at the source; a shrinking ring announces the release.
-                    ring(a.x,a.y,a.z,.16+(1-progress)*.35,camera.yaw,.025)
-                    if(firing && beam) {
-                        red=1f;green=.95f;blue=1f
-                        line(a.x,a.y,a.z,a.targetX,a.targetY,a.targetZ,.055)
-                    }
-                }
-                AttackShape.LUNGE -> {
-                    val fx=sin(a.yaw);val fz=cos(a.yaw);val rx=cos(a.yaw)*a.width;val rz=-sin(a.yaw)*a.width
-                    val ex=a.x+fx*a.range;val ez=a.z+fz*a.range
-                    line(a.x+rx,y,a.z+rz,ex+rx,y,ez+rz,.025)
-                    line(a.x-rx,y,a.z-rz,ex-rx,y,ez-rz,.025)
-                    line(ex-rx,y,ez-rz,ex+rx,y,ez+rz,.025)
-                    val marker=a.range*progress
-                    line(a.x+fx*marker-rx,y,a.z+fz*marker-rz,a.x+fx*marker+rx,y,a.z+fz*marker+rz,.045)
-                }
-                AttackShape.SLAM,AttackShape.SWEEP -> {
-                    val angle=if(a.shape==AttackShape.SLAM) PI else a.halfAngle
-                    for(i in 0 until 32) {
-                        val t0=a.yaw-angle+2*angle*i/32
-                        val t1=a.yaw-angle+2*angle*(i+1)/32
-                        val x0=a.x+sin(t0)*a.range;val z0=a.z+cos(t0)*a.range
-                        val x1=a.x+sin(t1)*a.range;val z1=a.z+cos(t1)*a.range
-                        line(x0,y,z0,x1,y,z1,.026)
-                        val radius=a.range*(if(firing) 1-a.flash/.3 else progress)
-                        line(a.x+sin(t0)*radius,y+.025,a.z+cos(t0)*radius,
-                            a.x+sin(t1)*radius,y+.025,a.z+cos(t1)*radius,.04)
-                        val oldAlpha=alpha;alpha*=.22f
-                        vertex(a.x,y,a.z);vertex(x0,y,z0);vertex(x1,y,z1)
-                        alpha=oldAlpha
-                    }
-                    if(a.shape==AttackShape.SWEEP) {
-                        for(side in intArrayOf(-1,1)) line(a.x,y,a.z,a.x+sin(a.yaw+angle*side)*a.range,y,
-                            a.z+cos(a.yaw+angle*side)*a.range,.025)
-                    }
-                }
-            }
+            red=.65f;green=.35f;blue=1f;alpha=(a.flash/.3f).coerceIn(0f,1f)*.7f
+            line(a.x,a.y,a.z,a.targetX,a.targetY,a.targetZ,a.width)
+            red=1f;green=.95f;blue=1f
+            line(a.x,a.y,a.z,a.targetX,a.targetY,a.targetZ,.055)
         }
         for(p in impacts) {
             red=1f;green=if(p.heavy) .7f else .96f;blue=if(p.heavy) .18f else .8f;alpha=p.life/.24f

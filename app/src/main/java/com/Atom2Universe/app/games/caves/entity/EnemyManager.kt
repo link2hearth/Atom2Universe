@@ -170,14 +170,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Repli (cocon ou bouclier) : immobile face au tireur, il regagne ce qu'on lui a pris de loin.
         if (e.retreat > 0f) {
             Harassment.update(e, dt)
-            e.attackWindup = 0f; e.attack?.lungeRemaining = 0f
+            e.attackWindup = 0f; e.attack = null
             e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
             return
         }
 
         // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
-        if (e.freezeTimer > 0f) { e.freezeTimer -= dt;e.attackWindup=0f;e.attack?.lungeRemaining=0f; return }
-        if(e.staggerTimer>0f) { e.staggerTimer=(e.staggerTimer-dt).coerceAtLeast(0f);e.attackWindup=0f;e.attack?.lungeRemaining=0f }
+        if (e.freezeTimer > 0f) { e.freezeTimer -= dt;e.attackWindup=0f;e.attack=null; return }
+        if(e.staggerTimer>0f) { e.staggerTimer=(e.staggerTimer-dt).coerceAtLeast(0f);e.attackWindup=0f;e.attack=null }
 
         WaterCurrent.sample(world, e.x, e.y + 0.25, e.z, current)
         val inWater = current[3] > 0.0
@@ -188,23 +188,50 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             move(e, e.waterDriftX * dt, e.waterDriftZ * dt, allowStep = false)
         } else { e.waterDriftX = 0.0; e.waterDriftZ = 0.0 }
 
-        if (e.confusionTimer > 0f) e.confusionTimer -= dt
+        if (e.confusionTimer > 0f) { e.confusionTimer -= dt; e.attack=null; e.attackWindup=0f }
 
+        e.contactCooldown=(e.contactCooldown-dt).coerceAtLeast(0f)
+        if(explorationCombat && e.contactCooldown==0f && target.hitCooldown<=0f && EnemyRig.touching(e,target) &&
+            clearSight?.invoke(e.x,e.y+.3,e.z,target.x,target.y-.8,target.z)==true) {
+            val length=hypot(target.x-e.x,target.z-e.z).coerceAtLeast(.001)
+            e.contactCooldown=.85f; target.hitCooldown=.32f
+            meleeImpact?.invoke(e,target,((target.x-e.x)/length).toFloat(),((target.z-e.z)/length).toFloat())
+        }
         e.attack?.let { attack ->
             if(e.attackWindup>0f) {
-                // A shove moves the warning with its owner, but never retargets the player.
+                // Aim follows during the early gesture, then commits before release.
                 attack.x=e.x;attack.z=e.z
-                attack.y=e.y+if(attack.ranged) e.def.eyeHeight.toDouble() else 0.0
+                attack.y=e.y
+                if(!attack.ranged && e.attackWindup>attack.windup*.4f) {
+                    attack.yaw=atan2(px-e.x,pz-e.z)
+                    e.windupYaw=Math.toDegrees(attack.yaw).toFloat()
+                }
+                if(attack.ranged) EnemyRig.muzzle(e).let { attack.x=it.x;attack.y=it.y;attack.z=it.z }
             }
             if (e.confusionTimer > 0f) attack.lungeRemaining = 0f
             if (attack.lungeRemaining > 0f) {
                 val step = min(dt, attack.lungeRemaining)
-                move(e, sin(attack.yaw) * attack.range * .65 * step / .24,
-                    cos(attack.yaw) * attack.range * .65 * step / .24, allowStep = false)
+                move(e, sin(attack.yaw) * attack.range * .65 * step / attack.rushDuration,
+                    cos(attack.yaw) * attack.range * .65 * step / attack.rushDuration, allowStep = false)
                 attack.lungeRemaining = (attack.lungeRemaining - dt).coerceAtLeast(0f)
                 resolveAttack(e, attack, target)
             }
-            if (e.def.id == "spider" && e.attackWindup > attack.windup - .25f) {
+            if(attack.activeRemaining>0f) {
+                attack.activeRemaining=(attack.activeRemaining-dt).coerceAtLeast(0f)
+                attack.x=e.x;attack.y=e.y;attack.z=e.z
+                resolveAttack(e,attack,target)
+            }
+            if(attack.followUpIn>0f) {
+                attack.followUpIn=(attack.followUpIn-dt).coerceAtLeast(0f)
+                if(attack.followUpIn==0f && attack.remainingHits>0) {
+                    attack.remainingHits--;attack.hitIndex++;attack.lungeHit=false
+                    e.strikeTime=.55f
+                    attack.x=e.x;attack.y=e.y;attack.z=e.z
+                    if(attack.ranged) rangedImpact?.invoke(e,attack.targetX,attack.targetY,attack.targetZ)
+                    else resolveAttack(e,attack,target)
+                }
+            }
+            if (e.def.id == "spider" && e.attackWindup > attack.windup - .12f) {
                 move(e, -sin(attack.yaw) * dt * 1.6, -cos(attack.yaw) * dt * 1.6, allowStep = false)
                 attack.x=e.x; attack.z=e.z
             }
@@ -224,7 +251,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // le rayon, qui coûte 10 lectures de bloc par bloc de distance et par monstre, à chaque image.
         val sight= !explorationCombat || dist3d<maxOf(e.def.detectRange,18.0) &&
             clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
-        val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f || e.attackRecovery>0f)
+        val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f || e.attackRecovery>0f || e.attack?.busy==true)
 
         val prevState = e.state
         e.state = when (e.state) {
@@ -290,7 +317,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
             }
         }
 
-        if(explorationCombat && (e.attackWindup>0f || e.attackRecovery>0f)) e.yaw=e.windupYaw
+        if(explorationCombat && (e.attackWindup>0f || e.attackRecovery>0f || e.attack?.busy==true)) e.yaw=e.windupYaw
 
         // Attaque : découplée de l'état de déplacement. Dès que le mob est à portée,
         // le cooldown tourne et il frappe — la séparation entre mobs ne l'empêche plus.
@@ -322,20 +349,23 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                     e.attackWindup=(e.attackWindup-dt).coerceAtLeast(0f)
                     if(e.attackWindup==0f) {
                         val attack = e.attack!!
-                        e.attackCooldown=if(attack.ranged) 2.2f else 1.5f
+                        e.attackCooldown=attack.recovery + if(attack.ranged) .48f else .16f
                         e.attackRecovery=attack.recovery
                         e.strikeTime=.55f
                         if(attack.shape==AttackShape.BEAM) clipBeam(attack)
                         attack.flash=.3f
+                        if(attack.remainingHits>0) attack.followUpIn=.38f
+                        if(attack.shape==AttackShape.SPIN) attack.activeRemaining=.55f
                         if(attack.shape == AttackShape.ARROW || attack.shape == AttackShape.VENOM) {
                             rangedImpact?.invoke(e,attack.targetX,attack.targetY,attack.targetZ)
-                        } else if(attack.shape == AttackShape.LUNGE) {
-                            attack.lungeRemaining=.24f
-                            e.velY=3.2; e.onGround=false
+                        } else if(attack.rushing) {
+                            attack.lungeRemaining=attack.rushDuration
+                            if(attack.shape==AttackShape.LUNGE) { e.velY=3.2; e.onGround=false }
                         } else resolveAttack(e,attack,target)
                     }
-                } else if(e.attackCooldown<=0f && sight && (!hopping || e.onGround) &&
-                    (archer && dist<(if(e.def.id=="spider") 10 else 14) || !archer && dist<=keep+ATTACK_REACH && abs(dy)<3)) {
+                } else if(e.attackCooldown<=0f && e.attack?.busy!=true && sight && (!hopping || e.onGround) &&
+                    (archer && dist<(if(e.def.id=="spider") 10 else 14) || !archer && abs(dy)<3 &&
+                        (dist<=keep+ATTACK_REACH || dist<6 && EnemyAttack.forEnemy(e,dist).shape==AttackShape.CHARGE))) {
                     beginAttack(e,target,dist)
                 }
             }
@@ -381,16 +411,21 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     private fun resolveAttack(e: Enemy, attack: EnemyAttack, target: EnemyTarget) {
         val px = target.x; val py = target.y; val pz = target.z
-        if (!attack.hits(px,py,pz,target.eyeDrop) || target.hitCooldown>0f) return
-        if(attack.shape==AttackShape.LUNGE) {
+        if(target.hitCooldown>0f || attack.lungeHit) return
+        if(attack.rushing) {
+            val height=com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale)
+            if(py-1.62>e.y+height || py<e.y || hypot(px-e.x,pz-e.z)>e.collisionRadius+.65) return
             val forward=(px-e.x)*sin(attack.yaw)+(pz-e.z)*cos(attack.yaw)
-            if(attack.lungeHit || forward < -e.collisionRadius || forward > attack.range*.35) return
-        }
-        val originY=if(attack.ranged) attack.y else attack.y+e.def.eyeHeight
-        if(attack.shape!=AttackShape.BEAM && clearSight?.invoke(attack.x,originY,attack.z,px,py-.6,pz)!=true) return
+            if(forward < -e.collisionRadius) return
+        } else if(!attack.hits(px,py,pz,target.eyeDrop)) return
+        val originX=if(attack.rushing) e.x else attack.x
+        val originZ=if(attack.rushing) e.z else attack.z
+        val originY=if(attack.ranged) attack.y else e.y+e.def.eyeHeight
+        if(attack.ranged && clearSight?.invoke(e.x,originY,e.z,originX,originY,originZ)!=true) return
+        if(attack.shape!=AttackShape.BEAM && clearSight?.invoke(originX,originY,originZ,px,py-.6,pz)!=true) return
         val dx=px-attack.x; val dz=pz-attack.z
         val len=hypot(dx,dz).coerceAtLeast(.001)
-        target.hitCooldown=.5f
+        target.hitCooldown=.30f
         attack.lungeHit=true
         meleeImpact?.invoke(e,target,(dx/len).toFloat(),(dz/len).toFloat())
     }
@@ -398,10 +433,12 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private fun beginAttack(e: Enemy, target: EnemyTarget, distance: Double) {
         val px = target.x; val py = target.y; val pz = target.z
         val attack = EnemyAttack.forEnemy(e, distance)
+        e.attackSequence++
         attack.x=e.x; attack.y=e.y; attack.z=e.z
         attack.yaw=atan2(px-e.x,pz-e.z)
         attack.targetX=px; attack.targetY=py-.6-target.eyeDrop*.5; attack.targetZ=pz
-        if(attack.ranged) attack.y=e.y+e.def.eyeHeight
+        e.windupYaw=Math.toDegrees(attack.yaw).toFloat()
+        if(attack.ranged) EnemyRig.muzzle(e).let { attack.x=it.x;attack.y=it.y;attack.z=it.z }
         if(attack.shape==AttackShape.BEAM) {
             val dx=px-attack.x; val dy=attack.targetY-attack.y; val dz=pz-attack.z
             val length=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.001)

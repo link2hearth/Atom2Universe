@@ -12,6 +12,7 @@ internal class MapSource(
     val originY: Int = DEFAULT_ORIGIN_Y,
     val originZ: Int = 0,
     val isShowcase: Boolean = false,
+    val isCombatTraining: Boolean = false,
 ) : WorldSource {
     val decor = CaveDecorScene(map.decor)
 

@@ -420,7 +420,9 @@ internal class CaveRenderer(
         return true
     }
     internal fun fireExplorationProjectile(e: com.Atom2Universe.app.games.caves.entity.Enemy,tx: Double,ty: Double,tz: Double) {
-        val sx=e.x;val sy=e.y+e.def.eyeHeight;val sz=e.z
+        val muzzle=com.Atom2Universe.app.games.caves.entity.EnemyRig.muzzle(e)
+        val sx=muzzle.x;val sy=muzzle.y;val sz=muzzle.z
+        if(!clearCombatLine(e.x,sy,e.z,sx,sy,sz)) return
         val venom=e.attack?.shape==com.Atom2Universe.app.games.caves.entity.AttackShape.VENOM
         val kind=if(venom) ProjectileKind.VENOM else ProjectileKind.ARROW
         val speed=if(venom) 9f else 19f
@@ -576,7 +578,8 @@ internal class CaveRenderer(
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
     // Le meta accompagne le bloc pour le nommer : une double dalle y garde sa dalle du haut.
     var miningCallback:   ((progress: Float, block: Short?, meta: Byte) -> Unit)? = null
-    var lookAtCallback:   ((block: Short?, meta: Byte) -> Unit)? = null
+    var lookAtCallback:   ((block: Short?, meta: Byte, mob: com.Atom2Universe.app.games.caves.entity.EnemyFocus.Mob?) -> Unit)? = null
+    private var lookMob: com.Atom2Universe.app.games.caves.entity.EnemyFocus.Mob? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var fishingGaugeCallback: ((FishingLine.Gauge)->Unit)? = null
@@ -1076,6 +1079,18 @@ internal class CaveRenderer(
         if (com.Atom2Universe.app.BuildConfig.DEBUG)
             android.util.Log.i("CavePerf", "startupReady ms=${(lastFrameNs - startupNs) / 1_000_000}")
         scheduleInitialLodBuilds()
+    }
+
+    /** GL-thread relocation; physics pauses until the destination meshes are ready. */
+    internal fun restartTrainingAt(spawn: FloatArray) {
+        camera.playerX=spawn[0].toDouble(); camera.playerY=spawn[1].toDouble(); camera.playerZ=spawn[2].toDouble()
+        camera.yaw=0f; camera.pitch=0f; camera.eyeDrop=0.0
+        physics.reset(); resetInput(); projectiles.clear()
+        expeditionCombat.resetActions()
+        magazines.clear(); weaponAttackCooldown=0f; weaponChargeTime=0f; rockChargeTime=0f
+        fireWasDown=false; equipmentRelease=-1f; releasedEquipment=null
+        camera.update()
+        warmSpawnNeighborhood()
     }
 
     private fun warmSpawnNeighborhood() {
@@ -2139,13 +2154,13 @@ internal class CaveRenderer(
             reloadWithSound(magazine)
             return false
         }
-        val stats = if(mode.allowsWorldEdits && profile.gear) buildMap {
+        val stats = if(mode.usesSurvivalCombat && profile.gear) buildMap {
             for(b in listOf(G.Bonus.ATTACK,G.Bonus.CRIT,G.Bonus.CRIT_DAMAGE)) {
                 val value=expeditionCombat.bonus(b,false)
                 if(value>0) put(b.key,value)
             }
         } else emptyMap()
-        val drawPower=if(mode.allowsWorldEdits && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
+        val drawPower=if(mode.usesSurvivalCombat && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
         val baseDamage = (profile.damage*drawPower).roundToInt()
         val yawRad = Math.toRadians(player.yaw.toDouble())
         val rightX = -cos(yawRad); val rightZ = sin(yawRad)
@@ -2158,7 +2173,7 @@ internal class CaveRenderer(
         val ammoWeapon = ammoWeaponDef
         val heat = if(profile.type=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
-            val spread=profile.spread*heat*if(mode.allowsWorldEdits && physics.isCrouching) .65f else 1f
+            val spread=profile.spread*heat*if(mode.usesSurvivalCombat && physics.isCrouching) .65f else 1f
             var dx=player.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             var dy=player.aimY.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
             var dz=player.aimZ.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
@@ -2166,7 +2181,7 @@ internal class CaveRenderer(
             projectiles.add(Projectile(spawnX,spawnY,spawnZ,dx,dy,dz,
                 profile.speed*sqrt(drawPower),(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
                 isRock=profile.kind==ProjectileKind.ROCK,stats=stats,isPlayerWeapon=true,
-                kind=profile.kind,ammoId=if(profile.kind==ProjectileKind.ARROW || profile.kind==ProjectileKind.BOLT) ammoId else null,
+                kind=profile.kind,ammoId=if(!infiniteAmmo && (profile.kind==ProjectileKind.ARROW || profile.kind==ProjectileKind.BOLT)) ammoId else null,
                 maxRange=profile.range,owner=player))
         }
 
@@ -2177,7 +2192,7 @@ internal class CaveRenderer(
         }
 
         val speedBonus = stats["attack_speed"] ?: 0
-        weaponAttackCooldown=if(mode.allowsWorldEdits) profile.interval/(1f+speedBonus/100f)
+        weaponAttackCooldown=if(mode.usesSurvivalCombat) profile.interval/(1f+speedBonus/100f)
             else (profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
         eventBus.publish(GameEvent.WeaponFired(profile.type))
         if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) reloadWithSound(magazine)
@@ -2207,10 +2222,8 @@ internal class CaveRenderer(
         val pressed=down && !fireWasDown
         fireWasDown=down
         val held=hotbar[selectedSlot]
-        if(mode.allowsWorldEdits) {
-            expeditionCombat.tick(dt,held)
-            fishing.tick(dt,held,down)
-        }
+        if(mode.usesSurvivalCombat) expeditionCombat.tick(dt,held)
+        if(mode.allowsWorldEdits) fishing.tick(dt,held,down)
         if(held!=lastFireWeapon) {
             rockChargeTime=0f;weaponChargeTime=0f;lastFireWeapon=held
         }
@@ -2226,11 +2239,11 @@ internal class CaveRenderer(
             if(pressed && (isCreative || (inventory[held] ?: 0)>0)) { fishing.action(); startSwing() }
             return
         }
-        if(mode.allowsWorldEdits && expeditionCombat.guard>0f) {
+        if(mode.usesSurvivalCombat && expeditionCombat.guard>0f) {
             rockChargeTime=0f;weaponChargeTime=0f;return
         }
         if (heldItemMode != HotbarMode.COMBAT) { rockChargeTime = 0f; weaponChargeTime = 0f; return }
-        if(mode.allowsWorldEdits && held!=null && E.isEquipment(held)) {
+        if(mode.usesSurvivalCombat && held!=null && E.isEquipment(held)) {
             rockChargeTime=0f;weaponChargeTime=0f
             if(!isCreative && (inventory[held] ?: 0)<=0) return
             if(E.melee(held)!=null) { if(down) expeditionCombat.hold(dt); expeditionCombat.input(held,down) }
@@ -2308,7 +2321,7 @@ internal class CaveRenderer(
      * Les balles des soldats aussi : entendre claquer le mur juste à côté, c'est savoir qu'on est visé.
      */
     private fun announceImpact(x: Double, y: Double, z: Double) {
-        if (mode.allowsWorldEdits) return
+        if (mode.usesSurvivalCombat) return
         val block = worldBlockAt(floor(x).toInt(), floor(y).toInt(), floor(z).toInt())
         val material = when {
             block == AIR || block in 1000..1019 -> "wood"   // meubles (décor) et planches
@@ -2453,11 +2466,17 @@ internal class CaveRenderer(
     }
 
     private fun updateLookTarget() {
-        val target=raycastBlock()
-        if(lookTarget?.bx!=target?.bx || lookTarget?.by!=target?.by || lookTarget?.bz!=target?.bz) {
+        val solid=raycastBlock(player.aimFromX,player.aimFromY,player.aimFromZ,
+            player.aimX.toDouble(),player.aimY.toDouble(),player.aimZ.toDouble(),24.0)
+        val mob=com.Atom2Universe.app.games.caves.entity.EnemyFocus.mob(enemyManager.enemies,
+            player.aimFromX,player.aimFromY,player.aimFromZ,player.aimX.toDouble(),player.aimY.toDouble(),
+            player.aimZ.toDouble(),solid?.distance ?: 24.0)
+        val target=solid?.takeIf { mob==null && it.distance<=MINE_REACH }
+        if(lookMob!=mob || lookTarget?.bx!=target?.bx || lookTarget?.by!=target?.by || lookTarget?.bz!=target?.bz) {
+            lookMob=mob
             lookTarget=target
             lookAtCallback?.invoke(target?.let { worldBlockAt(it.bx,it.by,it.bz) },
-                target?.let { world.metaAt(it.bx,it.by,it.bz) } ?: 0)
+                target?.let { world.metaAt(it.bx,it.by,it.bz) } ?: 0,mob)
         }
     }
 
@@ -3452,7 +3471,7 @@ internal class CaveRenderer(
     /** Called on the GL thread, like firing and magazine updates. */
     fun reloadAssaultWeapon() {
         if (!mode.allowsCombat || gamePaused) return
-        if(mode.allowsWorldEdits) {
+        if(mode.usesSurvivalCombat) {
             val held=hotbar[selectedSlot]
             if(held==E.ROD) { fishing.cancel();return }
             if(heldItemMode==HotbarMode.COMBAT && (E.melee(held)!=null || expeditionCombat.shield && (RangedProfile.all[selectedEquipmentType()]?.magazine ?: 0)==0)) {
@@ -3478,13 +3497,13 @@ internal class CaveRenderer(
         val type=selectedEquipmentType()
         val profile=RangedProfile.all[type]
         val id=hotbar[selectedSlot]
-        val meleeCharge=if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null)
+        val meleeCharge=if(mode.usesSurvivalCombat && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null)
             (expeditionCombat.charge/.9f*20).toInt().coerceIn(0,20)*5 else 0
         if(meleeCharge!=lastCombatCharge) { lastCombatCharge=meleeCharge;combatChargeCallback?.invoke(meleeCharge) }
         val action = when {
             !mode.allowsCombat -> SecondaryAction.NONE
             mode.allowsWorldEdits && id == E.ROD -> SecondaryAction.CANCEL_FISHING
-            mode.allowsWorldEdits && heldItemMode == HotbarMode.COMBAT &&
+            mode.usesSurvivalCombat && heldItemMode == HotbarMode.COMBAT &&
                 (E.melee(id)!=null || expeditionCombat.shield && (profile?.magazine ?: 0) == 0) -> SecondaryAction.GUARD
             heldItemMode == HotbarMode.COMBAT && id != null && (profile?.magazine ?: 0) > 0 -> SecondaryAction.RELOAD
             else -> SecondaryAction.NONE
@@ -3496,11 +3515,12 @@ internal class CaveRenderer(
         val reserve=ammoBlockIdFor(type)?.let { inventory[it] ?: 0 } ?: 0
         val mag=if(id!=null && profile!=null && profile.magazine>0) magazine(id,profile) else null
         val status=if(mode.allowsWorldEdits && id==E.ROD) fishing.status()
-            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_hint)
+            else if(mode.usesSurvivalCombat && heldItemMode==HotbarMode.COMBAT && expeditionCombat.guard>0f) context.getString(com.Atom2Universe.app.R.string.cave_guard_hint)
             else if(meleeCharge>=100) context.getString(com.Atom2Universe.app.R.string.cave_melee_charged)
             else if(meleeCharge>0) context.getString(com.Atom2Universe.app.R.string.cave_melee_charging,meleeCharge)
-            else if(mode.allowsWorldEdits && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
-            else if(mode.allowsWorldEdits && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
+            else if(mode.usesSurvivalCombat && heldItemMode==HotbarMode.COMBAT && E.melee(id)!=null) context.getString(com.Atom2Universe.app.R.string.cave_melee_hint)
+            else if(mode.usesSurvivalCombat && id!=null && E.isEquipment(id)) context.getString(com.Atom2Universe.app.R.string.cave_equipment_use)
+            else if(mode.infiniteAmmo && heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_training_bow, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100))
             else if(heldItemMode==HotbarMode.COMBAT && profile!=null && profile.magazine==0) context.getString(com.Atom2Universe.app.R.string.cave_ranged_charge, (weaponChargeTime/.9f*100).toInt().coerceIn(0,100),reserve)
             else if(heldItemMode!=HotbarMode.COMBAT || mag==null) ""
             else if(mag.reloadRemaining>0f) context.getString(com.Atom2Universe.app.R.string.cave_weapon_reloading)
@@ -3511,7 +3531,7 @@ internal class CaveRenderer(
     }
 
     private fun selectedEquipmentType(): String? {
-        val id = hotbar[selectedSlot] ?: return if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) "buckler" else null
+        val id = hotbar[selectedSlot] ?: return if(mode.usesSurvivalCombat && expeditionCombat.shield && expeditionCombat.guard>0f) "buckler" else null
         E.melee(id)?.let { return it.type }
         if(id==E.ROD) return "fishing_rod"
         return RangedProfile.of(id)?.type
@@ -3602,9 +3622,9 @@ internal class CaveRenderer(
             heldAttack += dt * heldAttackSpeed / HeldItemPoses.attackDuration(kind)
             if (heldAttack >= 1f) heldAttack = -1f
         }
-        val charge = if (mode.allowsWorldEdits && kind.melee) (expeditionCombat.charge / .9f).coerceIn(0f, 1f) else 0f
+        val charge = if (mode.usesSurvivalCombat && kind.melee) (expeditionCombat.charge / .9f).coerceIn(0f, 1f) else 0f
         heldChargeShown = if (charge > .01f) charge else if (heldAttack < 0f) 0f else heldChargeShown
-        val guardTarget = if (mode.allowsWorldEdits && expeditionCombat.guard > 0f) 1f else 0f
+        val guardTarget = if (mode.usesSurvivalCombat && expeditionCombat.guard > 0f) 1f else 0f
         heldGuard += (guardTarget - heldGuard) * (dt / .09f).coerceAtMost(1f)
         val moving = hypot(camera.playerX - walkLastX, camera.playerZ - walkLastZ) > .001
         if (camera.thirdPerson) return // La marche TPS avance déjà walkPhase dans drawPlayerBox.
@@ -3634,7 +3654,7 @@ internal class CaveRenderer(
     private fun drawHeldItem(kind: HeldKind) {
         val m = equipmentMesh
         HeldItemModels.fpsFrame(m, kind, heldLook(), HeldItemPoses.pose(kind, heldState(), heldAttackCharge))
-        if (mode.allowsWorldEdits && expeditionCombat.shield && heldGuard > .05f) {
+        if (mode.usesSurvivalCombat && expeditionCombat.shield && heldGuard > .05f) {
             // Rondache levée à gauche pendant la garde.
             val y = -.62f + .40f * HeldItemPoses.smooth(heldGuard)
             m.box(-.36f, y, -.66f, .17f, .20f, .03f, 0x946E4D)
@@ -3719,7 +3739,7 @@ internal class CaveRenderer(
         android.opengl.Matrix.rotateM(equipmentModel,0,dip*28f,0f,0f,1f)
         android.opengl.Matrix.translateM(equipmentModel,0,0f,-dip*.12f,0f)
         m.pose(type,rock,fps,charge,rockCharge,release,loaded,accent,reload,mag?.shots ?: 0)
-        if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) {
+        if(mode.usesSurvivalCombat && expeditionCombat.shield && expeditionCombat.guard>0f) {
             m.box(-.28f,.12f,-.02f,.17f,.22f,.035f,0x946E4D)
             m.box(-.28f,.12f,-.06f,.022f,.22f,.014f,0xBBC9C6)
         }
@@ -4221,8 +4241,8 @@ internal class CaveRenderer(
         val rX = cos(yawRad).toFloat(); val rZ = -sin(yawRad).toFloat()
         val chargeMul = if (rockChargeTime > 0f) 0.55f else 1f
 
-        physics.equipmentSpeed=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.SPEED)/100.0 else 1.0
-        physics.equipmentJumpHeight=if(mode.allowsWorldEdits) 1.0+expeditionCombat.bonus(G.Bonus.JUMP)/100.0 else 1.0
+        physics.equipmentSpeed=if(mode.usesSurvivalCombat) 1.0+expeditionCombat.bonus(G.Bonus.SPEED)/100.0 else 1.0
+        physics.equipmentJumpHeight=if(mode.usesSurvivalCombat) 1.0+expeditionCombat.bonus(G.Bonus.JUMP)/100.0 else 1.0
         val input = player.input
         physics.updateCrouch(input.crouch, camera.playerX, camera.playerY, camera.playerZ)
         if (physics.isCrouching) { touch.cancelSprint(); input.sprint = false }

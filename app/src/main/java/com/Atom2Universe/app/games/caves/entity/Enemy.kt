@@ -50,6 +50,8 @@ internal class Enemy(
     var attackWindup = 0f
     var attack: EnemyAttack? = null
     var attackRecovery = 0f
+    var attackSequence = 0
+    var contactCooldown = 0f
     var hopRest = 0f
     var landingSquash = 0f
     var windupYaw = 0f

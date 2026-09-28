@@ -217,7 +217,7 @@ internal class HeldEquipmentMesh {
                 }
                 val pull = pullBack(type,charge,release)
                 if (loaded) arrow(.035f,0f,pull)
-                if (charge > .01f) hand(.065f,0f,pull+.025f)
+                if (showSlingHand && charge > .01f) hand(.065f,0f,pull+.025f)
             }
             "crossbow" -> {
                 box(0f,.035f,-.13f,.038f,.045f,.27f,wood)

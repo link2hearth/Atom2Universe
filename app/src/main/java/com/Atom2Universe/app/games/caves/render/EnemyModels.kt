@@ -59,6 +59,8 @@ internal object EnemyModels {
         box(0f,17f,0f,10f,11f,6f,shirt)
         box(0f,12.4f,0f,10.3f,1.5f,6.3f,leather)
         arms(7f,22f,11f,3f,skin,-52f)
+        for(side in listOf(-1,1)) for(finger in listOf(-.7f,.7f))
+            box(side*7f+finger,10f,1.7f,.65f,3f,.8f,bone,Limb.ARM,side,py=22f,pz=0f,tilt=-52f)
         head(26.5f,8f,8f,8f,skin)
         box(0f,30f,-.6f,8.3f,1f,7f,0xFF677566.toInt(),Limb.LOOK,py=22.5f,pz=0f,px=0f)
         box(-2f,25f,4.3f,2.3f,1f,.5f,0xFFB5BC9C.toInt(),Limb.LOOK,py=22.5f,pz=0f,px=0f)
@@ -73,7 +75,17 @@ internal object EnemyModels {
         box(0f,12f,0f,7f,2.5f,4f,bone)
         for (y in listOf(15f,18f,21f)) for (side in listOf(-1,1))
             box(side*2.5f,y,.4f,4f,1.3f,4.2f,bone)
-        arms(6f,22f,11f,2f,bone)
+        // The string arm crosses the chest; it needs a longer articulated silhouette.
+        for(side in listOf(-1,1)) {
+            val length=if(side<0) 13.4f else 11f
+            box(side*6f,22f-length/2,0f,2f,length,2f,bone,Limb.ARM,side,py=22f,pz=0f)
+            box(side*6f,22f-length+.8f,.3f,2.5f,2.6f,2.6f,bone,Limb.ARM,side,py=22f,pz=0f)
+            box(side*6f,22f-length*.5f,0f,2.4f,1.2f,2.4f,bone,Limb.ARM,side,py=22f,pz=0f)
+        }
+        // Scapulae and a back-mounted quiver give the archer a readable silhouette.
+        for(side in listOf(-1,1)) box(side*3.2f,21f,-1.8f,3.5f,2.5f,1.2f,bone)
+        box(-3f,18f,-3.5f,3f,9f,3f,leather)
+        for(x in listOf(-3.7f,-2.3f)) box(x,23f,-3.5f,.5f,5f,.5f,bone)
         head(26f,7f,7f,7f,bone)
         box(0f,23f,1f,5.5f,1.3f,5f,bone,Limb.LOOK,py=22.5f,pz=0f,px=0f)
         box(0f,25f,3.7f,1f,1.4f,.5f,ink,Limb.LOOK,py=22.5f,pz=0f,px=0f)
@@ -89,6 +101,9 @@ internal object EnemyModels {
         box(0f,14f,0f,17f,5f,12f,leather)
         box(0f,15f,6.3f,3f,2f,1f,steel)
         arms(11f,30f,16f,5f,skin)
+        box(11f,13f,3f,2f,15f,2f,leather,Limb.ARM,1,py=30f,pz=0f)
+        box(11f,8f,3f,6f,8f,6f,0xFF776B60.toInt(),Limb.ARM,1,py=30f,pz=0f)
+        box(11f,10f,3f,6.4f,1.5f,6.4f,steel,Limb.ARM,1,py=30f,pz=0f)
         head(32f,9f,8f,9f,skin)
         for(side in listOf(-1,1)) {
             box(side*2.8f,29.7f,5f,1.6f,3f,1.6f,bone,Limb.LOOK,py=28f,pz=0f,px=0f)
@@ -127,6 +142,7 @@ internal object EnemyModels {
         box(0f,19f,5.7f,2f,2.6f,2.3f,skin,Limb.LOOK,py=16.5f,pz=1.5f,px=0f)
         box(-2.2f,12f,4f,3f,4f,2f,leather)
         box(5.5f,8f,2f,1.6f,5f,2f,steel,Limb.ARM,1,py=17f,pz=0f,tilt=-15f)
+        box(-5.5f,8f,2f,1.2f,4f,1.6f,steel,Limb.ARM,-1,py=17f,pz=0f,tilt=-15f)
     }.build(24f,gait=11f,stride=.6f,breath=.2f)
 
     private fun troll()=Builder().apply {
@@ -134,6 +150,8 @@ internal object EnemyModels {
         legs(4f,16f,5f,skin)
         box(0f,26f,0f,13f,16f,9f,skin)
         arms(8.5f,33f,20f,4f,skin)
+        for(side in listOf(-1,1)) for(finger in listOf(-1f,1f))
+            box(side*8.5f+finger,12f,2f,.9f,4f,1f,bone,Limb.ARM,side,py=33f,pz=0f)
         head(37f,8f,7f,8f,skin,glow)
         box(0f,36f,4.8f,3f,4f,3f,skin,Limb.LOOK,py=33.5f,pz=0f,px=0f)
         box(-4f,32f,-1f,8f,4f,10f,moss)
@@ -149,6 +167,10 @@ internal object EnemyModels {
         legs(5f,12f,7f,dark)
         box(0f,22f,0f,18f,18f,12f,stone)
         arms(12f,30f,18f,6f,stone)
+        for(side in listOf(-1,1)) {
+            box(side*12f,13f,1f,8f,6f,8f,dark,Limb.ARM,side,py=30f,pz=0f)
+            box(side*12f,13f,5.1f,5f,1f,.3f,glow,Limb.ARM,side,py=30f,pz=0f,lit=true)
+        }
         head(36f,11f,9f,11f,dark,glow)
         for(side in listOf(-1,1)) {
             box(side*12f,28f,0f,7f,5f,7f,dark,Limb.ARM,side,py=30f,pz=0f)

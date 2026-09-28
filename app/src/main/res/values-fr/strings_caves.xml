@@ -856,4 +856,12 @@
     <string name="cave_block_sapling_willow">Pousse de saule</string>
     <string name="cave_block_sapling_jungle_small">Pousse de petit arbre de la jungle</string>
     <string name="cave_block_sapling_autumn">Pousse d\'arbre d\'automne</string>
+    <string name="cave_training_map">Test de combat — structures souterraines</string>
+    <string name="cave_training_choose">Structure : %1$s ▾</string>
+    <string name="cave_training_reset">Recommencer</string>
+    <string name="cave_training_status">Palier 1 · munitions infinies · invincible\nVie Survie : dernier coup −%1$d · défaites simulées : %2$d\nÀ 0 PV, la barre se remplit après 3 secondes.</string>
+    <string name="cave_training_bow">Tension : %1$d%% · flèches : ∞</string>
+    <string name="cave_waila_boss">Boss — %1$s · Palier %2$d\nVie : %3$d / %4$d</string>
+    <string name="cave_waila_unknown_mob">Créature inconnue</string>
+    <string name="cave_waila_mob">%1$s · Palier %2$d\nVie : %3$d / %4$d</string>
 </resources>

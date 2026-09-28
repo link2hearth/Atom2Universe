@@ -38,9 +38,9 @@
             android:textColor="#99FFFFFF"
             android:textSize="11sp" />
 
-        <!-- WAILA : bloc visé -->
-        <TextView
-            android:id="@+id/cave_tv_waila"
+        <!-- WAILA : bloc ou boss visé -->
+        <LinearLayout
+            android:id="@+id/cave_waila_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
@@ -48,9 +48,24 @@
             android:background="#AA101814"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:textColor="#EEFFFFFF"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/cave_tv_waila"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#EEFFFFFF"
+                android:textSize="13sp" />
+            <ProgressBar
+                android:id="@+id/cave_waila_health"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="3dp"
+                android:progressTint="#E46C58"
+                android:progressBackgroundTint="#663E302C"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <!-- Coordonnées, visibles sous la mini-carte -->
         <TextView

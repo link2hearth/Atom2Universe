@@ -95,7 +95,10 @@ internal class SpawnManager(
 
     // ── Tick principal ────────────────────────────────────────────────────────
 
+    var enabled = true
+
     fun update(dt: Float, px: Double, py: Double, pz: Double) {
+        if (!enabled) return
         if (bossEnemyId >= 0 && enemies.none { it.id == bossEnemyId }) {
             bossEnemyId = -1; bossRewardGiven = false
         }

@@ -1,5 +1,11 @@
 package com.Atom2Universe.app.games.caves.render
 
+import com.Atom2Universe.app.games.caves.entity.EnemyAttackPose
+
+import com.Atom2Universe.app.games.caves.entity.EnemyRig
+
+import com.Atom2Universe.app.games.caves.entity.AttackShape
+
 import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -283,97 +289,7 @@ internal class EnemyRenderer {
             disableBodyAttribs()
         }
 
-        // ── 2. Barres de vie + labels (accumulés puis dessinés batchés) ─────────
-        var ci = 0; var di = 0; var count = 0
-        for (index in from until to) {
-            val e = visible[index]
-            if (e.hp <= 0) continue
-            if (count >= MAX_VISIBLE) break
-            count++
-            if (e.exhibitPose != null || e.def.behavior in setOf("passive", "settler", "machine")) continue
-
-            val ex = (e.x - camX).toFloat()
-            val ey = (e.y - camY).toFloat()
-            val ez = (e.z - camZ).toFloat()
-            // Sommet réel du modèle voxel (les gros mobs dépassent baseScale×2).
-            val modelTop = MobModels.bodyHeightWorld(e.def.model, e.baseScale)
-            val barW = (e.baseScale * 2f) * 0.55f
-
-            val barY0 = ey + modelTop + 0.14f
-            val barY1 = barY0 + 0.14f
-            val hpFrac = e.hp.toFloat() / e.maxHp.coerceAtLeast(1)
-            val fgX1 = -barW * 0.5f + barW * hpFrac
-            levelBgColor(e.level, labelBg)
-            val bgR = labelBg[0]; val bgG = labelBg[1]; val bgB = labelBg[2]
-
-            fun cv(rx: Float, ry: Float, r: Float, g: Float, b: Float) {
-                coV[ci++] = ex + rightX * rx; coV[ci++] = ry; coV[ci++] = ez + rightZ * rx
-                coV[ci++] = r; coV[ci++] = g; coV[ci++] = b
-            }
-            val bx0 = -barW * 0.5f; val bx1 = barW * 0.5f
-            cv(bx0, barY1, bgR, bgG, bgB); cv(bx0, barY0, bgR, bgG, bgB); cv(bx1, barY0, bgR, bgG, bgB)
-            cv(bx0, barY1, bgR, bgG, bgB); cv(bx1, barY0, bgR, bgG, bgB); cv(bx1, barY1, bgR, bgG, bgB)
-            val gr = 1f - hpFrac; val gg = hpFrac * 0.85f
-            cv(bx0, barY1, gr, gg, 0f); cv(bx0, barY0, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f)
-            cv(bx0, barY1, gr, gg, 0f); cv(fgX1, barY0, gr, gg, 0f); cv(fgX1, barY1, gr, gg, 0f)
-
-            val levelStr = if (e.isBoss) "BOSS" else if (e.level in LEVEL_LABELS.indices)
-                LEVEL_LABELS[e.level] else e.level.toString()
-            val digitW = if (e.isBoss) 0.20f else 0.16f
-            val digitH = if (e.isBoss) 0.28f else 0.22f
-            val gap = 0.02f
-            val totalW = levelStr.length * (digitW + gap) - gap
-            val digitY0 = barY1 + 0.06f
-            val digitY1 = digitY0 + digitH
-
-            fun dv(rx: Float, ry: Float, u: Float, v: Float) {
-                diV[di++] = ex + rightX * rx; diV[di++] = ry; diV[di++] = ez + rightZ * rx
-                diV[di++] = u; diV[di++] = v
-            }
-            var curX = -totalW * 0.5f
-            for (ch in levelStr) {
-                val d = if (ch.isDigit()) ch - '0' else 10 + (ch - 'A').coerceIn(0, 5)
-                val du0 = d * DIGIT_W.toFloat() / DIGIT_ATLAS_W
-                val du1 = (d + 1) * DIGIT_W.toFloat() / DIGIT_ATLAS_W
-                dv(curX,          digitY1, du0, 0f)
-                dv(curX,          digitY0, du0, DIGIT_H.toFloat() / DIGIT_ATLAS_H)
-                dv(curX + digitW, digitY0, du1, DIGIT_H.toFloat() / DIGIT_ATLAS_H)
-                dv(curX,          digitY1, du0, 0f)
-                dv(curX + digitW, digitY0, du1, DIGIT_H.toFloat() / DIGIT_ATLAS_H)
-                dv(curX + digitW, digitY1, du1, 0f)
-                curX += digitW + gap
-            }
-        }
-
-        if (ci > 0) {
-            GLES30.glDepthFunc(GLES30.GL_LEQUAL)
-            GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL); GLES30.glPolygonOffset(-1f, -1f)
-            uploadAndBind(colorVbo, coV, 0, ci)
-            colorShader?.use()
-            GLES30.glUniformMatrix4fv(colorUMvp, 1, false, vpMatrix, 0)
-            bindColorAttribs(); GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, ci / 6)
-            disableColorAttribs()
-            GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
-            GLES30.glDepthFunc(GLES30.GL_LESS)
-        }
-
-        if (di > 0) {
-            GLES30.glEnable(GLES30.GL_BLEND)
-            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-            GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL); GLES30.glPolygonOffset(-2f, -2f)
-            uploadAndBind(digitVbo, diV, 0, di)
-            spriteShader?.use()
-            GLES30.glUniformMatrix4fv(spriteUMvp, 1, false, vpMatrix, 0)
-            GLES30.glUniform1f(spriteUFlash, 0f)
-            GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, digitTex)
-            GLES30.glUniform1i(spriteUTex, 0)
-            bindSpriteAttribs(); GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, di / 5)
-            disableSpriteAttribs()
-            GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
-            GLES30.glDisable(GLES30.GL_BLEND)
-        }
-
+        // Health and identity are displayed by WAILA only.
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
@@ -389,7 +305,7 @@ internal class EnemyRenderer {
             val frames=heldFrames.getOrPut("exploration_bow") { arrayOfNulls(10) }
             frames[stage]?.let { return it }
             heldMesh.clear()
-            heldMesh.weapon("bow",if(stage==0) 0f else (stage-1)/8f,-1f,stage>0,0x9EAEB5,showSlingHand=false)
+            heldMesh.weapon("bow",if(stage==0) 0f else (stage-1)/8f,-1f,false,0x9EAEB5,showSlingHand=false)
             return heldMesh.vertices.copyOf(heldMesh.count).also { frames[stage]=it }
         }
         val weaponType = e.heldWeaponType ?: return null
@@ -428,6 +344,10 @@ internal class EnemyRenderer {
     private var pSpider = false
     private var pCaster = false
     private var pArcher = false
+    private var pAttackShape: AttackShape? = null
+    private var pHitIndex = 0
+    private var pFollowUp = false
+    private var pSweepTwist = 0f
     private var pGrazingDrop = 0f; private var pSxz = 1f; private var pSyY = 1f
     private var pAnimTime = 0f; private var pId = 0; private var pRecoil = 0f; private var pFlash = 0f
     private val pTint = FloatArray(3)
@@ -509,7 +429,9 @@ internal class EnemyRenderer {
 
     private fun preparePose(e: Enemy, model: MobModel, camX: Double, camY: Double, camZ: Double) {
         pS = e.baseScale * 2f / MobModels.REF_VOX             // unités monde par voxel
-        val yawRad = Math.toRadians(e.yaw.toDouble())
+        val spin=if(e.attack?.shape==AttackShape.SPIN)
+            EnemyAttackPose.spin(e.attack?.activeRemaining ?: 0f) else 0f
+        val yawRad = Math.toRadians((e.yaw+spin).toDouble())
         pCosY = cos(yawRad).toFloat(); pSinY = sin(yawRad).toFloat()
         pEx = (e.x - camX).toFloat()
         pEz = (e.z - camZ).toFloat()
@@ -520,9 +442,12 @@ internal class EnemyRenderer {
         pSoldier = e.def.model == "soldier"
         pCrouchDrop = if (pSoldier && !pReference) e.crouchDrop else 0f
         pArcher = e.exploration && e.def.model=="skeleton"
+        pAttackShape=e.attack?.shape
+        pHitIndex=e.attack?.hitIndex ?: 0
+        pFollowUp=(e.attack?.followUpIn ?: 0f)>0f
         pHeavyArms = e.def.model == "ogre" || e.def.model == "golem" || e.def.model == "troll"
         pSpider = e.def.model == "spider"
-        pCaster = e.attack?.shape == com.Atom2Universe.app.games.caves.entity.AttackShape.BEAM
+        pCaster = e.attack?.shape == AttackShape.BEAM
         pResting = e.resting
         pAnimTime = e.animTime
         pId = e.id
@@ -534,6 +459,14 @@ internal class EnemyRenderer {
         pStrike = if (pReference || pPassive || pSoldier) 0f else (e.strikeTime / .55f).coerceIn(0f, 1f)
         pCharge = if (!pReference && e.attackWindup > 0f)
             (1f-e.attackWindup/(e.attack?.windup ?: 1f)).coerceIn(0f,1f) else 0f
+        pCharge=EnemyAttackPose.preparation(pAttackShape,pCharge)
+        if(!pReference && (e.attack?.followUpIn ?: 0f)>0f) pCharge=1f-e.attack!!.followUpIn/.38f
+        pSweepTwist=when(pAttackShape) {
+            AttackShape.SWEEP,
+            AttackShape.FEINT -> -.65f*pCharge+.8f*pStrike
+            AttackShape.DOUBLE -> (if(pHitIndex==0) 1f else -1f)*(-.5f*pCharge+.7f*pStrike)
+            else -> 0f
+        }
         pBreath = if (pReference || pPassive) 0f else sin(e.animTime * 1.8f + e.id * .73f) * model.breath
         pFlinch = if (pReference || pPassive) 0f else e.hitFlash.coerceIn(0f, .25f) * 2f
         // Descente du cou pendant le broutage, commune à toute la tête (yeux,
@@ -558,11 +491,6 @@ internal class EnemyRenderer {
         levelTint(if (pPassive) 2 else e.level, e.isBoss, pTint)
         // La progression reste lisible sur le label ; elle ne masque plus les matériaux pastel.
         if (!pPassive) for (i in 0..2) pTint[i] = 1f + (pTint[i] - 1f) * .3f
-        if(pCharge>0f) {
-            pTint[0] += pCharge*.24f
-            pTint[1] += pCharge*.10f
-            if(pCaster) pTint[2] += pCharge*.35f
-        }
         pFlash = (e.hitFlash * 2.8f).coerceIn(0f, .7f)
     }
 
@@ -596,8 +524,12 @@ internal class EnemyRenderer {
             Limb.LEG -> baseRad + part.side * pWalk * model.stride
             Limb.ARM ->
                 if (pSoldier) baseRad
-                else if(pArcher) baseRad - (if(part.side>0) 1.3f else .7f+pCharge*.7f-pStrike*.35f)
+                else if(pArcher && (pAttackShape==null || pAttackShape==AttackShape.ARROW))
+                    -1.5708f + if(part.side>0) 0f else .1f*(1f-pCharge)+pStrike*.22f
                 else if(pCaster) baseRad - pCharge*1.45f - pStrike*.8f
+                else if(pAttackShape==AttackShape.SPIN) baseRad-1.5f*(pCharge+pStrike).coerceAtMost(1f)
+                else if(pAttackShape==AttackShape.DOUBLE)
+                    baseRad-EnemyAttackPose.doubleArm(part.side,pHitIndex,pFollowUp,pCharge,pStrike)
                 else baseRad - pCharge*(if(pHeavyArms) 2.65f else 1.8f) - pStrike * (if (pHeavyArms) .7f else if (part.side > 0) 1f else .65f) -
                     part.side * pWalk * model.stride * .65f
             Limb.HEAD -> if (pResting) .65f + .12f * sin(pAnimTime * 2f) else .04f * sin(pAnimTime * 2f)
@@ -630,6 +562,13 @@ internal class EnemyRenderer {
         val dy = ly - part.pivotY; val dz = lz - pivotZ
         var ry = part.pivotY + dy * cosA - dz * sinA
         var rz = pivotZ + dy * sinA + dz * cosA
+        if(pArcher && !pReference && part.limb==Limb.ARM && part.side<0 &&
+            (pAttackShape==null || pAttackShape==AttackShape.ARROW)) {
+            val turn=.96f+.14f*pCharge-.08f*pStrike
+            val armX=lx-part.pivotX; val armZ=rz-part.pivotZ
+            lx=part.pivotX+armX*cos(turn)+armZ*sin(turn)
+            rz=part.pivotZ-armX*sin(turn)+armZ*cos(turn)
+        }
         if (part.limb == Limb.HEAD) ry -= pGrazingDrop
         if (part.limb == Limb.LOOK && !pReference) {
             val turn = if (pSoldier && !pResting) 0f else .09f * sin(pAnimTime * .8f + pId * .73f)
@@ -640,9 +579,12 @@ internal class EnemyRenderer {
         if (part.limb == Limb.CRAWL && !pReference) {
             ry += max(0f, part.side * sin(pGait)) * .7f * pLocomotion
         }
-        if (!pPassive && !pReference && part.limb != Limb.LEG && part.limb != Limb.CRAWL) {
+        if (!pPassive && !pReference && !pArcher && part.limb != Limb.LEG && part.limb != Limb.CRAWL) {
             ry += pBreath
             rz += (pStrike * 2.3f - pCharge*1.8f - pFlinch * 2.5f) * (ly / model.heightVox).coerceIn(0f, 1f)
+            val tx=lx
+            lx=tx*cos(pSweepTwist)+rz*sin(pSweepTwist)
+            rz=-tx*sin(pSweepTwist)+rz*cos(pSweepTwist)
         }
         if(part.limb==Limb.ROTOR) {
             val rx=lx-part.pivotX
@@ -696,9 +638,10 @@ internal class EnemyRenderer {
         var i = 0
         while (i < verts.size) {
             // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
-            val px = (if(pArcher) 6f*pS else .09f) - verts[i]
-            val py = (if(pArcher) 19f*pS else 1.16f) + verts[i + 1] + recoil * .027f - pCrouchDrop
-            val pz = (if(pArcher) 10.5f*pS else .36f) - verts[i + 2] - recoil * .108f
+            val weaponScale=if(pArcher) pS*15f else 1f
+            val px = (if(pArcher) EnemyRig.BOW_X*pS else .09f) - verts[i]*weaponScale
+            val py = (if(pArcher) EnemyRig.BOW_Y*pS else 1.16f) + verts[i + 1]*weaponScale + recoil * .027f - pCrouchDrop
+            val pz = (if(pArcher) EnemyRig.BOW_Z*pS else .36f) - verts[i + 2]*weaponScale - recoil * .108f
             boV[n++] = pEx + px * pCosY + pz * pSinY
             boV[n++] = pEy + py
             boV[n++] = pEz - px * pSinY + pz * pCosY
