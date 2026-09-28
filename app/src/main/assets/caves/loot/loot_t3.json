@@ -1,8 +1,0 @@
-{
-  "id": "loot_t3",
-  "rolls": [1, 1],
-  "entries": [
-    { "item": "ward_stone", "weight": 5, "count": [1, 1] },
-    { "item": "bow",        "weight": 5, "count": [1, 1] }
-  ]
-}

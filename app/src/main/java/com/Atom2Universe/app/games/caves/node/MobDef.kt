@@ -22,14 +22,15 @@ internal data class MobDef(
     val spawnZoneMin: Int,
     /** Poids relatif du tirage de spawn : petit mob commun = poids élevé, gros mob = poids faible. */
     val spawnWeight: Float,
-    val lootTable: String,
     val behavior: String,
     val bossEligible: Boolean,
     val xpBase: Int,
     /** Multiplicateur par élément ("fire","ice","electric","poison","bleed") appliqué à la
      *  fois à la chance de proc et aux dégâts/durée de l'effet. 0 = immunisé, 1 = neutre
      *  (valeur par défaut si absent), >1 = vulnérable. */
-    val resistances: Map<String, Float> = emptyMap()
+    val resistances: Map<String, Float> = emptyMap(),
+    /** Repli quand on le harcèle à distance : "cocoon" (créatures) ou "shield" (humanoïdes armés). */
+    val retreat: String = "cocoon"
 ) {
     companion object {
         fun fromJson(j: JSONObject): MobDef {
@@ -59,11 +60,11 @@ internal data class MobDef(
                 model              = j.optString("model", "slime"),
                 spawnZoneMin       = j.optInt("spawn_zone_min", 1),
                 spawnWeight        = j.optDouble("spawn_weight", 1.0).toFloat(),
-                lootTable          = j.optString("loot_table", "default_loot"),
                 behavior           = j.optString("behavior", "aggressive"),
                 bossEligible       = j.optBoolean("boss_eligible", true),
                 xpBase             = j.optInt("xp_base", 1),
-                resistances        = resistances
+                resistances        = resistances,
+                retreat            = j.optString("retreat", "cocoon")
             )
         }
     }

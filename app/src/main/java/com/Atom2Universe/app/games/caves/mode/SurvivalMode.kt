@@ -51,7 +51,6 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         val enemyManager = r.enemyManager
         enemyManager.targets        = r.sim.players
         enemyManager.eventBus       = r.eventBus
-        enemyManager.thornsProvider = { r.equippedWeaponStat("thorns") }
 
         r.eventBus.subscribe { event ->
             if (event !is GameEvent.MobDied) return@subscribe
@@ -63,9 +62,7 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
             }
         }
 
-        // Exploration rewards feed the workshop instead of flooding the bag with random guns.
-        // Existing weapons remain usable; Assault keeps its own equipment rules.
-        r.lootNode.onItemsDropped = { _ -> }
+        // Exploration rewards feed the workshop: resources, never weapons.
         r.eventBus.subscribe { event ->
             if (event !is GameEvent.MobDied) return@subscribe
             val resource: Short = when(event.mobDefId) {

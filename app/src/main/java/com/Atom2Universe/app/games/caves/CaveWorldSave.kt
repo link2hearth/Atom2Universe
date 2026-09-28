@@ -1,8 +1,6 @@
 package com.Atom2Universe.app.games.caves
 
 import android.content.Context
-import com.Atom2Universe.app.games.caves.node.ItemInstance
-import com.Atom2Universe.app.games.caves.node.ItemRarity
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -45,8 +43,6 @@ internal data class CaveWorldSave(
     var wardStonePositions: List<Pair<Double, Double>> = emptyList(),
     var isCreative: Boolean = false,
     // Compétences RPG (XP cumulatif, niveau calculé à la volée)
-    // IDs ≥ 10000 → instances d'armes dynamiques
-    var weaponInstances: Map<Short, ItemInstance> = emptyMap(),
     var forgedEquipment: String = "{}",
     var recoverableAmmo: List<StuckAmmo> = emptyList(),
     var passiveAnimals: String = "[]",
@@ -118,7 +114,6 @@ internal object CaveWorldSaveManager {
         existing.playerWeapons       = snap.playerWeapons
         existing.wardStonePositions  = snap.wardStonePositions
         existing.isCreative          = snap.isCreative
-        existing.weaponInstances     = snap.weaponInstances
         existing.forgedEquipment     = snap.forgedEquipment
         existing.recoverableAmmo = snap.recoverableAmmo
         existing.passiveAnimals = snap.passiveAnimals
@@ -183,20 +178,6 @@ internal object CaveWorldSaveManager {
             }
             put("wardStonePositions", wardArr)
             put("isCreative", save.isCreative)
-            val wiJson = JSONObject()
-            save.weaponInstances.forEach { (id, inst) ->
-                val o = JSONObject().apply {
-                    put("def_id", inst.defId)
-                    put("rarity", inst.rarity.name)
-                    inst.rolledDamage?.let { put("damage", it) }
-                    val statsJson = JSONObject()
-                    inst.rolledStats.forEach { (k, v) -> statsJson.put(k, v) }
-                    put("stats", statsJson)
-                    put("tier", inst.tier)
-                }
-                wiJson.put(id.toString(), o)
-            }
-            put("weaponInstances", wiJson)
             put("forgedEquipment", save.forgedEquipment)
             put("recoverableAmmo",JSONArray().also { arr ->
                 save.recoverableAmmo.takeLast(256).forEach { a -> arr.put(JSONObject().apply {
@@ -267,21 +248,6 @@ internal object CaveWorldSaveManager {
                 Pair(o.getDouble("x"), o.getDouble("z"))
             }
         } else emptyList()
-        val wiJson = j.optJSONObject("weaponInstances") ?: JSONObject()
-        val weaponInstances = mutableMapOf<Short, ItemInstance>()
-        wiJson.keys().forEach { k ->
-            val o = wiJson.optJSONObject(k) ?: return@forEach
-            val statsJson = o.optJSONObject("stats") ?: JSONObject()
-            val stats = mutableMapOf<String, Int>()
-            statsJson.keys().forEach { sk -> stats[sk] = statsJson.getInt(sk) }
-            weaponInstances[k.toShort()] = ItemInstance(
-                defId        = o.getString("def_id"),
-                rarity       = runCatching { ItemRarity.valueOf(o.getString("rarity")) }.getOrDefault(ItemRarity.COMMON),
-                rolledDamage = if (o.has("damage")) o.getInt("damage") else null,
-                rolledStats  = stats,
-                tier         = o.optInt("tier", 0)
-            )
-        }
         return CaveWorldSave(
             id = j.getString("id"),
             name = j.getString("name"),
@@ -318,7 +284,6 @@ internal object CaveWorldSaveManager {
             playerWeapons = weapons,
             wardStonePositions = wardStones,
             isCreative = j.optBoolean("isCreative", false),
-            weaponInstances = weaponInstances,
             forgedEquipment = j.optString("forgedEquipment", "{}"),
             recoverableAmmo = j.optJSONArray("recoverableAmmo")?.let { arr ->
                 (0 until minOf(arr.length(),256)).mapNotNull { i ->

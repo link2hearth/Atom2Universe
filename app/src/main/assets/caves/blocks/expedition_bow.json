@@ -1,0 +1,12 @@
+{
+  "id": 9907,
+  "name": "expedition_bow",
+  "texture_top": "expedition:9907:top",
+  "texture_side": "expedition:9907:side",
+  "texture_bottom": "expedition:9907:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_bow",
+  "creative_tab": "resources",
+  "placeable": false
+}

@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.caves
 import android.content.Context
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.caves.entity.Enemy
+import com.Atom2Universe.app.games.caves.entity.Harassment
 import com.Atom2Universe.app.games.caves.render.HeldKind
 import com.Atom2Universe.app.games.caves.render.HeldItemPoses
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
@@ -120,6 +121,7 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         val e=targetsInArc(TOOL_REACH,TOOL_ARC,1).firstOrNull() ?: return
         r.meleeContact(e,false)
         if(e.def.behavior=="passive") { r.damageAnimal(e,damage);return }
+        Harassment.melee(e)
         r.enemyManager.damageEnemy(e,damage)
         r.enemyManager.knockbackFromPlayer(e,2.0)
     }
@@ -131,6 +133,7 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
             val damage=(p.damage*(1f+strength*.85f)*multiplier).roundToInt()
             r.meleeContact(e,strength>.65f || p.type=="hammer" || critical)
             if(e.def.behavior=="passive") { r.damageAnimal(e,damage);continue }
+            Harassment.melee(e)
             r.enemyManager.damageEnemy(e,damage)
             if(critical) message(R.string.cave_gear_critical)
             r.enemyManager.knockbackFromPlayer(e,if(p.type=="hammer") 7.0+strength*2.0 else 4.0+strength*4.0)
@@ -153,8 +156,6 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         if(amount>0f) {
             val final=amount.roundToInt().coerceAtLeast(1)
             r.playerNode.applyDamage(final);r.eventBus.publish(GameEvent.PlayerHit(final,dirX,dirZ))
-            val thorns=r.equippedWeaponStat("thorns")
-            if(attacker!=null && thorns>0) r.enemyManager.damageEnemy(attacker,thorns)
         }
     }
     fun equip(id: Short) {
@@ -196,8 +197,7 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         var total=pieces.values.sumOf { G.get(it)?.bonuses?.get(bonus) ?: 0 }
         if(includeWeapon && r.heldItemMode==HotbarMode.COMBAT) {
             val held=r.hotbar.getOrNull(r.selectedSlot)
-            total+=G.get(held)?.takeIf { it.damage>0 }?.bonuses?.get(bonus)
-                ?: held?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it)?.rolledStats?.get(bonus.key) } ?: 0
+            total+=G.get(held)?.takeIf { it.damage>0 }?.bonuses?.get(bonus) ?: 0
         }
         return total.coerceIn(0,bonus.cap)
     }

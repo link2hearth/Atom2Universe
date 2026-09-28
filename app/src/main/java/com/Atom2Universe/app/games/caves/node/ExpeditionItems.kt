@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 
-/** Equipment has stable IDs; forged firearms still use the existing instance registry. */
+/** Equipment has stable IDs; ranged weapons too (see RangedProfile, 9906-9908 and 9914-9918). */
 internal object ExpeditionItems {
     const val FORGE: Short = 9890
     const val ANVIL: Short = 9891
@@ -26,11 +26,6 @@ internal object ExpeditionItems {
     const val IRON_ARMOR: Short = 9911
     const val STEEL_ARMOR: Short = 9912
     const val SHIELD: Short = 9913
-    const val BARREL: Short = 9920
-    const val RECEIVER: Short = 9921
-    const val MAGAZINE: Short = 9922
-    const val CASE: Short = 9923
-    const val POWDER: Short = 9924
     const val STEEL_PLATE: Short = 9925
     const val RIVETS: Short = 9926
     const val BLANK: Short = 9927

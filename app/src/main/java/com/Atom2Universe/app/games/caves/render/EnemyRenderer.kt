@@ -9,6 +9,7 @@ import android.opengl.GLES30
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyState
 import com.Atom2Universe.app.games.caves.entity.ExhibitPose
+import com.Atom2Universe.app.games.caves.entity.Harassment
 import com.Atom2Universe.app.games.caves.mode.ShieldPickup
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -263,7 +264,8 @@ internal class EnemyRenderer {
                 else MobModels.get(e.def.model)
             // Include the detailed weapon and the slime mesh, not just the body boxes.
             val required = model.parts.size * 216 + (weaponVertices?.size ?: 0) +
-                if (model.squash) SlimeGeometry.vertices.size / 4 * 6 else 0
+                (if (model.squash) SlimeGeometry.vertices.size / 4 * 6 else 0) +
+                if (e.retreat > 0f) RETREAT_BOXES * 216 else 0
             check(required <= boV.size) { "Enemy geometry exceeds render buffer: ${e.def.model}" }
             if (bodyOffset + required > boV.size) {
                 uploadAndBind(bodyVbo, boV, 0, bodyOffset)
@@ -436,7 +438,11 @@ internal class EnemyRenderer {
         val skipModelWeapon = pSoldier && e.heldWeaponType != null
         val parts = model.parts
         var n = offset
+        val retreat = if (Harassment.shielded(e)) Harassment.growth(e) else 0f
+        // Roulé dans son cocon, le corps ne se voit plus : inutile de l'envoyer à la carte graphique.
+        val hidden = retreat >= 1f && e.def.retreat == "cocoon"
         for (i in parts.indices) {
+            if (hidden) break
             val part = parts[i]
             if (skipModelWeapon && (part.limb == Limb.WEAPON || part.limb == Limb.MUZZLE_FLASH)) continue
             if (model.squash && i == 0) {
@@ -451,7 +457,53 @@ internal class EnemyRenderer {
             n = emitPart(part, n)
         }
         if (weaponVertices != null && n + weaponVertices.size <= boV.size) n = emitWeapon(weaponVertices, n)
+        if (retreat > 0f && n + RETREAT_BOXES * 216 <= boV.size) n = emitRetreat(e, n, retreat)
         return n
+    }
+
+    /**
+     * Repli d'un monstre harcelé à distance (voir Harassment) : un cocon de soie qui l'enveloppe
+     * en montant du sol, ou un grand pavois dressé face au tireur. [grow] va de 0 à 1.
+     */
+    private fun emitRetreat(e: Enemy, offset: Int, grow: Float): Int {
+        val height = MobModels.bodyHeightWorld(e.def.model, e.baseScale)
+        val r = e.def.radius * e.baseScale / e.def.spriteScale   // un boss a un modèle agrandi
+        var n = offset
+        if (e.def.retreat == "shield") {
+            val top = .05f + height * .85f * grow
+            val half = r * .95f
+            val front = r + .08f
+            n = shellBox(-half, half, .05f, top, front, front + .09f, 0f, .47f, .31f, .18f, n)       // planches
+            n = shellBox(-half - .02f, half + .02f, top - .06f, top, front + .09f, front + .12f, 0f, .62f, .64f, .66f, n)
+            n = shellBox(-half - .02f, half + .02f, .05f, .11f, front + .09f, front + .12f, 0f, .62f, .64f, .66f, n)
+            val mid = .05f + (top - .05f) * .5f
+            n = shellBox(-.07f, .07f, mid - .07f, mid + .07f, front + .09f, front + .15f, 0f, .70f, .72f, .74f, n) // umbo
+            return n
+        }
+        // Cocon : quatre anneaux de soie serrés, légèrement tournés les uns sur les autres.
+        val h = height * .8f * grow
+        for ((k, ring) in COCOON_RINGS.withIndex()) {
+            val w = r * ring[2]
+            val shade = if (k % 2 == 0) 1f else .9f
+            n = shellBox(-w, w, h * ring[0], h * ring[1], -w, w, (k - 1.5f) * .22f, .88f * shade, .86f * shade, .80f * shade, n)
+        }
+        return n
+    }
+
+    /** Boîte du repli dans le repère du monstre (x à droite, z vers l'avant), tournée de [twist]. */
+    private fun shellBox(x0: Float, x1: Float, y0: Float, y1: Float, z0: Float, z1: Float, twist: Float,
+                         cr: Float, cg: Float, cb: Float, offset: Int): Int {
+        val c = cos(twist) * pCosY - sin(twist) * pSinY
+        val s = sin(twist) * pCosY + cos(twist) * pSinY
+        for (i in 0..7) {
+            val lx = if (i and 1 == 0) x0 else x1
+            val ly = if (i and 2 == 0) y0 else y1
+            val lz = if (i and 4 == 0) z0 else z1
+            corners[i * 3] = pEx + lx * c + lz * s
+            corners[i * 3 + 1] = pEy + ly
+            corners[i * 3 + 2] = pEz - lx * s + lz * c
+        }
+        return emitBox(boV, offset, cr, cg, cb, pFlash, false)
     }
 
     private fun preparePose(e: Enemy, model: MobModel, camX: Double, camY: Double, camZ: Double) {
@@ -794,6 +846,11 @@ internal class EnemyRenderer {
     }
 
     companion object {
+        /** Boîtes du repli : quatre anneaux de cocon, ou le pavois (planches, deux bandes, umbo). */
+        private const val RETREAT_BOXES = 4
+        /** Anneaux du cocon : bas et haut (part de la hauteur), demi-largeur (part du rayon). */
+        private val COCOON_RINGS = arrayOf(floatArrayOf(0f, .2f, .72f), floatArrayOf(.2f, .56f, 1f),
+            floatArrayOf(.56f, .86f, .86f), floatArrayOf(.86f, 1f, .52f))
         private const val FLOAT_FREQ  = 2.2f
 
         private const val MAX_VISIBLE = 32

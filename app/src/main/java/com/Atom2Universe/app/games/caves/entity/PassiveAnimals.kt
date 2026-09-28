@@ -396,6 +396,6 @@ internal class PassiveAnimals(private val world: World, private val seed: Long) 
             id=id, hpBase=20, damageBase=0, speed=speed, attackRange=0.0, detectRange=0.0,
             eyeHeight=1f, radius=radius, spriteScale=scale, hpScalePerLevel=1.0, hpScaleCap=1.0,
             damageScalePer3Lvl=0, speedScalePerLevel=0f, biomes=biomes, model=id, spawnZoneMin=0,
-            spawnWeight=0f, lootTable="", behavior="passive", bossEligible=false, xpBase=0)
+            spawnWeight=0f, behavior="passive", bossEligible=false, xpBase=0)
     }
 }

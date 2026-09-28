@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.caves
 import android.content.Context
 import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
+import com.Atom2Universe.app.games.caves.entity.Harassment
 import com.Atom2Universe.app.games.caves.entity.FrontierResidents
 import com.Atom2Universe.app.games.caves.entity.PassiveAnimals
 import com.Atom2Universe.app.games.caves.entity.Projectile
@@ -27,7 +28,6 @@ import kotlin.math.roundToInt
 import kotlin.math.sqrt
 import kotlin.random.Random
 import com.Atom2Universe.app.games.caves.node.EventBus
-import com.Atom2Universe.app.games.caves.node.LootNode
 import com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
 import com.Atom2Universe.app.games.caves.world.CaveWorldChunkStorage
 import com.Atom2Universe.app.games.caves.world.Farming
@@ -88,7 +88,6 @@ internal class CaveSimulation(
     // ── Ce qui vit dans le monde ──────────────────────────────────────────────
 
     val eventBus = EventBus()
-    val lootNode = LootNode(eventBus)
     val enemyManager = EnemyManager(world, worldSeed).apply {
         spawnManager.restoreDefeatedSiteBosses(savedState?.defeatedSiteBosses.orEmpty())
     }
@@ -353,6 +352,8 @@ internal class CaveSimulation(
         fun impact(x: Double, y: Double, z: Double)
         /** Une balle claque contre un mur en (x, y, z). */
         fun bulletImpact(x: Double, y: Double, z: Double)
+        /** Un projectile rebondit sur un monstre replié (cocon ou bouclier) en (x, y, z). */
+        fun deflected(x: Double, y: Double, z: Double)
         /** Une balle ennemie touche [player]. */
         fun playerShot(player: CavePlayer, p: Projectile)
         /** Un tir touche [enemy] (déjà blessé), à la tête si [headshot]. */
@@ -463,6 +464,12 @@ internal class CaveSimulation(
                 }
                 if(hit!=null) {
                     if(p.kind!=ProjectileKind.LEGACY) rules.impact(p.x,p.y,p.z)
+                    // Un monstre replié ne craint rien de loin : la flèche rebondit et tombe à son pied.
+                    if(Harassment.shielded(hit)) {
+                        rules.deflected(p.x,p.y,p.z)
+                        if(p.ammoId != null) { p.x=ox;p.y=oy;p.z=oz;p.stuck=true;ammoChanged=true } else iter.remove()
+                        break
+                    }
                     if(hit.def.behavior=="passive") {
                         rules.animalHit(hit,p.damage)
                         iter.remove();break
@@ -472,7 +479,12 @@ internal class CaveSimulation(
                     val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
                     val damage = if (headshot) (p.damage * rules.headshotMultiplier).roundToInt() else p.damage
                     if(p.isPlayerWeapon) applyWeaponHit(hit,damage,p.stats,Random.Default,p.owner)
-                    else enemyManager.damageEnemy(hit,damage)
+                    else {
+                        // Caillou lancé à la main : lui aussi plafonné par la jauge de harcèlement.
+                        val dealt=Harassment.cap(hit,damage)
+                        enemyManager.damageEnemy(hit,dealt)
+                        Harassment.ranged(hit,dealt)
+                    }
                     rules.enemyHit(hit, headshot)
                     iter.remove();break
                 }
@@ -498,9 +510,12 @@ internal class CaveSimulation(
         val isCrit = critChance > 0 && rng.nextInt(100) < critChance
         val critMult = if (isCrit) 2.0f + (stats["crit_dmg"] ?: 0) / 100f else 1.0f
         if (isCrit) dmg = (dmg * critMult).toInt()
+        // Les projectiles n'achèvent pas : au seuil de harcèlement, le monstre se replie.
+        dmg = Harassment.cap(enemy, dmg)
 
         CombatNode.damageEnemy(enemy, dmg)
         enemyManager.knockbackFromPlayer(enemy)
+        if (Harassment.ranged(enemy, dmg)) return
 
         // Vol de vie (sur les dégâts du coup, post-crit) : soigne celui qui a tiré.
         val lifeSteal = stats["life_steal"] ?: 0

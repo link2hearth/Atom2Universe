@@ -28,11 +28,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CraftDef
 import com.Atom2Universe.app.games.caves.node.CraftRegistry
-import com.Atom2Universe.app.games.caves.node.ItemRarity
-import com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
+import com.Atom2Universe.app.games.caves.node.CreativeTiers
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
 
 internal enum class InvGpZone { GRID, HOTBAR, CRAFTING }
@@ -74,6 +74,14 @@ internal class InventoryManager(private val activity: CaveActivity) {
     // BlockRegistry.creativeList() filters and sorts the full registry. Keep one
     // snapshot: the comparator can ask for thousands of IDs during one sort.
     private val creativeCatalog by lazy(LazyThreadSafetyMode.NONE) { BlockRegistry.creativeList() }
+    // Creative catalog: the tiers of one item share a tile; one family at a time is unfolded.
+    private var openTierFamily: String? = null
+    private var tierHeads: Map<Int,Int> = emptyMap()
+    private fun toggleTiers(index: Int) {
+        val family=catalogTypeAt(index)?.let(CreativeTiers::family) ?: return
+        openTierFamily=if(openTierFamily==family) null else family
+        refreshPagedAdapter()
+    }
 
     // ── Slots ─────────────────────────────────────────────────────────────────
     // The count map covers bag + bar; each stack is shown in exactly one location.
@@ -91,14 +99,13 @@ internal class InventoryManager(private val activity: CaveActivity) {
     private val recipeColumns get()=(craftingRecyclerView?.layoutManager as? GridLayoutManager)?.spanCount ?: 1
     private val favoriteRecipes by lazy { preferences.getStringSet("recipeFavorites",emptySet()).orEmpty().toMutableSet() }
     private val recipeHistory=java.util.ArrayDeque<CraftDef>()
-    private fun recipeKey(r: CraftDef)="${r.resultItemId ?: r.result}:${r.ingredients}:${r.groups.map { it.tag to it.count }}:${r.station}"
+    private fun recipeKey(r: CraftDef)="${r.result}:${r.ingredients}:${r.groups.map { it.tag to it.count }}:${r.station}"
 
     private val names=hashMapOf<Short,String>()
     private val accents=Regex("\\p{M}+")
     private fun folded(text: String)=java.text.Normalizer.normalize(text.lowercase(java.util.Locale.ROOT),java.text.Normalizer.Form.NFD).replace(accents,"")
     private fun name(id: Short)=names.getOrPut(id) { folded(activity.blockName(id)) }
-    private fun favoriteKey(id: Short)=G.get(id)?.let { "$id:${it.hashCode()}" }
-        ?: WeaponInstanceRegistry.get(id)?.let { "$id:${it.hashCode()}" } ?: id.toString()
+    private fun favoriteKey(id: Short)=G.get(id)?.let { "$id:${it.hashCode()}" } ?: id.toString()
     internal fun isFavorite(id: Short)=favoriteKey(id) in favorites
 
     private fun rebuildCatalog() {
@@ -149,9 +156,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
     var craftingEmptyTv: View? = null
     var craftingRecyclerView: RecyclerView? = null
     var rightHeaderTv: TextView? = null
-    var sellPanel: View? = null
-    var sellPriceTv: TextView? = null
-    var sellButton: Button? = null
 
     // ── Pager inventaire ──────────────────────────────────────────────────────
     var invPager: ViewPager2? = null
@@ -183,10 +187,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
         craftingEmptyTv      = invOverlay.findViewById(R.id.cave_inv_crafting_empty)
         craftingRecyclerView = invOverlay.findViewById(R.id.cave_inv_crafting_recycler)
         rightHeaderTv        = ui.detailScroll.findViewById(R.id.cave_inv_right_header)
-        sellPanel            = ui.detailScroll.findViewById(R.id.cave_inv_sell_panel)
-        sellPriceTv          = ui.detailScroll.findViewById(R.id.cave_inv_sell_price)
-        sellButton           = ui.detailScroll.findViewById<Button>(R.id.cave_inv_sell_btn)
-            ?.also { btn -> btn.setOnClickListener { selectedType()?.let { confirmSell(it) } } }
         invPager             = invOverlay.findViewById(R.id.cave_inv_pager)
         pageIndicatorTv      = invOverlay.findViewById(R.id.cave_inv_page_indicator)
         setupNavigation()
@@ -351,14 +351,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
         preferences.edit().putStringSet("recipeFavorites",favoriteRecipes.toSet()).apply()
         updateCraftingList()
         ui.status.setText(if(added) R.string.cave_catalog_favorite_added else R.string.cave_catalog_favorite_removed)
-    }
-
-    private fun confirmSell(id: Short) {
-        val offered = WeaponInstanceRegistry.get(id) ?: return
-        AlertDialog.Builder(activity).setTitle(R.string.cave_inv_sell_btn)
-            .setMessage(activity.getString(R.string.cave_ui_sell_confirm, activity.blockName(id), weaponSellPrice(id)))
-            .setNegativeButton(R.string.cave_ui_cancel, null)
-            .setPositiveButton(R.string.cave_inv_sell_btn) { _, _ -> if (WeaponInstanceRegistry.get(id) === offered) doSell(id) }.show()
     }
 
     fun initInvSlots() { renderer.syncInventoryStacks();invSlotsReady=true;previousCounts=renderer.inventory.toMap();rebuildCatalog();syncHotbar() }
@@ -596,7 +588,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if (browsingEquipment) updateEquipmentFilter()
         val needle=folded(query)
         val catalogSize=if(activity.isCreative) creativeCatalog.size else hotbarBase()
-        gridIndices = (0 until catalogSize).filter { index ->
+        val sorted = (0 until catalogSize).filter { index ->
             val type=catalogTypeAt(index) ?: return@filter false
             (activity.isCreative || (renderer.inventory[type] ?: 0)>0) && name(type).contains(needle) &&
                 (!onlyFavorites || isFavorite(type)) && (!onlyRecent || type in recent.take(24)) &&
@@ -608,6 +600,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 2 -> (recent.indexOf(x).takeIf { it>=0 } ?: Int.MAX_VALUE).compareTo(recent.indexOf(y).takeIf { it>=0 } ?: Int.MAX_VALUE)
                 else -> name(x).compareTo(name(y)) }.takeIf { it!=0 } ?: name(x).compareTo(name(y))
         })
+        // A search shows every matching tier; browsing folds them under their lowest tier.
+        if(activity.isCreative && needle.isEmpty()) {
+            val (grouped,heads)=CreativeTiers.group(sorted,::catalogTypeAt,openTierFamily)
+            gridIndices=grouped;tierHeads=heads
+        } else { gridIndices=sorted;tierHeads=emptyMap() }
         currentPage = currentPage.coerceIn(0, pageCount() - 1)
         pagedAdapter?.notifyDataSetChanged()
         invPager?.setCurrentItem(currentPage, false)
@@ -637,18 +634,10 @@ internal class InventoryManager(private val activity: CaveActivity) {
         updateActions()
         ui.ingredients.removeAllViews()
         if (recipe != null) {
-            val weaponDefId = recipe.resultItemId
-            if (weaponDefId != null) {
-                infoSpriteView?.background = weaponSpriteDrawable(weaponDefId, 6f)
-                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                infoNameTv?.text  = activity.weaponName(weaponDefId)
-                infoCountTv?.text = activity.getString(R.string.cave_catalog_craft_quantity,1)
-            } else {
-                infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
-                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                infoNameTv?.text  = activity.blockName(recipe.result)
-                infoCountTv?.text = activity.getString(R.string.cave_catalog_craft_quantity,recipe.resultCount)
-            }
+            infoSpriteView?.background = activity.blockDrawable(recipe.result, 6f)
+            infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+            infoNameTv?.text  = activity.blockName(recipe.result)
+            infoCountTv?.text = activity.getString(R.string.cave_catalog_craft_quantity,recipe.resultCount)
             infoIngredientsTv?.text = listOfNotNull(activity.getString(R.string.cave_ui_available_batches,
                 recipe.maxCraftable(renderer.inventory, renderer.nearbyStations)),G.describe(activity,recipe.result,preview=true)).joinToString("\n\n")
             infoDivider?.visibility       = View.VISIBLE
@@ -656,61 +645,33 @@ internal class InventoryManager(private val activity: CaveActivity) {
             ingredientTiles(recipe)
         } else {
             val type = if (browsingCraft) null else selectedType()
-            val isWeapon = type != null && WeaponInstanceRegistry.isWeapon(type)
-            if (isWeapon) {
-                val instance = WeaponInstanceRegistry.get(type!!)
-                val def = instance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
-                infoSpriteView?.background = activity.blockDrawable(type, 6f)
-                val rarityColor = weaponRarityColor(instance?.rarity ?: ItemRarity.COMMON)
-                val rarityLabel = instance?.rarity?.name?.lowercase()?.replaceFirstChar { it.uppercase() } ?: "?"
-                val baseName = def?.id?.let { activity.weaponName(it) } ?: "?"
-                infoNameTv?.setTextColor(rarityColor)
-                infoNameTv?.text  = "$baseName · $rarityLabel"
+            infoDivider?.visibility       = View.GONE
+            infoIngredientsTv?.visibility = View.GONE
+            if (type == null) {
+                infoSpriteView?.background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE; setColor(0x33FFFFFF)
+                    cornerRadius = 6 * dp
+                }
+                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                infoNameTv?.text  = activity.getString(if (browsingCraft) R.string.cave_ui_select_recipe else R.string.cave_ui_select_item)
                 infoCountTv?.text = ""
-                infoDivider?.visibility = View.VISIBLE
-                val dmg   = instance?.rolledDamage ?: 0
-                val speed = def?.attackSpeedMs ?: 0
-                val extra = instance?.rolledStats?.entries?.joinToString("\n") { (k, v) ->
-                    val label = affixLabel(k)
-                    val suffix = affixSuffix(k)
-                    "$label: $v$suffix"
-                } ?: ""
-                infoIngredientsTv?.text = buildString {
-                    append(activity.getString(R.string.cave_ui_damage, dmg, speed))
-                    if (extra.isNotEmpty()) { append("\n"); append(extra) }
-                    val description=activity.resources.getIdentifier("cave_weapon_style_${def?.id}","string",activity.packageName)
-                    if(description!=0) { append("\n");append(activity.getString(description)) }
-                }
-                infoIngredientsTv?.visibility = View.VISIBLE
             } else {
-                infoDivider?.visibility       = View.GONE
-                infoIngredientsTv?.visibility = View.GONE
-                if (type == null) {
-                    infoSpriteView?.background = GradientDrawable().apply {
-                        shape = GradientDrawable.RECTANGLE; setColor(0x33FFFFFF)
-                        cornerRadius = 6 * dp
+                infoSpriteView?.background = activity.blockDrawable(type, 6f)
+                infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
+                infoNameTv?.text  = activity.blockName(type)
+                infoCountTv?.text = activity.getString(R.string.cave_ui_owned, countAt(selectedSlotIdx))
+                infoIngredientsTv?.text = itemDescription(type)
+                val foodRecipes=foodRecipes(type)
+                if(foodRecipes.isNotEmpty()) ui.ingredients.addView(Button(activity).apply {
+                    text=activity.getString(R.string.cave_kitchen_recipes)
+                    setOnClickListener {
+                        AlertDialog.Builder(activity).setTitle(R.string.cave_kitchen_recipes)
+                            .setMessage(activity.getString(R.string.cave_kitchen_recipe_help)+"\n\n"+foodRecipes.joinToString("\n\n"))
+                            .setPositiveButton(android.R.string.ok,null).show()
                     }
-                    infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                    infoNameTv?.text  = activity.getString(if (browsingCraft) R.string.cave_ui_select_recipe else R.string.cave_ui_select_item)
-                    infoCountTv?.text = ""
-                } else {
-                    infoSpriteView?.background = activity.blockDrawable(type, 6f)
-                    infoNameTv?.setTextColor(0xFFFFFFFF.toInt())
-                    infoNameTv?.text  = activity.blockName(type)
-                    infoCountTv?.text = activity.getString(R.string.cave_ui_owned, countAt(selectedSlotIdx))
-                    infoIngredientsTv?.text = itemDescription(type)
-                    val foodRecipes=foodRecipes(type)
-                    if(foodRecipes.isNotEmpty()) ui.ingredients.addView(Button(activity).apply {
-                        text=activity.getString(R.string.cave_kitchen_recipes)
-                        setOnClickListener {
-                            AlertDialog.Builder(activity).setTitle(R.string.cave_kitchen_recipes)
-                                .setMessage(activity.getString(R.string.cave_kitchen_recipe_help)+"\n\n"+foodRecipes.joinToString("\n\n"))
-                                .setPositiveButton(android.R.string.ok,null).show()
-                        }
-                    })
-                    infoDivider?.visibility = View.VISIBLE
-                    infoIngredientsTv?.visibility = View.VISIBLE
-                }
+                })
+                infoDivider?.visibility = View.VISIBLE
+                infoIngredientsTv?.visibility = View.VISIBLE
             }
         }
         if(renderer.mode.allowsWorldEdits) {
@@ -772,9 +733,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
             return if(equipped==null) description else description+"\n\n"+activity.getString(R.string.cave_gear_compare,
                 activity.blockName(equipped),G.describe(activity,equipped))
         }
-        WeaponInstanceRegistry.get(type)?.let { instance ->
-            val definition=com.Atom2Universe.app.games.caves.node.ItemRegistry.get(instance.defId)
-            return activity.getString(R.string.cave_ui_damage,instance.rolledDamage ?: 0,definition?.attackSpeedMs ?: 0)
+        RangedProfile.of(type)?.let { weapon ->
+            val cycle=(maxOf(weapon.interval,if(weapon.magazine==1) weapon.reload else 0f)*1000).toInt()
+            val style=activity.resources.getIdentifier("cave_weapon_style_${weapon.type}","string",activity.packageName)
+            return listOfNotNull(activity.getString(R.string.cave_ui_damage,weapon.damage,cycle),
+                style.takeIf { it!=0 }?.let(activity::getString)).joinToString("\n")
         }
         val def=BlockRegistry.get(type)
         val drop=BlockRegistry.harvestDrop(type)
@@ -790,7 +753,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         type==E.SHIELD -> activity.getString(R.string.cave_shield_description,82,50)
                         type==E.ROD || type==E.BAIT -> activity.getString(R.string.cave_fishing_aim)
                         type in E.RIVER_FISH..E.DEEP_FISH || type==E.FISH_OIL -> activity.getString(R.string.cave_fish_description)
-                        type==E.FORGE || type==E.ANVIL || type in E.BARREL..E.BLANK -> activity.getString(R.string.cave_forge_description)
+                        type==E.FORGE || type==E.ANVIL || type in E.STEEL_PLATE..E.BLANK -> activity.getString(R.string.cave_forge_description)
                         type==F.CHARM || type==F.HEARTH -> activity.getString(R.string.cave_travel_hint)
                         type==F.MARKET_BELL || type==F.TOKEN -> activity.getString(R.string.cave_trade_hint)
                         type==F.SHEARS || type in F.WOOL..F.TRUFFLE -> activity.getString(R.string.cave_husbandry_hint)
@@ -848,13 +811,6 @@ internal class InventoryManager(private val activity: CaveActivity) {
         return workshops+crafts
     }
 
-    /** Icône d'un résultat de recette d'arme (pas encore d'instance rollée, juste l'aperçu). */
-    private fun weaponSpriteDrawable(defId: String, cornerDp: Float): android.graphics.drawable.Drawable {
-        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(defId)
-        return com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(activity.assets,
-            def?.weaponType ?: def?.sprite ?: defId,ItemRarity.COMMON)
-    }
-
     private fun ingredientTiles(recipe: CraftDef) {
         val groups=recipe.groups.associateBy { group -> group.ids.maxBy { renderer.inventory[it] ?: 0 } }
         val entries=recipe.ingredients.map { Triple(it.first,it.second,(renderer.inventory[it.first] ?: 0)>=it.second) } +
@@ -893,62 +849,17 @@ internal class InventoryManager(private val activity: CaveActivity) {
         }) }
     }
 
-    private fun affixLabel(key: String): String = when (key) {
-        "crit_chance"   -> activity.getString(R.string.cave_affix_crit_chance)
-        "crit_dmg"      -> activity.getString(R.string.cave_affix_crit_dmg)
-        "attack_speed"  -> activity.getString(R.string.cave_affix_attack_speed)
-        "life_steal"    -> activity.getString(R.string.cave_affix_life_steal)
-        "bleed_chance"    -> activity.getString(R.string.cave_affix_bleed_chance)
-        "electric_chance" -> activity.getString(R.string.cave_affix_electric_chance)
-        "freeze_chance"   -> activity.getString(R.string.cave_affix_freeze_chance)
-        "execute"       -> activity.getString(R.string.cave_affix_execute)
-        "aoe_splash"    -> activity.getString(R.string.cave_affix_aoe_splash)
-        "thorns"        -> activity.getString(R.string.cave_affix_thorns)
-        "poison_chance" -> activity.getString(R.string.cave_affix_poison_chance)
-        "fire_chance"   -> activity.getString(R.string.cave_affix_fire_chance)
-        else            -> key.replace('_', ' ').split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
-    }
-
-    private fun affixSuffix(key: String): String = when (key) {
-        "crit_dmg" -> "%"
-        "thorns"   -> "%"
-        else       -> "%"
-    }
-
-    private fun weaponRarityColor(rarity: ItemRarity) = when (rarity) {
-        ItemRarity.COMMON    -> 0xFFAAAAAA.toInt()
-        ItemRarity.MAGIC     -> 0xFF4488FF.toInt()
-        ItemRarity.RARE      -> CaveUiStyle.ACCENT
-        ItemRarity.EPIC      -> 0xFFCC44FF.toInt()
-        ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
-    }
-
-    private fun weaponSellPrice(id: Short): Int {
-        val inst = WeaponInstanceRegistry.get(id) ?: return 0
-        val tierMult = inst.tier.coerceAtLeast(1) * 5
-        val rarityMult = when (inst.rarity) {
-            ItemRarity.COMMON    -> 1
-            ItemRarity.MAGIC     -> 2
-            ItemRarity.RARE      -> 4
-            ItemRarity.EPIC      -> 8
-            ItemRarity.LEGENDARY -> 15
-        }
-        return tierMult * rarityMult
-    }
-
     // ── Crafting ──────────────────────────────────────────────────────────────
 
     fun updateCraftingList() {
         val type = selectedType()
-        sellPanel?.visibility = if (!browsingCraft && type != null && WeaponInstanceRegistry.get(type) != null) View.VISIBLE else View.GONE
-        if (type != null) sellPriceTv?.text = activity.getString(R.string.cave_inv_sell_price_label) + ": " + weaponSellPrice(type) + " " + activity.getString(R.string.cave_inv_sell_ward_stones)
         rightHeaderTv?.setText(if (browsingCraft) R.string.cave_ui_workshop else R.string.cave_ui_details)
         if(!browsingCraft) { craftingRecyclerView?.visibility=View.GONE;updateActions();return }
         val needle=folded(query)
         val recipes = CraftRegistry.all().filter { r ->
             (if(ui.craftable.isChecked) r.canCraft(renderer.inventory, renderer.nearbyStations)
                 else r.ingredients.any { (id,_) -> (renderer.inventory[id] ?: 0)>0 } || r.groups.any { it.available(renderer.inventory)>0 }) &&
-                (if(r.resultItemId!=null) category in listOf(InventoryCategory.ALL, InventoryCategory.WEAPONS) else category.matches(r.result)) &&
+                category.matches(r.result) &&
                 (!onlyFavorites || recipeKey(r) in favoriteRecipes) &&
                 (!onlyRecent || r.result in recent.take(24)) &&
                 (relatedType == null || relatedType in r.inputIds) &&
@@ -963,7 +874,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         updateActions()
     }
 
-    private fun recipeName(recipe: CraftDef) = recipe.resultItemId?.let { activity.weaponName(it) } ?: activity.blockName(recipe.result)
+    private fun recipeName(recipe: CraftDef) = activity.blockName(recipe.result)
 
     private fun craftGroupName(tag: String): String = activity.getString(when (tag) {
         "logs" -> R.string.cave_craft_logs
@@ -975,55 +886,17 @@ internal class InventoryManager(private val activity: CaveActivity) {
         else -> R.string.cave_craft_stone
     })
 
-    fun doSell(id: Short) {
-        if (WeaponInstanceRegistry.get(id) == null || (renderer.inventory[id] ?: 0) <= 0) return
-        val price = weaponSellPrice(id)
-        // Rémunération en ward stones
-        if (price > 0) {
-            val WARD_STONE = com.Atom2Universe.app.games.caves.world.WARD_STONE
-            renderer.inventory[WARD_STONE] = (renderer.inventory[WARD_STONE] ?: 0) + price
-            val existing = invSlots.filterNotNull().toSet()
-            addNewTypeByCategory(WARD_STONE)
-        }
-        // Retirer l'arme
-        renderer.inventory.remove(id)
-        for (i in renderer.hotbar.indices) { if (renderer.hotbar[i] == id) renderer.hotbar[i] = null }
-        WeaponInstanceRegistry.free(id)
-        names.remove(id)
-        selectedSlotIdx = -1
-        previousCounts=renderer.inventory.toMap()
-        syncHotbar()
-        refreshPagedAdapter()
-        hud.updateHotbarForInventory()
-        updateInfoPanel()
-        updateCraftingList()
-        activity.saveWorldAsync()
-    }
-
     fun doCraft(recipe: CraftDef, batches: Int = 1) {
         if (batches !in 1..64 || recipe.maxCraftable(renderer.inventory, renderer.nearbyStations) < batches) {
             ui.status.setText(R.string.cave_ui_missing); return
         }
         val allocated = mutableListOf<Short>()
         val consumption = recipe.consumption(renderer.inventory, batches, renderer.nearbyStations) ?: return
-        val weaponDefId = recipe.resultItemId
-        val forged = weaponDefId==null && G.isCraft(recipe.result)
+        val forged = G.isCraft(recipe.result)
         if(forged) {
             val prepared=runCatching { repeat(batches*recipe.resultCount) { allocated+=G.allocate(G.roll(recipe.result)) } }
             if(prepared.isFailure) {
                 allocated.forEach(G::free); ui.status.setText(R.string.cave_ui_craft_failed); return
-            }
-        } else if (weaponDefId != null) {
-            val prepared = runCatching {
-                repeat(batches) {
-                    val instance = (if(recipe.station!=null) com.Atom2Universe.app.games.caves.node.ItemRegistry.forgedInstance(weaponDefId) else com.Atom2Universe.app.games.caves.node.ItemRegistry.rollInstance(weaponDefId, kotlin.random.Random.Default))
-                        ?: error("Unknown craft output")
-                    allocated += WeaponInstanceRegistry.allocate(instance)
-                }
-            }
-            if (prepared.isFailure) {
-                allocated.forEach { WeaponInstanceRegistry.free(it) }
-                ui.status.setText(R.string.cave_ui_craft_failed); return
             }
         } else if ((renderer.inventory[recipe.result] ?: 0).toLong() + recipe.resultCount.toLong() * batches > Int.MAX_VALUE) {
             ui.status.setText(R.string.cave_ui_craft_failed); return
@@ -1035,7 +908,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 for(i in renderer.hotbar.indices) if(renderer.hotbar[i]==type) renderer.hotbar[i]=null
             } else renderer.inventory[type] = after
         }
-        if (weaponDefId != null || forged) for (id in allocated) {
+        if (forged) for (id in allocated) {
             renderer.inventory[id] = 1; addNewTypeByCategory(id)
         } else {
             val out = recipe.result
@@ -1044,7 +917,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         }
         selectedSlotIdx = -1
         onInventoryChanged(renderer.inventory.toMap()); refreshPagedAdapter(); hud.updateHotbarForInventory(); updateInfoPanel(); updateCraftingList()
-        ui.status.text = activity.getString(R.string.cave_ui_crafted, recipeName(recipe), if (weaponDefId != null) batches else recipe.resultCount * batches)
+        ui.status.text = activity.getString(R.string.cave_ui_crafted, recipeName(recipe), recipe.resultCount * batches)
         activity.saveWorldAsync()
     }
 
@@ -1225,8 +1098,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
         override fun onBindViewHolder(holder: VH,position: Int) {
             val index=indices[position];val id=items[position] ?: return
             holder.tile.bind(activity.blockDrawable(id,3f),activity.blockName(id),if(activity.isCreative) 0 else countAt(index),
-                index==selectedSlotIdx || invGpZone==InvGpZone.GRID && index==invGpCursor,isFavorite(id),
-                accent=WeaponInstanceRegistry.get(id)?.let { weaponRarityColor(it.rarity) })
+                index==selectedSlotIdx || invGpZone==InvGpZone.GRID && index==invGpCursor,isFavorite(id))
+            holder.tile.tiers(if(index in tierHeads) CreativeTiers.family(id)==openTierFamily else null) { toggleTiers(index) }
             CaveInventoryGestures.bind(holder.tile,
                 tap={ holder.bindingAdapterPosition.takeIf { it!=RecyclerView.NO_POSITION }?.let { selectInventorySlot(indices[it]);ui.showDetails(holder.tile) } },
                 favorite={ toggleFavorite(id) },
@@ -1245,7 +1118,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         })
         override fun onBindViewHolder(holder: VH,position: Int) {
             val recipe=recipes[position];val ready=recipe.canCraft(renderer.inventory,renderer.nearbyStations)
-            holder.tile.bind(recipe.resultItemId?.let { weaponSpriteDrawable(it,4f) } ?: activity.blockDrawable(recipe.result,4f),
+            holder.tile.bind(activity.blockDrawable(recipe.result,4f),
                 recipeName(recipe),recipe.resultCount,recipe==selectedRecipe || invGpZone==InvGpZone.CRAFTING && position==invGpCursor,favorite=recipeKey(recipe) in favoriteRecipes,available=ready)
             holder.tile.contentDescription=activity.getString(R.string.cave_catalog_recipe_state,recipeName(recipe),activity.getString(if(ready) R.string.cave_ui_ready else R.string.cave_ui_missing))
             holder.tile.setOnClickListener { recipeHistory.clear();selectedRecipe=recipe;notifyDataSetChanged();updateInfoPanel();ui.showDetails(holder.tile) }

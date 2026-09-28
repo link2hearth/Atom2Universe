@@ -12,8 +12,8 @@
   "biomes": ["any"],
   "spawn_zone_min": 1,
   "spawn_weight": 90,
-  "loot_table": "loot_t2",
   "behavior": "aggressive",
+  "retreat": "cocoon",
   "boss_eligible": true,
   "xp_base": 3,
   "resistances": { "fire": 1.5, "poison": 0.3 }

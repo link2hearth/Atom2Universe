@@ -93,30 +93,21 @@ internal class CaveHud(private val activity: CaveActivity) {
         slots.forEachIndexed { i, type ->
             val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
             val eff      = if (count > 0) type else null
-            val isWeapon = eff != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(eff)
-
-            val instance = eff?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
             slotViews[i]?.background = CaveUiStyle.panel(activity,
                 if (i == selected) 0xAE688365.toInt() else 0x55405748,
-                if (i == selected) CaveUiStyle.ACCENT else instance?.let { rarityColor(it.rarity) } ?: 0x7786A38C,
+                if (i == selected) CaveUiStyle.ACCENT else 0x7786A38C,
                 i == selected)
             slotViews[i]?.contentDescription = activity.getString(R.string.cave_ui_shortcut_description, i + 1,
                 eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
             slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
                 else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
-            // Les armes n'empilent pas → pas de compteur
-            slotCounts[i]?.text = if (eff != null && !isWeapon) CaveUiStyle.count(activity,count) else ""
+            slotCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
             bindTile(slotViews[i],eff,count,i==selected)
         }
 
-        // Arme en main : affiché uniquement si le slot sélectionné contient une arme
-        val selType = slots.getOrNull(selected)
-        val selInstance = selType?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
-        if (selType != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(selType)) {
-            if (selInstance != null) showWeaponInHand(selInstance) else hideWeaponInHand()
-        } else {
-            hideWeaponInHand()
-        }
+        // Arme à distance en main : son nom et ses munitions.
+        val weapon = com.Atom2Universe.app.games.caves.entity.RangedProfile.of(slots.getOrNull(selected))
+        if (weapon != null) showWeaponInHand(weapon.type) else hideWeaponInHand()
     }
 
     private fun hideWeaponInHand() {
@@ -220,7 +211,6 @@ internal class CaveHud(private val activity: CaveActivity) {
 
     private var weaponTooltipView: LinearLayout? = null
     private var weaponTooltipName: android.widget.TextView? = null
-    private var weaponTooltipStats: android.widget.TextView? = null
 
     // ── Flash rouge de dégât ────────────────────────────────────────────────────
 
@@ -281,48 +271,19 @@ internal class CaveHud(private val activity: CaveActivity) {
             setTypeface(typeface, android.graphics.Typeface.BOLD)
             gravity = Gravity.END
         }
-        val statsTv = android.widget.TextView(activity).apply {
-            textSize = 9f; setTextColor(0xFFCCCCCC.toInt())
-            gravity = Gravity.END
-        }
-        tooltip.addView(nameTv); tooltip.addView(statsTv)
+        tooltip.addView(nameTv)
         magazineText=android.widget.TextView(activity).apply { textSize=10f;setTextColor(0xFFE5C987.toInt());gravity=Gravity.END }
         tooltip.addView(magazineText)
         root.addView(tooltip)
         weaponTooltipView = tooltip
         weaponTooltipName = nameTv
-        weaponTooltipStats = statsTv
     }
 
 
-    private fun showWeaponInHand(weapon: com.Atom2Universe.app.games.caves.node.ItemInstance) {
-        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return
-        if (activity.renderer.mode.singleWeapon) {
-            weaponTooltipName?.text = activity.weaponName(def.id)
-            weaponTooltipName?.setTextColor(Color.WHITE)
-            weaponTooltipStats?.visibility = View.GONE
-            weaponTooltipView?.visibility = View.VISIBLE
-            return
-        }
-        val rarityColor = rarityColor(weapon.rarity)
-
-        // Tooltip
-        val rarityLabel = weapon.rarity.name.lowercase().replaceFirstChar { it.uppercase() }
-        val baseName = activity.weaponName(def.id)
-        weaponTooltipName?.setTextColor(rarityColor)
-        weaponTooltipName?.text = "[$rarityLabel] $baseName"
-        val dmg = weapon.rolledDamage ?: 0
-        val extra = weapon.rolledStats.entries.firstOrNull()
-        weaponTooltipStats?.text = if (extra != null) "⚔ $dmg   ${extra.key.replace('_',' ')}: ${extra.value}%" else "⚔ $dmg"
+    private fun showWeaponInHand(type: String) {
+        weaponTooltipName?.text = activity.weaponName(type)
+        weaponTooltipName?.setTextColor(Color.WHITE)
         weaponTooltipView?.visibility = View.VISIBLE
-    }
-
-    private fun rarityColor(rarity: com.Atom2Universe.app.games.caves.node.ItemRarity) = when (rarity) {
-        com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON    -> 0xFFAAAAAA.toInt()
-        com.Atom2Universe.app.games.caves.node.ItemRarity.MAGIC     -> 0xFF4488FF.toInt()
-        com.Atom2Universe.app.games.caves.node.ItemRarity.RARE      -> 0xFFFFDD00.toInt()
-        com.Atom2Universe.app.games.caves.node.ItemRarity.EPIC      -> 0xFFCC44FF.toInt()
-        com.Atom2Universe.app.games.caves.node.ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
     }
 
 

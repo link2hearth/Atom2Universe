@@ -358,7 +358,8 @@ internal object BlockRegistry {
 
     fun creativeList(): List<Short> =
         defs.values
-            .filter { !it.water && "retired" !in it.tags && FarmShowcasePlants.sample(it.id) == null && DoubleSlabs.materials(it.id) == null }
+            .filter { !it.water && "retired" !in it.tags && FarmShowcasePlants.sample(it.id) == null && DoubleSlabs.materials(it.id) == null &&
+                com.Atom2Universe.app.games.caves.entity.RangedProfile.of(it.id)?.firearm != true } // Firearms stay in Assault.
             .sortedBy { it.id }
             .map { it.id }
 

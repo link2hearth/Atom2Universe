@@ -56,7 +56,6 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     var clearSight: ((Double,Double,Double,Double,Double,Double)->Boolean)? = null
 
     // Fournit les dégâts thorns de l'arme équipée (0 si pas d'épines)
-    var thornsProvider: (() -> Int)? = null
 
 
     // ── Tick principal ────────────────────────────────────────────────────────
@@ -167,6 +166,14 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         // Recul infligé par le joueur — déplacement amorti, même si étourdi.
         applyMobKnockback(e, dt)
         if (e.hp <= 0) { e.attackWindup = 0f; return }
+
+        // Repli (cocon ou bouclier) : immobile face au tireur, il regagne ce qu'on lui a pris de loin.
+        if (e.retreat > 0f) {
+            Harassment.update(e, dt)
+            e.attackWindup = 0f; e.attack?.lungeRemaining = 0f
+            e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
+            return
+        }
 
         // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
         if (e.freezeTimer > 0f) { e.freezeTimer -= dt;e.attackWindup=0f;e.attack?.lungeRemaining=0f; return }
@@ -343,11 +350,6 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 val kdx = (px - e.x); val kdz = (pz - e.z)
                 val klen = sqrt(kdx * kdx + kdz * kdz).coerceAtLeast(0.001)
                 CombatNode.enemyAttacksPlayer(e, p, bus, (kdx / klen).toFloat(), (kdz / klen).toFloat())
-                val thornsDmg = thornsProvider?.invoke() ?: 0
-                if (thornsDmg > 0) {
-                    e.hp = (e.hp - thornsDmg).coerceAtLeast(0)
-                    e.hitFlash = 0.15f
-                }
             }
         }
 

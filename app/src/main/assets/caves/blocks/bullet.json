@@ -12,5 +12,7 @@
   "placement_rule": "any",
   "replaceable": false,
   "placeable": false,
-  "tags": []
+  "tags": [
+    "retired"
+  ]
 }

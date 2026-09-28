@@ -125,12 +125,8 @@ class CaveActivity : ThemedActivity() {
 
     internal fun blockDrawable(type: Short, cornerDp: Float = 4f): Drawable {
         val dp = resources.displayMetrics.density
-        if (com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(type)) {
-            val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)
-            val def = instance?.let { com.Atom2Universe.app.games.caves.node.ItemRegistry.get(it.defId) }
-            return com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(assets,
-                def?.weaponType ?: def?.sprite ?: "gun",
-                instance?.rarity ?: com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON)
+        com.Atom2Universe.app.games.caves.entity.RangedProfile.of(type)?.let { weapon ->
+            return com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(assets, weapon.type)
         }
         val base = com.Atom2Universe.app.games.caves.node.ForgedEquipment.base(type) ?: type
         val thumbnail = BlockRegistry.getItemIcon(base)
@@ -162,7 +158,7 @@ class CaveActivity : ThemedActivity() {
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.get(type)?.let { return blockName(it.base) }
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.name(this,type)?.let { return it }
         com.Atom2Universe.app.games.caves.node.MineralItems.name(this,type)?.let { return it }
-        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(type)?.let { return weaponName(it.defId) }
+        com.Atom2Universe.app.games.caves.entity.RangedProfile.of(type)?.let { return weaponName(it.type) }
         com.Atom2Universe.app.games.caves.node.FarmItems.seedCrop(type)?.let { crop ->
             return getString(R.string.cave_farm_seed_name, getString(com.Atom2Universe.app.games.caves.node.FarmItems.crops[crop].label))
         }
@@ -243,14 +239,12 @@ class CaveActivity : ThemedActivity() {
         val save = worldId?.let { CaveWorldSaveManager.loadWorld(this, it) }
         lastSnapshotTime=save?.lastPlayedAt ?: 0L
         isCreative = save?.isCreative ?: false
-        // Restaurer les instances d'armes AVANT de créer le renderer
-        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
-        com.Atom2Universe.app.games.caves.node.ForgedEquipment.clear()
-        save?.weaponInstances?.forEach { (id, inst) ->
-            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.restore(id, inst)
-        }
-
+        // Restaurer l'équipement forgé AVANT de créer le renderer, puis oublier les objets qui
+        // n'existent plus (anciennes armes aléatoires, pièces d'armes à feu) : pas de conversion.
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.restore(save?.forgedEquipment ?: "{}")
+        save?.let { s -> s.inventory = s.inventory.filterKeys { id ->
+            BlockRegistry.get(id) != null || com.Atom2Universe.app.games.caves.node.ForgedEquipment.get(id) != null
+        } }
         val savedState = when {
             save != null && save.isCreative -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -719,8 +713,7 @@ class CaveActivity : ThemedActivity() {
                 isFocusable = true
                 contentDescription = weaponName(type)
                 addView(android.widget.ImageView(this@CaveActivity).apply {
-                    setImageDrawable(com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(
-                        assets, type, com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON))
+                    setImageDrawable(com.Atom2Universe.app.games.caves.render.WeaponIconDrawable(assets, type))
                     importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 }, LinearLayout.LayoutParams(dp(72), dp(72)))
                 addView(android.widget.TextView(this@CaveActivity).apply {
@@ -825,7 +818,6 @@ class CaveActivity : ThemedActivity() {
         renderer.destroy()
         music.stop()
         soundEngine?.destroy()
-        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.clear()
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.clear()
     }
 
@@ -864,7 +856,6 @@ class CaveActivity : ThemedActivity() {
             playerShield        = stats.shield,
             playerShieldCurrent = renderer.playerNode.shield,
             wardStonePositions  = renderer.enemyManager.wardStoneZones.toList(),
-            weaponInstances     = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.snapshot(),
             forgedEquipment     = com.Atom2Universe.app.games.caves.node.ForgedEquipment.snapshot(),
             passiveAnimals = renderer.passiveAnimals.snapshotNow(),
             defeatedSiteBosses = renderer.enemyManager.spawnManager.defeatedSiteBossesSnapshot(),

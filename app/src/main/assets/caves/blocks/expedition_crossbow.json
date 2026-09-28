@@ -1,0 +1,12 @@
+{
+  "id": 9908,
+  "name": "expedition_crossbow",
+  "texture_top": "expedition:9908:top",
+  "texture_side": "expedition:9908:side",
+  "texture_bottom": "expedition:9908:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_crossbow",
+  "creative_tab": "resources",
+  "placeable": false
+}

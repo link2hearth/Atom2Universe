@@ -174,9 +174,7 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.FLOUR to 2,F.EGG to 1),mapOf(F.PANCAKE to 4,BUCKET_EMPTY to 1),12),
         Recipe(F.COOKER,mapOf(F.MILK to 1,F.TRUFFLE to 1,9705.toShort() to 2),mapOf(F.CREAM_SOUP to 3,BUCKET_EMPTY to 1),15)
     ) + listOf(
-        Recipe(E.FORGE,mapOf(F.GEODE to 1),mapOf(E.POWDER to 8),12,heat=1),
         Recipe(F.PRESS,mapOf(F.IRON_PLATE to 1),mapOf(E.RIVETS to 8),6,true),
-        Recipe(F.PRESS,mapOf(F.PLATE to 1),mapOf(E.CASE to 8),6,true),
         Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
         Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
         Recipe(F.PRESS,mapOf(E.RIVER_FISH to 2),mapOf(E.FISH_OIL to 1),8,true),

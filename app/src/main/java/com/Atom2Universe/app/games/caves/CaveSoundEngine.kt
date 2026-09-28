@@ -57,6 +57,10 @@ internal class CaveSoundEngine(private val context: Context) {
                 context.assets.openFd("caves/audio/$name.wav").use { ids[name] = sounds.load(it, 1) }
             } catch (e: Exception) { Log.w("CaveAudio", "Cannot load $name", e) }
         }
+        // Temporaire : l'arbalète se réarme sur la corde de fronde du Trébuchet, faute de son propre.
+        try {
+            context.assets.openFd("trebuchet/audio/rope_tie.ogg").use { ids["reload_crossbow"] = sounds.load(it, 1) }
+        } catch (e: Exception) { Log.w("CaveAudio", "Cannot load reload_crossbow", e) }
         Thread({
             try {
                 val files = CaveNatureSounds.prepare(context.cacheDir)

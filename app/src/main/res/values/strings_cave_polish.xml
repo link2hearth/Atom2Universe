@@ -32,6 +32,8 @@
     <string name="cave_storage_empty_filtered">No matching items</string>
     <string name="cave_storage_done">Transferred %1$s × %2$d</string>
     <string name="cave_catalog_guide">The bag and bar are two parts of the same inventory. Drag a stack from the bag to a specific bar slot: it leaves the bag and the replaced stack returns there. Drag between bar slots to swap their stacks; drag back to the bag to free a slot. All stacks, including those in the bar, can be used for crafting. Tap an item for details; hold still to toggle its favorite. Arrows change pages, including during a drag. Recipes are shown when you own at least one ingredient in the bag or bar; Available requires all ingredients, tools and stations. Tap a recipe for ingredients and crafting.</string>
+    <string name="cave_catalog_show_tiers">Show all tiers</string>
+    <string name="cave_catalog_hide_tiers">Hide tiers</string>
     <string name="cave_catalog_page">%1$d / %2$d · %3$d items</string>
     <string name="cave_catalog_craft_quantity">×%1$d</string>
     <string name="cave_catalog_craft_action">Craft %1$s batches</string>

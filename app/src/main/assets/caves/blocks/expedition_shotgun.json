@@ -1,0 +1,12 @@
+{
+  "id": 9915,
+  "name": "expedition_shotgun",
+  "texture_top": "expedition:9915:top",
+  "texture_side": "expedition:9915:side",
+  "texture_bottom": "expedition:9915:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_shotgun",
+  "creative_tab": "resources",
+  "placeable": false
+}

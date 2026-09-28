@@ -1,0 +1,12 @@
+{
+  "id": 9917,
+  "name": "expedition_dual_pistols",
+  "texture_top": "expedition:9917:top",
+  "texture_side": "expedition:9917:side",
+  "texture_bottom": "expedition:9917:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_dual_pistols",
+  "creative_tab": "resources",
+  "placeable": false
+}

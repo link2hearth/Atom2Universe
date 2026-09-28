@@ -12,7 +12,4 @@
     <item type="id" name="cave_inv_right_header" />
     <item type="id" name="cave_inv_crafting_empty" />
     <item type="id" name="cave_inv_crafting_recycler" />
-    <item type="id" name="cave_inv_sell_panel" />
-    <item type="id" name="cave_inv_sell_price" />
-    <item type="id" name="cave_inv_sell_btn" />
 </resources>

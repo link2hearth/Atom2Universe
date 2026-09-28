@@ -239,11 +239,6 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         detail.addView(ingredients)
         detail.addView(label().apply { id = R.id.cave_inv_info_ingredients; setLineSpacing(dp(3).toFloat(), 1f) })
         CaveUiStyle.button(craftOne, true)
-        detail.addView(column().apply {
-            id = R.id.cave_inv_sell_panel
-            addView(label().apply { id = R.id.cave_inv_sell_price; setTextColor(CaveUiStyle.MUTED) })
-            addView(button(R.string.cave_inv_sell_btn).apply { id = R.id.cave_inv_sell_btn; setTextColor(CaveUiStyle.WARNING) })
-        })
         panel.addView(status, LinearLayout.LayoutParams(-1, -2))
     }
 }

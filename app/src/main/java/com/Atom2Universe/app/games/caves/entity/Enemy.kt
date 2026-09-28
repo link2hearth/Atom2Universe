@@ -102,6 +102,13 @@ internal class Enemy(
 
     var alertPlayed: Boolean = false
 
+    // Harcèlement (voir Harassment) : dégâts pris à distance depuis le dernier coup au corps à
+    // corps, puis repli en cocon ou derrière un bouclier qui les regagne.
+    var harassment: Int = 0
+    var retreat: Float = 0f
+    var retreatFrom: Int = 0
+    var retreatHeal: Int = 0
+
     companion object {
         const val BOSS_SPRITE_SCALE = 2.2f
         const val BOSS_HP_MULT      = 6

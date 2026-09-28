@@ -12,8 +12,8 @@
   "biomes": ["any"],
   "spawn_zone_min": 13,
   "spawn_weight": 20,
-  "loot_table": "loot_t4",
   "behavior": "aggressive",
+  "retreat": "shield",
   "boss_eligible": true,
   "xp_base": 8,
   "resistances": { "electric": 1.5, "fire": 0.2, "ice": 0.2, "poison": 0.0 }

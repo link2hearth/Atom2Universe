@@ -52,11 +52,11 @@ internal object ForgedEquipment {
         return if(t != null) Item(id, 0, hpRange(t).random(rng), defenseRange(t).random(rng), bonuses)
         else Item(id, damageRange(id).random(rng), 0, 0, bonuses)
     }
-    fun allocate(item: Item): Short = synchronized(WeaponInstanceRegistry) {
+    @Synchronized fun allocate(item: Item): Short {
         for(i in 10002..32767) {
             val id=i.toShort()
-            if(!instances.containsKey(id) && !WeaponInstanceRegistry.isWeapon(id) && BlockRegistry.get(id)==null) {
-                instances[id]=item; return@synchronized id
+            if(!instances.containsKey(id) && BlockRegistry.get(id)==null) {
+                instances[id]=item; return id
             }
         }
         error("No equipment IDs available")
@@ -73,7 +73,7 @@ internal object ForgedEquipment {
         clear()
         val root=runCatching { JSONObject(json) }.getOrNull() ?: return
         root.keys().forEach { key -> runCatching {
-            val id=key.toInt(); require(id in 10002..32767 && !WeaponInstanceRegistry.isWeapon(id.toShort()))
+            val id=key.toInt(); require(id in 10002..32767)
             val o=root.getJSONObject(key); val base=o.getInt("base").toShort(); require(isCraft(base))
             val b=o.optJSONObject("bonuses") ?: JSONObject()
             instances[id.toShort()]=Item(base,o.optInt("damage").coerceAtLeast(0),o.optInt("hp").coerceAtLeast(0),

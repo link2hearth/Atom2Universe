@@ -14,9 +14,6 @@ import com.Atom2Universe.app.games.caves.node.ORIENT_AXIS
 import com.Atom2Universe.app.games.caves.node.ORIENT_FACING
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.GameEvent
-import com.Atom2Universe.app.games.caves.node.ItemRegistry
-import com.Atom2Universe.app.games.caves.node.LootNode
-import com.Atom2Universe.app.games.caves.node.LootTableRegistry
 import com.Atom2Universe.app.games.caves.node.MobRegistry
 import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
@@ -457,7 +454,7 @@ internal class CaveRenderer(
         val saved=runCatching { org.json.JSONObject(frontierLife.magazines) }.getOrElse { org.json.JSONObject() }
         magazines.forEach { (id,m) -> saved.put(id.toString(),m.snapshot()) }
         saved.keys().asSequence().toList().forEach { key ->
-            if(com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(key.toShortOrNull() ?: 0)==null) saved.remove(key)
+            if((RangedProfile.of(key.toShortOrNull())?.magazine ?: 0)==0) saved.remove(key)
         }
         frontierLife.magazines=saved.toString()
         return frontierLife.snapshot()
@@ -478,7 +475,7 @@ internal class CaveRenderer(
 
     /** Combat = armes équipées, munitions (cailloux/flèches/carreaux/balles) et pierres de garde. */
     internal fun isCombatItem(id: Short): Boolean = E.isEquipment(id) ||
-        com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id) ||
+        RangedProfile.of(id) != null ||
         id in ROCK_IDS || id == ARROW_ID || id == BOLT_ID || id == BULLET_ID ||
         id == com.Atom2Universe.app.games.caves.world.WARD_STONE
 
@@ -501,7 +498,6 @@ internal class CaveRenderer(
     private var swingActive = false
     private var swingTimer  = 0f
     private val SWING_DUR = 0.30f
-    private val itemTexCache = HashMap<String, Int>()
     private val ARM_SKIN   = floatArrayOf(0.85f, 0.66f, 0.52f)   // teinte peau
     private val ARM_SLEEVE = floatArrayOf(0.30f, 0.55f, 0.85f)   // manche
 
@@ -513,7 +509,6 @@ internal class CaveRenderer(
 
     internal val eventBus get() = sim.eventBus
     internal val playerNode get() = player.node
-    internal val lootNode get() = sim.lootNode
     internal val enemyManager get() = sim.enemyManager
     private val enemyRenderer      = EnemyRenderer()
     private val combatEffects = CombatEffectsRenderer()
@@ -997,8 +992,6 @@ internal class CaveRenderer(
         initSkyBodies()
 
         MobRegistry.load(context.assets)
-        ItemRegistry.load(context.assets)
-        LootTableRegistry.load(context.assets)
         blockTexArray = loadBlockTextures()
         enemyRenderer.onSurfaceCreated(context.assets)
         combatEffects.onSurfaceCreated()
@@ -2046,6 +2039,8 @@ internal class CaveRenderer(
         override val huntableAnimals get() = this@CaveRenderer.huntableAnimals
         override fun impact(x: Double, y: Double, z: Double) = spawnImpact(x, y, z)
         override fun bulletImpact(x: Double, y: Double, z: Double) = announceImpact(x, y, z)
+        // Le ricochet métallique des balles, en attendant un son propre au cocon et au bouclier.
+        override fun deflected(x: Double, y: Double, z: Double) = playImpact("metal", x, y, z)
         override fun playerShot(player: CavePlayer, p: Projectile) {
             // Les règles du mode ne gèrent que le joueur de l'appareil, le seul pour l'instant.
             if (player === this@CaveRenderer.player) mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
@@ -2068,45 +2063,11 @@ internal class CaveRenderer(
         return worldBlockAt(hit.bx, hit.by, hit.bz) in ROCK_IDS
     }
 
-    // Munitions possibles pour chaque famille d'arme à distance, dans l'ordre de préférence
-    // de consommation (le lance-pierre accepte les deux variantes de caillou ramassées au sol).
-    /** Kit de test, appelé sur le thread GL. Réutilise les armes déjà possédées. */
-    fun giveWeaponTestKit() {
-        if (mode.singleWeapon) return
-        val registry = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry
-        val types = RangedProfile.all.keys.toList()
-        magazines.clear()
-        for ((slot, type) in types.withIndex()) {
-            val existing = inventory.keys.firstOrNull { id ->
-                (inventory[id] ?: 0) > 0 && registry.get(id)?.defId == type
-            }
-            val id = existing ?: ItemRegistry.rollInstance(type,Random.Default)?.let { registry.allocate(it) } ?: continue
-            inventory[id] = 1
-            // Les objets déplacés de la barre restent dans l'inventaire.
-            for (i in hotbar.indices) if (hotbar[i] == id) hotbar[i] = null
-            hotbar[slot] = id
-            for (ammo in ammoCandidatesFor(type)) inventory[ammo] = maxOf(inventory[ammo] ?: 0,250)
-        }
-        selectedSlot = 0
-        weaponChargeTime = 0f; rockChargeTime = 0f
-        equipmentRelease = -1f; releasedEquipment = null
-        // L’activité reconstruit les banques UI avant de publier les changements.
-    }
-
-    private val assaultWeaponIds = HashMap<String, Short>()
-
-    /** Un seul prêt par famille, sans affixes aléatoires qui modifieraient la cadence. Thread GL. */
+    /** Arme de Assaut : le même objet fixe qu'ailleurs, seul en main, chargeur plein. Thread GL. */
     fun equipAssaultWeapon(type: String): Boolean {
         if (!mode.singleWeapon) return false
-        val def = ItemRegistry.get(type) ?: return false
-        val profile = RangedProfile.all[type] ?: return false
-        if (profile.magazine <= 0) return false
-        val id = assaultWeaponIds.getOrPut(type) {
-            val damage = def.damageBase?.let { (it.min + it.max) / 2 } ?: 1
-            com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.allocate(
-                com.Atom2Universe.app.games.caves.node.ItemInstance(type,
-                    com.Atom2Universe.app.games.caves.node.ItemRarity.COMMON, damage, emptyMap(), tier = def.tier))
-        }
+        val profile = RangedProfile.all[type]?.takeIf { it.firearm } ?: return false
+        val id = profile.item
         inventory.clear()
         inventory[id] = 1
         hotbar.fill(null)
@@ -2122,6 +2083,8 @@ internal class CaveRenderer(
         return true
     }
 
+    // Munitions possibles pour chaque famille d'arme à distance, dans l'ordre de préférence
+    // de consommation (la fronde accepte les deux variantes de caillou ramassées au sol).
     private fun ammoCandidatesFor(weaponType: String?): List<Short> = when (weaponType) {
         "sling"    -> ROCK_IDS.toList()
         "bow"      -> listOf(ARROW_ID)
@@ -2135,41 +2098,35 @@ internal class CaveRenderer(
         ammoCandidatesFor(weaponType).firstOrNull { (inventory[it] ?: 0) > 0 }
             ?: ammoCandidatesFor(weaponType).firstOrNull()
 
-    /** Le slot sélectionné contient-il une arme à distance (sling/bow/crossbow/gun) ? */
-    private fun isSelectedRangedWeapon(): Boolean {
-        val id = hotbar[selectedSlot] ?: return false
-        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return false
-        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return false
-        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
-        return def.weaponType in RANGED_WEAPON_TYPES
-    }
+    /** Le slot sélectionné contient-il une arme à distance (fronde, arc, arbalète, arme à feu) ? */
+    private fun isSelectedRangedWeapon(): Boolean = RangedProfile.of(hotbar[selectedSlot]) != null
 
-    // Attaque à distance avec l'arme équipée (arc, arbalète…) : consomme 1 munition
-    // dans l'inventaire et applique les mêmes affixes qu'un coup de mêlée (crit, statuts…).
+    // Attaque à distance avec l'arme équipée : consomme 1 munition dans l'inventaire.
+    // Arc et arbalète reçoivent les bonus d'armure (critique, vitesse) ; la fronde, rien.
     private fun tryWeaponRangedAttack(): Boolean {
         val heldId = hotbar[selectedSlot] ?: return false
-        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(heldId) ?: return false
-        val def = com.Atom2Universe.app.games.caves.node.ItemRegistry.get(weapon.defId) ?: return false
-        val ammoId = ammoBlockIdFor(def.weaponType) ?: return false
+        val profile = RangedProfile.of(heldId) ?: return false
+        if (!isCreative && (inventory[heldId] ?: 0) <= 0) return false
+        val ammoId = ammoBlockIdFor(profile.type) ?: return false
         if (weaponAttackCooldown > 0f) return false
-        // Munitions illimitées (Assaut) : la réserve n'est ni vérifiée ni entamée, seul le chargeur compte.
-        val infiniteAmmo = mode.infiniteAmmo
+        // Munitions illimitées (Assaut, créatif) : la réserve n'est ni vérifiée ni entamée.
+        val infiniteAmmo = mode.infiniteAmmo || isCreative
         val ammoCount = inventory[ammoId] ?: 0
         if (!infiniteAmmo && ammoCount <= 0) return false
 
-        val profile = RangedProfile.all[def.weaponType] ?: return false
         val magazine = if(profile.magazine>0) magazine(heldId,profile) else null
         if(magazine != null && !magazine.shoot()) {
             reloadWithSound(magazine)
             return false
         }
-        val stats = if(mode.allowsWorldEdits) weapon.rolledStats.toMutableMap().also { stats ->
+        val stats = if(mode.allowsWorldEdits && profile.gear) buildMap {
             for(b in listOf(G.Bonus.ATTACK,G.Bonus.CRIT,G.Bonus.CRIT_DAMAGE)) {
-                stats[b.key]=((stats[b.key] ?: 0)+expeditionCombat.bonus(b,false)).coerceIn(0,b.cap)
+                val value=expeditionCombat.bonus(b,false)
+                if(value>0) put(b.key,value)
             }
-        } else weapon.rolledStats
+        } else emptyMap()
         val drawPower=if(mode.allowsWorldEdits && profile.magazine==0) (.45f+.55f*(weaponChargeTime/.9f).coerceIn(0f,1f)) else 1f
-        val baseDamage = ((weapon.rolledDamage ?: 1)*drawPower).roundToInt()
+        val baseDamage = (profile.damage*drawPower).roundToInt()
         val yawRad = Math.toRadians(player.yaw.toDouble())
         val rightX = -cos(yawRad); val rightZ = sin(yawRad)
         val fwdX = sin(yawRad);   val fwdZ = cos(yawRad)
@@ -2179,7 +2136,7 @@ internal class CaveRenderer(
         val spawnZ = player.z + rightZ * 0.10 + fwdZ * 0.12
         val spawnY = player.eyeY - 0.05
         val ammoWeapon = ammoWeaponDef
-        val heat = if(def.weaponType=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
+        val heat = if(profile.type=="smg") 1f+(magazine?.shots?.rem(profile.magazine) ?: 0)*.055f else 1f
         repeat(profile.pellets) {
             val spread=profile.spread*heat*if(mode.allowsWorldEdits && physics.isCrouching) .65f else 1f
             var dx=player.aimX.toDouble()+Random.nextDouble(-spread.toDouble(),spread.toDouble())
@@ -2202,14 +2159,14 @@ internal class CaveRenderer(
         val speedBonus = stats["attack_speed"] ?: 0
         weaponAttackCooldown=if(mode.allowsWorldEdits) profile.interval/(1f+speedBonus/100f)
             else (profile.interval*(1f-speedBonus/100f)).coerceAtLeast(profile.interval*.45f)
-        eventBus.publish(GameEvent.WeaponFired(def.weaponType ?: "gun"))
+        eventBus.publish(GameEvent.WeaponFired(profile.type))
         if(magazine?.remaining==0 && (infiniteAmmo || newCount>0)) reloadWithSound(magazine)
         // Un coup de feu s'entend : le mode prévient les ennemis à portée d'oreille.
         mode.onPlayerFired()
         swingCallback?.invoke()
         startSwing()
         equipmentRelease = 0f
-        releasedEquipment = def.weaponType
+        releasedEquipment = profile.type
         return true
     }
 
@@ -2325,12 +2282,6 @@ internal class CaveRenderer(
         }
     }
 
-    internal fun equippedWeaponStat(key: String): Int {
-        val id = hotbar[selectedSlot] ?: return 0
-        if (!com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(id)) return 0
-        return com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id)?.rolledStats?.get(key) ?: 0
-    }
-
     /**
      * Le bruit d'une balle qui frappe un mur, en mode Assaut seulement : béton, bois ou métal selon
      * le bloc touché, plus faible avec la distance et placé à gauche ou à droite comme les animaux.
@@ -2338,16 +2289,21 @@ internal class CaveRenderer(
      */
     private fun announceImpact(x: Double, y: Double, z: Double) {
         if (mode.allowsWorldEdits) return
-        val dx = x - camera.playerX
-        val dz = z - camera.playerZ
-        val distance = kotlin.math.sqrt(dx * dx + dz * dz + (y - camera.eyeY) * (y - camera.eyeY))
-        if (distance > IMPACT_HEARING) return
         val block = worldBlockAt(floor(x).toInt(), floor(y).toInt(), floor(z).toInt())
         val material = when {
             block == AIR || block in 1000..1019 -> "wood"   // meubles (décor) et planches
             block == BRICK_OBSIDIAN || block == FURNACE || block == IRON -> "metal"
             else -> "concrete"
         }
+        playImpact(material, x, y, z)
+    }
+
+    /** Un claquement de [material] en (x, y, z), atténué par la distance et placé à gauche ou à droite. */
+    private fun playImpact(material: String, x: Double, y: Double, z: Double) {
+        val dx = x - camera.playerX
+        val dz = z - camera.playerZ
+        val distance = kotlin.math.sqrt(dx * dx + dz * dz + (y - camera.eyeY) * (y - camera.eyeY))
+        if (distance > IMPACT_HEARING) return
         val yaw = Math.toRadians(camera.yaw.toDouble())
         val pan = ((-cos(yaw) * dx + sin(yaw) * dz) / distance.coerceAtLeast(1.0)).toFloat() * .65f
         eventBus.publish(GameEvent.BulletImpact(material, (1f - distance.toFloat() / IMPACT_HEARING.toFloat()), pan))
@@ -3226,9 +3182,6 @@ internal class CaveRenderer(
         GLES30.glDepthMask(true)
 
         val held = hotbar[selectedSlot]
-        val isWeapon = held != null && com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.isWeapon(held)
-
-
         heldKind()?.let { drawHeldItem(it); return }
         if (held == TORCH) { drawHeldTorch(swing); return }
         val type = selectedEquipmentType()
@@ -3254,18 +3207,17 @@ internal class CaveRenderer(
             drawEquipment(type,throwing || type == null,true)
             return
         }
-        val holdingBlock = held != null && !isWeapon && G.template(held) == null &&
+        val holdingBlock = held != null && G.template(held) == null &&
             !BlockRegistry.isDecoration(held) && !com.Atom2Universe.app.games.caves.node.FarmItems.isItem(held)
         if (holdingBlock) {
             // Décalage en repère caméra : le bras accompagne le bloc vers le coin bas-droite.
             vmModel[12] += .20f
             vmModel[13] -= .18f
         }
-        drawArm(isWeapon)
+        drawArm()
 
         if (held != null) {
             when {
-                isWeapon                     -> drawHeldWeapon(held)
                 G.template(held)!=null        -> drawHeldFlat(G.base(held) ?: held)
                 BlockRegistry.isDecoration(held) || com.Atom2Universe.app.games.caves.node.FarmItems.isItem(held) -> drawHeldFlat(held)
                 else                         -> drawHeldBlock(held)
@@ -3278,11 +3230,11 @@ internal class CaveRenderer(
      * En mode arme/outil ([weapon] = true), on n'affiche qu'une main courte au niveau de la
      * poignée pour ne pas chevaucher le sprite de l'arme qui remonte au-dessus.
      */
-    private fun drawArm(weapon: Boolean) {
+    private fun drawArm() {
         val w = 0.058f
-        // Manche + peau : long avant-bras (blocs/main vide) ou main courte (arme).
-        val sleeveTop = if (weapon) 0.20f else 0.28f
-        val skinTop   = if (weapon) 0.40f else 0.56f
+        // Manche + peau : long avant-bras sous le bloc ou la main vide.
+        val sleeveTop = 0.28f
+        val skinTop   = 0.56f
         val arr = FloatArray(2 * 36 * 6)
         var o = 0
         o = vmBox(arr, o, -w, w, 0.00f, sleeveTop, -w, w, ARM_SLEEVE[0], ARM_SLEEVE[1], ARM_SLEEVE[2])
@@ -3451,53 +3403,6 @@ internal class CaveRenderer(
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
-    /** Arme/outil tenu : sprite 2D du PNG, présenté en diagonale (billboard shader). */
-    private fun drawHeldWeapon(id: Short) {
-        val weapon = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return
-        val def = ItemRegistry.get(weapon.defId) ?: return
-        val tex = itemTexture(def.sprite)
-        if (tex == 0) return
-
-        val s = 0.30f
-        System.arraycopy(vmModel, 0, vmTmp, 0, 16)
-        // Manche ancré dans le poing, tête/lame redressée vers le haut en diagonale
-        // (roll négatif = redresse la diagonale de la texture vers la verticale),
-        // légèrement inclinée vers l'avant et tournée pour un rendu 3D.
-        android.opengl.Matrix.translateM(vmTmp, 0, 0.0f, 0.52f, 0.05f)
-        android.opengl.Matrix.rotateM(vmTmp, 0, -16f, 1f, 0f, 0f)   // pointe vers l'avant
-        android.opengl.Matrix.rotateM(vmTmp, 0, -12f, 0f, 1f, 0f)   // léger angle 3D
-        android.opengl.Matrix.rotateM(vmTmp, 0, -42f, 0f, 0f, 1f)   // redresse la lame
-        android.opengl.Matrix.multiplyMM(vmMvp, 0, vmProj, 0, vmTmp, 0)
-
-        val v = floatArrayOf(
-            -s,-s,0f, 0f,1f,   s,-s,0f, 1f,1f,   s, s,0f, 1f,0f,
-            -s,-s,0f, 0f,1f,   s, s,0f, 1f,0f,  -s, s,0f, 0f,0f
-        )
-        val buf = ByteBuffer.allocateDirect(v.size * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(v); buf.position(0)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vmVbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, v.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
-        GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-        billboardShader?.use()
-        GLES30.glUniformMatrix4fv(bUMvp, 1, false, vmMvp, 0)
-        GLES30.glUniform1f(bUAlpha, 1f)
-        GLES30.glUniform1f(bUMask, 0f)
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, tex)
-        GLES30.glUniform1i(bUTex, 0)
-        val stride = 5 * 4
-        GLES30.glEnableVertexAttribArray(bAPos)
-        GLES30.glVertexAttribPointer(bAPos, 3, GLES30.GL_FLOAT, false, stride, 0)
-        GLES30.glEnableVertexAttribArray(bAUv)
-        GLES30.glVertexAttribPointer(bAUv, 2, GLES30.GL_FLOAT, false, stride, 12)
-        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, 6)
-        GLES30.glDisableVertexAttribArray(bAPos)
-        GLES30.glDisableVertexAttribArray(bAUv)
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
-        GLES30.glDisable(GLES30.GL_BLEND)
-    }
-
     private val equipmentMesh = HeldEquipmentMesh()
     private val equipmentModel = FloatArray(16)
     private var equipmentRelease = -1f
@@ -3568,8 +3473,7 @@ internal class CaveRenderer(
         val id = hotbar[selectedSlot] ?: return if(mode.allowsWorldEdits && expeditionCombat.shield && expeditionCombat.guard>0f) "buckler" else null
         E.melee(id)?.let { return it.type }
         if(id==E.ROD) return "fishing_rod"
-        val instance = com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(id) ?: return null
-        return ItemRegistry.get(instance.defId)?.weaponType
+        return RangedProfile.of(id)?.type
     }
 
     private fun updateEquipmentAnimation(dt: Float) {
@@ -3763,17 +3667,12 @@ internal class CaveRenderer(
         val charge = (weaponChargeTime / WEAPON_CHARGE_VISUAL_MAX).coerceIn(0f,1f)
         val rockCharge = (rockChargeTime / ROCK_CHARGE_MAX).coerceIn(0f,1f)
         val ammo = ammoBlockIdFor(type)
-        val loaded = if (rock) ROCK_IDS.any { (inventory[it] ?: 0) > 0 }
-            else ammo != null && (inventory[ammo] ?: 0) > 0 && release < 0f
-        val instance = hotbar[selectedSlot]?.let { com.Atom2Universe.app.games.caves.node.WeaponInstanceRegistry.get(it) }
-        val accent = when(instance?.rarity) {
-            com.Atom2Universe.app.games.caves.node.ItemRarity.MAGIC -> 0x60B6E3
-            com.Atom2Universe.app.games.caves.node.ItemRarity.RARE -> 0xE5C36A
-            com.Atom2Universe.app.games.caves.node.ItemRarity.EPIC -> 0xB889E8
-            com.Atom2Universe.app.games.caves.node.ItemRarity.LEGENDARY -> 0xF5A04A
-            else -> 0xBFA779
-        }
         val mag=hotbar[selectedSlot]?.let { magazines[it] }
+        // L'arbalète armée garde son carreau en place ; les autres armes le montrent tant qu'il en reste.
+        val loaded = if (rock) ROCK_IDS.any { (inventory[it] ?: 0) > 0 }
+            else if (type == "crossbow" && mag != null) mag.remaining > 0 && release < 0f
+            else ammo != null && (isCreative || (inventory[ammo] ?: 0) > 0) && release < 0f
+        val accent = 0xBFA779
         val reload=mag?.progress ?: 0f
         val dip=sin(reload*PI.toFloat())
         android.opengl.Matrix.rotateM(equipmentModel,0,dip*28f,0f,0f,1f)
@@ -3834,30 +3733,6 @@ internal class CaveRenderer(
         GLES30.glUniform1f(lUAlpha,1f)
         GLES30.glDisableVertexAttribArray(lAPos); GLES30.glDisableVertexAttribArray(lAColor)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER,0)
-    }
-
-    /** Texture GL d'un sprite d'item (cache par nom ; 0 si introuvable). */
-    private fun itemTexture(sprite: String): Int {
-        itemTexCache[sprite]?.let { return it }
-        val tex = runCatching {
-            val ids = IntArray(1); GLES30.glGenTextures(1, ids, 0); val t = ids[0]
-            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, t)
-            val bmp = runCatching {
-                context.assets.open("caves/items/$sprite.png").use { BitmapFactory.decodeStream(it) }
-            }.getOrNull() ?: context.assets.open("caves/weapon_icons/$sprite.png").use { BitmapFactory.decodeStream(it) }
-            val b = ByteBuffer.allocateDirect(bmp.width * bmp.height * 4).order(ByteOrder.nativeOrder())
-            bmp.copyPixelsToBuffer(b); b.position(0)
-            GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bmp.width, bmp.height, 0,
-                GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, b)
-            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
-            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST)
-            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
-            GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
-            bmp.recycle()
-            t
-        }.getOrDefault(0)
-        itemTexCache[sprite] = tex
-        return tex
     }
 
     // ── LOD helpers ──────────────────────────────────────────────────────────
@@ -4910,8 +4785,6 @@ internal class CaveRenderer(
         if (transientVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(transientVbo), 0)
         if (playerBoxVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(playerBoxVbo), 0)
         if (vmVbo != 0) GLES30.glDeleteBuffers(1, intArrayOf(vmVbo), 0)
-        itemTexCache.values.filter { it != 0 }.forEach { GLES30.glDeleteTextures(1, intArrayOf(it), 0) }
-        itemTexCache.clear()
     }
 
     companion object {

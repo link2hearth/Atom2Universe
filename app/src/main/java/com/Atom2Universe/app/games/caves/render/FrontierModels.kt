@@ -8,7 +8,7 @@ internal object FrontierModels {
         id=id, hpBase=20, damageBase=0, speed=.7f, attackRange=0.0, detectRange=0.0,
         eyeHeight=1.5f, radius=.3f, spriteScale=scale, hpScalePerLevel=1.0, hpScaleCap=1.0,
         damageScalePer3Lvl=0, speedScalePerLevel=0f, biomes=emptyList(), model=id,
-        spawnZoneMin=0, spawnWeight=0f, lootTable="", behavior=behavior, bossEligible=false, xpBase=0)
+        spawnZoneMin=0, spawnWeight=0f, behavior=behavior, bossEligible=false, xpBase=0)
 
     val all: Map<String,MobModel> by lazy {
         (0..2).associate { "settler_$it" to resident(it) }

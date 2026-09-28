@@ -3,27 +3,19 @@ package com.Atom2Universe.app.games.caves.render
 import android.content.res.AssetManager
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import com.Atom2Universe.app.games.caves.node.ItemRarity
 
-/** Icône indépendante de la sélection : la rareté reste lisible sur toutes les cases. */
-internal class WeaponIconDrawable(assets: AssetManager, type: String, private val rarity: ItemRarity) : Drawable() {
+/** Icône d'arme à distance, indépendante de la sélection. */
+internal class WeaponIconDrawable(assets: AssetManager, type: String) : Drawable() {
     private val icon = synchronized(cache) {
         cache.getOrPut(type) {
             runCatching { assets.open("caves/weapon_icons/$type.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
-                ?: runCatching { assets.open("caves/items/$type.png").use { BitmapFactory.decodeStream(it) } }.getOrNull()
                 ?: Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888)
         }
     }
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private var opacity=255
     private var filter: ColorFilter?=null
-    private val color=when(rarity) {
-        ItemRarity.COMMON -> 0xFFAAAAAA.toInt()
-        ItemRarity.MAGIC -> 0xFF4488FF.toInt()
-        ItemRarity.RARE -> 0xFFFFDD00.toInt()
-        ItemRarity.EPIC -> 0xFFCC44FF.toInt()
-        ItemRarity.LEGENDARY -> 0xFFFF8800.toInt()
-    }
+    private val color=0xFFAAAAAA.toInt()
     override fun draw(canvas: Canvas) {
         if(bounds.isEmpty) return
         val save=canvas.save()
@@ -39,9 +31,6 @@ internal class WeaponIconDrawable(assets: AssetManager, type: String, private va
         paint.color=color;paint.alpha=opacity;paint.style=Paint.Style.STROKE;paint.strokeWidth=2.6f
         canvas.drawRoundRect(2f,2f,98f,98f,9f,9f,paint)
         paint.style=Paint.Style.FILL
-        // De un à cinq points : indice de rareté en complément de la couleur.
-        val dots=rarity.ordinal+1
-        for(i in 0 until dots) canvas.drawCircle(50f+(i-(dots-1)/2f)*7f,92f,2f,paint)
         canvas.restoreToCount(save)
     }
     override fun setAlpha(alpha: Int) { opacity=alpha;invalidateSelf() }

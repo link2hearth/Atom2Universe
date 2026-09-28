@@ -87,6 +87,10 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
             "resources" -> {
                 canvas.drawPath(Path().apply { moveTo(5f,14f); lineTo(24f,14f); lineTo(28f,23f); lineTo(9f,23f); close(); moveTo(5f,14f); lineTo(3f,20f); lineTo(9f,27f); lineTo(28f,27f); lineTo(28f,23f); moveTo(9f,23f); lineTo(9f,27f) },paint)
             }
+            "expand", "collapse" -> {
+                canvas.drawLine(9f,16f,23f,16f,paint)
+                if(kind=="expand") canvas.drawLine(16f,9f,16f,23f,paint)
+            }
             "close", "remove" -> { canvas.drawLine(9f,9f,23f,23f,paint);canvas.drawLine(23f,9f,9f,23f,paint) }
             "previous", "next" -> {
                 if(kind=="next") canvas.rotate(180f,16f,16f)

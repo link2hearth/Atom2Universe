@@ -77,7 +77,7 @@ internal class AssaultMode(
     val match = AssaultMatch(targetsPerRound = soldierCount,
         roundSeconds = if (isTower) 20 * 60f else if (isSuburb) 10 * 60f else ROUND_SECONDS, chooseWeaponEachRound = true)
     private var roundWeapon = "gun"
-    val weaponChoices: List<String> = RangedProfile.all.filterValues { it.magazine > 0 }.keys.toList()
+    val weaponChoices: List<String> = RangedProfile.all.filterValues { it.firearm }.keys.toList()
     private val recovery = AssaultRecovery(r.playerNode)
     private val pickups = ArrayList<ShieldPickup>()
     val shieldPickups: List<ShieldPickup> get() = pickups
@@ -936,7 +936,7 @@ internal class AssaultMode(
             attackRange = 45.0, detectRange = 45.0, eyeHeight = 1.62f, radius = 0.45f,
             spriteScale = 0.9f, hpScalePerLevel = 1.0, hpScaleCap = 1.0, damageScalePer3Lvl = 0,
             speedScalePerLevel = 0f, biomes = emptyList(), model = "soldier", spawnZoneMin = 0,
-            spawnWeight = 0f, lootTable = "", behavior = "soldier", bossEligible = false, xpBase = 0,
+            spawnWeight = 0f, behavior = "soldier", bossEligible = false, xpBase = 0,
             resistances = mapOf("bleed" to 0f, "poison" to 0f, "fire" to 0f, "ice" to 0f, "electric" to 0f),
         )
     }

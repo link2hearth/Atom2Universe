@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.games.caves
 
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.games.caves.entity.RangedProfile
 import com.Atom2Universe.app.games.caves.node.*
 import com.Atom2Universe.app.games.caves.node.ExpeditionItems as E
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
@@ -51,7 +52,7 @@ internal enum class InventoryCategory(val label: Int, val icon: String) {
             val base = ForgedEquipment.base(id) ?: id
             val mineral = M.variant(base)
             if (ForgedEquipment.template(base) != null || E.armor(base) > 0f || base == E.SHIELD) return ARMOR
-            if (WeaponInstanceRegistry.isWeapon(id) || E.melee(base) != null) return WEAPONS
+            if (RangedProfile.of(base) != null || E.melee(base) != null) return WEAPONS
             if (base in ammunition) return AMMO
             if (base in garden || FarmItems.seedCrop(base) != null || FarmShowcasePlants.sample(base) != null) return GARDEN
             if (F.toolIndex(base) >= 0 || mineral?.form == M.Form.PICK || base == F.SHEARS ||

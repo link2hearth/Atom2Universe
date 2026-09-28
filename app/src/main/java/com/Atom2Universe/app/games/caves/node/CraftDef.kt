@@ -10,14 +10,13 @@ internal data class CraftDef(
     val ingredients: List<Pair<Short, Int>>,
     val result: Short = 0,
     val resultCount: Int = 1,
-    val resultItemId: String? = null,
     val groups: List<CraftGroup> = emptyList(),
     val tools: List<Short> = emptyList(),
     val station: Short? = null,
 ) {
     val inputIds: Set<Short> = (ingredients.map { it.first } + groups.flatMap { it.ids } + tools).toSet()
     init {
-        require(resultCount > 0 && ((result > 0) xor (resultItemId != null)))
+        require(resultCount > 0 && result > 0)
         val inputs = ingredients.map { it.first } + groups.flatMap { it.ids }
         require(inputs.isNotEmpty() && inputs.distinct().size == inputs.size) { "Overlapping craft ingredients" }
         require(ingredients.all { it.second > 0 } && groups.all { it.count > 0 && it.ids.isNotEmpty() })
@@ -66,9 +65,8 @@ internal data class CraftDef(
             val tools = j.optJSONArray("tools")?.let { a -> (0 until a.length()).map { a.getInt(it).toShort() } } ?: emptyList()
             require(tools.all { BlockRegistry.get(it) != null })
             val result = j.optInt("result", 0).toShort()
-            require(result == 0.toShort() || BlockRegistry.get(result) != null)
-            return CraftDef(exact, result, j.optInt("result_count", 1),
-                j.optString("result_item").takeIf { it.isNotBlank() }, groups, tools, if(j.has("station")) j.getInt("station").toShort().also { require(BlockRegistry.get(it)?.placeable == true) } else null)
+            require(BlockRegistry.get(result) != null) { "Unknown craft result $result" }
+            return CraftDef(exact, result, j.optInt("result_count", 1), groups, tools, if(j.has("station")) j.getInt("station").toShort().also { require(BlockRegistry.get(it)?.placeable == true) } else null)
         }
     }
 }

@@ -27,12 +27,23 @@ internal class CaveItemTile(context: Context): FrameLayout(context) {
         background=CaveUiStyle.panel(context,0xE51A2E29.toInt(),0)
     }
     private val badge=View(context)
+    /** Le « + » d'une famille de paliers (catalogue créatif) : l'appui déplie ou replie. */
+    private val tiers=View(context).apply { visibility=GONE }
     init {
         isFocusable=true
         addView(icon,LayoutParams(-1,-1).apply { setMargins(dp(4),dp(3),dp(4),dp(19)) })
         addView(label,LayoutParams(-1,dp(19),Gravity.BOTTOM).apply { marginStart=dp(3);marginEnd=dp(3) })
         addView(count,LayoutParams(-2,-2,Gravity.TOP or Gravity.END).apply { topMargin=dp(3);marginEnd=dp(3) })
         addView(badge,LayoutParams(dp(17),dp(17),Gravity.TOP or Gravity.START).apply { topMargin=dp(3);marginStart=dp(3) })
+        addView(tiers,LayoutParams(dp(24),dp(24),Gravity.TOP or Gravity.END).apply { topMargin=dp(1);marginEnd=dp(1) })
+    }
+    /** [open] : null sans famille, sinon l'état de la famille ; [toggle] la déplie ou la replie. */
+    fun tiers(open: Boolean?,toggle: () -> Unit={}) {
+        tiers.visibility=if(open==null) GONE else VISIBLE
+        if(open==null) { tiers.setOnClickListener(null);return }
+        tiers.background=CaveActionDrawable(if(open) "collapse" else "expand")
+        tiers.contentDescription=context.getString(if(open) R.string.cave_catalog_hide_tiers else R.string.cave_catalog_show_tiers)
+        tiers.setOnClickListener { toggle() }
     }
     fun bind(drawable: Drawable?,name: String,amount: Int,selected: Boolean=false,favorite: Boolean=false,pinned: Boolean=false,available: Boolean=true,accent: Int?=null) {
         icon.background=drawable;label.text=name
