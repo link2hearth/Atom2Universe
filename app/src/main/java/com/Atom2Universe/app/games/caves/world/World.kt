@@ -575,6 +575,37 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             }
         }
     }
+
+    private val grassRandom = java.util.Random()
+
+    /**
+     * Propagation de l'herbe, façon Minecraft : à chaque appel, quelques cases tirées au hasard
+     * dans chaque chunk chargé. Une terre éclairée (lumière ≥ 9), sans bloc plein ni eau au-dessus,
+     * devient herbe si une herbe se trouve à côté (±1 en X/Z, d'un bloc plus bas à trois plus haut).
+     */
+    fun tickGrass(samplesPerChunk: Int = 6) {
+        for (chunk in chunks.values) {
+            if (!chunk.generated) continue
+            repeat(samplesPerChunk) {
+                val i = grassRandom.nextInt(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+                val lx = i % CHUNK_SIZE; val ly = i / CHUNK_SIZE % CHUNK_SIZE; val lz = i / (CHUNK_SIZE * CHUNK_SIZE)
+                if (chunk.blockAt(lx, ly, lz) != DIRT) return@repeat
+                val above = neighborBlockOr(chunk, lx, ly + 1, lz, STONE)
+                if (!skyPassable(above) || isWater(above)) return@repeat
+                val light = max(skyLightAt(chunk, lx, ly + 1, lz), passableBlockLightAt(chunk, lx, ly + 1, lz))
+                if (light < 9) return@repeat
+                val wx = chunk.worldX + lx; val wy = chunk.worldY + ly; val wz = chunk.worldZ + lz
+                if (hasGrassNear(wx, wy, wz)) setBlock(wx, wy, wz, GRASS)
+            }
+        }
+    }
+
+    private fun hasGrassNear(wx: Int, wy: Int, wz: Int): Boolean {
+        for (dy in -1..3) for (dz in -1..1) for (dx in -1..1)
+            if ((dx != 0 || dy != 0 || dz != 0) && blockAt(wx + dx, wy + dy, wz + dz) == GRASS) return true
+        return false
+    }
+
     fun setBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)

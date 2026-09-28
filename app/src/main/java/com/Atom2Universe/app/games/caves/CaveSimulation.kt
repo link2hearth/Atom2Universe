@@ -163,7 +163,12 @@ internal class CaveSimulation(
         leafTickAccum += dt
         if (leafTickAccum >= 0.25f) {
             leafTickAccum %= 0.25f
-            if (allowsWorldEdits) world.tickLeaves { leafDrop?.invoke(it) }
+            if (allowsWorldEdits) {
+                world.tickLeaves { leafDrop?.invoke(it) }
+                // 6 cases par chunk toutes les 0,25 s : une terre au bord d'une pelouse
+                // verdit en 2 à 3 minutes en moyenne.
+                world.tickGrass()
+            }
         }
         gravityTickAccum += dt
         if (gravityTickAccum >= 0.1f) {
