@@ -14,8 +14,11 @@ internal object Dust2Map {
     const val DEPTH = 144
     const val HEIGHT = 24
     const val GROUND = 5
+    const val SPAWN_HEIGHT = 11
+    const val TOP_MID_HEIGHT = 9
+    const val CATWALK_HEIGHT = 8
     const val SITE_A_HEIGHT = 9
-    val PLAYER_SPAWN = MapPoint(62, GROUND, 129)
+    val PLAYER_SPAWN = MapPoint(62, SPAWN_HEIGHT, 129)
 
     /** Réservoirs de garnison au sol : une escouade sur chaque site et une au milieu CT. */
     data class Sector(val x0: Int, val z0: Int, val x1: Int, val z1: Int, val feet: Int) {
@@ -94,25 +97,49 @@ internal object Dust2Map {
             tunnelsAndB()
             middleAndShort()
             longAndA()
+            workshopConnector()
             architecture()
             coverAndLandmarks()
             streetLife()
+            lighting()
             return A2Map(ID, WIDTH, HEIGHT, DEPTH, blocks, metadata,
-                listOf(PLAYER_SPAWN, MapPoint(58, GROUND, 130), MapPoint(66, GROUND, 130)),
+                listOf(PLAYER_SPAWN, MapPoint(58, SPAWN_HEIGHT, 130), MapPoint(66, SPAWN_HEIGHT, 130)),
                 listOf(MapPoint(23, GROUND, 36), MapPoint(105, SITE_A_HEIGHT, 23),
                     MapPoint(65, GROUND, 34)), decor)
         }
 
         private fun southernApproaches() {
-            passage(43, 118, 83, 135) // Départ T, avec trois sorties.
+            passage(43, 118, 83, 135, feet = SPAWN_HEIGHT) // Belvédère de départ.
             passage(14, 112, 50, 124)
+            // Six blocs de descente vers la cour des tunnels, avec des paliers de deux blocs.
+            passage(45, 112, 50, 124, feet = SPAWN_HEIGHT)
+            for (step in 0..5) {
+                val x = 33 + step * 2
+                val feet = GROUND + 1 + step
+                passage(x, 112, x + 1, 124, feet = feet)
+                box(x, feet - 1, 112, x, feet - 1, 124, stair, 1)
+            }
             passage(10, 86, 30, 115) // Extérieur des tunnels.
-            passage(49, 100, 76, 122) // Haut du milieu.
-            passage(76, 106, 101, 119) // Extérieur longue.
+            // Le haut du milieu est une terrasse, deux blocs sous le départ.
+            for (z in 100..122) {
+                val feet = when {
+                    z >= 116 -> SPAWN_HEIGHT
+                    z >= 113 -> TOP_MID_HEIGHT + 1
+                    else -> TOP_MID_HEIGHT
+                }
+                passage(49, z, 76, z, feet = feet)
+                if (z == 113 || z == 116) box(49, feet - 1, z, 76, feet - 1, z, stair, 0)
+            }
+            // La troisième sortie descend jusqu'aux portes longues, restées au niveau bas.
+            for (z in 106..119) {
+                val feet = GROUND + (z - 106) / 2
+                passage(76, z, 101, z, feet = feet)
+                if (z >= 108 && z % 2 == 0) box(76, feet - 1, z, 101, feet - 1, z, stair, 0)
+            }
             passage(88, 89, 104, 107, ceiling = 13) // Sas des portes longues.
             passage(104, 89, 120, 99)
             // Écran face au départ : on choisit un côté avant d'exposer le milieu.
-            box(54, GROUND, 117, 68, 11, 119, BRICK_SANDY)
+            box(54, SPAWN_HEIGHT, 117, 68, SPAWN_HEIGHT + 6, 119, BRICK_SANDY)
         }
 
         private fun tunnelsAndB() {
@@ -149,20 +176,25 @@ internal object Dust2Map {
         }
 
         private fun middleAndShort() {
-            passage(49, 43, 62, 109)
-            passage(43, 29, 70, 43)
-            passage(63, 74, 71, 104, feet = 6, paving = BRICK_SANDY) // Corniche.
-            passage(64, 67, 79, 75, feet = 6, paving = BRICK_SANDY)
-            passage(72, 43, 79, 73, feet = 6, paving = BRICK_SANDY)
-            box(63, 5, 105, 71, 5, 105, stair, 2)
-            // Muret sur le bord du milieu ; la corniche conserve huit blocs utiles.
-            box(63, 6, 76, 63, 6, 100, BRICK_SANDY)
-            // Court A monte de trois blocs, paliers de deux blocs entre les marches.
-            for (step in 0..2) {
-                val z = 51 - step * 2
-                passage(72, z - 1, 79, z, feet = 7 + step, paving = BRICK_SANDY)
-                box(72, 6 + step, z, 79, 6 + step, z, stair, 2)
+            // Longue pente centrale : 9 en haut, 5 aux portes, sans marche de plus d'un bloc.
+            for (z in 43..109) {
+                val feet = GROUND + ((z - 70).coerceAtLeast(0) / 8).coerceAtMost(4)
+                passage(49, z, 62, z, feet = feet)
+                if (z in listOf(78, 86, 94, 102))
+                    box(49, feet - 1, z, 62, feet - 1, z, stair, 0)
             }
+            passage(43, 29, 70, 43)
+            passage(63, 74, 71, 104, feet = CATWALK_HEIGHT, paving = BRICK_SANDY)
+            passage(64, 67, 79, 75, feet = CATWALK_HEIGHT, paving = BRICK_SANDY)
+            passage(72, 43, 79, 73, feet = CATWALK_HEIGHT, paving = BRICK_SANDY)
+            box(63, TOP_MID_HEIGHT - 1, 105, 71, TOP_MID_HEIGHT - 1, 105, stair, 0)
+            // Muret sur le bord du milieu ; la corniche conserve huit blocs utiles.
+            box(63, CATWALK_HEIGHT, 76, 63, CATWALK_HEIGHT, 100, BRICK_SANDY)
+            // Une ouverture au-dessus de la caisse conserve le raccourci depuis le milieu.
+            box(63, CATWALK_HEIGHT, 81, 63, CATWALK_HEIGHT, 83, AIR)
+            // Court A domine maintenant le bas du milieu de trois blocs.
+            passage(72, 46, 79, 51, feet = SITE_A_HEIGHT, paving = BRICK_SANDY)
+            box(72, SITE_A_HEIGHT - 1, 51, 79, SITE_A_HEIGHT - 1, 51, stair, 2)
             passage(72, 38, 94, 45, feet = SITE_A_HEIGHT, paving = BRICK_SANDY)
             gateZ(49, 46, GROUND, 14)
         }
@@ -201,6 +233,29 @@ internal object Dust2Map {
             gateZ(104, 91, GROUND, 17)
         }
 
+        /** Liaison de trois blocs de large : milieu → corniche → alcôve de la longue. */
+        private fun workshopConnector() {
+            // Monte depuis le milieu bas (5) sur la corniche (8), sans saut obligatoire.
+            for (step in 0..2) {
+                val x = 63 + step
+                val feet = GROUND + 1 + step
+                passage(x, 69, x, 71, feet = feet, ceiling = 12, paving = BRICK_SANDY)
+                box(x, feet - 1, 69, x, feet - 1, 71, stair, 1)
+            }
+            // Le palier traverse l'îlot à hauteur de la corniche. Quatre blocs de hauteur libre.
+            passage(80, 69, 92, 71, feet = CATWALK_HEIGHT, ceiling = 12, paving = BRICK_SANDY)
+            // Descente côté atelier : marches orientées vers le haut (-X), paliers de deux blocs.
+            for (step in 0..2) {
+                val x = 92 + step * 2
+                val feet = CATWALK_HEIGHT - step
+                box(x, feet - 1, 69, x, feet - 1, 71, stair, 3)
+                passage(x + 1, 69, x + 2, 71, feet = feet - 1,
+                    ceiling = feet + 3, paving = BRICK_SANDY)
+            }
+            passage(99, 69, 102, 71, ceiling = 9, paving = BRICK_GREY)
+            // L'alcôve (103..107) est ouverte et meublée par streetLife().
+        }
+
         private fun architecture() {
             // Fenêtres bleues en retrait visuel dans des façades pleines, jamais des trous de collision.
             for (z in listOf(49, 61, 73, 85)) {
@@ -212,21 +267,47 @@ internal object Dust2Map {
                 box(x - 1, 13, 14, x + 3, 13, 14, BRICK_SANDY)
             }
             for (x in listOf(47, 59, 73)) {
-                box(x, 9, 136, x + 2, 11, 136, PLANK_BLUE)
-                box(x - 1, 8, 136, x + 3, 8, 136, BRICK_SANDY)
+                box(x, SPAWN_HEIGHT + 4, 136, x + 2, SPAWN_HEIGHT + 6, 136, PLANK_BLUE)
+                box(x - 1, SPAWN_HEIGHT + 3, 136, x + 3, SPAWN_HEIGHT + 3, 136, BRICK_SANDY)
             }
-            // Poutres hautes, lanternes dans les tunnels et sous A.
+            // Poutres hautes des tunnels ; l'éclairage est posé après tous les percements.
             for (z in listOf(55, 67, 79, 87)) {
                 box(17, 12, z, 31, 12, z, PLANK_DARK)
-                box(20, 10, z, 20, 10, z, TORCH, 1)
             }
-            box(37, 9, 72, 37, 9, 72, TORCH, 3)
-            box(47, 9, 72, 47, 9, 72, TORCH, 3)
-            box(91, 7, 30, 91, 7, 30, TORCH, 3)
             // Deux petits volumes de toiture donnent une silhouette de village désertique.
             box(82, 17, 18, 86, 20, 22, BRICK_SANDY)
             box(83, 21, 19, 85, 21, 21, SANDSTONE)
             box(4, 16, 47, 9, 20, 52, BRICK_SANDY)
+        }
+
+        /** Coordonnées du bloc porteur ; la normale place et oriente la torche sur sa face. */
+        private fun wallTorch(wallX: Int, y: Int, wallZ: Int, facing: Byte) {
+            val (nx, nz) = TorchModel.normal(facing)
+            require(nx != 0 || nz != 0)
+            val support = blocks[wallX + WIDTH * (wallZ + DEPTH * y)]
+            check(support in listOf(STONE, SANDSTONE, BRICK_SANDY, BRICK_GREY, PLANK_DARK)) {
+                "Torch support missing at ($wallX, $y, $wallZ): block=$support"
+            }
+            val x = wallX + nx
+            val z = wallZ + nz
+            check(blocks[x + WIDTH * (z + DEPTH * y)] == AIR) {
+                "Torch position occupied at ($x, $y, $z)"
+            }
+            item(x, y, z, TORCH, facing.toInt())
+        }
+
+        private fun lighting() {
+            // Le tunnel vers B est plus étroit que la salle : ses parois sont à x=18 et x=26.
+            wallTorch(18, 10, 55, 1)
+            // La cour extérieure commence à z=86 : le mur ouest s'arrête donc à z=85.
+            for (z in listOf(67, 79, 85)) wallTorch(16, 10, z, 1)
+            wallTorch(37, 9, 71, 3)
+            wallTorch(47, 9, 71, 3)
+            wallTorch(91, 7, 29, 3)
+            // Le nouveau passage est éclairé à son palier haut et au pied de l'escalier.
+            wallTorch(84, 10, 68, 3)
+            wallTorch(90, 10, 68, 3)
+            wallTorch(98, 7, 72, 4)
         }
 
         private fun coverAndLandmarks() {
@@ -237,11 +318,11 @@ internal object Dust2Map {
             crate(91, 9, 17, width = 3, height = 3)
             crate(103, 9, 25, width = 4, height = 2)
             crate(91, 9, 35, height = 2)
-            crate(59, 5, 81, width = 4, height = 1) // « Xbox », marche vers la corniche.
+            crate(59, 6, 81, width = 4, height = 1) // Milieu à 6, caisse à 7, corniche à 8.
             crate(44, 5, 31, height = 2)
             crate(20, 7, 78, height = 2)
             crate(16, 5, 104, height = 2)
-            crate(78, 5, 111, height = 2)
+            crate(78, SPAWN_HEIGHT, 124, height = 2)
             // Conteneur bleu à la sortie des portes longues.
             box(105, 5, 96, 108, 7, 101, PLANK_BLUE)
             box(105, 8, 96, 108, 8, 101, BRICK_GREY)
@@ -276,22 +357,23 @@ internal object Dust2Map {
         /** Petites scènes en bord de voie, en dehors des escaliers et des seuils des portes. */
         private fun streetLife() {
             // Place de départ : terrasse, comptoir sous auvent et marchandises au mur.
-            prop("outdoor.bench", 49f, 5f, 134f, .17f, 2)
-            prop("outdoor.planter", 45.5f, 5f, 133.5f, .14f)
-            prop("living.dining_table", 75f, 5f, 132f, .13f)
-            prop("living.dining_chair", 75f, 5f, 130.3f, .12f)
-            prop("living.dining_chair", 75f, 5f, 133.7f, .12f, 2)
+            val terrace = SPAWN_HEIGHT.toFloat()
+            prop("outdoor.bench", 49f, terrace, 134f, .17f, 2)
+            prop("outdoor.planter", 45.5f, terrace, 133.5f, .14f)
+            prop("living.dining_table", 75f, terrace, 132f, .13f)
+            prop("living.dining_chair", 75f, terrace, 130.3f, .12f)
+            prop("living.dining_chair", 75f, terrace, 133.7f, .12f, 2)
             // Le plateau du modèle de table est à 11,1 unités au-dessus de son origine.
-            prop("kitchen.fruit_bowl", 75f, 5f + 11.1f * .13f, 132f, .09f)
-            box(78, 5, 134, 81, 5, 134, PLANK_DARK)
-            item(79, 6, 134, UndergroundSites.CRATE_OAK)
-            item(81, 6, 134, UndergroundSites.BARREL_OAK)
-            box(72, 9, 130, 82, 9, 135, 2506)
-            box(72, 5, 130, 72, 8, 130, WOOD)
-            box(82, 5, 130, 82, 8, 130, WOOD)
-            for (x in 72..82 step 2) item(x, 9, 130, PLANK_BLUE)
-            supplies(45, 5, 120)
-            item(49, 5, 120, FrontierItems.CHEST, 1)
+            prop("kitchen.fruit_bowl", 75f, terrace + 11.1f * .13f, 132f, .09f)
+            box(78, SPAWN_HEIGHT, 134, 81, SPAWN_HEIGHT, 134, PLANK_DARK)
+            item(79, SPAWN_HEIGHT + 1, 134, UndergroundSites.CRATE_OAK)
+            item(81, SPAWN_HEIGHT + 1, 134, UndergroundSites.BARREL_OAK)
+            box(72, SPAWN_HEIGHT + 4, 130, 82, SPAWN_HEIGHT + 4, 135, 2506)
+            box(72, SPAWN_HEIGHT, 130, 72, SPAWN_HEIGHT + 3, 130, WOOD)
+            box(82, SPAWN_HEIGHT, 130, 82, SPAWN_HEIGHT + 3, 130, WOOD)
+            for (x in 72..82 step 2) item(x, SPAWN_HEIGHT + 4, 130, PLANK_BLUE)
+            supplies(45, SPAWN_HEIGHT, 120)
+            item(49, SPAWN_HEIGHT, 120, FrontierItems.CHEST, 1)
 
             // Approche et intérieur des tunnels : réserves contre les parois latérales.
             supplies(11, 5, 110, dark = true)
@@ -316,9 +398,9 @@ internal object Dust2Map {
             supplies(67, 5, 40, dark = true)
             item(67, 5, 30, FrontierItems.CHEST, 1)
             prop("outdoor.bench", 62f, 5f, 30.2f, .15f)
-            item(70, 6, 91, UndergroundSites.BARREL_OAK)
-            item(78, 6, 56, UndergroundSites.CRATE_OAK)
-            prop("outdoor.planter", 78f, 6f, 63f, .10f)
+            item(70, CATWALK_HEIGHT, 91, UndergroundSites.BARREL_OAK)
+            item(78, CATWALK_HEIGHT, 56, UndergroundSites.CRATE_OAK)
+            prop("outdoor.planter", 78f, CATWALK_HEIGHT.toFloat(), 63f, .10f)
 
             // A : réserves en périphérie ; marquage et accès CT restent dégagés.
             supplies(108, 9, 15)
@@ -332,7 +414,7 @@ internal object Dust2Map {
             passage(103, 64, 107, 74, ceiling = 10, paving = BRICK_GREY)
             val bench = prop("garage.workbench", 104.5f, 5f, 67f, .13f, 1)
             prop("garage.toolbox", 104.5f, bench.y + 10f * bench.scale, 67f, .08f, 1)
-            prop("garage.tool_chest", 105f, 5f, 72f, .14f, 1)
+            prop("garage.tool_chest", 105f, 5f, 73.5f, .14f, 1)
             prop("garage.tires", 106.5f, 5f, 65f, .14f)
             box(108, 9, 64, 109, 9, 74, 2506)
             for (z in listOf(64, 74)) box(108, 5, z, 108, 8, z, WOOD_DARK)
@@ -343,10 +425,11 @@ internal object Dust2Map {
             item(121, 3, 105, FrontierItems.CHEST)
 
             // Abords du sas long : un banc et des marchandises dans la cour extérieure.
-            prop("outdoor.bench", 96f, 5f, 117.8f, .16f, 2)
-            prop("outdoor.planter", 100f, 5f, 117.5f, .12f)
-            supplies(89, 5, 109)
-            item(94, 5, 107, FrontierItems.CHEST, 1)
+            // Les objets sont sur le palier inférieur, jamais à cheval sur deux marches.
+            prop("outdoor.bench", 96f, 5f, 106.8f, .16f, 2)
+            prop("outdoor.planter", 100f, 5f, 106.8f, .12f)
+            supplies(89, 5, 106)
+            item(93, 5, 106, FrontierItems.CHEST, 1)
         }
 
         /** Pictogrammes tactiques A/B en mosaïque, affleurants : aucune collision ajoutée. */
