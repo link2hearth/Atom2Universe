@@ -81,7 +81,7 @@ internal class GamepadController(
             GamepadAction.JUMP -> touch.flyUp = down
             GamepadAction.CROUCH -> if (down) touch.pressDown() else touch.flyDown = false
             GamepadAction.RUN -> if (down) touch.pressGamepadRun() else touch.releaseGamepadRun()
-            GamepadAction.PLACE -> if (down) touch.placeRequested = true
+            GamepadAction.PLACE -> { if (down) touch.placeRequested = true; touch.placeHeld = down }
             GamepadAction.ATTACK -> Unit
             else -> if (down) onAction(action)
         }

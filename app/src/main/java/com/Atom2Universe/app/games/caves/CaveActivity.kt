@@ -60,6 +60,8 @@ import kotlin.math.max
 class CaveActivity : ThemedActivity() {
 
     companion object {
+        /** Pose au réticule : un doigt immobile sur la vue aussi longtemps commence la pose continue. */
+        private const val HOLD_PLACE_MS = 350L
         const val EXTRA_WORLD_ID = "cave_world_id"
         /** Chemin d'une carte Assaut (voir A2MapStorage) : lance le mode Assaut au lieu d'un monde. */
         const val EXTRA_MAP_PATH = "cave_map_path"
@@ -79,7 +81,7 @@ class CaveActivity : ThemedActivity() {
     internal fun releaseGameInputs() {
         gamepad.reset(); ptrUp = -1; ptrDown = -1; ptrLaser = -1; ptrPlace = -1; uiTouchIds.clear()
         ptrReload = -1; vBtnReload?.isPressed = false
-        tapCandidates.clear()
+        tapCandidates.clear(); ptrHoldPlace = -1; touch.placeHeld = false
     }
     private val gamepad = GamepadController(touch, ::handleGamepadAction)
     private  val uiHandler = Handler(Looper.getMainLooper())
@@ -94,6 +96,8 @@ class CaveActivity : ThemedActivity() {
     private var ptrUp    = -1; private var ptrDown  = -1
     private var ptrLaser = -1; private var ptrPlace = -1
     private var ptrReload = -1
+    /** Doigt resté immobile sur le monde en pose au réticule : il pose en continu tant qu'il tient. */
+    private var ptrHoldPlace = -1
     private val tapCandidates = HashMap<Int, TapCandidate>()
     private var vBtnBack: View? = null
     private var vBtnCamera: Button? = null
@@ -1105,10 +1109,13 @@ class CaveActivity : ThemedActivity() {
                 if (ptrUp    == -1 && hit(vBtnUp))    { ptrUp    = pid; touch.flyUp       = true }
                 if (ptrDown  == -1 && hit(vBtnDown))  { ptrDown  = pid; touch.pressDown() }
                 if (ptrLaser == -1 && hit(vBtnLaser)) { ptrLaser = pid; touch.laserActive = true; touch.rtChargeRaw = 1f; touch.firePresses++ }
-                if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true; uiTouchIds.add(pid) }
+                // Bouton de pose : tenu, il pose en continu ; glisser le doigt tourne la vue.
+                if (ptrPlace == -1 && hit(vBtnPlace)) { ptrPlace = pid; touch.placeRequested = true; touch.placeHeld = true }
                 val hitsAction = hitsRun || listOf(vBtnUp, vBtnDown, vBtnLaser, vBtnPlace).any { hit(it) }
                 if (!hitsQuickbar && !hitsHudOnly && !hitsAction) {
-                    tapCandidates[pid] = TapCandidate(x, y, ev.eventTime)
+                    val candidate = TapCandidate(x, y, ev.eventTime)
+                    tapCandidates[pid] = candidate
+                    if (placeAtCrosshair) uiHandler.postDelayed({ startHoldPlace(pid, candidate) }, HOLD_PLACE_MS)
                 }
             }
             MotionEvent.ACTION_MOVE -> {
@@ -1129,12 +1136,13 @@ class CaveActivity : ThemedActivity() {
                 if (pid == ptrUp    || cancel) { ptrUp    = -1; touch.flyUp       = false }
                 if (pid == ptrDown  || cancel) { ptrDown  = -1; touch.flyDown     = false }
                 if (pid == ptrLaser || cancel) { ptrLaser = -1; touch.laserActive = false; touch.rtChargeRaw = 0f }
-                if (pid == ptrPlace || cancel) { ptrPlace = -1 }
+                if (pid == ptrPlace || cancel) { ptrPlace = -1; if (ptrHoldPlace == -1) touch.placeHeld = false }
+                if (pid == ptrHoldPlace || cancel) { ptrHoldPlace = -1; if (ptrPlace == -1) touch.placeHeld = false }
                 if (pid == ptrReload || cancel) { ptrReload = -1; vBtnReload?.isPressed = false }
             }
         }
         touch.onTouch(ev, glView.width, uiTouchIds,
-            actionCameraPointer = pid == ptrUp || pid == ptrDown || pid == ptrLaser,
+            actionCameraPointer = pid == ptrUp || pid == ptrDown || pid == ptrLaser || pid == ptrPlace,
             runButtonPointer = hitsRun)
         if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) uiTouchIds.remove(pid)
         if (action == MotionEvent.ACTION_CANCEL) { uiTouchIds.clear(); tapCandidates.clear(); touch.reset() }
@@ -1153,6 +1161,22 @@ class CaveActivity : ThemedActivity() {
             }
         }
         return false
+    }
+
+    /**
+     * Pose au réticule : le doigt [pid] est resté immobile sur la vue depuis [candidate]. Il pose
+     * un bloc puis continue tant qu'il tient ; le glisser tourne la vue, les blocs suivent.
+     * Le doigt du joystick (moitié gauche) ne construit pas.
+     */
+    private fun startHoldPlace(pid: Int, candidate: TapCandidate) {
+        if (tapCandidates[pid] !== candidate || ptrHoldPlace != -1 || isAssault) return
+        if (!touch.isCameraPointer(pid) || renderer.heldItemMode == HotbarMode.COMBAT) return
+        tapCandidates.remove(pid) // relâcher ne doit pas poser un deuxième bloc « au tap »
+        ptrHoldPlace = pid
+        touch.placeHeld = true
+        glView.queueEvent {
+            if (!renderer.gamePaused && renderer.heldItemMode != HotbarMode.COMBAT) touch.placeRequested = true
+        }
     }
 
     private fun handleWorldTapCandidate(ev: MotionEvent, idx: Int, pid: Int) {

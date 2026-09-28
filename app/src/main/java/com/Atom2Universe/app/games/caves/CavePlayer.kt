@@ -136,9 +136,11 @@ internal class PlayerInput {
     var firePresses = 0
     /** Poser un bloc : reste vrai jusqu'à ce que le jeu s'en occupe. */
     var place = false
+    /** Bouton de pose tenu : les blocs suivants se posent en suivant la visée. */
+    var placeHeld = false
 
     fun clear() {
         moveForward = 0f; moveRight = 0f; up = false; down = false
-        crouch = false; sprint = false; mining = false; fire = 0f; place = false
+        crouch = false; sprint = false; mining = false; fire = 0f; place = false; placeHeld = false
     }
 }

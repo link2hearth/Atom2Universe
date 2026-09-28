@@ -815,7 +815,7 @@
     <string name="cave_pad_jump">Jump / Fly up</string>
     <string name="cave_pad_crouch">Crouch / Fly down</string>
     <string name="cave_pad_attack">Attack / Shoot / Mine</string>
-    <string name="cave_pad_place">Place / Interact</string>
+    <string name="cave_pad_place">Place / Interact (weapon: reload, guard)</string>
     <string name="cave_pad_secondary">Reload / Guard / Cancel fishing</string>
     <string name="cave_pad_inventory">Inventory</string>
     <string name="cave_pad_previous">Previous hotbar slot</string>

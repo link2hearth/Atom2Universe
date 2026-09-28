@@ -1915,6 +1915,7 @@ internal class CaveRenderer(
         mining = touch.laserActive; fire = touch.rtChargeRaw; firePresses = touch.firePresses
         // Une demande de pose attend la fin de la pause sur l'écran, où l'interface peut encore l'annuler.
         if (!gamePaused && touch.placeRequested) { place = true; touch.placeRequested = false }
+        placeHeld = touch.placeHeld && !gamePaused
     }
 
     /** Oublie les gestes en cours : ceux de l'écran et ceux déjà recopiés dans le joueur. */
@@ -2350,18 +2351,30 @@ internal class CaveRenderer(
     private fun updateMining(dt: Float) {
         // Mode sans construction ni destruction (Assaut) : la carte ne se touche pas.
         val input = player.input
+        // Arme en main, la gâchette gauche (pose) devient l'action secondaire de l'arme.
+        if (input.place && heldItemMode == HotbarMode.COMBAT && mode.allowsCombat) {
+            input.place = false
+            placeChain = null
+            useWithWeapon()
+        }
         if (!mode.allowsWorldEdits) {
             input.place = false
+            placeChain = null
             updateLookTarget()
             return
         }
         updateLookTarget()
         if (input.place) {
             input.place = false
+            placeChain = null
             placeBlock()
         }
+        // Bouton de pose maintenu : les blocs suivent la visée (voir PlaceChain).
+        if (!input.placeHeld || heldItemMode == HotbarMode.COMBAT) placeChain = null
+        else continuePlacing(dt)
 
-        // Minage libre et gratuit en mode construction, peu importe ce qui est en main.
+        // Minage libre et gratuit hors combat, peu importe ce qui est en main : un bloc, des
+        // graines ou un légume n'empêchent pas de casser un bloc ni de cueillir une culture.
         // En mode combat, viser un caillou permet quand même de le ramasser (munitions),
         // sans avoir à repasser en construction juste pour ça.
         // Un outil se brandit tant que le bouton est tenu, qu'il y ait un bloc visé ou non.
@@ -2374,7 +2387,7 @@ internal class CaveRenderer(
             return
         }
         val canMine = input.mining &&
-            (heldItemMode == HotbarMode.BUILD || (heldItemMode == HotbarMode.COMBAT && E.melee(hotbar[selectedSlot])==null && isAimingAtRockBlock()))
+            (heldItemMode != HotbarMode.COMBAT || (E.melee(hotbar[selectedSlot])==null && isAimingAtRockBlock()))
         val target = if (canMine) raycastBlock() else null
 
         if (target == null) {
@@ -4486,21 +4499,21 @@ internal class CaveRenderer(
         return com.Atom2Universe.app.R.string.cave_travel_done
     }
 
+    /**
+     * Gâchette gauche une arme en main : elle interagit encore (habitant, coffre, manivelle…) ;
+     * sans rien à viser, elle fait l'action secondaire de l'arme (recharger, lever la garde).
+     */
+    private fun useWithWeapon() {
+        if (mode.allowsWorldEdits && interactWithWorld(raycastBlock())) return
+        reloadAssaultWeapon()
+    }
+
     private fun placeBlock(target: RayHit? = raycastBlock(), actorChecked: Boolean=false) {
         if(worldSource==null && mode.allowsWorldEdits && playerNode.isAlive) {
-            if(!actorChecked && interactActor(
-                if(camera.thirdPerson) camera.playerX else camera.x,
-                if(camera.thirdPerson) camera.orbitY else camera.y,
-                if(camera.thirdPerson) camera.playerZ else camera.z,
-                camera.aimX.toDouble(),camera.aimY.toDouble(),camera.aimZ.toDouble())) return
+            if(!actorChecked && interactsWithActor()) return
             val held=hotbar[selectedSlot]
             if(held==com.Atom2Universe.app.games.caves.node.FrontierItems.CHARM && (inventory[held] ?: 0)>0) {
                 gamePaused=true;resetInput();travelCallback?.invoke();return
-            }
-            if(target!=null && !physics.isCrouching && world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.HEARTH) {
-                frontierLife.bindHome(FrontierLife.Place(target.bx,target.by,target.bz))
-                farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_travel_bound))
-                checkpointCallback?.invoke();return
             }
         }
         if (target != null && !physics.isCrouching && mode.allowsWorldEdits) {
@@ -4514,11 +4527,37 @@ internal class CaveRenderer(
                 } else farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_forge_already_upgraded))
                 return
             }
+        }
+        if (interactWithWorld(target, actorChecked = true)) return
+        placeHeldItem(target)
+    }
+
+    private fun interactsWithActor(): Boolean = interactActor(
+        if(camera.thirdPerson) camera.playerX else camera.x,
+        if(camera.thirdPerson) camera.orbitY else camera.y,
+        if(camera.thirdPerson) camera.playerZ else camera.z,
+        camera.aimX.toDouble(),camera.aimY.toDouble(),camera.aimZ.toDouble())
+
+    /**
+     * Ce que la gâchette gauche fait sur le monde quel que soit l'objet en main : parler à un
+     * habitant, lier le foyer, ouvrir l'enclume ou un coffre, tourner une manivelle, un moulin.
+     * Vrai si quelque chose s'est passé : il n'y a alors rien d'autre à faire.
+     */
+    private fun interactWithWorld(target: RayHit?, actorChecked: Boolean = false): Boolean {
+        if(worldSource==null && mode.allowsWorldEdits && playerNode.isAlive) {
+            if(!actorChecked && interactsWithActor()) return true
+            if(target!=null && !physics.isCrouching && world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.HEARTH) {
+                frontierLife.bindHome(FrontierLife.Place(target.bx,target.by,target.bz))
+                farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_travel_bound))
+                checkpointCallback?.invoke();return true
+            }
+        }
+        if (target != null && !physics.isCrouching && mode.allowsWorldEdits) {
             if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
-                resetInput();craftStationCallback?.invoke();return
+                resetInput();craftStationCallback?.invoke();return true
             }
             if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.CRANK) {
-                workshops.crank(FrontierWorkshops.Pos(target.bx,target.by,target.bz));startSwing();return
+                workshops.crank(FrontierWorkshops.Pos(target.bx,target.by,target.bz));startSwing();return true
             }
             if(world.blockAt(target.bx,target.by,target.bz)==com.Atom2Universe.app.games.caves.node.FrontierItems.WINDMILL) {
                 val change=workshops.toggleWindmill(FrontierWorkshops.Pos(target.bx,target.by,target.bz))
@@ -4529,15 +4568,20 @@ internal class CaveRenderer(
                 }
                 if(change.tooFewSails) farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_windmill_too_few,
                     FrontierWorkshops.MIN_SAILS))
-                startSwing();return
+                startSwing();return true
             }
             workshops.view(FrontierWorkshops.Pos(target.bx,target.by,target.bz))?.let { box ->
                 touch.laserActive = false; player.input.mining = false
                 gamePaused=true
                 storageCallback?.invoke(box, inventory.toMap())
-                return
+                return true
             }
         }
+        return false
+    }
+
+    /** Ce que fait l'objet en main quand rien n'a répondu à l'interaction : soigner, planter, poser un bloc… */
+    private fun placeHeldItem(target: RayHit?) {
         val held = hotbar[selectedSlot]
         if (held != null && (inventory[held] ?: 0) > 0) {
             val heal = com.Atom2Universe.app.games.caves.node.FrontierItems.healing(held)
@@ -4645,6 +4689,55 @@ internal class CaveRenderer(
             return
         }
 
+        placeChain = placeHeldBlock(target, blockType, null)?.let { (x, y, z) ->
+            PlaceChain(blockType, target.fnx, target.fny, target.fnz, x, y, z).apply {
+                // Une chaîne de dalles garde l'orientation de la première (pas une double dalle).
+                if (world.blockAt(x, y, z) == blockType && BlockRegistry.get(blockType)?.slab == true)
+                    slabSide = PartialBlockModel.slabSide(world.metaAt(x, y, z))
+            }
+        }
+    }
+
+    /**
+     * Pose continue, bouton maintenu : la chaîne retient le sens de la première face visée et la
+     * couche de la première case posée. Les blocs suivants ne se posent que sur une face du même
+     * sens, dans la même couche (un sol, un mur) — jamais empilés vers le joueur quand il ne bouge
+     * pas. Seule exception : prolonger la ligne sous ses pieds, pour un pont ou une tour en sautant.
+     */
+    private class PlaceChain(val block: Short, val nx: Int, val ny: Int, val nz: Int,
+                             val firstX: Int, val firstY: Int, val firstZ: Int) {
+        var lastX = firstX; var lastY = firstY; var lastZ = firstZ
+        var wait = PLACE_FIRST_DELAY
+        /** Côté plein des dalles de la chaîne (voir PartialBlockModel.slabSide), -1 si ce n'en sont pas. */
+        var slabSide = -1
+    }
+    private var placeChain: PlaceChain? = null
+
+    private fun continuePlacing(dt: Float) {
+        val chain = placeChain ?: return
+        chain.wait -= dt
+        if (chain.wait > 0f) return
+        val blockType = hotbar[selectedSlot]
+        if (blockType != chain.block || (inventory[blockType] ?: 0) <= 0 || physics.isCrouching) { placeChain = null; return }
+        val target = raycastBlock() ?: return
+        if (target.fnx != chain.nx || target.fny != chain.ny || target.fnz != chain.nz) return
+        val x = target.bx + chain.nx; val y = target.by + chain.ny; val z = target.bz + chain.nz
+        val sameLayer = if (chain.nx != 0) x == chain.firstX else if (chain.ny != 0) y == chain.firstY else z == chain.firstZ
+        val underFeet = x == chain.lastX + chain.nx && y == chain.lastY + chain.ny && z == chain.lastZ + chain.nz &&
+            y < floorInt(camera.playerY - 1.62)
+        if (!sameLayer && !underFeet) return
+        startSwing()
+        val placed = placeHeldBlock(target, blockType, chain) ?: return
+        chain.lastX = placed.first; chain.lastY = placed.second; chain.lastZ = placed.third
+        chain.wait = PLACE_REPEAT
+    }
+
+    /**
+     * Pose [blockType] contre la face visée [target]. Renvoie la case posée, ou null si rien n'a
+     * changé. En pose continue ([chain] non nul), une dalle ne complète jamais une autre dalle :
+     * rester immobile en visant la dalle qu'on vient de poser ne doit pas la doubler.
+     */
+    private fun placeHeldBlock(target: RayHit, blockType: Short, chain: PlaceChain?): Triple<Int, Int, Int>? {
         val slab = BlockRegistry.get(blockType)?.slab == true
         val targetSide = PartialBlockModel.slabSide(world.metaAt(target.bx, target.by, target.bz))
         val targetType = world.blockAt(target.bx, target.by, target.bz)
@@ -4658,10 +4751,11 @@ internal class CaveRenderer(
             else -> 5
         }
         // Cinq zones sur la face visée : centre → à plat contre elle, bords → perpendiculaire.
-        val placedSide = PartialBlockModel.slabSideFromAim(hitSide, target.hitX, target.hitY, target.hitZ)
+        val placedSide = chain?.slabSide?.takeIf { it >= 0 }
+            ?: PartialBlockModel.slabSideFromAim(hitSide, target.hitX, target.hitY, target.hitZ)
         // Deux dalles face à face, pareilles ou non, deviennent une double dalle qui les garde toutes les deux.
         fun combinedSlabs(existing: Short, existingSide: Int, newSide: Int): Pair<Short, Byte>? {
-            if (!slab || BlockRegistry.get(existing)?.slab != true || newSide != existingSide xor 1) return null
+            if (!slab || chain != null || BlockRegistry.get(existing)?.slab != true || newSide != existingSide xor 1) return null
             val existingMinus = existingSide and 1 == 0
             return com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(
                 if (existingMinus) existing else blockType, if (existingMinus) blockType else existing, existingSide / 2)
@@ -4672,12 +4766,12 @@ internal class CaveRenderer(
         val px = target.bx + if (fillTarget) 0 else target.fnx
         val py = target.by + if (fillTarget) 0 else target.fny
         val pz = target.bz + if (fillTarget) 0 else target.fnz
-        if (isInsidePlayer(px, py, pz)) return
+        if (isInsidePlayer(px, py, pz)) return null
         val existing = world.blockAt(px, py, pz)
         val existingSide = PartialBlockModel.slabSide(world.metaAt(px, py, pz))
         val combined = combinedSlabs(existing, existingSide, if (fillTarget) existingSide xor 1 else placedSide)
         val mergeSlabs = combined != null
-        if (!mergeSlabs && existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return
+        if (!mergeSlabs && existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return null
         val placedType = if (mergeSlabs) combined!!.first else blockType
         val orientMeta = if (mergeSlabs) combined!!.second else if (slab) {
             PartialBlockModel.slabMeta(placedSide)
@@ -4692,14 +4786,14 @@ internal class CaveRenderer(
             val box = world.blockAt(target.bx, target.by, target.bz)
             val faceAxis = if (target.fnx != 0) 0 else if (target.fny != 0) 1 else 2
             if (box != com.Atom2Universe.app.games.caves.node.FrontierItems.GEARBOX ||
-                PartialBlockModel.shaftAxis(world.metaAt(target.bx, target.by, target.bz)) == faceAxis) return
+                PartialBlockModel.shaftAxis(world.metaAt(target.bx, target.by, target.bz)) == faceAxis) return null
             val onPlus = target.fnx + target.fny + target.fnz < 0
             (computeOrientMeta(blockType, target.fnx, target.fny, target.fnz).toInt() or
                 (if (onPlus) PartialBlockModel.CRANK_ON_PLUS else 0)).toByte()
         } else if (blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.HOPPER)
             FrontierWorkshops.hopperMeta(-target.fnx, -target.fny, -target.fnz)
         else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
-        sim.placeBlock(player, blockType, placedType, px, py, pz, orientMeta)
+        return if (sim.placeBlock(player, blockType, placedType, px, py, pz, orientMeta)) Triple(px, py, pz) else null
     }
 
     internal fun selectWorkshopRecipe(p: FrontierWorkshops.Pos,index: Int) {
@@ -4811,5 +4905,9 @@ internal class CaveRenderer(
         private const val PROJ_SPEED       = 15f
         private const val PROJ_MAX_DIST    = 40.0
         /** Au-delà, une balle qui frappe un mur ne s'entend plus. */
-        private const val IMPACT_HEARING   = 40.0    }
+        private const val IMPACT_HEARING   = 40.0
+        /** Pose continue : attente avant le deuxième bloc (un appui bref n'en pose qu'un), puis entre deux blocs. */
+        private const val PLACE_FIRST_DELAY = .25f
+        private const val PLACE_REPEAT      = .15f
+    }
 }

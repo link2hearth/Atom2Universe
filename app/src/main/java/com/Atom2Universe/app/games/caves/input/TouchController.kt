@@ -9,7 +9,7 @@ class TouchController {
     fun reset() {
         moveForward = 0f; moveRight = 0f; deltaYaw = 0f; deltaPitch = 0f
         flyUp = false; flyDown = false; laserActive = false; rtChargeRaw = 0f
-        placeRequested = false; sprintActive = false; leftId = -1; rightId = -1
+        placeRequested = false; placeHeld = false; sprintActive = false; leftId = -1; rightId = -1
         crouchLatched = false
         runHeld = false; runId = -1
         l3Pressed = false; l3RunHeld = false
@@ -45,6 +45,8 @@ class TouchController {
 
     // Pose de bloc (1 bloc par appui, consommé par le renderer)
     @Volatile var placeRequested = false
+    // Pose maintenue : tant que c'est vrai, les blocs suivants suivent la visée.
+    @Volatile var placeHeld = false
 
     // Toggle state (Run button / gamepad L3) and the independent hold gesture.
     @Volatile var sprintActive = false
