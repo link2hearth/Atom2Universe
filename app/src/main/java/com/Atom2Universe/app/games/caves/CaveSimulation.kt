@@ -456,7 +456,7 @@ internal class CaveSimulation(
                 val hit=enemyManager.enemies.find { e ->
                     val radius=e.def.radius.toDouble()+.5
                     e.hp>0 && (p.x-e.x).pow(2)+(p.z-e.z).pow(2)<radius*radius &&
-                        p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)+.25
+                        p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)-e.crouchDrop+.25
                 } ?: rules.huntableAnimals.find { a ->
                     val radius=a.def.radius * (if(a.young) .72 else 1.0)
                     a.hp>0 && (p.x-a.x).pow(2)+(p.z-a.z).pow(2)<radius*radius &&
@@ -476,7 +476,7 @@ internal class CaveSimulation(
                     }
                     // Tête : le haut du corps, au-dessus de MobModels.HEAD_START. Le mode décide ce
                     // qu'elle vaut (la survie ne change rien, l'Assaut double les dégâts).
-                    val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
+                    val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START - hit.crouchDrop
                     val damage = if (headshot) (p.damage * rules.headshotMultiplier).roundToInt() else p.damage
                     if(p.isPlayerWeapon) applyWeaponHit(hit,damage,p.stats,Random.Default,p.owner)
                     else {

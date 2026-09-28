@@ -21,6 +21,30 @@ internal class PathFollower(private val grid: NavGrid, private val clearance: Bo
     var z = 0.0; private set
     /** Direction de marche en degrés, même convention que la caméra et les ennemis (0 = +Z). */
     var yawDeg = 0f; private set
+    var jumpOffset = 0.0; private set
+    private var jumpVelocity = 0.0
+
+    /** Petit saut d'esquive ; le volume debout doit pouvoir monter sans toucher le plafond. */
+    fun startJump(): Boolean {
+        if (jumpOffset > 0.0 || arrived || clearance == null) return false
+        for (i in 1..4) if (!clearance.isFree(x, y + i * .2, z)) return false
+        jumpVelocity = 5.0
+        jumpOffset = .001
+        return true
+    }
+
+    fun updateJump(dt: Float) {
+        var remaining = dt.coerceAtLeast(0f)
+        while (remaining > 0f && jumpOffset > 0.0) {
+            val step = minOf(remaining, .016f).toDouble()
+            remaining -= step.toFloat()
+            jumpVelocity -= 18.0 * step
+            val height = (jumpOffset + jumpVelocity * step).coerceAtLeast(0.0)
+            if (clearance == null || clearance.isFree(x, y + height, z)) jumpOffset = height
+            else jumpVelocity = minOf(0.0, jumpVelocity)
+            if (jumpOffset == 0.0) jumpVelocity = 0.0
+        }
+    }
 
     val arrived: Boolean get() = next >= path.size
 
@@ -29,6 +53,7 @@ internal class PathFollower(private val grid: NavGrid, private val clearance: Bo
 
     fun place(x: Double, y: Double, z: Double) {
         this.x = x; this.y = y; this.z = z
+        jumpOffset = 0.0; jumpVelocity = 0.0
         stop()
     }
 
@@ -83,6 +108,8 @@ internal class PathFollower(private val grid: NavGrid, private val clearance: Bo
             val node = path[next]
             val tx = grid.nodeX[node] + .5; val tz = grid.nodeZ[node] + .5
             val ty = grid.nodeY[node].toDouble()
+            // Termine le saut avant de changer d'étage ; la navigation garde le sol comme repère.
+            if (jumpOffset > 0.0 && kotlin.math.abs(ty - y) > .0001) break
             val dx = tx - x; val dz = tz - z
             val distance = sqrt(dx * dx + dz * dz)
             val travel = minOf(distance, speed * step.toDouble())
@@ -96,6 +123,16 @@ internal class PathFollower(private val grid: NavGrid, private val clearance: Bo
                 if (y < ty - .0001) continue
             }
             if (!clearance!!.isFree(nx, y, nz)) break
+            // Garde tout le couloir de retombée libre, pas seulement le volume au sommet du saut.
+            if (jumpOffset > 0.0) {
+                var lift = .1
+                var free = true
+                while (lift < jumpOffset + .1) {
+                    if (!clearance.isFree(nx, y + minOf(lift, jumpOffset), nz)) { free = false; break }
+                    lift += .1
+                }
+                if (!free) break
+            }
             if (travel > .00001) {
                 yawDeg = Math.toDegrees(atan2(dx, dz)).toFloat()
                 moved = true

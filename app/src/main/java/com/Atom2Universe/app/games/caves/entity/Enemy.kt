@@ -43,6 +43,8 @@ internal class Enemy(
      */
     var occluded = false
     var weaponReload = 0f
+    /** Abaissement du torse des soldats ; partagé par le modèle et les zones touchables. */
+    var crouchDrop = 0f
     /** Impulsion visuelle déclenchée par une frappe réelle ; ne décide jamais des dégâts. */
     var strikeTime = 0f
     var attackWindup = 0f

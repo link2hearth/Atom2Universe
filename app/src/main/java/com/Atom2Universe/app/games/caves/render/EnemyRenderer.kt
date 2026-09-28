@@ -424,6 +424,7 @@ internal class EnemyRenderer {
     private var pGait = 0f; private var pLocomotion = 0f; private var pWalk = 0f
     private var pStrike = 0f; private var pBreath = 0f; private var pFlinch = 0f
     private var pCharge = 0f
+    private var pCrouchDrop = 0f
     private var pSpider = false
     private var pCaster = false
     private var pArcher = false
@@ -517,6 +518,7 @@ internal class EnemyRenderer {
         pReference = e.exhibitPose == ExhibitPose.REFERENCE
         pPassive = e.def.behavior == "passive"
         pSoldier = e.def.model == "soldier"
+        pCrouchDrop = if (pSoldier && !pReference) e.crouchDrop else 0f
         pArcher = e.exploration && e.def.model=="skeleton"
         pHeavyArms = e.def.model == "ogre" || e.def.model == "golem" || e.def.model == "troll"
         pSpider = e.def.model == "spider"
@@ -669,7 +671,10 @@ internal class EnemyRenderer {
             ry += recoil * .45f
         }
         // Échelle voxel→monde, orientation (yaw) puis translation au pied du mob
-        val px = lx * pS; val py = ry * pS; val pz = rz * pS
+        val px = lx * pS
+        // Les pieds restent au sol, les jambes se replient, le torse et la tête descendent ensemble.
+        val py = ry * pS - pCrouchDrop * (ry * pS / .85f).coerceIn(0f, 1f)
+        val pz = rz * pS
         val k = corner * 3
         corners[k] = pEx + (px * pCosY + pz * pSinY)
         corners[k + 1] = pEy + py
@@ -692,7 +697,7 @@ internal class EnemyRenderer {
         while (i < verts.size) {
             // Le mesh joueur pointe vers -Z ; rotation de 180° vers l'avant du soldat.
             val px = (if(pArcher) 6f*pS else .09f) - verts[i]
-            val py = (if(pArcher) 19f*pS else 1.16f) + verts[i + 1] + recoil * .027f
+            val py = (if(pArcher) 19f*pS else 1.16f) + verts[i + 1] + recoil * .027f - pCrouchDrop
             val pz = (if(pArcher) 10.5f*pS else .36f) - verts[i + 2] - recoil * .108f
             boV[n++] = pEx + px * pCosY + pz * pSinY
             boV[n++] = pEy + py

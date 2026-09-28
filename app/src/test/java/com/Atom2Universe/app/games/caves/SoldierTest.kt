@@ -92,6 +92,71 @@ class SoldierTest {
     }
 
     @Test
+    fun `un bruit ne remplace pas le poste individuel de contournement`() {
+        val world = TestWorld(40, 6, 40)
+        val grid = NavGrid.build(40, 6, 40, world)
+        val s = Soldier(grid, world, PathFinder(grid), Random(5)).also { it.place(5.5, 1.0, 5.5) }
+        s.order(grid.nodeAt(20, 1, 5), strict = false)
+        s.hearShot(5.5, 2.62, 20.5)
+        run(s, player(5.5, 20.5, alive = false), 4f)
+        assertTrue("il rejoint son flanc au lieu de converger sur le bruit", s.x > 18.0)
+        assertEquals(5.5, s.z, .1)
+    }
+
+    @Test
+    fun `les jambes avancent entre deux decisions sans bond de rattrapage`() {
+        val world = TestWorld(30, 6, 30)
+        val grid = NavGrid.build(30, 6, 30, world)
+        val s = Soldier(grid, world, PathFinder(grid), Random(5)).also { it.place(2.5, 1.0, 2.5) }
+        s.order(grid.nodeAt(22, 1, 2))
+        val p = player(25.5, 25.5, alive = false)
+        s.update(.5f, p, Shots(), moveWithDecision = false)
+        assertEquals("penser ne déplace plus le corps", 2.5, s.x, .0001)
+        repeat(30) {
+            val before = s.x
+            s.advanceMotion(1f / 60f)
+            assertTrue("avance à chaque image", s.x > before)
+            assertTrue("pas de téléportation", s.x - before <= s.tuning.runSpeed / 60.0 + .0001)
+        }
+        assertEquals(2.5 + s.tuning.runSpeed * .5, s.x, .001)
+        val before = s.x
+        s.update(.5f, p, Shots(), moveWithDecision = false)
+        assertEquals("la décision suivante ne recompte pas le déplacement", before, s.x, .0001)
+    }
+
+    @Test
+    fun `la cadence des decisions ne change pas la vitesse des jambes`() {
+        val world = TestWorld(30, 6, 30)
+        val grid = NavGrid.build(30, 6, 30, world)
+        fun travel(fps: Int, decisionsEvery: Int): Double {
+            val s = Soldier(grid, world, PathFinder(grid), Random(5)).also { it.place(2.5, 1.0, 2.5) }
+            s.order(grid.nodeAt(22, 1, 2))
+            val p = player(25.5, 25.5, alive = false)
+            repeat(fps) { frame ->
+                if (frame % decisionsEvery == 0)
+                    s.update(decisionsEvery.toFloat() / fps, p, Shots(), moveWithDecision = false)
+                s.advanceMotion(1f / fps)
+            }
+            return s.x
+        }
+        assertEquals(travel(60, 3), travel(120, 30), .001)
+    }
+
+    @Test
+    fun `un trajet refuse temporairement est retente sans nouvel ordre`() {
+        val world = TestWorld(20, 6, 20)
+        val grid = NavGrid.build(20, 6, 20, world)
+        val finder = PathFinder(grid).also { it.remainingExpansions = 0 }
+        val s = Soldier(grid, world, finder, Random(5)).also { it.place(2.5, 1.0, 2.5) }
+        s.order(grid.nodeAt(12, 1, 2))
+        val p = player(18.5, 18.5, alive = false)
+        s.update(.05f, p, Shots())
+        finder.remainingExpansions = Int.MAX_VALUE
+        run(s, p, 4f)
+        assertTrue("le manque de budget ne doit pas le figer définitivement", s.x > 10.0)
+    }
+
+    @Test
     fun `en reserve, un contact lointain le met en mouvement au lieu de le figer`() {
         val world = TestWorld(90, 6, 90)
         val s = soldier(world, 5.5, 5.5)          // regard initial vers +Z

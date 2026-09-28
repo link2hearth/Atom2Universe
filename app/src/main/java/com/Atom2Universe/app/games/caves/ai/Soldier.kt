@@ -19,9 +19,9 @@ internal data class SoldierTuning(
     val hearingRange: Double = 80.0,
     /** Sans rien voir ni entendre pendant ce temps, il abandonne la traque. */
     val memorySeconds: Float = 8f,
-    val reactionMin: Float = 0.35f,
-    val reactionMax: Float = 0.6f,
-    val aimErrorStartDeg: Float = 2f,
+    val reactionMin: Float = 0.22f,
+    val reactionMax: Float = 0.42f,
+    val aimErrorStartDeg: Float = 1.4f,
     val aimErrorMinDeg: Float = 0.18f,
     val aimErrorMaxDeg: Float = 3f,
     /** De combien la visée se resserre chaque seconde où il garde le joueur en vue. */
@@ -45,11 +45,11 @@ internal data class SoldierTuning(
     val coverRadius: Int = 10,
     val coverHoldSeconds: Float = 1.2f,
     val coverCooldownSeconds: Float = 5f,
-    val repositionSeconds: Float = 3f,
+    val repositionSeconds: Float = 0.8f,
     /** Retard de son estimation de ta course : il tire où tu allais, pas où tu vas exactement. */
-    val velocityLagSeconds: Float = 0.35f,
-    /** Écart supplémentaire tant qu'il se déplace lui-même : tirer en marchant coûte cher. */
-    val aimMoveSelfPenaltyDeg: Float = 0.8f,
+    val velocityLagSeconds: Float = 0.22f,
+    /** Écart supplémentaire lorsqu'il tire en marchant. */
+    val aimMoveSelfPenaltyDeg: Float = 0.15f,
     /** Rafales courtes puis pause, plutôt qu'un tir régulier de métronome. */
     val burstMin: Int = 3,
     val burstMax: Int = 5,
@@ -133,6 +133,16 @@ internal class Soldier(
     /** Direction du regard en degrés (0 = +Z), même convention que la caméra. */
     var yawDeg = 0f; private set
     var isMoving = false; private set
+    /** Abaissement réel du haut du corps, également transmis au rendu et aux impacts. */
+    var crouchDrop = 0f; private set
+    val bodyY: Double get() = y + follower.jumpOffset
+    private val eyeY: Double get() = bodyY + EYE_HEIGHT - crouchDrop
+    private var crouchLeft = 0f
+    private var postureCooldown = 0f
+    private var jumpCooldown = 0f
+    private var deferMovement = false
+    private var movementSpeed = 0f
+    private var crouchTarget = 0f
 
     /** Touché ou frôlé il y a peu : l'escouade n'a plus de raison de rester discrète. */
     val shaken: Boolean get() = recentHitLeft > 0f || suppressedLeft > 0f
@@ -161,10 +171,11 @@ internal class Soldier(
     private var searchRefreshLeft = 0f
     private var pendingRoute: RouteQueue.Request? = null
 
-    /** Il attend un trajet de la file partagée : tant que oui, il ne bouge pas. */
+    /** Il attend un trajet de la file partagée, en poursuivant le précédent s'il en a un. */
     val waitingForRoute: Boolean get() = pendingRoute != null
 
     fun cancelRoute() {
+        if (pendingRoute != null) searchNode = -1
         pendingRoute?.cancelled = true
         pendingRoute = null
     }
@@ -237,6 +248,8 @@ internal class Soldier(
         shotsInBurst = 0; burstTarget = tuning.burstMin
         orderedNode = -1; orderStrict = false; hasRadio = false; lookPhase = 0f
         leashRadius = Double.POSITIVE_INFINITY
+        crouchDrop = 0f; crouchLeft = 0f; postureCooldown = 0f; jumpCooldown = 0f
+        movementSpeed = 0f; crouchTarget = 0f; isMoving = false
     }
 
     /**
@@ -282,8 +295,15 @@ internal class Soldier(
         trackedVelZ += (p.velZ - trackedVelZ) * k
     }
 
-    fun update(dt: Float, player: PlayerSnapshot, shots: ShotSink) {
+    fun update(dt: Float, player: PlayerSnapshot, shots: ShotSink, moveWithDecision: Boolean = true) {
+        deferMovement = !moveWithDecision
+        movementSpeed = 0f
+        val movedBeforeDecision = isMoving
         justSpotted = false
+        if (moveWithDecision) follower.updateJump(dt)
+        jumpCooldown = (jumpCooldown - dt).coerceAtLeast(0f)
+        postureCooldown = (postureCooldown - dt).coerceAtLeast(0f)
+        crouchLeft = (crouchLeft - dt).coerceAtLeast(0f)
         searchRefreshLeft = (searchRefreshLeft - dt).coerceAtLeast(0f)
         if (clearance != null && !follower.arrived) {
             if (isMoving) { blockedFor = 0f; unblockDelay = UNBLOCK_FIRST_DELAY }
@@ -358,9 +378,10 @@ internal class Soldier(
             }
         }
         if (state == State.ENGAGE && previous != State.ENGAGE) {
-            follower.stop()
-            repositionLeft = tuning.repositionSeconds
+            // Un angle de mur ne doit pas annuler la marche à chaque reprise de contact.
+            repositionLeft = minOf(repositionLeft, .15f + rng.nextFloat() * .35f)
         }
+        updatePosture(dt, player)
         isMoving = false
         when (state) {
             State.RELOAD -> actReload(dt)
@@ -369,6 +390,37 @@ internal class Soldier(
             State.SEARCH -> actSearch(dt)
             State.PATROL -> actPatrol(dt)
         }
+        // Les décisions peuvent exprimer une intention de marcher, mais le déblocage doit
+        // se baser sur le déplacement réellement constaté au dernier pas physique.
+        if (deferMovement) isMoving = movedBeforeDecision
+    }
+
+    /** Pas léger à CHAQUE image : pas de perception, de recherche A* ni de choix tactique. */
+    fun advanceMotion(dt: Float) {
+        follower.updateJump(dt)
+        crouchDrop += (crouchTarget - crouchDrop).coerceIn(-dt * 4f, dt * 4f)
+        isMoving = movementSpeed > 0f && follower.advance(dt, movementSpeed)
+        if (isMoving) yawDeg = if (state == State.ENGAGE && knowsPlayer)
+            yawTo(lastKnownX, lastKnownZ) else follower.yawDeg
+    }
+
+    private fun advance(dt: Float, speed: Float): Boolean {
+        movementSpeed = speed
+        return if (deferMovement) !follower.arrived else follower.advance(dt, speed)
+    }
+
+    private fun updatePosture(dt: Float, player: PlayerSnapshot) {
+        if (follower.jumpOffset > 0.0 || !follower.arrived) crouchLeft = 0f
+        else if (state == State.COVER || state == State.RELOAD) crouchLeft = .3f
+        else if (state == State.ENGAGE && postureCooldown <= 0f) {
+            postureCooldown = 2f + rng.nextFloat() * 2f
+            // Ne s'accroupit pour tirer que si le canon dépassera encore l'abri.
+            if (LineOfSight.isClear(x, bodyY + EYE_HEIGHT - .7, z,
+                    player.x, player.eyeY - AIM_BELOW_EYE, player.z, world))
+                crouchLeft = .45f + rng.nextFloat() * .5f
+        }
+        crouchTarget = if (crouchLeft > 0f) .55f else 0f
+        if (!deferMovement) crouchDrop += (crouchTarget - crouchDrop).coerceIn(-dt * 4f, dt * 4f)
     }
 
     // ── Perception ────────────────────────────────────────────────────────────
@@ -382,7 +434,7 @@ internal class Soldier(
         if (!seesPlayer && distSq > tuning.closeAwareness * tuning.closeAwareness) {
             if (abs(angleDiff(yawTo(p.x, p.z), yawDeg)) > tuning.fovDegrees / 2f) return false
         }
-        return LineOfSight.isClear(follower.x, follower.y + EYE_HEIGHT, follower.z, p.x, p.eyeY, p.z, world)
+        return LineOfSight.isClear(follower.x, eyeY, follower.z, p.x, p.eyeY, p.z, world)
     }
 
     private fun remember(x: Double, eyeY: Double, z: Double) {
@@ -399,10 +451,14 @@ internal class Soldier(
             tuning.bulletRange * tuning.bulletRange * .81
         repositionLeft -= dt
         if (inWeaponRange && follower.arrived && repositionLeft <= 0f) {
-            repositionLeft = tuning.repositionSeconds + rng.nextFloat()
+            repositionLeft = tuning.repositionSeconds * (.7f + rng.nextFloat() * .6f)
             reposition()
         }
-        if (inWeaponRange && !follower.arrived) isMoving = follower.advance(dt, tuning.patrolSpeed)
+        if (inWeaponRange && !follower.arrived) {
+            if (jumpCooldown <= 0f && shaken && crouchDrop <= .01f && follower.startJump())
+                jumpCooldown = 3f + rng.nextFloat() * 3f
+            isMoving = advance(dt, tuning.runSpeed * .85f)
+        }
         yawDeg = yawTo(p.x, p.z)
 
         // La visée se resserre tant qu'il garde le joueur en vue ; une course en travers la dérègle.
@@ -411,7 +467,8 @@ internal class Soldier(
         val ux = dx / dist; val uz = dz / dist
         val along = p.velX * ux + p.velZ * uz
         val lateral = sqrt((p.velX - along * ux).let { it * it } + (p.velZ - along * uz).let { it * it })
-        val selfMove = if (isMoving) tuning.aimMoveSelfPenaltyDeg else 0f
+        val selfMove = (if (isMoving) tuning.aimMoveSelfPenaltyDeg else 0f) +
+            (if (follower.jumpOffset > 0.0) .8f else 0f)
         val suppression = if (suppressedLeft > 0f) tuning.suppressionAimPenaltyDeg else 0f
         val targetError = (tuning.aimErrorMinDeg + lateral.toFloat() * tuning.aimMovePenaltyDeg +
             selfMove + suppression)
@@ -423,7 +480,8 @@ internal class Soldier(
             val goal = grid.nodeUnder(lastKnownX - ux * 2, lastKnownEyeY - EYE_HEIGHT,
                 lastKnownZ - uz * 2)
             if (follower.arrived && goal >= 0) pathTo(goal)
-            if (!follower.arrived) isMoving = follower.advance(dt, tuning.runSpeed)
+            movementSpeed = tuning.runSpeed
+            if (!follower.arrived) isMoving = advance(dt, tuning.runSpeed)
             return
         }
         if (reactionLeft > 0f) { reactionLeft -= dt; return }
@@ -431,7 +489,7 @@ internal class Soldier(
         if (ammo <= 0) { startReload(); return }
 
         // La position a pu changer depuis la perception : aucun tir à travers un angle de mur.
-        if (!LineOfSight.isClear(x, y + EYE_HEIGHT - 0.15, z,
+        if (!LineOfSight.isClear(x, eyeY - 0.15, z,
                 p.x, p.eyeY - AIM_BELOW_EYE, p.z, world)) {
             // Ses yeux passent mais pas son canon (rebord, embrasure, angle de mur). Rester planté
             // là à le regarder est le pire de tout : il se décale pour dégager sa ligne de tir.
@@ -457,7 +515,7 @@ internal class Soldier(
     }
 
     private fun fire(p: PlayerSnapshot, shots: ShotSink) {
-        val ox = follower.x; val oy = follower.y + EYE_HEIGHT - 0.15; val oz = follower.z
+        val ox = follower.x; val oy = eyeY - 0.15; val oz = follower.z
         // Anticipation du temps de vol de la balle, d'après l'estimation retardée de la course
         // (voir [trackPlayerRun]) : une course régulière est donc bien devancée, mais un
         // changement de direction le prend à contre-pied et la balle passe derrière.
@@ -495,7 +553,7 @@ internal class Soldier(
     private fun actReload(dt: Float) {
         if (!follower.arrived && coverTravelLeft > 0f) {
             coverTravelLeft -= dt
-            isMoving = follower.advance(dt, tuning.runSpeed)
+            isMoving = advance(dt, tuning.runSpeed)
             yawDeg = follower.yawDeg
             return
         }
@@ -513,7 +571,7 @@ internal class Soldier(
         searchNode = -1
         if (!follower.arrived && coverTravelLeft > 0f) {
             coverTravelLeft -= dt
-            isMoving = follower.advance(dt, tuning.runSpeed)
+            isMoving = advance(dt, tuning.runSpeed)
             yawDeg = follower.yawDeg
             return
         }
@@ -533,13 +591,19 @@ internal class Soldier(
         val bodyClearance = clearance ?: return false
         val from = grid.nodeUnder(x, y, z)
         if (from < 0) return false
-        for (e in grid.edgeStart[from] until grid.edgeStart[from + 1]) {
+        val start = grid.edgeStart[from]
+        val count = grid.edgeStart[from + 1] - start
+        val offset = if (count > 0) rng.nextInt(count) else 0
+        for (i in 0 until count) {
+            val e = start + (i + offset) % count
             val n = grid.edgeTarget[e]
             val nx = grid.nodeX[n] + 0.5; val ny = grid.nodeY[n].toDouble(); val nz = grid.nodeZ[n] + 0.5
             if (!bodyClearance.isFree(nx, ny, nz)) continue
+            cancelRoute()
             path.clear(); path.add(from); path.add(n)
             follower.follow(path)
             searchNode = -1   // l'état qui suit redemandera un vrai chemin en arrivant
+            searchRefreshLeft = .65f // laisse finir l'esquive avant de revenir au but initial
             return true
         }
         return false
@@ -555,12 +619,18 @@ internal class Soldier(
         // Distance tirée à chaque saut : un rythme et une portée toujours identiques se
         // synchronisaient visiblement entre soldats voisins.
         val hop = REPOSITION_HOP_MIN + rng.nextDouble() * (REPOSITION_HOP_MAX - REPOSITION_HOP_MIN)
+        val distance = sqrt(distSq2D(x, z, lastKnownX, lastKnownZ))
+        val forward = when {
+            distance > 18.0 -> hop * .65
+            distance < 6.0 -> -hop * .65
+            else -> 0.0
+        }
         for (sign in intArrayOf(side, -side)) {
-            val nx = floor(x + cos(angle) * sign * hop).toInt()
-            val nz = floor(z - sin(angle) * sign * hop).toInt()
+            val nx = floor(x + cos(angle) * sign * hop + sin(angle) * forward).toInt()
+            val nz = floor(z - sin(angle) * sign * hop + cos(angle) * forward).toInt()
             val n = grid.nodeAt(nx, grid.nodeY[from], nz)
             if (n < 0 || !clearsToLastKnown(n)) continue
-            if (finder.findPath(from, n, path, clearance, maxCost = 4.5f) && path.size in 2..5) {
+            if (finder.findPath(from, n, path, clearance, maxCost = 6f) && path.size in 2..7) {
                 follower.follow(path)
                 return
             }
@@ -574,7 +644,8 @@ internal class Soldier(
         // monter, ou sans redescendre se mettre à couvert.
         for (e in grid.edgeStart[from] until grid.edgeStart[from + 1]) {
             val n = grid.edgeTarget[e]
-            if (grid.nodeY[n] == grid.nodeY[from] || !clearsToLastKnown(n)) continue
+            if (!clearsToLastKnown(n)) continue
+            if (clearance?.isFree(grid.nodeX[n] + .5, grid.nodeY[n].toDouble(), grid.nodeZ[n] + .5) == false) continue
             path.clear(); path.add(from); path.add(n)
             follower.follow(path)
             return
@@ -586,20 +657,21 @@ internal class Soldier(
         lastKnownX, lastKnownEyeY - AIM_BELOW_EYE, lastKnownZ, world)
 
     private fun actSearch(dt: Float) {
-        // Ce qu'il a perçu lui-même l'emporte sur son poste, sauf sous un ordre strict : on ne
-        // disperse pas une escouade en cours de regroupement. Sa destination reste bornée au
-        // secteur qu'on lui a confié (rayon infini pour l'escouade engagée : elle va partout).
-        val target = if (knowsPlayer && !(orderStrict && orderedNode >= 0))
+        movementSpeed = tuning.runSpeed
+        // Les postes de flanc sont individuels : les remplacer tous par la position entendue
+        // faisait converger l'escouade entière dans le même couloir. Une réserve qui voit un
+        // joueur trop loin peut toutefois se rapprocher dans les limites de son secteur.
+        val target = if (orderedNode >= 0 && (orderStrict || !seesPlayer)) orderedNode else if (knowsPlayer)
             leashed(grid.nodeUnder(lastKnownX, lastKnownEyeY - EYE_HEIGHT, lastKnownZ))
-        else orderedNode
-        if (target != searchNode && worthRepathing(target) && searchRefreshLeft <= 0f &&
+        else -1
+        if (target != searchNode && (follower.arrived || worthRepathing(target)) && searchRefreshLeft <= 0f &&
             pendingRoute == null) {
             searchRefreshLeft = .4f + rng.nextFloat() * .2f
             searchNode = target
             if (target >= 0) pathTo(target)
         }
         if (!follower.arrived) {
-            isMoving = follower.advance(dt, tuning.runSpeed)
+            isMoving = advance(dt, tuning.runSpeed)
             yawDeg = follower.yawDeg
         } else if (hasRadio && !knowsPlayer) {
             // En poste, sans rien avoir vu : il balaie le secteur annoncé à la radio, plutôt que
@@ -614,8 +686,9 @@ internal class Soldier(
     }
 
     private fun actPatrol(dt: Float) {
+        movementSpeed = tuning.patrolSpeed
         if (!follower.arrived) {
-            isMoving = follower.advance(dt, tuning.patrolSpeed)
+            isMoving = advance(dt, tuning.patrolSpeed)
             yawDeg = follower.yawDeg
             return
         }
@@ -641,7 +714,13 @@ internal class Soldier(
         // dedans (une centaine de cases sur des dizaines de milliers), et le soldat ne bouge plus.
         val minimum = if (leashRadius.isInfinite()) PATROL_MIN_SQ else SECTOR_PATROL_MIN_SQ
         repeat(PATROL_PICK_ATTEMPTS) {
-            val n = if (leashRadius.isInfinite()) rng.nextInt(grid.nodeCount) else randomSectorNode()
+            val n = if (leashRadius.isInfinite()) {
+                // Sur une grande carte, tirer dans tout le graphe ne trouvait presque jamais
+                // une case assez proche : une patrouille sans ordre restait alors immobile.
+                val angle = rng.nextDouble() * 2.0 * Math.PI
+                val radius = 8.0 + rng.nextDouble() * 16.0
+                grid.nodeUnder(x + cos(angle) * radius, y, z + sin(angle) * radius)
+            } else randomSectorNode()
             if (n < 0) return@repeat
             // Une patrouille locale ne doit pas viser une pièce quatre étages plus haut.
             if (abs(grid.nodeY[n] - follower.y) > 2.0) return@repeat
@@ -742,7 +821,11 @@ internal class Soldier(
             }
             return
         }
-        if (from >= 0 && finder.findPath(from, goal, path, clearance, maxCost)) follower.follow(path) else follower.stop()
+        if (from >= 0 && finder.findPath(from, goal, path, clearance, maxCost)) follower.follow(path) else {
+            follower.stop()
+            searchNode = -1
+            searchRefreshLeft = .7f + rng.nextFloat() * .4f
+        }
     }
 
     /**
@@ -770,15 +853,18 @@ internal class Soldier(
         // un bâtiment, chaque pas sur un escalier ou une dalle déclenche un test de volume. Le
         // balayage complet, c'est deux mille lignes de vue pour un seul soldat qui recharge.
         var probes = COVER_PROBE_BUDGET
-        scan@ for (nz in cz - r..cz + r) for (nx in cx - r..cx + r) {
+        // Cercles croissants : le budget doit examiner les abris proches dans TOUTES les
+        // directions avant les bords du disque (l'ancien balayage favorisait toujours le nord).
+        scan@ for (ring in 0..r) for (nz in cz - ring..cz + ring) for (nx in cx - ring..cx + ring) {
+            if (maxOf(abs(nx - cx), abs(nz - cz)) != ring) continue
             val distSq = (nx - cx) * (nx - cx) + (nz - cz) * (nz - cz)
-            if (distSq > r * r || distSq >= coverDistances.last()) continue
+            if (distSq > r * r) continue
             for (ny in maxOf(1, floor(y).toInt() - 2)..minOf(grid.sizeY - 1, floor(y).toInt() + 2)) {
                 val n = grid.nodeAt(nx, ny, nz)
                 if (n < 0) continue
                 if (probes-- <= 0) break@scan
                 val hidden = !LineOfSight.isClear(lastKnownX, lastKnownEyeY, lastKnownZ,
-                    nx + 0.5, ny + EYE_HEIGHT, nz + 0.5, world)
+                    nx + 0.5, ny + EYE_HEIGHT - .55, nz + 0.5, world)
                 if (hidden) {
                     val bearingThere = atan2(nx + 0.5 - lastKnownX, nz + 0.5 - lastKnownZ)
                     val swing = abs(angleDiffRad(bearingThere, bearingHere)) / Math.PI
@@ -836,7 +922,7 @@ internal class Soldier(
         /** Déplacement minimal de l'objectif avant de refaire un trajet. */
         const val REPATH_MIN_SHIFT_SQ = 3 * 3
         const val UNBLOCK_FIRST_DELAY = .7f
-        const val UNBLOCK_MAX_DELAY = 4f
+        const val UNBLOCK_MAX_DELAY = 1.4f
         /** Marge de détour tolérée pour rejoindre un point de ronde dans son secteur. */
         const val SECTOR_PATH_SLACK = 1.8
         /** Au-delà de cette distance de ce qu'annonce la radio, les rondes s'espacent. */

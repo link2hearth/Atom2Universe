@@ -5,6 +5,43 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class SoldierCollisionTest {
+    @Test fun `un saut avance et retombe sans changer le sol de navigation`() {
+        val world = SolidGrid { _, y, _ -> y == 0 }
+        val grid = NavGrid.build(8, 5, 3, world)
+        val path = IntList()
+        assertTrue(PathFinder(grid).findPath(grid.nodeAt(1, 1, 1), grid.nodeAt(6, 1, 1), path))
+        val follower = PathFollower(grid, BodyClearance { x, y, z ->
+            SoldierCollision.clearsWorld(world, x, y, z) })
+        follower.place(1.5, 1.0, 1.5)
+        follower.follow(path)
+        assertTrue(follower.startJump())
+        var peak = 0.0
+        repeat(80) {
+            follower.updateJump(.016f)
+            follower.advance(.016f, 4f)
+            peak = maxOf(peak, follower.jumpOffset)
+            assertTrue(SoldierCollision.clearsWorld(world, follower.x,
+                follower.y + follower.jumpOffset, follower.z))
+        }
+        assertTrue(peak > .4)
+        assertTrue(follower.x > 3.0)
+        assertEquals(0.0, follower.jumpOffset, .0001)
+        assertEquals(1.0, follower.y, .0001)
+    }
+
+    @Test fun `un plafond bas interdit le saut mais pas la marche`() {
+        val world = SolidGrid { _, y, _ -> y == 0 || y == 3 }
+        val grid = NavGrid.build(8, 5, 3, world)
+        val path = IntList()
+        assertTrue(PathFinder(grid).findPath(grid.nodeAt(1, 1, 1), grid.nodeAt(6, 1, 1), path))
+        val follower = PathFollower(grid, BodyClearance { x, y, z ->
+            SoldierCollision.clearsWorld(world, x, y, z) })
+        follower.place(1.5, 1.0, 1.5)
+        follower.follow(path)
+        assertFalse(follower.startJump())
+        assertTrue(follower.advance(.5f, 4f))
+    }
+
     @Test fun `le volume bloque un mur et un plafond mais autorise le contact au sol`() {
         val world = SolidGrid { x, y, _ -> y == 0 || x == 3 || y == 4 }
         assertTrue(SoldierCollision.clearsWorld(world, 2.5, 1.0, 2.5))

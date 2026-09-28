@@ -48,7 +48,7 @@ internal data class SquadTuning(
      * rapproche du front sans jamais s'y jeter — c'est l'activation qui décide du moment où elle
      * s'engage, pas la dérive.
      */
-    val holdDriftSpeed: Float = 0.6f,
+    val holdDriftSpeed: Float = 1.1f,
     /** Distance minimale gardée entre le centre d'une réserve et le joueur : au-delà de la
      * dérive, elle tient sa position, elle ne fond pas dessus. Au-dessus de [rallyDistance] pour
      * ne jamais chevaucher le regroupement de l'escouade déjà engagée. */
@@ -72,9 +72,9 @@ internal data class SquadTuning(
     /** Un homme à moins de ça de son poste de regroupement est considéré en place. */
     val rallyTolerance: Double = 6.0,
     /** Au-delà, l'assaut part même si les traînards ne sont pas arrivés. */
-    val rallyTimeoutSeconds: Float = 25f,
+    val rallyTimeoutSeconds: Float = 12f,
     /** Une fois que l'éclaireur a trouvé le joueur, le reste n'a plus que ça pour se placer. */
-    val contactRallySeconds: Float = 8f,
+    val contactRallySeconds: Float = 2.5f,
     /** Rayon des postes de tir autour de la position annoncée. */
     val engageRadius: Double = 12.0,
     /**
@@ -86,11 +86,11 @@ internal data class SquadTuning(
     /** Filet de sécurité : au bout de ce temps, on refait le plan même sans mouvement. */
     val replanSeconds: Float = 6f,
     /** La relève part quand il ne reste plus que tant d'hommes debout dans l'escouade engagée. */
-    val reliefAtSurvivors: Int = 1,
+    val reliefAtSurvivors: Int = 2,
     /** Souffle laissé au joueur avant que la relève ne soit lancée. */
-    val reliefSeconds: Float = 7f,
+    val reliefSeconds: Float = 3.5f,
     /** Même chose lorsque l'escouade engagée a été anéantie. */
-    val wipedPauseSeconds: Float = 5f,
+    val wipedPauseSeconds: Float = 2.5f,
 )
 
 /**

@@ -328,6 +328,7 @@ internal class AssaultMode(
         }
 
         updateSoldiers(dt)
+        advanceSoldierBodies(dt)
         if (collectFallenSoldiers()) forceStatus = true
 
         when (match.update(dt)) {
@@ -413,7 +414,6 @@ internal class AssaultMode(
             val u = units[i]
             if (u.body.hp <= 0) { crowd.remove(u.body.id); u.brain.cancelRoute(); continue }
             u.elapsed += dt
-            u.body.shotRecoil = (u.body.shotRecoil - dt).coerceAtLeast(0f)
         }
         routes?.update()
         pathFinder?.remainingExpansions = 256 // petites recherches d'abri et pas latéraux
@@ -421,8 +421,8 @@ internal class AssaultMode(
         val deadline = System.nanoTime() + 2_000_000L
         var updated = 0
         var inspected = 0
-        // Le plafond par image compte ceux qui *pensent* : un soldat non mis à jour garde sa
-        // pose et son regard, et paraît figé. La vraie limite reste l'échéance en temps.
+        // Ce budget ne concerne que les décisions. Les corps avancent à chaque image,
+        // même lorsqu'un cerveau attend son prochain tour.
         while (inspected < units.size && updated < MAX_BRAINS_PER_FRAME) {
             if (updated > 0 && System.nanoTime() >= deadline) break
             updateCursor %= units.size
@@ -442,23 +442,18 @@ internal class AssaultMode(
                 else -> 1f
             }
             if (u.elapsed < interval) continue
-            // Le pas ne doit être borné que pour éviter un bond visible chez un soldat qu'on
-            // regarde de près : le brider au même 0,15 s pour la case « loin/réserve » (revu une
-            // fois par seconde) revenait à figer son horloge interne à 15 % du temps réel — sa
-            // patrouille et son balayage du regard s'étiraient alors sur des dizaines de secondes
-            // au lieu de quelques-unes, et un homme malchanceux paraissait ne plus bouger du tout.
-            // À cette distance, un homme qui avance d'un coup ne se voit de toute façon pas.
-            val step = u.elapsed.coerceAtMost(if (interval >= 1f) interval else .15f)
+            // Les horloges tactiques rattrapent le temps depuis la dernière décision.
+            // Ce délai ne sert plus à déplacer le corps d'un seul coup.
+            val step = u.elapsed.coerceAtMost(if (interval >= 1f) interval else .5f)
             u.elapsed = 0f
             updated++
             brain.healthFraction = u.body.hp.toFloat() / u.body.maxHp.coerceAtLeast(1)
             noticeNearMisses(brain, u.body)
             firingBody = u.body
             firingUnit = u
-            brain.update(step, player, shotSink)
+            brain.update(step, player, shotSink, moveWithDecision = false)
             firingBody = null
             firingUnit = null
-            crowd.move(u.body.id, brain.x, brain.y, brain.z)
             if (brain.justSpotted) r.eventBus.publish(GameEvent.MobNearby(false))
 
             if (com.Atom2Universe.app.BuildConfig.DEBUG) {
@@ -473,19 +468,6 @@ internal class AssaultMode(
                 }
             }
 
-            val body = u.body
-            body.weaponReload = brain.reloadProgress
-            body.x = brain.x + source.originX
-            body.y = brain.y + source.originY
-            body.z = brain.z + source.originZ
-            body.yaw = brain.yawDeg
-            body.resting = !brain.isMoving
-            if (brain.isMoving) {
-                body.state = EnemyState.CHASE   // jambes et bras qui balancent
-                body.animTime += step
-            } else {
-                body.state = EnemyState.WANDER
-            }
         }
         if (com.Atom2Universe.app.BuildConfig.DEBUG) {
             val spent = commandNs + System.nanoTime() - started
@@ -515,6 +497,30 @@ internal class AssaultMode(
                 aiTotalNs = 0L
                 aiLogSeconds = 0f
             }
+        }
+    }
+
+    /** Mouvement réel à la cadence du jeu : le rendu et les impacts lisent le même corps. */
+    private fun advanceSoldierBodies(frameDt: Float) {
+        // Une reprise après une pause ne doit pas déplacer toute l'escouade de plusieurs mètres.
+        val dt = frameDt.coerceIn(0f, .05f)
+        for (u in units) {
+            val body = u.body
+            if (body.hp <= 0) continue
+            val brain = u.brain
+            brain.advanceMotion(dt)
+            crowd.move(body.id, brain.x, brain.y, brain.z)
+            body.x = brain.x + source.originX
+            body.y = brain.bodyY + source.originY
+            body.z = brain.z + source.originZ
+            val turn = ((brain.yawDeg - body.yaw + 540f) % 360f) - 180f
+            body.yaw = ((body.yaw + turn * (dt * 16f).coerceAtMost(1f) + 540f) % 360f) - 180f
+            body.crouchDrop = brain.crouchDrop
+            body.weaponReload = brain.reloadProgress
+            body.shotRecoil = (body.shotRecoil - dt).coerceAtLeast(0f)
+            body.resting = !brain.isMoving
+            body.state = if (brain.isMoving) EnemyState.CHASE else EnemyState.WANDER
+            body.animTime += dt
         }
     }
 
@@ -905,7 +911,7 @@ internal class AssaultMode(
         const val HEADSHOT_MULTIPLIER = 2f
         const val STATUS_INTERVAL = 0.1f
         /** Cerveaux mis à jour par pas d'IA, sous réserve de l'échéance de 2 ms. */
-        const val MAX_BRAINS_PER_FRAME = 8
+        const val MAX_BRAINS_PER_FRAME = 16
 
         /** Pas de réflexion de la garnison : 60 fois par seconde, quel que soit l'écran. */
         const val AI_STEP = 1f / 60f
