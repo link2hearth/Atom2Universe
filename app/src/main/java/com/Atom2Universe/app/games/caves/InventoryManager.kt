@@ -117,6 +117,18 @@ internal class InventoryManager(private val activity: CaveActivity) {
     var invSlotsReady = false
     var selectedSlotIdx = -1
     var dragSourceIdx = -1
+    /** Case de la barre survolée pendant un glisser (-1 = aucune). */
+    private var dragHoverBar = -1
+    /**
+     * La case [i] de la barre est-elle surlignée ? Pendant un glisser, seule la case survolée
+     * l'est : garder aussi la sélection affichait deux cases à la fois.
+     */
+    fun barSlotHighlighted(i: Int): Boolean =
+        if (dragSourceIdx >= 0) i == dragHoverBar else hotbarBase() + i == selectedSlotIdx
+    private fun setDragHoverBar(slot: Int) {
+        if (dragHoverBar == slot) return
+        dragHoverBar = slot;hud.updateActiveBarOverlay()
+    }
     private var selectedCreativeType: Short? = null
 
     fun hotbarBase() = (invSlots.size - CaveActivity.ACTIVE_SIZE).coerceAtLeast(0)
@@ -431,21 +443,32 @@ internal class InventoryManager(private val activity: CaveActivity) {
             dragSourceIdx=idx
             val token=InventoryDrag(0L,id,null,creative=true)
             if(!view.startDragAndDrop(ClipData.newPlainText("cave-item",id.toString()),View.DragShadowBuilder(view),token,0)) dragSourceIdx=-1
+            else hud.updateActiveBarOverlay()
             return
         }
         val stack=stackAt(idx) ?: return
         dragSourceIdx=idx
         val token=InventoryDrag(stack.key,stack.id,stack.slot.takeIf { it>=0 })
         if(!view.startDragAndDrop(ClipData.newPlainText("cave-item",stack.id.toString()),View.DragShadowBuilder(view),token,0)) dragSourceIdx=-1
+        else hud.updateActiveBarOverlay()   // la sélection s'efface le temps du glisser
     }
     fun makeSlotDragListener(idxProvider: () -> Int): View.OnDragListener = View.OnDragListener { v,event ->
         val token=event.localState as? InventoryDrag
         when(event.action) {
             DragEvent.ACTION_DRAG_STARTED -> token!=null
-            DragEvent.ACTION_DRAG_ENTERED -> { if(token!=null) v.alpha=.55f;token!=null }
-            DragEvent.ACTION_DRAG_EXITED -> { v.alpha=1f;true }
-            DragEvent.ACTION_DROP -> {
+            DragEvent.ACTION_DRAG_ENTERED -> {
+                // Une case de la barre prend la bordure de sélection ; une case du sac pâlit.
+                val barSlot=hud.overlayActiveFrames.indexOfFirst { it===v }
+                if(token!=null) { if(barSlot>=0) setDragHoverBar(barSlot) else v.alpha=.55f }
+                token!=null
+            }
+            DragEvent.ACTION_DRAG_EXITED -> {
                 v.alpha=1f
+                if(dragHoverBar>=0 && hud.overlayActiveFrames.indexOfFirst { it===v }==dragHoverBar) setDragHoverBar(-1)
+                true
+            }
+            DragEvent.ACTION_DROP -> {
+                v.alpha=1f;dragHoverBar=-1
                 val index=idxProvider()
                 val barSlot=hud.overlayActiveFrames.indexOfFirst { it===v }
                 if(token!=null && activity.isCreative) {
@@ -466,7 +489,12 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 }
                 token!=null
             }
-            DragEvent.ACTION_DRAG_ENDED -> { v.alpha=1f;dragSourceIdx=-1;true }
+            DragEvent.ACTION_DRAG_ENDED -> {
+                v.alpha=1f
+                // Chaque case reçoit la fin du glisser : la sélection réapparaît quoi qu'il arrive.
+                dragSourceIdx=-1;dragHoverBar=-1;hud.updateActiveBarOverlay()
+                true
+            }
             else -> token!=null
         }
     }

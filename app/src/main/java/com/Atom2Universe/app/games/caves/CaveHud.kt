@@ -138,8 +138,8 @@ internal class CaveHud(private val activity: CaveActivity) {
             val type  = inv.invSlots.getOrNull(invIdx)
             val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
             val eff   = if (count > 0) type else null
-            val isSel    = invIdx == inv.selectedSlotIdx
-            val isCursor = inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
+            val isSel    = inv.barSlotHighlighted(i)
+            val isCursor = inv.dragSourceIdx < 0 && inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
             slotViews[i]?.background  = when {
                 isSel    -> overlaySlotDrawable(selected = true)
                 isCursor -> overlaySlotDrawable(selected = false, cursor = true)
@@ -178,8 +178,8 @@ internal class CaveHud(private val activity: CaveActivity) {
             val type  = inv.invSlots.getOrNull(invIdx)
             val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
             val eff   = if (count > 0) type else null
-            val isSel    = invIdx == inv.selectedSlotIdx
-            val isCursor = inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
+            val isSel    = inv.barSlotHighlighted(i)
+            val isCursor = inv.dragSourceIdx < 0 && inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
             overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel, isCursor)
             overlayActiveFrames[i]?.contentDescription=activity.getString(R.string.cave_ui_shortcut_description,i+1,
                 eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
@@ -193,7 +193,7 @@ internal class CaveHud(private val activity: CaveActivity) {
     fun updateActiveSlotHighlights() {
         val inv = activity.invManager
         for (i in 0 until CaveActivity.ACTIVE_SIZE) {
-            val isSel = (inv.hotbarBase() + i) == inv.selectedSlotIdx
+            val isSel = inv.barSlotHighlighted(i)
             overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel)
         }
     }
