@@ -1,21 +1,26 @@
 package com.Atom2Universe.app.games.caves.render
 
 import android.opengl.Matrix
+import com.Atom2Universe.app.games.caves.CavePlayer
 import com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
 import kotlin.math.*
 
-internal class Camera(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) {
+/**
+ * L'œil qui regarde le monde. Il suit un joueur ([target]) mais n'est pas le joueur : la position
+ * et le regard appartiennent au joueur, la caméra n'en garde que des raccourcis.
+ */
+internal class Camera(val target: CavePlayer) {
 
-    // Position logique du joueur (mouvements, collision, sauvegarde)
-    var playerX = x
-    var playerY = y
-    var playerZ = z
+    // Position logique du joueur suivi (mouvements, collision, sauvegarde)
+    var playerX by target::x
+    var playerY by target::y
+    var playerZ by target::z
 
     // Position de l'œil de rendu (floating origin) — dérivée de playerX/Y/Z en TPS
-    var x = x; var y = y; var z = z
+    var x = target.x; var y = target.y; var z = target.z
 
-    var yaw = 0f
-    var pitch = 0f
+    var yaw by target::yaw
+    var pitch by target::pitch
     var thirdPerson = false
     var eyeDrop = 0.0
     val eyeY get() = playerY - eyeDrop

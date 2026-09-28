@@ -102,13 +102,46 @@ internal class CaveRenderer(
         val defeatedSiteBosses: Set<String> = emptySet()
     )
 
-    val camera = Camera(8.0, 8.0, 8.0)
-    private val storage = worldId?.let {
-        CaveWorldChunkStorage(java.io.File(context.filesDir, "cave_worlds/$it"))
-    }
     @Volatile private var viewDistances = CaveViewDistances.load(context)
-    internal val world = World(seed = worldSeed, storage = storage,
-                               source = worldSource).apply { setSimulationDistance(viewDistances.detail) }
+
+    // ── Simulation du monde ───────────────────────────────────────────────────
+    // Le monde et tout ce qui y vit sont dans CaveSimulation ; le renderer les dessine.
+    // Les raccourcis ci-dessous gardent les anciens noms (renderer.world, renderer.farming…).
+    internal val sim = CaveSimulation(context, worldSeed, worldId, savedState, worldSource,
+        viewDistances.detail).apply {
+        blockChanged = ::forceMeshRebuild
+        // Un lambda, pas meshes::containsKey : meshes n'existe pas encore à cette ligne.
+        chunkShown = { meshes.containsKey(it) }
+        checkpointDue = { checkpointCallback?.invoke() }
+        enemyManager.spawnManager.siteBossDefeated = {
+            farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_guardian_defeated))
+            checkpointCallback?.invoke()
+        }
+        enemyManager.spawnManager.siteEntered = { site ->
+            val resource = context.resources.getIdentifier(
+                "cave_site_${site.kind.name.lowercase(java.util.Locale.ROOT)}", "string", context.packageName)
+            if (resource != 0) farmMessageCallback?.invoke(context.getString(
+                com.Atom2Universe.app.R.string.cave_site_depth_discovery,
+                context.getString(resource), site.depthBand + 1L, site.level))
+        }
+    }
+    private val storage get() = sim.storage
+    internal val world get() = sim.world
+
+    // ── Le joueur de cet appareil ─────────────────────────────────────────────
+    // Il fait partie de la liste des joueurs du monde (un seul pour l'instant) ; la caméra le suit.
+    // Sa position, son inventaire et sa santé sont dans CavePlayer ; les anciens noms
+    // (renderer.inventory, renderer.physics, camera.playerX…) y renvoient.
+    internal val player = CavePlayer(PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply {
+        decorCollision = { x, feet, z, height -> decorSource?.decorCollides(x, feet, z, height, .30) == true }
+        metaAt = { x, y, z -> world.metaAt(x, y, z) }
+        waterContainsPoint = { x, y, z -> MeshBuilder.isPointInWater(world, x, y, z) }
+        sampleWaterCurrent = { x, y, z, out -> WaterCurrent.sample(world, x, y, z, out) }
+    }).apply {
+        x = 8.0; y = 8.0; z = 8.0
+        sim.players.add(this)
+    }
+    val camera = Camera(player)
 
     /** Called on the GL thread, including while the pause bubble is open. */
     internal fun setViewDistances(value: CaveViewDistances) {
@@ -324,15 +357,10 @@ internal class CaveRenderer(
     private val TARGET_FRAME_NS = 33_333_333L
 
     // Physique
-    var playerMode = PlayerMode.WALK
+    var playerMode by player::mode
     @Volatile var pendingMode: PlayerMode? = null
-    var isCreative = false
-    internal val physics = PhysicsNode { wx, wy, wz -> worldBlockAt(wx, wy, wz) }.apply {
-        decorCollision = { x, feet, z, height -> decorSource?.decorCollides(x, feet, z, height, .30) == true }
-        metaAt = { x, y, z -> world.metaAt(x, y, z) }
-        waterContainsPoint = { x, y, z -> MeshBuilder.isPointInWater(world, x, y, z) }
-        sampleWaterCurrent = { x, y, z, out -> WaterCurrent.sample(world, x, y, z, out) }
-    }
+    var isCreative by player::isCreative
+    internal val physics get() = player.physics
 
     // ── Minage ────────────────────────────────────────────────────────────────
 
@@ -342,7 +370,7 @@ internal class CaveRenderer(
     private var lookTarget: RayHit? = null
     private var mineDamage = 0f
 
-    val inventory = mutableMapOf<Short, Int>()
+    val inventory get() = player.inventory
 
     // WeaponDef n'a aucun état mutable (couleur/variante fixes) : partagés plutôt que
     // réalloués à chaque tir/jet, qui pouvait dépasser 10 fois/s en tir automatique.
@@ -350,19 +378,18 @@ internal class CaveRenderer(
     private val rockWeaponDef = WeaponDef(WeaponColor.BLUE, WeaponVariant.SWIRL)
 
     // One mixed shortcut bar. Item categories affect actions, never the destination slot.
-    val hotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
-    internal val frontierLife = FrontierLife(savedState?.frontierLife ?: "{}")
+    val hotbar get() = player.hotbar
+    internal val frontierLife get() = sim.frontierLife
     internal val inventoryStacks = CaveStackInventory(frontierLife.stacks)
     internal fun syncInventoryStacks() = inventoryStacks.reconcile(inventory,hotbar,selectedSlot)
     internal fun notifyHotbar() {
         syncInventoryStacks()
         hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
     }
-    internal val residents by lazy { com.Atom2Universe.app.games.caves.entity.FrontierResidents(world,frontierLife.residents) }
+    internal val residents get() = sim.residents
     var travelCallback: (() -> Unit)? = null
     var tradeCallback: ((TradeView) -> Unit)? = null
     var checkpointCallback: (() -> Unit)? = null
-    private var checkpointTimer=0f
     internal val expeditionCombat by lazy { ExpeditionCombat(this,context,frontierLife.equipment) }
     private val fishing by lazy { FishingLine(this,context,frontierLife.fisheries) }
     @Volatile internal var nearbyStations: Set<Short> = emptySet()
@@ -430,27 +457,18 @@ internal class CaveRenderer(
         frontierLife.magazines=saved.toString()
         return frontierLife.snapshot()
     }
-    internal val workshops by lazy { FrontierWorkshops(world, worldSeed).also {
-        it.restore(savedState?.workshops ?: "{}")
-        it.exhibition = exhibition
-        (worldSource as? com.Atom2Universe.app.games.caves.world.MapSource)?.takeIf { s -> s.isShowcase }?.let { s ->
-            for (mill in com.Atom2Universe.app.games.caves.world.ShowcaseMap.windmills())
-                it.addWindmill(FrontierWorkshops.Pos(mill.x + s.originX, mill.y + s.originY, mill.z + s.originZ), mill.axis, mill.sails)
-        }
-    } }
-    /** The Assault exhibition map shows the mechanical parts turning. */
-    private val exhibition get() = (worldSource as? com.Atom2Universe.app.games.caves.world.MapSource)?.isShowcase == true
+    internal val workshops get() = sim.workshops
     var craftStationCallback: (() -> Unit)? = null
     var storageCallback: ((FrontierWorkshops.View, Map<Short, Int>) -> Unit)? = null
     val worldTimeSnapshot: Long get() = gameTimeMs
     internal fun checkpointCommitted(changes: Map<String,CaveCheckpoint.Edit>) { storage?.acknowledge(changes) }
     internal fun chunkSnapshot() = storage?.snapshot().orEmpty()
-    internal val farming by lazy { com.Atom2Universe.app.games.caves.world.Farming(world, ::forceMeshRebuild, ::ecologicalLight) }
+    internal val farming get() = sim.farming
     internal fun itemMode(id: Short) = if (com.Atom2Universe.app.games.caves.node.FarmItems.isItem(id)) HotbarMode.GARDEN
         else if (isCombatItem(id)) HotbarMode.COMBAT else HotbarMode.BUILD
     // Context follows the selected item; there are no separate shortcut banks.
     val heldItemMode: HotbarMode get() = hotbar.getOrNull(selectedSlot)?.let(::itemMode) ?: HotbarMode.BUILD
-    var selectedSlot = 0
+    var selectedSlot by player::selectedSlot
         private set
 
     /** Combat = armes équipées, munitions (cailloux/flèches/carreaux/balles) et pierres de garde. */
@@ -462,9 +480,6 @@ internal class CaveRenderer(
     private var transientVbo = 0
     private var playerBoxVbo = 0
     private var elapsed = 0f
-    private var waterTickAccum   = 0f
-    private var leafTickAccum = 0f
-    private var gravityTickAccum = 0f
     private var walkPhase  = 0f   // phase de balancement (rad), avance seulement quand le joueur marche
     private var walkLastX  = 0.0  // position précédente pour détecter le mouvement
     private var walkLastZ  = 0.0
@@ -498,26 +513,13 @@ internal class CaveRenderer(
 
     // ── Ennemis ───────────────────────────────────────────────────────────────
 
-    internal val eventBus           = EventBus()
-    internal val playerNode         = PlayerNode()
-    internal val lootNode           = LootNode(eventBus)
-    internal val enemyManager      = EnemyManager(world, worldSeed).apply {
-        spawnManager.restoreDefeatedSiteBosses(savedState?.defeatedSiteBosses.orEmpty())
-        spawnManager.siteBossDefeated = {
-            farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_guardian_defeated))
-            checkpointCallback?.invoke()
-        }
-        spawnManager.siteEntered = { site ->
-            val resource = context.resources.getIdentifier(
-                "cave_site_${site.kind.name.lowercase(java.util.Locale.ROOT)}", "string", context.packageName)
-            if (resource != 0) farmMessageCallback?.invoke(context.getString(
-                com.Atom2Universe.app.R.string.cave_site_depth_discovery,
-                context.getString(resource), site.depthBand + 1L, site.level))
-        }
-    }
+    internal val eventBus get() = sim.eventBus
+    internal val playerNode get() = player.node
+    internal val lootNode get() = sim.lootNode
+    internal val enemyManager get() = sim.enemyManager
     private val enemyRenderer      = EnemyRenderer()
     private val combatEffects = CombatEffectsRenderer()
-    internal val passiveAnimals = com.Atom2Universe.app.games.caves.entity.PassiveAnimals(world, worldSeed).apply { restore(savedState?.passiveAnimals ?: "[]") }
+    internal val passiveAnimals get() = sim.passiveAnimals
     private val projRenderer       = ProjectileRenderer()
 
     // ── Règles de la partie ───────────────────────────────────────────────────
@@ -527,7 +529,7 @@ internal class CaveRenderer(
 
     // ── Progression joueur ────────────────────────────────────────────────────
 
-    val playerStats = PlayerStats()
+    val playerStats get() = player.stats
     val projectiles = ArrayList<Projectile>(64)
     @Volatile var recoverableAmmoSnapshot: List<StuckAmmo> = emptyList()
         private set
@@ -1201,47 +1203,9 @@ internal class CaveRenderer(
         adjustTpsCamera()
 
         elapsed += dt
-        // Heure figée par le mode (Assaut : midi) ; sinon le jour et la nuit tournent.
-        if (!gamePaused && mode.allowsWorldEdits && rawDt < 1f) {
-            frontierLife.advance((rawDt*1000f).toLong())
-            farming.advance((rawDt * 1000f).toLong())
-            workshops.sunUp = ambientFor(dayFraction()) > .6f
-            workshops.advance(rawDt)
-            for (p in workshops.takeChanged()) forceMeshRebuild(p.x, p.y, p.z)
-            workshops.feedAnimals(passiveAnimals,rawDt)
-            checkpointTimer+=rawDt
-            if(checkpointTimer>=10f) { checkpointTimer=0f;checkpointCallback?.invoke() }
-        }
-        if (!gamePaused && mode.fixedTimeOfDayMs == null) gameTimeMs += (dt * 1_000f).toLong()
+        if (!gamePaused) stepGame(dt, rawDt)
 
-        if(!gamePaused) waterTickAccum += dt
-        if (!gamePaused && waterTickAccum >= 0.1f) {
-            waterTickAccum %= 0.1f
-            world.tickWater()
-        }
-        if (!gamePaused) leafTickAccum += dt
-        if (!gamePaused && leafTickAccum >= 0.25f) {
-            leafTickAccum %= 0.25f
-            if (mode.allowsWorldEdits) world.tickLeaves { if (!isCreative) collectBlock(it) }
-        }
-
-        if(!gamePaused) gravityTickAccum += dt
-        if (!gamePaused && gravityTickAccum >= 0.1f) {
-            gravityTickAccum = 0f
-            world.tickFalling(64)
-        }
-
-        if (!gamePaused) {
-            if (weaponAttackCooldown > 0f) weaponAttackCooldown = (weaponAttackCooldown - dt).coerceAtLeast(0f)
-            updateRockThrow(dt)
-            updateMining(dt)
-            updateProjectiles(dt)
-            publishWeaponStatus()
-            updateImpactParticles(dt)
-            combatEffects.update(dt)
-            heldImpact=(heldImpact-dt).coerceAtLeast(0f)
-        }
-
+        // Tout ce qui suit ne change plus l'état du jeu : chargement des chunks et dessin.
         val cx = camera.chunkX(); val cy = camera.chunkY(); val cz = camera.chunkZ()
         val movedChunk = cx != lastCx || cy != lastCy || cz != lastCz
         streamTickAccum += dt
@@ -1793,26 +1757,12 @@ internal class CaveRenderer(
         decorRenderer?.draw(camera, sceneAmbient, caveBlend, caveFogEnd)
         if (supportsNature && wildlifeEnabled) ambientRenderer.wildlife(camera, ambientWildlife, sceneAmbient)
 
-        // ── Mise à jour + rendu ennemis ───────────────────────────────────────
-        if (!gamePaused) { mode.update(dt);if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot) }
+        // ── Rendu des êtres vivants ───────────────────────────────────────────
         if (worldSource == null) {
-            if (!gamePaused) {
-                // Simulation distance from the pause menu: how far living things and machines stay active.
-                val simulation = viewDistances.simulation * CHUNK_SIZE.toDouble()
-                passiveAnimals.simulationRadius = simulation; residents.simulationRadius = simulation
-                enemyManager.despawnChunks = viewDistances.simulation
-                workshops.simulationRadius = simulation
-                passiveAnimals.update(dt, camera.playerX, camera.playerY, camera.playerZ,hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0)>0 })
-                residents.update(dt,camera.playerX,camera.playerY,camera.playerZ,ambientFor(dayT)<.4f)
-                workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
-                updateAnimalAudio(dt)
-            }
             enemyRenderer.render(passiveAnimals.visible, camera.x, camera.y, camera.z, camera.yaw, camera.vpMatrix)
             enemyRenderer.render(residents.visible,camera.x,camera.y,camera.z,camera.yaw,camera.vpMatrix)
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
-        } else if (exhibition) {
-            workshops.simulationRadius = viewDistances.simulation * CHUNK_SIZE.toDouble()
-            if (!gamePaused) workshops.animate(dt,camera.playerX,camera.playerY,camera.playerZ) { x,y,z -> ecologicalLight(x,y,z)/15f }
+        } else if (sim.exhibition) {
             kineticRenderer.draw(workshops.kinetics,workshops.visibleWindmills,camera,caveBlend,caveFogEnd)
         }
         enemyRenderer.render(
@@ -1958,6 +1908,34 @@ internal class CaveRenderer(
         val elapsed2 = System.nanoTime() - now
         val sleepNs = TARGET_FRAME_NS - elapsed2
         if (sleepNs > 1_000_000L) Thread.sleep(sleepNs / 1_000_000L)
+    }
+
+    /**
+     * Une image de jeu, sans rien dessiner : le monde vit, le joueur agit, les monstres jouent.
+     * Tout ce qui change l'état de la partie passe ici, avant le dessin ; onDrawFrame ne fait
+     * ensuite que montrer le résultat. N'est pas appelé en pause.
+     */
+    private fun stepGame(dt: Float, rawDt: Float) {
+        // Le monde : blocs, eau, heure, ferme, ateliers.
+        sim.tickWorld(dt, rawDt, mode.allowsWorldEdits, timeFlows = mode.fixedTimeOfDayMs == null,
+            leafDrop = if (isCreative) null else ::collectBlock)
+
+        // Le joueur : armes, minage, projectiles.
+        if (weaponAttackCooldown > 0f) weaponAttackCooldown = (weaponAttackCooldown - dt).coerceAtLeast(0f)
+        updateRockThrow(dt)
+        updateMining(dt)
+        updateProjectiles(dt)
+        publishWeaponStatus()
+        updateImpactParticles(dt)
+        combatEffects.update(dt)
+        heldImpact=(heldImpact-dt).coerceAtLeast(0f)
+
+        // Les règles du mode (monstres, manches…), puis les animaux, habitants et machines.
+        mode.update(dt)
+        if(syncInventoryStacks()) hotbarCallback?.invoke(hotbar.copyOf(),selectedSlot)
+        // Distance de simulation du menu pause : jusqu'où les êtres vivants et les machines restent actifs.
+        sim.tickLiving(dt, viewDistances.simulation)
+        if (worldSource == null) updateAnimalAudio(dt)
     }
 
     /** Les sources sont choisies par volume éclairé, puis mises en cache hors du shader. */
@@ -2730,7 +2708,7 @@ internal class CaveRenderer(
             val block=chunk.blockAt(lx,ly,lz)
             // Include chunk boundaries: ores behind a solid neighbor cast no visible halo.
             if(M.isOre(block) && !LightEngine.exposedOre(chunk,world,lx,ly,lz,neighborCache)) continue
-            if((worldSource==null || exhibition) && block.toInt() in 9800..9891) {
+            if((worldSource==null || sim.exhibition) && block.toInt() in 9800..9891) {
                 workshops.discover(FrontierWorkshops.Pos(wx0+lx,wy0+ly,wz0+lz),block)
                 if(worldSource==null && block==com.Atom2Universe.app.games.caves.node.FrontierItems.MARKET_BELL) residents.discoverBell(wx0+lx,wy0+ly,wz0+lz)
             }
@@ -4311,7 +4289,8 @@ internal class CaveRenderer(
     // gameTimeMs : ms de temps de jeu écoulées (ne progresse pas en pause).
     // t=0.25 = 6h (aube) · t=0.50 = 12h (midi) · t=0.75 = 18h (crépuscule) · t=0.0 = 0h (minuit)
     // Quarts : 6h=0 ms, 12h=600 000 ms, 18h=1 200 000 ms, 0h=1 500 000 ms
-    private var gameTimeMs: Long = 0L
+    // L'heure appartient au monde : elle vit dans la simulation.
+    private var gameTimeMs: Long by sim::gameTimeMs
     // 10h du matin IG : 6h = 0 ms, et la portion jour avance à 100 000 ms par heure de jeu.
     private val NEW_GAME_START_MS = 400_000L
 
@@ -4332,15 +4311,7 @@ internal class CaveRenderer(
         }
     }
 
-    private fun dayFraction(): Float {
-        val gf = (gameTimeMs % 1_800_000L) / 1_800_000f
-        return if (gf < 0.6667f) {
-            0.25f + gf * 0.75f
-        } else {
-            (0.75f + (gf - 0.6667f) * 1.5f) % 1f
-        }
-    }
-
+    private fun dayFraction(): Float = sim.dayFraction()
 
     private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t.coerceIn(0f, 1f)
 
@@ -4369,13 +4340,7 @@ internal class CaveRenderer(
         }
     }
 
-    private fun ambientFor(t: Float): Float = when {
-        t < 0.208f -> 0.08f
-        t < 0.313f -> lerpF(0.08f, 1.00f, (t-0.208f)/0.105f)
-        t < 0.708f -> 1.00f
-        t < 0.833f -> lerpF(1.00f, 0.08f, (t-0.708f)/0.125f)
-        else       -> 0.08f
-    }
+    private fun ambientFor(t: Float): Float = CaveSimulation.ambientFor(t)
 
     private fun starsAlphaFor(t: Float): Float = when {
         t < 0.208f -> 1.00f
@@ -5151,19 +5116,8 @@ internal class CaveRenderer(
         }
     }
 
-    /** Wait for occluded light to settle before allowing hostile population checks. */
-    internal fun spawnLight(x: Int,y: Int,z: Int): Int {
-        val c=world.getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16))
-        return if(c?.ecologyLightReady==true) ecologicalLight(x,y,z) else 15
-    }
-    internal fun ecologicalLight(x: Int, y: Int, z: Int): Int {
-        val chunk = world.getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16)) ?: return 15
-        if (!meshes.containsKey(world.chunkKey(chunk.cx,chunk.cy,chunk.cz))) return 15
-        val sky = chunk.skyAt(Math.floorMod(x,16),Math.floorMod(y,16),Math.floorMod(z,16))
-        val index=Math.floorMod(x,16)+Math.floorMod(y,16)*16+Math.floorMod(z,16)*256
-        val blockLight=(chunk.light[index].toInt() ushr 4) and 15
-        return maxOf((sky*ambientFor(dayFraction())).toInt(),blockLight).coerceIn(0,15)
-    }
+    internal fun spawnLight(x: Int,y: Int,z: Int): Int = sim.spawnLight(x,y,z)
+    internal fun ecologicalLight(x: Int, y: Int, z: Int): Int = sim.ecologicalLight(x,y,z)
     private fun swapBucketInInventory(from: Short, to: Short) {
         if (isCreative) {
             inventory[to] = (inventory[to] ?: 0) + 1

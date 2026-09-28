@@ -23,8 +23,8 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         r.enemyManager.spawnManager.exploration = true
         r.enemyManager.explorationCombat=true
         r.enemyManager.clearSight=r::clearCombatLine
-        r.enemyManager.playerEyeDrop={ r.camera.eyeDrop }
-        r.enemyManager.meleeImpact={ enemy,dx,dz -> r.expeditionCombat.receive(enemy.scaledDamage,dx,dz,enemy) }
+        // L'équipement qui encaisse est celui du joueur de l'appareil, le seul pour l'instant.
+        r.enemyManager.meleeImpact={ enemy,_,dx,dz -> r.expeditionCombat.receive(enemy.scaledDamage,dx,dz,enemy) }
         r.enemyManager.rangedImpact=r::fireExplorationProjectile
         r.enemyManager.spawnManager.lightAt = r::spawnLight
         if (savedState != null) restoreProgress(savedState)
@@ -42,14 +42,14 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         r.expeditionCombat.receive(damage,dirX.toFloat(),dirZ.toFloat())
     }
     override fun update(dt: Float) {
-        r.enemyManager.update(dt, r.camera.playerX, r.camera.playerY, r.camera.playerZ)
+        r.enemyManager.update(dt)
     }
 
     // ── Monstres : attaques, récompenses, butin ───────────────────────────────
 
     private fun wireEnemies() {
         val enemyManager = r.enemyManager
-        enemyManager.player         = r.playerNode
+        enemyManager.targets        = r.sim.players
         enemyManager.eventBus       = r.eventBus
         enemyManager.thornsProvider = { r.equippedWeaponStat("thorns") }
 

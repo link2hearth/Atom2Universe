@@ -22,7 +22,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         seed           = seed
     )
 
-    var player: PlayerNode? = null
+    /** Les joueurs que les monstres peuvent poursuivre ; chacun vise le plus proche. */
+    var targets: List<EnemyTarget> = emptyList()
+    /** Le joueur de l'appareil (le premier de la liste) : c'est lui que l'interface affiche. */
+    val player: PlayerNode? get() = targets.firstOrNull()?.node
 
     var eventBus: EventBus? = null
         set(v) { field = v; spawnManager.eventBus = v }
@@ -47,29 +50,27 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     var isCreative = false
     var explorationCombat = false
-    var meleeImpact: ((Enemy,Float,Float)->Unit)? = null
+    /** Un coup de mêlée touche la cible, repoussée dans la direction (dx, dz). */
+    var meleeImpact: ((Enemy,EnemyTarget,Float,Float)->Unit)? = null
     var rangedImpact: ((Enemy,Double,Double,Double)->Unit)? = null
     var clearSight: ((Double,Double,Double,Double,Double,Double)->Boolean)? = null
-    var playerEyeDrop: (() -> Double)? = null
 
     // Fournit les dégâts thorns de l'arme équipée (0 si pas d'épines)
     var thornsProvider: (() -> Int)? = null
 
-    private var playerInvTimer = 0f
-    private var lastPx = 0.0
-    private var lastPz = 0.0
 
     // ── Tick principal ────────────────────────────────────────────────────────
 
     /** Simulation distance from the pause menu: enemies farther than this leave the world. */
     var despawnChunks = DESPAWN_CHUNKS
 
-    fun update(dt: Float, px: Double, py: Double, pz: Double) {
+    fun update(dt: Float) {
         if (isCreative) { enemies.clear(); return }
-        lastPx = px; lastPz = pz
-        playerInvTimer = (playerInvTimer - dt).coerceAtLeast(0f)
-
-        player?.tickShield(dt)
+        val first = targets.firstOrNull() ?: return
+        for (t in targets) {
+            t.hitCooldown = (t.hitCooldown - dt).coerceAtLeast(0f)
+            t.node.tickShield(dt)
+        }
 
         for (e in enemies) if (e.hp > 0 && e.freezeTimer <= 0f) e.animTime += dt
 
@@ -80,12 +81,16 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 spawnManager.onEnemyDied(e)
                 return@removeAll true
             }
-            val dx = e.x - px; val dz = e.z - pz
-            val dy = if (explorationCombat) e.y - py else 0.0
-            dx * dx + dy * dy + dz * dz > despawnDist2
+            // Un monstre ne quitte le monde que s'il est loin de tous les joueurs.
+            targets.all { t ->
+                val dx = e.x - t.x; val dz = e.z - t.z
+                val dy = if (explorationCombat) e.y - t.y else 0.0
+                dx * dx + dy * dy + dz * dz > despawnDist2
+            }
         }
 
-        spawnManager.update(dt, px, py, pz)
+        // Les apparitions se font encore autour du premier joueur seulement.
+        spawnManager.update(dt, first.x, first.y, first.z)
 
         for (e in enemies) {
             val frozen=e.freezeTimer>0f
@@ -97,7 +102,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 e.landingSquash = (e.landingSquash - dt).coerceAtLeast(0f)
             }
             val oldX=e.x; val oldZ=e.z
-            updateEnemy(e, dt, px, py, pz)
+            updateEnemy(e, dt, nearestTarget(e.x, e.y, e.z) ?: first)
             val distance=hypot(e.x-oldX,e.z-oldZ).toFloat()
             if(!frozen) {
                 val target=if(distance>.001f) 1f else 0f
@@ -110,7 +115,20 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
 
     // ── IA ennemis ────────────────────────────────────────────────────────────
 
-    private fun updateEnemy(e: Enemy, dt: Float, px: Double, py: Double, pz: Double) {
+    /** Le joueur le plus proche du point (x, y, z), ou null s'il n'y en a aucun. */
+    private fun nearestTarget(x: Double, y: Double, z: Double): EnemyTarget? {
+        var best: EnemyTarget? = null
+        var bestD2 = Double.MAX_VALUE
+        for (t in targets) {
+            val dx = t.x - x; val dy = t.y - y; val dz = t.z - z
+            val d2 = dx * dx + dy * dy + dz * dz
+            if (d2 < bestD2) { bestD2 = d2; best = t }
+        }
+        return best
+    }
+
+    private fun updateEnemy(e: Enemy, dt: Float, target: EnemyTarget) {
+        val px = target.x; val py = target.y; val pz = target.z
         if (e.hitFlash > 0f) e.hitFlash -= dt
 
         // Saignement : jauge qui redescend seule si le mob n'est pas retouché depuis
@@ -177,7 +195,7 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                 move(e, sin(attack.yaw) * attack.range * .65 * step / .24,
                     cos(attack.yaw) * attack.range * .65 * step / .24, allowStep = false)
                 attack.lungeRemaining = (attack.lungeRemaining - dt).coerceAtLeast(0f)
-                resolveAttack(e, attack, px, py, pz)
+                resolveAttack(e, attack, target)
             }
             if (e.def.id == "spider" && e.attackWindup > attack.windup - .25f) {
                 move(e, -sin(attack.yaw) * dt * 1.6, -cos(attack.yaw) * dt * 1.6, allowStep = false)
@@ -307,20 +325,20 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
                         } else if(attack.shape == AttackShape.LUNGE) {
                             attack.lungeRemaining=.24f
                             e.velY=3.2; e.onGround=false
-                        } else resolveAttack(e,attack,px,py,pz)
+                        } else resolveAttack(e,attack,target)
                     }
                 } else if(e.attackCooldown<=0f && sight && (!hopping || e.onGround) &&
                     (archer && dist<(if(e.def.id=="spider") 10 else 14) || !archer && dist<=keep+ATTACK_REACH && abs(dy)<3)) {
-                    beginAttack(e,px,py,pz,dist)
+                    beginAttack(e,target,dist)
                 }
             }
-        } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && playerInvTimer <= 0f) {
+        } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && target.hitCooldown <= 0f) {
             e.attackCooldown = ATTACK_CD
             e.strikeTime = .55f
-            playerInvTimer = 0.5f
+            target.hitCooldown = 0.5f
             val bus = eventBus
-            val p   = player
-            if (p != null && bus != null) {
+            val p   = target.node
+            if (bus != null) {
                 // Direction du recul : de l'ennemi vers le joueur, à l'horizontale.
                 val kdx = (px - e.x); val kdz = (pz - e.z)
                 val klen = sqrt(kdx * kdx + kdz * kdz).coerceAtLeast(0.001)
@@ -359,8 +377,9 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         }
     }
 
-    private fun resolveAttack(e: Enemy, attack: EnemyAttack, px: Double, py: Double, pz: Double) {
-        if (!attack.hits(px,py,pz,playerEyeDrop?.invoke() ?: 0.0) || playerInvTimer>0f) return
+    private fun resolveAttack(e: Enemy, attack: EnemyAttack, target: EnemyTarget) {
+        val px = target.x; val py = target.y; val pz = target.z
+        if (!attack.hits(px,py,pz,target.eyeDrop) || target.hitCooldown>0f) return
         if(attack.shape==AttackShape.LUNGE) {
             val forward=(px-e.x)*sin(attack.yaw)+(pz-e.z)*cos(attack.yaw)
             if(attack.lungeHit || forward < -e.collisionRadius || forward > attack.range*.35) return
@@ -369,16 +388,17 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
         if(attack.shape!=AttackShape.BEAM && clearSight?.invoke(attack.x,originY,attack.z,px,py-.6,pz)!=true) return
         val dx=px-attack.x; val dz=pz-attack.z
         val len=hypot(dx,dz).coerceAtLeast(.001)
-        playerInvTimer=.5f
+        target.hitCooldown=.5f
         attack.lungeHit=true
-        meleeImpact?.invoke(e,(dx/len).toFloat(),(dz/len).toFloat())
+        meleeImpact?.invoke(e,target,(dx/len).toFloat(),(dz/len).toFloat())
     }
 
-    private fun beginAttack(e: Enemy, px: Double, py: Double, pz: Double, distance: Double) {
+    private fun beginAttack(e: Enemy, target: EnemyTarget, distance: Double) {
+        val px = target.x; val py = target.y; val pz = target.z
         val attack = EnemyAttack.forEnemy(e, distance)
         attack.x=e.x; attack.y=e.y; attack.z=e.z
         attack.yaw=atan2(px-e.x,pz-e.z)
-        attack.targetX=px; attack.targetY=py-.6-(playerEyeDrop?.invoke() ?: 0.0)*.5; attack.targetZ=pz
+        attack.targetX=px; attack.targetY=py-.6-target.eyeDrop*.5; attack.targetZ=pz
         if(attack.ranged) attack.y=e.y+e.def.eyeHeight
         if(attack.shape==AttackShape.BEAM) {
             val dx=px-attack.x; val dy=attack.targetY-attack.y; val dz=pz-attack.z
@@ -414,9 +434,10 @@ internal class EnemyManager(private val world: World, seed: Long = 0L) {
     private fun keepDist(e: Enemy): Double =
         (e.collisionRadius + PLAYER_STANDOFF).coerceAtLeast(e.def.attackRange)
 
-    /** Donne une impulsion de recul à [e], à l'opposé du joueur (réduite pour les boss). */
+    /** Donne une impulsion de recul à [e], à l'opposé du joueur le plus proche (réduite pour les boss). */
     fun knockbackFromPlayer(e: Enemy, strength: Double = MOB_KNOCKBACK) {
-        val dx = e.x - lastPx; val dz = e.z - lastPz
+        val from = nearestTarget(e.x, e.y, e.z) ?: return
+        val dx = e.x - from.x; val dz = e.z - from.z
         val len = sqrt(dx * dx + dz * dz).coerceAtLeast(0.001)
         val s = if (e.isBoss) strength * 0.4 else strength
         e.knockX = dx / len * s
