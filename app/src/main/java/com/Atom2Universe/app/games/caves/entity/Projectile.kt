@@ -17,7 +17,9 @@ internal class Projectile(
     val ammoId: Short? = null,
     val maxRange: Float = 90f,
     /** Tiré par un ennemi (soldat du mode Assaut) : ne touche que le joueur, jamais les autres ennemis. */
-    val fromEnemy: Boolean = false
+    val fromEnemy: Boolean = false,
+    /** Le joueur qui a tiré, s'il y en a un : c'est lui que soigne le vol de vie. */
+    val owner: EnemyTarget? = null
 ) {
     var stuck = false
     var age = 0f

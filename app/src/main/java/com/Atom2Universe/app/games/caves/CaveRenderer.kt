@@ -1949,7 +1949,7 @@ internal class CaveRenderer(
         if (weaponAttackCooldown > 0f) weaponAttackCooldown = (weaponAttackCooldown - dt).coerceAtLeast(0f)
         updateRockThrow(dt)
         updateMining(dt)
-        updateProjectiles(dt)
+        sim.tickProjectiles(dt)
         publishWeaponStatus()
         updateImpactParticles(dt)
         combatEffects.update(dt)
@@ -2041,118 +2041,30 @@ internal class CaveRenderer(
     private fun stairMaskAt(x: Int, y: Int, z: Int) =
         StairConnections.maskAt(x, y, z, ::worldBlockAt, world::metaAt)
 
-    private fun projectileSolid(x: Double, y: Double, z: Double): Boolean {
-        if (decorSource?.decorHitsSegment(x, y, z, x, y, z) == true) return true
-        val bx = floor(x).toInt(); val by = floor(y).toInt(); val bz = floor(z).toInt()
-        val block = worldBlockAt(bx, by, bz)
-        if (block == AIR || BlockRegistry.isDecoration(block) || BlockRegistry.isWater(block)) return false
-        val def = BlockRegistry.get(block) ?: return true
-        if (!def.partial) return true
-        return PartialBlockModel.boxes(def, world.metaAt(bx, by, bz), stairMaskAt(bx, by, bz)).any {
-            x - bx >= it.x && x - bx <= it.x + it.width &&
-                y - by >= it.y && y - by <= it.y + it.height &&
-                z - bz >= it.z && z - bz <= it.z + it.depth
-        }
-    }
-    private val PLAYER_HIT_RADIUS = 0.4
+    private fun projectileSolid(x: Double, y: Double, z: Double): Boolean = sim.projectileSolid(x, y, z)
 
-    /** Le joueur dont la balle traverse le corps, ou null. Cylindre qui va des pieds au sommet du crâne. */
-    private fun playerHitBy(p: Projectile): CavePlayer? = sim.players.firstOrNull { who ->
-        if (who.mode != PlayerMode.WALK) return@firstOrNull false
-        val dx = p.x - who.x; val dz = p.z - who.z
-        if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return@firstOrNull false
-        p.y >= who.y - 1.62 && p.y <= who.y + who.physics.heightAbove
-    }
-
-    /** Le joueur qui peut ramasser cette munition plantée (assez près, rien entre les deux), ou null. */
-    private fun recoveredBy(p: Projectile): CavePlayer? = sim.players.firstOrNull { who ->
-        val dx=p.x-who.x; val dy=p.y-(who.y-.5); val dz=p.z-who.z
-        if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return@firstOrNull false
-        val steps=ceil(sqrt(dx*dx+dy*dy+dz*dz)/.15).toInt().coerceAtLeast(1)
-        (1..steps).none { i ->
-            val t=i.toDouble()/steps
-            projectileSolid(who.x+dx*t,who.y-.5+dy*t,who.z+dz*t)
+    /** Ce que le vol des projectiles déclenche chez ce joueur-ci : éclats, sons, règles, butin. */
+    private val projectileRules = object : CaveSimulation.ProjectileRules {
+        override val headshotMultiplier get() = mode.headshotMultiplier
+        override val huntableAnimals get() = this@CaveRenderer.huntableAnimals
+        override fun impact(x: Double, y: Double, z: Double) = spawnImpact(x, y, z)
+        override fun bulletImpact(x: Double, y: Double, z: Double) = announceImpact(x, y, z)
+        override fun playerShot(player: CavePlayer, p: Projectile) {
+            // Les règles du mode ne gèrent que le joueur de l'appareil, le seul pour l'instant.
+            if (player === this@CaveRenderer.player) mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
         }
-    }
-
-    private fun updateProjectiles(dt: Float) {
-        var recovered = false
-        val iter=projectiles.iterator()
-        while(iter.hasNext()) {
-            val p=iter.next()
-            p.age+=dt
-            if(p.stuck) {
-                val who = if(p.age>.4f && p.ammoId != null) recoveredBy(p) else null
-                if(who != null) {
-                    who.inventory[p.ammoId!!]=(who.inventory[p.ammoId] ?: 0)+1
-                    recovered=true; iter.remove()
-                }
-                continue
-            }
-            // Sous-pas de 15 cm : même une balle rapide ne saute pas une paroi voxel.
-            val steps=p.substeps(dt)
-            val step=dt/steps
-                for(i in 0 until steps) {
-                val ox=p.x; val oy=p.y; val oz=p.z
-                p.advance(step)
-                if(p.kind != ProjectileKind.LEGACY && (projectileSolid(p.x,p.y,p.z) ||
-                    decorSource?.decorHitsSegment(ox,oy,oz,p.x,p.y,p.z) == true)) {
-                    spawnImpact(p.x,p.y,p.z)
-                    if (p.kind == ProjectileKind.BULLET || p.kind == ProjectileKind.PELLET) announceImpact(p.x,p.y,p.z)
-                    if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
-                        p.x=ox;p.y=oy;p.z=oz;p.stuck=true;recovered=true
-                    } else { iter.remove() }
-                    break
-                }
-                if (p.fromEnemy) {
-                    // Balle de soldat : elle ne touche que le joueur (pas de tir ami entre soldats).
-                    val shot = playerHitBy(p)
-                    if (shot != null) {
-                        spawnImpact(p.x,p.y,p.z)
-                        // Les règles du mode ne gèrent que le joueur de l'appareil, le seul pour l'instant.
-                        if (shot === player) mode.onPlayerShot(p.damage, p.dirX, p.dirZ)
-                        iter.remove();break
-                    }
-                    if(p.travelDist>p.maxRange) { iter.remove();break }
-                    continue
-                }
-                val hit=enemyManager.enemies.find { e ->
-                    val radius=e.def.radius.toDouble()+.5
-                    e.hp>0 && (p.x-e.x).pow(2)+(p.z-e.z).pow(2)<radius*radius &&
-                        p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)+.25
-                } ?: huntableAnimals.find { a ->
-                    val radius=a.def.radius * (if(a.young) .72 else 1.0)
-                    a.hp>0 && (p.x-a.x).pow(2)+(p.z-a.z).pow(2)<radius*radius &&
-                        p.y>=a.y && p.y<=a.y+passiveAnimals.height(a)
-                }
-                if(hit!=null) {
-                    if(p.kind!=ProjectileKind.LEGACY) spawnImpact(p.x,p.y,p.z)
-                    if(hit.def.behavior=="passive") {
-                        damageAnimal(hit,p.damage)
-                        iter.remove();break
-                    }
-                    // Tête : le haut du corps, au-dessus de MobModels.HEAD_START. Le mode décide ce
-                    // qu'elle vaut (la survie ne change rien, l'Assaut double les dégâts).
-                    val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
-                    val damage = if (headshot) (p.damage * mode.headshotMultiplier).roundToInt() else p.damage
-                    if(p.isPlayerWeapon) applyWeaponHit(hit,damage,p.stats,Random.Default)
-                    else enemyManager.damageEnemy(hit,damage)
-                    mode.onEnemyHit(hit, headshot)
-                    iter.remove();break
-                }
-                if(p.travelDist>p.maxRange) { iter.remove();break }
-            }
-        }
-        // Limite mémoire pour les munitions plantées dans une session très longue.
-        var excess=projectiles.count { it.stuck }-256
-        if(excess>0) projectiles.removeAll { it.stuck && excess-- > 0 }
-        if(recovered) {
+        override fun enemyHit(enemy: com.Atom2Universe.app.games.caves.entity.Enemy, headshot: Boolean) =
+            mode.onEnemyHit(enemy, headshot)
+        override fun animalHit(animal: com.Atom2Universe.app.games.caves.entity.Enemy, damage: Int) =
+            damageAnimal(animal, damage)
+        override fun ammoChanged(collectors: Set<CavePlayer>) {
             recoverableAmmoSnapshot=projectiles.filter { it.stuck && it.ammoId!=null }.map {
                 StuckAmmo(it.x,it.y,it.z,it.dirX*it.speed,it.velY,it.dirZ*it.speed,it.ammoId!!)
             }
             inventoryCallback?.invoke(inventory.toMap())
         }
     }
+    init { sim.projectileRules = projectileRules }
 
     private fun isAimingAtRockBlock(): Boolean {
         val hit = raycastBlock() ?: return false
@@ -2281,7 +2193,7 @@ internal class CaveRenderer(
                 profile.speed*sqrt(drawPower),(baseDamage/profile.pellets).coerceAtLeast(1),ammoWeapon,
                 isRock=profile.kind==ProjectileKind.ROCK,stats=stats,isPlayerWeapon=true,
                 kind=profile.kind,ammoId=if(profile.kind==ProjectileKind.ARROW || profile.kind==ProjectileKind.BOLT) ammoId else null,
-                maxRange=profile.range))
+                maxRange=profile.range,owner=player))
         }
 
         val newCount = if (infiniteAmmo) ammoCount else ammoCount - 1
@@ -2413,87 +2325,6 @@ internal class CaveRenderer(
             rockChargeTime = 0f
         } else {
             rockChargeTime = 0f
-        }
-    }
-
-    private fun applyWeaponHit(
-        enemy: com.Atom2Universe.app.games.caves.entity.Enemy,
-        baseDamage: Int,
-        stats: Map<String, Int>,
-        rng: kotlin.random.Random
-    ) {
-        var dmg = baseDamage
-
-        // Coup critique — multiplie le coup ET les DoTs
-        val critChance = stats["crit_chance"] ?: 0
-        val isCrit = critChance > 0 && rng.nextInt(100) < critChance
-        val critMult = if (isCrit) 2.0f + (stats["crit_dmg"] ?: 0) / 100f else 1.0f
-        if (isCrit) dmg = (dmg * critMult).toInt()
-
-        com.Atom2Universe.app.games.caves.node.CombatNode.damageEnemy(enemy, dmg)
-        enemyManager.knockbackFromPlayer(enemy)
-
-        // Vol de vie (sur les dégâts du coup, post-crit)
-        val lifeSteal = stats["life_steal"] ?: 0
-        if (lifeSteal > 0) {
-            val heal = (dmg * lifeSteal / 100f).toInt().coerceAtLeast(1)
-            enemyManager.player?.applyHeal(heal)
-        }
-
-        // Exécution (ennemi < 20% HP)
-        val execute = stats["execute"] ?: 0
-        if (execute > 0 && enemy.hp > 0) {
-            val threshold = (enemy.maxHp * 0.20f).toInt()
-            if (enemy.hp <= threshold && rng.nextInt(100) < execute) {
-                enemy.hp = 0
-                return
-            }
-        }
-
-        // Résistances élémentaires du mob : multiplient à la fois la chance de proc
-        // et l'ampleur de l'effet (dégâts ou durée). 0 = immunisé, >1 = vulnérable.
-        val res = enemy.def.resistances
-
-        // Saignement : chaque proc ajoute à une jauge (façon Dark Souls) ; pleine (100),
-        // elle explose en un gros pourcentage des PV max puis retombe à zéro. Elle
-        // redescend seule si le mob n'est pas retouché (voir EnemyManager).
-        val bleedRes = res["bleed"] ?: 1f
-        val bleedChance = ((stats["bleed_chance"] ?: 0) * bleedRes).toInt()
-        if (bleedRes > 0f && bleedChance > 0 && rng.nextInt(100) < bleedChance) {
-            enemy.bleedBuildup = (enemy.bleedBuildup + 25f * bleedRes).coerceAtMost(100f)
-            enemy.bleedDecayGrace = 2.5f
-        }
-
-        // Poison : dégâts sur la durée, chance et ampleur réduites si le mob y résiste
-        val poisonRes = res["poison"] ?: 1f
-        val poisonChance = ((stats["poison_chance"] ?: 0) * poisonRes).toInt()
-        if (poisonRes > 0f && poisonChance > 0 && rng.nextInt(100) < poisonChance) {
-            enemy.poisonDamage = (baseDamage * 0.10f * critMult * poisonRes).toInt().coerceAtLeast(1)
-            enemy.poisonTimer = 4f
-            enemy.poisonTickTimer = 0.8f
-        }
-
-        // Feu : dégâts rapides sur la durée, inefficace contre les mobs résistants au feu
-        val fireRes = res["fire"] ?: 1f
-        val fireChance = ((stats["fire_chance"] ?: 0) * fireRes).toInt()
-        if (fireRes > 0f && fireChance > 0 && rng.nextInt(100) < fireChance) {
-            enemy.fireDamage = (baseDamage * 0.20f * critMult * fireRes).toInt().coerceAtLeast(1)
-            enemy.fireTimer = 2f
-            enemy.fireTickTimer = 0.3f
-        }
-
-        // Gel : immobilisation totale, durée modulée par la résistance/vulnérabilité au froid
-        val freezeRes = res["ice"] ?: 1f
-        val freezeChance = ((stats["freeze_chance"] ?: 0) * freezeRes).toInt()
-        if (freezeRes > 0f && freezeChance > 0 && rng.nextInt(100) < freezeChance) {
-            enemy.freezeTimer = 1.5f * freezeRes
-        }
-
-        // Électrique : le mob "bugue" et attaque ses propres alliés un instant
-        val electricRes = res["electric"] ?: 1f
-        val electricChance = ((stats["electric_chance"] ?: 0) * electricRes).toInt()
-        if (electricRes > 0f && electricChance > 0 && rng.nextInt(100) < electricChance) {
-            enemy.confusionTimer = 1.5f * electricRes
         }
     }
 

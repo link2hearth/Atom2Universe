@@ -1,10 +1,24 @@
 package com.Atom2Universe.app.games.caves
 
 import android.content.Context
+import com.Atom2Universe.app.games.caves.entity.Enemy
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.entity.FrontierResidents
 import com.Atom2Universe.app.games.caves.entity.PassiveAnimals
 import com.Atom2Universe.app.games.caves.entity.Projectile
+import com.Atom2Universe.app.games.caves.entity.ProjectileKind
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.CombatNode
+import com.Atom2Universe.app.games.caves.render.MobModels
+import com.Atom2Universe.app.games.caves.world.AIR
+import com.Atom2Universe.app.games.caves.world.PartialBlockModel
+import com.Atom2Universe.app.games.caves.world.StairConnections
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
+import kotlin.random.Random
 import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.node.LootNode
 import com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
@@ -175,6 +189,234 @@ internal class CaveSimulation(
         }
     }
 
+    // ── Projectiles ───────────────────────────────────────────────────────────
+
+    /**
+     * Ce que le vol des projectiles laisse au reste du jeu : les effets à l'écran, les sons, les
+     * règles du mode et le butin. Le renderer le branche ; la simulation ne fait que l'appeler.
+     */
+    interface ProjectileRules {
+        /** Multiplicateur de dégâts d'un tir à la tête (voir GameMode.headshotMultiplier). */
+        val headshotMultiplier: Float
+        /** Les animaux qu'un tir peut blesser (aucun en Assaut, ni quand le joueur est mort). */
+        val huntableAnimals: List<Enemy>
+        /** Un projectile frappe quelque chose en (x, y, z) : des éclats. */
+        fun impact(x: Double, y: Double, z: Double)
+        /** Une balle claque contre un mur en (x, y, z). */
+        fun bulletImpact(x: Double, y: Double, z: Double)
+        /** Une balle ennemie touche [player]. */
+        fun playerShot(player: CavePlayer, p: Projectile)
+        /** Un tir touche [enemy] (déjà blessé), à la tête si [headshot]. */
+        fun enemyHit(enemy: Enemy, headshot: Boolean)
+        /** Un tir touche un animal qu'on peut chasser. */
+        fun animalHit(animal: Enemy, damage: Int)
+        /** Une munition vient de se planter, ou d'être ramassée par l'un des [collectors]. */
+        fun ammoChanged(collectors: Set<CavePlayer>)
+    }
+    var projectileRules: ProjectileRules? = null
+
+    private val decorSource get() = worldSource as? MapSource
+
+    /** Le bloc en (x, y, z), ou de l'air tant que son chunk n'est pas encore construit. */
+    private fun loadedBlockAt(x: Int, y: Int, z: Int): Short {
+        val cx = Math.floorDiv(x, CHUNK_SIZE); val cy = Math.floorDiv(y, CHUNK_SIZE); val cz = Math.floorDiv(z, CHUNK_SIZE)
+        val chunk = world.getChunk(cx, cy, cz) ?: return AIR
+        if (!chunk.generated) return AIR
+        return chunk.blockAt(x - cx * CHUNK_SIZE, y - cy * CHUNK_SIZE, z - cz * CHUNK_SIZE)
+    }
+
+    /** Un projectile en (x, y, z) est-il dans quelque chose de dur ? Tient compte des demi-blocs et du décor. */
+    fun projectileSolid(x: Double, y: Double, z: Double): Boolean {
+        if (decorSource?.decorHitsSegment(x, y, z, x, y, z) == true) return true
+        val bx = floor(x).toInt(); val by = floor(y).toInt(); val bz = floor(z).toInt()
+        val block = loadedBlockAt(bx, by, bz)
+        if (block == AIR || BlockRegistry.isDecoration(block) || BlockRegistry.isWater(block)) return false
+        val def = BlockRegistry.get(block) ?: return true
+        if (!def.partial) return true
+        val stairs = StairConnections.maskAt(bx, by, bz, ::loadedBlockAt, world::metaAt)
+        return PartialBlockModel.boxes(def, world.metaAt(bx, by, bz), stairs).any {
+            x - bx >= it.x && x - bx <= it.x + it.width &&
+                y - by >= it.y && y - by <= it.y + it.height &&
+                z - bz >= it.z && z - bz <= it.z + it.depth
+        }
+    }
+
+    /** Le joueur dont la balle traverse le corps, ou null. Cylindre qui va des pieds au sommet du crâne. */
+    private fun playerHitBy(p: Projectile): CavePlayer? = players.firstOrNull { who ->
+        if (who.mode != PlayerMode.WALK) return@firstOrNull false
+        val dx = p.x - who.x; val dz = p.z - who.z
+        if (dx * dx + dz * dz > PLAYER_HIT_RADIUS * PLAYER_HIT_RADIUS) return@firstOrNull false
+        p.y >= who.y - 1.62 && p.y <= who.y + who.physics.heightAbove
+    }
+
+    /** Le joueur qui peut ramasser cette munition plantée (assez près, rien entre les deux), ou null. */
+    private fun recoveredBy(p: Projectile): CavePlayer? = players.firstOrNull { who ->
+        val dx=p.x-who.x; val dy=p.y-(who.y-.5); val dz=p.z-who.z
+        if (dx*dx+dy*dy+dz*dz > 2.2*2.2) return@firstOrNull false
+        val steps=ceil(sqrt(dx*dx+dy*dy+dz*dz)/.15).toInt().coerceAtLeast(1)
+        (1..steps).none { i ->
+            val t=i.toDouble()/steps
+            projectileSolid(who.x+dx*t,who.y-.5+dy*t,who.z+dz*t)
+        }
+    }
+
+    /** Fait voler les projectiles pendant [dt] secondes : murs, joueurs, monstres, animaux. */
+    fun tickProjectiles(dt: Float) {
+        val rules = projectileRules ?: return
+        var ammoChanged = false
+        val collectors = HashSet<CavePlayer>(1)
+        val iter=projectiles.iterator()
+        while(iter.hasNext()) {
+            val p=iter.next()
+            p.age+=dt
+            if(p.stuck) {
+                val who = if(p.age>.4f && p.ammoId != null) recoveredBy(p) else null
+                if(who != null) {
+                    who.inventory[p.ammoId!!]=(who.inventory[p.ammoId] ?: 0)+1
+                    collectors += who; ammoChanged=true; iter.remove()
+                }
+                continue
+            }
+            // Sous-pas de 15 cm : même une balle rapide ne saute pas une paroi voxel.
+            val steps=p.substeps(dt)
+            val step=dt/steps
+            for(i in 0 until steps) {
+                val ox=p.x; val oy=p.y; val oz=p.z
+                p.advance(step)
+                if(p.kind != ProjectileKind.LEGACY && (projectileSolid(p.x,p.y,p.z) ||
+                    decorSource?.decorHitsSegment(ox,oy,oz,p.x,p.y,p.z) == true)) {
+                    rules.impact(p.x,p.y,p.z)
+                    if (p.kind == ProjectileKind.BULLET || p.kind == ProjectileKind.PELLET) rules.bulletImpact(p.x,p.y,p.z)
+                    if(p.ammoId != null && (p.kind==ProjectileKind.ARROW || p.kind==ProjectileKind.BOLT)) {
+                        p.x=ox;p.y=oy;p.z=oz;p.stuck=true;ammoChanged=true
+                    } else { iter.remove() }
+                    break
+                }
+                if (p.fromEnemy) {
+                    // Balle de soldat : elle ne touche que les joueurs (pas de tir ami entre soldats).
+                    val shot = playerHitBy(p)
+                    if (shot != null) {
+                        rules.impact(p.x,p.y,p.z)
+                        rules.playerShot(shot, p)
+                        iter.remove();break
+                    }
+                    if(p.travelDist>p.maxRange) { iter.remove();break }
+                    continue
+                }
+                val hit=enemyManager.enemies.find { e ->
+                    val radius=e.def.radius.toDouble()+.5
+                    e.hp>0 && (p.x-e.x).pow(2)+(p.z-e.z).pow(2)<radius*radius &&
+                        p.y>=e.y-.25 && p.y<=e.y+MobModels.bodyHeightWorld(e.def.model,e.baseScale)+.25
+                } ?: rules.huntableAnimals.find { a ->
+                    val radius=a.def.radius * (if(a.young) .72 else 1.0)
+                    a.hp>0 && (p.x-a.x).pow(2)+(p.z-a.z).pow(2)<radius*radius &&
+                        p.y>=a.y && p.y<=a.y+passiveAnimals.height(a)
+                }
+                if(hit!=null) {
+                    if(p.kind!=ProjectileKind.LEGACY) rules.impact(p.x,p.y,p.z)
+                    if(hit.def.behavior=="passive") {
+                        rules.animalHit(hit,p.damage)
+                        iter.remove();break
+                    }
+                    // Tête : le haut du corps, au-dessus de MobModels.HEAD_START. Le mode décide ce
+                    // qu'elle vaut (la survie ne change rien, l'Assaut double les dégâts).
+                    val headshot = p.y >= hit.y + MobModels.bodyHeightWorld(hit.def.model, hit.baseScale) * MobModels.HEAD_START
+                    val damage = if (headshot) (p.damage * rules.headshotMultiplier).roundToInt() else p.damage
+                    if(p.isPlayerWeapon) applyWeaponHit(hit,damage,p.stats,Random.Default,p.owner)
+                    else enemyManager.damageEnemy(hit,damage)
+                    rules.enemyHit(hit, headshot)
+                    iter.remove();break
+                }
+                if(p.travelDist>p.maxRange) { iter.remove();break }
+            }
+        }
+        // Limite mémoire pour les munitions plantées dans une session très longue.
+        var excess=projectiles.count { it.stuck }-256
+        if(excess>0) projectiles.removeAll { it.stuck && excess-- > 0 }
+        if(ammoChanged) rules.ammoChanged(collectors)
+    }
+
+    /**
+     * Un coup d'arme touche [enemy] : critique, vol de vie pour [owner], exécution et effets
+     * (saignement, poison, feu, gel, électricité), selon les [stats] de l'arme.
+     */
+    fun applyWeaponHit(enemy: Enemy, baseDamage: Int, stats: Map<String, Int>, rng: Random,
+                       owner: com.Atom2Universe.app.games.caves.entity.EnemyTarget?) {
+        var dmg = baseDamage
+
+        // Coup critique — multiplie le coup ET les DoTs
+        val critChance = stats["crit_chance"] ?: 0
+        val isCrit = critChance > 0 && rng.nextInt(100) < critChance
+        val critMult = if (isCrit) 2.0f + (stats["crit_dmg"] ?: 0) / 100f else 1.0f
+        if (isCrit) dmg = (dmg * critMult).toInt()
+
+        CombatNode.damageEnemy(enemy, dmg)
+        enemyManager.knockbackFromPlayer(enemy)
+
+        // Vol de vie (sur les dégâts du coup, post-crit) : soigne celui qui a tiré.
+        val lifeSteal = stats["life_steal"] ?: 0
+        if (lifeSteal > 0) {
+            val heal = (dmg * lifeSteal / 100f).toInt().coerceAtLeast(1)
+            (owner?.node ?: enemyManager.player)?.applyHeal(heal)
+        }
+
+        // Exécution (ennemi < 20% HP)
+        val execute = stats["execute"] ?: 0
+        if (execute > 0 && enemy.hp > 0) {
+            val threshold = (enemy.maxHp * 0.20f).toInt()
+            if (enemy.hp <= threshold && rng.nextInt(100) < execute) {
+                enemy.hp = 0
+                return
+            }
+        }
+
+        // Résistances élémentaires du mob : multiplient à la fois la chance de proc
+        // et l'ampleur de l'effet (dégâts ou durée). 0 = immunisé, >1 = vulnérable.
+        val res = enemy.def.resistances
+
+        // Saignement : chaque proc ajoute à une jauge (façon Dark Souls) ; pleine (100),
+        // elle explose en un gros pourcentage des PV max puis retombe à zéro. Elle
+        // redescend seule si le mob n'est pas retouché (voir EnemyManager).
+        val bleedRes = res["bleed"] ?: 1f
+        val bleedChance = ((stats["bleed_chance"] ?: 0) * bleedRes).toInt()
+        if (bleedRes > 0f && bleedChance > 0 && rng.nextInt(100) < bleedChance) {
+            enemy.bleedBuildup = (enemy.bleedBuildup + 25f * bleedRes).coerceAtMost(100f)
+            enemy.bleedDecayGrace = 2.5f
+        }
+
+        // Poison : dégâts sur la durée, chance et ampleur réduites si le mob y résiste
+        val poisonRes = res["poison"] ?: 1f
+        val poisonChance = ((stats["poison_chance"] ?: 0) * poisonRes).toInt()
+        if (poisonRes > 0f && poisonChance > 0 && rng.nextInt(100) < poisonChance) {
+            enemy.poisonDamage = (baseDamage * 0.10f * critMult * poisonRes).toInt().coerceAtLeast(1)
+            enemy.poisonTimer = 4f
+            enemy.poisonTickTimer = 0.8f
+        }
+
+        // Feu : dégâts rapides sur la durée, inefficace contre les mobs résistants au feu
+        val fireRes = res["fire"] ?: 1f
+        val fireChance = ((stats["fire_chance"] ?: 0) * fireRes).toInt()
+        if (fireRes > 0f && fireChance > 0 && rng.nextInt(100) < fireChance) {
+            enemy.fireDamage = (baseDamage * 0.20f * critMult * fireRes).toInt().coerceAtLeast(1)
+            enemy.fireTimer = 2f
+            enemy.fireTickTimer = 0.3f
+        }
+
+        // Gel : immobilisation totale, durée modulée par la résistance/vulnérabilité au froid
+        val freezeRes = res["ice"] ?: 1f
+        val freezeChance = ((stats["freeze_chance"] ?: 0) * freezeRes).toInt()
+        if (freezeRes > 0f && freezeChance > 0 && rng.nextInt(100) < freezeChance) {
+            enemy.freezeTimer = 1.5f * freezeRes
+        }
+
+        // Électrique : le mob "bugue" et attaque ses propres alliés un instant
+        val electricRes = res["electric"] ?: 1f
+        val electricChance = ((stats["electric_chance"] ?: 0) * electricRes).toInt()
+        if (electricRes > 0f && electricChance > 0 && rng.nextInt(100) < electricChance) {
+            enemy.confusionTimer = 1.5f * electricRes
+        }
+    }
+
     // ── Lumière vue par les êtres vivants ─────────────────────────────────────
 
     /** Attend que la lumière d'un chunk caché soit posée avant d'y faire apparaître des monstres. */
@@ -194,6 +436,9 @@ internal class CaveSimulation(
     }
 
     companion object {
+        /** Rayon du corps d'un joueur pour les balles. */
+        private const val PLAYER_HIT_RADIUS = 0.4
+
         private fun lerpF(a: Float, b: Float, t: Float) = a + (b - a) * t.coerceIn(0f, 1f)
 
         /** Lumière ambiante au moment [t] de la journée (voir [dayFraction]). */
