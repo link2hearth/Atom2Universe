@@ -10,7 +10,14 @@ import com.Atom2Universe.app.games.caves.entity.ProjectileKind
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.CombatNode
 import com.Atom2Universe.app.games.caves.render.MobModels
+import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.world.AIR
+import com.Atom2Universe.app.games.caves.world.BlockPlacement
+import com.Atom2Universe.app.games.caves.world.RegionalBiomes
+import com.Atom2Universe.app.games.caves.world.WARD_STONE
+import com.Atom2Universe.app.games.caves.world.WATER
+import com.Atom2Universe.app.games.caves.world.WATER_FLOW
+import com.Atom2Universe.app.games.caves.world.isFalling
 import com.Atom2Universe.app.games.caves.world.PartialBlockModel
 import com.Atom2Universe.app.games.caves.world.StairConnections
 import kotlin.math.ceil
@@ -67,6 +74,8 @@ internal class CaveSimulation(
     var chunkShown: (key: Long) -> Boolean = { true }
     /** Toutes les 10 s de jeu : le moment d'écrire une sauvegarde de secours. */
     var checkpointDue: () -> Unit = {}
+    /** L'inventaire ou la barre de ce joueur viennent de changer : son écran doit se mettre à jour. */
+    var inventoryChanged: (CavePlayer) -> Unit = {}
 
     // ── Les joueurs ───────────────────────────────────────────────────────────
 
@@ -162,6 +171,146 @@ internal class CaveSimulation(
             gravityTickAccum = 0f
             world.tickFalling(64)
         }
+        tickFallingBlocks(dt)
+    }
+
+    // ── Blocs qui tombent ─────────────────────────────────────────────────────
+
+    /** Un bloc qui descend d'une case (sable, gravier…) : 0,2 s de chute, puis il se pose. */
+    class FallingBlock(val type: Short, val wx: Int, val wy: Int, val wz: Int) {
+        var timer = 0f
+        val done get() = timer >= DURATION
+        // ease-in (accélération naturelle) : commence lent, finit vite
+        val visualY get() = wy.toFloat() - (timer / DURATION).let { it * it }
+        companion object { const val DURATION = 0.2f }
+    }
+    val fallingBlocks = ArrayList<FallingBlock>()
+
+    private fun tickFallingBlocks(dt: Float) {
+        // Récupérer les nouvelles chutes lancées par tickFalling
+        while (true) {
+            val item = world.pendingFallingBlocks.poll() ?: break
+            fallingBlocks.add(FallingBlock(item[3].toShort(), item[0], item[1], item[2]))
+        }
+        // Ce qu'un atterrissage fait tomber revient au joueur de l'appareil, comme avant.
+        val collector = players.firstOrNull()
+        val iter = fallingBlocks.iterator()
+        while (iter.hasNext()) {
+            val fb = iter.next()
+            fb.timer = minOf(fb.timer + dt, FallingBlock.DURATION)
+            if (fb.done) {
+                world.onFallingBlockLanded(fb.wx, fb.wy - 1, fb.wz, fb.type)
+                world.enqueueIfFalling(fb.wx, fb.wy - 1, fb.wz)
+                clearUnsupportedAround(fb.wx, fb.wy, fb.wz, collector)
+                clearUnsupportedAround(fb.wx, fb.wy - 1, fb.wz, collector)
+                blockChanged(fb.wx, fb.wy - 1, fb.wz)
+                iter.remove()
+            }
+        }
+    }
+
+    // ── Casser et poser ───────────────────────────────────────────────────────
+
+    enum class BreakResult { BROKEN, STORAGE_FULL }
+
+    /**
+     * [who] casse le bloc (x, y, z). Ce qu'il donnait, et ce que contenait un coffre ou une
+     * culture, va dans son inventaire (sauf en créatif). Un coffre trop plein pour son sac reste
+     * en place : [BreakResult.STORAGE_FULL].
+     */
+    fun breakBlock(who: CavePlayer, x: Int, y: Int, z: Int): BreakResult {
+        val blockType = loadedBlockAt(x, y, z)
+        val creative = who.isCreative
+        val box = workshops.view(FrontierWorkshops.Pos(x, y, z))
+        if (box?.items?.any { (id, count) -> (who.inventory[id] ?: 0).toLong() + count > Int.MAX_VALUE } == true)
+            return BreakResult.STORAGE_FULL
+        val farmDrops = farming.harvest(x, y, z, uproot = true)
+        if (!creative && farmDrops != null) who.grant(farmDrops)
+        if (!creative && BlockRegistry.get(blockType)?.harvestCategory == "plant" && Random.nextFloat() < .12f) {
+            val biome = world.naturalSurfaceBiomeAt(x.toDouble(), y.toDouble(), z.toDouble())
+                ?.let(RegionalBiomes::parent)
+            val crops = when (biome) {
+                "desert", "red_desert", "savanna" -> intArrayOf(1,9,14,18)
+                "taiga", "tundra" -> intArrayOf(4,5,15,17)
+                "jungle", "jungle_edge", "wetlands" -> intArrayOf(2,10,13,18)
+                "forest", "birch_forest", "dark_forest", "redwood_forest" -> intArrayOf(7,8,11,16,17)
+                else -> intArrayOf(0,2,3,6,8,12)
+            }
+            who.grant(listOf(FarmItems.seed(crops[Random.nextInt(crops.size)]) to 1))
+        }
+        val contents = workshops.breakBlock(FrontierWorkshops.Pos(x, y, z))
+        for ((id, count) in contents)
+            who.inventory[id] = ((who.inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        world.setBlock(x, y, z, AIR)
+        blockChanged(x, y, z)
+        world.enqueueIfFalling(x, y + 1, z)
+        when (blockType) {
+            WATER      -> { world.onWaterSourceRemoved(x, y, z)
+                            if (!creative) who.collectBlock(blockType) }
+            WATER_FLOW -> { /* eau qui coule : pas de drop, pas de re-simulation */ }
+            WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
+                                wx.toInt() == x && wz.toInt() == z }
+                            if (!creative) who.collectBlock(blockType) }
+            else       -> { if (!creative) who.collectBlock(blockType) }
+        }
+        clearUnsupportedAround(x, y, z, who)
+        inventoryChanged(who)
+        return BreakResult.BROKEN
+    }
+
+    /**
+     * [who] pose [placedType] en (x, y, z) avec l'orientation [meta], en dépensant un [blockType]
+     * (sauf en créatif). [placedType] diffère de [blockType] quand deux dalles se combinent.
+     * Faux si le bloc ne tiendrait pas à cet endroit : rien n'a changé.
+     */
+    fun placeBlock(who: CavePlayer, blockType: Short, placedType: Short, x: Int, y: Int, z: Int, meta: Byte): Boolean {
+        if (!BlockPlacement.supported(placedType, x, y, z, meta) { a, b, c -> world.blockAt(a, b, c) }) return false
+        world.setBlock(x, y, z, placedType)
+        workshops.placed(FrontierWorkshops.Pos(x, y, z), placedType)
+        world.setMeta(x, y, z, meta)
+        blockChanged(x, y, z)
+        if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(x.toDouble(), z.toDouble()))
+        if (blockType == WATER) world.onWaterSourcePlaced(x, y, z)
+        if (isFalling(placedType)) world.enqueueIfFalling(x, y, z)
+        clearUnsupportedAround(x, y, z, who)
+        if (!who.isCreative) {
+            who.inventory[blockType] = (who.inventory[blockType] ?: 1) - 1
+            if ((who.inventory[blockType] ?: 0) <= 0) {
+                who.inventory.remove(blockType)
+                for (j in who.hotbar.indices) { if (who.hotbar[j] == blockType) who.hotbar[j] = null }
+            }
+        }
+        inventoryChanged(who)
+        return true
+    }
+
+    /**
+     * Ce qui n'est plus soutenu autour de (x, y, z) (torche, plante, échelle…) se détache, de
+     * proche en proche. [collector] le ramasse, sauf en créatif ; null = personne.
+     */
+    fun clearUnsupportedAround(x: Int, y: Int, z: Int, collector: CavePlayer?) {
+        val gather = collector?.takeIf { !it.isCreative }
+        var gathered = false
+        val pending = java.util.ArrayDeque<Triple<Int, Int, Int>>()
+        pending.add(Triple(x, y, z))
+        var budget = 256
+        while (pending.isNotEmpty() && budget-- > 0) {
+            val (cx, cy, cz) = pending.removeFirst()
+            for ((nx, ny, nz) in listOf(Triple(cx, cy + 1, cz), Triple(cx - 1, cy, cz),
+                Triple(cx + 1, cy, cz), Triple(cx, cy, cz - 1), Triple(cx, cy, cz + 1))) {
+                val id = world.blockAt(nx, ny, nz)
+                val def = BlockRegistry.get(id) ?: continue
+                if (def.placementRule == "any") continue
+                if (BlockPlacement.supported(id, nx, ny, nz, world.metaAt(nx, ny, nz)) { a, b, c -> world.blockAt(a, b, c) }) continue
+                val farmDrops = farming.harvest(nx, ny, nz, uproot = true)
+                if (gather != null && farmDrops != null) { gather.grant(farmDrops); gathered = true }
+                world.setBlock(nx, ny, nz, AIR)
+                blockChanged(nx, ny, nz)
+                if (gather != null) { gather.collectBlock(id); gathered = true }
+                pending.add(Triple(nx, ny, nz))
+            }
+        }
+        if (gathered) inventoryChanged(gather!!)
     }
 
     /**

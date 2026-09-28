@@ -3,6 +3,9 @@ package com.Atom2Universe.app.games.caves
 import com.Atom2Universe.app.games.caves.entity.EnemyTarget
 import com.Atom2Universe.app.games.caves.entity.MagazineState
 import com.Atom2Universe.app.games.caves.entity.PlayerStats
+import com.Atom2Universe.app.games.caves.node.BlockRegistry
+import com.Atom2Universe.app.games.caves.node.DoubleSlabs
+import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.node.PhysicsNode
 import com.Atom2Universe.app.games.caves.node.PlayerNode
 
@@ -47,6 +50,34 @@ internal class CavePlayer(
 
     /** L'objet en main, s'il en reste au moins un dans l'inventaire. */
     val heldItem: Short? get() = hotbar[selectedSlot]?.takeIf { (inventory[it] ?: 0) > 0 }
+
+    /** Ajoute des objets. Un objet nouveau prend une case libre de la barre, sans en déloger aucun. */
+    fun grant(items: List<Pair<Short, Int>>) {
+        for ((id, count) in items) {
+            val newStack = (inventory[id] ?: 0) == 0
+            inventory[id] = ((inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            if (newStack && id !in hotbar) {
+                val empty = hotbar.indices.firstOrNull { hotbar[it] == null }
+                if (empty != null) hotbar[empty] = id
+            }
+        }
+    }
+
+    /** Ramasse ce que donne un bloc cassé : la pierre donne des pavés, une dalle double deux dalles… */
+    fun collectBlock(blockType: Short) {
+        DoubleSlabs.materials(blockType)?.let { (lower, upper) ->
+            collectBlock(lower)
+            collectBlock(upper)
+            return
+        }
+        if (blockType.toInt() in 7020..7023) {
+            grant(listOf(FarmItems.seed(0) to 1))
+            return
+        }
+        // Une seule conversion : la pierre donne des pavés, qu'on ne recasse pas à leur tour.
+        val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
+        grant(listOf(dropType to count))
+    }
 
     /** Hauteur des yeux en ce moment (plus bas quand il est accroupi). */
     val eyeY: Double get() = y - eyeDrop

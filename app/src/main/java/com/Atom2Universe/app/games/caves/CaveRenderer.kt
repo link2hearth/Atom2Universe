@@ -109,12 +109,16 @@ internal class CaveRenderer(
     // ── Simulation du monde ───────────────────────────────────────────────────
     // Le monde et tout ce qui y vit sont dans CaveSimulation ; le renderer les dessine.
     // Les raccourcis ci-dessous gardent les anciens noms (renderer.world, renderer.farming…).
-    internal val sim = CaveSimulation(context, worldSeed, worldId, savedState, worldSource,
+    internal val sim: CaveSimulation = CaveSimulation(context, worldSeed, worldId, savedState, worldSource,
         viewDistances.detail).apply {
         blockChanged = ::forceMeshRebuild
         // Un lambda, pas meshes::containsKey : meshes n'existe pas encore à cette ligne.
         chunkShown = { meshes.containsKey(it) }
         checkpointDue = { checkpointCallback?.invoke() }
+        // Seul l'écran de ce joueur-ci se met à jour ; les autres n'en ont pas sur cet appareil.
+        inventoryChanged = { who ->
+            if (who === player) { inventoryCallback?.invoke(inventory.toMap()); notifyHotbar() }
+        }
         enemyManager.spawnManager.siteBossDefeated = {
             farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_guardian_defeated))
             checkpointCallback?.invoke()
@@ -501,14 +505,7 @@ internal class CaveRenderer(
     private val ARM_SKIN   = floatArrayOf(0.85f, 0.66f, 0.52f)   // teinte peau
     private val ARM_SLEEVE = floatArrayOf(0.30f, 0.55f, 0.85f)   // manche
 
-    private class FallingBlock(val type: Short, val wx: Int, val wy: Int, val wz: Int) {
-        var timer = 0f
-        val done  get() = timer >= DURATION
-        // ease-in (accélération naturelle) : commence lent, finit vite
-        val visualY get() = wy.toFloat() - (timer / DURATION).let { it * it }
-        companion object { const val DURATION = 0.2f }
-    }
-    private val fallingBlocks = mutableListOf<FallingBlock>()
+    private val fallingBlocks get() = sim.fallingBlocks
     private var fallingVbo = 0
 
 
@@ -1804,7 +1801,7 @@ internal class CaveRenderer(
         drawStructureSelection()
 
         // ── Blocs en chute (rendu avec world shader encore actif) ────────────
-        drawFallingBlocks(dt)
+        drawFallingBlocks()
 
         // ── Passe eau (blending semi-transparent, après géométrie opaque) ─────
         val waterAmbient = sceneAmbient
@@ -2450,43 +2447,12 @@ internal class CaveRenderer(
         miningCallback?.invoke(mineDamage, blockType)
 
         if (mineDamage >= 1f) {
-            val box = workshops.view(FrontierWorkshops.Pos(bx,by,bz))
-            if (box?.items?.any { (id,count) -> (inventory[id] ?: 0).toLong()+count > Int.MAX_VALUE } == true) {
+            if (sim.breakBlock(player, bx, by, bz) == CaveSimulation.BreakResult.STORAGE_FULL) {
                 mineDamage = 0f
                 farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_storage_overflow))
                 return
             }
-            val farmDrops = farming.harvest(bx, by, bz, uproot = true)
-            if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
-            if (!isCreative && BlockRegistry.get(blockType)?.harvestCategory == "plant" && Random.nextFloat() < .12f) {
-                val biome=world.naturalSurfaceBiomeAt(bx.toDouble(),by.toDouble(),bz.toDouble())
-                    ?.let(com.Atom2Universe.app.games.caves.world.RegionalBiomes::parent)
-                val crops=when(biome) {
-                    "desert", "red_desert", "savanna" -> intArrayOf(1,9,14,18)
-                    "taiga", "tundra" -> intArrayOf(4,5,15,17)
-                    "jungle", "jungle_edge", "wetlands" -> intArrayOf(2,10,13,18)
-                    "forest", "birch_forest", "dark_forest", "redwood_forest" -> intArrayOf(7,8,11,16,17)
-                    else -> intArrayOf(0,2,3,6,8,12)
-                }
-                grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(crops[Random.nextInt(crops.size)]) to 1))
-            }
-            val contents = workshops.breakBlock(FrontierWorkshops.Pos(bx, by, bz))
-            for ((id, count) in contents) inventory[id] = ((inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-            if (contents.isNotEmpty()) inventoryCallback?.invoke(inventory.toMap())
-            world.setBlock(bx, by, bz, AIR)
-            forceMeshRebuild(bx, by, bz)
-            world.enqueueIfFalling(bx, by + 1, bz)
-            when (blockType) {
-                WATER      -> { world.onWaterSourceRemoved(bx, by, bz)
-                                if (!isCreative) collectBlock(blockType) }
-                WATER_FLOW -> { /* eau qui coule : pas de drop, pas de re-simulation */ }
-                WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
-                                    wx.toInt() == bx && wz.toInt() == bz }
-                                if (!isCreative) collectBlock(blockType) }
-                else       -> { if (!isCreative) collectBlock(blockType) }
-            }
             if (blockType in ROCK_IDS) rockChargeTime = 0f
-            clearUnsupportedAround(bx, by, bz)
             mineTarget = null
             mineDamage = 0f
             miningCallback?.invoke(0f, null)
@@ -2502,52 +2468,12 @@ internal class CaveRenderer(
     }
 
     private fun collectBlock(blockType: Short) {
-        com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(blockType)?.let { (lower, upper) ->
-            collectBlock(lower)
-            collectBlock(upper)
-            return
-        }
-        if (blockType.toInt() in 7020..7023) {
-            grantFarmItems(listOf(com.Atom2Universe.app.games.caves.node.FarmItems.seed(0) to 1))
-            return
-        }
-        // Resolve once: breaking stone yields cobble, never recursively breaks the result.
-        val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
-        val newStack=(inventory[dropType] ?: 0)==0
-        inventory[dropType] = (inventory[dropType] ?: 0) + count
-        // New pickups can fill a free shortcut, without replacing the player's assignments.
-        val targetBar = hotbar
-        if (newStack && targetBar.none { it == dropType }) {
-            val emptySlot = targetBar.indexOfFirst { it == null }
-            if (emptySlot != -1) {
-                targetBar[emptySlot] = dropType
-                notifyHotbar()
-            }
-        }
+        player.collectBlock(blockType)
         inventoryCallback?.invoke(inventory.toMap())
+        notifyHotbar()
     }
 
-    private fun clearUnsupportedAround(x: Int, y: Int, z: Int) {
-        val pending = java.util.ArrayDeque<Triple<Int, Int, Int>>()
-        pending.add(Triple(x, y, z))
-        var budget = 256
-        while (pending.isNotEmpty() && budget-- > 0) {
-            val (cx, cy, cz) = pending.removeFirst()
-            for ((nx, ny, nz) in listOf(Triple(cx, cy + 1, cz), Triple(cx - 1, cy, cz),
-                Triple(cx + 1, cy, cz), Triple(cx, cy, cz - 1), Triple(cx, cy, cz + 1))) {
-                val id = world.blockAt(nx, ny, nz)
-                val def = BlockRegistry.get(id) ?: continue
-                if (def.placementRule == "any") continue
-                if (com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(id, nx, ny, nz, world.metaAt(nx, ny, nz)) { a, b, c -> world.blockAt(a, b, c) }) continue
-                val farmDrops = farming.harvest(nx, ny, nz, uproot = true)
-                if (!isCreative && farmDrops != null) grantFarmItems(farmDrops)
-                world.setBlock(nx, ny, nz, AIR)
-                forceMeshRebuild(nx, ny, nz)
-                if (!isCreative) collectBlock(id)
-                pending.add(Triple(nx, ny, nz))
-            }
-        }
-    }
+    private fun clearUnsupportedAround(x: Int, y: Int, z: Int) = sim.clearUnsupportedAround(x, y, z, player)
 
     private fun refreshChunkLightSources(chunk: Chunk) {
         val key = world.chunkKey(chunk.cx, chunk.cy, chunk.cz)
@@ -2831,28 +2757,8 @@ internal class CaveRenderer(
 
     // ── Blocs en chute libre (animation 200ms) ───────────────────────────────
 
-    private fun drawFallingBlocks(dt: Float) {
-        // Récupérer les nouvelles animations lancées par tickFalling
-        while (true) {
-            val item = world.pendingFallingBlocks.poll() ?: break
-            fallingBlocks.add(FallingBlock(item[3].toShort(), item[0], item[1], item[2]))
-        }
-        if (fallingBlocks.isEmpty()) return
-
-        // Mettre à jour les timers ; poser les blocs qui ont atterri
-        val iter = fallingBlocks.iterator()
-        while (iter.hasNext()) {
-            val fb = iter.next()
-            fb.timer = minOf(fb.timer + dt, FallingBlock.DURATION)
-            if (fb.done) {
-                world.onFallingBlockLanded(fb.wx, fb.wy - 1, fb.wz, fb.type)
-                world.enqueueIfFalling(fb.wx, fb.wy - 1, fb.wz)
-                clearUnsupportedAround(fb.wx, fb.wy, fb.wz)
-                clearUnsupportedAround(fb.wx, fb.wy - 1, fb.wz)
-                forceMeshRebuild(fb.wx, fb.wy - 1, fb.wz)
-                iter.remove()
-            }
-        }
+    /** Dessine les blocs en train de tomber ; leur chute avance dans la simulation. */
+    private fun drawFallingBlocks() {
         if (fallingBlocks.isEmpty()) return
 
         // Construire la géométrie (5 faces par bloc : top + 4 côtés)
@@ -4567,14 +4473,7 @@ internal class CaveRenderer(
     }
 
     private fun grantFarmItems(items: List<Pair<Short, Int>>) {
-        for ((id,count) in items) {
-            val newStack=(inventory[id] ?: 0)==0
-            inventory[id] = ((inventory[id] ?: 0).toLong()+count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-            if (newStack && id !in hotbar) {
-                val empty = hotbar.indices.firstOrNull { hotbar[it] == null }
-                if (empty != null) hotbar[empty] = id
-            }
-        }
+        player.grant(items)
         inventoryCallback?.invoke(inventory.toMap())
         notifyHotbar()
     }
@@ -4907,24 +4806,7 @@ internal class CaveRenderer(
         } else if (blockType == com.Atom2Universe.app.games.caves.node.FrontierItems.HOPPER)
             FrontierWorkshops.hopperMeta(-target.fnx, -target.fny, -target.fnz)
         else computeOrientMeta(blockType, target.fnx, target.fny, target.fnz)
-        if (!com.Atom2Universe.app.games.caves.world.BlockPlacement.supported(placedType, px, py, pz, orientMeta) { a, b, c -> world.blockAt(a, b, c) }) return
-        world.setBlock(px, py, pz, placedType)
-        workshops.placed(FrontierWorkshops.Pos(px, py, pz), placedType)
-        world.setMeta(px, py, pz, orientMeta)
-        forceMeshRebuild(px, py, pz)
-        if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(px.toDouble(), pz.toDouble()))
-        if (blockType == WATER) world.onWaterSourcePlaced(px, py, pz)
-        if (isFalling(placedType)) world.enqueueIfFalling(px, py, pz)
-        clearUnsupportedAround(px, py, pz)
-        if (!isCreative) {
-            inventory[blockType] = (inventory[blockType] ?: 1) - 1
-            if ((inventory[blockType] ?: 0) <= 0) {
-                inventory.remove(blockType)
-                for (j in hotbar.indices) { if (hotbar[j] == blockType) hotbar[j] = null }
-            }
-        }
-        inventoryCallback?.invoke(inventory.toMap())
-        notifyHotbar()
+        sim.placeBlock(player, blockType, placedType, px, py, pz, orientMeta)
     }
 
     internal fun selectWorkshopRecipe(p: FrontierWorkshops.Pos,index: Int) {
