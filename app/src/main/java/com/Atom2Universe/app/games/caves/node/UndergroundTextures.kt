@@ -24,6 +24,7 @@ internal object UndergroundTextures {
 
     fun register() {
         UndergroundRuinTextures.register()
+        UndergroundRelicTextures.register()
         for (name in colors.keys) BlockRegistry.registerGeneratedTexture("underground:$name") { size ->
             texture(name, size)
         }

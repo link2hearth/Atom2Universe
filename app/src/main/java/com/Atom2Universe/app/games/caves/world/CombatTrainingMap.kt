@@ -2,10 +2,10 @@ package com.Atom2Universe.app.games.caves.world
 
 /** Real underground blueprints, all on the first equipment layer, in connected test bays. */
 internal object CombatTrainingMap {
-    const val FLOOR = 4
+    const val FLOOR = 16
     const val WIDTH = 192
     const val DEPTH = 256
-    const val HEIGHT = 18
+    const val HEIGHT = 32
     data class Bay(val kind: UndergroundSites.Kind, val x: Int, val z: Int, val plan: UndergroundSites.Plan) {
         val entrance get() = MapPoint(x, FLOOR + 1, z - 6)
     }

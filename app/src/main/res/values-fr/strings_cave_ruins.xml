@@ -42,4 +42,16 @@
     <string name="cave_site_wraith_archive">Archives des spectres</string>
     <string name="cave_site_slime_cistern">Citerne des slimes</string>
     <string name="cave_site_depth_discovery">Découverte : %1$s · strate %2$d · niveau de combat %3$d</string>
+    <string name="cave_block_cave_relic_ossuary">Niche ossuaire</string>
+    <string name="cave_block_cave_relic_cocoon">Cocon de soie</string>
+    <string name="cave_block_cave_relic_furnace_duct">Conduit de fournaise</string>
+    <string name="cave_block_cave_relic_grave_stele">Stèle funéraire moussue</string>
+    <string name="cave_block_cave_relic_instruments">Paillasse gobeline</string>
+    <string name="cave_block_cave_relic_golem_seal">Sceau du golem de cristal</string>
+    <string name="cave_block_cave_relic_dwarf_tools">Établi nain</string>
+    <string name="cave_block_cave_relic_ogre_trophy">Piédestal de trophée ogre</string>
+    <string name="cave_block_cave_relic_canopic_urn">Urne canope</string>
+    <string name="cave_block_cave_relic_root_stump">Souche aux racines anciennes</string>
+    <string name="cave_block_cave_relic_spectral_tablet">Tablette aux inscriptions spectrales</string>
+    <string name="cave_block_cave_relic_cistern_filter">Filtre de citerne visqueux</string>
 </resources>
