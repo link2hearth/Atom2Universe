@@ -38,17 +38,23 @@ internal object MeshBuilder {
             }
 
             val meta  = chunk.metaAt(lx, ly, lz)
-            val slabMaterials = com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(block)
+            val slabMaterials = com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(block, meta)
             if (slabMaterials != null) {
-                val sky = skyOf(chunk, world, lx, ly, lz, cache)
-                for (upper in listOf(false, true)) {
-                    val material = if (upper) slabMaterials.second else slabMaterials.first
-                    for (face in PartialBlockModel.faces(if (upper) 4 else 0, slab = true)) {
-                        // The two touching horizontal faces are internal to the combined cube.
-                        if (face.direction == if (upper) 1 else 0) continue
+                // Une dalle double est un bloc plein : sa propre case ne voit pas le ciel.
+                // Chaque face prend la lumière de la case d'air devant elle, comme un cube.
+                val axis = com.Atom2Universe.app.games.caves.node.DoubleSlabs.axis(block)
+                for (plus in listOf(false, true)) {
+                    val material = if (plus) slabMaterials.second else slabMaterials.first
+                    val side = axis * 2 + if (plus) 1 else 0
+                    for (face in PartialBlockModel.faces(PartialBlockModel.slabMeta(side), slab = true)) {
+                        // The two touching faces are internal to the combined cube. The half of
+                        // side s (0 bottom, 2 −X, 4 −Z…) turns its inner face toward direction s:
+                        // the bottom half's inner face looks up (+Y = 0), the −X half's looks +X (2).
+                        if (face.direction == side) continue
                         val offset = faceOffsets[face.direction]
                         val neighbor = world.neighborBlock(chunk, lx + offset[0], ly + offset[1], lz + offset[2], cache)
                         if (!shouldRenderFace(block, neighbor)) continue
+                        val sky = skyOf(chunk, world, lx + offset[0], ly + offset[1], lz + offset[2], cache)
                         val layer = BlockRegistry.surfaceLayer(BlockRegistry.getLayerForFace(material, face.direction, AIR, 0),
                             chunk.worldX + lx, chunk.worldY + ly, chunk.worldZ + lz, face.direction)
                         val packed = face.direction * 4096f + layer
@@ -159,6 +165,7 @@ internal object MeshBuilder {
         val tint = FloatArray(6 * 4096 * 4)
         val out = GrowableFloatArray(8192)
         val cornerLight = FloatArray(4)
+        val cornerSky = FloatArray(4)
         val cornerTint = FloatArray(16)
         val corner = FloatArray(20)   // x, y, z, u, v des quatre coins
         fun reset() { packed.fill(-1); out.clear() }
@@ -182,26 +189,27 @@ internal object MeshBuilder {
             else if (BlockRegistry.lightEmission(block) > 0) 7 else face
         val packed = marker * 4096 + layer
         val corners = cubeCorners[face]
-        val light = g.cornerLight; val tint = g.cornerTint
+        val light = g.cornerLight; val skyLight = g.cornerSky; val tint = g.cornerTint
         val mask = if (chunk.worldY >= 0) BlockRegistry.climateMask(layer) else 0
         var uniform = true
         for (c in 0 until 4) {
             val x = (lx + corners[c * 3]).toFloat(); val y = (ly + corners[c * 3 + 1]).toFloat()
             val z = (lz + corners[c * 3 + 2]).toFloat()
             light[c] = vertexBlockLight(chunk, world, cache, x, y, z, if (marker >= 8) face else marker)
+            skyLight[c] = vertexSkyLight(chunk, world, cache, x, y, z, face, lx, ly, lz, sky)
             if (mask != 0) { blend.writeDelta(x, z, tint, c * 4); tint[c * 4 + 3] = mask.toFloat() }
             else { tint[c * 4] = 0f; tint[c * 4 + 1] = 0f; tint[c * 4 + 2] = 0f; tint[c * 4 + 3] = 0f }
-            if (c > 0 && (light[c] != light[0] || tint[c * 4] != tint[0] ||
+            if (c > 0 && (light[c] != light[0] || skyLight[c] != skyLight[0] || tint[c * 4] != tint[0] ||
                     tint[c * 4 + 1] != tint[1] || tint[c * 4 + 2] != tint[2])) uniform = false
         }
         val capRotation = BlockRegistry.capQuarterTurns(block, face, meta)
         if (!uniform || capRotation != 0) {
             emitFace(g, face, lx.toFloat(), ly.toFloat(), lz.toFloat(), lx + 1f, ly + 1f, lz + 1f,
-                packed.toFloat(), sky, capRotation)
+                packed.toFloat(), capRotation)
             return
         }
         val cell = face * 4096 + lx + ly * 16 + lz * 256
-        g.packed[cell] = packed; g.sky[cell] = sky; g.light[cell] = light[0]
+        g.packed[cell] = packed; g.sky[cell] = skyLight[0]; g.light[cell] = light[0]
         tint.copyInto(g.tint, cell * 4, 0, 4)
     }
 
@@ -231,15 +239,16 @@ internal object MeshBuilder {
                     h++
                 }
                 g.cornerLight.fill(g.light[start])
+                g.cornerSky.fill(g.sky[start])
                 for (c in 0 until 4) g.tint.copyInto(g.cornerTint, c * 4, start * 4, start * 4 + 4)
-                val packed = g.packed[start].toFloat(); val sky = g.sky[start]
+                val packed = g.packed[start].toFloat()
                 for (hb in 0 until h) for (k in 0 until w) g.packed[cellOf(face, slice, a + k, b + hb)] = -1
                 val s = slice.toFloat(); val a0 = a.toFloat(); val a1 = (a + w).toFloat()
                 val b0 = b.toFloat(); val b1 = (b + h).toFloat()
                 when (face) {
-                    0, 1 -> emitFace(g, face, a0, s, b0, a1, s + 1f, b1, packed, sky)
-                    2, 3 -> emitFace(g, face, s, b0, a0, s + 1f, b1, a1, packed, sky)
-                    else -> emitFace(g, face, a0, b0, s, a1, b1, s + 1f, packed, sky)
+                    0, 1 -> emitFace(g, face, a0, s, b0, a1, s + 1f, b1, packed)
+                    2, 3 -> emitFace(g, face, s, b0, a0, s + 1f, b1, a1, packed)
+                    else -> emitFace(g, face, a0, b0, s, a1, b1, s + 1f, packed)
                 }
                 a += w
             }
@@ -248,11 +257,11 @@ internal object MeshBuilder {
 
     /**
      * Une face pleine couvrant la boîte [x0,x1]×[y0,y1]×[z0,z1], au format large (12 flottants),
-     * avec la lumière et la teinte de `g.cornerLight` / `g.cornerTint` : la texture garde le sens
-     * qu'elle a sur un bloc seul, répétée sur toute la taille du rectangle.
+     * avec les lumières et la teinte de `g.cornerLight` / `g.cornerSky` / `g.cornerTint` : la texture
+     * garde le sens qu'elle a sur un bloc seul, répétée sur toute la taille du rectangle.
      */
     private fun emitFace(g: GreedyScratch, face: Int, x0: Float, y0: Float, z0: Float,
-                         x1: Float, y1: Float, z1: Float, packed: Float, sky: Float, capRotation: Int = 0) {
+                         x1: Float, y1: Float, z1: Float, packed: Float, capRotation: Int = 0) {
         val wx = x1 - x0; val hy = y1 - y0; val wz = z1 - z0
         val c = g.corner
         fun corner(i: Int, x: Float, y: Float, z: Float, u: Float, v: Float) {
@@ -278,10 +287,10 @@ internal object MeshBuilder {
             else -> { corner(0, x1, y0, z0, 0f, hy); corner(1, x1, y1, z0, 0f, 0f)
                       corner(2, x0, y1, z0, wx, 0f); corner(3, x0, y0, z0, wx, hy) }
         }
-        val out = g.out; val light = g.cornerLight; val tint = g.cornerTint
+        val out = g.out; val light = g.cornerLight; val sky = g.cornerSky; val tint = g.cornerTint
         for (i in faceTriangles) {
             out.add(c[i * 5]); out.add(c[i * 5 + 1]); out.add(c[i * 5 + 2])
-            out.add(c[i * 5 + 3]); out.add(c[i * 5 + 4]); out.add(packed); out.add(sky)
+            out.add(c[i * 5 + 3]); out.add(c[i * 5 + 4]); out.add(packed); out.add(sky[i])
             out.add(tint[i * 4]); out.add(tint[i * 4 + 1]); out.add(tint[i * 4 + 2]); out.add(tint[i * 4 + 3])
             out.add(light[i])
         }
@@ -296,13 +305,43 @@ internal object MeshBuilder {
     private fun vertexBlockLight(chunk: Chunk, world: World, cache: World.ChunkLookupCache,
                                  x: Float, y: Float, z: Float, face: Int): Float {
         if (face !in 0..5) return 1f
+        var sum = 0; var count = 0
+        forEachCornerCell(x, y, z, face) { cx, cy, cz ->
+            val level = world.passableBlockLightAt(chunk, cx, cy, cz, cache)
+            if (level >= 0) { sum += level; count++ }
+        }
+        return if (count == 0) 0f else sum / (count * 15f)
+    }
+
+    /**
+     * Lumière du ciel d'un sommet (0..1), lissée comme celle des torches : sans elle, chaque face
+     * d'une grotte prend la valeur de sa case (15, 14, 13…) et la pénombre descend en escalier.
+     * La case posée contre la face compte toujours, avec la valeur de [skyOf] (`ownSky`) : c'est
+     * elle qui sait regarder à travers une dalle ou un escalier, que la moyenne sauterait.
+     */
+    private fun vertexSkyLight(chunk: Chunk, world: World, cache: World.ChunkLookupCache,
+                               x: Float, y: Float, z: Float, face: Int,
+                               lx: Int, ly: Int, lz: Int, ownSky: Float): Float {
+        val n = faceOffsets[face]
+        val ownX = lx + n[0]; val ownY = ly + n[1]; val ownZ = lz + n[2]
+        var sum = ownSky * 15f; var count = 1
+        forEachCornerCell(x, y, z, face) { cx, cy, cz ->
+            if (cx == ownX && cy == ownY && cz == ownZ) return@forEachCornerCell
+            val level = world.passableSkyLightAt(chunk, cx, cy, cz, cache)
+            if (level >= 0) { sum += level; count++ }
+        }
+        return sum / (count * 15f)
+    }
+
+    /** Les quatre cases qui touchent le sommet (x, y, z) du côté éclairé de la face [face]. */
+    private inline fun forEachCornerCell(x: Float, y: Float, z: Float, face: Int,
+                                         action: (Int, Int, Int) -> Unit) {
         val n = faceOffsets[face]
         val sx = x + n[0] * .5f; val sy = y + n[1] * .5f; val sz = z + n[2] * .5f
         // Les deux axes du plan de la face, décalés d'un demi-bloc de part et d'autre du sommet.
         val ax = if (n[0] != 0) 0f else .5f
         val ay = if (n[1] != 0) 0f else .5f
         val az = if (n[2] != 0) 0f else .5f
-        var sum = 0; var count = 0
         for (i in 0 until 4) {
             // Deux des trois décalages varient ; le troisième (le long de la normale) vaut 0.
             val first = if (i and 1 == 0) -1f else 1f
@@ -313,12 +352,9 @@ internal object MeshBuilder {
                 n[1] != 0 -> { ox = ax * first; oy = 0f; oz = az * second }
                 else -> { ox = ax * first; oy = ay * second; oz = 0f }
             }
-            val level = world.passableBlockLightAt(chunk, kotlin.math.floor(sx + ox).toInt(),
-                kotlin.math.floor(sy + oy).toInt(), kotlin.math.floor(sz + oz).toInt(), cache)
-            if (level < 0) continue
-            sum += level; count++
+            action(kotlin.math.floor(sx + ox).toInt(), kotlin.math.floor(sy + oy).toInt(),
+                kotlin.math.floor(sz + oz).toInt())
         }
-        return if (count == 0) 0f else sum / (count * 15f)
     }
 
     // Lumière du ciel (0..1) du voxel d'air adjacent à une face.

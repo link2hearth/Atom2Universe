@@ -57,7 +57,10 @@ import kotlin.random.Random
 
 enum class PlayerMode { WALK, SPECTATOR }
 /** Un bloc touché par un rayon de visée, et la face par laquelle il est entré (fnx, fny, fnz). */
-internal data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) { var hitY: Double = 0.0; var distance: Double = 0.0 }
+/** [hitX], [hitY], [hitZ] : point touché, relatif au coin du bloc (0..1 sur sa face). */
+internal data class RayHit(val bx: Int, val by: Int, val bz: Int, val fnx: Int, val fny: Int, val fnz: Int) {
+    var hitX: Double = .5; var hitY: Double = 0.0; var hitZ: Double = .5; var distance: Double = 0.0
+}
 enum class HotbarMode { COMBAT, BUILD, GARDEN }
 
 internal class CaveRenderer(
@@ -569,8 +572,9 @@ internal class CaveRenderer(
     var posCallback:      ((String) -> Unit)?                    = null
     var fpsCallback:      ((Int) -> Unit)?                       = null
     var modeCallback:     ((PlayerMode) -> Unit)?                = null
-    var miningCallback:   ((progress: Float, block: Short?) -> Unit)? = null
-    var lookAtCallback:   ((Short?) -> Unit)? = null
+    // Le meta accompagne le bloc pour le nommer : une double dalle y garde sa dalle du haut.
+    var miningCallback:   ((progress: Float, block: Short?, meta: Byte) -> Unit)? = null
+    var lookAtCallback:   ((block: Short?, meta: Byte) -> Unit)? = null
     var inventoryCallback: ((Map<Short, Int>) -> Unit)?           = null
     var hotbarCallback:   ((slots: Array<Short?>, selected: Int) -> Unit)? = null
     var fishingGaugeCallback: ((FishingLine.Gauge)->Unit)? = null
@@ -2366,7 +2370,7 @@ internal class CaveRenderer(
         toolSwinging = input.mining && tool != null && playerNode.isAlive
         if (toolSwinging && mode.allowsCombat &&
             expeditionCombat.targetsInArc(ExpeditionCombat.TOOL_REACH, ExpeditionCombat.TOOL_ARC, 1).isNotEmpty()) {
-            mineTarget=null; mineDamage=0f; miningCallback?.invoke(0f,null)
+            mineTarget=null; mineDamage=0f; miningCallback?.invoke(0f,null,0)
             return
         }
         val canMine = input.mining &&
@@ -2377,7 +2381,7 @@ internal class CaveRenderer(
             lastBlockedMineral = null
             mineTarget = null
             mineDamage = 0f
-            miningCallback?.invoke(0f, null)
+            miningCallback?.invoke(0f, null, 0)
             return
         }
 
@@ -2386,9 +2390,10 @@ internal class CaveRenderer(
         mineTarget = target
 
         val blockType = worldBlockAt(bx, by, bz)
+        val blockMeta = world.metaAt(bx, by, bz)
         if(!isCreative && !M.canMine(blockType,hotbar[selectedSlot])) {
             mineDamage=0f
-            miningCallback?.invoke(0f,blockType)
+            miningCallback?.invoke(0f,blockType,blockMeta)
             if(blockType!=lastBlockedMineral) {
                 lastBlockedMineral=blockType
                 val name=M.name(context,M.requiredPick(blockType)) ?: context.getString(com.Atom2Universe.app.R.string.cave_mineral_stone_pick)
@@ -2397,10 +2402,13 @@ internal class CaveRenderer(
             return
         }
         lastBlockedMineral=null
-        val hardness = BlockRegistry.getHardness(blockType)
+        // Une double dalle se casse à la dureté de la plus dure de ses deux dalles.
+        val hardness = com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(blockType, blockMeta)
+            ?.let { (lower, upper) -> maxOf(BlockRegistry.getHardness(lower), BlockRegistry.getHardness(upper)) }
+            ?: BlockRegistry.getHardness(blockType)
         mineDamage += dt * com.Atom2Universe.app.games.caves.node.FrontierItems.miningSpeed(hotbar[selectedSlot], BlockRegistry.get(blockType)) / hardness
 
-        miningCallback?.invoke(mineDamage, blockType)
+        miningCallback?.invoke(mineDamage, blockType, blockMeta)
 
         if (mineDamage >= 1f) {
             if (sim.breakBlock(player, bx, by, bz) == CaveSimulation.BreakResult.STORAGE_FULL) {
@@ -2411,7 +2419,7 @@ internal class CaveRenderer(
             if (blockType in ROCK_IDS) rockChargeTime = 0f
             mineTarget = null
             mineDamage = 0f
-            miningCallback?.invoke(0f, null)
+            miningCallback?.invoke(0f, null, 0)
         }
     }
 
@@ -2419,7 +2427,8 @@ internal class CaveRenderer(
         val target=raycastBlock()
         if(lookTarget?.bx!=target?.bx || lookTarget?.by!=target?.by || lookTarget?.bz!=target?.bz) {
             lookTarget=target
-            lookAtCallback?.invoke(target?.let { worldBlockAt(it.bx,it.by,it.bz) })
+            lookAtCallback?.invoke(target?.let { worldBlockAt(it.bx,it.by,it.bz) },
+                target?.let { world.metaAt(it.bx,it.by,it.bz) } ?: 0)
         }
     }
 
@@ -2643,7 +2652,8 @@ internal class CaveRenderer(
                 BlockRegistry.getSpriteMargin(id).toDouble(),BlockRegistry.getSpriteHeight(id).toDouble(),
                 0.0,distance) ?: continue
             distance=hit
-            best=RayHit(p.x,p.y,p.z,0,1,0).apply { this.distance=hit; hitY=startY+dirY*hit-p.y }
+            best=RayHit(p.x,p.y,p.z,0,1,0).apply { this.distance=hit; hitY=startY+dirY*hit-p.y
+                hitX=startX+dirX*hit-p.x; hitZ=startZ+dirZ*hit-p.z }
         }
         return best
     }
@@ -2678,6 +2688,7 @@ internal class CaveRenderer(
                         startX-bx, startY-by, startZ-bz, dirX, dirY, dirZ, reach, stairMaskAt(bx, by, bz))
                     if (stairHit != null) return RayHit(bx, by, bz, stairHit.nx, stairHit.ny, stairHit.nz).apply {
                         distance = stairHit.distance; hitY = startY + dirY * stairHit.distance - by
+                        hitX = startX + dirX * stairHit.distance - bx; hitZ = startZ + dirZ * stairHit.distance - bz
                     }
                 }
                 val hit = if (partialDef != null) false else if (b == TORCH) TorchModel.intersects(world.metaAt(bx, by, bz),
@@ -2688,7 +2699,8 @@ internal class CaveRenderer(
                     BlockRegistry.getSpriteMargin(b).toDouble(), BlockRegistry.getSpriteHeight(b).toDouble(),
                     entryDistance, minOf(reach, tMaxX, tMaxY, tMaxZ),
                 ) == true
-                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz).apply { distance = entryDistance; hitY = startY + dirY * entryDistance - by }
+                if (hit) return RayHit(bx, by, bz, fnx, fny, fnz).apply { distance = entryDistance; hitY = startY + dirY * entryDistance - by
+                    hitX = startX + dirX * entryDistance - bx; hitZ = startZ + dirZ * entryDistance - bz }
             }
             when {
                 tMaxX <= tMaxY && tMaxX <= tMaxZ -> {
@@ -4634,35 +4646,41 @@ internal class CaveRenderer(
         }
 
         val slab = BlockRegistry.get(blockType)?.slab == true
-        // Use the existing two-slabs recipe as the source of the matching full block.
-        val fullSlabBlock = if (slab) com.Atom2Universe.app.games.caves.node.CraftRegistry.all()
-            .firstOrNull { it.ingredients == listOf(blockType to 2) && it.resultCount == 1 &&
-                it.groups.isEmpty() && it.tools.isEmpty() && it.station == null &&
-                BlockRegistry.get(it.result)?.let { def -> def.placeable && !def.partial } == true }
-            ?.result else null
-        val targetUpper = world.metaAt(target.bx, target.by, target.bz).toInt() and 4 != 0
+        val targetSide = PartialBlockModel.slabSide(world.metaAt(target.bx, target.by, target.bz))
         val targetType = world.blockAt(target.bx, target.by, target.bz)
-        fun combinedSlabs(existing: Short, existingUpper: Boolean): Short? {
-            if (!slab || BlockRegistry.get(existing)?.slab != true) return null
-            if (existing == blockType) return fullSlabBlock
-            return if (existingUpper) com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(blockType, existing)
-            else com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(existing, blockType)
+        // Côté de la nouvelle case qui touche la face visée (voir PartialBlockModel.slabSide).
+        val hitSide = when {
+            target.fny > 0 -> 0
+            target.fny < 0 -> 1
+            target.fnx > 0 -> 2
+            target.fnx < 0 -> 3
+            target.fnz > 0 -> 4
+            else -> 5
         }
-        val fillTarget = combinedSlabs(targetType, targetUpper) != null &&
-            ((!targetUpper && target.fny == 1) || (targetUpper && target.fny == -1))
+        // Cinq zones sur la face visée : centre → à plat contre elle, bords → perpendiculaire.
+        val placedSide = PartialBlockModel.slabSideFromAim(hitSide, target.hitX, target.hitY, target.hitZ)
+        // Deux dalles face à face, pareilles ou non, deviennent une double dalle qui les garde toutes les deux.
+        fun combinedSlabs(existing: Short, existingSide: Int, newSide: Int): Pair<Short, Byte>? {
+            if (!slab || BlockRegistry.get(existing)?.slab != true || newSide != existingSide xor 1) return null
+            val existingMinus = existingSide and 1 == 0
+            return com.Atom2Universe.app.games.caves.node.DoubleSlabs.combine(
+                if (existingMinus) existing else blockType, if (existingMinus) blockType else existing, existingSide / 2)
+        }
+        // Viser la face intérieure d'une dalle (celle qui regarde vers sa moitié vide) la complète.
+        // Cette face regarde dans la direction qui porte le numéro de son côté plein.
+        val fillTarget = hitSide == targetSide && combinedSlabs(targetType, targetSide, targetSide xor 1) != null
         val px = target.bx + if (fillTarget) 0 else target.fnx
         val py = target.by + if (fillTarget) 0 else target.fny
         val pz = target.bz + if (fillTarget) 0 else target.fnz
         if (isInsidePlayer(px, py, pz)) return
         val existing = world.blockAt(px, py, pz)
-        val placeUpper = target.fny < 0 || target.fny == 0 && target.hitY > .5
-        val existingUpper = world.metaAt(px, py, pz).toInt() and 4 != 0
-        val combinedType = combinedSlabs(existing, existingUpper)
-        val mergeSlabs = combinedType != null && (fillTarget || existingUpper != placeUpper)
+        val existingSide = PartialBlockModel.slabSide(world.metaAt(px, py, pz))
+        val combined = combinedSlabs(existing, existingSide, if (fillTarget) existingSide xor 1 else placedSide)
+        val mergeSlabs = combined != null
         if (!mergeSlabs && existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return
-        val placedType = if (mergeSlabs) combinedType!! else blockType
-        val orientMeta = if (mergeSlabs) 0.toByte() else if (slab) {
-            (if (target.fny < 0 || target.fny == 0 && target.hitY > .5) 4 else 0).toByte()
+        val placedType = if (mergeSlabs) combined!!.first else blockType
+        val orientMeta = if (mergeSlabs) combined!!.second else if (slab) {
+            PartialBlockModel.slabMeta(placedSide)
         } else if (BlockRegistry.get(blockType)?.stairs == true) {
             val facing = if (abs(camera.fwdX) > abs(camera.fwdZ)) {
                 if (camera.fwdX > 0) 1 else 3
@@ -4793,6 +4811,5 @@ internal class CaveRenderer(
         private const val PROJ_SPEED       = 15f
         private const val PROJ_MAX_DIST    = 40.0
         /** Au-delà, une balle qui frappe un mur ne s'entend plus. */
-        private const val IMPACT_HEARING   = 40.0
-    }
+        private const val IMPACT_HEARING   = 40.0    }
 }

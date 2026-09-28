@@ -224,6 +224,8 @@ internal class CaveSimulation(
      */
     fun breakBlock(who: CavePlayer, x: Int, y: Int, z: Int): BreakResult {
         val blockType = loadedBlockAt(x, y, z)
+        // Lu avant de casser : une double dalle y garde sa dalle du haut.
+        val blockMeta = world.metaAt(x, y, z)
         val creative = who.isCreative
         val box = workshops.view(FrontierWorkshops.Pos(x, y, z))
         if (box?.items?.any { (id, count) -> (who.inventory[id] ?: 0).toLong() + count > Int.MAX_VALUE } == true)
@@ -255,7 +257,7 @@ internal class CaveSimulation(
             WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
                                 wx.toInt() == x && wz.toInt() == z }
                             if (!creative) who.collectBlock(blockType) }
-            else       -> { if (!creative) who.collectBlock(blockType) }
+            else       -> { if (!creative) who.collectBlock(blockType, blockMeta) }
         }
         clearUnsupportedAround(x, y, z, who)
         inventoryChanged(who)
@@ -305,12 +307,13 @@ internal class CaveSimulation(
                 val id = world.blockAt(nx, ny, nz)
                 val def = BlockRegistry.get(id) ?: continue
                 if (def.placementRule == "any") continue
-                if (BlockPlacement.supported(id, nx, ny, nz, world.metaAt(nx, ny, nz)) { a, b, c -> world.blockAt(a, b, c) }) continue
+                val meta = world.metaAt(nx, ny, nz)
+                if (BlockPlacement.supported(id, nx, ny, nz, meta) { a, b, c -> world.blockAt(a, b, c) }) continue
                 val farmDrops = farming.harvest(nx, ny, nz, uproot = true)
                 if (gather != null && farmDrops != null) { gather.grant(farmDrops); gathered = true }
                 world.setBlock(nx, ny, nz, AIR)
                 blockChanged(nx, ny, nz)
-                if (gather != null) { gather.collectBlock(id); gathered = true }
+                if (gather != null) { gather.collectBlock(id, meta); gathered = true }
                 pending.add(Triple(nx, ny, nz))
             }
         }

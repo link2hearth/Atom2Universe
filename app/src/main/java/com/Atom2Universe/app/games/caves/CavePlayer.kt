@@ -64,8 +64,8 @@ internal class CavePlayer(
     }
 
     /** Ramasse ce que donne un bloc cassé : la pierre donne des pavés, une dalle double deux dalles… */
-    fun collectBlock(blockType: Short) {
-        DoubleSlabs.materials(blockType)?.let { (lower, upper) ->
+    fun collectBlock(blockType: Short, meta: Byte = 0) {
+        DoubleSlabs.materials(blockType, meta)?.let { (lower, upper) ->
             collectBlock(lower)
             collectBlock(upper)
             return

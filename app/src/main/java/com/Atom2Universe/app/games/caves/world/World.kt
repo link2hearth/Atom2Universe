@@ -1186,6 +1186,18 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
      * Renvoie -1 pour une case pleine ou d'un chunk pas encore généré.
      */
     fun passableBlockLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Int {
+        val both = passableLightAt(baseChunk, lx, ly, lz, cache)
+        return if (both < 0) -1 else (both ushr 4) and 15
+    }
+
+    /** Même chose pour la lumière du ciel (quartet bas de `chunk.light`). */
+    fun passableSkyLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache? = null): Int {
+        val both = passableLightAt(baseChunk, lx, ly, lz, cache)
+        return if (both < 0) -1 else both and 15
+    }
+
+    // Octet de lumière complet (ciel + torches) d'une case où la lumière passe, sinon -1.
+    private fun passableLightAt(baseChunk: Chunk, lx: Int, ly: Int, lz: Int, cache: ChunkLookupCache?): Int {
         val chunk: Chunk; val x: Int; val y: Int; val z: Int
         if (lx in 0 until CHUNK_SIZE && ly in 0 until CHUNK_SIZE && lz in 0 until CHUNK_SIZE) {
             chunk = baseChunk; x = lx; y = ly; z = lz
@@ -1198,7 +1210,7 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             chunk = neighbor; x = wx - ncx * CHUNK_SIZE; y = wy - ncy * CHUNK_SIZE; z = wz - ncz * CHUNK_SIZE
         }
         if (!LightEngine.passable(chunk.blockAt(x, y, z))) return -1
-        return (chunk.light[x + y * CHUNK_SIZE + z * CHUNK_SIZE * CHUNK_SIZE].toInt() ushr 4) and 15
+        return chunk.light[x + y * CHUNK_SIZE + z * CHUNK_SIZE * CHUNK_SIZE].toInt() and 0xFF
     }
 
     // ── Lumière du ciel ───────────────────────────────────────────────────────

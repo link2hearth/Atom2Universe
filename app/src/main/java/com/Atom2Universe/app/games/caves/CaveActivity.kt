@@ -151,8 +151,9 @@ class CaveActivity : ThemedActivity() {
         return if(res!=0) getString(res) else id.replace('_',' ')
     }
 
-    internal fun blockName(type: Short): String {
-        com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(type)?.let { (lower, upper) ->
+    /** [meta] ne sert qu'à une double dalle posée : il dit sa dalle du haut. */
+    internal fun blockName(type: Short, meta: Byte = 0): String {
+        com.Atom2Universe.app.games.caves.node.DoubleSlabs.materials(type, meta)?.let { (lower, upper) ->
             return getString(R.string.cave_double_slab_name, blockName(lower), blockName(upper))
         }
         com.Atom2Universe.app.games.caves.node.ForgedEquipment.get(type)?.let { return blockName(it.base) }
@@ -429,16 +430,16 @@ class CaveActivity : ThemedActivity() {
         }
         renderer.modeCallback    = { mode -> uiHandler.post { applyModeUi(mode, btnMode, btnUp as Button, btnDown, btnLaser) } }
         renderer.posCallback     = { pos  -> uiHandler.post { tvCoords.text = pos } }
-        renderer.lookAtCallback = { block -> uiHandler.post {
+        renderer.lookAtCallback = { block, meta -> uiHandler.post {
             if(block==null) { tvWaila.visibility=View.GONE;tvWaila.text="" }
-            else { tvWaila.text=getString(R.string.cave_waila_block,blockName(block));tvWaila.visibility=View.VISIBLE }
+            else { tvWaila.text=getString(R.string.cave_waila_block,blockName(block,meta));tvWaila.visibility=View.VISIBLE }
         } }
         renderer.fpsCallback     = { fps  -> uiHandler.post { tvFps.text = "$fps FPS" } }
-        renderer.miningCallback  = { progress, blockType ->
+        renderer.miningCallback  = { progress, blockType, meta ->
             uiHandler.post {
                 if (blockType != null && progress > 0f) {
                     miningPanel.visibility = View.VISIBLE
-                    tvMiningBlock.text = blockName(blockType)
+                    tvMiningBlock.text = blockName(blockType, meta)
                     miningBar.progress = (progress * 100).toInt()
                 } else { miningPanel.visibility = View.GONE; miningBar.progress = 0 }
             }

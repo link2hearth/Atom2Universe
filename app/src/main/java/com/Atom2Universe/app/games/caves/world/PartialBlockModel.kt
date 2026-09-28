@@ -42,23 +42,63 @@ internal object PartialBlockModel {
         return own
     }
 
-    private val boxes = Array(34) { shape ->
+    /**
+     * Côté plein d'une dalle, de 0 à 5 : 0 bas, 1 haut, 2 côté −X, 3 côté +X, 4 côté −Z, 5 côté +Z.
+     * Deux côtés opposés ne diffèrent que du dernier bit (`côté xor 1`), et `côté / 2` donne l'axe
+     * (0 = Y, 1 = X, 2 = Z). Dans le meta : bit 2 = haut (comme les escaliers) ; une dalle
+     * verticale porte le bit 3 et son côté 2..5 moins 2 dans les bits 0..1.
+     */
+    fun slabSide(meta: Byte): Int {
+        val m = meta.toInt()
+        return if (m and 8 != 0) 2 + (m and 3) else (m shr 2) and 1
+    }
+    fun slabMeta(side: Int): Byte = (if (side >= 2) 8 + side - 2 else side * 4).toByte()
+
+    /** Demi-largeur du carré central d'une face visée : dedans, la dalle se pose à plat contre la face. */
+    const val SLAB_AIM_CENTER = .25
+
+    /**
+     * Côté plein d'une dalle posée en visant une face, découpée en cinq zones. Au centre, la dalle
+     * se pose à plat contre la face visée ([faceSide] : le côté de la nouvelle case qui touche le
+     * bloc visé). Près d'un bord (haut, bas, gauche, droite), elle se pose perpendiculaire, contre
+     * ce bord. [hx], [hy], [hz] : le point visé, de 0 à 1 dans le bloc ; seuls les deux axes du plan
+     * de la face comptent, et le plus éloigné du centre désigne le bord.
+     */
+    fun slabSideFromAim(faceSide: Int, hx: Double, hy: Double, hz: Double): Int {
+        val normalAxis = faceSide / 2          // 0 = Y, 1 = X, 2 = Z, comme les côtés
+        val offsets = doubleArrayOf(hy - .5, hx - .5, hz - .5)
+        var edgeAxis = -1; var farthest = SLAB_AIM_CENTER
+        for (axis in 0..2) {
+            if (axis == normalAxis) continue
+            if (kotlin.math.abs(offsets[axis]) > farthest) { farthest = kotlin.math.abs(offsets[axis]); edgeAxis = axis }
+        }
+        if (edgeAxis < 0) return faceSide
+        return edgeAxis * 2 + if (offsets[edgeAxis] > 0) 1 else 0
+    }
+
+    private val boxes = Array(38) { shape ->
         buildList {
-            val half = if (shape >= 32) shape - 32 else shape and 1
+            val side = shape - 32
+            val half = shape and 1
             val mask = if (shape >= 32) 0 else shape shr 1
-            for (x in 0..1) for (y in 0..1) for (z in 0..1)
-                if (y == half || mask and (1 shl (x + 2 * z)) != 0)
-                    add(Box(x * .5f, y * .5f, z * .5f))
+            for (x in 0..1) for (y in 0..1) for (z in 0..1) {
+                val inside = if (shape >= 32) when (side) {
+                    0, 1 -> y == side
+                    2, 3 -> x == side - 2
+                    else -> z == side - 4
+                } else y == half || mask and (1 shl (x + 2 * z)) != 0
+                if (inside) add(Box(x * .5f, y * .5f, z * .5f))
+            }
         }
     }
     private fun index(meta: Byte, slab: Boolean, mask: Int) =
-        if (slab) 32 + ((meta.toInt() shr 2) and 1)
+        if (slab) 32 + slabSide(meta)
         else 2 * (if (mask < 0) straightMask(meta) else mask) + ((meta.toInt() shr 2) and 1)
     private val lowBoxes = java.util.concurrent.ConcurrentHashMap<Float, List<Box>>()
     fun boxes(meta: Byte, slab: Boolean = false, height: Float = 1f, mask: Int = -1) =
         if (height < 1f) lowBoxes.getOrPut(height) { listOf(Box(0f, 0f, 0f, 1f, height, 1f)) }
         else boxes[index(meta, slab, mask)]
-    private val surfaces = Array(34) { meta ->
+    private val surfaces = Array(38) { meta ->
         buildList {
             val cells = boxes[meta]
             for (b in cells) for ((f,n) in normals.withIndex()) {
