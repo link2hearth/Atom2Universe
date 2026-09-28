@@ -25,10 +25,12 @@ internal class CozyLandscape(private val seed: Long,
     fun height(x: Double, z: Double) = natural.height(x, z)
     fun topBlock(b: SurfaceBiomeDef, x: Double, z: Double, h: Int) = natural.topBlock(b, x, z, h, natural.waterLevelAt(x,z))
 
-    private fun put(c: Chunk, x: Int, y: Int, z: Int, block: Short, onlyAir: Boolean = false) {
+    private fun put(c: Chunk, x: Int, y: Int, z: Int, block: Short, onlyAir: Boolean = false, meta: Byte = 0) {
         val lx = x - c.worldX; val ly = y - c.worldY; val lz = z - c.worldZ
-        if (lx in 0..15 && ly in 0..15 && lz in 0..15 && (!onlyAir || c.blockAt(lx, ly, lz) == AIR))
+        if (lx in 0..15 && ly in 0..15 && lz in 0..15 && (!onlyAir || c.blockAt(lx, ly, lz) == AIR)) {
             c.setBlock(lx, ly, lz, block)
+            c.setMeta(lx, ly, lz, meta)
+        }
     }
 
     fun decorate(c: Chunk, heights: IntArray, tops: ShortArray, biomes: IntArray) {
@@ -124,7 +126,8 @@ internal class CozyLandscape(private val seed: Long,
                         val ground = height((x + dx).toDouble(), (z + dz).toDouble()).toInt()
                         for (rootY in ground + 1..y) put(c, x + dx, rootY, z + dz, block, true)
                     }
-                    put(c, x + dx, y + dy, z + dz, block, onlyAir)
+                    put(c, x + dx, y + dy, z + dz, block, onlyAir,
+                        if (isLeaf(block)) TreeSpecies.leafMeta(treeType) else 0)
                 }
             }
     }

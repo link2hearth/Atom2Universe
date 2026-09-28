@@ -22,6 +22,8 @@ import com.Atom2Universe.app.games.caves.node.PlayerNode
 internal class CavePlayer(
     /** Collisions, gravité, nage : le corps du joueur dans le monde. */
     val physics: PhysicsNode,
+    /** Stable identity for delayed loot; remote players must reuse their saved identity. */
+    val id: String = java.util.UUID.randomUUID().toString(),
 ) : EnemyTarget {
     // Position dans le monde. Attention : y est la hauteur des yeux debout, pas celle des pieds.
     override var x = 0.0

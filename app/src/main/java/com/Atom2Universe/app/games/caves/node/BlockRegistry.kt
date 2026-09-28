@@ -111,6 +111,12 @@ internal object BlockRegistry {
             defs[def.id] = def
             decorationTable[def.id.toInt()] = true
         }
+        for (def in SaplingBlocks.definitions(requireNotNull(defs[7020.toShort()]))) {
+            require(def.id !in defs) { "Duplicate sapling ${def.id}" }
+            defs[def.id] = def
+            decorationTable[def.id.toInt()] = true
+            transparentTable[def.id.toInt()] = true
+        }
         for (def in FarmItems.definitions(requireNotNull(defs[FarmSoil.HOE]))) {
             require(def.id !in defs) { "Duplicate farm item ${def.id}" }
             defs[def.id] = def

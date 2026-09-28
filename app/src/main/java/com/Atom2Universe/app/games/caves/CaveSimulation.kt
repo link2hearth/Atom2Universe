@@ -31,6 +31,10 @@ import com.Atom2Universe.app.games.caves.node.EventBus
 import com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
 import com.Atom2Universe.app.games.caves.world.CaveWorldChunkStorage
 import com.Atom2Universe.app.games.caves.world.Farming
+import com.Atom2Universe.app.games.caves.world.Saplings
+import com.Atom2Universe.app.games.caves.world.TreeSpecies
+import com.Atom2Universe.app.games.caves.world.isLeaf
+import com.Atom2Universe.app.games.caves.world.isWood
 import com.Atom2Universe.app.games.caves.world.FrontierLife
 import com.Atom2Universe.app.games.caves.world.FrontierWorkshops
 import com.Atom2Universe.app.games.caves.world.MapSource
@@ -108,6 +112,23 @@ internal class CaveSimulation(
     /** Flèches, balles, cailloux et venin en vol, ou munitions plantées dans un mur. */
     val projectiles = ArrayList<Projectile>(64)
     val farming by lazy { Farming(world, { x, y, z -> blockChanged(x, y, z) }, ::ecologicalLight) }
+    val saplings by lazy {
+        Saplings(worldSeed, { x,y,z ->
+            world.getChunk(Math.floorDiv(x,16),Math.floorDiv(y,16),Math.floorDiv(z,16))
+                ?.takeIf { it.generated }?.blockAt(Math.floorMod(x,16),Math.floorMod(y,16),Math.floorMod(z,16))
+        }, world::metaAt, { x,y,z,id,meta ->
+            world.setBlock(x,y,z,id); world.setMeta(x,y,z,meta); blockChanged(x,y,z)
+        }, ::ecologicalLight, { "soil" in BlockRegistry.get(it)?.tags.orEmpty() })
+            .also { it.restore(savedState?.saplings.orEmpty()) }
+    }
+    init { world.onBlockReplaced = { x,y,z -> saplings.removed(x,y,z) } }
+
+    private fun leafLoot(who: CavePlayer, id: Short, meta: Byte) {
+        if (who.isCreative) return
+        who.collectBlock(id,meta)
+        TreeSpecies.drop(meta, Random.nextFloat())?.let { who.grant(listOf(it to 1)) }
+        inventoryChanged(who)
+    }
 
     // ── Heure du jour ─────────────────────────────────────────────────────────
 
@@ -138,14 +159,14 @@ internal class CaveSimulation(
      * Fait vivre les blocs et le temps pendant [dt] secondes (déjà plafonné) ; [rawDt] est
      * l'intervalle réel, qui sert à la ferme et aux ateliers. N'est jamais appelé en pause.
      *
-     * [leafDrop] reçoit les feuilles qui tombent d'un arbre coupé (null = elles disparaissent).
+     * Les feuilles décomposées donnent leur butin au joueur responsable encore à proximité.
      */
-    fun tickWorld(dt: Float, rawDt: Float, allowsWorldEdits: Boolean, timeFlows: Boolean,
-                  leafDrop: ((Short) -> Unit)?) {
+    fun tickWorld(dt: Float, rawDt: Float, allowsWorldEdits: Boolean, timeFlows: Boolean) {
         // Heure figée par le mode (Assaut : midi) ; sinon le jour et la nuit tournent.
         if (allowsWorldEdits && rawDt < 1f) {
             frontierLife.advance((rawDt * 1000f).toLong())
             farming.advance((rawDt * 1000f).toLong())
+            saplings.advance((rawDt * 1000f).toLong())
             workshops.sunUp = daylight() > .6f
             workshops.advance(rawDt)
             for (p in workshops.takeChanged()) blockChanged(p.x, p.y, p.z)
@@ -164,7 +185,12 @@ internal class CaveSimulation(
         if (leafTickAccum >= 0.25f) {
             leafTickAccum %= 0.25f
             if (allowsWorldEdits) {
-                world.tickLeaves { leafDrop?.invoke(it) }
+                saplings.resumeCuts()
+                world.tickLeaves(saplings::supportedLeaf) { x,y,z,id,meta ->
+                    val owner = saplings.decayOwner(x,y,z)
+                    players.firstOrNull { saplings.eligible(owner,x,y,z,it.id,it.x,it.y,it.z) }
+                        ?.let { leafLoot(it,id,meta) }
+                }
                 // 6 cases par chunk toutes les 0,25 s : une terre au bord d'une pelouse
                 // verdit en 2 à 3 minutes en moyenne.
                 world.tickGrass()
@@ -248,6 +274,8 @@ internal class CaveSimulation(
         for ((id, count) in contents)
             who.inventory[id] = ((who.inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         world.setBlock(x, y, z, AIR)
+        if (isWood(blockType)) saplings.cut(x,y,z,if (creative) "creative:${who.id}" else who.id)
+        if (isLeaf(blockType)) leafLoot(who,blockType,blockMeta)
         blockChanged(x, y, z)
         world.enqueueIfFalling(x, y + 1, z)
         when (blockType) {
@@ -257,7 +285,7 @@ internal class CaveSimulation(
             WARD_STONE -> { enemyManager.wardStoneZones.removeAll { (wx, wz) ->
                                 wx.toInt() == x && wz.toInt() == z }
                             if (!creative) who.collectBlock(blockType) }
-            else       -> { if (!creative) who.collectBlock(blockType, blockMeta) }
+            else       -> { if (!creative && !isLeaf(blockType)) who.collectBlock(blockType, blockMeta) }
         }
         clearUnsupportedAround(x, y, z, who)
         inventoryChanged(who)
@@ -274,6 +302,7 @@ internal class CaveSimulation(
         world.setBlock(x, y, z, placedType)
         workshops.placed(FrontierWorkshops.Pos(x, y, z), placedType)
         world.setMeta(x, y, z, meta)
+        saplings.planted(x,y,z,placedType)
         blockChanged(x, y, z)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(x.toDouble(), z.toDouble()))
         if (blockType == WATER) world.onWaterSourcePlaced(x, y, z)

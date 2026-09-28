@@ -86,6 +86,7 @@ internal class CaveRenderer(
         val inventory: Map<Short, Int>,
         val hotbar: List<Short?>,
         val farming: String = "{}",
+        val saplings: String = "",
         val workshops: String = "{}",
         val worldTimeMs: Long = 400_000L,
         val frontierLife: String = "{}",
@@ -143,7 +144,7 @@ internal class CaveRenderer(
         metaAt = { x, y, z -> world.metaAt(x, y, z) }
         waterContainsPoint = { x, y, z -> MeshBuilder.isPointInWater(world, x, y, z) }
         sampleWaterCurrent = { x, y, z, out -> WaterCurrent.sample(world, x, y, z, out) }
-    }).apply {
+    }, id = "local").apply {
         x = 8.0; y = 8.0; z = 8.0
         sim.players.add(this)
     }
@@ -469,6 +470,7 @@ internal class CaveRenderer(
     internal fun checkpointCommitted(changes: Map<String,CaveCheckpoint.Edit>) { storage?.acknowledge(changes) }
     internal fun chunkSnapshot() = storage?.snapshot().orEmpty()
     internal val farming get() = sim.farming
+    internal val saplings get() = sim.saplings
     internal fun itemMode(id: Short) = if (com.Atom2Universe.app.games.caves.node.FarmItems.isItem(id)) HotbarMode.GARDEN
         else if (isCombatItem(id)) HotbarMode.COMBAT else HotbarMode.BUILD
     // Context follows the selected item; there are no separate shortcut banks.
@@ -1951,8 +1953,7 @@ internal class CaveRenderer(
      */
     private fun stepGame(dt: Float, rawDt: Float) {
         // Le monde : blocs, eau, heure, ferme, ateliers.
-        sim.tickWorld(dt, rawDt, mode.allowsWorldEdits, timeFlows = mode.fixedTimeOfDayMs == null,
-            leafDrop = if (isCreative) null else ::collectBlock)
+        sim.tickWorld(dt, rawDt, mode.allowsWorldEdits, timeFlows = mode.fixedTimeOfDayMs == null)
 
         // Le joueur : armes, minage, projectiles.
         if (weaponAttackCooldown > 0f) weaponAttackCooldown = (weaponAttackCooldown - dt).coerceAtLeast(0f)

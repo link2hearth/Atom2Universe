@@ -366,7 +366,8 @@ internal object ShowcaseMap {
                         fill(ox + tx, 5, oz + tz, ox + tx, 9, oz + tz, wood.toShort())
                         for (dy in 0..2) for (dz in -2..2) for (dx in -2..2) {
                             if (abs(dx) + abs(dz) <= 3 - dy / 2)
-                                put(ox + tx + dx, 9 + dy, oz + tz + dz, leaves.toShort())
+                                put(ox + tx + dx, 9 + dy, oz + tz + dz, leaves.toShort(),
+                                    TreeSpecies.leafMeta(if (wood == WOOD_WHITE.toInt()) "birch" else "oak"))
                         }
                     }
                     put(ox + 8, 5, oz + 3, MOSSY_COBBLESTONE)
@@ -398,7 +399,7 @@ internal object ShowcaseMap {
             TreeShape.generate(type, kotlin.random.Random(8100 + index)) { dx, dy, dz, block, onlyAir ->
                 val x = tx + dx; val y = FLOOR + dy; val z = tz + dz
                 if (!onlyAir || blocks[x + WIDTH * (z + depth * y)] == AIR)
-                    put(x, y, z, block, if (isLeaf(block)) LeafSupport.PERSISTENT else 0)
+                    put(x, y, z, block, if (isLeaf(block)) TreeSpecies.leafMeta(type, persistent = true) else 0)
             }
         }
         for (kind in 0..7) {

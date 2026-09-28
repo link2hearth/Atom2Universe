@@ -160,7 +160,7 @@ internal class ColdLandscape(
                     put(2, y + h + 1, 0, WOOD_SAPIN, 0)
                     put(-1, y + 2, 0, WOOD_SAPIN, 1)
                     if (rng.nextBoolean()) for (z in -1..1) for (x in 1..3)
-                        put(x, y + h + 2, z, LEAVES_SAPIN, 0)
+                        put(x, y + h + 2, z, LEAVES_SAPIN, TreeSpecies.leafMeta("sapin"))
                 }
                 5 -> { stone(-2, -1, 1); stone(2, 1, 2); column(0, 3, 1, LICHEN_STONE) }
                 6 -> { // Deliberately incomplete ring with an entrance facing south.

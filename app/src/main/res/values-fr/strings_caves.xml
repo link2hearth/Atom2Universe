@@ -836,4 +836,24 @@
     <string name="cave_pad_down">↓</string>
     <string name="cave_pad_left">←</string>
     <string name="cave_pad_right">→</string>
+    <string name="cave_block_sapling_oak">Pousse de chêne</string>
+    <string name="cave_block_sapling_birch">Pousse de bouleau</string>
+    <string name="cave_block_sapling_sapin">Pousse de sapin</string>
+    <string name="cave_block_sapling_darkwood">Pousse de bois sombre</string>
+    <string name="cave_block_sapling_jungle">Pousse d\'arbre de la jungle</string>
+    <string name="cave_block_sapling_redwood">Pousse de séquoia</string>
+    <string name="cave_block_sapling_apple">Pousse de pommier</string>
+    <string name="cave_block_sapling_pear">Pousse de poirier</string>
+    <string name="cave_block_sapling_pink">Pousse de cerisier</string>
+    <string name="cave_block_sapling_purple">Pousse d\'arbre violet</string>
+    <string name="cave_block_sapling_blue">Pousse d\'arbre bleu</string>
+    <string name="cave_block_sapling_yellow">Pousse d\'arbre jaune</string>
+    <string name="cave_block_sapling_giant_redwood">Pousse de séquoia géant</string>
+    <string name="cave_block_sapling_giant_pine">Pousse de pin géant</string>
+    <string name="cave_block_sapling_broad_oak">Pousse de grand chêne</string>
+    <string name="cave_block_sapling_baobab">Pousse de baobab</string>
+    <string name="cave_block_sapling_acacia">Pousse d\'acacia</string>
+    <string name="cave_block_sapling_willow">Pousse de saule</string>
+    <string name="cave_block_sapling_jungle_small">Pousse de petit arbre de la jungle</string>
+    <string name="cave_block_sapling_autumn">Pousse d\'arbre d\'automne</string>
 </resources>

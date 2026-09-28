@@ -26,6 +26,7 @@ internal data class CaveWorldSave(
     var inventory: Map<Short, Int>,
     var hotbar: List<Short?>,
     var farming: String = "{}",
+    var saplings: String = "",
     var workshops: String = "{}",
     var worldTimeMs: Long = 400_000L,
     var frontierLife: String = "{}",
@@ -99,6 +100,7 @@ internal object CaveWorldSaveManager {
         existing.inventory           = snap.inventory
         existing.hotbar              = snap.hotbar
         existing.farming = snap.farming
+        existing.saplings = snap.saplings
         existing.workshops = snap.workshops
         existing.worldTimeMs = snap.worldTimeMs
         existing.frontierLife = snap.frontierLife
@@ -158,6 +160,7 @@ internal object CaveWorldSaveManager {
             put("hotbar", hotbarArr)
 
             put("farming", save.farming)
+            put("saplings", save.saplings)
             put("workshops", save.workshops)
             put("worldTimeMs", save.worldTimeMs)
             put("frontierLife", save.frontierLife)
@@ -270,6 +273,7 @@ internal object CaveWorldSaveManager {
             hotbar = CaveHotbar.restore(hotbar,buildHotbar,
                 j.optJSONArray("gardenHotbar")?.let { a -> (0 until a.length()).map { a.optInt(it,-1).takeIf { id -> id>=0 }?.toShort() } }.orEmpty(),if(j.optBoolean("isCreative",false)) null else inventory),
             farming = j.optString("farming", "{}"),
+            saplings = j.optString("saplings", ""),
             workshops = j.optString("workshops", "{}"),
             worldTimeMs = j.optLong("worldTimeMs", 400_000L).coerceAtLeast(0L),
             frontierLife = j.optString("frontierLife", "{}"),

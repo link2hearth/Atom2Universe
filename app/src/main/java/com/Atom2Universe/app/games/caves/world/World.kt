@@ -544,7 +544,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
     private var leafScanIndex = 0
 
     /** Bounded background sweep also resumes decay after saving/reloading or chunk streaming. */
-    fun tickLeaves(onDecay: (Short) -> Unit) {
+    internal fun tickLeaves(onSupported: (Int, Int, Int) -> Unit,
+                           onDecay: (Int, Int, Int, Short, Byte) -> Unit) {
         if (leafScanChunk >= leafScanChunks.size) {
             leafScanChunks = chunks.keys.toList()
             leafScanChunk = 0
@@ -565,13 +566,16 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             leafChecks.remove(p)
             val (x, y, z) = p
             val id = blockAt(x, y, z)
-            if (!isLeaf(id) || metaAt(x, y, z) == LeafSupport.PERSISTENT) return@repeat
-            if (!LeafSupport.supported(x, y, z) { a, b, c ->
+            val metadata = metaAt(x,y,z)
+            if (!isLeaf(id) || TreeSpecies.persistent(metadata)) return@repeat
+            val supported = LeafSupport.state(x, y, z) { a, b, c ->
                 getChunk(Math.floorDiv(a, 16), Math.floorDiv(b, 16), Math.floorDiv(c, 16))
                     ?.takeIf { it.generated }?.blockAt(Math.floorMod(a, 16), Math.floorMod(b, 16), Math.floorMod(c, 16))
-            }) {
+            }
+            if (supported == true) onSupported(x,y,z)
+            if (supported == false) {
+                onDecay(x,y,z,id,metadata)
                 setBlock(x, y, z, AIR)
-                onDecay(id)
             }
         }
     }
@@ -606,6 +610,8 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
         return false
     }
 
+    internal var onBlockReplaced: (Int, Int, Int) -> Unit = { _,_,_ -> }
+
     fun setBlock(wx: Int, wy: Int, wz: Int, type: Short) {
         val cx = Math.floorDiv(wx, CHUNK_SIZE)
         val cy = Math.floorDiv(wy, CHUNK_SIZE)
@@ -621,7 +627,10 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
                     leafChecks.add(Triple(wx + dx, wy + dy, wz + dz))
             }
         }
+        onBlockReplaced(wx,wy,wz)
         chunk.setBlock(lx, ly, lz, type)
+        // Leaf species/persistence must not leak into the replacement (or inherit an orientation).
+        if (isLeaf(old) || isLeaf(type)) setMeta(wx,wy,wz,0)
         if (old == WATER_FLOW) clearWaterFlowLevel(wx, wy, wz)
         if (type == WATER_FLOW) setWaterFlowLevel(wx, wy, wz, 1)
         chunk.version++

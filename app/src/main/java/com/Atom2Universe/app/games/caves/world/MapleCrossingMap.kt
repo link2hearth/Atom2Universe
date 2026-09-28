@@ -269,9 +269,13 @@ internal object MapleCrossingMap {
                 prop("outdoor.hedge",8f,40f,.13f)
                 // Native trees, never overwrite architecture or props with generated foliage.
                 for((i,p) in listOf(36 to 3,40 to 40).withIndex()) {
-                    GrandTrees.generate(if(i==0) "giant_pine" else "broad_oak",Random(9021+variant*7+i)) { x,y,z,id,_ ->
+                    val species = if(i==0) "giant_pine" else "broad_oak"
+                    GrandTrees.generate(species,Random(9021+variant*7+i)) { x,y,z,id,_ ->
                         val gx=wx(p.first+x); val gz=wz(p.second+z); val gy=FLOOR+y
-                        if(gx in 2 until SIZE-2 && gz in 2 until SIZE-2 && gy in 5 until HEIGHT && block(gx,gy,gz)==AIR) put(gx,gy,gz,id)
+                        if(gx in 2 until SIZE-2 && gz in 2 until SIZE-2 && gy in 5 until HEIGHT && block(gx,gy,gz)==AIR) {
+                            put(gx,gy,gz,id)
+                            if (isLeaf(id)) meta[index(gx,gy,gz)] = TreeSpecies.leafMeta(species)
+                        }
                     }
                 }
                 // Low side fence with a rear passage: the back garden remains a flank route.

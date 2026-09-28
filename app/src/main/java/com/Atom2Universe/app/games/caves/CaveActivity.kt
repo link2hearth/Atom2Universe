@@ -270,7 +270,7 @@ class CaveActivity : ThemedActivity() {
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
                 defeatedSiteBosses = save.defeatedSiteBosses,
-                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
+                farming = save.farming, saplings = save.saplings, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
                 x = save.playerX, y = save.playerY, z = save.playerZ,
@@ -289,7 +289,7 @@ class CaveActivity : ThemedActivity() {
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
                 defeatedSiteBosses = save.defeatedSiteBosses,
-                farming = save.farming, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
+                farming = save.farming, saplings = save.saplings, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             else -> null
         }
@@ -851,6 +851,7 @@ class CaveActivity : ThemedActivity() {
             inventory = renderer.inventory.toMap(),
             hotbar = renderer.hotbar.toList(),
             farming = renderer.farming.snapshot(),
+            saplings = renderer.saplings.snapshot(),
             workshops = renderer.workshops.snapshot(), worldTimeMs = renderer.worldTimeSnapshot,
             chunkChanges = renderer.chunkSnapshot(), frontierLife = renderer.frontierSnapshot(),
             isCreative          = isCreative,
