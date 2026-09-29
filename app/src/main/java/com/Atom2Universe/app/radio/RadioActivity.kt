@@ -545,6 +545,16 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
         currentResults = stations
         resultsAdapter.submitList(stations)
         resultsEmptyText.isVisible = stations.isEmpty()
+        // Une station en cours de lecture reste dans le lecteur: une recherche (vide, en erreur
+        // ou réinitialisée) ne doit pas la désélectionner, sinon plus moyen de l'arrêter.
+        val playing = RadioPlaybackHolder.getCurrentStation()
+        if (playing != null) {
+            if (selectedStation?.id != playing.id) {
+                selectedStation = playing
+                updatePlayerUi()
+            }
+            return
+        }
         if (stations.isNotEmpty()) {
             selectStation(stations.first(), autoplay = false)
         } else {
