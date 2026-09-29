@@ -2,7 +2,8 @@ package com.Atom2Universe.app.games.caves.mode
 
 import com.Atom2Universe.app.games.caves.CaveRenderer
 import com.Atom2Universe.app.games.caves.node.GameEvent
-import com.Atom2Universe.app.games.caves.world.WARD_STONE
+import com.Atom2Universe.app.games.caves.node.FrontierItems as F
+import com.Atom2Universe.app.games.caves.world.CoinEconomy
 import com.Atom2Universe.app.games.caves.node.MineralItems as M
 import com.Atom2Universe.app.games.caves.world.MineralProgression as P
 
@@ -56,10 +57,6 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
             if (event !is GameEvent.MobDied) return@subscribe
             val xpGain = if (event.isBoss) 5 * event.level else event.level
             r.playerStats.addXp(xpGain)
-            if (event.isBoss) {
-                r.inventory[WARD_STONE] = (r.inventory[WARD_STONE] ?: 0) + 1
-                r.inventoryCallback?.invoke(r.inventory.toMap())
-            }
         }
 
         // Exploration rewards feed the workshop: resources, never weapons.
@@ -72,8 +69,12 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
             }
             r.inventory[resource] = ((r.inventory[resource] ?: 0).toLong() + 1 + event.level.coerceAtMost(3))
                 .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            val stage = (event.level - 1).coerceIn(0, P.LAST_STAGE)
+            // Coins go straight into the bag, no item on the ground.
+            val coins = CoinEconomy.loot(stage, event.isBoss, kotlin.random.Random)
+            r.inventory[F.COIN] = ((r.inventory[F.COIN] ?: 0).toLong() + coins)
+                .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
             if (event.isBoss) {
-                val stage = (event.level - 1).coerceIn(0, P.LAST_STAGE)
                 val metal = M.id(stage, M.Form.RAW)
                 r.inventory[metal] = ((r.inventory[metal] ?: 0).toLong() + 8)
                     .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()

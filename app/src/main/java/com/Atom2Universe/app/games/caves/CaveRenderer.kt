@@ -2222,7 +2222,7 @@ internal class CaveRenderer(
         val pressed=down && !fireWasDown
         fireWasDown=down
         val held=hotbar[selectedSlot]
-        if(mode.usesSurvivalCombat) expeditionCombat.tick(dt,held)
+        if(mode.usesSurvivalCombat) { expeditionCombat.tick(dt,held);frontierLife.reached(MineralProgression.stage(camera.playerY)) }
         if(mode.allowsWorldEdits) fishing.tick(dt,held,down)
         if(held!=lastFireWeapon) {
             rockChargeTime=0f;weaponChargeTime=0f;lastFireWeapon=held
@@ -4425,16 +4425,16 @@ internal class CaveRenderer(
         notifyHotbar()
     }
 
-    internal data class TradeView(val key: String,val role: Int,val offers: List<FrontierLife.Offer>,val remaining: List<Int>,val items: Map<Short,Int>)
+    internal data class TradeView(val key: String,val role: Int,val offers: List<FrontierLife.Offer>,val items: Map<Short,Int>,val deepest: Int)
     internal fun tradeView(key: String): TradeView? {
         val r=residents.nearby(key,camera.playerX,camera.playerY,camera.playerZ) ?: return null
         val offers=frontierLife.offers(r.role)
-        return TradeView(key,r.role,offers,offers.indices.map { frontierLife.remaining(key,it,frontierLife.elapsedMs) },inventory.toMap())
+        return TradeView(key,r.role,offers,inventory.toMap(),frontierLife.deepest)
     }
     internal fun trade(key: String,index: Int): Boolean {
         if(worldSource!=null || !mode.allowsWorldEdits || !playerNode.isAlive) return false
         val r=residents.nearby(key,camera.playerX,camera.playerY,camera.playerZ) ?: return false
-        if(!frontierLife.trade(key,r.role,index,inventory,frontierLife.elapsedMs)) return false
+        if(!frontierLife.trade(r.role,index,inventory)) return false
         changedFrontierInventory();return true
     }
     internal fun changedFrontierInventory() {
@@ -4627,7 +4627,7 @@ internal class CaveRenderer(
             val heal = com.Atom2Universe.app.games.caves.node.FrontierItems.healing(held)
             if (heal > 0) {
                 if (playerNode.isAlive && playerNode.hp < playerNode.maxHp) {
-                    playerNode.applyHeal(expeditionCombat.healing(heal)); consumeFarmItem(held); startSwing()
+                    playerNode.applyHeal(heal); consumeFarmItem(held); startSwing()
                 }
                 return
             }

@@ -47,7 +47,7 @@ internal object ExpeditionItems {
     }
     fun isEquipment(id: Short) = ForgedEquipment.get(id)!=null || ForgedEquipment.template(id)!=null || id in melee || id in PADDED_ARMOR..SHIELD || MineralItems.isEquipment(id)
     fun isGardenItem(id: Short) = id in ROD..FISH_OIL
-    fun healing(id: Short) = when(id) { GRILLED_FISH -> 12; FISH_STEW -> 22; else -> 0 }
+    fun baseHealing(id: Short) = when(id) { GRILLED_FISH -> 12; FISH_STEW -> 22; else -> 0 }
 
     /** Forge furnace, one drawing per face: the fire door in front, masonry and the bellows' nozzle on
      * the sides, the chimney and its glowing grate on top, plain stone below. */

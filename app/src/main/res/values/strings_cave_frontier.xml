@@ -69,7 +69,7 @@
     <string name="cave_block_frontier_kiln">Metallurgical kiln</string>
     <string name="cave_block_frontier_vat">Cheese vat</string>
     <string name="cave_block_frontier_shears">Shears</string>
-    <string name="cave_block_frontier_token">Hamlet token</string>
+    <string name="cave_block_frontier_token">Coin</string>
     <string name="cave_block_frontier_wool">Wool</string>
     <string name="cave_block_frontier_milk">Milk bucket</string>
     <string name="cave_block_frontier_egg">Egg</string>
@@ -100,9 +100,8 @@
     <string name="cave_trade_farmer">Mara · Gardener</string>
     <string name="cave_trade_artisan">Orin · Artisan</string>
     <string name="cave_trade_keeper">Lume · Keeper</string>
-    <string name="cave_trade_hint">Local trade · 8 batches per offer, renewed every 10 minutes of play. A gathering bell also welcomes traders at your home.</string>
-    <string name="cave_trade_offer">%1$s × %2$d → %3$s × %4$d · %5$d batches</string>
-    <string name="cave_trade_failed">Trade unavailable: depleted stock, missing items or trader too far away.</string>
+    <string name="cave_trade_hint">A gathering bell welcomes traders at your home.</string>
+    <string name="cave_trade_offer">%1$s × %2$d → %3$s × %4$d</string>
     <string name="cave_animal_fed">Animal fed. Two nearby adults ready to breed can have a baby.</string>
     <string name="cave_animal_ready">Product collected. Feed this animal for its next production.</string>
     <string name="cave_animal_wait">This animal is growing, digesting or still preparing its product.</string>

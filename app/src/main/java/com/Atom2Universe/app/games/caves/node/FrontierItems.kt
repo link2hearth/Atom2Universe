@@ -3,6 +3,7 @@ package com.Atom2Universe.app.games.caves.node
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import com.Atom2Universe.app.games.caves.world.CoinEconomy
 
 /** Stable IDs below the dynamic weapon range. */
 internal object FrontierItems {
@@ -63,7 +64,8 @@ internal object FrontierItems {
     const val VAT: Short = 9844
     const val SHEARS: Short = 9846
     const val TROUGH: Short = 9847
-    const val TOKEN: Short = 9848
+    /** The currency. Mobs drop it, villagers take it for seeds (asset name stays `frontier_token`). */
+    const val COIN: Short = 9848
     const val WOOL: Short = 9850
     const val MILK: Short = 9851
     const val EGG: Short = 9852
@@ -84,12 +86,15 @@ internal object FrontierItems {
     const val MARKET_BELL: Short = 9872
 
     fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE || id==HOPPER || id==CRUCIBLE || id==CAST_MOLD
-    fun healing(id: Short): Int = when (id) {
+    /** Base healing of a dish, for a dish made without vegetables of any depth. */
+    private fun baseHealing(id: Short): Int = when (id) {
         BREAD -> 7; SALAD -> 6; STEW -> 14; BAKED_POTATO -> 6
         BERRY_TART -> 12; RATATOUILLE -> 16; TRAVEL_RATION -> 10
         CHEESE -> 9; OMELETTE -> 16; PANCAKE -> 18; CREAM_SOUP -> 24
-        else -> maxOf(ExpeditionItems.healing(id), KitchenItems.healing(id))
+        else -> maxOf(ExpeditionItems.baseHealing(id), KitchenItems.baseHealing(id))
     }
+    /** Fixed points restored by a dish: its base grown by the depth of its best vegetable, never a share of max health. */
+    fun healing(id: Short): Int = CoinEconomy.healing(id, baseHealing(id))
     fun isGardenItem(id: Short) = id in FLOUR..MORTAR || id in WOOL..CHEESE || id in OMELETTE..CREAM_SOUP || id == SHEARS || id == CHARM || KitchenItems.isItem(id)
 
     fun toolIndex(id: Short?): Int = when(id?.toInt()) {

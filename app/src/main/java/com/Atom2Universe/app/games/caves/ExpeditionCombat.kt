@@ -252,7 +252,6 @@ internal class ExpeditionCombat(private val r: CaveRenderer, private val context
         player.setMaxHp(maximum)
         observedHp=player.hp;observedMaxHp=maximum
     }
-    fun healing(amount: Int) = (amount.toLong()*r.playerNode.maxHp/50).coerceIn(1,Int.MAX_VALUE.toLong()).toInt()
     private fun message(id: Int) { r.farmMessageCallback?.invoke(context.getString(id)) }
     private fun announce() { r.farmMessageCallback?.invoke(context.getString(R.string.cave_equipment_changed,
         (reduction(P.stage(r.camera.playerY))*100).roundToInt(),context.getString(if(shield) R.string.cave_ui_ready else R.string.cave_ui_missing))) }

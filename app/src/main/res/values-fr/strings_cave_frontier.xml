@@ -69,7 +69,7 @@
     <string name="cave_block_frontier_kiln">Four de métallurgie</string>
     <string name="cave_block_frontier_vat">Cuve fromagère</string>
     <string name="cave_block_frontier_shears">Cisailles</string>
-    <string name="cave_block_frontier_token">Jeton de hameau</string>
+    <string name="cave_block_frontier_token">Pièce</string>
     <string name="cave_block_frontier_wool">Laine</string>
     <string name="cave_block_frontier_milk">Seau de lait</string>
     <string name="cave_block_frontier_egg">Œuf</string>
@@ -100,9 +100,8 @@
     <string name="cave_trade_farmer">Mara · Jardinière</string>
     <string name="cave_trade_artisan">Orin · Artisan</string>
     <string name="cave_trade_keeper">Lume · Veilleuse</string>
-    <string name="cave_trade_hint">Échanges locaux · 8 lots par offre, renouvelés toutes les 10 minutes de jeu. La cloche de rencontre accueille aussi des marchands chez vous.</string>
-    <string name="cave_trade_offer">%1$s × %2$d → %3$s × %4$d · %5$d lots</string>
-    <string name="cave_trade_failed">Échange impossible : stock épuisé, objets manquants ou marchand trop loin.</string>
+    <string name="cave_trade_hint">Une cloche de rencontre accueille des marchands chez vous.</string>
+    <string name="cave_trade_offer">%1$s × %2$d → %3$s × %4$d</string>
     <string name="cave_animal_fed">Animal nourri. Deux adultes proches et disponibles peuvent avoir un petit.</string>
     <string name="cave_animal_ready">Produit récolté. Nourrissez cet animal pour sa prochaine production.</string>
     <string name="cave_animal_wait">Cet animal grandit, digère ou prépare encore son produit.</string>

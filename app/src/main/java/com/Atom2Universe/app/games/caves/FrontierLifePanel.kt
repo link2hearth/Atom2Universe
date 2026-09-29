@@ -87,17 +87,17 @@ internal class FrontierLifePanel(private val a: CaveActivity) {
         if(!available()) return
         busy=false
         val body=content()
-        body.addView(TextView(a).apply { setText(R.string.cave_trade_hint) })
         val rows=content();body.addView(rows)
         fun render(view: CaveRenderer.TradeView) {
             rows.removeAllViews()
             view.offers.forEachIndexed { index,offer ->
+                if(offer.stage>view.deepest) return@forEachIndexed
                 rows.addView(Button(a).apply {
                     CaveUiStyle.button(this)
                     isAllCaps=false
                     text=a.getString(R.string.cave_trade_offer,a.blockName(offer.cost),offer.costCount,
-                        a.blockName(offer.result),offer.count,view.remaining[index])
-                    isEnabled=!busy && view.remaining[index]>0 && (view.items[offer.cost] ?: 0)>=offer.costCount
+                        a.blockName(offer.result),offer.count)
+                    isEnabled=!busy && (view.items[offer.cost] ?: 0)>=offer.costCount
                     setOnClickListener {
                         if(busy) return@setOnClickListener
                         val session=generation
@@ -108,7 +108,6 @@ internal class FrontierLifePanel(private val a: CaveActivity) {
                             a.runOnUiThread {
                                 if(!open || session!=generation) return@runOnUiThread
                                 busy=false
-                                if(!ok) Toast.makeText(a,R.string.cave_trade_failed,Toast.LENGTH_SHORT).show()
                                 if(open) {
                                     if(next==null) a.invManager.closeInventory() else render(next)
                                 }

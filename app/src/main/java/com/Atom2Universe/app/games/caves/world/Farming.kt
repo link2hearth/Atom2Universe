@@ -107,7 +107,8 @@ internal class Farming(private val world: World, private val rebuild: (Int, Int,
         }
         val mature = stage(plant) == 4
         if (!mature && !uproot) return emptyList()
-        if (mature && !uproot && FarmItems.regrows(plant.crop)) {
+        val regrown = mature && !uproot && FarmItems.regrows(plant.crop)
+        if (regrown) {
             plant.growthMs=FarmItems.durationMs(plant.crop)/2
             plant.checkedAt=clockMs
             world.setBlock(x,y,z,FarmShowcasePlants.id(plant.crop,2))
@@ -115,8 +116,10 @@ internal class Farming(private val world: World, private val rebuild: (Int, Int,
             plants.remove(p); cursor=null; world.setBlock(x,y,z,AIR)
         }
         rebuild(x,y,z)
-        return if (mature) listOf(FarmItems.produce(plant.crop) to 2, FarmItems.seed(plant.crop) to 1)
-            else listOf(FarmItems.seed(plant.crop) to 1)
+        // A planted seed always comes back once the plant is gone, ripe or not; a ripe plant adds 1 or 2 fruits.
+        // A crop that regrows stays planted, so it gives fruit only.
+        val produce = if (mature) listOf(FarmItems.produce(plant.crop) to (1 + kotlin.random.Random.nextInt(2))) else emptyList()
+        return if (regrown) produce else produce + (FarmItems.seed(plant.crop) to 1)
     }
 
     @Synchronized fun fertilize(x: Int,y: Int,z: Int): Boolean {

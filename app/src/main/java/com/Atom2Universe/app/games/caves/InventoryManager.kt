@@ -755,7 +755,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         type in E.RIVER_FISH..E.DEEP_FISH || type==E.FISH_OIL -> activity.getString(R.string.cave_fish_description)
                         type==E.FORGE || type==E.ANVIL || type in E.STEEL_PLATE..E.BLANK -> activity.getString(R.string.cave_forge_description)
                         type==F.CHARM || type==F.HEARTH -> activity.getString(R.string.cave_travel_hint)
-                        type==F.MARKET_BELL || type==F.TOKEN -> activity.getString(R.string.cave_trade_hint)
+                        type==F.MARKET_BELL -> activity.getString(R.string.cave_trade_hint)
                         type==F.SHEARS || type in F.WOOL..F.TRUFFLE -> activity.getString(R.string.cave_husbandry_hint)
                         type in F.PRESS..F.LOOM -> activity.getString(R.string.cave_machine_power)
                         type==F.KILN -> activity.getString(R.string.cave_machine_kiln)

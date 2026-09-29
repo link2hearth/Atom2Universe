@@ -118,73 +118,6 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         val key: String = "$machine/" + input.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" } +
             "/" + output.entries.sortedBy { it.key }.joinToString(";") { "${it.key}:${it.value}" }
     }
-    private val legacyRecipes=listOf(
-        Recipe(F.COOKER,mapOf(F.FLOUR to 3),mapOf(F.BREAD to 4),10),
-        Recipe(F.COOKER,mapOf(9705.toShort() to 3),mapOf(F.BAKED_POTATO to 4),10),
-        Recipe(F.MILL,mapOf(9700.toShort() to 1),mapOf(F.FLOUR to 3),6,true),
-        Recipe(F.CRUSHER,mapOf(3101.toShort() to 1),mapOf(F.IRON_DUST to 2),8,true),
-        Recipe(F.CRUSHER,mapOf(3104.toShort() to 1),mapOf(F.COPPER_DUST to 2),8,true),
-        // Cooking stove: every dish that needs a fire (1 fuel per batch).
-        Recipe(F.COOKER,mapOf(9705.toShort() to 2,9704.toShort() to 1,9706.toShort() to 1),mapOf(F.STEW to 3),12),
-        Recipe(F.COOKER,mapOf(9702.toShort() to 2,9709.toShort() to 1,9710.toShort() to 1,9706.toShort() to 1),mapOf(F.RATATOUILLE to 3),12),
-        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9707.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
-        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9716.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
-        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9717.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
-        // Forge furnace: all the metal, glass and fired clay. Its heat comes from fuel and bellows.
-        Recipe(E.FORGE,mapOf(LOG to 1),mapOf(CHARCOAL to 1),10,heat=0),
-        Recipe(E.FORGE,mapOf(3104.toShort() to 1),mapOf(3115.toShort() to 1),6,heat=1),
-        Recipe(E.FORGE,mapOf(F.COPPER_DUST to 1),mapOf(3115.toShort() to 1),4,heat=1),
-        Recipe(E.FORGE,mapOf(SAND to 1),mapOf(8003.toShort() to 1),4,heat=1),
-        Recipe(E.FORGE,mapOf(2300.toShort() to 1),mapOf(2000.toShort() to 1),4,heat=1),
-        Recipe(E.FORGE,mapOf(2304.toShort() to 1),mapOf(2308.toShort() to 1),5,heat=1),
-        Recipe(E.FORGE,mapOf(3118.toShort() to 4),mapOf(3119.toShort() to 4),8,heat=1),
-        Recipe(E.FORGE,mapOf(3101.toShort() to 1),mapOf(3114.toShort() to 1),8,heat=2),
-        Recipe(E.FORGE,mapOf(F.IRON_DUST to 1),mapOf(3114.toShort() to 1),5,heat=2),
-        Recipe(E.FORGE,mapOf(3103.toShort() to 1),mapOf(3116.toShort() to 1),6,heat=2),
-        Recipe(E.FORGE,mapOf(3102.toShort() to 1),mapOf(3117.toShort() to 1),6,heat=2),
-        Recipe(E.FORGE,mapOf(3114.toShort() to 2,CHARCOAL to 1),mapOf(F.STEEL to 1),15,heat=3),
-        // Crucible on a forge: every form of a metal melts into measures of it, at that metal's heat.
-        Recipe(F.CRUCIBLE,mapOf(3115.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
-        Recipe(F.CRUCIBLE,mapOf(F.COPPER_DUST to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
-        Recipe(F.CRUCIBLE,mapOf(3104.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),4,heat=1),
-        Recipe(F.CRUCIBLE,mapOf(3114.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(F.IRON_DUST to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(3101.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),4,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(3116.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),3,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(3103.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),4,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(3117.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),3,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(3102.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),4,heat=2),
-        Recipe(F.CRUCIBLE,mapOf(F.STEEL to 1),mapOf(F.MOLTEN_STEEL to 1),4,heat=3),
-        // Casting mould: ingots first (the automatic choice), then plates and the blank. The metal sets in
-        // the mould (its time is the cooling), so what comes out is already cold.
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(3115.toShort() to 1),6),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(3114.toShort() to 1),6),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(F.STEEL to 1),6),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_GOLD to 1),mapOf(3116.toShort() to 1),6),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_SILVER to 1),mapOf(3117.toShort() to 1),6),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(F.PLATE to 1),8),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(F.IRON_PLATE to 1),8),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(E.STEEL_PLATE to 1),8),
-        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 2),mapOf(E.BLANK to 1),10),
-        // Press: it shapes cast plates, never ingots.
-        Recipe(F.PRESS,mapOf(E.STEEL_PLATE to 1),mapOf(F.GEAR to 3),10,true),
-        Recipe(F.LOOM,mapOf(F.WOOL to 2),mapOf(F.CLOTH to 3),10,true),
-        Recipe(F.VAT,mapOf(F.MILK to 1),mapOf(F.CHEESE to 3,BUCKET_EMPTY to 1),30),
-        Recipe(F.COOKER,mapOf(F.EGG to 2,9706.toShort() to 1),mapOf(F.OMELETTE to 2),10),
-        Recipe(F.COOKER,mapOf(F.MILK to 1,F.FLOUR to 2,F.EGG to 1),mapOf(F.PANCAKE to 4,BUCKET_EMPTY to 1),12),
-        Recipe(F.COOKER,mapOf(F.MILK to 1,F.TRUFFLE to 1,9705.toShort() to 2),mapOf(F.CREAM_SOUP to 3,BUCKET_EMPTY to 1),15)
-    ) + listOf(
-        Recipe(F.PRESS,mapOf(F.IRON_PLATE to 1),mapOf(E.RIVETS to 8),6,true),
-        Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
-        Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
-        Recipe(F.PRESS,mapOf(E.RIVER_FISH to 2),mapOf(E.FISH_OIL to 1),8,true),
-        Recipe(F.COOKER,mapOf(E.CAVE_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
-        Recipe(F.COOKER,mapOf(E.CAVE_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
-        Recipe(F.PRESS,mapOf(E.CAVE_FISH to 2),mapOf(E.FISH_OIL to 1),8,true),
-        Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
-        Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
-        Recipe(F.PRESS,mapOf(E.DEEP_FISH to 2),mapOf(E.FISH_OIL to 1),8,true)
-    ) + FarmItems.crops.indices.map { Recipe(F.COMPOSTER,mapOf(FarmItems.produce(it) to 3),mapOf(F.COMPOST to 1),20) } + KitchenRecipes.workshops
     val recipes = legacyRecipes.filterNot(MineralRecipes::replacesWorkshop) + MineralRecipes.workshops
     @Synchronized fun select(p: Pos,index: Int): Boolean {
         if(!loaded(p) || !F.isContainer(block(p)) || index != -1 && recipes.getOrNull(index)?.machine!=block(p)) return false
@@ -344,12 +277,14 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
                     UndergroundSites.Kind.SLIME_CISTERN -> MOSSY_COBBLESTONE
                 }
                 s.items[relic] = (s.items[relic] ?: 0) + 2 + rng.nextInt(3)
+                // Coins and the odd seed: same seeded roll as the rest of the chest, so reopening never rerolls.
+                s.items[F.COIN] = CoinEconomy.chestCoins(site.stage, rng)
+                CoinEconomy.siteSeed(site.stage, rng)?.let { s.items[it] = 1 }
                 return@also
             }
             s.items[3110] = 4+rng.nextInt(8) // sticks
             s.items[3111] = 6+rng.nextInt(8) // fibres
             s.items[F.BREAD] = 2+rng.nextInt(3)
-            repeat(3) { val id=FarmItems.seed(rng.nextInt(FarmItems.crops.size)); s.items[id]=(s.items[id] ?: 0)+3 }
             s.items[if(rng.nextBoolean()) F.GEAR else 3114] = 1+rng.nextInt(3)
         } }
     }
@@ -810,5 +745,73 @@ internal class FrontierWorkshops(private val world: World, private val seed: Lon
         const val MAX_SAILS=256
         /** One force per sail, up to this. */
         const val MAX_SAIL_FORCE=32
+    /** Every fixed workshop recipe; kept here so the economy can trace a dish back to its vegetables. */
+    val legacyRecipes=listOf(
+        Recipe(F.COOKER,mapOf(F.FLOUR to 3),mapOf(F.BREAD to 4),10),
+        Recipe(F.COOKER,mapOf(9705.toShort() to 3),mapOf(F.BAKED_POTATO to 4),10),
+        Recipe(F.MILL,mapOf(9700.toShort() to 1),mapOf(F.FLOUR to 3),6,true),
+        Recipe(F.CRUSHER,mapOf(3101.toShort() to 1),mapOf(F.IRON_DUST to 2),8,true),
+        Recipe(F.CRUSHER,mapOf(3104.toShort() to 1),mapOf(F.COPPER_DUST to 2),8,true),
+        // Cooking stove: every dish that needs a fire (1 fuel per batch).
+        Recipe(F.COOKER,mapOf(9705.toShort() to 2,9704.toShort() to 1,9706.toShort() to 1),mapOf(F.STEW to 3),12),
+        Recipe(F.COOKER,mapOf(9702.toShort() to 2,9709.toShort() to 1,9710.toShort() to 1,9706.toShort() to 1),mapOf(F.RATATOUILLE to 3),12),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9707.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9716.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        Recipe(F.COOKER,mapOf(F.FLOUR to 2,9717.toShort() to 3),mapOf(F.BERRY_TART to 3),10),
+        // Forge furnace: all the metal, glass and fired clay. Its heat comes from fuel and bellows.
+        Recipe(E.FORGE,mapOf(LOG to 1),mapOf(CHARCOAL to 1),10,heat=0),
+        Recipe(E.FORGE,mapOf(3104.toShort() to 1),mapOf(3115.toShort() to 1),6,heat=1),
+        Recipe(E.FORGE,mapOf(F.COPPER_DUST to 1),mapOf(3115.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(SAND to 1),mapOf(8003.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(2300.toShort() to 1),mapOf(2000.toShort() to 1),4,heat=1),
+        Recipe(E.FORGE,mapOf(2304.toShort() to 1),mapOf(2308.toShort() to 1),5,heat=1),
+        Recipe(E.FORGE,mapOf(3118.toShort() to 4),mapOf(3119.toShort() to 4),8,heat=1),
+        Recipe(E.FORGE,mapOf(3101.toShort() to 1),mapOf(3114.toShort() to 1),8,heat=2),
+        Recipe(E.FORGE,mapOf(F.IRON_DUST to 1),mapOf(3114.toShort() to 1),5,heat=2),
+        Recipe(E.FORGE,mapOf(3103.toShort() to 1),mapOf(3116.toShort() to 1),6,heat=2),
+        Recipe(E.FORGE,mapOf(3102.toShort() to 1),mapOf(3117.toShort() to 1),6,heat=2),
+        Recipe(E.FORGE,mapOf(3114.toShort() to 2,CHARCOAL to 1),mapOf(F.STEEL to 1),15,heat=3),
+        // Crucible on a forge: every form of a metal melts into measures of it, at that metal's heat.
+        Recipe(F.CRUCIBLE,mapOf(3115.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(F.COPPER_DUST to 1),mapOf(F.MOLTEN_COPPER to 1),3,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(3104.toShort() to 1),mapOf(F.MOLTEN_COPPER to 1),4,heat=1),
+        Recipe(F.CRUCIBLE,mapOf(3114.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(F.IRON_DUST to 1),mapOf(F.MOLTEN_IRON to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3101.toShort() to 1),mapOf(F.MOLTEN_IRON to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3116.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3103.toShort() to 1),mapOf(F.MOLTEN_GOLD to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3117.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),3,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(3102.toShort() to 1),mapOf(F.MOLTEN_SILVER to 1),4,heat=2),
+        Recipe(F.CRUCIBLE,mapOf(F.STEEL to 1),mapOf(F.MOLTEN_STEEL to 1),4,heat=3),
+        // Casting mould: ingots first (the automatic choice), then plates and the blank. The metal sets in
+        // the mould (its time is the cooling), so what comes out is already cold.
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(3115.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(3114.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(F.STEEL to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_GOLD to 1),mapOf(3116.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_SILVER to 1),mapOf(3117.toShort() to 1),6),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_COPPER to 1),mapOf(F.PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 1),mapOf(F.IRON_PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_STEEL to 1),mapOf(E.STEEL_PLATE to 1),8),
+        Recipe(F.CAST_MOLD,mapOf(F.MOLTEN_IRON to 2),mapOf(E.BLANK to 1),10),
+        // Press: it shapes cast plates, never ingots.
+        Recipe(F.PRESS,mapOf(E.STEEL_PLATE to 1),mapOf(F.GEAR to 3),10,true),
+        Recipe(F.LOOM,mapOf(F.WOOL to 2),mapOf(F.CLOTH to 3),10,true),
+        Recipe(F.VAT,mapOf(F.MILK to 1),mapOf(F.CHEESE to 3,BUCKET_EMPTY to 1),30),
+        Recipe(F.COOKER,mapOf(F.EGG to 2,9706.toShort() to 1),mapOf(F.OMELETTE to 2),10),
+        Recipe(F.COOKER,mapOf(F.MILK to 1,F.FLOUR to 2,F.EGG to 1),mapOf(F.PANCAKE to 4,BUCKET_EMPTY to 1),12),
+        Recipe(F.COOKER,mapOf(F.MILK to 1,F.TRUFFLE to 1,9705.toShort() to 2),mapOf(F.CREAM_SOUP to 3,BUCKET_EMPTY to 1),15)
+    ) + listOf(
+        Recipe(F.PRESS,mapOf(F.IRON_PLATE to 1),mapOf(E.RIVETS to 8),6,true),
+        Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
+        Recipe(F.COOKER,mapOf(E.RIVER_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
+        Recipe(F.PRESS,mapOf(E.RIVER_FISH to 2),mapOf(E.FISH_OIL to 1),8,true),
+        Recipe(F.COOKER,mapOf(E.CAVE_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
+        Recipe(F.COOKER,mapOf(E.CAVE_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
+        Recipe(F.PRESS,mapOf(E.CAVE_FISH to 2),mapOf(E.FISH_OIL to 1),8,true),
+        Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1),mapOf(E.GRILLED_FISH to 1),8),
+        Recipe(F.COOKER,mapOf(E.DEEP_FISH to 1,9705.toShort() to 2,9706.toShort() to 1),mapOf(E.FISH_STEW to 2),12),
+        Recipe(F.PRESS,mapOf(E.DEEP_FISH to 2),mapOf(E.FISH_OIL to 1),8,true)
+    ) + FarmItems.crops.indices.map { Recipe(F.COMPOSTER,mapOf(FarmItems.produce(it) to 3),mapOf(F.COMPOST to 1),20) } + KitchenRecipes.workshops
     }
 }

@@ -13,9 +13,9 @@ import com.Atom2Universe.app.games.caves.node.CombatNode
 import com.Atom2Universe.app.games.caves.render.MobModels
 import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.world.AIR
+import com.Atom2Universe.app.games.caves.world.CoinEconomy
 import com.Atom2Universe.app.games.caves.world.BlockPlacement
 import com.Atom2Universe.app.games.caves.world.DoorModel
-import com.Atom2Universe.app.games.caves.world.RegionalBiomes
 import com.Atom2Universe.app.games.caves.world.WARD_STONE
 import com.Atom2Universe.app.games.caves.world.WATER
 import com.Atom2Universe.app.games.caves.world.WATER_FLOW
@@ -259,17 +259,8 @@ internal class CaveSimulation(
             return BreakResult.STORAGE_FULL
         val farmDrops = farming.harvest(x, y, z, uproot = true)
         if (!creative && farmDrops != null) who.grant(farmDrops)
-        if (!creative && BlockRegistry.get(blockType)?.harvestCategory == "plant" && Random.nextFloat() < .12f) {
-            val biome = world.naturalSurfaceBiomeAt(x.toDouble(), y.toDouble(), z.toDouble())
-                ?.let(RegionalBiomes::parent)
-            val crops = when (biome) {
-                "desert", "red_desert", "savanna" -> intArrayOf(1,9,14,18)
-                "taiga", "tundra" -> intArrayOf(4,5,15,17)
-                "jungle", "jungle_edge", "wetlands" -> intArrayOf(2,10,13,18)
-                "forest", "birch_forest", "dark_forest", "redwood_forest" -> intArrayOf(7,8,11,16,17)
-                else -> intArrayOf(0,2,3,6,8,12)
-            }
-            who.grant(listOf(FarmItems.seed(crops[Random.nextInt(crops.size)]) to 1))
+        if (!creative && BlockRegistry.get(blockType)?.harvestCategory == "plant") {
+            CoinEconomy.wildSeed(Random)?.let { who.grant(listOf(it to 1)) }
         }
         val contents = workshops.breakBlock(FrontierWorkshops.Pos(x, y, z))
         for ((id, count) in contents)

@@ -80,7 +80,7 @@ internal object KitchenItems {
     private val byId = foods.associateBy { it.id }
     fun isItem(id: Short) = id in byId
     fun isRawMeat(id: Short) = id in BEEF..MUTTON
-    fun healing(id: Short) = byId[id]?.heal ?: 0
+    fun baseHealing(id: Short) = byId[id]?.heal ?: 0
 
     fun definitions(template: BlockDef): List<BlockDef> = foods.map { food ->
         val texture = "kitchen:${food.name}"

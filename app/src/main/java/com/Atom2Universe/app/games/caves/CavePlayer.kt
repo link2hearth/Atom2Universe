@@ -72,10 +72,7 @@ internal class CavePlayer(
             collectBlock(upper)
             return
         }
-        if (blockType.toInt() in 7020..7023) {
-            grant(listOf(FarmItems.seed(0) to 1))
-            return
-        }
+        if (blockType.toInt() in 7020..7023) return // wild wheat: no free seed, seeds are bought
         // Une seule conversion : la pierre donne des pavés, qu'on ne recasse pas à leur tour.
         val (dropType, count) = BlockRegistry.harvestDrop(blockType) ?: return
         grant(listOf(dropType to count))
