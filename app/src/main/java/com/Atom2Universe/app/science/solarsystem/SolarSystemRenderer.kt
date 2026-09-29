@@ -112,6 +112,8 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     private val proj = FloatArray(16); private val view = FloatArray(16)
     private val pv = FloatArray(16); private val model = FloatArray(16)
     private val mvp = FloatArray(16); private val tmp = FloatArray(16)
+    private val rotView = FloatArray(16); private val starProj = FloatArray(16)
+    private val sunPos = floatArrayOf(0f, 0f, 0f)
 
     // ── Camera (mutable from UI thread via GL thread access) ──────
     @Volatile var cameraYaw = 30f
@@ -177,9 +179,10 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        val nowMs = System.currentTimeMillis()
+        // Horloge monotone : currentTimeMillis saute quand l'heure système change.
+        val nowMs = android.os.SystemClock.uptimeMillis()
         if (lastFrameMs < 0) lastFrameMs = nowMs
-        val dtRealMs = (nowMs - lastFrameMs).coerceAtMost(100)
+        val dtRealMs = (nowMs - lastFrameMs).coerceIn(0L, 100L)
         lastFrameMs = nowMs
 
         if (!paused) elapsedSimDays += dtRealMs / 1000.0 * speedDaysPerSec
@@ -245,7 +248,6 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
     // Rendu de toutes les planètes
     private fun renderPlanets() {
         val blend = currentModeBlend
-        val sunPos = floatArrayOf(0f, 0f, 0f)
 
         SolarSystemData.planets.forEach { planet ->
             val orbitR = OrbitalCalculator.getOrbitRadius(planet, blend)
@@ -260,9 +262,10 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
             // Sphère planète — axe orienté dans le repère écliptique :
             // azimut (longitude du pôle) puis obliquité, puis rotation propre autour de l'axe.
+            // 90° + longitude : avec Z = −y écliptique, le pôle pointe bien vers cette longitude.
             Matrix.setIdentityM(model, 0)
             Matrix.translateM(model, 0, wx, wy, wz)
-            Matrix.rotateM(model, 0, 90f - planet.axisEclLonDeg, 0f, 1f, 0f)
+            Matrix.rotateM(model, 0, 90f + planet.axisEclLonDeg, 0f, 1f, 0f)
             Matrix.rotateM(model, 0, planet.axisObliquityEclDeg, 1f, 0f, 0f)
             Matrix.rotateM(model, 0, selfRot, 0f, 1f, 0f)
             Matrix.scaleM(model, 0, planetR, planetR, planetR)
@@ -290,7 +293,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
         Matrix.setIdentityM(model, 0)
         Matrix.translateM(model, 0, cx, cy, cz)
-        Matrix.rotateM(model, 0, 90f - planet.axisEclLonDeg, 0f, 1f, 0f)
+        Matrix.rotateM(model, 0, 90f + planet.axisEclLonDeg, 0f, 1f, 0f)
         Matrix.rotateM(model, 0, planet.axisObliquityEclDeg, 1f, 0f, 0f)
         Matrix.scaleM(model, 0, planetR, planetR, planetR)
         Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
@@ -326,11 +329,11 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
             val r = OrbitalCalculator.getOrbitRadius(planet, blend)
             // Inclinaison du plan orbital : rotation autour de l'axe du nœud ascendant
             val omegaRad = Math.toRadians(planet.ascendingNodeDeg.toDouble()).toFloat()
-            val nodeAxisX = cos(omegaRad); val nodeAxisZ = sin(omegaRad)
+            // Direction du nœud ascendant dans la scène (Z = −y écliptique) ; une rotation de +i
+            // autour d'elle soulève la demi-orbite qui suit le nœud, comme orbitPosition3D.
+            val nodeAxisX = cos(omegaRad); val nodeAxisZ = -sin(omegaRad)
             Matrix.setIdentityM(model, 0)
-            // Signe négatif : la rotation Rodrigues autour du nœud donne Y = -r·sin(u)·sin(i),
-            // mais la formule orbitale 3D donne Y = +r·sin(u)·sin(i). On inverse pour coïncider.
-            Matrix.rotateM(model, 0, -planet.orbitalInclinationDeg, nodeAxisX, 0f, nodeAxisZ)
+            Matrix.rotateM(model, 0, planet.orbitalInclinationDeg, nodeAxisX, 0f, nodeAxisZ)
             Matrix.scaleM(model, 0, r, 1f, r)
             Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
             GLES20.glUniformMatrix4fv(lMVP, 1, false, mvp, 0)
@@ -341,11 +344,15 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     private fun renderStars() {
         // Vue rotation seulement (pas de translation → étoiles à l'infini)
-        val rotView = FloatArray(16)
         System.arraycopy(view, 0, rotView, 0, 16)
         rotView[12] = 0f; rotView[13] = 0f; rotView[14] = 0f; rotView[15] = 1f
-        Matrix.multiplyMM(tmp, 0, proj, 0, rotView, 0)
+        // Projection propre aux étoiles (sphère de rayon 500) : celle de la scène a un plan
+        // lointain qui descend à 200 quand on zoome près d'une planète, et les étoiles
+        // disparaissaient. Elles n'écrivent pas de profondeur, la scène se dessine par-dessus.
+        Matrix.perspectiveM(starProj, 0, 45f, screenAspect, 1f, 1000f)
+        Matrix.multiplyMM(tmp, 0, starProj, 0, rotView, 0)
 
+        GLES20.glDepthMask(false)
         GLES20.glUseProgram(starProg)
         GLES20.glUniformMatrix4fv(stMVP, 1, false, tmp, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, starsVBO)
@@ -353,6 +360,7 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glVertexAttribPointer(stPos, 3, GLES20.GL_FLOAT, false, 12, 0)
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, STAR_COUNT)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        GLES20.glDepthMask(true)
     }
 
     // ── Utilitaires sphère ────────────────────────────────────────
@@ -395,7 +403,9 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         val clip = FloatArray(4)
         val world = floatArrayOf(wx, wy, wz, 1f)
         Matrix.multiplyMV(clip, 0, pv, 0, world, 0)
-        if (abs(clip[3]) < 1e-6f) return floatArrayOf(-1f, -1f)
+        // Point derrière la caméra (w ≤ 0) : sa projection serait inversée et pourrait tomber
+        // sous le doigt ; (-1, -1) restait aussi à un pixel de l'écran.
+        if (clip[3] <= 1e-6f) return floatArrayOf(-1e6f, -1e6f)
         val ndcX = clip[0] / clip[3]
         val ndcY = clip[1] / clip[3]
         return floatArrayOf(
@@ -565,7 +575,8 @@ class SolarSystemRenderer(private val context: Context) : GLSurfaceView.Renderer
         try {
             context.assets.open(asset).use { stream ->
                 val opts = BitmapFactory.Options().apply { inScaled = false }
-                val bmp = BitmapFactory.decodeStream(stream, null, opts)!!
+                val bmp = BitmapFactory.decodeStream(stream, null, opts)
+                    ?: throw IOException("image illisible : $asset")
                 GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
                 GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
                 bmp.recycle()

@@ -94,17 +94,17 @@ object LunarCalculator {
 
     /**
      * Position 3D de la Lune relative à la Terre, en unités de scène.
-     * Plan écliptique = XZ, Y = nord écliptique (cohérent avec SolarSystemRenderer).
+     * Même repère que le système solaire ([OrbitalCalculator.eclipticToScene]).
      */
     fun position3D(pos: LunarPosition, kmPerUnit: Double): FloatArray {
         val r    = pos.distanceKm / kmPerUnit
         val lRad = Math.toRadians(pos.longitude)
         val bRad = Math.toRadians(pos.latitude)
         val cosB = cos(bRad)
-        return floatArrayOf(
-            (r * cosB * cos(lRad)).toFloat(),
-            (r * sin(bRad)).toFloat(),
-            (r * cosB * sin(lRad)).toFloat()
+        return OrbitalCalculator.eclipticToScene(
+            r * cosB * cos(lRad),
+            r * cosB * sin(lRad),
+            r * sin(bRad)
         )
     }
 }

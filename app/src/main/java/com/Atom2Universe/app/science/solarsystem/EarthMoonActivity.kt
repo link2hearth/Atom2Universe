@@ -48,7 +48,13 @@ class EarthMoonActivity : ThemedActivity() {
     private val dateHandler = Handler(Looper.getMainLooper())
     private val dateFmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
     private val dateUpdater = object : Runnable {
-        override fun run() { updateDateLabel(); dateHandler.postDelayed(this, 500) }
+        override fun run() {
+            updateDateLabel()
+            // Distance et phase de la Lune changent avec le temps : la carte restait figée
+            // sur les valeurs du moment où on l'avait ouverte.
+            if (cardInfo.visibility == View.VISIBLE && selectedBody == 1) showBodyCard(1)
+            dateHandler.postDelayed(this, 500)
+        }
     }
 
     private var selectedBody = 0  // 0=Terre, 1=Lune
@@ -73,6 +79,12 @@ class EarthMoonActivity : ThemedActivity() {
         super.onPause(); glView.onPause(); dateHandler.removeCallbacks(dateUpdater)
     }
 
+    /** Rend la date courante au système solaire, quel que soit le chemin de sortie. */
+    override fun finish() {
+        setResult(RESULT_OK, android.content.Intent().putExtra(EXTRA_ELAPSED_DAYS, glView.renderer.elapsedSimDays))
+        super.finish()
+    }
+
     // ─────────────────────────────────────────────────────────────
     private fun buildUI() {
         val root = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
@@ -88,11 +100,13 @@ class EarthMoonActivity : ThemedActivity() {
         }
         val btnBack = ImageButton(this).apply {
             setImageResource(R.drawable.ic_arrow_back); setColorFilter(Color.WHITE); background = null
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         tvDate = TextView(this).apply {
             textSize = 13f; setTextColor(0xFFDDEEFF.toInt()); gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0x33FFFFFF)
+            contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
         // Bouton bascule vers la vue Système solaire — icône du mode courant (Terre-Lune)
@@ -101,11 +115,13 @@ class EarthMoonActivity : ThemedActivity() {
             scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
             background = null
             setPadding(dp(3), dp(3), dp(3), dp(3))
+            contentDescription = getString(R.string.solar_open_solar_system)
             setOnClickListener { finish() }
         }
         btnBodySelector = TextView(this).apply {
             textSize = 12f; setTextColor(0xFFFFDD88.toInt()); gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0x33FFFFFF)
+            contentDescription = getString(R.string.solar_choose_body)
             setOnClickListener { showBodyDropdown() }
         }
         topBar.addView(btnBack, LinearLayout.LayoutParams(dp(40), dp(40)))
@@ -138,6 +154,7 @@ class EarthMoonActivity : ThemedActivity() {
         }
         val btnCloseCard = ImageButton(this).apply {
             setImageResource(R.drawable.ic_close); setColorFilter(0xFFAAAAAA.toInt()); background = null
+            contentDescription = getString(R.string.solar_close_card)
             setOnClickListener { cardInfo.visibility = View.GONE }
         }
         cardHeader.addView(tvBodyName)
@@ -186,6 +203,7 @@ class EarthMoonActivity : ThemedActivity() {
         }
         btnPlayPause = ImageButton(this).apply {
             setImageResource(android.R.drawable.ic_media_pause); setColorFilter(Color.WHITE); background = null
+            contentDescription = getString(R.string.solar_play_pause)
         }
         tvSpeed = TextView(this).apply {
             textSize = 11f; setTextColor(0xFFCCCCCC.toInt()); gravity = Gravity.END
@@ -195,6 +213,7 @@ class EarthMoonActivity : ThemedActivity() {
             stepCount = SolarSystemActivity.SPEED_STEPS.size
             centerStep = SolarSystemActivity.PAUSE_STEP
             setStep(SolarSystemActivity.DEFAULT_STEP)
+            contentDescription = getString(R.string.solar_speed_slider)
         }
         speedRow.addView(btnPlayPause, LinearLayout.LayoutParams(dp(40), dp(40)))
         speedRow.addView(speedSlider, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -208,7 +227,7 @@ class EarthMoonActivity : ThemedActivity() {
         setContentView(root)
         updateModeButtons()
         glView.renderer.speedDaysPerSec = SolarSystemActivity.SPEED_STEPS[SolarSystemActivity.DEFAULT_STEP]
-        tvSpeed.text = SolarSystemActivity.STEP_LABELS[SolarSystemActivity.DEFAULT_STEP]
+        tvSpeed.text = SolarSystemActivity.stepLabel(this, SolarSystemActivity.DEFAULT_STEP)
         updateBodySelector()
     }
 
@@ -242,12 +261,12 @@ class EarthMoonActivity : ThemedActivity() {
     }
 
     private fun updateDateLabel() {
-        val date = J2000.plusDays(glView.renderer.elapsedSimDays.toLong())
+        val date = SolarSystemActivity.simDate(J2000, glView.renderer.elapsedSimDays)
         tvDate.text = date.format(dateFmt)
     }
 
     private fun updateBodySelector() {
-        btnBodySelector.text = if (selectedBody == 1) "Lune ▾" else "Terre ▾"
+        btnBodySelector.text = getString(R.string.solar_body_selector, bodyName(selectedBody))
     }
 
     private fun applyStep(p: Int) {
@@ -257,11 +276,11 @@ class EarthMoonActivity : ThemedActivity() {
         btnPlayPause.setImageResource(
             if (speed == 0.0) android.R.drawable.ic_media_play
             else android.R.drawable.ic_media_pause)
-        tvSpeed.text = SolarSystemActivity.STEP_LABELS[p]
+        tvSpeed.text = SolarSystemActivity.stepLabel(this, p)
     }
 
     private fun showDatePicker() {
-        val cur = J2000.plusDays(glView.renderer.elapsedSimDays.toLong())
+        val cur = SolarSystemActivity.simDate(J2000, glView.renderer.elapsedSimDays)
         DatePickerDialog(this, { _, y, m, d ->
             glView.renderer.elapsedSimDays = ChronoUnit.DAYS.between(J2000, LocalDate.of(y, m + 1, d)).toDouble()
         }, cur.year, cur.monthValue - 1, cur.dayOfMonth).show()
@@ -269,8 +288,8 @@ class EarthMoonActivity : ThemedActivity() {
 
     private fun showBodyDropdown() {
         val popup = PopupMenu(this, btnBodySelector)
-        popup.menu.add(0, 0, 0, "Terre")
-        popup.menu.add(0, 1, 1, "Lune")
+        popup.menu.add(0, 0, 0, bodyName(0))
+        popup.menu.add(0, 1, 1, bodyName(1))
         popup.setOnMenuItemClickListener { item -> focusOnBody(item.itemId); true }
         popup.show()
     }
@@ -286,18 +305,18 @@ class EarthMoonActivity : ThemedActivity() {
     private fun showBodyCard(idx: Int) {
         selectedBody = idx
         val lunarPos = LunarCalculator.position(glView.renderer.elapsedSimDays)
+        tvBodyName.text = bodyName(idx)
         if (idx == 0) {
-            tvBodyName.text = "Terre"
-            setRow(0, "Rayon", "6 371 km")
-            setRow(1, "Inclinaison axiale", "23,44°")
-            setRow(2, "Rotation", "24 h")
-            setRow(3, "Satellite(s)", "1")
+            setRow(0, getString(R.string.solar_info_radius_label), getString(R.string.solar_info_km, 6_371.0))
+            setRow(1, getString(R.string.solar_info_tilt), getString(R.string.solar_info_degrees, 23.44))
+            // Rotation sidérale (23 h 56 min), comme pour les planètes ; 24 h est le jour solaire.
+            setRow(2, getString(R.string.solar_info_rotation), getString(R.string.solar_info_rotation_hm, 23, 56))
+            setRow(3, getString(R.string.solar_info_satellites), "1")
         } else {
-            tvBodyName.text = "Lune"
-            setRow(0, "Distance", "%,.0f km".format(lunarPos.distanceKm))
-            setRow(1, "Phase", moonPhaseName(lunarPos))
-            setRow(2, "Rayon", "1 737 km")
-            setRow(3, "Période synodique", "29,53 j")
+            setRow(0, getString(R.string.solar_info_distance), getString(R.string.solar_info_km, lunarPos.distanceKm))
+            setRow(1, getString(R.string.solar_info_phase), moonPhaseName(lunarPos))
+            setRow(2, getString(R.string.solar_info_radius_label), getString(R.string.solar_info_km, 1_737.0))
+            setRow(3, getString(R.string.solar_info_synodic), getString(R.string.solar_info_days_precise, 29.53))
         }
         cardInfo.visibility = View.VISIBLE
         updateBodySelector()
@@ -312,19 +331,22 @@ class EarthMoonActivity : ThemedActivity() {
             glView.renderer.elapsedSimDays).toDouble()
         val sunLong = (earthLong + 180.0) % 360.0
         val elong = ((pos.longitude - sunLong + 360.0) % 360.0).roundToInt()
-        val name = when {
-            elong < 22  -> "Nouvelle Lune"
-            elong < 68  -> "Premier croissant"
-            elong < 112 -> "Premier quartier"
-            elong < 158 -> "Gibbeuse croissante"
-            elong < 202 -> "Pleine Lune"
-            elong < 248 -> "Gibbeuse décroissante"
-            elong < 292 -> "Dernier quartier"
-            elong < 338 -> "Dernier croissant"
-            else        -> "Nouvelle Lune"
-        }
-        return "$name (${elong}°)"
+        val name = getString(when {
+            elong < 22  -> R.string.solar_phase_new
+            elong < 68  -> R.string.solar_phase_waxing_crescent
+            elong < 112 -> R.string.solar_phase_first_quarter
+            elong < 158 -> R.string.solar_phase_waxing_gibbous
+            elong < 202 -> R.string.solar_phase_full
+            elong < 248 -> R.string.solar_phase_waning_gibbous
+            elong < 292 -> R.string.solar_phase_last_quarter
+            elong < 338 -> R.string.solar_phase_waning_crescent
+            else        -> R.string.solar_phase_new
+        })
+        return getString(R.string.solar_phase_value, name, elong)
     }
+
+    private fun bodyName(idx: Int): String =
+        getString(if (idx == 1) R.string.solar_moon_name else R.string.solar_planet_earth)
 
     private fun modeBtn(text: String) = TextView(this).apply {
         this.text = text; textSize = 13f; setTextColor(Color.WHITE); gravity = Gravity.CENTER

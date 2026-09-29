@@ -114,6 +114,8 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private val proj = FloatArray(16); private val view = FloatArray(16)
     private val pv = FloatArray(16); private val model = FloatArray(16)
     private val mvp = FloatArray(16); private val tmp = FloatArray(16)
+    private val rotView = FloatArray(16); private val starProj = FloatArray(16)
+    private val sunPos = FloatArray(3)
 
     // Camera
     @Volatile var cameraYaw = 30f
@@ -194,10 +196,8 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         // Direction du Soleil (Terre héliocentrique → Soleil = direction opposée)
         val earthLong = OrbitalCalculator.orbitAngleDeg(SolarSystemData.planets[2], elapsedSimDays)
         val sunLongRad = Math.toRadians(((earthLong + 180.0) % 360.0))
-        val sunPos = floatArrayOf(
-            (1000f * cos(sunLongRad)).toFloat(), 0f,
-            (1000f * sin(sunLongRad)).toFloat()
-        )
+        val sunDir = OrbitalCalculator.eclipticToScene(1000.0 * cos(sunLongRad), 1000.0 * sin(sunLongRad), 0.0)
+        System.arraycopy(sunDir, 0, sunPos, 0, 3)
 
         // Suivi focus
         val targetFX = if (focusBody == 1) moonXyz[0] else 0f
@@ -226,13 +226,16 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     // ─────────────────────────────────────────────────────────────
     private fun renderEarth(sunPos: FloatArray) {
         val r = getEarthR(currentBlend)
-        // Auto-rotation Terre : ~1 tr/jour sidéral (0.9973 j)
-        val rot = ((elapsedSimDays / 0.9973) * 360.0).mod(360.0).toFloat()
+        // Rotation propre calée sur le temps sidéral : le méridien de Greenwich (centre de la
+        // texture, −X local) fait face au Soleil vers midi UTC. L'ancienne phase, arbitraire,
+        // montrait le jour et la nuit aux mauvais endroits pour la date affichée.
+        val rot = (OrbitalCalculator.greenwichSiderealDeg(elapsedSimDays) - 180.0).toFloat()
 
         Matrix.setIdentityM(model, 0)
-        // Axe terrestre fixe dans l'espace : projeté vers la longitude écliptique 90°
-        // (= direction du Soleil au solstice de juin), donc pôle nord incliné vers +Z.
-        Matrix.rotateM(model, 0, 23.44f, 1f, 0f, 0f)   // inclinaison axiale (vers +Z)
+        // Axe terrestre fixe dans l'espace, penché vers la longitude écliptique 90°
+        // (direction du Soleil au solstice de juin), soit −Z dans la scène. L'axe X reste
+        // la ligne des équinoxes, ce qui garde le temps sidéral juste.
+        Matrix.rotateM(model, 0, -23.44f, 1f, 0f, 0f)  // inclinaison axiale (vers −Z)
         Matrix.rotateM(model, 0, rot, 0f, 1f, 0f)       // rotation propre
         Matrix.scaleM(model, 0, r, r, r)
         Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
@@ -250,8 +253,10 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     private fun renderMoon(xyz: FloatArray, lunarLongDeg: Double, sunPos: FloatArray) {
         val r = getMoonR(currentBlend)
-        // Verrou de marée : face avant toujours vers la Terre (= origine)
-        val moonFaceRot = (lunarLongDeg + 180.0).mod(360.0).toFloat()
+        // Verrou de marée : face visible (centre de la texture, −X local) vers la Terre.
+        // Une rotation de la longitude l l'oriente vers −position ; l'ancien l + 180° la
+        // tournait de travers.
+        val moonFaceRot = lunarLongDeg.mod(360.0).toFloat()
 
         Matrix.setIdentityM(model, 0)
         Matrix.translateM(model, 0, xyz[0], xyz[1], xyz[2])
@@ -306,11 +311,11 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private fun renderMoonOrbit(lunarPos: LunarCalculator.LunarPosition) {
         // Rayon moyen = 10 unités, orbite inclinée de MOON_INCL_DEG autour du nœud ascendant
         val omegaRad = Math.toRadians(lunarPos.ascendingNodeDeg).toFloat()
-        val nodeX = cos(omegaRad); val nodeZ = sin(omegaRad)
+        // Même convention que les orbites planétaires (nœud en Z = −y écliptique, rotation +i)
+        val nodeX = cos(omegaRad); val nodeZ = -sin(omegaRad)
 
         Matrix.setIdentityM(model, 0)
-        // Même convention signe que pour les planètes (Rodrigues inversé)
-        Matrix.rotateM(model, 0, -MOON_INCL_DEG, nodeX, 0f, nodeZ)
+        Matrix.rotateM(model, 0, MOON_INCL_DEG, nodeX, 0f, nodeZ)
         val orbitR = MOON_ORBIT_REAL_U * moonOrbitScale(currentBlend)
         Matrix.scaleM(model, 0, orbitR, 1f, orbitR)
         Matrix.multiplyMM(mvp, 0, pv, 0, model, 0)
@@ -326,10 +331,14 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     }
 
     private fun renderStars() {
-        val rotView = view.copyOf()
+        System.arraycopy(view, 0, rotView, 0, 16)
         rotView[12] = 0f; rotView[13] = 0f; rotView[14] = 0f; rotView[15] = 1f
-        Matrix.multiplyMM(tmp, 0, proj, 0, rotView, 0)
+        // Projection propre aux étoiles : le plan lointain de la scène descend à 50 en zoom
+        // rapproché, en deçà de la sphère d'étoiles, qui disparaissait.
+        Matrix.perspectiveM(starProj, 0, 45f, screenAspect, 1f, 1000f)
+        Matrix.multiplyMM(tmp, 0, starProj, 0, rotView, 0)
 
+        GLES20.glDepthMask(false)
         GLES20.glUseProgram(starProg)
         GLES20.glUniformMatrix4fv(stMVP, 1, false, tmp, 0)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, starsVBO)
@@ -337,6 +346,7 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(stPos, 3, GLES20.GL_FLOAT, false, 12, 0)
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, STAR_COUNT)
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0)
+        GLES20.glDepthMask(true)
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -368,7 +378,9 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
     fun projectToScreen(wx: Float, wy: Float, wz: Float): FloatArray {
         val clip = FloatArray(4)
         Matrix.multiplyMV(clip, 0, pv, 0, floatArrayOf(wx, wy, wz, 1f), 0)
-        if (abs(clip[3]) < 1e-6f) return floatArrayOf(-1f, -1f)
+        // Point derrière la caméra (w ≤ 0) : sa projection serait inversée et pourrait tomber
+        // sous le doigt ; (-1, -1) restait aussi à un pixel de l'écran.
+        if (clip[3] <= 1e-6f) return floatArrayOf(-1e6f, -1e6f)
         val ndcX = clip[0] / clip[3]; val ndcY = clip[1] / clip[3]
         return floatArrayOf(
             (ndcX + 1f) / 2f * screenW,
@@ -515,7 +527,9 @@ class EarthMoonRenderer(private val context: Context) : GLSurfaceView.Renderer {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE)
         try {
             context.assets.open(asset).use { s ->
-                val bmp = BitmapFactory.decodeStream(s, null, BitmapFactory.Options().apply { inScaled = false })!!
+                // Une image illisible retombe sur la couleur de repli au lieu de planter (NPE).
+                val bmp = BitmapFactory.decodeStream(s, null, BitmapFactory.Options().apply { inScaled = false })
+                    ?: throw IOException("image illisible : $asset")
                 GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
                 GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
                 bmp.recycle()

@@ -28,6 +28,9 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
         }
     )
 
+    // Seuils de toucher en dp : en pixels bruts, ils rétrécissaient sur les écrans denses.
+    private val density = resources.displayMetrics.density
+
     init {
         setEGLContextClientVersion(2)
         setRenderer(renderer)
@@ -80,7 +83,7 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
             MotionEvent.ACTION_UP -> {
                 if (!longPressHandled) {
                     val dx = event.x - tapStartX; val dy = event.y - tapStartY
-                    if (sqrt(dx * dx + dy * dy) < 20f) handleTap(event.x, event.y)
+                    if (sqrt(dx * dx + dy * dy) < 8f * density) handleTap(event.x, event.y)
                 }
                 pointerCount = 0
             }
@@ -89,12 +92,12 @@ class SolarSystemGLView(context: Context) : GLSurfaceView(context) {
     }
 
     private fun handleTap(x: Float, y: Float) {
-        val idx = nearestBody(x, y, threshold = 80f)
+        val idx = nearestBody(x, y, threshold = 28f * density)
         if (idx >= -1) renderer.onPlanetTapped?.invoke(idx)
     }
 
     private fun handleLongPress(x: Float, y: Float) {
-        val idx = nearestBody(x, y, threshold = 120f)
+        val idx = nearestBody(x, y, threshold = 40f * density)
         val target = if (idx >= -1) idx else -1  // -1 par défaut = retour Soleil
         renderer.focusPlanetIdx = target
         renderer.panX = 0f; renderer.panY = 0f

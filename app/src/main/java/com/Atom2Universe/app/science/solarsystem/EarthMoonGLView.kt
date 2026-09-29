@@ -25,6 +25,9 @@ class EarthMoonGLView(context: Context) : GLSurfaceView(context) {
             }
         })
 
+    // Seuils de toucher en dp : en pixels bruts, ils rétrécissaient sur les écrans denses.
+    private val density = resources.displayMetrics.density
+
     init {
         setEGLContextClientVersion(2)
         setRenderer(renderer)
@@ -59,7 +62,7 @@ class EarthMoonGLView(context: Context) : GLSurfaceView(context) {
             MotionEvent.ACTION_UP -> {
                 if (!longPressHandled) {
                     val dx = event.x - tapStartX; val dy = event.y - tapStartY
-                    if (sqrt(dx * dx + dy * dy) < 20f) handleTap(event.x, event.y)
+                    if (sqrt(dx * dx + dy * dy) < 8f * density) handleTap(event.x, event.y)
                 }
                 pointerCount = 0
             }
@@ -68,12 +71,12 @@ class EarthMoonGLView(context: Context) : GLSurfaceView(context) {
     }
 
     private fun handleTap(x: Float, y: Float) {
-        val idx = nearestBody(x, y, 80f)
+        val idx = nearestBody(x, y, 28f * density)
         if (idx >= 0) renderer.onBodyTapped?.invoke(idx)
     }
 
     private fun handleLongPress(x: Float, y: Float) {
-        val idx = nearestBody(x, y, 120f).coerceAtLeast(0)
+        val idx = nearestBody(x, y, 40f * density).coerceAtLeast(0)
         renderer.focusBody = idx
         renderer.cameraDistance = renderer.recommendedDistance(idx)
         renderer.onBodyTapped?.invoke(idx)

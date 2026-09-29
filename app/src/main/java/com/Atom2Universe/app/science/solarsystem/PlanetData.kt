@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.science.solarsystem
 
+import androidx.annotation.StringRes
+import com.Atom2Universe.app.R
+
 enum class ProportionMode { CLOSE, COMPRESSED, REALISTIC }
 
 data class MoonDef(
@@ -13,7 +16,7 @@ data class MoonDef(
 
 data class PlanetDef(
     val id: Int,
-    val name: String,
+    @StringRes val nameRes: Int,
     val textureAsset: String,
     val radiusKm: Float,
     val orbitRadiusAU: Float,
@@ -49,7 +52,7 @@ object SolarSystemData {
     // e = excentricité, ω̃ = longitude du périhélie (°) — tous à J2000.0.
     val planets = listOf(
         PlanetDef(
-            id = 0, name = "Mercury", textureAsset = "textures/planets/mercury.jpg",
+            id = 0, nameRes = R.string.solar_planet_mercury, textureAsset = "textures/planets/mercury.jpg",
             radiusKm = 2_439f, orbitRadiusAU = 0.387f,
             orbitalPeriodDays = 87.97f, rotationPeriodDays = 58.65f, axialTiltDeg = 0.03f,
             axisEclLonDeg = 318.24f, axisObliquityEclDeg = 7.04f,
@@ -59,7 +62,7 @@ object SolarSystemData {
             knownMoons = 0, fallbackColor = 0xFFB5B5B5.toInt()
         ),
         PlanetDef(
-            id = 1, name = "Venus", textureAsset = "textures/planets/venus.jpg",
+            id = 1, nameRes = R.string.solar_planet_venus, textureAsset = "textures/planets/venus.jpg",
             radiusKm = 6_051f, orbitRadiusAU = 0.723f,
             orbitalPeriodDays = 224.7f, rotationPeriodDays = -243f, axialTiltDeg = 177.4f,
             axisEclLonDeg = 30.19f, axisObliquityEclDeg = 1.24f,
@@ -69,9 +72,9 @@ object SolarSystemData {
             knownMoons = 0, fallbackColor = 0xFFE8C76E.toInt()
         ),
         PlanetDef(
-            id = 2, name = "Earth", textureAsset = "textures/earth.jpg",
+            id = 2, nameRes = R.string.solar_planet_earth, textureAsset = "textures/earth.jpg",
             radiusKm = 6_371f, orbitRadiusAU = 1.0f,
-            orbitalPeriodDays = 365.25f, rotationPeriodDays = 1.0f, axialTiltDeg = 23.44f,
+            orbitalPeriodDays = 365.25f, rotationPeriodDays = 0.99727f, axialTiltDeg = 23.44f,  // jour sidéral, comme les autres planètes
             axisEclLonDeg = 90.0f, axisObliquityEclDeg = 23.44f,
             initialAngleDeg = 100.464457f, meanMotionDegCentury = 35999.372851,
             eccentricity = 0.01671f, perihelionLongDeg = 102.937f,
@@ -86,7 +89,7 @@ object SolarSystemData {
             )
         ),
         PlanetDef(
-            id = 3, name = "Mars", textureAsset = "textures/planets/mars.jpg",
+            id = 3, nameRes = R.string.solar_planet_mars, textureAsset = "textures/planets/mars.jpg",
             radiusKm = 3_389f, orbitRadiusAU = 1.524f,
             orbitalPeriodDays = 686.97f, rotationPeriodDays = 1.026f, axialTiltDeg = 25.19f,
             axisEclLonDeg = 352.91f, axisObliquityEclDeg = 26.72f,
@@ -96,7 +99,7 @@ object SolarSystemData {
             knownMoons = 2, fallbackColor = 0xFFC1440E.toInt()
         ),
         PlanetDef(
-            id = 4, name = "Jupiter", textureAsset = "textures/planets/jupiter.jpg",
+            id = 4, nameRes = R.string.solar_planet_jupiter, textureAsset = "textures/planets/jupiter.jpg",
             radiusKm = 69_911f, orbitRadiusAU = 5.203f,
             orbitalPeriodDays = 4_332.59f, rotationPeriodDays = 0.414f, axialTiltDeg = 3.13f,
             axisEclLonDeg = 247.82f, axisObliquityEclDeg = 2.22f,
@@ -106,7 +109,7 @@ object SolarSystemData {
             knownMoons = 95, fallbackColor = 0xFFC88B3A.toInt()
         ),
         PlanetDef(
-            id = 5, name = "Saturn", textureAsset = "textures/planets/saturn.jpg",
+            id = 5, nameRes = R.string.solar_planet_saturn, textureAsset = "textures/planets/saturn.jpg",
             radiusKm = 58_232f, orbitRadiusAU = 9.537f,
             orbitalPeriodDays = 10_759.22f, rotationPeriodDays = 0.444f, axialTiltDeg = 26.73f,
             axisEclLonDeg = 79.53f, axisObliquityEclDeg = 28.05f,
@@ -119,7 +122,7 @@ object SolarSystemData {
             fallbackColor = 0xFFE4D191.toInt()
         ),
         PlanetDef(
-            id = 6, name = "Uranus", textureAsset = "textures/planets/uranus.jpg",
+            id = 6, nameRes = R.string.solar_planet_uranus, textureAsset = "textures/planets/uranus.jpg",
             radiusKm = 25_362f, orbitRadiusAU = 19.19f,
             orbitalPeriodDays = 30_688.5f, rotationPeriodDays = -0.718f, axialTiltDeg = 97.77f,
             axisEclLonDeg = 257.65f, axisObliquityEclDeg = 82.28f,
@@ -129,7 +132,7 @@ object SolarSystemData {
             knownMoons = 28, fallbackColor = 0xFFC6EBF5.toInt()
         ),
         PlanetDef(
-            id = 7, name = "Neptune", textureAsset = "textures/planets/neptune.jpg",
+            id = 7, nameRes = R.string.solar_planet_neptune, textureAsset = "textures/planets/neptune.jpg",
             radiusKm = 24_622f, orbitRadiusAU = 30.07f,
             orbitalPeriodDays = 60_195f, rotationPeriodDays = 0.671f, axialTiltDeg = 28.32f,
             axisEclLonDeg = 319.24f, axisObliquityEclDeg = 28.03f,

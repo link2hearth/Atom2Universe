@@ -29,27 +29,41 @@ object OrbitalCalculator {
     }
 
     /**
-     * Position 3D héliocentrique écliptique (X, Y, Z) à l'échelle de scène donnée.
+     * Position 3D héliocentrique à l'échelle de scène donnée.
      *
-     * Formule standard avec nœud ascendant Ω et inclinaison i :
+     * Coordonnées écliptiques, formule standard avec nœud ascendant Ω et inclinaison i :
      *   u = λ − Ω  (argument de latitude approché)
-     *   X = r·(cos Ω·cos u − sin Ω·sin u·cos i)
-     *   Y = r·sin u·sin i
-     *   Z = r·(sin Ω·cos u + cos Ω·sin u·cos i)
+     *   x = r·(cos Ω·cos u − sin Ω·sin u·cos i)
+     *   y = r·(sin Ω·cos u + cos Ω·sin u·cos i)
+     *   z = r·sin u·sin i
      *
-     * Le plan écliptique correspond à Y = 0 (Terre à Y ≈ 0 par définition).
+     * Repère de scène OpenGL (main droite) : X = x, Y = z (nord écliptique vers le haut),
+     * Z = −y. Le signe moins est indispensable : l'ancien Z = +y était un miroir, et les
+     * planètes tournaient dans le sens horaire vu du nord (antihoraire en réalité), alors que
+     * leur rotation propre, elle, était dans le bon sens. Voir [eclipticToScene].
      */
     fun orbitPosition3D(planet: PlanetDef, orbitR: Float, elapsedDays: Double): FloatArray {
         val lambda = Math.toRadians(orbitAngleDeg(planet, elapsedDays).toDouble())
         val omega  = Math.toRadians(planet.ascendingNodeDeg.toDouble())
         val incl   = Math.toRadians(planet.orbitalInclinationDeg.toDouble())
         val u = lambda - omega
-        return floatArrayOf(
-            (orbitR * (cos(omega)*cos(u) - sin(omega)*sin(u)*cos(incl))).toFloat(),
-            (orbitR * sin(u)*sin(incl)).toFloat(),
-            (orbitR * (sin(omega)*cos(u) + cos(omega)*sin(u)*cos(incl))).toFloat()
+        return eclipticToScene(
+            orbitR * (cos(omega)*cos(u) - sin(omega)*sin(u)*cos(incl)),
+            orbitR * (sin(omega)*cos(u) + cos(omega)*sin(u)*cos(incl)),
+            orbitR * sin(u)*sin(incl)
         )
     }
+
+    /** Écliptique (x, y, z nord) → scène OpenGL (x, z, −y). Seule conversion du module. */
+    fun eclipticToScene(x: Double, y: Double, z: Double): FloatArray =
+        floatArrayOf(x.toFloat(), z.toFloat(), (-y).toFloat())
+
+    /**
+     * Temps sidéral moyen de Greenwich (°), Meeus éq. 12.4 limitée au terme linéaire :
+     * l'angle entre l'équinoxe de printemps et le méridien de Greenwich.
+     */
+    fun greenwichSiderealDeg(elapsedDays: Double): Double =
+        (280.46061837 + 360.98564736629 * elapsedDays).mod(360.0)
 
     /** Angle de rotation propre en degrés à elapsedDays. Sens de rotation géré par le signe. */
     fun selfRotationDeg(planet: PlanetDef, elapsedDays: Double): Float {

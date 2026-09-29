@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.cardview.widget.CardView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
@@ -56,6 +57,18 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private var selectedPlanetIdx = -2  // -2=rien, -1=Soleil, 0..7=planète
+
+    // La vue Terre-Lune renvoie sa date : sans ça, le temps écoulé ou la date choisie là-bas
+    // étaient perdus au retour.
+    private val earthMoonLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val days = result.data?.getDoubleExtra(EarthMoonActivity.EXTRA_ELAPSED_DAYS, Double.NaN) ?: Double.NaN
+        if (!days.isNaN()) {
+            glView.renderer.elapsedSimDays = days
+            updateDateLabel()
+        }
+    }
     private var currentMode = ProportionMode.CLOSE
     private var lastActiveStep = DEFAULT_STEP
 
@@ -66,13 +79,26 @@ class SolarSystemActivity : ThemedActivity() {
             0.0,
             1.0/24, 1.0, 3.0, 7.0, 30.4375
         )
-        val STEP_LABELS = arrayOf(
-            "−1 mois/s", "−1 sem/s", "−3 j/s", "−1 j/s", "−1 h/s",
-            "⏸",
-            "+1 h/s", "+1 j/s", "+3 j/s", "+1 sem/s", "+1 mois/s"
-        )
         const val PAUSE_STEP    = 5
         const val DEFAULT_STEP  = 6    // +1 h/s
+
+        /** Libellé traduit d'un cran de [SPEED_STEPS] (« +1 j/s », « −1 mois/s »…). */
+        fun stepLabel(context: android.content.Context, step: Int): String {
+            val speed = SPEED_STEPS[step]
+            if (speed == 0.0) return "⏸"
+            val sign = if (speed > 0) "+" else "−"
+            val days = kotlin.math.abs(speed)
+            return when {
+                days < 1.0 -> context.getString(R.string.solar_step_hour, sign)
+                days == 7.0 -> context.getString(R.string.solar_step_week, sign)
+                days > 7.0 -> context.getString(R.string.solar_step_month, sign)
+                else -> context.getString(R.string.solar_step_days, sign, days.toInt())
+            }
+        }
+
+        /** Date affichée : floor, car toLong() tronquait vers zéro avant l'an 2000 (un jour de trop). */
+        fun simDate(j2000: LocalDate, elapsedDays: Double): LocalDate =
+            j2000.plusDays(kotlin.math.floor(elapsedDays).toLong())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,6 +131,7 @@ class SolarSystemActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setColorFilter(Color.WHITE)
             background = null
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         // Bouton date (centre, remplace le titre)
@@ -114,6 +141,7 @@ class SolarSystemActivity : ThemedActivity() {
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4))
             setBackgroundColor(0x33FFFFFF)
+            contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
         // Bouton bascule vers la vue Terre-Lune — icône du mode courant (système solaire)
@@ -122,10 +150,11 @@ class SolarSystemActivity : ThemedActivity() {
             scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
             background = null
             setPadding(dp(3), dp(3), dp(3), dp(3))
+            contentDescription = getString(R.string.solar_open_earth_moon)
             setOnClickListener {
                 val intent = android.content.Intent(this@SolarSystemActivity, EarthMoonActivity::class.java)
                 intent.putExtra(EarthMoonActivity.EXTRA_ELAPSED_DAYS, glView.renderer.elapsedSimDays)
-                startActivity(intent)
+                earthMoonLauncher.launch(intent)
             }
         }
         // Dropdown sélection de l'astre en focus
@@ -135,6 +164,7 @@ class SolarSystemActivity : ThemedActivity() {
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4))
             setBackgroundColor(0x33FFFFFF)
+            contentDescription = getString(R.string.solar_choose_body)
             setOnClickListener { showBodySelector() }
         }
 
@@ -178,6 +208,7 @@ class SolarSystemActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_close)
             setColorFilter(0xFFAAAAAA.toInt())
             background = null
+            contentDescription = getString(R.string.solar_close_card)
             setOnClickListener { cardPlanetInfo.visibility = View.GONE }
         }
         cardHeader.addView(tvPlanetName)
@@ -237,11 +268,13 @@ class SolarSystemActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_pause)
             setColorFilter(Color.WHITE)
             background = null
+            contentDescription = getString(R.string.solar_play_pause)
         }
         speedSlider = StepSpeedSlider(this).apply {
             stepCount = SPEED_STEPS.size
             centerStep = PAUSE_STEP
             setStep(DEFAULT_STEP)
+            contentDescription = getString(R.string.solar_speed_slider)
         }
         tvSpeed = TextView(this).apply {
             textSize = 11f
@@ -310,9 +343,9 @@ class SolarSystemActivity : ThemedActivity() {
 
     private fun updateBodySelectorLabel(idx: Int) {
         btnBodySelector.text = if (idx < 0)
-            "${getString(R.string.solar_sun_name)} ▾"
+            getString(R.string.solar_body_selector, getString(R.string.solar_sun_name))
         else
-            "${SolarSystemData.planets[idx].name} ▾"
+            getString(R.string.solar_body_selector, getString(SolarSystemData.planets[idx].nameRes))
     }
 
     private fun showBodySelector() {
@@ -320,7 +353,7 @@ class SolarSystemActivity : ThemedActivity() {
         popup.menu.add(0, Menu.NONE, 0, getString(R.string.solar_sun_name))
             .setOnMenuItemClickListener { focusOnBody(-1); true }
         SolarSystemData.planets.forEach { p ->
-            popup.menu.add(0, p.id, p.id + 1, p.name)
+            popup.menu.add(0, p.id, p.id + 1, getString(p.nameRes))
                 .setOnMenuItemClickListener { focusOnBody(p.id); true }
         }
         popup.show()
@@ -346,15 +379,18 @@ class SolarSystemActivity : ThemedActivity() {
     private fun showPlanetInfo(idx: Int) {
         if (idx == -1) {
             // Soleil
+            // La ligne s'intitule « Diamètre » : les planètes affichaient bien 2 × rayon, mais le
+            // Soleil affichait son rayon (696 000 km). Rotation sidérale à l'équateur : 25,05 j
+            // (25,4 j correspond à la latitude 16°).
             tvPlanetName.text = getString(R.string.solar_sun_name)
-            tvPlanetRadius.text = "696 000 km"
+            tvPlanetRadius.text = getString(R.string.solar_info_km, SolarSystemData.SUN_RADIUS_KM * 2.0)
             tvPlanetOrbit.text = "—"
-            tvPlanetPeriod.text = "25.4 j (équateur)"
+            tvPlanetPeriod.text = getString(R.string.solar_sun_rotation, 25.05)
             tvPlanetMoons.text = "—"
-            tvPlanetTilt.text = "7.25°"
+            tvPlanetTilt.text = getString(R.string.solar_info_degrees, 7.25)
         } else if (idx in 0..7) {
             val p = SolarSystemData.planets[idx]
-            tvPlanetName.text = p.name
+            tvPlanetName.text = getString(p.nameRes)
             tvPlanetRadius.text = getString(R.string.solar_info_km,
                 (p.radiusKm * 2).toDouble())
             tvPlanetOrbit.text = getString(R.string.solar_info_au, p.orbitRadiusAU.toDouble())
@@ -364,14 +400,13 @@ class SolarSystemActivity : ThemedActivity() {
             else
                 getString(R.string.solar_info_days, days.toDouble())
             tvPlanetMoons.text = p.knownMoons.toString()
-            tvPlanetTilt.text = "${p.axialTiltDeg}°"
+            tvPlanetTilt.text = getString(R.string.solar_info_degrees, p.axialTiltDeg.toDouble())
         }
         cardPlanetInfo.visibility = View.VISIBLE
         selectedPlanetIdx = idx
     }
 
-    private fun currentSimDate(): LocalDate =
-        J2000.plusDays(glView.renderer.elapsedSimDays.toLong())
+    private fun currentSimDate(): LocalDate = simDate(J2000, glView.renderer.elapsedSimDays)
 
     private fun updateDateLabel() {
         tvDate.text = "📅  ${currentSimDate().format(dateFmt)}"
@@ -395,7 +430,7 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private fun updateSpeedLabel(p: Int) {
-        tvSpeed.text = STEP_LABELS[p]
+        tvSpeed.text = stepLabel(this, p)
     }
 
     private fun updateModeButtons() {
