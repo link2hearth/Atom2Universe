@@ -39,6 +39,9 @@
     <string name="pendulum_arm_length">Longueur bras</string>
     <string name="pendulum_damping">Friction</string>
     <string name="pendulum_off">Aucune</string>
+    <string name="pendulum_gravity_value">%1$s (%2$.2f m/s²)</string>
+    <string name="pendulum_lock">Verrouiller l\'ancre pour saisir les pendules</string>
+    <string name="pendulum_unlock">Déverrouiller l\'ancre</string>
     <string name="pendulum_gravity_pluto">Pluton</string>
     <string name="pendulum_gravity_moon">Lune</string>
     <string name="pendulum_gravity_mars">Mars</string>

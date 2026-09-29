@@ -3,6 +3,7 @@ package com.Atom2Universe.app.science.pendulum
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -16,34 +17,38 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 
 class DoublePendulumActivity : ThemedActivity() {
 
-    // Corps célestes : (nom ressource string, gravité m/s²)
-    // L'index 3 = Terre est la valeur par défaut
+    // Corps célestes : (nom ressource string, gravité m/s²), par gravité croissante pour que le
+    // curseur monte toujours (Uranus, 8,87, était rangée après Saturne, 10,44).
     private val gravityPresets by lazy {
         listOf(
             getString(R.string.pendulum_gravity_pluto)    to 0.62,
             getString(R.string.pendulum_gravity_moon)     to 1.62,
             getString(R.string.pendulum_gravity_mars)     to 3.72,
+            getString(R.string.pendulum_gravity_uranus)   to 8.87,
             getString(R.string.pendulum_gravity_earth)    to 9.81,
             getString(R.string.pendulum_gravity_saturn)   to 10.44,
-            getString(R.string.pendulum_gravity_uranus)   to 8.87,
             getString(R.string.pendulum_gravity_neptune)  to 11.15,
             getString(R.string.pendulum_gravity_jupiter)  to 24.79,
             getString(R.string.pendulum_gravity_sun)      to 274.0
         )
     }
+    private val earthIndex = 4
 
     private lateinit var pendulumView: DoublePendulumView
     private lateinit var playPauseBtn: ImageButton
 
     private val handler = Handler(Looper.getMainLooper())
     private var isRunning = false
+    // Pause voulue par l'utilisateur : onResume ne doit pas relancer une simulation mise en pause.
+    private var pausedByUser = false
     private var lastFrameMs = 0L
     private val frameMs = 16L // ~60 fps
 
     private val stepRunnable = object : Runnable {
         override fun run() {
             if (!isRunning) return
-            val now = System.currentTimeMillis()
+            // Horloge monotone : currentTimeMillis saute quand l'heure système change.
+            val now = SystemClock.uptimeMillis()
             val dt = if (lastFrameMs == 0L) 0.016 else (now - lastFrameMs) / 1000.0
             lastFrameMs = now
             pendulumView.step(dt.coerceAtMost(0.05))
@@ -55,7 +60,7 @@ class DoublePendulumActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(buildUI())
-        startSim()
+        // Démarrage dans onResume seulement : le lancer aussi ici postait deux boucles de pas.
     }
 
     private fun buildUI(): FrameLayout {
@@ -97,6 +102,7 @@ class DoublePendulumActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setBackgroundColor(android.graphics.Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFFFFFFFF.toInt())
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         bar.addView(backBtn, LinearLayout.LayoutParams((36 * dp).toInt(), (36 * dp).toInt()))
@@ -114,18 +120,23 @@ class DoublePendulumActivity : ThemedActivity() {
             setImageResource(android.R.drawable.ic_media_pause)
             setBackgroundColor(android.graphics.Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFF7B8CDE.toInt())
+            contentDescription = getString(R.string.gol_pause)
             setOnClickListener { togglePlay() }
         }
         bar.addView(playPauseBtn, LinearLayout.LayoutParams((40 * dp).toInt(), (36 * dp).toInt()))
 
         val lockBtn = TextView(this).apply {
             text = "🔓"
+            contentDescription = getString(R.string.pendulum_lock)
             textSize = 20f
             gravity = Gravity.CENTER
             setPadding((6 * dp).toInt(), 0, (6 * dp).toInt(), 0)
             setOnClickListener {
                 pendulumView.isLocked = !pendulumView.isLocked
                 text = if (pendulumView.isLocked) "🔒" else "🔓"
+                contentDescription = getString(
+                    if (pendulumView.isLocked) R.string.pendulum_unlock else R.string.pendulum_lock
+                )
             }
         }
         bar.addView(lockBtn, LinearLayout.LayoutParams(
@@ -244,8 +255,12 @@ class DoublePendulumActivity : ThemedActivity() {
         return bar
     }
 
+    private fun gravityLabel(index: Int): String {
+        val (name, g) = gravityPresets[index]
+        return getString(R.string.pendulum_gravity_value, name, g)
+    }
+
     private fun buildGravityRow(dp: Float): LinearLayout {
-        val earthIndex = 3
         val row = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -264,8 +279,7 @@ class DoublePendulumActivity : ThemedActivity() {
         row.addView(label)
 
         val valueText = TextView(this).apply {
-            val (name, g) = gravityPresets[earthIndex]
-            text = "$name (${"%.2f".format(g)} m/s²)"
+            text = gravityLabel(earthIndex)
             textSize = 11f
             setTextColor(0xFFCCCCFF.toInt())
             minWidth = (110 * dp).toInt()
@@ -276,12 +290,12 @@ class DoublePendulumActivity : ThemedActivity() {
         val seek = SeekBar(this).apply {
             max = gravityPresets.size - 1
             progress = earthIndex
+            contentDescription = getString(R.string.pendulum_gravity)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
-                    val (name, g) = gravityPresets[progress]
-                    valueText.text = "$name (${"%.2f".format(g)} m/s²)"
-                    pendulumView.gravity = g
+                    valueText.text = gravityLabel(progress)
+                    pendulumView.gravity = gravityPresets[progress].second
                 }
                 override fun onStartTrackingTouch(sb: SeekBar) {}
                 override fun onStopTrackingTouch(sb: SeekBar) {}
@@ -328,6 +342,7 @@ class DoublePendulumActivity : ThemedActivity() {
         val seek = SeekBar(this).apply {
             this.max = max - min
             progress = initial - min
+            contentDescription = getString(labelRes)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
@@ -345,23 +360,27 @@ class DoublePendulumActivity : ThemedActivity() {
     }
 
     private fun togglePlay() {
+        pausedByUser = isRunning
         if (isRunning) stopSim() else startSim()
     }
 
     private fun startSim() {
+        handler.removeCallbacks(stepRunnable)
         isRunning = true
         lastFrameMs = 0L
         playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+        playPauseBtn.contentDescription = getString(R.string.gol_pause)
         handler.post(stepRunnable)
     }
 
     private fun stopSim() {
         isRunning = false
         playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+        playPauseBtn.contentDescription = getString(R.string.gol_play)
         handler.removeCallbacks(stepRunnable)
     }
 
     override fun onPause() { super.onPause(); stopSim() }
-    override fun onResume() { super.onResume(); startSim() }
+    override fun onResume() { super.onResume(); if (!pausedByUser) startSim() }
     override fun onDestroy() { super.onDestroy(); handler.removeCallbacks(stepRunnable) }
 }

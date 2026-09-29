@@ -44,8 +44,15 @@ class DoublePendulumView @JvmOverloads constructor(
     private var originY = 0f
     private var scale = 0f       // px par unité de longueur
 
+    // Tailles en dp : en pixels bruts, bobs et tiges devenaient minuscules sur les écrans denses.
+    private val density = resources.displayMetrics.density
+    private val bobRadius1 = 8f * density
+    private val bobRadius2 = 10f * density
+    private val pivotRadius = 6f * density
+    private val trailPath = Path()
+
     private val rodPaint = Paint().apply {
-        strokeWidth = 3f
+        strokeWidth = 3f * density
         isAntiAlias = true
         style = Paint.Style.STROKE
     }
@@ -56,7 +63,7 @@ class DoublePendulumView @JvmOverloads constructor(
     private val trailPaint = Paint().apply {
         isAntiAlias = true
         style = Paint.Style.STROKE
-        strokeWidth = 1.5f
+        strokeWidth = 1.5f * density
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
     }
@@ -69,7 +76,7 @@ class DoublePendulumView @JvmOverloads constructor(
         color = Color.parseColor("#FFFFFF")
         isAntiAlias = true
         style = Paint.Style.STROKE
-        strokeWidth = 2.5f
+        strokeWidth = 2.5f * density
     }
 
     private val PALETTE = intArrayOf(
@@ -121,19 +128,19 @@ class DoublePendulumView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(Color.parseColor("#0D0D1A"))
+        canvas.drawColor(BACKGROUND)
 
         // Point d'ancrage fixe
-        canvas.drawCircle(originX, originY, 6f, pivotPaint)
+        canvas.drawCircle(originX, originY, pivotRadius, pivotPaint)
 
         for ((i, p) in pendulums.withIndex()) {
-            val (x1, y1) = worldToScreen(p.x1, p.y1)
-            val (x2, y2) = worldToScreen(p.x2, p.y2)
+            val x1 = screenX(p.x1); val y1 = screenY(p.y1)
+            val x2 = screenX(p.x2); val y2 = screenY(p.y2)
 
             // Traînée pivot 2
-            if (showTrailPivot2 && p.trailPivot2.size > 1) drawTrail(canvas, p.trailPivot2, p.color, 0.5f)
+            if (showTrailPivot2) drawTrail(canvas, p.trailPivot2, p.color, 0.5f)
             // Traînée extrémité
-            if (showTrailTip && p.trailTip.size > 1) drawTrail(canvas, p.trailTip, p.color, 1f)
+            if (showTrailTip) drawTrail(canvas, p.trailTip, p.color, 1f)
 
             // Bras
             rodPaint.color = applyAlpha(p.color, 0.55f)
@@ -142,31 +149,32 @@ class DoublePendulumView @JvmOverloads constructor(
 
             // Bobs
             bobPaint.color = applyAlpha(p.color, 0.85f)
-            canvas.drawCircle(x1, y1, 8f, bobPaint)
-            canvas.drawCircle(x2, y2, 10f, bobPaint)
+            canvas.drawCircle(x1, y1, bobRadius1, bobPaint)
+            canvas.drawCircle(x2, y2, bobRadius2, bobPaint)
 
             // Highlight du bob grabé
             if (i == grabbedIndex) {
-                val (hx, hy) = if (grabbingTip) Pair(x2, y2) else Pair(x1, y1)
-                val hr = if (grabbingTip) 14f else 12f
-                canvas.drawCircle(hx, hy, hr, grabHighlightPaint)
+                if (grabbingTip) canvas.drawCircle(x2, y2, bobRadius2 + 4f * density, grabHighlightPaint)
+                else canvas.drawCircle(x1, y1, bobRadius1 + 4f * density, grabHighlightPaint)
             }
         }
     }
 
-    private fun drawTrail(canvas: Canvas, trail: ArrayDeque<Pair<Float, Float>>, color: Int, opacityMax: Float) {
-        if (trail.size < 2) return
-        val path = Path()
-        val list = trail.toList()
-        path.moveTo(list[0].first, list[0].second)
-        for (i in 1 until list.size) path.lineTo(list[i].first, list[i].second)
+    private fun drawTrail(canvas: Canvas, trail: Trail, color: Int, opacityMax: Float) {
+        // Seuls les trailLength derniers points : le curseur peut avoir réduit la longueur.
+        val count = minOf(trail.size, trailLength)
+        if (count < 2) return
+        val first = trail.size - count
+        trailPath.rewind()
+        trailPath.moveTo(trail.x(first), trail.y(first))
+        for (i in first + 1 until trail.size) trailPath.lineTo(trail.x(i), trail.y(i))
 
         trailPaint.color = applyAlpha(color, opacityMax)
-        canvas.drawPath(path, trailPaint)
+        canvas.drawPath(trailPath, trailPaint)
     }
 
-    private fun worldToScreen(wx: Double, wy: Double): Pair<Float, Float> =
-        Pair(originX + (wx * scale).toFloat(), originY + (wy * scale).toFloat())
+    private fun screenX(wx: Double): Float = originX + (wx * scale).toFloat()
+    private fun screenY(wy: Double): Float = originY + (wy * scale).toFloat()
 
     private fun applyAlpha(color: Int, alpha: Float): Int {
         val a = (alpha * 255).toInt().coerceIn(0, 255)
@@ -207,12 +215,10 @@ class DoublePendulumView @JvmOverloads constructor(
         grabbedIndex = -1
 
         for ((i, p) in pendulums.withIndex()) {
-            val (tx, ty) = worldToScreen(p.x2, p.y2)
-            val dTip = hypot(sx - tx, sy - ty)
+            val dTip = hypot(sx - screenX(p.x2), sy - screenY(p.y2))
             if (dTip < bestDist) { bestDist = dTip; grabbedIndex = i; grabbingTip = true }
 
-            val (px, py) = worldToScreen(p.x1, p.y1)
-            val dPivot = hypot(sx - px, sy - py)
+            val dPivot = hypot(sx - screenX(p.x1), sy - screenY(p.y1))
             if (dPivot < bestDist) { bestDist = dPivot; grabbedIndex = i; grabbingTip = false }
         }
 
@@ -243,8 +249,8 @@ class DoublePendulumView @JvmOverloads constructor(
         var omega1: Double = 0.0,
         var omega2: Double = 0.0
     ) {
-        val trailPivot2 = ArrayDeque<Pair<Float, Float>>()
-        val trailTip    = ArrayDeque<Pair<Float, Float>>()
+        internal val trailPivot2 = Trail()
+        internal val trailTip    = Trail()
 
         val x1 get() = armLength * sin(theta1)
         val y1 get() = armLength * cos(theta1)
@@ -293,34 +299,66 @@ class DoublePendulumView @JvmOverloads constructor(
             recordTrails()
         }
 
+        /**
+         * Équations du pendule double pour m1 = m2 = m et L1 = L2 = l :
+         *   θ1'' = [−3mg·sinθ1 − mg·sin(θ1−2θ2) − 2m·sinΔ·(ω2²l + ω1²l·cosΔ)] / [l·m(3 − cos2Δ)]
+         *   θ2'' = [2·sinΔ·(2mω1²l + 2mg·cosθ1 + mω2²l·cosΔ)] / [l·m(3 − cos2Δ)]
+         * La version précédente divisait par 2m·l²(2 − cos2Δ) : l'énergie dérivait de plus de
+         * 100 % en 100 s (contre ~10⁻⁵ ici) et la longueur des bras jouait au carré.
+         */
         private fun equations(t1: Double, t2: Double, o1: Double, o2: Double, g: Double, l: Double, m: Double): Pair<Double, Double> {
-            val dt = t1 - t2
-            val denom1 = (2 * m) * l * (2.0 - cos(2 * dt))
-            val denom2 = l * (2.0 - cos(2 * dt))
+            val delta = t1 - t2
+            val denom = l * m * (3.0 - cos(2 * delta))
 
-            val alpha1 = (-g * (2 * m) * sin(t1)
+            val alpha1 = (-3 * m * g * sin(t1)
                     - m * g * sin(t1 - 2 * t2)
-                    - 2 * sin(dt) * m * (o2 * o2 * l + o1 * o1 * l * cos(dt))
-                    ) / (denom1 * l)
+                    - 2 * sin(delta) * m * (o2 * o2 * l + o1 * o1 * l * cos(delta))
+                    ) / denom
 
-            val alpha2 = (2 * sin(dt) * (
+            val alpha2 = (2 * sin(delta) * (
                     o1 * o1 * l * (2 * m)
                             + g * (2 * m) * cos(t1)
-                            + o2 * o2 * l * m * cos(dt)
-                    )) / (denom2 * (2 * m) * l)
+                            + o2 * o2 * l * m * cos(delta)
+                    )) / denom
 
             return Pair(alpha1, alpha2)
         }
 
         private fun recordTrails() {
-            val (sx1, sy1) = worldToScreen(x1, y1)
-            val (sx2, sy2) = worldToScreen(x2, y2)
-
-            trailPivot2.addLast(Pair(sx1, sy1))
-            trailTip.addLast(Pair(sx2, sy2))
-
-            while (trailPivot2.size > trailLength) trailPivot2.removeFirst()
-            while (trailTip.size > trailLength) trailTip.removeFirst()
+            trailPivot2.add(screenX(x1), screenY(y1))
+            trailTip.add(screenX(x2), screenY(y2))
         }
     }
+}
+
+private const val BACKGROUND = 0xFF0D0D1A.toInt()
+
+/**
+ * Traînée en tampon circulaire de floats : l'ancienne ArrayDeque<Pair<Float, Float>> allouait
+ * une paire et deux Float à chaque sous-pas, et le dessin recopiait toute la liste à chaque image.
+ */
+internal class Trail(private val capacity: Int = MAX_POINTS) {
+    companion object {
+        /** Longueur maximale proposée par le curseur de traînée. */
+        const val MAX_POINTS = 1000
+    }
+
+    private val xs = FloatArray(capacity)
+    private val ys = FloatArray(capacity)
+    private var start = 0
+    var size = 0
+        private set
+
+    fun add(x: Float, y: Float) {
+        val end = (start + size) % capacity
+        xs[end] = x
+        ys[end] = y
+        if (size < capacity) size++ else start = (start + 1) % capacity
+    }
+
+    fun clear() { start = 0; size = 0 }
+
+    /** i-ème point, du plus ancien (0) au plus récent (size − 1). */
+    fun x(i: Int): Float = xs[(start + i) % capacity]
+    fun y(i: Int): Float = ys[(start + i) % capacity]
 }

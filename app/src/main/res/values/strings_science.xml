@@ -39,6 +39,9 @@
     <string name="pendulum_arm_length">Arm length</string>
     <string name="pendulum_damping">Friction</string>
     <string name="pendulum_off">Off</string>
+    <string name="pendulum_gravity_value">%1$s (%2$.2f m/s²)</string>
+    <string name="pendulum_lock">Lock the anchor to grab the pendulums</string>
+    <string name="pendulum_unlock">Unlock the anchor</string>
     <string name="pendulum_gravity_pluto">Pluto</string>
     <string name="pendulum_gravity_moon">Moon</string>
     <string name="pendulum_gravity_mars">Mars</string>
