@@ -75,6 +75,7 @@
     <string name="nuclide_axis_n">N (neutrons)</string>
     <string name="nuclide_mode_ec">CE</string>
     <string name="nuclide_mode_sf">FS</string>
+    <string name="nuclide_mode_percent">%1$s (%2$s %%)</string>
     <string name="nuclide_unknown">Inconnu</string>
     <string name="nuclide_unit_day">j</string>
     <string name="nuclide_unit_year">a</string>

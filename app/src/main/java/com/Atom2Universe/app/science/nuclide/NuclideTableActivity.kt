@@ -84,10 +84,18 @@ class NuclideTableActivity : ThemedActivity() {
         detailHalfLife.text = when {
             n.stable -> getString(R.string.nuclide_halflife_stable)
             n.halfLifeValue == null -> unknown
-            else -> getString(R.string.nuclide_halflife_val, formatHalfLife(n.halfLifeValue, n.halfLifeUnit))
+            else -> getString(R.string.nuclide_halflife_val,
+                (n.halfLifeOperator?.let { "$it " } ?: "") + formatHalfLife(n.halfLifeValue, n.halfLifeUnit))
         }
+        // Les parts ne sont utiles que s'il y a plusieurs voies.
+        val showPercent = n.decayModes.size > 1
         detailDecay.text = if (n.stable) "—"
-                           else n.decayModes.joinToString(", ") { decayModeLabel(it) }.ifEmpty { unknown }
+                           else n.decayModes.joinToString(", ") { m ->
+                               val label = decayModeLabel(m.mode)
+                               if (showPercent && m.percent != null)
+                                   getString(R.string.nuclide_mode_percent, label, formatPercent(m.percent))
+                               else label
+                           }.ifEmpty { unknown }
         detailSpin.text = n.spin ?: unknown
         detailBE.text = if (n.bindingEnergyPerNucleon > 0.0)
             getString(R.string.nuclide_be_val, n.bindingEnergyPerNucleon)
@@ -103,6 +111,18 @@ class NuclideTableActivity : ThemedActivity() {
             DecayType.OTHER -> R.color.nuclide_other
         }
         detailNotation.setTextColor(getColor(colorRes))
+    }
+
+    /** 97.91 → « 97,91 » ; les parts infimes (0.0000545) en puissance de dix : « 5,5 × 10⁻⁵ ». */
+    private fun formatPercent(p: Double): String {
+        val locale = resources.configuration.locales[0]
+        if (p >= 0.01 || p == 0.0) {
+            return java.text.NumberFormat.getNumberInstance(locale).apply { maximumFractionDigits = 2 }.format(p)
+        }
+        val exponent = kotlin.math.floor(kotlin.math.log10(p)).toInt()
+        val mantissa = p / Math.pow(10.0, exponent.toDouble())
+        val m = java.text.NumberFormat.getNumberInstance(locale).apply { maximumFractionDigits = 1 }.format(mantissa)
+        return "$m × 10${Nuclide.superscript(exponent)}"
     }
 
     /** « 1.248e9 » + « a » → « 1,248 × 10⁹ a » (séparateur décimal et unité de la langue). */
@@ -126,10 +146,12 @@ class NuclideTableActivity : ThemedActivity() {
         else -> unit
     }
 
-    /** EC et SF sont des abréviations anglaises (CE et FS en français) ; β- s'écrit avec un vrai signe moins. */
-    private fun decayModeLabel(mode: String): String = when (mode) {
-        "EC" -> getString(R.string.nuclide_mode_ec)
-        "SF" -> getString(R.string.nuclide_mode_sf)
-        else -> mode.replace("β-", "β−")
-    }
+    /**
+     * EC et SF sont des abréviations anglaises (CE et FS en français), y compris dans les modes
+     * composés (« β+/EC », « ECp ») ; β- s'écrit avec un vrai signe moins.
+     */
+    private fun decayModeLabel(mode: String): String = mode
+        .replace("EC", getString(R.string.nuclide_mode_ec))
+        .replace("SF", getString(R.string.nuclide_mode_sf))
+        .replace("β-", "β−")
 }

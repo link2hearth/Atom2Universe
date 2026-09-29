@@ -20,41 +20,30 @@ object NuclideRepository {
         for (i in 0 until arr.length()) {
             val o = arr.getJSONObject(i)
             val modes = o.getJSONArray("decayModes").let { dm ->
-                (0 until dm.length()).map { dm.getString(it) }
+                (0 until dm.length()).map {
+                    val m = dm.getJSONObject(it)
+                    DecayMode(m.getString("mode"), m.optNullableString("percent")?.toDoubleOrNull())
+                }
             }
-            // « 1.248e9 a » : mantisse et unité séparées pour pouvoir les localiser.
-            val halfLife = if (o.isNull("halfLife")) null else o.optString("halfLife").trim().ifEmpty { null }
-            val value = halfLife?.substringBefore(' ')
-            val unit = halfLife?.substringAfter(' ', "")?.ifEmpty { null }
             list.add(Nuclide(
                 Z = o.getInt("Z"),
                 N = o.getInt("N"),
                 A = o.getInt("A"),
                 symbol = o.getString("symbol"),
                 stable = o.getBoolean("stable"),
-                halfLifeValue = value,
-                halfLifeUnit = unit,
+                halfLifeValue = o.optNullableString("halfLife"),
+                halfLifeUnit = o.optNullableString("halfLifeUnit"),
+                halfLifeOperator = o.optNullableString("halfLifeOperator"),
                 decayModes = modes,
-                spin = normalizeSpin(o.optString("spin", "")),
+                spin = o.optNullableString("spin"),
                 bindingEnergyPerNucleon = o.getDouble("bindingEnergyPerNucleon")
             ))
         }
         nuclides = list
     }
 
-    /**
-     * Les données mélangent « 1/2+ », « +1/2 » et « +1/2+ » (parité en tête, parfois doublée).
-     * On ramène tout à la notation usuelle J^π : « +0 » → « 0+ », « +1/2+ » → « 1/2+ ».
-     */
-    internal fun normalizeSpin(raw: String): String? {
-        val s = raw.trim()
-        if (s.isEmpty() || s == "?") return null
-        val lead = s.first()
-        if (lead != '+' && lead != '-') return s
-        val rest = s.substring(1)
-        if (rest.isEmpty()) return null
-        return if (rest.last() == '+' || rest.last() == '-') rest else rest + lead
-    }
+    private fun JSONObject.optNullableString(key: String): String? =
+        if (isNull(key)) null else optString(key, "").trim().ifEmpty { null }
 
     fun getAll(): List<Nuclide> = nuclides ?: emptyList()
 
