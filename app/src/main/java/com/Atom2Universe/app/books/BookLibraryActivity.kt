@@ -73,7 +73,7 @@ data class AuthorFolder(
 class BookLibraryActivity : ThemedActivity() {
 
     companion object {
-        private const val PREFS_NAME = "books_prefs"
+        const val PREFS_NAME = "books_prefs"
         private const val KEY_LIBRARY = "book_library"
         private const val KEY_DISPLAY_MODE = "book_display_mode"
         private const val KEY_GRID_COLS = "book_grid_cols"

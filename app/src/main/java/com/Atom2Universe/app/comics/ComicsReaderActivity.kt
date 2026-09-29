@@ -39,6 +39,8 @@ class ComicsReaderActivity : ThemedActivity() {
         const val EXTRA_COMIC_FORMAT = "comic_format"
         const val EXTRA_COMIC_TITLE = "comic_title"
         const val EXTRA_COMIC_PAGE = "comic_page"
+        /** PDF ouvert depuis le module Livres: suivi dans les récents des livres, pas dans la base BD. */
+        const val EXTRA_FROM_BOOKS = "from_books"
     }
 
     private lateinit var imageView: ZoomableImageView
@@ -59,6 +61,7 @@ class ComicsReaderActivity : ThemedActivity() {
     private var currentLayout = ZoomableImageView.ViewLayout.FULL
 
     private var comicId: String? = null
+    private var fromBooks = false
     private var comicFormat = "pdf"
     private var sourceUri: Uri? = null
 
@@ -110,7 +113,8 @@ class ComicsReaderActivity : ThemedActivity() {
         if (sourcePath == null) {
             // Ouverture externe (ex. appli Fichiers) — intent.data contient l'URI du PDF
             val externalUri = intent.data ?: run { finish(); return }
-            handleExternalIntent(externalUri)
+            fromBooks = intent.getBooleanExtra(EXTRA_FROM_BOOKS, false)
+            if (fromBooks) handleBookPdfIntent(externalUri) else handleExternalIntent(externalUri)
             return
         }
 
@@ -133,6 +137,29 @@ class ComicsReaderActivity : ThemedActivity() {
             }
             setupSource()
         }
+    }
+
+    private fun bookPrefs() = getSharedPreferences(
+        com.Atom2Universe.app.books.BookLibraryActivity.PREFS_NAME, MODE_PRIVATE
+    )
+
+    /** PDF venant du module Livres: page de reprise lue dans les récents des livres, rien dans la base BD. */
+    private fun handleBookPdfIntent(uri: Uri) {
+        comicFormat = "pdf"
+        sourceUri = uri
+        val saved = com.Atom2Universe.app.books.BookLibraryActivity.loadLibrary(bookPrefs())
+            .firstOrNull { it.uri == uri.toString() }
+        currentPage = ((saved?.lastReadItem ?: 1) - 1).coerceAtLeast(0)
+        titleText.text = saved?.title ?: (uri.lastPathSegment?.substringBeforeLast('.') ?: "")
+        setupSource()
+    }
+
+    private fun saveBookPdfProgress() {
+        val uri = sourceUri ?: return
+        if (totalPages <= 0) return
+        com.Atom2Universe.app.books.BookLibraryActivity.updateProgress(
+            bookPrefs(), uri.toString(), currentPage + 1, totalPages
+        )
     }
 
     private fun handleExternalIntent(uri: Uri) {
@@ -173,6 +200,7 @@ class ComicsReaderActivity : ThemedActivity() {
     override fun onPause() {
         super.onPause()
         StatsTracker.endReadingSession()
+        if (fromBooks) { saveBookPdfProgress(); return }
         // Synchrone : garantit l'écriture avant que onResume de la bibliothèque ne lise la DB
         val id = comicId ?: return
         val page = currentPage
@@ -196,6 +224,7 @@ class ComicsReaderActivity : ThemedActivity() {
     }
 
     private fun saveProgress() {
+        if (fromBooks) { saveBookPdfProgress(); return }
         val id = comicId ?: return
         val page = currentPage
         val title = titleText.text?.toString()

@@ -983,8 +983,16 @@ class BookReaderActivity : ThemedActivity() {
         when {
             isEpub(mimeType, fileName) -> loadEpub(uri)
             isPdf(mimeType, fileName) -> {
+                // Les PDF ouverts depuis les livres restent dans les récents des livres (pas dans les BD)
+                val now = System.currentTimeMillis()
+                BookLibraryActivity.updateOrAddBook(prefs, BookEntry(
+                    uri = uri.toString(), title = title, author = "", coverPath = null,
+                    totalItems = 0, lastReadItem = 0, format = "PDF",
+                    addedAt = now, lastOpenedAt = now, fileSize = currentFileSize
+                ))
                 startActivity(Intent(this, com.Atom2Universe.app.comics.ComicsReaderActivity::class.java).apply {
                     data = uri
+                    putExtra(com.Atom2Universe.app.comics.ComicsReaderActivity.EXTRA_FROM_BOOKS, true)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 })
                 finish()
