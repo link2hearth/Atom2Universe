@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="gacha_open_periodic_table">Open periodic table</string>
     <string name="periodic_info_atomic_number">Atomic number</string>
@@ -31,4 +31,17 @@
     <string name="periodic_atom_neutrons">n</string>
     <string name="periodic_atom_electrons">e⁻</string>
 
+    <string name="periodic_category_alkali_metal">Alkali metal</string>
+    <string name="periodic_category_alkaline_earth_metal">Alkaline earth metal</string>
+    <string name="periodic_category_transition_metal">Transition metal</string>
+    <string name="periodic_category_post_transition_metal">Post-transition metal</string>
+    <string name="periodic_category_metalloid">Metalloid</string>
+    <string name="periodic_category_nonmetal">Nonmetal</string>
+    <string name="periodic_category_halogen">Halogen</string>
+    <string name="periodic_category_noble_gas">Noble gas</string>
+    <string name="periodic_category_lanthanide">Lanthanide</string>
+    <string name="periodic_category_actinide">Actinide</string>
+    <string name="periodic_phase_solid">Solid</string>
+    <string name="periodic_phase_liquid">Liquid</string>
+    <string name="periodic_phase_gas">Gas</string>
 </resources>

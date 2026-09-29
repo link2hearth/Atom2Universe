@@ -3,9 +3,12 @@ package com.Atom2Universe.app.periodic
 import android.content.Context
 import org.json.JSONObject
 
+/**
+ * Valeurs numériques et noms propres de periodic_table.json. Les textes en anglais de ce fichier
+ * (apparence, résumé) ne sont pas lus : ils viennent des fichiers localisés.
+ */
 data class ElementJsonData(
     val phase: String?,
-    val appearance: String?,
     val density: Double?,
     val melt: Double?,
     val boil: Double?,
@@ -14,7 +17,6 @@ data class ElementJsonData(
     val electronConfiguration: String?,
     val electronegativityPauling: Double?,
     val block: String?,
-    val summary: String?,
     val shells: List<Int>
 )
 
@@ -36,7 +38,6 @@ object PeriodicElementJsonRepository {
             val el = elements.getJSONObject(i)
             map[el.getInt("number")] = ElementJsonData(
                 phase = el.optNullableString("phase"),
-                appearance = el.optNullableString("appearance"),
                 density = el.optNullableDouble("density"),
                 melt = el.optNullableDouble("melt"),
                 boil = el.optNullableDouble("boil"),
@@ -45,7 +46,6 @@ object PeriodicElementJsonRepository {
                 electronConfiguration = el.optNullableString("electron_configuration"),
                 electronegativityPauling = el.optNullableDouble("electronegativity_pauling"),
                 block = el.optNullableString("block"),
-                summary = el.optNullableString("summary"),
                 shells = el.optJSONArray("shells")?.let { arr ->
                     (0 until arr.length()).map { arr.getInt(it) }
                 } ?: emptyList()

@@ -48,26 +48,49 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
     )
   }
 
+  /** Apparence localisée ; repli sur l'anglais, jamais sur le texte brut de periodic_table.json. */
+  fun getAppearance(element: PeriodicElement): String? =
+    localizedProperty("appearance", element.atomicNumber)
+
+  /**
+   * Découvreur : les lieux et époques (« Ancient Egypt », « 5000 BC »…) sont traduits dans
+   * periodic_properties_*.json ; les noms propres de periodic_table.json restent tels quels.
+   */
+  fun getDiscoveredBy(element: PeriodicElement, raw: String?): String? =
+    localizedProperty("discovered_by", element.atomicNumber) ?: raw
+
+  private fun localizedProperty(section: String, atomicNumber: Int): String? {
+    val key = atomicNumber.toString()
+    return sequenceOf(LocaleHelper.getLanguage(context), "en")
+      .mapNotNull { loadProperties(context, it)?.optJSONObject(section)?.optString(key, "") }
+      .firstOrNull { it.isNotEmpty() }
+  }
+
   private fun fallback(element: PeriodicElement) =
-    ElementDescription("${element.symbol} – ${element.name}", emptyList())
+    ElementDescription("${element.symbol} – ${getName(element)}", emptyList())
 
   companion object {
     private val cache = mutableMapOf<String, JSONObject>()
-    // Langues sans fichier : on ne retente pas l'ouverture (et son exception) à chaque nom affiché.
+    // Fichiers absents (langue non traduite) : on ne retente pas l'ouverture à chaque nom affiché.
     private val missing = mutableSetOf<String>()
 
+    fun loadRoot(context: Context, lang: String): JSONObject? =
+      loadAsset(context, "Elements/periodic_descriptions_$lang.json")
+
+    private fun loadProperties(context: Context, lang: String): JSONObject? =
+      loadAsset(context, "Elements/periodic_properties_$lang.json")
+
     @Synchronized
-    fun loadRoot(context: Context, lang: String): JSONObject? {
-      cache[lang]?.let { return it }
-      if (lang in missing) return null
+    private fun loadAsset(context: Context, path: String): JSONObject? {
+      cache[path]?.let { return it }
+      if (path in missing) return null
       val root = try {
-        context.assets.open("Elements/periodic_descriptions_$lang.json").bufferedReader().use { it.readText() }
-          .let(::JSONObject)
+        context.assets.open(path).bufferedReader().use { it.readText() }.let(::JSONObject)
       } catch (e: Exception) {
-        missing += lang
+        missing += path
         return null
       }
-      return root.also { cache[lang] = it }
+      return root.also { cache[path] = it }
     }
   }
 }

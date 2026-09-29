@@ -29,4 +29,18 @@
     <string name="periodic_info_copies_badge">x%1$d</string>
     <string name="periodic_info_hint">Appuie sur le nom pour voir la description</string>
     <string name="periodic_table_title">Tableau périodique</string>
+
+    <string name="periodic_category_alkali_metal">Métal alcalin</string>
+    <string name="periodic_category_alkaline_earth_metal">Métal alcalino-terreux</string>
+    <string name="periodic_category_transition_metal">Métal de transition</string>
+    <string name="periodic_category_post_transition_metal">Métal pauvre</string>
+    <string name="periodic_category_metalloid">Métalloïde</string>
+    <string name="periodic_category_nonmetal">Non-métal</string>
+    <string name="periodic_category_halogen">Halogène</string>
+    <string name="periodic_category_noble_gas">Gaz noble</string>
+    <string name="periodic_category_lanthanide">Lanthanide</string>
+    <string name="periodic_category_actinide">Actinide</string>
+    <string name="periodic_phase_solid">Solide</string>
+    <string name="periodic_phase_liquid">Liquide</string>
+    <string name="periodic_phase_gas">Gaz</string>
 </resources>

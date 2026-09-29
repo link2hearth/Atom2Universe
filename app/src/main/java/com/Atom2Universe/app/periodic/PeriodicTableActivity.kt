@@ -318,8 +318,7 @@ class PeriodicTableActivity : ThemedActivity() {
     panelSymbolText?.text = element.symbol
     panelMassText?.text   = "%.3f".format(element.atomicMass)
     panelNameText?.text   = element.localizedName(this)
-    panelCategoryText?.text = element.category.replace("-", " ")
-      .replaceFirstChar { it.uppercase() }
+    panelCategoryText?.text = categoryLabel(element.category)
 
     if (!launchedFromScience) {
       val everCount = collectionStore.getTotalEverCount(element.atomicNumber)
@@ -342,20 +341,21 @@ class PeriodicTableActivity : ThemedActivity() {
     }
 
     val json = PeriodicElementJsonRepository.get(element.atomicNumber)
-    val appearance = json?.appearance
+    val appearance = descriptionProvider.getAppearance(element)
     panelAppearanceText?.text = appearance ?: ""
     panelAppearanceText?.visibility = if (appearance != null) View.VISIBLE else View.GONE
 
-    propPhaseVal?.text      = json?.phase ?: dash
+    propPhaseVal?.text      = json?.phase?.let(::phaseLabel) ?: dash
     propBlockVal?.text      = json?.block?.uppercase() ?: dash
     propShellsVal?.text     = json?.shells?.joinToString(" · ") ?: dash
     propConfigVal?.text     = json?.electronConfiguration ?: dash
     propEnegVal?.text       = json?.electronegativityPauling?.let { "%.2f".format(it) } ?: dash
-    propDensityVal?.text    = json?.density?.let { "%.3f g/cm³".format(it) } ?: dash
+    val kelvin = getString(R.string.periodic_prop_kelvin_suffix)
+    propDensityVal?.text    = json?.density?.let { "%.3f".format(it) + getString(R.string.periodic_prop_density_suffix) } ?: dash
     // Arrondi et non troncature : He fond à 0,95 K (affichait « 0 K »), H à 13,99 K (affichait 13).
-    propMeltVal?.text       = json?.melt?.let { "${it.roundToInt()} K" } ?: dash
-    propBoilVal?.text       = json?.boil?.let { "${it.roundToInt()} K" } ?: dash
-    propDiscoveredVal?.text = json?.discoveredBy ?: dash
+    propMeltVal?.text       = json?.melt?.let { "${it.roundToInt()}$kelvin" } ?: dash
+    propBoilVal?.text       = json?.boil?.let { "${it.roundToInt()}$kelvin" } ?: dash
+    propDiscoveredVal?.text = descriptionProvider.getDiscoveredBy(element, json?.discoveredBy) ?: dash
   }
 
   private fun showDescriptionDialog() {
@@ -384,6 +384,7 @@ class PeriodicTableActivity : ThemedActivity() {
 
       val backBtn = TextView(this).apply {
         text = "←"
+        contentDescription = getString(R.string.back)
         textSize = 28f
         setTextColor(0xFFFFFFFF.toInt())
         setPadding(0, 0, dpToPx(20), 0)
@@ -427,13 +428,10 @@ class PeriodicTableActivity : ThemedActivity() {
       }
 
       if (jsonData != null) {
-        contentLayout.addView(buildPropertiesCard(jsonData))
+        contentLayout.addView(buildPropertiesCard(element, jsonData))
       }
 
-      val textsToDisplay = description.paragraphs.ifEmpty {
-        listOfNotNull(jsonData?.summary?.takeIf { it.isNotBlank() })
-      }
-      textsToDisplay.forEach { para ->
+      description.paragraphs.forEach { para ->
         val paraView = TextView(this).apply {
           text = para
           textSize = 24f
@@ -686,7 +684,7 @@ class PeriodicTableActivity : ThemedActivity() {
     return container
   }
 
-  private fun buildPropertiesCard(data: ElementJsonData): LinearLayout {
+  private fun buildPropertiesCard(element: PeriodicElement, data: ElementJsonData): LinearLayout {
     val unknown = getString(R.string.periodic_prop_unknown)
     val kSuffix = getString(R.string.periodic_prop_kelvin_suffix)
     val gSuffix = getString(R.string.periodic_prop_density_suffix)
@@ -695,16 +693,17 @@ class PeriodicTableActivity : ThemedActivity() {
       if (value == null) unknown else "%.${decimals}f$suffix".format(value)
 
     val props = listOfNotNull(
-      data.phase?.let { Pair(getString(R.string.periodic_prop_phase), it) },
+      data.phase?.let { Pair(getString(R.string.periodic_prop_phase), phaseLabel(it)) },
       Pair(getString(R.string.periodic_prop_density), fmt(data.density, 4, gSuffix)),
       Pair(getString(R.string.periodic_prop_melt), fmt(data.melt, 2, kSuffix)),
       Pair(getString(R.string.periodic_prop_boil), fmt(data.boil, 2, kSuffix)),
       data.block?.let { Pair(getString(R.string.periodic_prop_block), it) },
       data.electronegativityPauling?.let { Pair(getString(R.string.periodic_prop_electronegativity), "%.2f".format(it)) },
-      data.discoveredBy?.let { Pair(getString(R.string.periodic_prop_discovered_by), it) },
+      descriptionProvider.getDiscoveredBy(element, data.discoveredBy)
+        ?.let { Pair(getString(R.string.periodic_prop_discovered_by), it) },
       data.namedBy?.let { Pair(getString(R.string.periodic_prop_named_by), it) },
       data.electronConfiguration?.let { Pair(getString(R.string.periodic_prop_electron_config), it) },
-      data.appearance?.let { Pair(getString(R.string.periodic_prop_appearance), it) }
+      descriptionProvider.getAppearance(element)?.let { Pair(getString(R.string.periodic_prop_appearance), it) }
     )
 
     return LinearLayout(this).apply {
@@ -856,7 +855,7 @@ class PeriodicTableActivity : ThemedActivity() {
     cell.addView(dot)
 
     val label = TextView(this).apply {
-      text = rarity.label
+      text = getString(rarity.nameRes)
       textSize = 8.5f
       setTextColor(0xFFFFFFFF.toInt())
       gravity = android.view.Gravity.CENTER
@@ -905,6 +904,7 @@ class PeriodicTableActivity : ThemedActivity() {
     }
     val backBtn = TextView(this).apply {
       text = "←"
+      contentDescription = getString(R.string.back)
       textSize = 28f
       setTextColor(0xFFFFFFFF.toInt())
       setPadding(0, 0, dpToPx(20), 0)
@@ -912,7 +912,7 @@ class PeriodicTableActivity : ThemedActivity() {
     }
     header.addView(backBtn)
     val titleView = TextView(this).apply {
-      text = rarity.label
+      text = getString(rarity.nameRes)
       textSize = 22f
       setTextColor(rarityColor)
       setTypeface(null, Typeface.BOLD)
@@ -1172,6 +1172,28 @@ class PeriodicTableActivity : ThemedActivity() {
 
   private fun getRarityCornerColor(atomicNumber: Int): Int =
     getRarityColor(rarityOf(atomicNumber))
+
+  private fun categoryLabel(category: String): String = when (category) {
+    "alkali-metal" -> getString(R.string.periodic_category_alkali_metal)
+    "alkaline-earth-metal" -> getString(R.string.periodic_category_alkaline_earth_metal)
+    "transition-metal" -> getString(R.string.periodic_category_transition_metal)
+    "post-transition-metal" -> getString(R.string.periodic_category_post_transition_metal)
+    "metalloid" -> getString(R.string.periodic_category_metalloid)
+    "nonmetal" -> getString(R.string.periodic_category_nonmetal)
+    "halogen" -> getString(R.string.periodic_category_halogen)
+    "noble-gas" -> getString(R.string.periodic_category_noble_gas)
+    "lanthanide" -> getString(R.string.periodic_category_lanthanide)
+    "actinide" -> getString(R.string.periodic_category_actinide)
+    else -> getString(R.string.periodic_prop_unknown)
+  }
+
+  /** Phase de periodic_table.json (« Solid », « Liquid », « Gas ») traduite. */
+  private fun phaseLabel(phase: String): String = when (phase.lowercase()) {
+    "solid" -> getString(R.string.periodic_phase_solid)
+    "liquid" -> getString(R.string.periodic_phase_liquid)
+    "gas" -> getString(R.string.periodic_phase_gas)
+    else -> getString(R.string.periodic_prop_unknown)
+  }
 
   private fun getCategoryColor(category: String): Int = when (category) {
     "alkali-metal" -> getColor(R.color.category_alkali_metal)
