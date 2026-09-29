@@ -53,6 +53,7 @@ object RadioPlaybackHolder {
     private const val KEY_LAST_STATION_LANGUAGE = "last_station_language"
     private const val KEY_LAST_STATION_FAVICON = "last_station_favicon"
     private const val KEY_LAST_STATION_BITRATE = "last_station_bitrate"
+    private const val DUCK_VOLUME = 0.2f
     private const val MAX_RECONNECT_ATTEMPTS = 3
     private const val INITIAL_RECONNECT_DELAY_MS = 1000L
 
@@ -116,8 +117,9 @@ object RadioPlaybackHolder {
         override fun onAudioFocusDuck() {
             appContext ?: return
             player?.let {
-                originalVolume = it.volume
-                it.volume = 0.2f
+                // Ne mémoriser le volume d'origine qu'au premier duck (évite de rester à 0.2)
+                if (it.volume != DUCK_VOLUME) originalVolume = it.volume
+                it.volume = DUCK_VOLUME
             }
         }
 
@@ -400,6 +402,13 @@ object RadioPlaybackHolder {
      */
     @androidx.annotation.OptIn(UnstableApi::class)
     fun play(context: Context, station: RadioStation, forceReload: Boolean = false): Boolean {
+        // Lecture demandée explicitement: annule toute reconnexion différée (ancienne station)
+        cancelReconnect()
+        return playInternal(context, station, forceReload)
+    }
+
+    @androidx.annotation.OptIn(UnstableApi::class)
+    private fun playInternal(context: Context, station: RadioStation, forceReload: Boolean): Boolean {
         // Bug 4.22: Valider l'URL avant de continuer
         val stationUri = validateAndParseUrl(station.url)
         if (stationUri == null) {
@@ -426,7 +435,9 @@ object RadioPlaybackHolder {
         saveLastStation(context, station)
 
         val currentUri = p.currentMediaItem?.localConfiguration?.uri?.toString().orEmpty()
-        val shouldReload = forceReload || currentUri != station.url
+        // Un player en IDLE (après erreur) ou terminé doit être re-préparé, même pour la même URL
+        val needsPrepare = p.playbackState == Player.STATE_IDLE || p.playbackState == Player.STATE_ENDED
+        val shouldReload = forceReload || needsPrepare || currentUri != station.url
 
         if (shouldReload) {
             val mediaItem = MediaItem.fromUri(stationUri)
@@ -495,8 +506,12 @@ object RadioPlaybackHolder {
         pendingNotificationUpdate?.let { notificationHandler.removeCallbacks(it) }
         pendingNotificationUpdate = null
 
+        // Un stop explicite ne doit pas être suivi d'une reconnexion automatique
+        cancelReconnect()
+
         player?.stop()
         player?.clearMediaItems()
+        player?.volume = 1f
         currentStation = null
         currentMetadata = StreamMetadata(null, null)
 
@@ -591,12 +606,12 @@ object RadioPlaybackHolder {
         Log.d(TAG, "Scheduling reconnect attempt $reconnectAttempts in ${delay}ms")
 
         val runnable = Runnable {
+            reconnectRunnable = null
             val ctx = appContext
             if (ctx != null && (currentStation != null || lastStation != null)) {
                 Log.d(TAG, "Attempting reconnect #$reconnectAttempts")
-                play(ctx, station, forceReload = true)
+                playInternal(ctx, station, forceReload = true)
             }
-            reconnectRunnable = null
         }
         reconnectRunnable = runnable
         notificationHandler.postDelayed(runnable, delay)
@@ -746,7 +761,12 @@ object RadioPlaybackHolder {
         val intent = Intent(context, RadioForegroundService::class.java).apply {
             action = RadioForegroundService.ACTION_UPDATE
         }
-        context.startService(intent)
+        try {
+            context.startService(intent)
+        } catch (e: IllegalStateException) {
+            // Android 12+: interdit en arrière-plan si le service n'est pas déjà lancé
+            Log.w(TAG, "Cannot update notification from background", e)
+        }
     }
 
     /**
@@ -848,12 +868,13 @@ class RadioForegroundService : Service() {
                 startForeground(NOTIFICATION_ID, notification)
             }
             ACTION_UPDATE -> {
-                // Mise à jour - utilise NotificationManager directement (plus léger)
-                val notification = buildMediaNotification()
-                val manager = getSystemService(NotificationManager::class.java)
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
-                    ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                    manager.notify(NOTIFICATION_ID, notification)
+                if (RadioPlaybackHolder.getCurrentStation() == null) {
+                    // Lecture arrêtée: un événement tardif ne doit pas reposter la notification
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopSelf()
+                } else {
+                    // Gère aussi le passage foreground <-> détaché (pause via la notification)
+                    updateNotification()
                 }
             }
             ACTION_STOP -> {
