@@ -22,7 +22,8 @@ class CosmicScaleGLView(context: Context) : GLSurfaceView(context) {
             override fun onFling(
                 e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float
             ): Boolean {
-                if (abs(velocityX) > abs(velocityY) && abs(velocityX) > 400f) {
+                // Seuil en dp/s : en px/s, le geste demandé variait avec la densité de l'écran.
+                if (abs(velocityX) > abs(velocityY) && abs(velocityX) > 400f * resources.displayMetrics.density) {
                     onSwipe?.invoke(if (velocityX < 0) +1 else -1)
                     return true
                 }

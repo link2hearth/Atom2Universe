@@ -34,6 +34,10 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         const val FILL_FRACTION = 0.80f
         /** En deçà de ce rayon écran (px), l'astre est dessiné comme un point lumineux. */
         const val MIN_PIXEL_RADIUS = 1.6f
+        /** Inclinaison commune de la planète et de ses anneaux (plan équatorial). */
+        const val PLANET_TILT_DEG = 18f
+        /** Rayon extérieur des anneaux, en rayons planétaires (géométrie de buildRingStrip). */
+        const val RINGS_OUTER_FACTOR = 2.35f
         val PLANET_VERT = """
             attribute vec4 aPos; attribute vec2 aUV; attribute vec3 aNorm;
             uniform mat4 uMVP; uniform mat4 uRot;
@@ -177,8 +181,10 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        if (startMs < 0) startMs = System.currentTimeMillis()
-        val tSec = (System.currentTimeMillis() - startMs) / 1000f
+        // Horloge monotone : currentTimeMillis saute quand l'heure système change.
+        val nowMs = android.os.SystemClock.uptimeMillis()
+        if (startMs < 0) startMs = nowMs
+        val tSec = (nowMs - startMs) / 1000f
         val spin = (tSec * 8f) % 360f
 
         GLES20.glViewport(0, 0, surfaceW, surfaceH)
@@ -187,10 +193,16 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         renderDivider()
 
         val halfW = surfaceW / 2
-        val maxKm = max(leftBody.radiusKm, rightBody.radiusKm)
+        // Même échelle pour les deux moitiés, calée sur l'encombrement réel : les anneaux de
+        // Saturne (2,35 rayons) débordaient sur l'autre moitié et y étaient coupés quand elle
+        // était le plus grand des deux astres.
+        val maxKm = max(fitKm(leftBody), fitKm(rightBody))
         drawHalf(0, halfW, surfaceH, leftBody, maxKm, spin, tSec)
         drawHalf(halfW, surfaceW - halfW, surfaceH, rightBody, maxKm, spin, tSec)
     }
+
+    private fun fitKm(body: CosmicBody): Double =
+        if (body.hasRings) body.radiusKm * RINGS_OUTER_FACTOR else body.radiusKm
 
     /** Rend un astre centré dans la moitié d'écran [x, x+vw]. */
     private fun drawHalf(x: Int, vw: Int, vh: Int, body: CosmicBody, maxKm: Double, spin: Float, tSec: Float) {
@@ -236,7 +248,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
 
     // ── Planète / Lune (sphère éclairée) ─────────────────────────────
     private fun drawPlanet(body: CosmicBody, rWorld: Float, spin: Float) {
-        buildModel(rWorld, spin, tiltDeg = 18f)
+        buildModel(rWorld, spin, tiltDeg = PLANET_TILT_DEG)
         Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
 
         GLES20.glUseProgram(planetProg)
@@ -293,7 +305,9 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
     // ── Anneaux de Saturne ───────────────────────────────────────────
     private fun drawRings(rWorld: Float, spin: Float) {
         Matrix.setIdentityM(model, 0)
-        Matrix.rotateM(model, 0, 72f, 1f, 0f, 0f)   // forte inclinaison pour voir l'ellipse
+        // Dans le plan équatorial : même inclinaison que la planète. Les 72° précédents les
+        // décalaient de 54° par rapport à l'équateur dessiné.
+        Matrix.rotateM(model, 0, PLANET_TILT_DEG, 1f, 0f, 0f)
         Matrix.rotateM(model, 0, spin * 0.3f, 0f, 1f, 0f)
         Matrix.scaleM(model, 0, rWorld, rWorld, rWorld)
         Matrix.multiplyMM(mvp, 0, proj, 0, model, 0)
@@ -425,7 +439,8 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         try {
             context.assets.open(asset).use { stream ->
                 val opts = BitmapFactory.Options().apply { inScaled = false }
-                val bmp = BitmapFactory.decodeStream(stream, null, opts)!!
+                val bmp = BitmapFactory.decodeStream(stream, null, opts)
+                    ?: throw IOException("image illisible : $asset")
                 GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0)
                 GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D)
                 bmp.recycle()
@@ -505,7 +520,7 @@ class CosmicScaleRenderer(private val context: Context) : GLSurfaceView.Renderer
         GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER, si.capacity() * 2, si, GLES20.GL_STATIC_DRAW)
 
         bindArray(quadVBO, buildQuad())
-        val ringBuf = buildRingStrip(1.25f, 2.35f, 96); ringsVertCount = (96 + 1) * 2
+        val ringBuf = buildRingStrip(1.25f, RINGS_OUTER_FACTOR, 96); ringsVertCount = (96 + 1) * 2
         bindArray(ringsVBO, ringBuf)
         bindArray(bgVBO, buildBackgroundStars())
         bindArray(pointVBO, floatBuffer(floatArrayOf(0f, 0f)))

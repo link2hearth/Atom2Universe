@@ -95,6 +95,7 @@ class CosmicScaleActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setColorFilter(Color.WHITE)
             background = null
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         btnLeft = selectorChip().apply { setOnClickListener { showSelector(this, isLeft = true) } }
@@ -400,7 +401,8 @@ class CosmicScaleActivity : ThemedActivity() {
         BodyKind.STAR -> "${decSmart(b.radiusInSuns)} R☉ · ${sci(b.radiusKm)} km"
         BodyKind.BLACK_HOLE -> {
             val au = b.radiusKm / AU_KM
-            if (au >= 0.01) "${decSmart(au)} UA · ${sci(b.radiusKm)} km"
+            // « UA » était écrit en dur (français) : unité traduite (AU en anglais).
+            if (au >= 0.01) "${decSmart(au)} ${getString(R.string.cosmic_unit_au)} · ${sci(b.radiusKm)} km"
             else "${sci(b.radiusKm)} km"
         }
         else -> "${sci(b.radiusKm)} km · ${decSmart(b.radiusInEarths)} R⊕"
@@ -415,9 +417,12 @@ class CosmicScaleActivity : ThemedActivity() {
 
     private fun sci(x: Double): String {
         if (x <= 0.0) return "0"
-        val exp = floor(log10(x)).toInt()
-        return if (exp in -1..5) String.format("%,.0f", x)
-        else String.format("%.2f×10%s", x / 10.0.pow(exp), superscript(exp))
+        var exp = floor(log10(x)).toInt()
+        if (exp in -1..5) return String.format("%,.0f", x)
+        // 9,996 s'arrondit à « 10,00 » : on passe alors à la puissance suivante (1,00×10ⁿ⁺¹).
+        var mantissa = x / 10.0.pow(exp)
+        if (Math.round(mantissa * 100) >= 1000) { exp++; mantissa = x / 10.0.pow(exp) }
+        return String.format("%.2f×10%s", mantissa, superscript(exp))
     }
 
     private fun ratioStr(x: Double): String = when {

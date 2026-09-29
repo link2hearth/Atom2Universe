@@ -224,6 +224,7 @@
     <string name="hub_cosmic_title">Échelle cosmique</string>
     <string name="hub_cosmic_desc">Compare la taille des astres, de la Lune au trou noir supermassif</string>
     <string name="cosmic_swap">Inverser les côtés</string>
+    <string name="cosmic_unit_au">UA</string>
     <string name="cosmic_mode_scroll">Défilement</string>
     <string name="cosmic_mode_free">Libre</string>
     <string name="cosmic_hint_swipe">←  glissez pour parcourir l\'échelle  →</string>

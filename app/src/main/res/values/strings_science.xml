@@ -224,6 +224,7 @@
     <string name="hub_cosmic_title">Cosmic Scale</string>
     <string name="hub_cosmic_desc">Compare body sizes, from the Moon to a supermassive black hole</string>
     <string name="cosmic_swap">Swap sides</string>
+    <string name="cosmic_unit_au">AU</string>
     <string name="cosmic_mode_scroll">Scroll</string>
     <string name="cosmic_mode_free">Free</string>
     <string name="cosmic_hint_swipe">←  swipe to scroll through the scale  →</string>
