@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 
 /**
  * DAO pour accéder aux filtres radio en cache
@@ -22,6 +23,12 @@ interface RadioFilterDao {
 
     @Query("DELETE FROM radio_filters WHERE filterType = :type")
     suspend fun deleteFiltersByType(type: String)
+
+    @Transaction
+    suspend fun replaceFilters(type: String, filters: List<RadioFilterEntity>) {
+        deleteFiltersByType(type)
+        insertFilters(filters)
+    }
 
     @Query("DELETE FROM radio_filters")
     suspend fun clearAllFilters()

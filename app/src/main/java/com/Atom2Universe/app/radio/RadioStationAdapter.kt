@@ -41,6 +41,11 @@ class RadioStationAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    /** Re-binde les lignes visibles (ex: état favori modifié sans changement de liste). */
+    fun refreshFavoriteState() {
+        if (stations.isNotEmpty()) notifyItemRangeChanged(0, stations.size)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_radio_station, parent, false)

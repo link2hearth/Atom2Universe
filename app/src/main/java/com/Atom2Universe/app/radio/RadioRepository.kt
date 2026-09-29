@@ -7,7 +7,9 @@ import com.Atom2Universe.app.radio.data.RadioDatabase
 import com.Atom2Universe.app.radio.data.RadioFilterDao
 import com.Atom2Universe.app.radio.data.RadioFilterEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.job
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -41,10 +43,8 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
     private val appContext: Context = context.applicationContext
     private val filterDao: RadioFilterDao = RadioDatabase.getInstance(context).radioFilterDao()
 
-    // Bug 4.18: Stocker le call en cours pour pouvoir l'annuler
-    @Volatile
-    private var currentCall: okhttp3.Call? = null
-    private val callLock = Any()
+    // Bug 4.18: Appels en cours (recherche et filtres peuvent tourner en parallèle)
+    private val activeCalls = java.util.concurrent.ConcurrentHashMap.newKeySet<okhttp3.Call>()
 
     /**
      * Bug 4.28: Vérifie si l'appareil est connecté à Internet
@@ -67,7 +67,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
         private const val MAX_RESPONSE_SIZE_BYTES = 10 * 1024 * 1024L
 
         // Bug 4.23: Limite du cache mémoire des filtres
-        private const val MAX_FILTER_CACHE_ENTRIES = 500
+        private const val MAX_FILTER_CACHE_ENTRIES = 5000
 
         // Bug 4.17: Client HTTP partagé entre instances avec configuration correcte
         @Volatile
@@ -137,10 +137,8 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
      */
     @Suppress("unused")
     fun cancelPendingRequests() {
-        synchronized(callLock) {
-            currentCall?.cancel()
-            currentCall = null
-        }
+        activeCalls.forEach { it.cancel() }
+        activeCalls.clear()
     }
 
     suspend fun fetchFilters(): RadioFilters = withContext(Dispatchers.IO) {
@@ -181,9 +179,6 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
     }
 
     private suspend fun cacheFilters(filterType: String, values: List<String>) {
-        // Supprimer l'ancien cache
-        filterDao.deleteFiltersByType(filterType)
-
         // Bug 4.23: Limiter le nombre d'entrées en cache pour éviter les problèmes de mémoire
         val limitedValues = if (values.size > MAX_FILTER_CACHE_ENTRIES) {
             Log.w(TAG, "Filter cache truncated from ${values.size} to $MAX_FILTER_CACHE_ENTRIES entries for type $filterType")
@@ -201,7 +196,8 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
                 cachedAt = timestamp
             )
         }
-        filterDao.insertFilters(entities)
+        // Remplacement atomique: pas de cache vide si l'insertion échoue
+        filterDao.replaceFilters(filterType, entities)
     }
 
     /**
@@ -224,6 +220,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
         val results = mutableListOf<RadioStation>()
         var lastException: Exception? = null
         var hadTimeout = false
+        var hadEmptySuccess = false
 
         for (server in servers) {
             val url = server.toUri()
@@ -253,6 +250,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
                     results.addAll(normalized)
                     break
                 }
+                hadEmptySuccess = true
             } catch (e: SocketTimeoutException) {
                 Log.w(TAG, "Timeout on server $server, trying next", e)
                 hadTimeout = true
@@ -272,6 +270,7 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
         // Déterminer le résultat
         when {
             results.isNotEmpty() -> SearchResult.Success(results.take(config.maxResults))
+            hadEmptySuccess -> SearchResult.Success(emptyList())
             hadTimeout -> SearchResult.Timeout
             lastException != null -> SearchResult.ServerError(lastException.message ?: "Unknown error")
             else -> SearchResult.Success(emptyList()) // Recherche réussie mais aucun résultat
@@ -371,11 +370,11 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
             .header("User-Agent", config.userAgent)
             .build()
         return withContext(Dispatchers.IO) {
-            // Bug 4.18: Annuler l'appel précédent et stocker le nouveau
+            // Bug 4.18: l'appel est annulé si la coroutine l'est (et jamais par un autre appel)
             val call = client.newCall(request)
-            synchronized(callLock) {
-                currentCall?.cancel()
-                currentCall = call
+            activeCalls.add(call)
+            val cancelHandle = coroutineContext.job.invokeOnCompletion { cause ->
+                if (cause != null) call.cancel()
             }
             try {
                 call.execute().use { response ->
@@ -417,11 +416,8 @@ class RadioRepository(private val config: RadioConfig, context: Context) {
                     JSONArray(raw)
                 }
             } finally {
-                synchronized(callLock) {
-                    if (currentCall == call) {
-                        currentCall = null
-                    }
-                }
+                cancelHandle.dispose()
+                activeCalls.remove(call)
             }
         }
     }

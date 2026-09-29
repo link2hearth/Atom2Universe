@@ -482,6 +482,8 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
                 setupSpinner(countrySpinner, countries)
                 setupSpinner(languageSpinner, languages)
                 updateStatus(getString(R.string.radio_status_idle))
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
             } catch (e: Exception) {
                 android.util.Log.w("RadioActivity", "Failed to load filters", e)
                 setupSpinner(countrySpinner, listOf(getString(R.string.radio_filter_any_country)))
@@ -498,11 +500,14 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
 
     }
 
+    private var searchJob: kotlinx.coroutines.Job? = null
+
     private fun searchStations() {
         if (!config.enabled) {
             return
         }
-        lifecycleScope.launch {
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch {
             setLoading(true)
             updateStatus(getString(R.string.radio_status_loading))
             val params = RadioSearchParams(
@@ -512,6 +517,8 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
             )
             val (stations, searchError) = try {
                 Pair(repository.searchStations(params), false)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e // recherche remplacée: ne pas écraser l'état de la nouvelle
             } catch (e: Exception) {
                 android.util.Log.w("RadioActivity", "Search failed", e)
                 Pair(emptyList<RadioStation>(), true)
@@ -685,6 +692,8 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
 
     private fun refreshResults() {
         resultsAdapter.submitList(currentResults)
+        // submitList ne détecte pas un changement de favori (contenu identique)
+        resultsAdapter.refreshFavoriteState()
     }
 
     private fun updatePlayerUi() {
