@@ -64,20 +64,28 @@ class ReactionDiffusionView @JvmOverloads constructor(
     private val seedQueue = ArrayDeque<IntArray>()
     private val seedLock = Any()
 
+    // Réinitialisation demandée depuis le thread UI, appliquée par le thread de simulation
+    // entre deux pas : écrire a/b depuis l'UI pendant que la simulation échange ses tampons
+    // perdait la graine ou mélangeait deux états.
+    @Volatile private var pendingReset = RESET_NONE
+
     // ── Thread de simulation ─────────────────────────────────────────────────
     @Volatile private var running = false
     private var simThread: Thread? = null
+    // Lecture voulue : start() avant la mise en page (grille encore vide) démarre dès que
+    // la grille existe, au lieu d'être ignorée.
+    private var wantRunning = false
 
-    val isRunning: Boolean get() = running
+    val isRunning: Boolean get() = wantRunning
 
     // ── Construction de la grille ────────────────────────────────────────────
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (w <= 0 || h <= 0) return
-        val wasRunning = running
-        stop()
+        val resume = wantRunning
+        stopThread()
         buildGrid(w, h)
-        if (wasRunning) start()
+        if (resume) start()
     }
 
     private fun buildGrid(viewW: Int, viewH: Int) {
@@ -103,22 +111,27 @@ class ReactionDiffusionView @JvmOverloads constructor(
         synchronized(bmpLock) {
             bitmap = Bitmap.createBitmap(gw, gh, Bitmap.Config.ARGB_8888)
         }
-        clearAndSeed()
+        // Le thread est arrêté pendant la reconstruction : réinitialisation directe.
+        pendingReset = RESET_NONE
+        doClearAndSeed()
+        flushImmediate()
     }
 
     // ── Cycle de vie de la simulation ────────────────────────────────────────
     fun start() {
+        wantRunning = true
         if (running || gw == 0) return
         running = true
         simThread = Thread {
             val frameTargetMs = 16L
             while (running) {
-                val t0 = System.currentTimeMillis()
+                val t0 = android.os.SystemClock.uptimeMillis()
+                applyPendingReset()
                 drainSeeds()
                 repeat(iterationsPerFrame) { stepOnce() }
                 render()
                 postInvalidate()
-                val elapsed = System.currentTimeMillis() - t0
+                val elapsed = android.os.SystemClock.uptimeMillis() - t0
                 val sleep = frameTargetMs - elapsed
                 if (sleep > 0) {
                     try { Thread.sleep(sleep) } catch (_: InterruptedException) { break }
@@ -128,10 +141,19 @@ class ReactionDiffusionView @JvmOverloads constructor(
     }
 
     fun stop() {
+        wantRunning = false
+        stopThread()
+    }
+
+    /**
+     * Attend la fin réelle du thread : avec join(200), un thread encore dans ses itérations
+     * pouvait continuer sur les anciens tableaux pendant que onSizeChanged changeait gw/gh.
+     */
+    private fun stopThread() {
         running = false
         simThread?.let {
             it.interrupt()
-            try { it.join(200) } catch (_: InterruptedException) {}
+            try { it.join() } catch (_: InterruptedException) { Thread.currentThread().interrupt() }
         }
         simThread = null
     }
@@ -195,16 +217,31 @@ class ReactionDiffusionView @JvmOverloads constructor(
 
     // ── Ensemencement / réinitialisation ─────────────────────────────────────
     /** Champ vierge (A=1, B=0) avec une tache centrale de B qui va croître. */
-    fun clearAndSeed() {
+    fun clearAndSeed() = requestReset(RESET_CLEAR)
+
+    /** Disperse une dizaine de taches aléatoires. */
+    fun randomize() = requestReset(RESET_RANDOM)
+
+    private fun requestReset(kind: Int) {
+        if (running) pendingReset = kind      // appliqué par le thread de simulation
+        else { pendingReset = kind; applyPendingReset(); flushImmediate() }
+    }
+
+    private fun applyPendingReset() {
+        val kind = pendingReset
+        if (kind == RESET_NONE) return
+        pendingReset = RESET_NONE
+        if (kind == RESET_RANDOM) doRandomize() else doClearAndSeed()
+    }
+
+    private fun doClearAndSeed() {
         for (i in a.indices) { a[i] = 1f; b[i] = 0f }
         val cx = gw / 2
         val cy = gh / 2
         seedBlob(cx, cy, (gw.coerceAtMost(gh) / 12).coerceAtLeast(6))
-        flushImmediate()
     }
 
-    /** Disperse une dizaine de taches aléatoires. */
-    fun randomize() {
+    private fun doRandomize() {
         for (i in a.indices) { a[i] = 1f; b[i] = 0f }
         val blobs = 12
         repeat(blobs) {
@@ -214,7 +251,6 @@ class ReactionDiffusionView @JvmOverloads constructor(
                 Random.nextInt(4, 9)
             )
         }
-        flushImmediate()
     }
 
     private fun seedBlob(cx: Int, cy: Int, radius: Int) {
@@ -312,7 +348,13 @@ class ReactionDiffusionView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
-        stop()
+        stopThread()
         super.onDetachedFromWindow()
+    }
+
+    private companion object {
+        const val RESET_NONE = 0
+        const val RESET_CLEAR = 1
+        const val RESET_RANDOM = 2
     }
 }

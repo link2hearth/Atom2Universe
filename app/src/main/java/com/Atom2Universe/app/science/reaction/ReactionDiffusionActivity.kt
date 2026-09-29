@@ -14,6 +14,7 @@ import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import kotlin.math.roundToInt
 
 class ReactionDiffusionActivity : ThemedActivity() {
 
@@ -22,6 +23,9 @@ class ReactionDiffusionActivity : ThemedActivity() {
 
     private lateinit var feedSeek: SeekBar
     private lateinit var killSeek: SeekBar
+
+    // Pause voulue par l'utilisateur : onResume ne relance pas une simulation mise en pause.
+    private var pausedByUser = false
 
     private var paletteChips = mutableListOf<TextView>()
     private var presetChips = mutableListOf<TextView>()
@@ -94,6 +98,7 @@ class ReactionDiffusionActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setBackgroundColor(Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFFFFFFFF.toInt())
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         bar.addView(backBtn, LinearLayout.LayoutParams((36 * dp).toInt(), (36 * dp).toInt()))
@@ -164,10 +169,11 @@ class ReactionDiffusionActivity : ThemedActivity() {
         bar.addView(buildPaletteRow(dp))
 
         // ── Curseurs ─────────────────────────────────────────────────────────
-        feedSeek = addSeekRow(bar, dp, R.string.rd_feed, 8, 110, (rdView.feed * 1000).toInt(),
+        // roundToInt : 0.029f × 1000 = 28.999998, que toInt() ramenait à 28.
+        feedSeek = addSeekRow(bar, dp, R.string.rd_feed, 8, 110, (rdView.feed * 1000).roundToInt(),
             { "%.3f".format(it / 1000f) }) { rdView.feed = it / 1000f }
 
-        killSeek = addSeekRow(bar, dp, R.string.rd_kill, 40, 75, (rdView.kill * 1000).toInt(),
+        killSeek = addSeekRow(bar, dp, R.string.rd_kill, 40, 75, (rdView.kill * 1000).roundToInt(),
             { "%.3f".format(it / 1000f) }) { rdView.kill = it / 1000f }
 
         addSeekRow(bar, dp, R.string.rd_speed, 1, 24, rdView.iterationsPerFrame,
@@ -230,8 +236,9 @@ class ReactionDiffusionActivity : ThemedActivity() {
 
     private fun selectPreset(index: Int) {
         val p = presets[index]
-        feedSeek.progress = (p.feed * 1000).toInt() - 8
-        killSeek.progress = (p.kill * 1000).toInt() - 40
+        // Le curseur affichait 0,028 pour le préréglage Labyrinthe (0,029) : troncature du float.
+        feedSeek.progress = (p.feed * 1000).roundToInt() - 8
+        killSeek.progress = (p.kill * 1000).roundToInt() - 40
         rdView.feed = p.feed
         rdView.kill = p.kill
         rdView.clearAndSeed()
@@ -300,6 +307,7 @@ class ReactionDiffusionActivity : ThemedActivity() {
         val seek = SeekBar(this).apply {
             this.max = max - min
             progress = (initial - min).coerceIn(0, max - min)
+            contentDescription = getString(labelRes)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
@@ -318,24 +326,26 @@ class ReactionDiffusionActivity : ThemedActivity() {
     }
 
     private fun togglePlay() {
-        if (rdView.isRunning) {
-            rdView.stop()
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
-        } else {
-            rdView.start()
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
-        }
+        pausedByUser = rdView.isRunning
+        if (rdView.isRunning) rdView.stop() else rdView.start()
+        updatePlayButton()
+    }
+
+    private fun updatePlayButton() {
+        val running = rdView.isRunning
+        playPauseBtn.setImageResource(if (running) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play)
+        playPauseBtn.contentDescription = getString(if (running) R.string.gol_pause else R.string.gol_play)
     }
 
     override fun onResume() {
         super.onResume()
-        rdView.start()
-        playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+        if (!pausedByUser) rdView.start()
+        updatePlayButton()
     }
 
     override fun onPause() {
         super.onPause()
         rdView.stop()
-        playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+        updatePlayButton()
     }
 }
