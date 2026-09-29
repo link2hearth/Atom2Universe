@@ -63,6 +63,11 @@ import java.util.zip.ZipInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 import androidx.core.content.edit
 
+// Regex précompilées: l'extraction EPUB les utilise pour chaque paragraphe (des milliers de fois)
+private val HTML_TAG_RE = Regex("<[^>]+>")
+private val WHITESPACE_RE = Regex("\\s+")
+private val HTML_BR_RE = Regex("<br\\s*/?>", RegexOption.IGNORE_CASE)
+
 class BookReaderActivity : ThemedActivity() {
 
     companion object {
@@ -1145,12 +1150,12 @@ class BookReaderActivity : ThemedActivity() {
         val tagRe = Regex("<(p|h[1-6]|div)[^>]*>(.*?)</(p|h[1-6]|div)>", RegexOption.DOT_MATCHES_ALL)
         var found = false
         for (m in tagRe.findAll(body)) {
-            val text = decodeHtmlEntities(m.groupValues[2].replace(Regex("<[^>]+>"), ""))
-                .replace(Regex("\\s+"), " ").trim()
+            val text = decodeHtmlEntities(m.groupValues[2].replace(HTML_TAG_RE, ""))
+                .replace(WHITESPACE_RE, " ").trim()
             if (text.length > 5) { out.add(text); found = true }
         }
         if (!found) {
-            val stripped = body.replace(Regex("<[^>]+>"), " ").replace(Regex("\\s+"), "\n\n").trim()
+            val stripped = body.replace(HTML_TAG_RE, " ").replace(WHITESPACE_RE, "\n\n").trim()
             out.addAll(splitParagraphs(stripped))
         }
     }
@@ -1186,28 +1191,28 @@ class BookReaderActivity : ThemedActivity() {
                 // Heading tags → single Heading item (bold, sized by level)
                 if (tagName.length == 2 && tagName[0] == 'h' && tagName[1].isDigit()) {
                     val level = tagName[1].digitToInt()
-                    val text = decodeHtmlEntities(inner.replace(Regex("<[^>]+>"), ""))
-                        .replace(Regex("\\s+"), " ").trim()
+                    val text = decodeHtmlEntities(inner.replace(HTML_TAG_RE, ""))
+                        .replace(WHITESPACE_RE, " ").trim()
                     if (text.isNotEmpty()) { out.add(EpubItem.Heading(text, level)); found = true }
                 } else if (tagName == "p") {
                     // <p> : <br> = saut typographique, garder en un seul paragraphe
                     val text = decodeHtmlEntities(
-                        inner.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), " ")
-                             .replace(Regex("<[^>]+>"), "")
-                    ).replace(Regex("\\s+"), " ").trim()
+                        inner.replace(HTML_BR_RE, " ")
+                             .replace(HTML_TAG_RE, "")
+                    ).replace(WHITESPACE_RE, " ").trim()
                     if (text.length > 3) { out.add(EpubItem.Paragraph(text)); found = true }
                 } else {
                     // div/figure : <br> = séparateur de lignes
-                    val withBreaks = inner.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n")
-                    val raw = decodeHtmlEntities(withBreaks.replace(Regex("<[^>]+>"), ""))
+                    val withBreaks = inner.replace(HTML_BR_RE, "\n")
+                    val raw = decodeHtmlEntities(withBreaks.replace(HTML_TAG_RE, ""))
                     val lines = raw.split("\n")
-                        .map { it.replace(Regex("\\s+"), " ").trim() }.filter { it.length > 3 }
+                        .map { it.replace(WHITESPACE_RE, " ").trim() }.filter { it.length > 3 }
                     if (lines.isNotEmpty()) { lines.forEach { out.add(EpubItem.Paragraph(it)) }; found = true }
                 }
             }
         }
         if (!found) {
-            val stripped = body.replace(Regex("<[^>]+>"), " ").replace(Regex("\\s+"), "\n\n").trim()
+            val stripped = body.replace(HTML_TAG_RE, " ").replace(WHITESPACE_RE, "\n\n").trim()
             splitParagraphs(stripped).forEach { out.add(EpubItem.Paragraph(it)) }
         }
     }
@@ -1377,7 +1382,7 @@ class BookReaderActivity : ThemedActivity() {
     // ── Détection d'encodage pour les fichiers TXT ────────────────────────────
 
     private fun readTextWithCharsetDetection(uri: Uri): String {
-        val bytes = contentResolver.openInputStream(uri)?.readBytes() ?: return ""
+        val bytes = contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: return ""
         return when {
             bytes.size >= 3 && bytes[0] == 0xEF.toByte() && bytes[1] == 0xBB.toByte() && bytes[2] == 0xBF.toByte() ->
                 String(bytes, 3, bytes.size - 3, Charsets.UTF_8)
