@@ -86,15 +86,15 @@ internal object FrontierItems {
     const val MARKET_BELL: Short = 9872
 
     fun isContainer(id: Short) = id in CHEST..COMPOSTER && id != WATERWHEEL && id != SHAFT || id in PRESS..VAT || id==TROUGH || id==ExpeditionItems.FORGE || id==HOPPER || id==CRUCIBLE || id==CAST_MOLD
-    /** Base healing of a dish, for a dish made without vegetables of any depth. */
-    private fun baseHealing(id: Short): Int = when (id) {
-        BREAD -> 7; SALAD -> 6; STEW -> 14; BAKED_POTATO -> 6
-        BERRY_TART -> 12; RATATOUILLE -> 16; TRAVEL_RATION -> 10
-        CHEESE -> 9; OMELETTE -> 16; PANCAKE -> 18; CREAM_SOUP -> 24
-        else -> maxOf(ExpeditionItems.baseHealing(id), KitchenItems.baseHealing(id))
+    /** How much of a standard dish each item heals (0 = not food); see [CoinEconomy.healing]. */
+    private fun healWeight(id: Short): Float = when (id) {
+        BREAD, SALAD, BAKED_POTATO, CHEESE -> .6f
+        STEW, BERRY_TART, TRAVEL_RATION, OMELETTE, PANCAKE -> 1f
+        RATATOUILLE, CREAM_SOUP -> 1.5f
+        else -> maxOf(ExpeditionItems.healWeight(id), KitchenItems.weight(id))
     }
-    /** Fixed points restored by a dish: its base grown by the depth of its best vegetable, never a share of max health. */
-    fun healing(id: Short): Int = CoinEconomy.healing(id, baseHealing(id))
+    /** Fixed points restored by a dish: it grows with the depth of its best vegetable, never a share of max health. */
+    fun healing(id: Short): Int = CoinEconomy.healing(id, healWeight(id))
     fun isGardenItem(id: Short) = id in FLOUR..MORTAR || id in WOOL..CHEESE || id in OMELETTE..CREAM_SOUP || id == SHEARS || id == CHARM || KitchenItems.isItem(id)
 
     fun toolIndex(id: Short?): Int = when(id?.toInt()) {

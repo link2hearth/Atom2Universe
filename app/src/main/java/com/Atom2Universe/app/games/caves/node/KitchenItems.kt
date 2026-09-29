@@ -18,69 +18,106 @@ internal object KitchenItems {
     const val CREAM: Short = 9939
     const val CORNMEAL: Short = 9940
     const val CORNBREAD: Short = 9941
-    const val GRILLED_CORN: Short = 9942
-    const val TOMATO_SOUP: Short = 9943
-    const val PEA_SOUP: Short = 9944
-    const val LEEK_SOUP: Short = 9945
-    const val BROCCOLI_GRATIN: Short = 9946
-    const val CAULIFLOWER_GRATIN: Short = 9947
-    const val STUFFED_PEPPER: Short = 9948
-    const val STUFFED_TOMATO: Short = 9949
-    const val EGGPLANT_BAKE: Short = 9950
-    const val SHEPHERDS_PIE: Short = 9951
-    const val BEEF_STEW: Short = 9952
-    const val PORK_SKEWER: Short = 9953
-    const val CHICKEN_PIE: Short = 9954
+    const val CHEESE_SANDWICH: Short = 9942
+    const val EGG_SANDWICH: Short = 9943
+    const val RADISH_TARTINE: Short = 9944
+    const val BURGER: Short = 9945
+    const val CHICKEN_BURGER: Short = 9946
+    const val BURGER_FRIES: Short = 9947
+    const val HOT_DOG: Short = 9948
+    const val PIZZA: Short = 9949
+    const val PIZZA_SUPREME: Short = 9950
+    const val TACOS: Short = 9951
+    const val TOMATO_SOUP: Short = 9952
+    const val PEA_SOUP: Short = 9953
+    const val LEEK_SOUP: Short = 9954
     const val CHICKEN_SOUP: Short = 9955
-    const val LAMB_STEW: Short = 9956
-    const val SPICY_BEEF: Short = 9957
-    const val FISH_PIE: Short = 9958
-    const val FISH_CHOWDER: Short = 9959
-    const val CHEESE_QUICHE: Short = 9960
-    const val LEEK_QUICHE: Short = 9961
-    const val VEGETABLE_OMELETTE: Short = 9962
-    const val CHEESE_SANDWICH: Short = 9963
-    const val EGG_SALAD: Short = 9964
-    const val GARDEN_SALAD: Short = 9965
-    const val FRUIT_SALAD: Short = 9966
-    const val STRAWBERRY_JAM: Short = 9967
-    const val RASPBERRY_JAM: Short = 9968
-    const val BLUEBERRY_JAM: Short = 9969
-    const val PINEAPPLE_CAKE: Short = 9970
-    const val BERRY_PANCAKES: Short = 9971
-    const val CUSTARD: Short = 9972
+    const val BEEF_STEW: Short = 9956
+    const val LAMB_STEW: Short = 9957
+    const val SHEPHERDS_PIE: Short = 9958
+    const val STUFFED_PEPPER: Short = 9959
+    const val STUFFED_TOMATO: Short = 9960
+    const val PORK_SKEWER: Short = 9961
+    const val CHICKEN_PIE: Short = 9962
+    const val FISH_AND_CHIPS: Short = 9963
+    const val GRILLED_CORN: Short = 9964
+    const val BROCCOLI_GRATIN: Short = 9965
+    const val CAULIFLOWER_GRATIN: Short = 9966
+    const val EGGPLANT_BAKE: Short = 9967
+    const val CHEESE_QUICHE: Short = 9968
+    const val LEEK_QUICHE: Short = 9969
+    const val EGG_SALAD: Short = 9970
+    const val SHORTBREAD: Short = 9971
+    const val FRENCH_TOAST: Short = 9972
+    const val BRIOCHE: Short = 9973
+    const val BERRY_PANCAKES: Short = 9974
+    const val PINEAPPLE_CAKE: Short = 9975
+    const val CUSTARD: Short = 9976
+    const val FRUIT_SALAD: Short = 9977
+    const val STRAWBERRY_JAM: Short = 9978
+    const val RASPBERRY_JAM: Short = 9979
+    const val BLUEBERRY_JAM: Short = 9980
 
     private enum class Shape { RAW, ROAST, BUTTER, JUG, MEAL, BREAD, CORN, SOUP, PLATE, PIE, SALAD, JAM, CAKE }
-    private data class Food(val id: Short, val name: String, val heal: Int, val shape: Shape, val color: Long)
+    /** [weight]: how much of a "standard dish" it heals (0 = ingredient, .6 snack, 1 dish, 1.5 full meal). */
+    private data class Food(val id: Short, val name: String, val weight: Float, val shape: Shape, val color: Long)
     private val foods = listOf(
-        Food(BEEF,"beef",0,Shape.RAW,0xFFC76258), Food(PORK,"pork",0,Shape.RAW,0xFFE39A91),
-        Food(CHICKEN,"chicken",0,Shape.RAW,0xFFE9C3A3), Food(MUTTON,"mutton",0,Shape.RAW,0xFFAD6662),
-        Food(STEAK,"steak",10,Shape.ROAST,0xFF985B38), Food(PORK_CHOP,"pork_chop",10,Shape.ROAST,0xFFBB7850),
-        Food(ROAST_CHICKEN,"roast_chicken",11,Shape.ROAST,0xFFD29B54), Food(LAMB_CHOP,"lamb_chop",10,Shape.ROAST,0xFFA16F45),
-        Food(BUTTER,"butter",0,Shape.BUTTER,0xFFF1D77D), Food(CREAM,"cream",0,Shape.JUG,0xFFF5E9CE),
-        Food(CORNMEAL,"cornmeal",0,Shape.MEAL,0xFFE2BC62), Food(CORNBREAD,"cornbread",9,Shape.BREAD,0xFFE2AF52),
-        Food(GRILLED_CORN,"grilled_corn",7,Shape.CORN,0xFFE1B442),
-        Food(TOMATO_SOUP,"tomato_soup",11,Shape.SOUP,0xFFD36548), Food(PEA_SOUP,"pea_soup",12,Shape.SOUP,0xFF90AF5F),
-        Food(LEEK_SOUP,"leek_soup",13,Shape.SOUP,0xFFB8C987),
-        Food(BROCCOLI_GRATIN,"broccoli_gratin",17,Shape.PLATE,0xFF78A757), Food(CAULIFLOWER_GRATIN,"cauliflower_gratin",17,Shape.PLATE,0xFFE5D7A0),
-        Food(STUFFED_PEPPER,"stuffed_pepper",21,Shape.PLATE,0xFFD68C42), Food(STUFFED_TOMATO,"stuffed_tomato",21,Shape.PLATE,0xFFD76146),
-        Food(EGGPLANT_BAKE,"eggplant_bake",19,Shape.PLATE,0xFF947394), Food(SHEPHERDS_PIE,"shepherds_pie",26,Shape.PIE,0xFFE3C174),
-        Food(BEEF_STEW,"beef_stew",24,Shape.SOUP,0xFFA66943), Food(PORK_SKEWER,"pork_skewer",20,Shape.ROAST,0xFFB47A55),
-        Food(CHICKEN_PIE,"chicken_pie",25,Shape.PIE,0xFFC99A61), Food(CHICKEN_SOUP,"chicken_soup",22,Shape.SOUP,0xFFCEAD70),
-        Food(LAMB_STEW,"lamb_stew",24,Shape.SOUP,0xFFB98956), Food(SPICY_BEEF,"spicy_beef",25,Shape.PLATE,0xFFC4693E),
-        Food(FISH_PIE,"fish_pie",24,Shape.PIE,0xFFE0BD81), Food(FISH_CHOWDER,"fish_chowder",23,Shape.SOUP,0xFFE6D6AC),
-        Food(CHEESE_QUICHE,"cheese_quiche",22,Shape.PIE,0xFFE2BE63), Food(LEEK_QUICHE,"leek_quiche",23,Shape.PIE,0xFFACC079),
-        Food(VEGETABLE_OMELETTE,"vegetable_omelette",19,Shape.PLATE,0xFFE7C96D),
-        Food(CHEESE_SANDWICH,"cheese_sandwich",13,Shape.BREAD,0xFFDBBA79), Food(EGG_SALAD,"egg_salad",16,Shape.SALAD,0xFFE8D8A0),
-        Food(GARDEN_SALAD,"garden_salad",10,Shape.SALAD,0xFF94BA62), Food(FRUIT_SALAD,"fruit_salad",12,Shape.SALAD,0xFFE99A75),
-        Food(STRAWBERRY_JAM,"strawberry_jam",8,Shape.JAM,0xFFD46565), Food(RASPBERRY_JAM,"raspberry_jam",8,Shape.JAM,0xFFBB5379),
-        Food(BLUEBERRY_JAM,"blueberry_jam",8,Shape.JAM,0xFF7978AD), Food(PINEAPPLE_CAKE,"pineapple_cake",21,Shape.CAKE,0xFFE7C671),
-        Food(BERRY_PANCAKES,"berry_pancakes",23,Shape.CAKE,0xFFBA768F), Food(CUSTARD,"custard",18,Shape.JUG,0xFFE4CF88)
+        Food(BEEF,"beef",0f,Shape.RAW,0xFFC76258),
+        Food(PORK,"pork",0f,Shape.RAW,0xFFE39A91),
+        Food(CHICKEN,"chicken",0f,Shape.RAW,0xFFE9C3A3),
+        Food(MUTTON,"mutton",0f,Shape.RAW,0xFFAD6662),
+        Food(STEAK,"steak",1.0f,Shape.ROAST,0xFF985B38),
+        Food(PORK_CHOP,"pork_chop",1.0f,Shape.ROAST,0xFFBB7850),
+        Food(ROAST_CHICKEN,"roast_chicken",1.0f,Shape.ROAST,0xFFD29B54),
+        Food(LAMB_CHOP,"lamb_chop",1.0f,Shape.ROAST,0xFFA16F45),
+        Food(BUTTER,"butter",0f,Shape.BUTTER,0xFFF1D77D),
+        Food(CREAM,"cream",0f,Shape.JUG,0xFFF5E9CE),
+        Food(CORNMEAL,"cornmeal",0f,Shape.MEAL,0xFFE2BC62),
+        Food(CORNBREAD,"cornbread",1.0f,Shape.BREAD,0xFFE2AF52),
+        Food(CHEESE_SANDWICH,"cheese_sandwich",1.0f,Shape.BREAD,0xFFDBBA79),
+        Food(EGG_SANDWICH,"egg_sandwich",1.0f,Shape.BREAD,0xFFE7CF7E),
+        Food(RADISH_TARTINE,"radish_tartine",0.6f,Shape.BREAD,0xFFE8B4B8),
+        Food(BURGER,"burger",1.5f,Shape.BREAD,0xFFB56B3C),
+        Food(CHICKEN_BURGER,"chicken_burger",1.5f,Shape.BREAD,0xFFD4A05A),
+        Food(BURGER_FRIES,"burger_fries",1.5f,Shape.BREAD,0xFFC0723A),
+        Food(HOT_DOG,"hot_dog",1.5f,Shape.BREAD,0xFFC98A52),
+        Food(PIZZA,"pizza",1.0f,Shape.PIE,0xFFD9704A),
+        Food(PIZZA_SUPREME,"pizza_supreme",1.5f,Shape.PIE,0xFFC65B3C),
+        Food(TACOS,"tacos",1.5f,Shape.PLATE,0xFFD8A648),
+        Food(TOMATO_SOUP,"tomato_soup",1.0f,Shape.SOUP,0xFFD36548),
+        Food(PEA_SOUP,"pea_soup",1.0f,Shape.SOUP,0xFF90AF5F),
+        Food(LEEK_SOUP,"leek_soup",1.0f,Shape.SOUP,0xFFB8C987),
+        Food(CHICKEN_SOUP,"chicken_soup",1.0f,Shape.SOUP,0xFFCEAD70),
+        Food(BEEF_STEW,"beef_stew",1.5f,Shape.SOUP,0xFFA66943),
+        Food(LAMB_STEW,"lamb_stew",1.5f,Shape.SOUP,0xFFB98956),
+        Food(SHEPHERDS_PIE,"shepherds_pie",1.5f,Shape.PIE,0xFFE3C174),
+        Food(STUFFED_PEPPER,"stuffed_pepper",1.5f,Shape.PLATE,0xFFD68C42),
+        Food(STUFFED_TOMATO,"stuffed_tomato",1.5f,Shape.PLATE,0xFFD76146),
+        Food(PORK_SKEWER,"pork_skewer",1.0f,Shape.ROAST,0xFFB47A55),
+        Food(CHICKEN_PIE,"chicken_pie",1.5f,Shape.PIE,0xFFC99A61),
+        Food(FISH_AND_CHIPS,"fish_and_chips",1.5f,Shape.PLATE,0xFFE0BD81),
+        Food(GRILLED_CORN,"grilled_corn",0.6f,Shape.CORN,0xFFE1B442),
+        Food(BROCCOLI_GRATIN,"broccoli_gratin",1.0f,Shape.PLATE,0xFF78A757),
+        Food(CAULIFLOWER_GRATIN,"cauliflower_gratin",1.0f,Shape.PLATE,0xFFE5D7A0),
+        Food(EGGPLANT_BAKE,"eggplant_bake",1.0f,Shape.PLATE,0xFF947394),
+        Food(CHEESE_QUICHE,"cheese_quiche",1.0f,Shape.PIE,0xFFE2BE63),
+        Food(LEEK_QUICHE,"leek_quiche",1.0f,Shape.PIE,0xFFACC079),
+        Food(EGG_SALAD,"egg_salad",1.0f,Shape.SALAD,0xFFE8D8A0),
+        Food(SHORTBREAD,"shortbread",0.6f,Shape.CAKE,0xFFE6C27A),
+        Food(FRENCH_TOAST,"french_toast",1.0f,Shape.CAKE,0xFFD9A75E),
+        Food(BRIOCHE,"brioche",1.0f,Shape.BREAD,0xFFE0A24E),
+        Food(BERRY_PANCAKES,"berry_pancakes",1.5f,Shape.CAKE,0xFFBA768F),
+        Food(PINEAPPLE_CAKE,"pineapple_cake",1.5f,Shape.CAKE,0xFFE7C671),
+        Food(CUSTARD,"custard",1.0f,Shape.JUG,0xFFE4CF88),
+        Food(FRUIT_SALAD,"fruit_salad",1.0f,Shape.SALAD,0xFFE99A75),
+        Food(STRAWBERRY_JAM,"strawberry_jam",0.6f,Shape.JAM,0xFFD46565),
+        Food(RASPBERRY_JAM,"raspberry_jam",0.6f,Shape.JAM,0xFFBB5379),
+        Food(BLUEBERRY_JAM,"blueberry_jam",0.6f,Shape.JAM,0xFF7978AD)
     )
     private val byId = foods.associateBy { it.id }
     fun isItem(id: Short) = id in byId
     fun isRawMeat(id: Short) = id in BEEF..MUTTON
-    fun baseHealing(id: Short) = byId[id]?.heal ?: 0
+    fun weight(id: Short) = byId[id]?.weight ?: 0f
 
     fun definitions(template: BlockDef): List<BlockDef> = foods.map { food ->
         val texture = "kitchen:${food.name}"

@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.caves.world
 
 import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.node.FrontierItems as F
+import com.Atom2Universe.app.games.farm.FarmCrop
 import kotlin.math.pow
 import kotlin.math.roundToLong
 import kotlin.random.Random
@@ -51,8 +52,8 @@ internal object CoinEconomy {
     // ── Dishes ────────────────────────────────────────────────────────────────
     /** Recipes that only exist as JSON crafts in the assets (the crafts folder), listed here by hand. */
     private val jsonCrafts: Map<Short, List<Short>> = mapOf(
-        F.SALAD to listOf(FarmItems.produce(3), FarmItems.produce(2), FarmItems.produce(4)),
-        F.TRAVEL_RATION to listOf(F.BREAD, FarmItems.produce(4), FarmItems.produce(17)),
+        F.SALAD to listOf(FarmItems.produce(3), FarmItems.produce(8)),
+        F.TRAVEL_RATION to listOf(F.BREAD, FarmItems.produce(4), F.CHEESE),
         F.FLOUR to listOf(FarmItems.produce(0))
     )
 
@@ -82,8 +83,16 @@ internal object CoinEconomy {
         val step = position - (STARTER_SPECIES - 1)
         return if (step <= 0) 0 else (step * STAGES_PER_SPECIES).roundToLong().toInt().coerceAtMost(MineralProgression.LAST_STAGE)
     }
-    /** Farm crop indices, in the order they are unlocked: the farm's own rank, cheapest crop first. */
-    val order: List<Int> by lazy { FarmItems.crops.indices.sortedBy { FarmItems.crops[it].rank } }
+    /**
+     * The order seeds are unlocked in, by what the kitchen needs first: the wheat field, then the burger
+     * garden (tomato, potato, carrot, onion), the pot herbs, and last the fruit.
+     */
+    private val unlockOrder = listOf(FarmCrop.WHEAT, FarmCrop.RADISH, FarmCrop.LETTUCE, FarmCrop.TOMATO, FarmCrop.POTATO,
+        FarmCrop.CARROT, FarmCrop.ONION, FarmCrop.PEAS, FarmCrop.CORN, FarmCrop.PEPPER, FarmCrop.LEEK, FarmCrop.CHILI,
+        FarmCrop.EGGPLANT, FarmCrop.BROCCOLI, FarmCrop.CAULIFLOWER, FarmCrop.STRAWBERRY, FarmCrop.RASPBERRY,
+        FarmCrop.BLUEBERRY, FarmCrop.PINEAPPLE)
+    /** Farm crop indices in unlock order. */
+    val order: List<Int> by lazy { unlockOrder.map { crop -> FarmItems.crops.indexOf(crop).also { require(it >= 0) } } }
     fun cropAt(position: Int): Int = order[position]
     fun positionOf(crop: Int): Int = order.indexOf(crop)
     fun isUnlocked(position: Int, deepestStage: Int) = unlockStage(position) <= deepestStage
@@ -105,9 +114,9 @@ internal object CoinEconomy {
     }
 
     // ── Dishes ────────────────────────────────────────────────────────────────
-    private val inputsOf: Map<Short, List<Short>> by lazy {
-        val map = HashMap<Short, MutableList<Short>>()
-        fun add(output: Short, inputs: Collection<Short>) { map.getOrPut(output) { mutableListOf() }.addAll(inputs) }
+    private val recipesOf: Map<Short, List<Collection<Short>>> by lazy {
+        val map = HashMap<Short, MutableList<Collection<Short>>>()
+        fun add(output: Short, inputs: Collection<Short>) { map.getOrPut(output) { mutableListOf() }.add(inputs) }
         for (r in FrontierWorkshops.legacyRecipes) for (out in r.output.keys) add(out, r.input.keys)
         for (c in KitchenRecipes.crafts) add(c.result, c.inputIds - c.tools.toSet())
         for ((out, inputs) in jsonCrafts) add(out, inputs)
@@ -119,13 +128,18 @@ internal object CoinEconomy {
     private fun stageOf(id: Short, seen: MutableSet<Short>): Int {
         FarmItems.produceCrop(id)?.let { return cropStage(it) }
         if (!seen.add(id)) return 0
-        val best = inputsOf[id]?.maxOfOrNull { stageOf(it, seen) } ?: 0
+        // Each recipe is as deep as its deepest vegetable; a dish with several recipes is as deep as the easiest one.
+        val best = recipesOf[id]?.minOfOrNull { inputs -> inputs.maxOfOrNull { stageOf(it, seen) } ?: 0 } ?: 0
         seen.remove(id)
         return best
     }
-    /** Fixed healing of a dish: its base, grown like everything else with the depth of its vegetables. */
-    fun healing(id: Short, base: Int): Int {
-        if (base <= 0) return 0
-        return (base * growth(dishStage(id))).roundToLong().coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
+    /** Average hit points one piece of armor gives at [stage]: what a standard dish heals. */
+    fun gearHp(stage: Int): Double = ((50.0 * growth(stage) - 25.0) * AVERAGE_SLOT_WEIGHT).coerceAtLeast(1.0)
+    /** The four armor slots share 100 % of the equipment health: 20 + 40 + 25 + 15 %. */
+    const val AVERAGE_SLOT_WEIGHT = .25
+    /** Fixed healing of a dish: [weight] times the health of a piece of armor of its best vegetable's stage. */
+    fun healing(id: Short, weight: Float): Int {
+        if (weight <= 0f) return 0
+        return (gearHp(dishStage(id)) * weight).roundToLong().coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
     }
 }

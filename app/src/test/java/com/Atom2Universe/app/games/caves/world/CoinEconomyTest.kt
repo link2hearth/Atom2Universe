@@ -44,4 +44,18 @@ class CoinEconomyTest {
     @Test fun everySpeciesIsSoldOnce() {
         assertEquals((0 until species).toList(), CoinEconomy.order.sorted())
     }
+
+    @Test fun dishesHealByTheDepthOfTheirBestVegetable() {
+        fun stage(id: Short) = CoinEconomy.dishStage(id)
+        fun crop(c: com.Atom2Universe.app.games.farm.FarmCrop) = CoinEconomy.cropStage(
+            com.Atom2Universe.app.games.caves.node.FarmItems.crops.indexOf(c))
+        val K = com.Atom2Universe.app.games.caves.node.KitchenItems
+        val F = com.Atom2Universe.app.games.caves.node.FrontierItems
+        assertEquals(0, stage(F.BREAD))
+        assertEquals(0, stage(K.BURGER))
+        assertEquals(crop(com.Atom2Universe.app.games.farm.FarmCrop.TOMATO), stage(K.CHICKEN_BURGER))
+        assertEquals(crop(com.Atom2Universe.app.games.farm.FarmCrop.POTATO), stage(K.BURGER_FRIES))
+        assertTrue(F.healing(K.BURGER_FRIES) > F.healing(K.BURGER))
+        assertTrue(F.healing(K.BURGER) > F.healing(F.BREAD))
+    }
 }
