@@ -32,9 +32,11 @@ import android.animation.ValueAnimator
 import android.graphics.Typeface
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 
 class PeriodicTableActivity : ThemedActivity() {
 
@@ -104,8 +106,18 @@ class PeriodicTableActivity : ThemedActivity() {
       it.alpha = if (rarityVisible) 1f else 0.4f
     }
 
-    CoroutineScope(Dispatchers.IO).launch {
-      PeriodicElementJsonRepository.load(applicationContext)
+    if (!PeriodicElementJsonRepository.isLoaded) {
+      lifecycleScope.launch {
+        val loaded = withContext(Dispatchers.IO) {
+          runCatching { PeriodicElementJsonRepository.load(applicationContext) }.isSuccess
+        }
+        // Un élément touché avant la fin du chargement affichait des tirets jusqu'au tap suivant.
+        if (loaded) {
+          val element = selectedElement
+          val cell = lastSelectedElementCell
+          if (element != null && cell != null) updateInfoPanel(element, cell)
+        }
+      }
     }
 
     populatePeriodicTable()
@@ -116,6 +128,14 @@ class PeriodicTableActivity : ThemedActivity() {
   private fun dpToPx(dp: Int): Int {
     return (dp * resources.displayMetrics.density).toInt()
   }
+
+  /**
+   * Fond de case teinté. mutate() est indispensable : sans lui, toutes les instances partagent
+   * l'état des couches GradientDrawable du layer-list, et chaque setTint réécrit la teinte
+   * stockée dans cet état commun à toutes les cases.
+   */
+  private fun elementBackground(color: Int) =
+    resources.getDrawable(R.drawable.element_background, null).mutate().apply { setTint(color) }
 
   private fun createInfoPanel() {
     val MP = LinearLayout.LayoutParams.MATCH_PARENT
@@ -140,8 +160,7 @@ class PeriodicTableActivity : ThemedActivity() {
       val s = dpToPx(58)
       layoutParams = LinearLayout.LayoutParams(s, s)
         .also { it.setMargins(0, 0, dpToPx(10), 0) }
-      background = resources.getDrawable(R.drawable.element_background, null)
-      background.setTint(0xFF3A3A4A.toInt())
+      background = elementBackground(0xFF3A3A4A.toInt())
     }
     panelNumberText = TextView(this).apply {
       textSize = 9f; setTextColor(0xCCFFFFFF.toInt())
@@ -267,8 +286,7 @@ class PeriodicTableActivity : ThemedActivity() {
     val scrollView = ScrollView(this).apply {
       isVerticalScrollBarEnabled = false
       overScrollMode = ScrollView.OVER_SCROLL_NEVER
-      background = resources.getDrawable(R.drawable.element_background, null)
-      background.setTint(0xFF1A1A2E.toInt())
+      background = elementBackground(0xFF1A1A2E.toInt())
     }
     scrollView.addView(panel)
 
@@ -312,7 +330,7 @@ class PeriodicTableActivity : ThemedActivity() {
     if (card != null) {
       panelCardView?.apply {
         visibility = View.VISIBLE
-        this.element = getPeriodicElements().first { it.atomicNumber == card.atomicNumber }
+        this.element = element
         setOnClickListener { showCardFullscreen(card) }
       }
     } else {
@@ -334,8 +352,9 @@ class PeriodicTableActivity : ThemedActivity() {
     propConfigVal?.text     = json?.electronConfiguration ?: dash
     propEnegVal?.text       = json?.electronegativityPauling?.let { "%.2f".format(it) } ?: dash
     propDensityVal?.text    = json?.density?.let { "%.3f g/cm³".format(it) } ?: dash
-    propMeltVal?.text       = json?.melt?.let { "${it.toInt()} K" } ?: dash
-    propBoilVal?.text       = json?.boil?.let { "${it.toInt()} K" } ?: dash
+    // Arrondi et non troncature : He fond à 0,95 K (affichait « 0 K »), H à 13,99 K (affichait 13).
+    propMeltVal?.text       = json?.melt?.let { "${it.roundToInt()} K" } ?: dash
+    propBoilVal?.text       = json?.boil?.let { "${it.roundToInt()} K" } ?: dash
     propDiscoveredVal?.text = json?.discoveredBy ?: dash
   }
 
@@ -592,9 +611,13 @@ class PeriodicTableActivity : ThemedActivity() {
 
     // ── Logique expand / collapse ─────────────────────────────────────────
     var expanded = false
+    // Deux taps rapprochés lançaient deux animations concurrentes sur la même hauteur :
+    // la fin de l'ouverture pouvait relancer l'atome et remettre WRAP_CONTENT en pleine fermeture.
+    var heightAnimator: ValueAnimator? = null
 
     header.setOnClickListener {
       expanded = !expanded
+      heightAnimator?.cancel()
       if (expanded) {
         content.visibility = View.VISIBLE
         content.measure(
@@ -606,7 +629,7 @@ class PeriodicTableActivity : ThemedActivity() {
           LinearLayout.LayoutParams.MATCH_PARENT, 0
         )
 
-        ValueAnimator.ofInt(0, targetH).apply {
+        heightAnimator = ValueAnimator.ofInt(0, targetH).apply {
           duration = 380
           interpolator = DecelerateInterpolator()
           addUpdateListener { va ->
@@ -615,7 +638,10 @@ class PeriodicTableActivity : ThemedActivity() {
             )
           }
           addListener(object : AnimatorListenerAdapter() {
+            private var cancelled = false
+            override fun onAnimationCancel(animation: Animator) { cancelled = true }
             override fun onAnimationEnd(animation: Animator) {
+              if (cancelled) return
               content.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -631,7 +657,7 @@ class PeriodicTableActivity : ThemedActivity() {
         atomView.stopAnimation()
         val startH = content.height
 
-        ValueAnimator.ofInt(startH, 0).apply {
+        heightAnimator = ValueAnimator.ofInt(startH, 0).apply {
           duration = 270
           interpolator = AccelerateInterpolator()
           addUpdateListener { va ->
@@ -640,7 +666,10 @@ class PeriodicTableActivity : ThemedActivity() {
             )
           }
           addListener(object : AnimatorListenerAdapter() {
+            private var cancelled = false
+            override fun onAnimationCancel(animation: Animator) { cancelled = true }
             override fun onAnimationEnd(animation: Animator) {
+              if (cancelled) return
               content.visibility = View.GONE
               content.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -702,9 +731,12 @@ class PeriodicTableActivity : ThemedActivity() {
 
       // Grille 2 colonnes
       var rowLayout: LinearLayout? = null
-      props.forEachIndexed { index, (label, value) ->
-        val isFullWidth = label == getString(R.string.periodic_prop_electron_config) ||
-            label == getString(R.string.periodic_prop_appearance)
+      val fullWidthLabels = setOf(
+        getString(R.string.periodic_prop_electron_config),
+        getString(R.string.periodic_prop_appearance)
+      )
+      props.forEach { (label, value) ->
+        val isFullWidth = label in fullWidthLabels
 
         if (isFullWidth) {
           if (rowLayout != null) {
@@ -812,8 +844,7 @@ class PeriodicTableActivity : ThemedActivity() {
       orientation = LinearLayout.VERTICAL
       gravity = android.view.Gravity.CENTER
       setPadding(dpToPx(4), dpToPx(6), dpToPx(4), dpToPx(6))
-      background = resources.getDrawable(R.drawable.element_background, null)
-      background.setTint(rarityColor)
+      background = elementBackground(rarityColor)
     }
 
     val dot = TextView(this).apply {
@@ -995,7 +1026,6 @@ class PeriodicTableActivity : ThemedActivity() {
     cell.orientation = LinearLayout.VERTICAL
     cell.gravity = android.view.Gravity.CENTER
     cell.setPadding(6, 6, 6, 6)
-    cell.background = resources.getDrawable(R.drawable.element_background, null)
 
     // Dimensions de la cellule
     val cellSize = 70  // dp
@@ -1006,9 +1036,7 @@ class PeriodicTableActivity : ThemedActivity() {
     layoutParams.setMargins(2, 2, 2, 2)
     cell.layoutParams = layoutParams
 
-    // Appliquer la couleur
-    val categoryColor = getCategoryColor(element.category)
-    cell.background.setTint(categoryColor)
+    cell.background = elementBackground(getCategoryColor(element.category))
 
     // Symbole atomique
     val symbolView = TextView(this).apply {

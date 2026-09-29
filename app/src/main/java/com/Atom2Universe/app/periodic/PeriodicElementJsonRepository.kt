@@ -20,11 +20,16 @@ data class ElementJsonData(
 
 object PeriodicElementJsonRepository {
 
+    // Écrit depuis un thread IO, lu depuis le thread principal.
+    @Volatile
     private var data: Map<Int, ElementJsonData>? = null
 
+    val isLoaded: Boolean get() = data != null
+
+    @Synchronized
     fun load(context: Context) {
         if (data != null) return
-        val json = context.assets.open("Elements/periodic_table.json").bufferedReader().readText()
+        val json = context.assets.open("Elements/periodic_table.json").bufferedReader().use { it.readText() }
         val elements = JSONObject(json).getJSONArray("elements")
         val map = mutableMapOf<Int, ElementJsonData>()
         for (i in 0 until elements.length()) {

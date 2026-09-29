@@ -180,6 +180,10 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
     private var edition = ""
     private var accent = Color.CYAN
     private var secondary = Color.MAGENTA
+    // Dégradés fixes (ou ne dépendant que de l'élément) : créés une fois, pas à chaque image.
+    private var backgroundShader: Shader? = null
+    private val lowerPanelShader = LinearGradient(0f, 353f, 0f, 500f,
+        intArrayOf(0x00080B14, 0xF0080B14.toInt()), null, Shader.TileMode.CLAMP)
     private val animator = ValueAnimator.ofFloat(0f, 1f).apply {
         duration = 24000L; repeatCount = ValueAnimator.INFINITE
         interpolator = LinearInterpolator()
@@ -226,6 +230,8 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
             accent = IndustrialElementCardArt.accent(element.atomicNumber)
             secondary = IndustrialElementCardArt.secondary(element.atomicNumber)
         }
+        backgroundShader = LinearGradient(0f, 0f, 360f, 520f,
+            intArrayOf(0xFF171C30.toInt(), 0xFF080C17.toInt(), alpha(accent, 255) and 0xff242424.toInt()), null, Shader.TileMode.CLAMP)
     }
 
     private fun syncAnimation() {
@@ -279,8 +285,7 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
         clip.reset(); clip.addRoundRect(4f, 4f, 356f, 516f, 23f, 23f, Path.Direction.CW)
         canvas.clipPath(clip)
         ink(Color.BLACK)
-        paint.shader = LinearGradient(0f, 0f, 360f, 520f,
-            intArrayOf(0xFF171C30.toInt(), 0xFF080C17.toInt(), alpha(accent, 255) and 0xff242424.toInt()), null, Shader.TileMode.CLAMP)
+        paint.shader = backgroundShader
         canvas.drawRect(0f, 0f, 360f, 520f, paint)
         glow(canvas, lightX, lightY, 225f, alpha(accent, 52))
         glow(canvas, 280f, 350f, 155f, alpha(secondary, 35))
@@ -316,8 +321,7 @@ class ProceduralElementCardView @JvmOverloads constructor(context: Context, attr
         text(canvas, rarityLabel.uppercase(resources.configuration.locales[0]),
             180f, 78f, 12f, 0xFFDEE3EF.toInt(), mono)
         // Dark lower panel keeps metadata legible over the effects.
-        ink(Color.BLACK); paint.shader = LinearGradient(0f, 353f, 0f, 500f,
-            intArrayOf(0x00080B14, 0xF0080B14.toInt()), null, Shader.TileMode.CLAMP)
+        ink(Color.BLACK); paint.shader = lowerPanelShader
         canvas.drawRect(28f, 350f, 332f, 499f, paint)
         text(canvas, element.symbol, 180f, 374f, 66f, 0xFFF8F3E8.toInt(), serif)
         text(canvas, name, 180f, 413f, 25f, Color.WHITE, serif)

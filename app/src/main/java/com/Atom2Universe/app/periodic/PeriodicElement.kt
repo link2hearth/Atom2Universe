@@ -19,7 +19,10 @@ data class PeriodicElement(
   val column: Int
 )
 
-fun getPeriodicElements(): List<PeriodicElement> = listOf(
+/** La table est immuable : construite une seule fois, partagée par tous les appelants. */
+fun getPeriodicElements(): List<PeriodicElement> = periodicElementTable
+
+private val periodicElementTable: List<PeriodicElement> by lazy { listOf(
   PeriodicElement("element-001-hydrogene", "hydrogene", 1, "H", "Hydrogen", "nonmetal", 1.008, 1, 1, 1, 1),
   PeriodicElement("element-002-helium", "helium", 2, "He", "Helium", "noble-gas", 4.0026, 1, 18, 1, 18),
   PeriodicElement("element-003-lithium", "lithium", 3, "Li", "Lithium", "alkali-metal", 6.94, 2, 1, 2, 1),
@@ -138,4 +141,4 @@ fun getPeriodicElements(): List<PeriodicElement> = listOf(
   PeriodicElement("element-116-livermorium", "livermorium", 116, "Lv", "Livermorium", "post-transition-metal", 293.0, 7, 16, 7, 16),
   PeriodicElement("element-117-tennesse", "tennesse", 117, "Ts", "Tennessine", "halogen", 294.0, 7, 17, 7, 17),
   PeriodicElement("element-118-oganesson", "oganesson", 118, "Og", "Oganesson", "noble-gas", 294.0, 7, 18, 7, 18),
-)
+) }

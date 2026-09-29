@@ -16,9 +16,15 @@ class AtomDiagramView @JvmOverloads constructor(
     var shells: List<Int> = emptyList()
         set(value) { field = value; recomputeGeometry(); invalidate() }
     var atomicNumber: Int = 0
-        set(value) { field = value; invalidate() }
+        set(value) { field = value; nucleusDirty = true; invalidate() }
     var neutronCount: Int = 0
-        set(value) { field = value; invalidate() }
+        set(value) { field = value; nucleusDirty = true; invalidate() }
+
+    // Le noyau est immobile : mélange et spirale calculés une fois, pas à chaque image.
+    private var nucleusDirty = true
+    private var nucleusIsProton = BooleanArray(0)
+    private var nucleusUnitX = FloatArray(0)
+    private var nucleusUnitY = FloatArray(0)
 
     private var animating = false
     private var startTime = 0L
@@ -164,12 +170,9 @@ class AtomDiagramView @JvmOverloads constructor(
         if (animating) postInvalidateOnAnimation()
     }
 
-    private fun drawNucleus(canvas: Canvas) {
-        val total = atomicNumber + neutronCount
-        if (total == 0) return
-
-        val dotR = (nucleusR * sqrt(0.60f / total))
-            .coerceIn(dp(1.5f), nucleusR * 0.40f)
+    private fun rebuildNucleus() {
+        nucleusDirty = false
+        val total = (atomicNumber + neutronCount).coerceAtLeast(0)
 
         // Mélange uniforme déterministe : même élément → même motif
         val isProton = BooleanArray(total) { it < atomicNumber }
@@ -179,14 +182,34 @@ class AtomDiagramView @JvmOverloads constructor(
             val tmp = isProton[i]; isProton[i] = isProton[j]; isProton[j] = tmp
         }
 
+        // Spirale de Fibonacci dans le disque unité, mise à l'échelle au dessin.
         val goldenAngle = 2.3999632f
+        val unitX = FloatArray(total)
+        val unitY = FloatArray(total)
+        for (i in 0 until total) {
+            val r = sqrt((i + 0.5f) / total)
+            val angle = (i * goldenAngle).toDouble()
+            unitX[i] = r * cos(angle).toFloat()
+            unitY[i] = r * sin(angle).toFloat()
+        }
+        nucleusIsProton = isProton
+        nucleusUnitX = unitX
+        nucleusUnitY = unitY
+    }
+
+    private fun drawNucleus(canvas: Canvas) {
+        if (nucleusDirty) rebuildNucleus()
+        val total = nucleusIsProton.size
+        if (total == 0) return
+
+        val dotR = (nucleusR * sqrt(0.60f / total))
+            .coerceIn(dp(1.5f), nucleusR * 0.40f)
         val placementR = nucleusR * 0.82f
+        val isProton = nucleusIsProton
 
         for (i in 0 until total) {
-            val r = sqrt((i + 0.5f) / total) * placementR
-            val angle = (i * goldenAngle).toDouble()
-            val px = cx + r * cos(angle).toFloat()
-            val py = cy + r * sin(angle).toFloat()
+            val px = cx + nucleusUnitX[i] * placementR
+            val py = cy + nucleusUnitY[i] * placementR
 
             canvas.drawCircle(px, py, dotR, if (isProton[i]) protonPaint else neutronPaint)
 

@@ -53,15 +53,21 @@ class PeriodicElementDescriptionProvider(private val context: Context) {
 
   companion object {
     private val cache = mutableMapOf<String, JSONObject>()
+    // Langues sans fichier : on ne retente pas l'ouverture (et son exception) à chaque nom affiché.
+    private val missing = mutableSetOf<String>()
 
+    @Synchronized
     fun loadRoot(context: Context, lang: String): JSONObject? {
       cache[lang]?.let { return it }
-      val json = try {
-        context.assets.open("Elements/periodic_descriptions_$lang.json").bufferedReader().readText()
+      if (lang in missing) return null
+      val root = try {
+        context.assets.open("Elements/periodic_descriptions_$lang.json").bufferedReader().use { it.readText() }
+          .let(::JSONObject)
       } catch (e: Exception) {
+        missing += lang
         return null
       }
-      return JSONObject(json).also { cache[lang] = it }
+      return root.also { cache[lang] = it }
     }
   }
 }
