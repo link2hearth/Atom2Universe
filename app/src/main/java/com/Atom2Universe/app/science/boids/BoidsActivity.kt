@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import kotlin.math.roundToInt
 
 class BoidsActivity : ThemedActivity() {
 
@@ -200,6 +201,7 @@ class BoidsActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setBackgroundColor(Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFFFFFFFF.toInt())
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         bar.addView(backBtn, LinearLayout.LayoutParams((36 * dp).toInt(), (36 * dp).toInt()))
@@ -217,6 +219,7 @@ class BoidsActivity : ThemedActivity() {
             setImageResource(android.R.drawable.ic_menu_help)
             setBackgroundColor(Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFF7B8CDE.toInt())
+            contentDescription = getString(R.string.boids_info_title)
             setOnClickListener { showInfoDialog() }
         }
         bar.addView(infoBtn, LinearLayout.LayoutParams((40 * dp).toInt(), (36 * dp).toInt()))
@@ -324,18 +327,20 @@ class BoidsActivity : ThemedActivity() {
             setPadding(0, (8 * dp).toInt(), 0, 0)
         }
 
+        // roundToInt : 0.9f × 100 = 89.99999…, que toInt() ramenait à 89.
+        val percent: (Int) -> String = { getString(R.string.boids_percent, it) }
         speedCtrl = SliderControl(R.string.boids_speed, 30, 250,
-            (boidsView.speedFactor * 100).toInt(), { "$it%" }) { boidsView.speedFactor = it / 100f }
+            (boidsView.speedFactor * 100).roundToInt(), percent) { boidsView.speedFactor = it / 100f }
         countCtrl = SliderControl(R.string.boids_count, BoidsView.MIN_BOIDS, BoidsView.MAX_BOIDS,
             280, { it.toString() }) { boidsView.setBoidCount(it) }
         cohCtrl = SliderControl(R.string.boids_cohesion, 0, 200,
-            (boidsView.cohesionWeight * 100).toInt(), { "$it%" }) { boidsView.cohesionWeight = it / 100f }
+            (boidsView.cohesionWeight * 100).roundToInt(), percent) { boidsView.cohesionWeight = it / 100f }
         aliCtrl = SliderControl(R.string.boids_alignment, 0, 200,
-            (boidsView.alignmentWeight * 100).toInt(), { "$it%" }) { boidsView.alignmentWeight = it / 100f }
+            (boidsView.alignmentWeight * 100).roundToInt(), percent) { boidsView.alignmentWeight = it / 100f }
         sepCtrl = SliderControl(R.string.boids_separation, 0, 200,
-            (boidsView.separationWeight * 100).toInt(), { "$it%" }) { boidsView.separationWeight = it / 100f }
+            (boidsView.separationWeight * 100).roundToInt(), percent) { boidsView.separationWeight = it / 100f }
         perceptionCtrl = SliderControl(R.string.boids_perception, 20, 160,
-            boidsView.perceptionDp.toInt(), { it.toString() }) { boidsView.perceptionDp = it.toFloat() }
+            boidsView.perceptionDp.roundToInt(), { it.toString() }) { boidsView.perceptionDp = it.toFloat() }
 
         listOf(speedCtrl, countCtrl, cohCtrl, aliCtrl, sepCtrl, perceptionCtrl).forEach { ctrl ->
             ctrl.button = controlBtn(dp, "") { showSliderPopup(ctrl) }
@@ -530,25 +535,30 @@ class BoidsActivity : ThemedActivity() {
             .show()
     }
 
+    // Pause voulue par l'utilisateur : onResume ne relance pas une nuée mise en pause.
+    private var pausedByUser = false
+
     private fun togglePlay() {
-        if (boidsView.isRunning) {
-            boidsView.stop()
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
-        } else {
-            boidsView.start()
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
-        }
+        pausedByUser = boidsView.isRunning
+        if (boidsView.isRunning) boidsView.stop() else boidsView.start()
+        updatePlayButton()
+    }
+
+    private fun updatePlayButton() {
+        val running = boidsView.isRunning
+        playPauseBtn.setImageResource(if (running) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play)
+        playPauseBtn.contentDescription = getString(if (running) R.string.gol_pause else R.string.gol_play)
     }
 
     override fun onResume() {
         super.onResume()
-        boidsView.start()
-        playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+        if (!pausedByUser) boidsView.start()
+        updatePlayButton()
     }
 
     override fun onPause() {
         super.onPause()
         boidsView.stop()
-        playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+        updatePlayButton()
     }
 }

@@ -109,6 +109,14 @@ class BoidsView @JvmOverloads constructor(
     private val vy = FloatArray(MAX_BOIDS)
     private val phase = FloatArray(MAX_BOIDS) { Random.nextFloat() * 6.2832f }
 
+    // État suivant, validé en fin de pas : mis à jour sur place, un boid voyait déjà la
+    // nouvelle position des boids traités avant lui, et une paire (i, j) ne se repoussait pas
+    // symétriquement selon l'ordre de la boucle.
+    private val nextX = FloatArray(MAX_BOIDS)
+    private val nextY = FloatArray(MAX_BOIDS)
+    private val nextVx = FloatArray(MAX_BOIDS)
+    private val nextVy = FloatArray(MAX_BOIDS)
+
     private var predatorCount = 0
     private val px = FloatArray(MAX_PREDATORS)
     private val py = FloatArray(MAX_PREDATORS)
@@ -315,6 +323,8 @@ class BoidsView @JvmOverloads constructor(
         val wallMargin = 90f * density
         val sc = speciesCount
         val walls = edgeMode == EDGE_WALLS
+        val halfW = w * 0.5f
+        val halfH = h * 0.5f
         // « Espace vital » : rayon de contact incompressible, indépendant des curseurs
         val coreR = 14f * density
         val coreR2 = coreR * coreR
@@ -338,8 +348,15 @@ class BoidsView @JvmOverloads constructor(
 
             for (j in 0 until count) {
                 if (j == i) continue
-                val dx = x[j] - xi
-                val dy = y[j] - yi
+                var dx = x[j] - xi
+                var dy = y[j] - yi
+                if (!walls) {
+                    // Bords reliés : on mesure par le plus court chemin sur le tore. Sans ça,
+                    // deux voisins de part et d'autre d'un bord s'ignoraient et la cohésion
+                    // d'une nuée à cheval sur le bord visait le milieu de l'écran.
+                    if (dx > halfW) dx -= w else if (dx < -halfW) dx += w
+                    if (dy > halfH) dy -= h else if (dy < -halfH) dy += h
+                }
                 val d2 = dx * dx + dy * dy
                 if (d2 >= per2 || d2 < 1e-6f) continue
                 if (d2 < coreR2) {
@@ -352,7 +369,8 @@ class BoidsView @JvmOverloads constructor(
                 if (sc == 1 || j % sc == si) {
                     n++
                     aliX += vx[j]; aliY += vy[j]
-                    cohX += x[j]; cohY += y[j]
+                    // Décalages relatifs (et non positions absolues) : juste aussi sur le tore.
+                    cohX += dx; cohY += dy
                     if (d2 < sepR2) {
                         val inv = 1f / d2
                         sepX -= dx * inv
@@ -367,8 +385,8 @@ class BoidsView @JvmOverloads constructor(
                     nSep++
                 }
                 if (captureVision && i == 0 && visionNeighborCount < MAX_VISION_NEIGHBORS) {
-                    visionNeighbors[visionNeighborCount * 2] = x[j]
-                    visionNeighbors[visionNeighborCount * 2 + 1] = y[j]
+                    visionNeighbors[visionNeighborCount * 2] = xi + dx
+                    visionNeighbors[visionNeighborCount * 2 + 1] = yi + dy
                     visionNeighborCount++
                 }
             }
@@ -406,7 +424,7 @@ class BoidsView @JvmOverloads constructor(
                 ruleAliY = steerY * alignmentWeight
                 fx += ruleAliX; fy += ruleAliY
 
-                steer(cohX / n - xi, cohY / n - yi, vxi, vyi, maxSpeed, maxForce)
+                steer(cohX / n, cohY / n, vxi, vyi, maxSpeed, maxForce)
                 ruleCohX = steerX * cohesionWeight
                 ruleCohY = steerY * cohesionWeight
                 fx += ruleCohX; fy += ruleCohY
@@ -420,8 +438,12 @@ class BoidsView @JvmOverloads constructor(
 
             // Fuite des prédateurs
             for (p in 0 until predatorCount) {
-                val dx = xi - px[p]
-                val dy = yi - py[p]
+                var dx = xi - px[p]
+                var dy = yi - py[p]
+                if (!walls) {
+                    if (dx > halfW) dx -= w else if (dx < -halfW) dx += w
+                    if (dy > halfH) dy -= h else if (dy < -halfH) dy += h
+                }
                 if (dx * dx + dy * dy < fleeR2) {
                     steer(dx, dy, vxi, vyi, maxSpeed, maxForce)
                     fx += steerX * 2.6f
@@ -493,11 +515,15 @@ class BoidsView @JvmOverloads constructor(
                 if (nx < 0f) nx += w else if (nx >= w) nx -= w
                 if (ny < 0f) ny += h else if (ny >= h) ny -= h
             }
-            vx[i] = nvx
-            vy[i] = nvy
-            x[i] = nx
-            y[i] = ny
+            nextVx[i] = nvx
+            nextVy[i] = nvy
+            nextX[i] = nx
+            nextY[i] = ny
         }
+        System.arraycopy(nextVx, 0, vx, 0, count)
+        System.arraycopy(nextVy, 0, vy, 0, count)
+        System.arraycopy(nextX, 0, x, 0, count)
+        System.arraycopy(nextY, 0, y, 0, count)
 
         stepPredators(dt, w, h, per, maxSpeed, maxForce)
     }
@@ -505,19 +531,26 @@ class BoidsView @JvmOverloads constructor(
     private fun stepPredators(dt: Float, w: Float, h: Float, per: Float, maxSpeed: Float, maxForce: Float) {
         val chaseR2 = per * 4f * (per * 4f)
         val predSpeed = maxSpeed * 0.85f
+        val wrap = edgeMode != EDGE_WALLS
         for (p in 0 until predatorCount) {
             var bestD2 = chaseR2
             var bestI = -1
+            var bestDx = 0f
+            var bestDy = 0f
             for (i in 0 until count) {
-                val dx = x[i] - px[p]
-                val dy = y[i] - py[p]
+                var dx = x[i] - px[p]
+                var dy = y[i] - py[p]
+                if (wrap) {
+                    if (dx > w * 0.5f) dx -= w else if (dx < -w * 0.5f) dx += w
+                    if (dy > h * 0.5f) dy -= h else if (dy < -h * 0.5f) dy += h
+                }
                 val d2 = dx * dx + dy * dy
-                if (d2 < bestD2) { bestD2 = d2; bestI = i }
+                if (d2 < bestD2) { bestD2 = d2; bestI = i; bestDx = dx; bestDy = dy }
             }
             var fx = 0f
             var fy = 0f
             if (bestI >= 0) {
-                steer(x[bestI] - px[p], y[bestI] - py[p], pvx[p], pvy[p], predSpeed, maxForce)
+                steer(bestDx, bestDy, pvx[p], pvy[p], predSpeed, maxForce)
                 fx = steerX
                 fy = steerY
             } else {

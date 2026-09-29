@@ -123,6 +123,7 @@
     <string name="boids_title">Boids</string>
     <string name="boids_hint">Touch the flock: attract it, scare it away or drop obstacles</string>
     <string name="boids_param_value">%1$s · %2$s</string>
+    <string name="boids_percent">%1$d%%</string>
     <string name="boids_edges">Edges</string>
     <string name="boids_edge_walls">Walls</string>
     <string name="boids_edge_wrap">Loop</string>

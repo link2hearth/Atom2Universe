@@ -123,6 +123,7 @@
     <string name="boids_title">Boids</string>
     <string name="boids_hint">Touchez la nuée : attirez-la, effrayez-la ou posez des obstacles</string>
     <string name="boids_param_value">%1$s · %2$s</string>
+    <string name="boids_percent">%1$d %%</string>
     <string name="boids_edges">Bords</string>
     <string name="boids_edge_walls">Murs</string>
     <string name="boids_edge_wrap">Torique</string>
