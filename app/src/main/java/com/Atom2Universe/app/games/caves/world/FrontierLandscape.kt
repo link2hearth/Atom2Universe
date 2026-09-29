@@ -29,7 +29,7 @@ internal object FrontierLandscape {
         fun hut(ox: Int,oz: Int,model: Int) {
             val m=FrontierHouses.models[model]
             plot(ox-1,oz-1,m.width+2,m.depth+2,stone)
-            FrontierHouses.build(model,houses) { dx,dy,dz,id -> put(ox+dx,dy,oz+dz,id) }
+            FrontierHouses.build(model,houses) { dx,dy,dz,id,meta -> put(ox+dx,dy,oz+dz,id,meta) }
             put(ox+1,1,oz+m.depth-2,F.CACHE); put(ox+m.width-2,1,oz+m.depth-2,F.COOKER)
             put(ox+1,1,oz+m.doorZ+1,TORCH)
             // The terrain may be three blocks lower than the floor: provide a walkable entrance.

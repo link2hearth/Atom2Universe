@@ -7,7 +7,12 @@ import kotlin.random.Random
 internal object GrandTrees {
     val types = setOf("giant_redwood", "giant_pine", "broad_oak", "baobab", "acacia", "willow")
 
-    fun generate(type: String, rng: Random, put: (Int, Int, Int, Short, Boolean) -> Unit) {
+    /** Species whose trunk is 2x2 when four saplings are planted in a square, 1x1 otherwise. */
+    val widenable = setOf("giant_redwood", "giant_pine", "broad_oak", "willow")
+
+    /** [thick] widens the [widenable] species to a 2x2 trunk; the others ignore it. */
+    fun generate(type: String, rng: Random, thick: Boolean = true, put: (Int, Int, Int, Short, Boolean) -> Unit) {
+        val w = if (thick || type !in widenable) 1 else 0
         val conifer = type == "giant_redwood" || type == "giant_pine"
         val wood = when (type) {
             "giant_redwood" -> WOOD_RED
@@ -30,11 +35,11 @@ internal object GrandTrees {
         }
         if (conifer) {
             val h = if (type == "giant_redwood") 20 + rng.nextInt(6) else 15 + rng.nextInt(6)
-            for (y in 1..h) for (z in 0..1) for (x in 0..1) log(x, y, z)
+            for (y in 1..h) for (z in 0..w) for (x in 0..w) log(x, y, z)
             for (y in h / 3..h step 2) {
                 val r = ((h - y) / 5 + 1).coerceIn(1, 3)
-                for (z in -r..r + 1) for (x in -r..r + 1)
-                    if (abs(x * 2 - 1) + abs(z * 2 - 1) <= r * 2 + 2) {
+                for (z in -r..r + w) for (x in -r..r + w)
+                    if (abs(x * 2 - w) + abs(z * 2 - w) <= r * 2 + 2) {
                         foliage(x, y, z); foliage(x, y + 1, z)
                     }
             }
@@ -55,7 +60,7 @@ internal object GrandTrees {
                 log(x, y, z)
             }
         } else {
-            val width = if (type == "acacia") 0 else 1
+            val width = if (type == "acacia") 0 else w
             for (y in 1..h) for (z in 0..width) for (x in 0..width) log(x, y, z)
         }
         val tips = ArrayList<Triple<Int, Int, Int>>()

@@ -14,6 +14,7 @@ import com.Atom2Universe.app.games.caves.render.MobModels
 import com.Atom2Universe.app.games.caves.node.FarmItems
 import com.Atom2Universe.app.games.caves.world.AIR
 import com.Atom2Universe.app.games.caves.world.BlockPlacement
+import com.Atom2Universe.app.games.caves.world.DoorModel
 import com.Atom2Universe.app.games.caves.world.RegionalBiomes
 import com.Atom2Universe.app.games.caves.world.WARD_STONE
 import com.Atom2Universe.app.games.caves.world.WATER
@@ -274,6 +275,8 @@ internal class CaveSimulation(
         for ((id, count) in contents)
             who.inventory[id] = ((who.inventory[id] ?: 0).toLong() + count).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         world.setBlock(x, y, z, AIR)
+        if (BlockRegistry.get(blockType)?.door == true)
+            blockChanged(x, DoorModel.partnerY(y, blockMeta), z)
         if (isWood(blockType)) saplings.cut(x,y,z,if (creative) "creative:${who.id}" else who.id)
         if (isLeaf(blockType)) leafLoot(who,blockType,blockMeta)
         blockChanged(x, y, z)
@@ -288,6 +291,8 @@ internal class CaveSimulation(
             else       -> { if (!creative && !isLeaf(blockType)) who.collectBlock(blockType, blockMeta) }
         }
         clearUnsupportedAround(x, y, z, who)
+        if (BlockRegistry.get(blockType)?.door == true)
+            clearUnsupportedAround(x, DoorModel.partnerY(y, blockMeta), z, who)
         inventoryChanged(who)
         return BreakResult.BROKEN
     }
@@ -299,9 +304,19 @@ internal class CaveSimulation(
      */
     fun placeBlock(who: CavePlayer, blockType: Short, placedType: Short, x: Int, y: Int, z: Int, meta: Byte): Boolean {
         if (!BlockPlacement.supported(placedType, x, y, z, meta) { a, b, c -> world.blockAt(a, b, c) }) return false
+        val door = BlockRegistry.get(placedType)?.door == true
+        if (door) {
+            if (DoorModel.upper(meta) || !doorSpaceFree(x, y, z) || !doorSpaceFree(x, y + 1, z)) return false
+            if (doorTouchesPlayer(x, y, z, meta)) return false
+        }
         world.setBlock(x, y, z, placedType)
         workshops.placed(FrontierWorkshops.Pos(x, y, z), placedType)
         world.setMeta(x, y, z, meta)
+        if (door) {
+            world.setBlock(x, y + 1, z, placedType)
+            world.setMeta(x, y + 1, z, (meta.toInt() or DoorModel.UPPER).toByte())
+            blockChanged(x, y + 1, z)
+        }
         saplings.planted(x,y,z,placedType)
         blockChanged(x, y, z)
         if (blockType == WARD_STONE) enemyManager.wardStoneZones.add(Pair(x.toDouble(), z.toDouble()))
@@ -316,6 +331,39 @@ internal class CaveSimulation(
             }
         }
         inventoryChanged(who)
+        return true
+    }
+
+    private fun doorSpaceFree(x: Int, y: Int, z: Int): Boolean {
+        if (world.getChunk(Math.floorDiv(x, CHUNK_SIZE), Math.floorDiv(y, CHUNK_SIZE),
+                Math.floorDiv(z, CHUNK_SIZE))?.generated != true) return false
+        val id = world.blockAt(x, y, z)
+        return id == AIR || BlockRegistry.get(id)?.replaceable == true
+    }
+
+    private fun doorTouchesPlayer(x: Int, y: Int, z: Int, meta: Byte): Boolean =
+        DoorModel.boxes(meta).any { box -> players.any { p ->
+            p.x + .3 > x + box.x && p.x - .3 < x + box.x + box.width &&
+                p.z + .3 > z + box.z && p.z - .3 < z + box.z + box.depth &&
+                p.y + p.physics.heightAbove > y && p.y - 1.62 < y + 2
+        } }
+
+    /** A blocked swing still consumes the interaction, so it cannot place a held block. */
+    fun toggleDoor(x: Int, y: Int, z: Int): Boolean {
+        val id = world.blockAt(x, y, z)
+        if (BlockRegistry.get(id)?.door != true) return false
+        val hitMeta = world.metaAt(x, y, z)
+        val baseY = y - if (DoorModel.upper(hitMeta)) 1 else 0
+        val meta = (hitMeta.toInt() and DoorModel.UPPER.inv()).toByte()
+        if (world.blockAt(x, baseY, z) != id || world.blockAt(x, baseY + 1, z) != id ||
+            world.metaAt(x, baseY, z) != meta ||
+            world.metaAt(x, baseY + 1, z).toInt() != (meta.toInt() or DoorModel.UPPER)) return true
+        val next = (meta.toInt() xor DoorModel.OPEN).toByte()
+        if (doorTouchesPlayer(x, baseY, z, next)) return true
+        world.setMeta(x, baseY, z, next)
+        world.setMeta(x, baseY + 1, z, (next.toInt() or DoorModel.UPPER).toByte())
+        blockChanged(x, baseY, z)
+        blockChanged(x, baseY + 1, z)
         return true
     }
 
@@ -341,6 +389,11 @@ internal class CaveSimulation(
                 val farmDrops = farming.harvest(nx, ny, nz, uproot = true)
                 if (gather != null && farmDrops != null) { gather.grant(farmDrops); gathered = true }
                 world.setBlock(nx, ny, nz, AIR)
+                if (def.door) {
+                    val partnerY = DoorModel.partnerY(ny, meta)
+                    blockChanged(nx, partnerY, nz)
+                    pending.add(Triple(nx, partnerY, nz))
+                }
                 blockChanged(nx, ny, nz)
                 if (gather != null) { gather.collectBlock(id, meta); gathered = true }
                 pending.add(Triple(nx, ny, nz))

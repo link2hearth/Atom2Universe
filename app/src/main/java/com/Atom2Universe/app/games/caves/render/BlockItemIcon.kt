@@ -22,7 +22,9 @@ internal object BlockItemIcon {
         // Camera looks at the front (-Z) and right (+X), so steps and facades stay visible.
         fun project(v: FloatArray) = floatArrayOf(48f + (v[0]+v[2]-1f)*39f,
             48f + (v[0]-v[2])*19.5f - (v[1]-.5f)*43f)
-        val faces = if (def.partial) PartialBlockModel.faces(def, 0)
+        val faces = if (def.door) {
+            com.Atom2Universe.app.games.caves.world.DoorModel.itemFaces(def)
+        } else if (def.partial) PartialBlockModel.faces(def, 0)
             else cubeFaces
         val visible = faces.filter { it.direction == 0 || it.direction == 2 || it.direction == 5 }
             .sortedBy { face -> face.vertices.sumOf { (it[0]-it[2]+it[1]*39f/43f).toDouble() } / 4 }

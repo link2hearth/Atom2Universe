@@ -33,6 +33,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
     private lateinit var status: TextView
     private lateinit var production: Button
     private lateinit var matching: Button
+    private lateinit var takeAll: Button
     private lateinit var progress: ProgressBar
     private val barTiles=ArrayList<CaveItemTile>()
     private val accents=Regex("\\p{M}+")
@@ -86,6 +87,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
             header.addView(this,LinearLayout.LayoutParams(dp(44),dp(44)))
         }
         production=action("craft",R.string.cave_machine_choose) { chooseProduction(it) }
+        takeAll=action("takeall",R.string.cave_storage_take_all) { takeEverything() }
         matching=action("pin",R.string.cave_storage_matching) { depositMatching() }
         action("info",R.string.cave_ui_details) { bubbles.message(it,a.getString(R.string.cave_ui_details),machineDetails()) }
         action("close",R.string.cave_storage_close) { a.invManager.closeInventory() }
@@ -210,6 +212,7 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
         bag.adapter=Items(bagRows,true);box.adapter=Items(boxRows,false)
         bag.layoutManager?.onRestoreInstanceState(bagScroll);box.layoutManager?.onRestoreInstanceState(boxScroll)
         bag.alpha=if(busy) .5f else 1f;box.alpha=bag.alpha;matching.isEnabled=!busy
+        takeAll.isEnabled=!busy && (if(zoned) v.outputStacks else v.stacks).isNotEmpty()
         barTiles.forEachIndexed { slot,tile ->
             val stack=playerStacks.firstOrNull { it.slot==slot }
             tile.bind(stack?.let { a.blockDrawable(it.id,4f) },stack?.let { a.blockName(it.id) } ?: a.getString(R.string.cave_ui_empty_slot),stack?.count ?: 0,favorite=stack?.let { a.invManager.isFavorite(it.id) }==true)
@@ -270,6 +273,17 @@ internal class CaveStorageBrowser(private val a: CaveActivity) {
                 zone=if(stack.id in fuel) FrontierWorkshops.ZONE_FUEL else FrontierWorkshops.ZONE_INPUT)
             a.renderer.changedFrontierInventory()
         }) { }
+    }
+    /** Chest: the whole content; oven: its finished products only (inputs and fuel stay). */
+    private fun takeEverything() {
+        val v=view ?: return;if(busy) return
+        val zone=if(zoned) FrontierWorkshops.ZONE_OUTPUT else FrontierWorkshops.ZONE_INPUT
+        val keys=(if(zoned) v.outputStacks else v.stacks).map { it.key }
+        if(keys.isEmpty()) return
+        runMutation({
+            for(key in keys) a.renderer.mutateStorageStack(v.pos,key,false,transfer=true,notify=false,zone=zone)
+            a.renderer.changedFrontierInventory()
+        }) { status.setText(R.string.cave_stack_moved) }
     }
     private fun runMutation(action: ()->Unit,after: ()->Unit) {
         val v=view ?: return;val session=generation

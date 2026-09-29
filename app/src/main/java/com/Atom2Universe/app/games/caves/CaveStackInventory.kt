@@ -32,11 +32,14 @@ internal class CaveStackInventory(json: String = "[]") {
         if(lastTotals==totals && (if(bar==null) lastBar==null else lastBar?.contentEquals(bar)==true)) return false
         val previousBar=entries.filter { it.slot>=0 }.associateBy { it.slot }
         val allocated=entries.groupBy { it.id }.mapValues { (_,rows)->rows.sumOf { it.count.toLong() } }
+        val arrivals=ArrayList<Short>()
         for(id in allocated.keys+totals.keys) {
             val target=(totals[id] ?: 0).coerceAtLeast(0).toLong()
             val delta=target-(allocated[id] ?: 0L)
-            if(delta>0) receive(id,delta.toInt())
-            else if(delta<0) {
+            if(delta>0) {
+                if(entries.none { it.id==id }) arrivals+=id
+                receive(id,delta.toInt())
+            } else if(delta<0) {
                 var remaining=-delta
                 val ordered=entries.filter { it.id==id }.sortedBy {
                     when { preferredSlot>=0 && it.slot==preferredSlot -> 0;it.slot<0 -> 1;else -> 2 }
@@ -55,6 +58,12 @@ internal class CaveStackInventory(json: String = "[]") {
                 if(current?.id==expected) continue
                 if(current!=null) moveToBag(current.key)
                 if(expected!=null) entries.firstOrNull { it.id==expected && it.slot<0 }?.let { moveToBar(it.key,slot) }
+            }
+            // A type new to the player lands on the active bar first; a full bar leaves it in the bag.
+            for(id in arrivals) {
+                val stack=entries.firstOrNull { it.id==id && it.slot<0 } ?: continue
+                val free=bar.indices.firstOrNull { at(it)==null && bar[it]==null } ?: break
+                moveToBar(stack.key,free)
             }
             writeBar(bar)
         } else {

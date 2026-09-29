@@ -8,6 +8,12 @@ internal object BlockPlacement {
         supported(id, x, y, z, 0, blockAt)
 
     fun supported(id: Short, x: Int, y: Int, z: Int, meta: Byte, blockAt: (Int, Int, Int) -> Short): Boolean {
+        if (BlockRegistry.get(id)?.door == true) {
+            val below = blockAt(x, y - 1, z)
+            if (DoorModel.upper(meta)) return below == id
+            val support = BlockRegistry.get(below) ?: return false
+            return below != AIR && !support.decoration && !support.water && below != LAVA && !support.partial
+        }
         if (id == TORCH) {
             if (meta.toInt() !in 0..4) return false
             val (nx, nz) = TorchModel.normal(meta)

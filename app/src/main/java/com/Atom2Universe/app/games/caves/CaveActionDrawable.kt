@@ -108,6 +108,7 @@ internal class CaveActionDrawable(private val kind: String) : Drawable() {
             "info" -> { canvas.drawCircle(16f,16f,11f,paint);canvas.drawCircle(16f,10f,1f,paint);canvas.drawLine(16f,15f,16f,23f,paint) }
             "craft" -> { canvas.drawLine(9f,26f,23f,8f,paint);canvas.drawRoundRect(13f,5f,28f,11f,2f,2f,paint);canvas.drawLine(5f,27f,26f,27f,paint) }
             "pin" -> { canvas.drawRoundRect(8f,6f,24f,16f,3f,3f,paint);canvas.drawLine(11f,16f,8f,21f,paint);canvas.drawLine(8f,21f,24f,21f,paint);canvas.drawLine(24f,21f,21f,16f,paint);canvas.drawLine(16f,21f,16f,28f,paint) }
+            "takeall" -> { canvas.drawLine(27f,16f,12f,16f,paint);canvas.drawLine(18f,10f,12f,16f,paint);canvas.drawLine(18f,22f,12f,16f,paint);canvas.drawLine(6f,7f,6f,25f,paint) }
             "all" -> { for(x in 0..1) for(y in 0..1) canvas.drawRoundRect(6f+x*12,6f+y*12,14f+x*12,14f+y*12,2f,2f,paint) }
             "map" -> {
                 val path = Path().apply { moveTo(5f,8f); lineTo(12f,5f); lineTo(20f,8f); lineTo(27f,5f); lineTo(27f,24f); lineTo(20f,27f); lineTo(12f,24f); lineTo(5f,27f); close(); moveTo(12f,5f); lineTo(12f,24f); moveTo(20f,8f); lineTo(20f,27f) }

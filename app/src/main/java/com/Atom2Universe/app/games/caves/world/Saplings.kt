@@ -66,25 +66,41 @@ internal class Saplings(
         }
     }
 
+    /** The plants of a 2x2 square of same-species saplings containing [p], or just [p]. */
+    private fun squareOf(p: Pos, plant: Plant): List<Pos> {
+        if (TreeSpecies.types[plant.species] !in GrandTrees.widenable) return listOf(p)
+        for (ox in -1..0) for (oz in -1..0) {
+            val cells = listOf(Pos(p.x+ox,p.y,p.z+oz), Pos(p.x+ox+1,p.y,p.z+oz),
+                Pos(p.x+ox,p.y,p.z+oz+1), Pos(p.x+ox+1,p.y,p.z+oz+1))
+            if (cells.all { plants[it]?.species == plant.species }) return cells
+        }
+        return listOf(p)
+    }
+
     private fun grow(p: Pos, plant: Plant) {
+        val group = squareOf(p, plant)
+        val thick = group.size == 4
+        // A square waits until all four saplings have matured, so the tree is planted as one.
+        if (group.any { (plants[it]?.growth ?: 0L) < TreeSpecies.duration(plant.species) }) return
+        val ax = group.minOf { it.x }; val az = group.minOf { it.z }
         val blocks = linkedMapOf<Pos, Short>()
         val type = TreeSpecies.types[plant.species]
-        TreeShape.generate(type, Random(plant.shapeSeed)) { dx,dy,dz,id,onlyAir ->
-            val q = Pos(p.x+dx,p.y-1+dy,p.z+dz)
+        TreeShape.generate(type, Random(plant.shapeSeed), thick) { dx,dy,dz,id,onlyAir ->
+            val q = Pos(ax+dx,p.y-1+dy,az+dz)
             if (!onlyAir || q !in blocks) blocks[q] = id
         }
         // Validate the entire recipe before writing anything. Never grow into unknown chunks,
         // other plants, constructions or a cliff underneath a wide trunk.
         for ((q,id) in blocks) {
             val current = read(q.x,q.y,q.z) ?: return
-            if (q != p && current != AIR) return
+            if (q !in group && current != AIR) return
             if (q.y == p.y && isWood(id)) {
                 val ground = read(q.x,q.y-1,q.z) ?: return
                 if (!soil(ground)) return
             }
         }
-        plants.remove(p)
-        write(p.x,p.y,p.z,AIR,0) // A baobab's hollow centre stays empty.
+        for (cell in group) { plants.remove(cell); claims.remove(cell) }
+        for (cell in group) write(cell.x,cell.y,cell.z,AIR,0) // A baobab's hollow centre stays empty.
         for ((q,id) in blocks) write(q.x,q.y,q.z,id, if (isLeaf(id)) TreeSpecies.leafMeta(type) else 0)
     }
 

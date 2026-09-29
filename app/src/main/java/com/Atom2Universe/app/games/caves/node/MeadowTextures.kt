@@ -45,7 +45,8 @@ internal object MeadowTextures {
             "material" -> p[2] == "0" || p[2] == "1"
             "cap" -> p.getOrNull(4) == "0"
             "groundcover" -> p[2].toInt() in 0..2
-            "leaf" -> p.getOrNull(3) in setOf("537B66", "619378", "698E80", "829D65")
+            // Flowering and fruiting foliage (tiles 20+) is green leaves too: it follows the climate.
+            "leaf" -> p[2].toInt() >= 20 || p.getOrNull(3) in setOf("537B66", "619378", "698E80", "829D65")
             else -> false
         }
     }
@@ -322,7 +323,7 @@ internal object MeadowTextures {
                     }
                 }
                 6 -> {
-                    MossTextureCandidates.pixels(MossTextureCandidates.Variant.CUSHIONS).copyInto(data)
+                    MossTextureCandidates.pixels(MossTextureCandidates.Variant.COTTON).copyInto(data)
                 }
                 7 -> {
                     for (x in intArrayOf(4, 14, 26)) {

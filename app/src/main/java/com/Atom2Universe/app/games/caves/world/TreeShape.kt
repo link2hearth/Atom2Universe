@@ -12,7 +12,7 @@ internal object TreeShape {
     const val PEAR_LEAF: Short = 1034
     const val CHERRY_LEAF: Short = 1035
 
-    fun generate(type: String, rng: Random, rawPut: (Int, Int, Int, Short, Boolean) -> Unit) {
+    fun generate(type: String, rng: Random, thick: Boolean = true, rawPut: (Int, Int, Int, Short, Boolean) -> Unit) {
         // A crown centred low on a short tree dips under the trunk base: y = 0 is the ground the
         // tree stands on, so those blocks are dropped instead of overwriting the terrain. Clipping
         // here rather than inside foliage() keeps the rng draws — and so the rest of the tree —
@@ -21,7 +21,7 @@ internal object TreeShape {
             if (y >= 1) rawPut(x, y, z, id, onlyAir)
         }
         if (type in GrandTrees.types) {
-            GrandTrees.generate(type, rng, put)
+            GrandTrees.generate(type, rng, thick, put)
             return
         }
         val fruit = when {
@@ -65,7 +65,9 @@ internal object TreeShape {
             val block = when {
                 fruit != 0.toShort() && roll < .11f -> fruit
                 fruit != 0.toShort() && roll < .18f -> BLOSSOM
-                !pine && roll < .015f -> BLOSSOM
+                // Blossom leaves are a fixed green: only sprinkle them in green crowns, never in dark,
+                // autumn or jungle ones where they would clash with the species' own foliage.
+                !pine && leaf == LEAVES && roll < .015f -> BLOSSOM
                 else -> leaf
             }
             put(x, y, z, block, true)

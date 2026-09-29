@@ -1,0 +1,18 @@
+{
+  "hardness": 1.5,
+  "placement_rule": "any",
+  "texture_bottom": "cozy:material:9:7E9779",
+  "orient_mode": "facing",
+  "texture_side": "cozy:material:9:7E9779",
+  "tags": [
+    "window"
+  ],
+  "id": 9229,
+  "transparent": true,
+  "window": 10,
+  "color": "#7E9779",
+  "drop": "window_plank_sapin",
+  "name": "window_plank_sapin",
+  "creative_tab": "wood",
+  "texture_top": "cozy:material:9:7E9779"
+}

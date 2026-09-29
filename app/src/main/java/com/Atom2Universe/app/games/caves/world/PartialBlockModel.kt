@@ -152,14 +152,14 @@ internal object PartialBlockModel {
 
     /** The shape of any partial block, turning parts included. */
     fun boxes(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Box> =
-        if (def.furnitureShape != 0) CaveFurnitureModel.boxes(def.furnitureShape, meta) else when (def.kineticShape) {
+        if (def.windowShape != 0) WindowModel.boxes(meta) else if (def.door) DoorModel.boxes(meta) else if (def.furnitureShape != 0) CaveFurnitureModel.boxes(def.furnitureShape, meta) else when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftBoxes[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateBoxes[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeBox
         else -> boxes(meta, def.slab, def.blockHeight, mask)
     }
     fun faces(def: com.Atom2Universe.app.games.caves.node.BlockDef, meta: Byte, mask: Int = -1): List<Face> =
-        if (def.furnitureShape != 0) CaveFurnitureModel.faces(def.furnitureShape, meta) else when (def.kineticShape) {
+        if (def.windowShape != 0) WindowModel.faces(def.windowShape, meta) else if (def.door) DoorModel.faces(def, meta) else if (def.furnitureShape != 0) CaveFurnitureModel.faces(def.furnitureShape, meta) else when (def.kineticShape) {
         com.Atom2Universe.app.games.caves.node.KINETIC_ROD -> shaftSurfaces[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_PLATE -> plateSurfaces[shaftAxis(meta)]
         com.Atom2Universe.app.games.caves.node.KINETIC_MACHINE -> cubeSurfaces

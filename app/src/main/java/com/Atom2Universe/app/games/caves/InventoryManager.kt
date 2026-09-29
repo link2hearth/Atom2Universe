@@ -784,6 +784,8 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         type == 8000.toShort() -> activity.getString(R.string.cave_craft_furnace_hint)
                         type == 8001.toShort() -> activity.getString(R.string.cave_craft_table_hint)
                         type == 9990.toShort() || type == 9991.toShort() -> activity.getString(R.string.cave_craft_bucket_hint)
+                        def?.door == true -> activity.getString(R.string.cave_door_hint)
+                        def != null && def.windowShape != 0 -> activity.getString(R.string.cave_window_hint)
                         def?.placeable == false -> activity.getString(R.string.cave_ui_raw_resource_hint)
                         drop == null -> activity.getString(R.string.cave_ui_harvest_none)
                         else -> activity.getString(R.string.cave_ui_harvest_result, drop.second, activity.blockName(drop.first))

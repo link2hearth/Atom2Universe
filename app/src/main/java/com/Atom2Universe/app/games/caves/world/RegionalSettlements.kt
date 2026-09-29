@@ -193,9 +193,13 @@ internal class RegionalSettlements(private val seed: Long, private val terrain: 
                     0 -> {
                         val model = models[slot]; val m = FrontierHouses.models[model]
                         pad(ox - 1, oz - 1, m.width + 2, m.depth + 2, style.foundation, level)
-                        fun p(dx: Int, dy: Int, dz: Int, block: Short) {
+                        fun p(dx: Int, dy: Int, dz: Int, block: Short, meta: Byte = 0) {
+                            // North-side houses rotate 180 degrees, including each leaf's facing.
+                            // Keep hinge, opening and upper-half bits intact.
+                            val rotated = if (north && (block == style.door || block == style.window))
+                                ((meta.toInt() and 3.inv()) or ((meta.toInt() + 2) and 3)).toByte() else meta
                             b(ox + if (north) m.width - 1 - dx else dx, dy,
-                                oz + if (north) m.depth - 1 - dz else dz, block)
+                                oz + if (north) m.depth - 1 - dz else dz, block, rotated)
                         }
                         FrontierHouses.build(model, style, ::p)
                         p(1, 1, m.depth - 2, F.CACHE); p(m.width - 2, 1, m.depth - 2, F.COOKER)

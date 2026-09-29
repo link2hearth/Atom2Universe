@@ -628,7 +628,17 @@ class World(private val seed: Long = 42L, private val storage: CaveWorldChunkSto
             }
         }
         onBlockReplaced(wx,wy,wz)
+        val oldDoorMeta = chunk.metaAt(lx, ly, lz)
         chunk.setBlock(lx, ly, lz, type)
+        // Remove the other half for every replacement, including non-player world edits.
+        // Change this cell first so the recursive call cannot return to it.
+        if (com.Atom2Universe.app.games.caves.node.BlockRegistry.get(old)?.door == true) {
+            val partner = DoorModel.partnerY(wy, oldDoorMeta)
+            if (blockAt(wx, partner, wz) == old &&
+                (metaAt(wx, partner, wz).toInt() xor oldDoorMeta.toInt()) == DoorModel.UPPER)
+                setBlock(wx, partner, wz, AIR)
+            setMeta(wx, wy, wz, 0)
+        }
         // Leaf species/persistence must not leak into the replacement (or inherit an orientation).
         if (isLeaf(old) || isLeaf(type)) setMeta(wx,wy,wz,0)
         if (old == WATER_FLOW) clearWaterFlowLevel(wx, wy, wz)

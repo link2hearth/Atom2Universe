@@ -25,6 +25,7 @@
     <string name="cave_catalog_pinned">Shortcut assigned</string>
     <string name="cave_catalog_bar_full">Bar full: drag onto the shortcut you want to replace.</string>
     <string name="cave_storage_matching">Deposit matching stacks, except favorites and stacks in the bar</string>
+    <string name="cave_storage_take_all">Take everything</string>
     <string name="cave_storage_drag_hint">Tap: details · drag: move stack · hold: favorites / split</string>
     <string name="cave_stack_confirm">Confirm</string>
     <string name="cave_storage_bag_title">Bag · %1$d</string>

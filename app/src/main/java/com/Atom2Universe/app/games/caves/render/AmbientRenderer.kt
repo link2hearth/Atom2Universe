@@ -34,7 +34,8 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     }
     // 196 colonnes × 3 particules, dimensionné pour le flocon le plus détaillé.
     private val buffer = ByteBuffer.allocateDirect(maxOf(196 * 3 * maxOf(3, snowShapes.maxOf { it.size }) * 6,
-        AmbientWildlife.MAX_CREATURES * AmbientAnimalModels.maxParts * 36) * 7 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
+        AmbientWildlife.MAX_CREATURES * AmbientAnimalModels.maxParts * 36,
+        81 * CloudShapes.maxRects * 6) * 7 * 4).order(ByteOrder.nativeOrder()).asFloatBuffer()
     private var shader: ShaderProgram? = null
     private var vbo = 0
     private var vao = 0
@@ -46,6 +47,7 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
     private val roofZ = IntArray(196)
     private val roofs = IntArray(196)
     private var roofCursor = 0
+    private val toneColors = IntArray(CloudShapes.TONES)
 
     fun onSurfaceCreated() {
         shader = ShaderProgram("""#version 300 es
@@ -165,19 +167,29 @@ internal class AmbientRenderer(private val world: World, private val grayscale: 
         if (weather.cloud < .01f || cave > .99f) return
         buffer.clear(); light = daylight.coerceAtLeast(.12f); turnSin = 0f; turnCos = 1f
         val drift = seconds * 1.4
+        val storm = weather.cloud * weather.cloud * .6f
+        for (i in 0 until CloudShapes.TONES) {
+            val t = CloudShapes.tones[i]
+            fun mix(shift: Int) = ((t shr shift and 255) + ((0x8E99A5 shr shift and 255) - (t shr shift and 255)) * storm).toInt()
+            toneColors[i] = mix(16) shl 16 or (mix(8) shl 8) or mix(0)
+        }
         val tileX = floor((camera.x-drift)/70).toInt(); val tileZ = floor(camera.z/70).toInt()
         for (z in tileZ-4..tileZ+4) for (x in tileX-4..tileX+4) {
             val hash = (x*73428767 xor z*912931) and 255
             if (hash / 255f > .22f + weather.cloud*.75f) continue
             originX = (x*70.0+drift-camera.x).toFloat(); originZ = (z*70.0-camera.z).toFloat()
             originY = 95f + hash%23
-            alpha = (.25f+weather.cloud*.48f)*(1f-cave)
-            // Low polygon banks with smaller lobes soften the square skyline.
-            for (lobe in 0..2) {
-                val w=24f + (hash+lobe*13)%19; val d=17f + (hash+lobe*7)%13
-                val ox=lobe*17f-17f; val oz=(lobe%2)*13f
-                tri(ox-w,0f,oz-d,ox+w,0f,oz-d,ox+w,0f,oz+d,0xBAC5CF)
-                tri(ox-w,0f,oz-d,ox+w,0f,oz+d,ox-w,0f,oz+d,0xBAC5CF)
+            alpha = (.42f+weather.cloud*.45f)*(1f-cave)
+            // Cotton puffs: the sky greys them as the cover thickens.
+            val rects = CloudShapes.variants[(hash shr 3) % CloudShapes.variants.size]
+            val flip = if ((hash and 4) == 0) 1f else -1f
+            for (i in 0 until rects.size / 5) {
+                val o = i * 5
+                val c = toneColors[rects[o + 4].toInt()]
+                val x0 = rects[o] * flip; val x1 = rects[o + 1] * flip
+                val z0 = rects[o + 2]; val z1 = rects[o + 3]
+                tri(x0,0f,z0,x1,0f,z0,x1,0f,z1,c)
+                tri(x0,0f,z0,x1,0f,z1,x0,0f,z1,c)
             }
         }
         flush(camera, false)

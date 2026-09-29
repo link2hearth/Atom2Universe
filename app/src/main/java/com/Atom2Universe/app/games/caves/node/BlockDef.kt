@@ -44,6 +44,9 @@ internal data class BlockDef(
     val replaceable: Boolean = false,
     val stairs: Boolean = false,
     val slab: Boolean = false,
+    val door: Boolean = false,
+    /** Fixed, one-cell glazed frame; 1..10 select its woodwork pattern. */
+    val windowShape: Int = 0,
     val spriteWidth: Float = 1f,
     val blockHeight: Float = 1f,
     /** Turning part drawn by KineticRenderer, oriented by its ORIENT_AXIS meta
@@ -65,7 +68,7 @@ internal data class BlockDef(
     var layerSideSnow: Int = -1,
 ) {
     /** Not a full cube: collision, picking and meshing go through PartialBlockModel. */
-    val partial: Boolean get() = stairs || slab || blockHeight < 1f || kinetic || furnitureShape != 0
+    val partial: Boolean get() = stairs || slab || door || windowShape != 0 || blockHeight < 1f || kinetic || furnitureShape != 0
     val kinetic: Boolean get() = kineticShape != 0
 
     companion object {
@@ -111,6 +114,8 @@ internal data class BlockDef(
                 replaceable     = j.optBoolean("replaceable", false),
                 stairs          = j.optBoolean("stairs", false),
                 slab            = j.optBoolean("slab", false),
+                door            = j.optBoolean("door", false),
+                windowShape     = j.optInt("window", 0),
                 kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; "machine" -> KINETIC_MACHINE; else -> 0 },
                 furnitureShape  = when (j.optString("furniture", "")) { "bookshelf" -> FURNITURE_BOOKSHELF; "barrel" -> FURNITURE_BARREL; else -> 0 },
             )

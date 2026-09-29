@@ -841,7 +841,7 @@
     <string name="cave_block_sapling_oak">Pousse de chêne</string>
     <string name="cave_block_sapling_birch">Pousse de bouleau</string>
     <string name="cave_block_sapling_sapin">Pousse de sapin</string>
-    <string name="cave_block_sapling_darkwood">Pousse de bois sombre</string>
+    <string name="cave_block_sapling_darkwood">Pousse d\'arbre des forêts sombres</string>
     <string name="cave_block_sapling_jungle">Pousse d\'arbre de la jungle</string>
     <string name="cave_block_sapling_redwood">Pousse de séquoia</string>
     <string name="cave_block_sapling_apple">Pousse de pommier</string>
@@ -855,7 +855,7 @@
     <string name="cave_block_sapling_broad_oak">Pousse de grand chêne</string>
     <string name="cave_block_sapling_baobab">Pousse de baobab</string>
     <string name="cave_block_sapling_acacia">Pousse d\'acacia</string>
-    <string name="cave_block_sapling_willow">Pousse de saule</string>
+    <string name="cave_block_sapling_willow">Pousse de saule pleureur</string>
     <string name="cave_block_sapling_jungle_small">Pousse de petit arbre de la jungle</string>
     <string name="cave_block_sapling_autumn">Pousse d\'arbre d\'automne</string>
     <string name="cave_training_map">Test de combat — structures souterraines</string>

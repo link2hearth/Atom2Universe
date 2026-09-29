@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.games.caves.world
 
-/** Houses of the version 5 settlements: a finished shell, interior left empty.
+/** Houses of the settlements: a finished shell with working doors and framed windows.
  * Local frame: walls fill x 0 until width and z 0 until depth, the floor is y = 0, the main door
  * opens on the front (low z). Eaves and chimneys overhang by one block: x -1..width, z -1..depth.
  *
@@ -10,7 +10,12 @@ package com.Atom2Universe.app.games.caves.world
  */
 internal object FrontierHouses {
     class Style(val foundation: Short, val floor: Short, val wall: Short, val stoneWall: Short,
-                val frame: Short, val roof: Short, val flat: Boolean, val snow: Boolean)
+                val frame: Short, val roof: Short, val flat: Boolean, val snow: Boolean) {
+        // Door/window catalogues follow the ten plank IDs 1010..1019 in the same order.
+        private val joinery = if (floor.toInt() in 1010..1019) floor else PLANK_DARK
+        val door: Short get() = (9200 + joinery - 1010).toShort()
+        val window: Short get() = (9220 + joinery - 1010).toShort()
+    }
 
     fun style(arid: Boolean, cold: Boolean) = when {
         arid -> Style(SANDSTONE, BRICK_TERRACOTTA, SANDSTONE, SANDSTONE, BRICK_TERRACOTTA, BRICK_SANDY, flat = true, snow = false)
@@ -34,7 +39,8 @@ internal object FrontierHouses {
         fun contains(x: Int, z: Int) = x in x0..x1 && z in z0..z1
     }
 
-    fun build(index: Int, s: Style, put: (Int, Int, Int, Short) -> Unit) {
+    fun build(index: Int, s: Style, putBlock: (Int, Int, Int, Short, Byte) -> Unit) {
+        fun put(x: Int, y: Int, z: Int, id: Short, meta: Byte = 0) = putBlock(x, y, z, id, meta)
         val m = models[index]
         val wings = when (index) {
             0 -> listOf(Wing(0, 0, 7, 6, 4, Roof.RIDGE_Z))
@@ -81,10 +87,29 @@ internal object FrontierHouses {
             for (y in 1..top) put(x, y, z, if (pillar || (!s.flat && y == h)) s.frame else wall)
         }
 
-        fun window(x0: Int, z0: Int, x1: Int, z1: Int, y0: Int = 2, y1: Int = 3) = box(x0, y0, z0, x1, y1, z1, GLASS)
+        fun window(x0: Int, z0: Int, x1: Int, z1: Int, y0: Int = 2, y1: Int = 3) {
+            for (x in x0..x1) for (z in z0..z1) {
+                // Same quarter-turn convention as DoorModel and WindowModel.
+                val facing = when {
+                    !inside(x, z - 1) -> 0
+                    !inside(x + 1, z) -> 1
+                    !inside(x, z + 1) -> 2
+                    else -> 3
+                }
+                for (y in y0..y1) put(x, y, z, s.window, facing.toByte())
+            }
+        }
         // Gable windows sit above the wall top: a flat roof has no gable to hold them.
         fun gable(x0: Int, z0: Int, x1: Int, z1: Int, y0: Int, y1: Int = y0) { if (!s.flat) window(x0, z0, x1, z1, y0, y1) }
-        fun door(x: Int, z: Int) = box(x, 1, z, x + 1, 3, z, AIR)
+        fun door(x: Int, z: Int) {
+            for (leaf in 0..1) {
+                val meta = if (leaf == 0) 0 else DoorModel.RIGHT
+                put(x + leaf, 1, z, s.door, meta.toByte())
+                put(x + leaf, 2, z, s.door, (meta or DoorModel.UPPER).toByte())
+                // The old entrance was three cells tall: close its extra row with a lintel.
+                put(x + leaf, 3, z, s.frame)
+            }
+        }
         var chimney: Pair<Int, Int>? = null
         when (index) {
             0 -> {

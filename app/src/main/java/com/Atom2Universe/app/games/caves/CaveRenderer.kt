@@ -3356,7 +3356,7 @@ internal class CaveRenderer(
             val arr = heldPartialMeshes.getOrPut(block) {
                 // La caméra voit +Z : tourner l'escalier pour montrer les marches, pas son dos.
                 val meta: Byte = if (definition.stairs) 2 else 0
-                val faces = PartialBlockModel.faces(definition, meta)
+                val faces = if (definition.door) DoorModel.itemFaces(definition) else PartialBlockModel.faces(definition, meta)
                 val mesh = FloatArray(faces.size * 6 * 7)
                 var offset = 0
                 for (face in faces) {
@@ -4590,6 +4590,9 @@ internal class CaveRenderer(
             }
         }
         if (target != null && !physics.isCrouching && mode.allowsWorldEdits) {
+            if (sim.toggleDoor(target.bx, target.by, target.bz)) {
+                startSwing(); checkpointCallback?.invoke(); return true
+            }
             if(world.blockAt(target.bx,target.by,target.bz)==E.ANVIL) {
                 resetInput();craftStationCallback?.invoke();return true
             }
@@ -4810,7 +4813,27 @@ internal class CaveRenderer(
         val mergeSlabs = combined != null
         if (!mergeSlabs && existing != AIR && !isWater(existing) && BlockRegistry.get(existing)?.replaceable != true) return null
         val placedType = if (mergeSlabs) combined!!.first else blockType
-        val orientMeta = if (mergeSlabs) combined!!.second else if (slab) {
+        val orientMeta = if (BlockRegistry.get(blockType)?.windowShape?.let { it != 0 } == true) {
+            // A centred window faces the player, independent of the clicked face or edge.
+            // WindowModel uses quarter turns: -Z, +X, +Z, -X (not ORIENT_FACING's order).
+            (if (abs(camera.fwdX) > abs(camera.fwdZ)) {
+                if (camera.fwdX > 0) 3 else 1
+            } else if (camera.fwdZ > 0) 0 else 2).toByte()
+        } else if (BlockRegistry.get(blockType)?.door == true) {
+            // Put the closed leaf against the nearest edge of the floor block being aimed at.
+            val facing = if (target.fny != 0) {
+                if (abs(target.hitX - .5) > abs(target.hitZ - .5)) {
+                    if (target.hitX > .5) 1 else 3
+                } else if (target.hitZ > .5) 2 else 0
+            } else when {
+                target.fnx > 0 -> 3
+                target.fnx < 0 -> 1
+                target.fnz > 0 -> 0
+                else -> 2
+            }
+            val along = when (facing) { 0 -> target.hitX; 1 -> target.hitZ; 2 -> 1 - target.hitX; else -> 1 - target.hitZ }
+            (facing or if (along > .5) DoorModel.RIGHT else 0).toByte()
+        } else if (mergeSlabs) combined!!.second else if (slab) {
             PartialBlockModel.slabMeta(placedSide)
         } else if (BlockRegistry.get(blockType)?.stairs == true) {
             val facing = if (abs(camera.fwdX) > abs(camera.fwdZ)) {

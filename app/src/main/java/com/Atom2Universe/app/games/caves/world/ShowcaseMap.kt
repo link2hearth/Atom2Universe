@@ -306,8 +306,8 @@ internal object ShowcaseMap {
         fill(FRONTIER_AISLE_X, FLOOR, FRONTIER_Z + 1, FRONTIER_AISLE_X + 3, FLOOR, FRONTIER_END_Z - 1, COBBLESTONE)
         for (climate in 0..2) for (model in FrontierHouses.models.indices) {
             val (ox, oz) = houseOrigin(climate, model)
-            FrontierHouses.build(model, FrontierHouses.style(arid = climate == 2, cold = climate == 1)) { x, y, z, id ->
-                put(ox + x, FLOOR + y, oz + z, id)
+            FrontierHouses.build(model, FrontierHouses.style(arid = climate == 2, cold = climate == 1)) { x, y, z, id, meta ->
+                put(ox + x, FLOOR + y, oz + z, id, meta)
             }
         }
         for (climate in 0..2) for (kind in 0 until FrontierLandscape.KINDS) {

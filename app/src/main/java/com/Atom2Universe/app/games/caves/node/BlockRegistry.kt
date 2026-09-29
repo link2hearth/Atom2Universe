@@ -94,6 +94,7 @@ internal object BlockRegistry {
             if (!file.endsWith(".json")) continue
             val json = assets.open("caves/blocks/$file").bufferedReader().readText()
             val def = BlockDef.fromJson(JSONObject(json))
+            DoorTextures.register(def)
             defs[def.id] = def
             val idx = def.id.toInt() and 0xFFFF
             emissionTable[idx] = def.lightEmission.coerceIn(0, 15).toByte()

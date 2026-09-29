@@ -841,7 +841,7 @@
     <string name="cave_block_sapling_oak">Oak sapling</string>
     <string name="cave_block_sapling_birch">Birch sapling</string>
     <string name="cave_block_sapling_sapin">Fir sapling</string>
-    <string name="cave_block_sapling_darkwood">Darkwood sapling</string>
+    <string name="cave_block_sapling_darkwood">Dark forest tree sapling</string>
     <string name="cave_block_sapling_jungle">Jungle tree sapling</string>
     <string name="cave_block_sapling_redwood">Redwood sapling</string>
     <string name="cave_block_sapling_apple">Apple tree sapling</string>
@@ -855,7 +855,7 @@
     <string name="cave_block_sapling_broad_oak">Broad oak sapling</string>
     <string name="cave_block_sapling_baobab">Baobab sapling</string>
     <string name="cave_block_sapling_acacia">Acacia sapling</string>
-    <string name="cave_block_sapling_willow">Willow sapling</string>
+    <string name="cave_block_sapling_willow">Weeping willow sapling</string>
     <string name="cave_block_sapling_jungle_small">Small jungle tree sapling</string>
     <string name="cave_block_sapling_autumn">Autumn tree sapling</string>
     <string name="cave_training_map">Combat lab — underground structures</string>

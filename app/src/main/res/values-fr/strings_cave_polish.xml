@@ -25,6 +25,7 @@
     <string name="cave_catalog_pinned">Raccourci attribué</string>
     <string name="cave_catalog_bar_full">Barre pleine : glisse sur le raccourci à remplacer.</string>
     <string name="cave_storage_matching">Ranger les piles déjà présentes, sauf les favoris et les piles de la barre</string>
+    <string name="cave_storage_take_all">Tout prendre</string>
     <string name="cave_storage_drag_hint">Toucher : infos · glisser : déplacer · appui long : favoris / diviser</string>
     <string name="cave_stack_confirm">Valider</string>
     <string name="cave_storage_bag_title">Sac · %1$d</string>
