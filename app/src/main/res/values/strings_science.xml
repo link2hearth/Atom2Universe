@@ -22,7 +22,7 @@
     <string name="gol_preset_gosper">Gosper Gun</string>
     <string name="gol_preset_lwss">Spaceship</string>
     <string name="gol_preset_label">Presets</string>
-    <string name="gol_zoom_hint">Pinch to zoom · Drag to pan · Tap to draw</string>
+    <string name="gol_zoom_hint">Pinch to zoom · Two-finger drag to pan · Tap or drag to draw</string>
 
     <!-- Double Pendulum -->
     <string name="hub_pendulum_title">Double Pendulum</string>

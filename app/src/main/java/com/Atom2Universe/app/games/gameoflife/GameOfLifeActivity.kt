@@ -25,7 +25,7 @@ class GameOfLifeActivity : ThemedActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isRunning = false
     private var generation = 0
-    private var intervalMs = 100L
+    private var intervalMs = intervalFor(DEFAULT_SPEED)
 
     private val stepRunnable = object : Runnable {
         override fun run() {
@@ -100,6 +100,7 @@ class GameOfLifeActivity : ThemedActivity() {
             setImageResource(R.drawable.ic_arrow_back)
             setBackgroundColor(android.graphics.Color.TRANSPARENT)
             imageTintList = android.content.res.ColorStateList.valueOf(0xFFFFFFFF.toInt())
+            contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         bar.addView(backBtn, LinearLayout.LayoutParams((36 * dp).toInt(), (36 * dp).toInt()))
@@ -164,14 +165,14 @@ class GameOfLifeActivity : ThemedActivity() {
         speedRow.addView(speedLabel)
         val seekBar = SeekBar(this).apply {
             max = 9
-            progress = 7
+            // Le curseur affichait la vitesse 7 (30 ms) alors que la simulation tournait à 100 ms :
+            // progress est posé avant le listener, qui n'était donc jamais appelé au départ.
+            progress = DEFAULT_SPEED
+            contentDescription = getString(R.string.gol_speed)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
-                    intervalMs = when (progress) {
-                        0 -> 1000L; 1 -> 500L; 2 -> 300L; 3 -> 200L; 4 -> 150L
-                        5 -> 100L; 6 -> 60L; 7 -> 30L; 8 -> 16L; else -> 8L
-                    }
+                    intervalMs = intervalFor(progress)
                 }
                 override fun onStartTrackingTouch(sb: SeekBar) {}
                 override fun onStopTrackingTouch(sb: SeekBar) {}
@@ -187,6 +188,7 @@ class GameOfLifeActivity : ThemedActivity() {
 
         playPauseBtn = ImageButton(this).apply {
             setImageResource(android.R.drawable.ic_media_play)
+            contentDescription = getString(R.string.gol_play)
             setBackgroundColor(0xFF2A2A4A.toInt())
             imageTintList = android.content.res.ColorStateList.valueOf(0xFF7B8CDE.toInt())
             setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
@@ -256,12 +258,14 @@ class GameOfLifeActivity : ThemedActivity() {
     private fun startSim() {
         isRunning = true
         playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+        playPauseBtn.contentDescription = getString(R.string.gol_pause)
         handler.post(stepRunnable)
     }
 
     private fun stopSim() {
         isRunning = false
         playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+        playPauseBtn.contentDescription = getString(R.string.gol_play)
         handler.removeCallbacks(stepRunnable)
     }
 
@@ -293,12 +297,25 @@ class GameOfLifeActivity : ThemedActivity() {
             .show()
     }
 
+    // La simulation tournait encore application en arrière-plan (jusqu'à 125 pas par seconde).
+    override fun onPause() {
+        super.onPause()
+        if (isRunning) stopSim()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(stepRunnable)
     }
 
     companion object {
+        private const val DEFAULT_SPEED = 7
+
+        private fun intervalFor(speed: Int): Long = when (speed) {
+            0 -> 1000L; 1 -> 500L; 2 -> 300L; 3 -> 200L; 4 -> 150L
+            5 -> 100L; 6 -> 60L; 7 -> 30L; 8 -> 16L; else -> 8L
+        }
+
         val GLIDER = arrayOf(
             intArrayOf(0, 1, 0),
             intArrayOf(0, 0, 1),

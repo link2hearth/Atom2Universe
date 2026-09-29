@@ -31,9 +31,11 @@ class GameOfLifeView @JvmOverloads constructor(
         private fun decodeY(v: Long): Int = v.toInt()
     }
 
-    // Grille infinie — seules les cellules vivantes sont stockées
-    private val cells = HashSet<Long>(1024)
-    private val nextCells = HashSet<Long>(1024)
+    // Grille infinie — seules les cellules vivantes sont stockées. Les deux ensembles sont échangés
+    // à chaque génération au lieu d'être recopiés.
+    private var cells = HashSet<Long>(1024)
+    private var nextCells = HashSet<Long>(1024)
+    private val neighborCounts = NeighborCounter()
 
     // Viewport en coordonnées monde (originX = cellule monde à x=0 écran)
     private var cellSize = BASE_CELL_SIZE
@@ -93,11 +95,15 @@ class GameOfLifeView @JvmOverloads constructor(
 
     fun randomize(density: Float = 0.3f) {
         cells.clear()
+        // Autour de ce qu'on regarde : centré sur (0,0), un tirage fait après un déplacement
+        // tombait hors de l'écran.
+        val centerC = floor(originX + width / cellSize / 2f).toInt()
+        val centerR = floor(originY + height / cellSize / 2f).toInt()
         val halfW = ((width / cellSize) / 2f).toInt() + 10
         val halfH = ((height / cellSize) / 2f).toInt() + 10
         for (r in -halfH..halfH) {
             for (c in -halfW..halfW) {
-                if (Math.random() < density) cells.add(encode(c, r))
+                if (Math.random() < density) cells.add(encode(centerC + c, centerR + r))
             }
         }
         notifyCount()
@@ -112,31 +118,30 @@ class GameOfLifeView @JvmOverloads constructor(
 
     fun step() {
         // Compter les voisins de tous les candidats (cellules vivantes + leurs voisins)
-        val neighborCounts = HashMap<Long, Int>(cells.size * 9)
+        neighborCounts.clear()
         for (key in cells) {
             val x = decodeX(key)
             val y = decodeY(key)
             for (dx in -1..1) for (dy in -1..1) {
                 if (dx == 0 && dy == 0) continue
-                val nk = encode(x + dx, y + dy)
-                neighborCounts[nk] = (neighborCounts[nk] ?: 0) + 1
+                neighborCounts.increment(encode(x + dx, y + dy))
             }
         }
         nextCells.clear()
-        for ((key, count) in neighborCounts) {
-            val alive = cells.contains(key)
-            if ((alive && count in 2..3) || (!alive && count == 3)) {
-                nextCells.add(key)
-            }
+        for (i in 0 until neighborCounts.capacity) {
+            val key = neighborCounts.keyAt(i)
+            if (key == NeighborCounter.EMPTY) continue
+            val count = neighborCounts.countAt(i)
+            // count == 3 naît ou survit ; count == 2 ne fait que survivre.
+            if (count == 3 || (count == 2 && cells.contains(key))) nextCells.add(key)
         }
-        cells.clear()
-        cells.addAll(nextCells)
+        val previous = cells
+        cells = nextCells
+        nextCells = previous
         nextCells.clear()
         notifyCount()
         invalidate()
     }
-
-    fun countAlive(): Int = cells.size
 
     private fun notifyCount() {
         post { onCellCountChanged?.invoke(cells.size) }
@@ -273,5 +278,61 @@ class GameOfLifeView @JvmOverloads constructor(
             }
         }
         return true
+    }
+}
+
+/**
+ * Compteur de voisins sans boxing : table à adressage ouvert réutilisée d'une génération à
+ * l'autre. Un HashMap<Long, Int> recréé à chaque pas allouait un objet par case candidate,
+ * jusqu'à 125 fois par seconde à la vitesse maximale.
+ */
+internal class NeighborCounter {
+    companion object {
+        // encode(Int.MIN_VALUE, 0) : hors de portée d'une grille réelle.
+        const val EMPTY = Long.MIN_VALUE
+    }
+
+    private var keys = LongArray(1 shl 12).also { it.fill(EMPTY) }
+    private var counts = IntArray(1 shl 12)
+    private var size = 0
+
+    val capacity: Int get() = keys.size
+    fun keyAt(i: Int): Long = keys[i]
+    fun countAt(i: Int): Int = counts[i]
+
+    fun clear() {
+        if (size == 0) return
+        keys.fill(EMPTY)
+        size = 0
+    }
+
+    fun increment(key: Long) {
+        if ((size + 1) * 2 > keys.size) grow()
+        add(key, 1)
+    }
+
+    private fun add(key: Long, amount: Int) {
+        val mask = keys.size - 1
+        var i = slot(key, mask)
+        while (true) {
+            val k = keys[i]
+            if (k == key) { counts[i] += amount; return }
+            if (k == EMPTY) { keys[i] = key; counts[i] = amount; size++; return }
+            i = (i + 1) and mask
+        }
+    }
+
+    private fun grow() {
+        val oldKeys = keys
+        val oldCounts = counts
+        keys = LongArray(oldKeys.size * 2).also { it.fill(EMPTY) }
+        counts = IntArray(oldKeys.size * 2)
+        size = 0
+        for (i in oldKeys.indices) if (oldKeys[i] != EMPTY) add(oldKeys[i], oldCounts[i])
+    }
+
+    private fun slot(key: Long, mask: Int): Int {
+        val h = key * -7046029254386353131L // constante de Fibonacci 64 bits
+        return (h xor (h ushr 32)).toInt() and mask
     }
 }
