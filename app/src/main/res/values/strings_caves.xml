@@ -586,7 +586,9 @@
     <string name="cave_block_cobblestone">Cobblestone</string>
     <string name="cave_block_mossy_cobblestone">Mossy cobblestone</string>
     <string name="cave_block_sandstone">Sandstone</string>
-    <string name="cave_block_mud">Mud</string>
+    <string name="cave_block_mud">Wet mud</string>
+    <string name="cave_block_mud_clay">Clay mud</string>
+    <string name="cave_block_mud_swamp">Swamp mud</string>
     <string name="cave_block_clay">Clay</string>
     <string name="cave_block_forest_floor">Forest floor</string>
     <string name="cave_block_moss">Moss</string>

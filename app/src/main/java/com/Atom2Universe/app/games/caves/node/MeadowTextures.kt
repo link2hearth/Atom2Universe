@@ -322,9 +322,7 @@ internal object MeadowTextures {
                     }
                 }
                 6 -> {
-                    marks(base, 12, dense = true)
-                    for ((x, y) in arrayOf(8 to 6, 22 to 17, 4 to 24))
-                        rect(x, y, 4, 2, shade(base, 17))
+                    MossTextureCandidates.pixels(MossTextureCandidates.Variant.CUSHIONS).copyInto(data)
                 }
                 7 -> {
                     for (x in intArrayOf(4, 14, 26)) {

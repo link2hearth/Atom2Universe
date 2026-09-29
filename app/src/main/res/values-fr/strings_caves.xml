@@ -586,7 +586,9 @@
     <string name="cave_block_cobblestone">Pierre brute</string>
     <string name="cave_block_mossy_cobblestone">Pierre brute moussue</string>
     <string name="cave_block_sandstone">Grès</string>
-    <string name="cave_block_mud">Boue</string>
+    <string name="cave_block_mud">Boue humide</string>
+    <string name="cave_block_mud_clay">Boue argileuse</string>
+    <string name="cave_block_mud_swamp">Boue de marécage</string>
     <string name="cave_block_clay">Argile</string>
     <string name="cave_block_forest_floor">Sol forestier</string>
     <string name="cave_block_moss">Mousse</string>

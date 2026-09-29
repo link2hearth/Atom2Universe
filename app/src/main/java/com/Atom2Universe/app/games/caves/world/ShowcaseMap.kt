@@ -337,7 +337,12 @@ internal object ShowcaseMap {
                     1 -> if (x < 4) SANDSTONE else if (z > 11) REDSAND else SAND
                     2 -> if (x < 5) SAND else if (z % 5 == 0) GRAVEL else CLAY
                     3 -> if ((x + z) % 6 == 0) MOSS else FOREST_FLOOR
-                    4 -> if (x < 4) CLAY else if (z > 11) MOSS else MUD
+                    4 -> when {
+                        x < 4 -> MUD_CLAY
+                        z > 11 -> MOSS
+                        top < FLOOR -> MUD
+                        else -> MUD_SWAMP
+                    }
                     else -> BASALT
                 }
                 val under = when (zone) { 1 -> SANDSTONE; 3, 4 -> DIRT; 5 -> BASALT; else -> STONE }

@@ -8,6 +8,8 @@ internal fun blockIdByName(name: String): Short = when (name) {
     "mossy_cobblestone" -> MOSSY_COBBLESTONE
     "sandstone" -> SANDSTONE
     "mud" -> MUD
+    "mud_clay" -> MUD_CLAY
+    "mud_swamp" -> MUD_SWAMP
     "clay" -> CLAY
     "forest_floor" -> FOREST_FLOOR
     "moss" -> MOSS

@@ -4280,7 +4280,8 @@ internal class CaveRenderer(
             val interval = (stride / speed.coerceAtLeast(.1)).coerceIn(.23, .92).toFloat()
             val ground = worldBlockAt(floorInt(newX), floorInt(newY - 1.62 - .08), floorInt(newZ))
             val surface = when (ground) {
-                GRASS, DIRT, DIRT_SAND, DIRT_SNOW, SAND, SNOW, FOREST_FLOOR, MOSS -> "earth"
+                GRASS, DIRT, DIRT_SAND, DIRT_SNOW, SAND, SNOW, FOREST_FLOOR, MOSS,
+                MUD, MUD_CLAY, MUD_SWAMP -> "earth"
                 in WOOD..PLANK_SAPIN -> "wood"
                 else -> "stone"
             }

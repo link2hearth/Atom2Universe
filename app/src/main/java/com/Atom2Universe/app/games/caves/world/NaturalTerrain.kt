@@ -264,6 +264,33 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
         if (y >= aquiferTable(x.toDouble(), z.toDouble(), h)) return false
         return aquiferWetness(x.toDouble(), z.toDouble()) > 0.0
     }
+
+    // Only queried for muddy ground. Share neighbour samples across columns without depending
+    // on loaded chunks or recursively computing their top blocks (including elevated lakes).
+    private val mudWaterSurfaces = ConcurrentHashMap<Long, Int>()
+
+    private fun nearSurfaceWater(x: Int, z: Int, h: Int, waterLevel: Int): Boolean {
+        if (h < waterLevel) return true
+        for (radius in 1..4) for (dz in -radius..radius) for (dx in -radius..radius) {
+            if (max(abs(dx), abs(dz)) != radius || dx * dx + dz * dz > 16) continue
+            val wx = x + dx; val wz = z + dz
+            val level = mudWaterSurfaces.getOrPut(columnCacheKey(wx, wz)) {
+                if (mudWaterSurfaces.size > 8192) mudWaterSurfaces.clear()
+                val water = waterLevelAt(wx.toDouble(), wz.toDouble())
+                if (height(wx.toDouble(), wz.toDouble()).toInt() < water) water else Int.MIN_VALUE
+            }
+            // Being at sea level alone is not enough; a real water column must be nearby.
+            if (level != Int.MIN_VALUE && abs(h - level) <= 3) return true
+        }
+        return false
+    }
+
+    private fun mudBlockAt(x: Double, z: Double, h: Int, waterLevel: Int): Short = when {
+        nearSurfaceWater(x.toInt(), z.toInt(), h, waterLevel) -> MUD
+        temperature(x, z) >= .70 || humidity(x, z) < .65 -> MUD_CLAY
+        else -> MUD_SWAMP
+    }
+
     fun topBlock(b: SurfaceBiomeDef, x: Double, z: Double, h: Int, waterLevel: Int = SEA_LEVEL): Short {
         val patch = n(x, z, .035, 334.0)
         val wet = humidity(x, z)
@@ -276,14 +303,14 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
             RegionalBiomes.variant(b.id)?.let { v ->
                 if (h > waterLevel + 2) return when (b.id) {
                     "sandstone_badlands" -> if (patch > .25) 2308.toShort() else REDSAND // natural terracotta
-                    "willow_marsh", "tropical_marsh" -> if (patch > .25) MOSS else MUD
+                    "willow_marsh", "tropical_marsh" -> if (patch > .25) MOSS else mudBlockAt(x, z, h, waterLevel)
                     else -> v.ground
                 }
             }
         }
         if (h <= waterLevel + 2) {
             if (patch > .22 && h >= waterLevel - 16) return CLAY
-            if (wet > .65 && h >= waterLevel - 2) return if (patch > -.15) MUD else CLAY
+            if (wet > .65 && h >= waterLevel - 2) return if (patch > -.15) mudBlockAt(x, z, h, waterLevel) else CLAY
             return if (b.id == "red_desert") REDSAND else if (patch < -.45) GRAVEL else SAND
         }
         val snowLine = 420 + temperature(x, z) * 700
@@ -293,7 +320,7 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
             "mountains", "rocky" -> if (patch > .36) GRAVEL else if (patch < -.40) GRANITE else STONE
             "desert" -> if (patch > .40) SANDSTONE else SAND
             "red_desert" -> if (patch > .40) 2308 else REDSAND
-            "wetlands" -> if (patch > .20) MOSS else MUD
+            "wetlands" -> if (patch > .20) MOSS else mudBlockAt(x, z, h, waterLevel)
             else -> if (b.treeType != "none" && patch > -.12) { if (patch > .48) MOSS else FOREST_FLOOR } else GRASS
         }
     }
@@ -465,7 +492,7 @@ internal class NaturalTerrain(private val seed: Long, profiles: List<NaturalBiom
                 density(x, y, z) > 0 && !(h <= waterLevel && depth < 8) ->
                     if (wy < surface.floodBelow[i]) WATER else AIR
                 depth == 0 -> top
-                depth < 4 && top in shortArrayOf(SAND, REDSAND, CLAY, MUD, SANDSTONE) -> if (top == SAND || top == REDSAND) SANDSTONE else top
+                depth < 4 && top in shortArrayOf(SAND, REDSAND, CLAY, MUD, MUD_CLAY, MUD_SWAMP, SANDSTONE) -> if (top == SAND || top == REDSAND) SANDSTONE else top
                 depth < 4 && top in shortArrayOf(GRASS, FOREST_FLOOR, MOSS, DIRT_SNOW) -> DIRT
                 else -> rockAt(wx, wy, wz, depth)
             }

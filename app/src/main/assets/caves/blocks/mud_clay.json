@@ -1,0 +1,14 @@
+{
+  "id": 2309,
+  "name": "mud_clay",
+  "texture_top": "base_art:mud_clay",
+  "texture_side": "base_art:mud_clay",
+  "texture_bottom": "base_art:mud_clay",
+  "color": "#857159",
+  "hardness": 1,
+  "drop": "mud_clay",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": ["soil"]
+}

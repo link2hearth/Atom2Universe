@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 internal object BaseBlockTextures {
     private const val PREFIX = "base_art:"
     private val terrains = setOf("stone", "dirt", "sand", "grass_top", "grass_side", "cobblestone", "planks")
+    private val singleTerrains = setOf("mud_wet", "mud_clay", "mud_swamp")
     private val props = setOf("chest", "cache").flatMap { kind ->
         listOf("top", "front", "side", "back", "bottom").map { "${kind}_$it" }
     }.toSet()
@@ -14,7 +15,7 @@ internal object BaseBlockTextures {
     private fun key(name: String): String? {
         if (!name.startsWith(PREFIX)) return null
         val parts = name.removePrefix(PREFIX).split(':')
-        if (parts.size == 1 && parts[0] in props) return parts[0]
+        if (parts.size == 1 && (parts[0] in props || parts[0] in singleTerrains)) return parts[0]
         if (parts.size != 2 || parts[0] !in terrains || parts[1].length != 1 || parts[1][0] !in '0'..'3') return null
         return "${parts[0]}_${parts[1]}"
     }
