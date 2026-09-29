@@ -11,8 +11,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import kotlin.math.max
-import kotlin.math.min
+import com.Atom2Universe.app.R
+import kotlin.math.floor
 
 class NuclideChartView @JvmOverloads constructor(
     context: Context,
@@ -21,12 +21,14 @@ class NuclideChartView @JvmOverloads constructor(
 
     var onNuclideSelected: ((Nuclide?) -> Unit) = {}
 
-    private val paintStable = Paint().apply { color = Color.parseColor("#000000"); style = Paint.Style.FILL }
-    private val paintAlpha = Paint().apply { color = Color.parseColor("#FFCC00"); style = Paint.Style.FILL }
-    private val paintBetaMinus = Paint().apply { color = Color.parseColor("#4FC3F7"); style = Paint.Style.FILL }
-    private val paintBetaPlus = Paint().apply { color = Color.parseColor("#EF5350"); style = Paint.Style.FILL }
-    private val paintFission = Paint().apply { color = Color.parseColor("#AB47BC"); style = Paint.Style.FILL }
-    private val paintOther = Paint().apply { color = Color.parseColor("#78909C"); style = Paint.Style.FILL }
+    // Mêmes couleurs que la légende et le panneau de détail (res/values/colors.xml).
+    private fun fill(colorRes: Int) = Paint().apply { color = context.getColor(colorRes); style = Paint.Style.FILL }
+    private val paintStable = fill(R.color.nuclide_stable)
+    private val paintAlpha = fill(R.color.nuclide_alpha)
+    private val paintBetaMinus = fill(R.color.nuclide_beta_minus)
+    private val paintBetaPlus = fill(R.color.nuclide_beta_plus)
+    private val paintFission = fill(R.color.nuclide_fission)
+    private val paintOther = fill(R.color.nuclide_other)
     private val paintSelected = Paint().apply { color = Color.WHITE; style = Paint.Style.STROKE; strokeWidth = 2f }
     private val paintText = Paint().apply {
         color = Color.WHITE; textAlign = Paint.Align.CENTER; isAntiAlias = true
@@ -48,7 +50,11 @@ class NuclideChartView @JvmOverloads constructor(
     private var maxN = 180
 
     private var cellSize = 0f  // 0 = not yet initialized
-    private val margin = 60f
+    private val density = resources.displayMetrics.density
+    private val margin = 24f * density
+    private val axisTitleSize = 13f * resources.displayMetrics.scaledDensity
+    private val axisTitleZ = context.getString(R.string.nuclide_axis_z)
+    private val axisTitleN = context.getString(R.string.nuclide_axis_n)
 
     private var translateX = 0f
     private var translateY = 0f
@@ -80,8 +86,10 @@ class NuclideChartView @JvmOverloads constructor(
         }
 
         override fun onSingleTapUp(e: MotionEvent): Boolean {
-            val col = ((e.x - translateX - margin) / cellSize).toInt()
-            val rowInv = ((e.y - translateY - margin) / cellSize).toInt()
+            // floor et non toInt() : toInt() tronque vers zéro, si bien qu'un tap juste à gauche ou
+            // au-dessus de la grille tombait sur la colonne N=0 ou la ligne Z=maxZ.
+            val col = floor((e.x - translateX - margin) / cellSize).toInt()
+            val rowInv = floor((e.y - translateY - margin) / cellSize).toInt()
             val Z = maxZ - rowInv
             val N = col
             val hit = nuclideMap[Z to N]
@@ -127,7 +135,8 @@ class NuclideChartView @JvmOverloads constructor(
         val tx = translateX + margin
         val ty = translateY + margin
 
-        paintAxisLabel.textSize = cellSize.coerceAtLeast(8f)
+        // Plafonnée à la marge : au zoom maximal (150 px par case), les graduations débordaient.
+        paintAxisLabel.textSize = cellSize.coerceIn(8f, margin * 0.5f)
         paintText.textSize = (cellSize * 0.45f).coerceAtLeast(5f)
 
         // Axis labels every 10
@@ -178,12 +187,13 @@ class NuclideChartView @JvmOverloads constructor(
 
         // Axis titles
         val savedCount = canvas.save()
-        canvas.rotate(-90f, 16f, height / 2f)
-        paintAxisLabel.textSize = 13f
-        canvas.drawText("Z (protons)", 16f, height / 2f, paintAxisLabel)
+        // Ligne de base à une hauteur de texte du bord : le titre reste entier quelle que soit la densité.
+        val titleBase = axisTitleSize
+        canvas.rotate(-90f, titleBase, height / 2f)
+        paintAxisLabel.textSize = axisTitleSize
+        canvas.drawText(axisTitleZ, titleBase, height / 2f, paintAxisLabel)
         canvas.restoreToCount(savedCount)
-        paintAxisLabel.textSize = 13f
-        canvas.drawText("N (neutrons)", width / 2f, 16f, paintAxisLabel)
+        canvas.drawText(axisTitleN, width / 2f, titleBase, paintAxisLabel)
     }
 
     @SuppressLint("ClickableViewAccessibility")

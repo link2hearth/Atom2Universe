@@ -6,26 +6,42 @@ data class Nuclide(
     val A: Int,
     val symbol: String,
     val stable: Boolean,
-    val halfLife: String?,
+    /** Mantisse telle que dans les données (« 1.248e9 », « 12.32 »), sans unité. */
+    val halfLifeValue: String?,
+    /** Code d'unité des données : ns, μs, ms, s, min, h, d, a. */
+    val halfLifeUnit: String?,
+    /** Modes dans l'ordre des données, le principal en premier : α, β-, 2β-, β+, EC, SF. */
     val decayModes: List<String>,
-    val spin: String,
+    /** Spin/parité normalisé (« 1/2+ »), null si inconnu. */
+    val spin: String?,
     val bindingEnergyPerNucleon: Double
 ) {
     val notation get() = "${superscript(A)}$symbol"
 
-    private fun superscript(n: Int): String {
-        val map = mapOf('0' to '⁰','1' to '¹','2' to '²','3' to '³','4' to '⁴',
-                        '5' to '⁵','6' to '⁶','7' to '⁷','8' to '⁸','9' to '⁹')
-        return n.toString().map { map[it] ?: it }.joinToString("")
+    /** Couleur de la carte : celle du mode principal, comme sur les cartes de nucléides usuelles. */
+    val decayType: DecayType get() {
+        if (stable) return DecayType.STABLE
+        val main = decayModes.firstOrNull() ?: return DecayType.OTHER
+        return when {
+            main.startsWith("α") -> DecayType.ALPHA
+            // 2β- est une double désintégration bêta moins : même famille que β-.
+            main == "β-" || main == "2β-" -> DecayType.BETA_MINUS
+            main == "β+" || main == "EC" -> DecayType.BETA_PLUS
+            main.contains("SF") -> DecayType.FISSION
+            else -> DecayType.OTHER
+        }
     }
 
-    val decayType: DecayType get() = when {
-        stable -> DecayType.STABLE
-        decayModes.any { it.startsWith("α") } -> DecayType.ALPHA
-        decayModes.any { it == "β-" } -> DecayType.BETA_MINUS
-        decayModes.any { it == "β+" || it == "EC" } -> DecayType.BETA_PLUS
-        decayModes.any { it.contains("SF") } -> DecayType.FISSION
-        else -> DecayType.OTHER
+    companion object {
+        private const val SUPERSCRIPT_DIGITS = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+
+        fun superscript(n: Int): String = n.toString().map { c ->
+            when (c) {
+                in '0'..'9' -> SUPERSCRIPT_DIGITS[c - '0']
+                '-' -> '⁻'
+                else -> c
+            }
+        }.joinToString("")
     }
 }
 

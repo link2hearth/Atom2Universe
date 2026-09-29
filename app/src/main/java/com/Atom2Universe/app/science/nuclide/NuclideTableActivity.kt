@@ -8,10 +8,11 @@ import android.widget.TextView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.DecimalFormatSymbols
 
 class NuclideTableActivity : ThemedActivity() {
 
@@ -56,12 +57,13 @@ class NuclideTableActivity : ThemedActivity() {
             }
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            NuclideRepository.load(this@NuclideTableActivity)
-            val all = NuclideRepository.getAll()
-            withContext(Dispatchers.Main) {
-                chartView.loadNuclides(all)
+        // Lié au cycle de vie : l'ancien scope non rattaché retenait l'activité et une erreur de
+        // lecture des données faisait planter l'application.
+        lifecycleScope.launch {
+            val loaded = withContext(Dispatchers.IO) {
+                runCatching { NuclideRepository.load(applicationContext) }.isSuccess
             }
+            if (loaded) chartView.loadNuclides(NuclideRepository.getAll())
         }
     }
 
@@ -71,21 +73,22 @@ class NuclideTableActivity : ThemedActivity() {
 
         detailNotation.text = n.notation
         val elementName = NuclideRepository.getElementName(this, n.Z)
-        detailName.text = if (elementName.isNotEmpty())
-            "$elementName-${n.A}"
-        else
-            getString(R.string.nuclide_detail_element, n.symbol, n.A)
+        detailName.text = getString(R.string.nuclide_detail_element, elementName.ifEmpty { n.symbol }, n.A)
         detailStability.text = if (n.stable) getString(R.string.nuclide_stable)
                                else getString(R.string.nuclide_radioactive)
         detailStability.setTextColor(
             if (n.stable) getColor(R.color.nuclide_stable_text)
             else getColor(R.color.nuclide_radioactive_text)
         )
-        detailHalfLife.text = if (n.stable) getString(R.string.nuclide_halflife_stable)
-                              else getString(R.string.nuclide_halflife_val, n.halfLife ?: "?")
+        val unknown = getString(R.string.nuclide_unknown)
+        detailHalfLife.text = when {
+            n.stable -> getString(R.string.nuclide_halflife_stable)
+            n.halfLifeValue == null -> unknown
+            else -> getString(R.string.nuclide_halflife_val, formatHalfLife(n.halfLifeValue, n.halfLifeUnit))
+        }
         detailDecay.text = if (n.stable) "—"
-                           else n.decayModes.joinToString(", ").ifEmpty { "?" }
-        detailSpin.text = n.spin
+                           else n.decayModes.joinToString(", ") { decayModeLabel(it) }.ifEmpty { unknown }
+        detailSpin.text = n.spin ?: unknown
         detailBE.text = if (n.bindingEnergyPerNucleon > 0.0)
             getString(R.string.nuclide_be_val, n.bindingEnergyPerNucleon)
         else "—"
@@ -100,5 +103,33 @@ class NuclideTableActivity : ThemedActivity() {
             DecayType.OTHER -> R.color.nuclide_other
         }
         detailNotation.setTextColor(getColor(colorRes))
+    }
+
+    /** « 1.248e9 » + « a » → « 1,248 × 10⁹ a » (séparateur décimal et unité de la langue). */
+    private fun formatHalfLife(value: String, unit: String?): String {
+        val decimal = DecimalFormatSymbols.getInstance(resources.configuration.locales[0]).decimalSeparator
+        val mantissa = value.substringBefore('e').substringBefore('E').replace('.', decimal)
+        val exponent = value.substringAfter('e', value.substringAfter('E', "")).toIntOrNull()
+        val number = if (exponent == null) mantissa else "$mantissa × 10${Nuclide.superscript(exponent)}"
+        return if (unit == null) number else "$number ${unitLabel(unit)}"
+    }
+
+    private fun unitLabel(unit: String): String = when (unit) {
+        "a" -> getString(R.string.nuclide_unit_year)
+        "d" -> getString(R.string.nuclide_unit_day)
+        "h" -> getString(R.string.nuclide_unit_hour)
+        "min" -> getString(R.string.nuclide_unit_minute)
+        "s" -> getString(R.string.nuclide_unit_second)
+        "ms" -> getString(R.string.nuclide_unit_ms)
+        "μs", "us" -> getString(R.string.nuclide_unit_us)
+        "ns" -> getString(R.string.nuclide_unit_ns)
+        else -> unit
+    }
+
+    /** EC et SF sont des abréviations anglaises (CE et FS en français) ; β- s'écrit avec un vrai signe moins. */
+    private fun decayModeLabel(mode: String): String = when (mode) {
+        "EC" -> getString(R.string.nuclide_mode_ec)
+        "SF" -> getString(R.string.nuclide_mode_sf)
+        else -> mode.replace("β-", "β−")
     }
 }

@@ -59,7 +59,7 @@
     <string name="nuclide_radioactive">Radioactive</string>
     <string name="nuclide_halflife_stable">Stable (no decay)</string>
     <string name="nuclide_halflife_val">T½ = %1$s</string>
-    <string name="nuclide_be_val">%1$.4f MeV/u</string>
+    <string name="nuclide_be_val">%1$.4f MeV/nucleon</string>
     <string name="nuclide_zn_val">Z=%1$d  N=%2$d</string>
     <string name="nuclide_label_zn">Z / N</string>
     <string name="nuclide_label_halflife">Half-life</string>
@@ -71,6 +71,19 @@
     <string name="nuclide_legend_beta_minus">β−</string>
     <string name="nuclide_legend_beta_plus">β+/EC</string>
     <string name="nuclide_legend_fission">SF</string>
+    <string name="nuclide_axis_z">Z (protons)</string>
+    <string name="nuclide_axis_n">N (neutrons)</string>
+    <string name="nuclide_mode_ec">EC</string>
+    <string name="nuclide_mode_sf">SF</string>
+    <string name="nuclide_unknown">Unknown</string>
+    <string name="nuclide_unit_day">d</string>
+    <string name="nuclide_unit_year">a</string>
+    <string name="nuclide_unit_hour">h</string>
+    <string name="nuclide_unit_minute">min</string>
+    <string name="nuclide_unit_second">s</string>
+    <string name="nuclide_unit_ms">ms</string>
+    <string name="nuclide_unit_us">μs</string>
+    <string name="nuclide_unit_ns">ns</string>
 
     <!-- Reaction-Diffusion (Gray-Scott) -->
     <string name="hub_reaction_title">Reaction-Diffusion</string>
