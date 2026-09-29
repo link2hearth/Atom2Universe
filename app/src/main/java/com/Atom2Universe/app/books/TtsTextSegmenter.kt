@@ -11,6 +11,10 @@ internal object TtsTextSegmenter {
     const val DEFAULT_MAX_WORDS = 500
     const val DEFAULT_MAX_CHARS = 3_800
 
+    private const val CLAUSE_MARKS = ";:,—–"
+    private const val SENTENCE_MARKS = ".!?…"
+    private const val CLOSING_MARKS = "\"'»”)]"
+
     fun next(
         paragraph: String,
         fromOffset: Int = 0,
@@ -66,7 +70,7 @@ internal object TtsTextSegmenter {
         // An exceptionally long sentence has no sentence boundary. Prefer a clause,
         // then a word boundary, so the Android engine is never given oversized text.
         for (index in limit - 1 downTo start + 1) {
-            if (text[index] in charArrayOf(';', ':', ',', '—', '–') &&
+            if (text[index] in CLAUSE_MARKS &&
                 (index + 1 >= text.length || text[index + 1].isWhitespace())) return index + 1
         }
         if (limit < text.length && text[limit].isWhitespace()) return trimEnd(text, start, limit)
@@ -87,9 +91,9 @@ internal object TtsTextSegmenter {
         // Some engines reject a full stop followed by a lowercase word as a sentence
         // ending. EPUB punctuation is still a safer cut than an arbitrary word.
         for (i in start until text.lastIndex) {
-            if (text[i] in charArrayOf('.', '!', '?', '…') && text[i + 1].isWhitespace()) {
+            if (text[i] in SENTENCE_MARKS && text[i + 1].isWhitespace()) {
                 var end = i + 1
-                while (end < text.length && text[end] in charArrayOf('"', '\'', '»', '”', ')', ']')) end++
+                while (end < text.length && text[end] in CLOSING_MARKS) end++
                 boundaries += end
             }
         }

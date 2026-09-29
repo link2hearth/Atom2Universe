@@ -85,10 +85,13 @@ class BookLibraryActivity : ThemedActivity() {
             val json = prefs.getString(KEY_LIBRARY, "[]") ?: "[]"
             return try {
                 val arr = JSONArray(json)
-                (0 until arr.length()).map { i ->
-                    val o = arr.getJSONObject(i)
+                // Une entrée corrompue ne doit pas vider toute la bibliothèque (puis être réécrite vide)
+                (0 until arr.length()).mapNotNull { i ->
+                    val o = arr.optJSONObject(i) ?: return@mapNotNull null
+                    val uri = o.optString("uri", "")
+                    if (uri.isEmpty()) return@mapNotNull null
                     BookEntry(
-                        uri = o.getString("uri"),
+                        uri = uri,
                         title = o.optString("title", ""),
                         author = o.optString("author", ""),
                         coverPath = o.optString("coverPath", "").ifEmpty { null },
@@ -490,7 +493,7 @@ class BookLibraryActivity : ThemedActivity() {
                 bookCount = rootBookCount
             ))
         }
-        authorMap.entries.sortedBy { it.key }.forEach { (name, count) ->
+        authorMap.entries.sortedBy { it.key.lowercase() }.forEach { (name, count) ->
             folders.add(AuthorFolder(name, name, count))
         }
 
@@ -532,8 +535,26 @@ class BookLibraryActivity : ThemedActivity() {
         applyBooksDisplayMode(authorPath, entries)
     }
 
+    /**
+     * La progression est enregistrée par le lecteur dans les préférences (liste des récents),
+     * jamais dans la base des étagères: on la reporte ici pour l'affichage.
+     */
+    private fun withReadingProgress(entries: List<BookShelfEntry>): List<BookShelfEntry> {
+        val byUri = loadLibrary(prefs).associateBy { it.uri }
+        if (byUri.isEmpty()) return entries
+        return entries.map { e ->
+            val uri = if (e.sourcePath.startsWith("/")) Uri.fromFile(File(e.sourcePath)).toString() else e.sourcePath
+            val b = byUri[uri] ?: return@map e
+            e.copy(
+                lastReadItem = b.lastReadItem,
+                totalItems = if (b.totalItems > 0) b.totalItems else e.totalItems,
+                lastOpenedAt = maxOf(e.lastOpenedAt, b.lastOpenedAt)
+            )
+        }
+    }
+
     private fun applyBooksDisplayMode(authorPath: String, entries: List<BookShelfEntry>? = null) {
-        val bookEntries = entries ?: run {
+        val sourceEntries = entries ?: run {
             if (authorPath.isEmpty()) currentEntries.filter { it.relativePath.isEmpty() }
             else currentEntries.filter { it.relativePath == authorPath || it.relativePath.startsWith("$authorPath/") }
         }
@@ -541,6 +562,7 @@ class BookLibraryActivity : ThemedActivity() {
         treeCoverScope?.cancel()
         treeCoverScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
         val coverScope = treeCoverScope!!
+        val bookEntries = withReadingProgress(sourceEntries)
 
         if (displayMode == MODE_GRID) {
             shelfTreeRecycler.layoutManager = GridLayoutManager(this, gridColumns)
@@ -614,7 +636,7 @@ class BookLibraryActivity : ThemedActivity() {
                 shelfScope.launch {
                     withContext(Dispatchers.IO) {
                         val dao = BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao()
-                        dao.getEntriesByRoot(root.id).forEach { e -> e.coverPath?.let { File(it).delete() } }
+                        dao.getEntriesByRoot(root.id).forEach { e -> deleteShelfEntryCovers(this@BookLibraryActivity, e) }
                         dao.deleteEntriesByRoot(root.id)
                         dao.deleteRoot(root.id)
                     }
@@ -630,21 +652,46 @@ class BookLibraryActivity : ThemedActivity() {
         val (countText, nameText, dialog) = buildScanDialog(R.string.book_shelf_rescanning_title)
         dialog.show()
         shelfScope.launch {
-            val (newRoot, entries) = withContext(Dispatchers.IO) {
-                scanLibraryRoot(uri, existingRootId = root.id) { count, lastName ->
-                    runOnUiThread {
-                        countText.text = getString(R.string.book_shelf_scanning_found, count)
-                        nameText.text = lastName
+            try {
+                val (newRoot, scanned) = withContext(Dispatchers.IO) {
+                    scanLibraryRoot(uri, existingRootId = root.id) { count, lastName ->
+                        runOnUiThread {
+                            countText.text = getString(R.string.book_shelf_scanning_found, count)
+                            nameText.text = lastName
+                        }
                     }
                 }
-            }
-            dialog.dismiss()
-            val dao = BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao()
-            withContext(Dispatchers.IO) {
-                dao.getEntriesByRoot(root.id).forEach { e -> e.coverPath?.let { File(it).delete() } }
-                dao.deleteEntriesByRoot(root.id)
-                dao.insertEntries(entries)
-                dao.updateRoot(newRoot.copy(bookCount = entries.size, lastScannedAt = System.currentTimeMillis()))
+                val dao = BookDatabase.getInstance(this@BookLibraryActivity).bookShelfDao()
+                val done = withContext(Dispatchers.IO) {
+                    val old = dao.getEntriesByRoot(root.id)
+                    // Scan vide alors qu'il y avait des livres: dossier inaccessible, on ne détruit rien
+                    if (scanned.isEmpty() && old.isNotEmpty()) return@withContext false
+                    // On conserve id (cache de couverture), progression et dates des livres déjà connus
+                    val oldByPath = old.associateBy { it.sourcePath }
+                    val merged = scanned.map { e ->
+                        val o = oldByPath[e.sourcePath] ?: return@map e
+                        e.copy(
+                            id = o.id, coverPath = o.coverPath, totalItems = o.totalItems,
+                            lastReadItem = o.lastReadItem, lastOpenedAt = o.lastOpenedAt, addedAt = o.addedAt
+                        )
+                    }
+                    val keptPaths = merged.mapTo(HashSet()) { it.sourcePath }
+                    old.filter { it.sourcePath !in keptPaths }
+                        .forEach { deleteShelfEntryCovers(this@BookLibraryActivity, it) }
+                    dao.deleteEntriesByRoot(root.id)
+                    dao.insertEntries(merged)
+                    dao.updateRoot(newRoot.copy(bookCount = merged.size, lastScannedAt = System.currentTimeMillis()))
+                    true
+                }
+                if (!done) {
+                    Toast.makeText(this@BookLibraryActivity, getString(R.string.book_shelf_scanning_found, 0), Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.w("BookLibrary", "Rescan failed", e)
+            } finally {
+                dialog.dismiss()
             }
             loadRoots()
         }
@@ -657,15 +704,23 @@ class BookLibraryActivity : ThemedActivity() {
         val (countText, nameText, dialog) = buildScanDialog(R.string.book_shelf_scanning_title)
         dialog.show()
         shelfScope.launch {
-            val (root, entries) = withContext(Dispatchers.IO) {
-                scanLibraryRoot(uri) { count, lastName ->
-                    runOnUiThread {
-                        countText.text = getString(R.string.book_shelf_scanning_found, count)
-                        nameText.text = lastName
+            val (root, entries) = try {
+                withContext(Dispatchers.IO) {
+                    scanLibraryRoot(uri) { count, lastName ->
+                        runOnUiThread {
+                            countText.text = getString(R.string.book_shelf_scanning_found, count)
+                            nameText.text = lastName
+                        }
                     }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                android.util.Log.w("BookLibrary", "Scan failed", e)
+                Pair(BookShelfRoot(name = "", rootUri = uri.toString()), emptyList())
+            } finally {
+                dialog.dismiss()
             }
-            dialog.dismiss()
             if (entries.isEmpty()) {
                 Toast.makeText(this@BookLibraryActivity, getString(R.string.book_shelf_scanning_found, 0), Toast.LENGTH_SHORT).show()
                 return@launch
@@ -809,8 +864,8 @@ class BookLibraryActivity : ThemedActivity() {
                 val opfPath = Regex("""full-path="([^"]+\.opf)"""").find(containerText)?.groupValues?.get(1) ?: return Pair(title, author)
                 val opfEntry = zip.getEntry(opfPath) ?: return Pair(title, author)
                 val opfText = zip.getInputStream(opfEntry).readBytes().decodeToString()
-                Regex("""<dc:title[^>]*>([^<]+)</dc:title>""").find(opfText)?.let { title = it.groupValues[1].trim() }
-                Regex("""<dc:creator[^>]*>([^<]+)</dc:creator>""").find(opfText)?.let { author = it.groupValues[1].trim() }
+                Regex("""<dc:title[^>]*>([^<]+)</dc:title>""").find(opfText)?.let { title = unescapeXml(it.groupValues[1].trim()) }
+                Regex("""<dc:creator[^>]*>([^<]+)</dc:creator>""").find(opfText)?.let { author = unescapeXml(it.groupValues[1].trim()) }
             }
         } catch (_: Exception) {}
         return Pair(title, author)
@@ -865,7 +920,7 @@ class BookLibraryActivity : ThemedActivity() {
 
             val coverFile = book.coverPath?.let { File(it) }
             if (coverFile != null && coverFile.exists()) {
-                val bmp = BitmapFactory.decodeFile(coverFile.absolutePath)
+                val bmp = decodeSampledFile(coverFile.absolutePath, COVER_MAX_DIM)
                 if (bmp != null) {
                     holder.cover.scaleType = ImageView.ScaleType.CENTER_CROP
                     holder.cover.setPadding(0, 0, 0, 0)
@@ -957,6 +1012,28 @@ class BookLibraryActivity : ThemedActivity() {
     }
 }
 
+private const val COVER_MAX_DIM = 600
+
+private fun unescapeXml(text: String): String =
+    if (!text.contains('&')) text else text
+        .replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"")
+        .replace("&apos;", "'").replace("&amp;", "&")
+
+/** Décode une image en la sous-échantillonnant (évite de charger une couverture pleine taille sur le thread UI). */
+private fun decodeSampledFile(path: String, maxDim: Int): Bitmap? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(path, bounds)
+    var sample = 1
+    while (bounds.outWidth / (sample * 2) >= maxDim && bounds.outHeight / (sample * 2) >= maxDim) sample *= 2
+    return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample })
+}
+
+/** Supprime les couvertures (pré-extraite et cache) d'une entrée d'étagère. */
+private fun deleteShelfEntryCovers(context: Context, entry: BookShelfEntry) {
+    entry.coverPath?.let { File(it).delete() }
+    File(context.filesDir, "book_covers/${entry.id}.jpg").delete()
+}
+
 // ── Author books rows ─────────────────────────────────────────────────────────
 
 private sealed class AuthorBooksRow {
@@ -967,7 +1044,7 @@ private sealed class AuthorBooksRow {
 private fun buildAuthorBooksRows(entries: List<BookShelfEntry>, authorPath: String): List<AuthorBooksRow> {
     val rows = mutableListOf<AuthorBooksRow>()
 
-    val directBooks = entries.filter { it.relativePath == authorPath }.sortedBy { it.title }
+    val directBooks = entries.filter { it.relativePath == authorPath }.sortedBy { it.title.lowercase() }
     directBooks.forEach { rows.add(AuthorBooksRow.BookItem(it)) }
 
     val subEntries = entries.filter { it.relativePath != authorPath }
@@ -977,8 +1054,8 @@ private fun buildAuthorBooksRows(entries: List<BookShelfEntry>, authorPath: Stri
                             else entry.relativePath.removePrefix("$authorPath/")
             remainder.split("/").first()
         }
-        subGroups.keys.sorted().forEach { sectionName ->
-            val sectionBooks = subGroups[sectionName]!!.sortedBy { it.title }
+        subGroups.keys.sortedBy { it.lowercase() }.forEach { sectionName ->
+            val sectionBooks = subGroups[sectionName]!!.sortedBy { it.title.lowercase() }
             rows.add(AuthorBooksRow.SectionHeader(sectionName, sectionBooks.size))
             sectionBooks.forEach { rows.add(AuthorBooksRow.BookItem(it)) }
         }
@@ -1182,7 +1259,8 @@ private class BookCoverGridAdapter(
 private fun loadShelfCover(context: Context, entry: BookShelfEntry): Bitmap? {
     val cacheFile = File(context.filesDir, "book_covers/${entry.id}.jpg")
     if (cacheFile.exists()) {
-        return BitmapFactory.decodeFile(cacheFile.path, BitmapFactory.Options().apply { inSampleSize = 2 })
+        // Déjà sous-échantillonné à l'extraction: pas de second sous-échantillonnage
+        return BitmapFactory.decodeFile(cacheFile.path)
     }
     entry.coverPath?.let { path ->
         val f = File(path)
