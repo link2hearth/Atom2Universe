@@ -234,7 +234,7 @@ class ZoomSceneTest {
         var lastLevel = scene.level()
         repeat(500) {
             scene.zoomAt(1.05, 11.0, 7.0)
-            assertTrue(scene.zoom >= ZoomScene.MIN_ZOOM && scene.zoom < ZoomScene.MIN_ZOOM * 10)
+            assertTrue(scene.zoom >= scene.minZoom && scene.zoom < scene.maxZoom)
             val lvl = scene.level()
             assertTrue(lvl > lastLevel && lvl - lastLevel < 0.03)
             lastLevel = lvl
@@ -248,19 +248,80 @@ class ZoomSceneTest {
         assertTrue(scene.depth < 0)
     }
 
+    /**
+     * Le scénario de référence : on ouvre, on dessine un cercle de 14 px d'épaisseur à la taille
+     * normale ; il reste pleinement visible jusqu'à ×7,9, s'efface ensuite et a disparu à ×10.
+     */
     @Test
-    fun workingLayerFadesOutBeforeTheSwitchAndTheNextOneIsFullyVisible() {
+    fun aLayerFadesOnlyAtTheVeryEndOfItsTimesTenZoom() {
         val scene = ZoomScene(10.0)
-        assertEquals(1.0, scene.workingAlpha(), 0.0)
-        scene.zoomAt(10.0 * (1 - 1e-9), 0.0, 0.0)
-        assertEquals(0L, scene.depth)
-        assertTrue(scene.workingAlpha() < 1e-6)
-        scene.zoomAt(1 + 2e-9, 0.0, 0.0)
+        val circle = (0..36).map { 200 * Math.cos(it * Math.PI / 18) to 200 * Math.sin(it * Math.PI / 18) }
+        scene.draw(circle, 14.0)
+        assertEquals(1.0, scene.zoom, 0.0)
+        assertEquals(1.0, scene.layerAlpha(0), 0.0)
+
+        scene.zoomAt(Math.pow(10.0, 0.9) * 0.999, 0.0, 0.0)
+        assertEquals(1.0, scene.layerAlpha(0), 0.0)
+        scene.zoomAt(1.03, 0.0, 0.0)
+        assertTrue(scene.layerAlpha(0) in 0.0..0.999)
+        // À ×10 : disparu, et la couche 1 est à sa taille normale.
+        scene.zoomAt(10.0 / (Math.pow(10.0, 0.9) * 0.999 * 1.03), 0.0, 0.0)
+        assertEquals(0.0, scene.layerAlpha(0), 1e-9)
         assertEquals(1L, scene.depth)
-        assertEquals(1.0, scene.workingAlpha(), 1e-9)
-        // Mi-chemin : encore pleinement visible.
-        scene.zoomAt(Math.pow(10.0, 0.5), 0.0, 0.0)
-        assertEquals(1.0, scene.workingAlpha(), 0.0)
+        assertEquals(1.0, scene.zoom, 1e-9)
+        assertEquals(1.0, scene.layerAlpha(1), 0.0)
+    }
+
+    @Test
+    fun aLayerAppearsFarAwayAndGrowsToNormalSize() {
+        val scene = ZoomScene(10.0)
+        val s = scene.draw(gesture, 14.0)
+        // Dézoom ×10 : la couche 0 est au loin, dix fois plus petite, entièrement visible.
+        scene.zoomAt(0.1, 0.0, 0.0)
+        assertEquals(-1L, scene.depth)
+        assertEquals(1.0, scene.layerAlpha(0), 0.0)
+        val a = scene.toScreen(0, s, 0)
+        assertEquals(gesture[0].first / 10, a[0], 1e-9)
+        // Encore ×10 : elle fait moins d'un pixel et n'est plus dessinée.
+        scene.zoomAt(0.001, 0.0, 0.0)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(0, out.layersDrawn)
+    }
+
+    @Test
+    fun theEditableLayerSwitchesInTheMiddleOfTheFade() {
+        val scene = ZoomScene(10.0)
+        scene.draw(gesture)
+        // Un léger dézoom ne change pas de couche : on dessine toujours dans la couche 0.
+        scene.zoomAt(0.9, 0.0, 0.0)
+        assertEquals(0L, scene.depth)
+        // ×8 : la couche 0 commence à peine à s'effacer, elle reste la couche éditable.
+        scene.zoomAt(8.0 / 0.9, 0.0, 0.0)
+        assertEquals(0L, scene.depth)
+        // ×9 : elle est à plus de moitié effacée, on édite la couche 1.
+        scene.zoomAt(9.0 / 8.0, 0.0, 0.0)
+        assertEquals(1L, scene.depth)
+        assertTrue(scene.layerAlpha(0) < 0.5)
+        assertEquals(1.0, scene.layerAlpha(1), 0.0)
+    }
+
+    @Test
+    fun whatIDrawIsAlwaysVisible() {
+        // Un trait ne doit jamais atterrir dans une couche effacée.
+        val scene = ZoomScene(10.0)
+        val out = RenderList()
+        repeat(60) {
+            scene.zoomAt(if (it % 2 == 0) 1.37 else 0.61, 13.0, 8.0)
+            scene.draw(gesture)
+            ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+            val x0 = (500 + gesture[0].first).toFloat()
+            val y0 = (500 + gesture[0].second).toFloat()
+            val found = (0 until out.runCount).any { r ->
+                abs(out.coords[out.runStart[r]] - x0) < 1e-3f && abs(out.coords[out.runStart[r] + 1] - y0) < 1e-3f && out.runAlpha[r] >= 0.5f
+            }
+            assertTrue("étape $it, niveau ${scene.depth}", found)
+        }
     }
 
     @Test
@@ -273,7 +334,7 @@ class ZoomSceneTest {
         scene.draw(gesture.map { it.first * 0.2 to it.second * 0.2 })
         // Retour au niveau 0, juste avant le seuil.
         scene.zoomAt(0.01, 0.0, 0.0)
-        scene.zoomAt(10.0 * (1 - 1e-7), 0.0, 0.0)
+        scene.zoomAt(scene.maxZoom / scene.zoom * (1 - 1e-7), 0.0, 0.0)
         assertEquals(0L, scene.depth)
         val before = visibleRuns(scene)
         scene.zoomAt(1 + 2e-7, 0.0, 0.0)
@@ -378,7 +439,7 @@ class ZoomSceneTest {
         while (scene.depth > 0) scene.zoomAt(0.5, 0.0, 0.0)
         scene.jumpTo(4, 1080.0, 1920.0)
         assertEquals(4L, scene.depth)
-        assertEquals(1.0, scene.workingAlpha(), 0.0)
+        assertEquals(1.0, scene.layerAlpha(4), 0.0)
         for (i in 0 until s.pointCount) {
             val p = scene.toScreen(4, s, i)
             assertTrue(abs(p[0]) < 540 && abs(p[1]) < 960)

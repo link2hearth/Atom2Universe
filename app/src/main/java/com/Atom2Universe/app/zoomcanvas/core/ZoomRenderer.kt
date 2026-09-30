@@ -64,7 +64,8 @@ class RenderList {
 
 /**
  * Calcule l'image : de l'arrière vers l'avant, les couches visibles sous la couche de travail
- * (chacune à sa propre échelle), puis la couche de travail avec son fondu, puis le trait en cours.
+ * (chacune à sa propre échelle), la couche de travail, la couche du dessus tant qu'elle n'a pas fini
+ * de s'effacer, puis le trait en cours.
  *
  * Tout se calcule en `Double` relativement à la caméra (position de l'objet − position de la
  * caméra, dans le repère de sa couche) ; seul le petit résultat, déjà découpé au bord de l'écran,
@@ -113,14 +114,26 @@ object ZoomRenderer {
             if (l.strokes.isNotEmpty()) visible.add(Visible(l, x, y, z))
         }
 
-        val front = scene.workingAlpha()
+        // Du fond vers l'avant, chaque couche avec son opacité (pleine sauf en fin de fondu).
         for (k in visible.indices.reversed()) {
             val v = visible[k]
-            val alpha = if (v.layer.depth == scene.depth) front else 1.0
+            val alpha = scene.layerAlpha(v.layer.depth)
             if (alpha <= 0.0) continue
             if (!layerOnScreen(v, hw, hh, viewW, viewH)) continue
             out.layersDrawn++
             for (s in v.layer.strokes) emit(s, v.x, v.y, v.zoom, alpha, hw, hh, viewW, viewH, out)
+        }
+
+        // La couche du dessus, par-dessus, tant qu'elle n'a pas fini de s'effacer.
+        val above = scene.layer(scene.depth - 1)
+        val current = scene.layer(scene.depth)
+        val aboveAlpha = scene.layerAlpha(scene.depth - 1)
+        if (aboveAlpha > 0.0 && above != null && current != null && above.strokes.isNotEmpty()) {
+            val v = Visible(above, current.ax + scene.cx / scene.ratio, current.ay + scene.cy / scene.ratio, scene.zoom * scene.ratio)
+            if (layerOnScreen(v, hw, hh, viewW, viewH)) {
+                out.layersDrawn++
+                for (s in above.strokes) emit(s, v.x, v.y, v.zoom, aboveAlpha, hw, hh, viewW, viewH, out)
+            }
         }
 
         scene.liveStroke()?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }

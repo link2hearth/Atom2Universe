@@ -20,10 +20,16 @@ import kotlin.math.sqrt
  * écran. Quand on zoome assez pour changer de couche, on la convertit dans la nouvelle couche et les
  * nombres redeviennent petits. La profondeur n'est qu'un entier.
  *
- * Le zoom de la caméra (pixels par unité de la couche de travail) reste dans [MIN_ZOOM, MIN_ZOOM·ratio[ :
- * au-delà on descend d'une couche, en deçà on remonte. La couche de travail s'efface en fondu sur la
- * dernière part de cet intervalle ([FADE_START]), si bien qu'au moment du changement elle est déjà
- * invisible et la couche suivante, dessinée pleinement depuis le début, prend le relais sans à-coup.
+ * Une couche est à sa taille normale au zoom 1 (un trait de 14 px fait 14 px à l'écran). Elle vit sur
+ * ×100 de zoom : elle apparaît au loin à 1/ratio de sa taille normale (fond, derrière la couche de
+ * devant), grandit de ×ratio jusqu'à sa taille normale, puis encore de ×ratio jusqu'à disparaître.
+ * Le fondu de sortie n'occupe que la toute fin ([FADE_START], en échelle logarithmique) : de ×ratio^0,9
+ * à ×ratio. Les couches existent dans les deux sens (au-dessus et en dessous), à l'infini.
+ *
+ * La couche de travail — la seule qu'on édite — est celle qu'on voit devant : on passe à la suivante
+ * au milieu du fondu, quand la couche de devant est à moitié effacée. Le zoom de la caméra reste donc
+ * dans [minZoom, maxZoom[ (un rapport d'échelle de large, décalé d'un demi-fondu autour de 1) ; la
+ * couche du dessus, en fin de fondu, est dessinée par-dessus jusqu'à s'effacer complètement.
  *
  * Les couches forment une suite contiguë [firstDepth .. lastDepth] qui couvre les couches dessinées
  * et celle de la caméra. Une couche vide n'y est gardée que pour son ancre, quand elle est coincée
@@ -55,8 +61,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         private set
     var cy = 0.0
         private set
-    /** Pixels d'écran par unité de la couche de travail, dans [MIN_ZOOM, MIN_ZOOM·ratio[. */
-    var zoom = MIN_ZOOM
+    /** Au-delà, la couche de dessous devient la couche de travail : milieu du fondu de sortie. */
+    val maxZoom = Math.pow(ratio, (FADE_START + 1.0) / 2)
+    /** En deçà, la couche du dessus redevient la couche de travail (exactement maxZoom / ratio). */
+    val minZoom = maxZoom / ratio
+
+    /** Pixels d'écran par unité de la couche de travail, dans [minZoom, maxZoom[ ; 1 = taille normale. */
+    var zoom = START_ZOOM
         private set
 
     /** Prochain identifiant de trait (unique dans le projet). */
@@ -83,17 +94,25 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
     /** Les profondeurs qui contiennent au moins un trait, de haut en bas. */
     fun nonEmptyDepths(): List<Long> = layers.filter { it.strokes.isNotEmpty() }.map { it.depth }
 
-    /** Position continue de la caméra dans la pile : profondeur + avancée du zoom dans la couche (0..1). */
-    fun level(): Double = depth + progress()
+    /**
+     * Position continue de la caméra dans la pile : la couche de travail est à sa taille normale
+     * quand level() vaut sa profondeur, et s'efface complètement à profondeur + 1.
+     */
+    fun level(): Double = depth + ln(zoom) / logRatio
 
-    /** Avancée du zoom dans la couche de travail : 0 juste après être entré, 1 au moment d'en sortir. */
-    fun progress(): Double = (ln(zoom / MIN_ZOOM) / logRatio).coerceIn(0.0, 1.0)
+    /** Avancée du zoom dans la couche de travail : 0 juste après y être entré, 1 au moment d'en sortir. */
+    fun progress(): Double = (ln(zoom / minZoom) / logRatio).coerceIn(0.0, 1.0)
 
-    /** Opacité de la couche de travail : pleine, puis fondu de sortie sur la fin du zoom. */
-    fun workingAlpha(): Double {
-        val p = progress()
-        if (p <= FADE_START) return 1.0
-        val t = ((p - FADE_START) / (1.0 - FADE_START)).coerceIn(0.0, 1.0)
+    /**
+     * Opacité de la couche [d] : pleine tant qu'elle n'a pas grossi de plus de ×ratio^FADE_START
+     * depuis sa taille normale, puis fondu jusqu'à ×ratio où elle a disparu.
+     */
+    fun layerAlpha(d: Long): Double = alphaAt(level() - d)
+
+    private fun alphaAt(r: Double): Double {
+        if (r <= FADE_START) return 1.0
+        if (r >= 1.0) return 0.0
+        val t = (r - FADE_START) / (1.0 - FADE_START)
         return 1.0 - t * t * (3.0 - 2.0 * t)
     }
 
@@ -185,25 +204,25 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
 
     /**
      * Saute vers la couche [d] et cadre tout son contenu dans une vue de [viewW]×[viewH] pixels,
-     * sans entrer dans le fondu de sortie.
+     * sans entrer dans son fondu de sortie.
      */
     fun jumpTo(d: Long, viewW: Double, viewH: Double) {
         val l = layer(d) ?: return
         val b = l.bounds()
         if (b == null) {
-            setCamera(d, 0.0, 0.0, MIN_ZOOM)
+            setCamera(d, 0.0, 0.0, START_ZOOM)
             return
         }
         val w = max(b[2] - b[0], 1e-9)
         val h = max(b[3] - b[1], 1e-9)
         val fit = min(viewW * 0.8 / w, viewH * 0.8 / h)
-        val maxZoom = MIN_ZOOM * Math.pow(ratio, FADE_START * 0.9)
-        setCamera(d, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, fit.coerceIn(MIN_ZOOM, maxZoom))
+        val noFade = Math.pow(ratio, FADE_START) * 0.99
+        setCamera(d, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, fit.coerceIn(minZoom, noFade))
     }
 
     private fun normalize() {
-        while (zoom >= MIN_ZOOM * ratio) descend()
-        while (zoom < MIN_ZOOM) ascend()
+        while (zoom >= maxZoom) descend()
+        while (zoom < minZoom) ascend()
     }
 
     /** La couche de dessous devient la couche de travail. */
@@ -482,7 +501,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         for (l in layers) for (s in l.strokes) maxId = max(maxId, s.id)
         nextStrokeId = max(nextId, maxId + 1)
         undoStack.clear(); redoStack.clear()
-        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else MIN_ZOOM
+        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else START_ZOOM
         val x = if (camX.isFinite()) camX else 0.0
         val y = if (camY.isFinite()) camY else 0.0
         setCamera(camDepth, x, y, z)
@@ -492,10 +511,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
 
     companion object {
         const val DEFAULT_RATIO = 10.0
-        /** Zoom d'entrée dans une couche (pixels par unité) ; on en sort à MIN_ZOOM·ratio. */
-        const val MIN_ZOOM = 1.0
-        /** Part du zoom (en échelle logarithmique) à partir de laquelle la couche de travail s'efface. */
-        const val FADE_START = 0.7
+        /** Zoom d'ouverture : la couche 0 à sa taille normale. */
+        const val START_ZOOM = 1.0
+        /**
+         * Début du fondu de sortie, en part du rapport d'échelle (échelle logarithmique) : avec ×10,
+         * la couche commence à s'effacer à ×10^0,9 ≈ ×7,9 de sa taille normale et a disparu à ×10.
+         */
+        const val FADE_START = 0.9
         const val MAX_HISTORY = 300
         val RATIOS = doubleArrayOf(5.0, 10.0, 20.0)
     }
