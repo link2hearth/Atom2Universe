@@ -7,6 +7,10 @@ import java.io.File
 import kotlin.random.Random
 
 class RegionalGenerationTest {
+    /** Les portes des maisons (ids 9200..9209) sont des blocs pleins mais se franchissent : on les ouvre. */
+    private fun isDoor(id: Short?) = id != null && id in 9200..9209
+    private fun passable(id: Short?) = id == AIR || isDoor(id)
+
     private fun profiles(): List<NaturalBiomeProfile> {
         val text = File("src/main/assets/caves/natural_generation.json").readText()
         return Regex("\\{[^{}]*\"id\"[^{}]*\\}").findAll(text).map { m ->
@@ -47,7 +51,7 @@ class RegionalGenerationTest {
             // Only planned ground counts: no shortcut through unplanned terrain.
             fun walkable(x: Int, z: Int) = plan.containsKey(Triple(x, 0, z)) &&
                 block(x, 0, z) != WATER && block(x, 0, z) != AIR &&
-                block(x, 1, z) == AIR && block(x, 2, z) == AIR
+                passable(block(x, 1, z)) && passable(block(x, 2, z))
             val start = 44 to 44
             assertTrue(walkable(start.first, start.second))
             val visited = mutableSetOf(start); val queue = ArrayDeque<Pair<Int, Int>>(); queue += start
@@ -88,9 +92,9 @@ class RegionalGenerationTest {
             fun block(x: Int, y: Int, z: Int) = plan[Triple(x, y, z)]?.id
                 ?: if (y <= height(x, z)) STONE else AIR
             val walkable = plan.filter { (p, cell) ->
-                cell.id != AIR && cell.id != WATER &&
-                    block(p.first, p.second + 1, p.third) == AIR &&
-                    block(p.first, p.second + 2, p.third) == AIR
+                cell.id != AIR && cell.id != WATER && !isDoor(cell.id) &&
+                    passable(block(p.first, p.second + 1, p.third)) &&
+                    passable(block(p.first, p.second + 2, p.third))
             }.keys
             val start = Triple(44, 0, 44)
             assertTrue(start in walkable)
@@ -103,8 +107,8 @@ class RegionalGenerationTest {
                     val next = Triple(p.first + dx, p.second + dy, p.third + dz)
                     // Enough headroom on the higher of the two adjacent steps.
                     val top = maxOf(p.second, next.second) + 2
-                    if (next in walkable && block(p.first, top, p.third) == AIR &&
-                        block(next.first, top, next.third) == AIR && visited.add(next)) queue += next
+                    if (next in walkable && passable(block(p.first, top, p.third)) &&
+                        passable(block(next.first, top, next.third)) && visited.add(next)) queue += next
                 }
             }
             val buildings = plan.filterValues { it.id == F.COOKER || it.id == F.MILL }.keys
@@ -125,7 +129,9 @@ class RegionalGenerationTest {
             for (p in plan.blocks.keys) {
                 // Anchors use [48,79] in X/Z and [8,80] in Y; any quarter-turn must fit.
                 assertTrue("Horizontal extent: $kind $p", p.x in -48..48 && p.z in -48..48)
-                assertTrue("Vertical extent: $kind $p", p.y in -8..15)
+                // Les sites ont deux niveaux : le sous-sol descend a -11 sous l'ancre (le placement
+                // garde 16 blocs libres sous elle).
+                assertTrue("Vertical extent: $kind $p", p.y in -11..15)
             }
         }
     }

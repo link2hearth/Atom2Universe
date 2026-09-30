@@ -450,10 +450,12 @@ class PrototypeTrackTest {
     fun fallingBetweenHouseLevelsLandsOnTheFloorBelow() {
         val track = PrototypeTrack(scene = SceneChoice(RoomKind.BEDROOM, CircuitKind.HOUSE_GROUND_FLOOR))
         val car = ArcadeCar(track)
-        car.setPrivateField("worldX", 80f)
+        // Point de chute sur le plancher nu de l'etage 1 : pas sous un meuble. (Il etait a x = 80, que
+        // l'ilot de cuisine a occupe en se deplacant : la voiture se posait alors sur l'ilot.)
+        car.setPrivateField("worldX", 55f)
         car.setPrivateField("worldZ", 0f)
         car.setPrivateField("airborneY", 40f)
-        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(80f, 40f, 0f))
+        car.setPrivateField("worldPosition", PrototypeTrack.Vec3(55f, 40f, 0f))
         car.setPrivateField("airborne", true)
         repeat(120) {
             car.update(1f / 60f, ArcadeCar.Input(0f, false, false))

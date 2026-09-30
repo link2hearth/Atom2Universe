@@ -113,15 +113,24 @@ class SquadCommandTest {
 
     @Test
     fun `une reserve derive vers le joueur sans jamais s'en approcher trop`() {
-        val cmd = command(SquadTuning(holdDriftSpeed = 5f, holdStandoff = 10.0))
+        // Activation repoussee tres loin : le test mesure la derive, pas le moment ou la reserve s'engage
+        // (ce delai est un reglage de jeu, il a deja change une fois).
+        val cmd = command(SquadTuning(holdDriftSpeed = 5f, holdStandoff = 10.0, wipedPauseSeconds = 60f))
         val squad = enlist(cmd, 70.0, 70.0)
         cmd.start(MID, 1.0, MID)
         val startDist = hypot(squad.anchorX - MID, squad.anchorZ - MID)
-        run(cmd, 4f)   // largement sous le délai d'activation (5 s par défaut) : reste en réserve
+        run(cmd, 4f)
+        assertEquals(Squad.Stance.HOLD, squad.stance)
+        val midDist = hypot(squad.anchorX - MID, squad.anchorZ - MID)
+        assertTrue("le secteur doit se rapprocher ($startDist -> $midDist)", midDist < startDist)
+        // Assez longtemps pour que la derive atteigne le seuil : elle doit s'y arreter, pas le depasser.
+        run(cmd, 8f)
         assertEquals(Squad.Stance.HOLD, squad.stance)
         val laterDist = hypot(squad.anchorX - MID, squad.anchorZ - MID)
-        assertTrue("le secteur doit se rapprocher ($startDist -> $laterDist)", laterDist < startDist)
-        assertTrue("jamais plus près que le seuil", laterDist >= cmd.tuning.holdStandoff - 1e-6)
+        // Le seuil se mesure depuis la position annoncee par radio, floue de radioBlur : on tolere ce flou.
+        val blur = cmd.tuning.radioBlur * 1.5
+        assertTrue("jamais beaucoup plus pres que le seuil ($laterDist)", laterDist >= cmd.tuning.holdStandoff - blur)
+        assertTrue("elle doit etre arrivee au seuil ($laterDist)", laterDist <= cmd.tuning.holdStandoff + blur)
         // La laisse de chaque homme suit le secteur déplacé, pas seulement son rayon.
         val p = puppets(squad).first()
         assertEquals(squad.anchorX, p.leashX, 1e-6)
@@ -206,16 +215,18 @@ class SquadCommandTest {
         val cmd = command()
         val squad = enlist(cmd, 62.0, 62.0)
         cmd.start(MID, 1.0, MID)
-        run(cmd, 6f)   // le temps que l'alerte parte et que l'escouade soit activée
+        // Le delai d'activation est un reglage de jeu : on attend l'activation, pas un nombre de secondes.
+        run(cmd, cmd.tuning.wipedPauseSeconds + .5f)
         assertEquals(Squad.Stance.RALLY, squad.stance)
         val scout = squad.roles.indexOf(Squad.Role.POINT)
         assertTrue("une escouade doit avoir une pointe", scout >= 0)
         puppets(squad)[scout].seesTarget = true
 
         // Vu n'est pas visé : le groupe garde un court délai pour se placer, il ne fonce pas.
-        run(cmd, 2f)
+        // (Le délai se compte depuis le début du regroupement, pas depuis le contact.)
+        run(cmd, cmd.tuning.contactRallySeconds - 1.5f)
         assertEquals(Squad.Stance.RALLY, squad.stance)
-        run(cmd, cmd.tuning.contactRallySeconds)
+        run(cmd, 2f)
         assertEquals(Squad.Stance.ASSAULT, squad.stance)
     }
 
