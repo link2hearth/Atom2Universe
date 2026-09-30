@@ -157,7 +157,7 @@ class Match3Activity : ThemedActivity() {
             val hero = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(0, 0, dp(18), 0) }
             hero.addFull(label(getString(R.string.forge_subtitle), 22f, 0xffedb56b.toInt()))
             hero.addView(object : View(this) {
-                private val artwork = Match3HubTileDrawable(this@Match3Activity)
+                private val artwork = Match3HubTileDrawable(this@Match3Activity).also { it.callback = this }
                 override fun onDraw(canvas: Canvas) { artwork.setBounds(0, 0, width, height); artwork.draw(canvas) }
             }, LinearLayout.LayoutParams(-1, 0, 1f))
             hero.addFull(label(getString(R.string.forge_menu_tagline), 15f, 0xffb9c9cc.toInt()))
