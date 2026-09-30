@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Tela Creativa</string>
+    <string name="canvas_editor_title">Tela</string>
     <string name="canvas_fit_content">Adatta contenuto</string>
     <string name="canvas_toggle_grid">Griglia</string>
     <string name="canvas_menu">Menu</string>

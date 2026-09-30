@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Lienzo creativo</string>
+    <string name="canvas_editor_title">Lienzo</string>
     <string name="canvas_fit_content">Ajustar contenido</string>
     <string name="canvas_toggle_grid">Cuadrícula</string>
     <string name="canvas_menu">Menú</string>

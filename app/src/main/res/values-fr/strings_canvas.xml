@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Toile Créative</string>
+    <string name="canvas_editor_title">Canvas</string>
     <string name="canvas_fit_content">Ajuster au contenu</string>
     <string name="canvas_toggle_grid">Grille</string>
     <string name="canvas_menu">Menu</string>

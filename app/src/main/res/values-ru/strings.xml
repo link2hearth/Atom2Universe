@@ -38,8 +38,10 @@
     <string name="common_resize">Изменить размер</string>
     <string name="common_save">Сохранить</string>
     <string name="common_yes">Да</string>
-    <string name="creative_hub_canvas_desc">Рисуйте на бесконечном холсте</string>
-    <string name="creative_hub_canvas_title">Творческий холст</string>
+    <string name="creative_hub_canvas_desc">Рисуйте и компонуйте свободно</string>
+    <string name="creative_hub_zoom_canvas_title">Бесконечный холст</string>
+    <string name="creative_hub_zoom_canvas_desc">Приближайте рисунок бесконечно</string>
+    <string name="creative_hub_canvas_title">Холст</string>
     <string name="creative_hub_pixel_art_desc">Создавайте спрайты и иллюстрации</string>
     <string name="creative_hub_pixel_art_title">Пиксель-арт</string>
     <string name="creative_hub_subtitle">Выразите свой творческий потенциал</string>

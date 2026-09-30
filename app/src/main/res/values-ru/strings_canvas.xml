@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Творческий холст</string>
+    <string name="canvas_editor_title">Холст</string>
     <string name="canvas_fit_content">По размеру</string>
     <string name="canvas_toggle_grid">Сетка</string>
     <string name="canvas_menu">Меню</string>

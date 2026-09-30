@@ -38,8 +38,10 @@
     <string name="common_resize">Yeniden boyutlandır</string>
     <string name="common_save">Kaydet</string>
     <string name="common_yes">Evet</string>
-    <string name="creative_hub_canvas_desc">Sonsuz bir tuvalde çiz</string>
-    <string name="creative_hub_canvas_title">Yaratıcı Tuval</string>
+    <string name="creative_hub_canvas_desc">Özgürce çiz ve düzenle</string>
+    <string name="creative_hub_zoom_canvas_title">Sonsuz Tuval</string>
+    <string name="creative_hub_zoom_canvas_desc">Çiziminin içine sonsuzca yakınlaş</string>
+    <string name="creative_hub_canvas_title">Tuval</string>
     <string name="creative_hub_pixel_art_desc">Sprite ve illüstrasyonlar oluştur</string>
     <string name="creative_hub_pixel_art_title">Piksel Sanatı</string>
     <string name="creative_hub_subtitle">Yaratıcılığını ifade et</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Kreatywne Płótno</string>
+    <string name="canvas_editor_title">Płótno</string>
     <string name="canvas_fit_content">Dopasuj zawartość</string>
     <string name="canvas_toggle_grid">Siatka</string>
     <string name="canvas_menu">Menu</string>

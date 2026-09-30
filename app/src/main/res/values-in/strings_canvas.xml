@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Kanvas Kreatif</string>
+    <string name="canvas_editor_title">Kanvas</string>
     <string name="canvas_fit_content">Sesuaikan konten</string>
     <string name="canvas_toggle_grid">Grid</string>
     <string name="canvas_menu">Menu</string>

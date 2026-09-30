@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Δημιουργικός Καμβάς</string>
+    <string name="canvas_editor_title">Καμβάς</string>
     <string name="canvas_fit_content">Προσαρμογή περιεχομένου</string>
     <string name="canvas_toggle_grid">Πλέγμα</string>
     <string name="canvas_menu">Μενού</string>

@@ -38,8 +38,10 @@
     <string name="common_resize">Formaat wijzigen</string>
     <string name="common_save">Opslaan</string>
     <string name="common_yes">Ja</string>
-    <string name="creative_hub_canvas_desc">Teken op een oneindig canvas</string>
-    <string name="creative_hub_canvas_title">Creatief canvas</string>
+    <string name="creative_hub_canvas_desc">Teken en ontwerp vrij</string>
+    <string name="creative_hub_zoom_canvas_title">Oneindig canvas</string>
+    <string name="creative_hub_zoom_canvas_desc">Zoom eindeloos in op je tekening</string>
+    <string name="creative_hub_canvas_title">Canvas</string>
     <string name="creative_hub_pixel_art_desc">Maak sprites en illustraties</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Druk je creativiteit uit</string>

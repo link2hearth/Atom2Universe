@@ -38,8 +38,10 @@
     <string name="common_resize">Zmień rozmiar</string>
     <string name="common_save">Zapisz</string>
     <string name="common_yes">Tak</string>
-    <string name="creative_hub_canvas_desc">Rysuj na nieskończonym płótnie</string>
-    <string name="creative_hub_canvas_title">Kreatywne płótno</string>
+    <string name="creative_hub_canvas_desc">Rysuj i komponuj swobodnie</string>
+    <string name="creative_hub_zoom_canvas_title">Nieskończone płótno</string>
+    <string name="creative_hub_zoom_canvas_desc">Przybliżaj swój rysunek bez końca</string>
+    <string name="creative_hub_canvas_title">Płótno</string>
     <string name="creative_hub_pixel_art_desc">Twórz sprite\'y i ilustracje</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Wyraź swoją kreatywność</string>

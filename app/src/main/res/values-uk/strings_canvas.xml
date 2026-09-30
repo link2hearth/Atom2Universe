@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Творче Полотно</string>
+    <string name="canvas_editor_title">Полотно</string>
     <string name="canvas_fit_content">Вмістити вміст</string>
     <string name="canvas_toggle_grid">Сітка</string>
     <string name="canvas_menu">Меню</string>

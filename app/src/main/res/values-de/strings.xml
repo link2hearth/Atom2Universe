@@ -38,8 +38,10 @@
     <string name="common_resize">Größe ändern</string>
     <string name="common_save">Speichern</string>
     <string name="common_yes">Ja</string>
-    <string name="creative_hub_canvas_desc">Zeichne auf einer unendlichen Leinwand</string>
-    <string name="creative_hub_canvas_title">Kreative Leinwand</string>
+    <string name="creative_hub_canvas_desc">Frei zeichnen und gestalten</string>
+    <string name="creative_hub_zoom_canvas_title">Unendliche Leinwand</string>
+    <string name="creative_hub_zoom_canvas_desc">Zoome endlos in deine Zeichnung</string>
+    <string name="creative_hub_canvas_title">Leinwand</string>
     <string name="creative_hub_pixel_art_desc">Erstelle Sprites und Illustrationen</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Drücke deine Kreativität aus</string>

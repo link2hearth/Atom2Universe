@@ -651,6 +651,15 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.A2U" />
+        <!-- Canvas infini à couches : galerie, puis l'éditeur (le projet vit dans un ViewModel) -->
+        <activity
+            android:name=".zoomcanvas.ZoomCanvasLibraryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <activity
+            android:name=".zoomcanvas.ZoomCanvasEditorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
         <activity
             android:name=".pixelart.CanvasEditorActivity"
             android:exported="false"

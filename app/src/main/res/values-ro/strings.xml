@@ -64,8 +64,10 @@
     <string name="creative_hub_subtitle">Exprimați-vă creativitatea</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_pixel_art_desc">Creați sprite-uri și ilustrații</string>
-    <string name="creative_hub_canvas_title">Pânză creativă</string>
-    <string name="creative_hub_canvas_desc">Desenați pe o pânză infinită</string>
+    <string name="creative_hub_canvas_title">Pânză</string>
+    <string name="creative_hub_canvas_desc">Desenați și compuneți liber</string>
+    <string name="creative_hub_zoom_canvas_title">Pânză infinită</string>
+    <string name="creative_hub_zoom_canvas_desc">Măriți desenul la nesfârșit</string>
     <string name="stat_total_clicks">Total clicuri</string>
     <string name="stat_frenzy_clicks">Clicuri în frenezia APC</string>
     <string name="stat_apc_frenzies">Frenzii APC</string>

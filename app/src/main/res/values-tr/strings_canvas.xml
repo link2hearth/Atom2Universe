@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Yaratıcı Tuval</string>
+    <string name="canvas_editor_title">Tuval</string>
     <string name="canvas_fit_content">İçeriği sığdır</string>
     <string name="canvas_toggle_grid">Kılavuz</string>
     <string name="canvas_menu">Menü</string>

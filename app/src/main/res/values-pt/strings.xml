@@ -38,8 +38,10 @@
     <string name="common_resize">Redimensionar</string>
     <string name="common_save">Salvar</string>
     <string name="common_yes">Sim</string>
-    <string name="creative_hub_canvas_desc">Desenhe em uma tela infinita</string>
-    <string name="creative_hub_canvas_title">Tela criativa</string>
+    <string name="creative_hub_canvas_desc">Desenhe e componha livremente</string>
+    <string name="creative_hub_zoom_canvas_title">Tela infinita</string>
+    <string name="creative_hub_zoom_canvas_desc">Aproxime o zoom no seu desenho, sem fim</string>
+    <string name="creative_hub_canvas_title">Tela</string>
     <string name="creative_hub_pixel_art_desc">Crie sprites e ilustrações</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Expresse sua criatividade</string>

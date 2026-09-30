@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Pânză Creativă</string>
+    <string name="canvas_editor_title">Pânză</string>
     <string name="canvas_fit_content">Potrivire conținut</string>
     <string name="canvas_toggle_grid">Grilă</string>
     <string name="canvas_menu">Meniu</string>

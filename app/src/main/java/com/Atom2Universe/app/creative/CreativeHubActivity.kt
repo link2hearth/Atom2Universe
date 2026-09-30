@@ -7,6 +7,7 @@ import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.notes.ui.NotesActivity
 import com.Atom2Universe.app.pixelart.CanvasEditorActivity
 import com.Atom2Universe.app.pixelart.PixelArtLibraryActivity
+import com.Atom2Universe.app.zoomcanvas.ZoomCanvasLibraryActivity
 
 class CreativeHubActivity : BaseHubActivity() {
 
@@ -14,6 +15,7 @@ class CreativeHubActivity : BaseHubActivity() {
         const val TILE_PIXEL_ART = "pixel_art"
         const val TILE_CANVAS = "canvas"
         const val TILE_NOTES = "notes"
+        const val TILE_ZOOM_CANVAS = "zoom_canvas"
     }
 
     override fun getLayoutResId(): Int = R.layout.activity_base_hub
@@ -53,6 +55,14 @@ class CreativeHubActivity : BaseHubActivity() {
             iconRes = android.R.drawable.ic_menu_gallery,
             defaultColorRes = R.color.creative_hub_tile_canvas,
             activityClass = CanvasEditorActivity::class.java
+        ),
+        HubTile(
+            id = TILE_ZOOM_CANVAS,
+            titleRes = R.string.creative_hub_zoom_canvas_title,
+            descriptionRes = R.string.creative_hub_zoom_canvas_desc,
+            iconRes = R.drawable.ic_px_layers,
+            defaultColorRes = R.color.creative_hub_tile_zoom_canvas,
+            activityClass = ZoomCanvasLibraryActivity::class.java
         )
     )
 

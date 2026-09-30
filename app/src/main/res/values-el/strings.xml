@@ -64,8 +64,10 @@
     <string name="creative_hub_subtitle">Εκφράστε τη δημιουργικότητά σας</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_pixel_art_desc">Δημιουργήστε sprites και εικονογραφήσεις</string>
-    <string name="creative_hub_canvas_title">Δημιουργικός Καμβάς</string>
-    <string name="creative_hub_canvas_desc">Σχεδιάστε σε άπειρο καμβά</string>
+    <string name="creative_hub_canvas_title">Καμβάς</string>
+    <string name="creative_hub_canvas_desc">Σχεδιάστε και συνθέστε ελεύθερα</string>
+    <string name="creative_hub_zoom_canvas_title">Άπειρος καμβάς</string>
+    <string name="creative_hub_zoom_canvas_desc">Κάντε ζουμ στο σχέδιό σας, ατελείωτα</string>
     <string name="stat_total_clicks">Συνολικά κλικ</string>
     <string name="stat_frenzy_clicks">Κλικ κατά τη μανία APC</string>
     <string name="stat_apc_frenzies">Μανίες APC</string>

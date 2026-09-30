@@ -38,8 +38,10 @@
     <string name="common_resize">Redimensionar</string>
     <string name="common_save">Guardar</string>
     <string name="common_yes">Sí</string>
-    <string name="creative_hub_canvas_desc">Dibuja en un lienzo infinito</string>
-    <string name="creative_hub_canvas_title">Lienzo creativo</string>
+    <string name="creative_hub_canvas_desc">Dibuja y compón libremente</string>
+    <string name="creative_hub_zoom_canvas_title">Lienzo infinito</string>
+    <string name="creative_hub_zoom_canvas_desc">Haz zoom en tu dibujo, sin fin</string>
+    <string name="creative_hub_canvas_title">Lienzo</string>
     <string name="creative_hub_pixel_art_desc">Crea sprites e ilustraciones</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Expresa tu creatividad</string>

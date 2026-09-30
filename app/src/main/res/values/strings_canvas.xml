@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Creative Canvas</string>
+    <string name="canvas_editor_title">Canvas</string>
     <string name="canvas_fit_content">Fit content</string>
     <string name="canvas_toggle_grid">Grid</string>
     <string name="canvas_menu">Menu</string>

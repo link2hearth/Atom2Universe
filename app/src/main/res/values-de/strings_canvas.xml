@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="canvas_editor_title">Kreativ-Leinwand</string>
+    <string name="canvas_editor_title">Leinwand</string>
     <string name="canvas_fit_content">Inhalt anpassen</string>
     <string name="canvas_toggle_grid">Raster</string>
     <string name="canvas_menu">Menü</string>

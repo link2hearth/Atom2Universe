@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="zc_title">Canvas infini</string>
+    <string name="zc_library_empty">Aucun canvas infini pour l\'instant.\nCréez-en un, dessinez, puis zoomez pour dessiner dans votre dessin.</string>
+    <string name="zc_untitled_n">Canvas %1$d</string>
+    <string name="zc_new_title">Nouveau canvas infini</string>
+    <string name="zc_name">Nom</string>
+    <string name="zc_ratio">Rapport d\'échelle entre deux couches</string>
+    <string name="zc_ratio_hint">Chaque couche est autant de fois plus petite que celle du dessus. Impossible de le changer ensuite.</string>
+    <string name="zc_ratio_value">×%1$d</string>
+    <string name="zc_project_info">%1$s · %2$s · %3$s</string>
+    <string name="zc_create">Créer</string>
+    <string name="zc_open_failed">Impossible d\'ouvrir ce canvas</string>
+    <string name="zc_level">Niveau %1$s</string>
+    <string name="zc_layers_title">Couches dessinées</string>
+    <string name="zc_layers_none">Rien n\'est encore dessiné.</string>
+    <string name="zc_layers_hint">Zoomer suffit à passer d\'une couche à l\'autre : chacune est %1$d fois plus petite que celle du dessus.</string>
+    <string name="zc_tool_pen">Crayon</string>
+    <string name="zc_tool_eraser">Gomme</string>
+    <string name="zc_tool_hand">Déplacer la vue</string>
+    <string name="zc_tool_move_layer">Réaligner la couche du dessous</string>
+    <string name="zc_move_layer_hint">Glissez pour décaler la couche du dessous (et tout ce qu\'elle contient) sous celle-ci.</string>
+    <string name="zc_no_layer_below">Rien à réaligner : la couche du dessous ne contient encore aucun dessin.</string>
+    <string name="zc_width">Épaisseur</string>
+    <plurals name="zc_strokes_count">
+        <item quantity="one">%1$d trait</item>
+        <item quantity="many">%1$d traits</item>
+        <item quantity="other">%1$d traits</item>
+    </plurals>
+    <plurals name="zc_layers_count">
+        <item quantity="one">%1$d couche</item>
+        <item quantity="many">%1$d couches</item>
+        <item quantity="other">%1$d couches</item>
+    </plurals>
+</resources>

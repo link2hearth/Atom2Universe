@@ -145,6 +145,7 @@
     <color name="sudoku_status_error">#F44336</color>
     <color name="creative_hub_tile_pixel_art">#E91E63</color>
     <color name="creative_hub_tile_canvas">#00BCD4</color>
+    <color name="creative_hub_tile_zoom_canvas">#7E57C2</color>
     <color name="creative_hub_tile_notes">#FF9800</color>
     <color name="main_hub_tile_clicker_stats">#546E7A</color>
     <color name="crypto_banner_background">#000000</color>

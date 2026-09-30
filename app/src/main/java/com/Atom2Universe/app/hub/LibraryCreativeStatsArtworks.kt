@@ -129,6 +129,35 @@ class CanvasHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : Au
     }
 }
 
+/** Des cadres emboîtés à l'infini : chaque tableau contient le suivant, dix fois plus petit. */
+class ZoomCanvasHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) : AudioHubTileDrawable(0xFF9C7CE0.toInt()) {
+    override fun drawScene(scene: AudioTileScene, accent: Int) = with(scene) {
+        var x = 46f
+        var y = 22f
+        var w = 208f
+        var h = 158f
+        val frames = intArrayOf(0xFF4B3A73.toInt(), 0xFF2F5E73.toInt(), 0xFF6B3F5E.toInt(), 0xFF3A6152.toInt(), 0xFF4B3A73.toInt())
+        for (i in frames.indices) {
+            box(x, y, w, h, PAPER, 3f + 3f * (1f - i / 5f))
+            val m = w * .045f
+            box(x + m, y + m, w - 2 * m, h - 2 * m, frames[i], 2f)
+            // Le tableau suivant, décentré vers le bas à droite : on y plonge.
+            val nw = w * .46f
+            val nh = h * .46f
+            x += w * .44f
+            y += h * .38f
+            w = nw
+            h = nh
+        }
+        oval(62f, 34f, 26f, 26f, 0xFFF4D394.toInt())
+        line(64f, 150f, 116f, 108f, 0xFFB9D7D1.toInt(), 5f)
+        line(116f, 108f, 150f, 132f, 0xFFB9D7D1.toInt(), 5f)
+        // La loupe.
+        arc(214f, 150f, 44f, 44f, 0f, 360f, accent, 6f)
+        line(250f, 188f, 270f, 208f, accent, 9f)
+    }
+}
+
 private fun AudioTileScene.chart(accent: Int) {
     box(41f, 77f, 219f, 117f, 0xFF20334A.toInt(), 8f)
     for (i in 0..3) line(56f, 96f + i * 25f, 247f, 96f + i * 25f, 0xFF37485E.toInt(), 1f)

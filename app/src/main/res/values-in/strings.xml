@@ -38,8 +38,10 @@
     <string name="common_resize">Ubah ukuran</string>
     <string name="common_save">Simpan</string>
     <string name="common_yes">Ya</string>
-    <string name="creative_hub_canvas_desc">Gambar di kanvas tak terbatas</string>
-    <string name="creative_hub_canvas_title">Kanvas Kreatif</string>
+    <string name="creative_hub_canvas_desc">Gambar dan susun dengan bebas</string>
+    <string name="creative_hub_zoom_canvas_title">Kanvas Tak Terbatas</string>
+    <string name="creative_hub_zoom_canvas_desc">Perbesar gambarmu tanpa henti</string>
+    <string name="creative_hub_canvas_title">Kanvas</string>
     <string name="creative_hub_pixel_art_desc">Buat sprite dan ilustrasi</string>
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_subtitle">Ekspresikan kreativitasmu</string>

@@ -38,8 +38,10 @@
     <string name="common_resize">Змінити розмір</string>
     <string name="common_save">Зберегти</string>
     <string name="common_yes">Так</string>
-    <string name="creative_hub_canvas_desc">Малюйте на нескінченному полотні</string>
-    <string name="creative_hub_canvas_title">Творче полотно</string>
+    <string name="creative_hub_canvas_desc">Малюйте й компонуйте вільно</string>
+    <string name="creative_hub_zoom_canvas_title">Нескінченне полотно</string>
+    <string name="creative_hub_zoom_canvas_desc">Наближайте малюнок нескінченно</string>
+    <string name="creative_hub_canvas_title">Полотно</string>
     <string name="creative_hub_pixel_art_desc">Створюйте спрайти та ілюстрації</string>
     <string name="creative_hub_pixel_art_title">Піксель-арт</string>
     <string name="creative_hub_subtitle">Висловіть свою творчість</string>
