@@ -104,9 +104,9 @@ class RenderList {
 }
 
 /**
- * Calcule l'image : de l'arrière vers l'avant, les couches visibles sous la couche de travail
- * (chacune à sa propre échelle), la couche de travail, les couches du dessus tant qu'elles n'ont pas
- * fini de s'effacer, puis le trait en cours. Dans chaque couche, les images passent sous les traits.
+ * Calcule l'image : de l'arrière vers l'avant, la couche d'en dessous la couche de travail (à sa
+ * propre échelle), la couche de travail, puis le trait en cours. Rien d'autre, pas de fondu. Dans
+ * chaque couche, les images passent sous les traits.
  *
  * Tout se calcule en `Double` relativement à la caméra (position de l'objet − position de la
  * caméra, dans le repère de sa couche) ; seul le petit résultat, déjà découpé au bord de l'écran,
@@ -118,8 +118,8 @@ object ZoomRenderer {
     const val MIN_PX = 1.0
     /** Épaisseur minimale tracée : plus fin, le trait s'éclaircit au lieu de disparaître. */
     const val MIN_WIDTH_PX = 0.8
-    /** Garde-fou : jamais plus de couches dessinées à la fois. */
-    const val MAX_LAYERS = 32
+    /** Les couches vues : la couche de travail et celle d'en dessous. */
+    const val MAX_LAYERS = 2
 
     private class Visible(val layer: Layer, val x: Double, val y: Double, val zoom: Double)
 
@@ -151,29 +151,13 @@ object ZoomRenderer {
             }
             if (!x.isFinite() || !y.isFinite() || z <= 0.0) break
             if (suffixExtent[i] * z < MIN_PX) break
-            if (visible.size >= MAX_LAYERS) break
+            if (i >= MAX_LAYERS) break
             if (!l.isEmpty) visible.add(Visible(l, x, y, z))
         }
 
-        // Du fond vers l'avant : les couches du dessous, puis la couche de travail.
+        // Du fond vers l'avant : la couche d'en dessous, puis la couche de travail. Rien d'autre :
+        // les couches du dessus ne se voient jamais, celles d'encore en dessous apparaissent au seuil.
         for (k in visible.indices.reversed()) drawLayer(visible[k], scene.layerAlpha(visible[k].layer.depth), hw, hh, viewW, viewH, out)
-
-        // Les couches du dessus, par-dessus, tant qu'elles n'ont pas fini de s'effacer.
-        var up = scene.depth - 1
-        var ux = scene.cx
-        var uy = scene.cy
-        var uz = scene.zoom
-        while (true) {
-            val child = scene.layer(up + 1) ?: break
-            val l = scene.layer(up) ?: break
-            val alpha = scene.layerAlpha(up)
-            if (alpha <= 0.0) break
-            ux = child.ax + ux / scene.ratio
-            uy = child.ay + uy / scene.ratio
-            uz *= scene.ratio
-            if (!l.isEmpty) drawLayer(Visible(l, ux, uy, uz), alpha, hw, hh, viewW, viewH, out)
-            up--
-        }
 
         scene.liveStroke()?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
     }

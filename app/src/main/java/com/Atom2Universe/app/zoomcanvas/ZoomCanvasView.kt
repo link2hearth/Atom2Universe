@@ -46,9 +46,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             invalidate()
         }
     var color = Color.BLACK
-    /** Épaisseur du crayon, en unités de la couche (pixels quand la couche est à sa taille normale). */
+    /** Épaisseur du crayon, en pixels de la grille de la couche (un pixel de la couche vaut [zoom] pixels d'écran). */
     var penSize = 6f
-    /** Diamètre de la gomme, en unités de la couche. */
+    /** Diamètre de la gomme, en pixels de la grille de la couche. */
     var eraserSize = 24f
     var paperColor = 0xFFFAF8F3.toInt()
 

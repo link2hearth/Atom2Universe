@@ -20,17 +20,25 @@ import kotlin.math.sqrt
  * écran. Quand on zoome assez pour changer de couche, on la convertit dans la nouvelle couche et les
  * nombres redeviennent petits. La profondeur n'est qu'un entier.
  *
- * Une couche est à sa taille normale au zoom 1 : un trait d'épaisseur 14 fait 14 px à l'écran. Les
- * épaisseurs sont en unités de la couche : zoomer grossit les traits comme tout le reste, ce qui dit
- * à quelle échelle on dessine. Une couche apparaît au loin à 1/ratio de sa taille normale (derrière
- * la couche de devant), grandit jusqu'à sa taille normale, puis encore de ×ratio jusqu'à disparaître :
- * le fondu de sortie n'occupe que la fin ([FADE_START] → [FADE_END], de ×7,9 à ×10 avec ×10). Les
- * couches existent dans les deux sens, à l'infini.
+ * Chaque couche a sa grille de pixels virtuelle, infinie dans les quatre directions (on ne la dessine
+ * pas) : une unité de la couche est un de ses pixels, et le zoom dit combien de pixels d'écran fait
+ * un pixel de la couche. Les épaisseurs se choisissent en pixels de la couche : un trait de 8 fait 8
+ * pixels de la grille de la couche où l'on dessine, et grossit avec le zoom comme tout le reste. Un
+ * pixel de la couche du dessus vaut [ratio] × [ratio] pixels de celle du dessous.
  *
- * Une seule couche est devant : la couche de travail, la seule qu'on édite. On passe à la suivante au
- * milieu du fondu ([EDIT_SWITCH]), quand la couche de devant est à moitié effacée ; rien d'autre
- * n'est dessiné par-dessus la couche de travail que la fin de ce fondu. Le zoom de la caméra reste
- * donc dans [minZoom, maxZoom[, un rapport d'échelle de large.
+ * **Les grilles sont alignées** : l'ancre d'une couche est toujours un nombre entier de pixels de la
+ * couche du dessus (un coin de pixel), et [ratio] est entier. Chaque coin de pixel d'une couche est
+ * donc aussi un point de la grille de la couche du dessous : les grilles s'emboîtent exactement.
+ *
+ * **Un seul seuil, pas de fondu.** On ne voit que deux couches : la couche de travail (devant, la
+ * seule qu'on édite) et celle d'en dessous (derrière, plus petite). Quand le zoom atteint [maxZoom],
+ * la couche de travail passe « derrière l'écran » et disparaît, celle du dessous devient la couche
+ * de travail (à [minZoom]) et celle d'encore en dessous apparaît. En dézoomant, le même seuil joue
+ * à l'envers, à l'instant où on le franchit : la couche du dessus revient devant et la plus basse
+ * disparaît. Aucun fondu, aucune zone morte : zoomer et dézoomer autour du seuil fait basculer
+ * la vue à chaque passage. On travaille sur une couche jusqu'à [maxZoom] (un pixel de la couche
+ * fait alors environ un centimètre sur une tablette), et on la quitte vers le haut à
+ * [minZoom] = [maxZoom] / [ratio].
  *
  * Les couches forment une suite contiguë [firstDepth .. lastDepth] qui couvre les couches dessinées
  * et celle de la caméra. Une couche vide n'y est gardée que pour son ancre, quand elle est coincée
@@ -39,10 +47,11 @@ import kotlin.math.sqrt
  * au-delà n'existent que virtuellement : on les crée quand la caméra y entre, on les oublie quand
  * elle en sort sans y avoir dessiné.
  */
-class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
+class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT_MAX_ZOOM, startZoom: Double = Double.NaN) {
 
     init {
         require(ratio > 1.0 && ratio.isFinite()) { "ratio must be > 1" }
+        require(maxZoom > 0.0 && maxZoom.isFinite()) { "maxZoom must be > 0" }
     }
 
     private val logRatio = ln(ratio)
@@ -62,13 +71,12 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         private set
     var cy = 0.0
         private set
-    /** Au-delà, la couche de dessous devient la couche de travail. */
-    val maxZoom = Math.pow(ratio, EDIT_SWITCH)
+    // Le seuil [maxZoom] (constructeur) : au-delà, la couche de dessous devient la couche de travail.
     /** En deçà, la couche du dessus redevient la couche de travail (exactement maxZoom / ratio). */
     val minZoom = maxZoom / ratio
 
-    /** Pixels d'écran par unité de la couche de travail, dans [minZoom, maxZoom[ ; 1 = taille normale. */
-    var zoom = START_ZOOM
+    /** Pixels d'écran par pixel de la couche de travail, dans [minZoom, maxZoom[. On ouvre tout dézoomé. */
+    var zoom = if (startZoom.isNaN()) minZoom else startZoom
         private set
 
     /** Prochain identifiant d'objet, trait ou image (unique dans le projet). */
@@ -101,21 +109,14 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
      */
     fun level(): Double = depth + ln(zoom) / logRatio
 
-    /** Avancée du zoom dans la couche de travail : 0 juste après y être entré, 1 au moment d'en sortir. */
-    fun progress(): Double = (ln(zoom / minZoom) / logRatio).coerceIn(0.0, 1.0)
+    /** Avancée du zoom dans la plage de la couche de travail : 0 à son bord bas, 1 à son bord haut. */
+    fun progress(): Double = (ln(zoom / minZoom) / ln(maxZoom / minZoom)).coerceIn(0.0, 1.0)
 
     /**
-     * Opacité de la couche [d] : pleine tant qu'elle n'a pas grossi de plus de ×ratio^FADE_START
-     * depuis sa taille normale, puis fondu jusqu'à ×ratio^FADE_END où elle a disparu.
+     * Opacité de la couche [d] : 1 pour la couche de travail et celle d'en dessous, les seules qu'on
+     * voit, 0 pour toutes les autres. Pas de fondu : le changement se fait au seuil.
      */
-    fun layerAlpha(d: Long): Double = alphaAt(level() - d)
-
-    private fun alphaAt(r: Double): Double {
-        if (r <= FADE_START) return 1.0
-        if (r >= FADE_END) return 0.0
-        val t = (r - FADE_START) / (FADE_END - FADE_START)
-        return 1.0 - t * t * (3.0 - 2.0 * t)
-    }
+    fun layerAlpha(d: Long): Double = if (d == depth || d == depth + 1) 1.0 else 0.0
 
     // ---- Projection -----------------------------------------------------------------------
 
@@ -211,7 +212,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         val l = layer(d) ?: return
         val b = l.bounds()
         if (b == null) {
-            setCamera(d, 0.0, 0.0, START_ZOOM)
+            setCamera(d, 0.0, 0.0, minZoom)
             return
         }
         val w = max(b[2] - b[0], 1e-9)
@@ -227,7 +228,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
 
     /** La couche de dessous devient la couche de travail. */
     private fun descend() {
-        val child = layer(depth + 1) ?: Layer(depth + 1, cx, cy).also { layers.add(it) }
+        val child = layer(depth + 1) ?: Layer(depth + 1, Math.rint(cx), Math.rint(cy)).also { layers.add(it) }
         cx = (cx - child.ax) * ratio
         cy = (cy - child.ay) * ratio
         zoom /= ratio
@@ -241,8 +242,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         if (layer(depth - 1) == null) {
             // Rien au-dessus : on crée la couche parente centrée sur la caméra. La couche courante
             // étant tout en haut, son ancre n'engageait rien, on peut la choisir.
-            cur.ax = -cx / ratio
-            cur.ay = -cy / ratio
+            cur.ax = -Math.rint(cx / ratio)
+            cur.ay = -Math.rint(cy / ratio)
             layers.add(0, Layer(depth - 1, 0.0, 0.0))
             firstDepth--
         }
@@ -290,8 +291,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
     val isDrawing: Boolean get() = liveCount > 0
 
     /**
-     * Commence un trait à l'écart d'écran [sx], [sy]. [width] est en unités de la couche : c'est
-     * l'épaisseur en pixels quand la couche est à sa taille normale.
+     * Commence un trait à l'écart d'écran [sx], [sy]. [width] est en unités de la couche, c'est-à-dire
+     * en pixels de sa grille.
      */
     fun beginStroke(sx: Double, sy: Double, color: Int, width: Double) {
         anchorIfFresh(layer(depth)!!)
@@ -344,7 +345,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
      */
     private fun anchorIfFresh(l: Layer) {
         if (l.used || !l.isEmpty) return
-        rebase(l, cx, cy)
+        // Un multiple du rapport : l'ancre de la couche reste un nombre entier de pixels du dessus.
+        rebase(l, Math.rint(cx / ratio) * ratio, Math.rint(cy / ratio) * ratio)
     }
 
     /** Décale le repère de [l] de ([dx], [dy]) de ses propres unités, sans rien bouger à l'écran. */
@@ -484,6 +486,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
     private var moveDepth = Long.MIN_VALUE
     private var moveDx = 0.0
     private var moveDy = 0.0
+    private var moveRawX = 0.0
+    private var moveRawY = 0.0
 
     /** La couche qu'un glissé de réalignement déplacerait : celle du fond, juste sous la couche de travail. */
     fun movableLayer(): Layer? = layer(depth + 1)
@@ -492,6 +496,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         val l = movableLayer() ?: return false
         moveDepth = l.depth
         moveDx = 0.0; moveDy = 0.0
+        moveRawX = 0.0; moveRawY = 0.0
         return true
     }
 
@@ -502,10 +507,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
     fun moveLayerBy(dx: Double, dy: Double) {
         if (moveDepth == Long.MIN_VALUE) return
         val l = layer(moveDepth) ?: return
-        val ux = dx / zoom
-        val uy = dy / zoom
-        l.ax += ux; l.ay += uy
-        moveDx += ux; moveDy += uy
+        moveRawX += dx / zoom
+        moveRawY += dy / zoom
+        // Par pixels entiers de la couche de travail : les grilles restent alignées.
+        val tx = Math.rint(moveRawX)
+        val ty = Math.rint(moveRawY)
+        l.ax += tx - moveDx; l.ay += ty - moveDy
+        moveDx = tx; moveDy = ty
         l.used = true
         contentVersion++
     }
@@ -611,7 +619,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         }
         nextStrokeId = max(nextId, maxId + 1)
         undoStack.clear(); redoStack.clear()
-        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else START_ZOOM
+        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else minZoom
         val x = if (camX.isFinite()) camX else 0.0
         val y = if (camY.isFinite()) camY else 0.0
         setCamera(camDepth, x, y, z)
@@ -620,24 +628,16 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
     class View(var x: Double = 0.0, var y: Double = 0.0, var zoom: Double = 1.0)
 
     companion object {
-        const val DEFAULT_RATIO = 10.0
-        /** Zoom d'ouverture : la couche 0 à sa taille normale. */
-        const val START_ZOOM = 1.0
+        const val DEFAULT_RATIO = 25.0
         /**
-         * Fondu de sortie, en part du rapport d'échelle (échelle logarithmique) : avec ×10, une couche
-         * reste entièrement visible jusqu'à ×10^0,9 ≈ ×7,9 de sa taille normale et a disparu à ×10.
+         * Zoom maximal de la couche de travail, en pixels d'écran par pixel de la couche : environ
+         * 1 cm de côté sur une tablette. Au-delà, la couche du dessous prend la main.
          */
-        const val FADE_START = 0.9
-        const val FADE_END = 1.0
-        /**
-         * La couche de dessous devient la couche de travail au milieu du fondu (×10^0,95 ≈ ×8,9 avec
-         * ×10), quand la couche de devant est à moitié effacée.
-         */
-        const val EDIT_SWITCH = (FADE_START + FADE_END) / 2
+        const val DEFAULT_MAX_ZOOM = 100.0
         /** Une image ne se réduit pas en dessous de cette taille à l'écran (pixels). */
         const val MIN_IMAGE_PX = 12.0
         const val MAX_HISTORY = 300
-        val RATIOS = doubleArrayOf(5.0, 10.0, 20.0)
+        val RATIOS = doubleArrayOf(10.0, 25.0, 35.0)
     }
 }
 
