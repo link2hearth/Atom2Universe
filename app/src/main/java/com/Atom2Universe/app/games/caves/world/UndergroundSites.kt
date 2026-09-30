@@ -151,6 +151,9 @@ internal class UndergroundSites(private val seed: Long, private val terrain: Nat
     }
 
     companion object {
+        /** Palier d'un site à partir de son identifiant « x:y:z » (celui de son entrée). */
+        fun stageOfId(id: String): Int =
+            MineralProgression.stage(id.split(':').getOrNull(1)?.toDoubleOrNull() ?: 0.0)
         private const val CELL = 128
         private const val HEIGHT = 96
         const val RAIL: Short = 2660

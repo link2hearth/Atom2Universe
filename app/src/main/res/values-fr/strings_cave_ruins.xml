@@ -35,6 +35,7 @@
     <string name="cave_site_entered">Découverte : %1$s</string>
     <string name="cave_site_hint">Éclairez les salles pour empêcher le retour des ennemis ordinaires. Le gardien doit être vaincu une seule fois.</string>
     <string name="cave_site_guardian_defeated">Gardien vaincu. Ce lieu ne fera plus apparaître de gardien.</string>
+    <string name="cave_site_pick_unlocked">Une nouvelle pioche peut désormais être forgée.</string>
     <string name="cave_site_dwarven_mine">Mine des nains</string>
     <string name="cave_site_ogre_den">Tanière des ogres</string>
     <string name="cave_site_mummy_tomb">Tombeau des momies</string>

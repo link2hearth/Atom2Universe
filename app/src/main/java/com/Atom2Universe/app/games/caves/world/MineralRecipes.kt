@@ -42,10 +42,11 @@ internal object MineralRecipes {
     val crafts: List<CraftDef> by lazy { buildList {
         for(stage in 0..MineralProgression.LAST_STAGE) {
             fun id(form: Fm)=M.id(stage,form)
-            fun craft(form: Fm, ingredients: List<Pair<Short,Int>>) {
-                add(CraftDef(ingredients,result=id(form),station=E.ANVIL))
+            fun craft(form: Fm, ingredients: List<Pair<Short,Int>>, bossStage: Int? = null) {
+                add(CraftDef(ingredients,result=id(form),station=E.ANVIL,bossStage=bossStage))
             }
-            craft(Fm.PICK,listOf(id(Fm.HEAD) to 1,3110.toShort() to 2))
+            // The guardian of a layer opens the pick of that layer's metal; the first layer has none.
+            craft(Fm.PICK,listOf(id(Fm.HEAD) to 1,3110.toShort() to 2),bossStage=stage.takeIf { it > 0 })
             craft(Fm.SWORD,listOf(id(Fm.BLADE) to 1,3110.toShort() to 1,E.RIVETS to 2))
             craft(Fm.SPEAR,listOf(id(Fm.BLADE) to 1,3110.toShort() to 3,E.RIVETS to 1))
             craft(Fm.HAMMER,listOf(id(Fm.HEAD) to 2,3110.toShort() to 2,E.RIVETS to 2))

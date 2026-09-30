@@ -271,6 +271,7 @@ class CaveActivity : ThemedActivity() {
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
                 defeatedSiteBosses = save.defeatedSiteBosses,
+                bossStages = save.bossStages,
                 farming = save.farming, saplings = save.saplings, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             save != null && save.playerY != 0.0 -> CaveRenderer.SavedState(
@@ -290,6 +291,7 @@ class CaveActivity : ThemedActivity() {
                 recoverableAmmo = save.recoverableAmmo,
                 passiveAnimals = save.passiveAnimals,
                 defeatedSiteBosses = save.defeatedSiteBosses,
+                bossStages = save.bossStages,
                 farming = save.farming, saplings = save.saplings, workshops = save.workshops, worldTimeMs = save.worldTimeMs, frontierLife = save.frontierLife
             )
             else -> null
@@ -881,6 +883,7 @@ class CaveActivity : ThemedActivity() {
             forgedEquipment     = com.Atom2Universe.app.games.caves.node.ForgedEquipment.snapshot(),
             passiveAnimals = renderer.passiveAnimals.snapshotNow(),
             defeatedSiteBosses = renderer.enemyManager.spawnManager.defeatedSiteBossesSnapshot(),
+            bossStages = renderer.player.bossStages.toSet(),
             recoverableAmmo = renderer.recoverableAmmoSnapshot
         )
     }

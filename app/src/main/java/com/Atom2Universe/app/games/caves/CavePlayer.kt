@@ -46,6 +46,8 @@ internal class CavePlayer(
     val stats = PlayerStats()
 
     val inventory = mutableMapOf<Short, Int>()
+    /** Paliers dont le gardien est tombé en sa présence : ils ouvrent la recette de la pioche du palier. */
+    val bossStages: MutableSet<Int> = java.util.concurrent.ConcurrentHashMap.newKeySet()
     /** Barre de raccourcis : un objet par case, ou rien. */
     val hotbar = arrayOfNulls<Short>(CaveActivity.ACTIVE_SIZE)
     var selectedSlot = 0

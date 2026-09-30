@@ -102,7 +102,8 @@ internal class CaveRenderer(
         val wardStonePositions: List<Pair<Double, Double>> = emptyList(),
         val recoverableAmmo: List<StuckAmmo> = emptyList(),
         val passiveAnimals: String = "[]",
-        val defeatedSiteBosses: Set<String> = emptySet()
+        val defeatedSiteBosses: Set<String> = emptySet(),
+        val bossStages: Set<Int> = emptySet()
     )
 
     @Volatile private var viewDistances = CaveViewDistances.load(context)
@@ -120,8 +121,15 @@ internal class CaveRenderer(
         inventoryChanged = { who ->
             if (who === player) { inventoryCallback?.invoke(inventory.toMap()); notifyHotbar() }
         }
-        enemyManager.spawnManager.siteBossDefeated = {
+        enemyManager.spawnManager.siteBossDefeated = { stage, bx, by, bz ->
             farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_guardian_defeated))
+            // Everyone who fought near the guardian opens the recipe, not only whoever landed the last hit.
+            val reach = SITE_VICTORY_RADIUS * SITE_VICTORY_RADIUS
+            val opened = sim.players.filter { p ->
+                val dx = p.x - bx; val dy = p.y - by; val dz = p.z - bz
+                dx * dx + dy * dy + dz * dz <= reach
+            }.count { it.bossStages.add(stage) }
+            if (stage > 0 && opened > 0) farmMessageCallback?.invoke(context.getString(com.Atom2Universe.app.R.string.cave_site_pick_unlocked))
             checkpointCallback?.invoke()
         }
         enemyManager.spawnManager.siteEntered = { site ->
@@ -4961,6 +4969,8 @@ internal class CaveRenderer(
 
     companion object {
         private val NO_FLOATS = FloatArray(0)
+        /** Blocks around a fallen guardian within which players share the victory. */
+        private const val SITE_VICTORY_RADIUS = 64.0
         private const val AUTO_SHOOT_RANGE = 30.0
         private const val PROJ_SPEED       = 15f
         private const val PROJ_MAX_DIST    = 40.0

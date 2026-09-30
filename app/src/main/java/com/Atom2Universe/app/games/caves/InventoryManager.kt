@@ -258,7 +258,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.clearSearch.setOnClickListener { ui.search.setText("");onlyFavorites=false;onlyRecent=false;categoryIndex=0;ui.craftable.isChecked=false;relatedType=null;refreshPagedAdapter();updateCraftingList() }
         ui.favoritesOnly.setOnClickListener { onlyFavorites=!onlyFavorites;currentPage=0;refreshPagedAdapter();updateCraftingList() }
         ui.recentOnly.setOnClickListener { onlyRecent=!onlyRecent;currentPage=0;refreshPagedAdapter();updateCraftingList() }
-        ui.craftMax.setOnClickListener { selectedRecipe?.let { doCraft(it,minOf(64,it.maxCraftable(renderer.inventory,renderer.nearbyStations))) } }
+        ui.craftMax.setOnClickListener { selectedRecipe?.let { doCraft(it,minOf(64,it.maxCraftable(renderer.inventory,renderer.nearbyStations, renderer.player.bossStages))) } }
         pageIndicatorTv?.setOnClickListener {
             val field=android.widget.EditText(activity).apply { inputType=android.text.InputType.TYPE_CLASS_NUMBER;setText((currentPage+1).toString());selectAll() }
             AlertDialog.Builder(activity).setTitle(R.string.cave_catalog_jump).setView(field).setNegativeButton(android.R.string.cancel,null)
@@ -292,15 +292,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
         CaveUiStyle.icon(ui.related,"previous",activity.getString(R.string.cave_ui_previous))
         ui.craftOne.visibility = if (browsingCraft && recipe != null) View.VISIBLE else View.GONE
         ui.craftFive.visibility = ui.craftOne.visibility;ui.craftMax.visibility=ui.craftOne.visibility
-        ui.craftMax.isEnabled=(recipe?.maxCraftable(renderer.inventory,renderer.nearbyStations) ?: 0)>0
+        ui.craftMax.isEnabled=(recipe?.maxCraftable(renderer.inventory,renderer.nearbyStations, renderer.player.bossStages) ?: 0)>0
         ui.craftOne.text=activity.getString(R.string.cave_catalog_craft_quantity,1)
         ui.craftFive.text=activity.getString(R.string.cave_catalog_craft_quantity,5)
-        ui.craftMax.text=activity.getString(R.string.cave_catalog_craft_quantity,minOf(64,recipe?.maxCraftable(renderer.inventory,renderer.nearbyStations) ?: 0))
+        ui.craftMax.text=activity.getString(R.string.cave_catalog_craft_quantity,minOf(64,recipe?.maxCraftable(renderer.inventory,renderer.nearbyStations, renderer.player.bossStages) ?: 0))
         for(b in listOf(ui.craftOne,ui.craftFive,ui.craftMax)) {
             b.contentDescription=activity.getString(R.string.cave_catalog_craft_action,b.text);b.tooltipText=b.contentDescription
         }
-        ui.craftOne.isEnabled = recipe?.canCraft(renderer.inventory, renderer.nearbyStations) == true
-        ui.craftFive.isEnabled = (recipe?.maxCraftable(renderer.inventory, renderer.nearbyStations) ?: 0) >= 5
+        ui.craftOne.isEnabled = recipe?.canCraft(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages) == true
+        ui.craftFive.isEnabled = (recipe?.maxCraftable(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages) ?: 0) >= 5
         ui.craftOne.alpha = if (ui.craftOne.isEnabled) 1f else .45f
         ui.craftFive.alpha = if (ui.craftFive.isEnabled) 1f else .45f
         ui.status.setText(if (assigningShortcut) R.string.cave_ui_choose_shortcut else if (browsingCraft) R.string.cave_catalog_recipe_hint else R.string.cave_catalog_drag_hint)
@@ -639,7 +639,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             infoNameTv?.text  = activity.blockName(recipe.result)
             infoCountTv?.text = activity.getString(R.string.cave_catalog_craft_quantity,recipe.resultCount)
             infoIngredientsTv?.text = listOfNotNull(activity.getString(R.string.cave_ui_available_batches,
-                recipe.maxCraftable(renderer.inventory, renderer.nearbyStations)),G.describe(activity,recipe.result,preview=true)).joinToString("\n\n")
+                recipe.maxCraftable(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages)),G.describe(activity,recipe.result,preview=true)).joinToString("\n\n")
             infoDivider?.visibility       = View.VISIBLE
             infoIngredientsTv?.visibility = View.VISIBLE
             ingredientTiles(recipe)
@@ -831,7 +831,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                         else activity.getString(R.string.cave_catalog_ingredient,title,group?.available(renderer.inventory) ?: (renderer.inventory[id] ?: 0).toLong(),n,state)
                     tooltipText=contentDescription
                     setOnClickListener {
-                        val recipes=CraftRegistry.all().filter { it.result in (group?.ids ?: listOf(id)) }
+                        val recipes=CraftRegistry.all().filter { it.result in (group?.ids ?: listOf(id)) && it.unlocked(renderer.player.bossStages) }
                         if(recipes.isEmpty()) {
                             AlertDialog.Builder(activity).setTitle(activity.blockName(id)).setMessage(contentDescription)
                                 .setPositiveButton(android.R.string.ok,null).show()
@@ -859,14 +859,15 @@ internal class InventoryManager(private val activity: CaveActivity) {
         if(!browsingCraft) { craftingRecyclerView?.visibility=View.GONE;updateActions();return }
         val needle=folded(query)
         val recipes = CraftRegistry.all().filter { r ->
-            (if(ui.craftable.isChecked) r.canCraft(renderer.inventory, renderer.nearbyStations)
+            r.unlocked(renderer.player.bossStages) &&
+            (if(ui.craftable.isChecked) r.canCraft(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages)
                 else r.ingredients.any { (id,_) -> (renderer.inventory[id] ?: 0)>0 } || r.groups.any { it.available(renderer.inventory)>0 }) &&
                 category.matches(r.result) &&
                 (!onlyFavorites || recipeKey(r) in favoriteRecipes) &&
                 (!onlyRecent || r.result in recent.take(24)) &&
                 (relatedType == null || relatedType in r.inputIds) &&
                 (folded(recipeName(r)).contains(needle) || r.inputIds.any { name(it).contains(needle) } || r.groups.any { folded(craftGroupName(it.tag)).contains(needle) })
-        }.sortedWith(compareByDescending<CraftDef> { recipeKey(it) in favoriteRecipes }.thenByDescending { it.canCraft(renderer.inventory, renderer.nearbyStations) }.thenBy { recipeName(it) })
+        }.sortedWith(compareByDescending<CraftDef> { recipeKey(it) in favoriteRecipes }.thenByDescending { it.canCraft(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages) }.thenBy { recipeName(it) })
         ui.empty.setText(if(ui.craftable.isChecked) R.string.cave_ui_empty_search else R.string.cave_catalog_no_known_recipe)
         if(browsingCraft) ui.summary.text=activity.getString(R.string.cave_catalog_recipes,recipes.size)
         craftingAdapter?.recipes = recipes
@@ -889,11 +890,11 @@ internal class InventoryManager(private val activity: CaveActivity) {
     })
 
     fun doCraft(recipe: CraftDef, batches: Int = 1) {
-        if (batches !in 1..64 || recipe.maxCraftable(renderer.inventory, renderer.nearbyStations) < batches) {
+        if (batches !in 1..64 || recipe.maxCraftable(renderer.inventory, renderer.nearbyStations, renderer.player.bossStages) < batches) {
             ui.status.setText(R.string.cave_ui_missing); return
         }
         val allocated = mutableListOf<Short>()
-        val consumption = recipe.consumption(renderer.inventory, batches, renderer.nearbyStations) ?: return
+        val consumption = recipe.consumption(renderer.inventory, batches, renderer.nearbyStations, renderer.player.bossStages) ?: return
         val forged = G.isCraft(recipe.result)
         if(forged) {
             val prepared=runCatching { repeat(batches*recipe.resultCount) { allocated+=G.allocate(G.roll(recipe.result)) } }
@@ -1119,7 +1120,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
             layoutParams=RecyclerView.LayoutParams(CaveItemTile.edge(activity),CaveItemTile.edge(activity)).apply { val gap=CaveUiStyle.dp(activity,2);setMargins(gap,gap,gap,gap) }
         })
         override fun onBindViewHolder(holder: VH,position: Int) {
-            val recipe=recipes[position];val ready=recipe.canCraft(renderer.inventory,renderer.nearbyStations)
+            val recipe=recipes[position];val ready=recipe.canCraft(renderer.inventory,renderer.nearbyStations, renderer.player.bossStages)
             holder.tile.bind(activity.blockDrawable(recipe.result,4f),
                 recipeName(recipe),recipe.resultCount,recipe==selectedRecipe || invGpZone==InvGpZone.CRAFTING && position==invGpCursor,favorite=recipeKey(recipe) in favoriteRecipes,available=ready)
             holder.tile.contentDescription=activity.getString(R.string.cave_catalog_recipe_state,recipeName(recipe),activity.getString(if(ready) R.string.cave_ui_ready else R.string.cave_ui_missing))

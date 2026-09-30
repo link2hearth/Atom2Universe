@@ -23,7 +23,8 @@ internal class SpawnManager(
     var eventBus: EventBus? = null
     var exploration = false
     var lightAt: ((Int, Int, Int) -> Int)? = null
-    var siteBossDefeated: (() -> Unit)? = null
+    /** Palier du site, puis position du gardien : ceux qui étaient là débloquent la pioche. */
+    var siteBossDefeated: ((stage: Int, x: Double, y: Double, z: Double) -> Unit)? = null
     var siteEntered: ((UndergroundSites.Site) -> Unit)? = null
     private val defeatedSiteBosses = mutableSetOf<String>()
     private val visitedSites = mutableSetOf<String>()
@@ -134,7 +135,7 @@ internal class SpawnManager(
         if (e.id == bossEnemyId && wasBoss) { bossRewardGiven = true; bossEnemyId = -1 }
         eventBus?.publish(GameEvent.MobDied(e.id, e.x, e.y, e.z, e.level, wasBoss, e.def.id, e.maxHp))
         // Loot and XP subscribers run synchronously before requesting the same world checkpoint.
-        if (siteVictory) siteBossDefeated?.invoke()
+        if (siteVictory) siteBossDefeated?.invoke(UndergroundSites.stageOfId(e.undergroundSiteId!!), e.x, e.y, e.z)
     }
 
     // ── Spawn ambiant ─────────────────────────────────────────────────────────

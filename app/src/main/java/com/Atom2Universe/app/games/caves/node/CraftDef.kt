@@ -13,6 +13,8 @@ internal data class CraftDef(
     val groups: List<CraftGroup> = emptyList(),
     val tools: List<Short> = emptyList(),
     val station: Short? = null,
+    /** Palier dont le gardien doit être vaincu pour fabriquer ceci : un déblocage, pas un objet. */
+    val bossStage: Int? = null,
 ) {
     val inputIds: Set<Short> = (ingredients.map { it.first } + groups.flatMap { it.ids } + tools).toSet()
     init {
@@ -22,17 +24,20 @@ internal data class CraftDef(
         require(ingredients.all { it.second > 0 } && groups.all { it.count > 0 && it.ids.isNotEmpty() })
         require(tools.none { it in inputs }) { "A required tool cannot be consumed" }
     }
-    fun maxCraftable(inv: Map<Short, Int>, stations: Set<Short> = emptySet()): Int {
+    /** Faux tant que le gardien du palier n'est pas tombé : la recette n'existe pas encore pour ce joueur. */
+    fun unlocked(bossStages: Set<Int>) = bossStage == null || bossStage in bossStages
+    fun maxCraftable(inv: Map<Short, Int>, stations: Set<Short> = emptySet(), bossStages: Set<Int> = emptySet()): Int {
+        if(!unlocked(bossStages)) return 0
         if(station != null && station !in stations) return 0
         if (tools.any { (inv[it] ?: 0) < 1 }) return 0
         val limits = ingredients.map { (id, n) -> (inv[id] ?: 0).coerceAtLeast(0).toLong() / n } + groups.map { it.available(inv) / it.count }
         return (limits.minOrNull() ?: 0).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
-    fun canCraft(inv: Map<Short, Int>, stations: Set<Short> = emptySet()) = maxCraftable(inv, stations) > 0
+    fun canCraft(inv: Map<Short, Int>, stations: Set<Short> = emptySet(), bossStages: Set<Int> = emptySet()) = maxCraftable(inv, stations, bossStages) > 0
 
     /** Exact debit for mixed wood/fuel batches; equipment is never consumed. */
-    fun consumption(inv: Map<Short, Int>, batches: Int, stations: Set<Short> = emptySet()): Map<Short, Int>? {
-        if (batches <= 0 || maxCraftable(inv, stations) < batches) return null
+    fun consumption(inv: Map<Short, Int>, batches: Int, stations: Set<Short> = emptySet(), bossStages: Set<Int> = emptySet()): Map<Short, Int>? {
+        if (batches <= 0 || maxCraftable(inv, stations, bossStages) < batches) return null
         val debit = ingredients.associate { it.first to Math.multiplyExact(it.second, batches) }.toMutableMap()
         for (group in groups) {
             var remaining = group.count.toLong() * batches

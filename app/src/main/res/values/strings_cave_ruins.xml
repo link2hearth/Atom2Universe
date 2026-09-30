@@ -35,6 +35,7 @@
     <string name="cave_site_entered">Discovered: %1$s</string>
     <string name="cave_site_hint">Light the rooms to prevent ordinary enemies from returning. The guardian must be defeated once.</string>
     <string name="cave_site_guardian_defeated">Guardian defeated. This site will never summon another guardian.</string>
+    <string name="cave_site_pick_unlocked">A new pickaxe can now be forged.</string>
     <string name="cave_site_dwarven_mine">Dwarven mine</string>
     <string name="cave_site_ogre_den">Ogre den</string>
     <string name="cave_site_mummy_tomb">Mummy tomb</string>

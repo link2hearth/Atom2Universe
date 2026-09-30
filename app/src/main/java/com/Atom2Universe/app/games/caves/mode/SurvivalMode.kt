@@ -99,6 +99,7 @@ internal class SurvivalMode(private val r: CaveRenderer) : GameMode {
         playerNode.maxShield = saved.playerShield
         playerNode.shield    = saved.playerShieldCurrent.coerceAtMost(saved.playerShield)
 
+        r.player.bossStages.addAll(saved.bossStages)
         saved.wardStonePositions.forEach { (x, z) -> r.enemyManager.wardStoneZones.add(Pair(x, z)) }
 
     }
