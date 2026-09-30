@@ -26,9 +26,10 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     enum class Tool { PEN, ERASER, HAND, MOVE_LAYER }
 
+    /** Noms volontairement distincts de ceux d'Activity (onContentChanged y est déjà pris). */
     interface Listener {
-        fun onContentChanged()
-        fun onCameraChanged()
+        fun onDrawingChanged()
+        fun onViewMoved()
         fun onNothingToMove()
     }
 
@@ -224,23 +225,23 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     private fun finishStroke(s: ZoomScene) {
-        if (s.endStroke() != null) listener?.onContentChanged()
+        if (s.endStroke() != null) listener?.onDrawingChanged()
     }
 
     private fun finishErase(s: ZoomScene) {
         val before = s.contentVersion
         s.endErase()
-        if (s.contentVersion != before) listener?.onContentChanged()
+        if (s.contentVersion != before) listener?.onDrawingChanged()
     }
 
     private fun finishMove(s: ZoomScene) {
         s.endMoveLayer()
-        listener?.onContentChanged()
+        listener?.onDrawingChanged()
     }
 
     private fun cameraMoved() {
         invalidate()
-        listener?.onCameraChanged()
+        listener?.onViewMoved()
     }
 
     private fun startPinch(e: MotionEvent, skip: Int = -1) {

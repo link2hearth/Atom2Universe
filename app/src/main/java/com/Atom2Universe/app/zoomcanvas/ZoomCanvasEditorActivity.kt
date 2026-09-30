@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
  * L'éditeur du canvas infini : la toile, la pastille de niveau, et quatre outils (crayon, gomme,
  * main, réalignement de la couche du dessous).
  */
-class ZoomCanvasEditorActivity : AppCompatActivity(), ZoomCanvasView.Listener {
+class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_ID = "zoom_canvas_id"
@@ -86,8 +86,8 @@ class ZoomCanvasEditorActivity : AppCompatActivity(), ZoomCanvasView.Listener {
         findViewById<View>(R.id.zc_title_block).setOnClickListener { askRename() }
         findViewById<View>(R.id.zc_btn_more).setOnClickListener { showMenu() }
         findViewById<View>(R.id.zc_level_pill).setOnClickListener { showLayers() }
-        undoBtn.setOnClickListener { if (vm.project?.scene?.undo() == true) onContentChanged() }
-        redoBtn.setOnClickListener { if (vm.project?.scene?.redo() == true) onContentChanged() }
+        undoBtn.setOnClickListener { if (vm.project?.scene?.undo() == true) drawingChanged() }
+        redoBtn.setOnClickListener { if (vm.project?.scene?.redo() == true) drawingChanged() }
 
         val prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
         canvasView.color = prefs.getInt(KEY_COLOR, 0xFF1E1E24.toInt())
@@ -95,7 +95,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity(), ZoomCanvasView.Listener {
         canvasView.penWidthPx = dp(widthDp).toFloat()
         prefs.getString(KEY_RECENTS, null)?.split(',')?.mapNotNull { it.toLongOrNull()?.toInt() }?.let { recents.addAll(it) }
         buildTools()
-        canvasView.listener = this
+        canvasView.listener = canvasListener
 
         val id = intent.getStringExtra(EXTRA_ID)
         if (id == null) { finish(); return }
@@ -140,19 +140,21 @@ class ZoomCanvasEditorActivity : AppCompatActivity(), ZoomCanvasView.Listener {
 
     // ---- Retours de la toile ---------------------------------------------------------------
 
-    override fun onContentChanged() {
+    private fun drawingChanged() {
         canvasView.invalidate()
         refreshChrome()
         vm.scheduleSave(contentChanged = true)
     }
 
-    override fun onCameraChanged() {
+    private fun viewMoved() {
         refreshLevel()
         vm.scheduleSave(contentChanged = false)
     }
 
-    override fun onNothingToMove() {
-        showMessage(getString(R.string.zc_no_layer_below))
+    private val canvasListener = object : ZoomCanvasView.Listener {
+        override fun onDrawingChanged() = drawingChanged()
+        override fun onViewMoved() = viewMoved()
+        override fun onNothingToMove() = showMessage(getString(R.string.zc_no_layer_below))
     }
 
     private fun refreshChrome() {
@@ -287,7 +289,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity(), ZoomCanvasView.Listener {
                     dialog.dismiss()
                     s.jumpTo(d, canvasView.width.toDouble(), canvasView.height.toDouble())
                     canvasView.invalidate()
-                    onCameraChanged()
+                    viewMoved()
                 }
                 root.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
             }
