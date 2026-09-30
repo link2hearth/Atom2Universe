@@ -22,14 +22,15 @@ import kotlin.math.sqrt
  *
  * Une couche est à sa taille normale au zoom 1 : un trait d'épaisseur 14 fait 14 px à l'écran. Les
  * épaisseurs sont en unités de la couche : zoomer grossit les traits comme tout le reste, ce qui dit
- * à quelle échelle on dessine. Une couche apparaît au loin à 1/ratio de sa taille normale, grandit
- * jusqu'à sa taille normale, reste entièrement visible jusqu'à ×ratio ([FADE_START]), puis s'efface
- * en fondu jusqu'à ×ratio^1,5 ([FADE_END]). Les couches existent dans les deux sens, à l'infini.
+ * à quelle échelle on dessine. Une couche apparaît au loin à 1/ratio de sa taille normale (derrière
+ * la couche de devant), grandit jusqu'à sa taille normale, puis encore de ×ratio jusqu'à disparaître :
+ * le fondu de sortie n'occupe que la fin ([FADE_START] → [FADE_END], de ×7,9 à ×10 avec ×10). Les
+ * couches existent dans les deux sens, à l'infini.
  *
- * La couche de travail — la seule qu'on édite — est celle qui est le plus près de sa taille normale :
- * on passe à la suivante quand elle a grossi de ×ratio^[EDIT_SWITCH]. Le zoom de la caméra reste donc
- * dans [minZoom, maxZoom[, un rapport d'échelle de large autour de 1. Les couches du dessus sont
- * dessinées par-dessus tant qu'elles ne sont pas complètement effacées.
+ * Une seule couche est devant : la couche de travail, la seule qu'on édite. On passe à la suivante au
+ * milieu du fondu ([EDIT_SWITCH]), quand la couche de devant est à moitié effacée ; rien d'autre
+ * n'est dessiné par-dessus la couche de travail que la fin de ce fondu. Le zoom de la caméra reste
+ * donc dans [minZoom, maxZoom[, un rapport d'échelle de large.
  *
  * Les couches forment une suite contiguë [firstDepth .. lastDepth] qui couvre les couches dessinées
  * et celle de la caméra. Une couche vide n'y est gardée que pour son ancre, quand elle est coincée
@@ -624,16 +625,15 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO) {
         const val START_ZOOM = 1.0
         /**
          * Fondu de sortie, en part du rapport d'échelle (échelle logarithmique) : avec ×10, une couche
-         * reste entièrement visible jusqu'à ×10 de sa taille normale et a disparu à ×10^1,5 ≈ ×32.
+         * reste entièrement visible jusqu'à ×10^0,9 ≈ ×7,9 de sa taille normale et a disparu à ×10.
          */
-        const val FADE_START = 1.0
-        const val FADE_END = 1.5
+        const val FADE_START = 0.9
+        const val FADE_END = 1.0
         /**
-         * La couche de dessous devient la couche de travail quand la couche courante a grossi de
-         * ×ratio^EDIT_SWITCH (×3,2 avec ×10) : à mi-chemin, en échelle de zoom, entre les tailles
-         * normales des deux couches. On édite ainsi toujours la couche la plus proche de sa taille normale.
+         * La couche de dessous devient la couche de travail au milieu du fondu (×10^0,95 ≈ ×8,9 avec
+         * ×10), quand la couche de devant est à moitié effacée.
          */
-        const val EDIT_SWITCH = 0.5
+        const val EDIT_SWITCH = (FADE_START + FADE_END) / 2
         /** Une image ne se réduit pas en dessous de cette taille à l'écran (pixels). */
         const val MIN_IMAGE_PX = 12.0
         const val MAX_HISTORY = 300
