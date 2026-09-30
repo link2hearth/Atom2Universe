@@ -141,6 +141,33 @@ tasks.withType<Test>().configureEach {
     ).withPropertyName("stringResources").withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
+/**
+ * Deux familles dans `src/test`, qu'il ne faut pas lancer ensemble.
+ *
+ * - Les **garde-fous** verifient quelque chose (assertions) et durent quelques secondes :
+ *   ils tournent par defaut avec `testDebugUnitTest`.
+ * - Les **bancs de mesure** simulent des milliers de parties ou dessinent des apercus, pour
+ *   *regler* un jeu ; ils ne verifient (presque) rien et peuvent durer des dizaines de
+ *   minutes. Ils ne tournent que sur demande explicite :
+ *
+ *       ./gradlew testDebugUnitTest -PbancsMesure --tests "*RoguelikeSimulationTest.goldEconomy"
+ *
+ * Sans `-PbancsMesure`, ces classes sont exclues : meme un `--tests` qui les vise ne trouve
+ * rien. Quand un nouveau banc apparait, l'ajouter a cette liste.
+ */
+val bancsDeMesure = listOf(
+    "*.roguelike.RoguelikeSimulationTest",
+    "*.cosmorun.CosmoRunSimTest",
+    "*.cosmorun.CosmoRunPreviewTest",
+    "*.cosmorun.CosmoRunDebugTest",
+    "*.trebuchet.TrebuchetApercuTest",
+)
+if (!providers.gradleProperty("bancsMesure").isPresent) {
+    tasks.withType<Test>().configureEach {
+        filter { bancsDeMesure.forEach { excludeTestsMatching(it) } }
+    }
+}
+
 dependencies {
     // Core Android
     implementation(libs.androidx.core.ktx)
