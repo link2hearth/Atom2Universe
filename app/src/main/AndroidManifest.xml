@@ -640,10 +640,16 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
+        <!-- Galerie des dessins : l'entrée du module pixel art -->
+        <activity
+            android:name=".pixelart.PixelArtLibraryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <!-- Pas de configChanges : une rotation recrée l'écran (layout-land), le projet vit dans un ViewModel -->
         <activity
             android:name=".pixelart.PixelArtEditorActivity"
             android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.A2U" />
         <activity
             android:name=".pixelart.CanvasEditorActivity"

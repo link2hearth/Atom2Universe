@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pixel art : galerie et éditeur -->
+    <string name="px_library_title">Pixel Art</string>
+    <string name="px_library_empty">Aucun dessin pour l\'instant</string>
+    <string name="px_new">Nouveau</string>
+    <string name="px_new_title">Nouveau dessin</string>
+    <string name="px_name_hint">Nom</string>
+    <string name="px_untitled">Sans titre</string>
+    <string name="px_untitled_n">Dessin %1$d</string>
+    <string name="px_copy_of">Copie de %1$s</string>
+    <string name="px_custom">Autre</string>
+    <string name="px_create">Créer</string>
+    <string name="px_open">Ouvrir</string>
+    <string name="px_open_image">Ouvrir une image…</string>
+    <string name="px_open_failed">Impossible d\'ouvrir ce fichier</string>
+    <string name="px_import_project">Importer un fichier de projet</string>
+    <string name="px_export_project">Exporter le fichier de projet</string>
+    <string name="px_delete_project_title">Supprimer ce dessin ?</string>
+    <string name="px_delete_project_message">« %1$s » sera supprimé définitivement.</string>
+    <plurals name="px_frames_count">
+        <item quantity="one">%d image</item>
+        <item quantity="other">%d images</item>
+    </plurals>
+
+    <!-- Général -->
+    <string name="px_back">Retour</string>
+    <string name="px_more">Plus</string>
+    <string name="px_ok">OK</string>
+    <string name="px_cancel">Annuler</string>
+    <string name="px_apply">Appliquer</string>
+    <string name="px_apply_this">Cette image</string>
+    <string name="px_apply_all">Toutes les images</string>
+    <string name="px_delete">Supprimer</string>
+    <string name="px_rename">Renommer</string>
+    <string name="px_duplicate">Dupliquer</string>
+    <string name="px_on">Activée</string>
+    <string name="px_off">Désactivée</string>
+    <string name="px_undo">Annuler</string>
+    <string name="px_redo">Rétablir</string>
+    <string name="px_zoom">×%1$s</string>
+    <string name="px_subtitle_size">%1$d × %2$d</string>
+    <string name="px_subtitle_frames">" · image %1$d/%2$d"</string>
+    <string name="px_subtitle_file">" · %1$s"</string>
+
+    <!-- Enregistrer -->
+    <string name="px_save">Enregistrer</string>
+    <string name="px_save_as">Enregistrer sous…</string>
+    <string name="px_saved_to">« %1$s » enregistré</string>
+    <string name="px_saved_gallery">Enregistré dans la galerie</string>
+    <string name="px_save_failed_title">Enregistrement impossible</string>
+    <string name="px_save_failed">« %1$s » n\'a pas pu être écrasé.</string>
+    <string name="px_unsaved_title">Enregistrer les modifications ?</string>
+    <string name="px_unsaved_message">« %1$s » a des modifications non enregistrées.</string>
+    <string name="px_dont_save">Ne pas enregistrer</string>
+    <string name="px_unlink">Détacher de « %1$s »</string>
+
+    <!-- Export -->
+    <string name="px_export">Exporter…</string>
+    <string name="px_export_title">Exporter</string>
+    <string name="px_export_format">Format</string>
+    <string name="px_export_scale">Échelle</string>
+    <string name="px_export_size">%1$d × %2$d px</string>
+    <string name="px_export_sheet">Planche de sprites</string>
+    <string name="px_export_failed">L\'export a échoué</string>
+    <string name="px_to_gallery">Galerie</string>
+    <string name="px_share">Partager</string>
+    <string name="px_gif_loops">Lecture</string>
+    <string name="px_gif_loop_forever">Sans fin</string>
+    <string name="px_gif_loop_once">Une fois</string>
+    <string name="px_gif_direction">Sens</string>
+    <string name="px_gif_forward">Avant</string>
+    <string name="px_gif_reverse">Arrière</string>
+    <string name="px_gif_pingpong">Aller-retour</string>
+    <string name="px_gif_speed">Vitesse</string>
+    <string name="px_gif_background">Fond</string>
+    <string name="px_gif_bg_transparent">Transparent</string>
+    <string name="px_sheet_columns">Colonnes</string>
+    <string name="px_sheet_rows">Lignes</string>
+    <string name="px_sheet_import_title">Planche de sprites</string>
+    <string name="px_sheet_image_size">Image : %1$d × %2$d px</string>
+    <string name="px_sheet_cell_info">Chaque image : %1$d × %2$d px — %3$d images</string>
+    <string name="px_import_sheet">Importer une planche de sprites</string>
+    <string name="px_import_layer">Importer une image comme calque</string>
+
+    <!-- Outils -->
+    <string name="px_tool_pencil">Crayon</string>
+    <string name="px_tool_brush">Pinceau doux</string>
+    <string name="px_tool_eraser">Gomme</string>
+    <string name="px_tool_fill">Pot de peinture</string>
+    <string name="px_tool_picker">Pipette</string>
+    <string name="px_tool_shape">Formes</string>
+    <string name="px_tool_select_rect">Sélection rectangulaire</string>
+    <string name="px_tool_select_lasso">Lasso</string>
+    <string name="px_tool_select_wand">Baguette magique</string>
+    <string name="px_tool_move">Déplacer</string>
+    <string name="px_tool_hand">Main (déplacer la vue)</string>
+    <string name="px_opt_size">Taille</string>
+    <string name="px_opt_size_value">%1$d px</string>
+    <string name="px_opt_opacity">Opacité</string>
+    <string name="px_opt_percent">%1$d %%</string>
+    <string name="px_opt_round">Pinceau rond / carré</string>
+    <string name="px_opt_pixel_perfect">Pixel parfait</string>
+    <string name="px_opt_tolerance">Tolérance</string>
+    <string name="px_opt_tolerance_value">%1$d</string>
+    <string name="px_opt_contiguous">Contigu</string>
+    <string name="px_opt_all_layers">Tous les calques</string>
+    <string name="px_opt_fill_mode">Contour / remplissage</string>
+    <string name="px_opt_square">Garder les proportions</string>
+    <string name="px_mirror_h">Symétrie horizontale</string>
+    <string name="px_mirror_v">Symétrie verticale</string>
+    <string name="px_shape_title">Forme</string>
+    <string name="px_shape_line">Ligne</string>
+    <string name="px_shape_rect">Rectangle</string>
+    <string name="px_shape_rounded">Arrondi</string>
+    <string name="px_shape_ellipse">Ellipse</string>
+    <string name="px_shape_triangle">Triangle</string>
+    <string name="px_shape_diamond">Losange</string>
+    <string name="px_shape_pentagon">Pentagone</string>
+    <string name="px_shape_hexagon">Hexagone</string>
+    <string name="px_shape_star">Étoile</string>
+    <string name="px_shape_arrow">Flèche</string>
+
+    <!-- Sélection -->
+    <string name="px_sel_replace">Nouvelle sélection</string>
+    <string name="px_sel_add">Ajouter à la sélection</string>
+    <string name="px_sel_subtract">Retirer de la sélection</string>
+    <string name="px_sel_all">Tout sélectionner</string>
+    <string name="px_sel_none">Désélectionner</string>
+    <string name="px_sel_invert">Inverser la sélection</string>
+    <string name="px_copy">Copier</string>
+    <string name="px_cut">Couper</string>
+    <string name="px_paste">Coller</string>
+    <string name="px_delete_selection">Effacer la sélection</string>
+    <string name="px_fill_selection">Remplir avec la couleur principale</string>
+    <string name="px_flip_h">Retourner horizontalement</string>
+    <string name="px_flip_v">Retourner verticalement</string>
+    <string name="px_rotate_cw">Pivoter à droite</string>
+    <string name="px_rotate_ccw">Pivoter à gauche</string>
+    <string name="px_commit">Valider</string>
+
+    <!-- Couleurs -->
+    <string name="px_color_title">Couleur</string>
+    <string name="px_color_primary">Couleur principale</string>
+    <string name="px_color_secondary">Couleur secondaire</string>
+    <string name="px_color_swap">Échanger les couleurs</string>
+    <string name="px_color_recent">Récentes</string>
+    <string name="px_color_palette">Palette</string>
+    <string name="px_palette">Palettes</string>
+    <string name="px_palette_title">Palettes</string>
+    <string name="px_palette_default">De base</string>
+    <string name="px_palette_grays">Gris</string>
+    <string name="px_palette_mine">Ma palette</string>
+    <string name="px_palette_new">Nouvelle palette</string>
+    <string name="px_palette_add_color">Ajouter la couleur principale</string>
+    <string name="px_palette_from_image">Palette tirée de l\'image</string>
+    <string name="px_palette_import">Importer une palette</string>
+    <string name="px_palette_delete">Supprimer cette palette ?</string>
+    <string name="px_export_palette">Exporter la palette</string>
+
+    <!-- Calques -->
+    <string name="px_layers">Calques</string>
+    <string name="px_layer_name">Calque %1$d</string>
+    <string name="px_layer_copy_name">%1$s copie</string>
+    <string name="px_layer_add">Nouveau calque</string>
+    <string name="px_layer_duplicate">Dupliquer le calque</string>
+    <string name="px_layer_merge">Fusionner vers le bas</string>
+    <string name="px_layer_delete">Supprimer le calque</string>
+    <string name="px_layer_props">Réglages du calque</string>
+    <string name="px_layer_info_opacity">Opacité %1$d %%</string>
+    <string name="px_blend">Mode de fusion</string>
+    <string name="px_blend_normal">Normal</string>
+    <string name="px_blend_multiply">Multiplication</string>
+    <string name="px_blend_screen">Écran</string>
+    <string name="px_blend_add">Addition</string>
+
+    <!-- Images -->
+    <string name="px_frames">Images</string>
+    <string name="px_play">Lecture</string>
+    <string name="px_onion">Pelure d\'oignon</string>
+    <string name="px_frame_add">Nouvelle image vide</string>
+    <string name="px_frame_duplicate">Dupliquer l\'image</string>
+    <string name="px_frame_delete">Supprimer l\'image</string>
+    <string name="px_frame_delete_confirm">Supprimer l\'image %1$d ?</string>
+    <string name="px_duration_title">Durée de l\'image</string>
+    <string name="px_duration">Durée</string>
+    <string name="px_ms">%1$d ms</string>
+    <string name="px_fps">Vitesse</string>
+    <string name="px_fps_value">%1$d i/s</string>
+
+    <!-- Toile, fond, référence -->
+    <string name="px_canvas_size">Taille de la toile</string>
+    <string name="px_canvas_title">Taille de la toile et transformations</string>
+    <string name="px_canvas_mode">Mode</string>
+    <string name="px_canvas_crop">Rogner / agrandir</string>
+    <string name="px_canvas_scale">Mettre à l\'échelle</string>
+    <string name="px_canvas_anchor">Ancrage</string>
+    <string name="px_canvas_transform">Toute la toile</string>
+    <string name="px_bg_title">Fond et grille</string>
+    <string name="px_bg_style">Fond</string>
+    <string name="px_bg_checker_dark">Damier sombre</string>
+    <string name="px_bg_checker_light">Damier clair</string>
+    <string name="px_bg_white">Blanc</string>
+    <string name="px_bg_gray">Gris</string>
+    <string name="px_bg_black">Noir</string>
+    <string name="px_bg_pixel_grid">Grille de pixels</string>
+    <string name="px_bg_tile_grid">Repères tous les N pixels</string>
+    <string name="px_reference">Image de référence</string>
+    <string name="px_reference_choose">Choisir une image…</string>
+    <string name="px_reference_show">Afficher</string>
+    <string name="px_reference_hide">Masquer</string>
+    <string name="px_reference_adjust">Déplacer et redimensionner</string>
+    <string name="px_reference_fit">Adapter à la toile</string>
+    <string name="px_reference_opacity">Opacité</string>
+    <string name="px_reference_remove">Retirer</string>
+    <string name="px_reference_done">Terminé</string>
+    <string name="px_mirror_h_short">Miroir ↔</string>
+    <string name="px_mirror_v_short">Miroir ↕</string>
+    <string name="px_brush_round">Rond</string>
+    <string name="px_brush_square">Carré</string>
+    <string name="px_fill_outline">Contour</string>
+    <string name="px_fill_solid">Plein</string>
+    <string name="px_fill_both">Les deux</string>
+    <string name="px_mode_new">Nouvelle</string>
+    <string name="px_mode_add">Ajouter</string>
+    <string name="px_mode_subtract">Retirer</string>
+    <string name="px_canvas_transparency">Transparence de la toile</string>
+    <string name="px_open_from_gallery">Depuis la galerie</string>
+    <string name="px_open_from_files">Depuis les fichiers (permet d’écraser l’original)</string>
+
+    <!-- Panneau des couleurs -->
+    <string name="px_colors_hide">Masquer le panneau des couleurs</string>
+    <string name="px_mode_hsv">TSV</string>
+    <string name="px_mode_rgb">RVB</string>
+    <string name="px_ch_hue">Teinte</string>
+    <string name="px_ch_sat">Sat.</string>
+    <string name="px_ch_val">Lumin.</string>
+    <string name="px_ch_red">Rouge</string>
+    <string name="px_ch_green">Vert</string>
+    <string name="px_ch_blue">Bleu</string>
+    <string name="px_ch_alpha">Opacité</string>
+    <string name="px_channel_degrees">%1$d°</string>
+    <string name="px_channel_value">%1$d</string>
+    <string name="px_color_page_square">Carré</string>
+    <string name="px_color_as_secondary">Utiliser comme couleur secondaire</string>
+    <string name="px_color_edit">Régler cette couleur</string>
+</resources>

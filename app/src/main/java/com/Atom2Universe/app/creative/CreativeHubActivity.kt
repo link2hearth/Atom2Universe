@@ -6,7 +6,7 @@ import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
 import com.Atom2Universe.app.notes.ui.NotesActivity
 import com.Atom2Universe.app.pixelart.CanvasEditorActivity
-import com.Atom2Universe.app.pixelart.PixelArtEditorActivity
+import com.Atom2Universe.app.pixelart.PixelArtLibraryActivity
 
 class CreativeHubActivity : BaseHubActivity() {
 
@@ -44,7 +44,7 @@ class CreativeHubActivity : BaseHubActivity() {
             descriptionRes = R.string.creative_hub_pixel_art_desc,
             iconRes = android.R.drawable.ic_menu_edit,
             defaultColorRes = R.color.creative_hub_tile_pixel_art,
-            activityClass = PixelArtEditorActivity::class.java
+            activityClass = PixelArtLibraryActivity::class.java
         ),
         HubTile(
             id = TILE_CANVAS,

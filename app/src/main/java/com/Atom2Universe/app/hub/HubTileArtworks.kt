@@ -125,7 +125,7 @@ object HubTileArtworks {
         com.Atom2Universe.app.books.BookLibraryActivity::class.java.name to BooksHubTileDrawable::class,
         com.Atom2Universe.app.comics.ComicsLibraryActivity::class.java.name to ComicsHubTileDrawable::class,
         com.Atom2Universe.app.notes.ui.NotesActivity::class.java.name to NotesHubTileDrawable::class,
-        com.Atom2Universe.app.pixelart.PixelArtEditorActivity::class.java.name to PixelArtHubTileDrawable::class,
+        com.Atom2Universe.app.pixelart.PixelArtLibraryActivity::class.java.name to PixelArtHubTileDrawable::class,
         com.Atom2Universe.app.pixelart.CanvasEditorActivity::class.java.name to CanvasHubTileDrawable::class,
         com.Atom2Universe.app.stats.ui.StatsActivity::class.java.name to AudioStatsHubTileDrawable::class,
         com.Atom2Universe.app.clickerstats.ClickerStatsActivity::class.java.name to GameStatsHubTileDrawable::class,

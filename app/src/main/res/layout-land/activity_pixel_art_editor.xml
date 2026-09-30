@@ -100,8 +100,30 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_stack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tools_scroll_v"
         app:layout_constraintTop_toBottomOf="@id/top_bar" />
+
+    <!-- Établi vertical : les boutons d'outils sont ajoutés par le code -->
+    <ScrollView
+        android:id="@+id/tools_scroll_v"
+        android:layout_width="56dp"
+        android:layout_height="0dp"
+        android:background="@color/audio_surface"
+        android:elevation="6dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@id/bottom_stack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar">
+
+        <LinearLayout
+            android:id="@+id/tools_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+    </ScrollView>
 
     <!-- Réglages de l'outil en cours, flottant sur le haut de la zone -->
     <HorizontalScrollView
@@ -118,7 +140,7 @@
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tools_scroll_v"
         app:layout_constraintTop_toBottomOf="@id/top_bar">
 
         <LinearLayout
@@ -145,7 +167,7 @@
         android:paddingEnd="12dp"
         android:textColor="@color/audio_text_primary"
         app:layout_constraintBottom_toTopOf="@id/bottom_stack"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/tools_scroll_v" />
 
     <!-- Panneau des calques -->
     <LinearLayout
@@ -242,7 +264,7 @@
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@id/bottom_stack"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_max="340dp" />
 
@@ -347,28 +369,6 @@
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/px_divider" />
-
-        <!-- Établi : les boutons d'outils sont ajoutés par le code -->
-        <HorizontalScrollView
-            android:id="@+id/tools_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/tools_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp" />
-        </HorizontalScrollView>
 
         <View
             android:layout_width="match_parent"

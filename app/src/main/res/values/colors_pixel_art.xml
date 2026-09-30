@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Panneaux flottants de l'éditeur de pixel art : la couleur de surface, un peu translucide. -->
+    <color name="px_panel">#FF202733</color>
+    <color name="px_divider">#22FFFFFF</color>
+    <color name="px_checker_a">#3A404C</color>
+    <color name="px_checker_b">#2D323C</color>
+</resources>

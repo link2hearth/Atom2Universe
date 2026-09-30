@@ -8,27 +8,20 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
- * Base de données Room pour les modules graphiques
+ * Base de données Room du module « Toile infinie ».
  *
- * Contient:
- * - PixelArtProject: Métadonnées des projets pixel art
- * - PixelArtFrame: Données des frames pixel art (pixels en Base64)
+ * Le pixel art n'y vit plus : ses projets sont des dossiers de fichiers (voir `io/ProjectStore`).
+ * Les anciennes tables `pixel_art_projects` / `pixel_art_frames` ne sont plus déclarées ni lues ;
+ * la migration 6 -> 7 les laisse en place plutôt que d'effacer des dessins.
  */
 @Database(
     entities = [
-        PixelArtProject::class,
-        PixelArtFrame::class,
         CanvasProject::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class PixelArtDatabase : RoomDatabase() {
-
-    /**
-     * DAO pour les opérations sur les projets et frames Pixel Art
-     */
-    abstract fun pixelArtDao(): PixelArtDao
 
     /**
      * DAO pour les opérations sur les projets Canvas (Toile Infinie)
@@ -130,6 +123,14 @@ abstract class PixelArtDatabase : RoomDatabase() {
         }
 
         /**
+         * Migration v6 -> v7: le pixel art quitte la base ; rien à modifier dans les tables restantes.
+         */
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+            }
+        }
+
+        /**
          * Récupère (ou crée) l'instance singleton de la database
          * Utilise le stockage interne par défaut
          *
@@ -166,7 +167,7 @@ abstract class PixelArtDatabase : RoomDatabase() {
                     PixelArtDatabase::class.java,
                     dbPath
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                     .build()
 
                 currentDbPath = dbPath
