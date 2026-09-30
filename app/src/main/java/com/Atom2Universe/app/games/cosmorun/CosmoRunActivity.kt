@@ -31,12 +31,14 @@ class CosmoRunActivity : ThemedActivity() {
     private lateinit var missionText: TextView
     private lateinit var banner: TextView
     private lateinit var missionBar: ProgressBar
+    private lateinit var chainBar: ProgressBar
     private val prefs by lazy { getSharedPreferences("cosmo_run_save", MODE_PRIVATE) }
     private var panel = Panel.HANGAR
     private var settled = true
     private var lastReward = 0
     private var selectedSuit = 0
     private var bannerUntil = 0L
+    private var focus: CosmoRunMissions.Mission? = null
     private val game get() = runView.game
     private enum class Panel { HANGAR, RUN, PAUSE, RESULTS }
     private val white = 0xFFE9F6FF.toInt()
@@ -52,31 +54,29 @@ class CosmoRunActivity : ThemedActivity() {
         root = findViewById(R.id.cosmo_root)
         runView = findViewById(R.id.cosmo_run_view)
         game.initBestScore(prefs.getInt("best_score", 0))
-        game.restoreCareer(prefs.getInt("contract_level", 0), prefs.getFloat("contract_progress", 0f))
+        game.bestDistance = prefs.getFloat("best_distance", 0f)
+        game.lastDeathDistance = prefs.getFloat("last_death", 0f)
+        game.restoreMissions(prefs.getInt("rank", 0), FloatArray(3) { prefs.getFloat("mission_$it", 0f) })
         selectedSuit = prefs.getInt("suit", 0).coerceIn(0, unlockedSuits() - 1)
         runView.renderer.suit = selectedSuit
         runView.feedbackEnabled = prefs.getBoolean("haptics", true)
+        runView.sfx.enabled = prefs.getBoolean("sound", true)
         buildInterface()
         runView.onHud = { updateHud() }
         runView.onEvent = { event ->
+            // Pas de phrases en course : un titre de monde, un record, une mission, un rang.
             val text = when (event) {
-                CosmoRunGame.Event.SHIELD -> R.string.cosmo_shield_ready
-                CosmoRunGame.Event.MAGNET -> R.string.cosmo_magnet_ready
-                CosmoRunGame.Event.BOOST -> R.string.cosmo_boost_ready
-                CosmoRunGame.Event.SHIELD_BREAK -> R.string.cosmo_shield_broken
-                CosmoRunGame.Event.CONTRACT -> R.string.cosmo_contract_complete
-                CosmoRunGame.Event.SECTOR -> sectorName()
-                CosmoRunGame.Event.CLEAR -> R.string.cosmo_clean_move
-                else -> 0
+                CosmoRunGame.Event.MISSION -> getString(R.string.cosmo_mission_complete)
+                CosmoRunGame.Event.RANK -> getString(R.string.cosmo_rank_up, game.missions.rank)
+                CosmoRunGame.Event.RECORD -> getString(R.string.cosmo_new_record)
+                CosmoRunGame.Event.SECTOR -> getString(sectorName())
+                else -> null
             }
-            if (text != 0) {
-                // Un petit franchissement ne masque pas le message de contrat ou de bonus.
-                if (event != CosmoRunGame.Event.CLEAR || android.os.SystemClock.uptimeMillis() >= bannerUntil) {
-                    banner.text = getString(text)
-                    bannerUntil = android.os.SystemClock.uptimeMillis() + if (event == CosmoRunGame.Event.CLEAR) 700L else 2400L
-                }
+            if (text != null) {
+                banner.text = text
+                bannerUntil = android.os.SystemClock.uptimeMillis() + 2400L
             }
-            if (event == CosmoRunGame.Event.CONTRACT) saveCareer()
+            if (event == CosmoRunGame.Event.MISSION || event == CosmoRunGame.Event.RANK) saveCareer()
         }
         runView.onGameOver = { settleRun(); showPanel(Panel.RESULTS) }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -127,6 +127,10 @@ class CosmoRunActivity : ThemedActivity() {
         top.addView(scoreColumn, LinearLayout.LayoutParams(0, -2, 1f))
         top.addView(button(getString(R.string.cosmo_pause)) { showPanel(Panel.PAUSE) }, LinearLayout.LayoutParams(-2, dp(48)))
         hud.addView(top)
+        chainBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 1000; progressBackgroundTintList = android.content.res.ColorStateList.valueOf(0xFF34445A.toInt())
+        }
+        hud.addView(chainBar, LinearLayout.LayoutParams(-1, dp(4)).apply { topMargin = dp(4); bottomMargin = dp(4) })
         bonusText = label("", 12f, muted)
         hud.addView(bonusText)
         banner = label("", 14f, mint, true).apply { gravity = Gravity.CENTER; minHeight = dp(32) }
@@ -168,14 +172,27 @@ class CosmoRunActivity : ThemedActivity() {
         }
     }
 
-    private fun contractText(): String {
-        val res = when (game.contract) {
-            CosmoRunGame.Contract.DISTANCE -> R.string.cosmo_contract_distance
-            CosmoRunGame.Contract.ATOMS -> R.string.cosmo_contract_atoms
-            CosmoRunGame.Contract.SECTORS -> R.string.cosmo_contract_rows
+    private fun missionText(m: CosmoRunMissions.Mission): String {
+        val res = when (m.kind) {
+            CosmoRunMissions.Kind.ATOMS -> R.string.cosmo_mission_atoms
+            CosmoRunMissions.Kind.DISTANCE -> R.string.cosmo_mission_distance
+            CosmoRunMissions.Kind.CLEARS -> R.string.cosmo_mission_clears
+            CosmoRunMissions.Kind.CHAIN -> R.string.cosmo_mission_chain
+            CosmoRunMissions.Kind.ROOF -> R.string.cosmo_mission_roof
+            CosmoRunMissions.Kind.SMASHES -> R.string.cosmo_mission_smashes
         }
-        return getString(res, game.contractProgress.toInt(), game.contractTarget)
+        return getString(res, m.progress.toInt(), m.target)
     }
+    /** La mission la plus avancée : c'est elle qu'on suit en course. */
+    private fun leadMission(): CosmoRunMissions.Mission {
+        // On garde la mission choisie au départ jusqu'à son terme : la ligne ne change pas de sujet en pleine course.
+        val kept = focus
+        if (kept != null && !kept.done && kept in game.missions.missions) return kept
+        val next = game.missions.missions.filter { !it.done }.maxByOrNull { it.fraction } ?: game.missions.missions[0]
+        focus = next
+        return next
+    }
+    private fun missionList() = game.missions.missions.joinToString("\n") { "▸ " + missionText(it) }
     private fun sectorName() = when (game.sector % 3) {
         1 -> R.string.cosmo_sector_crystal
         2 -> R.string.cosmo_sector_nebula
@@ -189,14 +206,18 @@ class CosmoRunActivity : ThemedActivity() {
             game.boostTime > 0 -> getString(R.string.cosmo_boost_timer, kotlin.math.ceil(game.boostTime).toInt())
             game.magnetTime > 0 -> getString(R.string.cosmo_magnet_timer, kotlin.math.ceil(game.magnetTime).toInt())
             game.shield -> getString(R.string.cosmo_shield_ready)
-            else -> getString(R.string.cosmo_no_shield)
+            else -> ""
         }
         bonusText.text = getString(R.string.cosmo_hud_stats, game.atomsCollected, status)
-        missionText.text = getString(R.string.cosmo_contract_hud, game.contractLevel + 1, contractText())
-        missionBar.progress = (game.contractProgress / game.contractTarget * 1000f).toInt()
+        val lead = leadMission()
+        missionText.text = getString(R.string.cosmo_mission_hud, game.missions.rank, missionText(lead))
+        missionBar.progress = (lead.fraction * 1000f).toInt()
+        val tier = game.multiplier - 1
+        val floor = CosmoRunGame.TIERS[tier]
+        val ceiling = CosmoRunGame.TIERS.getOrNull(tier + 1)
+        chainBar.progress = if (ceiling == null) 1000 else ((game.chain - floor) * 1000f / (ceiling - floor)).toInt()
         if (runView.resumeCountdown > 0f) banner.text = getString(R.string.cosmo_resume_countdown, kotlin.math.ceil(runView.resumeCountdown).toInt())
-        else if (android.os.SystemClock.uptimeMillis() > bannerUntil) banner.text =
-            if (game.distance < 90f) getString(R.string.cosmo_swipe_hint) else ""
+        else if (android.os.SystemClock.uptimeMillis() > bannerUntil) banner.text = ""
     }
 
     private fun showPanel(next: Panel) {
@@ -227,9 +248,8 @@ class CosmoRunActivity : ThemedActivity() {
                 card.addView(label(getString(R.string.cosmo_kicker), 11f, mint, true))
                 card.addSpaced(label(getString(R.string.cosmo_run_title), 38f, white, true), 3)
                 card.addSpaced(label(getString(R.string.cosmo_run_subtitle), 14f, muted), 2)
-                card.addSpaced(label(getString(R.string.cosmo_career, game.contractLevel, game.bestScore), 12f, mint), 14)
-                card.addSpaced(label(getString(R.string.cosmo_contract_hud, game.contractLevel + 1, contractText()), 15f, white, true), 10)
-                card.addSpaced(label(getString(R.string.cosmo_contract_persistent), 12f, muted), 3)
+                card.addSpaced(label(getString(R.string.cosmo_career, game.missions.rank, game.bestDistance.toInt()), 12f, mint), 14)
+                card.addSpaced(label(missionList(), 15f, white, true), 10)
                 card.addSpaced(button(getString(R.string.cosmo_run_btn_start), true) { startRun() }, 18)
                 card.addSpaced(button(getString(R.string.cosmo_suit_button, suitName())) { showSuits() })
                 val row = LinearLayout(this)
@@ -239,7 +259,7 @@ class CosmoRunActivity : ThemedActivity() {
             }
             Panel.PAUSE -> {
                 card.addView(label(getString(R.string.cosmo_pause_title), 30f, white, true))
-                card.addSpaced(label(contractText(), 15f, mint))
+                card.addSpaced(label(missionList(), 15f, mint))
                 card.addSpaced(button(getString(R.string.cosmo_resume), true) { resumeRun() }, 20)
                 card.addSpaced(button(getString(R.string.cosmo_guide)) { showGuide() })
                 card.addSpaced(button(getString(R.string.cosmo_finish_run)) { settleRun(); showPanel(Panel.RESULTS) })
@@ -248,16 +268,16 @@ class CosmoRunActivity : ThemedActivity() {
                 card.addView(label(getString(R.string.cosmo_run_game_over), 12f, mint, true))
                 card.addSpaced(label(getString(R.string.cosmo_run_score_label, game.score), 32f, white, true), 6)
                 val reason = if (!game.isGameOver) R.string.cosmo_run_banked else when (game.crashType) {
-                    CosmoRunGame.EntityType.CARGO -> R.string.cosmo_crash_cargo
                     CosmoRunGame.EntityType.HURDLE -> R.string.cosmo_crash_hurdle
-                    CosmoRunGame.EntityType.GAP -> R.string.cosmo_crash_gap
-                    else -> R.string.cosmo_crash_laser
+                    CosmoRunGame.EntityType.LASER -> R.string.cosmo_crash_laser
+                    CosmoRunGame.EntityType.DRONE -> R.string.cosmo_crash_drone
+                    else -> R.string.cosmo_crash_container
                 }
                 card.addSpaced(label(getString(reason), 14f, muted))
                 card.addSpaced(label(getString(R.string.cosmo_run_stats_label, game.distance.toInt(), game.atomsCollected), 17f, white, true), 16)
-                card.addSpaced(label(getString(R.string.cosmo_results_details, game.maxChain, game.contractsThisRun, lastReward), 14f, mint), 6)
+                card.addSpaced(label(getString(R.string.cosmo_results_details, game.maxChain, game.missionsThisRun, lastReward), 14f, mint), 6)
                 card.addSpaced(label(getString(R.string.cosmo_run_best_label, game.bestScore), 13f, muted), 6)
-                card.addSpaced(label(contractText(), 14f, white))
+                card.addSpaced(label(missionList(), 14f, white))
                 card.addSpaced(button(getString(R.string.cosmo_run_btn_restart), true) { startRun() }, 20)
                 card.addSpaced(button(getString(R.string.cosmo_hangar)) { showPanel(Panel.HANGAR) })
             }
@@ -266,25 +286,29 @@ class CosmoRunActivity : ThemedActivity() {
     }
 
     private fun startRun() {
-        settled = false; lastReward = 0; bannerUntil = 0L
+        settled = false; lastReward = 0; bannerUntil = 0L; focus = null
         runView.startGame(); showPanel(Panel.RUN)
     }
     private fun resumeRun() { showPanel(Panel.RUN); runView.requestFocus() }
     private fun saveCareer() {
         prefs.edit {
-            putInt("contract_level", game.contractLevel); putFloat("contract_progress", game.contractProgress)
+            putInt("rank", game.missions.rank)
+            // La progression d'une mission « en une course » ne survit pas à la course : on ne l'enregistre pas.
+            game.missions.missions.forEachIndexed { i, m -> putFloat("mission_$i", if (m.kind.perRun) 0f else m.progress) }
             putInt("suit", selectedSuit); putInt("best_score", game.bestScore)
+            putFloat("best_distance", game.bestDistance); putFloat("last_death", game.lastDeathDistance)
         }
     }
     private fun settleRun() {
         if (settled) return
         settled = true
         game.initBestScore(game.score)
+        game.bestDistance = maxOf(game.bestDistance, game.distance)
         lastReward = NeutrinoRewards.perDistance(game.distance)
         if (lastReward > 0) NeutrinoRepository(this).addBalance(lastReward)
         saveCareer()
     }
-    private fun unlockedSuits() = when { game.contractLevel >= 9 -> 3; game.contractLevel >= 3 -> 2; else -> 1 }
+    private fun unlockedSuits() = CosmoRunMissions.suitsUnlocked(game.missions.rank)
     private fun suitName(index: Int = selectedSuit) = getString(when (index) {
         1 -> R.string.cosmo_suit_solar
         2 -> R.string.cosmo_suit_void
@@ -293,7 +317,7 @@ class CosmoRunActivity : ThemedActivity() {
     private fun showSuits() {
         val names = Array(3) { i ->
             if (i < unlockedSuits()) suitName(i)
-            else getString(R.string.cosmo_suit_locked, suitName(i), if (i == 1) 3 else 9)
+            else getString(R.string.cosmo_suit_locked, suitName(i), CosmoRunMissions.suitRank(i))
         }
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(R.string.cosmo_suits_title)
@@ -303,7 +327,6 @@ class CosmoRunActivity : ThemedActivity() {
                     runView.invalidate(); dialog.dismiss(); showPanel(Panel.HANGAR)
                 } else {
                     (dialog as androidx.appcompat.app.AlertDialog).listView.setItemChecked(selectedSuit, true)
-                    Toast.makeText(this, names[which], Toast.LENGTH_SHORT).show()
                 }
             }.setNegativeButton(R.string.cosmo_close, null).show()
     }
@@ -315,6 +338,10 @@ class CosmoRunActivity : ThemedActivity() {
             .setNeutralButton(if (runView.feedbackEnabled) R.string.cosmo_haptics_off else R.string.cosmo_haptics_on) { _, _ ->
                 runView.feedbackEnabled = !runView.feedbackEnabled
                 prefs.edit { putBoolean("haptics", runView.feedbackEnabled) }
+            }
+            .setNegativeButton(if (runView.sfx.enabled) R.string.cosmo_sound_off else R.string.cosmo_sound_on) { _, _ ->
+                runView.sfx.enabled = !runView.sfx.enabled
+                prefs.edit { putBoolean("sound", runView.sfx.enabled) }
             }.show()
     }
     override fun onResume() { super.onResume(); runView.resume() }
