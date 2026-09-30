@@ -41,6 +41,16 @@ internal object BlockRegistry {
     // Textures uniques ordonnées → index = couche GL dans la texture array
     private val textureOrder = mutableListOf<String>()
     private val textureIndexMap = HashMap<String, Int>()
+    // Parallèles à textureOrder : le nom lisible du fichier du pack et son dossier (voir TexturePackNames)
+    private val textureNames = mutableListOf<String>()
+    private val textureFolders = mutableListOf<String>()
+
+    /** Une texture de l'atlas telle que le pack la connaît : `folder/name.png`. */
+    internal class TextureEntry(val key: String, val name: String, val folder: String)
+
+    /** Dans l'ordre des calques, donc de la liste rendue par [buildTextureAtlas]. */
+    internal fun textureEntries(): List<TextureEntry> =
+        textureOrder.indices.map { TextureEntry(textureOrder[it], textureNames[it], textureFolders[it]) }
     private var climateMasks = IntArray(0)
     var vividStyle = false
         private set
@@ -169,6 +179,8 @@ internal object BlockRegistry {
         // Réinitialise l'état texture pour chaque reconstruction (recréation de surface GL)
         textureIndexMap.clear()
         textureOrder.clear()
+        textureNames.clear()
+        textureFolders.clear()
         topBitmapById.values.forEach { it.recycle() }
         topBitmapById.clear()
         decorationMasks.clear()
@@ -176,26 +188,36 @@ internal object BlockRegistry {
 
         val bitmaps = mutableListOf<Bitmap>()
 
-        fun register(name: String): Int {
+        val namer = TexturePackNames.Namer()
+
+        /** [friendly] : nom voulu dans le pack ; sans lui, la clé interne sert de nom. */
+        fun register(name: String, friendly: String? = null, folder: String = "misc"): Int {
             textureIndexMap[name]?.let { return it }
             val idx = bitmaps.size
+            val fileName = namer.unique(friendly ?: name)
             textureIndexMap[name] = idx
             textureOrder += name
-            bitmaps += TexturePack.load(assets, name, tileSize, vivid) {
+            textureNames += fileName
+            textureFolders += TexturePackNames.sanitize(folder)
+            bitmaps += TexturePack.load(name, fileName, tileSize) {
                 textureFallback(assets, name, tileSize, vivid)
             }
             return idx
         }
 
         for (def in defs.values.sortedBy { it.id }) {
-            def.layerTop    = register(def.textureTop)
-            def.layerSide   = register(def.textureSide)
-            def.layerBottom = register(def.textureBottom)
-            def.layerFront     = def.textureFront?.let { register(it) } ?: def.layerSide
-            def.layerBack      = def.textureBack?.let { register(it) } ?: def.layerSide
-            def.layerSideGrass = def.textureSideGrass?.let { register(it) } ?: def.layerSide
-            def.layerSideSand  = def.textureSideSand?.let  { register(it) } ?: def.layerSide
-            def.layerSideSnow  = def.textureSideSnow?.let  { register(it) } ?: def.layerSide
+            // Le premier bloc (par id) à utiliser une texture lui donne son nom ; les suivants la partagent.
+            val plain = def.textureTop == def.textureSide && def.textureSide == def.textureBottom
+            fun face(key: String, suffix: String, plainName: Boolean = false) =
+                register(key, TexturePackNames.faceName(def.name, suffix, plain && plainName), def.creativeTab)
+            def.layerTop    = face(def.textureTop, "top", plainName = true)
+            def.layerSide   = face(def.textureSide, "side", plainName = true)
+            def.layerBottom = face(def.textureBottom, "bottom", plainName = true)
+            def.layerFront     = def.textureFront?.let { face(it, "front") } ?: def.layerSide
+            def.layerBack      = def.textureBack?.let { face(it, "back") } ?: def.layerSide
+            def.layerSideGrass = def.textureSideGrass?.let { face(it, "side_grass") } ?: def.layerSide
+            def.layerSideSand  = def.textureSideSand?.let  { face(it, "side_sand") } ?: def.layerSide
+            def.layerSideSnow  = def.textureSideSnow?.let  { face(it, "side_snow") } ?: def.layerSide
 
             val idx = def.id.toInt() and 0xFFFF
             layerTopTable[idx]       = def.layerTop
@@ -225,11 +247,13 @@ internal object BlockRegistry {
         }
 
         // Register all approved surface variants before taking the final layer-table sizes.
+        fun nameOf(layer: Int) = textureNames[layer]
+        fun folderOf(layer: Int) = textureFolders[layer]
         val surfacesByBase = HashMap<Int, IntArray>()
         for (name in textureOrder.toList()) if (BaseBlockTextures.variantCount(name) == 4) {
             val base = textureIndexMap.getValue(name)
             val family = name.substringBeforeLast(':')
-            surfacesByBase[base] = IntArray(4) { register("$family:$it") }
+            surfacesByBase[base] = IntArray(4) { register("$family:$it", "${nameOf(base)}_v$it", folderOf(base)) }
         }
         surfaceVariants = arrayOfNulls(bitmaps.size)
         for ((base, variants) in surfacesByBase) surfaceVariants[base] = variants
@@ -239,7 +263,9 @@ internal object BlockRegistry {
         val variantsByBase = HashMap<Int, IntArray>()
         for (def in defs.values) if (MineralItems.isOre(def.id) || def.id.toInt() in 3000..3009) {
             variantsByBase.getOrPut(def.layerTop) {
-                IntArray(MineralOrePixels.VARIANTS) { register(MineralArt.oreVariantKey(def.textureTop,it)) }
+                IntArray(MineralOrePixels.VARIANTS) {
+                    register(MineralArt.oreVariantKey(def.textureTop, it), "${nameOf(def.layerTop)}_v$it", folderOf(def.layerTop))
+                }
             }
         }
         oreVariants = arrayOfNulls(bitmaps.size)
@@ -258,7 +284,7 @@ internal object BlockRegistry {
         for (layer in 0 until baseCount) {
             val name = textureOrder[layer]
             if (MeadowTextures.hasKnotVariant(name)) {
-                knotLayers[layer] = register("$name:knot")
+                knotLayers[layer] = register("$name:knot", "${nameOf(layer)}_knot", folderOf(layer))
             }
         }
         // Small opaque procedural materials for the volumetric torch; keep its inventory icon.

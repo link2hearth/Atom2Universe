@@ -866,4 +866,19 @@
     <string name="cave_waila_boss">Boss — %1$s · Palier %2$d\nVie : %3$d / %4$d</string>
     <string name="cave_waila_unknown_mob">Créature inconnue</string>
     <string name="cave_waila_mob">%1$s · Palier %2$d\nVie : %3$d / %4$d</string>
+    <string name="cave_menu_export_pack">Exporter le modèle de pack de textures</string>
+    <string name="cave_pack_exported">Modèle enregistré (%1$d textures)</string>
+    <string name="cave_pack_export_failed">Impossible d\'enregistrer le modèle</string>
+    <string name="cave_pack_default_name">Mon pack de textures</string>
+    <string name="cave_pack_button">Textures</string>
+    <string name="cave_pack_button_named">Textures : %1$s</string>
+    <string name="cave_pack_dialog_title">Textures — %1$s</string>
+    <string name="cave_pack_none">d\'origine</string>
+    <string name="cave_pack_import">Importer un pack (.zip)</string>
+    <string name="cave_pack_remove">Retirer le pack</string>
+    <string name="cave_pack_removed">Pack retiré : textures d\'origine</string>
+    <string name="cave_pack_imported">Pack \"%1$s\" installé (%2$d textures)</string>
+    <string name="cave_pack_import_empty">Aucune texture utilisable dans ce zip (PNG carrés nommés comme dans le modèle)</string>
+    <string name="cave_pack_import_failed">Impossible de lire ce zip</string>
+    <string name="cave_pack_readme">CAVE WORLD — PACK DE TEXTURES\n\nCe zip contient toutes les textures que le jeu dessine lui-même, un PNG par fichier. Retouche celles que tu veux, supprime celles que tu gardes, et rezippe : toute texture absente de ton pack reste celle d\'origine.\n\nDOSSIERS\nassets/caves/textures/&lt;onglet&gt;/&lt;nom&gt;.png\nLes dossiers suivent les onglets du mode créatif (terrain, stone, wood, ores…). Seul le NOM du fichier compte : tu peux déplacer les fichiers d\'un dossier à l\'autre ou tout mettre dans un seul.\n\nNOMS\n• stone.png — un bloc dont le dessus, le côté et le dessous partagent la même texture.\n• grass_top.png, grass_side.png — un bloc aux faces différentes (top, side, bottom, front, back).\n• _v1, _v2, _v3 — des variantes tirées au hasard selon la position, pour que le terrain ne paraisse pas carrelé.\n• Une texture partagée par plusieurs blocs (la terre est aussi sous l\'herbe) est un seul fichier : la modifier les change tous.\n\nIMAGES\n• PNG carré, de 16 à 2048 pixels. 32 px est la taille d\'origine ; de 16 à 96 px convient le mieux (le jeu dessine en 96).\n• La transparence est conservée. Aucun lissage : le pixel art reste net.\n• L\'herbe, les feuilles et certaines plantes sont teintées par le biome : peins-les en gris clair ou en blanc.\n\nL\'UTILISER\nDans le menu de Cave World, touche Textures en haut à droite, puis Importer un pack (.zip). Le pack s\'applique au prochain lancement d\'une partie.\n\nPACK.JSON\nNom et auteur de ton pack ; ne touche pas au format.</string>
 </resources>

@@ -1,58 +1,69 @@
 package com.Atom2Universe.app.games.caves.node
 
-import android.content.res.AssetManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import java.io.IOException
+import java.io.File
 
-/** Editable, bundled PNG overrides. Missing or invalid files use the original pixel recipes. */
+/**
+ * Le pack de textures du joueur : un dossier de PNG carrés, nommés comme l'export (voir
+ * [TexturePackNames]). Le dossier où ils sont rangés n'a aucune importance : seul le nom du
+ * fichier compte, ce qui pardonne un zip refait à la main. Un fichier absent ou invalide retombe
+ * sur la texture dessinée par le code, donc un pack peut ne changer que quelques blocs.
+ */
 internal object TexturePack {
-    const val ROOT = "caves/textures/pack"
+    private const val TAG = "CaveTexturePack"
     private const val MAX_SIZE = 2048
-    private const val HEX = "0123456789ABCDEF"
+    private const val MANIFEST_ICON = "pack.png"
 
-    /** Reversible names: ':' separates folders; other punctuation is encoded without collisions. */
-    fun relativePath(key: String): String = key.split(':').joinToString("/") { component ->
-        buildString {
-            for (byte in component.toByteArray(Charsets.UTF_8)) {
-                val c = byte.toInt() and 255
-                if (c in 65..90 || c in 97..122 || c in 48..57 || c == 95 || c == 45) append(c.toChar())
-                else { append('%'); append(HEX[c ushr 4]); append(HEX[c and 15]) }
-            }
-        }
-    } + ".png"
+    @Volatile private var files: Map<String, File> = emptyMap()
 
-    fun load(assets: AssetManager, key: String, size: Int, vivid: Boolean, fallback: () -> Bitmap): Bitmap {
-        require(size > 0)
-        val path = "$ROOT/${relativePath(key)}"
-        val bitmap = try {
-            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true; inScaled = false }
-            assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
-            if (bounds.outWidth !in 1..MAX_SIZE || bounds.outHeight != bounds.outWidth) {
-                Log.w("CaveTexturePack", "Invalid square PNG dimensions: $path; using code fallback")
-                null
-            } else {
-                assets.open(path).use {
-                    BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inScaled = false })
-                }.also { if (it == null) Log.w("CaveTexturePack", "Cannot decode $path; using code fallback") }
-            }
-        } catch (_: IOException) {
-            // Packs may intentionally override only a few textures.
-            null
-        }
-        if (bitmap == null) return fallback()
-        val colored = if (vivid && usesVividPalette(key)) {
-            val pixels = IntArray(bitmap.width * bitmap.height)
-            bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-            for (i in pixels.indices) if (pixels[i] ushr 24 != 0) pixels[i] = CavePalette.vivid(pixels[i])
-            Bitmap.createBitmap(pixels, bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888).also { bitmap.recycle() }
-        } else bitmap
-        if (colored.width == size) return colored
-        // No smoothing: native 32px/48px silhouettes remain sharp in the shared 96px atlas.
-        return Bitmap.createScaledBitmap(colored, size, size, false).also { colored.recycle() }
+    /** Où le pack actif est décompressé ; `null` tant qu'aucun n'est installé. */
+    fun activeDirectory(context: Context): File? = directory(context).takeIf { it.isDirectory }
+
+    fun directory(context: Context) = File(context.filesDir, "caves/texturepack")
+
+    /** Choisit le pack (`null` : textures du code) ; à appeler avant de construire l'atlas. */
+    fun use(directory: File?) {
+        files = directory?.let(::scan) ?: emptyMap()
     }
 
-    private fun usesVividPalette(key: String) = key.startsWith("cozy:") ||
-        key.startsWith("base_art:") || key in MeadowTextures.itemTextureNames
+    /** Pour l'export : le modèle doit montrer les textures du code, pas celles d'un pack déjà actif. */
+    fun <T> withoutPack(block: () -> T): T {
+        val previous = files
+        files = emptyMap()
+        try { return block() } finally { files = previous }
+    }
+
+    private fun scan(root: File): Map<String, File> {
+        val found = HashMap<String, File>()
+        for (file in root.walkTopDown().sortedBy { it.path }) {
+            if (!file.isFile || !file.extension.equals("png", true)) continue
+            if (file.parentFile == root && file.name.equals(MANIFEST_ICON, true)) continue
+            val name = file.nameWithoutExtension.lowercase()
+            if (found.putIfAbsent(name, file) != null) Log.w(TAG, "Duplicate texture name '$name': ${file.path} ignored")
+        }
+        return found
+    }
+
+    /** La texture du pack pour [name], mise à la taille [size] de l'atlas, ou le résultat de [fallback]. */
+    fun load(key: String, name: String, size: Int, fallback: () -> Bitmap): Bitmap {
+        require(size > 0)
+        val file = files[name] ?: return fallback()
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true; inScaled = false }
+        BitmapFactory.decodeFile(file.path, bounds)
+        if (bounds.outWidth !in 1..MAX_SIZE || bounds.outHeight != bounds.outWidth) {
+            Log.w(TAG, "Not a square PNG up to ${MAX_SIZE}px: ${file.path} (texture $key); using the default")
+            return fallback()
+        }
+        val bitmap = BitmapFactory.decodeFile(file.path, BitmapFactory.Options().apply { inScaled = false })
+        if (bitmap == null) {
+            Log.w(TAG, "Cannot decode ${file.path} (texture $key); using the default")
+            return fallback()
+        }
+        if (bitmap.width == size) return bitmap
+        // Sans lissage : une silhouette en 32 px reste nette dans l'atlas en 96 px.
+        return Bitmap.createScaledBitmap(bitmap, size, size, false).also { bitmap.recycle() }
+    }
 }

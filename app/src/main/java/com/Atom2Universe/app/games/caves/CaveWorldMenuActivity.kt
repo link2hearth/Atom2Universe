@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -15,11 +16,14 @@ import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.games.caves.node.TexturePackExporter
+import com.Atom2Universe.app.games.caves.node.TexturePackImporter
 import com.Atom2Universe.app.games.caves.world.A2MapStorage
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.google.android.material.button.MaterialButton
@@ -47,6 +51,82 @@ class CaveWorldMenuActivity : ThemedActivity() {
     private val blue = Color.rgb(163, 200, 249)
     private val orange = Color.rgb(255, 190, 143)
     private val accent get() = if (assault) orange else green
+
+    private var exportingPack = false
+    private var importingPack = false
+    private val importPack = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) importTexturePack(uri)
+    }
+
+    private fun packName() = TexturePackImporter.installedName(this, getString(R.string.cave_pack_default_name))
+
+    private fun packButtonLabel() = packName()?.let { getString(R.string.cave_pack_button_named, it) }
+        ?: getString(R.string.cave_pack_button)
+
+    /** Un pack se choisit ici, mais ne s'applique qu'au prochain lancement d'une partie. */
+    private fun showPackDialog() {
+        val installed = packName()
+        val labels = mutableListOf(getString(R.string.cave_pack_import), getString(R.string.cave_menu_export_pack))
+        if (installed != null) labels += getString(R.string.cave_pack_remove)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.cave_pack_dialog_title, installed ?: getString(R.string.cave_pack_none)))
+            .setItems(labels.toTypedArray()) { _, which ->
+                when (which) {
+                    0 -> if (!importingPack) importPack.launch(arrayOf("application/zip",
+                        "application/x-zip-compressed", "application/octet-stream"))
+                    1 -> if (!exportingPack) exportPack.launch("cave_world_textures.zip")
+                    else -> {
+                        TexturePackImporter.remove(this)
+                        Toast.makeText(this, R.string.cave_pack_removed, Toast.LENGTH_SHORT).show()
+                        menuAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null).show()
+    }
+
+    private fun importTexturePack(uri: Uri) {
+        importingPack = true
+        val fallback = getString(R.string.cave_pack_default_name)
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                runCatching {
+                    val input = contentResolver.openInputStream(uri) ?: error("Cannot open $uri")
+                    input.use { TexturePackImporter.install(applicationContext, it, fallback) }
+                }.onFailure { android.util.Log.w("CaveTexturePack", "Import failed", it) }
+            }
+            importingPack = false
+            val pack = result.getOrNull()
+            Toast.makeText(this@CaveWorldMenuActivity,
+                if (pack != null) getString(R.string.cave_pack_imported, pack.name, pack.textures)
+                else getString(if (result.isFailure) R.string.cave_pack_import_failed else R.string.cave_pack_import_empty),
+                Toast.LENGTH_LONG).show()
+            menuAdapter.notifyDataSetChanged()
+        }
+    }
+
+    private val exportPack = registerForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
+        if (uri != null) exportTexturePack(uri)
+    }
+
+    /** Écrit le zip modèle dans le fichier choisi ; la construction de l'atlas est trop lourde pour le fil d'interface. */
+    private fun exportTexturePack(uri: Uri) {
+        exportingPack = true
+        val readme = getString(R.string.cave_pack_readme)
+        val packName = getString(R.string.cave_pack_default_name)
+        lifecycleScope.launch {
+            val count = withContext(Dispatchers.IO) {
+                runCatching {
+                    val out = contentResolver.openOutputStream(uri) ?: error("Cannot open $uri")
+                    out.use { TexturePackExporter.write(applicationContext, it, readme, packName) }
+                }.onFailure { android.util.Log.w("CaveTexturePack", "Export failed", it) }.getOrNull()
+            }
+            exportingPack = false
+            Toast.makeText(this@CaveWorldMenuActivity,
+                if (count != null) getString(R.string.cave_pack_exported, count) else getString(R.string.cave_pack_export_failed),
+                Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,7 +287,21 @@ class CaveWorldMenuActivity : ThemedActivity() {
                 menuAdapter.notifyDataSetChanged()
             }
         }
-        banner.addView(palette, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.END).apply {
+        val textures = MaterialButton(this@CaveWorldMenuActivity).apply {
+            text = packButtonLabel()
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            maxWidth = dp(180)
+            setTextColor(Color.WHITE)
+            backgroundTintList = ColorStateList.valueOf(0xDD20252B.toInt())
+            setOnClickListener { showPackDialog() }
+        }
+        val bannerButtons = LinearLayout(this@CaveWorldMenuActivity).apply {
+            gravity = Gravity.CENTER_VERTICAL
+            addView(textures, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
+            addView(palette, LinearLayout.LayoutParams(-2, -2))
+        }
+        banner.addView(bannerButtons, FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.END).apply {
             rightMargin = dp(12); bottomMargin = dp(8); leftMargin = dp(12)
         })
         addView(banner, LinearLayout.LayoutParams(-1, dp(132)))

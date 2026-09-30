@@ -866,4 +866,19 @@
     <string name="cave_waila_boss">Boss — %1$s · Tier %2$d\nHealth: %3$d / %4$d</string>
     <string name="cave_waila_unknown_mob">Unknown creature</string>
     <string name="cave_waila_mob">%1$s · Tier %2$d\nHealth: %3$d / %4$d</string>
+    <string name="cave_menu_export_pack">Export texture pack template</string>
+    <string name="cave_pack_exported">Template saved (%1$d textures)</string>
+    <string name="cave_pack_export_failed">Could not save the template</string>
+    <string name="cave_pack_default_name">My texture pack</string>
+    <string name="cave_pack_button">Textures</string>
+    <string name="cave_pack_button_named">Textures: %1$s</string>
+    <string name="cave_pack_dialog_title">Textures — %1$s</string>
+    <string name="cave_pack_none">original</string>
+    <string name="cave_pack_import">Import a pack (.zip)</string>
+    <string name="cave_pack_remove">Remove the pack</string>
+    <string name="cave_pack_removed">Pack removed: original textures</string>
+    <string name="cave_pack_imported">Pack \"%1$s\" installed (%2$d textures)</string>
+    <string name="cave_pack_import_empty">No usable texture in this zip (square PNG files named like the template)</string>
+    <string name="cave_pack_import_failed">Could not read this zip</string>
+    <string name="cave_pack_readme">CAVE WORLD — TEXTURE PACK\n\nThis zip holds every texture the game draws itself, one PNG per file. Edit the ones you want, delete the ones you keep, and zip it again: any texture missing from your pack uses the original.\n\nFOLDERS\nassets/caves/textures/&lt;tab&gt;/&lt;name&gt;.png\nThe folders follow the creative tabs (terrain, stone, wood, ores…). Only the file NAME matters: you can move files between folders or drop them all in one.\n\nNAMES\n• stone.png — a block whose top, side and bottom share one texture.\n• grass_top.png, grass_side.png — a block with different faces (top, side, bottom, front, back).\n• _v1, _v2, _v3 — extra paintings picked at random by position, so terrain does not look tiled.\n• A texture shared by several blocks (dirt is also under grass) is one file: changing it changes them all.\n\nIMAGES\n• Square PNG, from 16 to 2048 pixels. 32 px is the original size; 16 to 96 px works best (the game draws 96).\n• Transparency is kept. No smoothing is applied, so pixel art stays sharp.\n• Grass, leaves and some plants are tinted by the biome: paint them light grey or white.\n\nUSING IT\nIn the Cave World menu, tap Textures at the top right, then Import a pack (.zip). The pack applies the next time you start a game.\n\nPACK.JSON\nName and author of your pack; leave the format alone.</string>
 </resources>

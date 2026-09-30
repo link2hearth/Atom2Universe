@@ -1143,7 +1143,9 @@ internal class CaveRenderer(
 
         // Preserve the native crop silhouettes in every playable world.
         val tileSize = 96
-        val bitmaps = BlockRegistry.buildTextureAtlas(context.assets, tileSize, vivid = vividStyle)
+        com.Atom2Universe.app.games.caves.node.TexturePack.use(
+            com.Atom2Universe.app.games.caves.node.TexturePack.activeDirectory(context))
+        val bitmaps =BlockRegistry.buildTextureAtlas(context.assets, tileSize, vivid = vividStyle)
         if (bitmaps.isEmpty()) return 0
         val w = bitmaps[0].width; val h = bitmaps[0].height
 
