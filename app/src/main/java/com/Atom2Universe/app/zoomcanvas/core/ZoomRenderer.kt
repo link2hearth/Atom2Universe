@@ -4,9 +4,12 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Ce qu'il faut tracer, prêt pour le moteur graphique : des polylignes en coordonnées d'écran
- * (`Float`), déjà découpées au bord de la vue. Réutilisée d'une image à l'autre (aucune allocation
- * une fois les tableaux à la bonne taille).
+ * Ce qu'il faut tracer, dans l'ordre, prêt pour le moteur graphique : des polylignes et des images
+ * en coordonnées d'écran (`Float`), déjà découpées au bord de la vue. Réutilisée d'une image à
+ * l'autre (aucune allocation une fois les tableaux à la bonne taille).
+ *
+ * Chaque élément est une « passe » : une polyligne ([runImage] = -1) ou une image ([runImage] =
+ * indice dans [imageKeys], [imageSrc], [imageDst]).
  */
 class RenderList {
     /** Points (x, y) de toutes les polylignes, à la suite. */
@@ -28,6 +31,23 @@ class RenderList {
         private set
     var runAlpha = FloatArray(256)
         private set
+    /** -1 pour une polyligne, sinon l'indice de l'image. */
+    var runImage = IntArray(256)
+        private set
+
+    var imageCount = 0
+        private set
+    /** Fichier de l'image (clé), et sa taille en pixels. */
+    var imageKeys = arrayOfNulls<String>(16)
+        private set
+    var imagePx = IntArray(32)
+        private set
+    /** Rectangle source, en pixels de l'image : gauche, haut, droite, bas. */
+    var imageSrc = FloatArray(64)
+        private set
+    /** Rectangle de destination à l'écran : gauche, haut, droite, bas (toujours dans la vue). */
+    var imageDst = FloatArray(64)
+        private set
 
     /** Nombre de couches effectivement dessinées (pour l'indicateur et les tests). */
     var layersDrawn = 0
@@ -36,6 +56,7 @@ class RenderList {
     fun clear() {
         coordCount = 0
         runCount = 0
+        imageCount = 0
         layersDrawn = 0
     }
 
@@ -44,13 +65,33 @@ class RenderList {
             val n = runCount * 2
             runStart = runStart.copyOf(n); runPoints = runPoints.copyOf(n)
             runColor = runColor.copyOf(n); runWidth = runWidth.copyOf(n); runAlpha = runAlpha.copyOf(n)
+            runImage = runImage.copyOf(n)
         }
         runStart[runCount] = coordCount
         runPoints[runCount] = 0
         runColor[runCount] = color
         runWidth[runCount] = width
         runAlpha[runCount] = alpha
+        runImage[runCount] = -1
         runCount++
+    }
+
+    internal fun addImage(item: ImageItem, src: DoubleArray, dst: DoubleArray, alpha: Float) {
+        if (imageCount == imageKeys.size) {
+            val n = imageCount * 2
+            imageKeys = imageKeys.copyOf(n); imagePx = imagePx.copyOf(2 * n)
+            imageSrc = imageSrc.copyOf(4 * n); imageDst = imageDst.copyOf(4 * n)
+        }
+        val i = imageCount++
+        imageKeys[i] = item.key
+        imagePx[2 * i] = item.pxW
+        imagePx[2 * i + 1] = item.pxH
+        for (k in 0 until 4) {
+            imageSrc[4 * i + k] = src[k].toFloat()
+            imageDst[4 * i + k] = dst[k].toFloat()
+        }
+        beginRun(0, 0f, alpha)
+        runImage[runCount - 1] = i
     }
 
     internal fun addPoint(x: Double, y: Double) {
@@ -64,8 +105,8 @@ class RenderList {
 
 /**
  * Calcule l'image : de l'arrière vers l'avant, les couches visibles sous la couche de travail
- * (chacune à sa propre échelle), la couche de travail, la couche du dessus tant qu'elle n'a pas fini
- * de s'effacer, puis le trait en cours.
+ * (chacune à sa propre échelle), la couche de travail, les couches du dessus tant qu'elles n'ont pas
+ * fini de s'effacer, puis le trait en cours. Dans chaque couche, les images passent sous les traits.
  *
  * Tout se calcule en `Double` relativement à la caméra (position de l'objet − position de la
  * caméra, dans le repère de sa couche) ; seul le petit résultat, déjà découpé au bord de l'écran,
@@ -111,32 +152,64 @@ object ZoomRenderer {
             if (!x.isFinite() || !y.isFinite() || z <= 0.0) break
             if (suffixExtent[i] * z < MIN_PX) break
             if (visible.size >= MAX_LAYERS) break
-            if (l.strokes.isNotEmpty()) visible.add(Visible(l, x, y, z))
+            if (!l.isEmpty) visible.add(Visible(l, x, y, z))
         }
 
-        // Du fond vers l'avant, chaque couche avec son opacité (pleine sauf en fin de fondu).
-        for (k in visible.indices.reversed()) {
-            val v = visible[k]
-            val alpha = scene.layerAlpha(v.layer.depth)
-            if (alpha <= 0.0) continue
-            if (!layerOnScreen(v, hw, hh, viewW, viewH)) continue
-            out.layersDrawn++
-            for (s in v.layer.strokes) emit(s, v.x, v.y, v.zoom, alpha, hw, hh, viewW, viewH, out)
-        }
+        // Du fond vers l'avant : les couches du dessous, puis la couche de travail.
+        for (k in visible.indices.reversed()) drawLayer(visible[k], scene.layerAlpha(visible[k].layer.depth), hw, hh, viewW, viewH, out)
 
-        // La couche du dessus, par-dessus, tant qu'elle n'a pas fini de s'effacer.
-        val above = scene.layer(scene.depth - 1)
-        val current = scene.layer(scene.depth)
-        val aboveAlpha = scene.layerAlpha(scene.depth - 1)
-        if (aboveAlpha > 0.0 && above != null && current != null && above.strokes.isNotEmpty()) {
-            val v = Visible(above, current.ax + scene.cx / scene.ratio, current.ay + scene.cy / scene.ratio, scene.zoom * scene.ratio)
-            if (layerOnScreen(v, hw, hh, viewW, viewH)) {
-                out.layersDrawn++
-                for (s in above.strokes) emit(s, v.x, v.y, v.zoom, aboveAlpha, hw, hh, viewW, viewH, out)
-            }
+        // Les couches du dessus, par-dessus, tant qu'elles n'ont pas fini de s'effacer.
+        var up = scene.depth - 1
+        var ux = scene.cx
+        var uy = scene.cy
+        var uz = scene.zoom
+        while (true) {
+            val child = scene.layer(up + 1) ?: break
+            val l = scene.layer(up) ?: break
+            val alpha = scene.layerAlpha(up)
+            if (alpha <= 0.0) break
+            ux = child.ax + ux / scene.ratio
+            uy = child.ay + uy / scene.ratio
+            uz *= scene.ratio
+            if (!l.isEmpty) drawLayer(Visible(l, ux, uy, uz), alpha, hw, hh, viewW, viewH, out)
+            up--
         }
 
         scene.liveStroke()?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
+    }
+
+    private fun drawLayer(v: Visible, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
+        if (alpha <= 0.0) return
+        if (!layerOnScreen(v, hw, hh, w, h)) return
+        out.layersDrawn++
+        for (i in v.layer.images) emitImage(i, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+        for (s in v.layer.strokes) emit(s, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+    }
+
+    private val src = DoubleArray(4)
+    private val dst = DoubleArray(4)
+
+    /**
+     * Projette une image et ne garde que sa partie visible : le rectangle de destination est
+     * découpé au bord de l'écran, et le rectangle source (dans les pixels de l'image) suit.
+     */
+    private fun emitImage(item: ImageItem, vx: Double, vy: Double, z: Double, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
+        val x0 = (item.x - item.w / 2 - vx) * z + hw
+        val y0 = (item.y - item.h / 2 - vy) * z + hh
+        val sw = item.w * z
+        val sh = item.h * z
+        if (sw < MIN_PX && sh < MIN_PX) return
+        val cx0 = max(x0, -1.0)
+        val cy0 = max(y0, -1.0)
+        val cx1 = min(x0 + sw, w + 1)
+        val cy1 = min(y0 + sh, h + 1)
+        if (cx1 <= cx0 || cy1 <= cy0) return
+        dst[0] = cx0; dst[1] = cy0; dst[2] = cx1; dst[3] = cy1
+        src[0] = (cx0 - x0) / sw * item.pxW
+        src[1] = (cy0 - y0) / sh * item.pxH
+        src[2] = (cx1 - x0) / sw * item.pxW
+        src[3] = (cy1 - y0) / sh * item.pxH
+        out.addImage(item, src, dst, alpha.toFloat())
     }
 
     private fun layerOnScreen(v: Visible, hw: Double, hh: Double, w: Double, h: Double): Boolean {

@@ -1,8 +1,10 @@
 package com.Atom2Universe.app.util
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.view.View
+import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -67,6 +69,26 @@ fun Activity.enableImmersiveMode() {
 
     // Applique les insets pour gérer le padding selon la préférence utilisateur
     applySystemBarInsets(showBars)
+}
+
+/**
+ * Une fenêtre par-dessus l'écran (feuille du bas, boîte de dialogue) suit le mode plein écran : sans
+ * ça, son ouverture fait réapparaître les barres système. À appeler avant `show()`.
+ *
+ * La fenêtre s'ouvre d'abord sans prendre le focus (c'est la prise de focus qui ramène les barres),
+ * cache les barres pour son compte, puis reprend un focus normal une fois affichée (saisie de texte).
+ */
+fun Dialog.followImmersiveMode() {
+    if (SystemBarsManager.shouldShowSystemBars(context)) return
+    val w = window ?: return
+    w.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+    val controller = WindowCompat.getInsetsController(w, w.decorView)
+    controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    controller.hide(WindowInsetsCompat.Type.systemBars())
+    w.decorView.post {
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        w.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+    }
 }
 
 /**

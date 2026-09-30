@@ -120,7 +120,7 @@ class ZoomSceneTest {
     @Test
     fun lateralPanOfOneBillionUnitsDoesNotDrift() {
         val scene = ZoomScene(10.0)
-        scene.zoomAt(3.7, 0.0, 0.0)
+        scene.zoomAt(2.7, 0.0, 0.0)
         val s0 = scene.draw(gesture)
 
         // 10^9 unités en 1000 glissés.
@@ -143,7 +143,10 @@ class ZoomSceneTest {
         // Remontée : le trait lointain est toujours sous le doigt.
         scene.zoomOutSteps(steps)
         assertEquals(0L, scene.depth)
-        assertTrue(relativeError(scene, 0, far, gesture) < 1e-9)
+        // À 10^9 unités de l'origine de la couche, un Double ne distingue pas mieux que Math.ulp(1e9)
+        // (≈ 1,2e-7 unité) : on tolère deux de ces pas, soit quelques dix-millionièmes de pixel.
+        val ulpPx = Math.ulp(1e9) * scene.zoom
+        assertTrue(relativeError(scene, 0, far, gesture) * 300 <= 2 * ulpPx)
 
         // Retour au point de départ : aucune dérive visible (bien moins d'un millième de pixel).
         repeat(1000) { scene.pan(stepPx, 0.0) }
@@ -249,27 +252,29 @@ class ZoomSceneTest {
     }
 
     /**
-     * Le scénario de référence : on ouvre, on dessine un cercle de 14 px d'épaisseur à la taille
-     * normale ; il reste pleinement visible jusqu'à ×7,9, s'efface ensuite et a disparu à ×10.
+     * Le scénario de référence : on ouvre, on dessine un cercle de 14 d'épaisseur à la taille normale.
+     * Il reste entièrement visible jusqu'à ×10, s'efface ensuite et a disparu à ×10^1,5 (≈ ×32).
      */
     @Test
-    fun aLayerFadesOnlyAtTheVeryEndOfItsTimesTenZoom() {
+    fun aLayerStaysVisibleUntilTimesTenThenFades() {
         val scene = ZoomScene(10.0)
         val circle = (0..36).map { 200 * Math.cos(it * Math.PI / 18) to 200 * Math.sin(it * Math.PI / 18) }
         scene.draw(circle, 14.0)
         assertEquals(1.0, scene.zoom, 0.0)
         assertEquals(1.0, scene.layerAlpha(0), 0.0)
 
-        scene.zoomAt(Math.pow(10.0, 0.9) * 0.999, 0.0, 0.0)
+        scene.zoomAt(9.99, 0.0, 0.0)
         assertEquals(1.0, scene.layerAlpha(0), 0.0)
-        scene.zoomAt(1.03, 0.0, 0.0)
-        assertTrue(scene.layerAlpha(0) in 0.0..0.999)
-        // À ×10 : disparu, et la couche 1 est à sa taille normale.
-        scene.zoomAt(10.0 / (Math.pow(10.0, 0.9) * 0.999 * 1.03), 0.0, 0.0)
-        assertEquals(0.0, scene.layerAlpha(0), 1e-9)
-        assertEquals(1L, scene.depth)
-        assertEquals(1.0, scene.zoom, 1e-9)
-        assertEquals(1.0, scene.layerAlpha(1), 0.0)
+        scene.zoomAt(2.0 / 0.999, 0.0, 0.0) // ≈ ×20
+        assertTrue(scene.layerAlpha(0) in 0.01..0.99)
+        scene.zoomAt(2.0, 0.0, 0.0) // ≈ ×40
+        assertEquals(0.0, scene.layerAlpha(0), 0.0)
+        // Tant qu'elle est visible, elle est dessinée par-dessus la couche de travail.
+        scene.zoomAt(0.5 / 2.0, 0.0, 0.0) // ≈ ×10
+        assertTrue(scene.depth >= 1)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertTrue(out.layersDrawn >= 1)
     }
 
     @Test
@@ -282,7 +287,7 @@ class ZoomSceneTest {
         assertEquals(1.0, scene.layerAlpha(0), 0.0)
         val a = scene.toScreen(0, s, 0)
         assertEquals(gesture[0].first / 10, a[0], 1e-9)
-        // Encore ×10 : elle fait moins d'un pixel et n'est plus dessinée.
+        // Encore ×1000 : elle fait moins d'un pixel et n'est plus dessinée.
         scene.zoomAt(0.001, 0.0, 0.0)
         val out = RenderList()
         ZoomRenderer.build(scene, 1000.0, 1000.0, out)
@@ -290,20 +295,35 @@ class ZoomSceneTest {
     }
 
     @Test
-    fun theEditableLayerSwitchesInTheMiddleOfTheFade() {
+    fun theEditableLayerIsTheOneClosestToItsNormalSize() {
         val scene = ZoomScene(10.0)
         scene.draw(gesture)
-        // Un léger dézoom ne change pas de couche : on dessine toujours dans la couche 0.
+        // Un léger dézoom ou zoom ne change pas de couche.
         scene.zoomAt(0.9, 0.0, 0.0)
         assertEquals(0L, scene.depth)
-        // ×8 : la couche 0 commence à peine à s'effacer, elle reste la couche éditable.
-        scene.zoomAt(8.0 / 0.9, 0.0, 0.0)
+        scene.zoomAt(3.0 / 0.9, 0.0, 0.0)
         assertEquals(0L, scene.depth)
-        // ×9 : elle est à plus de moitié effacée, on édite la couche 1.
-        scene.zoomAt(9.0 / 8.0, 0.0, 0.0)
+        // Au-delà de ×√10, la couche 1 est plus proche de sa taille normale : c'est elle qu'on édite,
+        // pendant que la couche 0 reste entièrement visible.
+        scene.zoomAt(3.3 / 3.0, 0.0, 0.0)
         assertEquals(1L, scene.depth)
-        assertTrue(scene.layerAlpha(0) < 0.5)
+        assertEquals(1.0, scene.layerAlpha(0), 0.0)
         assertEquals(1.0, scene.layerAlpha(1), 0.0)
+    }
+
+    @Test
+    fun strokeThicknessIsInLayerUnits() {
+        val scene = ZoomScene(10.0)
+        val a = scene.draw(gesture, 14.0)
+        scene.zoomAt(2.5, 0.0, 0.0)
+        val b = scene.draw(gesture, 14.0)
+        // Même épaisseur dans la couche, quel que soit le zoom au moment du trait…
+        assertEquals(14.0, a.width, 0.0)
+        assertEquals(14.0, b.width, 0.0)
+        // … donc à l'écran elle grossit avec le zoom : 14 × 2,5 = 35 px.
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertTrue((0 until out.runCount).all { abs(out.runWidth[it] - 35f) < 1e-3f })
     }
 
     @Test
@@ -385,7 +405,7 @@ class ZoomSceneTest {
         val top = scene.draw(gesture)
         scene.zoomAt(10.0, 0.0, 0.0)
         val below = scene.draw(gesture)
-        scene.zoomAt(0.5, 0.0, 0.0)
+        scene.zoomAt(0.2, 0.0, 0.0)
         assertEquals(0L, scene.depth)
 
         val topBefore = scene.toScreen(0, top, 1)
@@ -501,6 +521,88 @@ class ZoomSceneTest {
         assertFalse(scene.canUndo)
     }
 
+    // ---- Images -----------------------------------------------------------------------------
+
+    @Test
+    fun anImportedImageIsPlacedAtTheCenterOfTheScreenAndFits() {
+        val scene = ZoomScene(10.0)
+        scene.zoomAt(2.0, 100.0, 50.0)
+        val img = scene.addImage("a.png", 400, 200, 600.0, 600.0)
+        val r = scene.imageScreenRect(img)
+        // 400×200 px réduits pour tenir dans 600×600 : 600×300 à l'écran, centré.
+        assertEquals(-300.0, r[0], 1e-9)
+        assertEquals(-150.0, r[1], 1e-9)
+        assertEquals(300.0, r[2], 1e-9)
+        assertEquals(150.0, r[3], 1e-9)
+        assertEquals(img.id, scene.imageAt(10.0, 10.0)?.id)
+        assertNull(scene.imageAt(400.0, 0.0))
+    }
+
+    @Test
+    fun anImageCanBeMovedResizedAndUndone() {
+        val scene = ZoomScene(10.0)
+        val img = scene.addImage("a.png", 100, 50, 200.0, 200.0) // 200×100 à l'écran
+        assertTrue(scene.beginImageEdit(img.id))
+        scene.moveImageBy(30.0, -10.0)
+        scene.endImageEdit()
+        val moved = scene.imageScreenRect(scene.image(img.id)!!)
+        assertEquals(-70.0, moved[0], 1e-9)
+        assertEquals(-60.0, moved[1], 1e-9)
+
+        // On tire le coin bas-droit : le coin haut-gauche ne bouge pas, les proportions restent.
+        assertTrue(scene.beginImageEdit(img.id))
+        scene.resizeImageTo(2, 330.0, 140.0)
+        scene.endImageEdit()
+        val resized = scene.imageScreenRect(scene.image(img.id)!!)
+        assertEquals(-70.0, resized[0], 1e-9)
+        assertEquals(-60.0, resized[1], 1e-9)
+        val w = resized[2] - resized[0]
+        val h = resized[3] - resized[1]
+        assertEquals(2.0, w / h, 1e-9)
+        assertEquals(400.0, w, 1e-6)
+
+        assertTrue(scene.undo())
+        assertEquals(moved[2], scene.imageScreenRect(scene.image(img.id)!!)[2], 1e-9)
+        assertTrue(scene.undo())
+        assertEquals(100.0, scene.imageScreenRect(scene.image(img.id)!!)[2], 1e-9)
+        assertTrue(scene.undo())
+        assertNull(scene.image(img.id))
+        assertTrue(scene.redo())
+        assertNotNull(scene.image(img.id))
+
+        scene.deleteImage(img.id)
+        assertNull(scene.image(img.id))
+        assertTrue(scene.undo())
+        assertNotNull(scene.image(img.id))
+    }
+
+    @Test
+    fun anImageDeepDownStaysExactlyInPlace() {
+        val scene = ZoomScene(10.0)
+        scene.draw(gesture)
+        scene.zoomInto(200)
+        val img = scene.addImage("a.png", 300, 300, 300.0, 300.0)
+        val r = scene.imageScreenRect(img)
+        assertEquals(-150.0, r[0], 1e-9)
+        assertEquals(150.0, r[3], 1e-9)
+        assertTrue(abs(img.x) < 1e4 && abs(img.w) < 1e4)
+    }
+
+    @Test
+    fun aHugelyZoomedImageIsCroppedToTheScreen() {
+        val scene = ZoomScene(10.0)
+        scene.addImage("a.png", 1000, 1000, 500.0, 500.0)
+        // Couche de travail suivante : l'image de la couche 0, au-dessus, fait des milliers de pixels.
+        scene.zoomAt(20.0, 37.0, -12.0)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1080.0, 1920.0, out)
+        assertEquals(1, out.imageCount)
+        val d = out.imageDst
+        assertTrue(d[0] >= -1f && d[1] >= -1f && d[2] <= 1081f && d[3] <= 1921f)
+        val src = out.imageSrc
+        assertTrue(src[0] >= 0f && src[2] <= 1000f && src[2] - src[0] < 1000f)
+    }
+
     // ---- Rendu -----------------------------------------------------------------------------
 
     @Test
@@ -529,7 +631,11 @@ class ZoomSceneTest {
                     repeat(rnd.nextInt(1, 30)) { scene.extendStroke(x0 + rnd.nextDouble(-size, size), y0 + rnd.nextDouble(-size, size)) }
                     scene.endStroke()
                 }
-                8 -> if (rnd.nextBoolean()) scene.undo() else scene.redo()
+                8 -> when (rnd.nextInt(3)) {
+                    0 -> scene.undo()
+                    1 -> scene.redo()
+                    else -> scene.addImage("k", rnd.nextInt(10, 3000), rnd.nextInt(10, 3000), rnd.nextDouble(10.0, 5000.0), rnd.nextDouble(10.0, 5000.0))
+                }
                 else -> { scene.beginErase(); scene.eraseAt(rnd.nextDouble(-w / 2, w / 2), 0.0, 30.0); scene.endErase() }
             }
             minDepth = minOf(minDepth, scene.depth)
@@ -542,6 +648,10 @@ class ZoomSceneTest {
                 assertTrue("valeur $v à l'étape $step (niveau ${scene.depth})", v.isFinite() && abs(v) <= limit)
             }
             for (r in 0 until out.runCount) assertTrue(out.runWidth[r] <= 4 * h)
+            for (i in 0 until 4 * out.imageCount) {
+                val v = out.imageDst[i]
+                assertTrue("image $v à l'étape $step", v.isFinite() && v >= -1f && v <= h.toFloat() + 1f)
+            }
         }
         assertTrue("profondeur max $maxDepth", maxDepth >= 30)
         assertTrue("profondeur min $minDepth", minDepth <= -3)

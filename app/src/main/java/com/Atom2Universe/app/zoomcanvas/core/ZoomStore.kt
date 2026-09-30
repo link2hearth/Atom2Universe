@@ -45,18 +45,18 @@ class ZoomSnapshot(
     val layers: List<LayerData>,
     val contentVersion: Long,
 ) {
-    class LayerData(val ax: Double, val ay: Double, val strokes: List<Stroke>)
+    class LayerData(val ax: Double, val ay: Double, val strokes: List<Stroke>, val images: List<ImageItem> = emptyList())
 
     companion object {
         fun of(meta: ZoomProjectMeta, scene: ZoomScene): ZoomSnapshot {
             val all = scene.allLayers()
             var lo = scene.depth
             var hi = scene.depth
-            for (l in all) if (l.strokes.isNotEmpty()) { lo = min(lo, l.depth); hi = max(hi, l.depth) }
+            for (l in all) if (!l.isEmpty) { lo = min(lo, l.depth); hi = max(hi, l.depth) }
             val kept = ArrayList<LayerData>()
             for (d in lo..hi) {
                 val l = scene.layer(d)!!
-                kept.add(LayerData(l.ax, l.ay, ArrayList(l.strokes)))
+                kept.add(LayerData(l.ax, l.ay, ArrayList(l.strokes), ArrayList(l.images)))
             }
             return ZoomSnapshot(meta, scene.ratio, scene.depth, scene.cx, scene.cy, scene.zoom, scene.nextStrokeId, lo, kept, scene.contentVersion)
         }
@@ -67,6 +67,7 @@ class ZoomSnapshot(
  * Les projets du canvas infini, un dossier chacun :
  *
  *     <racine>/<id>/scene.bin   en-tête (nom, dates, rapport d'échelle, caméra) puis les couches
+ *                  images/<clé>  les images importées (une fois chacune, telles que réduites à l'import)
  *                  thumb.png    vignette de la galerie
  *
  * Tout est en coordonnées locales à chaque couche (`Double`), jamais en valeurs absolues. Chaque
@@ -84,6 +85,21 @@ class ZoomStore(val root: File) {
     fun thumbFile(id: String) = File(dir(id), "thumb.png")
     private fun sceneFile(id: String) = File(dir(id), "scene.bin")
     private fun backupFile(id: String) = File(dir(id), "scene.bak")
+    fun imageFile(id: String, key: String) = File(File(dir(id), "images"), key)
+
+    /** Range une image importée dans le projet (écriture atomique). */
+    fun saveImage(id: String, key: String, bytes: ByteArray) {
+        val f = imageFile(id, key)
+        f.parentFile?.mkdirs()
+        val tmp = File(f.parentFile, "$key.tmp")
+        FileOutputStream(tmp).use { it.write(bytes); it.fd.sync() }
+        if (!tmp.renameTo(f)) throw IOException("rename failed: $tmp")
+    }
+
+    /** Supprime les fichiers d'images que plus rien n'utilise (à l'ouverture, historique vide). */
+    fun deleteUnusedImages(id: String, used: Set<String>) {
+        File(dir(id), "images").listFiles()?.forEach { if (it.name !in used) it.delete() }
+    }
 
     fun list(): List<ZoomProjectSummary> {
         val out = ArrayList<ZoomProjectSummary>()
@@ -144,6 +160,7 @@ class ZoomStore(val root: File) {
         val p = load(id) ?: return null
         val now = System.currentTimeMillis()
         val meta = ZoomProjectMeta(UUID.randomUUID().toString(), name, now, now)
+        File(dir(id), "images").takeIf { it.isDirectory }?.copyRecursively(File(dir(meta.id), "images"), overwrite = true)
         save(ZoomSnapshot.of(meta, p.scene))
         thumbFile(id).takeIf { it.isFile }?.copyTo(thumbFile(meta.id), overwrite = true)
         return meta.id
@@ -162,8 +179,8 @@ class ZoomStore(val root: File) {
         out.writeLong(s.meta.created)
         out.writeLong(s.meta.modified)
         out.writeDouble(s.ratio)
-        out.writeInt(s.layers.count { it.strokes.isNotEmpty() })
-        out.writeInt(s.layers.sumOf { it.strokes.size })
+        out.writeInt(s.layers.count { it.strokes.isNotEmpty() || it.images.isNotEmpty() })
+        out.writeInt(s.layers.sumOf { it.strokes.size + it.images.size })
         out.writeLong(s.camDepth)
         out.writeDouble(s.cx)
         out.writeDouble(s.cy)
@@ -183,6 +200,17 @@ class ZoomStore(val root: File) {
                 out.writeDouble(st.y)
                 out.writeInt(st.pts.size)
                 for (v in st.pts) out.writeDouble(v)
+            }
+            out.writeInt(l.images.size)
+            for (im in l.images) {
+                out.writeLong(im.id)
+                out.writeUTF(im.key)
+                out.writeInt(im.pxW)
+                out.writeInt(im.pxH)
+                out.writeDouble(im.x)
+                out.writeDouble(im.y)
+                out.writeDouble(im.w)
+                out.writeDouble(im.h)
             }
         }
         out.writeInt(END_MAGIC)
@@ -212,7 +240,8 @@ class ZoomStore(val root: File) {
         return try {
             DataInputStream(BufferedInputStream(FileInputStream(f), 1 shl 16)).use { inp ->
                 if (inp.readInt() != MAGIC) return null
-                if (inp.readInt() > VERSION) return null
+                val version = inp.readInt()
+                if (version > VERSION) return null
                 val name = inp.readUTF()
                 val created = inp.readLong()
                 val modified = inp.readLong()
@@ -242,6 +271,19 @@ class ZoomStore(val root: File) {
                         val pts = DoubleArray(np) { inp.readDouble() }
                         l.add(Stroke(sid, x, y, pts, color, width))
                     }
+                    if (version >= 2) {
+                        val ic = inp.readInt()
+                        if (ic < 0) return null
+                        for (k in 0 until ic) {
+                            val iid = inp.readLong()
+                            val key = inp.readUTF()
+                            val pw = inp.readInt()
+                            val ph = inp.readInt()
+                            val item = ImageItem(iid, key, pw, ph, inp.readDouble(), inp.readDouble(), inp.readDouble(), inp.readDouble())
+                            if (pw <= 0 || ph <= 0 || key.contains('/') || key.contains("..")) return null
+                            l.addImage(item)
+                        }
+                    }
                     layers.add(l)
                 }
                 if (inp.readInt() != END_MAGIC) return null
@@ -259,6 +301,7 @@ class ZoomStore(val root: File) {
     companion object {
         private const val MAGIC = 0x41325A43 // « A2ZC »
         private const val END_MAGIC = 0x454E4421 // « END! » : un fichier tronqué est rejeté
-        private const val VERSION = 1
+        /** 1 : traits seuls ; 2 : plus les images de chaque couche. */
+        private const val VERSION = 2
     }
 }

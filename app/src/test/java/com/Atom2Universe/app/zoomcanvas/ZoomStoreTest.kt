@@ -85,6 +85,32 @@ class ZoomStoreTest {
     }
 
     @Test
+    fun imagesAreSavedWithTheirLayerAndCopiedWhenDuplicating() {
+        val p = store.create("Images", 10.0)
+        store.saveImage(p.meta.id, "a.png", byteArrayOf(1, 2, 3))
+        store.saveImage(p.meta.id, "orphan.png", byteArrayOf(4))
+        repeat(12) { p.scene.zoomAt(2.0, 0.0, 0.0) }
+        val img = p.scene.addImage("a.png", 640, 480, 300.0, 300.0)
+        store.save(ZoomSnapshot.of(p.meta, p.scene))
+
+        val loaded = store.load(p.meta.id)!!
+        val back = loaded.scene.image(img.id)!!
+        assertEquals("a.png", back.key)
+        assertEquals(640, back.pxW)
+        assertEquals(img.x, back.x, 0.0)
+        assertEquals(img.w, back.w, 0.0)
+        assertEquals(setOf("a.png"), loaded.scene.imageKeys())
+
+        store.deleteUnusedImages(p.meta.id, loaded.scene.imageKeys())
+        assertTrue(store.imageFile(p.meta.id, "a.png").isFile)
+        assertFalse(store.imageFile(p.meta.id, "orphan.png").exists())
+
+        val copy = store.duplicate(p.meta.id, "Copie")!!
+        assertTrue(store.imageFile(copy, "a.png").isFile)
+        assertEquals(1, store.list().first { it.id == p.meta.id }.strokeCount)
+    }
+
+    @Test
     fun listReadsTheHeaderOnly() {
         val p = store.create("A", 20.0)
         p.scene.scribble(4)

@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.util.followImmersiveMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -157,6 +158,7 @@ class LabeledSlider(context: Context, name: String, min: Int, max: Int, value: I
 /** Feuille du bas : titre puis contenu, prête à montrer. */
 fun Context.bottomSheet(title: CharSequence?, build: (LinearLayout, BottomSheetDialog) -> Unit): BottomSheetDialog {
     val dialog = BottomSheetDialog(this, R.style.PxBottomSheetDialog)
+    dialog.followImmersiveMode()
     val root = LinearLayout(this).apply {
         orientation = LinearLayout.VERTICAL
         setPadding(dp(16), dp(8), dp(16), dp(20))
@@ -242,8 +244,8 @@ fun Context.promptText(
         .setView(box)
         .setPositiveButton(positive) { _, _ -> onOk(input.text.toString().trim()) }
         .setNegativeButton(R.string.px_cancel, null)
-        .show()
-        .also { input.requestFocus() }
+        .create()
+        .also { it.followImmersiveMode(); it.show(); input.requestFocus() }
 }
 
 fun Context.confirm(@StringRes title: Int, message: CharSequence?, @StringRes positive: Int, destructive: Boolean = false, onOk: () -> Unit): AlertDialog =
@@ -252,7 +254,8 @@ fun Context.confirm(@StringRes title: Int, message: CharSequence?, @StringRes po
         .apply { if (message != null) setMessage(message) }
         .setPositiveButton(positive) { _, _ -> onOk() }
         .setNegativeButton(R.string.px_cancel, null)
-        .show()
+        .create()
+        .also { it.followImmersiveMode(); it.show() }
 
 /** Une ligne horizontale défilante de puces. */
 fun Context.scrollRow(vararg views: View): HorizontalScrollView = HorizontalScrollView(this).apply {

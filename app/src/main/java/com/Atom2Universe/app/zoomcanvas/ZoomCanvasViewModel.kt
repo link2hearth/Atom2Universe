@@ -67,7 +67,10 @@ class ZoomCanvasViewModel(app: Application) : AndroidViewModel(app) {
         if (project?.meta?.id == id) { _state.value = State.READY; return }
         _state.value = State.LOADING
         viewModelScope.launch {
-            val loaded = withContext(Dispatchers.IO) { store.load(id) }
+            val loaded = withContext(Dispatchers.IO) {
+                // À l'ouverture l'historique est vide : les images que plus rien n'utilise peuvent partir.
+                store.load(id)?.also { store.deleteUnusedImages(id, it.scene.imageKeys()) }
+            }
             if (loaded == null) { _state.value = State.FAILED; return@launch }
             project = loaded
             savedContent = loaded.scene.contentVersion

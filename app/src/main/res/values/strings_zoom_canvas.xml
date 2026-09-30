@@ -21,13 +21,18 @@
     <string name="zc_tool_move_layer">Realign the layer below</string>
     <string name="zc_move_layer_hint">Drag to slide the layer below (and everything inside it) under this one.</string>
     <string name="zc_no_layer_below">Nothing to realign: there is no drawing in the layer below yet.</string>
-    <string name="zc_width">Thickness</string>
-    <plurals name="zc_strokes_count">
-        <item quantity="one">%1$d stroke</item>
-        <item quantity="other">%1$d strokes</item>
-    </plurals>
     <plurals name="zc_layers_count">
         <item quantity="one">%1$d layer</item>
         <item quantity="other">%1$d layers</item>
+    </plurals>
+    <string name="zc_tool_select">Select an image</string>
+    <string name="zc_select_hint">Tap an image to select it: drag it to move it, drag a corner to resize it.</string>
+    <string name="zc_import_image">Import an image</string>
+    <string name="zc_import_failed">Couldn\'t open this image</string>
+    <string name="zc_image_delete">Delete the image</string>
+    <string name="zc_deselect">Deselect</string>
+    <plurals name="zc_items_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
     </plurals>
 </resources>

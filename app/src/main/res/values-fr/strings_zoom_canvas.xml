@@ -21,15 +21,20 @@
     <string name="zc_tool_move_layer">Réaligner la couche du dessous</string>
     <string name="zc_move_layer_hint">Glissez pour décaler la couche du dessous (et tout ce qu\'elle contient) sous celle-ci.</string>
     <string name="zc_no_layer_below">Rien à réaligner : la couche du dessous ne contient encore aucun dessin.</string>
-    <string name="zc_width">Épaisseur</string>
-    <plurals name="zc_strokes_count">
-        <item quantity="one">%1$d trait</item>
-        <item quantity="many">%1$d traits</item>
-        <item quantity="other">%1$d traits</item>
-    </plurals>
     <plurals name="zc_layers_count">
         <item quantity="one">%1$d couche</item>
         <item quantity="many">%1$d couches</item>
         <item quantity="other">%1$d couches</item>
+    </plurals>
+    <string name="zc_tool_select">Sélectionner une image</string>
+    <string name="zc_select_hint">Touchez une image pour la sélectionner : glissez-la pour la déplacer, tirez un coin pour la redimensionner.</string>
+    <string name="zc_import_image">Importer une image</string>
+    <string name="zc_import_failed">Impossible d\'ouvrir cette image</string>
+    <string name="zc_image_delete">Supprimer l\'image</string>
+    <string name="zc_deselect">Désélectionner</string>
+    <plurals name="zc_items_count">
+        <item quantity="one">%1$d élément</item>
+        <item quantity="many">%1$d éléments</item>
+        <item quantity="other">%1$d éléments</item>
     </plurals>
 </resources>

@@ -33,6 +33,7 @@ import com.Atom2Universe.app.pixelart.ui.label
 import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.promptText
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.zoomcanvas.core.ZoomProjectSummary
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +68,12 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.zc_lib_btn_back).setOnClickListener { finish() }
         findViewById<View>(R.id.zc_lib_fab_new).setOnClickListener { newProject() }
+    }
+
+    /** Une fenêtre (menu, feuille, dialogue) vient de se fermer : on recache les barres système. */
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) updateSystemBarsVisibility()
     }
 
     override fun onResume() {
