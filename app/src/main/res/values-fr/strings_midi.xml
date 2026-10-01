@@ -29,6 +29,8 @@
     <string name="midi_toggle_keyboard">Afficher/masquer le clavier</string>
     <string name="midi_practice_mode">Mode pratique</string>
     <string name="midi_refresh_keyboards">Actualiser les claviers</string>
+    <string name="midi_channel_volume">Volume de la piste</string>
+    <string name="midi_shuffle_count">Lecture aléatoire : %1$d morceaux</string>
     <string name="midi_keyboards_refreshed">Claviers actualisés</string>
     <string name="midi_two_hands_practice">Entraînement deux mains</string>
     <string name="midi_favorite">Favori</string>

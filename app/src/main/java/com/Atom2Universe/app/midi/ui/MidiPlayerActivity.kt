@@ -402,10 +402,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
     private fun updatePlaybackBarUI(state: PlaybackStateCompat) {
         // Update play/pause button
         val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
-        playbackBarPlayPause.setImageResource(
-            if (isPlaying) android.R.drawable.ic_media_pause
-            else android.R.drawable.ic_media_play
-        )
+        playbackBarPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
 
         // Extract shuffle/repeat and position/duration from extras
         state.extras?.let { extras ->
@@ -458,13 +455,13 @@ class MidiPlayerActivity : AudioThemedActivity() {
     }
 
     private fun updatePlaybackBarRepeatButton() {
-        val tintColor = when (playbackBarRepeatMode) {
-            PlaybackQueueManager.RepeatMode.NONE -> colorInactive
-            else -> colorActive
-        }
-        playbackBarRepeat.imageTintList = ColorStateList.valueOf(tintColor)
-        // Visual indicator for ONE mode (slight rotation)
-        playbackBarRepeat.rotation = if (playbackBarRepeatMode == PlaybackQueueManager.RepeatMode.ONE) 15f else 0f
+        playbackBarRepeat.setImageResource(
+            if (playbackBarRepeatMode == PlaybackQueueManager.RepeatMode.ONE) R.drawable.ic_repeat_one
+            else R.drawable.ic_repeat
+        )
+        playbackBarRepeat.imageTintList = ColorStateList.valueOf(
+            if (playbackBarRepeatMode == PlaybackQueueManager.RepeatMode.NONE) colorInactive else colorActive
+        )
     }
 
     /**

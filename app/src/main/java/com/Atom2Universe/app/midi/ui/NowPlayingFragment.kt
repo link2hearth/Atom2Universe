@@ -2,15 +2,12 @@ package com.Atom2Universe.app.midi.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
@@ -32,7 +29,6 @@ import com.Atom2Universe.app.midi.visualizer.MidiChannelAdapter
 import com.Atom2Universe.app.midi.visualizer.MidiEventDispatcher
 import com.Atom2Universe.app.midi.visualizer.MidiNoteTracker
 import kotlinx.coroutines.launch
-import org.billthefarmer.mididriver.MidiDriver
 import java.util.Locale
 
 /**
@@ -41,12 +37,11 @@ import java.util.Locale
  * Affiche:
  * - Informations sur le morceau en cours
  * - Liste des pistes/canaux MIDI avec clavier individuel par canal
+ *   (les claviers lisent eux-mêmes MidiLiveState : aucune note ne transite par ce fragment)
  * - Toggle pour afficher/cacher chaque clavier
  * - Contrôles de lecture
  */
-class NowPlayingFragment : Fragment(),
-    MidiEventDispatcher.MidiEventListener,
-    MidiEventDispatcher.MidiAnalysisListener {
+class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener {
 
     private val viewModel: MidiPlayerViewModel by activityViewModels()
 
@@ -61,8 +56,7 @@ class NowPlayingFragment : Fragment(),
     private lateinit var btnNext: ImageButton
     private lateinit var btnShuffle: ImageButton
     private lateinit var btnRepeat: ImageButton
-    private lateinit var btnRefreshKeyboards: ImageButton
-    private lateinit var btnTwoHandsPractice: ImageButton
+    private lateinit var btnTwoHandsPractice: View
     private lateinit var channelsList: RecyclerView
     private lateinit var channelsEmpty: TextView
     private lateinit var channelsHeader: TextView
@@ -76,10 +70,6 @@ class NowPlayingFragment : Fragment(),
 
     // Adapter pour la liste des canaux avec claviers
     private lateinit var channelAdapter: MidiChannelAdapter
-
-    // Plage de notes détectée
-    private var currentNoteRangeMin = 48
-    private var currentNoteRangeMax = 84
 
     // Détection deux mains
     private var twoHandsInfo: MidiNoteTracker.TwoHandsInfo? = null
@@ -96,9 +86,6 @@ class NowPlayingFragment : Fragment(),
     // Position tracking
     private var currentDurationMs: Long = 0L
     private var isUserSeeking: Boolean = false
-
-    // Test MidiDriver
-    private var testMidiDriver: MidiDriver? = null
 
     // Repository pour charger les tracks par scope
     private lateinit var repository: MidiRepository
@@ -195,7 +182,6 @@ class NowPlayingFragment : Fragment(),
         btnNext = view.findViewById(R.id.btn_next)
         btnShuffle = view.findViewById(R.id.btn_shuffle)
         btnRepeat = view.findViewById(R.id.btn_repeat)
-        btnRefreshKeyboards = view.findViewById(R.id.btn_refresh_keyboards)
         btnTwoHandsPractice = view.findViewById(R.id.btn_two_hands_practice)
         channelsList = view.findViewById(R.id.channels_list)
         channelsEmpty = view.findViewById(R.id.channels_empty)
@@ -211,50 +197,43 @@ class NowPlayingFragment : Fragment(),
         setupFavoriteButton()
         setupSeekBar()
         setupChannelsList()
-        setupRefreshButton()
         setupTwoHandsPracticeButton()
         observePlaybackState()
         observeFavorites()
-
-        // Bouton de test MIDI (temporaire pour debug)
-        setupTestButton(view)
     }
 
     override fun onResume() {
         super.onResume()
-        // S'enregistrer pour recevoir les événements MIDI
-        MidiEventDispatcher.addMidiEventListener(this)
+        // Les moteurs ne suivent les notes que si un écran les affiche
+        MidiEventDispatcher.acquireVisualizer()
         MidiEventDispatcher.addAnalysisListener(this)
 
         // S'enregistrer pour les mises à jour du MediaController
         getMediaController()?.registerCallback(mediaControllerCallback)
 
-        // Si un tracker existe déjà (fichier déjà chargé), initialiser l'UI
-        MidiEventDispatcher.getTracker()?.let { tracker ->
-            currentNoteRangeMin = tracker.displayRangeMin
-            currentNoteRangeMax = tracker.displayRangeMax
-            channelAdapter.updateNoteRange(currentNoteRangeMin, currentNoteRangeMax)
+        // Mettre à jour l'UI avec l'état actuel du playback
+        val controller = getMediaController()
+        controller?.playbackState?.let { updatePlaybackUI(it) }
+
+        // Pendant notre absence, les moteurs n'ont pas alimenté les claviers : on leur demande
+        // de reconstruire les notes en cours à la position actuelle.
+        if (controller?.playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+            controller.sendCommand(MidiPlaybackService.COMMAND_SYNC_VISUALIZER, null, null)
         }
 
-        // Mettre à jour l'UI avec l'état actuel du playback
-        getMediaController()?.playbackState?.let { updatePlaybackUI(it) }
-
         // Mettre à jour l'UI avec les métadonnées actuelles (titre, artiste)
-        getMediaController()?.metadata?.let { updateTrackInfo(it) }
+        controller?.metadata?.let { updateTrackInfo(it) }
     }
 
     override fun onPause() {
         super.onPause()
-        // Se désenregistrer
-        MidiEventDispatcher.removeMidiEventListener(this)
+        MidiEventDispatcher.releaseVisualizer()
         MidiEventDispatcher.removeAnalysisListener(this)
         getMediaController()?.unregisterCallback(mediaControllerCallback)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        testMidiDriver?.stop()
-        testMidiDriver = null
 
         // BUG FIX 3.35: Supprimer les observers LiveData pour éviter les fuites mémoire
         viewModel.currentTrack.removeObservers(viewLifecycleOwner)
@@ -425,10 +404,7 @@ class NowPlayingFragment : Fragment(),
     private fun updatePlaybackUI(state: PlaybackStateCompat) {
         // Mettre à jour le bouton play/pause
         val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
-        btnPlayPause.setImageResource(
-            if (isPlaying) android.R.drawable.ic_media_pause
-            else android.R.drawable.ic_media_play
-        )
+        btnPlayPause.setImageResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play)
 
         // Mettre à jour le ViewModel pour synchroniser avec d'autres fragments
         viewModel.setPlaying(isPlaying)
@@ -501,23 +477,12 @@ class NowPlayingFragment : Fragment(),
      */
     private fun updateRepeatButton() {
         val (iconRes, tintColor) = when (repeatMode) {
-            PlaybackQueueManager.RepeatMode.NONE -> {
-                android.R.drawable.ic_menu_revert to colorInactive
-            }
-            PlaybackQueueManager.RepeatMode.ALL -> {
-                android.R.drawable.ic_menu_revert to colorActive
-            }
-            PlaybackQueueManager.RepeatMode.ONE -> {
-                // Utiliser la même icône mais avec une indication "1"
-                // Pour l'instant on utilise la même icône, on pourrait créer une icône custom
-                android.R.drawable.ic_menu_revert to colorActive
-            }
+            PlaybackQueueManager.RepeatMode.NONE -> R.drawable.ic_repeat to colorInactive
+            PlaybackQueueManager.RepeatMode.ALL -> R.drawable.ic_repeat to colorActive
+            PlaybackQueueManager.RepeatMode.ONE -> R.drawable.ic_repeat_one to colorActive
         }
         btnRepeat.setImageResource(iconRes)
         btnRepeat.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
-
-        // Ajouter un indicateur visuel pour le mode ONE (rotation légère)
-        btnRepeat.rotation = if (repeatMode == PlaybackQueueManager.RepeatMode.ONE) 15f else 0f
     }
 
     /**
@@ -586,7 +551,7 @@ class NowPlayingFragment : Fragment(),
 
                 Toast.makeText(
                     context,
-                    "Shuffle: ${sortedTracks.size} morceaux",
+                    getString(R.string.midi_shuffle_count, sortedTracks.size),
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -640,17 +605,7 @@ class NowPlayingFragment : Fragment(),
         }
 
         // Afficher l'état vide par défaut
-        updateChannelsVisibility(false)
-    }
-
-    /**
-     * Configure le bouton de rafraîchissement des claviers
-     * Efface les notes fantômes et re-synchronise l'affichage
-     */
-    private fun setupRefreshButton() {
-        btnRefreshKeyboards.setOnClickListener {
-            refreshKeyboards()
-        }
+        showChannels(false)
     }
 
     /**
@@ -681,40 +636,6 @@ class NowPlayingFragment : Fragment(),
         }
     }
 
-    /**
-     * Rafraîchit tous les claviers en les enroulant/déroulant.
-     * Cette méthode force le re-bind des ViewHolders via DiffUtil, ce qui:
-     * - Ré-enregistre les ViewHolders dans viewHolderMap
-     * - Réinitialise les PianoKeyboardViews
-     * - Corrige les problèmes d'affichage des notes
-     */
-    private fun refreshKeyboards() {
-        // 1. Éteindre toutes les notes visuelles sur tous les claviers
-        channelAdapter.allNotesOff()
-
-        // 2. Effacer les notes actives dans le tracker (pas l'analyse)
-        MidiEventDispatcher.clearTrackerActiveNotes()
-
-        // 3. Réinitialiser les volumes des canaux à 1.0
-        for (channel in 0 until 16) {
-            MidiAudioMixer.setChannelVolume(channel, 1.0f)
-        }
-
-        // 4. Enrouler puis dérouler tous les claviers pour forcer le re-bind
-        // C'est ce qui fait vraiment fonctionner le refresh
-        channelAdapter.collapseExpandAllKeyboards {
-            // 5. Une fois les claviers re-bindés, demander au service de resync
-            getMediaController()?.sendCommand(
-                MidiPlaybackService.COMMAND_SYNC_VISUALIZER,
-                null,
-                null
-            )
-        }
-
-        // 6. Afficher un toast de confirmation
-        Toast.makeText(context, R.string.midi_keyboards_refreshed, Toast.LENGTH_SHORT).show()
-    }
-
     private fun observePlaybackState() {
         // Observer current track (pour le titre et l'artiste)
         viewModel.currentTrack.observe(viewLifecycleOwner) { track ->
@@ -740,35 +661,11 @@ class NowPlayingFragment : Fragment(),
                 btnAddToPlaylist.visibility = View.GONE
                 currentTrackId = null
 
-                // Reset la visualisation
-                channelAdapter.allNotesOff()
-                updateChannelsVisibility(false)
+                showChannels(false)
             }
         }
 
         // Note: L'état play/pause est maintenant géré via MediaController callback (updatePlaybackUI)
-    }
-
-    // === MidiEventDispatcher.MidiEventListener Implementation ===
-
-    override fun onNoteOn(channel: Int, note: Int, velocity: Int) {
-        // Envoyer la note au clavier du canal concerné
-        channelAdapter.noteOn(channel, note, velocity)
-    }
-
-    override fun onNoteOff(channel: Int, note: Int) {
-        // Éteindre la note sur le clavier du canal concerné
-        channelAdapter.noteOff(channel, note)
-    }
-
-    override fun onProgramChange(channel: Int, program: Int) {
-        // Mettre à jour le nom de l'instrument affiché en temps réel
-        channelAdapter.onProgramChange(channel, program)
-    }
-
-    override fun onAllNotesOff() {
-        // Éteindre toutes les notes sur tous les claviers
-        channelAdapter.allNotesOff()
     }
 
     // === MidiEventDispatcher.MidiAnalysisListener Implementation ===
@@ -780,128 +677,47 @@ class NowPlayingFragment : Fragment(),
         displayMax: Int,
         tracks: List<MidiNoteTracker.TrackInfo>
     ) {
-        // Stocker la plage de notes
-        currentNoteRangeMin = displayMin
-        currentNoteRangeMax = displayMax
-
-        // Mettre à jour la liste des pistes avec claviers
-        if (tracks.isNotEmpty()) {
-            channelAdapter.setTracks(tracks, displayMin, displayMax)
-            updateChannelsVisibility(true)
-
-            // Après setTracks, les ViewHolders n'existent pas encore (le RecyclerView
-            // fait son layout au prochain frame). Les noteOn qui arrivent entre-temps
-            // ne trouvent rien dans viewHolderMap. On demande un re-sync du visualiseur
-            // après le layout pour que les notes en cours s'affichent sur les claviers.
-            channelsList.post {
-                getMediaController()?.sendCommand(
-                    MidiPlaybackService.COMMAND_SYNC_VISUALIZER,
-                    null,
-                    null
-                )
-            }
-
-            // Détecter si c'est un MIDI piano deux mains
-            twoHandsInfo = MidiNoteTracker.detectTwoHands(tracks)
-            btnTwoHandsPractice.visibility = if (twoHandsInfo?.isDetected == true) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-        } else {
-            updateChannelsVisibility(false)
+        if (tracks.isEmpty()) {
+            showChannels(false)
             twoHandsInfo = null
             btnTwoHandsPractice.visibility = View.GONE
+            return
         }
+
+        channelAdapter.setRows(tracks.map { it.toRow() })
+        showChannels(true)
+
+        // Détecter si c'est un MIDI piano deux mains
+        twoHandsInfo = MidiNoteTracker.detectTwoHands(tracks)
+        btnTwoHandsPractice.visibility = if (twoHandsInfo?.isDetected == true) View.VISIBLE else View.GONE
     }
 
     override fun onAnalysisReset() {
-        // Reset l'UI
-        channelAdapter.allNotesOff()
-        currentNoteRangeMin = 48
-        currentNoteRangeMax = 84
-
-        // Cacher la liste sans soumettre une liste vide à l'adapter.
-        // Soumettre emptyList() provoque une race condition avec AsyncListDiffer
-        // quand onAnalysisComplete() suit immédiatement (ex: skip de piste).
-        // L'adapter gardera les anciennes pistes invisiblement, puis recevra
-        // les nouvelles via onAnalysisComplete().
-        channelsList.visibility = View.GONE
-        channelsEmpty.visibility = View.VISIBLE
-
-        // Reset la détection deux mains
+        // Les claviers n'ont rien à effacer : ils lisent MidiLiveState, déjà remis à zéro.
+        // On cache seulement la liste jusqu'à l'analyse suivante (mutes et volumes sont remis à
+        // zéro par MidiEventDispatcher.prepareForNewFile, pas ici).
+        channelAdapter.clearChannelStates()
+        showChannels(false)
         twoHandsInfo = null
         btnTwoHandsPractice.visibility = View.GONE
-
-        // Reset les mutes lors du changement de fichier
-        MidiEventDispatcher.clearMutes()
-
-        // Reset les volumes des canaux lors du changement de fichier
-        for (channel in 0..15) {
-            MidiAudioMixer.setChannelVolume(channel, 1.0f)
-        }
     }
 
     // === Helper Methods ===
 
-    private fun updateChannelsVisibility(hasTracks: Boolean) {
-        if (hasTracks) {
-            channelsList.visibility = View.VISIBLE
-            channelsEmpty.visibility = View.GONE
-        } else {
-            channelsList.visibility = View.GONE
-            channelsEmpty.visibility = View.VISIBLE
-            channelAdapter.setTracks(emptyList(), currentNoteRangeMin, currentNoteRangeMax)
-        }
-    }
+    private fun MidiNoteTracker.TrackInfo.toRow() = MidiChannelAdapter.Row(
+        trackIndex = trackIndex,
+        channel = channel,
+        program = program,
+        trackName = trackName,
+        isDrumTrack = isDrumTrack,
+        noteRangeMin = channelNoteRangeMin,
+        noteRangeMax = channelNoteRangeMax,
+        programCount = programCount,
+        allPrograms = allPrograms
+    )
 
-    // === Test Button (Debug) ===
-
-    private fun setupTestButton(view: View) {
-        val btnTest = view.findViewById<Button>(R.id.btn_test_midi)
-        btnTest?.setOnClickListener {
-            testMidiDriverDirectly()
-        }
-    }
-
-    private fun testMidiDriverDirectly() {
-        Toast.makeText(context, "Testing MidiDriver...", Toast.LENGTH_SHORT).show()
-
-        try {
-            testMidiDriver = MidiDriver.getInstance()
-
-            if (testMidiDriver == null) {
-                Toast.makeText(context, "ERROR: MidiDriver is null", Toast.LENGTH_LONG).show()
-                return
-            }
-
-            testMidiDriver?.start()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                try {
-                    // Note On + simulation sur les claviers
-                    val noteOn = byteArrayOf(0x90.toByte(), 60.toByte(), 100.toByte())
-                    testMidiDriver?.write(noteOn)
-
-                    // Afficher la note sur le clavier du canal 0
-                    channelAdapter.noteOn(0, 60, 100)
-                    Toast.makeText(context, "Note MIDI (Do) envoyée!", Toast.LENGTH_SHORT).show()
-
-                    // Arrêter après 1 seconde
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val noteOff = byteArrayOf(0x80.toByte(), 60.toByte(), 0.toByte())
-                        testMidiDriver?.write(noteOff)
-                        channelAdapter.noteOff(0, 60)
-                        testMidiDriver?.stop()
-                    }, 1000)
-
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }, 200)
-
-        } catch (e: Exception) {
-            Toast.makeText(context, "Exception: ${e.message}", Toast.LENGTH_LONG).show()
-        }
+    private fun showChannels(hasTracks: Boolean) {
+        channelsList.visibility = if (hasTracks) View.VISIBLE else View.GONE
+        channelsEmpty.visibility = if (hasTracks) View.GONE else View.VISIBLE
     }
 }

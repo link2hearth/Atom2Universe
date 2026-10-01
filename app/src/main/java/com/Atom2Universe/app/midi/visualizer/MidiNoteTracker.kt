@@ -1,8 +1,6 @@
 package com.Atom2Universe.app.midi.visualizer
 
 import android.content.Context
-import android.util.SparseArray
-import android.util.SparseIntArray
 import com.Atom2Universe.app.R
 import com.leff.midi.MidiFile
 import com.leff.midi.event.NoteOn
@@ -122,11 +120,8 @@ class MidiNoteTracker(private val context: Context) {
     var displayRangeMax: Int = 72  // C5 par défaut
         private set
 
-    // Notes actives: channel -> Set<note>
-    private val activeNotes = SparseArray<MutableSet<Int>>()
-
-    // Vélocité des notes actives: (channel * 128 + note) -> velocity
-    private val noteVelocities = SparseIntArray()
+    // Les notes actives et les instruments courants vivent dans MidiLiveState :
+    // les claviers les lisent directement, le tracker se contente de les écrire.
 
     // Callbacks
     var onNoteOn: ((channel: Int, note: Int, velocity: Int) -> Unit)? = null
@@ -159,13 +154,6 @@ class MidiNoteTracker(private val context: Context) {
         val noteCount: Int,
         val isDrumChannel: Boolean = channel == DRUM_CHANNEL
     )
-
-    init {
-        // Initialiser les sets pour chaque canal
-        for (ch in 0 until TOTAL_CHANNELS) {
-            activeNotes.put(ch, mutableSetOf())
-        }
-    }
 
     /**
      * Analyse un fichier MIDI pour extraire les informations par CANAL
@@ -369,43 +357,25 @@ class MidiNoteTracker(private val context: Context) {
     }
 
     private fun handleNoteOn(channel: Int, note: Int, velocity: Int) {
-        activeNotes.get(channel)?.add(note)
-        noteVelocities.put(channel * 128 + note, velocity)
+        MidiLiveState.noteOn(channel, note, velocity)
         onNoteOn?.invoke(channel, note, velocity)
     }
 
     private fun handleNoteOff(channel: Int, note: Int) {
-        activeNotes.get(channel)?.remove(note)
-        noteVelocities.delete(channel * 128 + note)
+        MidiLiveState.noteOff(channel, note)
         onNoteOff?.invoke(channel, note)
     }
 
     private fun handleProgramChange(channel: Int, program: Int) {
+        MidiLiveState.setProgram(channel, program)
         onProgramChange?.invoke(channel, program)
-    }
-
-    /**
-     * Retourne les notes actuellement actives pour un canal
-     */
-    fun getActiveNotes(channel: Int): Set<Int> {
-        return activeNotes.get(channel)?.toSet() ?: emptySet()
-    }
-
-    /**
-     * Retourne la vélocité d'une note active
-     */
-    fun getNoteVelocity(channel: Int, note: Int): Int {
-        return noteVelocities.get(channel * 128 + note, 0)
     }
 
     /**
      * Réinitialise l'état du tracker
      */
     fun reset() {
-        for (ch in 0 until TOTAL_CHANNELS) {
-            activeNotes.get(ch)?.clear()
-        }
-        noteVelocities.clear()
+        MidiLiveState.reset()
 
         noteRangeMin = MIDI_NOTE_MAX
         noteRangeMax = MIDI_NOTE_MIN
@@ -418,10 +388,7 @@ class MidiNoteTracker(private val context: Context) {
      * Utilisé pour le refresh des claviers.
      */
     fun clearActiveNotes() {
-        for (ch in 0 until TOTAL_CHANNELS) {
-            activeNotes.get(ch)?.clear()
-        }
-        noteVelocities.clear()
+        MidiLiveState.clearNotes()
     }
 
     /**

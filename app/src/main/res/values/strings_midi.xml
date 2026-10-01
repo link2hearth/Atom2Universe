@@ -29,6 +29,8 @@
     <string name="midi_toggle_keyboard">Show/hide keyboard</string>
     <string name="midi_practice_mode">Practice mode</string>
     <string name="midi_refresh_keyboards">Refresh keyboards</string>
+    <string name="midi_channel_volume">Track volume</string>
+    <string name="midi_shuffle_count">Shuffle: %1$d tracks</string>
     <string name="midi_keyboards_refreshed">Keyboards refreshed</string>
     <string name="midi_two_hands_practice">Two hands practice</string>
     <string name="midi_favorite">Favorite</string>

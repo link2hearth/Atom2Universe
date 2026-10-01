@@ -17,6 +17,9 @@ object MidiEventDispatcher {
     private val analysisListeners = CopyOnWriteArrayList<MidiAnalysisListener>()
     private val channelControlListeners = CopyOnWriteArrayList<ChannelControlListener>()
 
+    // Nombre d'écrans qui affichent les claviers (0 = inutile de suivre les notes)
+    private val visualizerWatchers = java.util.concurrent.atomic.AtomicInteger(0)
+
     // Canaux mutés (pas de son mais visualisation OK)
     private val mutedChannels = mutableSetOf<Int>()
 
@@ -168,7 +171,21 @@ object MidiEventDispatcher {
      * Indique si des listeners MIDI visuels sont actifs.
      * Utilisé par le thread audio pour éviter les allocations inutiles en arrière-plan.
      */
-    fun hasMidiEventListeners(): Boolean = midiEventListeners.isNotEmpty()
+    fun hasMidiEventListeners(): Boolean =
+        visualizerWatchers.get() > 0 || midiEventListeners.isNotEmpty()
+
+    /**
+     * Un écran affiche les claviers : les moteurs doivent alimenter [MidiLiveState].
+     * À appeler dans onResume, avec [releaseVisualizer] dans onPause. Au retour, l'état
+     * a pu rater des notes : demander une resynchronisation (COMMAND_SYNC_VISUALIZER).
+     */
+    fun acquireVisualizer() {
+        visualizerWatchers.incrementAndGet()
+    }
+
+    fun releaseVisualizer() {
+        if (visualizerWatchers.decrementAndGet() < 0) visualizerWatchers.set(0)
+    }
 
     /**
      * Traite des bytes MIDI bruts et dispatche vers les listeners
@@ -183,6 +200,7 @@ object MidiEventDispatcher {
      * Utilisé lors de la pause pour effacer les notes du piano virtuel
      */
     fun dispatchAllNotesOff() {
+        MidiLiveState.clearNotes()
         mainHandler.post {
             midiEventListeners.forEach { it.onAllNotesOff() }
         }
@@ -194,6 +212,7 @@ object MidiEventDispatcher {
      */
     fun reset() {
         noteTracker?.reset()
+        MidiLiveState.reset()
 
         // Notifier tous les listeners
         mainHandler.post {
@@ -208,14 +227,18 @@ object MidiEventDispatcher {
      * Appelé AVANT de charger un nouveau fichier
      */
     fun prepareForNewFile() {
-        // Reset le tracker
+        // Reset le tracker et l'état lu par les claviers
         noteTracker?.reset()
+        MidiLiveState.reset()
 
         // Effacer le cache d'analyse (nouveau fichier = nouvelle analyse)
         cachedAnalysisResult = null
 
-        // Réinitialiser les canaux mutés (nouveau fichier = pas de mutes)
+        // Réinitialiser les canaux mutés et les volumes (nouveau fichier = réglages neufs)
         mutedChannels.clear()
+        for (channel in 0 until MidiLiveState.CHANNELS) {
+            com.Atom2Universe.app.midi.service.MidiAudioMixer.setChannelVolume(channel, 1.0f)
+        }
 
         // Notifier tous les listeners de reset complet
         mainHandler.post {
@@ -239,8 +262,8 @@ object MidiEventDispatcher {
      * Appelé AVANT de recharger un SoundFont
      */
     fun prepareForSoundFontChange() {
-        // Reset le tracker (éteint les notes actives)
-        noteTracker?.reset()
+        // Éteint les notes actives mais garde les instruments (même fichier)
+        MidiLiveState.clearNotes()
 
         // NE PAS effacer le cache d'analyse (même fichier MIDI)
         // cachedAnalysisResult reste intact
@@ -293,26 +316,14 @@ object MidiEventDispatcher {
     }
 
     /**
-     * Ré-envoie les notes actuellement actives à tous les listeners
-     * Utile après un refresh des claviers pour afficher les notes en cours de lecture
+     * Ré-envoie les notes actuellement actives aux écouteurs d'événements.
+     * Les claviers n'en ont plus besoin (ils lisent MidiLiveState), mais un écouteur
+     * qui veut un état complet après coup peut toujours le demander.
      */
     fun resendActiveNotes() {
-        val tracker = noteTracker
-        if (tracker == null) {
-            return
-        }
-
-        var totalNotes = 0
-
-        // Pour chaque canal, récupérer les notes actives et les envoyer
-        for (channel in 0 until MidiNoteTracker.TOTAL_CHANNELS) {
-            val activeNotes = tracker.getActiveNotes(channel)
-            for (note in activeNotes) {
-                val velocity = tracker.getNoteVelocity(channel, note)
-                if (velocity > 0) {
-                    dispatchNoteOn(channel, note, velocity)
-                    totalNotes++
-                }
+        for (channel in 0 until MidiLiveState.CHANNELS) {
+            for (note in MidiLiveState.activeNotes(channel)) {
+                dispatchNoteOn(channel, note, MidiLiveState.velocity(channel, note))
             }
         }
     }
