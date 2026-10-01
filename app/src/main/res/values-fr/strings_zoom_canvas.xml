@@ -61,4 +61,15 @@
     <string name="cv_grid">Grille</string>
     <string name="cv_export_view">Enregistrer la vue en image</string>
     <string name="cv_new_title">Nouveau canvas</string>
+    <!-- La couche de pixels du « Canvas » -->
+    <string name="cv_tool_pixels">Couche de pixels</string>
+    <string name="cv_tool_pixel_pen">Pinceau pixel</string>
+    <string name="cv_tool_pixel_eraser">Gomme pixel</string>
+    <string name="cv_pixels_behind">Pixels derrière</string>
+    <string name="cv_pixels_front">Pixels devant</string>
+    <string name="cv_pixels_to_behind">Mettre les pixels derrière le dessin</string>
+    <string name="cv_pixels_to_front">Mettre les pixels devant le dessin</string>
+    <string name="cv_pixel_grid">Grille de pixels</string>
+    <string name="cv_pixel_snap">Caler le zoom sur les pixels</string>
+    <string name="cv_project_info">%1$s · %2$s</string>
 </resources>

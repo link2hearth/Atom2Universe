@@ -12,9 +12,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.graphics.Typeface
 import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.PointSink
+import com.Atom2Universe.app.pixelart.core.Raster
 import com.Atom2Universe.app.pixelart.core.ShapeKind
 import com.Atom2Universe.app.zoomcanvas.core.BoxItem
 import com.Atom2Universe.app.zoomcanvas.core.Layer
+import com.Atom2Universe.app.zoomcanvas.core.PixelLayer
 import com.Atom2Universe.app.zoomcanvas.core.RenderList
 import com.Atom2Universe.app.zoomcanvas.core.TextItem
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
@@ -24,6 +27,7 @@ import kotlin.math.hypot
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /**
  * La toile du canvas infini. Un doigt dessine, gomme, trace une forme, pose un texte, manipule un
@@ -46,7 +50,11 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
      * coups de gomme ressortent en couleur, et on les sélectionne, déplace, redimensionne,
      * monte / descend dans la pile ou supprime comme n'importe quel élément.
      */
-    enum class Tool { PEN, BRUSH, MARKER, ERASER, SHAPE, TEXT, SELECT, HAND, MOVE_LAYER, ERASER_EDIT }
+    enum class Tool {
+        PEN, BRUSH, MARKER, ERASER, SHAPE, TEXT, SELECT, HAND, MOVE_LAYER, ERASER_EDIT,
+        /** Les outils de la couche de pixels (le « Canvas ») : pinceau, gomme, formes, pot de peinture, pipette. */
+        PIXEL_PEN, PIXEL_ERASER, PIXEL_SHAPE, PIXEL_FILL, PIXEL_PICK,
+    }
 
     /** Noms volontairement distincts de ceux d'Activity (onContentChanged y est déjà pris). */
     interface Listener {
@@ -56,10 +64,12 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         fun onSelectionChanged()
         /** Un appui avec l'outil texte : sur le texte [id] pour le modifier, ou dans le vide (null) pour en poser un à cet écart d'écran. */
         fun onTextRequested(id: Long?, sx: Double, sy: Double)
+        /** La pipette a pris la couleur d'une case : à mettre en couleur principale. */
+        fun onColorPicked(color: Int) {}
     }
 
     var scene: ZoomScene? = null
-        set(value) { field = value; selectedItem = null; caches.clear(); cachePolicy.clear(); invalidate() }
+        set(value) { field = value; selectedItem = null; caches.clear(); cachePolicy.clear(); pixelPainter.clear(); invalidate() }
     var listener: Listener? = null
     var tool = Tool.PEN
         set(value) {
@@ -86,6 +96,17 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     /** Zoom bloqué : deux doigts ne font plus que déplacer la vue, la molette ne fait rien. */
     var zoomLocked = false
     var paperColor = 0xFFFAF8F3.toInt()
+    /**
+     * L'éditeur est en mode pixels : la grille des cases se montre (quand elles sont assez grandes) et les
+     * formes en cours se prévisualisent. Les outils de pixels eux-mêmes se choisissent par [tool].
+     */
+    var pixelMode = false
+        set(value) { field = value; invalidate() }
+    var showPixelGrid = true
+        set(value) { field = value; invalidate() }
+    /** Pinceau rond (sinon carré) et « pixel parfait » : retire les coins d'un trait d'une case. */
+    var pixelRound = true
+    var pixelPerfect = true
     /** Une grille discrète sous le dessin, qui suit le zoom (le « Canvas » à une seule couche). */
     var showGrid = false
         set(value) { field = value; invalidate() }
@@ -111,6 +132,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val painter = RunPainter()
     /** Quelles couches se tracent depuis un cache raster, et les caches eux-mêmes. */
     private val cachePolicy = ZoomRenderer.CachePolicy()
+    private val pixelPainter = PixelPainter()
     private val caches = LayerCacheManager(object : LayerCache.Host {
         override val imageProvider get() = this@ZoomCanvasView.imageProvider
         override val typefaceProvider get() = this@ZoomCanvasView.typefaceProvider
@@ -146,12 +168,17 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         val s = scene ?: return
         if (showGrid) drawGrid(s, canvas)
         draw(s, canvas, width.toDouble(), height.toDouble(), tool == Tool.ERASER_EDIT)
+        if (pixelMode) {
+            if (showPixelGrid && s.zoom >= PIXEL_GRID_MIN_ZOOM) drawGrid(s, canvas, 1.0)
+            drawPixelPreview(s, canvas)
+        }
         if (mode == Mode.ERASE) canvas.drawCircle(lastX, lastY, strokeSize / 2, cursorPaint)
         drawSelection(s, canvas)
     }
 
     private fun draw(s: ZoomScene, canvas: Canvas, w: Double, h: Double, ghost: Boolean = false) {
         val now = SystemClock.uptimeMillis()
+        if (!s.pixelsAbove) pixelPainter.draw(canvas, s.pixels, s.cx, s.cy, s.zoom, w, h)
         ZoomRenderer.build(s, w, h, list, ghost, cachePolicy)
         for (g in 0 until list.groupCount) {
             val from = list.groupStart[g]
@@ -170,6 +197,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             painter.drawRuns(canvas, list, from, to)
             canvas.restoreToCount(saved)
         }
+        if (s.pixelsAbove) pixelPainter.draw(canvas, s.pixels, s.cx, s.cy, s.zoom, w, h)
         caches.trim(now)
     }
 
@@ -183,12 +211,12 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
      * garde des cases de 48 à 120 pixels à l'écran, quel que soit le zoom. Les lignes sont placées
      * depuis la caméra (jamais depuis l'origine) : exact même très loin du centre.
      */
-    private fun drawGrid(s: ZoomScene, canvas: Canvas) {
+    private fun drawGrid(s: ZoomScene, canvas: Canvas, forcedStep: Double = 0.0) {
         val raw = 48.0 / s.zoom
         val e = Math.floor(Math.log10(raw))
         val base = Math.pow(10.0, e)
         val m = raw / base
-        val step = base * (if (m <= 1.0) 1.0 else if (m <= 2.0) 2.0 else if (m <= 5.0) 5.0 else 10.0)
+        val step = if (forcedStep > 0.0) forcedStep else base * (if (m <= 1.0) 1.0 else if (m <= 2.0) 2.0 else if (m <= 5.0) 5.0 else 10.0)
         val w = width.toDouble()
         val h = height.toDouble()
         val left = s.cx - w / 2 / s.zoom
@@ -231,6 +259,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     override fun onDetachedFromWindow() {
         caches.clear()
+        pixelPainter.clear()
         super.onDetachedFromWindow()
     }
 
@@ -280,7 +309,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     // ---- Gestes --------------------------------------------------------------------------
 
-    private enum class Mode { NONE, DRAW, ERASE, SHAPE, TEXT_TAP, PAN, MOVE_LAYER, ITEM_MOVE, ITEM_RESIZE, GESTURE, IGNORE }
+    private enum class Mode { NONE, DRAW, ERASE, SHAPE, TEXT_TAP, PAN, MOVE_LAYER, ITEM_MOVE, ITEM_RESIZE, GESTURE, IGNORE, PIXEL_DRAW, PIXEL_SHAPE, PIXEL_TAP }
 
     private var mode = Mode.NONE
     private var lastX = 0f
@@ -321,6 +350,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     Tool.HAND -> Mode.PAN
                     Tool.MOVE_LAYER -> if (s.beginMoveLayer()) Mode.MOVE_LAYER else { listener?.onNothingToMove(); Mode.IGNORE }
                     Tool.SELECT, Tool.ERASER_EDIT -> startItemGesture(s, e.x, e.y)
+                    Tool.PIXEL_PEN, Tool.PIXEL_ERASER -> { startPixelStroke(s, e.x, e.y); Mode.PIXEL_DRAW }
+                    Tool.PIXEL_SHAPE -> { startPixelShape(s, e.x, e.y); Mode.PIXEL_SHAPE }
+                    Tool.PIXEL_FILL, Tool.PIXEL_PICK -> { downX = e.x; downY = e.y; Mode.PIXEL_TAP }
                 }
                 invalidate()
             }
@@ -329,6 +361,8 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     // Un deuxième doigt tout de suite : c'était un pincement, pas un trait.
                     Mode.DRAW, Mode.ERASE -> if (e.eventTime - downTime < 350) s.cancelStroke() else finishStroke(s)
                     Mode.SHAPE -> if (e.eventTime - downTime < 350) s.cancelShape() else finishShape(s)
+                    Mode.PIXEL_DRAW -> if (e.eventTime - downTime < 350) s.cancelPixelEdit() else finishPixelStroke(s)
+                    Mode.PIXEL_SHAPE -> if (e.eventTime - downTime < 350) clearPixelPreview() else finishPixelShape(s)
                     Mode.MOVE_LAYER -> finishMove(s)
                     Mode.ITEM_MOVE, Mode.ITEM_RESIZE -> finishItem(s)
                     else -> Unit
@@ -350,6 +384,17 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     lastX = e.x; lastY = e.y
                     invalidate()
                 }
+                Mode.PIXEL_DRAW -> {
+                    for (h in 0 until e.historySize) movePixelTo(s, s.cellX(ox(e.getHistoricalX(h))), s.cellY(oy(e.getHistoricalY(h))))
+                    movePixelTo(s, s.cellX(ox(e.x)), s.cellY(oy(e.y)))
+                    invalidate()
+                }
+                Mode.PIXEL_SHAPE -> {
+                    pixelCurX = s.cellX(ox(e.x)); pixelCurY = s.cellY(oy(e.y))
+                    buildPixelPreview()
+                    invalidate()
+                }
+                Mode.PIXEL_TAP -> if (hypot(e.x - downX, e.y - downY) > tapSlop) mode = Mode.IGNORE
                 // Un appui qui glisse n'est plus un appui : le texte ne se pose pas.
                 Mode.TEXT_TAP -> if (hypot(e.x - lastX, e.y - lastY) > tapSlop) mode = Mode.IGNORE
                 Mode.PAN -> {
@@ -387,6 +432,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                 when (mode) {
                     Mode.DRAW, Mode.ERASE -> finishStroke(s)
                     Mode.SHAPE -> finishShape(s)
+                    Mode.PIXEL_DRAW -> finishPixelStroke(s)
+                    Mode.PIXEL_SHAPE -> finishPixelShape(s)
+                    Mode.PIXEL_TAP -> if (e.eventTime - downTime < TAP_MS) pixelTap(s, e.x, e.y)
                     Mode.TEXT_TAP -> if (e.eventTime - downTime < TAP_MS) {
                         val hit = s.boxAt(ox(e.x), oy(e.y), textOnly = true)
                         listener?.onTextRequested((hit as? TextItem)?.id, ox(e.x), oy(e.y))
@@ -410,6 +458,8 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                 when (mode) {
                     Mode.DRAW, Mode.ERASE -> s.cancelStroke()
                     Mode.SHAPE -> s.cancelShape()
+                    Mode.PIXEL_DRAW -> s.cancelPixelEdit()
+                    Mode.PIXEL_SHAPE -> clearPixelPreview()
                     Mode.MOVE_LAYER -> finishMove(s)
                     Mode.ITEM_MOVE, Mode.ITEM_RESIZE -> finishItem(s)
                     else -> Unit
@@ -419,6 +469,194 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             }
         }
         return true
+    }
+
+    // ---- Pixels ---------------------------------------------------------------------------
+
+    private var pixelLastX = 0
+    private var pixelLastY = 0
+    /** Les cases du trait en cours, dans l'ordre : le « pixel parfait » y cherche les coins. */
+    private var pixelPath = LongArray(64)
+    private var pixelPathN = 0
+    private var pixelAnchorX = 0
+    private var pixelAnchorY = 0
+    private var pixelCurX = 0
+    private var pixelCurY = 0
+
+    /** Cases d'un aperçu de forme (paires x, y) : le plein et le contour. */
+    private class CellList {
+        var a = IntArray(256)
+        var n = 0
+        val count: Int get() = n / 2
+        fun add(x: Int, y: Int) {
+            if (n + 2 > a.size) a = a.copyOf(a.size * 2)
+            a[n++] = x
+            a[n++] = y
+        }
+        fun clear() { n = 0 }
+    }
+
+    private val previewFill = CellList()
+    private val previewLine = CellList()
+    private val previewPaint = Paint().apply { isAntiAlias = false }
+
+    private fun pixelSize() = strokeSize.toInt().coerceAtLeast(1)
+
+    private fun startPixelStroke(s: ZoomScene, x: Float, y: Float) {
+        s.beginPixelEdit()
+        pixelPathN = 0
+        val cx = s.cellX(ox(x))
+        val cy = s.cellY(oy(y))
+        pixelLastX = cx
+        pixelLastY = cy
+        stampPixel(s, cx, cy)
+        pathAdd(s, cx, cy)
+    }
+
+    /** Pose le pinceau (ou la gomme) sur la case ([x], [y]). */
+    private fun stampPixel(s: ZoomScene, x: Int, y: Int) {
+        val c = if (tool == Tool.PIXEL_ERASER) 0 else color
+        Raster.stamp(x, y, pixelSize(), pixelRound) { px, py -> s.paintCell(px, py, c) }
+    }
+
+    private fun movePixelTo(s: ZoomScene, cx: Int, cy: Int) {
+        if (cx == pixelLastX && cy == pixelLastY) return
+        val fx = pixelLastX
+        val fy = pixelLastY
+        Raster.line(fx, fy, cx, cy) { x, y ->
+            if (x != fx || y != fy) {
+                stampPixel(s, x, y)
+                pathAdd(s, x, y)
+            }
+        }
+        pixelLastX = cx
+        pixelLastY = cy
+    }
+
+    /**
+     * Note une case du trait. « Pixel parfait » (pinceau d'une case) : si les trois dernières forment un coin en L (la
+     * première et la troisième en diagonale), la case du coin est de trop : on la retire.
+     */
+    private fun pathAdd(s: ZoomScene, x: Int, y: Int) {
+        if (pixelPathN == pixelPath.size) pixelPath = pixelPath.copyOf(pixelPath.size * 2)
+        pixelPath[pixelPathN++] = PixelLayer.cellKey(x, y)
+        if (!pixelPerfect || tool != Tool.PIXEL_PEN || pixelSize() != 1 || pixelPathN < 3) return
+        val n = pixelPathN
+        val ax = PixelLayer.cellX(pixelPath[n - 3])
+        val ay = PixelLayer.cellY(pixelPath[n - 3])
+        val bx = PixelLayer.cellX(pixelPath[n - 2])
+        val by = PixelLayer.cellY(pixelPath[n - 2])
+        val corner = ax != x && ay != y && Math.abs(ax - x) <= 1 && Math.abs(ay - y) <= 1 &&
+            (ax == bx || ay == by) && (bx == x || by == y)
+        if (!corner) return
+        // La case du coin ne sert qu'une fois dans le trait : sinon on la garde.
+        var uses = 0
+        for (i in 0 until n) if (pixelPath[i] == pixelPath[n - 2]) uses++
+        if (uses != 1) return
+        s.unpaintCell(bx, by)
+        pixelPath[n - 2] = pixelPath[n - 1]
+        pixelPathN = n - 1
+    }
+
+    private fun finishPixelStroke(s: ZoomScene) {
+        if (s.endPixelEdit()) listener?.onDrawingChanged()
+    }
+
+    private fun startPixelShape(s: ZoomScene, x: Float, y: Float) {
+        pixelAnchorX = s.cellX(ox(x))
+        pixelAnchorY = s.cellY(oy(y))
+        pixelCurX = pixelAnchorX
+        pixelCurY = pixelAnchorY
+        buildPixelPreview()
+    }
+
+    /** La couleur du plein d'une forme : la principale pour « plein », la secondaire pour « les deux ». */
+    private fun shapeFillColor() = if (shapeFill == ShapeFill.FILL) color else fillColor
+
+    /** Envoie les cases de la forme en cours : le plein à [plotFill], le contour (épaissi par le pinceau) à [plotLine]. */
+    private fun shapeCells(plotFill: PointSink, plotLine: PointSink) {
+        val ax = pixelAnchorX
+        val ay = pixelAnchorY
+        var bx = pixelCurX
+        var by = pixelCurY
+        val directed = shapeKind == ShapeKind.LINE || shapeKind == ShapeKind.ARROW
+        if (shapeSquare && !directed) {
+            val dx = bx - ax
+            val dy = by - ay
+            val m = Math.max(Math.abs(dx), Math.abs(dy))
+            bx = ax + if (dx < 0) -m else m
+            by = ay + if (dy < 0) -m else m
+        }
+        val size = pixelSize()
+        val line = PointSink { x, y -> Raster.stamp(x, y, size, pixelRound, plotLine) }
+        when {
+            shapeKind == ShapeKind.LINE || shapeFill == ShapeFill.OUTLINE -> Raster.shape(shapeKind, ax, ay, bx, by, false, line)
+            shapeFill == ShapeFill.FILL -> Raster.shape(shapeKind, ax, ay, bx, by, true, plotFill)
+            else -> {
+                Raster.shape(shapeKind, ax, ay, bx, by, true, plotFill)
+                Raster.shape(shapeKind, ax, ay, bx, by, false, line)
+            }
+        }
+    }
+
+    private fun buildPixelPreview() {
+        previewFill.clear()
+        previewLine.clear()
+        shapeCells(
+            { x, y -> if (previewFill.count < PREVIEW_MAX) previewFill.add(x, y) },
+            { x, y -> if (previewLine.count < PREVIEW_MAX) previewLine.add(x, y) },
+        )
+    }
+
+    private fun clearPixelPreview() {
+        previewFill.clear()
+        previewLine.clear()
+    }
+
+    private fun finishPixelShape(s: ZoomScene) {
+        clearPixelPreview()
+        s.beginPixelEdit()
+        val inside = shapeFillColor()
+        shapeCells({ x, y -> s.paintCell(x, y, inside) }, { x, y -> s.paintCell(x, y, color) })
+        if (s.endPixelEdit()) listener?.onDrawingChanged()
+    }
+
+    /** L'aperçu de la forme en cours, case par case. */
+    private fun drawPixelPreview(s: ZoomScene, canvas: Canvas) {
+        if (previewFill.count == 0 && previewLine.count == 0) return
+        val w = width.toDouble()
+        val h = height.toDouble()
+        fun paintCells(list: CellList, c: Int) {
+            previewPaint.color = c
+            var i = 0
+            while (i < list.n) {
+                val l = ((list.a[i] - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
+                val t = ((list.a[i + 1] - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
+                val r = ((list.a[i] + 1 - s.cx) * s.zoom + w / 2).roundToInt().toFloat()
+                val b = ((list.a[i + 1] + 1 - s.cy) * s.zoom + h / 2).roundToInt().toFloat()
+                if (r >= 0 && b >= 0 && l <= w && t <= h) canvas.drawRect(l, t, r, b, previewPaint)
+                i += 2
+            }
+        }
+        paintCells(previewFill, shapeFillColor())
+        paintCells(previewLine, color)
+    }
+
+    /** Un appui avec le pot de peinture ou la pipette. */
+    private fun pixelTap(s: ZoomScene, x: Float, y: Float) {
+        val cx = s.cellX(ox(x))
+        val cy = s.cellY(oy(y))
+        if (tool == Tool.PIXEL_PICK) {
+            val c = s.pixels.get(cx, cy)
+            if (c ushr 24 != 0) listener?.onColorPicked(c)
+            return
+        }
+        // Dans le vide, le remplissage n'a pas de bord : il s'arrête à l'écran (et à une fenêtre qui reste raisonnable).
+        val x0 = maxOf(s.cellX(ox(0f)), cx - FILL_REACH)
+        val x1 = minOf(s.cellX(ox(width.toFloat())), cx + FILL_REACH)
+        val y0 = maxOf(s.cellY(oy(0f)), cy - FILL_REACH)
+        val y1 = minOf(s.cellY(oy(height.toFloat())), cy + FILL_REACH)
+        if (s.fillPixels(cx, cy, color, x0, y0, x1, y1)) listener?.onDrawingChanged()
     }
 
     /**
@@ -486,6 +724,12 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     private companion object {
         /** Un appui plus long que ça n'est plus un appui. */
         const val TAP_MS = 500L
+        /** La grille des cases se montre quand une case fait au moins 8 pixels d'écran. */
+        const val PIXEL_GRID_MIN_ZOOM = 8.0
+        /** Cases d'un aperçu de forme au plus (au-delà, l'aperçu est tronqué ; la forme, elle, est posée en entier). */
+        const val PREVIEW_MAX = 60_000
+        /** Le pot de peinture cherche à au plus ces cases de l'appui, de chaque côté. */
+        const val FILL_REACH = 900
     }
 
     private fun cameraMoved() {

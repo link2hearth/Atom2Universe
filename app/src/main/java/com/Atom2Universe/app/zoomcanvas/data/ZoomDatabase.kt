@@ -42,6 +42,8 @@ class ZcProject(
     val nextId: Long,
     /** [KIND_LAYERS] : le canvas infini à couches ; [KIND_SINGLE] : le « Canvas », une seule couche. */
     @ColumnInfo(defaultValue = "0") val kind: Int = KIND_LAYERS,
+    /** La couche de pixels (le « Canvas ») est tracée devant le dessin (1) ou derrière (0). */
+    @ColumnInfo(defaultValue = "0") val pixelsAbove: Int = 0,
 ) {
     companion object {
         const val KIND_LAYERS = 0
@@ -94,6 +96,22 @@ class ZcItem(
     val data: ByteArray,
 )
 
+/**
+ * Une tuile de la couche de pixels du « Canvas » : 64 × 64 cases, compressées ([data] : voir
+ * [com.Atom2Universe.app.zoomcanvas.core.PixelLayer.encode]). Seules les tuiles qui ont de la couleur existent.
+ */
+@Entity(
+    tableName = "zc_pixel_tile",
+    primaryKeys = ["pid", "tx", "ty"],
+    foreignKeys = [ForeignKey(entity = ZcProject::class, parentColumns = ["pid"], childColumns = ["pid"], onDelete = ForeignKey.CASCADE)],
+)
+class ZcPixelTile(
+    val pid: Long,
+    val tx: Int,
+    val ty: Int,
+    val data: ByteArray,
+)
+
 /** Ce que la galerie affiche d'un projet, lu sans charger un seul élément. */
 class ZcSummary(
     val uuid: String,
@@ -115,7 +133,8 @@ abstract class ZoomDao {
         SELECT p.uuid AS uuid, p.name AS name, p.modified AS modified, p.ratio AS ratio, p.kind AS kind,
                (SELECT COUNT(*) FROM zc_layer l WHERE l.pid = p.pid AND l.count > l.erasers) AS layerCount,
                (SELECT COALESCE(SUM(l.count - l.erasers), 0) FROM zc_layer l WHERE l.pid = p.pid) AS itemCount,
-               (SELECT COALESCE(SUM(LENGTH(i.data)), 0) FROM zc_item i WHERE i.pid = p.pid) AS dataBytes
+               (SELECT COALESCE(SUM(LENGTH(i.data)), 0) FROM zc_item i WHERE i.pid = p.pid)
+                 + (SELECT COALESCE(SUM(LENGTH(t.data)), 0) FROM zc_pixel_tile t WHERE t.pid = p.pid) AS dataBytes
         FROM zc_project p WHERE p.kind = :kind ORDER BY p.modified DESC
         """
     )
@@ -167,6 +186,23 @@ abstract class ZoomDao {
     @Query("SELECT * FROM zc_item WHERE pid = :pid AND depth = :depth AND itemId > :after ORDER BY itemId LIMIT :limit")
     abstract fun itemsPage(pid: Long, depth: Long, after: Long, limit: Int): List<ZcItem>
 
+    // ---- Couche de pixels ----
+
+    @Query("SELECT * FROM zc_pixel_tile WHERE pid = :pid")
+    abstract fun pixelTiles(pid: Long): List<ZcPixelTile>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun putPixelTiles(rows: List<ZcPixelTile>)
+
+    @Query("DELETE FROM zc_pixel_tile WHERE pid = :pid AND tx = :tx AND ty = :ty")
+    abstract fun deletePixelTile(pid: Long, tx: Int, ty: Int)
+
+    @Query("UPDATE zc_project SET pixelsAbove = :above WHERE pid = :pid")
+    abstract fun savePixelsAbove(pid: Long, above: Int)
+
+    @Query("INSERT INTO zc_pixel_tile (pid, tx, ty, data) SELECT :to, tx, ty, data FROM zc_pixel_tile WHERE pid = :from")
+    abstract fun copyPixelTiles(from: Long, to: Long)
+
     // ---- Copie d'un projet ----
 
     @Query("INSERT INTO zc_layer (pid, depth, ax, ay, count, erasers, minX, minY, maxX, maxY) SELECT :to, depth, ax, ay, count, erasers, minX, minY, maxX, maxY FROM zc_layer WHERE pid = :from")
@@ -176,7 +212,7 @@ abstract class ZoomDao {
     abstract fun copyItems(from: Long, to: Long)
 }
 
-@Database(entities = [ZcProject::class, ZcLayer::class, ZcItem::class], version = 2, exportSchema = false)
+@Database(entities = [ZcProject::class, ZcLayer::class, ZcItem::class, ZcPixelTile::class], version = 3, exportSchema = false)
 abstract class ZoomDatabase : RoomDatabase() {
     abstract fun dao(): ZoomDao
 
@@ -190,13 +226,27 @@ abstract class ZoomDatabase : RoomDatabase() {
             }
         }
 
+        /** Version 3 : la couche de pixels du « Canvas » (ses tuiles, et son ordre par rapport au dessin). */
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE zc_project ADD COLUMN pixelsAbove INTEGER NOT NULL DEFAULT 0")
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `zc_pixel_tile` (`pid` INTEGER NOT NULL, `tx` INTEGER NOT NULL, `ty` INTEGER NOT NULL, " +
+                        "`data` BLOB NOT NULL, PRIMARY KEY(`pid`, `tx`, `ty`), " +
+                        "FOREIGN KEY(`pid`) REFERENCES `zc_project`(`pid`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+                )
+            }
+        }
+
+        internal val MIGRATIONS = arrayOf(MIGRATION_1_2, MIGRATION_2_3)
+
         @Volatile
         private var instance: ZoomDatabase? = null
 
         fun get(context: Context): ZoomDatabase = instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, ZoomDatabase::class.java, NAME)
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(*MIGRATIONS)
                 .addCallback(object : Callback() {
                     override fun onOpen(db: SupportSQLiteDatabase) {
                         // Avec le journal WAL, « NORMAL » ne perd au pire que la toute dernière écriture à une coupure

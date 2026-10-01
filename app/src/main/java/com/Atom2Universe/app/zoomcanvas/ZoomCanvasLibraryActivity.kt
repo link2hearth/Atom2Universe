@@ -185,13 +185,11 @@ private class ZoomProjectsAdapter(
     override fun onBindViewHolder(h: Holder, position: Int) {
         val p = items[position]
         h.name.text = p.name
-        h.info.text = context.getString(
-            R.string.zc_project_info,
-            if (single) context.resources.getQuantityString(R.plurals.zc_items_count, p.itemCount, p.itemCount)
-            else context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount),
-            Formatter.formatShortFileSize(context, p.sizeBytes),
-            DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
-        )
+        val size = Formatter.formatShortFileSize(context, p.sizeBytes)
+        val when_ = DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+        // Un « Canvas » n'a pas de couches à compter (et son dessin peut n'être fait que de pixels).
+        h.info.text = if (single) context.getString(R.string.cv_project_info, size, when_)
+        else context.getString(R.string.zc_project_info, context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount), size, when_)
         h.badge.visibility = View.GONE
         h.thumb.setBackgroundColor(0xFFFAF8F3.toInt())
         val key = p.id + p.modified

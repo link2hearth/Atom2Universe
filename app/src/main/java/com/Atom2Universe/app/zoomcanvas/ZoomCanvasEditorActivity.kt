@@ -122,6 +122,15 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     private lateinit var colorDock: ColorDock
     private lateinit var paletteAdapter: PaletteAdapter
     private val toolButtons = HashMap<ZoomCanvasView.Tool, ImageButton>()
+    /** Le bouton qui passe du dessin vectoriel à la couche de pixels (le « Canvas » seulement). */
+    private lateinit var modeButton: ImageButton
+    /** Le « Canvas » est en mode pixels : les outils de la couche de pixels remplacent ceux du dessin. */
+    private var pixelMode = false
+    private var pixelRound = true
+    private var pixelPerfect = true
+    private var showPixelGrid = true
+    private var lastVectorTool = ZoomCanvasView.Tool.PEN
+    private var lastPixelTool = ZoomCanvasView.Tool.PIXEL_PEN
 
     private var primary = 0xFF1E1E24.toInt()
     private var secondary = 0xFFFFFFFF.toInt()
@@ -225,10 +234,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         single = p.scene.single
         canvasView.scene = p.scene
         canvasView.showGrid = single && prefs.getBoolean("grid", false)
-        // Une seule couche : rien à réaligner dessous.
-        toolButtons[ZoomCanvasView.Tool.MOVE_LAYER]?.visibility = if (single) View.GONE else View.VISIBLE
         title.text = p.meta.name
         shownLevel = Long.MIN_VALUE
+        applyMode()
         refreshChrome()
     }
 
@@ -261,6 +269,15 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         // Pour une forme : l'épaisseur du contour. Pour un texte : la taille de la police.
         ZoomCanvasView.Tool.SHAPE to DrawDef(4, 1, 60),
         ZoomCanvasView.Tool.TEXT to DrawDef(32, 8, 300),
+        // Les outils de pixels : la taille est en cases (« px »), jamais d'opacité (une case est pleine ou vide).
+        ZoomCanvasView.Tool.PIXEL_PEN to DrawDef(1, 1, 64, hasOpacity = false),
+        ZoomCanvasView.Tool.PIXEL_ERASER to DrawDef(1, 1, 64, hasOpacity = false),
+        ZoomCanvasView.Tool.PIXEL_SHAPE to DrawDef(1, 1, 16, hasOpacity = false),
+    )
+
+    private val pixelTools = setOf(
+        ZoomCanvasView.Tool.PIXEL_PEN, ZoomCanvasView.Tool.PIXEL_ERASER, ZoomCanvasView.Tool.PIXEL_SHAPE,
+        ZoomCanvasView.Tool.PIXEL_FILL, ZoomCanvasView.Tool.PIXEL_PICK,
     )
 
     private fun loadPrefs() {
@@ -275,6 +292,12 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         shapeSquare = prefs.getBoolean("shape_square", false)
         textStyle = prefs.getInt("text_style", 0)
         textFont = prefs.getString("text_font", "") ?: ""
+        pixelMode = prefs.getBoolean("pixel_mode", false)
+        pixelRound = prefs.getBoolean("pixel_round", true)
+        pixelPerfect = prefs.getBoolean("pixel_perfect", true)
+        showPixelGrid = prefs.getBoolean("pixel_grid", true)
+        lastPixelTool = runCatching { ZoomCanvasView.Tool.valueOf(prefs.getString("pixel_tool", "PIXEL_PEN")!!) }
+            .getOrDefault(ZoomCanvasView.Tool.PIXEL_PEN).takeIf { it in pixelTools } ?: ZoomCanvasView.Tool.PIXEL_PEN
         setZoomLocked(prefs.getBoolean("zoom_locked", false))
     }
 
@@ -289,6 +312,11 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             .putBoolean("shape_square", shapeSquare)
             .putInt("text_style", textStyle)
             .putString("text_font", textFont)
+            .putBoolean("pixel_mode", pixelMode)
+            .putBoolean("pixel_round", pixelRound)
+            .putBoolean("pixel_perfect", pixelPerfect)
+            .putBoolean("pixel_grid", showPixelGrid)
+            .putString("pixel_tool", lastPixelTool.name)
         for (t in drawDefs.keys) {
             e.putInt("size_${t.name}", sizes[t]!!)
             e.putInt("opacity_${t.name}", opacities[t]!!)
@@ -315,6 +343,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         canvasView.shapeKind = shapeKind
         canvasView.shapeFill = shapeFill
         canvasView.shapeSquare = shapeSquare
+        canvasView.pixelRound = pixelRound
+        canvasView.pixelPerfect = pixelPerfect
+        canvasView.showPixelGrid = showPixelGrid
         canvasView.textStyle = textStyle
         canvasView.textFont = textFont
     }
@@ -337,6 +368,12 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         override fun onNothingToMove() = showMessage(getString(R.string.zc_no_layer_below))
         override fun onSelectionChanged() = rebuildOptions()
         override fun onTextRequested(id: Long?, sx: Double, sy: Double) = askText(id, sx, sy)
+        override fun onColorPicked(color: Int) {
+            primary = color
+            linkedIndex = -1
+            palettes.addRecent(color)
+            colorsChanged()
+        }
     }
 
     private fun drawingChanged() {
@@ -393,17 +430,31 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         ToolDef(ZoomCanvasView.Tool.SELECT, R.drawable.ic_px_move, R.string.zc_tool_select),
         ToolDef(ZoomCanvasView.Tool.HAND, R.drawable.ic_px_hand, R.string.zc_tool_hand),
         ToolDef(ZoomCanvasView.Tool.MOVE_LAYER, R.drawable.ic_px_layers, R.string.zc_tool_move_layer),
+        // La couche de pixels (le « Canvas ») : le même ensemble d'outils que le pixel art.
+        ToolDef(ZoomCanvasView.Tool.PIXEL_PEN, R.drawable.ic_px_pencil, R.string.cv_tool_pixel_pen),
+        ToolDef(ZoomCanvasView.Tool.PIXEL_ERASER, R.drawable.ic_px_eraser, R.string.cv_tool_pixel_eraser),
+        ToolDef(ZoomCanvasView.Tool.PIXEL_SHAPE, R.drawable.ic_px_shape, R.string.px_tool_shape),
+        ToolDef(ZoomCanvasView.Tool.PIXEL_FILL, R.drawable.ic_px_fill, R.string.px_tool_fill),
+        ToolDef(ZoomCanvasView.Tool.PIXEL_PICK, R.drawable.ic_px_picker, R.string.px_tool_picker),
     )
 
     private fun setupTools() {
         val bar = findViewById<LinearLayout>(R.id.zc_tools)
+        modeButton = ImageButton(this, null, 0, R.style.PxToolButton).apply {
+            setImageResource(R.drawable.ic_px_checker)
+            contentDescription = getString(R.string.cv_tool_pixels)
+            setOnClickListener { setPixelMode(!pixelMode) }
+            visibility = View.GONE
+        }
+        TooltipCompat.setTooltipText(modeButton, getString(R.string.cv_tool_pixels))
+        bar.addView(modeButton)
         for (d in toolDefs) {
             val b = ImageButton(this, null, 0, R.style.PxToolButton).apply {
                 setImageResource(d.icon)
                 contentDescription = getString(d.label)
                 setOnClickListener { selectTool(d.tool) }
                 // Appui long sur les formes : la feuille des dix formes, comme dans le pixel art.
-                if (d.tool == ZoomCanvasView.Tool.SHAPE) setOnLongClickListener { showShapeSheet(shapeKind) { pickShape(it) }; true }
+                if (d.tool == ZoomCanvasView.Tool.SHAPE || d.tool == ZoomCanvasView.Tool.PIXEL_SHAPE) setOnLongClickListener { showShapeSheet(shapeKind) { pickShape(it) }; true }
                 // Appui long sur la gomme : le mode d'édition des gommes (un second appui long en sort).
                 if (d.tool == ZoomCanvasView.Tool.ERASER) setOnLongClickListener {
                     selectTool(if (canvasView.tool == ZoomCanvasView.Tool.ERASER_EDIT) ZoomCanvasView.Tool.ERASER else ZoomCanvasView.Tool.ERASER_EDIT)
@@ -426,6 +477,8 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private fun selectTool(t: ZoomCanvasView.Tool, quiet: Boolean = false) {
         canvasView.tool = t
+        if (t in pixelTools) lastPixelTool = t
+        else if (t != ZoomCanvasView.Tool.HAND && t != ZoomCanvasView.Tool.MOVE_LAYER && t != ZoomCanvasView.Tool.ERASER_EDIT) lastVectorTool = t
         // Le mode d'édition des gommes n'a pas de bouton à lui : c'est celui de la gomme qui reste allumé.
         for ((k, b) in toolButtons) b.isSelected = k == t || (k == ZoomCanvasView.Tool.ERASER && t == ZoomCanvasView.Tool.ERASER_EDIT)
         applyPenColor()
@@ -435,12 +488,33 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     /** Monte ou descend l'élément sélectionné dans la pile de la couche. */
     private fun reorder(move: OrderMove) {
+        if (single && pixelMode) {
+            // La bulle ne règle alors que la place de la couche de pixels : devant ou derrière le dessin.
+            vm.project?.scene?.pixelsAbove = move == OrderMove.FORWARD || move == OrderMove.TO_FRONT
+            drawingChanged()
+            refreshOrder()
+            return
+        }
         val sel = canvasView.selectedItem ?: return
         if (vm.project?.scene?.reorder(sel, move) == true) drawingChanged()
     }
 
     /** Le widget de pile : rang de l'élément sélectionné parmi ceux de la couche, et ce qu'on peut encore faire. */
     private fun refreshOrder() {
+        // Les quatre boutons de la pile d'un élément ; en mode pixels, seuls « derrière » et « devant » servent.
+        val pixels = single && pixelMode
+        orderButtons[OrderMove.TO_BACK]?.visibility = if (pixels) View.GONE else View.VISIBLE
+        orderButtons[OrderMove.TO_FRONT]?.visibility = if (pixels) View.GONE else View.VISIBLE
+        orderButtons[OrderMove.BACKWARD]?.contentDescription = getString(if (pixels) R.string.cv_pixels_to_behind else R.string.zc_order_backward)
+        orderButtons[OrderMove.FORWARD]?.contentDescription = getString(if (pixels) R.string.cv_pixels_to_front else R.string.zc_order_forward)
+        if (pixels) {
+            val above = vm.project?.scene?.pixelsAbove == true
+            orderPill.visibility = View.VISIBLE
+            orderText.text = getString(if (above) R.string.cv_pixels_front else R.string.cv_pixels_behind)
+            orderButtons[OrderMove.BACKWARD]?.apply { isEnabled = above; alpha = if (above) 1f else 0.35f }
+            orderButtons[OrderMove.FORWARD]?.apply { isEnabled = !above; alpha = if (!above) 1f else 0.35f }
+            return
+        }
         val info = canvasView.selectedItem?.let { vm.project?.scene?.orderInfo(it) }
         orderPill.visibility = if (info == null) View.GONE else View.VISIBLE
         if (info == null) return
@@ -456,12 +530,16 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     /** Le bouton des formes montre la forme choisie. */
     private fun updateShapeToolIcon() {
         toolButtons[ZoomCanvasView.Tool.SHAPE]?.setImageResource(shapeIcon(shapeKind))
+        toolButtons[ZoomCanvasView.Tool.PIXEL_SHAPE]?.setImageResource(shapeIcon(shapeKind))
     }
 
     private fun pickShape(kind: ShapeKind) {
         shapeKind = kind
         updateShapeToolIcon()
-        if (canvasView.tool != ZoomCanvasView.Tool.SHAPE) selectTool(ZoomCanvasView.Tool.SHAPE) else { applyPenColor(); rebuildOptions() }
+        val current = canvasView.tool
+        if (current != ZoomCanvasView.Tool.SHAPE && current != ZoomCanvasView.Tool.PIXEL_SHAPE) {
+            selectTool(if (single && pixelMode) ZoomCanvasView.Tool.PIXEL_SHAPE else ZoomCanvasView.Tool.SHAPE)
+        } else { applyPenColor(); rebuildOptions() }
     }
 
     /**
@@ -475,7 +553,17 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         val draw = drawDefs[t]
         // Les choix propres à l'outil d'abord (forme, remplissage, police…), puis ses curseurs.
         when (t) {
-            ZoomCanvasView.Tool.SHAPE -> {
+            ZoomCanvasView.Tool.PIXEL_PEN -> {
+                options.addView(roundChip())
+                options.addView(chip(getString(R.string.px_opt_pixel_perfect), R.drawable.ic_px_pixel_perfect) {
+                    pixelPerfect = !pixelPerfect
+                    it.isSelected = pixelPerfect
+                    applyPenColor()
+                }.apply { isSelected = pixelPerfect; contentDescription = getString(R.string.px_opt_pixel_perfect) })
+            }
+            ZoomCanvasView.Tool.PIXEL_ERASER -> options.addView(roundChip())
+            ZoomCanvasView.Tool.SHAPE, ZoomCanvasView.Tool.PIXEL_SHAPE -> {
+                if (t == ZoomCanvasView.Tool.PIXEL_SHAPE) options.addView(roundChip())
                 options.addView(chip(getString(shapeLabel(shapeKind)), shapeIcon(shapeKind)) { showShapeSheet(shapeKind) { pickShape(it) } })
                 if (shapeKind != ShapeKind.LINE) options.addView(fillChip(shapeFill) { shapeFill = it; applyPenColor() })
                 if (shapeKind != ShapeKind.LINE && shapeKind != ShapeKind.ARROW) {
@@ -597,6 +685,52 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             scene.addText(text, sx, sy, (sizes[ZoomCanvasView.Tool.TEXT] ?: 32).toDouble(), canvasView.color, textStyle, textFont, unitWidth(text, textFont, textStyle))
         }
         drawingChanged()
+    }
+
+    /** Pinceau rond ou carré (les pixels) : une puce à bascule, allumée quand il est rond. */
+    private fun roundChip(): TextView = chip(getString(R.string.px_opt_round), R.drawable.ic_px_round) {
+        pixelRound = !pixelRound
+        it.isSelected = pixelRound
+        applyPenColor()
+    }.apply { isSelected = pixelRound; contentDescription = getString(R.string.px_opt_round) }
+
+    /** Passe du dessin à la couche de pixels, et inversement (le « Canvas » seulement). */
+    private fun setPixelMode(on: Boolean) {
+        pixelMode = on
+        val s = vm.project?.scene
+        // Une case fait 1 pixel d'écran à 100 % : pour la voir et la viser, on s'approche d'abord.
+        if (on && s != null && s.zoom < 4.0) snapPixelZoom(8.0)
+        applyMode()
+    }
+
+    /** Les boutons d'outils du mode courant : dessin, pixels, ou (canvas à couches) dessin seulement. */
+    private fun applyMode() {
+        val inPixels = single && pixelMode
+        for ((t, b) in toolButtons) {
+            b.visibility = when {
+                !single -> if (t in pixelTools) View.GONE else View.VISIBLE
+                inPixels -> if (t in pixelTools || t == ZoomCanvasView.Tool.HAND) View.VISIBLE else View.GONE
+                else -> if (t in pixelTools || t == ZoomCanvasView.Tool.MOVE_LAYER) View.GONE else View.VISIBLE
+            }
+        }
+        modeButton.visibility = if (single) View.VISIBLE else View.GONE
+        modeButton.isSelected = inPixels
+        canvasView.pixelMode = inPixels
+        val t = canvasView.tool
+        val fits = if (inPixels) t in pixelTools || t == ZoomCanvasView.Tool.HAND else t !in pixelTools
+        if (fits) {
+            applyPenColor()
+            rebuildOptions()
+        } else selectTool(if (inPixels) lastPixelTool else lastVectorTool, quiet = true)
+    }
+
+    /** Zoome (ou dézoome) au centre de la vue jusqu'à ce qu'une case fasse [target] pixels, et cale la grille sur les pixels d'écran. */
+    private fun snapPixelZoom(target: Double) {
+        val s = vm.project?.scene ?: return
+        s.zoomAt(target / s.zoom, 0.0, 0.0)
+        s.snapCameraToPixels(canvasView.width.toDouble(), canvasView.height.toDouble())
+        canvasView.invalidate()
+        viewMoved()
     }
 
     private fun fillIcon(f: ShapeFill) = when (f) {
@@ -931,13 +1065,25 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                 viewMoved()
             },
             SheetItem(R.drawable.ic_px_crop, getString(R.string.cv_fit_content)) {
-                s.jumpTo(s.depth, canvasView.width.toDouble(), canvasView.height.toDouble(), ZoomScene.SINGLE_FIT_MAX_ZOOM)
+                s.jumpTo(s.depth, canvasView.width.toDouble(), canvasView.height.toDouble(), if (pixelMode) ZoomScene.PIXEL_FIT_MAX_ZOOM else ZoomScene.SINGLE_FIT_MAX_ZOOM)
                 canvasView.invalidate()
                 viewMoved()
             },
-            SheetItem(R.drawable.ic_px_grid, getString(R.string.cv_grid), checked = canvasView.showGrid) {
-                canvasView.showGrid = !canvasView.showGrid
-                prefs.edit().putBoolean("grid", canvasView.showGrid).apply()
+            if (pixelMode) {
+                SheetItem(R.drawable.ic_px_grid, getString(R.string.cv_pixel_grid), checked = showPixelGrid) {
+                    showPixelGrid = !showPixelGrid
+                    canvasView.showPixelGrid = showPixelGrid
+                }
+            } else {
+                SheetItem(R.drawable.ic_px_grid, getString(R.string.cv_grid), checked = canvasView.showGrid) {
+                    canvasView.showGrid = !canvasView.showGrid
+                    prefs.edit().putBoolean("grid", canvasView.showGrid).apply()
+                }
+            },
+            SheetItem(R.drawable.ic_px_checker, getString(R.string.cv_pixel_snap)) {
+                // Le zoom de calage suivant : 4, 8, 16, 32, 64 pixels par case, puis on recommence.
+                val presets = doubleArrayOf(4.0, 8.0, 16.0, 32.0, 64.0)
+                snapPixelZoom(presets.firstOrNull { it > s.zoom * 1.001 } ?: presets[0])
             },
             SheetItem(R.drawable.ic_px_export, getString(R.string.cv_export_view)) { exportView() },
         )).show()

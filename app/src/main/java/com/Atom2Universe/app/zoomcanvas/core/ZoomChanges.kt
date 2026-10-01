@@ -85,6 +85,10 @@ class SceneDelta(
     val cameraVersion: Long,
     /** Les couches touchées par ce lot, avec leur version : une fois écrit, elles ne sont plus à écrire (voir [ZoomScene.markSaved]). */
     val layerVersions: Map<Long, Long> = emptyMap(),
+    /** Les tuiles de la couche de pixels à écrire (le « Canvas »), et son ordre par rapport au dessin si celui-ci a changé. */
+    val pixels: PixelDelta = PixelDelta.EMPTY,
+    val pixelsAbove: Boolean = false,
+    val pixelSettingsChanged: Boolean = false,
 ) {
-    val itemsChanged: Boolean get() = upserts.isNotEmpty() || deletes.isNotEmpty()
+    val itemsChanged: Boolean get() = upserts.isNotEmpty() || deletes.isNotEmpty() || !pixels.isEmpty
 }

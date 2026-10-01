@@ -3,6 +3,7 @@ package com.Atom2Universe.app.zoomcanvas.data
 import com.Atom2Universe.app.zoomcanvas.core.ImageItem
 import com.Atom2Universe.app.zoomcanvas.core.Layer
 import com.Atom2Universe.app.zoomcanvas.core.LayerItem
+import com.Atom2Universe.app.zoomcanvas.core.PixelLayer
 import com.Atom2Universe.app.zoomcanvas.core.SceneDelta
 import com.Atom2Universe.app.zoomcanvas.core.ZoomCodec
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
@@ -141,6 +142,11 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
         }
         val scene = ZoomScene.create(p.kind == ZcProject.KIND_SINGLE, p.ratio)
         scene.restore(first, layers, cam, p.cx, p.cy, p.zoom, p.nextId)
+        if (p.kind == ZcProject.KIND_SINGLE) {
+            // La couche de pixels se lit d'un bloc : seules ses tuiles colorées existent, et la scène en a besoin pour tracer.
+            val tiles = dao.pixelTiles(p.pid).mapNotNull { r -> PixelLayer.decode(r.data)?.let { PixelLayer.tileKey(r.tx, r.ty) to it } }
+            scene.restorePixels(tiles, p.pixelsAbove == 1)
+        }
         return LoadedZoomProject(ZoomProjectMeta(p.uuid, p.name, p.created, p.modified, p.pid), scene)
     }
 
@@ -164,6 +170,11 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
                     ZcLayer(pid, it.depth, it.ax, it.ay, it.count, it.erasers, b?.get(0) ?: 0.0, b?.get(1) ?: 0.0, b?.get(2) ?: 0.0, b?.get(3) ?: 0.0)
                 })
             }
+            for (chunk in delta.pixels.upserts.chunked(WRITE_CHUNK)) {
+                dao.putPixelTiles(chunk.map { (k, px) -> ZcPixelTile(pid, PixelLayer.tileX(k), PixelLayer.tileY(k), PixelLayer.encode(px)) })
+            }
+            for (k in delta.pixels.deletes) dao.deletePixelTile(pid, PixelLayer.tileX(k), PixelLayer.tileY(k))
+            if (delta.pixelSettingsChanged) dao.savePixelsAbove(pid, if (delta.pixelsAbove) 1 else 0)
             dao.pruneLayers(pid, delta.firstDepth, delta.lastDepth)
             dao.saveCamera(pid, delta.camDepth, delta.cx, delta.cy, delta.zoom, delta.nextId)
             if (delta.itemsChanged) dao.touch(pid, meta.modified)
@@ -188,9 +199,10 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
         val now = System.currentTimeMillis()
         val uuid = UUID.randomUUID().toString()
         db.runInTransaction {
-            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = p.ratio, camDepth = p.camDepth, cx = p.cx, cy = p.cy, zoom = p.zoom, nextId = p.nextId, kind = p.kind))
+            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = p.ratio, camDepth = p.camDepth, cx = p.cx, cy = p.cy, zoom = p.zoom, nextId = p.nextId, kind = p.kind, pixelsAbove = p.pixelsAbove))
             dao.copyLayers(p.pid, pid)
             dao.copyItems(p.pid, pid)
+            dao.copyPixelTiles(p.pid, pid)
         }
         File(dir(id), "images").takeIf { it.isDirectory }?.copyRecursively(File(dir(uuid), "images"), overwrite = true)
         thumbFile(id).takeIf { it.isFile }?.copyTo(thumbFile(uuid), overwrite = true)

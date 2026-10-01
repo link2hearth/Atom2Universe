@@ -59,4 +59,15 @@
     <string name="cv_grid">Grid</string>
     <string name="cv_export_view">Save the view as an image</string>
     <string name="cv_new_title">New canvas</string>
+    <!-- La couche de pixels du « Canvas » -->
+    <string name="cv_tool_pixels">Pixel layer</string>
+    <string name="cv_tool_pixel_pen">Pixel brush</string>
+    <string name="cv_tool_pixel_eraser">Pixel eraser</string>
+    <string name="cv_pixels_behind">Pixels behind</string>
+    <string name="cv_pixels_front">Pixels in front</string>
+    <string name="cv_pixels_to_behind">Put the pixels behind the drawing</string>
+    <string name="cv_pixels_to_front">Put the pixels in front of the drawing</string>
+    <string name="cv_pixel_grid">Pixel grid</string>
+    <string name="cv_pixel_snap">Snap the zoom to the pixels</string>
+    <string name="cv_project_info">%1$s · %2$s</string>
 </resources>

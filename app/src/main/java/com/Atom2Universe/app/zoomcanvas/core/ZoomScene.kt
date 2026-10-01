@@ -257,7 +257,12 @@ class ZoomScene(
      */
     fun jumpTo(d: Long, viewW: Double, viewH: Double, maxFit: Double = maxZoom * 0.99) {
         val l = layer(d) ?: return
-        val b = l.bounds()
+        var b = l.bounds()
+        // Une seule couche : la couche de pixels compte aussi dans ce qu'on cadre.
+        if (single) pixels.bounds()?.let { pb ->
+            val r = doubleArrayOf(pb[0].toDouble(), pb[1].toDouble(), pb[2] + 1.0, pb[3] + 1.0)
+            b = if (b == null) r else doubleArrayOf(min(b[0], r[0]), min(b[1], r[1]), max(b[2], r[2]), max(b[3], r[3]))
+        }
         if (b == null) {
             setCamera(d, 0.0, 0.0, homeZoom)
             return
@@ -733,6 +738,131 @@ class ZoomScene(
         moveDepth = Long.MIN_VALUE
     }
 
+    // ---- Couche de pixels (le « Canvas ») ---------------------------------------------------
+
+    /** La grille de pixels, une couche à part du dessin vectoriel : vide dans un canvas infini à couches. */
+    val pixels = PixelLayer()
+
+    /** La couche de pixels est tracée devant le dessin (sinon derrière). Se choisit dans l'éditeur. */
+    var pixelsAbove = false
+        set(value) {
+            if (field == value) return
+            field = value
+            pixelSettingsDirty = true
+            contentVersion++
+        }
+    private var pixelSettingsDirty = false
+
+    /** Ce que la case ([x], [y]) était avant le geste en cours : de quoi défaire d'un seul pas d'historique. */
+    private var pixelBefore: LinkedHashMap<Long, Int>? = null
+
+    val isEditingPixels: Boolean get() = pixelBefore != null
+
+    /** La case sous l'écart d'écran [sx] (pixels depuis le centre de la vue). */
+    fun cellX(sx: Double): Int = Math.floor(cx + sx / zoom).coerceIn(-PixelLayer.LIMIT.toDouble(), PixelLayer.LIMIT.toDouble()).toInt()
+    fun cellY(sy: Double): Int = Math.floor(cy + sy / zoom).coerceIn(-PixelLayer.LIMIT.toDouble(), PixelLayer.LIMIT.toDouble()).toInt()
+
+    /** Commence un geste de pixels : tout ce qu'on peint jusqu'à [endPixelEdit] est un seul pas d'historique. */
+    fun beginPixelEdit() {
+        pixelBefore = LinkedHashMap()
+    }
+
+    /** Peint la case ([x], [y]) pendant un geste ([beginPixelEdit]). Faux si rien n'a changé. */
+    fun paintCell(x: Int, y: Int, color: Int): Boolean {
+        val before = pixelBefore ?: return false
+        val old = pixels.get(x, y)
+        if (!pixels.set(x, y, color)) return false
+        before.putIfAbsent(PixelLayer.cellKey(x, y), old)
+        return true
+    }
+
+    /** Remet la case ([x], [y]) comme elle était avant le geste (le « pixel parfait » retire ainsi un coin). */
+    fun unpaintCell(x: Int, y: Int) {
+        val before = pixelBefore ?: return
+        val old = before[PixelLayer.cellKey(x, y)] ?: return
+        pixels.set(x, y, old)
+    }
+
+    /** Termine le geste : ce qui a vraiment changé entre dans l'historique. Faux s'il n'a rien changé. */
+    fun endPixelEdit(): Boolean {
+        val before = pixelBefore ?: return false
+        pixelBefore = null
+        val keys = ArrayList<Long>()
+        val was = ArrayList<Int>()
+        val now = ArrayList<Int>()
+        for ((k, b) in before) {
+            val a = pixels.get(PixelLayer.cellX(k), PixelLayer.cellY(k))
+            if (a != b) { keys.add(k); was.add(b); now.add(a) }
+        }
+        if (keys.isEmpty()) return false
+        record(Edit.Pixels(keys.toLongArray(), was.toIntArray(), now.toIntArray()))
+        return true
+    }
+
+    /** Abandonne le geste (un pincement, un geste annulé) : les cases touchées redeviennent ce qu'elles étaient. */
+    fun cancelPixelEdit() {
+        val before = pixelBefore ?: return
+        pixelBefore = null
+        for ((k, b) in before) pixels.set(PixelLayer.cellX(k), PixelLayer.cellY(k), b)
+        contentVersion++
+    }
+
+    /**
+     * Remplit, avec [color], la zone de cases de la même couleur que ([x], [y]) qui touche cette case, sans sortir de la
+     * boîte ([x0], [y0])–([x1], [y1]) (inclus). Dans le vide, la zone n'a pas de bord : on la borne à l'écran. Rien si elle
+     * dépasse [MAX_FILL_CELLS] cases. Un seul pas d'historique. Vrai si quelque chose a été rempli.
+     */
+    fun fillPixels(x: Int, y: Int, color: Int, x0: Int, y0: Int, x1: Int, y1: Int): Boolean {
+        if (x < x0 || x > x1 || y < y0 || y > y1) return false
+        val c = if (color ushr 24 == 0) 0 else color
+        val target = pixels.get(x, y)
+        if (target == c) return false
+        val w = x1 - x0 + 1
+        val h = y1 - y0 + 1
+        if (w.toLong() * h > MAX_FILL_AREA) return false
+        val seen = BooleanArray(w * h)
+        val region = ArrayList<Int>()
+        var stack = IntArray(256)
+        var n = 0
+        fun push(px: Int, py: Int) {
+            if (px < x0 || px > x1 || py < y0 || py > y1) return
+            val i = (py - y0) * w + (px - x0)
+            if (seen[i] || pixels.get(px, py) != target) return
+            seen[i] = true
+            if (n + 1 > stack.size) stack = stack.copyOf(stack.size * 2)
+            stack[n++] = i
+        }
+        push(x, y)
+        while (n > 0) {
+            val i = stack[--n]
+            region.add(i)
+            if (region.size > MAX_FILL_CELLS) return false
+            val px = x0 + i % w
+            val py = y0 + i / w
+            push(px - 1, py); push(px + 1, py); push(px, py - 1); push(px, py + 1)
+        }
+        beginPixelEdit()
+        for (i in region) paintCell(x0 + i % w, y0 + i / w, c)
+        return endPixelEdit()
+    }
+
+    /**
+     * Cale la caméra sur la grille : les bords des cases tombent sur des pixels d'écran entiers (des cases nettes,
+     * sans cases plus larges que leurs voisines si le zoom est entier). Un demi-pixel de glissement au plus.
+     */
+    fun snapCameraToPixels(viewW: Double, viewH: Double) {
+        cx = (Math.rint(cx * zoom - viewW / 2) + viewW / 2) / zoom
+        cy = (Math.rint(cy * zoom - viewH / 2) + viewH / 2) / zoom
+        cameraVersion++
+    }
+
+    /** Lecture d'un projet : les tuiles (déjà écrites) et l'ordre de la couche de pixels. */
+    fun restorePixels(tiles: List<Pair<Long, IntArray>>, above: Boolean) {
+        pixels.load(tiles)
+        pixelsAbove = above
+        pixelSettingsDirty = false
+    }
+
     // ---- Historique -----------------------------------------------------------------------
 
     sealed class Edit {
@@ -747,6 +877,10 @@ class ZoomScene(
         /** L'élément [id] passe du rang [from] au rang [to] de la pile de sa couche. */
         class Reorder(override val depth: Long, val id: Long, val from: Int, val to: Int) : Edit()
         class ChangeBox(override val depth: Long, val before: BoxItem, val after: BoxItem) : Edit()
+        /** Un geste de pixels : les cases [keys] ([PixelLayer.cellKey]) passent de [before] à [after]. */
+        class Pixels(val keys: LongArray, val before: IntArray, val after: IntArray) : Edit() {
+            override val depth: Long get() = 0L
+        }
     }
 
     private val undoStack = ArrayDeque<Edit>()
@@ -804,6 +938,7 @@ class ZoomScene(
             }
             is Edit.Reorder -> layer(e.depth)?.moveInOrder(e.id, if (reverse) e.from else e.to)
             is Edit.ChangeBox -> layer(e.depth)?.replaceBox(if (reverse) e.before else e.after)
+            is Edit.Pixels -> for (i in e.keys.indices) pixels.set(PixelLayer.cellX(e.keys[i]), PixelLayer.cellY(e.keys[i]), if (reverse) e.before[i] else e.after[i])
         }
     }
 
@@ -813,7 +948,7 @@ class ZoomScene(
     private var persisted = HashMap<Long, DoubleArray>()
 
     /** Y a-t-il des objets posés, retirés ou remplacés qu'on n'a pas encore écrits ? */
-    val hasUnsavedItems: Boolean get() = !log.isEmpty
+    val hasUnsavedItems: Boolean get() = !log.isEmpty || pixels.hasUnsaved || pixelSettingsDirty
 
     /**
      * Prend ce qui a changé depuis le dernier appel, pour l'écrire : les objets touchés (leur dernier
@@ -845,7 +980,9 @@ class ZoomScene(
         val delta = SceneDelta(
             ArrayList(log.upserts.values), log.deletes.toLongArray(), rows, lo, hi,
             depth, cx, cy, zoom, nextStrokeId, contentVersion, cameraVersion, versions,
+            pixels.drain(), pixelsAbove, pixelSettingsDirty,
         )
+        pixelSettingsDirty = false
         log.clear()
         return delta
     }
@@ -853,6 +990,8 @@ class ZoomScene(
     /** L'écriture de [delta] a échoué : ses changements repartent dans le journal (ce qui s'est passé depuis l'emporte). */
     fun requeueChanges(delta: SceneDelta) {
         log.requeue(delta)
+        pixels.requeue(delta.pixels)
+        if (delta.pixelSettingsChanged) pixelSettingsDirty = true
         persisted.clear()
     }
 
@@ -978,6 +1117,8 @@ class ZoomScene(
         const val SINGLE_MAX_ZOOM = 100.0
         /** Ajuster au contenu ne zoome pas au-delà : un petit dessin ne remplit pas l'écran de ses pixels. */
         const val SINGLE_FIT_MAX_ZOOM = 4.0
+        /** En mode pixels, un petit dessin se cadre plus gros : on veut voir et viser les cases. */
+        const val PIXEL_FIT_MAX_ZOOM = 64.0
 
         /** Une scène neuve : à couches (le [ratio] du projet) ou à une seule couche. */
         fun create(single: Boolean, ratio: Double = DEFAULT_RATIO): ZoomScene =
@@ -996,6 +1137,10 @@ class ZoomScene(
         /** De combien un doigt déborde d'un objet pour le toucher (pixels d'écran). */
         const val HIT_SLACK_PX = 8.0
         const val MAX_HISTORY = 300
+        /** Le pot de peinture ne remplit pas plus de cases que ça (l'historique garde chaque case : 16 octets). */
+        const val MAX_FILL_CELLS = 262_144
+        /** Aire de la boîte dans laquelle il cherche (cases) : un tableau de marques de cette taille. */
+        const val MAX_FILL_AREA = 4_000_000L
         /** Points d'un seul trait (un geste sans lever le doigt, sur des dizaines d'écrans) : 100 000 points = 800 Ko. */
         const val MAX_STROKE_POINTS = 100_000
         /** Couches gardées en mémoire autour de la couche de travail : une au-dessus, deux en dessous (voir [updateResidency]). */
